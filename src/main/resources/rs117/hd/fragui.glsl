@@ -41,6 +41,7 @@ uniform vec4 alphaOverlay;
 #include scaling/bicubic.glsl
 #include utils/constants.glsl
 #include utils/color_blindness.glsl
+#include utils/gamma_calibration_ui.glsl
 
 #if SHADOW_MAP_OVERLAY
 uniform sampler2D shadowMap;
@@ -85,6 +86,8 @@ void main() {
 
     c = alphaBlend(c, alphaOverlay);
     c.rgb = colorBlindnessCompensation(c.rgb);
+
+    gammaCalibrationUi(c, TexCoord, targetDimensions);
 
     FragColor = c;
 }

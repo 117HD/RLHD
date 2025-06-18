@@ -57,6 +57,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Override
 	public Dimension render(Graphics2D g) {
+		long time = System.nanoTime();
+
 		var timings = getAverageTimings();
 		if (timings.length != Timer.values().length) {
 			panelComponent.getChildren().add(TitleComponent.builder()
@@ -69,13 +71,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				if (!t.isGpuTimer && t != Timer.DRAW_FRAME)
 					addTiming(t, timings);
 
-			long gpuTime = 0;
-			for (var t : Timer.values())
-				if (t.isGpuTimer)
-					gpuTime += timings[t.ordinal()];
+			long gpuTime = timings[Timer.RENDER_FRAME.ordinal()];
 			addTiming("GPU", gpuTime, true);
 			for (var t : Timer.values())
-				if (t.isGpuTimer)
+				if (t.isGpuTimer && t != Timer.RENDER_FRAME)
 					addTiming(t, timings);
 
 			panelComponent.getChildren().add(LineComponent.builder()
@@ -98,7 +97,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.build());
 		}
 
-		return super.render(g);
+		var result = super.render(g);
+		frameTimer.cumulativeError += System.nanoTime() - time;
+		return result;
 	}
 
 	private long[] getAverageTimings() {

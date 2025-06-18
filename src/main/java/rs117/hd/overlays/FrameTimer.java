@@ -27,7 +27,8 @@ public class FrameTimer {
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 
 	private boolean isInactive = true;
-	private long cumulativeError = 0;
+
+	public long cumulativeError;
 	public long errorCompensation;
 
 	private void initialize() {

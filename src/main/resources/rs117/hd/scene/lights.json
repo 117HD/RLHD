@@ -17600,15 +17600,15 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      1632,
-      6689,
-      5604,
-      5590,
-      6696,
-      1625,
-      6682,
-      6668,
-      5597
+      "LAZYCAT_HELL",
+      "POH_LAZYCAT_HELL",
+      "OVERGROWNCAT_HELL",
+      "WILEYCAT_HELL",
+      "POH_WILEYCAT_HELL",
+      "GROWNCAT_HELL",
+      "POH_OVERGROWNCAT_HELL",
+      "POH_GROWNCAT_HELL",
+      "KITTENPET_HELL"
     ]
   },
   {
@@ -17626,7 +17626,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      4809
+      "HUNDRED_DAVE_HELLRAT"
     ]
   },
   {
@@ -17644,7 +17644,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      6793
+      "HUNDRED_DAVE_BIGRAT"
     ]
   },
   {
@@ -17662,8 +17662,8 @@
     "duration": 5000,
     "range": 20,
     "npcIds": [
-      964,
-      3099
+      "POH_HELLPET",
+      "HELLPET"
     ]
   },
   {
@@ -17681,8 +17681,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      8519,
-      8494
+      "POH_HYDRA_PET_FIRE",
+      "HYDRA_PET_FIRE"
     ]
   },
   {
@@ -17700,8 +17700,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      8517,
-      8492
+      "POH_HYDRA_PET",
+      "HYDRA_PET"
     ]
   },
   {
@@ -17719,8 +17719,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      8518,
-      8493
+      "POH_HYDRA_PET_ELECTRIC",
+      "HYDRA_PET_ELECTRIC"
     ]
   },
   {
@@ -17738,8 +17738,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      8520,
-      8495
+      "POH_HYDRA_PET_EXTINGUISHED",
+      "HYDRA_PET_EXTINGUISHED"
     ]
   },
   {
@@ -17757,8 +17757,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      7368,
-      7370
+      "POH_PHOENIX_PET",
+      "PHOENIX_PET"
     ]
   },
   {
@@ -17776,8 +17776,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      3079,
-      3083
+      "POH_PHOENIX_PET_WHITE",
+      "PHOENIX_PET_WHITE"
     ]
   },
   {
@@ -17795,8 +17795,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      3078,
-      3082
+      "POH_PHOENIX_PET_BLUE",
+      "PHOENIX_PET_BLUE"
     ]
   },
   {
@@ -17814,8 +17814,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      3080,
-      3084
+      "POH_PHOENIX_PET_PURPLE",
+      "PHOENIX_PET_PURPLE"
     ]
   },
   {
@@ -17833,8 +17833,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      3077,
-      3081
+      "POH_PHOENIX_PET_GREEN",
+      "PHOENIX_PET_GREEN"
     ]
   },
   {
@@ -17852,8 +17852,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      8009,
-      8011
+      "POH_ZUK_PET",
+      "ZUK_PET"
     ]
   },
   {
@@ -17871,8 +17871,8 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      7890,
-      7893
+      "POH_DUSK_PET",
+      "DUSK_PET"
     ]
   },
   {
@@ -17890,8 +17890,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7337,
-      7354
+      "POH_SKILLPET_RUNECRAFTING_FIRE",
+      "SKILLPET_RUNECRAFTING_FIRE"
     ]
   },
   {
@@ -17909,8 +17909,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7338,
-      7355
+      "POH_SKILLPET_RUNECRAFTING_AIR",
+      "SKILLPET_RUNECRAFTING_AIR"
     ]
   },
   {
@@ -17928,8 +17928,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7339,
-      7356
+      "POH_SKILLPET_RUNECRAFTING_MIND",
+      "SKILLPET_RUNECRAFTING_MIND"
     ]
   },
   {
@@ -17947,8 +17947,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7340,
-      7357
+      "POH_SKILLPET_RUNECRAFTING_WATER",
+      "SKILLPET_RUNECRAFTING_WATER"
     ]
   },
   {
@@ -17966,8 +17966,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7341,
-      7358
+      "POH_SKILLPET_RUNECRAFTING_EARTH",
+      "SKILLPET_RUNECRAFTING_EARTH"
     ]
   },
   {
@@ -17985,8 +17985,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7342,
-      7359
+      "POH_SKILLPET_RUNECRAFTING_BODY",
+      "SKILLPET_RUNECRAFTING_BODY"
     ]
   },
   {
@@ -18004,8 +18004,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7360,
-      7343
+      "SKILLPET_RUNECRAFTING_COSMIC",
+      "POH_SKILLPET_RUNECRAFTING_COSMIC"
     ]
   },
   {
@@ -18023,8 +18023,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7344,
-      7361
+      "POH_SKILLPET_RUNECRAFTING_CHAOS",
+      "SKILLPET_RUNECRAFTING_CHAOS"
     ]
   },
   {
@@ -18042,8 +18042,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7345,
-      7362
+      "POH_SKILLPET_RUNECRAFTING_NATURE",
+      "SKILLPET_RUNECRAFTING_NATURE"
     ]
   },
   {
@@ -18061,8 +18061,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7346,
-      7363
+      "POH_SKILLPET_RUNECRAFTING_LAW",
+      "SKILLPET_RUNECRAFTING_LAW"
     ]
   },
   {
@@ -18080,8 +18080,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7347,
-      7364
+      "POH_SKILLPET_RUNECRAFTING_DEATH",
+      "SKILLPET_RUNECRAFTING_DEATH"
     ]
   },
   {
@@ -18099,8 +18099,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7348,
-      7365
+      "POH_SKILLPET_RUNECRAFTING_SOUL",
+      "SKILLPET_RUNECRAFTING_SOUL"
     ]
   },
   {
@@ -18118,8 +18118,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7349,
-      7366
+      "POH_SKILLPET_RUNECRAFTING_ASTRAL",
+      "SKILLPET_RUNECRAFTING_ASTRAL"
     ]
   },
   {
@@ -18137,8 +18137,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      7350,
-      7367
+      "POH_SKILLPET_RUNECRAFTING_BLOOD",
+      "SKILLPET_RUNECRAFTING_BLOOD"
     ]
   },
   {
@@ -18156,8 +18156,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      8024,
-      8028
+      "POH_SKILLPET_RUNECRAFTING_WRATH",
+      "SKILLPET_RUNECRAFTING_WRATH"
     ]
   },
   {
@@ -18175,8 +18175,8 @@
     "duration": 20,
     "range": 20,
     "npcIds": [
-      2055,
-      5907
+      "CHAOS_ELEMENTAL_PET",
+      "POH_CHAOS_ELEMENTAL_PET"
     ]
   },
   {
@@ -18194,8 +18194,8 @@
     "duration": 20,
     "range": 0,
     "npcIds": [
-      2055,
-      5907
+      "CHAOS_ELEMENTAL_PET",
+      "POH_CHAOS_ELEMENTAL_PET"
     ]
   },
   {
@@ -18213,8 +18213,8 @@
     "duration": 3000,
     "range": 20,
     "npcIds": [
-      7671,
-      425
+      "SKOTIZO_PET",
+      "POH_SKOTIZO_PET"
     ]
   },
   {
@@ -18232,8 +18232,8 @@
     "duration": 2100,
     "range": 10,
     "npcIds": [
-      8198,
-      8203
+      "POH_VANGUARD_PET",
+      "VANGUARD_PET"
     ]
   },
   {
@@ -18251,8 +18251,8 @@
     "duration": 2400,
     "range": 30,
     "npcIds": [
-      8199,
-      8204
+      "POH_VASA_PET",
+      "VASA_PET"
     ]
   },
   {
@@ -18270,8 +18270,8 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      8197,
-      8202
+      "POH_TEKTON_PET",
+      "TEKTON_PET"
     ]
   },
   {
@@ -18289,8 +18289,8 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      9511,
-      9513
+      "POH_TEKTON_ENRAGED_PET",
+      "TEKTON_ENRAGED_PET"
     ]
   },
   {
@@ -18308,8 +18308,8 @@
     "duration": 3000,
     "range": 15,
     "npcIds": [
-      6639,
-      6655
+      "SMOKE_PET",
+      "POH_SMOKE_PET"
     ]
   },
   {
@@ -18327,8 +18327,8 @@
     "duration": 3000,
     "range": 15,
     "npcIds": [
-      8737,
-      8729
+      "GAUNTLET_PET",
+      "POH_GAUNTLET_PET"
     ]
   },
   {
@@ -18346,8 +18346,8 @@
     "duration": 3000,
     "range": 15,
     "npcIds": [
-      8738,
-      8730
+      "GAUNTLET_PET_CORRUPT",
+      "POH_GAUNTLET_PET_CORRUPT"
     ]
   },
   {
@@ -18365,8 +18365,8 @@
     "duration": 3200,
     "range": 20,
     "npcIds": [
-      10562,
-      10637
+      "POH_TEMPOROSS_PET",
+      "TEMPOROSS_PET"
     ]
   },
   {
@@ -18384,11 +18384,11 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      433,
-      434,
-      435,
-      3139,
-      436
+      "SLAYER_PYREFIEND_1",
+      "SLAYER_PYREFIEND_2",
+      "SLAYER_PYREFIEND_3",
+      "GODWARS_PYREFIEND_1",
+      "SLAYER_PYREFIEND_4"
     ]
   },
   {
@@ -18406,8 +18406,8 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      2916,
-      2917
+      "BRUT_WATERFIEND",
+      "WATERFIEND_STRONGHOLDCAVE"
     ]
   },
   {
@@ -18425,59 +18425,59 @@
     "duration": 1,
     "range": 10,
     "npcIds": [
-      3975,
-      3976,
-      3977,
-      3978,
-      3979,
-      920,
-      3625,
-      10538,
-      3516,
-      10558,
-      3008,
-      3009,
-      85,
-      86,
-      87,
-      88,
-      472,
-      89,
-      473,
-      90,
-      474,
-      91,
-      92,
-      93,
-      94,
-      95,
-      2527,
-      7263,
-      96,
-      2528,
-      7264,
-      97,
-      2529,
-      98,
-      2530,
-      99,
-      2531,
-      2532,
-      2533,
-      2534,
-      9194,
-      505,
-      506,
-      1786,
-      5370,
-      507,
-      3451,
-      3452,
-      3453,
-      3454,
-      3455,
-      10475,
-      11237
+      "DRAGONSLAYER_GHOST_1_KEY",
+      "DRAGONSLAYER_GHOST_2",
+      "DRAGONSLAYER_GHOST_3",
+      "DRAGONSLAYER_GHOST_4",
+      "DRAGONSLAYER_GHOST_5",
+      "AGRITH_NONCOMBAT_GHOST",
+      "HAUNTEDMINE_SUPRISE_GHOST",
+      "SOUL_WARS_PLAYER_GHOST",
+      "SHADOW_MAJ_GHOST",
+      "SW_BANDOS_GHOST_VIS",
+      "AHOY_GHOST_DISGUISE",
+      "AHOY_GHOST_DISGUISE_GREEN",
+      "GHOST",
+      "GHOST2",
+      "GHOST3",
+      "GHOST4",
+      "GHOST8_UNAGGRESSIVE",
+      "GHOST5",
+      "HOUSE_GHOST",
+      "GHOST6",
+      "HOUSE_GHOST2",
+      "GHOST7",
+      "GHOST8",
+      "GHOST_UNAGGRESSIVE",
+      "GHOST2_UNAGGRESSIVE",
+      "GHOST3_UNAGGRESSIVE",
+      "SOS_DEATH_GHOST",
+      "KOUREND_GHOST1",
+      "GHOST4_UNAGGRESSIVE",
+      "SOS_DEATH_GHOST_B",
+      "KOUREND_GHOST2",
+      "GHOST5_UNAGGRESSIVE",
+      "SOS_DEATH_GHOST_C",
+      "GHOST6_UNAGGRESSIVE",
+      "SOS_DEATH_GHOST_D",
+      "GHOST7_UNAGGRESSIVE",
+      "SOS_DEATH_GHOST2",
+      "SOS_DEATH_GHOST2_B",
+      "SOS_DEATH_GHOST2_C",
+      "SOS_DEATH_GHOST2_D",
+      "PRIF_GHOST_VISIBLE",
+      "HOUSE_GHOST3",
+      "HOUSE_GHOST4",
+      "UNATTACKABLE_GHOST",
+      "ZAMORAKGHOST",
+      "HOUSE_GHOST5",
+      "SECRET_GHOST_MAGE",
+      "SECRET_GHOST_EXPLORER",
+      "SECRET_GHOST_MESSENGER",
+      "SECRET_GHOST_SPY",
+      "SECRET_GHOST_SWORDSMAN",
+      "WILD_CAVE_INACTIVE_GHOST_SMALL_ROAM",
+      "WILD_CAVE_INACTIVE_GHOST_SMALL_ROAM2"
     ]
   },
   {
@@ -18495,15 +18495,15 @@
     "duration": 1,
     "range": 10,
     "npcIds": [
-      10544,
-      10545,
-      10534,
-      10535,
-      10536,
-      10537,
-      10524,
-      10525,
-      10526
+      "SW_TOWER_GHOST1",
+      "SW_TOWER_GHOST2",
+      "SOUL_WARS_SOUL_WEAK_1",
+      "SOUL_WARS_SOUL_WEAK_2",
+      "SOUL_WARS_SOUL_STRONG_1",
+      "SOUL_WARS_SOUL_STRONG_2",
+      "SOUL_WARS_TUT_SOUL_WEAK_2",
+      "SOUL_WARS_TUT_SOUL_STRONG_1",
+      "SOUL_WARS_TUT_SOUL_STRONG_2"
     ]
   },
   {
@@ -18521,24 +18521,24 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      3493,
-      3494,
-      8134,
-      2985,
-      2986,
-      6698,
-      2987,
-      2988,
-      2998,
-      2999,
-      3000,
-      3001,
-      3002,
-      3003,
-      3004,
-      3005,
-      3006,
-      3007
+      "MAKINGHISTORY_DROALAK_FADE_NPC",
+      "MAKINGHISTORY_DROALAK",
+      "SARAH_CORVO",
+      "AHOY_VELORINA",
+      "AHOY_NECROVARUS",
+      "DEADMAN_GUARD_PORTPHAS_VIS",
+      "AHOY_GHOST_PROTESTOR",
+      "AHOY_DISCIPLE",
+      "AHOY_GHOST_VILLAGER",
+      "AHOY_TORTURED_SOUL",
+      "AHOY_GHOST_SHOPKEEPER",
+      "AHOY_GHOST_INNKEEPER",
+      "AHOY_GHOST_FARMER",
+      "AHOY_GHOST_BANKER",
+      "AHOY_GHOST_SAILOR",
+      "AHOY_GHOST_CAPTAIN_1",
+      "AHOY_GHOST_CAPTAIN_2",
+      "AHOY_GHOST_GUARD"
     ]
   },
   {
@@ -18556,12 +18556,12 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      2,
-      3,
-      4,
-      5,
-      6,
-      7
+      "SLAYER_ABBERANT_SPECTRE_1",
+      "SLAYER_ABBERANT_SPECTRE_2",
+      "SLAYER_ABBERANT_SPECTRE_3",
+      "SLAYER_ABBERANT_SPECTRE_4",
+      "SLAYER_ABERRANTSPECTRE_1_STRONGHOLDCAVE",
+      "SLAYER_ABERRANTSPECTRE_2_STRONGHOLDCAVE"
     ]
   },
   {
@@ -18579,7 +18579,7 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      7279
+      "KOUREND_SPECTRE"
     ]
   },
   {
@@ -18597,7 +18597,7 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      7402
+      "SUPERIOR_ABBERANT_SPECTRE"
     ]
   },
   {
@@ -18615,7 +18615,7 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      7403
+      "SUPERIOR_KOUREND_SPECTRE"
     ]
   },
   {
@@ -18633,12 +18633,12 @@
     "duration": 1,
     "range": 0.7,
     "npcIds": [
-      1672,
-      1673,
-      1674,
-      1675,
-      1676,
-      1677
+      "BARROWS_AHRIM",
+      "BARROWS_DHAROK",
+      "BARROWS_GUTHAN",
+      "BARROWS_KARIL",
+      "BARROWS_TORAG",
+      "BARROWS_VERAC"
     ]
   },
   {
@@ -18656,16 +18656,16 @@
     "duration": 3200,
     "range": 10,
     "npcIds": [
-      8784,
-      8775,
-      8776,
-      8777,
-      8778,
-      8779,
-      8780,
-      8781,
-      8782,
-      8783
+      "SOTE_SEREN_IORWERTH",
+      "SOTE_SEREN_VIS",
+      "SOTE_SEREN_MEMORY",
+      "SOTE_SEREN_ITHELL",
+      "SOTE_SEREN_CADARN",
+      "SOTE_SEREN_CRWYS",
+      "SOTE_SEREN_AMLODD",
+      "SOTE_SEREN_MEILYR",
+      "SOTE_SEREN_HEFIN",
+      "SOTE_SEREN_TRAHAEARN"
     ]
   },
   {
@@ -18683,9 +18683,9 @@
     "duration": 3200,
     "range": 10,
     "npcIds": [
-      8917,
-      8919,
-      8920
+      "DARK_SEREN",
+      "DARK_SEREN_CUTSCENE",
+      "DARK_SEREN_CUTSCENE_TRAPPED"
     ]
   },
   {
@@ -18703,10 +18703,10 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9024,
-      9021,
-      9022,
-      9023
+      "CRYSTAL_HUNLLEF_DEATH",
+      "CRYSTAL_HUNLLEF_MELEE",
+      "CRYSTAL_HUNLLEF_RANGED",
+      "CRYSTAL_HUNLLEF_MAGIC"
     ]
   },
   {
@@ -18724,7 +18724,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9028
+      "CRYSTAL_BAT"
     ]
   },
   {
@@ -18742,7 +18742,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9026
+      "CRYSTAL_RAT"
     ]
   },
   {
@@ -18760,7 +18760,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9027
+      "CRYSTAL_SPIDER"
     ]
   },
   {
@@ -18778,7 +18778,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9033
+      "CRYSTAL_DRAGON"
     ]
   },
   {
@@ -18796,7 +18796,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9032
+      "CRYSTAL_BEAR"
     ]
   },
   {
@@ -18814,7 +18814,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9034
+      "CRYSTAL_DARK_BEAST"
     ]
   },
   {
@@ -18832,7 +18832,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9030
+      "CRYSTAL_SCORPION"
     ]
   },
   {
@@ -18850,7 +18850,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9029
+      "CRYSTAL_UNICORN"
     ]
   },
   {
@@ -18868,7 +18868,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9031
+      "CRYSTAL_WOLF"
     ]
   },
   {
@@ -18886,10 +18886,10 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9035,
-      9036,
-      9037,
-      9038
+      "CRYSTAL_HUNLLEF_MELEE_HM",
+      "CRYSTAL_HUNLLEF_RANGED_HM",
+      "CRYSTAL_HUNLLEF_MAGIC_HM",
+      "CRYSTAL_HUNLLEF_DEATH_HM"
     ]
   },
   {
@@ -18907,7 +18907,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9042
+      "CRYSTAL_BAT_HM"
     ]
   },
   {
@@ -18925,7 +18925,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9040
+      "CRYSTAL_RAT_HM"
     ]
   },
   {
@@ -18943,7 +18943,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9041
+      "CRYSTAL_SPIDER_HM"
     ]
   },
   {
@@ -18961,7 +18961,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9047
+      "CRYSTAL_DRAGON_HM"
     ]
   },
   {
@@ -18979,7 +18979,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9046
+      "CRYSTAL_BEAR_HM"
     ]
   },
   {
@@ -18997,7 +18997,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9048
+      "CRYSTAL_DARK_BEAST_HM"
     ]
   },
   {
@@ -19015,7 +19015,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9044
+      "CRYSTAL_SCORPION_HM"
     ]
   },
   {
@@ -19033,7 +19033,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9043
+      "CRYSTAL_UNICORN_HM"
     ]
   },
   {
@@ -19051,28 +19051,76 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9045
+      "CRYSTAL_WOLF_HM"
     ]
   },
   {
     "description": "CERBERUS",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 800,
+    "offset": [ -7, 110, -30 ],
+    "radius": 850,
     "strength": 30,
     "color": [
       255,
-      208,
+      130,
       54
     ],
     "type": "PULSE",
     "duration": 5000,
     "range": 20,
     "npcIds": [
-      5862,
-      5863,
-      5866
+      "CERBERUS_ATTACKING",
+      "CERBERUS_SITTING",
+      "CERBERUS_RESETTING"
     ]
+  },
+  {
+    "description": "CERBERUS_2",
+    "offset": [ -7, 75, -30 ],
+    "radius": 250,
+    "strength": 40,
+    "color": [
+      255,
+      50,
+      54
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 20,
+    "npcIds": [
+      "CERBERUS_ATTACKING",
+      "CERBERUS_SITTING",
+      "CERBERUS_RESETTING"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_NORTH_LAVA_FLOW_LEFT",
+    "offset": [ 1250, 0, 2200 ],
+    "radius": 2000,
+    "strength": 20,
+    "color": [
+      255,
+      150,
+      54
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [ "HELLHOUND_IRON_GATE_ACTIVE" ]
+  },
+  {
+    "description": "CERBERUS_LAIR_NORTH_LAVA_FLOW_RIGHT",
+    "offset": [ -1250, 0, 2300 ],
+    "radius": 2000,
+    "strength": 20,
+    "color": [
+      255,
+      150,
+      54
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "objectIds": [ "HELLHOUND_IRON_GATE_ACTIVE" ]
   },
   {
     "description": "TEMPOROSS",
@@ -19089,7 +19137,7 @@
     "duration": 3200,
     "range": 20,
     "npcIds": [
-      10572
+      "TEMPOROSS_BOSS_READY"
     ]
   },
   {
@@ -19107,8 +19155,8 @@
     "duration": 3200,
     "range": 20,
     "npcIds": [
-      10573,
-      10574
+      "TEMPOROSS_BOSS_UNENGAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL"
     ]
   },
   {
@@ -19126,7 +19174,7 @@
     "duration": 3200,
     "range": 20,
     "npcIds": [
-      10571
+      "TEMPOROSS_P2_FISHINGSPOT"
     ]
   },
   {
@@ -19144,7 +19192,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9672
+      "HALLOWED_PROJECTILE_NPC"
     ]
   },
   {
@@ -19162,7 +19210,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9673
+      "HALLOWED_PROJECTILE_NPC_T2"
     ]
   },
   {
@@ -19180,7 +19228,7 @@
     "duration": 0,
     "range": 0,
     "npcIds": [
-      9674
+      "HALLOWED_PROJECTILE_NPC_T3"
     ]
   },
   {
@@ -19198,7 +19246,7 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      8344
+      "TOB_NYLOCAS_INCOMING_MAGIC"
     ]
   },
   {
@@ -19216,8 +19264,8 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      8347,
-      8383
+      "TOB_NYLOCAS_BIG_INCOMING_MAGIC",
+      "VERZIK_NYLOCAS_MAGIC"
     ]
   },
   {
@@ -19235,7 +19283,7 @@
     "duration": 0,
     "range": 40,
     "npcIds": [
-      8356
+      "NYLOCAS_BOSS_MAGIC"
     ]
   },
   {
@@ -19253,30 +19301,30 @@
     "duration": 4500,
     "range": 10,
     "npcIds": [
-      5856,
-      3204,
-      7332,
-      7748,
-      5736,
-      1161,
-      5835,
-      5836,
-      2829,
-      5837,
-      5838,
-      5839,
-      1840,
-      1841,
-      1842,
-      404,
-      2868,
-      3092,
-      2869,
-      1847,
-      1848,
-      1849,
-      1850,
-      1851
+      "FAIRY_CHEF",
+      "FAIRY_LADDER_ATTENDANT",
+      "FAIRY2_REPAIR_1OP",
+      "FAIRY_CHILD",
+      "II_FAIRY",
+      "FAIRY_QUEEN",
+      "FAIRY_COORDINATOR",
+      "FAIRY_NUFF",
+      "FAIRY",
+      "FAIRY_GODFATHER",
+      "FAIRY_HENCHMAN1",
+      "FAIRY_HENCHMAN2",
+      "FAIRY_GODFATHER2",
+      "FAIRY_NUFF2",
+      "FAIRY_QUEEN2",
+      "SLAYER_MASTER_4",
+      "GENERALSHOPKEEPER8",
+      "FAIRY_BANKER",
+      "GENERALASSISTANT8",
+      "FAIRY2_ADVISOR",
+      "FAIRY2_BANDAGES",
+      "FAIRY2_BROKEN_LEG",
+      "FAIRY2_SLING_ARM",
+      "FAIRY2_NO_ARM"
     ]
   },
   {
@@ -19294,9 +19342,9 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      10880,
-      10878,
-      10879
+      "ARCEUUS_THRALL_GHOST_GREATER",
+      "ARCEUUS_THRALL_GHOST_LESSER",
+      "ARCEUUS_THRALL_GHOST_SUPERIOR"
     ]
   },
   {
@@ -19315,7 +19363,7 @@
     "fadeInDuration": 100,
     "range": 5,
     "projectileIds": [
-      1907
+      "THRALL_MAGIC_TRAVEL"
     ]
   },
   {
@@ -19333,9 +19381,9 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      10881,
-      10882,
-      10883
+      "ARCEUUS_THRALL_SKELETON_LESSER",
+      "ARCEUUS_THRALL_SKELETON_SUPERIOR",
+      "ARCEUUS_THRALL_SKELETON_GREATER"
     ]
   },
   {
@@ -19353,7 +19401,7 @@
     "fadeOutDuration": 200,
     "range": 5,
     "projectileIds": [
-      1906
+      "THRALL_RANGED_TRAVEL"
     ]
   },
   {
@@ -19371,9 +19419,9 @@
     "duration": 0,
     "range": 10,
     "npcIds": [
-      10884,
-      10885,
-      10886
+      "ARCEUUS_THRALL_ZOMBIE_LESSER",
+      "ARCEUUS_THRALL_ZOMBIE_SUPERIOR",
+      "ARCEUUS_THRALL_ZOMBIE_GREATER"
     ]
   },
   {
@@ -19391,7 +19439,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      7568
+      "RAIDS_VASANISTIRIO_CRYSTAL"
     ]
   },
   {
@@ -19409,8 +19457,8 @@
     "duration": 2400,
     "range": 30,
     "npcIds": [
-      7566,
-      7567
+      "RAIDS_VASANISTIRIO_WALKING",
+      "RAIDS_VASANISTIRIO_HEALING"
     ]
   },
   {
@@ -19428,10 +19476,10 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      7540,
-      7541,
-      7542,
-      7545
+      "RAIDS_TEKTON_WAITING",
+      "RAIDS_TEKTON_WALKING_STANDARD",
+      "RAIDS_TEKTON_FIGHTING_STANDARD",
+      "RAIDS_TEKTON_HAMMERING"
     ]
   },
   {
@@ -19449,8 +19497,8 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      7543,
-      7544
+      "RAIDS_TEKTON_WALKING_ENRAGED",
+      "RAIDS_TEKTON_FIGHTING_ENRAGED"
     ]
   },
   {
@@ -19468,11 +19516,11 @@
     "duration": 2400,
     "range": 0,
     "npcIds": [
-      7525,
-      7526,
-      7527,
-      7528,
-      7529
+      "RAIDS_VANGUARD_DORMANT",
+      "RAIDS_VANGUARD_WALKING",
+      "RAIDS_VANGUARD_MELEE",
+      "RAIDS_VANGUARD_RANGED",
+      "RAIDS_VANGUARD_MAGIC"
     ]
   },
   {
@@ -19490,7 +19538,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      7578
+      "RAIDS_LASERCRABS_CRAB_GREEN"
     ]
   },
   {
@@ -19508,7 +19556,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      7577
+      "RAIDS_LASERCRABS_CRAB_RED"
     ]
   },
   {
@@ -19526,7 +19574,7 @@
     "duration": 2400,
     "range": 20,
     "npcIds": [
-      7579
+      "RAIDS_LASERCRABS_CRAB_BLUE"
     ]
   },
   {
@@ -19546,10 +19594,10 @@
     "duration": 2300,
     "range": 8,
     "npcIds": [
-      9461,
-      9462,
-      9463,
-      9464
+      "NIGHTMARE_ENTRY_OPEN",
+      "NIGHTMARE_ENTRY_CLOSED_01",
+      "NIGHTMARE_ENTRY_CLOSED_02",
+      "NIGHTMARE_ENTRY_CLOSED_03"
     ]
   },
   {
@@ -19565,7 +19613,7 @@
     "type": "PULSE",
     "duration": 2950,
     "range": 10,
-    "objectIds": [ 29706 ]
+    "objectIds": [ "NIGHTMARE_CHALLENGE_PORTAL_ENABLED" ]
   },
   {
     "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight South",
@@ -19578,7 +19626,7 @@
       166
     ],
     "type": "STATIC",
-    "objectIds": [ 29706 ]
+    "objectIds": [ "NIGHTMARE_CHALLENGE_PORTAL_ENABLED" ]
   },
   {
     "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight North",
@@ -19591,7 +19639,7 @@
       166
     ],
     "type": "STATIC",
-    "objectIds": [ 29706 ]
+    "objectIds": [ "NIGHTMARE_CHALLENGE_PORTAL_ENABLED" ]
   },
   {
     "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight East",
@@ -19604,7 +19652,7 @@
       166
     ],
     "type": "STATIC",
-    "objectIds": [ 29706 ]
+    "objectIds": [ "NIGHTMARE_CHALLENGE_PORTAL_ENABLED" ]
   },
   {
     "description": "Nightmare of Ashihama - Pool of Nightmares - Highlight West",
@@ -19617,7 +19665,7 @@
       166
     ],
     "type": "STATIC",
-    "objectIds": [ 29706 ]
+    "objectIds": [ "NIGHTMARE_CHALLENGE_PORTAL_ENABLED" ]
   },
   {
     "description": "Nightmare of Ashihama - Energy Barrier 1",
@@ -19633,8 +19681,8 @@
     "duration": 2000,
     "range": 7,
     "objectIds": [
-      37730,
-      37731
+      "NIGHTMARE_BARRIER_ESCAPE_INITIAL",
+      "NIGHTMARE_BARRIER_ESCAPE_FIGHT"
     ]
   },
   {
@@ -19651,8 +19699,8 @@
     "duration": 750,
     "range": 7,
     "objectIds": [
-      37730,
-      37731
+      "NIGHTMARE_BARRIER_ESCAPE_INITIAL",
+      "NIGHTMARE_BARRIER_ESCAPE_FIGHT"
     ]
   },
   {
@@ -19670,7 +19718,7 @@
     "type": "PULSE",
     "duration": 1750,
     "range": 20,
-    "projectileIds": [ 1764 ]
+    "projectileIds": [ "NIGHTMARE_MAGIC_TRAVEL" ]
   },
   {
     "description": "Nightmare of Ashihama - Charged Totem",
@@ -19688,7 +19736,7 @@
     "type": "PULSE",
     "duration": 1750,
     "range": 7,
-    "npcIds": [ 9445, 9442, 9439, 9436 ]
+    "npcIds": [ "NIGHTMARE_TOTEM_4_CHARGED", "NIGHTMARE_TOTEM_3_CHARGED", "NIGHTMARE_TOTEM_2_CHARGED", "NIGHTMARE_TOTEM_1_CHARGED" ]
   },
   {
     "description": "FIRE_GIANT",
@@ -19705,18 +19753,18 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      2080,
-      2081,
-      2082,
-      2083,
-      7251,
-      2084,
-      7252,
-      2075,
-      2076,
-      2077,
-      2078,
-      2079
+      "FIREGIANT3",
+      "FIREGIANT_STRONGHOLDCAVE_1",
+      "FIREGIANT_STRONGHOLDCAVE_2",
+      "FIREGIANT_STRONGHOLDCAVE_3",
+      "KOUREND_FIREGIANT1",
+      "FIREGIANT_STRONGHOLDCAVE_4",
+      "KOUREND_FIREGIANT2",
+      "FIREGIANT_BIG",
+      "FIREGIANT_BIG2",
+      "FIREGIANT_BIG3",
+      "FIREGIANT",
+      "FIREGIANT2"
     ]
   },
   {
@@ -19734,10 +19782,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      1747,
-      1751,
-      1739,
-      1743
+      "PEST_PORTAL_1_ACTIVE_BT1",
+      "PEST_PORTAL_SHIELD_1_ACTIVE_BT1",
+      "PEST_PORTAL_1_ACTIVE",
+      "PEST_PORTAL_SHIELD_1_ACTIVE"
     ]
   },
   {
@@ -19755,10 +19803,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      1744,
-      1748,
-      1752,
-      1740
+      "PEST_PORTAL_SHIELD_2_ACTIVE",
+      "PEST_PORTAL_2_ACTIVE_BT1",
+      "PEST_PORTAL_SHIELD_2_ACTIVE_BT1",
+      "PEST_PORTAL_2_ACTIVE"
     ]
   },
   {
@@ -19776,10 +19824,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      1745,
-      1749,
-      1753,
-      1741
+      "PEST_PORTAL_SHIELD_3_ACTIVE",
+      "PEST_PORTAL_3_ACTIVE_BT1",
+      "PEST_PORTAL_SHIELD_3_ACTIVE_BT1",
+      "PEST_PORTAL_3_ACTIVE"
     ]
   },
   {
@@ -19797,10 +19845,10 @@
     "duration": 2000,
     "range": 25,
     "npcIds": [
-      1746,
-      1750,
-      1754,
-      1742
+      "PEST_PORTAL_SHIELD_4_ACTIVE",
+      "PEST_PORTAL_4_ACTIVE_BT1",
+      "PEST_PORTAL_SHIELD_4_ACTIVE_BT1",
+      "PEST_PORTAL_4_ACTIVE"
     ]
   },
   {
@@ -19818,10 +19866,10 @@
     "duration": 1500,
     "range": 10,
     "npcIds": [
-      2950,
-      2951,
-      2952,
-      2953
+      "PEST_VOIDKNIGHT_CONTROL1",
+      "PEST_VOIDKNIGHT_CONTROL2",
+      "PEST_VOIDKNIGHT_CONTROL3",
+      "PEST_VOIDKNIGHT_CONTROL4"
     ]
   },
   {
@@ -19839,7 +19887,7 @@
     "duration": 0,
     "range": 20,
     "projectileIds": [
-      647
+      "TORCHER_FIREBALL_TRAVEL_SPOTANIM"
     ]
   },
   {
@@ -19857,7 +19905,7 @@
     "duration": 0,
     "range": 20,
     "graphicsObjectIds": [
-      654
+      "SHIFTER_TELEPORT_SPOTANIM"
     ]
   },
   {
@@ -19875,7 +19923,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7934
+      "WILD_CAVE_CYCLOPS"
     ]
   },
   {
@@ -19893,7 +19941,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7881
+      "WILD_CAVE_IMP"
     ]
   },
   {
@@ -19911,7 +19959,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7936
+      "WILD_CAVE_DEMON"
     ]
   },
   {
@@ -19929,7 +19977,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7940
+      "WILD_CAVE_DRAGON"
     ]
   },
   {
@@ -19947,7 +19995,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7931
+      "WILD_CAVE_GOBLIN"
     ]
   },
   {
@@ -19965,7 +20013,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7938
+      "WILD_CAVE_DARKBEAST"
     ]
   },
   {
@@ -19983,7 +20031,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7935
+      "WILD_CAVE_HELLHOUND"
     ]
   },
   {
@@ -20001,7 +20049,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7933
+      "WILD_CAVE_HOBGOBLIN"
     ]
   },
   {
@@ -20019,7 +20067,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7939
+      "WILD_CAVE_KNIGHT"
     ]
   },
   {
@@ -20037,7 +20085,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7937
+      "WILD_CAVE_ORK"
     ]
   },
   {
@@ -20055,7 +20103,7 @@
     "duration": 3400,
     "range": 10,
     "npcIds": [
-      7932
+      "WILD_CAVE_PYREFIEND"
     ]
   },
   {
@@ -20073,26 +20121,26 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      10178,
-      25122,
-      10179,
-      25123,
-      6404,
-      6406,
-      6408,
-      6410,
-      6412,
-      20716,
-      6413,
-      6414,
-      6415,
-      6416,
-      6896,
-      724,
-      5494,
-      11606,
-      15158,
-      6203
+      "DAGANNOTH_STANDING_TORCH",
+      "DRAGON_SLAYER_QIP_CANDLE",
+      "DAGANNOTH_STANDING_TORCH_LIT",
+      "DRAGON_SLAYER_QIP_CANDLE2",
+      "_4D_STANDING_TORCH",
+      "_4D_STANDING_TORCH1_UNLIT",
+      "_4D_STANDING_TORCH2_UNLIT",
+      "_4D_STANDING_TORCH3_UNLIT",
+      "_4D_STANDING_TORCH4_UNLIT",
+      "BARROWS_TORCH",
+      "_4D_STANDING_TORCH1_LIT",
+      "_4D_STANDING_TORCH2_LIT",
+      "_4D_STANDING_TORCH3_LIT",
+      "_4D_STANDING_TORCH4_LIT",
+      "ZOGRE_STANDING_TORCH",
+      "STANDING_TORCH",
+      "FAVOUR_STANDING_TORCH",
+      "FAI_BARBARIAN_TORCH",
+      "ROYAL_TORCH",
+      "DWARF_KELDAGRIM_LAMP_STAND"
     ]
   },
   {
@@ -20110,7 +20158,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      10658
+      "SNAKEBOSS_STANDING_TORCH"
     ]
   },
   {
@@ -20128,16 +20176,16 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      38512,
-      38513,
-      38514,
-      38562,
-      17237,
-      3478,
-      32118,
-      5881,
-      38555,
-      33454
+      "HS_TORCH_PILLAR_01",
+      "HS_TORCH_PILLAR_02",
+      "HS_TORCH_PILLAR_03",
+      "HS_NPT1_TORCH_PILLAR",
+      "EYEGLO_TORCH",
+      "CANDLE_STAND",
+      "DS2_LITHKREN_DUNGEON_TORCH_SMALL",
+      "MDAUGHTER_TORCH",
+      "HS_LOBBY_TORCH_PILLAR",
+      "_1V1ARENA_DUNGEON_BRAZIER"
     ],
     "visibleFromOtherPlanes": true
   },
@@ -20157,7 +20205,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      51759
+      "HG_TORCH_LANDING01"
     ],
     "visibleFromOtherPlanes": true
   },
@@ -20176,7 +20224,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      25156
+      "DRAGON_SLAYER_QIP_FIRE_1X1"
     ]
   },
   {
@@ -20194,7 +20242,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      37826
+      "SANCTUARY_BRAZIER"
     ]
   },
   {
@@ -20212,7 +20260,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      34856
+      "HOSDUN_TORCH"
     ]
   },
   {
@@ -20230,7 +20278,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6202
+      "DWARF_KELDAGRIM_LAMP"
     ]
   },
   {
@@ -20248,7 +20296,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      198
+      "CAVE_TORCH"
     ]
   },
   {
@@ -20266,26 +20314,26 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6537,
-      18891,
-      12300,
-      31628,
-      12238,
-      43122,
-      43123,
-      43124,
-      43125,
-      4694,
-      43126,
-      43127,
-      5208,
-      10297,
-      15161,
-      25659,
-      5247,
-      7376,
-      5247,
-      15016
+      "FOUR_DIAMONDS_TOMB_WALL_TORCH",
+      "TOURTRAP_QIP_MINE_WALL_LAMP_SINGLE",
+      "_100_DUNGEON_SKULLTORCH",
+      "DS2_GUILD_WALL_SCONCE",
+      "_100_DAVE_CANDLE_WALL",
+      "LOTG_CRYPT_PRIEST_GRAVE1",
+      "LOTG_CRYPT_PRIEST_GRAVE2",
+      "LOTG_CRYPT_PRIEST_GRAVE3",
+      "LOTG_CRYPT_PRIEST_GRAVE4",
+      "MISC_TORCHES",
+      "LOTG_CRYPT_PRIEST_GRAVE5",
+      "LOTG_CRYPT_MODEST_GRAVE",
+      "FENK_TORCH",
+      "VC_CANDLE",
+      "ROYAL_CAVEWALL_TORCH_FLAMES",
+      "KR_UNDERGROUND_JAIL_TOURCH",
+      "FAVOUR_TORCH",
+      "FALADOR_TORCH",
+      "FAVOUR_TORCH",
+      "LUNAR_MINE_TORCH_FLAMES"
     ]
   },
   {
@@ -20302,17 +20350,17 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      196,
-      197,
-      202,
-      203,
-      206,
-      11474,
-      5746,
-      5787,
-      24414,
-      2175,
-      30130
+      "TORCH",
+      "TORCH_GRUBBY",
+      "CANDLES",
+      "GOLDCANDLES",
+      "SKULLTORCH",
+      "DRAYNOR_CANDLE_WALL",
+      "OLDROOFEDGE_HL_GREYSLATE",
+      "ROOFEDGE_DOUBLELENGTH_RR_OFFSET",
+      "VM_BASEMENT_WALL_FIRST_FLOOR_LAMP",
+      "SLAYER_TORCH",
+      "MISTMYST_CANDLE_LIT"
     ]
   },
   {
@@ -20329,7 +20377,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      7432
+      "FAI_VARROCK_POSH_CANDLESTICK"
     ]
   },
   {
@@ -20346,7 +20394,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      4501
+      "FAI_VARROCK_OILLAMP"
     ]
   },
   {
@@ -20364,7 +20412,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      38027
+      "MYQ5_TORCH"
     ]
   },
   {
@@ -20382,7 +20430,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      24173
+      "FAI_FALADOR_HOUSE_TORCH"
     ]
   },
   {
@@ -20400,8 +20448,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      9746,
-      18355
+      "MOURNING_CAVEWALL_CANDLE_FACE1",
+      "SLUG2_DUNGEON_WALL"
     ]
   },
   {
@@ -20418,8 +20466,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      11472,
-      12301
+      "DRAYNOR_CANDLES_1",
+      "_100_DAVE_CANDLES_1"
     ]
   },
   {
@@ -20436,7 +20484,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      12302
+      "_100_DAVE_CANDLES_2"
     ],
     "offset": [ 3, 0, 40 ]
   },
@@ -20455,10 +20503,10 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      4691,
-      10307,
-      16901,
-      23577
+      "MISC_LANTERN",
+      "VC_LANTERN_DECOR",
+      "QUEST_LUNAR_HANGING_LANTERN",
+      "ATJUN_MINE_WALL_LAMP"
     ]
   },
   {
@@ -20476,7 +20524,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      2492
+      "FAI_VARROCK_GYPSY_LANTERN"
     ]
   },
   {
@@ -20494,7 +20542,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      2458
+      "FAI_VARROCK_GYPSY_CANDEL"
     ]
   },
   {
@@ -20512,7 +20560,7 @@
     "duration": 10,
     "range": 30,
     "objectIds": [
-      2459
+      "FAI_VARROCK_CRYSTALBALLTABLE"
     ]
   },
   {
@@ -20530,7 +20578,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      11468
+      "DRAYNOR_OUTSIDE_LAMP"
     ]
   },
   {
@@ -20548,10 +20596,10 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      42132,
-      42133,
-      42134,
-      42135
+      "SHAYZIEN_LANTERN01_LIT_STATIC",
+      "SHAYZIEN_LANTERN01_LIT_SWAYR",
+      "SHAYZIEN_LANTERN01_LIT_SWAYL",
+      "SHAYZIEN_LANTERN01_LIT_IDLE01"
     ]
   },
   {
@@ -20569,7 +20617,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      4650
+      "BOARDGAMES_FIREPLACE"
     ]
   },
   {
@@ -20587,8 +20635,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      5608,
-      4267
+      "MISC_SPITROAST",
+      "VIKING_PIG_ROAST"
     ]
   },
   {
@@ -20606,8 +20654,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26180,
-      30932
+      "FIREPLACECOOKINGPOT",
+      "FOSSIL_RANGE_BUILT"
     ]
   },
   {
@@ -20625,45 +20673,45 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      732,
-      5249,
-      30021,
-      23046,
-      9735,
-      23175,
-      35912,
-      26185,
-      35913,
-      26577,
-      26578,
-      43475,
-      13337,
-      14169,
-      5981,
-      29085,
-      25374,
-      35810,
-      35811,
-      10660,
-      4265,
-      19881,
-      32297,
-      4266,
-      19884,
-      15156,
-      21620,
-      29300,
-      31798,
-      28791,
-      3769,
-      13881,
-      25465,
-      34682,
-      5499,
-      12796,
-      3775,
-      49927,
-      44021
+      "LAVAFIRE",
+      "ROVING_FIRE",
+      "RAIDS_TEKTON_FIRE",
+      "DORGESH_FROG_SPIT_FIRE",
+      "NEWBIEFIRE",
+      "OLAF2_CAVE_OLD_CAMP_FIRE",
+      "SOTE_SCENE_FIRE",
+      "FIRE",
+      "SOTE_SCENE_FIRE_LARGE",
+      "EMBERS_WITH_PANS",
+      "EMBERS",
+      "FIRE_COOK",
+      "POH_OUBLIETTE_FLOOR_FIRE",
+      "OLAF_FIRE",
+      "DWARF_LIGHTS",
+      "BR_CAMPFIRE_FIRE",
+      "BRUT_CAMPFIRE_FIRE",
+      "SOTE_FIRE",
+      "SOTE_FIRE_2X1",
+      "SNAKEBOSS_VILLAGE_FIRE",
+      "VIKING_LONGHALL_FIRE",
+      "EAGLEPEAK_CAMPFIRE_TIDY",
+      "DS2_VIKING_SHIP_FIRE",
+      "VIKING_HOUSE_FIRE",
+      "EAGLEPEAK_CAMPFIRE_MESSY",
+      "ROYAL_VILLAGE_FIRE",
+      "FRIS_FIRE",
+      "WINT_BONFIRE",
+      "DS2_OGRE_CORSAIR_FIRE",
+      "MM2_MONKEY_FIRE",
+      "TROLL_STRONGHOLD_CAMP_FIRE",
+      "SOULBANE_FIREWALL",
+      "QIP_OBS_CAMPFIRE",
+      "OSB6_DISPLAY_MYARM_FIRE",
+      "FAVOUR_CAMPFIRE",
+      "BURGH_VILLAGE_FIRE",
+      "TROLL_EADGAR_COOKING_POT",
+      "FORESTRY_FIRE",
+      "BCS_MAISA_CAMP_FIRE"
     ]
   },
   {
@@ -20681,9 +20729,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      25155,
-      35812,
-      40728
+      "DRAGON_SLAYER_QIP_FIRE_2X2",
+      "SOTE_FIRE_LARGE",
+      "SW_CAMP_FIRE"
     ]
   },
   {
@@ -20701,7 +20749,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      37996
+      "MYQ5_DAMIEN_FIRE_SMALL"
     ]
   },
   {
@@ -20719,8 +20767,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      37994,
-      37995
+      "MYQ5_DAMIEN_FIRE_NOOP",
+      "MYQ5_DAMIEN_FIRE"
     ]
   },
   {
@@ -20738,34 +20786,34 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6785,
-      26179,
-      40775,
-      8712,
-      10824,
-      40777,
-      4618,
-      10058,
-      6093,
-      6094,
-      6095,
-      6096,
-      9439,
-      9440,
-      9441,
-      21795,
-      17640,
-      17641,
-      17642,
-      17643,
-      5165,
-      17325,
-      18039,
-      30136,
-      30137,
-      30138,
-      6781,
-      6783
+      "POH_FIREPLACE_3_LIT",
+      "GRANDFIREPLACE_OLDBRICK",
+      "XMAS20_POH_FIREPLACE_2_LIT",
+      "FARM_FIREPLACE",
+      "DRAYNOR_FIREPLACE",
+      "XMAS20_POH_FIREPLACE_3_LIT",
+      "BOARDGAMES_FIREPLACE_SMALL",
+      "FAI_VARROCK_SHANTY_FIREPLACE",
+      "DWARF_KELDAGRIM_KEBAB_FIREPLACE",
+      "DWARF_KELDAGRIM_POOR_FIREPLACE",
+      "DWARF_KELDAGRIM_FIREPLACE",
+      "DWARF_KELDAGRIM_BIG_FIREPLACE",
+      "TWOCATS_FIREPLACE_LIT",
+      "TWOCATS_FIREPLACE_GONE_OUT",
+      "TWOCATS_FIREPLACE_GOT_WOOD",
+      "SORCERESS_FIREPLACE",
+      "MYQ3_GHETTO_FIREPLACE_BOTTOM",
+      "MYQ3_GHETTO_FIREPLACE_MIDDLE",
+      "MYQ3_GHETTO_FIREPLACE_TOP",
+      "MYQ3_GHETTO_FIREPLACE_TOP_NOOFFSET",
+      "FENK_FIREPLACE",
+      "QIP_DIGSITE_FIREPLACE",
+      "MYQ3_FIREPLACE_LOOSE_TILE",
+      "MISTMYST_FIREPLACE_UNLIT",
+      "MISTMYST_FIREPLACE_REVEALED",
+      "MISTMYST_FIREPLACE_LIT",
+      "POH_FIREPLACE_1_LIT",
+      "POH_FIREPLACE_2_LIT"
     ]
   },
   {
@@ -20782,7 +20830,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      24970
+      "GRANDFIREPLACE"
     ]
   },
   {
@@ -20799,7 +20847,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      7185
+      "FAI_VARROCK_FIREPLACE"
     ]
   },
   {
@@ -20816,7 +20864,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      24969
+      "FIREPLACE"
     ]
   },
   {
@@ -20834,7 +20882,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      19129
+      "ZEP_BASKET"
     ]
   },
   {
@@ -20852,7 +20900,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      35806
+      "SOTE_BARRICADE_BURNING"
     ]
   },
   {
@@ -20870,7 +20918,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      34345
+      "BRIMSTONE_STONE_TORCH"
     ]
   },
   {
@@ -20888,7 +20936,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      34346
+      "BRIMSTONE_CRUDE_TORCH"
     ]
   },
   {
@@ -20906,8 +20954,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      20001,
-      49932
+      "TRAIL_PURPLE_FIRE",
+      "FORESTRY_FIRE_PURPLE"
     ]
   },
   {
@@ -20925,8 +20973,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26186,
-      49928
+      "RED_FIRE",
+      "FORESTRY_FIRE_RED"
     ]
   },
   {
@@ -20944,8 +20992,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26576,
-      49930
+      "BLUE_FIRE",
+      "FORESTRY_FIRE_BLUE"
     ]
   },
   {
@@ -20963,8 +21011,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      20000,
-      49931
+      "TRAIL_WHITE_FIRE",
+      "FORESTRY_FIRE_WHITE"
     ]
   },
   {
@@ -20982,8 +21030,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26575,
-      49929
+      "GREEN_FIRE",
+      "FORESTRY_FIRE_GREEN"
     ]
   },
   {
@@ -21001,10 +21049,10 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      18967,
-      18968,
-      18969,
-      25213
+      "CLIMBING_ROPE",
+      "CLIMBING_ROPE_TOP",
+      "CLIMBING_ROPE2",
+      "DRAGON_SLAYER_QIP_CLIMBING_ROPE"
     ]
   },
   {
@@ -21021,10 +21069,10 @@
     "duration": 0,
     "range": 15,
     "objectIds": [
-      15796,
-      17829,
-      25055,
-      25056
+      "LOTR_MINE_WALL_LAMP",
+      "AREA_SANGUINE_MINE_WALL_LAMP",
+      "DRAGON_SLAYER_MINE_WALL_LAMP_SINGLE",
+      "DRAGON_SLAYER_MINE_WALL_LAMP"
     ]
   },
   {
@@ -21041,7 +21089,7 @@
     "duration": 0,
     "range": 15,
     "objectIds": [
-      37573
+      "WYVERN_CAVE_WALL_COLDMUD_LAMP_SINGLE"
     ]
   },
   {
@@ -21059,7 +21107,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      12005
+      "FAIRY_MUSHROOM_TORCH_RED"
     ]
   },
   {
@@ -21077,7 +21125,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      12006
+      "FAIRY_MUSHROOM_TORCH_BLUE"
     ]
   },
   {
@@ -21095,8 +21143,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      12101,
-      24012
+      "FAIRY_FURNACE_GLOW",
+      "FAI_FALADOR_FURNACE_GLOW"
     ]
   },
   {
@@ -21114,7 +21162,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      12809
+      "BURGH_FURNACE_FIRED"
     ]
   },
   {
@@ -21132,8 +21180,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      16657,
-      16469
+      "AHOY_NEW_FURNACE",
+      "VARROCK_DIARY_FURNACE"
     ]
   },
   {
@@ -21150,8 +21198,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      16657,
-      16469
+      "AHOY_NEW_FURNACE",
+      "VARROCK_DIARY_FURNACE"
     ]
   },
   {
@@ -21169,7 +21217,7 @@
     "duration": 4000,
     "range": 15,
     "objectIds": [
-      16648
+      "AHOY_ECTOFUNTUS"
     ]
   },
   {
@@ -21313,7 +21361,7 @@
     "duration": 4000,
     "range": 15,
     "objectIds": [
-      16649
+      "AHOY_ECTOFUNTUS_SMALL"
     ]
   },
   {
@@ -21547,12 +21595,12 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      20720,
-      20721,
-      20722,
-      20770,
-      20771,
-      20772
+      "BARROW_DHAROK_SARCOPHAGUS",
+      "BARROW_TORAG_SARCOPHAGUS",
+      "BARROW_GUTHAN_SARCOPHAGUS",
+      "BARROW_AHRIM_SARCOPHAGUS",
+      "BARROW_KARIL_SARCOPHAGUS",
+      "BARROW_VERAC_SARCOPHAGUS"
     ]
   },
   {
@@ -21570,7 +21618,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      2282
+      "FAI_VARROCK_SMITHY_HEARTH"
     ]
   },
   {
@@ -21588,9 +21636,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6197,
-      6199,
-      6201
+      "DWARF_KELDAGRIM_TABLE_SMALL_LAMP",
+      "DWARF_KELDAGRIM_TABLE_BIG_LAMP",
+      "DWARF_KELDAGRIM_TABLE_POSH_LAMP"
     ]
   },
   {
@@ -21608,7 +21656,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      26765
+      "CHAOS_FANATIC_RIFT"
     ]
   },
   {
@@ -21626,7 +21674,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      11909
+      "FAI_THORNSKIT_TORCH"
     ]
   },
   {
@@ -21644,7 +21692,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      4470
+      "CASTLEWARS_ZAMORAK_SPAWNDOOR"
     ]
   },
   {
@@ -21662,7 +21710,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      4469
+      "CASTLEWARS_SARADOMIN_SPAWNDOOR"
     ]
   },
   {
@@ -21680,9 +21728,9 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      4388,
-      4390,
-      4407
+      "CASTLEWARS_ZAMORAK_TELE",
+      "CASTLEWARS_ZAMORAK_EXIT",
+      "CASTLEWARS_ZAMORAK_QUIT"
     ]
   },
   {
@@ -21700,8 +21748,8 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      4387,
-      4389
+      "CASTLEWARS_SARADOMIN_TELE",
+      "CASTLEWARS_SARADOMIN_EXIT"
     ]
   },
   {
@@ -21719,7 +21767,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      4408
+      "CASTLEWARS_RANDOM_TELE"
     ]
   },
   {
@@ -21737,7 +21785,7 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      40454
+      "SOUL_WARS_BLUE_GRAVEYARD_BARRIER"
     ]
   },
   {
@@ -21755,8 +21803,8 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      40456,
-      40457
+      "SOUL_WARS_RED_WESTERN_BARRIER",
+      "SOUL_WARS_RED_GRAVEYARD_BARRIER"
     ]
   },
   {
@@ -21774,7 +21822,7 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      41200
+      "SOUL_WARS_CLAN_WAITING_AREA_BARRIER"
     ]
   },
   {
@@ -21792,7 +21840,7 @@
     "duration": 1600,
     "range": 20,
     "objectIds": [
-      41199
+      "SOUL_WARS_MAIN_WAITING_AREA_BARRIER"
     ]
   },
   {
@@ -21810,8 +21858,8 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      40474,
-      40476
+      "SOUL_WARS_EDGEVILLE_PORTAL",
+      "SOUL_WARS_LEAVE_SOULWARS_PORTAL"
     ]
   },
   {
@@ -21829,7 +21877,7 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      40460
+      "SOUL_WARS_BLUE_EXIT_PORTAL"
     ]
   },
   {
@@ -21847,7 +21895,7 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      40461
+      "SOUL_WARS_RED_EXIT_PORTAL"
     ]
   },
   {
@@ -21865,7 +21913,7 @@
     "duration": 1000,
     "range": 20,
     "objectIds": [
-      40475
+      "SOUL_WARS_ENCLAVE_PORTAL"
     ]
   },
   {
@@ -21883,8 +21931,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      40550,
-      40551
+      "SNP_PILLAR_TORCH_BLUE",
+      "SNP_PILLAR_TORCH_RED"
     ]
   },
   {
@@ -21902,8 +21950,8 @@
     "duration": 1000,
     "range": 30,
     "objectIds": [
-      40449,
-      40435
+      "SOUL_WARS_CENTRAL_OBELISK_NEUTRAL",
+      "SOUL_WARS_TUT_CENTRAL_OBELISK_NEUTRAL_CHILD"
     ]
   },
   {
@@ -21921,7 +21969,7 @@
     "duration": 3000,
     "range": 30,
     "objectIds": [
-      40451
+      "SOUL_WARS_CENTRAL_OBELISK_RED"
     ]
   },
   {
@@ -21939,7 +21987,7 @@
     "duration": 3000,
     "range": 30,
     "objectIds": [
-      40450
+      "SOUL_WARS_CENTRAL_OBELISK_BLUE"
     ]
   },
   {
@@ -21957,7 +22005,7 @@
     "duration": 2550,
     "range": 10,
     "objectIds": [
-      30386
+      "CASTLEWARS_F2P_PORTAL"
     ]
   },
   {
@@ -21975,7 +22023,7 @@
     "duration": 13800,
     "range": 5,
     "objectIds": [
-      39640
+      "BR_COMPETITIVE_ENTRANCE"
     ]
   },
   {
@@ -21993,7 +22041,7 @@
     "duration": 1500,
     "range": 20,
     "objectIds": [
-      39639
+      "BR_CASUAL_ENTRANCE"
     ]
   },
   {
@@ -22010,7 +22058,7 @@
     "duration": 2650,
     "range": 10,
     "objectIds": [
-      39656
+      "WILDY_HUB_ENTRANCE_FX"
     ]
   },
   {
@@ -22028,7 +22076,7 @@
     "duration": 1541,
     "range": 40,
     "objectIds": [
-      47346
+      "BH_PORTAL_ENTER"
     ]
   },
   {
@@ -22046,7 +22094,7 @@
     "duration": 2750,
     "range": 10,
     "objectIds": [
-      26642
+      "CLANWARS_CHALLENGEPORTAL_W"
     ]
   },
   {
@@ -22064,7 +22112,7 @@
     "duration": 2850,
     "range": 10,
     "objectIds": [
-      26645
+      "CLANWARS_FFAPORTAL"
     ]
   },
   {
@@ -22082,7 +22130,7 @@
     "duration": 1850,
     "range": 20,
     "objectIds": [
-      26646
+      "CLANWARS_FFAEXIT"
     ]
   },
   {
@@ -22100,7 +22148,7 @@
     "duration": 1650,
     "range": 5,
     "objectIds": [
-      39651
+      "WILDY_HUB_POOL"
     ]
   },
   {
@@ -22118,7 +22166,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      39694
+      "WILDY_HUB_SKULLTORCH"
     ]
   },
   {
@@ -22135,7 +22183,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      39582
+      "DEATH_OFFICE_TORCH"
     ]
   },
   {
@@ -22152,7 +22200,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      39551
+      "DEATH_OFFICE_WALL_FIRE"
     ]
   },
   {
@@ -22169,7 +22217,7 @@
     "duration": 1850,
     "range": 20,
     "objectIds": [
-      39549
+      "DEATH_OFFICE_EXITPORTAL"
     ]
   },
   {
@@ -22187,8 +22235,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      11833,
-      11834
+      "TZHAAR_FIGHTCAVE_WALL_ENTRANCE",
+      "TZHAAR_FIGHTCAVE_WALL_EXIT"
     ]
   },
   {
@@ -22206,7 +22254,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      11836
+      "TZHAAR_KARAMJADUNGEON_WALL_EXIT"
     ]
   },
   {
@@ -22224,8 +22272,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      30281,
-      30282
+      "INFERNO_ENTRANCE_NOOP",
+      "INFERNO_ENTRANCE_OP"
     ]
   },
   {
@@ -22243,7 +22291,7 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      4525
+      "POH_EXIT_PORTAL"
     ]
   },
   {
@@ -22261,13 +22309,13 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      15477,
-      15478,
-      28822,
-      15479,
-      15480,
-      15481,
-      30172
+      "POH_TAVERLY_PORTAL",
+      "POH_RIMMINGTON_PORTAL",
+      "POH_KOUREND_PORTAL",
+      "POH_POLLNIVNEACH_PORTAL",
+      "POH_RELLEKKA_PORTAL",
+      "POH_BRIMHAVEN_PORTAL",
+      "POH_PORTAL_OP"
     ]
   },
   {
@@ -22285,7 +22333,7 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      34947
+      "POH_PRIFDDINAS_PORTAL"
     ]
   },
   {
@@ -22303,11 +22351,11 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      27097,
-      33408,
-      33409,
-      33410,
-      37550
+      "LEAGUE_5_POH_SPIRIT_RING",
+      "POH_NEXUS_PORTAL_1",
+      "POH_NEXUS_PORTAL_2",
+      "POH_NEXUS_PORTAL_3",
+      "HUNTING_TRAIL4_8L"
     ]
   },
   {
@@ -22325,8 +22373,8 @@
     "duration": 800,
     "range": 20,
     "objectIds": [
-      29237,
-      40844
+      "POH_POOL_RESTORATION",
+      "XMAS20_POH_POOL_RESTORATION"
     ]
   },
   {
@@ -22344,8 +22392,8 @@
     "duration": 1200,
     "range": 6,
     "objectIds": [
-      29237,
-      40844
+      "POH_POOL_RESTORATION",
+      "XMAS20_POH_POOL_RESTORATION"
     ]
   },
   {
@@ -22363,8 +22411,8 @@
     "duration": 800,
     "range": 20,
     "objectIds": [
-      29238,
-      40845
+      "POH_POOL_REVITALISATION",
+      "XMAS20_POH_POOL_REVITALISATION"
     ]
   },
   {
@@ -22382,8 +22430,8 @@
     "duration": 1200,
     "range": 6,
     "objectIds": [
-      29238,
-      40845
+      "POH_POOL_REVITALISATION",
+      "XMAS20_POH_POOL_REVITALISATION"
     ]
   },
   {
@@ -22401,8 +22449,8 @@
     "duration": 800,
     "range": 20,
     "objectIds": [
-      29239,
-      40846
+      "POH_POOL_REJUVENATION",
+      "XMAS20_POH_POOL_REJUVENATION"
     ]
   },
   {
@@ -22420,8 +22468,8 @@
     "duration": 1200,
     "range": 6,
     "objectIds": [
-      29239,
-      40846
+      "POH_POOL_REJUVENATION",
+      "XMAS20_POH_POOL_REJUVENATION"
     ]
   },
   {
@@ -22439,8 +22487,8 @@
     "duration": 800,
     "range": 20,
     "objectIds": [
-      29240,
-      40847
+      "POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_RECOVERY"
     ]
   },
   {
@@ -22458,8 +22506,8 @@
     "duration": 1200,
     "range": 6,
     "objectIds": [
-      29240,
-      40847
+      "POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_RECOVERY"
     ]
   },
   {
@@ -22477,8 +22525,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      40848,
-      29241
+      "XMAS20_POH_POOL_REGENERATION",
+      "POH_POOL_REGENERATION"
     ]
   },
   {
@@ -22496,8 +22544,8 @@
     "duration": 1200,
     "range": 6,
     "objectIds": [
-      40848,
-      29241
+      "XMAS20_POH_POOL_REGENERATION",
+      "POH_POOL_REGENERATION"
     ]
   },
   {
@@ -22515,7 +22563,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      49993
+      "LEAGUE_4_POH_POOL_REJUVENATION"
     ]
   },
   {
@@ -22533,7 +22581,7 @@
     "duration": 0,
     "range": 40,
     "objectIds": [
-      49993
+      "LEAGUE_4_POH_POOL_REJUVENATION"
     ]
   },
   {
@@ -22551,7 +22599,7 @@
     "duration": 0,
     "range": 40,
     "objectIds": [
-      49993
+      "LEAGUE_4_POH_POOL_REJUVENATION"
     ]
   },
   {
@@ -22569,9 +22617,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      13639,
-      13640,
-      13641
+      "POH_SCRYING_POOL",
+      "POH_TELEPORT_CENTREPIECE",
+      "POH_TELEPORT_CENTREPIECE_GRAND"
     ]
   },
   {
@@ -22589,7 +22637,7 @@
     "duration": 0,
     "range": 25,
     "objectIds": [
-      49963
+      "POH_LEAGUEHALL_PEDESTAL_2_SIMPLE_LEAGUE_4_DRAGON"
     ]
   },
   {
@@ -22607,9 +22655,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      41416,
-      41417,
-      41418
+      "POH_PORTAL_TEAK_ARCEUUS_LIBRARY",
+      "POH_PORTAL_MAG_ARCEUUS_LIBRARY",
+      "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY"
     ]
   },
   {
@@ -22627,9 +22675,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37607,
-      37595,
-      37583
+      "POH_PORTAL_MARBLE_DRAYNOR_MANOR",
+      "POH_PORTAL_MAG_DRAYNOR_MANOR",
+      "POH_PORTAL_TEAK_DRAYNOR_MANOR"
     ]
   },
   {
@@ -22647,9 +22695,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37584,
-      37608,
-      37596
+      "POH_PORTAL_TEAK_BATTLEFRONT",
+      "POH_PORTAL_MARBLE_BATTLEFRONT",
+      "POH_PORTAL_MAG_BATTLEFRONT"
     ]
   },
   {
@@ -22667,16 +22715,16 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      33092,
-      33092,
-      33093,
-      33093,
-      33098,
-      33099,
-      33104,
-      33104,
-      33105,
-      33105
+      "POH_PORTAL_TEAK_VARROCK_VARROCK1ST",
+      "POH_PORTAL_TEAK_VARROCK_VARROCK1ST",
+      "POH_PORTAL_TEAK_VARROCK_GE1ST",
+      "POH_PORTAL_TEAK_VARROCK_GE1ST",
+      "POH_PORTAL_MAHOGANY_VARROCK_VARROCK1ST",
+      "POH_PORTAL_MAHOGANY_VARROCK_GE1ST",
+      "POH_PORTAL_MARBLE_VARROCK_VARROCK1ST",
+      "POH_PORTAL_MARBLE_VARROCK_VARROCK1ST",
+      "POH_PORTAL_MARBLE_VARROCK_GE1ST",
+      "POH_PORTAL_MARBLE_VARROCK_GE1ST"
     ]
   },
   {
@@ -22694,9 +22742,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37585,
-      37609,
-      37597
+      "POH_PORTAL_TEAK_MIND_ALTAR",
+      "POH_PORTAL_MARBLE_MIND_ALTAR",
+      "POH_PORTAL_MAG_MIND_ALTAR"
     ]
   },
   {
@@ -22714,9 +22762,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      13616,
-      13623,
-      13630
+      "POH_PORTAL_TEAK_LUMBRIDGE",
+      "POH_PORTAL_MAG_LUMBRIDGE",
+      "POH_PORTAL_MARBLE_LUMBRIDGE"
     ]
   },
   {
@@ -22734,9 +22782,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      13617,
-      13624,
-      13631
+      "POH_PORTAL_TEAK_FALADOR",
+      "POH_PORTAL_MAG_FALADOR",
+      "POH_PORTAL_MARBLE_FALADOR"
     ]
   },
   {
@@ -22754,9 +22802,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37586,
-      37610,
-      37598
+      "POH_PORTAL_TEAK_SALVE_GRAVEYARD",
+      "POH_PORTAL_MARBLE_SALVE_GRAVEYARD",
+      "POH_PORTAL_MAG_SALVE_GRAVEYARD"
     ]
   },
   {
@@ -22774,12 +22822,12 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      33094,
-      33095,
-      33100,
-      33101,
-      33106,
-      33107
+      "POH_PORTAL_TEAK_CAMELOT_CAMELOT1ST",
+      "POH_PORTAL_TEAK_CAMELOT_SEERS1ST",
+      "POH_PORTAL_MAHOGANY_CAMELOT_CAMELOT1ST",
+      "POH_PORTAL_MAHOGANY_CAMELOT_SEERS1ST",
+      "POH_PORTAL_MARBLE_CAMELOT_CAMELOT1ST",
+      "POH_PORTAL_MARBLE_CAMELOT_SEERS1ST"
     ]
   },
   {
@@ -22797,9 +22845,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37587,
-      37611,
-      37599
+      "POH_PORTAL_TEAK_FENKENSTRAIN",
+      "POH_PORTAL_MARBLE_FENKENSTRAIN",
+      "POH_PORTAL_MAG_FENKENSTRAIN"
     ]
   },
   {
@@ -22817,9 +22865,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      13633,
-      13619,
-      13626
+      "POH_PORTAL_MARBLE_ARDOUGNE",
+      "POH_PORTAL_TEAK_ARDOUGNE",
+      "POH_PORTAL_MAG_ARDOUGNE"
     ]
   },
   {
@@ -22837,12 +22885,12 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      33108,
-      33109,
-      33096,
-      33097,
-      33102,
-      33103
+      "POH_PORTAL_MARBLE_YANILLE_WATCHTOWER1ST",
+      "POH_PORTAL_MARBLE_YANILLE_YANILLE1ST",
+      "POH_PORTAL_TEAK_YANILLE_WATCHTOWER1ST",
+      "POH_PORTAL_TEAK_YANILLE_YANILLE1ST",
+      "POH_PORTAL_MAHOGANY_YANILLE_WATCHTOWER1ST",
+      "POH_PORTAL_MAHOGANY_YANILLE_YANILLE1ST"
     ]
   },
   {
@@ -22860,9 +22908,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29348,
-      29340,
-      29356
+      "POH_PORTAL_MAG_SENNTISTEN",
+      "POH_PORTAL_TEAK_SENNTISTEN",
+      "POH_PORTAL_MARBLE_SENNTISTEN"
     ]
   },
   {
@@ -22880,9 +22928,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37600,
-      37588,
-      37612
+      "POH_PORTAL_MAG_WEST_ARDOUGNE",
+      "POH_PORTAL_TEAK_WEST_ARDOUGNE",
+      "POH_PORTAL_MARBLE_WEST_ARDOUGNE"
     ]
   },
   {
@@ -22900,9 +22948,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29344,
-      29360,
-      29352
+      "POH_PORTAL_TEAK_MARIM",
+      "POH_PORTAL_MARBLE_MARIM",
+      "POH_PORTAL_MAG_MARIM"
     ]
   },
   {
@@ -22920,9 +22968,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37601,
-      37589,
-      37613
+      "POH_PORTAL_MAG_HARMONY_ISLAND",
+      "POH_PORTAL_TEAK_HARMONY_ISLAND",
+      "POH_PORTAL_MARBLE_HARMONY_ISLAND"
     ]
   },
   {
@@ -22940,9 +22988,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29346,
-      29338,
-      29354
+      "POH_PORTAL_MAG_KHARYRLL",
+      "POH_PORTAL_TEAK_KHARYRLL",
+      "POH_PORTAL_MARBLE_KHARYRLL"
     ]
   },
   {
@@ -22960,9 +23008,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29347,
-      29339,
-      29355
+      "POH_PORTAL_MAG_LUNARISLE",
+      "POH_PORTAL_TEAK_LUNARISLE",
+      "POH_PORTAL_MARBLE_LUNARISLE"
     ]
   },
   {
@@ -22980,9 +23028,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29345,
-      29361,
-      29353
+      "POH_PORTAL_TEAK_KOUREND",
+      "POH_PORTAL_MARBLE_KOUREND",
+      "POH_PORTAL_MAG_KOUREND"
     ]
   },
   {
@@ -23000,9 +23048,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37602,
-      37590,
-      37614
+      "POH_PORTAL_MAG_CEMETERY",
+      "POH_PORTAL_TEAK_CEMETERY",
+      "POH_PORTAL_MARBLE_CEMETERY"
     ]
   },
   {
@@ -23020,9 +23068,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29350,
-      29342,
-      29358
+      "POH_PORTAL_MAG_WATERBIRTH",
+      "POH_PORTAL_TEAK_WATERBIRTH",
+      "POH_PORTAL_MARBLE_WATERBIRTH"
     ]
   },
   {
@@ -23040,9 +23088,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37603,
-      37591,
-      37615
+      "POH_PORTAL_MAG_BARROWS",
+      "POH_PORTAL_TEAK_BARROWS",
+      "POH_PORTAL_MARBLE_BARROWS"
     ]
   },
   {
@@ -23060,9 +23108,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      33440,
-      33434,
-      33437
+      "POH_PORTAL_MARBLE_CARRALLANGAR",
+      "POH_PORTAL_TEAK_CARRALLANGAR",
+      "POH_PORTAL_MAG_CARRALLANGAR"
     ]
   },
   {
@@ -23080,9 +23128,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29351,
-      29343,
-      29359
+      "POH_PORTAL_MAG_FISHINGGUILD",
+      "POH_PORTAL_TEAK_FISHINGGUILD",
+      "POH_PORTAL_MARBLE_FISHINGGUILD"
     ]
   },
   {
@@ -23100,9 +23148,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      33432,
-      33435,
-      33438
+      "POH_PORTAL_TEAK_CATHERBY",
+      "POH_PORTAL_MAG_CATHERBY",
+      "POH_PORTAL_MARBLE_CATHERBY"
     ]
   },
   {
@@ -23120,9 +23168,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      29349,
-      29341,
-      29357
+      "POH_PORTAL_MAG_ANNAKARL",
+      "POH_PORTAL_TEAK_ANNAKARL",
+      "POH_PORTAL_MARBLE_ANNAKARL"
     ]
   },
   {
@@ -23140,9 +23188,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37616,
-      37604,
-      37592
+      "POH_PORTAL_MARBLE_APE_ATOLL",
+      "POH_PORTAL_MAG_APE_ATOLL",
+      "POH_PORTAL_TEAK_APE_ATOLL"
     ]
   },
   {
@@ -23160,9 +23208,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      33433,
-      33436,
-      33439
+      "POH_PORTAL_TEAK_GHORROCK",
+      "POH_PORTAL_MAG_GHORROCK",
+      "POH_PORTAL_MARBLE_GHORROCK"
     ]
   },
   {
@@ -23180,9 +23228,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      33179,
-      33180,
-      33181
+      "POH_PORTAL_TEAK_STRONGHOLD",
+      "POH_PORTAL_MAG_STRONGHOLD",
+      "POH_PORTAL_MARBLE_STRONGHOLD"
     ]
   },
   {
@@ -23200,9 +23248,9 @@
     "duration": 4100,
     "range": 20,
     "objectIds": [
-      37605,
-      37593,
-      37581
+      "POH_PORTAL_MARBLE_WEISS",
+      "POH_PORTAL_MAG_WEISS",
+      "POH_PORTAL_TEAK_WEISS"
     ]
   },
   {
@@ -23220,7 +23268,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      3760
+      "TROLL_MAD_EADGAR_EXIT"
     ]
   },
   {
@@ -23238,8 +23286,8 @@
     "duration": 3000,
     "range": 7,
     "objectIds": [
-      4004,
-      4005
+      "REGICIDE_VOYAGE_TEMPLE_WELL1",
+      "REGICIDE_VOYAGE_TEMPLE_WELL2"
     ]
   },
   {
@@ -23257,11 +23305,11 @@
     "duration": 2000,
     "range": 7,
     "objectIds": [
-      35867,
-      35868,
-      3918,
-      34958,
-      8767
+      "SOTE_HUNTING_LAMP_OP",
+      "SOTE_HUNTING_LAMP_NOOP",
+      "REGICIDE_CRYSTAL_LAMP",
+      "REGICIDE_CRYSTAL_LAMP_BLOCKWALK_ONLY",
+      "ELF_VILLAGE_RAIL_LAMP"
     ]
   },
   {
@@ -23278,7 +23326,7 @@
     "duration": 1200,
     "range": 10,
     "objectIds": [
-      35075
+      "SOTE_LIBRARY_EXIT"
     ]
   },
   {
@@ -23295,7 +23343,7 @@
     "duration": 1200,
     "range": 10,
     "objectIds": [
-      35075
+      "SOTE_LIBRARY_EXIT"
     ]
   },
   {
@@ -23312,7 +23360,7 @@
     "duration": 3200,
     "range": 5,
     "objectIds": [
-      34998
+      "SOTE_WARPED_LIBRARY_PILLAR_LVL2_02"
     ]
   },
   {
@@ -23329,10 +23377,10 @@
     "duration": 3200,
     "range": 5,
     "objectIds": [
-      35059,
-      35061,
-      35064,
-      35384
+      "SOTE_WARPED_LIBRARY_PILLAR_LVL3_03",
+      "SOTE_WARPED_LIBRARY_PILLAR_LVL3_05",
+      "SOTE_WARPED_LIBRARY_PILLAR_LVL3_08",
+      "SOTE_WARPED_LIBRARY_PILLAR_02"
     ]
   },
   {
@@ -23350,7 +23398,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      35000
+      "SOTE_WARPED_LIBRARY_PILLAR_LVL2_04"
     ]
   },
   {
@@ -23367,9 +23415,9 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      35065,
-      35066,
-      35386
+      "SOTE_WARPED_LIBRARY_PILLAR_LIGHT_LVL3",
+      "SOTE_WARPED_LIBRARY_PILLAR_LIGHT_LVL3_02",
+      "SOTE_WARPED_LIBRARY_PILLAR_LIGHT_01"
     ]
   },
   {
@@ -23386,14 +23434,14 @@
     "duration": 3200,
     "range": 5,
     "objectIds": [
-      35451,
-      35453,
-      35455,
-      35457,
-      35459,
-      35461,
-      35463,
-      35465
+      "SOTE_CADARN_SEAL_FIXED",
+      "SOTE_CRWYS_SEAL_FIXED",
+      "SOTE_AMLODD_SEAL_FIXED",
+      "SOTE_HEFIN_SEAL_FIXED",
+      "SOTE_IORWERTH_SEAL_FIXED",
+      "SOTE_ITHELL_SEAL_FIXED",
+      "SOTE_MEILYR_SEAL_FIXED",
+      "SOTE_TRAHAEARN_SEAL_FIXED"
     ],
     "fadeOutDuration": 300
   },
@@ -23411,14 +23459,14 @@
     "duration": 3200,
     "range": 5,
     "objectIds": [
-      35451,
-      35453,
-      35455,
-      35457,
-      35459,
-      35461,
-      35463,
-      35465
+      "SOTE_CADARN_SEAL_FIXED",
+      "SOTE_CRWYS_SEAL_FIXED",
+      "SOTE_AMLODD_SEAL_FIXED",
+      "SOTE_HEFIN_SEAL_FIXED",
+      "SOTE_IORWERTH_SEAL_FIXED",
+      "SOTE_ITHELL_SEAL_FIXED",
+      "SOTE_MEILYR_SEAL_FIXED",
+      "SOTE_TRAHAEARN_SEAL_FIXED"
     ],
     "fadeOutDuration": 300
   },
@@ -23436,14 +23484,14 @@
     "duration": 3200,
     "range": 5,
     "objectIds": [
-      35451,
-      35453,
-      35455,
-      35457,
-      35459,
-      35461,
-      35463,
-      35465
+      "SOTE_CADARN_SEAL_FIXED",
+      "SOTE_CRWYS_SEAL_FIXED",
+      "SOTE_AMLODD_SEAL_FIXED",
+      "SOTE_HEFIN_SEAL_FIXED",
+      "SOTE_IORWERTH_SEAL_FIXED",
+      "SOTE_ITHELL_SEAL_FIXED",
+      "SOTE_MEILYR_SEAL_FIXED",
+      "SOTE_TRAHAEARN_SEAL_FIXED"
     ],
     "fadeOutDuration": 300
   },
@@ -23462,15 +23510,15 @@
     "duration": 3200,
     "range": 5,
     "objectIds": [
-      35452,
-      35454,
-      35456,
-      35458,
-      35460,
-      35462,
-      35464,
-      35466,
-      35467
+      "SOTE_CADARN_SEAL_BROKEN",
+      "SOTE_CRWYS_SEAL_BROKEN",
+      "SOTE_AMLODD_SEAL_BROKEN",
+      "SOTE_HEFIN_SEAL_BROKEN",
+      "SOTE_IORWERTH_SEAL_BROKEN",
+      "SOTE_ITHELL_SEAL_BROKEN",
+      "SOTE_MEILYR_SEAL_BROKEN",
+      "SOTE_TRAHAEARN_SEAL_BROKEN",
+      "SOTE_FORGOTTEN_SEAL"
     ]
   },
   {
@@ -23488,7 +23536,7 @@
     "duration": 3200,
     "range": 10,
     "objectIds": [
-      35901
+      "DARK_SEREN_DEFEATED_VIS"
     ]
   },
   {
@@ -23506,15 +23554,15 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      35984,
-      35985,
-      36082,
-      36197,
-      36198,
-      36614,
-      36615,
-      36490,
-      36062
+      "GAUNTLET_LOBBY_ENTRANCE_HM",
+      "GAUNTLET_LOBBY_EXIT_HM",
+      "GAUNTLET_LOBBY_EXIT",
+      "ZALCANO_EXIT",
+      "ZALCANO_ENTRANCE",
+      "PRIF_LIBRARY_TELEPORTER1",
+      "PRIF_LIBRARY_TELEPORTER2",
+      "PRIF_CLAN_TOWER_TELEPORTER",
+      "GAUNTLET_EXIT"
     ]
   },
   {
@@ -23532,7 +23580,7 @@
     "duration": 5000,
     "range": 20,
     "objectIds": [
-      36081
+      "GAUNTLET_LOBBY_ENTRANCE"
     ]
   },
   {
@@ -23550,8 +23598,8 @@
     "duration": 2000,
     "range": 20,
     "objectIds": [
-      36083,
-      36084
+      "GAUNTLET_ENTRANCE_HM_DISABLED",
+      "GAUNTLET_ENTRANCE_HM_ENABLED"
     ]
   },
   {
@@ -23569,8 +23617,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36087,
-      36088
+      "GAUNTLET_CHEST_CLOSED",
+      "GAUNTLET_CHEST_OPEN"
     ]
   },
   {
@@ -23588,7 +23636,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36074
+      "GAUNTLET_TOOLS"
     ]
   },
   {
@@ -23606,7 +23654,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      36077
+      "GAUNTLET_RANGE"
     ]
   },
   {
@@ -23624,7 +23672,7 @@
     "duration": 3100,
     "range": 20,
     "objectIds": [
-      36063
+      "GAUNTLET_SINGING_BOWL"
     ]
   },
   {
@@ -23641,7 +23689,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36103
+      "PRIF_GAUNTLET_DOOR_WALL_LIT_01"
     ]
   },
   {
@@ -23658,7 +23706,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36104
+      "PRIF_GAUNTLET_DOOR_WALL_LIT_02"
     ]
   },
   {
@@ -23676,7 +23724,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36066
+      "GAUNTLET_TREE"
     ]
   },
   {
@@ -23694,7 +23742,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      36064
+      "GAUNTLET_ROCK"
     ]
   },
   {
@@ -23710,7 +23758,7 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      36068
+      "GAUNTLET_POND"
     ],
     "fadeOutDuration": 100
   },
@@ -23729,7 +23777,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      35965
+      "GAUNTLET_EXIT_HM"
     ]
   },
   {
@@ -23747,7 +23795,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      35977
+      "GAUNTLET_TOOLS_HM"
     ]
   },
   {
@@ -23765,7 +23813,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      35980
+      "GAUNTLET_RANGE_HM"
     ]
   },
   {
@@ -23783,7 +23831,7 @@
     "duration": 3100,
     "range": 20,
     "objectIds": [
-      35966
+      "GAUNTLET_SINGING_BOWL_HM"
     ]
   },
   {
@@ -23800,7 +23848,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36000
+      "PRIF_GAUNTLET_DOOR_WALL_LIT_01_HM"
     ]
   },
   {
@@ -23817,7 +23865,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36001
+      "PRIF_GAUNTLET_DOOR_WALL_LIT_02_HM"
     ]
   },
   {
@@ -23835,7 +23883,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      35969
+      "GAUNTLET_TREE_HM"
     ]
   },
   {
@@ -23853,7 +23901,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      35967
+      "GAUNTLET_ROCK_HM"
     ]
   },
   {
@@ -23869,7 +23917,7 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      35971
+      "GAUNTLET_POND_HM"
     ],
     "fadeOutDuration": 100
   },
@@ -23888,7 +23936,7 @@
     "duration": 4300,
     "range": 20,
     "objectIds": [
-      36192
+      "ZALCANO_ROCK_ACTIVE"
     ]
   },
   {
@@ -23906,7 +23954,7 @@
     "duration": 4300,
     "range": 20,
     "objectIds": [
-      36193
+      "ZALCANO_ROCK_PARTIAL"
     ]
   },
   {
@@ -23924,7 +23972,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36196
+      "ZALCANO_ALTAR"
     ]
   },
   {
@@ -23942,7 +23990,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      36195
+      "ZALCANO_FURNACE"
     ]
   },
   {
@@ -23960,7 +24008,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      6551
+      "DT_PORTAL"
     ]
   },
   {
@@ -23978,7 +24026,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6483
+      "DESERT_TREASURE_OBLIX_A"
     ]
   },
   {
@@ -23996,7 +24044,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6484
+      "FD_BLOOD_COLUMN"
     ]
   },
   {
@@ -24014,7 +24062,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6486
+      "DESERT_TREASURE_OBLIX_B"
     ]
   },
   {
@@ -24032,7 +24080,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6487
+      "FD_SMOKE_COLUMN"
     ]
   },
   {
@@ -24050,7 +24098,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6489
+      "DESERT_TREASURE_OBLIX_C"
     ]
   },
   {
@@ -24068,7 +24116,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6490
+      "FD_ICE_COLUMN"
     ]
   },
   {
@@ -24086,7 +24134,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6492
+      "DESERT_TREASURE_OBLIX_D"
     ]
   },
   {
@@ -24104,7 +24152,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      6493
+      "FD_SHADOW_COLUMN"
     ]
   },
   {
@@ -24121,7 +24169,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      20931
+      "NTK_TOMB_DOOR_EXIT"
     ]
   },
   {
@@ -24138,7 +24186,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      20932
+      "NTK_ANTECHAMBER_EXIT"
     ]
   },
   {
@@ -24156,7 +24204,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      20942
+      "NTK_TOMB_WALL_TORCH"
     ]
   },
   {
@@ -24174,9 +24222,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26616,
-      20946,
-      20947
+      "NTK_GOLDEN_CHEST_MULTI",
+      "NTK_GOLDEN_CHEST_CLOSED",
+      "NTK_GOLDEN_CHEST_OPEN"
     ]
   },
   {
@@ -24194,7 +24242,7 @@
     "duration": 6200,
     "range": 30,
     "objectIds": [
-      27878
+      "ARCHEUS_CRYSTAL_LARGE"
     ]
   },
   {
@@ -24212,7 +24260,7 @@
     "duration": 4000,
     "range": 30,
     "objectIds": [
-      27882
+      "ARCHEUS_CRYSTAL_MEDIUM"
     ]
   },
   {
@@ -24230,7 +24278,7 @@
     "duration": 2400,
     "range": 30,
     "objectIds": [
-      27886
+      "ARCHEUS_CRYSTAL_SMALL"
     ]
   },
   {
@@ -24248,7 +24296,7 @@
     "duration": 6100,
     "range": 30,
     "objectIds": [
-      27879
+      "ARCHEUS_CRYSTAL_LARGE_DARK"
     ]
   },
   {
@@ -24266,7 +24314,7 @@
     "duration": 3900,
     "range": 30,
     "objectIds": [
-      27883
+      "ARCHEUS_CRYSTAL_MEDIUM_DARK"
     ]
   },
   {
@@ -24284,7 +24332,7 @@
     "duration": 2300,
     "range": 30,
     "objectIds": [
-      27887
+      "ARCHEUS_CRYSTAL_SMALL_DARK"
     ]
   },
   {
@@ -24302,7 +24350,7 @@
     "duration": 6300,
     "range": 30,
     "objectIds": [
-      27881
+      "ARCHEUS_CRYSTAL_LARGE_REFLECT_RED"
     ]
   },
   {
@@ -24320,8 +24368,8 @@
     "duration": 4100,
     "range": 30,
     "objectIds": [
-      27884,
-      27885
+      "ARCHEUS_CRYSTAL_MEDIUM_RED",
+      "ARCHEUS_CRYSTAL_MEDIUM_REFLECT_RED"
     ]
   },
   {
@@ -24339,7 +24387,7 @@
     "duration": 2500,
     "range": 30,
     "objectIds": [
-      27888
+      "ARCHEUS_CRYSTAL_SMALL_RED"
     ]
   },
   {
@@ -24357,7 +24405,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      27978
+      "ARCHEUS_ALTAR_BLOOD"
     ]
   },
   {
@@ -24375,7 +24423,7 @@
     "duration": 2000,
     "range": 10,
     "objectIds": [
-      43479
+      "BLOOD_ALTAR"
     ]
   },
   {
@@ -24393,7 +24441,7 @@
     "duration": 1800,
     "range": 5,
     "objectIds": [
-      43478
+      "BLOODTEMPLE_EXIT_PORTAL"
     ]
   },
   {
@@ -24483,7 +24531,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      27979
+      "ARCHEUS_ALTAR_DARK"
     ]
   },
   {
@@ -24501,7 +24549,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      27980
+      "ARCHEUS_ALTAR_SOUL"
     ]
   },
   {
@@ -24519,10 +24567,10 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29794,
-      30018,
-      30027,
-      30015
+      "RAIDS_CRYTAL1",
+      "RAIDS_BLOCKAGE_GREEN",
+      "RAIDS_REWARD_CRYSTAL",
+      "RAIDS_BLOCKAGE_PURPLE"
     ]
   },
   {
@@ -24540,7 +24588,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29800
+      "RAIDS_WALL_TOP_CRYSTAL_LARGE"
     ]
   },
   {
@@ -24558,7 +24606,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29796
+      "RAIDS_CRYTAL3"
     ]
   },
   {
@@ -24576,8 +24624,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      30016,
-      29775
+      "RAIDS_BLOCKAGE_PURPLE_SMALL",
+      "RAIDS_VASANISTIRIO_CRYSTAL_OFF"
     ]
   },
   {
@@ -24595,7 +24643,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29801
+      "RAIDS_WALL_TOP_CRYSTAL_LARGE2"
     ]
   },
   {
@@ -24613,8 +24661,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      30017,
-      29798
+      "RAIDS_BLOCKAGE_ORANGE",
+      "RAIDS_CRYTAL5"
     ]
   },
   {
@@ -24632,7 +24680,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29802
+      "RAIDS_WALL_TOP_CRYSTAL_LARGE3"
     ]
   },
   {
@@ -24650,8 +24698,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      33147,
-      30014
+      "DEADMAN_CRYSTAL_BLOOD",
+      "RAIDS_BLOOD_CRYSTAL"
     ]
   },
   {
@@ -24669,7 +24717,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29867
+      "RAIDS_TEKTON_ANVIL"
     ]
   },
   {
@@ -24687,7 +24735,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      29748
+      "RAIDS_ICEDEMON_BRAZIER_LIT"
     ]
   },
   {
@@ -24705,7 +24753,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      30019
+      "RAIDS_VASANISTIRIO_FIRE"
     ]
   },
   {
@@ -24723,8 +24771,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29760,
-      31958
+      "RAIDS_LASERCRABS_SMALLCRYSTAL_MAGENTA",
+      "SHAYZIENQUEST_CRYSTAL_MAGENTA"
     ]
   },
   {
@@ -24742,8 +24790,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      31957,
-      29759
+      "SHAYZIENQUEST_CRYSTAL_CYAN",
+      "RAIDS_LASERCRABS_SMALLCRYSTAL_CYAN"
     ]
   },
   {
@@ -24761,8 +24809,8 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29761,
-      31959
+      "RAIDS_LASERCRABS_SMALLCRYSTAL_YELLOW",
+      "SHAYZIENQUEST_CRYSTAL_YELLOW"
     ]
   },
   {
@@ -24780,7 +24828,7 @@
     "duration": 2400,
     "range": 20,
     "objectIds": [
-      29758
+      "RAIDS_LASERCRABS_SMALLCRYSTAL_BLACK"
     ]
   },
   {
@@ -24798,7 +24846,7 @@
     "duration": 1400,
     "range": 20,
     "objectIds": [
-      29879
+      "RAIDS_OLM_BARRIER"
     ]
   },
   {
@@ -24816,7 +24864,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      10433
+      "ELID_SPIRIT_FIRE"
     ]
   },
   {
@@ -24834,7 +24882,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      34421
+      "MOLCH_TEMPLE_GODRAY"
     ]
   },
   {
@@ -24852,7 +24900,7 @@
     "duration": 1400,
     "range": 20,
     "objectIds": [
-      34432
+      "MOLCH_TEMPLE_BARRIER_GREEN"
     ]
   },
   {
@@ -24866,7 +24914,7 @@
     "duration": 1400,
     "range": 20,
     "objectIds": [
-      34433
+      "MOLCH_TEMPLE_BARRIER_ORANGE"
     ]
   },
   {
@@ -24880,7 +24928,7 @@
     "duration": 1400,
     "range": 20,
     "objectIds": [
-      34434
+      "MOLCH_TEMPLE_BARRIER_RED"
     ]
   },
   {
@@ -24898,7 +24946,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      9368
+      "CORP_PRIVATEPORTAL_OUTSIDE"
     ]
   },
   {
@@ -24915,7 +24963,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      9369
+      "CORP_PRIVATEPORTAL_INSIDE"
     ]
   },
   {
@@ -24934,7 +24982,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      41016
+      "CORP_IRONMAN_BRAZIER_ON"
     ]
   },
   {
@@ -24953,7 +25001,7 @@
     "duration": 1000,
     "range": 25,
     "objectIds": [
-      41016
+      "CORP_IRONMAN_BRAZIER_ON"
     ]
   },
   {
@@ -24973,8 +25021,8 @@
     "duration": 1000,
     "range": 25,
     "projectileIds": [
-      314,
-      316
+      "CORP_SPIRIT_BEAST_WEAK_PROJ",
+      "CORP_SPIRIT_BEAST_STRONG_PROJ"
     ]
   },
   {
@@ -24994,7 +25042,7 @@
     "duration": 1000,
     "range": 25,
     "projectileIds": [
-      315
+      "CORP_SPIRIT_BEAST_MID_PROJ"
     ]
   },
   {
@@ -25012,7 +25060,7 @@
     "type": "FLICKER",
     "duration": 1000,
     "range": 10,
-    "npcIds": [ 320 ]
+    "npcIds": [ "DARK_CORE" ]
   },
   {
     "description": "Corporeal Beast Dark Core - Moving",
@@ -25029,7 +25077,7 @@
     "type": "FLICKER",
     "duration": 1000,
     "range": 10,
-    "projectileIds": [ 319 ]
+    "projectileIds": [ "DARK_CORE_JUMP" ]
   },
   {
     "description": "TUNNEL_EXIT",
@@ -25046,7 +25094,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      2141
+      "SLAYER_DUNGEON_EXIT"
     ]
   },
   {
@@ -25064,7 +25112,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      31790
+      "DS2_OGRE_CORSAIR_VINE_LADDER"
     ]
   },
   {
@@ -25082,7 +25130,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      32119
+      "DS2_LITHKREN_DUNGEON_BRAZIER"
     ]
   },
   {
@@ -25100,8 +25148,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      6661,
-      6665
+      "TOG_WEEPING_WALL_GOOD_R",
+      "TOG_WEEPING_WALL_GOOD_L"
     ]
   },
   {
@@ -25119,8 +25167,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      6662,
-      6666
+      "TOG_WEEPING_WALL_BAD_R",
+      "TOG_WEEPING_WALL_BAD_L"
     ]
   },
   {
@@ -25138,7 +25186,7 @@
     "duration": 0,
     "range": 7.5,
     "objectIds": [
-      41467
+      "BIM_RUINS_WALLKIT_STREETLAMP01"
     ]
   },
   {
@@ -25156,7 +25204,7 @@
     "duration": 1700,
     "range": 30,
     "objectIds": [
-      41585
+      "DECOKIT_CRYSTAL_BARRONITE01"
     ]
   },
   {
@@ -25174,8 +25222,8 @@
     "duration": 2200,
     "range": 20,
     "objectIds": [
-      41547,
-      41548
+      "CAMDOZAALROCK1",
+      "CAMDOZAALROCK2"
     ]
   },
   {
@@ -25193,8 +25241,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      41412,
-      41481
+      "BIM_RUINS_WALLKIT_SACRED_FORGE_OP",
+      "BIM_RUINS_WALLKIT_SACRED_FORGE"
     ]
   },
   {
@@ -25212,7 +25260,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      41520
+      "BIM_VAULT_WALL01"
     ]
   },
   {
@@ -25230,7 +25278,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      41588
+      "CAVEKIT_WATERFALL_CAMDOZAAL"
     ]
   },
   {
@@ -25248,7 +25296,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      41565
+      "CAVEKIT_IMCANDO_STALAGMITE01"
     ]
   },
   {
@@ -25266,7 +25314,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      41236
+      "TEMPOROSS_SHRINE_FIRE"
     ]
   },
   {
@@ -25284,7 +25332,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      37582
+      "TEMPOROSS_FIRE_VISUALS"
     ]
   },
   {
@@ -25302,10 +25350,10 @@
     "duration": 0,
     "range": 40,
     "objectIds": [
-      41242,
-      41243,
-      41244,
-      41245
+      "TEMPOROSS_CANNON_1_DISABLED",
+      "TEMPOROSS_CANNON_2_DISABLED",
+      "TEMPOROSS_CANNON_3_DISABLED",
+      "TEMPOROSS_CANNON_4_DISABLED"
     ]
   },
   {
@@ -25322,7 +25370,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      41724
+      "CLAN_HUB_PORTAL"
     ]
   },
   {
@@ -25340,7 +25388,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      20868
+      "LIGHT_MIND_BEAM"
     ]
   },
   {
@@ -25358,7 +25406,7 @@
     "duration": 2100,
     "range": 20,
     "objectIds": [
-      38451
+      "HALLOWED_EXIT"
     ],
     "visibleFromOtherPlanes": true
   },
@@ -25377,7 +25425,7 @@
     "duration": 1000,
     "range": 10,
     "objectIds": [
-      38829
+      "HALLOWED_TREASURE_MAGIC_FINAL"
     ]
   },
   {
@@ -25395,8 +25443,8 @@
     "duration": 1000,
     "range": 10,
     "objectIds": [
-      38798,
-      38801
+      "HALLOWED_TREASURE_PRAYER_READY",
+      "HALLOWED_TREASURE_PRAYER_READY_MIRROR"
     ]
   },
   {
@@ -25414,7 +25462,7 @@
     "duration": 600,
     "range": 10,
     "objectIds": [
-      38804
+      "HALLOWED_TREASURE_PRAYER_BARRIER_READY"
     ]
   },
   {
@@ -25432,7 +25480,7 @@
     "duration": 600,
     "range": 10,
     "objectIds": [
-      38840
+      "HALLOWED_FINAL_CHEST_BARRIER_INACTIVE"
     ]
   },
   {
@@ -25450,7 +25498,7 @@
     "duration": 600,
     "range": 10,
     "objectIds": [
-      38841
+      "HALLOWED_FINAL_CHEST_BARRIER_ACTIVE"
     ]
   },
   {
@@ -25461,7 +25509,7 @@
     "strength": 25,
     "color": "#5577ff",
     "graphicsObjectIds": [
-      1799
+      "HALLOWED_TELEPAD_TELEGRAPH_FORWARD"
     ]
   },
   {
@@ -25472,7 +25520,7 @@
     "strength": 5,
     "color": "#ffff00",
     "graphicsObjectIds": [
-      1800
+      "HALLOWED_TELEPAD_TELEGRAPH_BACKWARD"
     ]
   },
   {
@@ -25485,11 +25533,11 @@
     "type": "FLICKER",
     "range": 50,
     "objectIds": [
-      38427
+      "HALLOWED_FIRE_TRAP_ANIMATIONS"
     ],
     "animationIds": [
-      8660,
-      8663
+      "HALLOWED_STATUE_READY_FIRE_BLAST",
+      "HALLOWED_STATUE_END_FIRE_BLAST"
     ]
   },
   {
@@ -25502,11 +25550,11 @@
     "type": "FLICKER",
     "range": 50,
     "objectIds": [
-      38427
+      "HALLOWED_FIRE_TRAP_ANIMATIONS"
     ],
     "animationIds": [
-      8661,
-      8662
+      "HALLOWED_STATUE_START_FIRE_BLAST",
+      "HALLOWED_STATUE_FIRE_BLAST"
     ]
   },
   {
@@ -25524,8 +25572,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      38797,
-      38800
+      "HALLOWED_TREASURE_PRAYER_INACTIVE",
+      "HALLOWED_TREASURE_PRAYER_INACTIVE_MIRROR"
     ]
   },
   {
@@ -25543,8 +25591,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      38799,
-      38802
+      "HALLOWED_TREASURE_PRAYER_FINAL",
+      "HALLOWED_TREASURE_PRAYER_FINAL_MIRROR"
     ]
   },
   {
@@ -25562,7 +25610,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      39152
+      "DARKM_STREET_LAMP"
     ]
   },
   {
@@ -25581,8 +25629,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      32992,
-      32990
+      "TOB_TREASUREROOM_CHEST_MINE_STANDARD",
+      "TOB_TREASUREROOM_CHEST_NOTMINE_STANDARD"
     ]
   },
   {
@@ -25600,8 +25648,8 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      32993,
-      32991
+      "TOB_TREASUREROOM_CHEST_MINE_RARE",
+      "TOB_TREASUREROOM_CHEST_NOTMINE_RARE"
     ]
   },
   {
@@ -25618,8 +25666,8 @@
     "duration": 30,
     "range": 20,
     "objectIds": [
-      32998,
-      32999
+      "TOB_DUNGEON_TREASURE_ROOM_WALL_INSIDE_CORNER",
+      "TOB_DUNGEON_TREASURE_ROOM_WALL_OUTSIDE_CORNER"
     ]
   },
   {
@@ -25637,7 +25685,7 @@
     "duration": 1800,
     "range": 10,
     "objectIds": [
-      32996
+      "TOB_TREASUREROOM_TELEPORTOUT"
     ]
   },
   {
@@ -25658,7 +25706,7 @@
     "duration": 2200,
     "range": 30,
     "objectIds": [
-      32743
+      "TOB_XARPUS_EXHUMED"
     ]
   },
   {
@@ -25676,7 +25724,7 @@
     "duration": 2200,
     "range": 30,
     "objectIds": [
-      32662
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE"
     ]
   },
   {
@@ -25694,7 +25742,7 @@
     "duration": 2200,
     "range": 30,
     "objectIds": [
-      32755
+      "TOB_ARENA_BARRIER"
     ]
   },
   {
@@ -25712,8 +25760,8 @@
     "duration": 2200,
     "range": 30,
     "objectIds": [
-      33028,
-      47336
+      "TOB_WALKWAY_VERZIK_BARRIER",
+      "TOB_WALKWAY_VERZIK_BARRIER_OP"
     ]
   },
   {
@@ -25731,7 +25779,7 @@
     "duration": 1800,
     "range": 5,
     "objectIds": [
-      32957
+      "TOB_BLOAT_CHAMBER"
     ]
   },
   {
@@ -25748,7 +25796,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      32691
+      "TOB_DUNGEON_VERZIK_THRONE_WINDOW"
     ]
   },
   {
@@ -25765,7 +25813,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      32697
+      "TOB_DUNGEON_VERZIK_THRONE_WALL_WINDOW"
     ]
   },
   {
@@ -25782,7 +25830,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      32698
+      "TOB_DUNGEON_VERZIK_THRONE_WALL_WINDOW_LIGHT"
     ]
   },
   {
@@ -25799,7 +25847,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      33052
+      "TOB_DUNGEON_SOTETSEG_DIAG_WALL_LEFT_G"
     ]
   },
   {
@@ -25816,7 +25864,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      33052
+      "TOB_DUNGEON_SOTETSEG_DIAG_WALL_LEFT_G"
     ]
   },
   {
@@ -25833,7 +25881,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      33052
+      "TOB_DUNGEON_SOTETSEG_DIAG_WALL_LEFT_G"
     ]
   },
   {
@@ -25850,7 +25898,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      32776
+      "TOB_DUNGEON_WALKWAY_TOP_SIDE_BATLAMP"
     ]
   },
   {
@@ -25868,10 +25916,10 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      34748,
-      34749,
-      34752,
-      34751
+      "AIRTEMPLE_EXIT_PORTAL",
+      "MINDTEMPLE_EXIT_PORTAL",
+      "FIRETEMPLE_EXIT_PORTAL",
+      "EARTHTEMPLE_EXIT_PORTAL"
     ]
   },
   {
@@ -25889,8 +25937,8 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      34750,
-      34791
+      "WATERTEMPLE_EXIT_PORTAL",
+      "RUNETEMPLE_STANDINGSTONE_GLOW_WATER"
     ]
   },
   {
@@ -25908,8 +25956,8 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      34793,
-      34753
+      "RUNETEMPLE_STANDINGSTONE_GLOW_BODY",
+      "BODYTEMPLE_EXIT_PORTAL"
     ]
   },
   {
@@ -25927,7 +25975,7 @@
     "duration": 500,
     "range": 20,
     "objectIds": [
-      34790
+      "RUNETEMPLE_STANDINGSTONE_GLOW_AIR"
     ]
   },
   {
@@ -25945,7 +25993,7 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      34792
+      "RUNETEMPLE_STANDINGSTONE_GLOW_FIRE"
     ]
   },
   {
@@ -25963,17 +26011,17 @@
     "duration": 2200,
     "range": 30,
     "objectIds": [
-      20208,
-      20209,
-      20199,
-      20200,
-      20201,
-      20202,
-      20203,
-      20204,
-      20205,
-      20206,
-      20207
+      "BARBASSAULT_DOOR_10",
+      "BARBASSAULT_DOOR_NO_FRIENDS",
+      "BARBASSAULT_DOOR_01",
+      "BARBASSAULT_DOOR_02",
+      "BARBASSAULT_DOOR_03",
+      "BARBASSAULT_DOOR_04",
+      "BARBASSAULT_DOOR_05",
+      "BARBASSAULT_DOOR_06",
+      "BARBASSAULT_DOOR_07",
+      "BARBASSAULT_DOOR_08",
+      "BARBASSAULT_DOOR_09"
     ]
   },
   {
@@ -25991,7 +26039,7 @@
     "duration": 500,
     "range": 20,
     "objectIds": [
-      26274
+      "NZONE_LOBBY_WALLBLOCK"
     ]
   },
   {
@@ -26009,7 +26057,7 @@
     "duration": 800,
     "range": 20,
     "objectIds": [
-      34789
+      "RUNETEMPLE_STANDINGSTONE_GLOW"
     ]
   },
   {
@@ -26027,9 +26075,9 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      2156,
-      2157,
-      2158
+      "WIZTOWERPORTAL",
+      "DARKWIZPORTAL",
+      "THORMACPORTAL"
     ]
   },
   {
@@ -26047,11 +26095,11 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      22760,
-      22761,
-      22762,
-      22764,
-      22976
+      "DORGESH_LAMP_POST_LIGHT",
+      "DORGESH_LAMP_MARKET_LIGHT",
+      "DORGESH_LAMP_STAND_LIGHT",
+      "DORGESH_LAMP_STAND_LIGHT_OPEN",
+      "DORGESH_LAMP_STAND_LIGHT_ON"
     ]
   },
   {
@@ -26069,9 +26117,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      22736,
-      22737,
-      22735
+      "DORGESH_ZAPPER_LIGHT_INACTIVE",
+      "DORGESH_ZAPPER_LIGHT_ACTIVE",
+      "DORGESH_ZAPPER_LIGHT"
     ]
   },
   {
@@ -26089,7 +26137,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      22826
+      "DORGESH_OLDAK_PLASMA_BALL"
     ]
   },
   {
@@ -26107,7 +26155,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      22823
+      "DORGESH_OLDAK_CONDUCTOR_COIL"
     ]
   },
   {
@@ -26125,7 +26173,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      22721
+      "DORGESH_BLACKSMITH_FURNACE_COMBINE"
     ]
   },
   {
@@ -26143,7 +26191,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43146
+      "LOTG_YU_CAMPFIRE"
     ]
   },
   {
@@ -26161,7 +26209,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43089
+      "LOTG_TEMPLE_ALTAR"
     ]
   },
   {
@@ -26179,7 +26227,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      9098
+      "BLAST_FURNACE_CHIMNEY"
     ]
   },
   {
@@ -26196,7 +26244,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      9087
+      "BLAST_FURNACE_STOVE_FULL"
     ]
   },
   {
@@ -26213,7 +26261,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      9087
+      "BLAST_FURNACE_STOVE_FULL"
     ]
   },
   {
@@ -26231,7 +26279,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      15469
+      "POH_TAXIDERMIST_LOC_ITEM"
     ]
   },
   {
@@ -26249,7 +26297,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26181
+      "RANGE"
     ]
   },
   {
@@ -26266,7 +26314,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      205
+      "LANTERN"
     ]
   },
   {
@@ -26284,7 +26332,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      26570
+      "HELLHOUND_LAIR_TORCH"
     ]
   },
   {
@@ -26302,9 +26350,9 @@
     "duration": 2200,
     "range": 10,
     "objectIds": [
-      42939,
-      42940,
-      42941
+      "NEX_FIGHT_BARRIER_OUTER_BUSY",
+      "NEX_FIGHT_BARRIER_OUTER_PRIV_BUSY",
+      "NEX_FIGHT_BARRIER_INNER_BUSY"
     ]
   },
   {
@@ -26322,7 +26370,7 @@
     "duration": 2200,
     "range": 10,
     "objectIds": [
-      42937, 42938
+      "NEX_FIGHT_BARRIER_OUTER", "NEX_FIGHT_BARRIER_OUTER_PRIV"
     ]
   },
   {
@@ -26340,7 +26388,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      42859
+      "NEX_FURNACE_NOOP"
     ]
   },
   {
@@ -26358,7 +26406,7 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      20843
+      "FORESTER_FORCEWALL"
     ]
   },
   {
@@ -26376,7 +26424,7 @@
     "duration": 2800,
     "range": 30,
     "objectIds": [
-      14985
+      "MACRO_MAZE_COMPLETE"
     ]
   },
   {
@@ -26396,7 +26444,7 @@
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
     "graphicsObjectIds": [
-      803
+      "AIDE_PLAYER_BOOK_PORTAL"
     ]
   },
   {
@@ -26419,7 +26467,7 @@
     "fadeInDuration": 150,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      678
+      "POH_ABSORB_TABLET_MAGIC"
     ]
   },
   {
@@ -26439,7 +26487,7 @@
     "fadeInDuration": 1500,
     "fadeOutDuration": 1300,
     "graphicsObjectIds": [
-      1753
+      "LEAGUE_TWISTED_PLAYER_BOOK_PORTAL"
     ]
   },
   {
@@ -26459,7 +26507,7 @@
     "spawnDelay": 850,
     "fadeInDuration": 1000,
     "graphicsObjectIds": [
-      2619
+      "LEAGUE_4_HOME_TELEPORT_SPOTANIM_3"
     ]
   },
   {
@@ -26478,7 +26526,7 @@
     "range": 20,
     "fadeOutDuration": 1500,
     "graphicsObjectIds": [
-      2620
+      "LEAGUE_4_HOME_TELEPORT_SPOTANIM_4"
     ]
   },
   {
@@ -26497,7 +26545,7 @@
     "range": 20,
     "fadeInDuration": 1500,
     "graphicsObjectIds": [
-      2028
+      "LEAGUE03_HOME_TELEPORT_SPOTANIM_4"
     ]
   },
   {
@@ -26516,7 +26564,7 @@
     "range": 20,
     "fadeOutDuration": 1000,
     "graphicsObjectIds": [
-      2029
+      "LEAGUE03_HOME_TELEPORT_SPOTANIM_5"
     ]
   },
   {
@@ -26539,7 +26587,7 @@
     "despawnDelay": 100,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      2608
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
   },
   {
@@ -26563,7 +26611,7 @@
     "despawnDelay": 2200,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      2609
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
     ]
   },
   {
@@ -26587,7 +26635,7 @@
     "despawnDelay": 100,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      2608
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE"
     ]
   },
   {
@@ -26611,7 +26659,7 @@
     "despawnDelay": 2300,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      2609
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
     ]
   },
   {
@@ -26635,8 +26683,8 @@
     "despawnDelay": 550,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      2608,
-      2609
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE",
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
     ]
   },
   {
@@ -26660,8 +26708,8 @@
     "despawnDelay": 550,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      2608,
-      2609
+      "SPOTANIM_CASTLOWLVLALCHEMY_FIRE",
+      "SPOTANIM_CASTHIGHLVLALCHEMY_FIRE"
     ]
   },
   {
@@ -26683,7 +26731,7 @@
     "fadeInDuration": 1350,
     "fadeOutDuration": 450,
     "graphicsObjectIds": [
-      2610
+      "TRAILBLAZER_DEATH_SPOTANIM"
     ]
   },
   {
@@ -26705,7 +26753,7 @@
     "fadeOutDuration": 450,
     "despawnDelay" : 900,
     "graphicsObjectIds": [
-      2611
+      "TRAILBLAZER_SPAWN_SPOTANIM"
     ]
   },
   {
@@ -26727,7 +26775,7 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [
-      2605
+      "TRAILBLAZER_VENGEANCE_SPOTANIM_01"
     ]
   },
   {
@@ -26749,7 +26797,7 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [
-      2605
+      "TRAILBLAZER_VENGEANCE_SPOTANIM_01"
     ]
   },
   {
@@ -26771,7 +26819,7 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 300,
     "graphicsObjectIds": [
-      2605
+      "TRAILBLAZER_VENGEANCE_SPOTANIM_01"
     ]
   },
   {
@@ -26795,7 +26843,7 @@
     "despawnDelay": 875,
     "fadeOutDuration": 75,
     "graphicsObjectIds": [
-      148
+      "SUPERHEATITEM_CASTING"
     ]
   },
   {
@@ -26813,7 +26861,7 @@
     "duration": 0,
     "range": 10,
     "projectileIds": [
-      143
+      "TELEGRAB_TRAVEL"
     ]
   },
   {
@@ -26831,7 +26879,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      91
+      "WINDSTRIKE_TRAVEL"
     ]
   },
   {
@@ -26849,7 +26897,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      94
+      "WATERSTRIKE_TRAVEL"
     ]
   },
   {
@@ -26867,7 +26915,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      97
+      "EARTHSTRIKE_TRAVEL"
     ]
   },
   {
@@ -26885,7 +26933,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      100
+      "FIRESTRIKE_TRAVEL"
     ]
   },
   {
@@ -26903,7 +26951,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      118
+      "WINDBOLT_TRAVEL"
     ]
   },
   {
@@ -26921,7 +26969,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      121
+      "WATERBOLT_TRAVEL"
     ]
   },
   {
@@ -26939,7 +26987,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      124
+      "EARTHBOLT_TRAVEL"
     ]
   },
   {
@@ -26957,7 +27005,7 @@
     "fadeOutDuration": 250,
     "fadeInDuration": 1000,
     "projectileIds": [
-      127
+      "FIREBOLT_TRAVEL"
     ]
   },
   {
@@ -26975,7 +27023,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      133
+      "WINDBLAST_TRAVEL"
     ]
   },
   {
@@ -26993,7 +27041,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      136
+      "WATERBLAST_TRAVEL"
     ]
   },
   {
@@ -27011,7 +27059,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      139
+      "EARTHBLAST_TRAVEL"
     ]
   },
   {
@@ -27029,7 +27077,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      130
+      "FIREBLAST_TRAVEL"
     ]
   },
   {
@@ -27047,7 +27095,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      159
+      "WINDWAVE_TRAVEL"
     ]
   },
   {
@@ -27065,7 +27113,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      162
+      "WATERWAVE_TRAVEL"
     ]
   },
   {
@@ -27083,7 +27131,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      165
+      "EARTHWAVE_TRAVEL"
     ]
   },
   {
@@ -27101,7 +27149,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      156
+      "FIREWAVE_TRAVEL"
     ]
   },
   {
@@ -27119,7 +27167,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      1456
+      "WINDSURGE_TRAVEL"
     ]
   },
   {
@@ -27137,7 +27185,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      1459
+      "WATERSURGE_TRAVEL"
     ]
   },
   {
@@ -27155,7 +27203,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      1462
+      "EARTHSURGE_TRAVEL"
     ]
   },
   {
@@ -27173,7 +27221,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      1465
+      "FIRESURGE_TRAVEL"
     ]
   },
   {
@@ -27190,7 +27238,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      103
+      "CONFUSE_TRAVEL"
     ]
   },
   {
@@ -27207,7 +27255,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      106
+      "WEAKEN_TRAVEL"
     ]
   },
   {
@@ -27224,7 +27272,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      109
+      "CURSE_TRAVEL"
     ]
   },
   {
@@ -27241,7 +27289,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      168
+      "VULNERABILITY_TRAVEL"
     ]
   },
   {
@@ -27258,7 +27306,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      171
+      "ENFEEBLE_TRAVEL"
     ]
   },
   {
@@ -27275,7 +27323,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      174
+      "STUN_TRAVEL"
     ]
   },
   {
@@ -27292,7 +27340,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      178
+      "ENTANGLE_TRAVEL"
     ]
   },
   {
@@ -27309,7 +27357,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      146
+      "CRUMBLEUNDEAD_TRAVEL"
     ]
   },
   {
@@ -27326,7 +27374,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      328
+      "SLAYER_MAGICDART_TRAVEL"
     ]
   },
   {
@@ -27343,7 +27391,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      88
+      "IBANBLAST_TRAVEL"
     ]
   },
   {
@@ -27360,7 +27408,7 @@
     "range": 20,
     "fadeInDuration": 1000,
     "projectileIds": [
-      344
+      "BALLISTA_SPECIAL"
     ]
   },
   {
@@ -27377,7 +27425,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      1040
+      "TOXIC_TOTS_PROJECTILE"
     ]
   },
   {
@@ -27394,7 +27442,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      1252
+      "SLAYER_TOTS_PROJECTILE"
     ]
   },
   {
@@ -27412,7 +27460,7 @@
     "range": 10,
     "fadeOutDuration": 250,
     "projectileIds": [
-      2569
+      "VFX_WARPED_SCEPTRE_PROJECTILE_PROJECTILE"
     ]
   },
   {
@@ -27429,7 +27477,7 @@
     "fadeInDuration": 400,
     "fadeOutDuration": 600,
     "projectileIds": [
-      2126
+      "TUMEKENS_SHADOW_TRAVEL"
     ]
   },
   {
@@ -27448,7 +27496,7 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 175,
     "graphicsObjectIds": [
-      2125
+      "TUMEKENS_SHADOW_CASTING"
     ]
   },
   {
@@ -27465,7 +27513,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      384
+      "SMOKE_RUSH_TRAVEL"
     ]
   },
   {
@@ -27482,7 +27530,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      378
+      "SHADOW_RUSH_TRAVEL"
     ]
   },
   {
@@ -27499,7 +27547,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      360
+      "ICE_RUSH_TRAVEL"
     ]
   },
   {
@@ -27516,7 +27564,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      386
+      "SMOKE_BLITZ_TRAVEL"
     ]
   },
   {
@@ -27533,7 +27581,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      380
+      "SHADOW_BLITZ_TRAVEL"
     ]
   },
   {
@@ -27550,7 +27598,7 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      374
+      "BLOOD_BLITZ_TRAVEL"
     ]
   },
   {
@@ -27572,7 +27620,7 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1856
+      "GHOSTLY_GRASP_CAST_SPOTANIM"
     ]
   },
   {
@@ -27595,8 +27643,8 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1857,
-      1858
+      "GHOSTLY_GRASP_HIT_SPOTANIM",
+      "GHOSTLY_GRASP_MISS_SPOTANIM"
     ]
   },
   {
@@ -27619,8 +27667,8 @@
     "fadeInDuration": 75,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      1857,
-      1858
+      "GHOSTLY_GRASP_HIT_SPOTANIM",
+      "GHOSTLY_GRASP_MISS_SPOTANIM"
     ]
   },
   {
@@ -27642,7 +27690,7 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1859
+      "SKELETAL_GRASP_CAST_SPOTANIM"
     ]
   },
   {
@@ -27665,8 +27713,8 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1860,
-      1861
+      "SKELETAL_GRASP_HIT_SPOTANIM",
+      "SKELETAL_GRASP_MISS_SPOTANIM"
     ]
   },
   {
@@ -27689,8 +27737,8 @@
     "fadeInDuration": 75,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      1860,
-      1861
+      "SKELETAL_GRASP_HIT_SPOTANIM",
+      "SKELETAL_GRASP_MISS_SPOTANIM"
     ]
   },
   {
@@ -27712,7 +27760,7 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1862
+      "UNDEAD_GRASP_CAST_SPOTANIM"
     ]
   },
   {
@@ -27735,8 +27783,8 @@
     "fadeInDuration": 200,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1863,
-      1864
+      "UNDEAD_GRASP_HIT_SPOTANIM",
+      "UNDEAD_GRASP_MISS_SPOTANIM"
     ]
   },
   {
@@ -27759,8 +27807,8 @@
     "fadeInDuration": 75,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      1863,
-      1864
+      "UNDEAD_GRASP_HIT_SPOTANIM",
+      "UNDEAD_GRASP_MISS_SPOTANIM"
     ]
   },
   {
@@ -27783,7 +27831,7 @@
     "despawnDelay": 1450,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1865
+      "INFERIOR_DEMONBANE_CAST_SPOTANIM"
     ]
   },
   {
@@ -27806,7 +27854,7 @@
     "despawnDelay": 500,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1866
+      "INFERIOR_DEMONBANE_HIT_SPOTANIM"
     ]
   },
   {
@@ -27829,7 +27877,7 @@
     "despawnDelay": 1450,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1867
+      "SUPERIOR_DEMONBANE_CAST_SPOTANIM"
     ]
   },
   {
@@ -27852,7 +27900,7 @@
     "despawnDelay": 500,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1868
+      "SUPERIOR_DEMONBANE_HIT_SPOTANIM"
     ]
   },
   {
@@ -27875,7 +27923,7 @@
     "despawnDelay": 1450,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1869
+      "DARK_DEMONBANE_CAST_SPOTANIM"
     ]
   },
   {
@@ -27898,7 +27946,7 @@
     "despawnDelay": 500,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1870
+      "DARK_DEMONBANE_HIT_SPOTANIM"
     ]
   },
   {
@@ -27920,7 +27968,7 @@
     "fadeOutDuration": 250,
     "despawnDelay": 1000,
     "graphicsObjectIds": [
-      1877
+      "LESSER_CORRUPTION_CAST_SPOTANIM"
     ]
   },
   {
@@ -27943,7 +27991,7 @@
     "spawnDelay": 1000,
     "despawnDelay": 600,
     "graphicsObjectIds": [
-      1877
+      "LESSER_CORRUPTION_CAST_SPOTANIM"
     ]
   },
   {
@@ -27963,7 +28011,7 @@
     "fadeInDuration": 250,
     "fadeOutDuration": 125,
     "graphicsObjectIds": [
-      1878
+      "GREATER_CORRUPTION_CAST_SPOTANIM"
     ]
   },
   {
@@ -27982,7 +28030,7 @@
     "fadeInDuration": 250,
     "fadeOutDuration": 250,
     "projectileIds": [
-      1883
+      "DARK_LURE_TRAVEL_PROJANIM"
     ]
   },
   {
@@ -28005,7 +28053,7 @@
     "despawnDelay": 1350,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1876
+      "VILE_VIGOUR_CAST_SPOTANIM"
     ]
   },
   {
@@ -28028,7 +28076,7 @@
     "despawnDelay": 1350,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1852
+      "MARK_OF_DARKNESS_CAST_SPOTANIM"
     ]
   },
   {
@@ -28052,7 +28100,7 @@
     "despawnDelay": 1500,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1852
+      "MARK_OF_DARKNESS_CAST_SPOTANIM"
     ]
   },
   {
@@ -28072,7 +28120,7 @@
     "fadeInDuration": 150,
     "fadeOutDuration": 150,
     "graphicsObjectIds": [
-      1886
+      "MARK_OF_DARKNESS_END_SPOTANIM"
     ]
   },
   {
@@ -28095,7 +28143,7 @@
     "despawnDelay": 2250,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1851
+      "WARD_OF_ARCEUUS_CAST_SPOTANIM"
     ]
   },
   {
@@ -28116,7 +28164,7 @@
     "spawnDelay": 500,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1854
+      "DEATH_CHARGE_CAST_SPOTANIM"
     ]
   },
   {
@@ -28139,7 +28187,7 @@
     "despawnDelay": 1250,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [
-      1296
+      "ARCEUUS_TELEPORT_SPOTANIM"
     ]
   },
   {
@@ -28156,7 +28204,7 @@
     "range": 0,
     "fadeInDuration": 300,
     "projectileIds": [
-      249
+      "SP_ATTACK_GLOW_ARROW_TRAVEL"
     ]
   },
   {
@@ -28173,7 +28221,7 @@
     "range": 0,
     "fadeInDuration": 300,
     "projectileIds": [
-      1574
+      "WILD_CAVE_BOW_ARROW_TRAVEL"
     ]
   },
   {
@@ -28190,7 +28238,7 @@
     "range": 30,
     "fadeInDuration": 300,
     "projectileIds": [
-      17
+      "FIRE_ARROW_TRAVEL"
     ]
   },
   {
@@ -28207,7 +28255,7 @@
     "range": 0,
     "fadeInDuration": 300,
     "projectileIds": [
-      301
+      "ACB_SPECIALATTACK"
     ]
   },
   {
@@ -28224,7 +28272,7 @@
     "range": 0,
     "fadeInDuration": 500,
     "projectileIds": [
-      450
+      "TZHAAR_FIRE_SPIT_END_TRAVEL"
     ]
   },
   {
@@ -28241,7 +28289,7 @@
     "range": 0,
     "fadeInDuration": 500,
     "projectileIds": [
-      54
+      "FIREBREATH_TRAVEL"
     ]
   },
   {
@@ -28258,62 +28306,8 @@
     "range": 0,
     "fadeInDuration": 1000,
     "projectileIds": [
-      1679
+      "HOSDUN_DRUID_WAVE_TRAVEL"
     ]
-  },
-  {
-    "description": "CERBERUS_LAIR_NORTH",
-    "worldX": 1304,
-    "worldY": 1316,
-    "plane": 0,
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 4000,
-    "strength": 10,
-    "color": [
-      245.70636,
-      164.33739,
-      85.43297
-    ],
-    "type": "PULSE",
-    "duration": 7000,
-    "range": 10
-  },
-  {
-    "description": "CERBERUS_LAIR_WEST",
-    "worldX": 1240,
-    "worldY": 1252,
-    "plane": 0,
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 4000,
-    "strength": 10,
-    "color": [
-      245.70636,
-      164.33739,
-      85.43297
-    ],
-    "type": "PULSE",
-    "duration": 7000,
-    "range": 10
-  },
-  {
-    "description": "CERBERUS_LAIR_EAST",
-    "worldX": 1368,
-    "worldY": 1252,
-    "plane": 0,
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 4000,
-    "strength": 10,
-    "color": [
-      245.70636,
-      164.33739,
-      85.43297
-    ],
-    "type": "PULSE",
-    "duration": 7000,
-    "range": 10
   },
   {
     "description": "CERBERUS_LAIR_FIRE",
@@ -28321,6 +28315,8 @@
     "alignment": "CENTER",
     "radius": 800,
     "strength": 20,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
     "color": [
       252,
       148,
@@ -28330,25 +28326,143 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      23105
+      "HELLHOUND_FIREWALL"
     ]
   },
   {
-    "description": "CERBERUS_LAIR_SOUL_DEVOURER",
-    "height": 80,
-    "alignment": "CENTER",
-    "radius": 5000,
+    "description": "CERBERUS_LAIR_SOUL_DEVOURER_LEFT_EYE",
+    "offset": [ -90, 350, 80 ],
+    "radius": 350,
     "strength": 30,
     "color": [
-      252,
-      148,
-      3
+      170,
+      140,
+      255
     ],
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
     "objectIds": [
-      21773
+      "SOUL_SKULL_EATER"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_SOUL_DEVOURER_RIGHT_EYE",
+    "offset": [ -90, 350, -80 ],
+    "radius": 350,
+    "strength": 30,
+    "color": [
+      170,
+      140,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SOUL_SKULL_EATER"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_RIVER_LIGHT_1",
+    "offset": [ 0, 350, -400 ],
+    "radius": 1050,
+    "strength": 7,
+    "color": [
+      170,
+      140,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3000,
+    "range": 8,
+    "objectIds": [
+      "SOUL_BOAT"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_RIVER_LIGHT_2",
+    "offset": [ 0, 350, 400 ],
+    "radius": 1050,
+    "strength": 7,
+    "color": [
+      170,
+      140,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3100,
+    "range": 8,
+    "objectIds": [
+      "SOUL_BOAT"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_RIVER_LIGHT_3",
+    "offset": [ 0, 350, 1200 ],
+    "radius": 1550,
+    "strength": 6,
+    "color": [
+      170,
+      140,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 8,
+    "objectIds": [
+      "SOUL_BOAT"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_RIVER_LIGHT_4",
+    "offset": [ 0, 350, 2000 ],
+    "radius": 1050,
+    "strength": 7,
+    "color": [
+      170,
+      140,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2700,
+    "range": 8,
+    "objectIds": [
+      "SOUL_BOAT"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_RIVER_LIGHT_5",
+    "offset": [ 0, 350, 2800 ],
+    "radius": 1050,
+    "strength": 7,
+    "color": [
+      170,
+      140,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2500,
+    "range": 8,
+    "objectIds": [
+      "SOUL_BOAT"
+    ]
+  },
+  {
+    "description": "CERBERUS_LAIR_RIVER_LIGHT_6",
+    "offset": [ 0, 350, 3600 ],
+    "radius": 1050,
+    "strength": 7,
+    "color": [
+      170,
+      140,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3500,
+    "range": 8,
+    "objectIds": [
+      "SOUL_BOAT"
     ]
   },
   {
@@ -28366,7 +28480,7 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      8144
+      "DS2_DRAGON_HEAD_LIT"
     ]
   },
   {
@@ -28384,12 +28498,12 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      32215,
-      32216,
-      32217,
-      32218,
-      32219,
-      32220
+      "DS2_AC_FORGE_ANVIL",
+      "DS2_AC_FORGE_ANVIL_UNLIT",
+      "DS2_AC_FORGE_BLANK",
+      "DS2_AC_FORGE_FLOW",
+      "DS2_AC_FORGE_INSIDE_CORNER",
+      "DS2_AC_FORGE_OUTER_CORNER"
     ]
   },
   {
@@ -28407,7 +28521,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      32213
+      "DS2_AC_FORGE_DRAGON_HEAD_LIT"
     ]
   },
   {
@@ -28425,9 +28539,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      32224,
-      32222,
-      32223
+      "DS2_AC_FORGE_WALL_WITH_HOLE",
+      "DS2_AC_FORGE_FLOOR_LIT_CORNER",
+      "DS2_AC_FORGE_FLOOR_LIT_STRAIGHT"
     ]
   },
   {
@@ -28445,7 +28559,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      32210
+      "DS2_DRAGONKIN_ORB_LIT"
     ]
   },
   {
@@ -28463,7 +28577,7 @@
     "duration": 1200,
     "range": 10,
     "objectIds": [
-      43765
+      "TOTE_PORTAL_TO_GOTR_CHILD"
     ]
   },
   {
@@ -28499,7 +28613,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      43695
+      "GOTR_REWARD_RIFT"
     ]
   },
   {
@@ -28517,7 +28631,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      43696
+      "GOTR_DEPOSITCHEST"
     ]
   },
   {
@@ -28535,9 +28649,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43704,
-      43787,
-      43812
+      "GOTR_PORTAL_FIRE",
+      "TOTE_PORTAL_FIRE",
+      "TOTE_TUTORIAL_PORTAL_FIRE"
     ]
   },
   {
@@ -28555,9 +28669,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43711,
-      43794,
-      43819
+      "GOTR_PORTAL_NATURE",
+      "TOTE_PORTAL_NATURE",
+      "TOTE_TUTORIAL_PORTAL_NATURE"
     ]
   },
   {
@@ -28575,9 +28689,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43703,
-      43786,
-      43811
+      "GOTR_PORTAL_EARTH",
+      "TOTE_PORTAL_EARTH",
+      "TOTE_TUTORIAL_PORTAL_EARTH"
     ]
   },
   {
@@ -28595,10 +28709,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43702,
-      43785,
-      43810,
-      43821
+      "GOTR_PORTAL_WATER",
+      "TOTE_PORTAL_WATER",
+      "TOTE_TUTORIAL_PORTAL_WATER",
+      "TOTE_PORTAL_WATER_ACTIVE"
     ]
   },
   {
@@ -28616,9 +28730,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43710,
-      43793,
-      43818
+      "GOTR_PORTAL_COSMIC",
+      "TOTE_PORTAL_COSMIC",
+      "TOTE_TUTORIAL_PORTAL_COSMIC"
     ]
   },
   {
@@ -28636,9 +28750,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43701,
-      43784,
-      43809
+      "GOTR_PORTAL_AIR",
+      "TOTE_PORTAL_AIR",
+      "TOTE_TUTORIAL_PORTAL_AIR"
     ]
   },
   {
@@ -28656,10 +28770,10 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43705,
-      43788,
-      43813,
-      43822
+      "GOTR_PORTAL_MIND",
+      "TOTE_PORTAL_MIND",
+      "TOTE_TUTORIAL_PORTAL_MIND",
+      "TOTE_PORTAL_MIND_ACTIVE"
     ]
   },
   {
@@ -28677,9 +28791,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43709,
-      43792,
-      43817
+      "GOTR_PORTAL_BODY",
+      "TOTE_PORTAL_BODY",
+      "TOTE_TUTORIAL_PORTAL_BODY"
     ]
   },
   {
@@ -28697,9 +28811,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43706,
-      43789,
-      43814
+      "GOTR_PORTAL_CHAOS",
+      "TOTE_PORTAL_CHAOS",
+      "TOTE_TUTORIAL_PORTAL_CHAOS"
     ]
   },
   {
@@ -28717,9 +28831,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43707,
-      43790,
-      43815
+      "GOTR_PORTAL_DEATH",
+      "TOTE_PORTAL_DEATH",
+      "TOTE_TUTORIAL_PORTAL_DEATH"
     ]
   },
   {
@@ -28737,9 +28851,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43712,
-      43795,
-      43820
+      "GOTR_PORTAL_LAW",
+      "TOTE_PORTAL_LAW",
+      "TOTE_TUTORIAL_PORTAL_LAW"
     ]
   },
   {
@@ -28757,9 +28871,9 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43708,
-      43791,
-      43816
+      "GOTR_PORTAL_BLOOD",
+      "TOTE_PORTAL_BLOOD",
+      "TOTE_TUTORIAL_PORTAL_BLOOD"
     ]
   },
   {
@@ -28777,8 +28891,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43729,
-      43730
+      "GOTR_AGILITY_PORTAL_TOP",
+      "GOTR_AGILITY_PORTAL_BOTTOM_CHILD"
     ]
   },
   {
@@ -28796,7 +28910,7 @@
     "duration": 4000,
     "range": 28,
     "objectIds": [
-      27029
+      "NEXUS_FONT_01"
     ]
   },
   {
@@ -28814,14 +28928,14 @@
     "duration": 1200,
     "range": 15,
     "objectIds": [
-      43713,
-      43714
+      "GOTR_ABYSSAL_RIFT",
+      "GOTR_ABYSSAL_RIFT_PHASE1"
     ]
   },
   {
     "description": "SIRE_BELLY_LIGHT_LOWER",
     "offset": [ 0, 250, 100 ],
-    "npcIds": [ 5890, 5889, 5891 ],
+    "npcIds": [ "ABYSSALSIRE_SIRE_WANDERING", "ABYSSALSIRE_SIRE_PUPPET", "ABYSSALSIRE_SIRE_PANICKING" ],
     "radius": 250,
     "strength": 125,
     "color": [
@@ -28836,7 +28950,7 @@
   {
     "description": "SIRE_BELLY_LIGHT_UPPER",
     "offset": [ 0, 350, 75 ],
-    "npcIds": [ 5890, 5889, 5891 ],
+    "npcIds": [ "ABYSSALSIRE_SIRE_WANDERING", "ABYSSALSIRE_SIRE_PUPPET", "ABYSSALSIRE_SIRE_PANICKING" ],
     "radius": 100,
     "strength": 125,
     "color": [
@@ -28851,7 +28965,7 @@
   {
     "description": "SIRE_BELLY_LIGHT_EXPLOSION",
     "offset": [ 0, 325, 200 ],
-    "npcIds": [ 5908 ],
+    "npcIds": [ "ABYSSALSIRE_SIRE_APOCALYPSE" ],
     "radius": 350,
     "strength": 200,
     "color": [
@@ -28864,8 +28978,8 @@
   {
     "description": "SIRE_BELLY_LIGHT_EXPLOSION_2",
     "offset": [ 0, 150, 275 ],
-    "npcIds": [ 5908 ],
-    "animationIds": [ -1, 7098, 7099 ],
+    "npcIds": [ "ABYSSALSIRE_SIRE_APOCALYPSE" ],
+    "animationIds": [ "-1", "SIRE_APOCALYPSE", "SIRE_IDLE_FOUR" ],
     "radius": 450,
     "strength": 15,
     "color": [
@@ -28883,7 +28997,7 @@
   {
     "description": "SIRE_THRONE_LIGHT",
     "offset": [ -50, 170, 50 ],
-    "objectIds": [ 26984 ],
+    "objectIds": [ "NEXUS_STASIS_CHAMBER_11" ],
     "radius": 700,
     "strength": 25,
     "color": [
@@ -28910,9 +29024,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      27014,
-      27015,
-      27016
+      "NEXUS_TENDRILS",
+      "NEXUS_TENDRILS_CORNER",
+      "NEXUS_TENDRILS_FALLOFF"
     ]
   },
   {
@@ -28926,7 +29040,7 @@
       242,
       31
     ],
-    "objectIds": [ 26953 ],
+    "objectIds": [ "NEXUS_LUNG_WHEEZING" ],
     "fadeInDuration": 200,
     "fadeOutDuration": 200
   },
@@ -28945,7 +29059,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43700
+      "GOTR_BARRIER"
     ]
   },
   {
@@ -28963,7 +29077,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43849
+      "GOTR_BARRIER_CLOSED"
     ]
   },
   {
@@ -28981,8 +29095,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43744,
-      43745
+      "GOTR_BARRIER_TIER1",
+      "GOTR_BARRIER_TIER1_3X3"
     ]
   },
   {
@@ -29000,8 +29114,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43746,
-      43747
+      "GOTR_BARRIER_TIER2",
+      "GOTR_BARRIER_TIER2_3X3"
     ]
   },
   {
@@ -29019,8 +29133,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43748,
-      43749
+      "GOTR_BARRIER_TIER3",
+      "GOTR_BARRIER_TIER3_3X3"
     ]
   },
   {
@@ -29038,8 +29152,8 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      43750,
-      43751
+      "GOTR_BARRIER_TIER4",
+      "GOTR_BARRIER_TIER4_3X3"
     ]
   },
   {
@@ -29057,7 +29171,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      43740
+      "GOTR_CELL_TILE_TIER1"
     ]
   },
   {
@@ -29075,7 +29189,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      43741
+      "GOTR_CELL_TILE_TIER2"
     ]
   },
   {
@@ -29093,7 +29207,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      43742
+      "GOTR_CELL_TILE_TIER3"
     ]
   },
   {
@@ -29111,7 +29225,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      43743
+      "GOTR_CELL_TILE_TIER4"
     ]
   },
   {
@@ -29128,23 +29242,23 @@
     "type": "FLICKER",
     "duration": 10,
     "range": 30,
-    "npcIds": [ 8612 ]
+    "npcIds": [ "DRAKE" ]
   },
   {
-  "description": "Drake Back Wound Left",
-  "height": 300,
-  "offset": [ -100, 0, -100 ],
-  "radius": 175,
-  "strength": 30,
-  "color": [
-    255,
-    0,
-    0
-  ],
-  "type": "FLICKER",
-  "duration": 10,
-  "range": 30,
-  "npcIds": [ 8612 ]
+    "description": "Drake Back Wound Left",
+    "height": 300,
+    "offset": [ -100, 0, -100 ],
+    "radius": 175,
+    "strength": 30,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 10,
+    "range": 30,
+    "npcIds": [ "DRAKE" ]
   },
   {
     "description": "Drake Back Wound Front",
@@ -29160,8 +29274,8 @@
     "type": "FLICKER",
     "duration": 10,
     "range": 30,
-    "npcIds": [ 8612 ],
-    "animationIds": [ -1, 8276 ],
+    "npcIds": [ "DRAKE" ],
+    "animationIds": [ "-1", "DRAKE_RANGED" ],
     "fadeOutDuration": 300,
     "fadeInDuration": 750
   },
@@ -29175,8 +29289,8 @@
     "type": "FLICKER",
     "duration": 10,
     "range": 5,
-    "npcIds": [ 8612 ],
-    "animationIds": [ -1 ],
+    "npcIds": [ "DRAKE" ],
+    "animationIds": [ "-1" ],
     "fadeInDuration": 300
   },
   {
@@ -29192,7 +29306,7 @@
     "type": "FLICKER",
     "duration": 1,
     "range": 80,
-    "projectileIds": [ 1636 ],
+    "projectileIds": [ "DRAKE_RANGE_PROJ" ],
     "spawnDelay": 800,
     "fadeInDuration": 300,
     "fadeOutDuration": 100
@@ -29206,7 +29320,7 @@
     "type": "FLICKER",
     "duration": 5,
     "range": 60,
-    "projectileIds": [ 1637 ],
+    "projectileIds": [ "DRAKE_BURN_PROJ" ],
     "spawnDelay": 255,
     "fadeInDuration": 150,
     "fadeOutDuration": 150
@@ -29220,7 +29334,7 @@
     "type": "FLICKER",
     "duration": 2,
     "range": 80,
-    "graphicsObjectIds": [ 1638 ],
+    "graphicsObjectIds": [ "DRAKE_BURN_IMPACT" ],
     "fadeInDuration": 50,
     "fadeOutDuration": 50
   },
@@ -29237,7 +29351,7 @@
     "type": "FLICKER",
     "duration": 10,
     "range": 70,
-    "npcIds": [ 8610 ],
+    "npcIds": [ "WYRM_DARK" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 100
   },
@@ -29254,7 +29368,7 @@
     "type": "FLICKER",
     "duration": 10,
     "range": 70,
-    "npcIds": [ 10398 ],
+    "npcIds": [ "SUPERIOR_WYRM_DARK" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 100
   },
@@ -29272,7 +29386,7 @@
     "type": "FLICKER",
     "duration": 1,
     "range": 80,
-    "projectileIds": [ 1634 ],
+    "projectileIds": [ "WYRM_RANGE_PROJ" ],
     "spawnDelay": 400,
     "fadeInDuration": 300,
     "fadeOutDuration": 100
@@ -29290,7 +29404,7 @@
     "type": "FLICKER",
     "duration": 10,
     "range": 70,
-    "projectileIds": [ 1814 ],
+    "projectileIds": [ "SUPERIOR_WYRM_RANGE_PROJ" ],
     "spawnDelay": 400,
     "fadeInDuration": 300,
     "fadeOutDuration": 100
@@ -30804,7 +30918,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      34335
+      "BRIMSTONE_LAVA_CRATER"
     ]
   },
   {
@@ -30860,8 +30974,8 @@
     "fadeInDuration": 50,
     "fadeOutDuration": 100,
     "objectIds": [
-      29314,
-      31926
+      "WINT_BRAZIER_LIT",
+      "OSB5_BRAZIER_LIT"
     ]
   },
   {
@@ -30878,8 +30992,8 @@
     "duration": 10,
     "range": 45,
     "objectIds": [
-      29314,
-      31926
+      "WINT_BRAZIER_LIT",
+      "OSB5_BRAZIER_LIT"
     ]
   },
   {
@@ -30897,7 +31011,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      29322
+      "WINT_DOOR"
     ]
   },
   {
@@ -30915,7 +31029,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      29322
+      "WINT_DOOR"
     ]
   },
   {
@@ -30933,7 +31047,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      29322
+      "WINT_DOOR"
     ]
   },
   {
@@ -30951,7 +31065,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      29322
+      "WINT_DOOR"
     ]
   },
   {
@@ -30969,7 +31083,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      14437
+      "WILD_FALLOFF_CRATER"
     ]
   },
   {
@@ -30987,7 +31101,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      14438
+      "WILD_FALLOFF_CRATER_SMALL"
     ]
   },
   {
@@ -31005,7 +31119,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      14419
+      "WILD_FALLOFF4"
     ]
   },
   {
@@ -31516,7 +31630,7 @@
       38
     ],
     "objectIds": [
-      44624
+      "GIANTS_FOUNDRY_CRUCIBLE_FULL"
     ],
     "type": "PULSE",
     "duration": 7000,
@@ -31534,7 +31648,7 @@
       38
     ],
     "objectIds": [
-      44627
+      "GIANTS_FOUNDRY_JIG_MOULD_FILLED"
     ],
     "type": "PULSE",
     "duration": 7000,
@@ -31555,7 +31669,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      28562
+      "LOVAKENGJ_FURNACE_LARGE_01"
     ]
   },
   {
@@ -31573,7 +31687,7 @@
     "duration": 200,
     "range": 15,
     "objectIds": [
-      29088
+      "WCGUILD_SHRINE"
     ]
   },
   {
@@ -31591,7 +31705,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      40149
+      "CON_CONTRACT_FALADOR_SOUTH_RANGE_FIXED"
     ]
   },
   {
@@ -31609,7 +31723,7 @@
     "duration": 2000,
     "range": 10,
     "objectIds": [
-      31969
+      "SHAYZIENQUEST_CRYSTAL"
     ]
   },
   {
@@ -31627,7 +31741,7 @@
     "duration": 2000,
     "range": 10,
     "objectIds": [
-      31970
+      "SHAYZIENQUEST_CRYSTAL_LARGE"
     ]
   },
   {
@@ -31645,7 +31759,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      32524
+      "SHAY_CAVE_XERIC_RELIEF"
     ]
   },
   {
@@ -31663,8 +31777,8 @@
     "duration": 500,
     "range": 10,
     "objectIds": [
-      44023,
-      44024
+      "BCS_MAGIC_FIRE_SMALL_1",
+      "BCS_MAGIC_FIRE_SMALL_2"
     ]
   },
   {
@@ -31682,7 +31796,7 @@
     "duration": 1000,
     "range": 10,
     "objectIds": [
-      44022
+      "BCS_MAGIC_FIRE"
     ]
   },
   {
@@ -31700,7 +31814,7 @@
     "duration": 800,
     "range": 7,
     "objectIds": [
-      4767
+      "MM_PYRE"
     ]
   },
   {
@@ -31718,7 +31832,7 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      28687
+      "MM2_CAVE_BOSS_EXIT"
     ]
   },
   {
@@ -31772,7 +31886,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34562
+      "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_BLUE"
     ]
   },
   {
@@ -31790,7 +31904,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34563
+      "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_GREEN"
     ]
   },
   {
@@ -31808,7 +31922,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34564
+      "KARUULM_HYDRA_ROOM_FLOOR_VIAL_LARGE_RED"
     ]
   },
   {
@@ -31826,7 +31940,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34571
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_BLUE"
     ]
   },
   {
@@ -31844,7 +31958,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34572
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_GREEN"
     ]
   },
   {
@@ -31862,7 +31976,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34573
+      "KARUULM_HYDRA_ROOM_FLOOR_LONG_PIPE_RED"
     ]
   },
   {
@@ -31880,7 +31994,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34565
+      "KARUULM_HYDRA_ROOM_WALL_PIPE_BLUE"
     ]
   },
   {
@@ -31898,7 +32012,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34566
+      "KARUULM_HYDRA_ROOM_WALL_PIPE_GREEN"
     ]
   },
   {
@@ -31916,7 +32030,7 @@
     "duration": 7000,
     "range": 50,
     "objectIds": [
-      34567
+      "KARUULM_HYDRA_ROOM_WALL_PIPE_RED"
     ]
   },
   {
@@ -31934,13 +32048,13 @@
     "duration": 600,
     "range": 10,
     "objectIds": [
-      46089,
-      46090,
-      46164,
-      46161,
-      46155,
-      46158,
-      46167
+      "TOA_LOBBY_RAID_ENTRY",
+      "TOA_LOBBY_RAID_ENTRY_NOOP",
+      "TOA_NEXUS_HET_DOOR",
+      "TOA_NEXUS_CRONDIS_DOOR",
+      "TOA_NEXUS_SCABARAS_DOOR",
+      "TOA_NEXUS_APMEKEN_DOOR",
+      "TOA_NEXUS_WARDENS_DOOR"
     ]
   },
   {
@@ -31958,7 +32072,7 @@
     "duration": 600,
     "range": 4,
     "objectIds": [
-      46168
+      "TOA_NEXUS_WARDENS_DOOR_OPEN"
     ]
   },
   {
@@ -32109,11 +32223,11 @@
     "duration": 1800,
     "range": 9,
     "objectIds": [
-      45505,
-      45506,
-      45579,
-      45754,
-      45866
+      "KEPHRI_TELEPORT",
+      "ZEBAK_TELEPORT",
+      "WARDENS_TELEPORT",
+      "BABA_TELEPORT",
+      "AKKHA_TELEPORT"
     ]
   },
   {
@@ -32131,7 +32245,7 @@
     "duration": 600,
     "range": 10,
     "objectIds": [
-      45334
+      "TOA_FX_FIRE01_SMALL01"
     ]
   },
   {
@@ -32149,8 +32263,8 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      45135,
-      45335
+      "TOA_PATH_BARRIER",
+      "TOA_SCABARAS_BARRIER"
     ]
   },
   {
@@ -32168,7 +32282,7 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      45499
+      "TOA_PATH_APMEKEN_VENT"
     ]
   },
   {
@@ -32186,8 +32300,8 @@
     "duration": 1400,
     "range": 5,
     "graphicsObjectIds": [
-      2134,
-      2135
+      "TOA_PATH_APMEKEN_SIGHT_WARNING",
+      "TOA_PATH_APMEKEN_SIGHT_WARNING02"
     ]
   },
   {
@@ -32205,7 +32319,7 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      45344
+      "TOA_SCABARAS_LIGHTSOUT_TILE_OFF"
     ]
   },
   {
@@ -32223,18 +32337,18 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      45341,
-      45384,
-      45386,
-      45387,
-      45388,
-      45389,
-      45390,
-      45391,
-      45392,
-      45393,
-      45394,
-      45395
+      "TOA_SCABARAS_SIMONSAYS_TILE_DOWN",
+      "TOA_SCABARAS_FX01",
+      "TOA_SCABARAS_FX03",
+      "TOA_SCABARAS_FX04",
+      "TOA_SCABARAS_FX05",
+      "TOA_SCABARAS_FX06",
+      "TOA_SCABARAS_FX07",
+      "TOA_SCABARAS_FX08",
+      "TOA_SCABARAS_FX09",
+      "TOA_SCABARAS_FX10",
+      "TOA_SCABARAS_FX11",
+      "TOA_SCABARAS_FX12"
     ]
   },
   {
@@ -32252,7 +32366,7 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      45342
+      "TOA_SCABARAS_SIMONSAYS_TILE_DOWN_PLAYER"
     ]
   },
   {
@@ -32270,7 +32384,7 @@
     "duration": 600,
     "range": 3,
     "npcIds": [
-      11699
+      "TOA_SCABARAS_GUESSER_OBELISK_HIT"
     ]
   },
   {
@@ -32288,7 +32402,7 @@
     "duration": 1800,
     "range": 5,
     "npcIds": [
-      11706
+      "TOA_HET_GOAL"
     ]
   },
   {
@@ -32306,7 +32420,7 @@
     "duration": 1800,
     "range": 5,
     "npcIds": [
-      11707
+      "TOA_HET_GOAL_VULNERABLE"
     ]
   },
   {
@@ -32324,7 +32438,7 @@
     "duration": 1800,
     "range": 2,
     "npcIds": [
-      11708
+      "TOA_HET_ORB"
     ]
   },
   {
@@ -32341,7 +32455,7 @@
     "range": 3,
     "fadeInDuration": 0,
     "projectileIds": [
-      2253
+      "AKKHA_MAGIC_TRAVEL"
     ]
   },
   {
@@ -32358,8 +32472,8 @@
     "range": 3,
     "fadeInDuration": 0,
     "projectileIds": [
-      1481,
-      2266
+      "VORKATH_AREA_TRAVEL",
+      "VORKATH_AREA_TRAVEL_SMALL"
     ]
   },
   {
@@ -32377,7 +32491,7 @@
     "duration": 400,
     "range": 3,
     "objectIds": [
-      45868
+      "AKKHA_SYMBOL_GLOW_BURN"
     ]
   },
   {
@@ -32395,7 +32509,7 @@
     "duration": 400,
     "range": 3,
     "objectIds": [
-      45869
+      "AKKHA_SYMBOL_GLOW_LIGHTNING"
     ]
   },
   {
@@ -32413,7 +32527,7 @@
     "duration": 400,
     "range": 3,
     "objectIds": [
-      45870
+      "AKKHA_SYMBOL_GLOW_FREEZE"
     ]
   },
   {
@@ -32431,7 +32545,7 @@
     "duration": 400,
     "range": 3,
     "objectIds": [
-      45871
+      "AKKHA_SYMBOL_GLOW_DARKNESS"
     ]
   },
   {
@@ -32449,7 +32563,7 @@
     "duration": 600,
     "range": 5,
     "npcIds": [
-      11804
+      "AKKHA_ENRAGE_ORB"
     ]
   },
   {
@@ -32467,7 +32581,7 @@
     "duration": 300,
     "range": 3,
     "projectileIds": [
-      2181
+      "ZEBAK_MAGE_PROJANIM_SPLIT"
     ]
   },
   {
@@ -32485,7 +32599,7 @@
     "duration": 300,
     "range": 3,
     "objectIds": [
-      45525
+      "TOA_WALL_CROCODILES04"
     ]
   },
   {
@@ -32503,7 +32617,7 @@
     "duration": 600,
     "range": 3,
     "npcIds": [
-      11694
+      "TOA_MIDRAIDLOOT_TRADER"
     ]
   },
   {
@@ -32521,9 +32635,9 @@
     "duration": 600,
     "range": 2,
     "npcIds": [
-      11750,
-      11751,
-      11752
+      "TOA_WARDENS_P1_OBELISK_NPC_INACTIVE",
+      "TOA_WARDENS_P1_OBELISK_NPC",
+      "TOA_WARDENS_P2_OBELISK_NPC"
     ]
   },
   {
@@ -32541,7 +32655,7 @@
     "duration": 600,
     "range": 2,
     "npcIds": [
-      11769
+      "TOA_WARDENS_ENERGY"
     ]
   },
   {
@@ -32559,25 +32673,25 @@
     "duration": 600,
     "range": 2,
     "objectIds": [
-      45607,
-      45608,
-      45609,
-      45610,
-      45611,
-      45612,
-      45613,
-      45614,
-      45615,
-      45616,
-      45617,
-      45618,
-      45619,
-      45620,
-      45621,
-      45622,
-      45623,
-      45624,
-      45625
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_1",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_2",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_3",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_4",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_5",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_6",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_7",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_8",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_9",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_10",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_11",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_12",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_13",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_14",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_15",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_16",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_17",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_18",
+      "TOA_WARDENS_DEFAULT_CHARGING_PLATFORM_19"
     ]
   },
   {
@@ -32595,7 +32709,7 @@
     "duration": 600,
     "range": 2,
     "objectIds": [
-      45748
+      "TOA_WARDENS_PYRAMID01"
     ]
   },
   {
@@ -32613,7 +32727,7 @@
     "duration": 600,
     "range": 2,
     "objectIds": [
-      45750
+      "TOA_WARDENS_PYRAMID01_LOAD"
     ]
   },
   {
@@ -32631,7 +32745,7 @@
     "duration": 600,
     "range": 2,
     "objectIds": [
-      45749
+      "TOA_WARDENS_PYRAMID02"
     ]
   },
   {
@@ -32649,7 +32763,7 @@
     "duration": 600,
     "range": 2,
     "objectIds": [
-      45751
+      "TOA_WARDENS_PYRAMID02_LOAD"
     ]
   },
   {
@@ -32665,7 +32779,7 @@
     "duration": 600,
     "range": 2,
     "projectileIds": [
-      2237
+      "SPOTANIM_WARDENS_PHASE01_BALL01"
     ]
   },
   {
@@ -32681,7 +32795,7 @@
     "duration": 600,
     "range": 2,
     "projectileIds": [
-      2238
+      "SPOTANIM_WARDENS_PHASE01_BALL02"
     ]
   },
   {
@@ -32697,7 +32811,7 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2224
+      "FX_WARDENS_BOMB01"
     ]
   },
   {
@@ -32713,7 +32827,7 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2225
+      "FX_WARDENS_BOMB02"
     ]
   },
   {
@@ -32730,12 +32844,12 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2239,
-      2240
+      "PROJECTILE_WARDEN_TUMEKEN_CORE",
+      "PROJECTILE_WARDEN_ELIDINIS_CORE"
     ],
     "npcIds": [
-      11770,
-      11771
+      "TOA_WARDEN_TUMEKEN_CORE",
+      "TOA_WARDEN_ELIDINIS_CORE"
     ]
   },
   {
@@ -32751,7 +32865,7 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2204
+      "TOA_WARDENS_PRAYER_MELEE_TRAVEL"
     ]
   },
   {
@@ -32767,7 +32881,7 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2206
+      "TOA_WARDENS_PRAYER_RANGED_TRAVEL"
     ]
   },
   {
@@ -32783,7 +32897,7 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2208
+      "TOA_WARDENS_PRAYER_MAGIC_TRAVEL"
     ]
   },
   {
@@ -32800,10 +32914,10 @@
     "duration": 1800,
     "range": 3,
     "npcIds": [
-      11761,
-      11762,
-      11763,
-      11764
+      "TOA_WARDEN_ELIDINIS_PHASE3",
+      "TOA_WARDEN_TUMEKEN_PHASE3",
+      "TOA_WARDEN_ELIDINIS_PHASE3_CHARGING",
+      "TOA_WARDEN_TUMEKEN_PHASE3_CHARGING"
     ]
   },
   {
@@ -32820,10 +32934,10 @@
     "duration": 1800,
     "range": 3,
     "npcIds": [
-      11774,
-      11775,
-      11776,
-      11777
+      "TOA_WARDENS_ZEBAK",
+      "TOA_WARDENS_BABA",
+      "TOA_WARDENS_KEPHRI",
+      "TOA_WARDENS_AKKHA"
     ]
   },
   {
@@ -32840,7 +32954,7 @@
     "duration": 300,
     "range": 2,
     "npcIds": [
-      11772
+      "WARDENS_P3_ORB_BLUE"
     ]
   },
   {
@@ -32858,8 +32972,8 @@
     "range": 2,
     "fadeOutDuration": 200,
     "projectileIds": [
-      2226,
-      2227
+      "FX_WARDENS_BOMB03",
+      "FX_WARDENS_CHARGING01"
     ]
   },
   {
@@ -32876,7 +32990,7 @@
     "duration": 300,
     "range": 2,
     "npcIds": [
-      11773
+      "WARDENS_P3_ORB_RED"
     ]
   },
   {
@@ -32895,7 +33009,7 @@
     "range": 2,
     "fadeInDuration": 1200,
     "objectIds": [
-      45138
+      "TOA_TELEPORT_CRYSTAL_CONTINUE_WARDENS"
     ]
   },
   {
@@ -32913,7 +33027,7 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      44825
+      "TOA_VAULT_SARCOPHAGUS_CLOSED"
     ]
   },
   {
@@ -32947,7 +33061,7 @@
     "duration": 600,
     "range": 3,
     "objectIds": [
-      23072
+      "SUROK_TUNNEL_WALL_LAMP"
     ]
   },
   {
@@ -32965,9 +33079,9 @@
     "duration": 1550,
     "range": 50,
     "objectIds": [
-      23095,
-      23093,
-      34757
+      "SUROK_ENTRANCE_PORTAL",
+      "SUROK_EXIT_PORTAL_COMPLETE",
+      "CHAOSTEMPLE_EXIT_PORTAL"
     ]
   },
   {
@@ -32985,8 +33099,8 @@
     "duration": 1028,
     "range": 50,
     "objectIds": [
-      16691,
-      16692
+      "LUNAR_MOONCLAN_HAT_RACK",
+      "LUNAR_MOONCLAN_HAT_EMPTY"
     ]
   },
   {
@@ -33004,7 +33118,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      16702
+      "LUNAR_MOONCLAN_COOKER_SMALL"
     ]
   },
   {
@@ -33022,7 +33136,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      16703
+      "LUNAR_MOONCLAN_COOKER_WITH_KETTLE"
     ]
   },
   {
@@ -33039,7 +33153,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      16701
+      "LUNAR_MOONCLAN_LIGHT_HANGING"
     ]
   },
   {
@@ -33057,7 +33171,7 @@
     "duration": 1800,
     "range": 10,
     "objectIds": [
-      46692
+      "GHORROCK_DOOR_SHIELD01"
     ]
   },
   {
@@ -33075,7 +33189,7 @@
     "duration": 0,
     "range": 3,
     "objectIds": [
-      46647
+      "GHORROCK_WALL_CANDLE01"
     ]
   },
   {
@@ -33093,7 +33207,7 @@
     "duration": 0,
     "range": 3,
     "objectIds": [
-      46629
+      "GHORROCK_STONE01_PILLAR02"
     ]
   },
   {
@@ -33111,7 +33225,7 @@
     "duration": 0,
     "range": 3,
     "objectIds": [
-      46615
+      "SOTN_GHORROCK_BRAZIER_LIT"
     ]
   },
   {
@@ -33128,7 +33242,7 @@
     "duration": 1800,
     "range": 7,
     "objectIds": [
-      46636
+      "GHORROCK_STONE01_ALCOVE02_PLAQUE"
     ]
   },
   {
@@ -33145,7 +33259,7 @@
     "duration": 1800,
     "range": 7,
     "objectIds": [
-      46636
+      "GHORROCK_STONE01_ALCOVE02_PLAQUE"
     ]
   },
   {
@@ -33160,7 +33274,7 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      46701
+      "ANCIENT_ESSENCE_ROCK_ACTIVE"
     ]
   },
   {
@@ -33176,7 +33290,7 @@
     "duration": 300,
     "range": 2,
     "projectileIds": [
-      2327
+      "PROJECTILE_MUSPAH_ATTACK_MAGIC_01"
     ],
     "fadeInDuration": 300
   },
@@ -33192,9 +33306,9 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 100,
     "npcIds": [
-      12199,
-      12200,
-      12201
+      "DUKE_EXTREMITY_CONE_1",
+      "DUKE_EXTREMITY_CONE_2",
+      "DUKE_EXTREMITY_CONE_3"
     ]
   },
   {
@@ -33212,7 +33326,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      210
+      "ICE_LIGHT"
     ]
   },
   {
@@ -33230,7 +33344,7 @@
     "duration": 600,
     "range": 10,
     "objectIds": [
-      201
+      "GNOME_LAMP2"
     ]
   },
   {
@@ -33247,7 +33361,7 @@
     "duration": 1300,
     "range": 100,
     "objectIds": [
-      21085
+      "PENG_BASE_SPINNING_LIGHT"
     ]
   },
   {
@@ -33265,7 +33379,7 @@
     "duration": 1250,
     "range": 60,
     "objectIds": [
-      726
+      "FAIRY_SPARKLE"
     ]
   },
   {
@@ -33283,8 +33397,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      12009,
-      12011
+      "FAIRY_WALL_MUSH_GREEN",
+      "FAIRY_WALL_MUSH_GREEN_VAR"
     ]
   },
   {
@@ -33302,7 +33416,7 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      12020
+      "FAIRY_WALL_TOP_MUSH_GREEN"
     ]
   },
   {
@@ -33320,7 +33434,7 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      12021
+      "FAIRY_WALL_TOP_TENTACLE"
     ]
   },
   {
@@ -33338,8 +33452,8 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      12010,
-      12012
+      "FAIRY_WALL_MUSH_RED",
+      "FAIRY_WALL_MUSH_RED_VAR"
     ]
   },
   {
@@ -33357,7 +33471,7 @@
     "duration": 1250,
     "range": 20,
     "objectIds": [
-      12019
+      "FAIRY_WALL_TOP_MUSH_RED"
     ]
   },
   {
@@ -33375,7 +33489,7 @@
     "duration": 5000,
     "range": 20,
     "objectIds": [
-      12124
+      "FAIRY_MUSHROOM_RAILING"
     ]
   },
   {
@@ -33393,7 +33507,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      207
+      "SKULLTORCH_GRUBBY"
     ]
   },
   {
@@ -33411,7 +33525,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      12400
+      "_100_GOBLIN_CAULDREN_STILL"
     ]
   },
   {
@@ -33429,7 +33543,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      12356
+      "HUNDRED_EXIT_PORTAL"
     ]
   },
   {
@@ -33446,7 +33560,7 @@
     "duration": 0,
     "range": 23,
     "objectIds": [
-      12934
+      "BURGH_INN_BASEMENT_TORCH"
     ]
   },
   {
@@ -33464,7 +33578,7 @@
     "duration": 0,
     "range": 24,
     "objectIds": [
-      17324
+      "QIP_DIGSITE_SWING_LANTERN"
     ]
   },
   {
@@ -33500,7 +33614,7 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      3434
+      "LANTERN_POST"
     ]
   },
   {
@@ -33518,7 +33632,7 @@
     "duration": 0,
     "range": 24,
     "objectIds": [
-      24172
+      "FAI_FALADOR_LANTERN"
     ]
   },
   {
@@ -33537,7 +33651,7 @@
     "duration": 3000,
     "range": 10,
     "objectIds": [
-      29630
+      "RC_ZMI_CRATER_LAVA_BIG"
     ]
   },
   {
@@ -33556,7 +33670,7 @@
     "duration": 3000,
     "range": 10,
     "objectIds": [
-      29629
+      "RC_ZMI_CRATER_LAVA"
     ]
   },
   {
@@ -33594,12 +33708,12 @@
     "duration": 600,
     "range": 15,
     "objectIds": [
-      49335
+      "DT2_SCAR_FIRE03"
     ]
   },
   {
     "description": "The Scar exit portal",
-    "objectIds": [ 49204 ],
+    "objectIds": [ "DT2_SCAR_RIFT" ],
     "alignment": "CENTER",
     "radius": 2500,
     "height": 256,
@@ -33628,7 +33742,7 @@
     "duration": 600,
     "range": 15,
     "objectIds": [
-      49342
+      "DT2_SCAR_PERSTENCAMP_FIRE01"
     ]
   },
   {
@@ -33645,7 +33759,7 @@
     "range": 3,
     "fadeInDuration": 0,
     "projectileIds": [
-      2489
+      "VFX_LEVIATHAN_01_PROJECTILE_MAGIC_01"
     ]
   },
   {
@@ -33662,7 +33776,7 @@
     "range": 3,
     "fadeInDuration": 0,
     "projectileIds": [
-      2487
+      "VFX_LEVIATHAN_01_PROJECTILE_RANGED_01"
     ]
   },
   {
@@ -33679,7 +33793,7 @@
     "range": 3,
     "fadeInDuration": 0,
     "projectileIds": [
-      2488
+      "VFX_LEVIATHAN_01_PROJECTILE_MELEE_01"
     ]
   },
   {
@@ -33692,7 +33806,7 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      48004
+      "LASSAR_THRONE01_DEFAULT01"
     ]
   },
   {
@@ -33710,7 +33824,7 @@
     "range": 3,
     "fadeInDuration": 0,
     "objectIds": [
-      48252
+      "DT2_LASSAR_SHADOW_BRAZIER_LIT_PERMANENTLY"
     ]
   },
   {
@@ -33726,7 +33840,7 @@
     "range": 2,
     "fadeInDuration": 0,
     "objectIds": [
-      48189
+      "LIGHT_LAMP01_LASSAR01"
     ]
   },
   {
@@ -33743,7 +33857,7 @@
     "fadeInDuration": 0,
     "visibleFromOtherPlanes": true,
     "objectIds": [
-      47945
+      "LIGHT_LAMP01_LASSAR01_SHADOW"
     ]
   },
   {
@@ -33759,7 +33873,7 @@
     "range": 3,
     "fadeInDuration": 0,
     "objectIds": [
-      48202
+      "DT2_LASSAR_TELEPORTER_ACTIVE"
     ]
   },
   {
@@ -33774,8 +33888,8 @@
     "duration": 600,
     "range": 5,
     "objectIds": [
-      48218,
-      48219
+      "DT2_LASSAR_ANIMA_PORTAL_NORMAL",
+      "DT2_LASSAR_ANIMA_PORTAL_SHADOW"
     ]
   },
   {
@@ -33790,7 +33904,7 @@
     "duration": 600,
     "range": 5,
     "npcIds": [
-      12234
+      "DT2_LASSAR_GHOST"
     ]
   },
   {
@@ -33808,7 +33922,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      11601
+      "FAI_BARBARIAN_POTTERY_OVEN"
     ]
   },
   {
@@ -33826,8 +33940,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      10760,
-      10766
+      "MAGICTRAINING_DUNGEONWALL_LIGHT",
+      "MAGICTRAINING_DUNGEONWALL_BONES_LIGHT"
     ]
   },
   {
@@ -33845,7 +33959,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      10720
+      "MAGICTRAINING_CANDLE_STAND"
     ]
   },
   {
@@ -33863,11 +33977,11 @@
     "duration": 1100,
     "range": 20,
     "objectIds": [
-      23673,
-      23674,
-      23675,
-      23676,
-      23677
+      "MAGICTRAINING_TELEDOOR",
+      "MAGICTRAINING_ENCHANTDOOR",
+      "MAGICTRAINING_ALCHEMDOOR",
+      "MAGICTRAINING_GRAVEDOOR",
+      "MAGICTRAINING_RETURNDOOR"
     ]
   },
   {
@@ -33885,7 +33999,7 @@
     "duration": 1100,
     "range": 20,
     "objectIds": [
-      10733
+      "MAGICTRAINING_HIDDEN_PORTAL_ENTRANCE1"
     ]
   },
   {
@@ -33903,7 +34017,7 @@
     "duration": 600,
     "range": 20,
     "objectIds": [
-      10738
+      "MAGICTRAINING_STATUE_WATER"
     ]
   },
   {
@@ -33921,10 +34035,10 @@
     "duration": 1254,
     "range": 15,
     "graphicsObjectIds": [
-      520,
-      521,
-      522,
-      523
+      "MAGICTRAINING_BONE_DROP1",
+      "MAGICTRAINING_BONE_DROP2",
+      "MAGICTRAINING_BONE_DROP3",
+      "MAGICTRAINING_BONE_DROP4"
     ]
   },
   {
@@ -33940,12 +34054,12 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      10721
+      "MAGICTRAINING_TEMPLE_DOOR"
     ]
   },
   {
     "description": "Xamphur during cutscene",
-    "npcIds": [ 10951 ],
+    "npcIds": [ "AKD_XAMPHUR_CUTSCENE" ],
     "radius": 400,
     "strength": 50,
     "height": 100,
@@ -33960,7 +34074,7 @@
   },
   {
     "description": "Xamphur during fight",
-    "npcIds": [ 10954, 10955, 10953, 10956 ],
+    "npcIds": [ "AKD_XAMPHUR_CUTSCENE_TRANSITION_B", "AKD_XAMPHUR_COMBAT", "AKD_XAMPHUR_CUTSCENE_TRANSITION_A", "AKD_XAMPHUR_COMBAT_NOHANDS" ],
     "radius": 700,
     "strength": 70,
     "height": 100,
@@ -33975,7 +34089,7 @@
   },
   {
     "description": "Xamphur phantom hands",
-    "npcIds": [ 10957, 10958 ],
+    "npcIds": [ "AKD_XAMPHUR_HAND_LEFT", "AKD_XAMPHUR_HAND_RIGHT" ],
     "radius": 300,
     "strength": 40,
     "height": 80,
@@ -33987,7 +34101,7 @@
   },
   {
     "description": "Xamphur mark of darkness",
-    "objectIds": [ 41881 ],
+    "objectIds": [ "AKD_XAMPHUR_MARK" ],
     "radius": 300,
     "strength": 50,
     "height": 40,
@@ -34013,10 +34127,10 @@
     "duration": 1550,
     "range": 20,
     "objectIds": [
-      19005,
-      20786,
-      23707,
-      23922
+      "SOS_FAM_PORTAL",
+      "SOS_WAR_PORTAL",
+      "SOS_PEST_PORTAL",
+      "SOS_DEATH_PORTAL"
     ]
   },
   {
@@ -34032,8 +34146,8 @@
     "type": "STATIC",
     "range": 20,
     "objectIds": [
-      19204,
-      19205
+      "SOS_WAR_WALL_LIGHT",
+      "SOS_WAR_WALL_LIGHT_UP"
     ]
   },
   {
@@ -34050,7 +34164,7 @@
     "type": "STATIC",
     "range": 20,
     "objectIds": [
-      19211
+      "SOS_WAR_DOOR_TOP"
     ]
   },
   {
@@ -34066,7 +34180,7 @@
     "type": "STATIC",
     "range": 20,
     "objectIds": [
-      17004
+      "SOS_FAM_WALL_LITE"
     ]
   },
   {
@@ -34083,7 +34197,7 @@
     "type": "STATIC",
     "range": 20,
     "objectIds": [
-      23651
+      "SOS_PEST_WALL_LIGHT"
     ]
   },
   {
@@ -34099,8 +34213,8 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      23653,
-      23654
+      "SOS_PEST_DOOR_FACE",
+      "SOS_PEST_DOOR_FACE_MIRR"
     ]
   },
   {
@@ -34117,7 +34231,7 @@
     "duration": 500,
     "range": 20,
     "objectIds": [
-      23716
+      "SOS_DEATH_WALL_LIGHT_GLOW"
     ]
   },
   {
@@ -34135,10 +34249,10 @@
     "duration": 1200,
     "range": 4,
     "objectIds": [
-      19000,
-      20656,
-      23709,
-      23731
+      "SOS_FAM_SACK",
+      "SOS_WAR_CHEST",
+      "SOS_PEST_CHEST",
+      "SOS_DEATH_PRAM"
     ]
   },
   {
@@ -34154,7 +34268,7 @@
     ],
     "type": "FLICKER",
     "range": 10,
-    "objectIds": [ 33311 ]
+    "objectIds": [ "MY2ARM_THRONEROOM_FIRE_NORMAL" ]
   },
   {
     "description": "Weiss Saltmine Entrance",
@@ -34176,7 +34290,7 @@
   },
   {
     "description": "Summoning circle powered - The Scar",
-    "objectIds": [ 49450 ],
+    "objectIds": [ "DT2_SCAR_MAZE_3_LINK_RITUAL_CIRCLE" ],
     "height": 200,
     "color": [
       196,
@@ -34188,7 +34302,7 @@
   },
   {
     "description": "Summoning circle - The Scar",
-    "objectIds": [ 49451 ],
+    "objectIds": [ "DT2_SCAR_MAZE_3_LINK_RITUAL_CIRCLE_INACTIVE" ],
     "height": 200,
     "color": [
       196,
@@ -34200,7 +34314,7 @@
   },
   {
     "description": "Summoning circle powered - The Scar",
-    "npcIds": [ 12359 ],
+    "npcIds": [ "DT2_SCAR_MAZE_1_RITUAL_CATALYST" ],
     "height": 200,
     "color": [
       196,
@@ -34212,7 +34326,7 @@
   },
   {
     "description": "Axon terminal powered - The Scar",
-    "objectIds": [ 49440, 49441, 49442, 49443 ],
+    "objectIds": [ "DT2_SCAR_MAZE_3_PATHING_WATER", "DT2_SCAR_MAZE_3_PATHING_FIRE", "DT2_SCAR_MAZE_3_PATHING_NATURE", "DT2_SCAR_MAZE_3_PATHING_COSMIC" ],
     "height": 200,
     "color": [
       196,
@@ -34224,7 +34338,7 @@
   },
   {
     "description": "Axon terminal - The Scar",
-    "objectIds": [ 49444 ],
+    "objectIds": [ "DT2_SCAR_MAZE_3_PATHING_INACTIVE_TERMINAL" ],
     "height": 200,
     "color": [
       196,
@@ -34236,7 +34350,7 @@
   },
   {
     "description": "Neural teleporter blue - The Scar",
-    "objectIds": [ 49413, 49414 ],
+    "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_1_1", "DT2_SCAR_MAZE_TELEPORTER_1_2" ],
     "height": 120,
     "color": [
       80,
@@ -34248,7 +34362,7 @@
   },
   {
     "description": "Neural teleporter green - The Scar",
-    "objectIds": [ 49415, 49416 ],
+    "objectIds": [ "DT2_SCAR_MAZE_TELEPORTER_2_1", "DT2_SCAR_MAZE_TELEPORTER_2_2" ],
     "height": 120,
     "color": [
       136,
@@ -34260,7 +34374,7 @@
   },
   {
     "description": "Damaged growth - light leech puzzle - The Scar",
-    "objectIds": [ 49437 ],
+    "objectIds": [ "DT2_SCAR_MAZE_LIGHT_FILLED" ],
     "height": 120,
     "color": [
       165,
@@ -34272,7 +34386,7 @@
   },
   {
     "description": "Neural gateway - The Scar",
-    "objectIds": [ 49407 ],
+    "objectIds": [ "DT2_SCAR_MAZE_2_PILLAR_ATTACKER_SPAWN" ],
     "height": 120,
     "color": [
       202,
@@ -34284,7 +34398,7 @@
   },
   {
     "description": "Ancient Vault brazier",
-    "objectIds": [ 48858 ],
+    "objectIds": [ "DT2_DESERT_VAULT_BRAZIER02" ],
     "height": 200,
     "color": [ 115, 50, 137 ],
     "strength": 30,
@@ -34306,7 +34420,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "objectIds": [ 46268 ]
+    "objectIds": [ "HW22_LANTERN_PUMPKIN01_LIT01_LARGE01" ]
   },
   {
     "description": "HALLOWEEN_PUMPKIN_SMALL",
@@ -34322,7 +34436,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 25,
-    "objectIds": [ 46269 ]
+    "objectIds": [ "HW22_LANTERN_PUMPKIN01_LIT01_SMALL02" ]
   },
   {
     "description": "FIRE_OF_DOMINATION",
@@ -34333,7 +34447,7 @@
     "type": "FLICKER",
     "range": 10,
     "objectIds": [
-      33318
+      "MY2ARM_THRONEROOM_FIRE_SPECIAL"
     ]
   },
   {
@@ -34345,7 +34459,7 @@
     "type": "FLICKER",
     "range": 10,
     "objectIds": [
-      33319
+      "MY2ARM_HERBPATCH_FIRE_SPECIAL"
     ]
   },
   {
@@ -34357,7 +34471,7 @@
     "type": "FLICKER",
     "range": 10,
     "objectIds": [
-      33320
+      "MY2ARM_FIRE_ETERNALLIGHT"
     ]
   },
   {
@@ -34369,7 +34483,7 @@
     "type": "FLICKER",
     "range": 10,
     "objectIds": [
-      33321
+      "MY2ARM_FIRE_UNSEASONALWARMTH"
     ]
   },
   {
@@ -34381,7 +34495,7 @@
     "type": "FLICKER",
     "range": 10,
     "objectIds": [
-      33322
+      "MY2ARM_FIRE_DEHUMIDIFICATION"
     ]
   },
   {
@@ -34398,7 +34512,7 @@
     "duration": 0,
     "range": 23,
     "objectIds": [
-      10185
+      "DAGANNOTH_CAVEWALL_TORCH_FLAMES"
     ]
   },
   {
@@ -34415,7 +34529,7 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      4587
+      "HORROR_LIGHTHOUSE_COG"
     ]
   },
   {
@@ -34431,7 +34545,7 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      4587
+      "HORROR_LIGHTHOUSE_COG"
     ]
   },
   {
@@ -34448,7 +34562,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      3474
+      "HANGINGLANTERN"
     ]
   },
   {
@@ -34484,7 +34598,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      32631
+      "SLP_POOR_STOVE"
     ]
   },
   {
@@ -34502,7 +34616,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      13053
+      "DUNGEON_CANDLE"
     ]
   },
   {
@@ -34520,7 +34634,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      9992
+      "MOURNING_CRYSTAL_LIGHT"
     ]
   },
   {
@@ -34538,7 +34652,7 @@
     "duration": 0,
     "range": 15,
     "objectIds": [
-      9799
+      "MOURNING_LIGHT_WHITE"
     ]
   },
   {
@@ -34556,7 +34670,7 @@
     "duration": 0,
     "range": 15,
     "objectIds": [
-      9801
+      "MOURNING_LIGHT_YELLOW"
     ]
   },
   {
@@ -34573,7 +34687,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 15,
-    "objectIds": [ 9803 ]
+    "objectIds": [ "MOURNING_LIGHT_CYAN" ]
   },
   {
     "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_GREEN",
@@ -34589,7 +34703,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 15,
-    "objectIds": [ 9802 ]
+    "objectIds": [ "MOURNING_LIGHT_GREEN" ]
   },
   {
     "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_BLUE",
@@ -34605,7 +34719,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 15,
-    "objectIds": [ 9804 ]
+    "objectIds": [ "MOURNING_LIGHT_BLUE" ]
   },
   {
     "description": "TEMPLE_OF_LIGHT_LIGHTBEAM_RED",
@@ -34621,7 +34735,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 15,
-    "objectIds": [ 9800 ]
+    "objectIds": [ "MOURNING_LIGHT_RED" ]
   },
   {
     "description": "TEMPLE_OF_LIGHT_DOOR_OPEN",
@@ -34638,7 +34752,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      9775
+      "MOURNING_DOOR_OF_LIGHT_WHITE"
     ]
   },
   {
@@ -34656,7 +34770,7 @@
     "duration": 1689,
     "range": 100,
     "objectIds": [
-      24974
+      "ABYSS_EXIT_TO_COSMIC"
     ]
   },
   {
@@ -34674,7 +34788,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      43824, 43825
+      "ABYSS_EXIT_TO_BLOOD_CHILD_TRUE", "ABYSS_EXIT_TO_BLOOD_CHILD_KOUREND"
     ]
   },
   {
@@ -34692,7 +34806,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      24971
+      "ABYSS_EXIT_TO_FIRE"
     ]
   },
   {
@@ -34710,7 +34824,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      24972
+      "ABYSS_EXIT_TO_EARTH"
     ]
   },
   {
@@ -34728,7 +34842,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      24973
+      "ABYSS_EXIT_TO_BODY"
     ]
   },
   {
@@ -34746,7 +34860,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      25379
+      "ABYSS_EXIT_TO_MIND"
     ]
   },
   {
@@ -34764,7 +34878,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      25378
+      "ABYSS_EXIT_TO_AIR"
     ]
   },
   {
@@ -34782,7 +34896,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      25377
+      "ABYSS_EXIT_TO_SOUL"
     ]
   },
   {
@@ -34800,7 +34914,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      25376
+      "ABYSS_EXIT_TO_WATER"
     ]
   },
   {
@@ -34818,7 +34932,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      25035
+      "ABYSS_EXIT_TO_DEATH"
     ]
   },
   {
@@ -34836,7 +34950,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      25034
+      "ABYSS_EXIT_TO_LAW"
     ]
   },
   {
@@ -34854,7 +34968,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      24976
+      "ABYSS_EXIT_TO_CHAOS"
     ]
   },
   {
@@ -34872,7 +34986,7 @@
     "duration": 1686,
     "range": 100,
     "objectIds": [
-      24975
+      "ABYSS_EXIT_TO_NATURE"
     ]
   },
   {
@@ -34888,7 +35002,7 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      26149
+      "RCU_ABYSSAL_ENERGY_APOCALYPSE"
     ]
   },
   {
@@ -34906,9 +35020,9 @@
     "duration": 1550,
     "range": 50,
     "objectIds": [
-      34754,
-      34755,
-      34756
+      "COSMICTEMPLE_EXIT_PORTAL",
+      "LAWTEMPLE_EXIT_PORTAL",
+      "NATURETEMPLE_EXIT_PORTAL"
     ]
   },
   {
@@ -34926,7 +35040,7 @@
     "duration": 1550,
     "range": 50,
     "objectIds": [
-      34794
+      "RUNETEMPLE_STANDINGSTONE_GLOW_LAW"
     ]
   },
   {
@@ -34995,7 +35109,7 @@
   },
   {
     "description": "Defender of Varrock dungeon braziers",
-    "objectIds": [ 50170 ],
+    "objectIds": [ "ZEMO_BASE_TORCH" ],
     "height": 200,
     "alignment": "CENTER",
     "radius": 1200,
@@ -35018,12 +35132,12 @@
     "type": "FLICKER",
     "range": 30,
     "objectIds": [
-      50101
+      "DOV_DREAM_THEATER_FORGE"
     ]
   },
   {
     "description": "Defender of Varrock shield responds lightning spotanim",
-    "graphicsObjectIds": [ 2656 ],
+    "graphicsObjectIds": [ "DOV_DIMINTHEIS_RECEIVE_SHIELD_SPOTANIM" ],
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
@@ -35040,7 +35154,7 @@
     "color": [ 60, 110, 190 ],
     "type": "FLICKER",
     "range": 20,
-    "objectIds": [ 50108 ],
+    "objectIds": [ "DOV_CHAIN_LIGHTNING_1X3_LONG" ],
     "fadeInDuration": 150,
     "fadeOutDuration": 300,
     "spawnDelay": 3600,
@@ -35055,7 +35169,7 @@
     "color": [ 60, 110, 190 ],
     "type": "FLICKER",
     "range": 20,
-    "objectIds": [ 50109 ],
+    "objectIds": [ "DOV_CHAIN_LIGHTNING_2X4_ONE_LONG" ],
     "fadeInDuration": 150,
     "fadeOutDuration": 300,
     "spawnDelay": 4050,
@@ -35070,7 +35184,7 @@
     "color": [ 60, 110, 190 ],
     "type": "FLICKER",
     "range": 20,
-    "objectIds": [ 50110 ],
+    "objectIds": [ "DOV_CHAIN_LIGHTNING_2X4_TWO_LONG" ],
     "fadeInDuration": 150,
     "fadeOutDuration": 300,
     "spawnDelay": 4400,
@@ -35079,7 +35193,7 @@
   },
   {
     "description": "Imbued heart lightning spotanim",
-    "graphicsObjectIds": [ 1316 ],
+    "graphicsObjectIds": [ "IMBUED_HEART_IMPACT" ],
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
@@ -35090,7 +35204,7 @@
   },
   {
     "description": "Saturated heart lightning spotanim",
-    "graphicsObjectIds": [ 2287 ],
+    "graphicsObjectIds": [ "IMBUED_HEART_IMPACT02" ],
     "height": 200,
     "alignment": "CENTER",
     "radius": 500,
@@ -35114,7 +35228,7 @@
     "duration": 4,
     "range": 75,
     "npcIds": [
-      2054
+      "CHAOSELEMENTAL"
     ]
   },
   {
@@ -35132,7 +35246,7 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      2054
+      "CHAOSELEMENTAL"
     ]
   },
   {
@@ -35150,7 +35264,7 @@
     "duration": 0,
     "range": 20,
     "projectileIds": [
-      554
+      "CHAOSELEMENTAL_SPOTANIM_CONFUSION_TRAVEL"
     ]
   },
   {
@@ -35168,7 +35282,7 @@
     "duration": 0,
     "range": 20,
     "projectileIds": [
-      551
+      "CHAOSELEMENTAL_SPOTANIM_MADNESS_TRAVEL"
     ]
   },
   {
@@ -35186,7 +35300,7 @@
     "duration": 0,
     "range": 100,
     "projectileIds": [
-      557
+      "CHAOSELEMENTAL_SPOTANIM_DISCORD_TRAVEL"
     ]
   },
   {
@@ -35204,7 +35318,7 @@
     "duration": 0,
     "range": 100,
     "projectileIds": [
-      557
+      "CHAOSELEMENTAL_SPOTANIM_DISCORD_TRAVEL"
     ]
   },
   {
@@ -35222,7 +35336,7 @@
     "duration": 0,
     "range": 100,
     "projectileIds": [
-      557
+      "CHAOSELEMENTAL_SPOTANIM_DISCORD_TRAVEL"
     ]
   },
   {
@@ -35240,12 +35354,12 @@
     "duration": 20,
     "range": 0,
     "npcIds": [
-      6620
+      "MINI_CHAOS_ELE"
     ]
   },
   {
     "description": "Yu'biusk portal",
-    "objectIds": [ 43119 ],
+    "objectIds": [ "LOTG_PORTAL_FLUX_THERE" ],
     "height": 400,
     "strength": 200,
     "radius": 600,
@@ -35266,7 +35380,7 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 500,
     "projectileIds": [
-      2640
+      "VFX_RAT_BOSS_PROJ_MAGIC_01"
     ]
   },
   {
@@ -35284,7 +35398,7 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 100,
     "projectileIds": [
-      2642
+      "VFX_RAT_BOSS_PROJ_RANGED_01"
     ]
   },
   {
@@ -35302,8 +35416,8 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      51906,
-      51907
+      "BRAZIER_VARLAMORE01_DEFAULT01_2X3",
+      "BRAZIER_VARLAMORE01_DEFAULT01_2X2"
     ]
   },
   {
@@ -35321,7 +35435,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      15253
+      "LUNAR_MINE_CAVE_TORCH"
     ]
   },
   {
@@ -35339,7 +35453,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      50698
+      "FURNACE3"
     ]
   },
   {
@@ -35357,8 +35471,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      52647,
-      52648
+      "FORTIS_STOVE",
+      "FORTIS_STOVE_NOOP"
     ]
   },
   {
@@ -35405,7 +35519,7 @@
     "type": "FLICKER",
     "range": 15,
     "objectIds": [
-      51578
+      "BRAZIER_IMCANDO01_RALOS01"
     ],
     "visibleFromOtherPlanes": true
   },
@@ -35423,8 +35537,8 @@
     "type": "FLICKER",
     "range": 10,
     "objectIds": [
-      47446,
-      47447
+      "DECO_CANDLES01_RED",
+      "DECO_CANDLES02_RED"
     ],
     "visibleFromOtherPlanes": true
   },
@@ -35441,7 +35555,7 @@
     "type": "FLICKER",
     "range": 7.5,
     "objectIds": [
-      51009
+      "DUNGEONKIT_IMCANDO02_STATUE02"
     ]
   },
   {
@@ -35496,7 +35610,7 @@
   },
   {
     "description": "ANTECHAMBER_ORANGE_BRAZIERS",
-    "objectIds": [ 51342 ],
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON01" ],
     "color": "#e58500",
     "strength": 20,
     "radius": 1000,
@@ -35504,7 +35618,7 @@
   },
   {
     "description": "ANTECHAMBER_BLOOD_MOON_BRAZIERS",
-    "objectIds": [ 51343 ],
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON02" ],
     "color": "#df002e",
     "strength": 10,
     "radius": 1000,
@@ -35512,7 +35626,7 @@
   },
   {
     "description": "ANTECHAMBER_BLUE_MOON_BRAZIERS",
-    "objectIds": [ 51344 ],
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON03" ],
     "color": "#3571a7",
     "strength": 25,
     "radius": 1000,
@@ -35520,7 +35634,7 @@
   },
   {
     "description": "Earthbound Cavern - Glowing Mushrooms",
-    "objectIds": [ 36220 ],
+    "objectIds": [ "PRIF_MINE_MUSHROOM_1" ],
     "height": 155,
     "color": "#00e4ff",
     "strength": 5.5,
@@ -35528,7 +35642,7 @@
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
-    "objectIds": [ 51345 ],
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
     "strength": 3.5,
     "radius": 1000,
@@ -35536,7 +35650,7 @@
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
-    "objectIds": [ 51345 ],
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
     "strength": 250,
     "radius": 100,
@@ -35544,7 +35658,7 @@
   },
   {
     "description": "SULPHUR_NAGA",
-    "npcIds": [ 13033 ],
+    "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
     "color": "#cd7c00",
     "strength": 20,
     "radius": 600,
@@ -35552,7 +35666,7 @@
   },
   {
     "description": "PERILOUS_MOONS_COOKING_STOVE",
-    "objectIds": [ 51362 ],
+    "objectIds": [ "PMOON_RANGE" ],
     "color": "#e58500",
     "strength": 30,
     "radius": 400,
@@ -35560,7 +35674,7 @@
   },
   {
     "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES",
-    "objectIds": [ 51441 ],
+    "objectIds": [ "LIGHT_GODRAY02_SMALL01_MOONLIGHT01" ],
     "radius": 1300,
     "strength": 25,
     "color": "#ffffff",
@@ -35581,12 +35695,12 @@
     "duration": 0,
     "range": 30,
     "objectIds": [
-      51496
+      "CAM_TORUM_SACRED_FORGE"
     ]
   },
   {
     "description": "EYATLALLI",
-    "npcIds": [ 12869, 12870 ],
+    "npcIds": [ "PMOON_EYATLALLI_VIS", "PMOON_EYATLALLI_VIS_POSTQUEST" ],
     "color": "#00c7c1",
     "strength": 25,
     "radius": 700,
@@ -35594,7 +35708,7 @@
   },
   {
     "description": "EYATLALLI_RIGHT_HAND",
-    "npcIds": [ 12869, 12870 ],
+    "npcIds": [ "PMOON_EYATLALLI_VIS", "PMOON_EYATLALLI_VIS_POSTQUEST" ],
     "color": "#00c7c1",
     "strength": 25,
     "radius": 250,
@@ -35602,7 +35716,7 @@
   },
   {
     "description": "EYATLALLI_LEFT_HAND",
-    "npcIds": [ 12869, 12870 ],
+    "npcIds": [ "PMOON_EYATLALLI_VIS", "PMOON_EYATLALLI_VIS_POSTQUEST" ],
     "color": "#00c7c1",
     "strength": 15,
     "radius": 250,
@@ -35610,7 +35724,7 @@
   },
   {
     "description": "THE_BLUE_MOON_BRAZIERS",
-    "objectIds": [ 52992, 52993 ],
+    "objectIds": [ "PMOON_BOSS_BRAZIER_LEFT", "PMOON_BOSS_BRAZIER_RIGHT" ],
     "color": "#3571a7",
     "strength": 25,
     "radius": 1000,
@@ -35618,7 +35732,7 @@
   },
   {
     "description": "ECLIPSE_MOON",
-    "npcIds": [ 13012, 13019 ],
+    "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_VIS", "PMOON_BOSS_ECLIPSE_CLONE" ],
     "color": "#cd7c00",
     "strength": 50,
     "radius": 1200,
@@ -35627,7 +35741,7 @@
   },
   {
     "description": "BLOOD_MOON",
-    "npcIds": [ 13011 ],
+    "npcIds": [ "PMOON_BOSS_BLOOD_MOON_VIS" ],
     "color": "#df002e",
     "strength": 10,
     "radius": 1200,
@@ -35637,7 +35751,7 @@
   },
   {
     "description": "BLUE_MOON",
-    "npcIds": [ 13013 ],
+    "npcIds": [ "PMOON_BOSS_BLUE_MOON_VIS" ],
     "color": "#3571a7",
     "strength": 20,
     "radius": 1200,
@@ -35647,7 +35761,7 @@
   },
   {
     "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS",
-    "objectIds": [ 51052 ],
+    "objectIds": [ "PMOON_BOSS_BRAZIER_LIT" ],
     "color": "#3571a7",
     "strength": 25,
     "radius": 1000,
@@ -35657,7 +35771,7 @@
   },
   {
     "description": "BLUE_MOON_ARENA_BURNING_LINE",
-    "objectIds": [ 51053 ],
+    "objectIds": [ "PMOON_BOSS_BLUE_FIRE" ],
     "color": "#3571a7",
     "strength": 25,
     "radius": 220,
@@ -35667,7 +35781,7 @@
   },
   {
     "description": "BLOOD_MOON_ARENA_BURNING_LINE",
-    "objectIds": [ 51054 ],
+    "objectIds": [ "PMOON_BOSS_BLOOD_FIRE" ],
     "color": "#6f2375",
     "strength": 15,
     "radius": 250,
@@ -35677,9 +35791,9 @@
   },
   {
     "description": "CURRENT_MOON_PHASE",
-    "npcIds": [ 13015 ],
+    "npcIds": [ "PMOON_BOSS_THREAT_CIRCLE" ],
     "objectIds": [
-      51042
+      "PMOON_BOSS_THREAT_CIRCLE"
     ],
     "color": "#00c7c1",
     "strength": 25,
@@ -35689,7 +35803,7 @@
   },
   {
     "description": "SMALL_MOON_PHASE",
-    "objectIds": [ 51041 ],
+    "objectIds": [ "PMOON_BOSS_SMALL_THREAT_CIRCLE" ],
     "color": "#00c7c1",
     "strength": 25,
     "radius": 128,
@@ -35711,10 +35825,10 @@
     "duration": 0,
     "range": 0,
     "objectIds": [
-      46327,
-      46330,
-      46333,
-      46336
+      "TGOD_GARDEN_1_EXIT",
+      "TGOD_GARDEN_2_EXIT",
+      "TGOD_GARDEN_3_EXIT",
+      "TGOD_GARDEN_4_EXIT"
     ]
   },
   {
@@ -35726,7 +35840,7 @@
     "range": 13,
     "offset": [ 0, 406, 0 ],
     "objectIds": [
-      51731
+      "HG_LANTERN_HANGING_LARGE01"
     ]
   },
   {
@@ -35738,7 +35852,7 @@
     "type": "FLICKER",
     "range": 13,
     "objectIds": [
-      19037
+      "CHINCHOMPA_JUNGLE_CAVE_EXIT"
     ]
   },
   {
@@ -35756,7 +35870,7 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      9736
+      "NEWBIERANGE"
     ]
   },
   {
@@ -35774,13 +35888,13 @@
     "duration": 1000,
     "range": 12,
     "objectIds": [
-      42819,
-      42820
+      "GIM_PORTAL",
+      "GIM_PORTAL_LUMBRIDGE_PORTAL"
     ]
   },
   {
     "description": "Easter event 2024 brazier",
-    "objectIds": [ 53050 ],
+    "objectIds": [ "EASTER24_BRAZIER_LIT" ],
     "radius": 500,
     "strength": 20,
     "color": "#dc5600",
@@ -35798,7 +35912,7 @@
     "range": 15,
     "offset": [ 0, 52, 0 ],
     "objectIds": [
-      51728
+      "HG_COOKING_FIRE_TRIVET"
     ]
   },
   {
@@ -35816,7 +35930,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      2501
+      "FAI_VARROCK_PRETTY_OILLAMP"
     ]
   },
   {
@@ -35834,12 +35948,12 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      15229
+      "ROYAL_COAL_LIFT_ENGINE_PLATFORM_ENGINE_ON"
     ]
   },
   {
     "description": "Troll Stronghold Window and Exit Door",
-    "objectIds": [ 3770, 3774 ],
+    "objectIds": [ "TROLL_STRONGHOLD_WINDOW", "TROLL_STRONGHOLD_TOP_EXIT_MID" ],
     "radius": 450,
     "areas": [ "TROLL_STRONGHOLD" ],
     "strength": 10,
@@ -35848,7 +35962,7 @@
   },
   {
     "description": "Icy Basalt Teleport",
-    "graphicsObjectIds": [ 1628 ],
+    "graphicsObjectIds": [ "MY2ARM_FLAME_TELEPORT_WEISS" ],
     "radius": 250,
     "strength": 10,
     "color": [ 0, 255, 255 ],
@@ -35859,7 +35973,7 @@
   },
   {
     "description": "Stony Basalt Teleport",
-    "graphicsObjectIds": [ 1617 ],
+    "graphicsObjectIds": [ "MY2ARM_FLAME_TELEPORT_SPOT" ],
     "radius": 250,
     "strength": 10,
     "color": [ 0, 255, 50 ],
@@ -35870,7 +35984,7 @@
   },
   {
     "description": "Standard Spellbook Teleport",
-    "graphicsObjectIds": [ 111 ],
+    "graphicsObjectIds": [ "TELEPORT_CASTING" ],
     "radius": 350,
     "strength": 12,
     "color": [ 205, 0, 205 ],
@@ -35926,8 +36040,8 @@
     "type": "FLICKER",
     "duration": 10,
     "range": 20,
-    "objectIds": [ 14825 ],
-    "animationIds": [ 3944 ],
+    "objectIds": [ "WILDERNESS_PORTAL_STONE_GLOWING" ],
+    "animationIds": [ "WILDERNESS_PORTAL_STONE_GLOW" ],
     "fadeInDuration": 80,
     "fadeOutDuration": 80
   },
@@ -35945,7 +36059,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "objectIds": [ 14008 ],
+    "objectIds": [ "RAG_POTBOILER_ONFIRE" ],
     "fadeInDuration": 50,
     "fadeOutDuration": 100
   },
@@ -35963,7 +36077,7 @@
     "type": "FLICKER",
     "duration": 3,
     "range": 35,
-    "projectileIds": [ 1737 ],
+    "projectileIds": [ "JORMUNGAND_MAGIC_TRAVEL" ],
     "fadeInDuration": 900,
     "fadeOutDuration": 300
   },
@@ -35973,7 +36087,7 @@
     "radius": 215,
     "strength": 11,
     "color": [ 220, 0, 255 ],
-    "projectileIds": [ 1735 ],
+    "projectileIds": [ "BASILISK_KNIGHT_MAGIC_TRAVEL" ],
     "fadeInDuration": 350,
     "spawnDelay": 750,
     "fadeOutDuration": 600
@@ -35981,10 +36095,10 @@
   {
     "description": "Venenatis, Spindel, Artio, Callisto and Escape Caves exit cave",
     "objectIds": [
-      46999,
-      47000,
-      47122,
-      47147
+      "WILD_VENANATIS_EXIT_NOOP",
+      "WILD_VENANATIS_EXIT",
+      "WILD_CALLISTO_EXIT01",
+      "WILD_BOSS_ESCAPE_CAVE_EXIT01"
     ],
     "radius": 500,
     "strength": 10,
@@ -35994,7 +36108,7 @@
   {
     "description": "Vet'ion/Calvar'ion Exit Door",
     "objectIds": [
-      46925
+      "WILD_VETION_EXIT01"
     ],
     "radius": 450,
     "strength": 10,
@@ -36004,7 +36118,7 @@
   {
     "description": "Vet'ion/Calvar'ion Ceiling Light",
     "objectIds": [
-      46949
+      "LIGHT_GODRAY02_LARGE01"
     ],
     "radius": 1350,
     "strength": 10,
@@ -36025,7 +36139,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      46993
+      "WILD_VETION_CANDLES01"
     ]
   },
   {
@@ -36042,7 +36156,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      46994
+      "WILD_VETION_CANDLES02"
     ]
   },
   {
@@ -36059,9 +36173,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108,
-      46910,
-      46911
+      "WILD_VETION_COFFIN01",
+      "WILD_VETION_COFFIN02",
+      "WILD_VETION_COFFIN03"
     ]
   },
   {
@@ -36078,9 +36192,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108,
-      46910,
-      46911
+      "WILD_VETION_COFFIN01",
+      "WILD_VETION_COFFIN02",
+      "WILD_VETION_COFFIN03"
     ]
   },
   {
@@ -36097,9 +36211,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108,
-      46910,
-      46911
+      "WILD_VETION_COFFIN01",
+      "WILD_VETION_COFFIN02",
+      "WILD_VETION_COFFIN03"
     ]
   },
   {
@@ -36116,9 +36230,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108,
-      46910,
-      46911
+      "WILD_VETION_COFFIN01",
+      "WILD_VETION_COFFIN02",
+      "WILD_VETION_COFFIN03"
     ]
   },
   {
@@ -36135,9 +36249,9 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43108,
-      46910,
-      46911
+      "WILD_VETION_COFFIN01",
+      "WILD_VETION_COFFIN02",
+      "WILD_VETION_COFFIN03"
     ]
   },
   {
@@ -36154,7 +36268,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      43108
+      "WILD_VETION_COFFIN01"
     ],
     "fadeOutDuration": 50,
     "fadeInDuration": 50
@@ -36173,7 +36287,7 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      46910
+      "WILD_VETION_COFFIN02"
     ],
     "fadeOutDuration": 50,
     "fadeInDuration": 50
@@ -36191,8 +36305,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 10,
-    "npcIds": [ 6611, 11993 ],
-    "animationIds": [ 9975 ],
+    "npcIds": [ "VETION", "VETION_SINGLE" ],
+    "animationIds": [ "NPC_VETION_DEFEND_SHIELD_01" ],
     "fadeOutDuration": 250,
     "fadeInDuration": 500
   },
@@ -36209,8 +36323,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 10,
-    "npcIds": [ 11994 ],
-    "animationIds": [ -1, 9969, 9972, 9974, 9976 ],
+    "npcIds": [ "VETION_2_SINGLE" ],
+    "animationIds": [ "-1", "NPC_VETION_ATTACK_MAGIC_01", "NPC_VETION_ATTACK_MELEE_02", "NPC_VETION_DEFEND_PARRY_02", "NPC_VETION_DEFEND_SHIELD_02" ],
     "fadeOutDuration": 1500
   },
   {
@@ -36226,15 +36340,15 @@
     "type": "STATIC",
     "duration": 0,
     "range": 10,
-    "npcIds": [ 12108 ],
-    "animationIds": [ -1, 6578, 6579 ],
+    "npcIds": [ "VETION_HELLHOUND_SNR_SINGLES" ],
+    "animationIds": [ "-1", "DOG_UPDATE_SKELETON_HELLHOUND_DEFEND", "DOG_UPDATE_SKELETON_HELLHOUND_ATTACK" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 1500
   },
   {
     "description": "Wilderness - Escape Caves - Rope Light",
     "objectIds": [
-      47150
+      "WILD_BOSS_ESCAPE_CAVE_EXIT03_OVERHEAD"
     ],
     "radius": 550,
     "strength": 15,
@@ -36244,7 +36358,7 @@
   {
     "description": "Tutorial Island - The Node - Furnace - 1",
     "objectIds": [
-      42824
+      "GIM_FURNACE"
     ],
     "offset": [ 0, 80, -30 ],
     "radius": 150,
@@ -36261,7 +36375,7 @@
   {
     "description": "Tutorial Island - The Node - Furnace - 2",
     "objectIds": [
-      42824
+      "GIM_FURNACE"
     ],
     "offset": [ 0, 80, -90 ],
     "radius": 250,
@@ -36290,7 +36404,7 @@
     "type": "STATIC",
     "duration": 4500,
     "range": 10,
-    "objectIds": [ 34705 ]
+    "objectIds": [ "KEBOS_FARMING_GUILD_HESPORI_GROWN" ]
   },
   {
     "description": "Hespori Combat Flower - Open - Wide",
@@ -36309,8 +36423,8 @@
     "type": "PULSE",
     "duration": 2500,
     "range": 15,
-    "npcIds": [ 8584 ],
-    "animationIds": [ -1, 8229 ]
+    "npcIds": [ "HESPORI_HEALER_ACTIVE" ],
+    "animationIds": [ "-1", "HESPORI_HEALER_DEAD_TO_ALIVE" ]
   },
   {
     "description": "Hespori Combat Flower - Open - Short",
@@ -36329,8 +36443,8 @@
     "type": "PULSE",
     "duration": 2500,
     "range": 15,
-    "npcIds": [ 8584 ],
-    "animationIds": [ -1, 8229 ]
+    "npcIds": [ "HESPORI_HEALER_ACTIVE" ],
+    "animationIds": [ "-1", "HESPORI_HEALER_DEAD_TO_ALIVE" ]
   },
   {
     "description": "Hespori Magic Attack",
@@ -36348,7 +36462,7 @@
     "fadeInDuration": 1000,
     "fadeOutDuration": 250,
     "projectileIds": [
-      1640
+      "HESPORI_MAGIC_PROJ"
     ]
   },
   {
@@ -36365,14 +36479,14 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      16812
+      "LUNAR_MOONCLAN_ANIM_LOC_KETTLE"
     ]
   },
   {
     "description": "Grotesque Guardians Dawn Ranged Attack",
     "projectileIds": [
-      1437,
-      1444
+      "GARGBOSS_HEALING_SPHERE_SMALL",
+      "GARGBOSS_STANDARD_RANGED_PROJECTILE"
     ],
     "offset": [ 0, 0, 0 ],
     "radius": 210,
@@ -36392,7 +36506,7 @@
   {
     "description": "Grotesque Guardians Dawn Freeze",
     "projectileIds": [
-      1445
+      "GARGBOSS_STUN_RANGED_PROJECTILE"
     ],
     "offset": [ 0, -20, 0 ],
     "radius": 195,
@@ -36412,7 +36526,7 @@
   {
     "description": "Grotesque Guardians Flames",
     "graphicsObjectIds": [
-      1434
+      "GG_DUSK_LIGHTNING_ENRAGED"
     ],
     "offset": [ 0, 10, 0 ],
     "radius": 175,
@@ -36433,7 +36547,7 @@
   {
     "description": "Grotesque Guardians Dusk Final Phase",
     "npcIds": [
-      7888
+      "GARGBOSS_DUSK_PHASE4"
     ],
     "offset": [ 0, 50, 0 ],
     "radius": 700,
@@ -36448,9 +36562,9 @@
   {
     "description": "Grotesque Guardians Dusk Heal Orb",
     "objectIds": [
-      31678,
-      31679,
-      31680
+      "GARGBOSS_HEALSPHERE_SMALL",
+      "GARGBOSS_HEALSPHERE_MED",
+      "GARGBOSS_HEALSPHERE_LARGE"
     ],
     "offset": [ 0, 10, 0 ],
     "radius": 200,
@@ -36479,10 +36593,10 @@
     "duration": 30,
     "range": 10,
     "objectIds": [
-      3493,
-      3494,
-      3495,
-      3496
+      "PRIESTPERIL_GRAVE_BASE1",
+      "PRIESTPERIL_GRAVE_BASE2",
+      "PRIESTPERIL_GRAVE_BASE3",
+      "PRIESTPERIL_GRAVE_BASE4"
     ]
   },
   {
@@ -36500,9 +36614,9 @@
     "duration": 30,
     "range": 10,
     "objectIds": [
-      3497,
-      3498,
-      3499
+      "PRIESTPERIL_GRAVE_BASE5",
+      "PRIESTPERIL_GRAVE_BASE6",
+      "PRIESTPERIL_GRAVE_BASE7"
     ]
   },
   {
@@ -36519,7 +36633,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      18536
+      "ELEM1_QIP_LANTERN_LIT"
     ]
   },
   {
@@ -36536,8 +36650,8 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      4932,
-      4933
+      "GLOWING_MUSHROOM",
+      "GLOWING_MUSHROOM2"
     ]
   },
   {
@@ -36554,9 +36668,9 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      4926,
-      4927,
-      4928
+      "CRYSTALCORNER",
+      "CRYSTALEDGING",
+      "LARGECRYSTALS"
     ]
   },
   {
@@ -36573,7 +36687,7 @@
     "duration": 600,
     "range": 15,
     "objectIds": [
-      55200
+      "HUEY_LOBBY_COOKINGFIRE"
     ]
   },
   {
@@ -36592,9 +36706,9 @@
     "duration": 600,
     "range": 15,
     "objectIds": [
-      55210,
-      55218,
-      55226
+      "HUEY_PRAYER_PILLAR_MAGIC_BRAZIER_ON",
+      "HUEY_PRAYER_PILLAR_RANGED_BRAZIER_ON",
+      "HUEY_PRAYER_PILLAR_MELEE_BRAZIER_ON"
     ]
   },
   {
@@ -36612,7 +36726,7 @@
     "fadeOutDuration": 300,
     "duration": 600,
     "range": 15,
-    "projectileIds": [ 2969 ]
+    "projectileIds": [ "VFX_HUEY_ATTACK_MELEE_PROJANIM_01" ]
   },
   {
     "description": "Hueycoatl Range Projectile",
@@ -36629,7 +36743,7 @@
     "fadeOutDuration": 300,
     "duration": 600,
     "range": 15,
-    "projectileIds": [ 2972 ]
+    "projectileIds": [ "VFX_HUEY_ATTACK_RANGED_PROJANIM_01" ]
   },
   {
     "description": "Hueycoatl Mage Projectile",
@@ -36646,7 +36760,7 @@
     "fadeOutDuration": 300,
     "duration": 600,
     "range": 15,
-    "projectileIds": [ 2975 ]
+    "projectileIds": [ "VFX_HUEY_ATTACK_MAGIC_PROJANIM_01" ]
   },
   {
     "description": "Hueycoatl Ground Attack",
@@ -36665,11 +36779,11 @@
     "fadeOutDuration": 200,
     "duration": 600,
     "range": 15,
-    "graphicsObjectIds": [ 3001 ]
+    "graphicsObjectIds": [ "VFX_HUEYCOATL_PRAYER_02" ]
   },
   {
     "description": "Asgarnia Ice Dungeon Ladder",
-    "objectIds": [ 17385 ],
+    "objectIds": [ "LADDER_FROM_CELLAR" ],
     "height": 360,
     "radius": 900,
     "strength": 10,
@@ -36810,7 +36924,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      56001
+      "VFX_BRANDA_QUEEN_LOC01_IDLE01"
     ]
   },
   {
@@ -36826,7 +36940,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "npcIds": [ 12596 ],
+    "npcIds": [ "RT_FIRE_QUEEN" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 400
   },
@@ -36843,7 +36957,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "npcIds": [ 12596 ],
+    "npcIds": [ "RT_FIRE_QUEEN" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 400
   },
@@ -36860,7 +36974,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "npcIds": [ 12596 ],
+    "npcIds": [ "RT_FIRE_QUEEN" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 400
   },
@@ -36877,8 +36991,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "npcIds": [ 14148 ],
-    "animationIds": [ 11992 ],
+    "npcIds": [ "RT_FIRE_QUEEN_INACTIVE" ],
+    "animationIds": [ "FIRE_GIANT_BRANDA_QUEEN_DEATH01" ],
     "fadeInDuration": 400,
     "fixedDespawnTime": true,
     "despawnDelay": 3100,
@@ -36895,7 +37009,7 @@
       255
     ],
     "type": "STATIC",
-    "npcIds": [ 14147 ],
+    "npcIds": [ "RT_ICE_KING" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 400
   },
@@ -36910,7 +37024,7 @@
       255
     ],
     "type": "STATIC",
-    "npcIds": [ 14147 ],
+    "npcIds": [ "RT_ICE_KING" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 400
   },
@@ -36925,7 +37039,7 @@
       255
     ],
     "type": "STATIC",
-    "npcIds": [ 14147 ],
+    "npcIds": [ "RT_ICE_KING" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 400
   },
@@ -36942,8 +37056,8 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "npcIds": [ 14150 ],
-    "animationIds": [ -1, 11947, 11956 ],
+    "npcIds": [ "RT_SUMMON_ELEMENTAL_FIRE" ],
+    "animationIds": [ "-1", "FIRE_MINION_ATTACK01", "FIRE_MINION_SPAWN01" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 200
   },
@@ -36958,8 +37072,8 @@
       255
     ],
     "type": "STATIC",
-    "npcIds": [ 14151 ],
-    "animationIds": [ -1, 11950, 11954 ],
+    "npcIds": [ "RT_SUMMON_ELEMENTAL_ICE" ],
+    "animationIds": [ "-1", "ICE_MINION_ATTACK01", "ICE_MINION_SPAWN01" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 200
   },
@@ -36974,7 +37088,7 @@
       255
     ],
     "type": "STATIC",
-    "graphicsObjectIds": [ 3226 ],
+    "graphicsObjectIds": [ "VFX_HUMAN_TELEPORT_GIANTSOUL_AMULET_01" ],
     "fixedDespawnTime": true,
     "despawnDelay": 1300,
     "fadeInDuration": 100,
@@ -36993,7 +37107,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
-    "graphicsObjectIds": [ 3226 ],
+    "graphicsObjectIds": [ "VFX_HUMAN_TELEPORT_GIANTSOUL_AMULET_01" ],
     "fixedDespawnTime": true,
     "despawnDelay": 1300,
     "fadeInDuration": 100,
@@ -37013,7 +37127,7 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      43895
+      "BCS_FURNACE_LIT"
     ]
   },
   {
@@ -37030,7 +37144,7 @@
     "duration": 0,
     "range": 20,
     "npcIds": [
-      11559
+      "BCS_BOLT_NPC"
     ],
     "fadeOutDuration": 100,
     "fadeInDuration": 300

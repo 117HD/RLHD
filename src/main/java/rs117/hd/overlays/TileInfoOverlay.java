@@ -41,12 +41,12 @@ import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
@@ -95,6 +95,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
+	private GamevalManager gamevalManager;
+
+	@Inject
 	private ProceduralGenerator proceduralGenerator;
 
 	@Getter
@@ -127,6 +130,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private Area[] visibleAreas = new Area[0];
 	private final AABB dummyAabb = new AABB(0, 0);
 	private int[] baseEx;
+	private final ArrayList<String> hoveredGamevals = new ArrayList<>();
+	private int hoveredGamevalsIndex;
+	private int hoveredGamevalsHash;
+	private int copiedGamevalsHash;
 
 	public TileInfoOverlay() {
 		setLayer(OverlayLayer.ABOVE_SCENE);
@@ -210,6 +217,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		mousePos = null;
 		if (canvasMousePos != null && canvasMousePos.getX() != -1 && canvasMousePos.getY() != -1)
 			mousePos = new int[] { canvasMousePos.getX(), canvasMousePos.getY() };
+		hoveredGamevals.clear();
 
 		int maxPlane = client.getPlane();
 		int minPlane = 0;
@@ -275,6 +283,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				}
 			}
 		}
+
+		hoveredGamevalsHash = hoveredGamevals.hashCode();
 
 		switch (mode) {
 			case MODE_OBJECT_IDS:
@@ -469,6 +479,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				worldPos[1] >> 6
 			));
 
+			for (var environment : sceneContext.environments) {
+				if (environment.area.containsPoint(worldPos)) {
+					lines.add("Environment: " + environment);
+					break;
+				}
+			}
+
 			int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
@@ -557,10 +574,21 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			}
 		}
 
+		var decorObject = tile.getDecorativeObject();
+		if (decorObject != null) {
+			lines.add(String.format(
+				"Decor Object: %s preori=%d%s",
+				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
+				HDUtils.getBakedOrientation(decorObject.getConfig()),
+				getModelInfo(decorObject.getRenderable())
+			));
+			lines.add("Decor Type: " + HDUtils.getObjectType(decorObject.getConfig()));
+		}
+
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null) {
 			lines.add(String.format(
-				"Ground Object: ID=%s preori=%d%s",
+				"Ground Object: %s preori=%d%s",
 				getIdAndImpostorId(groundObject, groundObject.getRenderable()),
 				HDUtils.getBakedOrientation(groundObject.getConfig()),
 				getModelInfo(groundObject.getRenderable())
@@ -572,7 +600,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (wallObject != null) {
 			if (wallObject.getRenderable1() != null) {
 				lines.add(String.format(
-					"Wall Object 1: ID=%s bakedOri=%d ori=%d%s",
+					"Wall Object 1: %s bakedOri=%d ori=%d%s",
 					getIdAndImpostorId(wallObject, wallObject.getRenderable1()),
 					HDUtils.getBakedOrientation(wallObject.getConfig()),
 					wallObject.getOrientationA(),
@@ -581,7 +609,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			}
 			if (wallObject.getRenderable2() != null) {
 				lines.add(String.format(
-					"Wall Object 2: ID=%s bakedOri=%d ori=%d%s",
+					"Wall Object 2: %s bakedOri=%d ori=%d%s",
 					getIdAndImpostorId(wallObject, wallObject.getRenderable2()),
 					HDUtils.getBakedOrientation(wallObject.getConfig()),
 					wallObject.getOrientationB(),
@@ -613,7 +641,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				if (renderable instanceof Player) {
 					id = "name=" + ((Player) renderable).getName();
 				} else {
-					id = "ID=" + getIdAndImpostorId(gameObject, renderable);
+					id = getIdAndImpostorId(gameObject, renderable);
 					if (renderable instanceof DynamicObject) {
 						var anim = ((DynamicObject) renderable).getAnimation();
 						if (anim != null)
@@ -643,8 +671,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int x = lp.getSceneX();
 			int y = lp.getSceneY();
 			if (x - size <= tileX && tileX <= x + size && y - size <= tileY && tileY <= y + size) {
+				var name = gamevalManager.getNpcName(npc.getId());
+				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"NPC: ID=%s name=%s ori=[%d,%d] anim=%d impostor=?%s",
+					"NPC: %s (%d) name=%s ori=[%d,%d] anim=%d impostor=?%s",
+					name,
 					npc.getId(),
 					npc.getName(),
 					npc.getOrientation(),
@@ -657,12 +688,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		for (GraphicsObject graphicsObject : client.getGraphicsObjects()) {
 			var lp = graphicsObject.getLocation();
-			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY)
+			if (lp.getSceneX() == tileX && lp.getSceneY() == tileY) {
+				var name = gamevalManager.getSpotanimName(graphicsObject.getId());
+				hoveredGamevals.add(name);
 				lines.add(String.format(
-					"Graphics Object: ID=%s%s",
+					"Graphics Object: %s (%d)%s",
+					name,
 					graphicsObject.getId(),
 					getModelInfo(graphicsObject)
 				));
+			}
 		}
 
 		if (tile.getBridge() != null)
@@ -793,7 +828,15 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private String getIdAndImpostorId(TileObject object, @Nullable Renderable renderable) {
 		int id = object.getId();
 		int impostorId = getIdOrImpostorId(object, renderable);
-		return id + (id == impostorId ? "" : " -> " + impostorId);
+		String name = gamevalManager.getObjectName(id);
+		if (id == impostorId) {
+			hoveredGamevals.add(name);
+			return String.format("%s (%d)", name, id);
+		}
+
+		String impostorName = gamevalManager.getObjectName(impostorId);
+		hoveredGamevals.add(impostorName);
+		return String.format("%s (%d) -> %s (%d)", name, id, impostorName, impostorId);
 	}
 
 	private int getIdOrImpostorId(TileObject object, @Nullable Renderable renderable) {
@@ -1421,16 +1464,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	private void copyToClipboard(String toCopy, @Nullable String description) {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		StringSelection string = new StringSelection(toCopy);
+		StringSelection string = new StringSelection("\"" + toCopy + "\"");
 		clipboard.setContents(string, null);
 		clientThread.invoke(() -> client.addChatMessage(
 			ChatMessageType.GAMEMESSAGE,
 			"117 HD",
-			ColorUtil.wrapWithColorTag("[117 HD] " + (
+			"<col=006600>[117 HD] " + (
 				description == null ?
 					"Copied to clipboard: " + toCopy :
 					description
-			), Color.GREEN),
+			),
 			"117 HD"
 		));
 	}
@@ -1487,6 +1530,15 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				aabbMarkingStage = 0;
 				selections.clear();
 				pendingSelection = null;
+			}
+		} else if (SwingUtilities.isRightMouseButton(e)) {
+			if (!hoveredGamevals.isEmpty()) {
+				if (copiedGamevalsHash != hoveredGamevalsHash) {
+					copiedGamevalsHash = hoveredGamevalsHash;
+					hoveredGamevalsIndex = 0;
+				}
+				copyToClipboard(hoveredGamevals.get(hoveredGamevalsIndex));
+				hoveredGamevalsIndex = (hoveredGamevalsIndex + 1) % hoveredGamevals.size();
 			}
 		}
 
