@@ -89,6 +89,11 @@ public enum Material {
 	SIMPLE_GRAIN_WOOD(16),
 	WATER_DROPLETS(17, p -> p
 		.setHasTransparency(true)),
+	WATER_DROPS(p -> p
+		.setScroll(0, 0.9f)
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.075f)
+		.setFlowMapDuration(new float[] { 7, -7 })),
 	HAY(18),
 	NET(19, p -> p
 		.setHasTransparency(true)),
