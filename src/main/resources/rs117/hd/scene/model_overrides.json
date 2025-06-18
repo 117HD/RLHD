@@ -12994,8 +12994,11 @@
       "TENTDOOR2",
       "TENTDOOR3",
       "TENTDOOR4",
+      "BEDABIN_TENTDOOR",
       "FEUD_TENTDOOR",
-      "FEUD_TENTWALL"
+      "FEUD_TENTWALL",
+      "TENTROOF2",
+      "TENTROOFCENTRE2"
     ],
     "uvType": "BOX"
   },
@@ -13259,7 +13262,7 @@
       },
       {
         "colors": ["h == 8 && s == 7", "h == 37"],
-        "baseMaterial": "METALLIC_1"
+        "baseMaterial": "METALLIC_1_LIGHT"
       },
       {
         "colors": "h == 8 && s == 2",
