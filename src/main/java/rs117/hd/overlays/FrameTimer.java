@@ -1,5 +1,6 @@
 package rs117.hd.overlays;
 
+import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import javax.inject.Inject;
@@ -108,8 +109,9 @@ public class FrameTimer {
 				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
 			glQueryCounter(gpuQueries[timer.ordinal() * 2], GL_TIMESTAMP);
 		} else if (!activeTimers[timer.ordinal()]) {
+			long timestamp = System.nanoTime();
 			cumulativeError += (errorCompensation + 1) / 2;
-			timings[timer.ordinal()] -= System.nanoTime() - cumulativeError;
+			timings[timer.ordinal()] -= timestamp - cumulativeError;
 		}
 		activeTimers[timer.ordinal()] = true;
 	}
@@ -122,8 +124,10 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
+			long timestamp = System.nanoTime();
 			cumulativeError += errorCompensation / 2;
-			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
+			timestamp += timings[timer.ordinal()] - cumulativeError;
+			timings[timer.ordinal()] = timestamp > 0 ? timestamp : 0; // avoid going into negative due to over compensation
 			activeTimers[timer.ordinal()] = false;
 		}
 	}
