@@ -2391,6 +2391,13 @@
     ]
   },
   {
+    "name": "UZER_DEMONIC_THRONEROOM",
+    "hideOtherAreas": true,
+    "aabbs": [
+      [ 2687, 4864, 0, 2751, 4927, 2 ]
+    ]
+  },
+  {
     "name": "RUINS_OF_UNKAH",
     "aabbs": [
       [ 3125, 2808, 3185, 2857 ],

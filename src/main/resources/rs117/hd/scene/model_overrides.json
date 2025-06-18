@@ -2136,7 +2136,11 @@
       "KEBOS_FARMING_GUILD_GRASS_1",
       "KEBOS_FARMING_GUILD_GRASS_2",
       "KEBOS_FARMING_GUILD_GRASS_3",
-      "KEBOS_FARMING_GUILD_GRASS_4"
+      "KEBOS_FARMING_GUILD_GRASS_4",
+      "DESERT_LONG_GRASS_3",
+      "DESERT_LONG_GRASS_1",
+      "DESERT_LONG_GRASS_2",
+      "DESERT_LONG_GRASS_4"
     ]
   },
   {
@@ -13054,6 +13058,197 @@
     "uvScale": 0.6
   },
   {
+    "description": "Ruins of Uzer - Stonework",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOLEM_EDGE_WALL",
+      "GOLEM_WALL",
+      "GOLEM_WALL_WOMAN_BROKEN",
+      "GOLEM_WINDOW",
+      "GOLEM_WALLTOP",
+      "GOLEM_WALL_CRUMBLY_MIRROR",
+      "GOLEM_WALLTOP_END_R",
+      "GOLEM_WALLARCH_BROKEN_L",
+      "GOLEM_WALL_BROKEN_CONNECTS_R",
+      "GOLEM_WALL_BROKEN_CONNECTS_L",
+      "GOLEM_WALL_SMASHED_END_L",
+      "GOLEM_WALLTOP_END_L",
+      "GOLEM_WALLARCH_LIP_R",
+      "GOLEM_WALLARCH_BROKEN_R",
+      "GOLEM_WALL_SMASHED_END_R",
+      "GOLEM_WALL_SMASHED_LOW_R",
+      "GOLEM_WALLARCH_LIP_L",
+      "GOLEM_TEMPLE_FLOOR_DEPTH2",
+      "GOLEM_TEMPLE_FLOOR_DEPTH6",
+      "GOLEM_TEMPLE_FLOOR_DEPTH5",
+      "GOLEM_WALL_CRUMBLY",
+      "GOLEM_STATUE_HAMMER_BROKEN",
+      "GOLEM_FACE",
+      "GOLEM_WALL_SMASHED_LOW_L",
+      "GOLEM_INSIDESTAIRS_TOP",
+      "GOLEM_INSIDESTAIRS_BASE",
+      "GOLEM_STATUE_FEMALE",
+      "GOLEM_CAVEWALL",
+      "GOLEM_CAVEWALL_TOP",
+      "GOLEM_CAVEWALL_INSIDE_EDGE",
+      "GOLEM_PLINTH",
+      "GOLEM_PLINTH_FEMALE_TURNED_MIRROR",
+      "GOLEM_PLINTH_FEMALE_TURNED",
+      "GOLEM_STATUE_HAMMER",
+      "GOLEM_DEMON_CAVEWALL",
+      "GOLEM_DEMON_CAVEWALL_TOP_HIGHER",
+      "GOLEM_WALL_WOMAN",
+      "GOLEM_STATUETTE_FACING_LEFT",
+      "GOLEM_STATUETTE_FACING_RIGHT"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Stonework",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "objectIds": [
+      "GOLEM_DEMON_CAVEWALL",
+      "GOLEM_DEMON_CAVEWALL_TOP_HIGHER",
+      "GOLEM_DEMON_CAVEWALL_TOP",
+      "GOLEM_DEMON_PILLAR3",
+      "GOLEM_DEMON_PILLAR",
+      "GOLEM_DEMON_PILLAR2",
+      "GOLEM_DEMON_PILLAR4",
+      "GOLEM_DEMON_CAVEWALL_DECOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 6",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 6",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Door",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GOLEM_DEMON_DOOR_ALWAYS_OPEN",
+      "GOLEM_DEMON_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT"
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demon Throne",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOLEM_DEMON_THRONE",
+      "GOLEM_THRONE_WITHGEMS",
+      "GOLEM_THRONE_NOGEMS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s > 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demon Skeleton",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOLEM_DEMON_SKELETON"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Kilns",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "objectIds": [
+      "GOLEM_KILN",
+      "GOLEM_KILN_SMASHED1",
+      "GOLEM_KILN_SMASHED2",
+      "GOLEM_KILN_SMASHED3"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Support Beam",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvOrientationZ": 700,
+    "uvScale": 0.5,
+    "objectIds": [
+      "GOLEM_WALL_SUPPORT"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Torch",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOLEM_TORCH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Black Mushrooms",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOLEM_BLACK_MUSHROOMS"
+    ]
+  },
+  {
     "description": "Objects - Wooden - Counter",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -14854,7 +15049,8 @@
       "SMALLFERN",
       "FERN",
       "FERN1",
-      "FERN2"
+      "FERN2",
+      "MM_JUNGLEPLANT2"
     ]
   },
   {

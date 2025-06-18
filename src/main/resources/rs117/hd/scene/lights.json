@@ -20360,7 +20360,8 @@
       "ROOFEDGE_DOUBLELENGTH_RR_OFFSET",
       "VM_BASEMENT_WALL_FIRST_FLOOR_LAMP",
       "SLAYER_TORCH",
-      "MISTMYST_CANDLE_LIT"
+      "MISTMYST_CANDLE_LIT",
+      "GOLEM_TORCH"
     ]
   },
   {
@@ -24225,6 +24226,70 @@
       "NTK_GOLDEN_CHEST_MULTI",
       "NTK_GOLDEN_CHEST_CLOSED",
       "NTK_GOLDEN_CHEST_OPEN"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Door",
+    "offset": [ 0, 150, 30 ],
+    "radius": 225,
+    "strength": -1.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      "GOLEM_DEMON_DOOR_ALWAYS_OPEN"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal",
+    "offset": [ 0, 170, 0 ],
+    "radius": 375,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 10,
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal - Highlight Front",
+    "offset": [ 0, 150, 70 ],
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal - Highlight Back",
+    "offset": [ 0, 150, -70 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
     ]
   },
   {
