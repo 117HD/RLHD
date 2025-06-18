@@ -15967,7 +15967,8 @@
   },
   {
     "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
-    "baseMaterial": "ROCK_3_SMOOTH",
+    "baseMaterial": "NONE",
+    "castShadows": false,
     "objectIds": [
       "DESERT_TREASURE_OBLIX_A",
       "FD_BLOOD_COLUMN",
@@ -15977,8 +15978,14 @@
       "DESERT_TREASURE_OBLIX_D",
       "FD_SHADOW_COLUMN"
     ],
-    "uvType": "BOX",
-    "uvOrientation": 680
+    "colorOverrides": [
+      {
+        "colors": [ "a == 255" ],
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 680
+      }
+    ]
   },
   {
     "description": "Objects - Desert Treasure Pyramid Statue - Medium",
