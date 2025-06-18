@@ -297,8 +297,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_BRIGHTNESS,
 		name = "Brightness",
 		description =
-			"Controls the brightness of the game, except for UI.<br>" +
-			"Adjust until the dot on the left is barely visible.",
+			"Controls the brightness of the game, excluding UI.<br>" +
+			"Adjust until the disk on the left is barely visible.",
 		position = 13,
 		section = generalSettings
 	)
@@ -309,7 +309,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = "useLegacyBrightness",
 		name = "Enable Legacy Brightness",
-		description = "Whether the old brightness option below should be used instead of the new brightness option.",
+		description =
+			"Whether the legacy brightness option below should be applied.<br>" +
+			"We recommend leaving this disabled.",
 		position = 14,
 		section = generalSettings
 	)

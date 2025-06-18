@@ -135,6 +135,7 @@ import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.Vector.pow;
 
 @PluginDescriptor(
 	name = "117 HD",
@@ -2126,7 +2127,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform3fv(uniWaterColorMid, waterColorMid);
 			glUniform3fv(uniWaterColorDark, waterColorDark);
 
-			glUniform1f(uniGammaCorrection, 100f / config.brightness());
+			float gammaCorrection = 100f / config.brightness();
+			glUniform1f(uniGammaCorrection, gammaCorrection);
 			float ambientStrength = environmentManager.currentAmbientStrength;
 			float directionalStrength = environmentManager.currentDirectionalStrength;
 			if (config.useLegacyBrightness()) {
@@ -2209,7 +2211,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
-			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
+			float[] gammaCorrectedFogColor = pow(fogColor, gammaCorrection);
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
 			glClearDepthf(0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
