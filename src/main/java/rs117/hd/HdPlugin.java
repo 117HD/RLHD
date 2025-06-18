@@ -2982,8 +2982,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
 		final int rightClip = client.getRasterizer3D_clipMidX2();
-		final int bottomClip = client.getRasterizer3D_clipMidY2();
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
+		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
 		final int modelRadius = model.getXYZMag();
 		final int transformedZ = yawCos * z - yawSin * x >> 16;
