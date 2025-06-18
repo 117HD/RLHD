@@ -1662,6 +1662,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		tileVisibilityCached = true;
 
 		frameTimer.end(Timer.DRAW_SCENE);
+		frameTimer.begin(Timer.RENDER_FRAME);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
@@ -2333,6 +2334,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		frameTimer.end(Timer.DRAW_FRAME);
+		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
@@ -3426,7 +3428,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void checkGLErrors() {
-		if (!log.isDebugEnabled())
+		if (!log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled())
 			return;
 
 		while (true) {
