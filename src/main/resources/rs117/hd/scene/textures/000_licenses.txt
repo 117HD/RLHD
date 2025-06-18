@@ -98,3 +98,12 @@ ROPE texture from TextureCan. All textures on this site are licensed as CC0.
 
 LEAF_VEINS texture from TextureCan. All textures on this site are licensed as CC0.
 -- https://www.texturecan.com/details/272/
+
+CARPET and CARPET_N textures from AmbientCG. All textures on this site are licensed as CC0.
+-- https://ambientcg.com/view?id=Fabric030
+
+MUD_1 and MUD_1_N textures are a composite of textures from CC0-Textures. All textures on this site are licensed as CC0.
+-- https://cc0-textures.com/t/th-brown-mud-02
+-- https://cc0-textures.com/t/th-brown-mud-03
+
+GROUND_WEB_# and variants made by SirFancyBacon for the purpose of this project and are licensed as CC0

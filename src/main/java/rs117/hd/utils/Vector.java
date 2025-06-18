@@ -31,6 +31,16 @@ public class Vector {
 		return out;
 	}
 
+	public static float[] pow(float[] out, float[] in, float exp) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = (float) Math.pow(in[i], exp);
+		return out;
+	}
+
+	public static float[] pow(float[] in, float exp) {
+		return pow(new float[in.length], in, exp);
+	}
+
 	public static float dot(int[] a, int[] b) {
 		float f = 0;
 		int len = Math.min(a.length, b.length);
