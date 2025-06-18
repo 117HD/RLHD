@@ -2108,6 +2108,64 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				renderViewportHeight
 			);
 
+			// Calculate projection matrix
+			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+			if (orthographicProjection) {
+				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+			} else {
+				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+			}
+			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+			Mat4.mul(projectionMatrix, Mat4.translate(
+				-cameraPosition[0],
+				-cameraPosition[1],
+				-cameraPosition[2]
+			));
+
+			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
+			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
+
+			// Clear scene
+			frameTimer.begin(Timer.CLEAR_SCENE);
+			float gammaCorrection = 100f / config.brightness();
+			float[] gammaCorrectedFogColor = pow(fogColor, gammaCorrection);
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
+			glClearDepthf(0);
+
+			// Draw Skybox
+			float[] skyboxProperties = environmentManager.getSkyboxProperties();
+			if(config.renderSkybox() && textureManager.getSkyboxCount() > 0 && vaoSkyboxHandle != 0 && (skyboxProperties[0] >= 0.0 || skyboxProperties[2] >= 0.0)) {
+				glClear(GL_DEPTH_BUFFER_BIT);
+				glToggle(GL_MULTISAMPLE, false);
+
+				glUseProgram(glSkyboxProgram);
+				glDepthMask(false);
+
+				glUniform4fv(uniSkyboxProperties, skyboxProperties);
+				glUniform3fv(uniSkyboxFogColor, fogColor);
+				glUniformMatrix4fv(uniSkyboxModelMatrix, false, Mat4.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
+				glUniformMatrix4fv(uniSkyboxProjectionMatrix, false, projectionMatrix);
+				glBindVertexArray(vaoSkyboxHandle);
+
+				glDrawArrays(GL_TRIANGLES, 0, 36);
+			} else {
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			}
+
+			glDepthMask(true);
+			glToggle(GL_MULTISAMPLE, numSamples > 1);
+
+			frameTimer.end(Timer.CLEAR_SCENE);
+
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
 			if (computeMode == ComputeMode.OPENCL) {
 				openCLManager.finish();
@@ -2178,7 +2236,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
-
 			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
 			final Dimension stretchedDimensions = client.getStretchedDimensions();
 			final int stretchedCanvasWidth = client.isStretchedEnabled() ? stretchedDimensions.width : canvasWidth;
@@ -2203,64 +2260,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			}
 
-			// Calculate projection matrix
-			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			if (orthographicProjection) {
-				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-			} else {
-				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-			}
-			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-			Mat4.mul(projectionMatrix, Mat4.translate(
-				-cameraPosition[0],
-				-cameraPosition[1],
-				-cameraPosition[2]
-			));
-
-			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
 			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
-
-			// Clear scene
-			frameTimer.begin(Timer.CLEAR_SCENE);
-			float gammaCorrection = 100f / config.brightness();
-			float[] gammaCorrectedFogColor = pow(fogColor, gammaCorrection);
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
-			glClearDepthf(0);
-
-			// Draw Skybox
-			float[] skyboxProperties = environmentManager.getSkyboxProperties();
-			if(config.renderSkybox() && textureManager.getSkyboxCount() > 0 && vaoSkyboxHandle != 0 && (skyboxProperties[0] >= 0.0 || skyboxProperties[2] >= 0.0)) {
-				glClear(GL_DEPTH_BUFFER_BIT);
-				glToggle(GL_MULTISAMPLE, false);
-
-				glUseProgram(glSkyboxProgram);
-				glDepthMask(false);
-
-				glUniform4fv(uniSkyboxProperties, skyboxProperties);
-				glUniform3fv(uniSkyboxFogColor, fogColor);
-				glUniformMatrix4fv(uniSkyboxModelMatrix, false, Mat4.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
-				glUniformMatrix4fv(uniSkyboxProjectionMatrix, false, projectionMatrix);
-				glBindVertexArray(vaoSkyboxHandle);
-
-				glDrawArrays(GL_TRIANGLES, 0, 36);
-			} else {
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			}
-
-			glDepthMask(true);
-			glToggle(GL_MULTISAMPLE, numSamples > 1);
-
-			frameTimer.end(Timer.CLEAR_SCENE);
-
 
 			glUseProgram(glSceneProgram);
 
