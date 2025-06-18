@@ -12832,7 +12832,9 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       "CACTUS3",
-      "FEUD_CACTUS_ROW"
+      "FEUD_CACTUS_ROW",
+      "DESERT_CACTUS_FULL_ALT",
+      "DESERT_CACTUS_EMPTY_ALT"
     ]
   },
   {
@@ -13182,11 +13184,32 @@
       "BREW_BAMBOO_TREE_MID",
       "BREW_BAMBOO_TREE_UPPERMID",
       "TREE_PALM01_CLUSTER01",
-      "TREE_PALM01_CLUSTER02"
+      "TREE_PALM01_CLUSTER02",
+      "TREE_PALM03_BASE",
+      "TREE_PALM03_MID",
+      "TREE_PALM03_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
     "uvOrientation": 512
+  },
+  {
+    "description": "Tropical Tree Dead",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "TREE_PALM01_DEAD01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.62,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Tropical Tree Big - Leaning",
@@ -17481,10 +17504,24 @@
       "ENAKH_LEAFLESSBUSH",
       "FAI_LEAFLESS_BUSH_LARGE_01",
       "FAI_LEAFLESS_BUSH_LARGE_02",
-      "DOV_HUNTING_PLANT2_NOOP"
+      "DOV_HUNTING_PLANT2_NOOP",
+      "BUSH_DESERT_DEAD01",
+      "BUSH_DESERT_DEAD02"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
+  },
+  {
+    "description": "Objects - Bush - Desert",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BUSH_DESERT_DEFAULT01",
+      "BUSH_DESERT_DEFAULT02",
+      "BUSH_DESERT_DEFAULT03",
+      "BUSH_DESERT_DEFAULT04"
+    ]
   },
   {
     "description": "Mage Training Arena - Marble - Portal Pillars",
