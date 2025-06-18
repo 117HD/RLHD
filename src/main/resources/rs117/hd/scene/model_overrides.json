@@ -9270,9 +9270,7 @@
     "uvScale": 0.5,
     "objectIds": [
       "TOURTRAP_QIP_WOOD_FLOOR_2",
-      "TOURTRAP_QIP_WOOD_FLOOR_1",
-      "TOURTRAP_QIP_PLATFORM_WALL",
-      "TOURTRAP_QIP_WOOD"
+      "TOURTRAP_QIP_WOOD_FLOOR_1"
     ],
     "uvType": "BOX"
   },
@@ -11485,6 +11483,7 @@
       "FARMING_CHAIR",
       "RIMMINGTON_CHAIR",
       "ELID_CHAIR1",
+      "ELID_CHAIR2",
       "DRAYNOR_CHAIR",
       "BURGH_CHAIR1",
       "FISHING_CONTEST_CHAIR",
@@ -13279,6 +13278,239 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "Nardah - Cart and Water Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "ELID_CART_WATER",
+      "ELID_WATERBARREL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Potted Plants",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "ELID_POTTEDFERN1",
+      "ELID_POTTEDFERN",
+      "ELID_POTTEDFERN2",
+      "EGYPT_PLANTPOTTED",
+      "ELID_POTTEDSMALLFERN",
+      "FEUD_POTTED_PLANT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Chemestry Table",
+    "baseMaterial": "GRAY_75",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "BCS_CHEMISTY_TABLE_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ELID_HERB_SHELVES2",
+      "ELID_HERB_SHELVES",
+      "ELID_WAREHOUSE_SHELVES3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Small Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "HUNTING_SHOP_SHELVES1",
+      "HUNTING_SHOP_SHELVES2",
+      "HUNTING_SHOP_SHELVES3",
+      "ELID_SHELF_COOKING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_WAREHOUSE_SHELVES3",
+      "ELID_WAREHOUSE_SHELVES4",
+      "ELID_WAREHOUSE_SHELVES",
+      "ELID_WAREHOUSE_SHELVES2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Double Doors",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ELID_BANK_DOOR",
+      "ELID_BANK_DOOR_MIRROR",
+      "ELID_TEMPLE_DOOR_OPEN_MIRROR",
+      "ELID_TEMPLE_DOOR_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Cupboard",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_CUPBOARD_OPEN",
+      "ELID_CUPBOARD_CLOSED_WITHROBES",
+      "ELID_CUPBOARD_OPEN_WITHROBES",
+      "ELID_CUPBOARD_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Bed",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_BED"
+    ]
+  },
+  {
+    "description": "Nardah - Rope Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "ELID_TEMPLE_RAILING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Eldinis Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "ELID_STATUETTE_PLACED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Fountain",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "ELID_WELL_STRAIGHT",
+      "ELID_WELL_CORNER",
+      "ELID_WELL_CENTRE",
+      "ELID_FOUNTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Stall",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "ELID_MARKET_CHOCICE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "WORLD_XZ"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "CARPET",
+        "uvType": "WORLD_XZ"
+      }
+    ]
   },
   {
     "description": "Ruins of Uzer - Stonework",
@@ -27757,7 +27989,8 @@
       "BOOKCASE_MAHOGANY",
       "FAI_FALADOR_BOOKCASE_WIDE",
       "FAI_FALADOR_BOOKSHELF_OLD_TALL",
-      "CAPT_SIAD_BOOKCASE"
+      "CAPT_SIAD_BOOKCASE",
+      "ELID_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
