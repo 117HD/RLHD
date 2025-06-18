@@ -43,6 +43,7 @@ public class AsyncUICopy implements Runnable {
 	}
 
 	public void prepare(int interfacePbo, int interfaceTex) {
+		// Ensure there isn't already another UI copy in progress
 		if (mappedBuffer != null)
 			return;
 
@@ -67,7 +68,6 @@ public class AsyncUICopy implements Runnable {
 	}
 
 	public boolean complete() {
-		// Ensure there isn't already another UI copy in progress
 		if (mappedBuffer == null)
 			return false;
 

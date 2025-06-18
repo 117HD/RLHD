@@ -704,6 +704,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
+			asyncUICopy.complete();
 			developerTools.deactivate();
 			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
@@ -2653,6 +2654,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
+		configAsyncUICopy = config.asyncUICopy();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 
@@ -2754,9 +2756,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								}
 								break;
 							case KEY_ASYNC_UI_COPY:
-								if (configAsyncUICopy)
-									asyncUICopy.complete();
-								configAsyncUICopy = config.asyncUICopy();
+								asyncUICopy.complete();
 								break;
 						}
 
