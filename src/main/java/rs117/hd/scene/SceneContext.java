@@ -22,8 +22,8 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
@@ -67,9 +67,6 @@ public class SceneContext {
 	public Map<Integer, float[]> vertexTerrainNormals;
 	// used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
-
-	private int[] tileCameraCache = new int[8];
-	public boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	// water-related data
 	public boolean[][][] tileIsWater;
@@ -138,44 +135,6 @@ public class SceneContext {
 		if (stagingBufferNormals != null)
 			stagingBufferNormals.destroy();
 		stagingBufferNormals = null;
-	}
-
-	public boolean compareCameraCache(int pitchSin,
-		int pitchCos,
-		int yawSin,
-		int yawCos,
-		int cameraX,
-		int cameraY,
-		int cameraZ,
-		int currentZoom){
-
-		return tileCameraCache[0] == pitchSin &&
-			   tileCameraCache[1] == pitchCos &&
-			   tileCameraCache[2] == yawSin &&
-			   tileCameraCache[3] == yawCos &&
-			   tileCameraCache[4] == cameraX &&
-			   tileCameraCache[5] == cameraY &&
-			   tileCameraCache[6] == cameraZ &&
-			   tileCameraCache[7] == currentZoom;
-	}
-
-	public void setCameraCache(int pitchSin,
-		int pitchCos,
-		int yawSin,
-		int yawCos,
-		int cameraX,
-		int cameraY,
-		int cameraZ,
-		int currentZoom){
-		// Cache the camera info
-		tileCameraCache[0] = pitchSin;
-		tileCameraCache[1] = pitchCos;
-		tileCameraCache[2] = yawSin;
-		tileCameraCache[3] = yawCos;
-		tileCameraCache[4] = cameraX;
-		tileCameraCache[5] = cameraY;
-		tileCameraCache[6] = cameraZ;
-		tileCameraCache[7] = currentZoom;
 	}
 
 	public int getVertexOffset() {
