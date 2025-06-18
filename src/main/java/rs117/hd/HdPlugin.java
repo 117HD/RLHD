@@ -2925,8 +2925,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (orthographicProjection)
 			return true;
 
-		if (tileVisibilityCached)
-			return tileIsVisible[plane][tileExX][tileExY];
+//		if (tileVisibilityCached)
+//			return tileIsVisible[plane][tileExX][tileExY];
 
 		int[][][] tileHeights = scene.getTileHeights();
 		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;

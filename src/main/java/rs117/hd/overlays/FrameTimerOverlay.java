@@ -112,7 +112,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				timers[i] += frame.timers[i];
 
 		for (int i = 0; i < timers.length; i++)
-			timers[i] /= frames.size();
+//			timers[i] = Math.max(0, timers[i] / frames.size());
+			timers[i] = timers[i] / frames.size();
 
 		return timers;
 	}
@@ -122,8 +123,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	}
 
 	private void addTiming(String name, long nanos, boolean bold) {
-		if (nanos == 0)
-			return;
+//		if (nanos == 0)
+//			return;
 
 		// Round timers to zero if they are less than a microsecond off
 		String result = "~0 ms";

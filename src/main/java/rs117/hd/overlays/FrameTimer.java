@@ -46,7 +46,7 @@ public class FrameTimer {
 
 			// Estimate the timer's own runtime, with a warm-up run first
 			final int iterations = 100000;
-			final int compensation = 1950000; // Additional manual correction
+			final int compensation = 1900000; // additional manual correction
 			for (int i = 0; i < 2; i++) {
 				errorCompensation = 0;
 				for (int j = 0; j < iterations; j++) {
@@ -108,9 +108,8 @@ public class FrameTimer {
 				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
 			glQueryCounter(gpuQueries[timer.ordinal() * 2], GL_TIMESTAMP);
 		} else if (!activeTimers[timer.ordinal()]) {
-			long timestamp = System.nanoTime();
-			cumulativeError += (errorCompensation + 1) / 2;
-			timings[timer.ordinal()] -= timestamp - cumulativeError;
+			cumulativeError += errorCompensation + 1 >> 1;
+			timings[timer.ordinal()] -= System.nanoTime() - cumulativeError;
 		}
 		activeTimers[timer.ordinal()] = true;
 	}
@@ -123,10 +122,8 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
-			long timestamp = System.nanoTime();
-			cumulativeError += errorCompensation / 2;
-			timestamp += timings[timer.ordinal()] - cumulativeError;
-			timings[timer.ordinal()] = timestamp > 0 ? timestamp : 0; // avoid going into negative due to over compensation
+			cumulativeError += errorCompensation >> 1;
+			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
 		}
 	}
