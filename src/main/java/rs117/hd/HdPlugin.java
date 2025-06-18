@@ -1517,7 +1517,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		frameTimer.begin(Timer.DRAW_FRAME);
-		frameTimer.begin(Timer.RENDER_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
 
 		final Scene scene = client.getScene();
@@ -1663,6 +1662,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		tileVisibilityCached = true;
 
 		frameTimer.end(Timer.DRAW_SCENE);
+		frameTimer.begin(Timer.RENDER_FRAME);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
