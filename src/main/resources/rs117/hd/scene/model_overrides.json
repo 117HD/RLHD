@@ -13470,6 +13470,7 @@
     "uvScale": 0.75,
     "uvType": "BOX",
     "objectIds": [
+      "BCS_NECROPOLIS_ENTRY_NOCLIMBABLE",
       "BCS_NECROPOLIS_ENTRY_CLIMBABLE",
       "BCS_NECROPOLIS_ENTRY02",
       "BCS_NECROPOLIS_ENTRY01",
@@ -13643,7 +13644,8 @@
       "TOA_ENTRANCE_STEPS_SIDE15",
       "TOA_ENTRANCE_STEPS_SIDE16",
       "TOA_ENTRANCE_STEPS_SIDE17",
-      "TOA_ENTRANCE_STEPS_SIDE18"
+      "TOA_ENTRANCE_STEPS_SIDE18",
+      "NECROPOLIS_OBELISK"
     ],
     "colorOverrides": [
       {
@@ -13810,6 +13812,58 @@
         "colors": "a < 255",
         "baseMaterial": "TRANSPARENT"
       }
+    ]
+  },
+  {
+    "description": "Necropolis - Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "NECROPOLIS_ROCKS_01",
+      "NECROPOLIS_ROCKS_02",
+      "NECROPOLIS_ROCKS_03",
+      "NECROPOLIS_ROCKS_04",
+      "NECROPOLIS_ROCKS_05",
+      "NECROPOLIS_ROCKS_06"
+    ]
+  },
+  {
+    "description": "Necropolis - Stone Chips",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "NECROPOLIS_SAND_DETAIL1",
+      "NECROPOLIS_SAND_DETAIL2",
+      "NECROPOLIS_SAND_DETAIL3",
+      "NECROPOLIS_DUGUPSOIL_05",
+      "NECROPOLIS_DUGUPSOIL_06",
+      "NECROPOLIS_DUGUPSOIL_07",
+      "NECROPOLIS_DUGUPSOIL_09",
+      "NECROPOLIS_DUGUPSOIL_10",
+      "NECROPOLIS_DUGUPSOIL_11"
+    ]
+  },
+  {
+    "description": "Necropolis - Sand Patches",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "DECAL_SAND01_PILE01",
+      "DECAL_SAND01_PILE02",
+      "DECOKIT_SAND01_PILE01"
+    ]
+  },
+  {
+    "description": "Necropolis - Stone Tiles",
+    "baseMaterial": "MARBLE_3",
+    "uvScale": 1.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "NECROPOLIS_TILE_01",
+      "NECROPOLIS_TILE_02",
+      "NECROPOLIS_TILE_03",
+      "NECROPOLIS_TILE_05",
+      "NECROPOLIS_TILE_07"
     ]
   },
   {
