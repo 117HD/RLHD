@@ -8918,6 +8918,7 @@
       "FARMING_CRATES",
       "ELID_CRATE",
       "ELID_CRATES",
+      "ELID_CRATES_2",
       "ELID_SMALL_CRATES",
       "FEVER_CRATES_STACKED",
       "FEVER_CRATE",
@@ -10713,6 +10714,20 @@
       "STONECUTTER_DUGUPSOIL1_LIGHT",
       "STONECUTTER_DUGUPSOIL3_LIGHT",
       "STONECUTTER_DUGUPSOIL2_LIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Sandy - Rock",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "objectIds": [
+      "DUGUPSOIL_OASIS_1",
+      "ROCKSLIDE3_OASIS",
+      "DUGUPSOIL_OASIS_2",
+      "ROCKSLIDE1_OASIS",
+      "ROCKSLIDE2_OASIS",
+      "DUGUPSOIL_OASIS_3"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -13022,10 +13037,40 @@
     ]
   },
   {
-    "description": "Kharidian Barrell Cactus",
+    "description": "Kharidian Barrel Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       "CACTUS5"
+    ]
+  },
+  {
+    "description": "Kharidian Cactus with Sign",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      "TOURTRAP_QIP_SIGNPOST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kharidian Cactus with Scarf",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      "TOURTRAP_QIP_CACTUS_SCARF"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
@@ -13495,6 +13540,14 @@
       "ELID_SKEW_STEPS"
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Elid Tent",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "TENT_OASIS"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Nardah Stone Pew",
@@ -32079,7 +32132,8 @@
     "description": "Hueycoatl Campfire Frame",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
-      "HUEY_LOBBY_COOKINGFIRE"
+      "HUEY_LOBBY_COOKINGFIRE",
+      "CAMPFIRE_OASIS"
     ],
     "colorOverrides": [
       {
