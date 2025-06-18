@@ -1898,9 +1898,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		// Copy the UI at the end of the frame instead, and upload it before the next frame
-		if (configAsyncUICopy)
+		if (configAsyncUICopy) {
+			// Start copying the UI on a different thread, to be uploaded during the next frame
+			asyncUICopy.prepare(interfacePbo, interfaceTexture);
 			return;
+		}
 
 		final BufferProvider bufferProvider = client.getBufferProvider();
 		final int[] pixels = bufferProvider.getPixels();
@@ -2344,10 +2346,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-
-		// Begin copying the UI to be displayed the next frame
-		if (configAsyncUICopy)
-			asyncUICopy.prepare(interfacePbo, interfaceTexture);
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
@@ -3390,7 +3388,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		// Upload the UI which we started copying at the end of the previous frame
+		// Upload the UI which we began copying during the previous frame
 		if (configAsyncUICopy)
 			asyncUICopy.complete();
 
