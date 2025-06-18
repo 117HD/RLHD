@@ -3187,7 +3187,11 @@
       "KHARID_BIGWINDOW",
       "DESERTWALL_RAISED",
       "DESERTROOFWALL_RAISED",
-      "DESERTROOFWALL_NOBLOCKRANGE"
+      "DESERTROOFWALL_NOBLOCKRANGE",
+      "TOURTRAP_QIP_DESERTWALL",
+      "TOURTRAP_QIP_CELL_BAR_WALL_BARS",
+      "TOURTRAP_QIP_DESERTWALL_WINDOW",
+      "TOURTRAP_QIP_DESERTROOFWALL"
     ],
     "flatNormals": true,
     "uvType": "BOX"
@@ -4038,8 +4042,7 @@
       "AGILITY_PYRAMID_DUGUPSOIL1",
       "AGILITY_PYRAMID_DUGUPSOIL2",
       "AGILITY_PYRAMID_DUGUPSOIL3",
-      "AGILITY_PYRAMID_DUGUPSOIL4",
-      "TOURTRAP_QIP_SAND_DETAIL2"
+      "AGILITY_PYRAMID_DUGUPSOIL4"
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "BOX",
@@ -6350,7 +6353,8 @@
       "DOV_BASE_EXIT_UPPER",
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
-      "CIVITAS_LADDER_TOP_NORIM"
+      "CIVITAS_LADDER_TOP_NORIM",
+      "TOURTRAP_QIP_LADDER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -6595,7 +6599,8 @@
       "QIP_WATCHTOWER_LARGE_TABLE",
       "OLAF2_OLD_BROKEN_TABLE",
       "FARMING_COUNTER_TABLE",
-      "WILDY_HUB_BROKEN_TABLE"
+      "WILDY_HUB_BROKEN_TABLE",
+      "TOURTRAP_QIP_DESERT_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -7034,7 +7039,10 @@
       "KHARIDMETALGATECLOSEDL_1OP",
       "KHARIDMETALGATECLOSEDR_1OP",
       "KHARIDMETALGATECLOSEDL_2OP",
-      "KHARIDMETALGATECLOSEDR_2OP"
+      "KHARIDMETALGATECLOSEDR_2OP",
+      "CAPT_SIAD_CELL_DOOR",
+      "UNDERGROUNDCELLGATER",
+      "UNDERGROUNDCELLGATEL"
     ],
     "uvType": "BOX",
     "uvOrientation": 463
@@ -8362,7 +8370,9 @@
     "description": "Ground Decoration - Ash Pile - Small",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
+      "WILDERNESS_ROCKS_FLOOR_SOFT_03",
       "WILDERNESS_ROCKS_FLOOR_SOFT_02",
+      "WILDERNESS_ROCKS_FLOOR_SOFT_04",
       "WILDERNESS_ROCKS_FLOOR_SOFT_05"
     ],
     "uvType": "WORLD_XZ",
@@ -8568,7 +8578,12 @@
       "HORROR_ROCKSLIDE6",
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_1",
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_3",
-      "PLAGUE_MUD"
+      "PLAGUE_MUD",
+      "TOURTRAP_QIP_SAND_DETAIL1",
+      "TOURTRAP_QIP_CLIFF_SURROUND2",
+      "TOURTRAP_QIP_CLIMB_ROCK_1",
+      "TOURTRAP_QIP_CLIFF_SURROUND1",
+      "TOURTRAP_QIP_SAND_DETAIL2"
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -8972,7 +8987,9 @@
       "KR_SEERS_TABLE",
       "FOSSIL_CRATE1",
       "FOSSIL_CRATE3",
-      "FOSSIL_CRATE_STACKED"
+      "FOSSIL_CRATE_STACKED",
+      "TOURTRAP_QIP_CRATE_SINGLE",
+      "TOURTRAP_QIP_CRATE_STACKED"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9149,7 +9166,9 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "AGGIE_COURTYARD_CRATE",
-      "AGGIE_COURTYARD_CRATES_STACKED"
+      "AGGIE_COURTYARD_CRATES_STACKED",
+      "TOURTRAP_QIP_MINE_CRATE",
+      "TOURTRAP_QIP_MINE_CRATE_STACKED"
     ],
     "uvOrientation": 512,
     "uvScale": 0.75,
@@ -9181,6 +9200,162 @@
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Cart, Barrel with Metal Bands",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TOURTRAP_QIP_CART_NORMAL",
+      "TOURTRAP_QIP_BARREL",
+      "THMINEBARREL_ANA_WINCHSIDE",
+      "THMINEBARREL_FULL",
+      "THMINEBARREL_EMPTY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TOURTRAP_QIP_ROPEPULLTHINGY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": [ "h == 5", "h == 6 && s == 4" ],
+        "baseMaterial": "GRAVEL_LIGHT"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch - Underside",
+    "baseMaterial": "ROPE",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURTRAP_QIP_ROPEPULLTHINGY2"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch - Platform Floor",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURTRAP_QIP_WOOD_FLOOR_2",
+      "TOURTRAP_QIP_WOOD_FLOOR_1",
+      "TOURTRAP_QIP_PLATFORM_WALL",
+      "TOURTRAP_QIP_WOOD"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch - Platform Walls",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURTRAP_QIP_PLATFORM_WALL",
+      "TOURTRAP_QIP_WOOD"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Tourist Trap - Rail Tracks",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURISTTRAP_MINECART",
+      "TOURTRAP_QIP_TRACKBUFFER",
+      "TOURTRAP_QIP_TRACKSTRAIGHT",
+      "TOURTRAP_QIP_TRACKSTRAIGHT_BROKEN",
+      "TOURTRAP_QIP_TRACKSTRAIGHT_BROKEN2",
+      "TOURTRAP_QIP_TRACKCURVE_A",
+      "TOURTRAP_QIP_TRACKCURVE_C",
+      "TOURTRAP_QIP_TRACKCURVE_B",
+      "TOURTRAP_QIP_TRACKCURVE_D"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Rail Sign",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TOURTRAP_QIP_DANGER_SIGN"
+    ],
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Cliffs",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "TOURTRAP_QIP_CLIFFTOP_3",
+      "TOURTRAP_QIP_CLIFFTOP_2",
+      "TOURTRAP_QIP_CLIFFTOP_1",
+      "TOURTRAP_QIP_CLIFF_FLOOR",
+      "TOURTRAP_QIP_CLIFFTOP_3_LOW",
+      "TOURTRAP_QIP_CLIFFTOP_1_LOW",
+      "TOURTRAP_QIP_CLIFFTOP_2_LOW",
+      "TOURTRAP_QIP_CLIFF_FLOOR_LOW"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Tourist Trap - Dug Up Soil",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_05",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_02",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_04",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_01",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_03",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_06",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_07"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
   },
   {
     "description": "Metallic - Ground - Armor",
@@ -10512,7 +10687,8 @@
       "WILD_ESCAPECAVE_ROCKSLIDE1",
       "WILD_ESCAPECAVE_ROCKSLIDE2",
       "WILD_ESCAPECAVE_ROCKSLIDE3",
-      "WILD_ESCAPECAVE_ROCKSLIDE4"
+      "WILD_ESCAPECAVE_ROCKSLIDE4",
+      "PUNISHROCKS"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -15673,7 +15849,10 @@
       "FAI_ROCK_VSMALL_01",
       "FAI_ROCK_VSMALL_02",
       "FAI_ROCK_VSMALL_03",
-      "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_MIDDLE"
+      "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_MIDDLE",
+      "TOURTRAP_QIP_ROCKS1",
+      "TOURTRAP_QIP_ROCKS2",
+      "TOURTRAP_QIP_ROCKS3"
     ],
     "uvType": "BOX",
     "uvScale": 0.22
@@ -15704,7 +15883,9 @@
       "FAI_ROCK_BIG_01",
       "FAI_ROCK_BIG_02",
       "FAI_ROCK_BIG_03",
-      "FAI_ROCK_BIG_04"
+      "FAI_ROCK_BIG_04",
+      "TOURTRAP_QIP_MINE_ROCKS_BIG_02",
+      "TOURTRAP_QIP_MINE_ROCKS_BIG_01"
     ],
     "uvType": "BOX",
     "uvScale": 0.22
@@ -25412,7 +25593,15 @@
     "objectIds": [
       "TOURTRAP_QIP_MINE_WALL",
       "SHADOW_MAJ_CRACK",
-      "TOURTRAP_QIP_MINE_WALL_JUTTING"
+      "TOURTRAP_QIP_MINE_WALL_SUPPORT_RIGHT",
+      "TOURTRAP_QIP_MINE_WALL_SUPPORT_LEFT",
+      "TOURTRAP_QIP_MINE_WALL_JUTTING",
+      "TOURTRAP_QIP_MINE_WALL_LAMP",
+      "TOURTRAP_QIP_MINE_WALL_ROCKY",
+      "THMINECAVEL",
+      "THMINECAVER",
+      "TOURTRAP_QIP_MINE_WALL_GATE_SUPPORT_L",
+      "TOURTRAP_QIP_MINE_WALL_GATE_SUPPORT_R"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -27512,7 +27701,10 @@
       "SARIM_BOOKCASE2",
       "FAI_WIZTOWER_BOOKCASE",
       "FAI_WIZTOWER_BOOKCASE_WALL",
-      "BOOKCASE_MAHOGANY"
+      "BOOKCASE_MAHOGANY",
+      "FAI_FALADOR_BOOKCASE_WIDE",
+      "FAI_FALADOR_BOOKSHELF_OLD_TALL",
+      "CAPT_SIAD_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
