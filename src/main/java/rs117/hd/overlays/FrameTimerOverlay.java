@@ -48,7 +48,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.nanoTime();
 		while (!frames.isEmpty()) {
-			if (now - frames.peekFirst().frameTimestamp < 20e9) // remove entries older than 3 seconds
+			if (now - frames.peekFirst().frameTimestamp < 10e9) // remove older entries
 				break;
 			frames.removeFirst();
 		}
@@ -93,7 +93,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			panelComponent.getChildren().add(LineComponent.builder()
 				.left("Error compensation:")
-				.right(String.format("%d", frameTimer.errorCompensation))
+				.right(String.format("%d ns", frameTimer.errorCompensation))
 				.build());
 		}
 
@@ -112,8 +112,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				timers[i] += frame.timers[i];
 
 		for (int i = 0; i < timers.length; i++)
-//			timers[i] = Math.max(0, timers[i] / frames.size());
-			timers[i] = timers[i] / frames.size();
+			timers[i] = Math.max(0, timers[i] / frames.size());
 
 		return timers;
 	}
@@ -123,15 +122,15 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	}
 
 	private void addTiming(String name, long nanos, boolean bold) {
-//		if (nanos == 0)
-//			return;
+		if (nanos == 0)
+			return;
 
 		// Round timers to zero if they are less than a microsecond off
 		String result = "~0 ms";
-//		if (Math.abs(nanos) > 1e5) {
+		if (Math.abs(nanos) > 1e3) {
 			result = sb.append(Math.round(nanos / 1e3) / 1e3).append(" ms").toString();
 			sb.setLength(0);
-//		}
+		}
 		var font = bold ? FontManager.getRunescapeBoldFont() : FontManager.getRunescapeFont();
 		panelComponent.getChildren().add(LineComponent.builder()
 			.left(name + ":")

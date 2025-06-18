@@ -46,7 +46,7 @@ public class FrameTimer {
 
 			// Estimate the timer's own runtime, with a warm-up run first
 			final int iterations = 100000;
-			final int compensation = 1900000; // additional manual correction
+			final int compensation = 1950000; // additional manual correction
 			for (int i = 0; i < 2; i++) {
 				errorCompensation = 0;
 				for (int j = 0; j < iterations; j++) {

@@ -2938,19 +2938,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tileExX,
 		int tileExY
 	) {
-		try {
-			frameTimer.begin(Timer.CLICKBOX_CHECK);
-			frameTimer.begin(Timer.VISIBILITY_CHECK);
-			frameTimer.end(Timer.CLICKBOX_CHECK);
-
 		if (sceneContext == null)
 			return false;
 
 		if (orthographicProjection)
 			return true;
 
-//		if (tileVisibilityCached)
-//			return tileIsVisible[plane][tileExX][tileExY];
+		if (tileVisibilityCached)
+			return tileIsVisible[plane][tileExX][tileExY];
 
 		int[][][] tileHeights = scene.getTileHeights();
 		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
@@ -2999,9 +2994,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		return tileIsVisible[plane][tileExX][tileExY] = visible;
-		} finally {
-			frameTimer.end(Timer.VISIBILITY_CHECK);
-		}
 	}
 
 	/**
