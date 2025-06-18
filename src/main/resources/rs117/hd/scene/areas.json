@@ -2500,7 +2500,7 @@
   },
   {
     "name": "Genie cave",
-    "regions": [ 13457 ],
+    "aabbs": [ [ 3363, 9295, 3382, 9328 ] ],
     "hideOtherAreas": true
   },
   {

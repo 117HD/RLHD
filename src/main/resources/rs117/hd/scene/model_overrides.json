@@ -7675,7 +7675,9 @@
       "FAI_VARROCK_POOR_DOOR_OPEN_FLIPPED",
       "VMQ1_BANDIT_DOOR",
       "VMQ1_BANDIT_DOOR_OPEN",
-      "VMQ1_BANDIT_DOOR_NOOP"
+      "VMQ1_BANDIT_DOOR_NOOP",
+      "ELID_GENIE_DOOR",
+      "ELID_GENIE_DOOR_OPEN"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -13510,6 +13512,40 @@
         "baseMaterial": "CARPET",
         "uvType": "WORLD_XZ"
       }
+    ]
+  },
+  {
+    "description": "Elid - Genie's Crevice - Walls",
+    "baseMaterial": "MUD_1",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_UNDERGROUND_WALLS",
+      "ELID_UNDERGROUND_WALL_SHORTER",
+      "ELID_UNDERGROUND_TOP_SHORTER",
+      "ELID_UNDERGROUND_DOOR_WALL_MIRROR",
+      "ELID_UNDERGROUND_TOP5_HIGHER",
+      "ELID_UNDERGROUND_DOOR_WALL",
+      "ELID_UNDERGROUND_TOP",
+      "ELID_STALAGTITES_SMALLER",
+      "ELID_STALAGTITES_LARGER",
+      "ELID_STALAGTITES",
+      "ELID_STALAGTITES_TWIN",
+      "ELID_STALAGTITES_FALLOFF"
+    ]
+  },
+  {
+    "description": "Elid - Genie's Crevice",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_FALLOFF_10",
+      "ELID_FALLOFF_1",
+      "ELID_FALLOFF_2",
+      "ELID_FALLOFF_5",
+      "ELID_FALLOFF_3",
+      "ELID_FALLOFF_6",
+      "ELID_FALLOFF_7"
     ]
   },
   {
