@@ -1668,6 +1668,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.end(Timer.DRAW_SCENE);
 
+		// Upload the UI which should be done copying on the CPU side from the previous frame
 		if (configAsyncUICopy)
 			interfaceAsyncCopy.complete();
 
@@ -1903,6 +1904,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		if (configAsyncUICopy) {
+			// Prepare to upload the current UI for the next frame
 			interfaceAsyncCopy.prepare(client.getBufferProvider(), interfacePbo, interfaceTexture);
 			return;
 		}
