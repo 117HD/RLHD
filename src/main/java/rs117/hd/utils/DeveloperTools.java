@@ -3,6 +3,7 @@ package rs117.hd.utils;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
@@ -56,13 +57,10 @@ public class DeveloperTools implements KeyListener {
 
 	private boolean keyBindingsEnabled = false;
 	private boolean tileInfoOverlayEnabled = false;
+	@Getter
 	private boolean frameTimingsOverlayEnabled = false;
 	private boolean shadowMapOverlayEnabled = false;
 	private boolean lightGizmoOverlayEnabled = false;
-
-	public boolean isFrameTimingsOverlayEnabled(){
-		return frameTimingsOverlayEnabled;
-	}
 
 	public void activate() {
 		// Listen for commands

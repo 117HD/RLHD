@@ -25,8 +25,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final StringBuilder sb = new StringBuilder();
 
-	private long lastRenderElapsed = 0;
-
 	@Inject
 	public FrameTimerOverlay(HdPlugin plugin) {
 		super(plugin);
@@ -59,14 +57,15 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Override
 	public Dimension render(Graphics2D g) {
-		long begin = System.nanoTime();
+		long time = System.nanoTime();
+
 		var timings = getAverageTimings();
 		if (timings.length != Timer.values().length) {
 			panelComponent.getChildren().add(TitleComponent.builder()
 				.text("Waiting for data...")
 				.build());
 		} else {
-			long cpuTime = timings[Timer.DRAW_FRAME.ordinal()] - lastRenderElapsed; // Remove time taken to draw the timerOverlay :D
+			long cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
 			addTiming("CPU", cpuTime, true);
 			for (var t : Timer.values())
 				if (!t.isGpuTimer && t != Timer.DRAW_FRAME)
@@ -93,8 +92,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.build());
 		}
 
-		Dimension result = super.render(g);
-		lastRenderElapsed = System.nanoTime() - begin;
+		var result = super.render(g);
+		frameTimer.cumulativeError += System.nanoTime() - time;
 		return result;
 	}
 
