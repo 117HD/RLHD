@@ -93,7 +93,7 @@ public class FrameTimer {
 		destroy();
 	}
 
-	private void reset() {
+	public void reset() {
 		Arrays.fill(timings, 0);
 		Arrays.fill(activeTimers, false);
 		cumulativeError = 0;
@@ -126,6 +126,12 @@ public class FrameTimer {
 			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
 		}
+	}
+
+	public void add(Timer timer, long time) {
+		if (isInactive)
+			return;
+		timings[timer.ordinal()] += time;
 	}
 
 	public void endFrameAndReset() {
