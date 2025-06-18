@@ -41,7 +41,6 @@ import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
@@ -480,6 +479,13 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				worldPos[1] >> 6
 			));
 
+			for (var environment : sceneContext.environments) {
+				if (environment.area.containsPoint(worldPos)) {
+					lines.add("Environment: " + environment);
+					break;
+				}
+			}
+
 			int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
@@ -566,6 +572,17 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
+		}
+
+		var decorObject = tile.getDecorativeObject();
+		if (decorObject != null) {
+			lines.add(String.format(
+				"Decor Object: %s preori=%d%s",
+				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
+				HDUtils.getBakedOrientation(decorObject.getConfig()),
+				getModelInfo(decorObject.getRenderable())
+			));
+			lines.add("Decor Type: " + HDUtils.getObjectType(decorObject.getConfig()));
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
@@ -1447,16 +1464,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	private void copyToClipboard(String toCopy, @Nullable String description) {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		StringSelection string = new StringSelection(toCopy);
+		StringSelection string = new StringSelection("\"" + toCopy + "\"");
 		clipboard.setContents(string, null);
 		clientThread.invoke(() -> client.addChatMessage(
 			ChatMessageType.GAMEMESSAGE,
 			"117 HD",
-			ColorUtil.wrapWithColorTag("[117 HD] " + (
+			"<col=006600>[117 HD] " + (
 				description == null ?
 					"Copied to clipboard: " + toCopy :
 					description
-			), Color.GREEN),
+			),
 			"117 HD"
 		));
 	}
@@ -1515,7 +1532,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				pendingSelection = null;
 			}
 		} else if (SwingUtilities.isRightMouseButton(e)) {
-			e.consume();
 			if (!hoveredGamevals.isEmpty()) {
 				if (copiedGamevalsHash != hoveredGamevalsHash) {
 					copiedGamevalsHash = hoveredGamevalsHash;

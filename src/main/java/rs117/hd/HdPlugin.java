@@ -135,6 +135,7 @@ import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.utils.Vector.pow;
 
 @PluginDescriptor(
 	name = "117 HD",
@@ -390,6 +391,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniWaterColorLight;
 	private int uniWaterColorMid;
 	private int uniWaterColorDark;
+	private int uniGammaCorrection;
 	private int uniAmbientStrength;
 	private int uniAmbientColor;
 	private int uniLightStrength;
@@ -431,6 +433,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniUiAlphaOverlay;
 	private int uniTextureArray;
 	private int uniElapsedTime;
+	private int uniUiGammaCorrection;
+	private int uniUiGammaCalibration;
+	private int uniUiGammaCalibrationTimer;
 
 	private int uniBlockMaterials;
 	private int uniBlockWaterTypes;
@@ -493,6 +498,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private double lastFrameClientTime;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
+	private long brightnessChangedAt;
 	private int currentZoom;
 
 	@Provides
@@ -936,6 +942,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniWaterColorDark = glGetUniformLocation(glSceneProgram, "waterColorDark");
 		uniDrawDistance = glGetUniformLocation(glSceneProgram, "drawDistance");
 		uniExpandedMapLoadingChunks = glGetUniformLocation(glSceneProgram, "expandedMapLoadingChunks");
+		uniGammaCorrection = glGetUniformLocation(glSceneProgram, "gammaCorrection");
 		uniAmbientStrength = glGetUniformLocation(glSceneProgram, "ambientStrength");
 		uniAmbientColor = glGetUniformLocation(glSceneProgram, "ambientColor");
 		uniLightStrength = glGetUniformLocation(glSceneProgram, "lightStrength");
@@ -970,6 +977,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
 		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
 		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
+		uniUiGammaCorrection = glGetUniformLocation(glUiProgram, "gammaCorrection");
+		uniUiGammaCalibration = glGetUniformLocation(glUiProgram, "showGammaCalibration");
+		uniUiGammaCalibrationTimer = glGetUniformLocation(glUiProgram, "gammaCalibrationTimer");
 
 		uniBlockMaterials = glGetUniformBlockIndex(glSceneProgram, "MaterialUniforms");
 		uniBlockWaterTypes = glGetUniformBlockIndex(glSceneProgram, "WaterTypeUniforms");
@@ -2133,10 +2143,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniform3fv(uniWaterColorMid, waterColorMid);
 			glUniform3fv(uniWaterColorDark, waterColorDark);
 
-			float brightness = config.brightness() / 20f;
-			glUniform1f(uniAmbientStrength, environmentManager.currentAmbientStrength * brightness);
+			float gammaCorrection = 100f / config.brightness();
+			glUniform1f(uniGammaCorrection, gammaCorrection);
+			float ambientStrength = environmentManager.currentAmbientStrength;
+			float directionalStrength = environmentManager.currentDirectionalStrength;
+			if (config.useLegacyBrightness()) {
+				float factor = config.legacyBrightness() / 20f;
+				ambientStrength *= factor;
+				directionalStrength *= factor;
+			}
+			glUniform1f(uniAmbientStrength, ambientStrength);
 			glUniform3fv(uniAmbientColor, environmentManager.currentAmbientColor);
-			glUniform1f(uniLightStrength, environmentManager.currentDirectionalStrength * brightness);
+			glUniform1f(uniLightStrength, directionalStrength);
 			glUniform3fv(uniLightColor, environmentManager.currentDirectionalColor);
 
 			glUniform1f(uniUnderglowStrength, environmentManager.currentUnderglowStrength);
@@ -2209,7 +2227,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
-			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
+			float[] gammaCorrectedFogColor = pow(fogColor, gammaCorrection);
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
 			glClearDepthf(0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
@@ -2338,6 +2363,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
 		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100f);
 		glUniform4fv(uniUiAlphaOverlay, ColorUtils.srgba(overlayColor));
+		glUniform1f(uniUiGammaCorrection, 100f / config.brightness());
+		final int gammaCalibrationTimeout = 3000;
+		float gammaCalibrationTimer = System.currentTimeMillis() - brightnessChangedAt;
+		glUniform1i(uniUiGammaCalibration, gammaCalibrationTimer < gammaCalibrationTimeout ? 1 : 0);
+		glUniform1f(uniUiGammaCalibrationTimer, 1 - gammaCalibrationTimer / gammaCalibrationTimeout);
 
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
@@ -2710,6 +2740,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						}
 
 						switch (key) {
+							case KEY_BRIGHTNESS:
+								brightnessChangedAt = System.currentTimeMillis();
+								break;
 							case KEY_EXPANDED_MAP_LOADING_CHUNKS:
 								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 								// fall-through
