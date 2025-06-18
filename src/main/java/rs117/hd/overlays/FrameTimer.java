@@ -78,7 +78,7 @@ public class FrameTimer {
 		destroy();
 	}
 
-	private void reset() {
+	public void reset() {
 		Arrays.fill(timings, 0);
 		Arrays.fill(activeTimers, false);
 	}
