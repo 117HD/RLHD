@@ -13513,6 +13513,105 @@
     ]
   },
   {
+    "description": "Agility Pyramid - Tent",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "AGILITY_PYRAMID_TENT_END",
+      "AGILITY_PYRAMID_TENT_SIDE",
+      "AGILITY_PYRAMID_TENT_END_MIRROR",
+      "AGILITY_PYRAMID_TENT_TOP_END",
+      "AGILITY_PYRAMID_TENT_TOP",
+      "AGILITY_PYRAMID_TENT_FLAPS"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Climbing Rocks",
+    "baseMaterial": "ROCK_3_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "NTK_AGILITY_CLIMBING_ROCKS_1",
+      "AGILITY_PYRAMID_CLIMBING_ROCKS_INACTIVE",
+      "AGILITY_PYRAMID_CLIMBING_ROCKS_FALLOFF",
+      "AGILITY_PYRAMID_CLIMBING_ROCKS_FALLOFF",
+      "NTK_AGILITY_CLIMBING_ROCKS_2"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "AGILITY_PYRAMID_PLANK_CENTRE",
+      "AGILITY_PYRAMID_PLANK_START",
+      "AGILITY_PYRAMID_PLANK_END"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Blocks",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "AGILITY_PYRAMID_STEPS1",
+      "AGILITY_PYRAMID_SIDE1",
+      "AGILITY_PYRAMID_SIDE3",
+      "AGILITY_PYRAMID_SIDE2",
+      "AGILITY_PYRAMID_TILTING_FLOOR_NOANIM",
+      "AGILITY_PYRAMID_SIDE4",
+      "AGILITY_PYRAMID_LOW_WALL",
+      "AGILITY_PYRAMID_CORNER1",
+      "AGILITY_PYRAMID_TOP2",
+      "AGILITY_PYRAMID_TOP1",
+      "AGILITY_PYRAMID_GAP2",
+      "AGILITY_PYRAMID_TOP4",
+      "AGILITY_PYRAMID_TOP3",
+      "AGILITY_PYRAMID_GAP1",
+      "AGILITY_PYRAMID_GAP3",
+      "AGILITY_PYRAMID_LEDGE2",
+      "AGILITY_PYRAMID_LEDGE1",
+      "AGILITY_PYRAMID_TOP2",
+      "AGILITY_PYRAMID_TOP",
+      "AGILITY_PYRAMID_SIDE2_LOWWALL",
+      "AGILITY_PYRAMID_TOP2_CORNER",
+      "AGILITY_PYRAMID_TOP2_SIDE4",
+      "AGILITY_PYRAMID_SIDE4_STEPS",
+      "AGILITY_PYRAMID_TOP4_CORNER",
+      "AGILITY_PYRAMID_PENNY_LOC",
+      "AGILITY_PYRAMID_TOP2_TILTING_FLOOR",
+      "AGILITY_PYRAMID_TOP3_GAP"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Blocks - Animating",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "objectIds": [
+      "AGILITY_PYRAMID_TILTING_FLOOR"
+    ],
+    "npcIds": [
+      "AGILITY_PYRAMID_PENNY_WATERFALL_NPC_NORTH",
+      "AGILITY_PYRAMID_PENNY_WATERFALL_NPC_EAST"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Top",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "AGILITY_PYRAMID_TOP4_TOP",
+      "AGILITY_PYRAMID_TOP_CAP",
+      "AGILITY_PYRAMID_WALL_ROCKS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ]
+  },
+  {
     "description": "Ruins of Uzer - Stonework",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
