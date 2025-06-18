@@ -1885,7 +1885,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight) {
-		if (canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight) {
+		boolean resize = canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight;
+		if (resize) {
 			lastCanvasWidth = canvasWidth;
 			lastCanvasHeight = canvasHeight;
 
@@ -1901,6 +1902,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configAsyncUICopy) {
 			// Start copying the UI on a different thread, to be uploaded during the next frame
 			asyncUICopy.prepare(interfacePbo, interfaceTexture);
+			// If the window was just resized, upload once synchronously so there is something to show
+			if (resize)
+				asyncUICopy.complete();
 			return;
 		}
 

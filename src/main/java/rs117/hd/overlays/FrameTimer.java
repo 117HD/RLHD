@@ -111,6 +111,12 @@ public class FrameTimer {
 		}
 	}
 
+	public void add(Timer timer, long time) {
+		if (isInactive)
+			return;
+		timings[timer.ordinal()] += time;
+	}
+
 	public void endFrameAndReset() {
 		if (isInactive)
 			return;

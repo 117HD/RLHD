@@ -35,10 +35,11 @@ public class AsyncUICopy implements Runnable {
 
 	@Override
 	public void run() {
-		timer.begin(Timer.COPY_UI);
+		long time = System.nanoTime();
 		mappedBuffer.put(pixels, 0, width * height);
-		timer.end(Timer.COPY_UI);
+		time = System.nanoTime() - time;
 		completionSemaphore.release();
+		timer.add(Timer.COPY_UI, time);
 	}
 
 	public void prepare(int interfacePbo, int interfaceTex) {
