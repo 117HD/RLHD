@@ -1,6 +1,5 @@
 package rs117.hd.overlays;
 
-import java.time.Instant;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import javax.inject.Inject;
