@@ -41,13 +41,11 @@ import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
-import net.runelite.client.util.ColorUtil;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.AreaManager;
-import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -101,9 +99,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
-
-	@Inject
-	private EnvironmentManager environmentManager;
 
 	@Getter
 	private boolean active;
@@ -477,13 +472,19 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 			lines.add("Scene point: " + tileX + ", " + tileY + ", " + tileZ);
 			lines.add("World point: " + Arrays.toString(worldPos));
-			lines.add("Environment: " + environmentManager.currentEnvironment);
 			lines.add(String.format(
 				"Region ID: %d (%d, %d)",
 				HDUtils.worldToRegionID(worldPos),
 				worldPos[0] >> 6,
 				worldPos[1] >> 6
 			));
+
+			for (var environment : sceneContext.environments) {
+				if (environment.area.containsPoint(worldPos)) {
+					lines.add("Environment: " + environment);
+					break;
+				}
+			}
 
 			int overlayId = scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
@@ -1531,7 +1532,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				pendingSelection = null;
 			}
 		} else if (SwingUtilities.isRightMouseButton(e)) {
-			e.consume();
 			if (!hoveredGamevals.isEmpty()) {
 				if (copiedGamevalsHash != hoveredGamevalsHash) {
 					copiedGamevalsHash = hoveredGamevalsHash;
