@@ -244,6 +244,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private SceneUploader sceneUploader;
 
 	@Inject
+	private AsyncInterfaceCopy interfaceAsyncCopy;
+
+	@Inject
 	private ModelPusher modelPusher;
 
 	@Inject
@@ -354,9 +357,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final GLBuffer hUniformBufferLights = new GLBuffer();
 	private ByteBuffer uniformBufferCamera;
 	private ByteBuffer uniformBufferLights;
-
-	private AsyncInterfaceCopy interfaceAsyncCopy;
-	private boolean shouldSkipInterfaceUpload;
 
 	@Getter
 	@Nullable
@@ -536,9 +536,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				awtContext.createGLContext();
 
 				canvas.setIgnoreRepaint(true);
-
-				if (interfaceAsyncCopy == null)
-					interfaceAsyncCopy = new AsyncInterfaceCopy(frameTimer);
 
 				// lwjgl defaults to lwjgl- + user.name, but this breaks if the username would cause an invalid path
 				// to be created.
@@ -1642,6 +1639,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		frameTimer.end(Timer.DRAW_SCENE);
+
+		if (configAsyncUICopy)
+			interfaceAsyncCopy.complete();
+
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
@@ -1872,8 +1873,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
-		if (shouldSkipInterfaceUpload)
+		if (configAsyncUICopy) {
+			interfaceAsyncCopy.prepare(client.getBufferProvider(), interfacePbo, interfaceTexture);
 			return;
+		}
 
 		frameTimer.begin(Timer.UPLOAD_UI);
 		final BufferProvider bufferProvider = client.getBufferProvider();
@@ -2303,10 +2306,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.endFrameAndReset();
-
-		if (configAsyncUICopy)
-			interfaceAsyncCopy.prepare(client.getBufferProvider(), interfacePbo, interfaceTexture);
-
 		frameModelInfoMap.clear();
 		checkGLErrors();
 
@@ -2603,7 +2602,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
-		configAsyncUICopy = config.useInterfaceAsyncCopy();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2701,6 +2699,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									clearModelCache = true;
 									reloadScene = true;
 								}
+								break;
+							case KEY_ASYNC_UI_COPY:
+								if (configAsyncUICopy)
+									interfaceAsyncCopy.complete();
+								configAsyncUICopy = config.useInterfaceAsyncCopy();
 								break;
 						}
 
@@ -2828,6 +2831,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				stopPlugin();
 			} finally {
 				pendingConfigChanges.clear();
+				frameTimer.reset();
 			}
 		});
 	}
@@ -3327,9 +3331,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		if (interfaceAsyncCopy != null)
-			shouldSkipInterfaceUpload = interfaceAsyncCopy.complete();
-
 		if (client.getScene() == null)
 			return;
 		// The game runs significantly slower with lower planes in Chambers of Xeric
