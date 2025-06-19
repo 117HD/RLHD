@@ -39,8 +39,27 @@
   ],
   "resolution": 1024,
   "skyboxes": [
-    "rs3_greenlands",
-    "rs3_magicblue",
-    "debug"
+    {
+      "name": "rs3_greenlands",
+      "dir:": "rs3_greenlands"
+    },
+    {
+      "name": "rs3_magicblue",
+      "dir": "rs3_magicblue"
+    },
+    {
+      "name": "rs3_magicblue_post",
+      "dir": "rs3_magicblue",
+      "postProcessing": {
+        "brightness": 0.1,
+        "contrast": 1.1,
+        "saturation": 1.2,
+        "hueShift": 180
+      }
+    },
+    {
+      "name": "debug",
+      "dir": "debug"
+    }
   ]
 }
