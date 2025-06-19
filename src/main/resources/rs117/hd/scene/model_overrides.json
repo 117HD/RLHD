@@ -5514,6 +5514,93 @@
     ]
   },
   {
+    "description": "Relleka - Small Long Boat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "DAGANNOTH_VIKING_BOAT",
+      "FREMENNIK_BOAT_STONE_TRAVEL",
+      "FREMENNIK_BOAT_UNGAEL_NO_TRAVEL",
+      "FREMENNIK_BOAT_UNGAEL_TRAVEL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 9",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 5 && s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MISC_VIKING_SHIP_FRONT_LV0",
+      "MISC_VIKING_SHIP_FRONT_LV1",
+      "MISC_VIKING_SHIPMAIN",
+      "MISC_VIKING_SHIPSIDE",
+      "MISC_VIKING_SHIPEDGE_WITH_SEAT",
+      "MISC_VIKING_SHIPEDGE_WITH_SEAT_MIRROR",
+      "MISC_VIKING_SHIPEDGE",
+      "MISC_VIKING_SHIPEDGEPIER",
+      "MISC_SHIP_GANGPLANK",
+      "MISC_VIKING_SHIPEDGESHIELD"
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat Mast",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MISC_VIKING_SHIP_MAST",
+      "MISC_VIKING_SHIP_MAST_LV2",
+      "MISC_VIKING_SHIP_MAST_LV3",
+      "MISC_VIKING_SHIP_MAST_LV3_SAIL_MIRROR",
+      "MISC_VIKING_SHIP_MAST_LV3_SAIL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 5 && s == 4",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat Mast",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.65,
+    "objectIds": [
+      "FRIS_VIKING_BOAT"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BURLAP",
+        "colors": [ "h == 0", "h == 7", "h == 8" ],
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "baseMaterial": "TRANSPARENT",
+        "colors": [ "a < 255" ]
+      }
+    ]
+  },
+  {
     "description": "PHASMATYS_DOCK_FENCES",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
