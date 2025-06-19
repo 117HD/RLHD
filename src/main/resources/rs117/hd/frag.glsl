@@ -214,21 +214,6 @@ void main() {
         vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vHsl[1])), 1 - float(vHsl[1] >> 24 & 0xff) / 255.);
         vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vHsl[2])), 1 - float(vHsl[2] >> 24 & 0xff) / 255.);
 
-        #if VANILLA_COLOR_BANDING
-        vec4 baseColor =
-            IN.texBlend[0] * baseColor1 +
-            IN.texBlend[1] * baseColor2 +
-            IN.texBlend[2] * baseColor3;
-
-        baseColor.rgb = linearToSrgb(baseColor.rgb);
-        baseColor.rgb = srgbToHsv(baseColor.rgb);
-        baseColor.b = floor(baseColor.b * 127) / 127;
-        baseColor.rgb = hsvToSrgb(baseColor.rgb);
-        baseColor.rgb = srgbToLinear(baseColor.rgb);
-
-        baseColor1 = baseColor2 = baseColor3 = baseColor;
-        #endif
-
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
         vec4 texColor2 = colorMap2 == -1 ? vec4(1) : texture(textureArray, vec3(uv2, colorMap2), mipBias);
@@ -454,6 +439,15 @@ void main() {
             getMaterialIsUnlit(material2),
             getMaterialIsUnlit(material3)
         ));
+
+        #if VANILLA_COLOR_BANDING
+            outputColor.rgb = linearToSrgb(outputColor.rgb);
+            outputColor.rgb = srgbToHsv(outputColor.rgb);
+            outputColor.b = floor(outputColor.b * 127) / 127;
+            outputColor.rgb = hsvToSrgb(outputColor.rgb);
+            outputColor.rgb = srgbToLinear(outputColor.rgb);
+        #endif
+
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
@@ -469,7 +463,6 @@ void main() {
         // This is required if we always draw all underwater terrain.
         outputColor.a *= -256;
     }
-
 
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
 
