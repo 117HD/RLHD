@@ -1199,15 +1199,16 @@
   {
     "name": "FALADOR_PATHS",
     "area": "FALADOR",
+    "uvScale": 0.65,
     "overlayIds": [
       137
     ],
     "groundMaterial": "FALADOR_PATHS",
-    "minHue": 7,
-    "maxHue": 7,
+    "minHue": 8,
+    "maxHue": 8,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 7
+    "shiftLightness": 15
   },
   {
     "name": "FALADOR_HAIRDRESSER_TILE_1",
