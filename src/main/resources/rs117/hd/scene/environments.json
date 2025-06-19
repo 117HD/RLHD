@@ -769,6 +769,42 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "NEITIZNOT",
+    "ambientColor": "#97baff",
+    "directionalStrength": 4,
+    "sunAngles": [ 52, 235 ],
+    "fogDepth": 15
+  },
+  {
+    "area": "JATIZSO",
+    "ambientColor": "#96a3cb",
+    "ambientStrength": 0.9,
+    "directionalColor": "#abc2d3",
+    "directionalStrength": 2,
+    "fogColor": "#969ca2",
+    "fogDepth": 40,
+    "groundFogEnd": -400,
+    "groundFogOpacity": 0.3
+  },
+  {
+    "area": "FREMENNIK_ISLES_FAR_NORTH",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 0.75,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 1,
+    "fogColor": "#aebde0",
+    "fogDepth": 70
+  },
+  {
+    "area": "FREMENNIK_ISLES_NORTH",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 50
+  },
+  {
     "area": "LIGHTHOUSE_DUNGEON",
     "ambientColor": "#ffffff",
     "ambientStrength": 1,
