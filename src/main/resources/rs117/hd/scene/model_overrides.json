@@ -2600,7 +2600,24 @@
     "uvScale": 0.75,
     "colorOverrides": [
       {
-        "colors": "h == 34",
+        "colors": "h >= 34",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Small Water Fountain",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 42,
+    "objectIds": [
+      "FAI_VARROCK_SMALL_FOUNTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX"
       }
@@ -7030,7 +7047,9 @@
       "KHARIDMETALGATECLOSEDL_1OP",
       "KHARIDMETALGATECLOSEDR_1OP",
       "KHARIDMETALGATECLOSEDL_2OP",
-      "KHARIDMETALGATECLOSEDR_2OP"
+      "KHARIDMETALGATECLOSEDR_2OP",
+      "FAI_VARROCK_BANK_DOOR_VAULT_L",
+      "FAI_VARROCK_BANK_DOOR_VAULT_R"
     ],
     "uvType": "BOX",
     "uvOrientation": 463
@@ -17905,12 +17924,12 @@
   },
   {
     "description": "Edgeville - Well",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "WELL"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "colorOverrides": [
       {
         "colors": "h == 6",
@@ -27094,6 +27113,40 @@
     ]
   },
   {
+    "description": "Varrock - Posh Cupboard with glass panels and silver dishes and golden trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_CABINET",
+      "FAI_VARROCK_POSH_CABINET2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.25
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
     "description": "Weapons case mounted on wall",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -27321,8 +27374,52 @@
         "uvType": "BOX"
       },
       {
-        "description": "Dark brown books",
+        "description": "Light brown books",
         "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Wooden - bookcase with Multicolored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_BOOKCASE",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT2",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 7 && s == 3",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       }
@@ -30085,6 +30182,30 @@
         "baseMaterial": "ROPE",
         "uvType": "MODEL_YZ",
         "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Double bed with Yellow or Gold blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_DOUBLEBED2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 0 || h == 10 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "blanket",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
       }
     ]
   },
@@ -33383,6 +33504,227 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": 128
+      }
+    ]
+  },
+  {
+    "description": "Decoration - Wall - Saradomin wall flag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_WALLHANGING_SARODOMIN_STAR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold fabric",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "White fabric",
+        "colors": "h > 10",
+        "baseMaterial": "CARPET_DARK",
+        "uvOrientation": 280,
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "Star",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Vault - Golden Bars - Stacked",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 89,
+    "objectIds": ["FAI_VARROCK_BANK_GOLD_BARS" ]
+  },
+  {
+    "description": "Varrock - Vault - Golden Bars - Stacked",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 179,
+    "objectIds": ["FAI_VARROCK_GOLDSTATUE_KING" ]
+  },
+  {
+    "description": "East Varrock - Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_WELL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Floor standing cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_FABRIC_RACK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Wall mount cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_FABRIC_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - floor cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_FABRIC01",
+      "FAI_VARROCK_FABRIC02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Self with thread",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "CLOTHESEQUIP_SHELVES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - wooden - Sewing machine table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_SEWING_MACHINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 177
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Self with thread",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_CLOTHES_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Mirror",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_NONE_GLOSS",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Table - Long - Wooden – With book scrolls and papers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_POSH_TABLE_SCROLLS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Book and scrolls",
+        "colors": "h < 7 || h == 7 && s == 2 || s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   }
