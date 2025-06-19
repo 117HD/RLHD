@@ -9,9 +9,7 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static org.lwjgl.opengl.GL43.GL_DEBUG_SOURCE_APPLICATION;
-import static org.lwjgl.opengl.GL43.glPopDebugGroup;
-import static org.lwjgl.opengl.GL43.glPushDebugGroup;
+import static org.lwjgl.opengl.GL43C.*;
 
 @Slf4j
 @Singleton
@@ -103,8 +101,12 @@ public class FrameTimer {
 	}
 
 	public void begin(Timer timer) {
-		if(timer.isGpuTimer)
+		if (log.isDebugEnabled() && timer.isGpuTimer && plugin.glCaps.OpenGL43) {
+			log.debug("Push {}", timer, new Throwable());
+			// TODO: Ensure we always pop as many as we push, e.g. by cleaning up in `endFrameAndReset`
 			glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
+			plugin.checkGLErrors();
+		}
 
 		if (isInactive)
 			return;
@@ -121,8 +123,13 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
-		if(timer.isGpuTimer)
+		if (log.isDebugEnabled() && timer.isGpuTimer && plugin.glCaps.OpenGL43) {
+			log.debug("Pop {}", timer, new Throwable());
+			// TODO: Ensure we never pop if we haven't pushed
+			// TODO: Track the stack of debug groups and warn when things aren't popped in the correct order
 			glPopDebugGroup();
+			plugin.checkGLErrors();
+		}
 
 		if (isInactive || !activeTimers[timer.ordinal()])
 			return;

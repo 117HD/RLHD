@@ -592,6 +592,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0) {
 					debugCallback = GLUtil.setupDebugMessageCallback();
 					if (debugCallback != null) {
+						// Hide our own debug push groups
+						glDebugMessageControl(
+							GL_DEBUG_SOURCE_APPLICATION,
+							GL_DEBUG_TYPE_PUSH_GROUP,
+							GL_DEBUG_SEVERITY_NOTIFICATION,
+							(int[]) null,
+							false
+						);
+
 						//	GLDebugEvent[ id 0x20071
 						//		type Warning: generic
 						//		severity Unknown (0x826b)
@@ -3425,6 +3434,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				case GL_INVALID_VALUE:
 					errStr = "INVALID_VALUE";
 					break;
+				case GL_STACK_OVERFLOW:
+					errStr = "STACK_OVERFLOW";
+					break;
+				case GL_STACK_UNDERFLOW:
+					errStr = "STACK_UNDERFLOW";
+					break;
 				case GL_INVALID_OPERATION:
 					errStr = "INVALID_OPERATION";
 					break;
@@ -3432,7 +3447,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					errStr = "INVALID_FRAMEBUFFER_OPERATION";
 					break;
 				default:
-					errStr = String.valueOf(err);
+					errStr = String.format("Error code: %d", err);
 					break;
 			}
 
