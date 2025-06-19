@@ -29,6 +29,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.awt.image.RasterFormatException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -428,33 +429,70 @@ public class TextureManager {
 		String[] faceFileNames = {"px", "nx", "py", "ny", "pz", "nz"};
 		for(int skyboxIdx = 0; skyboxIdx < skyboxConfig.skyboxes.length; skyboxIdx++) {
 			String skyboxId = skyboxConfig.skyboxes[skyboxIdx];
-			String loadedFaces = "";
+			BufferedImage[] faceImages = new BufferedImage[6];
+			StringBuilder loadedFaces = new StringBuilder();
 
-			for (int faceIdx = 0; faceIdx < 6; faceIdx++) {
-				BufferedImage faceImage = loadTextureImage("skybox/" + skyboxId + "/" + faceFileNames[faceIdx]);
-				if (faceImage != null) {
-					loadedFaces += (faceIdx > 0 ? ", " : "") + faceFileNames[faceIdx];
-					BufferedImage scaledImage = scaleTexture(faceImage, skyboxConfig.resolution, false, false);
+			// Try loading combined atlas first
+			BufferedImage atlasImage = loadTextureImage("skybox/" + skyboxId + "/skybox");
+			boolean usedAtlas = false;
 
-					int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
-					pixelBuffer.put(pixels).flip();
-
-					glTexSubImage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0,
-						validSkyboxCount * 6 + faceIdx, skyboxConfig.resolution, skyboxConfig.resolution, 1,
-						GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer);
+			if (atlasImage != null) {
+				int faceSize = 512;
+				if (atlasImage.getWidth() >= faceSize * 4 && atlasImage.getHeight() >= faceSize * 2) {
+					try {
+						faceImages[0] = atlasImage.getSubimage(0, 0, faceSize, faceSize); // px
+						faceImages[5] = atlasImage.getSubimage(faceSize, 0, faceSize, faceSize); // nz
+						faceImages[1] = atlasImage.getSubimage(2 * faceSize, 0, faceSize, faceSize); // nx
+						faceImages[4] = atlasImage.getSubimage(3 * faceSize, 0, faceSize, faceSize); // pz
+						faceImages[2] = atlasImage.getSubimage(0, faceSize, faceSize, faceSize);      // py
+						faceImages[3] = atlasImage.getSubimage(faceSize, faceSize, faceSize, faceSize); // ny
+						usedAtlas = true;
+					} catch (RasterFormatException e) {
+						log.warn("Invalid atlas format for skybox: {}", skyboxId);
+					}
+				} else {
+					log.warn(
+						"Unexpected skybox.png dimensions for skybox: {} ({}x{})",
+						skyboxId, atlasImage.getWidth(), atlasImage.getHeight()
+					);
 				}
 			}
 
-			if(loadedFaces.isEmpty()) {
-				log.debug("Skybox: {} failed to any face texture", skyboxId);
+			if (!usedAtlas) {
+				for (int faceIdx = 0; faceIdx < 6; faceIdx++) {
+					faceImages[faceIdx] = loadTextureImage("skybox/" + skyboxId + "/" + faceFileNames[faceIdx]);
+				}
+			}
+
+			// Upload valid faces
+			for (int faceIdx = 0; faceIdx < 6; faceIdx++) {
+				BufferedImage faceImage = faceImages[faceIdx];
+				if (faceImage != null) {
+					if (loadedFaces.length() > 0) loadedFaces.append(", ");
+					loadedFaces.append(faceFileNames[faceIdx]);
+
+					BufferedImage scaled = scaleTexture(faceImage, skyboxConfig.resolution, false, false);
+					int[] pixels = ((DataBufferInt) scaled.getRaster().getDataBuffer()).getData();
+					pixelBuffer.put(pixels).flip();
+
+					glTexSubImage3D(
+						GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0,
+						validSkyboxCount * 6 + faceIdx,
+						skyboxConfig.resolution, skyboxConfig.resolution, 1,
+						GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer
+					);
+				}
+			}
+
+			if (loadedFaces.length() == 0) {
+				log.debug("Skybox: {} failed to load any face texture", skyboxId);
 			} else {
 				log.debug("Skybox: {} loaded faces [{}]", skyboxId, loadedFaces);
-				loadedSkyboxes[validSkyboxCount] = skyboxId;
-				validSkyboxCount++;
+				loadedSkyboxes[validSkyboxCount++] = skyboxId;
 			}
 		}
-		log.debug("Loaded {} Skybox's", validSkyboxCount);
 
+		log.debug("Loaded {} Skybox's", validSkyboxCount);
 		plugin.checkGLErrors();
 
 		pixelBuffer = null;
