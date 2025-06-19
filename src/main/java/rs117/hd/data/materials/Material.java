@@ -524,9 +524,9 @@ public enum Material {
 	FALADOR_PATH_BRICK_D,
 	FALADOR_PATH_BRICK(p -> p
 		.setDisplacementMap(FALADOR_PATH_BRICK_D)
-		.setDisplacementScale(.05f)
+		.setDisplacementScale(.06f)
 		.setNormalMap(FALADOR_PATH_BRICK_N)
-		.setSpecular(0.3f, 30)
+		.setSpecular(0.25f, 30)
 	),
 	BRICK_PATH_N,
 	BRICK_PATH(p -> p
