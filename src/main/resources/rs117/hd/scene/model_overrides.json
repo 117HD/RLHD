@@ -16624,27 +16624,47 @@
     "uvOrientation": 512
   },
   {
+    "description": "Waterfalls - Replace Vanilla Droplets",
+    "textureMaterial": "WATER_DROPS",
+    "objectIds": [
+      "WATERFALL_OVERLAY_1",
+      "WATERFALL_OVERLAY_4",
+      "WATERFALL_OVERLAY_3",
+      "BRUT_WATERFALL_OVERLAY_4C",
+      "BRUT_WATERFALL_OVERLAY_WC",
+      "BRUT_WATERFALL_OVERLAY_3D",
+      "BRUT_WATERFALL_OVERLAY_QC",
+      "BRUT_WATERFALL_OVERLAY_2D",
+      "WATERFALL_OVERLAY_2",
+      "BRUT_WATERFALL_OVERLAY_Q",
+      "BRUT_WATERFALL_OVERLAY_W",
+      "BRUT_WATERFALL_OVERLAY_WB",
+      "BRUT_WATERFALL_OVERLAY_T",
+      "BRUT_WATERFALL_OVERLAY_3C",
+      "BRUT_WATERFALL_OVERLAY_2C",
+      "BRUT_WATERFALL_OVERLAY_4B",
+      "BRUT_WATERFALL_OVERLAY_WD",
+      "BRUT_WATERFALL_OVERLAY_2",
+      "BRUT_WATERFALL_OVERLAY_3",
+      "BRUT_WATERFALL_OVERLAY_E",
+      "BRUT_WATERFALL_OVERLAY_EC",
+      "BRUT_WATERFALL_OVERLAY_2B",
+      "BRUT_WATERFALL_OVERLAY_QB",
+      "BRUT_WATERFALL_OVERLAY_RB",
+      "BRUT_WATERFALL_OVERLAY_EB",
+      "BRUT_WATERFALL_OVERLAY_R",
+      "WATERFALL_OVERLAY",
+      "WATERFALL_OVERLAY_1_BRIGHTER",
+      "MYARM_WATER_MOVING_1"
+    ]
+  },
+  {
     "description": "Giants Foundry -  Wooden - WheelBarrow",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "GIANTS_FOUNDRY_WHEEL_BARROW" ],
     "uvType": "BOX",
     "uvOrientationX": 576,
     "uvOrientationZ": 512
-  },
-  {
-    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
-    "objectIds": [ "WATERFALL_OVERLAY", "WATERFALL_OVERLAY_1_BRIGHTER" ],
-    "textureMaterial": "WATER_DROPLETS",
-    "baseMaterial": "WATER_FLAT",
-    "areas": [
-      "TIRANNWN",
-      "APE_ATOLL"
-    ]
-  },
-  {
-    "description": "Hide vanilla scrolling water models, until a better solution is found",
-    "objectIds": [ "WATERFALL_OVERLAY", "WATERFALL_OVERLAY_1_BRIGHTER", "MYARM_WATER_MOVING_1" ],
-    "hide": true
   },
   {
     "description": "Texture for water in Motherlode Mine troughs",
