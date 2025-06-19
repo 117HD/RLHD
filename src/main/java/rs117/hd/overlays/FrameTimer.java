@@ -2,7 +2,6 @@ package rs117.hd.overlays;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Stack;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -21,14 +20,16 @@ public class FrameTimer {
 	@Inject
 	private HdPlugin plugin;
 
-	private final Timer[] timers = Timer.values();
-	private final int numTimers = timers.length;
-	private final int numGpuTimers = (int) Arrays.stream(timers).filter(t -> t.isGpuTimer).count();
-	private final boolean[] activeTimers = new boolean[numTimers];
-	private final long[] timings = new long[numTimers];
-	private final int[] gpuQueries = new int[numTimers * 2];
+	private static final Timer[] TIMERS = Timer.values();
+	private static final int NUM_TIMERS = TIMERS.length;
+	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(TIMERS).filter(t -> t.isGpuTimer).count();
+	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(TIMERS).filter(t -> t.gpuDebugGroup).count();
+
+	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
+	private final long[] timings = new long[NUM_TIMERS];
+	private final int[] gpuQueries = new int[NUM_TIMERS * 2];
+	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
-	private final Stack<Integer> glDebugGroupStack = new Stack<Integer>();
 
 	private boolean isInactive = true;
 
@@ -37,10 +38,10 @@ public class FrameTimer {
 
 	private void initialize() {
 		clientThread.invokeLater(() -> {
-			int[] queryNames = new int[numGpuTimers * 2];
+			int[] queryNames = new int[NUM_GPU_TIMERS * 2];
 			glGenQueries(queryNames);
 			int queryIndex = 0;
-			for (var timer : timers)
+			for (var timer : TIMERS)
 				if (timer.isGpuTimer)
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
@@ -104,10 +105,13 @@ public class FrameTimer {
 	}
 
 	public void begin(Timer timer) {
-		if (log.isDebugEnabled() && timer.isGpuTimer && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
-			glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
-			glDebugGroupStack.push(timer.ordinal());
-			plugin.checkGLErrors();
+		if (log.isDebugEnabled() && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
+			if (glDebugGroupStack.contains(timer)) {
+				log.warn("The debug group {} is already on the stack", timer.name());
+			} else {
+				glDebugGroupStack.push(timer);
+				glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
+			}
 		}
 
 		if (isInactive)
@@ -125,14 +129,13 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
-		if (log.isDebugEnabled() && timer.isGpuTimer && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
-			if(!glDebugGroupStack.isEmpty() && glDebugGroupStack.peek() == timer.ordinal()) {
-				glPopDebugGroup();
-				glDebugGroupStack.pop();
+		if (log.isDebugEnabled() && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
+			if (glDebugGroupStack.peek() != timer) {
+				log.warn("The debug group {} was popped out of order", timer.name());
 			} else {
-				log.warn("GPU Timer {} was popped out of order", timer.name);
+				glDebugGroupStack.pop();
+				glPopDebugGroup();
 			}
-			plugin.checkGLErrors();
 		}
 
 		if (isInactive || !activeTimers[timer.ordinal()])
@@ -155,9 +158,9 @@ public class FrameTimer {
 	}
 
 	public void endFrameAndReset() {
-		if (log.isDebugEnabled() &&  plugin.glCaps.OpenGL43) {
-			for (int i = 0; i < glDebugGroupStack.size(); i++) {
-				log.warn("GPU Group {} was never popped", timers[glDebugGroupStack.pop()].name);
+		if (plugin.glCaps.OpenGL43) {
+			while (!glDebugGroupStack.isEmpty()) {
+				log.warn("The debug group {} was never popped", glDebugGroupStack.pop().name());
 				glPopDebugGroup();
 			}
 		}
@@ -168,7 +171,7 @@ public class FrameTimer {
 		long frameEnd = System.nanoTime();
 
 		int[] available = { 0 };
-		for (var timer : timers) {
+		for (var timer : TIMERS) {
 			int i = timer.ordinal();
 			if (timer.isGpuTimer) {
 				if (!activeTimers[i])

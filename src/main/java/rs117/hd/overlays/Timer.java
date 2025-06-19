@@ -33,37 +33,37 @@ public enum Timer {
 	SWAP_BUFFERS,
 	;
 
-	public final boolean isGpuTimer;
 	public final String name;
+	public final boolean isGpuTimer;
 	public final boolean gpuDebugGroup;
 
 	Timer() {
+		name = enumToName(name());
 		isGpuTimer = false;
 		gpuDebugGroup = false;
-		name = enumToName(name());
 	}
 
 	Timer(boolean isGpuTimer) {
-		this.isGpuTimer = isGpuTimer;
 		name = enumToName(name());
-		gpuDebugGroup = true;
+		this.isGpuTimer = isGpuTimer;
+		gpuDebugGroup = isGpuTimer;
 	}
 
 	Timer(boolean isGpuTimer, @Nonnull String name) {
-		this.isGpuTimer = isGpuTimer;
 		this.name = name;
-		gpuDebugGroup = true;
+		this.isGpuTimer = isGpuTimer;
+		gpuDebugGroup = isGpuTimer;
 	}
 
 	Timer(boolean isGpuTimer, boolean gpuDebugGroup) {
+		name = enumToName(name());
 		this.isGpuTimer = isGpuTimer;
 		this.gpuDebugGroup = gpuDebugGroup;
-		name = enumToName(name());
 	}
 
 	Timer(@Nonnull String name) {
-		isGpuTimer = false;
 		this.name = name;
+		isGpuTimer = false;
 		gpuDebugGroup = false;
 	}
 
