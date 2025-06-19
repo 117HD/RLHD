@@ -926,7 +926,6 @@
       "FAI_VARROCK_SWING_LANTERN",
       "ROVING_FIRE_REMAINS",
       "DWARF_KELDAGRIM_BLACKSMITHTOOLS",
-      "ELID_FOUNTAIN",
       "ELID_BLACKSMITHTOOLS",
       "FAIRY_MUSHROOM_TORCH_RED",
       "FAIRY_MUSHROOM_TORCH_BLUE",
@@ -5670,11 +5669,6 @@
       "FRISD_TOWN_WALL_DOOR_LOCKED",
       "FRISD_TOWN_WALL_DOOR_OPEN",
       "FRISD_TOWN_WALL_BANK_CONNECTOR",
-      "FRISD_TOWN_WALL_DOOR",
-      "FRISD_OUTER_CITY_WALL_DOOR_LEFT",
-      "FRISD_OUTER_CITY_WALL_DOOR_RIGHT",
-      "FRISD_OUTER_CITY_WALL_DOOR_LEFT_OPEN",
-      "FRISD_OUTER_CITY_WALL_DOOR_RIGHT_OPEN",
       "FRISD_OUTER_CITY_WALL",
       "FRISD_OUTER_CITY_WALL_GATEPOST_LEFT",
       "FRISD_OUTER_CITY_WALL_GATEPOST_RIGHT",
@@ -5715,6 +5709,40 @@
       "FRISD_IZSO_WATCHTOWER_FLOOR_HOLE",
       "FRISD_IZSO_TURRET_FLOOR_HOLE",
       "FRIZD_IZSO_BELL"
+    ]
+  },
+  {
+    "description": "Jatizso - Mine Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISD_IZSO_MINE_ENTRANCE",
+      "FRISD_IZSO_SPIRAL_STAIRS"
+    ]
+  },
+  {
+    "description": "Jatizso - Rocks",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FRISD_IZSO_ROCKS",
+      "FRIZD_IZSO_ROCKS2",
+      "FRISD_OREMERCHANT_ORESTONES"
+    ]
+  },
+  {
+    "description": "Jatizso - Stone Chips",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "FRISD_DUGUPSOIL1_IZSO",
+      "FRISD_DUGUPSOIL2_IZSO",
+      "FRISD_DUGUPSOIL5_IZSO",
+      "FRISD_DUGUPSOIL4_IZSO",
+      "FRISD_DUGUPSOIL3_IZSO"
     ]
   },
   {
@@ -12726,13 +12754,6 @@
     "baseMaterial": "UNLIT"
   },
   {
-    "description": "Jatizso banners",
-    "baseMaterial": "UNLIT",
-    "objectIds": [
-      "FRISD_BANNER02"
-    ]
-  },
-  {
     "description": "Footprints on agility rooftops",
     "objectIds": [
       "ROOFTOP_FOOTPRINTS_SEERS",
@@ -13597,8 +13618,7 @@
     "uvOrientation": 512,
     "objectIds": [
       "ELID_HERB_SHELVES2",
-      "ELID_HERB_SHELVES",
-      "ELID_WAREHOUSE_SHELVES3"
+      "ELID_HERB_SHELVES"
     ],
     "colorOverrides": [
       {
