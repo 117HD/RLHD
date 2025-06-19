@@ -5658,8 +5658,8 @@
     ]
   },
   {
-    "description": "Jatizso - Walls",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Jatizso - Walls and Supports",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 256,
@@ -5687,7 +5687,10 @@
       "FRISD_IZSO_WATCHTOWER_FLOOR_EDGE",
       "FRISD_IZSO_WATCHTOWER_FLOOR_CORNER",
       "FRISD_IZSO_WATCHTOWER_TOPWALL2",
-      "FRISD_IZSO_WATCHTOWER_TOPWALL"
+      "FRISD_IZSO_WATCHTOWER_TOPWALL",
+      "FRISD_IZSO_BRIDGE_SUPPORT",
+      "FRISD_IZSO_BRIDGE_FLOOR_NORAIL",
+      "FRISD_IZSO_DOCK_SUPPORT"
     ]
   },
   {
@@ -5743,6 +5746,16 @@
       "FRISD_DUGUPSOIL5_IZSO",
       "FRISD_DUGUPSOIL4_IZSO",
       "FRISD_DUGUPSOIL3_IZSO"
+    ]
+  },
+  {
+    "description": "Jatizso - Bridges",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "FRISD_IZSO_BRIDGE_FLOOR2",
+      "FRISD_IZSO_BRIDGE_HANDRAIL"
     ]
   },
   {
