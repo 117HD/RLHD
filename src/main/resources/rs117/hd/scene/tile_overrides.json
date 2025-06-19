@@ -1125,7 +1125,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 16
+    "shiftLightness": 20
   },
   {
     "name": "FALADOR_EAST_BANK_PATH_FIX_1",
