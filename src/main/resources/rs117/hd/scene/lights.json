@@ -20315,7 +20315,6 @@
     "range": 20,
     "objectIds": [
       "FOUR_DIAMONDS_TOMB_WALL_TORCH",
-      "TOURTRAP_QIP_MINE_WALL_LAMP_SINGLE",
       "_100_DUNGEON_SKULLTORCH",
       "DS2_GUILD_WALL_SCONCE",
       "_100_DAVE_CANDLE_WALL",
@@ -20360,7 +20359,8 @@
       "ROOFEDGE_DOUBLELENGTH_RR_OFFSET",
       "VM_BASEMENT_WALL_FIRST_FLOOR_LAMP",
       "SLAYER_TORCH",
-      "MISTMYST_CANDLE_LIT"
+      "MISTMYST_CANDLE_LIT",
+      "GOLEM_TORCH"
     ]
   },
   {
@@ -21072,7 +21072,9 @@
       "LOTR_MINE_WALL_LAMP",
       "AREA_SANGUINE_MINE_WALL_LAMP",
       "DRAGON_SLAYER_MINE_WALL_LAMP_SINGLE",
-      "DRAGON_SLAYER_MINE_WALL_LAMP"
+      "DRAGON_SLAYER_MINE_WALL_LAMP",
+      "TOURTRAP_QIP_MINE_WALL_LAMP_SINGLE",
+      "TOURTRAP_QIP_MINE_WALL_LAMP"
     ]
   },
   {
@@ -24031,10 +24033,28 @@
   },
   {
     "description": "DESERT_TREASURE_PYRAMID_OBELISK_BLOOD_POWERED",
-    "height": 230,
+    "height": 220,
     "alignment": "CENTER",
-    "radius": 1400,
+    "radius": 800,
     "strength": 12.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FD_BLOOD_COLUMN"
+    ]
+  },
+  {
+    "description": "DESERT_TREASURE_PYRAMID_OBELISK_BLOOD_POWERED_HIGHLIGHT",
+    "height": 850,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 40,
     "color": [
       255,
       0,
@@ -24067,10 +24087,28 @@
   },
   {
     "description": "DESERT_TREASURE_PYRAMID_OBELISK_SMOKE_POWERED",
-    "height": 230,
+    "height": 220,
     "alignment": "CENTER",
-    "radius": 1400,
-    "strength": 7.5,
+    "radius": 500,
+    "strength": 20,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FD_SMOKE_COLUMN"
+    ]
+  },
+  {
+    "description": "DESERT_TREASURE_PYRAMID_OBELISK_SMOKE_POWERED_HIGHLIGHT",
+    "height": 850,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 40,
     "color": [
       255,
       255,
@@ -24120,6 +24158,24 @@
     ]
   },
   {
+    "description": "DESERT_TREASURE_PYRAMID_OBELISK_ICE_POWERED_HIGHLIGHT",
+    "height": 850,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 40,
+    "color": [
+      74,
+      168,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FD_ICE_COLUMN"
+    ]
+  },
+  {
     "description": "DESERT_TREASURE_PYRAMID_OBELISK_SHADOW",
     "height": 230,
     "alignment": "CENTER",
@@ -24142,7 +24198,25 @@
     "height": 230,
     "alignment": "CENTER",
     "radius": 1400,
-    "strength": 6.3,
+    "strength": 4.3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FD_SHADOW_COLUMN"
+    ]
+  },
+  {
+    "description": "DESERT_TREASURE_PYRAMID_OBELISK_SHADOW_POWERED_HIGHLIGHT",
+    "height": 850,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 40,
     "color": [
       255,
       255,
@@ -24225,6 +24299,70 @@
       "NTK_GOLDEN_CHEST_MULTI",
       "NTK_GOLDEN_CHEST_CLOSED",
       "NTK_GOLDEN_CHEST_OPEN"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Door",
+    "offset": [ 0, 150, 30 ],
+    "radius": 225,
+    "strength": -1.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 3000,
+    "range": 10,
+    "objectIds": [
+      "GOLEM_DEMON_DOOR_ALWAYS_OPEN"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal",
+    "offset": [ 0, 170, 0 ],
+    "radius": 375,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 10,
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal - Highlight Front",
+    "offset": [ 0, 150, 70 ],
+    "radius": 200,
+    "strength": 20,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal - Highlight Back",
+    "offset": [ 0, 150, -70 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
     ]
   },
   {

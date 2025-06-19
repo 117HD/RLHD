@@ -230,6 +230,22 @@
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            },
+            "flatNormals": {
+              "type": "boolean",
+              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+            },
+            "upwardsNormals": {
+              "type": "boolean",
+              "description": "Whether normals should always point directly up. Defaults to false."
+            },
+            "receiveShadows": {
+              "type": "boolean",
+              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "shadowOpacityThreshold": {
+              "type": "number",
+              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
             }
           }
         }
@@ -301,6 +317,22 @@
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            },
+            "flatNormals": {
+              "type": "boolean",
+              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+            },
+            "upwardsNormals": {
+              "type": "boolean",
+              "description": "Whether normals should always point directly up. Defaults to false."
+            },
+            "receiveShadows": {
+              "type": "boolean",
+              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "shadowOpacityThreshold": {
+              "type": "number",
+              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
             }
           }
         }

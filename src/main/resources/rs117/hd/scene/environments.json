@@ -675,6 +675,10 @@
     "fogDepth": 35
   },
   {
+    "area": "UZER_DEMONIC_THRONEROOM",
+    "fogDepth": 40
+  },
+  {
     "area": "ESSENCE_MINE",
     "ambientColor": "#6687a9",
     "ambientStrength": 0.85,
