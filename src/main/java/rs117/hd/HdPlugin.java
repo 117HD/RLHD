@@ -90,6 +90,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -246,6 +247,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private SceneUploader sceneUploader;
+
+	@Inject
+	private AsyncUICopy asyncUICopy;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -457,6 +461,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
+	public boolean configAsyncUICopy;
 	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -699,6 +704,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
+			asyncUICopy.complete();
 			developerTools.deactivate();
 			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
@@ -1880,9 +1886,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight) {
-		frameTimer.begin(Timer.UPLOAD_UI);
-
-		if (canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight) {
+		boolean resize = canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight;
+		if (resize) {
 			lastCanvasWidth = canvasWidth;
 			lastCanvasHeight = canvasHeight;
 
@@ -1895,25 +1900,39 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 
+		if (configAsyncUICopy) {
+			// Start copying the UI on a different thread, to be uploaded during the next frame
+			asyncUICopy.prepare(interfacePbo, interfaceTexture);
+			// If the window was just resized, upload once synchronously so there is something to show
+			if (resize)
+				asyncUICopy.complete();
+			return;
+		}
+
 		final BufferProvider bufferProvider = client.getBufferProvider();
 		final int[] pixels = bufferProvider.getPixels();
 		final int width = bufferProvider.getWidth();
 		final int height = bufferProvider.getHeight();
 
+		frameTimer.begin(Timer.MAP_UI_BUFFER);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		ByteBuffer mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (mappedBuffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 		} else {
+			frameTimer.begin(Timer.COPY_UI);
 			mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
+			frameTimer.end(Timer.COPY_UI);
+
+			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+			frameTimer.end(Timer.UPLOAD_UI);
 		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-
-		frameTimer.end(Timer.UPLOAD_UI);
 	}
 
 	@Override
@@ -2635,6 +2654,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
+		configAsyncUICopy = config.asyncUICopy();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 
@@ -2734,6 +2754,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									clearModelCache = true;
 									reloadScene = true;
 								}
+								break;
+							case KEY_ASYNC_UI_COPY:
+								asyncUICopy.complete();
 								break;
 						}
 
@@ -2864,6 +2887,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				stopPlugin();
 			} finally {
 				pendingConfigChanges.clear();
+				frameTimer.reset();
 			}
 		});
 	}
@@ -3368,6 +3392,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
+		// Upload the UI which we began copying during the previous frame
+		if (configAsyncUICopy)
+			asyncUICopy.complete();
+
 		if (client.getScene() == null)
 			return;
 		// The game runs significantly slower with lower planes in Chambers of Xeric

@@ -2604,7 +2604,24 @@
     "uvScale": 0.75,
     "colorOverrides": [
       {
-        "colors": "h == 34",
+        "colors": "h >= 34",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Small Water Fountain",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 42,
+    "objectIds": [
+      "FAI_VARROCK_SMALL_FOUNTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "BOX"
       }
@@ -2837,13 +2854,8 @@
         "uvType": "BOX"
       },
       {
-        "description": "Green glass",
-        "colors": "h > 11",
-        "baseMaterial": "NONE"
-      },
-      {
-        "description": "Gold glass",
-        "colors": "h == 8 && s == 7",
+        "description": "Glass",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ],
@@ -2865,7 +2877,7 @@
       },
       {
         "description": "Green glass",
-        "colors": "h > 11",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ],
@@ -2886,8 +2898,8 @@
         "uvType": "BOX"
       },
       {
-        "description": "Gold glass",
-        "colors": "h == 7 && s > 3 ",
+        "description": "Glass",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ],
@@ -5284,14 +5296,22 @@
   },
   {
     "description": "Lighthouse Wooden Shelves",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "VIKING_SHELF_BOOKS"
+      "VIKING_SHELF_BOOKS",
+      "VIKING_SHELF_TANKARDS",
+      "VIKING_SHELF_BUCKET"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientationX": 512,
-    "retainVanillaUvs": false
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": [ "h == 6 && s == 3", "h == 5 && s == 4" ],
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      }
+    ]
   },
   {
     "description": "Lighthouse Dungeon Doors",
@@ -5482,6 +5502,161 @@
     "uvOrientation": 512,
     "uvScale": 0.7,
     "flatNormals": true
+  },
+  {
+    "description": "Relleka - Stalls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "VIKING_FUR_MARKET",
+      "VIKING_FISH_MARKET",
+      "VIKING_MARKET"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": [ "h == 6 && s == 1", "h == 3 && s == 3" ],
+        "uvType": "BOX"
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0",
+        "uvType": "BOX"
+      },
+      {
+        "baseMaterial": "GRUNGE_1",
+        "colors": [ "h == 5", "h == 7" ]
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Fish Barrel",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "VIKING_BARREL_FISH"
+    ]
+  },
+  {
+    "description": "Relleka - Sand Pit",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "VIKING_SANDPIT_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "SAND_1",
+        "colors": "h == 6",
+        "uvScale": 0.35,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 140
+      }
+    ]
+  },
+  {
+    "description": "Misthalin Mystery Boat",
+    "objectIds": [ "QUEST_LUNAR_ROWBOAT" ],
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Small Long Boat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "DAGANNOTH_VIKING_BOAT",
+      "FREMENNIK_BOAT_STONE_TRAVEL",
+      "FREMENNIK_BOAT_UNGAEL_NO_TRAVEL",
+      "FREMENNIK_BOAT_UNGAEL_TRAVEL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 9",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 5 && s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MISC_VIKING_SHIP_FRONT_LV0",
+      "MISC_VIKING_SHIP_FRONT_LV1",
+      "MISC_VIKING_SHIPMAIN",
+      "MISC_VIKING_SHIPSIDE",
+      "MISC_VIKING_SHIPEDGE_WITH_SEAT",
+      "MISC_VIKING_SHIPEDGE_WITH_SEAT_MIRROR",
+      "MISC_VIKING_SHIPEDGE",
+      "MISC_VIKING_SHIPEDGEPIER",
+      "MISC_SHIP_GANGPLANK",
+      "MISC_VIKING_SHIPEDGESHIELD"
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat Mast",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MISC_VIKING_SHIP_MAST",
+      "MISC_VIKING_SHIP_MAST_LV2",
+      "MISC_VIKING_SHIP_MAST_LV3",
+      "MISC_VIKING_SHIP_MAST_LV3_SAIL_MIRROR",
+      "MISC_VIKING_SHIP_MAST_LV3_SAIL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 5 && s == 4",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat Mast",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.65,
+    "objectIds": [
+      "FRIS_VIKING_BOAT"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BURLAP",
+        "colors": [ "h == 0", "h == 7", "h == 8" ],
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "baseMaterial": "TRANSPARENT",
+        "colors": [ "a < 255" ]
+      }
+    ]
   },
   {
     "description": "PHASMATYS_DOCK_FENCES",
@@ -6517,22 +6692,35 @@
     "uvScale": 0.4
   },
   {
-    "description": "Rope Bridge - Rope",
+    "description": "Rooftop Agility - Rope Bridge - Rope",
     "baseMaterial": "ROPE",
-    "objectIds": [
-      "SHIPROPE"
-    ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHIPROPE",
+      "ROOFTOPS_TIGHTROPE_FORDIAGONAL_3",
+      "ROOFTOPS_TIGHTROPE_FORDIAGONAL_4",
+      "ROOFTOPS_TIGHTROPE_FORDIAGONAL_6"
+    ]
   },
   {
-    "description": "Rope Bridge - Anchor point",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Rooftop Agility - Rope Bridge - Anchor point",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "ROOFTOPS_SEERS_TIGHTROPE",
-      "ROOFTOPS_SEERS_TIGHTROPE_END"
+      "ROOFTOPS_SEERS_TIGHTROPE_END",
+      "ROOFTOPS_RELLEKKA_TIGHTROPE_END"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Wooden Staircase",
@@ -7040,6 +7228,8 @@
       "KHARIDMETALGATECLOSEDR_1OP",
       "KHARIDMETALGATECLOSEDL_2OP",
       "KHARIDMETALGATECLOSEDR_2OP",
+      "FAI_VARROCK_BANK_DOOR_VAULT_L",
+      "FAI_VARROCK_BANK_DOOR_VAULT_R",
       "CAPT_SIAD_CELL_DOOR",
       "UNDERGROUNDCELLGATER",
       "UNDERGROUNDCELLGATEL"
@@ -17274,27 +17464,47 @@
     "uvOrientation": 512
   },
   {
+    "description": "Waterfalls - Replace Vanilla Droplets",
+    "textureMaterial": "WATER_DROPS",
+    "objectIds": [
+      "WATERFALL_OVERLAY_1",
+      "WATERFALL_OVERLAY_4",
+      "WATERFALL_OVERLAY_3",
+      "BRUT_WATERFALL_OVERLAY_4C",
+      "BRUT_WATERFALL_OVERLAY_WC",
+      "BRUT_WATERFALL_OVERLAY_3D",
+      "BRUT_WATERFALL_OVERLAY_QC",
+      "BRUT_WATERFALL_OVERLAY_2D",
+      "WATERFALL_OVERLAY_2",
+      "BRUT_WATERFALL_OVERLAY_Q",
+      "BRUT_WATERFALL_OVERLAY_W",
+      "BRUT_WATERFALL_OVERLAY_WB",
+      "BRUT_WATERFALL_OVERLAY_T",
+      "BRUT_WATERFALL_OVERLAY_3C",
+      "BRUT_WATERFALL_OVERLAY_2C",
+      "BRUT_WATERFALL_OVERLAY_4B",
+      "BRUT_WATERFALL_OVERLAY_WD",
+      "BRUT_WATERFALL_OVERLAY_2",
+      "BRUT_WATERFALL_OVERLAY_3",
+      "BRUT_WATERFALL_OVERLAY_E",
+      "BRUT_WATERFALL_OVERLAY_EC",
+      "BRUT_WATERFALL_OVERLAY_2B",
+      "BRUT_WATERFALL_OVERLAY_QB",
+      "BRUT_WATERFALL_OVERLAY_RB",
+      "BRUT_WATERFALL_OVERLAY_EB",
+      "BRUT_WATERFALL_OVERLAY_R",
+      "WATERFALL_OVERLAY",
+      "WATERFALL_OVERLAY_1_BRIGHTER",
+      "MYARM_WATER_MOVING_1"
+    ]
+  },
+  {
     "description": "Giants Foundry -  Wooden - WheelBarrow",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "GIANTS_FOUNDRY_WHEEL_BARROW" ],
     "uvType": "BOX",
     "uvOrientationX": 576,
     "uvOrientationZ": 512
-  },
-  {
-    "description": "Replace vanilla scrolling waterfall texture with droplets, until a better solution is found",
-    "objectIds": [ "WATERFALL_OVERLAY", "WATERFALL_OVERLAY_1_BRIGHTER" ],
-    "textureMaterial": "WATER_DROPLETS",
-    "baseMaterial": "WATER_FLAT",
-    "areas": [
-      "TIRANNWN",
-      "APE_ATOLL"
-    ]
-  },
-  {
-    "description": "Hide vanilla scrolling water models, until a better solution is found",
-    "objectIds": [ "WATERFALL_OVERLAY", "WATERFALL_OVERLAY_1_BRIGHTER", "MYARM_WATER_MOVING_1" ],
-    "hide": true
   },
   {
     "description": "Texture for water in Motherlode Mine troughs",
@@ -18745,12 +18955,12 @@
   },
   {
     "description": "Edgeville - Well",
-    "baseMaterial": "STONE",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "WELL"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "colorOverrides": [
       {
         "colors": "h == 6",
@@ -20333,13 +20543,21 @@
     ]
   },
   {
-    "description": "Freminnik - Game Objects - Wooden Shelf With Bucket",
+    "description": "Freminnik - Game Objects - Wooden - Plank Tables",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "VIKING_SHELF_BUCKET"
+      "VIKING_BAR_NO_PUMPS",
+      "VIKING_BAR"
     ],
     "uvType": "BOX",
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "colors": "h < 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Freminnik - Decorations - Metal Gutter",
@@ -20372,6 +20590,7 @@
       "VIKING_PIKE_DEFENCE_BEND_MIRROR"
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "uvOrientation": 256
   },
   {
@@ -23576,7 +23795,8 @@
       "FUR_A",
       "FUR_B",
       "FUR_C",
-      "FUR_D"
+      "FUR_D",
+      "VIKING_FUR"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.4
@@ -27057,9 +27277,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 21549, 21594, 21630 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27080,9 +27299,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ "h == 42" ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27103,9 +27321,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ "h == 42" ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27118,9 +27335,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 21549, 21594, 21630 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27141,9 +27357,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43011, 43054, 43102 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27156,9 +27371,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43011, 43054, 43121 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27194,9 +27408,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 21535, 21576, 21630 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -27217,7 +27430,7 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43025, 43068, 43116 ],
+        "colors": "a < 255",
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -27232,11 +27445,21 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ "h == 21" ],
+        "colors": "a < 255",
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
     ]
+  },
+  {
+    "description": "Object - Wooden - Private Bank Booth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_BANK_BOOTH_PRIVATE",
+      "FAI_VARROCK_BANK_BOOTH_PRIVATE_END"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Compost Bins",
@@ -27926,8 +28149,42 @@
       },
       {
         "description": "Glass",
-        "colors": ["h == 8 && s == 5 && l < 5"],
+        "colors": "a < 255",
         "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Posh Cupboard with glass panels and silver dishes and golden trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_CABINET",
+      "FAI_VARROCK_POSH_CABINET2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.25
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
       }
     ]
   },
@@ -27958,7 +28215,7 @@
       },
       {
         "description": "Glass",
-        "colors": "h == 8 && s == 5 && l < 5",
+        "colors": "a < 255",
         "baseMaterial": "GRAY_75"
       }
     ]
@@ -28163,8 +28420,52 @@
         "uvType": "BOX"
       },
       {
-        "description": "Dark brown books",
+        "description": "Light brown books",
         "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Wooden - bookcase with Multicolored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_BOOKCASE",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT2",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 7 && s == 3",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       }
@@ -30927,6 +31228,30 @@
         "baseMaterial": "ROPE",
         "uvType": "MODEL_YZ",
         "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Double bed with Yellow or Gold blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_DOUBLEBED2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 0 || h == 10 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "blanket",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
       }
     ]
   },
@@ -34226,6 +34551,227 @@
         "uvType": "BOX",
         "uvScale": 0.25,
         "uvOrientation": 128
+      }
+    ]
+  },
+  {
+    "description": "Decoration - Wall - Saradomin wall flag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_WALLHANGING_SARODOMIN_STAR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold fabric",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "White fabric",
+        "colors": "h > 10",
+        "baseMaterial": "CARPET_DARK",
+        "uvOrientation": 280,
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "Star",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Vault - Golden Bars - Stacked",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 89,
+    "objectIds": ["FAI_VARROCK_BANK_GOLD_BARS" ]
+  },
+  {
+    "description": "Varrock - Vault - Golden Bars - Stacked",
+    "baseMaterial": "METALLIC_1_HIGHGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 179,
+    "objectIds": ["FAI_VARROCK_GOLDSTATUE_KING" ]
+  },
+  {
+    "description": "East Varrock - Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_WELL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Floor standing cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_FABRIC_RACK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Wall mount cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_FABRIC_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - floor cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_FABRIC01",
+      "FAI_VARROCK_FABRIC02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Self with thread",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "CLOTHESEQUIP_SHELVES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - wooden - Sewing machine table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_SEWING_MACHINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 177
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Self with thread",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_CLOTHES_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "East Varrock - Fancy Dress Shop - Mirror",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_NONE_GLOSS",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Table - Long - Wooden – With book scrolls and papers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_POSH_TABLE_SCROLLS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Book and scrolls",
+        "colors": "h < 7 || h == 7 && s == 2 || s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   }

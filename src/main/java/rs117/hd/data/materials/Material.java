@@ -89,6 +89,11 @@ public enum Material {
 	SIMPLE_GRAIN_WOOD(16),
 	WATER_DROPLETS(17, p -> p
 		.setHasTransparency(true)),
+	WATER_DROPS(p -> p
+		.setScroll(0, 0.9f)
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.075f)
+		.setFlowMapDuration(new float[] { 7, -7 })),
 	HAY(18),
 	NET(19, p -> p
 		.setHasTransparency(true)),
@@ -519,6 +524,8 @@ public enum Material {
 	),
 	CARPET_LIGHT(CARPET, p -> p
 		.setBrightness(1.45f)),
+	CARPET_DARK(CARPET, p -> p
+		.setBrightness(0.45f)),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p

@@ -28,7 +28,8 @@ public class FrameTimer {
 
 	private boolean isInactive = true;
 
-	public long cumulativeError = 0;
+	public long cumulativeError;
+	public long errorCompensation;
 
 	private void initialize() {
 		clientThread.invokeLater(() -> {
@@ -42,6 +43,20 @@ public class FrameTimer {
 
 			isInactive = false;
 			plugin.enableDetailedTimers = true;
+
+			// Estimate the timer's own runtime, with a warm-up run first
+			final int iterations = 100000;
+			final int compensation = 1950000; // additional manual correction
+			for (int i = 0; i < 2; i++) {
+				errorCompensation = 0;
+				for (int j = 0; j < iterations; j++) {
+					begin(Timer.DRAW_FRAME);
+					end(Timer.DRAW_FRAME);
+				}
+				errorCompensation = (timings[Timer.DRAW_FRAME.ordinal()] + compensation) / iterations;
+				timings[Timer.DRAW_FRAME.ordinal()] = 0;
+			}
+			log.debug("Estimated the overhead of timers to be around {} ns", errorCompensation);
 		});
 	}
 
@@ -78,9 +93,10 @@ public class FrameTimer {
 		destroy();
 	}
 
-	private void reset() {
+	public void reset() {
 		Arrays.fill(timings, 0);
 		Arrays.fill(activeTimers, false);
+		cumulativeError = 0;
 	}
 
 	public void begin(Timer timer) {
@@ -92,6 +108,7 @@ public class FrameTimer {
 				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
 			glQueryCounter(gpuQueries[timer.ordinal() * 2], GL_TIMESTAMP);
 		} else if (!activeTimers[timer.ordinal()]) {
+			cumulativeError += errorCompensation + 1 >> 1;
 			timings[timer.ordinal()] -= System.nanoTime() - cumulativeError;
 		}
 		activeTimers[timer.ordinal()] = true;
@@ -105,10 +122,16 @@ public class FrameTimer {
 			glQueryCounter(gpuQueries[timer.ordinal() * 2 + 1], GL_TIMESTAMP);
 			// leave the GPU timer active, since it needs to be gathered at a later point
 		} else {
-			cumulativeError += 17; // compensate slightly for the timer's own overhead
+			cumulativeError += errorCompensation >> 1;
 			timings[timer.ordinal()] += System.nanoTime() - cumulativeError;
 			activeTimers[timer.ordinal()] = false;
 		}
+	}
+
+	public void add(Timer timer, long time) {
+		if (isInactive)
+			return;
+		timings[timer.ordinal()] += time;
 	}
 
 	public void endFrameAndReset() {

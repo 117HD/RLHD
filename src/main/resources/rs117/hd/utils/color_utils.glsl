@@ -135,7 +135,7 @@ vec3 srgbToHsl(vec3 srgb) {
 
 vec3 hslToSrgb(vec3 hsl) {
     float C = (1 - abs(2 * hsl[2] - 1)) * hsl[1];
-    float H_prime = hsl[0] * 6;
+    float H_prime = fract(hsl[0]) * 6;
     float m = hsl[2] - C / 2;
 
     float r = clamp(abs(H_prime - 3) - 1, 0, 1);

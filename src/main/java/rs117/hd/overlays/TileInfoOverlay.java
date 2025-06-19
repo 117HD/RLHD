@@ -156,7 +156,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	@Override
-	public Dimension render(Graphics2D g) {
+	public synchronized Dimension render(Graphics2D g) {
 		// Disable the overlay while loading a scene, since tile overrides aren't thread safe
 		if (plugin.isLoadingScene())
 			return null;
@@ -1464,7 +1464,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	private void copyToClipboard(String toCopy, @Nullable String description) {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		StringSelection string = new StringSelection("\"" + toCopy + "\"");
+		StringSelection string = new StringSelection(toCopy);
 		clipboard.setContents(string, null);
 		clientThread.invoke(() -> client.addChatMessage(
 			ChatMessageType.GAMEMESSAGE,
@@ -1484,7 +1484,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	@Override
-	public MouseEvent mousePressed(MouseEvent e) {
+	public synchronized MouseEvent mousePressed(MouseEvent e) {
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return e;
@@ -1537,7 +1537,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					copiedGamevalsHash = hoveredGamevalsHash;
 					hoveredGamevalsIndex = 0;
 				}
-				copyToClipboard(hoveredGamevals.get(hoveredGamevalsIndex));
+				copyToClipboard('"' + hoveredGamevals.get(hoveredGamevalsIndex) + '"');
 				hoveredGamevalsIndex = (hoveredGamevalsIndex + 1) % hoveredGamevals.size();
 			}
 		}
