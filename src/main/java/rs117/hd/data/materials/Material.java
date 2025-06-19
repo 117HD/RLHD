@@ -778,6 +778,7 @@ public enum Material {
 		.setSpecular(1.1f, 160)),
 	METALLIC_1_LIGHT_SUPER_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(2.25f, 65)),
+	METALLIC_1_VERY_LIGHT(METALLIC_1, p -> p.setBrightness(2.6f)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 120)),
 	WATTLE_1,
