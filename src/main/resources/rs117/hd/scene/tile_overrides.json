@@ -7219,6 +7219,19 @@
     "groundMaterial": "CARPET"
   },
   {
+    "name": "UZER_DEMONIC_THRONEROOM_BLENDING_FIXES",
+    "area": "UZER_DEMONIC_THRONEROOM",
+    "overlayIds": [ 11, 86 ],
+    "groundMaterial": "MARBLE_1_GLOSS",
+    "blended": false
+  },
+  {
+    "name": "UZER_DEMONIC_THRONEROOM_BLENDING_MARBLE",
+    "area": "UZER_DEMONIC_THRONEROOM",
+    "underlayIds": [ 56, 57 ],
+    "groundMaterial": "MARBLE_1_GLOSS"
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
