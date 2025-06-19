@@ -26391,6 +26391,16 @@
     ]
   },
   {
+    "description": "Object - Wooden - Private Bank Booth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_BANK_BOOTH_PRIVATE",
+      "FAI_VARROCK_BANK_BOOTH_PRIVATE_END"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
     "description": "Compost Bins",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
