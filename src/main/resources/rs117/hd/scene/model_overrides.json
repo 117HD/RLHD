@@ -16434,7 +16434,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Waterfalls - Replace Vanilla Dropplets",
+    "description": "Waterfalls - Replace Vanilla Droplets",
     "textureMaterial": "WATER_DROPS",
     "objectIds": [
       "WATERFALL_OVERLAY_1",
