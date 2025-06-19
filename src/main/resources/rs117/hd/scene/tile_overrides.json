@@ -1125,7 +1125,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 18
+    "shiftLightness": 23
   },
   {
     "name": "FALADOR_EAST_BANK_PATH_FIX_1",
@@ -1139,7 +1139,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 14
+    "shiftLightness": 18
   },
   {
     "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_1",
@@ -1183,7 +1183,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 19Lightness fix
   },
   {
     "name": "FALADOR_SOUTH_PATH_FIX_2",
