@@ -1204,8 +1204,8 @@
       137
     ],
     "groundMaterial": "FALADOR_PATHS",
-    "minHue": 8,
-    "maxHue": 8,
+    "minHue": 7,
+    "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 15
