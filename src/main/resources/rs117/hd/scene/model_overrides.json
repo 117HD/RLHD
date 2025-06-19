@@ -5477,6 +5477,43 @@
     "flatNormals": true
   },
   {
+    "description": "Relleka - Stalls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "VIKING_FUR_MARKET",
+      "VIKING_FISH_MARKET",
+      "VIKING_MARKET"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": [ "h == 6 && s == 1", "h == 3 && s == 3" ],
+        "uvType": "BOX"
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0",
+        "uvType": "BOX"
+      },
+      {
+        "baseMaterial": "GRUNGE_1",
+        "colors": [ "h == 5", "h == 7" ]
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Fish Barrel",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "VIKING_BARREL_FISH"
+    ]
+  },
+  {
     "description": "PHASMATYS_DOCK_FENCES",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
