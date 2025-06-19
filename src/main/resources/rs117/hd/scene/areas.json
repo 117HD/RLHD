@@ -2391,8 +2391,17 @@
     ]
   },
   {
+    "name": "UZER_RUINS_DOWNSTAIRS",
+    "regionBoxes": [
+      [ 10828, 10828, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "UZER_DEMONIC_THRONEROOM",
-    "regions": [ 10828 ],
+    "aabbs": [
+      [ 2690, 4873, 1, 2749, 4925, 2 ]
+    ],
     "hideOtherAreas": true
   },
   {
