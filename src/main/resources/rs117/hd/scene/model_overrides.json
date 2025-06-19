@@ -2136,7 +2136,11 @@
       "KEBOS_FARMING_GUILD_GRASS_1",
       "KEBOS_FARMING_GUILD_GRASS_2",
       "KEBOS_FARMING_GUILD_GRASS_3",
-      "KEBOS_FARMING_GUILD_GRASS_4"
+      "KEBOS_FARMING_GUILD_GRASS_4",
+      "DESERT_LONG_GRASS_3",
+      "DESERT_LONG_GRASS_1",
+      "DESERT_LONG_GRASS_2",
+      "DESERT_LONG_GRASS_4"
     ]
   },
   {
@@ -3195,7 +3199,11 @@
       "KHARID_BIGWINDOW",
       "DESERTWALL_RAISED",
       "DESERTROOFWALL_RAISED",
-      "DESERTROOFWALL_NOBLOCKRANGE"
+      "DESERTROOFWALL_NOBLOCKRANGE",
+      "TOURTRAP_QIP_DESERTWALL",
+      "TOURTRAP_QIP_CELL_BAR_WALL_BARS",
+      "TOURTRAP_QIP_DESERTWALL_WINDOW",
+      "TOURTRAP_QIP_DESERTROOFWALL"
     ],
     "flatNormals": true,
     "uvType": "BOX"
@@ -4046,8 +4054,7 @@
       "AGILITY_PYRAMID_DUGUPSOIL1",
       "AGILITY_PYRAMID_DUGUPSOIL2",
       "AGILITY_PYRAMID_DUGUPSOIL3",
-      "AGILITY_PYRAMID_DUGUPSOIL4",
-      "TOURTRAP_QIP_SAND_DETAIL2"
+      "AGILITY_PYRAMID_DUGUPSOIL4"
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "BOX",
@@ -6521,7 +6528,8 @@
       "DOV_BASE_EXIT_UPPER",
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
-      "CIVITAS_LADDER_TOP_NORIM"
+      "CIVITAS_LADDER_TOP_NORIM",
+      "TOURTRAP_QIP_LADDER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -6779,7 +6787,8 @@
       "QIP_WATCHTOWER_LARGE_TABLE",
       "OLAF2_OLD_BROKEN_TABLE",
       "FARMING_COUNTER_TABLE",
-      "WILDY_HUB_BROKEN_TABLE"
+      "WILDY_HUB_BROKEN_TABLE",
+      "TOURTRAP_QIP_DESERT_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -7220,7 +7229,10 @@
       "KHARIDMETALGATECLOSEDL_2OP",
       "KHARIDMETALGATECLOSEDR_2OP",
       "FAI_VARROCK_BANK_DOOR_VAULT_L",
-      "FAI_VARROCK_BANK_DOOR_VAULT_R"
+      "FAI_VARROCK_BANK_DOOR_VAULT_R",
+      "CAPT_SIAD_CELL_DOOR",
+      "UNDERGROUNDCELLGATER",
+      "UNDERGROUNDCELLGATEL"
     ],
     "uvType": "BOX",
     "uvOrientation": 463
@@ -7853,7 +7865,9 @@
       "FAI_VARROCK_POOR_DOOR_OPEN_FLIPPED",
       "VMQ1_BANDIT_DOOR",
       "VMQ1_BANDIT_DOOR_OPEN",
-      "VMQ1_BANDIT_DOOR_NOOP"
+      "VMQ1_BANDIT_DOOR_NOOP",
+      "ELID_GENIE_DOOR",
+      "ELID_GENIE_DOOR_OPEN"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -8548,7 +8562,9 @@
     "description": "Ground Decoration - Ash Pile - Small",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
+      "WILDERNESS_ROCKS_FLOOR_SOFT_03",
       "WILDERNESS_ROCKS_FLOOR_SOFT_02",
+      "WILDERNESS_ROCKS_FLOOR_SOFT_04",
       "WILDERNESS_ROCKS_FLOOR_SOFT_05"
     ],
     "uvType": "WORLD_XZ",
@@ -8754,7 +8770,12 @@
       "HORROR_ROCKSLIDE6",
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_1",
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_3",
-      "PLAGUE_MUD"
+      "PLAGUE_MUD",
+      "TOURTRAP_QIP_SAND_DETAIL1",
+      "TOURTRAP_QIP_CLIFF_SURROUND2",
+      "TOURTRAP_QIP_CLIMB_ROCK_1",
+      "TOURTRAP_QIP_CLIFF_SURROUND1",
+      "TOURTRAP_QIP_SAND_DETAIL2"
     ],
     "inheritTileColorType": "OVERLAY",
     "uvType": "WORLD_XZ",
@@ -9089,6 +9110,7 @@
       "FARMING_CRATES",
       "ELID_CRATE",
       "ELID_CRATES",
+      "ELID_CRATES_2",
       "ELID_SMALL_CRATES",
       "FEVER_CRATES_STACKED",
       "FEVER_CRATE",
@@ -9158,7 +9180,9 @@
       "KR_SEERS_TABLE",
       "FOSSIL_CRATE1",
       "FOSSIL_CRATE3",
-      "FOSSIL_CRATE_STACKED"
+      "FOSSIL_CRATE_STACKED",
+      "TOURTRAP_QIP_CRATE_SINGLE",
+      "TOURTRAP_QIP_CRATE_STACKED"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9335,7 +9359,9 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "AGGIE_COURTYARD_CRATE",
-      "AGGIE_COURTYARD_CRATES_STACKED"
+      "AGGIE_COURTYARD_CRATES_STACKED",
+      "TOURTRAP_QIP_MINE_CRATE",
+      "TOURTRAP_QIP_MINE_CRATE_STACKED"
     ],
     "uvOrientation": 512,
     "uvScale": 0.75,
@@ -9367,6 +9393,160 @@
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Cart, Barrel with Metal Bands",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TOURTRAP_QIP_CART_NORMAL",
+      "TOURTRAP_QIP_BARREL",
+      "THMINEBARREL_ANA_WINCHSIDE",
+      "THMINEBARREL_FULL",
+      "THMINEBARREL_EMPTY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TOURTRAP_QIP_ROPEPULLTHINGY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": [ "h == 5", "h == 6 && s == 4" ],
+        "baseMaterial": "GRAVEL_LIGHT"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch - Underside",
+    "baseMaterial": "ROPE",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURTRAP_QIP_ROPEPULLTHINGY2"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch - Platform Floor",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURTRAP_QIP_WOOD_FLOOR_2",
+      "TOURTRAP_QIP_WOOD_FLOOR_1"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Tourist Trap - Wooden - Winch - Platform Walls",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURTRAP_QIP_PLATFORM_WALL",
+      "TOURTRAP_QIP_WOOD"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512
+  },
+  {
+    "description": "Tourist Trap - Rail Tracks",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TOURISTTRAP_MINECART",
+      "TOURTRAP_QIP_TRACKBUFFER",
+      "TOURTRAP_QIP_TRACKSTRAIGHT",
+      "TOURTRAP_QIP_TRACKSTRAIGHT_BROKEN",
+      "TOURTRAP_QIP_TRACKSTRAIGHT_BROKEN2",
+      "TOURTRAP_QIP_TRACKCURVE_A",
+      "TOURTRAP_QIP_TRACKCURVE_C",
+      "TOURTRAP_QIP_TRACKCURVE_B",
+      "TOURTRAP_QIP_TRACKCURVE_D"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Rail Sign",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TOURTRAP_QIP_DANGER_SIGN"
+    ],
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Tourist Trap - Cliffs",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "TOURTRAP_QIP_CLIFFTOP_3",
+      "TOURTRAP_QIP_CLIFFTOP_2",
+      "TOURTRAP_QIP_CLIFFTOP_1",
+      "TOURTRAP_QIP_CLIFF_FLOOR",
+      "TOURTRAP_QIP_CLIFFTOP_3_LOW",
+      "TOURTRAP_QIP_CLIFFTOP_1_LOW",
+      "TOURTRAP_QIP_CLIFFTOP_2_LOW",
+      "TOURTRAP_QIP_CLIFF_FLOOR_LOW"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.74
+  },
+  {
+    "description": "Tourist Trap - Dug Up Soil",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_05",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_02",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_04",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_01",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_03",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_06",
+      "TOURTRAP_QIP_MINE_DUGUPSOIL_07"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85
   },
   {
     "description": "Metallic - Ground - Armor",
@@ -10698,7 +10878,8 @@
       "WILD_ESCAPECAVE_ROCKSLIDE1",
       "WILD_ESCAPECAVE_ROCKSLIDE2",
       "WILD_ESCAPECAVE_ROCKSLIDE3",
-      "WILD_ESCAPECAVE_ROCKSLIDE4"
+      "WILD_ESCAPECAVE_ROCKSLIDE4",
+      "PUNISHROCKS"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -10723,6 +10904,20 @@
       "STONECUTTER_DUGUPSOIL1_LIGHT",
       "STONECUTTER_DUGUPSOIL3_LIGHT",
       "STONECUTTER_DUGUPSOIL2_LIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Sandy - Rock",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "objectIds": [
+      "DUGUPSOIL_OASIS_1",
+      "ROCKSLIDE3_OASIS",
+      "DUGUPSOIL_OASIS_2",
+      "ROCKSLIDE1_OASIS",
+      "ROCKSLIDE2_OASIS",
+      "DUGUPSOIL_OASIS_3"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -11480,6 +11675,7 @@
       "FARMING_CHAIR",
       "RIMMINGTON_CHAIR",
       "ELID_CHAIR1",
+      "ELID_CHAIR2",
       "DRAYNOR_CHAIR",
       "BURGH_CHAIR1",
       "FISHING_CONTEST_CHAIR",
@@ -12674,7 +12870,6 @@
       "CASTLEWARS_ZAMORAK_QUIT",
       "CASTLEWARS_RANDOM_TELE",
       "POH_EXIT_PORTAL",
-      "GOLEM_DEMON_PORTAL",
       "DT_PORTAL",
       "RD_PORTAL_ROOM1_ENTRANCE",
       "RD_PORTAL_ROOM1_EXIT",
@@ -13033,10 +13228,40 @@
     ]
   },
   {
-    "description": "Kharidian Barrell Cactus",
+    "description": "Kharidian Barrel Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
     "objectIds": [
       "CACTUS5"
+    ]
+  },
+  {
+    "description": "Kharidian Cactus with Sign",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      "TOURTRAP_QIP_SIGNPOST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kharidian Cactus with Scarf",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "objectIds": [
+      "TOURTRAP_QIP_CACTUS_SCARF"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
@@ -13181,8 +13406,11 @@
       "TENTDOOR2",
       "TENTDOOR3",
       "TENTDOOR4",
+      "BEDABIN_TENTDOOR",
       "FEUD_TENTDOOR",
-      "FEUD_TENTWALL"
+      "FEUD_TENTWALL",
+      "TENTROOF2",
+      "TENTROOFCENTRE2"
     ],
     "uvType": "BOX"
   },
@@ -13244,6 +13472,597 @@
     "uvScale": 0.6
   },
   {
+    "description": "Nardah - Cart and Water Barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "ELID_CART_WATER",
+      "ELID_WATERBARREL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Potted Plants",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "ELID_POTTEDFERN1",
+      "ELID_POTTEDFERN",
+      "ELID_POTTEDFERN2",
+      "EGYPT_PLANTPOTTED",
+      "ELID_POTTEDSMALLFERN",
+      "FEUD_POTTED_PLANT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Chemestry Table",
+    "baseMaterial": "GRAY_75",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "BCS_CHEMISTY_TABLE_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ELID_HERB_SHELVES2",
+      "ELID_HERB_SHELVES",
+      "ELID_WAREHOUSE_SHELVES3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Small Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "HUNTING_SHOP_SHELVES1",
+      "HUNTING_SHOP_SHELVES2",
+      "HUNTING_SHOP_SHELVES3",
+      "ELID_SHELF_COOKING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_WAREHOUSE_SHELVES3",
+      "ELID_WAREHOUSE_SHELVES4",
+      "ELID_WAREHOUSE_SHELVES",
+      "ELID_WAREHOUSE_SHELVES2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Double Doors",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ELID_BANK_DOOR",
+      "ELID_BANK_DOOR_MIRROR",
+      "ELID_TEMPLE_DOOR_OPEN_MIRROR",
+      "ELID_TEMPLE_DOOR_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Cupboard",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_CUPBOARD_OPEN",
+      "ELID_CUPBOARD_CLOSED_WITHROBES",
+      "ELID_CUPBOARD_OPEN_WITHROBES",
+      "ELID_CUPBOARD_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Bed",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_BED"
+    ]
+  },
+  {
+    "description": "Nardah - Rope Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "ELID_TEMPLE_RAILING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Eldinis Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "ELID_STATUETTE_PLACED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Fountain",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "ELID_WELL_STRAIGHT",
+      "ELID_WELL_CORNER",
+      "ELID_WELL_CENTRE",
+      "ELID_FOUNTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Nardah - Stall",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "ELID_MARKET_CHOCICE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "WORLD_XZ"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "CARPET",
+        "uvType": "WORLD_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Elid - Genie's Crevice - Walls",
+    "baseMaterial": "MUD_1",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_UNDERGROUND_WALLS",
+      "ELID_UNDERGROUND_WALL_SHORTER",
+      "ELID_UNDERGROUND_TOP_SHORTER",
+      "ELID_UNDERGROUND_DOOR_WALL_MIRROR",
+      "ELID_UNDERGROUND_TOP5_HIGHER",
+      "ELID_UNDERGROUND_DOOR_WALL",
+      "ELID_UNDERGROUND_TOP",
+      "ELID_STALAGTITES_SMALLER",
+      "ELID_STALAGTITES_LARGER",
+      "ELID_STALAGTITES",
+      "ELID_STALAGTITES_TWIN",
+      "ELID_STALAGTITES_FALLOFF"
+    ]
+  },
+  {
+    "description": "Elid - Genie's Crevice",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ELID_FALLOFF_10",
+      "ELID_FALLOFF_1",
+      "ELID_FALLOFF_2",
+      "ELID_FALLOFF_5",
+      "ELID_FALLOFF_3",
+      "ELID_FALLOFF_6",
+      "ELID_FALLOFF_7"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Tent",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "AGILITY_PYRAMID_TENT_END",
+      "AGILITY_PYRAMID_TENT_SIDE",
+      "AGILITY_PYRAMID_TENT_END_MIRROR",
+      "AGILITY_PYRAMID_TENT_TOP_END",
+      "AGILITY_PYRAMID_TENT_TOP",
+      "AGILITY_PYRAMID_TENT_FLAPS"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Climbing Rocks",
+    "baseMaterial": "ROCK_3_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "NTK_AGILITY_CLIMBING_ROCKS_1",
+      "AGILITY_PYRAMID_CLIMBING_ROCKS_INACTIVE",
+      "AGILITY_PYRAMID_CLIMBING_ROCKS_FALLOFF",
+      "AGILITY_PYRAMID_CLIMBING_ROCKS_FALLOFF",
+      "NTK_AGILITY_CLIMBING_ROCKS_2"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Plank",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "AGILITY_PYRAMID_PLANK_CENTRE",
+      "AGILITY_PYRAMID_PLANK_START",
+      "AGILITY_PYRAMID_PLANK_END"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Blocks",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "AGILITY_PYRAMID_STEPS1",
+      "AGILITY_PYRAMID_SIDE1",
+      "AGILITY_PYRAMID_SIDE3",
+      "AGILITY_PYRAMID_SIDE2",
+      "AGILITY_PYRAMID_TILTING_FLOOR_NOANIM",
+      "AGILITY_PYRAMID_SIDE4",
+      "AGILITY_PYRAMID_LOW_WALL",
+      "AGILITY_PYRAMID_CORNER1",
+      "AGILITY_PYRAMID_TOP2",
+      "AGILITY_PYRAMID_TOP1",
+      "AGILITY_PYRAMID_GAP2",
+      "AGILITY_PYRAMID_TOP4",
+      "AGILITY_PYRAMID_TOP3",
+      "AGILITY_PYRAMID_GAP1",
+      "AGILITY_PYRAMID_GAP3",
+      "AGILITY_PYRAMID_LEDGE2",
+      "AGILITY_PYRAMID_LEDGE1",
+      "AGILITY_PYRAMID_TOP2",
+      "AGILITY_PYRAMID_TOP",
+      "AGILITY_PYRAMID_SIDE2_LOWWALL",
+      "AGILITY_PYRAMID_TOP2_CORNER",
+      "AGILITY_PYRAMID_TOP2_SIDE4",
+      "AGILITY_PYRAMID_SIDE4_STEPS",
+      "AGILITY_PYRAMID_TOP4_CORNER",
+      "AGILITY_PYRAMID_PENNY_LOC",
+      "AGILITY_PYRAMID_TOP2_TILTING_FLOOR",
+      "AGILITY_PYRAMID_TOP3_GAP"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Blocks - Animating",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "GEOMETRY",
+    "objectIds": [
+      "AGILITY_PYRAMID_TILTING_FLOOR"
+    ],
+    "npcIds": [
+      "AGILITY_PYRAMID_PENNY_WATERFALL_NPC_NORTH",
+      "AGILITY_PYRAMID_PENNY_WATERFALL_NPC_EAST"
+    ]
+  },
+  {
+    "description": "Agility Pyramid - Top",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "AGILITY_PYRAMID_TOP4_TOP",
+      "AGILITY_PYRAMID_TOP_CAP",
+      "AGILITY_PYRAMID_WALL_ROCKS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Stonework",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOLEM_EDGE_WALL",
+      "GOLEM_WALL",
+      "GOLEM_WALL_WOMAN_BROKEN",
+      "GOLEM_WINDOW",
+      "GOLEM_WALLTOP",
+      "GOLEM_WALL_CRUMBLY_MIRROR",
+      "GOLEM_WALLTOP_END_R",
+      "GOLEM_WALLARCH_BROKEN_L",
+      "GOLEM_WALL_BROKEN_CONNECTS_R",
+      "GOLEM_WALL_BROKEN_CONNECTS_L",
+      "GOLEM_WALL_SMASHED_END_L",
+      "GOLEM_WALLTOP_END_L",
+      "GOLEM_WALLARCH_LIP_R",
+      "GOLEM_WALLARCH_BROKEN_R",
+      "GOLEM_WALL_SMASHED_END_R",
+      "GOLEM_WALL_SMASHED_LOW_R",
+      "GOLEM_WALLARCH_LIP_L",
+      "GOLEM_TEMPLE_FLOOR_DEPTH2",
+      "GOLEM_TEMPLE_FLOOR_DEPTH6",
+      "GOLEM_TEMPLE_FLOOR_DEPTH5",
+      "GOLEM_WALL_CRUMBLY",
+      "GOLEM_STATUE_HAMMER_BROKEN",
+      "GOLEM_FACE",
+      "GOLEM_WALL_SMASHED_LOW_L",
+      "GOLEM_INSIDESTAIRS_TOP",
+      "GOLEM_INSIDESTAIRS_BASE",
+      "GOLEM_STATUE_FEMALE",
+      "GOLEM_CAVEWALL",
+      "GOLEM_CAVEWALL_TOP",
+      "GOLEM_CAVEWALL_INSIDE_EDGE",
+      "GOLEM_PLINTH",
+      "GOLEM_PLINTH_FEMALE_TURNED_MIRROR",
+      "GOLEM_PLINTH_FEMALE_TURNED",
+      "GOLEM_STATUE_HAMMER",
+      "GOLEM_WALL_WOMAN",
+      "GOLEM_STATUETTE_FACING_LEFT",
+      "GOLEM_STATUETTE_FACING_RIGHT"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Stonework",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "objectIds": [
+      "GOLEM_DEMON_CAVEWALL",
+      "GOLEM_DEMON_CAVEWALL_TOP_HIGHER",
+      "GOLEM_DEMON_CAVEWALL_TOP",
+      "GOLEM_DEMON_PILLAR3",
+      "GOLEM_DEMON_PILLAR",
+      "GOLEM_DEMON_PILLAR2",
+      "GOLEM_DEMON_PILLAR4",
+      "GOLEM_DEMON_CAVEWALL_DECOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 6",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Portal",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOLEM_DEMON_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 6",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demonic Door",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GOLEM_DEMON_DOOR_ALWAYS_OPEN",
+      "GOLEM_DEMON_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT"
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demon Throne",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOLEM_DEMON_THRONE",
+      "GOLEM_THRONE_WITHGEMS",
+      "GOLEM_THRONE_NOGEMS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s > 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Demon Skeleton",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "GOLEM_DEMON_SKELETON"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Kilns",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "objectIds": [
+      "GOLEM_KILN",
+      "GOLEM_KILN_SMASHED1",
+      "GOLEM_KILN_SMASHED2",
+      "GOLEM_KILN_SMASHED3"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Support Beam",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvOrientationZ": 700,
+    "uvScale": 0.5,
+    "objectIds": [
+      "GOLEM_WALL_SUPPORT"
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Torch",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOLEM_TORCH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Ruins of Uzer - Black Mushrooms",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOLEM_BLACK_MUSHROOMS"
+    ]
+  },
+  {
+    "description": "Kharidian Desert - Carpet Merchant Tent",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "MODEL_XZ",
+    "objectIds": [
+      "CARPET_SHADETENT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": ["h == 8 && s == 7", "h == 37"],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Kharidian Desert - Carpet Merchant Rugs",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CARPET_ROLLEDOUT",
+      "CARPET_ROLLEDUP_PILE",
+      "CARPET_ROLLEDUP"
+    ]
+  },
+  {
     "description": "Objects - Wooden - Counter",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -13278,6 +14097,14 @@
       "ELID_SKEW_STEPS"
     ],
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "Elid Tent",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "TENT_OASIS"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Nardah Stone Pew",
@@ -15044,7 +15871,8 @@
       "SMALLFERN",
       "FERN",
       "FERN1",
-      "FERN2"
+      "FERN2",
+      "MM_JUNGLEPLANT2"
     ]
   },
   {
@@ -15329,7 +16157,8 @@
   },
   {
     "description": "Objects - Desert Treasure Pyramid Obilisk - Large",
-    "baseMaterial": "ROCK_3_SMOOTH",
+    "baseMaterial": "NONE",
+    "castShadows": false,
     "objectIds": [
       "DESERT_TREASURE_OBLIX_A",
       "FD_BLOOD_COLUMN",
@@ -15339,8 +16168,14 @@
       "DESERT_TREASURE_OBLIX_D",
       "FD_SHADOW_COLUMN"
     ],
-    "uvType": "BOX",
-    "uvOrientation": 680
+    "colorOverrides": [
+      {
+        "colors": "a == 255",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 680
+      }
+    ]
   },
   {
     "description": "Objects - Desert Treasure Pyramid Statue - Medium",
@@ -15631,7 +16466,10 @@
       "FAI_ROCK_VSMALL_01",
       "FAI_ROCK_VSMALL_02",
       "FAI_ROCK_VSMALL_03",
-      "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_MIDDLE"
+      "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_MIDDLE",
+      "TOURTRAP_QIP_ROCKS1",
+      "TOURTRAP_QIP_ROCKS2",
+      "TOURTRAP_QIP_ROCKS3"
     ],
     "uvType": "BOX",
     "uvScale": 0.22
@@ -15662,7 +16500,9 @@
       "FAI_ROCK_BIG_01",
       "FAI_ROCK_BIG_02",
       "FAI_ROCK_BIG_03",
-      "FAI_ROCK_BIG_04"
+      "FAI_ROCK_BIG_04",
+      "TOURTRAP_QIP_MINE_ROCKS_BIG_02",
+      "TOURTRAP_QIP_MINE_ROCKS_BIG_01"
     ],
     "uvType": "BOX",
     "uvScale": 0.22
@@ -25400,7 +26240,15 @@
     "objectIds": [
       "TOURTRAP_QIP_MINE_WALL",
       "SHADOW_MAJ_CRACK",
-      "TOURTRAP_QIP_MINE_WALL_JUTTING"
+      "TOURTRAP_QIP_MINE_WALL_SUPPORT_RIGHT",
+      "TOURTRAP_QIP_MINE_WALL_SUPPORT_LEFT",
+      "TOURTRAP_QIP_MINE_WALL_JUTTING",
+      "TOURTRAP_QIP_MINE_WALL_LAMP",
+      "TOURTRAP_QIP_MINE_WALL_ROCKY",
+      "THMINECAVEL",
+      "THMINECAVER",
+      "TOURTRAP_QIP_MINE_WALL_GATE_SUPPORT_L",
+      "TOURTRAP_QIP_MINE_WALL_GATE_SUPPORT_R"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -27537,7 +28385,11 @@
       "SARIM_BOOKCASE2",
       "FAI_WIZTOWER_BOOKCASE",
       "FAI_WIZTOWER_BOOKCASE_WALL",
-      "BOOKCASE_MAHOGANY"
+      "BOOKCASE_MAHOGANY",
+      "FAI_FALADOR_BOOKCASE_WIDE",
+      "FAI_FALADOR_BOOKSHELF_OLD_TALL",
+      "CAPT_SIAD_BOOKCASE",
+      "ELID_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -31980,7 +32832,8 @@
     "description": "Hueycoatl Campfire Frame",
     "baseMaterial": "METALLIC_1_GLOSS",
     "objectIds": [
-      "HUEY_LOBBY_COOKINGFIRE"
+      "HUEY_LOBBY_COOKINGFIRE",
+      "CAMPFIRE_OASIS"
     ],
     "colorOverrides": [
       {

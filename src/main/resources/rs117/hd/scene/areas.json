@@ -2391,6 +2391,20 @@
     ]
   },
   {
+    "name": "UZER_RUINS_DOWNSTAIRS",
+    "regionBoxes": [
+      [ 10828, 10828, 0 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "UZER_DEMONIC_THRONEROOM",
+    "aabbs": [
+      [ 2690, 4873, 1, 2749, 4925, 2 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "RUINS_OF_UNKAH",
     "aabbs": [
       [ 3125, 2808, 3185, 2857 ],
@@ -2493,7 +2507,9 @@
   },
   {
     "name": "Genie cave",
-    "regions": [ 13457 ],
+    "aabbs": [
+      [ 3363, 9295, 3382, 9328 ]
+    ],
     "hideOtherAreas": true
   },
   {
