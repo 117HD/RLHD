@@ -1119,13 +1119,13 @@
     "overlayIds": [
       137
     ],
-    "groundMaterial": "BRICK_PATHS",
+    "groundMaterial": "FALADOR_PATHS",
     "blended": false,
     "minHue": 7,
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 13
+    "shiftLightness": 18
   },
   {
     "name": "FALADOR_EAST_BANK_PATH_FIX_1",
@@ -1133,13 +1133,13 @@
     "overlayIds": [
       137
     ],
-    "groundMaterial": "BRICK_PATHS",
+    "groundMaterial": "FALADOR_PATHS",
     "blended": false,
     "minHue": 7,
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 9
+    "shiftLightness": 14
   },
   {
     "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_1",
@@ -1178,12 +1178,12 @@
     "overlayIds": [
       119
     ],
-    "groundMaterial": "BRICK_PATHS",
+    "groundMaterial": "FALADOR_PATHS",
     "minHue": 7,
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 7
+    "shiftLightness": 12
   },
   {
     "name": "FALADOR_SOUTH_PATH_FIX_2",
@@ -1197,9 +1197,8 @@
     "shiftLightness": 2
   },
   {
-    "name": "FALADOR_PATHS - REAL",
+    "name": "FALADOR_PATHS",
     "area": "FALADOR",
-    "uvScale": 0.65,
     "overlayIds": [
       137
     ],
