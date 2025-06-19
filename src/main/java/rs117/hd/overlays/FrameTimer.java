@@ -9,6 +9,9 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.GL43.GL_DEBUG_SOURCE_APPLICATION;
+import static org.lwjgl.opengl.GL43.glPopDebugGroup;
+import static org.lwjgl.opengl.GL43.glPushDebugGroup;
 
 @Slf4j
 @Singleton
@@ -100,6 +103,9 @@ public class FrameTimer {
 	}
 
 	public void begin(Timer timer) {
+		if(timer.isGpuTimer)
+			glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
+
 		if (isInactive)
 			return;
 
@@ -115,6 +121,9 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
+		if(timer.isGpuTimer)
+			glPopDebugGroup();
+
 		if (isInactive || !activeTimers[timer.ordinal()])
 			return;
 
