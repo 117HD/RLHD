@@ -5277,14 +5277,22 @@
   },
   {
     "description": "Lighthouse Wooden Shelves",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "VIKING_SHELF_BOOKS"
+      "VIKING_SHELF_BOOKS",
+      "VIKING_SHELF_TANKARDS",
+      "VIKING_SHELF_BUCKET"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
-    "uvOrientationX": 512,
-    "retainVanillaUvs": false
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": [ "h == 6 && s == 3", "h == 5 && s == 4" ],
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      }
+    ]
   },
   {
     "description": "Lighthouse Dungeon Doors",
@@ -5475,6 +5483,161 @@
     "uvOrientation": 512,
     "uvScale": 0.7,
     "flatNormals": true
+  },
+  {
+    "description": "Relleka - Stalls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "VIKING_FUR_MARKET",
+      "VIKING_FISH_MARKET",
+      "VIKING_MARKET"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": [ "h == 6 && s == 1", "h == 3 && s == 3" ],
+        "uvType": "BOX"
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0",
+        "uvType": "BOX"
+      },
+      {
+        "baseMaterial": "GRUNGE_1",
+        "colors": [ "h == 5", "h == 7" ]
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Fish Barrel",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "VIKING_BARREL_FISH"
+    ]
+  },
+  {
+    "description": "Relleka - Sand Pit",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "VIKING_SANDPIT_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "SAND_1",
+        "colors": "h == 6",
+        "uvScale": 0.35,
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 140
+      }
+    ]
+  },
+  {
+    "description": "Misthalin Mystery Boat",
+    "objectIds": [ "QUEST_LUNAR_ROWBOAT" ],
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Small Long Boat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "DAGANNOTH_VIKING_BOAT",
+      "FREMENNIK_BOAT_STONE_TRAVEL",
+      "FREMENNIK_BOAT_UNGAEL_NO_TRAVEL",
+      "FREMENNIK_BOAT_UNGAEL_TRAVEL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 9",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 5 && s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MISC_VIKING_SHIP_FRONT_LV0",
+      "MISC_VIKING_SHIP_FRONT_LV1",
+      "MISC_VIKING_SHIPMAIN",
+      "MISC_VIKING_SHIPSIDE",
+      "MISC_VIKING_SHIPEDGE_WITH_SEAT",
+      "MISC_VIKING_SHIPEDGE_WITH_SEAT_MIRROR",
+      "MISC_VIKING_SHIPEDGE",
+      "MISC_VIKING_SHIPEDGEPIER",
+      "MISC_SHIP_GANGPLANK",
+      "MISC_VIKING_SHIPEDGESHIELD"
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat Mast",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MISC_VIKING_SHIP_MAST",
+      "MISC_VIKING_SHIP_MAST_LV2",
+      "MISC_VIKING_SHIP_MAST_LV3",
+      "MISC_VIKING_SHIP_MAST_LV3_SAIL_MIRROR",
+      "MISC_VIKING_SHIP_MAST_LV3_SAIL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 5 && s == 4",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Relleka - Large Long Boat Mast",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.65,
+    "objectIds": [
+      "FRIS_VIKING_BOAT"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BURLAP",
+        "colors": [ "h == 0", "h == 7", "h == 8" ],
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "baseMaterial": "TRANSPARENT",
+        "colors": [ "a < 255" ]
+      }
+    ]
   },
   {
     "description": "PHASMATYS_DOCK_FENCES",
@@ -6509,22 +6672,35 @@
     "uvScale": 0.4
   },
   {
-    "description": "Rope Bridge - Rope",
+    "description": "Rooftop Agility - Rope Bridge - Rope",
     "baseMaterial": "ROPE",
-    "objectIds": [
-      "SHIPROPE"
-    ],
     "uvType": "BOX",
-    "uvScale": 0.4
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHIPROPE",
+      "ROOFTOPS_TIGHTROPE_FORDIAGONAL_3",
+      "ROOFTOPS_TIGHTROPE_FORDIAGONAL_4",
+      "ROOFTOPS_TIGHTROPE_FORDIAGONAL_6"
+    ]
   },
   {
-    "description": "Rope Bridge - Anchor point",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Rooftop Agility - Rope Bridge - Anchor point",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "ROOFTOPS_SEERS_TIGHTROPE",
-      "ROOFTOPS_SEERS_TIGHTROPE_END"
+      "ROOFTOPS_SEERS_TIGHTROPE_END",
+      "ROOFTOPS_RELLEKKA_TIGHTROPE_END"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Wooden Staircase",
@@ -19493,13 +19669,21 @@
     ]
   },
   {
-    "description": "Freminnik - Game Objects - Wooden Shelf With Bucket",
+    "description": "Freminnik - Game Objects - Wooden - Plank Tables",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "VIKING_SHELF_BUCKET"
+      "VIKING_BAR_NO_PUMPS",
+      "VIKING_BAR"
     ],
     "uvType": "BOX",
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "colors": "h < 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Freminnik - Decorations - Metal Gutter",
@@ -19532,6 +19716,7 @@
       "VIKING_PIKE_DEFENCE_BEND_MIRROR"
     ],
     "uvType": "BOX",
+    "uvScale": 0.5,
     "uvOrientation": 256
   },
   {
@@ -22736,7 +22921,8 @@
       "FUR_A",
       "FUR_B",
       "FUR_C",
-      "FUR_D"
+      "FUR_D",
+      "VIKING_FUR"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.4
