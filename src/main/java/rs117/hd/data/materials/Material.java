@@ -519,6 +519,8 @@ public enum Material {
 	),
 	CARPET_LIGHT(CARPET, p -> p
 		.setBrightness(1.45f)),
+	CARPET_DARK(CARPET, p -> p
+		.setBrightness(0.45f)),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
 	FALADOR_PATH_BRICK(p -> p
