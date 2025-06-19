@@ -1139,7 +1139,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 18
+    "shiftLightness": 20
   },
   {
     "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_1",

@@ -521,7 +521,10 @@ public enum Material {
 		.setBrightness(1.45f)),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
+	FALADOR_PATH_BRICK_D,
 	FALADOR_PATH_BRICK(p -> p
+		.setDisplacementMap(FALADOR_PATH_BRICK_D)
+		.setDisplacementScale(.05f)
 		.setNormalMap(FALADOR_PATH_BRICK_N)
 		.setSpecular(0.3f, 30)
 	),
