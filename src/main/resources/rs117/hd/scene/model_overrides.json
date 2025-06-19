@@ -16170,7 +16170,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "a == 255" ],
+        "colors": "a == 255",
         "baseMaterial": "ROCK_3_SMOOTH",
         "uvType": "BOX",
         "uvOrientation": 680

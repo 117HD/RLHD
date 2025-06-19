@@ -2392,10 +2392,8 @@
   },
   {
     "name": "UZER_DEMONIC_THRONEROOM",
-    "hideOtherAreas": true,
-    "aabbs": [
-      [ 2687, 4864, 0, 2751, 4927, 2 ]
-    ]
+    "regions": [ 10828 ],
+    "hideOtherAreas": true
   },
   {
     "name": "RUINS_OF_UNKAH",
@@ -2500,7 +2498,9 @@
   },
   {
     "name": "Genie cave",
-    "aabbs": [ [ 3363, 9295, 3382, 9328 ] ],
+    "aabbs": [
+      [ 3363, 9295, 3382, 9328 ]
+    ],
     "hideOtherAreas": true
   },
   {
