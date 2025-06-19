@@ -2850,13 +2850,8 @@
         "uvType": "BOX"
       },
       {
-        "description": "Green glass",
-        "colors": "h > 11",
-        "baseMaterial": "NONE"
-      },
-      {
-        "description": "Gold glass",
-        "colors": "h == 8 && s == 7",
+        "description": "Glass",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ],
@@ -2878,7 +2873,7 @@
       },
       {
         "description": "Green glass",
-        "colors": "h > 11",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ],
@@ -2899,8 +2894,8 @@
         "uvType": "BOX"
       },
       {
-        "description": "Gold glass",
-        "colors": "h == 7 && s > 3 ",
+        "description": "Glass",
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ],
@@ -26414,9 +26409,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 21549, 21594, 21630 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -26437,9 +26431,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ "h == 42" ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -26460,9 +26453,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ "h == 42" ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -26475,9 +26467,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 21549, 21594, 21630 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -26498,9 +26489,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43011, 43054, 43102 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -26513,9 +26503,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43011, 43054, 43121 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -26551,9 +26540,8 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 21535, 21576, 21630 ],
-        "baseMaterial": "NONE",
-        "uvType": "WORLD_XY"
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -26574,7 +26562,7 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ 43025, 43068, 43116 ],
+        "colors": "a < 255",
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -26589,7 +26577,7 @@
     "uvOrientationZ": 512,
     "colorOverrides": [
       {
-        "colors": [ "h == 21" ],
+        "colors": "a < 255",
         "baseMaterial": "NONE",
         "uvType": "WORLD_XY"
       }
@@ -27293,7 +27281,7 @@
       },
       {
         "description": "Glass",
-        "colors": ["h == 8 && s == 5 && l < 5"],
+        "colors": "a < 255",
         "baseMaterial": "GRAY_75"
       }
     ]
@@ -27359,7 +27347,7 @@
       },
       {
         "description": "Glass",
-        "colors": "h == 8 && s == 5 && l < 5",
+        "colors": "a < 255",
         "baseMaterial": "GRAY_75"
       }
     ]
