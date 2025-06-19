@@ -22,7 +22,7 @@ public enum Timer {
 	REPLACE_FISHING_SPOTS,
 	MAP_UI_BUFFER(false, "Map UI Buffer"),
 	COPY_UI(false, "Copy UI"),
-	RENDER_FRAME(true),
+	RENDER_FRAME(true, false),
 	UPLOAD_GEOMETRY(true),
 	UPLOAD_UI(true, "Upload UI"),
 	COMPUTE(true),
@@ -35,20 +35,36 @@ public enum Timer {
 
 	public final boolean isGpuTimer;
 	public final String name;
+	public final boolean gpuDebugGroup;
 
 	Timer() {
 		isGpuTimer = false;
+		gpuDebugGroup = false;
 		name = enumToName(name());
 	}
 
 	Timer(boolean isGpuTimer) {
 		this.isGpuTimer = isGpuTimer;
 		name = enumToName(name());
+		gpuDebugGroup = true;
+	}
+
+	Timer(boolean isGpuTimer, @Nonnull String name) {
+		this.isGpuTimer = isGpuTimer;
+		this.name = name;
+		gpuDebugGroup = true;
+	}
+
+	Timer(boolean isGpuTimer, boolean gpuDebugGroup) {
+		this.isGpuTimer = isGpuTimer;
+		this.gpuDebugGroup = gpuDebugGroup;
+		name = enumToName(name());
 	}
 
 	Timer(@Nonnull String name) {
 		isGpuTimer = false;
 		this.name = name;
+		gpuDebugGroup = false;
 	}
 
 	private static String enumToName(String name) {

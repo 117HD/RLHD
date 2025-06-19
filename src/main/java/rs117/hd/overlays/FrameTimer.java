@@ -2,6 +2,7 @@ package rs117.hd.overlays;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.Stack;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +21,14 @@ public class FrameTimer {
 	@Inject
 	private HdPlugin plugin;
 
-	private final int numTimers = Timer.values().length;
-	private final int numGpuTimers = (int) Arrays.stream(Timer.values()).filter(t -> t.isGpuTimer).count();
+	private final Timer[] timers = Timer.values();
+	private final int numTimers = timers.length;
+	private final int numGpuTimers = (int) Arrays.stream(timers).filter(t -> t.isGpuTimer).count();
 	private final boolean[] activeTimers = new boolean[numTimers];
 	private final long[] timings = new long[numTimers];
 	private final int[] gpuQueries = new int[numTimers * 2];
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
+	private final Stack<Integer> glDebugGroupStack = new Stack<Integer>();
 
 	private boolean isInactive = true;
 
@@ -37,7 +40,7 @@ public class FrameTimer {
 			int[] queryNames = new int[numGpuTimers * 2];
 			glGenQueries(queryNames);
 			int queryIndex = 0;
-			for (var timer : Timer.values())
+			for (var timer : timers)
 				if (timer.isGpuTimer)
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
@@ -101,10 +104,9 @@ public class FrameTimer {
 	}
 
 	public void begin(Timer timer) {
-		if (log.isDebugEnabled() && timer.isGpuTimer && plugin.glCaps.OpenGL43) {
-			log.debug("Push {}", timer, new Throwable());
-			// TODO: Ensure we always pop as many as we push, e.g. by cleaning up in `endFrameAndReset`
+		if (log.isDebugEnabled() && timer.isGpuTimer && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
 			glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
+			glDebugGroupStack.push(timer.ordinal());
 			plugin.checkGLErrors();
 		}
 
@@ -123,11 +125,13 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
-		if (log.isDebugEnabled() && timer.isGpuTimer && plugin.glCaps.OpenGL43) {
-			log.debug("Pop {}", timer, new Throwable());
-			// TODO: Ensure we never pop if we haven't pushed
-			// TODO: Track the stack of debug groups and warn when things aren't popped in the correct order
-			glPopDebugGroup();
+		if (log.isDebugEnabled() && timer.isGpuTimer && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
+			if(!glDebugGroupStack.isEmpty() && glDebugGroupStack.peek() == timer.ordinal()) {
+				glPopDebugGroup();
+				glDebugGroupStack.pop();
+			} else {
+				log.warn("GPU Timer {} was popped out of order", timer.name);
+			}
 			plugin.checkGLErrors();
 		}
 
@@ -151,13 +155,20 @@ public class FrameTimer {
 	}
 
 	public void endFrameAndReset() {
+		if (log.isDebugEnabled() &&  plugin.glCaps.OpenGL43) {
+			for (int i = 0; i < glDebugGroupStack.size(); i++) {
+				log.warn("GPU Group {} was never popped", timers[glDebugGroupStack.pop()].name);
+				glPopDebugGroup();
+			}
+		}
+
 		if (isInactive)
 			return;
 
 		long frameEnd = System.nanoTime();
 
 		int[] available = { 0 };
-		for (var timer : Timer.values()) {
+		for (var timer : timers) {
 			int i = timer.ordinal();
 			if (timer.isGpuTimer) {
 				if (!activeTimers[i])

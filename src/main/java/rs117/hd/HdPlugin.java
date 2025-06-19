@@ -592,10 +592,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0) {
 					debugCallback = GLUtil.setupDebugMessageCallback();
 					if (debugCallback != null) {
-						// Hide our own debug push groups
+						// Hide our own debug push & pop groups
 						glDebugMessageControl(
 							GL_DEBUG_SOURCE_APPLICATION,
 							GL_DEBUG_TYPE_PUSH_GROUP,
+							GL_DEBUG_SEVERITY_NOTIFICATION,
+							(int[]) null,
+							false
+						);
+
+						glDebugMessageControl(
+							GL_DEBUG_SOURCE_APPLICATION,
+							GL_DEBUG_TYPE_POP_GROUP,
 							GL_DEBUG_SEVERITY_NOTIFICATION,
 							(int[]) null,
 							false
