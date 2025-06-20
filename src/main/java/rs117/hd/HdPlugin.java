@@ -92,6 +92,7 @@ import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.GlobalBuffer;
+import rs117.hd.opengl.UIBuffer;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -165,6 +166,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
 	public static final int UNIFORM_BLOCK_GLOBAL = 4;
+	public static final int UNIFORM_BLOCK_UI = 5;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -366,6 +368,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ByteBuffer uniformBufferLights;
 
 	private final GlobalBuffer hUniformGlobalBuffer = new GlobalBuffer();
+	private final UIBuffer hUniformUIBuffer = new UIBuffer();
 
 	@Getter
 	@Nullable
@@ -388,9 +391,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportWidth;
 	private int viewportHeight;
 
-	// Uniforms
-	private int uniUiColorBlindnessIntensity;
-
 	// Shadow program uniforms
 	private int uniShadowLightProjectionMatrix;
 	private int uniShadowElapsedTime;
@@ -398,18 +398,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int uniShadowMap;
 	private int uniUiTexture;
-	private int uniTexSourceDimensions;
-	private int uniTexTargetDimensions;
-	private int uniUiAlphaOverlay;
 	private int uniTextureArray;
-	private int uniUiGammaCorrection;
-	private int uniUiGammaCalibration;
-	private int uniUiGammaCalibrationTimer;
+	private int uniUiBlockUi;
 
-	private int uniBlockMaterials;
-	private int uniBlockWaterTypes;
-	private int uniBlockPointLights;
-	private int uniBlockGlobals;
+	private int uniSceneBlockMaterials;
+	private int uniSceneBlockWaterTypes;
+	private int uniSceneBlockPointLights;
+	private int uniSceneBlockGlobals;
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -923,18 +918,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
-		uniTexTargetDimensions = glGetUniformLocation(glUiProgram, "targetDimensions");
-		uniTexSourceDimensions = glGetUniformLocation(glUiProgram, "sourceDimensions");
-		uniUiColorBlindnessIntensity = glGetUniformLocation(glUiProgram, "colorBlindnessIntensity");
-		uniUiAlphaOverlay = glGetUniformLocation(glUiProgram, "alphaOverlay");
-		uniUiGammaCorrection = glGetUniformLocation(glUiProgram, "gammaCorrection");
-		uniUiGammaCalibration = glGetUniformLocation(glUiProgram, "showGammaCalibration");
-		uniUiGammaCalibrationTimer = glGetUniformLocation(glUiProgram, "gammaCalibrationTimer");
+		uniUiBlockUi = glGetUniformBlockIndex(glUiProgram, "UIUniforms");
 
-		uniBlockMaterials = glGetUniformBlockIndex(glSceneProgram, "MaterialUniforms");
-		uniBlockWaterTypes = glGetUniformBlockIndex(glSceneProgram, "WaterTypeUniforms");
-		uniBlockPointLights = glGetUniformBlockIndex(glSceneProgram, "PointLightUniforms");
-		uniBlockGlobals = glGetUniformBlockIndex(glSceneProgram, "GlobalUniforms");
+		uniSceneBlockMaterials = glGetUniformBlockIndex(glSceneProgram, "MaterialUniforms");
+		uniSceneBlockWaterTypes = glGetUniformBlockIndex(glSceneProgram, "WaterTypeUniforms");
+		uniSceneBlockPointLights = glGetUniformBlockIndex(glSceneProgram, "PointLightUniforms");
+		uniSceneBlockGlobals = glGetUniformBlockIndex(glSceneProgram, "GlobalUniforms");
 
 		if (computeMode == ComputeMode.OPENGL) {
 			for (int sortingProgram : glModelSortingComputePrograms) {
@@ -1159,6 +1148,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		initGlBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		hUniformGlobalBuffer.Initialise(UNIFORM_BLOCK_GLOBAL);
+		hUniformUIBuffer.Initialise(UNIFORM_BLOCK_UI);
 	}
 
 	private void initGlBuffer(GLBuffer glBuffer, int target, int glUsage, int clUsage) {
@@ -1186,6 +1176,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		destroyGlBuffer(hModelPassthroughBuffer);
 
 		hUniformGlobalBuffer.Destroy();
+		hUniformUIBuffer.Destroy();
 
 		uniformBufferCamera = null;
 		uniformBufferLights = null;
@@ -2143,7 +2134,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
-			hUniformGlobalBuffer.LightDir.Set(new float[] { -lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10] });
+			hUniformGlobalBuffer.LightDir.Set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
@@ -2181,10 +2172,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			hUniformGlobalBuffer.UploadUniforms();
 			// Bind uniforms
-			glUniformBlockBinding(glSceneProgram, uniBlockMaterials, UNIFORM_BLOCK_MATERIALS);
-			glUniformBlockBinding(glSceneProgram, uniBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
-			glUniformBlockBinding(glSceneProgram, uniBlockPointLights, UNIFORM_BLOCK_LIGHTS);
-			glUniformBlockBinding(glSceneProgram, uniBlockGlobals, UNIFORM_BLOCK_GLOBAL);
+			glUniformBlockBinding(glSceneProgram, uniSceneBlockMaterials, UNIFORM_BLOCK_MATERIALS);
+			glUniformBlockBinding(glSceneProgram, uniSceneBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
+			glUniformBlockBinding(glSceneProgram, uniSceneBlockPointLights, UNIFORM_BLOCK_LIGHTS);
+			glUniformBlockBinding(glSceneProgram, uniSceneBlockGlobals, UNIFORM_BLOCK_GLOBAL);
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
 			glToggle(GL_MULTISAMPLE, numSamples > 1);
@@ -2326,23 +2317,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Use the texture bound in the first pass
 		glUseProgram(glUiProgram);
-		glUniform2i(uniTexSourceDimensions, canvasWidth, canvasHeight);
-		glUniform1f(uniUiColorBlindnessIntensity, config.colorBlindnessIntensity() / 100f);
-		glUniform4fv(uniUiAlphaOverlay, ColorUtils.srgba(overlayColor));
-		glUniform1f(uniUiGammaCorrection, 100f / config.brightness());
+		hUniformUIBuffer.SourceDimensions.Set(canvasWidth, canvasHeight);
+		hUniformUIBuffer.ColorBlindnessIntensity.Set(config.colorBlindnessIntensity() / 100f);
+
+		hUniformUIBuffer.AlphaOverlay.Set(ColorUtils.srgba(overlayColor));
+		hUniformUIBuffer.GammaCorrection.Set(100f / config.brightness());
 		final int gammaCalibrationTimeout = 3000;
 		float gammaCalibrationTimer = System.currentTimeMillis() - brightnessChangedAt;
-		glUniform1i(uniUiGammaCalibration, gammaCalibrationTimer < gammaCalibrationTimeout ? 1 : 0);
-		glUniform1f(uniUiGammaCalibrationTimer, 1 - gammaCalibrationTimer / gammaCalibrationTimeout);
+		hUniformUIBuffer.ShowGammaCalibration.Set(gammaCalibrationTimer < gammaCalibrationTimeout ? 1 : 0);
+		hUniformUIBuffer.GammaCalibrationTimer.Set(1 - gammaCalibrationTimer / gammaCalibrationTimeout);
 
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
 			glDpiAwareViewport(0, 0, dim.width, dim.height);
-			glUniform2i(uniTexTargetDimensions, dim.width, dim.height);
+			hUniformUIBuffer.TargetDimensions.Set(dim.width, dim.height);
 		} else {
 			glDpiAwareViewport(0, 0, canvasWidth, canvasHeight);
-			glUniform2i(uniTexTargetDimensions, canvasWidth, canvasHeight);
+			hUniformUIBuffer.TargetDimensions.Set(canvasWidth, canvasHeight);
 		}
+
+		hUniformUIBuffer.UploadUniforms();
+
+		glUniformBlockBinding(glSceneProgram, uniUiBlockUi, UNIFORM_BLOCK_UI);
 
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.

@@ -26,17 +26,35 @@ public abstract class UniformBuffer {
 
 	private static UBOWriteFunction WriteInt = (Buffer, Value) -> Buffer.putInt((int)Value);
 	private static UBOWriteFunction WriteIntArray = (Buffer, Value) -> {
-		int[] Array = (int[])Value;
-		for (int val : Array) {
-			Buffer.putInt(val);
+		if(Value != null) {
+			if(Value.getClass() == Integer[].class) {
+				Integer[] Array = (Integer[])Value;
+				for (Integer val : Array) {
+					Buffer.putInt(val);
+				}
+			} else {
+				int[] Array = (int[])Value;
+				for (int val : Array) {
+					Buffer.putInt(val);
+				}
+			}
 		}
 	};
 
 	private static UBOWriteFunction WriteFloat = (Buffer, Value) -> Buffer.putFloat((float)Value);
 	private static UBOWriteFunction WriteFloatArray = (Buffer, Value) -> {
-		float[] Array = (float[])Value;
-		for (float val : Array) {
-			Buffer.putFloat(val);
+		if(Value != null) {
+			if(Value.getClass() == Float[].class) {
+				Float[] Array = (Float[])Value;
+				for (Float val : Array) {
+					Buffer.putFloat(val);
+				}
+			} else {
+				float[] Array = (float[])Value;
+				for (float val : Array) {
+					Buffer.putFloat(val);
+				}
+			}
 		}
 	};
 
@@ -76,6 +94,13 @@ public abstract class UniformBuffer {
 		private UBOEntry(UBOEntryType Type) {
 			this.Type = Type;
 			Dirty = true;
+		}
+
+		public <K> void Set(K... Values) {
+			if(Value != Values) {
+				Value = (T) Values;
+				Dirty = true;
+			}
 		}
 
 		public void Set(T NewValue) {
@@ -167,9 +192,10 @@ public abstract class UniformBuffer {
 					CPUBuffer.position(CPUBuffer.position() + Entry.Type.Size);
 				}
 			}catch (Exception Ex) {
-				// TODO Print useful info here since we have the prop name
+				Ex.printStackTrace();
 			}
 		}
+		CPUBuffer.position(CPUBuffer.position() + (Size - CPUBuffer.position()));
 		CPUBuffer.flip();
 
 		if(NeedsUpdating) {
