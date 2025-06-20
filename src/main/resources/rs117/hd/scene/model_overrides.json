@@ -5723,31 +5723,6 @@
     ]
   },
   {
-    "description": "Jatizso - Rocks",
-    "baseMaterial": "ROCK_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 256,
-    "objectIds": [
-      "FRISD_IZSO_ROCKS",
-      "FRIZD_IZSO_ROCKS2",
-      "FRISD_OREMERCHANT_ORESTONES"
-    ]
-  },
-  {
-    "description": "Jatizso - Stone Chips",
-    "baseMaterial": "STONE",
-    "uvType": "BOX",
-    "uvScale": 0.25,
-    "objectIds": [
-      "FRISD_DUGUPSOIL1_IZSO",
-      "FRISD_DUGUPSOIL2_IZSO",
-      "FRISD_DUGUPSOIL5_IZSO",
-      "FRISD_DUGUPSOIL4_IZSO",
-      "FRISD_DUGUPSOIL3_IZSO"
-    ]
-  },
-  {
     "description": "Jatizso - Bridges",
     "baseMaterial": "METALLIC_1_VERY_LIGHT",
     "uvType": "BOX",
@@ -5926,6 +5901,74 @@
         "uvScale": 0.4,
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Rocks - Tiny",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "FRIS_ROCK_FLOOR_ICE_01",
+      "FRIS_ROCK_FLOOR_ICE_02",
+      "FRIS_ROCK_FLOOR_ICE_03",
+      "FRIS_ROCK_FLOOR_ICE_04",
+      "FRIS_ROCK_FLOOR_ICE_05",
+      "FRIS_ROCK_FLOOR_ICE_06",
+      "FRIS_ROCK_FLOOR_03",
+      "FRIS_ROCK_FLOOR_02",
+      "FRIS_ROCK_FLOOR_05",
+      "FRIS_ROCK_FLOOR_04",
+      "FRIS_ROCK_FLOOR_06",
+      "FRISB_DUGUPSOIL_1",
+      "FRISB_DUGUPSOIL_3",
+      "FRISB_DUGUPSOIL_2",
+      "FRISD_DUGUPSOIL1_IZSO",
+      "FRISD_DUGUPSOIL2_IZSO",
+      "FRISD_DUGUPSOIL5_IZSO",
+      "FRISD_DUGUPSOIL4_IZSO",
+      "FRISD_DUGUPSOIL3_IZSO"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Snowy - Rocks - Large",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "FRIS_ROCKS_BIG02",
+      "FRIS_ROCKS_BIG03"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Snowy - Cave Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "FRIS_TROLL_TRAPDOOR_R2",
+      "FRIS_TROLL_TRAPDOOR_NURSE",
+      "FRIS_TROLL_TRAPDOOR_FINAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "SNOW_4"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Rocks",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FRISD_IZSO_ROCKS",
+      "FRIZD_IZSO_ROCKS2",
+      "FRISD_OREMERCHANT_ORESTONES"
     ]
   },
   {
