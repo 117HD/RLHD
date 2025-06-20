@@ -5914,6 +5914,44 @@
     ]
   },
   {
+    "description": "Neitiznot - Wooden Walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_PALISADE_OUTER_WALL",
+      "FRIS_PALISADE_DOOR_L",
+      "FRIS_PALISADE_DOOR_R",
+      "FRIS_PALISADE_OUTER_WALL_TOP_ALT",
+      "FRIS_PALISADE_OUTER_WALL_TOP",
+      "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL",
+      "FRIS_PALISADE_OUTER_WALL_MID",
+      "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL_MIRROR"
+    ]
+  },
+  {
+    "description": "Neitiznot - Wooden Walkway",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_PALISADE_WALKWAY_1",
+      "FRIS_PALISADE_WALKWAY_2",
+      "FRIS_PALISADE_WALKWAY_CORNER",
+      "FRIS_PALISADE_WALKWAY"
+    ]
+  },  {
+  "description": "Neitiznot - Wooden Corner",
+  "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+  "uvScale": 0.7,
+  "uvType": "BOX",
+  "uvOrientation": 512,
+  "objectIds": [
+    "FRIS_PALISADE_WALKWAY_5"
+  ]
+},
+  {
     "description": "Fremennik Isles - Rocks - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
