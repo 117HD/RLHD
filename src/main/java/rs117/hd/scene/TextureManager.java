@@ -24,20 +24,14 @@
  */
 package rs117.hd.scene;
 
-import com.google.gson.Gson;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.awt.image.RasterFormatException;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -55,8 +49,9 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
-import rs117.hd.scene.environments.SkyboxConfig;
+import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ImageUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -64,8 +59,8 @@ import static org.lwjgl.opengl.GL12C.glTexSubImage3D;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_SKYBOX;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
+import static rs117.hd.scene.skybox.SkyboxManager.SKYBOX_PATH;
 import static rs117.hd.utils.HDUtils.HALF_PI;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -73,13 +68,9 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
-	private static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault(
+	public static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault(
 		"rlhd.texture-path",
 		() -> path(TextureManager.class, "textures")
-	);
-	private static final ResourcePath SKYBOX_PATH = Props.getPathOrDefault(
-		"rlhd.skybox-path",
-		() -> path(LightManager.class, "skybox.json")
 	);
 
 	@Inject
@@ -100,9 +91,11 @@ public class TextureManager {
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
+	@Inject
+	private SkyboxManager skyboxManager;
+
 	private int textureArray;
 	private int textureSize;
-	private int textureSkybox;
 
 	// Temporary variables for texture loading and generating material uniforms
 	private IntBuffer pixelBuffer;
@@ -112,9 +105,7 @@ public class TextureManager {
 	private ArrayList<MaterialEntry> materialUniformEntries;
 	private int[] materialOrdinalToTextureLayer;
 	private int[] vanillaTextureIndexToTextureLayer;
-	private ScheduledFuture<?> pendingReload;
-	private SkyboxConfig skyboxConfig;
-	private String[] loadedSkyboxes;
+	public ScheduledFuture<?> pendingReload;
 
 	public void startUp() {
 		clientThread.invoke(this::ensureMaterialsAreLoaded);
@@ -127,58 +118,25 @@ public class TextureManager {
 				pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
 		});
 
-		SKYBOX_PATH.watch((path, first) -> loadSkyboxConfig(plugin.getGson(), path, first));
+		SKYBOX_PATH.watch((path, first) -> {
+			skyboxManager.loadSkyboxConfig(plugin.getGson(), path);
+			if(first) {
+				clientThread.invoke(skyboxManager::ensureSkyboxesAreLoaded);
+			}else if(pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone()) {
+				pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
+			}
+		});
+
 	}
 
 	public void shutDown() {
 		clientThread.invoke(this::freeTextures);
 	}
 
-	private void loadSkyboxConfig(Gson gson, ResourcePath path, boolean first) {
-		try {
-			skyboxConfig = path.loadJson(gson, SkyboxConfig.class);
-			if (skyboxConfig == null) {
-				log.warn("Skipping empty skybox.json");
-				return;
-			}
-		} catch (IOException ex) {
-			log.error("Failed to load skybox config", ex);
-			return;
-		}
-
-		if(first) {
-			clientThread.invoke(this::ensureSkyboxesAreLoaded);
-		}else if(pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone()) {
-			pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
-		}
-	}
-
-	public int getSkyboxIndex(String skyboxId) {
-		if(loadedSkyboxes != null && skyboxId != null && !skyboxId.isEmpty()) {
-			for(int i = 0; i < loadedSkyboxes.length; i++) {
-				if(Objects.equals(loadedSkyboxes[i], skyboxId)) {
-					return i;
-				}
-			}
-		}
-		return -1;
-	}
-
-	public SkyboxConfig.SkyboxPostProcessingConfig getSkyboxPostPro(int index) {
-		if(skyboxConfig != null && index >= 0 && index < skyboxConfig.skyboxes.size()) {
-			return skyboxConfig.skyboxes.get(index).getPostProcessing();
-		}
-		return null;
-	}
-
-	public int getSkyboxCount() {
-		return skyboxConfig != null ? skyboxConfig.skyboxes.size() : 0;
-	}
-
 	public void reloadTextures() {
 		clientThread.invoke(() -> {
 			freeTextures();
-			ensureSkyboxesAreLoaded();
+			skyboxManager.ensureSkyboxesAreLoaded();
 			ensureMaterialsAreLoaded();
 			modelOverrideManager.reload();
 		});
@@ -187,10 +145,9 @@ public class TextureManager {
 	private void freeTextures() {
 		if (textureArray != 0)
 			glDeleteTextures(textureArray);
-		if(textureSkybox != 0)
-			glDeleteTextures(textureSkybox);
 		textureArray = 0;
-		textureSkybox = 0;
+
+		skyboxManager.freeTextures();
 	}
 
 	@RequiredArgsConstructor
@@ -325,7 +282,7 @@ public class TextureManager {
 			BufferedImage image = null;
 			// Check if HD provides a texture for the material
 			if (material != Material.VANILLA) {
-				image = loadTextureImage(material.name().toLowerCase());
+				image = ImageUtils.loadTextureImage(TEXTURE_PATH,material.name().toLowerCase());
 				if (image == null && material.vanillaTextureIndex == -1) {
 					log.warn("No texture found for material: {}", material);
 					continue;
@@ -405,163 +362,8 @@ public class TextureManager {
 		glActiveTexture(TEXTURE_UNIT_UI);
 	}
 
-	private void ensureSkyboxesAreLoaded() {
-		if (skyboxConfig == null || skyboxConfig.skyboxes.isEmpty()) {
-			return;
-		}
-
-		if(!plugin.glCaps.OpenGL43){
-			log.debug("Skipping loading sky boxes due to lack of OpenGL43");
-			return;
-		}
-
-		plugin.updateSkyboxVerticies(skyboxConfig.vertices);
-
-		if (textureSkybox != 0) {
-			glDeleteTextures(textureSkybox);
-		}
-
-		textureSkybox = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SKYBOX);
-		glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, textureSkybox);
-		glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_SRGB8_ALPHA8,
-			skyboxConfig.resolution, skyboxConfig.resolution, skyboxConfig.skyboxes.size() * 6);
-
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-		pixelBuffer = BufferUtils.createIntBuffer(skyboxConfig.resolution * skyboxConfig.resolution);
-
-		log.debug("Skybox resolution: {}", skyboxConfig.resolution);
-
-		loadedSkyboxes = new String[skyboxConfig.skyboxes.size()];
-		Map<String, Integer> uploadedDirs = new HashMap<>();
-
-		int validSkyboxCount = 0;
-		String[] faceFileNames = {"px", "nx", "py", "ny", "pz", "nz"};
-
-		for (SkyboxConfig.SkyboxEntry skybox : skyboxConfig.skyboxes) {
-			String dir = skybox.getDir();
-
-			if (uploadedDirs.containsKey(dir)) {
-				log.debug("Skybox: {} shares textures with previously uploaded entry", dir);
-				loadedSkyboxes[validSkyboxCount++] = dir;
-				continue;
-			}
-
-			BufferedImage[] faceImages = new BufferedImage[6];
-			StringBuilder loadedFaces = new StringBuilder();
-
-			BufferedImage atlasImage = loadTextureImage("skybox/" + dir + "/skybox");
-			boolean usedAtlas = false;
-
-			if (atlasImage != null) {
-				int faceSize = 512;
-				if (atlasImage.getWidth() >= faceSize * 4 && atlasImage.getHeight() >= faceSize * 2) {
-					try {
-						faceImages[0] = atlasImage.getSubimage(0, 0, faceSize, faceSize); // px
-						faceImages[5] = atlasImage.getSubimage(faceSize, 0, faceSize, faceSize); // nz
-						faceImages[1] = atlasImage.getSubimage(2 * faceSize, 0, faceSize, faceSize); // nx
-						faceImages[4] = atlasImage.getSubimage(3 * faceSize, 0, faceSize, faceSize); // pz
-						faceImages[2] = atlasImage.getSubimage(0, faceSize, faceSize, faceSize); // py
-						faceImages[3] = atlasImage.getSubimage(faceSize, faceSize, faceSize, faceSize); // ny
-						usedAtlas = true;
-					} catch (RasterFormatException e) {
-						log.warn("Invalid atlas format for skybox: {}", dir);
-					}
-				} else {
-					log.warn("Unexpected skybox.png dimensions for skybox: {} ({}x{})", dir, atlasImage.getWidth(), atlasImage.getHeight());
-				}
-			}
-
-			if (!usedAtlas) {
-				for (int faceIdx = 0; faceIdx < 6; faceIdx++) {
-					faceImages[faceIdx] = loadTextureImage("skybox/" + dir + "/" + faceFileNames[faceIdx]);
-				}
-			}
-
-			for (int faceIdx = 0; faceIdx < 6; faceIdx++) {
-				BufferedImage faceImage = faceImages[faceIdx];
-				if (faceImage != null) {
-					if (loadedFaces.length() > 0) loadedFaces.append(", ");
-					loadedFaces.append(faceFileNames[faceIdx]);
-
-					BufferedImage scaled = scaleTexture(faceImage, skyboxConfig.resolution, false, false);
-					int[] pixels = ((DataBufferInt) scaled.getRaster().getDataBuffer()).getData();
-					pixelBuffer.put(pixels).flip();
-
-					glTexSubImage3D(
-						GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0,
-						validSkyboxCount * 6 + faceIdx,
-						skyboxConfig.resolution, skyboxConfig.resolution, 1,
-						GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer
-					);
-
-				}
-			}
-
-			if (loadedFaces.length() == 0) {
-				log.debug("Skybox: {} failed to load any face texture", dir);
-			} else {
-				log.debug("Skybox: {} loaded faces [{}]", dir, loadedFaces);
-				uploadedDirs.put(dir, validSkyboxCount);
-				loadedSkyboxes[validSkyboxCount++] = dir;
-			}
-		}
-
-		log.debug("Loaded {} Skybox's", validSkyboxCount);
-		plugin.checkGLErrors();
-
-		pixelBuffer = null;
-		scaledImage = null;
-	}
-
-	private BufferedImage loadTextureImage(String textureName) {
-		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
-			ResourcePath path = TEXTURE_PATH.resolve(textureName + "." + ext);
-			try {
-				return path.loadImage();
-			} catch (Exception ex) {
-				log.trace("Unable to load texture: {}", path, ex);
-			}
-		}
-
-		return null;
-	}
-
-	private BufferedImage scaleTexture(BufferedImage image, int scaledSize, boolean flipU, boolean flipV) {
-		if(scaledImage == null || scaledImage.getWidth() != scaledSize || scaledImage.getHeight() != scaledSize){
-			scaledImage = new BufferedImage(scaledSize, scaledSize, BufferedImage.TYPE_INT_ARGB);
-		}
-
-		if(!flipU && !flipV && image.getWidth() == scaledSize && image.getHeight() == scaledSize) {
-			return image;
-		}
-
-		// TODO: scale and transform on the GPU for better performance
-		AffineTransform t = new AffineTransform();
-		if (image != vanillaImage) {
-			if(flipU) {
-				t.translate(scaledSize, 0);
-				t.scale(-1, 1);
-			}
-			if(flipV) {
-				t.translate(0, scaledSize);
-				t.scale(1, -1);
-			}
-		}
-		t.scale((double) scaledSize / image.getWidth(), (double) scaledSize / image.getHeight());
-		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
-		scaleOp.filter(image, scaledImage);
-
-		return scaledImage;
-	}
-
 	private void uploadTexture(TextureLayer layer, BufferedImage image) {
-		scaleTexture(image, textureSize, true, false);
+		ImageUtils.scaleTexture(scaledImage,vanillaImage,image, textureSize, true, false);
 
 		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
 		pixelBuffer.put(pixels).flip();

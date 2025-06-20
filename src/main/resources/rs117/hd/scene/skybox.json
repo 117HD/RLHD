@@ -41,7 +41,7 @@
   "skyboxes": [
     {
       "name": "rs3_greenlands",
-      "dir:": "rs3_greenlands"
+      "dir": "rs3_greenlands"
     },
     {
       "name": "rs3_magicblue",
@@ -51,10 +51,11 @@
       "name": "rs3_magicblue_post",
       "dir": "rs3_magicblue",
       "postProcessing": {
-        "brightness": 0.1,
-        "contrast": 1.1,
+        "hue": 180,
         "saturation": 1.2,
-        "hueShift": 180
+        "lightness": 0.1,
+
+        "contrast": 1.1
       }
     },
     {

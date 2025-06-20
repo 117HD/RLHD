@@ -113,6 +113,7 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
@@ -225,6 +226,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private GamevalManager gamevalManager;
+
+	@Inject
+	private SkyboxManager skyboxManager;
 
 	@Inject
 	private AreaManager areaManager;
@@ -1220,6 +1224,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void updateSkyboxVerticies(float[] verticies) {
+
 		if(vaoSkyboxHandle == 0) {
 			vaoSkyboxHandle = glGenVertexArrays();
 		}
@@ -2165,8 +2170,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glClearDepthf(0);
 
 			boolean shouldDrawSkybox = vaoSkyboxHandle != 0
-									   && textureManager.getSkyboxCount() > 0
+									   && skyboxManager.getSkyboxCount() > 0
 									   && config.renderSkybox();
+
 			shouldDrawSkybox &= environmentManager.updateSkyboxUniformBuffer(hUniformBufferSkybox.glBufferId);
 
 			if(shouldDrawSkybox) {

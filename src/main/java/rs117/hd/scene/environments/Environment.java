@@ -59,7 +59,7 @@ public class Environment {
 	public int groundFogStart = -200;
 	public int groundFogEnd = -500;
 	public float groundFogOpacity = 0;
-	public String skyboxId;
+	public String skybox;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {
