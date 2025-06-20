@@ -769,6 +769,13 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "FREMENNIK_ISLES_MIDDLE",
+    "ambientColor": "#97baff",
+    "directionalStrength": 4,
+    "sunAngles": [ 52, 235 ],
+    "fogDepth": 25
+  },
+  {
     "area": "NEITIZNOT",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
@@ -789,11 +796,13 @@
   {
     "area": "FREMENNIK_ISLES_FAR_NORTH",
     "ambientColor": "#6fb0ff",
-    "ambientStrength": 0.75,
+    "ambientStrength": 1,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 1,
+    "directionalStrength": 1.5,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 60,
+    "groundFogEnd": -800,
+    "groundFogOpacity": 0.3
   },
   {
     "area": "FREMENNIK_ISLES_NORTH",

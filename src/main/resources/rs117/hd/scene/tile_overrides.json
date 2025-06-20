@@ -6150,6 +6150,57 @@
     "uvScale": 1.25
   },
   {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [
+      55,
+      58,
+      92,
+      94
+    ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "SEASONAL_GRASS": "s >= 2",
+      "SEASONAL_DIRT": "s == 1",
+      "WINTER_DIRT": "season == WINTER",
+      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_OUTER": "h == 7 && blending",
+      "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING_OUTER": "h == 7",
+      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_INNER": "h == 6 && l < 45 && blending",
+      "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING": "!blending"
+    },
+    "shiftLightness": 16
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": -4,
+    "maxLightness": 80
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_OUTER",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "groundMaterial": "DIRT",
+    "shiftLightness": 20
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING_OUTER",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "groundMaterial": "DIRT",
+    "shiftLightness": 4
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_INNER",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 13
+  },
+  {
     "name": "SHADOW_DUNGEON_FLOOR",
     "area": "SHADOW_DUNGEON",
     "underlayIds": [
