@@ -1,4 +1,4 @@
-/*
+/*getSkyboxOffset
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
  * All rights reserved.
@@ -38,5 +38,5 @@ uniform mat4 projectionMatrix;
 void main()
 {
     TexCoords = aPos;
-    gl_Position = projectionMatrix * modelMatrix * vec4(aPos * getSkyboxOffset(), 1.0);
+    gl_Position = projectionMatrix * modelMatrix * vec4(aPos * SkyboxOffset, 1.0);
 }

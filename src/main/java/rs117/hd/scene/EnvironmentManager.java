@@ -25,6 +25,7 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,16 +34,22 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.environments.Environment;
+import rs117.hd.scene.environments.SkyboxConfig;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.Vector;
 
+import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL15C.glBufferSubData;
+import static org.lwjgl.opengl.GL31C.*;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.TWO_PI;
 import static rs117.hd.utils.HDUtils.clamp;
@@ -145,7 +152,6 @@ public class EnvironmentManager {
 	public final float[] currentSunAngles = { 0, 0 };
 	private final float[] targetSunAngles = { 0, 0 };
 
-	private float[] skyboxProperties = new float[4];
 	private int targetSkyboxIndex = -1;
 	private int currentSkyboxIndex = -1;
 	private float currentSkyboxBlend = 0f;
@@ -155,6 +161,8 @@ public class EnvironmentManager {
 
 	private Environment[] environments;
 	private FileWatcher.UnregisterCallback fileWatcher;
+
+	private ByteBuffer SkyboxBuffer = BufferUtils.createByteBuffer(80);
 
 	@Nonnull
 	private Environment currentEnvironment = Environment.NONE;
@@ -482,24 +490,42 @@ public class EnvironmentManager {
 		return currentEnvironment.isUnderwater;
 	}
 
-	public float[] getSkyboxProperties() {
+	private void writeSkyboxPostProConfig(int index, SkyboxConfig.SkyboxPostProcessingConfig config) {
+		SkyboxBuffer.putInt(index);
+		SkyboxBuffer.putInt(config != null ? 1 : 0);
+		SkyboxBuffer.putFloat(config != null ? config.getBrightness() : 0.0f);
+		SkyboxBuffer.putFloat(config != null ? config.getContrast()   : 0.0f);
+		SkyboxBuffer.putFloat(config != null ? config.getSaturation() : 0.0f);
+		SkyboxBuffer.putFloat(config != null ? config.getHueShift()   : 0.0f);
+
+		// Padding due to alignment added by layout(std140)
+		SkyboxBuffer.putInt(0);
+		SkyboxBuffer.putInt(0);
+	}
+
+	public boolean updateSkyboxUniformBuffer(int glBufferId) {
+		SkyboxBuffer.clear();
 		if(config.renderSkybox()){
 			int debugOverwriteSkyboxIndex = textureManager.getSkyboxIndex(config.overwriteSkybox());
 			if(debugOverwriteSkyboxIndex != -1) {
-				skyboxProperties[0] = debugOverwriteSkyboxIndex;
-				skyboxProperties[1] = 0.0f;
-				skyboxProperties[2] = -1;
+				writeSkyboxPostProConfig(debugOverwriteSkyboxIndex, null);
+				writeSkyboxPostProConfig(-1, null);
 			} else {
-				skyboxProperties[0] = currentSkyboxIndex;
-				skyboxProperties[1] = currentSkyboxBlend;
-				skyboxProperties[2] = targetSkyboxIndex;
+				writeSkyboxPostProConfig(currentSkyboxIndex, textureManager.getSkyboxPostPro(currentSkyboxIndex));
+				writeSkyboxPostProConfig(targetSkyboxIndex, textureManager.getSkyboxPostPro(targetSkyboxIndex));
 			}
 		} else {
-			skyboxProperties[0] = -1;
-			skyboxProperties[1] = 0.0f;
-			skyboxProperties[2] = -1;
+			writeSkyboxPostProConfig(-1, null);
+			writeSkyboxPostProConfig(-1, null);
 		}
-		skyboxProperties[3] = HdPlugin.NEAR_PLANE * 100.0f;
-		return skyboxProperties;
+		SkyboxBuffer.putFloat(currentSkyboxBlend);
+		SkyboxBuffer.putFloat(HdPlugin.NEAR_PLANE * 100.0f);
+		SkyboxBuffer.flip();
+
+		glBindBuffer(GL_UNIFORM_BUFFER, glBufferId);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, SkyboxBuffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		return currentSkyboxIndex >= 0 || targetSkyboxIndex >= 0;
 	}
 }

@@ -164,6 +164,13 @@ public class TextureManager {
 		return -1;
 	}
 
+	public SkyboxConfig.SkyboxPostProcessingConfig getSkyboxPostPro(int index) {
+		if(skyboxConfig != null && index >= 0 && index < skyboxConfig.skyboxes.size()) {
+			return skyboxConfig.skyboxes.get(index).getPostProcessing();
+		}
+		return null;
+	}
+
 	public int getSkyboxCount() {
 		return skyboxConfig != null ? skyboxConfig.skyboxes.size() : 0;
 	}
