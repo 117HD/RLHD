@@ -5666,8 +5666,6 @@
     "objectIds": [
       "FRISD_TOWN_WALL",
       "FRISD_TOWN_WALL_WINDOW",
-      "FRISD_TOWN_WALL_DOOR_LOCKED",
-      "FRISD_TOWN_WALL_DOOR_OPEN",
       "FRISD_TOWN_WALL_BANK_CONNECTOR",
       "FRISD_OUTER_CITY_WALL",
       "FRISD_OUTER_CITY_WALL_GATEPOST_LEFT",
@@ -5690,7 +5688,8 @@
       "FRISD_IZSO_WATCHTOWER_TOPWALL",
       "FRISD_IZSO_BRIDGE_SUPPORT",
       "FRISD_IZSO_BRIDGE_FLOOR_NORAIL",
-      "FRISD_IZSO_DOCK_SUPPORT"
+      "FRISD_IZSO_DOCK_SUPPORT",
+      "FRISD_TOWN_WALL_BANK_CONNECTOR_RIGHT"
     ]
   },
   {
@@ -5756,6 +5755,156 @@
     "objectIds": [
       "FRISD_IZSO_BRIDGE_FLOOR2",
       "FRISD_IZSO_BRIDGE_HANDRAIL"
+    ]
+  },
+  {
+    "description": "Jatizso - Wooden Furniture",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FRISD_WEAPON_MERCHANT_SWORDTABLE",
+      "FRIS_BANQUET_TABLE02",
+      "FRIS_BANQUET_TABLE03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Wooden Furniture - Rotated",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FRIS_BANQUET_SMALLBAR01",
+      "FRIS_BANQUET_SMALLBAR02",
+      "FRIS_BANQUET_SMALLBAR03",
+      "FRIS_BANQUET_SMALLBAR04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvOrientation": 512,
+        "uvScale": 0.7,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Metallic Furniture",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "uvScale": 0.5,
+    "objectIds": [
+      "FRISD_FISHMONGER_HANGING_FISH",
+      "FRISD_FISHMONGER_FISHTABLE",
+      "FRIZD_IZSO_THRONE",
+      "FRIZD_IZSO_THRONE_TORCH",
+      "FRIS_BANQUET_CHAIR01",
+      "FRISD_IZSO_CHAIR",
+      "FRISD_TOWN_WALL_BANK_COUNTER_EDGE_RIGHT",
+      "FRISD_TOWN_WALL_BANK_COUNTER_MID",
+      "FRISD_TOWN_WALL_BANK_COUNTER_BREAKROUTE",
+      "FRISD_TOWN_WALL_BANK_COUNTER_EDGE",
+      "FRIS_BANQUET_TABLE04",
+      "FRISD_IZSO_TABLE_PLATES",
+      "FRISD_IZSO_TABLE_PLATES1",
+      "FRISD_IZSO_SHIELD_DECOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 100,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FRISD_IZSO_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 100,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Rug",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISD_IZSO_KING_RUG_CORNER",
+      "FRISD_IZSO_KING_RUG_EDGE",
+      "FRISD_IZSO_KING_RUG_CENTRE",
+      "FRISD_IZSO_RUG_CENTRE"
+    ]
+  },
+  {
+    "description": "Jatizso - Kings Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_CHEST_CLOSED",
+      "FRIS_CHEST_OPEN"
+    ]
+  },
+  {
+    "description": "Jatizso - Ore Table and Crate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "FRISD_OREMERCHANT_ORETABLE",
+      "FRISD_IZSO_STONE_CRATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Shelves",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "FRISD_WEAPON_MERCHANT_SWORDCASE",
+      "FRISD_WEAPON_MERCHANT_AXECASE",
+      "FRISD_IZSO_SHELF",
+      "FRISD_IZSO_SHELF2",
+      "FRISD_ARMOURY_SHIELD_SHELF",
+      "FRISD_ARMOURY_ARMOUR_SHELF"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 31",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
     ]
   },
   {
