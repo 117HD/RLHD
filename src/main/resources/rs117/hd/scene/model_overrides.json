@@ -5943,13 +5943,36 @@
     ]
   },
   {
-    "description": "Fremennik Isles - Snowy - Rocks - Large",
+    "description": "Fremennik Isles - Rocks",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
       "FRIS_ROCKS_BIG02",
       "FRIS_ROCKS_BIG03"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Iceberg",
+    "baseMaterial": "SNOW_2_DARK",
+    "uvType": "BOX",
+    "npcIds": [
+      "FRIS_ICE_CHUNK_ONE",
+      "FRIS_ICE_CHUNK_TWO"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Trolls - Correct Over Brightness",
+    "areas": [ "FREMENNIK_ISLES_NORTH"],
+    "baseMaterial": "GRAY_75",
+    "npcIds": [
+      "FRIS_TROLLF_PC",
+      "FRIS_TROLLF",
+      "FRIS_TROLLM",
+      "FRIS_TROLLM_PC",
+      "FRIS_BABY_TROLL_PC",
+      "FRIS_BABY_TROLL",
+      "FRIS_TROLL_BODYGUARD_PC"
     ]
   },
   {
