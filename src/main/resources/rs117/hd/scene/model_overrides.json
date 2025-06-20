@@ -5949,7 +5949,9 @@
       "FRIS_PALISADE_OUTER_WALL_MID",
       "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL_MIRROR",
       "FRIS_PALISADE_DOOR_OPEN_L",
-      "FRIS_PALISADE_DOOR_OPEN_R"
+      "FRIS_PALISADE_DOOR_OPEN_R",
+      "FRIS_WATCHTOWER_LEG_LOW",
+      "FRIS_WATCHTOWER_LEG_HIGH"
     ]
   },
   {
@@ -5962,6 +5964,20 @@
       "FRIS_PALISADE_WALKWAY_2",
       "FRIS_PALISADE_WALKWAY_CORNER",
       "FRIS_PALISADE_WALKWAY"
+    ]
+  },
+  {
+    "description": "Neitiznot - Wooden Ladders",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.3,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_PALISADE_LADDER",
+      "FRISB_WATCHTOWER_LADDER_TWOFLOORS",
+      "FRISB_WATCHTOWER_LADDER_INCATIVE",
+      "FRISB_WATCHTOWER_LADDER_TOP_TWOFLOORS"
     ]
   },
   {
