@@ -6011,6 +6011,149 @@
     ]
   },
   {
+    "description": "Neitiznot - Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 256,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Throne",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_VIKING_THROWN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Bank Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_BANK_TABLE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Tables and Spinning Wheel",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FRIS_HERB_TABLE",
+      "FRIS_CARPENTRY_TABLE",
+      "IZNOT_SPINNING_WHEEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvOrientation": 512,
+        "uvScale": 0.5,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Wooden Junk",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISD_WOOD_JUNK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Stumps",
+    "baseMaterial": "LIGHT_BARK",
+    "uvScale": 0.3,
+    "uvType": "BOX",
+    "objectIds": [
+      "LOG_WITHOUTAXE",
+      "IZNOT_SHIELD_STUMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientationY": 720,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Range and Clay Furnace",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "IZNOT_CLAY_RANGE",
+      "IZNOT_CLAY_FORGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "GRUNGE_1",
+        "uvScale": 0.3,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Fremennik Isles - Rocks - Tiny",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -12148,7 +12291,8 @@
       "BURGH_CHAIR_3",
       "BURGH_CHAIR_4",
       "ROYAL_LONGHALL_CHAIR",
-      "AIDE_CHAIR"
+      "AIDE_CHAIR",
+      "FRISB_CHAIR"
     ],
     "uvType": "BOX"
   },
