@@ -9,6 +9,7 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.GL43C.*;
 
 @Slf4j
 @Singleton
@@ -19,11 +20,15 @@ public class FrameTimer {
 	@Inject
 	private HdPlugin plugin;
 
-	private final int numTimers = Timer.values().length;
-	private final int numGpuTimers = (int) Arrays.stream(Timer.values()).filter(t -> t.isGpuTimer).count();
-	private final boolean[] activeTimers = new boolean[numTimers];
-	private final long[] timings = new long[numTimers];
-	private final int[] gpuQueries = new int[numTimers * 2];
+	private static final Timer[] TIMERS = Timer.values();
+	private static final int NUM_TIMERS = TIMERS.length;
+	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(TIMERS).filter(t -> t.isGpuTimer).count();
+	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(TIMERS).filter(t -> t.gpuDebugGroup).count();
+
+	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
+	private final long[] timings = new long[NUM_TIMERS];
+	private final int[] gpuQueries = new int[NUM_TIMERS * 2];
+	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 
 	private boolean isInactive = true;
@@ -33,10 +38,10 @@ public class FrameTimer {
 
 	private void initialize() {
 		clientThread.invokeLater(() -> {
-			int[] queryNames = new int[numGpuTimers * 2];
+			int[] queryNames = new int[NUM_GPU_TIMERS * 2];
 			glGenQueries(queryNames);
 			int queryIndex = 0;
-			for (var timer : Timer.values())
+			for (var timer : TIMERS)
 				if (timer.isGpuTimer)
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
@@ -100,6 +105,15 @@ public class FrameTimer {
 	}
 
 	public void begin(Timer timer) {
+		if (log.isDebugEnabled() && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
+			if (glDebugGroupStack.contains(timer)) {
+				log.warn("The debug group {} is already on the stack", timer.name());
+			} else {
+				glDebugGroupStack.push(timer);
+				glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
+			}
+		}
+
 		if (isInactive)
 			return;
 
@@ -115,6 +129,15 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
+		if (log.isDebugEnabled() && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
+			if (glDebugGroupStack.peek() != timer) {
+				log.warn("The debug group {} was popped out of order", timer.name());
+			} else {
+				glDebugGroupStack.pop();
+				glPopDebugGroup();
+			}
+		}
+
 		if (isInactive || !activeTimers[timer.ordinal()])
 			return;
 
@@ -135,13 +158,20 @@ public class FrameTimer {
 	}
 
 	public void endFrameAndReset() {
+		if (plugin.glCaps.OpenGL43) {
+			while (!glDebugGroupStack.isEmpty()) {
+				log.warn("The debug group {} was never popped", glDebugGroupStack.pop().name());
+				glPopDebugGroup();
+			}
+		}
+
 		if (isInactive)
 			return;
 
 		long frameEnd = System.nanoTime();
 
 		int[] available = { 0 };
-		for (var timer : Timer.values()) {
+		for (var timer : TIMERS) {
 			int i = timer.ordinal();
 			if (timer.isGpuTimer) {
 				if (!activeTimers[i])

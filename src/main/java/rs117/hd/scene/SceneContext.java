@@ -34,7 +34,7 @@ public class SceneContext {
 	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Client client;
 	public final Scene scene;
-	public final HashSet<Integer> regionIds;
+	public final AABB sceneBounds;
 	public final int expandedMapLoadingChunks;
 
 	public boolean enableAreaHiding;
@@ -93,7 +93,7 @@ public class SceneContext {
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
 		this.client = client;
 		this.scene = scene;
-		this.regionIds = HDUtils.getSceneRegionIds(scene);
+		this.sceneBounds = HDUtils.getSceneBounds(scene);
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 
 		if (previous == null) {
