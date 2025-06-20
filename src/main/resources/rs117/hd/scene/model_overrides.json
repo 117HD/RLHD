@@ -31275,6 +31275,24 @@
     ]
   },
   {
+    "description": "Fossil Island - Bunk Bed with Brown Blanket ",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FOSSIL_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Tanning Line",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
