@@ -36,7 +36,6 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
@@ -369,15 +368,11 @@ public class EnvironmentManager {
 	 * adds them to lists for easy access.
 	 */
 	public void loadSceneEnvironments(SceneContext sceneContext) {
-		log.debug("Adding environments for scene with regions: {}", sceneContext.regionIds);
-
-		AABB[] regions = sceneContext.regionIds.stream()
-			.map(AABB::new)
-			.toArray(AABB[]::new);
+		log.debug("Loading environments for scene: {}", sceneContext.sceneBounds);
 
 		sceneContext.environments.clear();
 		for (var environment : environments) {
-			if (environment.area.intersects(regions)) {
+			if (sceneContext.sceneBounds.intersects(environment.area.aabbs)) {
 				log.debug("Added environment: {}", environment);
 				sceneContext.environments.add(environment);
 			}
