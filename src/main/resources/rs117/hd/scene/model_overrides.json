@@ -5908,6 +5908,27 @@
     ]
   },
   {
+    "description": "Jatizso - Banner",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.4,
+    "upwardsNormals": true,
+    "receiveShadows": false,
+    "objectIds": [
+      "FRISD_BANNER03",
+      "FRISD_BANNER02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvOrientationX": 512,
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "PHASMATYS_DOCK_FENCES",
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
