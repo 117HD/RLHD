@@ -6226,7 +6226,10 @@
     "uvScale": 0.5,
     "objectIds": [
       "FRIS_ROCKS_BIG02",
-      "FRIS_ROCKS_BIG03"
+      "FRIS_ROCKS_BIG03",
+      "FRISD_IZSO_ROCKS",
+      "FRIZD_IZSO_ROCKS2",
+      "FRISD_OREMERCHANT_ORESTONES"
     ]
   },
   {
@@ -6270,15 +6273,33 @@
     ]
   },
   {
-    "description": "Jatizso - Rocks",
-    "baseMaterial": "ROCK_3",
+    "description": "Fremennik Isles - Wooden Bridges",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 256,
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "objectIds": [
-      "FRISD_IZSO_ROCKS",
-      "FRIZD_IZSO_ROCKS2",
-      "FRISD_OREMERCHANT_ORESTONES"
+      "FRISB_ROPE_BRIDGE",
+      "FRISB_ROPE_BRIDGE_BROKEN",
+      "FRISB_BRIDGE_1_S",
+      "FRISB_BRIDGE_1_N",
+      "FRISB_BRIDGE_2_N",
+      "FRISB_BRIDGE_2_S",
+      "FRISB_BRIDGE_3_N",
+      "FRISB_BRIDGE_3_S",
+      "FRISB_BRIDGE_4_N",
+      "FRISB_BRIDGE_4_S",
+      "FRISB_BRIDGE_5_S",
+      "FRISB_BRIDGE_5_N"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
     ]
   },
   {
