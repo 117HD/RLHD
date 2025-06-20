@@ -2166,8 +2166,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			boolean shouldDrawSkybox = vaoSkyboxHandle != 0
 									   && textureManager.getSkyboxCount() > 0
-									   && config.renderSkybox()
-									   && environmentManager.updateSkyboxUniformBuffer(hUniformBufferSkybox.glBufferId);
+									   && config.renderSkybox();
+			shouldDrawSkybox &= environmentManager.updateSkyboxUniformBuffer(hUniformBufferSkybox.glBufferId);
 
 			if(shouldDrawSkybox) {
 				// Draw Skybox
