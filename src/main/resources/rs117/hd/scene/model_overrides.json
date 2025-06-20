@@ -21390,12 +21390,72 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Fossil Island - Stone - Manor Walls",
+    "description": "Fossil Island - Stone - Walls - House on the Hill Walls",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "FOSSIL_DKL_WALL_1", "FOSSIL_DKL_WALLROOF1", "FOSSIL_DKL_WALLROOF2", "FOSSIL_DKL_WINDOW_1" ],
     "uvType": "BOX",
     "uvScale": 0.5,
-    "uvOrientation": 768
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_WALL_1",
+      "FOSSIL_DKL_WALL_2",
+      "FOSSIL_DKL_WALLROOF1",
+      "FOSSIL_DKL_WALLROOF2",
+      "FOSSIL_DKL_WINDOW_1"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Walls - House on the Hill Roof",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_ROOF_1"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stairs - House on the Hill Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FOSSIL_DKL_STAIRCASE",
+      "FOSSIL_DKL_STAIRCASE_EXT"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - House on the Hill Floor Tiles",
+    "baseMaterial": "TILES_2X2_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.58,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_BRIDGE_CORNER",
+      "FOSSIL_DKL_BRIDGE_CORNER_P",
+      "FOSSIL_DKL_BRIDGE_EDGE",
+      "FOSSIL_DKL_BRIDGE_CENTER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Maroon tiles",
+        "baseMaterial": "MARBLE_1",
+        "colors": "s > 0",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stairs - House on the Hill parapet",
+    "baseMaterial": "FALADOR_PATH_BRICK",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_DKL_BRIDGE_PARAPET",
+      "FOSSIL_DKL_BRIDGE_PARAPET_P1",
+      "FOSSIL_DKL_BRIDGE_PARAPET_P2",
+      "FOSSIL_DKL_BRIDGE_PARAPET_P3"
+    ]
   },
   {
     "description": "Pest Control boat flags",
