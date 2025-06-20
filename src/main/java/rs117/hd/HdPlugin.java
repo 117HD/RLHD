@@ -391,12 +391,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportWidth;
 	private int viewportHeight;
 
-	// Shadow program uniforms
-	private int uniShadowLightProjectionMatrix;
-	private int uniShadowElapsedTime;
-	private int uniShadowCameraPos;
-
 	private int uniShadowMap;
+	private int uniShadowBlockGlobals;
+
 	private int uniUiTexture;
 	private int uniTextureArray;
 	private int uniUiBlockUi;
@@ -940,11 +937,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glUseProgram(glShadowProgram);
 				glUniform1i(uniShadowTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, UNIFORM_BLOCK_MATERIALS);
-				uniShadowElapsedTime = glGetUniformLocation(glShadowProgram, "elapsedTime");
-				uniShadowCameraPos = glGetUniformLocation(glShadowProgram, "cameraPos");
-				// fall-through
 			case FAST:
-				uniShadowLightProjectionMatrix = glGetUniformLocation(glShadowProgram, "lightProjectionMatrix");
+				uniShadowBlockGlobals = glGetUniformBlockIndex(glShadowProgram, "GlobalUniforms");
 		}
 
 		// Initialize uniform buffers that may depend on compile-time settings
@@ -1968,69 +1962,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindVertexArray(vaoSceneHandle);
 
-			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
-
-			float[] lightProjectionMatrix = Mat4.identity();
-			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
-				frameTimer.begin(Timer.RENDER_SHADOWS);
-
-				// Render to the shadow depth map
-				glViewport(0, 0, shadowMapResolution, shadowMapResolution);
-				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
-				glClearDepthf(1);
-				glClear(GL_DEPTH_BUFFER_BIT);
-				glDepthFunc(GL_LEQUAL);
-
-				glUseProgram(glShadowProgram);
-
-				final int camX = cameraFocalPoint[0];
-				final int camY = cameraFocalPoint[1];
-
-				final int drawDistanceSceneUnits = Math.min(config.shadowDistance().getValue(), getDrawDistance()) * LOCAL_TILE_SIZE / 2;
-				final int east = Math.min(camX + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
-				final int west = Math.max(camX - drawDistanceSceneUnits, 0);
-				final int north = Math.min(camY + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
-				final int south = Math.max(camY - drawDistanceSceneUnits, 0);
-				final int width = east - west;
-				final int height = north - south;
-				final int depthScale = 10000;
-
-				final int maxDrawDistance = 90;
-				final float maxScale = 0.7f;
-				final float minScale = 0.4f;
-				final float scaleMultiplier = 1.0f - (getDrawDistance() / (maxDrawDistance * maxScale));
-				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
-				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
-				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
-				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
-				glUniformMatrix4fv(uniShadowLightProjectionMatrix, false, lightProjectionMatrix);
-
-				// bind uniforms
-				if (configShadowMode == ShadowMode.DETAILED) {
-					glUniform1f(uniShadowElapsedTime, (float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-					glUniform3fv(uniShadowCameraPos, cameraPosition);
-				}
-
-				glEnable(GL_CULL_FACE);
-				glEnable(GL_DEPTH_TEST);
-
-				// Draw with buffers bound to scene VAO
-				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
-
-				glDisable(GL_CULL_FACE);
-				glDisable(GL_DEPTH_TEST);
-
-				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-
-				glUseProgram(0);
-
-				frameTimer.end(Timer.RENDER_SHADOWS);
-			}
-
-			glUseProgram(glSceneProgram);
-
 			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
 			final Dimension stretchedDimensions = client.getStretchedDimensions();
 			final int stretchedCanvasWidth = client.isStretchedEnabled() ? stretchedDimensions.width : canvasWidth;
@@ -2131,6 +2062,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			hUniformGlobalBuffer.ElapsedTime.Set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 			hUniformGlobalBuffer.CameraPos.Set(cameraPosition);
 
+			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
@@ -2167,10 +2100,65 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			));
 			hUniformGlobalBuffer.ProjectionMatrix.Set(projectionMatrix);
 
-			// Bind directional light projection matrix
-			hUniformGlobalBuffer.LightProjectionMatrix.Set(lightProjectionMatrix);
+			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
+				frameTimer.begin(Timer.RENDER_SHADOWS);
 
-			hUniformGlobalBuffer.UploadUniforms();
+				// Render to the shadow depth map
+				glViewport(0, 0, shadowMapResolution, shadowMapResolution);
+				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
+				glClearDepthf(1);
+				glClear(GL_DEPTH_BUFFER_BIT);
+				glDepthFunc(GL_LEQUAL);
+
+				glUseProgram(glShadowProgram);
+
+				final int camX = cameraFocalPoint[0];
+				final int camY = cameraFocalPoint[1];
+
+				final int drawDistanceSceneUnits = Math.min(config.shadowDistance().getValue(), getDrawDistance()) * LOCAL_TILE_SIZE / 2;
+				final int east = Math.min(camX + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
+				final int west = Math.max(camX - drawDistanceSceneUnits, 0);
+				final int north = Math.min(camY + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
+				final int south = Math.max(camY - drawDistanceSceneUnits, 0);
+				final int width = east - west;
+				final int height = north - south;
+				final int depthScale = 10000;
+
+				final int maxDrawDistance = 90;
+				final float maxScale = 0.7f;
+				final float minScale = 0.4f;
+				final float scaleMultiplier = 1.0f - (getDrawDistance() / (maxDrawDistance * maxScale));
+				float scale = HDUtils.lerp(maxScale, minScale, scaleMultiplier);
+				float[] lightProjectionMatrix = Mat4.identity();
+				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
+				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
+				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
+				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
+
+				hUniformGlobalBuffer.LightProjectionMatrix.Set(lightProjectionMatrix);
+				hUniformGlobalBuffer.UploadUniforms();
+
+				glUniformBlockBinding(glShadowProgram, uniShadowBlockGlobals, UNIFORM_BLOCK_GLOBAL);
+
+				glEnable(GL_CULL_FACE);
+				glEnable(GL_DEPTH_TEST);
+
+				// Draw with buffers bound to scene VAO
+				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+
+				glDisable(GL_CULL_FACE);
+				glDisable(GL_DEPTH_TEST);
+
+				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+
+				frameTimer.end(Timer.RENDER_SHADOWS);
+			} else {
+				hUniformGlobalBuffer.LightProjectionMatrix.Set(Mat4.identity());
+				hUniformGlobalBuffer.UploadUniforms();
+			}
+
+			glUseProgram(glSceneProgram);
+
 			// Bind uniforms
 			glUniformBlockBinding(glSceneProgram, uniSceneBlockMaterials, UNIFORM_BLOCK_MATERIALS);
 			glUniformBlockBinding(glSceneProgram, uniSceneBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
