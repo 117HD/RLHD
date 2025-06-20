@@ -9215,7 +9215,8 @@
       "SHAYZIEN_CRATE_03",
       "PISCARILIUS_CRATE_04",
       "BIM_SUPPLY_CRATE",
-      "NECROPOLIS_CRATE01_DEFAULT01"
+      "NECROPOLIS_CRATE01_DEFAULT01",
+      "FOSSIL_TOOL_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9231,7 +9232,8 @@
       "FGUILD_BOOK_TREES_LOC",
       "FAI_VARROCK_LARGE_CRATES_INACTIVE",
       "SHAYZIEN_CRATE_02_INACTIVE_DARK",
-      "NECROPOLIS_CRATE01_STACK01"
+      "NECROPOLIS_CRATE01_STACK01",
+      "FOSSIL_CRATE2"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -34834,6 +34836,89 @@
         "colors": "h == 0",
         "baseMaterial": "ROPE",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Fossil Storage Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FOSSIL_STORAGE_CRATE1"
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "description": "Fossils",
+        "baseMaterial": "BONE",
+        "colors": "h == 12",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Crumbling Stone Brick Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "objectIds": [
+      "QIP_OBS_VILLAGE_WALL_CRUMBLE3",
+      "QIP_OBS_VILLAGE_WALLM_CRUMBLE3",
+      "QIP_OBS_VILLAGE_WALL_CRUMBLE4"
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Plank table - Fossil Cleaning Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FOSSIL_CLEANING_BENCH_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Dirt clumps",
+        "baseMaterial": "DIRT_2",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 179,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FOSSIL_BANK_CHEST_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Velvet interior",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 179
       }
     ]
   }
