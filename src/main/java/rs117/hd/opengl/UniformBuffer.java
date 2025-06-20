@@ -95,8 +95,8 @@ public abstract class UniformBuffer {
 
 	public UniformBuffer() {
 		try {
-			Field[] UBOPropertieFields = this.getClass().getFields();
-			for(Field PropField : UBOPropertieFields) {
+			Field[] UBOPropertiesFields = this.getClass().getFields();
+			for(Field PropField : UBOPropertiesFields) {
 				UBOProperty Prop = PropField.getAnnotation(UBOProperty.class);
 				if(Prop != null) {
 					Class<?> FieldType = PropField.getType();
@@ -145,6 +145,7 @@ public abstract class UniformBuffer {
 			return;
 		}
 
+		boolean NeedsUpdating = false;
 		CPUBuffer.clear();
 		for(UBOEntry Entry : Entries) {
 			try {
@@ -160,6 +161,7 @@ public abstract class UniformBuffer {
 							CPUBuffer.put((byte)0);
 						}
 					}
+					NeedsUpdating = true;
 					Entry.Dirty = false;
 				} else {
 					CPUBuffer.position(CPUBuffer.position() + Entry.Type.Size);
@@ -170,10 +172,12 @@ public abstract class UniformBuffer {
 		}
 		CPUBuffer.flip();
 
-		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, CPUBuffer);
+		if(NeedsUpdating) {
+			glBindBuffer(GL_UNIFORM_BUFFER, glBuffer);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, CPUBuffer);
 
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		}
 	}
 
 	public void Destroy() {
