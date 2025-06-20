@@ -5914,6 +5914,26 @@
     ]
   },
   {
+    "description": "Neitiznot - Banner",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.4,
+    "upwardsNormals": true,
+    "receiveShadows": false,
+    "objectIds": [
+      "FRISD_BANNER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvOrientationX": 512,
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Neitiznot - Wooden Walls",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "uvScale": 0.7,
@@ -6150,6 +6170,23 @@
         "baseMaterial": "GRUNGE_1",
         "uvScale": 0.3,
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Geyser",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FRIS_ROCK_GEYSER",
+      "FRIS_ROCK_GEYSER_SMALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
       }
     ]
   },
