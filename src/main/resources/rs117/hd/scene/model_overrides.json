@@ -6156,7 +6156,8 @@
     "uvType": "BOX",
     "objectIds": [
       "FRISD_WOOD_JUNK",
-      "FRISB_WOODEN_TABLE_BROKEN"
+      "FRISB_WOODEN_TABLE_BROKEN",
+      "FRISD_WOOD_JUNK2"
     ],
     "colorOverrides": [
       {
@@ -6278,7 +6279,7 @@
   },
   {
     "description": "Fremennik Isles - Trolls - Correct Over Brightness",
-    "areas": [ "FREMENNIK_ISLES_NORTH"],
+    "areas": [ "FREMENNIK_ISLES_NORTH", "FREMENNIK_ISLES_ICE_TROLL_DUNGEON"],
     "baseMaterial": "GRAY_75",
     "npcIds": [
       "FRIS_TROLLF_PC",
@@ -6287,7 +6288,12 @@
       "FRIS_TROLLM_PC",
       "FRIS_BABY_TROLL_PC",
       "FRIS_BABY_TROLL",
-      "FRIS_TROLL_BODYGUARD_PC"
+      "FRIS_TROLL_BODYGUARD_PC",
+      "FRIS_TROLLM_LOWXP",
+      "FRIS_TROLL_BODYGUARD_LOWXP",
+      "FRIS_TROLLF_LOWXP",
+      "FRIS_BABY_TROLL_PC",
+      "FRIS_BABY_TROLL_LOWXP"
     ]
   },
   {
@@ -6326,7 +6332,11 @@
       "FRISB_BRIDGE_4_N",
       "FRISB_BRIDGE_4_S",
       "FRISB_BRIDGE_5_S",
-      "FRISB_BRIDGE_5_N"
+      "FRISB_BRIDGE_5_N",
+      "FRISB_BRIDGE_6_S",
+      "FRISB_BRIDGE_6_N",
+      "FRISB_BRIDGE_7_E",
+      "FRISB_BRIDGE_7_W"
     ],
     "colorOverrides": [
       {
@@ -20439,10 +20449,26 @@
   {
     "description": "Weiss Salt Mine Walls",
     "baseMaterial": "DIRT_1",
-    "objectIds": [ "FRIS_MINE_WALL", "FRIS_MINE_WALL_TOP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_SQUEEZE", "MY2ARM_CAVE_EXIT_BLOCKED" ],
+    "objectIds": [ "FRIS_MINE_WALL", "FRIS_MINE_WALL_TOP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_SQUEEZE", "MY2ARM_CAVE_EXIT_BLOCKED", "FRIS_MINE_WALL_COLUMN",
+      "FRIS_MINE_WALL_STEPS", "FRIS_WALL_RAMP_01", "FRIS_WALL_RAMP_02", "FRIS_MINE_WALL_STEPS_2", "FRIS_WALL_RAMP_02_MIRROR", "FRIS_WALL_RAMP_01_MIRROR", "FRIS_RAMP_02_MIRROR",
+      "FRIS_RAMP_MID_02", "FRIS_RAMP_02", "FRIS_RAMP_01_MIRROR", "FRIS_RAMP_MID_01", "FRIS_RAMP_01", "FRIS_MINE_WALL_COLUMN" , "FRIS_MINE_WALL_COLUMN_LADDERR1", "FRIS_MINE_WALL_COLUMN_LADDER" ],
     "uvType": "BOX",
     "uvOrientation": 128,
     "uvScale": 0.4
+  },
+  {
+    "description": "Fremennik Isles - Ice Troll Dungeon Exit",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ "FRIS_MINE_WALL_NURSE_ENTRANCE_ONE", "FRIS_MINE_WALL_NURSE_ENTRANCE_TWO", "FRIS_MINE_WALL_NURSE_ENTRANCE_THREE" ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": ["h == 10", "h == 5"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Weiss Underground Ground Rubble",
@@ -20454,7 +20480,7 @@
   {
     "description": "Weiss Underground Stalactites",
     "baseMaterial": "GRUNGE_1",
-    "objectIds": [ "FRIS_MINE_STALAGTITE_01", "FRIS_MINE_STALAGTITE_02" ],
+    "objectIds": [ "FRIS_MINE_STALAGTITE_01", "FRIS_MINE_STALAGTITE_02", "FRIS_MINE_ROCKS_SMALL_01", "FRIS_MINE_ROCKS_SMALL_02" ],
     "uvType": "BOX",
     "uvOrientation": 128,
     "uvScale": 0.6

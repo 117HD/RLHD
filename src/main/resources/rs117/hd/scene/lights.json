@@ -37337,5 +37337,20 @@
     "objectIds": [
       "IZNOT_CLAY_FORGE"
     ]
+  },
+  {
+    "description": "Fremennik Isles - Ice Troll Dungeon Exit",
+    "offset": [ 50, 300, 30 ],
+    "radius": 400,
+    "strength": 4.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "FRIS_MINE_WALL_NURSE_ENTRANCE_TWO"
+    ]
   }
 ]

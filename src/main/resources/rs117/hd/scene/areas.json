@@ -4848,6 +4848,11 @@
     ]
   },
   {
+    "name": "FREMENNIK_ISLES_ICE_TROLL_DUNGEON",
+    "regions": [ 9632 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "FREMENNIK_ISLES",
     "areas": [
       "JATIZSO",
