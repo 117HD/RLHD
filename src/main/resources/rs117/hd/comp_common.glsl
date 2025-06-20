@@ -31,10 +31,15 @@ struct ModelInfo {
     int uvOffset; // offset into uv buffer
     int size;     // length in faces
     int idx;      // write idx in target buffer
-    int flags;    // radius, orientation
+    int flags;    // hillskew, plane, orientation
     int x;        // scene position x
     int y;        // scene position y
     int z;        // scene position z
+};
+
+struct vert {
+    vec3 pos;
+    int ahsl;
 };
 
 layout(std430, binding = 0) readonly buffer ModelInfoBuffer {
@@ -42,7 +47,7 @@ layout(std430, binding = 0) readonly buffer ModelInfoBuffer {
 };
 
 layout(std430, binding = 1) readonly buffer StagingBufferVertices {
-    ivec4 vb[];
+    vert vb[];
 };
 
 layout(std430, binding = 2) readonly buffer StagingBufferUvs {
@@ -54,7 +59,7 @@ layout(std430, binding = 3) readonly buffer StagingBufferNormals {
 };
 
 layout(std430, binding = 4) writeonly buffer RenderBufferVertices {
-    ivec4 vout[];
+    vert vout[];
 };
 
 layout(std430, binding = 5) writeonly buffer RenderBufferUvs {

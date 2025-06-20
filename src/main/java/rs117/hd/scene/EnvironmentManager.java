@@ -37,9 +37,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
-import rs117.hd.utils.AABB;
 import rs117.hd.utils.FileWatcher;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -52,8 +50,8 @@ import static rs117.hd.utils.HDUtils.mod;
 import static rs117.hd.utils.HDUtils.rand;
 import static rs117.hd.utils.ResourcePath.path;
 
-@Singleton
 @Slf4j
+@Singleton
 public class EnvironmentManager {
 	private static final ResourcePath ENVIRONMENTS_PATH = Props.getPathOrDefault(
 		"rlhd.environments-path",
@@ -79,7 +77,7 @@ public class EnvironmentManager {
 
 	// when the current transition began, relative to plugin startup
 	private boolean transitionComplete = true;
-	private float transitionStartTime = 0;
+	private double transitionStartTime = 0;
 	private int[] previousPosition = new int[3];
 
 	private float[] startFogColor = new float[] { 0, 0, 0 };
@@ -145,7 +143,7 @@ public class EnvironmentManager {
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
-	private rs117.hd.scene.environments.Environment[] environments;
+	private Environment[] environments;
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	@Nonnull
@@ -154,7 +152,7 @@ public class EnvironmentManager {
 	public void startUp() {
 		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
 			try {
-				environments = path.loadJson(plugin.getGson(), rs117.hd.scene.environments.Environment[].class);
+				environments = path.loadJson(plugin.getGson(), Environment[].class);
 				if (environments == null)
 					throw new IOException("Empty or invalid: " + path);
 				log.debug("Loaded {} environments", environments.length);
@@ -172,6 +170,10 @@ public class EnvironmentManager {
 					env.normalize();
 
 				clientThread.invoke(() -> {
+					// Force instant transition during development
+					if (!first)
+						reset();
+
 					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
 						loadSceneEnvironments(plugin.getSceneContext());
 				});
@@ -237,7 +239,7 @@ public class EnvironmentManager {
 			currentWaterColor = targetWaterColor;
 		} else {
 			// interpolate between start and target values
-			float t = clamp((plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION, 0, 1);
+			float t = clamp((float) (plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION, 0, 1);
 			if (t >= 1)
 				transitionComplete = true;
 			currentFogColor = hermite(startFogColor, targetFogColor, t);
@@ -280,6 +282,9 @@ public class EnvironmentManager {
 			skipTransition = false;
 		}
 
+		if (currentEnvironment.instantTransition || newEnvironment.instantTransition)
+			skipTransition = true;
+
 		log.debug("changing environment from {} to {} (instant: {})", currentEnvironment, newEnvironment, skipTransition);
 		currentEnvironment = newEnvironment;
 		transitionComplete = false;
@@ -318,7 +323,7 @@ public class EnvironmentManager {
 			sunAngles = overworldEnv.sunAngles;
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
-		if (!config.atmosphericLighting())
+		if (!config.atmosphericLighting() && !env.force)
 			env = overworldEnv;
 		targetAmbientStrength = env.ambientStrength;
 		targetAmbientColor = env.ambientColor;
@@ -363,23 +368,13 @@ public class EnvironmentManager {
 	 * adds them to lists for easy access.
 	 */
 	public void loadSceneEnvironments(SceneContext sceneContext) {
-		log.debug("Adding environments for scene with regions: {}", sceneContext.regionIds);
-
-		AABB[] regions = sceneContext.regionIds.stream()
-			.map(AABB::new)
-			.toArray(AABB[]::new);
+		log.debug("Loading environments for scene: {}", sceneContext.sceneBounds);
 
 		sceneContext.environments.clear();
-		outer:
 		for (var environment : environments) {
-			for (AABB region : regions) {
-				for (AABB aabb : environment.area.getAabbs()) {
-					if (region.intersects(aabb)) {
-						log.debug("Added environment: {}", environment);
-						sceneContext.environments.add(environment);
-						continue outer;
-					}
-				}
+			if (sceneContext.sceneBounds.intersects(environment.area.aabbs)) {
+				log.debug("Added environment: {}", environment);
+				sceneContext.environments.add(environment);
 			}
 		}
 
@@ -421,7 +416,7 @@ public class EnvironmentManager {
 		}
 
 		if (lightningEnabled && config.flashingEffects()) {
-			float t = HDUtils.clamp(lightningBrightness, 0, 1);
+			float t = clamp(lightningBrightness, 0, 1);
 			currentFogColor = lerp(currentFogColor, LIGHTNING_COLOR, t);
 			currentWaterColor = lerp(currentWaterColor, LIGHTNING_COLOR, t);
 		} else {

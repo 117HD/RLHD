@@ -31,23 +31,38 @@ int count_prio_offset(__local struct shared_data *shared, int priority);
 void get_face(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
-  __global const int4 *vb,
-  uint localId, struct ModelInfo minfo,
-  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3);
+  __global const struct vert *vb,
+  uint localId,
+  struct ModelInfo minfo,
+  /* out */
+  int *prio,
+  int *dis,
+  struct vert *o1,
+  struct vert *o2,
+  struct vert *o3
+);
 void add_face_prio_distance(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
-  uint localId, struct ModelInfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos);
+  uint localId,
+  struct ModelInfo minfo,
+  struct vert thisrvA,
+  struct vert thisrvB,
+  struct vert thisrvC,
+  int thisPriority,
+  int thisDistance,
+  int4 pos
+);
 int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio);
-void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx);
+void insert_face(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx);
 int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y);
-int4 hillskew_vertex(read_only image3d_t tileHeightMap, int4 v, int hillskew, int y, int plane);
-void undoVanillaShading(int4 *vertex, float3 unrotatedNormal);
+void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int y, int plane);
+void undoVanillaShading(struct vert *vertex, float3 unrotatedNormal);
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const float4 *uv,
   __global const float4 *normal,
-  __global int4 *vout,
+  __global struct vert *vout,
   __global float4 *uvout,
   __global float4 *normalout,
   __constant struct uniform *uni,
@@ -55,9 +70,9 @@ void sort_and_insert(
   struct ModelInfo minfo,
   int thisPriority,
   int thisDistance,
-  int4 thisrvA,
-  int4 thisrvB,
-  int4 thisrvC,
+  struct vert thisrvA,
+  struct vert thisrvB,
+  struct vert thisrvC,
   read_only image3d_t tileHeightMap
 );
 
@@ -120,9 +135,15 @@ int count_prio_offset(__local struct shared_data *shared, int priority) {
 void get_face(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
-  __global const int4 *vb,
-  uint localId, struct ModelInfo minfo,
-  /* out */ int *prio, int *dis, int4 *o1, int4 *o2, int4 *o3
+  __global const struct vert *vb,
+  uint localId,
+  struct ModelInfo minfo,
+  /* out */
+  int *prio,
+  int *dis,
+  struct vert *o1,
+  struct vert *o2,
+  struct vert *o3
 ) {
   uint size = minfo.size;
   uint offset = minfo.offset;
@@ -135,38 +156,32 @@ void get_face(
     ssboOffset = 0;
   }
 
-  int4 thisA = vb[offset + ssboOffset * 3];
-  int4 thisB = vb[offset + ssboOffset * 3 + 1];
-  int4 thisC = vb[offset + ssboOffset * 3 + 2];
+  struct vert thisA = vb[offset + ssboOffset * 3];
+  struct vert thisB = vb[offset + ssboOffset * 3 + 1];
+  struct vert thisC = vb[offset + ssboOffset * 3 + 2];
 
   if (localId < size) {
-    int radius = (flags >> 12) & 0xfff;
     int orientation = flags & 0x7ff;
 
     // rotate for model orientation
-    int4 thisrvA = rotate_ivec(uni, thisA, orientation);
-    int4 thisrvB = rotate_ivec(uni, thisB, orientation);
-    int4 thisrvC = rotate_ivec(uni, thisC, orientation);
+    float4 thisrvA = rotate_vertex((float4)(thisA.x, thisA.y, thisA.z, 0), orientation);
+    float4 thisrvB = rotate_vertex((float4)(thisB.x, thisB.y, thisB.z, 0), orientation);
+    float4 thisrvC = rotate_vertex((float4)(thisC.x, thisC.y, thisC.z, 0), orientation);
 
     // calculate distance to face
-    int thisPriority = (thisA.w >> 16) & 0xF;// all vertices on the face have the same priority
-    int thisDistance;
-    if (radius == 0) {
-      thisDistance = 0;
-    } else {
-      thisDistance = face_distance(uni, thisrvA, thisrvB, thisrvC) + radius;
-    }
+    int thisPriority = (thisA.ahsl >> 16) & 0xF;// all vertices on the face have the same priority
+    int thisDistance = face_distance(uni, thisrvA, thisrvB, thisrvC);
 
-    *o1 = thisrvA;
-    *o2 = thisrvB;
-    *o3 = thisrvC;
+    *o1 = (struct vert){thisrvA.x, thisrvA.y, thisrvA.z, thisA.ahsl};
+    *o2 = (struct vert){thisrvB.x, thisrvB.y, thisrvB.z, thisB.ahsl};
+    *o3 = (struct vert){thisrvC.x, thisrvC.y, thisrvC.z, thisC.ahsl};
 
     *prio = thisPriority;
     *dis = thisDistance;
   } else {
-    *o1 = (int4)(0, 0, 0, 0);
-    *o2 = (int4)(0, 0, 0, 0);
-    *o3 = (int4)(0, 0, 0, 0);
+    *o1 = (struct vert){0, 0, 0, 0};
+    *o2 = (struct vert){0, 0, 0, 0};
+    *o3 = (struct vert){0, 0, 0, 0};
     *prio = 0;
     *dis = 0;
   }
@@ -175,11 +190,22 @@ void get_face(
 void add_face_prio_distance(
   __local struct shared_data *shared,
   __constant struct uniform *uni,
-  uint localId, struct ModelInfo minfo, int4 thisrvA, int4 thisrvB, int4 thisrvC, int thisPriority, int thisDistance, int4 pos) {
+  uint localId,
+  struct ModelInfo minfo,
+  struct vert thisrvA,
+  struct vert thisrvB,
+  struct vert thisrvC,
+  int thisPriority,
+  int thisDistance,
+  int4 pos
+) {
   uint size = minfo.size;
   if (localId < size) {
     // if the face is not culled, it is calculated into priority distance averages
-    if (face_visible(uni, thisrvA, thisrvB, thisrvC, pos)) {
+    float3 posA = (float3)(thisrvA.x, thisrvA.y, thisrvA.z);
+    float3 posB = (float3)(thisrvB.x, thisrvB.y, thisrvB.z);
+    float3 posC = (float3)(thisrvC.x, thisrvC.y, thisrvC.z);
+    if (face_visible(uni, posA, posB, posC, pos)) {
       atomic_add(&shared->totalNum[thisPriority], 1);
       atomic_add(&shared->totalDistance[thisPriority], thisDistance);
 
@@ -224,14 +250,16 @@ int map_face_priority(__local struct shared_data *shared, uint localId, struct M
   return 0;
 }
 
-void insert_dfs(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
   uint size = minfo.size;
 
   if (localId < size) {
-    // calculate base offset into dfs based on number of faces with a lower priority
+    // calculate base offset into renderPris based on number of faces with a lower priority
     int baseOff = count_prio_offset(shared, adjPrio);
-    // store into face array offset array by unique index
-    shared->dfs[baseOff + prioIdx] = ((int) localId << 16) | distance;
+    // the furthest faces draw first, and have the highest value
+    // if two faces have the same distance, the one with the
+    // lower id draws first
+    shared->renderPris[baseOff + prioIdx] = ((uint)(distance << 16)) | (~localId & 0xffffu);
   }
 }
 
@@ -242,22 +270,20 @@ int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y) {
   return read_imagei(tileHeightMap, tileHeightSampler, coord).x << 3;
 }
 
-int4 hillskew_vertex(read_only image3d_t tileHeightMap, int4 v, int hillskew, int y, int plane) {
-  if (hillskew == 1) {
-    int px = v.x & 127;
-    int pz = v.z & 127;
-    int sx = v.x >> 7;
-    int sz = v.z >> 7;
+void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int y, int plane) {
+    int x = (int) (*v).x;
+    int z = (int) (*v).z;
+    int px = x & 127;
+    int pz = z & 127;
+    int sx = x >> 7;
+    int sz = z >> 7;
     int h1 = (px * tile_height(tileHeightMap, plane, sx + 1, sz) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz)) >> 7;
     int h2 = (px * tile_height(tileHeightMap, plane, sx + 1, sz + 1) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz + 1)) >> 7;
     int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
-    return (int4)(v.x, v.y + h3 - y, v.z, v.w);
-  } else {
-    return v;
-  }
+    (*v).y += h3 - y;
 }
 
-void undoVanillaShading(int4 *vertex, float3 unrotatedNormal) {
+void undoVanillaShading(struct vert *vertex, float3 unrotatedNormal) {
     unrotatedNormal = normalize(unrotatedNormal);
 
     const float3 LIGHT_DIR_MODEL = (float3)(0.57735026, 0.57735026, 0.57735026);
@@ -270,7 +296,7 @@ void undoVanillaShading(int4 *vertex, float3 unrotatedNormal) {
     // the minimum amount by which each color will be lightened
     const int BASE_LIGHTEN = 10;
 
-    int hsl = vertex->w;
+    int hsl = vertex->ahsl;
     int saturation = hsl >> 7 & 0x7;
     int lightness = hsl & 0x7F;
     float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
@@ -288,14 +314,14 @@ void undoVanillaShading(int4 *vertex, float3 unrotatedNormal) {
     lightness = min(lightness, maxLightness);
     hsl &= ~0x7F;
     hsl |= lightness;
-    vertex->w = hsl;
+    vertex->ahsl = hsl;
 }
 
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const float4 *uv,
   __global const float4 *normal,
-  __global int4 *vout,
+  __global struct vert *vout,
   __global float4 *uvout,
   __global float4 *normalout,
   __constant struct uniform *uni,
@@ -303,12 +329,11 @@ void sort_and_insert(
   struct ModelInfo minfo,
   int thisPriority,
   int thisDistance,
-  int4 thisrvA,
-  int4 thisrvB,
-  int4 thisrvC,
+  struct vert thisrvA,
+  struct vert thisrvB,
+  struct vert thisrvC,
   read_only image3d_t tileHeightMap
 ) {
-  /* compute face distance */
   uint offset = minfo.offset;
   uint size = minfo.size;
 
@@ -316,27 +341,19 @@ void sort_and_insert(
     int outOffset = minfo.idx;
     int uvOffset = minfo.uvOffset;
     int flags = minfo.flags;
-    int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
     int orientation = flags & 0x7ff;
 
+    // we only have to order faces against others of the same priority
     const int priorityOffset = count_prio_offset(shared, thisPriority);
     const int numOfPriority = shared->totalMappedNum[thisPriority];
-    int start = priorityOffset; // index of first face with this priority
-    int end = priorityOffset + numOfPriority; // index of last face with this priority
+    const int start = priorityOffset;                // index of first face with this priority
+    const int end = priorityOffset + numOfPriority;  // index of last face with this priority
+    const int renderPriority = thisDistance << 16 | (int)(~localId & 0xffffu);
     int myOffset = priorityOffset;
-    
-    // we only have to order faces against others of the same priority
+
     // calculate position this face will be in
     for (int i = start; i < end; ++i) {
-      int d1 = shared->dfs[i];
-      uint theirId = d1 >> 16;
-      int theirDistance = d1 & 0xffff;
-
-      // the closest faces draw last, so have the highest index
-      // if two faces have the same distance, the one with the
-      // higher id draws last
-      if ((theirDistance > thisDistance)
-        || (theirDistance == thisDistance && theirId < localId)) {
+      if (renderPriority < shared->renderPris[i]) {
         ++myOffset;
       }
     }
@@ -345,15 +362,18 @@ void sort_and_insert(
     float4 normB = normal[offset + localId * 3 + 1];
     float4 normC = normal[offset + localId * 3 + 2];
 
-    normalout[outOffset + myOffset * 3    ] = rotate_vec(normA, orientation);
-    normalout[outOffset + myOffset * 3 + 1] = rotate_vec(normB, orientation);
-    normalout[outOffset + myOffset * 3 + 2] = rotate_vec(normC, orientation);
+    normalout[outOffset + myOffset * 3    ] = rotate_vertex(normA, orientation);
+    normalout[outOffset + myOffset * 3 + 1] = rotate_vertex(normB, orientation);
+    normalout[outOffset + myOffset * 3 + 2] = rotate_vertex(normC, orientation);
 
     #if UNDO_VANILLA_SHADING
-    if ((((int)thisrvA.w) >> 20 & 1) == 0) {
+    if ((thisrvA.ahsl >> 20 & 1) == 0) {
         if (fast_length(normA) == 0) {
             // Compute flat normal if necessary, and rotate it back to match unrotated normals
-            float3 N = cross(convert_float3(thisrvA.xyz - thisrvB.xyz), convert_float3(thisrvA.xyz - thisrvC.xyz));
+            float3 N = cross(
+              (float3)(thisrvA.x - thisrvB.x, thisrvA.y - thisrvB.y, thisrvA.z - thisrvB.z),
+              (float3)(thisrvA.x - thisrvC.x, thisrvA.y - thisrvC.y, thisrvA.z - thisrvC.z)
+            );
             normA = normB = normC = (float4) (N, 1.f);
         }
         undoVanillaShading(&thisrvA, normA.xyz);
@@ -362,21 +382,24 @@ void sort_and_insert(
     }
     #endif
 
-    thisrvA += pos;
-    thisrvB += pos;
-    thisrvC += pos;
+    float4 pos = (float4)(minfo.x, minfo.y, minfo.z, 0);
+    float4 vertA = (float4)(thisrvA.x, thisrvA.y, thisrvA.z, 0) + pos;
+    float4 vertB = (float4)(thisrvB.x, thisrvB.y, thisrvB.z, 0) + pos;
+    float4 vertC = (float4)(thisrvC.x, thisrvC.y, thisrvC.z, 0) + pos;
 
     // apply hillskew
     int plane = (flags >> 24) & 3;
     int hillskew = (flags >> 26) & 1;
-    thisrvA = hillskew_vertex(tileHeightMap, thisrvA, hillskew, minfo.y, plane);
-    thisrvB = hillskew_vertex(tileHeightMap, thisrvB, hillskew, minfo.y, plane);
-    thisrvC = hillskew_vertex(tileHeightMap, thisrvC, hillskew, minfo.y, plane);
+    if (hillskew == 1) {
+        hillskew_vertex(tileHeightMap, &vertA, hillskew, minfo.y, plane);
+        hillskew_vertex(tileHeightMap, &vertB, hillskew, minfo.y, plane);
+        hillskew_vertex(tileHeightMap, &vertC, hillskew, minfo.y, plane);
+    }
 
     // position vertices in scene and write to out buffer
-    vout[outOffset + myOffset * 3]     = thisrvA;
-    vout[outOffset + myOffset * 3 + 1] = thisrvB;
-    vout[outOffset + myOffset * 3 + 2] = thisrvC;
+    vout[outOffset + myOffset * 3] = (struct vert){vertA.x, vertA.y, vertA.z, thisrvA.ahsl};
+    vout[outOffset + myOffset * 3 + 1] = (struct vert){vertB.x, vertB.y, vertB.z, thisrvB.ahsl};
+    vout[outOffset + myOffset * 3 + 2] = (struct vert){vertC.x, vertC.y, vertC.z, thisrvC.ahsl};
 
     float4 uvA = (float4)(0);
     float4 uvB = (float4)(0);
@@ -389,15 +412,22 @@ void sort_and_insert(
 
       if ((((int)uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
         // Rotate the texture triangles to match model orientation
-        uvA = rotate_vec(uvA, orientation);
-        uvB = rotate_vec(uvB, orientation);
-        uvC = rotate_vec(uvC, orientation);
+        uvA = rotate_vertex(uvA, orientation);
+        uvB = rotate_vertex(uvB, orientation);
+        uvC = rotate_vertex(uvC, orientation);
 
         // Shift texture triangles to world space
         float3 modelPos = convert_float3(pos.xyz);
         uvA.xyz += modelPos;
         uvB.xyz += modelPos;
         uvC.xyz += modelPos;
+
+        // For vanilla UVs, the first 3 components are an integer position vector
+        if (hillskew == 1) {
+            hillskew_vertex(tileHeightMap, &uvA, hillskew, minfo.y, plane);
+            hillskew_vertex(tileHeightMap, &uvB, hillskew, minfo.y, plane);
+            hillskew_vertex(tileHeightMap, &uvC, hillskew, minfo.y, plane);
+        }
       }
     }
 

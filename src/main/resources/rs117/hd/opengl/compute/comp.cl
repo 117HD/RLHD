@@ -35,10 +35,10 @@ __attribute__((work_group_size_hint(THREAD_COUNT, 1, 1)))
 void sortModel(
   __local struct shared_data *shared,
   __global const struct ModelInfo *ol,
-  __global const int4 *vb,
+  __global const struct vert *vb,
   __global const float4 *uv,
   __global const float4 *normal,
-  __global int4 *vout,
+  __global struct vert *vout,
   __global float4 *uvout,
   __global float4 *normalout,
   __constant struct uniform *uni,
@@ -62,9 +62,9 @@ void sortModel(
 
   int prio[FACES_PER_THREAD];
   int dis[FACES_PER_THREAD];
-  int4 v1[FACES_PER_THREAD];
-  int4 v2[FACES_PER_THREAD];
-  int4 v3[FACES_PER_THREAD];
+  struct vert v1[FACES_PER_THREAD];
+  struct vert v2[FACES_PER_THREAD];
+  struct vert v3[FACES_PER_THREAD];
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
     get_face(shared, uni, vb, localId + i, minfo, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
@@ -87,7 +87,7 @@ void sortModel(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
-    insert_dfs(shared, localId + i, minfo, prioAdj[i], dis[i], idx[i]);
+    insert_face(shared, localId + i, minfo, prioAdj[i], dis[i], idx[i]);
   }
 
   barrier(CLK_LOCAL_MEM_FENCE);

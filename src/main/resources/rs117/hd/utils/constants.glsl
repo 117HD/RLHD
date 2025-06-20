@@ -40,8 +40,5 @@
 #include DISABLE_DIRECTIONAL_SHADING
 #include FLAT_SHADING
 #include SHADOW_MAP_OVERLAY
-
-#define LIGHT_DIRECTIONAL 0
-#define LIGHT_POINT 1
-#define LIGHT_SPOT 2 // Not supported yet, but adding for future
-#define LIGHT_AREA 3 // Also not supported yet
+#include APPLY_COLOR_FILTER
+#include WIREFRAME

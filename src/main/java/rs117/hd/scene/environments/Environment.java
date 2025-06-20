@@ -3,9 +3,9 @@ package rs117.hd.scene.environments;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.Objects;
 import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
-import rs117.hd.data.environments.Area;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 
@@ -13,7 +13,6 @@ import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
 import static rs117.hd.utils.ColorUtils.rgb;
 
 @Setter(value = AccessLevel.PRIVATE)
-@NoArgsConstructor // Called by GSON when parsing JSON
 public class Environment {
 	public static final Environment DEFAULT = new Environment()
 		.setKey("DEFAULT")
@@ -30,12 +29,14 @@ public class Environment {
 	public static Environment OVERWORLD, AUTUMN, WINTER;
 
 	public String key;
-	@JsonAdapter(Area.JsonAdapter.class)
+	@JsonAdapter(AreaManager.JsonAdapter.class)
 	public Area area = Area.NONE;
 	public boolean isOverworld = false;
 	public boolean isUnderwater = false;
+	public boolean force = false;
 	public boolean allowSkyOverride = true;
 	public boolean lightningEffects = false;
+	public boolean instantTransition = false;
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] ambientColor = rgb("#ffffff");
 	public float ambientStrength = 1;
@@ -84,6 +85,6 @@ public class Environment {
 	public String toString() {
 		if (key != null)
 			return key;
-		return area.name();
+		return area.name;
 	}
 }

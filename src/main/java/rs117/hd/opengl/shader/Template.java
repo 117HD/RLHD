@@ -76,6 +76,12 @@ public class Template
 				String includeContents = loadInternal(includeFile);
 				includeStack.pop();
 
+				int nextLineOffset = 1;
+				if (Shader.DUMP_SHADERS) {
+					sb.append("// Including ").append(includeFile).append('\n');
+					nextLineOffset = 0;
+				}
+
 				switch (includeType)
 				{
 					case GLSL:
@@ -96,7 +102,7 @@ public class Template
 								.append("\n")
 								.append(includeContents)
 								.append("#line ") // Return to the next line of the current file
-								.append(lineCount + 1)
+								.append(lineCount + nextLineOffset)
 								.append(" ")
 								.append(currentIndex)
 								.append("\n");
@@ -113,7 +119,7 @@ public class Template
 							.append("\"\n")
 							.append(includeContents)
 							.append("#line ") // Return to the next line in the parent include
-							.append(lineCount + 1)
+							.append(lineCount + nextLineOffset)
 							.append(" \"")
 							.append(currentFile)
 							.append("\"\n");
@@ -122,14 +128,19 @@ public class Template
 						sb.append(includeContents);
 						break;
 				}
+
+				if (Shader.DUMP_SHADERS)
+					sb.append("// End include of ").append(includeFile).append('\n');
 			}
 			else if (trimmed.startsWith("#pragma once"))
 			{
 				int currentIndex = includeList.size() - 1;
 				String currentInclude = includeList.get(currentIndex);
 				if (includeList.indexOf(currentInclude) != currentIndex) {
-					sb.append("// Already included\n");
+					sb.append("// #pragma once - already included\n");
 					break;
+				} else {
+					sb.append("// #pragma once - first include\n");
 				}
 			}
 			else

@@ -32,34 +32,37 @@ layout(local_size_x = 6) in;
 void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x;
-    ModelInfo minfo = ol[groupId];
+    const ModelInfo minfo = ol[groupId];
 
     int offset = minfo.offset;
     int size = minfo.size;
     int outOffset = minfo.idx;
     int uvOffset = minfo.uvOffset;
     int flags = minfo.flags;
-
-    ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
+    vec3 pos = vec3(minfo.x, minfo.y, minfo.z);
 
     if (localId >= size) {
         return;
     }
 
     uint ssboOffset = localId;
-    ivec4 thisA, thisB, thisC;
+    vert thisA, thisB, thisC;
 
     // Grab triangle vertices from the correct buffer
     thisA = vb[offset + ssboOffset * 3    ];
     thisB = vb[offset + ssboOffset * 3 + 1];
     thisC = vb[offset + ssboOffset * 3 + 2];
 
+    thisA.pos += pos;
+    thisB.pos += pos;
+    thisC.pos += pos;
+
     uint myOffset = localId;
 
     // position vertices in scene and write to out buffer
-    vout[outOffset + myOffset * 3]     = pos + thisA;
-    vout[outOffset + myOffset * 3 + 1] = pos + thisB;
-    vout[outOffset + myOffset * 3 + 2] = pos + thisC;
+    vout[outOffset + myOffset * 3]     = thisA;
+    vout[outOffset + myOffset * 3 + 1] = thisB;
+    vout[outOffset + myOffset * 3 + 2] = thisC;
 
     if (uvOffset < 0) {
         uvout[outOffset + myOffset * 3]     = vec4(0, 0, 0, 0);

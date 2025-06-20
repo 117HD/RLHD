@@ -30,16 +30,30 @@
       },
       "npcIds": {
         "type": "array",
-        "description": "A set of NPC IDs or NpcID keys that the override should apply to.",
+        "description": "A set of NPC gameval names which the override should apply to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "string"
         }
       },
       "objectIds": {
         "type": "array",
-        "description": "A set of object IDs or ObjectID keys that the override should apply to.",
+        "description": "A set of object gameval names which the override should apply to.",
         "items": {
-          "type": [ "integer", "string" ]
+          "type": "string"
+        }
+      },
+      "projectileIds": {
+        "type": "array",
+        "description": "A set of projectile gameval names which the override should apply to.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "graphicsObjectIds": {
+        "type": "array",
+        "description": "A set of graphics object gameval names which the override should apply to.",
+        "items": {
+          "type": "string"
         }
       },
       "baseMaterial": {
@@ -93,7 +107,7 @@
       },
       "rotate": {
         "type": "integer",
-        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0."
+        "description": "Counter-clockwise rotation around the up-axis in degrees, where only 0, 90, 180 and 270 are allowed. Defaults to 0. Only works for static scene models."
       },
       "hide": {
         "type": "boolean",
@@ -111,9 +125,21 @@
         "type": "boolean",
         "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
       },
-      "removeBakedLighting": {
+      "upwardsNormals": {
         "type": "boolean",
-        "description": "Whether the model has fake shadows or baked lighting that should be removed. Defaults to false."
+        "description": "Whether normals should always point directly up. Defaults to false."
+      },
+      "hideVanillaShadows": {
+        "type": "boolean",
+        "description": "Whether the model has fake shadows which should be removed. Defaults to false."
+      },
+      "retainVanillaShadowsInPvm": {
+        "type": "boolean",
+        "description": "Whether the model has fake shadows which are potentially useful for PvM. Defaults to false."
+      },
+      "hideHdShadowsInPvm": {
+        "type": "boolean",
+        "description": "Whether shadow casting should be disabled when Vanilla Shadows is set to 'Prefer in PvM'. Defaults to false."
       },
       "castShadows": {
         "type": "boolean",
@@ -204,6 +230,109 @@
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            },
+            "flatNormals": {
+              "type": "boolean",
+              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+            },
+            "upwardsNormals": {
+              "type": "boolean",
+              "description": "Whether normals should always point directly up. Defaults to false."
+            },
+            "receiveShadows": {
+              "type": "boolean",
+              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "shadowOpacityThreshold": {
+              "type": "number",
+              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            }
+          }
+        }
+      },
+      "colorOverrides": {
+        "description": "A subset of options can be tweaked separately for a specific set of colors of the model.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "baseMaterial", "colors" ],
+          "properties": {
+            "colors": {
+              "type": [ "array", "string", "integer" ],
+              "description": "One or more expressions or values to test the HSL color against. Available variables: `hsl`, `h`, `s`, `l`.",
+              "items": {
+                "type": [ "string", "integer" ]
+              }
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of which part of the object these properties apply to."
+            },
+            "baseMaterial": {
+              "type": "string",
+              "description": "Case-sensitive name of the material to apply to faces which pass the color checks."
+            },
+            "uvType": {
+              "type": "string",
+              "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
+              "enum": [
+                "VANILLA",
+                "GEOMETRY",
+                "MODEL_XY",
+                "MODEL_XY_MIRROR_A",
+                "MODEL_XY_MIRROR_B",
+                "MODEL_XZ",
+                "MODEL_XZ_MIRROR_A",
+                "MODEL_XZ_MIRROR_B",
+                "MODEL_YZ",
+                "MODEL_YZ_MIRROR_A",
+                "MODEL_YZ_MIRROR_B",
+                "WORLD_XY",
+                "WORLD_XZ",
+                "WORLD_YZ",
+                "BOX"
+              ]
+            },
+            "uvScale": {
+              "type": "number",
+              "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
+            },
+            "uvOrientation": {
+              "type": "integer",
+              "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
+            },
+            "uvOrientationX": {
+              "type": "integer",
+              "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationY": {
+              "type": "integer",
+              "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationZ": {
+              "type": "integer",
+              "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "retainVanillaUvs": {
+              "type": "boolean",
+              "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            },
+            "flatNormals": {
+              "type": "boolean",
+              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+            },
+            "upwardsNormals": {
+              "type": "boolean",
+              "description": "Whether normals should always point directly up. Defaults to false."
+            },
+            "receiveShadows": {
+              "type": "boolean",
+              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "shadowOpacityThreshold": {
+              "type": "number",
+              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
             }
           }
         }

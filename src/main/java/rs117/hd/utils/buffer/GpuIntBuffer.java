@@ -38,7 +38,13 @@ public class GpuIntBuffer
 	}
 
 	public GpuIntBuffer(int initialCapacity) {
-		buffer = MemoryUtil.memAllocInt(initialCapacity);
+		try {
+			buffer = MemoryUtil.memAllocInt(initialCapacity);
+		} catch (OutOfMemoryError oom) {
+			// Force garbage collection and try again
+			System.gc();
+			buffer = MemoryUtil.memAllocInt(initialCapacity);
+		}
 	}
 
 	public void destroy() {
@@ -57,8 +63,12 @@ public class GpuIntBuffer
 		buffer.put(x).put(y).put(z);
 	}
 
-	public void put(int x, int y, int z, int w) {
-		buffer.put(x).put(y).put(z).put(w);
+	public void put(float x, float y, float z, int w) {
+		buffer
+			.put(Float.floatToIntBits(x))
+			.put(Float.floatToIntBits(y))
+			.put(Float.floatToIntBits(z))
+			.put(w);
 	}
 
 	public void put(int[] ints) {

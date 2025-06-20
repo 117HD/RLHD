@@ -2,7 +2,6 @@
 // Algorithm from "Analysis of Color Blindness" by Onur Fidaner, Poliang Lin and Nevran Ozguven.
 // https://web.archive.org/web/20090731011248/http://scien.stanford.edu/class/psych221/projects/05/ofidaner/project_report.pdf
 //
-#pragma once
 
 #include COLOR_BLINDNESS
 

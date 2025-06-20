@@ -228,7 +228,7 @@ public class FileWatcher {
 		try {
 			watchKeys.put(dir.register(watchService, eventKinds), dir);
 			log.debug("Watching {}", path);
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException("Failed to register file watcher for path: " + path, ex);
 		}
 	}
@@ -244,7 +244,7 @@ public class FileWatcher {
 					return FileVisitResult.CONTINUE;
 				}
 			});
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException("Failed to register recursive file watcher for path: " + path, ex);
 		}
 	}

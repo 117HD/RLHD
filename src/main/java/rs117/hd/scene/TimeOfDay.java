@@ -5,9 +5,9 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.utils.SunCalc;
+import rs117.hd.utils.Vector;
 
 import static rs117.hd.utils.ColorUtils.rgb;
-import static rs117.hd.utils.HDUtils.multiply;
 
 public enum TimeOfDay
 {
@@ -54,11 +54,11 @@ public enum TimeOfDay
 	}
 
 	public static float[] getNightAmbientColor() {
-		return multiply(rgb(56, 99, 161), 2);
+		return Vector.multiply(rgb(56, 99, 161), 2);
 	}
 
 	public static float[] getNightLightColor() {
-		return multiply(rgb(181, 205, 255), 0.25f);
+		return Vector.multiply(rgb(181, 205, 255), 0.25f);
 	}
 
 	public static Instant getModifiedDate(float dayLength) {
@@ -94,8 +94,8 @@ public enum TimeOfDay
 				latitude = 41.8337329;
 				longitude = -87.7319639;
 				break;
-			default:
 			case UNITED_KINGDOM:
+			default:
 				// Cambridge
 				latitude = 52.1951;
 				longitude = .1313;

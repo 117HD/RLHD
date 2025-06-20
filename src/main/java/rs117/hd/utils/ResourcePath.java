@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -65,8 +66,7 @@ import org.lwjgl.system.Platform;
 
 @Slf4j
 public class ResourcePath {
-    public static ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
-
+	private static final ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
     private static final FileWatcher.UnregisterCallback NOOP = () -> {};
 
     @Nullable
@@ -116,7 +116,10 @@ public class ResourcePath {
     
     @SuppressWarnings("ResultOfMethodCallIgnored")
     public ResourcePath mkdirs() {
-        toFile().getParentFile().mkdirs();
+		var file = toFile();
+		if (file.isFile())
+			file = file.getParentFile();
+		file.mkdirs();
         return this;
     }
 
@@ -185,7 +188,7 @@ public class ResourcePath {
 		String path = toPosixPath();
 		if (root != null)
 			path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
-		return path.length() == 0 ? "." : path;
+		return path.isEmpty() ? "." : path;
 	}
 
 	public ResourcePath toAbsolute() {
@@ -265,15 +268,8 @@ public class ResourcePath {
         return false;
     }
 
-    /**
-	 * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-	 */
 	public boolean isFileSystemResource() {
-		try {
-			return toURL().getProtocol().equals("file");
-		} catch (IOException ex) {
-			return false;
-		}
+		return !isClassResource();
 	}
 
 	/**
@@ -283,18 +279,21 @@ public class ResourcePath {
 	 * @return A runnable that can be called to unregister the watch callback
 	 */
 	public FileWatcher.UnregisterCallback watch(BiConsumer<ResourcePath, Boolean> changeHandler) {
-		// Only watch files on the file system
-		if (RESOURCE_PATH == null) {
-			changeHandler.accept(this, true);
-			return NOOP;
-		}
+		var path = this;
 
-		// Attempt to redirect to the resource directory
-		ResourcePath path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+		// Redirect to the project folder during development
+		if (RESOURCE_PATH != null)
+			path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
 
 		// Load once up front
 		changeHandler.accept(path, true);
-		return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
+
+		// Watch for changes if the resource is on the file system, which will exclude paths pointing into the JAR.
+		// By default, unless paths are overridden by VM arguments, all of 117 HD's paths point into the JAR.
+		if (path.isFileSystemResource())
+			return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
+
+		return NOOP;
 	}
 
 	public FileWatcher.UnregisterCallback watch(Consumer<ResourcePath> changeHandler) {
@@ -325,6 +324,12 @@ public class ResourcePath {
 	}
 
 	public <T> T loadJson(Gson gson, Class<T> type) throws IOException {
+		try (BufferedReader reader = toReader()) {
+			return gson.fromJson(reader, type);
+		}
+	}
+
+	public <T> T loadJson(Gson gson, Type type) throws IOException {
 		try (BufferedReader reader = toReader()) {
 			return gson.fromJson(reader, type);
 		}
@@ -433,14 +438,14 @@ public class ResourcePath {
 
     private static String normalize(@Nullable String workingDirectory, String[] parts) {
         Stack<String> resolvedParts = new Stack<>();
-        if (workingDirectory != null && workingDirectory.length() > 0 && !workingDirectory.equals("."))
+		if (workingDirectory != null && !workingDirectory.isEmpty() && !workingDirectory.equals("."))
             resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
 
         if (parts.length > 0)
             parts[0] = resolveTilde(parts[0]);
 
         for (String part : parts) {
-            if (part == null || part.length() == 0 || part.equals("."))
+			if (part == null || part.isEmpty() || part.equals("."))
                 continue;
 
             part = normalizeSlashes(part);
@@ -450,7 +455,7 @@ public class ResourcePath {
 
             for (String normalizedPart : part.split("/")) {
                 if (normalizedPart.equals("..") &&
-                    resolvedParts.size() > 0 &&
+					!resolvedParts.isEmpty() &&
                     !resolvedParts.peek().equals("..")
                 ) {
                     resolvedParts.pop();
@@ -538,16 +543,6 @@ public class ResourcePath {
             return true;
         }
 
-        /**
-         * Check if the resource root is actually on the file system.
-         */
-        public boolean isFileSystemResource() {
-            URL url = root.getResource("/");
-            if (url == null)
-                return false;
-            return url.getProtocol().equals("file");
-        }
-
         @Override
         @NonNull
         public URL toURL() throws IOException {
@@ -614,16 +609,6 @@ public class ResourcePath {
         @Override
         public boolean isClassResource() {
             return true;
-        }
-
-        /**
-         * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-         */
-        public boolean isFileSystemResource() {
-            URL url = root.getResource("/");
-            if (url == null)
-                return false;
-            return url.getProtocol().equals("file");
         }
 
         @Override

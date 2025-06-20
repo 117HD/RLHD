@@ -26,15 +26,20 @@
  */
 package rs117.hd.utils;
 
+import java.awt.Color;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.TimeOfDay;
 
-import java.awt.*;
-
 import static java.lang.Math.PI;
-import static java.lang.Math.*;
+import static java.lang.Math.acos;
+import static java.lang.Math.asin;
+import static java.lang.Math.atan2;
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
+import static java.lang.Math.tan;
 import static rs117.hd.utils.ColorUtils.rgb;
-import static rs117.hd.utils.HDUtils.*;
+import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.HDUtils.lerp;
 
 @Slf4j
 public class SunCalc
@@ -75,7 +80,7 @@ public class SunCalc
 		double[] angles = getSunAngles(millis, latLong);
 
 		// Use night illumination as a base
-		float[] rgb = multiply(
+		float[] rgb = Vector.multiply(
 			ColorUtils.colorTemperatureToLinearRgb(4100),
 			(float) SunCalc.getMoonIllumination(millis)[0] * .2f
 		);
@@ -101,8 +106,8 @@ public class SunCalc
 			strength *= strength;
 			strength *= 3;
 			float[] sunIllumination = ColorUtils.colorTemperatureToLinearRgb(temperature);
-			sunIllumination = multiply(sunIllumination, strength);
-			add(rgb, rgb, sunIllumination);
+			sunIllumination = Vector.multiply(sunIllumination, strength);
+			Vector.add(rgb, rgb, sunIllumination);
 		}
 
 		return rgb;

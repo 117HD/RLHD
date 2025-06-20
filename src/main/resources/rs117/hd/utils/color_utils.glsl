@@ -18,16 +18,16 @@
  * Color Research & Application, 22(1), 11–23.
  * doi:10.1002/(sici)1520-6378(199702)22:1<11::aid-col4>3.0.co;2-7
  */
-const mat3 RGB_TO_XYZ_MATRIX = transpose(mat3(
-    .49,   .31,   .2,
-    .1769, .8124, .0107,
-    .0,    .0099, .9901
-));
-const mat3 XYZ_TO_RGB_MATRIX = transpose(mat3(
-    2.36449,    -.896553,  -.467937,
-    -.514935,   1.42633,    .0886025,
-    0.00514883, -.0142619, 1.00911
-));
+const mat3 RGB_TO_XYZ_MATRIX = mat3(
+    .49, .1769, .0,
+    .31, .8124, .0099,
+    .2,  .0107, .9901
+);
+const mat3 XYZ_TO_RGB_MATRIX = mat3(
+    2.36449,  -.514935,  0.00514883,
+    -.896553, 1.42633,   -.0142619,
+    -.467937,  .0886025, 1.00911
+);
 
 /**
  * Transform from CIE 1931 XYZ color space to linear RGB.
@@ -135,7 +135,7 @@ vec3 srgbToHsl(vec3 srgb) {
 
 vec3 hslToSrgb(vec3 hsl) {
     float C = (1 - abs(2 * hsl[2] - 1)) * hsl[1];
-    float H_prime = hsl[0] * 6;
+    float H_prime = fract(hsl[0]) * 6;
     float m = hsl[2] - C / 2;
 
     float r = clamp(abs(H_prime - 3) - 1, 0, 1);

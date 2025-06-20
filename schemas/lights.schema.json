@@ -32,6 +32,7 @@
       "alignment": {
         "type": "string",
         "enum": [
+          "CUSTOM",
           "CENTER",
 
           "NORTH",
@@ -61,6 +62,15 @@
           "BACKRIGHT_CORNER"
         ],
         "description": "Where to place the light in relation to what it's attached to, be it an NPC, object or world location."
+      },
+      "offset": {
+        "type": "array",
+        "description": "The light's position relative to the center of the model it's attached to, before rotation. Only applies if alignment is set to CUSTOM, which is the default.",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "integer"
+        }
       },
       "height": {
         "type": "integer",
@@ -99,45 +109,83 @@
       },
       "fadeInDuration": {
         "type": "number",
-        "description": "The time in milliseconds until the light is fully active after spawning."
+        "description": "The time in milliseconds until the light is fully active after spawning. May overlap with fade-out if overlap is enabled."
+      },
+      "fadeOutDuration": {
+        "type": "number",
+        "description": "The time in milliseconds until the light is fully inactive after despawning. May overlap with fade-in if overlap is enabled."
+      },
+      "fadeOverlap": {
+        "type": "boolean",
+        "description": "If enabled, fade-in and fade-out can overlap if spaced close enough together."
+      },
+      "spawnDelay": {
+        "type": "number",
+        "description": "The time in milliseconds between the light spawning and the light beginning to fade in."
+      },
+      "despawnDelay": {
+        "type": "number",
+        "description": "The time in milliseconds between the light despawning and the light beginning to fade out."
+      },
+      "fixedDespawnTime": {
+        "type": "boolean",
+        "description": "If enabled, the light will have faded out completely after spawnDelay + despawnDelay milliseconds."
       },
       "visibleFromOtherPlanes": {
         "type": "boolean",
         "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
       },
+      "ignoreActorHiding": {
+        "type": "boolean",
+        "description": "Don't hide the light if its actor is hidden by another actor drawing on top. Defaults to false."
+      },
+      "areas": {
+        "type": "array",
+        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the light should be limited to.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
+      "excludeAreas": {
+        "type": "array",
+        "description": "An array of areas where the light shouldn't be able to spawn.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
       "npcIds": {
         "type": "array",
-        "description": "A set of NPC IDs or NpcID keys to apply the light to.",
+        "description": "A set of NPC gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "objectIds": {
         "type": "array",
-        "description": "A set of object IDs or ObjectID keys to apply the light to.",
+        "description": "A set of object gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "projectileIds": {
         "type": "array",
-        "description": "A set of projectile IDs to apply the light to.",
+        "description": "A set of projectile gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "graphicsObjectIds": {
         "type": "array",
-        "description": "A set of graphics object IDs to apply the light to.",
+        "description": "A set of graphics object gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "animationIds": {
         "type": "array",
-        "description": "A set of animation IDs to display the light for. Must be specified alongside another kind of ID to apply to.",
+        "description": "A set of animation gameval names to display the light for. Must be specified alongside another kind of ID to apply to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       }
     }

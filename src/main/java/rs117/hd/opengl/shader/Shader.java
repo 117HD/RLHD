@@ -36,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import rs117.hd.utils.Props;
+import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -43,6 +44,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 public class Shader
 {
+	public static final boolean DUMP_SHADERS = Props.has("rlhd.dump-shaders");
+
 	@VisibleForTesting
 	final List<Unit> units = new ArrayList<>();
 
@@ -69,18 +72,24 @@ public class Shader
 		int[] shaders = new int[units.size()];
 		int i = 0;
 		boolean ok = false;
+
+		ResourcePath dumpPath = null;
+		if (DUMP_SHADERS)
+			dumpPath = path("shader-dumps").mkdirs();
+
 		try
 		{
-			while (i < shaders.length)
-			{
+			while (i < shaders.length) {
 				Unit unit = units.get(i);
 				int shader = glCreateShader(unit.type);
-				if (shader == 0)
-				{
+				if (shader == 0) {
 					throw new ShaderException("Unable to create shader of type " + unit.type);
 				}
 
 				String source = template.load(unit.filename);
+				if (DUMP_SHADERS)
+					dumpPath.resolve(unit.filename).writeString(source);
+
 				glShaderSource(shader, source);
 				glCompileShader(shader);
 
@@ -105,8 +114,7 @@ public class Shader
 
 			ok = true;
 
-			if (Props.has("rlhd.dump-shaders"))
-			{
+			if (DUMP_SHADERS) {
 				int[] numFormats = { 0 };
 				glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
 				if (numFormats[0] < 1) {
@@ -119,16 +127,11 @@ public class Shader
 					ByteBuffer binary = BufferUtils.createByteBuffer(size[0]);
 					glGetProgramBinary(program, size, format, binary);
 
-					try {
-						String shaderName = units.stream()
+					String shaderName =
+						units.stream()
 							.map(Unit::getFilename)
 							.collect(Collectors.joining(" + ")) + ".bin";
-						path("shader-dumps", shaderName)
-							.mkdirs()
-							.writeByteBuffer(binary);
-					} catch (IOException ex) {
-						throw new RuntimeException(ex);
-					}
+					dumpPath.resolve(shaderName).writeByteBuffer(binary);
 				}
 			}
 		}

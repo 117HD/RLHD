@@ -3,9 +3,10 @@ package rs117.hd.scene;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
@@ -19,8 +20,8 @@ import rs117.hd.utils.ResourcePath;
 
 import static rs117.hd.utils.ResourcePath.path;
 
-@Singleton
 @Slf4j
+@Singleton
 public class ModelOverrideManager {
 	private static final ResourcePath MODEL_OVERRIDES_PATH = Props.getPathOrDefault(
 		"rlhd.model-overrides-path",
@@ -39,7 +40,10 @@ public class ModelOverrideManager {
 	@Inject
 	private ModelPusher modelPusher;
 
-	private final HashMap<Long, ModelOverride> modelOverrides = new HashMap<>();
+	@Inject
+	private FishingSpotReplacer fishingSpotReplacer;
+
+	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
@@ -53,7 +57,7 @@ public class ModelOverrideManager {
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
 					try {
-						override.normalize();
+						override.normalize(plugin.configVanillaShadowMode);
 					} catch (IllegalStateException ex) {
 						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 						continue;
@@ -73,6 +77,8 @@ public class ModelOverrideManager {
 			} catch (IOException ex) {
 				log.error("Failed to load model overrides:", ex);
 			}
+
+			addOverride(fishingSpotReplacer.getModelOverride());
 
 			if (!first) {
 				clientThread.invoke(() -> {
@@ -97,18 +103,22 @@ public class ModelOverrideManager {
 		startUp();
 	}
 
-	private void addOverride(ModelOverride override) {
-		if (override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
+	private void addOverride(@Nullable ModelOverride override) {
+		if (override == null || override.seasonalTheme != null && override.seasonalTheme != plugin.configSeasonalTheme)
 			return;
 
-		for (int npcId : override.npcIds)
-			addEntry(ModelHash.TYPE_NPC, npcId, override);
-		for (int objectId : override.objectIds)
-			addEntry(ModelHash.TYPE_OBJECT, objectId, override);
+		for (int id : override.npcIds)
+			addEntry(ModelHash.TYPE_NPC, id, override);
+		for (int id : override.objectIds)
+			addEntry(ModelHash.TYPE_OBJECT, id, override);
+		for (int id : override.projectileIds)
+			addEntry(ModelHash.TYPE_PROJECTILE, id, override);
+		for (int id : override.graphicsObjectIds)
+			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override);
 	}
 
 	private void addEntry(int type, int id, ModelOverride entry) {
-		long uuid = ModelHash.packUuid(id, type);
+		int uuid = ModelHash.packUuid(type, id);
 		ModelOverride current = modelOverrides.get(uuid);
 
 		if (current != null && !Objects.equals(current.seasonalTheme, entry.seasonalTheme)) {
@@ -125,6 +135,21 @@ public class ModelOverrideManager {
 
 			// A dummy override is used as the base if only area-specific overrides exist
 			isDuplicate = current != null && !current.isDummy;
+
+			if (isDuplicate && Props.DEVELOPMENT) {
+				// This should ideally not be reached, so print helpful warnings in development mode
+				if (entry.hideInAreas.length > 0) {
+					log.error(
+						"Replacing ID {} from '{}' with hideInAreas-override '{}'. This is likely a mistake...",
+						id, current.description, entry.description
+					);
+				} else {
+					log.error(
+						"Replacing ID {} from '{}' with '{}'. The first-mentioned override should be removed.",
+						id, current.description, entry.description
+					);
+				}
+			}
 
 			if (current != null && current.areaOverrides != null && !current.areaOverrides.isEmpty()) {
 				var areaOverrides = current.areaOverrides;
@@ -149,26 +174,11 @@ public class ModelOverrideManager {
 			for (var area : entry.areas)
 				current.areaOverrides.put(area, entry);
 		}
-
-		if (isDuplicate && Props.DEVELOPMENT) {
-			// This should ideally not be reached, so print helpful warnings in development mode
-			if (entry.hideInAreas.length > 0) {
-				System.err.printf(
-					"Replacing ID %d from '%s' with hideInAreas-override '%s'. This is likely a mistake...\n",
-					id, current.description, entry.description
-				);
-			} else {
-				System.err.printf(
-					"Replacing ID %d from '%s' with '%s'. The first-mentioned override should be removed.\n",
-					id, current.description, entry.description
-				);
-			}
-		}
 	}
 
-	@NonNull
-	public ModelOverride getOverride(long hash, int[] worldPos) {
-		var override = modelOverrides.get(ModelHash.getUuid(client, hash));
+	@Nonnull
+	public ModelOverride getOverride(int uuid, int[] worldPos) {
+		var override = modelOverrides.get(ModelHash.getUuidWithoutSubType(uuid));
 		if (override == null)
 			return ModelOverride.NONE;
 

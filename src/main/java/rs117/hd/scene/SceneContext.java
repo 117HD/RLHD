@@ -1,39 +1,62 @@
 package rs117.hd.scene;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Area;
 import rs117.hd.data.materials.Material;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.utils.AABB;
+import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 
 public class SceneContext {
+	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
+
 	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
+	public final Client client;
 	public final Scene scene;
-	public final HashSet<Integer> regionIds;
+	public final AABB sceneBounds;
 	public final int expandedMapLoadingChunks;
+
+	public boolean enableAreaHiding;
+	public boolean fillGaps;
+	public boolean isPrepared;
+
+	@Nullable
+	public Area currentArea;
+	public Area[] possibleAreas = new Area[0];
+	public final ArrayList<Environment> environments = new ArrayList<>();
+	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	public int staticVertexCount = 0;
 	public GpuIntBuffer staticUnorderedModelBuffer;
 	public GpuIntBuffer stagingBufferVertices;
 	public GpuFloatBuffer stagingBufferUvs;
 	public GpuFloatBuffer stagingBufferNormals;
+
+	public int staticGapFillerTilesOffset;
+	public int staticGapFillerTilesVertexCount;
+	public int staticCustomTilesOffset;
+	public int staticCustomTilesVertexCount;
 
 	// statistics
 	public int uniqueModels;
@@ -55,19 +78,22 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
+	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
-	public final HashSet<Projectile> projectiles = new HashSet<>();
-
-	public final ArrayList<Environment> environments = new ArrayList<>();
+	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
+	public final HashMap<TileObject, TileObjectImpostorTracker> trackedTileObjects = new HashMap<>();
+	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
+	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
 
 	// model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
+	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
+		this.client = client;
 		this.scene = scene;
-		this.regionIds = HDUtils.getSceneRegionIds(scene);
+		this.sceneBounds = HDUtils.getSceneBounds(scene);
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 
 		if (previous == null) {
@@ -111,13 +137,11 @@ public class SceneContext {
 		stagingBufferNormals = null;
 	}
 
-	public int getVertexOffset()
-	{
+	public int getVertexOffset() {
 		return stagingBufferVertices.position() / VERTEX_SIZE;
 	}
 
-	public int getUvOffset()
-	{
+	public int getUvOffset() {
 		return stagingBufferUvs.position() / UV_SIZE;
 	}
 
@@ -126,35 +150,43 @@ public class SceneContext {
 	 * If the {@link LocalPoint} is not in the scene, this returns untranslated coordinates when in instances.
 	 *
 	 * @param localPoint to transform
-	 * @param plane		 which the local coordinate is on
+	 * @param plane      which the local coordinate is on
 	 * @return world coordinate
 	 */
-	public int[] localToWorld(LocalPoint localPoint, int plane)
-	{
+	public int[] localToWorld(LocalPoint localPoint, int plane) {
 		return HDUtils.localToWorld(scene, localPoint.getX(), localPoint.getY(), plane);
 	}
 
-	public int[] localToWorld(int localX, int localY, int plane)
-	{
+	public int[] localToWorld(LocalPoint localPoint) {
+		return localToWorld(localPoint, client.getPlane());
+	}
+
+	public int[] localToWorld(int localX, int localY, int plane) {
 		return HDUtils.localToWorld(scene, localX, localY, plane);
 	}
 
-	public int[] sceneToWorld(int sceneX, int sceneY, int plane)
-	{
-		return HDUtils.localToWorld(scene, sceneX * LOCAL_TILE_SIZE, sceneY * LOCAL_TILE_SIZE, plane);
+	public int[] localToWorld(int localX, int localY) {
+		return localToWorld(localX, localY, client.getPlane());
 	}
 
-	public Collection<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)
+	public int[] sceneToWorld(int sceneX, int sceneY, int plane) {
+		return localToWorld(sceneX * LOCAL_TILE_SIZE, sceneY * LOCAL_TILE_SIZE, plane);
+	}
+
+	public int[] extendedSceneToWorld(int sceneExX, int sceneExY, int plane) {
+		return sceneToWorld(sceneExX - SCENE_OFFSET, sceneExY - SCENE_OFFSET, plane);
+	}
+
+	public Stream<LocalPoint> worldInstanceToLocals(WorldPoint worldPoint)
 	{
 		return WorldPoint.toLocalInstance(scene, worldPoint)
 			.stream()
 			.map(this::worldToLocal)
-			.filter(Objects::nonNull)
-			.collect(Collectors.toList());
+			.filter(Objects::nonNull);
 	}
 
 	/**
-	 * Gets the local coordinate at the center of the passed tile.
+	 * Gets the local coordinate at the south-western corner of the passed tile.
 	 *
 	 * @param worldPoint the passed tile
 	 * @return coordinate if the tile is in the current scene, otherwise null
@@ -168,11 +200,46 @@ public class SceneContext {
 		);
 	}
 
+	/**
+	 * Gets the local coordinate at the south-western corner of the passed tile.
+	 */
+	public int[] worldToLocal(@Nonnull int[] worldPoint) {
+		return new int[] {
+			(worldPoint[0] - scene.getBaseX()) * LOCAL_TILE_SIZE,
+			(worldPoint[1] - scene.getBaseY()) * LOCAL_TILE_SIZE
+		};
+	}
+
 	public boolean intersects(Area area) {
 		return intersects(area.aabbs);
 	}
 
 	public boolean intersects(AABB... aabbs) {
 		return HDUtils.sceneIntersects(scene, expandedMapLoadingChunks, aabbs);
+	}
+
+	public AABB getNonInstancedSceneBounds() {
+		return HDUtils.getNonInstancedSceneBounds(scene, expandedMapLoadingChunks);
+	}
+
+	public int getObjectConfig(Tile tile, long hash) {
+		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
+			return tile.getWallObject().getConfig();
+		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
+			return tile.getDecorativeObject().getConfig();
+		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
+			return tile.getGroundObject().getConfig();
+		for (GameObject gameObject : tile.getGameObjects())
+			if (gameObject != null && gameObject.getHash() == hash)
+				return gameObject.getConfig();
+		return -1;
+	}
+
+	public int getBaseExX() {
+		return scene.getBaseX() - SCENE_OFFSET;
+	}
+
+	public int getBaseExY() {
+		return scene.getBaseY() - SCENE_OFFSET;
 	}
 }

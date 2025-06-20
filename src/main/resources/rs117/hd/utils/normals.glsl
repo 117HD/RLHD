@@ -22,7 +22,6 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
 
 #include NORMAL_MAPPING
 
@@ -37,6 +36,10 @@ vec3 sampleNormalMap(const Material material, const vec2 uv, const mat3 TBN) {
     n = linearToSrgb(n);
     // Scale and shift normal so it can point in both directions
     n.xy = n.xy * 2 - 1;
+    // Flip normals when UVs are flipped
+    n.xy *= sign(material.textureScale.xy);
+    // Scale the normal map's Z-component to adjust strength
+    n.z *= material.textureScale.z;
     // Transform the normal from tangent space to world space
     n = TBN * n;
     // Assume the normal is already normalized

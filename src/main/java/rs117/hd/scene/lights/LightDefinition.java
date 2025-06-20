@@ -3,17 +3,17 @@ package rs117.hd.scene.lights;
 import com.google.gson.annotations.JsonAdapter;
 import java.util.HashSet;
 import javax.annotation.Nullable;
-import lombok.NoArgsConstructor;
+import rs117.hd.scene.GamevalManager;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.GsonUtils;
 
-@NoArgsConstructor // Called by GSON when parsing JSON
 public class LightDefinition {
 	public String description;
 	@Nullable
 	public Integer worldX, worldY;
 	public int plane;
-	public Alignment alignment = Alignment.CENTER;
+	public Alignment alignment = Alignment.CUSTOM;
+	public int[] offset = new int[3];
 	public int height;
 	public int radius = 300;
 	public float strength = 5;
@@ -22,16 +22,43 @@ public class LightDefinition {
 	public LightType type = LightType.STATIC;
 	public float duration;
 	public float range;
-	public int fadeInDuration = -1;
-	public boolean visibleFromOtherPlanes = false;
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	public int fadeInDuration = 50;
+	public int fadeOutDuration = 50;
+	public int spawnDelay;
+	public int despawnDelay;
+	public boolean fixedDespawnTime;
+	public boolean visibleFromOtherPlanes;
+	public boolean ignoreActorHiding;
+	public int renderableIndex = -1;
+
+	@JsonAdapter(AABB.JsonAdapter.class)
+	public AABB[] areas = {};
+	@JsonAdapter(AABB.JsonAdapter.class)
+	public AABB[] excludeAreas = {};
+	@JsonAdapter(GamevalManager.NpcAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.ObjectAdapter.class)
 	public HashSet<Integer> objectIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
 	public HashSet<Integer> projectileIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
 	public HashSet<Integer> graphicsObjectIds = new HashSet<>();
-	@JsonAdapter(GsonUtils.IntegerSetAdapter.class)
+	@JsonAdapter(GamevalManager.AnimationAdapter.class)
 	public HashSet<Integer> animationIds = new HashSet<>();
+
+	public void normalize() {
+		if (description == null)
+			description = "N/A";
+		if (alignment == null || alignment == Alignment.CENTER)
+			alignment = Alignment.CUSTOM;
+		if (offset == null || offset.length != 3) {
+			offset = new int[3];
+		} else {
+			offset[1] *= -1;
+		}
+		if (color == null || color.length != 3)
+			color = new float[3];
+		if (type == null)
+			type = LightType.STATIC;
+	}
 }

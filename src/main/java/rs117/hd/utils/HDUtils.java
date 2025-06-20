@@ -24,20 +24,20 @@
  */
 package rs117.hd.utils;
 
-import java.util.HashSet;
 import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.api.coords.*;
-import rs117.hd.data.environments.Area;
+import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.areas.Area;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
+import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 
 @Slf4j
 @Singleton
@@ -47,9 +47,6 @@ public class HDUtils {
 	public static final long GiB = MiB * KiB;
 	public static final Random rand = new Random();
 
-	// directional vectors approximately opposite of the directional light used by the client
-	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
-
 	// The epsilon for floating point values used by jogl
 	public static final float EPSILON = 1.1920929E-7f;
 
@@ -58,62 +55,13 @@ public class HDUtils {
 	public static final float HALF_PI = PI / 2;
 	public static final float QUARTER_PI = PI / 2;
 
-	/**
-	 * Computes a + b, storing it in the out array
-	 */
-	public static float[] add(float[] out, float[] a, float[] b) {
-		for (int i = 0; i < out.length; i++)
-			out[i] = a[i] + b[i];
-		return out;
-	}
+	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
 
-	/**
-	 * Computes a - b, storing it in the out array
-	 */
-	public static float[] subtract(float[] out, float[] a, float[] b) {
-		for (int i = 0; i < out.length; i++)
-			out[i] = a[i] - b[i];
-		return out;
-	}
+	public static final int MAX_SNOW_LIGHTNESS = 70;
+	public static final int HIDDEN_HSL = 12345678;
 
-	public static float dot(float[] a, float[] b) {
-		float out = 0;
-		for (int i = 0; i < a.length; i++)
-			out += a[i] * b[i];
-		return out;
-	}
-
-	public static float magnitudeSquared(float[] vector) {
-		return dot(vector, vector);
-	}
-
-	public static float magnitude(float[] vector) {
-		return (float) Math.sqrt(magnitudeSquared(vector));
-	}
-
-	public static float[] multiply(float[] vec, float multiplier) {
-		float[] out = new float[vec.length];
-		for (int i = 0; i < vec.length; i++)
-			out[i] = vec[i] * multiplier;
-		return out;
-	}
-
-	public static float[] divide(float[] vec, float divide) {
-		return multiply(vec, 1 / divide);
-	}
-
-	public static float[] cross(float[] out, float[] a, float[] b) {
-		out[0] = a[1] * b[2] - a[2] * b[1];
-		out[1] = a[2] * b[0] - a[0] * b[2];
-		out[2] = a[0] * b[1] - a[1] * b[0];
-		return out;
-	}
-
-	public static float[] abs(float[] out, float[] v) {
-		for (int i = 0; i < out.length; i++)
-			out[i] = Math.abs(v[i]);
-		return out;
-	}
+	// directional vectors approximately opposite of the directional light used by the client
+	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
 
 	public static float min(float... v) {
 		float min = v[0];
@@ -129,6 +77,17 @@ public class HDUtils {
 			if (v[i] > max)
 				max = v[i];
 		return max;
+	}
+
+	public static float sum(float... v) {
+		float sum = 0;
+		for (float x : v)
+			sum += x;
+		return sum;
+	}
+
+	public static float avg(float... v) {
+		return sum(v) / v.length;
 	}
 
 	public static float lerp(float a, float b, float t) {
@@ -190,7 +149,7 @@ public class HDUtils {
 	 * Modulo that returns the answer with the same sign as the modulus.
 	 */
 	public static int mod(int x, int modulus) {
-		return x - (x / modulus) * modulus;
+		return ((x % modulus) + modulus) % modulus;
 	}
 
 	public static float clamp(float value, float min, float max) {
@@ -199,6 +158,14 @@ public class HDUtils {
 
 	public static int clamp(int value, int min, int max) {
 		return Math.min(Math.max(value, min), max);
+	}
+
+	public static long clamp(long value, long min, long max) {
+		return Math.min(Math.max(value, min), max);
+	}
+
+	public static double log2(double x) {
+		return Math.log(x) / Math.log(2);
 	}
 
 	public static int vertexHash(int[] vPos) {
@@ -210,10 +177,10 @@ public class HDUtils {
 	}
 
 	public static float[] calculateSurfaceNormals(float[] a, float[] b, float[] c) {
-		subtract(b, a, b);
-		subtract(c, a, c);
+		Vector.subtract(b, a, b);
+		Vector.subtract(c, a, c);
 		float[] n = new float[3];
-		return cross(n, b, c);
+		return Vector.cross(n, b, c);
 	}
 
 	public static float dotLightDirectionTile(float x, float y, float z) {
@@ -275,47 +242,88 @@ public class HDUtils {
 		}
 	}
 
-	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
-		HashSet<Integer> regionIds = new HashSet<>();
+	public static String getObjectType(int config) {
+		int type = config & 0x3F;
+		final String[] OBJECT_TYPES = {
+			"StraightWalls",
+			"DiagWallsConn",
+			"EntireWallsCorners",
+			"StraightWallsConn",
+			"StraightInDeco",
+			"StraightOutDeco",
+			"DiagOutDeco",
+			"DiagInDeco",
+			"DiagInWallDeco",
+			"DiagWalls",
+			"Objects",
+			"GroundObjects",
+			"StraightSlopeRoofs",
+			"DiagSlopeRoofs",
+			"DiagSlopeConnRoofs",
+			"StraightSlopeConnRoofs",
+			"StraightSlopeCorners",
+			"FlatTopRoofs",
+			"BottomEdgeRoofs",
+			"DiagBottomEdgeConn",
+			"StraightBottomEdgeConn",
+			"StraightBottomEdgeConnCorners",
+			"GroundDecoMapSigns"
+		};
+		String name = "Unknown";
+		if (type < OBJECT_TYPES.length)
+			name = OBJECT_TYPES[type];
+		return String.format("(%d) %s", type, name);
+	}
 
-		if (scene.isInstance()) {
-			// If the center chunk is invalid, pick any valid chunk and hope for the best
-			int[][][] chunks = scene.getInstanceTemplateChunks();
-			for (int[][] plane : chunks) {
-				for (int[] column : plane) {
-					for (int chunk : column) {
-						if (chunk == -1)
-							continue;
+	public static AABB getSceneBounds(Scene scene) {
+		if (!scene.isInstance()) {
+			int x = scene.getBaseX() - SCENE_OFFSET;
+			int y = scene.getBaseY() - SCENE_OFFSET;
+			return new AABB(x, y, x + EXTENDED_SCENE_SIZE, y + EXTENDED_SCENE_SIZE);
+		}
 
-						// Extract chunk coordinates
-						int x = chunk >> 14 & 0x3FF;
-						int y = chunk >> 3 & 0x7FF;
-						regionIds.add((x >> 3) << 8 | y >> 3);
-					}
+		// Assume instances are assembled from approximately adjacent chunks on the map
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int maxY = Integer.MIN_VALUE;
+
+		int[][][] chunks = scene.getInstanceTemplateChunks();
+		for (int[][] plane : chunks) {
+			for (int[] column : plane) {
+				for (int chunk : column) {
+					if (chunk == -1)
+						continue;
+
+					// Extract chunk coordinates
+					int x = chunk >> 14 & 0x3FF;
+					int y = chunk >> 3 & 0x7FF;
+					minX = Math.min(minX, x);
+					minY = Math.min(minY, y);
+					maxX = Math.max(maxX, x + 1);
+					maxY = Math.max(maxY, y + 1);
 				}
 			}
 		}
-		else
-		{
-			int baseX = scene.getBaseX();
-			int baseY = scene.getBaseY();
-			for (int x = 0; x < SCENE_SIZE; x += REGION_SIZE)
-				for (int y = 0; y < SCENE_SIZE; y += REGION_SIZE)
-					regionIds.add((baseX + x >> 6) << 8 | baseY + y >> 6);
-		}
 
-		return regionIds;
+		// Return an AABB representing no match, if there are no chunks
+		if (maxX < minX || maxY < minY)
+			return new AABB(-1, -1);
+
+		// Transform from chunk to world coordinates
+		return new AABB(minX << 3, minY << 3, maxX << 3, maxY << 3);
 	}
 
 	/**
-	 * Returns the south-west coordinate of the scene in world space, after resolving instance template chunks to their
-	 * original world coordinates. If the scene is instanced, the base coordinates are computed from the center chunk.
+	 * Returns the south-west coordinate of the extended scene in world coordinates, after resolving instance template
+	 * chunks to their original world coordinates. If the scene is instanced, the base coordinates are computed from
+	 * the center chunk instead, or any valid chunk if the center chunk is invalid.
 	 *
 	 * @param scene to get the south-west coordinate for
 	 * @param plane to use when resolving instance template chunks
 	 * @return the south-western coordinate of the scene in world space
 	 */
-	public static WorldPoint getSceneBase(Scene scene, int plane)
+	public static int[] getSceneBaseExtended(Scene scene, int plane)
 	{
 		int baseX = scene.getBaseX();
 		int baseY = scene.getBaseY();
@@ -355,19 +363,15 @@ public class HDUtils {
 			baseY <<= 3;
 		}
 
-		return new WorldPoint(baseX, baseY, plane);
+		return new int[] { baseX - SCENE_OFFSET, baseY - SCENE_OFFSET };
 	}
 
-	public static int[] cameraSpaceToWorldPoint(Client client, int relativeX, int relativeZ) {
-		int localX = client.getCameraX2() + relativeX;
-		int localY = client.getCameraZ2() + relativeZ;
-		int plane = client.getPlane();
-		return localToWorld(client.getScene(), localX, localY, plane);
-	}
-
+	/**
+	 * The returned plane may be different, so it's not safe to use for indexing into overlay IDs for instance
+	 */
 	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
-		int sceneX = localX / LOCAL_TILE_SIZE;
-		int sceneY = localY / LOCAL_TILE_SIZE;
+		int sceneX = localX >> LOCAL_COORD_BITS;
+		int sceneY = localY >> LOCAL_COORD_BITS;
 
 		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 			int chunkX = sceneX / 8;
@@ -445,37 +449,39 @@ public class HDUtils {
 					}
 				}
 			}
-		} else {
-			int baseX = scene.getBaseX();
-			int baseY = scene.getBaseX();
-			int extended = numChunksExtended * CHUNK_SIZE;
-			AABB sceneAabb = new AABB(
-				baseX - extended,
-				baseY - extended,
-				baseX + SCENE_SIZE + extended - 1,
-				baseY + SCENE_SIZE + extended - 1
-			);
 
-			for (var aabb : aabbs)
-				if (sceneAabb.intersects(aabb))
-					return true;
+			return false;
 		}
 
-		return false;
+		return getNonInstancedSceneBounds(scene, numChunksExtended).intersects(aabbs);
 	}
 
-	public static int[] getSouthWesternMostTileColor(Tile tile) {
+	public static AABB getNonInstancedSceneBounds(Scene scene, int numChunksExtended) {
+		assert !scene.isInstance();
+		int baseX = scene.getBaseX();
+		int baseY = scene.getBaseY();
+		int extended = numChunksExtended * CHUNK_SIZE;
+		return new AABB(
+			baseX - extended,
+			baseY - extended,
+			baseX + SCENE_SIZE + extended - 1,
+			baseY + SCENE_SIZE + extended - 1
+		);
+	}
+
+	public static int getSouthWesternMostTileColor(int[] out, Tile tile) {
 		var paint = tile.getSceneTilePaint();
 		var model = tile.getSceneTileModel();
+		int hsl = 0;
 		if (paint != null) {
-			return ColorUtils.unpackHslRaw(paint.getSwColor());
+			hsl = paint.getSwColor();
+			ColorUtils.unpackRawHsl(out, hsl);
 		} else if (model != null) {
 			int faceCount = tile.getSceneTileModel().getFaceX().length;
 			final int[] faceColorsA = model.getTriangleColorA();
 			final int[] faceColorsB = model.getTriangleColorB();
 			final int[] faceColorsC = model.getTriangleColorC();
 
-			int hsl = 0;
 			outer:
 			for (int face = 0; face < faceCount; face++) {
 				if (isOverlayFace(tile, face))
@@ -491,9 +497,8 @@ public class HDUtils {
 				}
 			}
 
-			return ColorUtils.unpackHslRaw(hsl);
+			ColorUtils.unpackRawHsl(out, hsl);
 		}
-
-		return null;
+		return hsl;
 	}
 }

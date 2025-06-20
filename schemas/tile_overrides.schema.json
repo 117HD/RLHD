@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "tile_overrides.schema.json",
+  "title": "Tile Overrides",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Identifier used to refer to the override from other overrides."
+      },
+      "description": {
+        "type": "string",
+        "description": "An optional description of where the override applies, and what it's intended to fix."
+      },
+      "area": {
+        "type": "string",
+        "description": "The area the tile override should apply in. Defaults to NONE."
+      },
+      "overlayIds": {
+        "type": "array",
+        "description": "An array of overlay IDs which the override should apply to. Must be combined with an area to take effect.",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "underlayIds": {
+        "type": "array",
+        "description": "An array of underlay IDs which the override should apply to. Must be combined with an area to take effect.",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "groundMaterial": {
+        "type": "string",
+        "description": "Case-sensitive name of the GroundMaterial to apply to the tile. Defaults to NONE."
+      },
+      "waterType": {
+        "type": "string",
+        "description": "Case-sensitive name of the WaterType to apply to the tile. Defaults to NONE."
+      },
+      "blended": {
+        "type": "boolean",
+        "description": "Whether the tile's colors should blend between nearby tile colors when ground blending is enabled. Defaults to true."
+      },
+      "blendedAsOpposite": {
+        "type": "boolean",
+        "description": "Blending is applied slightly differently for overlays and underlays. Defaults to false."
+      },
+      "forced": {
+        "type": "boolean",
+        "description": "Force the tile to render even if it has the special hidden color code. Defaults to false."
+      },
+      "depthTested": {
+        "type": "boolean",
+        "description": "Enable depth testing for the tile. Defaults to false, but is always enabled for forced tiles."
+      },
+      "setHue": {
+        "type": "integer",
+        "description": "Force a specific hue."
+      },
+      "shiftHue": {
+        "type": "integer",
+        "description": "Add or subtract from the tile's hue within the range defined by minHue and maxHue. Defaults to 0."
+      },
+      "minHue": {
+        "type": "integer",
+        "description": "Tile colors with a lower hue value will be clamped to the specified min hue. Defaults to 0."
+      },
+      "maxHue": {
+        "type": "integer",
+        "description": "Tile colors with a higher hue value will be clamped to the specified max hue. Defaults to 63."
+      },
+      "setSaturation": {
+        "type": "integer",
+        "description": "Force a specific saturation."
+      },
+      "shiftSaturation": {
+        "type": "integer",
+        "description": "Add or subtract from the tile's saturation within the range defined by minSaturation and maxSaturation. Defaults to 0."
+      },
+      "minSaturation": {
+        "type": "integer",
+        "description": "Tile colors with a lower saturation value will be clamped to the specified min saturation. Defaults to 0."
+      },
+      "maxSaturation": {
+        "type": "integer",
+        "description": "Tile colors with a higher saturation value will be clamped to the specified max saturation. Defaults to 7."
+      },
+      "setLightness": {
+        "type": "integer",
+        "description": "Force a specific lightness."
+      },
+      "shiftLightness": {
+        "type": "integer",
+        "description": "Add or subtract from the tile's lightness within the range defined by minLightness and maxLightness. Defaults to 0."
+      },
+      "minLightness": {
+        "type": "integer",
+        "description": "Tile colors with a lower lightness value will be clamped to the specified min lightness. Defaults to 0."
+      },
+      "maxLightness": {
+        "type": "integer",
+        "description": "Tile colors with a higher lightness value will be clamped to the specified max lightness. Defaults to 127."
+      },
+      "uvOrientation": {
+        "type": "integer",
+        "description": "The number of Jagex units to rotate the tile's texture counter-clockwise, from 0 to 2048, where 2048 is a complete rotation. Defaults to 0."
+      },
+      "uvScale": {
+        "type": "number",
+        "description": "A scaling factor to scale the tile's texture up by. Can be fractional. Defaults to 1."
+      },
+      "heightOffset": {
+        "type": "integer",
+        "description": "Shift the tile up by a fixed amount."
+      },
+      "replacements": {
+        "type": "object",
+        "description": "An ordered map of replacement override names and one or more conditions they should apply under.",
+        "additionalProperties": {
+          "type": [ "boolean", "string", "array" ],
+          "description": "The name of a replacement override and one or more replacement condition expressions. If any evaluate to true, the replacement is applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nSupported variables: h, s, l, blending, textures, season.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

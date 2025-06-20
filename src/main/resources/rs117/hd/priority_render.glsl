@@ -83,82 +83,42 @@ int count_prio_offset(int priority) {
     return total;
 }
 
-void get_face(
-    uint localId, ModelInfo minfo,
-    out int prio, out int dis, out ivec4 o1, out ivec4 o2, out ivec4 o3
-) {
-    int size = minfo.size;
-    int offset = minfo.offset;
-    int flags = minfo.flags;
-    uint ssboOffset;
+void add_face_prio_distance(const uint localId, const ModelInfo minfo, out int prio, out int dis) {
+    if (localId < minfo.size) {
+        int offset = minfo.offset;
+        int flags = minfo.flags;
 
-    if (localId < size) {
-        ssboOffset = localId;
-    } else {
-        ssboOffset = 0;
-    }
-
-    ivec4 thisA;
-    ivec4 thisB;
-    ivec4 thisC;
-
-    // Grab triangle vertices from the correct buffer
-    thisA = vb[offset + ssboOffset * 3];
-    thisB = vb[offset + ssboOffset * 3 + 1];
-    thisC = vb[offset + ssboOffset * 3 + 2];
-
-    if (localId < size) {
-        int radius = (flags >> 12) & 0xfff;
         int orientation = flags & 0x7ff;
 
+        // Grab triangle vertices from the correct buffer
+        vert thisA = vb[offset + localId * 3];
+        vert thisB = vb[offset + localId * 3 + 1];
+        vert thisC = vb[offset + localId * 3 + 2];
+
         // rotate for model orientation
-        ivec4 thisrvA = rotate(thisA, orientation);
-        ivec4 thisrvB = rotate(thisB, orientation);
-        ivec4 thisrvC = rotate(thisC, orientation);
+        thisA.pos = rotate(thisA.pos, orientation);
+        thisB.pos = rotate(thisB.pos, orientation);
+        thisC.pos = rotate(thisC.pos, orientation);
 
         // calculate distance to face
-        int thisPriority = (thisA.w >> 16) & 0xF;// all vertices on the face have the same priority
-        int thisDistance;
-        if (radius == 0) {
-            thisDistance = 0;
-        } else {
-            thisDistance = face_distance(thisrvA, thisrvB, thisrvC) + radius;
-            // Clamping here *should* be unnecessary, but it prevents crashing in the unlikely event where we
-            // somehow end up with negative numbers, which is known to happen with open-source AMD drivers.
-            thisDistance = max(0, thisDistance);
-        }
+        prio = (thisA.ahsl >> 16) & 0xF;// all vertices on the face have the same priority
+        dis = face_distance(thisA.pos, thisB.pos, thisC.pos);
 
-        o1 = thisrvA;
-        o2 = thisrvB;
-        o3 = thisrvC;
-
-        prio = thisPriority;
-        dis = thisDistance;
-    } else {
-        o1 = ivec4(0);
-        o2 = ivec4(0);
-        o3 = ivec4(0);
-        prio = 0;
-        dis = 0;
-    }
-}
-
-void add_face_prio_distance(uint localId, ModelInfo minfo, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC, int thisPriority, int thisDistance, ivec4 pos) {
-    if (localId < minfo.size) {
         // if the face is not culled, it is calculated into priority distance averages
-        if (face_visible(thisrvA, thisrvB, thisrvC, pos)) {
-            atomicAdd(totalNum[thisPriority], 1);
-            atomicAdd(totalDistance[thisPriority], thisDistance);
+        vec3 modelPos = vec3(minfo.x, minfo.y, minfo.z);
+        if (face_visible(thisA.pos, thisB.pos, thisC.pos, modelPos)) {
+            atomicAdd(totalNum[prio], 1);
+            atomicAdd(totalDistance[prio], dis);
 
             // calculate minimum distance to any face of priority 10 for positioning the 11 faces later
-            if (thisPriority == 10) {
-                atomicMin(min10, thisDistance);
+            if (prio == 10) {
+                atomicMin(min10, dis);
             }
         }
     }
 }
 
-int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, out int prio) {
+int map_face_priority(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, out int prio) {
     int size = minfo.size;
 
     // Compute average distances for 0/2, 3/4, and 6/8
@@ -191,16 +151,16 @@ int map_face_priority(uint localId, ModelInfo minfo, int thisPriority, int thisD
     return 0;
 }
 
-void insert_face(uint localId, ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
+void insert_face(uint localId, const ModelInfo minfo, int adjPrio, int distance, int prioIdx) {
     int size = minfo.size;
 
     if (localId < size) {
         // calculate base offset into renderPris based on number of faces with a lower priority
         int baseOff = count_prio_offset(adjPrio);
-        // the furthest faces draw first, and have the highest value
+        // the furthest faces draw first, and have the highest priority.
         // if two faces have the same distance, the one with the
-        // lower id draws first
-        renderPris[baseOff + prioIdx] = uint(distance << 16) | (~localId & 0xffffu);
+        // lower id draws first.
+        renderPris[baseOff + prioIdx] = distance << 16 | int(~localId & 0xffffu);
     }
 }
 
@@ -209,21 +169,20 @@ int tile_height(int z, int x, int y) {
     return texelFetch(tileHeightMap, ivec3(x + ESCENE_OFFSET, y + ESCENE_OFFSET, z), 0).r << 3;
 }
 
-ivec4 hillskew_vertex(ivec4 v, int hillskew, int y, int plane) {
-    if (hillskew == 0)
-        return v;
-
-    int px = v.x & 127;
-    int pz = v.z & 127;
-    int sx = v.x >> 7;
-    int sz = v.z >> 7;
+void hillskew_vertex(inout vec3 v, int hillskew, float modelPosY, int plane) {
+    int x = int(v.x);
+    int z = int(v.z);
+    int px = x & 127;
+    int pz = z & 127;
+    int sx = x >> 7;
+    int sz = z >> 7;
     int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
     int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
     int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
-    return ivec4(v.x, v.y + h3 - y, v.z, v.w);
+    v.y += h3 - modelPosY;
 }
 
-void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
+void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     const vec3 LIGHT_DIR_MODEL = vec3(0.57735026, 0.57735026, 0.57735026);
     // subtracts the X lowest lightness levels from the formula.
     // helps keep darker colors appropriately dark
@@ -234,7 +193,6 @@ void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
     // the minimum amount by which each color will be lightened
     const int BASE_LIGHTEN = 10;
 
-    int hsl = vertex.w;
     int saturation = hsl >> 7 & 0x7;
     int lightness = hsl & 0x7F;
     float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
@@ -252,11 +210,9 @@ void undoVanillaShading(inout ivec4 vertex, vec3 unrotatedNormal) {
     lightness = min(lightness, maxLightness);
     hsl &= ~0x7F;
     hsl |= lightness;
-    vertex.w = hsl;
 }
 
-void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDistance, ivec4 thisrvA, ivec4 thisrvB, ivec4 thisrvC) {
-    /* compute face distance */
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance) {
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -264,7 +220,7 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         int outOffset = minfo.idx;
         int uvOffset = minfo.uvOffset;
         int flags = minfo.flags;
-        ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
+        vec3 pos = vec3(minfo.x, minfo.y, minfo.z);
         int orientation = flags & 0x7ff;
 
         // we only have to order faces against others of the same priority
@@ -272,7 +228,7 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         const int numOfPriority = totalMappedNum[thisPriority];
         const int start = priorityOffset; // index of first face with this priority
         const int end = priorityOffset + numOfPriority; // index of last face with this priority
-        const uint renderPriority = uint(thisDistance << 16) | (~localId & 0xffffu);
+        const int renderPriority = thisDistance << 16 | int(~localId & 0xffffu);
         int myOffset = priorityOffset;
 
         // calculate position this face will be in
@@ -290,29 +246,41 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
         normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
         normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
 
+        // Grab triangle vertices from the correct buffer
+        vert thisrvA = vb[offset + localId * 3];
+        vert thisrvB = vb[offset + localId * 3 + 1];
+        vert thisrvC = vb[offset + localId * 3 + 2];
+
+        // rotate for model orientation
+        thisrvA.pos = rotate(thisrvA.pos, orientation);
+        thisrvB.pos = rotate(thisrvB.pos, orientation);
+        thisrvC.pos = rotate(thisrvC.pos, orientation);
+
         #if UNDO_VANILLA_SHADING
-        if ((int(thisrvA.w) >> 20 & 1) == 0) {
+        if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
             if (length(normA) == 0) {
                 // Compute flat normal if necessary, and rotate it back to match unrotated normals
-                vec4 N = vec4(cross(thisrvA.xyz - thisrvB.xyz, thisrvA.xyz - thisrvC.xyz), 0);
+                vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
                 normA = normB = normC = rotate(N, -orientation);
             }
-            undoVanillaShading(thisrvA, normA.xyz);
-            undoVanillaShading(thisrvB, normB.xyz);
-            undoVanillaShading(thisrvC, normC.xyz);
+            undoVanillaShading(thisrvA.ahsl, normA.xyz);
+            undoVanillaShading(thisrvB.ahsl, normB.xyz);
+            undoVanillaShading(thisrvC.ahsl, normC.xyz);
         }
         #endif
 
-        thisrvA += pos;
-        thisrvB += pos;
-        thisrvC += pos;
+        thisrvA.pos += pos;
+        thisrvB.pos += pos;
+        thisrvC.pos += pos;
 
         // apply hillskew
         int plane = (flags >> 24) & 3;
         int hillskew = (flags >> 26) & 1;
-        thisrvA = hillskew_vertex(thisrvA, hillskew, pos.y, plane);
-        thisrvB = hillskew_vertex(thisrvB, hillskew, pos.y, plane);
-        thisrvC = hillskew_vertex(thisrvC, hillskew, pos.y, plane);
+        if (hillskew == 1) {
+            hillskew_vertex(thisrvA.pos, hillskew, pos.y, plane);
+            hillskew_vertex(thisrvB.pos, hillskew, pos.y, plane);
+            hillskew_vertex(thisrvC.pos, hillskew, pos.y, plane);
+        }
 
         // position vertices in scene and write to out buffer
         vout[outOffset + myOffset * 3]     = thisrvA;
@@ -335,9 +303,16 @@ void sort_and_insert(uint localId, ModelInfo minfo, int thisPriority, int thisDi
                 uvC = rotate(uvC, orientation);
 
                 // Shift texture triangles to world space
-                uvA.xyz += pos.xyz;
-                uvB.xyz += pos.xyz;
-                uvC.xyz += pos.xyz;
+                uvA.xyz += pos;
+                uvB.xyz += pos;
+                uvC.xyz += pos;
+
+                // For vanilla UVs, the first 3 components are an integer position vector
+                if (hillskew == 1) {
+                    hillskew_vertex(uvA.xyz, hillskew, pos.y, plane);
+                    hillskew_vertex(uvB.xyz, hillskew, pos.y, plane);
+                    hillskew_vertex(uvC.xyz, hillskew, pos.y, plane);
+                }
             }
         }
 

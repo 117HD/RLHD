@@ -22,21 +22,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
 #include utils/misc.glsl
-#include utils/helpers.glsl
-#include utils/lighting.glsl
 
-vec4 sampleWater(inout Context ctx) {
-    WaterType waterType = getWaterType(ctx.waterTypeIndex);
+vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
+    WaterType waterType = getWaterType(waterTypeIndex);
 
     vec2 uv1 = worldUvs(3).yx - animationFrame(28 * waterType.duration);
     vec2 uv2 = worldUvs(3) + animationFrame(24 * waterType.duration);
-    vec2 uv3 = ctx.uvs[3];
+    vec2 uv3 = IN.uv;
 
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
+    float flowMapStrength = 0.025;
+
     vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
-    const float flowMapStrength = 0.025;
     uv1 += uvFlow * flowMapStrength;
     uv2 += uvFlow * flowMapStrength;
     uv3 += uvFlow * flowMapStrength;
@@ -49,71 +47,118 @@ vec4 sampleWater(inout Context ctx) {
     // normals
     n1 = -vec3((n1.x * 2 - 1) * waterType.normalStrength, n1.z, (n1.y * 2 - 1) * waterType.normalStrength);
     n2 = -vec3((n2.x * 2 - 1) * waterType.normalStrength, n2.z, (n2.y * 2 - 1) * waterType.normalStrength);
-    ctx.normals = normalize(n1 + n2);
-    populateContextDotProducts(ctx);
-    populateLightVectors(ctx.sun, lightDir, ctx.normals);
-    populateLightDotProducts(ctx.sun, ctx);
+    vec3 normals = normalize(n1 + n2);
 
-    ctx.smoothness = vec3(waterType.specularGloss);
-    ctx.reflectivity = vec3(waterType.specularStrength);
+    float lightDotNormals = dot(normals, lightDir);
+    float downDotNormals = -normals.y;
+    float viewDotNormals = dot(viewDir, normals);
 
-    float sunAttenuation = lightAttenuation(ctx.sun, ctx, uvFlow * .00075);
-    vec3 ambientTerm = ambientTerm(ctx, fogColor, ambientStrength);
-    vec3 diffuseTerm = ctx.sun.ndl * ctx.sun.color * sunAttenuation;
-    vec3 specularTerm = ctx.sun.color * getSpecular(ctx.viewDir, ctx.sun.reflection, ctx.smoothness, ctx.reflectivity) * sunAttenuation;
+    vec2 distortion = uvFlow * .00075;
+    float shadow = sampleShadowMap(IN.position, waterTypeIndex, distortion, lightDotNormals);
+    float inverseShadow = 1 - shadow;
+
+    vec3 vSpecularStrength = vec3(waterType.specularStrength);
+    vec3 vSpecularGloss = vec3(waterType.specularGloss);
+    float combinedSpecularStrength = waterType.specularStrength;
+
+    // calculate lighting
+
+    // ambient light
+    vec3 ambientLightOut = ambientColor * ambientStrength;
+
+    // directional light
+    vec3 dirLightColor = lightColor * lightStrength;
+
+    // apply shadows
+    dirLightColor *= inverseShadow;
+
+    vec3 lightColor = dirLightColor;
+    vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
+
+    // directional light specular
+    vec3 lightReflectDir = reflect(-lightDir, normals);
+    vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
     // point lights
-    vec3 lightsDiffuse = vec3(0);
-    vec3 lightsSpecular = vec3(0);
-    gatherLights(lightsDiffuse, lightsSpecular, ctx);
+    vec3 pointLightsOut = vec3(0);
+    vec3 pointLightsSpecularOut = vec3(0);
+    for (int i = 0; i < pointLightsCount; i++) {
+        vec4 pos = PointLightArray[i].position;
+        vec3 lightToFrag = pos.xyz - IN.position;
+        float distanceSquared = dot(lightToFrag, lightToFrag);
+        float radiusSquared = pos.w;
+        if (distanceSquared <= radiusSquared) {
+            vec3 pointLightColor = PointLightArray[i].color;
+            vec3 pointLightDir = normalize(lightToFrag);
 
-    // lightning
-    vec3 lightningEffect = ctx.udn * vec3(.25) * lightningBrightness;
+            float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
+            pointLightColor *= attenuation * attenuation;
 
-    // underglow
-    vec3 underglowOut = underglowColor * max(ctx.normals.y, 0) * underglowStrength;
+            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+            pointLightsOut += pointLightColor * pointLightDotNormals;
 
-    // fresnel reflection
-    float arbitraryFresnelIshValue = min(1.12 - 0.72 * ctx.vdn, 1.0);
-    vec3 surfaceColor;
-
-    // add sky gradient
-    if (arbitraryFresnelIshValue < 0.5) {
-        surfaceColor = mix(waterColorDark, waterColorMid, arbitraryFresnelIshValue * 2);
-    } else {
-        surfaceColor = mix(waterColorMid, waterColorLight, (arbitraryFresnelIshValue - 0.5) * 2);
+            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+            pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+        }
     }
 
-    vec3 surfaceColorOut = surfaceColor * max(waterType.specularStrength, 0.2);
+
+    // sky light
+    vec3 skyLightColor = fogColor.rgb;
+    float skyLightStrength = 0.5;
+    float skyDotNormals = downDotNormals;
+    vec3 skyLightOut = max(skyDotNormals, 0.0) * skyLightColor * skyLightStrength;
+
+
+    // lightning
+    vec3 lightningColor = vec3(1.0, 1.0, 1.0);
+    float lightningStrength = lightningBrightness;
+    float lightningDotNormals = downDotNormals;
+    vec3 lightningOut = max(lightningDotNormals, 0.0) * lightningColor * lightningStrength;
+
+
+    // underglow
+    vec3 underglowOut = underglowColor * max(normals.y, 0) * underglowStrength;
+
+
+    // fresnel reflection
+    float baseOpacity = 0.4;
+    float fresnel = 1.0 - clamp(viewDotNormals, 0.0, 1.0);
+    float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
+    vec3 surfaceColor = vec3(0);
+
+    // add sky gradient
+    if (finalFresnel < 0.5) {
+        surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
+    } else {
+        surfaceColor = mix(waterColorMid, waterColorLight, (finalFresnel - 0.5) * 2);
+    }
+
+    vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
+
 
     // apply lighting
-    vec3 compositeLight =
-        ambientTerm +
-        diffuseTerm +
-        specularTerm +
-        lightsDiffuse +
-        lightsSpecular +
-        underglowOut +
-        lightningEffect +
-        surfaceColorOut;
+    vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
+    underglowOut + pointLightsOut + pointLightsSpecularOut + surfaceColorOut;
 
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
-    float shoreLineMask = 1 - dot(IN.texBlend, vec3(vColor[0].x, vColor[1].x, vColor[2].x));
-    float foamAmount = min(shoreLineMask, 0.8);
+    float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
+    float maxFoamAmount = 0.8;
+    float foamAmount = min(shoreLineMask, maxFoamAmount);
     float foamDistance = 0.7;
     vec3 foamColor = waterType.foamColor;
     foamColor = foamColor * foamMask * compositeLight;
-    foamAmount = waterType.hasFoam * clamp(pow(1 - (1 - foamAmount) / foamDistance, 3), 0, 1);
+    foamAmount = clamp(pow(1.0 - ((1.0 - foamAmount) / foamDistance), 3), 0.0, 1.0) * waterType.hasFoam;
     foamAmount *= foamColor.r;
     baseColor = mix(baseColor, foamColor, foamAmount);
-    vec3 specularComposite = mix(specularTerm, vec3(0.0), foamAmount);
-    float flatFresnel = 1 + ctx.viewDir.y;
-    arbitraryFresnelIshValue = max(arbitraryFresnelIshValue, flatFresnel);
-    arbitraryFresnelIshValue *= mix(1, sunAttenuation, .2);
-    baseColor += lightsSpecular + specularTerm / 3;
+    vec3 specularComposite = mix(lightSpecularOut, vec3(0.0), foamAmount);
+    float flatFresnel = (1.0 - dot(viewDir, vec3(0, -1, 0))) * 1.0;
+    finalFresnel = max(finalFresnel, flatFresnel);
+    finalFresnel -= finalFresnel * shadow * 0.2;
+    baseColor += pointLightsSpecularOut + lightSpecularOut / 3;
 
-    float alpha = max(waterType.baseOpacity, max(foamAmount, max(arbitraryFresnelIshValue, length(specularComposite / 3))));
+    float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
 
     if (waterType.isFlat) {
         baseColor = mix(waterType.depthColor, baseColor, alpha);
@@ -123,19 +168,16 @@ vec4 sampleWater(inout Context ctx) {
     return vec4(baseColor, alpha);
 }
 
-void sampleUnderwater(inout vec3 outputColor, Context ctx) {
-    if (!ctx.isUnderwater)
-        return;
-
+void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, float lightDotNormals) {
     // underwater terrain
     float lowestColorLevel = 500;
     float midColorLevel = 150;
-    float surfaceLevel = IN.position.y - ctx.waterDepth; // e.g. -1600
+    float surfaceLevel = IN.position.y - depth; // e.g. -1600
 
-    if (ctx.waterDepth < midColorLevel) {
-        outputColor *= mix(vec3(1), ctx.waterType.depthColor, translateRange(0, midColorLevel, ctx.waterDepth));
-    } else if (ctx.waterDepth < lowestColorLevel) {
-        outputColor *= mix(ctx.waterType.depthColor, vec3(0), translateRange(midColorLevel, lowestColorLevel, ctx.waterDepth));
+    if (depth < midColorLevel) {
+        outputColor *= mix(vec3(1), waterType.depthColor, translateRange(0, midColorLevel, depth));
+    } else if (depth < lowestColorLevel) {
+        outputColor *= mix(waterType.depthColor, vec3(0), translateRange(midColorLevel, lowestColorLevel, depth));
     } else {
         outputColor = vec3(0);
     }
@@ -149,8 +191,7 @@ void sampleUnderwater(inout vec3 outputColor, Context ctx) {
         float depthMultiplier = (IN.position.y - surfaceLevel - maxCausticsDepth) / -maxCausticsDepth;
         depthMultiplier *= depthMultiplier;
 
-        // height offset
-        causticsUv += lightDir.xy * IN.position.y / (128 * scale);
+        causticsUv *= .75;
 
         const ivec2 direction = ivec2(1, -2);
         vec2 flow1 = causticsUv + animationFrame(17) * direction;
@@ -158,28 +199,6 @@ void sampleUnderwater(inout vec3 outputColor, Context ctx) {
         vec3 caustics = sampleCaustics(flow1, flow2, .005);
 
         vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * ctx.sun.ndl * ctx.sun.brightness;
-    }
-}
-
-void applyWaterCaustics(inout Context ctx, bool underwaterCaustics, bool underwaterEnvironment) {
-    // underwater caustics based on directional light
-    if (underwaterCaustics && underwaterEnvironment) {
-        float scale = 12.8;
-        vec2 causticsUv = worldUvs(scale);
-
-        // height offset
-        causticsUv += ctx.sun.direction.xy * IN.position.y / (128 * scale);
-
-        const ivec2 direction = ivec2(1, -1);
-        const int driftSpeed = 231;
-        vec2 drift = animationFrame(231) * ivec2(1, -2);
-        vec2 flow1 = causticsUv + animationFrame(19) * direction + drift;
-        vec2 flow2 = causticsUv * 1.25 + animationFrame(37) * -direction + drift;
-
-        vec3 caustics = sampleCaustics(flow1, flow2) * 2;
-
-        vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
-        ctx.sun.color += caustics * causticsColor * ctx.sun.ndl * pow(ctx.sun.brightness, 1.5);
+        outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
     }
 }
