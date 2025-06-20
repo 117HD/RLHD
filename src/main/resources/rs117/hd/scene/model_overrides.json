@@ -34800,6 +34800,9 @@
     "description": "Fossil Island - Magic Mushroom",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
+      "FOSSIL_MAGIC_MUSHTREE_TRUNK1",
+      "FOSSIL_MAGIC_MUSHTREE_CANOPY1",
+      "FOSSIL_MUSHTREE_CANOPY2",
       "FOSSIL_MAGIC_MUSHTREE_TRUNK3",
       "FOSSIL_MAGIC_MUSHTREE_CANOPY3"
     ],
