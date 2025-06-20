@@ -1517,6 +1517,22 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Trees - Arctic Pine",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "ARCTIC_PINE",
+      "ARCTIC_PINE_TREE_STUMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Objects - Trees - Tirannwn Tree",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
@@ -5478,7 +5494,9 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       "PEST_SERIM_PIER_RAIL",
-      "FRISB_PIER_RAIL"
+      "FRISB_PIER_RAIL",
+      "FRISD_WOOD_GATE_OPEN_01",
+      "FRISD_WOOD_GATE_01"
     ],
     "flatNormals": true
   },
@@ -6137,7 +6155,8 @@
     "uvScale": 0.5,
     "uvType": "BOX",
     "objectIds": [
-      "FRISD_WOOD_JUNK"
+      "FRISD_WOOD_JUNK",
+      "FRISB_WOODEN_TABLE_BROKEN"
     ],
     "colorOverrides": [
       {
@@ -12351,7 +12370,7 @@
   {
     "description": "Objects - Wooden - Chair - No cushion - Smashed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "SMASHEDCHAIR", "TROLL_SMASHEDCHAIR", "POG_SMASHEDCHAIR" ],
+    "objectIds": [ "SMASHEDCHAIR", "TROLL_SMASHEDCHAIR", "POG_SMASHEDCHAIR", "FRISB_SMASHEDCHAIR" ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
