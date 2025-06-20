@@ -12,14 +12,12 @@ public enum DaylightCycle
 
 	private final String name;
 
-	DaylightCycle()
-	{
+	DaylightCycle() {
 		name = this.name();
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return name;
 	}
 }

@@ -522,6 +522,17 @@ public interface HdPluginConfig extends Config
 	)
 	String environmentSettings = "environmentSettings";
 
+	@ConfigItem(
+		keyName = "daylightCycle",
+		name = "Daylight Cycle",
+		description = "",
+		position = -2,
+		section = environmentSettings
+	)
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.HOUR_LONG_DAYS;
+	}
+
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
@@ -544,18 +555,6 @@ public interface HdPluginConfig extends Config
 	)
 	default SeasonalHemisphere seasonalHemisphere() {
 		return SeasonalHemisphere.NORTHERN;
-	}
-
-	@ConfigItem(
-		keyName = "daylightCycle",
-		name = "Daylight Cycle",
-		description = "Choose how the cycle between night and day should behave.",
-		position = 0,
-		section = environmentSettings
-	)
-	default DaylightCycle daylightCycle()
-	{
-		return DaylightCycle.HOUR_LONG_DAYS;
 	}
 
 	@ConfigItem(

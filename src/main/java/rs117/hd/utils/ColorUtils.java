@@ -275,8 +275,14 @@ public class ColorUtils {
 		return srgbToLinear(srgb(srgb));
 	}
 
-	public static float[] rgb(Color c) {
-		return rgb(c.getRed(), c.getGreen(), c.getBlue());
+	/**
+	 * Convert Color instance from sRGB to linear RGB in the range 0-1.
+	 *
+	 * @param color sRGB Color instance
+	 * @return float[3] linear RGB values from 0-1
+	 */
+	public static float[] rgb(Color color) {
+		return srgbToLinear(srgb(color));
 	}
 
 	/**
@@ -298,7 +304,16 @@ public class ColorUtils {
 	 * @return float[3] non-linear sRGB values from 0-1
 	 */
 	public static float[] srgb(String hex) {
-		Color color = Color.decode(hex);
+		return srgb(Color.decode(hex));
+	}
+
+	/**
+	 * Convert Color instance from sRGB to sRGB in the range 0-1.
+	 *
+	 * @param color sRGB Color instance
+	 * @return float[3] non-linear sRGB values from 0-1
+	 */
+	public static float[] srgb(Color color) {
 		return srgb(color.getRed(), color.getGreen(), color.getBlue());
 	}
 

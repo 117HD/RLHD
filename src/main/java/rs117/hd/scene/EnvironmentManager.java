@@ -147,7 +147,7 @@ public class EnvironmentManager {
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	@Nonnull
-	public Environment currentEnvironment = Environment.NONE;
+	private Environment currentEnvironment = Environment.NONE;
 
 	public void startUp() {
 		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
@@ -455,6 +455,10 @@ public class EnvironmentManager {
 			default:
 				return Environment.OVERWORLD;
 		}
+	}
+
+	public boolean isOverworld() {
+		return currentEnvironment.isOverworld;
 	}
 
 	public boolean isUnderwater() {

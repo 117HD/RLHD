@@ -1,5 +1,5 @@
 /*
- * Ported from https://github.com/mourner/suncalc
+ * Based on https://github.com/mourner/suncalc:
  *
  * Copyright (c) 2014, Vladimir Agafonkin
  * All rights reserved.
@@ -42,7 +42,7 @@ import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.lerp;
 
 @Slf4j
-public class SunCalc
+public class AtmosphereUtils
 {
 	private static final double
 		rad = PI / 180,
@@ -82,7 +82,7 @@ public class SunCalc
 		// Use night illumination as a base
 		float[] rgb = Vector.multiply(
 			ColorUtils.colorTemperatureToLinearRgb(4100),
-			(float) SunCalc.getMoonIllumination(millis)[0] * .2f
+			(float) AtmosphereUtils.getMoonIllumination(millis)[0] * .2f
 		);
 
 		if (!TimeOfDay.isNight(angles)) {
@@ -100,7 +100,6 @@ public class SunCalc
 				{ 80, 5750 },
 				{ 90, 6000 }
 			};
-
 			float temperature = interpolate((float) Math.toDegrees(angles[1]), altitudeTemperatureRange);
 			float strength = (float) sin(angles[1]);
 			strength *= strength;

@@ -4,17 +4,13 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
-import rs117.hd.utils.SunCalc;
+import rs117.hd.utils.AtmosphereUtils;
 import rs117.hd.utils.Vector;
 
 import static rs117.hd.utils.ColorUtils.rgb;
 
-public enum TimeOfDay
+public class TimeOfDay
 {
-	DAY,
-	NIGHT,
-	;
-
 	public static final float MINUTES_PER_DAY = 30 / 60.f;
 
 	/**
@@ -27,30 +23,30 @@ public enum TimeOfDay
 	 */
 	public static double[] getShadowAngles(double[] latLong, float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] angles = SunCalc.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double[] angles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		return isNight(angles) ?
-			SunCalc.getMoonPosition(modifiedDate.toEpochMilli(), latLong) :
+			AtmosphereUtils.getMoonPosition(modifiedDate.toEpochMilli(), latLong) :
 			angles;
 	}
 
 	public static double[] getSunAngles(double[] latLong, float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return SunCalc.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 	}
 
 	public static float[] getLightColor(double[] latLong, float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return SunCalc.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
 	}
 
 	public static float[] getAmbientColor(double[] latLong, float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return SunCalc.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
 	public static float[] getSkyColor(double[] latLong, float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
-		return SunCalc.getSkyColor(modifiedDate.toEpochMilli(), latLong);
+		return AtmosphereUtils.getSkyColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
 	public static float[] getNightAmbientColor() {

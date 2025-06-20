@@ -2059,7 +2059,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			float[] waterColor = environmentManager.currentWaterColor;
 			float[] sunAngles = environmentManager.currentSunAngles;
 
-			if (environmentManager.currentEnvironment.isOverworld) {
+			if (environmentManager.isOverworld()) {
 				switch (config.daylightCycle()) {
 					case HOUR_LONG_DAYS:
 						directionalColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
