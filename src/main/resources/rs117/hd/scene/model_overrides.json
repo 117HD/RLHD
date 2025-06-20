@@ -5927,7 +5927,9 @@
       "FRIS_PALISADE_OUTER_WALL_TOP",
       "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL",
       "FRIS_PALISADE_OUTER_WALL_MID",
-      "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL_MIRROR"
+      "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL_MIRROR",
+      "FRIS_PALISADE_DOOR_OPEN_L",
+      "FRIS_PALISADE_DOOR_OPEN_R"
     ]
   },
   {
@@ -5941,7 +5943,8 @@
       "FRIS_PALISADE_WALKWAY_CORNER",
       "FRIS_PALISADE_WALKWAY"
     ]
-  },  {
+  },
+  {
   "description": "Neitiznot - Wooden Corner",
   "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
   "uvScale": 0.7,
@@ -5950,7 +5953,63 @@
   "objectIds": [
     "FRIS_PALISADE_WALKWAY_5"
   ]
-},
+  },
+  {
+    "description": "Neitiznot - Ruined House",
+    "baseMaterial": "GRUNGE_1",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FRISB_ABODE_BURNT_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.6,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Houses",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_ABODE_WALL_WINDOW",
+      "FRISB_ABODE_WALL",
+      "FRISB_ABODE_WALL_MIRROR",
+      "FRISB_ABODE_DOOR",
+      "FRISB_ABODE_DOOR_LOCKED",
+      "FRISB_ABODE_DOOR_ALWAYS_OPEN",
+      "FRISB_ABODE_DOOR_OPEN",
+      "FRISB_ROOF1_HILLSKEW",
+      "FRISB_ROOF"
+    ]
+  },
+  {
+    "description": "Neitiznot - Houses - Roof End",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_ROOF_EDGE_ABODE_NEW_1_MIRROR",
+      "FRISB_ROOF_EDGE_ABODE_NEW_1",
+      "FRISB_ROOF_EDGE"
+    ]
+  },
+  {
+    "description": "Neitiznot - Houses - Rotated Roof End",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_ROOF_EDGE_ABODE1",
+      "FRISB_ROOF_EDGE_ABODE1_MIRROR"
+    ]
+  },
   {
     "description": "Fremennik Isles - Rocks - Tiny",
     "baseMaterial": "STONE_NORMALED",
