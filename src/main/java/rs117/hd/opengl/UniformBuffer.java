@@ -5,15 +5,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Type;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import rs117.hd.utils.HDUtils;
 
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL15C.glBufferData;
 import static org.lwjgl.opengl.GL43C.*;
 
+@Slf4j
 public abstract class UniformBuffer {
 	@Retention(RetentionPolicy.RUNTIME)
 	protected @interface UBOProperty {
@@ -147,6 +149,7 @@ public abstract class UniformBuffer {
 		} catch (InstantiationException e) {
 			throw new RuntimeException(e);
 		}
+		Size = (int) HDUtils.ceilPow2(Size);
 	}
 
 	public void Initialise(int UniformBlockIndex) {
@@ -192,10 +195,9 @@ public abstract class UniformBuffer {
 					CPUBuffer.position(CPUBuffer.position() + Entry.Type.Size);
 				}
 			}catch (Exception Ex) {
-				Ex.printStackTrace();
+				log.error("Exception occurred whilst writing: {}\nException:\n{}", Entry.Name, Ex.toString());
 			}
 		}
-		CPUBuffer.position(CPUBuffer.position() + (Size - CPUBuffer.position()));
 		CPUBuffer.flip();
 
 		if(NeedsUpdating) {
