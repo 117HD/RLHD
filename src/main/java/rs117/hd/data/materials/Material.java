@@ -528,8 +528,16 @@ public enum Material {
 		.setBrightness(0.45f)),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
+	FALADOR_PATH_BRICK_D,
 	FALADOR_PATH_BRICK(p -> p
+		.setDisplacementMap(FALADOR_PATH_BRICK_D)
+		.setDisplacementScale(.06f)
 		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setSpecular(0.25f, 30)
+	),
+	BRICK_PATH_N,
+	BRICK_PATH(p -> p
+		.setNormalMap(BRICK_PATH_N)
 		.setSpecular(0.3f, 30)
 	),
 	JAGGED_STONE_TILE_D,
