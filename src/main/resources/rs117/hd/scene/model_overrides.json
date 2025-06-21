@@ -926,7 +926,6 @@
       "FAI_VARROCK_SWING_LANTERN",
       "ROVING_FIRE_REMAINS",
       "DWARF_KELDAGRIM_BLACKSMITHTOOLS",
-      "ELID_FOUNTAIN",
       "ELID_BLACKSMITHTOOLS",
       "FAIRY_MUSHROOM_TORCH_RED",
       "FAIRY_MUSHROOM_TORCH_BLUE",
@@ -1516,6 +1515,22 @@
     "uvType": "BOX",
     "uvOrientationZ": 128,
     "retainVanillaUvs": true
+  },
+  {
+    "description": "Objects - Trees - Arctic Pine",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "ARCTIC_PINE",
+      "ARCTIC_PINE_TREE_STUMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Objects - Trees - Tirannwn Tree",
@@ -2140,7 +2155,17 @@
       "DESERT_LONG_GRASS_3",
       "DESERT_LONG_GRASS_1",
       "DESERT_LONG_GRASS_2",
-      "DESERT_LONG_GRASS_4"
+      "DESERT_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_4",
+      "FRIS_SHORT_GRASS_3",
+      "FRIS_SHORT_GRASS_2",
+      "FRIS_SHORT_GRASS_1",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
+      "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_WALL_EDGE",
+      "FRIS_SHORT_GRASS_3_WALL_EDGE",
+      "FRIS_SHORT_GRASS_WALL_EDGE_2"
     ]
   },
   {
@@ -5469,7 +5494,9 @@
     "baseMaterial": "DOCK_FENCE",
     "objectIds": [
       "PEST_SERIM_PIER_RAIL",
-      "FRISB_PIER_RAIL"
+      "FRISB_PIER_RAIL",
+      "FRISD_WOOD_GATE_OPEN_01",
+      "FRISD_WOOD_GATE_01"
     ],
     "flatNormals": true
   },
@@ -5655,6 +5682,668 @@
       {
         "baseMaterial": "TRANSPARENT",
         "colors": [ "a < 255" ]
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Walls and Supports",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FRISD_TOWN_WALL",
+      "FRISD_TOWN_WALL_WINDOW",
+      "FRISD_TOWN_WALL_BANK_CONNECTOR",
+      "FRISD_OUTER_CITY_WALL",
+      "FRISD_OUTER_CITY_WALL_GATEPOST_LEFT",
+      "FRISD_OUTER_CITY_WALL_GATEPOST_RIGHT",
+      "FRISD_OUTER_CITY_WALL_TOPBLOCKS",
+      "FRISD_OUTER_CITY_WALL_TURRET_CONNECTOR",
+      "FRISD_IZSO_TURRET_FLOOR_CORNER",
+      "FRISD_IZSO_TURRET_FLOOR",
+      "FRISD_IZSO_TURRET_FLOOR_MID",
+      "FRISD_IZSO_TURRET_FLOOR_EDGE",
+      "FRISD_TURRETTOP_SMALL",
+      "FRISD_TURRETTOP_BIG",
+      "FRISD_TURRETTOP_SMALLCORNER",
+      "FRISD_IZSO_WATCHTOWER_BASE",
+      "FRISD_IZSO_WATCHTOWER_LVL2_SUPPORT",
+      "FRISD_IZSO_WATCHTOWER_ARCH",
+      "FRISD_IZSO_WATCHTOWER_FLOOR_EDGE",
+      "FRISD_IZSO_WATCHTOWER_FLOOR_CORNER",
+      "FRISD_IZSO_WATCHTOWER_TOPWALL2",
+      "FRISD_IZSO_WATCHTOWER_TOPWALL",
+      "FRISD_IZSO_BRIDGE_SUPPORT",
+      "FRISD_IZSO_BRIDGE_FLOOR_NORAIL",
+      "FRISD_IZSO_DOCK_SUPPORT",
+      "FRISD_TOWN_WALL_BANK_CONNECTOR_RIGHT"
+    ]
+  },
+  {
+    "description": "Jatizso - Doors, Ladders and Bell",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FRISD_TOWN_WALL_DOOR_LOCKED",
+      "FRISD_TOWN_WALL_DOOR_OPEN",
+      "FRISD_TOWN_WALL_DOOR",
+      "FRISD_OUTER_CITY_WALL_DOOR_LEFT",
+      "FRISD_OUTER_CITY_WALL_DOOR_RIGHT",
+      "FRISD_OUTER_CITY_WALL_DOOR_LEFT_OPEN",
+      "FRISD_OUTER_CITY_WALL_DOOR_RIGHT_OPEN",
+      "FRISD_IZSO_LADDER_TOP",
+      "FRISD_IZSO_LADDER_BOTTOM",
+      "FRISD_IZSO_WATCHTOWER_FLOOR_HOLE",
+      "FRISD_IZSO_TURRET_FLOOR_HOLE",
+      "FRIZD_IZSO_BELL"
+    ]
+  },
+  {
+    "description": "Jatizso - Mine Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISD_IZSO_MINE_ENTRANCE",
+      "FRISD_IZSO_SPIRAL_STAIRS"
+    ]
+  },
+  {
+    "description": "Jatizso - Bridges",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "FRISD_IZSO_BRIDGE_FLOOR2",
+      "FRISD_IZSO_BRIDGE_HANDRAIL"
+    ]
+  },
+  {
+    "description": "Jatizso - Wooden Furniture",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FRISD_WEAPON_MERCHANT_SWORDTABLE",
+      "FRIS_BANQUET_TABLE02",
+      "FRIS_BANQUET_TABLE03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Wooden Furniture - Rotated",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FRIS_BANQUET_SMALLBAR01",
+      "FRIS_BANQUET_SMALLBAR02",
+      "FRIS_BANQUET_SMALLBAR03",
+      "FRIS_BANQUET_SMALLBAR04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvOrientation": 512,
+        "uvScale": 0.7,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Metallic Furniture",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "uvScale": 0.5,
+    "objectIds": [
+      "FRISD_FISHMONGER_HANGING_FISH",
+      "FRISD_FISHMONGER_FISHTABLE",
+      "FRIZD_IZSO_THRONE",
+      "FRIZD_IZSO_THRONE_TORCH",
+      "FRIS_BANQUET_CHAIR01",
+      "FRISD_IZSO_CHAIR",
+      "FRISD_TOWN_WALL_BANK_COUNTER_EDGE_RIGHT",
+      "FRISD_TOWN_WALL_BANK_COUNTER_MID",
+      "FRISD_TOWN_WALL_BANK_COUNTER_BREAKROUTE",
+      "FRISD_TOWN_WALL_BANK_COUNTER_EDGE",
+      "FRIS_BANQUET_TABLE04",
+      "FRISD_IZSO_TABLE_PLATES",
+      "FRISD_IZSO_TABLE_PLATES1",
+      "FRISD_IZSO_SHIELD_DECOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 100,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FRISD_IZSO_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 100,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Rug",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISD_IZSO_KING_RUG_CORNER",
+      "FRISD_IZSO_KING_RUG_EDGE",
+      "FRISD_IZSO_KING_RUG_CENTRE",
+      "FRISD_IZSO_RUG_CENTRE"
+    ]
+  },
+  {
+    "description": "Jatizso - Kings Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_CHEST_CLOSED",
+      "FRIS_CHEST_OPEN"
+    ]
+  },
+  {
+    "description": "Jatizso - Ore Table and Crate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "FRISD_OREMERCHANT_ORETABLE",
+      "FRISD_IZSO_STONE_CRATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Shelves",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "FRISD_WEAPON_MERCHANT_SWORDCASE",
+      "FRISD_WEAPON_MERCHANT_AXECASE",
+      "FRISD_IZSO_SHELF",
+      "FRISD_IZSO_SHELF2",
+      "FRISD_ARMOURY_SHIELD_SHELF",
+      "FRISD_ARMOURY_ARMOUR_SHELF"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 31",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jatizso - Banner",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.4,
+    "upwardsNormals": true,
+    "receiveShadows": false,
+    "objectIds": [
+      "FRISD_BANNER03",
+      "FRISD_BANNER02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvOrientationX": 512,
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Banner",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.4,
+    "upwardsNormals": true,
+    "receiveShadows": false,
+    "objectIds": [
+      "FRISD_BANNER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvOrientationX": 512,
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Wooden Walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_PALISADE_OUTER_WALL",
+      "FRIS_PALISADE_DOOR_L",
+      "FRIS_PALISADE_DOOR_R",
+      "FRIS_PALISADE_OUTER_WALL_TOP_ALT",
+      "FRIS_PALISADE_OUTER_WALL_TOP",
+      "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL",
+      "FRIS_PALISADE_OUTER_WALL_MID",
+      "FRIS_PALISADE_OUTER_WALL_MID_TOP_FILL_MIRROR",
+      "FRIS_PALISADE_DOOR_OPEN_L",
+      "FRIS_PALISADE_DOOR_OPEN_R",
+      "FRIS_WATCHTOWER_LEG_LOW",
+      "FRIS_WATCHTOWER_LEG_HIGH"
+    ]
+  },
+  {
+    "description": "Neitiznot - Wooden Walkway",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_PALISADE_WALKWAY_1",
+      "FRIS_PALISADE_WALKWAY_2",
+      "FRIS_PALISADE_WALKWAY_CORNER",
+      "FRIS_PALISADE_WALKWAY"
+    ]
+  },
+  {
+    "description": "Neitiznot - Wooden Ladders",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.3,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_PALISADE_LADDER",
+      "FRISB_WATCHTOWER_LADDER_TWOFLOORS",
+      "FRISB_WATCHTOWER_LADDER_INCATIVE",
+      "FRISB_WATCHTOWER_LADDER_TOP_TWOFLOORS"
+    ]
+  },
+  {
+  "description": "Neitiznot - Wooden Corner",
+  "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+  "uvScale": 0.7,
+  "uvType": "BOX",
+  "uvOrientation": 512,
+  "objectIds": [
+    "FRIS_PALISADE_WALKWAY_5"
+  ]
+  },
+  {
+    "description": "Neitiznot - Ruined House",
+    "baseMaterial": "GRUNGE_1",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FRISB_ABODE_BURNT_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.6,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Houses",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_ABODE_WALL_WINDOW",
+      "FRISB_ABODE_WALL",
+      "FRISB_ABODE_WALL_MIRROR",
+      "FRISB_ABODE_DOOR",
+      "FRISB_ABODE_DOOR_LOCKED",
+      "FRISB_ABODE_DOOR_ALWAYS_OPEN",
+      "FRISB_ABODE_DOOR_OPEN",
+      "FRISB_ROOF1_HILLSKEW",
+      "FRISB_ROOF"
+    ]
+  },
+  {
+    "description": "Neitiznot - Houses - Roof End",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_ROOF_EDGE_ABODE_NEW_1_MIRROR",
+      "FRISB_ROOF_EDGE_ABODE_NEW_1",
+      "FRISB_ROOF_EDGE"
+    ]
+  },
+  {
+    "description": "Neitiznot - Houses - Rotated Roof End",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_ROOF_EDGE_ABODE1",
+      "FRISB_ROOF_EDGE_ABODE1_MIRROR"
+    ]
+  },
+  {
+    "description": "Neitiznot - Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvOrientation": 256,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Throne",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRIS_VIKING_THROWN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Bank Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISB_BANK_TABLE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Tables and Spinning Wheel",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FRIS_HERB_TABLE",
+      "FRIS_CARPENTRY_TABLE",
+      "IZNOT_SPINNING_WHEEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvOrientation": 512,
+        "uvScale": 0.5,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Wooden Junk",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FRISD_WOOD_JUNK",
+      "FRISB_WOODEN_TABLE_BROKEN",
+      "FRISD_WOOD_JUNK2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Stumps",
+    "baseMaterial": "LIGHT_BARK",
+    "uvScale": 0.3,
+    "uvType": "BOX",
+    "objectIds": [
+      "LOG_WITHOUTAXE",
+      "IZNOT_SHIELD_STUMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvScale": 0.6,
+        "uvOrientationY": 720,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Neitiznot - Range and Clay Furnace",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "IZNOT_CLAY_RANGE",
+      "IZNOT_CLAY_FORGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "GRUNGE_1",
+        "uvScale": 0.3,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Geyser",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FRIS_ROCK_GEYSER",
+      "FRIS_ROCK_GEYSER_SMALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Rocks - Tiny",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "FRIS_ROCK_FLOOR_ICE_01",
+      "FRIS_ROCK_FLOOR_ICE_02",
+      "FRIS_ROCK_FLOOR_ICE_03",
+      "FRIS_ROCK_FLOOR_ICE_04",
+      "FRIS_ROCK_FLOOR_ICE_05",
+      "FRIS_ROCK_FLOOR_ICE_06",
+      "FRIS_ROCK_FLOOR_03",
+      "FRIS_ROCK_FLOOR_02",
+      "FRIS_ROCK_FLOOR_05",
+      "FRIS_ROCK_FLOOR_04",
+      "FRIS_ROCK_FLOOR_06",
+      "FRISB_DUGUPSOIL_1",
+      "FRISB_DUGUPSOIL_3",
+      "FRISB_DUGUPSOIL_2",
+      "FRISD_DUGUPSOIL1_IZSO",
+      "FRISD_DUGUPSOIL2_IZSO",
+      "FRISD_DUGUPSOIL5_IZSO",
+      "FRISD_DUGUPSOIL4_IZSO",
+      "FRISD_DUGUPSOIL3_IZSO"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Rocks",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "FRIS_ROCKS_BIG02",
+      "FRIS_ROCKS_BIG03",
+      "FRISD_IZSO_ROCKS",
+      "FRIZD_IZSO_ROCKS2",
+      "FRISD_OREMERCHANT_ORESTONES"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Iceberg",
+    "baseMaterial": "SNOW_2_DARK",
+    "uvType": "BOX",
+    "npcIds": [
+      "FRIS_ICE_CHUNK_ONE",
+      "FRIS_ICE_CHUNK_TWO"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Trolls - Correct Over Brightness",
+    "areas": [ "FREMENNIK_ISLES_NORTH", "FREMENNIK_ISLES_ICE_TROLL_DUNGEON"],
+    "baseMaterial": "GRAY_75",
+    "npcIds": [
+      "FRIS_TROLLF_PC",
+      "FRIS_TROLLF",
+      "FRIS_TROLLM",
+      "FRIS_TROLLM_PC",
+      "FRIS_BABY_TROLL_PC",
+      "FRIS_BABY_TROLL",
+      "FRIS_TROLL_BODYGUARD_PC",
+      "FRIS_TROLLM_LOWXP",
+      "FRIS_TROLL_BODYGUARD_LOWXP",
+      "FRIS_TROLLF_LOWXP",
+      "FRIS_BABY_TROLL_PC",
+      "FRIS_BABY_TROLL_LOWXP"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Snowy - Cave Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "FRIS_TROLL_TRAPDOOR_R2",
+      "FRIS_TROLL_TRAPDOOR_NURSE",
+      "FRIS_TROLL_TRAPDOOR_FINAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "SNOW_4"
+      }
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Wooden Bridges",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FRISB_ROPE_BRIDGE",
+      "FRISB_ROPE_BRIDGE_BROKEN",
+      "FRISB_BRIDGE_1_S",
+      "FRISB_BRIDGE_1_N",
+      "FRISB_BRIDGE_2_N",
+      "FRISB_BRIDGE_2_S",
+      "FRISB_BRIDGE_3_N",
+      "FRISB_BRIDGE_3_S",
+      "FRISB_BRIDGE_4_N",
+      "FRISB_BRIDGE_4_S",
+      "FRISB_BRIDGE_5_S",
+      "FRISB_BRIDGE_5_N",
+      "FRISB_BRIDGE_6_S",
+      "FRISB_BRIDGE_6_N",
+      "FRISB_BRIDGE_7_E",
+      "FRISB_BRIDGE_7_W"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
       }
     ]
   },
@@ -11691,7 +12380,7 @@
   {
     "description": "Objects - Wooden - Chair - No cushion - Smashed",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "SMASHEDCHAIR", "TROLL_SMASHEDCHAIR", "POG_SMASHEDCHAIR" ],
+    "objectIds": [ "SMASHEDCHAIR", "TROLL_SMASHEDCHAIR", "POG_SMASHEDCHAIR", "FRISB_SMASHEDCHAIR" ],
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.6
@@ -11705,7 +12394,8 @@
       "BURGH_CHAIR_3",
       "BURGH_CHAIR_4",
       "ROYAL_LONGHALL_CHAIR",
-      "AIDE_CHAIR"
+      "AIDE_CHAIR",
+      "FRISB_CHAIR"
     ],
     "uvType": "BOX"
   },
@@ -12667,13 +13357,6 @@
     "baseMaterial": "UNLIT"
   },
   {
-    "description": "Jatizso banners",
-    "baseMaterial": "UNLIT",
-    "objectIds": [
-      "FRISD_BANNER02"
-    ]
-  },
-  {
     "description": "Footprints on agility rooftops",
     "objectIds": [
       "ROOFTOP_FOOTPRINTS_SEERS",
@@ -13538,8 +14221,7 @@
     "uvOrientation": 512,
     "objectIds": [
       "ELID_HERB_SHELVES2",
-      "ELID_HERB_SHELVES",
-      "ELID_WAREHOUSE_SHELVES3"
+      "ELID_HERB_SHELVES"
     ],
     "colorOverrides": [
       {
@@ -19767,10 +20449,26 @@
   {
     "description": "Weiss Salt Mine Walls",
     "baseMaterial": "DIRT_1",
-    "objectIds": [ "FRIS_MINE_WALL", "FRIS_MINE_WALL_TOP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_SQUEEZE", "MY2ARM_CAVE_EXIT_BLOCKED" ],
+    "objectIds": [ "FRIS_MINE_WALL", "FRIS_MINE_WALL_TOP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_SQUEEZE", "MY2ARM_CAVE_EXIT_BLOCKED", "FRIS_MINE_WALL_COLUMN",
+      "FRIS_MINE_WALL_STEPS", "FRIS_WALL_RAMP_01", "FRIS_WALL_RAMP_02", "FRIS_MINE_WALL_STEPS_2", "FRIS_WALL_RAMP_02_MIRROR", "FRIS_WALL_RAMP_01_MIRROR", "FRIS_RAMP_02_MIRROR",
+      "FRIS_RAMP_MID_02", "FRIS_RAMP_02", "FRIS_RAMP_01_MIRROR", "FRIS_RAMP_MID_01", "FRIS_RAMP_01", "FRIS_MINE_WALL_COLUMN" , "FRIS_MINE_WALL_COLUMN_LADDERR1", "FRIS_MINE_WALL_COLUMN_LADDER" ],
     "uvType": "BOX",
     "uvOrientation": 128,
     "uvScale": 0.4
+  },
+  {
+    "description": "Fremennik Isles - Ice Troll Dungeon Exit",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [ "FRIS_MINE_WALL_NURSE_ENTRANCE_ONE", "FRIS_MINE_WALL_NURSE_ENTRANCE_TWO", "FRIS_MINE_WALL_NURSE_ENTRANCE_THREE" ],
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": ["h == 10", "h == 5"],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Weiss Underground Ground Rubble",
@@ -19782,7 +20480,7 @@
   {
     "description": "Weiss Underground Stalactites",
     "baseMaterial": "GRUNGE_1",
-    "objectIds": [ "FRIS_MINE_STALAGTITE_01", "FRIS_MINE_STALAGTITE_02" ],
+    "objectIds": [ "FRIS_MINE_STALAGTITE_01", "FRIS_MINE_STALAGTITE_02", "FRIS_MINE_ROCKS_SMALL_01", "FRIS_MINE_ROCKS_SMALL_02" ],
     "uvType": "BOX",
     "uvOrientation": 128,
     "uvScale": 0.6

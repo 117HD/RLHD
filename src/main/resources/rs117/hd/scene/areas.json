@@ -4828,6 +4828,31 @@
     ]
   },
   {
+    "name": "FREMENNIK_ISLES_MIDDLE",
+    "aabbs": [
+      [ 2302, 3827, 2363, 3841 ],
+      [ 2322, 3823, 2336, 3826 ],
+      [ 2341, 3825, 2345, 3826 ],
+      [ 2348, 3821, 2365, 3826 ],
+      [ 2364, 3827, 2382, 3841 ],
+      [ 2311, 3840, 2319, 3843 ],
+      [ 2377, 3842, 2379, 3843 ],
+      [ 2354, 3842, 2356, 3843 ]
+    ]
+  },
+  {
+    "name": "FREMENNIK_ISLES_FAR_NORTH",
+    "aabbs": [
+      [ 2307, 3878, 2422, 3902 ],
+      [ 2339, 3872, 2359, 3877 ]
+    ]
+  },
+  {
+    "name": "FREMENNIK_ISLES_ICE_TROLL_DUNGEON",
+    "regions": [ 9632 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "FREMENNIK_ISLES",
     "areas": [
       "JATIZSO",
