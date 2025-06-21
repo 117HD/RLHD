@@ -586,22 +586,22 @@ public enum Material {
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
 
-	LASSAR_UNDERCITY_TILE_NORMAL,
-	LASSAR_UNDERCITY_TILE_DISP,
+	LASSAR_UNDERCITY_TILE_N,
+	LASSAR_UNDERCITY_TILE_D,
 	LASSAR_UNDERCITY_TILES(MARBLE_2_SEMIGLOSS, p -> p
-		.setNormalMap(LASSAR_UNDERCITY_TILE_NORMAL)
-		.setDisplacementMap(LASSAR_UNDERCITY_TILE_DISP)
+		.setNormalMap(LASSAR_UNDERCITY_TILE_N)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_D)
 		.setDisplacementScale(.015f)
 	),
 	LASSAR_UNDERCITY_TILES_SUBMERGED(LASSAR_UNDERCITY_TILES, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.025f)
 		.setFlowMapDuration(new float[] { 10, -10 })),
-	CAM_TORUM_TILE_DISP,
+	CAM_TORUM_TILE_AO,
 	CAM_TORUM_TILES(DIRT_1, p -> p
-		.setNormalMap(LASSAR_UNDERCITY_TILE_NORMAL)
-		.setDisplacementMap(LASSAR_UNDERCITY_TILE_DISP)
-		.setAmbientOcclusionMap(CAM_TORUM_TILE_DISP)
+		.setNormalMap(LASSAR_UNDERCITY_TILE_N)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_D)
+		.setAmbientOcclusionMap(CAM_TORUM_TILE_AO)
 		.setDisplacementScale(.025f)
 	),
 	HD_LAVA_1(p -> p
