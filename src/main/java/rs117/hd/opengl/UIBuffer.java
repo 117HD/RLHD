@@ -1,13 +1,17 @@
 package rs117.hd.opengl;
 
 public class UIBuffer extends UniformBuffer {
-	@UBOProperty(UBOEntryType.IVec2)	public UBOEntry<Integer[]> SourceDimensions;
-	@UBOProperty(UBOEntryType.IVec2)	public UBOEntry<Integer[]> TargetDimensions;
+	public UIBuffer() {
+		super("UI");
+	}
 
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> ColorBlindnessIntensity;
-	@UBOProperty(UBOEntryType.FVec4)	public UBOEntry<float[]> AlphaOverlay;
+	public Property SourceDimensions = AddProperty(PropertyType.IVec2, "SourceDimensions");
+	public Property TargetDimensions = AddProperty(PropertyType.IVec2, "TargetDimensions");
 
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> ShowGammaCalibration;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> GammaCalibrationTimer;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> GammaCorrection;
+	public Property ColorBlindnessIntensity = AddProperty(PropertyType.Float, "ColorBlindnessIntensity");
+	public Property AlphaOverlay = AddProperty(PropertyType.FVec4, "AlphaOverlay");
+
+	public Property ShowGammaCalibration = AddProperty(PropertyType.Int, "ShowGammaCalibration");
+	public Property GammaCalibrationTimer = AddProperty(PropertyType.Float, "GammaCalibrationTimer");
+	public Property GammaCorrection = AddProperty(PropertyType.Float, "GammaCorrection");
 }

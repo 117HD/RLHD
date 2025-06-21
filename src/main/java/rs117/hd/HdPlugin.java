@@ -276,7 +276,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Getter
 	private Gson gson;
 
-	public GLCapabilities glCaps;
+	public static GLCapabilities glCaps;
 	private Canvas canvas;
 	private AWTContext awtContext;
 	private Callback debugCallback;
@@ -2067,7 +2067,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
-			hUniformGlobalBuffer.LightDir.Set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
+			hUniformGlobalBuffer.LightDir.SetV(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
@@ -2305,7 +2305,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Use the texture bound in the first pass
 		glUseProgram(glUiProgram);
-		hUniformUIBuffer.SourceDimensions.Set(canvasWidth, canvasHeight);
+		hUniformUIBuffer.SourceDimensions.SetV(canvasWidth, canvasHeight);
 		hUniformUIBuffer.ColorBlindnessIntensity.Set(config.colorBlindnessIntensity() / 100f);
 
 		hUniformUIBuffer.AlphaOverlay.Set(ColorUtils.srgba(overlayColor));
@@ -2318,10 +2318,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
 			glDpiAwareViewport(0, 0, dim.width, dim.height);
-			hUniformUIBuffer.TargetDimensions.Set(dim.width, dim.height);
+			hUniformUIBuffer.TargetDimensions.SetV(dim.width, dim.height);
 		} else {
 			glDpiAwareViewport(0, 0, canvasWidth, canvasHeight);
-			hUniformUIBuffer.TargetDimensions.Set(canvasWidth, canvasHeight);
+			hUniformUIBuffer.TargetDimensions.SetV(canvasWidth, canvasHeight);
 		}
 
 		hUniformUIBuffer.UploadUniforms();

@@ -1,52 +1,56 @@
 package rs117.hd.opengl;
 
 public class GlobalBuffer extends UniformBuffer {
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> CameraPos;
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> ExpandedMapLoadingChunks;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> DrawDistance;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> ElapsedTime;
+	public GlobalBuffer() {
+		super("Global");
+	}
 
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> ColorBlindnessIntensity;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> GammaCorrection;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> Saturation;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> Contrast;
+	public Property CameraPos = AddProperty(PropertyType.FVec3, "CameraPos");
+	public Property ExpandedMapLoadingChunks = AddProperty(PropertyType.Int, "ExpandedMapLoadingChunks");
+	public Property DrawDistance = AddProperty(PropertyType.Float, "DrawDistance");
+	public Property ElapsedTime = AddProperty(PropertyType.Float, "ElapsedTime");
 
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> AmbientColor;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> AmbientStrength;
+	public Property ColorBlindnessIntensity = AddProperty(PropertyType.Float, "ColorBlindnessIntensity");
+	public Property GammaCorrection = AddProperty(PropertyType.Float, "GammaCorrection");
+	public Property Saturation = AddProperty(PropertyType.Float, "Saturation");
+	public Property Contrast = AddProperty(PropertyType.Float, "Contrast");
 
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> LightColor;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> LightStrength;
+	public Property AmbientColor = AddProperty(PropertyType.FVec3, "AmbientColor");
+	public Property AmbientStrength = AddProperty(PropertyType.Float, "AmbientStrength");
 
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> UnderglowColor;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> UnderglowStrength;
+	public Property LightColor = AddProperty(PropertyType.FVec3, "LightColor");
+	public Property LightStrength = AddProperty(PropertyType.Float, "LightStrength");
 
-	@UBOProperty(UBOEntryType.Mat4)		public UBOEntry<float[]> ProjectionMatrix;
-	@UBOProperty(UBOEntryType.Mat4)		public UBOEntry<float[]> LightProjectionMatrix;
+	public Property UnderglowColor = AddProperty(PropertyType.FVec3, "UnderglowColor");
+	public Property UnderglowStrength = AddProperty(PropertyType.Float, "UnderglowStrength");
 
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> UseFog;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> FogDepth;
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> FogColor;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> GroundFogStart;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> GroundFogEnd;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> GroundFogOpacity;
+	public Property ProjectionMatrix = AddProperty(PropertyType.Mat4, "ProjectionMatrix");
+	public Property LightProjectionMatrix = AddProperty(PropertyType.Mat4, "LightProjectionMatrix");
 
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> PointLightsCount;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> LightningBrightness;
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> LightDir;
+	public Property UseFog = AddProperty(PropertyType.Int, "UseFog");
+	public Property FogDepth = AddProperty(PropertyType.Float, "FogDepth");
+	public Property FogColor = AddProperty(PropertyType.FVec3, "FogColor");
+	public Property GroundFogStart = AddProperty(PropertyType.Float, "GroundFogStart");
+	public Property GroundFogEnd = AddProperty(PropertyType.Float, "GroundFogEnd");
+	public Property GroundFogOpacity = AddProperty(PropertyType.Float, "GroundFogOpacity");
 
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> ShadowMaxBias;
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> ShadowsEnabled;
+	public Property PointLightsCount = AddProperty(PropertyType.Int, "PointLightsCount");
+	public Property LightningBrightness = AddProperty(PropertyType.Float, "LightningBrightness");
+	public Property LightDir = AddProperty(PropertyType.FVec3, "LightDir");
 
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> WaterColorLight;
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> WaterColorMid;
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> WaterColorDark ;
+	public Property ShadowMaxBias = AddProperty(PropertyType.Float, "ShadowMaxBias");
+	public Property ShadowsEnabled = AddProperty(PropertyType.Int, "ShadowsEnabled");
 
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> UnderwaterEnvironment;
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> UnderwaterCaustics;
-	@UBOProperty(UBOEntryType.FVec3)	public UBOEntry<float[]> UnderwaterCausticsColor;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> UnderwaterCausticsStrength;
+	public Property WaterColorLight = AddProperty(PropertyType.FVec3, "WaterColorLight");
+	public Property WaterColorMid = AddProperty(PropertyType.FVec3, "WaterColorMid");
+	public Property WaterColorDark = AddProperty(PropertyType.FVec3, "WaterColorDark");
 
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> ColorFilterPrevious;
-	@UBOProperty(UBOEntryType.Int)		public UBOEntry<Integer> ColorFilter;
-	@UBOProperty(UBOEntryType.Float)	public UBOEntry<Float> ColorFilterFade;
+	public Property UnderwaterEnvironment = AddProperty(PropertyType.Int, "UnderwaterEnvironment");
+	public Property UnderwaterCaustics = AddProperty(PropertyType.Int, "UnderwaterCaustics");
+	public Property UnderwaterCausticsColor = AddProperty(PropertyType.FVec3, "UnderwaterCausticsColor");
+	public Property UnderwaterCausticsStrength = AddProperty(PropertyType.Float, "UnderwaterCausticsStrength");
+
+	public Property ColorFilterPrevious = AddProperty(PropertyType.Int, "ColorFilterPrevious");
+	public Property ColorFilter = AddProperty(PropertyType.Int, "ColorFilter");
+	public Property ColorFilterFade = AddProperty(PropertyType.FVec3, "ColorFilterFade");
 }

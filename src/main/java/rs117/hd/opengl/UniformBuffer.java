@@ -1,14 +1,11 @@
 package rs117.hd.opengl;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
+
+import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
+import rs117.hd.HdPlugin;
 import rs117.hd.utils.HDUtils;
 
 import static org.lwjgl.opengl.GL15C.*;
@@ -17,202 +14,192 @@ import static org.lwjgl.opengl.GL43C.*;
 
 @Slf4j
 public abstract class UniformBuffer {
-	@Retention(RetentionPolicy.RUNTIME)
-	protected @interface UBOProperty {
-		UBOEntryType value();
-	}
+	protected enum PropertyType {
+		Int(4, 4, 1),
+		IVec2(8, 8, 2),
+		IVec3(12, 16, 3),
+		IVec4(16, 16, 4),
 
-	protected interface UBOWriteFunction<T> {
-		void write(ByteBuffer Buffer, T Value);
-	}
+		Float(4, 4, 1),
+		FVec2(8, 8, 2),
+		FVec3(12, 16, 3),
+		FVec4(16, 16, 4),
 
-	private static UBOWriteFunction WriteInt = (Buffer, Value) -> Buffer.putInt((int)Value);
-	private static UBOWriteFunction WriteIntArray = (Buffer, Value) -> {
-		if(Value != null) {
-			if(Value.getClass() == Integer[].class) {
-				Integer[] Array = (Integer[])Value;
-				for (Integer val : Array) {
-					Buffer.putInt(val);
-				}
-			} else {
-				int[] Array = (int[])Value;
-				for (int val : Array) {
-					Buffer.putInt(val);
-				}
-			}
-		}
-	};
+		Mat3(36, 16, 9),
+		Mat4(64, 16, 16);
 
-	private static UBOWriteFunction WriteFloat = (Buffer, Value) -> Buffer.putFloat((float)Value);
-	private static UBOWriteFunction WriteFloatArray = (Buffer, Value) -> {
-		if(Value != null) {
-			if(Value.getClass() == Float[].class) {
-				Float[] Array = (Float[])Value;
-				for (Float val : Array) {
-					Buffer.putFloat(val);
-				}
-			} else {
-				float[] Array = (float[])Value;
-				for (float val : Array) {
-					Buffer.putFloat(val);
-				}
-			}
-		}
-	};
+		private int Size;
+		private int Alignment;
+		private int ElementSize;
+		private int ElementCount;
 
-
-	protected enum UBOEntryType {
-		Int(4, 4, WriteInt),
-		IVec2(8, 8, WriteIntArray),
-		IVec3(12, 16, WriteIntArray),
-		IVec4(16, 16, WriteIntArray),
-
-		Float(4, 4, WriteFloat),
-		FVec2(8, 8, WriteFloatArray),
-		FVec3(12, 16, WriteFloatArray),
-		FVec4(16, 16, WriteFloatArray),
-
-		Mat3(36, 16, WriteFloatArray),
-		Mat4(64, 16, WriteFloatArray);
-
-		protected int Size;
-		protected int Alignment;
-		protected UBOWriteFunction WriteFunction;
-
-		UBOEntryType(int Size, int Alignment, UBOWriteFunction WriteFunction) {
+		PropertyType(int Size, int Alignment, int ElementCount) {
 			this.Size = Size;
 			this.Alignment = Alignment;
-			this.WriteFunction = WriteFunction;
+			this.ElementSize = Size / ElementCount;
+			this.ElementCount = ElementCount;
 		}
 	}
 
-	public static class UBOEntry<T> {
-		protected T Value;
-		protected int Padding;
-		protected UBOEntryType Type;
-		protected String Name;
-		protected boolean Dirty;
+	public static class Property {
+		private UniformBuffer Owner;
+		private int Position;
+		private PropertyType Type;
+		private String Name;
 
-		private UBOEntry(UBOEntryType Type) {
+		private Property(PropertyType Type, String Name) {
 			this.Type = Type;
-			Dirty = true;
+			this.Name = Name;
 		}
 
-		public <K> void Set(K... Values) {
-			if(Value != Values) {
-				Value = (T) Values;
-				Dirty = true;
+		public void Set(int NewValue) {
+			if(Type != PropertyType.Int) {
+				log.warn("UBO {} - Incorrect Setter(int) called for Property: {}", Owner.Name, Name);
+				return;
+			}
+
+			if(Owner.Buffer.getInt(Position) != NewValue) {
+				Owner.Buffer.putInt(Position, NewValue);
+				Owner.NeedsUploading = true;
 			}
 		}
 
-		public void Set(T NewValue) {
-			if(Value != NewValue) {
-				Value = NewValue;
-				Dirty = true;
+		public void SetV(int... NewValues) { Set(NewValues); }
+		public void Set(int[] NewValues) {
+			if(Type != PropertyType.IVec2 && Type != PropertyType.IVec3 && Type != PropertyType.IVec4) {
+				log.warn("UBO {} - Incorrect Setter(int[]) called for Property: {}", Owner.Name, Name);
+				return;
 			}
-		}
 
-		public T Get() { return Value; }
-	}
+			if(NewValues == null) {
+				log.warn("UBO {} - Setter(int[]) was provided with null value for Property: {}", Owner.Name, Name);
+				return;
+			}
 
-	private ByteBuffer CPUBuffer;
-	private ArrayList<UBOEntry> Entries = new ArrayList<>();
-	private int Size;
-	private int glBuffer;
+			if(NewValues.length != Type.ElementCount) {
+				log.warn("UBO {} - Setter(int[]) was provided with incorrect number of elements for Property: {}", Owner.Name, Name);
+				return;
+			}
 
-	public UniformBuffer() {
-		try {
-			Field[] UBOPropertiesFields = this.getClass().getFields();
-			for(Field PropField : UBOPropertiesFields) {
-				UBOProperty Prop = PropField.getAnnotation(UBOProperty.class);
-				if(Prop != null) {
-					Class<?> FieldType = PropField.getType();
-					Constructor<?> Constructor = FieldType.getDeclaredConstructor(UBOEntryType.class);
+			if(Owner.Buffer == null) {
+				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Name);
+				return;
+			}
 
-					UBOEntryType Type = Prop.value();
-					UBOEntry<?> NewEntry = (UBOEntry<?>) Constructor.newInstance(Type);
-
-					NewEntry.Padding = (Type.Alignment - (Size % Type.Alignment)) % Type.Alignment;
-					NewEntry.Name = PropField.getName();
-
-					Entries.add(NewEntry);
-
-					Size += NewEntry.Type.Size + NewEntry.Padding;
-					PropField.setAccessible(true);
-					PropField.set(this, NewEntry);
+			for(int ElementIdx = 0; ElementIdx < Type.ElementCount; ElementIdx++) {
+				int Offset = Position + (ElementIdx * Type.ElementSize);
+				if(Owner.Buffer.getInt(Offset) != NewValues[ElementIdx]) {
+					Owner.Buffer.putInt(Offset, NewValues[ElementIdx]);
+					Owner.NeedsUploading = true;
 				}
 			}
-		} catch (NoSuchMethodException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		} catch (InvocationTargetException e) {
-			throw new RuntimeException(e);
-		} catch (InstantiationException e) {
-			throw new RuntimeException(e);
 		}
-		Size = (int) HDUtils.ceilPow2(Size);
+
+		public void Set(float NewValue) {
+			if(Type != PropertyType.Float) {
+				log.warn("UBO {} - Incorrect Setter(float) called for Property: {}", Owner.Name, Name);
+				return;
+			}
+
+			if(Owner.Buffer.getFloat(Position) != NewValue) {
+				Owner.Buffer.putFloat(Position, NewValue);
+				Owner.NeedsUploading = true;
+			}
+		}
+
+		public void SetV(float... NewValues) { Set(NewValues); }
+		public void Set(float[] NewValues) {
+			if(Type != PropertyType.FVec2 && Type != PropertyType.FVec3 && Type != PropertyType.FVec4 && Type != PropertyType.Mat3 && Type != PropertyType.Mat4) {
+				log.warn("UBO {} - Incorrect Setter(float[]) called for Property: {}", Owner.Name, Name);
+				return;
+			}
+
+			if(NewValues == null) {
+				log.warn("UBO {} - Setter(float[]) was provided with null value for Property: {}", Owner.Name, Name);
+				return;
+			}
+
+			if(NewValues.length != Type.ElementCount) {
+				log.warn("UBO {} - Setter(float[]) was provided with incorrect number of elements for Property: {}", Owner.Name, Name);
+				return;
+			}
+
+			if(Owner.Buffer == null) {
+				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Name);
+				return;
+			}
+
+			for(int ElementIdx = 0; ElementIdx < Type.ElementCount; ElementIdx++) {
+				int Offset = Position + (ElementIdx * Type.ElementSize);
+				if(Owner.Buffer.getFloat(Offset) != NewValues[ElementIdx]) {
+					Owner.Buffer.putFloat(Offset, NewValues[ElementIdx]);
+					Owner.NeedsUploading = true;
+				}
+			}
+		}
+	}
+
+	private ByteBuffer Buffer;
+	private int Size;
+	private int glBuffer;
+	private boolean NeedsUploading;
+	private String Name;
+
+	public UniformBuffer(String Name) {
+		this.Name = Name;
+	}
+
+	protected Property AddProperty(PropertyType Type, String Name) {
+		Property NewProperty = new Property(Type, Name);
+		NewProperty.Owner = this;
+
+		int Padding = (Type.Alignment - (Size % Type.Alignment)) % Type.Alignment;
+		NewProperty.Position = Size + Padding;
+
+		Size += Type.Size + Padding;
+
+		return NewProperty;
 	}
 
 	public void Initialise(int UniformBlockIndex) {
-		if(CPUBuffer != null) {
+		if(Buffer != null) {
 			Destroy();
 		}
 
-		CPUBuffer = BufferUtils.createByteBuffer(Size);
+		Size = (int) HDUtils.ceilPow2(Size);
+		Buffer = BufferUtils.createByteBuffer(Size);
 		glBuffer = glGenBuffers();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer);
 		glBufferData(GL_UNIFORM_BUFFER, Size, GL_STATIC_DRAW);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, CPUBuffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, Buffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, UniformBlockIndex, glBuffer);
+
+		if (HdPlugin.glCaps.OpenGL43 && log.isDebugEnabled()) {
+			glObjectLabel(GL_BUFFER, glBuffer, Name);
+		}
 	}
 
-	public void UploadUniforms() {
-		if(CPUBuffer == null) {
+	public final void UploadUniforms() {
+		if(Buffer == null) {
 			return;
 		}
 
-		boolean NeedsUpdating = false;
-		CPUBuffer.clear();
-		for(UBOEntry Entry : Entries) {
-			try {
-				if (Entry.Padding > 0) {
-					CPUBuffer.position(CPUBuffer.position() + Entry.Padding);
-				}
-				if (Entry.Dirty) {
-					if(Entry.Value != null) {
-						Entry.Type.WriteFunction.write(CPUBuffer, Entry.Value);
-					} else {
-						// Value is null, meaning not initialized fill in with zeros
-						for(int i = 0; i < Entry.Type.Size; i++) {
-							CPUBuffer.put((byte)0);
-						}
-					}
-					NeedsUpdating = true;
-					Entry.Dirty = false;
-				} else {
-					CPUBuffer.position(CPUBuffer.position() + Entry.Type.Size);
-				}
-			}catch (Exception Ex) {
-				log.error("Exception occurred whilst writing: {}\nException:\n{}", Entry.Name, Ex.toString());
-			}
-		}
-		CPUBuffer.flip();
-
-		if(NeedsUpdating) {
+		if(NeedsUploading) {
 			glBindBuffer(GL_UNIFORM_BUFFER, glBuffer);
-			glBufferSubData(GL_UNIFORM_BUFFER, 0, CPUBuffer);
+			glBufferSubData(GL_UNIFORM_BUFFER, 0, Buffer);
 
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 	}
 
 	public void Destroy() {
-		if(CPUBuffer != null) {
+		if(Buffer != null) {
 			glDeleteBuffers(glBuffer);
 
-			CPUBuffer = null;
+			Buffer = null;
 			glBuffer = -1;
 		}
 	}
