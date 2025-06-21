@@ -20,10 +20,20 @@ public abstract class UniformBuffer {
 		IVec3(12, 16, 3),
 		IVec4(16, 16, 4),
 
+		IntArray(4, 16, 1, true),
+		IVec2Array(8, 16, 2, true),
+		IVec3Array(12, 16, 3, true),
+		IVec4Array(16, 16, 4, true),
+
 		Float(4, 4, 1),
 		FVec2(8, 8, 2),
 		FVec3(12, 16, 3),
 		FVec4(16, 16, 4),
+
+		FloatArray(4, 16, 1, true),
+		FVec2Array(8, 16, 2, true),
+		FVec3Array(12, 16, 3, true),
+		FVec4Array(16, 16, 4, true),
 
 		Mat3(36, 16, 9),
 		Mat4(64, 16, 16);
@@ -32,12 +42,22 @@ public abstract class UniformBuffer {
 		private int Alignment;
 		private int ElementSize;
 		private int ElementCount;
+		private boolean IsArray;
 
 		PropertyType(int Size, int Alignment, int ElementCount) {
 			this.Size = Size;
 			this.Alignment = Alignment;
 			this.ElementSize = Size / ElementCount;
 			this.ElementCount = ElementCount;
+			this.IsArray = false;
+		}
+
+		PropertyType(int Size, int Alignment, int ElementCount, boolean IsArray) {
+			this.Size = Size;
+			this.Alignment = Alignment;
+			this.ElementSize = Size / ElementCount;
+			this.ElementCount = ElementCount;
+			this.IsArray = IsArray;
 		}
 	}
 
@@ -76,7 +96,7 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if(NewValues.length != Type.ElementCount) {
+			if ((Type.IsArray && (NewValues.length % Type.ElementCount) != 0) || NewValues.length != Type.ElementCount) {
 				log.warn("UBO {} - Setter(int[]) was provided with incorrect number of elements for Property: {}", Owner.Name, Name);
 				return;
 			}
@@ -86,7 +106,8 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			for(int ElementIdx = 0; ElementIdx < Type.ElementCount; ElementIdx++) {
+			int ElementCount = !Type.IsArray ? Type.ElementCount : NewValues.length;
+			for(int ElementIdx = 0; ElementIdx < ElementCount; ElementIdx++) {
 				int Offset = Position + (ElementIdx * Type.ElementSize);
 				if(Owner.Buffer.getInt(Offset) != NewValues[ElementIdx]) {
 					Owner.Buffer.putInt(Offset, NewValues[ElementIdx]);
@@ -119,7 +140,7 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if(NewValues.length != Type.ElementCount) {
+			if ((Type.IsArray && (NewValues.length % Type.ElementCount) != 0) || NewValues.length != Type.ElementCount) {
 				log.warn("UBO {} - Setter(float[]) was provided with incorrect number of elements for Property: {}", Owner.Name, Name);
 				return;
 			}
@@ -129,7 +150,8 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			for(int ElementIdx = 0; ElementIdx < Type.ElementCount; ElementIdx++) {
+			int ElementCount = !Type.IsArray ? Type.ElementCount : NewValues.length;
+			for(int ElementIdx = 0; ElementIdx < ElementCount; ElementIdx++) {
 				int Offset = Position + (ElementIdx * Type.ElementSize);
 				if(Owner.Buffer.getFloat(Offset) != NewValues[ElementIdx]) {
 					Owner.Buffer.putFloat(Offset, NewValues[ElementIdx]);
