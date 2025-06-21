@@ -105,6 +105,10 @@
         "type": "number",
         "description": "Underglow strength multiplier. Acts as light emanating from the ground."
       },
+      "skybox": {
+        "type": "string",
+        "description": "Skybox identifier."
+      },
       "sunAngles": {
         "type": "array",
         "description": "The sun's altitude and azimuth specified in degrees in the horizontal coordinate system. Altitude is from the ground up, azimuth is clockwise from north.",

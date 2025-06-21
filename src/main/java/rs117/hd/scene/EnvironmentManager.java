@@ -25,6 +25,7 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -33,14 +34,20 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.scene.environments.Environment;
+import rs117.hd.scene.skybox.SkyboxConfig;
+import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL15C.glBufferSubData;
+import static org.lwjgl.opengl.GL31C.*;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.TWO_PI;
 import static rs117.hd.utils.HDUtils.clamp;
@@ -66,6 +73,12 @@ public class EnvironmentManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private TextureManager textureManager;
+
+	@Inject
+	private SkyboxManager skyboxManager;
 
 	@Inject
 	private HdPluginConfig config;
@@ -140,11 +153,18 @@ public class EnvironmentManager {
 	public final float[] currentSunAngles = { 0, 0 };
 	private final float[] targetSunAngles = { 0, 0 };
 
+	private SkyboxConfig.SkyboxEntry targetSkybox = null;
+	private SkyboxConfig.SkyboxEntry currentSkybox = null;
+
+	private float currentSkyboxBlend = 0f;
+
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
 	private Environment[] environments;
 	private FileWatcher.UnregisterCallback fileWatcher;
+
+	private ByteBuffer skyboxBuffer = BufferUtils.createByteBuffer(80);
 
 	@Nonnull
 	private Environment currentEnvironment = Environment.NONE;
@@ -237,6 +257,11 @@ public class EnvironmentManager {
 			// Always write fog and water color, since they're affected by lightning
 			currentFogColor = targetFogColor;
 			currentWaterColor = targetWaterColor;
+			if(currentSkyboxBlend >= 1) {
+				currentSkybox = targetSkybox;
+				targetSkybox = null;
+				currentSkyboxBlend = 0.0f;
+			}
 		} else {
 			// interpolate between start and target values
 			float t = clamp((float) (plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION, 0, 1);
@@ -258,6 +283,7 @@ public class EnvironmentManager {
 				currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
 			currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 			currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
+			currentSkyboxBlend = t;
 		}
 
 		updateLightning();
@@ -333,6 +359,7 @@ public class EnvironmentManager {
 		targetUnderglowColor = env.underglowColor;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
+		targetSkybox = skyboxManager.getSkybox(env.skybox);
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
@@ -459,5 +486,57 @@ public class EnvironmentManager {
 
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
+	}
+
+	private void writeSkyboxPostProConfig(int index, SkyboxConfig.SkyboxPostProcessingConfig config) {
+		skyboxBuffer.putInt(index);
+		skyboxBuffer.putInt(config != null ? 1 : 0);
+		skyboxBuffer.putFloat(config != null ? config.getLightness() : 0.0f);
+		skyboxBuffer.putFloat(config != null ? config.getContrast()   : 0.0f);
+		skyboxBuffer.putFloat(config != null ? config.getSaturation() : 0.0f);
+		skyboxBuffer.putFloat(config != null ? config.getHue()   : 0.0f);
+
+		// Padding due to alignment added by layout(std140)
+		skyboxBuffer.putInt(0);
+		skyboxBuffer.putInt(0);
+	}
+
+	public boolean updateSkyboxUniformBuffer(int glBufferId) {
+		skyboxBuffer.clear();
+
+		SkyboxConfig.SkyboxEntry overrideEntry = null;
+		if (config.renderSkybox()) {
+			overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
+			if (overrideEntry != null) {
+				int overrideIndex = skyboxManager.getSkyboxTextureByDir(overrideEntry.getDir());
+				writeSkyboxConfig(overrideIndex, overrideEntry);
+				writeSkyboxConfig(null);
+			} else {
+				writeSkyboxConfig(currentSkybox);
+				writeSkyboxConfig(targetSkybox);
+			}
+		} else {
+			writeSkyboxConfig(null);
+			writeSkyboxConfig(null);
+		}
+
+		skyboxBuffer.putFloat(currentSkyboxBlend);
+		skyboxBuffer.putFloat(HdPlugin.NEAR_PLANE * 100.0f);
+		skyboxBuffer.flip();
+
+		glBindBuffer(GL_UNIFORM_BUFFER, glBufferId);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, skyboxBuffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		return currentSkybox != null || targetSkybox != null || overrideEntry != null;
+	}
+
+	private void writeSkyboxConfig(SkyboxConfig.SkyboxEntry skybox) {
+		int index = (skybox != null) ? skyboxManager.getSkyboxTextureByDir(skybox.getDir()) : -1;
+		writeSkyboxPostProConfig(index, (skybox != null) ? skybox.getPostProcessing() : null);
+	}
+
+	private void writeSkyboxConfig(int index, SkyboxConfig.SkyboxEntry postProcessing) {
+		writeSkyboxPostProConfig(index, postProcessing.getPostProcessing());
 	}
 }
