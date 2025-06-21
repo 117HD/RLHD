@@ -509,11 +509,13 @@ public class EnvironmentManager {
 	public boolean updateSkyboxUniformBuffer(int glBufferId) {
 		skyboxBuffer.clear();
 
+		SkyboxConfig.SkyboxEntry overrideEntry = null;
 		if (config.renderSkybox()) {
-			SkyboxConfig.SkyboxEntry overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
+			overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
 			if (overrideEntry != null) {
 				int overrideIndex = skyboxManager.getSkyboxTextureByDir(overrideEntry.getDir());
 				writeSkyboxConfig(overrideIndex, overrideEntry);
+				writeSkyboxConfig(null);
 			} else {
 				writeSkyboxConfig(currentSkybox);
 				writeSkyboxConfig(targetSkybox);
@@ -531,7 +533,7 @@ public class EnvironmentManager {
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, skyboxBuffer);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		return currentSkybox == null || targetSkybox == null;
+		return currentSkybox != null || targetSkybox != null || overrideEntry != null;
 	}
 
 	private void writeSkyboxConfig(SkyboxConfig.SkyboxEntry skybox) {
