@@ -28197,15 +28197,21 @@
   },
   {
     "description": "Bankbooth with Glass Window - Lunar Island",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "LUNAR_MOONCLAN_BANKBOOTH" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "objectIds": [ "LUNAR_MOONCLAN_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": 512
       }
     ]
   },
