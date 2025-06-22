@@ -12513,6 +12513,7 @@
     "description": "Objects - Wooden - Ugly combined backed wooden chair",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "FAI_VARROCK_POOR_CHAIR1",
       "FAI_VARROCK_POSH_CHAIR2",
       "FAI_VARROCK_POOR_CHAIR3"
     ],
@@ -36057,6 +36058,24 @@
     "uvOrientationY": 512,
     "objectIds": [
       "SARIM_DEPOSIT_BOX"
+    ]
+  },
+  {
+    "description": "Corsair Cove - Wooden - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DS2_CORSAIR_COVE_STAIRS"
+    ]
+  },
+  {
+    "description": "Corsair Cove - Wooden - Walls - Railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "DS2_CORSAIR_COVE_RAIL"
     ]
   }
 ]
