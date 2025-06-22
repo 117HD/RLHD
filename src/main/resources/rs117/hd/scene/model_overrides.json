@@ -28075,15 +28075,21 @@
   },
   {
     "description": "Bankbooth with Glass Window - Lumbridge",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "AIDE_BANKBOOTH" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [ "AIDE_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   },
