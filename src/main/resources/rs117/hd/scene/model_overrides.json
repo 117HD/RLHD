@@ -36232,7 +36232,7 @@
   },
   {
     "description": "Corsair Cove - Thatch - Roofs",
-    "baseMaterial": "HD_HAY_DESATURATED",
+    "baseMaterial": "HD_HAY",
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -36252,7 +36252,7 @@
     ]
   },
   {
-    "description": "Corsair Cove - Thatch - Roofs",
+    "description": "Corsair Cove - Wooden - Ship ribs",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
