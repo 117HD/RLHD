@@ -90,7 +90,7 @@ public class FishingSpotReplacer {
 		frameTimer.begin(Timer.REPLACE_FISHING_SPOTS);
 
 		// Despawn fishing spots for inactive NPCs
-		Set<Integer> npcIndices = client.getNpcs().stream().map(NPC::getIndex).collect(Collectors.toSet());
+		Set<Integer> npcIndices = client.getTopLevelWorldView().npcs().stream().map(NPC::getIndex).collect(Collectors.toSet());
 		npcIndexToModel.entrySet().removeIf(entry -> {
 			if (npcIndices.contains(entry.getKey()))
 				return false;
@@ -98,7 +98,7 @@ public class FishingSpotReplacer {
 			return true;
 		});
 
-		client.getNpcs().forEach(this::spawnFishingSpot);
+		client.getTopLevelWorldView().npcs().forEach(this::spawnFishingSpot);
 
 		// Update the location of active fishing spots to match their corresponding NPC's current position
 		npcIndexToModel.forEach((index, runeLiteObject) -> {
