@@ -11581,7 +11581,6 @@
       "DEATH_CAMPWALL1",
       "DEATH_CAMPWALL2",
       "DEATH_CAMPWALL3",
-      "DEATH_CAMPWALL1_SUPPORT",
       "MY2ARM_CLIFF_SHORTCUT_5",
       "VIKINGEXILE_ROCKS_OP",
       "VIKINGEXILE_ROCKS_NOOP",
@@ -11598,13 +11597,14 @@
     "uvScale": 0.33
   },
   {
-    "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
+    "description": "Trollheim - Corsair Cove - Fence support post surrounded by rocks",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.66,
     "uvOrientation": 168,
     "objectIds": [
-      "DEATH_CAMPWALL1_CORNER"
+      "DEATH_CAMPWALL1_CORNER",
+      "DEATH_CAMPWALL1_SUPPORT"
     ],
     "colorOverrides": [
       {
