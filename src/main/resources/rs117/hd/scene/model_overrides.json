@@ -7571,8 +7571,10 @@
     "uvOrientation": 512
   },
   {
-    "description": "Courthouse Basement stairs",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Seers Village - Wooden - Courthouse Basement stairs railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "KR_COURTHOUSE_STAIRS_TOP",
       "KR_COURTHOUSE_STAIRS_FALLOFF_EDGE",
@@ -36702,6 +36704,16 @@
     "uvScale": 0.75,
     "objectIds": [
       "COAL_TRUCK"
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - Courthouse Desk",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "KR_COURTHOUSE_TABLE"
     ]
   }
 ]
