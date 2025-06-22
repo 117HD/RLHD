@@ -7672,7 +7672,6 @@
       "WILD_TABLE",
       "AIDE_WOODEN_TABLE",
       "DK_TABLE",
-      "KR_CAM_BIGTABLE",
       "FAI_VARROCK_POOR_TABLE1X1",
       "WILD_TABLE_INACTIVE",
       "CON_CONTRACT_VARROCK_MID_TABLE_BROKEN",
@@ -7696,6 +7695,7 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "BIGTABLE2",
+      "KR_CAM_BIGTABLE",
       "FAI_VARROCK_COUNTER_TABLE",
       "FAI_VARROCK_WOODEN_TABLE",
       "RIMMINGTON_BIG_WOODEN_TABLE",
@@ -7919,7 +7919,8 @@
       "FAI_VARROCK_SUITOFARMOUR",
       "ROYAL_DWARF_ARMOUR2",
       "DRAGON_SLAYER_QIP_SUITOFARMOUR",
-      "KR_SUITOFARMOUR_DARKKNIGHT"
+      "KR_SUITOFARMOUR_DARKKNIGHT",
+      "KR_CAM_SUITOFARMOR"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -8495,7 +8496,8 @@
       "HANGINGLANTERN",
       "FAI_VARROCK_OILLAMP",
       "FAI_VARROCK_SWING_LANTERN_UNLIT",
-      "FAI_FALADOR_LANTERN"
+      "FAI_FALADOR_LANTERN",
+      "LANTERN_OFF"
     ]
   },
   {
@@ -8767,7 +8769,11 @@
       "KR_CHURCHDOOR_L",
       "KR_OPENCHURCHDOOR_L",
       "KR_CHURCHDOOR_R",
-      "KR_OPENCHURCHDOOR_R"
+      "KR_OPENCHURCHDOOR_R",
+      "KR_CAM_DOUBLEDOORL",
+      "KR_CAM_DOUBLEDOORL_OPEN",
+      "KR_CAM_DOUBLEDOORR",
+      "KR_CAM_DOUBLEDOORR_OPEN"
     ],
     "colorOverrides": [
       {
@@ -12803,7 +12809,8 @@
     "objectIds": [
       "POSH_CHAIR",
       "FAI_VARROCK_CHAIR_BLUE",
-      "FAI_FALADOR_POSH_CHAIR_WHITE"
+      "FAI_FALADOR_POSH_CHAIR_WHITE",
+      "POSH_CHAIR_WHITE"
     ]
   },
   {
@@ -29278,6 +29285,7 @@
       "CABINET_SWORDS",
       "CABINET_BOWS",
       "KR_CABINET_BOWS",
+      "KR_CAM_CABINET_BOWS_WHITE",
       "CABINET_AXES",
       "FAI_VARROCK_BOWCASE_CROSSBOW",
       "FAI_VARROCK_ARROW_DISPLAY"
@@ -29417,7 +29425,9 @@
     "description": "Light wooden shelves with boxs on them",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FARM_SHELF_WITHBOOKS"
+      "FARM_SHELF_WITHBOOKS",
+      "KR_CAM_SHELVES1",
+      "KR_CAM_SHELVES2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -29474,7 +29484,8 @@
       "FAI_FALADOR_BOOKSHELF_OLD_TALL",
       "CAPT_SIAD_BOOKCASE",
       "ELID_BOOKCASE",
-      "KR_BOOKCASE2"
+      "KR_BOOKCASE2",
+      "KR_CAM_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -36712,6 +36723,33 @@
     ]
   },
   {
+    "description": "Generic - Concrete - Textured - Prayer Alter with Marble",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "ALTARV2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "h >= 8 && h <= 9",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 168
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Metallic - Mine Cart",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvOrientation": 69,
@@ -36729,6 +36767,106 @@
     "uvScale": 0.66,
     "objectIds": [
       "KR_COURTHOUSE_TABLE"
+    ]
+  },
+  {
+    "description": "Decoration - Wall - Camelot wall flag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "KR_CAMELOT_FLAG_WALL_DECOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Red fabric",
+        "colors": "h == 2",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "White fabric",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET",
+        "uvOrientation": 280,
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Camelot - Wooden - Cloth - Round Table Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_CAMELOT_CHAIR_01",
+      "KR_CAMELOT_CHAIR_01_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Red fabric",
+        "colors": "h < 6",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "White fabric",
+        "colors": "s == 1",
+        "baseMaterial": "CARPET",
+        "uvOrientation": 280,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Camelot - Wooden - Round Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "KR_CAMELOT_TABLE"
+    ]
+  },
+  {
+    "description": "Seers Village - Camelot - Wooden - Cloth -  Throne syle Chair",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_CAM_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 5",
+        "baseMaterial": "CARPET",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Camelot - Wooden - Cloth - Metallic - Table covered with white table cloth and golden candles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "LONGTABLE_WIDE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "White fabric",
+        "colors": "h == 10",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "White fabric",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvOrientation": 255,
+        "uvType": "BOX"
+      }
     ]
   }
 ]
