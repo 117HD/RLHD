@@ -36,6 +36,7 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.FishingSpotMode;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
@@ -832,12 +833,12 @@ public interface HdPluginConfig extends Config
 	String KEY_REPLACE_FISHING_SPOTS = "replaceFishingSpots";
 	@ConfigItem(
 		keyName = KEY_REPLACE_FISHING_SPOTS,
-		name = "Replace Fishing Spots",
+		name = "Fishing Spots",
 		description = "Replace certain fishing spots with more appropriate models that are easier to see.",
 		section = miscellaneousSettings
 	)
-	default boolean replaceFishingSpots() {
-		return true;
+	default FishingSpotMode replaceFishingSpots() {
+		return FishingSpotMode.HD;
 	}
 
 	String KEY_COLOR_FILTER = "colorFilter";
