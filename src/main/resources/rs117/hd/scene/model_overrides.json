@@ -36196,19 +36196,19 @@
   {
     "description": "Corsair Cove - Deposit Box",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "CORSCURS_BANK_DEPOSIT_BOX"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    ]
   },
   {
-    "description": "Corsair Cove - Deposit Box",
+    "description": "Corsair Cove - Leather - Bank Curtains",
     "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "DS2_CORSAIR_COVE_BANK_CURTAIN"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    ]
   }
 ]
