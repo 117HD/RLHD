@@ -35737,5 +35737,32 @@
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
+  },
+  {
+    "description": "Seers Village - Metallic - Wooden - Bar Pump",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "KR_BARPUMPS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Pumps",
+        "colors": "h == 16",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 179
+      },
+      {
+        "description": "Handle",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   }
 ]
