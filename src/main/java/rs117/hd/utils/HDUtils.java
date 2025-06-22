@@ -24,7 +24,6 @@
  */
 package rs117.hd.utils;
 
-import java.util.HashSet;
 import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -276,36 +275,43 @@ public class HDUtils {
 		return String.format("(%d) %s", type, name);
 	}
 
-	public static HashSet<Integer> getSceneRegionIds(Scene scene) {
-		HashSet<Integer> regionIds = new HashSet<>();
+	public static AABB getSceneBounds(Scene scene) {
+		if (!scene.isInstance()) {
+			int x = scene.getBaseX() - SCENE_OFFSET;
+			int y = scene.getBaseY() - SCENE_OFFSET;
+			return new AABB(x, y, x + EXTENDED_SCENE_SIZE, y + EXTENDED_SCENE_SIZE);
+		}
 
-		if (scene.isInstance()) {
-			// If the center chunk is invalid, pick any valid chunk and hope for the best
-			int[][][] chunks = scene.getInstanceTemplateChunks();
-			for (int[][] plane : chunks) {
-				for (int[] column : plane) {
-					for (int chunk : column) {
-						if (chunk == -1)
-							continue;
+		// Assume instances are assembled from approximately adjacent chunks on the map
+		int minX = Integer.MAX_VALUE;
+		int minY = Integer.MAX_VALUE;
+		int maxX = Integer.MIN_VALUE;
+		int maxY = Integer.MIN_VALUE;
 
-						// Extract chunk coordinates
-						int x = chunk >> 14 & 0x3FF;
-						int y = chunk >> 3 & 0x7FF;
-						regionIds.add((x >> 3) << 8 | y >> 3);
-					}
+		int[][][] chunks = scene.getInstanceTemplateChunks();
+		for (int[][] plane : chunks) {
+			for (int[] column : plane) {
+				for (int chunk : column) {
+					if (chunk == -1)
+						continue;
+
+					// Extract chunk coordinates
+					int x = chunk >> 14 & 0x3FF;
+					int y = chunk >> 3 & 0x7FF;
+					minX = Math.min(minX, x);
+					minY = Math.min(minY, y);
+					maxX = Math.max(maxX, x + 1);
+					maxY = Math.max(maxY, y + 1);
 				}
 			}
 		}
-		else
-		{
-			int baseX = scene.getBaseX();
-			int baseY = scene.getBaseY();
-			for (int x = 0; x < SCENE_SIZE; x += REGION_SIZE)
-				for (int y = 0; y < SCENE_SIZE; y += REGION_SIZE)
-					regionIds.add((baseX + x >> 6) << 8 | baseY + y >> 6);
-		}
 
-		return regionIds;
+		// Return an AABB representing no match, if there are no chunks
+		if (maxX < minX || maxY < minY)
+			return new AABB(-1, -1);
+
+		// Transform from chunk to world coordinates
+		return new AABB(minX << 3, minY << 3, maxX << 3, maxY << 3);
 	}
 
 	/**
