@@ -7470,7 +7470,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "CRATE2",
-      "CRATE2_OLD"
+      "CRATE2_OLD",
+      "ROOFTOPS_SEERS_CRATE"
     ],
     "uvType": "BOX",
     "uvOrientationY": 256,
@@ -8248,7 +8249,10 @@
   },
   {
     "description": "Mysterious Statue",
-    "baseMaterial": "METALLIC_1",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 255,
     "objectIds": [
       "GRIM_JUNGLESTATUE"
     ]
@@ -18703,12 +18707,22 @@
   },
   {
     "description": "Pillory random event crates",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "objectIds": [
       "PILLORY_ROTTEN_TOMATO_CRATE"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.45
+    "colorOverrides": [
+      {
+        "description": "Tomatoes",
+        "colors": "h < 6 || h > 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.45
+      }
+    ]
   },
   {
     "description": "Lumbridge - Varrock Crossroads Signpost",
@@ -19521,6 +19535,9 @@
   },
   {
     "description": "Crafting Guild Blacksmith's tools",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 192,
     "objectIds": [ "BLACKSMITHTOOLS" ],
     "flatNormals": true
   },
@@ -36592,6 +36609,22 @@
     ]
   },
   {
+    "description": "Seers Village - Wooden - Hanging Bar Sign",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FORESTERSARMSIGN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Seers Village - Stone - Metallic - Grand Fireplace - DYNAMIC",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
@@ -36659,6 +36692,16 @@
         "uvType": "BOX",
         "uvScale": 0.8
       }
+    ]
+  },
+  {
+    "description": "Metallic - Mine Cart",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 69,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "COAL_TRUCK"
     ]
   }
 ]
