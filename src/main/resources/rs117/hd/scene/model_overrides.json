@@ -22105,6 +22105,16 @@
     ]
   },
   {
+    "description": "Fossil Island - House on the Hill - Stone - Roof Dome",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_ROOF_DOME"
+    ]
+  },
+  {
     "description": "Fossil Island - Stone - Walls - House on the Hill Roof",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
