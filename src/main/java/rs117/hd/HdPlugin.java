@@ -895,6 +895,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
+			.define("WIND_ENABLED", config.applyWindDisplacement())
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("WIREFRAME", config.wireframe())
 			.addIncludePath(SHADER_PATH);
@@ -2799,6 +2800,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
 							case KEY_COLOR_FILTER:
+							case KEY_APPLY_WIND_DISPLACEMENT:
 							case KEY_WIREFRAME:
 								recompilePrograms = true;
 								break;

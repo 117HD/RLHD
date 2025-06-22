@@ -57,8 +57,6 @@ layout(std140) uniform CameraUniforms {
 
 layout(local_size_x = THREAD_COUNT) in;
 
-#define WIND_ENABLED 1
-
 #include common.glsl
 #include priority_render.glsl
 

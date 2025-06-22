@@ -691,6 +691,18 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_APPLY_WIND_DISPLACEMENT = "applyWindDisplacement";
+	@ConfigItem(
+		keyName = KEY_APPLY_WIND_DISPLACEMENT,
+		name = "Wind Displacement",
+		description = "Controls whether things in the world should be displaced by wind.",
+		position = 13,
+		section = environmentSettings
+	)
+	default boolean applyWindDisplacement()
+	{
+		return true;
+	}
 
 	/*====== Model caching settings ======*/
 
