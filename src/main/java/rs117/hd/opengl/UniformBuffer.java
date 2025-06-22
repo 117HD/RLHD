@@ -7,8 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import java.nio.ByteBuffer;
 import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.buffer.GLBuffer;
 
+import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL15C.*;
 import static org.lwjgl.opengl.GL15C.glBufferData;
 import static org.lwjgl.opengl.GL43C.*;
@@ -75,12 +78,12 @@ public abstract class UniformBuffer {
 
 		public void Set(int NewValue) {
 			if(Type != PropertyType.Int) {
-				log.warn("UBO {} - Incorrect Setter(int) called for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Incorrect Setter(int) called for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
-			if(Owner.Buffer.getInt(Position) != NewValue) {
-				Owner.Buffer.putInt(Position, NewValue);
+			if(Owner.Data.getInt(Position) != NewValue) {
+				Owner.Data.putInt(Position, NewValue);
 				Owner.MarkWaterLine(Position, Type.Size);
 			}
 		}
@@ -88,30 +91,30 @@ public abstract class UniformBuffer {
 		public void SetV(int... NewValues) { Set(NewValues); }
 		public void Set(int[] NewValues) {
 			if(Type != PropertyType.IVec2 && Type != PropertyType.IVec3 && Type != PropertyType.IVec4) {
-				log.warn("UBO {} - Incorrect Setter(int[]) called for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Incorrect Setter(int[]) called for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
 			if(NewValues == null) {
-				log.warn("UBO {} - Setter(int[]) was provided with null value for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Setter(int[]) was provided with null value for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
 			if ((Type.IsArray && (NewValues.length % Type.ElementCount) != 0) || NewValues.length != Type.ElementCount) {
-				log.warn("UBO {} - Setter(int[]) was provided with incorrect number of elements for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Setter(int[]) was provided with incorrect number of elements for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
 			if(Owner.Buffer == null) {
-				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Name);
+				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Buffer.name);
 				return;
 			}
 
 			int ElementCount = !Type.IsArray ? Type.ElementCount : NewValues.length;
 			for(int ElementIdx = 0; ElementIdx < ElementCount; ElementIdx++) {
 				int Offset = Position + (ElementIdx * Type.ElementSize);
-				if(Owner.Buffer.getInt(Offset) != NewValues[ElementIdx]) {
-					Owner.Buffer.putInt(Offset, NewValues[ElementIdx]);
+				if(Owner.Data.getInt(Offset) != NewValues[ElementIdx]) {
+					Owner.Data.putInt(Offset, NewValues[ElementIdx]);
 					Owner.MarkWaterLine(Offset, Type.ElementSize);
 				}
 			}
@@ -119,12 +122,12 @@ public abstract class UniformBuffer {
 
 		public void Set(float NewValue) {
 			if(Type != PropertyType.Float) {
-				log.warn("UBO {} - Incorrect Setter(float) called for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Incorrect Setter(float) called for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
-			if(Owner.Buffer.getFloat(Position) != NewValue) {
-				Owner.Buffer.putFloat(Position, NewValue);
+			if(Owner.Data.getFloat(Position) != NewValue) {
+				Owner.Data.putFloat(Position, NewValue);
 				Owner.MarkWaterLine(Position, Type.Size);
 			}
 		}
@@ -132,30 +135,30 @@ public abstract class UniformBuffer {
 		public void SetV(float... NewValues) { Set(NewValues); }
 		public void Set(float[] NewValues) {
 			if(Type != PropertyType.FVec2 && Type != PropertyType.FVec3 && Type != PropertyType.FVec4 && Type != PropertyType.Mat3 && Type != PropertyType.Mat4) {
-				log.warn("UBO {} - Incorrect Setter(float[]) called for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Incorrect Setter(float[]) called for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
 			if(NewValues == null) {
-				log.warn("UBO {} - Setter(float[]) was provided with null value for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Setter(float[]) was provided with null value for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
 			if ((Type.IsArray && (NewValues.length % Type.ElementCount) != 0) || NewValues.length != Type.ElementCount) {
-				log.warn("UBO {} - Setter(float[]) was provided with incorrect number of elements for Property: {}", Owner.Name, Name);
+				log.warn("UBO {} - Setter(float[]) was provided with incorrect number of elements for Property: {}", Owner.Buffer.name, Name);
 				return;
 			}
 
 			if(Owner.Buffer == null) {
-				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Name);
+				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Buffer.name);
 				return;
 			}
 
 			int ElementCount = !Type.IsArray ? Type.ElementCount : NewValues.length;
 			for(int ElementIdx = 0; ElementIdx < ElementCount; ElementIdx++) {
 				int Offset = Position + (ElementIdx * Type.ElementSize);
-				if(Owner.Buffer.getFloat(Offset) != NewValues[ElementIdx]) {
-					Owner.Buffer.putFloat(Offset, NewValues[ElementIdx]);
+				if(Owner.Data.getFloat(Offset) != NewValues[ElementIdx]) {
+					Owner.Data.putFloat(Offset, NewValues[ElementIdx]);
 					Owner.MarkWaterLine(Offset, Type.ElementSize);
 				}
 			}
@@ -176,15 +179,14 @@ public abstract class UniformBuffer {
 		}
 	}
 
-	private ByteBuffer Buffer;
+	private ByteBuffer Data;
 	private int Size;
-	private int glBuffer;
 	private int DirtyLowTide = Integer.MAX_VALUE;
 	private int DirtyHighTide = Integer.MIN_VALUE;
-	private final String Name;
+	private GLBuffer Buffer;
 
 	public UniformBuffer(String Name) {
-		this.Name = Name;
+		Buffer = new GLBuffer(Name);
 	}
 
 	protected <T extends StructProperty> T AddStruct(T NewStructProp) {
@@ -223,24 +225,34 @@ public abstract class UniformBuffer {
 		DirtyHighTide = Math.max(DirtyHighTide, Position + Size);
 	}
 
+	public GLBuffer GetGLBuffer() {
+		return Buffer;
+	}
+
+	public void Initialise(int UniformBlockIndex, OpenCLManager openCLManager) {
+		Initialise(UniformBlockIndex);
+
+		openCLManager.recreateCLBuffer(Buffer, CL_MEM_READ_ONLY);
+	}
+
 	public void Initialise(int UniformBlockIndex) {
 		if(Buffer != null) {
 			Destroy();
 		}
 
 		Size = (int) HDUtils.ceilPow2(Size);
-		Buffer = BufferUtils.createByteBuffer(Size);
-		glBuffer = glGenBuffers();
+		Data = BufferUtils.createByteBuffer(Size);
+		Buffer.glBufferId = glGenBuffers();
 
-		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer);
+		glBindBuffer(GL_UNIFORM_BUFFER, Buffer.glBufferId);
 		glBufferData(GL_UNIFORM_BUFFER, Size, GL_STATIC_DRAW);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, Buffer);
+		glBufferSubData(GL_UNIFORM_BUFFER, 0, Data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		glBindBufferBase(GL_UNIFORM_BUFFER, UniformBlockIndex, glBuffer);
+		glBindBufferBase(GL_UNIFORM_BUFFER, UniformBlockIndex, Buffer.glBufferId);
 
 		if (HdPlugin.glCaps.OpenGL43 && log.isDebugEnabled()) {
-			glObjectLabel(GL_BUFFER, glBuffer, Name);
+			glObjectLabel(GL_BUFFER, Buffer.glBufferId, Buffer.name);
 		}
 	}
 
@@ -250,16 +262,16 @@ public abstract class UniformBuffer {
 		}
 
 		if(DirtyLowTide < Size && DirtyHighTide > 0) {
-			Buffer.position(DirtyLowTide);
-			Buffer.limit(DirtyHighTide);
+			Data.position(DirtyLowTide);
+			Data.limit(DirtyHighTide);
 
-			glBindBuffer(GL_UNIFORM_BUFFER, glBuffer);
-			glBufferSubData(GL_UNIFORM_BUFFER, DirtyLowTide, Buffer);
+			glBindBuffer(GL_UNIFORM_BUFFER, Buffer.glBufferId);
+			glBufferSubData(GL_UNIFORM_BUFFER, DirtyLowTide, Data);
 
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-			Buffer.position(0);
-			Buffer.limit(Size);
+			Data.position(0);
+			Data.limit(Size);
 
 			DirtyLowTide = Integer.MAX_VALUE;
 			DirtyHighTide = Integer.MIN_VALUE;
@@ -268,10 +280,15 @@ public abstract class UniformBuffer {
 
 	public void Destroy() {
 		if(Buffer != null) {
-			glDeleteBuffers(glBuffer);
+			glDeleteBuffers(Buffer.glBufferId);
 
-			Buffer = null;
-			glBuffer = -1;
+			Data = null;
+			Buffer.glBufferId = -1;
+
+			if (Buffer.clBuffer != 0) {
+				clReleaseMemObject(Buffer.clBuffer);
+				Buffer.clBuffer = 0;
+			}
 		}
 	}
 }
