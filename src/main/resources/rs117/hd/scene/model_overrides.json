@@ -19192,8 +19192,7 @@
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       "HENGE",
-      "HENGE_DIAGONAL",
-      "ALTAR"
+      "HENGE_DIAGONAL"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false
@@ -36601,7 +36600,7 @@
     ],
     "colorOverrides": [
       {
-        "description": "Red Glass",
+        "description": "Stone",
         "colors": "h == 0 && s == 0 && l < 70",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
@@ -36613,6 +36612,52 @@
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - Church Organ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_CHURCHORGAN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal pipes",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Generic - Concrete - Textured - Prayer Alter",
+    "textureMaterial": "HD_CONCRETE",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold",
+        "colors": "h >= 8 && h <= 9",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 168
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   }
