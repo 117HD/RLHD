@@ -3259,6 +3259,9 @@
   {
     "description": "SEERS_COURTHOUSE_WALLS",
     "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "KR_COURTHOUSE_WALL",
       "KR_COURTHOUSE_WALL_WINDOW",
@@ -3273,7 +3276,29 @@
       "KR_COURTHOUSE_WALL_JAIL_BEAM_SINGLE_MIRROR",
       "KR_COURTHOUSE_PILLAR"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Trim",
+        "baseMaterial": "MARBLE_2",
+        "colors": "h > 4 && h < 8",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "MODEL_XY"
+      }
+    ]
   },
   {
     "description": "Seers Village - Walls",
@@ -3344,7 +3369,8 @@
       {
         "description": "Glass",
         "baseMaterial": "BLANK_GLOSS",
-        "colors": "a < 255"
+        "colors": "a < 255",
+        "uvType": "MODEL_XY"
       },
       {
         "description": "Interior Wallpaper",
@@ -7847,7 +7873,8 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "objectIds": [
-      "BURGH_CHEST_CLOSED"
+      "BURGH_CHEST_CLOSED",
+      "KR_CHESTCLOSED"
     ],
     "colorOverrides": [
       {
@@ -7981,7 +8008,9 @@
       "FAI_VARROCK_BANK_DOOR_VAULT_R",
       "CAPT_SIAD_CELL_DOOR",
       "UNDERGROUNDCELLGATER",
-      "UNDERGROUNDCELLGATEL"
+      "UNDERGROUNDCELLGATEL",
+      "LOCKEDMETALGATER",
+      "LOCKEDMETALGATEL"
     ],
     "uvType": "BOX",
     "uvOrientation": 463
@@ -26152,7 +26181,9 @@
     "description": "Drawers with backsplash",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_DRAWERS", "FAI_VARROCK_POSH_DRAWERS"
+      "FAI_VARROCK_DRAWERS",
+      "FAI_VARROCK_POSH_DRAWERS",
+      "KR_SEERS_VILLAGE_DRAWERS1"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -28227,7 +28258,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_BANK_BOOTH_PRIVATE",
-      "FAI_VARROCK_BANK_BOOTH_PRIVATE_END"
+      "FAI_VARROCK_BANK_BOOTH_PRIVATE_END",
+      "KR_BANK_BOOTH_PRIVATE_END_MIRROR",
+      "KR_BANK_BOOTH_PRIVATE_END"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -35545,6 +35578,56 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - bookcase with Multicolored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "objectIds": [
+      "KR_BOOKCASE",
+      "ELEMENTAL_WORKSHOP_BOOKCASE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green and blue books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - Metallic - Freestanding shelves with pots and pans",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "KR_COOKINGSHELVES"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   }
