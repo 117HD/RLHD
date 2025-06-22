@@ -36077,5 +36077,33 @@
     "objectIds": [
       "DS2_CORSAIR_COVE_RAIL"
     ]
+  },
+  {
+    "description": "Corsair Cove - Cloth - Round Table",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "objectIds": [
+      "FAI_FALADOR_ROUND_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 3 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Corsair Cove - Stump Chair",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "DS2_CORSAIR_STUMP_CHAIR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 128,
+    "uvOrientationY": 512
   }
 ]
