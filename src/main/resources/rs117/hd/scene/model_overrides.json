@@ -3871,6 +3871,24 @@
     "uvType": "BOX"
   },
   {
+    "description": "Fossil Island - Camp Tent Ropes",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 0 ",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "GUIDEROPES1"
+    ]
+  },
+  {
     "description": "Wintertodt Wooden Cart",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
