@@ -9395,6 +9395,7 @@
     "description": "Objects - Dirt Piles - Medium",
     "baseMaterial": "DIRT_2",
     "objectIds": [
+      "UPASS_MUD",
       "AHZARHOON_ENTRANCE",
       "HEROROCKSLIDE",
       "FAVOUR_MOUNTAINROCKS",
@@ -36129,7 +36130,7 @@
       {
         "description": "Glass Bottle",
         "baseMaterial": "BLANK_GLOSS",
-        "colors": "h == spa 1 && s == 7",
+        "colors": "h == 1 && s == 7",
         "uvType": "BOX"
       }
     ]
@@ -36141,6 +36142,24 @@
     "uvOrientation": 168,
     "objectIds": [
       "CRANDOR_LAB_BIRTHING_POOL_WATER"
+    ]
+  },
+  {
+    "description": "Corsair Cove - Metallic - Bank door",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 168,
+    "objectIds": [
+      "DS2_CORSAIR_COVE_BANK_DOOR"
+    ]
+  },
+  {
+    "description": "Corsair Cove - Metallic - Bank door",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvOrientation": 168,
+    "objectIds": [
+      "DS2_CORSAIR_COVE_HOLE"
     ]
   }
 ]
