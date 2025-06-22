@@ -36591,5 +36591,29 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Seers Village - Stone - Metallic - Grand Fireplace - DYNAMIC",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "GRANDFIREPLACE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Red Glass",
+        "colors": "h == 0 && s == 0 && l < 70",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 21",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   }
 ]
