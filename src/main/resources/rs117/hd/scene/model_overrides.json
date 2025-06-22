@@ -6859,12 +6859,30 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "KR_SEERS_VILLAGE_FENCING",
-      "KR_SEERS_VILLAGE_FENCING_WITH_WALL",
-      "KR_SEERS_VILLAGE_FENCING_WITH_WALL_MIRROR"
+      "KR_SEERS_VILLAGE_FENCING_WITH_WALL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
     "uvOrientation": 512
+  },
+  {
+    "description": "White double row fence with Brick wall corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "objectIds": [
+      "KR_SEERS_VILLAGE_FENCING_WITH_WALL_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone Bricks",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "colors": "h == 10"
+      }
+    ]
   },
   {
     "description": "Seers village - Railing",
@@ -27443,7 +27461,10 @@
   {
     "description": "Grandfather Clock",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "GRANDFATHERCLOCK" ],
+    "objectIds": [
+      "GRANDFATHERCLOCK",
+      "KR_SEERS_VILLAGE_GRANDFATHERCLOCK"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
@@ -29811,6 +29832,51 @@
       "BARSTOOL",
       "BARSTOOL_WHITE",
       "GZ_BOARDGAMES_BARSTOOL"
+    ]
+  },
+  {
+    "description": "Wooden - Cloth - Board games table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "colorOverrides": [
+      {
+        "description": "Red cloth",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "White Cushion",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      },
+      {
+        "description": "Gold Trim",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "GZ_BOARDGAMES_TABLE"
+    ]
+  },
+  {
+    "description": "Cloth - Board games poster",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "objectIds": [
+      "GZ_BOARDGAME_POSTER"
     ]
   },
   {
@@ -36390,7 +36456,7 @@
     ]
   },
   {
-    "description": "Generic - Wooden - Metallic - Banksign ",
+    "description": "Generic - Wooden - Metallic - Banksign",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
@@ -36409,7 +36475,7 @@
     ]
   },
   {
-    "description": "Generic - Wooden - Metallic - Banksign ",
+    "description": "Generic - Wooden - Metallic - Blacksmithing Tools",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "objectIds": [
@@ -36423,6 +36489,106 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Generic - Metallic - Foresters Plaque",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "MODEL_YZ",
+    "uvOrientation": 512,
+    "objectIds": [
+      "FORESTERS_ARMS_PLAQUE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Handles",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - Glass - Bar Shelf with glasses",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_BARSHELF_FULL1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - Glass - Bar Shelf with glasses and bottles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_BARSHELF_FULL2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Red Glass",
+        "colors": "h < 6",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Blue Glass",
+        "colors": "h == 42",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - Piano",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_SEERS_VILLAGE_PIANO_A"
+    ]
+  },
+  {
+    "description": "Seers Village - Wooden - Cloth - Piano Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_SEERS_VILLAGE_PIANO_B"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Red Glass",
+        "colors": "h < 6",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 21",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   }
