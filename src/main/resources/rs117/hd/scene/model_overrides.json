@@ -22098,7 +22098,9 @@
       "FOSSIL_DKL_WALL_2",
       "FOSSIL_DKL_WALLROOF1",
       "FOSSIL_DKL_WALLROOF2",
-      "FOSSIL_DKL_WINDOW_1"
+      "FOSSIL_DKL_WINDOW_1",
+      "FOSSIL_DKL_PILLAR_1",
+      "FOSSIL_DKL_ARCH"
     ]
   },
   {
@@ -22120,6 +22122,16 @@
     "objectIds": [
       "FOSSIL_DKL_STAIRCASE",
       "FOSSIL_DKL_STAIRCASE_EXT"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Walls - House on the Hill Short walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_SMALLWALL_1"
     ]
   },
   {
@@ -22148,6 +22160,7 @@
     "description": "Fossil Island - Stone - Stairs - House on the Hill parapet",
     "baseMaterial": "BRICK_PATH",
     "uvType": "BOX",
+    "retainVanillaUvs": false,
     "objectIds": [
       "FOSSIL_DKL_BRIDGE_PARAPET",
       "FOSSIL_DKL_BRIDGE_PARAPET_P1",
