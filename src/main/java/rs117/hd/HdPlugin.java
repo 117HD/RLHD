@@ -92,6 +92,7 @@ import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.GlobalBuffer;
+import rs117.hd.opengl.LightsBuffer;
 import rs117.hd.opengl.UIBuffer;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
@@ -363,12 +364,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final GLBuffer hUniformBufferCamera = new GLBuffer("UBO Camera");
 	private final GLBuffer hUniformBufferMaterials = new GLBuffer("UBO Materials");
 	private final GLBuffer hUniformBufferWaterTypes = new GLBuffer("UBO Water Types");
-	private final GLBuffer hUniformBufferLights = new GLBuffer("UBO Lights");
 	private ByteBuffer uniformBufferCamera;
-	private ByteBuffer uniformBufferLights;
 
 	private final GlobalBuffer hUniformGlobalBuffer = new GlobalBuffer();
 	private final UIBuffer hUniformUIBuffer = new UIBuffer();
+	private final LightsBuffer hUniformLightsBuffer = new LightsBuffer();
 
 	@Getter
 	@Nullable
@@ -943,7 +943,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Initialize uniform buffers that may depend on compile-time settings
 		initCameraUniformBuffer();
-		initLightsUniformBuffer();
 	}
 
 	private void destroyPrograms() {
@@ -1124,12 +1123,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		initGlBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hUniformBufferMaterials, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		initGlBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_CAMERA, hUniformBufferCamera.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_MATERIALS, hUniformBufferMaterials.glBufferId);
 		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_WATER_TYPES, hUniformBufferWaterTypes.glBufferId);
-		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_LIGHTS, hUniformBufferLights.glBufferId);
 
 		initGlBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
@@ -1143,6 +1140,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		hUniformGlobalBuffer.Initialise(UNIFORM_BLOCK_GLOBAL);
 		hUniformUIBuffer.Initialise(UNIFORM_BLOCK_UI);
+		hUniformLightsBuffer.Initialise(UNIFORM_BLOCK_LIGHTS);
 	}
 
 	private void initGlBuffer(GLBuffer glBuffer, int target, int glUsage, int clUsage) {
@@ -1157,7 +1155,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		destroyGlBuffer(hUniformBufferCamera);
 		destroyGlBuffer(hUniformBufferMaterials);
 		destroyGlBuffer(hUniformBufferWaterTypes);
-		destroyGlBuffer(hUniformBufferLights);
 
 		destroyGlBuffer(hStagingBufferVertices);
 		destroyGlBuffer(hStagingBufferUvs);
@@ -1171,9 +1168,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		hUniformGlobalBuffer.Destroy();
 		hUniformUIBuffer.Destroy();
+		hUniformLightsBuffer.Destroy();
 
 		uniformBufferCamera = null;
-		uniformBufferLights = null;
 	}
 
 	private void destroyGlBuffer(GLBuffer glBuffer) {
@@ -1232,13 +1229,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void updateWaterTypeUniformBuffer(ByteBuffer buffer) {
 		updateBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-	}
-
-	private void initLightsUniformBuffer()
-	{
-		// Allowing a buffer size of zero causes Apple M1/M2 to revert to software rendering
-		uniformBufferLights = BufferUtils.createByteBuffer(Math.max(1, configMaxDynamicLights) * 8 * SCALAR_BYTES);
-		updateBuffer(hUniformBufferLights, GL_UNIFORM_BUFFER, uniformBufferLights, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private void initSceneFbo(int width, int height, AntiAliasingMode antiAliasingMode) {
@@ -1570,25 +1560,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
-			uniformBufferLights.clear();
 			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
-				uniformBufferLights.putFloat(light.pos[0] + cameraShift[0]);
-				uniformBufferLights.putFloat(light.pos[1]);
-				uniformBufferLights.putFloat(light.pos[2] + cameraShift[1]);
-				uniformBufferLights.putFloat(light.radius * light.radius);
-				uniformBufferLights.putFloat(light.color[0] * light.strength);
-				uniformBufferLights.putFloat(light.color[1] * light.strength);
-				uniformBufferLights.putFloat(light.color[2] * light.strength);
-				uniformBufferLights.putFloat(0); // pad
+				hUniformLightsBuffer.Lights[i].Position.SetV(
+					(float)(light.pos[0] + cameraShift[0]),
+					(float)light.pos[1],
+					(float)(light.pos[2] + cameraShift[1]),
+					(float)(light.radius * light.radius));
+
+				hUniformLightsBuffer.Lights[i].Color.SetV(
+					light.color[0] * light.strength,
+					light.color[1] * light.strength,
+					light.color[2] * light.strength);
 			}
-			uniformBufferLights.flip();
-			if (configMaxDynamicLights > 0) {
-				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferLights.glBufferId);
-				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferLights);
-				glBindBuffer(GL_UNIFORM_BUFFER, 0);
-			}
+			hUniformLightsBuffer.UploadUniforms();
 		}
 	}
 
