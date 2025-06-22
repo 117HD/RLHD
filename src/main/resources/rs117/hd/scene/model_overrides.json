@@ -35777,5 +35777,129 @@
     "objectIds": [
       "FOSSIL_DKL_STONE"
     ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Bone Grinder",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 163,
+    "objectIds": [
+      "FOSSIL_LAB_BONE_GRINDER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Shield Maker",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 163,
+    "objectIds": [
+      "FOSSIL_LAB_SHIELD_MAKER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Crystal",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "a == 255 && h > 36 && h < 40",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 42",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Table Top",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Bone",
+        "baseMaterial": "BONE",
+        "colors": "h == 6",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Necklace Enchanter",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 163,
+    "objectIds": [
+      "FOSSIL_LAB_NECKLACE_ENCHANTER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Crystal",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 1 && s == 3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 42",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Paper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 6",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Book Stack",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_DKL_PILE_OF_BOOKS_1",
+      "FOSSIL_DKL_PILE_OF_BOOKS_2"
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Metallic - Glass Vial",
+    "baseMaterial": "BLANK_GLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_DKL_GIANT_VIAL_1",
+      "FOSSIL_DKL_GIANT_VIAL_2",
+      "FOSSIL_DKL_GIANT_VIAL_3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "colors": "h == 0"
+      }
+    ]
   }
 ]
