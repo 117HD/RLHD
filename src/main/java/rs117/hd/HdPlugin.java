@@ -1535,13 +1535,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
-				hUniformLightsBuffer.Lights[i].Position.SetV(
+				LightsBuffer.LightStruct uniformStruct = hUniformLightsBuffer.Lights[i];
+
+				uniformStruct.Position.SetV(
 					(float)(light.pos[0] + cameraShift[0]),
 					(float)light.pos[1],
 					(float)(light.pos[2] + cameraShift[1]),
 					(float)(light.radius * light.radius));
 
-				hUniformLightsBuffer.Lights[i].Color.SetV(
+				uniformStruct.Color.SetV(
 					light.color[0] * light.strength,
 					light.color[1] * light.strength,
 					light.color[2] * light.strength);

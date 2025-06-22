@@ -464,23 +464,23 @@ public class TextureManager {
 
 	private void updateWaterTypeUniformBuffer() {
 		for (WaterType type : WaterType.values()) {
-			WaterTypesBuffer.WaterTypeStruct waterStruct = plugin.hUniformWaterTypesBuffer.WaterTypes[type.ordinal()];
-			waterStruct.IsFlat.Set(type.flat ? 1 : 0);
-			waterStruct.SpecularStrength.Set(type.specularStrength);
-			waterStruct.SpecularGloss.Set(type.specularGloss);
-			waterStruct.NormalStrength.Set(type.normalStrength);
-			waterStruct.BaseOpacity.Set(type.baseOpacity);
-			waterStruct.HasFoam.Set(type.hasFoam ? 1 : 0);
-			waterStruct.Duration.Set(type.duration);
-			waterStruct.FresnelAmount.Set(type.fresnelAmount);
-			waterStruct.SurfaceColor.Set(type.surfaceColor);
-			waterStruct.FoamColor.Set(type.foamColor);
-			waterStruct.DepthColor.Set(type.depthColor);
-			waterStruct.CausticsStrength.Set(type.causticsStrength);
-			waterStruct.NormalMap.Set(getTextureLayer(type.normalMap));
-			waterStruct.FoamMap.Set(getTextureLayer(Material.WATER_FOAM));
-			waterStruct.FlowMap.Set(getTextureLayer(Material.WATER_FLOW_MAP));
-			waterStruct.UnderwaterFlowMap.Set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
+			WaterTypesBuffer.WaterTypeStruct uniformStruct = plugin.hUniformWaterTypesBuffer.WaterTypes[type.ordinal()];
+			uniformStruct.IsFlat.Set(type.flat ? 1 : 0);
+			uniformStruct.SpecularStrength.Set(type.specularStrength);
+			uniformStruct.SpecularGloss.Set(type.specularGloss);
+			uniformStruct.NormalStrength.Set(type.normalStrength);
+			uniformStruct.BaseOpacity.Set(type.baseOpacity);
+			uniformStruct.HasFoam.Set(type.hasFoam ? 1 : 0);
+			uniformStruct.Duration.Set(type.duration);
+			uniformStruct.FresnelAmount.Set(type.fresnelAmount);
+			uniformStruct.SurfaceColor.Set(type.surfaceColor);
+			uniformStruct.FoamColor.Set(type.foamColor);
+			uniformStruct.DepthColor.Set(type.depthColor);
+			uniformStruct.CausticsStrength.Set(type.causticsStrength);
+			uniformStruct.NormalMap.Set(getTextureLayer(type.normalMap));
+			uniformStruct.FoamMap.Set(getTextureLayer(Material.WATER_FOAM));
+			uniformStruct.FlowMap.Set(getTextureLayer(Material.WATER_FLOW_MAP));
+			uniformStruct.UnderwaterFlowMap.Set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
 		}
 		plugin.hUniformWaterTypesBuffer.Upload();
 	}
