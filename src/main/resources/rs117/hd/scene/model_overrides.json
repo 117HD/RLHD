@@ -36210,5 +36210,26 @@
     "objectIds": [
       "DS2_CORSAIR_COVE_BANK_CURTAIN"
     ]
+  },
+  {
+    "description": "Corsair Cove - Thatch - Roofs",
+    "baseMaterial": "HD_HAY_DESATURATED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DS2_CORSAIR_COVE_ROOF_THATCHED",
+      "DS2_CORSAIR_COVE_ROOF_THATCHED_OUTSIDE",
+      "DS2_CORSAIR_COVE_ROOF_THATCHED_CURVE",
+      "DS2_CORSAIR_COVE_ROOF_THATCHED_CENTER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
   }
 ]
