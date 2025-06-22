@@ -18383,7 +18383,8 @@
       "BRAIN_BOAT_LOC_BARREL",
       "BRAIN_BOAT_LOC_BARREL_STACKED",
       "SHAYZIEN_BARREL_LARGE_TAP",
-      "SHAYZIEN_BARREL_LARGE"
+      "SHAYZIEN_BARREL_LARGE",
+      "SLUG2_BARREL"
     ],
     "uvType": "BOX"
   },
@@ -18399,6 +18400,40 @@
       {
         "colors": [ "s == 0" ],
         "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Wooden - Barrel - with tropical fish - Textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "BARREL_TROPICALFISH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h >= 6" ],
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Object - Wooden - Barrel - with fish bones",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SEASLUG_BARREL_FISHBONES"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "s == 0" ],
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 111
       }
     ]
   },
@@ -27280,7 +27315,7 @@
   {
     "description": "Wooden barrel with metal bands - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
-    "objectIds": [ "BARREL", "BARREL_WATERFALL_QUEST" ],
+    "objectIds": [ "BARREL", "BARREL_WATERFALL_QUEST", "BARRELWITHTAP" ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
