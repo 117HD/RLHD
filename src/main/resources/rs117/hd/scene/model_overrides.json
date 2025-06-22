@@ -6866,13 +6866,16 @@
   },
   {
     "description": "Seers village - Railing",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "flatNormals": false,
     "objectIds": [
       "KR_CAM_RAILING",
       "KR_WOODENRAILING",
       "KR_SPIRALSTAIRSTOP"
-    ],
-    "flatNormals": false
+    ]
   },
   {
     "description": "Camelot - Wooden grave",
