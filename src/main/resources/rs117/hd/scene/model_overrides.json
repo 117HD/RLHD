@@ -6783,6 +6783,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BR_LADDER",
+      "BR_LADDER_TOP",
       "KR_LADDER",
       "KR_LADDERTOP",
       "KR_LADDERTOP_DIRECTIONAL",
@@ -11114,7 +11115,8 @@
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_REGULAR",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_OAK",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_TEAK",
-      "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_MAHOGANY"
+      "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_MAHOGANY",
+      "AIDE_TABLE_SMALL"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -36196,6 +36198,15 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "CORSCURS_BANK_DEPOSIT_BOX"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Corsair Cove - Deposit Box",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DS2_CORSAIR_COVE_BANK_CURTAIN"
     ],
     "uvType": "BOX",
     "uvScale": 0.7
