@@ -49,6 +49,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -328,7 +329,7 @@ public class TextureManager {
 
 		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
 		plugin.updateMaterialUniformBuffer(generateMaterialUniformBuffer());
-		plugin.updateWaterTypeUniformBuffer(generateWaterTypeUniformBuffer());
+		updateWaterTypeUniformBuffer();
 
 		// Reset
 		pixelBuffer = null;
@@ -470,36 +471,26 @@ public class TextureManager {
 			.putFloat(0); // align vec4
 	}
 
-	private ByteBuffer generateWaterTypeUniformBuffer() {
-		ByteBuffer buffer = BufferUtils.createByteBuffer(WaterType.values().length * 28 * SCALAR_BYTES);
-		for (WaterType type : WaterType.values())
-			buffer
-				.putInt(type.flat ? 1 : 0)
-				.putFloat(type.specularStrength)
-				.putFloat(type.specularGloss)
-				.putFloat(type.normalStrength)
-				.putFloat(type.baseOpacity)
-				.putInt(type.hasFoam ? 1 : 0)
-				.putFloat(type.duration)
-				.putFloat(type.fresnelAmount)
-				.putFloat(type.surfaceColor[0])
-				.putFloat(type.surfaceColor[1])
-				.putFloat(type.surfaceColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.foamColor[0])
-				.putFloat(type.foamColor[1])
-				.putFloat(type.foamColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.depthColor[0])
-				.putFloat(type.depthColor[1])
-				.putFloat(type.depthColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.causticsStrength)
-				.putInt(getTextureLayer(type.normalMap))
-				.putInt(getTextureLayer(Material.WATER_FOAM))
-				.putInt(getTextureLayer(Material.WATER_FLOW_MAP))
-				.putInt(getTextureLayer(Material.UNDERWATER_FLOW_MAP))
-				.putFloat(0).putFloat(0).putFloat(0); // pad vec4
-		return buffer.flip();
+	private void updateWaterTypeUniformBuffer() {
+		for (WaterType type : WaterType.values()) {
+			WaterTypesBuffer.WaterTypeStruct waterStruct = plugin.hUniformWaterTypesBuffer.WaterTypes[type.ordinal()];
+			waterStruct.IsFlat.Set(type.flat ? 1 : 0);
+			waterStruct.SpecularStrength.Set(type.specularStrength);
+			waterStruct.SpecularGloss.Set(type.specularGloss);
+			waterStruct.NormalStrength.Set(type.normalStrength);
+			waterStruct.BaseOpacity.Set(type.baseOpacity);
+			waterStruct.HasFoam.Set(type.hasFoam ? 1 : 0);
+			waterStruct.Duration.Set(type.duration);
+			waterStruct.FresnelAmount.Set(type.fresnelAmount);
+			waterStruct.SurfaceColor.Set(type.surfaceColor);
+			waterStruct.FoamColor.Set(type.foamColor);
+			waterStruct.DepthColor.Set(type.depthColor);
+			waterStruct.CausticsStrength.Set(type.causticsStrength);
+			waterStruct.NormalMap.Set(getTextureLayer(type.normalMap));
+			waterStruct.FoamMap.Set(getTextureLayer(Material.WATER_FOAM));
+			waterStruct.FlowMap.Set(getTextureLayer(Material.WATER_FLOW_MAP));
+			waterStruct.UnderwaterFlowMap.Set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
+		}
+		plugin.hUniformWaterTypesBuffer.UploadUniforms();
 	}
 }

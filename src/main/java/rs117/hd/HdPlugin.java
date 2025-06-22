@@ -95,6 +95,7 @@ import rs117.hd.opengl.CameraBuffer;
 import rs117.hd.opengl.GlobalBuffer;
 import rs117.hd.opengl.LightsBuffer;
 import rs117.hd.opengl.UIBuffer;
+import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -363,8 +364,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private GLBuffer[] hModelSortingBuffers;
 
 	private final GLBuffer hUniformBufferMaterials = new GLBuffer("UBO Materials");
-	private final GLBuffer hUniformBufferWaterTypes = new GLBuffer("UBO Water Types");
 
+	public final WaterTypesBuffer hUniformWaterTypesBuffer = new WaterTypesBuffer();
 	private final CameraBuffer hUniformCameraBuffer = new CameraBuffer();
 	private final GlobalBuffer hUniformGlobalBuffer = new GlobalBuffer();
 	private final UIBuffer hUniformUIBuffer = new UIBuffer();
@@ -1118,10 +1119,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void initBuffers() {
 		initGlBuffer(hUniformBufferMaterials, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		initGlBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 
 		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_MATERIALS, hUniformBufferMaterials.glBufferId);
-		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_WATER_TYPES, hUniformBufferWaterTypes.glBufferId);
 
 		initGlBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
@@ -1133,8 +1132,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		initGlBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
-		hUniformCameraBuffer.Initialise(UNIFORM_BLOCK_CAMERA);
+		hUniformCameraBuffer.Initialise(UNIFORM_BLOCK_CAMERA, computeMode == ComputeMode.OPENCL ? openCLManager : null);
 		hUniformGlobalBuffer.Initialise(UNIFORM_BLOCK_GLOBAL);
+		hUniformWaterTypesBuffer.Initialise(UNIFORM_BLOCK_WATER_TYPES);
 		hUniformUIBuffer.Initialise(UNIFORM_BLOCK_UI);
 		hUniformLightsBuffer.Initialise(UNIFORM_BLOCK_LIGHTS);
 	}
@@ -1149,7 +1149,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void destroyBuffers() {
 		destroyGlBuffer(hUniformBufferMaterials);
-		destroyGlBuffer(hUniformBufferWaterTypes);
 
 		destroyGlBuffer(hStagingBufferVertices);
 		destroyGlBuffer(hStagingBufferUvs);
@@ -1161,6 +1160,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		destroyGlBuffer(hModelPassthroughBuffer);
 
+		hUniformWaterTypesBuffer.Destroy();
 		hUniformCameraBuffer.Destroy();
 		hUniformGlobalBuffer.Destroy();
 		hUniformUIBuffer.Destroy();
@@ -1211,10 +1211,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void updateMaterialUniformBuffer(ByteBuffer buffer) {
 		updateBuffer(hUniformBufferMaterials, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-	}
-
-	public void updateWaterTypeUniformBuffer(ByteBuffer buffer) {
-		updateBuffer(hUniformBufferWaterTypes, GL_UNIFORM_BUFFER, buffer, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private void initSceneFbo(int width, int height, AntiAliasingMode antiAliasingMode) {
