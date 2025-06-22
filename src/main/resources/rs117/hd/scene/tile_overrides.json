@@ -661,7 +661,7 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false
   },
   {
@@ -961,7 +961,7 @@
     "overlayIds": [
       26
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false,
     "shiftLightness": 5
   },
@@ -981,7 +981,7 @@
     "overlayIds": [
       21
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "shiftHue": 1,
     "shiftSaturation": -5,
     "shiftLightness": 23
@@ -992,7 +992,7 @@
     "overlayIds": [
       25
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "shiftHue": 1,
     "shiftSaturation": -1,
     "minLightness": 40,
@@ -1004,7 +1004,7 @@
     "overlayIds": [
       26
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "minLightness": 40,
     "maxLightness": 40
   },
@@ -1014,7 +1014,7 @@
     "overlayIds": [
       25
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1
   },
   {
@@ -1023,7 +1023,7 @@
     "overlayIds": [
       26
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "SOPHANEM_UNDERGROUND_BANK_MARBLE",
@@ -1103,7 +1103,7 @@
     "overlayIds": [
       21
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "GIANTS_FOUNDRY_224",
@@ -1125,7 +1125,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 13
+    "shiftLightness": 20
   },
   {
     "name": "FALADOR_EAST_BANK_PATH_FIX_1",
@@ -1139,7 +1139,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 9
+    "shiftLightness": 16
   },
   {
     "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_1",
@@ -1183,7 +1183,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 7
+    "shiftLightness": 19
   },
   {
     "name": "FALADOR_SOUTH_PATH_FIX_2",
@@ -1207,7 +1207,7 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 7
+    "shiftLightness": 15
   },
   {
     "name": "FALADOR_HAIRDRESSER_TILE_1",
@@ -1942,7 +1942,7 @@
       110,
       123
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "Elemental Workshop floor",
@@ -2315,7 +2315,7 @@
     "overlayIds": [
       12
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "minLightness": 33,
     "maxLightness": 33
   },
@@ -2325,7 +2325,7 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "minLightness": 33,
     "maxLightness": 33
   },
@@ -2819,7 +2819,7 @@
     "overlayIds": [
       164
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1
   },
   {
@@ -2834,7 +2834,7 @@
   },
   {
     "name": "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER",
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1,
     "replacements": {
       "WINTER_GRASS": "blending"
@@ -2846,7 +2846,7 @@
     "overlayIds": [
       164
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1,
     "replacements": {
       "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER": "season == WINTER",
@@ -2977,7 +2977,7 @@
     "overlayIds": [
       15
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false,
     "minHue": 9,
     "maxHue": 9,
@@ -2991,7 +2991,7 @@
     "overlayIds": [
       26
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false,
     "minSaturation": 1,
     "maxSaturation": 1,
@@ -3234,18 +3234,15 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "FOSSIL_ISLAND_HILL_HOUSE",
     "area": "FOSSIL_ISLAND_HILL_HOUSE_FIX",
+    "groundMaterial": "BRICK_PATHS",
     "overlayIds": [
       11
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == WINTER"
-    }
+    ]
   },
   {
     "name": "FOSSIL_ISLAND_HILL_TEXTURE_FIX",
@@ -3365,7 +3362,7 @@
     "overlayIds": [
       137
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false
   },
   {
@@ -3374,7 +3371,7 @@
     "overlayIds": [
       137
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false
   },
   {
@@ -3414,7 +3411,7 @@
     "overlayIds": [
       123
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "BLOOD_ALTAR_BLOOD",
@@ -3575,7 +3572,7 @@
     "name": "FORTIS_CASTLE_WALLS_BRICK_FLOOR",
     "area": "ZEAH",
     "overlayIds": [ 159 ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "uvScale": 1.1,
     "uvOrientation": 256
   },
@@ -4301,7 +4298,7 @@
     "overlayIds": [
       117
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false
   },
   {
@@ -4957,7 +4954,7 @@
     "overlayIds": [
       137
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "OVERLAY_N93",
@@ -5465,7 +5462,7 @@
       61,
       64
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "minHue": 7,
     "maxHue": 7,
     "minSaturation": 3,
@@ -5881,7 +5878,7 @@
       61,
       64
     ],
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "minHue": 7,
     "maxHue": 7,
     "minSaturation": 3,
@@ -6148,6 +6145,57 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR",
     "uvOrientation": 144,
     "uvScale": 1.25
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [
+      55,
+      58,
+      92,
+      94
+    ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "SEASONAL_GRASS": "s >= 2",
+      "SEASONAL_DIRT": "s == 1",
+      "WINTER_DIRT": "season == WINTER",
+      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_OUTER": "h == 7 && blending",
+      "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING_OUTER": "h == 7",
+      "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_INNER": "h == 6 && l < 45 && blending",
+      "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING": "!blending"
+    },
+    "shiftLightness": 16
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": -4,
+    "maxLightness": 80
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_OUTER",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "groundMaterial": "DIRT",
+    "shiftLightness": 20
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING_OUTER",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "groundMaterial": "DIRT",
+    "shiftLightness": 4
+  },
+  {
+    "name": "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_INNER",
+    "area": "FREMENNIK_ISLES_NORTH",
+    "description": "For when ground blending is ENABLED",
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 13
   },
   {
     "name": "SHADOW_DUNGEON_FLOOR",
