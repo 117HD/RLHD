@@ -28,7 +28,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +55,6 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.utils.HDUtils.HALF_PI;
@@ -415,7 +413,7 @@ public class TextureManager {
 		for (var material : Material.values())
 			materialOrdinalToMaterialUniformIndex[material.ordinal()] =
 				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().ordinal()];
-		plugin.hUniformMaterialsBuffer.UploadUniforms();
+		plugin.hUniformMaterialsBuffer.Upload();
 	}
 
 	private int getTextureLayer(@Nullable Material material) {
@@ -484,6 +482,6 @@ public class TextureManager {
 			waterStruct.FlowMap.Set(getTextureLayer(Material.WATER_FLOW_MAP));
 			waterStruct.UnderwaterFlowMap.Set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
 		}
-		plugin.hUniformWaterTypesBuffer.UploadUniforms();
+		plugin.hUniformWaterTypesBuffer.Upload();
 	}
 }

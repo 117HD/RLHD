@@ -76,7 +76,7 @@ public abstract class UniformBuffer {
 			this.Name = Name;
 		}
 
-		public void Set(int NewValue) {
+		public final void Set(int NewValue) {
 			if(Type != PropertyType.Int) {
 				log.warn("UBO {} - Incorrect Setter(int) called for Property: {}", Owner.Buffer.name, Name);
 				return;
@@ -88,8 +88,8 @@ public abstract class UniformBuffer {
 			}
 		}
 
-		public void SetV(int... NewValues) { Set(NewValues); }
-		public void Set(int[] NewValues) {
+		public final void SetV(int... NewValues) { Set(NewValues); }
+		public final void Set(int[] NewValues) {
 			if(Type != PropertyType.IVec2 && Type != PropertyType.IVec3 && Type != PropertyType.IVec4) {
 				log.warn("UBO {} - Incorrect Setter(int[]) called for Property: {}", Owner.Buffer.name, Name);
 				return;
@@ -105,14 +105,13 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if(Owner.Buffer == null) {
+			if(Owner.Data == null) {
 				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Buffer.name);
 				return;
 			}
 
 			int ElementCount = !Type.IsArray ? Type.ElementCount : NewValues.length;
-			for(int ElementIdx = 0; ElementIdx < ElementCount; ElementIdx++) {
-				int Offset = Position + (ElementIdx * Type.ElementSize);
+			for(int ElementIdx = 0, Offset = Position; ElementIdx < ElementCount; ElementIdx++, Offset += Type.ElementSize) {
 				if(Owner.Data.getInt(Offset) != NewValues[ElementIdx]) {
 					Owner.Data.putInt(Offset, NewValues[ElementIdx]);
 					Owner.MarkWaterLine(Offset, Type.ElementSize);
@@ -120,7 +119,7 @@ public abstract class UniformBuffer {
 			}
 		}
 
-		public void Set(float NewValue) {
+		public final void Set(float NewValue) {
 			if(Type != PropertyType.Float) {
 				log.warn("UBO {} - Incorrect Setter(float) called for Property: {}", Owner.Buffer.name, Name);
 				return;
@@ -132,8 +131,8 @@ public abstract class UniformBuffer {
 			}
 		}
 
-		public void SetV(float... NewValues) { Set(NewValues); }
-		public void Set(float[] NewValues) {
+		public final void SetV(float... NewValues) { Set(NewValues); }
+		public final void Set(float[] NewValues) {
 			if(Type != PropertyType.FVec2 && Type != PropertyType.FVec3 && Type != PropertyType.FVec4 && Type != PropertyType.Mat3 && Type != PropertyType.Mat4) {
 				log.warn("UBO {} - Incorrect Setter(float[]) called for Property: {}", Owner.Buffer.name, Name);
 				return;
@@ -149,14 +148,13 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if(Owner.Buffer == null) {
+			if(Owner.Data == null) {
 				log.warn("UBO {} - Hasn't been initialized yet!", Owner.Buffer.name);
 				return;
 			}
 
 			int ElementCount = !Type.IsArray ? Type.ElementCount : NewValues.length;
-			for(int ElementIdx = 0; ElementIdx < ElementCount; ElementIdx++) {
-				int Offset = Position + (ElementIdx * Type.ElementSize);
+			for(int ElementIdx = 0, Offset = Position; ElementIdx < ElementCount; ElementIdx++, Offset += Type.ElementSize) {
 				if(Owner.Data.getFloat(Offset) != NewValues[ElementIdx]) {
 					Owner.Data.putFloat(Offset, NewValues[ElementIdx]);
 					Owner.MarkWaterLine(Offset, Type.ElementSize);
@@ -172,23 +170,24 @@ public abstract class UniformBuffer {
 	public abstract static class StructProperty {
 		protected List<Property> Properties = new ArrayList<>();
 
-		protected Property AddProperty(PropertyType Type, String Name) {
+		protected final Property AddProperty(PropertyType Type, String Name) {
 			Property NewProperty = new Property(Type, Name);
 			Properties.add(NewProperty);
 			return NewProperty;
 		}
 	}
 
+	private final GLBuffer Buffer;
 	private ByteBuffer Data;
+
 	private int DirtyLowTide = Integer.MAX_VALUE;
 	private int DirtyHighTide = Integer.MIN_VALUE;
-	private GLBuffer Buffer;
 
 	public UniformBuffer(String Name) {
 		Buffer = new GLBuffer(Name);
 	}
 
-	protected <T extends StructProperty> T AddStruct(T NewStructProp) {
+	protected final <T extends StructProperty> T AddStruct(T NewStructProp) {
 		for(Property Prop : NewStructProp.Properties) {
 			AppendToBuffer(Prop);
 		}
@@ -200,7 +199,7 @@ public abstract class UniformBuffer {
 		return NewStructProp;
 	}
 
-	protected <T extends StructProperty> T[] AddStructs(T[] NewStructPropArray, CreateStructProperty<T> CreateFunction) {
+	protected final <T extends StructProperty> T[] AddStructs(T[] NewStructPropArray, CreateStructProperty<T> CreateFunction) {
 		for(int i = 0; i < NewStructPropArray.length; i++) {
 			NewStructPropArray[i] = CreateFunction.create();
 			AddStruct(NewStructPropArray[i]);
@@ -228,11 +227,11 @@ public abstract class UniformBuffer {
 		DirtyHighTide = Math.max(DirtyHighTide, Position + Size);
 	}
 
-	public GLBuffer GetGLBuffer() {
+	public final GLBuffer GetGLBuffer() {
 		return Buffer;
 	}
 
-	public void Initialise(int UniformBlockIndex, OpenCLManager openCLManager) {
+	public final void Initialise(int UniformBlockIndex, OpenCLManager openCLManager) {
 		Initialise(UniformBlockIndex);
 
 		if(openCLManager != null) {
@@ -240,8 +239,8 @@ public abstract class UniformBuffer {
 		}
 	}
 
-	public void Initialise(int UniformBlockIndex) {
-		if(Buffer != null) {
+	public final void Initialise(int UniformBlockIndex) {
+		if(Data != null) {
 			Destroy();
 		}
 
@@ -261,12 +260,8 @@ public abstract class UniformBuffer {
 		}
 	}
 
-	public final void UploadUniforms() {
-		if(Buffer == null) {
-			return;
-		}
-
-		if(DirtyLowTide < Buffer.size && DirtyHighTide > 0) {
+	public final void Upload() {
+		if(Data != null && DirtyLowTide < Buffer.size && DirtyHighTide > 0) {
 			Data.position(DirtyLowTide);
 			Data.limit(DirtyHighTide);
 
@@ -283,8 +278,8 @@ public abstract class UniformBuffer {
 		}
 	}
 
-	public void Destroy() {
-		if(Buffer != null) {
+	public final void Destroy() {
+		if(Data != null) {
 			glDeleteBuffers(Buffer.glBufferId);
 
 			Data = null;

@@ -1526,7 +1526,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				hUniformCameraBuffer.CameraY.Set(cameraPosition[1]);
 				hUniformCameraBuffer.CameraZ.Set(cameraPosition[2]);
 
-				hUniformCameraBuffer.UploadUniforms();
+				hUniformCameraBuffer.Upload();
 			}
 		}
 
@@ -1546,7 +1546,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					light.color[1] * light.strength,
 					light.color[2] * light.strength);
 			}
-			hUniformLightsBuffer.UploadUniforms();
+			hUniformLightsBuffer.Upload();
 		}
 	}
 
@@ -2094,7 +2094,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
 				hUniformGlobalBuffer.LightProjectionMatrix.Set(lightProjectionMatrix);
-				hUniformGlobalBuffer.UploadUniforms();
+				hUniformGlobalBuffer.Upload();
 
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockGlobals, UNIFORM_BLOCK_GLOBAL);
 
@@ -2112,7 +2112,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			} else {
 				hUniformGlobalBuffer.LightProjectionMatrix.Set(Mat4.identity());
-				hUniformGlobalBuffer.UploadUniforms();
+				hUniformGlobalBuffer.Upload();
 			}
 
 			glUseProgram(glSceneProgram);
@@ -2282,7 +2282,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			hUniformUIBuffer.TargetDimensions.SetV(canvasWidth, canvasHeight);
 		}
 
-		hUniformUIBuffer.UploadUniforms();
+		hUniformUIBuffer.Upload();
 
 		glUniformBlockBinding(glSceneProgram, uniUiBlockUi, UNIFORM_BLOCK_UI);
 
