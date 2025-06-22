@@ -7675,14 +7675,17 @@
     ]
   },
   {
-    "description": "Camelot Castle",
+    "description": "Camelot Castle Walls",
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
     "objectIds": [
       "KR_CAMELOT_WALL_TOP_01",
       "KR_CAMELOT_WALL",
       "KR_CAMELOT_WALL_TERM_01",
       "KR_CAMELOT_WALL_TERM_02",
-      "KR_CAMELOT_WALL_WINDOW",
       "KR_CAMELOT_WALL_EXTERNAL",
       "KR_CAMELOT_WALL_EXTERNAL_TERM_01",
       "KR_CAMELOT_WALL_EXTERNAL_TERM_02",
@@ -7691,9 +7694,28 @@
       "KR_CAMELOT_WALL_INTERNAL_TERM_02",
       "KR_CAMELOT_WALL_ABOVE_PILLAR",
       "KR_CAMELOT_BATTLEMENT",
+      "KR_CAMELOT_BATTLEMENT_HELPER_01",
       "KR_CAMELOT_BATTLEMENT_HELPER_02"
+    ]
+  },
+  {
+    "description": "Camelot Castle Walls with Window",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "KR_CAMELOT_WALL_WINDOW"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "MODEL_XY"
+      }
+    ]
   },
   {
     "description": "Camelot Castle Pillars",
