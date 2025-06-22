@@ -36129,7 +36129,7 @@
       {
         "description": "Glass Bottle",
         "baseMaterial": "BLANK_GLOSS",
-        "colors": "h ==spa 1 && s == 7",
+        "colors": "h == spa 1 && s == 7",
         "uvType": "BOX"
       }
     ]
