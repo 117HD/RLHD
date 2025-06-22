@@ -36231,5 +36231,17 @@
         "uvScale": 0.66
       }
     ]
+  },
+  {
+    "description": "Corsair Cove - Thatch - Roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DS2_CORSAIR_COVE_SHIPHULL_RIB1",
+      "DS2_CORSAIR_COVE_SHIPHULL_RIB2",
+      "DS2_CORSAIR_COVE_SHIPHULL_RIB3",
+      "DS2_CORSAIR_COVE_SHIPHULL_RIB4"
+    ]
   }
 ]
