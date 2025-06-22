@@ -29,9 +29,7 @@
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-uniform mat4 projectionMatrix;
-uniform float elapsedTime;
-uniform vec3 cameraPos;
+#include uniforms/global.glsl
 
 #include utils/constants.glsl
 #define USE_VANILLA_UV_PROJECTION

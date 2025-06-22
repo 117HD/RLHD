@@ -31,6 +31,7 @@ layout (location = 2) in vec4 vUv;
 layout (location = 3) in vec4 vNormal;
 
 #include utils/constants.glsl
+#include uniforms/global.glsl
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     // Pass to geometry shader
@@ -42,7 +43,6 @@ layout (location = 3) in vec4 vNormal;
         flat out float gOpacity;
     #endif
 #else
-    uniform mat4 lightProjectionMatrix;
     #if SHADOW_TRANSPARENCY
         // Pass to fragment shader
         out float fOpacity;

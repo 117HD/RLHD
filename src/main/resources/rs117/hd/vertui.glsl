@@ -31,8 +31,7 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
-uniform ivec2 sourceDimensions;
-uniform ivec2 targetDimensions;
+#include uniforms/ui.glsl
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
