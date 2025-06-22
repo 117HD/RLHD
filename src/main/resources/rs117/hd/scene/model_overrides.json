@@ -3377,7 +3377,6 @@
       "KR_SEERS_VILLAGE_MINECART_AREA_ARCH_TOP",
       "KR_SEERS_VILLAGE_WALL",
       "KR_SEERS_VILLAGE_WALL_INVERTED",
-      "KR_SEERS_VILLAGE_PUB_WALL",
       "KR_SEERS_VILLAGE_WALL_TERM_01",
       "KR_SEERS_VILLAGE_WALL_TERM_02",
       "KR_SEERS_VILLAGE_WALL_INTERNAL",
@@ -3427,7 +3426,8 @@
       "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH",
       "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_INVERTED",
       "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_TERM_01",
-      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_TERM_02"
+      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_TERM_02",
+      "KR_SEERS_VILLAGE_PUB_WALL"
     ],
     "colorOverrides": [
       {
@@ -6876,6 +6876,27 @@
     "uvScale": 0.8
   },
   {
+    "description": "Seers Village tables with silverware",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.8,
+    "objectIds": [
+      "KR_SEERS_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plates",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 0 && s == 0",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 89,
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
     "description": "Seers village wooden posts",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -10054,7 +10075,6 @@
       "CONTACT_CRATE_SINGLE",
       "KR_CRATE",
       "KR_CRATES",
-      "KR_SEERS_TABLE",
       "FOSSIL_CRATE1",
       "FOSSIL_CRATE3",
       "FOSSIL_CRATE_STACKED",
@@ -27359,7 +27379,8 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "SINK",
-      "SINK2"
+      "SINK2",
+      "KR_SINK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
