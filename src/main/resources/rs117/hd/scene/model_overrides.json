@@ -3397,7 +3397,9 @@
       "KR_COURTHOUSE_BASE_STEPS_MID",
       "KR_COURTHOUSE_BASE_TOP",
       "ELEMENTAL_WORKSHOP_ODDWALL_R",
-      "ELEMENTAL_WORKSHOP_ODDWALL_L"
+      "ELEMENTAL_WORKSHOP_ODDWALL_L",
+      "ELEMENTAL_WORKSHOP_ODDWALL_R_OPEN",
+      "ELEMENTAL_WORKSHOP_ODDWALL_L_OPEN"
     ],
     "colorOverrides": [
       {
@@ -36360,6 +36362,24 @@
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.4,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Generic - Wooden - Metallic - Banksign ",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "KR_SEERS_VILLAGE_BLACKSMITHTOOLS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Handles",
+        "colors": "h >= 6 && h <= 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
         "uvOrientation": 89
       }
     ]
