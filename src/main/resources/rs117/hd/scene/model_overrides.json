@@ -36105,5 +36105,42 @@
     "uvScale": 0.8,
     "uvOrientationZ": 128,
     "uvOrientationY": 512
+  },
+  {
+    "description": "Corsair Cove - Stone - Spa Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "uvOrientation": 128,
+    "objectIds": [
+      "DS2_CORSAIR_SPA_WALL"
+    ]
+  },
+  {
+    "description": "Corsair Cove - Stone - Spa Walls with Rum bottles",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "uvOrientation": 128,
+    "objectIds": [
+      "DS2_CORSAIR_SPA_WALL_RUM"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass Bottle",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "h ==spa 1 && s == 7",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Corsair Cove - Stone - Spa Water",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "uvType": "BOX",
+    "uvOrientation": 168,
+    "objectIds": [
+      "CRANDOR_LAB_BIRTHING_POOL_WATER"
+    ]
   }
 ]
