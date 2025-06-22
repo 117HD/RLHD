@@ -1647,9 +1647,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.putFloat(cameraPosition[0])
 					.putFloat(cameraPosition[1])
 					.putFloat(cameraPosition[2])
-					.putFloat(1.0f).putFloat(0.0f).putFloat(1.0f) // windDirection
-					.putFloat(10.0f) // windSpeed
-					.putFloat(30.0f) // windStrength
+					.putFloat((float)Math.cos(environmentManager.currentWindAngle))
+					.putFloat(0.0f)
+					.putFloat((float)Math.sin(environmentManager.currentWindAngle))
+					.putFloat(environmentManager.currentWindSpeed)
+					.putFloat(environmentManager.currentWindStrength)
 					.putFloat((float)elapsedTime)
 					.flip();
 				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
