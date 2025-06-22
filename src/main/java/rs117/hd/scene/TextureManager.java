@@ -49,6 +49,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.opengl.MaterialsBuffer;
 import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
@@ -328,7 +329,7 @@ public class TextureManager {
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
 		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
-		plugin.updateMaterialUniformBuffer(generateMaterialUniformBuffer());
+		updateMaterialUniformBuffer();
 		updateWaterTypeUniformBuffer();
 
 		// Reset
@@ -403,20 +404,18 @@ public class TextureManager {
 		}
 	}
 
-	private ByteBuffer generateMaterialUniformBuffer() {
-		final int materialBytes = 20 * SCALAR_BYTES;
-		ByteBuffer buffer = BufferUtils.createByteBuffer(materialUniformEntries.size() * materialBytes);
+	private void updateMaterialUniformBuffer() {
 		for (int i = 0; i < materialUniformEntries.size(); i++) {
 			MaterialEntry entry = materialUniformEntries.get(i);
 			materialOrdinalToMaterialUniformIndex[entry.material.ordinal()] = i;
 			if (entry.vanillaIndex != -1)
 				vanillaTextureIndexToMaterialUniformIndex[entry.vanillaIndex] = i;
-			writeMaterialData(buffer, entry);
+			writeMaterialData(plugin.hUniformMaterialsBuffer.Materials[i], entry);
 		}
 		for (var material : Material.values())
 			materialOrdinalToMaterialUniformIndex[material.ordinal()] =
 				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().ordinal()];
-		return buffer.flip();
+		plugin.hUniformMaterialsBuffer.UploadUniforms();
 	}
 
 	private int getTextureLayer(@Nullable Material material) {
@@ -426,7 +425,7 @@ public class TextureManager {
 		return materialOrdinalToTextureLayer[material.ordinal()];
 	}
 
-	private void writeMaterialData(ByteBuffer buffer, MaterialEntry entry) {
+	private void writeMaterialData(MaterialsBuffer.MaterialStruct uniformStruct, MaterialEntry entry) {
 		var m = entry.material;
 		var vanillaIndex = entry.vanillaIndex;
 
@@ -444,31 +443,25 @@ public class TextureManager {
 			baseColorTextureIndex = materialOrdinalToTextureLayer[m.ordinal()];
 		}
 
-		buffer
-			.putInt(baseColorTextureIndex)
-			.putInt(getTextureLayer(m.normalMap))
-			.putInt(getTextureLayer(m.displacementMap))
-			.putInt(getTextureLayer(m.roughnessMap))
-			.putInt(getTextureLayer(m.ambientOcclusionMap))
-			.putInt(getTextureLayer(m.flowMap))
-			.putInt(
-				(m.overrideBaseColor ? 1 : 0) << 2 |
-				(m.unlit ? 1 : 0) << 1 |
-				(m.hasTransparency ? 1 : 0)
-			)
-			.putFloat(m.brightness)
-			.putFloat(m.displacementScale)
-			.putFloat(m.specularStrength)
-			.putFloat(m.specularGloss)
-			.putFloat(m.flowMapStrength)
-			.putFloat(m.flowMapDuration[0])
-			.putFloat(m.flowMapDuration[1])
-			.putFloat(scrollSpeedX)
-			.putFloat(scrollSpeedY)
-			.putFloat(1 / m.textureScale[0])
-			.putFloat(1 / m.textureScale[1])
-			.putFloat(1 / m.textureScale[2])
-			.putFloat(0); // align vec4
+		uniformStruct.ColorMap.Set(baseColorTextureIndex);
+		uniformStruct.NormalMap.Set(getTextureLayer(m.normalMap));
+		uniformStruct.DisplacementMap.Set(getTextureLayer(m.displacementMap));
+		uniformStruct.RoughnessMap.Set(getTextureLayer(m.roughnessMap));
+		uniformStruct.AmbientOcclusionMap.Set(getTextureLayer(m.ambientOcclusionMap));
+		uniformStruct.FlowMap.Set(getTextureLayer(m.flowMap));
+		uniformStruct.Flags.Set(
+			(m.overrideBaseColor ? 1 : 0) << 2 |
+			(m.unlit ? 1 : 0) << 1 |
+			(m.hasTransparency ? 1 : 0)
+		);
+		uniformStruct.Brightness.Set(m.brightness);
+		uniformStruct.DisplacementScale.Set(m.displacementScale);
+		uniformStruct.SpecularStrength.Set(m.specularStrength);
+		uniformStruct.SpecularGloss.Set(m.specularGloss);
+		uniformStruct.FlowMapStrength.Set(m.flowMapStrength);
+		uniformStruct.FlowMapDuration.Set(m.flowMapDuration);
+		uniformStruct.ScrollDuration.SetV(scrollSpeedX, scrollSpeedY);
+		uniformStruct.TextureScale.SetV(1 / m.textureScale[0], 1 / m.textureScale[1], 1 / m.textureScale[2]);
 	}
 
 	private void updateWaterTypeUniformBuffer() {
