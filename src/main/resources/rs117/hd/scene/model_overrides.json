@@ -9872,7 +9872,8 @@
       "FOSSIL_CRATE3",
       "FOSSIL_CRATE_STACKED",
       "TOURTRAP_QIP_CRATE_SINGLE",
-      "TOURTRAP_QIP_CRATE_STACKED"
+      "TOURTRAP_QIP_CRATE_STACKED",
+      "FOSSIL_CRATE3_INACTIVE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9947,7 +9948,8 @@
       "SARIM_BOXES",
       "FAI_WIZTOWER_BOXES",
       "QIP_COOK_CRATE_STACKED",
-      "WILD_SMALL_CRATES"
+      "WILD_SMALL_CRATES",
+      "FOSSIL_CRATE_STACKED_INACTIVE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -35688,7 +35690,8 @@
     "uvType": "BOX",
     "uvOrientationY": 512,
     "objectIds": [
-      "FOSSIL_BANK_CHEST_BUILT"
+      "FOSSIL_BANK_CHEST_BUILT",
+      "FOSSIL_VOLCANO_BANK_CHEST"
     ],
     "colorOverrides": [
       {
@@ -35910,6 +35913,77 @@
         "uvType": "BOX",
         "colors": "h == 0"
       }
+    ]
+  },
+  {
+    "description": "Fossil Island - Burnt Tree",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_DEADTREE_SMALL1_STUMP",
+      "FOSSIL_DEADTREE_SMALL1",
+      "FOSSIL_DEADTREE_LARGE1",
+      "FOSSIL_DEADTREE_LARGE1_STUMP",
+      "FOSSIL_DEADTREE_LARGE2"
+    ]
+  },
+  {
+    "description": "Fossil Island - Volcano Barrel - Full",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 2 ",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h > 2 && h < 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Pickaxe",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_BARREL_FULL",
+      "FOSSIL_BARREL_FULL_PICKAXE"
+    ]
+  },
+  {
+    "description": "Fossil Island - Volcano Barrel - Full",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 300,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 5 ",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_VOLCANO_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Volcano - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SARIM_DEPOSIT_BOX"
     ]
   }
 ]
