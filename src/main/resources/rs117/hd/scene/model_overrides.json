@@ -3276,8 +3276,11 @@
     "flatNormals": true
   },
   {
-    "description": "SEERS_BUILDING_WALLS",
+    "description": "Seers Village - Walls",
     "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "KR_SEERS_VILLAGE_MINECART_AREA_WALL",
       "KR_SEERS_VILLAGE_MINECART_AREA_ARCH_L",
@@ -3288,12 +3291,6 @@
       "KR_SEERS_VILLAGE_PUB_WALL",
       "KR_SEERS_VILLAGE_WALL_TERM_01",
       "KR_SEERS_VILLAGE_WALL_TERM_02",
-      "KR_SEERS_VILLAGE_WALL_WINDOW",
-      "KR_SEERS_VILLAGE_WALL_WINDOW_TERM_02",
-      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH",
-      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_INVERTED",
-      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_TERM_01",
-      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_TERM_02",
       "KR_SEERS_VILLAGE_WALL_INTERNAL",
       "KR_SEERS_VILLAGE_WALL_INTERNAL_FILLER",
       "KR_SEERS_VILLAGE_WALL_INTERNAL_FILLER_MIRROR",
@@ -3311,7 +3308,60 @@
       "ELEMENTAL_WORKSHOP_ODDWALL_R",
       "ELEMENTAL_WORKSHOP_ODDWALL_L"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Walls - Windows",
+    "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "KR_SEERS_VILLAGE_WALL_WINDOW",
+      "KR_SEERS_VILLAGE_WALL_WINDOW_TERM_02",
+      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH",
+      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_INVERTED",
+      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_TERM_01",
+      "KR_SEERS_VILLAGE_WALL_WINDOW_CHURCH_TERM_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      },
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Sinclair Mansion - exterior walls",
@@ -6748,7 +6798,6 @@
     "description": "Seers village chairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "KR_BENCH",
       "KR_CHAIR",
       "KR_SMASHEDCHAIR",
       "KR_STOOL",
@@ -6756,6 +6805,17 @@
     ],
     "uvType": "BOX",
     "flatNormals": true
+  },
+  {
+    "description": "Seers Village - Wooden -Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "KR_BENCH"
+    ]
   },
   {
     "description": "Seer's Village Ladder",
@@ -8444,6 +8504,8 @@
   {
     "description": "Wooden Door 3 - Fake Plank Golden Handle",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
     "objectIds": [
       "LEFAYEUNOPENABLEDOORL",
       "LEFAYEUNOPENABLEDOORR",
@@ -8500,10 +8562,21 @@
       "W_ARDOUGNEDOUBLEDOORL_NOOP",
       "W_ARDOUGNEDOUBLEDOORR_NOOP",
       "TUT2_PRAYER_EXIT_L",
-      "TUT2_PRAYER_EXIT_R"
+      "TUT2_PRAYER_EXIT_R",
+      "KR_CHURCHDOOR_L",
+      "KR_OPENCHURCHDOOR_L",
+      "KR_CHURCHDOOR_R",
+      "KR_OPENCHURCHDOOR_R"
     ],
-    "uvType": "BOX",
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Golden Handles",
+        "colors": "s > 3",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Wooden Door 4 - Fake Plank with Silver Handle",
@@ -28857,7 +28930,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POSH_CABINET",
-      "FAI_VARROCK_POSH_CABINET2"
+      "FAI_VARROCK_POSH_CABINET2",
+      "KR_CABINET",
+      "KR_CABINET2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
