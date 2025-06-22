@@ -180,7 +180,6 @@ public abstract class UniformBuffer {
 	}
 
 	private ByteBuffer Data;
-	private int Size;
 	private int DirtyLowTide = Integer.MAX_VALUE;
 	private int DirtyHighTide = Integer.MIN_VALUE;
 	private GLBuffer Buffer;
@@ -212,10 +211,10 @@ public abstract class UniformBuffer {
 	private Property AppendToBuffer(Property NewProperty) {
 		NewProperty.Owner = this;
 
-		int Padding = (NewProperty.Type.Alignment - (Size % NewProperty.Type.Alignment)) % NewProperty.Type.Alignment;
-		NewProperty.Position = Size + Padding;
+		int Padding = (int)(NewProperty.Type.Alignment - (Buffer.size % NewProperty.Type.Alignment)) % NewProperty.Type.Alignment;
+		NewProperty.Position = (int)Buffer.size + Padding;
 
-		Size += NewProperty.Type.Size + Padding;
+		Buffer.size += NewProperty.Type.Size + Padding;
 
 		return NewProperty;
 	}
@@ -232,7 +231,9 @@ public abstract class UniformBuffer {
 	public void Initialise(int UniformBlockIndex, OpenCLManager openCLManager) {
 		Initialise(UniformBlockIndex);
 
-		openCLManager.recreateCLBuffer(Buffer, CL_MEM_READ_ONLY);
+		if(openCLManager != null) {
+			openCLManager.recreateCLBuffer(Buffer, CL_MEM_READ_ONLY);
+		}
 	}
 
 	public void Initialise(int UniformBlockIndex) {
@@ -240,12 +241,12 @@ public abstract class UniformBuffer {
 			Destroy();
 		}
 
-		Size = (int) HDUtils.ceilPow2(Size);
-		Data = BufferUtils.createByteBuffer(Size);
+		Buffer.size = HDUtils.ceilPow2(Buffer.size);
+		Data = BufferUtils.createByteBuffer((int)Buffer.size);
 		Buffer.glBufferId = glGenBuffers();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, Buffer.glBufferId);
-		glBufferData(GL_UNIFORM_BUFFER, Size, GL_STATIC_DRAW);
+		glBufferData(GL_UNIFORM_BUFFER, Buffer.size, GL_STATIC_DRAW);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, Data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
@@ -261,7 +262,7 @@ public abstract class UniformBuffer {
 			return;
 		}
 
-		if(DirtyLowTide < Size && DirtyHighTide > 0) {
+		if(DirtyLowTide < Buffer.size && DirtyHighTide > 0) {
 			Data.position(DirtyLowTide);
 			Data.limit(DirtyHighTide);
 
@@ -271,7 +272,7 @@ public abstract class UniformBuffer {
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 			Data.position(0);
-			Data.limit(Size);
+			Data.limit((int)Buffer.size);
 
 			DirtyLowTide = Integer.MAX_VALUE;
 			DirtyHighTide = Integer.MIN_VALUE;
