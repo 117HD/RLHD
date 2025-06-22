@@ -39,11 +39,11 @@ public abstract class UniformBuffer {
 		Mat3(36, 16, 9),
 		Mat4(64, 16, 16);
 
-		private int Size;
-		private int Alignment;
-		private int ElementSize;
-		private int ElementCount;
-		private boolean IsArray;
+		private final int Size;
+		private final int Alignment;
+		private final int ElementSize;
+		private final int ElementCount;
+		private final boolean IsArray;
 
 		PropertyType(int Size, int Alignment, int ElementCount) {
 			this.Size = Size;
@@ -65,8 +65,8 @@ public abstract class UniformBuffer {
 	public static class Property {
 		private UniformBuffer Owner;
 		private int Position;
-		private PropertyType Type;
-		private String Name;
+		private final PropertyType Type;
+		private final String Name;
 
 		private Property(PropertyType Type, String Name) {
 			this.Type = Type;
@@ -81,7 +81,7 @@ public abstract class UniformBuffer {
 
 			if(Owner.Buffer.getInt(Position) != NewValue) {
 				Owner.Buffer.putInt(Position, NewValue);
-				Owner.NeedsUploading = true;
+				Owner.MarkWaterLine(Position, Type.Size);
 			}
 		}
 
@@ -112,7 +112,7 @@ public abstract class UniformBuffer {
 				int Offset = Position + (ElementIdx * Type.ElementSize);
 				if(Owner.Buffer.getInt(Offset) != NewValues[ElementIdx]) {
 					Owner.Buffer.putInt(Offset, NewValues[ElementIdx]);
-					Owner.NeedsUploading = true;
+					Owner.MarkWaterLine(Offset, Type.ElementSize);
 				}
 			}
 		}
@@ -125,7 +125,7 @@ public abstract class UniformBuffer {
 
 			if(Owner.Buffer.getFloat(Position) != NewValue) {
 				Owner.Buffer.putFloat(Position, NewValue);
-				Owner.NeedsUploading = true;
+				Owner.MarkWaterLine(Position, Type.Size);
 			}
 		}
 
@@ -156,7 +156,7 @@ public abstract class UniformBuffer {
 				int Offset = Position + (ElementIdx * Type.ElementSize);
 				if(Owner.Buffer.getFloat(Offset) != NewValues[ElementIdx]) {
 					Owner.Buffer.putFloat(Offset, NewValues[ElementIdx]);
-					Owner.NeedsUploading = true;
+					Owner.MarkWaterLine(Offset, Type.ElementSize);
 				}
 			}
 		}
@@ -166,7 +166,7 @@ public abstract class UniformBuffer {
 		T create();
 	}
 
-	public abstract class StructProperty {
+	public abstract static class StructProperty {
 		protected List<Property> Properties = new ArrayList<>();
 
 		protected Property AddProperty(PropertyType Type, String Name) {
@@ -179,8 +179,9 @@ public abstract class UniformBuffer {
 	private ByteBuffer Buffer;
 	private int Size;
 	private int glBuffer;
-	private boolean NeedsUploading;
-	private String Name;
+	private int DirtyLowTide = Integer.MAX_VALUE;
+	private int DirtyHighTide = Integer.MIN_VALUE;
+	private final String Name;
 
 	public UniformBuffer(String Name) {
 		this.Name = Name;
@@ -217,6 +218,11 @@ public abstract class UniformBuffer {
 		return NewProperty;
 	}
 
+	private void MarkWaterLine(int Position, int Size) {
+		DirtyLowTide = Math.min(DirtyLowTide, Position);
+		DirtyHighTide = Math.max(DirtyHighTide, Position + Size);
+	}
+
 	public void Initialise(int UniformBlockIndex) {
 		if(Buffer != null) {
 			Destroy();
@@ -243,11 +249,20 @@ public abstract class UniformBuffer {
 			return;
 		}
 
-		if(NeedsUploading) {
+		if(DirtyLowTide < Size && DirtyHighTide > 0) {
+			Buffer.position(DirtyLowTide);
+			Buffer.limit(DirtyHighTide);
+
 			glBindBuffer(GL_UNIFORM_BUFFER, glBuffer);
-			glBufferSubData(GL_UNIFORM_BUFFER, 0, Buffer);
+			glBufferSubData(GL_UNIFORM_BUFFER, DirtyLowTide, Buffer);
 
 			glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+			Buffer.position(0);
+			Buffer.limit(Size);
+
+			DirtyLowTide = Integer.MAX_VALUE;
+			DirtyHighTide = Integer.MIN_VALUE;
 		}
 	}
 
