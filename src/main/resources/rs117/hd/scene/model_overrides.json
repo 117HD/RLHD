@@ -3878,7 +3878,7 @@
     "colorOverrides": [
       {
         "description": "Rope",
-        "colors": "h == 0 ",
+        "colors": "h == 0",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
         "uvScale": 0.5
@@ -10962,7 +10962,7 @@
     "uvOrientationY": 1212
   },
   {
-    "description": "Morytania - Objects - Wooden - Stacked Tri Crate - Angled ",
+    "description": "Morytania - Objects - Wooden - Stacked Tri Crate - Angled",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BURGH_CRATES_SMALL2"
@@ -17562,7 +17562,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Rough Wooden Plank Stairs ",
+    "description": "Rough Wooden Plank Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "WILDY_HUB_STAIRS",
@@ -18964,7 +18964,7 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Concrete - Nature Altar ",
+    "description": "Objects - Concrete - Nature Altar",
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
@@ -20010,7 +20010,7 @@
     "uvScale": 0.44
   },
   {
-    "description": "Stronghold Of Security - Famine - Bone Structures ",
+    "description": "Stronghold Of Security - Famine - Bone Structures",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "SOS_FAM_WALL_THIN",
@@ -20021,7 +20021,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Stronghold Of Security - Famine - Doors ",
+    "description": "Stronghold Of Security - Famine - Doors",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       "SOS_FAM_DOOR_FACE",
@@ -20033,7 +20033,7 @@
     "shadowOpacityThreshold": 0.1
   },
   {
-    "description": "Stronghold Of Security - Famine - Ladder ",
+    "description": "Stronghold Of Security - Famine - Ladder",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       "SOS_FAM_LADD_UP",
@@ -20059,7 +20059,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Stronghold Of Security - Famine - Escape Rope ",
+    "description": "Stronghold Of Security - Famine - Escape Rope",
     "baseMaterial": "ROPE",
     "objectIds": [
       "SOS_FAM_ROPE_UP",
@@ -20875,7 +20875,7 @@
     "flatNormals": true
   },
   {
-    "description": "Guardians of the Rift - Ground Decoration Grunge - Shelf Coral ",
+    "description": "Guardians of the Rift - Ground Decoration Grunge - Shelf Coral",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "GOTR_PLANT_SHELF01_DEFAULT01",
@@ -21126,7 +21126,7 @@
     "uvScale": 0.66
   },
   {
-    "description": "Freminnik - Walls - Wooden - Plank ",
+    "description": "Freminnik - Walls - Wooden - Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "VIKING_LONGHALL_WALL",
@@ -23367,7 +23367,7 @@
     "uvOrientation": 128
   },
   {
-    "description": "Objects - Cloth - Bentamirs Bed ",
+    "description": "Objects - Cloth - Bentamirs Bed",
     "baseMaterial": "CARPET",
     "objectIds": [ "DWARF_KELDAGRIM_VERY_POOR_BED" ],
     "uvType": "BOX",
@@ -28926,7 +28926,7 @@
       },
       {
         "description": "Curtains - Taupe",
-        "colors": "h == 6 && s < 3 ",
+        "colors": "h == 6 && s < 3",
         "baseMaterial": "GRAY_75"
       },
       {
@@ -32079,7 +32079,7 @@
     ]
   },
   {
-    "description": "Fossil Island - Bunk Bed with Brown Blanket ",
+    "description": "Fossil Island - Bunk Bed with Brown Blanket",
     "baseMaterial": "CARPET",
     "objectIds": [
       "FOSSIL_BUNKBED"
@@ -34297,7 +34297,7 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "h > 7 ",
+        "colors": "h > 7",
         "baseMaterial": "NONE"
       }
     ]
@@ -34310,7 +34310,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "ROCK_3"
       }
     ]
@@ -35953,7 +35953,7 @@
     "colorOverrides": [
       {
         "description": "Dirt",
-        "colors": "h == 2 ",
+        "colors": "h == 2",
         "baseMaterial": "DIRT_2",
         "uvType": "BOX",
         "uvScale": 0.5
@@ -35985,7 +35985,7 @@
     "colorOverrides": [
       {
         "description": "Rope",
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
         "uvScale": 0.5
