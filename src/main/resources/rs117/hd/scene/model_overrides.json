@@ -35695,5 +35695,86 @@
         "uvOrientation": 179
       }
     ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Stone - Stone Trapdoor",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_DKL_TRAPDOOR_CLOSED",
+      "FOSSIL_DKL_TRAPDOOR_OPEN"
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Stone - Ladder",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "objectIds": [
+      "FOSSIL_DKL_TRAPDOOR_LADDER"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stone Chests",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_DKL_CHEST1",
+      "FOSSIL_DKL_CHEST2",
+      "DS2_MAP_CHEST_1_NO_OP",
+      "DS2_MAP_CHEST_2_NO_OP"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stone Crate",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_DKL_STONE_CRATE1",
+      "FOSSIL_DKL_STONE_CRATE2"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Strange Stone",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "FOSSIL_DKL_STONE"
+    ]
   }
 ]
