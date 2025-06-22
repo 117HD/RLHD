@@ -1304,7 +1304,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void initCameraUniformBuffer()
 	{
-		int size = 8 * SCALAR_BYTES;
+		int size = 9 * SCALAR_BYTES;
 		uniformBufferCamera = BufferUtils.createByteBuffer(size);
 		initializeBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, size, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -1646,6 +1646,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.putFloat(cameraPosition[0])
 					.putFloat(cameraPosition[1])
 					.putFloat(cameraPosition[2])
+					.putFloat((float)elapsedTime)
 					.flip();
 				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);
 				glBufferSubData(GL_UNIFORM_BUFFER, 0, uniformBufferCamera);
@@ -3113,8 +3114,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		// Apply height to renderable from the model
+		int height = model.getModelHeight();
 		if (model != renderable)
-			renderable.setModelHeight(model.getModelHeight());
+			renderable.setModelHeight(height);
 
 		model.calculateBoundsCylinder();
 
@@ -3142,8 +3144,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
+		int heightFrac = clamp((int)((height / 200.0) * 31.0), 0, 31);
 		eightIntWrite[3] = renderBufferOffset;
-		eightIntWrite[4] = orientation;
+		eightIntWrite[4] = orientation | heightFrac << 27;
 		eightIntWrite[5] = x;
 		eightIntWrite[6] = y;
 		eightIntWrite[7] = z;

@@ -251,6 +251,43 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vert thisrvB = vb[offset + localId * 3 + 1];
         vert thisrvC = vb[offset + localId * 3 + 2];
 
+        vec4 uvA = vec4(0);
+        vec4 uvB = vec4(0);
+        vec4 uvC = vec4(0);
+
+        vec3 displacementA = vec3(0);
+        vec3 displacementB = vec3(0);
+        vec3 displacementC = vec3(0);
+
+        if (uvOffset >= 0) {
+            uvA = uv[uvOffset + localId * 3];
+            uvB = uv[uvOffset + localId * 3 + 1];
+            uvC = uv[uvOffset + localId * 3 + 2];
+
+            int WindSwayingValue = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
+            if (WindSwayingValue > 0) {
+                vec3 windDirection = mix(vec3(0.0, 0.0, -0.5), vec3(0.5, 0.0, 0.5), sin(elapsedTime));
+                float windSpeed = 20.0;
+                float windStrength = 20.0;
+
+                bool invert = WindSwayingValue == 2;
+                float height = 200.0 * (float((flags >> 27) & 0x1F) / 31);
+                float Noise = noise(vec2(pos.x + (elapsedTime * windSpeed), pos.z + (elapsedTime * windSpeed)) / vec2(10.0));
+                vec3 WindDisplacement = (windStrength * Noise) * windDirection;
+
+                float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
+                float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
+                float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
+
+                displacementA = WindDisplacement * (invert ? 0.9 - strengthA : strengthA);
+                displacementB = WindDisplacement * (invert ? 0.9 - strengthB : strengthB);
+                displacementC = WindDisplacement * (invert ? 0.9 - strengthC : strengthC);
+
+                thisrvA.pos += displacementA;
+                thisrvB.pos += displacementB;
+                thisrvC.pos += displacementC;
+            }
+        }
         // rotate for model orientation
         thisrvA.pos = rotate(thisrvA.pos, orientation);
         thisrvB.pos = rotate(thisrvB.pos, orientation);
@@ -287,15 +324,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vout[outOffset + myOffset * 3 + 1] = thisrvB;
         vout[outOffset + myOffset * 3 + 2] = thisrvC;
 
-        vec4 uvA = vec4(0);
-        vec4 uvB = vec4(0);
-        vec4 uvC = vec4(0);
-
         if (uvOffset >= 0) {
-            uvA = uv[uvOffset + localId * 3];
-            uvB = uv[uvOffset + localId * 3 + 1];
-            uvC = uv[uvOffset + localId * 3 + 2];
-
             if ((int(uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
                 // Rotate the texture triangles to match model orientation
                 uvA = rotate(uvA, orientation);
@@ -303,9 +332,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                 uvC = rotate(uvC, orientation);
 
                 // Shift texture triangles to world space
-                uvA.xyz += pos;
-                uvB.xyz += pos;
-                uvC.xyz += pos;
+                uvA.xyz += pos + displacementA;
+                uvB.xyz += pos + displacementB;
+                uvC.xyz += pos + displacementC;
 
                 // For vanilla UVs, the first 3 components are an integer position vector
                 if (hillskew == 1) {

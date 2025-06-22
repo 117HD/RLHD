@@ -45,6 +45,7 @@ layout(std140) uniform CameraUniforms {
     float cameraX;
     float cameraY;
     float cameraZ;
+    float elapsedTime;
 };
 
 #include comp_common.glsl
