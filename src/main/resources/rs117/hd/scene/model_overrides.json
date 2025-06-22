@@ -36231,7 +36231,7 @@
     ]
   },
   {
-    "description": "Corsair Cove - Thatch - Roofs",
+    "description": "Corsair Cove - Hosidius - Thatch - Roofs",
     "baseMaterial": "HD_HAY",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -36239,7 +36239,8 @@
       "DS2_CORSAIR_COVE_ROOF_THATCHED",
       "DS2_CORSAIR_COVE_ROOF_THATCHED_OUTSIDE",
       "DS2_CORSAIR_COVE_ROOF_THATCHED_CURVE",
-      "DS2_CORSAIR_COVE_ROOF_THATCHED_CENTER"
+      "DS2_CORSAIR_COVE_ROOF_THATCHED_CENTER",
+      "HOS_ROOF_FIX2"
     ],
     "colorOverrides": [
       {
