@@ -9,7 +9,7 @@ public class WaterTypesBuffer extends UniformBuffer{
 
 	public WaterTypeStruct[] WaterTypes = AddStructs(new WaterTypeStruct[WaterType.values().length], WaterTypeStruct::new);
 
-	public class WaterTypeStruct extends StructProperty {
+	public static class WaterTypeStruct extends StructProperty {
 		public Property IsFlat = AddProperty(PropertyType.Int, "IsFlat");
 		public Property SpecularStrength = AddProperty(PropertyType.Float, "SpecularStrength");
 		public Property SpecularGloss = AddProperty(PropertyType.Float, "SpecularGloss");
