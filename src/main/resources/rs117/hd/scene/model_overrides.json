@@ -28123,21 +28123,30 @@
         "baseMaterial": "NONE"
       },
       {
-        "colors": "s == 3",
+        "colors": "s > 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66,
+        "uvScale": 0.5,
         "uvOrientation": 512
       }
     ]
   },
   {
     "description": "Bankbooth with Shutters - Corsair Cove",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "FAI_VARROCK_BANKBOOTH_CLOSED" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [ "FAI_VARROCK_BANKBOOTH_CLOSED" ],
+    "colorOverrides": [
+      {
+        "colors": "s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Bankbooth with Glass Window - Falador",
@@ -28151,7 +28160,7 @@
         "baseMaterial": "NONE"
       },
       {
-        "colors": "s == 3",
+        "colors": "s == 4",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.66,
@@ -28165,14 +28174,14 @@
     "objectIds": [ "KR_BANKBOOTH" ],
     "uvType": "BOX",
     "uvScale": 0.5,
-    "uvOrientation": 512,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
       },
       {
-        "colors": "s == 2",
+        "colors": "s >= 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.66
@@ -28184,11 +28193,11 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
-    "uvOrientation": 512,
+    "uvOrientationY": 512,
     "objectIds": [ "KR_BANKBOOTH_CLOSED" ],
     "colorOverrides": [
       {
-        "colors": "s == 2",
+        "colors": "s >= 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.66
@@ -28275,6 +28284,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientationY": 512,
     "objectIds": [ "ELID_BANKBOOTH" ],
     "colorOverrides": [
       {
@@ -28285,8 +28295,7 @@
         "colors": "s == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66,
-        "uvOrientation": 512
+        "uvScale": 0.66
       }
     ]
   },
@@ -28295,14 +28304,14 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientationY": 512,
     "objectIds": [ "ELID_BANKBOOTHCLOSED" ],
     "colorOverrides": [
       {
         "colors": "s == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66,
-        "uvOrientation": 512
+        "uvScale": 0.66
       }
     ]
   },
