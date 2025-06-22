@@ -11176,7 +11176,8 @@
     "description": "Objects - Standing Torch -  Wood",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "STANDING_TORCH"
+      "STANDING_TORCH",
+      "ZOGRE_STANDING_TORCH"
     ],
     "uvType": "BOX",
     "uvScale": 1.1
@@ -14902,6 +14903,24 @@
     "colorOverrides": [
       {
         "colors": [ "h == 5", "h == 4" ],
+        "baseMaterial": "BARK",
+        "uvScale": 0.75,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jungle Tree Small",
+    "baseMaterial": "LEAF_VEINS",
+    "objectIds": [
+      "MM_BUSH_KHARAZI_JUNGLE_TREE2"
+    ],
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.25,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 4" ,
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
