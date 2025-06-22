@@ -192,6 +192,10 @@ public abstract class UniformBuffer {
 		for(Property Prop : NewStructProp.Properties) {
 			AppendToBuffer(Prop);
 		}
+
+		// Structs need to align to 16 bytes
+		Buffer.size += (int)(16 - (Buffer.size % 16)) % 16;
+
 		NewStructProp.Properties.clear();
 		return NewStructProp;
 	}
