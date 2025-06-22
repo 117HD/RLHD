@@ -7582,6 +7582,21 @@
     ]
   },
   {
+    "description": "Seers Village - Wooden - Courthouse Basement stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512,
+    "objectIds": [
+      "KR_COURTHOUSE_STAIRS_BOTTOM_01",
+      "KR_COURTHOUSE_STAIRS_BOTTOM_01_MIRROR",
+      "KR_COURTHOUSE_STAIRS_BOTTOM_02",
+      "KR_COURTHOUSE_STAIRS_BOTTOM_02_MIRROR",
+      "KR_COURTHOUSE_STAIRS_BOTTOM_03",
+      "KR_COURTHOUSE_STAIRS_BOTTOM_03_MIRROR"
+    ]
+  },
+  {
     "description": "Wooden Spiral Stairs",
     "baseMaterial": "MARBLE_2",
     "objectIds": [
