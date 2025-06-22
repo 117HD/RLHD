@@ -3257,7 +3257,7 @@
     "flatNormals": true
   },
   {
-    "description": "SEERS_COURTHOUSE_WALLS",
+    "description": "Seers Village - Wall - Courthouse Walls",
     "baseMaterial": "GRUNGE_1",
     "flatNormals": true,
     "uvType": "BOX",
@@ -3298,6 +3298,70 @@
         "colors": "a < 255",
         "uvType": "MODEL_XY"
       }
+    ]
+  },
+  {
+    "description": "Seers Village - Wall - Courthouse Roof with wall edges",
+    "baseMaterial": "GRUNGE_2",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "KR_COURTHOUSE_ROOF_SMALL_EDGE_01_MIRROR",
+      "KR_COURTHOUSE_ROOF_SMALL_EDGE_02_MIRROR",
+      "KR_COURTHOUSE_ROOF_OVERHANG_CAPPED_02_MIRROR",
+      "KR_COURTHOUSE_ROOF_SMALL_EDGE_01",
+      "KR_COURTHOUSE_ROOF_SMALL_EDGE_02",
+      "KR_COURTHOUSE_ROOF_EDGE_01",
+      "KR_COURTHOUSE_ROOF_EDGE_02",
+      "KR_COURTHOUSE_ROOF_EDGE_03",
+      "KR_COURTHOUSE_ROOF_EDGE_04",
+      "KR_COURTHOUSE_ROOF_EDGE_01_MIRROR",
+      "KR_COURTHOUSE_ROOF_EDGE_02_MIRROR",
+      "KR_COURTHOUSE_ROOF_EDGE_03_MIRROR",
+      "KR_COURTHOUSE_ROOF_EDGE_04_MIRROR",
+      "KR_COURTHOUSE_ROOF_OVERHANG_CAPPED_02",
+      "KR_COURTHOUSE_ROOF_OVERHANG",
+      "KR_COURTHOUSE_ROOF_OVERHANG_CAPPED",
+      "KR_COURTHOUSE_ROOF_OVERHANG_CAPPED_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Trim",
+        "baseMaterial": "MARBLE_2",
+        "colors": "h > 4 && h < 8",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Seers Village - Wall - Courthouse Roof",
+    "baseMaterial": "GRUNGE_2",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "KR_COURTHOUSE_ROOF_MID_01",
+      "KR_COURTHOUSE_ROOF_MID_02",
+      "KR_COURTHOUSE_ROOF_MID_03",
+      "KR_COURTHOUSE_ROOF_MID_04",
+      "KR_COURTHOUSE_ROOF_MID_01_MIRROR",
+      "KR_COURTHOUSE_ROOF_MID_02_MIRROR",
+      "KR_COURTHOUSE_ROOF_MID_03_MIRROR",
+      "KR_COURTHOUSE_ROOF_MID_04_MIRROR",
+      "KR_COURTHOUSE_ROOF_INSIDE_CORNER_01",
+      "KR_COURTHOUSE_ROOF_INSIDE_CORNER_02",
+      "KR_COURTHOUSE_ROOF_OVERHANG_INSIDE"
     ]
   },
   {
