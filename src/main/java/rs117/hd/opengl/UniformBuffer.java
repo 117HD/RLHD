@@ -1,6 +1,7 @@
 package rs117.hd.opengl;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.ByteBuffer;
@@ -161,6 +162,20 @@ public abstract class UniformBuffer {
 		}
 	}
 
+	public interface CreateStructProperty<T extends StructProperty> {
+		T create();
+	}
+
+	public abstract class StructProperty {
+		protected List<Property> Properties = new ArrayList<>();
+
+		protected Property AddProperty(PropertyType Type, String Name) {
+			Property NewProperty = new Property(Type, Name);
+			Properties.add(NewProperty);
+			return NewProperty;
+		}
+	}
+
 	private ByteBuffer Buffer;
 	private int Size;
 	private int glBuffer;
@@ -171,14 +186,33 @@ public abstract class UniformBuffer {
 		this.Name = Name;
 	}
 
+	protected <T extends StructProperty> T AddStruct(T NewStructProp) {
+		for(Property Prop : NewStructProp.Properties) {
+			AppendToBuffer(Prop);
+		}
+		NewStructProp.Properties.clear();
+		return NewStructProp;
+	}
+
+	protected <T extends StructProperty> T[] AddStructs(T[] NewStructPropArray, CreateStructProperty<T> CreateFunction) {
+		for(int i = 0; i < NewStructPropArray.length; i++) {
+			NewStructPropArray[i] = CreateFunction.create();
+			AddStruct(NewStructPropArray[i]);
+		};
+		return NewStructPropArray;
+	}
+
 	protected Property AddProperty(PropertyType Type, String Name) {
-		Property NewProperty = new Property(Type, Name);
+		return AppendToBuffer(new Property(Type, Name));
+	}
+
+	private Property AppendToBuffer(Property NewProperty) {
 		NewProperty.Owner = this;
 
-		int Padding = (Type.Alignment - (Size % Type.Alignment)) % Type.Alignment;
+		int Padding = (NewProperty.Type.Alignment - (Size % NewProperty.Type.Alignment)) % NewProperty.Type.Alignment;
 		NewProperty.Position = Size + Padding;
 
-		Size += Type.Size + Padding;
+		Size += NewProperty.Type.Size + Padding;
 
 		return NewProperty;
 	}
