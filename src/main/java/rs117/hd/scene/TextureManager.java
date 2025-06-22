@@ -408,12 +408,12 @@ public class TextureManager {
 			materialOrdinalToMaterialUniformIndex[entry.material.ordinal()] = i;
 			if (entry.vanillaIndex != -1)
 				vanillaTextureIndexToMaterialUniformIndex[entry.vanillaIndex] = i;
-			writeMaterialData(plugin.hUniformMaterialsBuffer.Materials[i], entry);
+			writeMaterialData(plugin.uboMaterials.materials[i], entry);
 		}
 		for (var material : Material.values())
 			materialOrdinalToMaterialUniformIndex[material.ordinal()] =
 				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().ordinal()];
-		plugin.hUniformMaterialsBuffer.Upload();
+		plugin.uboMaterials.upload();
 	}
 
 	private int getTextureLayer(@Nullable Material material) {
@@ -441,47 +441,47 @@ public class TextureManager {
 			baseColorTextureIndex = materialOrdinalToTextureLayer[m.ordinal()];
 		}
 
-		uniformStruct.ColorMap.Set(baseColorTextureIndex);
-		uniformStruct.NormalMap.Set(getTextureLayer(m.normalMap));
-		uniformStruct.DisplacementMap.Set(getTextureLayer(m.displacementMap));
-		uniformStruct.RoughnessMap.Set(getTextureLayer(m.roughnessMap));
-		uniformStruct.AmbientOcclusionMap.Set(getTextureLayer(m.ambientOcclusionMap));
-		uniformStruct.FlowMap.Set(getTextureLayer(m.flowMap));
-		uniformStruct.Flags.Set(
+		uniformStruct.colorMap.set(baseColorTextureIndex);
+		uniformStruct.normalMap.set(getTextureLayer(m.normalMap));
+		uniformStruct.displacementMap.set(getTextureLayer(m.displacementMap));
+		uniformStruct.roughnessMap.set(getTextureLayer(m.roughnessMap));
+		uniformStruct.ambientOcclusionMap.set(getTextureLayer(m.ambientOcclusionMap));
+		uniformStruct.flowMap.set(getTextureLayer(m.flowMap));
+		uniformStruct.flags.set(
 			(m.overrideBaseColor ? 1 : 0) << 2 |
 			(m.unlit ? 1 : 0) << 1 |
 			(m.hasTransparency ? 1 : 0)
 		);
-		uniformStruct.Brightness.Set(m.brightness);
-		uniformStruct.DisplacementScale.Set(m.displacementScale);
-		uniformStruct.SpecularStrength.Set(m.specularStrength);
-		uniformStruct.SpecularGloss.Set(m.specularGloss);
-		uniformStruct.FlowMapStrength.Set(m.flowMapStrength);
-		uniformStruct.FlowMapDuration.Set(m.flowMapDuration);
-		uniformStruct.ScrollDuration.SetV(scrollSpeedX, scrollSpeedY);
-		uniformStruct.TextureScale.SetV(1 / m.textureScale[0], 1 / m.textureScale[1], 1 / m.textureScale[2]);
+		uniformStruct.brightness.set(m.brightness);
+		uniformStruct.displacementScale.set(m.displacementScale);
+		uniformStruct.specularStrength.set(m.specularStrength);
+		uniformStruct.specularGloss.set(m.specularGloss);
+		uniformStruct.flowMapStrength.set(m.flowMapStrength);
+		uniformStruct.flowMapDuration.set(m.flowMapDuration);
+		uniformStruct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
+		uniformStruct.textureScale.set(1 / m.textureScale[0], 1 / m.textureScale[1], 1 / m.textureScale[2]);
 	}
 
 	private void updateWaterTypeUniformBuffer() {
 		for (WaterType type : WaterType.values()) {
-			WaterTypesBuffer.WaterTypeStruct uniformStruct = plugin.hUniformWaterTypesBuffer.WaterTypes[type.ordinal()];
-			uniformStruct.IsFlat.Set(type.flat ? 1 : 0);
-			uniformStruct.SpecularStrength.Set(type.specularStrength);
-			uniformStruct.SpecularGloss.Set(type.specularGloss);
-			uniformStruct.NormalStrength.Set(type.normalStrength);
-			uniformStruct.BaseOpacity.Set(type.baseOpacity);
-			uniformStruct.HasFoam.Set(type.hasFoam ? 1 : 0);
-			uniformStruct.Duration.Set(type.duration);
-			uniformStruct.FresnelAmount.Set(type.fresnelAmount);
-			uniformStruct.SurfaceColor.Set(type.surfaceColor);
-			uniformStruct.FoamColor.Set(type.foamColor);
-			uniformStruct.DepthColor.Set(type.depthColor);
-			uniformStruct.CausticsStrength.Set(type.causticsStrength);
-			uniformStruct.NormalMap.Set(getTextureLayer(type.normalMap));
-			uniformStruct.FoamMap.Set(getTextureLayer(Material.WATER_FOAM));
-			uniformStruct.FlowMap.Set(getTextureLayer(Material.WATER_FLOW_MAP));
-			uniformStruct.UnderwaterFlowMap.Set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
+			WaterTypesBuffer.WaterTypeStruct uniformStruct = plugin.uboWaterTypes.waterTypes[type.ordinal()];
+			uniformStruct.isFlat.set(type.flat ? 1 : 0);
+			uniformStruct.specularStrength.set(type.specularStrength);
+			uniformStruct.specularGloss.set(type.specularGloss);
+			uniformStruct.normalStrength.set(type.normalStrength);
+			uniformStruct.baseOpacity.set(type.baseOpacity);
+			uniformStruct.hasFoam.set(type.hasFoam ? 1 : 0);
+			uniformStruct.duration.set(type.duration);
+			uniformStruct.fresnelAmount.set(type.fresnelAmount);
+			uniformStruct.surfaceColor.set(type.surfaceColor);
+			uniformStruct.foamColor.set(type.foamColor);
+			uniformStruct.depthColor.set(type.depthColor);
+			uniformStruct.causticsStrength.set(type.causticsStrength);
+			uniformStruct.normalMap.set(getTextureLayer(type.normalMap));
+			uniformStruct.foamMap.set(getTextureLayer(Material.WATER_FOAM));
+			uniformStruct.flowMap.set(getTextureLayer(Material.WATER_FLOW_MAP));
+			uniformStruct.underwaterFlowMap.set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
 		}
-		plugin.hUniformWaterTypesBuffer.Upload();
+		plugin.uboWaterTypes.upload();
 	}
 }

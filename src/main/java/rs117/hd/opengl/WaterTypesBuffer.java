@@ -4,28 +4,27 @@ import rs117.hd.data.WaterType;
 
 public class WaterTypesBuffer extends UniformBuffer{
 	public WaterTypesBuffer() {
-		super("WaterTypes UBO");
+		super("WaterTypes");
 	}
 
-	public WaterTypeStruct[] WaterTypes = AddStructs(new WaterTypeStruct[WaterType.values().length], WaterTypeStruct::new);
+	public WaterTypeStruct[] waterTypes = addStructs(new WaterTypeStruct[WaterType.values().length], WaterTypeStruct::new);
 
 	public static class WaterTypeStruct extends StructProperty {
-		public Property IsFlat = AddProperty(PropertyType.Int, "IsFlat");
-		public Property SpecularStrength = AddProperty(PropertyType.Float, "SpecularStrength");
-		public Property SpecularGloss = AddProperty(PropertyType.Float, "SpecularGloss");
-		public Property NormalStrength = AddProperty(PropertyType.Float, "NormalStrength");
-		public Property BaseOpacity = AddProperty(PropertyType.Float, "BaseOpacity");
-		public Property HasFoam = AddProperty(PropertyType.Int, "HasFoam");
-		public Property Duration = AddProperty(PropertyType.Float, "Duration");
-		public Property FresnelAmount = AddProperty(PropertyType.Float, "FresnelAmount");
-		public Property SurfaceColor = AddProperty(PropertyType.FVec3, "SurfaceColor");
-		public Property FoamColor = AddProperty(PropertyType.FVec3, "FoamColor");
-		public Property DepthColor = AddProperty(PropertyType.FVec3, "DepthColor");
-		public Property CausticsStrength = AddProperty(PropertyType.Float, "CausticsStrength");
-		public Property NormalMap = AddProperty(PropertyType.Int, "NormalMap");
-		public Property FoamMap = AddProperty(PropertyType.Int, "FoamMap");
-		public Property FlowMap = AddProperty(PropertyType.Int, "FlowMap");
-		public Property UnderwaterFlowMap = AddProperty(PropertyType.Int, "UnderwaterFlowMap");
-
+		public Property isFlat = addProperty(PropertyType.Int, "IsFlat");
+		public Property specularStrength = addProperty(PropertyType.Float, "SpecularStrength");
+		public Property specularGloss = addProperty(PropertyType.Float, "SpecularGloss");
+		public Property normalStrength = addProperty(PropertyType.Float, "NormalStrength");
+		public Property baseOpacity = addProperty(PropertyType.Float, "BaseOpacity");
+		public Property hasFoam = addProperty(PropertyType.Int, "HasFoam");
+		public Property duration = addProperty(PropertyType.Float, "Duration");
+		public Property fresnelAmount = addProperty(PropertyType.Float, "FresnelAmount");
+		public Property surfaceColor = addProperty(PropertyType.FVec3, "SurfaceColor");
+		public Property foamColor = addProperty(PropertyType.FVec3, "FoamColor");
+		public Property depthColor = addProperty(PropertyType.FVec3, "DepthColor");
+		public Property causticsStrength = addProperty(PropertyType.Float, "CausticsStrength");
+		public Property normalMap = addProperty(PropertyType.Int, "NormalMap");
+		public Property foamMap = addProperty(PropertyType.Int, "FoamMap");
+		public Property flowMap = addProperty(PropertyType.Int, "FlowMap");
+		public Property underwaterFlowMap = addProperty(PropertyType.Int, "UnderwaterFlowMap");
 	}
 }

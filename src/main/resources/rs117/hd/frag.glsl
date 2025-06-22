@@ -25,10 +25,10 @@
  */
 #version 330
 
+#include uniforms/global.glsl
 #include uniforms/materials.glsl
 #include uniforms/water_types.glsl
 #include uniforms/lights.glsl
-#include uniforms/global.glsl
 
 #include MATERIAL_CONSTANTS
 

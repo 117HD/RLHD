@@ -4,26 +4,26 @@ import rs117.hd.data.materials.Material;
 
 public class MaterialsBuffer extends UniformBuffer{
 	public MaterialsBuffer() {
-		super("Materials UBO");
+		super("Materials");
 	}
 
-	public MaterialStruct[] Materials = AddStructs(new MaterialStruct[Material.values().length], MaterialStruct::new);
+	public MaterialStruct[] materials = addStructs(new MaterialStruct[Material.values().length], MaterialStruct::new);
 
 	public static class MaterialStruct extends StructProperty {
-		public Property ColorMap = AddProperty(PropertyType.Int, "ColorMap");
-		public Property NormalMap = AddProperty(PropertyType.Int, "NormalMap");
-		public Property DisplacementMap = AddProperty(PropertyType.Int, "DisplacementMap");
-		public Property RoughnessMap = AddProperty(PropertyType.Int, "RoughnessMap");
-		public Property AmbientOcclusionMap = AddProperty(PropertyType.Int, "AmbientOcclusionMap");
-		public Property FlowMap = AddProperty(PropertyType.Int, "FlowMap");
-		public Property Flags = AddProperty(PropertyType.Int, "Flags");
-		public Property Brightness = AddProperty(PropertyType.Float, "brightness");
-		public Property DisplacementScale = AddProperty(PropertyType.Float, "DisplacementScale");
-		public Property SpecularStrength = AddProperty(PropertyType.Float, "SpecularStrength");
-		public Property SpecularGloss = AddProperty(PropertyType.Float, "SpecularGloss");
-		public Property FlowMapStrength = AddProperty(PropertyType.Float, "FlowMapStrength");
-		public Property FlowMapDuration = AddProperty(PropertyType.FVec2, "FlowMapDuration");
-		public Property ScrollDuration = AddProperty(PropertyType.FVec2, "ScrollDuration");
-		public Property TextureScale = AddProperty(PropertyType.FVec3, "TextureScale");
+		public Property colorMap = addProperty(PropertyType.Int, "ColorMap");
+		public Property normalMap = addProperty(PropertyType.Int, "NormalMap");
+		public Property displacementMap = addProperty(PropertyType.Int, "DisplacementMap");
+		public Property roughnessMap = addProperty(PropertyType.Int, "RoughnessMap");
+		public Property ambientOcclusionMap = addProperty(PropertyType.Int, "AmbientOcclusionMap");
+		public Property flowMap = addProperty(PropertyType.Int, "FlowMap");
+		public Property flags = addProperty(PropertyType.Int, "Flags");
+		public Property brightness = addProperty(PropertyType.Float, "brightness");
+		public Property displacementScale = addProperty(PropertyType.Float, "DisplacementScale");
+		public Property specularStrength = addProperty(PropertyType.Float, "SpecularStrength");
+		public Property specularGloss = addProperty(PropertyType.Float, "SpecularGloss");
+		public Property flowMapStrength = addProperty(PropertyType.Float, "FlowMapStrength");
+		public Property flowMapDuration = addProperty(PropertyType.FVec2, "FlowMapDuration");
+		public Property scrollDuration = addProperty(PropertyType.FVec2, "ScrollDuration");
+		public Property textureScale = addProperty(PropertyType.FVec3, "TextureScale");
 	}
 }

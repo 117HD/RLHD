@@ -27,11 +27,11 @@
 
 #version 330
 
-layout(triangles) in;
-layout(triangle_strip, max_vertices = 3) out;
-
 #include uniforms/global.glsl
 #include uniforms/materials.glsl
+
+layout(triangles) in;
+layout(triangle_strip, max_vertices = 3) out;
 
 #include utils/constants.glsl
 #include utils/misc.glsl

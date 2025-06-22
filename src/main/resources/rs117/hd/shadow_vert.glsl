@@ -25,13 +25,14 @@
  */
 #version 330
 
+#include uniforms/global.glsl
+
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in int vHsl;
 layout (location = 2) in vec4 vUv;
 layout (location = 3) in vec4 vNormal;
 
 #include utils/constants.glsl
-#include uniforms/global.glsl
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     // Pass to geometry shader

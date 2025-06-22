@@ -92,10 +92,10 @@ import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.CameraBuffer;
-import rs117.hd.opengl.GlobalBuffer;
+import rs117.hd.opengl.GlobalUniforms;
 import rs117.hd.opengl.LightsBuffer;
 import rs117.hd.opengl.MaterialsBuffer;
-import rs117.hd.opengl.UIBuffer;
+import rs117.hd.opengl.UIUniforms;
 import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
@@ -281,6 +281,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private Gson gson;
 
 	public static GLCapabilities glCaps;
+
 	private Canvas canvas;
 	private AWTContext awtContext;
 	private Callback debugCallback;
@@ -364,13 +365,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private GpuIntBuffer[] modelSortingBuffers;
 	private GLBuffer[] hModelSortingBuffers;
 
-	public final MaterialsBuffer hUniformMaterialsBuffer = new MaterialsBuffer();
-	public final WaterTypesBuffer hUniformWaterTypesBuffer = new WaterTypesBuffer();
+	public final MaterialsBuffer uboMaterials = new MaterialsBuffer();
+	public final WaterTypesBuffer uboWaterTypes = new WaterTypesBuffer();
 
-	private final CameraBuffer hUniformCameraBuffer = new CameraBuffer();
-	private final GlobalBuffer hUniformGlobalBuffer = new GlobalBuffer();
-	private final UIBuffer hUniformUIBuffer = new UIBuffer();
-	private final LightsBuffer hUniformLightsBuffer = new LightsBuffer();
+	private final CameraBuffer uboCamera = new CameraBuffer();
+	private final GlobalUniforms uboGlobal = new GlobalUniforms();
+	private final UIUniforms uboUI = new UIUniforms();
+	private final LightsBuffer uboLights = new LightsBuffer();
 
 	@Getter
 	@Nullable
@@ -939,6 +940,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glUseProgram(glShadowProgram);
 				glUniform1i(uniShadowTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, UNIFORM_BLOCK_MATERIALS);
+				// fall-through
 			case FAST:
 				uniShadowBlockGlobals = glGetUniformBlockIndex(glShadowProgram, "GlobalUniforms");
 		}
@@ -1129,12 +1131,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		initGlBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
-		hUniformMaterialsBuffer.Initialise(UNIFORM_BLOCK_MATERIALS);
-		hUniformCameraBuffer.Initialise(UNIFORM_BLOCK_CAMERA, computeMode == ComputeMode.OPENCL ? openCLManager : null);
-		hUniformGlobalBuffer.Initialise(UNIFORM_BLOCK_GLOBAL);
-		hUniformWaterTypesBuffer.Initialise(UNIFORM_BLOCK_WATER_TYPES);
-		hUniformUIBuffer.Initialise(UNIFORM_BLOCK_UI);
-		hUniformLightsBuffer.Initialise(UNIFORM_BLOCK_LIGHTS);
+		uboMaterials.initialize(UNIFORM_BLOCK_MATERIALS);
+		uboCamera.initialize(UNIFORM_BLOCK_CAMERA, computeMode == ComputeMode.OPENCL ? openCLManager : null);
+		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
+		uboWaterTypes.initialize(UNIFORM_BLOCK_WATER_TYPES);
+		uboUI.initialize(UNIFORM_BLOCK_UI);
+		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
 	}
 
 	private void initGlBuffer(GLBuffer glBuffer, int target, int glUsage, int clUsage) {
@@ -1156,12 +1158,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		destroyGlBuffer(hModelPassthroughBuffer);
 
-		hUniformMaterialsBuffer.Destroy();
-		hUniformWaterTypesBuffer.Destroy();
-		hUniformCameraBuffer.Destroy();
-		hUniformGlobalBuffer.Destroy();
-		hUniformUIBuffer.Destroy();
-		hUniformLightsBuffer.Destroy();
+		uboMaterials.destroy();
+		uboWaterTypes.destroy();
+		uboCamera.destroy();
+		uboGlobal.destroy();
+		uboUI.destroy();
+		uboLights.destroy();
 	}
 
 	private void destroyGlBuffer(GLBuffer glBuffer) {
@@ -1517,16 +1519,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					cameraPosition[2] += cameraShift[1];
 				}
 
-				hUniformCameraBuffer.CameraYaw.Set(cameraOrientation[0]);
-				hUniformCameraBuffer.CameraPitch.Set(cameraOrientation[1]);
-				hUniformCameraBuffer.CenterX.Set(client.getCenterX());
-				hUniformCameraBuffer.CenterY.Set(client.getCenterY());
-				hUniformCameraBuffer.Zoom.Set(client.getScale());
-				hUniformCameraBuffer.CameraX.Set(cameraPosition[0]);
-				hUniformCameraBuffer.CameraY.Set(cameraPosition[1]);
-				hUniformCameraBuffer.CameraZ.Set(cameraPosition[2]);
+				uboCamera.yaw.set(cameraOrientation[0]);
+				uboCamera.pitch.set(cameraOrientation[1]);
+				uboCamera.centerX.set(client.getCenterX());
+				uboCamera.centerY.set(client.getCenterY());
+				uboCamera.zoom.set(client.getScale());
+				uboCamera.cameraX.set(cameraPosition[0]);
+				uboCamera.cameraY.set(cameraPosition[1]);
+				uboCamera.cameraZ.set(cameraPosition[2]);
 
-				hUniformCameraBuffer.Upload();
+				uboCamera.upload();
 			}
 		}
 
@@ -1535,20 +1537,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
-				LightsBuffer.LightStruct uniformStruct = hUniformLightsBuffer.Lights[i];
+				LightsBuffer.LightStruct uniformStruct = uboLights.lights[i];
 
-				uniformStruct.Position.SetV(
+				uniformStruct.position.set(
 					(float)(light.pos[0] + cameraShift[0]),
 					(float)light.pos[1],
 					(float)(light.pos[2] + cameraShift[1]),
 					(float)(light.radius * light.radius));
 
-				uniformStruct.Color.SetV(
+				uniformStruct.color.set(
 					light.color[0] * light.strength,
 					light.color[1] * light.strength,
 					light.color[2] * light.strength);
 			}
-			hUniformLightsBuffer.Upload();
+			uboLights.upload();
 		}
 	}
 
@@ -1644,7 +1646,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// glFinish();
 
 			openCLManager.compute(
-				hUniformCameraBuffer.GetGLBuffer(),
+				uboCamera.getGlBuffer(),
 				numPassthroughModels, numModelsToSort,
 				hModelPassthroughBuffer, hModelSortingBuffers,
 				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
@@ -1957,13 +1959,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					break;
 			}
 			fogDepth *= Math.min(getDrawDistance(), 90) / 10.f;
-			hUniformGlobalBuffer.UseFog.Set(fogDepth > 0 ? 1 : 0);
-			hUniformGlobalBuffer.FogDepth.Set(fogDepth);
-			hUniformGlobalBuffer.FogColor.Set(fogColor);
+			uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
+			uboGlobal.fogDepth.set(fogDepth);
+			uboGlobal.fogColor.set(fogColor);
 
-			hUniformGlobalBuffer.DrawDistance.Set((float)getDrawDistance());
-			hUniformGlobalBuffer.ExpandedMapLoadingChunks.Set(sceneContext.expandedMapLoadingChunks);
-			hUniformGlobalBuffer.ColorBlindnessIntensity.Set(config.colorBlindnessIntensity() / 100.f);
+			uboGlobal.drawDistance.set((float) getDrawDistance());
+			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
+			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
 			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
 			float lightBrightnessMultiplier = 0.8f;
@@ -1984,12 +1986,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				waterColorHsv[1],
 				waterColorHsv[2] * darkBrightnessMultiplier
 			}));
-			hUniformGlobalBuffer.WaterColorLight.Set(waterColorLight);
-			hUniformGlobalBuffer.WaterColorMid.Set(waterColorMid);
-			hUniformGlobalBuffer.WaterColorDark.Set(waterColorDark);
+			uboGlobal.waterColorLight.set(waterColorLight);
+			uboGlobal.waterColorMid.set(waterColorMid);
+			uboGlobal.waterColorDark.set(waterColorDark);
 
 			float gammaCorrection = 100f / config.brightness();
-			hUniformGlobalBuffer.GammaCorrection.Set(gammaCorrection);
+			uboGlobal.gammaCorrection.set(gammaCorrection);
 			float ambientStrength = environmentManager.currentAmbientStrength;
 			float directionalStrength = environmentManager.currentDirectionalStrength;
 			if (config.useLegacyBrightness()) {
@@ -1997,50 +1999,50 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				ambientStrength *= factor;
 				directionalStrength *= factor;
 			}
-			hUniformGlobalBuffer.AmbientStrength.Set(ambientStrength);
-			hUniformGlobalBuffer.AmbientColor.Set(environmentManager.currentAmbientColor);
-			hUniformGlobalBuffer.LightStrength.Set(directionalStrength);
-			hUniformGlobalBuffer.LightColor.Set(environmentManager.currentDirectionalColor);
+			uboGlobal.ambientStrength.set(ambientStrength);
+			uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
+			uboGlobal.lightStrength.set(directionalStrength);
+			uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
 
-			hUniformGlobalBuffer.UnderglowStrength.Set(environmentManager.currentUnderglowStrength);
-			hUniformGlobalBuffer.UnderglowColor.Set(environmentManager.currentUnderglowColor);
+			uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
+			uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
 
-			hUniformGlobalBuffer.GroundFogStart.Set(environmentManager.currentGroundFogStart);
-			hUniformGlobalBuffer.GroundFogEnd.Set(environmentManager.currentGroundFogEnd);
-			hUniformGlobalBuffer.GroundFogOpacity.Set(config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
+			uboGlobal.groundFogStart.set(environmentManager.currentGroundFogStart);
+			uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
+			uboGlobal.groundFogOpacity.set(config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
 			// Lights & lightning
-			hUniformGlobalBuffer.PointLightsCount.Set(sceneContext.numVisibleLights);
-			hUniformGlobalBuffer.LightningBrightness.Set(environmentManager.getLightningBrightness());
+			uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
+			uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
-			hUniformGlobalBuffer.Saturation.Set(config.saturation() / 100f);
-			hUniformGlobalBuffer.Contrast.Set(config.contrast() / 100f);
-			hUniformGlobalBuffer.UnderwaterEnvironment.Set(environmentManager.isUnderwater() ? 1 : 0);
-			hUniformGlobalBuffer.UnderwaterCaustics.Set(config.underwaterCaustics() ? 1 : 0);
-			hUniformGlobalBuffer.UnderwaterCausticsColor.Set(environmentManager.currentUnderwaterCausticsColor);
-			hUniformGlobalBuffer.UnderwaterCausticsStrength.Set(environmentManager.currentUnderwaterCausticsStrength);
-			hUniformGlobalBuffer.ElapsedTime.Set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			hUniformGlobalBuffer.CameraPos.Set(cameraPosition);
+			uboGlobal.saturation.set(config.saturation() / 100f);
+			uboGlobal.contrast.set(config.contrast() / 100f);
+			uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
+			uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
+			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
+			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+			uboGlobal.cameraPos.set(cameraPosition);
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
-			hUniformGlobalBuffer.LightDir.SetV(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
+			uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
 			// use a curve to calculate max bias value based on the density of the shadow map
 			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
 			float maxBias = 26f * (float) Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
-			hUniformGlobalBuffer.ShadowMaxBias.Set(maxBias / 10000f);
+			uboGlobal.shadowMaxBias.set(maxBias / 10000f);
 
-			hUniformGlobalBuffer.ShadowsEnabled.Set(configShadowsEnabled ? 1 : 0);
+			uboGlobal.shadowsEnabled.set(configShadowsEnabled ? 1 : 0);
 
 			if (configColorFilter != ColorFilter.NONE) {
-				hUniformGlobalBuffer.ColorFilter.Set(configColorFilter.ordinal());
-				hUniformGlobalBuffer.ColorFilterPrevious.Set(configColorFilterPrevious.ordinal());
+				uboGlobal.colorFilter.set(configColorFilter.ordinal());
+				uboGlobal.colorFilterPrevious.set(configColorFilterPrevious.ordinal());
 				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
-				hUniformGlobalBuffer.ColorFilterFade.Set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
+				uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
 
 			// Calculate projection matrix
@@ -2058,7 +2060,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				-cameraPosition[1],
 				-cameraPosition[2]
 			));
-			hUniformGlobalBuffer.ProjectionMatrix.Set(projectionMatrix);
+			uboGlobal.projectionMatrix.set(projectionMatrix);
 
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
@@ -2095,8 +2097,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
-				hUniformGlobalBuffer.LightProjectionMatrix.Set(lightProjectionMatrix);
-				hUniformGlobalBuffer.Upload();
+				uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+				uboGlobal.upload();
 
 				glUniformBlockBinding(glShadowProgram, uniShadowBlockGlobals, UNIFORM_BLOCK_GLOBAL);
 
@@ -2113,8 +2115,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			} else {
-				hUniformGlobalBuffer.LightProjectionMatrix.Set(Mat4.identity());
-				hUniformGlobalBuffer.Upload();
+				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
+				uboGlobal.upload();
 			}
 
 			glUseProgram(glSceneProgram);
@@ -2265,26 +2267,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Use the texture bound in the first pass
 		glUseProgram(glUiProgram);
-		hUniformUIBuffer.SourceDimensions.SetV(canvasWidth, canvasHeight);
-		hUniformUIBuffer.ColorBlindnessIntensity.Set(config.colorBlindnessIntensity() / 100f);
+		uboUI.sourceDimensions.set(canvasWidth, canvasHeight);
+		uboUI.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100f);
 
-		hUniformUIBuffer.AlphaOverlay.Set(ColorUtils.srgba(overlayColor));
-		hUniformUIBuffer.GammaCorrection.Set(100f / config.brightness());
+		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
+		uboUI.gammaCorrection.set(100f / config.brightness());
 		final int gammaCalibrationTimeout = 3000;
 		float gammaCalibrationTimer = System.currentTimeMillis() - brightnessChangedAt;
-		hUniformUIBuffer.ShowGammaCalibration.Set(gammaCalibrationTimer < gammaCalibrationTimeout ? 1 : 0);
-		hUniformUIBuffer.GammaCalibrationTimer.Set(1 - gammaCalibrationTimer / gammaCalibrationTimeout);
+		uboUI.showGammaCalibration.set(gammaCalibrationTimer < gammaCalibrationTimeout ? 1 : 0);
+		uboUI.gammaCalibrationTimer.set(1 - gammaCalibrationTimer / gammaCalibrationTimeout);
 
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
 			glDpiAwareViewport(0, 0, dim.width, dim.height);
-			hUniformUIBuffer.TargetDimensions.SetV(dim.width, dim.height);
+			uboUI.targetDimensions.set(dim.width, dim.height);
 		} else {
 			glDpiAwareViewport(0, 0, canvasWidth, canvasHeight);
-			hUniformUIBuffer.TargetDimensions.SetV(canvasWidth, canvasHeight);
+			uboUI.targetDimensions.set(canvasWidth, canvasHeight);
 		}
 
-		hUniformUIBuffer.Upload();
+		uboUI.upload();
 
 		glUniformBlockBinding(glSceneProgram, uniUiBlockUi, UNIFORM_BLOCK_UI);
 
