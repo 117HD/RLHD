@@ -212,7 +212,7 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance) {
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, vec3 windDisplacement) {
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -264,30 +264,26 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             uvB = uv[uvOffset + localId * 3 + 1];
             uvC = uv[uvOffset + localId * 3 + 2];
 
+            #if WIND_ENABLED
             int WindSwayingValue = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
             if (WindSwayingValue > 0) {
-                vec3 windDirection = mix(vec3(0.0, 0.0, -0.5), vec3(0.5, 0.0, 0.5), sin(elapsedTime));
-                float windSpeed = 20.0;
-                float windStrength = 20.0;
-
-                bool invert = WindSwayingValue == 2;
                 float height = 200.0 * (float((flags >> 27) & 0x1F) / 31);
-                float Noise = noise(vec2(pos.x + (elapsedTime * windSpeed), pos.z + (elapsedTime * windSpeed)) / vec2(10.0));
-                vec3 WindDisplacement = (windStrength * Noise) * windDirection;
-
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
 
-                displacementA = WindDisplacement * (invert ? 0.9 - strengthA : strengthA);
-                displacementB = WindDisplacement * (invert ? 0.9 - strengthB : strengthB);
-                displacementC = WindDisplacement * (invert ? 0.9 - strengthC : strengthC);
+                bool invert = WindSwayingValue == 2;
+                displacementA = windDisplacement * (invert ? 0.9 - strengthA : strengthA);
+                displacementB = windDisplacement * (invert ? 0.9 - strengthB : strengthB);
+                displacementC = windDisplacement * (invert ? 0.9 - strengthC : strengthC);
 
                 thisrvA.pos += displacementA;
                 thisrvB.pos += displacementB;
                 thisrvC.pos += displacementC;
             }
+            #endif
         }
+
         // rotate for model orientation
         thisrvA.pos = rotate(thisrvA.pos, orientation);
         thisrvB.pos = rotate(thisrvB.pos, orientation);

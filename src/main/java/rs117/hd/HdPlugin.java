@@ -1304,7 +1304,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void initCameraUniformBuffer()
 	{
-		int size = 9 * SCALAR_BYTES;
+		int size = 14 * SCALAR_BYTES;
 		uniformBufferCamera = BufferUtils.createByteBuffer(size);
 		initializeBuffer(hUniformBufferCamera, GL_UNIFORM_BUFFER, size, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -1646,6 +1646,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.putFloat(cameraPosition[0])
 					.putFloat(cameraPosition[1])
 					.putFloat(cameraPosition[2])
+					.putFloat(1.0f).putFloat(0.0f).putFloat(1.0f) // windDirection
+					.putFloat(10.0f) // windSpeed
+					.putFloat(30.0f) // windStrength
 					.putFloat((float)elapsedTime)
 					.flip();
 				glBindBuffer(GL_UNIFORM_BUFFER, hUniformBufferCamera.glBufferId);

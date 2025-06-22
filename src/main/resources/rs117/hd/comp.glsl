@@ -45,6 +45,11 @@ layout(std140) uniform CameraUniforms {
     float cameraX;
     float cameraY;
     float cameraZ;
+
+    // Wind Properties
+    vec3 windDirection;
+    float windSpeed;
+    float windStrength;
     float elapsedTime;
 };
 
@@ -52,8 +57,11 @@ layout(std140) uniform CameraUniforms {
 
 layout(local_size_x = THREAD_COUNT) in;
 
+#define WIND_ENABLED 1
+
 #include common.glsl
 #include priority_render.glsl
+
 
 void main() {
     uint groupId = gl_WorkGroupID.x;
@@ -70,6 +78,15 @@ void main() {
             totalMappedNum[i] = 0;
         }
     }
+
+    vec3 windDisplacement = vec3(0.0);
+    #if WIND_ENABLED
+    {
+        float windNoise = noise4Octaves(vec2(minfo.x + (elapsedTime * windSpeed), minfo.z + (elapsedTime * windSpeed)) * 0.05);
+        vec3 windDirectionWithNoise = normalize(windDirection * rotateY(windNoise * (PI / 2.0)));
+        windDisplacement = (windStrength * windNoise) * windDirectionWithNoise;
+    }
+    #endif
 
     // Ensure all invocations have their shared variables initialized
     barrier();
@@ -95,5 +112,5 @@ void main() {
     barrier();
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
-        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i]);
+        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], windDisplacement);
 }

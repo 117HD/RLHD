@@ -100,8 +100,50 @@ bool face_visible(vec3 vA, vec3 vB, vec3 vC, vec3 position) {
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }
 
+// Rotation matrix around the X axis.
+mat3 rotateX(float theta) {
+    float c = cos(theta);
+    float s = sin(theta);
+    return mat3(
+        vec3(1, 0, 0),
+        vec3(0, c, -s),
+        vec3(0, s, c)
+    );
+}
+
+// Rotation matrix around the Y axis.
+mat3 rotateY(float theta) {
+    float c = cos(theta);
+    float s = sin(theta);
+    return mat3(
+        vec3(c, 0, s),
+        vec3(0, 1, 0),
+        vec3(-s, 0, c)
+    );
+}
+
+// Rotation matrix around the Z axis.
+mat3 rotateZ(float theta) {
+    float c = cos(theta);
+    float s = sin(theta);
+    return mat3(
+        vec3(c, -s, 0),
+        vec3(s, c, 0),
+        vec3(0, 0, 1)
+    );
+}
+
+// Identity matrix.
+mat3 identity() {
+    return mat3(
+        vec3(1, 0, 0),
+        vec3(0, 1, 0),
+        vec3(0, 0, 1)
+    );
+}
+
 // 2D Random
-float random (in vec2 st) {
+float hash (in vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))
                  * 43758.5453123);
@@ -114,10 +156,10 @@ float noise (in vec2 st) {
     vec2 f = fract(st);
 
     // Four corners in 2D of a tile
-    float a = random(i);
-    float b = random(i + vec2(1.0, 0.0));
-    float c = random(i + vec2(0.0, 1.0));
-    float d = random(i + vec2(1.0, 1.0));
+    float a = hash(i);
+    float b = hash(i + vec2(1.0, 0.0));
+    float c = hash(i + vec2(0.0, 1.0));
+    float d = hash(i + vec2(1.0, 1.0));
 
     // Smooth Interpolation
 
@@ -129,4 +171,13 @@ float noise (in vec2 st) {
     return mix(a, b, u.x) +
             (c - a)* u.y * (1.0 - u.x) +
             (d - b) * u.x * u.y;
+}
+
+float noise4Octaves(in vec2 st) {
+    mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
+    float f  = 0.5000*noise( st ); st = m*st;
+    f += 0.2500*noise( st ); st = m*st;
+    f += 0.1250*noise( st ); st = m*st;
+    f += 0.0625*noise( st ); st = m*st;
+    return f;
 }
