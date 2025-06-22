@@ -11582,7 +11582,6 @@
       "DEATH_CAMPWALL2",
       "DEATH_CAMPWALL3",
       "DEATH_CAMPWALL1_SUPPORT",
-      "DEATH_CAMPWALL1_CORNER",
       "MY2ARM_CLIFF_SHORTCUT_5",
       "VIKINGEXILE_ROCKS_OP",
       "VIKINGEXILE_ROCKS_NOOP",
@@ -11597,6 +11596,25 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
+  },
+  {
+    "description": "Objects - Rockslide - Gray Rock - Rock - Medium",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 168,
+    "objectIds": [
+      "DEATH_CAMPWALL1_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvScale": 0.33
+      }
+    ]
   },
   {
     "description": "Objects - Rockslide - Darker Gray Rock - Rock - Medium",
@@ -20282,18 +20300,18 @@
     "uvScale": 0.7
   },
   {
-    "description": "Trollheim Tents",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Trollheim - Corsair Cove - Tents",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 128,
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "DEATH_CAMP_ROOF",
       "DEATH_CAMP_ROOF_INNER",
       "DEATH_CAMPROOF_SUPPORT",
       "DEATH_CAMPROOF_RIPPED",
       "DEATH_CAMPROOF_RIPPED_LEFT"
-    ],
-    "uvOrientation": 128,
-    "uvType": "BOX",
-    "uvScale": 0.6
+    ]
   },
   {
     "description": "Trollheim Dark Wall in Doorway",
