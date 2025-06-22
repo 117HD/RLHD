@@ -1686,11 +1686,12 @@
     ],
     "retainVanillaUvs": false,
     "uvType": "BOX",
-    "uvScale": 0.65,
+    "uvScale": 0.5,
+    "uvOrientation": 256,
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "PLANT_GRUNGE_1",
+        "baseMaterial": "GRUNGE_3",
         "uvScale": 0.5,
         "uvType": "MODEL_XZ",
         "uvOrientation": 256
@@ -3868,6 +3869,24 @@
       "QIP_DIGSITE_TENT_DOOR"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Fossil Island - Camp Tent Ropes",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 0",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "GUIDEROPES1"
+    ]
   },
   {
     "description": "Wintertodt Wooden Cart",
@@ -9871,7 +9890,8 @@
       "FOSSIL_CRATE3",
       "FOSSIL_CRATE_STACKED",
       "TOURTRAP_QIP_CRATE_SINGLE",
-      "TOURTRAP_QIP_CRATE_STACKED"
+      "TOURTRAP_QIP_CRATE_STACKED",
+      "FOSSIL_CRATE3_INACTIVE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9903,7 +9923,8 @@
       "SHAYZIEN_CRATE_03",
       "PISCARILIUS_CRATE_04",
       "BIM_SUPPLY_CRATE",
-      "NECROPOLIS_CRATE01_DEFAULT01"
+      "NECROPOLIS_CRATE01_DEFAULT01",
+      "FOSSIL_TOOL_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9919,7 +9940,8 @@
       "FGUILD_BOOK_TREES_LOC",
       "FAI_VARROCK_LARGE_CRATES_INACTIVE",
       "SHAYZIEN_CRATE_02_INACTIVE_DARK",
-      "NECROPOLIS_CRATE01_STACK01"
+      "NECROPOLIS_CRATE01_STACK01",
+      "FOSSIL_CRATE2"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -9944,7 +9966,8 @@
       "SARIM_BOXES",
       "FAI_WIZTOWER_BOXES",
       "QIP_COOK_CRATE_STACKED",
-      "WILD_SMALL_CRATES"
+      "WILD_SMALL_CRATES",
+      "FOSSIL_CRATE_STACKED_INACTIVE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10939,7 +10962,7 @@
     "uvOrientationY": 1212
   },
   {
-    "description": "Morytania - Objects - Wooden - Stacked Tri Crate - Angled ",
+    "description": "Morytania - Objects - Wooden - Stacked Tri Crate - Angled",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BURGH_CRATES_SMALL2"
@@ -16573,6 +16596,7 @@
       "PLANT2",
       "PLANT3",
       "PLANT4",
+      "AHOY_PLANT_1_INACTIVE",
       "AHOY_PLANT_1",
       "AHOY_PLANT_2",
       "AHOY_PLANT_3",
@@ -17538,7 +17562,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Rough Wooden Plank Stairs ",
+    "description": "Rough Wooden Plank Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "WILDY_HUB_STAIRS",
@@ -18940,7 +18964,7 @@
     "retainVanillaUvs": false
   },
   {
-    "description": "Objects - Concrete - Nature Altar ",
+    "description": "Objects - Concrete - Nature Altar",
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
@@ -19986,7 +20010,7 @@
     "uvScale": 0.44
   },
   {
-    "description": "Stronghold Of Security - Famine - Bone Structures ",
+    "description": "Stronghold Of Security - Famine - Bone Structures",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "SOS_FAM_WALL_THIN",
@@ -19997,7 +20021,7 @@
     "uvOrientation": 256
   },
   {
-    "description": "Stronghold Of Security - Famine - Doors ",
+    "description": "Stronghold Of Security - Famine - Doors",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       "SOS_FAM_DOOR_FACE",
@@ -20009,7 +20033,7 @@
     "shadowOpacityThreshold": 0.1
   },
   {
-    "description": "Stronghold Of Security - Famine - Ladder ",
+    "description": "Stronghold Of Security - Famine - Ladder",
     "baseMaterial": "DIRT_2",
     "objectIds": [
       "SOS_FAM_LADD_UP",
@@ -20035,7 +20059,7 @@
     "uvScale": 0.7
   },
   {
-    "description": "Stronghold Of Security - Famine - Escape Rope ",
+    "description": "Stronghold Of Security - Famine - Escape Rope",
     "baseMaterial": "ROPE",
     "objectIds": [
       "SOS_FAM_ROPE_UP",
@@ -20851,7 +20875,7 @@
     "flatNormals": true
   },
   {
-    "description": "Guardians of the Rift - Ground Decoration Grunge - Shelf Coral ",
+    "description": "Guardians of the Rift - Ground Decoration Grunge - Shelf Coral",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "GOTR_PLANT_SHELF01_DEFAULT01",
@@ -21102,7 +21126,7 @@
     "uvScale": 0.66
   },
   {
-    "description": "Freminnik - Walls - Wooden - Plank ",
+    "description": "Freminnik - Walls - Wooden - Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "VIKING_LONGHALL_WALL",
@@ -22085,12 +22109,95 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Fossil Island - Stone - Manor Walls",
+    "description": "Fossil Island - Stone - Walls - House on the Hill Walls",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "FOSSIL_DKL_WALL_1", "FOSSIL_DKL_WALLROOF1", "FOSSIL_DKL_WALLROOF2", "FOSSIL_DKL_WINDOW_1" ],
     "uvType": "BOX",
     "uvScale": 0.5,
-    "uvOrientation": 768
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_WALL_1",
+      "FOSSIL_DKL_WALL_2",
+      "FOSSIL_DKL_WALLROOF1",
+      "FOSSIL_DKL_WALLROOF2",
+      "FOSSIL_DKL_WINDOW_1",
+      "FOSSIL_DKL_PILLAR_1",
+      "FOSSIL_DKL_ARCH"
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Stone - Roof Dome",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_ROOF_DOME"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Walls - House on the Hill Roof",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_ROOF_1"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stairs - House on the Hill Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FOSSIL_DKL_STAIRCASE",
+      "FOSSIL_DKL_STAIRCASE_EXT"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Walls - House on the Hill Short walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_SMALLWALL_1"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - House on the Hill Floor Tiles",
+    "baseMaterial": "TILES_2X2_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.58,
+    "uvOrientation": 768,
+    "objectIds": [
+      "FOSSIL_DKL_BRIDGE_CORNER",
+      "FOSSIL_DKL_BRIDGE_CORNER_P",
+      "FOSSIL_DKL_BRIDGE_EDGE",
+      "FOSSIL_DKL_BRIDGE_CENTER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Maroon tiles",
+        "baseMaterial": "MARBLE_1",
+        "colors": "s > 0",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stairs - House on the Hill parapet",
+    "baseMaterial": "BRICK_PATH",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "FOSSIL_DKL_BRIDGE_PARAPET",
+      "FOSSIL_DKL_BRIDGE_PARAPET_P1",
+      "FOSSIL_DKL_BRIDGE_PARAPET_P2",
+      "FOSSIL_DKL_BRIDGE_PARAPET_P3"
+    ]
   },
   {
     "description": "Pest Control boat flags",
@@ -23260,7 +23367,7 @@
     "uvOrientation": 128
   },
   {
-    "description": "Objects - Cloth - Bentamirs Bed ",
+    "description": "Objects - Cloth - Bentamirs Bed",
     "baseMaterial": "CARPET",
     "objectIds": [ "DWARF_KELDAGRIM_VERY_POOR_BED" ],
     "uvType": "BOX",
@@ -28819,7 +28926,7 @@
       },
       {
         "description": "Curtains - Taupe",
-        "colors": "h == 6 && s < 3 ",
+        "colors": "h == 6 && s < 3",
         "baseMaterial": "GRAY_75"
       },
       {
@@ -31972,6 +32079,24 @@
     ]
   },
   {
+    "description": "Fossil Island - Bunk Bed with Brown Blanket",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FOSSIL_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Tanning Line",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -34172,7 +34297,7 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": "h > 7 ",
+        "colors": "h > 7",
         "baseMaterial": "NONE"
       }
     ]
@@ -34185,7 +34310,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "ROCK_3"
       }
     ]
@@ -35471,6 +35596,412 @@
         "uvType": "BOX",
         "uvScale": 0.4
       }
+    ]
+  },
+  {
+    "description": "Fossil Island - Magic Mushroom",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FOSSIL_MAGIC_MUSHTREE_TRUNK1",
+      "FOSSIL_MAGIC_MUSHTREE_CANOPY1",
+      "FOSSIL_MUSHTREE_CANOPY2",
+      "FOSSIL_MAGIC_MUSHTREE_TRUNK3",
+      "FOSSIL_MAGIC_MUSHTREE_CANOPY3"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Fossil Island - Camp - Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FOSSIL_WELL_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "colors": "h == 6 && s > 3",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Fossil Storage Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FOSSIL_STORAGE_CRATE1"
+    ],
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "colorOverrides": [
+      {
+        "description": "Fossils",
+        "baseMaterial": "BONE",
+        "colors": "h == 12",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Crumbling Stone Brick Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "objectIds": [
+      "QIP_OBS_VILLAGE_WALL_CRUMBLE3",
+      "QIP_OBS_VILLAGE_WALLM_CRUMBLE3",
+      "QIP_OBS_VILLAGE_WALL_CRUMBLE4"
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Plank table - Fossil Cleaning Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FOSSIL_CLEANING_BENCH_BUILT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Dirt clumps",
+        "baseMaterial": "DIRT_2",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 179,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FOSSIL_BANK_CHEST_BUILT",
+      "FOSSIL_VOLCANO_BANK_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Velvet interior",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Stone - Stone Trapdoor",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_DKL_TRAPDOOR_CLOSED",
+      "FOSSIL_DKL_TRAPDOOR_OPEN"
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Stone - Ladder",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "objectIds": [
+      "FOSSIL_DKL_TRAPDOOR_LADDER"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stone Chests",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_DKL_CHEST1",
+      "FOSSIL_DKL_CHEST2",
+      "DS2_MAP_CHEST_1_NO_OP",
+      "DS2_MAP_CHEST_2_NO_OP"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Stone Crate",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 128,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 0",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_DKL_STONE_CRATE1",
+      "FOSSIL_DKL_STONE_CRATE2"
+    ]
+  },
+  {
+    "description": "Fossil Island - Stone - Strange Stone",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "FOSSIL_DKL_STONE"
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Bone Grinder",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 163,
+    "objectIds": [
+      "FOSSIL_LAB_BONE_GRINDER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Shield Maker",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 163,
+    "objectIds": [
+      "FOSSIL_LAB_SHIELD_MAKER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Crystal",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "a == 255 && h > 36 && h < 40",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 42",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Table Top",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Bone",
+        "baseMaterial": "BONE",
+        "colors": "h == 6",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Necklace Enchanter",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 163,
+    "objectIds": [
+      "FOSSIL_LAB_NECKLACE_ENCHANTER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Crystal",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 1 && s == 3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 42",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Paper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 6",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Book Stack",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_DKL_PILE_OF_BOOKS_1",
+      "FOSSIL_DKL_PILE_OF_BOOKS_2"
+    ]
+  },
+  {
+    "description": "Fossil Island - House on the Hill - Metallic - Glass Vial",
+    "baseMaterial": "BLANK_GLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_DKL_GIANT_VIAL_1",
+      "FOSSIL_DKL_GIANT_VIAL_2",
+      "FOSSIL_DKL_GIANT_VIAL_3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "colors": "h == 0"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Burnt Tree",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_DEADTREE_SMALL1_STUMP",
+      "FOSSIL_DEADTREE_SMALL1",
+      "FOSSIL_DEADTREE_LARGE1",
+      "FOSSIL_DEADTREE_LARGE1_STUMP",
+      "FOSSIL_DEADTREE_LARGE2"
+    ]
+  },
+  {
+    "description": "Fossil Island - Volcano Barrel - Full",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 2",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h > 2 && h < 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Pickaxe",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_BARREL_FULL",
+      "FOSSIL_BARREL_FULL_PICKAXE"
+    ]
+  },
+  {
+    "description": "Fossil Island - Volcano Barrel - Full",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 300,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FOSSIL_VOLCANO_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Fossil Island - Wooden - Volcano - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SARIM_DEPOSIT_BOX"
     ]
   }
 ]

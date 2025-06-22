@@ -3234,18 +3234,15 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "FOSSIL_ISLAND_HILL_HOUSE",
     "area": "FOSSIL_ISLAND_HILL_HOUSE_FIX",
+    "groundMaterial": "BRICK_PATHS",
     "overlayIds": [
       11
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == WINTER"
-    }
+    ]
   },
   {
     "name": "FOSSIL_ISLAND_HILL_TEXTURE_FIX",
