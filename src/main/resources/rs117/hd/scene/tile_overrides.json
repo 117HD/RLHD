@@ -3234,12 +3234,12 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "FALADOR_PATHS"
+    "groundMaterial": "BRICK_PATHS"
   },
   {
     "name": "FOSSIL_ISLAND_HILL_HOUSE",
     "area": "FOSSIL_ISLAND_HILL_HOUSE_FIX",
-    "groundMaterial": "FALADOR_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "overlayIds": [
       11
     ]

@@ -22146,7 +22146,7 @@
   },
   {
     "description": "Fossil Island - Stone - Stairs - House on the Hill parapet",
-    "baseMaterial": "FALADOR_PATH_BRICK",
+    "baseMaterial": "BRICK_PATH",
     "uvType": "BOX",
     "objectIds": [
       "FOSSIL_DKL_BRIDGE_PARAPET",
