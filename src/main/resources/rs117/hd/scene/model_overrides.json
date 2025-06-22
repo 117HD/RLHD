@@ -18814,8 +18814,7 @@
     },
     "objectIds": [
       "BANKBOOTH",
-      "BANKPRIVATEBOOTH",
-      "BANKBOOTHCLOSED"
+      "BANKPRIVATEBOOTH"
     ],
     "colorOverrides": [
       {
@@ -18834,7 +18833,8 @@
       }
     },
     "objectIds": [
-      "BANKBOOTHCLOSED_END_LEFT"
+      "BANKBOOTHCLOSED_END_LEFT",
+      "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
