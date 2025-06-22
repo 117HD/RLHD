@@ -28133,25 +28133,39 @@
   },
   {
     "description": "Bankbooth with Glass Window - Seers",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "KR_BANKBOOTH" ],
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   },
   {
     "description": "Bankbooth with Shutters - Seers",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "KR_BANKBOOTH_CLOSED" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [ "KR_BANKBOOTH_CLOSED" ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
   },
   {
     "description": "Bankbooth with Glass Window - Lunar Island",
