@@ -212,7 +212,7 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, vec3 windDirection) {
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, vec4 windDirection) {
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -265,47 +265,39 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             uvC = uv[uvOffset + localId * 3 + 2];
 
             #if WIND_ENABLED
-            int WindSwayingValue = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
-            if (WindSwayingValue > 0) {
-                const float maxHeight = 100.0;
-                const float noiseResolution = 0.04;
-                const float gridSnapping = 400.0;
-
+            int WindDisplacementMode = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
+            if (WindDisplacementMode != 0) {
                 float heightFrac = float((flags >> 27) & 0x1F) / 31;
-                float height = maxHeight * heightFrac;
+                float height = 100.0 * heightFrac;
 
-                bool isTree = WindSwayingValue == 2;
                 float windT = elapsedTime * windSpeed;
                 float heightBasedWindStrength = windStrength * heightFrac;
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
 
-                if(isTree) {
-                    float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + vec2(windT)) * noiseResolution));
-                    float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + vec2(windT)) * noiseResolution));
-                    float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + vec2(windT)) * noiseResolution));
+                // Main Object Displacement
+                vec3 worldDisplacement = windDirection.xyz * (windDirection.w * heightBasedWindStrength);
 
-                    // Avoid over stretching which can cause issues in ComputeUVs
-                    strengthA *= 0.2;
-                    strengthB *= 0.2;
-                    strengthC *= 0.2;
+                // Apply Additional Vertex Displacement
+                if(WindDisplacementMode == 2) {
+                    const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
+                    float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + vec2(windT)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                    float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + vec2(windT)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                    float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + vec2(windT)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
-                    displacementA = ((windNoiseA * heightBasedWindStrength * strengthA) * normalize(windDirection)) + windDirection;
-                    displacementB = ((windNoiseB * heightBasedWindStrength * strengthB) * normalize(windDirection)) + windDirection;
-                    displacementC = ((windNoiseC * heightBasedWindStrength * strengthC) * normalize(windDirection)) + windDirection;
-                } else {
-                    vec3 offset = pos + ((thisrvA.pos + thisrvB.pos + thisrvC.pos) / 3.0);
-                    offset.x = round(offset.x / gridSnapping) * gridSnapping;
-                    offset.z = round(offset.z / gridSnapping) * gridSnapping;
+                    displacementA = ((windNoiseA * heightBasedWindStrength * (strengthA * VertexDisplacementMod)) * windDirection.xyz);
+                    displacementB = ((windNoiseB * heightBasedWindStrength * (strengthB * VertexDisplacementMod)) * windDirection.xyz);
+                    displacementC = ((windNoiseC * heightBasedWindStrength * (strengthC * VertexDisplacementMod)) * windDirection.xyz);
 
-                    float gridNoise = mix(-0.5, 0.5, noise((offset.xz + vec2(windT)) * noiseResolution));
-                    vec3 gridDisplacement = ((gridNoise * heightBasedWindStrength) * normalize(windDirection)) + windDirection;
-
-                    displacementA = gridDisplacement * strengthA;
-                    displacementB = gridDisplacement * strengthB;
-                    displacementC = gridDisplacement * strengthC;
+                    strengthA = clamp(strengthA - (VertexDisplacementMod * 2.0), 0.0, 1.0);
+                    strengthB = clamp(strengthB - (VertexDisplacementMod * 2.0), 0.0, 1.0);
+                    strengthC = clamp(strengthC - (VertexDisplacementMod * 2.0), 0.0, 1.0);
                 }
+
+                displacementA += worldDisplacement * strengthA;
+                displacementB += worldDisplacement * strengthB;
+                displacementC += worldDisplacement * strengthC;
 
                 thisrvA.pos += displacementA;
                 thisrvB.pos += displacementB;

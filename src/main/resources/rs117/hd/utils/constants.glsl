@@ -4,6 +4,8 @@
 #define PI 3.14159265358979323846264338327950288419716939937510582097494459230781
 #define EPS 1.0e-10
 
+#define WIND_DISPLACEMENT_NOISE_RESOLUTION 0.04
+
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
 #define MATERIAL_INDEX_SHIFT 14

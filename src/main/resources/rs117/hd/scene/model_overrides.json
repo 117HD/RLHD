@@ -2068,7 +2068,7 @@
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
-    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Object",
     "castShadows": false,
     "objectIds": [
       "GRASS_1",
@@ -16875,7 +16875,7 @@
     "description": "Generic - Plant - Fern - Small",
     "baseMaterial": "LEAF_VEINS",
     "uvType": "MODEL_XZ",
-    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Object",
     "uvScale": 0.25,
     "objectIds": [
       "SMALLFERN",
@@ -16888,7 +16888,6 @@
   {
     "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "Face",
     "windDisplacementMode": "Vertex",
     "colorOverrides": [
       {
@@ -19276,7 +19275,7 @@
     "description": "Objects - Textured Rock - Mossy Rock - Medium",
     "baseMaterial": "GRASS_3",
     "textureMaterial": "HD_CONCRETE",
-    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "MOSS_COVERED_ROCK_1",
       "MOSS_COVERED_ROCK_2"
@@ -24243,7 +24242,7 @@
   {
     "description": "Perilous Moons Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "PRIF_MINE_MUSHROOM_1",
       "WILDY_HUB_BUSH_01",
@@ -30477,7 +30476,7 @@
   {
     "description": "Farming Guild - Small Bush",
     "baseMaterial": "PLANT_GRUNGE_2",
-    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "PLANTS_UPDATE_SMALL_BUSH_GRASSLAND"
     ],
@@ -34572,7 +34571,7 @@
     "description": "Nightmare of Ashihama - Floating Island",
     "baseMaterial": "GRASS_2",
     "uvType": "MODEL_XZ",
-    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Object",
     "uvScale": 0.75,
     "objectIds": [
       "NIGHTMARE_GARDEN_ISLAND_01",
@@ -34595,7 +34594,7 @@
   {
     "description": "Morytania Spider Cave",
     "baseMaterial": "GRASS_3",
-    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Object",
     "uvOrientation": 512,
     "uvType": "BOX",
     "uvScale": 0.8,
