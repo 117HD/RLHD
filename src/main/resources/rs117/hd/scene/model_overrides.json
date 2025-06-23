@@ -1082,9 +1082,11 @@
     "uvScale": 0.8,
     "materialOverrides": {
       "LEAVES_SIDE": {
+        "windDisplacementMode": "Vertex",
         "textureMaterial": "LEAVES_YELLOW_SIDE"
       },
       "LEAVES_TOP": {
+        "windDisplacementMode": "Vertex",
         "textureMaterial": "LEAVES_YELLOW_TOP"
       }
     }
@@ -1101,9 +1103,11 @@
     "uvScale": 0.8,
     "materialOverrides": {
       "LEAVES_SIDE": {
+        "windDisplacementMode": "Vertex",
         "textureMaterial": "LEAVES_ORANGE_SIDE"
       },
       "LEAVES_TOP": {
+        "windDisplacementMode": "Vertex",
         "textureMaterial": "LEAVES_ORANGE_TOP"
       }
     }
@@ -2064,6 +2068,7 @@
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "inheritTileColorType": "UNDERLAY",
+    "windDisplacementMode": "Face",
     "castShadows": false,
     "objectIds": [
       "GRASS_1",
@@ -16870,6 +16875,7 @@
     "description": "Generic - Plant - Fern - Small",
     "baseMaterial": "LEAF_VEINS",
     "uvType": "MODEL_XZ",
+    "windDisplacementMode": "Face",
     "uvScale": 0.25,
     "objectIds": [
       "SMALLFERN",
@@ -16882,12 +16888,15 @@
   {
     "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "Face",
+    "windDisplacementMode": "Vertex",
     "colorOverrides": [
       {
         "colors": "h > 11",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.25,
-        "uvType": "MODEL_XZ"
+        "uvType": "MODEL_XZ",
+        "windDisplacementMode": "Vertex"
       }
     ],
     "objectIds": [
@@ -19267,6 +19276,7 @@
     "description": "Objects - Textured Rock - Mossy Rock - Medium",
     "baseMaterial": "GRASS_3",
     "textureMaterial": "HD_CONCRETE",
+    "windDisplacementMode": "Face",
     "objectIds": [
       "MOSS_COVERED_ROCK_1",
       "MOSS_COVERED_ROCK_2"
@@ -21092,9 +21102,11 @@
     "uvScale": 0.8,
     "materialOverrides": {
       "LEAVES_SIDE": {
+        "windDisplacementMode": "Vertex",
         "textureMaterial": "LEAVES_RED_SIDE"
       },
       "LEAVES_TOP": {
+        "windDisplacementMode": "Vertex",
         "textureMaterial": "LEAVES_RED_TOP"
       }
     }
@@ -24231,6 +24243,7 @@
   {
     "description": "Perilous Moons Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "Face",
     "objectIds": [
       "PRIF_MINE_MUSHROOM_1",
       "WILDY_HUB_BUSH_01",
@@ -30464,6 +30477,7 @@
   {
     "description": "Farming Guild - Small Bush",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "windDisplacementMode": "Face",
     "objectIds": [
       "PLANTS_UPDATE_SMALL_BUSH_GRASSLAND"
     ],
@@ -34558,6 +34572,7 @@
     "description": "Nightmare of Ashihama - Floating Island",
     "baseMaterial": "GRASS_2",
     "uvType": "MODEL_XZ",
+    "windDisplacementMode": "Face",
     "uvScale": 0.75,
     "objectIds": [
       "NIGHTMARE_GARDEN_ISLAND_01",
@@ -34580,6 +34595,7 @@
   {
     "description": "Morytania Spider Cave",
     "baseMaterial": "GRASS_3",
+    "windDisplacementMode": "Face",
     "uvOrientation": 512,
     "uvType": "BOX",
     "uvScale": 0.8,

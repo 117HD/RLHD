@@ -75,7 +75,6 @@ public enum Material {
 	LEAVES_SIDE(8, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.setCanWindDisplace(true, true)
 	),
 	TREE_RINGS(9, p -> p
 		.setHasTransparency(true)),
@@ -113,13 +112,11 @@ public enum Material {
 		.setHasTransparency(true)),
 	TROPICAL_LEAF(29, p -> p
 		.setBrightness(.5f)
-		.setHasTransparency(true)
-		.setCanWindDisplace(true, true))
+		.setHasTransparency(true))
 	,
 	WILLOW_LEAVES(30, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.0f)
-		.setCanWindDisplace(true, true)
 	),
 	LAVA(31, p -> p
 		.setUnlit(true)
@@ -130,7 +127,6 @@ public enum Material {
 	MAPLE_LEAVES(33, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.3f, 1.025f)
-		.setCanWindDisplace(true, true)
 	),
 	MAGIC_STARS(34, p -> p
 		.setHasTransparency(true)
@@ -149,7 +145,6 @@ public enum Material {
 	LEAVES_DISEASED(41, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.setCanWindDisplace(true, true)
 	),
 	MARBLE(42, p -> p
 		.setSpecular(1.0f, 400)),
@@ -177,8 +172,7 @@ public enum Material {
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
 		.setScroll(0, 0)),
 	LEAVES_TOP(60, p -> p
-		.setHasTransparency(true)
-		.setCanWindDisplace(true, true)),
+		.setHasTransparency(true)),
 	CLAN_SKULL(61, p -> p
 		.setHasTransparency(true)),
 	CLAN_PARTYHAT(62, p -> p
@@ -236,12 +230,10 @@ public enum Material {
 	CLAN_EMPTY(88, p -> p
 		.setHasTransparency(true)),
 	SHAYZIEN_LEAVES_TOP(89, p -> p
-		.setHasTransparency(true)
-		.setCanWindDisplace(true, true)),
+		.setHasTransparency(true)),
 	SHAYZIEN_LEAVES_SIDE(90, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.025f)
-		.setCanWindDisplace(true, true)
 	),
 	WATER_ICE(91),
 	SNOW_ROOF(92),
@@ -320,7 +312,7 @@ public enum Material {
 	GRAY_125(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.25f))),
 	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
-	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f)).setCanWindDisplace(true, false)),
+	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_70(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.70f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
@@ -353,8 +345,7 @@ public enum Material {
 	GRASS_SCROLLING(GRASS_1, p -> p
 		.setScroll(0, -1 / 0.7f)),
 	COLORED_GRASS(p ->
-		p.setOverrideBaseColor(true)
-		.setCanWindDisplace(true, false)),
+		p.setOverrideBaseColor(true)),
 	DIRT_1_N,
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
@@ -647,7 +638,7 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 		.setBrightness(1.75f)),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
-	LEAF_VEINS(p ->p.setCanWindDisplace(true, false)),
+	LEAF_VEINS(),
 	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
@@ -854,11 +845,9 @@ public enum Material {
 	),
 	PLANT_GRUNGE_1(GRUNGE_1, p -> p
 		.setSpecular(0.25f, 25)
-		.setCanWindDisplace(true, false)
 	),
 	PLANT_GRUNGE_2(GRUNGE_2, p -> p
 		.setSpecular(0.20f, 20)
-		.setCanWindDisplace(true, false)
 	),
 	HD_CONCRETE_D,
 	HD_CONCRETE_N,
@@ -1046,7 +1035,6 @@ public enum Material {
 	public final boolean overrideBaseColor;
 	public final boolean unlit;
 	public final boolean hasTexture;
-	public final int canWindDisplace;
 	public final float brightness;
 	public final float displacementScale;
 	public final float flowMapStrength;
@@ -1070,7 +1058,6 @@ public enum Material {
 		private boolean hasTransparency = false;
 		private boolean overrideBaseColor = false;
 		private boolean unlit = false;
-		private int canWindDisplace = 0;
 		private float brightness = 1;
 		private float displacementScale = .1f;
 		private float flowMapStrength;
@@ -1098,7 +1085,6 @@ public enum Material {
 			this.hasTransparency = parent.hasTransparency;
 			this.overrideBaseColor = parent.overrideBaseColor;
 			this.unlit = parent.unlit;
-			this.canWindDisplace = parent.canWindDisplace;
 			this.brightness = parent.brightness;
 			this.displacementScale = parent.displacementScale;
 			this.flowMapStrength = parent.flowMapStrength;
@@ -1127,11 +1113,6 @@ public enum Material {
 
 		Builder setScroll(float speedX, float speedY) {
 			this.scrollSpeed = new float[] { -speedX, -speedY };
-			return this;
-		}
-
-		Builder setCanWindDisplace(boolean canWindDisplace, boolean isTree) {
-			this.canWindDisplace = canWindDisplace ? isTree ? 2 : 1 : 0;
 			return this;
 		}
 
@@ -1185,7 +1166,6 @@ public enum Material {
 		hasTransparency = builder.hasTransparency;
 		overrideBaseColor = builder.overrideBaseColor;
 		unlit = builder.unlit;
-		canWindDisplace = builder.canWindDisplace;
 		brightness = builder.brightness;
 		displacementScale = builder.displacementScale;
 		flowMapStrength = builder.flowMapStrength;
