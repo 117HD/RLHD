@@ -1,6 +1,6 @@
 plugins {
 	id 'java'
-	id 'com.github.johnrengelman.shadow' version '6.1.0'
+//	id 'com.github.johnrengelman.shadow' version '6.1.0'
 }
 
 repositories {
@@ -86,10 +86,10 @@ tasks.withType(JavaCompile).configureEach {
 //	dependsOn 'exportGamevals'
 //}
 //
-shadowJar {
-	from sourceSets.test.output
-	configurations = [project.configurations.testRuntimeClasspath]
-	manifest {
-		attributes 'Main-Class': 'rs117.hd.HdPluginTest'
-	}
-}
+//shadowJar {
+//	from sourceSets.test.output
+//	configurations = [project.configurations.testRuntimeClasspath]
+//	manifest {
+//		attributes 'Main-Class': 'rs117.hd.HdPluginTest'
+//	}
+//}
