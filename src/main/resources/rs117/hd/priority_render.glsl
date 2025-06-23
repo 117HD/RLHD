@@ -277,9 +277,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
 
                 bool invert = WindSwayingValue == 2;
-                displacementA = windDisplacement * (invert ? 1.0 - strengthA : strengthA);
-                displacementB = windDisplacement * (invert ? 1.0 - strengthB : strengthB);
-                displacementC = windDisplacement * (invert ? 1.0 - strengthC : strengthC);
+                displacementA = windDisplacement * (invert ? 0.95 - strengthA : strengthA);
+                displacementB = windDisplacement * (invert ? 0.95 - strengthB : strengthB);
+                displacementC = windDisplacement * (invert ? 0.95 - strengthC : strengthC);
 
                 thisrvA.pos += displacementA;
                 thisrvB.pos += displacementB;
