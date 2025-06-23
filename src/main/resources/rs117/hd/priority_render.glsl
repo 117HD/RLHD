@@ -268,8 +268,8 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             int WindSwayingValue = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
             if (WindSwayingValue > 0) {
                 vec3 offset = pos + ((thisrvA.pos + thisrvB.pos + thisrvC.pos) / 3.0);
-                offset.x = round(offset.x / 50) * 50;
-                offset.z = round(offset.z / 50) * 50;
+                offset.x = round(offset.x / 400.0) * 400.0;
+                offset.z = round(offset.z / 400.0) * 400.0;
                 float windNoise = noise(vec2(offset.x + (elapsedTime * windSpeed), offset.z + (elapsedTime * windSpeed)) * 0.05);
                 vec3 windDisplacement = (windStrength * windNoise) * windDirection;
 
