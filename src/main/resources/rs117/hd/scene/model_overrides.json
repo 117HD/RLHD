@@ -2170,15 +2170,7 @@
       "LUNAR_BROWN_GRASS_1",
       "LUNAR_BROWN_GRASS_2",
       "LUNAR_BROWN_GRASS_3",
-      "LUNAR_BROWN_GRASS_4"
-    ]
-  },
-  {
-    "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
-    "baseMaterial": "GRAY_65",
-    "castShadows": false,
-    "flatNormals": true,
-    "objectIds": [
+      "LUNAR_BROWN_GRASS_4",
       "REGICIDE_BLUE_GRASS1",
       "REGICIDE_BLUE_GRASS2",
       "REGICIDE_BLUE_GRASS3",
