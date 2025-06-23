@@ -3318,7 +3318,6 @@
       "KR_COURTHOUSE_ROOF_EDGE_02",
       "KR_COURTHOUSE_ROOF_EDGE_03",
       "KR_COURTHOUSE_ROOF_EDGE_04",
-      "KR_COURTHOUSE_ROOF_EDGE_01_MIRROR",
       "KR_COURTHOUSE_ROOF_EDGE_02_MIRROR",
       "KR_COURTHOUSE_ROOF_EDGE_03_MIRROR",
       "KR_COURTHOUSE_ROOF_EDGE_04_MIRROR",
@@ -3356,7 +3355,6 @@
       "KR_COURTHOUSE_ROOF_MID_02",
       "KR_COURTHOUSE_ROOF_MID_03",
       "KR_COURTHOUSE_ROOF_MID_04",
-      "KR_COURTHOUSE_ROOF_MID_01_MIRROR",
       "KR_COURTHOUSE_ROOF_MID_02_MIRROR",
       "KR_COURTHOUSE_ROOF_MID_03_MIRROR",
       "KR_COURTHOUSE_ROOF_MID_04_MIRROR",
@@ -3491,13 +3489,6 @@
       "KR_MANSION_INTERNAL_WALLS_DIAG_02"
     ],
     "flatNormals": true
-  },
-  {
-    "description": "Murder Mystery house - white table",
-    "objectIds": [
-      "LONGTABLE_WIDE"
-    ],
-    "baseMaterial": "GRAY_75"
   },
   {
     "description": "STONE_WALL_FENCES",
