@@ -267,13 +267,14 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             #if WIND_ENABLED
             int WindSwayingValue = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
             if (WindSwayingValue > 0) {
+                float heightFrac = float((flags >> 27) & 0x1F) / 31;
                 vec3 offset = pos + ((thisrvA.pos + thisrvB.pos + thisrvC.pos) / 3.0);
                 offset.x = round(offset.x / 400.0) * 400.0;
                 offset.z = round(offset.z / 400.0) * 400.0;
                 float windNoise = noise(vec2(offset.x + (elapsedTime * windSpeed), offset.z + (elapsedTime * windSpeed)) * 0.05);
-                vec3 windDisplacement = (windStrength * windNoise) * windDirection;
+                vec3 windDisplacement = (windStrength * windNoise * heightFrac) * windDirection;
 
-                float height = 200.0 * (float((flags >> 27) & 0x1F) / 31);
+                float height = 200.0 * (heightFrac);
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);

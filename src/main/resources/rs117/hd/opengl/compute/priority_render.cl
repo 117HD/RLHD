@@ -407,14 +407,15 @@ void sort_and_insert(
         #if WIND_ENABLED
         int WindSwayingValue = (((int)uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3);
         if (WindSwayingValue > 0) {
+            float heightFrac = (float)((flags >> 27) & 0x1F) / 31.0f;
             float3 offset = pos.xyz + (vertA.xyz + vertB.xyz + vertC.xyz / 3.0f);
             offset.x = round(offset.x / 400.0f) * 400.0f;
             offset.z = round(offset.z / 400.0f) * 400.0f;
 
             float windNoise = noise((float2)(offset.x + (uni->elapsedTime * uni->windSpeed), offset.z + (uni->elapsedTime * uni->windSpeed)) * 0.05f);
-            float3 windDisplacement = (uni->windStrength * windNoise) * windDirection;
+            float3 windDisplacement = (uni->windStrength * windNoise * heightFrac) * windDirection;
 
-            float height = 200.0f * ((float)((flags >> 27) & 0x1F) / 31);
+            float height = 200.0f * heightFrac;
             float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
             float strengthB = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
             float strengthC = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
