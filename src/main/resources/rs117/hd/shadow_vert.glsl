@@ -25,6 +25,8 @@
  */
 #version 330
 
+#include uniforms/global.glsl
+
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in int vHsl;
 layout (location = 2) in vec4 vUv;
@@ -42,7 +44,6 @@ layout (location = 3) in vec4 vNormal;
         flat out float gOpacity;
     #endif
 #else
-    uniform mat4 lightProjectionMatrix;
     #if SHADOW_TRANSPARENCY
         // Pass to fragment shader
         out float fOpacity;

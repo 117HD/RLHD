@@ -23,15 +23,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #version 330
+
+#include uniforms/global.glsl
 
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
-
-uniform mat4 projectionMatrix;
-uniform float elapsedTime;
-uniform vec3 cameraPos;
 
 #include utils/constants.glsl
 #define USE_VANILLA_UV_PROJECTION
