@@ -19069,6 +19069,9 @@
   {
     "description": "Objects - Concrete - Bank Booth",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65,
     "materialOverrides": {
       "WOODEN_SCREEN": {
         "textureMaterial": "WOODEN_SCREEN"
@@ -19076,16 +19079,13 @@
     },
     "objectIds": [
       "BANKBOOTH",
-      "BANKPRIVATEBOOTH",
-      "BANKBOOTHCLOSED"
+      "BANKPRIVATEBOOTH"
     ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.65,
     "colorOverrides": [
       {
-        "colors": [ 43060, 43082, 43084, 43110, 43120, 43125, 43099, 43123 ],
-        "baseMaterial": "NONE"
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "MODEL_YZ"
       }
     ]
   },
@@ -19098,7 +19098,8 @@
       }
     },
     "objectIds": [
-      "BANKBOOTHCLOSED_END_LEFT"
+      "BANKBOOTHCLOSED_END_LEFT",
+      "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -28348,156 +28349,244 @@
   },
   {
     "description": "Bankbooth with Glass Window - Lumbridge",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "AIDE_BANKBOOTH" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [ "AIDE_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   },
   {
     "description": "Bankbooth with Shutters - Lumbridge",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "AIDE_BANKBOOTH_CLOSED" ],
+
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [ "AIDE_BANKBOOTH_CLOSED" ],
+    "colorOverrides": [
+      {
+        "colors": "s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
   },
   {
     "description": "Bankbooth with Glass Window - Varrock",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "FAI_VARROCK_BANKBOOTH" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "objectIds": [ "FAI_VARROCK_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
       }
     ]
   },
   {
     "description": "Bankbooth with Shutters - Corsair Cove",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "FAI_VARROCK_BANKBOOTH_CLOSED" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [ "FAI_VARROCK_BANKBOOTH_CLOSED" ],
+    "colorOverrides": [
+      {
+        "colors": "s > 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Bankbooth with Glass Window - Falador",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "FAI_FALADOR_BANKBOOTH" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "objectIds": [ "FAI_FALADOR_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": 512
       }
     ]
   },
   {
     "description": "Bankbooth with Glass Window - Seers",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "KR_BANKBOOTH" ],
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   },
   {
     "description": "Bankbooth with Shutters - Seers",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "KR_BANKBOOTH_CLOSED" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [ "KR_BANKBOOTH_CLOSED" ],
+    "colorOverrides": [
+      {
+        "colors": "s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
   },
   {
     "description": "Bankbooth with Glass Window - Lunar Island",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "LUNAR_MOONCLAN_BANKBOOTH" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "objectIds": [ "LUNAR_MOONCLAN_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": 512
       }
     ]
   },
   {
     "description": "Bankbooth with Glass Window - Canifis",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "CANAFIS_BANKBOOTH" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "objectIds": [ "CANAFIS_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   },
   {
     "description": "Bankbooth with Glass Window - Phasmatys",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [ "AHOY_BANKBOOTH" ],
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
-    "colorOverrides": [
-      {
-        "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "WORLD_XY"
-      }
-    ]
-  },
-  {
-    "description": "Bankbooth with Shutters - Phasmatys",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "AHOY_BANKBOOTHCLOSED" ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512
-  },
-  {
-    "description": "Bankbooth with Glass Window - Nardah",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "ELID_BANKBOOTH" ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512,
+    "uvScale": 0.5,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Bankbooth with Slatted Window - Phasmatys",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [ "AHOY_BANKBOOTHCLOSED" ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Bankbooth with Glass Window - Nardah",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [ "ELID_BANKBOOTH" ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   },
   {
     "description": "Bankbooth with Shutters - Nardah",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [ "ELID_BANKBOOTHCLOSED" ],
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientationZ": 512
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [ "ELID_BANKBOOTHCLOSED" ],
+    "colorOverrides": [
+      {
+        "colors": "s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
   },
   {
     "description": "Bankbooth with Glass Window - Sophanem",
