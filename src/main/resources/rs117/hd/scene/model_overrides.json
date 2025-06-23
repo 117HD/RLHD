@@ -7951,7 +7951,9 @@
       "FAI_VARROCK_BANK_DOOR_VAULT_R",
       "CAPT_SIAD_CELL_DOOR",
       "UNDERGROUNDCELLGATER",
-      "UNDERGROUNDCELLGATEL"
+      "UNDERGROUNDCELLGATEL",
+      "PRISONWALL",
+      "AKD_HUGHES_GATE_1"
     ],
     "uvType": "BOX",
     "uvOrientation": 463
@@ -20477,7 +20479,8 @@
       "RAT_BOSS_CORPSE01",
       "NECROPOLIS_SKELETON_1",
       "NECROPOLIS_SKELETON_2",
-      "NECROPOLIS_SKELETON_3"
+      "NECROPOLIS_SKELETON_3",
+      "AKD_HUGHES_SKELETON_1_NOOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -26227,7 +26230,11 @@
   },
   {
     "description": "Wooden Wardrobe",
-    "objectIds": [ "FAI_VARROCK_WARDROBE", "FAI_VARROCK_WARDROBE_POSH2" ],
+    "objectIds": [
+      "FAI_VARROCK_WARDROBE",
+      "FAI_VARROCK_WARDROBE_POSH2",
+      "AKD_HUGHES_WARDROBE_1_NOOP"
+    ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationY": 512,
     "uvType": "BOX",
@@ -26237,7 +26244,9 @@
     "description": "Drawers with backsplash",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_DRAWERS", "FAI_VARROCK_POSH_DRAWERS"
+      "FAI_VARROCK_DRAWERS",
+      "FAI_VARROCK_POSH_DRAWERS",
+      "AKD_HUGHES_DRAWERS_1_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -32118,7 +32127,8 @@
     "description": "Kourend - Bed - Wide - Wooden - Double bed with White blanket and bed frame with canopy",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_POSH_DOUBLE_BED"
+      "FAI_VARROCK_POSH_DOUBLE_BED",
+      "AKD_HUGHES_BED_1_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -35658,7 +35668,8 @@
     "uvOrientation": 512,
     "uvScale": 0.7,
     "objectIds": [
-      "FAI_VARROCK_POSH_TABLE_SCROLLS"
+      "FAI_VARROCK_POSH_TABLE_SCROLLS",
+      "AKD_HUGHES_DESK_1_NOOP"
     ],
     "colorOverrides": [
       {
@@ -36134,7 +36145,8 @@
     "uvScale": 0.6,
     "uvOrientationY": 512,
     "objectIds": [
-      "FAI_VARROCK_POSH_DRESSER"
+      "FAI_VARROCK_POSH_DRESSER",
+      "AKD_HUGHES_DRESSER_1_NOOP"
     ],
     "colorOverrides": [
       {
