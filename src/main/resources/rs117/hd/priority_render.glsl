@@ -267,22 +267,45 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             #if WIND_ENABLED
             int WindSwayingValue = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
             if (WindSwayingValue > 0) {
-                float heightFrac = float((flags >> 27) & 0x1F) / 31;
-                vec3 offset = pos + ((thisrvA.pos + thisrvB.pos + thisrvC.pos) / 3.0);
-                offset.x = round(offset.x / 400.0) * 400.0;
-                offset.z = round(offset.z / 400.0) * 400.0;
-                float windNoise = noise(vec2(offset.x + (elapsedTime * windSpeed), offset.z + (elapsedTime * windSpeed)) * 0.05);
-                vec3 windDisplacement = (windStrength * windNoise * heightFrac) * windDirection;
+                const float maxHeight = 100.0;
+                const float noiseResolution = 0.04;
+                const float gridSnapping = 400.0;
 
-                float height = 200.0 * (heightFrac);
+                float heightFrac = float((flags >> 27) & 0x1F) / 31;
+                float height = maxHeight * heightFrac;
+
+                bool isTree = WindSwayingValue == 2;
+                float windT = elapsedTime * windSpeed;
+                float heightBasedWindStrength = windStrength * heightFrac;
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
 
-                bool invert = WindSwayingValue == 2;
-                displacementA = windDisplacement * (invert ? 0.95 - strengthA : strengthA);
-                displacementB = windDisplacement * (invert ? 0.95 - strengthB : strengthB);
-                displacementC = windDisplacement * (invert ? 0.95 - strengthC : strengthC);
+                if(isTree) {
+                    float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + vec2(windT)) * noiseResolution));
+                    float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + vec2(windT)) * noiseResolution));
+                    float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + vec2(windT)) * noiseResolution));
+
+                    // Avoid over stretching which can cause issues in ComputeUVs
+                    strengthA *= 0.2;
+                    strengthB *= 0.2;
+                    strengthC *= 0.2;
+
+                    displacementA = ((windNoiseA * heightBasedWindStrength * strengthA) * normalize(windDirection)) + windDirection;
+                    displacementB = ((windNoiseB * heightBasedWindStrength * strengthB) * normalize(windDirection)) + windDirection;
+                    displacementC = ((windNoiseC * heightBasedWindStrength * strengthC) * normalize(windDirection)) + windDirection;
+                } else {
+                    vec3 offset = pos + ((thisrvA.pos + thisrvB.pos + thisrvC.pos) / 3.0);
+                    offset.x = round(offset.x / gridSnapping) * gridSnapping;
+                    offset.z = round(offset.z / gridSnapping) * gridSnapping;
+
+                    float gridNoise = mix(-0.5, 0.5, noise((offset.xz + vec2(windT)) * noiseResolution));
+                    vec3 gridDisplacement = ((gridNoise * heightBasedWindStrength) * normalize(windDirection)) + windDirection;
+
+                    displacementA = gridDisplacement * strengthA;
+                    displacementB = gridDisplacement * strengthB;
+                    displacementC = gridDisplacement * strengthC;
+                }
 
                 thisrvA.pos += displacementA;
                 thisrvB.pos += displacementB;
@@ -329,15 +352,19 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
 
         if (uvOffset >= 0) {
             if ((int(uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+                uvA.xyz += displacementA;
+                uvB.xyz += displacementB;
+                uvC.xyz += displacementC;
+
                 // Rotate the texture triangles to match model orientation
                 uvA = rotate(uvA, orientation);
                 uvB = rotate(uvB, orientation);
                 uvC = rotate(uvC, orientation);
 
                 // Shift texture triangles to world space
-                uvA.xyz += pos + displacementA;
-                uvB.xyz += pos + displacementB;
-                uvC.xyz += pos + displacementC;
+                uvA.xyz += pos;
+                uvB.xyz += pos;
+                uvC.xyz += pos;
 
                 // For vanilla UVs, the first 3 components are an integer position vector
                 if (hillskew == 1) {

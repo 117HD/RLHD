@@ -444,7 +444,7 @@ public class ModelPusher {
 		int materialData =
 			(materialIndex & MAX_MATERIAL_COUNT) << 14
 			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 8
-			| (material.shouldWindSway & 0x3) << 6
+			| (material.canWindDisplace & 0x3) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (modelOverride.upwardsNormals ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3

@@ -3029,7 +3029,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
-		int heightFrac = clamp((int)((height / 200.0) * 31.0), 0, 31);
+		int heightFrac = clamp((int)((height / 100.0) * 31.0), 0, 31);
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = orientation | heightFrac << 27;
 		eightIntWrite[5] = x;

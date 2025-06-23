@@ -89,7 +89,7 @@ void main() {
             globalWindDirection.x * c + globalWindDirection.z * s,
             globalWindDirection.y,
             -globalWindDirection.x * s + globalWindDirection.z * c
-        ));
+        )) * (windNoise * windStrength * 0.3);
     }
     #endif
 
