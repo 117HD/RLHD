@@ -172,12 +172,3 @@ float noise (in vec2 st) {
             (c - a)* u.y * (1.0 - u.x) +
             (d - b) * u.x * u.y;
 }
-
-float noise4Octaves(in vec2 st) {
-    mat2 m = mat2( 1.6,  1.2, -1.2,  1.6 );
-    float f  = 0.5000*noise( st ); st = m*st;
-    f += 0.2500*noise( st ); st = m*st;
-    f += 0.1250*noise( st ); st = m*st;
-    f += 0.0625*noise( st ); st = m*st;
-    return f;
-}

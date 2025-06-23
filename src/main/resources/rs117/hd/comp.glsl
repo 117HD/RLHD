@@ -81,7 +81,15 @@ void main() {
     #if WIND_ENABLED
     {
         float windNoise = noise(vec2(minfo.x + (elapsedTime * windSpeed), minfo.z + (elapsedTime * windSpeed)) * 0.05);
-        windDirection = normalize(globalWindDirection * rotateY(windNoise * (PI / 2.0)));
+        float angle = windNoise * (PI / 2.0);
+        float c = cos(angle);
+        float s = sin(angle);
+
+        windDirection = normalize(vec3(
+            globalWindDirection.x * c + globalWindDirection.z * s,
+            globalWindDirection.y,
+            -globalWindDirection.x * s + globalWindDirection.z * c
+        ));
     }
     #endif
 
