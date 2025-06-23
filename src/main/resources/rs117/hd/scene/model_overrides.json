@@ -2190,6 +2190,28 @@
     ]
   },
   {
+    "description": "Fremmenik Isles, Lighten Grass",
+    "areas": [ "FREMENNIK_ISLES" ],
+    "baseMaterial": "GRAY_90",
+    "flatNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "FRIS_LONG_GRASS_1",
+      "FRIS_SHORT_GRASS_1",
+      "FRIS_SHORT_GRASS_2",
+      "FRIS_SHORT_GRASS_3",
+      "FRIS_SHORT_GRASS_4",
+      "FRIS_LONG_GRASS_3",
+      "FRIS_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
+      "FRIS_SHORT_GRASS_4_WALL_EDGE",
+      "FRIS_SHORT_GRASS_3_WALL_EDGE",
+      "FRIS_SHORT_GRASS_WALL_EDGE_2"
+    ]
+  },
+  {
     "description": "Varlamore, Fortis and Avium Grass",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
