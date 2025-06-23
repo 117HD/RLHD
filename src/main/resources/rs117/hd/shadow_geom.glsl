@@ -27,13 +27,11 @@
 
 #version 330
 
+#include uniforms/global.glsl
+#include uniforms/materials.glsl
+
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
-
-uniform mat4 lightProjectionMatrix;
-uniform float elapsedTime;
-
-#include uniforms/materials.glsl
 
 #include utils/constants.glsl
 #include utils/misc.glsl
