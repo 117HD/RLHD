@@ -830,9 +830,9 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_REPLACE_FISHING_SPOTS = "replaceFishingSpots";
+	String KEY_FISHING_SPOT_STYLE = "fishingSpotStyle";
 	@ConfigItem(
-		keyName = KEY_REPLACE_FISHING_SPOTS,
+		keyName = KEY_FISHING_SPOT_STYLE,
 		name = "Fishing spot style",
 		description = "Choose the appearance of most fishing spots. Bubbles are the easiest to see on top of 117 HD's water style.",
 		section = miscellaneousSettings
