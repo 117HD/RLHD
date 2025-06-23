@@ -2412,6 +2412,25 @@
     ]
   },
   {
+    "description": "Objects - Rocks - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      "TROLL_ROCKS_GRASS",
+      "TROLL_ROCKS_GRASS_FALLOFF"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "upwardsNormals": true,
+        "uvScale": 0.6
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.32
+  },
+  {
     "description": "Short grass with rock objects usually found around Farming Patches",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
@@ -9156,8 +9175,6 @@
       "DEATH_ROCKSLIDE2",
       "DEATH_ROCKSLIDE3",
       "DEATH_ROCKSLIDE4",
-      "TROLL_ROCKS_GRASS",
-      "TROLL_ROCKS_GRASS_FALLOFF",
       "DEATH_MOUNTAINROCKS_2",
       "DEATH_MOUNTAINROCKS_2_LARGE",
       "DEATH_MOUNTAINROCKS_3",
