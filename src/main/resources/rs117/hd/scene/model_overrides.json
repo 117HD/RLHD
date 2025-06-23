@@ -2869,29 +2869,7 @@
     ]
   },
   {
-    "description": "Brick walls with green glass with gold windows",
-    "baseMaterial": "GRUNGE_1",
-    "flatNormals": true,
-    "colorOverrides": [
-      {
-        "description": "Wooden boards",
-        "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
-      },
-      {
-        "description": "Glass",
-        "colors": "a < 255",
-        "baseMaterial": "NONE"
-      }
-    ],
-    "objectIds": [
-      "FAI_VARROCK_INTERIOR_WINDOW",
-      "FAI_VARROCK_INTERIOR_WINDOW_TYPE1"
-    ]
-  },
-  {
-    "description": "Varrock - Kourend - Walls - Brick walls with green glass windows",
+    "description": "Varrock - Kourend - Walls - Brick walls with glass windows",
     "baseMaterial": "GRUNGE_2",
     "flatNormals": true,
     "uvType": "BOX",
@@ -2900,7 +2878,7 @@
       {
         "description": "Wooden boards",
         "colors": "h == 7",
-        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientation": 512
       },
@@ -2912,14 +2890,16 @@
         "uvScale": 0.6
       },
       {
-        "description": "Green glass",
+        "description": "Glass",
         "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ],
     "objectIds": [
       "FAI_VARROCK_INTERIOR_WINDOW_TALL",
-      "FAI_VARROCK_INTERIOR_WINDOW_TALL_TERM"
+      "FAI_VARROCK_INTERIOR_WINDOW_TALL_TERM",
+      "FAI_VARROCK_INTERIOR_WINDOW",
+      "FAI_VARROCK_INTERIOR_WINDOW_TYPE1"
     ]
   },
   {
