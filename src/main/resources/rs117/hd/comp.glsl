@@ -47,7 +47,7 @@ layout(std140) uniform CameraUniforms {
     float cameraZ;
 
     // Wind Properties
-    vec3 windDirection;
+    vec3 globalWindDirection;
     float windSpeed;
     float windStrength;
     float elapsedTime;
@@ -77,12 +77,11 @@ void main() {
         }
     }
 
-    vec3 windDisplacement = vec3(0.0);
+    vec3 windDirection = vec3(0.0);
     #if WIND_ENABLED
     {
-        float windNoise = noise4Octaves(vec2(minfo.x + (elapsedTime * windSpeed), minfo.z + (elapsedTime * windSpeed)) * 0.05);
-        vec3 windDirectionWithNoise = normalize(windDirection * rotateY(windNoise * (PI / 2.0)));
-        windDisplacement = (windStrength * windNoise) * windDirectionWithNoise;
+        float windNoise = noise(vec2(minfo.x + (elapsedTime * windSpeed), minfo.z + (elapsedTime * windSpeed)) * 0.05);
+        windDirection = normalize(globalWindDirection * rotateY(windNoise * (PI / 2.0)));
     }
     #endif
 
@@ -110,5 +109,5 @@ void main() {
     barrier();
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
-        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], windDisplacement);
+        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], windDirection);
 }

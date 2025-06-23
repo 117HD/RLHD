@@ -212,7 +212,7 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, vec3 windDisplacement) {
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, vec3 windDirection) {
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -267,15 +267,19 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             #if WIND_ENABLED
             int WindSwayingValue = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
             if (WindSwayingValue > 0) {
+                vec3 offset = (thisrvA.pos + thisrvB.pos + thisrvC.pos) / 3.0;
+                float windNoise = noise(vec2(offset.x + (elapsedTime * windSpeed), offset.z + (elapsedTime * windSpeed)) * 0.05);
+                vec3 windDisplacement = (windStrength * windNoise) * windDirection;
+
                 float height = 200.0 * (float((flags >> 27) & 0x1F) / 31);
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
 
                 bool invert = WindSwayingValue == 2;
-                displacementA = windDisplacement * (invert ? 0.9 - strengthA : strengthA);
-                displacementB = windDisplacement * (invert ? 0.9 - strengthB : strengthB);
-                displacementC = windDisplacement * (invert ? 0.9 - strengthC : strengthC);
+                displacementA = windDisplacement * (invert ? 1.0 - strengthA : strengthA);
+                displacementB = windDisplacement * (invert ? 1.0 - strengthB : strengthB);
+                displacementC = windDisplacement * (invert ? 1.0 - strengthC : strengthC);
 
                 thisrvA.pos += displacementA;
                 thisrvB.pos += displacementB;
