@@ -4,6 +4,7 @@ import com.google.common.collect.Sets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import javax.inject.Inject;
@@ -12,6 +13,7 @@ import net.runelite.api.events.*;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -46,21 +48,18 @@ public class FishingSpotReplacer {
 	@Inject
 	private FrameTimer frameTimer;
 
+	@Inject
+	private Random random;
+
 	private final Map<Integer, RuneLiteObject> npcIndexToModel = new HashMap<>();
-	private Animation fishingSpotAnimation;
-	private Animation lavaFishingSpotAnimation;
 
 	public void startUp() {
 		eventBus.register(this);
-		fishingSpotAnimation = client.loadAnimation(FISHING_SPOT_ANIMATION_ID);
-		lavaFishingSpotAnimation = client.loadAnimation(LAVA_SPOT_ANIMATION_ID);
 	}
 
 	public void shutDown() {
 		eventBus.unregister(this);
 		despawnRuneLiteObjects();
-		fishingSpotAnimation = null;
-		lavaFishingSpotAnimation = null;
 	}
 
 	public void despawnRuneLiteObjects() {
@@ -69,7 +68,7 @@ public class FishingSpotReplacer {
 	}
 
 	public ModelOverride getModelOverride() {
-		if (!config.replaceFishingSpots())
+		if (config.fishingSpotStyle() != FishingSpotStyle.HD)
 			return null;
 
 		ModelOverride override = new ModelOverride();
@@ -79,13 +78,13 @@ public class FishingSpotReplacer {
 	}
 
 	public void update() {
-		if (!config.replaceFishingSpots())
+		if (config.fishingSpotStyle() == FishingSpotStyle.VANILLA)
 			return;
 
 		frameTimer.begin(Timer.REPLACE_FISHING_SPOTS);
 
 		// Despawn fishing spots for inactive NPCs
-		Set<Integer> npcIndices = client.getNpcs().stream().map(NPC::getIndex).collect(Collectors.toSet());
+		Set<Integer> npcIndices = client.getTopLevelWorldView().npcs().stream().map(NPC::getIndex).collect(Collectors.toSet());
 		npcIndexToModel.entrySet().removeIf(entry -> {
 			if (npcIndices.contains(entry.getKey()))
 				return false;
@@ -93,7 +92,7 @@ public class FishingSpotReplacer {
 			return true;
 		});
 
-		client.getNpcs().forEach(this::spawnFishingSpot);
+		client.getTopLevelWorldView().npcs().forEach(this::spawnFishingSpot);
 
 		// Update the location of active fishing spots to match their corresponding NPC's current position
 		npcIndexToModel.forEach((index, runeLiteObject) -> {
@@ -114,20 +113,27 @@ public class FishingSpotReplacer {
 		if (!NPC_IDS.contains(npc.getId()))
 			return;
 
+		var worldView = client.getTopLevelWorldView();
+		Scene scene = worldView.getScene();
+		int plane = worldView.getPlane();
+		Tile[][][] tiles = worldView.getScene().getTiles();
+
 		npcIndexToModel.computeIfAbsent(npc.getIndex(), i -> {
-			int modelId = FISHING_SPOT_MODEL_ID;
-			Animation animation = fishingSpotAnimation;
+			AnimationController animController;
+			int modelId;
 			int recolor = -1;
 
 			if (LAVA_FISHING_SPOT_IDS.contains(npc.getId())) {
+				animController = new AnimationController(client, LAVA_SPOT_ANIMATION_ID);
 				modelId = LAVA_SPOT_MODEL_ID;
-				animation = lavaFishingSpotAnimation;
 				recolor = LAVA_SPOT_COLOR;
 			} else {
+				animController = new AnimationController(client, FISHING_SPOT_ANIMATION_ID);
+				modelId = FISHING_SPOT_MODEL_ID;
 				var lp = npc.getLocalLocation();
 				if (lp.isInScene()) {
-					Tile tile = client.getScene().getTiles()[client.getPlane()][lp.getSceneX()][lp.getSceneY()];
-					recolor = tileOverrideManager.getOverride(client.getScene(), tile).waterType.fishingSpotRecolor;
+					Tile tile = tiles[plane][lp.getSceneX()][lp.getSceneY()];
+					recolor = tileOverrideManager.getOverride(scene, tile).waterType.fishingSpotRecolor;
 				}
 			}
 
@@ -140,11 +146,15 @@ public class FishingSpotReplacer {
 				Arrays.fill(modelData.getFaceColors(), (short) recolor);
 			}
 
+			var anim = animController.getAnimation();
+			if (anim != null)
+				animController.setFrame(random.nextInt(anim.getDuration()));
+
 			RuneLiteObject fishingSpot = client.createRuneLiteObject();
-			fishingSpot.setAnimation(animation);
+			fishingSpot.setAnimationController(animController);
+			fishingSpot.setOrientation(random.nextInt(5) * 512);
 			fishingSpot.setDrawFrontTilesFirst(false);
 			fishingSpot.setActive(true);
-			fishingSpot.setShouldLoop(true);
 			fishingSpot.setModel(modelData.light());
 			return fishingSpot;
 		});
