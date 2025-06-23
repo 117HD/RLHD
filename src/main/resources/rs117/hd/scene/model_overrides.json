@@ -3484,6 +3484,7 @@
     "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       "KOUREND_FOOTPATH_01",
+      "KOUREND_FOOTPATH_01_TASK",
       "KOUREND_FOOTPATH_02",
       "KOUREND_FOOTPATH_03",
       "KOUREND_FOOTPATH_04",
@@ -8174,7 +8175,8 @@
       "DK_SPIRALSTAIRS",
       "WILD6_SPIRALSTAIRS_MIDDLE",
       "WILD6_SPIRALSTAIRSTOP",
-      "CANAFIS_SPIRALSTAIRS"
+      "CANAFIS_SPIRALSTAIRS",
+      "AKD_HUGHES_SPIRALSTAIRS"
     ]
   },
   {
@@ -9865,7 +9867,7 @@
     "flatNormals": true
   },
   {
-    "description": "Objects - Wooden - Crate",
+    "description": "Objects - Wooden - Crate - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "MCANNONCRATEBOY",
@@ -9891,7 +9893,8 @@
       "FOSSIL_CRATE_STACKED",
       "TOURTRAP_QIP_CRATE_SINGLE",
       "TOURTRAP_QIP_CRATE_STACKED",
-      "FOSSIL_CRATE3_INACTIVE"
+      "FOSSIL_CRATE3_INACTIVE",
+      "FAI_WIZTOWER_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -11329,7 +11332,8 @@
     "description": "Objects - Wooden - Plank tables - Long",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "QIP_SHEEP_SHEARER_LARGE_TABLE"
+      "QIP_SHEEP_SHEARER_LARGE_TABLE",
+      "AKD_HUGHES_TABLE_1_NOOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -14785,14 +14789,16 @@
   },
   {
     "description": "Objects - Wooden - Stairs",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
     "objectIds": [
       "ELID_MAYOR_STAIRS",
       "ELID_MAYOR_STAIRSTOP",
       "FAI_VARROCK_STAIRS",
       "FAI_VARROCK_STAIRS_TOP"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Nardah Worn Stone Stairs",
