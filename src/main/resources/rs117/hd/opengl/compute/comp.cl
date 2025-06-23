@@ -72,7 +72,7 @@ void sortModel(
           uni->globalWindDirection.x * c + uni->globalWindDirection.z * s,
           uni->globalWindDirection.y,
           -uni->globalWindDirection.x * s + uni->globalWindDirection.z * c
-      ));
+      )) * (windNoise * windStrength * 0.3);
   }
   #endif
 

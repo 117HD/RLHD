@@ -407,23 +407,45 @@ void sort_and_insert(
         #if WIND_ENABLED
         int WindSwayingValue = (((int)uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3);
         if (WindSwayingValue > 0) {
+            const float maxHeight = 100.0;
+            const float noiseResolution = 0.04;
+            const float gridSnapping = 400.0;
+
             float heightFrac = (float)((flags >> 27) & 0x1F) / 31.0f;
-            float3 offset = pos.xyz + (vertA.xyz + vertB.xyz + vertC.xyz / 3.0f);
-            offset.x = round(offset.x / 400.0f) * 400.0f;
-            offset.z = round(offset.z / 400.0f) * 400.0f;
+            float height = 100.0f * heightFrac;
 
-            float windNoise = noise((float2)(offset.x + (uni->elapsedTime * uni->windSpeed), offset.z + (uni->elapsedTime * uni->windSpeed)) * 0.05f);
-            float3 windDisplacement = (uni->windStrength * windNoise * heightFrac) * windDirection;
-
-            float height = 200.0f * heightFrac;
+            bool isTree = WindSwayingValue == 2;
+            float windT = elapsedTime * windSpeed;
+            float heightBasedWindStrength = windStrength * heightFrac;
             float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
             float strengthB = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
             float strengthC = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
 
-            bool invert = WindSwayingValue == 2;
-            displacementA.xyz = windDisplacement * (invert ? 0.95f - strengthA : strengthA);
-            displacementB.xyz = windDisplacement * (invert ? 0.95f - strengthB : strengthB);
-            displacementC.xyz = windDisplacement * (invert ? 0.95f - strengthC : strengthC);
+            if(isTree) {
+                float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + (float2)(windT)) * noiseResolution));
+                float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + (float2)(windT)) * noiseResolution));
+                float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + (float2)(windT)) * noiseResolution));
+
+                // Avoid over stretching which can cause issues in ComputeUVs
+                strengthA *= 0.2;
+                strengthB *= 0.2;
+                strengthC *= 0.2;
+
+                displacementA = ((windNoiseA * heightBasedWindStrength * strengthA) * normalize(windDirection)) + windDirection;
+                displacementB = ((windNoiseB * heightBasedWindStrength * strengthB) * normalize(windDirection)) + windDirection;
+                displacementC = ((windNoiseC * heightBasedWindStrength * strengthC) * normalize(windDirection)) + windDirection;
+            } else {
+                float3 offset = pos.xyz + (vertA.xyz + vertB.xyz + vertC.xyz / 3.0f);
+                offset.x = round(offset.x / 400.0f) * 400.0f;
+                offset.z = round(offset.z / 400.0f) * 400.0f;
+
+                float gridNoise = mix(-0.5, 0.5, noise((offset.xz + (float2)(uni->windT)) * noiseResolution));
+                float3 gridDisplacement = (uni->windStrength * gridNoise * heightFrac) * windDirection;
+
+                displacementA.xyz = gridDisplacement * strengthA;
+                displacementB.xyz = gridDisplacement * strengthB;
+                displacementC.xyz = gridDisplacement * strengthC;
+            }
         }
         #endif
     }
