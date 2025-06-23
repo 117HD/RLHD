@@ -1528,6 +1528,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.cameraX.set(cameraPosition[0]);
 				uboCamera.cameraY.set(cameraPosition[1]);
 				uboCamera.cameraZ.set(cameraPosition[2]);
+
+				uboCamera.globalWindDirection.set((float)Math.cos(environmentManager.currentWindAngle), 0, (float)Math.sin(environmentManager.currentWindAngle));
+				uboCamera.windSpeed.set(environmentManager.currentWindSpeed);
+				uboCamera.windStrength.set(environmentManager.currentWindStrength);
+				uboCamera.elapsedTime.set((float)elapsedTime);
+
 				uboCamera.upload();
 			}
 		}
