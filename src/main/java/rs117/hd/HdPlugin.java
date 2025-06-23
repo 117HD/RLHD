@@ -1527,7 +1527,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.cameraX.set(cameraPosition[0]);
 				uboCamera.cameraY.set(cameraPosition[1]);
 				uboCamera.cameraZ.set(cameraPosition[2]);
-
 				uboCamera.upload();
 			}
 		}
@@ -1538,17 +1537,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				LightsBuffer.LightStruct uniformStruct = uboLights.lights[i];
-
 				uniformStruct.position.set(
 					(float)(light.pos[0] + cameraShift[0]),
 					(float)light.pos[1],
 					(float)(light.pos[2] + cameraShift[1]),
-					(float)(light.radius * light.radius));
-
+					(float) (light.radius * light.radius)
+				);
 				uniformStruct.color.set(
 					light.color[0] * light.strength,
 					light.color[1] * light.strength,
-					light.color[2] * light.strength);
+					light.color[2] * light.strength
+				);
 			}
 			uboLights.upload();
 		}

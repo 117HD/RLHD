@@ -10,7 +10,7 @@ public class LightsBuffer extends UniformBuffer {
 	public LightStruct[] lights = addStructs(new LightStruct[MaxDynamicLights.MAX_LIGHTS], LightStruct::new);
 
 	public static class LightStruct extends UniformBuffer.StructProperty {
-		public Property position = addProperty(PropertyType.FVec4, "Position");
-		public Property color = addProperty(PropertyType.FVec3, "Color");
+		public Property position = addProperty(PropertyType.FVec4, "position");
+		public Property color = addProperty(PropertyType.FVec3, "color");
 	}
 }

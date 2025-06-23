@@ -1,6 +1,6 @@
 #pragma once
 
-// Needs to match GlobalBuffer Order!
+// Needs to match GlobalUniforms.java
 layout(std140) uniform GlobalUniforms {
     vec3 cameraPos;
     int expandedMapLoadingChunks;

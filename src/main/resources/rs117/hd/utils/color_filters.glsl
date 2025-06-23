@@ -1,8 +1,8 @@
 #pragma once
 
+#if APPLY_COLOR_FILTER
 #include utils/constants.glsl
 
-#if APPLY_COLOR_FILTER
 #define COLOR_FILTER_NONE 0
 #define COLOR_FILTER_GREYSCALE 1
 #define COLOR_FILTER_SEPIA 2

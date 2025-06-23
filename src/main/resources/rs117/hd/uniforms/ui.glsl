@@ -1,6 +1,6 @@
 #pragma once
 
-// Needs to match UIBuffer.java
+// Needs to match UIUniforms.java
 layout(std140) uniform UIUniforms {
     ivec2 sourceDimensions;
     ivec2 targetDimensions;
