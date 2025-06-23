@@ -36,6 +36,15 @@ public enum MaxDynamicLights
 	SOME("Some (50)", 50),
 	MANY("Many (100)", 100);
 
+	public static final int MAX_LIGHTS;
+
+	static {
+		int max = 0;
+		for (var e : values())
+			max = Math.max(max, e.value);
+		MAX_LIGHTS = max;
+	}
+
 	private final String name;
 	private final int value;
 
