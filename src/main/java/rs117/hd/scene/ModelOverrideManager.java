@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.config.FishingSpotMode;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
@@ -82,9 +81,7 @@ public class ModelOverrideManager {
 				log.error("Failed to load model overrides:", ex);
 			}
 
-			if (plugin.config.replaceFishingSpots() == FishingSpotMode.HD) {
-				addOverride(fishingSpotReplacer.getModelOverride());
-			}
+			addOverride(fishingSpotReplacer.getModelOverride());
 
 			if (!first) {
 				clientThread.invoke(() -> {
