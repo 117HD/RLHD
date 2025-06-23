@@ -188,12 +188,19 @@ public abstract class UniformBuffer {
 
 	@Getter
 	private final GLBuffer glBuffer;
+	private final int glDrawType;
 	private ByteBuffer data;
 
 	private int dirtyLowTide = Integer.MAX_VALUE;
 	private int dirtyHighTide = Integer.MIN_VALUE;
 
 	public UniformBuffer(String name) {
+		glBuffer = new GLBuffer("UBO " + name);
+		glDrawType = GL_STATIC_DRAW;
+	}
+
+	public UniformBuffer(String name, int glDrawType) {
+		this.glDrawType = glDrawType;
 		glBuffer = new GLBuffer("UBO " + name);
 	}
 
@@ -253,7 +260,7 @@ public abstract class UniformBuffer {
 		glBuffer.glBufferId = glGenBuffers();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer.glBufferId);
-		glBufferData(GL_UNIFORM_BUFFER, glBuffer.size, GL_STATIC_DRAW);
+		glBufferData(GL_UNIFORM_BUFFER, glBuffer.size, glDrawType);
 		glBufferSubData(GL_UNIFORM_BUFFER, 0, data);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 

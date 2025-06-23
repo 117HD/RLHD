@@ -2294,7 +2294,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboUI.upload();
 
-		glUniformBlockBinding(glSceneProgram, uniUiBlockUi, UNIFORM_BLOCK_UI);
+		glUniformBlockBinding(glUiProgram, uniUiBlockUi, UNIFORM_BLOCK_UI);
 
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
