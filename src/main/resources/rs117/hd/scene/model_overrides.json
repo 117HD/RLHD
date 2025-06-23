@@ -10016,7 +10016,8 @@
       "DRAYNOR_BOXES",
       "MCANNON_CRATES",
       "FAI_FALADOR_BOXES",
-      "FAI_FALADOR_BOXES_NOOP"
+      "FAI_FALADOR_BOXES_NOOP",
+      "FAI_VARROCK_BOXES_NOOP"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -12556,6 +12557,31 @@
     ]
   },
   {
+    "description": "Kourend - Wooden -  chair with combined back and cushioned Black and gold pattern",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_POSH_CHAIR1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Black Cushion",
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Gold Cushion",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -14278,14 +14304,16 @@
     ]
   },
   {
-    "description": "Nardah - Shelves - With Boxes",
+    "description": "Nardah - Kourend - Shelves - With Boxes",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
       "ELID_WAREHOUSE_SHELVES3",
       "ELID_WAREHOUSE_SHELVES4",
       "ELID_WAREHOUSE_SHELVES",
-      "ELID_WAREHOUSE_SHELVES2"
+      "ELID_WAREHOUSE_SHELVES2",
+      "AKD_HUGHES_SHELVES_2_NOOP",
+      "AKD_HUGHES_SHELVES_4_NOOP"
     ],
     "colorOverrides": [
       {
@@ -19839,7 +19867,8 @@
   },
   {
     "description": "Tutorial Island - Shelves",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
     "objectIds": [
       "FAI_VARROCK_SHELVES1",
       "FAI_VARROCK_SHELVES2",
@@ -19848,8 +19877,14 @@
       "FAI_VARROCK_SHELF_TANKARDS",
       "FAI_VARROCK_SHELF_BOOKS_INACTIVE"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.75
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Tutorial Island - Varrock - Bed",
@@ -28970,7 +29005,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POSH_CABINET",
-      "FAI_VARROCK_POSH_CABINET2"
+      "FAI_VARROCK_POSH_CABINET2",
+      "AKD_HUGHES_CABINET_1_NOOP",
+      "AKD_HUGHES_CABINET_2_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -29948,7 +29985,8 @@
       }
     ],
     "objectIds": [
-      "FAI_VARROCK_SWORD_TABLE"
+      "FAI_VARROCK_SWORD_TABLE",
+      "AKD_HUGHES_TABLE_3_NOOP"
     ]
   },
   {
@@ -32063,6 +32101,24 @@
         "colors": "h == 7 && s == 7",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Bed - Wide - Wooden - Double bed with White blanket and bed frame with canopy",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_DOUBLE_BED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 0 || h == 10 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
@@ -36008,6 +36064,139 @@
     "uvOrientationY": 512,
     "objectIds": [
       "SARIM_DEPOSIT_BOX"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Table Black and gold table cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "AKD_HUGHES_TABLE_2_NOOP",
+      "FAI_VARROCK_POSH_DININGTABLE_CLOTH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table Cloth",
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Gold Trim",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Table with gold table cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_POSH_DININGTABLE_CLOTH_SML"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Table cloth",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Black Trim",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Mirror - Fancy Dresser",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FAI_VARROCK_POSH_DRESSER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Trim",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 89
+      },
+      {
+        "description": "Black Trim",
+        "colors": "h == 35",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Glass - Drink Shelf",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "HOS_DRINK_CUPBOARD_01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Trim",
+        "colors": "h >= 5 && h <= 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Black Trim",
+        "colors": "h == 35",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Wooden - Tables - Round",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_DARKWIZ_ROUND_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Chair - Cloth - Green Velvet Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "LOVAKENG_VELVET_ROUND_CHAIR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h >= 14",
+        "uvType": "BOX"
+      }
     ]
   }
 ]
