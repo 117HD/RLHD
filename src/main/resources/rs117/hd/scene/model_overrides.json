@@ -7439,7 +7439,8 @@
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
       "CIVITAS_LADDER_TOP_NORIM",
-      "TOURTRAP_QIP_LADDER"
+      "TOURTRAP_QIP_LADDER",
+      "KOUREND_LADDER_INACTIVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -8094,7 +8095,9 @@
     "description": "BATHTUB",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
-      "BATH"
+      "BATH",
+      "AKD_HUGHES_BATH_1_NOOP",
+      "FAI_VARROCK_POSH_BATH"
     ],
     "uvType": "BOX",
     "uvScale": 0.3
@@ -30390,7 +30393,8 @@
     ],
     "objectIds": [
       "HAUNTEDMINE_BACK_ENTRANCE1",
-      "HAUNTEDMINE_BACK_ENTRANCE2"
+      "HAUNTEDMINE_BACK_ENTRANCE2",
+      "DUGUPSOIL2_BROWNMUD"
     ]
   },
   {
@@ -37360,6 +37364,7 @@
     "uvScale": 0.6,
     "objectIds": [
       "AKD_HUGHES_TABLE_2_NOOP",
+      "FAI_VARROCK_POSH_DININGTABLE_CLOTH_SQUARE",
       "FAI_VARROCK_POSH_DININGTABLE_CLOTH"
     ],
     "colorOverrides": [
@@ -37503,5 +37508,56 @@
         "uvScale": 0.80
       }
     ]
+  },
+  {
+    "description": "Kourend - Hay Bale - round",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HAY_BALE_STACK"
+    ]
+  },
+  {
+    "description": "Kourend - Metallic - Range",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "HOS_COOKING_RANGE_02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Kourend - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 172 ,
+    "objectIds": [
+      "FAI_VARROCK_POSH_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Textured - Bathscreen",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "materialOverrides": {
+      "WOODEN_SCREEN": {
+        "textureMaterial": "WOODEN_SCREEN"
+      }
+    },
+    "objectIds": [
+      "FAI_VARROCK_POSH_BATHSCREEN1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65
   }
 ]
