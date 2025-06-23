@@ -70,6 +70,7 @@ void sort_and_insert(
   struct ModelInfo minfo,
   int thisPriority,
   int thisDistance,
+  float3 windDirection,
   struct vert thisrvA,
   struct vert thisrvB,
   struct vert thisrvC,
@@ -329,6 +330,7 @@ void sort_and_insert(
   struct ModelInfo minfo,
   int thisPriority,
   int thisDistance,
+  float3 windDirection,
   struct vert thisrvA,
   struct vert thisrvB,
   struct vert thisrvC,
@@ -358,6 +360,8 @@ void sort_and_insert(
       }
     }
 
+
+
     float4 normA = normal[offset + localId * 3];
     float4 normB = normal[offset + localId * 3 + 1];
     float4 normC = normal[offset + localId * 3 + 2];
@@ -382,10 +386,50 @@ void sort_and_insert(
     }
     #endif
 
+    float4 uvA = (float4)(0);
+    float4 uvB = (float4)(0);
+    float4 uvC = (float4)(0);
+
     float4 pos = (float4)(minfo.x, minfo.y, minfo.z, 0);
-    float4 vertA = (float4)(thisrvA.x, thisrvA.y, thisrvA.z, 0) + pos;
-    float4 vertB = (float4)(thisrvB.x, thisrvB.y, thisrvB.z, 0) + pos;
-    float4 vertC = (float4)(thisrvC.x, thisrvC.y, thisrvC.z, 0) + pos;
+    float4 vertA = (float4)(thisrvA.x, thisrvA.y, thisrvA.z, 0);
+    float4 vertB = (float4)(thisrvB.x, thisrvB.y, thisrvB.z, 0);
+    float4 vertC = (float4)(thisrvC.x, thisrvC.y, thisrvC.z, 0) ;
+
+    float4 displacementA = (float4)(0);
+    float4 displacementB = (float4)(0);
+    float4 displacementC = (float4)(0);
+
+    if (uvOffset >= 0) {
+        uvA = uv[uvOffset + localId * 3];
+        uvB = uv[uvOffset + localId * 3 + 1];
+        uvC = uv[uvOffset + localId * 3 + 2];
+
+        #if WIND_ENABLED
+        int WindSwayingValue = (((int)uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3);
+        if (WindSwayingValue > 0) {
+            float3 offset = pos.xyz + (vertA.xyz + vertB.xyz + vertC.xyz / 3.0f);
+            offset.x = round(offset.x / 400.0f) * 400.0f;
+            offset.z = round(offset.z / 400.0f) * 400.0f;
+
+            float windNoise = noise((float2)(offset.x + (uni->elapsedTime * uni->windSpeed), offset.z + (uni->elapsedTime * uni->windSpeed)) * 0.05f);
+            float3 windDisplacement = (uni->windStrength * windNoise) * windDirection;
+
+            float height = 200.0f * ((float)((flags >> 27) & 0x1F) / 31);
+            float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
+            float strengthB = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
+            float strengthC = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
+
+            bool invert = WindSwayingValue == 2;
+            displacementA.xyz = windDisplacement * (invert ? 0.95f - strengthA : strengthA);
+            displacementB.xyz = windDisplacement * (invert ? 0.95f - strengthB : strengthB);
+            displacementC.xyz = windDisplacement * (invert ? 0.95f - strengthC : strengthC);
+        }
+        #endif
+    }
+
+    vertA += pos + displacementA;
+    vertB += pos + displacementB;
+    vertC += pos + displacementC;
 
     // apply hillskew
     int plane = (flags >> 24) & 3;
@@ -401,15 +445,8 @@ void sort_and_insert(
     vout[outOffset + myOffset * 3 + 1] = (struct vert){vertB.x, vertB.y, vertB.z, thisrvB.ahsl};
     vout[outOffset + myOffset * 3 + 2] = (struct vert){vertC.x, vertC.y, vertC.z, thisrvC.ahsl};
 
-    float4 uvA = (float4)(0);
-    float4 uvB = (float4)(0);
-    float4 uvC = (float4)(0);
 
     if (uvOffset >= 0) {
-      uvA = uv[uvOffset + localId * 3];
-      uvB = uv[uvOffset + localId * 3 + 1];
-      uvC = uv[uvOffset + localId * 3 + 2];
-
       if ((((int)uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
         // Rotate the texture triangles to match model orientation
         uvA = rotate_vertex(uvA, orientation);
@@ -418,9 +455,9 @@ void sort_and_insert(
 
         // Shift texture triangles to world space
         float3 modelPos = convert_float3(pos.xyz);
-        uvA.xyz += modelPos;
-        uvB.xyz += modelPos;
-        uvC.xyz += modelPos;
+        uvA.xyz += modelPos + displacementA.xyz;
+        uvB.xyz += modelPos + displacementB.xyz;
+        uvC.xyz += modelPos + displacementC.xyz;
 
         // For vanilla UVs, the first 3 components are an integer position vector
         if (hillskew == 1) {

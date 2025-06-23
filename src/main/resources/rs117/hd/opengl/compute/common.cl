@@ -103,3 +103,26 @@ bool face_visible(__constant struct uniform *uni, float3 vA, float3 vB, float3 v
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }
 
+// 2D Random
+float hash (float2 st) {
+    return fmod(sin(dot(st.xy, (float2)(12.9898f, 78.233f))) * 43758.5453123f, 1.0f);
+}
+
+float noise(float2 st) {
+    float2 i = floor(st);
+    float2 f = fmod(st, 1.0f);
+
+    // Four corners in 2D of a tile
+    float a = hash(i);
+    float b = hash(i + (float2)(1.0f, 0.0f));
+    float c = hash(i + (float2)(0.0f, 1.0f));
+    float d = hash(i + (float2)(1.0f, 1.0f));
+
+    // Smooth interpolation using Hermite polynomial
+    float2 u = f * f * (3.0f - 2.0f * f);
+
+    // Mix 4 corners
+    return mix(a, b, u.x) +
+           (c - a) * u.y * (1.0f - u.x) +
+           (d - b) * u.x * u.y;
+}
