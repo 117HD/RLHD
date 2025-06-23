@@ -18692,7 +18692,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h >= 6" ],
+        "colors": "h >= 6",
         "baseMaterial": "GRUNGE_3_SHINY",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -18708,7 +18708,7 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": [ "s == 0" ],
+        "colors": "s == 0",
         "baseMaterial": "BONE",
         "uvType": "BOX",
         "uvScale": 0.5,
