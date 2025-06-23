@@ -2905,15 +2905,25 @@
     ]
   },
   {
-    "description": "Varrock church golden window",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Varrock church - Kourend Castle - Glass -  golden window",
+    "baseMaterial": "GRUNGE_2",
     "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "description": "Wooden boards",
-        "colors": "h == 7 && s < 4",
+        "colors": "a == 255 && h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
       },
       {
         "description": "Glass",
@@ -7927,7 +7937,8 @@
       "ROYAL_DWARF_ARMOUR2",
       "DRAGON_SLAYER_QIP_SUITOFARMOUR",
       "KR_SUITOFARMOUR_DARKKNIGHT",
-      "KR_CAM_SUITOFARMOR"
+      "KR_CAM_SUITOFARMOR",
+      "SUITOFARMOUR_DARKKNIGHT"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -19262,12 +19273,23 @@
   {
     "description": "Objects - Concrete - Deposit Box",
     "textureMaterial": "HD_CONCRETE",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65,
     "objectIds": [
       "BANK_DEPOSIT_BOX"
     ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false,
-    "uvScale": 0.65
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "s == 7",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
   },
   {
     "description": "Motherlode Mine - Deposit Box",
@@ -19791,10 +19813,23 @@
     "uvType": "BOX"
   },
   {
-    "description": "Mage Training Arena - Candelabra",
+    "description": "Kourend - Mage Training Arena - Candelabra",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 178,
     "objectIds": [
-      "MAGICTRAINING_CANDLE_STAND"
+      "MAGICTRAINING_CANDLE_STAND",
+      "CANDLE_STAND"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wooden base",
+        "colors": "h == 8 && s < 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
     ]
   },
   {
@@ -27638,7 +27673,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "GRANDFATHERCLOCK",
-      "KR_SEERS_VILLAGE_GRANDFATHERCLOCK"
+      "KR_SEERS_VILLAGE_GRANDFATHERCLOCK",
+      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -37559,5 +37595,98 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.65
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - Marble -  Throne",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - Piano",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "upwardsNormals": true,
+    "objectIds": [
+      "FAI_VARROCK_GRAND_PIANOA"
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - Cloth - Piano Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_GRAND_PIANOB"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 0 && s > 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Cloth - Wooden - Red Cushioned church pew with foot rest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "ARCHEUSS_CHURCH_PEW_RIGHT",
+      "ARCHEUUS_CHURCH_PEW_LEFT"
+    ]
+  },
+  {
+    "description": "Kourend - Stone - Metallic - Saradomin Altar",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 8 || h == 10 || h == 7 && s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Candle",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "SLUG2_ALTAR_SARADOMIN"
+    ]
   }
 ]
