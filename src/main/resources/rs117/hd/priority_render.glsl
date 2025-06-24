@@ -269,7 +269,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             if (WindDisplacementMode != 0) {
                 float height = minfo.y >> 16;
 
-                float heightBasedWindStrength = ((pos.y + height) / windCeiling) * windStrength;
+                float heightBasedWindStrength = ((abs(pos.y) + height) / windCeiling) * windStrength;
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
