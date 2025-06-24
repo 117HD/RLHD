@@ -27598,9 +27598,17 @@
   {
     "description": "Brown Bed with pillow",
     "baseMaterial": "CARPET",
-    "objectIds": [ "BROWNBED" ],
+    "objectIds": [ "BROWNBED", "KEBOS_SHACK_BED" ],
     "uvType": "BOX",
-    "uvOrientation": 64
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Baby Blue Bed with pillow",
