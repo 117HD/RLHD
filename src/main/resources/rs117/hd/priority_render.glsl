@@ -270,7 +270,6 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                 float heightFrac = float((flags >> 27) & 0x1F) / 31;
                 float height = 100.0 * heightFrac;
 
-                float windT = elapsedTime * windSpeed;
                 float heightBasedWindStrength = windStrength * heightFrac;
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
@@ -282,9 +281,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                 // Apply Additional Vertex Displacement
                 if(WindDisplacementMode == 2) {
                     const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
-                    float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + vec2(windT)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-                    float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + vec2(windT)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-                    float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + vec2(windT)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                    float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                    float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                    float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
                     displacementA = ((windNoiseA * heightBasedWindStrength * (strengthA * VertexDisplacementMod)) * windDirection.xyz);
                     displacementB = ((windNoiseB * heightBasedWindStrength * (strengthB * VertexDisplacementMod)) * windDirection.xyz);

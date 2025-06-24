@@ -17,8 +17,8 @@ public class CameraBuffer extends UniformBuffer {
 	public Property cameraZ = addProperty(PropertyType.Float, "cameraZ");
 
 	// Wind Uniforms
-	public Property globalWindDirection = addProperty(PropertyType.FVec3, "globalWindDirection");
-	public Property windSpeed = addProperty(PropertyType.Float, "windSpeed");
+	public Property windDirectionX = addProperty(PropertyType.Float, "windDirectionX");
+	public Property windDirectionZ = addProperty(PropertyType.Float, "windDirectionZ");
 	public Property windStrength = addProperty(PropertyType.Float, "windStrength");
-	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
+	public Property windOffset = addProperty(PropertyType.Float, "windOffset");
 }

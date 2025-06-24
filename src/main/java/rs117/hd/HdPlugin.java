@@ -465,6 +465,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public float deltaClientTime;
 	private long lastFrameTimeMillis;
 	private double lastFrameClientTime;
+	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
 	private long brightnessChangedAt;
@@ -1529,10 +1530,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.cameraY.set(cameraPosition[1]);
 				uboCamera.cameraZ.set(cameraPosition[2]);
 
-				uboCamera.globalWindDirection.set((float)Math.cos(environmentManager.currentWindAngle), 0, (float)Math.sin(environmentManager.currentWindAngle));
-				uboCamera.windSpeed.set(environmentManager.currentWindSpeed);
+				uboCamera.windDirectionX.set((float)Math.cos(environmentManager.currentWindAngle));
+				uboCamera.windDirectionZ.set((float)Math.sin(environmentManager.currentWindAngle));
 				uboCamera.windStrength.set(environmentManager.currentWindStrength);
-				uboCamera.elapsedTime.set((float)elapsedTime);
+				uboCamera.windOffset.set(windOffset);
 
 				uboCamera.upload();
 			}
@@ -1857,6 +1858,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (Math.abs(deltaTime) > 10)
 				deltaTime = 1 / 60.f;
 			elapsedTime += deltaTime;
+			windOffset += deltaTime * environmentManager.currentWindSpeed;
 
 			// The client delta doesn't need clamping
 			deltaClientTime = (float) (elapsedClientTime - lastFrameClientTime);

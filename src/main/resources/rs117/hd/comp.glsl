@@ -47,10 +47,10 @@ layout(std140) uniform CameraUniforms {
     float cameraZ;
 
     // Wind Properties
-    vec3 globalWindDirection;
-    float windSpeed;
+    float windDirectionX;
+    float windDirectionZ;
     float windStrength;
-    float elapsedTime;
+    float windOffset;
 };
 
 #include comp_common.glsl
@@ -80,16 +80,14 @@ void main() {
     vec4 windDirection = vec4(0.0);
     #if WIND_ENABLED
     {
-        float windNoise = noise((vec2(minfo.x, minfo.z) + vec2(elapsedTime * windSpeed)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+        float windNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
         float angle = windNoise * (PI / 2.0);
         float c = cos(angle);
         float s = sin(angle);
 
-        windDirection.xyz = normalize(vec3(
-            globalWindDirection.x * c + globalWindDirection.z * s,
-            globalWindDirection.y,
-            -globalWindDirection.x * s + globalWindDirection.z * c
-        ));
+        windDirection.x = windDirectionX * c + windDirectionZ * s;
+        windDirection.z = -windDirectionX * s + windDirectionZ * c;
+        windDirection.xyz = normalize(windDirection.xyz);
         windDirection.w = windNoise;
     }
     #endif
