@@ -100,6 +100,22 @@ bool face_visible(vec3 vA, vec3 vB, vec3 vC, vec3 position) {
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }
 
+float saturate(float value) {
+    return clamp(value, 0.0, 1.0);
+}
+
+vec2 saturate(vec2 value) {
+    return clamp(value, vec2(0.0), vec2(1.0));
+}
+
+vec3 saturate(vec3 value) {
+    return clamp(value, vec3(0.0), vec3(1.0));
+}
+
+vec4 saturate(vec4 value) {
+    return clamp(value, vec4(0.0), vec4(1.0));
+}
+
 // Rotation matrix around the X axis.
 mat3 rotateX(float theta) {
     float c = cos(theta);

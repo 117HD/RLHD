@@ -269,10 +269,10 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             if (WindDisplacementMode != 0) {
                 float height = minfo.y >> 16;
 
-                float heightBasedWindStrength = ((abs(pos.y) + height) / windCeiling) * windStrength;
-                float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
-                float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
-                float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
+                float heightBasedWindStrength = saturate((abs(pos.y) + height) / windCeiling) * windStrength;
+                float strengthA = saturate(abs(thisrvA.pos.y) / height);
+                float strengthB = saturate(abs(thisrvB.pos.y) / height);
+                float strengthC = saturate(abs(thisrvC.pos.y) / height);
 
                 // Main Object Displacement
                 vec3 worldDisplacement = windDirection.xyz * (heightBasedWindStrength * windDirection.w);
@@ -288,21 +288,22 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                     displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB * VertexDisplacementMod)) * windDirection.xyz);
                     displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC * VertexDisplacementMod)) * windDirection.xyz);
 
-                    strengthA = clamp(strengthA - (VertexDisplacementMod), 0.0, 1.0);
-                    strengthB = clamp(strengthB - (VertexDisplacementMod), 0.0, 1.0);
-                    strengthC = clamp(strengthC - (VertexDisplacementMod), 0.0, 1.0);
+                    strengthA = saturate(strengthA - VertexDisplacementMod);
+                    strengthB = saturate(strengthB - VertexDisplacementMod);
+                    strengthC = saturate(strengthC - VertexDisplacementMod);
                 }
 
                 displacementA += worldDisplacement * strengthA;
                 displacementB += worldDisplacement * strengthB;
                 displacementC += worldDisplacement * strengthC;
-
-                thisrvA.pos += displacementA;
-                thisrvB.pos += displacementB;
-                thisrvC.pos += displacementC;
             }
             #endif
         }
+
+        // apply any displacement
+        thisrvA.pos += displacementA;
+        thisrvB.pos += displacementB;
+        thisrvC.pos += displacementC;
 
         // rotate for model orientation
         thisrvA.pos = rotate(thisrvA.pos, orientation);
