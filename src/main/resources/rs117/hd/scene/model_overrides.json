@@ -2550,7 +2550,9 @@
       "RUSTIC_OPENFENCEGATE_L",
       "RUSTIC_OPENFENCEGATE_R",
       "MURDER_QIP_GARDENFENCING",
-      "ROYAL_RAIL"
+      "ROYAL_RAIL",
+      "GA_FENCEGATE_L_NORMAL",
+      "GA_FENCEGATE_R_NORMAL"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -25926,7 +25928,8 @@
     "description": "Objects - Wooden - Hat Rack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "HATSTAND"
+      "HATSTAND",
+      "HATSTAND_MAHOGANY"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -25999,6 +26002,15 @@
     "description": "Wooden food trough",
     "objectIds": [ "FOODTROUGH", "FAI_VARROCK_FOODTROUGH" ],
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wooden food trough - With textured seed",
+    "objectIds": [ "FOODTROUGH2" ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
@@ -26536,7 +26548,8 @@
     "objectIds": [
       "FAI_VARROCK_DRAWERS",
       "FAI_VARROCK_POSH_DRAWERS",
-      "KR_SEERS_VILLAGE_DRAWERS1"
+      "KR_SEERS_VILLAGE_DRAWERS1",
+      "FAI_FALADOR_DRAWERS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -37298,6 +37311,117 @@
       "DS2_CORSAIR_COVE_SHIPHULL_RIB2",
       "DS2_CORSAIR_COVE_SHIPHULL_RIB3",
       "DS2_CORSAIR_COVE_SHIPHULL_RIB4"
+    ]
+  },
+  {
+    "description": "Kebos Farm - Wooden - Chicken Coop",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "KEBOS_FARMING_GUILD_CHICKEN_COOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grain",
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Straw",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HAY_1",
+      "STRAW",
+      "STRAW2"
+    ]
+  },
+  {
+    "description": "Kebos Farm - Straw with rocks",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HAY_2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "baseMaterial": "ROCK_4",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Wooden bookcase with brown and taupe colored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "GA_SHELVES"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red glass bottle",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Red glass bottle",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Yellow Glass Bottle",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Varrock - Metallic - Wooden - Sink with wooden frame and slats",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 179,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_COOKING_KITCHEN_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+
     ]
   }
 ]
