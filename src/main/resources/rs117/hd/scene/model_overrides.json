@@ -1088,6 +1088,10 @@
       "LEAVES_TOP": {
         "windDisplacementMode": "Vertex",
         "textureMaterial": "LEAVES_YELLOW_TOP"
+      },
+      "MAPLE_LEAVES": {
+        "windDisplacementMode": "Vertex",
+        "textureMaterial": "MAPLE_LEAVES"
       }
     }
   },
@@ -2013,6 +2017,52 @@
     ]
   },
   {
+    "description": "Flowers or flower-like objects that should sway in the wind",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "Object",
+    "objectIds": [
+      "DAISYS",
+      "ONION",
+      "RAREFLOWER_BLUE",
+      "RAREFLOWERS_BLUE",
+      "BLUEFLOWER",
+      "REDFLOWER",
+      "TULIPS",
+      "FLAX",
+      "RAREFLOWER_1",
+      "RAREFLOWERS_1",
+      "FLOWERBED1",
+      "FLOWERBED_YELLOW",
+      "RAREFLOWER_YELLOW",
+      "RAREFLOWERS_YELLOW",
+      "SUNFLOWER",
+      "SUNFLOWERS",
+      "BULLRUSHES",
+      "BULLRUSHES2",
+      "BULLRUSHES3",
+      "BULLRUSHES4",
+      "BULLRUSHES5",
+      "THISTLE",
+      "WATERLILY1",
+      "WATERLILY2",
+      "WATERLILY3",
+      "POTATO",
+      "FAI_VARROCK_WHEAT_CORNER",
+      "FAI_VARROCK_WHEAT_SMALL",
+      "FAI_VARROCK_WHEAT",
+      "NETTLES",
+      "NETTLES1",
+      "NETTLES2",
+      "NETTLES3",
+      "NETTLES4",
+      "NETTLES5",
+      "NETTLES6",
+      "HEATHER",
+      "HEATHER2",
+      "HEATHER3"
+    ]
+  },
+  {
     "description": "GRASS",
     "baseMaterial": "GRAY_75",
     "objectIds": [
@@ -2178,6 +2228,7 @@
   {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
     "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
@@ -2191,6 +2242,7 @@
   {
     "description": "Farming Patch Grass without Dirt",
     "baseMaterial": "GRAY_65",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "BELLADONNA_PATCH_WEEDS_1",
       "BELLADONNA_PATCH_WEEDS_2",
@@ -2289,6 +2341,7 @@
   {
     "description": "Farming Patch Grass with Dirt",
     "baseMaterial": "GRAY_65",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "HOP_PATCH_WEEDS_1",
       "HOP_PATCH_WEEDS_2",
@@ -2356,6 +2409,7 @@
   {
     "description": "Short grass with rock objects usually found around Farming Patches",
     "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
@@ -2477,6 +2531,7 @@
   {
     "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
     "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "Object",
     "seasonalTheme": "WINTER",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
@@ -2495,6 +2550,7 @@
   {
     "description": "Fixes weird pattern made by grass in POH",
     "areas": [ "PLAYER_OWNED_HOUSE" ],
+    "windDisplacementMode": "Object",
     "objectIds": [
       "POH_GRASS"
     ],
@@ -19794,6 +19850,7 @@
   {
     "description": "Objects - Bush - Dead",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "Vertex",
     "objectIds": [
       "LEAFLESSBUSH",
       "LEAFLESSBUSH2",
@@ -21066,7 +21123,6 @@
   },
   {
     "description": "Textured Bushes",
-    "windDisplacementMode": "Vertex",
     "objectIds": [
       "HEDGE", "HEDGECORNER", "WILDBUSH1", "WILDBUSH2",
       "WILDBUSH3", "WILDBUSH4", "BUSH1", "BUSH2",
@@ -21083,7 +21139,17 @@
     "baseMaterial": "BARK",
     "objectIds": [ "EVERGREEN", "EVERGREEN_LARGE", "MAX_EVERGREEN" ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "Vertex",
+        "textureMaterial": "LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "Vertex",
+        "textureMaterial": "LEAVES_TOP"
+      }
+    }
   },
   {
     "description": "Snowcovered Evergreen Trees - Textured",
@@ -21106,11 +21172,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "Vertex",
-        "textureMaterial": "LEAVES_RED_SIDE"
+        "textureMaterial": "LEAVES_SIDE"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "Vertex",
-        "textureMaterial": "LEAVES_RED_TOP"
+        "textureMaterial": "LEAVES_TOP"
       }
     }
   },
