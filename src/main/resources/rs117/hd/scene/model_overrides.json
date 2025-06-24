@@ -12989,7 +12989,8 @@
     "description": "Objects - Ardougne Castle - Spear Wall",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
-      "SPEARWALL"
+      "SPEARWALL",
+      "FAI_VARROCK_SPEARWALL"
     ],
     "colorOverrides": [
       {
@@ -21742,14 +21743,15 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Freminnik - Walls - Barricade",
+    "description": "Freminnik - Kourend - Walls - Barricade",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       "VIKING_PIKE_DEFENCE",
       "VIKING_PIKE_DEFENCE_TERMINATOR_RIGHT",
       "VIKING_PIKE_DEFENCE_TERMINATOR_LEFT",
       "VIKING_PIKE_DEFENCE_BEND",
-      "VIKING_PIKE_DEFENCE_BEND_MIRROR"
+      "VIKING_PIKE_DEFENCE_BEND_MIRROR",
+      "VIKING_PIKE_DEFENCE_CORNER"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -29549,7 +29551,8 @@
       "KR_CAM_CABINET_BOWS_WHITE",
       "CABINET_AXES",
       "FAI_VARROCK_BOWCASE_CROSSBOW",
-      "FAI_VARROCK_ARROW_DISPLAY"
+      "FAI_VARROCK_ARROW_DISPLAY",
+      "FAI_VARROCK_SWORDCASE_SWORDS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -30071,7 +30074,8 @@
       }
     ],
     "objectIds": [
-      "DRAYNOR_CANDLE_WALL"
+      "DRAYNOR_CANDLE_WALL",
+      "_100_DAVE_CANDLE_WALL"
     ]
   },
   {
@@ -37550,6 +37554,7 @@
     "baseMaterial": "HD_HAY",
     "uvType": "BOX",
     "uvScale": 0.75,
+    "uvOrientation": 512,
     "objectIds": [
       "HAY_BALE_STACK"
     ]
@@ -37687,6 +37692,246 @@
     ],
     "objectIds": [
       "SLUG2_ALTAR_SARADOMIN"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Static Fruit Stall - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "HOS_FRUIT_STALL"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Static Fruit Stall",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "HOS_FRUIT_STALL_01",
+      "HOS_FRUIT_STALL_02"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Wood plank debris",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientation": 303,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SHAYZIEN_BLACK_DEBRIS_WOOD"
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Wooden -  Metal - Barrel with metal bands and swords - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ "BARREL_SWORDS" ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Kourend - Varrock - Wooden -  Metal - Barrel with metal bands and staves - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ "BARREL_STAFFS" ],
+    "colorOverrides": [
+      {
+        "description": "Staves",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.25
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Barrel with Bow and Arrows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BARREL_RANGING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33
+      },
+      {
+        "description": "Flights",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Barrel with Bow and Arrows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_FEATHER_BARREL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Feathers",
+        "colors": "s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Workbench",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "FAI_VARROCK_BOWBENCH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Shayzien - Metallic - Ballista",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SHAYZIEN_MASSIVE_BALLISTA",
+      "SHAYZIEN_MASSIVE_CROSSBOW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Shayzien - Stone - Wooden - Gabion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHAYZIEN_GABION_DEFENCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "JAGGED_STONE_TILE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Cloth - Wooden - Gabion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 172
+      },
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      },
+      {
+        "colors": [ "h >= 8 && h <= 10" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Weapons case mounted on wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "FAI_VARROCK_WEAPONCASE_LARGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      }
     ]
   }
 ]
