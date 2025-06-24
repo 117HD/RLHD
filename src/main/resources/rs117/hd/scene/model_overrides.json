@@ -12841,7 +12841,8 @@
       "ROUNDTABLE",
       "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE2",
       "KR_SIN_ROUNDTABLE",
-      "HOS_ROUND_TABLE"
+      "HOS_ROUND_TABLE",
+      "ROUNDTABLE_WIDE_LIGHT"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -25224,7 +25225,8 @@
     "description": "Zeah - Wooden Spiral Staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "KEBOS_SPIRALSTAIRS_BOTTOM"
+      "KEBOS_SPIRALSTAIRS_BOTTOM",
+      "KEBOS_SPIRALSTAIRS_TOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 88,
@@ -27639,6 +27641,40 @@
       {
         "description": "Wood frame",
         "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Baby Blue Double wide Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_VARROCK_DOUBLE_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Baby Blue Bunk Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_FALADOR_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
@@ -37423,5 +37459,26 @@
       }
 
     ]
+  },
+  {
+    "description": "Barrel with metal bands filled with flower",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 12 && s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "DIRT_1",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ "GA_FLOURBARREL" ]
   }
 ]
