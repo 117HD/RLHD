@@ -1413,6 +1413,7 @@
   {
     "description": "Objects - Tree - Willow",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "Vertex",
     "objectIds": [
       "WILLOW_TREE2OR3OR4_STUMP",
       "WILLOWTREE",
@@ -9156,6 +9157,7 @@
   {
     "description": "Lumbridge Swamp Tree/Plant",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "Vertex",
     "objectIds": [
       "MEDPLANT_SWAMP"
     ],
@@ -9164,6 +9166,7 @@
     "uvOrientation": 256,
     "colorOverrides": [
       {
+        "windDisplacementMode": "Vertex",
         "colors": "h == 28",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.2,
@@ -21063,6 +21066,7 @@
   },
   {
     "description": "Textured Bushes",
+    "windDisplacementMode": "Vertex",
     "objectIds": [
       "HEDGE", "HEDGECORNER", "WILDBUSH1", "WILDBUSH2",
       "WILDBUSH3", "WILDBUSH4", "BUSH1", "BUSH2",
