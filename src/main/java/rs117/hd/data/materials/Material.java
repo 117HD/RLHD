@@ -112,8 +112,7 @@ public enum Material {
 		.setHasTransparency(true)),
 	TROPICAL_LEAF(29, p -> p
 		.setBrightness(.5f)
-		.setHasTransparency(true))
-	,
+		.setHasTransparency(true)),
 	WILLOW_LEAVES(30, p -> p
 		.setHasTransparency(true)
 		.setTextureScale(1.025f, 1.0f)
@@ -344,8 +343,7 @@ public enum Material {
 	GRASS_3,
 	GRASS_SCROLLING(GRASS_1, p -> p
 		.setScroll(0, -1 / 0.7f)),
-	COLORED_GRASS(p ->
-		p.setOverrideBaseColor(true)),
+	COLORED_GRASS(p -> p.setOverrideBaseColor(true)),
 	DIRT_1_N,
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
@@ -638,7 +636,7 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 		.setBrightness(1.75f)),
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
-	LEAF_VEINS(),
+	LEAF_VEINS,
 	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),
 	WOOD_GRAIN,
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
