@@ -18645,7 +18645,8 @@
       "FAI_VARROCK_CONTAINER",
       "SNAKEBOSS_BANKCHEST",
       "WILD_CHEST_CLOSED",
-      "WILD_CHEST_OPEN"
+      "WILD_CHEST_OPEN",
+      "KEBOS_CHEST_CLOSED_INACTIVE"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
@@ -27598,13 +27599,33 @@
   {
     "description": "Brown Bed with pillow",
     "baseMaterial": "CARPET",
-    "objectIds": [ "BROWNBED", "KEBOS_SHACK_BED" ],
+    "objectIds": [
+      "BROWNBED",
+      "KEBOS_SHACK_BED"
+    ],
     "uvType": "BOX",
     "uvOrientation": 64,
     "colorOverrides": [
       {
         "description": "Wood frame",
         "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Brown Bed with pillow - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
@@ -27637,7 +27658,8 @@
     "objectIds": [
       "SINK",
       "SINK2",
-      "KR_SINK"
+      "KR_SINK",
+      "QIP_SHEEP_SHEARER_SINK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
