@@ -37502,5 +37502,57 @@
       "FAI_VARROCK_WINDMILL_WINDOW_LARGE",
       "FAI_VARROCK_WINDMILL_WINDOW"
     ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW_RIGHT",
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW_LEFT",
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW",
+      "FAI_VARROCK_ROOF_THATCHED",
+      "FAI_VARROCK_ROOF_THATCHED_SHORT",
+      "FAI_VARROCK_ROOF_THATCHED_SHORT_MIRROR",
+      "FAI_VARROCK_ROOF_THATCHED_3H",
+      "FAI_VARROCK_ROOF_THATCHED_END",
+      "FAI_VARROCK_THATCHED_ROOF_BALCONY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_MILLROOFRIGHT",
+      "FAI_VARROCK_MILLROOFLEFT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      },
+      {
+        "description": "Walls",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
   }
 ]
