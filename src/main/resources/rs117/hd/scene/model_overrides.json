@@ -37480,5 +37480,27 @@
       }
     ],
     "objectIds": [ "GA_FLOURBARREL" ]
+  },
+  {
+    "description": "Kebos Farm - Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_WINDMILL_WALL",
+      "FAI_VARROCK_WINDMILL_WALL_TYPE2",
+      "FAI_VARROCK_WINDMILL_WALL_TYPE2_MIRROR",
+      "FAI_VARROCK_WINDMILL_WINDOW_LARGE_MIRROR",
+      "FAI_VARROCK_WINDMILL_WINDOW_LARGE",
+      "FAI_VARROCK_WINDMILL_WINDOW"
+    ]
   }
 ]
