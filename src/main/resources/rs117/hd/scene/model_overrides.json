@@ -37560,6 +37560,16 @@
     ]
   },
   {
+    "description": "Kourend - Hay Bale - round - Rotated",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HAY_BALE",
+      "HAY_BALE_THIN"
+    ]
+  },
+  {
     "description": "Kourend - Metallic - Range",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
