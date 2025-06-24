@@ -38,14 +38,9 @@ layout(std140) uniform GlobalUniforms {
     float shadowMaxBias;
     int shadowsEnabled;
 
-    vec3 waterColorLight;
-    vec3 waterColorMid;
-    vec3 waterColorDark;
-
     bool underwaterEnvironment;
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;
-    float underwaterCausticsStrength;
 
     int colorFilterPrevious;
     int colorFilter;

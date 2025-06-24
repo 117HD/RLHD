@@ -668,28 +668,116 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "underwaterCaustics",
-		name = "Underwater Caustics",
-		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 11,
-		section = environmentSettings
-	)
-	default boolean underwaterCaustics()
-	{
-		return true;
-	}
-
 	String KEY_HD_TZHAAR_RESKIN = "tzhaarHD";
 	@ConfigItem(
 		keyName = KEY_HD_TZHAAR_RESKIN,
 		name = "HD TzHaar Reskin",
 		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 12,
+		position = 10,
 		section = environmentSettings
 	)
 	default boolean hdTzHaarReskin() {
 		return true;
+	}
+
+
+	/*====== Water settings ======*/
+
+	@ConfigSection(
+		name = "Water",
+		description = "Various options which control the appearance of water.",
+		position = 3
+	)
+	String waterSettings = "waterSettings";
+
+	@ConfigItem(
+		keyName = "waterTransparency",
+		name = "Water Transparency",
+		description = "Choose whether water should be transparent. Some water will be opaque regardless of this setting.",
+		position = 1,
+		section = waterSettings
+	)
+	default boolean waterTransparency() {
+		return true;
+	}
+
+	String KEY_PLANAR_REFLECTIONS = "planarReflections";
+	@ConfigItem(
+		keyName = KEY_PLANAR_REFLECTIONS,
+		name = "Planar Reflections",
+		description = "Render a reflection for the main water surface in the scene.<br><b>GPU intensive</b>.",
+		position = 2,
+		section = waterSettings
+	)
+	default boolean enablePlanarReflections() {
+		return true;
+	}
+
+	String KEY_PLANAR_REFLECTION_RESOLUTION = "planarReflectionResolution";
+	@ConfigItem(
+		keyName = KEY_PLANAR_REFLECTION_RESOLUTION,
+		name = "Reflection Resolution",
+		description =
+			"Percentage of screen resolution to render reflections at.<br>" +
+			"50% is a good for performance, but produces more shimmering.<br>" +
+			"Super-resolution of up to 400% is allowed, but is very costly.",
+		position = 3,
+		section = waterSettings
+	)
+	@Units(Units.PERCENT)
+	@Range(min = 25, max = 400)
+	default int reflectionResolution() {
+		return 100;
+	}
+
+	@ConfigItem(
+		keyName = "shorelineCaustics",
+		name = "Shoreline Caustics",
+		description = "Imitate sunlight passing through waves on the water surface near shorelines.",
+		position = 4,
+		section = waterSettings
+	)
+	default boolean shorelineCaustics() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "underwaterCaustics",
+		name = "Underwater Caustics",
+		description =
+			"Imitate sunlight passing through waves on the surface in underwater environments.<br>" +
+			"This applies for example when diving and in Guardians of the Rift.",
+		position = 5,
+		section = waterSettings
+	)
+	default boolean underwaterCaustics() {
+		return true;
+	}
+
+	String KEY_WATER_FOAM = "waterFoam";
+	@ConfigItem(
+		keyName = KEY_WATER_FOAM,
+		name = "Foam",
+		description = "Add foam around the edges of water bodies.",
+		position = 6,
+		section = waterSettings
+	)
+	default boolean enableWaterFoam() {
+		return true;
+	}
+
+	String KEY_LEGACY_WATER = "legacyWater";
+	@ConfigItem(
+		keyName = KEY_LEGACY_WATER,
+		name = "Legacy Water",
+		description =
+			"Use the water style included in the initial release of the plugin. May be removed in the future.<br>" +
+			"For reflections, Planar Reflections in Water settings must also be enabled.",
+		position = 7,
+		section = waterSettings
+	)
+	default boolean legacyWater() {
+		return false;
 	}
 
 
@@ -698,7 +786,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Model caching",
 		description = "Improve performance by reusing model data",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String modelCachingSettings = "modelCachingSettings";
@@ -757,7 +845,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -872,7 +960,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

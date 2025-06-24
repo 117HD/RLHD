@@ -116,8 +116,7 @@ public enum WaterType
 		.surfaceColor(srgb(35, 10, 0))
 		.foamColor(srgb(106, 108, 24))
 		.depthColor(srgb(65, 23, 0))
-		.causticsStrength(0)
-		.duration(2.7f)),
+		.causticsStrength(0)),
 	SCAR_SLUDGE(b -> b
 		.specularStrength(0)
 		.specularGloss(100)
@@ -139,7 +138,8 @@ public enum WaterType
 		.foamColor(rgb(120, 81, 0))
 		.depthColor(rgb(120, 59, 0))
 		.causticsStrength(0.4f)
-		.duration(2.2f)),
+		.duration(2.2f)
+		.flat(true)),
 	PLAIN_WATER(b -> b
 		.depthColor(rgb(0, 0, 0))
 		.foamColor(rgb(64, 64, 64))
@@ -167,6 +167,8 @@ public enum WaterType
 		.depthColor(srgb(30, 255, 26))
 		.causticsStrength(0)
 		.duration(1.6f)),
+	CYAN_WATER,
+	GREEN_CAVE_WATER(SWAMP_WATER_FLAT, true),
 	;
 
 	public final boolean flat;

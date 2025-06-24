@@ -1114,6 +1114,14 @@
     "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
+    "name": "GIANTS_FOUNDRY_WATER",
+    "area": "GIANTS_FOUNDRY",
+    "overlayIds": [
+      104
+    ],
+    "waterType": "CYAN_WATER"
+  },
+  {
     "name": "FALADOR_EAST_BANK_PATH_FIX_2",
     "area": "FALADOR_EAST_BANK_PATH_FIX_2",
     "overlayIds": [
@@ -3853,7 +3861,7 @@
     "overlayIds": [
       181
     ],
-    "waterType": "WATER",
+    "waterType": "PLAIN_WATER",
     "blended": false
   },
   {
@@ -4199,7 +4207,7 @@
     "overlayIds": [
       41
     ],
-    "waterType": "WATER_FLAT",
+    "waterType": "CYAN_WATER",
     "blended": false
   },
   {
@@ -4674,7 +4682,7 @@
     "name": "STREAMBOUND_CAVERN_WATER",
     "area": "STREAMBOUND_CAVERN",
     "overlayIds": [ 156 ],
-    "waterType": "SWAMP_WATER_FLAT"
+    "waterType": "GREEN_CAVE_WATER"
   },
   {
     "name": "ANCIENT_SHRINE_DIRT",

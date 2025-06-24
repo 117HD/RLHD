@@ -41,14 +41,9 @@ public class GlobalUniforms extends UniformBuffer {
 	public Property shadowMaxBias = addProperty(PropertyType.Float, "shadowMaxBias");
 	public Property shadowsEnabled = addProperty(PropertyType.Int, "shadowsEnabled");
 
-	public Property waterColorLight = addProperty(PropertyType.FVec3, "waterColorLight");
-	public Property waterColorMid = addProperty(PropertyType.FVec3, "waterColorMid");
-	public Property waterColorDark = addProperty(PropertyType.FVec3, "waterColorDark");
-
 	public Property underwaterEnvironment = addProperty(PropertyType.Int, "underwaterEnvironment");
 	public Property underwaterCaustics = addProperty(PropertyType.Int, "underwaterCaustics");
 	public Property underwaterCausticsColor = addProperty(PropertyType.FVec3, "underwaterCausticsColor");
-	public Property underwaterCausticsStrength = addProperty(PropertyType.Float, "underwaterCausticsStrength");
 
 	public Property colorFilterPrevious = addProperty(PropertyType.Int, "colorFilterPrevious");
 	public Property colorFilter = addProperty(PropertyType.Int, "colorFilter");

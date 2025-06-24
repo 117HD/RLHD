@@ -1069,6 +1069,11 @@
     ]
   },
   {
+    "description": "Hide objects causing issues with water reflections, such as grapple shortcuts",
+    "objectIds": [ "XBOWS_INV_FLOOR" ],
+    "hide": true
+  },
+  {
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -18501,6 +18506,9 @@
       "WATERFALL_OVERLAY",
       "WATERFALL_OVERLAY_1_BRIGHTER",
       "MYARM_WATER_MOVING_1"
+    ],
+    "hideInAreas": [
+      "SHIP_SAILING"
     ]
   },
   {
@@ -37268,6 +37276,26 @@
       "DS2_CORSAIR_COVE_SHIPHULL_RIB2",
       "DS2_CORSAIR_COVE_SHIPHULL_RIB3",
       "DS2_CORSAIR_COVE_SHIPHULL_RIB4"
+    ]
+  },
+  {
+    "description": "Hide black boxes in God Wars Dungeon messing up the water reflection",
+    "objectIds": [ "CAVEWALL_TOP_SUPERBLACK" ],
+    "hideInAreas": [
+      [ 2899, 5301, 2911, 5311 ]
+    ]
+  },
+  {
+    "description": "Godwars waterfall replace cyan water",
+    "objectIds": [
+      "GODWARS_WATERFALL_TOP_OFFSET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "MODEL_XY"
+      }
     ]
   }
 ]

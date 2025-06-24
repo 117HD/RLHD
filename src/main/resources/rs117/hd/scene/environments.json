@@ -1245,8 +1245,8 @@
     "lightningEffects": true,
     "ambientColor": "#a5acbd",
     "ambientStrength": 2,
-    "directionalColor": "#707070",
-    "directionalStrength": 1,
+    "directionalColor": "#B7B7B7",
+    "directionalStrength": 1.5,
     "fogColor": "#45474b",
     "fogDepth": 60
   },

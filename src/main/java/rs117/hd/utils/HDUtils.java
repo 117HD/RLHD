@@ -176,19 +176,12 @@ public class HDUtils {
 		return s.toString().hashCode();
 	}
 
-	public static float[] calculateSurfaceNormals(float[] a, float[] b, float[] c) {
-		Vector.subtract(b, a, b);
-		Vector.subtract(c, a, c);
-		float[] n = new float[3];
-		return Vector.cross(n, b, c);
-	}
-
-	public static float dotLightDirectionTile(float x, float y, float z) {
+	public static float dotLightDirectionTile(float... xyz) {
 		// Tile normal vectors need to be normalized
-		float length = x * x + y * y + z * z;
+		float length = xyz[0] * xyz[0] + xyz[1] * xyz[1] + xyz[2] * xyz[2];
 		if (length < EPSILON)
 			return 0;
-		return (x * LIGHT_DIR_TILE[0] + y * LIGHT_DIR_TILE[1]) / (float) Math.sqrt(length);
+		return (xyz[0] * LIGHT_DIR_TILE[0] + xyz[2] * LIGHT_DIR_TILE[1]) / (float) Math.sqrt(length);
 	}
 
 	public static long ceilPow2(long x) {
