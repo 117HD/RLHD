@@ -1071,6 +1071,7 @@
   {
     "description": "TREES",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VertexWithHemisphereBlend",
     "objectIds": [
       "TREE2", "TREE3", "LEPRECHAUNTREE", "NEWBIETREE2",
       "WOM_TREE", "MAPLETREE", "PEST_TREE2",
@@ -1094,6 +1095,7 @@
   {
     "description": "Tree - Double Tree",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VertexWithHemisphereBlend",
     "objectIds": [
       "TREE", "LIGHTTREE", "NEWBIETREE", "PEST_TREE",
       "ZEP_TREE", "DRILL_TREE", "MACRO_FORESTER_TREE", "TUT2_TREE",
@@ -1366,6 +1368,7 @@
   {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VertexWithHemisphereBlend",
     "objectIds": [
       "POH_BIG_TREE6_4",
       "POH_SMALL_TREE6_5",
@@ -1408,7 +1411,17 @@
       "YEWTREE_NOOP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "Vertex",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "Vertex",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
   },
   {
     "description": "Objects - Tree - Willow",
@@ -1425,7 +1438,17 @@
     "uvScale": 0.8,
     "uvOrientationZ": 128,
     "uvOrientationY": 512,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "Vertex",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "Vertex",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
   },
   {
     "description": "Objects - Tree - Mahogany",
@@ -21095,6 +21118,7 @@
   {
     "description": "Oak Tree",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VertexWithHemisphereBlend",
     "objectIds": [
       "OAKTREE_STUMP", "POH_BIG_TREE3_4", "POH_SMALL_TREE3_5", "OAK_TREE_SEEDLING", "OAK_TREE_1",
       "OAK_TREE_2", "OAK_TREE_3", "OAK_TREE_FULLYGROWN_1", "OAK_TREE_FULLYGROWN_2",
