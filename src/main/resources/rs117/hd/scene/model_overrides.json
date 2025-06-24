@@ -37906,7 +37906,7 @@
     ]
   },
   {
-    "description": "Weapons case mounted on wall",
+    "description": "Kourend - Varrock - Metallic - Wooden - Floor standing Weapons case",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationZ": 512,
     "objectIds": [
@@ -37915,7 +37915,6 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
-    "retainVanillaUvs": false,
     "colorOverrides": [
       {
         "description": "Metal",
