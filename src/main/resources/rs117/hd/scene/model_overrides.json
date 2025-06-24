@@ -1426,7 +1426,7 @@
   {
     "description": "Objects - Tree - Willow",
     "baseMaterial": "BARK",
-    "windDisplacementMode": "Vertex",
+    "windDisplacementMode": "VertexWithHemisphereBlend",
     "objectIds": [
       "WILLOW_TREE2OR3OR4_STUMP",
       "WILLOWTREE",
