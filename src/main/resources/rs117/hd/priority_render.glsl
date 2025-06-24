@@ -285,9 +285,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                     float distBlendB = saturate(((abs(thisrvB.pos.x) + abs(thisrvB.pos.z)) - minDist) / blendDist);
                     float distBlendC = saturate(((abs(thisrvC.pos.x) + abs(thisrvC.pos.z)) - minDist) / blendDist);
 
-                    float heightFadeA = saturate((strengthA - 0.7) / 0.2);
-                    float heightFadeB = saturate((strengthB - 0.7) / 0.2);
-                    float heightFadeC = saturate((strengthC - 0.7) / 0.2);
+                    float heightFadeA = saturate((strengthA - 0.5) / 0.2);
+                    float heightFadeB = saturate((strengthB - 0.5) / 0.2);
+                    float heightFadeC = saturate((strengthC - 0.5) / 0.2);
 
                     strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA));
                     strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
