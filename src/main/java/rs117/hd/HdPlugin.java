@@ -1533,6 +1533,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.windDirectionX.set((float)Math.cos(environmentManager.currentWindAngle));
 				uboCamera.windDirectionZ.set((float)Math.sin(environmentManager.currentWindAngle));
 				uboCamera.windStrength.set(environmentManager.currentWindStrength);
+				uboCamera.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCamera.windOffset.set(windOffset);
 
 				uboCamera.upload();
@@ -3031,11 +3032,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
-		int heightFrac = clamp((int)((height / 100.0) * 31.0), 0, 31);
+		int heightFrac = clamp((int)((height / 100.0) * 31.0), 0, 31); // TODO: Remove!
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = orientation | heightFrac << 27;
 		eightIntWrite[5] = x;
-		eightIntWrite[6] = y;
+		eightIntWrite[6] = (((short)y) & 0xFFFF) | ((short)height << 16);
 		eightIntWrite[7] = z;
 
 		int plane = ModelHash.getPlane(hash);

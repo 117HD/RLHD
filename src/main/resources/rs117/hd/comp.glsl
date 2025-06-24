@@ -50,6 +50,7 @@ layout(std140) uniform CameraUniforms {
     float windDirectionX;
     float windDirectionZ;
     float windStrength;
+    float windCeiling;
     float windOffset;
 };
 

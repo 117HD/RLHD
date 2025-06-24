@@ -105,7 +105,7 @@ void add_face_prio_distance(const uint localId, const ModelInfo minfo, out int p
         dis = face_distance(thisA.pos, thisB.pos, thisC.pos);
 
         // if the face is not culled, it is calculated into priority distance averages
-        vec3 modelPos = vec3(minfo.x, minfo.y, minfo.z);
+        vec3 modelPos = vec3(minfo.x, minfo.y << 16 >> 16, minfo.z);
         if (face_visible(thisA.pos, thisB.pos, thisC.pos, modelPos)) {
             atomicAdd(totalNum[prio], 1);
             atomicAdd(totalDistance[prio], dis);
@@ -220,7 +220,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         int outOffset = minfo.idx;
         int uvOffset = minfo.uvOffset;
         int flags = minfo.flags;
-        vec3 pos = vec3(minfo.x, minfo.y, minfo.z);
+        vec3 pos = vec3(minfo.x, minfo.y << 16 >> 16, minfo.z);
         int orientation = flags & 0x7ff;
 
         // we only have to order faces against others of the same priority
@@ -267,16 +267,15 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             #if WIND_ENABLED
             int WindDisplacementMode = int(uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3;
             if (WindDisplacementMode != 0) {
-                float heightFrac = float((flags >> 27) & 0x1F) / 31;
-                float height = 100.0 * heightFrac;
+                float height = minfo.y >> 16;
 
-                float heightBasedWindStrength = windStrength * heightFrac;
+                float heightBasedWindStrength = ((pos.y + height) / windCeiling) * windStrength;
                 float strengthA = clamp(abs(thisrvA.pos.y) / height, 0.0, 1.0);
                 float strengthB = clamp(abs(thisrvB.pos.y) / height, 0.0, 1.0);
                 float strengthC = clamp(abs(thisrvC.pos.y) / height, 0.0, 1.0);
 
                 // Main Object Displacement
-                vec3 worldDisplacement = windDirection.xyz * (windDirection.w * heightBasedWindStrength);
+                vec3 worldDisplacement = windDirection.xyz * (heightBasedWindStrength * windDirection.w);
 
                 // Apply Additional Vertex Displacement
                 if(WindDisplacementMode == 2) {
@@ -285,13 +284,13 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                     float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
                     float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
-                    displacementA = ((windNoiseA * heightBasedWindStrength * (strengthA * VertexDisplacementMod)) * windDirection.xyz);
-                    displacementB = ((windNoiseB * heightBasedWindStrength * (strengthB * VertexDisplacementMod)) * windDirection.xyz);
-                    displacementC = ((windNoiseC * heightBasedWindStrength * (strengthC * VertexDisplacementMod)) * windDirection.xyz);
+                    displacementA = ((windNoiseA * (heightBasedWindStrength * strengthA * VertexDisplacementMod)) * windDirection.xyz);
+                    displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB * VertexDisplacementMod)) * windDirection.xyz);
+                    displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC * VertexDisplacementMod)) * windDirection.xyz);
 
-                    strengthA = clamp(strengthA - (VertexDisplacementMod * 2.0), 0.0, 1.0);
-                    strengthB = clamp(strengthB - (VertexDisplacementMod * 2.0), 0.0, 1.0);
-                    strengthC = clamp(strengthC - (VertexDisplacementMod * 2.0), 0.0, 1.0);
+                    strengthA = clamp(strengthA - (VertexDisplacementMod), 0.0, 1.0);
+                    strengthB = clamp(strengthB - (VertexDisplacementMod), 0.0, 1.0);
+                    strengthC = clamp(strengthC - (VertexDisplacementMod), 0.0, 1.0);
                 }
 
                 displacementA += worldDisplacement * strengthA;

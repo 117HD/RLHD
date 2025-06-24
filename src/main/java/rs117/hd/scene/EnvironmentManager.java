@@ -152,6 +152,10 @@ public class EnvironmentManager {
 	public float currentWindStrength = 0.0f;
 	private float targetWindStrength = 0.0f;
 
+	private float startWindCeiling = 0.0f;
+	public float currentWindCeiling = 0.0f;
+	private float targetWindCeiling = 0.0f;
+
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
@@ -273,6 +277,7 @@ public class EnvironmentManager {
 			currentWindAngle = hermite(startWindAngle, targetWindAngle, t);
 			currentWindSpeed = hermite(startWindSpeed, targetWindSpeed, t);
 			currentWindStrength = hermite(startWindStrength, targetWindStrength, t);
+			currentWindCeiling = hermite(startWindCeiling, targetWindCeiling, t);
 		}
 
 		updateLightning();
@@ -323,6 +328,7 @@ public class EnvironmentManager {
 		startWindAngle = currentWindAngle;
 		startWindSpeed = currentWindSpeed;
 		startWindStrength = currentWindStrength;
+		startWindCeiling = currentWindCeiling;
 		for (int i = 0; i < 2; i++)
 			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
@@ -354,6 +360,7 @@ public class EnvironmentManager {
 		targetWindAngle = env.windAngle;
 		targetWindSpeed = env.windSpeed;
 		targetWindStrength = env.windStrength;
+		targetWindCeiling = env.windCeiling;
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
