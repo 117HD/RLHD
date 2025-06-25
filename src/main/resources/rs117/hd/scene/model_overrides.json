@@ -9659,7 +9659,6 @@
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
       "SWAMP_MOSS_COVERED_ROCK_2",
-      "ARCHEUUS_ROCKS_GREEN_01",
       "RAIDS_ROCKS_FLOOR1",
       "RAIDS_ROCKS_FLOOR2",
       "RAIDS_ROCKS_FLOOR3",
@@ -33008,24 +33007,6 @@
         "uvType": "BOX",
         "uvScale": 0.8
       }
-    ]
-  },
-  {
-    "description": "Tanning Line",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "colorOverrides": [
-      {
-        "description": "Table",
-        "colors": "h == 6",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.5
-      }
-    ],
-    "objectIds": [
-      "TANNINGLINE"
     ]
   },
   {
