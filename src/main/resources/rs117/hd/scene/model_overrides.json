@@ -2086,27 +2086,13 @@
     ]
   },
   {
-    "description": "GRASS",
+    "description": "Grass that should cast shadows",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
     "objectIds": [
-      "VIKING_GRASS_4",
       "MM_JUNGLE_GRASS1",
       "MM_JUNGLE_GRASS2",
       "MM_JUNGLE_GRASS3",
-      "SLAYER_SHORT_GRASS_1",
-      "SLAYER_SHORT_GRASS_2",
-      "SLAYER_SHORT_GRASS_3",
-      "SLAYER_SHORT_GRASS_4",
-      "SLAYER_SHORT_GRASS_3_CASTLE_EDGE",
-      "SLAYER_SHORT_GRASS_4_CASTLE_EDGE",
-      "AHOY_SHORT_GRASS_4_WALL_CORNER",
-      "LIGHTGREEN_GRASS1",
-      "LIGHTGREEN_GRASS2",
-      "LIGHTGREEN_GRASS3",
-      "GRASSLAND_SHORT_GRASS_1",
-      "GRASSLAND_SHORT_GRASS_2",
-      "GRASSLAND_SHORT_GRASS_3",
-      "GRASSLAND_SHORT_GRASS_4",
       "HUNTING_LONG_JUNGLE_GRASS1",
       "HUNTING_LONG_JUNGLE_GRASS2",
       "HUNTING_LONG_JUNGLE_GRASS3",
@@ -2122,26 +2108,16 @@
       "HUNTING_GREENVINE_DIAGFILLER",
       "HUNTING_GREENVINE_END",
       "HUNTING_GREENVINE_END_DIAG",
-      "GRASSLAND_SHORT_3_CASTLE_EDGE",
-      "GRASSLAND_SHORT_4_CASTLE_EDGE",
-      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
-      "DS2_OGRE_BROWN_GRASS_1",
-      "DS2_OGRE_BROWN_GRASS_2",
-      "DS2_OGRE_BROWN_GRASS_3",
-      "DS2_OGRE_BROWN_GRASS_4",
       "HUNTING_JUNGLE_PLANT1",
       "MM_LONG_JUNGLE_GRASS1",
       "MM_LONG_JUNGLE_GRASS2",
       "MM_LONG_JUNGLE_GRASS3"
-    ],
-    "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY"
+    ]
   },
   {
     "description": "Short grass which shouldn't cast shadows",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_65",
     "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY",
     "windDisplacementMode": "Object",
     "castShadows": false,
     "objectIds": [
@@ -2158,7 +2134,7 @@
       "VIKING_GRASS_1",
       "VIKING_GRASS_2",
       "VIKING_GRASS_3",
-      "POH_GRASS",
+      "VIKING_GRASS_4",
       "SHORT_GRASS_1",
       "SHORT_GRASS_2",
       "SHORT_GRASS_3",
@@ -2180,6 +2156,7 @@
       "AHOY_SHORT_GRASS_4",
       "AHOY_SHORT_GRASS_3_WALL_EDGE",
       "AHOY_SHORT_GRASS_4_WALL_EDGE",
+      "AHOY_SHORT_GRASS_4_WALL_CORNER",
       "AHOY_SHORT_GRASS_WALL_EDGE_2",
       "AHOY_SHORT_GRASS_4",
       "SHORT_GRASS_WALL_EDGE_2",
@@ -2237,34 +2214,114 @@
       "DESERT_LONG_GRASS_2",
       "DESERT_LONG_GRASS_4",
       "FRIS_SHORT_GRASS_4",
-      "FRIS_SHORT_GRASS_3",
       "FRIS_SHORT_GRASS_2",
       "FRIS_SHORT_GRASS_1",
+      "FRIS_LONG_GRASS_4",
       "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
       "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
       "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_WALL_EDGE",
+      "FRIS_SHORT_GRASS_3_WALL_EDGE",
+      "FRIS_SHORT_GRASS_WALL_EDGE_2",
+      "SLAYER_SHORT_GRASS_1",
+      "SLAYER_SHORT_GRASS_2",
+      "SLAYER_SHORT_GRASS_3",
+      "SLAYER_SHORT_GRASS_4",
+      "SLAYER_SHORT_GRASS_3_CASTLE_EDGE",
+      "SLAYER_SHORT_GRASS_4_CASTLE_EDGE",
+      "LIGHTGREEN_GRASS1",
+      "LIGHTGREEN_GRASS2",
+      "LIGHTGREEN_GRASS3",
+      "GRASSLAND_SHORT_GRASS_1",
+      "GRASSLAND_SHORT_GRASS_2",
+      "GRASSLAND_SHORT_GRASS_3",
+      "GRASSLAND_SHORT_GRASS_4",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "DS2_OGRE_BROWN_GRASS_1",
+      "DS2_OGRE_BROWN_GRASS_2",
+      "DS2_OGRE_BROWN_GRASS_3",
+      "DS2_OGRE_BROWN_GRASS_4",
+      "LUNAR_BROWN_GRASS_1",
+      "LUNAR_BROWN_GRASS_2",
+      "LUNAR_BROWN_GRASS_3",
+      "LUNAR_BROWN_GRASS_4",
+      "REGICIDE_BLUE_GRASS1",
+      "REGICIDE_BLUE_GRASS2",
+      "REGICIDE_BLUE_GRASS3",
+      "FAI_VARROCK_DRAINS1",
+      "FAI_VARROCK_DRAINS2",
+      "FRIS_LONG_GRASS_1",
+      "FRIS_SHORT_GRASS_3",
+      "FRIS_LONG_GRASS_3"
+    ]
+  },
+  {
+    "description": "Fremmenik Isles, Lighten Grass",
+    "areas": [ "FREMENNIK_ISLES" ],
+    "baseMaterial": "GRAY_90",
+    "flatNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "FRIS_LONG_GRASS_1",
+      "FRIS_SHORT_GRASS_1",
+      "FRIS_SHORT_GRASS_2",
+      "FRIS_SHORT_GRASS_3",
+      "FRIS_SHORT_GRASS_4",
+      "FRIS_LONG_GRASS_3",
+      "FRIS_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
       "FRIS_SHORT_GRASS_4_WALL_EDGE",
       "FRIS_SHORT_GRASS_3_WALL_EDGE",
       "FRIS_SHORT_GRASS_WALL_EDGE_2"
     ]
   },
   {
+    "description": "Varlamore, Fortis and Avium Grass",
+    "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "AVIUM_GRASS_1",
+      "AVIUM_GRASS_2",
+      "AVIUM_GRASS_3",
+      "AVIUM_GRASS_5",
+      "AVIUM_GRASS_6",
+      "AVIUM_GRASS_4",
+      "AVIUM_GRASS_TALL1",
+      "AVIUM_GRASS_TALL2",
+      "AVIUM_GRASS_TALL3",
+      "AVIUM_GRASS_TALL4",
+      "AVIUM_GRASS_TALL1_DRY",
+      "AVIUM_GRASS_TALL2_DRY",
+      "AVIUM_GRASS_TALL3_DRY",
+      "AVIUM_GRASS_TALL4_DRY"
+    ]
+  },
+  {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "upwardsNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false,
     "windDisplacementMode": "Object",
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
       "GRASS_LIGHT_3"
-    ],
-    "flatNormals": true,
-    "upwardsNormals": true,
-    "inheritTileColorType": "UNDERLAY",
-    "castShadows": false
+    ]
   },
   {
     "description": "Farming Patch Grass without Dirt",
     "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
     "windDisplacementMode": "Object",
     "objectIds": [
       "BELLADONNA_PATCH_WEEDS_1",
@@ -2358,12 +2415,12 @@
       "CRYSTAL_TREE_PATCH_WEEDS_1",
       "CRYSTAL_TREE_PATCH_WEEDS_2",
       "CRYSTAL_TREE_PATCH_WEEDS_3"
-    ],
-    "upwardsNormals": true
+    ]
   },
   {
     "description": "Farming Patch Grass with Dirt",
     "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
     "windDisplacementMode": "Object",
     "objectIds": [
       "HOP_PATCH_WEEDS_1",
@@ -2382,7 +2439,6 @@
       "MISC_WEEDINGPATCH_MEDWEEDS",
       "MISC_WEEDINGPATCH_LIGHTWEEDS"
     ],
-    "upwardsNormals": true,
     "colorOverrides": [
       {
         "colors": "h == 8",
@@ -2394,6 +2450,7 @@
   {
     "description": "Farming Patch Grass with Dirt and Scarecrow",
     "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
     "objectIds": [
       "FARMING_SCARECROW_WEEDS_1",
       "FARMING_SCARECROW_WEEDS_2",
@@ -2402,7 +2459,6 @@
       "FARMING_SCARECROW_WEEDS_2_MORY",
       "FARMING_SCARECROW_WEEDS_3_MORY"
     ],
-    "upwardsNormals": true,
     "colorOverrides": [
       {
         "colors": "h == 8",
@@ -2420,18 +2476,39 @@
   {
     "description": "Short grass with rock objects",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "objectIds": [
       "QIP_DS_STONE_FLOOR1",
       "QIP_DS_STONE_FLOOR2",
       "QIP_DS_STONE_FLOOR_EDGE1",
       "QIP_DS_STONE_FLOOR_EDGE2"
+    ]
+  },
+  {
+    "description": "Objects - Rocks - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      "TROLL_ROCKS_GRASS",
+      "TROLL_ROCKS_GRASS_FALLOFF"
     ],
-    "flatNormals": true,
-    "castShadows": false
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "upwardsNormals": true,
+        "uvScale": 0.6
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.32
   },
   {
     "description": "Short grass with rock objects usually found around Farming Patches",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "windDisplacementMode": "Object",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
@@ -2443,8 +2520,6 @@
       "TGOD_GARDEN_TEMPLE_FARMING_BORDER_STRAIGHT",
       "TGOD_GARDEN_TEMPLE_FARMING_BORDER_CORNER_OUTSIDE"
     ],
-    "flatNormals": true,
-    "castShadows": false,
     "colorOverrides": [
       {
         "colors": "h == 7",
@@ -2466,11 +2541,11 @@
     "description": "Hespori Patch Edge Grass Fix",
     "areas": [ "FARMING_GUILD_HESPORI" ],
     "baseMaterial": "COLORED_GRASS",
+    "castShadows": false,
     "objectIds": [
       "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
       "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE"
     ],
-    "castShadows": false,
     "colorOverrides": [
       {
         "colors": "h == 7",
@@ -2489,12 +2564,12 @@
   {
     "description": "Short grass with rock objects Morytania Farming Patches",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "objectIds": [
       "FARMING_BORDER_STRAIGHT_DARK",
       "FARMING_BORDER_CORNER_DARK"
     ],
-    "flatNormals": true,
-    "castShadows": false,
     "colorOverrides": [
       {
         "colors": "s == 5 || s == 7",
@@ -2505,57 +2580,33 @@
     ]
   },
   {
-    "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
-    "baseMaterial": "GRAY_75",
-    "objectIds": [
-      "REGICIDE_BLUE_GRASS1",
-      "REGICIDE_BLUE_GRASS2",
-      "REGICIDE_BLUE_GRASS3",
-      "FAI_VARROCK_DRAINS1",
-      "FAI_VARROCK_DRAINS2",
-      "FRIS_LONG_GRASS_1",
-      "FRIS_LONG_GRASS_3"
-    ],
-    "castShadows": false,
-    "flatNormals": true
-  },
-  {
-    "description": "Varlamore, Fortis and Avium Grass",
-    "baseMaterial": "GRAY_75",
-    "objectIds": [
-      "AVIUM_GRASS_1",
-      "AVIUM_GRASS_2",
-      "AVIUM_GRASS_3",
-      "AVIUM_GRASS_5",
-      "AVIUM_GRASS_6",
-      "AVIUM_GRASS_4",
-      "AVIUM_GRASS_TALL1",
-      "AVIUM_GRASS_TALL2",
-      "AVIUM_GRASS_TALL3",
-      "AVIUM_GRASS_TALL4",
-      "AVIUM_GRASS_TALL1_DRY",
-      "AVIUM_GRASS_TALL2_DRY",
-      "AVIUM_GRASS_TALL3_DRY",
-      "AVIUM_GRASS_TALL4_DRY"
-    ],
-    "flatNormals": true,
-    "castShadows": false
-  },
-  {
     "description": "Hunter guild grass, that's also used elsewhere so restrict this to Varlamore",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "areas": [ "VARLAMORE" ],
     "objectIds": [
       "HUNTING_JUNGLE_GRASS3"
-    ],
-    "flatNormals": true,
-    "castShadows": false
+    ]
+  },
+  {
+    "description": "Fixes weird pattern made by grass in POH",
+    "areas": [ "PLAYER_OWNED_HOUSE" ],
+    "baseMaterial": "GRAY_35",
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "POH_GRASS"
+    ]
   },
   {
     "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
     "baseMaterial": "GRAY_75",
     "windDisplacementMode": "Object",
     "seasonalTheme": "WINTER",
+    "flatNormals": true,
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
@@ -2564,33 +2615,133 @@
       "FARMING_BORDER_CORNER_DARK",
       "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
       "KEBOS_FARMING_GUILD_BORDER_CORNER",
-      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE"
-    ],
-    "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY",
-    "castShadows": false
-  },
-  {
-    "description": "Fixes weird pattern made by grass in POH",
-    "areas": [ "PLAYER_OWNED_HOUSE" ],
-    "windDisplacementMode": "Object",
-    "objectIds": [
-      "POH_GRASS"
-    ],
-    "baseMaterial": "GRAY_65",
-    "flatNormals": true,
-    "castShadows": false
-  },
-  {
-    "description": "GRASS_MAINTAIN_ORIGINAL_COLOR",
-    "objectIds": [
-      "LUNAR_BROWN_GRASS_1",
-      "LUNAR_BROWN_GRASS_2",
-      "LUNAR_BROWN_GRASS_3",
-      "LUNAR_BROWN_GRASS_4"
-    ],
-    "flatNormals": true,
-    "castShadows": false
+      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE",
+      "GRASS_1",
+      "GRASS_1_SWAMP",
+      "GRASS_2_SWAMP",
+      "GRASS_3_SWAMP",
+      "REGICIDE_GRASS1",
+      "REGICIDE_GRASS2",
+      "REGICIDE_GRASS3",
+      "DEATH_GRASS_1",
+      "DEATH_GRASS_2",
+      "DEATH_GRASS_3",
+      "VIKING_GRASS_1",
+      "VIKING_GRASS_2",
+      "VIKING_GRASS_3",
+      "VIKING_GRASS_4",
+      "SHORT_GRASS_1",
+      "SHORT_GRASS_2",
+      "SHORT_GRASS_3",
+      "SHORT_GRASS_4",
+      "SHORT_GRASS_4_CASTLE_EDGE",
+      "SHORT_GRASS_4_CASTLE_EDGE2",
+      "SHORT_GRASS_4_CASTLE_CORNER",
+      "SHORT_GRASS_3_CASTLE_EDGE",
+      "FENK_LIGHT_GRASS_1",
+      "FENK_LIGHT_GRASS_2",
+      "FENK_LIGHT_GRASS_3",
+      "FENK_LIGHT_GRASS_4",
+      "SHORT_GRASS_3_WALL_EDGE",
+      "SHORT_GRASS_4_WALL_EDGE",
+      "SHORT_GRASS_4_WALL_CORNER",
+      "AHOY_SHORT_GRASS_1",
+      "AHOY_SHORT_GRASS_2",
+      "AHOY_SHORT_GRASS_3",
+      "AHOY_SHORT_GRASS_4",
+      "AHOY_SHORT_GRASS_3_WALL_EDGE",
+      "AHOY_SHORT_GRASS_4_WALL_EDGE",
+      "AHOY_SHORT_GRASS_4_WALL_CORNER",
+      "AHOY_SHORT_GRASS_WALL_EDGE_2",
+      "AHOY_SHORT_GRASS_4",
+      "SHORT_GRASS_WALL_EDGE_2",
+      "SHORT_GRASS_DARK_1",
+      "SHORT_GRASS_DARK_2",
+      "SHORT_GRASS_DARK_3",
+      "SHORT_GRASS_DARK_4",
+      "SHORT_GRASS_DARK_3_CASTLE_EDGE",
+      "SHORT_GRASS_DARK_4_CASTLE_EDGE",
+      "SHORT_GRASS_DARK_4_CASTLE_EDGE2",
+      "SHORT_GRASS_DARK_3_WALL_EDGE",
+      "SHORT_GRASS_DARK_4_WALL_EDGE",
+      "SHORT_GRASS_DARK_4_WALL_CORNER",
+      "DEATH_SHORT_GRASS_1",
+      "DEATH_SHORT_GRASS_2",
+      "DEATH_SHORT_GRASS_3",
+      "DEATH_SHORT_GRASS_4",
+      "DEATH_SHORT_GRASS_3_WALL_EDGE",
+      "DEATH_SHORT_GRASS_4_WALL_EDGE",
+      "DEATH_SHORT_GRASS_WALL_EDGE_2",
+      "AHOY_SHORT_GRASS_2_WALL_CORNER",
+      "SHORT_GRASS_2_WALL_CORNER",
+      "LONG_GRASS_1",
+      "LONG_GRASS_2",
+      "LONG_GRASS_3",
+      "LONG_GRASS_4",
+      "LONG_GRASS_3_CASTLE_EDGE",
+      "LONG_GRASS_4_CASTLE_EDGE",
+      "LONG_GRASS_4_CASTLE_EDGE2",
+      "YELLOW_GRASS1",
+      "YELLOW_GRASS2",
+      "YELLOW_GRASS3",
+      "TEMPLETREK_GRASS1",
+      "TEMPLETREK_GRASS2",
+      "TEMPLETREK_GRASS3",
+      "WILD_MUD_GRASS_1",
+      "WILD_MUD_GRASS_2",
+      "WILD_MUD_GRASS_3",
+      "WILD_MUD_GRASS_4",
+      "BARROWS_SHORT_GRASS_1",
+      "BARROWS_SHORT_GRASS_2",
+      "BARROWS_SHORT_GRASS_3",
+      "BARROWS_SHORT_GRASS_4",
+      "BARROWS_GRASS_3_WALL_EDGE",
+      "BARROWS_GRASS_4_WALL_EDGE",
+      "FOSSIL_GRASS_LUSH_LONG",
+      "FOSSIL_GRASS_LUSH_SHORT",
+      "FOSSIL_GRASS_LUSH_SPARSE",
+      "KEBOS_FARMING_GUILD_GRASS_1",
+      "KEBOS_FARMING_GUILD_GRASS_2",
+      "KEBOS_FARMING_GUILD_GRASS_3",
+      "KEBOS_FARMING_GUILD_GRASS_4",
+      "DESERT_LONG_GRASS_3",
+      "DESERT_LONG_GRASS_1",
+      "DESERT_LONG_GRASS_2",
+      "DESERT_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_4",
+      "FRIS_SHORT_GRASS_2",
+      "FRIS_SHORT_GRASS_1",
+      "FRIS_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
+      "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_WALL_EDGE",
+      "FRIS_SHORT_GRASS_3_WALL_EDGE",
+      "FRIS_SHORT_GRASS_WALL_EDGE_2",
+      "SLAYER_SHORT_GRASS_1",
+      "SLAYER_SHORT_GRASS_2",
+      "SLAYER_SHORT_GRASS_3",
+      "SLAYER_SHORT_GRASS_4",
+      "SLAYER_SHORT_GRASS_3_CASTLE_EDGE",
+      "SLAYER_SHORT_GRASS_4_CASTLE_EDGE",
+      "LIGHTGREEN_GRASS1",
+      "LIGHTGREEN_GRASS2",
+      "LIGHTGREEN_GRASS3",
+      "GRASSLAND_SHORT_GRASS_1",
+      "GRASSLAND_SHORT_GRASS_2",
+      "GRASSLAND_SHORT_GRASS_3",
+      "GRASSLAND_SHORT_GRASS_4",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "DS2_OGRE_BROWN_GRASS_1",
+      "DS2_OGRE_BROWN_GRASS_2",
+      "DS2_OGRE_BROWN_GRASS_3",
+      "DS2_OGRE_BROWN_GRASS_4"
+    ]
   },
   {
     "description": "WOODEN_FENCES",
@@ -2956,15 +3107,25 @@
     ]
   },
   {
-    "description": "Brick walls with green glass with gold windows",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Varrock - Kourend - Walls - Brick walls with glass windows",
+    "baseMaterial": "GRUNGE_2",
     "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "description": "Wooden boards",
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
       },
       {
         "description": "Glass",
@@ -2973,42 +3134,32 @@
       }
     ],
     "objectIds": [
+      "FAI_VARROCK_INTERIOR_WINDOW_TALL",
+      "FAI_VARROCK_INTERIOR_WINDOW_TALL_TERM",
       "FAI_VARROCK_INTERIOR_WINDOW",
       "FAI_VARROCK_INTERIOR_WINDOW_TYPE1"
     ]
   },
   {
-    "description": "Brick walls with green glass windows",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Varrock church - Kourend Castle - Glass -  golden window",
+    "baseMaterial": "GRUNGE_2",
     "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "description": "Wooden boards",
-        "colors": "h == 7",
+        "colors": "a == 255 && h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvOrientation": 512
       },
       {
-        "description": "Green glass",
-        "colors": "a < 255",
-        "baseMaterial": "NONE"
-      }
-    ],
-    "objectIds": [
-      "FAI_VARROCK_INTERIOR_WINDOW_TALL",
-      "FAI_VARROCK_INTERIOR_WINDOW_TALL_TERM"
-    ]
-  },
-  {
-    "description": "Varrock church golden window",
-    "baseMaterial": "GRUNGE_1",
-    "flatNormals": true,
-    "colorOverrides": [
-      {
-        "description": "Wooden boards",
-        "colors": "h == 7 && s < 4",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
       },
       {
         "description": "Glass",
@@ -3021,8 +3172,11 @@
     ]
   },
   {
-    "description": "Walls",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
+    "baseMaterial": "GRUNGE_2",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "FAI_VARROCK_POOR_WALL",
       "FAI_VARROCK_POOR_WALL_TOP",
@@ -3078,6 +3232,7 @@
       "GARDEN_TRELLIS_CONCAVE",
       "GARDEN_TRELLIS_WALL_MIRROR",
       "FAI_VARROCKWALL_HILLSKEW",
+      "FAI_VARROCKWALL",
       "FAI_VARROCK_INTERIORWALL",
       "FAI_VARROCK_INTERIORWALL_BLACK",
       "FAI_VARROCK_INTERIORWALL_BLACK_TOP",
@@ -3161,7 +3316,23 @@
       "AKD_PISCARILIUS_BATTLEMENT_NOOP",
       "VM_BASEMENT_WALL_STAIRS_DOWN"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "FALADOR_WALLS",
@@ -3706,6 +3877,7 @@
     "baseMaterial": "STONE_NORMALED_DARK",
     "objectIds": [
       "KOUREND_FOOTPATH_01",
+      "KOUREND_FOOTPATH_01_TASK",
       "KOUREND_FOOTPATH_02",
       "KOUREND_FOOTPATH_03",
       "KOUREND_FOOTPATH_04",
@@ -4689,7 +4861,8 @@
     "objectIds": [
       "CAVEENTRANCE3",
       "UPASS_CAVEENTRANCE2",
-      "XMAS20_GOBLIN_CAVE_ENTRANCE"
+      "XMAS20_GOBLIN_CAVE_ENTRANCE",
+      "GA_CAVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -7513,7 +7686,8 @@
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
       "CIVITAS_LADDER_TOP_NORIM",
-      "TOURTRAP_QIP_LADDER"
+      "TOURTRAP_QIP_LADDER",
+      "KOUREND_LADDER_INACTIVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -8000,7 +8174,8 @@
       "ROYAL_DWARF_ARMOUR2",
       "DRAGON_SLAYER_QIP_SUITOFARMOUR",
       "KR_SUITOFARMOUR_DARKKNIGHT",
-      "KR_CAM_SUITOFARMOR"
+      "KR_CAM_SUITOFARMOR",
+      "SUITOFARMOUR_DARKKNIGHT"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -8168,7 +8343,9 @@
     "description": "BATHTUB",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
-      "BATH"
+      "BATH",
+      "AKD_HUGHES_BATH_1_NOOP",
+      "FAI_VARROCK_POSH_BATH"
     ],
     "uvType": "BOX",
     "uvScale": 0.3
@@ -8261,7 +8438,10 @@
       "UNDERGROUNDCELLGATER",
       "UNDERGROUNDCELLGATEL",
       "LOCKEDMETALGATER",
-      "LOCKEDMETALGATEL"
+      "LOCKEDMETALGATEL",
+      "UNDERGROUNDCELLGATEL",
+      "PRISONWALL",
+      "AKD_HUGHES_GATE_1"
     ],
     "uvType": "BOX",
     "uvOrientation": 463
@@ -8273,7 +8453,6 @@
     "retainVanillaUvs": false,
     "uvOrientation": 512,
     "objectIds": [
-      "PRISONWALL",
       "PRISONWALL_LEND",
       "PRISONWALL_REND",
       "PIP_PRISONDOOR",
@@ -8498,7 +8677,8 @@
       "DK_SPIRALSTAIRS",
       "WILD6_SPIRALSTAIRS_MIDDLE",
       "WILD6_SPIRALSTAIRSTOP",
-      "CANAFIS_SPIRALSTAIRS"
+      "CANAFIS_SPIRALSTAIRS",
+      "AKD_HUGHES_SPIRALSTAIRS"
     ]
   },
   {
@@ -9359,8 +9539,6 @@
       "DEATH_ROCKSLIDE2",
       "DEATH_ROCKSLIDE3",
       "DEATH_ROCKSLIDE4",
-      "TROLL_ROCKS_GRASS",
-      "TROLL_ROCKS_GRASS_FALLOFF",
       "DEATH_MOUNTAINROCKS_2",
       "DEATH_MOUNTAINROCKS_2_LARGE",
       "DEATH_MOUNTAINROCKS_3",
@@ -9567,7 +9745,6 @@
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
       "SWAMP_MOSS_COVERED_ROCK_2",
-      "ARCHEUUS_ROCKS_GREEN_01",
       "RAIDS_ROCKS_FLOOR1",
       "RAIDS_ROCKS_FLOOR2",
       "RAIDS_ROCKS_FLOOR3",
@@ -9617,7 +9794,8 @@
       "WILDERNESS_ROCKS_FLOOR_SOFT_03",
       "WILDERNESS_ROCKS_FLOOR_SOFT_02",
       "WILDERNESS_ROCKS_FLOOR_SOFT_04",
-      "WILDERNESS_ROCKS_FLOOR_SOFT_05"
+      "WILDERNESS_ROCKS_FLOOR_SOFT_05",
+      "WILDERNESS_ROCKS_FLOOR_SOFT_01"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.9
@@ -9767,7 +9945,6 @@
       "DUGUPSOIL2_LIGHT",
       "SWAMP_DIGDUGUPSOIL2",
       "DEATH_DUGUPSOIL_LIGHT_2",
-      "DUGUPSOIL2_BROWNMUD",
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_2",
       "TEMPLETREK_SWAMP_EVADE_PATH",
       "TEMPLETREK_SWAMP_SUCCESS_PATH",
@@ -10210,7 +10387,7 @@
     "flatNormals": true
   },
   {
-    "description": "Objects - Wooden - Crate",
+    "description": "Objects - Wooden - Crate - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "MCANNONCRATEBOY",
@@ -10235,7 +10412,8 @@
       "FOSSIL_CRATE_STACKED",
       "TOURTRAP_QIP_CRATE_SINGLE",
       "TOURTRAP_QIP_CRATE_STACKED",
-      "FOSSIL_CRATE3_INACTIVE"
+      "FOSSIL_CRATE3_INACTIVE",
+      "FAI_WIZTOWER_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10357,7 +10535,8 @@
       "DRAYNOR_BOXES",
       "MCANNON_CRATES",
       "FAI_FALADOR_BOXES",
-      "FAI_FALADOR_BOXES_NOOP"
+      "FAI_FALADOR_BOXES_NOOP",
+      "FAI_VARROCK_BOXES_NOOP"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -11676,7 +11855,8 @@
     "description": "Objects - Wooden - Plank tables - Long",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "QIP_SHEEP_SHEARER_LARGE_TABLE"
+      "QIP_SHEEP_SHEARER_LARGE_TABLE",
+      "AKD_HUGHES_TABLE_1_NOOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -12919,6 +13099,31 @@
     ]
   },
   {
+    "description": "Kourend - Wooden -  chair with combined back and cushioned Black and gold pattern",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_POSH_CHAIR1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Black Cushion",
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Gold Cushion",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
     "description": "Objects - Wooden - Tables - Round",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -12926,7 +13131,8 @@
       "ROUNDTABLE",
       "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE2",
       "KR_SIN_ROUNDTABLE",
-      "HOS_ROUND_TABLE"
+      "HOS_ROUND_TABLE",
+      "ROUNDTABLE_WIDE_LIGHT"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13019,7 +13225,8 @@
     "description": "Objects - Ardougne Castle - Spear Wall",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "objectIds": [
-      "SPEARWALL"
+      "SPEARWALL",
+      "FAI_VARROCK_SPEARWALL"
     ],
     "colorOverrides": [
       {
@@ -14642,14 +14849,16 @@
     ]
   },
   {
-    "description": "Nardah - Shelves - With Boxes",
+    "description": "Nardah - Kourend - Shelves - With Boxes",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
       "ELID_WAREHOUSE_SHELVES3",
       "ELID_WAREHOUSE_SHELVES4",
       "ELID_WAREHOUSE_SHELVES",
-      "ELID_WAREHOUSE_SHELVES2"
+      "ELID_WAREHOUSE_SHELVES2",
+      "AKD_HUGHES_SHELVES_2_NOOP",
+      "AKD_HUGHES_SHELVES_4_NOOP"
     ],
     "colorOverrides": [
       {
@@ -15153,14 +15362,16 @@
   },
   {
     "description": "Objects - Wooden - Stairs",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
     "objectIds": [
       "ELID_MAYOR_STAIRS",
       "ELID_MAYOR_STAIRSTOP",
       "FAI_VARROCK_STAIRS",
       "FAI_VARROCK_STAIRS_TOP"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Nardah Worn Stone Stairs",
@@ -17583,12 +17794,38 @@
       "FAI_ROCK_SMALL_01",
       "FAI_ROCK_SMALL_02",
       "FAI_ROCK_SMALL_03",
-      "BCS_ROCKS_PICKAXE",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_BOTTOM",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.22
+  },
+  {
+    "description": "Rocks with Pickaxe in them",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      "BCS_ROCKS_PICKAXE",
+      "GA_ROCKS_PICKAXE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pickaxe",
+        "colors": "h == 5 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Pickaxe Handle",
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
   },
   {
     "description": "Rocks - Large",
@@ -18737,7 +18974,8 @@
       "FAI_VARROCK_CONTAINER",
       "SNAKEBOSS_BANKCHEST",
       "WILD_CHEST_CLOSED",
-      "WILD_CHEST_OPEN"
+      "WILD_CHEST_OPEN",
+      "KEBOS_CHEST_CLOSED_INACTIVE"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
@@ -19304,12 +19542,23 @@
   {
     "description": "Objects - Concrete - Deposit Box",
     "textureMaterial": "HD_CONCRETE",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65,
     "objectIds": [
       "BANK_DEPOSIT_BOX"
     ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false,
-    "uvScale": 0.65
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "s == 7",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
   },
   {
     "description": "Motherlode Mine - Deposit Box",
@@ -19834,10 +20083,23 @@
     "uvType": "BOX"
   },
   {
-    "description": "Mage Training Arena - Candelabra",
+    "description": "Kourend - Mage Training Arena - Candelabra",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 178,
     "objectIds": [
-      "MAGICTRAINING_CANDLE_STAND"
+      "MAGICTRAINING_CANDLE_STAND",
+      "CANDLE_STAND"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wooden base",
+        "colors": "h == 8 && s < 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
     ]
   },
   {
@@ -20274,7 +20536,8 @@
   },
   {
     "description": "Tutorial Island - Shelves",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
     "objectIds": [
       "FAI_VARROCK_SHELVES1",
       "FAI_VARROCK_SHELVES2",
@@ -20283,8 +20546,14 @@
       "FAI_VARROCK_SHELF_TANKARDS",
       "FAI_VARROCK_SHELF_BOOKS_INACTIVE"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.75
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Tutorial Island - Varrock - Bed",
@@ -20867,7 +21136,9 @@
       "RAT_BOSS_CORPSE01",
       "NECROPOLIS_SKELETON_1",
       "NECROPOLIS_SKELETON_2",
-      "NECROPOLIS_SKELETON_3"
+      "NECROPOLIS_SKELETON_3",
+      "AKD_HUGHES_SKELETON_1_NOOP",
+      "GA_SKELETON"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -20876,7 +21147,7 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
+    "objectIds": [ "GA_CAVE_BONES1", "GA_CAVE_BONES2" ,"GA_CAVE_BONES3", "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -21756,14 +22027,15 @@
     "uvOrientationZ": 512
   },
   {
-    "description": "Freminnik - Walls - Barricade",
+    "description": "Freminnik - Kourend - Walls - Barricade",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       "VIKING_PIKE_DEFENCE",
       "VIKING_PIKE_DEFENCE_TERMINATOR_RIGHT",
       "VIKING_PIKE_DEFENCE_TERMINATOR_LEFT",
       "VIKING_PIKE_DEFENCE_BEND",
-      "VIKING_PIKE_DEFENCE_BEND_MIRROR"
+      "VIKING_PIKE_DEFENCE_BEND_MIRROR",
+      "VIKING_PIKE_DEFENCE_CORNER"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -25329,7 +25601,8 @@
     "description": "Zeah - Wooden Spiral Staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "KEBOS_SPIRALSTAIRS_BOTTOM"
+      "KEBOS_SPIRALSTAIRS_BOTTOM",
+      "KEBOS_SPIRALSTAIRS_TOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 88,
@@ -26033,7 +26306,8 @@
     "description": "Objects - Wooden - Hat Rack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "HATSTAND"
+      "HATSTAND",
+      "HATSTAND_MAHOGANY"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -26106,6 +26380,15 @@
     "description": "Wooden food trough",
     "objectIds": [ "FOODTROUGH", "FAI_VARROCK_FOODTROUGH" ],
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wooden food trough - With textured seed",
+    "objectIds": [ "FOODTROUGH2" ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
@@ -26631,7 +26914,11 @@
   },
   {
     "description": "Wooden Wardrobe",
-    "objectIds": [ "FAI_VARROCK_WARDROBE", "FAI_VARROCK_WARDROBE_POSH2" ],
+    "objectIds": [
+      "FAI_VARROCK_WARDROBE",
+      "FAI_VARROCK_WARDROBE_POSH2",
+      "AKD_HUGHES_WARDROBE_1_NOOP"
+    ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationY": 512,
     "uvType": "BOX",
@@ -26643,7 +26930,9 @@
     "objectIds": [
       "FAI_VARROCK_DRAWERS",
       "FAI_VARROCK_POSH_DRAWERS",
-      "KR_SEERS_VILLAGE_DRAWERS1"
+      "KR_SEERS_VILLAGE_DRAWERS1",
+      "AKD_HUGHES_DRAWERS_1_NOOP",
+      "FAI_FALADOR_DRAWERS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -27683,7 +27972,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "GRANDFATHERCLOCK",
-      "KR_SEERS_VILLAGE_GRANDFATHERCLOCK"
+      "KR_SEERS_VILLAGE_GRANDFATHERCLOCK",
+      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -27706,9 +27996,71 @@
   {
     "description": "Brown Bed with pillow",
     "baseMaterial": "CARPET",
-    "objectIds": [ "BROWNBED" ],
+    "objectIds": [
+      "BROWNBED",
+      "KEBOS_SHACK_BED"
+    ],
     "uvType": "BOX",
-    "uvOrientation": 64
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Brown Bed with pillow - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Baby Blue Double wide Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_VARROCK_DOUBLE_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Baby Blue Bunk Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_FALADOR_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Baby Blue Bed with pillow",
@@ -27737,7 +28089,8 @@
     "objectIds": [
       "SINK",
       "SINK2",
-      "KR_SINK"
+      "KR_SINK",
+      "QIP_SHEEP_SHEARER_SINK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -29517,7 +29870,9 @@
       "FAI_VARROCK_POSH_CABINET",
       "FAI_VARROCK_POSH_CABINET2",
       "KR_CABINET",
-      "KR_CABINET2"
+      "KR_CABINET2",
+      "AKD_HUGHES_CABINET_1_NOOP",
+      "AKD_HUGHES_CABINET_2_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -29556,7 +29911,8 @@
       "KR_CAM_CABINET_BOWS_WHITE",
       "CABINET_AXES",
       "FAI_VARROCK_BOWCASE_CROSSBOW",
-      "FAI_VARROCK_ARROW_DISPLAY"
+      "FAI_VARROCK_ARROW_DISPLAY",
+      "FAI_VARROCK_SWORDCASE_SWORDS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -30078,7 +30434,8 @@
       }
     ],
     "objectIds": [
-      "DRAYNOR_CANDLE_WALL"
+      "DRAYNOR_CANDLE_WALL",
+      "_100_DAVE_CANDLE_WALL"
     ]
   },
   {
@@ -30436,7 +30793,8 @@
     ],
     "objectIds": [
       "HAUNTEDMINE_BACK_ENTRANCE1",
-      "HAUNTEDMINE_BACK_ENTRANCE2"
+      "HAUNTEDMINE_BACK_ENTRANCE2",
+      "DUGUPSOIL2_BROWNMUD"
     ]
   },
   {
@@ -30546,7 +30904,8 @@
       }
     ],
     "objectIds": [
-      "FAI_VARROCK_SWORD_TABLE"
+      "FAI_VARROCK_SWORD_TABLE",
+      "AKD_HUGHES_TABLE_3_NOOP"
     ]
   },
   {
@@ -32704,6 +33063,25 @@
     ]
   },
   {
+    "description": "Kourend - Bed - Wide - Wooden - Double bed with White blanket and bed frame with canopy",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_DOUBLE_BED",
+      "AKD_HUGHES_BED_1_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 0 || h == 10 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
     "description": "Single bed with gray blanket",
     "baseMaterial": "CARPET",
     "objectIds": [
@@ -32737,24 +33115,6 @@
         "uvType": "BOX",
         "uvScale": 0.8
       }
-    ]
-  },
-  {
-    "description": "Tanning Line",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "colorOverrides": [
-      {
-        "description": "Table",
-        "colors": "h == 6",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.5
-      }
-    ],
-    "objectIds": [
-      "TANNINGLINE"
     ]
   },
   {
@@ -36232,7 +36592,8 @@
     "uvOrientation": 512,
     "uvScale": 0.7,
     "objectIds": [
-      "FAI_VARROCK_POSH_TABLE_SCROLLS"
+      "FAI_VARROCK_POSH_TABLE_SCROLLS",
+      "AKD_HUGHES_DESK_1_NOOP"
     ],
     "colorOverrides": [
       {
@@ -37379,6 +37740,1013 @@
       "DS2_CORSAIR_COVE_SHIPHULL_RIB2",
       "DS2_CORSAIR_COVE_SHIPHULL_RIB3",
       "DS2_CORSAIR_COVE_SHIPHULL_RIB4"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Table Black and gold table cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "AKD_HUGHES_TABLE_2_NOOP",
+      "FAI_VARROCK_POSH_DININGTABLE_CLOTH_SQUARE",
+      "FAI_VARROCK_POSH_DININGTABLE_CLOTH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table Cloth",
+        "colors": "h == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Gold Trim",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Table with gold table cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_POSH_DININGTABLE_CLOTH_SML"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Table cloth",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Black Trim",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Mirror - Fancy Dresser",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FAI_VARROCK_POSH_DRESSER",
+      "AKD_HUGHES_DRESSER_1_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Trim",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 89
+      },
+      {
+        "description": "Black Trim",
+        "colors": "h == 35",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Glass - Drink Shelf",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "HOS_DRINK_CUPBOARD_01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Trim",
+        "colors": "h >= 5 && h <= 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Black Trim",
+        "colors": "h == 35",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Objects - Wooden - Tables - Round",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_DARKWIZ_ROUND_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Chair - Cloth - Green Velvet Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "LOVAKENG_VELVET_ROUND_CHAIR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h >= 14",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden Larder",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FAI_VARROCK_POSH_LARDER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.80
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hay Bale - round",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "objectIds": [
+      "HAY_BALE_STACK"
+    ]
+  },
+  {
+    "description": "Kourend - Hay Bale - round - Rotated",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HAY_BALE",
+      "HAY_BALE_THIN"
+    ]
+  },
+  {
+    "description": "Kourend - Metallic - Range",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "HOS_COOKING_RANGE_02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Kourend - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 172 ,
+    "objectIds": [
+      "FAI_VARROCK_POSH_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Textured - Bathscreen",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "materialOverrides": {
+      "WOODEN_SCREEN": {
+        "textureMaterial": "WOODEN_SCREEN"
+      }
+    },
+    "objectIds": [
+      "FAI_VARROCK_POSH_BATHSCREEN1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - Marble -  Throne",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvScale": 0.6,
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - Piano",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "upwardsNormals": true,
+    "objectIds": [
+      "FAI_VARROCK_GRAND_PIANOA"
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - Cloth - Piano Stool",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_VARROCK_GRAND_PIANOB"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 0 && s > 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Cloth - Wooden - Red Cushioned church pew with foot rest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "ARCHEUSS_CHURCH_PEW_RIGHT",
+      "ARCHEUUS_CHURCH_PEW_LEFT"
+    ]
+  },
+  {
+    "description": "Kourend - Stone - Metallic - Saradomin Altar",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 8 || h == 10 || h == 7 && s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Candle",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "SLUG2_ALTAR_SARADOMIN"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Static Fruit Stall - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "HOS_FRUIT_STALL"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Static Fruit Stall",
+    "baseMaterial": "PLANT_GRUNGE_2",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "HOS_FRUIT_STALL_01",
+      "HOS_FRUIT_STALL_02"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Wood plank debris",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientation": 303,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SHAYZIEN_BLACK_DEBRIS_WOOD"
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Wooden -  Metal - Barrel with metal bands and swords - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ "BARREL_SWORDS" ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Kourend - Varrock - Wooden -  Metal - Barrel with metal bands and staves - textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [ "BARREL_STAFFS" ],
+    "colorOverrides": [
+      {
+        "description": "Staves",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.25
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Barrel with Bow and Arrows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "BARREL_RANGING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s <= 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.33
+      },
+      {
+        "description": "Flights",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Barrel with Bow and Arrows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_FEATHER_BARREL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Feathers",
+        "colors": "s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Workbench",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "FAI_VARROCK_BOWBENCH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Shayzien - Metallic - Ballista",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SHAYZIEN_MASSIVE_BALLISTA",
+      "SHAYZIEN_MASSIVE_CROSSBOW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Shayzien - Stone - Wooden - Gabion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHAYZIEN_GABION_DEFENCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "JAGGED_STONE_TILE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 3" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Cloth - Wooden - Gabion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "KOUREND_MAIN_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 172
+      },
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      },
+      {
+        "colors": [ "h >= 8 && h <= 10" ],
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Varrock - Metallic - Wooden - Floor standing Weapons case",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "FAI_VARROCK_WEAPONCASE_LARGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Wooden - Chicken Coop",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "KEBOS_FARMING_GUILD_CHICKEN_COOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grain",
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Straw",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HAY_1",
+      "STRAW",
+      "STRAW2"
+    ]
+  },
+  {
+    "description": "Kebos Farm - Straw with rocks",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HAY_2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "baseMaterial": "ROCK_4",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Wooden bookcase with brown and taupe colored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "GA_SHELVES"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red glass bottle",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Red glass bottle",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Yellow Glass Bottle",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Varrock - Metallic - Wooden - Sink with wooden frame and slats",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 179,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_COOKING_KITCHEN_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+
+    ]
+  },
+  {
+    "description": "Barrel with metal bands filled with flower",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 12 && s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "DIRT_1",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ "GA_FLOURBARREL" ]
+  },
+  {
+    "description": "Kebos Farm - Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_WINDMILL_WALL",
+      "FAI_VARROCK_WINDMILL_WALL_TYPE2",
+      "FAI_VARROCK_WINDMILL_WALL_TYPE2_MIRROR",
+      "FAI_VARROCK_WINDMILL_WINDOW_LARGE_MIRROR",
+      "FAI_VARROCK_WINDMILL_WINDOW_LARGE",
+      "FAI_VARROCK_WINDMILL_WINDOW"
+    ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW_RIGHT",
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW_LEFT",
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW",
+      "FAI_VARROCK_ROOF_THATCHED",
+      "FAI_VARROCK_ROOF_THATCHED_SHORT",
+      "FAI_VARROCK_ROOF_THATCHED_SHORT_MIRROR",
+      "FAI_VARROCK_ROOF_THATCHED_3H",
+      "FAI_VARROCK_ROOF_THATCHED_END",
+      "FAI_VARROCK_THATCHED_ROOF_BALCONY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_MILLROOFRIGHT",
+      "FAI_VARROCK_MILLROOFLEFT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      },
+      {
+        "description": "Walls",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm Fence Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "GA_FENCEGATE_L_NORMAL",
+      "GA_FENCEGATE_R_NORMAL"
+    ]
+  },
+  {
+    "description": "Kebos Farm Fence Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "GA_FENCEGATE_L_FLOUR",
+      "GA_FENCEGATE_R_FLOUR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "DIRT_1",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Getting Ahead - Flour Pile",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "GA_FLOUR_FLOOR_CHILD"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Wooden - Log -  Molch Palisade",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MOLCH_PALISADE_1",
+      "MOLCH_PALISADE_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 16",
+        "uvType": "BOX",
+        "baseMaterial": "ROPE",
+        "uvScale": 0.5,
+        "uvOrientation": 212
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Kebos Lowlands - Rock - Crystal -  Archeuus Rocks - Large",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ARCHEUUS_ROCKS_LARGE_GREEN_01",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_02",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_03",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_5",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Kebos Lowlands - Rock - Crystal -  Archeuus Rocks - Medium",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ARCHEUUS_ROCKS_GREEN_01",
+      "ARCHEUUS_ROCKS_GREEN_02",
+      "ARCHEUUS_ROCKS_GREEN_03",
+      "ARCHEUUS_ROCKS_GREEN_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_4",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Piscarilius - Kebos Lowlands - Wooden -  Drift wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "objectIds": [
+      "PISCARILIUS_JUNK_01"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Corsair Cove - Bark - Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [ "DS2_OGRE_CORSAIR_ROOT_LARGE" ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Kebos Lowlands - Bark - Stone - Dirt - Walls with roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_WALL_VINES",
+      "GA_CAVE_WALL_VINES_A"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "baseMaterial": "LIGHT_BARK",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_3",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Abandoned Mine tops",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_WALL_TOP",
+      "GA_CAVE_WALL_TOP_STRAIGHT",
+      "GA_CAVE_WALL_TOP_INSIDE_CORNER",
+      "GA_CAVE_WALL_TOP_OUTSIDE_CORNER"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Abandoned Mine cave entrance",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_OUT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Metallic - Wooden - Mangel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TANNINGMANGEL_A",
+      "TANNINGMANGEL_B"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Cloth Barriers and Tanning Line",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TANNINGLINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Getting Ahead Plaque",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GA_MOUNTED_HEAD_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 6",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
     ]
   }
 ]

@@ -37352,5 +37352,23 @@
     "objectIds": [
       "FRIS_MINE_WALL_NURSE_ENTRANCE_TWO"
     ]
+  },
+  {
+    "description": "GETTING_AHEAD_CAVE_EXIT",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "GA_CAVE_OUT"
+    ]
   }
 ]
