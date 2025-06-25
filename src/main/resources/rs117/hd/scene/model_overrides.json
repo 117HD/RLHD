@@ -1682,7 +1682,8 @@
       "SOTE_HUNTING_ROCK4_NOOP",
       "SOTE_HUNTING_ROCK3_OP",
       "SOTE_HUNTING_ROCK2_OP",
-      "SOTE_HUNTING_ROCK4_OP"
+      "SOTE_HUNTING_ROCK4_OP",
+      "GB_MOSS_CAVEROCK_EXIT"
     ],
     "retainVanillaUvs": false,
     "uvType": "BOX",
@@ -17080,7 +17081,7 @@
   },
   {
     "description": "Generic - Plant - Fern - Small",
-    "baseMaterial": "LEAF_VEINS",
+    "baseMaterial": "LEAF_VEINS_LIGHT",
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
     "objectIds": [
@@ -17088,7 +17089,8 @@
       "FERN",
       "FERN1",
       "FERN2",
-      "MM_JUNGLEPLANT2"
+      "MM_JUNGLEPLANT2",
+      "AREA_SANGUINE_OUTER_WALL_PLANT"
     ]
   },
   {
@@ -17097,7 +17099,7 @@
     "colorOverrides": [
       {
         "colors": "h > 11",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
         "uvScale": 0.25,
         "uvType": "MODEL_XZ"
       }
@@ -22829,6 +22831,42 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [ "FAI_VARROCK_MANHOLE_LADDER" ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Varrock Sewers - Bryophyta - Trees",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAIRY2_FOREST",
+      "FAIRY2_FOREST_TOP",
+      "FAIRY2_FOREST_TOP2",
+      "FAIRY2_FOREST_TOP3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock Sewers - Bryophyta - Axe Stump",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GB_LOG_WITHAXE",
+      "WOODCHIPPINGS_LIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Varrock Sewers - Objects - Metallic - Scurrius Entrance Bars",
