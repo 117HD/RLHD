@@ -37700,11 +37700,66 @@
     ]
   },
   {
-    "description": "Kebos Lowlands - Corsair Cover - Bark - Root - Large",
+    "description": "Kebos Lowlands - Corsair Cove - Bark - Root - Large",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [ "DS2_OGRE_CORSAIR_ROOT_LARGE" ],
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 342
+  },
+  {
+    "description": "Kebos Lowlands - Bark - Stone - Dirt - Walls with roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_WALL_VINES",
+      "GA_CAVE_WALL_VINES_A"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "baseMaterial": "LIGHT_BARK",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_3",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Abandoned Mine tops",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_WALL_TOP",
+      "GA_CAVE_WALL_TOP_STRAIGHT",
+      "GA_CAVE_WALL_TOP_INSIDE_CORNER",
+      "GA_CAVE_WALL_TOP_OUTSIDE_CORNER"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Abandoned Mine cave entrance",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_OUT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]
