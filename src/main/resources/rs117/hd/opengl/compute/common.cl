@@ -23,6 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#pragma once
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
@@ -101,6 +102,10 @@ bool face_visible(__constant struct uniform *uni, float3 vA, float3 vB, float3 v
   float3 sC = to_screen(uni, lC);
 
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
+}
+
+float saturate(float value) {
+    return clamp(value, 0.0f, 1.0f);
 }
 
 // 2D Random

@@ -24,6 +24,7 @@
  */
 
 #include constants.cl
+#include common.cl
 #include vanilla_uvs.cl
 
 int priority_map(int p, int distance, int _min10, int avg1, int avg2, int avg3);
@@ -70,11 +71,11 @@ void sort_and_insert(
   struct ModelInfo minfo,
   int thisPriority,
   int thisDistance,
-  float3 windDirection,
   struct vert thisrvA,
   struct vert thisrvB,
   struct vert thisrvC,
-  read_only image3d_t tileHeightMap
+  read_only image3d_t tileHeightMap,
+  float4 windDirection
 );
 
 // Calculate adjusted priority for a face with a given priority, distance, and
@@ -330,11 +331,11 @@ void sort_and_insert(
   struct ModelInfo minfo,
   int thisPriority,
   int thisDistance,
-  float3 windDirection,
   struct vert thisrvA,
   struct vert thisrvB,
   struct vert thisrvC,
-  read_only image3d_t tileHeightMap
+  read_only image3d_t tileHeightMap,
+  float4 windDirection
 ) {
   uint offset = minfo.offset;
   uint size = minfo.size;
@@ -342,8 +343,10 @@ void sort_and_insert(
   if (localId < size) {
     int outOffset = minfo.idx;
     int uvOffset = minfo.uvOffset;
-    int flags = minfo.flags;
-    int orientation = flags & 0x7ff;
+    int orientation = minfo.flags & 0x7ff;
+    int plane = (minfo.flags >> 24) & 3;
+    int hillskew = (minfo.flags >> 26) & 1;
+    int vertexFlags = uvOffset >= 0 ? (int)(uv[uvOffset + localId * 3].w) : 0;
 
     // we only have to order faces against others of the same priority
     const int priorityOffset = count_prio_offset(shared, thisPriority);
@@ -360,15 +363,9 @@ void sort_and_insert(
       }
     }
 
-
-
     float4 normA = normal[offset + localId * 3];
     float4 normB = normal[offset + localId * 3 + 1];
     float4 normC = normal[offset + localId * 3 + 2];
-
-    normalout[outOffset + myOffset * 3    ] = rotate_vertex(normA, orientation);
-    normalout[outOffset + myOffset * 3 + 1] = rotate_vertex(normB, orientation);
-    normalout[outOffset + myOffset * 3 + 2] = rotate_vertex(normC, orientation);
 
     #if UNDO_VANILLA_SHADING
     if ((thisrvA.ahsl >> 20 & 1) == 0) {
@@ -386,77 +383,77 @@ void sort_and_insert(
     }
     #endif
 
-    float4 uvA = (float4)(0);
-    float4 uvB = (float4)(0);
-    float4 uvC = (float4)(0);
+    normalout[outOffset + myOffset * 3    ] = rotate_vertex(normA, orientation);
+    normalout[outOffset + myOffset * 3 + 1] = rotate_vertex(normB, orientation);
+    normalout[outOffset + myOffset * 3 + 2] = rotate_vertex(normC, orientation);
+
 
     float4 pos = (float4)(minfo.x, minfo.y, minfo.z, 0);
+    float3 displacementA = (float3)(0);
+    float3 displacementB = (float3)(0);
+    float3 displacementC = (float3)(0);
+
     float4 vertA = (float4)(thisrvA.x, thisrvA.y, thisrvA.z, 0);
     float4 vertB = (float4)(thisrvB.x, thisrvB.y, thisrvB.z, 0);
-    float4 vertC = (float4)(thisrvC.x, thisrvC.y, thisrvC.z, 0) ;
+    float4 vertC = (float4)(thisrvC.x, thisrvC.y, thisrvC.z, 0);
 
-    float4 displacementA = (float4)(0);
-    float4 displacementB = (float4)(0);
-    float4 displacementC = (float4)(0);
+    #if WIND_ENABLED
+    int WindDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 3;
+    if (WindDisplacementMode != 0) {
+        float heightBasedWindStrength = saturate((fabs(pos.y) + minfo.height) / uni->windCeiling) * uni->windStrength;
+        float strengthA = saturate(fabs(vertA.y) / minfo.height);
+        float strengthB = saturate(fabs(vertB.y) / minfo.height);
+        float strengthC = saturate(fabs(vertC.y) / minfo.height);
 
-    if (uvOffset >= 0) {
-        uvA = uv[uvOffset + localId * 3];
-        uvB = uv[uvOffset + localId * 3 + 1];
-        uvC = uv[uvOffset + localId * 3 + 2];
+        // Main Object Displacement
+        float3 worldDisplacement = windDirection.xyz * (100.0f * windDirection.w);
 
-        #if WIND_ENABLED
-        int WindSwayingValue = (((int)uvA.w) >> MATERIAL_FLAG_WIND_SWAYING & 3);
-        if (WindSwayingValue > 0) {
-            const float maxHeight = 100.0;
-            const float noiseResolution = 0.04;
-            const float gridSnapping = 400.0;
+        // Apply Additional Vertex Displacement
+        if(WindDisplacementMode == 2 || WindDisplacementMode == 3) {
+            const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
+            float windNoiseA = mix(-0.5f, 0.5f, noise((vertA.xz + (float2)(uni->windOffset)) * (float2)(WIND_DISPLACEMENT_NOISE_RESOLUTION)));
+            float windNoiseB = mix(-0.5f, 0.5f, noise((vertB.xz + (float2)(uni->windOffset)) * (float2)(WIND_DISPLACEMENT_NOISE_RESOLUTION)));
+            float windNoiseC = mix(-0.5f, 0.5f, noise((vertC.xz + (float2)(uni->windOffset)) * (float2)(WIND_DISPLACEMENT_NOISE_RESOLUTION)));
 
-            float heightFrac = (float)((flags >> 27) & 0x1F) / 31.0f;
-            float height = 100.0f * heightFrac;
+            // Hemisphere Blend
+            if(WindDisplacementMode == 3) {
+                const float minDist = 50.0f;
+                const float blendDist = 10.0f;
 
-            bool isTree = WindSwayingValue == 2;
-            float windT = elapsedTime * windSpeed;
-            float heightBasedWindStrength = windStrength * heightFrac;
-            float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
-            float strengthB = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
-            float strengthC = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
+                float distBlendA = saturate(((fabs(vertA.x) + fabs(vertA.z)) - minDist) / blendDist);
+                float distBlendB = saturate(((fabs(vertB.x) + fabs(vertB.z)) - minDist) / blendDist);
+                float distBlendC = saturate(((fabs(vertC.x) + fabs(vertC.z)) - minDist) / blendDist);
 
-            if(isTree) {
-                float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + (float2)(windT)) * noiseResolution));
-                float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + (float2)(windT)) * noiseResolution));
-                float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + (float2)(windT)) * noiseResolution));
+                float heightFadeA = saturate((strengthA - 0.5f) / 0.2f);
+                float heightFadeB = saturate((strengthB - 0.5f) / 0.2f);
+                float heightFadeC = saturate((strengthC - 0.5f) / 0.2f);
 
-                // Avoid over stretching which can cause issues in ComputeUVs
-                strengthA *= 0.2;
-                strengthB *= 0.2;
-                strengthC *= 0.2;
-
-                displacementA = ((windNoiseA * heightBasedWindStrength * strengthA) * normalize(windDirection)) + windDirection;
-                displacementB = ((windNoiseB * heightBasedWindStrength * strengthB) * normalize(windDirection)) + windDirection;
-                displacementC = ((windNoiseC * heightBasedWindStrength * strengthC) * normalize(windDirection)) + windDirection;
-            } else {
-                float3 offset = pos.xyz + (vertA.xyz + vertB.xyz + vertC.xyz / 3.0f);
-                offset.x = round(offset.x / 400.0f) * 400.0f;
-                offset.z = round(offset.z / 400.0f) * 400.0f;
-
-                float gridNoise = mix(-0.5, 0.5, noise((offset.xz + (float2)(uni->windT)) * noiseResolution));
-                float3 gridDisplacement = (uni->windStrength * gridNoise * heightFrac) * windDirection;
-
-                displacementA.xyz = gridDisplacement * strengthA;
-                displacementB.xyz = gridDisplacement * strengthB;
-                displacementC.xyz = gridDisplacement * strengthC;
+                strengthA *= mix(0.0f, mix(distBlendA, 1.0f, heightFadeA), step(0.3f, strengthA));
+                strengthB *= mix(0.0f, mix(distBlendB, 1.0f, heightFadeB), step(0.3f, strengthB));
+                strengthC *= mix(0.0f, mix(distBlendC, 1.0f, heightFadeC), step(0.3f, strengthC));
             }
-        }
-        #endif
-    }
 
-    vertA += pos + displacementA;
-    vertB += pos + displacementB;
-    vertC += pos + displacementC;
+            displacementA = ((windNoiseA * (heightBasedWindStrength * strengthA * VertexDisplacementMod)) * windDirection.xyz);
+            displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB * VertexDisplacementMod)) * windDirection.xyz);
+            displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC * VertexDisplacementMod)) * windDirection.xyz);
+
+            strengthA = saturate(strengthA - VertexDisplacementMod);
+            strengthB = saturate(strengthB - VertexDisplacementMod);
+            strengthC = saturate(strengthC - VertexDisplacementMod);
+        }
+
+        displacementA += worldDisplacement * strengthA;
+        displacementB += worldDisplacement * strengthB;
+        displacementC += worldDisplacement * strengthC;
+    }
+    #endif
+
+    vertA += pos + (float4)(displacementA, 0.0);
+    vertB += pos + (float4)(displacementB, 0.0);
+    vertC += pos + (float4)(displacementC, 0.0);
+
 
     // apply hillskew
-    int plane = (flags >> 24) & 3;
-    int hillskew = (flags >> 26) & 1;
     if (hillskew == 1) {
         hillskew_vertex(tileHeightMap, &vertA, hillskew, minfo.y, plane);
         hillskew_vertex(tileHeightMap, &vertB, hillskew, minfo.y, plane);
@@ -469,8 +466,16 @@ void sort_and_insert(
     vout[outOffset + myOffset * 3 + 2] = (struct vert){vertC.x, vertC.y, vertC.z, thisrvC.ahsl};
 
 
+    float4 uvA = (float4)(0);
+    float4 uvB = (float4)(0);
+    float4 uvC = (float4)(0);
+
     if (uvOffset >= 0) {
-      if ((((int)uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+      uvA = uv[uvOffset + localId * 3];
+      uvB = uv[uvOffset + localId * 3 + 1];
+      uvC = uv[uvOffset + localId * 3 + 2];
+
+      if ((vertexFlags >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
         // Rotate the texture triangles to match model orientation
         uvA = rotate_vertex(uvA, orientation);
         uvB = rotate_vertex(uvB, orientation);

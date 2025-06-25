@@ -60,19 +60,18 @@ void sortModel(
     }
   }
 
-  float3 windDirection = (float3)(0.0f);
+  float4 windDirection = (float4)(0.0f);
   #if WIND_ENABLED
   {
-      float windNoise = noise((float2)(minfo.x + (uni->elapsedTime * uni->windSpeed), minfo.z + (uni->elapsedTime * uni->windSpeed)) * 0.05f);
+      float windNoise = noise(((float2)(minfo.x, minfo.z) + (float2)(uni->windOffset)) * (float2)(WIND_DISPLACEMENT_NOISE_RESOLUTION));
       float angle = windNoise * (PI / 2.0f);
       float c = cos(angle);
       float s = sin(angle);
 
-      windDirection = normalize((float3)(
-          uni->globalWindDirection.x * c + uni->globalWindDirection.z * s,
-          uni->globalWindDirection.y,
-          -uni->globalWindDirection.x * s + uni->globalWindDirection.z * c
-      )) * (windNoise * windStrength * 0.3);
+      windDirection.x = uni->windDirectionX * c + uni->windDirectionZ * s;
+      windDirection.z = -uni->windDirectionX * s + uni->windDirectionZ * c;
+      windDirection.xyz = normalize(windDirection.xyz);
+      windDirection.w = windNoise;
   }
   #endif
 
@@ -109,6 +108,6 @@ void sortModel(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
-    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], windDirection, v1[i], v2[i], v3[i], tileHeightMap);
+    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap, windDirection);
   }
 }
