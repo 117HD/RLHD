@@ -3162,6 +3162,7 @@
       "FAI_VARROCK_SMALL_WALL_CASTLE_FILLER_MIRROR",
       "FAI_VARROCK_CASTLE_BATTLEMENT",
       "FAI_VARROCK_CASTLE_WALL_TOPPED",
+      "FAI_VARROCK_CASTLE_WALL_TOPPED_SPECIAL",
       "FAI_VARROCK_CASTLE_WALL_TOPPED_EDGE",
       "FAI_VARROCK_CASTLE_WALL_TOPPED_LOW_MEM",
       "FAI_VARROCK_CASTLE_WALL_NO_BACK_BUTRESS",
@@ -8123,7 +8124,9 @@
     "uvScale": 0.4,
     "objectIds": [
       "WALLSHIELD3_WHITE",
-      "WALLSHIELD"
+      "FAI_VARROCK_WALLSHIELD",
+      "WALLSHIELD",
+      "QIP_DS_COATOFARMS1"
     ]
   },
   {
@@ -27891,7 +27894,8 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       "BROWNBED",
-      "KEBOS_SHACK_BED"
+      "KEBOS_SHACK_BED",
+      "FAI_VARROCK_SINGLE_BED_DIRTY"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
@@ -29800,9 +29804,11 @@
     "objectIds": [
       "CABINET_SWORDS",
       "CABINET_BOWS",
+      "FAI_VARROCK_CABINET_SWORDS",
       "KR_CABINET_BOWS",
       "KR_CAM_CABINET_BOWS_WHITE",
       "CABINET_AXES",
+      "ORANGECABINET_AXES",
       "FAI_VARROCK_BOWCASE_CROSSBOW",
       "FAI_VARROCK_ARROW_DISPLAY",
       "FAI_VARROCK_SWORDCASE_SWORDS"
@@ -38785,6 +38791,182 @@
         "colors": "h == 10 && s == 3",
         "uvType": "BOX",
         "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Decoration - Wall - Varrock Castle wall flag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FAI_VARROCK_PALACE_WALLHANGING"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Yellow fabric",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "Black fabric",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "White fabric",
+        "colors": "h == 42",
+        "baseMaterial": "CARPET_DARK",
+        "uvOrientation": 280,
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Glass - Shelves",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_SHELVES_GLASSES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 164
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Porcelain - Shelves with tools and flowers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_SHELVES_MIXED2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 5 && h <= 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Shelves Gold canisters",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientation": 42,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHELF2",
+      "FAI_VARROCK_RUNE_SHELF3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 512 ,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "QIP_DS_CHESSTABLE"
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Blue Dragon Head Trophy",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "QIP_DS_DRAGONHEAD1_BLUE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 5 ",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Cloth - Wooden - White Bunk Bed with pillows",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_VARROCK_GUARD_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Cloth - Wooden - Castle Long Table",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 64,
+    "objectIds": [
+      "FAI_VARROCK_POSH_LARGE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
       }
     ]
   }
