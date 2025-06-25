@@ -20803,7 +20803,8 @@
       "RAT_BOSS_CORPSE01",
       "NECROPOLIS_SKELETON_1",
       "NECROPOLIS_SKELETON_2",
-      "NECROPOLIS_SKELETON_3"
+      "NECROPOLIS_SKELETON_3",
+      "GA_SKELETON"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -20812,7 +20813,7 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
+    "objectIds": [ "GA_CAVE_BONES1", "GA_CAVE_BONES2" ,"GA_CAVE_BONES3", "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -37697,5 +37698,13 @@
     "objectIds": [
       "PISCARILIUS_JUNK_01"
     ]
+  },
+  {
+    "description": "Kebos Lowlands - Corsair Cover - Bark - Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [ "DS2_OGRE_CORSAIR_ROOT_LARGE" ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
   }
 ]
