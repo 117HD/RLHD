@@ -3144,9 +3144,6 @@
       "FAI_VARROCK_CASTLE_SHANTY_JOIN_LOW_LEFT",
       "FAI_VARROCK_CASTLE_SHANTY_JOIN_TOP_RIGHT",
       "FAI_VARROCK_SHANTY_AND_BATTLEMENT",
-      "GARDEN_TRELLIS",
-      "GARDEN_TRELLIS_CONCAVE",
-      "GARDEN_TRELLIS_WALL_MIRROR",
       "FAI_VARROCKWALL_HILLSKEW",
       "FAI_VARROCKWALL",
       "FAI_VARROCK_INTERIORWALL",
@@ -17279,7 +17276,8 @@
     "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "SARIM_PICNICBENCH"
+      "SARIM_PICNICBENCH",
+      "GARDEN_PICNICBENCH"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -39109,6 +39107,79 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Tree",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FAI_VARROCK_COURTYARD_TREE_BASE",
+      "FAI_VARROCK_COURTYARD_TREE_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h > 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Wooden - Trellis",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "GARDEN_TRELLIS",
+      "GARDEN_TRELLIS_CONCAVE",
+      "GARDEN_TRELLIS_WALL_MIRROR",
+      "GARDEN_TRELLIS_ARCHWAY_SIDE",
+      "GARDEN_TRELLIS_ARCHWAY_TOP"
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Wooden - Stone - Trellis connected to wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "GARDEN_TRELLIS_CASTLE_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_2",
+        "flatNormals": true,
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Wooden - Vines - Climbable Trellis Shortcut",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "GARDEN_TRELLIS_CONCAVE_SHORTCUT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 15",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
       }
     ]
   }
