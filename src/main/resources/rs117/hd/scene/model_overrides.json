@@ -17070,11 +17070,13 @@
   {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "Object",
     "objectIds": [
       "SWAMP_PLANT1",
       "SWAMP_PLANT2",
       "SWAMP_PLANT3",
       "SWAMP_PLANT4",
+      "SWAMP_PLANT5",
       "TEMPLETREK_SWAMP_PLANT1",
       "TEMPLETREK_SWAMP_PLANT2",
       "TEMPLETREK_SWAMP_PLANT3",
