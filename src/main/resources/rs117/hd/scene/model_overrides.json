@@ -4777,7 +4777,8 @@
     "objectIds": [
       "CAVEENTRANCE3",
       "UPASS_CAVEENTRANCE2",
-      "XMAS20_GOBLIN_CAVE_ENTRANCE"
+      "XMAS20_GOBLIN_CAVE_ENTRANCE",
+      "GA_CAVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -9658,7 +9659,6 @@
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
       "SWAMP_MOSS_COVERED_ROCK_2",
-      "ARCHEUUS_ROCKS_GREEN_01",
       "RAIDS_ROCKS_FLOOR1",
       "RAIDS_ROCKS_FLOOR2",
       "RAIDS_ROCKS_FLOOR3",
@@ -9708,7 +9708,8 @@
       "WILDERNESS_ROCKS_FLOOR_SOFT_03",
       "WILDERNESS_ROCKS_FLOOR_SOFT_02",
       "WILDERNESS_ROCKS_FLOOR_SOFT_04",
-      "WILDERNESS_ROCKS_FLOOR_SOFT_05"
+      "WILDERNESS_ROCKS_FLOOR_SOFT_05",
+      "WILDERNESS_ROCKS_FLOOR_SOFT_01"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.9
@@ -13044,7 +13045,8 @@
       "ROUNDTABLE",
       "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE2",
       "KR_SIN_ROUNDTABLE",
-      "HOS_ROUND_TABLE"
+      "HOS_ROUND_TABLE",
+      "ROUNDTABLE_WIDE_LIGHT"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -17701,12 +17703,38 @@
       "FAI_ROCK_SMALL_01",
       "FAI_ROCK_SMALL_02",
       "FAI_ROCK_SMALL_03",
-      "BCS_ROCKS_PICKAXE",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_BOTTOM",
       "DAGANNOTH_WATERBIRTH_ROCK_CLIMB_AGILITY_SHORTCUT_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.22
+  },
+  {
+    "description": "Rocks with Pickaxe in them",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      "BCS_ROCKS_PICKAXE",
+      "GA_ROCKS_PICKAXE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pickaxe",
+        "colors": "h == 5 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Pickaxe Handle",
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
   },
   {
     "description": "Rocks - Large",
@@ -18855,7 +18883,8 @@
       "FAI_VARROCK_CONTAINER",
       "SNAKEBOSS_BANKCHEST",
       "WILD_CHEST_CLOSED",
-      "WILD_CHEST_OPEN"
+      "WILD_CHEST_OPEN",
+      "KEBOS_CHEST_CLOSED_INACTIVE"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
@@ -21015,7 +21044,8 @@
       "NECROPOLIS_SKELETON_1",
       "NECROPOLIS_SKELETON_2",
       "NECROPOLIS_SKELETON_3",
-      "AKD_HUGHES_SKELETON_1_NOOP"
+      "AKD_HUGHES_SKELETON_1_NOOP",
+      "GA_SKELETON"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -21024,7 +21054,7 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
+    "objectIds": [ "GA_CAVE_BONES1", "GA_CAVE_BONES2" ,"GA_CAVE_BONES3", "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -25464,7 +25494,8 @@
     "description": "Zeah - Wooden Spiral Staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "KEBOS_SPIRALSTAIRS_BOTTOM"
+      "KEBOS_SPIRALSTAIRS_BOTTOM",
+      "KEBOS_SPIRALSTAIRS_TOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 88,
@@ -26168,7 +26199,8 @@
     "description": "Objects - Wooden - Hat Rack",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "HATSTAND"
+      "HATSTAND",
+      "HATSTAND_MAHOGANY"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -26241,6 +26273,15 @@
     "description": "Wooden food trough",
     "objectIds": [ "FOODTROUGH", "FAI_VARROCK_FOODTROUGH" ],
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Wooden food trough - With textured seed",
+    "objectIds": [ "FOODTROUGH2" ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "retainVanillaUvs": false,
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
@@ -26783,7 +26824,8 @@
       "FAI_VARROCK_DRAWERS",
       "FAI_VARROCK_POSH_DRAWERS",
       "KR_SEERS_VILLAGE_DRAWERS1",
-      "AKD_HUGHES_DRAWERS_1_NOOP"
+      "AKD_HUGHES_DRAWERS_1_NOOP",
+      "FAI_FALADOR_DRAWERS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -27847,9 +27889,71 @@
   {
     "description": "Brown Bed with pillow",
     "baseMaterial": "CARPET",
-    "objectIds": [ "BROWNBED" ],
+    "objectIds": [
+      "BROWNBED",
+      "KEBOS_SHACK_BED"
+    ],
     "uvType": "BOX",
-    "uvOrientation": 64
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Brown Bed with pillow - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Baby Blue Double wide Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_VARROCK_DOUBLE_BED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos - Baby Blue Bunk Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_FALADOR_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Baby Blue Bed with pillow",
@@ -27878,7 +27982,8 @@
     "objectIds": [
       "SINK",
       "SINK2",
-      "KR_SINK"
+      "KR_SINK",
+      "QIP_SHEEP_SHEARER_SINK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -32902,24 +33007,6 @@
         "uvType": "BOX",
         "uvScale": 0.8
       }
-    ]
-  },
-  {
-    "description": "Tanning Line",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "colorOverrides": [
-      {
-        "description": "Table",
-        "colors": "h == 6",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.5
-      }
-    ],
-    "objectIds": [
-      "TANNINGLINE"
     ]
   },
   {
@@ -38088,6 +38175,467 @@
         "description": "Glass",
         "colors": "a < 255",
         "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Wooden - Chicken Coop",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "KEBOS_FARMING_GUILD_CHICKEN_COOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grain",
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Straw",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HAY_1",
+      "STRAW",
+      "STRAW2"
+    ]
+  },
+  {
+    "description": "Kebos Farm - Straw with rocks",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvOrientation": 512,
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HAY_2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "baseMaterial": "ROCK_4",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Wooden bookcase with brown and taupe colored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "GA_SHELVES"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red glass bottle",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Red glass bottle",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Yellow Glass Bottle",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Varrock - Metallic - Wooden - Sink with wooden frame and slats",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 179,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_COOKING_KITCHEN_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+
+    ]
+  },
+  {
+    "description": "Barrel with metal bands filled with flower",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 12 && s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "DIRT_1",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ "GA_FLOURBARREL" ]
+  },
+  {
+    "description": "Kebos Farm - Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_WINDMILL_WALL",
+      "FAI_VARROCK_WINDMILL_WALL_TYPE2",
+      "FAI_VARROCK_WINDMILL_WALL_TYPE2_MIRROR",
+      "FAI_VARROCK_WINDMILL_WINDOW_LARGE_MIRROR",
+      "FAI_VARROCK_WINDMILL_WINDOW_LARGE",
+      "FAI_VARROCK_WINDMILL_WINDOW"
+    ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW_RIGHT",
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW_LEFT",
+      "FAI_VARROCK_ROOF_THATCHED_WINDOW",
+      "FAI_VARROCK_ROOF_THATCHED",
+      "FAI_VARROCK_ROOF_THATCHED_SHORT",
+      "FAI_VARROCK_ROOF_THATCHED_SHORT_MIRROR",
+      "FAI_VARROCK_ROOF_THATCHED_3H",
+      "FAI_VARROCK_ROOF_THATCHED_END",
+      "FAI_VARROCK_THATCHED_ROOF_BALCONY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "baseMaterial": "HD_HAY",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_MILLROOFRIGHT",
+      "FAI_VARROCK_MILLROOFLEFT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      },
+      {
+        "description": "Walls",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm Fence Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "GA_FENCEGATE_L_NORMAL",
+      "GA_FENCEGATE_R_NORMAL"
+    ]
+  },
+  {
+    "description": "Kebos Farm Fence Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "GA_FENCEGATE_L_FLOUR",
+      "GA_FENCEGATE_R_FLOUR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "DIRT_1",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Getting Ahead - Flour Pile",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "GA_FLOUR_FLOOR_CHILD"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Wooden - Log -  Molch Palisade",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MOLCH_PALISADE_1",
+      "MOLCH_PALISADE_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 16",
+        "uvType": "BOX",
+        "baseMaterial": "ROPE",
+        "uvScale": 0.5,
+        "uvOrientation": 212
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Kebos Lowlands - Rock - Crystal -  Archeuus Rocks - Large",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ARCHEUUS_ROCKS_LARGE_GREEN_01",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_02",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_03",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_5",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Kebos Lowlands - Rock - Crystal -  Archeuus Rocks - Medium",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ARCHEUUS_ROCKS_GREEN_01",
+      "ARCHEUUS_ROCKS_GREEN_02",
+      "ARCHEUUS_ROCKS_GREEN_03",
+      "ARCHEUUS_ROCKS_GREEN_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_4",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Piscarilius - Kebos Lowlands - Wooden -  Drift wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "objectIds": [
+      "PISCARILIUS_JUNK_01"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Corsair Cove - Bark - Root - Large",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [ "DS2_OGRE_CORSAIR_ROOT_LARGE" ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 342
+  },
+  {
+    "description": "Kebos Lowlands - Bark - Stone - Dirt - Walls with roots",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_WALL_VINES",
+      "GA_CAVE_WALL_VINES_A"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "baseMaterial": "LIGHT_BARK",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_3",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Abandoned Mine tops",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_WALL_TOP",
+      "GA_CAVE_WALL_TOP_STRAIGHT",
+      "GA_CAVE_WALL_TOP_INSIDE_CORNER",
+      "GA_CAVE_WALL_TOP_OUTSIDE_CORNER"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Abandoned Mine cave entrance",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "GA_CAVE_OUT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Metallic - Wooden - Mangel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TANNINGMANGEL_A",
+      "TANNINGMANGEL_B"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Cloth Barriers and Tanning Line",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TANNINGLINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Getting Ahead Plaque",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GA_MOUNTED_HEAD_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 6",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
       }
     ]
   }
