@@ -3481,6 +3481,12 @@
     "blended": false
   },
   {
+    "name": "GETTING_AHEAD_CAVE_GROUND",
+    "area": "GETTING_AHEAD_CAVE",
+    "underlayIds": [ 25, 63, 93 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "MOUNT_QUIDAMORTEM_SYMBOL",
     "area": "MOUNT_QUIDAMORTEM",
     "overlayIds": [

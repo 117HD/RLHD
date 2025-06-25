@@ -4450,6 +4450,10 @@
     ]
   },
   {
+    "name": "GETTING_AHEAD_CAVE",
+    "regions": [ 4764 ]
+  },
+  {
     "name": "ZEAH_WOODLAND_AREAS",
     "aabbs": [
       [ 1430, 3383, 1897, 3677 ],
