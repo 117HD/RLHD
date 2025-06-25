@@ -468,7 +468,10 @@
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "windAngle": 40,
+    "windSpeed": 7,
+    "windStrength": 26
   },
   {
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
