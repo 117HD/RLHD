@@ -39258,5 +39258,42 @@
         "uvScale": 0.4
       }
     ]
+  },
+  {
+    "description": "Varrock - Caste Garden - King Statue",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GARDEN_KING_STATUE_PLACED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 188,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Falador - Caste Garden - Statues",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GARDEN_SARADOMIN_STATUE_PLACED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   }
 ]
