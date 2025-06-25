@@ -2008,27 +2008,13 @@
     ]
   },
   {
-    "description": "GRASS",
+    "description": "Grass that should cast shadows",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
     "objectIds": [
-      "VIKING_GRASS_4",
       "MM_JUNGLE_GRASS1",
       "MM_JUNGLE_GRASS2",
       "MM_JUNGLE_GRASS3",
-      "SLAYER_SHORT_GRASS_1",
-      "SLAYER_SHORT_GRASS_2",
-      "SLAYER_SHORT_GRASS_3",
-      "SLAYER_SHORT_GRASS_4",
-      "SLAYER_SHORT_GRASS_3_CASTLE_EDGE",
-      "SLAYER_SHORT_GRASS_4_CASTLE_EDGE",
-      "AHOY_SHORT_GRASS_4_WALL_CORNER",
-      "LIGHTGREEN_GRASS1",
-      "LIGHTGREEN_GRASS2",
-      "LIGHTGREEN_GRASS3",
-      "GRASSLAND_SHORT_GRASS_1",
-      "GRASSLAND_SHORT_GRASS_2",
-      "GRASSLAND_SHORT_GRASS_3",
-      "GRASSLAND_SHORT_GRASS_4",
       "HUNTING_LONG_JUNGLE_GRASS1",
       "HUNTING_LONG_JUNGLE_GRASS2",
       "HUNTING_LONG_JUNGLE_GRASS3",
@@ -2044,26 +2030,16 @@
       "HUNTING_GREENVINE_DIAGFILLER",
       "HUNTING_GREENVINE_END",
       "HUNTING_GREENVINE_END_DIAG",
-      "GRASSLAND_SHORT_3_CASTLE_EDGE",
-      "GRASSLAND_SHORT_4_CASTLE_EDGE",
-      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
-      "DS2_OGRE_BROWN_GRASS_1",
-      "DS2_OGRE_BROWN_GRASS_2",
-      "DS2_OGRE_BROWN_GRASS_3",
-      "DS2_OGRE_BROWN_GRASS_4",
       "HUNTING_JUNGLE_PLANT1",
       "MM_LONG_JUNGLE_GRASS1",
       "MM_LONG_JUNGLE_GRASS2",
       "MM_LONG_JUNGLE_GRASS3"
-    ],
-    "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY"
+    ]
   },
   {
     "description": "Short grass which shouldn't cast shadows",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_65",
     "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY",
     "castShadows": false,
     "objectIds": [
       "GRASS_1",
@@ -2079,7 +2055,7 @@
       "VIKING_GRASS_1",
       "VIKING_GRASS_2",
       "VIKING_GRASS_3",
-      "POH_GRASS",
+      "VIKING_GRASS_4",
       "SHORT_GRASS_1",
       "SHORT_GRASS_2",
       "SHORT_GRASS_3",
@@ -2101,6 +2077,7 @@
       "AHOY_SHORT_GRASS_4",
       "AHOY_SHORT_GRASS_3_WALL_EDGE",
       "AHOY_SHORT_GRASS_4_WALL_EDGE",
+      "AHOY_SHORT_GRASS_4_WALL_CORNER",
       "AHOY_SHORT_GRASS_WALL_EDGE_2",
       "AHOY_SHORT_GRASS_4",
       "SHORT_GRASS_WALL_EDGE_2",
@@ -2158,33 +2135,113 @@
       "DESERT_LONG_GRASS_2",
       "DESERT_LONG_GRASS_4",
       "FRIS_SHORT_GRASS_4",
-      "FRIS_SHORT_GRASS_3",
       "FRIS_SHORT_GRASS_2",
       "FRIS_SHORT_GRASS_1",
+      "FRIS_LONG_GRASS_4",
       "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
       "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
       "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_WALL_EDGE",
+      "FRIS_SHORT_GRASS_3_WALL_EDGE",
+      "FRIS_SHORT_GRASS_WALL_EDGE_2",
+      "SLAYER_SHORT_GRASS_1",
+      "SLAYER_SHORT_GRASS_2",
+      "SLAYER_SHORT_GRASS_3",
+      "SLAYER_SHORT_GRASS_4",
+      "SLAYER_SHORT_GRASS_3_CASTLE_EDGE",
+      "SLAYER_SHORT_GRASS_4_CASTLE_EDGE",
+      "LIGHTGREEN_GRASS1",
+      "LIGHTGREEN_GRASS2",
+      "LIGHTGREEN_GRASS3",
+      "GRASSLAND_SHORT_GRASS_1",
+      "GRASSLAND_SHORT_GRASS_2",
+      "GRASSLAND_SHORT_GRASS_3",
+      "GRASSLAND_SHORT_GRASS_4",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "DS2_OGRE_BROWN_GRASS_1",
+      "DS2_OGRE_BROWN_GRASS_2",
+      "DS2_OGRE_BROWN_GRASS_3",
+      "DS2_OGRE_BROWN_GRASS_4",
+      "LUNAR_BROWN_GRASS_1",
+      "LUNAR_BROWN_GRASS_2",
+      "LUNAR_BROWN_GRASS_3",
+      "LUNAR_BROWN_GRASS_4",
+      "REGICIDE_BLUE_GRASS1",
+      "REGICIDE_BLUE_GRASS2",
+      "REGICIDE_BLUE_GRASS3",
+      "FAI_VARROCK_DRAINS1",
+      "FAI_VARROCK_DRAINS2",
+      "FRIS_LONG_GRASS_1",
+      "FRIS_SHORT_GRASS_3",
+      "FRIS_LONG_GRASS_3"
+    ]
+  },
+  {
+    "description": "Fremmenik Isles, Lighten Grass",
+    "areas": [ "FREMENNIK_ISLES" ],
+    "baseMaterial": "GRAY_90",
+    "flatNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "FRIS_LONG_GRASS_1",
+      "FRIS_SHORT_GRASS_1",
+      "FRIS_SHORT_GRASS_2",
+      "FRIS_SHORT_GRASS_3",
+      "FRIS_SHORT_GRASS_4",
+      "FRIS_LONG_GRASS_3",
+      "FRIS_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
       "FRIS_SHORT_GRASS_4_WALL_EDGE",
       "FRIS_SHORT_GRASS_3_WALL_EDGE",
       "FRIS_SHORT_GRASS_WALL_EDGE_2"
     ]
   },
   {
+    "description": "Varlamore, Fortis and Avium Grass",
+    "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "AVIUM_GRASS_1",
+      "AVIUM_GRASS_2",
+      "AVIUM_GRASS_3",
+      "AVIUM_GRASS_5",
+      "AVIUM_GRASS_6",
+      "AVIUM_GRASS_4",
+      "AVIUM_GRASS_TALL1",
+      "AVIUM_GRASS_TALL2",
+      "AVIUM_GRASS_TALL3",
+      "AVIUM_GRASS_TALL4",
+      "AVIUM_GRASS_TALL1_DRY",
+      "AVIUM_GRASS_TALL2_DRY",
+      "AVIUM_GRASS_TALL3_DRY",
+      "AVIUM_GRASS_TALL4_DRY"
+    ]
+  },
+  {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "upwardsNormals": true,
+    "inheritTileColorType": "UNDERLAY",
+    "castShadows": false,
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
       "GRASS_LIGHT_3"
-    ],
-    "flatNormals": true,
-    "upwardsNormals": true,
-    "inheritTileColorType": "UNDERLAY",
-    "castShadows": false
+    ]
   },
   {
     "description": "Farming Patch Grass without Dirt",
     "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
     "objectIds": [
       "BELLADONNA_PATCH_WEEDS_1",
       "BELLADONNA_PATCH_WEEDS_2",
@@ -2277,12 +2334,12 @@
       "CRYSTAL_TREE_PATCH_WEEDS_1",
       "CRYSTAL_TREE_PATCH_WEEDS_2",
       "CRYSTAL_TREE_PATCH_WEEDS_3"
-    ],
-    "upwardsNormals": true
+    ]
   },
   {
     "description": "Farming Patch Grass with Dirt",
     "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
     "objectIds": [
       "HOP_PATCH_WEEDS_1",
       "HOP_PATCH_WEEDS_2",
@@ -2300,7 +2357,6 @@
       "MISC_WEEDINGPATCH_MEDWEEDS",
       "MISC_WEEDINGPATCH_LIGHTWEEDS"
     ],
-    "upwardsNormals": true,
     "colorOverrides": [
       {
         "colors": "h == 8",
@@ -2312,6 +2368,7 @@
   {
     "description": "Farming Patch Grass with Dirt and Scarecrow",
     "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
     "objectIds": [
       "FARMING_SCARECROW_WEEDS_1",
       "FARMING_SCARECROW_WEEDS_2",
@@ -2320,7 +2377,6 @@
       "FARMING_SCARECROW_WEEDS_2_MORY",
       "FARMING_SCARECROW_WEEDS_3_MORY"
     ],
-    "upwardsNormals": true,
     "colorOverrides": [
       {
         "colors": "h == 8",
@@ -2338,18 +2394,39 @@
   {
     "description": "Short grass with rock objects",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "objectIds": [
       "QIP_DS_STONE_FLOOR1",
       "QIP_DS_STONE_FLOOR2",
       "QIP_DS_STONE_FLOOR_EDGE1",
       "QIP_DS_STONE_FLOOR_EDGE2"
+    ]
+  },
+  {
+    "description": "Objects - Rocks - Medium",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "objectIds": [
+      "TROLL_ROCKS_GRASS",
+      "TROLL_ROCKS_GRASS_FALLOFF"
     ],
-    "flatNormals": true,
-    "castShadows": false
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "upwardsNormals": true,
+        "uvScale": 0.6
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.32
   },
   {
     "description": "Short grass with rock objects usually found around Farming Patches",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
@@ -2360,8 +2437,6 @@
       "TGOD_GARDEN_TEMPLE_FARMING_BORDER_STRAIGHT",
       "TGOD_GARDEN_TEMPLE_FARMING_BORDER_CORNER_OUTSIDE"
     ],
-    "flatNormals": true,
-    "castShadows": false,
     "colorOverrides": [
       {
         "colors": "h == 7",
@@ -2383,11 +2458,11 @@
     "description": "Hespori Patch Edge Grass Fix",
     "areas": [ "FARMING_GUILD_HESPORI" ],
     "baseMaterial": "COLORED_GRASS",
+    "castShadows": false,
     "objectIds": [
       "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
       "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE"
     ],
-    "castShadows": false,
     "colorOverrides": [
       {
         "colors": "h == 7",
@@ -2406,12 +2481,12 @@
   {
     "description": "Short grass with rock objects Morytania Farming Patches",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "objectIds": [
       "FARMING_BORDER_STRAIGHT_DARK",
       "FARMING_BORDER_CORNER_DARK"
     ],
-    "flatNormals": true,
-    "castShadows": false,
     "colorOverrides": [
       {
         "colors": "s == 5 || s == 7",
@@ -2422,56 +2497,32 @@
     ]
   },
   {
-    "description": "Objects with Short grass which shouldn't cast shadows and shouldn't inherit tile color",
-    "baseMaterial": "GRAY_75",
-    "objectIds": [
-      "REGICIDE_BLUE_GRASS1",
-      "REGICIDE_BLUE_GRASS2",
-      "REGICIDE_BLUE_GRASS3",
-      "FAI_VARROCK_DRAINS1",
-      "FAI_VARROCK_DRAINS2",
-      "FRIS_LONG_GRASS_1",
-      "FRIS_LONG_GRASS_3"
-    ],
-    "castShadows": false,
-    "flatNormals": true
-  },
-  {
-    "description": "Varlamore, Fortis and Avium Grass",
-    "baseMaterial": "GRAY_75",
-    "objectIds": [
-      "AVIUM_GRASS_1",
-      "AVIUM_GRASS_2",
-      "AVIUM_GRASS_3",
-      "AVIUM_GRASS_5",
-      "AVIUM_GRASS_6",
-      "AVIUM_GRASS_4",
-      "AVIUM_GRASS_TALL1",
-      "AVIUM_GRASS_TALL2",
-      "AVIUM_GRASS_TALL3",
-      "AVIUM_GRASS_TALL4",
-      "AVIUM_GRASS_TALL1_DRY",
-      "AVIUM_GRASS_TALL2_DRY",
-      "AVIUM_GRASS_TALL3_DRY",
-      "AVIUM_GRASS_TALL4_DRY"
-    ],
-    "flatNormals": true,
-    "castShadows": false
-  },
-  {
     "description": "Hunter guild grass, that's also used elsewhere so restrict this to Varlamore",
     "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
     "areas": [ "VARLAMORE" ],
     "objectIds": [
       "HUNTING_JUNGLE_GRASS3"
-    ],
-    "flatNormals": true,
-    "castShadows": false
+    ]
+  },
+  {
+    "description": "Fixes weird pattern made by grass in POH",
+    "areas": [ "PLAYER_OWNED_HOUSE" ],
+    "baseMaterial": "GRAY_35",
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "POH_GRASS"
+    ]
   },
   {
     "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
     "baseMaterial": "GRAY_75",
     "seasonalTheme": "WINTER",
+    "flatNormals": true,
+    "castShadows": false,
+    "inheritTileColorType": "UNDERLAY",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
@@ -2480,32 +2531,133 @@
       "FARMING_BORDER_CORNER_DARK",
       "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
       "KEBOS_FARMING_GUILD_BORDER_CORNER",
-      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE"
-    ],
-    "flatNormals": true,
-    "inheritTileColorType": "UNDERLAY",
-    "castShadows": false
-  },
-  {
-    "description": "Fixes weird pattern made by grass in POH",
-    "areas": [ "PLAYER_OWNED_HOUSE" ],
-    "objectIds": [
-      "POH_GRASS"
-    ],
-    "baseMaterial": "GRAY_65",
-    "flatNormals": true,
-    "castShadows": false
-  },
-  {
-    "description": "GRASS_MAINTAIN_ORIGINAL_COLOR",
-    "objectIds": [
-      "LUNAR_BROWN_GRASS_1",
-      "LUNAR_BROWN_GRASS_2",
-      "LUNAR_BROWN_GRASS_3",
-      "LUNAR_BROWN_GRASS_4"
-    ],
-    "flatNormals": true,
-    "castShadows": false
+      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE",
+      "GRASS_1",
+      "GRASS_1_SWAMP",
+      "GRASS_2_SWAMP",
+      "GRASS_3_SWAMP",
+      "REGICIDE_GRASS1",
+      "REGICIDE_GRASS2",
+      "REGICIDE_GRASS3",
+      "DEATH_GRASS_1",
+      "DEATH_GRASS_2",
+      "DEATH_GRASS_3",
+      "VIKING_GRASS_1",
+      "VIKING_GRASS_2",
+      "VIKING_GRASS_3",
+      "VIKING_GRASS_4",
+      "SHORT_GRASS_1",
+      "SHORT_GRASS_2",
+      "SHORT_GRASS_3",
+      "SHORT_GRASS_4",
+      "SHORT_GRASS_4_CASTLE_EDGE",
+      "SHORT_GRASS_4_CASTLE_EDGE2",
+      "SHORT_GRASS_4_CASTLE_CORNER",
+      "SHORT_GRASS_3_CASTLE_EDGE",
+      "FENK_LIGHT_GRASS_1",
+      "FENK_LIGHT_GRASS_2",
+      "FENK_LIGHT_GRASS_3",
+      "FENK_LIGHT_GRASS_4",
+      "SHORT_GRASS_3_WALL_EDGE",
+      "SHORT_GRASS_4_WALL_EDGE",
+      "SHORT_GRASS_4_WALL_CORNER",
+      "AHOY_SHORT_GRASS_1",
+      "AHOY_SHORT_GRASS_2",
+      "AHOY_SHORT_GRASS_3",
+      "AHOY_SHORT_GRASS_4",
+      "AHOY_SHORT_GRASS_3_WALL_EDGE",
+      "AHOY_SHORT_GRASS_4_WALL_EDGE",
+      "AHOY_SHORT_GRASS_4_WALL_CORNER",
+      "AHOY_SHORT_GRASS_WALL_EDGE_2",
+      "AHOY_SHORT_GRASS_4",
+      "SHORT_GRASS_WALL_EDGE_2",
+      "SHORT_GRASS_DARK_1",
+      "SHORT_GRASS_DARK_2",
+      "SHORT_GRASS_DARK_3",
+      "SHORT_GRASS_DARK_4",
+      "SHORT_GRASS_DARK_3_CASTLE_EDGE",
+      "SHORT_GRASS_DARK_4_CASTLE_EDGE",
+      "SHORT_GRASS_DARK_4_CASTLE_EDGE2",
+      "SHORT_GRASS_DARK_3_WALL_EDGE",
+      "SHORT_GRASS_DARK_4_WALL_EDGE",
+      "SHORT_GRASS_DARK_4_WALL_CORNER",
+      "DEATH_SHORT_GRASS_1",
+      "DEATH_SHORT_GRASS_2",
+      "DEATH_SHORT_GRASS_3",
+      "DEATH_SHORT_GRASS_4",
+      "DEATH_SHORT_GRASS_3_WALL_EDGE",
+      "DEATH_SHORT_GRASS_4_WALL_EDGE",
+      "DEATH_SHORT_GRASS_WALL_EDGE_2",
+      "AHOY_SHORT_GRASS_2_WALL_CORNER",
+      "SHORT_GRASS_2_WALL_CORNER",
+      "LONG_GRASS_1",
+      "LONG_GRASS_2",
+      "LONG_GRASS_3",
+      "LONG_GRASS_4",
+      "LONG_GRASS_3_CASTLE_EDGE",
+      "LONG_GRASS_4_CASTLE_EDGE",
+      "LONG_GRASS_4_CASTLE_EDGE2",
+      "YELLOW_GRASS1",
+      "YELLOW_GRASS2",
+      "YELLOW_GRASS3",
+      "TEMPLETREK_GRASS1",
+      "TEMPLETREK_GRASS2",
+      "TEMPLETREK_GRASS3",
+      "WILD_MUD_GRASS_1",
+      "WILD_MUD_GRASS_2",
+      "WILD_MUD_GRASS_3",
+      "WILD_MUD_GRASS_4",
+      "BARROWS_SHORT_GRASS_1",
+      "BARROWS_SHORT_GRASS_2",
+      "BARROWS_SHORT_GRASS_3",
+      "BARROWS_SHORT_GRASS_4",
+      "BARROWS_GRASS_3_WALL_EDGE",
+      "BARROWS_GRASS_4_WALL_EDGE",
+      "FOSSIL_GRASS_LUSH_LONG",
+      "FOSSIL_GRASS_LUSH_SHORT",
+      "FOSSIL_GRASS_LUSH_SPARSE",
+      "KEBOS_FARMING_GUILD_GRASS_1",
+      "KEBOS_FARMING_GUILD_GRASS_2",
+      "KEBOS_FARMING_GUILD_GRASS_3",
+      "KEBOS_FARMING_GUILD_GRASS_4",
+      "DESERT_LONG_GRASS_3",
+      "DESERT_LONG_GRASS_1",
+      "DESERT_LONG_GRASS_2",
+      "DESERT_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_4",
+      "FRIS_SHORT_GRASS_2",
+      "FRIS_SHORT_GRASS_1",
+      "FRIS_LONG_GRASS_4",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_CASTLE_EDGE2",
+      "FRIS_SHORT_GRASS_3_CASTLE_EDGE",
+      "FRIS_SHORT_GRASS_4_WALL_EDGE",
+      "FRIS_SHORT_GRASS_3_WALL_EDGE",
+      "FRIS_SHORT_GRASS_WALL_EDGE_2",
+      "SLAYER_SHORT_GRASS_1",
+      "SLAYER_SHORT_GRASS_2",
+      "SLAYER_SHORT_GRASS_3",
+      "SLAYER_SHORT_GRASS_4",
+      "SLAYER_SHORT_GRASS_3_CASTLE_EDGE",
+      "SLAYER_SHORT_GRASS_4_CASTLE_EDGE",
+      "LIGHTGREEN_GRASS1",
+      "LIGHTGREEN_GRASS2",
+      "LIGHTGREEN_GRASS3",
+      "GRASSLAND_SHORT_GRASS_1",
+      "GRASSLAND_SHORT_GRASS_2",
+      "GRASSLAND_SHORT_GRASS_3",
+      "GRASSLAND_SHORT_GRASS_4",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "GRASSLAND_SHORT_3_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE",
+      "GRASSLAND_SHORT_4_CASTLE_EDGE2",
+      "DS2_OGRE_BROWN_GRASS_1",
+      "DS2_OGRE_BROWN_GRASS_2",
+      "DS2_OGRE_BROWN_GRASS_3",
+      "DS2_OGRE_BROWN_GRASS_4"
+    ]
   },
   {
     "description": "WOODEN_FENCES",
@@ -9300,8 +9452,6 @@
       "DEATH_ROCKSLIDE2",
       "DEATH_ROCKSLIDE3",
       "DEATH_ROCKSLIDE4",
-      "TROLL_ROCKS_GRASS",
-      "TROLL_ROCKS_GRASS_FALLOFF",
       "DEATH_MOUNTAINROCKS_2",
       "DEATH_MOUNTAINROCKS_2_LARGE",
       "DEATH_MOUNTAINROCKS_3",
