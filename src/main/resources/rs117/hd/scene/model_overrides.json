@@ -4604,7 +4604,8 @@
     "objectIds": [
       "CAVEENTRANCE3",
       "UPASS_CAVEENTRANCE2",
-      "XMAS20_GOBLIN_CAVE_ENTRANCE"
+      "XMAS20_GOBLIN_CAVE_ENTRANCE",
+      "GA_CAVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -9530,7 +9531,8 @@
       "WILDERNESS_ROCKS_FLOOR_SOFT_03",
       "WILDERNESS_ROCKS_FLOOR_SOFT_02",
       "WILDERNESS_ROCKS_FLOOR_SOFT_04",
-      "WILDERNESS_ROCKS_FLOOR_SOFT_05"
+      "WILDERNESS_ROCKS_FLOOR_SOFT_05",
+      "WILDERNESS_ROCKS_FLOOR_SOFT_01"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.9
@@ -17498,6 +17500,33 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.22
+  },
+  {
+    "description": "Rocks with Pickaxe in them",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.22,
+    "objectIds": [
+      "BCS_ROCKS_PICKAXE",
+      "GA_ROCKS_PICKAXE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pickaxe",
+        "colors": "h == 5 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Pickaxe Handle",
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
   },
   {
     "description": "Rocks - Large",
@@ -37583,6 +37612,91 @@
         "baseMaterial": "DIRT_1",
         "uvScale": 0.25
       }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Getting Ahead - Flour Pile",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "GA_FLOUR_FLOOR_CHILD"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Wooden - Log -  Molch Palisade",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MOLCH_PALISADE_1",
+      "MOLCH_PALISADE_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 16",
+        "uvType": "BOX",
+        "baseMaterial": "ROPE",
+        "uvScale": 0.5,
+        "uvOrientation": 212
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Kebos Lowlands - Rock - Crystal -  Archeuus Rocks - Large",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ARCHEUUS_ROCKS_LARGE_GREEN_01",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_02",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_03",
+      "ARCHEUUS_ROCKS_LARGE_GREEN_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_5",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Kebos Lowlands - Rock - Crystal -  Archeuus Rocks - Medium",
+    "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ARCHEUUS_ROCKS_GREEN_01",
+      "ARCHEUUS_ROCKS_GREEN_02",
+      "ARCHEUUS_ROCKS_GREEN_03",
+      "ARCHEUUS_ROCKS_GREEN_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "ROCK_4",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Piscarilius - Kebos Lowlands - Wooden -  Drift wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "objectIds": [
+      "PISCARILIUS_JUNK_01"
     ]
   }
 ]
