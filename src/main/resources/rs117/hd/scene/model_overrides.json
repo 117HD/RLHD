@@ -8216,7 +8216,6 @@
     "retainVanillaUvs": false,
     "uvOrientation": 512,
     "objectIds": [
-      "PRISONWALL",
       "PRISONWALL_LEND",
       "PRISONWALL_REND",
       "PIP_PRISONDOOR",
@@ -9709,7 +9708,6 @@
       "DUGUPSOIL2_LIGHT",
       "SWAMP_DIGDUGUPSOIL2",
       "DEATH_DUGUPSOIL_LIGHT_2",
-      "DUGUPSOIL2_BROWNMUD",
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_2",
       "TEMPLETREK_SWAMP_EVADE_PATH",
       "TEMPLETREK_SWAMP_SUCCESS_PATH",
