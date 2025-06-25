@@ -30041,12 +30041,10 @@
     ]
   },
   {
-    "description": "Wooden - bookcase with Multicolored books",
+    "description": "Varrock - Kourend - Wooden - bookcase with Multicolored books",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_POSH_BOOKCASE",
-      "FAI_VARROCK_POSH_BOOKCASE_SHORT2",
-      "FAI_VARROCK_POSH_BOOKCASE_SHORT"
+      "FAI_VARROCK_POSH_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -30067,6 +30065,120 @@
       {
         "description": "Red books",
         "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - bookcase with tuape and green books  - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT",
+      "QUESTBOOKCASE",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT_EAST_OFFSET"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Light Wooden - bookcase with tuape and green books  - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT3",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT2",
+      "SUROK_BOOKCASE",
+      "SUROK_BOOKCASE2",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT2_EAST_OFFSET",
+      "LOST_TRIBE_BOOKCASE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6 || h == 7 && s == 5 && l >= 22",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - bookcase with tuape and red books - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DS2_VARROCK_BOOKCASE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 0 && s == 4",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       },
