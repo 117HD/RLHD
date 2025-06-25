@@ -36595,7 +36595,8 @@
     "uvScale": 0.7,
     "objectIds": [
       "FAI_VARROCK_POSH_TABLE_SCROLLS",
-      "AKD_HUGHES_DESK_1_NOOP"
+      "AKD_HUGHES_DESK_1_NOOP",
+      "FAI_VARROCK_POSH_DESK_UNTIDY"
     ],
     "colorOverrides": [
       {
@@ -38748,6 +38749,42 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Varrock library - book and papers on floor",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_PAGES1",
+      "FAI_VARROCK_PAGES2"
+    ]
+  },
+  {
+    "description": "Varrock library - Varrock Census",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOV_VARROCK_LEDGER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "baseMaterial": "MARBLE_2",
+        "colors": "h == 9",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Marble",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 10 && s == 3",
+        "uvType": "BOX",
+        "uvOrientation": 179
       }
     ]
   }
