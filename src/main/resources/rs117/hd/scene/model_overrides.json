@@ -37761,5 +37761,80 @@
         "baseMaterial": "NONE"
       }
     ]
+  },
+  {
+    "description": "Kebos Lowlands - Metallic - Wooden - Mangel",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TANNINGMANGEL_A",
+      "TANNINGMANGEL_B"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.5,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Cloth Barriers and Tanning Line",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TANNINGLINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Kebos Farm - Getting Ahead Plaque",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GA_MOUNTED_HEAD_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 6",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
   }
 ]
