@@ -39182,5 +39182,81 @@
         "uvScale": 0.8
       }
     ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Stone - Dirt - Flow beds with mason bricks ",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GARDEN_PAVING_STRAIGHT",
+      "GARDEN_PAVING_CURVED",
+      "GARDEN_PAVING_STRAIGHT_WALL_INTERSECTION",
+      "GARDEN_PAVING_CURVED_CASTLEWALL",
+      "GARDEN_PAVING_CURVED_CASTLEWALL_MIRROR",
+      "GARDEN_PAVING_CORNER_FILL",
+      "GARDEN_PAVING_STRAIGHT_CASTLEWALL",
+      "GARDEN_PAVING_STRAIGHT_WALL_INTERSECTION_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Dirt - flower bed dirt",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GARDEN_DIRTPATCH_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 15",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Stone - Dirt - Flower - Orchids in Stone Pots",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GARDEN_ORCHIDS_FULLYGROWN",
+      "GARDEN_ORCHIDS_FULLYGROWN_YELLOW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 8 && s == 4",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Plant stem",
+        "colors": "h == 24",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   }
 ]
