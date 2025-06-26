@@ -3174,8 +3174,6 @@
       "FAI_VARROCK_CASTLE_INTERIOR_WINDOW",
       "FAI_VARROCK_CASTLE_WALLS_WINDOW",
       "FAI_VARROCK_CASTLE_WALLS_PILLAR",
-      "FAI_VARROCK_BUTRESS",
-      "FAI_VARROCK_BUTRESS_DARK",
       "FAI_VARROCK_BUTRESS_DARK_NO_GRASS",
       "FAI_VARROCK_MUSEUM_PILLARS",
       "FAI_VARROCK_CASTLE_WALLS_BATTLE_INT_FILLER_R",
@@ -3245,6 +3243,26 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
+    "baseMaterial": "GRUNGE_2",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_BUTRESS",
+      "FAI_VARROCK_BUTRESS_DARK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 17",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "castShadows": false
       }
     ]
   },
