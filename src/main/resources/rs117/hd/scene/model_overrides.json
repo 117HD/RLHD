@@ -38658,6 +38658,33 @@
     ]
   },
   {
+    "description": "Hosidius - Varrock - Metallic - Wooden - Sink with wooden frame and slats with dishes",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 179,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_DIRTY_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Dishes",
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+
+    ]
+  },
+  {
     "description": "Barrel with metal bands filled with flower",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -39524,6 +39551,65 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": 42
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Cloth - Prayer Altar",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "HOSIDIUS_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Gold",
+        "colors": "h >= 8 && h <= 9",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 168
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "VM_BARRIER_ALONE_BLOCKING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 512,
+        "uvOrientationZ": -200
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.22
       }
     ]
   }
