@@ -26364,7 +26364,8 @@
     "objectIds": [
       "COOKINGSHELF",
       "QIP_COOK_COOKINGSHELF",
-      "CANAFIS_COOKING_SHELVES"
+      "CANAFIS_COOKING_SHELVES",
+      "LUNAR_MOONCLAN_SHELF_POTS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -30328,7 +30329,8 @@
     ],
     "objectIds": [
       "DRAYNOR_CANDLE_WALL",
-      "_100_DAVE_CANDLE_WALL"
+      "_100_DAVE_CANDLE_WALL",
+      "CANDLE_WALL"
     ]
   },
   {
@@ -33131,6 +33133,25 @@
     ],
     "objectIds": [
       "KR_STUDYDESK",
+      "STUDYDESK"
+    ]
+  },
+  {
+    "description": "Zeah - Hosidius - Wooden study desk with a green mat - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512 ,
+    "colorOverrides": [
+      {
+        "description": "Desk mat",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "colors": "h == 21"
+      }
+    ],
+    "objectIds": [
+      "KR_STUDYDESK",
+      "NARROW_STUDYDESK",
       "STUDYDESK"
     ]
   },
@@ -38884,6 +38905,83 @@
         "baseMaterial": "ROPE",
         "uvType": "BOX",
         "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Varrock - Wooden - Pottery - Metallic - Freestanding shelves with plates and bowls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_KITCHEN_SHELVES_LARGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Pottery",
+        "colors": "h == 7 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Varrock - Metallic - Metal shelf with copper pots",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      "DORGESH_KITCHEN_POTS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Hosidius Throne",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "HOSIDIUS_THRONE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_2_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 172
+      },
+      {
+        "colors": "h == 8 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   }
