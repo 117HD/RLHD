@@ -38638,5 +38638,57 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Flower - Rose",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KOURENDWOODLAND_ROSES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 17",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Plant - Leafy Shrub",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.4,
+        "uvOrientation": 89,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "FAIRY2_PLANT_1"
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Plant - Leafy Grass",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "FAIRY2_PLANT_3"
+    ]
   }
 ]
