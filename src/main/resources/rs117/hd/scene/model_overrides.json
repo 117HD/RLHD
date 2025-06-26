@@ -38859,5 +38859,32 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Zeah - Hosidius - Falador Stone - Wooden - Well",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_FALADOR_WELL"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Bottom stone bricks",
+        "colors": "h == 8",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 256
+      },
+      {
+        "description": "ROPE",
+        "colors": "h == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   }
 ]
