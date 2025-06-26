@@ -39214,5 +39214,30 @@
         "uvScale": 0.3
       }
     ]
+  },
+  {
+    "description": "Hosiduis - Wooden -  Metallic - Drawers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "HOS_MEDIUM_DRAWERS" ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Golden Knobs",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Metal Hinges",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   }
 ]
