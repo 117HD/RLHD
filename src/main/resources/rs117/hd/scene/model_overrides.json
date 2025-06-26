@@ -39123,7 +39123,7 @@
       {
         "description": "Leaves",
         "colors": "h > 10",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_3_DARK",
         "uvType": "BOX",
         "uvScale": 0.3
       }
@@ -39262,7 +39262,8 @@
     "uvType": "BOX",
     "objectIds": [
       "GARDEN_ORCHIDS_FULLYGROWN",
-      "GARDEN_ORCHIDS_FULLYGROWN_YELLOW"
+      "GARDEN_ORCHIDS_FULLYGROWN_YELLOW",
+      "GARDEN_ORCHIDS_PLANTPOT_EMPTY"
     ],
     "colorOverrides": [
       {
@@ -39294,7 +39295,8 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
-      "GARDEN_KING_STATUE_PLACED"
+      "GARDEN_KING_STATUE_PLACED",
+      "GARDEN_KING_STATUE_PLINTH"
     ],
     "colorOverrides": [
       {
@@ -39313,7 +39315,8 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
-      "GARDEN_SARADOMIN_STATUE_PLACED"
+      "GARDEN_SARADOMIN_STATUE_PLACED",
+      "GARDEN_SARADOMIN_STATUE_PLINTH"
     ],
     "colorOverrides": [
       {
