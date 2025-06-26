@@ -36,6 +36,7 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
 import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
@@ -840,15 +841,15 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_REPLACE_FISHING_SPOTS = "replaceFishingSpots";
+	String KEY_FISHING_SPOT_STYLE = "fishingSpotStyle";
 	@ConfigItem(
-		keyName = KEY_REPLACE_FISHING_SPOTS,
-		name = "Replace Fishing Spots",
-		description = "Replace certain fishing spots with more appropriate models that are easier to see.",
+		keyName = KEY_FISHING_SPOT_STYLE,
+		name = "Fishing spot style",
+		description = "Choose the appearance of most fishing spots. Bubbles are the easiest to see on top of 117 HD's water style.",
 		section = miscellaneousSettings
 	)
-	default boolean replaceFishingSpots() {
-		return true;
+	default FishingSpotStyle fishingSpotStyle() {
+		return FishingSpotStyle.HD;
 	}
 
 	String KEY_COLOR_FILTER = "colorFilter";

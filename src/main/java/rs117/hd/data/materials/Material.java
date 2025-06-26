@@ -315,6 +315,7 @@ public enum Material {
 	GRAY_70(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.70f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
+	GRAY_35(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.35f))),
 	GRAY_25(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.25f))),
 	BLACK(NONE, p -> p.setBrightness(0)),
 	PURE_BLACK(NONE, p -> p.setOverrideBaseColor(true).setBrightness(0)),
@@ -528,8 +529,16 @@ public enum Material {
 		.setBrightness(0.45f)),
 	BURLAP,
 	FALADOR_PATH_BRICK_N,
+	FALADOR_PATH_BRICK_D,
 	FALADOR_PATH_BRICK(p -> p
+		.setDisplacementMap(FALADOR_PATH_BRICK_D)
+		.setDisplacementScale(.06f)
 		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setSpecular(0.25f, 30)
+	),
+	BRICK_PATH_N,
+	BRICK_PATH(p -> p
+		.setNormalMap(BRICK_PATH_N)
 		.setSpecular(0.3f, 30)
 	),
 	JAGGED_STONE_TILE_D,
@@ -578,22 +587,22 @@ public enum Material {
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
 
-	LASSAR_UNDERCITY_TILE_NORMAL,
-	LASSAR_UNDERCITY_TILE_DISP,
+	LASSAR_UNDERCITY_TILE_N,
+	LASSAR_UNDERCITY_TILE_D,
 	LASSAR_UNDERCITY_TILES(MARBLE_2_SEMIGLOSS, p -> p
-		.setNormalMap(LASSAR_UNDERCITY_TILE_NORMAL)
-		.setDisplacementMap(LASSAR_UNDERCITY_TILE_DISP)
+		.setNormalMap(LASSAR_UNDERCITY_TILE_N)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_D)
 		.setDisplacementScale(.015f)
 	),
 	LASSAR_UNDERCITY_TILES_SUBMERGED(LASSAR_UNDERCITY_TILES, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.025f)
 		.setFlowMapDuration(new float[] { 10, -10 })),
-	CAM_TORUM_TILE_DISP,
+	CAM_TORUM_TILE_AO,
 	CAM_TORUM_TILES(DIRT_1, p -> p
-		.setNormalMap(LASSAR_UNDERCITY_TILE_NORMAL)
-		.setDisplacementMap(LASSAR_UNDERCITY_TILE_DISP)
-		.setAmbientOcclusionMap(CAM_TORUM_TILE_DISP)
+		.setNormalMap(LASSAR_UNDERCITY_TILE_N)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_D)
+		.setAmbientOcclusionMap(CAM_TORUM_TILE_AO)
 		.setDisplacementScale(.025f)
 	),
 	HD_LAVA_1(p -> p
@@ -778,6 +787,7 @@ public enum Material {
 		.setSpecular(1.1f, 160)),
 	METALLIC_1_LIGHT_SUPER_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(2.25f, 65)),
+	METALLIC_1_VERY_LIGHT(METALLIC_1, p -> p.setBrightness(2.6f)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 120)),
 	WATTLE_1,

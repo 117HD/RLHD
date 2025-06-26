@@ -134,7 +134,14 @@ public class GamevalManager {
 				String name = in.nextString();
 				Integer id = map.get(name);
 				if (id == null) {
-					log.warn("Missing {} gameval: {} at {}", key, name, GsonUtils.location(in), new Throwable());
+					String suggestion = "";
+					for (var gamevalMapEntry : GAMEVALS.entrySet()) {
+						if (gamevalMapEntry.getValue().get(name) != null) {
+							suggestion = String.format(", did you mean to match %s?", gamevalMapEntry.getKey());
+							break;
+						}
+					}
+					log.error("Missing {} gameval: {}{} at {}", key, name, suggestion, GsonUtils.location(in), new Throwable());
 				} else {
 					result.add(id);
 				}

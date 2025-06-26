@@ -30,13 +30,9 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
-uniform sampler2D uiTexture;
+#include uniforms/ui.glsl
 
-uniform int samplingMode;
-uniform ivec2 sourceDimensions;
-uniform ivec2 targetDimensions;
-uniform float colorBlindnessIntensity;
-uniform vec4 alphaOverlay;
+uniform sampler2D uiTexture;
 
 #include scaling/bicubic.glsl
 #include utils/constants.glsl

@@ -83,6 +83,12 @@
     ]
   },
   {
+    "name": "BRICK_PATHS",
+    "materials": [
+      "BRICK_PATH"
+    ]
+  },
+  {
     "name": "VARROCK_PATHS",
     "materials": [
       "JAGGED_STONE_TILE"

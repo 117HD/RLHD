@@ -623,8 +623,7 @@ public class LightManager {
 
 		for (Light light : WORLD_LIGHTS) {
 			assert light.worldPoint != null;
-			int regionId = light.worldPoint.getRegionID();
-			if (sceneContext.regionIds.contains(regionId))
+			if (sceneContext.sceneBounds.contains(light.worldPoint))
 				addWorldLight(sceneContext, light);
 		}
 

@@ -50,6 +50,8 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.skybox.SkyboxManager;
+import rs117.hd.opengl.MaterialsBuffer;
+import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ImageUtils;
 import rs117.hd.utils.Props;
@@ -57,7 +59,6 @@ import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL12C.glTexSubImage3D;
 import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.scene.skybox.SkyboxManager.SKYBOX_PATH;
@@ -347,8 +348,8 @@ public class TextureManager {
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
 		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
-		plugin.updateMaterialUniformBuffer(generateMaterialUniformBuffer());
-		plugin.updateWaterTypeUniformBuffer(generateWaterTypeUniformBuffer());
+		updateMaterialUniformBuffer();
+		updateWaterTypeUniformBuffer();
 
 		// Reset
 		pixelBuffer = null;
@@ -399,20 +400,18 @@ public class TextureManager {
 		}
 	}
 
-	private ByteBuffer generateMaterialUniformBuffer() {
-		final int materialBytes = 20 * SCALAR_BYTES;
-		ByteBuffer buffer = BufferUtils.createByteBuffer(materialUniformEntries.size() * materialBytes);
+	private void updateMaterialUniformBuffer() {
 		for (int i = 0; i < materialUniformEntries.size(); i++) {
 			MaterialEntry entry = materialUniformEntries.get(i);
 			materialOrdinalToMaterialUniformIndex[entry.material.ordinal()] = i;
 			if (entry.vanillaIndex != -1)
 				vanillaTextureIndexToMaterialUniformIndex[entry.vanillaIndex] = i;
-			writeMaterialData(buffer, entry);
+			writeMaterialData(plugin.uboMaterials.materials[i], entry);
 		}
 		for (var material : Material.values())
 			materialOrdinalToMaterialUniformIndex[material.ordinal()] =
 				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().ordinal()];
-		return buffer.flip();
+		plugin.uboMaterials.upload();
 	}
 
 	private int getTextureLayer(@Nullable Material material) {
@@ -422,7 +421,7 @@ public class TextureManager {
 		return materialOrdinalToTextureLayer[material.ordinal()];
 	}
 
-	private void writeMaterialData(ByteBuffer buffer, MaterialEntry entry) {
+	private void writeMaterialData(MaterialsBuffer.MaterialStruct uniformStruct, MaterialEntry entry) {
 		var m = entry.material;
 		var vanillaIndex = entry.vanillaIndex;
 
@@ -440,63 +439,47 @@ public class TextureManager {
 			baseColorTextureIndex = materialOrdinalToTextureLayer[m.ordinal()];
 		}
 
-		buffer
-			.putInt(baseColorTextureIndex)
-			.putInt(getTextureLayer(m.normalMap))
-			.putInt(getTextureLayer(m.displacementMap))
-			.putInt(getTextureLayer(m.roughnessMap))
-			.putInt(getTextureLayer(m.ambientOcclusionMap))
-			.putInt(getTextureLayer(m.flowMap))
-			.putInt(
-				(m.overrideBaseColor ? 1 : 0) << 2 |
-				(m.unlit ? 1 : 0) << 1 |
-				(m.hasTransparency ? 1 : 0)
-			)
-			.putFloat(m.brightness)
-			.putFloat(m.displacementScale)
-			.putFloat(m.specularStrength)
-			.putFloat(m.specularGloss)
-			.putFloat(m.flowMapStrength)
-			.putFloat(m.flowMapDuration[0])
-			.putFloat(m.flowMapDuration[1])
-			.putFloat(scrollSpeedX)
-			.putFloat(scrollSpeedY)
-			.putFloat(1 / m.textureScale[0])
-			.putFloat(1 / m.textureScale[1])
-			.putFloat(1 / m.textureScale[2])
-			.putFloat(0); // align vec4
+		uniformStruct.colorMap.set(baseColorTextureIndex);
+		uniformStruct.normalMap.set(getTextureLayer(m.normalMap));
+		uniformStruct.displacementMap.set(getTextureLayer(m.displacementMap));
+		uniformStruct.roughnessMap.set(getTextureLayer(m.roughnessMap));
+		uniformStruct.ambientOcclusionMap.set(getTextureLayer(m.ambientOcclusionMap));
+		uniformStruct.flowMap.set(getTextureLayer(m.flowMap));
+		uniformStruct.flags.set(
+			(m.overrideBaseColor ? 1 : 0) << 2 |
+			(m.unlit ? 1 : 0) << 1 |
+			(m.hasTransparency ? 1 : 0)
+		);
+		uniformStruct.brightness.set(m.brightness);
+		uniformStruct.displacementScale.set(m.displacementScale);
+		uniformStruct.specularStrength.set(m.specularStrength);
+		uniformStruct.specularGloss.set(m.specularGloss);
+		uniformStruct.flowMapStrength.set(m.flowMapStrength);
+		uniformStruct.flowMapDuration.set(m.flowMapDuration);
+		uniformStruct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
+		uniformStruct.textureScale.set(1 / m.textureScale[0], 1 / m.textureScale[1], 1 / m.textureScale[2]);
 	}
 
-	private ByteBuffer generateWaterTypeUniformBuffer() {
-		ByteBuffer buffer = BufferUtils.createByteBuffer(WaterType.values().length * 28 * SCALAR_BYTES);
-		for (WaterType type : WaterType.values())
-			buffer
-				.putInt(type.flat ? 1 : 0)
-				.putFloat(type.specularStrength)
-				.putFloat(type.specularGloss)
-				.putFloat(type.normalStrength)
-				.putFloat(type.baseOpacity)
-				.putInt(type.hasFoam ? 1 : 0)
-				.putFloat(type.duration)
-				.putFloat(type.fresnelAmount)
-				.putFloat(type.surfaceColor[0])
-				.putFloat(type.surfaceColor[1])
-				.putFloat(type.surfaceColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.foamColor[0])
-				.putFloat(type.foamColor[1])
-				.putFloat(type.foamColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.depthColor[0])
-				.putFloat(type.depthColor[1])
-				.putFloat(type.depthColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.causticsStrength)
-				.putInt(getTextureLayer(type.normalMap))
-				.putInt(getTextureLayer(Material.WATER_FOAM))
-				.putInt(getTextureLayer(Material.WATER_FLOW_MAP))
-				.putInt(getTextureLayer(Material.UNDERWATER_FLOW_MAP))
-				.putFloat(0).putFloat(0).putFloat(0); // pad vec4
-		return buffer.flip();
+	private void updateWaterTypeUniformBuffer() {
+		for (WaterType type : WaterType.values()) {
+			WaterTypesBuffer.WaterTypeStruct uniformStruct = plugin.uboWaterTypes.waterTypes[type.ordinal()];
+			uniformStruct.isFlat.set(type.flat ? 1 : 0);
+			uniformStruct.specularStrength.set(type.specularStrength);
+			uniformStruct.specularGloss.set(type.specularGloss);
+			uniformStruct.normalStrength.set(type.normalStrength);
+			uniformStruct.baseOpacity.set(type.baseOpacity);
+			uniformStruct.hasFoam.set(type.hasFoam ? 1 : 0);
+			uniformStruct.duration.set(type.duration);
+			uniformStruct.fresnelAmount.set(type.fresnelAmount);
+			uniformStruct.surfaceColor.set(type.surfaceColor);
+			uniformStruct.foamColor.set(type.foamColor);
+			uniformStruct.depthColor.set(type.depthColor);
+			uniformStruct.causticsStrength.set(type.causticsStrength);
+			uniformStruct.normalMap.set(getTextureLayer(type.normalMap));
+			uniformStruct.foamMap.set(getTextureLayer(Material.WATER_FOAM));
+			uniformStruct.flowMap.set(getTextureLayer(Material.WATER_FLOW_MAP));
+			uniformStruct.underwaterFlowMap.set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
+		}
+		plugin.uboWaterTypes.upload();
 	}
 }

@@ -25,6 +25,7 @@
  */
 #version 400
 
+#include uniforms/global.glsl
 #include uniforms/materials.glsl
 #include uniforms/water_types.glsl
 #include uniforms/lights.glsl
@@ -35,43 +36,8 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
-uniform vec3 cameraPos;
-uniform float drawDistance;
-uniform int expandedMapLoadingChunks;
-uniform float gammaCorrection;
-uniform mat4 lightProjectionMatrix;
-uniform float elapsedTime;
-uniform float colorBlindnessIntensity;
-uniform int useFog;
-uniform float fogDepth;
-uniform vec3 fogColor;
-uniform vec3 waterColorLight;
-uniform vec3 waterColorMid;
-uniform vec3 waterColorDark;
-uniform vec3 ambientColor;
-uniform float ambientStrength;
-uniform vec3 lightColor;
-uniform float lightStrength;
-uniform vec3 underglowColor;
-uniform float underglowStrength;
-uniform float groundFogStart;
-uniform float groundFogEnd;
-uniform float groundFogOpacity;
-uniform float lightningBrightness;
-uniform vec3 lightDir;
-uniform float shadowMaxBias;
-uniform int shadowsEnabled;
-uniform bool underwaterEnvironment;
-uniform bool underwaterCaustics;
-uniform vec3 underwaterCausticsColor;
-uniform float underwaterCausticsStrength;
 uniform ivec4 sceneAABB;
-
 // general HD settings
-uniform float saturation;
-uniform float contrast;
-
-uniform int pointLightsCount; // number of lights in current frame
 
 flat in ivec3 vHsl;
 flat in ivec3 vMaterialData;

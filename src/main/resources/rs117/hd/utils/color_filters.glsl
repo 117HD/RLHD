@@ -1,11 +1,7 @@
 #pragma once
 
-#include utils/constants.glsl
-
 #if APPLY_COLOR_FILTER
-uniform int colorFilterPrevious;
-uniform int colorFilter;
-uniform float colorFilterFade;
+#include utils/constants.glsl
 
 #define COLOR_FILTER_NONE 0
 #define COLOR_FILTER_GREYSCALE 1

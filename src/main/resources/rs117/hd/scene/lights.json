@@ -37286,5 +37286,89 @@
     ],
     "fadeOutDuration": 100,
     "fadeInDuration": 300
+  },
+  {
+    "description": "Neitiznot Range Top",
+    "offset": [ 0, 130, 0 ],
+    "radius": 250,
+    "strength": 4.5,
+    "color": [
+      252,
+      130,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "IZNOT_CLAY_RANGE"
+    ]
+  },
+  {
+    "description": "Neitiznot Range Front",
+    "offset": [ 0, 80, -40 ],
+    "radius": 100,
+    "strength": 12.5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "IZNOT_CLAY_RANGE"
+    ]
+  },
+  {
+    "description": "Neitiznot Clay Furnace",
+    "offset": [ 0, 95, 55 ],
+    "radius": 70,
+    "strength": 20.5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "IZNOT_CLAY_FORGE"
+    ]
+  },
+  {
+    "description": "Fremennik Isles - Ice Troll Dungeon Exit",
+    "offset": [ 50, 300, 30 ],
+    "radius": 400,
+    "strength": 4.5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "FRIS_MINE_WALL_NURSE_ENTRANCE_TWO"
+    ]
+  },
+  {
+    "description": "GETTING_AHEAD_CAVE_EXIT",
+    "height": 70,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "GA_CAVE_OUT"
+    ]
   }
 ]
