@@ -15,6 +15,7 @@ layout(std140) uniform SkyboxUniforms {
     SkyboxConfig NextSkybox;
     float SkyboxBlend;
     float SkyboxOffset;
+    mat4 SkyboxViewProj;
 };
 
 uniform samplerCubeArray skyboxArray;

@@ -420,17 +420,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int uniTextureArray;
 	private int uniUiBlockUi;
 
-	private int uniSkyboxModelMatrix;
-	private int uniSkyboxProjectionMatrix;
-	private int uniSkyboxFogColor;
 	private int uniSkyboxTexture;
+	private int uniSkyboxBlockGlobal;
 	private int uniSkyboxBlockSkybox;
 
 	private int uniSceneBlockMaterials;
 	private int uniSceneBlockWaterTypes;
 	private int uniSceneBlockPointLights;
 	private int uniSceneBlockGlobals;
-	private int uniBlockSkybox;
+	private int uniSceneBlockSkybox;
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -961,17 +959,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
 		uniUiBlockUi = glGetUniformBlockIndex(glUiProgram, "UIUniforms");
 
-		uniSkyboxFogColor = glGetUniformLocation(glSkyboxProgram, "fogColor");
-		uniSkyboxModelMatrix = glGetUniformLocation(glSkyboxProgram, "modelMatrix");
-		uniSkyboxProjectionMatrix = glGetUniformLocation(glSkyboxProgram, "projectionMatrix");
 		uniSkyboxTexture = glGetUniformLocation(glSkyboxProgram, "skyboxArray");
 		uniSkyboxBlockSkybox = glGetUniformBlockIndex(glSkyboxProgram, "SkyboxUniforms");
+		uniSkyboxBlockGlobal = glGetUniformBlockIndex(glSkyboxProgram, "GlobalUniforms");
 
 		uniSceneBlockMaterials = glGetUniformBlockIndex(glSceneProgram, "MaterialUniforms");
 		uniSceneBlockWaterTypes = glGetUniformBlockIndex(glSceneProgram, "WaterTypeUniforms");
 		uniSceneBlockPointLights = glGetUniformBlockIndex(glSceneProgram, "PointLightUniforms");
 		uniSceneBlockGlobals = glGetUniformBlockIndex(glSceneProgram, "GlobalUniforms");
-		uniBlockSkybox = glGetUniformBlockIndex(glSceneProgram, "SkyboxUniforms");
+		uniSceneBlockSkybox = glGetUniformBlockIndex(glSceneProgram, "SkyboxUniforms");
 
 		if (computeMode == ComputeMode.OPENGL) {
 			for (int sortingProgram : glModelSortingComputePrograms) {
@@ -2048,7 +2044,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									   && skyboxManager.getSkyboxCount() > 0
 									   && config.renderSkybox();
 
-			shouldDrawSkybox &= environmentManager.updateSkyboxUniformBuffer(uboSkybox);
+			shouldDrawSkybox &= environmentManager.updateSkyboxUniformBuffer(uboSkybox, projectionMatrix);
 
 			if(shouldDrawSkybox) {
 				// Draw Skybox
@@ -2058,10 +2054,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glUseProgram(glSkyboxProgram);
 				glDepthMask(false);
 
-				glUniform3fv(uniSkyboxFogColor, fogColor);
-				glUniformMatrix4fv(uniSkyboxModelMatrix, false, Mat4.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
-				glUniformMatrix4fv(uniSkyboxProjectionMatrix, false, projectionMatrix);
 				glUniformBlockBinding(glSkyboxProgram, uniSkyboxBlockSkybox, UNIFORM_BLOCK_SKYBOX);
+				glUniformBlockBinding(glSceneProgram, uniSkyboxBlockGlobal, UNIFORM_BLOCK_GLOBAL);
 
 				glBindVertexArray(vaoSkyboxHandle);
 
@@ -2272,7 +2266,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glUniformBlockBinding(glSceneProgram, uniSceneBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
 			glUniformBlockBinding(glSceneProgram, uniSceneBlockPointLights, UNIFORM_BLOCK_LIGHTS);
 			glUniformBlockBinding(glSceneProgram, uniSceneBlockGlobals, UNIFORM_BLOCK_GLOBAL);
-			glUniformBlockBinding(glSceneProgram, uniBlockSkybox, UNIFORM_BLOCK_SKYBOX);
+			glUniformBlockBinding(glSceneProgram, uniSceneBlockSkybox, UNIFORM_BLOCK_SKYBOX);
 
 			frameTimer.begin(Timer.RENDER_SCENE);
 

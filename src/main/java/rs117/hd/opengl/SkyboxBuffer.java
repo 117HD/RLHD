@@ -11,6 +11,7 @@ public class SkyboxBuffer extends UniformBuffer {
 	public SkyboxConfigStruct nextSkybox = addStruct(new SkyboxConfigStruct());
 	public Property skyboxBlend = addProperty(PropertyType.Float, "SkyboxBlend");
 	public Property skyboxOffset = addProperty(PropertyType.Float, "SkyboxOffset");
+	public Property skyboxViewProj = addProperty(PropertyType.Mat4, "SkyboxViewProj");
 
 	public static class SkyboxConfigStruct extends StructProperty {
 		public Property index = addProperty(PropertyType.Int, "index");

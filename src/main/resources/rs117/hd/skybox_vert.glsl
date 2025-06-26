@@ -27,16 +27,14 @@
 #version 400
 
 #include utils/skybox.glsl
+#include uniforms/global.glsl
 
 layout (location = 0) in vec3 aPos;
 
 out vec3 TexCoords;
 
-uniform mat4 modelMatrix;
-uniform mat4 projectionMatrix;
-
 void main()
 {
     TexCoords = aPos;
-    gl_Position = projectionMatrix * modelMatrix * vec4(aPos * SkyboxOffset, 1.0);
+    gl_Position = SkyboxViewProj * vec4(aPos * SkyboxOffset, 1.0);
 }

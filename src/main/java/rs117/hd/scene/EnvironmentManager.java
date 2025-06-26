@@ -43,6 +43,7 @@ import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.skybox.SkyboxConfig;
 import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -487,7 +488,7 @@ public class EnvironmentManager {
 		return currentEnvironment.isUnderwater;
 	}
 
-	public boolean updateSkyboxUniformBuffer(SkyboxBuffer buffer) {
+	public boolean updateSkyboxUniformBuffer(SkyboxBuffer buffer, float[] projectionMatrix) {
 		SkyboxConfig.SkyboxEntry overrideEntry = null;
 		if (config.renderSkybox()) {
 			overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
@@ -504,8 +505,13 @@ public class EnvironmentManager {
 			buffer.activeSkybox.copy(-1, null);
 		}
 
+		float[] viewProj = Mat4.identity();
+		Mat4.mul(viewProj, projectionMatrix);
+		Mat4.mul(viewProj, Mat4.translate(plugin.cameraPosition[0], plugin.cameraPosition[1], plugin.cameraPosition[2]));
+
 		buffer.skyboxBlend.set(currentSkyboxBlend);
 		buffer.skyboxOffset.set(HdPlugin.NEAR_PLANE * 100.0f);
+		buffer.skyboxViewProj.set(viewProj);
 		buffer.upload();
 
 		return currentSkybox != null || targetSkybox != null || overrideEntry != null;

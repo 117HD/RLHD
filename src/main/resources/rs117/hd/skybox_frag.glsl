@@ -27,11 +27,10 @@
 #version 400
 
 #include utils/skybox.glsl
+#include uniforms/global.glsl
 
 out vec4 FragColor;
 in vec3 TexCoords;
-
-uniform vec3 fogColor;
 
 void main()
 {
