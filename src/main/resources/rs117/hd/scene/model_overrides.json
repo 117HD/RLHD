@@ -33150,9 +33150,7 @@
       }
     ],
     "objectIds": [
-      "KR_STUDYDESK",
-      "NARROW_STUDYDESK",
-      "STUDYDESK"
+      "NARROW_STUDYDESK"
     ]
   },
   {
@@ -37734,6 +37732,24 @@
     ]
   },
   {
+    "description": "Kourend - Wooden -  Mirror - Dresser",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DRESSER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "h == 35 && s == 0",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Kourend - Wooden -  Glass - Drink Shelf",
     "baseMaterial": "GRUNGE_3_SHINY",
     "uvType": "BOX",
@@ -38718,7 +38734,6 @@
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "objectIds": [
-      "KORE2_HOS_WALL",
       "KORE2_HOS_WALL_INNER"
     ],
     "colorOverrides": [
@@ -38743,8 +38758,7 @@
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "objectIds": [
-      "KORE2_HOS_WALL",
-      "KORE2_HOS_WALL_INNER"
+      "KORE2_HOS_WALL"
     ],
     "colorOverrides": [
       {
@@ -38982,6 +38996,24 @@
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Draynor - Kourend - Wooden -  Table with pink purple table cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DRAYNOR_SMALLTABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Table cloth",
+        "colors": "h == 60",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
       }
     ]
   }
