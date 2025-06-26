@@ -39408,13 +39408,16 @@
     ]
   },
   {
-    "description": "Varrock - Castle Garden - Flower - Rose Bushes",
+    "description": "Varrock - Hosidius - Castle Garden - Flower - Rose Bushes",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "objectIds": [
       "GARDEN_ROSEBUSH_PINK_FULLYGROWN",
       "GARDEN_ROSEBUSH_RED_FULLYGROWN",
-      "GARDEN_ROSEBUSH_WHITE_FULLYGROWN"
+      "GARDEN_ROSEBUSH_WHITE_FULLYGROWN",
+      "GARDEN_ROSES_PINK_DUMMY",
+      "GARDEN_ROSES_RED_DUMMY",
+      "GARDEN_ROSES_WHITE_DUMMY"
     ],
     "colorOverrides": [
       {
