@@ -38876,7 +38876,8 @@
     "uvScale": 0.4,
     "objectIds": [
       "KORE2_HOS_DOOR_CLOSED",
-      "KORE2_HOS_DOOR_OPEN"
+      "KORE2_HOS_DOOR_OPEN",
+      "KORE2_HOS_DOOR_INACTIVE"
     ],
     "colorOverrides": [
       {
