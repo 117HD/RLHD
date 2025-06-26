@@ -7863,7 +7863,7 @@
   },
   {
     "description": "Wooden - Plank - Tables - Rotated",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "BIGTABLE2",
       "KR_CAM_BIGTABLE",
@@ -8122,6 +8122,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
+    "uvOrientation": 512,
     "objectIds": [
       "WALLSHIELD3_WHITE",
       "WALLSHIELD"
@@ -8139,7 +8140,8 @@
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "objectIds": [
       "BUST1",
-      "BUST2"
+      "BUST2",
+      "BUST_LUMBRIDGE"
     ]
   },
   {
@@ -8706,7 +8708,9 @@
       "IKOV_SHINYKEYDOOR",
       "IKOV_LUCIENDOOR",
       "POORDOOR",
+      "POORDOOR_M",
       "POORDOOROPEN",
+      "POORDOOROPEN_M",
       "INACTIVEPOORDOOR",
       "MAGICGUILD_DOOR_L",
       "LOCKEDDOOR1",
@@ -10723,7 +10727,6 @@
     "description": "Objects - Metallic - Range",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      "COOKSQUESTRANGE",
       "FAI_VARROCK_RANGE",
       "FAI_VARROCK_RANGE_WITH_PIPE",
       "KR_SIN_RANGE",
@@ -18904,7 +18907,8 @@
       "BRAIN_BOAT_LOC_BARREL_STACKED",
       "SHAYZIEN_BARREL_LARGE_TAP",
       "SHAYZIEN_BARREL_LARGE",
-      "SLUG2_BARREL"
+      "SLUG2_BARREL",
+      "AP_BARREL"
     ],
     "uvType": "BOX"
   },
@@ -26277,13 +26281,75 @@
   },
   {
     "description": "Decoration - Textured Lumbridge Heraldry",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "HANGINGBANNERL", "HANGINGBANNERR"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": false
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Decoration - Lumbridge Hanging Tapestry",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "HANGING_TAPESTRY1",
+      "HANGING_TAPESTRY2"
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512,
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Chairs",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "THRONE",
+      "CHAIR_REDSEAT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Table",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "LONGTABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Wooden Step Ladder",
@@ -26436,6 +26502,102 @@
     ]
   },
   {
+    "description": "Cooking rack - Lumbridge kitchen - Meat",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "QIP_COOK_HANGINGMEAT1",
+      "QIP_COOK_HANGINGMEAT2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Range",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "COOKSQUESTRANGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Kitchen Trapdoor",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "QIP_COOK_TRAPDOOR_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Standards",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      "STANDARD_BLUE3",
+      "FLAG_LUMBRIDGE_OVERHANG",
+      "FLAG_LUMBRIDGE",
+      "FLAG_LUMBRIDGE_OVERHANG_POLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge - Shop Signs",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.75,
+    "objectIds": [
+      "SHOPSIGN",
+      "XMTS_PUB_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "FAI_VARROCK_HAT_STAND", "QIP_SHEEP_SHEARER_HATSTAND" ],
@@ -26498,7 +26660,7 @@
   },
   {
     "description": "Marble statues at Lumbridge Entrance - Textured",
-    "objectIds": [ "STATUE_LUMBRIDGE", "GARDEN_QUEEN_STATUE"],
+    "objectIds": [ "STATUE_LUMBRIDGE", "GARDEN_QUEEN_STATUE", "STATUE_PLINTH_LUMBRIDGE" ],
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -26979,7 +27141,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL" ]
+    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL", "QIP_COOK_BARREL_TAP" ]
   },
   {
     "description": "Barrel with tarnished metal bands",
@@ -27012,7 +27174,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED" ]
+    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED", "QIP_COOK_BARREL_STACKED" ]
   },
   {
     "description": "Wooden Cart - Empty",
@@ -28021,7 +28183,8 @@
       "SINK",
       "SINK2",
       "KR_SINK",
-      "QIP_SHEEP_SHEARER_SINK"
+      "QIP_SHEEP_SHEARER_SINK",
+      "QIP_COOK_SINK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
