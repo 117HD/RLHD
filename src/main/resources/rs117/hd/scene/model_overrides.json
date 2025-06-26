@@ -25516,7 +25516,7 @@
   },
   {
     "description": "Kourend - Hosidius - Tithe Farm - Greenhouse Walls",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.25,
