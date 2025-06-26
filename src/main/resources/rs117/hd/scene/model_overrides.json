@@ -37621,7 +37621,7 @@
   },
   {
     "description": "Corsair Cove - Hosidius - Thatch - Roofs",
-    "baseMaterial": "HD_HAY",
+    "baseMaterial": "HD_HAY_BRIGHT",
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
