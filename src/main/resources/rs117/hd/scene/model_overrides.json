@@ -9341,7 +9341,7 @@
       "MEDPLANT_SWAMP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.85,
+    "uvScale": 0.6,
     "uvOrientation": 256,
     "colorOverrides": [
       {
