@@ -7569,7 +7569,9 @@
       "ELID_LADDER_UP",
       "ELID_LADDERTOP",
       "WAA_LADDER",
+      "HOSIDIUS_BASEMENT_LADDER_ENTRY",
       "FAI_VARROCK_LADDER",
+      "HOSIDIUS_BASEMENT_LADDER_EXIT",
       "FAI_VARROCK_LADDERTOP",
       "FAI_VARROCK_LADDER_TALLER",
       "FAI_VARROCK_LADDER_TALLER_TOP",
@@ -11514,7 +11516,8 @@
       "SHAYZIEN_STOOL",
       "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
       "POG_STOOL",
-      "HOSIDIUS_SERVERY_STOOL"
+      "HOSIDIUS_SERVERY_STOOL",
+      "HOS_STOOL_03"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -21045,7 +21048,8 @@
       "NECROPOLIS_SKELETON_2",
       "NECROPOLIS_SKELETON_3",
       "AKD_HUGHES_SKELETON_1_NOOP",
-      "GA_SKELETON"
+      "GA_SKELETON",
+      "GRIM_GIANT_SKELETON_2"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -26382,7 +26386,9 @@
       "COOKINGSHELF",
       "QIP_COOK_COOKINGSHELF",
       "CANAFIS_COOKING_SHELVES",
-      "LUNAR_MOONCLAN_SHELF_POTS"
+      "LUNAR_MOONCLAN_SHELF_POTS",
+      "FARM_COOKINGSHELF",
+      "FARM_COOKINGUTENSILS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -26692,6 +26698,23 @@
     ]
   },
   {
+    "description": "Objects - Wooden - Brown Drawers with metallic handles - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DRAWERS2_ROTATED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Gold handles",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
+  },
+  {
     "description": "Objects - Wooden - Brown Drawers with golden handles",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -26959,7 +26982,25 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL" ]
+    "objectIds": [ "FAI_FALADOR_BARREL", "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL" ]
+  },
+  {
+    "description": "Barrel with tarnished metal bands Asgarnian Ale",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal bands",
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "HOS_BARREL_ASGARNIAN_ALE"
+    ]
   },
   {
     "description": "Barrel with tarnished metal bands",
@@ -28739,9 +28780,9 @@
     "uvType": "BOX"
   },
   {
-    "description": "Wooden -  Tables - Sturdy",
+    "description": "Hosiduis - Wooden -  Tables - Sturdy",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "HOS_TABLE_01" ],
+    "objectIds": [ "HOS_TABLE_01", "HOS_TABLE_02" ],
     "uvOrientationY": 512,
     "uvType": "BOX",
     "flatNormals": true,
@@ -30378,7 +30419,8 @@
       "FAI_VARROCK_BLUE_INN_BARSTOOL_TALL",
       "CANAFIS_INN_BARSTOOL",
       "CANAFIS_INN_BARSTOOL_TALL",
-      "GZ_BOARDGAMES_BARSTOOL_BLUE"
+      "GZ_BOARDGAMES_BARSTOOL_BLUE",
+      "HOS_STOOL_01"
     ]
   },
   {
@@ -32909,6 +32951,78 @@
         "baseMaterial": "ROPE",
         "uvType": "MODEL_YZ",
         "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Cloth - Bed with Green blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HOS_BED_02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 7 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Cloth - Double Bed with Green blanket and cream pillow with a light frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MISC_DOUBLEBED_BRAND"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 6 && s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Cloth - Bed with Green blanket and gray pillow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_EAST_MEDIUM_BED_DEFAULT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
       }
     ]
   },
@@ -37870,13 +37984,14 @@
     "uvScale": 0.6
   },
   {
-    "description": "Kourend - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "description": "Zeah - Hosiduis - Kourend - Porcelain - Metallic - Wooden - Fancy Sink ",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 172 ,
     "objectIds": [
-      "FAI_VARROCK_POSH_SINK"
+      "FAI_VARROCK_POSH_SINK",
+      "CON_CONTRACT_HOSIDIUS_NORTH_SINK_FIXED"
     ],
     "colorOverrides": [
       {
