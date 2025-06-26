@@ -38676,20 +38676,188 @@
     ]
   },
   {
-    "description": "Zeah - Kourend - Hosidius - Plant - Leafy Grass",
+    "description": "Zeah - Kourend - Hosidius - Plant - Leafy grass",
     "baseMaterial": "PLANT_GRUNGE_1",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "colors": "h > 11",
         "baseMaterial": "LEAF_VEINS",
-        "uvScale": 0.25,
+        "uvScale": 0.4,
         "uvType": "MODEL_XZ"
       }
     ],
     "objectIds": [
       "FAIRY2_PLANT_3"
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Wooden - Hosidius Walls - Interior",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_WALL",
+      "KORE2_HOS_WALL_INNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Window sile",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Hosidius Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_WALL",
+      "KORE2_HOS_WALL_INNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Glass -  Hosidius Walls with Window",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_WINDOW_SHOP",
+      "KORE2_HOS_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Interior wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "a == 255 && s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255 ",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Hosidius Parapet",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "objectIds": [
+      "KORE2_HOS_PARAPET",
+      "KORE2_HOS_PARAPET_JOIN_M",
+      "KORE2_HOS_PARAPET_JOIN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Hosidius - Metallic - Wooden - Hosidius Door",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.4,
+    "objectIds": [
+      "KORE2_HOS_DOOR_CLOSED",
+      "KORE2_HOS_DOOR_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Handle",
+        "colors": "h == 8 && s >= 2",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvScale": 0.8,
+        "uvOrientation": 88,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.4,
+        "uvOrientation": 701,
+        "uvType": "BOX"
+      }
     ]
   }
 ]
