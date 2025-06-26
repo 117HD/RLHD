@@ -38349,16 +38349,6 @@
     ]
   },
   {
-    "description": "Kourend - Wooden - Wood plank debris",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "uvOrientation": 303,
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "objectIds": [
-      "SHAYZIEN_BLACK_DEBRIS_WOOD"
-    ]
-  },
-  {
     "description": "Kourend - Varrock - Wooden -  Metal - Barrel with metal bands and swords - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [ "BARREL_SWORDS" ],
