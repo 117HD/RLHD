@@ -1069,6 +1069,32 @@
     ]
   },
   {
+    "description": "Kourend - Hosidius - Apple Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "KORE2_ORCHARD_APPLETREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 89,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      }
+    },
+    "colorOverrides": [
+      {
+        "description": "Apple",
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -26365,7 +26391,8 @@
       "FAI_VARROCK_COOKING_SHELVES",
       "QIP_COOK_COOKINGSHELVES",
       "AIDE_COOKINGSHELVES",
-      "AIDE_COOKINGSHELVES_EMPTY"
+      "AIDE_COOKINGSHELVES_EMPTY",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_CUPBOARD_DEFAULT"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -28016,6 +28043,23 @@
     ]
   },
   {
+    "description": "Hosidius- Blue Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "HOS_BED_03"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h < 10 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Baby Blue Bed with pillow",
     "baseMaterial": "CARPET",
     "objectIds": [ "BLUEBED" ],
@@ -28039,14 +28083,25 @@
   {
     "description": "Sink with textured water and wood paneling - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "SINK",
       "SINK2",
       "KR_SINK",
-      "QIP_SHEEP_SHEARER_SINK"
+      "QIP_SHEEP_SHEARER_SINK",
+      "RIMMINGTON_SINK"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.8
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Pottery Oven",
