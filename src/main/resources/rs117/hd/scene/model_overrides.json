@@ -25703,7 +25703,16 @@
       "HOS_BARREL_RACK_01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 168,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Kourend - Hosidius - Vinery - Big Wine Barrels",
