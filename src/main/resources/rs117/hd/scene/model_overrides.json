@@ -25648,18 +25648,73 @@
     ]
   },
   {
-    "description": "Kourend - Hosidius - Tithe Farm - Baskets",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Kourend - Hosidius - Tithe Farm - Basket of apples",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
     "objectIds": [
-      "HOS_BASKET",
-      "HOS_BASKET_APPLE",
+      "HOS_BASKET_APPLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Apples",
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets of Onions",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
+    "objectIds": [
       "HOS_BASKET_ONION"
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 7", "h == 16"],
-        "baseMaterial": "GRUNGE_3"
+        "description": "Onions",
+        "colors": ["h == 7"],
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets with wood",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
+    "objectIds": [
+      "HOS_BASKET_WOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": ["h == 6"],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Bark",
+        "colors": ["h == 5 && s == 4"],
+        "baseMaterial": "BARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets - Empty",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
+    "objectIds": [
+      "HOS_BASKET"
     ]
   },
   {
@@ -28835,9 +28890,9 @@
     "uvType": "BOX"
   },
   {
-    "description": "Hosiduis - Wooden -  Tables - Sturdy",
+    "description": "Piscarilius - Hosiduis - Wooden -  Tables - Sturdy",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "HOS_TABLE_01", "HOS_TABLE_02" ],
+    "objectIds": [ "HOS_TABLE_01", "HOS_TABLE_02", "PISCARILIUS_TABLE_04" ],
     "uvOrientationY": 512,
     "uvType": "BOX",
     "flatNormals": true,
@@ -38172,7 +38227,8 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
-      "HOS_FRUIT_STALL"
+      "HOS_FRUIT_STALL",
+      "HOS_STALL_EMPTY"
     ]
   },
   {
@@ -38194,6 +38250,102 @@
     "objectIds": [
       "HOS_FRUIT_STALL_01",
       "HOS_FRUIT_STALL_02"
+    ]
+  },
+  {
+    "description": "Kourend - Wooden - Wood plank debris",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientation": 303,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SHAYZIEN_BLACK_DEBRIS_WOOD"
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Theiving Stalls - Needs proper UVs",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "HOS_STALL_UTENSIL",
+      "HOS_STALL_BREAD",
+      "HOS_STALL_VEG"
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Seed Stall",
+    "baseMaterial": "GRUNGE_1",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3 && s <= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Pot",
+        "colors": "h == 3 && s > 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 6 && s > 2",
+        "baseMaterial": "DIRT_1",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "HOS_STALL_SEEDS"
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Herb stall",
+    "baseMaterial": "LEAF_VEINS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Bark",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "HOS_STALL_HERBS"
     ]
   },
   {
@@ -39271,7 +39423,7 @@
     ]
   },
   {
-    "description": "Hosiduis - Wooden -  Metallic - Drawers",
+    "description": "Hosiduis - Wooden -  Metallic - Drawers with metal decorations",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "HOS_MEDIUM_DRAWERS" ],
     "uvOrientationY": 512,
@@ -39292,6 +39444,96 @@
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Drawers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HOS_LARGE_DRAWERS",
+      "HOS_SMALL_DRAWERS"
+    ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Hosiduis - Wooden -  Metallic - Bar with taps on them",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "HOS_BAR_02" ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Knobs",
+        "colors": "h == 8 && s == 1 && l > 45",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Glass - Wooden cupbaord with glass bottles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Green and blue bottles",
+        "colors": "h > 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      "HOS_DRINK_CUPBOARD"
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Piano",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "HOS_PIANO"
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Cloth - Big Barrel with Cloth covering",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "HOS_BIG_BEER_BARREL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Red cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 42
       }
     ]
   }
