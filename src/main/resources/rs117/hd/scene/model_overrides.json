@@ -1401,7 +1401,10 @@
       "YEW_TREE_STUMP_NEW",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP"
+      "YEWTREE_NOOP",
+      "XBOWS_YEWTREE_BASIC",
+      "XBOWS_YEWTREE_ROPE_GRAPPLED",
+      "XBOWS_YEWTREE_ROPE_TIED"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -9378,6 +9381,37 @@
     ]
   },
   {
+    "description": "Lumbridge Swamp - Crossbow Shortcut Raft",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "XBOWS_RAFT_TR",
+      "XBOWS_RAFT_BR",
+      "XBOWS_RAFT_TL",
+      "XBOWS_RAFT_BL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvScale": 0.2,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp - Crossbow Shortcut Rope",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      "XBOWS_GROUND_ROPE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 400
+  },
+  {
     "description": "Wyvern Shortcut",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -15340,7 +15374,10 @@
       "JUNGLETREE2",
       "JUNGLETREE1_KARAMJA",
       "JUNGLETREE2_KARAMJA",
-      "JUNGLETREE2BIG_KARAMJA"
+      "JUNGLETREE2BIG_KARAMJA",
+      "XBOWS_JUNGLETREE_ROPE_GRAPPLED",
+      "XBOWS_JUNGLETREE_BASIC",
+      "XBOWS_JUNGLETREE_ROPE_TIED"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
