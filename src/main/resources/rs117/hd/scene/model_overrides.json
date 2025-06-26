@@ -17121,7 +17121,7 @@
   },
   {
     "description": "Generic - Plant - Fern - Small",
-    "baseMaterial": "LEAF_VEINS_LIGHT",
+    "baseMaterial": "LEAF_VEINS",
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
     "objectIds": [
@@ -17139,7 +17139,7 @@
     "colorOverrides": [
       {
         "colors": "h > 11",
-        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.25,
         "uvType": "MODEL_XZ"
       }
