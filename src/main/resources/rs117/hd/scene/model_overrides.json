@@ -38795,6 +38795,47 @@
     ]
   },
   {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Glass- Stained glass Hosidius Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_STAINED_UPP_LEFT",
+      "KORE2_HOS_STAINED_UPP_RIGHT",
+      "KORE2_HOS_STAINED_LOW_LEFT",
+      "KORE2_HOS_STAINED_LOW_RIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Glass -  Hosidius Walls with Window",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
