@@ -39025,5 +39025,28 @@
         "uvScale": 0.65
       }
     ]
+  },
+  {
+    "description": "Zeah - Hosidius - Potted Plants",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "objectIds": [
+      "FAI_VARROCK_POTTED_PLANT3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 16",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   }
 ]
