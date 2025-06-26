@@ -1089,7 +1089,7 @@
       {
         "description": "Apple",
         "colors": "h == 16",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_3_DARK",
         "uvType": "BOX"
       }
     ]
@@ -7577,6 +7577,7 @@
     "description": "Ladder",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "HOSDUN_ENTRANCE_LADDER",
       "WATCHLADDERUP",
       "WATCHLADDERDOWN",
       "TOWERLADDER",
@@ -8035,7 +8036,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Wattle Style Houses (Ardougne, Digsite)",
+    "description": "Wattle Style Houses (Ardougne, Digsite, Hosidius)",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -8048,6 +8049,8 @@
     ],
     "objectIds": [
       "TIMBERWALL",
+      "TIMBERWALL_2",
+      "ROOF_TIMBERWALL_2",
       "TIMBERWALL_NO_OCCLUDE",
       "WOODENROOF_REDSLATE",
       "ROOF_VERYSPECIAL_THATCHED",
@@ -9460,9 +9463,11 @@
       "LUMBRIDGE_SC_STEPSTONE",
       "ZQROCKJUMP1",
       "ZQROCKJUMP2",
-      "ZQROCKJUMP3"
+      "ZQROCKJUMP3",
+      "ZEAH_SALTPETRE_SHORTCUT"
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Rocks - Medium",
@@ -10783,6 +10788,7 @@
     "description": "Objects - Metallic - Pots",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
+      "HOS_POTS",
       "POTSANDPANS1",
       "POTSANDPANS2",
       "DWARF_KELDAGRIM_POTSANDPANS1",
@@ -25660,19 +25666,20 @@
       {
         "description": "Apples",
         "colors": "h == 16",
-        "baseMaterial": "GRUNGE_3",
+        "baseMaterial": "GRUNGE_3_DARK",
         "uvType": "BOX"
       }
     ]
   },
   {
-    "description": "Kourend - Hosidius - Tithe Farm - Baskets of Onions",
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets of Onions or Potatoes",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 179,
     "uvScale": 0.8,
     "objectIds": [
-      "HOS_BASKET_ONION"
+      "HOS_BASKET_ONION",
+      "HOS_BASKET_POTATO"
     ],
     "colorOverrides": [
       {
@@ -39610,6 +39617,76 @@
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.22
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "HOS_ANCIENT_TECH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 179,
+    "colorOverrides": [
+      {
+        "colors": "h >= 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 1 || h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Generic - Cabbage",
+    "baseMaterial": "LEAF_VEINS",
+    "objectIds": [
+      "CABBAGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179
+  },
+  {
+    "description": "Hosidius - White brick walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "HOS_FORT_WALL_STONE_PILE2",
+      "HOS_FORT_WALL_STONE_PILE1",
+      "HOS_FORT_WALL_CRUMBLE_L",
+      "HOS_FORT_WALL_CRUMBLE_SMALL_L",
+      "HOS_FORT_WALL",
+      "HOS_FORT_WALL_CRUMBLE_R",
+      "HOS_FORT_WALL_BATTLEMENT_CRUMBLE_L",
+      "HOS_FORT_WALL_BATTLEMENT_CRUMBLE_R",
+      "HOS_FORT_BRIDGE_SUPPORT",
+      "HOS_FORT_WALL_BATTLEMENT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179
+  },
+  {
+    "description": "Hosidius - Dungeon entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "HOSDUN_ENTRANCE_LADDER_HOLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "colorOverrides": [
+      {
+        "colors": "h > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale":  0.8
       }
     ]
   }
