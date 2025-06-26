@@ -26317,6 +26317,22 @@
     ]
   },
   {
+    "description": "Lumbridge - Dirt - Rat Burrow",
+    "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
+    "objectIds": [
+      "RATBARROW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
     "description": "Lumbridge Castle - Chairs",
     "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
