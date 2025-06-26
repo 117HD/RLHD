@@ -38,6 +38,7 @@ import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.opengl.SkyboxBuffer;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.skybox.SkyboxConfig;
 import rs117.hd.scene.skybox.SkyboxManager;
@@ -163,8 +164,6 @@ public class EnvironmentManager {
 
 	private Environment[] environments;
 	private FileWatcher.UnregisterCallback fileWatcher;
-
-	private ByteBuffer skyboxBuffer = BufferUtils.createByteBuffer(80);
 
 	@Nonnull
 	private Environment currentEnvironment = Environment.NONE;
@@ -488,55 +487,32 @@ public class EnvironmentManager {
 		return currentEnvironment.isUnderwater;
 	}
 
-	private void writeSkyboxPostProConfig(int index, SkyboxConfig.SkyboxPostProcessingConfig config) {
-		skyboxBuffer.putInt(index);
-		skyboxBuffer.putInt(config != null ? 1 : 0);
-		skyboxBuffer.putFloat(config != null ? config.getLightness() : 0.0f);
-		skyboxBuffer.putFloat(config != null ? config.getContrast()   : 0.0f);
-		skyboxBuffer.putFloat(config != null ? config.getSaturation() : 0.0f);
-		skyboxBuffer.putFloat(config != null ? config.getHue()   : 0.0f);
-
-		// Padding due to alignment added by layout(std140)
-		skyboxBuffer.putInt(0);
-		skyboxBuffer.putInt(0);
-	}
-
-	public boolean updateSkyboxUniformBuffer(int glBufferId) {
-		skyboxBuffer.clear();
-
+	public boolean updateSkyboxUniformBuffer(SkyboxBuffer buffer) {
 		SkyboxConfig.SkyboxEntry overrideEntry = null;
 		if (config.renderSkybox()) {
 			overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
 			if (overrideEntry != null) {
 				int overrideIndex = skyboxManager.getSkyboxTextureByDir(overrideEntry.getDir());
-				writeSkyboxConfig(overrideIndex, overrideEntry);
-				writeSkyboxConfig(null);
+				buffer.activeSkybox.copy(overrideIndex, overrideEntry.getPostProcessing());
+				buffer.nextSkybox.copy(-1, null);
 			} else {
-				writeSkyboxConfig(currentSkybox);
-				writeSkyboxConfig(targetSkybox);
+				writeSkyboxConfig(buffer.activeSkybox, currentSkybox);
+				writeSkyboxConfig(buffer.nextSkybox, targetSkybox);
 			}
 		} else {
-			writeSkyboxConfig(null);
-			writeSkyboxConfig(null);
+			buffer.activeSkybox.copy(-1, null);
+			buffer.activeSkybox.copy(-1, null);
 		}
 
-		skyboxBuffer.putFloat(currentSkyboxBlend);
-		skyboxBuffer.putFloat(HdPlugin.NEAR_PLANE * 100.0f);
-		skyboxBuffer.flip();
-
-		glBindBuffer(GL_UNIFORM_BUFFER, glBufferId);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, skyboxBuffer);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		buffer.skyboxBlend.set(currentSkyboxBlend);
+		buffer.skyboxOffset.set(HdPlugin.NEAR_PLANE * 100.0f);
+		buffer.upload();
 
 		return currentSkybox != null || targetSkybox != null || overrideEntry != null;
 	}
 
-	private void writeSkyboxConfig(SkyboxConfig.SkyboxEntry skybox) {
+	private void writeSkyboxConfig(SkyboxBuffer.SkyboxConfigStruct uniformStruct, SkyboxConfig.SkyboxEntry skybox) {
 		int index = (skybox != null) ? skyboxManager.getSkyboxTextureByDir(skybox.getDir()) : -1;
-		writeSkyboxPostProConfig(index, (skybox != null) ? skybox.getPostProcessing() : null);
-	}
-
-	private void writeSkyboxConfig(int index, SkyboxConfig.SkyboxEntry postProcessing) {
-		writeSkyboxPostProConfig(index, postProcessing.getPostProcessing());
+		uniformStruct.copy(index, (skybox != null) ? skybox.getPostProcessing() : null);
 	}
 }

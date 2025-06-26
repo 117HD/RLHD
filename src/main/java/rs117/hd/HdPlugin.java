@@ -95,6 +95,7 @@ import rs117.hd.opengl.CameraBuffer;
 import rs117.hd.opengl.GlobalUniforms;
 import rs117.hd.opengl.LightsBuffer;
 import rs117.hd.opengl.MaterialsBuffer;
+import rs117.hd.opengl.SkyboxBuffer;
 import rs117.hd.opengl.UIUniforms;
 import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.opengl.compute.ComputeMode;
@@ -386,7 +387,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final GlobalUniforms uboGlobal = new GlobalUniforms();
 	private final UIUniforms uboUI = new UIUniforms();
 	private final LightsBuffer uboLights = new LightsBuffer();
-	private final GLBuffer hUniformBufferSkybox = new GLBuffer("UBO Skybox");
+	private final SkyboxBuffer uboSkybox = new SkyboxBuffer();
 
 	@Getter
 	@Nullable
@@ -1201,8 +1202,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initBuffers() {
-		initGlBuffer(hUniformBufferSkybox, GL_UNIFORM_BUFFER, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-		glBindBufferBase(GL_UNIFORM_BUFFER, UNIFORM_BLOCK_SKYBOX, hUniformBufferSkybox.glBufferId);
 		initGlBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 		initGlBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
@@ -1213,14 +1212,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		initGlBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
-		initializeBuffer(hUniformBufferSkybox, GL_UNIFORM_BUFFER, 80, GL_STATIC_DRAW, CL_MEM_READ_ONLY);
-
 		uboMaterials.initialize(UNIFORM_BLOCK_MATERIALS);
 		uboCamera.initialize(UNIFORM_BLOCK_CAMERA, computeMode == ComputeMode.OPENCL ? openCLManager : null);
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboWaterTypes.initialize(UNIFORM_BLOCK_WATER_TYPES);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+		uboSkybox.initialize(UNIFORM_BLOCK_SKYBOX);
 	}
 
 	private void initGlBuffer(GLBuffer glBuffer, int target, int glUsage, int clUsage) {
@@ -1232,7 +1230,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void destroyBuffers() {
-		destroyGlBuffer(hUniformBufferSkybox);
 		destroyGlBuffer(hStagingBufferVertices);
 		destroyGlBuffer(hStagingBufferUvs);
 		destroyGlBuffer(hStagingBufferNormals);
@@ -1249,6 +1246,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboGlobal.destroy();
 		uboUI.destroy();
 		uboLights.destroy();
+		uboSkybox.destroy();
 	}
 
 	private void destroyGlBuffer(GLBuffer glBuffer) {
@@ -2050,7 +2048,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									   && skyboxManager.getSkyboxCount() > 0
 									   && config.renderSkybox();
 
-			shouldDrawSkybox &= environmentManager.updateSkyboxUniformBuffer(hUniformBufferSkybox.glBufferId);
+			shouldDrawSkybox &= environmentManager.updateSkyboxUniformBuffer(uboSkybox);
 
 			if(shouldDrawSkybox) {
 				// Draw Skybox
