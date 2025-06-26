@@ -25517,6 +25517,9 @@
   {
     "description": "Kourend - Hosidius - Tithe Farm - Greenhouse Walls",
     "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
     "objectIds": [
       "TITHE_ROOF_A",
       "TITHE_ROOF_A2",
@@ -25527,9 +25530,14 @@
       "TITHE_ROOF_H",
       "VINE_GLASS_HOUSE_WALL"
     ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.25
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX",
+        "colors": "a < 255"
+      }
+    ]
   },
   {
     "description": "Kourend - Hosidius - Tithe Farm - Seed Table",
