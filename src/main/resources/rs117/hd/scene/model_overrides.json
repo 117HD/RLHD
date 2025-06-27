@@ -39162,26 +39162,6 @@
     ]
   },
   {
-    "description": "Varrock - Castle Garden - Wooden - Stone - Trellis connected to wall",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 768,
-    "objectIds": [
-      "GARDEN_TRELLIS_CASTLE_CORNER"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Wall",
-        "colors": "h == 10",
-        "baseMaterial": "GRUNGE_2",
-        "flatNormals": true,
-        "uvType": "BOX",
-        "uvScale": 0.8
-      }
-    ]
-  },
-  {
     "description": "Varrock - Castle Garden - Wooden - Trellis - Wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
