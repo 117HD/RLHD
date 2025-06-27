@@ -221,6 +221,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         int uvOffset = minfo.uvOffset;
         int flags = minfo.flags;
         vec3 pos = vec3(minfo.x, minfo.y << 16 >> 16, minfo.z);
+        float height = minfo.y >> 16;
         int orientation = flags & 0x7ff;
         int vertexFlags = uvOffset >= 0 ? int(uv[uvOffset + localId * 3].w) : 0;
 
@@ -237,29 +238,23 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             if (renderPriority < renderPris[i])
                 ++myOffset;
 
-        // Grab vertex normals from the correct buffer
-        vec4 normA = normal[offset + localId * 3    ];
-        vec4 normB = normal[offset + localId * 3 + 1];
-        vec4 normC = normal[offset + localId * 3 + 2];
-
-        // Rotate normals to match model orientation
-        normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
-        normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
-        normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
+        vec3 displacementA = vec3(0);
+        vec3 displacementB = vec3(0);
+        vec3 displacementC = vec3(0);
 
         // Grab triangle vertices from the correct buffer
         vert thisrvA = vb[offset + localId * 3];
         vert thisrvB = vb[offset + localId * 3 + 1];
         vert thisrvC = vb[offset + localId * 3 + 2];
 
-        vec3 displacementA = vec3(0);
-        vec3 displacementB = vec3(0);
-        vec3 displacementC = vec3(0);
+        // Grab vertex normals from the correct buffer
+        vec4 normA = normal[offset + localId * 3    ];
+        vec4 normB = normal[offset + localId * 3 + 1];
+        vec4 normC = normal[offset + localId * 3 + 2];
 
         #if WIND_ENABLED
         int WindDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 7;
         if (WindDisplacementMode != 0) {
-            float height = minfo.y >> 16;
 
             float heightBasedWindStrength = saturate((abs(pos.y) + height) / windCeiling) * windStrength;
             float strengthA = saturate(abs(thisrvA.pos.y) / height);
@@ -325,6 +320,11 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             displacementC += worldDisplacement * strengthC;
         }
         #endif
+
+        // Rotate normals to match model orientation
+        normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
+        normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
+        normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
 
         // apply any displacement
         thisrvA.pos += displacementA;
