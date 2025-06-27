@@ -2,20 +2,20 @@
 
 struct SkyboxConfig
 {
-    int Index;
-    int ApplyPostPro;
-    float Brightness;
-    float Contrast;
-    float Saturation;
-    float HueShift;
+    int index;
+    int applyPostProcessing;
+    float brightness;
+    float contrast;
+    float saturation;
+    float hueShift;
 };
 
 layout(std140) uniform SkyboxUniforms {
-    SkyboxConfig ActiveSkybox;
-    SkyboxConfig NextSkybox;
-    float SkyboxBlend;
-    float SkyboxOffset;
-    mat4 SkyboxViewProj;
+    SkyboxConfig activeSkybox;
+    SkyboxConfig nextSkybox;
+    float skyboxBlend;
+    float skyboxOffset;
+    mat4 skyboxViewProj;
 };
 
 uniform samplerCubeArray skyboxArray;

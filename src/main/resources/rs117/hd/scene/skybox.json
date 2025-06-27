@@ -51,10 +51,9 @@
       "name": "rs3_magicblue_post",
       "dir": "rs3_magicblue",
       "postProcessing": {
-        "hue": 180,
+        "hue": 120,
         "saturation": 1.2,
         "lightness": 0.1,
-
         "contrast": 1.1
       }
     },

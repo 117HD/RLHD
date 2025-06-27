@@ -158,7 +158,7 @@ public class EnvironmentManager {
 	private SkyboxConfig.SkyboxEntry targetSkybox = null;
 	private SkyboxConfig.SkyboxEntry currentSkybox = null;
 
-	private float currentSkyboxBlend = 0f;
+	private float currentskyboxBlend = 0f;
 
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
@@ -257,10 +257,10 @@ public class EnvironmentManager {
 			// Always write fog and water color, since they're affected by lightning
 			currentFogColor = targetFogColor;
 			currentWaterColor = targetWaterColor;
-			if(currentSkyboxBlend >= 1) {
+			if(currentskyboxBlend >= 1) {
 				currentSkybox = targetSkybox;
 				targetSkybox = null;
-				currentSkyboxBlend = 0.0f;
+				currentskyboxBlend = 0.0f;
 			}
 		} else {
 			// interpolate between start and target values
@@ -283,7 +283,7 @@ public class EnvironmentManager {
 				currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
 			currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 			currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
-			currentSkyboxBlend = t;
+			currentskyboxBlend = t;
 		}
 
 		updateLightning();
@@ -509,7 +509,7 @@ public class EnvironmentManager {
 		Mat4.mul(viewProj, projectionMatrix);
 		Mat4.mul(viewProj, Mat4.translate(plugin.cameraPosition[0], plugin.cameraPosition[1], plugin.cameraPosition[2]));
 
-		buffer.skyboxBlend.set(currentSkyboxBlend);
+		buffer.skyboxBlend.set(currentskyboxBlend);
 		buffer.skyboxOffset.set(HdPlugin.NEAR_PLANE * 100.0f);
 		buffer.skyboxViewProj.set(viewProj);
 		buffer.upload();

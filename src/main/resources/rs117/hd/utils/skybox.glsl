@@ -4,16 +4,16 @@
 #include utils/color_utils.glsl
 
 bool canSampleSky() {
-    return ActiveSkybox.Index >= 0 || NextSkybox.Index >= 0;
+    return activeSkybox.index >= 0 || nextSkybox.index >= 0;
 }
 
 vec3 applyPostProcessing(vec3 skyboxColor, SkyboxConfig Config) {
     vec3 hsl = srgbToHsl(skyboxColor);
 
-    hsl.z = (hsl.z + Config.Brightness) * Config.Contrast;
-    hsl.y *= Config.Saturation;
+    hsl.z = (hsl.z + Config.brightness) * Config.contrast;
+    hsl.y *= Config.saturation;
 
-    hsl.x = fract(hsl.x + Config.HueShift / 360.0);
+    hsl.x = fract(hsl.x + Config.hueShift / 360.0);
 
     return hslToSrgb(hsl);
 }
@@ -26,21 +26,21 @@ vec3 sampleSky(vec3 viewDir, vec3 baseColor) {
     vec3 baseLinear = srgbToLinear(baseColor);
 
     vec3 activeSkyColor = baseLinear;
-    if (ActiveSkybox.Index >= 0) {
+    if (activeSkybox.index >= 0) {
         // Texture fetch gives linear color usually, but if stored sRGB, convert
-        activeSkyColor = texture(skyboxArray, vec4(skyboxDir, ActiveSkybox.Index)).rgb;
-        if(ActiveSkybox.ApplyPostPro == 1) {
-            activeSkyColor = applyPostProcessing(activeSkyColor, ActiveSkybox);
+        activeSkyColor = texture(skyboxArray, vec4(skyboxDir, activeSkybox.index)).rgb;
+        if(activeSkybox.applyPostProcessing == 1) {
+            activeSkyColor = applyPostProcessing(activeSkyColor, activeSkybox);
         }
     }
 
     vec3 nextSkyColor = baseLinear;
-    if (NextSkybox.Index >= 0) {
-        nextSkyColor = texture(skyboxArray, vec4(skyboxDir, NextSkybox.Index)).rgb;
-        if(NextSkybox.ApplyPostPro == 1) {
-            nextSkyColor = applyPostProcessing(nextSkyColor, NextSkybox);
+    if (nextSkybox.index >= 0) {
+        nextSkyColor = texture(skyboxArray, vec4(skyboxDir, nextSkybox.index)).rgb;
+        if(nextSkybox.applyPostProcessing == 1) {
+            nextSkyColor = applyPostProcessing(nextSkyColor, nextSkybox);
         }
     }
 
-    return clamp(mix(activeSkyColor, nextSkyColor, SkyboxBlend), 0.0, 1.0);
+    return clamp(mix(activeSkyColor, nextSkyColor, skyboxBlend), 0.0, 1.0);
 }

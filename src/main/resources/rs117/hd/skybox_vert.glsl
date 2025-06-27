@@ -1,4 +1,4 @@
-/*getSkyboxOffset
+/*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
  * All rights reserved.
@@ -36,5 +36,5 @@ out vec3 TexCoords;
 void main()
 {
     TexCoords = aPos;
-    gl_Position = SkyboxViewProj * vec4(aPos * SkyboxOffset, 1.0);
+    gl_Position = skyboxViewProj * vec4(aPos * skyboxOffset, 1.0);
 }
