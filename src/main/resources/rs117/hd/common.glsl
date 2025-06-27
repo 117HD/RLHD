@@ -188,3 +188,10 @@ float noise (in vec2 st) {
             (c - a)* u.y * (1.0 - u.x) +
             (d - b) * u.x * u.y;
 }
+
+vec3 snap(vec3 position, float gridSpacing) {
+    position /= gridSpacing;
+    position = round(position);
+    position *= gridSpacing;
+    return position;
+}

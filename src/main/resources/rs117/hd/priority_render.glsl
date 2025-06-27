@@ -257,7 +257,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec3 displacementC = vec3(0);
 
         #if WIND_ENABLED
-        int WindDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 3;
+        int WindDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 7;
         if (WindDisplacementMode != 0) {
             float height = minfo.y >> 16;
 
@@ -270,11 +270,12 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             vec3 worldDisplacement = windDirection.xyz * (heightBasedWindStrength * windDirection.w);
 
             // Apply Additional Vertex Displacement
-            if(WindDisplacementMode == 2 || WindDisplacementMode == 3) {
+            if(WindDisplacementMode >= 2) {
+                const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
                 const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
-                float windNoiseA = mix(-0.5, 0.5, noise((thisrvA.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-                float windNoiseB = mix(-0.5, 0.5, noise((thisrvB.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-                float windNoiseC = mix(-0.5, 0.5, noise((thisrvC.pos.xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                float windNoiseA = mix(-0.5, 0.5, noise((snap(thisrvA.pos, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                float windNoiseB = mix(-0.5, 0.5, noise((snap(thisrvB.pos, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+                float windNoiseC = mix(-0.5, 0.5, noise((snap(thisrvC.pos, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
                 // Hemisphere Blend
                 if(WindDisplacementMode == 3) {
@@ -294,13 +295,29 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                     strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
                 }
 
-                displacementA = ((windNoiseA * (heightBasedWindStrength * strengthA * VertexDisplacementMod)) * windDirection.xyz);
-                displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB * VertexDisplacementMod)) * windDirection.xyz);
-                displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC * VertexDisplacementMod)) * windDirection.xyz);
+                // Vertex Jiggle
+                if(WindDisplacementMode == 4) {
+                    vec3 vertASkew = cross(normA.xyz, vec3(0, 1, 0));
+                    vec3 vertBSkew = cross(normB.xyz, vec3(0, 1, 0));
+                    vec3 vertCSkew = cross(normC.xyz, vec3(0, 1, 0));
 
-                strengthA = saturate(strengthA - VertexDisplacementMod);
-                strengthB = saturate(strengthB - VertexDisplacementMod);
-                strengthC = saturate(strengthC - VertexDisplacementMod);
+                    displacementA = ((windNoiseA * (heightBasedWindStrength * strengthA)) * normalize(vertASkew));
+                    displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB)) * normalize(vertBSkew));
+                    displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC)) * normalize(vertCSkew));
+
+                    // We're just jiggling the verticies in the wind, not applying any large wind sway
+                    strengthA = 0.0f;
+                    strengthB = 0.0f;
+                    strengthC = 0.0f;
+                } else {
+                    displacementA = ((windNoiseA * (heightBasedWindStrength * strengthA * VertexDisplacementMod)) * windDirection.xyz);
+                    displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB * VertexDisplacementMod)) * windDirection.xyz);
+                    displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC * VertexDisplacementMod)) * windDirection.xyz);
+
+                    strengthA = saturate(strengthA - VertexDisplacementMod);
+                    strengthB = saturate(strengthB - VertexDisplacementMod);
+                    strengthC = saturate(strengthC - VertexDisplacementMod);
+                }
             }
 
             displacementA += worldDisplacement * strengthA;

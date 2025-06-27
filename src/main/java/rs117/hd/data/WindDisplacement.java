@@ -4,5 +4,6 @@ public enum WindDisplacement {
 	Disabled,
 	Object,
 	Vertex,
-	VertexWithHemisphereBlend
+	VertexWithHemisphereBlend,
+	VertexJiggle
 }

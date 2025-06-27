@@ -21419,6 +21419,7 @@
   },
   {
     "description": "Textured Bushes",
+    "windDisplacementMode": "VertexJiggle",
     "objectIds": [
       "HEDGE", "HEDGECORNER", "WILDBUSH1", "WILDBUSH2",
       "WILDBUSH3", "WILDBUSH4", "BUSH1", "BUSH2",
@@ -26751,6 +26752,7 @@
   {
     "description": "Lumbridge crypt ivy",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VertexJiggle",
     "objectIds": [ "FAI_FALADOR_IVY_LARGE", "FAI_FALADOR_IVY_MEDIUM", "FAI_FALADOR_IVY_SMALL", "FAI_FALADOR_IVY_MEDIUM_MIRROR", "FAI_FALADOR_IVY_SMALL_MIRRIOR" ],
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
