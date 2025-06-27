@@ -20,14 +20,20 @@ public class SkyboxBuffer extends UniformBuffer {
 		public Property contrast = addProperty(PropertyType.Float, "contrast");
 		public Property saturation = addProperty(PropertyType.Float, "saturation");
 		public Property hueShift = addProperty(PropertyType.Float, "hueShift");
+		public Property rotation = addProperty(PropertyType.Float, "rotation");
 
-		public void copy(int skyboxIndex, SkyboxConfig.SkyboxPostProcessingConfig skyboxConfig) {
+		public void copy(int skyboxIndex, SkyboxConfig.SkyboxEntry skyboxConfig) {
 			index.set(skyboxIndex);
-			applyPostPro.set(skyboxConfig != null ? 1 : 0);
-			brightness.set(skyboxConfig != null ? skyboxConfig.getLightness() : 0.0f);
-			contrast.set(skyboxConfig != null ? skyboxConfig.getContrast() : 0.0f);
-			saturation.set(skyboxConfig != null ? skyboxConfig.getSaturation() : 0.0f);
-			hueShift.set(skyboxConfig != null ? skyboxConfig.getHue() : 0.0f);
+
+			SkyboxConfig.SkyboxPostProcessingConfig postConfig = (skyboxConfig != null) ? skyboxConfig.getPostProcessing() : null;
+
+			boolean hasPost = postConfig != null;
+			applyPostPro.set(hasPost ? 1 : 0);
+			brightness.set(hasPost ? postConfig.getLightness() : 0f);
+			contrast.set(hasPost ? postConfig.getContrast() : 0f);
+			saturation.set(hasPost ? postConfig.getSaturation() : 0f);
+			hueShift.set(hasPost ? postConfig.getHue() : 0f);
+			rotation.set(skyboxConfig != null ? skyboxConfig.getRotation() : 0f);
 		}
 	}
 }

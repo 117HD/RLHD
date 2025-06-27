@@ -58,7 +58,7 @@ public class SkyboxManager {
 			return;
 		}
 
-		if(!plugin.glCaps.OpenGL43){
+		if(!HdPlugin.glCaps.OpenGL43){
 			log.debug("Skipping loading sky boxes due to lack of OpenGL43");
 			return;
 		}

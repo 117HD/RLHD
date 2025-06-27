@@ -95,6 +95,9 @@ public class TextureManager {
 	@Inject
 	private SkyboxManager skyboxManager;
 
+	@Inject
+	private EnvironmentManager environmentManager;
+
 	private int textureArray;
 	private int textureSize;
 
@@ -125,6 +128,12 @@ public class TextureManager {
 				clientThread.invoke(skyboxManager::ensureSkyboxesAreLoaded);
 			}else if(pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone()) {
 				pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
+				clientThread.invoke(() -> {
+					environmentManager.reset();
+					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null) {
+						environmentManager.loadSceneEnvironments(plugin.getSceneContext());
+					}
+				});
 			}
 		});
 

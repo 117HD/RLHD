@@ -8,6 +8,7 @@ struct SkyboxConfig
     float contrast;
     float saturation;
     float hueShift;
+    float rotation;
 };
 
 layout(std140) uniform SkyboxUniforms {

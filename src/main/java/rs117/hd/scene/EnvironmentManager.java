@@ -494,7 +494,7 @@ public class EnvironmentManager {
 			overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
 			if (overrideEntry != null) {
 				int overrideIndex = skyboxManager.getSkyboxTextureByDir(overrideEntry.getDir());
-				buffer.activeSkybox.copy(overrideIndex, overrideEntry.getPostProcessing());
+				buffer.activeSkybox.copy(overrideIndex, overrideEntry);
 				buffer.nextSkybox.copy(-1, null);
 			} else {
 				writeSkyboxConfig(buffer.activeSkybox, currentSkybox);
@@ -519,6 +519,6 @@ public class EnvironmentManager {
 
 	private void writeSkyboxConfig(SkyboxBuffer.SkyboxConfigStruct uniformStruct, SkyboxConfig.SkyboxEntry skybox) {
 		int index = (skybox != null) ? skyboxManager.getSkyboxTextureByDir(skybox.getDir()) : -1;
-		uniformStruct.copy(index, (skybox != null) ? skybox.getPostProcessing() : null);
+		uniformStruct.copy(index, skybox);
 	}
 }

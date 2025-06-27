@@ -45,7 +45,8 @@
     },
     {
       "name": "rs3_magicblue",
-      "dir": "rs3_magicblue"
+      "dir": "rs3_magicblue",
+      "rotation":260.3
     },
     {
       "name": "rs3_magicblue_post",

@@ -1,7 +1,9 @@
 package rs117.hd.scene.skybox;
 
+import com.google.gson.annotations.JsonAdapter;
 import java.util.List;
 import lombok.Getter;
+import rs117.hd.utils.GsonUtils;
 
 @Getter
 public class SkyboxConfig {
@@ -13,6 +15,8 @@ public class SkyboxConfig {
 	public class SkyboxEntry {
 		private String name;
 		private String dir;
+		@JsonAdapter(GsonUtils.DegreesToRadians.class)
+		private float rotation;
 		private SkyboxPostProcessingConfig postProcessing;
 
 	}
