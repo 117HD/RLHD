@@ -171,18 +171,26 @@ public class SkyboxManager {
 	private boolean extractFacesFromAtlas(BufferedImage atlas, BufferedImage[] outFaces) {
 		if (atlas == null) return false;
 
-		if (atlas.getWidth() < SKYBOX_FACE_SIZE * 4 || atlas.getHeight() < SKYBOX_FACE_SIZE * 2) {
-			log.warn("Unexpected atlas dimensions: {}x{} (expected ≥{}x{})", atlas.getWidth(), atlas.getHeight(), SKYBOX_FACE_SIZE * 4, SKYBOX_FACE_SIZE * 2);
+		int face = SKYBOX_FACE_SIZE;
+
+		if (atlas.getWidth() < face * 4 || atlas.getHeight() < face * 2) {
+			log.warn("Unexpected atlas dimensions: {}x{} (expected ≥{}x{})", atlas.getWidth(), atlas.getHeight(), face * 4, face * 2);
 			return false;
 		}
 
+		if (atlas.getWidth() % SKYBOX_FACE_SIZE != 0 || atlas.getHeight() % SKYBOX_FACE_SIZE != 0) {
+			log.warn("Atlas size is not evenly divisible by face size: {}x{} with tile {}", atlas.getWidth(), atlas.getHeight(), SKYBOX_FACE_SIZE);
+		}
+
 		try {
-			outFaces[0] = atlas.getSubimage(0, 0, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE);                 // px
-			outFaces[5] = atlas.getSubimage(SKYBOX_FACE_SIZE, 0, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE);  // nz
-			outFaces[1] = atlas.getSubimage(SKYBOX_FACE_SIZE * 2, 0, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE); // nx
-			outFaces[4] = atlas.getSubimage(SKYBOX_FACE_SIZE * 3, 0, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE); // pz
-			outFaces[2] = atlas.getSubimage(0, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE);     // py
-			outFaces[3] = atlas.getSubimage(SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE, SKYBOX_FACE_SIZE); // ny
+			// Maintain your original face order
+			outFaces[0] = atlas.getSubimage(0, 0, face, face);
+			outFaces[5] = atlas.getSubimage(face, 0, face, face);
+			outFaces[1] = atlas.getSubimage(face * 2, 0, face, face);
+			outFaces[4] = atlas.getSubimage(face * 3, 0, face, face);
+			outFaces[2] = atlas.getSubimage(0, face, face, face);
+			outFaces[3] = atlas.getSubimage(face, face, face, face);
+
 			return true;
 		} catch (RasterFormatException e) {
 			log.warn("Invalid subimage layout in atlas: {}", e.toString());
