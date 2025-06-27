@@ -442,8 +442,8 @@ public class ModelPusher {
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_COUNT;
 		int materialData =
-			(materialIndex & MAX_MATERIAL_COUNT) << 14
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 8
+			(materialIndex & MAX_MATERIAL_COUNT) << 15
+			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 9
 			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (modelOverride.upwardsNormals ? 1 : 0) << 4
@@ -451,6 +451,7 @@ public class ModelPusher {
 			| (uvType.worldUvs ? 1 : 0) << 2
 			| (uvType == UvType.VANILLA ? 1 : 0) << 1
 			| (isOverlay ? 1 : 0);
+		assert ((materialData >> 6) & 0x7)  == modelOverride.windDisplacementMode.ordinal();
 		assert (materialData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return materialData;
 	}
