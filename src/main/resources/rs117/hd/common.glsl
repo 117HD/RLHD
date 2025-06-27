@@ -195,3 +195,10 @@ vec3 snap(vec3 position, float gridSpacing) {
     position *= gridSpacing;
     return position;
 }
+
+float smooth_step( float edge0, float edge1, float x )
+{
+    float p = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
+    float v = p * p * (3.0 - 2.0 * p); // smoothstep formula
+    return v;
+}

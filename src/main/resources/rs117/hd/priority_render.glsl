@@ -212,13 +212,28 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height,
+vec3 applyPlayerDisplacement(vec3 playerPos, vec3 vertPos, float height, float strength) {
+    const float falloffRadius = 128 + 64;
+    vec3 result = vec3(0.0);
+    vec2 offset = vertPos.xz - playerPos.xz;
+    float offsetLen = length(offset);
+    if (offsetLen < falloffRadius) {
+        float offsetFrac = saturate(1.0 - (offsetLen / falloffRadius));
+        vec3 horizontalDisplacement = normalize(vec3(offset.x, 0, offset.y)) * (height * strength * offsetFrac);
+        vec3 verticalFlattening = vec3(0.0, height * strength * offsetFrac, 0.0);
+        return mix(horizontalDisplacement, verticalFlattening, offsetFrac);
+    }
+
+    return result;
+}
+
+void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
     in vec3 vertA, in vec3 vertB, in vec3 vertC,
     in vec3 normA, in vec3 normB, in vec3 normC,
     inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC) {
 
     #if WIND_ENABLED
-    int windDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 7;
+    int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED) {
         return;
     }
@@ -249,25 +264,31 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA));
             strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
             strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
-        }
-
-        if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-            vec3 vertASkew = cross(normA.xyz, vec3(0, 1, 0));
-            vec3 vertBSkew = cross(normB.xyz, vec3(0, 1, 0));
-            vec3 vertCSkew = cross(normC.xyz, vec3(0, 1, 0));
-
-            displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * normalize(vertASkew));
-            displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * normalize(vertBSkew));
-            displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * normalize(vertCSkew));
         } else {
-            displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
-            displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
-            displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod)) * windSample.direction);
+            if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+                vec3 vertASkew = cross(normA.xyz, vec3(0, 1, 0));
+                vec3 vertBSkew = cross(normB.xyz, vec3(0, 1, 0));
+                vec3 vertCSkew = cross(normC.xyz, vec3(0, 1, 0));
 
-            strengthA = saturate(strengthA - VertexDisplacementMod);
-            strengthB = saturate(strengthB - VertexDisplacementMod);
-            strengthC = saturate(strengthC - VertexDisplacementMod);
+                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * normalize(vertASkew));
+                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * normalize(vertBSkew));
+                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * normalize(vertCSkew));
+            } else {
+                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
+                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
+                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod)) * windSample.direction);
+
+                strengthA = saturate(strengthA - VertexDisplacementMod);
+                strengthB = saturate(strengthB - VertexDisplacementMod);
+                strengthC = saturate(strengthC - VertexDisplacementMod);
+            }
         }
+    }
+
+     if(windDisplacementMode == WIND_DISPLACEMENT_OBJECT){
+        displacementA += applyPlayerDisplacement(windSample.playerPos, worldPos + vertA, height, strengthA);
+        displacementB += applyPlayerDisplacement(windSample.playerPos, worldPos + vertB, height, strengthB);
+        displacementC += applyPlayerDisplacement(windSample.playerPos, worldPos + vertC, height, strengthC);
     }
 
     if(windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
@@ -319,7 +340,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec4 normB = normal[offset + localId * 3 + 1];
         vec4 normC = normal[offset + localId * 3 + 2];
 
-        applyWindDisplacement(windSample, vertexFlags, height,
+        applyWindDisplacement(windSample, vertexFlags, height, pos,
                         thisrvA.pos, thisrvB.pos, thisrvC.pos,
                         normA.xyz, normB.xyz, normC.xyz,
                         displacementA, displacementB, displacementC);
