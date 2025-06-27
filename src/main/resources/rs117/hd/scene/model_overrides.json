@@ -11744,12 +11744,13 @@
   },
   {
     "description": "Lunar Island - Wooden - Ladder",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_LADDER",
       "LUNAR_MOONCLAN_LADDER_TOP"
-    ],
-    "uvType": "MODEL_XY_MIRROR_B"
+    ]
   },
   {
     "description": "Objects - Wooden - Plank tables - Medium",
@@ -11860,6 +11861,8 @@
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_WALL_WINDOW",
       "LUNAR_MOONCLAN_WALL_OPEN_WINDOW",
@@ -11867,26 +11870,57 @@
       "LUNAR_MOONCLAN_FIRSTFLOOR_WALL_WINDOW_HOLE",
       "LUNAR_MOONCLAN_FIRSTFLOOR_WALL_WINDOW_OPEN"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Door",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_DOOR",
       "LUNAR_MOONCLAN_DOOR_OPEN"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Door - Window",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "LUNAR_MOONCLAN_DOOR_BABA_YAGA_INAC",
       "LUNAR_MOONCLAN_DOOR_ASIAN",
       "LUNAR_MOONCLAN_DOOR_ASIAN_CLOSED"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Railing - Window",
