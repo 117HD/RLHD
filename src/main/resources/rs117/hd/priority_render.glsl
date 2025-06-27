@@ -212,7 +212,79 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, vec4 windDirection) {
+void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height,
+    in vec3 vertA, in vec3 vertB, in vec3 vertC,
+    in vec3 normA, in vec3 normB, in vec3 normC,
+    inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC) {
+
+    #if WIND_ENABLED
+    int windDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 7;
+    if (windDisplacementMode <= 0) {
+        return;
+    }
+
+    float strengthA = saturate(abs(vertA.y) / height);
+    float strengthB = saturate(abs(vertB.y) / height);
+    float strengthC = saturate(abs(vertC.y) / height);
+
+    // Apply Additional Vertex Displacement
+    if(windDisplacementMode >= 2) {
+        const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
+        const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
+        float windNoiseA = mix(-0.5, 0.5, noise((snap(vertA, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+
+        // Hemisphere Blend
+        if(windDisplacementMode == 3) {
+            const float minDist = 50;
+            const float blendDist = 10.0;
+
+            float distBlendA = saturate(((abs(vertA.x) + abs(vertA.z)) - minDist) / blendDist);
+            float distBlendB = saturate(((abs(vertB.x) + abs(vertB.z)) - minDist) / blendDist);
+            float distBlendC = saturate(((abs(vertC.x) + abs(vertC.z)) - minDist) / blendDist);
+
+            float heightFadeA = saturate((strengthA - 0.5) / 0.2);
+            float heightFadeB = saturate((strengthB - 0.5) / 0.2);
+            float heightFadeC = saturate((strengthC - 0.5) / 0.2);
+
+            strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA));
+            strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
+            strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
+        }
+
+        // Vertex Jiggle
+        if(windDisplacementMode == 4) {
+            vec3 vertASkew = cross(normA.xyz, vec3(0, 1, 0));
+            vec3 vertBSkew = cross(normB.xyz, vec3(0, 1, 0));
+            vec3 vertCSkew = cross(normC.xyz, vec3(0, 1, 0));
+
+            displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * normalize(vertASkew));
+            displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * normalize(vertBSkew));
+            displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * normalize(vertCSkew));
+
+            // We're just jiggling the verticies in the wind, not applying any large wind sway
+            strengthA = 0.0f;
+            strengthB = 0.0f;
+            strengthC = 0.0f;
+        } else {
+            displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
+            displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
+            displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod)) * windSample.direction);
+
+            strengthA = saturate(strengthA - VertexDisplacementMod);
+            strengthB = saturate(strengthB - VertexDisplacementMod);
+            strengthC = saturate(strengthC - VertexDisplacementMod);
+        }
+    }
+
+    displacementA += windSample.displacement * strengthA;
+    displacementB += windSample.displacement * strengthB;
+    displacementC += windSample.displacement * strengthC;
+    #endif
+}
+
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, ObjectWindSample windSample) {
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -252,74 +324,10 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec4 normB = normal[offset + localId * 3 + 1];
         vec4 normC = normal[offset + localId * 3 + 2];
 
-        #if WIND_ENABLED
-        int WindDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 7;
-        if (WindDisplacementMode != 0) {
-
-            float heightBasedWindStrength = saturate((abs(pos.y) + height) / windCeiling) * windStrength;
-            float strengthA = saturate(abs(thisrvA.pos.y) / height);
-            float strengthB = saturate(abs(thisrvB.pos.y) / height);
-            float strengthC = saturate(abs(thisrvC.pos.y) / height);
-
-            // Main Object Displacement
-            vec3 worldDisplacement = windDirection.xyz * (heightBasedWindStrength * windDirection.w);
-
-            // Apply Additional Vertex Displacement
-            if(WindDisplacementMode >= 2) {
-                const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
-                const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
-                float windNoiseA = mix(-0.5, 0.5, noise((snap(thisrvA.pos, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-                float windNoiseB = mix(-0.5, 0.5, noise((snap(thisrvB.pos, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-                float windNoiseC = mix(-0.5, 0.5, noise((snap(thisrvC.pos, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
-
-                // Hemisphere Blend
-                if(WindDisplacementMode == 3) {
-                    const float minDist = 50;
-                    const float blendDist = 10.0;
-
-                    float distBlendA = saturate(((abs(thisrvA.pos.x) + abs(thisrvA.pos.z)) - minDist) / blendDist);
-                    float distBlendB = saturate(((abs(thisrvB.pos.x) + abs(thisrvB.pos.z)) - minDist) / blendDist);
-                    float distBlendC = saturate(((abs(thisrvC.pos.x) + abs(thisrvC.pos.z)) - minDist) / blendDist);
-
-                    float heightFadeA = saturate((strengthA - 0.5) / 0.2);
-                    float heightFadeB = saturate((strengthB - 0.5) / 0.2);
-                    float heightFadeC = saturate((strengthC - 0.5) / 0.2);
-
-                    strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA));
-                    strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
-                    strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
-                }
-
-                // Vertex Jiggle
-                if(WindDisplacementMode == 4) {
-                    vec3 vertASkew = cross(normA.xyz, vec3(0, 1, 0));
-                    vec3 vertBSkew = cross(normB.xyz, vec3(0, 1, 0));
-                    vec3 vertCSkew = cross(normC.xyz, vec3(0, 1, 0));
-
-                    displacementA = ((windNoiseA * (heightBasedWindStrength * strengthA)) * normalize(vertASkew));
-                    displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB)) * normalize(vertBSkew));
-                    displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC)) * normalize(vertCSkew));
-
-                    // We're just jiggling the verticies in the wind, not applying any large wind sway
-                    strengthA = 0.0f;
-                    strengthB = 0.0f;
-                    strengthC = 0.0f;
-                } else {
-                    displacementA = ((windNoiseA * (heightBasedWindStrength * strengthA * VertexDisplacementMod)) * windDirection.xyz);
-                    displacementB = ((windNoiseB * (heightBasedWindStrength * strengthB * VertexDisplacementMod)) * windDirection.xyz);
-                    displacementC = ((windNoiseC * (heightBasedWindStrength * strengthC * VertexDisplacementMod)) * windDirection.xyz);
-
-                    strengthA = saturate(strengthA - VertexDisplacementMod);
-                    strengthB = saturate(strengthB - VertexDisplacementMod);
-                    strengthC = saturate(strengthC - VertexDisplacementMod);
-                }
-            }
-
-            displacementA += worldDisplacement * strengthA;
-            displacementB += worldDisplacement * strengthB;
-            displacementC += worldDisplacement * strengthC;
-        }
-        #endif
+        applyWindDisplacement(windSample, vertexFlags, height,
+                        thisrvA.pos, thisrvB.pos, thisrvC.pos,
+                        normA.xyz, normB.xyz, normC.xyz,
+                        displacementA, displacementB, displacementC);
 
         // Rotate normals to match model orientation
         normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);

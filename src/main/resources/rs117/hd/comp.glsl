@@ -78,18 +78,19 @@ void main() {
         }
     }
 
-    vec4 windDirection = vec4(0.0);
+    ObjectWindSample windSample;
     #if WIND_ENABLED
     {
-        float windNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
-        float angle = windNoise * (PI / 2.0);
+        float modelNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+        float angle = modelNoise * (PI / 2.0);
         float c = cos(angle);
         float s = sin(angle);
+        float y = minfo.y << 16 >> 16;
+        float height = minfo.y >> 16;
 
-        windDirection.x = windDirectionX * c + windDirectionZ * s;
-        windDirection.z = -windDirectionX * s + windDirectionZ * c;
-        windDirection.xyz = normalize(windDirection.xyz);
-        windDirection.w = windNoise;
+        windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
+        windSample.heightBasedStrength = saturate((abs(y) + height) / windCeiling) * windStrength;
+        windSample.displacement = windSample.direction.xyz * (windSample.heightBasedStrength * modelNoise);
     }
     #endif
 
@@ -117,5 +118,5 @@ void main() {
     barrier();
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
-        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], windDirection);
+        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], windSample);
 }

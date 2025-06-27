@@ -37,6 +37,12 @@ struct ModelInfo {
     int z;        // scene position z
 };
 
+struct ObjectWindSample {
+    vec3 direction;
+    vec3 displacement;
+    float heightBasedStrength;
+};
+
 struct vert {
     vec3 pos;
     int ahsl;
