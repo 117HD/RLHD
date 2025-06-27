@@ -617,7 +617,8 @@
     "ambientStrength": 2.5,
     "directionalColor": "#edcfa3",
     "directionalStrength": 2.5,
-    "fogColor": "#c7b79b"
+    "fogColor": "#c7b79b",
+    "skybox": "rs3_magicblue_post"
   },
   {
     "area": "DESERT_TREASURE_PYRAMID",

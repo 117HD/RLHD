@@ -51,6 +51,7 @@
     {
       "name": "rs3_magicblue_post",
       "dir": "rs3_magicblue",
+      "rotation":160.3,
       "postProcessing": {
         "hue": 120,
         "saturation": 1.2,
