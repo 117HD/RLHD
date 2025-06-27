@@ -26,6 +26,13 @@
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
+#define WIND_DISPLACEMENT_DISABLED 0
+#define WIND_DISPLACEMENT_OBJECT 1
+#define WIND_DISPLACEMENT_VERTEX 2
+#define WIND_DISPLACEMENT_VERTEX_HEMISPHERE 3
+#define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
+
+
 struct ModelInfo {
     int offset;   // offset into buffer
     int uvOffset; // offset into uv buffer

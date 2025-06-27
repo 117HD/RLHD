@@ -219,7 +219,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
 
     #if WIND_ENABLED
     int windDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 7;
-    if (windDisplacementMode <= 0) {
+    if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED) {
         return;
     }
 
@@ -227,16 +227,14 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     float strengthB = saturate(abs(vertB.y) / height);
     float strengthC = saturate(abs(vertC.y) / height);
 
-    // Apply Additional Vertex Displacement
-    if(windDisplacementMode >= 2) {
+    if(windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
         const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
         float windNoiseA = mix(-0.5, 0.5, noise((snap(vertA, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
         float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
         float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
-        // Hemisphere Blend
-        if(windDisplacementMode == 3) {
+        if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_HEMISPHERE) {
             const float minDist = 50;
             const float blendDist = 10.0;
 
@@ -253,8 +251,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
         }
 
-        // Vertex Jiggle
-        if(windDisplacementMode == 4) {
+        if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
             vec3 vertASkew = cross(normA.xyz, vec3(0, 1, 0));
             vec3 vertBSkew = cross(normB.xyz, vec3(0, 1, 0));
             vec3 vertCSkew = cross(normC.xyz, vec3(0, 1, 0));
@@ -262,11 +259,6 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * normalize(vertASkew));
             displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * normalize(vertBSkew));
             displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * normalize(vertCSkew));
-
-            // We're just jiggling the verticies in the wind, not applying any large wind sway
-            strengthA = 0.0f;
-            strengthB = 0.0f;
-            strengthC = 0.0f;
         } else {
             displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
             displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
@@ -278,9 +270,12 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
         }
     }
 
-    displacementA += windSample.displacement * strengthA;
-    displacementB += windSample.displacement * strengthB;
-    displacementC += windSample.displacement * strengthC;
+    if(windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+        // Object Displacement
+        displacementA += windSample.displacement * strengthA;
+        displacementB += windSample.displacement * strengthB;
+        displacementC += windSample.displacement * strengthC;
+    }
     #endif
 }
 
