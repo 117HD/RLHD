@@ -54,7 +54,7 @@ layout(std140) uniform CameraUniforms {
     float windOffset;
 
     int characterPositionCount;
-    vec2 characterPositions[50];
+    vec3 characterPositions[50];
 };
 
 #include comp_common.glsl

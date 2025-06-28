@@ -212,20 +212,17 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-vec3 applyCharacterDisplacement(vec2 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
-    const float falloffRadius = 128 + 64;
-    vec3 result = vec3(0.0);
-    vec2 offset = vertPos - characterPos;
+vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
+    vec2 offset = vertPos - characterPos.xy;
     float offsetLen = length(offset);
-    if (offsetLen < falloffRadius) {
-        float offsetFrac = saturate(1.0 - (offsetLen / falloffRadius));
+    if (offsetLen <= characterPos.z) {
+        float offsetFrac = saturate(1.0 - (offsetLen / characterPos.z));
         vec3 horizontalDisplacement = safe_normalize(vec3(offset.x, 0, offset.y)) * (height * strength * offsetFrac);
         vec3 verticalFlattening = vec3(0.0, height * strength * offsetFrac, 0.0);
         offsetAccum += offsetFrac;
         return mix(horizontalDisplacement, verticalFlattening, offsetFrac);
     }
-
-    return result;
+    return vec3(0.0);
 }
 
 void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
@@ -302,7 +299,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             displacementA += applyCharacterDisplacement(characterPositions[i], (worldPos + vertA).xz, height, strengthA, fractAccum);
             displacementB += applyCharacterDisplacement(characterPositions[i], (worldPos + vertB).xz, height, strengthB, fractAccum);
             displacementC += applyCharacterDisplacement(characterPositions[i], (worldPos + vertC).xz, height, strengthC, fractAccum);
-            if(fractAccum >= 1.0){
+            if(fractAccum >= 2.0){
                 break;
             }
         }
