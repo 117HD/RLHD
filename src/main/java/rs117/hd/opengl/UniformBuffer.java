@@ -278,8 +278,15 @@ public abstract class UniformBuffer {
 			glObjectLabel(GL_BUFFER, glBuffer.glBufferId, glBuffer.name);
 	}
 
+	protected void preupload() {}
+
 	public final void upload() {
-		if (data == null || dirtyHighTide <= 0 || dirtyLowTide >= glBuffer.size)
+		if(data == null)
+			return;
+
+		preupload();
+
+		if (dirtyHighTide <= 0 || dirtyLowTide >= glBuffer.size)
 			return;
 
 		data.position(dirtyLowTide);

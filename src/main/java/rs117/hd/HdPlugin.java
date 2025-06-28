@@ -381,7 +381,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int dynamicOffsetVertices;
 	private int dynamicOffsetUvs;
 	private int renderBufferOffset;
-	private int displacementCharacterCount;
 
 	private int lastCanvasWidth;
 	private int lastCanvasHeight;
@@ -485,7 +484,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
-				displacementCharacterCount = 0;
 				renderBufferOffset = 0;
 				fboSceneHandle = rboSceneColorHandle = rboSceneDepthHandle = 0;
 				fboShadowMap = 0;
@@ -1540,8 +1538,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.windOffset.set(windOffset);
 
 				var playerLocation = client.getLocalPlayer().getLocalLocation();
-				uboCamera.characterPositions[0].set((float)playerLocation.getX(), (float)playerLocation.getY());
-				displacementCharacterCount = 1;
+				uboCamera.addCharacterPosition((float)playerLocation.getX(), (float)playerLocation.getY());
 			}
 		}
 
@@ -3140,10 +3137,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		if(renderable instanceof Actor && !(renderable instanceof Player) && displacementCharacterCount < uboCamera.characterPositions.length) {
+		if(renderable instanceof Actor) {
 			var actorLocation = ((Actor) renderable).getLocalLocation();
-			uboCamera.characterPositions[displacementCharacterCount].set((float)actorLocation.getX(), (float)actorLocation.getY());
-			uboCamera.characterPositionCount.set(displacementCharacterCount++);
+			uboCamera.addCharacterPosition((float)actorLocation.getX(), (float)actorLocation.getY());
 		}
 
 		bufferForTriangles(faceCount)
