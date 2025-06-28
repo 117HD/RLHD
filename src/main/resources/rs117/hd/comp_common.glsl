@@ -45,7 +45,6 @@ struct ModelInfo {
 };
 
 struct ObjectWindSample {
-    vec3 playerPos;
     vec3 direction;
     vec3 displacement;
     float heightBasedStrength;

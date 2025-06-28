@@ -696,11 +696,24 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_APPLY_WIND_DISPLACEMENT,
 		name = "Wind Displacement",
-		description = "Controls whether things in the world should be displaced by wind.",
+		description = "Controls whether things in the world should be displaced by wind (Disabled on MacOS).",
 		position = 13,
 		section = environmentSettings
 	)
 	default boolean applyWindDisplacement()
+	{
+		return true;
+	}
+
+	String KEY_APPLY_GROUND_DISPLACEMENT = "applyGroundDisplacement";
+	@ConfigItem(
+		keyName = KEY_APPLY_GROUND_DISPLACEMENT,
+		name = "Character Ground Displacement",
+		description = "Player & NPCs will displace ground objects whilst walking around (Disabled on MacOS).",
+		position = 15,
+		section = environmentSettings
+	)
+	default boolean applyGroundDisplacement()
 	{
 		return true;
 	}

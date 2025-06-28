@@ -82,7 +82,7 @@ void main() {
     }
 
     ObjectWindSample windSample;
-    #if WIND_ENABLED
+    #if WIND_DISPLACEMENT_ENABLED
     {
         float modelNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
         float angle = modelNoise * (PI / 2.0);

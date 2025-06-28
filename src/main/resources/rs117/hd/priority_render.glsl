@@ -212,10 +212,10 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-vec3 applyPlayerDisplacement(vec2 playerPos, vec2 vertPos, float height, float strength, inout offsetAccum) {
+vec3 applyCharacterDisplacement(vec2 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
     const float falloffRadius = 128 + 64;
     vec3 result = vec3(0.0);
-    vec2 offset = vertPos - playerPos;
+    vec2 offset = vertPos - characterPos;
     float offsetLen = length(offset);
     if (offsetLen < falloffRadius) {
         float offsetFrac = saturate(1.0 - (offsetLen / falloffRadius));
@@ -233,7 +233,6 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     in vec3 normA, in vec3 normB, in vec3 normC,
     inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC) {
 
-    #if WIND_ENABLED
     int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED) {
         return;
@@ -243,6 +242,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     float strengthB = saturate(abs(vertB.y) / height);
     float strengthC = saturate(abs(vertC.y) / height);
 
+    #if WIND_DISPLACEMENT_ENABLED
     if(windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
         const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
@@ -285,19 +285,23 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             }
         }
     }
+    #endif
 
+    #if GROUND_DISPLACEMENT_ENABLED
      if(windDisplacementMode == WIND_DISPLACEMENT_OBJECT){
         float fractAccum = 0.0;
         for(int i = 0; i < characterPositionCount; i++) {
-            displacementA += applyPlayerDisplacement(characterPositions[i], (worldPos + vertA).xz, height, strengthA, fractAccum);
-            displacementB += applyPlayerDisplacement(characterPositions[i], (worldPos + vertB).xz, height, strengthB, fractAccum);
-            displacementC += applyPlayerDisplacement(characterPositions[i], (worldPos + vertC).xz, height, strengthC, fractAccum);
+            displacementA += applyCharacterDisplacement(characterPositions[i], (worldPos + vertA).xz, height, strengthA, fractAccum);
+            displacementB += applyCharacterDisplacement(characterPositions[i], (worldPos + vertB).xz, height, strengthB, fractAccum);
+            displacementC += applyCharacterDisplacement(characterPositions[i], (worldPos + vertC).xz, height, strengthC, fractAccum);
             if(fractAccum >= 1.0){
                 break;
             }
         }
     }
+    #endif
 
+    #if WIND_DISPLACEMENT_ENABLED
     if(windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
         // Object Displacement
         displacementA += windSample.displacement * strengthA;

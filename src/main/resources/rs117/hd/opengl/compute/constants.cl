@@ -7,10 +7,10 @@
 #include UNDO_VANILLA_SHADING
 #include LEGACY_GREY_COLORS
 
-#include WIND_ENABLED
+#include WIND_DISPLACEMENT_ENABLED
 
 // TODO: Wind Displacement is disabled on OpenCL until the "OUT_OF_RESOURCES" issue is resolved
-#if WIND_ENABLED
-#undef WIND_ENABLED
-#define WIND_ENABLED 0
+#if WIND_DISPLACEMENT_ENABLED
+#undef WIND_DISPLACEMENT_ENABLED
+#define WIND_DISPLACEMENT_ENABLED 0
 #endif
