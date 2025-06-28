@@ -271,17 +271,17 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
                 vec3 vertBSkew = safe_normalize(cross(normB.xyz, vec3(0, 1, 0)));
                 vec3 vertCSkew = safe_normalize(cross(normC.xyz, vec3(0, 1, 0)));
 
-                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * vertASkew);
-                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * vertBSkew);
-                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * vertCSkew);
+                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
+                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
+                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC) * 0.5) * vertCSkew);
 
                 vertASkew = safe_normalize(cross(normA.xyz, vec3(1, 0, 0)));
                 vertBSkew = safe_normalize(cross(normB.xyz, vec3(1, 0, 0)));
                 vertCSkew = safe_normalize(cross(normC.xyz, vec3(1, 0, 0)));
 
-                displacementA -= ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * vertASkew);
-                displacementB -= ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * vertBSkew);
-                displacementC -= ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * vertCSkew);
+                displacementA += (((1.0 - windNoiseA) * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
+                displacementB += (((1.0 - windNoiseB) * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
+                displacementC += (((1.0 - windNoiseC) * (windSample.heightBasedStrength * strengthC) * 0.5) * vertCSkew);
             } else {
                 displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
                 displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
