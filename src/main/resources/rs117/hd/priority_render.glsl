@@ -212,15 +212,16 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-vec3 applyPlayerDisplacement(vec3 playerPos, vec3 vertPos, float height, float strength) {
+vec3 applyPlayerDisplacement(vec2 playerPos, vec2 vertPos, float height, float strength, inout offsetAccum) {
     const float falloffRadius = 128 + 64;
     vec3 result = vec3(0.0);
-    vec2 offset = vertPos.xz - playerPos.xz;
+    vec2 offset = vertPos - playerPos;
     float offsetLen = length(offset);
     if (offsetLen < falloffRadius) {
         float offsetFrac = saturate(1.0 - (offsetLen / falloffRadius));
         vec3 horizontalDisplacement = normalize(vec3(offset.x, 0, offset.y)) * (height * strength * offsetFrac);
         vec3 verticalFlattening = vec3(0.0, height * strength * offsetFrac, 0.0);
+        offsetAccum += offsetFrac;
         return mix(horizontalDisplacement, verticalFlattening, offsetFrac);
     }
 
@@ -286,9 +287,15 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     }
 
      if(windDisplacementMode == WIND_DISPLACEMENT_OBJECT){
-        displacementA += applyPlayerDisplacement(windSample.playerPos, worldPos + vertA, height, strengthA);
-        displacementB += applyPlayerDisplacement(windSample.playerPos, worldPos + vertB, height, strengthB);
-        displacementC += applyPlayerDisplacement(windSample.playerPos, worldPos + vertC, height, strengthC);
+        float fractAccum = 0.0;
+        for(int i = 0; i < characterPositionCount; i++) {
+            displacementA += applyPlayerDisplacement(characterPositions[i], (worldPos + vertA).xz, height, strengthA, fractAccum);
+            displacementB += applyPlayerDisplacement(characterPositions[i], (worldPos + vertB).xz, height, strengthB, fractAccum);
+            displacementC += applyPlayerDisplacement(characterPositions[i], (worldPos + vertC).xz, height, strengthC, fractAccum);
+            if(fractAccum >= 1.0){
+                break;
+            }
+        }
     }
 
     if(windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {

@@ -228,6 +228,14 @@ public abstract class UniformBuffer {
 		return appendToBuffer(new Property(type, name));
 	}
 
+	protected Property[] addProperties(PropertyType type, int size, String name) {
+		Property[] result = new Property[size];
+		for(int i = 0; i < size; i++) {
+			result[i] = appendToBuffer(new Property(type, name));
+		}
+		return result;
+	}
+
 	private Property appendToBuffer(Property property) {
 		property.owner = this;
 

@@ -381,6 +381,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int dynamicOffsetVertices;
 	private int dynamicOffsetUvs;
 	private int renderBufferOffset;
+	private int displacementCharacterCount;
 
 	private int lastCanvasWidth;
 	private int lastCanvasHeight;
@@ -484,6 +485,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (!textureManager.vanillaTexturesAvailable())
 					return false;
 
+				displacementCharacterCount = 0;
 				renderBufferOffset = 0;
 				fboSceneHandle = rboSceneColorHandle = rboSceneDepthHandle = 0;
 				fboShadowMap = 0;
@@ -1529,10 +1531,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.cameraX.set(cameraPosition[0]);
 				uboCamera.cameraY.set(cameraPosition[1]);
 				uboCamera.cameraZ.set(cameraPosition[2]);
-				var playerLocation = client.getLocalPlayer().getLocalLocation();
-				uboCamera.playerX.set((float)playerLocation.getX());
-				uboCamera.playerY.set((float)client.getPlane());
-				uboCamera.playerZ.set((float)playerLocation.getY());
 
 				uboCamera.windDirectionX.set((float)Math.cos(environmentManager.currentWindAngle));
 				uboCamera.windDirectionZ.set((float)Math.sin(environmentManager.currentWindAngle));
@@ -1540,7 +1538,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCamera.windOffset.set(windOffset);
 
-				uboCamera.upload();
+				var playerLocation = client.getLocalPlayer().getLocalLocation();
+				uboCamera.characterPositions[0].set((float)playerLocation.getX(), (float)playerLocation.getY());
+				displacementCharacterCount = 1;
 			}
 		}
 
@@ -1650,6 +1650,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.end(Timer.UPLOAD_GEOMETRY);
 		frameTimer.begin(Timer.COMPUTE);
+
+		uboCamera.upload();
 
 		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
@@ -3135,6 +3137,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
+
+		if(renderable instanceof Actor && !(renderable instanceof Player) && displacementCharacterCount < uboCamera.characterPositions.length) {
+			var actorLocation = ((Actor) renderable).getLocalLocation();
+			uboCamera.characterPositions[displacementCharacterCount].set((float)actorLocation.getX(), (float)actorLocation.getY());
+			uboCamera.characterPositionCount.set(displacementCharacterCount++);
+		}
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)

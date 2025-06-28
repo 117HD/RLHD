@@ -45,9 +45,6 @@ layout(std140) uniform CameraUniforms {
     float cameraX;
     float cameraY;
     float cameraZ;
-    float playerX;
-    float playerY;
-    float playerZ;
 
     // Wind Properties
     float windDirectionX;
@@ -55,6 +52,9 @@ layout(std140) uniform CameraUniforms {
     float windStrength;
     float windCeiling;
     float windOffset;
+
+    int characterPositionCount;
+    vec2 characterPositions[50];
 };
 
 #include comp_common.glsl
@@ -91,7 +91,6 @@ void main() {
         float y = minfo.y << 16 >> 16;
         float height = minfo.y >> 16;
 
-        windSample.playerPos = vec3(playerX, playerY, playerZ);
         windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
         windSample.heightBasedStrength = saturate((abs(y) + height) / windCeiling) * windStrength;
         windSample.displacement = windSample.direction.xyz * (windSample.heightBasedStrength * modelNoise);
