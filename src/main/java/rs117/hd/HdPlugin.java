@@ -1536,10 +1536,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.windStrength.set(environmentManager.currentWindStrength);
 				uboCamera.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCamera.windOffset.set(windOffset);
-
-				var localPlayer = client.getLocalPlayer();
-				var model = localPlayer.getModel();
-				uboCamera.addCharacterPosition(localPlayer.getLocalLocation(), model != null ? model.getRadius() : 128.0f);
+				uboCamera.addCharacterPosition(client.getLocalPlayer(), null);
 			}
 		}
 
@@ -3138,8 +3135,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		if(renderable instanceof Actor) {
-			uboCamera.addCharacterPosition(((Actor) renderable).getLocalLocation(), model.getRadius());
+		if(renderable instanceof Actor && renderable != client.getLocalPlayer()) {
+			uboCamera.addCharacterPosition((Actor) renderable, model);
 		}
 
 		bufferForTriangles(faceCount)

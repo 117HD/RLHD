@@ -1,6 +1,7 @@
 package rs117.hd.opengl;
 
 import java.util.ArrayList;
+import net.runelite.api.*;
 import net.runelite.api.coords.*;
 
 import static org.lwjgl.opengl.GL15.*;
@@ -49,9 +50,18 @@ public class CameraBuffer extends UniformBuffer {
 	private final ArrayList<CharacterPositionPair> characterPositionsPairs = new ArrayList<>();
 	private float playerPosX, playerPosZ;
 
-	public void addCharacterPosition(LocalPoint point, float size) {
+	public void addCharacterPosition(Actor character, Model characterModel) {
 		if(writtenCharacterPositions >= characterPositions.length){
 			return; // We've exceeded the count
+		}
+
+		LocalPoint point = character.getLocalLocation();
+		if(characterModel == null) {
+			characterModel = character.getModel();
+		}
+
+		if(characterModel == null) {
+			return;
 		}
 
 		int writeIndex = writtenCharacterPositions;
@@ -60,6 +70,7 @@ public class CameraBuffer extends UniformBuffer {
 
 		pair.x = point.getX();
 		pair.z = point.getY();
+		pair.size = characterModel.getRadius();
 
 		if(writeIndex == 0) {
 			playerPosX = pair.x;
@@ -75,8 +86,6 @@ public class CameraBuffer extends UniformBuffer {
 				}
 			}
 		}
-
-		pair.size = size;
 
 		characterPositionsPairs.add(writeIndex, pair);
 		writtenCharacterPositions++;

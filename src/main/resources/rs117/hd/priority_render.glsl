@@ -214,15 +214,21 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
 
 vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
     vec2 offset = vertPos - characterPos.xy;
-    float offsetLen = length(offset);
-    if (offsetLen <= characterPos.z) {
-        float offsetFrac = saturate(1.0 - (offsetLen / characterPos.z));
-        vec3 horizontalDisplacement = safe_normalize(vec3(offset.x, 0, offset.y)) * (height * strength * offsetFrac);
-        vec3 verticalFlattening = vec3(0.0, height * strength * offsetFrac, 0.0);
-        offsetAccum += offsetFrac;
-        return mix(horizontalDisplacement, verticalFlattening, offsetFrac);
+    float offsetLen = abs(length(offset));
+
+    if (offsetLen >= characterPos.z) {
+        return vec3(0.0);
     }
-    return vec3(0.0);
+
+    float offsetFrac = saturate(1.0 - (offsetLen / characterPos.z));
+    float displacementFrac = offsetFrac * offsetFrac;
+
+    vec3 horizontalDisplacement = normalize(vec3(offset.x, 0.0, offset.y)) * (height * strength * displacementFrac * 0.5);
+    vec3 verticalDisplacement = vec3(0.0, height * strength * displacementFrac, 0.0);
+
+    offsetAccum += offsetFrac;
+
+    return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
 void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
@@ -294,11 +300,15 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
 
     #if GROUND_DISPLACEMENT_ENABLED
      if(windDisplacementMode == WIND_DISPLACEMENT_OBJECT){
+        vec2 worldVertA = (worldPos + vertA).xz;
+        vec2 worldVertB = (worldPos + vertB).xz;
+        vec2 worldVertC = (worldPos + vertC).xz;
+
         float fractAccum = 0.0;
         for(int i = 0; i < characterPositionCount; i++) {
-            displacementA += applyCharacterDisplacement(characterPositions[i], (worldPos + vertA).xz, height, strengthA, fractAccum);
-            displacementB += applyCharacterDisplacement(characterPositions[i], (worldPos + vertB).xz, height, strengthB, fractAccum);
-            displacementC += applyCharacterDisplacement(characterPositions[i], (worldPos + vertC).xz, height, strengthC, fractAccum);
+            displacementA += applyCharacterDisplacement(characterPositions[i], worldVertA, height, strengthA, fractAccum);
+            displacementB += applyCharacterDisplacement(characterPositions[i], worldVertB, height, strengthB, fractAccum);
+            displacementC += applyCharacterDisplacement(characterPositions[i], worldVertC, height, strengthC, fractAccum);
             if(fractAccum >= 2.0){
                 break;
             }
