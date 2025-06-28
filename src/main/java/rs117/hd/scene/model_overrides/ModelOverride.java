@@ -13,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.data.WindDisplacement;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.GamevalManager;
@@ -82,6 +83,8 @@ public class ModelOverride
 	public transient boolean isDummy;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 	public transient AhslPredicate ahslCondition;
+
+	public WindDisplacement windDisplacementMode = WindDisplacement.Disabled;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -196,7 +199,8 @@ public class ModelOverride
 			colors,
 			isDummy,
 			areaOverrides,
-			ahslCondition
+			ahslCondition,
+			windDisplacementMode
 		);
 	}
 
