@@ -219,7 +219,7 @@ vec3 applyCharacterDisplacement(vec2 characterPos, vec2 vertPos, float height, f
     float offsetLen = length(offset);
     if (offsetLen < falloffRadius) {
         float offsetFrac = saturate(1.0 - (offsetLen / falloffRadius));
-        vec3 horizontalDisplacement = normalize(vec3(offset.x, 0, offset.y)) * (height * strength * offsetFrac);
+        vec3 horizontalDisplacement = safe_normalize(vec3(offset.x, 0, offset.y)) * (height * strength * offsetFrac);
         vec3 verticalFlattening = vec3(0.0, height * strength * offsetFrac, 0.0);
         offsetAccum += offsetFrac;
         return mix(horizontalDisplacement, verticalFlattening, offsetFrac);
@@ -267,13 +267,21 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
         } else {
             if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-                vec3 vertASkew = cross(normA.xyz, vec3(0, 1, 0));
-                vec3 vertBSkew = cross(normB.xyz, vec3(0, 1, 0));
-                vec3 vertCSkew = cross(normC.xyz, vec3(0, 1, 0));
+                vec3 vertASkew = safe_normalize(cross(normA.xyz, vec3(0, 1, 0)));
+                vec3 vertBSkew = safe_normalize(cross(normB.xyz, vec3(0, 1, 0)));
+                vec3 vertCSkew = safe_normalize(cross(normC.xyz, vec3(0, 1, 0)));
 
-                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * normalize(vertASkew));
-                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * normalize(vertBSkew));
-                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * normalize(vertCSkew));
+                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * vertASkew);
+                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * vertBSkew);
+                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * vertCSkew);
+
+                vertASkew = safe_normalize(cross(normA.xyz, vec3(1, 0, 0)));
+                vertBSkew = safe_normalize(cross(normB.xyz, vec3(1, 0, 0)));
+                vertCSkew = safe_normalize(cross(normC.xyz, vec3(1, 0, 0)));
+
+                displacementA -= ((windNoiseA * (windSample.heightBasedStrength * strengthA)) * vertASkew);
+                displacementB -= ((windNoiseB * (windSample.heightBasedStrength * strengthB)) * vertBSkew);
+                displacementC -= ((windNoiseC * (windSample.heightBasedStrength * strengthC)) * vertCSkew);
             } else {
                 displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
                 displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);

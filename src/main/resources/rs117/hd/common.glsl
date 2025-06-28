@@ -202,3 +202,11 @@ float smooth_step( float edge0, float edge1, float x )
     float v = p * p * (3.0 - 2.0 * p); // smoothstep formula
     return v;
 }
+
+vec3 safe_normalize(vec3 v) {
+    vec3 r = normalize(v);
+    r.x = isnan(r.x) ? 0.0 : r.x;
+    r.y = isnan(r.y) ? 0.0 : r.y;
+    r.z = isnan(r.z) ? 0.0 : r.z;
+    return r;
+}
