@@ -9100,11 +9100,10 @@
   },
   {
     "description": "Varrock Wall ivy",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS",
     "objectIds": [ "FAI_VARROCK_IVY_MEDIUM", "FAI_VARROCK_IVY_SMALL" ],
     "uvType": "MODEL_YZ",
-    "uvOrientation": 144,
-    "uvScale": 0.6
+    "uvScale": 0.3
   },
   {
     "description": "Khandarian Eagles Landing",
