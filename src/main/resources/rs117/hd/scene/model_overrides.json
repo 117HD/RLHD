@@ -38646,7 +38646,8 @@
     "uvScale": 0.62,
     "uvOrientation": 343,
     "objectIds": [
-      "DUNGEON_TREE_UNPAID"
+      "DUNGEON_TREE_UNPAID",
+      "DUNGEON_TREE_OPEN"
     ],
     "colorOverrides": [
       {
