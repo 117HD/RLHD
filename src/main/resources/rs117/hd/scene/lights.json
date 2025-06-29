@@ -37370,5 +37370,23 @@
     "objectIds": [
       "GA_CAVE_OUT"
     ]
+  },
+  {
+    "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
+    "height": 235,
+    "offset": [ -41, -74, 20 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "STONEPILLAR_LBROWN_WITHTORCH"
+    ]
   }
 ]
