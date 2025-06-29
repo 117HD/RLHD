@@ -27060,9 +27060,11 @@
     "description": "Objects - Wooden - Beehive",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "MACRO_INACTIVE_BEEHIVE"
+      "MACRO_INACTIVE_BEEHIVE",
+      "MERLIN_BEEHIVE"
     ],
     "uvType": "BOX",
+    "uvScale": 0.85,
     "uvOrientation": 512
   },
   {
