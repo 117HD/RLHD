@@ -27766,6 +27766,23 @@
     ]
   },
   {
+    "description": "Skeleton with sword in back named corpse",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CORPSE4_NOBLOCK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Helmet",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
