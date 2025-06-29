@@ -18186,6 +18186,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "SKEWSTEPS1_LBROWN",
+      "SKEWSTEPS1_DIAG_LEFT1_LBROWN",
+      "SKEWSTEPS1_DIAG_RIGHT1_LBROWN",
       "CANAFIS_SKEWSTEPS"
     ],
     "uvType": "BOX",
