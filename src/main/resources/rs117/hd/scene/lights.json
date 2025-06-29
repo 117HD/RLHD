@@ -27014,7 +27014,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDSTRIKE_TRAVEL"
@@ -27032,7 +27032,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERSTRIKE_TRAVEL"
@@ -27050,7 +27050,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHSTRIKE_TRAVEL"
@@ -27068,7 +27068,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESTRIKE_TRAVEL"
@@ -27086,7 +27086,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDBOLT_TRAVEL"
@@ -27104,7 +27104,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERBOLT_TRAVEL"
@@ -27122,7 +27122,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHBOLT_TRAVEL"
@@ -27141,7 +27141,7 @@
     "duration": 0,
     "range": 0,
     "fadeOutDuration": 250,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "projectileIds": [
       "FIREBOLT_TRAVEL"
     ]
@@ -27158,7 +27158,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDBLAST_TRAVEL"
@@ -27176,7 +27176,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERBLAST_TRAVEL"
@@ -27194,7 +27194,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHBLAST_TRAVEL"
@@ -27212,7 +27212,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREBLAST_TRAVEL"
@@ -27230,7 +27230,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDWAVE_TRAVEL"
@@ -27248,7 +27248,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERWAVE_TRAVEL"
@@ -27266,7 +27266,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHWAVE_TRAVEL"
@@ -27284,7 +27284,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREWAVE_TRAVEL"
@@ -27302,7 +27302,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDSURGE_TRAVEL"
@@ -27320,7 +27320,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERSURGE_TRAVEL"
@@ -27338,7 +27338,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHSURGE_TRAVEL"
@@ -27356,7 +27356,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESURGE_TRAVEL"
@@ -27374,7 +27374,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "CONFUSE_TRAVEL"
     ]
@@ -27391,7 +27392,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "WEAKEN_TRAVEL"
     ]
@@ -27408,7 +27410,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "CURSE_TRAVEL"
     ]
@@ -27425,7 +27428,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "VULNERABILITY_TRAVEL"
     ]
@@ -27442,7 +27446,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ENFEEBLE_TRAVEL"
     ]
@@ -27459,7 +27464,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "STUN_TRAVEL"
     ]
@@ -27476,7 +27482,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ENTANGLE_TRAVEL"
     ]
@@ -27493,7 +27500,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "CRUMBLEUNDEAD_TRAVEL"
     ]
@@ -27510,7 +27518,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SLAYER_MAGICDART_TRAVEL"
     ]
@@ -27527,7 +27536,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "IBANBLAST_TRAVEL"
     ]
@@ -27544,7 +27554,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "BALLISTA_SPECIAL"
     ]
@@ -27649,7 +27660,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SMOKE_RUSH_TRAVEL"
     ]
@@ -27666,7 +27678,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SHADOW_RUSH_TRAVEL"
     ]
@@ -27683,7 +27696,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ICE_RUSH_TRAVEL"
     ]
@@ -27700,7 +27714,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SMOKE_BLITZ_TRAVEL"
     ]
@@ -27717,7 +27732,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SHADOW_BLITZ_TRAVEL"
     ]
@@ -27734,7 +27750,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "BLOOD_BLITZ_TRAVEL"
     ]
