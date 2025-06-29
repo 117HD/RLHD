@@ -38793,5 +38793,17 @@
 
       }
     ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Dungeon - Tropical Tree Log Agility Shortcut",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "KARAM_DUNGEON_BAMBOO_LOGBALANCE1",
+      "KARAM_DUNGEON_BAMBOO_LOGBALANCE2",
+      "KARAM_DUNGEON_BAMBOO_LOGBALANCE3"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientationY": 512
   }
 ]
