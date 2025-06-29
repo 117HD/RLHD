@@ -22077,6 +22077,21 @@
     "uvOrientationY": 256
   },
   {
+    "description": "White Wolf Mountain - White Fruit Trees",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "MDAUGHTER_WHITE_PEARL_BUSH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Giant Mole Lair - Object - Dirt Floor",
     "baseMaterial": "DIRT_1",
     "objectIds": [ "MOLE_WALL_TOP", "MOLE_WALL_TOP_LVL2", "MOLE_WALL_TOP5_LVL2", "MOLE_WALL_TOP_LVL2_BIG" ]
@@ -33656,6 +33671,24 @@
       }
     ],
     "objectIds": [ "GRANDTREE_ROOTDOOR" ]
+  },
+  {
+    "description": "Gnome Glider",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GNOME_GLIDER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 5",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256,
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Porcine of Interest - Veg Cart",
