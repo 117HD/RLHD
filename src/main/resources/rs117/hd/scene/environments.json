@@ -1765,10 +1765,10 @@
     "area": "WHITE_WOLF_MOUNTAIN_ENVIRONMENT",
     "ambientColor": "#a8d2ff",
     "ambientStrength": 1.75,
-    "directionalColor": "#f2e7d2",
+    "directionalColor": "#efe9de",
     "directionalStrength": 3.5,
     "fogColor": "#aebde0",
-    "fogDepth": 30
+    "fogDepth": 15
   },
   {
     "key": "OVERWORLD",
