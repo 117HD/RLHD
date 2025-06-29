@@ -31519,7 +31519,8 @@
     "uvScale": 0.5,
     "uvOrientation": 42,
     "objectIds": [
-      "STONEPILLAR_SMALL_WATERFALL_QUEST_NOOP"
+      "STONEPILLAR_SMALL_WATERFALL_QUEST_NOOP",
+      "STONEPILLAR"
     ]
   },
   {
