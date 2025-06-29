@@ -3712,7 +3712,9 @@
       "KARAM_CAVEWALL_VINE",
       "KARAM_CAVEWALL_VINE_LEV2",
       "KARAM_DUNGEON_CAVESTAIRS2",
-      "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN2"
+      "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN2",
+      "KARAM_DUNGEON_LAVAWALL_LEV1",
+      "KARAM_DUNGEON_LAVAWALL_LEV2"
     ]
   },
   {
@@ -11994,7 +11996,8 @@
     "uvType": "BOX",
     "objectIds": [
       "TAVERLY_DUNGEON_PIPE_SC",
-      "KARAM_DUNGEON_PIPE"
+      "KARAM_DUNGEON_PIPE",
+      "KARAM_DUNGEON_PIPE2"
     ],
     "colorOverrides": [
       {
@@ -27786,6 +27789,7 @@
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      "CORPSE_NOBLOCK",
       "CORPSE2",
       "CORPSE3",
       "SLAYER_CORPSE1",
@@ -38743,6 +38747,27 @@
     ]
   },
   {
+    "description": "Karamja - Brimhaven - Climable green vines",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_TAIL",
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_BOTTOM",
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_MIDDLE",
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Karamja - Brimhaven - Dungeon floor roots - Rotated",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
@@ -38773,7 +38798,17 @@
     "uvOrientation": 212,
     "objectIds": [
       "KARAM_DUNGEON_VINEBLOCKING1",
-      "KARAM_DUNGEON_VINEBLOCKING2"
+      "KARAM_DUNGEON_VINEBLOCKING2",
+      "KARAM_DUNGEON_VINEBLOCKING3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 1313,
+        "uvScale": 0.4
+      }
     ]
   },
   {
