@@ -17942,7 +17942,7 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": [ 38083, 38087 ],
+        "colors": [ "a < 255" ],
         "baseMaterial": "TRANSPARENT"
       }
     ]
