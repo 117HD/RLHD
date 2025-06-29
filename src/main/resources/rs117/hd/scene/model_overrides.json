@@ -17960,11 +17960,20 @@
   },
   {
     "description": "Ferox Enclave - Statue",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       "WILDY_HUB_WARRIOR_STATUE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10 && s == 0" ],
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Sleeping Bag",
