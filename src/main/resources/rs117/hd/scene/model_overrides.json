@@ -11103,12 +11103,21 @@
   },
   {
     "description": "Objects - Fungus - Medium",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "NASTYFUNGUS_DARK",
       "WILDERNESSFUNGUS",
       "NEW_NASTYFUNGUS_DARK",
       "NEW_NASTYFUNGUS_SMALL_DARK"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Fungus - Big",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "NASTYFUNGUS_DARK_BIG"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
