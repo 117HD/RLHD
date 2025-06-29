@@ -11991,10 +11991,20 @@
   {
     "description": "ROUNDED_CAVE_WALLS_WITH_PIPE",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
     "objectIds": [
-      "TAVERLY_DUNGEON_PIPE_SC"
+      "TAVERLY_DUNGEON_PIPE_SC",
+      "KARAM_DUNGEON_PIPE"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Pipe",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Objects - Rock Stairs - Large",
@@ -21058,7 +21068,8 @@
       "NECROPOLIS_SKELETON_2",
       "NECROPOLIS_SKELETON_3",
       "AKD_HUGHES_SKELETON_1_NOOP",
-      "GA_SKELETON"
+      "GA_SKELETON",
+      "CORPSE2_NOBLOCK"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -27738,12 +27749,21 @@
   {
     "description": "Skeleton with helmet named corpse",
     "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "SLAYER_CORPSE3",
-      "ROGUESDEN_CORPSE3"
+      "ROGUESDEN_CORPSE3",
+      "CORPSE3_NOBLOCK"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.6
+    "colorOverrides": [
+      {
+        "description": "Helmet",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Skeleton named corpse",
@@ -38677,6 +38697,74 @@
         "uvType": "BOX",
         "uvOrientation": 313,
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon floor roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "VINE_END",
+      "VINE_CORNER",
+      "VINE_DIAG2",
+      "VINE_DIAG1",
+      "VINE_STRAIGHT",
+      "VINE_JUNCTION",
+      "VINE_DIAG3"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon floor roots - Rotated",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -128,
+    "objectIds": [
+      "VINE_END_DIAG",
+      "VINE_DIAGFILLER"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon wall roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "objectIds": [
+      "KARAM_WALL_ROOT_1",
+      "KARAM_WALL_ROOT_2",
+      "KARAM_WALL_ROOT_3"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon wall roots - chopable",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 212,
+    "objectIds": [
+      "KARAM_DUNGEON_VINEBLOCKING1",
+      "KARAM_DUNGEON_VINEBLOCKING2"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Stone - Pillars with torches",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "objectIds": [
+      "STONEPILLAR_LBROWN_WITHTORCH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Flames",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+
       }
     ]
   }
