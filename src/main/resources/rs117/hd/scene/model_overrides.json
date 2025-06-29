@@ -3700,8 +3700,10 @@
     ]
   },
   {
-    "description": "KARAMJA_DUNGEON_WALLS",
+    "description": "Karamja - Brimhaven Dungeon - Walls",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "CAVEWALL_FACE1_LEV2",
       "KARAM_CAVEWALL_FACE1",
@@ -3711,6 +3713,15 @@
       "KARAM_CAVEWALL_VINE_LEV2",
       "KARAM_DUNGEON_CAVESTAIRS2",
       "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN2"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven Dungeon - Walls - Exit",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "KARAM_DUNGEON_EXIT"
     ]
   },
   {
