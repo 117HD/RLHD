@@ -38731,6 +38731,15 @@
       "VINE_STRAIGHT",
       "VINE_JUNCTION",
       "VINE_DIAG3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 1313,
+        "uvScale": 0.4
+      }
     ]
   },
   {
