@@ -38638,5 +38638,32 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon Entrance with tree - NEEDS PROPER UV FIX for bark and stone bricks",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 343,
+    "objectIds": [
+      "DUNGEON_TREE_UNPAID"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 179,
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      }
+    ]
   }
 ]
