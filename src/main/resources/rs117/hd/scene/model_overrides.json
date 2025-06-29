@@ -20306,7 +20306,15 @@
       "DEATH_OFFICE_ACCESS_COFFIN"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Edgeville - Streak Board",
@@ -28316,27 +28324,59 @@
   },
   {
     "description": "Deaths office - Entrances - Lumbridge",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAVEL_LIGHT",
     "objectIds": [
       "DEATH_OFFICE_ACCESS_GRAVE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h < 1",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "colors": "h > 9",
+        "baseMaterial": "GRASS_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Seers",
-    "baseMaterial": "GRAY_90",
+    "baseMaterial": "GRAVEL_LIGHT",
     "objectIds": [
       "DEATH_OFFICE_ACCESS_BROWNGRAVE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h < 1",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Ferox",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "WILDHUB_DEATH_ENTRANCE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Falador",
