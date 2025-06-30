@@ -23434,7 +23434,7 @@
     "colorOverrides": [
       {
         "colors": "h == 6",
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
       }
