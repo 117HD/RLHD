@@ -10299,7 +10299,11 @@
       "ARENA_DESERT01_CRATE01",
       "POG_CRATE",
       "POG_CRATES_STACKED",
-      "CRATE_ALDARIN01_SINGLE01"
+      "CRATE_ALDARIN01_SINGLE01",
+      "SNP_CRATE_BLUE",
+      "SNP_CRATE_STACKED_BLUE",
+      "SNP_CRATE_RED",
+      "SNP_CRATE_STACKED_RED"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -23239,6 +23243,51 @@
     "uvScale": 0.75
   },
   {
+    "description": "Isle of Souls - Wooden Barricade & Supply Tables",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SNP_TEMP_BARRICADE_DIAG_BLUE",
+      "SNP_TEMP_BARRICADE_DIAG_RED",
+      "SOUL_WARS_COUNTER_BANDAGES_BLUE",
+      "SOUL_WARS_COUNTER_BARRICADES_BLUE",
+      "SOUL_WARS_COUNTER_POTIONS_BLUE",
+      "SOUL_WARS_COUNTER_BUFF_POTIONS_BLUE",
+      "SOUL_WARS_COUNTER_BANDAGES_NEUTRAL",
+      "SOUL_WARS_COUNTER_BUFF_POTIONS_NEUTRAL",
+      "SOUL_WARS_COUNTER_BUFF_POTIONS_RED",
+      "SOUL_WARS_COUNTER_BANDAGES_RED",
+      "SOUL_WARS_COUNTER_POTIONS_RED",
+      "SOUL_WARS_COUNTER_BARRICADES_RED",
+      "SOUL_WARS_TUT_COUNTER_BARRICADES_BLUE",
+      "SOUL_WARS_TUT_COUNTER_BANDAGES",
+      "SOUL_WARS_TUT_COUNTER_POTIONS",
+      "SOUL_WARS_TUT_COUNTER_BUFF_POTIONS",
+      "SOUL_WARS_TUT_COUNTER_BARRICADES_RED"
+    ],
+    "npcIds": [
+      "SOUL_WARS_BARRICADE_RED",
+      "SOUL_WARS_BARRICADE_BLUE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -256
+      },
+      {
+          "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+          "colors": "h == 6",
+          "uvType": "BOX",
+          "uvScale": 0.65
+      }
+    ]
+  },
+  {
     "description": "Isle of Souls - Rocks",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -23340,7 +23389,27 @@
     "castShadows": false,
     "objectIds": [
       "SOUL_WARS_LEAVE_SOULWARS_PORTAL",
-      "SOUL_WARS_EDGEVILLE_PORTAL",
+      "SOUL_WARS_EDGEVILLE_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "baseMaterial": "GRAY_65",
+        "colors": "h > 11 && h < 16",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Soulwars - Exit Portals",
+    "castShadows": false,
+    "objectIds": [
       "SOUL_WARS_TUT_BLUE_EXIT_PORTAL",
       "SOUL_WARS_TUT_RED_EXIT_PORTAL",
       "SOUL_WARS_BLUE_EXIT_PORTAL",
@@ -27359,7 +27428,8 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL", "SNP_BARREL" ]
+    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL",
+      "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL", "SNP_BARREL", "SNP_BARREL_BLUE", "SNP_BARREL_RED" ]
   },
   {
     "description": "Barrel with tarnished metal bands",
