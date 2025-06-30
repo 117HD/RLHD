@@ -23231,7 +23231,9 @@
       "SNP_BURNT_TREE_01",
       "SNP_BURNT_TREE_02",
       "SNP_BURNT_TREE_03",
-      "SNP_BURNING_TREE_01"
+      "SNP_BURNING_TREE_01",
+      "SNP_BURNING_TREE_02",
+      "SNP_BURNING_TREE_03"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
@@ -23243,7 +23245,12 @@
       "SNP_DARK_ROCKS_SMALL_01",
       "SNP_DARK_ROCKS_SMALL_03",
       "SNP_DARK_ROCKS_SMALL_02",
-      "SNP_DARK_ROCKS_BIG_02"
+      "SNP_DARK_ROCKS_BIG_02",
+      "SNP_DARK_ROCKS_BIG_01",
+      "SNP_DARK_ROCKS_BIG_03",
+      "SNP_BURNT_ROCKS_SMALL_01",
+      "SNP_BURNT_ROCKS_SMALL_02",
+      "SNP_BURNT_ROCKS_SMALL_03"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -23392,7 +23399,8 @@
       "SNP_BONES_GRAVE_YARD_RAIL_01",
       "SNP_BONES_GRAVE_YARD_RAIL_02",
       "SNP_BONES_GRAVE_YARD_RAIL_03",
-      "SNP_BONES_GRAVE_YARD_RAIL_04"
+      "SNP_BONES_GRAVE_YARD_RAIL_04",
+      "SNP_BONES_GRAVE_YEARD_RAIL_LAVA_FALLOFF"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -23421,6 +23429,51 @@
         "colors": [ "h == 0", "h == 16" ],
         "uvType": "BOX",
         "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Lava Rocks",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "SNP_LAVA_PILLAR13",
+      "SNP_LAVA_PILLAR14",
+      "SNP_LAVA_PILLAR4",
+      "SNP_LAVA_PILLAR5",
+      "SNP_LAVA_PILLAR2",
+      "SNP_LAVA_PILLAR1",
+      "SNP_LAVA_PILLAR7",
+      "SNP_LAVA_PILLAR8",
+      "SNP_LAVA_PILLAR6",
+      "SNP_LAVA_PILLAR10",
+      "SNP_LAVA_PILLAR11",
+      "SNP_LAVA_PILLAR9"
+    ]
+  },
+  {
+    "description": "Isle of Souls - Lava Pool",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DI2_LAVA_EDGE_WILDERNESS_1",
+      "DI2_LAVA_EDGE_WILDERNESS_2",
+      "DI2_LAVA_EDGE_WILDERNESS_4",
+      "DI2_LAVA_EDGE_WILDERNESS_8",
+      "DI2_LAVA_EDGE_WILDERNESS_9",
+      "DI2_LAVA_EDGE_WILDERNESS_7",
+      "DI2_LAVA_EDGE_WILDERNESS_6",
+      "DI2_LAVA_EDGE_WILDERNESS_3",
+      "DI2_LAVA_EDGE_WILDERNESS_10",
+      "SNP_LAVA_EDGE1",
+      "SNP_LAVA_EDGE2",
+      "SNP_LAVA_EDGE3",
+      "SNP_LAVA_PILLAR3"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "NONE",
+        "colors": "h == 8 "
       }
     ]
   },
