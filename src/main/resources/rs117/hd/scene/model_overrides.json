@@ -23103,11 +23103,20 @@
   },
   {
     "description": "Object - Metal - Anchor",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
       "ANCHOR"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Fishing Trawler Boat - Wooden - Deck Opening",
@@ -26317,7 +26326,6 @@
     "description": "Wooden shelves - Empty or with pottery",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "COOKINGSHELFEMPTY",
       "FARMING_SHELVES_EMPTY",
       "FARM_SHELF",
       "QIP_SHEEP_SHEARER_COOKINGSHELVESEMPTY",
@@ -26335,6 +26343,17 @@
         "baseMaterial": "GRAY_75"
       }
     ]
+  },
+  {
+    "description": "Wooden shelves - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "COOKINGSHELFEMPTY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false
   },
   {
     "description": "Freestanding shelves with pots and pans - Lumbridge",
@@ -29670,7 +29689,9 @@
       {
         "description": "Stone sile",
         "colors": "s == 0 && l < 50 && l > 30",
-        "baseMaterial": "STONE"
+        "baseMaterial": "STONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
       },
       {
         "description": "Pottery",
@@ -29694,11 +29715,7 @@
       "CURTAINEDBIGWINDOW",
       "REDCURTAINEDPOSHBIGWINDOW",
       "GREENCURTAINEDPOSHBIGWINDOW",
-      "BLACKCURTAINEDPOSHBIGWINDOW",
-      "SHUTTERWINDOW",
-      "BROKENWINDOW",
-      "BROKENSHUTTERWINDOW1",
-      "BROKENSHUTTERWINDOW2"
+      "BLACKCURTAINEDPOSHBIGWINDOW"
     ],
     "colorOverrides": [
       {
@@ -29730,6 +29747,38 @@
         "description": "Stone sile",
         "colors": "s == 0 && l < 45 && l > 30",
         "baseMaterial": "STONE"
+      }
+    ]
+  },
+  {
+    "description": "Window with wooden slots or white with curtains",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "SHUTTERWINDOW",
+      "BROKENWINDOW",
+      "BROKENSHUTTERWINDOW1",
+      "BROKENSHUTTERWINDOW2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE",
+        "uvType": "BOX",
+        "uvScale": 0.35
       }
     ]
   },
@@ -32852,6 +32901,53 @@
     "retainVanillaUvs": false,
     "objectIds": [
       "TABLE3"
+    ]
+  },
+  {
+    "description": "Table with Unlit Lantern",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "TABLE4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Ned's Table with Rope",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "DRAYNOR_NED_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 600,
+        "uvScale": 0.55
+      }
+    ]
+  },
+  {
+    "description": "Ned's Hanging Ship Wheel",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.4,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "HANGINGSHIPWHEEL"
     ]
   },
   {
