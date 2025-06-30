@@ -14350,15 +14350,6 @@
     "shadowOpacityThreshold": 0.12
   },
   {
-    "description": "Edgeville Soul Wars portal",
-    "objectIds": [
-      "SOUL_WARS_EDGEVILLE_PORTAL",
-      "SOUL_WARS_LEAVE_SOULWARS_PORTAL"
-    ],
-    "shadowOpacityThreshold": 0.12,
-    "baseMaterial": "UNLIT"
-  },
-  {
     "description": "Al-Kharid Windows",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
@@ -23258,6 +23249,20 @@
     "uvScale": 0.6
   },
   {
+    "description": "Isle of Souls - Pebbles",
+    "castShadows": false,
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SNP_ROCKS_BRICK_OLD2",
+      "SNP_ROCKS_BRICK_OLD1",
+      "SNP_ROCKS_BRICK_OLD3",
+      "SNP_ROCKS_BRICK_OLD4",
+      "SNP_ROCKS_BRICK_OLD5"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
     "description": "Isle of Souls - Fort Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -23350,6 +23355,72 @@
         "colors": "h == 0",
         "uvType": "MODEL_YZ",
         "uvScale": 0.05
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - FFA Lobby Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SNP_VINES_GRAVE_YARD_RAIL_CAP",
+      "SNP_VINES_GRAVE_YARD_RAIL_02",
+      "SNP_VINES_GRAVE_YARD_RAIL_CAP_M",
+      "SNP_VINES_GRAVE_YARD_RAIL_01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 5",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.05
+      },
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 13"
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Clan Lobby Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SNP_BONES_GRAVE_YARD_RAIL_BASIC",
+      "SNP_BONES_GRAVE_YARD_RAIL_CAP_M",
+      "SNP_BONES_GRAVE_YARD_RAIL_CAP",
+      "SNP_BONES_GRAVE_YARD_RAIL_01",
+      "SNP_BONES_GRAVE_YARD_RAIL_02",
+      "SNP_BONES_GRAVE_YARD_RAIL_03",
+      "SNP_BONES_GRAVE_YARD_RAIL_04"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.05
+      },
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8"
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Lobby Pillar Torch",
+    "objectIds": [
+      "SNP_PILLAR_TORCH_BLUE",
+      "SNP_PILLAR_TORCH_RED"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "STONE_NORMALED",
+        "colors": [ "h == 0", "h == 16" ],
+        "uvType": "BOX",
+        "uvScale": 0.7
       }
     ]
   },
