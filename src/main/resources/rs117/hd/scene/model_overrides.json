@@ -23303,7 +23303,7 @@
   },
   {
     "description": "Isle of Souls - Gravestones",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "MARBLE_1",
     "objectIds": [
       "SNP_GRAVE_YARD_GRAVESTONE_1_RED",
       "SNP_GRAVE_YARD_GRAVESTONE_2_RED",
@@ -23315,7 +23315,8 @@
       "SNP_GRAVE_YARD_GRAVESTONE_4_BLUE",
       "SNP_GRAVE_YARD_GRAVESTONE_5_BLUE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Isle of Souls - Scoreboard",
@@ -23574,13 +23575,49 @@
     "uvScale": 0.5
   },
   {
-    "description": "Isle of Souls - Ruins",
+    "description": "Isle of Souls - Obelisk",
     "baseMaterial": "GRAY_90",
     "objectIds": [
       "SOUL_WARS_CENTRAL_OBELISK_NEUTRAL",
       "SOUL_WARS_CENTRAL_OBELISK_BLUE",
       "SOUL_WARS_CENTRAL_OBELISK_RED"
     ]
+  },
+  {
+    "description": "Isle of Souls - Respawn Hut",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "SNP_GRAVE_YARD_TOMB_END_RED",
+      "SNP_GRAVE_YARD_TOMB_RED",
+      "SNP_GRAVE_YARD_TOMB_END_MIRROR_RED",
+      "SNP_GRAVE_YARD_TOMB_ROOF_RED",
+      "SNP_GRAVE_YARD_TOMB_END_BLUE",
+      "SNP_GRAVE_YARD_TOMB_BLUE",
+      "SNP_GRAVE_YARD_TOMB_END_MIRROR_BLUE",
+      "SNP_GRAVE_YARD_TOMB_ROOF_BLUE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Isle of Souls - Respawn Hut - Fence",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      "SNP_GRAVE_YARD_RAIL_01_BLUE",
+      "SNP_GRAVE_YARD_RAIL_02_BLUE",
+      "SNP_GRAVE_YARD_RAIL_03_MIRROR_BLUE",
+      "SNP_GRAVE_YARD_RAIL_03_BLUE",
+      "SNP_GRAVE_YARD_RAIL_END_BLUE",
+      "SNP_GRAVE_YARD_RAIL_END_MIRROR_BLUE",
+      "SNP_GRAVE_YARD_RAIL_01_RED",
+      "SNP_GRAVE_YARD_RAIL_02_RED",
+      "SNP_GRAVE_YARD_RAIL_03_MIRROR_RED",
+      "SNP_GRAVE_YARD_RAIL_03_RED",
+      "SNP_GRAVE_YARD_RAIL_END_RED",
+      "SNP_GRAVE_YARD_RAIL_END_MIRROR_RED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
   },
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
