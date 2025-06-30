@@ -22908,79 +22908,6 @@
     "uvType": "BOX"
   },
   {
-    "description": "Isle of Souls - Maple Tree",
-    "baseMaterial": "LEAVES_1",
-    "uvType": "BOX",
-    "objectIds": [
-      "MAPLETREE_UPDATE"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h > 4",
-        "baseMaterial": "BARK",
-        "uvType": "BOX",
-        "uvScale": 0.6
-      }
-    ]
-  },
-  {
-    "description": "Isle of Souls - Yew & Mahogany Tree",
-    "baseMaterial": "LEAVES_1",
-    "uvType": "BOX",
-    "uvScale": 1.2,
-    "objectIds": [
-      "YEWTREE_UPDATE",
-      "MAHOGANYTREE_UPDATE"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h < 7",
-        "baseMaterial": "BARK",
-        "uvType": "BOX",
-        "uvScale": 0.6
-      }
-    ]
-  },
-  {
-    "description": "Isle of Souls - Tall Tree",
-    "baseMaterial": "LEAVES_1",
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "objectIds": [
-      "SNP_BASIC_TREE_02_LOBBY",
-      "TREE_UPDATE_2",
-      "SNP_BASIC_TREE_02"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h < 7",
-        "baseMaterial": "BARK",
-        "uvType": "BOX",
-        "uvScale": 0.6
-      }
-    ]
-  },
-  {
-    "description": "Isle of Souls - Short Tree",
-    "baseMaterial": "LEAVES_1",
-    "uvType": "BOX",
-    "uvScale": 0.9,
-    "objectIds": [
-      "SOULWARS_TOURNAMENT_TABLE_NOVIS",
-      "SNP_BASIC_TREE_01_LOBBY",
-      "TREE_UPDATE_1",
-      "SNP_BASIC_TREE_01"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h < 7",
-        "baseMaterial": "BARK",
-        "uvType": "BOX",
-        "uvScale": 0.6
-      }
-    ]
-  },
-  {
     "description": "Varrock Sewers - Bryophyta - Axe Stump",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -23411,6 +23338,147 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 768
+  },
+  {
+    "description": "Isle of Souls - Maple Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "MAPLETREE_UPDATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 4",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Yew & Mahogany Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "objectIds": [
+      "YEWTREE_UPDATE",
+      "MAHOGANYTREE_UPDATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Tall Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SNP_BASIC_TREE_02_LOBBY",
+      "TREE_UPDATE_2",
+      "SNP_BASIC_TREE_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Short Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "SOULWARS_TOURNAMENT_TABLE_NOVIS",
+      "SNP_BASIC_TREE_01_LOBBY",
+      "TREE_UPDATE_1",
+      "SNP_BASIC_TREE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Thick Forest - Trunk",
+    "baseMaterial": "GRAY_65",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "SNP_MAP_EDGE_FOREST_1_RED",
+      "SNP_MAP_EDGE_FOREST_2_RED",
+      "SNP_MAP_EDGE_FOREST_3_RED",
+      "SNP_MAP_EDGE_FOREST_1_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_2_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_3_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_1_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_2_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_3_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_1_BLUE",
+      "SNP_MAP_EDGE_FOREST_2_BLUE",
+      "SNP_MAP_EDGE_FOREST_3_BLUE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Thick Forest - Leaves",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "SNP_MAP_EDGE_FOREST_2_TOP_BLUE",
+      "SNP_MAP_EDGE_FOREST_2_TOP_OFFSET_BLUE",
+      "SNP_MAP_EDGE_FOREST_1_TOP_BLUE",
+      "SNP_MAP_EDGE_FOREST_3_TOP_OFFSET_BLUE",
+      "SNP_MAP_EDGE_FOREST_1_TOP_OFFSET_BLUE",
+      "SNP_MAP_EDGE_FOREST_3_TOP_BLUE",
+      "SNP_MAP_EDGE_FOREST_3_TOP_OFFSET_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_3_TOP_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_1_TOP_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_1_TOP_OFFSET_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_2_TOP_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_2_TOP_OFFSET_BLANK_LIGHT",
+      "SNP_MAP_EDGE_FOREST_1_TOP_OFFSET_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_2_TOP_OFFSET_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_3_TOP_OFFSET_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_3_TOP_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_1_TOP_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_2_TOP_BLANK_DARK",
+      "SNP_MAP_EDGE_FOREST_3_TOP_RED",
+      "SNP_MAP_EDGE_FOREST_1_TOP_OFFSET_RED",
+      "SNP_MAP_EDGE_FOREST_1_TOP_RED",
+      "SNP_MAP_EDGE_FOREST_2_TOP_OFFSET_RED",
+      "SNP_MAP_EDGE_FOREST_3_TOP_OFFSET_RED",
+      "SNP_MAP_EDGE_FOREST_2_TOP_RED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Objects - Rock - Brown Rock - Mineable rock models",
