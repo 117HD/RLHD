@@ -33386,6 +33386,61 @@
     ]
   },
   {
+    "description": "Port Sarim - Bar Pumps",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "BARPUMPS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Bar Sign",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "RUSTYANCHORSIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.74
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Mounted Swordfish",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SWORDFISHL",
+      "SWORDFISHR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Double bed with red blanket and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -33863,12 +33918,15 @@
     ]
   },
   {
-    "description": "Mogre Camp Anchor",
+    "description": "Anchor",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
     "objectIds": [
       "ANCHOR_BOTTOM",
       "ANCHOR_MIDDLE",
-      "ANCHOR_MIDDLE2"
+      "ANCHOR_MIDDLE2",
+      "SARIM_ANCHOR"
     ]
   },
   {
@@ -37614,7 +37672,10 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
-      "KR_BARSHELF_FULL1"
+      "KR_BARSHELF_FULL1",
+      "BARSHELF_FULL1",
+      "BARSHELF_FULL2",
+      "BARSHELF_EMPTY"
     ],
     "colorOverrides": [
       {
