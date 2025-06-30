@@ -32859,13 +32859,15 @@
     "description": "Game Objects - Wooden Shelf With Book and Urns",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
     "colorOverrides": [
       {
         "description": "Urns",
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
-        "uvOrientationX": 84
+        "uvScale": 0.3
       },
       {
         "description": "Book cover",
@@ -33108,6 +33110,136 @@
     "baseMaterial": "GRAY_65",
     "npcIds": [
       "WOM_BED_INACTIVE"
+    ]
+  },
+  {
+    "description": "Aggie's House - Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "WITCHSHELF1",
+      "WITCHSHELF2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.2,
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Aggie's House - Mirror",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DRAYNOR_AGGIE_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientationZ": -512,
+    "uvOrientationY": -768,
+    "uvOrientationX": -356,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Aggie's House - Broom",
+    "objectIds": [
+      "DRAYNOR_AGGIE_WITCHESBROOM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.2,
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "HD_HAY",
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Aggie's House - Cauldron",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DRAYNOR_AGGIE_CAULDRON"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 34",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Aggie's House - Garlic",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "STRING_OF_GARLIC"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Aggie's House - Table",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "AGGIE_TABLE_SMALL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Spira's House - Mounted Head",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      "BULLMOUNTEDHEAD"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
     ]
   },
   {
