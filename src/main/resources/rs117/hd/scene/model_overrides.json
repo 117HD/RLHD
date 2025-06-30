@@ -32950,7 +32950,6 @@
   },
   {
     "description": "Draynor Bank - Fixed Bank Wall",
-    "retainVanillaUvs": false,
     "objectIds": [
       "WOM_FIXED_WALL"
     ],
