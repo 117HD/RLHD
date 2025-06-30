@@ -21062,14 +21062,14 @@
   {
     "description": "Ground Objects - Bones",
     "baseMaterial": "BONE",
-    "objectIds": [ "ARENA_DESERT01_BONES01", "ARENA_DESERT01_BONES02", "ARENA_DESERT01_BONES03", "ARENA_DESERT01_BONES04" ],
+    "objectIds": [ "ARENA_DESERT01_BONES01", "ARENA_DESERT01_BONES02", "ARENA_DESERT01_BONES03", "ARENA_DESERT01_BONES04", "FRISD_FISHMONGER_FISHBONES" ],
     "uvType": "BOX",
     "uvOrientation": 256
   },
   {
     "description": "Bone Objects",
     "baseMaterial": "BONE",
-    "objectIds": [ "PILE_OF_SKULLS_GRUBBY", "ANIMALSKULL", "CARCASS", "CURVEDBONE", "CURVEDBONE_BURNT", "LARGEBONE", "LARGEBONE_BURNT", "ANIMALSKULL_BURNT", "CARCASS_BURNT" ],
+    "objectIds": [ "PILE_OF_SKULLS_GRUBBY", "ANIMALSKULL", "CARCASS", "CURVEDBONE", "CURVEDBONE_BURNT", "LARGEBONE", "LARGEBONE_BURNT", "ANIMALSKULL_BURNT", "CARCASS_BURNT", "SW_BONES_LARGE_RIBCAGE" ],
     "uvType": "BOX",
     "uvScale": 0.4
   },
@@ -23241,6 +23241,24 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75
+  },
+  {
+    "description": "Isle of Souls - Fort Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "HOS_FORT_WALL",
+      "HOS_FORT_WALL_CRUMBLE_SMALL_L",
+      "HOS_FORT_WALL_CRUMBLE_L",
+      "HOS_FORT_WALL_WINDOW_SML",
+      "HOS_FORT_WALL_TOP_CRUMBLE_SMALL_R",
+      "HOS_FORT_WALL_TOP_CRUMBLE_R",
+      "HOS_FORT_WALL_TOP",
+      "HOS_FORT_WALL_TOP_CRUMBLE_L",
+      "HOS_FORT_WALL_SHUTTERED",
+      "HOS_FORT_WALL_CRUMBLE_R"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
