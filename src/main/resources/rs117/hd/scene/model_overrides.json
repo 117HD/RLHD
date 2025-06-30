@@ -33367,6 +33367,25 @@
     ]
   },
   {
+    "description": "Draynor Village - Morgans Bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DRAYNOR_MORGAN_BIGBED"
+    ],
+    "colorOverrides": [
+      {
+
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
     "description": "Double bed with red blanket and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
