@@ -23230,6 +23230,17 @@
     "uvScale": 0.8
   },
   {
+    "description": "Isle of Souls - Dead and Burnt Trees",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "SNP_BURNT_TREE_01",
+      "SNP_BURNT_TREE_02",
+      "SNP_BURNT_TREE_03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER" ],
