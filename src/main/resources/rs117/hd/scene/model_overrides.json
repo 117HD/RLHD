@@ -10360,7 +10360,9 @@
       "PISCARILIUS_CRATE_04",
       "BIM_SUPPLY_CRATE",
       "NECROPOLIS_CRATE01_DEFAULT01",
-      "FOSSIL_TOOL_CRATE"
+      "FOSSIL_TOOL_CRATE",
+      "SNP_CRATE_STACKED",
+      "SNP_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -23297,6 +23299,61 @@
     "uvType": "BOX"
   },
   {
+    "description": "Isle of Souls - Scoreboard",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SOUL_WARS_SCOREBOARD"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 6 && s == 2",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Portal",
+    "objectIds": [
+      "SOUL_WARS_LEAVE_SOULWARS_PORTAL",
+      "SOUL_WARS_EDGEVILLE_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 6 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h == 13",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SOUL_WARS_BANKCHEST"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.05
+      }
+    ]
+  },
+  {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER" ],
@@ -26975,7 +27032,8 @@
       "SUROK_BANDIT_CAMP_TENT",
       "SUROK_BANDIT_CAMP_TENT_DIAG",
       "SHAYZIEN_MILITARY_TENT",
-      "SW_TENT"
+      "SW_TENT",
+      "SOUL_WARS_TENT"
     ],
     "uvType": "BOX"
   },
@@ -27009,7 +27067,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL" ]
+    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL", "SNP_BARREL" ]
   },
   {
     "description": "Barrel with tarnished metal bands",
