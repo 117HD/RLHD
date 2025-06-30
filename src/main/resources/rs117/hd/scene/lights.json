@@ -36922,6 +36922,7 @@
   {
     "description": "Asgarnia Ice Dungeon Ladder",
     "objectIds": [ "LADDER_FROM_CELLAR" ],
+    "areas": [ "ASGARNIA_ICE_DUNGEON" ],
     "height": 360,
     "radius": 900,
     "strength": 10,

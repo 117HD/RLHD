@@ -17365,8 +17365,6 @@
   {
     "description": "Remove the shadow cast by objects that look weird with them",
     "objectIds": [
-      "DRAYNOR_DIARY_UNDER_WALL_W",
-      "DRAYNOR_DIARY_UNDER_WALL_E",
       "OLAF2_DUNGEON_ENTRANCE",
       "GODWARS_LITTLE_HOLE"
     ],
@@ -33239,6 +33237,132 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Draynor Market - Stalls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "MARKET",
+      "DRAYNOR_TOY_MARKET",
+      "RAG_MARKET_STALL",
+      "SEED_STALL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": [ "h == 6 && s == 1" ],
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0"
+      },
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationZ": 512,
+        "colors": "h == 6"
+      }
+    ]
+  },
+  {
+    "description": "Draynor Market - Stalls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.15,
+    "objectIds": [
+      "FAIRY_GAG_BANNER"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512,
+        "colors": "h == 6"
+      }
+    ]
+  },
+  {
+    "description": "Draynor to Port Sarim Agility Shortcut",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.75,
+    "objectIds": [
+      "DRAYNOR_DIARY_UNDER_WALL_W",
+      "DRAYNOR_DIARY_UNDER_WALL_E"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "COLORED_GRASS",
+        "uvOrientation": 512,
+        "castShadows": false,
+        "colors": "h == 17"
+      },
+      {
+        "baseMaterial": "PURE_BLACK",
+        "colors": "h == 0 && s == 0"
+      }
+    ]
+  },
+  {
+    "description": "Draynor Village - Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "VAMPIRE_TRAP1",
+      "WIN05_TRAPDOOR_CLOSED"
+    ]
+  },
+  {
+    "description": "Draynor Village - Trapdoor Open",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WIN05_TRAPDOOR_OPEN",
+      "VAMPIRE_TRAP2"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "PURE_BLACK",
+        "colors": [ "h == 0" ,"h == 2", "h == 10 && s != 0"],
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "castShadows": false,
+        "colors": [ "h == 4" ,"h > 6" ],
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Draynor Village - Sawdust Box",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "WIN05_RECLAIM_PUPPETS_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "colors": "h == 6"
       }
     ]
   },
