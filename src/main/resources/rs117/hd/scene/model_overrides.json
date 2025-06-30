@@ -23446,6 +23446,32 @@
     ]
   },
   {
+    "description": "Isle of Souls - Stone Circle",
+    "baseMaterial": "STONE_NORMALED",
+    "uvScale": 1.2,
+    "uvType": "BOX",
+    "objectIds": [
+      "SNP_PILLAR1",
+      "SNP_PILLAR2",
+      "SNP_PILLAR_FALLEN1",
+      "SNP_PILLAR_FALLEN4",
+      "SNP_PILLAR_FLOOR2",
+      "SNP_PILLAR_TOP4",
+      "SNP_PILLAR_TOP5",
+      "SNP_PILLAR_TOP3",
+      "SNP_PILLAR_FLOOR",
+      "SNP_PILLAR_FALLEN2",
+      "SNP_PILLAR3",
+      "SNP_PILLAR_TOP2",
+      "SNP_PILLAR_TOP1",
+      "SNP_PILLAR_FLOOR6",
+      "SNP_PILLAR_FALLEN3",
+      "SNP_PILLAR_FLOOR5",
+      "SNP_MOSSY_ROCK",
+      "SNP_MOSSY_ROCK2"
+    ]
+  },
+  {
     "description": "Isle of Souls - Lava Rocks",
     "baseMaterial": "STONE",
     "uvType": "BOX",
