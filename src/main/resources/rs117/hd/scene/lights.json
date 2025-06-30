@@ -21774,7 +21774,7 @@
   },
   {
     "description": "SOUL_WARS_BLUE_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
@@ -21792,7 +21792,7 @@
   },
   {
     "description": "SOUL_WARS_RED_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
