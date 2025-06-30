@@ -26718,7 +26718,8 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "uvOrientation": 1024
+    "uvOrientation": 1024,
+    "uvOrientationZ": 512
   },
   {
     "description": "Flip UVs for HD Shingle trim",
@@ -32908,7 +32909,6 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "uvScale": 0.5,
     "uvType": "BOX",
-    "retainVanillaUvs": false,
     "objectIds": [
       "TABLE4"
     ],
@@ -32926,7 +32926,6 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "uvScale": 0.5,
     "uvType": "BOX",
-    "retainVanillaUvs": false,
     "objectIds": [
       "DRAYNOR_NED_TABLE"
     ],
@@ -32945,9 +32944,23 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvScale": 0.4,
     "uvType": "BOX",
-    "retainVanillaUvs": false,
     "objectIds": [
       "HANGINGSHIPWHEEL"
+    ]
+  },
+  {
+    "description": "Draynor Bank - Fixed Bank Wall",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "WOM_FIXED_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
