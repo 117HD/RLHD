@@ -23715,9 +23715,19 @@
     "uvScale": 0.5
   },
   {
+    "description": "Isle of Souls Dungeon - Cave Entrance",
+    "baseMaterial": "MUD_1",
+    "objectIds": [
+      "SW_DUNGEON_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 100
+  },
+  {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER" ],
+    "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER", "SANCTUARY_CAVE_WALL_TOP" ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 768
