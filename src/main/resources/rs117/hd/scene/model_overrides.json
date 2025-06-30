@@ -23261,6 +23261,14 @@
     "uvScale": 0.8
   },
   {
+    "description": "Isle of Souls - Fort Walls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SW_POTTERYWHEEL_BROKEN",
+      "SW_POTTERYWHEEL_FIXED"
+    ]
+  },
+  {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER" ],
