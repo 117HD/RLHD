@@ -23261,12 +23261,27 @@
     "uvScale": 0.8
   },
   {
-    "description": "Isle of Souls - Fort Walls",
+    "description": "Isle of Souls - Pottery Wheel",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "SW_POTTERYWHEEL_BROKEN",
       "SW_POTTERYWHEEL_FIXED"
     ]
+  },
+  {
+    "description": "Isle of Souls - Gravestones",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SNP_GRAVE_YARD_GRAVESTONE_1_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_2_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_4_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_5_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_1_BLUE",
+      "SNP_GRAVE_YARD_GRAVESTONE_2_BLUE",
+      "SNP_GRAVE_YARD_GRAVESTONE_4_BLUE",
+      "SNP_GRAVE_YARD_GRAVESTONE_5_BLUE"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
