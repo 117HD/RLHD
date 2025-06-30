@@ -14330,10 +14330,6 @@
       "HALLOWED_TREASURE_MAGIC_READY",
       "HALLOWED_TREASURE_MAGIC_FINAL",
       "DEATH_OFFICE_EXITPORTAL",
-      "SOUL_WARS_TUT_BLUE_EXIT_PORTAL",
-      "SOUL_WARS_TUT_RED_EXIT_PORTAL",
-      "SOUL_WARS_BLUE_EXIT_PORTAL",
-      "SOUL_WARS_RED_EXIT_PORTAL",
       "POH_PORTAL_TEAK_ARCEUUS_LIBRARY",
       "POH_PORTAL_MAG_ARCEUUS_LIBRARY",
       "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY",
@@ -23336,20 +23332,25 @@
   },
   {
     "description": "Isle of Souls - Portal",
+    "castShadows": false,
     "objectIds": [
       "SOUL_WARS_LEAVE_SOULWARS_PORTAL",
-      "SOUL_WARS_EDGEVILLE_PORTAL"
+      "SOUL_WARS_EDGEVILLE_PORTAL",
+      "SOUL_WARS_TUT_BLUE_EXIT_PORTAL",
+      "SOUL_WARS_TUT_RED_EXIT_PORTAL",
+      "SOUL_WARS_BLUE_EXIT_PORTAL",
+      "SOUL_WARS_RED_EXIT_PORTAL"
     ],
     "colorOverrides": [
       {
         "baseMaterial": "LIGHT_BARK",
-        "colors": "h == 6 && s == 2",
+        "colors": [ "h == 6", "h == 0 && s == 0" ],
         "uvType": "BOX",
         "uvScale": 0.6
       },
       {
-        "baseMaterial": "LEAF_VEINS",
-        "colors": "h == 13",
+        "baseMaterial": "GRAY_65",
+        "colors": "h > 11 && h < 16",
         "uvType": "BOX",
         "uvScale": 0.3
       }
