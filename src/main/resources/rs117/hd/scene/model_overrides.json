@@ -32963,6 +32963,154 @@
     ]
   },
   {
+    "description": "Wise Old Man's House - Bookcase",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "objectIds": [
+      "WOM_BOOKSHELF_OLD_TALL_DOUBLE2",
+      "WOM_BOOKSHELF_OLD_TALL_DOUBLE",
+      "BOOKSHELF_OLD_TALL_DOUBLE",
+      "BOOKSHELF_OLD_TALL_MOVEDIN3",
+      "BOOKSHELF_OLD_SHORT_MOVEDIN2",
+      "BOOKSHELF_OLD_TALL3_MOVEDIN3",
+      "BOOKSHELF_OLD_SHORT_WITHSPHINX",
+      "BOOKSHELF_OLD_TALL3_MOVEDIN2",
+      "BOOKSHELF_OLD_SHORT_MOVEDIN",
+      "BOOKSHELF_OLD_TALL2_MOVEDIN",
+      "BOOKSHELF_OLD_TALL_MOVEDIN",
+      "BOOKSHELF_OLD_TALL2_MOVEDIN3",
+      "BOOKSHELF_OLD_SHORT2_MOVEDIN3",
+      "BOOKSHELF_OLD_SHORT3_MOVEDIN3",
+      "BOOKSHELF_OLD_SHORT3_MOVEDIN2",
+      "BOOKSHELF_OLD_TALL_MOVEDIN2",
+      "BOOKSHELF_OLD_TALL2_MOVEDIN2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6 && s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.45,
+        "uvOrientationY": 512,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Wise Old Man's House - Study",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "WOM_RICH_NARROW_STUDYDESK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6 && s == 3" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.45,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "CARPET_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Wise Old Man's House - Candelabra and Lantern",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "WOM_CANDLE_STAND",
+      "WOM_HANGINGLANTERN_GOLD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s < 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Wise Old Man's House - Chair",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.45,
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "WOM_ORNATECHAIR"
+    ]
+  },
+  {
+    "description": "Wise Old Man's House - Scrolls and Charts",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "objectIds": [
+      "PIRATEMAP",
+      "WISE_OLD_MAN_SCROLLS",
+      "WISE_OLD_MAN_FLOORCHART1",
+      "WISE_OLD_MAN_FLOORCHART2",
+      "WISE_OLD_MAN_FLOORCHART3",
+      "WISE_OLD_MAN_WALLCHART1",
+      "WISE_OLD_MAN_WALLCHART2",
+      "WISE_OLD_MAN_WALLCHART3"
+    ]
+  },
+  {
+    "description": "Wise Old Man's House - Ornaments",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "objectIds": [
+      "WOM_RICH_GLOBE_MODEL",
+      "SARADOMIN_STAFF",
+      "WOM_BATHSCREEN_GOLD",
+      "WISE_OLD_MAN_TELESCOPE",
+      "WOM_SUITOFARMOUR_SARADOMIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8" ,"h == 9", "h == 11", "h == 35", "h == 36" ],
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.2,
+        "uvType": "BOX"
+      },
+      {
+        "colors": [ "h == 4" ,"h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.2,
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Wise Old Man's House - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.35,
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "NARROWSTAIRS_WOODEN_BOTTOM",
+      "NARROWSTAIRS_WOODEN_TOP"
+    ]
+  },
+  {
+    "description": "Wise Old Man's House - Bed",
+    "baseMaterial": "GRAY_65",
+    "npcIds": [
+      "WOM_BED_INACTIVE"
+    ]
+  },
+  {
     "description": "Double bed with red blanket and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
