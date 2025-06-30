@@ -5916,8 +5916,11 @@
     ]
   },
   {
-    "description": "Misthalin Mystery Boat",
-    "objectIds": [ "QUEST_LUNAR_ROWBOAT" ],
+    "description": "RowBoat",
+    "objectIds": [
+      "QUEST_LUNAR_ROWBOAT",
+      "SERIM_ROWBOAT"
+    ],
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -27003,7 +27006,8 @@
       "CART",
       "FAI_VARROCK_CART",
       "AHOY_CART",
-      "AHOY_WHEEL_BARROW"
+      "AHOY_WHEEL_BARROW",
+      "SARIM_CART"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -33463,6 +33467,62 @@
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Pier Hut - Roof",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FAVOUR_ANTIQUESHOP_ROOF",
+      "SARIM_PORT_SHACK_COUNTERWALL_MIRROR",
+      "SARIM_PORT_SHACK_COUNTERWALL_FRONT",
+      "SARIM_PORT_SHACK_COUNTERWALL"
+    ]
+  },
+  {
+    "description": "Port Sarim - Pier Hut - Wall",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SARIM_PORT_SHACK_COUNTERWALL_MIRROR",
+      "SARIM_PORT_SHACK_COUNTERWALL_FRONT",
+      "SARIM_PORT_SHACK_COUNTERWALL",
+      "FAVOUR_ANTIQUSHOP_SUPPORT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Pier - Crane",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "textureMaterial": "NET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SERIM_FISHINGCRANE_NOSCRIPT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && l < 60",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
       }
     ]
   },
