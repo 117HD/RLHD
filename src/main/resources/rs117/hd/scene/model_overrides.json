@@ -23349,7 +23349,7 @@
     "colorOverrides": [
       {
         "colors": "h > 4",
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -23367,7 +23367,7 @@
     "colorOverrides": [
       {
         "colors": "h < 7",
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -23386,7 +23386,7 @@
     "colorOverrides": [
       {
         "colors": "h < 7",
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -23406,10 +23406,23 @@
     "colorOverrides": [
       {
         "colors": "h < 7",
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
       }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Stumps",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TREE_UPDATE_1_STUMP",
+      "TREE_UPDATE_2_STUMP",
+      "MAHOGANYTREE_UPDATE_STUMP",
+      "YEWTREE_UPDATE_STUMP",
+      "MAPLETREE_UPDATE_STUMP"
     ]
   },
   {
