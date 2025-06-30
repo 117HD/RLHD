@@ -1401,7 +1401,10 @@
       "YEW_TREE_STUMP_NEW",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP"
+      "YEWTREE_NOOP",
+      "XBOWS_YEWTREE_BASIC",
+      "XBOWS_YEWTREE_ROPE_GRAPPLED",
+      "XBOWS_YEWTREE_ROPE_TIED"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -1682,7 +1685,8 @@
       "SOTE_HUNTING_ROCK4_NOOP",
       "SOTE_HUNTING_ROCK3_OP",
       "SOTE_HUNTING_ROCK2_OP",
-      "SOTE_HUNTING_ROCK4_OP"
+      "SOTE_HUNTING_ROCK4_OP",
+      "GB_MOSS_CAVEROCK_EXIT"
     ],
     "retainVanillaUvs": false,
     "uvType": "BOX",
@@ -7862,7 +7866,7 @@
   },
   {
     "description": "Wooden - Plank - Tables - Rotated",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "BIGTABLE2",
       "KR_CAM_BIGTABLE",
@@ -8121,6 +8125,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
+    "uvOrientation": 512,
     "objectIds": [
       "WALLSHIELD3_WHITE",
       "WALLSHIELD"
@@ -8138,7 +8143,8 @@
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "objectIds": [
       "BUST1",
-      "BUST2"
+      "BUST2",
+      "BUST_LUMBRIDGE"
     ]
   },
   {
@@ -8705,7 +8711,9 @@
       "IKOV_SHINYKEYDOOR",
       "IKOV_LUCIENDOOR",
       "POORDOOR",
+      "POORDOOR_M",
       "POORDOOROPEN",
+      "POORDOOROPEN_M",
       "INACTIVEPOORDOOR",
       "MAGICGUILD_DOOR_L",
       "LOCKEDDOOR1",
@@ -9092,11 +9100,10 @@
   },
   {
     "description": "Varrock Wall ivy",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS",
     "objectIds": [ "FAI_VARROCK_IVY_MEDIUM", "FAI_VARROCK_IVY_SMALL" ],
     "uvType": "MODEL_YZ",
-    "uvOrientation": 144,
-    "uvScale": 0.6
+    "uvScale": 0.3
   },
   {
     "description": "Khandarian Eagles Landing",
@@ -9336,7 +9343,7 @@
       "MEDPLANT_SWAMP"
     ],
     "uvType": "BOX",
-    "uvScale": 0.85,
+    "uvScale": 0.6,
     "uvOrientation": 256,
     "colorOverrides": [
       {
@@ -9371,6 +9378,37 @@
     "objectIds": [
       "EMBERS_WITH_PANS"
     ]
+  },
+  {
+    "description": "Lumbridge Swamp - Crossbow Shortcut Raft",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "XBOWS_RAFT_TR",
+      "XBOWS_RAFT_BR",
+      "XBOWS_RAFT_TL",
+      "XBOWS_RAFT_BL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvScale": 0.2,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Swamp - Crossbow Shortcut Rope",
+    "baseMaterial": "ROPE",
+    "objectIds": [
+      "XBOWS_GROUND_ROPE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 400
   },
   {
     "description": "Wyvern Shortcut",
@@ -10042,6 +10080,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "DWARF_HUT_WALL",
+      "DWARFHUT_WOODEN_ROOF_EDGE_3_MIRROR",
+      "DWARFHUT_WOODEN_ROOF_EDGE_3",
       "DWARF_HUT_WALL_WINDOW",
       "FAI_BARBARIAN_ABODE_WALL",
       "FAI_BARBARIAN_ABODE_WINDOW",
@@ -10074,7 +10114,8 @@
       "FAI_BARBARIAN_LONGHALL_ROOF2",
       "FAI_BARBARIAN_LONGHALL_ROOF3",
       "FAI_BARBARIAN_LONGHALL_ROOF4",
-      "FAI_DWARFHUT_WOODEN_ROOF2"
+      "FAI_DWARFHUT_WOODEN_ROOF2",
+      "DWARFHUT_WOODEN_ROOF3"
     ],
     "uvType": "BOX",
     "uvScale": 0.66,
@@ -10227,7 +10268,7 @@
       "REGICIDE_SWAMP_ROOT2"
     ],
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.7,
     "uvOrientation": 342
   },
   {
@@ -10722,7 +10763,6 @@
     "description": "Objects - Metallic - Range",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      "COOKSQUESTRANGE",
       "FAI_VARROCK_RANGE",
       "FAI_VARROCK_RANGE_WITH_PIPE",
       "KR_SIN_RANGE",
@@ -15336,7 +15376,10 @@
       "JUNGLETREE2",
       "JUNGLETREE1_KARAMJA",
       "JUNGLETREE2_KARAMJA",
-      "JUNGLETREE2BIG_KARAMJA"
+      "JUNGLETREE2BIG_KARAMJA",
+      "XBOWS_JUNGLETREE_ROPE_GRAPPLED",
+      "XBOWS_JUNGLETREE_BASIC",
+      "XBOWS_JUNGLETREE_ROPE_TIED"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -17088,7 +17131,8 @@
       "FERN",
       "FERN1",
       "FERN2",
-      "MM_JUNGLEPLANT2"
+      "MM_JUNGLEPLANT2",
+      "AREA_SANGUINE_OUTER_WALL_PLANT"
     ]
   },
   {
@@ -17897,7 +17941,7 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": [ 38083, 38087 ],
+        "colors": [ "a < 255" ],
         "baseMaterial": "TRANSPARENT"
       }
     ]
@@ -17916,11 +17960,20 @@
   },
   {
     "description": "Ferox Enclave - Statue",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "GRUNGE_2",
     "objectIds": [
       "WILDY_HUB_WARRIOR_STATUE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 10 && s == 0" ],
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Sleeping Bag",
@@ -18902,7 +18955,8 @@
       "BRAIN_BOAT_LOC_BARREL_STACKED",
       "SHAYZIEN_BARREL_LARGE_TAP",
       "SHAYZIEN_BARREL_LARGE",
-      "SLUG2_BARREL"
+      "SLUG2_BARREL",
+      "AP_BARREL"
     ],
     "uvType": "BOX"
   },
@@ -20260,7 +20314,15 @@
       "DEATH_OFFICE_ACCESS_COFFIN"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Edgeville - Streak Board",
@@ -22034,6 +22096,21 @@
     "uvOrientationY": 256
   },
   {
+    "description": "White Wolf Mountain - White Fruit Trees",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "MDAUGHTER_WHITE_PEARL_BUSH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Giant Mole Lair - Object - Dirt Floor",
     "baseMaterial": "DIRT_1",
     "objectIds": [ "MOLE_WALL_TOP", "MOLE_WALL_TOP_LVL2", "MOLE_WALL_TOP5_LVL2", "MOLE_WALL_TOP_LVL2_BIG" ]
@@ -22829,6 +22906,96 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [ "FAI_VARROCK_MANHOLE_LADDER" ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Isle of Souls - Maple Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "MAPLETREE_UPDATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 4",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Yew & Mahogany Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "objectIds": [
+      "YEWTREE_UPDATE",
+      "MAHOGANYTREE_UPDATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Tall Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SNP_BASIC_TREE_02_LOBBY",
+      "TREE_UPDATE_2",
+      "SNP_BASIC_TREE_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Short Tree",
+    "baseMaterial": "LEAVES_1",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "SOULWARS_TOURNAMENT_TABLE_NOVIS",
+      "SNP_BASIC_TREE_01_LOBBY",
+      "TREE_UPDATE_1",
+      "SNP_BASIC_TREE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock Sewers - Bryophyta - Axe Stump",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GB_LOG_WITHAXE",
+      "WOODCHIPPINGS_LIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Varrock Sewers - Objects - Metallic - Scurrius Entrance Bars",
@@ -26239,13 +26406,91 @@
   },
   {
     "description": "Decoration - Textured Lumbridge Heraldry",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "HANGINGBANNERL", "HANGINGBANNERR"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
-    "retainVanillaUvs": false
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Decoration - Lumbridge Hanging Tapestry",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "HANGING_TAPESTRY1",
+      "HANGING_TAPESTRY2"
+    ],
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "MODEL_YZ",
+        "uvOrientation": 512,
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge - Dirt - Rat Burrow",
+    "baseMaterial": "GRAY_65",
+    "upwardsNormals": true,
+    "objectIds": [
+      "RATBARROW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Chairs",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "THRONE",
+      "CHAIR_REDSEAT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Table",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "LONGTABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
   },
   {
     "description": "Wooden Step Ladder",
@@ -26398,6 +26643,102 @@
     ]
   },
   {
+    "description": "Cooking rack - Lumbridge kitchen - Meat",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "QIP_COOK_HANGINGMEAT1",
+      "QIP_COOK_HANGINGMEAT2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Range",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "COOKSQUESTRANGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 4",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Kitchen Trapdoor",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "QIP_COOK_TRAPDOOR_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Castle - Standards",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "objectIds": [
+      "STANDARD_BLUE3",
+      "FLAG_LUMBRIDGE_OVERHANG",
+      "FLAG_LUMBRIDGE",
+      "FLAG_LUMBRIDGE_OVERHANG_POLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge - Shop Signs",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.75,
+    "objectIds": [
+      "SHOPSIGN",
+      "XMTS_PUB_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "FAI_VARROCK_HAT_STAND", "QIP_SHEEP_SHEARER_HATSTAND" ],
@@ -26460,7 +26801,7 @@
   },
   {
     "description": "Marble statues at Lumbridge Entrance - Textured",
-    "objectIds": [ "STATUE_LUMBRIDGE", "GARDEN_QUEEN_STATUE"],
+    "objectIds": [ "STATUE_LUMBRIDGE", "GARDEN_QUEEN_STATUE", "STATUE_PLINTH_LUMBRIDGE" ],
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -26789,9 +27130,11 @@
     "description": "Objects - Wooden - Beehive",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "MACRO_INACTIVE_BEEHIVE"
+      "MACRO_INACTIVE_BEEHIVE",
+      "MERLIN_BEEHIVE"
     ],
     "uvType": "BOX",
+    "uvScale": 0.85,
     "uvOrientation": 512
   },
   {
@@ -26941,7 +27284,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL" ]
+    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL", "QIP_COOK_BARREL_TAP" ]
   },
   {
     "description": "Barrel with tarnished metal bands",
@@ -26974,7 +27317,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED" ]
+    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED", "QIP_COOK_BARREL_STACKED" ]
   },
   {
     "description": "Wooden Cart - Empty",
@@ -27983,7 +28326,8 @@
       "SINK",
       "SINK2",
       "KR_SINK",
-      "QIP_SHEEP_SHEARER_SINK"
+      "QIP_SHEEP_SHEARER_SINK",
+      "QIP_COOK_SINK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -28042,27 +28386,59 @@
   },
   {
     "description": "Deaths office - Entrances - Lumbridge",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAVEL_LIGHT",
     "objectIds": [
       "DEATH_OFFICE_ACCESS_GRAVE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h < 1",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "colors": "h > 9",
+        "baseMaterial": "GRASS_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Seers",
-    "baseMaterial": "GRAY_90",
+    "baseMaterial": "GRAVEL_LIGHT",
     "objectIds": [
       "DEATH_OFFICE_ACCESS_BROWNGRAVE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h < 1",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Ferox",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "WILDHUB_DEATH_ENTRANCE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Deaths office - Entrances - Falador",
@@ -31245,7 +31621,8 @@
     "uvScale": 0.5,
     "uvOrientation": 42,
     "objectIds": [
-      "STONEPILLAR_SMALL_WATERFALL_QUEST_NOOP"
+      "STONEPILLAR_SMALL_WATERFALL_QUEST_NOOP",
+      "STONEPILLAR"
     ]
   },
   {
@@ -33402,6 +33779,24 @@
       }
     ],
     "objectIds": [ "GRANDTREE_ROOTDOOR" ]
+  },
+  {
+    "description": "Gnome Glider",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GNOME_GLIDER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 5",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 256,
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Porcine of Interest - Veg Cart",
