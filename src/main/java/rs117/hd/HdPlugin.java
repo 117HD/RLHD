@@ -135,6 +135,7 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
+import static org.lwjgl.opengl.GL20.GL_LOWER_LEFT;
 import static org.lwjgl.opengl.GL43C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
@@ -652,6 +653,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
 					client.setGameState(GameState.LOADING);
+
+				if(glCaps.OpenGL45) {
+					log.debug("GL45 supported, switching from GL_NEGATIVE_ONE_TO_ONE -> GL_ZERO_TO_ONE");
+					GL45.glClipControl(GL_LOWER_LEFT, GL45.GL_ZERO_TO_ONE);
+				}
 
 				checkGLErrors();
 
