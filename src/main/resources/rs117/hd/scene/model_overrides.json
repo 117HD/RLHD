@@ -22014,6 +22014,15 @@
     "uvType": "BOX"
   },
   {
+    "description": "Loom",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "LOOM"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
     "description": "Textured Pottery Oven",
     "textureMaterial": "POTTERY_OVEN_STONE",
     "objectIds": [
@@ -33539,7 +33548,8 @@
         "colors": "h == 4",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 512,
+        "uvOrientationY": 512,
+        "uvOrientationZ": 512,
         "uvScale": 0.74
       },
       {
