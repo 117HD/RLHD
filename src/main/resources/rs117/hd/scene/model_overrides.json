@@ -33527,10 +33527,12 @@
     ]
   },
   {
-    "description": "Port Sarim - Bar Sign",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "description": "Port Sarim - Shop Signs",
+    "baseMaterial": "GRAY_75",
     "objectIds": [
-      "RUSTYANCHORSIGN"
+      "RUSTYANCHORSIGN",
+      "FISHINGSHOPSIGN",
+      "GROCERSIGN"
     ],
     "colorOverrides": [
       {
@@ -33539,6 +33541,10 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.74
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
