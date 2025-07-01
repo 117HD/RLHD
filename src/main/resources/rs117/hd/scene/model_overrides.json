@@ -23017,15 +23017,31 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "SHIPHIGHERWALL_LOW", "SHIPHULL", "SHIPHULL_FILLEDL", "SHIPHULL_FILLEDR",
-      "SHIP_FULLWALL", "SHIPHULL_DIAG", "SHIPHULL_FILLER", "SHIPHULL_CANNONOPEN",
-      "STERN", "SHIPHULL_BROKEN", "SHIPHULL_DAMAGED_L", "SHIPHULL_DAMAGED_R",
-      "SHIPHULL_DAMAGED_MIDDLE_FLOOR", "TRAWLER_HULL_DEFAULT", "TRAWLER_HULL_00",
-      "TRAWLER_HULL_01", "TRAWLER_HULL_03", "TRAWLER_HULL_12"
+      "SHIP_FULLWALL", "SHIPHULL_DIAG", "SHIPHULL_FILLER", "STERN", "SHIPHULL_BROKEN",
+      "SHIPHULL_DAMAGED_L", "SHIPHULL_DAMAGED_R", "SHIPHULL_DAMAGED_MIDDLE_FLOOR", "TRAWLER_HULL_DEFAULT",
+      "TRAWLER_HULL_00", "TRAWLER_HULL_01", "TRAWLER_HULL_03", "TRAWLER_HULL_12", "RUDDER", "SARIM_SHIPLADDER_BRIDGE_LEDGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientationZ": 512,
     "uvOrientationX": 512
+  },
+  {
+    "description": "Plank Boat - Walls - Wooden - Hull Cannon",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SHIPHULL_CANNONOPEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Plank Boat - Walls - Wooden - Hull Aft",
@@ -23043,7 +23059,13 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientationZ": 512,
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 27",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
   },
   {
     "description": "Plank Boat - Walls - Wooden - Hull with Bow Supports",
@@ -23061,7 +23083,13 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientationZ": 512,
-    "uvOrientationX": 512
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Plank Boat - Wooden - Deck",
@@ -23082,18 +23110,32 @@
   {
     "description": "Plank Boat - Wooden - Bowsprit",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "FRONTMAST" ],
+    "objectIds": [ "FRONTMAST", "FRONTMAST_FRONT_A", "FRONTMAST_FRONT_B", "FRONTMAST_BACK_B", "FRONTMAST_BACK_C", "FRONTMAST_BACK_D" ],
     "uvType": "BOX",
-    "uvScale": 1.1,
+    "uvScale": 0.9,
     "uvOrientation": 512
   },
   {
     "description": "Plank Boat - Wooden - Ship's Ladder",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "SHIPLADDER_ANGLED", "SHIPLADDER_TOP_ANGLED", "SHIP_LADDER", "SHIP_LADDERTOP" ],
+    "objectIds": [ "SHIPLADDER_ANGLED", "SHIPLADDER_TOP_ANGLED", "SHIP_LADDER", "SHIP_LADDERTOP", "SHIP_LADDER_NOCLIMB", "SHIP_LADDERTOP_NOCLIMB"  ],
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Mast with Metal Bands",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MAST1"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Plank Boat - Wooden - Mast and Helm",
@@ -23101,9 +23143,50 @@
     "objectIds": [
       "STEERINGWHEEL",
       "MAST2",
-      "MAST3"
+      "MAST3",
+      "MAST4",
+      "DRAGON_SLAYER_QIP_MAST3"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Plank Boat - Wooden - Net",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SHIP_NET1",
+      "SHIP_NET2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Plank Boat - Wooden - Mast with Sails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SAIL1_HOISTEDL",
+      "SAIL2_HOISTEDL",
+      "SAIL1_HOISTEDR",
+      "SAIL2_HOISTEDR",
+      "BACKSAIL_HOISTED",
+      "FRONTSAIL_HOISTED",
+      "DRAGON_SLAYER_QIP_SAIL1_HOISTEDL",
+      "DRAGON_SLAYER_QIP_SAIL1_HOISTEDR",
+      "FRONTSAIL_HOISTED_SEGMENTED1",
+      "FRONTSAIL_HOISTED_SEGMENTED2",
+      "FRONTSAIL_HOISTED_SEGMENTED3",
+      "FRONTSAIL_HOISTED_SEGMENTED4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Object - Metal - Anchor",
