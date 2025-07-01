@@ -38638,5 +38638,30 @@
         "uvScale": 0.5
       }
     ]
+  },
+  {
+    "description": "Aldarin - Mixology - Plant -  Mixology basement ferns  - Short",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 42,
+    "objectIds": [
+      "PLANT_FERN01_SHORT01",
+      "PLANT_FERN01_SHORT02",
+      "PLANT_FERN01_SHORT03"
+    ]
+  },
+  {
+    "description": "Aldarin - Mixology - Plant -  Mixology basement ferns - Tall",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 172,
+    "objectIds": [
+      "PLANT_FERN01_TALL01",
+      "PLANT_FERN01_TALL02",
+      "PLANT_FERN01_TALL03"
+
+    ]
   }
 ]
