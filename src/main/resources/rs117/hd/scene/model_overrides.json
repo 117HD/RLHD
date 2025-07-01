@@ -33610,7 +33610,6 @@
   {
     "description": "Port Sarim - Pier - Crane",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "textureMaterial": "NET",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 512,
@@ -33629,6 +33628,46 @@
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Prison Spike",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "PRISON_WALLSPIKES1",
+      "PRISON_WALLSPIKES2",
+      "PRISON_WALLSPIKES3",
+      "PRISON_WALLSPIKES_BROKEN",
+      "PRISON_WALLSPIKES_INCORNER",
+      "PRISON_WALLSPIKES_CORNER"
+    ]
+  },
+  {
+    "description": "Port Sarim - Trap Door",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "PRISON_TRAPDOOR"
+    ]
+  },
+  {
+    "description": "Port Sarim - Bunk Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "FAVOUR_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
       }
     ]
   },
