@@ -38675,6 +38675,16 @@
     ]
   },
   {
+    "description": "Aldarin - Mixology - Plant -  Mixology basement Digweed",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 89,
+    "objectIds": [
+      "MM_HERB_DEAD"
+    ]
+  },
+  {
     "description": "Aldarin - Mixology - Plant -  Mixology basement ferns - Tall",
     "baseMaterial": "LEAF_VEINS",
     "uvType": "BOX",
@@ -38705,6 +38715,49 @@
     "uvOrientation": 343,
     "objectIds": [
       "PILLAR_ALCHEMIST01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Rock and Dirt - Tiny",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "CIVITAS_DUGUPSOIL02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "s == 1",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Rock and Dirt - Small",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 168,
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "CIVITAS_DUGUPSOIL01",
+      "CIVITAS_DUGUPSOIL03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "s == 1",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
     ]
   }
 ]
