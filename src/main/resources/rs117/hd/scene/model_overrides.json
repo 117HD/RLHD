@@ -38695,5 +38695,15 @@
       "MM_LAB_STAIRS",
       "MM_LAB_STAIRS_ENTRY"
     ]
+  },
+  {
+    "description": "Aldarin - Mixology - Stone -  Mastering Mixology decorative pillars",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 343,
+    "objectIds": [
+      "PILLAR_ALCHEMIST01_DEFAULT01"
+    ]
   }
 ]
