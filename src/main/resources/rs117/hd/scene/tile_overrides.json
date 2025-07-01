@@ -4758,6 +4758,28 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "MASTERING_MIXOLOGY_OVERLAY",
+    "area": "MASTERING_MIXOLOGY",
+    "overlayIds": [
+      351
+    ],
+    "groundMaterial": "STONE_CAVE_FLOOR",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_UNDERLAY",
+    "area": "MASTERING_MIXOLOGY",
+    "underlayIds": [
+      26,
+      42,
+      72,
+      96,
+      223
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
     "name": "OVERWORLD_GRASS_OVERLAY",
     "area": "OVERWORLD",
     "overlayIds": [
