@@ -24813,14 +24813,32 @@
       "STEPS_ROR_CORNER01",
       "STEPS_ROR_CORNER01_DARK02",
       "STEPS_ROR_CORNER02_DARK02",
-      "PMOON_BOSS_EXIT_STAIRS",
+      "PMOON_BOSS_EXIT_STAIRS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86
+  },
+  {
+    "description": "Mastering Mixology Walls with brick walls infront of them",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "objectIds": [
       "WALLKIT_ALCHEMIST01_DEFAULT01",
       "WALLKIT_ALCHEMIST01_DEFAULT02",
       "WALLKIT_ALCHEMIST01_JOIN01",
       "WALLKIT_ALCHEMIST01_JOIN02"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.86
+    "colorOverrides": [
+      {
+        "description": "Stone Bricks",
+        "colors": "h == 5",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      }
+    ]
   },
   {
     "description": "Hunter Guild Entrance Bone Arches, Colossal Wyrm Ribs",
@@ -38666,6 +38684,16 @@
       "PLANT_FERN01_TALL02",
       "PLANT_FERN01_TALL03"
 
+    ]
+  },
+  {
+    "description": "Aldarin - Mixology - Plant -  Mixology basement ferns - Tall",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 343,
+    "objectIds": [
+      "MM_LAB_STAIRS",
+      "MM_LAB_STAIRS_ENTRY"
     ]
   }
 ]
