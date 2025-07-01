@@ -4777,7 +4777,7 @@
       96,
       223
     ],
-    "groundMaterial": "EARTHEN_CAVE_FLOOR"
+    "groundMaterial": "INTERIOR_DIRT_FLOOR"
   },
   {
     "name": "OVERWORLD_GRASS_OVERLAY",
