@@ -2281,7 +2281,6 @@
       "TREE_PATCH_WEEDS_3",
       "GARDEN_DELPHINIUMS_WEEDS_1",
       "GARDEN_DELPHINIUMS_WEEDS_2",
-      "RUGSIDE_DARK_RED",
       "GARDEN_ROSEBUSH_PINK_WEEDS_1",
       "GARDEN_ROSEBUSH_PINK_WEEDS_2",
       "GARDEN_ROSEBUSH_PINK_WEEDS_3",
@@ -7908,7 +7907,8 @@
     "objectIds": [
       "FAI_VARROCK_POSH_TABLE",
       "FAI_VARROCK_POSH_DININGTABLE_SMALL",
-      "ALDARIN_TABLE_DEFAULT01"
+      "ALDARIN_TABLE_DEFAULT01",
+      "WGS_SEED_COUNTER_EMPTY"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -33305,10 +33305,11 @@
     ]
   },
   {
-    "description": "Aggie's House - Cauldron",
+    "description": "Witches Cauldron",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      "DRAYNOR_AGGIE_CAULDRON"
+      "DRAYNOR_AGGIE_CAULDRON",
+      "SARIM_BETTYS_CAULDRON"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -33582,10 +33583,7 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "FAVOUR_ANTIQUESHOP_ROOF",
-      "SARIM_PORT_SHACK_COUNTERWALL_MIRROR",
-      "SARIM_PORT_SHACK_COUNTERWALL_FRONT",
-      "SARIM_PORT_SHACK_COUNTERWALL"
+      "FAVOUR_ANTIQUESHOP_ROOF"
     ]
   },
   {
@@ -33655,7 +33653,7 @@
     ]
   },
   {
-    "description": "Port Sarim - Bunk Bed",
+    "description": "Port Sarim - Jail Bunk Bed",
     "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "FAVOUR_BUNKBED"
@@ -33668,6 +33666,24 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Betty's Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SARIM_SHELVES_RUNES_1",
+      "SARIM_SHELVES_RUNES_2",
+      "SARIM_SHELVES_RUNES_3",
+      "SARIM_SHELVES_RUNES_4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 6 && l < 40"],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   },
