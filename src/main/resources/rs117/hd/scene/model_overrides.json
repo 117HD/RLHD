@@ -16437,7 +16437,7 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "BURLAP",
-    "objectIds": [ "SACK_FULL", "VC_SACK_FULL_DWARF", "LUNAR_PIRATE_GRAIN_SACK", "SOTE_LLETYA_SACK_FULL", "MOURNING_SACK_FULL" ],
+    "objectIds": [ "SACK_GRAIN01_FULL01", "SACK_FULL", "VC_SACK_FULL_DWARF", "LUNAR_PIRATE_GRAIN_SACK", "SOTE_LLETYA_SACK_FULL", "MOURNING_SACK_FULL" ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "retainVanillaUvs": false
