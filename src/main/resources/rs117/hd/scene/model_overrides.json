@@ -25075,6 +25075,47 @@
     ]
   },
   {
+    "description": "Hunter Guild - woven basket with handles - Empty",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HG_BARREL_BASKET01_EMPTY01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth lining",
+        "colors": "h == 3",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild - woven basket with handles - With veggies",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HG_BARREL_BASKET01_FOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plants",
+        "colors": "h >= 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Cloth lining",
+        "colors": "h == 3",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Varlamore, Stools and tables covered in furs, MODEL_XZ is used with intent",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
