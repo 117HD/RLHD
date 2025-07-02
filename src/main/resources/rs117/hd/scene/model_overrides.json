@@ -25117,6 +25117,46 @@
     ]
   },
   {
+    "description": "Varlamore - Quest - At First Light - Fern",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "AFL_BUSH1_OP",
+      "AFL_BUSH2_OP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "leaf",
+        "colors": "s >= 3",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Plant - Spikey Bush",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BUSH_SAVANNAH01_SPIKEY01",
+      "BUSH_SAVANNAH01_SPIKEY02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "leaf",
+        "colors": "h >= 5",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
+    ]
+  },
+  {
     "description": "Varlamore, Stools and tables covered in furs, MODEL_XZ is used with intent",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
@@ -25604,13 +25644,27 @@
     "description": "Zeah - Kourend - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
-      "GROUNDCOVER_PLANT1_WITHERED",
-      "GROUNDCOVER_PLANT2_WITHERED",
-      "GROUNDCOVER_PLANT3_WITHERED",
-      "GROUNDCOVER_PLANT4_WITHERED",
       "GROUNDCOVER_PLANT1_ROTTEN",
       "GROUNDCOVER_PLANT2_ROTTEN",
       "GROUNDCOVER_PLANT3_ROTTEN"
+    ]
+  },
+  {
+    "description": "Zeah - Varlamore - Plant - Withered Leafy Shrub",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "GROUNDCOVER_PLANT1_WITHERED",
+      "GROUNDCOVER_PLANT2_WITHERED",
+      "GROUNDCOVER_PLANT3_WITHERED",
+      "GROUNDCOVER_PLANT4_WITHERED"
     ]
   },
   {
@@ -38737,6 +38791,46 @@
         "uvOrientation": 512,
         "uvScale": 0.5
       }
+    ]
+  },
+  {
+    "description": "Varlamore - Adobe - Cabybara walls",
+    "baseMaterial": "WATTLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "AVIUM_SAVANNAH01_WALL01",
+      "AVIUM_SAVANNAH01_WINDOW01",
+      "AVIUM_SAVANNAH01_UPPER01",
+      "AVIUM_SAVANNAH01_WINDOWUPPER01",
+      "FLOORKIT_WOODEN02_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Adobe - Cabybara walls - Tops",
+    "baseMaterial": "WATTLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "AVIUM_SAVANNAH01_LOW01"
+    ]
+  },
+  {
+    "description": "Varlamore - Wooden - Plank Floorscabpy",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FLOORKIT_WOODEN02_DEFAULT01"
     ]
   }
 ]
