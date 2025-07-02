@@ -25122,7 +25122,9 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
+      "AFL_BUSH1_NOOP",
       "AFL_BUSH1_OP",
+      "AFL_BUSH2_NOOP",
       "AFL_BUSH2_OP"
     ],
     "colorOverrides": [
@@ -32333,7 +32335,7 @@
     ]
   },
   {
-    "description": "Fortis wooden plank walls",
+    "description": "Varlamore - Fortis wooden plank walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -32341,6 +32343,36 @@
     "objectIds": [
       "WALLKIT_WOODEN01_DEFAULT01",
       "WALLKIT_WOODEN01_WINDOW01"
+    ]
+  },
+  {
+    "description": " Varlamore - Fortis wooden plank Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FORTIS_DOOR_L_REVERSE",
+      "FORTIS_DOOR_L_REVERSE_OPEN",
+      "FORTIS_DOOR_L",
+      "FORTIS_DOOR_L_NOOP",
+      "FORTIS_DOOR_L_LOCKED",
+      "FORTIS_DOOR_L_OPEN",
+      "FORTIS_DOOR_R",
+      "FORTIS_DOOR_R_LOCKED",
+      "FORTIS_DOOR_R_NOOP",
+      "FORTIS_DOOR_R_OPEN",
+      "FORTIS_DOOR_R_REVERSE",
+      "FORTIS_DOOR_R_REVERSE_OPEN",
+      "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN",
+      "VARLAMORE_THIEVING_HOUSE_DOOR_LOCKED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -32504,7 +32536,9 @@
     "uvScale": 0.9,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_CIVITAS05_FENCE02"
+      "WALLKIT_CIVITAS05_FENCE01",
+      "WALLKIT_CIVITAS05_FENCE02",
+      "WALLKIT_CIVITAS05_FENCE03"
     ]
   },
   {
@@ -38830,6 +38864,16 @@
     "uvScale": 0.75,
     "objectIds": [
       "FLOORKIT_WOODEN02_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Varlamore - Fortis - Wooden – Plank Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "TABLE_WOODEN01_SMALL01",
+      "TABLE_WOODEN01_RECTANGULAR01"
     ]
   }
 ]
