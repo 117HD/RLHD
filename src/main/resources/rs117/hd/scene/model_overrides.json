@@ -25047,7 +25047,8 @@
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "objectIds": [
-      "FORTIS_STOVE"
+      "FORTIS_STOVE",
+      "FORTIS_STOVE_NOOP"
     ],
     "colorOverrides": [
       {
