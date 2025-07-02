@@ -4534,7 +4534,8 @@
   },
   {
     "name": "MASTERING_MIXOLOGY",
-    "regionBoxes": [ [5265, 5521] ]
+    "regionBoxes": [ [5265, 5521] ],
+    "hideOtherAreas": true
   },
   {
     "name": "FOSSIL_ISLAND_WYVERN_TASK_CAVE",
