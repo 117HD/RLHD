@@ -38521,7 +38521,7 @@
     ]
   },
   {
-    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "description": "Varrock - Kebos Farm - Fortis - Thatch - Roofs",
     "baseMaterial": "HD_HAY",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -38534,7 +38534,8 @@
       "FAI_VARROCK_ROOF_THATCHED_SHORT_MIRROR",
       "FAI_VARROCK_ROOF_THATCHED_3H",
       "FAI_VARROCK_ROOF_THATCHED_END",
-      "FAI_VARROCK_THATCHED_ROOF_BALCONY"
+      "FAI_VARROCK_THATCHED_ROOF_BALCONY",
+      "FAI_VARROCK_ROOF_THATCHED_CENTER"
     ],
     "colorOverrides": [
       {
