@@ -38803,14 +38803,13 @@
       "AVIUM_SAVANNAH01_WINDOW01",
       "AVIUM_SAVANNAH01_UPPER01",
       "AVIUM_SAVANNAH01_WINDOWUPPER01",
-      "FLOORKIT_WOODEN02_DEFAULT01"
+      "AVIUM_SAVANNAH01_LOW02"
     ],
     "colorOverrides": [
       {
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
-        "uvOrientation": 512,
         "uvScale": 0.5
       }
     ]
