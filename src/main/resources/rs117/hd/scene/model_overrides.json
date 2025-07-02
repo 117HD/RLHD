@@ -25007,10 +25007,18 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "BARREL_WOODEN01_CIVITAS01",
-      "BARREL_WOODEN01_AVIUM01"
+      "BARREL_WOODEN01_AVIUM01",
+      "BARREL_WOODEN01_ALDARIN01"
     ],
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "uvType": "BOX",
-    "uvOrientation": 512
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Varlamore and Hunter Guild Wooden Crates",
@@ -38842,13 +38850,14 @@
     ]
   },
   {
-    "description": "Varlamore - Mastering Mixology - Clay pottery with grain",
+    "description": "Varlamore - Mastering Mixology -  Hunters Guild - Clay pottery with grain",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 192,
     "objectIds": [
-      "MM_LAB_BARREL_CLAY01_FOOD01"
+      "MM_LAB_BARREL_CLAY01_FOOD01",
+      "HG_BARREL_CLAY01_FOOD01"
     ],
     "colorOverrides": [
       {
@@ -38859,6 +38868,16 @@
         "uvScale": 0.3,
         "uvOrientation": 89
       }
+    ]
+  },
+  {
+    "description": "Varlamore - Hunters Guild - Clay pot - Empty",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 192,
+    "objectIds": [
+      "HG_BARREL_CLAY01_EMPTY01"
     ]
   },
   {
@@ -38917,22 +38936,6 @@
         "colors": "h == 1 && s == 5",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
-      }
-    ]
-  },
-  {
-    "description": "Varlamore - Aldarin - Wooden - metallic Barrel with Metal Band",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "objectIds": [
-      "BARREL_WOODEN01_ALDARIN01"
-    ],
-    "uvOrientationZ": 512,
-    "uvOrientationX": 512,
-    "uvType": "BOX",
-    "colorOverrides": [
-      {
-        "colors": "h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   }
