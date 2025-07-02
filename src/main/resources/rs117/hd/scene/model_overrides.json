@@ -38888,5 +38888,52 @@
       "WALLKIT_ALCHEMIST01_BARS01",
       "WALLKIT_ALCHEMIST01_BARS01_M"
     ]
+  },
+  {
+    "description": "Mastering Mixology - Wooden - bookcase with Multicolored books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MM_LAB_NOTES_BOOKSHELF_NO_OP",
+      "MM_LAB_NOTES_BOOKSHELF"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green and blue books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 1 && s == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - metallic Barrel with Metal Band",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "BARREL_WOODEN01_ALDARIN01"
+    ],
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   }
 ]
