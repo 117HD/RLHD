@@ -32186,7 +32186,8 @@
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_WOODEN01_DEFAULT01"
+      "WALLKIT_WOODEN01_DEFAULT01",
+      "WALLKIT_WOODEN01_WINDOW01"
     ]
   },
   {
