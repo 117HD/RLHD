@@ -19331,7 +19331,7 @@
     "description": "GHOSTLY_THRALL",
     "height": 80,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 350,
     "strength": 8,
     "color": [
       0,
@@ -19349,9 +19349,9 @@
   },
   {
     "description": "Ghostly thrall projectile",
-    "radius": 300,
+    "radius": 250,
     "strength": 8,
-    "height": 140,
+    "height": 20,
     "color": [
       0,
       100,
@@ -19359,7 +19359,7 @@
     ],
     "type": "FLICKER",
     "duration": 600,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 100,
     "fadeInDuration": 100,
     "range": 5,
     "projectileIds": [
@@ -19370,8 +19370,8 @@
     "description": "SKELETAL_THRALL",
     "height": 80,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 8,
+    "radius": 350,
+    "strength": 7,
     "color": [
       144,
       245,
@@ -19388,9 +19388,9 @@
   },
   {
     "description": "Skeletal thrall projectile",
-    "radius": 300,
+    "radius": 200,
     "strength": 8,
-    "height": 140,
+    "height": 10,
     "color": [
       144,
       245,
@@ -19398,7 +19398,7 @@
     ],
     "type": "FLICKER",
     "duration": 600,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 100,
     "range": 5,
     "projectileIds": [
       "THRALL_RANGED_TRAVEL"
@@ -19408,7 +19408,7 @@
     "description": "ZOMBIE_THRALL",
     "height": 80,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 350,
     "strength": 8,
     "color": [
       255,
