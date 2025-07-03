@@ -39221,5 +39221,31 @@
         "uvOrientation": 512
       }
     ]
+  },
+  {
+    "description": "Varlamore - Mastering Mixology - Herb Grinder",
+    "baseMaterial": "SLIME_GRUNGE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MM_LAB_MILL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      },
+      {
+        "description": "Stone base",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 162
+      }
+    ]
   }
 ]
