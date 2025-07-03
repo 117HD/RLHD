@@ -34424,7 +34424,6 @@
     "description": "Hueycoatl Body Cave",
     "objectIds": [
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY_RESPAWN",
-      "HUEY_P2_BARRIER_RESPAWN",
       "DF_CAVE_SNOW01_ENTRANCE03",
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
       "DF_CAVE_SNOW01_ENTRANCE03_DIAG",
@@ -34445,12 +34444,21 @@
     "description": "Hueycoatl Blockage Segment Caves",
     "objectIds": [
       "HUEY_P2_BARRIER",
-      "HUEY_P2_BARRIER_RETRACTED"
+      "HUEY_P2_BARRIER_RETRACTED",
+      "HUEY_P2_BARRIER_RESPAWN"
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 0", "h < 63" ],
+        "colors": ["h == 0", "h == 1" ],
         "baseMaterial": "STONE_NORMALED"
+      },
+      {
+        "colors": "h == 63 && l > 2",
+        "baseMaterial": "SNOW_1"
+      },
+      {
+        "colors": "h == 63 && l == 2",
+        "baseMaterial": "BLACK"
       }
     ]
   },
@@ -34473,6 +34481,7 @@
   },
   {
     "description": "Hueycoatl Lightning Bolt Attack - Remove Shadows",
+    "baseMaterial": "GRAY_90",
     "castShadows": false,
     "objectIds": [ "HUEY_ATTACK_TILES_LOC" ],
     "graphicsObjectIds": [ "VFX_HUEYCOATL_PRAYER_02" ]
