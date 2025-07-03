@@ -399,6 +399,15 @@
     ]
   },
   {
+    "name": "INTERIOR_DIRT_FLOOR",
+    "materials": [
+      "GRUNGE_1",
+      "DIRT_1",
+      "DIRT_2",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "STONE_CAVE_FLOOR",
     "materials": [
       "STONE",
