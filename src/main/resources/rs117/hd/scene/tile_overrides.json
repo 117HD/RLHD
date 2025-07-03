@@ -4550,7 +4550,7 @@
     "replacements": {
       "Hueycoatl Snow Fix - No Blending": "!blending"
     },
-    "shiftLightness": 35
+    "shiftLightness": 25
   },
   {
     "name": "Hueycoatl Snow Fix - No Blending",
@@ -4558,9 +4558,9 @@
     "underlayIds": [ 58, 173 ],
     "description": "For when ground blending is DISABLED",
     "groundMaterial": "DIRTY_SNOW",
-    "shiftLightness": 15,
-    "maxLightness": 90,
-    "minLightness": 70,
+    "shiftLightness": 10,
+    "maxLightness": 75,
+    "minLightness": 50,
     "maxSaturation": 0
   },
   {
