@@ -1145,13 +1145,13 @@
   {
     "area": "COSMIC_ENTITYS_PLANE",
     "allowSkyOverride": false,
-    "ambientColor": "#db6fff",
-    "ambientStrength": 1.5,
-    "directionalColor": "#57ff00",
-    "directionalStrength": 3,
+    "ambientColor": "#E2A7FF",
+    "ambientStrength": 1,
+    "directionalColor": "#EDE9DC",
+    "directionalStrength": 1.7,
     "sunAngles": [
-      80,
-      190
+      90,
+      180
     ],
     "fogDepth": 6.5
   },

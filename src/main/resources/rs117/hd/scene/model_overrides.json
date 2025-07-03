@@ -23031,6 +23031,14 @@
     ]
   },
   {
+    "description": "Cosmic Entites Plane - Hide Black Wall",
+    "areas": [ "COSMIC_ENTITYS_PLANE" ],
+    "hide": true,
+    "objectIds": [
+      "BLACK_WALL"
+    ]
+  },
+  {
     "description": "Enchanted Valley - Stalagmite",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
