@@ -7286,6 +7286,28 @@
     "groundMaterial": "MARBLE_1_GLOSS"
   },
   {
+    "name": "Enchanted Valley Ledge",
+    "area": "ENCHANTED_VALLEY_LEDGES",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 0 ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvScale": 0.9,
+    "uvOrientation": 256,
+    "minLightness": 30,
+    "maxSaturation": 111,
+    "blended": false
+  },
+  {
+    "name": "Enchanted Valley Grass",
+    "area": "ENCHANTED_VALLEY",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 97 ],
+    "groundMaterial": "GRASS_1",
+    "minHue": 12,
+    "minSaturation": 2,
+    "uvScale": 0.85
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [

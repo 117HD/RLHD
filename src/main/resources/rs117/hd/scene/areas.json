@@ -5899,8 +5899,16 @@
   },
   {
     "name": "ENCHANTED_VALLEY",
-    "regions": [
-      12102
+    "aabbs": [
+      [ 3010, 4480, 3071, 4540 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "ENCHANTED_VALLEY_LEDGES",
+    "aabbs": [
+      [ 3046, 4481, 3055, 4486 ],
+      [ 3028, 4525, 3051, 4537, 0 ]
     ]
   },
   {

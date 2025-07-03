@@ -1354,7 +1354,8 @@
       "WILD3_TREE_STUMP",
       "WILD4_TREE_STUMP",
       "DOV_HUNTING_TREESTUMP_NOOP",
-      "BURGH_TREE_STUMP"
+      "BURGH_TREE_STUMP",
+      "FAIRY2_PINE_TREE_STUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -2205,6 +2206,18 @@
       "FRIS_SHORT_GRASS_4_WALL_EDGE",
       "FRIS_SHORT_GRASS_3_WALL_EDGE",
       "FRIS_SHORT_GRASS_WALL_EDGE_2"
+    ]
+  },
+  {
+    "description": "Enchanted Valley Grass - Inherit Overlay",
+    "areas": [ "ENCHANTED_VALLEY" ],
+    "baseMaterial": "GRAY_90",
+    "inheritTileColorType": "OVERLAY",
+    "upwardsNormals": true,
+    "castShadows": false,
+    "objectIds": [
+      "GRASSLAND_SHORT_GRASS_1",
+      "GRASSLAND_SHORT_GRASS_4"
     ]
   },
   {
@@ -17132,7 +17145,11 @@
       "FERN1",
       "FERN2",
       "MM_JUNGLEPLANT2",
-      "AREA_SANGUINE_OUTER_WALL_PLANT"
+      "AREA_SANGUINE_OUTER_WALL_PLANT",
+      "FAIRY2_PLANT_1",
+      "FAIRY2_PLANT_2",
+      "FAIRY2_PLANT_3",
+      "FAIRY2_PLANT_4"
     ]
   },
   {
@@ -18791,7 +18808,8 @@
       "BRUT_WATERFALL_OVERLAY_R",
       "WATERFALL_OVERLAY",
       "WATERFALL_OVERLAY_1_BRIGHTER",
-      "MYARM_WATER_MOVING_1"
+      "MYARM_WATER_MOVING_1",
+      "FAIRY2_WATERFALL_BOTTOM"
     ]
   },
   {
@@ -22908,14 +22926,20 @@
     "uvType": "BOX"
   },
   {
-    "description": "Varrock Sewers - Bryophyta - Trees",
+    "description": "Enchanted Valley - Trees",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "objectIds": [
       "FAIRY2_FOREST",
+      "FAIRY2_FOREST_TOP_SIMPLE",
       "FAIRY2_FOREST_TOP",
+      "FAIRY2_FOREST2",
+      "FAIRY2_FOREST3",
       "FAIRY2_FOREST_TOP2",
-      "FAIRY2_FOREST_TOP3"
+      "FAIRY2_FOREST_TOP3",
+      "FAIRY2_FOREST_TOP_EDGE",
+      "FAIRY2_FOREST_TOP_EDGE_CORNER",
+      "FAIRY2_PINE_TREE_LARGE"
     ],
     "colorOverrides": [
       {
@@ -22924,6 +22948,99 @@
         "uvType": "BOX",
         "uvScale": 0.6
       }
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Trees - Join to Cliff",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAIRY2_FOREST_CLIFF_TOP_EDGE_CORNER",
+      "FAIRY2_FORESTTOP_CLIFF_JOIN",
+      "FAIRY2_FORESTTOP_CLIFF_JOIN_MIRROR",
+      "FAIRY2_FOREST_CLIFF_TOP_EDGE_CORNER_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAVEL",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Cliff Walls",
+    "baseMaterial": "GRAVEL_SEMI_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 100,
+    "receiveShadows": false,
+    "objectIds": [
+      "FAIRY2_CLIFFWALL"
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Cliff Tops",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "uvOrientation": 356,
+    "receiveShadows": false,
+    "objectIds": [
+      "FAIRY2_CLIFF_WALL_TOP",
+      "FAIRY2_FOREST_CLIFF_JOIN",
+      "FAIRY2_FOREST_CLIFF_JOIN_MIRROR"
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Mossy Boulder",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "FAIRY2_LARGE_MOSSY_ROCK",
+      "FAIRY2_LARGE_MOSSY_ROCK2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 17",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h > 3 && h < 7",
+        "baseMaterial": "GRAVEL",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Rocks",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FAIRYTALE2_ENCHANTED_VALLEY_ROCKS1",
+      "FAIRYTALE2_ENCHANTED_VALLEY_ROCKS2",
+      "FAIRY2_CENTAUR_AREA_ROCKS5",
+      "FAIRY2_CENTAUR_AREA_ROCKS3",
+      "FAIRY2_CENTAUR_AREA_ROCKS4",
+      "FAIRY2_CENTAUR_AREA_ROCKS2",
+      "FAIRY2_CENTAUR_AREA_ROCKS1"
+    ]
+  },
+  {
+    "description": "Enchanted Valley - Stalagmite",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.75,
+    "objectIds": [
+      "FAIRY2_CENTAUR_AREA_STALAGMITE_LARGE",
+      "FAIRY2_CENTAUR_AREA_STALAGMITE",
+      "FAIRY2_CENTAUR_AREA_STALAGMITE_FALLOFF",
+      "FAIRY2_CENTAUR_AREA_STALAGMITE_TWIN"
     ]
   },
   {

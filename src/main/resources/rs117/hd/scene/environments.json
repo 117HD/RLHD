@@ -1771,6 +1771,16 @@
     "fogDepth": 15
   },
   {
+    "key": "Enchanted Valley",
+    "area": "ENCHANTED_VALLEY",
+    "fogColor": "#b9d6ff",
+    "fogDepth": 16.5,
+    "directionalStrength": 3.5,
+    "ambientStrength": 1.25,
+    "waterColor": "#b9d6ff",
+    "instantTransition": true
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
