@@ -4542,6 +4542,28 @@
     "blended": false
   },
   {
+    "name": "Hueycoatl Snow Fix - Blending",
+    "area": "Hueycoatl Snow Fix",
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [ 58, 63, 94, 173 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "replacements": {
+      "Hueycoatl Snow Fix - No Blending": "!blending"
+    },
+    "shiftLightness": 35
+  },
+  {
+    "name": "Hueycoatl Snow Fix - No Blending",
+    "area": "Hueycoatl Snow Fix",
+    "underlayIds": [ 58, 173 ],
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 15,
+    "maxLightness": 90,
+    "minLightness": 70,
+    "maxSaturation": 0
+  },
+  {
     "name": "CAM_TORUM_WATER",
     "area": "CAM_TORUM",
     "overlayIds": [ 201 ],

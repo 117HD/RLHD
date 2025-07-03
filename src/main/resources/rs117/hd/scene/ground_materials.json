@@ -53,6 +53,18 @@
     ]
   },
   {
+    "name": "DIRTY_SNOW",
+    "materials": [
+      "SNOW_1",
+      "SNOW_3",
+      "GRAVEL_LIGHT",
+      "SNOW_4",
+      "DIRT_1",
+      "GRAVEL_LIGHT",
+      "SNOW_2"
+    ]
+  },
+  {
     "name": "SNOW_1",
     "materials": [
       "SNOW_1",

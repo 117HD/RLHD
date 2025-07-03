@@ -34424,6 +34424,7 @@
     "description": "Hueycoatl Body Cave",
     "objectIds": [
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY_RESPAWN",
+      "HUEY_P2_BARRIER_RESPAWN",
       "DF_CAVE_SNOW01_ENTRANCE03",
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
       "DF_CAVE_SNOW01_ENTRANCE03_DIAG",
