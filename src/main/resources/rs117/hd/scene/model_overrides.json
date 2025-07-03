@@ -38938,5 +38938,268 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Varlamore - Mastering Mixology - Mixing Vessel",
+    "baseMaterial": "SLIME_GRUNGE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MM_LAB_VESSEL_EMPTY",
+      "MM_LAB_VESSEL_READY_MAL",
+      "MM_LAB_VESSEL_READY_MM1",
+      "MM_LAB_VESSEL_READY_MMM",
+      "MM_LAB_VESSEL_READY_MMA",
+      "MM_LAB_VESSEL_READY_AAM",
+      "MM_LAB_VESSEL_READY_AAA",
+      "MM_LAB_VESSEL_READY_AA1",
+      "MM_LAB_VESSEL_READY_LLA",
+      "MM_LAB_VESSEL_READY_LLM",
+      "MM_LAB_VESSEL_READY_LLL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 343
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Mastering Mixology - Retort",
+    "baseMaterial": "SLIME_GRUNGE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MM_LAB_MACHINE_RETORT_EMPTY",
+      "MM_LAB_MACHINE_RETORT_MAL",
+      "MM_LAB_MACHINE_RETORT_MMM",
+      "MM_LAB_MACHINE_RETORT_MMA",
+      "MM_LAB_MACHINE_RETORT_MML",
+      "MM_LAB_MACHINE_RETORT_AAA",
+      "MM_LAB_MACHINE_RETORT_AAM",
+      "MM_LAB_MACHINE_RETORT_AAL",
+      "MM_LAB_MACHINE_RETORT_LLL",
+      "MM_LAB_MACHINE_RETORT_LLA",
+      "MM_LAB_MACHINE_RETORT_LLM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Stone base",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 192
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Mastering Mixology - Agitator",
+    "baseMaterial": "SLIME_GRUNGE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MM_LAB_MACHINE_AGITATOR_EMPTY",
+      "MM_LAB_MACHINE_AGITATOR_MAL",
+      "MM_LAB_MACHINE_AGITATOR_MMM",
+      "MM_LAB_MACHINE_AGITATOR_MMA",
+      "MM_LAB_MACHINE_AGITATOR_MML",
+      "MM_LAB_MACHINE_AGITATOR_AAA",
+      "MM_LAB_MACHINE_AGITATOR_AAM",
+      "MM_LAB_MACHINE_AGITATOR_AAL",
+      "MM_LAB_MACHINE_AGITATOR_LLL",
+      "MM_LAB_MACHINE_AGITATOR_LLA",
+      "MM_LAB_MACHINE_AGITATOR_LLM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Stone base",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 768
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Mastering Mixology - Alembic",
+    "baseMaterial": "SLIME_GRUNGE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MM_LAB_MACHINE_ALEMBIC_EMPTY",
+      "MM_LAB_MACHINE_ALEMBIC_MAL",
+      "MM_LAB_MACHINE_ALEMBIC_MMM",
+      "MM_LAB_MACHINE_ALEMBIC_MMA",
+      "MM_LAB_MACHINE_ALEMBIC_MML",
+      "MM_LAB_MACHINE_ALEMBIC_AAA",
+      "MM_LAB_MACHINE_ALEMBIC_AAM",
+      "MM_LAB_MACHINE_ALEMBIC_AAL",
+      "MM_LAB_MACHINE_ALEMBIC_LLL",
+      "MM_LAB_MACHINE_ALEMBIC_LLA",
+      "MM_LAB_MACHINE_ALEMBIC_LLM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Stone base",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Mastering Mixology - Mixer",
+    "baseMaterial": "SLIME_GRUNGE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MM_LAB_MIXER01_EMPTY",
+      "MM_LAB_MIXER02_EMPTY",
+      "MM_LAB_MIXER03_EMPTY",
+      "MM_LAB_MIXER01_RED",
+      "MM_LAB_MIXER02_RED",
+      "MM_LAB_MIXER03_RED",
+      "MM_LAB_MIXER01_GREEN",
+      "MM_LAB_MIXER02_GREEN",
+      "MM_LAB_MIXER03_GREEN",
+      "MM_LAB_MIXER01_BLUE",
+      "MM_LAB_MIXER02_BLUE",
+      "MM_LAB_MIXER03_BLUE",
+      "MM_LAB_SWITCH_LYE",
+      "MM_LAB_SWITCH_AGA",
+      "MM_LAB_SWITCH_MOX"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Stone base",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Mastering Mixology - Hopper",
+    "baseMaterial": "SLIME_GRUNGE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MM_LAB_HOPPER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 255 && h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      },
+      {
+        "description": "Stone base",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "STONE_NORMALED_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
   }
 ]
