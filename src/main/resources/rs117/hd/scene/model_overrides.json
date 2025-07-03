@@ -34586,9 +34586,10 @@
     "colorOverrides": [
       {
         "colors": [ "h == 10" ],
-        "baseMaterial": "CARPET",
+        "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.85
+        "uvScale": 0.7,
+        "uvOrientation": 256
       }
     ]
   },
