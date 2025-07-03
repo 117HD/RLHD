@@ -36850,6 +36850,291 @@
     ]
   },
   {
+    "description": "Hueycoatl Melee Brazier Full 5",
+    "offset": [ 70 , 420 , -70 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Almost Full 4",
+    "offset": [ 70 , 350 , -70 ],
+    "radius": 100,
+    "strength": 8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Half 3",
+    "offset": [ 70 , 255 , -70 ],
+    "radius": 100,
+    "strength": 6,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S3",
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Half Empty 2",
+    "offset": [ 70 , 170 , -70 ],
+    "radius": 110,
+    "strength": 4,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S2",
+      "HUEY_PRAYER_PILLAR_MELEE_S3",
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Almost Empty 1",
+    "offset": [ 70 , 70 , -70 ],
+    "radius": 110,
+    "strength": 4,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S1",
+      "HUEY_PRAYER_PILLAR_MELEE_S2",
+      "HUEY_PRAYER_PILLAR_MELEE_S3",
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Full 5",
+    "offset": [ 70 , 420 , -70 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Almost Full 4",
+    "offset": [ 70 , 350 , -70 ],
+    "radius": 100,
+    "strength": 8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Half 3",
+    "offset": [ 70 , 255 , -70 ],
+    "radius": 100,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S3",
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Half Empty 2",
+    "offset": [ 70 , 170 , -70 ],
+    "radius": 100,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S2",
+      "HUEY_PRAYER_PILLAR_RANGED_S3",
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Almost Empty 1",
+    "offset": [ 70 , 70 , -70 ],
+    "radius": 100,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S1",
+      "HUEY_PRAYER_PILLAR_RANGED_S2",
+      "HUEY_PRAYER_PILLAR_RANGED_S3",
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Full 5",
+    "offset": [ 70 , 420 , -70 ],
+    "radius": 100,
+    "strength": 13,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Almost Full 4",
+    "offset": [ 70 , 350 , -70 ],
+    "radius": 100,
+    "strength": 11,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Half 3",
+    "offset": [ 70 , 255 , -70 ],
+    "radius": 100,
+    "strength": 9,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S3",
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Half Empty 2",
+    "offset": [ 70 , 170 , -70 ],
+    "radius": 100,
+    "strength": 7,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S2",
+      "HUEY_PRAYER_PILLAR_MAGIC_S3",
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Almost Empty 1",
+    "offset": [ 70 , 70 , -70 ],
+    "radius": 100,
+    "strength": 7,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S1",
+      "HUEY_PRAYER_PILLAR_MAGIC_S2",
+      "HUEY_PRAYER_PILLAR_MAGIC_S3",
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
     "description": "Hueycoatl Melee Projectile",
     "height": 0,
     "radius": 220,
@@ -36901,7 +37186,7 @@
     "projectileIds": [ "VFX_HUEY_ATTACK_MAGIC_PROJANIM_01" ]
   },
   {
-    "description": "Hueycoatl Ground Attack",
+    "description": "Hueycoatl Lightning Bolt Attack",
     "height": 25,
     "radius": 105,
     "strength": 6,

@@ -34457,17 +34457,24 @@
     "description": "Hueycoatl Tail Cave",
     "objectIds": [ "DF_CAVE_SNOW01_ENTRANCE02" ],
     "npcIds": [ "HUEY_TAIL", "HUEY_TAIL_BROKEN" ],
+    "upwardsNormals": true,
     "colorOverrides": [
       {
         "colors": [ 2 ],
         "baseMaterial": "BLACK"
       },
       {
-        "colors": [ "h == 0" ],
+        "colors": [ "h == 0", "h == 63" ],
         "baseMaterial": "ROCK_3",
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Hueycoatl Lightning Bolt Attack - Remove Shadows",
+    "castShadows": false,
+    "objectIds": [ "HUEY_ATTACK_TILES_LOC" ],
+    "graphicsObjectIds": [ "VFX_HUEYCOATL_PRAYER_02" ]
   },
   {
     "description": "Hueycoatl",
