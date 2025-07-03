@@ -6782,6 +6782,12 @@
     ]
   },
   {
+    "name": "Hueycoatl Ugly Shadow Fix",
+    "aabbs": [
+      [ 1519, 3289, 1520, 3289 ]
+    ]
+  },
+  {
     "name": "Hueycoatl Arena",
     "aabbs": [
       [ 1508, 3268, 1515, 3272 ],

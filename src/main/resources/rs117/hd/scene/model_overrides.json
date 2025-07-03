@@ -34406,7 +34406,21 @@
       "DF_CAVE_ROCK01_ROCKS04",
       "DF_CAVE_ROCK01_ROCKS06",
       "DF_CAVE_SNOW01_FALLOFF01",
-      "DF_CAVE_ROCK01_FALLOFF01"
+      "DF_CAVE_ROCK01_FALLOFF01",
+      "STRANGLER_DUGUPSOIL_07"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Hueycoatl Ugly Shadow Fix",
+    "castShadows": false,
+    "areas": [ "Hueycoatl Ugly Shadow Fix" ],
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "DF_CAVE_SNOW01_ROCKS04",
+      "STRANGLER_DUGUPSOIL_07"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
@@ -34415,6 +34429,7 @@
   {
     "description": "Hueycoatl Rocks",
     "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
     "objectIds": [
       "HUEY_FIGHT_EXIT_SHORTCUT"
     ],
