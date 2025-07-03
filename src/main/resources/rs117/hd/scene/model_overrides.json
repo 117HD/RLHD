@@ -13572,6 +13572,7 @@
   {
     "description": "Ground - Snow Piles - Tiny",
     "baseMaterial": "SNOW_1",
+    "castShadows": false,
     "objectIds": [
       "SNOW1",
       "SNOW2",
@@ -34394,10 +34395,9 @@
   },
   {
     "description": "Hueycoatl Rocks",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       "HUEY_HOLDING_ENTRANCE_INSTANCED",
-      "HUEY_FIGHT_EXIT_SHORTCUT",
       "DF_CAVE_SNOW01_ROCKS01",
       "DF_CAVE_SNOW01_ROCKS02",
       "DF_CAVE_SNOW01_ROCKS02_M",
@@ -34409,11 +34409,21 @@
       "DF_CAVE_ROCK01_FALLOFF01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.9,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Hueycoatl Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "HUEY_FIGHT_EXIT_SHORTCUT"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Hueycoatl Body Cave",
     "objectIds": [
+      "DF_CAVE_SNOW01_ENTRANCE03_HUEY_RESPAWN",
       "DF_CAVE_SNOW01_ENTRANCE03",
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
       "DF_CAVE_SNOW01_ENTRANCE03_DIAG",
@@ -34421,7 +34431,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 0 && s == 0",
+        "colors": "h < 2 && s == 0",
         "baseMaterial": "STONE_NORMALED"
       },
       {
@@ -34438,7 +34448,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 0", "h == 63" ],
+        "colors": ["h == 0", "h < 63" ],
         "baseMaterial": "STONE_NORMALED"
       }
     ]
@@ -34454,7 +34464,8 @@
       },
       {
         "colors": [ "h == 0" ],
-        "baseMaterial": "STONE"
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
       }
     ]
   },
@@ -34464,7 +34475,8 @@
     "colorOverrides": [
       {
         "colors": [ "h == 0 && s == 0", "h == 63" ],
-        "baseMaterial": "STONE"
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
       }
     ]
   },
@@ -34509,9 +34521,10 @@
   },
   {
     "description": "Hueycoatl Entrance Chain",
-    "baseMaterial": "STONE",
+    "baseMaterial": "ROCK_3",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.6,
+    "uvOrientation": 700,
     "objectIds": [
       "HUEY_FIGHT_ENTRANCE_INAREA",
       "HUEY_FIGHT_ENTRANCE_OUTAREA"
@@ -34580,10 +34593,9 @@
   },
   {
     "description": "Hueycoatl Brazier",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 256,
+    "uvScale": 0.7,
     "objectIds": [
       "HUEY_PRAYER_PILLAR_MAGIC_BRAZIER_ON",
       "HUEY_PRAYER_PILLAR_MAGIC_BRAZIER_OFF",
