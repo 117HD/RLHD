@@ -92,7 +92,8 @@
   },
   {
     "area": "HUNTER_GUILD",
-    "waterCausticsStrength": 50
+    "waterCausticsStrength": 50,
+    "waterColor": "#0F1E38"
   },
   {
     "area": "Daimon's Crater - Bounty Hunter",

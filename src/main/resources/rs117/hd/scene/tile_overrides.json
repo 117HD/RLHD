@@ -3586,7 +3586,7 @@
     "name": "Hunter Guild Water",
     "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
-    "waterType": "DEEP_CAVE_WATER"
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "STRANGLEWOOD_HILLSIDE",

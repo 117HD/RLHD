@@ -167,15 +167,15 @@ public enum WaterType
 		.depthColor(srgb(30, 255, 26))
 		.causticsStrength(0)
 		.duration(1.6f)),
-	DEEP_CAVE_WATER(b -> b
+	CAVE_WATER(b -> b
 		.specularStrength(.2f)
 		.specularGloss(100)
 		.normalStrength(.3f)
 		.baseOpacity(.75f)
 		.fresnelAmount(.1f)
-		.surfaceColor(rgb("#0F1E38"))
+		.surfaceColor(rgb("#274049"))
 		.foamColor(rgb(10, 10, 10))
-		.depthColor(rgb("#444444"))
+		.depthColor(rgb("#3A6A70"))
 		.causticsStrength(0f)),
 	;
 
