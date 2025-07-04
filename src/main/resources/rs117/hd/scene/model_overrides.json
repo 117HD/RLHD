@@ -34436,6 +34436,24 @@
     "uvType": "BOX"
   },
   {
+    "description": "Ates Pendant Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "ATES_STATUE_DARKFROST_INACTIVE",
+      "ATES_STATUE_DARKFROST_ACTIVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 35",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Hueycoatl Body Cave",
     "objectIds": [
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY_RESPAWN",
