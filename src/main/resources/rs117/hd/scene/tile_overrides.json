@@ -4635,7 +4635,7 @@
   },
   {
     "name": "Perilous Moons Ancient Prison, Sun Tiles Fix",
-    "area": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON_SUN_BLEND_FIX",
     "overlayIds": [ 80 ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
