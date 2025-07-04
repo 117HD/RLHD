@@ -24496,11 +24496,34 @@
       "FLOORKIT_BLOOD01_TILE24",
       "FLOORKIT_BLOOD01_TILE25",
       "FLOORKIT_MOON01_EMPTY01",
+      "FLOORKIT_BLUE01_TILE01",
+      "FLOORKIT_BLUE01_TILE01_MIRROR",
+      "FLOORKIT_BLUE01_TILE02",
+      "FLOORKIT_BLUE01_TILE02_MIRROR",
+      "FLOORKIT_BLUE01_TILE03",
+      "FLOORKIT_BLUE01_TILE03_MIRROR",
+      "FLOORKIT_BLUE01_TILE04",
+      "FLOORKIT_BLUE01_TILE04_MIRROR",
+      "FLOORKIT_BLUE01_TILE05",
+      "FLOORKIT_BLUE01_TILE05_MIRROR",
+      "FLOORKIT_BLUE01_TILE06",
+      "FLOORKIT_BLUE01_TILE06_MIRROR",
+      "FLOORKIT_BLUE01_TILE07",
+      "FLOORKIT_BLUE01_TILE07_MIRROR",
+      "FLOORKIT_BLUE01_TILE08",
+      "FLOORKIT_BLUE01_TILE08_MIRROR",
+      "FLOORKIT_BLUE01_TILE09",
+      "FLOORKIT_MOON01_FULL01",
       "FLOORKIT_MOON01_SEMI01",
       "FLOORKIT_MOON01_SEMI02",
       "FLOORKIT_MOON01_SEMI03",
       "FLOORKIT_MOON01_SEMI04",
-      "FLOORKIT_MOON01_FULL01"
+      "FLOORKIT_MOON02_EMPTY01",
+      "FLOORKIT_MOON02_SEMI01",
+      "FLOORKIT_MOON02_SEMI02",
+      "FLOORKIT_MOON02_SEMI03",
+      "FLOORKIT_MOON02_SEMI04",
+      "FLOORKIT_MOON02_FULL01"
     ]
   },
   {
@@ -24715,6 +24738,23 @@
     ]
   },
   {
+    "description": "Blue Moon Arena Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "PMOON_BOSS_BRAZIER_LIT",
+      "PMOON_BOSS_BRAZIER_UNLIT"
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.1,
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Blood Moon Arena Bloody Wall",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
@@ -24772,7 +24812,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 0 && s > 2", "h == 26" ],
+        "colors": [ "h == 0 && s > 2", "h == 26", "h == 36" ],
         "baseMaterial": "GRAY_65"
       }
     ]
