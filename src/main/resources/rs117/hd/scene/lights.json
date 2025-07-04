@@ -35779,20 +35779,196 @@
     "radius": 600
   },
   {
-    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_MAIN",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 3.5,
-    "radius": 1000,
-    "offset": [ 0, 257, 0 ]
+    "strength": 8.5,
+    "radius": 700,
+    "offset": [ 0, 227, 0 ]
   },
   {
-    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 250,
-    "radius": 100,
-    "offset": [ 15, 287, -15 ]
+    "strength": 400,
+    "radius": 75,
+    "offset": [ -15, 287, -15 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_2",
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
+    "color": "#ffa41b",
+    "strength": 400,
+    "radius": 75,
+    "offset": [ 15, 287, 15 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_TOP",
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
+    "color": "#ffa41b",
+    "strength": 400,
+    "radius": 75,
+    "offset": [ 0, 357, 0 ]
+  },
+  {
+    "description": "Eclipse Moon Lava North",
+    "worldX": 1488,
+    "worldY": 9648,
+    "plane": 0,
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Pillar 1",
+    "worldX": 1479,
+    "worldY": 9638,
+    "plane": 0,
+    "offset": [ 0, 20, -75 ],
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Pillar 2",
+    "worldX": 1482,
+    "worldY": 9641,
+    "plane": 0,
+    "offset": [ 100, 0, 0 ],
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 20,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Pillar 3",
+    "worldX": 1495,
+    "worldY": 9641,
+    "plane": 0,
+    "offset": [ 50, 20, 0 ],
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 20,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain North 1",
+    "offset": [ 0, 50, 60 ],
+    "worldY": 9629,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain North 2",
+    "offset": [ 0, 467, 100 ],
+    "worldY": 9629,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain South 1",
+    "offset": [ 0, 50, -60 ],
+    "worldY": 9635,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain South 2",
+    "offset": [ 0, 467, -100 ],
+    "worldY": 9635,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+  },
+  {
+    "description": "Eclipse Moon Lava General",
+    "offset": [ 0, 10, 0 ],
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
   },
   {
     "description": "SULPHUR_NAGA",
