@@ -22579,23 +22579,24 @@
     "uvScale": 0.57
   },
   {
-    "description": "Underground Pass - Spear Wall",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "description": "Spear Wall",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SPEARWALL_ROW2",
-      "SPEARWALL_SKEW"
+      "SPEARWALL_SKEW",
+      "DEATH_TROLL_SPEARWALL"
     ],
     "colorOverrides": [
       {
         "colors": "h == 6",
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.25
       }
     ]
   },
   {
-    "description": "Underground Pass - Spear Wall",
+    "description": "Underground Pass - SOTE Barrier",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "npcIds": [
       "SOTE_UPASS_BARRIER"
@@ -24497,17 +24498,44 @@
     "uvScale": 0.7
   },
   {
-    "description": "Perilous Moons Braziers and Chains",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Perilous Moons Stone Braziers",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "DRAGON_SLAYER_QIP_BROKEN_CHAINS",
       "BRAZIER_DUNGEON01_PMOON01",
       "BRAZIER_DUNGEON01_PMOON02",
       "BRAZIER_DUNGEON01_PMOON03",
       "BRAZIER_DUNGEON01_PMOON04",
-      "BRAZIER_DUNGEON01_PMOON04",
+      "BRAZIER_DUNGEON01_PMOON04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Perilous Moons Chains",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_BROKEN_CHAINS",
       "ROR_CHAIN_PRISON01",
       "ROR_SHACKLES_PRISON01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationX": 512
+      }
     ]
   },
   {
@@ -24704,7 +24732,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 26" ],
+        "colors": [ "h == 0 && s > 2", "h == 26" ],
         "baseMaterial": "GRAY_65"
       }
     ]
