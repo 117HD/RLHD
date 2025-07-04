@@ -3586,7 +3586,7 @@
     "name": "Hunter Guild Water",
     "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
-    "waterType": "PLAIN_WATER"
+    "waterType": "DEEP_CAVE_WATER"
   },
   {
     "name": "STRANGLEWOOD_HILLSIDE",
@@ -4503,7 +4503,7 @@
     "name": "HUNTER_GUILD_POND",
     "area": "HUNTER_GUILD_SURFACE",
     "overlayIds": [ 151 ],
-    "waterType": "WATER_FLAT"
+    "waterType": "PLAIN_WATER"
   },
   {
     "name": "RALOS_RISE_SNOW_PATH",

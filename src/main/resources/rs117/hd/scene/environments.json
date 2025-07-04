@@ -91,6 +91,10 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "HUNTER_GUILD",
+    "waterCausticsStrength": 50
+  },
+  {
     "area": "Daimon's Crater - Bounty Hunter",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,

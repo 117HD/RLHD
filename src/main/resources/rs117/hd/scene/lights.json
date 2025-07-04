@@ -35987,13 +35987,25 @@
     ]
   },
   {
-    "description": "Hunter Guild ceiling lantern",
-    "radius": 600,
+    "description": "Hunter Guild ceiling lantern - Highlight",
+    "radius": 100,
     "strength": 5,
     "color": "#fcb703",
     "type": "FLICKER",
     "range": 13,
-    "offset": [ 0, 406, 0 ],
+    "offset": [ 0, 430, 0 ],
+    "objectIds": [
+      "HG_LANTERN_HANGING_LARGE01"
+    ]
+  },
+  {
+    "description": "Hunter Guild ceiling lantern - Wide",
+    "radius": 600,
+    "strength": 7,
+    "color": "#fcb703",
+    "type": "FLICKER",
+    "range": 13,
+    "offset": [ 0, 360, 0 ],
     "objectIds": [
       "HG_LANTERN_HANGING_LARGE01"
     ]
@@ -37387,5 +37399,69 @@
     "objectIds": [
       "GA_CAVE_OUT"
     ]
+  },
+  {
+    "description": "Moonlight Antelope",
+    "offset": [ 0, 175, 20 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      70,
+      150,
+      235
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
+    "npcIds": [ "MOONLIGHT_ANTELOPE" ]
+  },
+  {
+    "description": "Moonlight Moth",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      40,
+      120,
+      165
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 500,
+    "npcIds": [ "MOTH_MOONLIGHT" ]
+  },
+  {
+    "description": "Hunter Guild Cave Exit - Near",
+    "offset": [ -50, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 17,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [ "HG_CAVE_EXIT" ]
+  },
+  {
+    "description": "Hunter Guild Cave Exit - Far",
+    "offset": [ -400, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [ "HG_CAVE_EXIT" ]
   }
 ]

@@ -25057,6 +25057,21 @@
     "uvScale": 0.86
   },
   {
+    "description": "Hunter Guild Cave Exit",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "HG_CAVE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": [ "l > 63" ],
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Hunter Guild Entrance Bone Arches, Colossal Wyrm Ribs",
     "baseMaterial": "BONE",
     "objectIds": [
@@ -25066,6 +25081,26 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Hunter Guild Shelves",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "HG_SHELF_HUNTERGUILD01_SKULL01",
+      "HG_SHELF_HUNTERGUILD01_BOOKS01",
+      "HG_SHELF_HUNTERGUILD01_BOOKS02",
+      "HG_SHELF_HUNTERGUILD01_BOW01",
+      "SHAYZIEN_GENERAL_SHELF"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3", "h == 5 && s == 4" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      }
+    ]
   },
   {
     "description": "Hunter Guild Wooden Fence Walls",
@@ -25132,7 +25167,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 16" ],
-        "baseMaterial": "GRUNGE_3"
+        "baseMaterial": "LEAF_VEINS"
       }
     ]
   },
@@ -25147,9 +25182,9 @@
     "colorOverrides": [
       {
         "colors": [ "h == 0", "h == 6", "h == 8", "h == 14" ],
-        "baseMaterial": "CARPET",
+        "baseMaterial": "CARPET_LIGHT",
         "uvType": "WORLD_XY",
-        "uvScale": 0.66
+        "uvScale": 0.4
       }
     ]
   },
@@ -25163,10 +25198,14 @@
     "uvScale": 1.2,
     "colorOverrides": [
       {
-        "colors": [ 5915 ],
+        "colors": [ "h == 5 && s == 6 && l == 27" ],
         "baseMaterial": "WOOD_GRAIN_DARK",
         "uvType": "WORLD_XY",
         "uvScale": 1.1
+      },
+      {
+        "colors": [ "h == 16" ],
+        "baseMaterial": "LEAF_VEINS"
       }
     ]
   },
@@ -25209,6 +25248,15 @@
     "uvOrientationY": 512
   },
   {
+    "description": "Hunter Guild Cavern Counter - Unrotate UV so it's seameless with the rest",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "areas": [ "Hunter Guild Fix - Counter" ],
+    "objectIds": [
+      "HG_TABLE_TAVERN02_DEFAULT01"
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Hunter Guild Wooden Pillars",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -25231,10 +25279,21 @@
     "description": "Varlamore and Hunter Guild Wooden Crates",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "objectIds": [
-      "CRATE_CIVITAS01_SINGLE01",
+      "CRATE_CIVITAS01_SINGLE01"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.75
+  },
+  {
+    "description": "Varlamore and Hunter Guild Wooden Crates - Stacked",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
       "CRATE_CIVITAS01_STACK01"
     ],
     "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 75,
     "uvOrientation": 512
   },
   {
@@ -25256,7 +25315,7 @@
     "uvScale": 1.5
   },
   {
-    "description": "Varlamore, Stools and tables covered in furs, MODEL_XZ is used with intent",
+    "description": "Varlamore, Stools and tables covered in furs",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
       "HG_TABLE_TAVERN02_SQUARE01",
@@ -25266,8 +25325,35 @@
       "HG_CHAIR_TAVERN02_HIDE01",
       "HG_CHAIR_TAVERN02_HIDE02"
     ],
-    "uvType": "MODEL_XZ",
-    "uvScale": 0.4
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore, Armchair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HG_SEATING_ARMCHAIR_DEFAULT01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 16" ],
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Varlamore - Well",
@@ -25293,7 +25379,19 @@
       "HG_CAVEKIT_ROOTS01_TOP01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && l == 2" ],
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Hunter Pitfall Spiked Pit - Snowy",
@@ -26418,10 +26516,16 @@
     "uvOrientation": 530
   },
   {
-    "description": "Hunter Guild ceiling lantern",
+    "description": "Hunter Guild ceiling lantern - Hide decal cast on the floor",
     "objectIds": [ "HG_LANTERN_HANGING_LARGE01" ],
-    "flatNormals": true,
-    "hideVanillaShadows": true
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "upwardsNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
   },
   {
     "description": "Object - Textured Brick Fireplace",

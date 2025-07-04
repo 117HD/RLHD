@@ -6806,6 +6806,12 @@
     ]
   },
   {
+    "name": "Hunter Guild Fix - Counter",
+    "aabbs": [
+      [ 1560, 9464 ]
+    ]
+  },
+  {
     "name": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
     "aabbs": [
       [ 1443, 3104, 1444, 3105 ]

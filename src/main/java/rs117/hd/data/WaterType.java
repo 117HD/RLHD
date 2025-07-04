@@ -153,7 +153,7 @@ public enum WaterType
 		.fresnelAmount(.2f)
 		.surfaceColor(rgb("#07292f"))
 		.foamColor(rgb(64, 64, 64))
-		.depthColor(rgb("#000000"))
+		.depthColor(rgb("#ffffff"))
 		.causticsStrength(0)
 		.flat(true)),
 	ARAXXOR_WASTE(b -> b
@@ -167,6 +167,16 @@ public enum WaterType
 		.depthColor(srgb(30, 255, 26))
 		.causticsStrength(0)
 		.duration(1.6f)),
+	DEEP_CAVE_WATER(b -> b
+		.specularStrength(.2f)
+		.specularGloss(100)
+		.normalStrength(.3f)
+		.baseOpacity(.75f)
+		.fresnelAmount(.1f)
+		.surfaceColor(rgb("#0F1E38"))
+		.foamColor(rgb(10, 10, 10))
+		.depthColor(rgb("#444444"))
+		.causticsStrength(0f)),
 	;
 
 	public final boolean flat;
