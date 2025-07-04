@@ -24902,7 +24902,6 @@
       "ROCK_LAVA01_MEDIUM03",
       "ROCK_LAVA01_SMALL01",
       "ROCK_LAVA01_SMALL02",
-      "PMOON_TELEBOX_CAVE",
       "VARLAMORE_MINING_ROCK",
       "VARLAMORE_MINING_ROCK_EMPTY",
       "VARLAMORE_MINING_ROCK02",
@@ -24941,6 +24940,21 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.86
+  },
+  {
+    "description": "Hunter Guild cave, Cam Torum, Perilous Moons, Giants Den and Escape Caves - Walls, Rocky objects and Stairs",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "PMOON_TELEBOX_CAVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": [ "l == 2 && a == 255" ],
+        "baseMaterial": "GRAY_65"
+      }
+    ]
   },
   {
     "description": "Hunter Guild Entrance Bone Arches, Colossal Wyrm Ribs",
