@@ -4026,6 +4026,13 @@
     ]
   },
   {
+    "name": "GOD_WARS_DUNGEON_ANCIENT_PRISON",
+    "aabbs": [
+      [ 2834, 5184, 2944, 5244 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "ISLE_OF_SOULS_DUNGEON",
     "regions": [
       8593
@@ -6906,14 +6913,17 @@
     "hideOtherAreas": true
   },
   {
-    "name": "ANCIENT_PRISON",
+    "name": "MOONS_OF_PERIL_ANCIENT_PRISON",
     "aabbs": [
-      [ 2834, 5184, 2944, 5244 ]
+      [ 1344, 9550, 1393, 9599 ],
+      [ 1344, 9534, 1380, 9549 ],
+      [ 1381, 9542, 1383, 9549 ],
+      [ 1384, 9547, 1386, 9549 ]
     ],
     "hideOtherAreas": true
   },
   {
-    "name": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "name": "MOONS_OF_PERIL_ANCIENT_PRISON_SUN_BLEND_FIX",
     "aabbs": [
       [ 1370, 9555, 0, 1381, 9566, 0 ]
     ]
