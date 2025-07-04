@@ -4641,16 +4641,17 @@
     "blended": false
   },
   {
-    "name": "EARTHBOUND_CAVERN_WATER_DARKER",
-    "area": "EARTHBOUND_CAVERN",
-    "overlayIds": [ 201 ],
-    "waterType": "DARK_BLUE_WATER"
+    "name": "EARTHBOUND_CAVERN_WATER_FIX",
+    "area": "EARTHBOUND_CAVERN_WATER_FIX",
+    "underlayIds": [ 72, 105 ],
+    "shiftLightness": 10,
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "EARTHBOUND_CAVERN_WATER",
     "area": "EARTHBOUND_CAVERN",
     "overlayIds": [ 158, 181, 201 ],
-    "waterType": "PLAIN_WATER"
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "EARTHBOUND_CAVERN_GRASS",
@@ -4697,8 +4698,8 @@
   },
   {
     "name": "THE_BLUE_MOON_ENTRANCE",
-    "area": "THE_BLUE_MOON",
-    "underlayIds": [ 73 ],
+    "area": "THE_BLUE_MOON_ENTRANCE",
+    "underlayIds": [ 56, 73, 205, 206 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {
@@ -4717,7 +4718,7 @@
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
     "area": "THE_BLOOD_MOON_ENTRANCE",
-    "underlayIds": [ 118 ],
+    "underlayIds": [ 56, 118 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {

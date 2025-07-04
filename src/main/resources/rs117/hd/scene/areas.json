@@ -6906,6 +6906,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "EARTHBOUND_CAVERN_WATER_FIX",
+    "aabbs": [
+      [ 1386, 9720, 1387, 9720 ]
+    ]
+  },
+  {
     "name": "STREAMBOUND_CAVERN",
     "regions": [
       6039
@@ -6942,15 +6948,21 @@
   {
     "name": "THE_BLUE_MOON",
     "aabbs": [
-      [ 1434, 9649, 0, 1446, 9663, 0 ],
-      [ 1420, 9664, 0, 1460, 9700, 0 ]
+      [ 1434, 9649, 0, 1446, 9663, 1 ],
+      [ 1420, 9664, 0, 1460, 9700, 1 ]
     ],
     "hideOtherAreas": true
   },
   {
+    "name": "THE_BLUE_MOON_ENTRANCE",
+    "aabbs": [
+      [ 1434, 9649, 1446, 9663 ]
+    ]
+  },
+  {
     "name": "THE_BLOOD_MOON_ENTRANCE",
     "aabbs": [
-      [ 1408, 9626, 0, 1422, 9638, 0 ]
+      [ 1408, 9626, 0, 1422, 9638 ]
     ]
   },
   {
