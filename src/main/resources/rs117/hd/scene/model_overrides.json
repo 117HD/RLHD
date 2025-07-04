@@ -24446,11 +24446,20 @@
   },
   {
     "description": "Perilous Moons Murals",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "TILE_SMALL_1",
+    "uvType": "BOX",
+    "uvOrientation": 256,
     "objectIds": [
       "ROR_GATE_BLOODMOON_CLOSED",
       "ROR_GATE_BLUEMOON_CLOSED",
       "ROR_GATE_SOLARECLIPSE_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && s == 0" ],
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -24561,7 +24570,7 @@
   },
   {
     "description": "Perilous Moons Monolith and Gates",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
     "objectIds": [
       "PMOON_ICOSAHEDRON",
       "ROR_GATE_WANMOON_CLOSED",
@@ -24680,7 +24689,8 @@
   },
   {
     "description": "Perilous Moons - Dragon Head Wall Fountains",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
     "objectIds": [
       "ROR_TEMPLE_WATERFALL01",
       "ROR_TEMPLE_WATERFALL01_ODD01",
@@ -24691,6 +24701,12 @@
       "ROR_TEMPLE_WATERFALL01_LAVA01",
       "ROR_TEMPLE_WATERFALL01_LAVA01_ODD01",
       "FORTIS_CRYPT_FOUNTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 26" ],
+        "baseMaterial": "GRAY_65"
+      }
     ]
   },
   {
