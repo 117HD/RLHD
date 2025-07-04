@@ -24582,7 +24582,7 @@
   },
   {
     "description": "Perilous Moons Statues",
-    "baseMaterial": "MARBLE_2_SEMI_GLOSS",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "objectIds": [
       "STATUES_NAGUA01_BLOOD01",
       "STATUES_NAGUA01_BLUE01",
