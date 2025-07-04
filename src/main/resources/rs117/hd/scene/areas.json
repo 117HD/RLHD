@@ -6919,6 +6919,25 @@
     "hideOtherAreas": true
   },
   {
+    "name": "STREAMBOUND_CAVERN_ROOF_LIGHTS_LARGER",
+    "aabbs": [
+      [ 1387, 9699, 1387, 9700 ],
+      [ 1385, 9698, 1385, 9700 ],
+      [ 1469, 9692, 1522, 9703 ],
+      [ 1492, 9676, 1503, 9687 ],
+      [ 1380, 9712, 1388, 9724 ],
+      [ 1394, 9676, 1402, 9687 ],
+      [ 1372, 9669, 1382, 9693 ],
+      [ 1350, 9684, 1356, 9693 ]
+    ]
+  },
+  {
+    "name": "STREAMBOUND_CAVERN_ROOF_LIGHTS_SMALLER",
+    "aabbs": [
+      [ 1508, 9683, 1511, 9687 ]
+    ]
+  },
+  {
     "name": "MOONS_OF_PERIL_ANCIENT_PRISON",
     "aabbs": [
       [ 1344, 9550, 1393, 9599 ],

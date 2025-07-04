@@ -24660,6 +24660,21 @@
     "uvScale": 0.9
   },
   {
+    "description": "Streambound Cavern Waterfall",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "WATERFALL_CAVE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.86
+      }
+    ]
+  },
+  {
     "description": "Perilous Moons Monolith and Gates",
     "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
     "objectIds": [

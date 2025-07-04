@@ -20194,7 +20194,7 @@
     "height": 230,
     "offset": [ 10, 0, 55 ],
     "alignment": "CENTER",
-    "radius": 450,
+    "radius": 350,
     "strength": 12.5,
     "color": [
       252,
@@ -35811,12 +35811,22 @@
     "offset": [ 0, 42, 0 ]
   },
   {
-    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES",
+    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES_LARGER",
+    "areas": [ "STREAMBOUND_CAVERN_ROOF_LIGHTS_LARGER" ],
     "objectIds": [ "LIGHT_GODRAY02_SMALL01_MOONLIGHT01" ],
-    "radius": 1300,
+    "radius": 1250,
     "strength": 25,
     "color": "#ffffff",
     "offset": [ 0, 540, 0 ]
+  },
+  {
+    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES_SMALLER",
+    "areas": [ "STREAMBOUND_CAVERN_ROOF_LIGHTS_SMALLER" ],
+    "objectIds": [ "LIGHT_GODRAY02_SMALL01_MOONLIGHT01" ],
+    "radius": 800,
+    "strength": 15,
+    "color": "#ffffff",
+    "offset": [ 0, 240, 0 ]
   },
   {
     "description": "CAM_TORUM_FORGE",
