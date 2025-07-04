@@ -6624,7 +6624,7 @@
   {
     "name": "COSMIC_ENTITYS_PLANE_ABYSS_UNDERLAY",
     "area": "COSMIC_ENTITYS_PLANE",
-    "groundMaterial": "DIRT_1",
+    "groundMaterial": "DIRT",
     "overlayIds": [ 0, 37 ],
     "underlayIds": [
       2,
