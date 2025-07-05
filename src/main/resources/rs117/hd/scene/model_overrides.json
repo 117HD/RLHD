@@ -17096,7 +17096,9 @@
     "objectIds": [
       "AREA_SANGUINE_CASTLE_L2_WALL1",
       "AREA_SANGUINE_CASTLE_LOWER_WALL1",
-      "AREA_SANGUINE_CASTLE_L3_WALL1"
+      "AREA_SANGUINE_CASTLE_L3_WALL1",
+      "MYQ4_OBSTACLE_RUBBLE_01_OP",
+      "MYQ3_CASTLE_WALL_TOP_HIGH"
     ]
   },
   {
@@ -17106,7 +17108,6 @@
     "uvScale": 0.7,
     "uvOrientation": 256,
     "objectIds": [
-
       "TOB_SCOREBOARD"
     ],
     "colorOverrides": [
@@ -17155,7 +17156,8 @@
     "uvOrientation": 256,
     "objectIds": [
       "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
-      "MYQ4_OBSTACLE_VENT"
+      "MYQ4_OBSTACLE_VENT",
+      "MYQ4_OBSTACLE_VENT_BROKEN"
     ],
     "colorOverrides": [
       {
@@ -17191,7 +17193,6 @@
     "uvOrientation": 512,
     "uvScale": 0.4,
     "objectIds": [
-      "MYQ3_CASTLE_WALL_TOP_HIGH",
       "TOB_ROOF"
     ]
   },
