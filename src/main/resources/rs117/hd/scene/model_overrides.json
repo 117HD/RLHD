@@ -24467,8 +24467,8 @@
     "description": "Perilous Moons Boss Tiles",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvScale": 3,
-    "uvOrientation": 256,
+    "uvScale": 2,
+    "uvOrientation": 180,
     "objectIds": [
       "FLOORKIT_BLOOD01_TILE01",
       "FLOORKIT_BLOOD01_TILE02",
@@ -24573,7 +24573,7 @@
     ]
   },
   {
-    "description": "Perilous Moons Eclipse Tiles",
+    "description": "Perilous Moons Eclipse Lava Pillar Trim",
     "baseMaterial": "GRAY_150",
     "upwardsNormals": true,
     "objectIds": [
@@ -24735,6 +24735,14 @@
     ]
   },
   {
+    "description": "Perilous Moons Hide Shadows on Magic Attacks",
+    "castShadows": false,
+    "objectIds": [
+      "PMOON_BOSS_BLOOD_POOL"
+    ],
+    "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ]
+  },
+  {
     "description": "Perilous Moons - Darken Ripples in Earthbound",
     "areas": [ "EARTHBOUND_CAVERN" ],
     "baseMaterial": "GRAY_35",
@@ -24835,7 +24843,7 @@
     "baseMaterial": "MARBLE_1",
     "objectIds": [
       "CHEST_SUN01_DEFAULT01",
-      "CHEST_SUN01_OPEN01 "
+      "CHEST_SUN01_OPEN01"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
@@ -24937,6 +24945,10 @@
       "FORTIS_CRYPT_FOUNTAIN"
     ],
     "colorOverrides": [
+      {
+        "colors": [ "h == 0 && s == 5 && l < 20" ],
+        "baseMaterial": "GRAY_150"
+      },
       {
         "colors": [ "h == 0 && s > 2", "h == 26", "h == 36" ],
         "baseMaterial": "GRAY_65"

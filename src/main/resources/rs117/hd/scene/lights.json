@@ -36056,32 +36056,58 @@
   },
   {
     "description": "ECLIPSE_MOON",
-    "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_VIS", "PMOON_BOSS_ECLIPSE_CLONE" ],
+    "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_VIS", "PMOON_BOSS_ECLIPSE_CLONE", "PMOON_ECLIPSE_BOSS_INVIS" ],
+    "animationIds": [ "-1", "NPC_DJINN_02_MAGIC", "NPC_DJINN_02_MAGIC_02", "NPC_DJINN_02_SPAWN", "NPC_DJINN_02_TELEPORT_IDLE_APPEAR", "NPC_DJINN_02_TELEPORT_IDLE_DISAPPEAR", "NPC_DJINN_02_MELEE", "NPC_DJINN_02_COMBO" ],
     "color": "#cd7c00",
     "strength": 50,
     "radius": 1200,
-    "offset": [ 0, 47, 0 ],
+    "offset": [ 0, 60, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "ECLIPSE_PROJECTILE",
+    "projectileIds": [ "VFX_DJINN_ECLIPSE_MOON_PROJANIM_01" ],
+    "color": "#cd7c00",
+    "strength": 20,
+    "radius": 1100,
+    "offset": [ 0, -20, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 200
+  },
+  {
+    "description": "ECLIPSE_SHIELD",
+    "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_SHIELD" ],
+    "animationIds": [ "-1" ],
+    "color": "#cd7c00",
+    "strength": 50,
+    "radius": 1200,
+    "offset": [ 0, 100, 0 ],
+    "fadeOutDuration": 100,
     "fadeInDuration": 150
   },
   {
     "description": "BLOOD_MOON",
     "npcIds": [ "PMOON_BOSS_BLOOD_MOON_VIS" ],
+    "animationIds": [ "-1", "NPC_DJINN_01_MAGIC", "NPC_DJINN_01_SPAWN", "NPC_DJINN_01_TELEPORT_IDLE_APPEAR", "NPC_DJINN_01_COMBO" ],
     "color": "#df002e",
     "strength": 10,
-    "radius": 1200,
-    "offset": [ 0, 47, 0 ],
+    "radius": 1400,
+    "offset": [ 0, 50, 0 ],
     "fadeInDuration": 300,
-    "spawnDelay": 600
+    "fadeOutDuration": 600
   },
   {
     "description": "BLUE_MOON",
     "npcIds": [ "PMOON_BOSS_BLUE_MOON_VIS" ],
+    "animationIds": [ "-1", "NPC_DJINN_03_MAGIC", "NPC_DJINN_03_TELEPORT_IDLE_APPEAR", "NPC_DJINN_03_COMBO", "NPC_DJINN_03_MELEE" ],
     "color": "#3571a7",
     "strength": 20,
     "radius": 1200,
-    "offset": [ 0, 47, 0 ],
+    "offset": [ 0, 60, 0 ],
     "fadeInDuration": 300,
-    "spawnDelay": 600
+    "fadeOutDuration": 100,
+    "spawnDelay": 550
   },
   {
     "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS",
@@ -36123,14 +36149,15 @@
     "strength": 25,
     "radius": 320,
     "offset": [ 0, 47, 0 ],
-    "fadeInDuration": 600
+    "fadeInDuration": 600,
+    "fadeOutDuration": 125
   },
   {
     "description": "SMALL_MOON_PHASE",
     "objectIds": [ "PMOON_BOSS_SMALL_THREAT_CIRCLE" ],
     "color": "#00c7c1",
     "strength": 25,
-    "radius": 128,
+    "radius": 148,
     "offset": [ 0, 47, 0 ],
     "fadeInDuration": 1200
   },
