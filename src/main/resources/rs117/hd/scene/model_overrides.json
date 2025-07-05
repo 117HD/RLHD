@@ -16853,7 +16853,8 @@
     "uvScale": 0.7,
     "uvOrientation": 256,
     "objectIds": [
-      "TOB_SURFACE_CASTLE_ENTRANCE"
+      "TOB_SURFACE_CASTLE_ENTRANCE",
+      "TOB_SURFACE_CASTLE_EXIT"
     ],
     "colorOverrides": [
       {
@@ -16880,18 +16881,43 @@
     "objectIds": [
       "AREA_SANGUINE_CASTLE_L2_WALL1",
       "AREA_SANGUINE_CASTLE_LOWER_WALL1",
-      "MYQ3_CASTLE_WALL_TOP_HIGH",
       "AREA_SANGUINE_CASTLE_L3_WALL1"
     ]
   },
   {
-    "description": "Ver Sinhaza - Stone - Walls with Window",
+    "description": "Ver Sinhaza - Stone - Walls with Scorboard",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.7,
     "uvOrientation": 256,
     "objectIds": [
-      "TOB_SURFACE_CASTLE_WINDOW_SINGLE"
+
+      "TOB_SCOREBOARD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_YZ"
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_YZ"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls with Window or vent",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "MYQ4_OBSTACLE_VENT"
     ],
     "colorOverrides": [
       {
@@ -16902,13 +16928,43 @@
     ]
   },
   {
+    "description": "Ver Sinhaza - Stone - Walls with Doors",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Door",
+        "colors": "s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
     "description": "Ver Sinhaza - Metallic - Roof",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 0.4,
     "objectIds": [
+      "MYQ3_CASTLE_WALL_TOP_HIGH",
       "TOB_ROOF"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Statu with plinth and two fences attached - Needs proper UV",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOB_SURFACE_LARGE_STATUE_WITH_PLINTH"
     ]
   },
   {
@@ -35571,8 +35627,6 @@
     "baseMaterial": "STONE_NORMALED",
     "areas": [ "THEATRE_OF_BLOOD" ],
     "objectIds": [
-      "AREA_SANGUINE_CASTLE_LOWER_WALL1",
-      "TOB_ROOF",
       "TOB_DUNGEON_XARPUS_UPPER_WALL_SINGLE"
     ]
   },
