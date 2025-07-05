@@ -7880,7 +7880,8 @@
       "OLAF2_OLD_BROKEN_TABLE",
       "FARMING_COUNTER_TABLE",
       "WILDY_HUB_BROKEN_TABLE",
-      "TOURTRAP_QIP_DESERT_TABLE"
+      "TOURTRAP_QIP_DESERT_TABLE",
+      "MYQ3_HIDEOUT_LARGE_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10360,7 +10361,10 @@
       "PISCARILIUS_CRATE_04",
       "BIM_SUPPLY_CRATE",
       "NECROPOLIS_CRATE01_DEFAULT01",
-      "FOSSIL_TOOL_CRATE"
+      "FOSSIL_TOOL_CRATE",
+      "MYQ4_EMPTY_CRATES",
+      "MYQ4_VIAL_CRATE",
+      "MYQ4_MEAT_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10377,7 +10381,9 @@
       "FAI_VARROCK_LARGE_CRATES_INACTIVE",
       "SHAYZIEN_CRATE_02_INACTIVE_DARK",
       "NECROPOLIS_CRATE01_STACK01",
-      "FOSSIL_CRATE2"
+      "FOSSIL_CRATE2",
+      "MYQ4_PESTLE_CRATE",
+      "MYQ4_EMPTY_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10423,7 +10429,8 @@
       "ELEM_CRATE_3",
       "SHAYZIEN_CRATE_02_DARK",
       "SHAYZIEN_CRATE_03_DARK",
-      "CRATE_ALDARIN01_STACK01"
+      "CRATE_ALDARIN01_STACK01",
+      "MYQ4_EMPTY_CRATES_SMALL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -16634,7 +16641,9 @@
       "MYQ3_LABORATORY_DOOR_INACTIVE",
       "MYQ3_DOOR_SHORTCUT_REWARD",
       "MYQ3_AGIL_14_LOCKED_DOOR",
-      "MYQ3_AGIL_14_LOCKED_DOOR_INACTIVE"
+      "MYQ3_AGIL_14_LOCKED_DOOR_INACTIVE",
+      "MYQ4_SERAFINA_DOOR",
+      "MYQ4_SERAFINA_DOOR_OPEN"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -16711,7 +16720,8 @@
     "uvScale": 0.58,
     "objectIds": [
       "SANG_MYREQUE_HIDEOUT_RUG_TRAPDOOR_UNHIDDEN_OPEN",
-      "AREA_SANGUINE_MYREQUE_HIDEOUT_LADDER_UP"
+      "AREA_SANGUINE_MYREQUE_HIDEOUT_LADDER_UP",
+      "MYQ4_HIDEOUT_TRAPDOOR_OPEN"
     ],
     "colorOverrides": [
       {
@@ -16722,7 +16732,7 @@
         "uvScale": 0.8
       },
       {
-        "description": "Metal",
+        "description": "Carpet",
         "colors": "h >= 20",
         "baseMaterial": "CARPET",
         "uvType": "MODEL_YZ"
@@ -16846,7 +16856,8 @@
     "objectIds": [
       "AREA_SANGUINE_GHETTO_BED3",
       "AREA_SANGUINE_GHETTO_BED2",
-      "AREA_SANGUINE_GHETTO_BED1"
+      "AREA_SANGUINE_GHETTO_BED1",
+      "MYQ4_SERAFINA_BED"
     ],
     "colorOverrides": [
       {
@@ -17069,6 +17080,62 @@
     "uvOrientation": -162,
     "objectIds": [
       "AREA_SANGUINE_CASTLE_WALL_ARCH_SPIKES"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Metallic - Spikes",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": -162,
+    "objectIds": [
+      "MYQ4_FOUNTAIN_OP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Metallic - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ4_CHEST_CLOSED",
+      "MYQ4_CHEST",
+      "MYQ5_DISGUISE_CHEST_CLOSED",
+      "MYQ5_DISGUISE_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Metallic - Wooden - Crate with Sickles and Chains",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ4_CHAIN_CRATE",
+      "MYQ4_SICKLE_CRATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
     ]
   },
   {
@@ -17392,9 +17459,26 @@
       "AREA_SANGUINE_GHETTO_STAIRS_UP",
       "AREA_SANGUINE_GHETTO_STAIRS_DOWN",
       "MYQ3_LAB_STAIRS_DOWN",
-      "MYQ3_LAB_STAIRS_UP"
+      "MYQ3_LAB_STAIRS_UP",
+      "MYQ4_SERAFINA_STAIRS_UP",
+      "MYQ4_HIDEOUT_EXIT"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Meiyerditch Poor Wooden Stairs going into the ground",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MYQ4_SERAFINA_STAIRS_DOWN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Meiyerditch Myreque Hideout Brick Stone Walls",
@@ -27704,7 +27788,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL", "MYQ3_HIDEOUT_BARREL" ]
+    "objectIds": [ "GERTRUDEEMPTY_BARREL", "FAI_VARROCK_RED_BARREL", "FAI_VARROCK_GREEN_BARREL", "FAI_VARROCK_BARREL", "FAI_VARROCK_BARREL_TAP", "SARIM_BARREL", "SARIM_BARREL_TAP", "SHAYZIEN_BARREL", "PISCARILIUS_BARREL", "POG_BARREL", "MYQ3_HIDEOUT_BARREL", "MYQ4_EMPTY_BARREL", "MYQ4_HERB_BARREL" ]
   },
   {
     "description": "Barrel with tarnished metal bands",
@@ -39401,6 +39485,24 @@
       {
         "colors": "h == 0 && s == 6",
         "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Camelot - Meiyerditch - Wooden - Metallic - Cloth - Training Dummy - Needs proper UV",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "KR_CAM_SWORDDUMMY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.5
