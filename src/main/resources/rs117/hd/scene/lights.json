@@ -37434,7 +37434,7 @@
     "range": 30,
     "fadeInDuration": 500,
     "fadeOutDuration": 100,
-    "npcIds": [ "MOTH_MOONLIGHT" ]
+    "npcIds": [ "MOTH_MOONLIGHT", "MOTH_MOONLIGHT_LOW_WANDER", "MOTH_MOONLIGHT_NOCLICK" ]
   },
   {
     "description": "Hunter Guild Cave Exit - Near",
