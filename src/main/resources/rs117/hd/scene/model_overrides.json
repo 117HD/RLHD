@@ -17533,6 +17533,110 @@
     ]
   },
   {
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_TRACK_01",
+      "AREA_SANGUINE_MINECART_TRACK_02",
+      "AREA_SANGUINE_MINECART_TRACK_JOIN_01",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_09"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft tracks - Diag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_TRACK_JOIN_02",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_01",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_02",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_03",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_04",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_05",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_06",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_07",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_08"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 343
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft track end",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_TRACK_END"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 343
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft track end",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 343,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_EMPTY",
+      "AREA_SANGUINE_MINECART_LOAD1",
+      "AREA_SANGUINE_MINECART_LOAD2",
+      "AREA_SANGUINE_MINECART_LOAD3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Daeyalt Ore",
+        "colors": "h > 26",
+        "baseMaterial": "ROCK_5_ORE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Wooden - Minecraft track supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_SUPPORT",
+      "AREA_SANGUINE_MINECART_SUPPORT_DARK"
+    ]
+  },
+  {
     "description": "Darkmeyer Stone Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
