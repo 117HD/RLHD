@@ -2828,9 +2828,10 @@
   },
   {
     "name": "MEIYERDITCH_MINES",
-    "regions": [
-      9544
-    ]
+    "aabbs": [
+      [ 2406, 4648, 2371, 4613 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "CASTLE_DRAKAN",
