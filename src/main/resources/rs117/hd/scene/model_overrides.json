@@ -17157,7 +17157,8 @@
     "objectIds": [
       "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
       "MYQ4_OBSTACLE_VENT",
-      "MYQ4_OBSTACLE_VENT_BROKEN"
+      "MYQ4_OBSTACLE_VENT_BROKEN",
+      "MYQ4_WINDOW"
     ],
     "colorOverrides": [
       {
@@ -17199,7 +17200,7 @@
     ]
   },
   {
-    "description": "Ver Sinhaza - Statu with plinth and two fences attached - Needs proper UV",
+    "description": "Ver Sinhaza - Statue with plinth and two fences attached - Needs proper UV",
     "baseMaterial": "MARBLE_1_GLOSS",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -17453,35 +17454,83 @@
     "uvScale": 0.85
   },
   {
-    "description": "Meiyerditch Mine Walls",
+    "description": "Meiyerditch - Rock - Wooden - Mine Walls - With supports",
     "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_WALL_SUPPORT_LEFT",
+      "AREA_SANGUINE_MINE_WALL_SUPPORT_RIGHT",
+      "AREA_SANGUINE_MINE_WALL_SUPPORT_MID"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Wooden - Mine Walls - With supports and lamp",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_WALL_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "AREA_SANGUINE_MINE_WALL",
       "AREA_SANGUINE_MINE_WALL_ROCKY",
       "AREA_SANGUINE_MINE_WALL_END",
       "AREA_SANGUINE_MINE_WALL_END_02",
       "AREA_SANGUINE_MINE_WALL_END_NO_MAP",
-      "AREA_SANGUINE_MINE_WALL_SUPPORT_LEFT",
-      "AREA_SANGUINE_MINE_WALL_SUPPORT_RIGHT",
-      "AREA_SANGUINE_MINE_WALL_SUPPORT_MID",
       "AREA_SANGUINE_MINE_WALL_FOR_MINING",
-      "AREA_SANGUINE_MINE_WALL_LAMP",
       "AREA_SANGUINE_MINE_WALL_TOP"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    ]
   },
   {
     "description": "Meiyerditch Mine Walls - Daeyalt Rocks",
     "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "AREA_SANGUINE_MINE_MINEROCKS_01",
       "AREA_SANGUINE_MINE_MINEROCKS_02",
       "AREA_SANGUINE_MINE_MINEROCKS_03",
       "AREA_SANGUINE_MINE_MINEROCKS_04"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    "colorOverrides": [
+      {
+        "description": "Daeyalt Ore",
+        "colors": "h > 26",
+        "baseMaterial": "ROCK_5_ORE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Darkmeyer Stone Walls",
@@ -35746,7 +35795,7 @@
     "colorOverrides": [
       {
         "colors": "h > 7",
-        "baseMaterial": "NONE"
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
@@ -35805,6 +35854,13 @@
       "TOB_DUNGEON_VERZIK_THRONE_SIDE_BLOCKER_END_RIGHT",
       "TOB_DUNGEON_VERZIK_THRONE_SIDE_BLOCKER_END_LEFT"
     ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Stone - Pillar - GAMEVAL MISSING",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [ "MYQ4_PILLAR" ],
     "uvType": "BOX"
   },
   {
