@@ -16727,6 +16727,8 @@
   {
     "description": "Meiyerditch House Roof",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "objectIds": [
       "MYQ3_GHETTO_ROOF_JUMP_02",
       "AREA_SANGUINE_POOR_ROOF_MIDDLE1",
@@ -16739,8 +16741,7 @@
       "AREA_SANGUINE_POOR_ROOF_CORNER1_NO_SIDES",
       "AREA_SANGUINE_POOR_ROOF_CORNER2_NO_SIDES",
       "MYQ3_AGIL_20_JUMP_SOUTH"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Meiyerditch - Wooden - Bed without blanket but with pillow - Needs proper UV",
