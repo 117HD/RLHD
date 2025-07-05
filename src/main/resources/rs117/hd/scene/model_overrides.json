@@ -16469,6 +16469,7 @@
       "AREA_SANGUINE_OUTER_CRUMBLE3_JUMP",
       "AREA_SANGUINE_OUTER_CRUMBLE1_MIR",
       "AREA_SANGUINE_OUTER_CRUMBLE2_MIR",
+      "AREA_SANGUINE_OUTER_CRUMBLE3_MIR",
       "AREA_SANGUINE_OUTER_WALL1",
       "AREA_SANGUINE_OUTER_WALL1_NOMINIMAP",
       "AREA_SANGUINE_OUTER_WALL_ARCH_MIDDLE3_OPEN_NOMINIMAP",
@@ -16600,6 +16601,7 @@
     "objectIds": [
       "AREA_SANGUINE_ROOF_FLOOR1",
       "AREA_SANGUINE_ROOF_FLOOR2",
+      "AREA_SANGUINE_ROOF_FLOOR2_MIRROR",
       "AREA_SANGUINE_ROOF_FLOOR3",
       "AREA_SANGUINE_ROOF_FLOOR3_MIRROR"
     ],
@@ -16731,18 +16733,38 @@
       "AREA_SANGUINE_POOR_ROOF_EDGE1_FILLED",
       "AREA_SANGUINE_POOR_ROOF_EDGE_LEFT1",
       "AREA_SANGUINE_POOR_ROOF_EDGE_RIGHT1",
+      "AREA_SANGUINE_POOR_ROOF_EDGE1_HIGHER",
       "AREA_SANGUINE_POOR_ROOF_EDGE1_NO_SIDES",
       "AREA_SANGUINE_POOR_ROOF_EDGE2_NO_SIDES",
       "AREA_SANGUINE_POOR_ROOF_CORNER1_NO_SIDES",
+      "AREA_SANGUINE_POOR_ROOF_CORNER2_NO_SIDES",
       "MYQ3_AGIL_20_JUMP_SOUTH"
     ],
     "uvType": "GEOMETRY"
   },
   {
-    "description": "Meiyerditch Wooden Shelves",
+    "description": "Meiyerditch - Wooden - Bed without blanket but with pillow - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "AREA_SANGUINE_GHETTO_BED3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow",
+        "colors": "h == 10",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Shelves",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
-      "AREA_SANGUINE_GHETTO_SHELF1",
       "AREA_SANGUINE_GHETTO_SHELF2",
       "AREA_SANGUINE_GHETTO_SHELF3",
       "AREA_SANGUINE_GHETTO_SHELF4",
@@ -16759,6 +16781,24 @@
     "uvType": "BOX",
     "uvOrientationY": 512,
     "uvScale": 0.86
+  },
+  {
+    "description": "Meiyerditch - Wooden - Shelves with papers",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.86,
+    "objectIds": [
+      "AREA_SANGUINE_GHETTO_SHELF1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h >= 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Meiyerditch Stone Brick Fireplace",
