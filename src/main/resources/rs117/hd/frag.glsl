@@ -73,7 +73,8 @@ vec2 worldUvs(float scale) {
 void main() {
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
-    vec3 viewDir = normalize(cameraPos - IN.position);
+    vec3 viewVec = cameraPos - IN.position;
+    vec3 viewDir = normalize(viewVec);
 
     Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
@@ -152,24 +153,39 @@ void main() {
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
         #if PARALLAX_OCCLUSION_MAPPING
-        mat3 invTBN = inverse(TBN);
-        vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * -lightDir;
+        if(material1.displacementMap != -1 || material2.displacementMap != -1 || material3.displacementMap != -1)
+        {
+            const float minLayers = 1;
+            const float maxLayers = 16;
 
-        vec3 fragDelta = vec3(0);
+            float layerDistFade = 1.0 - clamp((length(viewVec) - 500.0) / 2000.0, 0.0, 1.0);
+            if(layerDistFade > 0.0) {
+                mat3 invTBN = inverse(TBN);
+                vec3 tsViewDir = invTBN * viewDir;
 
-        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
+                float cosView = normalize(tsViewDir).z;
+                float layerAngleFade = 1.0 - clamp(cosView * cosView, 0, 1);
+                float numLayers = maxLayers * layerAngleFade * layerDistFade;
 
-        // Average
-        fragDelta /= 3;
-        selfShadowing /= 3;
+                if(numLayers > minLayers) {
+                    vec3 tsLightDir = invTBN * -lightDir;
 
-        // Prevent displaced surfaces from casting flat shadows onto themselves
-        fragDelta.z = max(0, fragDelta.z);
+                    vec3 fragDelta = vec3(0);
+                    sampleDisplacementMap(material1, tsViewDir, tsLightDir, numLayers, uv1, fragDelta, selfShadowing);
+                    sampleDisplacementMap(material2, tsViewDir, tsLightDir, numLayers, uv2, fragDelta, selfShadowing);
+                    sampleDisplacementMap(material3, tsViewDir, tsLightDir, numLayers, uv3, fragDelta, selfShadowing);
 
-        fragPos += TBN * fragDelta;
+                    // Average
+                    fragDelta /= 3;
+                    selfShadowing /= 3;
+
+                    // Prevent displaced surfaces from casting flat shadows onto themselves
+                    fragDelta.z = max(0, fragDelta.z);
+
+                    fragPos += TBN * fragDelta;
+                }
+            }
+        }
         #endif
 
         // get vertex colors
