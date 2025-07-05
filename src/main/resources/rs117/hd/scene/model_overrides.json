@@ -16847,26 +16847,83 @@
     "uvScale": 0.7
   },
   {
-    "description": "Ver Sinhaza Walls",
-    "baseMaterial": "STONE",
+    "description": "Ver Sinhaza - Stone - Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
     "objectIds": [
-      "AREA_SANGUINE_CASTLE_LOWER_WALL1",
-      "MYQ3_CASTLE_WALL_TOP_HIGH"
+      "TOB_SURFACE_CASTLE_ENTRANCE"
     ],
-    "uvType": "GEOMETRY"
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "s >= 5",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 192,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
-    "description": "Ver Sinhaza Walls",
+    "description": "Ver Sinhaza - Stone - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "AREA_SANGUINE_CASTLE_L2_WALL1",
+      "AREA_SANGUINE_CASTLE_LOWER_WALL1",
+      "MYQ3_CASTLE_WALL_TOP_HIGH",
+      "AREA_SANGUINE_CASTLE_L3_WALL1"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls with Window",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "s >= 5",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Roof",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOB_ROOF"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Fences",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
     "objectIds": [
       "AREA_SANGUINE_CASTLE_FENCE_END_RIGHT1",
+      "AREA_SANGUINE_CASTLE_FENCE_END_LEFT1",
       "AREA_SANGUINE_CASTLE_FENCE_MIDDLE1",
       "AREA_SANGUINE_CASTLE_FENCE_MIDDLE2",
       "MYQ3_CASTLE_FENCE_MIDDLE"
-    ],
-    "uvType": "MODEL_YZ",
-    "uvOrientation": 512,
-    "uvScale": 0.4
+    ]
   },
   {
     "description": "Meiyerditch Poor Wooden Stairs",
