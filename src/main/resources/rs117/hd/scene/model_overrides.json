@@ -24123,13 +24123,32 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       "GROUNDCOVER_PLANT5_WITHERED",
-      "BUSH_SAVANNAH01_SPIKEY02",
       "PLANT_FERN_ECLIPSE01",
       "PLANT_FERN_ECLIPSE02",
       "PLANT_FERN_ECLIPSE03",
       "PLANT_FERN_ECLIPSE04",
       "PLANT_SUNFLOWER01_DEFAULT01",
       "PLANT_SUNFLOWER01_DEFAULT02"
+    ]
+  },
+  {
+    "description": "Varlamore - Avium Savannah- Plant - Spikey Bush",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BUSH_SAVANNAH01_SPIKEY01",
+      "BUSH_SAVANNAH01_SPIKEY02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "leaf",
+        "colors": "h >= 5",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
     ]
   },
   {
@@ -25131,26 +25150,6 @@
       {
         "description": "leaf",
         "colors": "s >= 3",
-        "baseMaterial": "LEAF_VEINS",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 42
-      }
-    ]
-  },
-  {
-    "description": "Varlamore - Plant - Spikey Bush",
-    "baseMaterial": "BARK",
-    "uvType": "BOX",
-    "uvScale": 0.75,
-    "objectIds": [
-      "BUSH_SAVANNAH01_SPIKEY01",
-      "BUSH_SAVANNAH01_SPIKEY02"
-    ],
-    "colorOverrides": [
-      {
-        "description": "leaf",
-        "colors": "h >= 5",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
         "uvScale": 0.4,
@@ -32536,7 +32535,6 @@
     "uvScale": 0.9,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_CIVITAS05_FENCE01",
       "WALLKIT_CIVITAS05_FENCE02",
       "WALLKIT_CIVITAS05_FENCE03"
     ]
