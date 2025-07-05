@@ -16910,6 +16910,29 @@
     ]
   },
   {
+    "description": "Ver Sinhaza - Stone - Theater of Blood Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_RAID_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "h == 0 && s >= 1"
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h >= 1",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
     "description": "Ver Sinhaza - Stone - Walls with Window or vent",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -16981,6 +17004,26 @@
       "MYQ3_CASTLE_FENCE_MIDDLE"
     ]
   },
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Vyre Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BLOOD_WELL_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h >= 1",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+
   {
     "description": "Meiyerditch Poor Wooden Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
