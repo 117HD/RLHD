@@ -35973,10 +35973,10 @@
   {
     "description": "SULPHUR_NAGA",
     "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
-    "color": "#cd7c00",
+    "color": "#F9BE00",
     "strength": 20,
-    "radius": 600,
-    "offset": [ 0, 47, 0 ]
+    "radius": 350,
+    "offset": [ 0, 150, 20 ]
   },
   {
     "description": "PERILOUS_MOONS_COOKING_STOVE",
