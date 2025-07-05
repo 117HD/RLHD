@@ -17056,11 +17056,20 @@
       "AREA_SANGUINE_CASTLE_WALL_JOIN1",
       "AREA_SANGUINE_CASTLE_WALL_JOIN1_MIRROR",
       "AREA_SANGUINE_CASTLE_WALL_ARCH_LEFT1",
-      "AREA_SANGUINE_CASTLE_WALL_ARCH_SPIKES",
       "AREA_SANGUINE_CASTLE_WALL_ARCH_RIGHT1"
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Meiyerditch Stone Brick Walls",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": -162,
+    "objectIds": [
+      "AREA_SANGUINE_CASTLE_WALL_ARCH_SPIKES"
+    ]
   },
   {
     "description": "Ver Sinhaza - Stone - Entrance",
