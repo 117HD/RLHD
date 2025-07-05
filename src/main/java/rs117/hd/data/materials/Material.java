@@ -366,6 +366,9 @@ public enum Material {
 	VERTICAL_GRAVEL(GRAVEL, p -> p
 		.setNormalMap(null)
 	),
+	GRAVEL_SEMI_LIGHT(GRAVEL, p -> p
+		.setBrightness(1.25f)
+	),
 	GRAVEL_LIGHT(GRAVEL, p -> p
 		.setBrightness(1.5f)
 	),

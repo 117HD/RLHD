@@ -91,6 +91,11 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "HUNTER_GUILD",
+    "waterCausticsStrength": 50,
+    "waterColor": "#0F1E38"
+  },
+  {
     "area": "Daimon's Crater - Bounty Hunter",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
@@ -1145,13 +1150,13 @@
   {
     "area": "COSMIC_ENTITYS_PLANE",
     "allowSkyOverride": false,
-    "ambientColor": "#db6fff",
-    "ambientStrength": 1.5,
-    "directionalColor": "#57ff00",
-    "directionalStrength": 3,
+    "ambientColor": "#E2A7FF",
+    "ambientStrength": 1,
+    "directionalColor": "#EDE9DC",
+    "directionalStrength": 1.7,
     "sunAngles": [
-      80,
-      190
+      90,
+      180
     ],
     "fogDepth": 6.5
   },
@@ -1760,6 +1765,25 @@
     "directionalStrength": 3,
     "fogColor": "#aebde0",
     "fogDepth": 30
+  },
+  {
+    "area": "WHITE_WOLF_MOUNTAIN_ENVIRONMENT",
+    "ambientColor": "#a8d2ff",
+    "ambientStrength": 1.75,
+    "directionalColor": "#efe9de",
+    "directionalStrength": 3.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 15
+  },
+  {
+    "key": "Enchanted Valley",
+    "area": "ENCHANTED_VALLEY",
+    "fogColor": "#b9d6ff",
+    "fogDepth": 16.5,
+    "directionalStrength": 3.5,
+    "ambientStrength": 1.25,
+    "waterColor": "#b9d6ff",
+    "instantTransition": true
   },
   {
     "key": "OVERWORLD",
