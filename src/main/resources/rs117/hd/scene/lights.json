@@ -35996,13 +35996,13 @@
     "offset": [ 0, 540, 0 ]
   },
   {
-    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES_SMALLER",
+    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES_SMALLER_OFFSET",
     "areas": [ "STREAMBOUND_CAVERN_ROOF_LIGHTS_SMALLER" ],
     "objectIds": [ "LIGHT_GODRAY02_SMALL01_MOONLIGHT01" ],
     "radius": 800,
     "strength": 15,
     "color": "#ffffff",
-    "offset": [ 0, 240, 0 ]
+    "offset": [ 70, 240, 100 ]
   },
   {
     "description": "CAM_TORUM_FORGE",

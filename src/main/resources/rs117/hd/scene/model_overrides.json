@@ -24640,6 +24640,10 @@
       {
         "colors": [ "h == 5" ],
         "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": [ "a < 255" ],
+        "baseMaterial": "NONE"
       }
     ]
   },
@@ -24712,8 +24716,6 @@
       "PLANT_FERN_MOONLIGHT02",
       "PLANT_FERN_MOONLIGHT03",
       "PLANT_FERN_MOONLIGHT04",
-      "ROR_VINE01_HANGING01",
-      "ROR_VINE01_HANGING01_PRISON01",
       "ROR_IVY01_LARGE01",
       "ROR_IVY01_MEDIUM01",
       "ROR_IVY01_MEDIUM01_DARK01",
@@ -24721,6 +24723,23 @@
       "ROR_IVY01_SMALL01_DARK01",
       "FLORA_MUSHROOM01_IMCANDO01",
       "FLORA_MUSHROOM01_IMCANDO02"
+    ]
+  },
+  {
+    "description": "Perilous Moons Hanging Vines - Remove Shadows",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "castShadows": false,
+    "objectIds": [
+      "ROR_VINE01_HANGING01",
+      "ROR_VINE01_HANGING01_PRISON01"
+    ]
+  },
+  {
+    "description": "Perilous Moons - Darken Ripples in Earthbound",
+    "areas": [ "EARTHBOUND_CAVERN" ],
+    "baseMaterial": "GRAY_35",
+    "objectIds": [
+      "DWARF_RIPPLE"
     ]
   },
   {
