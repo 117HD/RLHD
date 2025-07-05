@@ -12962,7 +12962,8 @@
     "description": "Ugly combined backed wooden rocking chair - Broken",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_POOR_CHAIR2"
+      "FAI_VARROCK_POOR_CHAIR2",
+      "AREA_SANGUINE_GHETTO_CHAIR1"
     ],
     "uvType": "BOX"
   },
@@ -16732,6 +16733,7 @@
     "objectIds": [
       "MYQ3_GHETTO_ROOF_JUMP_02",
       "AREA_SANGUINE_POOR_ROOF_MIDDLE1",
+      "AREA_SANGUINE_POOR_ROOF_EDGE1",
       "AREA_SANGUINE_POOR_ROOF_EDGE1_FILLED",
       "AREA_SANGUINE_POOR_ROOF_EDGE_LEFT1",
       "AREA_SANGUINE_POOR_ROOF_EDGE_RIGHT1",
@@ -16744,13 +16746,15 @@
     ]
   },
   {
-    "description": "Meiyerditch - Wooden - Bed without blanket but with pillow - Needs proper UV",
+    "description": "Meiyerditch - Wooden - Bedw ith pillow - Needs proper UV",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationY": 512,
     "objectIds": [
-      "AREA_SANGUINE_GHETTO_BED3"
+      "AREA_SANGUINE_GHETTO_BED3",
+      "AREA_SANGUINE_GHETTO_BED2",
+      "AREA_SANGUINE_GHETTO_BED1"
     ],
     "colorOverrides": [
       {
@@ -16805,6 +16809,7 @@
     "description": "Meiyerditch Stone Brick Fireplace",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      "MYQ3_GHETTO_FIREPLACE_BOTTOM",
       "MYQ3_GHETTO_FIREPLACE_MIDDLE",
       "MYQ3_GHETTO_FIREPLACE_TOP",
       "MYQ3_GHETTO_FIREPLACE_TOP_NOOFFSET",
@@ -16867,6 +16872,7 @@
     "description": "Meiyerditch Poor Wooden Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "AREA_SANGUINE_GHETTO_STAIRS_UP_BROKEN",
       "AREA_SANGUINE_GHETTO_STAIRS_UP",
       "AREA_SANGUINE_GHETTO_STAIRS_DOWN",
       "MYQ3_LAB_STAIRS_DOWN",
