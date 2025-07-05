@@ -11260,7 +11260,9 @@
   },
   {
     "description": "Morytania - Floor - Wooden - Ladder - Burgh De Rott - Meiyerditch",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": -62,
     "objectIds": [
       "BURGH_LADDER_GENERALSTORE_UP",
       "BURGH_LADDER_GENERALSTORE_DOWN",
@@ -16663,6 +16665,7 @@
       "AREA_SANGUINE_GHETTO_UPPER_WALL3",
       "AREA_SANGUINE_GHETTO_UPPER_WALL4",
       "AREA_SANGUINE_MYREQUE_SECRET_WALL_CLOSED",
+      "AREA_SANGUINE_MYREQUE_SECRET_WALL_INACTIVE",
       "MYQ3_AGIL_WALL_LADDERTOP_FULL",
       "MYQ3_AGIL_WALL_LADDERTOP_EMPTY",
       "MYQ3_AGIL_4_PUSHWALL_NORTH",
@@ -16672,13 +16675,90 @@
       "MYQ3_AGIL_6_PUSHWALL_WEST_ANIM",
       "MYQ3_AGIL_11_CRAWL_WALL",
       "MYQ3_AGIL_24_PUSHWALL_NORTH",
-      "MYQ3_AGIL_24_PUSHWALL_NORTH_ANIM",
-      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_OUT",
-      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_IN"
+      "MYQ3_AGIL_24_PUSHWALL_NORTH_ANIM"
     ],
     "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.58
+  },
+  {
+    "description": "Meiyerditch - Wooden - Metallic- House Walls - Myreque Symbol",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.58,
+    "objectIds": [
+      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_OUT",
+      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_IN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 212
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Metallic - Stone - Myreque Entrance - Open",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.58,
+    "objectIds": [
+      "SANG_MYREQUE_HIDEOUT_RUG_TRAPDOOR_UNHIDDEN_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h >= 20",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_YZ"
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - House Walls - Agility",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      "MYQ3_AGIL_4_PUSHWALL_MULTI",
+      "MYQ3_AGIL_4_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_4_ACTIVE_FLOOR_2",
+      "MYQ3_AGIL_6_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_6_ACTIVE_FLOOR_2",
+      "MYQ3_AGIL_24_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_24_ACTIVE_FLOOR_2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.58
+  },
+  {
+    "description": "Meiyerditch - Paint - Myreque symbol",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      "MYQ3_SICKLE_LOGO_WALL"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Dirt - Trapdoor Tunnel",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MYQ3_AGIL_TRAPDOOR_TUNNEL",
+      "MYQ3_AGIL_9_TUNNEL_SOUTH"
+    ]
   },
   {
     "description": "Objects - Wooden - Poor Looking tables - Wide",
@@ -16759,7 +16839,7 @@
     "colorOverrides": [
       {
         "description": "Pillow",
-        "colors": "h == 10",
+        "colors": "h >= 10",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -16774,14 +16854,10 @@
       "AREA_SANGUINE_GHETTO_SHELF3",
       "AREA_SANGUINE_GHETTO_SHELF4",
       "AREA_SANGUINE_GHETTO_SHELF5",
-      "MYQ3_AGIL_10_SHELF_CLIMB_UP",
       "MYQ3_AGIL_10_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_18_SHELF_CLIMB_UP",
       "MYQ3_AGIL_18_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_25_SHELF_CLIMB_UP",
       "MYQ3_AGIL_25_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_26_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_26_SHELF_CLIMB_UP"
+      "MYQ3_AGIL_26_SHELF_CLIMB_DOWN"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -16794,7 +16870,11 @@
     "uvOrientationY": 512,
     "uvScale": 0.86,
     "objectIds": [
-      "AREA_SANGUINE_GHETTO_SHELF1"
+      "AREA_SANGUINE_GHETTO_SHELF1",
+      "MYQ3_AGIL_10_SHELF_CLIMB_UP",
+      "MYQ3_AGIL_18_SHELF_CLIMB_UP",
+      "MYQ3_AGIL_25_SHELF_CLIMB_UP",
+      "MYQ3_AGIL_26_SHELF_CLIMB_UP"
     ],
     "colorOverrides": [
       {
@@ -16822,7 +16902,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "MYQ3_GHETTO_BARICADE",
-      "MYQ3_GHETTO_BARICADE2"
+      "MYQ3_GHETTO_BARICADE2",
+      "MYQ3_GHETTO_BARICADE3"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -17159,6 +17240,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "AREA_SANGUINE_GHETTO_STAIRS_UP_BROKEN",
+      "AREA_SANGUINE_GHETTO_STAIRS_DOWN_BROKEN",
       "AREA_SANGUINE_GHETTO_STAIRS_UP",
       "AREA_SANGUINE_GHETTO_STAIRS_DOWN",
       "MYQ3_LAB_STAIRS_DOWN",
