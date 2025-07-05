@@ -12896,7 +12896,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "QIP_SHEEP_SHEARER_CHAIR",
-      "CONTACT_CHAIR4"
+      "CONTACT_CHAIR4",
+      "MYQ3_HIDEOUT_CHAIR"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -17185,7 +17186,8 @@
     "uvScale": 0.7,
     "uvOrientation": 256,
     "objectIds": [
-      "TOB_SCOREBOARD"
+      "TOB_SCOREBOARD",
+      "TOB_SCOREBOARD_NOOP"
     ],
     "colorOverrides": [
       {
@@ -17209,7 +17211,8 @@
     "uvScale": 0.7,
     "uvOrientation": 256,
     "objectIds": [
-      "TOB_SURFACE_RAID_ENTRANCE"
+      "TOB_SURFACE_RAID_ENTRANCE",
+      "MYQ4_TOB_ENTRANCE"
     ],
     "colorOverrides": [
       {
@@ -17307,7 +17310,8 @@
     "uvOrientation": 256,
     "uvScale": 0.6,
     "objectIds": [
-      "TOB_SURFACE_BLOOD_WELL_EMPTY"
+      "TOB_SURFACE_BLOOD_WELL_EMPTY",
+      "MYQ4_TOB_SURFACE_BLOOD_WELL_EMPTY"
     ],
     "colorOverrides": [
       {
