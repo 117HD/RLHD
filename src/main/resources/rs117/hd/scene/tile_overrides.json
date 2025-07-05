@@ -4654,16 +4654,38 @@
     "waterType": "CAVE_WATER"
   },
   {
-    "name": "EARTHBOUND_CAVERN_GRASS",
+    "name": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "area": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "underlayIds": [ 56, 72 ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7,
+    "blended": false
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_COMPLEX",
     "area": "EARTHBOUND_CAVERN",
+    "replacements": {
+      "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
+      "EARTHBOUND_CAVERN_GRASS": "s > 2",
+      "EARTHBOUND_CAVERN_ROCK": "s < 3"
+    }
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_ROCK_TOP",
+    "underlayIds": [ 54, 105 ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "minLightness": 4
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_GRASS",
     "underlayIds": [ 54, 105 ],
     "groundMaterial": "GRASS_1"
   },
   {
     "name": "EARTHBOUND_CAVERN_ROCK",
-    "area": "EARTHBOUND_CAVERN",
     "underlayIds": [ 56, 72 ],
-    "groundMaterial": "ROCKY_CAVE_FLOOR"
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7
   },
   {
     "name": "STREAMBOUND_CAVERN_GRASS",

@@ -6906,6 +6906,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "aabbs": [
+      [ 1374, 9701, 1377, 9702 ],
+      [ 1372, 9701 ]
+    ]
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_FIX",
     "aabbs": [
       [ 1386, 9720, 1387, 9720 ]
