@@ -17023,7 +17023,114 @@
       }
     ]
   },
-
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Bank",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BANKBOOTH"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Bank closed",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BANKBOOTH_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      },
+      {
+        "description": "Wooden Panels",
+        "colors": "s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Wooden - Roude table with coin piles on and around it",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BANK_COINS_ON_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Coins",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 7 && s == 7",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Wooden Panels",
+        "colors": "h > 30",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Cloth - Bank barrier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TOB_SURFACE_BANK_BARRIER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 512,
+        "uvOrientationZ": -200
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "TOB_REWARDS_CHEST_LOBBY_CLOSED",
+      "TOB_REWARDS_CHEST_LOBBY_CLOSED_NOOP",
+      "TOB_REWARDS_CHEST_LOBBY_MULTI",
+      "TOB_REWARDS_CHEST_LOBBY_MULTI_NOOP",
+      "TOB_REWARDS_CHEST_LOBBY_OPEN",
+      "TOB_REWARDS_CHEST_LOBBY_OPEN_NOOP",
+      "TOB_SURFACE_GRAVESTONE_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h == 6 && s == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ]
+  },
   {
     "description": "Meiyerditch Poor Wooden Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
