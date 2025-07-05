@@ -16924,6 +16924,43 @@
     ]
   },
   {
+    "description": "Meiyerditch - Wooden - Painting with key inside",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MYQ3_STATUE_PAINTING_SLASHED_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 8 && l > 19 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Objects - Wooden - Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "MYQ3_HIDEOUT_PAPYRUS_CRATES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Papers",
+        "colors": "h < 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Objects - Wooden - Crate",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "uvType": "BOX",
