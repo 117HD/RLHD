@@ -17193,7 +17193,9 @@
     "uvOrientation": 512,
     "uvScale": 0.4,
     "objectIds": [
-      "TOB_ROOF"
+      "TOB_ROOF",
+      "MYQ4_OBSTACLE_ROOF_01",
+      "MYQ4_OBSTACLE_ROOF_02"
     ]
   },
   {
