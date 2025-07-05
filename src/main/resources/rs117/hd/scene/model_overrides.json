@@ -10768,8 +10768,7 @@
       "ELID_POTSANDPANS1",
       "ELID_POTSANDPANS2",
       "AREA_SANGUINE_GHETTO_POTS1",
-      "AREA_SANGUINE_GHETTO_POTS2",
-      "MYQ3_SICKLE_LOGO_WALL"
+      "AREA_SANGUINE_GHETTO_POTS2"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -16741,16 +16740,6 @@
     ]
   },
   {
-    "description": "Meiyerditch - Wooden - - Myreque Exit staircase",
-    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
-    "uvType": "BOX",
-    "uvOrientation": 1536,
-    "uvScale": 0.58,
-    "objectIds": [
-      "AREA_SANGUINE_MYREQUE_HIDEOUT_LADDER_UP"
-    ]
-  },
-  {
     "description": "Meiyerditch - Wooden - House Walls - Agility",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
@@ -16919,7 +16908,7 @@
     ]
   },
   {
-    "description": "Objects - Wooden - Crate",
+    "description": "Objects - Wooden - Crate with papers in it",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -16956,25 +16945,7 @@
     ]
   },
   {
-    "description": "Objects - Wooden - Crate",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "flatNormals": true,
-    "objectIds": [
-      "MYQ3_HIDEOUT_PAPYRUS_CRATES"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Papers",
-        "colors": "h < 8",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.75
-      }
-    ]
-  },
-  {
-    "description": "Objects - Wooden - Crate",
+    "description": "Objects - Wooden - Blackboard",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
