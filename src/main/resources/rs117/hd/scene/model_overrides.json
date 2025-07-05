@@ -11268,7 +11268,8 @@
       "BURGH_LADDER_GENERALSTORE_DOWN",
       "BURGH_LADDER_HATCH_UP",
       "AREA_SANGUINE_GHETTO_LADDER_UP",
-      "AREA_SANGUINE_GHETTO_LADDER_DOWN"
+      "AREA_SANGUINE_GHETTO_LADDER_DOWN",
+      "MYQ3_MINE_LADDER"
     ]
   },
   {
@@ -17533,7 +17534,7 @@
     ]
   },
   {
-    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft tracks",
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecart tracks",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -17556,7 +17557,7 @@
     ]
   },
   {
-    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft tracks - Diag",
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecart tracks - Diag",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -17584,7 +17585,7 @@
     ]
   },
   {
-    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft track end",
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecart track end",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -17604,7 +17605,7 @@
     ]
   },
   {
-    "description": "Meiyerditch Mine - Metallic - Wooden - Minecraft track end",
+    "description": "Meiyerditch Mine - Metallic - Minecart",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -17614,6 +17615,27 @@
       "AREA_SANGUINE_MINECART_LOAD1",
       "AREA_SANGUINE_MINECART_LOAD2",
       "AREA_SANGUINE_MINECART_LOAD3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Daeyalt Ore",
+        "colors": "h > 26",
+        "baseMaterial": "ROCK_5_ORE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mines Exit - Wooden - Rock",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 343,
+    "objectIds": [
+      "MYQ3_MINE_CLIFF_EDGE_1",
+      "MYQ3_MINE_CLIFF_EDGE_2",
+      "MYQ3_MINE_CLIFF_EDGE_3"
     ],
     "colorOverrides": [
       {
@@ -17641,11 +17663,12 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "DARKM_OUTER_WALL_3H",
+      "DARKM_OUTER_WALL_3H_CRACK",
+      "DARKM_INNER_WALL_PILLAR_3H_TO_1H",
       "DARKM_OUTER_WALL_3H_MEYERDITCH_WALL_SHORTCUT_TOP",
       "DARKM_OUTER_WALL_INSIDE_3H",
       "DARKM_OUTER_WALL_OUTSIDE_1H",
       "DARKM_OUTER_WALL_OUTSIDE_3H",
-      "DARKM_OUTER_WALL_3H_FLAG",
       "DARKM_OUTER_WALL_1H",
       "DARKM_OUTER_WALL_INSIDE_1H",
       "DARKM_CASTLE_WALL",
@@ -17664,6 +17687,32 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Darkmeyer Stone Walls with cloth flag",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DARKM_OUTER_WALL_3H_FLAG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Flag",
+        "colors": " h > 6 && s >= 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Flag pole",
+        "colors": " h > 0 && h <= 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
   },
   {
     "description": "Darkmeyer Stone Tiles",
