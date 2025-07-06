@@ -36059,13 +36059,13 @@
   {
     "description": "ECLIPSE_MOON",
     "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_VIS", "PMOON_BOSS_ECLIPSE_CLONE", "PMOON_ECLIPSE_BOSS_INVIS" ],
-    "animationIds": [ "-1", "NPC_DJINN_02_MAGIC", "NPC_DJINN_02_MAGIC_02", "NPC_DJINN_02_SPAWN", "NPC_DJINN_02_TELEPORT_IDLE_APPEAR", "NPC_DJINN_02_TELEPORT_IDLE_DISAPPEAR", "NPC_DJINN_02_MELEE", "NPC_DJINN_02_COMBO" ],
+    "animationIds": [ "-1", "NPC_DJINN_02_MAGIC", "NPC_DJINN_02_MAGIC_02", "NPC_DJINN_02_SPAWN", "NPC_DJINN_02_TELEPORT_IDLE_APPEAR", "NPC_DJINN_02_MELEE", "NPC_DJINN_02_COMBO" ],
     "color": "#cd7c00",
     "strength": 50,
     "radius": 1200,
     "offset": [ 0, 60, 0 ],
     "fadeInDuration": 150,
-    "fadeOutDuration": 200
+    "fadeOutDuration": 600
   },
   {
     "description": "ECLIPSE_PROJECTILE",
@@ -36075,18 +36075,18 @@
     "radius": 1100,
     "offset": [ 0, -20, 0 ],
     "fadeInDuration": 150,
-    "fadeOutDuration": 200
+    "fadeOutDuration": 600
   },
   {
     "description": "ECLIPSE_SHIELD",
     "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_SHIELD" ],
-    "animationIds": [ "-1" ],
+    "animationIds": [ "-1", "VFX_DJINN_ECLIPSE_MOON_SPAWN_01" ],
     "color": "#cd7c00",
     "strength": 50,
-    "radius": 1200,
+    "radius": 1300,
     "offset": [ 0, 100, 0 ],
-    "fadeOutDuration": 100,
-    "fadeInDuration": 150
+    "fadeOutDuration": 800,
+    "fadeInDuration": 800
   },
   {
     "description": "BLOOD_MOON",
@@ -36112,7 +36112,27 @@
     "spawnDelay": 550
   },
   {
-    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS",
+    "description": "BLUE_MOON_ARENA_BRAZIER_EXTINGUISH_ATTACK",
+    "projectileIds": [ "VFX_DJINN_BLUE_MOON_PROJANIM_01" ],
+    "color": "#3571a7",
+    "strength": 10,
+    "radius": 1100,
+    "offset": [ 0, 10, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "BLUE_MOON_ARENA_BRAZIER_DISARM",
+    "projectileIds": [ "VFX_DJINN_BLUE_MAGIC_PROJECTILE_01", "VFX_DJINN_BLUE_MAGIC_PROJECTILE_02" ],
+    "color": "#3571a7",
+    "strength": 7.5,
+    "radius": 450,
+    "offset": [ 0, -30, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS_WIDE",
     "objectIds": [ "PMOON_BOSS_BRAZIER_LIT" ],
     "color": "#3571a7",
     "strength": 25,
@@ -36122,14 +36142,24 @@
     "fadeOutDuration": 200
   },
   {
+    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS_HIGHLIGHT",
+    "objectIds": [ "PMOON_BOSS_BRAZIER_LIT" ],
+    "color": "#3571a7",
+    "strength": 40,
+    "radius": 200,
+    "offset": [ 0, 180, -100 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
     "description": "BLUE_MOON_ARENA_BURNING_LINE",
     "objectIds": [ "PMOON_BOSS_BLUE_FIRE" ],
     "color": "#3571a7",
-    "strength": 25,
+    "strength": 15,
     "radius": 220,
-    "offset": [ -30, 100, 0 ],
-    "fadeInDuration": 200,
-    "fadeOutDuration": 200
+    "offset": [ -30, 120, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150
   },
   {
     "description": "BLOOD_MOON_ARENA_BURNING_LINE",

@@ -24740,7 +24740,7 @@
     "objectIds": [
       "PMOON_BOSS_BLOOD_POOL"
     ],
-    "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ]
+    "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01", "VFX_DJINN_BLUE_MOON_PROJANIM_01" ]
   },
   {
     "description": "Perilous Moons - Darken Ripples in Earthbound",
@@ -24872,6 +24872,14 @@
     ]
   },
   {
+    "description": "Blue Moon Arena Disarm Ice Blocks - Brighten",
+    "baseMaterial": "GRAY_150",
+    "npcIds": [
+      "PMOON_BOSS_ICICLE_UNCRACKED",
+      "PMOON_BOSS_ICICLE_CRACKED"
+    ]
+  },
+  {
     "description": "Blue Moon Arena Brazier",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
@@ -24883,8 +24891,8 @@
     "uvScale": 0.1,
     "colorOverrides": [
       {
-        "colors": [ "a < 255" ],
-        "baseMaterial": "NONE"
+        "colors": [ "h == 42 && l > 45" ],
+        "baseMaterial": "GRAY_110"
       }
     ]
   },
