@@ -35699,32 +35699,32 @@
   {
     "description": "Eclipse Moon Entrance",
     "worldX": 1510,
-    "worldY": 9673,
+    "worldY": 9675,
     "plane": 1,
-    "radius": 750,
-    "strength": 15,
+    "radius": 800,
+    "strength": 17,
     "color": "#ff8000",
-    "offset": [ 70, 250, 0 ]
+    "offset": [ 70, 300, 20 ]
   },
   {
     "description": "Blue Moon Entrance",
-    "worldX": 1405,
+    "worldX": 1403,
     "worldY": 9704,
     "plane": 0,
     "radius": 1200,
-    "strength": 15,
+    "strength": 17,
     "color": "#0097ff",
-    "offset": [ 100, 350, 0 ]
+    "offset": [ 0, 350, 0 ]
   },
   {
     "description": "Blood Moon Entrance",
-    "worldX": 1388,
+    "worldX": 1384,
     "worldY": 9591,
     "plane": 0,
     "radius": 1600,
     "strength": 15,
     "color": "#de0000",
-    "offset": [ 0, 350, 70 ]
+    "offset": [ 0, 450, 70 ]
   },
   {
     "description": "ANTECHAMBER_CEILING_LIGHT",
