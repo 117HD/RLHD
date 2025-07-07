@@ -35897,8 +35897,7 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10,
-    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+    "range": 10
   },
   {
     "description": "Eclipse Moon Lava Fountain North 2",
@@ -35915,8 +35914,7 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10,
-    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+    "range": 10
   },
   {
     "description": "Eclipse Moon Lava Fountain South 1",
@@ -35933,8 +35931,7 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10,
-    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+    "range": 10
   },
   {
     "description": "Eclipse Moon Lava Fountain South 2",
@@ -35951,8 +35948,7 @@
     ],
     "type": "PULSE",
     "duration": 7000,
-    "range": 10,
-    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
+    "range": 10
   },
   {
     "description": "Eclipse Moon Lava General",
