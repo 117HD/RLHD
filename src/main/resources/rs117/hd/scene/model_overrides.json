@@ -24954,8 +24954,8 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 0 && s == 5 && l < 20" ],
-        "baseMaterial": "GRAY_150"
+        "colors": [ "h == 0 && s == 5 && l < 11" ],
+        "baseMaterial": "GRAY_125"
       },
       {
         "colors": [ "h == 0 && s > 2", "h == 26", "h == 36" ],
