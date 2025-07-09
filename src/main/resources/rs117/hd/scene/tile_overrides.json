@@ -3548,7 +3548,7 @@
   {
     "name": "Aldarin Terracotta Floor - Red",
     "area": "ALDARIN",
-    "overlayIds": [ 373, 374 ],
+    "overlayIds": [ 324, 373, 374 ],
     "groundMaterial": "TERRACOTTA_FLOOR",
     "minLightness": 23,
     "shiftLightness": 2,

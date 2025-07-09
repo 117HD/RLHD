@@ -512,7 +512,8 @@
     "materials": [
       "GRUNGE_1_LIGHT_SHINY",
       "GRUNGE_2_SHINY",
-      "GRUNGE_3"
+      "GRUNGE_1_LIGHT_SHINY",
+      "GRUNGE_2_SHINY"
     ]
   }
 ]
