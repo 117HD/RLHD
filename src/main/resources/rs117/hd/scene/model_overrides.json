@@ -38705,7 +38705,7 @@
     "description": "Aldarin - Open doorways",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.8,
     "objectIds": [
       "WALLKIT_ALDARIN01_DOORWAY01",
       "WALLKIT_ALDARIN01_INTERIOR01_DOORWAY01"
