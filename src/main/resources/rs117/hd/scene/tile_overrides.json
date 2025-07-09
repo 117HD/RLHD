@@ -3574,7 +3574,7 @@
   {
     "name": "Aldarin Wooden Floor ",
     "area": "ALDARIN",
-    "overlayIds": [ 81, 185 ],
+    "overlayIds": [ 185 ],
     "groundMaterial": "HD_WOOD_PLANKS_2",
     "uvOrientation": 512,
     "uvScale": 1.2,
