@@ -32196,7 +32196,8 @@
     "uvScale": 0.9,
     "flatNormals": true,
     "objectIds": [
-      "CIVITAS_STAIRS_1X3"
+      "CIVITAS_STAIRS_1X3",
+      "ALDARIN_STAIRS_1X2"
     ]
   },
   {
@@ -38637,6 +38638,105 @@
         "uvOrientation": 512,
         "uvScale": 0.5
       }
+    ]
+  },
+  {
+    "description": "Aldarin - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_MIDDLE01",
+      "WALLKIT_ALDARIN01_MIDDLE02",
+      "WALLKIT_ALDARIN01_MIDDLE03",
+      "WALLKIT_ALDARIN01_MIDDLE04",
+      "WALLKIT_ALDARIN01_MIDDLE05",
+      "WALLKIT_ALDARIN01_MIDDLE06",
+      "WALLKIT_ALDARIN01_MIDDLE07",
+      "WALLKIT_ALDARIN01_MIDDLE08",
+      "WALLKIT_ALDARIN01_END01_LEFT01",
+      "WALLKIT_ALDARIN01_END01_LEFT02",
+      "WALLKIT_ALDARIN01_END01_RIGHT01",
+      "WALLKIT_ALDARIN01_WINDOW01",
+      "WALLKIT_ALDARIN01_WINDOW02",
+      "WALLKIT_ALDARIN01_WINDOW03",
+      "WALLKIT_ALDARIN01_WINDOW04",
+      "WALLKIT_ALDARIN01_JUNCTION01_M",
+      "WALLKIT_ALDARIN01_JUNCTION01",
+      "WALLKIT_ALDARIN01_JUNCTION02",
+      "WALLKIT_ALDARIN01_JUNCTION02_M",
+      "WALLKIT_ALDARIN01_INTERIOR01",
+      "WALLKIT_ALDARIN01_INTERIOR02",
+      "WALLKIT_ALDARIN02_MIDDLE01",
+      "WALLKIT_ALDARIN02_MIDDLE02",
+      "WALLKIT_ALDARIN02_MIDDLE03",
+      "WALLKIT_ALDARIN02_MIDDLE04",
+      "WALLKIT_ALDARIN02_MIDDLE05",
+      "WALLKIT_ALDARIN02_JUNCTION01",
+      "WALLKIT_ALDARIN02_JUNCTION01_M",
+      "WALLKIT_ALDARIN02_JUNCTION02",
+      "WALLKIT_ALDARIN02_JUNCTION02_M",
+      "WALLKIT_ALDARIN02_WINDOW01",
+      "WALLKIT_ALDARIN02_WINDOW02",
+      "WALLKIT_ALDARIN02_WINDOW03",
+      "WALLKIT_ALDARIN03_ARCH01",
+      "WALLKIT_ALDARIN03_ARCH02",
+      "WALLKIT_ALDARIN03_ARCH03",
+      "DOTI_HOUSE_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 2 && s >= 4",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 303,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Open doorways",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_DOORWAY01",
+      "WALLKIT_ALDARIN01_INTERIOR01_DOORWAY01"
+    ]
+  },
+  {
+    "description": "Aldarin - Half walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "WALLKIT_ALDARIN04_MIDDLE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -303,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone railing",
+    "baseMaterial": "GRUNGE_2_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 404,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_FENCE01"
     ]
   }
 ]
