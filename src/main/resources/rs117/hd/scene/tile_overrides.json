@@ -3546,6 +3546,36 @@
     }
   },
   {
+    "name": "Aldarin Terracotta Floor - Red",
+    "area": "ALDARIN",
+    "overlayIds": [ 373, 374 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 23,
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "Aldarin Terracotta Floor - Taupe",
+    "area": "ALDARIN",
+    "overlayIds": [ 326 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 25,
+    "maxLightness": 35,
+    "shiftLightness": 2,
+    "uvOrientation": 512,
+    "blended": false
+  },
+  {
+    "name": "Aldarin Wooden Floor ",
+    "area": "ALDARIN",
+    "overlayIds": [ 185 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16
+  },
+  {
     "name": "FORTIS_MARBLE_FLOOR",
     "area": "ZEAH",
     "overlayIds": [ 327 ],
@@ -4614,22 +4644,6 @@
     "maxSaturation": 1,
     "minLightness": 15,
     "maxLightness": 15
-  },
-  {
-    "name": "Aldarin Terracotta Floor - Red",
-    "area": "ALDARIN",
-    "overlayIds": [ 373, 374 ],
-    "groundMaterial": "TERRACOTTA_FLOOR",
-    "minLightness": 23
-  },
-  {
-    "name": "Aldarin Wooden Floor ",
-    "area": "ALDARIN",
-    "overlayIds": [ 185 ],
-    "groundMaterial": "HD_WOOD_PLANKS_2",
-    "uvOrientation": 512,
-    "minLightness": 14,
-    "maxLightness": 16
   },
   {
     "name": "Perilous Moons Antechamber Tiles",
