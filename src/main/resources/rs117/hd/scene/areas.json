@@ -6599,10 +6599,18 @@
     "hideOtherAreas": true
   },
   {
+    "name": "ALDARIN",
+    "aabbs": [
+      [ 1309, 2850, 1486, 2953 ],
+      [ 1309, 2954, 1463, 3001 ]
+    ]
+  },
+  {
     "name": "VARLAMORE",
     "regionBoxes": [
       [ 4908, 7476 ]
-    ]
+    ],
+    "areas": [ "ALDARIN" ]
   },
   {
     "name": "VARLAMORE_TEMPLE_CRYPT",
