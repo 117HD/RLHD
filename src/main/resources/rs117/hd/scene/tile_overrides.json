@@ -3546,6 +3546,12 @@
     }
   },
   {
+    "name": "Aldarin Underwall blending fix - has no texture",
+    "area": "ALDARIN",
+    "overlayIds": [ 159 ],
+    "blended": false
+  },
+  {
     "name": "Aldarin Terracotta Floor - Red",
     "area": "ALDARIN",
     "overlayIds": [ 324, 373, 374 ],
@@ -3557,7 +3563,7 @@
   {
     "name": "Aldarin Terracotta Floor - Taupe",
     "area": "ALDARIN",
-    "overlayIds": [ 326 ],
+    "overlayIds": [ 325, 326 ],
     "groundMaterial": "TERRACOTTA_FLOOR",
     "minLightness": 25,
     "maxLightness": 35,
