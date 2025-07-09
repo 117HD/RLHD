@@ -406,6 +406,10 @@ public enum Material {
 	GRUNGE_1_SHINY(GRUNGE_1, p -> p
 		.setSpecular(0.7f, 300)
 	),
+	GRUNGE_1_LIGHT_SHINY(GRUNGE_1, p -> p
+		.setBrightness(1.2f)
+		.setSpecular(0.7f, 300)
+	),
 	GRUNGE_2,
 	GRUNGE_2_SHINY(GRUNGE_2, p -> p
 		.setSpecular(0.7f, 300)

@@ -4616,6 +4616,21 @@
     "maxLightness": 15
   },
   {
+    "name": "Aldarin Terracotta Floor - Red",
+    "area": "ALDARIN",
+    "overlayIds": [ 373, 374 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 23
+  },
+  {
+    "name": "Aldarin Terracotta Floor - Brown",
+    "area": "ALDARIN",
+    "overlayIds": [ 185 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 12,
+    "maxLightness": 15
+  },
+  {
     "name": "Perilous Moons Antechamber Tiles",
     "area": "PERILOUS_MOONS_ANTECHAMBER_TILES",
     "underlayIds": [ 19, 39, 72 ],
