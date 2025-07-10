@@ -24154,6 +24154,14 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Varlamore - orange carpet with sun symbol",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "RUG_VARLAMORE01_MIDDLE02_RED01"
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
     "description": "Object - Cushions",
     "baseMaterial": "CARPET",
     "objectIds": [
@@ -38714,6 +38722,46 @@
     ]
   },
   {
+    "description": "Aldarin - Terracotta shingled roofs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 303,
+    "objectIds": [
+      "ROOFKIT_CIVITAS_ROOF01",
+      "ROOFKIT_CIVITAS_ROOF02",
+      "ROOFKIT_CIVITAS_ROOF03",
+      "ROOFKIT_CIVITAS_ROOF04",
+      "ROOFKIT_CIVITAS_ROOF05"
+    ]
+  },
+  {
+    "description": "Aldarin - Terracotta shingled roof with fron facade",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ROOFKIT_ALDARIN_FACADE01_5X1",
+      "ROOFKIT_ALDARIN_FACADE01_5X1_M"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Terracotta Shingles - Must match Civatas Roofs",
+        "colors": "h == 2 && s >= 4",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 303
+      },
+      {
+        "description": "Symbol",
+        "colors": "h == 0 && s == 4 || h == 8 && s == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 303,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Aldarin - Open doorways",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -38790,6 +38838,26 @@
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "MODEL_XZ",
         "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_ALDARIN01_CITY01_LOWER01",
+      "PILLAR_ALDARIN01_CITY01_HIGHER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h <= 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
       }
     ]
   }
