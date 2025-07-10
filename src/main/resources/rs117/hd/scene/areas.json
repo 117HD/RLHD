@@ -6599,6 +6599,10 @@
     "hideOtherAreas": true
   },
   {
+    "name": "ALDARIN_324_DIRT_FIX",
+    "aabbs": [ 1406, 2942, 1402, 2938 ]
+  },
+  {
     "name": "ALDARIN",
     "aabbs": [
       [ 1309, 2850, 1486, 2953 ],
