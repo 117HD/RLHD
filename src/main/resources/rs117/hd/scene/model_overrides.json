@@ -11513,7 +11513,8 @@
       "SHAYZIEN_STOOL",
       "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
       "POG_STOOL",
-      "HOSIDIUS_SERVERY_STOOL"
+      "HOSIDIUS_SERVERY_STOOL",
+      "BR_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -32169,14 +32170,25 @@
     ]
   },
   {
-    "description": "Fortis wooden plank floor",
+    "description": "Fortis - Aldarin - wooden plank floor",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "FLOORKIT_WOODEN01_DEFAULT01"
+      "FLOORKIT_WOODEN01_DEFAULT01",
+      "FLOORKIT_ALDARIN_WOOD01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Fortis - Aldarin - wooden plank floor - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "FLOORKIT_ALDARIN_WOOD01_CUTOFF01"
     ]
   },
   {
@@ -38737,6 +38749,48 @@
     "uvOrientation": 404,
     "objectIds": [
       "WALLKIT_ALDARIN01_FENCE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Support posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_CIVITAS05_SUPPORT01",
+      "WALLKIT_CIVITAS05_SUPPORT02",
+      "WALLKIT_ALDARIN05_SUPPORT01",
+      "WALLKIT_ALDARIN05_SUPPORT02"
+    ]
+  },
+  {
+    "description": "Varlamore - Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "ALDARIN_WELL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 35",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 89
+      }
     ]
   }
 ]
