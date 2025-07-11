@@ -17278,7 +17278,8 @@
       "MYQ4_CHEST_CLOSED",
       "MYQ4_CHEST",
       "MYQ5_DISGUISE_CHEST_CLOSED",
-      "MYQ5_DISGUISE_CHEST"
+      "MYQ5_DISGUISE_CHEST_OPEN",
+      "MYQ5_DISGUISE_CHEST_CLOSED_NOOP"
     ],
     "colorOverrides": [
       {
