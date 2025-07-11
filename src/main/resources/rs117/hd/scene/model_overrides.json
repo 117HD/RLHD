@@ -14254,13 +14254,6 @@
       "VT_MAZEPORTAL_6",
       "VT_MAZEPORTAL_7",
       "VT_MAZEPORTAL_WRONG",
-      "CASTLEWARS_SARADOMIN_TELE",
-      "CASTLEWARS_ZAMORAK_TELE",
-      "CASTLEWARS_SARADOMIN_EXIT",
-      "CASTLEWARS_ZAMORAK_EXIT",
-      "CASTLEWARS_SARADOMIN_QUIT",
-      "CASTLEWARS_ZAMORAK_QUIT",
-      "CASTLEWARS_RANDOM_TELE",
       "POH_EXIT_PORTAL",
       "DT_PORTAL",
       "RD_PORTAL_ROOM1_ENTRANCE",
@@ -14536,6 +14529,20 @@
       "AKD_JUDGE_PORTAL"
     ],
     "shadowOpacityThreshold": 0.12
+  },
+  {
+    "description": "Remove flickering shadows from various portals - with flat normals",
+    "objectIds": [
+      "CASTLEWARS_SARADOMIN_TELE",
+      "CASTLEWARS_ZAMORAK_TELE",
+      "CASTLEWARS_SARADOMIN_EXIT",
+      "CASTLEWARS_ZAMORAK_EXIT",
+      "CASTLEWARS_SARADOMIN_QUIT",
+      "CASTLEWARS_ZAMORAK_QUIT",
+      "CASTLEWARS_RANDOM_TELE"
+    ],
+    "shadowOpacityThreshold": 0.12,
+    "flatNormals": true
   },
   {
     "description": "Use flat normals for POH Portal Nexus, since it spins around",
