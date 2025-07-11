@@ -32178,6 +32178,17 @@
     ]
   },
   {
+    "description": "Aldarin - wooden plank dock",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "ALDARIN_PIER_RAISED"
+    ]
+  },
+  {
     "description": "Fortis - Aldarin - wooden plank floor",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
@@ -38901,6 +38912,17 @@
       "WALLKIT_ALDARIN02_TOWER01",
       "WALLKIT_ALDARIN03_TOWER01",
       "WALLKIT_ALDARIN03_TOWER01_INNER01"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cross fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_ALDARIN05_FENCE01"
     ]
   }
 ]
