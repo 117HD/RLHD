@@ -4812,7 +4812,8 @@
       "DRAGON_SLAYER_QIP_STAGAMITE",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL2",
-      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP"
+      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP",
+      "CIVITAS_DUGUPSOIL05"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -7676,6 +7677,7 @@
       "DOV_BASE_EXIT_UPPER",
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
+      "CIVITAS_LADDER_TOP",
       "CIVITAS_LADDER_TOP_NORIM",
       "TOURTRAP_QIP_LADDER",
       "KOUREND_LADDER_INACTIVE"
@@ -9921,7 +9923,9 @@
       "EYEGLO_DUGUPSOIL_3",
       "TOURTRAP_QIP_MINE_ROCKS_SMALL_02",
       "TOURTRAP_QIP_MINE_ROCKS_BIG_03",
-      "BRAIN_MUD_DUGUPSOIL_06"
+      "BRAIN_MUD_DUGUPSOIL_06",
+      "BRACKENTOP_ROCKSLIDE03",
+      "BRACKENTOP_ROCKSLIDE04"
     ],
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -9973,7 +9977,11 @@
       "TOURTRAP_QIP_ROCKSLIDE3",
       "TOURTRAP_QIP_ROCKSLIDE4",
       "BRUT_SHORE_ROCKS1",
-      "BRUT_SHORE_ROCKS2"
+      "BRUT_SHORE_ROCKS2",
+      "BRACKENTOP_ROCKSLIDE01",
+      "BRACKENTOP_ROCKSLIDE02",
+      "AVIUM_ROCKSLIDE03",
+      "AVIUM_ROCKSLIDE04"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -10158,7 +10166,9 @@
       "POG_DUGUPSOIL_03",
       "POG_DUGUPSOIL_04",
       "POG_DUGUPSOIL_05",
-      "POG_DUGUPSOIL_06"
+      "POG_DUGUPSOIL_06",
+      "CIVITAS_DUGUPSOIL04",
+      "CIVITAS_DUGUPSOIL06"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.74
@@ -41763,13 +41773,15 @@
     ]
   },
   {
-    "description": "Varlamore - Marble - Metallic - Statue of Quoatlos",
+    "description": "Varlamore - Marble - Metallic - Statues",
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 343,
     "objectIds": [
-      "VARLAMORE_STATUE01_QUOATLOS01_2X2"
+      "VARLAMORE_STATUE01_QUOATLOS01_2X2",
+      "VARLAMORE_STATUE01_TAUR01_2X2",
+      "VARLAMORE_STATUE01_XERNA01_2X2"
     ],
     "colorOverrides": [
       {
@@ -41889,7 +41901,9 @@
     "uvScale": 0.6,
     "uvOrientation": 313,
     "objectIds": [
-      "TABLE_CIVITAS01_TABLE01"
+      "TABLE_CIVITAS01_TABLE01",
+      "TABLE_ALDARIN01_TABLE01",
+      "TABLE_ALDARIN01_TABLE01_DIAGONAL"
     ]
   },
   {
