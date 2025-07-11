@@ -153,7 +153,7 @@ public enum WaterType
 		.fresnelAmount(.2f)
 		.surfaceColor(rgb("#07292f"))
 		.foamColor(rgb(64, 64, 64))
-		.depthColor(rgb("#ffffff"))
+		.depthColor(rgb("#000000"))
 		.causticsStrength(0)
 		.flat(true)),
 	ARAXXOR_WASTE(b -> b
