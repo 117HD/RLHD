@@ -3144,9 +3144,6 @@
       "FAI_VARROCK_CASTLE_SHANTY_JOIN_LOW_LEFT",
       "FAI_VARROCK_CASTLE_SHANTY_JOIN_TOP_RIGHT",
       "FAI_VARROCK_SHANTY_AND_BATTLEMENT",
-      "GARDEN_TRELLIS",
-      "GARDEN_TRELLIS_CONCAVE",
-      "GARDEN_TRELLIS_WALL_MIRROR",
       "FAI_VARROCKWALL_HILLSKEW",
       "FAI_VARROCKWALL",
       "FAI_VARROCK_INTERIORWALL",
@@ -3162,6 +3159,7 @@
       "FAI_VARROCK_SMALL_WALL_CASTLE_FILLER_MIRROR",
       "FAI_VARROCK_CASTLE_BATTLEMENT",
       "FAI_VARROCK_CASTLE_WALL_TOPPED",
+      "FAI_VARROCK_CASTLE_WALL_TOPPED_SPECIAL",
       "FAI_VARROCK_CASTLE_WALL_TOPPED_EDGE",
       "FAI_VARROCK_CASTLE_WALL_TOPPED_LOW_MEM",
       "FAI_VARROCK_CASTLE_WALL_NO_BACK_BUTRESS",
@@ -3176,8 +3174,6 @@
       "FAI_VARROCK_CASTLE_INTERIOR_WINDOW",
       "FAI_VARROCK_CASTLE_WALLS_WINDOW",
       "FAI_VARROCK_CASTLE_WALLS_PILLAR",
-      "FAI_VARROCK_BUTRESS",
-      "FAI_VARROCK_BUTRESS_DARK",
       "FAI_VARROCK_BUTRESS_DARK_NO_GRASS",
       "FAI_VARROCK_MUSEUM_PILLARS",
       "FAI_VARROCK_CASTLE_WALLS_BATTLE_INT_FILLER_R",
@@ -3247,6 +3243,26 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
+    "baseMaterial": "GRUNGE_2",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_BUTRESS",
+      "FAI_VARROCK_BUTRESS_DARK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 17",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "castShadows": false
       }
     ]
   },
@@ -8123,7 +8139,9 @@
     "uvScale": 0.4,
     "objectIds": [
       "WALLSHIELD3_WHITE",
-      "WALLSHIELD"
+      "FAI_VARROCK_WALLSHIELD",
+      "WALLSHIELD",
+      "QIP_DS_COATOFARMS1"
     ]
   },
   {
@@ -8231,13 +8249,23 @@
   {
     "description": "CANNON",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
     "objectIds": [
       "CANNON",
       "FAI_VARROCK_CANNON"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 512
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h < 10",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "METAL_FLAG_POLE",
@@ -13208,10 +13236,23 @@
     ]
   },
   {
-    "description": "Objects - Ardougne Castle - Bathroom Table",
+    "description": "Varrock Scatle - Ardougne Castle - Bathroom Table",
     "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
     "objectIds": [
-      "BATHTABLE"
+      "BATHTABLE",
+      "FAI_VARROCK_POSH_BATHTABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "s > 0",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 179
+      }
     ]
   },
   {
@@ -17253,7 +17294,8 @@
     "description": "Generic - Plank - Tables - Picnic Bench - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "SARIM_PICNICBENCH"
+      "SARIM_PICNICBENCH",
+      "GARDEN_PICNICBENCH"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -21054,7 +21096,17 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ "GA_CAVE_BONES1", "GA_CAVE_BONES2" ,"GA_CAVE_BONES3", "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
+    "objectIds": [
+      "GA_CAVE_BONES1",
+      "GA_CAVE_BONES2",
+      "GA_CAVE_BONES3",
+      "MY2ARM_BONES1",
+      "MY2ARM_BONES2",
+      "MY2ARM_BONES3",
+      "MY2ARM_BONES4",
+      "NECROPOLIS_BONES1",
+      "NECROPOLIS_BONES3"
+    ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -27891,7 +27943,8 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       "BROWNBED",
-      "KEBOS_SHACK_BED"
+      "KEBOS_SHACK_BED",
+      "FAI_VARROCK_SINGLE_BED_DIRTY"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
@@ -27939,10 +27992,12 @@
     ]
   },
   {
-    "description": "Kebos - Baby Blue Bunk Bed with pillows - Light Frame",
+    "description": "Kebos - Baby Blue bed - Bunkbed with pillows - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_FALADOR_BUNKBED"
+      "FAI_FALADOR_BUNKBED",
+      "FAI_VARROCK_SINGLE_BED_ORANGE",
+      "FAI_VARROCK_SINGLE_BED_ORANGE"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
@@ -29800,9 +29855,11 @@
     "objectIds": [
       "CABINET_SWORDS",
       "CABINET_BOWS",
+      "FAI_VARROCK_CABINET_SWORDS",
       "KR_CABINET_BOWS",
       "KR_CAM_CABINET_BOWS_WHITE",
       "CABINET_AXES",
+      "ORANGECABINET_AXES",
       "FAI_VARROCK_BOWCASE_CROSSBOW",
       "FAI_VARROCK_ARROW_DISPLAY",
       "FAI_VARROCK_SWORDCASE_SWORDS"
@@ -30041,12 +30098,10 @@
     ]
   },
   {
-    "description": "Wooden - bookcase with Multicolored books",
+    "description": "Varrock - Kourend - Wooden - bookcase with Multicolored books",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_POSH_BOOKCASE",
-      "FAI_VARROCK_POSH_BOOKCASE_SHORT2",
-      "FAI_VARROCK_POSH_BOOKCASE_SHORT"
+      "FAI_VARROCK_POSH_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -30067,6 +30122,120 @@
       {
         "description": "Red books",
         "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - bookcase with tuape and green books  - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT",
+      "QUESTBOOKCASE",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT_EAST_OFFSET"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Light Wooden - bookcase with tuape and green books  - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT3",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT2",
+      "SUROK_BOOKCASE",
+      "SUROK_BOOKCASE2",
+      "FAI_VARROCK_POSH_BOOKCASE_SHORT2_EAST_OFFSET",
+      "LOST_TRIBE_BOOKCASE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green books",
+        "colors": "h > 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Dark brown books",
+        "colors": "h == 7 && s == 6 || h == 7 && s == 5 && l >= 22",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Light brown books",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - bookcase with tuape and red books - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DS2_VARROCK_BOOKCASE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red books",
+        "colors": "h == 0 && s == 4",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       },
@@ -31140,7 +31309,8 @@
       "PEW_LUMBRIDGE",
       "FAI_VARROCK_PEW_LEFT",
       "FAI_VARROCK_PEW_RIGHT",
-      "FAI_VARROCK_PEW_MIDDLE"
+      "FAI_VARROCK_PEW_MIDDLE",
+      "FAI_VARROCK_CHURCH_PEW"
     ]
   },
   {
@@ -36483,7 +36653,8 @@
     "uvScale": 0.7,
     "objectIds": [
       "FAI_VARROCK_POSH_TABLE_SCROLLS",
-      "AKD_HUGHES_DESK_1_NOOP"
+      "AKD_HUGHES_DESK_1_NOOP",
+      "FAI_VARROCK_POSH_DESK_UNTIDY"
     ],
     "colorOverrides": [
       {
@@ -38636,6 +38807,645 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Varrock library - book and papers on floor",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_PAGES1",
+      "FAI_VARROCK_PAGES2"
+    ]
+  },
+  {
+    "description": "Varrock library - Varrock Census",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOV_VARROCK_LEDGER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "baseMaterial": "MARBLE_2",
+        "colors": "h == 9",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Marble",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 10 && s == 3",
+        "uvType": "BOX",
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Decoration - Wall - Varrock Castle wall flag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FAI_VARROCK_PALACE_WALLHANGING"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Yellow fabric",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "Black fabric",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      },
+      {
+        "description": "White fabric",
+        "colors": "h == 42",
+        "baseMaterial": "CARPET_DARK",
+        "uvOrientation": 280,
+        "uvType": "MODEL_YZ",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Decoration - Varrock Castle Standing flag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "VARROCK_CASTLE_BANNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Yellow fabric",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Black fabric",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "White fabric",
+        "colors": "h == 42",
+        "baseMaterial": "CARPET",
+        "uvOrientation": 280,
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Glass - Shelves",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_SHELVES_GLASSES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 164
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Porcelain - Shelves with tools and flowers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_SHELVES_MIXED1",
+      "FAI_VARROCK_SHELVES_MIXED2",
+      "FAI_VARROCK_SHELVES_TOOLS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 5 && h <= 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Shelves Gold canisters",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientation": 42,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHELF2",
+      "FAI_VARROCK_RUNE_SHELF3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 512 ,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Objects - Table - Single - Wooden – Plank - Generic",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "QIP_DS_CHESSTABLE"
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Blue Dragon Head Trophy",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "QIP_DS_DRAGONHEAD1_BLUE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Red Dragon Head Trophy",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "DRAGONMOUNTEDHEAD_RED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Bull Head Trophy",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BULLMOUNTEDHEAD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Cloth - Wooden - White Bunk Bed with pillows",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_VARROCK_GUARD_BUNKBED"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Cloth - Wooden - Castle Long Table",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 64,
+    "objectIds": [
+      "FAI_VARROCK_POSH_LARGE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock Castle - Guard trunks and lockers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.66,
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "FAI_VARROCK_GUARD_TRUNK",
+      "FAI_VARROCK_GUARD_LOCKERS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kourend - Wooden - Shelf with Multicolored books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_VARROCK_SHELF_BOOKS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Tree",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FAI_VARROCK_COURTYARD_TREE_BASE",
+      "FAI_VARROCK_COURTYARD_TREE_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h > 10",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Wooden - Trellis",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "GARDEN_TRELLIS",
+      "GARDEN_TRELLIS_CONCAVE",
+      "GARDEN_TRELLIS_WALL_MIRROR",
+      "GARDEN_TRELLIS_ARCHWAY_SIDE",
+      "GARDEN_TRELLIS_ARCHWAY_TOP"
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Wooden - Trellis - Wall mounted",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GARDEN_TRELLIS_WALLDECOR"
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Wooden - Stone - Trellis connected to wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "GARDEN_TRELLIS_CASTLE_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_2",
+        "flatNormals": true,
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Wooden - Vines - Climbable Trellis Shortcut",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 768,
+    "objectIds": [
+      "GARDEN_TRELLIS_CONCAVE_SHORTCUT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 15",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Stone - Dirt - Flow beds with mason bricks ",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GARDEN_PAVING_STRAIGHT",
+      "GARDEN_PAVING_CURVED",
+      "GARDEN_PAVING_STRAIGHT_WALL_INTERSECTION",
+      "GARDEN_PAVING_CURVED_CASTLEWALL",
+      "GARDEN_PAVING_CURVED_CASTLEWALL_MIRROR",
+      "GARDEN_PAVING_CORNER_FILL",
+      "GARDEN_PAVING_STRAIGHT_CASTLEWALL",
+      "GARDEN_PAVING_STRAIGHT_WALL_INTERSECTION_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 8",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Dirt - flower bed dirt",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GARDEN_DIRTPATCH_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 15",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Stone - Dirt - Flower - Orchids in Stone Pots",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GARDEN_ORCHIDS_FULLYGROWN",
+      "GARDEN_ORCHIDS_FULLYGROWN_YELLOW",
+      "GARDEN_ORCHIDS_PLANTPOT_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 8 && s == 4",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Plant stem",
+        "colors": "h == 24",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Caste Garden - King Statue",
+    "baseMaterial": "MARBLE_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GARDEN_KING_STATUE_PLACED",
+      "GARDEN_KING_STATUE_PLINTH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 188,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Falador - Caste Garden - Statues",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "GARDEN_SARADOMIN_STATUE_PLACED",
+      "GARDEN_SARADOMIN_STATUE_PLINTH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Flower - Grapes",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.8,
+    "objectIds": [
+      "GARDEN_VINES_FULLYGROWN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grapes",
+        "colors": "h == 50",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Leaves",
+        "colors": "h == 16",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Flower - Snow Drops",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.4,
+    "objectIds": [
+      "GARDEN_SNOWDROPS_FULLYGROWN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 19",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Flower - Delphiniums",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "GARDEN_DELPHINIUMS_FULLYGROWN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Hosidius - Castle Garden - Flower - Rose Bushes",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GARDEN_ROSEBUSH_PINK_FULLYGROWN",
+      "GARDEN_ROSEBUSH_RED_FULLYGROWN",
+      "GARDEN_ROSEBUSH_WHITE_FULLYGROWN",
+      "GARDEN_ROSES_PINK_DUMMY",
+      "GARDEN_ROSES_RED_DUMMY",
+      "GARDEN_ROSES_WHITE_DUMMY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Castle Garden - Tree - White Tree",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "objectIds": [
+      "GARDEN_WHITE_TREE_FULLYGROWN",
+      "GARDEN_WHITE_TREE_FRUIT_1",
+      "GARDEN_WHITE_TREE_FRUIT_2",
+      "GARDEN_WHITE_TREE_FRUIT_3",
+      "GARDEN_WHITE_TREE_FRUIT_4"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 2",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Fruit",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   }
