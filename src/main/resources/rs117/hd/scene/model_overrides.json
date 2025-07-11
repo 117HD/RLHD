@@ -1069,6 +1069,32 @@
     ]
   },
   {
+    "description": "Kourend - Hosidius - Apple Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "KORE2_ORCHARD_APPLETREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 89,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "textureMaterial": "LEAVES_YELLOW_SIDE"
+      },
+      "LEAVES_TOP": {
+        "textureMaterial": "LEAVES_YELLOW_TOP"
+      }
+    },
+    "colorOverrides": [
+      {
+        "description": "Apple",
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "TREES",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -7584,6 +7610,7 @@
     "description": "Ladder",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "HOSDUN_ENTRANCE_LADDER",
       "WATCHLADDERUP",
       "WATCHLADDERDOWN",
       "TOWERLADDER",
@@ -7602,7 +7629,9 @@
       "ELID_LADDER_UP",
       "ELID_LADDERTOP",
       "WAA_LADDER",
+      "HOSIDIUS_BASEMENT_LADDER_ENTRY",
       "FAI_VARROCK_LADDER",
+      "HOSIDIUS_BASEMENT_LADDER_EXIT",
       "FAI_VARROCK_LADDERTOP",
       "FAI_VARROCK_LADDER_TALLER",
       "FAI_VARROCK_LADDER_TALLER_TOP",
@@ -8040,7 +8069,7 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Wattle Style Houses (Ardougne, Digsite)",
+    "description": "Wattle Style Houses (Ardougne, Digsite, Hosidius)",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -8053,6 +8082,8 @@
     ],
     "objectIds": [
       "TIMBERWALL",
+      "TIMBERWALL_2",
+      "ROOF_TIMBERWALL_2",
       "TIMBERWALL_NO_OCCLUDE",
       "WOODENROOF_REDSLATE",
       "ROOF_VERYSPECIAL_THATCHED",
@@ -8680,7 +8711,8 @@
       "POH_BRIMHAVEN_PORTAL",
       "POH_PORTAL_OP",
       "POH_PORTAL_NOOP",
-      "SOUL_WARS_ENCLAVE_PORTAL"
+      "SOUL_WARS_ENCLAVE_PORTAL",
+      "POH_KOUREND_PORTAL"
     ],
     "shadowOpacityThreshold": 0.12
   },
@@ -9510,9 +9542,11 @@
       "LUMBRIDGE_SC_STEPSTONE",
       "ZQROCKJUMP1",
       "ZQROCKJUMP2",
-      "ZQROCKJUMP3"
+      "ZQROCKJUMP3",
+      "ZEAH_SALTPETRE_SHORTCUT"
     ],
-    "uvType": "WORLD_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Objects - Rocks - Medium",
@@ -10835,6 +10869,7 @@
     "description": "Objects - Metallic - Pots",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
+      "HOS_POTS",
       "POTSANDPANS1",
       "POTSANDPANS2",
       "DWARF_KELDAGRIM_POTSANDPANS1",
@@ -11594,7 +11629,8 @@
       "SHAYZIEN_STOOL",
       "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
       "POG_STOOL",
-      "HOSIDIUS_SERVERY_STOOL"
+      "HOSIDIUS_SERVERY_STOOL",
+      "HOS_STOOL_03"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -14231,7 +14267,6 @@
       "CLANCUP_PORTAL_CHALLENGEAREA_EXIT",
       "CLANCUP_PORTAL_FROM_BATTLEAREA",
       "LEAGUE_5_POH_SPIRIT_RING",
-      "POH_KOUREND_PORTAL",
       "CATA_BOSS_EXIT_PORTAL",
       "POH_PORTAL_TEAK_KHARYRLL",
       "POH_PORTAL_TEAK_LUNARISLE",
@@ -17187,9 +17222,7 @@
       "FERN2",
       "MM_JUNGLEPLANT2",
       "AREA_SANGUINE_OUTER_WALL_PLANT",
-      "FAIRY2_PLANT_1",
       "FAIRY2_PLANT_2",
-      "FAIRY2_PLANT_3",
       "FAIRY2_PLANT_4"
     ]
   },
@@ -21167,7 +21200,8 @@
       "NECROPOLIS_SKELETON_2",
       "NECROPOLIS_SKELETON_3",
       "AKD_HUGHES_SKELETON_1_NOOP",
-      "GA_SKELETON"
+      "GA_SKELETON",
+      "GRIM_GIANT_SKELETON_2"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -25904,7 +25938,10 @@
   },
   {
     "description": "Kourend - Hosidius - Tithe Farm - Greenhouse Walls",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.25,
     "objectIds": [
       "TITHE_ROOF_A",
       "TITHE_ROOF_A2",
@@ -25915,9 +25952,14 @@
       "TITHE_ROOF_H",
       "VINE_GLASS_HOUSE_WALL"
     ],
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "uvScale": 0.25
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX",
+        "colors": "a < 255"
+      }
+    ]
   },
   {
     "description": "Kourend - Hosidius - Tithe Farm - Seed Table",
@@ -25998,18 +26040,74 @@
     ]
   },
   {
-    "description": "Kourend - Hosidius - Tithe Farm - Baskets",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Kourend - Hosidius - Tithe Farm - Basket of apples",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
     "objectIds": [
-      "HOS_BASKET",
-      "HOS_BASKET_APPLE",
-      "HOS_BASKET_ONION"
+      "HOS_BASKET_APPLE"
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 7", "h == 16"],
-        "baseMaterial": "GRUNGE_3"
+        "description": "Apples",
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets of Onions or Potatoes",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
+    "objectIds": [
+      "HOS_BASKET_ONION",
+      "HOS_BASKET_POTATO"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Onions",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets with wood",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
+    "objectIds": [
+      "HOS_BASKET_WOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Bark",
+        "colors": "h == 5 && s == 4",
+        "baseMaterial": "BARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Baskets - Empty",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "uvScale": 0.8,
+    "objectIds": [
+      "HOS_BASKET"
     ]
   },
   {
@@ -26091,7 +26189,16 @@
       "HOS_BARREL_RACK_01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 168,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Kourend - Hosidius - Vinery - Big Wine Barrels",
@@ -26815,7 +26922,8 @@
       "FAI_VARROCK_COOKING_SHELVES",
       "QIP_COOK_COOKINGSHELVES",
       "AIDE_COOKINGSHELVES",
-      "AIDE_COOKINGSHELVES_EMPTY"
+      "AIDE_COOKINGSHELVES_EMPTY",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_CUPBOARD_DEFAULT"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -26835,7 +26943,10 @@
     "objectIds": [
       "COOKINGSHELF",
       "QIP_COOK_COOKINGSHELF",
-      "CANAFIS_COOKING_SHELVES"
+      "CANAFIS_COOKING_SHELVES",
+      "LUNAR_MOONCLAN_SHELF_POTS",
+      "FARM_COOKINGSHELF",
+      "FARM_COOKINGUTENSILS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -27241,6 +27352,23 @@
     ]
   },
   {
+    "description": "Objects - Wooden - Brown Drawers with metallic handles - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DRAWERS2_ROTATED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Gold handles",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
+  },
+  {
     "description": "Objects - Wooden - Brown Drawers with golden handles",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -27512,6 +27640,7 @@
     ],
     "objectIds": [
       "GERTRUDEEMPTY_BARREL",
+      "FAI_FALADOR_BARREL",
       "FAI_VARROCK_RED_BARREL",
       "FAI_VARROCK_GREEN_BARREL",
       "FAI_VARROCK_BARREL",
@@ -27522,6 +27651,24 @@
       "PISCARILIUS_BARREL",
       "POG_BARREL",
       "QIP_COOK_BARREL_TAP"
+    ]
+  },
+  {
+    "description": "Barrel with tarnished metal bands Asgarnian Ale",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal bands",
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "HOS_BARREL_ASGARNIAN_ALE"
     ]
   },
   {
@@ -28473,14 +28620,15 @@
     "objectIds": [
       "BROWNBED",
       "KEBOS_SHACK_BED",
-      "FAI_VARROCK_SINGLE_BED_DIRTY"
+      "FAI_VARROCK_SINGLE_BED_DIRTY",
+      "HOS_BED_01"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
     "colorOverrides": [
       {
         "description": "Wood frame",
-        "colors": "h == 7",
+        "colors": "h == 7 && s > 0",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
@@ -28540,6 +28688,23 @@
     ]
   },
   {
+    "description": "Hosidius- Blue Bed with pillows - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "HOS_BED_03"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h < 10 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Baby Blue Bed with pillow",
     "baseMaterial": "CARPET",
     "objectIds": [ "BLUEBED" ],
@@ -28563,15 +28728,26 @@
   {
     "description": "Sink with textured water and wood paneling - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "SINK",
       "SINK2",
       "KR_SINK",
       "QIP_SHEEP_SHEARER_SINK",
-      "QIP_COOK_SINK"
+      "QIP_COOK_SINK",
+      "RIMMINGTON_SINK"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.8
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Pottery Oven",
@@ -29337,9 +29513,13 @@
     "uvType": "BOX"
   },
   {
-    "description": "Wooden -  Tables - Sturdy",
+    "description": "Piscarilius - Hosiduis - Wooden -  Tables - Sturdy",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "HOS_TABLE_01" ],
+    "objectIds": [
+      "HOS_TABLE_01",
+      "HOS_TABLE_02",
+      "PISCARILIUS_TABLE_04"
+    ],
     "uvOrientationY": 512,
     "uvType": "BOX",
     "flatNormals": true,
@@ -31059,7 +31239,8 @@
     ],
     "objectIds": [
       "DRAYNOR_CANDLE_WALL",
-      "_100_DAVE_CANDLE_WALL"
+      "_100_DAVE_CANDLE_WALL",
+      "CANDLE_WALL"
     ]
   },
   {
@@ -31089,7 +31270,8 @@
       "FAI_VARROCK_BLUE_INN_BARSTOOL_TALL",
       "CANAFIS_INN_BARSTOOL",
       "CANAFIS_INN_BARSTOOL_TALL",
-      "GZ_BOARDGAMES_BARSTOOL_BLUE"
+      "GZ_BOARDGAMES_BARSTOOL_BLUE",
+      "HOS_STOOL_01"
     ]
   },
   {
@@ -33626,6 +33808,78 @@
     ]
   },
   {
+    "description": "Hosidius - Wooden - Cloth - Bed with Green blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HOS_BED_02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 7 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Cloth - Double Bed with Green blanket and cream pillow with a light frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "MISC_DOUBLEBED_BRAND"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 6 && s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Cloth - Bed with Green blanket and gray pillow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_EAST_MEDIUM_BED_DEFAULT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Seers Village - Double bed with red blanket and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -33865,6 +34119,23 @@
     "objectIds": [
       "KR_STUDYDESK",
       "STUDYDESK"
+    ]
+  },
+  {
+    "description": "Zeah - Hosidius - Wooden study desk with a green mat - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512 ,
+    "colorOverrides": [
+      {
+        "description": "Desk mat",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "colors": "h == 21"
+      }
+    ],
+    "objectIds": [
+      "NARROW_STUDYDESK"
     ]
   },
   {
@@ -38352,7 +38623,7 @@
   },
   {
     "description": "Corsair Cove - Hosidius - Thatch - Roofs",
-    "baseMaterial": "HD_HAY",
+    "baseMaterial": "HD_HAY_BRIGHT",
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
@@ -38360,7 +38631,8 @@
       "DS2_CORSAIR_COVE_ROOF_THATCHED_OUTSIDE",
       "DS2_CORSAIR_COVE_ROOF_THATCHED_CURVE",
       "DS2_CORSAIR_COVE_ROOF_THATCHED_CENTER",
-      "HOS_ROOF_FIX2"
+      "HOS_ROOF_FIX2",
+      "HOS_ROOF_FIX1"
     ],
     "colorOverrides": [
       {
@@ -38458,6 +38730,24 @@
       {
         "description": "Black Trim",
         "colors": "h == 35",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Kourend - Wooden -  Mirror - Dresser",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DRESSER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "h == 35 && s == 0",
         "baseMaterial": "BLANK_GLOSS",
         "uvType": "BOX"
       }
@@ -38566,13 +38856,14 @@
     "uvScale": 0.6
   },
   {
-    "description": "Kourend - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "description": "Zeah - Hosiduis - Kourend - Porcelain - Metallic - Wooden - Fancy Sink ",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 172 ,
     "objectIds": [
-      "FAI_VARROCK_POSH_SINK"
+      "FAI_VARROCK_POSH_SINK",
+      "CON_CONTRACT_HOSIDIUS_NORTH_SINK_FIXED"
     ],
     "colorOverrides": [
       {
@@ -38698,7 +38989,8 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
-      "HOS_FRUIT_STALL"
+      "HOS_FRUIT_STALL",
+      "HOS_STALL_EMPTY"
     ]
   },
   {
@@ -38730,6 +39022,92 @@
     "uvScale": 0.4,
     "objectIds": [
       "SHAYZIEN_BLACK_DEBRIS_WOOD"
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Theiving Stalls - Needs proper UVs",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "HOS_STALL_UTENSIL",
+      "HOS_STALL_BREAD",
+      "HOS_STALL_VEG"
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Seed Stall",
+    "baseMaterial": "GRUNGE_1",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3 && s <= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Pot",
+        "colors": "h == 3 && s > 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Dirt",
+        "colors": "h == 6 && s > 2",
+        "baseMaterial": "DIRT_1",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "HOS_STALL_SEEDS"
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Herb stall",
+    "baseMaterial": "LEAF_VEINS",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stand",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Bark",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "HOS_STALL_HERBS"
     ]
   },
   {
@@ -39035,6 +39413,33 @@
         "description": "Wood",
         "colors": "s > 0",
         "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+
+    ]
+  },
+  {
+    "description": "Hosidius - Varrock - Metallic - Wooden - Sink with wooden frame and slats with dishes",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 179,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_DIRTY_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Dishes",
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvOrientation": 512
       }
@@ -40027,6 +40432,655 @@
         "baseMaterial": "GRUNGE_3_SHINY",
         "uvType": "BOX",
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Flower - Rose",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "KOURENDWOODLAND_ROSES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 17",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Plant - Leafy Shrub",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.4,
+        "uvOrientation": 89,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "FAIRY2_PLANT_1"
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Plant - Leafy grass",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.4,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "FAIRY2_PLANT_3"
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Wooden - Hosidius Walls - Interior",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_WALL_INNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Window sile",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Hosidius Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Glass- Stained glass Hosidius Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_STAINED_UPP_LEFT",
+      "KORE2_HOS_STAINED_UPP_RIGHT",
+      "KORE2_HOS_STAINED_LOW_LEFT",
+      "KORE2_HOS_STAINED_LOW_RIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Glass -  Hosidius Walls with Window",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "KORE2_HOS_WINDOW_SHOP",
+      "KORE2_HOS_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Interior wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "a == 255 && s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255 ",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Kourend - Hosidius - Stone - Wooden - Hosidius Parapet",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "objectIds": [
+      "KORE2_HOS_PARAPET",
+      "KORE2_HOS_PARAPET_JOIN_M",
+      "KORE2_HOS_PARAPET_JOIN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Inside wall",
+        "colors": "h == 10 && s >= 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Grout",
+        "colors": "s == 0 && h >= 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Hosidius - Metallic - Wooden - Hosidius Door",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.4,
+    "objectIds": [
+      "KORE2_HOS_DOOR_CLOSED",
+      "KORE2_HOS_DOOR_OPEN",
+      "KORE2_HOS_DOOR_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Handle",
+        "colors": "h == 8 && s >= 2",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvScale": 0.8,
+        "uvOrientation": 88,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.4,
+        "uvOrientation": 701,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Hosidius - Falador Stone - Wooden - Well",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_FALADOR_WELL"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Bottom stone bricks",
+        "colors": "h == 8",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 256
+      },
+      {
+        "description": "ROPE",
+        "colors": "h == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Varrock - Wooden - Pottery - Metallic - Freestanding shelves with plates and bowls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FAI_VARROCK_KITCHEN_SHELVES_LARGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Pottery",
+        "colors": "h == 7 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Varrock - Metallic - Metal shelf with copper pots",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "objectIds": [
+      "DORGESH_KITCHEN_POTS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Hosidius Throne",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "HOSIDIUS_THRONE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_2_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 172
+      },
+      {
+        "colors": "h == 8 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Draynor - Kourend - Wooden -  Table with pink purple table cloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DRAYNOR_SMALLTABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Gold Table cloth",
+        "colors": "h == 60",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Zeah - Hosidius - Potted Plants",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "objectIds": [
+      "FAI_VARROCK_POTTED_PLANT3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 16",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden -  Metallic - Drawers with metal decorations",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "HOS_MEDIUM_DRAWERS" ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Golden Knobs",
+        "colors": "h == 10 && s == 7",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Metal Hinges",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Drawers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HOS_LARGE_DRAWERS",
+      "HOS_SMALL_DRAWERS"
+    ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.6
+  },
+  {
+    "description": "Hosiduis - Wooden -  Metallic - Bar with taps on them",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "HOS_BAR_02" ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Knobs",
+        "colors": "h == 8 && s == 1 && l > 45",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Glass - Wooden cupbaord with glass bottles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "description": "Green and blue bottles",
+        "colors": "h > 12",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      "HOS_DRINK_CUPBOARD"
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Piano",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "HOS_PIANO"
+    ]
+  },
+  {
+    "description": "Hosiduis - Wooden - Cloth - Big Barrel with Cloth covering",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "HOS_BIG_BEER_BARREL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Red cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 42
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Wooden - Cloth - Prayer Altar",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "HOSIDIUS_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Gold",
+        "colors": "h >= 8 && h <= 9",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 168
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 42",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "VM_BARRIER_ALONE_BLOCKING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 512,
+        "uvOrientationZ": -200
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.22
+      }
+    ]
+  },
+  {
+    "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "HOS_ANCIENT_TECH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 179,
+    "colorOverrides": [
+      {
+        "colors": "h >= 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 1 || h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Generic - Cabbage",
+    "baseMaterial": "LEAF_VEINS",
+    "objectIds": [
+      "CABBAGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179
+  },
+  {
+    "description": "Hosidius - White brick walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "HOS_FORT_WALL_STONE_PILE2",
+      "HOS_FORT_WALL_STONE_PILE1",
+      "HOS_FORT_WALL_CRUMBLE_L",
+      "HOS_FORT_WALL_CRUMBLE_SMALL_L",
+      "HOS_FORT_WALL",
+      "HOS_FORT_WALL_CRUMBLE_R",
+      "HOS_FORT_WALL_BATTLEMENT_CRUMBLE_L",
+      "HOS_FORT_WALL_BATTLEMENT_CRUMBLE_R",
+      "HOS_FORT_BRIDGE_SUPPORT",
+      "HOS_FORT_WALL_BATTLEMENT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179
+  },
+  {
+    "description": "Hosidius - Dungeon entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "HOSDUN_ENTRANCE_LADDER_HOLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "colorOverrides": [
+      {
+        "colors": "h > 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale":  0.8
       }
     ]
   }
