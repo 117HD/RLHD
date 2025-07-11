@@ -3555,7 +3555,8 @@
     "name": "Aldarin Forced Dirt Floor",
     "area": "ALDARIN_324_DIRT_FIX",
     "overlayIds": [ 324 ],
-    "groundMaterial": "PACKED_EARTH"
+    "groundMaterial": "PACKED_EARTH",
+    "blended": false
   },
   {
     "name": "Aldarin Terracotta Floor - Red",
@@ -3576,6 +3577,29 @@
     "shiftLightness": 1,
     "uvOrientation": 512,
     "blended": false
+  },
+  {
+    "name": "Aldarin Wooden Roof tiles ",
+    "area": "ALDARIN_WOOD_ROOFS",
+    "overlayIds": [ 81, 185 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16,
+    "replacements": {
+      "WINTER_GRUNGE": "season == WINTER"
+    }
+  },
+  {
+    "name": "Aldarin Wooden Floor - 81 ",
+    "area": "ALDARIN_WOOD_FLOOR_INTERIOR",
+    "overlayIds": [ 81 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16
   },
   {
     "name": "Aldarin Wooden Floor ",
