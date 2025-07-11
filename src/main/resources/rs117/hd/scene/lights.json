@@ -19331,7 +19331,7 @@
     "description": "GHOSTLY_THRALL",
     "height": 80,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 350,
     "strength": 8,
     "color": [
       0,
@@ -19349,9 +19349,9 @@
   },
   {
     "description": "Ghostly thrall projectile",
-    "radius": 300,
+    "radius": 250,
     "strength": 8,
-    "height": 140,
+    "height": 20,
     "color": [
       0,
       100,
@@ -19359,7 +19359,7 @@
     ],
     "type": "FLICKER",
     "duration": 600,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 100,
     "fadeInDuration": 100,
     "range": 5,
     "projectileIds": [
@@ -19370,8 +19370,8 @@
     "description": "SKELETAL_THRALL",
     "height": 80,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 8,
+    "radius": 350,
+    "strength": 7,
     "color": [
       144,
       245,
@@ -19388,9 +19388,9 @@
   },
   {
     "description": "Skeletal thrall projectile",
-    "radius": 300,
+    "radius": 200,
     "strength": 8,
-    "height": 140,
+    "height": 10,
     "color": [
       144,
       245,
@@ -19398,7 +19398,7 @@
     ],
     "type": "FLICKER",
     "duration": 600,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 100,
     "range": 5,
     "projectileIds": [
       "THRALL_RANGED_TRAVEL"
@@ -19408,7 +19408,7 @@
     "description": "ZOMBIE_THRALL",
     "height": 80,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 350,
     "strength": 8,
     "color": [
       255,
@@ -27015,7 +27015,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDSTRIKE_TRAVEL"
@@ -27033,7 +27033,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERSTRIKE_TRAVEL"
@@ -27051,7 +27051,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHSTRIKE_TRAVEL"
@@ -27069,7 +27069,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESTRIKE_TRAVEL"
@@ -27087,7 +27087,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDBOLT_TRAVEL"
@@ -27105,7 +27105,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERBOLT_TRAVEL"
@@ -27123,7 +27123,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHBOLT_TRAVEL"
@@ -27142,7 +27142,7 @@
     "duration": 0,
     "range": 0,
     "fadeOutDuration": 250,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "projectileIds": [
       "FIREBOLT_TRAVEL"
     ]
@@ -27159,7 +27159,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDBLAST_TRAVEL"
@@ -27177,7 +27177,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERBLAST_TRAVEL"
@@ -27195,7 +27195,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHBLAST_TRAVEL"
@@ -27213,7 +27213,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREBLAST_TRAVEL"
@@ -27231,7 +27231,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDWAVE_TRAVEL"
@@ -27249,7 +27249,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERWAVE_TRAVEL"
@@ -27267,7 +27267,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHWAVE_TRAVEL"
@@ -27285,7 +27285,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIREWAVE_TRAVEL"
@@ -27303,7 +27303,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WINDSURGE_TRAVEL"
@@ -27321,7 +27321,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "WATERSURGE_TRAVEL"
@@ -27339,7 +27339,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "EARTHSURGE_TRAVEL"
@@ -27357,7 +27357,7 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
       "FIRESURGE_TRAVEL"
@@ -27375,7 +27375,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "CONFUSE_TRAVEL"
     ]
@@ -27392,7 +27393,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "WEAKEN_TRAVEL"
     ]
@@ -27409,7 +27411,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "CURSE_TRAVEL"
     ]
@@ -27426,7 +27429,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "VULNERABILITY_TRAVEL"
     ]
@@ -27443,7 +27447,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ENFEEBLE_TRAVEL"
     ]
@@ -27460,7 +27465,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "STUN_TRAVEL"
     ]
@@ -27477,7 +27483,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ENTANGLE_TRAVEL"
     ]
@@ -27494,7 +27501,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "CRUMBLEUNDEAD_TRAVEL"
     ]
@@ -27511,7 +27519,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SLAYER_MAGICDART_TRAVEL"
     ]
@@ -27528,7 +27537,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "IBANBLAST_TRAVEL"
     ]
@@ -27545,7 +27555,8 @@
     "type": "PULSE",
     "duration": 500,
     "range": 20,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "BALLISTA_SPECIAL"
     ]
@@ -27650,7 +27661,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SMOKE_RUSH_TRAVEL"
     ]
@@ -27667,7 +27679,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SHADOW_RUSH_TRAVEL"
     ]
@@ -27684,7 +27697,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "ICE_RUSH_TRAVEL"
     ]
@@ -27701,7 +27715,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SMOKE_BLITZ_TRAVEL"
     ]
@@ -27718,7 +27733,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "SHADOW_BLITZ_TRAVEL"
     ]
@@ -27735,7 +27751,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
     "projectileIds": [
       "BLOOD_BLITZ_TRAVEL"
     ]
@@ -35971,13 +35988,25 @@
     ]
   },
   {
-    "description": "Hunter Guild ceiling lantern",
-    "radius": 600,
+    "description": "Hunter Guild ceiling lantern - Highlight",
+    "radius": 100,
     "strength": 5,
     "color": "#fcb703",
     "type": "FLICKER",
     "range": 13,
-    "offset": [ 0, 406, 0 ],
+    "offset": [ 0, 430, 0 ],
+    "objectIds": [
+      "HG_LANTERN_HANGING_LARGE01"
+    ]
+  },
+  {
+    "description": "Hunter Guild ceiling lantern - Wide",
+    "radius": 600,
+    "strength": 7,
+    "color": "#fcb703",
+    "type": "FLICKER",
+    "range": 13,
+    "offset": [ 0, 360, 0 ],
     "objectIds": [
       "HG_LANTERN_HANGING_LARGE01"
     ]
@@ -37371,5 +37400,69 @@
     "objectIds": [
       "GA_CAVE_OUT"
     ]
+  },
+  {
+    "description": "Moonlight Antelope",
+    "offset": [ 0, 175, 20 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      70,
+      150,
+      235
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
+    "npcIds": [ "MOONLIGHT_ANTELOPE" ]
+  },
+  {
+    "description": "Moonlight Moth",
+    "height": 220,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 7,
+    "color": [
+      40,
+      120,
+      165
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 100,
+    "npcIds": [ "MOTH_MOONLIGHT", "MOTH_MOONLIGHT_LOW_WANDER", "MOTH_MOONLIGHT_NOCLICK" ]
+  },
+  {
+    "description": "Hunter Guild Cave Exit - Near",
+    "offset": [ -50, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 17,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [ "HG_CAVE_EXIT" ]
+  },
+  {
+    "description": "Hunter Guild Cave Exit - Far",
+    "offset": [ -400, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [ "HG_CAVE_EXIT" ]
   }
 ]
