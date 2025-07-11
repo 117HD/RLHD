@@ -33782,6 +33782,54 @@
     ]
   },
   {
+    "description": "PoH - Stone - Fancy Brick wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "YANILLE_POH_WALL",
+      "YANILLE_POH_WALL_WINDOW",
+      "YANILLE_POH_ROOF"
+    ]
+  },
+  {
+    "description": "PoH - Stone - Wooden - Fancy Brick wall with wooden shutters",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "POH_YANILLE_WINDOW_SHUTTERS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wooden shutters",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "PoH - Stone - Wooden - Fancy Brick wall - door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "YANILLE_POH_DOUBLE_DOORL",
+      "YANILLE_POH_DOUBLE_DOORL_OPEN",
+      "YANILLE_POH_DOUBLE_DOOR_OPEN",
+      "YANILLE_POH_DOUBLE_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wooden shutters",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Post with rope",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",

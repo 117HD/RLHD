@@ -4127,6 +4127,14 @@
     "blended": false
   },
   {
+    "name": "POC_FANCY_BRICK_INTERIOR",
+    "area": "PLAYER_OWNED_HOUSE",
+    "overlayIds": [ 79 ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
     "name": "LAND_OF_GOBLINS_WATER_FIX",
     "area": "LAND_OF_GOBLINS_CUTSCENE_WATER",
     "overlayIds": [
