@@ -622,7 +622,8 @@
     "ambientStrength": 2.5,
     "directionalColor": "#edcfa3",
     "directionalStrength": 2.5,
-    "fogColor": "#c7b79b"
+    "fogColor": "#c7b79b",
+    "skybox": "rs3_magicblue_post"
   },
   {
     "area": "DESERT_TREASURE_PYRAMID",
@@ -1791,7 +1792,8 @@
     "ambientColor": "#97baff",
     "directionalStrength": 4,
     "sunAngles": [ 52, 235 ],
-    "fogDepth": 6.5
+    "fogDepth": 6.5,
+    "skybox": "rs3_magicblue"
   },
   {
     "key": "AUTUMN",
