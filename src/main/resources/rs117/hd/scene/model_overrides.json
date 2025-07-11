@@ -41398,7 +41398,6 @@
         "description": "Flames",
         "colors": "a < 255",
         "baseMaterial": "NONE"
-
       }
     ]
   },
