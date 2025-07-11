@@ -3759,8 +3759,10 @@
     ]
   },
   {
-    "description": "KARAMJA_DUNGEON_WALLS",
+    "description": "Karamja - Brimhaven Dungeon - Walls",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "CAVEWALL_FACE1_LEV2",
       "KARAM_CAVEWALL_FACE1",
@@ -3769,7 +3771,18 @@
       "KARAM_CAVEWALL_VINE",
       "KARAM_CAVEWALL_VINE_LEV2",
       "KARAM_DUNGEON_CAVESTAIRS2",
-      "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN2"
+      "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN2",
+      "KARAM_DUNGEON_LAVAWALL_LEV1",
+      "KARAM_DUNGEON_LAVAWALL_LEV2"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven Dungeon - Walls - Exit",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "KARAM_DUNGEON_EXIT"
     ]
   },
   {
@@ -11206,12 +11219,21 @@
   },
   {
     "description": "Objects - Fungus - Medium",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "NASTYFUNGUS_DARK",
       "WILDERNESSFUNGUS",
       "NEW_NASTYFUNGUS_DARK",
       "NEW_NASTYFUNGUS_SMALL_DARK"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Objects - Fungus - Big",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "NASTYFUNGUS_DARK_BIG"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -12131,10 +12153,21 @@
   {
     "description": "ROUNDED_CAVE_WALLS_WITH_PIPE",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
     "objectIds": [
-      "TAVERLY_DUNGEON_PIPE_SC"
+      "TAVERLY_DUNGEON_PIPE_SC",
+      "KARAM_DUNGEON_PIPE",
+      "KARAM_DUNGEON_PIPE2"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Pipe",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Objects - Rock Stairs - Large",
@@ -18365,6 +18398,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "SKEWSTEPS1_LBROWN",
+      "SKEWSTEPS1_DIAG_LEFT1_LBROWN",
+      "SKEWSTEPS1_DIAG_RIGHT1_LBROWN",
       "CANAFIS_SKEWSTEPS"
     ],
     "uvType": "BOX",
@@ -21235,7 +21270,8 @@
       "NECROPOLIS_SKELETON_3",
       "AKD_HUGHES_SKELETON_1_NOOP",
       "GA_SKELETON",
-      "GRIM_GIANT_SKELETON_2"
+      "GRIM_GIANT_SKELETON_2",
+      "CORPSE2_NOBLOCK"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -28487,17 +28523,44 @@
   {
     "description": "Skeleton with helmet named corpse",
     "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "SLAYER_CORPSE3",
-      "ROGUESDEN_CORPSE3"
+      "ROGUESDEN_CORPSE3",
+      "CORPSE3_NOBLOCK"
     ],
+    "colorOverrides": [
+      {
+        "description": "Helmet",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Skeleton with sword in back named corpse",
+    "baseMaterial": "BONE",
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.6,
+    "objectIds": [
+      "CORPSE4_NOBLOCK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Helmet",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Skeleton named corpse",
     "baseMaterial": "BONE",
     "objectIds": [
+      "CORPSE_NOBLOCK",
       "CORPSE2",
       "CORPSE3",
       "SLAYER_CORPSE1",
@@ -41202,5 +41265,152 @@
       "LUNAR_MOONCLAN_ROOFEND3_STEEP",
       "LUNAR_MOONCLAN_ROOFEND_GUTTERING"
     ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon Entrance with tree - NEEDS PROPER UV FIX for bark and stone bricks",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 343,
+    "objectIds": [
+      "DUNGEON_TREE_UNPAID",
+      "DUNGEON_TREE_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 179,
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon floor roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "VINE_END",
+      "VINE_CORNER",
+      "VINE_DIAG2",
+      "VINE_DIAG1",
+      "VINE_STRAIGHT",
+      "VINE_JUNCTION",
+      "VINE_DIAG3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 1313,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Climable green vines",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_TAIL",
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_BOTTOM",
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_MIDDLE",
+      "KARAM_CAVEWALL_VINE_CLIMBABLE_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon floor roots - Rotated",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -128,
+    "objectIds": [
+      "VINE_END_DIAG",
+      "VINE_DIAGFILLER"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon wall roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "objectIds": [
+      "KARAM_WALL_ROOT_1",
+      "KARAM_WALL_ROOT_2",
+      "KARAM_WALL_ROOT_3"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Dungeon wall roots - chopable",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 212,
+    "objectIds": [
+      "KARAM_DUNGEON_VINEBLOCKING1",
+      "KARAM_DUNGEON_VINEBLOCKING2",
+      "KARAM_DUNGEON_VINEBLOCKING3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 1313,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven - Stone - Pillars with torches",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "objectIds": [
+      "STONEPILLAR_LBROWN_WITHTORCH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Flames",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Karamja -  Brimhaven Dungeon - Tropical Tree Log Agility Shortcut",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "KARAM_DUNGEON_BAMBOO_LOGBALANCE1",
+      "KARAM_DUNGEON_BAMBOO_LOGBALANCE2",
+      "KARAM_DUNGEON_BAMBOO_LOGBALANCE3"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientationY": 512
   }
 ]
