@@ -26716,6 +26716,8 @@
     "duration": 0,
     "range": 20,
     "spawnDelay": 500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2700,
     "fadeInDuration": 900,
     "graphicsObjectIds": [
       "VFX_LEAGUE_5_HOME_TELEPORT_02"
@@ -26725,12 +26727,13 @@
   "description": "RAGING_ECHOES_HOME_TELEPORT_MIDDLE",
   "height": 25,
   "alignment": "CENTER",
-  "radius": 150,
+  "radius": 175,
   "strength": 20,
   "color": "#DB2090",
   "type": "FLICKER",
   "duration": 0,
   "range": 20,
+  "fadeInDuration": 500,
   "fadeOutDuration": 100,
   "graphicsObjectIds": [
     "VFX_LEAGUE_5_HOME_TELEPORT_03"
@@ -26740,7 +26743,7 @@
     "description": "RAGING_ECHOES_HOME_TELEPORT_END_BOTTOM",
     "height": 25,
     "alignment": "CENTER",
-    "radius": 150,
+    "radius": 200,
     "strength": 20,
     "color": "#DB2090",
     "type": "FLICKER",
@@ -28497,7 +28500,7 @@
     ]
   },
   {
-    "description": "DRAGONFIRE",
+    "description": "Dragonfire Projectile",
     "radius": 700,
     "strength": 12.5,
     "color": [
@@ -28512,6 +28515,46 @@
     "projectileIds": [
       "FIREBREATH_TRAVEL"
     ]
+  },
+  {
+    "description": "Dragonfire Breath",
+    "offset": [ 0, 200, 290 ],
+    "radius": 275,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
+  },
+  {
+    "description": "Dragonfire Breath Highlight",
+    "offset": [ 0, 140, 390 ],
+    "radius": 100,
+    "strength": 40,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
   },
   {
     "description": "UNDEAD_DRUID",
