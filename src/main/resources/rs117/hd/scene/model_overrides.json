@@ -41843,5 +41843,81 @@
         "uvOrientation": 179
       }
     ]
+  },
+  {
+    "description": "Varlamore - Metallic - Stone - Wood - Banking Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TABLE_BANK01_CIVITAS01",
+      "TABLE_BANK01_CIVITAS02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table Top",
+        "baseMaterial": "MARBLE_1_GLOSS",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Coins",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 7 && s == 7",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      },
+      {
+        "description": "Coins",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Table",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "objectIds": [
+      "TABLE_CIVITAS01_TABLE01"
+    ]
+  },
+  {
+    "description": "Dorgeshkaan - Varlamore - Metallic - Bank safe",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 282,
+    "objectIds": [
+      "DORGESH_BANK_SAFE"
+    ]
+  },
+  {
+    "description": "Varlamore - Wood - Cloth - u shaped chair with red fabric",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CHAIR_CIVITAS01_WOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
   }
 ]
