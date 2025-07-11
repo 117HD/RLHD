@@ -11861,12 +11861,13 @@
   },
   {
     "description": "Lunar Island - Wooden - Ladder",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_LADDER",
       "LUNAR_MOONCLAN_LADDER_TOP"
-    ],
-    "uvType": "MODEL_XY_MIRROR_B"
+    ]
   },
   {
     "description": "Objects - Wooden - Plank tables - Medium",
@@ -11977,6 +11978,8 @@
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Windows",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_WALL_WINDOW",
       "LUNAR_MOONCLAN_WALL_OPEN_WINDOW",
@@ -11984,26 +11987,57 @@
       "LUNAR_MOONCLAN_FIRSTFLOOR_WALL_WINDOW_HOLE",
       "LUNAR_MOONCLAN_FIRSTFLOOR_WALL_WINDOW_OPEN"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Plank - Door",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
     "objectIds": [
       "LUNAR_MOONCLAN_DOOR",
       "LUNAR_MOONCLAN_DOOR_OPEN"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Door - Window",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "LUNAR_MOONCLAN_DOOR_BABA_YAGA_INAC",
       "LUNAR_MOONCLAN_DOOR_ASIAN",
       "LUNAR_MOONCLAN_DOOR_ASIAN_CLOSED"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Lunar Isles - WALLS - Wooden - Railing - Window",
@@ -41082,6 +41116,91 @@
         "uvType": "BOX",
         "uvScale":  0.8
       }
+    ]
+  },
+  {
+    "description": "Lunar Island - Moonclan - Metallic - Wood - Walls",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "LUNAR_MOONCLAN_TOWN_WALL_BASIC",
+      "LUNAR_MOONCLAN_TOWN_WALL",
+      "LUNAR_MOONCLAN_TOWN_GATE_FULL",
+      "LUNAR_MOONCLAN_TOWN_GATE_FULL_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvOrientation": 179,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Lunar Island - Moonclan - Wood - Roofs of the walls",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "LUNAR_MOONCLAN_WALL_ROOFTOP",
+      "LUNAR_MOONCLAN_GATE_ROOFTOP"
+    ]
+  },
+  {
+    "description": "Lunar Island - Moonclan - Wood - Roofs",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "LUNAR_MOONCLAN_ROOFEND1",
+      "LUNAR_MOONCLAN_ROOFEND2",
+      "LUNAR_MOONCLAN_ROOFEND3",
+      "LUNAR_MOONCLAN_ROOFEND4",
+      "LUNAR_MOONCLAN_ROOFEND_EDGE",
+      "LUNAR_MOONCLAN_ROOFEND1_MIRROR",
+      "LUNAR_MOONCLAN_ROOFEND2_MIRROR",
+      "LUNAR_MOONCLAN_ROOFEND3_MIRROR",
+      "LUNAR_MOONCLAN_ROOFEND4_MIRROR",
+      "LUNAR_MOONCLAN_ROOFEND_EDGE_MIRROR",
+      "LUNAR_MOONCLAN_ROOFEND3_STEEP_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Purple planks",
+        "colors": "h == 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Plaster wall",
+        "colors": "h == 10",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Lunar Island - Moonclan - Wood - Roofs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "LUNAR_MOONCLAN_ROOFTOP1",
+      "LUNAR_MOONCLAN_ROOFTOP2",
+      "LUNAR_MOONCLAN_ROOFTOP3",
+      "LUNAR_MOONCLAN_ROOFTOP4",
+      "LUNAR_MOONCLAN_ROOFEND3_STEEP",
+      "LUNAR_MOONCLAN_ROOFEND_GUTTERING"
     ]
   }
 ]
