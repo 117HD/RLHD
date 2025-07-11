@@ -32206,7 +32206,9 @@
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_WOODEN01_DEFAULT01"
+      "WALLKIT_WOODEN01_DEFAULT01",
+      "WALLKIT_WOODEN02_DEFAULT01",
+      "WALLKIT_WOODEN02_WINDOW01"
     ]
   },
   {
@@ -38812,7 +38814,7 @@
     ]
   },
   {
-    "description": "Varlamore - Well",
+    "description": "Aldarin - Well",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -38859,6 +38861,46 @@
         "uvOrientation": 89,
         "uvScale": 0.8
       }
+    ]
+  },
+  {
+    "description": "Aldarin - Mistrock - Stone - Wooden - plank walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_MISTROCK01_LVL0",
+      "WALLKIT_MISTROCK01_WINDOW01",
+      "WALLKIT_MISTROCK02_DEFAULT01",
+      "WALLKIT_MISTROCK02_WINDOW01",
+      "WALLKIT_MISTROCK01_POST01",
+      "WALLKIT_MISTROCK01_POST02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 5 && s == 0",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 7 && s == 1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Windmill Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_TOWER01",
+      "WALLKIT_ALDARIN02_TOWER01",
+      "WALLKIT_ALDARIN03_TOWER01",
+      "WALLKIT_ALDARIN03_TOWER01_INNER01"
     ]
   }
 ]
