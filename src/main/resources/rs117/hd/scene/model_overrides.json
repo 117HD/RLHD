@@ -41172,7 +41172,7 @@
     "colorOverrides": [
       {
         "description": "Purple planks",
-        "colors": " h == 0",
+        "colors": "h == 0",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.75,
@@ -41180,7 +41180,7 @@
       },
       {
         "description": "Plaster wall",
-        "colors": " h == 10",
+        "colors": "h == 10",
         "baseMaterial": "WATTLE_1",
         "uvType": "BOX",
         "uvScale": 0.75,
