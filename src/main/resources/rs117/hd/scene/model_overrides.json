@@ -21096,7 +21096,17 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ "GA_CAVE_BONES1", "GA_CAVE_BONES2" ,"GA_CAVE_BONES3", "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
+    "objectIds": [
+      "GA_CAVE_BONES1",
+      "GA_CAVE_BONES2",
+      "GA_CAVE_BONES3",
+      "MY2ARM_BONES1",
+      "MY2ARM_BONES2",
+      "MY2ARM_BONES3",
+      "MY2ARM_BONES4",
+      "NECROPOLIS_BONES1",
+      "NECROPOLIS_BONES3"
+    ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -39000,7 +39010,7 @@
         "uvScale": 0.5
       },
       {
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "BONE",
         "uvType": "BOX",
         "uvOrientation": 512,
@@ -39025,7 +39035,7 @@
         "uvScale": 0.5
       },
       {
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "BONE",
         "uvType": "BOX",
         "uvOrientation": 512,
@@ -39050,7 +39060,7 @@
         "uvScale": 0.5
       },
       {
-        "colors": "h == 10 ",
+        "colors": "h == 10",
         "baseMaterial": "BONE",
         "uvType": "BOX",
         "uvOrientation": 512,
@@ -39105,7 +39115,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "s == 0" ],
+        "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       }
     ]
