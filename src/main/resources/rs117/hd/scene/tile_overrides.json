@@ -3016,7 +3016,7 @@
       37
     ],
     "blended": false,
-    "maxLightness": -100
+    "groundMaterial": "TRANSPARENT"
   },
   {
     "name": "ZANARIS_POND_WATER",
@@ -6624,15 +6624,14 @@
   {
     "name": "COSMIC_ENTITYS_PLANE_ABYSS_UNDERLAY",
     "area": "COSMIC_ENTITYS_PLANE",
-    "groundMaterial": "DIRT",
+    "groundMaterial": "TRANSPARENT",
     "overlayIds": [ 0, 37 ],
     "underlayIds": [
       2,
       37,
       72
     ],
-    "blended": false,
-    "maxLightness": -100
+    "blended": false
   },
   {
     "name": "ICE_QUEENS_DUNGEON_UNDERLAY",
