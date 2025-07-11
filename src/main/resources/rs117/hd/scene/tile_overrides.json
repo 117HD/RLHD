@@ -3624,6 +3624,15 @@
     "maxLightness": 16
   },
   {
+    "name": "Aldarin Dirt hills Overlay",
+    "area": "ALDARIN",
+    "overlayIds": [ 377 ],
+    "groundMaterial": "VERTICAL_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
+  },
+  {
     "name": "FORTIS_MARBLE_FLOOR",
     "area": "ZEAH",
     "overlayIds": [ 327 ],
