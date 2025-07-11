@@ -20584,10 +20584,10 @@
   },
   {
     "description": "PAPER_LANTERN",
-    "height": 200,
+    "offset": [ -10, 175, 0 ],
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
+    "radius": 350,
+    "strength": 20,
     "color": [
       235,
       107,
@@ -21682,7 +21682,7 @@
   },
   {
     "description": "ZAMORAK_BARRIER",
-    "height": 50,
+    "offset": [ 0, 60, 50 ],
     "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
@@ -21693,15 +21693,14 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 15,
     "objectIds": [
       "CASTLEWARS_ZAMORAK_SPAWNDOOR"
     ]
   },
   {
     "description": "SARADOMIN_BARRIER",
-    "height": 50,
-    "alignment": "CENTER",
+    "offset": [ 0, 60, 50 ],
     "radius": 300,
     "strength": 10,
     "color": [
@@ -21711,7 +21710,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 15,
     "objectIds": [
       "CASTLEWARS_SARADOMIN_SPAWNDOOR"
     ]
@@ -21721,7 +21720,7 @@
     "height": 100,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 10,
+    "strength": 8,
     "color": [
       255,
       50,
@@ -21729,7 +21728,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
       "CASTLEWARS_ZAMORAK_TELE",
       "CASTLEWARS_ZAMORAK_EXIT",
@@ -21741,7 +21740,7 @@
     "height": 100,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 12.5,
+    "strength": 8.5,
     "color": [
       0,
       80,
@@ -21749,7 +21748,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
       "CASTLEWARS_SARADOMIN_TELE",
       "CASTLEWARS_SARADOMIN_EXIT"
@@ -21760,7 +21759,7 @@
     "height": 100,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 7.5,
+    "strength": 6,
     "color": [
       0,
       255,
@@ -21768,7 +21767,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
       "CASTLEWARS_RANDOM_TELE"
     ]
@@ -26704,6 +26703,72 @@
     "fadeOutDuration": 1000,
     "graphicsObjectIds": [
       "LEAGUE03_HOME_TELEPORT_SPOTANIM_5"
+    ]
+  },
+  {
+    "description": "RAGING_ECHOES_HOME_TELEPORT_START",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 20,
+    "color": "#DB2090",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 500,
+    "fadeInDuration": 900,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_02"
+    ]
+  },
+  {
+  "description": "RAGING_ECHOES_HOME_TELEPORT_MIDDLE",
+  "height": 25,
+  "alignment": "CENTER",
+  "radius": 150,
+  "strength": 20,
+  "color": "#DB2090",
+  "type": "FLICKER",
+  "duration": 0,
+  "range": 20,
+  "fadeOutDuration": 100,
+  "graphicsObjectIds": [
+    "VFX_LEAGUE_5_HOME_TELEPORT_03"
+  ]
+  },
+  {
+    "description": "RAGING_ECHOES_HOME_TELEPORT_END_BOTTOM",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 20,
+    "color": "#DB2090",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3800,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_04"
+    ]
+  },
+  {
+    "description": "RAGING_ECHOES_HOME_TELEPORT_END_TOP",
+    "offset": [ 0, 240, -27 ],
+    "alignment": "CENTER",
+    "radius": 115,
+    "strength": 8,
+    "color": "#48CAF9",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3800,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_04"
     ]
   },
   {
@@ -34065,8 +34130,7 @@
   },
   {
     "description": "POTTERY_OVEN_GLOW",
-    "height": 150,
-    "alignment": "NORTH",
+    "offset": [ 40, 150, 0 ],
     "radius": 500,
     "strength": 7.5,
     "color": [

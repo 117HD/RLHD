@@ -41460,5 +41460,20 @@
     "uvType": "BOX",
     "uvScale": 0.62,
     "uvOrientationY": 512
+  },
+  {
+    "description": "Shazyzien Hanging Lantern - Brighten Flames and Hole on Top",
+    "objectIds": [
+      "SHAYZIEN_LANTERN01_LIT_STATIC",
+      "SHAYZIEN_LANTERN01_LIT_SWAYR",
+      "SHAYZIEN_LANTERN01_LIT_SWAYL",
+      "SHAYZIEN_LANTERN01_LIT_IDLE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255", "s == 7 && l < 6" ],
+        "baseMaterial": "GRAY_150"
+      }
+    ]
   }
 ]
