@@ -366,6 +366,9 @@ public enum Material {
 	VERTICAL_GRAVEL(GRAVEL, p -> p
 		.setNormalMap(null)
 	),
+	GRAVEL_SEMI_LIGHT(GRAVEL, p -> p
+		.setBrightness(1.25f)
+	),
 	GRAVEL_LIGHT(GRAVEL, p -> p
 		.setBrightness(1.5f)
 	),
@@ -863,6 +866,9 @@ public enum Material {
 		.replaceIf(plugin -> plugin.configModelTextures, HAY)
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
+	),
+	HD_HAY_BRIGHT(HD_HAY, p -> p
+		.setBrightness(1.8f)
 	),
 	HD_IRON_BARS(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, IRON_BARS)
