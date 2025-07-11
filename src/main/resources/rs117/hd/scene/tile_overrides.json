@@ -3016,7 +3016,7 @@
       37
     ],
     "blended": false,
-    "maxLightness": 0
+    "groundMaterial": "TRANSPARENT"
   },
   {
     "name": "ZANARIS_POND_WATER",
@@ -3586,7 +3586,7 @@
     "name": "Hunter Guild Water",
     "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
-    "waterType": "PLAIN_WATER"
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "STRANGLEWOOD_HILLSIDE",
@@ -4127,6 +4127,14 @@
     "blended": false
   },
   {
+    "name": "POC_FANCY_BRICK_INTERIOR",
+    "area": "PLAYER_OWNED_HOUSE",
+    "overlayIds": [ 79 ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
     "name": "LAND_OF_GOBLINS_WATER_FIX",
     "area": "LAND_OF_GOBLINS_CUTSCENE_WATER",
     "overlayIds": [
@@ -4503,7 +4511,7 @@
     "name": "HUNTER_GUILD_POND",
     "area": "HUNTER_GUILD_SURFACE",
     "overlayIds": [ 151 ],
-    "waterType": "WATER_FLAT"
+    "waterType": "PLAIN_WATER"
   },
   {
     "name": "RALOS_RISE_SNOW_PATH",
@@ -6646,12 +6654,14 @@
   {
     "name": "COSMIC_ENTITYS_PLANE_ABYSS_UNDERLAY",
     "area": "COSMIC_ENTITYS_PLANE",
+    "groundMaterial": "TRANSPARENT",
+    "overlayIds": [ 0, 37 ],
     "underlayIds": [
       2,
+      37,
       72
     ],
-    "blended": false,
-    "maxLightness": 0
+    "blended": false
   },
   {
     "name": "ICE_QUEENS_DUNGEON_UNDERLAY",
@@ -7031,6 +7041,7 @@
     "name": "ARCEUUS_GROUND",
     "area": "ARCEUUS",
     "underlayIds": [
+      0,
       2,
       3,
       21,
@@ -7306,6 +7317,27 @@
     "area": "UZER_DEMONIC_THRONEROOM",
     "underlayIds": [ 56, 57 ],
     "groundMaterial": "MARBLE_1_GLOSS"
+  },
+  {
+    "name": "Enchanted Valley Ledge",
+    "area": "ENCHANTED_VALLEY_LEDGES",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 0 ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvScale": 0.9,
+    "uvOrientation": 256,
+    "minLightness": 30,
+    "blended": false
+  },
+  {
+    "name": "Enchanted Valley Grass",
+    "area": "ENCHANTED_VALLEY",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 97 ],
+    "groundMaterial": "GRASS_1",
+    "minHue": 12,
+    "minSaturation": 2,
+    "uvScale": 0.85
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
