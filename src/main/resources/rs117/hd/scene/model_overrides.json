@@ -17270,12 +17270,27 @@
   },
   {
     "description": "Bush Wall",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "QIP_DIGSITE_HEDGE",
       "QIP_DIGSITE_HEDGE_CORNER",
       "QIP_DIGSITE_HEDGE_END",
-      "MURDER_QIP_GARDEN_HEDGE"
+      "MURDER_QIP_GARDEN_HEDGE",
+      "HEDGE_ALDARIN01_END01",
+      "HEDGE_ALDARIN01_CORNER01",
+      "HEDGE_ALDARIN01_MIDDLE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 11",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
     ]
   },
   {
@@ -41745,6 +41760,88 @@
     "flatNormals": true,
     "objectIds": [
       "WALLKIT_ALDARIN05_FENCE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Marble - Metallic - Statue of Quoatlos",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "VARLAMORE_STATUE01_QUOATLOS01_2X2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Nameplate",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Pottery - Plant - Potted Plant",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "ALDARIN_POTTED01_PALM01",
+      "ALDARIN_POTTED01_PALM02",
+      "ALDARIN_POTTED01_PALM03",
+      "ALDARIN_POTTED01_FAN01",
+      "ALDARIN_POTTED01_FAN02",
+      "ALDARIN_POTTED01_FAN03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 10",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Stem",
+        "baseMaterial": "BARK",
+        "colors": "h <= 5 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Pottery - Plant - Potted vines",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "ALDARIN_POTTERY01_PLANT02A",
+      "ALDARIN_POTTERY01_PLANT03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 10",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": "h <= 5",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
     ]
   }
 ]
