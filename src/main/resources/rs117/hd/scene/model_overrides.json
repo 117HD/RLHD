@@ -5575,7 +5575,9 @@
     "colorOverrides": [
       {
         "colors": [ "h == 8" ],
-        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
+        "baseMaterial": "METALLIC_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
       }
     ]
   },
@@ -5588,9 +5590,9 @@
     "colorOverrides": [
       {
         "colors": [ "h == 9" ],
-        "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.2
+        "uvScale": 0.15
       }
     ]
   },
@@ -5618,7 +5620,7 @@
       "NTK_SARCOPHAGUS_ANIM"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "uvOrientation": 1142,
     "uvOrientationX": 1
   },
