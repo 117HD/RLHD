@@ -235,7 +235,7 @@ public class ModelOverride
 			} else if (prim.isNumber()) {
 				try {
 					int targetHsl = prim.getAsInt();
-					condition = ahsl -> ahsl == (targetHsl & 0xFFFF);
+					condition = ahsl -> (ahsl & 0xFFFF) == targetHsl;
 				} catch (Exception ex) {
 					log.warn("Expected integer, but got {} in override '{}'", el, description);
 					continue;
