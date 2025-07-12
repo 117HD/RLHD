@@ -48,6 +48,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.MaterialsBuffer;
 import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.utils.HDUtils;
@@ -403,6 +404,9 @@ public class TextureManager {
 	}
 
 	private void updateMaterialUniformBuffer() {
+		assert materialUniformEntries.size() - 1 <= ModelPusher.MAX_MATERIAL_INDEX :
+			"Too many materials (" + materialUniformEntries.size() + ") to fit into packed material data.";
+		log.debug("Uploading {} materials", materialUniformEntries.size());
 		for (int i = 0; i < materialUniformEntries.size(); i++) {
 			MaterialEntry entry = materialUniformEntries.get(i);
 			materialOrdinalToMaterialUniformIndex[entry.material.ordinal()] = i;
