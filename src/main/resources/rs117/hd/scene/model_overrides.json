@@ -7842,7 +7842,10 @@
       "DOV_BASE_EXIT_UPPER",
       "ROYAL_LADDERUP",
       "CIVITAS_LADDER",
+      "CIVITAS_LADDER_TOP",
       "CIVITAS_LADDER_TOP_NORIM",
+      "CIVITAS_LADDER_TALL",
+      "CIVITAS_LADDER_MIDDLE_TALL",
       "TOURTRAP_QIP_LADDER",
       "KOUREND_LADDER_INACTIVE"
     ],
@@ -8145,7 +8148,6 @@
     "objectIds": [
       "FAI_VARROCK_POSH_TABLE",
       "FAI_VARROCK_POSH_DININGTABLE_SMALL",
-      "ALDARIN_TABLE_DEFAULT01",
       "WGS_SEED_COUNTER_EMPTY"
     ],
     "uvType": "BOX",
@@ -8673,7 +8675,8 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "objectIds": [
-      "FAI_VARROCK_FOUNTAIN_SPLASH"
+      "FAI_VARROCK_FOUNTAIN_SPLASH",
+      "ATES_FOUNTAIN"
     ],
     "colorOverrides": [
       {
@@ -9105,7 +9108,8 @@
       "CANAFIS_DOOR_GROUND_NOOP",
       "FAI_FALADOR_POOR_DOOR_FLIP",
       "FAI_FALADOR_POOR_DOOR_OPEN_FLIP",
-      "FIGHTARENA_DOOR2_ESCAPE"
+      "FIGHTARENA_DOOR2_ESCAPE",
+      "DOTI_INTERROGATION_DOOR"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -10091,7 +10095,9 @@
       "EYEGLO_DUGUPSOIL_3",
       "TOURTRAP_QIP_MINE_ROCKS_SMALL_02",
       "TOURTRAP_QIP_MINE_ROCKS_BIG_03",
-      "BRAIN_MUD_DUGUPSOIL_06"
+      "BRAIN_MUD_DUGUPSOIL_06",
+      "BRACKENTOP_ROCKSLIDE03",
+      "BRACKENTOP_ROCKSLIDE04"
     ],
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -10143,7 +10149,16 @@
       "TOURTRAP_QIP_ROCKSLIDE3",
       "TOURTRAP_QIP_ROCKSLIDE4",
       "BRUT_SHORE_ROCKS1",
-      "BRUT_SHORE_ROCKS2"
+      "BRUT_SHORE_ROCKS2",
+      "BRACKENTOP_ROCKSLIDE01",
+      "BRACKENTOP_ROCKSLIDE02",
+      "AVIUM_ROCKSLIDE01",
+      "AVIUM_ROCKSLIDE02",
+      "AVIUM_ROCKSLIDE03",
+      "AVIUM_ROCKSLIDE04",
+      "DOTI_AGILITY_CHALLENGE_A",
+      "DOTI_AGILITY_CHALLENGE_B",
+      "DOTI_AGILITY_CHALLENGE_C"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -10158,7 +10173,8 @@
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_2",
       "TEMPLETREK_SWAMP_EVADE_PATH",
       "TEMPLETREK_SWAMP_SUCCESS_PATH",
-      "TEMPLETREK_SWAMP_FAIL_PATH"
+      "TEMPLETREK_SWAMP_FAIL_PATH",
+      "ALDARIN_DUGUPSOIL02"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.68,
@@ -10193,7 +10209,9 @@
       "DUGUPSOIL3_BROWNMUD",
       "BURGH_DUGUPSOIL_1",
       "BURGH_DUGUPSOIL_2",
-      "BURGH_DUGUPSOIL_3"
+      "BURGH_DUGUPSOIL_3",
+      "ALDARIN_DUGUPSOIL01",
+      "ALDARIN_DUGUPSOIL03"
     ],
     "uvType": "BOX",
     "uvScale": 0.74
@@ -10238,6 +10256,8 @@
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      "CIVITAS_DUGUPSOIL05",
+      "ALDARIN_DUGUPSOIL05",
       "DUGUPSOIL2_VDARKBROWN",
       "FAIRY_DUGUPSOIL_2",
       "WILD2_DUGUPSOIL_2",
@@ -10328,9 +10348,13 @@
       "POG_DUGUPSOIL_03",
       "POG_DUGUPSOIL_04",
       "POG_DUGUPSOIL_05",
-      "POG_DUGUPSOIL_06"
+      "POG_DUGUPSOIL_06",
+      "CIVITAS_DUGUPSOIL04",
+      "CIVITAS_DUGUPSOIL06",
+      "ALDARIN_DUGUPSOIL04",
+      "ALDARIN_DUGUPSOIL06"
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.74
   },
   {
@@ -10598,7 +10622,8 @@
       "SNP_CRATE_BLUE",
       "SNP_CRATE_STACKED_BLUE",
       "SNP_CRATE_RED",
-      "SNP_CRATE_STACKED_RED"
+      "SNP_CRATE_STACKED_RED",
+      "DOTI_POISON_CRATE_OP"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -11836,7 +11861,8 @@
       "TOTE_PORTAL_TO_GOTR_CHILD_HIDDEN",
       "POG_STOOL",
       "HOSIDIUS_SERVERY_STOOL",
-      "HOS_STOOL_03"
+      "HOS_STOOL_03",
+      "BR_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -16765,7 +16791,8 @@
       "LUNAR_PIRATE_SACK_PILE_SMALL",
       "LUNAR_PIRATE_SACK_PILE_LARGE",
       "MOURNING_SACKS",
-      "WILDY_HUB_SACK"
+      "WILDY_HUB_SACK",
+      "FORTIS_SACKS"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -18269,12 +18296,27 @@
   },
   {
     "description": "Bush Wall",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "QIP_DIGSITE_HEDGE",
       "QIP_DIGSITE_HEDGE_CORNER",
       "QIP_DIGSITE_HEDGE_END",
-      "MURDER_QIP_GARDEN_HEDGE"
+      "MURDER_QIP_GARDEN_HEDGE",
+      "HEDGE_ALDARIN01_END01",
+      "HEDGE_ALDARIN01_CORNER01",
+      "HEDGE_ALDARIN01_MIDDLE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 11",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
     ]
   },
   {
@@ -20883,7 +20925,8 @@
       "ROOTS_3",
       "CAVE_TWIG1",
       "AVIUM_ROOTS01",
-      "AVIUM_ROOTS02"
+      "AVIUM_ROOTS02",
+      "DOTI_BAG_DUFFEL01_DEFAULT01_GONE"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -26381,13 +26424,23 @@
     "uvType": "MODEL_XZ"
   },
   {
+    "description": "Varlamore - orange carpet with sun symbol",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "RUG_VARLAMORE01_MIDDLE02_RED01"
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
     "description": "Object - Cushions",
     "baseMaterial": "CARPET",
     "objectIds": [
       "BCS_MAISA_CAMP_CUSHION",
       "AFL_CATBED_NOOP",
       "PILLOW_VARLAMORE01_DEFAULT01",
-      "PILLOW_VARLAMORE01_STACK01"
+      "PILLOW_VARLAMORE01_STACK01",
+      "PILLOW_ALDARIN01_DEFAULT01",
+      "PILLOW_ALDARIN01_STACK01"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -29053,16 +29106,6 @@
     "uvOrientation": 147
   },
   {
-    "description": "Varlamore - Objects - Stone - Stone block steps",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      "SKEWSTEPS_STONE02_CIVITAS01"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 777
-  },
-  {
     "description": "Varlamore - Objects - Stone - Short column railing",
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "objectIds": [
@@ -29099,7 +29142,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "HATSTAND",
-      "HATSTAND_MAHOGANY"
+      "HATSTAND_MAHOGANY",
+      "STAND_HAT01_LASSAR01"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -29513,7 +29557,9 @@
   },
   {
     "description": "Disable shadows for Colosseum entrance walls",
-    "objectIds": [ "HS_INVISWALL_ACTIVE", "WALLKIT_COLOSSEUM10_ARCH01", "WALLKIT_COLOSSEUM10_ARCH02", "WALLKIT_COLOSSEUM10_ARCH01_M", "WALLKIT_COLOSSEUM10_ARCH02_M" ],
+    "objectIds": [
+      "HS_INVISWALL_ACTIVE"
+    ],
     "receiveShadows": false,
     "flatNormals": true
   },
@@ -30968,7 +31014,7 @@
   {
     "description": "Wooden shelves - Triple - Filled with Crates",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [  "FARMING_SHELVES_PROPS_4", "FARMING_SHELVES_PROPS_5" ],
+    "objectIds": [ "FARMING_SHELVES_PROPS_4", "FARMING_SHELVES_PROPS_5" ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -33236,7 +33282,7 @@
         "uvScale": 0.4
       },
       {
-        "colors": ["h == 7", "h == 6 && s == 3 && l > 27"],
+        "colors": [ "h == 7", "h == 6 && s == 3 && l > 27" ],
         "description": "Books",
         "baseMaterial": "GRUNGE_3"
       }
@@ -35589,14 +35635,36 @@
     ]
   },
   {
-    "description": "Fortis wooden plank floor",
+    "description": "Aldarin - wooden plank dock",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "FLOORKIT_WOODEN01_DEFAULT01"
+      "ALDARIN_PIER_RAISED"
+    ]
+  },
+  {
+    "description": "Fortis - Aldarin - wooden plank floor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "FLOORKIT_WOODEN01_DEFAULT01",
+      "FLOORKIT_ALDARIN_WOOD01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Fortis - Aldarin - wooden plank floor - Rotated",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "FLOORKIT_ALDARIN_WOOD01_CUTOFF01"
     ]
   },
   {
@@ -35607,7 +35675,9 @@
     "flatNormals": true,
     "objectIds": [
       "WALLKIT_WOODEN01_DEFAULT01",
-      "WALLKIT_WOODEN01_WINDOW01"
+      "WALLKIT_WOODEN01_WINDOW01",
+      "WALLKIT_WOODEN02_DEFAULT01",
+      "WALLKIT_WOODEN02_WINDOW01"
     ]
   },
   {
@@ -35647,7 +35717,8 @@
     "uvScale": 0.9,
     "flatNormals": true,
     "objectIds": [
-      "CIVITAS_STAIRS_1X3"
+      "CIVITAS_STAIRS_1X3",
+      "ALDARIN_STAIRS_1X2"
     ]
   },
   {
@@ -36806,7 +36877,6 @@
     ],
     "colorOverrides": [
       {
-
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
@@ -37098,10 +37168,11 @@
     ]
   },
   {
-    "description": "Seers Village - Double bed with red blanket and bed frame",
+    "description": "Varlamore - Aldarin - Seers Village - Double bed with red blanket and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "KR_BIGBED"
+      "KR_BIGBED",
+      "BED_CIVITAS01_DOUBLE01"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -38724,7 +38795,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 0", "h == 1" ],
+        "colors": [ "h == 0", "h == 1" ],
         "baseMaterial": "STONE_NORMALED"
       },
       {
@@ -42212,7 +42283,7 @@
     ]
   },
   {
-    "description": "Kourend - Wooden - Textured - Bathscreen",
+    "description": "Kourend - Aldarin - Wooden - Textured - Bathscreen",
     "baseMaterial": "WOOD_GRAIN_3",
     "materialOverrides": {
       "WOODEN_SCREEN": {
@@ -42220,7 +42291,8 @@
       }
     },
     "objectIds": [
-      "FAI_VARROCK_POSH_BATHSCREEN1"
+      "FAI_VARROCK_POSH_BATHSCREEN1",
+      "ALDARIN_SCREEN_DEFAULT01"
     ],
     "uvType": "BOX",
     "uvScale": 0.65
@@ -44347,7 +44419,8 @@
     "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "VM_BARRIER_ALONE_BLOCKING"
+      "VM_BARRIER_ALONE_BLOCKING",
+      "BOARDGAMES_BARRIERS"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -44369,7 +44442,7 @@
     ]
   },
   {
-    "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
+    "description": "Hosidius - Unknown",
     "baseMaterial": "METALLIC_1",
     "objectIds": [
       "HOS_ANCIENT_TECH"
@@ -45300,6 +45373,1414 @@
       {
         "colors": [ "a < 255", "s == 7 && l < 6" ],
         "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_MIDDLE01",
+      "WALLKIT_ALDARIN01_MIDDLE02",
+      "WALLKIT_ALDARIN01_MIDDLE03",
+      "WALLKIT_ALDARIN01_MIDDLE04",
+      "WALLKIT_ALDARIN01_MIDDLE05",
+      "WALLKIT_ALDARIN01_MIDDLE06",
+      "WALLKIT_ALDARIN01_MIDDLE07",
+      "WALLKIT_ALDARIN01_MIDDLE08",
+      "WALLKIT_ALDARIN01_END01_LEFT01",
+      "WALLKIT_ALDARIN01_END01_LEFT02",
+      "WALLKIT_ALDARIN01_END01_RIGHT01",
+      "WALLKIT_ALDARIN01_WINDOW01",
+      "WALLKIT_ALDARIN01_WINDOW02",
+      "WALLKIT_ALDARIN01_WINDOW03",
+      "WALLKIT_ALDARIN01_WINDOW04",
+      "WALLKIT_ALDARIN01_JUNCTION01_M",
+      "WALLKIT_ALDARIN01_JUNCTION01",
+      "WALLKIT_ALDARIN01_JUNCTION02",
+      "WALLKIT_ALDARIN01_JUNCTION02_M",
+      "WALLKIT_ALDARIN01_INTERIOR01",
+      "WALLKIT_ALDARIN01_INTERIOR02",
+      "WALLKIT_ALDARIN02_MIDDLE01",
+      "WALLKIT_ALDARIN02_MIDDLE02",
+      "WALLKIT_ALDARIN02_MIDDLE03",
+      "WALLKIT_ALDARIN02_MIDDLE04",
+      "WALLKIT_ALDARIN02_MIDDLE05",
+      "WALLKIT_ALDARIN02_JUNCTION01",
+      "WALLKIT_ALDARIN02_JUNCTION01_M",
+      "WALLKIT_ALDARIN02_JUNCTION02",
+      "WALLKIT_ALDARIN02_JUNCTION02_M",
+      "WALLKIT_ALDARIN02_WINDOW01",
+      "WALLKIT_ALDARIN02_WINDOW02",
+      "WALLKIT_ALDARIN02_WINDOW03",
+      "WALLKIT_ALDARIN02_WINDOW04",
+      "WALLKIT_ALDARIN03_ARCH01",
+      "WALLKIT_ALDARIN03_ARCH02",
+      "WALLKIT_ALDARIN03_ARCH03",
+      "DOTI_HOUSE_WINDOW",
+      "WALLKIT_ALDARIN02_MANOR01",
+      "WALLKIT_ALDARIN02_MANOR02",
+      "ALDARIN_CELLAR_ENTRANCE",
+      "ALDARIN_BACKSTAGE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 2 && s >= 4",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 303,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Terracotta shingled roofs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 303,
+    "objectIds": [
+      "ROOFKIT_CIVITAS_ROOF01",
+      "ROOFKIT_CIVITAS_ROOF02",
+      "ROOFKIT_CIVITAS_ROOF03",
+      "ROOFKIT_CIVITAS_ROOF04",
+      "ROOFKIT_CIVITAS_ROOF05"
+    ]
+  },
+  {
+    "description": "Aldarin - Terracotta shingled roof with fron facade",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ROOFKIT_ALDARIN_FACADE01_5X1",
+      "ROOFKIT_ALDARIN_FACADE01_5X1_M"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Terracotta Shingles - Must match Civatas Roofs",
+        "colors": "h == 2 && s >= 4",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 303
+      },
+      {
+        "description": "Symbol",
+        "colors": "h == 0 && s == 4 || h == 8 && s == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 303,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Open doorways",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_DOORWAY01",
+      "WALLKIT_ALDARIN01_INTERIOR01_DOORWAY01"
+    ]
+  },
+  {
+    "description": "Aldarin - Half walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "WALLKIT_ALDARIN04_MIDDLE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -303,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone railing",
+    "baseMaterial": "GRUNGE_2_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 404,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_FENCE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Support posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_CIVITAS05_SUPPORT01",
+      "WALLKIT_CIVITAS05_SUPPORT02",
+      "WALLKIT_ALDARIN05_SUPPORT01",
+      "WALLKIT_ALDARIN05_SUPPORT02"
+    ]
+  },
+  {
+    "description": "Aldarin - Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "ALDARIN_WELL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 35",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Pillars",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_ALDARIN01_CITY01_LOWER01",
+      "PILLAR_ALDARIN01_CITY01_HIGHER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h <= 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Mistrock - Stone - Wooden - plank walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_MISTROCK01_LVL0",
+      "WALLKIT_MISTROCK01_WINDOW01",
+      "WALLKIT_MISTROCK02_DEFAULT01",
+      "WALLKIT_MISTROCK02_WINDOW01",
+      "WALLKIT_MISTROCK01_POST01",
+      "WALLKIT_MISTROCK01_POST02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "h == 5 && s == 0",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 7 && s == 1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Windmill Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_ALDARIN01_TOWER01",
+      "WALLKIT_ALDARIN02_TOWER01",
+      "WALLKIT_ALDARIN03_TOWER01",
+      "WALLKIT_ALDARIN03_TOWER01_INNER01"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cross fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_ALDARIN05_FENCE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Marble - Metallic - Statues",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 343,
+    "objectIds": [
+      "VARLAMORE_STATUE01_QUOATLOS01_2X2",
+      "VARLAMORE_STATUE01_TAUR01_2X2",
+      "VARLAMORE_STATUE01_XERNA01_2X2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Nameplate",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Pottery - Plant - Potted Plant",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "ALDARIN_POTTED01_PALM01",
+      "ALDARIN_POTTED01_PALM02",
+      "ALDARIN_POTTED01_PALM03",
+      "ALDARIN_POTTED01_FAN01",
+      "ALDARIN_POTTED01_FAN02",
+      "ALDARIN_POTTED01_FAN03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Leaf",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 10",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Stem",
+        "baseMaterial": "BARK",
+        "colors": "h <= 5 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Pottery - Plant - Potted vines",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "ALDARIN_POTTERY01_PLANT01A",
+      "ALDARIN_POTTERY01_PLANT01B",
+      "ALDARIN_POTTERY01_PLANT01C",
+      "ALDARIN_POTTERY01_PLANT01D",
+      "ALDARIN_POTTERY01_PLANT02A",
+      "ALDARIN_POTTERY01_PLANT02B",
+      "ALDARIN_POTTERY01_PLANT02C",
+      "ALDARIN_POTTERY01_PLANT03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 10",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": "h <= 5",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Metallic - Stone - Wood - Banking Table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TABLE_BANK01_CIVITAS01",
+      "TABLE_BANK01_CIVITAS02",
+      "CIVITAS_TABLE_RICH_1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table Top",
+        "baseMaterial": "MARBLE_1_GLOSS",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Coins",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 7 && s == 7",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      },
+      {
+        "description": "Coins",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 343,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Table",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "objectIds": [
+      "TABLE_CIVITAS01_TABLE01",
+      "TABLE_ALDARIN01_TABLE01",
+      "TABLE_ALDARIN01_TABLE01_DIAGONAL"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Bench",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 913,
+    "objectIds": [
+      "CHAIR_ALDARIN01_BENCH01"
+    ]
+  },
+  {
+    "description": "Dorgeshkaan - Varlamore - Metallic - Bank safe",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 282,
+    "objectIds": [
+      "DORGESH_BANK_SAFE",
+      "SAFE_ALDARIN01_VILLA01"
+    ]
+  },
+  {
+    "description": "Varlamore - Wood - Cloth - u shaped chair with red fabric",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CHAIR_CIVITAS01_WOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ardalin - Wood - Paper - Glass - Shelf with Tuape books papers and bottles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "ALDARIN_SHELF02_BOOKS02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 5 && s == 2 || h == 7",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Liquid",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "colors": "h == 0 && s == 4 || h == 17",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ardalin - Wood - Paper - Glass - Shelf with Tuape books papers and bottles - Diag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 256,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "ALDARIN_SHELF02_BOOKS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 5 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Liquid",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "colors": "h == 0 && s == 4 || h == 17",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ardalin - Prif - Paper - Stack of multi colored books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 69,
+    "objectIds": [
+      "PRIF_LIBRARY_BOOKS_01",
+      "PRIF_LIBRARY_BOOKS_02",
+      "ALDARIN_BOOK01_FALLEN01"
+    ]
+  },
+  {
+    "description": "Aldarin - Plant - Wall ivy",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.5,
+    "objectIds": [
+      "ALDARIN_IVY01_SMALL01",
+      "ALDARIN_IVY01_MEDIUM01",
+      "ALDARIN_IVY01_LARGE01",
+      "ALDARIN_IVY01_SMALL02"
+    ]
+  },
+  {
+    "description": "Shayzien - Aldarin - Wooden - Trellis",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 808,
+    "objectIds": [
+      "SHAYZIEN_TRELLIS_WALLDECOR"
+    ]
+  },
+  {
+    "description": "Aldarin - Cloth - Awning",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "uvOrientation": 999,
+    "objectIds": [
+      "TENT_BAZAAR01_COVER01_ALDARIN01"
+    ]
+  },
+  {
+    "description": "Varlamore - Cypress Tree",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 192,
+    "objectIds": [
+      "TREE_CYPRESS01_SHORT01",
+      "TREE_CYPRESS01_MEDIUM01",
+      "TREE_CYPRESS01_TALL01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Needles",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - potted Cypress Tree",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 192,
+    "objectIds": [
+      "ALDARIN_TREE01_POTTED01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Needles",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Wall posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_CIVITAS03_MIDDLE01_TALLER01"
+
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Plank tables",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALDARIN_TABLE_DEFAULT01",
+      "ALDARIN_TABLE_DEFAULT01_DIAGONAL",
+      "TABLE_WOODEN01_RECTANGULAR01",
+      "TABLE_WOODEN01_SQUARE01",
+      "TABLE_WOODEN01_SMALL01"
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Plank tables - With pottery",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 913,
+    "uvScale": 0.4,
+    "objectIds": [
+      "ALDARIN_TABLE_WINE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Plank tables - With pottery filled with vegetables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 913,
+    "uvScale": 0.4,
+    "objectIds": [
+      "ALDARIN_TABLE_FOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Vegetables",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cloth - Plank market stall with red cover",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALDARIN_MARKET_STALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Canvas",
+        "baseMaterial": "BURLAP",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cloth - Plank market stall with red cover - Vegetables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 172,
+    "objectIds": [
+      "ALDARIN_MARKET_STALL_VEG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Canvas",
+        "baseMaterial": "BURLAP",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Vegetables",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cloth - Plank market stall with red cover - Gems",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 172,
+    "objectIds": [
+      "ALDARIN_MARKET_STALL_GEMS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Canvas",
+        "baseMaterial": "BURLAP",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Scales",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Leather - Canvas - Metallic - Death on the Island bag",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 172,
+    "objectIds": [
+      "DOTI_BAG_DUFFEL01_DEFAULT01_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "h == 7 && s == 1",
+        "uvType": "BOX",
+        "uvOrientation": -176
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Path of Glorphie - Stone rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 89,
+    "objectIds": [
+      "POG_SEWER_BRICK_RUBBLE_01",
+      "POG_SEWER_BRICK_RUBBLE_02",
+      "POG_SEWER_BRICK_RUBBLE_03",
+      "POG_SEWER_BRICK_RUBBLE_04"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Wardrobe",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "ALDARIN_WARDROBE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal Handle",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvOrientation": 88
+      },
+      {
+        "description": "Vaneer wood",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Wardrobe for Butler clothes - Quest Death on the Island",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DOTI_BUTLER_RACK",
+      "DOTI_BUTLER_RACK_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal Handle",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvOrientation": 88
+      },
+      {
+        "description": "Vaneer wood",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Clothes",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0 && s == 4 || h == 5 && s == 0 || h > 8",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cloth - Chair with purple cushion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "ALDARIN01_CHAIR_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Purple cushion",
+        "baseMaterial": "CARPET",
+        "colors": "h == 48",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Vanity - Desk with gold trim and mirror",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALDARIN_VANITY_DEFAULT01",
+      "ALDARIN_VANITY_DEFAULT02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Trim",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Mirror",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "h == 36",
+        "uvType": "MODEL_XY",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Fancy Mirror",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "ALDARIN_MIRROR_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Mirror",
+        "colors": "h == 36",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 212
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Plank window boards",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "DOTI_HOUSE_WINDOW_BOARDS"
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Round chair with a up-side-down cone shape",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 168,
+    "objectIds": [
+      "CHAIR_ALDARIN01_STONE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Cloth - Long table with faded red table cloth",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 168,
+    "objectIds": [
+      "TABLE_ALDARIN01_PARTY01",
+      "TABLE_ALDARIN01_PARTY01_END01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 42
+      }
+    ]
+  },
+  {
+    "description": "Aldarin -  Wooden - WheelBarrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "CART_CIVITAS01_GARDENING01" ],
+    "uvType": "BOX",
+    "uvOrientationX": 476,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Aldarin -  Plant - leafy bush",
+    "baseMaterial": "LEAF_VEINS",
+    "objectIds": [ "ALDARIN_PLANT_WALL_NORTH" ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Aldarin - Wooden - Plank Stairs",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "FLOORKIT_WOODEN01_DEFAULT01_SKEWSTEPS"
+    ]
+  },
+  {
+    "description": "Aldarin - Shayzian - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 172 ,
+    "objectIds": [
+      "AKD_SHAYZIEN_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DOTI_VILLA_STAIRS"
+    ]
+  },
+  {
+    "description": "Aldarin - Metallic - Bath with water",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 172 ,
+    "objectIds": [
+      "BATH_ALDARIN01_TIN01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin Manor - Metallic - chest",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "objectIds": [
+      "MASK_CHEST_CLOSED",
+      "ATES_CHEST_CLOSED"
+    ]
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block steps",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 343,
+    "objectIds": [
+      "SKEWSTEPS_STONE02_CIVITAS01",
+      "ALDARIN_STEPS_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block steps - diag",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALDARIN_STEPS_CORNER01",
+      "ALDARIN_STEPS_CORNER02"
+    ]
+  },
+  {
+    "description": "Aldarin Manor wineceller - Wooden - bookshelf with Multicolored books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "ALDARIN_SHELF01_BOOKS01",
+      "ALDARIN_SHELF01_BOOKS02",
+      "DOTI_BOOKSHELF_CLOSED",
+      "DOTI_BOOKSHELF_CLOSED_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h <= 7 && s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Aldarin Manor wineceller - Wooden - bookshelf with Multicolored books - Angled",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DOTI_BOOKSHELF_OPEN_NOOP",
+      "DOTI_BOOKSHELF_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h <= 7 && s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 256,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Aldarin Manor Wineceller Stairs - Stone",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128,
+    "objectIds": [
+      "DOTI_CELLAR_STAIR_EXIT_VILLA",
+      "DOTI_CELLAR_STAIR_EXIT_BACKSTAGE"
+    ]
+  },
+  {
+    "description": "Aldarin Manor Wineceller Stairs - Stone",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128,
+    "objectIds": [
+      "WALLKIT_COLOSSEUM10_DEFAULT01",
+      "WALLKIT_COLOSSEUM10_DEFAULT02",
+      "WALLKIT_COLOSSEUM10_CORNER01",
+      "WALLKIT_COLOSSEUM10_ARCH01",
+      "WALLKIT_COLOSSEUM10_ARCH01_M",
+      "WALLKIT_COLOSSEUM10_ARCH02",
+      "WALLKIT_COLOSSEUM10_ARCH02_M"
+    ],
+    "flatNormals": true
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Large barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "BARREL_WOODEN01_LARGE01_ALDARIN01"
+    ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Pottery - Wine jars in storage sehlf",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "objectIds": [
+      "ALDARIN_WINE01_LARGE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvOrientation": -177,
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -79,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Pottery - Wine jars in storage sehlf",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_ALDARIN_RED_AMPHORA_OP",
+      "ALDARIN_WINE01_BARREL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 177,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Fermentation Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "ALDARIN_FERMENTING01_CORNER01",
+      "ALDARIN_FERMENTING01_SIDE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Dirt - Pottery - Fermentating pot",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "ALDARIN_FERMENTING01_BARREL01",
+      "ALDARIN_FERMENTING01_BARREL02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvOrientation": 102,
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "DIRT_1",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Pottery - Death on the Isle Clue",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_CLUE1",
+      "DOTI_CLUE2",
+      "DOTI_CLUE3"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle Clue - Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_CLUE4"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle Clue - Stool",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_CLUE5"
+    ]
+  },
+  {
+    "description": "Aldarin - Marble - Cloth - Rope - Wooden - Death on the Isle Clue - Crate",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "ALDARIN_PILLAR01_CURTAIN01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 64,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle - Stage curtain rod",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_PILLAR01_POLE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle - fake building",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_FACADE01_BALCONY01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Carpet - Manor double bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "BED_ALDARIN01_LARGE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Carpet - Costume Rack",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_RACK01_COSTUMES01",
+      "DOTI_DAMAGED_COSTUME_OP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 3 || h == 3 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Carpet - Costume Stand",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_RACK01_COSTUMES02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h <= 5 && s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Carpet - Sofa",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "CLAN_MEDIEVAL_SOFA"
+    ]
+  },
+  {
+    "description": "Aldarin - Carpet - Sofa",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_TORCH01_CAVE01"
+    ]
+  },
+  {
+    "description": "Stone wine Fountain",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "ALDARIN_FOUNTAIN01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   }

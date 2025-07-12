@@ -3569,6 +3569,140 @@
     }
   },
   {
+    "name": "Aldarin Underwall blending fix - has no texture",
+    "area": "ALDARIN",
+    "overlayIds": [ 159 ],
+    "blended": false
+  },
+  {
+    "name": "Aldarin under stairs blending removal",
+    "area": "ALDARIN_UNDERSTAIR_BLENDING_FIX",
+    "overlayIds": [ 172 ],
+    "shiftLightness": -10,
+    "blended": false
+  },
+  {
+    "name": "Aldarin fake brick path",
+    "area": "ALDARIN",
+    "overlayIds": [ 398, 399 ],
+    "blended": false,
+    "maxLightness": 38,
+    "minLightness": 22,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin - Manor Winceller - fake brick",
+    "area": "ALDARIN_MANOR_WINECELLER",
+    "underlayIds": [ 12, 141 ],
+    "minLightness": 13,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Dark tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 101 ],
+    "blended": false,
+    "shiftLightness": 1,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Medium tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 173 ],
+    "blended": false,
+    "shiftLightness": -2,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Light tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 172 ],
+    "blended": false,
+    "shiftLightness": 3,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin Forced Dirt Floor",
+    "area": "ALDARIN_324_DIRT_FIX",
+    "overlayIds": [ 324 ],
+    "groundMaterial": "PACKED_EARTH",
+    "blended": false
+  },
+  {
+    "name": "Aldarin Terracotta Roof - Red",
+    "area": "ALDARIN_TERACOTTA_ROOFS",
+    "overlayIds": [ 324, 373, 374 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 23,
+    "shiftLightness": 2,
+    "blended": false,
+    "replacements": {
+      "WINTER_GRUNGE": "season == WINTER"
+    }
+  },
+  {
+    "name": "Aldarin Terracotta Floor - Red",
+    "area": "ALDARIN",
+    "overlayIds": [ 324, 373, 374 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 23,
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "Aldarin Terracotta Floor - Taupe",
+    "area": "ALDARIN",
+    "overlayIds": [ 325, 326 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 25,
+    "maxLightness": 35,
+    "shiftLightness": 1,
+    "uvOrientation": 512,
+    "blended": false
+  },
+  {
+    "name": "Aldarin Wooden Roof tiles ",
+    "area": "ALDARIN_WOOD_ROOFS",
+    "overlayIds": [ 81, 185 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16,
+    "replacements": {
+      "WINTER_GRUNGE": "season == WINTER"
+    }
+  },
+  {
+    "name": "Aldarin Wooden Floor - 81 ",
+    "area": "ALDARIN_WOOD_FLOOR_INTERIOR",
+    "overlayIds": [ 81 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16
+  },
+  {
+    "name": "Aldarin Wooden Floor ",
+    "area": "ALDARIN",
+    "overlayIds": [ 185 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16
+  },
+  {
+    "name": "Aldarin Dirt hills Overlay",
+    "area": "ALDARIN",
+    "overlayIds": [ 377 ],
+    "groundMaterial": "VERTICAL_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
+  },
+  {
     "name": "FORTIS_MARBLE_FLOOR",
     "area": "ZEAH",
     "overlayIds": [ 327 ],

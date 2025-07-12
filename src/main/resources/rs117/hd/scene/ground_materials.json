@@ -527,5 +527,14 @@
       "ABYSSAL_2_FLOW",
       "ABYSSAL_FLOW"
     ]
+  },
+  {
+    "name": "TERRACOTTA_FLOOR",
+    "materials": [
+      "GRUNGE_1_LIGHT_SHINY",
+      "GRUNGE_2_SHINY",
+      "GRUNGE_1_LIGHT_SHINY",
+      "GRUNGE_2_SHINY"
+    ]
   }
 ]
