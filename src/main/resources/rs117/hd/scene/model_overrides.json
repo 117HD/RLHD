@@ -23691,10 +23691,10 @@
         "uvOrientation": -256
       },
       {
-          "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-          "colors": "h == 6",
-          "uvType": "BOX",
-          "uvScale": 0.65
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.65
       }
     ]
   },
