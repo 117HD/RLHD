@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,7 +62,6 @@ public class GamevalManager {
 					new TypeToken<Map<String, Map<String, Integer>>>() {}.getType()
 				);
 				GAMEVALS.replaceAll((k, v) -> gamevals.getOrDefault(k, Collections.emptyMap()));
-				GAMEVALS.get(ANIM_KEY).put("-1", -1); // Allow -1 for animations specifically
 				log.debug("Loaded gameval mappings");
 			} catch (IOException ex) {
 				log.error("Failed to load gamevals:", ex);
@@ -131,19 +131,34 @@ public class GamevalManager {
 
 			in.beginArray();
 			while (in.hasNext()) {
-				String name = in.nextString();
-				Integer id = map.get(name);
-				if (id == null) {
-					String suggestion = "";
-					for (var gamevalMapEntry : GAMEVALS.entrySet()) {
-						if (gamevalMapEntry.getValue().get(name) != null) {
-							suggestion = String.format(", did you mean to match %s?", gamevalMapEntry.getKey());
-							break;
-						}
+				var type = in.peek();
+				switch (type) {
+					case NUMBER: {
+						int id = in.nextInt();
+						if (id != -1)
+							log.debug("Adding raw {} ID: {} at {}. Should be replaced with a gameval.", key, id, GsonUtils.location(in));
+						result.add(id);
+						break;
 					}
-					log.error("Missing {} gameval: {}{} at {}", key, name, suggestion, GsonUtils.location(in), new Throwable());
-				} else {
-					result.add(id);
+					case STRING:
+						String name = in.nextString();
+						Integer id = map.get(name);
+						if (id == null) {
+							String suggestion = "";
+							for (var gamevalMapEntry : GAMEVALS.entrySet()) {
+								if (gamevalMapEntry.getValue().get(name) != null) {
+									suggestion = String.format(", did you mean to match %s?", gamevalMapEntry.getKey());
+									break;
+								}
+							}
+							log.error("Missing {} gameval: {}{} at {}", key, name, suggestion, GsonUtils.location(in), new Throwable());
+						} else {
+							result.add(id);
+						}
+						break;
+					default:
+						log.error("Unexpected {} gameval type: {} at {}", key, type, GsonUtils.location(in), new Throwable());
+						break;
 				}
 			}
 			in.endArray();
@@ -153,7 +168,7 @@ public class GamevalManager {
 
 		@Override
 		public void write(JsonWriter out, HashSet<Integer> ids) throws IOException {
-			var remainingIds = new HashSet<>(ids);
+			var remainingIds = new ArrayList<>(ids);
 			var map = GAMEVALS.get(key);
 			var names = map.entrySet().stream()
 				.filter(e -> remainingIds.remove(e.getValue()))
@@ -162,14 +177,18 @@ public class GamevalManager {
 				.toArray(String[]::new);
 
 			if (!remainingIds.isEmpty()) {
-				throw new RuntimeException(String.format(
-					"Unknown %s IDs: %s", key, remainingIds.stream()
+				remainingIds.sort(Integer::compareTo);
+				log.warn(
+					"Exporting IDs with no corresponding gamevals: {}", remainingIds.stream()
+						.filter(i -> i != -1)
 						.map(Object::toString)
 						.collect(Collectors.joining(", "))
-				));
+				);
 			}
 
 			out.beginArray();
+			for (var id : remainingIds)
+				out.value(id);
 			for (var name : names)
 				out.value(name);
 			out.endArray();
