@@ -23,8 +23,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include PARALLAX_OCCLUSION_MAPPING
-
 #if PARALLAX_OCCLUSION_MAPPING
 float sampleHeight(const Material material, const vec2 uv) {
     return linearToSrgb(texture(textureArray, vec3(uv, material.displacementMap)).r);
@@ -34,6 +32,7 @@ void sampleDisplacementMap(
     const Material material,
     const vec3 tsViewDir,
     const vec3 tsLightDir,
+    const float numLayers,
     inout vec2 uv,
     inout vec3 fragDelta,
     inout float selfShadowing
@@ -45,10 +44,6 @@ void sampleDisplacementMap(
 
     // TODO: consider anti-aliasing to fit more nicely with MSAA
     // TODO: improve close-up accuracy
-    const float minLayers = 1;
-    const float maxLayers = 16;
-    float cosView = normalize(tsViewDir).z;
-    float numLayers = mix(minLayers, maxLayers, 1 - clamp(cosView * cosView, 0, 1));
     float heightPerLayer = 1. / numLayers;
 
     vec2 deltaXyPerZ = tsViewDir.xy / tsViewDir.z * scale;
