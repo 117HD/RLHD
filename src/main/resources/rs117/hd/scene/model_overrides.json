@@ -42550,23 +42550,70 @@
   {
     "description": "Varlamore - Objects - Stone - Stone block steps",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 343,
     "objectIds": [
       "SKEWSTEPS_STONE02_CIVITAS01",
       "ALDARIN_STEPS_DEFAULT01"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 343
+    ]
   },
   {
     "description": "Varlamore - Objects - Stone - Stone block steps - diag",
     "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
     "objectIds": [
       "ALDARIN_STEPS_CORNER01",
       "ALDARIN_STEPS_CORNER02"
-    ],
+    ]
+  },
+  {
+    "description": "Aldarin Manor wineceller - Wooden - bookshelf with Multicolored books",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 512
+    "uvScale": 0.4,
+    "objectIds": [
+      "ALDARIN_SHELF01_BOOKS01",
+      "ALDARIN_SHELF01_BOOKS02",
+      "DOTI_BOOKSHELF_CLOSED",
+      "DOTI_BOOKSHELF_CLOSED_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Aldarin Manor Wineceller Stairs - Stone",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128,
+    "objectIds": [
+      "DOTI_CELLAR_STAIR_EXIT_VILLA"
+    ]
+  },
+  {
+    "description": "Aldarin Manor Wineceller Stairs - Stone",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 128,
+    "objectIds": [
+      "WALLKIT_COLOSSEUM10_DEFAULT01",
+      "WALLKIT_COLOSSEUM10_DEFAULT02",
+      "WALLKIT_COLOSSEUM10_CORNER01",
+      "WALLKIT_COLOSSEUM10_ARCH01",
+      "WALLKIT_COLOSSEUM10_ARCH01_M",
+      "WALLKIT_COLOSSEUM10_ARCH02",
+      "WALLKIT_COLOSSEUM10_ARCH02_M"
+    ]
   }
 ]
