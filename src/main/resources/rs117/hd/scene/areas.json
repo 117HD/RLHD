@@ -2861,7 +2861,7 @@
   {
     "name": "MEIYERDITCH_MINES",
     "aabbs": [
-      [ 2406, 4648, 2371, 4613 ]
+      [ 2376, 4616, 2399, 4639 ]
     ],
     "hideOtherAreas": true
   },

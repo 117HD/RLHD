@@ -17978,7 +17978,7 @@
     "colorOverrides": [
       {
         "description": "Flag",
-        "colors": " h > 6 && s >= 1",
+        "colors": "h > 6 && s >= 1",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.8,
@@ -17986,7 +17986,7 @@
       },
       {
         "description": "Flag pole",
-        "colors": " h > 0 && h <= 6",
+        "colors": "h > 0 && h <= 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8
