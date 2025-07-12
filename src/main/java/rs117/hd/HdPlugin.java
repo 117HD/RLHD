@@ -1434,8 +1434,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		boolean updateUniforms = true;
 
+		Player localPlayer = client.getLocalPlayer();
+		var lp = localPlayer.getLocalLocation();
 		if (sceneContext.enableAreaHiding) {
-			var lp = client.getLocalPlayer().getLocalLocation();
 			int[] worldPos = {
 				sceneContext.scene.getBaseX() + lp.getSceneX(),
 				sceneContext.scene.getBaseY() + lp.getSceneY(),
@@ -1538,6 +1539,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.windStrength.set(environmentManager.currentWindStrength);
 				uboCamera.windCeiling.set(environmentManager.currentWindCeiling);
 				uboCamera.windOffset.set(windOffset);
+
+				if (configCharacterDisplacement) {
+					Model playerModel = localPlayer.getModel();
+					if(playerModel != null) {
+						uboCamera.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getRadius());
+					}
+				}
 			}
 		}
 
@@ -3139,8 +3147,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		if (configCharacterDisplacement && renderable instanceof Actor)
-			uboCamera.addCharacterPosition(x, z, modelRadius);
+		if (configCharacterDisplacement && renderable instanceof Actor) {
+			if(renderable instanceof NPC){
+				NPC npc = (NPC) renderable;
+				String walkAnimName = gamevalManager.getAnimName(npc.getWalkAnimation()).toUpperCase();
+				if(!walkAnimName.contains("HOVER") || !walkAnimName.contains("FLY")) {
+					uboCamera.addCharacterPosition(x, z, modelRadius);
+				}
+			} else {
+				uboCamera.addCharacterPosition(x, z, modelRadius);
+			}
+		}
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)
