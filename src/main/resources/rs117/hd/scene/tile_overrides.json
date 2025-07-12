@@ -171,6 +171,14 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "VERTICAL_DIRT_FIX_NEAR_CASTLE_WARS",
+    "area": "VERTICAL_DIRT_FIX_NEAR_CASTLE_WARS",
+    "underlayIds": [
+      64
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
     "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
     "area": "TUTORIAL_ISLAND_KITCHEN",
     "overlayIds": [
