@@ -4354,6 +4354,48 @@
     ]
   },
   {
+    "description": "Castle Wars - Doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "CASTLEWARS_ZAMORAK_MAINDOORL",
+      "CASTLEWARS_ZAMORAK_MAINDOORR",
+      "CASTLEWARS_SARADOMIN_MAINDOORL",
+      "CASTLEWARS_SARADOMIN_MAINDOORR",
+      "CASTLEWARS_SARADOMIN_MAINDOORL_OPEN",
+      "CASTLEWARS_SARADOMIN_MAINDOORR_OPEN",
+      "CASTLEWARS_ZAMORAK_MAINDOORR_OPEN",
+      "CASTLEWARS_ZAMORAK_MAINDOORL_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Castle Wars - Doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CASTLEWARS_CATAPULT_SARADOMIN",
+      "CASTLEWARS_CATAPULT_ZAMORAK",
+      "CASTLEWARS_CATAPULT_ZAMORAK_BROKEN",
+      "CASTLEWARS_CATAPULT_SARADOMIN_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
     "description": "Castle Wars - Stairs",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -9818,7 +9860,8 @@
       "ROCKS_SEAROCK_BARE03",
       "HUNTING_DEADFALL_TRAPPING_FENNEC",
       "HUNTING_DEADFALL_TRAPPING_FENNEC_M",
-      "HUNTING_DEADFALL_FULL_FENNEC"
+      "HUNTING_DEADFALL_FULL_FENNEC",
+      "CASTLEWARS_STEPING_STONE"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
