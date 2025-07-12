@@ -41203,7 +41203,8 @@
     "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "VM_BARRIER_ALONE_BLOCKING"
+      "VM_BARRIER_ALONE_BLOCKING",
+      "BOARDGAMES_BARRIERS"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -41225,7 +41226,7 @@
     ]
   },
   {
-    "description": "Hosidius - Varrock - Red Rope Barrier - Bank",
+    "description": "Hosidius - Unknown",
     "baseMaterial": "METALLIC_1",
     "objectIds": [
       "HOS_ANCIENT_TECH"
@@ -42232,6 +42233,37 @@
         "uvOrientation": 89,
         "uvScale": 0.6
       }
+    ]
+  },
+  {
+    "description": "Aldarin - Leather - Canvas - Metallic - Death on the Island bag",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 172,
+    "objectIds": [
+      "DOTI_BAG_DUFFEL01_DEFAULT01_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "h == 7 && s == 1",
+        "uvType": "BOX",
+        "uvOrientation": -176
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Path of Glorphie - Stone rubble",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 89,
+    "objectIds": [
+      "POG_SEWER_BRICK_RUBBLE_01",
+      "POG_SEWER_BRICK_RUBBLE_02",
+      "POG_SEWER_BRICK_RUBBLE_03",
+      "POG_SEWER_BRICK_RUBBLE_04"
     ]
   }
 ]
