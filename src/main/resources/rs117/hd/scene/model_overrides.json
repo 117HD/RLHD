@@ -7679,6 +7679,8 @@
       "CIVITAS_LADDER",
       "CIVITAS_LADDER_TOP",
       "CIVITAS_LADDER_TOP_NORIM",
+      "CIVITAS_LADDER_TALL",
+      "CIVITAS_LADDER_MIDDLE_TALL",
       "TOURTRAP_QIP_LADDER",
       "KOUREND_LADDER_INACTIVE"
     ],
@@ -16597,7 +16599,8 @@
       "LUNAR_PIRATE_SACK_PILE_SMALL",
       "LUNAR_PIRATE_SACK_PILE_LARGE",
       "MOURNING_SACKS",
-      "WILDY_HUB_SACK"
+      "WILDY_HUB_SACK",
+      "FORTIS_SACKS"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -42002,6 +42005,45 @@
     "uvOrientation": 808,
     "objectIds": [
       "SHAYZIEN_TRELLIS_WALLDECOR"
+    ]
+  },
+  {
+    "description": "Aldarin - Cloth - Awning",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 999,
+    "objectIds": [
+      "TENT_BAZAAR01_COVER01_ALDARIN01"
+    ]
+  },
+  {
+    "description": "Varlamore - Cypress Tree",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 192,
+    "objectIds": [
+      "TREE_CYPRESS01_MEDIUM01",
+      "TREE_CYPRESS01_TALL01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Needles",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Wall posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_CIVITAS03_MIDDLE01_TALLER01"
+
     ]
   }
 ]
