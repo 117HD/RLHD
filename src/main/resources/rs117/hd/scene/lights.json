@@ -20490,6 +20490,41 @@
     "offset": [ 3, 0, 40 ]
   },
   {
+    "description": "Altar Candles",
+    "offset": [ 0, 140, -33 ],
+    "radius": 180,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CANDLES_1",
+      "CANDLES_2"
+    ]
+  },
+  {
+    "description": "Altar Candles Mirror",
+    "offset": [ 0, 140, 33 ],
+    "radius": 180,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CANDLES_2_MIRROR"
+    ]
+  },
+  {
     "description": "LANTERN",
     "height": 250,
     "alignment": "CENTER",
@@ -21775,7 +21810,7 @@
   },
   {
     "description": "SOUL_WARS_BLUE_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
@@ -21793,7 +21828,7 @@
   },
   {
     "description": "SOUL_WARS_RED_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
@@ -21812,7 +21847,7 @@
   },
   {
     "description": "SOUL_WARS_CLAN_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
@@ -21830,7 +21865,7 @@
   },
   {
     "description": "SOUL_WARS_MAIN_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 10,
@@ -36952,6 +36987,7 @@
   {
     "description": "Asgarnia Ice Dungeon Ladder",
     "objectIds": [ "LADDER_FROM_CELLAR" ],
+    "areas": [ "ASGARNIA_ICE_DUNGEON" ],
     "height": 360,
     "radius": 900,
     "strength": 10,
