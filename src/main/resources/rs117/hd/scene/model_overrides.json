@@ -10705,7 +10705,9 @@
       "SNP_CRATE",
       "MYQ4_EMPTY_CRATES",
       "MYQ4_VIAL_CRATE",
-      "MYQ4_MEAT_CRATE"
+      "MYQ4_MEAT_CRATE",
+      "VMQ2_COTHON_CRATE",
+      "VMQ2_COTHON_CRATES"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -11933,7 +11935,8 @@
     "objectIds": [
       "PIRATETREASURE_WOODEN_TABLE_SMALL",
       "MYQ3_HIDEOUT_SMALL_TABLE",
-      "BURGH_QUEST_FOOD_TABLE"
+      "BURGH_QUEST_FOOD_TABLE",
+      "BR_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -24752,7 +24755,7 @@
       "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF", "DS2_CORSAIR_COVE_SHIPPLANK", "SAILING_RIMMINGTON_SHIPPLANK_ON",
       "SAILING_RIMMINGTON_SHIPPLANK_OFF", "SAILING_RIMMINGTON_SHIPPLANK2_ON", "SAILING_RIMMINGTON_SHIPPLANK2_OFF", "SAILING_SARIM_VEOS_SHIPPLANK_ON",
       "SAILING_SARIM_VEOS_SHIPPLANK_OFF", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_ON_2", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_OFF_2", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON_2",
-      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2"
+      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2", "SAILING_FORTIS_SHIPPLANK_OFF", "SAILING_FORTIS_SHIPPLANK_ON", "SAILING_FORTIS_SHIPPLANK_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -35670,6 +35673,81 @@
     ]
   },
   {
+    "description": "Fortis - brick half wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_FORTIS03_PARAPET01"
+    ]
+  },
+  {
+    "description": "Fortis - wooden plank floor attached to brick",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_FORTIS_DOCK_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone wall Bottom",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_FORTIS_DOCK_LOWER_LEFT",
+      "WALLKIT_FORTIS01_WALL01",
+      "WALLKIT_FORTIS01_WALL01_INVERSE",
+      "WALLKIT_FORTIS01_WALL02",
+      "WALLKIT_FORTIS_DOCK_LOWER_RIGHT",
+      "WALLKIT_FORTIS01_WALL01_GATEHOUSE_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone wall attached to brick",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_FORTIS_DOCK_MID"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Fortis - Aldarin - wooden plank floor - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -35704,12 +35782,18 @@
       "FORTIS_DOOR_L_OPEN",
       "FORTIS_DOOR_L_REVERSE",
       "FORTIS_DOOR_L_REVERSE_OPEN",
+      "FORTIS_DOOR_DOUBLE_L",
+      "FORTIS_DOOR_DOUBLE_L_OPEN",
+      "FORTIS_DOOR_DOUBLE_L_OPEN_NOOP",
       "FORTIS_DOOR_R",
       "FORTIS_DOOR_R_LOCKED",
       "FORTIS_DOOR_R_NOOP",
       "FORTIS_DOOR_R_OPEN",
       "FORTIS_DOOR_R_REVERSE",
       "FORTIS_DOOR_R_REVERSE_OPEN",
+      "FORTIS_DOOR_DOUBLE_R",
+      "FORTIS_DOOR_DOUBLE_R_OPEN",
+      "FORTIS_DOOR_DOUBLE_R_OPEN_NOOP",
       "VARLAMORE_THIEVING_HOUSE_DOOR_LOCKED",
       "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN"
     ],
@@ -35756,10 +35840,35 @@
         "colors": "h == 5 && s > 0",
         "uvType": "BOX",
         "uvScale": 0.8
+      },
+      {
+        "description": "Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ],
     "objectIds": [
-      "WALLKIT_CIVITAS03_MIDDLE01"
+      "WALLKIT_CIVITAS01_FRAME01"
+    ]
+  },
+  {
+    "description": "Fortis Masonry wall with red shifted wooden post",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Wooden Post",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5 && s > 0 && s < 3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "WALLKIT_CIVITAS03_MIDDLE02"
     ]
   },
   {
@@ -35859,7 +35968,23 @@
       "WALLKIT_CIVITAS07_END01",
       "WALLKIT_CIVITAS07_END02",
       "WALLKIT_CIVITAS04_MIDDLE01",
-      "WALLKIT_CIVITAS04_END01_LEFT"
+      "WALLKIT_CIVITAS04_END01_LEFT",
+      "WALLKIT_CIVITAS03_JUNCTION01_M",
+      "WALLKIT_CIVITAS01_INNER03",
+      "WALLKIT_CIVITAS04_JUNCTION01",
+      "WALLKIT_CIVITAS04_JUNCTION01_M",
+      "WALLKIT_CIVITAS04_BILLBOARD02",
+      "WALLKIT_CIVITAS04_BILLBOARD02_M",
+      "WALLKIT_CIVITAS04_BILLBOARD03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
     ]
   },
   {
@@ -45455,7 +45580,7 @@
     ]
   },
   {
-    "description": "Aldarin - Terracotta shingled roofs",
+    "description": "Aldarin - Fortis - Terracotta shingled roofs",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvOrientation": 303,
@@ -45464,17 +45589,24 @@
       "ROOFKIT_CIVITAS_ROOF02",
       "ROOFKIT_CIVITAS_ROOF03",
       "ROOFKIT_CIVITAS_ROOF04",
-      "ROOFKIT_CIVITAS_ROOF05"
+      "ROOFKIT_CIVITAS_ROOF05",
+      "ROOFKIT_CIVITAS_TOP01",
+      "ROOFKIT_CIVITAS_2X2",
+      "ROOFKIT_CIVITAS_2X2B",
+      "ROOFKIT_CIVITAS_2X2C",
+      "ROOFKIT_CIVITAS_2X1"
     ]
   },
   {
-    "description": "Aldarin - Terracotta shingled roof with fron facade",
+    "description": "Aldarin - Fortis - Terracotta shingled roof with fron facade",
     "baseMaterial": "GRUNGE_3_DARK",
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
       "ROOFKIT_ALDARIN_FACADE01_5X1",
-      "ROOFKIT_ALDARIN_FACADE01_5X1_M"
+      "ROOFKIT_ALDARIN_FACADE01_5X1_M",
+      "ROOFKIT_CIVITAS_FACADE01_5X1",
+      "ROOFKIT_CIVITAS_FACADE01_5X1_M"
     ],
     "colorOverrides": [
       {
@@ -45575,18 +45707,57 @@
     ]
   },
   {
-    "description": "Aldarin - Stone - Pillars",
+    "description": "Aldarin - Civitas - Stone - Pillars - Red",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 179,
     "objectIds": [
       "PILLAR_ALDARIN01_CITY01_LOWER01",
-      "PILLAR_ALDARIN01_CITY01_HIGHER01"
+      "PILLAR_ALDARIN01_CITY01_HIGHER01",
+      "PILLAR_CIVITAS01_CITY01_LOWER01",
+      "PILLAR_CIVITAS01_CITY01_HIGHER01",
+      "PILLAR_CIVITAS01_CITY01"
     ],
     "colorOverrides": [
       {
         "colors": "h <= 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Civitas - Stone - Pillars - White",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_CIVITAS01_CITY04_LOWER01",
+      "PILLAR_CIVITAS01_CITY04_HIGHER01",
+      "PILLAR_CIVITAS01_CITY04"
+
+    ]
+  },
+  {
+    "description": "Aldarin - Civitas - Stone - Pillars - Blue",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_CIVITAS01_CITY05",
+      "PILLAR_CIVITAS01_CITY05_LOWER01",
+      "PILLAR_CIVITAS01_CITY05_HIGHER01",
+      "PILLAR_CIVITAS01_CITY05_LOWER01_NOTES01"
+
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 35",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientation": 89,
@@ -45833,7 +46004,9 @@
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
     "objectIds": [
-      "ALDARIN_SHELF02_BOOKS02"
+      "ALDARIN_SHELF02_BOOKS02",
+      "CIVITAS_SHELF01_BOOKS01",
+      "CIVITAS_SHELF01_BOOKS02"
     ],
     "colorOverrides": [
       {
@@ -46793,6 +46966,46 @@
       {
         "colors": "a < 255",
         "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Wooden - Window Shutters - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "WALLKIT_CIVITAS03_SHUTTERS01",
+      "WALLKIT_CIVITAS03_SHUTTERS02"
+    ]
+  },
+  {
+    "description": "Varlamore - Pottery - Plant - Potted vines",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "CIVITAS_POTTERY01_PLANT01",
+      "CIVITAS_POTTERY01_PLANT02",
+      "CIVITAS_POTTERY01_PLANT03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 10",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Shadow",
+        "baseMaterial": "NONE",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
       }
     ]
   }
