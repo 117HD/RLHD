@@ -4323,7 +4323,7 @@
     "flatNormals": true
   },
   {
-    "description": "Castle Wars - Supply Tables",
+    "description": "Castle Wars - Supply Tables & Barricades",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "CASTLEWARS_TABLE_POTION",
@@ -4339,6 +4339,10 @@
       "CASTLEWARS_TABLE_BANDAGES_ZAMORAK",
       "CASTLEWARS_TABLE_SKILL_POTION_ZAMORAK"
     ],
+    "npcIds": [
+      "CASTLEWARS_BARRICADE_SARADOMIN",
+      "CASTLEWARS_BARRICADE_ZAMORAK"
+    ],
     "colorOverrides": [
       {
         "colors": "h == 5 && s == 4",
@@ -4347,6 +4351,22 @@
         "uvScale": 0.6,
         "uvOrientationY": 512
       }
+    ]
+  },
+  {
+    "description": "Castle Wars - Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "CASTLEWARS_OUTSIDESTAIRS_SARADOMIN",
+      "CASTLEWARS_OUTSIDESTAIRS_SARADOMIN_LINKED",
+      "CASTLEWARS_OUTSIDESTAIRS_ZAMORAK",
+      "CASTLEWARS_OUTSIDESTAIRS_ZAMORAK_LINKED",
+      "CASTLEWARS_STAIR_THIN_C",
+      "CASTLEWARS_STAIR_THIN_B",
+      "CASTLEWARS_STAIR_THIN_A"
     ]
   },
   {
