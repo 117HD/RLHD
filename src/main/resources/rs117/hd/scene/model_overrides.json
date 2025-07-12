@@ -26030,7 +26030,7 @@
     "uvScale": 0.86
   },
   {
-    "description": "Mastering Mixology Walls with brick walls infront of them",
+    "description": "Mastering Mixology Walls with brick walls in front of them",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "uvScale": 0.86,
@@ -35156,29 +35156,6 @@
     "uvScale": 0.5
   },
   {
-    "description": "Spira's House - Mounted Head",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
-    "objectIds": [
-      "BULLMOUNTEDHEAD"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "colorOverrides": [
-      {
-        "colors": "h == 5",
-        "baseMaterial": "GRUNGE_1",
-        "uvType": "BOX",
-        "uvScale": 0.3
-      },
-      {
-        "colors": "h == 10",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.75
-      }
-    ]
-  },
-  {
     "description": "Draynor Market - Stalls",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -41782,7 +41759,7 @@
     ]
   },
   {
-    "description": "Varrock - Wooden - Bull Head Trophy",
+    "description": "Varrock - Wooden - Bull Head Trophy (also in Spira's house)",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.75,
