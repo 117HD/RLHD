@@ -280,7 +280,7 @@ public class OpenCLManager {
 	public int getMaxWorkGroupSize() {
 		long[] maxWorkGroupSize = new long[1];
 		clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, maxWorkGroupSize, null);
-		return (int) maxWorkGroupSize[0];
+		return (int) (maxWorkGroupSize[0] * 0.6f); // Workaround for https://github.com/117HD/RLHD/issues/598
 	}
 
 	private void initQueue() {
@@ -335,6 +335,8 @@ public class OpenCLManager {
 					.copy()
 					.define("THREAD_COUNT", threadCount)
 					.define("FACES_PER_THREAD", facesPerThread)
+					.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
+					.define("GROUND_DISPLACEMENT", plugin.configCharacterDisplacement)
 					.load("comp.cl")
 				);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);

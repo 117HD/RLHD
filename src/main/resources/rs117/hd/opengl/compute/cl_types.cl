@@ -39,6 +39,9 @@ struct uniform {
   float windStrength;
   float windCeiling;
   float windOffset;
+
+  int characterPositionCount;
+  float3 characterPositions[50];
 };
 
 struct shared_data {
@@ -66,4 +69,10 @@ struct vert {
   float y;
   float z;
   int ahsl;
+};
+
+struct ObjectWindSample {
+    float3 direction;
+    float3 displacement;
+    float heightBasedStrength;
 };

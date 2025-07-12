@@ -60,18 +60,20 @@ void sortModel(
     }
   }
 
-  float4 windDirection = (float4)(0.0f);
+  struct ObjectWindSample windSample;
   #if WIND_DISPLACEMENT
   {
-      float windNoise = noise(((float2)(minfo.x, minfo.z) + (float2)(uni->windOffset)) * (float2)(WIND_DISPLACEMENT_NOISE_RESOLUTION));
-      float angle = windNoise * (PI / 2.0f);
+      float2 modelPos = (float2)(minfo.x, minfo.z);
+      float modelNoise = noise((modelPos + (float2)(uni->windOffset, uni->windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+      float angle = modelNoise * (PI / 2.0f);
       float c = cos(angle);
       float s = sin(angle);
+      float y = (float)minfo.y;
+      float height = (float)minfo.height;
 
-      windDirection.x = uni->windDirectionX * c + uni->windDirectionZ * s;
-      windDirection.z = -uni->windDirectionX * s + uni->windDirectionZ * c;
-      windDirection.xyz = normalize(windDirection.xyz);
-      windDirection.w = windNoise;
+      windSample.direction = normalize((float3)(uni->windDirectionX * c + uni->windDirectionZ * s, 0.0f, -uni->windDirectionX * s + uni->windDirectionZ * c));
+      windSample.heightBasedStrength = clamp((fabs(y) + height) / uni->windCeiling, 0.0f, 1.0f) * uni->windStrength;
+      windSample.displacement = windSample.direction * (windSample.heightBasedStrength * modelNoise);
   }
   #endif
 
@@ -108,6 +110,6 @@ void sortModel(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
-    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap, windDirection);
+    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap, windSample);
   }
 }

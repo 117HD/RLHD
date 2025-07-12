@@ -27,6 +27,12 @@
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
+#define WIND_DISPLACEMENT_DISABLED 0
+#define WIND_DISPLACEMENT_OBJECT 1
+#define WIND_DISPLACEMENT_VERTEX 2
+#define WIND_DISPLACEMENT_VERTEX_HEMISPHERE 3
+#define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
+
 float3 to_screen(__constant struct uniform *uni, float3 vertex);
 float4 rotate_vertex(float4 vector, int orientation);
 float vertex_distance(__constant struct uniform *uni, float4 vertex);
