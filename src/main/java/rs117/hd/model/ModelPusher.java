@@ -69,7 +69,7 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 9) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
