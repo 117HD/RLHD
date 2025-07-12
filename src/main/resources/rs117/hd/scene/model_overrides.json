@@ -2209,7 +2209,11 @@
       "FAI_VARROCK_DRAINS2",
       "FRIS_LONG_GRASS_1",
       "FRIS_SHORT_GRASS_3",
-      "FRIS_LONG_GRASS_3"
+      "FRIS_LONG_GRASS_3",
+      "PHOENIX_BURNT_GRASS_1",
+      "PHOENIX_BURNT_GRASS_2",
+      "PHOENIX_BURNT_GRASS_3",
+      "PHOENIX_BURNT_GRASS_4"
     ]
   },
   {
@@ -9805,7 +9809,7 @@
     ],
     "retainVanillaUvs": false,
     "uvType": "BOX",
-    "uvScale": 0.65
+    "uvScale": 0.55
   },
   {
     "description": "Objects - Mossy Rock - Rectangle",
@@ -10424,7 +10428,11 @@
       "ARENA_DESERT01_CRATE01",
       "POG_CRATE",
       "POG_CRATES_STACKED",
-      "CRATE_ALDARIN01_SINGLE01"
+      "CRATE_ALDARIN01_SINGLE01",
+      "SNP_CRATE_BLUE",
+      "SNP_CRATE_STACKED_BLUE",
+      "SNP_CRATE_RED",
+      "SNP_CRATE_STACKED_RED"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -10489,7 +10497,9 @@
       "PISCARILIUS_CRATE_04",
       "BIM_SUPPLY_CRATE",
       "NECROPOLIS_CRATE01_DEFAULT01",
-      "FOSSIL_TOOL_CRATE"
+      "FOSSIL_TOOL_CRATE",
+      "SNP_CRATE_STACKED",
+      "SNP_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -14524,10 +14534,6 @@
       "HALLOWED_TREASURE_MAGIC_READY",
       "HALLOWED_TREASURE_MAGIC_FINAL",
       "DEATH_OFFICE_EXITPORTAL",
-      "SOUL_WARS_TUT_BLUE_EXIT_PORTAL",
-      "SOUL_WARS_TUT_RED_EXIT_PORTAL",
-      "SOUL_WARS_BLUE_EXIT_PORTAL",
-      "SOUL_WARS_RED_EXIT_PORTAL",
       "POH_PORTAL_TEAK_ARCEUUS_LIBRARY",
       "POH_PORTAL_MAG_ARCEUUS_LIBRARY",
       "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY",
@@ -14542,15 +14548,6 @@
     "objectIds": [ "POH_NEXUS_PORTAL_3" ],
     "flatNormals": true,
     "shadowOpacityThreshold": 0.12
-  },
-  {
-    "description": "Edgeville Soul Wars portal",
-    "objectIds": [
-      "SOUL_WARS_EDGEVILLE_PORTAL",
-      "SOUL_WARS_LEAVE_SOULWARS_PORTAL"
-    ],
-    "shadowOpacityThreshold": 0.12,
-    "baseMaterial": "UNLIT"
   },
   {
     "description": "Al-Kharid Windows",
@@ -21298,14 +21295,31 @@
   {
     "description": "Ground Objects - Bones",
     "baseMaterial": "BONE",
-    "objectIds": [ "ARENA_DESERT01_BONES01", "ARENA_DESERT01_BONES02", "ARENA_DESERT01_BONES03", "ARENA_DESERT01_BONES04" ],
+    "objectIds": [
+      "ARENA_DESERT01_BONES01",
+      "ARENA_DESERT01_BONES02",
+      "ARENA_DESERT01_BONES03",
+      "ARENA_DESERT01_BONES04",
+      "FRISD_FISHMONGER_FISHBONES"
+    ],
     "uvType": "BOX",
     "uvOrientation": 256
   },
   {
     "description": "Bone Objects",
     "baseMaterial": "BONE",
-    "objectIds": [ "PILE_OF_SKULLS_GRUBBY", "ANIMALSKULL", "CARCASS", "CURVEDBONE", "CURVEDBONE_BURNT", "LARGEBONE", "LARGEBONE_BURNT", "ANIMALSKULL_BURNT", "CARCASS_BURNT" ],
+    "objectIds": [
+      "PILE_OF_SKULLS_GRUBBY",
+      "ANIMALSKULL",
+      "CARCASS",
+      "CURVEDBONE",
+      "CURVEDBONE_BURNT",
+      "LARGEBONE",
+      "LARGEBONE_BURNT",
+      "ANIMALSKULL_BURNT",
+      "CARCASS_BURNT",
+      "SW_BONES_LARGE_RIBCAGE"
+    ],
     "uvType": "BOX",
     "uvScale": 0.4
   },
@@ -22241,7 +22255,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "VIKING_SPINNINGWHEEL",
-      "ELF_VILLAGE_SPINNING_WHEEL"
+      "ELF_VILLAGE_SPINNING_WHEEL",
+      "SW_SPINNINGWHEEL_BROKEN",
+      "SW_SPINNINGWHEEL_FIXED"
     ],
     "uvType": "BOX"
   },
@@ -23624,9 +23640,501 @@
     "uvScale": 0.8
   },
   {
+    "description": "Isle of Souls - Dead and Burnt Trees",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "SNP_BURNT_TREE_01",
+      "SNP_BURNT_TREE_02",
+      "SNP_BURNT_TREE_03",
+      "SNP_BURNING_TREE_01",
+      "SNP_BURNING_TREE_02",
+      "SNP_BURNING_TREE_03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Isle of Souls - Wooden Barricade & Supply Tables",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SNP_TEMP_BARRICADE_DIAG_BLUE",
+      "SNP_TEMP_BARRICADE_DIAG_RED",
+      "SOUL_WARS_COUNTER_BANDAGES_BLUE",
+      "SOUL_WARS_COUNTER_BARRICADES_BLUE",
+      "SOUL_WARS_COUNTER_POTIONS_BLUE",
+      "SOUL_WARS_COUNTER_BUFF_POTIONS_BLUE",
+      "SOUL_WARS_COUNTER_BANDAGES_NEUTRAL",
+      "SOUL_WARS_COUNTER_BUFF_POTIONS_NEUTRAL",
+      "SOUL_WARS_COUNTER_BUFF_POTIONS_RED",
+      "SOUL_WARS_COUNTER_BANDAGES_RED",
+      "SOUL_WARS_COUNTER_POTIONS_RED",
+      "SOUL_WARS_COUNTER_BARRICADES_RED",
+      "SOUL_WARS_TUT_COUNTER_BARRICADES_BLUE",
+      "SOUL_WARS_TUT_COUNTER_BANDAGES",
+      "SOUL_WARS_TUT_COUNTER_POTIONS",
+      "SOUL_WARS_TUT_COUNTER_BUFF_POTIONS",
+      "SOUL_WARS_TUT_COUNTER_BARRICADES_RED"
+    ],
+    "npcIds": [
+      "SOUL_WARS_BARRICADE_RED",
+      "SOUL_WARS_BARRICADE_BLUE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -256
+      },
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Rocks",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "SNP_DARK_ROCKS_SMALL_01",
+      "SNP_DARK_ROCKS_SMALL_03",
+      "SNP_DARK_ROCKS_SMALL_02",
+      "SNP_DARK_ROCKS_BIG_02",
+      "SNP_DARK_ROCKS_BIG_01",
+      "SNP_DARK_ROCKS_BIG_03",
+      "SNP_BURNT_ROCKS_SMALL_01",
+      "SNP_BURNT_ROCKS_SMALL_02",
+      "SNP_BURNT_ROCKS_SMALL_03",
+      "SNP_NORMAL_ROCKS_SMALL2",
+      "SNP_NORMAL_ROCKS_BIG3",
+      "SNP_NORMAL_ROCKS_BIG1",
+      "SNP_NORMAL_ROCKS_SMALL1",
+      "SNP_NORMAL_ROCKS_BIG2",
+      "SNP_NORMAL_ROCKS_SMALL3"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Isle of Souls - Pebbles",
+    "castShadows": false,
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SNP_ROCKS_BRICK_OLD2",
+      "SNP_ROCKS_BRICK_OLD1",
+      "SNP_ROCKS_BRICK_OLD3",
+      "SNP_ROCKS_BRICK_OLD4",
+      "SNP_ROCKS_BRICK_OLD5"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Isle of Souls - Fort Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "HOS_FORT_WALL_WINDOW_SML",
+      "HOS_FORT_WALL_TOP_CRUMBLE_SMALL_R",
+      "HOS_FORT_WALL_TOP_CRUMBLE_R",
+      "HOS_FORT_WALL_TOP",
+      "HOS_FORT_WALL_TOP_CRUMBLE_L",
+      "HOS_FORT_WALL_SHUTTERED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Isle of Souls - Pottery Wheel",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SW_POTTERYWHEEL_BROKEN",
+      "SW_POTTERYWHEEL_FIXED"
+    ]
+  },
+  {
+    "description": "Isle of Souls - Gravestones",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      "SNP_GRAVE_YARD_GRAVESTONE_1_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_2_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_3_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_4_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_5_RED",
+      "SNP_GRAVE_YARD_GRAVESTONE_1_BLUE",
+      "SNP_GRAVE_YARD_GRAVESTONE_2_BLUE",
+      "SNP_GRAVE_YARD_GRAVESTONE_4_BLUE",
+      "SNP_GRAVE_YARD_GRAVESTONE_5_BLUE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Isle of Souls - Scoreboard",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SOUL_WARS_SCOREBOARD"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h == 6 && s == 2",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Portal",
+    "castShadows": false,
+    "objectIds": [
+      "SOUL_WARS_LEAVE_SOULWARS_PORTAL",
+      "SOUL_WARS_EDGEVILLE_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "baseMaterial": "GRAY_65",
+        "colors": "h > 11 && h < 16",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Soulwars - Exit Portals",
+    "castShadows": false,
+    "objectIds": [
+      "SOUL_WARS_TUT_BLUE_EXIT_PORTAL",
+      "SOUL_WARS_TUT_RED_EXIT_PORTAL",
+      "SOUL_WARS_BLUE_EXIT_PORTAL",
+      "SOUL_WARS_RED_EXIT_PORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "LIGHT_BARK",
+        "colors": [ "h == 6", "h == 0 && s == 0" ],
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "baseMaterial": "GRAY_65",
+        "colors": "h > 11 && h < 16",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SOUL_WARS_BANKCHEST"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.05
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - FFA Lobby Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SNP_VINES_GRAVE_YARD_RAIL_CAP",
+      "SNP_VINES_GRAVE_YARD_RAIL_02",
+      "SNP_VINES_GRAVE_YARD_RAIL_CAP_M",
+      "SNP_VINES_GRAVE_YARD_RAIL_01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 5",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.05
+      },
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 13"
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Clan Lobby Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SNP_BONES_GRAVE_YARD_RAIL_BASIC",
+      "SNP_BONES_GRAVE_YARD_RAIL_CAP_M",
+      "SNP_BONES_GRAVE_YARD_RAIL_CAP",
+      "SNP_BONES_GRAVE_YARD_RAIL_01",
+      "SNP_BONES_GRAVE_YARD_RAIL_02",
+      "SNP_BONES_GRAVE_YARD_RAIL_03",
+      "SNP_BONES_GRAVE_YARD_RAIL_04",
+      "SNP_BONES_GRAVE_YEARD_RAIL_LAVA_FALLOFF"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 3",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.05
+      },
+      {
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8"
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Lobby Pillar Torch",
+    "objectIds": [
+      "SNP_PILLAR_TORCH_BLUE",
+      "SNP_PILLAR_TORCH_RED"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "STONE_NORMALED",
+        "colors": [ "h == 0", "h == 16" ],
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Stone Circle",
+    "baseMaterial": "STONE_NORMALED",
+    "uvScale": 1.2,
+    "uvType": "BOX",
+    "objectIds": [
+      "SNP_PILLAR1",
+      "SNP_PILLAR2",
+      "SNP_PILLAR_FALLEN1",
+      "SNP_PILLAR_FALLEN4",
+      "SNP_PILLAR_FLOOR2",
+      "SNP_PILLAR_TOP4",
+      "SNP_PILLAR_TOP5",
+      "SNP_PILLAR_TOP3",
+      "SNP_PILLAR_FLOOR",
+      "SNP_PILLAR_FALLEN2",
+      "SNP_PILLAR3",
+      "SNP_PILLAR_TOP2",
+      "SNP_PILLAR_TOP1",
+      "SNP_PILLAR_FLOOR6",
+      "SNP_PILLAR_FALLEN3",
+      "SNP_PILLAR_FLOOR5",
+      "SNP_MOSSY_ROCK",
+      "SNP_MOSSY_ROCK2"
+    ]
+  },
+  {
+    "description": "Isle of Souls - Lava Rocks",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "SNP_LAVA_PILLAR13",
+      "SNP_LAVA_PILLAR14",
+      "SNP_LAVA_PILLAR4",
+      "SNP_LAVA_PILLAR5",
+      "SNP_LAVA_PILLAR2",
+      "SNP_LAVA_PILLAR1",
+      "SNP_LAVA_PILLAR7",
+      "SNP_LAVA_PILLAR8",
+      "SNP_LAVA_PILLAR6",
+      "SNP_LAVA_PILLAR10",
+      "SNP_LAVA_PILLAR11",
+      "SNP_LAVA_PILLAR9"
+    ]
+  },
+  {
+    "description": "Isle of Souls - Lava Pool",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DI2_LAVA_EDGE_WILDERNESS_1",
+      "DI2_LAVA_EDGE_WILDERNESS_2",
+      "DI2_LAVA_EDGE_WILDERNESS_4",
+      "DI2_LAVA_EDGE_WILDERNESS_8",
+      "DI2_LAVA_EDGE_WILDERNESS_9",
+      "DI2_LAVA_EDGE_WILDERNESS_7",
+      "DI2_LAVA_EDGE_WILDERNESS_6",
+      "DI2_LAVA_EDGE_WILDERNESS_3",
+      "DI2_LAVA_EDGE_WILDERNESS_10",
+      "SNP_LAVA_EDGE1",
+      "SNP_LAVA_EDGE2",
+      "SNP_LAVA_EDGE3",
+      "SNP_LAVA_PILLAR3"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "NONE",
+        "colors": "h == 8"
+      }
+    ]
+  },
+  {
+    "description": "Isle of Souls - Ruins",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SNP_BRIDGE_FLOOR",
+      "SNP_BRIDGE_LVL_0_SLOPE12_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE12",
+      "SNP_BRIDGE_FLOOR_LIP2_MIRROR",
+      "SNP_BRIDGE_FLOOR_LIP",
+      "SNP_BRIDGE_FLOOR_LIP2",
+      "SNP_BRIDGE_WALL_END_MIRROR",
+      "SNP_BRIDGE_WALL_END",
+      "SNP_BRIDGE_WALL_CUSTOM1",
+      "SNP_BRIDGE_WALL_CUSTOM2_MIRROR",
+      "SNP_BRIDGE_WALL_CUSTOM1_MIRROR",
+      "SNP_BRIDGE_WALL",
+      "SNP_BRIDGE_WALL_CUSTOM2",
+      "SNP_BRIDGE_LVL_0_SLOPE11_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE10_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE9_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE8_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE7_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE6_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE5_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE4_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE3_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE2_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE_MIRROR",
+      "SNP_BRIDGE_FLOOR",
+      "SNP_BRIDGE_LVL_0_SLOPE12_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE12",
+      "SNP_BRIDGE_FLOOR_LIP2_MIRROR",
+      "SNP_BRIDGE_FLOOR_LIP",
+      "SNP_BRIDGE_FLOOR_LIP2",
+      "SNP_BRIDGE_WALL_END_MIRROR",
+      "SNP_BRIDGE_WALL_END",
+      "SNP_BRIDGE_WALL_CUSTOM1",
+      "SNP_BRIDGE_WALL_CUSTOM2_MIRROR",
+      "SNP_BRIDGE_WALL_CUSTOM1_MIRROR",
+      "SNP_BRIDGE_WALL",
+      "SNP_BRIDGE_WALL_CUSTOM2",
+      "SNP_BRIDGE_LVL_0_SLOPE11_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE10_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE9_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE8_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE7_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE6_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE5_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE4_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE3_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE2_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE_MIRROR",
+      "SNP_BRIDGE_LVL_0_SLOPE11",
+      "SNP_BRIDGE_LVL_0_SLOPE10",
+      "SNP_BRIDGE_LVL_0_SLOPE9",
+      "SNP_BRIDGE_LVL_0_SLOPE8",
+      "SNP_BRIDGE_LVL_0_SLOPE7",
+      "SNP_BRIDGE_LVL_0_SLOPE6",
+      "SNP_BRIDGE_LVL_0_SLOPE5",
+      "SNP_BRIDGE_LVL_0_SLOPE4",
+      "SNP_BRIDGE_LVL_0_SLOPE3",
+      "SNP_BRIDGE_LVL_0_SLOPE2",
+      "SNP_BRIDGE_LVL_0_SLOPE",
+      "SNP_PILLAR",
+      "SNP_RUIN_WINDOW2",
+      "SNP_RUIN_SMALL_WALL2_MIRROR",
+      "SNP_RUINS_LARGE_WALL2_MIRROR",
+      "SNP_RUINS_RUBBLE1",
+      "SNP_RUINS_RUBBLE2",
+      "SNP_RUIN_SMALL_WALL1",
+      "SNP_RUIN_SMALL_WALL2",
+      "SNP_RUINS_LARGE_WALL1_MIRROR",
+      "SNP_RUIN_WINDOW1_MIRROR",
+      "SNP_RUINS_LARGE_WALL1",
+      "SNP_RUIN_SMALL_WALL1_MIRROR",
+      "SNP_RUINS_LARGE_WALL2",
+      "SNP_RUIN_WINDOW1",
+      "SNP_RUIN_WINDOW2_MIRROR",
+      "SNP_RUINS_STEPS",
+      "SNP_RUINS_STEPS_CNR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Isle of Souls - Obelisk",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "SOUL_WARS_CENTRAL_OBELISK_NEUTRAL",
+      "SOUL_WARS_CENTRAL_OBELISK_BLUE",
+      "SOUL_WARS_CENTRAL_OBELISK_RED"
+    ]
+  },
+  {
+    "description": "Isle of Souls - Respawn Hut",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "SNP_GRAVE_YARD_TOMB_END_RED",
+      "SNP_GRAVE_YARD_TOMB_RED",
+      "SNP_GRAVE_YARD_TOMB_END_MIRROR_RED",
+      "SNP_GRAVE_YARD_TOMB_ROOF_RED",
+      "SNP_GRAVE_YARD_TOMB_END_BLUE",
+      "SNP_GRAVE_YARD_TOMB_BLUE",
+      "SNP_GRAVE_YARD_TOMB_END_MIRROR_BLUE",
+      "SNP_GRAVE_YARD_TOMB_ROOF_BLUE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Isle of Souls - Respawn Hut - Fence",
+    "baseMaterial": "MARBLE_3",
+    "objectIds": [
+      "SNP_GRAVE_YARD_RAIL_01_BLUE",
+      "SNP_GRAVE_YARD_RAIL_02_BLUE",
+      "SNP_GRAVE_YARD_RAIL_03_MIRROR_BLUE",
+      "SNP_GRAVE_YARD_RAIL_03_BLUE",
+      "SNP_GRAVE_YARD_RAIL_END_BLUE",
+      "SNP_GRAVE_YARD_RAIL_END_MIRROR_BLUE",
+      "SNP_GRAVE_YARD_RAIL_01_RED",
+      "SNP_GRAVE_YARD_RAIL_02_RED",
+      "SNP_GRAVE_YARD_RAIL_03_MIRROR_RED",
+      "SNP_GRAVE_YARD_RAIL_03_RED",
+      "SNP_GRAVE_YARD_RAIL_END_RED",
+      "SNP_GRAVE_YARD_RAIL_END_MIRROR_RED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Isle of Souls Dungeon - Cave Entrance",
+    "baseMaterial": "MUD_1",
+    "objectIds": [
+      "SW_DUNGEON_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 100
+  },
+  {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER" ],
+    "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER", "SANCTUARY_CAVE_WALL_TOP" ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 768
@@ -27674,7 +28182,9 @@
     "objectIds": [
       "SUROK_BANDIT_CAMP_TENT",
       "SUROK_BANDIT_CAMP_TENT_DIAG",
-      "SHAYZIEN_MILITARY_TENT"
+      "SHAYZIEN_MILITARY_TENT",
+      "SW_TENT",
+      "SOUL_WARS_TENT"
     ],
     "uvType": "BOX"
   },
@@ -27720,7 +28230,10 @@
       "SHAYZIEN_BARREL",
       "PISCARILIUS_BARREL",
       "POG_BARREL",
-      "QIP_COOK_BARREL_TAP"
+      "QIP_COOK_BARREL_TAP",
+      "SNP_BARREL",
+      "SNP_BARREL_BLUE",
+      "SNP_BARREL_RED"
     ]
   },
   {
@@ -34270,7 +34783,7 @@
     "description": "Zeah - Hosidius - Wooden study desk with a green mat - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientationY": 512 ,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "description": "Desk mat",
@@ -39561,7 +40074,6 @@
         "uvType": "BOX",
         "uvOrientation": 512
       }
-
     ]
   },
   {
@@ -40110,7 +40622,7 @@
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientationX": 512 ,
+        "uvOrientationX": 512,
         "uvScale": 0.75
       }
     ]
@@ -41225,7 +41737,7 @@
         "colors": "h > 0",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale":  0.8
+        "uvScale": 0.8
       }
     ]
   },
