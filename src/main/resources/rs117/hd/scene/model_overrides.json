@@ -4812,8 +4812,7 @@
       "DRAGON_SLAYER_QIP_STAGAMITE",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL2",
-      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP",
-      "CIVITAS_DUGUPSOIL05"
+      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -8940,7 +8939,8 @@
       "CANAFIS_DOOR_GROUND_NOOP",
       "FAI_FALADOR_POOR_DOOR_FLIP",
       "FAI_FALADOR_POOR_DOOR_OPEN_FLIP",
-      "FIGHTARENA_DOOR2_ESCAPE"
+      "FIGHTARENA_DOOR2_ESCAPE",
+      "DOTI_INTERROGATION_DOOR"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -9999,7 +9999,8 @@
       "FAI_VARROCK_PATHS_MUD_DUGUPSOIL_2",
       "TEMPLETREK_SWAMP_EVADE_PATH",
       "TEMPLETREK_SWAMP_SUCCESS_PATH",
-      "TEMPLETREK_SWAMP_FAIL_PATH"
+      "TEMPLETREK_SWAMP_FAIL_PATH",
+      "ALDARIN_DUGUPSOIL02"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.68,
@@ -10034,7 +10035,9 @@
       "DUGUPSOIL3_BROWNMUD",
       "BURGH_DUGUPSOIL_1",
       "BURGH_DUGUPSOIL_2",
-      "BURGH_DUGUPSOIL_3"
+      "BURGH_DUGUPSOIL_3",
+      "ALDARIN_DUGUPSOIL01",
+      "ALDARIN_DUGUPSOIL03"
     ],
     "uvType": "BOX",
     "uvScale": 0.74
@@ -10079,6 +10082,8 @@
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
+      "CIVITAS_DUGUPSOIL02",
+      "CIVITAS_DUGUPSOIL05",
       "DUGUPSOIL2_VDARKBROWN",
       "FAIRY_DUGUPSOIL_2",
       "WILD2_DUGUPSOIL_2",
@@ -10170,10 +10175,12 @@
       "POG_DUGUPSOIL_04",
       "POG_DUGUPSOIL_05",
       "POG_DUGUPSOIL_06",
+      "CIVITAS_DUGUPSOIL01",
+      "CIVITAS_DUGUPSOIL03",
       "CIVITAS_DUGUPSOIL04",
       "CIVITAS_DUGUPSOIL06"
     ],
-    "uvType": "WORLD_XZ",
+    "uvType": "BOX",
     "uvScale": 0.74
   },
   {
@@ -19915,7 +19922,8 @@
       "ROOTS_3",
       "CAVE_TWIG1",
       "AVIUM_ROOTS01",
-      "AVIUM_ROOTS02"
+      "AVIUM_ROOTS02",
+      "DOTI_BAG_DUFFEL01_DEFAULT01_GONE"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -39087,7 +39095,7 @@
     ]
   },
   {
-    "description": "Kourend - Wooden - Textured - Bathscreen",
+    "description": "Kourend - Aldarin - Wooden - Textured - Bathscreen",
     "baseMaterial": "WOOD_GRAIN_3",
     "materialOverrides": {
       "WOODEN_SCREEN": {
@@ -39095,7 +39103,8 @@
       }
     },
     "objectIds": [
-      "FAI_VARROCK_POSH_BATHSCREEN1"
+      "FAI_VARROCK_POSH_BATHSCREEN1",
+      "ALDARIN_SCREEN_DEFAULT01"
     ],
     "uvType": "BOX",
     "uvScale": 0.65
@@ -41571,7 +41580,10 @@
       "WALLKIT_ALDARIN03_ARCH01",
       "WALLKIT_ALDARIN03_ARCH02",
       "WALLKIT_ALDARIN03_ARCH03",
-      "DOTI_HOUSE_WINDOW"
+      "DOTI_HOUSE_WINDOW",
+      "WALLKIT_ALDARIN02_MANOR01",
+      "WALLKIT_ALDARIN02_MANOR02",
+      "ALDARIN_CELLAR_ENTRANCE"
     ],
     "colorOverrides": [
       {
@@ -41848,7 +41860,7 @@
       "ALDARIN_POTTERY01_PLANT01C",
       "ALDARIN_POTTERY01_PLANT01D",
       "ALDARIN_POTTERY01_PLANT02A",
-      "ALDARIN_POTTERY01_PLANT0BC",
+      "ALDARIN_POTTERY01_PLANT02B",
       "ALDARIN_POTTERY01_PLANT02C",
       "ALDARIN_POTTERY01_PLANT03"
     ],
@@ -41919,6 +41931,16 @@
       "TABLE_CIVITAS01_TABLE01",
       "TABLE_ALDARIN01_TABLE01",
       "TABLE_ALDARIN01_TABLE01_DIAGONAL"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Bench",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 913,
+    "objectIds": [
+      "CHAIR_ALDARIN01_BENCH01"
     ]
   },
   {
@@ -42299,7 +42321,8 @@
     "uvType": "BOX",
     "uvOrientationY": 512,
     "objectIds": [
-      "DOTI_BUTLER_RACK"
+      "DOTI_BUTLER_RACK",
+      "DOTI_BUTLER_RACK_NOOP"
     ],
     "colorOverrides": [
       {
@@ -42404,5 +42427,146 @@
     "objectIds": [
       "DOTI_HOUSE_WINDOW_BOARDS"
     ]
+  },
+  {
+    "description": "Aldarin - Stone - Round chair with a up-side-down cone shape",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 168,
+    "objectIds": [
+      "CHAIR_ALDARIN01_STONE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Cloth - Long table with faded red table cloth",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 168,
+    "objectIds": [
+      "TABLE_ALDARIN01_PARTY01",
+      "TABLE_ALDARIN01_PARTY01_END01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 42
+      }
+    ]
+  },
+  {
+    "description": "Aldarin -  Wooden - WheelBarrow",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [ "CART_CIVITAS01_GARDENING01" ],
+    "uvType": "BOX",
+    "uvOrientationX": 476,
+    "uvOrientationZ": 512
+  },
+  {
+    "description": "Aldarin -  Plant - leafy bush",
+    "baseMaterial": "LEAF_VEINS",
+    "objectIds": [ "ALDARIN_PLANT_WALL_NORTH" ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Aldarin - Wooden - Plank Stairs",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "FLOORKIT_WOODEN01_DEFAULT01_SKEWSTEPS"
+    ]
+  },
+  {
+    "description": "Aldarin - Shayzian - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 172 ,
+    "objectIds": [
+      "AKD_SHAYZIEN_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DOTI_VILLA_STAIRS"
+    ]
+  },
+  {
+    "description": "Aldarin - Metallic - Bath with water",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 172 ,
+    "objectIds": [
+      "BATH_ALDARIN01_TIN01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DOTI_VILLA_STAIRS"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Stairs",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "objectIds": [
+      "MASK_CHEST_CLOSED"
+    ]
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block steps",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SKEWSTEPS_STONE02_CIVITAS01",
+      "ALDARIN_STEPS_DEFAULT01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 343
+  },
+  {
+    "description": "Varlamore - Objects - Stone - Stone block steps - diag",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "ALDARIN_STEPS_CORNER01",
+      "ALDARIN_STEPS_CORNER02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512
   }
 ]
