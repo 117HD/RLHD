@@ -42539,12 +42539,13 @@
     ]
   },
   {
-    "description": "Aldarin - Wooden - Stairs",
+    "description": "Aldarin Manor - Metallic - chest",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvOrientation": 179,
     "objectIds": [
-      "MASK_CHEST_CLOSED"
+      "MASK_CHEST_CLOSED",
+      "ATES_CHEST_CLOSED"
     ]
   },
   {
@@ -42614,6 +42615,102 @@
       "WALLKIT_COLOSSEUM10_ARCH01_M",
       "WALLKIT_COLOSSEUM10_ARCH02",
       "WALLKIT_COLOSSEUM10_ARCH02_M"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Large barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "BARREL_WOODEN01_LARGE01_ALDARIN01"
+    ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Pottery - Wine jars in storage sehlf",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "objectIds": [
+      "ALDARIN_WINE01_LARGE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 && s == 3",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvOrientation": -177,
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -79,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Metallic - Pottery - Wine jars in storage sehlf",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_ALDARIN_RED_AMPHORA_OP",
+      "ALDARIN_WINE01_BARREL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 177,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Stone - Fermentation Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "ALDARIN_FERMENTING01_CORNER01",
+      "ALDARIN_FERMENTING01_SIDE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Dirt - Pottery - Fermentating pot",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "ALDARIN_FERMENTING01_BARREL01",
+      "ALDARIN_FERMENTING01_BARREL02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s == 3",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvOrientation": 102,
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 3 && s == 02",
+        "baseMaterial": "DIRT_1",
+        "uvType": "MODEL_XZ"
+      }
     ]
   }
 ]
