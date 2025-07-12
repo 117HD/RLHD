@@ -20366,7 +20366,7 @@
   },
   {
     "description": "Varrock Wall Candelabra",
-    "offset": [ 0, 215 , 0 ],
+    "offset": [ 0, 215, 0 ],
     "radius": 275,
     "strength": 5.5,
     "color": [
@@ -20383,7 +20383,7 @@
   },
   {
     "description": "Varrock Lantern",
-    "offset": [ -10, 155 , 0 ],
+    "offset": [ -10, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
     "color": [
@@ -36916,7 +36916,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Full 5",
-    "offset": [ 70 , 420 , -70 ],
+    "offset": [ 70, 420, -70 ],
     "radius": 100,
     "strength": 10,
     "color": [
@@ -36933,7 +36933,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Almost Full 4",
-    "offset": [ 70 , 350 , -70 ],
+    "offset": [ 70, 350, -70 ],
     "radius": 100,
     "strength": 8,
     "color": [
@@ -36951,7 +36951,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Half 3",
-    "offset": [ 70 , 255 , -70 ],
+    "offset": [ 70, 255, -70 ],
     "radius": 100,
     "strength": 6,
     "color": [
@@ -36970,7 +36970,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Half Empty 2",
-    "offset": [ 70 , 170 , -70 ],
+    "offset": [ 70, 170, -70 ],
     "radius": 110,
     "strength": 4,
     "color": [
@@ -36990,7 +36990,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Almost Empty 1",
-    "offset": [ 70 , 70 , -70 ],
+    "offset": [ 70, 70, -70 ],
     "radius": 110,
     "strength": 4,
     "color": [
@@ -37011,7 +37011,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Full 5",
-    "offset": [ 70 , 420 , -70 ],
+    "offset": [ 70, 420, -70 ],
     "radius": 100,
     "strength": 10,
     "color": [
@@ -37028,7 +37028,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Almost Full 4",
-    "offset": [ 70 , 350 , -70 ],
+    "offset": [ 70, 350, -70 ],
     "radius": 100,
     "strength": 8,
     "color": [
@@ -37046,7 +37046,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Half 3",
-    "offset": [ 70 , 255 , -70 ],
+    "offset": [ 70, 255, -70 ],
     "radius": 100,
     "strength": 6,
     "color": [
@@ -37065,7 +37065,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Half Empty 2",
-    "offset": [ 70 , 170 , -70 ],
+    "offset": [ 70, 170, -70 ],
     "radius": 100,
     "strength": 4,
     "color": [
@@ -37085,7 +37085,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Almost Empty 1",
-    "offset": [ 70 , 70 , -70 ],
+    "offset": [ 70, 70, -70 ],
     "radius": 100,
     "strength": 4,
     "color": [
@@ -37106,7 +37106,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Full 5",
-    "offset": [ 70 , 420 , -70 ],
+    "offset": [ 70, 420, -70 ],
     "radius": 100,
     "strength": 13,
     "color": [
@@ -37123,7 +37123,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Almost Full 4",
-    "offset": [ 70 , 350 , -70 ],
+    "offset": [ 70, 350, -70 ],
     "radius": 100,
     "strength": 11,
     "color": [
@@ -37141,7 +37141,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Half 3",
-    "offset": [ 70 , 255 , -70 ],
+    "offset": [ 70, 255, -70 ],
     "radius": 100,
     "strength": 9,
     "color": [
@@ -37160,7 +37160,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Half Empty 2",
-    "offset": [ 70 , 170 , -70 ],
+    "offset": [ 70, 170, -70 ],
     "radius": 100,
     "strength": 7,
     "color": [
@@ -37180,7 +37180,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Almost Empty 1",
-    "offset": [ 70 , 70 , -70 ],
+    "offset": [ 70, 70, -70 ],
     "radius": 100,
     "strength": 7,
     "color": [
