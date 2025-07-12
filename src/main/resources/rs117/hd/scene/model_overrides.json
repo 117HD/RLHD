@@ -41898,7 +41898,8 @@
     "uvOrientation": 512,
     "objectIds": [
       "TABLE_BANK01_CIVITAS01",
-      "TABLE_BANK01_CIVITAS02"
+      "TABLE_BANK01_CIVITAS02",
+      "CIVITAS_TABLE_RICH_1"
     ],
     "colorOverrides": [
       {
@@ -42055,7 +42056,9 @@
     "uvScale": 0.8,
     "uvOrientation": 69,
     "objectIds": [
-      "PRIF_LIBRARY_BOOKS_02"
+      "PRIF_LIBRARY_BOOKS_01",
+      "PRIF_LIBRARY_BOOKS_02",
+      "ALDARIN_BOOK01_FALLEN01"
     ]
   },
   {
@@ -42823,6 +42826,44 @@
       {
         "colors": "h == 4 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Carpet - Manor double bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "BED_ALDARIN01_LARGE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Carpet - Costume Rack",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_RACK01_COSTUMES01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.6
