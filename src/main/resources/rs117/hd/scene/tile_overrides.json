@@ -171,6 +171,29 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "VERTICAL_DIRT_FIX_NEAR_CASTLE_WARS",
+    "area": "VERTICAL_DIRT_FIX_NEAR_CASTLE_WARS",
+    "underlayIds": [
+      64
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "overlayIds": [
+      14
+    ],
+    "underlayIds": [
+      48,
+      63,
+      64,
+      65,
+      66
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
     "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
     "area": "TUTORIAL_ISLAND_KITCHEN",
     "overlayIds": [
@@ -6318,6 +6341,17 @@
   },
   {
     "name": "CENTER_SARADOMIN_SIDE_DIRT_1",
+    "area": "CASTLE_WARS_UNDERGROUND_SARADOMIN_PORTAL_FIX",
+    "underlayIds": [
+      65,
+      66
+    ],
+    "groundMaterial": "DIRT",
+    "minSaturation": 2,
+    "maxSaturation": 6
+  },
+  {
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_2",
     "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
     "underlayIds": [
       98
@@ -6329,7 +6363,7 @@
     "maxSaturation": 4
   },
   {
-    "name": "CENTER_SARADOMIN_SIDE_DIRT_2",
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_3",
     "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
     "underlayIds": [
       56

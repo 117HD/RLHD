@@ -17514,78 +17514,6 @@
     "range": 0.2
   },
   {
-    "description": "Castle Wars\nunderground ladders",
-    "worldX": 2399,
-    "worldY": 9499,
-    "plane": 0,
-    "height": 260,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
-    "color": [
-      187.73344,
-      217.66177,
-      255
-    ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
-    "description": "Castle Wars\nunderground ladders",
-    "worldX": 2400,
-    "worldY": 9508,
-    "plane": 0,
-    "height": 260,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
-    "color": [
-      187.73344,
-      217.66177,
-      255
-    ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
-    "description": "Castle Wars\nunderground ladders",
-    "worldX": 2369,
-    "worldY": 9525,
-    "plane": 0,
-    "height": 260,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
-    "color": [
-      187.73344,
-      217.66177,
-      255
-    ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
-    "description": "Castle Wars\nunderground ladders",
-    "worldX": 2430,
-    "worldY": 9482,
-    "plane": 0,
-    "height": 260,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
-    "color": [
-      187.73344,
-      217.66177,
-      255
-    ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
     "description": "HELLCAT",
     "height": 20,
     "alignment": "CENTER",
@@ -20619,10 +20547,10 @@
   },
   {
     "description": "PAPER_LANTERN",
-    "height": 200,
+    "offset": [ -10, 175, 0 ],
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 10,
+    "radius": 350,
+    "strength": 20,
     "color": [
       235,
       107,
@@ -21717,7 +21645,7 @@
   },
   {
     "description": "ZAMORAK_BARRIER",
-    "height": 50,
+    "offset": [ 0, 60, 50 ],
     "alignment": "CENTER",
     "radius": 300,
     "strength": 10,
@@ -21728,15 +21656,14 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 15,
     "objectIds": [
       "CASTLEWARS_ZAMORAK_SPAWNDOOR"
     ]
   },
   {
     "description": "SARADOMIN_BARRIER",
-    "height": 50,
-    "alignment": "CENTER",
+    "offset": [ 0, 60, 50 ],
     "radius": 300,
     "strength": 10,
     "color": [
@@ -21746,7 +21673,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 15,
     "objectIds": [
       "CASTLEWARS_SARADOMIN_SPAWNDOOR"
     ]
@@ -21756,7 +21683,7 @@
     "height": 100,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 10,
+    "strength": 8,
     "color": [
       255,
       50,
@@ -21764,7 +21691,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
       "CASTLEWARS_ZAMORAK_TELE",
       "CASTLEWARS_ZAMORAK_EXIT",
@@ -21772,11 +21699,11 @@
     ]
   },
   {
-    "description": "SARADOMIN_PORTAL",
+    "description": "SARADOMIN_PORTAL_DIM",
     "height": 100,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 12.5,
+    "strength": 8.5,
     "color": [
       0,
       80,
@@ -21784,9 +21711,27 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
       "CASTLEWARS_SARADOMIN_TELE",
+      "CASTLEWARS_SARADOMIN_QUIT"
+    ]
+  },
+  {
+    "description": "SARADOMIN_PORTAL_BRIGHT",
+    "offset": [ 0, 100, -50 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 40,
+    "color": [
+      0,
+      80,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 13.5,
+    "objectIds": [
       "CASTLEWARS_SARADOMIN_EXIT"
     ]
   },
@@ -21795,7 +21740,7 @@
     "height": 100,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 7.5,
+    "strength": 6,
     "color": [
       0,
       255,
@@ -21803,7 +21748,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 13.5,
     "objectIds": [
       "CASTLEWARS_RANDOM_TELE"
     ]
@@ -26742,6 +26687,75 @@
     ]
   },
   {
+    "description": "RAGING_ECHOES_HOME_TELEPORT_START",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 20,
+    "color": "#DB2090",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2700,
+    "fadeInDuration": 900,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_02"
+    ]
+  },
+  {
+    "description": "RAGING_ECHOES_HOME_TELEPORT_MIDDLE",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 175,
+    "strength": 20,
+    "color": "#DB2090",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_03"
+    ]
+  },
+  {
+    "description": "RAGING_ECHOES_HOME_TELEPORT_END_BOTTOM",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 20,
+    "color": "#DB2090",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3800,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_04"
+    ]
+  },
+  {
+    "description": "RAGING_ECHOES_HOME_TELEPORT_END_TOP",
+    "offset": [ 0, 240, -27 ],
+    "alignment": "CENTER",
+    "radius": 115,
+    "strength": 8,
+    "color": "#48CAF9",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3800,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_04"
+    ]
+  },
+  {
     "description": "TRAILBLAZER_LOW_ALCH",
     "height": 140,
     "alignment": "CENTER",
@@ -28467,7 +28481,7 @@
     ]
   },
   {
-    "description": "DRAGONFIRE",
+    "description": "Dragonfire Projectile",
     "radius": 700,
     "strength": 12.5,
     "color": [
@@ -28482,6 +28496,46 @@
     "projectileIds": [
       "FIREBREATH_TRAVEL"
     ]
+  },
+  {
+    "description": "Dragonfire Breath",
+    "offset": [ 0, 200, 290 ],
+    "radius": 275,
+    "strength": 20,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
+  },
+  {
+    "description": "Dragonfire Breath Highlight",
+    "offset": [ 0, 140, 390 ],
+    "radius": 100,
+    "strength": 40,
+    "color": [
+      255,
+      123,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 300,
+    "graphicsObjectIds": [ "FIREBREATH_ATTACK" ]
   },
   {
     "description": "UNDEAD_DRUID",
@@ -34100,8 +34154,7 @@
   },
   {
     "description": "POTTERY_OVEN_GLOW",
-    "height": 150,
-    "alignment": "NORTH",
+    "offset": [ 40, 150, 0 ],
     "radius": 500,
     "strength": 7.5,
     "color": [

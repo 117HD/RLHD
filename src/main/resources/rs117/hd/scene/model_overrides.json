@@ -4319,11 +4319,129 @@
   },
   {
     "description": "CASTLE_WARS_DECORATION",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
     "objectIds": [
       "CASTLEWARS_BANNER_RED",
       "CASTLEWARS_BANNER_BLUE"
     ],
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Castle Wars - Supply Tables & Barricades",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "CASTLEWARS_TABLE_POTION",
+      "CASTLEWARS_TABLE_ROPE",
+      "CASTLEWARS_TABLE_PICKAXES",
+      "CASTLEWARS_TABLE_ROCKS",
+      "CASTLEWARS_TABLE_SKILL_POTION",
+      "CASTLEWARS_TABLE_TOOLBOX",
+      "CASTLEWARS_TABLE_BUCKETS",
+      "CASTLEWARS_TABLE_BARRICADES",
+      "CASTLEWARS_TABLE_SKILL_POTION_SARADOMIN",
+      "CASTLEWARS_TABLE_BANDAGES_SARADOMIN",
+      "CASTLEWARS_TABLE_BANDAGES_ZAMORAK",
+      "CASTLEWARS_TABLE_SKILL_POTION_ZAMORAK",
+      "CASTLEWARS_TABLE_RUNEPOUCH_SARADOMIN",
+      "CASTLEWARS_TABLE_RUNEPOUCH_ZAMORAK"
+    ],
+    "npcIds": [
+      "CASTLEWARS_BARRICADE_SARADOMIN",
+      "CASTLEWARS_BARRICADE_ZAMORAK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Castle Wars - Doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "CASTLEWARS_ZAMORAK_MAINDOORL",
+      "CASTLEWARS_ZAMORAK_MAINDOORR",
+      "CASTLEWARS_SARADOMIN_MAINDOORL",
+      "CASTLEWARS_SARADOMIN_MAINDOORR",
+      "CASTLEWARS_SARADOMIN_MAINDOORL_OPEN",
+      "CASTLEWARS_SARADOMIN_MAINDOORR_OPEN",
+      "CASTLEWARS_ZAMORAK_MAINDOORR_OPEN",
+      "CASTLEWARS_ZAMORAK_MAINDOORL_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Castle Wars - Doors",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CASTLEWARS_CATAPULT_SARADOMIN",
+      "CASTLEWARS_CATAPULT_ZAMORAK",
+      "CASTLEWARS_CATAPULT_ZAMORAK_BROKEN",
+      "CASTLEWARS_CATAPULT_SARADOMIN_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 4",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.35,
+        "uvOrientation": 256
+      }
+    ]
+  },
+  {
+    "description": "Castle Wars - Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "CASTLEWARS_OUTSIDESTAIRS_SARADOMIN",
+      "CASTLEWARS_OUTSIDESTAIRS_SARADOMIN_LINKED",
+      "CASTLEWARS_OUTSIDESTAIRS_ZAMORAK",
+      "CASTLEWARS_OUTSIDESTAIRS_ZAMORAK_LINKED",
+      "CASTLEWARS_STAIR_THIN_C",
+      "CASTLEWARS_STAIR_THIN_B",
+      "CASTLEWARS_STAIR_THIN_A"
+    ]
+  },
+  {
+    "description": "Castle Wars - Rock Trap",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "CASTLEWARS_BLOCKED_TUNNEL_1",
+      "CASTLEWARS_BLOCKED_TUNNEL_2",
+      "ROCKSLIDE5",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_TOPLEFT",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_BOTTOMLEFT",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_BOTTOMRIGHT",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_TOPRIGHT"
+    ]
   },
   {
     "description": "MORYTANIA_SLAYER_TOWER_WALLS",
@@ -5015,7 +5133,6 @@
       "CAVEWALL_TOP_DARK",
       "CAVEWALL_TOP5_DARK",
       "CAVEWALLTUNNEL_UPASS_DOWN",
-      "CASTLEWARS_CAVEWALL_ROCKSLIDE",
       "CAVEWALL_FACE1_FOR_LEVER",
       "HEROES_GUILD_SHORTCUT_TO_FOUNTAIN",
       "HEROES_GUILD_SHORTCUT_FROM_FOUNTAIN",
@@ -5031,6 +5148,45 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 100
+  },
+  {
+    "description": "Castle Wars - Cave in Walls 1",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "upwardsNormals": true,
+    "receiveShadows": false,
+    "uvOrientation": 100,
+    "areas": [ "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_1" ],
+    "objectIds": [
+      "CASTLEWARS_CAVEWALL_ROCKSLIDE"
+    ],
+    "uvScale": 0.6
+  },
+  {
+    "description": "Castle Wars - Cave in Walls 2",
+    "baseMaterial": "GRUNGE_2",
+    "areas": [ "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_2" ],
+    "objectIds": [
+      "CASTLEWARS_CAVEWALL_ROCKSLIDE"
+    ],
+    "receiveShadows": false
+  },
+  {
+    "description": "Castle Wars - Cave in Walls 3",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "areas": [ "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_3" ],
+    "objectIds": [
+      "CASTLEWARS_CAVEWALL_ROCKSLIDE"
+    ],
+    "receiveShadows": false,
+    "upwardsNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "s == 4 && l == 2",
+        "baseMaterial": "GRUNGE_1_VERY_LIGHT",
+        "upwardsNormals": true,
+        "receiveShadows": false
+      }
+    ]
   },
   {
     "description": "Rounded Cave Wall Entrance with Tracks",
@@ -9731,7 +9887,8 @@
       "ROCKS_SEAROCK_BARE03",
       "HUNTING_DEADFALL_TRAPPING_FENNEC",
       "HUNTING_DEADFALL_TRAPPING_FENNEC_M",
-      "HUNTING_DEADFALL_FULL_FENNEC"
+      "HUNTING_DEADFALL_FULL_FENNEC",
+      "CASTLEWARS_STEPING_STONE"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
@@ -14284,13 +14441,6 @@
       "VT_MAZEPORTAL_6",
       "VT_MAZEPORTAL_7",
       "VT_MAZEPORTAL_WRONG",
-      "CASTLEWARS_SARADOMIN_TELE",
-      "CASTLEWARS_ZAMORAK_TELE",
-      "CASTLEWARS_SARADOMIN_EXIT",
-      "CASTLEWARS_ZAMORAK_EXIT",
-      "CASTLEWARS_SARADOMIN_QUIT",
-      "CASTLEWARS_ZAMORAK_QUIT",
-      "CASTLEWARS_RANDOM_TELE",
       "POH_EXIT_PORTAL",
       "DT_PORTAL",
       "RD_PORTAL_ROOM1_ENTRANCE",
@@ -14562,6 +14712,20 @@
       "AKD_JUDGE_PORTAL"
     ],
     "shadowOpacityThreshold": 0.12
+  },
+  {
+    "description": "Remove flickering shadows from various portals - with flat normals",
+    "objectIds": [
+      "CASTLEWARS_SARADOMIN_TELE",
+      "CASTLEWARS_ZAMORAK_TELE",
+      "CASTLEWARS_SARADOMIN_EXIT",
+      "CASTLEWARS_ZAMORAK_EXIT",
+      "CASTLEWARS_SARADOMIN_QUIT",
+      "CASTLEWARS_ZAMORAK_QUIT",
+      "CASTLEWARS_RANDOM_TELE"
+    ],
+    "shadowOpacityThreshold": 0.12,
+    "flatNormals": true
   },
   {
     "description": "Use flat normals for POH Portal Nexus, since it spins around",
@@ -41391,12 +41555,13 @@
   {
     "description": "Generic - Concrete - Textured - Prayer Alter",
     "textureMaterial": "HD_CONCRETE",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "retainVanillaUvs": false,
     "objectIds": [
-      "ALTAR"
+      "ALTAR",
+      "CASTLEWARS_ALTAR_SARADOMIN"
     ],
     "colorOverrides": [
       {
@@ -41411,6 +41576,29 @@
         "description": "Paper",
         "colors": "h == 42",
         "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Prayer Alter - Zamorak",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "CASTLEWARS_ALTAR_ZAMORAK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 8 && h <= 9",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "s == 7",
+        "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.8
       }
@@ -45098,6 +45286,21 @@
     "uvScale": 0.75,
     "objectIds": [
       "FLOORKIT_WOODEN02_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Shazyzien Hanging Lantern - Brighten Flames and Hole on Top",
+    "objectIds": [
+      "SHAYZIEN_LANTERN01_LIT_STATIC",
+      "SHAYZIEN_LANTERN01_LIT_SWAYR",
+      "SHAYZIEN_LANTERN01_LIT_SWAYL",
+      "SHAYZIEN_LANTERN01_LIT_IDLE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "a < 255", "s == 7 && l < 6" ],
+        "baseMaterial": "GRAY_150"
+      }
     ]
   }
 ]
