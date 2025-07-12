@@ -13785,6 +13785,7 @@
   {
     "description": "Ground - Snow Piles - Tiny",
     "baseMaterial": "SNOW_1",
+    "castShadows": false,
     "objectIds": [
       "SNOW1",
       "SNOW2",
@@ -37315,10 +37316,9 @@
   },
   {
     "description": "Hueycoatl Rocks",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       "HUEY_HOLDING_ENTRANCE_INSTANCED",
-      "HUEY_FIGHT_EXIT_SHORTCUT",
       "DF_CAVE_SNOW01_ROCKS01",
       "DF_CAVE_SNOW01_ROCKS02",
       "DF_CAVE_SNOW01_ROCKS02_M",
@@ -37327,14 +37327,57 @@
       "DF_CAVE_ROCK01_ROCKS04",
       "DF_CAVE_ROCK01_ROCKS06",
       "DF_CAVE_SNOW01_FALLOFF01",
-      "DF_CAVE_ROCK01_FALLOFF01"
+      "DF_CAVE_ROCK01_FALLOFF01",
+      "STRANGLER_DUGUPSOIL_07"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.9,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Hueycoatl Ugly Shadow Fix",
+    "castShadows": false,
+    "areas": [ "Hueycoatl Ugly Shadow Fix" ],
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "DF_CAVE_SNOW01_ROCKS04",
+      "STRANGLER_DUGUPSOIL_07"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 200
+  },
+  {
+    "description": "Hueycoatl Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
+    "objectIds": [
+      "HUEY_FIGHT_EXIT_SHORTCUT"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Ates Pendant Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "ATES_STATUE_DARKFROST_INACTIVE",
+      "ATES_STATUE_DARKFROST_ACTIVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 35",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Hueycoatl Body Cave",
     "objectIds": [
+      "DF_CAVE_SNOW01_ENTRANCE03_HUEY_RESPAWN",
       "DF_CAVE_SNOW01_ENTRANCE03",
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
       "DF_CAVE_SNOW01_ENTRANCE03_DIAG",
@@ -37342,7 +37385,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 0 && s == 0",
+        "colors": "h < 2 && s == 0",
         "baseMaterial": "STONE_NORMALED"
       },
       {
@@ -37355,12 +37398,21 @@
     "description": "Hueycoatl Blockage Segment Caves",
     "objectIds": [
       "HUEY_P2_BARRIER",
-      "HUEY_P2_BARRIER_RETRACTED"
+      "HUEY_P2_BARRIER_RETRACTED",
+      "HUEY_P2_BARRIER_RESPAWN"
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 0", "h == 63" ],
+        "colors": ["h == 0", "h == 1" ],
         "baseMaterial": "STONE_NORMALED"
+      },
+      {
+        "colors": "h == 63 && l > 2",
+        "baseMaterial": "SNOW_1"
+      },
+      {
+        "colors": "h == 63 && l == 2",
+        "baseMaterial": "BLACK"
       }
     ]
   },
@@ -37368,16 +37420,25 @@
     "description": "Hueycoatl Tail Cave",
     "objectIds": [ "DF_CAVE_SNOW01_ENTRANCE02" ],
     "npcIds": [ "HUEY_TAIL", "HUEY_TAIL_BROKEN" ],
+    "upwardsNormals": true,
     "colorOverrides": [
       {
         "colors": [ 2 ],
         "baseMaterial": "BLACK"
       },
       {
-        "colors": [ "h == 0" ],
-        "baseMaterial": "STONE"
+        "colors": [ "h == 0", "h == 63" ],
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Hueycoatl Lightning Bolt Attack - Remove Shadows",
+    "baseMaterial": "GRAY_90",
+    "castShadows": false,
+    "objectIds": [ "HUEY_ATTACK_TILES_LOC" ],
+    "graphicsObjectIds": [ "VFX_HUEYCOATL_PRAYER_02" ]
   },
   {
     "description": "Hueycoatl",
@@ -37385,7 +37446,8 @@
     "colorOverrides": [
       {
         "colors": [ "h == 0 && s == 0", "h == 63" ],
-        "baseMaterial": "STONE"
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX"
       }
     ]
   },
@@ -37430,9 +37492,10 @@
   },
   {
     "description": "Hueycoatl Entrance Chain",
-    "baseMaterial": "STONE",
+    "baseMaterial": "ROCK_3",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.6,
+    "uvOrientation": 700,
     "objectIds": [
       "HUEY_FIGHT_ENTRANCE_INAREA",
       "HUEY_FIGHT_ENTRANCE_OUTAREA"
@@ -37462,9 +37525,10 @@
     "colorOverrides": [
       {
         "colors": [ "h == 10" ],
-        "baseMaterial": "CARPET",
+        "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.85
+        "uvScale": 0.7,
+        "uvOrientation": 256
       }
     ]
   },
@@ -37501,10 +37565,9 @@
   },
   {
     "description": "Hueycoatl Brazier",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 256,
+    "uvScale": 0.7,
     "objectIds": [
       "HUEY_PRAYER_PILLAR_MAGIC_BRAZIER_ON",
       "HUEY_PRAYER_PILLAR_MAGIC_BRAZIER_OFF",
@@ -43596,17 +43659,17 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
-      "MM_LAB_MACHINE_AGITATOR_EMPTY",
-      "MM_LAB_MACHINE_AGITATOR_MAL",
-      "MM_LAB_MACHINE_AGITATOR_MMM",
-      "MM_LAB_MACHINE_AGITATOR_MMA",
-      "MM_LAB_MACHINE_AGITATOR_MM1",
       "MM_LAB_MACHINE_AGITATOR_AAA",
+      "MM_LAB_MACHINE_AGITATOR_AA1",
       "MM_LAB_MACHINE_AGITATOR_AAM",
-      "MM_LAB_MACHINE_AGITATOR_AAL",
-      "MM_LAB_MACHINE_AGITATOR_LLL",
+      "MM_LAB_MACHINE_AGITATOR_EMPTY",
       "MM_LAB_MACHINE_AGITATOR_LLA",
-      "MM_LAB_MACHINE_AGITATOR_LLM"
+      "MM_LAB_MACHINE_AGITATOR_LLL",
+      "MM_LAB_MACHINE_AGITATOR_LLM",
+      "MM_LAB_MACHINE_AGITATOR_MAL",
+      "MM_LAB_MACHINE_AGITATOR_MM1",
+      "MM_LAB_MACHINE_AGITATOR_MMA",
+      "MM_LAB_MACHINE_AGITATOR_MMM"
     ],
     "colorOverrides": [
       {
