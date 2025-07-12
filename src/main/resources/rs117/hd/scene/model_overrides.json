@@ -16639,7 +16639,14 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "BURLAP",
-    "objectIds": [ "SACK_FULL", "VC_SACK_FULL_DWARF", "LUNAR_PIRATE_GRAIN_SACK", "SOTE_LLETYA_SACK_FULL", "MOURNING_SACK_FULL" ],
+    "objectIds": [
+      "LUNAR_PIRATE_GRAIN_SACK",
+      "MOURNING_SACK_FULL",
+      "SACK_FULL",
+      "SACK_GRAIN01_FULL01",
+      "SOTE_LLETYA_SACK_FULL",
+      "VC_SACK_FULL_DWARF"
+    ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "retainVanillaUvs": false
@@ -25334,13 +25341,32 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
       "GROUNDCOVER_PLANT5_WITHERED",
-      "BUSH_SAVANNAH01_SPIKEY02",
       "PLANT_FERN_ECLIPSE01",
       "PLANT_FERN_ECLIPSE02",
       "PLANT_FERN_ECLIPSE03",
       "PLANT_FERN_ECLIPSE04",
       "PLANT_SUNFLOWER01_DEFAULT01",
       "PLANT_SUNFLOWER01_DEFAULT02"
+    ]
+  },
+  {
+    "description": "Varlamore - Avium Savannah- Plant - Spikey Bush",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BUSH_SAVANNAH01_SPIKEY01",
+      "BUSH_SAVANNAH01_SPIKEY02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "leaf",
+        "colors": "h >= 5",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
     ]
   },
   {
@@ -26319,6 +26345,127 @@
     "uvScale": 1.5
   },
   {
+    "description": "Hunter Guild - Wooden - Metallic - Pottery -  Cooking Table",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "HG_COOKING_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 35",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvOrientation": 192,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Table",
+        "colors": "h == 3 && s == 3 || h == 4 || h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild - Wooden - Metallic - Stone -  Cooking Oven",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FORTIS_STOVE",
+      "FORTIS_STOVE_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvOrientation": 192,
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Log",
+        "colors": "h == 4 && s == 3 && l <= 20",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Bricks",
+        "colors": "h == 3 && s == 4 || h == 2 && s == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild - woven basket with handles - Empty",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HG_BARREL_BASKET01_EMPTY01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth lining",
+        "colors": "h == 3",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild - woven basket with handles - With veggies",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "HG_BARREL_BASKET01_FOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plants",
+        "colors": "h >= 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Cloth lining",
+        "colors": "h == 3",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Quest - At First Light - Fern",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "AFL_BUSH1_NOOP",
+      "AFL_BUSH1_OP",
+      "AFL_BUSH2_NOOP",
+      "AFL_BUSH2_OP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "leaf",
+        "colors": "s >= 3",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 42
+      }
+    ]
+  },
+  {
     "description": "Varlamore, Stools and tables covered in furs",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
@@ -26845,13 +26992,27 @@
     "description": "Zeah - Kourend - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
     "objectIds": [
-      "GROUNDCOVER_PLANT1_WITHERED",
-      "GROUNDCOVER_PLANT2_WITHERED",
-      "GROUNDCOVER_PLANT3_WITHERED",
-      "GROUNDCOVER_PLANT4_WITHERED",
       "GROUNDCOVER_PLANT1_ROTTEN",
       "GROUNDCOVER_PLANT2_ROTTEN",
       "GROUNDCOVER_PLANT3_ROTTEN"
+    ]
+  },
+  {
+    "description": "Zeah - Varlamore - Plant - Withered Leafy Shrub",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "GROUNDCOVER_PLANT1_WITHERED",
+      "GROUNDCOVER_PLANT2_WITHERED",
+      "GROUNDCOVER_PLANT3_WITHERED",
+      "GROUNDCOVER_PLANT4_WITHERED"
     ]
   },
   {
@@ -34117,13 +34278,44 @@
     ]
   },
   {
-    "description": "Fortis wooden plank walls",
+    "description": "Varlamore - Fortis wooden plank walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_WOODEN01_DEFAULT01"
+      "WALLKIT_WOODEN01_DEFAULT01",
+      "WALLKIT_WOODEN01_WINDOW01"
+    ]
+  },
+  {
+    "description": " Varlamore - Fortis wooden plank Door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FORTIS_DOOR_L",
+      "FORTIS_DOOR_L_LOCKED",
+      "FORTIS_DOOR_L_NOOP",
+      "FORTIS_DOOR_L_OPEN",
+      "FORTIS_DOOR_L_REVERSE",
+      "FORTIS_DOOR_L_REVERSE_OPEN",
+      "FORTIS_DOOR_R",
+      "FORTIS_DOOR_R_LOCKED",
+      "FORTIS_DOOR_R_NOOP",
+      "FORTIS_DOOR_R_OPEN",
+      "FORTIS_DOOR_R_REVERSE",
+      "FORTIS_DOOR_R_REVERSE_OPEN",
+      "VARLAMORE_THIEVING_HOUSE_DOOR_LOCKED",
+      "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -34287,7 +34479,8 @@
     "uvScale": 0.9,
     "flatNormals": true,
     "objectIds": [
-      "WALLKIT_CIVITAS05_FENCE02"
+      "WALLKIT_CIVITAS05_FENCE02",
+      "WALLKIT_CIVITAS05_FENCE03"
     ]
   },
   {
@@ -41219,7 +41412,7 @@
     ]
   },
   {
-    "description": "Varrock - Kebos Farm - Thatch - Roofs",
+    "description": "Varrock - Kebos Farm - Fortis - Thatch - Roofs",
     "baseMaterial": "HD_HAY",
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -41232,7 +41425,8 @@
       "FAI_VARROCK_ROOF_THATCHED_SHORT_MIRROR",
       "FAI_VARROCK_ROOF_THATCHED_3H",
       "FAI_VARROCK_ROOF_THATCHED_END",
-      "FAI_VARROCK_THATCHED_ROOF_BALCONY"
+      "FAI_VARROCK_THATCHED_ROOF_BALCONY",
+      "FAI_VARROCK_ROOF_THATCHED_CENTER"
     ],
     "colorOverrides": [
       {
@@ -43622,6 +43816,45 @@
         "uvScale": 0.6,
         "uvOrientation": 162
       }
+    ]
+  },
+  {
+    "description": "Varlamore - Adobe - Cabybara walls",
+    "baseMaterial": "WATTLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "AVIUM_SAVANNAH01_LOW02",
+      "AVIUM_SAVANNAH01_UPPER01",
+      "AVIUM_SAVANNAH01_WALL01",
+      "AVIUM_SAVANNAH01_WINDOW01",
+      "AVIUM_SAVANNAH01_WINDOWUPPER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Adobe - Cabybara walls - Tops",
+    "baseMaterial": "WATTLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "AVIUM_SAVANNAH01_LOW01"
+    ]
+  },
+  {
+    "description": "Varlamore - Wooden - Plank Floors",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "FLOORKIT_WOODEN02_DEFAULT01"
     ]
   }
 ]
