@@ -311,6 +311,7 @@ public enum Material {
 	GRAY_125(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.25f))),
 	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
+	GRAY_85(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.85f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_70(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.70f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
@@ -406,6 +407,8 @@ public enum Material {
 		.setSpecular(0.2f, 10)
 	),
 	GRUNGE_1,
+	GRUNGE_1_LIGHT(GRUNGE_1, p -> p.setBrightness(1.3f)),
+	GRUNGE_1_VERY_LIGHT(GRUNGE_1, p -> p.setBrightness(1.7f)),
 	GRUNGE_1_SHINY(GRUNGE_1, p -> p
 		.setSpecular(0.7f, 300)
 	),
@@ -646,6 +649,11 @@ public enum Material {
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	LEAF_VEINS,
 	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),
+	LEAVES_1_N,
+	LEAVES_1(p -> p
+		.setNormalMap(LEAVES_1_N)
+		.setSpecular(0.25f, 15)
+	),
 	WOOD_GRAIN,
 	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
 		.setBrightness(1.5f)
@@ -795,8 +803,16 @@ public enum Material {
 	METALLIC_1_LIGHT_SUPER_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(2.25f, 65)),
 	METALLIC_1_VERY_LIGHT(METALLIC_1, p -> p.setBrightness(2.6f)),
+	METALLIC_2_N,
+	METALLIC_2(p -> p.setNormalMap(METALLIC_2_N).setSpecular(0.7f, 35)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 120)),
+	METALLIC_1_SMOOTH(METALLIC_1, p -> p
+		.setTextureScale(1, 1, .1f)
+	),
+	METALLIC_1_SMOOTH_LIGHT(METALLIC_1_SMOOTH, p -> p
+		.setBrightness(1.8f)
+	),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
 		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
