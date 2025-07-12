@@ -6727,6 +6727,10 @@
     ]
   },
   {
+    "name": "ALDARIN_MANOR_WINECELLER",
+    "regions": [ 5777 ]
+  },
+  {
     "name": "VARLAMORE",
     "regionBoxes": [
       [ 4908, 7476 ]

@@ -3561,10 +3561,17 @@
   {
     "name": "Aldarin fake brick path",
     "area": "ALDARIN",
-    "overlayIds": [ 399 ],
+    "overlayIds": [ 398, 399 ],
     "blended": false,
     "maxLightness": 38,
     "minLightness": 22,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin - Manor Winceller - fake brick",
+    "area": "ALDARIN_MANOR_WINECELLER",
+    "underlayIds": [ 12, 141 ],
+    "minLightness": 13,
     "groundMaterial": "GRUNGE"
   },
   {
