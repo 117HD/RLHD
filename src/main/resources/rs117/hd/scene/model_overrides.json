@@ -7963,7 +7963,8 @@
       "OLAF2_OLD_BROKEN_TABLE",
       "FARMING_COUNTER_TABLE",
       "WILDY_HUB_BROKEN_TABLE",
-      "TOURTRAP_QIP_DESERT_TABLE"
+      "TOURTRAP_QIP_DESERT_TABLE",
+      "MYQ3_HIDEOUT_LARGE_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10505,7 +10506,10 @@
       "NECROPOLIS_CRATE01_DEFAULT01",
       "FOSSIL_TOOL_CRATE",
       "SNP_CRATE_STACKED",
-      "SNP_CRATE"
+      "SNP_CRATE",
+      "MYQ4_EMPTY_CRATES",
+      "MYQ4_VIAL_CRATE",
+      "MYQ4_MEAT_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10522,7 +10526,9 @@
       "FAI_VARROCK_LARGE_CRATES_INACTIVE",
       "SHAYZIEN_CRATE_02_INACTIVE_DARK",
       "NECROPOLIS_CRATE01_STACK01",
-      "FOSSIL_CRATE2"
+      "FOSSIL_CRATE2",
+      "MYQ4_PESTLE_CRATE",
+      "MYQ4_EMPTY_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10568,7 +10574,8 @@
       "ELEM_CRATE_3",
       "SHAYZIEN_CRATE_02_DARK",
       "SHAYZIEN_CRATE_03_DARK",
-      "CRATE_ALDARIN01_STACK01"
+      "CRATE_ALDARIN01_STACK01",
+      "MYQ4_EMPTY_CRATES_SMALL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -10906,8 +10913,7 @@
       "ELID_POTSANDPANS1",
       "ELID_POTSANDPANS2",
       "AREA_SANGUINE_GHETTO_POTS1",
-      "AREA_SANGUINE_GHETTO_POTS2",
-      "MYQ3_SICKLE_LOGO_WALL"
+      "AREA_SANGUINE_GHETTO_POTS2"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -11414,13 +11420,16 @@
   },
   {
     "description": "Morytania - Floor - Wooden - Ladder - Burgh De Rott - Meiyerditch",
-    "baseMaterial": "WOOD_GRAIN",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": -62,
     "objectIds": [
       "BURGH_LADDER_GENERALSTORE_UP",
       "BURGH_LADDER_GENERALSTORE_DOWN",
       "BURGH_LADDER_HATCH_UP",
       "AREA_SANGUINE_GHETTO_LADDER_UP",
-      "AREA_SANGUINE_GHETTO_LADDER_DOWN"
+      "AREA_SANGUINE_GHETTO_LADDER_DOWN",
+      "MYQ3_MINE_LADDER"
     ]
   },
   {
@@ -13086,7 +13095,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "QIP_SHEEP_SHEARER_CHAIR",
-      "CONTACT_CHAIR4"
+      "CONTACT_CHAIR4",
+      "MYQ3_HIDEOUT_CHAIR"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -13162,7 +13172,8 @@
     "description": "Ugly combined backed wooden rocking chair - Broken",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAI_VARROCK_POOR_CHAIR2"
+      "FAI_VARROCK_POOR_CHAIR2",
+      "AREA_SANGUINE_GHETTO_CHAIR1"
     ],
     "uvType": "BOX"
   },
@@ -16679,6 +16690,7 @@
       "AREA_SANGUINE_OUTER_CRUMBLE3_JUMP",
       "AREA_SANGUINE_OUTER_CRUMBLE1_MIR",
       "AREA_SANGUINE_OUTER_CRUMBLE2_MIR",
+      "AREA_SANGUINE_OUTER_CRUMBLE3_MIR",
       "AREA_SANGUINE_OUTER_WALL1",
       "AREA_SANGUINE_OUTER_WALL1_NOMINIMAP",
       "AREA_SANGUINE_OUTER_WALL_ARCH_MIDDLE3_OPEN_NOMINIMAP",
@@ -16810,6 +16822,7 @@
     "objectIds": [
       "AREA_SANGUINE_ROOF_FLOOR1",
       "AREA_SANGUINE_ROOF_FLOOR2",
+      "AREA_SANGUINE_ROOF_FLOOR2_MIRROR",
       "AREA_SANGUINE_ROOF_FLOOR3",
       "AREA_SANGUINE_ROOF_FLOOR3_MIRROR"
     ],
@@ -16838,7 +16851,9 @@
       "MYQ3_LABORATORY_DOOR_INACTIVE",
       "MYQ3_DOOR_SHORTCUT_REWARD",
       "MYQ3_AGIL_14_LOCKED_DOOR",
-      "MYQ3_AGIL_14_LOCKED_DOOR_INACTIVE"
+      "MYQ3_AGIL_14_LOCKED_DOOR_INACTIVE",
+      "MYQ4_SERAFINA_DOOR",
+      "MYQ4_SERAFINA_DOOR_OPEN"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -16870,6 +16885,7 @@
       "AREA_SANGUINE_GHETTO_UPPER_WALL3",
       "AREA_SANGUINE_GHETTO_UPPER_WALL4",
       "AREA_SANGUINE_MYREQUE_SECRET_WALL_CLOSED",
+      "AREA_SANGUINE_MYREQUE_SECRET_WALL_INACTIVE",
       "MYQ3_AGIL_WALL_LADDERTOP_FULL",
       "MYQ3_AGIL_WALL_LADDERTOP_EMPTY",
       "MYQ3_AGIL_4_PUSHWALL_NORTH",
@@ -16879,13 +16895,92 @@
       "MYQ3_AGIL_6_PUSHWALL_WEST_ANIM",
       "MYQ3_AGIL_11_CRAWL_WALL",
       "MYQ3_AGIL_24_PUSHWALL_NORTH",
-      "MYQ3_AGIL_24_PUSHWALL_NORTH_ANIM",
-      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_OUT",
-      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_IN"
+      "MYQ3_AGIL_24_PUSHWALL_NORTH_ANIM"
     ],
     "uvType": "BOX",
     "uvOrientation": 1536,
     "uvScale": 0.58
+  },
+  {
+    "description": "Meiyerditch - Wooden - Metallic- House Walls - Myreque Symbol",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.58,
+    "objectIds": [
+      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_OUT",
+      "SANG_MYREQUE_HIDEOUT_SYMBOL_ACTIVE_IN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 212
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Metallic - Stone - Myreque Entrance - Open",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 1536,
+    "uvScale": 0.58,
+    "objectIds": [
+      "SANG_MYREQUE_HIDEOUT_RUG_TRAPDOOR_UNHIDDEN_OPEN",
+      "AREA_SANGUINE_MYREQUE_HIDEOUT_LADDER_UP",
+      "MYQ4_HIDEOUT_TRAPDOOR_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Carpet",
+        "colors": "h >= 20",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_YZ"
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - House Walls - Agility",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "objectIds": [
+      "MYQ3_AGIL_4_PUSHWALL_MULTI",
+      "MYQ3_AGIL_4_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_4_ACTIVE_FLOOR_2",
+      "MYQ3_AGIL_6_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_6_ACTIVE_FLOOR_2",
+      "MYQ3_AGIL_24_ACTIVE_FLOOR_1",
+      "MYQ3_AGIL_24_ACTIVE_FLOOR_2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.58
+  },
+  {
+    "description": "Meiyerditch - Paint - Myreque symbol",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      "MYQ3_SICKLE_LOGO_WALL"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Dirt - Trapdoor Tunnel",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "MYQ3_AGIL_TRAPDOOR_TUNNEL",
+      "MYQ3_AGIL_9_TUNNEL_SOUTH"
+    ]
   },
   {
     "description": "Objects - Wooden - Poor Looking tables - Wide",
@@ -16935,45 +17030,194 @@
   {
     "description": "Meiyerditch House Roof",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
     "objectIds": [
       "MYQ3_GHETTO_ROOF_JUMP_02",
       "AREA_SANGUINE_POOR_ROOF_MIDDLE1",
+      "AREA_SANGUINE_POOR_ROOF_EDGE1",
       "AREA_SANGUINE_POOR_ROOF_EDGE1_FILLED",
       "AREA_SANGUINE_POOR_ROOF_EDGE_LEFT1",
       "AREA_SANGUINE_POOR_ROOF_EDGE_RIGHT1",
+      "AREA_SANGUINE_POOR_ROOF_EDGE1_HIGHER",
       "AREA_SANGUINE_POOR_ROOF_EDGE1_NO_SIDES",
       "AREA_SANGUINE_POOR_ROOF_EDGE2_NO_SIDES",
       "AREA_SANGUINE_POOR_ROOF_CORNER1_NO_SIDES",
+      "AREA_SANGUINE_POOR_ROOF_CORNER2_NO_SIDES",
       "MYQ3_AGIL_20_JUMP_SOUTH"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
-    "description": "Meiyerditch Wooden Shelves",
+    "description": "Meiyerditch - Wooden - Bed with pillow - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "AREA_SANGUINE_GHETTO_BED3",
+      "AREA_SANGUINE_GHETTO_BED2",
+      "AREA_SANGUINE_GHETTO_BED1",
+      "MYQ4_SERAFINA_BED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow",
+        "colors": "h >= 10",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Bunk Bed with pillow",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "MYQ3_HIDEOUT_BUNK_BED_01",
+      "MYQ3_HIDEOUT_BUNK_BED_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow",
+        "colors": "h >= 10",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Myreque Locker",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MYQ3_HIDEOUT_LOCKER",
+      "MYQ3_HIDEOUT_LOCKER2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Myreque ramshackle table",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MYQ3_HIDEOUT_TABLE"
+    ]
+  },
+  {
+    "description": "Objects - Wooden - Crate with papers in it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "MYQ3_HIDEOUT_PAPYRUS_CRATES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Papers",
+        "colors": "h < 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Painting with key inside",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "MYQ3_STATUE_PAINTING_SLASHED_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Frame",
+        "colors": "h == 8 && l > 19 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Objects - Wooden - Blackboard",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "MYQ3_HIDEOUT_BLACKBOARD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Blackboard",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Wooden - Shelves",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
-      "AREA_SANGUINE_GHETTO_SHELF1",
       "AREA_SANGUINE_GHETTO_SHELF2",
       "AREA_SANGUINE_GHETTO_SHELF3",
       "AREA_SANGUINE_GHETTO_SHELF4",
       "AREA_SANGUINE_GHETTO_SHELF5",
-      "MYQ3_AGIL_10_SHELF_CLIMB_UP",
       "MYQ3_AGIL_10_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_18_SHELF_CLIMB_UP",
       "MYQ3_AGIL_18_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_25_SHELF_CLIMB_UP",
       "MYQ3_AGIL_25_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_26_SHELF_CLIMB_DOWN",
-      "MYQ3_AGIL_26_SHELF_CLIMB_UP"
+      "MYQ3_AGIL_26_SHELF_CLIMB_DOWN"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
     "uvScale": 0.86
   },
   {
+    "description": "Meiyerditch - Wooden - Shelves with papers",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.86,
+    "objectIds": [
+      "AREA_SANGUINE_GHETTO_SHELF1",
+      "MYQ3_AGIL_10_SHELF_CLIMB_UP",
+      "MYQ3_AGIL_18_SHELF_CLIMB_UP",
+      "MYQ3_AGIL_25_SHELF_CLIMB_UP",
+      "MYQ3_AGIL_26_SHELF_CLIMB_UP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h >= 12",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Meiyerditch Stone Brick Fireplace",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      "MYQ3_GHETTO_FIREPLACE_BOTTOM",
       "MYQ3_GHETTO_FIREPLACE_MIDDLE",
       "MYQ3_GHETTO_FIREPLACE_TOP",
       "MYQ3_GHETTO_FIREPLACE_TOP_NOOFFSET",
@@ -16986,7 +17230,8 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "MYQ3_GHETTO_BARICADE",
-      "MYQ3_GHETTO_BARICADE2"
+      "MYQ3_GHETTO_BARICADE2",
+      "MYQ3_GHETTO_BARICADE3"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -17004,44 +17249,422 @@
       "AREA_SANGUINE_CASTLE_WALL_JOIN1",
       "AREA_SANGUINE_CASTLE_WALL_JOIN1_MIRROR",
       "AREA_SANGUINE_CASTLE_WALL_ARCH_LEFT1",
-      "AREA_SANGUINE_CASTLE_WALL_ARCH_SPIKES",
       "AREA_SANGUINE_CASTLE_WALL_ARCH_RIGHT1"
     ],
     "uvType": "BOX",
     "uvScale": 0.7
   },
   {
-    "description": "Ver Sinhaza Walls",
-    "baseMaterial": "STONE",
+    "description": "Meiyerditch - Metallic - Spikes",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": -162,
     "objectIds": [
-      "AREA_SANGUINE_CASTLE_LOWER_WALL1",
-      "MYQ3_CASTLE_WALL_TOP_HIGH"
-    ],
-    "uvType": "GEOMETRY"
+      "AREA_SANGUINE_CASTLE_WALL_ARCH_SPIKES"
+    ]
   },
   {
-    "description": "Ver Sinhaza Walls",
+    "description": "Meiyerditch - Metallic - Spikes",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": -162,
+    "objectIds": [
+      "MYQ4_FOUNTAIN_OP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Metallic - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ4_CHEST_CLOSED",
+      "MYQ4_CHEST",
+      "MYQ5_DISGUISE_CHEST_CLOSED",
+      "MYQ5_DISGUISE_CHEST_OPEN",
+      "MYQ5_DISGUISE_CHEST_CLOSED_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h >= 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Metallic - Wooden - Crate with Sickles and Chains",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "MYQ4_CHAIN_CRATE",
+      "MYQ4_SICKLE_CRATE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_ENTRANCE",
+      "TOB_SURFACE_CASTLE_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "s >= 5",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 192,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "AREA_SANGUINE_CASTLE_L2_WALL1",
+      "AREA_SANGUINE_CASTLE_LOWER_WALL1",
+      "AREA_SANGUINE_CASTLE_L3_WALL1",
+      "MYQ4_OBSTACLE_RUBBLE_01_OP",
+      "MYQ3_CASTLE_WALL_TOP_HIGH"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls with Scorboard",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SCOREBOARD",
+      "TOB_SCOREBOARD_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_YZ"
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_YZ"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Theater of Blood Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_RAID_ENTRANCE",
+      "MYQ4_TOB_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "h == 0 && s >= 1"
+      },
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h >= 1",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls with Window or vent",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_WINDOW_SINGLE",
+      "MYQ4_OBSTACLE_VENT",
+      "MYQ4_OBSTACLE_VENT_BROKEN",
+      "MYQ4_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "GLASS",
+        "colors": "s >= 5",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Walls with Doors",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "TOB_SURFACE_CASTLE_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Door",
+        "colors": "s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Roof",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOB_ROOF",
+      "MYQ4_OBSTACLE_ROOF_01",
+      "MYQ4_OBSTACLE_ROOF_02"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Statue with plinth and two fences attached - Needs proper UV",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOB_SURFACE_LARGE_STATUE_WITH_PLINTH"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Fences",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
     "objectIds": [
       "AREA_SANGUINE_CASTLE_FENCE_END_RIGHT1",
+      "AREA_SANGUINE_CASTLE_FENCE_END_LEFT1",
       "AREA_SANGUINE_CASTLE_FENCE_MIDDLE1",
       "AREA_SANGUINE_CASTLE_FENCE_MIDDLE2",
       "MYQ3_CASTLE_FENCE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Vyre Well",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BLOOD_WELL_EMPTY",
+      "MYQ4_TOB_SURFACE_BLOOD_WELL_EMPTY"
     ],
-    "uvType": "MODEL_YZ",
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h >= 1",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Bank",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BANKBOOTH"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Bank closed",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BANKBOOTH_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      },
+      {
+        "description": "Wooden Panels",
+        "colors": "s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Stone - Wooden - Roude table with coin piles on and around it",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOB_SURFACE_BANK_COINS_ON_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Coins",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 7 && s == 7",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Wooden Panels",
+        "colors": "h > 30",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Cloth - Bank barrier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TOB_SURFACE_BANK_BARRIER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 512,
+        "uvOrientationZ": -200
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
     "uvOrientation": 512,
-    "uvScale": 0.4
+    "objectIds": [
+      "TOB_REWARDS_CHEST_LOBBY_CLOSED",
+      "TOB_REWARDS_CHEST_LOBBY_CLOSED_NOOP",
+      "TOB_REWARDS_CHEST_LOBBY_MULTI",
+      "TOB_REWARDS_CHEST_LOBBY_MULTI_NOOP",
+      "TOB_REWARDS_CHEST_LOBBY_OPEN",
+      "TOB_REWARDS_CHEST_LOBBY_OPEN_NOOP",
+      "TOB_SURFACE_GRAVESTONE_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 || h == 6 && s == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Wooden  - Freestanding Noticeboard",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "TOB_SURFACE_NOTICE_BOARD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Meiyerditch Poor Wooden Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "AREA_SANGUINE_GHETTO_STAIRS_UP_BROKEN",
+      "AREA_SANGUINE_GHETTO_STAIRS_DOWN_BROKEN",
       "AREA_SANGUINE_GHETTO_STAIRS_UP",
       "AREA_SANGUINE_GHETTO_STAIRS_DOWN",
       "MYQ3_LAB_STAIRS_DOWN",
-      "MYQ3_LAB_STAIRS_UP"
+      "MYQ3_LAB_STAIRS_UP",
+      "MYQ4_SERAFINA_STAIRS_UP",
+      "MYQ4_HIDEOUT_EXIT"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Meiyerditch Poor Wooden Stairs going into the ground",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MYQ4_SERAFINA_STAIRS_DOWN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Meiyerditch Myreque Hideout Brick Stone Walls",
@@ -17111,46 +17734,220 @@
     "uvScale": 0.85
   },
   {
-    "description": "Meiyerditch Mine Walls",
+    "description": "Meiyerditch - Rock - Wooden - Mine Walls - With supports",
     "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_WALL_SUPPORT_LEFT",
+      "AREA_SANGUINE_MINE_WALL_SUPPORT_RIGHT",
+      "AREA_SANGUINE_MINE_WALL_SUPPORT_MID"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Wooden - Mine Walls - With supports and lamp",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "AREA_SANGUINE_MINE_WALL_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch - Rock - Mine Walls",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "AREA_SANGUINE_MINE_WALL",
       "AREA_SANGUINE_MINE_WALL_ROCKY",
       "AREA_SANGUINE_MINE_WALL_END",
       "AREA_SANGUINE_MINE_WALL_END_02",
       "AREA_SANGUINE_MINE_WALL_END_NO_MAP",
-      "AREA_SANGUINE_MINE_WALL_SUPPORT_LEFT",
-      "AREA_SANGUINE_MINE_WALL_SUPPORT_RIGHT",
-      "AREA_SANGUINE_MINE_WALL_SUPPORT_MID",
       "AREA_SANGUINE_MINE_WALL_FOR_MINING",
-      "AREA_SANGUINE_MINE_WALL_LAMP",
       "AREA_SANGUINE_MINE_WALL_TOP"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7
+    ]
   },
   {
     "description": "Meiyerditch Mine Walls - Daeyalt Rocks",
     "baseMaterial": "ROCK_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "AREA_SANGUINE_MINE_MINEROCKS_01",
       "AREA_SANGUINE_MINE_MINEROCKS_02",
       "AREA_SANGUINE_MINE_MINEROCKS_03",
       "AREA_SANGUINE_MINE_MINEROCKS_04"
     ],
+    "colorOverrides": [
+      {
+        "description": "Daeyalt Ore",
+        "colors": "h > 26",
+        "baseMaterial": "ROCK_5_ORE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecart tracks",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_TRACK_01",
+      "AREA_SANGUINE_MINECART_TRACK_02",
+      "AREA_SANGUINE_MINECART_TRACK_JOIN_01",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_09"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecart tracks - Diag",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_TRACK_JOIN_02",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_01",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_02",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_03",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_04",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_05",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_06",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_07",
+      "AREA_SANGUINE_MINECART_TRACK_CURVE_08"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 343
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Metallic - Wooden - Minecart track end",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_TRACK_END"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 343
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Metallic - Minecart",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 343,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_EMPTY",
+      "AREA_SANGUINE_MINECART_LOAD1",
+      "AREA_SANGUINE_MINECART_LOAD2",
+      "AREA_SANGUINE_MINECART_LOAD3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Daeyalt Ore",
+        "colors": "h > 26",
+        "baseMaterial": "ROCK_5_ORE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mines Exit - Wooden - Rock",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 343,
+    "objectIds": [
+      "MYQ3_MINE_CLIFF_EDGE_1",
+      "MYQ3_MINE_CLIFF_EDGE_2",
+      "MYQ3_MINE_CLIFF_EDGE_3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Daeyalt Ore",
+        "colors": "h > 26",
+        "baseMaterial": "ROCK_5_ORE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Meiyerditch Mine - Wooden - Minecraft track supports",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "AREA_SANGUINE_MINECART_SUPPORT",
+      "AREA_SANGUINE_MINECART_SUPPORT_DARK"
+    ]
   },
   {
     "description": "Darkmeyer Stone Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "DARKM_OUTER_WALL_3H",
+      "DARKM_OUTER_WALL_3H_CRACK",
+      "DARKM_INNER_WALL_PILLAR_3H_TO_1H",
       "DARKM_OUTER_WALL_3H_MEYERDITCH_WALL_SHORTCUT_TOP",
       "DARKM_OUTER_WALL_INSIDE_3H",
       "DARKM_OUTER_WALL_OUTSIDE_1H",
       "DARKM_OUTER_WALL_OUTSIDE_3H",
-      "DARKM_OUTER_WALL_3H_FLAG",
       "DARKM_OUTER_WALL_1H",
       "DARKM_OUTER_WALL_INSIDE_1H",
       "DARKM_CASTLE_WALL",
@@ -17169,6 +17966,32 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Darkmeyer Stone Walls with cloth flag",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DARKM_OUTER_WALL_3H_FLAG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Flag",
+        "colors": "h > 6 && s >= 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Flag pole",
+        "colors": "h > 0 && h <= 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
   },
   {
     "description": "Darkmeyer Stone Tiles",
@@ -29074,7 +29897,10 @@
       "QIP_COOK_BARREL_TAP",
       "SNP_BARREL",
       "SNP_BARREL_BLUE",
-      "SNP_BARREL_RED"
+      "SNP_BARREL_RED",
+      "MYQ3_HIDEOUT_BARREL",
+      "MYQ4_EMPTY_BARREL",
+      "MYQ4_HERB_BARREL"
     ]
   },
   {
@@ -38507,7 +39333,7 @@
     "colorOverrides": [
       {
         "colors": "h > 7",
-        "baseMaterial": "NONE"
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
@@ -38566,6 +39392,13 @@
       "TOB_DUNGEON_VERZIK_THRONE_SIDE_BLOCKER_END_RIGHT",
       "TOB_DUNGEON_VERZIK_THRONE_SIDE_BLOCKER_END_LEFT"
     ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Theatre of Blood - Stone - Pillar - GAMEVAL MISSING",
+    "baseMaterial": "ROCK_3",
+    "uvScale": 1.2,
+    "objectIds": [ "MYQ4_PILLAR" ],
     "uvType": "BOX"
   },
   {
@@ -38780,8 +39613,6 @@
     "baseMaterial": "STONE_NORMALED",
     "areas": [ "THEATRE_OF_BLOOD" ],
     "objectIds": [
-      "AREA_SANGUINE_CASTLE_LOWER_WALL1",
-      "TOB_ROOF",
       "TOB_DUNGEON_XARPUS_UPPER_WALL_SINGLE"
     ]
   },
@@ -42105,6 +42936,24 @@
       {
         "colors": "h == 0 && s == 6",
         "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Camelot - Meiyerditch - Wooden - Metallic - Cloth - Training Dummy - Needs proper UV",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "KR_CAM_SWORDDUMMY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.5
