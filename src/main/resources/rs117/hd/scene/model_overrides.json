@@ -9984,7 +9984,10 @@
       "AVIUM_ROCKSLIDE01",
       "AVIUM_ROCKSLIDE02",
       "AVIUM_ROCKSLIDE03",
-      "AVIUM_ROCKSLIDE04"
+      "AVIUM_ROCKSLIDE04",
+      "DOTI_AGILITY_CHALLENGE_A",
+      "DOTI_AGILITY_CHALLENGE_B",
+      "DOTI_AGILITY_CHALLENGE_C"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -10084,6 +10087,7 @@
     "objectIds": [
       "CIVITAS_DUGUPSOIL02",
       "CIVITAS_DUGUPSOIL05",
+      "ALDARIN_DUGUPSOIL05",
       "DUGUPSOIL2_VDARKBROWN",
       "FAIRY_DUGUPSOIL_2",
       "WILD2_DUGUPSOIL_2",
@@ -10178,7 +10182,9 @@
       "CIVITAS_DUGUPSOIL01",
       "CIVITAS_DUGUPSOIL03",
       "CIVITAS_DUGUPSOIL04",
-      "CIVITAS_DUGUPSOIL06"
+      "CIVITAS_DUGUPSOIL06",
+      "ALDARIN_DUGUPSOIL04",
+      "ALDARIN_DUGUPSOIL06"
     ],
     "uvType": "BOX",
     "uvScale": 0.74
@@ -41583,7 +41589,8 @@
       "DOTI_HOUSE_WINDOW",
       "WALLKIT_ALDARIN02_MANOR01",
       "WALLKIT_ALDARIN02_MANOR02",
-      "ALDARIN_CELLAR_ENTRANCE"
+      "ALDARIN_CELLAR_ENTRANCE",
+      "ALDARIN_BACKSTAGE_ENTRANCE"
     ],
     "colorOverrides": [
       {
@@ -42707,9 +42714,118 @@
         "uvScale": 0.75
       },
       {
-        "colors": "h == 3 && s == 02",
+        "colors": "h == 3 && s == 2",
         "baseMaterial": "DIRT_1",
         "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Pottery - Death on the Isle Clue",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": -177,
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_CLUE1",
+      "DOTI_CLUE2",
+      "DOTI_CLUE3"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle Clue - Stool",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_CLUE5"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle Clue - Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_CLUE4"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle Clue - Stool",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DOTI_CLUE5"
+    ]
+  },
+  {
+    "description": "Aldarin - Marble - Cloth - Rope - Wooden - Death on the Isle Clue - Crate",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "ALDARIN_PILLAR01_CURTAIN01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 64,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 3 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle - Stage curtain rod",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_PILLAR01_POLE01"
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Death on the Isle - fake building",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_FACADE01_BALCONY01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
       }
     ]
   }
