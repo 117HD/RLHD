@@ -61,7 +61,7 @@ void sortModel(
   }
 
   float4 windDirection = (float4)(0.0f);
-  #if WIND_DISPLACEMENT_ENABLED
+  #if WIND_DISPLACEMENT
   {
       float windNoise = noise(((float2)(minfo.x, minfo.z) + (float2)(uni->windOffset)) * (float2)(WIND_DISPLACEMENT_NOISE_RESOLUTION));
       float angle = windNoise * (PI / 2.0f);

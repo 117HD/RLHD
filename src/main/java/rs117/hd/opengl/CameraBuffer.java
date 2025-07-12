@@ -1,32 +1,10 @@
 package rs117.hd.opengl;
 
 import java.util.ArrayList;
-import net.runelite.api.*;
-import net.runelite.api.coords.*;
 
 import static org.lwjgl.opengl.GL15.*;
 
 public class CameraBuffer extends UniformBuffer {
-
-	private static class CharacterPositionPair {
-		public float x;
-		public float z;
-		public float size;
-		public float dist = Float.MAX_VALUE;
-
-		public float getDistance() {
-			return dist;
-		}
-	}
-
-	public CameraBuffer() {
-		super("Camera", GL_DYNAMIC_DRAW);
-
-		for(int i = 0; i < characterPositions.length; i++) {
-			characterPositionsPairs.add(new CharacterPositionPair());
-		}
-	}
-
 	public Property yaw = addProperty(PropertyType.Float, "yaw");
 	public Property pitch = addProperty(PropertyType.Float, "pitch");
 	public Property centerX = addProperty(PropertyType.Int, "centerX");
@@ -44,43 +22,47 @@ public class CameraBuffer extends UniformBuffer {
 	public Property windOffset = addProperty(PropertyType.Float, "windOffset");
 
 	private final Property characterPositionCount = addProperty(PropertyType.Int, "characterPositionCount");
-	private final Property[] characterPositions = addProperties(PropertyType.FVec3, 50, "characterPositions");
+	private final Property[] characterPositions = addPropertyArray(PropertyType.FVec3, "characterPositions", 50);
 
-	private int writtenCharacterPositions = 0;
-	private final ArrayList<CharacterPositionPair> characterPositionsPairs = new ArrayList<>();
+	private final ArrayList<CharacterPositionPair> characterPositionsPairs = new ArrayList<>(characterPositions.length);
+	private int writtenCharacterPositions;
 	private float playerPosX, playerPosZ;
 
-	public void addCharacterPosition(Actor character, Model characterModel) {
-		if(writtenCharacterPositions >= characterPositions.length){
+	private static class CharacterPositionPair {
+		public float x;
+		public float z;
+		public float radius;
+		public float dist = Float.MAX_VALUE;
+	}
+
+	public CameraBuffer() {
+		super("Camera", GL_DYNAMIC_DRAW);
+
+		for (int i = 0; i < characterPositions.length; i++)
+			characterPositionsPairs.add(new CharacterPositionPair());
+	}
+
+	public void addCharacterPosition(int localX, int localZ, int modelRadius) {
+		if (writtenCharacterPositions >= characterPositions.length)
 			return; // We've exceeded the count
-		}
-
-		LocalPoint point = character.getLocalLocation();
-		if(characterModel == null) {
-			characterModel = character.getModel();
-		}
-
-		if(characterModel == null) {
-			return;
-		}
 
 		int writeIndex = writtenCharacterPositions;
 		CharacterPositionPair pair = characterPositionsPairs.get(writeIndex);
 		characterPositionsPairs.remove(writeIndex);
 
-		pair.x = point.getX();
-		pair.z = point.getY();
-		pair.size = characterModel.getRadius();
+		pair.x = localX;
+		pair.z = localZ;
+		pair.radius = modelRadius;
 
-		if(writeIndex == 0) {
+		if (writeIndex == 0) {
 			playerPosX = pair.x;
 			playerPosZ = pair.z;
 			pair.dist = 0.0f;
 		} else {
 			pair.dist = Math.abs(playerPosX - pair.x) + Math.abs(playerPosZ - pair.z);
 
-			for(int i = 0; i < writeIndex; i++) {
-				if(characterPositionsPairs.get(i).dist >= pair.dist){
+			for (int i = 0; i < writeIndex; i++) {
+				if (characterPositionsPairs.get(i).dist >= pair.dist) {
 					writeIndex = i + 1;
 					break;
 				}
@@ -92,12 +74,12 @@ public class CameraBuffer extends UniformBuffer {
 	}
 
 	@Override
-	protected void preupload() {
+	protected void preUpload() {
 		for(int i = 0; i < writtenCharacterPositions; i++) {
 			CharacterPositionPair pair = characterPositionsPairs.get(i);
 			pair.dist = Float.MAX_VALUE;
 
-			characterPositions[i].set(pair.x, pair.z, pair.size);
+			characterPositions[i].set(pair.x, pair.z, pair.radius);
 		}
 		characterPositionCount.set(writtenCharacterPositions);
 		writtenCharacterPositions = 0;

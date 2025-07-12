@@ -245,7 +245,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     float strengthB = saturate(abs(vertB.y) / height);
     float strengthC = saturate(abs(vertC.y) / height);
 
-    #if WIND_DISPLACEMENT_ENABLED
+    #if WIND_DISPLACEMENT
     if(windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
         const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
@@ -298,7 +298,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     }
     #endif
 
-    #if GROUND_DISPLACEMENT_ENABLED
+    #if GROUND_DISPLACEMENT
      if(windDisplacementMode == WIND_DISPLACEMENT_OBJECT){
         vec2 worldVertA = (worldPos + vertA).xz;
         vec2 worldVertB = (worldPos + vertB).xz;
@@ -316,7 +316,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     }
     #endif
 
-    #if WIND_DISPLACEMENT_ENABLED
+    #if WIND_DISPLACEMENT
     if(windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
         // Object Displacement
         displacementA += windSample.displacement * strengthA;

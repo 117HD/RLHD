@@ -1,4 +1,4 @@
-package rs117.hd.data;
+package rs117.hd.scene.model_overrides;
 
 public enum WindDisplacement {
 	Disabled,

@@ -397,7 +397,7 @@ void sort_and_insert(
     float4 vertB = (float4)(thisrvB.x, thisrvB.y, thisrvB.z, 0);
     float4 vertC = (float4)(thisrvC.x, thisrvC.y, thisrvC.z, 0);
 
-    #if WIND_DISPLACEMENT_ENABLED
+    #if WIND_DISPLACEMENT
     int WindDisplacementMode = vertexFlags >> MATERIAL_FLAG_WIND_SWAYING & 3;
     if (WindDisplacementMode != 0) {
         float heightBasedWindStrength = saturate((fabs(pos.y) + minfo.height) / uni->windCeiling) * uni->windStrength;

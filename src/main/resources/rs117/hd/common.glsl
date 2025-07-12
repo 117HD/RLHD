@@ -151,23 +151,19 @@ mat3 rotateZ(float theta) {
 
 // Identity matrix.
 mat3 identity() {
-    return mat3(
-        vec3(1, 0, 0),
-        vec3(0, 1, 0),
-        vec3(0, 0, 1)
-    );
+    return mat3(1);
 }
 
 // 2D Random
-float hash (in vec2 st) {
+float hash(in vec2 st) {
     return fract(sin(dot(st.xy,
                          vec2(12.9898,78.233)))
                  * 43758.5453123);
 }
 
-// 2D Noise based on Morgan McGuire @morgan3d
+// 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
 // https://www.shadertoy.com/view/4dS3Wd
-float noise (in vec2 st) {
+float noise(in vec2 st) {
     vec2 i = floor(st);
     vec2 f = fract(st);
 

@@ -29,6 +29,7 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
+import rs117.hd.scene.model_overrides.WindDisplacement;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
@@ -76,6 +77,8 @@ public class ModelPusher {
 	private ModelCache modelCache;
 
 	public void startUp() {
+		assert WindDisplacement.values().length - 1 <= 0x7;
+
 		if (config.modelCaching() && !plugin.useLowMemoryMode) {
 			final int size = config.modelCacheSizeMiB();
 			try {
@@ -446,7 +449,6 @@ public class ModelPusher {
 			| (uvType.worldUvs ? 1 : 0) << 2
 			| (uvType == UvType.VANILLA ? 1 : 0) << 1
 			| (isOverlay ? 1 : 0);
-		assert ((materialData >> 6) & 0x7)  == modelOverride.windDisplacementMode.ordinal();
 		assert (materialData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return materialData;
 	}
