@@ -45,6 +45,16 @@ layout(std140) uniform CameraUniforms {
     float cameraX;
     float cameraY;
     float cameraZ;
+
+    // Wind Properties
+    float windDirectionX;
+    float windDirectionZ;
+    float windStrength;
+    float windCeiling;
+    float windOffset;
+
+    int characterPositionCount;
+    vec3 characterPositions[50];
 };
 
 #include comp_common.glsl
@@ -53,6 +63,7 @@ layout(local_size_x = THREAD_COUNT) in;
 
 #include common.glsl
 #include priority_render.glsl
+
 
 void main() {
     uint groupId = gl_WorkGroupID.x;
@@ -69,6 +80,22 @@ void main() {
             totalMappedNum[i] = 0;
         }
     }
+
+    ObjectWindSample windSample;
+    #if WIND_DISPLACEMENT
+    {
+        float modelNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+        float angle = modelNoise * (PI / 2.0);
+        float c = cos(angle);
+        float s = sin(angle);
+        float y = minfo.y << 16 >> 16;
+        float height = minfo.y >> 16;
+
+        windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
+        windSample.heightBasedStrength = saturate((abs(y) + height) / windCeiling) * windStrength;
+        windSample.displacement = windSample.direction.xyz * (windSample.heightBasedStrength * modelNoise);
+    }
+    #endif
 
     // Ensure all invocations have their shared variables initialized
     barrier();
@@ -94,5 +121,5 @@ void main() {
     barrier();
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
-        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i]);
+        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], windSample);
 }

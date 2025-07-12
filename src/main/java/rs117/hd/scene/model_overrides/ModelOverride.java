@@ -70,6 +70,7 @@ public class ModelOverride
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
+	public WindDisplacement windDisplacementMode = WindDisplacement.Disabled;
 
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -190,6 +191,7 @@ public class ModelOverride
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
 			inheritTileColorType,
+			windDisplacementMode,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,

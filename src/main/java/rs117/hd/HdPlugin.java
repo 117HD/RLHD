@@ -423,6 +423,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
 	public boolean configAsyncUICopy;
+	public boolean configWindDisplacement;
+	public boolean configCharacterDisplacement;
 	public int configMaxDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -465,6 +467,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public float deltaClientTime;
 	private long lastFrameTimeMillis;
 	private double lastFrameClientTime;
+	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
 	private long brightnessChangedAt;
@@ -856,6 +859,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
+			.define("WIND_DISPLACEMENT", configWindDisplacement)
+			.define("GROUND_DISPLACEMENT", configCharacterDisplacement)
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("WIREFRAME", config.wireframe())
 			.addIncludePath(SHADER_PATH);
@@ -1527,7 +1532,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCamera.cameraX.set(cameraPosition[0]);
 				uboCamera.cameraY.set(cameraPosition[1]);
 				uboCamera.cameraZ.set(cameraPosition[2]);
-				uboCamera.upload();
+
+				uboCamera.windDirectionX.set((float) Math.cos(environmentManager.currentWindAngle));
+				uboCamera.windDirectionZ.set((float) Math.sin(environmentManager.currentWindAngle));
+				uboCamera.windStrength.set(environmentManager.currentWindStrength);
+				uboCamera.windCeiling.set(environmentManager.currentWindCeiling);
+				uboCamera.windOffset.set(windOffset);
 			}
 		}
 
@@ -1637,6 +1647,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.end(Timer.UPLOAD_GEOMETRY);
 		frameTimer.begin(Timer.COMPUTE);
+
+		uboCamera.upload();
 
 		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
@@ -1850,6 +1862,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (Math.abs(deltaTime) > 10)
 				deltaTime = 1 / 60.f;
 			elapsedTime += deltaTime;
+			windOffset += deltaTime * environmentManager.currentWindSpeed;
 
 			// The client delta doesn't need clamping
 			deltaClientTime = (float) (elapsedClientTime - lastFrameClientTime);
@@ -2549,6 +2562,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configAsyncUICopy = config.asyncUICopy();
+		configWindDisplacement = config.windDisplacement();
+		configCharacterDisplacement = config.characterDisplacement();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 
@@ -2673,6 +2688,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
 							case KEY_COLOR_FILTER:
+							case KEY_WIND_DISPLACEMENT:
+							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
 								recompilePrograms = true;
 								break;
@@ -2893,7 +2910,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	/**
 	 * Check is a model is visible and should be drawn.
 	 */
-	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
+	private boolean isOutsideViewport(Model model, int modelRadius, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
 		if (sceneContext == null)
 			return true;
 
@@ -2905,7 +2922,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
-		final int modelRadius = model.getXYZMag();
 		final int transformedZ = yawCos * z - yawSin * x >> 16;
 		final int depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ >> 16;
 
@@ -2991,15 +3007,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		// Apply height to renderable from the model
+		int height = model.getModelHeight();
 		if (model != renderable)
-			renderable.setModelHeight(model.getModelHeight());
+			renderable.setModelHeight(height);
 
 		model.calculateBoundsCylinder();
+		int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
 		if (projection instanceof IntProjection) {
 			var p = (IntProjection) projection;
 			if (isOutsideViewport(
 				model,
+				modelRadius,
 				p.getPitchSin(),
 				p.getPitchCos(),
 				p.getYawSin(),
@@ -3023,7 +3042,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = orientation;
 		eightIntWrite[5] = x;
-		eightIntWrite[6] = y;
+		eightIntWrite[6] = (height & 0xFFFF) << 16 | y & 0xFFFF;
 		eightIntWrite[7] = z;
 
 		int plane = ModelHash.getPlane(hash);
@@ -3119,6 +3138,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
+
+		if (configCharacterDisplacement && renderable instanceof Actor)
+			uboCamera.addCharacterPosition(x, z, modelRadius);
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)

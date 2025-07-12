@@ -60,6 +60,21 @@ void sortModel(
     }
   }
 
+  float4 windDirection = (float4)(0.0f);
+  #if WIND_DISPLACEMENT
+  {
+      float windNoise = noise(((float2)(minfo.x, minfo.z) + (float2)(uni->windOffset)) * (float2)(WIND_DISPLACEMENT_NOISE_RESOLUTION));
+      float angle = windNoise * (PI / 2.0f);
+      float c = cos(angle);
+      float s = sin(angle);
+
+      windDirection.x = uni->windDirectionX * c + uni->windDirectionZ * s;
+      windDirection.z = -uni->windDirectionX * s + uni->windDirectionZ * c;
+      windDirection.xyz = normalize(windDirection.xyz);
+      windDirection.w = windNoise;
+  }
+  #endif
+
   int prio[FACES_PER_THREAD];
   int dis[FACES_PER_THREAD];
   struct vert v1[FACES_PER_THREAD];
@@ -93,6 +108,6 @@ void sortModel(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
-    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap);
+    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap, windDirection);
   }
 }

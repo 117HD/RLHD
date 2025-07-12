@@ -32,6 +32,13 @@ struct uniform {
   float cameraX;
   float cameraY;
   float cameraZ;
+
+  // Wind Properties
+  float windDirectionX;
+  float windDirectionZ;
+  float windStrength;
+  float windCeiling;
+  float windOffset;
 };
 
 struct shared_data {
@@ -47,9 +54,10 @@ struct ModelInfo {
   int uvOffset; // offset into uv buffer
   int size;     // length in faces
   int idx;      // write idx in target buffer
-  int flags;    // hillskew, plane, orientation
+  int flags;    // height, hillskew, plane, orientation
   int x;        // scene position x
-  int y;        // scene position y
+  short y;      // scene position y
+  short height; // model height
   int z;        // scene position z
 };
 
