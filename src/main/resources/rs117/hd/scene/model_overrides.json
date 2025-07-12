@@ -41735,7 +41735,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "MM_LAB_NOTES_BOOKSHELF_NO_OP",
-      "MM_LAB_NOTES_BOOKSHELF"
+      "MM_LAB_NOTES_BOOKSHELF",
+      "ALDARIN_SHELF01_BOOKS04"
     ],
     "uvType": "BOX",
     "colorOverrides": [
