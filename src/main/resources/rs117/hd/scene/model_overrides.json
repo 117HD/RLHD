@@ -21295,14 +21295,31 @@
   {
     "description": "Ground Objects - Bones",
     "baseMaterial": "BONE",
-    "objectIds": [ "ARENA_DESERT01_BONES01", "ARENA_DESERT01_BONES02", "ARENA_DESERT01_BONES03", "ARENA_DESERT01_BONES04", "FRISD_FISHMONGER_FISHBONES" ],
+    "objectIds": [
+      "ARENA_DESERT01_BONES01",
+      "ARENA_DESERT01_BONES02",
+      "ARENA_DESERT01_BONES03",
+      "ARENA_DESERT01_BONES04",
+      "FRISD_FISHMONGER_FISHBONES"
+    ],
     "uvType": "BOX",
     "uvOrientation": 256
   },
   {
     "description": "Bone Objects",
     "baseMaterial": "BONE",
-    "objectIds": [ "PILE_OF_SKULLS_GRUBBY", "ANIMALSKULL", "CARCASS", "CURVEDBONE", "CURVEDBONE_BURNT", "LARGEBONE", "LARGEBONE_BURNT", "ANIMALSKULL_BURNT", "CARCASS_BURNT", "SW_BONES_LARGE_RIBCAGE" ],
+    "objectIds": [
+      "PILE_OF_SKULLS_GRUBBY",
+      "ANIMALSKULL",
+      "CARCASS",
+      "CURVEDBONE",
+      "CURVEDBONE_BURNT",
+      "LARGEBONE",
+      "LARGEBONE_BURNT",
+      "ANIMALSKULL_BURNT",
+      "CARCASS_BURNT",
+      "SW_BONES_LARGE_RIBCAGE"
+    ],
     "uvType": "BOX",
     "uvScale": 0.4
   },
@@ -23722,16 +23739,12 @@
     "description": "Isle of Souls - Fort Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "HOS_FORT_WALL",
-      "HOS_FORT_WALL_CRUMBLE_SMALL_L",
-      "HOS_FORT_WALL_CRUMBLE_L",
       "HOS_FORT_WALL_WINDOW_SML",
       "HOS_FORT_WALL_TOP_CRUMBLE_SMALL_R",
       "HOS_FORT_WALL_TOP_CRUMBLE_R",
       "HOS_FORT_WALL_TOP",
       "HOS_FORT_WALL_TOP_CRUMBLE_L",
-      "HOS_FORT_WALL_SHUTTERED",
-      "HOS_FORT_WALL_CRUMBLE_R"
+      "HOS_FORT_WALL_SHUTTERED"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -23975,7 +23988,7 @@
     "colorOverrides": [
       {
         "baseMaterial": "NONE",
-        "colors": "h == 8 "
+        "colors": "h == 8"
       }
     ]
   },
@@ -34770,7 +34783,7 @@
     "description": "Zeah - Hosidius - Wooden study desk with a green mat - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientationY": 512 ,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "description": "Desk mat",
@@ -40061,7 +40074,6 @@
         "uvType": "BOX",
         "uvOrientation": 512
       }
-
     ]
   },
   {
@@ -40610,7 +40622,7 @@
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientationX": 512 ,
+        "uvOrientationX": 512,
         "uvScale": 0.75
       }
     ]
@@ -41725,7 +41737,7 @@
         "colors": "h > 0",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale":  0.8
+        "uvScale": 0.8
       }
     ]
   },
