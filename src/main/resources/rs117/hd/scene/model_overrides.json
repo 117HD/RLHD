@@ -10450,7 +10450,8 @@
       "ARENA_DESERT01_CRATE01",
       "POG_CRATE",
       "POG_CRATES_STACKED",
-      "CRATE_ALDARIN01_SINGLE01"
+      "CRATE_ALDARIN01_SINGLE01",
+      "DOTI_POISON_CRATE_OP"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -26825,7 +26826,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "HATSTAND",
-      "HATSTAND_MAHOGANY"
+      "HATSTAND_MAHOGANY",
+      "STAND_HAT01_LASSAR01"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -42114,6 +42116,24 @@
     ]
   },
   {
+    "description": "Varlamore - potted Cypress Tree",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 192,
+    "objectIds": [
+      "ALDARIN_TREE01_POTTED01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Needles",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Varlamore - Aldarin - Wooden - Wall posts",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -42594,7 +42614,7 @@
     "colorOverrides": [
       {
         "description": "Wood",
-        "colors": "h == 7 && s == 3",
+        "colors": "h <= 7 && s >= 1",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -42608,7 +42628,8 @@
     "uvScale": 0.7,
     "uvOrientation": 128,
     "objectIds": [
-      "DOTI_CELLAR_STAIR_EXIT_VILLA"
+      "DOTI_CELLAR_STAIR_EXIT_VILLA",
+      "DOTI_CELLAR_STAIR_EXIT_BACKSTAGE"
     ]
   },
   {
@@ -42858,16 +42879,61 @@
     "uvOrientation": 88,
     "uvScale": 0.6,
     "objectIds": [
-      "ALDARIN_RACK01_COSTUMES01"
+      "ALDARIN_RACK01_COSTUMES01",
+      "DOTI_DAMAGED_COSTUME_OP"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 4 && s == 3",
+        "colors": "h == 4 && s == 3 || h == 3 && s == 2",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.6
       }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Carpet - Costume Stand",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_RACK01_COSTUMES02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h <= 5 && s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Carpet - Sofa",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "CLAN_MEDIEVAL_SOFA"
+    ]
+  },
+  {
+    "description": "Aldarin - Carpet - Sofa",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALDARIN_TORCH01_CAVE01"
     ]
   }
 ]
