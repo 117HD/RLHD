@@ -4370,6 +4370,21 @@
     ]
   },
   {
+    "description": "Castle Wars - Rock Trap",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "CASTLEWARS_BLOCKED_TUNNEL_1",
+      "CASTLEWARS_BLOCKED_TUNNEL_2",
+      "ROCKSLIDE5",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_TOPLEFT",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_BOTTOMLEFT",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_BOTTOMRIGHT",
+      "CASTLEWARS_BLOCKED_TUNNEL_3_TOPRIGHT"
+    ]
+  },
+  {
     "description": "MORYTANIA_SLAYER_TOWER_WALLS",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
@@ -5059,7 +5074,6 @@
       "CAVEWALL_TOP_DARK",
       "CAVEWALL_TOP5_DARK",
       "CAVEWALLTUNNEL_UPASS_DOWN",
-      "CASTLEWARS_CAVEWALL_ROCKSLIDE",
       "CAVEWALL_FACE1_FOR_LEVER",
       "HEROES_GUILD_SHORTCUT_TO_FOUNTAIN",
       "HEROES_GUILD_SHORTCUT_FROM_FOUNTAIN",
@@ -5075,6 +5089,45 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 100
+  },
+  {
+    "description": "Castle Wars - Cave in Walls 1",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "upwardsNormals": true,
+    "receiveShadows": false,
+    "uvOrientation": 100,
+    "areas": [ "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_1" ],
+    "objectIds": [
+      "CASTLEWARS_CAVEWALL_ROCKSLIDE"
+    ],
+    "uvScale": 0.6
+  },
+  {
+    "description": "Castle Wars - Cave in Walls 2",
+    "baseMaterial": "GRUNGE_2",
+    "areas": [ "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_2" ],
+    "objectIds": [
+      "CASTLEWARS_CAVEWALL_ROCKSLIDE"
+    ],
+    "receiveShadows": false
+  },
+  {
+    "description": "Castle Wars - Cave in Walls 3",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "areas": [ "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_3" ],
+    "objectIds": [
+      "CASTLEWARS_CAVEWALL_ROCKSLIDE"
+    ],
+    "receiveShadows": false,
+    "upwardsNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "s == 4 && l == 2",
+        "baseMaterial": "GRUNGE_1_VERY_LIGHT",
+        "upwardsNormals": true,
+        "receiveShadows": false
+      }
+    ]
   },
   {
     "description": "Rounded Cave Wall Entrance with Tracks",

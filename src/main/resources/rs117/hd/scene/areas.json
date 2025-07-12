@@ -1993,6 +1993,37 @@
     ]
   },
   {
+    "name": "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_1",
+    "aabbs": [
+      [ 2399, 9514 ],
+      [ 2400, 9496 ],
+      [ 2411, 9502 ],
+      [ 2408, 9502 ],
+      [ 2390, 9500 ],
+      [ 2393, 9500 ]
+    ]
+  },
+  {
+    "name": "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_2",
+    "aabbs": [
+      [ 2403, 9496 ],
+      [ 2403, 9493 ],
+      [ 2411, 9505 ],
+      [ 2408, 9505 ],
+      [ 2402, 9511 ],
+      [ 2402, 9514 ],
+      [ 2390, 9503 ],
+      [ 2393, 9503 ]
+    ]
+  },
+  {
+    "name": "CASTLE_WARS_UNDERGROUND_CAVE_IN_WALLS_FIX_3",
+    "aabbs": [
+      [ 2399, 9511 ],
+      [ 2400, 9493 ]
+    ]
+  },
+  {
     "name": "CASTLE_WARS",
     "aabbs": [
       [ 2364, 3068, 2435, 3139 ],
