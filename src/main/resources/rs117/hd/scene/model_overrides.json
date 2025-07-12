@@ -16639,7 +16639,14 @@
   {
     "description": "Object - Sack with Hey or Grain",
     "baseMaterial": "BURLAP",
-    "objectIds": [ "SACK_GRAIN01_FULL01", "SACK_FULL", "VC_SACK_FULL_DWARF", "LUNAR_PIRATE_GRAIN_SACK", "SOTE_LLETYA_SACK_FULL", "MOURNING_SACK_FULL" ],
+    "objectIds": [
+      "LUNAR_PIRATE_GRAIN_SACK",
+      "MOURNING_SACK_FULL",
+      "SACK_FULL",
+      "SACK_GRAIN01_FULL01",
+      "SOTE_LLETYA_SACK_FULL",
+      "VC_SACK_FULL_DWARF"
+    ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "retainVanillaUvs": false
@@ -34287,20 +34294,20 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
+      "FORTIS_DOOR_L",
+      "FORTIS_DOOR_L_LOCKED",
+      "FORTIS_DOOR_L_NOOP",
+      "FORTIS_DOOR_L_OPEN",
       "FORTIS_DOOR_L_REVERSE",
       "FORTIS_DOOR_L_REVERSE_OPEN",
-      "FORTIS_DOOR_L",
-      "FORTIS_DOOR_L_NOOP",
-      "FORTIS_DOOR_L_LOCKED",
-      "FORTIS_DOOR_L_OPEN",
       "FORTIS_DOOR_R",
       "FORTIS_DOOR_R_LOCKED",
       "FORTIS_DOOR_R_NOOP",
       "FORTIS_DOOR_R_OPEN",
       "FORTIS_DOOR_R_REVERSE",
       "FORTIS_DOOR_R_REVERSE_OPEN",
-      "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN",
-      "VARLAMORE_THIEVING_HOUSE_DOOR_LOCKED"
+      "VARLAMORE_THIEVING_HOUSE_DOOR_LOCKED",
+      "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN"
     ],
     "colorOverrides": [
       {
@@ -43817,11 +43824,11 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
+      "AVIUM_SAVANNAH01_LOW02",
+      "AVIUM_SAVANNAH01_UPPER01",
       "AVIUM_SAVANNAH01_WALL01",
       "AVIUM_SAVANNAH01_WINDOW01",
-      "AVIUM_SAVANNAH01_UPPER01",
-      "AVIUM_SAVANNAH01_WINDOWUPPER01",
-      "AVIUM_SAVANNAH01_LOW02"
+      "AVIUM_SAVANNAH01_WINDOWUPPER01"
     ],
     "colorOverrides": [
       {
