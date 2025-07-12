@@ -10256,7 +10256,6 @@
     "description": "Ground Decoration - Rock - Tiny - Uncolored",
     "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
-      "CIVITAS_DUGUPSOIL02",
       "CIVITAS_DUGUPSOIL05",
       "ALDARIN_DUGUPSOIL05",
       "DUGUPSOIL2_VDARKBROWN",
@@ -10350,8 +10349,6 @@
       "POG_DUGUPSOIL_04",
       "POG_DUGUPSOIL_05",
       "POG_DUGUPSOIL_06",
-      "CIVITAS_DUGUPSOIL01",
-      "CIVITAS_DUGUPSOIL03",
       "CIVITAS_DUGUPSOIL04",
       "CIVITAS_DUGUPSOIL06",
       "ALDARIN_DUGUPSOIL04",
@@ -29109,16 +29106,6 @@
     "uvOrientation": 147
   },
   {
-    "description": "Varlamore - Objects - Stone - Stone block steps",
-    "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      "SKEWSTEPS_STONE02_CIVITAS01"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 777
-  },
-  {
     "description": "Varlamore - Objects - Stone - Short column railing",
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "objectIds": [
@@ -29570,7 +29557,9 @@
   },
   {
     "description": "Disable shadows for Colosseum entrance walls",
-    "objectIds": [ "HS_INVISWALL_ACTIVE", "WALLKIT_COLOSSEUM10_ARCH01", "WALLKIT_COLOSSEUM10_ARCH02", "WALLKIT_COLOSSEUM10_ARCH01_M", "WALLKIT_COLOSSEUM10_ARCH02_M" ],
+    "objectIds": [
+      "HS_INVISWALL_ACTIVE"
+    ],
     "receiveShadows": false,
     "flatNormals": true
   },
@@ -31025,7 +31014,7 @@
   {
     "description": "Wooden shelves - Triple - Filled with Crates",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [  "FARMING_SHELVES_PROPS_4", "FARMING_SHELVES_PROPS_5" ],
+    "objectIds": [ "FARMING_SHELVES_PROPS_4", "FARMING_SHELVES_PROPS_5" ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -33293,7 +33282,7 @@
         "uvScale": 0.4
       },
       {
-        "colors": ["h == 7", "h == 6 && s == 3 && l > 27"],
+        "colors": [ "h == 7", "h == 6 && s == 3 && l > 27" ],
         "description": "Books",
         "baseMaterial": "GRUNGE_3"
       }
@@ -36888,7 +36877,6 @@
     ],
     "colorOverrides": [
       {
-
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
@@ -38807,7 +38795,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 0", "h == 1" ],
+        "colors": [ "h == 0", "h == 1" ],
         "baseMaterial": "STONE_NORMALED"
       },
       {
@@ -46403,15 +46391,6 @@
     ]
   },
   {
-    "description": "Aldarin - Wooden - Stairs",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvOrientationY": 512,
-    "objectIds": [
-      "DOTI_VILLA_STAIRS"
-    ]
-  },
-  {
     "description": "Aldarin Manor - Metallic - chest",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
@@ -46509,7 +46488,8 @@
       "WALLKIT_COLOSSEUM10_ARCH01_M",
       "WALLKIT_COLOSSEUM10_ARCH02",
       "WALLKIT_COLOSSEUM10_ARCH02_M"
-    ]
+    ],
+    "flatNormals": true
   },
   {
     "description": "Aldarin - Wooden - Metallic - Large barrels",
@@ -46617,16 +46597,6 @@
       "DOTI_CLUE1",
       "DOTI_CLUE2",
       "DOTI_CLUE3"
-    ]
-  },
-  {
-    "description": "Aldarin - Wooden - Death on the Isle Clue - Stool",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "uvOrientationY": 512,
-    "uvType": "BOX",
-    "uvScale": 0.7,
-    "objectIds": [
-      "DOTI_CLUE5"
     ]
   },
   {
