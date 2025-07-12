@@ -21736,7 +21736,7 @@
     ]
   },
   {
-    "description": "SARADOMIN_PORTAL",
+    "description": "SARADOMIN_PORTAL_DIM",
     "height": 100,
     "alignment": "CENTER",
     "radius": 500,
@@ -21751,6 +21751,24 @@
     "range": 13.5,
     "objectIds": [
       "CASTLEWARS_SARADOMIN_TELE",
+      "CASTLEWARS_SARADOMIN_QUIT"
+    ]
+  },
+  {
+    "description": "SARADOMIN_PORTAL_BRIGHT",
+    "offset": [ 0, 100, -50 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 40,
+    "color": [
+      0,
+      80,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 13.5,
+    "objectIds": [
       "CASTLEWARS_SARADOMIN_EXIT"
     ]
   },

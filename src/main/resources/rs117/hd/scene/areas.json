@@ -1979,7 +1979,18 @@
   },
   {
     "name": "CASTLE_WARS_UNDERGROUND",
-    "regions": [ 9620 ]
+    "aabbs": [
+      [ 2356, 9473, 2444, 9535 ],
+      [ 2368, 9536, 2444, 9544 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "CASTLE_WARS_UNDERGROUND_SARADOMIN_PORTAL_FIX",
+    "aabbs": [
+      [ 2369, 9481, 2374, 9486 ],
+      [ 2368, 9487, 2373, 9487 ]
+    ]
   },
   {
     "name": "CASTLE_WARS",

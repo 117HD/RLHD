@@ -6251,6 +6251,17 @@
   },
   {
     "name": "CENTER_SARADOMIN_SIDE_DIRT_1",
+    "area": "CASTLE_WARS_UNDERGROUND_SARADOMIN_PORTAL_FIX",
+    "underlayIds": [
+      65,
+      66
+    ],
+    "groundMaterial": "DIRT",
+    "minSaturation": 2,
+    "maxSaturation": 6
+  },
+  {
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_1",
     "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
     "underlayIds": [
       98
