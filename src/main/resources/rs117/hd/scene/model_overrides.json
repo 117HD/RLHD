@@ -15393,7 +15393,7 @@
     "uvOrientation": 256,
     "colorOverrides": [
       {
-        "colors": "h == 6 && s == 4" ,
+        "colors": "h == 6 && s == 4",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -21058,7 +21058,17 @@
   {
     "description": "Bones - Medium",
     "baseMaterial": "BONE",
-    "objectIds": [ "GA_CAVE_BONES1", "GA_CAVE_BONES2" ,"GA_CAVE_BONES3", "MY2ARM_BONES1", "MY2ARM_BONES2", "MY2ARM_BONES3", "MY2ARM_BONES4", "NECROPOLIS_BONES1", "NECROPOLIS_BONES3" ],
+    "objectIds": [
+      "GA_CAVE_BONES1",
+      "GA_CAVE_BONES2",
+      "GA_CAVE_BONES3",
+      "MY2ARM_BONES1",
+      "MY2ARM_BONES2",
+      "MY2ARM_BONES3",
+      "MY2ARM_BONES4",
+      "NECROPOLIS_BONES1",
+      "NECROPOLIS_BONES3"
+    ],
     "uvType": "BOX",
     "uvOrientation": 768,
     "uvScale": 0.6
@@ -21096,9 +21106,30 @@
   {
     "description": "Weiss Salt Mine Walls",
     "baseMaterial": "DIRT_1",
-    "objectIds": [ "FRIS_MINE_WALL", "FRIS_MINE_WALL_TOP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_RAMP", "MY2ARM_CAVE_SQUEEZE", "MY2ARM_CAVE_EXIT_BLOCKED", "FRIS_MINE_WALL_COLUMN",
-      "FRIS_MINE_WALL_STEPS", "FRIS_WALL_RAMP_01", "FRIS_WALL_RAMP_02", "FRIS_MINE_WALL_STEPS_2", "FRIS_WALL_RAMP_02_MIRROR", "FRIS_WALL_RAMP_01_MIRROR", "FRIS_RAMP_02_MIRROR",
-      "FRIS_RAMP_MID_02", "FRIS_RAMP_02", "FRIS_RAMP_01_MIRROR", "FRIS_RAMP_MID_01", "FRIS_RAMP_01", "FRIS_MINE_WALL_COLUMN" , "FRIS_MINE_WALL_COLUMN_LADDERR1", "FRIS_MINE_WALL_COLUMN_LADDER" ],
+    "objectIds": [
+      "FRIS_MINE_WALL",
+      "FRIS_MINE_WALL_COLUMN",
+      "FRIS_MINE_WALL_COLUMN",
+      "FRIS_MINE_WALL_COLUMN_LADDER",
+      "FRIS_MINE_WALL_COLUMN_LADDERR1",
+      "FRIS_MINE_WALL_STEPS",
+      "FRIS_MINE_WALL_STEPS_2",
+      "FRIS_MINE_WALL_TOP",
+      "FRIS_RAMP_01",
+      "FRIS_RAMP_01_MIRROR",
+      "FRIS_RAMP_02",
+      "FRIS_RAMP_02_MIRROR",
+      "FRIS_RAMP_MID_01",
+      "FRIS_RAMP_MID_02",
+      "FRIS_WALL_RAMP_01",
+      "FRIS_WALL_RAMP_01_MIRROR",
+      "FRIS_WALL_RAMP_02",
+      "FRIS_WALL_RAMP_02_MIRROR",
+      "MY2ARM_CAVE_EXIT_BLOCKED",
+      "MY2ARM_CAVE_RAMP",
+      "MY2ARM_CAVE_RAMP",
+      "MY2ARM_CAVE_SQUEEZE"
+    ],
     "uvType": "BOX",
     "uvOrientation": 128,
     "uvScale": 0.4
@@ -21112,7 +21143,7 @@
     "uvScale": 0.4,
     "colorOverrides": [
       {
-        "colors": ["h == 10", "h == 5"],
+        "colors": [ "h == 10", "h == 5" ],
         "baseMaterial": "GRUNGE_3"
       }
     ]
@@ -23025,10 +23056,25 @@
     "description": "Plank Boat - Walls - Wooden - Hull",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "SHIPHIGHERWALL_LOW", "SHIPHULL", "SHIPHULL_FILLEDL", "SHIPHULL_FILLEDR",
-      "SHIP_FULLWALL", "SHIPHULL_DIAG", "SHIPHULL_FILLER", "STERN", "SHIPHULL_BROKEN",
-      "SHIPHULL_DAMAGED_L", "SHIPHULL_DAMAGED_R", "SHIPHULL_DAMAGED_MIDDLE_FLOOR", "TRAWLER_HULL_DEFAULT",
-      "TRAWLER_HULL_00", "TRAWLER_HULL_01", "TRAWLER_HULL_03", "TRAWLER_HULL_12", "RUDDER", "SARIM_SHIPLADDER_BRIDGE_LEDGE"
+      "RUDDER",
+      "SARIM_SHIPLADDER_BRIDGE_LEDGE",
+      "SHIPHIGHERWALL_LOW",
+      "SHIPHULL",
+      "SHIPHULL_BROKEN",
+      "SHIPHULL_DAMAGED_L",
+      "SHIPHULL_DAMAGED_MIDDLE_FLOOR",
+      "SHIPHULL_DAMAGED_R",
+      "SHIPHULL_DIAG",
+      "SHIPHULL_FILLEDL",
+      "SHIPHULL_FILLEDR",
+      "SHIPHULL_FILLER",
+      "SHIP_FULLWALL",
+      "STERN",
+      "TRAWLER_HULL_00",
+      "TRAWLER_HULL_01",
+      "TRAWLER_HULL_03",
+      "TRAWLER_HULL_12",
+      "TRAWLER_HULL_DEFAULT"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -23119,7 +23165,14 @@
   {
     "description": "Plank Boat - Wooden - Bowsprit",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "FRONTMAST", "FRONTMAST_FRONT_A", "FRONTMAST_FRONT_B", "FRONTMAST_BACK_B", "FRONTMAST_BACK_C", "FRONTMAST_BACK_D" ],
+    "objectIds": [
+      "FRONTMAST",
+      "FRONTMAST_FRONT_A",
+      "FRONTMAST_FRONT_B",
+      "FRONTMAST_BACK_B",
+      "FRONTMAST_BACK_C",
+      "FRONTMAST_BACK_D"
+    ],
     "uvType": "BOX",
     "uvScale": 0.9,
     "uvOrientation": 512
@@ -23127,7 +23180,14 @@
   {
     "description": "Plank Boat - Wooden - Ship's Ladder",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "SHIPLADDER_ANGLED", "SHIPLADDER_TOP_ANGLED", "SHIP_LADDER", "SHIP_LADDERTOP", "SHIP_LADDER_NOCLIMB", "SHIP_LADDERTOP_NOCLIMB"  ],
+    "objectIds": [
+      "SHIPLADDER_ANGLED",
+      "SHIPLADDER_TOP_ANGLED",
+      "SHIP_LADDER",
+      "SHIP_LADDERTOP",
+      "SHIP_LADDER_NOCLIMB",
+      "SHIP_LADDERTOP_NOCLIMB"
+    ],
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
@@ -26870,7 +26930,7 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationZ": 512,
-    "uvOrientationY": 512 ,
+    "uvOrientationY": 512,
     "flatNormals": true
   },
   {
@@ -31020,7 +31080,7 @@
       {
         "colors": [
           2, 7, 8, 12, 15, 16, 17, 18, 20,
-          21, 22, 24, 25, 26, 27, 28, 29 ,
+          21, 22, 24, 25, 26, 27, 28, 29,
           30, 31, 32, 33, 34, 35, 36, 37,
           39, 40, 41, 42, 43, 44, 46, 49
         ],
@@ -31534,7 +31594,7 @@
         "baseMaterial": "NONE"
       },
       {
-        "colors": [ "h == 30" ,"h == 32", "h == 34" ],
+        "colors": [ "h == 30", "h == 32", "h == 34" ],
         "baseMaterial": "MARBLE_1",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -33206,13 +33266,13 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 8" ,"h == 9", "h == 11", "h == 35", "h == 36" ],
+        "colors": [ "h == 8", "h == 9", "h == 11", "h == 35", "h == 36" ],
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvScale": 0.2,
         "uvType": "BOX"
       },
       {
-        "colors": [ "h == 4" ,"h == 6" ],
+        "colors": [ "h == 4", "h == 6" ],
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvScale": 0.2,
         "uvType": "BOX",
@@ -33385,7 +33445,7 @@
     "colorOverrides": [
       {
         "baseMaterial": "CARPET_LIGHT",
-        "colors": [ "h == 6 && s == 1" ],
+        "colors": "h == 6 && s == 1",
         "uvType": "BOX",
         "uvScale": 0.6
       },
@@ -33466,14 +33526,14 @@
     "colorOverrides": [
       {
         "baseMaterial": "PURE_BLACK",
-        "colors": [ "h == 0" ,"h == 2", "h == 10 && s != 0"],
+        "colors": [ "h == 0", "h == 2", "h == 10 && s != 0" ],
         "uvType": "BOX",
         "uvScale": 0.5
       },
       {
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
         "castShadows": false,
-        "colors": [ "h == 4" ,"h > 6" ],
+        "colors": [ "h == 4", "h > 6" ],
         "uvType": "BOX",
         "uvScale": 0.4
       }
@@ -33680,7 +33740,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 6 && l < 40"],
+        "colors": "h == 6 && l < 40",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8
@@ -35514,7 +35574,7 @@
     "colorOverrides": [
       {
         "description": "Metal Spikes",
-        "colors": "h == 0" ,
+        "colors": "h == 0",
         "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS"
       }
     ],
@@ -35530,7 +35590,7 @@
     "colorOverrides": [
       {
         "description": "Corpse parts",
-        "colors": "s == 1" ,
+        "colors": "s == 1",
         "baseMaterial": "BONE",
         "uvType": "BOX",
         "uvOrientation": 42,
@@ -38678,7 +38738,7 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "uvOrientation": 172 ,
+    "uvOrientation": 172,
     "objectIds": [
       "FAI_VARROCK_POSH_SINK"
     ],
