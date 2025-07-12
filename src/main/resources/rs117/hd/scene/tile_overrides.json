@@ -179,6 +179,21 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "overlayIds": [
+      14
+    ],
+    "underlayIds": [
+      48,
+      63,
+      64,
+      65,
+      66
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
     "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
     "area": "TUTORIAL_ISLAND_KITCHEN",
     "overlayIds": [
