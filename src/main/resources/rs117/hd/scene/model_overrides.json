@@ -41686,15 +41686,5 @@
     "objectIds": [
       "FLOORKIT_WOODEN02_DEFAULT01"
     ]
-  },
-  {
-    "description": "Varlamore - Fortis - Wooden – Plank Table",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvOrientation": 512,
-    "objectIds": [
-      "TABLE_WOODEN01_SMALL01",
-      "TABLE_WOODEN01_RECTANGULAR01"
-    ]
   }
 ]
