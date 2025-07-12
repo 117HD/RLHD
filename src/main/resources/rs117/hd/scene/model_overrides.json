@@ -35678,7 +35678,8 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
-      "WALLKIT_FORTIS03_PARAPET01"
+      "WALLKIT_FORTIS03_PARAPET01",
+      "WALLKIT_FORTIS03_PARAPET02"
     ]
   },
   {
@@ -35850,7 +35851,8 @@
       }
     ],
     "objectIds": [
-      "WALLKIT_CIVITAS01_FRAME01"
+      "WALLKIT_CIVITAS01_FRAME01",
+      "WALLKIT_CIVITAS03_MIDDLE01"
     ]
   },
   {
@@ -45845,12 +45847,14 @@
     "uvScale": 0.4,
     "uvOrientation": 343,
     "objectIds": [
+
       "ALDARIN_POTTED01_PALM01",
       "ALDARIN_POTTED01_PALM02",
       "ALDARIN_POTTED01_PALM03",
       "ALDARIN_POTTED01_FAN01",
       "ALDARIN_POTTED01_FAN02",
-      "ALDARIN_POTTED01_FAN03"
+      "ALDARIN_POTTED01_FAN03",
+      "CIVITAS_POTTED01_FAN03"
     ],
     "colorOverrides": [
       {
