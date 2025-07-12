@@ -43100,7 +43100,6 @@
       "PLANT_FERN01_TALL01",
       "PLANT_FERN01_TALL02",
       "PLANT_FERN01_TALL03"
-
     ]
   },
   {
@@ -43167,7 +43166,7 @@
     ]
   },
   {
-    "description": "Varlamore - Mastering Mixology - Wooden - Glass - Plant - Stone - Mixology Shelfs",
+    "description": "Varlamore - Mastering Mixology - Wooden - Glass - Plant - Stone - Mixology Shelves",
     "baseMaterial": "GRUNGE_2",
     "uvScale": 0.5,
     "uvType": "BOX",
@@ -43199,7 +43198,7 @@
         "uvScale": 0.5
       },
       {
-        "description": "Pestle and Morter",
+        "description": "Pestle and Mortar",
         "colors": "h == 7 && s == 1",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
