@@ -3552,6 +3552,46 @@
     "blended": false
   },
   {
+    "name": "Aldarin under stairs blending removal",
+    "area": "ALDARIN_UNDERSTAIR_BLENDING_FIX",
+    "overlayIds": [ 172 ],
+    "shiftLightness": -10,
+    "blended": false
+  },
+  {
+    "name": "Aldarin fake brick path",
+    "area": "ALDARIN",
+    "overlayIds": [ 399 ],
+    "blended": false,
+    "maxLightness": 38,
+    "minLightness": 22,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Dark tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 101 ],
+    "blended": false,
+    "shiftLightness": 1,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Medium tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 173 ],
+    "blended": false,
+    "shiftLightness": -2,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Light tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 172 ],
+    "blended": false,
+    "shiftLightness": 3,
+    "groundMaterial": "GRUNGE"
+  },
+  {
     "name": "Aldarin Forced Dirt Floor",
     "area": "ALDARIN_324_DIRT_FIX",
     "overlayIds": [ 324 ],
