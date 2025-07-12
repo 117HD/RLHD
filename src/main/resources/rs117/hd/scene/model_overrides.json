@@ -8507,7 +8507,8 @@
     "uvType": "BOX",
     "uvScale": 0.45,
     "objectIds": [
-      "FAI_VARROCK_FOUNTAIN_SPLASH"
+      "FAI_VARROCK_FOUNTAIN_SPLASH",
+      "ATES_FOUNTAIN"
     ],
     "colorOverrides": [
       {
@@ -42622,6 +42623,26 @@
     ]
   },
   {
+    "description": "Aldarin Manor wineceller - Wooden - bookshelf with Multicolored books - Angled",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DOTI_BOOKSHELF_OPEN_NOOP",
+      "DOTI_BOOKSHELF_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h <= 7 && s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 256,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Aldarin Manor Wineceller Stairs - Stone",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
@@ -42934,6 +42955,21 @@
     "uvScale": 0.6,
     "objectIds": [
       "ALDARIN_TORCH01_CAVE01"
+    ]
+  },
+  {
+    "description": "Stone wine Fountain",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "ALDARIN_FOUNTAIN01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
     ]
   }
 ]
