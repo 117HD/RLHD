@@ -37,22 +37,26 @@ public class CameraBuffer extends UniformBuffer {
 
 	public CameraBuffer() {
 		super("Camera", GL_DYNAMIC_DRAW);
+	}
 
-		for (int i = 0; i < characterPositions.length; i++)
-			characterPositionsPairs.add(new CharacterPositionPair());
+	private CharacterPositionPair getCharacterPositionPair() {
+		if(writtenCharacterPositions >= characterPositionsPairs.size()) {
+			CharacterPositionPair newPair = new CharacterPositionPair();
+			characterPositionsPairs.add(newPair);
+			return newPair;
+		}
+
+		return characterPositionsPairs.get(writtenCharacterPositions);
 	}
 
 	public void addCharacterPosition(int localX, int localZ, int modelRadius) {
-		if (writtenCharacterPositions >= characterPositions.length)
-			return; // We've exceeded the count
-
 		int writeIndex = writtenCharacterPositions;
-		CharacterPositionPair pair = characterPositionsPairs.get(writeIndex);
+		CharacterPositionPair pair = getCharacterPositionPair();
 		characterPositionsPairs.remove(writeIndex);
 
 		pair.x = localX;
 		pair.z = localZ;
-		pair.radius = modelRadius;
+		pair.radius = modelRadius * 1.25f;
 
 		if (writeIndex == 0) {
 			playerPosX = pair.x;
@@ -75,13 +79,14 @@ public class CameraBuffer extends UniformBuffer {
 
 	@Override
 	protected void preUpload() {
-		for(int i = 0; i < writtenCharacterPositions; i++) {
+		int writeCount = Math.min(writtenCharacterPositions, characterPositions.length);
+		for(int i = 0; i < writeCount; i++) {
 			CharacterPositionPair pair = characterPositionsPairs.get(i);
 			pair.dist = Float.MAX_VALUE;
 
 			characterPositions[i].set(pair.x, pair.z, pair.radius);
 		}
-		characterPositionCount.set(writtenCharacterPositions);
+		characterPositionCount.set(writeCount);
 		writtenCharacterPositions = 0;
 	}
 }
