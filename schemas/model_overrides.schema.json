@@ -250,6 +250,10 @@
               "type": "boolean",
               "description": "Whether normals should always point directly up. Defaults to false."
             },
+            "castShadows": {
+              "type": "boolean",
+              "description": "Whether the model cast shadows. Defaults to true."
+            },
             "receiveShadows": {
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
@@ -347,6 +351,10 @@
             "upwardsNormals": {
               "type": "boolean",
               "description": "Whether normals should always point directly up. Defaults to false."
+            },
+            "castShadows": {
+              "type": "boolean",
+              "description": "Whether the model cast shadows. Defaults to true."
             },
             "receiveShadows": {
               "type": "boolean",

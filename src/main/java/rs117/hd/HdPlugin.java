@@ -186,7 +186,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
-	private static final float COLOR_FILTER_FADE_DURATION = 3000;
+	private static final float COLOR_FILTER_FADE_DURATION = 500;
 
 	private static final int[] eightIntWrite = new int[8];
 
