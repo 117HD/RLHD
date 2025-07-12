@@ -37482,5 +37482,23 @@
     "objectIds": [
       "STONEPILLAR_LBROWN_WITHTORCH"
     ]
+  },
+  {
+    "description": "Aldarin - Metal wall Torches",
+    "height": 235,
+    "offset": [ -36, -17, 5 ],
+    "radius": 440,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "ALDARIN_TORCH01_CAVE01"
+    ]
   }
 ]
