@@ -7981,8 +7981,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POSH_TABLE",
-      "FAI_VARROCK_POSH_DININGTABLE_SMALL",
-      "ALDARIN_TABLE_DEFAULT01"
+      "FAI_VARROCK_POSH_DININGTABLE_SMALL"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -41841,6 +41840,8 @@
     "uvOrientation": 343,
     "objectIds": [
       "ALDARIN_POTTERY01_PLANT02A",
+      "ALDARIN_POTTERY01_PLANT0BC",
+      "ALDARIN_POTTERY01_PLANT02C",
       "ALDARIN_POTTERY01_PLANT03"
     ],
     "colorOverrides": [
@@ -42009,9 +42010,9 @@
   },
   {
     "description": "Aldarin - Cloth - Awning",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.3,
     "uvOrientation": 999,
     "objectIds": [
       "TENT_BAZAAR01_COVER01_ALDARIN01"
@@ -42044,6 +42045,148 @@
     "objectIds": [
       "WALLKIT_CIVITAS03_MIDDLE01_TALLER01"
 
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Plank tables",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALDARIN_TABLE_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Plank tables - With pottery",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 913,
+    "uvScale": 0.4,
+    "objectIds": [
+      "ALDARIN_TABLE_WINE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Aldarin - Wooden - Plank tables - With pottery filled with vegetables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 913,
+    "uvScale": 0.4,
+    "objectIds": [
+      "ALDARIN_TABLE_FOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Vegetables",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cloth - Plank market stall with red cover",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALDARIN_MARKET_STALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Canvas",
+        "baseMaterial": "BURLAP",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cloth - Plank market stall with red cover - Vegetables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 172,
+    "objectIds": [
+      "ALDARIN_MARKET_STALL_VEG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Canvas",
+        "baseMaterial": "BURLAP",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Vegetables",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Wooden - Cloth - Plank market stall with red cover - Gems",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 172,
+    "objectIds": [
+      "ALDARIN_MARKET_STALL_GEMS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Canvas",
+        "baseMaterial": "BURLAP",
+        "colors": "h == 2",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Scales",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.6
+      }
     ]
   }
 ]
