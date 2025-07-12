@@ -25695,7 +25695,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 0 && s == 0" ],
+        "colors": "h == 0 && s == 0",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
       }
@@ -25733,7 +25733,6 @@
       "FLOORKIT_BLOOD01_TILE23",
       "FLOORKIT_BLOOD01_TILE24",
       "FLOORKIT_BLOOD01_TILE25",
-      "FLOORKIT_MOON01_EMPTY01",
       "FLOORKIT_BLUE01_TILE01",
       "FLOORKIT_BLUE01_TILE01_MIRROR",
       "FLOORKIT_BLUE01_TILE02",
@@ -25751,29 +25750,30 @@
       "FLOORKIT_BLUE01_TILE08",
       "FLOORKIT_BLUE01_TILE08_MIRROR",
       "FLOORKIT_BLUE01_TILE09",
+      "FLOORKIT_MOON01_EMPTY01",
       "FLOORKIT_MOON01_FULL01",
       "FLOORKIT_MOON01_SEMI01",
       "FLOORKIT_MOON01_SEMI02",
       "FLOORKIT_MOON01_SEMI03",
       "FLOORKIT_MOON01_SEMI04",
       "FLOORKIT_MOON02_EMPTY01",
+      "FLOORKIT_MOON02_FULL01",
       "FLOORKIT_MOON02_SEMI01",
       "FLOORKIT_MOON02_SEMI02",
       "FLOORKIT_MOON02_SEMI03",
       "FLOORKIT_MOON02_SEMI04",
-      "FLOORKIT_MOON02_FULL01",
+      "FLOORKIT_MOON03_EMPTY01",
       "FLOORKIT_MOON03_FULL01",
       "FLOORKIT_MOON03_SEMI01",
       "FLOORKIT_MOON03_SEMI02",
       "FLOORKIT_MOON03_SEMI03",
       "FLOORKIT_MOON03_SEMI04",
-      "FLOORKIT_MOON03_EMPTY01",
+      "FLOORKIT_MOON04_EMPTY01",
+      "FLOORKIT_MOON04_FULL01",
       "FLOORKIT_MOON04_SEMI01",
       "FLOORKIT_MOON04_SEMI02",
       "FLOORKIT_MOON04_SEMI03",
-      "FLOORKIT_MOON04_SEMI04",
-      "FLOORKIT_MOON04_EMPTY01",
-      "FLOORKIT_MOON04_FULL01"
+      "FLOORKIT_MOON04_SEMI04"
     ]
   },
   {
@@ -25783,31 +25783,31 @@
     "uvScale": 0.5,
     "uvOrientation": 256,
     "objectIds": [
-      "FLOORKIT_ECLIPSE01_DIAGONAL01A",
-      "FLOORKIT_ECLIPSE01_STRAIGHT01D_MIRROR",
-      "FLOORKIT_ECLIPSE01_DIAGONAL02C",
       "FLOORKIT_ECLIPSE01_DIAGONAL01",
-      "FLOORKIT_ECLIPSE01_DIAGONAL03",
-      "FLOORKIT_ECLIPSE01_STRAIGHT01G",
-      "FLOORKIT_ECLIPSE01_STRAIGHT01E",
-      "FLOORKIT_ECLIPSE01_DIAGONAL02",
+      "FLOORKIT_ECLIPSE01_DIAGONAL01A",
       "FLOORKIT_ECLIPSE01_DIAGONAL01A_MIRROR",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02B",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02B_MIRROR",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02C",
       "FLOORKIT_ECLIPSE01_DIAGONAL02C_MIRROR",
-      "FLOORKIT_ECLIPSE01_TRIANGLE01",
+      "FLOORKIT_ECLIPSE01_DIAGONAL03",
+      "FLOORKIT_ECLIPSE01_DIAGONAL03A",
       "FLOORKIT_ECLIPSE01_HALF01",
       "FLOORKIT_ECLIPSE01_STRAIGHT01",
-      "FLOORKIT_ECLIPSE01_DIAGONAL02B_MIRROR",
-      "FLOORKIT_ECLIPSE01_TRIANGLE02A",
-      "FLOORKIT_ECLIPSE01_DIAGONAL03A",
-      "FLOORKIT_ECLIPSE01_STRAIGHT01B",
-      "FLOORKIT_ECLIPSE01_DIAGONAL02B",
-      "FLOORKIT_ECLIPSE01_TRIANGLE02",
-      "FLOORKIT_ECLIPSE01_TRIANGLE01A",
-      "FLOORKIT_ECLIPSE01_STRAIGHT01D",
       "FLOORKIT_ECLIPSE01_STRAIGHT01A",
-      "FLOORKIT_ECLIPSE01_STRAIGHT01F",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01B",
       "FLOORKIT_ECLIPSE01_STRAIGHT01C_MIRROR",
-      "FLOORKIT_ECLIPSE01_STRAIGHT01H"
+      "FLOORKIT_ECLIPSE01_STRAIGHT01D",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01D_MIRROR",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01E",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01F",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01G",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01H",
+      "FLOORKIT_ECLIPSE01_TRIANGLE01",
+      "FLOORKIT_ECLIPSE01_TRIANGLE01A",
+      "FLOORKIT_ECLIPSE01_TRIANGLE02",
+      "FLOORKIT_ECLIPSE01_TRIANGLE02A"
     ]
   },
   {
@@ -25822,20 +25822,20 @@
     "description": "Perilous Moons Statues",
     "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "objectIds": [
-      "STATUES_NAGUA01_BLOOD01",
-      "STATUES_NAGUA01_BLUE01",
-      "STATUES_NAGUA01_ECLIPSE01",
-      "STATUES_DUNGEON01_JAGUAR01",
-      "STATUES_DUNGEON01_JAGUAR02",
       "STATUES_DUNGEON01_EAGLE02",
       "STATUES_DUNGEON01_EAGLE03",
+      "STATUES_DUNGEON01_JAGUAR01",
+      "STATUES_DUNGEON01_JAGUAR02",
       "STATUES_DUNGEON01_SNAKE01",
+      "STATUES_NAGUA01_BLOOD01",
       "STATUES_NAGUA01_BLOOD01_PRISON01",
       "STATUES_NAGUA01_BLOOD01_PRISON02",
+      "STATUES_NAGUA01_BLUE01",
       "STATUES_NAGUA01_BLUE01_MOONLIGHT01",
       "STATUES_NAGUA01_BLUE01_MOONLIGHT02",
       "STATUES_NAGUA01_BLUE01_VERDANT01",
-      "STATUES_NAGUA01_BLUE01_VERDANT02"
+      "STATUES_NAGUA01_BLUE01_VERDANT02",
+      "STATUES_NAGUA01_ECLIPSE01"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -25870,17 +25870,17 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 0" ],
+        "colors": "h == 0",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientationX": 512
       },
       {
-        "colors": [ "h == 5" ],
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT"
       },
       {
-        "colors": [ "a < 255" ],
+        "colors": "a < 255",
         "baseMaterial": "NONE"
       }
     ]
@@ -25892,17 +25892,17 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 0" ],
+        "colors": "h == 0",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientationX": 512
       },
       {
-        "colors": [ "a < 255" ],
+        "colors": "a < 255",
         "baseMaterial": "GRAY_150"
       },
       {
-        "colors": [ "h == 5" ],
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
@@ -25917,7 +25917,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 6" ],
+        "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.6,
@@ -25978,7 +25978,10 @@
     "objectIds": [
       "PMOON_BOSS_BLOOD_POOL"
     ],
-    "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01", "VFX_DJINN_BLUE_MOON_PROJANIM_01" ]
+    "graphicsObjectIds": [
+      "VFX_DJINN_ICE_FLOOR_ATTACK_01",
+      "VFX_DJINN_BLUE_MOON_PROJANIM_01"
+    ]
   },
   {
     "description": "Perilous Moons - Darken Ripples in Earthbound",
@@ -26014,7 +26017,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 0" ],
+        "colors": "h == 0",
         "baseMaterial": "ROCK_3",
         "uvType": "BOX",
         "uvScale": 0.86
@@ -26129,7 +26132,7 @@
     "uvScale": 0.1,
     "colorOverrides": [
       {
-        "colors": [ "h == 42 && l > 45" ],
+        "colors": "h == 42 && l > 45",
         "baseMaterial": "GRAY_110"
       }
     ]
@@ -26192,26 +26195,26 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 0 && s == 5 && l < 11" ],
+        "colors": "h == 0 && s == 5 && l < 11",
         "baseMaterial": "GRAY_125"
       },
       {
-        "colors": [ "h == 0 && s > 2", "h == 26", "h == 36" ],
+        "colors": "h == 0 && s > 2 || h == 26 || h == 36",
         "baseMaterial": "GRAY_65"
       },
       {
-        "colors": [ "h == 5 &&  a > 108 && a < 254" ],
+        "colors": "h == 5 && a > 108 && a < 254",
         "baseMaterial": "LAVA",
         "uvOrientationY": 512,
         "uvScale": 0.75,
         "uvType": "BOX"
       },
       {
-        "colors": [ "a < 108" ],
+        "colors": "a < 108",
         "baseMaterial": "TRANSPARENT"
       },
       {
-        "colors": [ "h == 5 && a == 255" ],
+        "colors": "h == 5 && a == 255",
         "baseMaterial": "HD_MAGMA_1",
         "uvType": "BOX",
         "uvScale": 0.85
@@ -26237,7 +26240,7 @@
     "uvScale": 0.55,
     "colorOverrides": [
       {
-        "colors": [ "h == 0" ],
+        "colors": "h == 0",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "MODEL_YZ",
         "uvScale": 0.8
@@ -26413,7 +26416,7 @@
     "uvScale": 0.86,
     "colorOverrides": [
       {
-        "colors": [ "l == 2 && a == 255" ],
+        "colors": "l == 2 && a == 255",
         "baseMaterial": "GRAY_65"
       }
     ]

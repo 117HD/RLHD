@@ -36107,8 +36107,20 @@
   },
   {
     "description": "ECLIPSE_MOON",
-    "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_VIS", "PMOON_BOSS_ECLIPSE_CLONE", "PMOON_ECLIPSE_BOSS_INVIS" ],
-    "animationIds": [ "-1", "NPC_DJINN_02_MAGIC", "NPC_DJINN_02_MAGIC_02", "NPC_DJINN_02_SPAWN", "NPC_DJINN_02_TELEPORT_IDLE_APPEAR", "NPC_DJINN_02_MELEE", "NPC_DJINN_02_COMBO" ],
+    "npcIds": [
+      "PMOON_BOSS_ECLIPSE_MOON_VIS",
+      "PMOON_BOSS_ECLIPSE_CLONE",
+      "PMOON_ECLIPSE_BOSS_INVIS"
+    ],
+    "animationIds": [
+      "-1",
+      "NPC_DJINN_02_MAGIC",
+      "NPC_DJINN_02_MAGIC_02",
+      "NPC_DJINN_02_SPAWN",
+      "NPC_DJINN_02_TELEPORT_IDLE_APPEAR",
+      "NPC_DJINN_02_MELEE",
+      "NPC_DJINN_02_COMBO"
+    ],
     "color": "#cd7c00",
     "strength": 50,
     "radius": 1200,
@@ -36140,7 +36152,13 @@
   {
     "description": "BLOOD_MOON",
     "npcIds": [ "PMOON_BOSS_BLOOD_MOON_VIS" ],
-    "animationIds": [ "-1", "NPC_DJINN_01_MAGIC", "NPC_DJINN_01_SPAWN", "NPC_DJINN_01_TELEPORT_IDLE_APPEAR", "NPC_DJINN_01_COMBO" ],
+    "animationIds": [
+      "-1",
+      "NPC_DJINN_01_MAGIC",
+      "NPC_DJINN_01_SPAWN",
+      "NPC_DJINN_01_TELEPORT_IDLE_APPEAR",
+      "NPC_DJINN_01_COMBO"
+    ],
     "color": "#df002e",
     "strength": 10,
     "radius": 1400,
@@ -36151,7 +36169,13 @@
   {
     "description": "BLUE_MOON",
     "npcIds": [ "PMOON_BOSS_BLUE_MOON_VIS" ],
-    "animationIds": [ "-1", "NPC_DJINN_03_MAGIC", "NPC_DJINN_03_TELEPORT_IDLE_APPEAR", "NPC_DJINN_03_COMBO", "NPC_DJINN_03_MELEE" ],
+    "animationIds": [
+      "-1",
+      "NPC_DJINN_03_MAGIC",
+      "NPC_DJINN_03_TELEPORT_IDLE_APPEAR",
+      "NPC_DJINN_03_COMBO",
+      "NPC_DJINN_03_MELEE"
+    ],
     "color": "#3571a7",
     "strength": 20,
     "radius": 1200,
