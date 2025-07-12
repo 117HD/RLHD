@@ -1734,7 +1734,8 @@
   {
     "area": "EARTHBOUND_CAVERN",
     "sunAngles": [ 62, 210 ],
-    "waterColor": "#477d95"
+    "waterColor": "#477d95",
+    "waterCausticsStrength": 20
   },
   {
     "area": "RED_CHINCHOMPA_HUNTING_GROUND",

@@ -311,6 +311,7 @@ public enum Material {
 	GRAY_125(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.25f))),
 	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
 	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
+	GRAY_85(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.85f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
 	GRAY_70(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.70f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
@@ -798,6 +799,12 @@ public enum Material {
 	METALLIC_1_VERY_LIGHT(METALLIC_1, p -> p.setBrightness(2.6f)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
 		.setSpecular(0.7f, 120)),
+	METALLIC_1_SMOOTH(METALLIC_1, p -> p
+		.setTextureScale(1, 1, .1f)
+	),
+	METALLIC_1_SMOOTH_LIGHT(METALLIC_1_SMOOTH, p -> p
+		.setBrightness(1.8f)
+	),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
 		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)

@@ -22888,23 +22888,24 @@
     "uvScale": 0.57
   },
   {
-    "description": "Underground Pass - Spear Wall",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "description": "Spear Wall",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "SPEARWALL_ROW2",
-      "SPEARWALL_SKEW"
+      "SPEARWALL_SKEW",
+      "DEATH_TROLL_SPEARWALL"
     ],
     "colorOverrides": [
       {
         "colors": "h == 6",
-        "baseMaterial": "BARK",
+        "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.25
       }
     ]
   },
   {
-    "description": "Underground Pass - Spear Wall",
+    "description": "Underground Pass - SOTE Barrier",
     "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "npcIds": [
       "SOTE_UPASS_BARRIER"
@@ -25684,31 +25685,165 @@
   },
   {
     "description": "Perilous Moons Murals",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "TILE_SMALL_1",
+    "uvType": "BOX",
+    "uvOrientation": 256,
     "objectIds": [
       "ROR_GATE_BLOODMOON_CLOSED",
       "ROR_GATE_BLUEMOON_CLOSED",
       "ROR_GATE_SOLARECLIPSE_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Perilous Moons Boss Tiles",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 2,
+    "uvOrientation": 180,
+    "objectIds": [
+      "FLOORKIT_BLOOD01_TILE01",
+      "FLOORKIT_BLOOD01_TILE02",
+      "FLOORKIT_BLOOD01_TILE03",
+      "FLOORKIT_BLOOD01_TILE04",
+      "FLOORKIT_BLOOD01_TILE05",
+      "FLOORKIT_BLOOD01_TILE06",
+      "FLOORKIT_BLOOD01_TILE07",
+      "FLOORKIT_BLOOD01_TILE08",
+      "FLOORKIT_BLOOD01_TILE09",
+      "FLOORKIT_BLOOD01_TILE10",
+      "FLOORKIT_BLOOD01_TILE11",
+      "FLOORKIT_BLOOD01_TILE12",
+      "FLOORKIT_BLOOD01_TILE13",
+      "FLOORKIT_BLOOD01_TILE14",
+      "FLOORKIT_BLOOD01_TILE15",
+      "FLOORKIT_BLOOD01_TILE16",
+      "FLOORKIT_BLOOD01_TILE17",
+      "FLOORKIT_BLOOD01_TILE18",
+      "FLOORKIT_BLOOD01_TILE19",
+      "FLOORKIT_BLOOD01_TILE20",
+      "FLOORKIT_BLOOD01_TILE21",
+      "FLOORKIT_BLOOD01_TILE22",
+      "FLOORKIT_BLOOD01_TILE23",
+      "FLOORKIT_BLOOD01_TILE24",
+      "FLOORKIT_BLOOD01_TILE25",
+      "FLOORKIT_BLUE01_TILE01",
+      "FLOORKIT_BLUE01_TILE01_MIRROR",
+      "FLOORKIT_BLUE01_TILE02",
+      "FLOORKIT_BLUE01_TILE02_MIRROR",
+      "FLOORKIT_BLUE01_TILE03",
+      "FLOORKIT_BLUE01_TILE03_MIRROR",
+      "FLOORKIT_BLUE01_TILE04",
+      "FLOORKIT_BLUE01_TILE04_MIRROR",
+      "FLOORKIT_BLUE01_TILE05",
+      "FLOORKIT_BLUE01_TILE05_MIRROR",
+      "FLOORKIT_BLUE01_TILE06",
+      "FLOORKIT_BLUE01_TILE06_MIRROR",
+      "FLOORKIT_BLUE01_TILE07",
+      "FLOORKIT_BLUE01_TILE07_MIRROR",
+      "FLOORKIT_BLUE01_TILE08",
+      "FLOORKIT_BLUE01_TILE08_MIRROR",
+      "FLOORKIT_BLUE01_TILE09",
+      "FLOORKIT_MOON01_EMPTY01",
+      "FLOORKIT_MOON01_FULL01",
+      "FLOORKIT_MOON01_SEMI01",
+      "FLOORKIT_MOON01_SEMI02",
+      "FLOORKIT_MOON01_SEMI03",
+      "FLOORKIT_MOON01_SEMI04",
+      "FLOORKIT_MOON02_EMPTY01",
+      "FLOORKIT_MOON02_FULL01",
+      "FLOORKIT_MOON02_SEMI01",
+      "FLOORKIT_MOON02_SEMI02",
+      "FLOORKIT_MOON02_SEMI03",
+      "FLOORKIT_MOON02_SEMI04",
+      "FLOORKIT_MOON03_EMPTY01",
+      "FLOORKIT_MOON03_FULL01",
+      "FLOORKIT_MOON03_SEMI01",
+      "FLOORKIT_MOON03_SEMI02",
+      "FLOORKIT_MOON03_SEMI03",
+      "FLOORKIT_MOON03_SEMI04",
+      "FLOORKIT_MOON04_EMPTY01",
+      "FLOORKIT_MOON04_FULL01",
+      "FLOORKIT_MOON04_SEMI01",
+      "FLOORKIT_MOON04_SEMI02",
+      "FLOORKIT_MOON04_SEMI03",
+      "FLOORKIT_MOON04_SEMI04"
+    ]
+  },
+  {
+    "description": "Perilous Moons Eclipse Tiles",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FLOORKIT_ECLIPSE01_DIAGONAL01",
+      "FLOORKIT_ECLIPSE01_DIAGONAL01A",
+      "FLOORKIT_ECLIPSE01_DIAGONAL01A_MIRROR",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02B",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02B_MIRROR",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02C",
+      "FLOORKIT_ECLIPSE01_DIAGONAL02C_MIRROR",
+      "FLOORKIT_ECLIPSE01_DIAGONAL03",
+      "FLOORKIT_ECLIPSE01_DIAGONAL03A",
+      "FLOORKIT_ECLIPSE01_HALF01",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01A",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01B",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01C_MIRROR",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01D",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01D_MIRROR",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01E",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01F",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01G",
+      "FLOORKIT_ECLIPSE01_STRAIGHT01H",
+      "FLOORKIT_ECLIPSE01_TRIANGLE01",
+      "FLOORKIT_ECLIPSE01_TRIANGLE01A",
+      "FLOORKIT_ECLIPSE01_TRIANGLE02",
+      "FLOORKIT_ECLIPSE01_TRIANGLE02A"
+    ]
+  },
+  {
+    "description": "Perilous Moons Eclipse Lava Pillar Trim",
+    "baseMaterial": "GRAY_150",
+    "upwardsNormals": true,
+    "objectIds": [
+      "DUNGEONKIT_LAVA01_GRADIENT01"
     ]
   },
   {
     "description": "Perilous Moons Statues",
-    "baseMaterial": "MARBLE_2_GLOSS",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
     "objectIds": [
-      "STATUES_NAGUA01_BLOOD01",
-      "STATUES_NAGUA01_BLUE01",
-      "STATUES_NAGUA01_ECLIPSE01",
-      "STATUES_DUNGEON01_JAGUAR01",
-      "STATUES_DUNGEON01_JAGUAR02",
       "STATUES_DUNGEON01_EAGLE02",
       "STATUES_DUNGEON01_EAGLE03",
+      "STATUES_DUNGEON01_JAGUAR01",
+      "STATUES_DUNGEON01_JAGUAR02",
       "STATUES_DUNGEON01_SNAKE01",
+      "STATUES_NAGUA01_BLOOD01",
       "STATUES_NAGUA01_BLOOD01_PRISON01",
       "STATUES_NAGUA01_BLOOD01_PRISON02",
+      "STATUES_NAGUA01_BLUE01",
       "STATUES_NAGUA01_BLUE01_MOONLIGHT01",
       "STATUES_NAGUA01_BLUE01_MOONLIGHT02",
       "STATUES_NAGUA01_BLUE01_VERDANT01",
       "STATUES_NAGUA01_BLUE01_VERDANT02",
+      "STATUES_NAGUA01_ECLIPSE01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Perilous Moons Statues Darker",
+    "baseMaterial": "MARBLE_2_DARK",
+    "objectIds": [
       "PMOON_ENTRY_STATUE_BLOOD",
       "PMOON_ENTRY_STATUE_BLUE",
       "PMOON_ENTRY_STATUE_ECLIPSE"
@@ -25726,17 +25861,68 @@
     "uvScale": 0.7
   },
   {
-    "description": "Perilous Moons Braziers and Chains",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Perilous Moons Stone Braziers",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "DRAGON_SLAYER_QIP_BROKEN_CHAINS",
       "BRAZIER_DUNGEON01_PMOON01",
       "BRAZIER_DUNGEON01_PMOON02",
-      "BRAZIER_DUNGEON01_PMOON03",
-      "BRAZIER_DUNGEON01_PMOON04",
-      "BRAZIER_DUNGEON01_PMOON04",
+      "BRAZIER_DUNGEON01_PMOON03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Perilous Moons Stone Braziers",
+    "objectIds": [
+      "BRAZIER_DUNGEON01_PMOON04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Perilous Moons Chains",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "DRAGON_SLAYER_QIP_BROKEN_CHAINS",
       "ROR_CHAIN_PRISON01",
       "ROR_SHACKLES_PRISON01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationX": 512
+      }
     ]
   },
   {
@@ -25768,8 +25954,6 @@
       "PLANT_FERN_MOONLIGHT02",
       "PLANT_FERN_MOONLIGHT03",
       "PLANT_FERN_MOONLIGHT04",
-      "ROR_VINE01_HANGING01",
-      "ROR_VINE01_HANGING01_PRISON01",
       "ROR_IVY01_LARGE01",
       "ROR_IVY01_MEDIUM01",
       "ROR_IVY01_MEDIUM01_DARK01",
@@ -25777,6 +25961,34 @@
       "ROR_IVY01_SMALL01_DARK01",
       "FLORA_MUSHROOM01_IMCANDO01",
       "FLORA_MUSHROOM01_IMCANDO02"
+    ]
+  },
+  {
+    "description": "Perilous Moons Hanging Vines - Remove Shadows",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "castShadows": false,
+    "objectIds": [
+      "ROR_VINE01_HANGING01",
+      "ROR_VINE01_HANGING01_PRISON01"
+    ]
+  },
+  {
+    "description": "Perilous Moons Hide Shadows on Magic Attacks",
+    "castShadows": false,
+    "objectIds": [
+      "PMOON_BOSS_BLOOD_POOL"
+    ],
+    "graphicsObjectIds": [
+      "VFX_DJINN_ICE_FLOOR_ATTACK_01",
+      "VFX_DJINN_BLUE_MOON_PROJANIM_01"
+    ]
+  },
+  {
+    "description": "Perilous Moons - Darken Ripples in Earthbound",
+    "areas": [ "EARTHBOUND_CAVERN" ],
+    "baseMaterial": "GRAY_35",
+    "objectIds": [
+      "DWARF_RIPPLE"
     ]
   },
   {
@@ -25798,8 +26010,23 @@
     "uvScale": 0.9
   },
   {
+    "description": "Streambound Cavern Waterfall",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "WATERFALL_CAVE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.86
+      }
+    ]
+  },
+  {
     "description": "Perilous Moons Monolith and Gates",
-    "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "baseMaterial": "METALLIC_1_SMOOTH_LIGHT",
     "objectIds": [
       "PMOON_ICOSAHEDRON",
       "ROR_GATE_WANMOON_CLOSED",
@@ -25853,6 +26080,16 @@
     "uvScale": 0.75
   },
   {
+    "description": "Perilous Moons Ancient Shrine Chest",
+    "baseMaterial": "MARBLE_1",
+    "objectIds": [
+      "CHEST_SUN01_DEFAULT01",
+      "CHEST_SUN01_OPEN01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
     "description": "Perilous Moons Ancient Shrine stone chips, Hide them they are ugly here",
     "hide": true,
     "areas": [ "PERILOUS_MOONS_REWARD_ROOM" ],
@@ -25873,6 +26110,31 @@
       "ICE03_SHARD01_STALAGMITE04",
       "ICE03_SHARD01_STALAGMITE05",
       "ICE03_SHARD01_STALAGMITE06"
+    ]
+  },
+  {
+    "description": "Blue Moon Arena Disarm Ice Blocks - Brighten",
+    "baseMaterial": "GRAY_150",
+    "npcIds": [
+      "PMOON_BOSS_ICICLE_UNCRACKED",
+      "PMOON_BOSS_ICICLE_CRACKED"
+    ]
+  },
+  {
+    "description": "Blue Moon Arena Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "PMOON_BOSS_BRAZIER_LIT",
+      "PMOON_BOSS_BRAZIER_UNLIT"
+    ],
+    "uvType": "MODEL_XY",
+    "uvOrientation": 512,
+    "uvScale": 0.1,
+    "colorOverrides": [
+      {
+        "colors": "h == 42 && l > 45",
+        "baseMaterial": "GRAY_110"
+      }
     ]
   },
   {
@@ -25918,7 +26180,8 @@
   },
   {
     "description": "Perilous Moons - Dragon Head Wall Fountains",
-    "baseMaterial": "GRAY_65",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
     "objectIds": [
       "ROR_TEMPLE_WATERFALL01",
       "ROR_TEMPLE_WATERFALL01_ODD01",
@@ -25929,16 +26192,60 @@
       "ROR_TEMPLE_WATERFALL01_LAVA01",
       "ROR_TEMPLE_WATERFALL01_LAVA01_ODD01",
       "FORTIS_CRYPT_FOUNTAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 5 && l < 11",
+        "baseMaterial": "GRAY_125"
+      },
+      {
+        "colors": "h == 0 && s > 2 || h == 26 || h == 36",
+        "baseMaterial": "GRAY_65"
+      },
+      {
+        "colors": "h == 5 && a > 108 && a < 254",
+        "baseMaterial": "LAVA",
+        "uvOrientationY": 512,
+        "uvScale": 0.75,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 108",
+        "baseMaterial": "TRANSPARENT"
+      },
+      {
+        "colors": "h == 5 && a == 255",
+        "baseMaterial": "HD_MAGMA_1",
+        "uvType": "BOX",
+        "uvScale": 0.85
+      }
     ]
   },
   {
-    "description": "Perilous Moons - Camp - Barrier and Stove",
+    "description": "Perilous Moons - Camp - Stove",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "PMOON_RANGE",
+      "PMOON_RANGE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Perilous Moons - Camp - Barrier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
       "PMOON_BARRIER_FABRIC01_SHORT01"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.8
+      }
+    ]
   },
   {
     "description": "Perilous Moons - Camp - Supply Crates",
@@ -25947,7 +26254,8 @@
       "PMOON_SUPPLY_CRATE"
     ],
     "uvType": "BOX",
-    "uvOrientation": 520
+    "uvOrientationX": 520,
+    "uvOrientationY": 600
   },
   {
     "description": "Hunter Guild cave, Cam Torum, Perilous Moons, Giants Den and Escape Caves - Walls, Rocky objects and Stairs",
@@ -26016,7 +26324,6 @@
       "ROCK_LAVA01_MEDIUM03",
       "ROCK_LAVA01_SMALL01",
       "ROCK_LAVA01_SMALL02",
-      "PMOON_TELEBOX_CAVE",
       "VARLAMORE_MINING_ROCK",
       "VARLAMORE_MINING_ROCK_EMPTY",
       "VARLAMORE_MINING_ROCK02",
@@ -26051,7 +26358,12 @@
       "STEPS_ROR_CORNER01",
       "STEPS_ROR_CORNER01_DARK02",
       "STEPS_ROR_CORNER02_DARK02",
-      "PMOON_BOSS_EXIT_STAIRS"
+      "PMOON_BOSS_EXIT_STAIRS",
+      "ROR_TEMPLE_CRUMBLE02_DARK01",
+      "ROR_TEMPLE_CRUMBLE01_DARK01",
+      "ROR_TEMPLE01_LOW01_DARK01",
+      "STEPS_ROR_CORNER01_DARK01",
+      "DECOKIT_TILES_BROKEN01"
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -26091,6 +26403,21 @@
       {
         "colors": "l > 63",
         "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild cave, Cam Torum, Perilous Moons, Giants Den and Escape Caves - Walls, Rocky objects and Stairs",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "PMOON_TELEBOX_CAVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "l == 2 && a == 255",
+        "baseMaterial": "GRAY_65"
       }
     ]
   },
@@ -26299,6 +26626,8 @@
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
     "uvType": "BOX",
+    "uvOrientationY": 1,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": "h == 0 && s == 0",

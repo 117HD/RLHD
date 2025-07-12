@@ -4665,34 +4665,57 @@
   },
   {
     "name": "Perilous Moons Ancient Prison, Sun Tiles Fix",
-    "area": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON_SUN_BLEND_FIX",
     "overlayIds": [ 80 ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
   },
   {
-    "name": "EARTHBOUND_CAVERN_WATER_DARKER",
-    "area": "EARTHBOUND_CAVERN",
-    "overlayIds": [ 201 ],
-    "waterType": "DARK_BLUE_WATER"
+    "name": "EARTHBOUND_CAVERN_WATER_FIX",
+    "area": "EARTHBOUND_CAVERN_WATER_FIX",
+    "underlayIds": [ 72, 105 ],
+    "shiftLightness": 10,
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "EARTHBOUND_CAVERN_WATER",
     "area": "EARTHBOUND_CAVERN",
     "overlayIds": [ 158, 181, 201 ],
-    "waterType": "PLAIN_WATER"
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "area": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "underlayIds": [ 56, 72 ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7,
+    "blended": false
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_COMPLEX",
+    "area": "EARTHBOUND_CAVERN",
+    "replacements": {
+      "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
+      "EARTHBOUND_CAVERN_GRASS": "s > 2",
+      "EARTHBOUND_CAVERN_ROCK": "s < 3"
+    }
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_ROCK_TOP",
+    "underlayIds": [ 54, 105 ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "minLightness": 4
   },
   {
     "name": "EARTHBOUND_CAVERN_GRASS",
-    "area": "EARTHBOUND_CAVERN",
     "underlayIds": [ 54, 105 ],
     "groundMaterial": "GRASS_1"
   },
   {
     "name": "EARTHBOUND_CAVERN_ROCK",
-    "area": "EARTHBOUND_CAVERN",
     "underlayIds": [ 56, 72 ],
-    "groundMaterial": "ROCKY_CAVE_FLOOR"
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7
   },
   {
     "name": "STREAMBOUND_CAVERN_GRASS",
@@ -4727,8 +4750,8 @@
   },
   {
     "name": "THE_BLUE_MOON_ENTRANCE",
-    "area": "THE_BLUE_MOON",
-    "underlayIds": [ 73 ],
+    "area": "THE_BLUE_MOON_ENTRANCE",
+    "underlayIds": [ 56, 73, 205, 206 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {
@@ -4747,7 +4770,7 @@
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
     "area": "THE_BLOOD_MOON_ENTRANCE",
-    "underlayIds": [ 118 ],
+    "underlayIds": [ 56, 118 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {
