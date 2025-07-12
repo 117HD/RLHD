@@ -26705,20 +26705,20 @@
     ]
   },
   {
-  "description": "RAGING_ECHOES_HOME_TELEPORT_MIDDLE",
-  "height": 25,
-  "alignment": "CENTER",
-  "radius": 175,
-  "strength": 20,
-  "color": "#DB2090",
-  "type": "FLICKER",
-  "duration": 0,
-  "range": 20,
-  "fadeInDuration": 500,
-  "fadeOutDuration": 100,
-  "graphicsObjectIds": [
-    "VFX_LEAGUE_5_HOME_TELEPORT_03"
-  ]
+    "description": "RAGING_ECHOES_HOME_TELEPORT_MIDDLE",
+    "height": 25,
+    "alignment": "CENTER",
+    "radius": 175,
+    "strength": 20,
+    "color": "#DB2090",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [
+      "VFX_LEAGUE_5_HOME_TELEPORT_03"
+    ]
   },
   {
     "description": "RAGING_ECHOES_HOME_TELEPORT_END_BOTTOM",
