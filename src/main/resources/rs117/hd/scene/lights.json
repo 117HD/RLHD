@@ -20122,7 +20122,7 @@
     "height": 230,
     "offset": [ 10, 0, 55 ],
     "alignment": "CENTER",
-    "radius": 450,
+    "radius": 350,
     "strength": 12.5,
     "color": [
       252,
@@ -20294,7 +20294,7 @@
   },
   {
     "description": "Varrock Wall Candelabra",
-    "offset": [ 0, 215 , 0 ],
+    "offset": [ 0, 215, 0 ],
     "radius": 275,
     "strength": 5.5,
     "color": [
@@ -20311,7 +20311,7 @@
   },
   {
     "description": "Varrock Lantern",
-    "offset": [ -10, 155 , 0 ],
+    "offset": [ -10, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
     "color": [
@@ -20416,6 +20416,41 @@
       "_100_DAVE_CANDLES_2"
     ],
     "offset": [ 3, 0, 40 ]
+  },
+  {
+    "description": "Altar Candles",
+    "offset": [ 0, 140, -33 ],
+    "radius": 180,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CANDLES_1",
+      "CANDLES_2"
+    ]
+  },
+  {
+    "description": "Altar Candles Mirror",
+    "offset": [ 0, 140, 33 ],
+    "radius": 180,
+    "strength": 7,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "CANDLES_2_MIRROR"
+    ]
   },
   {
     "description": "LANTERN",
@@ -21720,7 +21755,7 @@
   },
   {
     "description": "SOUL_WARS_BLUE_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
@@ -21738,7 +21773,7 @@
   },
   {
     "description": "SOUL_WARS_RED_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
@@ -21757,7 +21792,7 @@
   },
   {
     "description": "SOUL_WARS_CLAN_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 15,
@@ -21775,7 +21810,7 @@
   },
   {
     "description": "SOUL_WARS_MAIN_BARRIER",
-    "height": 70,
+    "offset": [ 0, 70, 37 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 10,
@@ -35770,32 +35805,32 @@
   {
     "description": "Eclipse Moon Entrance",
     "worldX": 1510,
-    "worldY": 9673,
+    "worldY": 9675,
     "plane": 1,
-    "radius": 750,
-    "strength": 15,
+    "radius": 800,
+    "strength": 17,
     "color": "#ff8000",
-    "offset": [ 70, 250, 0 ]
+    "offset": [ 70, 300, 20 ]
   },
   {
     "description": "Blue Moon Entrance",
-    "worldX": 1405,
+    "worldX": 1403,
     "worldY": 9704,
     "plane": 0,
     "radius": 1200,
-    "strength": 15,
+    "strength": 17,
     "color": "#0097ff",
-    "offset": [ 100, 350, 0 ]
+    "offset": [ 0, 350, 0 ]
   },
   {
     "description": "Blood Moon Entrance",
-    "worldX": 1388,
+    "worldX": 1384,
     "worldY": 9591,
     "plane": 0,
     "radius": 1600,
     "strength": 15,
     "color": "#de0000",
-    "offset": [ 0, 350, 70 ]
+    "offset": [ 0, 450, 70 ]
   },
   {
     "description": "ANTECHAMBER_CEILING_LIGHT",
@@ -35850,28 +35885,202 @@
     "radius": 600
   },
   {
-    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_MAIN",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 3.5,
-    "radius": 1000,
-    "offset": [ 0, 257, 0 ]
+    "strength": 8.5,
+    "radius": 700,
+    "offset": [ 0, 227, 0 ]
   },
   {
-    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS",
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
     "color": "#ffa41b",
-    "strength": 250,
-    "radius": 100,
-    "offset": [ 15, 287, -15 ]
+    "strength": 400,
+    "radius": 75,
+    "offset": [ -15, 287, -15 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_2",
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
+    "color": "#ffa41b",
+    "strength": 400,
+    "radius": 75,
+    "offset": [ 15, 287, 15 ]
+  },
+  {
+    "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_TOP",
+    "objectIds": [ "BRAZIER_DUNGEON01_PMOON04" ],
+    "color": "#ffa41b",
+    "strength": 400,
+    "radius": 75,
+    "offset": [ 0, 357, 0 ]
+  },
+  {
+    "description": "Eclipse Moon Lava North",
+    "worldX": 1488,
+    "worldY": 9648,
+    "plane": 0,
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Pillar 1",
+    "worldX": 1479,
+    "worldY": 9638,
+    "plane": 0,
+    "offset": [ 0, 20, -75 ],
+    "alignment": "CENTER",
+    "radius": 800,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Pillar 2",
+    "worldX": 1482,
+    "worldY": 9641,
+    "plane": 0,
+    "offset": [ 100, 0, 0 ],
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 20,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Pillar 3",
+    "worldX": 1495,
+    "worldY": 9641,
+    "plane": 0,
+    "offset": [ 50, 20, 0 ],
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 20,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain North 1",
+    "offset": [ 0, 50, 60 ],
+    "worldY": 9629,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain North 2",
+    "offset": [ 0, 467, 100 ],
+    "worldY": 9629,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain South 1",
+    "offset": [ 0, 50, -60 ],
+    "worldY": 9635,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava Fountain South 2",
+    "offset": [ 0, 467, -100 ],
+    "worldY": 9635,
+    "worldX": 1465,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      253.63197,
+      172.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10
+  },
+  {
+    "description": "Eclipse Moon Lava General",
+    "offset": [ 0, 10, 0 ],
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 30,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 10,
+    "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
   },
   {
     "description": "SULPHUR_NAGA",
     "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
-    "color": "#cd7c00",
+    "color": "#F9BE00",
     "strength": 20,
-    "radius": 600,
-    "offset": [ 0, 47, 0 ]
+    "radius": 350,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "offset": [ 0, 150, 20 ]
   },
   {
     "description": "PERILOUS_MOONS_COOKING_STOVE",
@@ -35882,12 +36091,22 @@
     "offset": [ 0, 42, 0 ]
   },
   {
-    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES",
+    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES_LARGER",
+    "areas": [ "STREAMBOUND_CAVERN_ROOF_LIGHTS_LARGER" ],
     "objectIds": [ "LIGHT_GODRAY02_SMALL01_MOONLIGHT01" ],
-    "radius": 1300,
+    "radius": 1250,
     "strength": 25,
     "color": "#ffffff",
     "offset": [ 0, 540, 0 ]
+  },
+  {
+    "description": "PERILOUS_MOONS_SURFACE_OPENING_VINES_SMALLER_OFFSET",
+    "areas": [ "STREAMBOUND_CAVERN_ROOF_LIGHTS_SMALLER" ],
+    "objectIds": [ "LIGHT_GODRAY02_SMALL01_MOONLIGHT01" ],
+    "radius": 800,
+    "strength": 15,
+    "color": "#ffffff",
+    "offset": [ 70, 240, 100 ]
   },
   {
     "description": "CAM_TORUM_FORGE",
@@ -35941,35 +36160,105 @@
   },
   {
     "description": "ECLIPSE_MOON",
-    "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_VIS", "PMOON_BOSS_ECLIPSE_CLONE" ],
+    "npcIds": [
+      "PMOON_BOSS_ECLIPSE_MOON_VIS",
+      "PMOON_BOSS_ECLIPSE_CLONE",
+      "PMOON_ECLIPSE_BOSS_INVIS"
+    ],
+    "animationIds": [
+      "-1",
+      "NPC_DJINN_02_MAGIC",
+      "NPC_DJINN_02_MAGIC_02",
+      "NPC_DJINN_02_SPAWN",
+      "NPC_DJINN_02_TELEPORT_IDLE_APPEAR",
+      "NPC_DJINN_02_MELEE",
+      "NPC_DJINN_02_COMBO"
+    ],
     "color": "#cd7c00",
     "strength": 50,
     "radius": 1200,
-    "offset": [ 0, 47, 0 ],
-    "fadeInDuration": 150
+    "offset": [ 0, 60, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 600
+  },
+  {
+    "description": "ECLIPSE_PROJECTILE",
+    "projectileIds": [ "VFX_DJINN_ECLIPSE_MOON_PROJANIM_01" ],
+    "color": "#cd7c00",
+    "strength": 20,
+    "radius": 1100,
+    "offset": [ 0, -20, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 600
+  },
+  {
+    "description": "ECLIPSE_SHIELD",
+    "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_SHIELD" ],
+    "animationIds": [ "-1", "VFX_DJINN_ECLIPSE_MOON_SPAWN_01" ],
+    "color": "#cd7c00",
+    "strength": 50,
+    "radius": 1300,
+    "offset": [ 0, 100, 0 ],
+    "fadeOutDuration": 800,
+    "fadeInDuration": 800
   },
   {
     "description": "BLOOD_MOON",
     "npcIds": [ "PMOON_BOSS_BLOOD_MOON_VIS" ],
+    "animationIds": [
+      "-1",
+      "NPC_DJINN_01_MAGIC",
+      "NPC_DJINN_01_SPAWN",
+      "NPC_DJINN_01_TELEPORT_IDLE_APPEAR",
+      "NPC_DJINN_01_COMBO"
+    ],
     "color": "#df002e",
     "strength": 10,
-    "radius": 1200,
-    "offset": [ 0, 47, 0 ],
+    "radius": 1400,
+    "offset": [ 0, 50, 0 ],
     "fadeInDuration": 300,
-    "spawnDelay": 600
+    "fadeOutDuration": 600
   },
   {
     "description": "BLUE_MOON",
     "npcIds": [ "PMOON_BOSS_BLUE_MOON_VIS" ],
+    "animationIds": [
+      "-1",
+      "NPC_DJINN_03_MAGIC",
+      "NPC_DJINN_03_TELEPORT_IDLE_APPEAR",
+      "NPC_DJINN_03_COMBO",
+      "NPC_DJINN_03_MELEE"
+    ],
     "color": "#3571a7",
     "strength": 20,
     "radius": 1200,
-    "offset": [ 0, 47, 0 ],
+    "offset": [ 0, 60, 0 ],
     "fadeInDuration": 300,
-    "spawnDelay": 600
+    "fadeOutDuration": 100,
+    "spawnDelay": 550
   },
   {
-    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS",
+    "description": "BLUE_MOON_ARENA_BRAZIER_EXTINGUISH_ATTACK",
+    "projectileIds": [ "VFX_DJINN_BLUE_MOON_PROJANIM_01" ],
+    "color": "#3571a7",
+    "strength": 10,
+    "radius": 1100,
+    "offset": [ 0, 10, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "BLUE_MOON_ARENA_BRAZIER_DISARM",
+    "projectileIds": [ "VFX_DJINN_BLUE_MAGIC_PROJECTILE_01", "VFX_DJINN_BLUE_MAGIC_PROJECTILE_02" ],
+    "color": "#3571a7",
+    "strength": 7.5,
+    "radius": 450,
+    "offset": [ 0, -30, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300
+  },
+  {
+    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS_WIDE",
     "objectIds": [ "PMOON_BOSS_BRAZIER_LIT" ],
     "color": "#3571a7",
     "strength": 25,
@@ -35979,14 +36268,24 @@
     "fadeOutDuration": 200
   },
   {
+    "description": "BLUE_MOON_ARENA_BURNING_BRAZIERS_HIGHLIGHT",
+    "objectIds": [ "PMOON_BOSS_BRAZIER_LIT" ],
+    "color": "#3571a7",
+    "strength": 40,
+    "radius": 200,
+    "offset": [ 0, 180, -100 ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200
+  },
+  {
     "description": "BLUE_MOON_ARENA_BURNING_LINE",
     "objectIds": [ "PMOON_BOSS_BLUE_FIRE" ],
     "color": "#3571a7",
-    "strength": 25,
+    "strength": 15,
     "radius": 220,
-    "offset": [ -30, 100, 0 ],
-    "fadeInDuration": 200,
-    "fadeOutDuration": 200
+    "offset": [ -30, 120, 0 ],
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150
   },
   {
     "description": "BLOOD_MOON_ARENA_BURNING_LINE",
@@ -36008,14 +36307,15 @@
     "strength": 25,
     "radius": 320,
     "offset": [ 0, 47, 0 ],
-    "fadeInDuration": 600
+    "fadeInDuration": 600,
+    "fadeOutDuration": 125
   },
   {
     "description": "SMALL_MOON_PHASE",
     "objectIds": [ "PMOON_BOSS_SMALL_THREAT_CIRCLE" ],
     "color": "#00c7c1",
     "strength": 25,
-    "radius": 128,
+    "radius": 148,
     "offset": [ 0, 47, 0 ],
     "fadeInDuration": 1200
   },
@@ -36933,6 +37233,291 @@
     ]
   },
   {
+    "description": "Hueycoatl Melee Brazier Full 5",
+    "offset": [ 70, 420, -70 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Almost Full 4",
+    "offset": [ 70, 350, -70 ],
+    "radius": 100,
+    "strength": 8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Half 3",
+    "offset": [ 70, 255, -70 ],
+    "radius": 100,
+    "strength": 6,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S3",
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Half Empty 2",
+    "offset": [ 70, 170, -70 ],
+    "radius": 110,
+    "strength": 4,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S2",
+      "HUEY_PRAYER_PILLAR_MELEE_S3",
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Melee Brazier Almost Empty 1",
+    "offset": [ 70, 70, -70 ],
+    "radius": 110,
+    "strength": 4,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MELEE_S1",
+      "HUEY_PRAYER_PILLAR_MELEE_S2",
+      "HUEY_PRAYER_PILLAR_MELEE_S3",
+      "HUEY_PRAYER_PILLAR_MELEE_S4",
+      "HUEY_PRAYER_PILLAR_MELEE_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Full 5",
+    "offset": [ 70, 420, -70 ],
+    "radius": 100,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Almost Full 4",
+    "offset": [ 70, 350, -70 ],
+    "radius": 100,
+    "strength": 8,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Half 3",
+    "offset": [ 70, 255, -70 ],
+    "radius": 100,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S3",
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Half Empty 2",
+    "offset": [ 70, 170, -70 ],
+    "radius": 100,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S2",
+      "HUEY_PRAYER_PILLAR_RANGED_S3",
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Ranged Brazier Almost Empty 1",
+    "offset": [ 70, 70, -70 ],
+    "radius": 100,
+    "strength": 4,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_RANGED_S1",
+      "HUEY_PRAYER_PILLAR_RANGED_S2",
+      "HUEY_PRAYER_PILLAR_RANGED_S3",
+      "HUEY_PRAYER_PILLAR_RANGED_S4",
+      "HUEY_PRAYER_PILLAR_RANGED_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Full 5",
+    "offset": [ 70, 420, -70 ],
+    "radius": 100,
+    "strength": 13,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Almost Full 4",
+    "offset": [ 70, 350, -70 ],
+    "radius": 100,
+    "strength": 11,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Half 3",
+    "offset": [ 70, 255, -70 ],
+    "radius": 100,
+    "strength": 9,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S3",
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Half Empty 2",
+    "offset": [ 70, 170, -70 ],
+    "radius": 100,
+    "strength": 7,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S2",
+      "HUEY_PRAYER_PILLAR_MAGIC_S3",
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
+    "description": "Hueycoatl Magic Brazier Almost Empty 1",
+    "offset": [ 70, 70, -70 ],
+    "radius": 100,
+    "strength": 7,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 50,
+    "fadeInDuration": 50,
+    "objectIds": [
+      "HUEY_PRAYER_PILLAR_MAGIC_S1",
+      "HUEY_PRAYER_PILLAR_MAGIC_S2",
+      "HUEY_PRAYER_PILLAR_MAGIC_S3",
+      "HUEY_PRAYER_PILLAR_MAGIC_S4",
+      "HUEY_PRAYER_PILLAR_MAGIC_S5"
+    ]
+  },
+  {
     "description": "Hueycoatl Melee Projectile",
     "height": 0,
     "radius": 220,
@@ -36984,7 +37569,83 @@
     "projectileIds": [ "VFX_HUEY_ATTACK_MAGIC_PROJANIM_01" ]
   },
   {
-    "description": "Hueycoatl Ground Attack",
+    "description": "Hueycoatl Tail - Hurt",
+    "offset": [ 0, 250, 100 ],
+    "radius": 500,
+    "strength": 8,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "spawnDelay": 1800,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 1000,
+    "npcIds": [ "HUEY_TAIL_BROKEN" ],
+    "animationIds": [ "NPC_HUEY_TAIL_BREAK_01"]
+  },
+  {
+    "description": "Hueycoatl Tail - Shielded Slam",
+    "offset": [ 0, 250, 100 ],
+    "radius": 500,
+    "strength": 8,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "spawnDelay": 400,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 1300,
+    "npcIds": [ "HUEY_TAIL_BROKEN" ],
+    "animationIds": [ "NPC_HUEY_TAIL_APPEAR_01" ]
+  },
+  {
+    "description": "Hueycoatl Shield Glow - Low",
+    "offset": [ 0, 130, 300 ],
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "spawnDelay": 1250,
+    "fadeInDuration": 800,
+    "fadeOutDuration": 1600,
+    "npcIds": [ "HUEY_HEAD_INVULNERABLE" ],
+    "animationIds": [ -1, "HUEY_SHIELD_ATTACK_MELEE", "HUEY_SHIELD_ATTACK_RANGE", "HUEY_SHIELD_ATTACK_MAGIC", "HUEY_SHIELD_ACTIVATION" ]
+  },
+  {
+    "description": "Hueycoatl Shield Glow - High",
+    "offset": [ 0, 400, 450 ],
+    "radius": 800,
+    "strength": 6,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 600,
+    "range": 15,
+    "spawnDelay": 1500,
+    "fadeInDuration": 800,
+    "fadeOutDuration": 1600,
+    "npcIds": [ "HUEY_HEAD_INVULNERABLE" ],
+    "animationIds": [ -1, "HUEY_ATTACK_MELEE", "HUEY_ATTACK_RANGE", "HUEY_ATTACK_MAGIC", "HUEY_SHIELD_ACTIVATION" ]
+  },
+  {
+    "description": "Hueycoatl Lightning Bolt Attack",
     "height": 25,
     "radius": 105,
     "strength": 6,
@@ -37005,6 +37666,7 @@
   {
     "description": "Asgarnia Ice Dungeon Ladder",
     "objectIds": [ "LADDER_FROM_CELLAR" ],
+    "areas": [ "ASGARNIA_ICE_DUNGEON" ],
     "height": 360,
     "radius": 900,
     "strength": 10,
@@ -37534,6 +38196,24 @@
     "range": 20,
     "objectIds": [
       "STONEPILLAR_LBROWN_WITHTORCH"
+    ]
+  },
+  {
+    "description": "Mastering Mixology - Godray lights - Hovering in mid air to add depth to scene",
+    "height": -70,
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MM_LAB_LIGHT_GODRAY02_LARGE01_BRIGHT01"
     ]
   }
 ]

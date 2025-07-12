@@ -4573,6 +4573,28 @@
     "blended": false
   },
   {
+    "name": "Hueycoatl Snow Fix - Blending",
+    "area": "Hueycoatl Snow Fix",
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [ 58, 63, 94, 173 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "replacements": {
+      "Hueycoatl Snow Fix - No Blending": "!blending"
+    },
+    "shiftLightness": 25
+  },
+  {
+    "name": "Hueycoatl Snow Fix - No Blending",
+    "area": "Hueycoatl Snow Fix",
+    "underlayIds": [ 58, 173 ],
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 75,
+    "minLightness": 50,
+    "maxSaturation": 0
+  },
+  {
     "name": "CAM_TORUM_WATER",
     "area": "CAM_TORUM",
     "overlayIds": [ 201 ],
@@ -4666,34 +4688,57 @@
   },
   {
     "name": "Perilous Moons Ancient Prison, Sun Tiles Fix",
-    "area": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON_SUN_BLEND_FIX",
     "overlayIds": [ 80 ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
   },
   {
-    "name": "EARTHBOUND_CAVERN_WATER_DARKER",
-    "area": "EARTHBOUND_CAVERN",
-    "overlayIds": [ 201 ],
-    "waterType": "DARK_BLUE_WATER"
+    "name": "EARTHBOUND_CAVERN_WATER_FIX",
+    "area": "EARTHBOUND_CAVERN_WATER_FIX",
+    "underlayIds": [ 72, 105 ],
+    "shiftLightness": 10,
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "EARTHBOUND_CAVERN_WATER",
     "area": "EARTHBOUND_CAVERN",
     "overlayIds": [ 158, 181, 201 ],
-    "waterType": "PLAIN_WATER"
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "area": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "underlayIds": [ 56, 72 ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7,
+    "blended": false
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_COMPLEX",
+    "area": "EARTHBOUND_CAVERN",
+    "replacements": {
+      "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
+      "EARTHBOUND_CAVERN_GRASS": "s > 2",
+      "EARTHBOUND_CAVERN_ROCK": "s < 3"
+    }
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_ROCK_TOP",
+    "underlayIds": [ 54, 105 ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "minLightness": 4
   },
   {
     "name": "EARTHBOUND_CAVERN_GRASS",
-    "area": "EARTHBOUND_CAVERN",
     "underlayIds": [ 54, 105 ],
     "groundMaterial": "GRASS_1"
   },
   {
     "name": "EARTHBOUND_CAVERN_ROCK",
-    "area": "EARTHBOUND_CAVERN",
     "underlayIds": [ 56, 72 ],
-    "groundMaterial": "ROCKY_CAVE_FLOOR"
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7
   },
   {
     "name": "STREAMBOUND_CAVERN_GRASS",
@@ -4728,8 +4773,8 @@
   },
   {
     "name": "THE_BLUE_MOON_ENTRANCE",
-    "area": "THE_BLUE_MOON",
-    "underlayIds": [ 73 ],
+    "area": "THE_BLUE_MOON_ENTRANCE",
+    "underlayIds": [ 56, 73, 205, 206 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {
@@ -4748,7 +4793,7 @@
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
     "area": "THE_BLOOD_MOON_ENTRANCE",
-    "underlayIds": [ 118 ],
+    "underlayIds": [ 56, 118 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {
@@ -4787,6 +4832,28 @@
     "area": "THE_ECLIPSE_MOON",
     "underlayIds": [ 212, 213 ],
     "groundMaterial": "DIRT"
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_OVERLAY",
+    "area": "MASTERING_MIXOLOGY",
+    "overlayIds": [
+      351
+    ],
+    "groundMaterial": "STONE_CAVE_FLOOR",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_UNDERLAY",
+    "area": "MASTERING_MIXOLOGY",
+    "underlayIds": [
+      26,
+      42,
+      72,
+      96,
+      223
+    ],
+    "groundMaterial": "INTERIOR_DIRT_FLOOR"
   },
   {
     "name": "OVERWORLD_GRASS_OVERLAY",
