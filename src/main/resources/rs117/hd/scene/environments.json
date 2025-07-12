@@ -1734,7 +1734,8 @@
   {
     "area": "EARTHBOUND_CAVERN",
     "sunAngles": [ 62, 210 ],
-    "waterColor": "#477d95"
+    "waterColor": "#477d95",
+    "waterCausticsStrength": 20
   },
   {
     "area": "RED_CHINCHOMPA_HUNTING_GROUND",
@@ -1747,6 +1748,17 @@
       102
     ],
     "fogDepth": 30
+  },
+  {
+    "area": "Hueycoatl Arena",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 65,
+    "groundFogOpacity": 0.3,
+    "groundFogEnd": -1800
   },
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
