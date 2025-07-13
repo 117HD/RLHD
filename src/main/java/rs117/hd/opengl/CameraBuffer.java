@@ -67,7 +67,7 @@ public class CameraBuffer extends UniformBuffer {
 
 			for (int i = 0; i < writeIndex; i++) {
 				if (characterPositionsPairs.get(i).dist >= pair.dist) {
-					writeIndex = i + 1;
+					writeIndex = i;
 					break;
 				}
 			}
@@ -79,14 +79,15 @@ public class CameraBuffer extends UniformBuffer {
 
 	@Override
 	protected void preUpload() {
-		int writeCount = Math.min(writtenCharacterPositions, characterPositions.length);
-		for(int i = 0; i < writeCount; i++) {
+		for(int i = 0; i < writtenCharacterPositions; i++) {
 			CharacterPositionPair pair = characterPositionsPairs.get(i);
 			pair.dist = Float.MAX_VALUE;
 
-			characterPositions[i].set(pair.x, pair.z, pair.radius);
+			if(i < characterPositions.length) {
+				characterPositions[i].set(pair.x, pair.z, pair.radius);
+			}
 		}
-		characterPositionCount.set(writeCount);
+		characterPositionCount.set(Math.min(writtenCharacterPositions, characterPositions.length));
 		writtenCharacterPositions = 0;
 	}
 }

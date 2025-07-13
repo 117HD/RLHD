@@ -3147,7 +3147,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		if (configCharacterDisplacement && renderable instanceof Actor) {
+		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
 			if(renderable instanceof NPC){
 				NPC npc = (NPC) renderable;
 				String walkAnimName = gamevalManager.getAnimName(npc.getWalkAnimation()).toUpperCase();
