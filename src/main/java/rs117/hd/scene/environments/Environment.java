@@ -63,7 +63,7 @@ public class Environment {
 	public float windAngle = 0.0f;
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;
-	public float windCeiling= 1280.0f;
+	public float windCeiling = 1280.0f;
 
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {

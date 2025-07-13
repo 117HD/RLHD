@@ -149,7 +149,7 @@
       },
       "windAngle": {
         "type": "number",
-        "description": "Angle in degrees for the wind direction, with zero in the X direction, rotating towards Z. Defaults to 0."
+        "description": "Angle in degrees for the wind direction. Zero is east and positive rotates towards north. Defaults to 0."
       },
       "windSpeed": {
         "type": "number",
@@ -161,7 +161,7 @@
       },
       "windCeiling": {
         "type": "number",
-        "description": "The world height at which point the `windStrength` will be reached. The closer objects are to this height, the stronger the wind will be. Defaults to 1280 (10 tiles in height)."
+        "description": "The height where the `windStrength` will be reached. The closer objects are to this height, the stronger the wind will be. Defaults to 1280 (10 tiles in height)."
       }
     }
   }

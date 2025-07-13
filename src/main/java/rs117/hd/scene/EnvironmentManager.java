@@ -140,21 +140,21 @@ public class EnvironmentManager {
 	public final float[] currentSunAngles = { 0, 0 };
 	private final float[] targetSunAngles = { 0, 0 };
 
-	private float startWindAngle = 0.0f;
-	public float currentWindAngle = 0.0f;
-	private float targetWindAngle = 0.0f;
+	private float startWindAngle = 0f;
+	public float currentWindAngle = 0f;
+	private float targetWindAngle = 0f;
 
-	private float startWindSpeed = 0.0f;
-	public float currentWindSpeed = 0.0f;
-	private float targetWindSpeed = 0.0f;
+	private float startWindSpeed = 0f;
+	public float currentWindSpeed = 0f;
+	private float targetWindSpeed = 0f;
 
-	private float startWindStrength = 0.0f;
-	public float currentWindStrength = 0.0f;
-	private float targetWindStrength = 0.0f;
+	private float startWindStrength = 0f;
+	public float currentWindStrength = 0f;
+	private float targetWindStrength = 0f;
 
-	private float startWindCeiling = 0.0f;
-	public float currentWindCeiling = 0.0f;
-	private float targetWindCeiling = 0.0f;
+	private float startWindCeiling = 0f;
+	public float currentWindCeiling = 0f;
+	private float targetWindCeiling = 0f;
 
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;

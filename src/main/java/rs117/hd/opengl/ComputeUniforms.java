@@ -86,9 +86,8 @@ public class ComputeUniforms extends UniformBuffer {
 			CharacterPositionPair pair = characterPositionsPairs.get(i);
 			pair.dist = Float.MAX_VALUE;
 
-			if(i < characterPositions.length) {
+			if (i < characterPositions.length)
 				characterPositions[i].set(pair.x, pair.z, pair.radius);
-			}
 		}
 		characterPositionCount.set(Math.min(writtenCharacterPositions, characterPositions.length));
 		writtenCharacterPositions = 0;
