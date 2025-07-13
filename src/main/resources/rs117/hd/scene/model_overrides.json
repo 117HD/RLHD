@@ -29854,6 +29854,18 @@
     ]
   },
   {
+    "description": "Cooking Tutor - Meat Rack",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "HANGINGMEAT1",
+      "HANGINGMEAT2"
+    ],
+    "retainVanillaUvs": false
+  },
+  {
     "description": "Lumbridge Castle - Range",
     "baseMaterial": "METALLIC_1_VERY_LIGHT",
     "uvType": "BOX",
