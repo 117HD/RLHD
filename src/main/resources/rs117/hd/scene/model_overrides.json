@@ -27098,7 +27098,7 @@
   },
   {
     "description": "Perilous Moons Murals",
-    "baseMaterial": "TILE_SMALL_1",
+    "baseMaterial": "TILE_SMALL_2",
     "uvType": "BOX",
     "uvOrientation": 256,
     "objectIds": [
