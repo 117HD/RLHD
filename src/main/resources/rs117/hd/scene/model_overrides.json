@@ -5223,7 +5223,6 @@
       "SWAMP_CAVEWALL1_STALAGMITE1",
       "SWAMP_CAVEWALL1",
       "SWAMP_CAVEWALL1_GUNGYWATER1",
-      "GOBLIN_CAVEWALL_FLOWINGGUNGYWATER",
       "SWAMP_CAVEWALL2",
       "SWAMP_CAVEWALL3",
       "SWAMP_CAVEWALL4",
@@ -5293,10 +5292,96 @@
       "GOBLIN_CAVEWALL_BONE_SUPPORTED2",
       "SWAMP_CAVEWALL1_GASHOLE",
       "SWAMP_CAVEWALL1_GASHOLE2",
-      "LOST_TRIBE_CELLAR_HOLE_BLOCKING"
+      "LOST_TRIBE_CELLAR_HOLE_BLOCKING",
+      "DTTD_WALL_HAM_TOP5_OUTER2",
+      "DTTD_WALL_HAM_TOP5_OUTER",
+      "DTTD_WALL_HAM_TOP_OUTER",
+      "ENAKH_B_W_CAVEWALL_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 100
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_MAZE_MARKERS",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SWAMP_CAVEWALL_EASTMARKER",
+      "SWAMP_CAVEWALL_WESTMARKER",
+      "SWAMP_CAVEWALL_NORTHMARKER",
+      "SWAMP_CAVEWALL_SOUTHMARKER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALLS_BONE_SUPPORT",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      "GOBLIN_CAVEWALL_BONEARCH",
+      "GOBLIN_CAVEWALL_BONEARCH_RAGS1",
+      "GOBLIN_CAVEWALL_BONEARCH_RAGS2",
+      "GOBLIN_CAVEWALL_BONEARCH_BROKEN1",
+      "GOBLIN_CAVEWALL_BONEARCH_BROKEN2",
+      "GOBLIN_CAVEWALL_BONE_SUPPORTED1",
+      "GOBLIN_CAVEWALL_BONE_SUPPORTED2",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_DOUBLE_RAGS1",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_DOUBLE",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_RAGS1",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_END",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE",
+      "ARCH_BONES",
+      "BONE_CRANE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "BONE"
+      },
+      {
+        "colors": "h == 17",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALLS_DARKER",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      "DTTD_CAVE_ENTRANCE_HAMSIDE_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_SWAMP_WATERFALL",
+    "textureMaterial": "SWAMP_WATER_FLAT_FLOW",
+    "objectIds": [
+      "GOBLIN_CAVEWALL_FLOWINGGUNGYWATER"
+    ]
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALL_BEAST",
+    "npcIds": [
+      "SWAMP_WALLBEAST",
+      "SWAMP_WALLBEAST_COMBAT"],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Corporeal Beast Entrance Passage",

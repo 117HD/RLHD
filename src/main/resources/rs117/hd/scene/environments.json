@@ -489,14 +489,14 @@
   },
   {
     "area": "GOBLIN_MAZE",
-    "ambientStrength": 0.75,
-    "directionalColor": "#a29b71",
+    "ambientStrength": 0.85,
+    "directionalColor": "#B5AC7E",
     "directionalStrength": 0.75,
     "sunAngles": [
       80,
       190
     ],
-    "fogColor": "#050d02",
+    "fogColor": "#0A0D0A",
     "fogDepth": 60
   },
   {

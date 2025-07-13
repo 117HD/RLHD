@@ -457,6 +457,12 @@ public enum Material {
 		.setScroll(0, 1.4f)
 		.setFlowMapDuration(new float[] { 10, -14 })
 	),
+	SWAMP_WATER_FLAT_FLOW(SWAMP_WATER_FLAT, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setScroll(0, 1.3f)
+		.setFlowMapDuration(new float[] { 7, -11 })
+	),
 	GRUNGE_3_DULL(GRUNGE_3, p -> p
 		.setNormalMap(null)
 		.setSpecular(0, 0)

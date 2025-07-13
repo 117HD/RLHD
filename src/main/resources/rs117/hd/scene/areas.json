@@ -85,7 +85,7 @@
   {
     "name": "LUMBRIDGE_CASTLE_BASEMENT",
     "aabbs": [
-      [ 3205, 9613, 3220, 9626 ]
+      [ 3200, 9600, 3220, 9663 ]
     ]
   },
   {
@@ -206,14 +206,37 @@
   {
     "name": "GOBLIN_MAZE",
     "aabbs": [
-      [ 3221, 9602, 3307, 9660 ]
+      [ 3221, 9600, 3327, 9660 ],
+      [ 3249, 9661, 3258, 9663 ],
+      [ 3234, 9661, 3240, 9661 ],
+      [ 3221, 9661, 3233, 9663 ]
     ]
   },
   {
     "name": "LUMBRIDGE_SWAMP_CAVES",
     "aabbs": [
-      [ 3141, 9536, 3265, 9602 ]
+      [ 3141, 9536, 3265, 9599 ]
     ]
+  },
+  {
+    "name": "Lumbridge Watermill Basement",
+    "aabbs": [
+      [ 3203, 9664, 3250, 9708 ],
+      [ 3234, 9662, 3248, 9663 ],
+      [ 3241, 9660, 3247, 9661 ],
+      [ 3248, 9661 ]
+    ]
+  },
+  {
+    "name": "Lumbridge Underground",
+    "areas": [
+      "LUMBRIDGE_SWAMP_CAVES",
+      "GOBLIN_MAZE",
+      "LUMBRIDGE_CASTLE_BASEMENT",
+      "Lumbridge Watermill Basement",
+      "TEARS_OF_GUTHIX"
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TEARS_OF_GUTHIX",
@@ -7273,7 +7296,7 @@
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
     "aabbs": [
-      [ 1408, 9626, 0, 1422, 9638, 0 ]
+      [ 1408, 9626, 0, 1422, 9638 ]
     ]
   },
   {
