@@ -3,6 +3,7 @@ package rs117.hd.opengl;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -251,7 +252,7 @@ public abstract class UniformBuffer {
 		dirtyHighTide = Math.max(dirtyHighTide, position + size);
 	}
 
-	public final void initialize(int uniformBlockIndex, OpenCLManager openCLManager) {
+	public final void initialize(int uniformBlockIndex, @Nullable OpenCLManager openCLManager) {
 		initialize(uniformBlockIndex);
 
 		if (openCLManager != null)

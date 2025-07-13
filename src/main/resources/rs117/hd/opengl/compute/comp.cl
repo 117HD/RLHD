@@ -41,13 +41,13 @@ void sortModel(
   __global struct vert *vout,
   __global float4 *uvout,
   __global float4 *normalout,
-  __constant struct uniform *uni,
+  __constant struct ComputeUniforms *uni,
   read_only image3d_t tileHeightMap
 ) {
   size_t groupId = get_group_id(0);
   size_t localId = get_local_id(0) * FACES_PER_THREAD;
   struct ModelInfo minfo = ol[groupId];
-  int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
+  int4 pos = (int4)(minfo.x, minfo.y >> 16, minfo.z, 0);
 
   if (localId == 0) {
     shared->min10 = 6000;
@@ -68,8 +68,8 @@ void sortModel(
       float angle = modelNoise * (PI / 2.0f);
       float c = cos(angle);
       float s = sin(angle);
-      float y = (float)minfo.y;
-      float height = (float)minfo.height;
+      float y = (float)(minfo.y >> 16);
+      float height = (float)(minfo.y & 0xffff);
 
       windSample.direction = normalize((float3)(uni->windDirectionX * c + uni->windDirectionZ * s, 0.0f, -uni->windDirectionX * s + uni->windDirectionZ * c));
       windSample.heightBasedStrength = clamp((fabs(y) + height) / uni->windCeiling, 0.0f, 1.0f) * uni->windStrength;

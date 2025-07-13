@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 import static org.lwjgl.opengl.GL15.*;
 
-public class CameraBuffer extends UniformBuffer {
+public class ComputeUniforms extends UniformBuffer {
+	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
+
+	// Camera uniforms
 	public Property yaw = addProperty(PropertyType.Float, "yaw");
 	public Property pitch = addProperty(PropertyType.Float, "pitch");
 	public Property centerX = addProperty(PropertyType.Int, "centerX");
@@ -14,7 +17,7 @@ public class CameraBuffer extends UniformBuffer {
 	public Property cameraY = addProperty(PropertyType.Float, "cameraY");
 	public Property cameraZ = addProperty(PropertyType.Float, "cameraZ");
 
-	// Wind Uniforms
+	// Wind uniforms
 	public Property windDirectionX = addProperty(PropertyType.Float, "windDirectionX");
 	public Property windDirectionZ = addProperty(PropertyType.Float, "windDirectionZ");
 	public Property windStrength = addProperty(PropertyType.Float, "windStrength");
@@ -22,7 +25,7 @@ public class CameraBuffer extends UniformBuffer {
 	public Property windOffset = addProperty(PropertyType.Float, "windOffset");
 
 	private final Property characterPositionCount = addProperty(PropertyType.Int, "characterPositionCount");
-	private final Property[] characterPositions = addPropertyArray(PropertyType.FVec3, "characterPositions", 50);
+	private final Property[] characterPositions = addPropertyArray(PropertyType.FVec3, "characterPositions", MAX_CHARACTER_POSITION_COUNT);
 
 	private final ArrayList<CharacterPositionPair> characterPositionsPairs = new ArrayList<>(characterPositions.length);
 	private int writtenCharacterPositions;
@@ -35,8 +38,8 @@ public class CameraBuffer extends UniformBuffer {
 		public float dist = Float.MAX_VALUE;
 	}
 
-	public CameraBuffer() {
-		super("Camera", GL_DYNAMIC_DRAW);
+	public ComputeUniforms() {
+		super("Compute", GL_DYNAMIC_DRAW);
 	}
 
 	private CharacterPositionPair getCharacterPositionPair() {

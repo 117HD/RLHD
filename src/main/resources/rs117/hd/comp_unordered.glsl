@@ -39,7 +39,7 @@ void main() {
     int outOffset = minfo.idx;
     int uvOffset = minfo.uvOffset;
     int flags = minfo.flags;
-    vec3 pos = vec3(minfo.x, minfo.y << 16 >> 16, minfo.z);
+    vec3 pos = vec3(minfo.x, minfo.y >> 16, minfo.z);
 
     if (localId >= size) {
         return;

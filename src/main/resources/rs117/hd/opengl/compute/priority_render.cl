@@ -31,7 +31,7 @@ int priority_map(int p, int distance, int _min10, int avg1, int avg2, int avg3);
 int count_prio_offset(__local struct shared_data *shared, int priority);
 void get_face(
   __local struct shared_data *shared,
-  __constant struct uniform *uni,
+  __constant struct ComputeUniforms *uni,
   __global const struct vert *vb,
   uint localId,
   struct ModelInfo minfo,
@@ -44,7 +44,7 @@ void get_face(
 );
 void add_face_prio_distance(
   __local struct shared_data *shared,
-  __constant struct uniform *uni,
+  __constant struct ComputeUniforms *uni,
   uint localId,
   struct ModelInfo minfo,
   struct vert thisrvA,
@@ -66,7 +66,7 @@ void sort_and_insert(
   __global struct vert *vout,
   __global float4 *uvout,
   __global float4 *normalout,
-  __constant struct uniform *uni,
+  __constant struct ComputeUniforms *uni,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,
@@ -136,7 +136,7 @@ int count_prio_offset(__local struct shared_data *shared, int priority) {
 
 void get_face(
   __local struct shared_data *shared,
-  __constant struct uniform *uni,
+  __constant struct ComputeUniforms *uni,
   __global const struct vert *vb,
   uint localId,
   struct ModelInfo minfo,
@@ -191,7 +191,7 @@ void get_face(
 
 void add_face_prio_distance(
   __local struct shared_data *shared,
-  __constant struct uniform *uni,
+  __constant struct ComputeUniforms *uni,
   uint localId,
   struct ModelInfo minfo,
   struct vert thisrvA,
@@ -345,7 +345,7 @@ inline float3 applyCharacterDisplacement(
 }
 
 void applyWindDisplacement(
-    __constant struct uniform *uni,
+    __constant struct ComputeUniforms *uni,
     const struct ObjectWindSample windSample,
     int vertexFlags,
     float height,
@@ -424,7 +424,7 @@ void applyWindDisplacement(
     }
 #endif // WIND_DISPLACEMENT
 
-#if GROUND_DISPLACEMENT
+#if CHARACTER_DISPLACEMENT
     if (windDisplacementMode == WIND_DISPLACEMENT_OBJECT) {
         float2 worldVertA = (worldPos + vertA).xz;
         float2 worldVertB = (worldPos + vertB).xz;
@@ -456,7 +456,7 @@ void sort_and_insert(
   __global struct vert *vout,
   __global float4 *uvout,
   __global float4 *normalout,
-  __constant struct uniform *uni,
+  __constant struct ComputeUniforms *uni,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,
@@ -474,8 +474,9 @@ void sort_and_insert(
     int outOffset = minfo.idx;
     int uvOffset = minfo.uvOffset;
     int flags = minfo.flags;
-    float4 pos = (float4)(minfo.x, minfo.y, minfo.z, 0);
-    float height = (float)minfo.height;
+    int modelY = minfo.y >> 16;
+    float4 pos = (float4)(minfo.x, modelY, minfo.z, 0);
+    float height = (float)(minfo.y & 0xffff);
     int orientation = minfo.flags & 0x7ff;
     int vertexFlags = uvOffset >= 0 ? (int)(uv[uvOffset + localId * 3].w) : 0;
 
@@ -540,9 +541,9 @@ void sort_and_insert(
     int plane = (flags >> 24) & 3;
     int hillskew = (flags >> 26) & 1;
     if (hillskew == 1) {
-        hillskew_vertex(tileHeightMap, &vertA, hillskew, minfo.y, plane);
-        hillskew_vertex(tileHeightMap, &vertB, hillskew, minfo.y, plane);
-        hillskew_vertex(tileHeightMap, &vertC, hillskew, minfo.y, plane);
+        hillskew_vertex(tileHeightMap, &vertA, hillskew, modelY, plane);
+        hillskew_vertex(tileHeightMap, &vertB, hillskew, modelY, plane);
+        hillskew_vertex(tileHeightMap, &vertC, hillskew, modelY, plane);
     }
 
     // position vertices in scene and write to out buffer
@@ -574,9 +575,9 @@ void sort_and_insert(
 
         // For vanilla UVs, the first 3 components are an integer position vector
         if (hillskew == 1) {
-            hillskew_vertex(tileHeightMap, &uvA, hillskew, minfo.y, plane);
-            hillskew_vertex(tileHeightMap, &uvB, hillskew, minfo.y, plane);
-            hillskew_vertex(tileHeightMap, &uvC, hillskew, minfo.y, plane);
+            hillskew_vertex(tileHeightMap, &uvA, hillskew, modelY, plane);
+            hillskew_vertex(tileHeightMap, &uvB, hillskew, modelY, plane);
+            hillskew_vertex(tileHeightMap, &uvC, hillskew, modelY, plane);
         }
       }
     }

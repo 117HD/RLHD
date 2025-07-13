@@ -91,7 +91,7 @@ import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
-import rs117.hd.opengl.CameraBuffer;
+import rs117.hd.opengl.ComputeUniforms;
 import rs117.hd.opengl.GlobalUniforms;
 import rs117.hd.opengl.LightsBuffer;
 import rs117.hd.opengl.MaterialsBuffer;
@@ -165,7 +165,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
 
-	public static final int UNIFORM_BLOCK_CAMERA = 0;
+	public static final int UNIFORM_BLOCK_COMPUTE = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
@@ -181,8 +181,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
-
 	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
+	public static final float WIND_DISPLACEMENT_NOISE_RESOLUTION = 0.04f;
 
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
@@ -368,7 +368,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final MaterialsBuffer uboMaterials = new MaterialsBuffer();
 	public final WaterTypesBuffer uboWaterTypes = new WaterTypesBuffer();
 
-	private final CameraBuffer uboCamera = new CameraBuffer();
+	private final ComputeUniforms uboCompute = new ComputeUniforms();
 	private final GlobalUniforms uboGlobal = new GlobalUniforms();
 	private final UIUniforms uboUI = new UIUniforms();
 	private final LightsBuffer uboLights = new LightsBuffer();
@@ -848,7 +848,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
 			.define("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
-			.define("LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
+			.define("MAX_LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
 			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
@@ -860,7 +860,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
-			.define("GROUND_DISPLACEMENT", configCharacterDisplacement)
+			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
+			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
+			.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("WIREFRAME", config.wireframe())
 			.addIncludePath(SHADER_PATH);
@@ -932,8 +934,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (computeMode == ComputeMode.OPENGL) {
 			for (int sortingProgram : glModelSortingComputePrograms) {
-				int uniBlockCamera = glGetUniformBlockIndex(sortingProgram, "CameraUniforms");
-				glUniformBlockBinding(sortingProgram, uniBlockCamera, UNIFORM_BLOCK_CAMERA);
+				int uniBlock = glGetUniformBlockIndex(sortingProgram, "ComputeUniforms");
+				glUniformBlockBinding(sortingProgram, uniBlock, UNIFORM_BLOCK_COMPUTE);
 			}
 		}
 
@@ -1137,7 +1139,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		initGlBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		uboMaterials.initialize(UNIFORM_BLOCK_MATERIALS);
-		uboCamera.initialize(UNIFORM_BLOCK_CAMERA, computeMode == ComputeMode.OPENCL ? openCLManager : null);
+		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE, computeMode == ComputeMode.OPENCL ? openCLManager : null);
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboWaterTypes.initialize(UNIFORM_BLOCK_WATER_TYPES);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
@@ -1165,7 +1167,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboMaterials.destroy();
 		uboWaterTypes.destroy();
-		uboCamera.destroy();
+		uboCompute.destroy();
 		uboGlobal.destroy();
 		uboUI.destroy();
 		uboLights.destroy();
@@ -1525,26 +1527,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					cameraPosition[2] += cameraShift[1];
 				}
 
-				uboCamera.yaw.set(cameraOrientation[0]);
-				uboCamera.pitch.set(cameraOrientation[1]);
-				uboCamera.centerX.set(client.getCenterX());
-				uboCamera.centerY.set(client.getCenterY());
-				uboCamera.zoom.set(client.getScale());
-				uboCamera.cameraX.set(cameraPosition[0]);
-				uboCamera.cameraY.set(cameraPosition[1]);
-				uboCamera.cameraZ.set(cameraPosition[2]);
+				uboCompute.yaw.set(cameraOrientation[0]);
+				uboCompute.pitch.set(cameraOrientation[1]);
+				uboCompute.centerX.set(client.getCenterX());
+				uboCompute.centerY.set(client.getCenterY());
+				uboCompute.zoom.set(client.getScale());
+				uboCompute.cameraX.set(cameraPosition[0]);
+				uboCompute.cameraY.set(cameraPosition[1]);
+				uboCompute.cameraZ.set(cameraPosition[2]);
 
-				uboCamera.windDirectionX.set((float) Math.cos(environmentManager.currentWindAngle));
-				uboCamera.windDirectionZ.set((float) Math.sin(environmentManager.currentWindAngle));
-				uboCamera.windStrength.set(environmentManager.currentWindStrength);
-				uboCamera.windCeiling.set(environmentManager.currentWindCeiling);
-				uboCamera.windOffset.set(windOffset);
+				uboCompute.windDirectionX.set((float) Math.cos(environmentManager.currentWindAngle));
+				uboCompute.windDirectionZ.set((float) Math.sin(environmentManager.currentWindAngle));
+				uboCompute.windStrength.set(environmentManager.currentWindStrength);
+				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
+				uboCompute.windOffset.set(windOffset);
 
 				if (configCharacterDisplacement) {
+					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
-					if(playerModel != null) {
-						uboCamera.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getRadius());
-					}
+					if (playerModel != null)
+						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getRadius());
 				}
 			}
 		}
@@ -1656,7 +1658,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.end(Timer.UPLOAD_GEOMETRY);
 		frameTimer.begin(Timer.COMPUTE);
 
-		uboCamera.upload();
+		uboCompute.upload();
 
 		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
@@ -1665,7 +1667,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// glFinish();
 
 			openCLManager.compute(
-				uboCamera.getGlBuffer(),
+				uboCompute.getGlBuffer(),
 				numPassthroughModels, numModelsToSort,
 				hModelPassthroughBuffer, hModelSortingBuffers,
 				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
@@ -3050,7 +3052,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = orientation;
 		eightIntWrite[5] = x;
-		eightIntWrite[6] = (height & 0xFFFF) << 16 | y & 0xFFFF;
+		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
 		int plane = ModelHash.getPlane(hash);
@@ -3152,10 +3154,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				NPC npc = (NPC) renderable;
 				String walkAnimName = gamevalManager.getAnimName(npc.getWalkAnimation()).toUpperCase();
 				if(!walkAnimName.contains("HOVER") || !walkAnimName.contains("FLY")) {
-					uboCamera.addCharacterPosition(x, z, modelRadius);
+					uboCompute.addCharacterPosition(x, z, modelRadius);
 				}
 			} else {
-				uboCamera.addCharacterPosition(x, z, modelRadius);
+				uboCompute.addCharacterPosition(x, z, modelRadius);
 			}
 		}
 

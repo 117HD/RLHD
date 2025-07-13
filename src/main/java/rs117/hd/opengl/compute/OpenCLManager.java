@@ -42,6 +42,7 @@ import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.opengl.ComputeUniforms;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -321,6 +322,7 @@ public class OpenCLManager {
 			var template = new Template()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
+				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
@@ -336,7 +338,8 @@ public class OpenCLManager {
 					.define("THREAD_COUNT", threadCount)
 					.define("FACES_PER_THREAD", facesPerThread)
 					.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
-					.define("GROUND_DISPLACEMENT", plugin.configCharacterDisplacement)
+					.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
+					.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
 					.load("comp.cl")
 				);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
@@ -403,7 +406,7 @@ public class OpenCLManager {
 	}
 
 	public void compute(
-		GLBuffer uniformBufferCamera,
+		GLBuffer uboCompute,
 		int numPassthroughModels, int[] numSortingBinModels,
 		GLBuffer modelPassthroughBuffer, GLBuffer[] modelSortingBuffers,
 		GLBuffer stagingBufferVertices, GLBuffer stagingBufferUvs, GLBuffer stagingBufferNormals,
@@ -411,7 +414,7 @@ public class OpenCLManager {
 	) {
 		try (var stack = MemoryStack.stackPush()) {
 			PointerBuffer glBuffers = stack.mallocPointer(8 + modelSortingBuffers.length)
-				.put(uniformBufferCamera.clBuffer)
+				.put(uboCompute.clBuffer)
 				.put(modelPassthroughBuffer.clBuffer)
 				.put(stagingBufferVertices.clBuffer)
 				.put(stagingBufferUvs.clBuffer)
@@ -461,7 +464,7 @@ public class OpenCLManager {
 				clSetKernelArg1p(kernel, 5, renderBufferVertices.clBuffer);
 				clSetKernelArg1p(kernel, 6, renderBufferUvs.clBuffer);
 				clSetKernelArg1p(kernel, 7, renderBufferNormals.clBuffer);
-				clSetKernelArg1p(kernel, 8, uniformBufferCamera.clBuffer);
+				clSetKernelArg1p(kernel, 8, uboCompute.clBuffer);
 				clSetKernelArg1p(kernel, 9, tileHeightMap);
 
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, null,

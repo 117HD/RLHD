@@ -22,8 +22,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
-struct uniform {
+#include MAX_CHARACTER_POSITION_COUNT
+
+struct ComputeUniforms {
   float cameraYaw;
   float cameraPitch;
   int centerX;
@@ -41,7 +44,7 @@ struct uniform {
   float windOffset;
 
   int characterPositionCount;
-  float3 characterPositions[50];
+  float3 characterPositions[MAX_CHARACTER_POSITION_COUNT];
 };
 
 struct shared_data {
@@ -57,10 +60,9 @@ struct ModelInfo {
   int uvOffset; // offset into uv buffer
   int size;     // length in faces
   int idx;      // write idx in target buffer
-  int flags;    // height, hillskew, plane, orientation
+  int flags;    // hillskew, plane, orientation
   int x;        // scene position x
-  short y;      // scene position y
-  short height; // model height
+  int y;        // scene position y & model height
   int z;        // scene position z
 };
 

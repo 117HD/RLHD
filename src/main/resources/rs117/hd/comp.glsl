@@ -36,26 +36,7 @@ shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 shared int min10; // minimum distance to a face of priority 10
 shared int renderPris[THREAD_COUNT * FACES_PER_THREAD]; // priority for face draw order
 
-layout(std140) uniform CameraUniforms {
-    float cameraYaw;
-    float cameraPitch;
-    int centerX;
-    int centerY;
-    int zoom;
-    float cameraX;
-    float cameraY;
-    float cameraZ;
-
-    // Wind Properties
-    float windDirectionX;
-    float windDirectionZ;
-    float windStrength;
-    float windCeiling;
-    float windOffset;
-
-    int characterPositionCount;
-    vec3 characterPositions[50];
-};
+#include uniforms/compute.glsl
 
 #include comp_common.glsl
 
@@ -63,7 +44,6 @@ layout(local_size_x = THREAD_COUNT) in;
 
 #include common.glsl
 #include priority_render.glsl
-
 
 void main() {
     uint groupId = gl_WorkGroupID.x;
@@ -88,8 +68,8 @@ void main() {
         float angle = modelNoise * (PI / 2.0);
         float c = cos(angle);
         float s = sin(angle);
-        float y = minfo.y << 16 >> 16;
-        float height = minfo.y >> 16;
+        float y = minfo.y >> 16;
+        float height = minfo.y & 0xffff;
 
         windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
         windSample.heightBasedStrength = saturate((abs(y) + height) / windCeiling) * windStrength;

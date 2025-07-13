@@ -105,7 +105,7 @@ void add_face_prio_distance(const uint localId, const ModelInfo minfo, out int p
         dis = face_distance(thisA.pos, thisB.pos, thisC.pos);
 
         // if the face is not culled, it is calculated into priority distance averages
-        vec3 modelPos = vec3(minfo.x, minfo.y << 16 >> 16, minfo.z);
+        vec3 modelPos = vec3(minfo.x, minfo.y >> 16, minfo.z);
         if (face_visible(thisA.pos, thisB.pos, thisC.pos, modelPos)) {
             atomicAdd(totalNum[prio], 1);
             atomicAdd(totalDistance[prio], dis);
@@ -298,7 +298,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     }
     #endif
 
-    #if GROUND_DISPLACEMENT
+    #if CHARACTER_DISPLACEMENT
      if(windDisplacementMode == WIND_DISPLACEMENT_OBJECT){
         vec2 worldVertA = (worldPos + vertA).xz;
         vec2 worldVertB = (worldPos + vertB).xz;
@@ -334,8 +334,8 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         int outOffset = minfo.idx;
         int uvOffset = minfo.uvOffset;
         int flags = minfo.flags;
-        vec3 pos = vec3(minfo.x, minfo.y << 16 >> 16, minfo.z);
-        float height = minfo.y >> 16;
+        vec3 pos = vec3(minfo.x, minfo.y >> 16, minfo.z);
+        float height = minfo.y & 0xffff;
         int orientation = flags & 0x7ff;
         int vertexFlags = uvOffset >= 0 ? int(uv[uvOffset + localId * 3].w) : 0;
 
@@ -376,7 +376,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
         normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
 
-        // apply any displacement
+        // Apply any displacement
         thisrvA.pos += displacementA;
         thisrvB.pos += displacementB;
         thisrvC.pos += displacementC;

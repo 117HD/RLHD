@@ -32,15 +32,14 @@
 #define WIND_DISPLACEMENT_VERTEX_HEMISPHERE 3
 #define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
 
-
 struct ModelInfo {
     int offset;   // offset into buffer
     int uvOffset; // offset into uv buffer
     int size;     // length in faces
     int idx;      // write idx in target buffer
-    int flags;    // height, hillskew, plane, orientation
+    int flags;    // hillskew, plane, orientation
     int x;        // scene position x
-    int y;        // scene position y
+    int y;        // scene position y & model height
     int z;        // scene position z
 };
 
