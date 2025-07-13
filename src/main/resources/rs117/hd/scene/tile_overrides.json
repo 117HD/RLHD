@@ -448,6 +448,12 @@
     "shiftLightness": 12
   },
   {
+    "name": "Al Kharid to Varrock Gate Grass Fix",
+    "area": "Al Kharid to Varrock Gate Grass Fix",
+    "underlayIds": [ 52 ],
+    "groundMaterial": "GRASS_1"
+  },
+  {
     "name": "LUMBRIDGE_PATHS",
     "area": "LUMBRIDGE",
     "overlayIds": [

@@ -20588,6 +20588,16 @@
     "flatNormals": true
   },
   {
+    "description": "Lumbridge - Al Khrid Crossroads Signpost",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "AIDE_SIGNPOST_1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "upwardsNormals": true
+  },
+  {
     "description": "What Lies Below - Camp Fire",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -30583,7 +30593,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 0 && l < 40",
+        "colors": "h == 0 && l < 32",
         "uvType": "BOX",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvScale": 0.5
@@ -36834,7 +36844,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 6",
+        "colors": [ "h == 0", "h == 6" ],
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.4
