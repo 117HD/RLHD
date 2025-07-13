@@ -1387,6 +1387,15 @@
     "uvScale": 0.8
   },
   {
+    "description": "Tree - Sapling",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "XMAS18_SAPLING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -6105,7 +6114,18 @@
     "uvType": "BOX"
   },
   {
-    "description": "WOODEN_PLANK_ROUGH",
+    "description": "Lumbridge - Support Beam",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "PIER_RAIL_TALL",
+      "TIMBERWALL_BROWN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512
+  },
+  {
+    "description": "WOODEN_PLANK_ROUGH_2",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "SHAYZIEN_WOODEN_DECKING",
@@ -9755,6 +9775,73 @@
     "uvOrientation": 400
   },
   {
+    "description": "Lumbridge Windmill - Flour Bin, Hopper, Handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "MILLBASE_EMPTY",
+      "MILLBASE_FLOUR",
+      "HOPPER1",
+      "HOPPERLEVERS1",
+      "INACTIVEHOPPERLEVERS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 0 && s == 0 && l < 72 ",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 0 && s == 0 && l > 72",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Windmill - Darken moving parts so they don't stick out as much",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "MILLTOP2",
+      "MILL",
+      "MILLSAIL_BACK"
+    ]
+  },
+  {
+    "description": "Scarecrow",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "SCARECROW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 7",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvOrientationY": 0,
+        "uvOrientationZ": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
     "description": "Wyvern Shortcut",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -10036,6 +10123,33 @@
       "HIDEY_CRATE_MASTER"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Inconspicuous Hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HIDEY_UNBUILT_HOLE_EASY",
+      "HIDEY_HOLE_EASY",
+      "HIDEY_UNBUILT_HOLE_MEDIUM",
+      "HIDEY_HOLE_MEDIUM",
+      "HIDEY_UNBUILT_HOLE_HARD",
+      "HIDEY_HOLE_HARD",
+      "HIDEY_UNBUILT_HOLE_ELITE",
+      "HIDEY_HOLE_ELITE",
+      "HIDEY_UNBUILT_HOLE_MASTER",
+      "HIDEY_HOLE_MASTER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "castShadows": false
+      }
+    ]
   },
   {
     "description": "Objects - Mossy Rock - Medium",
@@ -10974,7 +11088,8 @@
       "TOURTRAP_QIP_BARREL",
       "THMINEBARREL_ANA_WINCHSIDE",
       "THMINEBARREL_FULL",
-      "THMINEBARREL_EMPTY"
+      "THMINEBARREL_EMPTY",
+      "QIP_SHEEP_SHEARER_BARREL"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -21504,6 +21619,7 @@
   },
   {
     "description": "Objects - Hay - Haystack",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "textureMaterial": "HD_HAY",
     "objectIds": [
       "HAYSTACK3"
@@ -29375,8 +29491,41 @@
     "uvOrientation": 512
   },
   {
+    "description": "Sheep Shearer - Fireplace with Pot",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_FIREPLACECOOKINGPOT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "GRAY_110",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Wooden food trough",
-    "objectIds": [ "FOODTROUGH", "FAI_VARROCK_FOODTROUGH" ],
+    "objectIds": [
+      "FOODTROUGH",
+      "FOODTROUGH4",
+      "FAI_VARROCK_FOODTROUGH"
+    ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -30284,6 +30433,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "CART",
+      "WHEEL_BARROW",
       "FAI_VARROCK_CART",
       "AHOY_CART",
       "AHOY_WHEEL_BARROW",
@@ -33748,14 +33898,16 @@
   {
     "description": "Metal Plough with wooden handles",
     "baseMaterial": "WOOD_GRAIN_3",
-    "uvOrientation": 256,
+    "uvOrientation": 412,
     "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
-        "uvOrientation": 920
+        "uvOrientation": 920,
+        "uvScale": 0.5
       }
     ],
     "objectIds": [

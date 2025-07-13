@@ -20623,6 +20623,24 @@
     ]
   },
   {
+    "description": "COOKING_POT_2",
+    "offset": [ 20, 50, 0 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      122,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_FIREPLACECOOKINGPOT"
+    ]
+  },
+  {
     "description": "FIRE",
     "height": 40,
     "alignment": "CENTER",
