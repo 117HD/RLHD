@@ -5312,8 +5312,7 @@
       "SWAMP_CAVEWALL_SOUTHMARKER"
     ],
     "uvType": "BOX",
-    "uvScale": 0.75,
-    "uvOrientation": 100
+    "uvScale": 0.75
   },
   {
     "description": "LUMBRIDGE_CAVE_WALLS_BONE_SUPPORT",
@@ -5336,6 +5335,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
+    "uvOrientation": 100,
     "colorOverrides": [
       {
         "colors": "h == 6",
@@ -29866,8 +29866,35 @@
     "uvScale": 0.1,
     "colorOverrides": [
       {
-        "colors": [ "h == 17" ],
+        "colors": "h == 17",
         "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Basement - Culinaromancer's Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HUNDRED_GOODCHEST",
+      "HUNDRED_GOODCHEST_BASE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_35",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
@@ -30197,7 +30224,8 @@
       "SNP_BARREL_RED",
       "MYQ3_HIDEOUT_BARREL",
       "MYQ4_EMPTY_BARREL",
-      "MYQ4_HERB_BARREL"
+      "MYQ4_HERB_BARREL",
+      "AIDE_BARREL_TAP"
     ]
   },
   {
@@ -32201,7 +32229,6 @@
   },
   {
     "description": "Bankbooth with Shutters - Lumbridge",
-
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
