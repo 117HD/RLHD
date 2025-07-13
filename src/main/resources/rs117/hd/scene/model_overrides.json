@@ -15008,6 +15008,14 @@
     ]
   },
   {
+    "description": "Al-Kharid Throne",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "EGYPT_THRONE"
+    ]
+  },
+  {
     "description": "Al-Kharid Pillars",
     "baseMaterial": "MARBLE_3",
     "uvType": "BOX",
@@ -15035,6 +15043,25 @@
     "flatNormals": true,
     "objectIds": [
       "EGYPTWALLDECOR_COLUMN"
+    ]
+  },
+  {
+    "description": "Al-Kharid Warning Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 800,
+    "objectIds": [
+      "TOURTRAP_QIP_DANGER_POSTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_110",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
