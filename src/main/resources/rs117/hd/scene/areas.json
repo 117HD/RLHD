@@ -6015,6 +6015,12 @@
     ]
   },
   {
+    "name": "SORCERESS_GARDEN_HOUSE",
+    "aabbs": [
+      [ 3318, 3137, 3324, 3141 ]
+    ]
+  },
+  {
     "name": "PURO_PURO",
     "regions": [
       10307

@@ -20783,7 +20783,6 @@
       "TWOCATS_FIREPLACE_LIT",
       "TWOCATS_FIREPLACE_GONE_OUT",
       "TWOCATS_FIREPLACE_GOT_WOOD",
-      "SORCERESS_FIREPLACE",
       "MYQ3_GHETTO_FIREPLACE_BOTTOM",
       "MYQ3_GHETTO_FIREPLACE_MIDDLE",
       "MYQ3_GHETTO_FIREPLACE_TOP",
@@ -38250,6 +38249,23 @@
     "range": 20,
     "objectIds": [
       "ALDARIN_TORCH01_CAVE01"
+    ]
+  },
+  {
+    "description": "Sorceress Garden - Fireplace",
+    "offset": [ 10, 45, 0 ],
+    "radius": 800,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SORCERESS_FIREPLACE"
     ]
   }
 ]

@@ -5047,6 +5047,13 @@
     "groundMaterial": "ABYSSAL_FLOOR"
   },
   {
+    "name": "SORCERESS_GARDEN_HOUSE_FLOOR",
+    "area": "SORCERESS_GARDEN_HOUSE",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 0.85
+  },
+  {
     "name": "OVERLAY_DIRT",
     "area": "ALL",
     "overlayIds": [
