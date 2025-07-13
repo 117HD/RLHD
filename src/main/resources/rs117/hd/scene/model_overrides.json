@@ -38147,7 +38147,7 @@
         "colors": "h == 5",
         "uvType": "MODEL_XZ",
         "uvOrientation": 256,
-        "uvScale": 0.5
+        "uvScale": 0.3
       }
     ]
   },
