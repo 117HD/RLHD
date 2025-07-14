@@ -406,10 +406,8 @@
       10
     ],
     "groundMaterial": "GRAVEL",
-    "minHue": 7,
-    "maxHue": 7,
-    "minSaturation": 1,
-    "maxSaturation": 1,
+    "setHue": 7,
+    "setSaturation": 1,
     "shiftLightness": 12
   },
   {
