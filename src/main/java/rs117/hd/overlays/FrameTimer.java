@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 
-import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.GL31C.*;
 import static org.lwjgl.opengl.GL43C.*;
 
 @Slf4j

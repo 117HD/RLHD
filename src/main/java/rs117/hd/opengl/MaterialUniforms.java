@@ -1,14 +1,8 @@
 package rs117.hd.opengl;
 
-import rs117.hd.data.materials.Material;
+import static org.lwjgl.opengl.GL31C.*;
 
-public class MaterialsBuffer extends UniformBuffer{
-	public MaterialsBuffer() {
-		super("Materials");
-	}
-
-	public MaterialStruct[] materials = addStructs(new MaterialStruct[Material.values().length], MaterialStruct::new);
-
+public class MaterialUniforms extends UniformBuffer {
 	public static class MaterialStruct extends StructProperty {
 		public Property colorMap = addProperty(PropertyType.Int, "colorMap");
 		public Property normalMap = addProperty(PropertyType.Int, "normalMap");
@@ -25,5 +19,12 @@ public class MaterialsBuffer extends UniformBuffer{
 		public Property flowMapDuration = addProperty(PropertyType.FVec2, "flowMapDuration");
 		public Property scrollDuration = addProperty(PropertyType.FVec2, "scrollDuration");
 		public Property textureScale = addProperty(PropertyType.FVec3, "textureScale");
+	}
+
+	public MaterialStruct[] materials;
+
+	public MaterialUniforms(int materialCount) {
+		super("Materials", GL_STATIC_DRAW);
+		materials = addStructs(new MaterialStruct[materialCount], MaterialStruct::new);
 	}
 }

@@ -1,8 +1,6 @@
 package rs117.hd.scene.skybox;
 
 import com.google.gson.Gson;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.awt.image.RasterFormatException;
@@ -21,10 +19,7 @@ import rs117.hd.utils.ImageUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static org.lwjgl.opengl.GL11C.*;
-import static org.lwjgl.opengl.GL12C.*;
-import static org.lwjgl.opengl.GL13C.*;
-import static org.lwjgl.opengl.GL21C.GL_SRGB8_ALPHA8;
+import static org.lwjgl.opengl.GL31C.*;
 import static org.lwjgl.opengl.GL40C.*;
 import static org.lwjgl.opengl.GL42C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SKYBOX;

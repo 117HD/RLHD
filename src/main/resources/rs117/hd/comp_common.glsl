@@ -26,6 +26,12 @@
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
+#define WIND_DISPLACEMENT_DISABLED 0
+#define WIND_DISPLACEMENT_OBJECT 1
+#define WIND_DISPLACEMENT_VERTEX 2
+#define WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND 3
+#define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
+
 struct ModelInfo {
     int offset;   // offset into buffer
     int uvOffset; // offset into uv buffer
@@ -33,8 +39,14 @@ struct ModelInfo {
     int idx;      // write idx in target buffer
     int flags;    // hillskew, plane, orientation
     int x;        // scene position x
-    int y;        // scene position y
+    int y;        // scene position y & model height
     int z;        // scene position z
+};
+
+struct ObjectWindSample {
+    vec3 direction;
+    vec3 displacement;
+    float heightBasedStrength;
 };
 
 struct vert {

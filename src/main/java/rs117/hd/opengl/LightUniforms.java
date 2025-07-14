@@ -2,11 +2,11 @@ package rs117.hd.opengl;
 
 import rs117.hd.config.MaxDynamicLights;
 
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL31C.*;
 
-public class LightsBuffer extends UniformBuffer {
-	public LightsBuffer() {
-		super("Lights", GL_STREAM_DRAW);
+public class LightUniforms extends UniformBuffer {
+	public LightUniforms() {
+		super("Lights", GL_DYNAMIC_DRAW);
 	}
 
 	public LightStruct[] lights = addStructs(new LightStruct[MaxDynamicLights.MAX_LIGHTS], LightStruct::new);

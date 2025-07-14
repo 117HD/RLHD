@@ -703,6 +703,29 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_WIND_DISPLACEMENT = "windDisplacement";
+	@ConfigItem(
+		keyName = KEY_WIND_DISPLACEMENT,
+		name = "Wind Displacement",
+		description = "Controls whether things like grass and leaves should be affected by wind.",
+		position = 13,
+		section = environmentSettings
+	)
+	default boolean windDisplacement() {
+		return true;
+	}
+
+	String KEY_CHARACTER_DISPLACEMENT = "characterDisplacement";
+	@ConfigItem(
+		keyName = KEY_CHARACTER_DISPLACEMENT,
+		name = "Character Displacement",
+		description = "Let players & NPCs affect things like grass whilst walking around.",
+		position = 14,
+		section = environmentSettings
+	)
+	default boolean characterDisplacement() {
+		return true;
+	}
 
 	/*====== Model caching settings ======*/
 

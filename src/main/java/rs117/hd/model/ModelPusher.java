@@ -29,6 +29,7 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
+import rs117.hd.scene.model_overrides.WindDisplacement;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
@@ -69,17 +70,14 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_COUNT = (1 << 12) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 9) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
 	private ModelCache modelCache;
 
 	public void startUp() {
-		if (Material.values().length - 1 >= MAX_MATERIAL_COUNT) {
-			throw new IllegalStateException(
-				"Too many materials (" + Material.values().length + ") to fit into packed material data.");
-		}
+		assert WindDisplacement.values().length - 1 <= 0x7;
 
 		if (config.modelCaching() && !plugin.useLowMemoryMode) {
 			final int size = config.modelCacheSizeMiB();
@@ -440,10 +438,11 @@ public class ModelPusher {
 	) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
-		assert materialIndex <= MAX_MATERIAL_COUNT;
+		assert materialIndex <= MAX_MATERIAL_INDEX;
 		int materialData =
-			(materialIndex & MAX_MATERIAL_COUNT) << 12
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 6
+			(materialIndex & MAX_MATERIAL_INDEX) << 15
+			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 9
+			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (modelOverride.upwardsNormals ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3

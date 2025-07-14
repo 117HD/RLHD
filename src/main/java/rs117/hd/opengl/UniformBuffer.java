@@ -4,18 +4,12 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
-import rs117.hd.HdPlugin;
-import rs117.hd.opengl.compute.OpenCLManager;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 
-import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL31C.*;
-import static org.lwjgl.opengl.GL43C.*;
 
 @Slf4j
 public abstract class UniformBuffer {
@@ -76,7 +70,7 @@ public abstract class UniformBuffer {
 
 		public final void set(int value) {
 			if (type != PropertyType.Int) {
-				log.warn("UBO {} - Incorrect Setter(int) called for Property: {}", owner.glBuffer.name, name);
+				log.warn("{} - Incorrect Setter(int) called for Property: {}", owner.glBuffer.name, name);
 				return;
 			}
 
@@ -88,18 +82,18 @@ public abstract class UniformBuffer {
 
 		public final void set(int... values) {
 			if (type != PropertyType.IVec2 && type != PropertyType.IVec3 && type != PropertyType.IVec4) {
-				log.warn("UBO {} - Incorrect Setter(int[]) called for Property: {}", owner.glBuffer.name, name);
+				log.warn("{} - Incorrect Setter(int[]) called for Property: {}", owner.glBuffer.name, name);
 				return;
 			}
 
 			if (values == null) {
-				log.warn("UBO {} - Setter(int[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
+				log.warn("{} - Setter(int[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
 				return;
 			}
 
 			if ((type.isArray && (values.length % type.elementCount) != 0) || values.length != type.elementCount) {
 				log.warn(
-					"UBO {} - Setter(int[]) was provided with incorrect number of elements for Property: {}",
+					"{} - Setter(int[]) was provided with incorrect number of elements for Property: {}",
 					owner.glBuffer.name,
 					name
 				);
@@ -107,7 +101,7 @@ public abstract class UniformBuffer {
 			}
 
 			if (owner.data == null) {
-				log.warn("UBO {} - Hasn't been initialized yet!", owner.glBuffer.name);
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
 				return;
 			}
 
@@ -122,7 +116,7 @@ public abstract class UniformBuffer {
 
 		public final void set(float value) {
 			if (type != PropertyType.Float) {
-				log.warn("UBO {} - Incorrect Setter(float) called for Property: {}", owner.glBuffer.name, name);
+				log.warn("{} - Incorrect Setter(float) called for Property: {}", owner.glBuffer.name, name);
 				return;
 			}
 
@@ -139,18 +133,18 @@ public abstract class UniformBuffer {
 				type != PropertyType.Mat3 &&
 				type != PropertyType.Mat4
 			) {
-				log.warn("UBO {} - Incorrect Setter(float[]) called for Property: {}", owner.glBuffer.name, name);
+				log.warn("{} - Incorrect Setter(float[]) called for Property: {}", owner.glBuffer.name, name);
 				return;
 			}
 
 			if (values == null) {
-				log.warn("UBO {} - Setter(float[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
+				log.warn("{} - Setter(float[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
 				return;
 			}
 
 			if ((type.isArray && (values.length % type.elementCount) != 0) || values.length != type.elementCount) {
 				log.warn(
-					"UBO {} - Setter(float[]) was provided with incorrect number of elements for Property: {}",
+					"{} - Setter(float[]) was provided with incorrect number of elements for Property: {}",
 					owner.glBuffer.name,
 					name
 				);
@@ -158,7 +152,7 @@ public abstract class UniformBuffer {
 			}
 
 			if (owner.data == null) {
-				log.warn("UBO {} - Hasn't been initialized yet!", owner.glBuffer.name);
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
 				return;
 			}
 
@@ -186,22 +180,19 @@ public abstract class UniformBuffer {
 		}
 	}
 
-	@Getter
-	private final GLBuffer glBuffer;
-	private final int glDrawType;
+	public final GLBuffer glBuffer;
+
+	private int size;
+	private int dirtyLowTide = Integer.MAX_VALUE;
+	private int dirtyHighTide = 0;
 	private ByteBuffer data;
 
-	private int dirtyLowTide = Integer.MAX_VALUE;
-	private int dirtyHighTide = Integer.MIN_VALUE;
-
-	public UniformBuffer(String name) {
-		glBuffer = new GLBuffer("UBO " + name);
-		glDrawType = GL_STATIC_DRAW;
+	protected UniformBuffer(GLBuffer glBuffer) {
+		this.glBuffer = glBuffer;
 	}
 
-	public UniformBuffer(String name, int glDrawType) {
-		this.glDrawType = glDrawType;
-		glBuffer = new GLBuffer("UBO " + name);
+	public UniformBuffer(String name, int glUsage) {
+		this(new GLBuffer("UBO " + name, GL_UNIFORM_BUFFER, glUsage));
 	}
 
 	protected final <T extends StructProperty> T addStruct(T newStructProp) {
@@ -209,7 +200,7 @@ public abstract class UniformBuffer {
 			appendToBuffer(property);
 
 		// Structs need to align to 16 bytes
-		glBuffer.size += (int) (16 - (glBuffer.size % 16)) % 16;
+		size += (16 - (size % 16)) % 16;
 
 		newStructProp.properties.clear();
 		return newStructProp;
@@ -228,13 +219,20 @@ public abstract class UniformBuffer {
 		return appendToBuffer(new Property(type, name));
 	}
 
+	protected Property[] addPropertyArray(PropertyType type, String name, int size) {
+		Property[] result = new Property[size];
+		for (int i = 0; i < size; i++)
+			result[i] = addProperty(type, name);
+		return result;
+	}
+
 	private Property appendToBuffer(Property property) {
 		property.owner = this;
 
-		int Padding = (int) (property.type.alignment - (glBuffer.size % property.type.alignment)) % property.type.alignment;
-		property.position = (int) glBuffer.size + Padding;
+		int padding = (property.type.alignment - (size % property.type.alignment)) % property.type.alignment;
+		property.position = size + padding;
 
-		glBuffer.size += property.type.size + Padding;
+		size += property.type.size + padding;
 
 		return property;
 	}
@@ -244,63 +242,52 @@ public abstract class UniformBuffer {
 		dirtyHighTide = Math.max(dirtyHighTide, position + size);
 	}
 
-	public final void initialize(int uniformBlockIndex, OpenCLManager openCLManager) {
-		initialize(uniformBlockIndex);
-
-		if (openCLManager != null)
-			openCLManager.recreateCLBuffer(glBuffer, CL_MEM_READ_ONLY);
-	}
-
-	public final void initialize(int UniformBlockIndex) {
+	public void initialize() {
 		if (data != null)
 			destroy();
 
-		glBuffer.size = HDUtils.ceilPow2(glBuffer.size);
-		data = BufferUtils.createByteBuffer((int) glBuffer.size);
-		glBuffer.glBufferId = glGenBuffers();
-
-		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer.glBufferId);
-		glBufferData(GL_UNIFORM_BUFFER, glBuffer.size, glDrawType);
-		glBufferSubData(GL_UNIFORM_BUFFER, 0, data);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-		glBindBufferBase(GL_UNIFORM_BUFFER, UniformBlockIndex, glBuffer.glBufferId);
-
-		if (HdPlugin.glCaps.OpenGL43 && log.isDebugEnabled())
-			glObjectLabel(GL_BUFFER, glBuffer.glBufferId, glBuffer.name);
+		glBuffer.initialize(size);
+		data = BufferUtils.createByteBuffer(size);
 	}
 
+	public void initialize(int uniformBlockIndex) {
+		initialize();
+		bind(uniformBlockIndex);
+	}
+
+	public void bind(int uniformBlockIndex) {
+		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBlockIndex, glBuffer.id);
+	}
+
+	protected void preUpload() {}
+
 	public final void upload() {
-		if (data == null || dirtyHighTide <= 0 || dirtyLowTide >= glBuffer.size)
+		if (data == null)
+			return;
+
+		preUpload();
+
+		if (dirtyHighTide <= 0 || dirtyLowTide >= glBuffer.size)
 			return;
 
 		data.position(dirtyLowTide);
 		data.limit(dirtyHighTide);
 
-		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer.glBufferId);
+		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer.id);
 		glBufferSubData(GL_UNIFORM_BUFFER, dirtyLowTide, data);
-
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-		data.position(0);
-		data.limit((int) glBuffer.size);
+		data.clear();
 
 		dirtyLowTide = Integer.MAX_VALUE;
-		dirtyHighTide = Integer.MIN_VALUE;
+		dirtyHighTide = 0;
 	}
 
 	public final void destroy() {
 		if (data == null)
 			return;
 
-		glDeleteBuffers(glBuffer.glBufferId);
-
+		glBuffer.destroy();
 		data = null;
-		glBuffer.glBufferId = -1;
-
-		if (glBuffer.clBuffer != 0) {
-			clReleaseMemObject(glBuffer.clBuffer);
-			glBuffer.clBuffer = 0;
-		}
 	}
 }

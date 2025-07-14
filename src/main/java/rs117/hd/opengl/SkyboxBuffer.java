@@ -2,9 +2,11 @@ package rs117.hd.opengl;
 
 import rs117.hd.scene.skybox.SkyboxConfig;
 
+import static org.lwjgl.opengl.GL31C.*;
+
 public class SkyboxBuffer extends UniformBuffer {
 	public SkyboxBuffer() {
-		super("Skybox");
+		super("Skybox", GL_DYNAMIC_DRAW);
 	}
 
 	public SkyboxConfigStruct activeSkybox = addStruct(new SkyboxConfigStruct());

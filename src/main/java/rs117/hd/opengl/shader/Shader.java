@@ -38,7 +38,8 @@ import org.lwjgl.BufferUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static org.lwjgl.opengl.GL43C.*;
+import static org.lwjgl.opengl.GL31C.*;
+import static org.lwjgl.opengl.GL41C.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
