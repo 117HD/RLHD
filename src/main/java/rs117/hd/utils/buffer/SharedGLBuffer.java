@@ -4,7 +4,7 @@ import java.nio.IntBuffer;
 import rs117.hd.opengl.compute.OpenCLManager;
 
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opencl.CL10GL.*;
+import static org.lwjgl.opencl.CL10GL.clCreateFromGLBuffer;
 
 public class SharedGLBuffer extends GLBuffer {
 	public final int clUsage;

@@ -1,6 +1,6 @@
-package rs117.hd.opengl;
+package rs117.hd.opengl.uniforms;
 
-import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL33C.*;
 
 public class MaterialUniforms extends UniformBuffer {
 	public static class MaterialStruct extends StructProperty {
