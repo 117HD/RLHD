@@ -149,16 +149,9 @@ mat3 rotateZ(float theta) {
     );
 }
 
-// Identity matrix.
-mat3 identity() {
-    return mat3(1);
-}
-
 // 2D Random
 float hash(in vec2 st) {
-    return fract(sin(dot(st.xy,
-                         vec2(12.9898,78.233)))
-                 * 43758.5453123);
+    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453123);
 }
 
 // 2D Noise based on Morgan McGuire @morgan3d, under the BSD license
@@ -181,8 +174,8 @@ float noise(in vec2 st) {
 
     // Mix 4 coorners percentages
     return mix(a, b, u.x) +
-            (c - a)* u.y * (1.0 - u.x) +
-            (d - b) * u.x * u.y;
+        (c - a)* u.y * (1.0 - u.x) +
+        (d - b) * u.x * u.y;
 }
 
 vec3 snap(vec3 position, float gridSpacing) {
@@ -196,8 +189,7 @@ vec2 snap(vec2 position, float gridSpacing) {
     return snap(vec3(position.x, 0.0, position.y), gridSpacing).xz;
 }
 
-float smooth_step( float edge0, float edge1, float x )
-{
+float smooth_step(float edge0, float edge1, float x) {
     float p = clamp((x - edge0) / (edge1 - edge0), 0.0, 1.0);
     float v = p * p * (3.0 - 2.0 * p); // smoothstep formula
     return v;

@@ -319,19 +319,18 @@ void undoVanillaShading(struct vert *vertex, float3 unrotatedNormal) {
     vertex->ahsl = hsl;
 }
 
-inline float3 applyCharacterDisplacement(
+float3 applyCharacterDisplacement(
     float3 characterPos,
     float2 vertPos,
     float height,
     float strength,
-    float* offsetAccum)
-{
+    float* offsetAccum
+) {
     float2 offset = vertPos - characterPos.xy;
     float offsetLen = fabs(length(offset));
 
-    if (offsetLen >= fabs(characterPos.z)) {
+    if (offsetLen >= fabs(characterPos.z))
         return (float3)(0.0f, 0.0f, 0.0f);
-    }
 
     float offsetFrac = clamp(1.0f - (offsetLen / fabs(characterPos.z)), 0.0f, 1.0f);
     float displacementFrac = offsetFrac * offsetFrac;
@@ -354,13 +353,12 @@ void applyWindDisplacement(
     float3 normA, float3 normB, float3 normC,
     float3* displacementA,
     float3* displacementB,
-    float3* displacementC)
-{
+    float3* displacementC
+) {
     const int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
 
-    if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED) {
+    if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
-    }
 
     float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
     float strengthB = clamp(fabs(vertB.y) / height, 0.0f, 1.0f);
@@ -394,8 +392,7 @@ void applyWindDisplacement(
             strengthA *= (strengthA >= 0.3f ?  mix(distBlendA, 1.0f, heightFadeA) : 0.0f);
             strengthB *= (strengthB >= 0.3f ? mix(distBlendB, 1.0f, heightFadeB) : 0.0f);
             strengthC *= (strengthC >= 0.3f ? mix(distBlendC, 1.0f, heightFadeC) : 0.0f);
-        }
-        else if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+        } else if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
             float3 skewA = normalize(cross(normA, (float3)(0.0f, 1.0f, 0.0f)));
             float3 skewB = normalize(cross(normB, (float3)(0.0f, 1.0f, 0.0f)));
             float3 skewC = normalize(cross(normC, (float3)(0.0f, 1.0f, 0.0f)));
@@ -411,8 +408,7 @@ void applyWindDisplacement(
             *displacementA += (1.0f - windNoiseA) * (windSample.heightBasedStrength * strengthA) * 0.5f * skewA;
             *displacementB += (1.0f - windNoiseB) * (windSample.heightBasedStrength * strengthB) * 0.5f * skewB;
             *displacementC += (1.0f - windNoiseC) * (windSample.heightBasedStrength * strengthC) * 0.5f * skewC;
-        }
-        else {
+        } else {
             *displacementA = windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod) * windSample.direction;
             *displacementB = windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod) * windSample.direction;
             *displacementC = windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod) * windSample.direction;
@@ -508,9 +504,9 @@ void sort_and_insert(
     float3 displacementC = (float3)(0);
 
     applyWindDisplacement(uni, windSample, vertexFlags, height, pos.xyz,
-                            vertA.xyz, vertB.xyz, vertC.xyz,
-                            normA.xyz, normB.xyz, normC.xyz,
-                            &displacementA, &displacementB, &displacementC);
+        vertA.xyz, vertB.xyz, vertC.xyz,
+        normA.xyz, normB.xyz, normC.xyz,
+        &displacementA, &displacementB, &displacementC);
 
     vertA += pos + (float4)(displacementA, 0.0);
     vertB += pos + (float4)(displacementB, 0.0);
@@ -550,7 +546,6 @@ void sort_and_insert(
     vout[outOffset + myOffset * 3] = (struct vert){vertA.x, vertA.y, vertA.z, thisrvA.ahsl};
     vout[outOffset + myOffset * 3 + 1] = (struct vert){vertB.x, vertB.y, vertB.z, thisrvB.ahsl};
     vout[outOffset + myOffset * 3 + 2] = (struct vert){vertC.x, vertC.y, vertC.z, thisrvC.ahsl};
-
 
     float4 uvA = (float4)(0);
     float4 uvB = (float4)(0);

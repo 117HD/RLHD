@@ -27,6 +27,7 @@
 #include MAX_CHARACTER_POSITION_COUNT
 
 struct ComputeUniforms {
+  // Camera uniforms
   float cameraYaw;
   float cameraPitch;
   int centerX;
@@ -36,7 +37,7 @@ struct ComputeUniforms {
   float cameraY;
   float cameraZ;
 
-  // Wind Properties
+  // Wind uniforms
   float windDirectionX;
   float windDirectionZ;
   float windStrength;

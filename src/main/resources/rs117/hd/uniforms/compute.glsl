@@ -3,6 +3,7 @@
 #include MAX_CHARACTER_POSITION_COUNT
 
 layout(std140) uniform ComputeUniforms {
+    // Camera uniforms
     float cameraYaw;
     float cameraPitch;
     int centerX;
@@ -12,7 +13,7 @@ layout(std140) uniform ComputeUniforms {
     float cameraY;
     float cameraZ;
 
-    // Wind Properties
+    // Wind uniforms
     float windDirectionX;
     float windDirectionZ;
     float windStrength;

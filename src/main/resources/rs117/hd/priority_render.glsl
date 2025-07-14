@@ -216,9 +216,8 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
     vec2 offset = vertPos - characterPos.xy;
     float offsetLen = abs(length(offset));
 
-    if (offsetLen >= characterPos.z) {
-        return vec3(0.0);
-    }
+    if (offsetLen >= characterPos.z)
+        return vec3(0);
 
     float offsetFrac = saturate(1.0 - (offsetLen / characterPos.z));
     float displacementFrac = offsetFrac * offsetFrac;
@@ -234,26 +233,25 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
 void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
     in vec3 vertA, in vec3 vertB, in vec3 vertC,
     in vec3 normA, in vec3 normB, in vec3 normC,
-    inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC) {
-
+    inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC
+) {
     int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
-    if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED) {
+    if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
-    }
 
     float strengthA = saturate(abs(vertA.y) / height);
     float strengthB = saturate(abs(vertB.y) / height);
     float strengthC = saturate(abs(vertC.y) / height);
 
     #if WIND_DISPLACEMENT
-    if(windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
+    if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
         const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
         float windNoiseA = mix(-0.5, 0.5, noise((snap(vertA, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
         float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
         float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
-        if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
+        if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
             const float minDist = 50;
             const float blendDist = 10.0;
 
@@ -269,7 +267,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
             strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
         } else {
-            if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+            if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
                 vec3 vertASkew = safe_normalize(cross(normA.xyz, vec3(0, 1, 0)));
                 vec3 vertBSkew = safe_normalize(cross(normB.xyz, vec3(0, 1, 0)));
                 vec3 vertCSkew = safe_normalize(cross(normC.xyz, vec3(0, 1, 0)));
@@ -299,25 +297,24 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     #endif
 
     #if CHARACTER_DISPLACEMENT
-     if(windDisplacementMode == WIND_DISPLACEMENT_OBJECT){
+    if (windDisplacementMode == WIND_DISPLACEMENT_OBJECT) {
         vec2 worldVertA = (worldPos + vertA).xz;
         vec2 worldVertB = (worldPos + vertB).xz;
         vec2 worldVertC = (worldPos + vertC).xz;
 
         float fractAccum = 0.0;
-        for(int i = 0; i < characterPositionCount; i++) {
+        for (int i = 0; i < characterPositionCount; i++) {
             displacementA += applyCharacterDisplacement(characterPositions[i], worldVertA, height, strengthA, fractAccum);
             displacementB += applyCharacterDisplacement(characterPositions[i], worldVertB, height, strengthB, fractAccum);
             displacementC += applyCharacterDisplacement(characterPositions[i], worldVertC, height, strengthC, fractAccum);
-            if(fractAccum >= 2.0){
+            if (fractAccum >= 2.0)
                 break;
-            }
         }
     }
     #endif
 
     #if WIND_DISPLACEMENT
-    if(windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
         // Object Displacement
         displacementA += windSample.displacement * strengthA;
         displacementB += windSample.displacement * strengthB;
@@ -367,9 +364,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec4 normC = normal[offset + localId * 3 + 2];
 
         applyWindDisplacement(windSample, vertexFlags, height, pos,
-                        thisrvA.pos, thisrvB.pos, thisrvC.pos,
-                        normA.xyz, normB.xyz, normC.xyz,
-                        displacementA, displacementB, displacementC);
+            thisrvA.pos, thisrvB.pos, thisrvC.pos,
+            normA.xyz, normB.xyz, normC.xyz,
+            displacementA, displacementB, displacementC);
 
         // Rotate normals to match model orientation
         normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
@@ -417,9 +414,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vout[outOffset + myOffset * 3 + 1] = thisrvB;
         vout[outOffset + myOffset * 3 + 2] = thisrvC;
 
-        vec4 uvA = vec4(0.0);
-        vec4 uvB = vec4(0.0);
-        vec4 uvC = vec4(0.0);
+        vec4 uvA = vec4(0);
+        vec4 uvB = vec4(0);
+        vec4 uvC = vec4(0);
 
         if (uvOffset >= 0) {
             uvA = uv[uvOffset + localId * 3];

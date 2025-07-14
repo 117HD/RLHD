@@ -44,7 +44,7 @@ public class ComputeUniforms extends SharedUniformBuffer {
 	}
 
 	private CharacterPositionPair getCharacterPositionPair() {
-		if(writtenCharacterPositions >= characterPositionsPairs.size()) {
+		if (writtenCharacterPositions >= characterPositionsPairs.size()) {
 			CharacterPositionPair newPair = new CharacterPositionPair();
 			characterPositionsPairs.add(newPair);
 			return newPair;
@@ -83,7 +83,7 @@ public class ComputeUniforms extends SharedUniformBuffer {
 
 	@Override
 	protected void preUpload() {
-		for(int i = 0; i < writtenCharacterPositions; i++) {
+		for (int i = 0; i < writtenCharacterPositions; i++) {
 			CharacterPositionPair pair = characterPositionsPairs.get(i);
 			pair.dist = Float.MAX_VALUE;
 

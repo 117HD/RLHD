@@ -73,7 +73,7 @@ void sortModel(
 
       windSample.direction = normalize((float3)(uni->windDirectionX * c + uni->windDirectionZ * s, 0.0f, -uni->windDirectionX * s + uni->windDirectionZ * c));
       windSample.heightBasedStrength = clamp((fabs(y) + height) / uni->windCeiling, 0.0f, 1.0f) * uni->windStrength;
-      windSample.displacement = windSample.direction * (windSample.heightBasedStrength * modelNoise);
+      windSample.displacement = windSample.direction * windSample.heightBasedStrength * modelNoise;
   }
   #endif
 

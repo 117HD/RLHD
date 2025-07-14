@@ -115,7 +115,7 @@ float saturate(float value) {
 }
 
 // 2D Random
-float hash (float2 st) {
+float hash(float2 st) {
     return fmod(sin(dot(st.xy, (float2)(12.9898f, 78.233f))) * 43758.5453123f, 1.0f);
 }
 
@@ -134,6 +134,6 @@ float noise(float2 st) {
 
     // Mix 4 corners
     return mix(a, b, u.x) +
-           (c - a) * u.y * (1.0f - u.x) +
-           (d - b) * u.x * u.y;
+        (c - a) * u.y * (1.0f - u.x) +
+        (d - b) * u.x * u.y;
 }
