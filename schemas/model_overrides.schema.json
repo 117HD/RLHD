@@ -172,13 +172,13 @@
       },
       "windDisplacementMode": {
         "type": "string",
-        "description": "What type of wind displacement should be applied to the model. Defaults to Disabled.",
+        "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
         "enum": [
-          "Disabled",
-          "Object",
-          "Vertex",
-          "VertexWithHemisphereBlend",
-          "VertexJiggle"
+          "DISABLED",
+          "OBJECT",
+          "VERTEX",
+          "VERTEX_WITH_HEMISPHERE_BLEND",
+          "VERTEX_JIGGLE"
         ]
       },
       "materialOverrides": {
@@ -264,13 +264,13 @@
             },
             "windDisplacementMode": {
               "type": "string",
-              "description": "What type of wind displacement should be applied to the model. Defaults to Disabled.",
+              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
               "enum": [
-                "Disabled",
-                "Object",
-                "Vertex",
-                "VertexWithHemisphereBlend",
-                "VertexJiggle"
+                "DISABLED",
+                "OBJECT",
+                "VERTEX",
+                "VERTEX_WITH_HEMISPHERE_BLEND",
+                "VERTEX_JIGGLE"
               ]
             }
           }
@@ -366,13 +366,13 @@
             },
             "windDisplacementMode": {
               "type": "string",
-              "description": "What type of wind displacement should be applied to the model. Defaults to Disabled.",
+              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
               "enum": [
-                "Disabled",
-                "Object",
-                "Vertex",
-                "VertexWithHemisphereBlend",
-                "VertexJiggle"
+                "DISABLED",
+                "OBJECT",
+                "VERTEX",
+                "VERTEX_WITH_HEMISPHERE_BLEND",
+                "VERTEX_JIGGLE"
               ]
             }
           }

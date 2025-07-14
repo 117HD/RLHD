@@ -70,7 +70,7 @@ public class ModelOverride
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
-	public WindDisplacement windDisplacementMode = WindDisplacement.Disabled;
+	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] hideInAreas = {};

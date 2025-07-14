@@ -1,9 +1,9 @@
 package rs117.hd.scene.model_overrides;
 
 public enum WindDisplacement {
-	Disabled,
-	Object,
-	Vertex,
-	VertexWithHemisphereBlend,
-	VertexJiggle
+	DISABLED,
+	OBJECT,
+	VERTEX,
+	VERTEX_WITH_HEMISPHERE_BLEND,
+	VERTEX_JIGGLE
 }

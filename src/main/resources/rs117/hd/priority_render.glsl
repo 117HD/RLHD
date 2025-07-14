@@ -253,7 +253,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
         float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
         float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
-        if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_HEMISPHERE) {
+        if(windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
             const float minDist = 50;
             const float blendDist = 10.0;
 
