@@ -1101,6 +1101,7 @@
     "objectIds": [
       "TREE2",
       "TREE3",
+      "TREE4",
       "LEPRECHAUNTREE",
       "NEWBIETREE2",
       "WOM_TREE",
@@ -2098,6 +2099,8 @@
     "objectIds": [
       "DAISYS",
       "ONION",
+      "AVIUM_ONION01",
+      "AVIUM_ONION02",
       "RAREFLOWER_BLUE",
       "RAREFLOWERS_BLUE",
       "BLUEFLOWER",
@@ -2134,7 +2137,13 @@
       "NETTLES6",
       "HEATHER",
       "HEATHER2",
-      "HEATHER3"
+      "HEATHER3",
+      "FLOWER_SUNFLOWER_FULL01",
+      "FLOWER_SUNFLOWER_EDGE01",
+      "FLOWER_SUNFLOWER_EDGE01_RED",
+      "FLOWER_SUNFLOWER_FULL01_RED",
+      "AVIUM_CORN01",
+      "AVIUM_CORN02"
     ]
   },
   {
@@ -2355,6 +2364,7 @@
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "AVIUM_GRASS_1",
       "AVIUM_GRASS_2",
@@ -26863,6 +26873,7 @@
   {
     "description": "Varlamore - Avium Savannah - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "GROUNDCOVER_PLANT5_WITHERED",
       "PLANT_FERN_ECLIPSE01",
@@ -26876,6 +26887,7 @@
   {
     "description": "Varlamore - Avium Savannah- Plant - Spikey Bush",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
@@ -26885,6 +26897,7 @@
     "colorOverrides": [
       {
         "description": "leaf",
+        "windDisplacementMode": "OBJECT",
         "colors": "h >= 5",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
@@ -28854,6 +28867,7 @@
   {
     "description": "Zeah - Kourend - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "GROUNDCOVER_PLANT1_ROTTEN",
       "GROUNDCOVER_PLANT2_ROTTEN",
@@ -28862,11 +28876,13 @@
   },
   {
     "description": "Zeah - Varlamore - Plant - Withered Leafy Shrub",
+    "windDisplacementMode": "OBJECT",
     "baseMaterial": "PLANT_GRUNGE_1",
     "colorOverrides": [
       {
         "colors": "h > 3",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "OBJECT",
         "uvScale": 0.25,
         "uvType": "MODEL_XZ"
       }
@@ -45041,7 +45057,9 @@
     "description": "Generic - Cabbage",
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
-      "CABBAGE"
+      "CABBAGE",
+      "AVIUM_CABBAGE01",
+      "AVIUM_CABBAGE02"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -46513,6 +46531,7 @@
     "colorOverrides": [
       {
         "description": "Needles",
+        "windDisplacementMode": "VERTEX",
         "baseMaterial": "LEAF_VEINS",
         "colors": "h > 10",
         "uvType": "BOX"
