@@ -2688,6 +2688,7 @@
     "description": "Fixes weird pattern made by grass in POH",
     "areas": [ "PLAYER_OWNED_HOUSE" ],
     "baseMaterial": "GRAY_35",
+    "windDisplacementMode": "OBJECT",
     "upwardsNormals": true,
     "castShadows": false,
     "objectIds": [
