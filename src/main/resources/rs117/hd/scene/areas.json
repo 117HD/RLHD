@@ -85,7 +85,7 @@
   {
     "name": "LUMBRIDGE_CASTLE_BASEMENT",
     "aabbs": [
-      [ 3200, 9600, 3220, 9663 ]
+      [ 3200, 9600, 3220, 9659 ]
     ]
   },
   {
@@ -221,44 +221,47 @@
   {
     "name": "GOBLIN_MAZE",
     "aabbs": [
-      [ 3221, 9600, 3327, 9660 ],
-      [ 3249, 9661, 3258, 9663 ],
-      [ 3234, 9661, 3240, 9661 ],
-      [ 3221, 9661, 3233, 9663 ],
-      [ 3259, 9661, 3279, 9663 ]
-    ]
+      [ 3221, 9600, 3263, 9659 ],
+      [ 3224, 9660, 3241, 9660 ],
+      [ 3226, 9661, 3239, 9661 ],
+      [ 3248, 9660 ],
+      [ 3249, 9660, 3263, 9663 ]
+    ],
+    "regions": [ 13206 ]
   },
   {
     "name": "LUMBRIDGE_SWAMP_CAVES",
-    "aabbs": [
-      [ 3141, 9536, 3265, 9599 ]
+    "regionBoxes": [
+      [ 12693, 12949 ]
     ]
   },
   {
     "name": "Lumbridge Watermill Basement",
     "aabbs": [
       [ 3203, 9664, 3250, 9708 ],
-      [ 3234, 9662, 3248, 9663 ],
-      [ 3241, 9660, 3247, 9661 ],
-      [ 3248, 9661 ]
-    ]
+      [ 3233, 9663, 3249, 9663 ],
+      [ 3234, 9662, 3248, 9662 ],
+      [ 3241, 9661, 3248, 9661 ],
+      [ 3242, 9660, 3247, 9660 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "Lumbridge Underground",
     "areas": [
       "LUMBRIDGE_SWAMP_CAVES",
       "GOBLIN_MAZE",
-      "LUMBRIDGE_CASTLE_BASEMENT",
-      "Lumbridge Watermill Basement",
-      "TEARS_OF_GUTHIX"
+      "LUMBRIDGE_CASTLE_BASEMENT"
     ],
     "hideOtherAreas": true
   },
   {
     "name": "TEARS_OF_GUTHIX",
-    "regions": [
-      12948
-    ]
+    "aabbs": [
+      [ 3200, 9501, 3265, 9535 ],
+      [ 3200, 9479, 3263, 9500 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "DORGESHKAAN",
