@@ -1406,7 +1406,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.begin(Timer.DRAW_SCENE);
 
 		final Scene scene = client.getScene();
-		scene.setDrawDistance(getDrawDistance());
+		int drawDistance = getDrawDistance();
+		boolean drawDistanceChanged = false;
+		if (scene.getDrawDistance() != drawDistance) {
+			scene.setDrawDistance(drawDistance);
+			drawDistanceChanged = true;
+		}
 
 		boolean updateUniforms = true;
 
@@ -1467,7 +1472,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int newZoom = configShadowsEnabled && configExpandShadowDraw ? client.get3dZoom() / 2 : client.get3dZoom();
 				if (!Arrays.equals(cameraPosition, newCameraPosition) ||
 					!Arrays.equals(cameraOrientation, newCameraOrientation) ||
-					cameraZoom != newZoom
+					cameraZoom != newZoom ||
+					drawDistanceChanged
 				) {
 					System.arraycopy(newCameraPosition, 0, cameraPosition, 0, cameraPosition.length);
 					System.arraycopy(newCameraOrientation, 0, cameraOrientation, 0, cameraOrientation.length);
