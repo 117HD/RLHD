@@ -116,6 +116,11 @@ public class ModelOverride
 				throw new IllegalStateException("Invalid inheritTileColorType");
 			inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
 		}
+		if (windDisplacementMode == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid windDisplacementMode");
+			windDisplacementMode = ModelOverride.NONE.windDisplacementMode;
+		}
 
 		if (areas == null)
 			areas = new AABB[0];
