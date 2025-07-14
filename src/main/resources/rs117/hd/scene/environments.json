@@ -1798,7 +1798,10 @@
     "directionalStrength": 3.5,
     "ambientStrength": 1.25,
     "waterColor": "#b9d6ff",
-    "instantTransition": true
+    "instantTransition": true,
+    "windAngle": 40,
+    "windSpeed": 13,
+    "windStrength": 65
   },
   {
     "key": "Varlamore",

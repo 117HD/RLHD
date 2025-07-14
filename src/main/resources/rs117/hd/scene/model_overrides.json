@@ -2161,7 +2161,15 @@
       "PRIDE22_FLOWER_INDIGO_T2",
       "PRIDE22_FLOWER_VIOLET_T3",
       "PRIDE22_FLOWER_VIOLET_T1",
-      "PRIDE22_FLOWER_VIOLET_T2"
+      "PRIDE22_FLOWER_VIOLET_T2",
+      "FAIRY2_BULLRUSH_FALLOFF",
+      "FAIRY2_BULLRUSH_SMALL",
+      "FAIRY2_BULLRUSH_TILE",
+      "FAIRY2_BULLRUSH_LARGE",
+      "FAIRY2_LITTLE_FLOWERS_4",
+      "FAIRY2_LITTLE_FLOWERS_3",
+      "FAIRY2_LITTLE_FLOWERS_2",
+      "FAIRY2_LITTLE_FLOWERS_1"
     ]
   },
   {
@@ -2369,6 +2377,7 @@
     "description": "Enchanted Valley Grass - Inherit Overlay",
     "areas": [ "ENCHANTED_VALLEY" ],
     "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
     "inheritTileColorType": "OVERLAY",
     "upwardsNormals": true,
     "castShadows": false,
@@ -24766,7 +24775,7 @@
     "colorOverrides": [
       {
         "colors": "h == 17",
-        "baseMaterial": "GRUNGE_3"
+        "baseMaterial": "GRAY_65"
       },
       {
         "colors": "h == 16",
@@ -44489,11 +44498,13 @@
   {
     "description": "Zeah - Kourend - Hosidius - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h > 11",
+        "windDisplacementMode": "OBJECT",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.4,
         "uvOrientation": 89,
@@ -44507,11 +44518,13 @@
   {
     "description": "Zeah - Kourend - Hosidius - Plant - Leafy grass",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.6,
     "colorOverrides": [
       {
         "colors": "h > 11",
+        "windDisplacementMode": "OBJECT",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.4,
         "uvType": "MODEL_XZ"
