@@ -394,7 +394,30 @@
     "minSaturation": 5,
     "maxSaturation": 5,
     "minLightness": 18,
-    "maxLightness": 18
+    "maxLightness": 18,
+    "replacements": {
+      "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING": "!blending"
+    }
+  },
+  {
+    "name": "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING",
+    "area": "LUMBRIDGE_VARROCK_PATH_BLEND_FIX",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL",
+    "setHue": 7,
+    "setSaturation": 1,
+    "shiftLightness": 12
+  },
+  {
+    "name": "LUMBRIDGE_RIVER_DIRT_FIX",
+    "area": "LUMBRIDGE_RIVER_DIRT_FIX",
+    "underlayIds": [ 65 ],
+    "groundMaterial": "DIRT",
+    "maxSaturation": 3,
+    "shiftHue": -1,
+    "shiftLightness": 3
   },
   {
     "name": "LUMBRIDGE_VARROCK_PATH_FIX_1",
@@ -421,6 +444,12 @@
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 12
+  },
+  {
+    "name": "Al Kharid to Varrock Gate Grass Fix",
+    "area": "Al Kharid to Varrock Gate Grass Fix",
+    "underlayIds": [ 52 ],
+    "groundMaterial": "GRASS_1"
   },
   {
     "name": "LUMBRIDGE_PATHS",
@@ -5045,6 +5074,13 @@
       29
     ],
     "groundMaterial": "ABYSSAL_FLOOR"
+  },
+  {
+    "name": "SORCERESS_GARDEN_HOUSE_FLOOR",
+    "area": "SORCERESS_GARDEN_HOUSE",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 0.85
   },
   {
     "name": "OVERLAY_DIRT",

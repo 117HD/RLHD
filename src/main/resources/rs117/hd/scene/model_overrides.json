@@ -1409,6 +1409,15 @@
     "uvScale": 0.8
   },
   {
+    "description": "Tree - Sapling",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "XMAS18_SAPLING"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
+  },
+  {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
@@ -2844,7 +2853,9 @@
       "RUSTIC_OPENFENCEGATE_L",
       "RUSTIC_OPENFENCEGATE_R",
       "MURDER_QIP_GARDENFENCING",
-      "ROYAL_RAIL"
+      "ROYAL_RAIL",
+      "PVPA_ACCESS_GATE_R_CLOSED",
+      "PVPA_ACCESS_GATE_L_CLOSED"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -5319,7 +5330,6 @@
       "SWAMP_CAVEWALL1_STALAGMITE1",
       "SWAMP_CAVEWALL1",
       "SWAMP_CAVEWALL1_GUNGYWATER1",
-      "GOBLIN_CAVEWALL_FLOWINGGUNGYWATER",
       "SWAMP_CAVEWALL2",
       "SWAMP_CAVEWALL3",
       "SWAMP_CAVEWALL4",
@@ -5389,10 +5399,96 @@
       "GOBLIN_CAVEWALL_BONE_SUPPORTED2",
       "SWAMP_CAVEWALL1_GASHOLE",
       "SWAMP_CAVEWALL1_GASHOLE2",
-      "LOST_TRIBE_CELLAR_HOLE_BLOCKING"
+      "LOST_TRIBE_CELLAR_HOLE_BLOCKING",
+      "DTTD_WALL_HAM_TOP5_OUTER2",
+      "DTTD_WALL_HAM_TOP5_OUTER",
+      "DTTD_WALL_HAM_TOP_OUTER",
+      "ENAKH_B_W_CAVEWALL_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 100
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_MAZE_MARKERS",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SWAMP_CAVEWALL_EASTMARKER",
+      "SWAMP_CAVEWALL_WESTMARKER",
+      "SWAMP_CAVEWALL_NORTHMARKER",
+      "SWAMP_CAVEWALL_SOUTHMARKER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALLS_BONE_SUPPORT",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      "GOBLIN_CAVEWALL_BONEARCH",
+      "GOBLIN_CAVEWALL_BONEARCH_RAGS1",
+      "GOBLIN_CAVEWALL_BONEARCH_RAGS2",
+      "GOBLIN_CAVEWALL_BONEARCH_BROKEN1",
+      "GOBLIN_CAVEWALL_BONEARCH_BROKEN2",
+      "GOBLIN_CAVEWALL_BONE_SUPPORTED1",
+      "GOBLIN_CAVEWALL_BONE_SUPPORTED2",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_DOUBLE_RAGS1",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_DOUBLE",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_RAGS1",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE_END",
+      "GOBLIN_CAVEWALL_BONEARCH_MIDDLE",
+      "ARCH_BONES",
+      "BONE_CRANE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "BONE"
+      },
+      {
+        "colors": "h == 17",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALLS_DARKER",
+    "baseMaterial": "ROCK_1",
+    "objectIds": [
+      "DTTD_CAVE_ENTRANCE_HAMSIDE_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_SWAMP_WATERFALL",
+    "textureMaterial": "SWAMP_WATER_FLAT_FLOW",
+    "objectIds": [
+      "GOBLIN_CAVEWALL_FLOWINGGUNGYWATER"
+    ]
+  },
+  {
+    "description": "LUMBRIDGE_CAVE_WALL_BEAST",
+    "npcIds": [
+      "SWAMP_WALLBEAST",
+      "SWAMP_WALLBEAST_COMBAT"],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Corporeal Beast Entrance Passage",
@@ -6116,7 +6212,18 @@
     "uvType": "BOX"
   },
   {
-    "description": "WOODEN_PLANK_ROUGH",
+    "description": "Lumbridge - Support Beam",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "PIER_RAIL_TALL",
+      "TIMBERWALL_BROWN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512
+  },
+  {
+    "description": "WOODEN_PLANK_ROUGH_2",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "SHAYZIEN_WOODEN_DECKING",
@@ -7603,7 +7710,13 @@
       "FEUD_RUGMIDDLE_RED_SWORD",
       "EYEGLO_RUG_SIDE_MINIGAME",
       "RUGCORNER_DARK_RED",
-      "RUGSIDE_DARK_RED"
+      "RUGSIDE_DARK_RED",
+      "SORCERESS_RUG_MIDDLE",
+      "SORCERESS_RUG_SIDE",
+      "SORCERESS_RUG_END",
+      "SORCERESS_RUG_END_M",
+      "SORCERESS_RUG_CORNER_M",
+      "SORCERESS_RUG_CORNER"
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
@@ -9768,6 +9881,73 @@
     "uvOrientation": 400
   },
   {
+    "description": "Lumbridge Windmill - Flour Bin, Hopper, Handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "MILLBASE_EMPTY",
+      "MILLBASE_FLOUR",
+      "HOPPER1",
+      "HOPPERLEVERS1",
+      "INACTIVEHOPPERLEVERS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 0 && s == 0 && l < 72 ",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 0 && s == 0 && l > 72",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Windmill - Darken moving parts so they don't stick out as much",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "MILLTOP2",
+      "MILL",
+      "MILLSAIL_BACK"
+    ]
+  },
+  {
+    "description": "Scarecrow",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "objectIds": [
+      "SCARECROW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 7",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "description": "Both required to prevent vanilla texture from disappearing",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvOrientationY": 0,
+        "uvOrientationZ": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
     "description": "Wyvern Shortcut",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -10049,6 +10229,33 @@
       "HIDEY_CRATE_MASTER"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Inconspicuous Hole",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HIDEY_UNBUILT_HOLE_EASY",
+      "HIDEY_HOLE_EASY",
+      "HIDEY_UNBUILT_HOLE_MEDIUM",
+      "HIDEY_HOLE_MEDIUM",
+      "HIDEY_UNBUILT_HOLE_HARD",
+      "HIDEY_HOLE_HARD",
+      "HIDEY_UNBUILT_HOLE_ELITE",
+      "HIDEY_HOLE_ELITE",
+      "HIDEY_UNBUILT_HOLE_MASTER",
+      "HIDEY_HOLE_MASTER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "castShadows": false
+      }
+    ]
   },
   {
     "description": "Objects - Mossy Rock - Medium",
@@ -10987,7 +11194,8 @@
       "TOURTRAP_QIP_BARREL",
       "THMINEBARREL_ANA_WINCHSIDE",
       "THMINEBARREL_FULL",
-      "THMINEBARREL_EMPTY"
+      "THMINEBARREL_EMPTY",
+      "QIP_SHEEP_SHEARER_BARREL"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -11160,7 +11368,8 @@
       "FAI_VARROCK_RANGE_WITH_PIPE",
       "KR_SIN_RANGE",
       "CON_CONTRACT_FALADOR_SOUTH_RANGE_FIXED",
-      "CON_CONTRACT_ARDY_WEST_HOTSPOT1"
+      "CON_CONTRACT_ARDY_WEST_HOTSPOT1",
+      "SORCERESS_RANGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -14863,7 +15072,7 @@
     "objectIds": [
       "DESERTWINDOW"
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvOrientation": 512
   },
   {
@@ -14897,9 +15106,20 @@
     ]
   },
   {
-    "description": "Al-Kharid Pillars",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "description": "Al-Kharid Throne",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
     "objectIds": [
+      "EGYPT_THRONE"
+    ]
+  },
+  {
+    "description": "Al-Kharid Pillars",
+    "baseMaterial": "MARBLE_3",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "EGYPT_COLUMN2",
       "EGYPT_COLUMN3",
       "EGYPT_COLUMN4"
     ]
@@ -14921,6 +15141,25 @@
     "flatNormals": true,
     "objectIds": [
       "EGYPTWALLDECOR_COLUMN"
+    ]
+  },
+  {
+    "description": "Al-Kharid Warning Sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 800,
+    "objectIds": [
+      "TOURTRAP_QIP_DANGER_POSTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_110",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
@@ -15064,7 +15303,8 @@
       "GROUPOFDESERTBASKETS",
       "ROOFTOPS_POLLNIVNEACH_BASKET"
     ],
-    "uvType": "GEOMETRY"
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Metal Birdcage",
@@ -15091,6 +15331,38 @@
     ],
     "flatNormals": true,
     "uvType": "GEOMETRY"
+  },
+  {
+    "description": "AL Kharid - Bed and Chair",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "objectIds": [
+      "EGYPT_BED",
+      "EGYPT_CHAIR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "AL Kharid - Pot and Pillar",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "EGYPT_STATUE5"
+    ]
   },
   {
     "description": "Kharidian Tent",
@@ -16030,12 +16302,30 @@
     "description": "Broken Wood Awning",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      "ARENA_KIOSK_WOOD",
-      "ARENA_KIOSK_WOOD_MIRROR",
       "BREW_PIER_CUTOFF_2"
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512
+  },
+  {
+    "description": "Duel Arena Hut Awning",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      "ARENA_KIOSK_WOOD",
+      "ARENA_KIOSK_WOOD_MIRROR"
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Duel Arena Hut Awning - Support",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "ARENA_KIOSK_SUPPORT",
+      "ARENA_KIOSK_SUPPORT_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 300,
+    "uvScale": 0.75
   },
   {
     "description": "Wattle Roof",
@@ -20428,6 +20718,16 @@
     "flatNormals": true
   },
   {
+    "description": "Lumbridge - Al Khrid Crossroads Signpost",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "AIDE_SIGNPOST_1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "upwardsNormals": true
+  },
+  {
     "description": "What Lies Below - Camp Fire",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -21524,6 +21824,7 @@
   },
   {
     "description": "Objects - Hay - Haystack",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "textureMaterial": "HD_HAY",
     "objectIds": [
       "HAYSTACK3"
@@ -23759,6 +24060,76 @@
       "_100_OSMAN_TRELLIS_WINTER", "_100_OSMAN_TRELLIS_WINTER_SINGLE", "_100_OSMAN_TRELLIS_WINTER_CORNER", "_100_OSMAN_TRELLIS_WINTER_END"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Sorceress Garden Table",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "SORCERESS_TABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Sorceress Garden Chair",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "objectIds": [
+      "SORCERESS_CHAIR",
+      "SORCERESS_CHAIR_DAMAGED_1",
+      "SORCERESS_CHAIR_DAMAGED_2"
+    ],
+    "uvType": "BOX",
+    "uvOrientationZ": 512,
+    "uvScale": 0.3
+  },
+  {
+    "description": "Sorceress Garden Shelves",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "SORCERESS_SHELVES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sorceress Garden Pedestal",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SORCERESS_PEDESTAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sorceress Garden Ladder",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SORCERESS_LADDER",
+      "SORCERESS_LADDER_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Sorceress Garden Fireplace",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SORCERESS_FIREPLACE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45
   },
   {
     "description": "Crombwick Maynor - Ground Object - Deck",
@@ -26846,7 +27217,7 @@
   },
   {
     "description": "Perilous Moons Murals",
-    "baseMaterial": "TILE_SMALL_1",
+    "baseMaterial": "TILE_SMALL_2",
     "uvType": "BOX",
     "uvOrientation": 256,
     "objectIds": [
@@ -29410,8 +29781,41 @@
     "uvOrientation": 512
   },
   {
+    "description": "Sheep Shearer - Fireplace with Pot",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "QIP_SHEEP_SHEARER_FIREPLACECOOKINGPOT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "GRAY_110",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Wooden food trough",
-    "objectIds": [ "FOODTROUGH", "FAI_VARROCK_FOODTROUGH" ],
+    "objectIds": [
+      "FOODTROUGH",
+      "FOODTROUGH4",
+      "FAI_VARROCK_FOODTROUGH"
+    ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -29568,6 +29972,18 @@
         "uvOrientationX": 512
       }
     ]
+  },
+  {
+    "description": "Cooking Tutor - Meat Rack",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "HANGINGMEAT1",
+      "HANGINGMEAT2"
+    ],
+    "retainVanillaUvs": false
   },
   {
     "description": "Lumbridge Castle - Range",
@@ -29902,8 +30318,35 @@
     "uvScale": 0.1,
     "colorOverrides": [
       {
-        "colors": [ "h == 17" ],
+        "colors": "h == 17",
         "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Lumbridge Basement - Culinaromancer's Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "HUNDRED_GOODCHEST",
+      "HUNDRED_GOODCHEST_BASE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "GRAY_35",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
@@ -30233,7 +30676,8 @@
       "SNP_BARREL_RED",
       "MYQ3_HIDEOUT_BARREL",
       "MYQ4_EMPTY_BARREL",
-      "MYQ4_HERB_BARREL"
+      "MYQ4_HERB_BARREL",
+      "AIDE_BARREL_TAP"
     ]
   },
   {
@@ -30292,6 +30736,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "CART",
+      "WHEEL_BARROW",
       "FAI_VARROCK_CART",
       "AHOY_CART",
       "AHOY_WHEEL_BARROW",
@@ -30308,7 +30753,7 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": "h == 0 && l < 40",
+        "colors": "h == 0 && l < 32",
         "uvType": "BOX",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvScale": 0.5
@@ -32237,7 +32682,6 @@
   },
   {
     "description": "Bankbooth with Shutters - Lumbridge",
-
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -33757,14 +34201,16 @@
   {
     "description": "Metal Plough with wooden handles",
     "baseMaterial": "WOOD_GRAIN_3",
-    "uvOrientation": 256,
+    "uvOrientation": 412,
     "uvType": "BOX",
+    "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX",
-        "uvOrientation": 920
+        "uvOrientation": 920,
+        "uvScale": 0.5
       }
     ],
     "objectIds": [
@@ -36559,7 +37005,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 6",
+        "colors": [ "h == 0", "h == 6" ],
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -37835,7 +38281,7 @@
         "colors": "h == 5",
         "uvType": "MODEL_XZ",
         "uvOrientation": 256,
-        "uvScale": 0.5
+        "uvScale": 0.3
       }
     ]
   },
@@ -41532,6 +41978,9 @@
     "description": "Generic - Wooden - Metallic - Banksign",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvOrientationZ": 512,
+    "uvScale": 0.75,
     "objectIds": [
       "ROOFTOPS_SEERS_BANKSIGN",
       "BANKSIGN"
