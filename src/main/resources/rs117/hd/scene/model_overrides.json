@@ -15167,6 +15167,7 @@
   {
     "description": "Kharidian Barrel Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS5"
     ]
@@ -15204,6 +15205,7 @@
   {
     "description": "Kharidian Saguaro Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS2"
     ]
@@ -15211,6 +15213,7 @@
   {
     "description": "Kharidian Fern Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS4"
     ]
@@ -15218,6 +15221,7 @@
   {
     "description": "Kharidian Columnar Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS3",
       "FEUD_CACTUS_ROW",
@@ -15228,6 +15232,7 @@
   {
     "description": "Kharidian Komodo Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS",
       "DESERT_CACTUS_FULL",
@@ -15237,6 +15242,7 @@
   {
     "description": "Kharidian Sophmena Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "PLANT_CACTUS_01",
       "PLANT_CACTUS_02",

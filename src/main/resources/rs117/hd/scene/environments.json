@@ -608,7 +608,10 @@
     "directionalColor": "#f5bc67",
     "directionalStrength": 1,
     "fogColor": "#cdaf7a",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "windStrength": 66,
+    "windAngle": 270,
+    "windSpeed": 30
   },
   {
     "area": "KHARIDIAN_DESERT_MID",
@@ -617,7 +620,10 @@
     "directionalColor": "#f5bc67",
     "directionalStrength": 1,
     "fogColor": "#c8b085",
-    "fogDepth": 40
+    "fogDepth": 40,
+    "windStrength": 28,
+    "windAngle": 270,
+    "windSpeed": 20
   },
   {
     "area": "KHARIDIAN_DESERT",
@@ -625,7 +631,9 @@
     "ambientStrength": 2.5,
     "directionalColor": "#edcfa3",
     "directionalStrength": 2.5,
-    "fogColor": "#c7b79b"
+    "fogColor": "#c7b79b",
+    "windStrength": 14,
+    "windAngle": 270
   },
   {
     "area": "DESERT_TREASURE_PYRAMID",
