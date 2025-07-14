@@ -93,10 +93,8 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.ComputeUniforms;
 import rs117.hd.opengl.GlobalUniforms;
-import rs117.hd.opengl.LightsBuffer;
-import rs117.hd.opengl.MaterialsBuffer;
+import rs117.hd.opengl.LightUniforms;
 import rs117.hd.opengl.UIUniforms;
-import rs117.hd.opengl.WaterTypesBuffer;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
@@ -130,6 +128,7 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -181,6 +180,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
+
 	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
 	public static final float WIND_DISPLACEMENT_NOISE_RESOLUTION = 0.04f;
 
@@ -224,7 +224,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private PluginManager pluginManager;
 
 	@Inject
-	private OpenCLManager openCLManager;
+	private OpenCLManager clManager;
 
 	@Inject
 	private TextureManager textureManager;
@@ -280,6 +280,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Getter
 	private Gson gson;
 
+	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities glCaps;
 
 	private Canvas canvas;
@@ -345,16 +346,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int texTileHeightMap;
 
-	private final GLBuffer hStagingBufferVertices = new GLBuffer("Staging Vertices");
-	private final GLBuffer hStagingBufferUvs = new GLBuffer("Staging UVs");
-	private final GLBuffer hStagingBufferNormals = new GLBuffer("Staging Normals");
-	private final GLBuffer hRenderBufferVertices = new GLBuffer("Render Vertices");
-	private final GLBuffer hRenderBufferUvs = new GLBuffer("Render UVs");
-	private final GLBuffer hRenderBufferNormals = new GLBuffer("Render Normals");
+	private final SharedGLBuffer hStagingBufferVertices = new SharedGLBuffer(
+		"Staging Vertices", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+	private final SharedGLBuffer hStagingBufferUvs = new SharedGLBuffer(
+		"Staging UVs", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+	private final SharedGLBuffer hStagingBufferNormals = new SharedGLBuffer(
+		"Staging Normals", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+	private final SharedGLBuffer hRenderBufferVertices = new SharedGLBuffer(
+		"Render Vertices", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
+	private final SharedGLBuffer hRenderBufferUvs = new SharedGLBuffer(
+		"Render UVs", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
+	private final SharedGLBuffer hRenderBufferNormals = new SharedGLBuffer(
+		"Render Normals", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
 
 	private int numPassthroughModels;
 	private GpuIntBuffer modelPassthroughBuffer;
-	private final GLBuffer hModelPassthroughBuffer = new GLBuffer("Model Passthrough");
+	private final SharedGLBuffer hModelPassthroughBuffer = new SharedGLBuffer(
+		"Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 	// ordered by face count from small to large
 	public int numSortingBins;
@@ -363,15 +371,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public int[] modelSortingBinThreadCounts;
 	private int[] numModelsToSort;
 	private GpuIntBuffer[] modelSortingBuffers;
-	private GLBuffer[] hModelSortingBuffers;
-
-	public final MaterialsBuffer uboMaterials = new MaterialsBuffer();
-	public final WaterTypesBuffer uboWaterTypes = new WaterTypesBuffer();
+	private SharedGLBuffer[] hModelSortingBuffers;
 
 	private final ComputeUniforms uboCompute = new ComputeUniforms();
 	private final GlobalUniforms uboGlobal = new GlobalUniforms();
 	private final UIUniforms uboUI = new UIUniforms();
-	private final LightsBuffer uboLights = new LightsBuffer();
+	private final LightUniforms uboLights = new LightUniforms();
 
 	@Getter
 	@Nullable
@@ -518,6 +523,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// to be created.
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl");
 
+				SKIP_GL_ERROR_CHECKS = false;
 				glCaps = GL.createCapabilities();
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
@@ -599,8 +605,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				int maxComputeThreadCount;
 				if (computeMode == ComputeMode.OPENCL) {
-					openCLManager.startUp(awtContext);
-					maxComputeThreadCount = openCLManager.getMaxWorkGroupSize();
+					clManager.startUp(awtContext);
+					maxComputeThreadCount = clManager.getMaxWorkGroupSize();
 				} else {
 					maxComputeThreadCount = glGetInteger(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS);
 				}
@@ -711,7 +717,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyTileHeightMap();
 				destroyModelSortingBins();
 
-				openCLManager.shutDown();
+				clManager.shutDown();
 			}
 
 			if (awtContext != null)
@@ -880,7 +886,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
-			openCLManager.initPrograms();
+			clManager.initPrograms();
 		} else {
 			glModelPassthroughComputeProgram = UNORDERED_COMPUTE_PROGRAM.compile(template);
 
@@ -976,7 +982,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					glDeleteProgram(program);
 			glModelSortingComputePrograms = null;
 		} else {
-			openCLManager.destroyPrograms();
+			clManager.destroyPrograms();
 		}
 	}
 
@@ -1033,10 +1039,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		for (int i = 0; i < numSortingBins; i++)
 			modelSortingBuffers[i] = new GpuIntBuffer();
 
-		hModelSortingBuffers = new GLBuffer[numSortingBins];
+		hModelSortingBuffers = new SharedGLBuffer[numSortingBins];
 		for (int i = 0; i < numSortingBins; i++) {
-			hModelSortingBuffers[i] = new GLBuffer("Model Sorting " + modelSortingBinFaceCounts[i]);
-			initGlBuffer(hModelSortingBuffers[i], GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+			hModelSortingBuffers[i] = new SharedGLBuffer(
+				"Model Sorting " + modelSortingBinFaceCounts[i], GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+			// Initialize each model sorting buffer with capacity for 64 models
+			hModelSortingBuffers[i].initialize();
 		}
 
 		log.debug("Spreading model sorting across {} bins: {}", numBins, modelSortingBinFaceCounts);
@@ -1058,7 +1066,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (hModelSortingBuffers != null)
 			for (var buffer : hModelSortingBuffers)
-				destroyGlBuffer(buffer);
+				buffer.destroy();
 		hModelSortingBuffers = null;
 	}
 
@@ -1097,19 +1105,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindVertexArray(vaoSceneHandle);
 
 		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.glBufferId);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.id);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 16, 0);
 
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.glBufferId);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.id);
 		glVertexAttribIPointer(1, 1, GL_INT, 16, 12);
 
 		glEnableVertexAttribArray(2);
-		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.glBufferId);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
 		glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 0);
 
 		glEnableVertexAttribArray(3);
-		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.glBufferId);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.id);
 		glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
 	}
 
@@ -1128,63 +1136,37 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initBuffers() {
-		initGlBuffer(hStagingBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		initGlBuffer(hStagingBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
-		initGlBuffer(hStagingBufferNormals, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		hStagingBufferVertices.initialize();
+		hStagingBufferUvs.initialize();
+		hStagingBufferNormals.initialize();
 
-		initGlBuffer(hRenderBufferVertices, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_WRITE_ONLY);
-		initGlBuffer(hRenderBufferUvs, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_WRITE_ONLY);
-		initGlBuffer(hRenderBufferNormals, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_WRITE_ONLY);
+		hRenderBufferVertices.initialize();
+		hRenderBufferUvs.initialize();
+		hRenderBufferNormals.initialize();
 
-		initGlBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+		hModelPassthroughBuffer.initialize();
 
-		uboMaterials.initialize(UNIFORM_BLOCK_MATERIALS);
-		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE, computeMode == ComputeMode.OPENCL ? openCLManager : null);
+		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
-		uboWaterTypes.initialize(UNIFORM_BLOCK_WATER_TYPES);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
 	}
 
-	private void initGlBuffer(GLBuffer glBuffer, int target, int glUsage, int clUsage) {
-		glBuffer.glBufferId = glGenBuffers();
-		// Initialize both GL and CL buffers to dummy buffers of a single byte,
-		// to ensure that valid buffers are given to compute dispatches.
-		// This is particularly important on Apple M2 Max, where an uninitialized buffer leads to a crash
-		initializeBuffer(glBuffer, target, 1, glUsage, clUsage);
-	}
-
 	private void destroyBuffers() {
-		destroyGlBuffer(hStagingBufferVertices);
-		destroyGlBuffer(hStagingBufferUvs);
-		destroyGlBuffer(hStagingBufferNormals);
+		hStagingBufferVertices.destroy();
+		hStagingBufferUvs.destroy();
+		hStagingBufferNormals.destroy();
 
-		destroyGlBuffer(hRenderBufferVertices);
-		destroyGlBuffer(hRenderBufferUvs);
-		destroyGlBuffer(hRenderBufferNormals);
+		hRenderBufferVertices.destroy();
+		hRenderBufferUvs.destroy();
+		hRenderBufferNormals.destroy();
 
-		destroyGlBuffer(hModelPassthroughBuffer);
+		hModelPassthroughBuffer.destroy();
 
-		uboMaterials.destroy();
-		uboWaterTypes.destroy();
 		uboCompute.destroy();
 		uboGlobal.destroy();
 		uboUI.destroy();
 		uboLights.destroy();
-	}
-
-	private void destroyGlBuffer(GLBuffer glBuffer) {
-		glBuffer.size = -1;
-
-		if (glBuffer.glBufferId != 0) {
-			glDeleteBuffers(glBuffer.glBufferId);
-			glBuffer.glBufferId = 0;
-		}
-
-		if (glBuffer.clBuffer != 0) {
-			clReleaseMemObject(glBuffer.clBuffer);
-			glBuffer.clBuffer = 0;
-		}
 	}
 
 	private void initInterfaceTexture()
@@ -1432,7 +1414,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.begin(Timer.DRAW_SCENE);
 
 		final Scene scene = client.getScene();
-		scene.setDrawDistance(getDrawDistance());
+		int drawDistance = getDrawDistance();
+		boolean drawDistanceChanged = false;
+		if (scene.getDrawDistance() != drawDistance) {
+			scene.setDrawDistance(drawDistance);
+			drawDistanceChanged = true;
+		}
 
 		boolean updateUniforms = true;
 
@@ -1494,7 +1481,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int newZoom = configShadowsEnabled && configExpandShadowDraw ? client.get3dZoom() / 2 : client.get3dZoom();
 				if (!Arrays.equals(cameraPosition, newCameraPosition) ||
 					!Arrays.equals(cameraOrientation, newCameraOrientation) ||
-					cameraZoom != newZoom
+					cameraZoom != newZoom ||
+					drawDistanceChanged
 				) {
 					System.arraycopy(newCameraPosition, 0, cameraPosition, 0, cameraPosition.length);
 					System.arraycopy(newCameraOrientation, 0, cameraOrientation, 0, cameraOrientation.length);
@@ -1556,14 +1544,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
-				LightsBuffer.LightStruct uniformStruct = uboLights.lights[i];
-				uniformStruct.position.set(
+				var struct = uboLights.lights[i];
+				struct.position.set(
 					(float)(light.pos[0] + cameraShift[0]),
 					(float)light.pos[1],
 					(float)(light.pos[2] + cameraShift[1]),
 					(float) (light.radius * light.radius)
 				);
-				uniformStruct.color.set(
+				struct.color.set(
 					light.color[0] * light.strength,
 					light.color[1] * light.strength,
 					light.color[2] * light.strength
@@ -1597,22 +1585,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				hStagingBufferVertices,
 				GL_ARRAY_BUFFER,
 				dynamicOffsetVertices * VERTEX_SIZE,
-				sceneContext.stagingBufferVertices.getBuffer(),
-				GL_STREAM_DRAW, CL_MEM_READ_ONLY
+				sceneContext.stagingBufferVertices.getBuffer()
 			);
 			updateBuffer(
 				hStagingBufferUvs,
 				GL_ARRAY_BUFFER,
 				dynamicOffsetUvs * UV_SIZE,
-				sceneContext.stagingBufferUvs.getBuffer(),
-				GL_STREAM_DRAW, CL_MEM_READ_ONLY
+				sceneContext.stagingBufferUvs.getBuffer()
 			);
 			updateBuffer(
 				hStagingBufferNormals,
 				GL_ARRAY_BUFFER,
 				dynamicOffsetVertices * NORMAL_SIZE,
-				sceneContext.stagingBufferNormals.getBuffer(),
-				GL_STREAM_DRAW, CL_MEM_READ_ONLY
+				sceneContext.stagingBufferNormals.getBuffer()
 			);
 			sceneContext.stagingBufferVertices.clear();
 			sceneContext.stagingBufferUvs.clear();
@@ -1620,38 +1605,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Model buffers
 			modelPassthroughBuffer.flip();
-			updateBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, modelPassthroughBuffer.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+			updateBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, modelPassthroughBuffer.getBuffer());
 			modelPassthroughBuffer.clear();
 
 			for (int i = 0; i < modelSortingBuffers.length; i++) {
 				var buffer = modelSortingBuffers[i];
 				buffer.flip();
-				updateBuffer(hModelSortingBuffers[i], GL_ARRAY_BUFFER, buffer.getBuffer(), GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+				updateBuffer(hModelSortingBuffers[i], GL_ARRAY_BUFFER, buffer.getBuffer());
 				buffer.clear();
 			}
 
 			// Output buffers
-			initializeBuffer(
-				hRenderBufferVertices,
-				GL_ARRAY_BUFFER,
-				renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
-				GL_STREAM_DRAW,
-				CL_MEM_WRITE_ONLY
-			);
-			initializeBuffer(
-				hRenderBufferUvs,
-				GL_ARRAY_BUFFER,
-				renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
-				GL_STREAM_DRAW,
-				CL_MEM_WRITE_ONLY
-			);
-			initializeBuffer(
-				hRenderBufferNormals,
-				GL_ARRAY_BUFFER,
-				renderBufferOffset * 16L, // each vertex is an ivec4, which is 16 bytes
-				GL_STREAM_DRAW,
-				CL_MEM_WRITE_ONLY
-			);
+			// each vertex is an ivec4, which is 16 bytes
+			hRenderBufferVertices.ensureCapacity(renderBufferOffset * 16L);
+			// each vertex is an ivec4, which is 16 bytes
+			hRenderBufferUvs.ensureCapacity(renderBufferOffset * 16L);
+			// each vertex is an ivec4, which is 16 bytes
+			hRenderBufferNormals.ensureCapacity(renderBufferOffset * 16L);
 			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
 		}
 
@@ -1666,8 +1636,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// However, no issues have been observed from not calling it, and so will leave disabled for now.
 			// glFinish();
 
-			openCLManager.compute(
-				uboCompute.getGlBuffer(),
+			clManager.compute(
+				uboCompute.glBuffer,
 				numPassthroughModels, numModelsToSort,
 				hModelPassthroughBuffer, hModelSortingBuffers,
 				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
@@ -1678,16 +1648,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// and multiple sizes of sorting shaders to better utilize the GPU
 
 			// Bind shared buffers
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.glBufferId);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.glBufferId);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, hStagingBufferNormals.glBufferId);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, hRenderBufferVertices.glBufferId);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, hRenderBufferUvs.glBufferId);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.glBufferId);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.id);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.id);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, hStagingBufferNormals.id);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, hRenderBufferVertices.id);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, hRenderBufferUvs.id);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.id);
 
 			// unordered
 			glUseProgram(glModelPassthroughComputeProgram);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelPassthroughBuffer.glBufferId);
+			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelPassthroughBuffer.id);
 			glDispatchCompute(numPassthroughModels, 1, 1);
 
 			for (int i = 0; i < numModelsToSort.length; i++) {
@@ -1695,7 +1665,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					continue;
 
 				glUseProgram(glModelSortingComputePrograms[i]);
-				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelSortingBuffers[i].glBufferId);
+				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelSortingBuffers[i].id);
 				glDispatchCompute(numModelsToSort[i], 1, 1);
 			}
 		}
@@ -1939,7 +1909,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
 			if (computeMode == ComputeMode.OPENCL) {
-				openCLManager.finish();
+				clManager.finish();
 			} else {
 				glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
 			}
@@ -2469,7 +2439,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
-			openCLManager.uploadTileHeights(scene);
+			clManager.uploadTileHeights(scene);
 		} else {
 			initTileHeightMap(scene);
 		}
@@ -2497,23 +2467,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		updateBuffer(
 			hStagingBufferVertices,
 			GL_ARRAY_BUFFER,
-			sceneContext.stagingBufferVertices.getBuffer(),
-			GL_STREAM_DRAW,
-			CL_MEM_READ_ONLY
+			sceneContext.stagingBufferVertices.getBuffer()
 		);
 		updateBuffer(
 			hStagingBufferUvs,
 			GL_ARRAY_BUFFER,
-			sceneContext.stagingBufferUvs.getBuffer(),
-			GL_STREAM_DRAW,
-			CL_MEM_READ_ONLY
+			sceneContext.stagingBufferUvs.getBuffer()
 		);
 		updateBuffer(
 			hStagingBufferNormals,
 			GL_ARRAY_BUFFER,
-			sceneContext.stagingBufferNormals.getBuffer(),
-			GL_STREAM_DRAW,
-			CL_MEM_READ_ONLY
+			sceneContext.stagingBufferNormals.getBuffer()
 		);
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferUvs.clear();
@@ -3212,72 +3176,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return config.expandedMapLoadingChunks();
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull ByteBuffer data, int usage, long clFlags) {
-		initializeBuffer(glBuffer, target, data.remaining(), usage, clFlags);
-		glBufferSubData(target, 0, data);
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull IntBuffer data) {
+		updateBuffer(glBuffer, target, 0, data);
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull IntBuffer data, int usage, long clFlags)	{
-		updateBuffer(glBuffer, target, 0, data, usage, clFlags);
-	}
-
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data, int usage, long clFlags) {
-		ensureBufferCapacity(glBuffer, target, offset, data.remaining(), usage, clFlags);
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data) {
+		glBuffer.ensureCapacity(offset, data.remaining());
 		glBufferSubData(target, offset * 4L, data);
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data, int usage, long clFlags) {
-		updateBuffer(glBuffer, target, 0, data, usage, clFlags);
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data) {
+		updateBuffer(glBuffer, target, 0, data);
 	}
 
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data, int usage, long clFlags) {
-		ensureBufferCapacity(glBuffer, target, offset, data.remaining(), usage, clFlags);
+	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data) {
+		glBuffer.ensureCapacity(offset, data.remaining());
 		glBufferSubData(target, offset * 4L, data);
-	}
-
-	private void initializeBuffer(@Nonnull GLBuffer glBuffer, int target, long size, int usage, long clFlags) {
-		ensureBufferCapacity(glBuffer, target, 0, size, usage, clFlags);
-	}
-
-	private void ensureBufferCapacity(@Nonnull GLBuffer glBuffer, int target, int offset, long numBytes, int usage, long clFlags) {
-		long size = 4L * (offset + numBytes);
-		if (size <= glBuffer.size) {
-			glBindBuffer(target, glBuffer.glBufferId);
-			return;
-		}
-
-		size = HDUtils.ceilPow2(size);
-		if (log.isTraceEnabled())
-			log.trace("Buffer resize: {} {}", glBuffer, String.format("%.2f MB -> %.2f MB", glBuffer.size / 1e6, size / 1e6));
-
-		if (offset > 0) {
-			// Create a new buffer and copy the old data to it
-			int oldBuffer = glBuffer.glBufferId;
-			glBuffer.glBufferId = glGenBuffers();
-			glBindBuffer(target, glBuffer.glBufferId);
-			glBufferData(target, size, usage);
-
-			glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
-			glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
-			glDeleteBuffers(oldBuffer);
-		} else {
-			glBindBuffer(target, glBuffer.glBufferId);
-			glBufferData(target, size, usage);
-		}
-
-		glBuffer.size = size;
-
-		if (glCaps.OpenGL43 && log.isDebugEnabled()) {
-			glObjectLabel(GL_BUFFER, glBuffer.glBufferId, glBuffer.name);
-			checkGLErrors();
-		}
-
-		if (computeMode == ComputeMode.OPENCL)
-			openCLManager.recreateCLBuffer(glBuffer, clFlags);
 	}
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+
 		// Upload the UI which we began copying during the previous frame
 		if (configAsyncUICopy)
 			asyncUICopy.complete();
@@ -3322,7 +3242,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void waitUntilIdle() {
 		if (computeMode == ComputeMode.OPENCL)
-			openCLManager.finish();
+			clManager.finish();
 		glFinish();
 	}
 
@@ -3335,14 +3255,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")
-	public void clearGLErrors() {
+	public static void clearGLErrors() {
 		// @formatter:off
 		while (glGetError() != GL_NO_ERROR);
 		// @formatter:on
 	}
 
-	public void checkGLErrors() {
-		if (!log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled())
+	public static void checkGLErrors() {
+		if (SKIP_GL_ERROR_CHECKS)
 			return;
 
 		while (true) {

@@ -2,9 +2,10 @@ package rs117.hd.opengl;
 
 import java.util.ArrayList;
 
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opencl.CL10.*;
+import static org.lwjgl.opengl.GL15C.*;
 
-public class ComputeUniforms extends UniformBuffer {
+public class ComputeUniforms extends SharedUniformBuffer {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
 
 	// Camera uniforms
@@ -39,7 +40,7 @@ public class ComputeUniforms extends UniformBuffer {
 	}
 
 	public ComputeUniforms() {
-		super("Compute", GL_DYNAMIC_DRAW);
+		super("Compute", GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private CharacterPositionPair getCharacterPositionPair() {
