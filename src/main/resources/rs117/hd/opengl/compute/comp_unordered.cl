@@ -25,6 +25,7 @@
  */
 
 #include cl_types.cl
+#include common.cl
 
 __kernel
 __attribute__((reqd_work_group_size(6, 1, 1)))
@@ -57,7 +58,7 @@ void passthroughModel(
   thisC = vb[offset + ssboOffset * 3 + 2];
 
   uint myOffset = localId;
-  float3 pos = convert_float3((int3)(minfo.x, minfo.y, minfo.z));
+  float3 pos = convert_float3((int3)(minfo.x, minfo.y >> 16, minfo.z));
 
   float3 vertA = (float3)(thisA.x, thisA.y, thisA.z) + pos;
   float3 vertB = (float3)(thisB.x, thisB.y, thisB.z) + pos;

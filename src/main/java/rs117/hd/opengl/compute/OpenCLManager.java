@@ -41,6 +41,7 @@ import org.lwjgl.opencl.*;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.ComputeUniforms;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
 import rs117.hd.utils.buffer.SharedGLBuffer;
@@ -276,7 +277,7 @@ public class OpenCLManager {
 	public int getMaxWorkGroupSize() {
 		long[] maxWorkGroupSize = new long[1];
 		clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, maxWorkGroupSize, null);
-		return (int) maxWorkGroupSize[0];
+		return (int) (maxWorkGroupSize[0] * 0.6f); // Workaround for https://github.com/117HD/RLHD/issues/598
 	}
 
 	private void initQueue() {
@@ -317,6 +318,7 @@ public class OpenCLManager {
 			var template = new Template()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
+				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
@@ -331,6 +333,9 @@ public class OpenCLManager {
 					.copy()
 					.define("THREAD_COUNT", threadCount)
 					.define("FACES_PER_THREAD", facesPerThread)
+					.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
+					.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
+					.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
 					.load("comp.cl")
 				);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
@@ -397,7 +402,7 @@ public class OpenCLManager {
 	}
 
 	public void compute(
-		SharedGLBuffer uniformBufferCamera,
+		SharedGLBuffer uboCompute,
 		int numPassthroughModels, int[] numSortingBinModels,
 		SharedGLBuffer modelPassthroughBuffer, SharedGLBuffer[] modelSortingBuffers,
 		SharedGLBuffer stagingBufferVertices, SharedGLBuffer stagingBufferUvs, SharedGLBuffer stagingBufferNormals,
@@ -405,7 +410,7 @@ public class OpenCLManager {
 	) {
 		try (var stack = MemoryStack.stackPush()) {
 			PointerBuffer glBuffers = stack.mallocPointer(8 + modelSortingBuffers.length)
-				.put(uniformBufferCamera.clId)
+				.put(uboCompute.clId)
 				.put(modelPassthroughBuffer.clId)
 				.put(stagingBufferVertices.clId)
 				.put(stagingBufferUvs.clId)
@@ -455,7 +460,7 @@ public class OpenCLManager {
 				clSetKernelArg1p(kernel, 5, renderBufferVertices.clId);
 				clSetKernelArg1p(kernel, 6, renderBufferUvs.clId);
 				clSetKernelArg1p(kernel, 7, renderBufferNormals.clId);
-				clSetKernelArg1p(kernel, 8, uniformBufferCamera.clId);
+				clSetKernelArg1p(kernel, 8, uboCompute.clId);
 				clSetKernelArg1p(kernel, 9, tileHeightMap);
 
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, null,

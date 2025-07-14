@@ -219,6 +219,13 @@ public abstract class UniformBuffer {
 		return appendToBuffer(new Property(type, name));
 	}
 
+	protected Property[] addPropertyArray(PropertyType type, String name, int size) {
+		Property[] result = new Property[size];
+		for (int i = 0; i < size; i++)
+			result[i] = addProperty(type, name);
+		return result;
+	}
+
 	private Property appendToBuffer(Property property) {
 		property.owner = this;
 
@@ -252,8 +259,15 @@ public abstract class UniformBuffer {
 		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBlockIndex, glBuffer.id);
 	}
 
+	protected void preUpload() {}
+
 	public final void upload() {
-		if (data == null || dirtyHighTide - dirtyLowTide <= 0)
+		if (data == null)
+			return;
+
+		preUpload();
+
+		if (dirtyHighTide <= 0 || dirtyLowTide >= glBuffer.size)
 			return;
 
 		data.position(dirtyLowTide);
