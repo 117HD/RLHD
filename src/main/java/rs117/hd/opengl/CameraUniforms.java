@@ -1,10 +1,11 @@
 package rs117.hd.opengl;
 
-import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opencl.CL10.*;
+import static org.lwjgl.opengl.GL31C.*;
 
-public class CameraBuffer extends UniformBuffer {
-	public CameraBuffer() {
-		super("Camera", GL_DYNAMIC_DRAW);
+public class CameraUniforms extends SharedUniformBuffer {
+	public CameraUniforms() {
+		super("Camera", GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	public Property yaw = addProperty(PropertyType.Float, "yaw");
