@@ -2322,6 +2322,7 @@
     "baseMaterial": "GRAY_90",
     "flatNormals": true,
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "FRIS_LONG_GRASS_1",
       "FRIS_SHORT_GRASS_1",
@@ -12337,6 +12338,7 @@
   {
     "description": "Lunar Island - Objects - Bark - Windswept Tree",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "LUNAR_WINDSWEPT_TREE"
     ],
