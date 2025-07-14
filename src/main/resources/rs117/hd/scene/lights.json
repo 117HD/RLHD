@@ -29241,7 +29241,7 @@
     "description": "SIRE_BELLY_LIGHT_EXPLOSION_2",
     "offset": [ 0, 150, 275 ],
     "npcIds": [ "ABYSSALSIRE_SIRE_APOCALYPSE" ],
-    "animationIds": [ "-1", "SIRE_APOCALYPSE", "SIRE_IDLE_FOUR" ],
+    "animationIds": [ -1, "SIRE_APOCALYPSE", "SIRE_IDLE_FOUR" ],
     "radius": 450,
     "strength": 15,
     "color": [
@@ -29537,7 +29537,7 @@
     "duration": 10,
     "range": 30,
     "npcIds": [ "DRAKE" ],
-    "animationIds": [ "-1", "DRAKE_RANGED" ],
+    "animationIds": [ -1, "DRAKE_RANGED" ],
     "fadeOutDuration": 300,
     "fadeInDuration": 750
   },
@@ -29552,7 +29552,7 @@
     "duration": 10,
     "range": 5,
     "npcIds": [ "DRAKE" ],
-    "animationIds": [ "-1" ],
+    "animationIds": [ -1 ],
     "fadeInDuration": 300
   },
   {
@@ -36183,7 +36183,7 @@
       "PMOON_ECLIPSE_BOSS_INVIS"
     ],
     "animationIds": [
-      "-1",
+      -1,
       "NPC_DJINN_02_MAGIC",
       "NPC_DJINN_02_MAGIC_02",
       "NPC_DJINN_02_SPAWN",
@@ -36211,7 +36211,7 @@
   {
     "description": "ECLIPSE_SHIELD",
     "npcIds": [ "PMOON_BOSS_ECLIPSE_MOON_SHIELD" ],
-    "animationIds": [ "-1", "VFX_DJINN_ECLIPSE_MOON_SPAWN_01" ],
+    "animationIds": [ -1, "VFX_DJINN_ECLIPSE_MOON_SPAWN_01" ],
     "color": "#cd7c00",
     "strength": 50,
     "radius": 1300,
@@ -36223,7 +36223,7 @@
     "description": "BLOOD_MOON",
     "npcIds": [ "PMOON_BOSS_BLOOD_MOON_VIS" ],
     "animationIds": [
-      "-1",
+      -1,
       "NPC_DJINN_01_MAGIC",
       "NPC_DJINN_01_SPAWN",
       "NPC_DJINN_01_TELEPORT_IDLE_APPEAR",
@@ -36240,7 +36240,7 @@
     "description": "BLUE_MOON",
     "npcIds": [ "PMOON_BOSS_BLUE_MOON_VIS" ],
     "animationIds": [
-      "-1",
+      -1,
       "NPC_DJINN_03_MAGIC",
       "NPC_DJINN_03_TELEPORT_IDLE_APPEAR",
       "NPC_DJINN_03_COMBO",
@@ -36862,7 +36862,13 @@
     "duration": 0,
     "range": 10,
     "npcIds": [ "VETION_2_SINGLE" ],
-    "animationIds": [ "-1", "NPC_VETION_ATTACK_MAGIC_01", "NPC_VETION_ATTACK_MELEE_02", "NPC_VETION_DEFEND_PARRY_02", "NPC_VETION_DEFEND_SHIELD_02" ],
+    "animationIds": [
+      -1,
+      "NPC_VETION_ATTACK_MAGIC_01",
+      "NPC_VETION_ATTACK_MELEE_02",
+      "NPC_VETION_DEFEND_PARRY_02",
+      "NPC_VETION_DEFEND_SHIELD_02"
+    ],
     "fadeOutDuration": 1500
   },
   {
@@ -36879,7 +36885,7 @@
     "duration": 0,
     "range": 10,
     "npcIds": [ "VETION_HELLHOUND_SNR_SINGLES" ],
-    "animationIds": [ "-1", "DOG_UPDATE_SKELETON_HELLHOUND_DEFEND", "DOG_UPDATE_SKELETON_HELLHOUND_ATTACK" ],
+    "animationIds": [ -1, "DOG_UPDATE_SKELETON_HELLHOUND_DEFEND", "DOG_UPDATE_SKELETON_HELLHOUND_ATTACK" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 1500
   },
@@ -36962,7 +36968,7 @@
     "duration": 2500,
     "range": 15,
     "npcIds": [ "HESPORI_HEALER_ACTIVE" ],
-    "animationIds": [ "-1", "HESPORI_HEALER_DEAD_TO_ALIVE" ]
+    "animationIds": [ -1, "HESPORI_HEALER_DEAD_TO_ALIVE" ]
   },
   {
     "description": "Hespori Combat Flower - Open - Short",
@@ -36982,7 +36988,7 @@
     "duration": 2500,
     "range": 15,
     "npcIds": [ "HESPORI_HEALER_ACTIVE" ],
-    "animationIds": [ "-1", "HESPORI_HEALER_DEAD_TO_ALIVE" ]
+    "animationIds": [ -1, "HESPORI_HEALER_DEAD_TO_ALIVE" ]
   },
   {
     "description": "Hespori Magic Attack",
@@ -37957,7 +37963,7 @@
     "duration": 0,
     "range": 20,
     "npcIds": [ "RT_SUMMON_ELEMENTAL_FIRE" ],
-    "animationIds": [ "-1", "FIRE_MINION_ATTACK01", "FIRE_MINION_SPAWN01" ],
+    "animationIds": [ -1, "FIRE_MINION_ATTACK01", "FIRE_MINION_SPAWN01" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 200
   },
@@ -37973,7 +37979,7 @@
     ],
     "type": "STATIC",
     "npcIds": [ "RT_SUMMON_ELEMENTAL_ICE" ],
-    "animationIds": [ "-1", "ICE_MINION_ATTACK01", "ICE_MINION_SPAWN01" ],
+    "animationIds": [ -1, "ICE_MINION_ATTACK01", "ICE_MINION_SPAWN01" ],
     "fadeInDuration": 100,
     "fadeOutDuration": 200
   },

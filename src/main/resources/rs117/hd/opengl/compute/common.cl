@@ -22,17 +22,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
 #define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
 
-float3 to_screen(__constant struct uniform *uni, float3 vertex);
-float4 rotate_vertex(float4 vector, int orientation);
-float vertex_distance(__constant struct uniform *uni, float4 vertex);
-int face_distance(__constant struct uniform *uni, float4 vA, float4 vB, float4 vC);
-bool face_visible(__constant struct uniform *uni, float3 vA, float3 vB, float3 vC, int4 position);
+#define WIND_DISPLACEMENT_DISABLED 0
+#define WIND_DISPLACEMENT_OBJECT 1
+#define WIND_DISPLACEMENT_VERTEX 2
+#define WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND 3
+#define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
 
-float3 to_screen(__constant struct uniform *uni, float3 vertex) {
+float3 to_screen(__constant struct ComputeUniforms *uni, float3 vertex);
+float4 rotate_vertex(float4 vector, int orientation);
+float vertex_distance(__constant struct ComputeUniforms *uni, float4 vertex);
+int face_distance(__constant struct ComputeUniforms *uni, float4 vA, float4 vB, float4 vC);
+bool face_visible(__constant struct ComputeUniforms *uni, float3 vA, float3 vB, float3 vC, int4 position);
+
+float3 to_screen(__constant struct ComputeUniforms *uni, float3 vertex) {
   float yawSin = sin(uni->cameraYaw);
   float yawCos = cos(uni->cameraYaw);
 
@@ -67,7 +74,7 @@ float4 rotate_vertex(float4 vector, int orientation) {
 /*
  * Calculate the distance to a vertex given the camera angle
  */
-float vertex_distance(__constant struct uniform *uni, float4 vertex) {
+float vertex_distance(__constant struct ComputeUniforms *uni, float4 vertex) {
   float j = vertex.z * cos(uni->cameraYaw) - vertex.x * sin(uni->cameraYaw);
   float l = vertex.y * sin(uni->cameraPitch) + j * cos(uni->cameraPitch);
   return l;
@@ -76,7 +83,7 @@ float vertex_distance(__constant struct uniform *uni, float4 vertex) {
 /*
  * Calculate the distance to a face
  */
-int face_distance(__constant struct uniform *uni, float4 vA, float4 vB, float4 vC) {
+int face_distance(__constant struct ComputeUniforms *uni, float4 vA, float4 vB, float4 vC) {
   float dvA = vertex_distance(uni, vA);
   float dvB = vertex_distance(uni, vB);
   float dvC = vertex_distance(uni, vC);
@@ -87,7 +94,7 @@ int face_distance(__constant struct uniform *uni, float4 vA, float4 vB, float4 v
 /*
  * Test if a face is visible (not backward facing)
  */
-bool face_visible(__constant struct uniform *uni, float3 vA, float3 vB, float3 vC, int4 position) {
+bool face_visible(__constant struct ComputeUniforms *uni, float3 vA, float3 vB, float3 vC, int4 position) {
   // Move model to scene location, and account for camera offset
   float3 cameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ);
   float3 modelPos = convert_float3(position.xyz);
@@ -103,3 +110,30 @@ bool face_visible(__constant struct uniform *uni, float3 vA, float3 vB, float3 v
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }
 
+float saturate(float value) {
+    return clamp(value, 0.0f, 1.0f);
+}
+
+// 2D Random
+float hash(float2 st) {
+    return fmod(sin(dot(st.xy, (float2)(12.9898f, 78.233f))) * 43758.5453123f, 1.0f);
+}
+
+float noise(float2 st) {
+    float2 i = floor(st);
+    float2 f = fmod(st, 1.0f);
+
+    // Four corners in 2D of a tile
+    float a = hash(i);
+    float b = hash(i + (float2)(1.0f, 0.0f));
+    float c = hash(i + (float2)(0.0f, 1.0f));
+    float d = hash(i + (float2)(1.0f, 1.0f));
+
+    // Smooth interpolation using Hermite polynomial
+    float2 u = f * f * (3.0f - 2.0f * f);
+
+    // Mix 4 corners
+    return mix(a, b, u.x) +
+        (c - a) * u.y * (1.0f - u.x) +
+        (d - b) * u.x * u.y;
+}

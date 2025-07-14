@@ -183,9 +183,9 @@
       },
       "animationIds": {
         "type": "array",
-        "description": "A set of animation gameval names to display the light for. Must be specified alongside another kind of ID to apply to.",
+        "description": "A set of animation gameval names to display the light for, or the special value `-1` for no animation. Must be specified alongside an NPC or other thing to watch for animations on.",
         "items": {
-          "type": "string"
+          "type": [ "string", "number" ]
         }
       }
     }

@@ -1097,27 +1097,47 @@
   {
     "description": "TREES",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "TREE2", "TREE3", "LEPRECHAUNTREE", "NEWBIETREE2",
-      "WOM_TREE", "MAPLETREE", "PEST_TREE2",
-      "ARDOUGNE_LOG_BALANCE_LEFT_SC", "ARDOUGNE_LOG_BALANCE_MID_SC", "ARDOUGNE_LOG_BALANCE_RIGHT_SC", "ZEP_TREE3",
-      "MACRO_FORESTERTREE2", "TREE_FORROPESWING1", "TUT2_TREE2",
-      "TUT2_TREE2_NOOP", "GIM_TREE", "GREYBOX_NUMBER_TILE_0"
+      "TREE2",
+      "TREE3",
+      "LEPRECHAUNTREE",
+      "NEWBIETREE2",
+      "WOM_TREE",
+      "MAPLETREE",
+      "PEST_TREE2",
+      "ARDOUGNE_LOG_BALANCE_LEFT_SC",
+      "ARDOUGNE_LOG_BALANCE_MID_SC",
+      "ARDOUGNE_LOG_BALANCE_RIGHT_SC",
+      "ZEP_TREE3",
+      "MACRO_FORESTERTREE2",
+      "TREE_FORROPESWING1",
+      "TUT2_TREE2",
+      "TUT2_TREE2_NOOP",
+      "GIM_TREE",
+      "GREYBOX_NUMBER_TILE_0"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "materialOverrides": {
       "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
         "textureMaterial": "LEAVES_YELLOW_SIDE"
       },
       "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
         "textureMaterial": "LEAVES_YELLOW_TOP"
+      },
+      "MAPLE_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "MAPLE_LEAVES"
       }
     }
   },
   {
     "description": "Tree - Double Tree",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "TREE", "LIGHTTREE", "NEWBIETREE", "PEST_TREE",
       "ZEP_TREE", "DRILL_TREE", "MACRO_FORESTER_TREE", "TUT2_TREE",
@@ -1127,9 +1147,11 @@
     "uvScale": 0.8,
     "materialOverrides": {
       "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
         "textureMaterial": "LEAVES_ORANGE_SIDE"
       },
       "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
         "textureMaterial": "LEAVES_ORANGE_TOP"
       }
     }
@@ -1398,6 +1420,7 @@
   {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "POH_BIG_TREE6_4",
       "POH_SMALL_TREE6_5",
@@ -1443,11 +1466,22 @@
       "XBOWS_YEWTREE_ROPE_TIED"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
   },
   {
     "description": "Objects - Tree - Willow",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "WILLOW_TREE2OR3OR4_STUMP",
       "WILLOWTREE",
@@ -1459,7 +1493,17 @@
     "uvScale": 0.8,
     "uvOrientationZ": 128,
     "uvOrientationY": 512,
-    "retainVanillaUvs": true
+    "retainVanillaUvs": true,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
   },
   {
     "description": "Objects - Tree - Mahogany",
@@ -2048,6 +2092,52 @@
     ]
   },
   {
+    "description": "Flowers or flower-like objects that should sway in the wind",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "DAISYS",
+      "ONION",
+      "RAREFLOWER_BLUE",
+      "RAREFLOWERS_BLUE",
+      "BLUEFLOWER",
+      "REDFLOWER",
+      "TULIPS",
+      "FLAX",
+      "RAREFLOWER_1",
+      "RAREFLOWERS_1",
+      "FLOWERBED1",
+      "FLOWERBED_YELLOW",
+      "RAREFLOWER_YELLOW",
+      "RAREFLOWERS_YELLOW",
+      "SUNFLOWER",
+      "SUNFLOWERS",
+      "BULLRUSHES",
+      "BULLRUSHES2",
+      "BULLRUSHES3",
+      "BULLRUSHES4",
+      "BULLRUSHES5",
+      "THISTLE",
+      "WATERLILY1",
+      "WATERLILY2",
+      "WATERLILY3",
+      "POTATO",
+      "FAI_VARROCK_WHEAT_CORNER",
+      "FAI_VARROCK_WHEAT_SMALL",
+      "FAI_VARROCK_WHEAT",
+      "NETTLES",
+      "NETTLES1",
+      "NETTLES2",
+      "NETTLES3",
+      "NETTLES4",
+      "NETTLES5",
+      "NETTLES6",
+      "HEATHER",
+      "HEATHER2",
+      "HEATHER3"
+    ]
+  },
+  {
     "description": "Grass that should cast shadows",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
@@ -2080,6 +2170,7 @@
     "description": "Short grass which shouldn't cast shadows",
     "baseMaterial": "GRAY_65",
     "flatNormals": true,
+    "windDisplacementMode": "OBJECT",
     "castShadows": false,
     "objectIds": [
       "GRASS_1",
@@ -2288,6 +2379,7 @@
     "upwardsNormals": true,
     "inheritTileColorType": "UNDERLAY",
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
@@ -2298,6 +2390,7 @@
     "description": "Farming Patch Grass without Dirt",
     "baseMaterial": "GRAY_65",
     "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "BELLADONNA_PATCH_WEEDS_1",
       "BELLADONNA_PATCH_WEEDS_2",
@@ -2395,6 +2488,7 @@
     "description": "Farming Patch Grass with Dirt",
     "baseMaterial": "GRAY_65",
     "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "HOP_PATCH_WEEDS_1",
       "HOP_PATCH_WEEDS_2",
@@ -2482,6 +2576,7 @@
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
@@ -2574,6 +2669,7 @@
   {
     "description": "Short grass which shouldn't cast shadows but should inherit tile color, this is required to make the grass around the edges white and not green in winter",
     "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "OBJECT",
     "seasonalTheme": "WINTER",
     "flatNormals": true,
     "castShadows": false,
@@ -9711,6 +9807,7 @@
   {
     "description": "Lumbridge Swamp Tree/Plant",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "MEDPLANT_SWAMP"
     ],
@@ -9719,6 +9816,7 @@
     "uvOrientation": 256,
     "colorOverrides": [
       {
+        "windDisplacementMode": "VERTEX",
         "colors": "h == 28",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.2,
@@ -18613,6 +18711,7 @@
     "description": "Generic - Plant - Fern - Small",
     "baseMaterial": "LEAF_VEINS",
     "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
     "uvScale": 0.25,
     "objectIds": [
       "SMALLFERN",
@@ -18628,12 +18727,14 @@
   {
     "description": "Generic - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "colorOverrides": [
       {
         "colors": "h > 11",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.25,
-        "uvType": "MODEL_XZ"
+        "uvType": "MODEL_XZ",
+        "windDisplacementMode": "VERTEX"
       }
     ],
     "objectIds": [
@@ -18749,11 +18850,13 @@
   {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "SWAMP_PLANT1",
       "SWAMP_PLANT2",
       "SWAMP_PLANT3",
       "SWAMP_PLANT4",
+      "SWAMP_PLANT5",
       "TEMPLETREK_SWAMP_PLANT1",
       "TEMPLETREK_SWAMP_PLANT2",
       "TEMPLETREK_SWAMP_PLANT3",
@@ -21073,6 +21176,7 @@
     "description": "Objects - Textured Rock - Mossy Rock - Medium",
     "baseMaterial": "GRASS_3",
     "textureMaterial": "HD_CONCRETE",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "MOSS_COVERED_ROCK_1",
       "MOSS_COVERED_ROCK_2"
@@ -21602,6 +21706,7 @@
   {
     "description": "Objects - Bush - Dead",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "LEAFLESSBUSH",
       "LEAFLESSBUSH2",
@@ -22942,6 +23047,7 @@
   },
   {
     "description": "Textured Bushes",
+    "windDisplacementMode": "VERTEX_JIGGLE",
     "objectIds": [
       "HEDGE", "HEDGECORNER", "WILDBUSH1", "WILDBUSH2",
       "WILDBUSH3", "WILDBUSH4", "BUSH1", "BUSH2",
@@ -22958,7 +23064,17 @@
     "baseMaterial": "BARK",
     "objectIds": [ "EVERGREEN", "EVERGREEN_LARGE", "MAX_EVERGREEN" ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_TOP"
+      }
+    }
   },
   {
     "description": "Snowcovered Evergreen Trees - Textured",
@@ -22970,6 +23086,7 @@
   {
     "description": "Oak Tree",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "OAKTREE_STUMP", "POH_BIG_TREE3_4", "POH_SMALL_TREE3_5", "OAK_TREE_SEEDLING", "OAK_TREE_1",
       "OAK_TREE_2", "OAK_TREE_3", "OAK_TREE_FULLYGROWN_1", "OAK_TREE_FULLYGROWN_2",
@@ -22980,10 +23097,12 @@
     "uvScale": 0.8,
     "materialOverrides": {
       "LEAVES_SIDE": {
-        "textureMaterial": "LEAVES_RED_SIDE"
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_SIDE"
       },
       "LEAVES_TOP": {
-        "textureMaterial": "LEAVES_RED_TOP"
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_TOP"
       }
     }
   },
@@ -27341,6 +27460,7 @@
   {
     "description": "Perilous Moons Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "PRIF_MINE_MUSHROOM_1",
       "WILDY_HUB_BUSH_01",
@@ -30191,6 +30311,7 @@
   {
     "description": "Lumbridge crypt ivy",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VERTEX_JIGGLE",
     "objectIds": [ "FAI_FALADOR_IVY_LARGE", "FAI_FALADOR_IVY_MEDIUM", "FAI_FALADOR_IVY_SMALL", "FAI_FALADOR_IVY_MEDIUM_MIRROR", "FAI_FALADOR_IVY_SMALL_MIRRIOR" ],
     "uvType": "MODEL_YZ",
     "uvOrientation": 144,
@@ -34734,6 +34855,7 @@
   {
     "description": "Farming Guild - Small Bush",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "PLANTS_UPDATE_SMALL_BUSH_GRASSLAND"
     ],
@@ -39741,6 +39863,7 @@
     "description": "Nightmare of Ashihama - Floating Island",
     "baseMaterial": "GRASS_2",
     "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
     "uvScale": 0.75,
     "objectIds": [
       "NIGHTMARE_GARDEN_ISLAND_01",
@@ -39763,6 +39886,7 @@
   {
     "description": "Morytania Spider Cave",
     "baseMaterial": "GRASS_3",
+    "windDisplacementMode": "OBJECT",
     "uvOrientation": 512,
     "uvType": "BOX",
     "uvScale": 0.8,

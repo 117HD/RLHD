@@ -94,7 +94,7 @@ public class GpuFloatBuffer
 		final int position = buffer.position();
 		if ((capacity - position) < size) {
 			do {
-				capacity *= HdPlugin.BUFFER_GROWTH_MULTIPLIER;
+				capacity = (int) (capacity * HdPlugin.BUFFER_GROWTH_MULTIPLIER);
 			}
 			while ((capacity - position) < size);
 
