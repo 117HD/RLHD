@@ -52,7 +52,7 @@ import rs117.hd.config.VanillaShadowMode;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
-import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
+import static rs117.hd.HdPluginConfig.*;
 
 @ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config

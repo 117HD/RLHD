@@ -1,9 +1,9 @@
-package rs117.hd.opengl;
+package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayList;
 
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opengl.GL15C.*;
+import static org.lwjgl.opengl.GL33C.*;
 
 public class ComputeUniforms extends SharedUniformBuffer {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
