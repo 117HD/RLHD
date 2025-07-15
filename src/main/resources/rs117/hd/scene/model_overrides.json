@@ -25898,6 +25898,7 @@
   {
     "description": "Isle of Souls - Maple Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "objectIds": [
       "MAPLETREE_UPDATE"
@@ -25905,6 +25906,7 @@
     "colorOverrides": [
       {
         "colors": "h > 4",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -25914,6 +25916,7 @@
   {
     "description": "Isle of Souls - Yew & Mahogany Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 1.2,
     "objectIds": [
@@ -25924,6 +25927,7 @@
       {
         "colors": "h < 7",
         "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -25932,6 +25936,7 @@
   {
     "description": "Isle of Souls - Tall Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -25952,6 +25957,7 @@
     "description": "Isle of Souls - Short Tree",
     "baseMaterial": "LEAVES_1",
     "uvType": "BOX",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvScale": 0.9,
     "objectIds": [
       "SOULWARS_TOURNAMENT_TABLE_NOVIS",
@@ -25962,6 +25968,7 @@
     "colorOverrides": [
       {
         "colors": "h < 7",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
