@@ -46158,18 +46158,30 @@
     "description": "Aldarin - Fortis - Terracotta shingled roofs",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 303,
+    "uvOrientation": -256,
     "objectIds": [
       "ROOFKIT_CIVITAS_ROOF01",
       "ROOFKIT_CIVITAS_ROOF02",
       "ROOFKIT_CIVITAS_ROOF03",
       "ROOFKIT_CIVITAS_ROOF04",
       "ROOFKIT_CIVITAS_ROOF05",
+      "ROOFKIT_CIVITAS_ROOF06",
+      "ROOFKIT_CIVITAS_ROOF_CENTER_SINGLE",
       "ROOFKIT_CIVITAS_TOP01",
       "ROOFKIT_CIVITAS_2X2",
       "ROOFKIT_CIVITAS_2X2B",
       "ROOFKIT_CIVITAS_2X2C",
-      "ROOFKIT_CIVITAS_2X1"
+      "ROOFKIT_CIVITAS_2X1",
+      "ROOFKIT_CIVITAS_2X1_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Roof",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 303
+      }
     ]
   },
   {
