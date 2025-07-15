@@ -11900,7 +11900,7 @@
       "SANG_FLOORBOARD_BOAT_SUPPORT_TL",
       "SANG_FLOORBOARD_BOAT_SUPPORT_TR"
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Morytania - Floor - Wooden - Ladder - Burgh De Rott - Meiyerditch",
@@ -12006,14 +12006,14 @@
   },
   {
     "description": "Morytania - Ground  - Wooden - Boat Launch - Burgh De Rott",
-    "baseMaterial": "DOCK_FENCE_DARK",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
     "objectIds": [
       "SANG_BOATHOUSE_CHUTE",
       "SANG_BOATHOUSE_CHUTE_MIRROR",
       "SANG_BOATHOUSE_CHUTE_BROKEN",
       "SANG_BOATHOUSE_CHUTE_FIXED"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Burgh De Rott - Objects - Dirt - Rubble Pile",

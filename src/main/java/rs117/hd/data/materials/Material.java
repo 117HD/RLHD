@@ -697,8 +697,6 @@ public enum Material {
 	),
 	WOOD_GRAIN_3_LIGHT(WOOD_GRAIN_3, p -> p.setBrightness(1.6f)),
 	DOCK_FENCE,
-	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
-
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(plugin -> plugin.config.hdInfernalTexture(), INFERNAL_CAPE)
 		.setUnlit(true)
