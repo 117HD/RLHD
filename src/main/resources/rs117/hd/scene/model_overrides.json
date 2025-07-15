@@ -2348,7 +2348,14 @@
       "PHOENIX_BURNT_GRASS_1",
       "PHOENIX_BURNT_GRASS_2",
       "PHOENIX_BURNT_GRASS_3",
-      "PHOENIX_BURNT_GRASS_4"
+      "PHOENIX_BURNT_GRASS_4",
+      "PMOON_SHORT_GRASS_1",
+      "PMOON_SHORT_GRASS_2",
+      "PMOON_SHORT_GRASS_3",
+      "PLANT_MOSS01_SUN01",
+      "PLANT_MOSS01_SUN02",
+      "PLANT_MOSS01_SUN03",
+      "PLANT_MOSS01_SUN04"
     ]
   },
   {
@@ -27503,23 +27510,9 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "windDisplacementMode": "OBJECT",
     "objectIds": [
-      "PRIF_MINE_MUSHROOM_1",
       "WILDY_HUB_BUSH_01",
       "WILDY_HUB_BUSH_02",
       "WILDY_HUB_BUSH_03",
-      "PLANT_MOSS01_SUN01",
-      "PLANT_MOSS01_SUN02",
-      "PLANT_MOSS01_SUN03",
-      "PLANT_MOSS01_SUN04",
-      "DUNGEONKIT_MOSS01_BUILDUP01",
-      "DUNGEONKIT_MOSS01_BUILDUP02",
-      "DUNGEONKIT_MOSS01_BUILDUP03",
-      "DUNGEONKIT_MOSS01_BUILDUP04",
-      "DUNGEONKIT_MOSS01_BUILDUP03_MIRROR",
-      "DUNGEONKIT_MOSS01_BUILDUP04_MIRROR",
-      "BUSH_GRASS01_SUNFLOWER01",
-      "BUSH_GRASS01_SUNFLOWER02",
-      "BUSH_GRASS01_SUNFLOWER03",
       "PMOON_LIZARD_BUSH",
       "PMOON_GRUB_SAPLING",
       "PLANT_FERN01_SMALL01",
@@ -27527,7 +27520,46 @@
       "PLANT_FERN_MOONLIGHT01",
       "PLANT_FERN_MOONLIGHT02",
       "PLANT_FERN_MOONLIGHT03",
-      "PLANT_FERN_MOONLIGHT04",
+      "PLANT_FERN_MOONLIGHT04"
+    ]
+  },
+  {
+    "description": "Perilous Moons Sunflower Bush",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "BUSH_GRASS01_SUNFLOWER01",
+      "BUSH_GRASS01_SUNFLOWER02",
+      "BUSH_GRASS01_SUNFLOWER03"
+    ]
+  },
+  {
+    "description": "Perilous Moons Plants with Rocks",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "PLANT_ROCKS_SWAMP02_DARK01",
+      "PLANT_ROCKS_SWAMP01_DARK01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.86
+      }
+    ]
+  },
+  {
+    "description": "Perilous Moons Ivy and Mushrooms",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "PRIF_MINE_MUSHROOM_1",
+      "DUNGEONKIT_MOSS01_BUILDUP01",
+      "DUNGEONKIT_MOSS01_BUILDUP02",
+      "DUNGEONKIT_MOSS01_BUILDUP03",
+      "DUNGEONKIT_MOSS01_BUILDUP04",
+      "DUNGEONKIT_MOSS01_BUILDUP03_MIRROR",
+      "DUNGEONKIT_MOSS01_BUILDUP04_MIRROR",
       "ROR_IVY01_LARGE01",
       "ROR_IVY01_MEDIUM01",
       "ROR_IVY01_MEDIUM01_DARK01",
@@ -27540,6 +27572,8 @@
   {
     "description": "Perilous Moons Hanging Vines - Remove Shadows",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
+
     "castShadows": false,
     "objectIds": [
       "ROR_VINE01_HANGING01",

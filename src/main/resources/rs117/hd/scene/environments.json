@@ -1738,7 +1738,31 @@
     "area": "EARTHBOUND_CAVERN",
     "sunAngles": [ 62, 210 ],
     "waterColor": "#477d95",
-    "waterCausticsStrength": 20
+    "waterCausticsStrength": 20,
+    "windAngle": 30,
+    "windSpeed": 10,
+    "windStrength": 8.5,
+    "windCeiling": 500
+  },
+  {
+    "area": "STREAMBOUND_CAVERN",
+    "windAngle": 30,
+    "windSpeed": 10,
+    "windStrength": 8.5,
+    "windCeiling": 500
+  },
+  {
+    "area": "PERIOUS_MOONS_ANTECHAMBER",
+    "windAngle": 30,
+    "windSpeed": 10,
+    "windStrength": 7.5
+  },
+  {
+    "area": "ANCIENT_SHRINE",
+    "windAngle": 30,
+    "windSpeed": 7.5,
+    "windStrength": 17.5,
+    "windCeiling": 200
   },
   {
     "area": "RED_CHINCHOMPA_HUNTING_GROUND",
