@@ -6237,27 +6237,29 @@
   {
     "description": "DOCK_FENCES",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 1.1,
+    "uvOrientation": 512,
     "objectIds": [
       "PIER_RAIL",
       "SERIM_PIER_RAIL",
       "FAI_BARBARIAN_RAIL",
       "BREW_PIER_RAIL"
-    ],
-    "uvType": "BOX",
-    "flatNormals": true,
-    "uvScale": 1.1,
-    "uvOrientation": 512
+    ]
   },
   {
     "description": "DOCK_FENCES_TAN",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
     "objectIds": [
       "PEST_SERIM_PIER_RAIL",
       "FRISB_PIER_RAIL",
       "FRISD_WOOD_GATE_OPEN_01",
       "FRISD_WOOD_GATE_01"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "RELLEKKA_FENCES",
@@ -7111,21 +7113,27 @@
   },
   {
     "description": "PHASMATYS_DOCK_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 1.1,
+    "uvOrientation": 512,
     "objectIds": [
       "AHOY_PIER_RAIL"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "RoU_DOCK_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.7,
+    "uvOrientation": 512,
     "objectIds": [
       "TEMPOROSS_LOBBY_DOCK_RAIL",
       "TEMPOROSS_LOBBY_BANNER_LOWER_LEFT",
       "TEMPOROSS_LOBBY_BANNER_LOWER_RIGHT"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "LIGHT_WOODEN_DOCKS",
@@ -7182,7 +7190,10 @@
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 128,
     "objectIds": [
       "QUEST_LUNAR_GALLEON_PIER_LVL1_LOW",
       "QUEST_LUNAR_GALLEON_PIER_LVL2_LOW"
@@ -7423,7 +7434,10 @@
   },
   {
     "description": "Witchaven Dock Rails",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
     "objectIds": [
       "SLUG2_PIER_RAIL"
     ]
@@ -7981,11 +7995,13 @@
   },
   {
     "description": "Wooden Wall Supports - Mines",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       "WALLSUPPORT"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Ladder",
@@ -8119,9 +8135,15 @@
   },
   {
     "description": "Falador - Wood Railing",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "objectIds": [
       "SARIM_BANNISTER",
+      "SARIM_BANNISTER_END",
+      "SARIM_SPIRALSTAIRSTOP",
+      "SARIM_SPIRALSTAIRS_FIX",
       "FAI_WIZTOWER_SPIRALSTAIRSTOP"
     ]
   },
@@ -9070,7 +9092,10 @@
   },
   {
     "description": "Black Knight Fortress Wood Rails",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "objectIds": [
       "DK_SPIRALSTAIRS_FIX",
       "DK_SPIRALSTAIRSTOP",
@@ -10853,12 +10878,13 @@
   },
   {
     "description": "Fence Gate - Static",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "PVPA_ACCESS_GATE_L_OPEN",
       "PVPA_ACCESS_GATE_R_OPEN"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Objects - Wooden - Crate",
@@ -11827,15 +11853,17 @@
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence Gate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "uvType": "BOX",
     "objectIds": [
       "BURGH_FENCEGATE_L",
       "BURGH_FENCEGATE_R",
       "BURGH_OPENFENCEGATE_L",
       "BURGH_OPENFENCEGATE_R",
       "BURGH_AGILITY_SHORTCUT_FENCE"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Morytania - Walls - Wooden - Plank - Burgh De Rott",
@@ -12123,11 +12151,11 @@
   },
   {
     "description": "Objects - Locker - Wooden - Non Interactable",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
     "objectIds": [
       "SUROK_TUNNEL_LOCKER"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Objects - Stool - Wooden – Generic",
@@ -12375,7 +12403,8 @@
   },
   {
     "description": "Lunar Island - Objects - Wooden - Hat Rack",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.6,
     "objectIds": [
       "LUNAR_MOONCLAN_HAT_EMPTY"
     ]
@@ -14054,10 +14083,21 @@
     ]
   },
   {
-    "description": "Gnome - Walls - Rope Rails",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Gnome - Walls - Wooden - Rope - Gnome Rope Rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "BRIDGE_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
     ]
   },
   {
@@ -14198,7 +14238,10 @@
   },
   {
     "description": "Gnome - Objects - Wooden - Staircase Rails - Textured",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
     "objectIds": [
       "SPIRALSTAIRSTOP_WOODEN"
     ]
