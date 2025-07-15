@@ -1536,7 +1536,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getRadius());
+						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getXYZMag()); // XZ radius
 				}
 			}
 		}
