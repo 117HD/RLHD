@@ -73,7 +73,7 @@ public class OpenCLManager {
 	//      int totalDistance[12];
 	//      int totalMappedNum[18];
 	//      int min10;
-	//      int dfs[0];
+	//      int renderPris[0];
 	//  };
 	private static final int SHARED_SIZE = 12 + 12 + 18 + 1; // in ints
 
@@ -103,12 +103,7 @@ public class OpenCLManager {
 	public void startUp(AWTContext awtContext) {
 		CL.create();
 		initialized = true;
-
-		if (OSType.getOSType() == OSType.MacOS) {
-			initContextMacOS(awtContext);
-		} else {
-			initContext(awtContext);
-		}
+		initContext(awtContext);
 		log.debug("Device CL_DEVICE_MAX_WORK_GROUP_SIZE: {}", getMaxWorkGroupSize());
 		initQueue();
 	}
@@ -148,34 +143,36 @@ public class OpenCLManager {
 
 			PointerBuffer platforms = stack.mallocPointer(pi.get(0));
 			checkCLError(clGetPlatformIDs(platforms, (IntBuffer) null));
-
-			PointerBuffer ctxProps = stack.mallocPointer(7);
-			if (OSType.getOSType() == OSType.Windows) {
-				ctxProps
-					.put(CL_CONTEXT_PLATFORM)
-					.put(0)
-					.put(CL_GL_CONTEXT_KHR)
-					.put(awtContext.getGLContext())
-					.put(CL_WGL_HDC_KHR)
-					.put(awtContext.getWGLHDC())
-					.put(0)
-					.flip();
-			} else if (OSType.getOSType() == OSType.Linux) {
-				ctxProps
-					.put(CL_CONTEXT_PLATFORM)
-					.put(0)
-					.put(CL_GL_CONTEXT_KHR)
-					.put(awtContext.getGLContext())
-					.put(CL_GLX_DISPLAY_KHR)
-					.put(awtContext.getGLXDisplay())
-					.put(0)
-					.flip();
-			} else {
-				throw new RuntimeException("unsupported platform");
-			}
-
 			if (platforms.limit() == 0)
 				throw new RuntimeException("Unable to find compute platform");
+
+			PointerBuffer ctxProps = stack.mallocPointer(7)
+				.put(CL_CONTEXT_PLATFORM)
+				.put(0);
+			switch (OSType.getOSType()) {
+				case Windows:
+					ctxProps
+						.put(CL_GL_CONTEXT_KHR)
+						.put(awtContext.getGLContext())
+						.put(CL_WGL_HDC_KHR)
+						.put(awtContext.getWGLHDC());
+					break;
+				case Linux:
+					ctxProps
+						.put(CL_GL_CONTEXT_KHR)
+						.put(awtContext.getGLContext())
+						.put(CL_GLX_DISPLAY_KHR)
+						.put(awtContext.getGLXDisplay());
+					break;
+				case MacOS:
+					ctxProps
+						.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
+						.put(awtContext.getCGLShareGroup());
+					break;
+				default:
+					throw new RuntimeException("unsupported platform");
+			}
+			ctxProps.put(0).flip();
 
 			IntBuffer errcode_ret = stack.callocInt(1);
 			for (int p = 0; p < platforms.limit(); p++) {
@@ -228,6 +225,7 @@ public class OpenCLManager {
 						if (!deviceCaps.cl_khr_gl_sharing && !deviceCaps.cl_APPLE_gl_sharing)
 							continue;
 
+						// Initialize a context from the device if one hasn't already been created
 						if (context == 0) {
 							try {
 								var callback = CLContextCallback.create((errinfo, private_info, cb, user_data) ->
@@ -235,9 +233,24 @@ public class OpenCLManager {
 								long context = clCreateContext(ctxProps, device, callback, NULL, errcode_ret);
 								checkCLError(errcode_ret);
 
+								if (OSType.getOSType() == OSType.MacOS) {
+									var buf = stack.mallocPointer(1);
+									checkCLError(clGetGLContextInfoAPPLE(
+										context,
+										awtContext.getGLContext(),
+										CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE,
+										buf,
+										null
+									));
+									if (buf.get(0) != device) {
+										log.debug("Skipping capable but not current virtual screen device...");
+										clReleaseContext(context);
+										continue;
+									}
+								}
+
 								this.device = device;
 								OpenCLManager.context = context;
-								break;
 							} catch (Exception ex) {
 								log.error("Error while creating context:", ex);
 							}
@@ -248,39 +261,8 @@ public class OpenCLManager {
 				}
 			}
 
-			if (this.context == 0)
+			if (context == 0)
 				throw new RuntimeException("Unable to create suitable compute context");
-		}
-	}
-
-	private void initContextMacOS(AWTContext awtContext) {
-		try (var stack = MemoryStack.stackPush()) {
-			PointerBuffer ctxProps = stack.mallocPointer(3);
-			ctxProps
-				.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
-				.put(awtContext.getCGLShareGroup())
-				.put(0)
-				.flip();
-
-			IntBuffer errcode_ret = stack.callocInt(1);
-			var devices = stack.mallocPointer(0);
-			long context = clCreateContext(ctxProps, devices, CLContextCallback.create((errinfo, private_info, cb, user_data) ->
-				log.error("[LWJGL] cl_context_callback: {}", memUTF8(errinfo))), NULL, errcode_ret);
-			checkCLError(errcode_ret);
-
-			var deviceBuf = stack.mallocPointer(1);
-			checkCLError(clGetGLContextInfoAPPLE(
-				context,
-				awtContext.getGLContext(),
-				CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE,
-				deviceBuf,
-				null
-			));
-			long device = deviceBuf.get(0);
-
-			log.debug("Got macOS CLGL compute device {}", device);
-			this.context = context;
-			this.device = device;
 		}
 	}
 
