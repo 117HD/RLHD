@@ -3732,6 +3732,13 @@
     }
   },
   {
+    "name": "FORTIS_EARTHEN_FLOOR",
+    "area": "ZEAH",
+    "overlayIds": [ 326 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "uvScale": 1.1
+  },
+  {
     "name": "FORTIS_MARBLE_FLOOR",
     "area": "ZEAH",
     "overlayIds": [ 327 ],
