@@ -31,10 +31,10 @@
 
 layout (location = 0) in vec3 aPos;
 
-out vec3 TexCoords;
+out vec2 quadPos;
 
 void main()
 {
-    TexCoords = aPos;
-    gl_Position = skyboxViewProj * vec4(aPos * skyboxOffset, 1.0);
+    quadPos = aPos.xy;
+    gl_Position = vec4(aPos.xy, 0.0, 1.0);
 }

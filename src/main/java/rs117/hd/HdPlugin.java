@@ -2054,7 +2054,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				glBindVertexArray(vaoSkyboxHandle);
 
-				glDrawArrays(GL_TRIANGLES, 0, 36);
+				glDrawArrays(GL_TRIANGLES, 0, 6);
 			} else {
 				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			}
