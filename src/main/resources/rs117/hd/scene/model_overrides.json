@@ -36272,9 +36272,19 @@
     ]
   },
   {
+    "description": "Fortis - brick - Exterior walls - Middle",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_FORTIS02_WALL01",
+      "WALLKIT_FORTIS02_ARROWSLIT01",
+      "WALLKIT_FORTIS02_GATEHOUSE01"
+    ]
+  },
+  {
     "description": "Fortis - Stone wall Bottom",
     "baseMaterial": "ROCK_3_SMOOTH",
-    "uvOrientation": 256,
+    "uvOrientation": -256,
     "uvType": "BOX",
     "uvScale": 0.75,
     "flatNormals": true,
@@ -36293,7 +36303,7 @@
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientation": -256,
-        "uvScale": 0.8
+        "uvScale": 1.1
       }
     ]
   },
@@ -36312,6 +36322,86 @@
         "description": "Bricks",
         "colors": "h == 2",
         "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Brick - Exterior wall - Gatehouse",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1,
+    "objectIds": [
+      "WALLKIT_FORTIS_GATEHOUSE_02",
+      "WALLKIT_FORTIS_GATEHOUSE_03",
+      "WALLKIT_FORTIS_GATEHOUSE_04",
+      "WALLKIT_FORTIS_GATEHOUSE_05"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Metallic - Brick - Wooden - Exterior wall - Gatehouse door",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1,
+    "objectIds": [
+      "WALLKIT_FORTIS_GATEHOUSE_02_DOOR",
+      "WALLKIT_FORTIS_GATEHOUSE_03_DOOR",
+      "WALLKIT_FORTIS_GATEHOUSE_04_DOOR",
+      "WALLKIT_FORTIS_GATEHOUSE_05_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -128
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Metallic - Wooden - Gatehouse gate",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -128,
+    "objectIds": [
+      "WALLKIT_FORTIS_GATEHOUSE_06"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8
       }
@@ -46205,6 +46295,16 @@
     ]
   },
   {
+    "description": "Aldarin - Fortis - Terracotta roofs facade with moon",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "objectIds": [
+      "ROOFKIT_CIVITAS_FACADE02_6X1",
+      "ROOFKIT_CIVITAS_FACADE02_6X1_M"
+    ]
+  },
+  {
     "description": "Aldarin - Fortis - Terracotta shingled roof with fron facade",
     "baseMaterial": "GRUNGE_3_DARK",
     "uvType": "BOX",
@@ -46324,7 +46424,8 @@
       "PILLAR_ALDARIN01_CITY01_HIGHER01",
       "PILLAR_CIVITAS01_CITY01_LOWER01",
       "PILLAR_CIVITAS01_CITY01_HIGHER01",
-      "PILLAR_CIVITAS01_CITY01"
+      "PILLAR_CIVITAS01_CITY01",
+      "PILLAR_CIVITAS01_CITY02_LOWER01"
     ],
     "colorOverrides": [
       {
@@ -46360,7 +46461,8 @@
       "PILLAR_CIVITAS01_CITY05",
       "PILLAR_CIVITAS01_CITY05_LOWER01",
       "PILLAR_CIVITAS01_CITY05_HIGHER01",
-      "PILLAR_CIVITAS01_CITY05_LOWER01_NOTES01"
+      "PILLAR_CIVITAS01_CITY05_LOWER01_NOTES01",
+      "PILLAR_CIVITAS01_CITY05_LOWER01_NOTES02"
 
     ],
     "colorOverrides": [
