@@ -2119,6 +2119,7 @@
       "RAREFLOWER_1",
       "RAREFLOWERS_1",
       "FLOWERBED1",
+      "FLOWERBED_RED",
       "FLOWERBED_YELLOW",
       "RAREFLOWER_YELLOW",
       "RAREFLOWERS_YELLOW",
@@ -2182,7 +2183,8 @@
       "WILDY_HUB_FLOWERS_04",
       "WILDY_HUB_FLOWERS_03",
       "WILDY_HUB_FLOWERS_02",
-      "WILDY_HUB_FLOWERS_01"
+      "WILDY_HUB_FLOWERS_01",
+      "JUNGLEFLOWER"
     ]
   },
   {
@@ -16166,6 +16168,7 @@
   {
     "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
@@ -16182,6 +16185,7 @@
     "colorOverrides": [
       {
         "colors": "h > 10",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
         "uvScale": 0.25
@@ -16257,12 +16261,14 @@
   {
     "description": "Jungle Tree Large - Unusual Plant",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 768,
     "colorOverrides": [
       {
         "description": "Leaves",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "colors": "h > 10"
       }
@@ -16296,6 +16302,25 @@
       "TREE_PALM03_BASE",
       "TREE_PALM03_MID",
       "TREE_PALM03_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 15",
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Tropical Tree Top",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX",
+    "objectIds": [
+      "BAMBOO_TREE_TOP",
+      "BAMBOO_TREE_2_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -18816,6 +18841,7 @@
   },
   {
     "description": "Karamja - Jungle plant - Leafy style",
+    "windDisplacementMode": "VERTEX",
     "baseMaterial": "LEAF_VEINS",
     "uvScale": 0.25,
     "uvType": "BOX",
@@ -18830,6 +18856,7 @@
   {
     "description": "Karamja - Jungle plant - fern style",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VERTEX",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
@@ -18840,6 +18867,7 @@
   {
     "description": "Karamja - Creeping plant",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "OBJECT",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
@@ -20806,8 +20834,30 @@
   {
     "description": "Objects - Tree - Banana Tree",
     "baseMaterial": "GRAY_65",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "BANANATREEFULL"
+      "BANANATREEFULL",
+      "BANANATREEFOUR",
+      "BANANATREETHREE",
+      "BANANATREETWO",
+      "BANANATREEONE",
+      "BANANATREEEMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 6", "h == 8" ],
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 22",
+        "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
     ]
   },
   {
