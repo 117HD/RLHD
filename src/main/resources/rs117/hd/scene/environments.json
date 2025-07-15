@@ -67,7 +67,10 @@
     "fogDepth": 30,
     "groundFogStart": 0,
     "groundFogEnd": -250,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 20
   },
   {
     "area": "WILDERNESS_LOW",
@@ -76,7 +79,10 @@
     "directionalColor": "#8a9eb6",
     "directionalStrength": 2.5,
     "fogColor": "#3e3e46",
-    "fogDepth": 20
+    "fogDepth": 20,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 40
   },
   {
     "area": "WILDERNESS",
@@ -88,7 +94,10 @@
     "fogDepth": 30,
     "groundFogStart": 0,
     "groundFogEnd": -250,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 25
   },
   {
     "area": "HUNTER_GUILD",
