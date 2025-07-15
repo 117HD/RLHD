@@ -621,7 +621,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
-		description = "Adds textures to some models.",
+		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
 		position = 7,
 		section = environmentSettings
 	)
@@ -633,7 +633,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_GROUND_TEXTURES,
 		name = "Ground Textures",
-		description = "Adds textures to some ground tiles.",
+		description = "Adds new textures to most ground tiles.",
 		position = 8,
 		section = environmentSettings
 	)
@@ -692,6 +692,29 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_WIND_DISPLACEMENT = "windDisplacement";
+	@ConfigItem(
+		keyName = KEY_WIND_DISPLACEMENT,
+		name = "Wind Displacement",
+		description = "Controls whether things like grass and leaves should be affected by wind.",
+		position = 13,
+		section = environmentSettings
+	)
+	default boolean windDisplacement() {
+		return true;
+	}
+
+	String KEY_CHARACTER_DISPLACEMENT = "characterDisplacement";
+	@ConfigItem(
+		keyName = KEY_CHARACTER_DISPLACEMENT,
+		name = "Character Displacement",
+		description = "Let players & NPCs affect things like grass whilst walking around.",
+		position = 14,
+		section = environmentSettings
+	)
+	default boolean characterDisplacement() {
+		return true;
+	}
 
 	/*====== Model caching settings ======*/
 

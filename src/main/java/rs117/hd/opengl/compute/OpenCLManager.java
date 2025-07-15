@@ -41,14 +41,13 @@ import org.lwjgl.opencl.*;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
+import rs117.hd.opengl.ComputeUniforms;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
-import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.APPLEGLSharing.*;
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opencl.CL10GL.*;
 import static org.lwjgl.opencl.CL12.*;
 import static org.lwjgl.opencl.KHRGLSharing.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -73,13 +72,11 @@ public class OpenCLManager {
 	@Inject
 	private HdPlugin plugin;
 
-	@Inject
-	private HdPluginConfig config;
+	public static long context;
 
 	private boolean initialized;
 
 	private long device;
-	private long context;
 	private long commandQueue;
 
 	private long passthroughProgram;
@@ -280,7 +277,7 @@ public class OpenCLManager {
 	public int getMaxWorkGroupSize() {
 		long[] maxWorkGroupSize = new long[1];
 		clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, maxWorkGroupSize, null);
-		return (int) maxWorkGroupSize[0];
+		return (int) (maxWorkGroupSize[0] * 0.6f); // Workaround for https://github.com/117HD/RLHD/issues/598
 	}
 
 	private void initQueue() {
@@ -321,6 +318,7 @@ public class OpenCLManager {
 			var template = new Template()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
+				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
@@ -335,6 +333,9 @@ public class OpenCLManager {
 					.copy()
 					.define("THREAD_COUNT", threadCount)
 					.define("FACES_PER_THREAD", facesPerThread)
+					.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
+					.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
+					.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
 					.load("comp.cl")
 				);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
@@ -401,24 +402,24 @@ public class OpenCLManager {
 	}
 
 	public void compute(
-		GLBuffer uniformBufferCamera,
+		SharedGLBuffer uboCompute,
 		int numPassthroughModels, int[] numSortingBinModels,
-		GLBuffer modelPassthroughBuffer, GLBuffer[] modelSortingBuffers,
-		GLBuffer stagingBufferVertices, GLBuffer stagingBufferUvs, GLBuffer stagingBufferNormals,
-		GLBuffer renderBufferVertices, GLBuffer renderBufferUvs, GLBuffer renderBufferNormals
+		SharedGLBuffer modelPassthroughBuffer, SharedGLBuffer[] modelSortingBuffers,
+		SharedGLBuffer stagingBufferVertices, SharedGLBuffer stagingBufferUvs, SharedGLBuffer stagingBufferNormals,
+		SharedGLBuffer renderBufferVertices, SharedGLBuffer renderBufferUvs, SharedGLBuffer renderBufferNormals
 	) {
 		try (var stack = MemoryStack.stackPush()) {
 			PointerBuffer glBuffers = stack.mallocPointer(8 + modelSortingBuffers.length)
-				.put(uniformBufferCamera.clBuffer)
-				.put(modelPassthroughBuffer.clBuffer)
-				.put(stagingBufferVertices.clBuffer)
-				.put(stagingBufferUvs.clBuffer)
-				.put(stagingBufferNormals.clBuffer)
-				.put(renderBufferVertices.clBuffer)
-				.put(renderBufferUvs.clBuffer)
-				.put(renderBufferNormals.clBuffer);
+				.put(uboCompute.clId)
+				.put(modelPassthroughBuffer.clId)
+				.put(stagingBufferVertices.clId)
+				.put(stagingBufferUvs.clId)
+				.put(stagingBufferNormals.clId)
+				.put(renderBufferVertices.clId)
+				.put(renderBufferUvs.clId)
+				.put(renderBufferNormals.clId);
 			for (var buffer : modelSortingBuffers)
-				glBuffers.put(buffer.clBuffer);
+				glBuffers.put(buffer.clId);
 			glBuffers.flip();
 
 			PointerBuffer acquireEvent = stack.mallocPointer(1);
@@ -426,13 +427,13 @@ public class OpenCLManager {
 
 			PointerBuffer computeEvents = stack.mallocPointer(1 + modelSortingBuffers.length);
 			if (numPassthroughModels > 0) {
-				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 2, stagingBufferUvs.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 3, stagingBufferNormals.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 4, renderBufferVertices.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 5, renderBufferUvs.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 6, renderBufferNormals.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clId);
+				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clId);
+				clSetKernelArg1p(passthroughKernel, 2, stagingBufferUvs.clId);
+				clSetKernelArg1p(passthroughKernel, 3, stagingBufferNormals.clId);
+				clSetKernelArg1p(passthroughKernel, 4, renderBufferVertices.clId);
+				clSetKernelArg1p(passthroughKernel, 5, renderBufferUvs.clId);
+				clSetKernelArg1p(passthroughKernel, 6, renderBufferNormals.clId);
 
 				// queue compute call after acquireGLBuffers
 				clEnqueueNDRangeKernel(commandQueue, passthroughKernel, 1, null,
@@ -452,14 +453,14 @@ public class OpenCLManager {
 				long kernel = sortingKernels[i];
 
 				clSetKernelArg(kernel, 0, (long) (SHARED_SIZE + faceCount) * Integer.BYTES);
-				clSetKernelArg1p(kernel, 1, modelSortingBuffers[i].clBuffer);
-				clSetKernelArg1p(kernel, 2, stagingBufferVertices.clBuffer);
-				clSetKernelArg1p(kernel, 3, stagingBufferUvs.clBuffer);
-				clSetKernelArg1p(kernel, 4, stagingBufferNormals.clBuffer);
-				clSetKernelArg1p(kernel, 5, renderBufferVertices.clBuffer);
-				clSetKernelArg1p(kernel, 6, renderBufferUvs.clBuffer);
-				clSetKernelArg1p(kernel, 7, renderBufferNormals.clBuffer);
-				clSetKernelArg1p(kernel, 8, uniformBufferCamera.clBuffer);
+				clSetKernelArg1p(kernel, 1, modelSortingBuffers[i].clId);
+				clSetKernelArg1p(kernel, 2, stagingBufferVertices.clId);
+				clSetKernelArg1p(kernel, 3, stagingBufferUvs.clId);
+				clSetKernelArg1p(kernel, 4, stagingBufferNormals.clId);
+				clSetKernelArg1p(kernel, 5, renderBufferVertices.clId);
+				clSetKernelArg1p(kernel, 6, renderBufferUvs.clId);
+				clSetKernelArg1p(kernel, 7, renderBufferNormals.clId);
+				clSetKernelArg1p(kernel, 8, uboCompute.clId);
 				clSetKernelArg1p(kernel, 9, tileHeightMap);
 
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, null,
@@ -562,20 +563,5 @@ public class OpenCLManager {
 	private static void checkCLError(int errcode) {
 		if (errcode != CL_SUCCESS)
 			throw new RuntimeException(String.format("OpenCL error [%d]", errcode));
-	}
-
-	public void recreateCLBuffer(GLBuffer glBuffer, long clFlags) {
-		// cleanup previous buffer
-		if (glBuffer.clBuffer != 0)
-			clReleaseMemObject(glBuffer.clBuffer);
-
-		// allocate new
-		if (glBuffer.size == 0) {
-			// opencl does not allow 0-size gl buffers, it will segfault on macOS
-			glBuffer.clBuffer = 0;
-		} else {
-			assert glBuffer.size > 0 : "Size <= 0 should not reach this point";
-			glBuffer.clBuffer = clCreateFromGLBuffer(context, clFlags, glBuffer.glBufferId, (IntBuffer) null);
-		}
 	}
 }

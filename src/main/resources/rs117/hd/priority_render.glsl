@@ -105,7 +105,7 @@ void add_face_prio_distance(const uint localId, const ModelInfo minfo, out int p
         dis = face_distance(thisA.pos, thisB.pos, thisC.pos);
 
         // if the face is not culled, it is calculated into priority distance averages
-        vec3 modelPos = vec3(minfo.x, minfo.y, minfo.z);
+        vec3 modelPos = vec3(minfo.x, minfo.y >> 16, minfo.z);
         if (face_visible(thisA.pos, thisB.pos, thisC.pos, modelPos)) {
             atomicAdd(totalNum[prio], 1);
             atomicAdd(totalDistance[prio], dis);
@@ -212,7 +212,118 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     hsl |= lightness;
 }
 
-void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance) {
+vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
+    vec2 offset = vertPos - characterPos.xy;
+    float offsetLen = abs(length(offset));
+
+    if (offsetLen >= characterPos.z)
+        return vec3(0);
+
+    float offsetFrac = saturate(1.0 - (offsetLen / characterPos.z));
+    float displacementFrac = offsetFrac * offsetFrac;
+
+    vec3 horizontalDisplacement = normalize(vec3(offset.x, 0.0, offset.y)) * (height * strength * displacementFrac * 0.5);
+    vec3 verticalDisplacement = vec3(0.0, height * strength * displacementFrac, 0.0);
+
+    offsetAccum += offsetFrac;
+
+    return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
+}
+
+void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
+    in vec3 vertA, in vec3 vertB, in vec3 vertC,
+    in vec3 normA, in vec3 normB, in vec3 normC,
+    inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC
+) {
+    int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
+    if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
+        return;
+
+    float strengthA = saturate(abs(vertA.y) / height);
+    float strengthB = saturate(abs(vertB.y) / height);
+    float strengthC = saturate(abs(vertC.y) / height);
+
+    #if WIND_DISPLACEMENT
+    if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
+        const float VertexSnapping = 150.0; // Snap so verticies which are almost overlapping will obtain the same noise value
+        const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
+        float windNoiseA = mix(-0.5, 0.5, noise((snap(vertA, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseB = mix(-0.5, 0.5, noise((snap(vertB, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseC = mix(-0.5, 0.5, noise((snap(vertC, VertexSnapping).xz + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+
+        if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
+            const float minDist = 50;
+            const float blendDist = 10.0;
+
+            float distBlendA = saturate(((abs(vertA.x) + abs(vertA.z)) - minDist) / blendDist);
+            float distBlendB = saturate(((abs(vertB.x) + abs(vertB.z)) - minDist) / blendDist);
+            float distBlendC = saturate(((abs(vertC.x) + abs(vertC.z)) - minDist) / blendDist);
+
+            float heightFadeA = saturate((strengthA - 0.5) / 0.2);
+            float heightFadeB = saturate((strengthB - 0.5) / 0.2);
+            float heightFadeC = saturate((strengthC - 0.5) / 0.2);
+
+            strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA));
+            strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
+            strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
+        } else {
+            if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+                vec3 vertASkew = safe_normalize(cross(normA.xyz, vec3(0, 1, 0)));
+                vec3 vertBSkew = safe_normalize(cross(normB.xyz, vec3(0, 1, 0)));
+                vec3 vertCSkew = safe_normalize(cross(normC.xyz, vec3(0, 1, 0)));
+
+                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
+                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
+                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC) * 0.5) * vertCSkew);
+
+                vertASkew = safe_normalize(cross(normA.xyz, vec3(1, 0, 0)));
+                vertBSkew = safe_normalize(cross(normB.xyz, vec3(1, 0, 0)));
+                vertCSkew = safe_normalize(cross(normC.xyz, vec3(1, 0, 0)));
+
+                displacementA += (((1.0 - windNoiseA) * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
+                displacementB += (((1.0 - windNoiseB) * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
+                displacementC += (((1.0 - windNoiseC) * (windSample.heightBasedStrength * strengthC) * 0.5) * vertCSkew);
+            } else {
+                displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA * VertexDisplacementMod)) * windSample.direction);
+                displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
+                displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod)) * windSample.direction);
+
+                strengthA = saturate(strengthA - VertexDisplacementMod);
+                strengthB = saturate(strengthB - VertexDisplacementMod);
+                strengthC = saturate(strengthC - VertexDisplacementMod);
+            }
+        }
+    }
+    #endif
+
+    #if CHARACTER_DISPLACEMENT
+    if (windDisplacementMode == WIND_DISPLACEMENT_OBJECT) {
+        vec2 worldVertA = (worldPos + vertA).xz;
+        vec2 worldVertB = (worldPos + vertB).xz;
+        vec2 worldVertC = (worldPos + vertC).xz;
+
+        float fractAccum = 0.0;
+        for (int i = 0; i < characterPositionCount; i++) {
+            displacementA += applyCharacterDisplacement(characterPositions[i], worldVertA, height, strengthA, fractAccum);
+            displacementB += applyCharacterDisplacement(characterPositions[i], worldVertB, height, strengthB, fractAccum);
+            displacementC += applyCharacterDisplacement(characterPositions[i], worldVertC, height, strengthC, fractAccum);
+            if (fractAccum >= 2.0)
+                break;
+        }
+    }
+    #endif
+
+    #if WIND_DISPLACEMENT
+    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+        // Object Displacement
+        displacementA += windSample.displacement * strengthA;
+        displacementB += windSample.displacement * strengthB;
+        displacementC += windSample.displacement * strengthC;
+    }
+    #endif
+}
+
+void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, ObjectWindSample windSample) {
     int offset = minfo.offset;
     int size = minfo.size;
 
@@ -220,8 +331,10 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         int outOffset = minfo.idx;
         int uvOffset = minfo.uvOffset;
         int flags = minfo.flags;
-        vec3 pos = vec3(minfo.x, minfo.y, minfo.z);
+        vec3 pos = vec3(minfo.x, minfo.y >> 16, minfo.z);
+        float height = minfo.y & 0xffff;
         int orientation = flags & 0x7ff;
+        int vertexFlags = uvOffset >= 0 ? int(uv[uvOffset + localId * 3].w) : 0;
 
         // we only have to order faces against others of the same priority
         const int priorityOffset = count_prio_offset(thisPriority);
@@ -236,20 +349,34 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             if (renderPriority < renderPris[i])
                 ++myOffset;
 
+        vec3 displacementA = vec3(0);
+        vec3 displacementB = vec3(0);
+        vec3 displacementC = vec3(0);
+
+        // Grab triangle vertices from the correct buffer
+        vert thisrvA = vb[offset + localId * 3];
+        vert thisrvB = vb[offset + localId * 3 + 1];
+        vert thisrvC = vb[offset + localId * 3 + 2];
+
         // Grab vertex normals from the correct buffer
         vec4 normA = normal[offset + localId * 3    ];
         vec4 normB = normal[offset + localId * 3 + 1];
         vec4 normC = normal[offset + localId * 3 + 2];
+
+        applyWindDisplacement(windSample, vertexFlags, height, pos,
+            thisrvA.pos, thisrvB.pos, thisrvC.pos,
+            normA.xyz, normB.xyz, normC.xyz,
+            displacementA, displacementB, displacementC);
 
         // Rotate normals to match model orientation
         normalout[outOffset + myOffset * 3]     = rotate(normA, orientation);
         normalout[outOffset + myOffset * 3 + 1] = rotate(normB, orientation);
         normalout[outOffset + myOffset * 3 + 2] = rotate(normC, orientation);
 
-        // Grab triangle vertices from the correct buffer
-        vert thisrvA = vb[offset + localId * 3];
-        vert thisrvB = vb[offset + localId * 3 + 1];
-        vert thisrvC = vb[offset + localId * 3 + 2];
+        // Apply any displacement
+        thisrvA.pos += displacementA;
+        thisrvB.pos += displacementB;
+        thisrvC.pos += displacementC;
 
         // rotate for model orientation
         thisrvA.pos = rotate(thisrvA.pos, orientation);
@@ -296,7 +423,11 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             uvB = uv[uvOffset + localId * 3 + 1];
             uvC = uv[uvOffset + localId * 3 + 2];
 
-            if ((int(uvA.w) >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+            if ((vertexFlags >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+                uvA.xyz += displacementA;
+                uvB.xyz += displacementB;
+                uvC.xyz += displacementC;
+
                 // Rotate the texture triangles to match model orientation
                 uvA = rotate(uvA, orientation);
                 uvB = rotate(uvB, orientation);

@@ -140,6 +140,22 @@ public class EnvironmentManager {
 	public final float[] currentSunAngles = { 0, 0 };
 	private final float[] targetSunAngles = { 0, 0 };
 
+	private float startWindAngle = 0f;
+	public float currentWindAngle = 0f;
+	private float targetWindAngle = 0f;
+
+	private float startWindSpeed = 0f;
+	public float currentWindSpeed = 0f;
+	private float targetWindSpeed = 0f;
+
+	private float startWindStrength = 0f;
+	public float currentWindStrength = 0f;
+	private float targetWindStrength = 0f;
+
+	private float startWindCeiling = 0f;
+	public float currentWindCeiling = 0f;
+	private float targetWindCeiling = 0f;
+
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
 
@@ -258,6 +274,10 @@ public class EnvironmentManager {
 				currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
 			currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 			currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
+			currentWindAngle = hermite(startWindAngle, targetWindAngle, t);
+			currentWindSpeed = hermite(startWindSpeed, targetWindSpeed, t);
+			currentWindStrength = hermite(startWindStrength, targetWindStrength, t);
+			currentWindCeiling = hermite(startWindCeiling, targetWindCeiling, t);
 		}
 
 		updateLightning();
@@ -305,6 +325,10 @@ public class EnvironmentManager {
 		startGroundFogOpacity = currentGroundFogOpacity;
 		startUnderwaterCausticsColor = currentUnderwaterCausticsColor;
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
+		startWindAngle = currentWindAngle;
+		startWindSpeed = currentWindSpeed;
+		startWindStrength = currentWindStrength;
+		startWindCeiling = currentWindCeiling;
 		for (int i = 0; i < 2; i++)
 			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
@@ -333,6 +357,10 @@ public class EnvironmentManager {
 		targetUnderglowColor = env.underglowColor;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
+		targetWindAngle = env.windAngle;
+		targetWindSpeed = env.windSpeed;
+		targetWindStrength = env.windStrength;
+		targetWindCeiling = env.windCeiling;
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
