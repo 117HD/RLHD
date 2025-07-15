@@ -3736,14 +3736,16 @@
     "area": "ZEAH",
     "overlayIds": [ 326 ],
     "groundMaterial": "TERRACOTTA_FLOOR",
-    "uvScale": 1.1
+    "uvScale": 1.1,
+    "blended": false
   },
   {
     "name": "FORTIS_MARBLE_FLOOR",
     "area": "ZEAH",
     "overlayIds": [ 327 ],
     "groundMaterial": "MARBLE_2",
-    "uvScale": 1.1
+    "uvScale": 1.1,
+    "blended": false
   },
   {
     "name": "FORTIS_WOOD_FLOOR",
