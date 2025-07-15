@@ -36386,6 +36386,22 @@
     ]
   },
   {
+    "description": "Fortis - Masonry Wall",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+
+    ],
+    "objectIds": [
+      "WALLKIT_CIVITAS01_END01_RIGHT",
+      "WALLKIT_CIVITAS01_END01_LEFT",
+      "WALLKIT_CIVITAS01_MIDDLE01",
+      "WALLKIT_CIVITAS01_MIDDLE02",
+      "WALLKIT_CIVITAS01_INNER01_TALL"
+    ]
+  },
+  {
     "description": "Fortis Masonry wall with wooden post",
     "baseMaterial": "MARBLE_2_GLOSS",
     "uvType": "BOX",
@@ -45608,7 +45624,10 @@
     "uvScale": 0.5,
     "uvOrientation": 168,
     "objectIds": [
-      "MM_LAB_BARREL_WOVEN01_FOOD01"
+      "MM_LAB_BARREL_WOVEN01_FOOD01",
+      "HG_BARREL_WOVEN01_FOOD01",
+      "HG_BARREL_WOVEN01_EMPTY01",
+      "HG_BARREL_POT01_EMPTY01"
     ],
     "colorOverrides": [
       {
@@ -46312,6 +46331,7 @@
     "uvScale": 0.8,
     "uvOrientation": 179,
     "objectIds": [
+      "PILLAR_CIVITAS01_CITY05_SMALL",
       "PILLAR_CIVITAS01_CITY05",
       "PILLAR_CIVITAS01_CITY05_LOWER01",
       "PILLAR_CIVITAS01_CITY05_HIGHER01",
