@@ -2607,6 +2607,7 @@
       {
         "colors": "h == 12",
         "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT",
         "uvType": "BOX",
         "upwardsNormals": true,
         "uvScale": 0.6
