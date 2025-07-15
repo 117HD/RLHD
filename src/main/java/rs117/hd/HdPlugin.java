@@ -2017,15 +2017,113 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				-cameraPosition[1],
 				-cameraPosition[2]
 			));
+			uboGlobal.projectionMatrix.set(projectionMatrix);
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+
+			float fogDepth = 0;
+			switch (config.fogDepthMode()) {
+				case USER_DEFINED:
+					fogDepth = config.fogDepth();
+					break;
+				case DYNAMIC:
+					fogDepth = environmentManager.currentFogDepth;
+					break;
+			}
+			fogDepth *= Math.min(getDrawDistance(), 90) / 10.f;
+			uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
+			uboGlobal.fogDepth.set(fogDepth);
+			uboGlobal.fogColor.set(fogColor);
+
+			uboGlobal.drawDistance.set((float) getDrawDistance());
+			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
+			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
+			glUniform4iv(uniSceneAABB, sceneMinMaxXY);
+
+			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
+			float lightBrightnessMultiplier = 0.8f;
+			float midBrightnessMultiplier = 0.45f;
+			float darkBrightnessMultiplier = 0.05f;
+			float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * lightBrightnessMultiplier
+			}));
+			float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * midBrightnessMultiplier
+			}));
+			float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+				waterColorHsv[0],
+				waterColorHsv[1],
+				waterColorHsv[2] * darkBrightnessMultiplier
+			}));
+			uboGlobal.waterColorLight.set(waterColorLight);
+			uboGlobal.waterColorMid.set(waterColorMid);
+			uboGlobal.waterColorDark.set(waterColorDark);
+
+			float gammaCorrection = 100f / config.brightness();
+			uboGlobal.gammaCorrection.set(gammaCorrection);
+			float ambientStrength = environmentManager.currentAmbientStrength;
+			float directionalStrength = environmentManager.currentDirectionalStrength;
+			if (config.useLegacyBrightness()) {
+				float factor = config.legacyBrightness() / 20f;
+				ambientStrength *= factor;
+				directionalStrength *= factor;
+			}
+			uboGlobal.ambientStrength.set(ambientStrength);
+			uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
+			uboGlobal.lightStrength.set(directionalStrength);
+			uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
+
+			uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
+			uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
+
+			uboGlobal.groundFogStart.set(environmentManager.currentGroundFogStart);
+			uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
+			uboGlobal.groundFogOpacity.set(config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
+
+			// Lights & lightning
+			uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
+			uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
+
+			uboGlobal.saturation.set(config.saturation() / 100f);
+			uboGlobal.contrast.set(config.contrast() / 100f);
+			uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
+			uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
+			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
+			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+			uboGlobal.cameraPos.set(cameraPosition);
+
+			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
+			// Extract the 3rd column from the light view matrix (the float array is column-major).
+			// This produces the light's direction vector in world space, which we negate in order to
+			// get the light's direction vector pointing away from each fragment
+			uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
+
+			// use a curve to calculate max bias value based on the density of the shadow map
+			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
+			float maxBias = 26f * (float) Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
+			uboGlobal.shadowMaxBias.set(maxBias / 10000f);
+
+			uboGlobal.shadowsEnabled.set(configShadowsEnabled ? 1 : 0);
+
+			if (configColorFilter != ColorFilter.NONE) {
+				uboGlobal.colorFilter.set(configColorFilter.ordinal());
+				uboGlobal.colorFilterPrevious.set(configColorFilterPrevious.ordinal());
+				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
+				uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
+			}
+			uboGlobal.upload();
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
 			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
-			float gammaCorrection = 100f / config.brightness();
 			float[] gammaCorrectedFogColor = pow(fogColor, gammaCorrection);
 			glClearColor(
 				gammaCorrectedFogColor[0],
@@ -2098,103 +2196,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			glUseProgram(glSceneProgram);
-
-			float fogDepth = 0;
-			switch (config.fogDepthMode()) {
-				case USER_DEFINED:
-					fogDepth = config.fogDepth();
-					break;
-				case DYNAMIC:
-					fogDepth = environmentManager.currentFogDepth;
-					break;
-			}
-			fogDepth *= Math.min(getDrawDistance(), 90) / 10.f;
-			uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
-			uboGlobal.fogDepth.set(fogDepth);
-			uboGlobal.fogColor.set(fogColor);
-
-			uboGlobal.drawDistance.set((float) getDrawDistance());
-			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
-			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
-			glUniform4iv(uniSceneAABB, sceneMinMaxXY);
-
-			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
-			float lightBrightnessMultiplier = 0.8f;
-			float midBrightnessMultiplier = 0.45f;
-			float darkBrightnessMultiplier = 0.05f;
-			float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * lightBrightnessMultiplier
-			}));
-			float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * midBrightnessMultiplier
-			}));
-			float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * darkBrightnessMultiplier
-			}));
-			uboGlobal.waterColorLight.set(waterColorLight);
-			uboGlobal.waterColorMid.set(waterColorMid);
-			uboGlobal.waterColorDark.set(waterColorDark);
-
-			uboGlobal.gammaCorrection.set(gammaCorrection);
-			float ambientStrength = environmentManager.currentAmbientStrength;
-			float directionalStrength = environmentManager.currentDirectionalStrength;
-			if (config.useLegacyBrightness()) {
-				float factor = config.legacyBrightness() / 20f;
-				ambientStrength *= factor;
-				directionalStrength *= factor;
-			}
-			uboGlobal.ambientStrength.set(ambientStrength);
-			uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
-			uboGlobal.lightStrength.set(directionalStrength);
-			uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
-
-			uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
-			uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
-
-			uboGlobal.groundFogStart.set(environmentManager.currentGroundFogStart);
-			uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
-			uboGlobal.groundFogOpacity.set(config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
-
-			// Lights & lightning
-			uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
-			uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
-
-			uboGlobal.saturation.set(config.saturation() / 100f);
-			uboGlobal.contrast.set(config.contrast() / 100f);
-			uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
-			uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
-			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
-			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			uboGlobal.cameraPos.set(cameraPosition);
-
-			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
-			// Extract the 3rd column from the light view matrix (the float array is column-major).
-			// This produces the light's direction vector in world space, which we negate in order to
-			// get the light's direction vector pointing away from each fragment
-			uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
-
-			// use a curve to calculate max bias value based on the density of the shadow map
-			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
-			float maxBias = 26f * (float) Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
-			uboGlobal.shadowMaxBias.set(maxBias / 10000f);
-
-			uboGlobal.shadowsEnabled.set(configShadowsEnabled ? 1 : 0);
-
-			if (configColorFilter != ColorFilter.NONE) {
-				uboGlobal.colorFilter.set(configColorFilter.ordinal());
-				uboGlobal.colorFilterPrevious.set(configColorFilterPrevious.ordinal());
-				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
-				uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
-			}
-			uboGlobal.projectionMatrix.set(projectionMatrix);
 
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
