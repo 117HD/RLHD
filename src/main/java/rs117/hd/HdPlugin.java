@@ -2038,7 +2038,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.drawDistance.set((float) getDrawDistance());
 			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
-			glUniform4iv(uniSceneAABB, sceneMinMaxXY);
 
 			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
 			float lightBrightnessMultiplier = 0.8f;
@@ -2196,6 +2195,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			glUseProgram(glSceneProgram);
+			glUniform4iv(uniSceneAABB, sceneMinMaxXY);
 
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
