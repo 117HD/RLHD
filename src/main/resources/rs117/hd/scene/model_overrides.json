@@ -1508,6 +1508,7 @@
   },
   {
     "description": "Objects - Tree - Mahogany",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "BARK_STONEPINE",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -1542,12 +1543,14 @@
   {
     "description": "Objects - Tree - Teak",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.66,
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h > 12",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.2,
         "uvOrientation": 42,
@@ -1556,10 +1559,17 @@
     ],
     "objectIds": [
       "TEAKTREE",
-      "TEAK_STUMP",
-      "CHICKEN_CRATE",
       "PRIF_TEAKTREE",
       "TEAKTREE_UPDATE"
+    ]
+  },
+  {
+    "description": "Objects - Tree - Teak - Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "TEAK_STUMP"
     ]
   },
   {
@@ -2131,9 +2141,6 @@
       "BULLRUSHES4",
       "BULLRUSHES5",
       "THISTLE",
-      "WATERLILY1",
-      "WATERLILY2",
-      "WATERLILY3",
       "POTATO",
       "FAI_VARROCK_WHEAT_CORNER",
       "FAI_VARROCK_WHEAT_SMALL",
@@ -2152,8 +2159,17 @@
       "FLOWER_SUNFLOWER_EDGE01",
       "FLOWER_SUNFLOWER_EDGE01_RED",
       "FLOWER_SUNFLOWER_FULL01_RED",
-      "AVIUM_CORN01",
-      "AVIUM_CORN02",
+      "FAIRY2_LITTLE_FLOWERS_4",
+      "FAIRY2_LITTLE_FLOWERS_3",
+      "FAIRY2_LITTLE_FLOWERS_2",
+      "FAIRY2_LITTLE_FLOWERS_1",
+      "WILDY_HUB_FLOWERS_04",
+      "WILDY_HUB_FLOWERS_03",
+      "WILDY_HUB_FLOWERS_02",
+      "WILDY_HUB_FLOWERS_01",
+      "JUNGLEFLOWER",
+      "FAI_VARROCK_FLOWERBED_CORNER_BLUE",
+      "FAI_VARROCK_FLOWERBED_BLUE",
       "PRIDE22_FLOWER_ORANGE_T3",
       "PRIDE22_FLOWER_RED_T1",
       "PRIDE22_FLOWER_RED_T3",
@@ -2171,20 +2187,28 @@
       "PRIDE22_FLOWER_INDIGO_T2",
       "PRIDE22_FLOWER_VIOLET_T3",
       "PRIDE22_FLOWER_VIOLET_T1",
-      "PRIDE22_FLOWER_VIOLET_T2",
+      "PRIDE22_FLOWER_VIOLET_T2"
+    ]
+  },
+  {
+    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "VERTEX",
+    "objectIds": [
       "FAIRY2_BULLRUSH_FALLOFF",
       "FAIRY2_BULLRUSH_SMALL",
       "FAIRY2_BULLRUSH_TILE",
       "FAIRY2_BULLRUSH_LARGE",
-      "FAIRY2_LITTLE_FLOWERS_4",
-      "FAIRY2_LITTLE_FLOWERS_3",
-      "FAIRY2_LITTLE_FLOWERS_2",
-      "FAIRY2_LITTLE_FLOWERS_1",
-      "WILDY_HUB_FLOWERS_04",
-      "WILDY_HUB_FLOWERS_03",
-      "WILDY_HUB_FLOWERS_02",
-      "WILDY_HUB_FLOWERS_01",
-      "JUNGLEFLOWER"
+      "FAI_VARROCK_ROSES_EDGE",
+      "FAI_VARROCK_ROSEBUSH",
+      "FAI_VARROCK_ROSES_EDGE_SHAPE_8",
+      "FAI_VARROCK_ROSES_EDGE_B_SHAPE_8",
+      "FAI_VARROCK_ROSES_EDGE_B",
+      "AVIUM_CORN01",
+      "AVIUM_CORN02",
+      "WATERLILY1",
+      "WATERLILY2",
+      "WATERLILY3"
     ]
   },
   {
@@ -11730,7 +11754,10 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "NONE"
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
       },
       {
         "description": "Leaves",
@@ -11747,7 +11774,20 @@
       "GREENVINE_DIAG3",
       "GREENVINE_DIAGFILLER",
       "GREENVINE_END",
-      "GREENVINE_END_DIAG"
+      "GREENVINE_END_DIAG",
+      "JUNGLEFLOOR1"
+    ]
+  },
+  {
+    "description": "Objects - Vines with grass",
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "GRAY_75",
+    "castShadows": false,
+    "objectIds": [
+      "JUNGLEFLOOR1",
+      "JUNGLEFLOOR2",
+      "JUNGLEFLOOR3"
     ]
   },
   {
@@ -16195,6 +16235,7 @@
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "KHARAZI_JUNGLE_TREE_LOGS",
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
@@ -16204,7 +16245,8 @@
       "AVIUM_TREE_2_STUMP",
       "AVIUM_TREE_ORANGE",
       "AVIUM_TREE_DARK",
-      "AVIUM_TREE_DARK_STUMP"
+      "AVIUM_TREE_DARK_STUMP",
+      "KHARAZI_JUNGLE_TREE1"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -16212,6 +16254,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 5", "h == 4" ],
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -16220,9 +16263,11 @@
   },
   {
     "description": "Jungle Tree Small",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
-      "MM_BUSH_KHARAZI_JUNGLE_TREE2"
+      "MM_BUSH_KHARAZI_JUNGLE_TREE2",
+      "KHARAZI_JUNGLE_TREE2"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -16230,6 +16275,7 @@
     "colorOverrides": [
       {
         "colors": "h == 6 && s == 4",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -16278,6 +16324,37 @@
     ]
   },
   {
+    "description": "Jungle - Pineapple Plant",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "OBJECT",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10 && h < 21",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "PINEAPPLE_PLANT",
+      "PINEAPPLE_PLANT_FOUR",
+      "PINEAPPLE_PLANT_THREE",
+      "PINEAPPLE_PLANT_TWO",
+      "PINEAPPLE_PLANT_ONE",
+      "PINEAPPLE_PLANT_NO_PINEAPPLES"
+    ]
+  },
+  {
+    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "windDisplacementMode": "VERTEX",
+    "flatNormals": true,
+    "objectIds": [
+      "FLYTRAP2"
+    ]
+  },
+  {
     "description": "Tropical Tree Big",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
@@ -16315,16 +16392,19 @@
     ]
   },
   {
-    "description": "Tropical Tree Top",
-    "baseMaterial": "LIGHT_BARK",
-    "windDisplacementMode": "VERTEX",
+    "description": "Tropical Tree Top - WIND TODO",
     "objectIds": [
       "BAMBOO_TREE_TOP",
       "BAMBOO_TREE_2_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "materialOverrides": {
+      "TROPICAL_LEAF": {
+        "textureMaterial": "TROPICAL_LEAF"
+      }
+    }
   },
   {
     "description": "Tropical Tree Dead",
@@ -18850,12 +18930,14 @@
       "JUNGLEPLANT1",
       "JUNGLEPLANT1_KARAMJA",
       "JUNGLEPLANT2",
-      "JUNGLEPLANT3"
+      "JUNGLEPLANT3",
+      "KHARAZI_JUNGLE_PLANT1",
+      "KHARAZI_JUNGLE_PLANT2"
     ]
   },
   {
     "description": "Karamja - Jungle plant - fern style",
-    "baseMaterial": "LEAF_VEINS",
+    "baseMaterial": "LEAF_VEINS_DARK",
     "windDisplacementMode": "VERTEX",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
@@ -18876,7 +18958,8 @@
   },
   {
     "description": "Karamja - Curling plant",
-    "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "LEAF_VEINS_DARK",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
@@ -38741,6 +38824,7 @@
   {
     "description": "Tai Bwo Wannai Cleanup Jungle with leaves - Dynamic",
     "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 512,
@@ -38748,6 +38832,7 @@
       {
         "description": "Plant",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "colors": "h > 11",
         "uvType": "MODEL_XZ",
         "uvOrientation": 384,

@@ -1827,7 +1827,6 @@
     "fogDepth": 15
   },
   {
-    "key": "Enchanted Valley",
     "area": "ENCHANTED_VALLEY",
     "fogColor": "#b9d6ff",
     "fogDepth": 16.5,
@@ -1840,7 +1839,6 @@
     "windStrength": 65
   },
   {
-    "key": "Varlamore",
     "area": "VARLAMORE",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
@@ -1879,7 +1877,8 @@
       102
     ],
     "fogColor": "#fddcb4",
-    "fogDepth": 18
+    "fogDepth": 18,
+    "windSpeed": 100
   },
   {
     "key": "WINTER",
