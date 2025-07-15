@@ -1619,7 +1619,6 @@
   {
     "description": "Objects - Trees - Tirannwn Tree",
     "baseMaterial": "LIGHT_BARK",
-    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "REGICIDE_TREE_LARGE",
       "REGICIDE_TREE_STUMP",
@@ -1631,7 +1630,13 @@
       "SOTE_FLOWERS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "materialOverrides": {
+      "WILLOW_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "WILLOW_LEAVES"
+      }
+    }
   },
   {
     "description": "Tirannwn - Lord Crwys Tree",
@@ -18907,7 +18912,7 @@
   {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "SWAMP_PLANT1",
       "SWAMP_PLANT2",
