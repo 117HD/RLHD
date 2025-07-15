@@ -7,28 +7,64 @@ public class Vector {
 		return Arrays.copyOf(v, v.length);
 	}
 
-	/**
-	 * Computes a + b, storing it in the out array
-	 */
 	public static float[] add(float[] out, float[] a, float[] b) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = a[i] + b[i];
 		return out;
 	}
 
-	/**
-	 * Computes a - b, storing it in the out array
-	 */
+	public static float[] add(float[] a, float[] b) {
+		return add(new float[a.length], a, b);
+	}
+
+	public static float[] add(float[] out, float[] a, float b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i] + b;
+		return out;
+	}
+
+	public static float[] add(float[] a, float b) {
+		return add(new float[a.length], a, b);
+	}
+
 	public static float[] subtract(float[] out, float[] a, float[] b) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = a[i] - b[i];
 		return out;
 	}
 
-	public static int[] subtract(int[] out, int[] a, int[] b) {
+	public static float[] subtract(float[] a, float[] b) {
+		return subtract(new float[a.length], a, b);
+	}
+
+	public static float[] subtract(float[] out, float[] a, float b) {
 		for (int i = 0; i < out.length; i++)
-			out[i] = a[i] - b[i];
+			out[i] = a[i] - b;
 		return out;
+	}
+
+	public static float[] subtract(float[] a, float b) {
+		return subtract(new float[a.length], a, b);
+	}
+
+	public static float[] multiply(float[] out, float[] a, float[] b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i] * b[i];
+		return out;
+	}
+
+	public static float[] multiply(float[] a, float[] b) {
+		return multiply(new float[a.length], a, b);
+	}
+
+	public static float[] multiply(float[] out, float[] a, float b) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = a[i] * b;
+		return out;
+	}
+
+	public static float[] multiply(float[] a, float b) {
+		return multiply(new float[a.length], a, b);
 	}
 
 	public static float[] pow(float[] out, float[] in, float exp) {
@@ -39,14 +75,6 @@ public class Vector {
 
 	public static float[] pow(float[] in, float exp) {
 		return pow(new float[in.length], in, exp);
-	}
-
-	public static float dot(int[] a, int[] b) {
-		float f = 0;
-		int len = Math.min(a.length, b.length);
-		for (int i = 0; i < len; i++)
-			f += (float) a[i] * b[i]; // cast to float to prevent int overflow
-		return f;
 	}
 
 	public static float dot(float[] a, float[] b) {
