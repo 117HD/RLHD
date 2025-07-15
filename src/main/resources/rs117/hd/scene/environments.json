@@ -1749,29 +1749,26 @@
     "waterColor": "#477d95",
     "waterCausticsStrength": 20,
     "windAngle": 30,
-    "windSpeed": 10,
-    "windStrength": 8.5,
-    "windCeiling": 500
+    "windSpeed": 12.5,
+    "windStrength": 20
   },
   {
     "area": "STREAMBOUND_CAVERN",
     "windAngle": 30,
-    "windSpeed": 10,
-    "windStrength": 8.5,
-    "windCeiling": 500
+    "windSpeed": 12.5,
+    "windStrength": 20
   },
   {
     "area": "PERIOUS_MOONS_ANTECHAMBER",
     "windAngle": 30,
     "windSpeed": 10,
-    "windStrength": 7.5
+    "windStrength": 10
   },
   {
     "area": "ANCIENT_SHRINE",
     "windAngle": 30,
-    "windSpeed": 7.5,
-    "windStrength": 17.5,
-    "windCeiling": 200
+    "windSpeed": 8.5,
+    "windStrength": 20
   },
   {
     "area": "RED_CHINCHOMPA_HUNTING_GROUND",
