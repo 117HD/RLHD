@@ -1,10 +1,12 @@
-package rs117.hd.opengl;
+package rs117.hd.opengl.uniforms;
 
 import rs117.hd.data.WaterType;
 
-public class WaterTypesBuffer extends UniformBuffer{
-	public WaterTypesBuffer() {
-		super("WaterTypes");
+import static org.lwjgl.opengl.GL33C.*;
+
+public class WaterTypeUniforms extends UniformBuffer {
+	public WaterTypeUniforms() {
+		super("WaterTypes", GL_STATIC_DRAW);
 	}
 
 	public WaterTypeStruct[] waterTypes = addStructs(new WaterTypeStruct[WaterType.values().length], WaterTypeStruct::new);

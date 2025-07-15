@@ -1,8 +1,10 @@
-package rs117.hd.opengl;
+package rs117.hd.opengl.uniforms;
+
+import static org.lwjgl.opengl.GL33C.*;
 
 public class GlobalUniforms extends UniformBuffer {
 	public GlobalUniforms() {
-		super("Global");
+		super("Global", GL_DYNAMIC_DRAW);
 	}
 
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
@@ -47,5 +49,5 @@ public class GlobalUniforms extends UniformBuffer {
 
 	public Property colorFilterPrevious = addProperty(PropertyType.Int, "colorFilterPrevious");
 	public Property colorFilter = addProperty(PropertyType.Int, "colorFilter");
-	public Property colorFilterFade = addProperty(PropertyType.FVec3, "colorFilterFade");
+	public Property colorFilterFade = addProperty(PropertyType.Float, "colorFilterFade");
 }

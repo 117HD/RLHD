@@ -170,6 +170,17 @@
           "$ref": "aabb.schema.json"
         }
       },
+      "windDisplacementMode": {
+        "type": "string",
+        "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
+        "enum": [
+          "DISABLED",
+          "OBJECT",
+          "VERTEX",
+          "VERTEX_WITH_HEMISPHERE_BLEND",
+          "VERTEX_JIGGLE"
+        ]
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",
@@ -239,6 +250,10 @@
               "type": "boolean",
               "description": "Whether normals should always point directly up. Defaults to false."
             },
+            "castShadows": {
+              "type": "boolean",
+              "description": "Whether the model cast shadows. Defaults to true."
+            },
             "receiveShadows": {
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
@@ -246,6 +261,17 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "windDisplacementMode": {
+              "type": "string",
+              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
+              "enum": [
+                "DISABLED",
+                "OBJECT",
+                "VERTEX",
+                "VERTEX_WITH_HEMISPHERE_BLEND",
+                "VERTEX_JIGGLE"
+              ]
             }
           }
         }
@@ -326,6 +352,10 @@
               "type": "boolean",
               "description": "Whether normals should always point directly up. Defaults to false."
             },
+            "castShadows": {
+              "type": "boolean",
+              "description": "Whether the model cast shadows. Defaults to true."
+            },
             "receiveShadows": {
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
@@ -333,6 +363,17 @@
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "windDisplacementMode": {
+              "type": "string",
+              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
+              "enum": [
+                "DISABLED",
+                "OBJECT",
+                "VERTEX",
+                "VERTEX_WITH_HEMISPHERE_BLEND",
+                "VERTEX_JIGGLE"
+              ]
             }
           }
         }

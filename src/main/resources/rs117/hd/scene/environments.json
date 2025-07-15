@@ -91,6 +91,11 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "HUNTER_GUILD",
+    "waterCausticsStrength": 50,
+    "waterColor": "#0F1E38"
+  },
+  {
     "area": "Daimon's Crater - Bounty Hunter",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
@@ -468,7 +473,10 @@
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "windAngle": 40,
+    "windSpeed": 7,
+    "windStrength": 26
   },
   {
     "area": "LUMBRIDGE_CASTLE_BASEMENT",
@@ -484,14 +492,14 @@
   },
   {
     "area": "GOBLIN_MAZE",
-    "ambientStrength": 0.75,
-    "directionalColor": "#a29b71",
+    "ambientStrength": 0.85,
+    "directionalColor": "#B5AC7E",
     "directionalStrength": 0.75,
     "sunAngles": [
       80,
       190
     ],
-    "fogColor": "#050d02",
+    "fogColor": "#0A0D0A",
     "fogDepth": 60
   },
   {
@@ -1145,13 +1153,13 @@
   {
     "area": "COSMIC_ENTITYS_PLANE",
     "allowSkyOverride": false,
-    "ambientColor": "#db6fff",
-    "ambientStrength": 1.5,
-    "directionalColor": "#57ff00",
-    "directionalStrength": 3,
+    "ambientColor": "#E2A7FF",
+    "ambientStrength": 1,
+    "directionalColor": "#EDE9DC",
+    "directionalStrength": 1.7,
     "sunAngles": [
-      80,
-      190
+      90,
+      180
     ],
     "fogDepth": 6.5
   },
@@ -1729,7 +1737,8 @@
   {
     "area": "EARTHBOUND_CAVERN",
     "sunAngles": [ 62, 210 ],
-    "waterColor": "#477d95"
+    "waterColor": "#477d95",
+    "waterCausticsStrength": 20
   },
   {
     "area": "RED_CHINCHOMPA_HUNTING_GROUND",
@@ -1742,6 +1751,17 @@
       102
     ],
     "fogDepth": 30
+  },
+  {
+    "area": "Hueycoatl Arena",
+    "ambientColor": "#6fb0ff",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 2,
+    "fogColor": "#aebde0",
+    "fogDepth": 65,
+    "groundFogOpacity": 0.3,
+    "groundFogEnd": -1800
   },
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_UPPER",
@@ -1762,12 +1782,34 @@
     "fogDepth": 30
   },
   {
+    "area": "WHITE_WOLF_MOUNTAIN_ENVIRONMENT",
+    "ambientColor": "#a8d2ff",
+    "ambientStrength": 1.75,
+    "directionalColor": "#efe9de",
+    "directionalStrength": 3.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 15
+  },
+  {
+    "key": "Enchanted Valley",
+    "area": "ENCHANTED_VALLEY",
+    "fogColor": "#b9d6ff",
+    "fogDepth": 16.5,
+    "directionalStrength": 3.5,
+    "ambientStrength": 1.25,
+    "waterColor": "#b9d6ff",
+    "instantTransition": true
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
     "sunAngles": [ 52, 235 ],
-    "fogDepth": 6.5
+    "fogDepth": 6.5,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50
   },
   {
     "key": "AUTUMN",
@@ -1797,6 +1839,7 @@
     "directionalStrength": 1.5,
     "sunAngles": [ 52, 235 ],
     "fogColor": "#b8c5db",
-    "fogDepth": 35
+    "fogDepth": 35,
+    "windAngle": 60
   }
 ]

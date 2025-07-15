@@ -70,6 +70,7 @@ public class ModelOverride
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
+	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -114,6 +115,11 @@ public class ModelOverride
 			if (Props.DEVELOPMENT)
 				throw new IllegalStateException("Invalid inheritTileColorType");
 			inheritTileColorType = ModelOverride.NONE.inheritTileColorType;
+		}
+		if (windDisplacementMode == null) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid windDisplacementMode");
+			windDisplacementMode = ModelOverride.NONE.windDisplacementMode;
 		}
 
 		if (areas == null)
@@ -190,6 +196,7 @@ public class ModelOverride
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
 			inheritTileColorType,
+			windDisplacementMode,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
@@ -235,7 +242,7 @@ public class ModelOverride
 			} else if (prim.isNumber()) {
 				try {
 					int targetHsl = prim.getAsInt();
-					condition = ahsl -> ahsl == (targetHsl & 0xFFFF);
+					condition = ahsl -> (ahsl & 0xFFFF) == targetHsl;
 				} catch (Exception ex) {
 					log.warn("Expected integer, but got {} in override '{}'", el, description);
 					continue;

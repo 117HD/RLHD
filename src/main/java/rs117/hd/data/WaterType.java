@@ -169,6 +169,16 @@ public enum WaterType
 		.duration(1.6f)),
 	CYAN_WATER,
 	GREEN_CAVE_WATER(SWAMP_WATER_FLAT, true),
+	CAVE_WATER(b -> b
+		.specularStrength(.2f)
+		.specularGloss(100)
+		.normalStrength(.3f)
+		.baseOpacity(.75f)
+		.fresnelAmount(.1f)
+		.surfaceColor(rgb("#274049"))
+		.foamColor(rgb(10, 10, 10))
+		.depthColor(rgb("#3A6A70"))
+		.causticsStrength(0f)),
 	;
 
 	public final boolean flat;

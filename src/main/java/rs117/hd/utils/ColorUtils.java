@@ -312,6 +312,10 @@ public class ColorUtils {
 		};
 	}
 
+	public static float[] srgb(Color c) {
+		return srgb(c.getRed(), c.getGreen(), c.getBlue());
+	}
+
 	/**
 	 * Convert alpha and sRGB color packed in an int as ARGB to sRGB in the range 0-1.
 	 *

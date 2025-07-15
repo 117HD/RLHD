@@ -1,8 +1,10 @@
-package rs117.hd.opengl;
+package rs117.hd.opengl.uniforms;
+
+import static org.lwjgl.opengl.GL33C.*;
 
 public class UIUniforms extends UniformBuffer {
 	public UIUniforms() {
-		super("UI");
+		super("UI", GL_DYNAMIC_DRAW);
 	}
 
 	public Property sourceDimensions = addProperty(PropertyType.IVec2, "sourceDimensions");
