@@ -1619,6 +1619,7 @@
   {
     "description": "Objects - Trees - Tirannwn Tree",
     "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "REGICIDE_TREE_LARGE",
       "REGICIDE_TREE_STUMP",
@@ -1656,7 +1657,9 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT"
       }
     ]
   },
@@ -1714,6 +1717,7 @@
         "colors": "h == 12",
         "baseMaterial": "PLANT_GRUNGE_1",
         "uvScale": 0.5,
+        "upwardsNormals": true,
         "uvType": "MODEL_XZ",
         "uvOrientation": 256
       },
@@ -2359,7 +2363,10 @@
       "PLANT_MOSS01_SUN01",
       "PLANT_MOSS01_SUN02",
       "PLANT_MOSS01_SUN03",
-      "PLANT_MOSS01_SUN04"
+      "PLANT_MOSS01_SUN04",
+      "REGICIDE_GRASS1_RIVER",
+      "REGICIDE_GRASS2_RIVER",
+      "REGICIDE_GRASS2L_RIVER"
     ]
   },
   {

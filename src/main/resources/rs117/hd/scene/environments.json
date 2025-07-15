@@ -953,14 +953,20 @@
     "directionalColor": "#adb08b",
     "directionalStrength": 2,
     "fogColor": "#32372f",
-    "fogDepth": 30
+    "fogDepth": 30,
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 40
   },
   {
     "area": "TIRANNWN_MAINLAND",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
     "fogColor": "#99d8c8",
-    "fogDepth": 15
+    "fogDepth": 15,
+    "windAngle": 40,
+    "windSpeed": 12,
+    "windStrength": 65
   },
   {
     "area": "PRIFDDINAS",
