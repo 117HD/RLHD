@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.TextureManager;
@@ -19,9 +20,7 @@ import rs117.hd.utils.ImageUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static org.lwjgl.opengl.GL31C.*;
-import static org.lwjgl.opengl.GL40C.*;
-import static org.lwjgl.opengl.GL42C.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SKYBOX;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -53,8 +52,8 @@ public class SkyboxManager {
 			return;
 		}
 
-		if(!HdPlugin.glCaps.OpenGL43){
-			log.debug("Skipping loading sky boxes due to lack of OpenGL43");
+		if (!HdPlugin.GL_CAPS.OpenGL42) {
+			log.debug("Skipping loading sky boxes due to lack of OpenGL42");
 			return;
 		}
 
@@ -66,15 +65,16 @@ public class SkyboxManager {
 
 		textureSkybox = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SKYBOX);
-		glBindTexture(GL_TEXTURE_CUBE_MAP_ARRAY, textureSkybox);
-		glTexStorage3D(GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_SRGB8_ALPHA8,
+		glBindTexture(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, textureSkybox);
+		GL42C.glTexStorage3D(
+			GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_SRGB8_ALPHA8,
 			skyboxConfig.resolution, skyboxConfig.resolution, skyboxConfig.skyboxes.size() * 6);
 
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 		pixelBuffer = BufferUtils.createIntBuffer(skyboxConfig.resolution * skyboxConfig.resolution);
 
@@ -125,7 +125,7 @@ public class SkyboxManager {
 			pixelBuffer.put(pixels).flip();
 
 			glTexSubImage3D(
-				GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0,
+				GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0,
 				skyboxIndex * 6 + faceIdx,
 				skyboxConfig.resolution, skyboxConfig.resolution, 1,
 				GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer

@@ -48,8 +48,8 @@ import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.NORMAL_SIZE;
 import static rs117.hd.HdPlugin.SCALAR_BYTES;

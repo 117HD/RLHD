@@ -12,7 +12,7 @@ import net.runelite.api.*;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 
-import static org.lwjgl.opengl.GL31C.*;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class AsyncUICopy implements Runnable {

@@ -1,8 +1,9 @@
 package rs117.hd.opengl;
 
+import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.scene.skybox.SkyboxConfig;
 
-import static org.lwjgl.opengl.GL31C.*;
+import static org.lwjgl.opengl.GL31C.GL_DYNAMIC_DRAW;
 
 public class SkyboxBuffer extends UniformBuffer {
 	public SkyboxBuffer() {

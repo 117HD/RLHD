@@ -26,11 +26,11 @@ package rs117.hd.utils.buffer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.utils.HDUtils;
 
-import static org.lwjgl.opengl.GL31C.*;
-import static org.lwjgl.opengl.GL43C.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.checkGLErrors;
 
 @Slf4j
@@ -97,8 +97,8 @@ public class GLBuffer
 
 		this.size = size;
 
-		if (HdPlugin.glCaps.OpenGL43 && log.isDebugEnabled()) {
-			glObjectLabel(GL_BUFFER, id, name);
+		if (HdPlugin.GL_CAPS.OpenGL43 && log.isDebugEnabled()) {
+			GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
 			checkGLErrors();
 		}
 	}

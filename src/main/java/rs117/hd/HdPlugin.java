@@ -91,16 +91,16 @@ import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
-import rs117.hd.opengl.ComputeUniforms;
-import rs117.hd.opengl.GlobalUniforms;
-import rs117.hd.opengl.LightUniforms;
 import rs117.hd.opengl.SkyboxBuffer;
-import rs117.hd.opengl.UIUniforms;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.opengl.uniforms.ComputeUniforms;
+import rs117.hd.opengl.uniforms.GlobalUniforms;
+import rs117.hd.opengl.uniforms.LightUniforms;
+import rs117.hd.opengl.uniforms.UIUniforms;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
@@ -136,9 +136,7 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opengl.GL31C.*;
-import static org.lwjgl.opengl.GL32C.*;
-import static org.lwjgl.opengl.GL43C.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
@@ -290,7 +288,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private Gson gson;
 
 	public static boolean SKIP_GL_ERROR_CHECKS;
-	public static GLCapabilities glCaps;
+	public static GLCapabilities GL_CAPS;
 
 	private Canvas canvas;
 	private AWTContext awtContext;
@@ -319,10 +317,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
 
 	private static final Shader COMPUTE_PROGRAM = new Shader()
-		.add(GL_COMPUTE_SHADER, "comp.glsl");
+		.add(GL43C.GL_COMPUTE_SHADER, "comp.glsl");
 
 	private static final Shader UNORDERED_COMPUTE_PROGRAM = new Shader()
-		.add(GL_COMPUTE_SHADER, "comp_unordered.glsl");
+		.add(GL43C.GL_COMPUTE_SHADER, "comp_unordered.glsl");
 
 	private static final Shader UI_PROGRAM = new Shader()
 		.add(GL_VERTEX_SHADER, "vertui.glsl")
@@ -551,7 +549,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Configuration.SHARED_LIBRARY_EXTRACT_DIRECTORY.set("lwjgl-rl");
 
 				SKIP_GL_ERROR_CHECKS = false;
-				glCaps = GL.createCapabilities();
+				GL_CAPS = GL.createCapabilities();
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
@@ -572,7 +570,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					"softpipe"
 				);
 				boolean isFallbackGpu = fallbackDevices.contains(glRenderer) && !Props.has("rlhd.allowFallbackGpu");
-				boolean isUnsupportedGpu = isFallbackGpu || (computeMode == ComputeMode.OPENGL ? !glCaps.OpenGL43 : !glCaps.OpenGL31);
+				boolean isUnsupportedGpu = isFallbackGpu || (computeMode == ComputeMode.OPENGL ? !GL_CAPS.OpenGL43 : !GL_CAPS.OpenGL31);
 				if (isUnsupportedGpu) {
 					log.error(
 						"The GPU is lacking OpenGL {} support. Stopping the plugin...",
@@ -586,21 +584,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lwjglInitialized = true;
 				checkGLErrors();
 
-				if (log.isDebugEnabled() && glCaps.glDebugMessageControl != 0) {
+				if (log.isDebugEnabled() && GL_CAPS.glDebugMessageControl != 0) {
 					debugCallback = GLUtil.setupDebugMessageCallback();
 					if (debugCallback != null) {
 						// Hide our own debug group messages
-						glDebugMessageControl(
-							GL_DEBUG_SOURCE_APPLICATION,
-							GL_DEBUG_TYPE_PUSH_GROUP,
-							GL_DEBUG_SEVERITY_NOTIFICATION,
+						GL43C.glDebugMessageControl(
+							GL43C.GL_DEBUG_SOURCE_APPLICATION,
+							GL43C.GL_DEBUG_TYPE_PUSH_GROUP,
+							GL43C.GL_DEBUG_SEVERITY_NOTIFICATION,
 							(int[]) null,
 							false
 						);
-						glDebugMessageControl(
-							GL_DEBUG_SOURCE_APPLICATION,
-							GL_DEBUG_TYPE_POP_GROUP,
-							GL_DEBUG_SEVERITY_NOTIFICATION,
+						GL43C.glDebugMessageControl(
+							GL43C.GL_DEBUG_SOURCE_APPLICATION,
+							GL43C.GL_DEBUG_TYPE_POP_GROUP,
+							GL43C.GL_DEBUG_SEVERITY_NOTIFICATION,
 							(int[]) null,
 							false
 						);
@@ -610,7 +608,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						//		severity Unknown (0x826b)
 						//		source GL API
 						//		msg Buffer detailed info: Buffer object 11 (bound to GL_ARRAY_BUFFER_ARB, and GL_SHADER_STORAGE_BUFFER (4), usage hint is GL_STREAM_DRAW) will use VIDEO memory as the source for buffer object operations.
-						glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_OTHER,
+						GL43C.glDebugMessageControl(
+							GL43C.GL_DEBUG_SOURCE_API, GL43C.GL_DEBUG_TYPE_OTHER,
 							GL_DONT_CARE, 0x20071, false
 						);
 
@@ -619,7 +618,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						//		severity Medium: Severe performance/deprecation/other warnings
 						//		source GL API
 						//		msg Pixel-path performance warning: Pixel transfer is synchronized with 3D rendering.
-						glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_PERFORMANCE,
+						GL43C.glDebugMessageControl(
+							GL43C.GL_DEBUG_SOURCE_API, GL43C.GL_DEBUG_TYPE_PERFORMANCE,
 							GL_DONT_CARE, 0x20052, false
 						);
 					}
@@ -635,7 +635,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					clManager.startUp(awtContext);
 					maxComputeThreadCount = clManager.getMaxWorkGroupSize();
 				} else {
-					maxComputeThreadCount = glGetInteger(GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS);
+					maxComputeThreadCount = glGetInteger(GL43C.GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS);
 				}
 				initModelSortingBins(maxComputeThreadCount);
 
@@ -1734,25 +1734,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// and multiple sizes of sorting shaders to better utilize the GPU
 
 			// Bind shared buffers
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.id);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.id);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 3, hStagingBufferNormals.id);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 4, hRenderBufferVertices.id);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 5, hRenderBufferUvs.id);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.id);
+			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 1, hStagingBufferVertices.id);
+			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 2, hStagingBufferUvs.id);
+			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 3, hStagingBufferNormals.id);
+			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 4, hRenderBufferVertices.id);
+			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 5, hRenderBufferUvs.id);
+			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.id);
 
 			// unordered
 			glUseProgram(glModelPassthroughComputeProgram);
-			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelPassthroughBuffer.id);
-			glDispatchCompute(numPassthroughModels, 1, 1);
+			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 0, hModelPassthroughBuffer.id);
+			GL43C.glDispatchCompute(numPassthroughModels, 1, 1);
 
 			for (int i = 0; i < numModelsToSort.length; i++) {
 				if (numModelsToSort[i] == 0)
 					continue;
 
 				glUseProgram(glModelSortingComputePrograms[i]);
-				glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 0, hModelSortingBuffers[i].id);
-				glDispatchCompute(numModelsToSort[i], 1, 1);
+				glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 0, hModelSortingBuffers[i].id);
+				GL43C.glDispatchCompute(numModelsToSort[i], 1, 1);
 			}
 		}
 
@@ -2033,7 +2033,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				gammaCorrectedFogColor[2],
 				1f
 			);
-			glClearDepthf(0);
+			glClearDepth(0);
 
 			boolean shouldDrawSkybox = vaoSkyboxHandle != 0
 									   && skyboxManager.getSkyboxCount() > 0
@@ -2068,7 +2068,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (computeMode == ComputeMode.OPENCL) {
 				clManager.finish();
 			} else {
-				glMemoryBarrier(GL_SHADER_STORAGE_BARRIER_BIT);
+				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
 			glBindVertexArray(vaoSceneHandle);
@@ -2202,7 +2202,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// Render to the shadow depth map
 				glViewport(0, 0, shadowMapResolution, shadowMapResolution);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
-				glClearDepthf(1);
+				glClearDepth(1);
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
 
@@ -3064,11 +3064,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		// Hide everything outside the current area if area hiding is enabled
-		if (sceneContext.currentArea != null && (
-			renderable instanceof Actor ||
-			renderable instanceof Projectile ||
-			renderable instanceof GraphicsObject
-		)) {
+		if (sceneContext.currentArea != null) {
 			boolean inArea = sceneContext.currentArea.containsPoint(
 				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
 				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),

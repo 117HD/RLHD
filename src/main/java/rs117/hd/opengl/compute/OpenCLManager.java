@@ -37,19 +37,27 @@ import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.opencl.*;
+import org.lwjgl.opencl.APPLEGLSharing;
+import org.lwjgl.opencl.CL;
+import org.lwjgl.opencl.CL10GL;
+import org.lwjgl.opencl.CL12;
+import org.lwjgl.opencl.CLCapabilities;
+import org.lwjgl.opencl.CLContextCallback;
+import org.lwjgl.opencl.CLImageFormat;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
-import rs117.hd.opengl.ComputeUniforms;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.opengl.uniforms.ComputeUniforms;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
-import static org.lwjgl.opencl.APPLEGLSharing.*;
+import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
+import static org.lwjgl.opencl.APPLEGLSharing.clGetGLContextInfoAPPLE;
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opencl.CL12.*;
-import static org.lwjgl.opencl.KHRGLSharing.*;
+import static org.lwjgl.opencl.KHRGLSharing.CL_GLX_DISPLAY_KHR;
+import static org.lwjgl.opencl.KHRGLSharing.CL_GL_CONTEXT_KHR;
+import static org.lwjgl.opencl.KHRGLSharing.CL_WGL_HDC_KHR;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
@@ -76,6 +84,7 @@ public class OpenCLManager {
 
 	private boolean initialized;
 
+	private CLCapabilities deviceCaps;
 	private long device;
 	private long commandQueue;
 
@@ -121,8 +130,8 @@ public class OpenCLManager {
 			if (context != 0)
 				clReleaseContext(context);
 			context = 0;
-			if (device != 0)
-				clReleaseDevice(device);
+			if (device != 0 && deviceCaps.OpenCL12)
+				CL12.clReleaseDevice(device);
 			device = 0;
 		} finally {
 			CL.destroy();
@@ -215,11 +224,11 @@ public class OpenCLManager {
 						if (deviceType != CL_DEVICE_TYPE_GPU)
 							continue;
 						CLCapabilities platformCaps = CL.createPlatformCapabilities(platform);
-						CLCapabilities deviceCaps = CL.createDeviceCapabilities(device, platformCaps);
+						deviceCaps = CL.createDeviceCapabilities(device, platformCaps);
 						if (!deviceCaps.cl_khr_gl_sharing && !deviceCaps.cl_APPLE_gl_sharing)
 							continue;
 
-						if (this.context == 0) {
+						if (context == 0) {
 							try {
 								var callback = CLContextCallback.create((errinfo, private_info, cb, user_data) ->
 									log.error("[LWJGL] cl_context_callback: {}", memUTF8(errinfo)));
@@ -227,7 +236,8 @@ public class OpenCLManager {
 								checkCLError(errcode_ret);
 
 								this.device = device;
-								this.context = context;
+								OpenCLManager.context = context;
+								break;
 							} catch (Exception ex) {
 								log.error("Error while creating context:", ex);
 							}
@@ -299,7 +309,8 @@ public class OpenCLManager {
 			throw new ShaderException(getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_LOG));
 
 		log.debug("Build status: {}", getProgramBuildInfoInt(program, device, CL_PROGRAM_BUILD_STATUS));
-		log.debug("Binary type: {}", getProgramBuildInfoInt(program, device, CL_PROGRAM_BINARY_TYPE));
+		if (deviceCaps.OpenCL12)
+			log.debug("Binary type: {}", getProgramBuildInfoInt(program, device, CL12.CL_PROGRAM_BINARY_TYPE));
 		log.debug("Build options: {}", getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_OPTIONS));
 		log.debug("Build log: {}", getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_LOG));
 		return program;

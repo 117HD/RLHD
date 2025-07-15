@@ -52,7 +52,7 @@ import rs117.hd.config.VanillaShadowMode;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
-import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
+import static rs117.hd.HdPluginConfig.*;
 
 @ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
@@ -632,7 +632,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
-		description = "Adds textures to some models.",
+		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
 		position = 7,
 		section = environmentSettings
 	)
@@ -644,7 +644,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_GROUND_TEXTURES,
 		name = "Ground Textures",
-		description = "Adds textures to some ground tiles.",
+		description = "Adds new textures to most ground tiles.",
 		position = 8,
 		section = environmentSettings
 	)

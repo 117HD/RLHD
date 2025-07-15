@@ -457,6 +457,12 @@ public enum Material {
 		.setScroll(0, 1.4f)
 		.setFlowMapDuration(new float[] { 10, -14 })
 	),
+	SWAMP_WATER_FLAT_FLOW(SWAMP_WATER_FLAT, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setScroll(0, 1.3f)
+		.setFlowMapDuration(new float[] { 7, -11 })
+	),
 	GRUNGE_3_DULL(GRUNGE_3, p -> p
 		.setNormalMap(null)
 		.setSpecular(0, 0)
@@ -562,6 +568,8 @@ public enum Material {
 	POTTERY_OVEN_STONE(JAGGED_STONE_TILE, p -> p.setBrightness(0.3f)),
 
 	TILE_SMALL_1(p -> p
+		.setSpecular(0.8f, 70)),
+	TILE_SMALL_2(p -> p
 		.setSpecular(0.8f, 70)),
 	TILES_2X2_1_N,
 	TILES_2X2_1(p -> p

@@ -47,16 +47,15 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.opengl.MaterialUniforms;
-import rs117.hd.opengl.WaterTypeUniforms;
+import rs117.hd.opengl.uniforms.MaterialUniforms;
+import rs117.hd.opengl.uniforms.WaterTypeUniforms;
 import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ImageUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static org.lwjgl.opengl.GL31C.*;
-import static org.lwjgl.opengl.GL42C.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.scene.skybox.SkyboxManager.SKYBOX_PATH;
@@ -262,8 +261,8 @@ public class TextureManager {
 
 		int mipLevels = 1 + (int) Math.floor(HDUtils.log2(textureSize));
 		int format = GL_SRGB8_ALPHA8;
-		if (HdPlugin.glCaps.glTexStorage3D != 0) {
-			glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
+		if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
+			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
 		} else {
 			// Allocate each mip level separately
 			for (int i = 0; i < mipLevels; i++) {
