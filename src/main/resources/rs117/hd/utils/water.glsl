@@ -22,6 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include uniforms/global.glsl
 #include utils/constants.glsl
 #include utils/color_utils.glsl
 #include utils/noise.glsl
@@ -186,19 +187,19 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     }
 
     // Kind of hacky way to fix the edges for some water types
-//    switch (waterTypeIndex) {
-//        case WATER_TYPE_BLOOD:
-//        case WATER_TYPE_SWAMP_WATER:
-//        case WATER_TYPE_POISON_WASTE:
-//        case WATER_TYPE_MUDDY_WATER:
-//        case WATER_TYPE_SCAR_SLUDGE:
-//        case WATER_TYPE_CYAN_WATER:
-//        case WATER_TYPE_ARAXXOR_WASTE:
-//            depth += 48;
-//            sunToFragDist = depth / refractedSunDir.y;
-//            fragToSurfaceDist = abs(depth / camToFrag.y);
-//            break;
-//    }
+    switch (waterTypeIndex) {
+        case WATER_TYPE_BLOOD:
+        case WATER_TYPE_SWAMP_WATER:
+        case WATER_TYPE_POISON_WASTE:
+        case WATER_TYPE_MUDDY_WATER:
+        case WATER_TYPE_SCAR_SLUDGE:
+        case WATER_TYPE_CYAN_WATER:
+        case WATER_TYPE_ARAXXOR_WASTE:
+            depth += 48;
+            sunToFragDist = depth / refractedSunDir.y;
+            fragToSurfaceDist = abs(depth / camToFrag.y);
+            break;
+    }
 
     // Convert coefficients from meters to in-game units
     sigma_a_particles /= 128;
@@ -271,6 +272,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
             distortion = uvFlow * .001 * (1 - exp(-.01 * depth));
         }
+        // TODO: This would be nicer if blurred based on optical depth
         float shadow = sampleShadowMap(surfaceSunPos, distortion, dot(-sunDir, underwaterNormal));
         // Apply shadow to directional light
         L_directional *= 1 - shadow;
@@ -304,9 +306,10 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     L *= exp(-sigma_t * fragToSurfaceDist);
 
     // QSSA for upwelling radiance at the surface for a given depth
+    // https://www.oceanopticsbook.info/view/radiative-transfer-theory/level-2/the-quasi-single-scattering-approximation
     float mu_sw = refractedSunDir.y; // cos(theta) between downward direction in water and the sunlight's direction
     float mu = omega_o.y;
-    vec3 E_d0 = directionalLight * mu_sw; // downwelling plane irradiance at the surface
+    vec3 E_d0 = (directionalLight * .5 + ambientLight) * mu_sw; // downwelling plane irradiance at the surface
     vec3 b_pureWater = sigma_s_pureWater * B_pureWater; // backscatter coefficient
     vec3 zeta_star_pureWater = (sigma_a + b_pureWater) * depth; // optical depth
     vec3 b_particles = sigma_s_particles * B_hg; // backscatter coefficient
@@ -332,6 +335,73 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
+
+    float slope = abs(IN.flatNormal.y);
+    if (slope < .8) {
+        float waterfallMask = smoothstep(.8, .6, slope);
+
+        vec3 bgColor = srgbToLinear(vec3(.063, .119, .194));
+        vec3 bgColor2 = srgbToLinear(vec3(.063, .2, .3));
+        vec3 fgColor = srgbToLinear(vec3(.9));
+
+        vec3 N = IN.flatNormal;
+        const float discretize = 5;
+        N = floor(N * discretize) / discretize;
+        vec3 T = normalize(vec3(-N.z, 0, N.x)); // up cross n
+        vec3 B = cross(N, T);
+        mat3 TBN = mat3(T, B, N);
+        mat3 invTBN = transpose(TBN);
+
+        const float uvScale = .15;
+        vec3 uvw = (invTBN * IN.position) / -128;
+        vec2 uv = uvw.xy;
+        uv *= uvScale;
+
+//        uv.y -= elapsedTime * uvw.z * .0001;
+
+        vec2 flowMapUv = vec2(uv.x, IN.position.y / 128 * uvScale) * .3 - animationFrame(vec2(200, 4));
+        vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
+        uv += uvFlow * .2;
+
+        uv.y -= elapsedTime * .5;
+
+        vec3 n = texture(waterNormalMaps, vec3(uv, 0)).xyz;
+        n.xy = n.xy * 2 - 1;
+        n.z *= .3;
+        n = TBN * n;
+        n = normalize(n);
+
+        float cosAngle = max(0, dot(n, viewDir));
+        float fresnel = calculateFresnel(cosAngle, IOR_WATER);
+
+        vec4 dst = vec4(0);
+
+        vec4 src = vec4(0);
+
+        vec3 light = lightColor * lightStrength + ambientColor * ambientStrength;
+
+        src.rgb = mix(bgColor, bgColor2, cosAngle) * light;
+//        src += srgbToLinear(fogColor) * fresnel;
+        vec3 omega_h = normalize(viewDir + lightDir); // half-way vector
+        vec3 sunSpecular = pow(max(0, dot(n, omega_h)), 500) * lightColor * lightStrength;
+        src.rgb += sunSpecular;
+        src.a = waterfallMask * .15;
+        dst = dst * (1 - src.a) + src;
+
+//        src = mix(bgColor, bgColor2, pow(max(0, dot(N, viewDir)), 7));
+//        float noise = 1;
+//        noise *= (bccNoiseClassic(vec3(uv * 30 + vec2(0, elapsedTime), 0)) + 1) / 2;
+//        noise *= (bccNoiseClassic(vec3(uv * 13 + vec2(0, elapsedTime * 1.5), 0)) + 1) / 2;
+//        src = vec4(light, noise * .025);
+//
+//        // Blend as overlay
+//        dst.rgb = src.rgb * src.a + dst.rgb * dst.a * (1 - src.a);
+//        dst.a = src.a + dst.a * (1 - src.a);
+//        dst.rgb /= dst.a;
+
+        return dst;
+    }
+
     float specularGloss = 500; // Ignore values set per water type, as they don't make a lot of sense
     float specularStrength = 1;
 
@@ -358,7 +428,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             break;
     }
 
-    // Initialize the reflection with a fake sky reflection
     vec4 reflection = vec4(
         sampleWaterReflection(flatR, R, distortionFactor),
         calculateFresnel(dot(fragToCam, N), IOR_WATER)
@@ -453,7 +522,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         }
 
         vec4 src = dst;
-        dst.rgb = surfaceColor * (ambientLight + dot(N, omega_o) * directionalLight);
+        dst.rgb = surfaceColor * (ambientLight + directionalLight * max(0, dot(N, omega_o)));
         dst.rgb = mix(dst.rgb, src.rgb, src.a);
         dst.a = 1;
     } else if (waterType.isFlat || !waterTransparency) { // If the water is opaque, blend in a fake underwater surface
@@ -481,7 +550,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
         vec2 uv = IN.uv + uvFlow * flowMapStrength;
         float foamMask = texture(textureArray, vec3(uv, waterType.foamMap)).r;
-        foamMask *= .2;
+        foamMask *= .075;
         float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
         shoreLineMask *= shoreLineMask;
         shoreLineMask *= shoreLineMask;

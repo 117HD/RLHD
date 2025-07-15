@@ -154,6 +154,7 @@ void main() {
         OUT.texBlend[i] = 1;
 
         // Apply some arbitrary displacement to mimic refraction
+        // TODO: Solve the quartic equation numerically
         int waterDepth = vTerrainData[i] >> 8 & 0x7FF;
         displaceUnderwaterPosition(position, waterDepth);
 

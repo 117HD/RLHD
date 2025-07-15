@@ -55,7 +55,7 @@ import static rs117.hd.utils.Vector.add;
 @Slf4j
 @Singleton
 public class ProceduralGenerator {
-	public static final int[] DEPTH_LEVEL_SLOPE = new int[20];
+	public static int[] DEPTH_LEVEL_SLOPE = new int[50];
 
 	public static final int VERTICES_PER_FACE = 3;
 	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
@@ -83,12 +83,13 @@ public class ProceduralGenerator {
 	public void generateSceneData(SceneContext sceneContext)
 	{
 		{
-			// TODO: tune
-			float minDepth = 150;
+			// TODO: improve
+			float minDepth = 96;
 			float maxDepth = 3200;
+			DEPTH_LEVEL_SLOPE[0] = 128;
 			float B = 3.f;
 			float A = B * (maxDepth - minDepth) / (1 - (float) Math.exp(-B));
-			for (int i = 0; i < DEPTH_LEVEL_SLOPE.length; i++) {
+			for (int i = 1; i < DEPTH_LEVEL_SLOPE.length; i++) {
 				float x = (float) i / DEPTH_LEVEL_SLOPE.length;
 				ProceduralGenerator.DEPTH_LEVEL_SLOPE[i] = Math.round(A / B * (1 - (float) Math.exp(-B * x)) + minDepth);
 			}
