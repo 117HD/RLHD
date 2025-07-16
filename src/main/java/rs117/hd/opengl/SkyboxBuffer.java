@@ -1,10 +1,13 @@
 package rs117.hd.opengl;
 
+import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.scene.skybox.SkyboxConfig;
+
+import static org.lwjgl.opengl.GL31C.GL_DYNAMIC_DRAW;
 
 public class SkyboxBuffer extends UniformBuffer {
 	public SkyboxBuffer() {
-		super("Skybox");
+		super("Skybox", GL_DYNAMIC_DRAW);
 	}
 
 	public SkyboxConfigStruct activeSkybox = addStruct(new SkyboxConfigStruct());
@@ -21,6 +24,7 @@ public class SkyboxBuffer extends UniformBuffer {
 		public Property saturation = addProperty(PropertyType.Float, "saturation");
 		public Property hueShift = addProperty(PropertyType.Float, "hueShift");
 		public Property rotation = addProperty(PropertyType.Float, "rotation");
+		public Property rotationSpeed = addProperty(PropertyType.Float, "rotationSpeed");
 
 		public void copy(int skyboxIndex, SkyboxConfig.SkyboxEntry skyboxConfig) {
 			index.set(skyboxIndex);
@@ -34,6 +38,7 @@ public class SkyboxBuffer extends UniformBuffer {
 			saturation.set(hasPost ? postConfig.getSaturation() : 0f);
 			hueShift.set(hasPost ? postConfig.getHue() : 0f);
 			rotation.set(skyboxConfig != null ? skyboxConfig.getRotation() : 0f);
+			rotationSpeed.set(skyboxConfig != null ? skyboxConfig.getRotationSpeed() : 0f);
 		}
 	}
 }

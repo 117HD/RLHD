@@ -25,7 +25,6 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -34,7 +33,6 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
-import org.lwjgl.BufferUtils;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
@@ -47,9 +45,6 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static org.lwjgl.opengl.GL15C.glBindBuffer;
-import static org.lwjgl.opengl.GL15C.glBufferSubData;
-import static org.lwjgl.opengl.GL31C.*;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.TWO_PI;
 import static rs117.hd.utils.HDUtils.clamp;
@@ -154,6 +149,22 @@ public class EnvironmentManager {
 	private final float[] startSunAngles = { 0, 0 };
 	public final float[] currentSunAngles = { 0, 0 };
 	private final float[] targetSunAngles = { 0, 0 };
+
+	private float startWindAngle = 0f;
+	public float currentWindAngle = 0f;
+	private float targetWindAngle = 0f;
+
+	private float startWindSpeed = 0f;
+	public float currentWindSpeed = 0f;
+	private float targetWindSpeed = 0f;
+
+	private float startWindStrength = 0f;
+	public float currentWindStrength = 0f;
+	private float targetWindStrength = 0f;
+
+	private float startWindCeiling = 0f;
+	public float currentWindCeiling = 0f;
+	private float targetWindCeiling = 0f;
 
 	private SkyboxConfig.SkyboxEntry targetSkybox = null;
 	private SkyboxConfig.SkyboxEntry currentSkybox = null;
@@ -283,6 +294,10 @@ public class EnvironmentManager {
 				currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
 			currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
 			currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
+			currentWindAngle = hermite(startWindAngle, targetWindAngle, t);
+			currentWindSpeed = hermite(startWindSpeed, targetWindSpeed, t);
+			currentWindStrength = hermite(startWindStrength, targetWindStrength, t);
+			currentWindCeiling = hermite(startWindCeiling, targetWindCeiling, t);
 			currentskyboxBlend = t;
 		}
 
@@ -331,6 +346,10 @@ public class EnvironmentManager {
 		startGroundFogOpacity = currentGroundFogOpacity;
 		startUnderwaterCausticsColor = currentUnderwaterCausticsColor;
 		startUnderwaterCausticsStrength = currentUnderwaterCausticsStrength;
+		startWindAngle = currentWindAngle;
+		startWindSpeed = currentWindSpeed;
+		startWindStrength = currentWindStrength;
+		startWindCeiling = currentWindCeiling;
 		for (int i = 0; i < 2; i++)
 			startSunAngles[i] = mod(currentSunAngles[i], TWO_PI);
 
@@ -359,6 +378,10 @@ public class EnvironmentManager {
 		targetUnderglowColor = env.underglowColor;
 		targetUnderwaterCausticsColor = env.waterCausticsColor;
 		targetUnderwaterCausticsStrength = env.waterCausticsStrength;
+		targetWindAngle = env.windAngle;
+		targetWindSpeed = env.windSpeed;
+		targetWindStrength = env.windStrength;
+		targetWindCeiling = env.windCeiling;
 		targetSkybox = skyboxManager.getSkybox(env.skybox);
 
 		// Prevent transitions from taking the long way around

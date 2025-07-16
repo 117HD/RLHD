@@ -41,8 +41,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     uv3 += uvFlow * flowMapStrength;
 
     // get diffuse textures
-    vec3 n1 = texture(textureArray, vec3(uv1, waterType.normalMap)).xyz;
-    vec3 n2 = texture(textureArray, vec3(uv2, waterType.normalMap)).xyz;
+    vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, waterType.normalMap)).xyz);
+    vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, waterType.normalMap)).xyz);
     float foamMask = texture(textureArray, vec3(uv3, waterType.foamMap)).r;
 
     // normals

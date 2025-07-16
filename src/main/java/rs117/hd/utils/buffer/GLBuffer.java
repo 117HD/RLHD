@@ -25,12 +25,81 @@
 package rs117.hd.utils.buffer;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.opengl.*;
+import rs117.hd.HdPlugin;
+import rs117.hd.utils.HDUtils;
 
+import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.checkGLErrors;
+
+@Slf4j
 @RequiredArgsConstructor
 public class GLBuffer
 {
 	public final String name;
-	public int glBufferId;
-	public long clBuffer;
-	public long size = -1;
+	public final int target;
+	public final int usage;
+
+	public int id;
+	public long size;
+
+	public void initialize() {
+		initialize(0);
+	}
+
+	public void initialize(long initialCapacity) {
+		id = glGenBuffers();
+		// Initialize both GL and CL buffers to buffers of a single byte or more,
+		// to ensure that valid buffers are given to compute dispatches.
+		// This is particularly important on Apple M2 Max, where an uninitialized buffer leads to a crash
+		ensureCapacity(Math.max(1, initialCapacity));
+	}
+
+	public void destroy() {
+		size = 0;
+
+		if (id != 0) {
+			glDeleteBuffers(id);
+			id = 0;
+		}
+	}
+
+	public void ensureCapacity(long numBytes) {
+		ensureCapacity(0, numBytes);
+	}
+
+	public void ensureCapacity(int offset, long numBytes) {
+		long size = 4L * (offset + numBytes);
+		if (size <= this.size) {
+			glBindBuffer(target, id);
+			return;
+		}
+
+		size = HDUtils.ceilPow2(size);
+		if (log.isTraceEnabled())
+			log.trace("Buffer resize: {} {}", this, String.format("%.2f MB -> %.2f MB", this.size / 1e6, size / 1e6));
+
+		if (offset > 0) {
+			// Create a new buffer and copy the old data to it
+			int oldBuffer = id;
+			id = glGenBuffers();
+			glBindBuffer(target, id);
+			glBufferData(target, size, usage);
+
+			glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
+			glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
+			glDeleteBuffers(oldBuffer);
+		} else {
+			glBindBuffer(target, id);
+			glBufferData(target, size, usage);
+		}
+
+		this.size = size;
+
+		if (HdPlugin.GL_CAPS.OpenGL43 && log.isDebugEnabled()) {
+			GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
+			checkGLErrors();
+		}
+	}
 }

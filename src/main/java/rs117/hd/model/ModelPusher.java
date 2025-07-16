@@ -29,6 +29,7 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
+import rs117.hd.scene.model_overrides.WindDisplacement;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
@@ -69,17 +70,14 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_COUNT = (1 << 12) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 9) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
 	private ModelCache modelCache;
 
 	public void startUp() {
-		if (Material.values().length - 1 >= MAX_MATERIAL_COUNT) {
-			throw new IllegalStateException(
-				"Too many materials (" + Material.values().length + ") to fit into packed material data.");
-		}
+		assert WindDisplacement.values().length - 1 <= 0x7;
 
 		if (config.modelCaching() && !plugin.useLowMemoryMode) {
 			final int size = config.modelCacheSizeMiB();
@@ -162,7 +160,7 @@ public class ModelPusher {
 	 * @param model          to push data from
 	 * @param modelOverride  the active model override
 	 * @param preOrientation which the vertices have already been rotated by
-	 * @param shouldCache    whether the model should be cached for future reuse, if enabled
+	 * @param needsCaching   whether the model should be cached for future reuse, if enabled
 	 */
 	public void pushModel(
 		SceneContext sceneContext,
@@ -171,10 +169,11 @@ public class ModelPusher {
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,
-		boolean shouldCache
+		boolean needsCaching
 	) {
+		boolean useCache = needsCaching;
 		if (modelCache == null)
-			shouldCache = false;
+			useCache = false;
 
 		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
@@ -191,7 +190,8 @@ public class ModelPusher {
 			model.getTextureFaces() != null;
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-		if (!plugin.configModelTextures && !modelOverride.forceMaterialChanges) {
+		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
+		if (disableTextures) {
 			if (baseMaterial.hasTexture)
 				baseMaterial = Material.NONE;
 			if (textureMaterial.hasTexture)
@@ -215,7 +215,7 @@ public class ModelPusher {
 		long normalHash = 0;
 		long uvHash = 0;
 
-		if (shouldCache) {
+		if (useCache) {
 			assert client.isClientThread() : "Model caching isn't thread-safe";
 
 			vertexHash = modelHasher.vertexHash;
@@ -256,35 +256,35 @@ public class ModelPusher {
 		FloatBuffer fullNormalData = null;
 		FloatBuffer fullUvData = null;
 
-		boolean shouldCacheVertexData = false;
-		boolean shouldCacheNormalData = false;
-		boolean shouldCacheUvData = false;
-		if (shouldCache) {
-			shouldCacheVertexData = !foundCachedVertexData;
-			shouldCacheNormalData = !foundCachedNormalData;
-			shouldCacheUvData = !foundCachedUvData;
+		boolean cacheVertexData = false;
+		boolean cacheNormalData = false;
+		boolean cacheUvData = false;
+		if (useCache) {
+			cacheVertexData = !foundCachedVertexData;
+			cacheNormalData = !foundCachedNormalData;
+			cacheUvData = !foundCachedUvData;
 
-			if (shouldCacheVertexData) {
+			if (cacheVertexData) {
 				fullVertexData = this.modelCache.reserveIntBuffer(vertexHash, bufferSize);
 				if (fullVertexData == null) {
 					log.error("failed to reserve vertex buffer");
-					shouldCacheVertexData = false;
+					cacheVertexData = false;
 				}
 			}
 
-			if (shouldCacheNormalData) {
+			if (cacheNormalData) {
 				fullNormalData = this.modelCache.reserveFloatBuffer(normalHash, bufferSize);
 				if (fullNormalData == null) {
 					log.error("failed to reserve normal buffer");
-					shouldCacheNormalData = false;
+					cacheNormalData = false;
 				}
 			}
 
-			if (shouldCacheUvData) {
+			if (cacheUvData) {
 				fullUvData = this.modelCache.reserveFloatBuffer(uvHash, bufferSize);
 				if (fullUvData == null) {
 					log.error("failed to reserve uv buffer");
-					shouldCacheUvData = false;
+					cacheUvData = false;
 				}
 			}
 		}
@@ -297,7 +297,7 @@ public class ModelPusher {
 			for (int face = 0; face < faceCount; face++) {
 				int[] data = getFaceVertices(sceneContext, tile, uuid, model, modelOverride, face);
 				sceneContext.stagingBufferVertices.put(data);
-				if (shouldCacheVertexData)
+				if (cacheVertexData)
 					fullVertexData.put(data);
 			}
 			modelOverride.revertRotation(model);
@@ -313,7 +313,7 @@ public class ModelPusher {
 			for (int face = 0; face < faceCount; face++) {
 				getNormalDataForFace(sceneContext, model, modelOverride, face);
 				sceneContext.stagingBufferNormals.put(sceneContext.modelFaceNormals);
-				if (shouldCacheNormalData)
+				if (cacheNormalData)
 					fullNormalData.put(sceneContext.modelFaceNormals);
 			}
 
@@ -340,21 +340,24 @@ public class ModelPusher {
 				}
 
 				ModelOverride faceOverride = modelOverride;
-				if (modelOverride.materialOverrides != null) {
-					var override = modelOverride.materialOverrides.get(material);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
-					}
-				}
-
-				if (modelOverride.colorOverrides != null) {
-					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
-					for (var override : modelOverride.colorOverrides) {
-						if (override.ahslCondition.test(ahsl)) {
+				if (!disableTextures) {
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
 							faceOverride = override;
-							material = faceOverride.baseMaterial;
-							break;
+							material = faceOverride.textureMaterial;
+						}
+					}
+
+					// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
+					if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
+						int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
+						for (var override : modelOverride.colorOverrides) {
+							if (override.ahslCondition.test(ahsl)) {
+								faceOverride = override;
+								material = faceOverride.baseMaterial;
+								break;
+							}
 						}
 					}
 				}
@@ -376,7 +379,7 @@ public class ModelPusher {
 				}
 
 				sceneContext.stagingBufferUvs.put(uvData);
-				if (shouldCacheUvData)
+				if (cacheUvData)
 					fullUvData.put(uvData);
 
 				++texturedFaceCount;
@@ -386,11 +389,11 @@ public class ModelPusher {
 				frameTimer.end(Timer.MODEL_PUSHING_UV);
 		}
 
-		if (shouldCacheVertexData)
+		if (cacheVertexData)
 			fullVertexData.flip();
-		if (shouldCacheNormalData)
+		if (cacheNormalData)
 			fullNormalData.flip();
-		if (shouldCacheUvData)
+		if (cacheUvData)
 			fullUvData.flip();
 
 		sceneContext.modelPusherResults[0] = faceCount;
@@ -440,10 +443,11 @@ public class ModelPusher {
 	) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
-		assert materialIndex <= MAX_MATERIAL_COUNT;
+		assert materialIndex <= MAX_MATERIAL_INDEX;
 		int materialData =
-			(materialIndex & MAX_MATERIAL_COUNT) << 12
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 6
+			(materialIndex & MAX_MATERIAL_INDEX) << 15
+			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 9
+			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (modelOverride.upwardsNormals ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3

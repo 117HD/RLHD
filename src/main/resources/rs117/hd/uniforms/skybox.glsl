@@ -9,6 +9,7 @@ struct SkyboxConfig
     float saturation;
     float hueShift;
     float rotation;
+    float rotationSpeed;
 };
 
 layout(std140) uniform SkyboxUniforms {

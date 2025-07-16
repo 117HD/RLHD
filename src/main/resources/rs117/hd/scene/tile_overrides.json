@@ -171,6 +171,29 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
+    "name": "VERTICAL_DIRT_FIX_NEAR_CASTLE_WARS",
+    "area": "VERTICAL_DIRT_FIX_NEAR_CASTLE_WARS",
+    "underlayIds": [
+      64
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "overlayIds": [
+      14
+    ],
+    "underlayIds": [
+      48,
+      63,
+      64,
+      65,
+      66
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
     "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
     "area": "TUTORIAL_ISLAND_KITCHEN",
     "overlayIds": [
@@ -371,7 +394,30 @@
     "minSaturation": 5,
     "maxSaturation": 5,
     "minLightness": 18,
-    "maxLightness": 18
+    "maxLightness": 18,
+    "replacements": {
+      "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING": "!blending"
+    }
+  },
+  {
+    "name": "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING",
+    "area": "LUMBRIDGE_VARROCK_PATH_BLEND_FIX",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL",
+    "setHue": 7,
+    "setSaturation": 1,
+    "shiftLightness": 12
+  },
+  {
+    "name": "LUMBRIDGE_RIVER_DIRT_FIX",
+    "area": "LUMBRIDGE_RIVER_DIRT_FIX",
+    "underlayIds": [ 65 ],
+    "groundMaterial": "DIRT",
+    "maxSaturation": 3,
+    "shiftHue": -1,
+    "shiftLightness": 3
   },
   {
     "name": "LUMBRIDGE_VARROCK_PATH_FIX_1",
@@ -398,6 +444,12 @@
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 12
+  },
+  {
+    "name": "Al Kharid to Varrock Gate Grass Fix",
+    "area": "Al Kharid to Varrock Gate Grass Fix",
+    "underlayIds": [ 52 ],
+    "groundMaterial": "GRASS_1"
   },
   {
     "name": "LUMBRIDGE_PATHS",
@@ -3016,7 +3068,7 @@
       37
     ],
     "blended": false,
-    "maxLightness": 0
+    "groundMaterial": "TRANSPARENT"
   },
   {
     "name": "ZANARIS_POND_WATER",
@@ -3546,6 +3598,140 @@
     }
   },
   {
+    "name": "Aldarin Underwall blending fix - has no texture",
+    "area": "ALDARIN",
+    "overlayIds": [ 159 ],
+    "blended": false
+  },
+  {
+    "name": "Aldarin under stairs blending removal",
+    "area": "ALDARIN_UNDERSTAIR_BLENDING_FIX",
+    "overlayIds": [ 172 ],
+    "shiftLightness": -10,
+    "blended": false
+  },
+  {
+    "name": "Aldarin fake brick path",
+    "area": "ALDARIN",
+    "overlayIds": [ 398, 399 ],
+    "blended": false,
+    "maxLightness": 38,
+    "minLightness": 22,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin - Manor Winceller - fake brick",
+    "area": "ALDARIN_MANOR_WINECELLER",
+    "underlayIds": [ 12, 141 ],
+    "minLightness": 13,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Dark tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 101 ],
+    "blended": false,
+    "shiftLightness": 1,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Medium tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 173 ],
+    "blended": false,
+    "shiftLightness": -2,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin fake brick override - Light tile",
+    "area": "ALDARIN_FAKE_BRICK_OVERRIDE",
+    "overlayIds": [ 172 ],
+    "blended": false,
+    "shiftLightness": 3,
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Aldarin Forced Dirt Floor",
+    "area": "ALDARIN_324_DIRT_FIX",
+    "overlayIds": [ 324 ],
+    "groundMaterial": "PACKED_EARTH",
+    "blended": false
+  },
+  {
+    "name": "Aldarin Terracotta Roof - Red",
+    "area": "ALDARIN_TERACOTTA_ROOFS",
+    "overlayIds": [ 324, 373, 374 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 23,
+    "shiftLightness": 2,
+    "blended": false,
+    "replacements": {
+      "WINTER_GRUNGE": "season == WINTER"
+    }
+  },
+  {
+    "name": "Aldarin Terracotta Floor - Red",
+    "area": "ALDARIN",
+    "overlayIds": [ 324, 373, 374 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 23,
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "Aldarin Terracotta Floor - Taupe",
+    "area": "ALDARIN",
+    "overlayIds": [ 325, 326 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "minLightness": 25,
+    "maxLightness": 35,
+    "shiftLightness": 1,
+    "uvOrientation": 512,
+    "blended": false
+  },
+  {
+    "name": "Aldarin Wooden Roof tiles ",
+    "area": "ALDARIN_WOOD_ROOFS",
+    "overlayIds": [ 81, 185 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16,
+    "replacements": {
+      "WINTER_GRUNGE": "season == WINTER"
+    }
+  },
+  {
+    "name": "Aldarin Wooden Floor - 81 ",
+    "area": "ALDARIN_WOOD_FLOOR_INTERIOR",
+    "overlayIds": [ 81 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16
+  },
+  {
+    "name": "Aldarin Wooden Floor ",
+    "area": "ALDARIN",
+    "overlayIds": [ 185 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "minLightness": 14,
+    "maxLightness": 16
+  },
+  {
+    "name": "Aldarin Dirt hills Overlay",
+    "area": "ALDARIN",
+    "overlayIds": [ 377 ],
+    "groundMaterial": "VERTICAL_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == WINTER"
+    }
+  },
+  {
     "name": "FORTIS_MARBLE_FLOOR",
     "area": "ZEAH",
     "overlayIds": [ 327 ],
@@ -3586,7 +3772,7 @@
     "name": "Hunter Guild Water",
     "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
-    "waterType": "PLAIN_WATER"
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "STRANGLEWOOD_HILLSIDE",
@@ -4127,6 +4313,14 @@
     "blended": false
   },
   {
+    "name": "POC_FANCY_BRICK_INTERIOR",
+    "area": "PLAYER_OWNED_HOUSE",
+    "overlayIds": [ 79 ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
     "name": "LAND_OF_GOBLINS_WATER_FIX",
     "area": "LAND_OF_GOBLINS_CUTSCENE_WATER",
     "overlayIds": [
@@ -4503,7 +4697,7 @@
     "name": "HUNTER_GUILD_POND",
     "area": "HUNTER_GUILD_SURFACE",
     "overlayIds": [ 151 ],
-    "waterType": "WATER_FLAT"
+    "waterType": "PLAIN_WATER"
   },
   {
     "name": "RALOS_RISE_SNOW_PATH",
@@ -4540,6 +4734,28 @@
     "overlayIds": [ 3 ],
     "groundMaterial": "DIRT",
     "blended": false
+  },
+  {
+    "name": "Hueycoatl Snow Fix - Blending",
+    "area": "Hueycoatl Snow Fix",
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [ 58, 63, 94, 173 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "replacements": {
+      "Hueycoatl Snow Fix - No Blending": "!blending"
+    },
+    "shiftLightness": 25
+  },
+  {
+    "name": "Hueycoatl Snow Fix - No Blending",
+    "area": "Hueycoatl Snow Fix",
+    "underlayIds": [ 58, 173 ],
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 75,
+    "minLightness": 50,
+    "maxSaturation": 0
   },
   {
     "name": "CAM_TORUM_WATER",
@@ -4635,34 +4851,57 @@
   },
   {
     "name": "Perilous Moons Ancient Prison, Sun Tiles Fix",
-    "area": "ANCIENT_PRISON_SUN_BLEND_FIX",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON_SUN_BLEND_FIX",
     "overlayIds": [ 80 ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
   },
   {
-    "name": "EARTHBOUND_CAVERN_WATER_DARKER",
-    "area": "EARTHBOUND_CAVERN",
-    "overlayIds": [ 201 ],
-    "waterType": "DARK_BLUE_WATER"
+    "name": "EARTHBOUND_CAVERN_WATER_FIX",
+    "area": "EARTHBOUND_CAVERN_WATER_FIX",
+    "underlayIds": [ 72, 105 ],
+    "shiftLightness": 10,
+    "waterType": "CAVE_WATER"
   },
   {
     "name": "EARTHBOUND_CAVERN_WATER",
     "area": "EARTHBOUND_CAVERN",
     "overlayIds": [ 158, 181, 201 ],
-    "waterType": "PLAIN_WATER"
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "area": "EARTHBOUND_CAVERN_BLENDING_FIX",
+    "underlayIds": [ 56, 72 ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7,
+    "blended": false
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_COMPLEX",
+    "area": "EARTHBOUND_CAVERN",
+    "replacements": {
+      "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
+      "EARTHBOUND_CAVERN_GRASS": "s > 2",
+      "EARTHBOUND_CAVERN_ROCK": "s < 3"
+    }
+  },
+  {
+    "name": "EARTHBOUND_CAVERN_ROCK_TOP",
+    "underlayIds": [ 54, 105 ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "minLightness": 4
   },
   {
     "name": "EARTHBOUND_CAVERN_GRASS",
-    "area": "EARTHBOUND_CAVERN",
     "underlayIds": [ 54, 105 ],
     "groundMaterial": "GRASS_1"
   },
   {
     "name": "EARTHBOUND_CAVERN_ROCK",
-    "area": "EARTHBOUND_CAVERN",
     "underlayIds": [ 56, 72 ],
-    "groundMaterial": "ROCKY_CAVE_FLOOR"
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "minLightness": 7
   },
   {
     "name": "STREAMBOUND_CAVERN_GRASS",
@@ -4697,8 +4936,8 @@
   },
   {
     "name": "THE_BLUE_MOON_ENTRANCE",
-    "area": "THE_BLUE_MOON",
-    "underlayIds": [ 73 ],
+    "area": "THE_BLUE_MOON_ENTRANCE",
+    "underlayIds": [ 56, 73, 205, 206 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {
@@ -4717,7 +4956,7 @@
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
     "area": "THE_BLOOD_MOON_ENTRANCE",
-    "underlayIds": [ 118 ],
+    "underlayIds": [ 56, 118 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
   },
   {
@@ -4756,6 +4995,28 @@
     "area": "THE_ECLIPSE_MOON",
     "underlayIds": [ 212, 213 ],
     "groundMaterial": "DIRT"
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_OVERLAY",
+    "area": "MASTERING_MIXOLOGY",
+    "overlayIds": [
+      351
+    ],
+    "groundMaterial": "STONE_CAVE_FLOOR",
+    "blended": false,
+    "shiftLightness": 6
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_UNDERLAY",
+    "area": "MASTERING_MIXOLOGY",
+    "underlayIds": [
+      26,
+      42,
+      72,
+      96,
+      223
+    ],
+    "groundMaterial": "INTERIOR_DIRT_FLOOR"
   },
   {
     "name": "OVERWORLD_GRASS_OVERLAY",
@@ -4813,6 +5074,13 @@
       29
     ],
     "groundMaterial": "ABYSSAL_FLOOR"
+  },
+  {
+    "name": "SORCERESS_GARDEN_HOUSE_FLOOR",
+    "area": "SORCERESS_GARDEN_HOUSE",
+    "overlayIds": [ 123 ],
+    "groundMaterial": "MARBLE_2",
+    "uvScale": 0.85
   },
   {
     "name": "OVERLAY_DIRT",
@@ -6243,6 +6511,17 @@
   },
   {
     "name": "CENTER_SARADOMIN_SIDE_DIRT_1",
+    "area": "CASTLE_WARS_UNDERGROUND_SARADOMIN_PORTAL_FIX",
+    "underlayIds": [
+      65,
+      66
+    ],
+    "groundMaterial": "DIRT",
+    "minSaturation": 2,
+    "maxSaturation": 6
+  },
+  {
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_2",
     "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
     "underlayIds": [
       98
@@ -6254,7 +6533,7 @@
     "maxSaturation": 4
   },
   {
-    "name": "CENTER_SARADOMIN_SIDE_DIRT_2",
+    "name": "CENTER_SARADOMIN_SIDE_DIRT_3",
     "area": "CASTLE_WARS_ARENA_SARADOMIN_SIDE",
     "underlayIds": [
       56
@@ -6624,12 +6903,14 @@
   {
     "name": "COSMIC_ENTITYS_PLANE_ABYSS_UNDERLAY",
     "area": "COSMIC_ENTITYS_PLANE",
+    "groundMaterial": "TRANSPARENT",
+    "overlayIds": [ 0, 37 ],
     "underlayIds": [
       2,
+      37,
       72
     ],
-    "blended": false,
-    "maxLightness": 0
+    "blended": false
   },
   {
     "name": "ICE_QUEENS_DUNGEON_UNDERLAY",
@@ -7009,6 +7290,7 @@
     "name": "ARCEUUS_GROUND",
     "area": "ARCEUUS",
     "underlayIds": [
+      0,
       2,
       3,
       21,
@@ -7284,6 +7566,27 @@
     "area": "UZER_DEMONIC_THRONEROOM",
     "underlayIds": [ 56, 57 ],
     "groundMaterial": "MARBLE_1_GLOSS"
+  },
+  {
+    "name": "Enchanted Valley Ledge",
+    "area": "ENCHANTED_VALLEY_LEDGES",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 0 ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvScale": 0.9,
+    "uvOrientation": 256,
+    "minLightness": 30,
+    "blended": false
+  },
+  {
+    "name": "Enchanted Valley Grass",
+    "area": "ENCHANTED_VALLEY",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 97 ],
+    "groundMaterial": "GRASS_1",
+    "minHue": 12,
+    "minSaturation": 2,
+    "uvScale": 0.85
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",

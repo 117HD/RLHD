@@ -59,6 +59,11 @@ public class Environment {
 	public int groundFogStart = -200;
 	public int groundFogEnd = -500;
 	public float groundFogOpacity = 0;
+	@JsonAdapter(GsonUtils.DegreesToRadians.class)
+	public float windAngle = 0.0f;
+	public float windSpeed = 15.0f;
+	public float windStrength = 0.0f;
+	public float windCeiling = 1280.0f;
 	public String skybox;
 
 	public Environment normalize() {

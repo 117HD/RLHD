@@ -35,10 +35,11 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.*;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static org.lwjgl.opengl.GL43C.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
@@ -116,16 +117,16 @@ public class Shader
 
 			if (DUMP_SHADERS) {
 				int[] numFormats = { 0 };
-				glGetIntegerv(GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
+				glGetIntegerv(GL41C.GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
 				if (numFormats[0] < 1) {
 					log.error("OpenGL driver does not support any binary formats");
 				} else {
 					int[] size = { 0 };
-					glGetProgramiv(program, GL_PROGRAM_BINARY_LENGTH, size);
+					glGetProgramiv(program, GL41C.GL_PROGRAM_BINARY_LENGTH, size);
 
 					int[] format = { 0 };
 					ByteBuffer binary = BufferUtils.createByteBuffer(size[0]);
-					glGetProgramBinary(program, size, format, binary);
+					GL41C.glGetProgramBinary(program, size, format, binary);
 
 					String shaderName =
 						units.stream()

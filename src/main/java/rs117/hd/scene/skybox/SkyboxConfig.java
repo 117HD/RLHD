@@ -17,6 +17,7 @@ public class SkyboxConfig {
 		private String dir;
 		@JsonAdapter(GsonUtils.DegreesToRadians.class)
 		private float rotation;
+		private float rotationSpeed;
 		private SkyboxPostProcessingConfig postProcessing;
 
 	}
