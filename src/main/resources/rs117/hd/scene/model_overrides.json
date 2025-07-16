@@ -2214,8 +2214,9 @@
     ]
   },
   {
-    "description": "Grass that should cast shadows",
+    "description": "Hunter Grass",
     "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "OBJECT",
     "flatNormals": true,
     "objectIds": [
       "HUNTING_LONG_JUNGLE_GRASS1",
@@ -2223,7 +2224,13 @@
       "HUNTING_LONG_JUNGLE_GRASS3",
       "HUNTING_JUNGLE_GRASS1",
       "HUNTING_JUNGLE_GRASS2",
-      "HUNTING_JUNGLE_GRASS3",
+      "HUNTING_JUNGLE_GRASS3"
+    ]
+  },
+  {
+    "description": "Hunter Grass with Vines",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
       "HUNTING_GREENVINE_STRAIGHT",
       "HUNTING_GREENVINE_CORNER",
       "HUNTING_GREENVINE_JUNCTION",
@@ -2232,8 +2239,16 @@
       "HUNTING_GREENVINE_DIAG3",
       "HUNTING_GREENVINE_DIAGFILLER",
       "HUNTING_GREENVINE_END",
-      "HUNTING_GREENVINE_END_DIAG",
-      "HUNTING_JUNGLE_PLANT1"
+      "HUNTING_GREENVINE_END_DIAG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
+      }
     ]
   },
   {
@@ -16443,7 +16458,8 @@
       "BAMBOO_TREE_TOP",
       "BAMBOO_TREE_2_TOP",
       "MM_BAMBOO_TREE_TOP",
-      "_100_ILM_CLIMBABLE_TREE_TOP"
+      "_100_ILM_CLIMBABLE_TREE_TOP",
+      "LEANING_BAMBOO_TREE_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -18986,7 +19002,9 @@
       "MM_PLANT_KHARAZI_JUNGLE_PLANT1",
       "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
       "MM_JUNGLEPLANT_FAT",
-      "MM_JUNGLE_PLANT_MISC2"
+      "MM_JUNGLE_PLANT_MISC2",
+      "HUNTING_JUNGLE_PLANT1",
+      "HUNTING_JUNGLE_PLANT2"
     ]
   },
   {
