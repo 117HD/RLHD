@@ -2172,6 +2172,7 @@
     "flatNormals": true,
     "windDisplacementMode": "OBJECT",
     "castShadows": false,
+    "terrainVertexSnap": true,
     "objectIds": [
       "GRASS_1",
       "GRASS_1_SWAMP",
@@ -23087,6 +23088,7 @@
     "description": "Oak Tree",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
     "objectIds": [
       "OAKTREE_STUMP", "POH_BIG_TREE3_4", "POH_SMALL_TREE3_5", "OAK_TREE_SEEDLING", "OAK_TREE_1",
       "OAK_TREE_2", "OAK_TREE_3", "OAK_TREE_FULLYGROWN_1", "OAK_TREE_FULLYGROWN_2",

@@ -91,9 +91,9 @@ void add_face_prio_distance(const uint localId, const ModelInfo minfo, out int p
         int orientation = flags & 0x7ff;
 
         // Grab triangle vertices from the correct buffer
-        vert thisA = vb[offset + localId * 3];
-        vert thisB = vb[offset + localId * 3 + 1];
-        vert thisC = vb[offset + localId * 3 + 2];
+        VertexData thisA = vb[offset + localId * 3];
+        VertexData thisB = vb[offset + localId * 3 + 1];
+        VertexData thisC = vb[offset + localId * 3 + 2];
 
         // rotate for model orientation
         thisA.pos = rotate(thisA.pos, orientation);
@@ -169,7 +169,12 @@ int tile_height(int z, int x, int y) {
     return texelFetch(tileHeightMap, ivec3(x + ESCENE_OFFSET, y + ESCENE_OFFSET, z), 0).r << 3;
 }
 
-void hillskew_vertex(inout vec3 v, int hillskew, float modelPosY, int plane) {
+void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float modelHeight, int plane) {
+    float heightFrac = abs(v.y - modelPosY) / modelHeight;
+    if(hillskewMode == HILLSKEW_TILE_SNAPPING && heightFrac > HILLSKEW_TILE_SNAPPING_BLEND) {
+        return; // Only apply tile snapping, which will only be applied to verticies close to the bottom of the model
+    }
+
     int x = int(v.x);
     int z = int(v.z);
     int px = x & 127;
@@ -179,7 +184,12 @@ void hillskew_vertex(inout vec3 v, int hillskew, float modelPosY, int plane) {
     int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
     int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
     int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
-    v.y += h3 - modelPosY;
+
+    if((hillskewMode & HILLSKEW_TILE_SNAPPING) != 0 && heightFrac <= HILLSKEW_TILE_SNAPPING_BLEND) {
+        v.y = mix(h3, v.y, heightFrac / HILLSKEW_TILE_SNAPPING_BLEND); // Blend tile snapping
+    } else if ((hillskewMode & HILLSKEW_MODEL) != 0) {
+        v.y += h3 - modelPosY; // Hillskew the whole model
+    }
 }
 
 void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
@@ -334,7 +344,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec3 pos = vec3(minfo.x, minfo.y >> 16, minfo.z);
         float height = minfo.y & 0xffff;
         int orientation = flags & 0x7ff;
-        int vertexFlags = uvOffset >= 0 ? int(uv[uvOffset + localId * 3].w) : 0;
+        int vertexFlags = uvOffset >= 0 ? uv[uvOffset + localId * 3].materialFlags : 0;
 
         // we only have to order faces against others of the same priority
         const int priorityOffset = count_prio_offset(thisPriority);
@@ -354,9 +364,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec3 displacementC = vec3(0);
 
         // Grab triangle vertices from the correct buffer
-        vert thisrvA = vb[offset + localId * 3];
-        vert thisrvB = vb[offset + localId * 3 + 1];
-        vert thisrvC = vb[offset + localId * 3 + 2];
+        VertexData thisrvA = vb[offset + localId * 3];
+        VertexData thisrvB = vb[offset + localId * 3 + 1];
+        VertexData thisrvC = vb[offset + localId * 3 + 2];
 
         // Grab vertex normals from the correct buffer
         vec4 normA = normal[offset + localId * 3    ];
@@ -402,11 +412,14 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
 
         // apply hillskew
         int plane = (flags >> 24) & 3;
-        int hillskew = (flags >> 26) & 1;
-        if (hillskew == 1) {
-            hillskew_vertex(thisrvA.pos, hillskew, pos.y, plane);
-            hillskew_vertex(thisrvB.pos, hillskew, pos.y, plane);
-            hillskew_vertex(thisrvC.pos, hillskew, pos.y, plane);
+        int hillskewFlags = ((flags >> 26) & 1) != 0 ? HILLSKEW_MODEL : HILLSKEW_NONE;
+        if((vertexFlags >> MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING & 1) == 1) {
+            hillskewFlags |= HILLSKEW_TILE_SNAPPING;
+        }
+        if (hillskewFlags != HILLSKEW_NONE) {
+            hillskew_vertex(thisrvA.pos, hillskewFlags, pos.y, height, plane);
+            hillskew_vertex(thisrvB.pos, hillskewFlags, pos.y, height, plane);
+            hillskew_vertex(thisrvC.pos, hillskewFlags, pos.y, height, plane);
         }
 
         // position vertices in scene and write to out buffer
@@ -414,9 +427,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vout[outOffset + myOffset * 3 + 1] = thisrvB;
         vout[outOffset + myOffset * 3 + 2] = thisrvC;
 
-        vec4 uvA = vec4(0);
-        vec4 uvB = vec4(0);
-        vec4 uvC = vec4(0);
+        UVData uvA = UVData(vec3(0.0), 0);
+        UVData uvB = UVData(vec3(0.0), 0);
+        UVData uvC = UVData(vec3(0.0), 0);
 
         if (uvOffset >= 0) {
             uvA = uv[uvOffset + localId * 3];
@@ -424,25 +437,25 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
             uvC = uv[uvOffset + localId * 3 + 2];
 
             if ((vertexFlags >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
-                uvA.xyz += displacementA;
-                uvB.xyz += displacementB;
-                uvC.xyz += displacementC;
+                uvA.uvw += displacementA;
+                uvB.uvw += displacementB;
+                uvC.uvw += displacementC;
 
                 // Rotate the texture triangles to match model orientation
-                uvA = rotate(uvA, orientation);
-                uvB = rotate(uvB, orientation);
-                uvC = rotate(uvC, orientation);
+                uvA.uvw = rotate(uvA.uvw, orientation);
+                uvB.uvw = rotate(uvB.uvw, orientation);
+                uvC.uvw = rotate(uvC.uvw, orientation);
 
                 // Shift texture triangles to world space
-                uvA.xyz += pos;
-                uvB.xyz += pos;
-                uvC.xyz += pos;
+                uvA.uvw += pos;
+                uvB.uvw += pos;
+                uvC.uvw += pos;
 
                 // For vanilla UVs, the first 3 components are an integer position vector
-                if (hillskew == 1) {
-                    hillskew_vertex(uvA.xyz, hillskew, pos.y, plane);
-                    hillskew_vertex(uvB.xyz, hillskew, pos.y, plane);
-                    hillskew_vertex(uvC.xyz, hillskew, pos.y, plane);
+                if (hillskewFlags != HILLSKEW_NONE) {
+                    hillskew_vertex(uvA.uvw, hillskewFlags, pos.y, height, plane);
+                    hillskew_vertex(uvB.uvw, hillskewFlags, pos.y, height, plane);
+                    hillskew_vertex(uvC.uvw, hillskewFlags, pos.y, height, plane);
                 }
             }
         }

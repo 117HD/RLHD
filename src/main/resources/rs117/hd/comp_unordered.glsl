@@ -46,7 +46,7 @@ void main() {
     }
 
     uint ssboOffset = localId;
-    vert thisA, thisB, thisC;
+    VertexData thisA, thisB, thisC;
 
     // Grab triangle vertices from the correct buffer
     thisA = vb[offset + ssboOffset * 3    ];
@@ -65,9 +65,9 @@ void main() {
     vout[outOffset + myOffset * 3 + 2] = thisC;
 
     if (uvOffset < 0) {
-        uvout[outOffset + myOffset * 3]     = vec4(0, 0, 0, 0);
-        uvout[outOffset + myOffset * 3 + 1] = vec4(0, 0, 0, 0);
-        uvout[outOffset + myOffset * 3 + 2] = vec4(0, 0, 0, 0);
+        uvout[outOffset + myOffset * 3]     = UVData(vec3(0.0), 0);
+        uvout[outOffset + myOffset * 3 + 1] = UVData(vec3(0.0), 0);
+        uvout[outOffset + myOffset * 3 + 2] = UVData(vec3(0.0), 0);
     } else {
         uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
         uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];

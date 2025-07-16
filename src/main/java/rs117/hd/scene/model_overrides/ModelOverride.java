@@ -67,6 +67,7 @@ public class ModelOverride
 	public boolean hideHdShadowsInPvm = false;
 	public boolean castShadows = true;
 	public boolean receiveShadows = true;
+	public boolean terrainVertexSnap = false;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
@@ -193,6 +194,7 @@ public class ModelOverride
 			hideHdShadowsInPvm,
 			castShadows,
 			receiveShadows,
+			terrainVertexSnap,
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
 			inheritTileColorType,

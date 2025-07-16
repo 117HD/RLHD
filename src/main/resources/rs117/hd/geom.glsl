@@ -37,7 +37,8 @@ layout(triangle_strip, max_vertices = 3) out;
 
 in vec3 gPosition[3];
 in int gHsl[3];
-in vec4 gUv[3];
+in vec3 gUv[3];
+in int gMaterialData[3];
 in vec4 gNormal[3];
 
 flat out ivec3 vHsl;
@@ -60,9 +61,9 @@ void main() {
     // One of the many wonders of Apple software...
     for (int i = 0; i < 3; i++) {
         vHsl[i] = gHsl[i];
-        vUv[i] = gUv[i].xyz;
+        vUv[i] = gUv[i];
         // CAUTION: only 24-bit ints can be stored safely as floats
-        vMaterialData[i] = int(gUv[i].w);
+        vMaterialData[i] = gMaterialData[i];
         vTerrainData[i] = int(gNormal[i].w);
     }
 
