@@ -78,6 +78,10 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
+	// Water reflection texture height
+	public boolean hasWater;
+	public int waterHeight;
+
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();

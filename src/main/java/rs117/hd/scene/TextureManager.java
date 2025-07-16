@@ -24,6 +24,7 @@
  */
 package rs117.hd.scene;
 
+import com.google.common.base.Stopwatch;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -88,8 +89,8 @@ public class TextureManager {
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
-	private int textureArray;
-	private int textureSize;
+	public int textureArray;
+	public int textureSize;
 	private MaterialUniforms uboMaterials;
 	private final WaterTypeUniforms uboWaterTypes = new WaterTypeUniforms();
 
@@ -189,6 +190,8 @@ public class TextureManager {
 		if (textureArray != 0)
 			return;
 
+		Stopwatch stopwatch = Stopwatch.createStarted();
+
 		assert vanillaTexturesAvailable();
 		var textureProvider = client.getTextureProvider();
 		Texture[] vanillaTextures = textureProvider.getTextures();
@@ -247,7 +250,7 @@ public class TextureManager {
 
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		setAnisotropicFilteringLevel();
+		setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
 
 		log.debug("Allocated {}x{} texture array with {} layers", textureSize, textureSize, textureLayers.size());
 
@@ -271,7 +274,7 @@ public class TextureManager {
 			BufferedImage image = null;
 			// Check if HD provides a texture for the material
 			if (material != Material.VANILLA) {
-				image = loadTextureImage(material);
+				image = loadTextureImage(material.name().toLowerCase());
 				if (image == null && material.vanillaTextureIndex == -1) {
 					log.warn("No texture found for material: {}", material);
 					continue;
@@ -349,10 +352,11 @@ public class TextureManager {
 		vanillaTextureIndexToTextureLayer = null;
 		textureProvider.setBrightness(vanillaBrightness);
 		glActiveTexture(TEXTURE_UNIT_UI);
+
+		log.debug("Texture load time: {}", stopwatch);
 	}
 
-	private BufferedImage loadTextureImage(Material material) {
-		String textureName = material.name().toLowerCase();
+	public BufferedImage loadTextureImage(String textureName) {
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
 			ResourcePath path = TEXTURE_PATH.resolve(textureName + "." + ext);
 			try {
@@ -387,28 +391,30 @@ public class TextureManager {
 		);
 	}
 
-	private void setAnisotropicFilteringLevel() {
-		int level = config.anisotropicFilteringLevel();
+	public void setAnisotropicFilteringAndMipMapping(int target, float level) {
+		setAnisotropicFilteringLevel(target, level);
 		if (level == 0) {
-			//level = 0 means no mipmaps and no anisotropic filtering
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			// level = 0 means no mipmaps and no anisotropic filtering
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		} else {
 			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
 			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
 			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
 			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
 			// that are very noticeable on terrain
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
+	}
 
-		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
-			final float maxSamples = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-			//Clamp from 1 to max GL says it supports.
-			final float anisoLevel = Math.max(1, Math.min(maxSamples, level));
-			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoLevel);
-		}
+	public void setAnisotropicFilteringLevel(int target, float level) {
+		if (!HdPlugin.GL_CAPS.GL_EXT_texture_filter_anisotropic)
+			return;
+
+		float max = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+		level = HDUtils.clamp(level, 1, max);
+		glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);
 	}
 
 	private void updateMaterialUniforms() {

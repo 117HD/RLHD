@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
+#pragma once
 #include utils/constants.glsl
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
@@ -39,7 +39,7 @@ float fetchShadowTexel(vec2 uv, float fragDepth) {
     #endif
 }
 
-float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float lightDotNormals) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
@@ -88,5 +88,5 @@ float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float l
     return shadow * (1 - fadeOut);
 }
 #else
-#define sampleShadowMap(fragPos, waterTypeIndex, distortion, lightDotNormals) 0
+#define sampleShadowMap(fragPos, distortion, lightDotNormals) 0
 #endif
