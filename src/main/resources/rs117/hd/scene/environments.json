@@ -783,7 +783,8 @@
     "fogDepth": 40,
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3,
-    "windStrength": 17
+    "windSpeed": 17.5,
+    "windStrength": 60
   },
   {
     "area": "FREMENNIK_ISLES_MIDDLE",
@@ -791,9 +792,10 @@
     "directionalStrength": 4,
     "sunAngles": [ 52, 235 ],
     "fogDepth": 25,
-    "windStrength": 100,
+    "windStrength": 85,
+    "windCeiling": 400,
     "windAngle": 45,
-    "windSpeed": 45
+    "windSpeed": 22.5
   },
   {
     "area": "NEITIZNOT",
@@ -801,9 +803,10 @@
     "directionalStrength": 4,
     "sunAngles": [ 52, 235 ],
     "fogDepth": 15,
-    "windStrength": 80,
+    "windStrength": 85,
+    "windCeiling": 400,
     "windAngle": 45,
-    "windSpeed": 45
+    "windSpeed": 22.5
   },
   {
     "area": "JATIZSO",
@@ -814,7 +817,11 @@
     "fogColor": "#969ca2",
     "fogDepth": 40,
     "groundFogEnd": -400,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "windStrength": 85,
+    "windCeiling": 400,
+    "windAngle": 45,
+    "windSpeed": 22.5
   },
   {
     "area": "FREMENNIK_ISLES_FAR_NORTH",
@@ -825,7 +832,11 @@
     "fogColor": "#aebde0",
     "fogDepth": 60,
     "groundFogEnd": -800,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "windStrength": 85,
+    "windCeiling": 400,
+    "windAngle": 45,
+    "windSpeed": 22.5
   },
   {
     "area": "FREMENNIK_ISLES_NORTH",
@@ -835,9 +846,10 @@
     "directionalStrength": 2,
     "fogColor": "#aebde0",
     "fogDepth": 50,
-    "windStrength": 130,
+    "windStrength": 85,
+    "windCeiling": 400,
     "windAngle": 45,
-    "windSpeed": 60
+    "windSpeed": 22.5
   },
   {
     "area": "LIGHTHOUSE_DUNGEON",
