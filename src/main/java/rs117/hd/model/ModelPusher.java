@@ -445,8 +445,9 @@ public class ModelPusher {
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_INDEX;
 		// The sign bit can't be used without shader changes to correctly unpack the material index
-		return (materialIndex & MAX_MATERIAL_INDEX) << 16
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 10
+		return (materialIndex & MAX_MATERIAL_INDEX) << 19
+			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 13
+		    | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 10
 			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 7
 		    | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5

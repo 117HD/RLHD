@@ -239,6 +239,12 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
+float getModelWindDisplacementMod(int vertexFlags) {
+    float modifiers[7] = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0};
+    int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
+    return modifiers[modifierIDx];
+}
+
 void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
     in vec3 vertA, in vec3 vertB, in vec3 vertC,
     in vec3 normA, in vec3 normB, in vec3 normC,
@@ -248,9 +254,10 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float strengthA = saturate(abs(vertA.y) / height);
-    float strengthB = saturate(abs(vertB.y) / height);
-    float strengthC = saturate(abs(vertC.y) / height);
+    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
+    float strengthA = saturate(abs(vertA.y) / height) * modelDisplacementMod;
+    float strengthB = saturate(abs(vertB.y) / height) * modelDisplacementMod;
+    float strengthC = saturate(abs(vertC.y) / height) * modelDisplacementMod;
 
     #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {

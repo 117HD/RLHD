@@ -7,8 +7,9 @@
 
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
-#define MATERIAL_INDEX_SHIFT 16
-#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 10
+#define MATERIAL_INDEX_SHIFT 19
+#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 13
+#define MATERIAL_FLAG_WIND_MODIFIER 10
 #define MATERIAL_FLAG_WIND_SWAYING 7
 #define MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING 6
 #define MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING 5

@@ -72,6 +72,7 @@ public class ModelOverride
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
+	public int windDisplacementModifier = 0;
 
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -121,6 +122,12 @@ public class ModelOverride
 			if (Props.DEVELOPMENT)
 				throw new IllegalStateException("Invalid windDisplacementMode");
 			windDisplacementMode = ModelOverride.NONE.windDisplacementMode;
+		}
+
+		if(windDisplacementModifier < -3 || windDisplacementModifier > 3) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid windDisplacementModifier (range is -3 to 3)");
+			windDisplacementModifier = Math.min(Math.max(windDisplacementModifier, -3), 3);
 		}
 
 		if (areas == null)
@@ -199,6 +206,7 @@ public class ModelOverride
 			tzHaarRecolorType,
 			inheritTileColorType,
 			windDisplacementMode,
+			windDisplacementModifier,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
