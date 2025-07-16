@@ -26,8 +26,10 @@
 
 #version 400
 
-#include utils/skybox.glsl
 #include uniforms/global.glsl
+
+#include utils/skybox.glsl
+#include utils/color_utils.glsl
 
 out vec4 FragColor;
 in vec2 quadPos;
@@ -37,5 +39,7 @@ void main()
     vec4 clip = vec4(quadPos, 1.0, 1.0);
     vec4 view = inverse(skyboxViewProj) * clip;
     vec3 viewDir = normalize(view.xyz / view.w);
-    FragColor = vec4(sampleSky(viewDir, fogColor), 1.0);
+    vec3 c = sampleSky(viewDir, fogColor);
+    c = linearToSrgb(c);
+    FragColor = vec4(c, 1.0);
 }
