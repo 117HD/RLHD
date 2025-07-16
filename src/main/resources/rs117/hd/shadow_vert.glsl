@@ -29,8 +29,9 @@
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in int vHsl;
-layout (location = 2) in vec4 vUv;
-layout (location = 3) in vec4 vNormal;
+layout (location = 2) in vec3 vUv;
+layout (location = 3) in int vMaterialData;
+layout (location = 4) in vec4 vNormal;
 
 #include utils/constants.glsl
 
@@ -51,12 +52,11 @@ layout (location = 3) in vec4 vNormal;
 #endif
 
 void main() {
-    int materialData = int(vUv.w);
     int terrainData = int(vNormal.w);
     int waterTypeIndex = terrainData >> 3 & 0x1F;
     float opacity = 1 - (vHsl >> 24 & 0xFF) / float(0xFF);
 
-    float opacityThreshold = float(materialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
+    float opacityThreshold = float(vMaterialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
     if (opacityThreshold == 0)
         opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
@@ -74,7 +74,7 @@ void main() {
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         gPosition = vPosition;
         gUv = vec3(vUv);
-        gMaterialData = materialData;
+        gMaterialData = vMaterialData;
         gCastShadow = shouldCastShadow;
         #if SHADOW_TRANSPARENCY
             gOpacity = opacity;

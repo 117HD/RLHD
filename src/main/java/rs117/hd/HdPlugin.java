@@ -1116,11 +1116,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
-		glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(2, 3, GL_FLOAT, false, 16, 0);
 
 		glEnableVertexAttribArray(3);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
+		glVertexAttribIPointer(3, 1, GL_INT, 16, 12);
+
+		glEnableVertexAttribArray(4);
 		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.id);
-		glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
 	}
 
 	private void destroyVaos() {

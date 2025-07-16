@@ -67,11 +67,18 @@ struct ModelInfo {
   int z;        // scene position z
 };
 
-struct vert {
+struct VertexData {
   float x;
   float y;
   float z;
   int ahsl;
+};
+
+struct UVData {
+    float u;
+    float v;
+    float w;
+    int materialData;
 };
 
 struct ObjectWindSample {
