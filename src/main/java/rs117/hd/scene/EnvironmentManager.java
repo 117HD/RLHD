@@ -36,8 +36,12 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.opengl.SkyboxBuffer;
 import rs117.hd.scene.environments.Environment;
+import rs117.hd.scene.skybox.SkyboxConfig;
+import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -66,6 +70,12 @@ public class EnvironmentManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private TextureManager textureManager;
+
+	@Inject
+	private SkyboxManager skyboxManager;
 
 	@Inject
 	private HdPluginConfig config;
@@ -155,6 +165,11 @@ public class EnvironmentManager {
 	private float startWindCeiling = 0f;
 	public float currentWindCeiling = 0f;
 	private float targetWindCeiling = 0f;
+
+	private SkyboxConfig.SkyboxEntry targetSkybox = null;
+	private SkyboxConfig.SkyboxEntry currentSkybox = null;
+
+	private float currentskyboxBlend = 0f;
 
 	private boolean lightningEnabled = false;
 	private boolean forceNextTransition = false;
@@ -253,6 +268,11 @@ public class EnvironmentManager {
 			// Always write fog and water color, since they're affected by lightning
 			currentFogColor = targetFogColor;
 			currentWaterColor = targetWaterColor;
+			if(currentskyboxBlend >= 1) {
+				currentSkybox = targetSkybox;
+				targetSkybox = null;
+				currentskyboxBlend = 0.0f;
+			}
 		} else {
 			// interpolate between start and target values
 			float t = clamp((float) (plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION, 0, 1);
@@ -278,6 +298,7 @@ public class EnvironmentManager {
 			currentWindSpeed = hermite(startWindSpeed, targetWindSpeed, t);
 			currentWindStrength = hermite(startWindStrength, targetWindStrength, t);
 			currentWindCeiling = hermite(startWindCeiling, targetWindCeiling, t);
+			currentskyboxBlend = t;
 		}
 
 		updateLightning();
@@ -361,6 +382,7 @@ public class EnvironmentManager {
 		targetWindSpeed = env.windSpeed;
 		targetWindStrength = env.windStrength;
 		targetWindCeiling = env.windCeiling;
+		targetSkybox = skyboxManager.getSkybox(env.skybox);
 
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
@@ -487,5 +509,39 @@ public class EnvironmentManager {
 
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
+	}
+
+	public boolean updateSkyboxUniformBuffer(SkyboxBuffer buffer, float[] projectionMatrix) {
+		SkyboxConfig.SkyboxEntry overrideEntry = null;
+		if (config.renderSkybox()) {
+			overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
+			if (overrideEntry != null) {
+				int overrideIndex = skyboxManager.getSkyboxTextureByDir(overrideEntry.getDir());
+				buffer.activeSkybox.copy(overrideIndex, overrideEntry);
+				buffer.nextSkybox.copy(-1, null);
+			} else {
+				writeSkyboxConfig(buffer.activeSkybox, currentSkybox);
+				writeSkyboxConfig(buffer.nextSkybox, targetSkybox);
+			}
+		} else {
+			buffer.activeSkybox.copy(-1, null);
+			buffer.activeSkybox.copy(-1, null);
+		}
+
+		float[] viewProj = Mat4.identity();
+		Mat4.mul(viewProj, projectionMatrix);
+		Mat4.mul(viewProj, Mat4.translate(plugin.cameraPosition[0], plugin.cameraPosition[1], plugin.cameraPosition[2]));
+
+		buffer.skyboxBlend.set(currentskyboxBlend);
+		buffer.skyboxOffset.set(HdPlugin.NEAR_PLANE * 100.0f);
+		buffer.skyboxViewProj.set(viewProj);
+		buffer.upload();
+
+		return currentSkybox != null || targetSkybox != null || overrideEntry != null;
+	}
+
+	private void writeSkyboxConfig(SkyboxBuffer.SkyboxConfigStruct uniformStruct, SkyboxConfig.SkyboxEntry skybox) {
+		int index = (skybox != null) ? skyboxManager.getSkyboxTextureByDir(skybox.getDir()) : -1;
+		uniformStruct.copy(index, skybox);
 	}
 }
