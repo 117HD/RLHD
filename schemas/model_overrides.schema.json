@@ -129,6 +129,10 @@
         "type": "boolean",
         "description": "Whether normals should always point directly up. Defaults to false."
       },
+      "terrainVertexSnap": {
+        "type": "boolean",
+        "description": "Whether the bottom most vertices of the model should snap to the tile height. Defaults to false."
+      },
       "hideVanillaShadows": {
         "type": "boolean",
         "description": "Whether the model has fake shadows which should be removed. Defaults to false."
