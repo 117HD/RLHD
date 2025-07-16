@@ -6,10 +6,10 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
+import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static org.lwjgl.opengl.GL43C.*;
 
 @Slf4j
 @Singleton
@@ -105,12 +105,12 @@ public class FrameTimer {
 	}
 
 	public void begin(Timer timer) {
-		if (log.isDebugEnabled() && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
+		if (log.isDebugEnabled() && timer.gpuDebugGroup && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.contains(timer)) {
 				log.warn("The debug group {} is already on the stack", timer.name());
 			} else {
 				glDebugGroupStack.push(timer);
-				glPushDebugGroup(GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
+				GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
 			}
 		}
 
@@ -129,12 +129,12 @@ public class FrameTimer {
 	}
 
 	public void end(Timer timer) {
-		if (log.isDebugEnabled() && timer.gpuDebugGroup && plugin.glCaps.OpenGL43) {
+		if (log.isDebugEnabled() && timer.gpuDebugGroup && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.peek() != timer) {
 				log.warn("The debug group {} was popped out of order", timer.name());
 			} else {
 				glDebugGroupStack.pop();
-				glPopDebugGroup();
+				GL43C.glPopDebugGroup();
 			}
 		}
 
@@ -158,10 +158,10 @@ public class FrameTimer {
 	}
 
 	public void endFrameAndReset() {
-		if (plugin.glCaps.OpenGL43) {
+		if (HdPlugin.GL_CAPS.OpenGL43) {
 			while (!glDebugGroupStack.isEmpty()) {
 				log.warn("The debug group {} was never popped", glDebugGroupStack.pop().name());
-				glPopDebugGroup();
+				GL43C.glPopDebugGroup();
 			}
 		}
 

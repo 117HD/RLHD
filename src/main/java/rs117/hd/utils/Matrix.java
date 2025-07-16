@@ -4,6 +4,8 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class Matrix {
+	private static final float EPS = 1e-7f;
+
 	/**
 	 * Utility class for working with column-major m x n matrices.
 	 */
@@ -18,7 +20,7 @@ public class Matrix {
 		for (int j = 0; j < square; j++) {
 			for (int i = j; i < rows; i++) {
 				var f = m[j * rows + i];
-				if (f == 0)
+				if (Math.abs(f) < EPS)
 					continue;
 
 				// Swap the row into the right position
@@ -31,18 +33,20 @@ public class Matrix {
 				}
 
 				// Divide by the first entry of the row
-				f = 1 / f;
-				for (int k = 0; k < rows * columns; k += rows)
-					m[k + j] *= f;
+				if (Math.abs(f - 1) > EPS) {
+					f = 1 / f;
+					for (int k = 0; k < rows * columns; k += rows)
+						m[k + j] *= f;
+				}
 
-				// Add or subtract multiples to reduce other rows
+				// Reduce other rows
 				for (int r = 0; r < rows; r++) {
 					if (r == j)
 						continue;
 					var g = m[j * rows + r];
-					if (g != 0)
+					if (Math.abs(g) > EPS)
 						for (int k = 0; k < rows * columns; k += rows)
-							m[k + r] += -g * m[k + j];
+							m[k + r] -= g * m[k + j];
 				}
 
 				continue columns;
