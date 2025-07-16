@@ -36252,6 +36252,19 @@
     ]
   },
   {
+    "description": "Fortis - wall bricks - Decoration",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 222,
+    "objectIds": [
+      "WALLKIT_FORTIS02_BRICKS01",
+      "WALLKIT_FORTIS03_BRICKS01",
+      "WALLKIT_FORTIS02_BRICKS02",
+      "WALLKIT_FORTIS03_BRICKS02"
+    ]
+  },
+  {
     "description": "Fortis - wooden plank floor attached to brick",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
@@ -36405,6 +36418,111 @@
         "uvType": "BOX",
         "uvScale": 0.8
       }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Marble - Temple and aquaduct walls",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_CIVITAS01_AQUEDUCT01",
+      "WALLKIT_CIVITAS02_AQUEDUCT01",
+      "WALLKIT_CIVITAS01_AQUEDUCT02",
+      "WALLKIT_CIVITAS03_AQUEDUCT01",
+      "ARCH_CIVITAS03_AQUEDUCT01",
+      "ARCH_CIVITAS02_AQUEDUCT01_T_JUNCTION01",
+      "ARCH_CIVITAS02_AQUEDUCT01_T_JUNCTION02",
+      "ARCH_CIVITAS03_AQUEDUCT01_T_JUNCTION01",
+      "ARCH_CIVITAS03_AQUEDUCT01_T_JUNCTION02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dark bricks",
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Marble - Temple and aquaduct walls with moss",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_CIVITAS02_AQUEDUCT01_DAMAGED02",
+      "WALLKIT_CIVITAS01_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_CIVITAS02_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_CIVITAS01_AQUEDUCT01_DAMAGED02",
+      "WALLKIT_CIVITAS01_AQUEDUCT01_DAMAGED03",
+      "ARCH_CIVITAS02_AQUEDUCT01",
+      "ARCH_CIVITAS02_AQUEDUCT01_FOLIAGE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dark bricks",
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "MOss",
+        "colors": "h >= 12",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Marble - Brick - Temple and aquaduct roof",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_CIVITAS04_AQUEDUCT01",
+      "WALLKIT_CIVITAS04_AQUEDUCT02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dark bricks",
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Red Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      }
+    ]
+  },
+  {
+    "description": "Fortis  Marble - Temple and aquaduct roof tiles",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_CIVITAS04_AQUEDUCT02_M",
+      "WALLKIT_CIVITAS04_AQUEDUCT03",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_ALT",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_ALT_M",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_CORNER01",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_CORNER02",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_STRAIGHT01"
     ]
   },
   {
@@ -46439,14 +46557,16 @@
   },
   {
     "description": "Aldarin - Civitas - Stone - Pillars - White",
-    "baseMaterial": "ROCK_3_SMOOTH",
+    "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 179,
     "objectIds": [
       "PILLAR_CIVITAS01_CITY04_LOWER01",
       "PILLAR_CIVITAS01_CITY04_HIGHER01",
-      "PILLAR_CIVITAS01_CITY04"
+      "PILLAR_CIVITAS01_CITY04",
+      "PILLAR_CIVITAS01_CITY04_LOWER02",
+      "PILLAR_CIVITAS01_CITY04_HIGHER02"
 
     ]
   },
@@ -46569,14 +46689,14 @@
     "uvScale": 0.4,
     "uvOrientation": 343,
     "objectIds": [
-
       "ALDARIN_POTTED01_PALM01",
       "ALDARIN_POTTED01_PALM02",
       "ALDARIN_POTTED01_PALM03",
       "ALDARIN_POTTED01_FAN01",
       "ALDARIN_POTTED01_FAN02",
       "ALDARIN_POTTED01_FAN03",
-      "CIVITAS_POTTED01_FAN03"
+      "CIVITAS_POTTED01_FAN03",
+      "CIVITAS_POTTED01_FAN04"
     ],
     "colorOverrides": [
       {
