@@ -27842,7 +27842,6 @@
     "description": "Perilous Moons Hanging Vines - Remove Shadows",
     "baseMaterial": "PLANT_GRUNGE_1",
     "windDisplacementMode": "VERTEX",
-
     "castShadows": false,
     "objectIds": [
       "ROR_VINE01_HANGING01",
