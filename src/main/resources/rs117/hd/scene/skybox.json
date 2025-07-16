@@ -16,7 +16,8 @@
     {
       "name": "rs3_magicblue",
       "dir": "rs3_magicblue",
-      "rotation":260.3
+      "rotation":260.3,
+      "rotationSpeed": 0.056
     },
     {
       "name": "rs3_magicblue_post",

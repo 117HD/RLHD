@@ -1,6 +1,7 @@
 #pragma once
 
 #include uniforms/skybox.glsl
+#include uniforms/global.glsl
 #include utils/color_utils.glsl
 
 bool canSampleSky() {
@@ -35,7 +36,9 @@ vec3 sampleSky(vec3 viewDir, vec3 baseColor) {
     vec3 skyboxDir = viewDir;
     skyboxDir.y = -viewDir.y;
 
-    skyboxDir = rotateSkyDirection(skyboxDir, activeSkybox.rotation);
+
+    float dynamicRotation = activeSkybox.rotation + elapsedTime * activeSkybox.rotationSpeed;
+    skyboxDir = rotateSkyDirection(skyboxDir, dynamicRotation);
 
     // Convert baseColor from sRGB to linear (fogColor is usually sRGB)
     vec3 baseLinear = srgbToLinear(baseColor);
