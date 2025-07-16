@@ -9,6 +9,7 @@ public class GlobalUniforms extends UniformBuffer {
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
+	public Property sceneAABB = addProperty(PropertyType.IVec4, "sceneAABB");
 
 	public Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
 	public Property gammaCorrection = addProperty(PropertyType.Float, "gammaCorrection");

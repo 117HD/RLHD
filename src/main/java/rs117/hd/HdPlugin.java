@@ -411,7 +411,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportHeight;
 
 	private int uniSceneSkyboxTexture;
-	private int uniSceneAABB;
 
 	private int uniShadowMap;
 	private int uniShadowBlockGlobals;
@@ -953,7 +952,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initUniforms() {
 		uniShadowMap = glGetUniformLocation(glSceneProgram, "shadowMap");
 		uniSceneSkyboxTexture = glGetUniformLocation(glSceneProgram, "skyboxArray");
-		uniSceneAABB = glGetUniformLocation(glSceneProgram, "sceneAABB");
 		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
 
 		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
@@ -2121,7 +2119,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.drawDistance.set((float) getDrawDistance());
 			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
-			glUniform4iv(uniSceneAABB, sceneMinMaxXY);
+			uboGlobal.sceneAABB.set(sceneMinMaxXY);
 
 			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
 			float lightBrightnessMultiplier = 0.8f;

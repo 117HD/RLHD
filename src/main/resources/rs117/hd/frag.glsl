@@ -36,9 +36,6 @@
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
 
-uniform ivec4 sceneAABB;
-// general HD settings
-
 flat in ivec3 vHsl;
 flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
