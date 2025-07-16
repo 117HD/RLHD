@@ -36,7 +36,7 @@
 #define HILLSKEW_NONE 0
 #define HILLSKEW_MODEL 1
 #define HILLSKEW_TILE_SNAPPING 2
-#define HILLSKEW_TILE_SNAPPING_BLEND 0.1f
+#define HILLSKEW_TILE_SNAPPING_BLEND 0.35f
 
 float3 to_screen(__constant struct ComputeUniforms *uni, float3 vertex);
 float4 rotate_vertex(float4 vector, int orientation);
