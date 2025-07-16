@@ -37068,24 +37068,6 @@
       {
         "description": "Wooden Post",
         "baseMaterial": "WOOD_GRAIN_3",
-        "colors": "h == 5 && s > 0 && s < 3",
-        "uvType": "BOX",
-        "uvScale": 0.8
-      }
-    ],
-    "objectIds": [
-      "WALLKIT_CIVITAS03_MIDDLE02"
-    ]
-  },
-  {
-    "description": "Fortis Masonry wall with red shifted wooden post",
-    "baseMaterial": "MARBLE_2_GLOSS",
-    "uvType": "BOX",
-    "uvScale": 0.8,
-    "colorOverrides": [
-      {
-        "description": "Wooden Post",
-        "baseMaterial": "WOOD_GRAIN_3",
         "colors": "h == 3 && s > 0 && s < 3",
         "uvType": "BOX",
         "uvScale": 0.8
