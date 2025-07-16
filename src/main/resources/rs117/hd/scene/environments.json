@@ -611,7 +611,7 @@
     "fogDepth": 50,
     "windStrength": 66,
     "windAngle": 270,
-    "windSpeed": 30
+    "windSpeed": 20
   },
   {
     "area": "KHARIDIAN_DESERT_MID",
@@ -623,7 +623,7 @@
     "fogDepth": 40,
     "windStrength": 28,
     "windAngle": 270,
-    "windSpeed": 20
+    "windSpeed": 18
   },
   {
     "area": "KHARIDIAN_DESERT",

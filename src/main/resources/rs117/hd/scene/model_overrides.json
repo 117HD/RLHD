@@ -15167,7 +15167,6 @@
   {
     "description": "Kharidian Barrel Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
-    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS5"
     ]
