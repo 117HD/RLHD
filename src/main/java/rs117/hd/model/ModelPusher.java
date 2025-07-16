@@ -340,34 +340,32 @@ public class ModelPusher {
 				}
 
 				ModelOverride faceOverride = modelOverride;
-				if (modelOverride.materialOverrides != null) {
-					var override = modelOverride.materialOverrides.get(material);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
-					}
-				}
-
-				// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-				if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
-					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
-					for (var override : modelOverride.colorOverrides) {
-						if (override.ahslCondition.test(ahsl)) {
+				if (!disableTextures) {
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
 							faceOverride = override;
-							material = faceOverride.baseMaterial;
-							break;
+							material = faceOverride.textureMaterial;
+						}
+					}
+
+					// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
+					if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
+						int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
+						for (var override : modelOverride.colorOverrides) {
+							if (override.ahslCondition.test(ahsl)) {
+								faceOverride = override;
+								material = faceOverride.baseMaterial;
+								break;
+							}
 						}
 					}
 				}
 
 				if (material != Material.NONE) {
-					if (disableTextures && material.hasTexture) {
-						material = Material.NONE;
-					} else {
-						uvType = faceOverride.uvType;
-						if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
-							uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
-					}
+					uvType = faceOverride.uvType;
+					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
+						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
 				int materialData = packMaterialData(material, textureId, faceOverride, uvType, false);

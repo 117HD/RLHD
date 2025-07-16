@@ -657,6 +657,7 @@ public enum Material {
 	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
 	LEAF_VEINS,
 	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),
+	LEAF_VEINS_DARK(LEAF_VEINS, p -> p.setBrightness(0.75f)),
 	LEAVES_1_N,
 	LEAVES_1(p -> p
 		.setNormalMap(LEAVES_1_N)
@@ -696,9 +697,7 @@ public enum Material {
 		.setSpecular(0.3f, 25)
 	),
 	WOOD_GRAIN_3_LIGHT(WOOD_GRAIN_3, p -> p.setBrightness(1.6f)),
-	DOCK_FENCE,
-	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
-
+	WOOD_GRAIN_3_DARK(WOOD_GRAIN_3, p -> p.setBrightness(0.7f)),
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(plugin -> plugin.config.hdInfernalTexture(), INFERNAL_CAPE)
 		.setUnlit(true)

@@ -24,7 +24,7 @@
  */
 #pragma once
 
-#define PI 3.1415926535897932384626433832795f
+#define PI 3.14159265f // max 32-bit float precision
 #define UNIT PI / 1024.0f
 
 #define WIND_DISPLACEMENT_DISABLED 0

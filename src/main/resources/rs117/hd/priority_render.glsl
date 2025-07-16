@@ -224,7 +224,7 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
 
 vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {
     vec2 offset = vertPos - characterPos.xy;
-    float offsetLen = abs(length(offset));
+    float offsetLen = length(offset);
 
     if (offsetLen >= characterPos.z)
         return vec3(0);
