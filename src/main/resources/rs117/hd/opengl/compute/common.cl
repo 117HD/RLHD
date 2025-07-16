@@ -34,8 +34,8 @@
 #define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
 
 #define HILLSKEW_NONE 0
-#define HILLSKEW_MODEL 1 << 1
-#define HILLSKEW_TILE_SNAPPING 1 << 2
+#define HILLSKEW_MODEL 1
+#define HILLSKEW_TILE_SNAPPING 2
 #define HILLSKEW_TILE_SNAPPING_BLEND 0.1f
 
 float3 to_screen(__constant struct ComputeUniforms *uni, float3 vertex);

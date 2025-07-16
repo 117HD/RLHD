@@ -274,9 +274,8 @@ int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y) {
 
 void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskewMode, int y, float height, int plane) {
     float heightFrac = fabs((*v).y - y) / height;
-    if(hillskewMode == HILLSKEW_TILE_SNAPPING && heightFrac > HILLSKEW_TILE_SNAPPING_BLEND) {
-        return; // Only apply tile snapping, which will only be applied to verticies close to the bottom of the model
-    }
+    if (hillskewMode == HILLSKEW_TILE_SNAPPING && heightFrac > HILLSKEW_TILE_SNAPPING_BLEND)
+        return; // Only apply tile snapping, which will only be applied to vertices close to the bottom of the model
 
     int x = (int) (*v).x;
     int z = (int) (*v).z;
@@ -288,9 +287,9 @@ void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskewM
     int h2 = (px * tile_height(tileHeightMap, plane, sx + 1, sz + 1) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz + 1)) >> 7;
     int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
 
-     if((hillskewMode & HILLSKEW_TILE_SNAPPING) != 0 && heightFrac <= HILLSKEW_TILE_SNAPPING_BLEND) {
+    if ((hillskewMode & HILLSKEW_TILE_SNAPPING) != 0 && heightFrac <= HILLSKEW_TILE_SNAPPING_BLEND) {
         (*v).y = mix(h3, (*v).y, heightFrac / HILLSKEW_TILE_SNAPPING_BLEND); // Blend tile snapping
-    } else if ((hillskewMode & HILLSKEW_MODEL) != 0) {
+    } else {
         (*v).y += h3 - y; // Hillskew the whole model
     }
 }
@@ -383,9 +382,9 @@ void applyWindDisplacement(
         float2 snappedB = (floor(vertB.xz / VertexSnapping + 0.5f) * VertexSnapping);
         float2 snappedC = (floor(vertC.xz / VertexSnapping + 0.5f) * VertexSnapping);
 
-        float windNoiseA = mix(-0.5f, 0.5f, noise((snappedA + (float2)(uni->windOffset, 0.0f)) * (float)WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseB = mix(-0.5f, 0.5f, noise((snappedB + (float2)(uni->windOffset, 0.0f)) * (float)WIND_DISPLACEMENT_NOISE_RESOLUTION));
-        float windNoiseC = mix(-0.5f, 0.5f, noise((snappedC + (float2)(uni->windOffset, 0.0f)) * (float)WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseA = mix(-0.5f, 0.5f, noise((snappedA + (float2)(uni->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseB = mix(-0.5f, 0.5f, noise((snappedB + (float2)(uni->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
+        float windNoiseC = mix(-0.5f, 0.5f, noise((snappedC + (float2)(uni->windOffset, 0.0f)) * WIND_DISPLACEMENT_NOISE_RESOLUTION));
 
         if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND) {
             const float minDist = 50.0f;
@@ -544,11 +543,10 @@ void sort_and_insert(
 
 
     // apply hillskew
-    int plane = (flags >> 24) & 3;
-    int hillskewFlags = ((flags >> 26) & 1) != 0 ? HILLSKEW_MODEL : HILLSKEW_NONE;
-    if((vertexFlags >> MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING & 1) == 1) {
+    int plane = flags >> 24 & 3;
+    int hillskewFlags = flags >> 26 & 1;
+    if ((vertexFlags >> MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING & 1) == 1)
         hillskewFlags |= HILLSKEW_TILE_SNAPPING;
-    }
     if (hillskewFlags != HILLSKEW_NONE) {
         hillskew_vertex(tileHeightMap, &vertA, hillskewFlags, modelY, height, plane);
         hillskew_vertex(tileHeightMap, &vertB, hillskewFlags, modelY, height, plane);

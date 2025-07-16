@@ -62,7 +62,6 @@ void main() {
     for (int i = 0; i < 3; i++) {
         vHsl[i] = gHsl[i];
         vUv[i] = gUv[i];
-        // CAUTION: only 24-bit ints can be stored safely as floats
         vMaterialData[i] = gMaterialData[i];
         vTerrainData[i] = int(gNormal[i].w);
     }

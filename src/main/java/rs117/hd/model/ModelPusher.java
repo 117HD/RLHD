@@ -70,7 +70,7 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_INDEX = (1 << 16) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 15) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
@@ -444,6 +444,7 @@ public class ModelPusher {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_INDEX;
+		// The sign bit can't be used without shader changes to correctly unpack the material index
 		return (materialIndex & MAX_MATERIAL_INDEX) << 16
 			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 10
 			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 7
