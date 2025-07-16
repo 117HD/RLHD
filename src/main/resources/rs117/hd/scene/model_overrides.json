@@ -1101,6 +1101,7 @@
     "objectIds": [
       "TREE2",
       "TREE3",
+      "TREE4",
       "LEPRECHAUNTREE",
       "NEWBIETREE2",
       "WOM_TREE",
@@ -1518,6 +1519,7 @@
   },
   {
     "description": "Objects - Tree - Mahogany",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "BARK_STONEPINE",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -1552,12 +1554,14 @@
   {
     "description": "Objects - Tree - Teak",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.66,
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h > 12",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.2,
         "uvOrientation": 42,
@@ -1566,10 +1570,17 @@
     ],
     "objectIds": [
       "TEAKTREE",
-      "TEAK_STUMP",
-      "CHICKEN_CRATE",
       "PRIF_TEAKTREE",
       "TEAKTREE_UPDATE"
+    ]
+  },
+  {
+    "description": "Objects - Tree - Teak - Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "TEAK_STUMP"
     ]
   },
   {
@@ -1640,7 +1651,13 @@
       "SOTE_FLOWERS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "materialOverrides": {
+      "WILLOW_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "WILLOW_LEAVES"
+      }
+    }
   },
   {
     "description": "Tirannwn - Lord Crwys Tree",
@@ -1666,7 +1683,9 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT"
       }
     ]
   },
@@ -1724,6 +1743,7 @@
         "colors": "h == 12",
         "baseMaterial": "PLANT_GRUNGE_1",
         "uvScale": 0.5,
+        "upwardsNormals": true,
         "uvType": "MODEL_XZ",
         "uvOrientation": 256
       },
@@ -2109,6 +2129,8 @@
     "objectIds": [
       "DAISYS",
       "ONION",
+      "AVIUM_ONION01",
+      "AVIUM_ONION02",
       "RAREFLOWER_BLUE",
       "RAREFLOWERS_BLUE",
       "BLUEFLOWER",
@@ -2118,6 +2140,7 @@
       "RAREFLOWER_1",
       "RAREFLOWERS_1",
       "FLOWERBED1",
+      "FLOWERBED_RED",
       "FLOWERBED_YELLOW",
       "RAREFLOWER_YELLOW",
       "RAREFLOWERS_YELLOW",
@@ -2129,9 +2152,6 @@
       "BULLRUSHES4",
       "BULLRUSHES5",
       "THISTLE",
-      "WATERLILY1",
-      "WATERLILY2",
-      "WATERLILY3",
       "POTATO",
       "FAI_VARROCK_WHEAT_CORNER",
       "FAI_VARROCK_WHEAT_SMALL",
@@ -2145,23 +2165,83 @@
       "NETTLES6",
       "HEATHER",
       "HEATHER2",
-      "HEATHER3"
+      "HEATHER3",
+      "FLOWER_SUNFLOWER_FULL01",
+      "FLOWER_SUNFLOWER_EDGE01",
+      "FLOWER_SUNFLOWER_EDGE01_RED",
+      "FLOWER_SUNFLOWER_FULL01_RED",
+      "FAIRY2_LITTLE_FLOWERS_4",
+      "FAIRY2_LITTLE_FLOWERS_3",
+      "FAIRY2_LITTLE_FLOWERS_2",
+      "FAIRY2_LITTLE_FLOWERS_1",
+      "WILDY_HUB_FLOWERS_04",
+      "WILDY_HUB_FLOWERS_03",
+      "WILDY_HUB_FLOWERS_02",
+      "WILDY_HUB_FLOWERS_01",
+      "JUNGLEFLOWER",
+      "MM_JUNGLE_PLANT_FLOWER",
+      "FAI_VARROCK_FLOWERBED_CORNER_BLUE",
+      "FAI_VARROCK_FLOWERBED_BLUE",
+      "PRIDE22_FLOWER_ORANGE_T3",
+      "PRIDE22_FLOWER_RED_T1",
+      "PRIDE22_FLOWER_RED_T3",
+      "PRIDE22_FLOWER_RED_T2",
+      "PRIDE22_FLOWER_ORANGE_T1",
+      "PRIDE22_FLOWER_ORANGE_T2",
+      "PRIDE22_FLOWER_YELLOW_T1",
+      "PRIDE22_FLOWER_YELLOW_T3",
+      "PRIDE22_FLOWER_YELLOW_T2",
+      "PRIDE22_FLOWER_GREEN_T1",
+      "PRIDE22_FLOWER_GREEN_T3",
+      "PRIDE22_FLOWER_GREEN_T2",
+      "PRIDE22_FLOWER_INDIGO_T1",
+      "PRIDE22_FLOWER_INDIGO_T3",
+      "PRIDE22_FLOWER_INDIGO_T2",
+      "PRIDE22_FLOWER_VIOLET_T3",
+      "PRIDE22_FLOWER_VIOLET_T1",
+      "PRIDE22_FLOWER_VIOLET_T2",
+      "MM_JUNGLE_PLANT_ORCHID"
     ]
   },
   {
-    "description": "Grass that should cast shadows",
+    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "VERTEX",
+    "objectIds": [
+      "FAIRY2_BULLRUSH_FALLOFF",
+      "FAIRY2_BULLRUSH_SMALL",
+      "FAIRY2_BULLRUSH_TILE",
+      "FAIRY2_BULLRUSH_LARGE",
+      "FAI_VARROCK_ROSES_EDGE",
+      "FAI_VARROCK_ROSEBUSH",
+      "FAI_VARROCK_ROSES_EDGE_SHAPE_8",
+      "FAI_VARROCK_ROSES_EDGE_B_SHAPE_8",
+      "FAI_VARROCK_ROSES_EDGE_B",
+      "AVIUM_CORN01",
+      "AVIUM_CORN02",
+      "WATERLILY1",
+      "WATERLILY2",
+      "WATERLILY3"
+    ]
+  },
+  {
+    "description": "Hunter Grass",
     "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "OBJECT",
     "flatNormals": true,
     "objectIds": [
-      "MM_JUNGLE_GRASS1",
-      "MM_JUNGLE_GRASS2",
-      "MM_JUNGLE_GRASS3",
       "HUNTING_LONG_JUNGLE_GRASS1",
       "HUNTING_LONG_JUNGLE_GRASS2",
       "HUNTING_LONG_JUNGLE_GRASS3",
       "HUNTING_JUNGLE_GRASS1",
       "HUNTING_JUNGLE_GRASS2",
-      "HUNTING_JUNGLE_GRASS3",
+      "HUNTING_JUNGLE_GRASS3"
+    ]
+  },
+  {
+    "description": "Hunter Grass with Vines",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
       "HUNTING_GREENVINE_STRAIGHT",
       "HUNTING_GREENVINE_CORNER",
       "HUNTING_GREENVINE_JUNCTION",
@@ -2170,11 +2250,16 @@
       "HUNTING_GREENVINE_DIAG3",
       "HUNTING_GREENVINE_DIAGFILLER",
       "HUNTING_GREENVINE_END",
-      "HUNTING_GREENVINE_END_DIAG",
-      "HUNTING_JUNGLE_PLANT1",
-      "MM_LONG_JUNGLE_GRASS1",
-      "MM_LONG_JUNGLE_GRASS2",
-      "MM_LONG_JUNGLE_GRASS3"
+      "HUNTING_GREENVINE_END_DIAG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
+      }
     ]
   },
   {
@@ -2324,7 +2409,17 @@
       "PHOENIX_BURNT_GRASS_1",
       "PHOENIX_BURNT_GRASS_2",
       "PHOENIX_BURNT_GRASS_3",
-      "PHOENIX_BURNT_GRASS_4"
+      "PHOENIX_BURNT_GRASS_4",
+      "PMOON_SHORT_GRASS_1",
+      "PMOON_SHORT_GRASS_2",
+      "PMOON_SHORT_GRASS_3",
+      "PLANT_MOSS01_SUN01",
+      "PLANT_MOSS01_SUN02",
+      "PLANT_MOSS01_SUN03",
+      "PLANT_MOSS01_SUN04",
+      "REGICIDE_GRASS1_RIVER",
+      "REGICIDE_GRASS2_RIVER",
+      "REGICIDE_GRASS2L_RIVER"
     ]
   },
   {
@@ -2353,6 +2448,7 @@
     "description": "Enchanted Valley Grass - Inherit Overlay",
     "areas": [ "ENCHANTED_VALLEY" ],
     "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
     "inheritTileColorType": "OVERLAY",
     "upwardsNormals": true,
     "castShadows": false,
@@ -2366,6 +2462,7 @@
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "AVIUM_GRASS_1",
       "AVIUM_GRASS_2",
@@ -2574,6 +2671,7 @@
       {
         "colors": "h == 12",
         "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT",
         "uvType": "BOX",
         "upwardsNormals": true,
         "uvScale": 0.6
@@ -2671,6 +2769,7 @@
     "description": "Fixes weird pattern made by grass in POH",
     "areas": [ "PLAYER_OWNED_HOUSE" ],
     "baseMaterial": "GRAY_35",
+    "windDisplacementMode": "OBJECT",
     "upwardsNormals": true,
     "castShadows": false,
     "objectIds": [
@@ -11685,7 +11784,9 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "NONE"
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
       },
       {
         "description": "Leaves",
@@ -11703,6 +11804,51 @@
       "GREENVINE_DIAGFILLER",
       "GREENVINE_END",
       "GREENVINE_END_DIAG"
+    ]
+  },
+  {
+    "description": "Objects - Ape Atoll - Vines with grass",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
+      }
+    ],
+    "objectIds": [
+      "MM_GREENVINE_END_DIAG",
+      "MM_GREENVINE_DIAG1",
+      "MM_GREENVINE_JUNCTION",
+      "MM_GREENVINE_CORNER",
+      "MM_GREENVINE_END",
+      "MM_GREENVINE_STRAIGHT",
+      "MM_GREENVINE_DIAG2",
+      "MM_GREENVINE_DIAG3",
+      "MM_GREENVINE_DIAGFILLER"
+    ]
+  },
+  {
+    "description": "Objects - Jungle grass",
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "JUNGLEFLOOR1",
+      "JUNGLEFLOOR2",
+      "JUNGLEFLOOR3",
+      "MM_JUNGLE_GRASS1",
+      "MM_JUNGLE_GRASS2",
+      "MM_JUNGLE_GRASS3",
+      "MM_LONG_JUNGLE_GRASS1",
+      "MM_LONG_JUNGLE_GRASS2",
+      "MM_LONG_JUNGLE_GRASS3",
+      "HARMLESS_DEAD_GRASS1",
+      "HARMLESS_DEAD_GRASS2",
+      "HARMLESS_DEAD_GRASS3"
     ]
   },
   {
@@ -16139,6 +16285,7 @@
   {
     "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
@@ -16155,6 +16302,7 @@
     "colorOverrides": [
       {
         "colors": "h > 10",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
         "uvScale": 0.25
@@ -16164,16 +16312,19 @@
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "KHARAZI_JUNGLE_TREE_LOGS",
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
+      "MM_BUSH_BIG_KHARAZI_JUNGLE_TREE_LOGS",
       "AVIUM_TREE_1",
       "AVIUM_TREE_1_STUMP",
       "AVIUM_TREE_2",
       "AVIUM_TREE_2_STUMP",
       "AVIUM_TREE_ORANGE",
       "AVIUM_TREE_DARK",
-      "AVIUM_TREE_DARK_STUMP"
+      "AVIUM_TREE_DARK_STUMP",
+      "KHARAZI_JUNGLE_TREE1"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -16181,6 +16332,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 5", "h == 4" ],
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -16189,9 +16341,11 @@
   },
   {
     "description": "Jungle Tree Small",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
-      "MM_BUSH_KHARAZI_JUNGLE_TREE2"
+      "MM_BUSH_KHARAZI_JUNGLE_TREE2",
+      "KHARAZI_JUNGLE_TREE2"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -16199,6 +16353,7 @@
     "colorOverrides": [
       {
         "colors": "h == 6 && s == 4",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -16230,18 +16385,71 @@
   {
     "description": "Jungle Tree Large - Unusual Plant",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 768,
     "colorOverrides": [
       {
         "description": "Leaves",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "colors": "h > 10"
       }
     ],
     "objectIds": [
       "MEDPLANT_KARAMJA"
+    ]
+  },
+  {
+    "description": "Jungle Tree Large - Ape Atoll - Unusual Plant",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "uvType": "BOX",
+    "uvScale": 0.42,
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "baseMaterial": "LEAF_VEINS_DARK",
+        "colors": "h > 10"
+      }
+    ],
+    "objectIds": [
+      "MM_BUSH_JUNGLE_PALM"
+    ]
+  },
+  {
+    "description": "Jungle - Pineapple Plant",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "OBJECT",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10 && h < 21",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "PINEAPPLE_PLANT",
+      "PINEAPPLE_PLANT_FOUR",
+      "PINEAPPLE_PLANT_THREE",
+      "PINEAPPLE_PLANT_TWO",
+      "PINEAPPLE_PLANT_ONE",
+      "MM_PINEAPPLE_PLANT_ONE",
+      "PINEAPPLE_PLANT_NO_PINEAPPLES"
+    ]
+  },
+  {
+    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "windDisplacementMode": "VERTEX",
+    "flatNormals": true,
+    "objectIds": [
+      "FLYTRAP2"
     ]
   },
   {
@@ -16268,11 +16476,37 @@
       "TREE_PALM01_CLUSTER02",
       "TREE_PALM03_BASE",
       "TREE_PALM03_MID",
-      "TREE_PALM03_TOP"
+      "TREE_PALM03_TOP",
+      "_100_ILM_CLIMBABLE_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 15",
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Tropical Tree Top - WIND TODO",
+    "objectIds": [
+      "BAMBOO_TREE_TOP",
+      "BAMBOO_TREE_2_TOP",
+      "MM_BAMBOO_TREE_TOP",
+      "_100_ILM_CLIMBABLE_TREE_TOP",
+      "LEANING_BAMBOO_TREE_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512,
+    "materialOverrides": {
+      "TROPICAL_LEAF": {
+        "textureMaterial": "TROPICAL_LEAF"
+      }
+    }
   },
   {
     "description": "Tropical Tree Dead",
@@ -18789,30 +19023,44 @@
   },
   {
     "description": "Karamja - Jungle plant - Leafy style",
+    "windDisplacementMode": "VERTEX",
     "baseMaterial": "LEAF_VEINS",
     "uvScale": 0.25,
     "uvType": "BOX",
     "objectIds": [
       "JUNGLEPLANT4",
       "JUNGLEPLANT1",
+      "MM_JUNGLEPLANT3",
+      "MM_JUNGLEPLANT1",
       "JUNGLEPLANT1_KARAMJA",
       "JUNGLEPLANT2",
-      "JUNGLEPLANT3"
+      "JUNGLEPLANT3",
+      "KHARAZI_JUNGLE_PLANT1",
+      "KHARAZI_JUNGLE_PLANT2",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT1",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
+      "MM_JUNGLEPLANT_FAT",
+      "MM_JUNGLE_PLANT_MISC2",
+      "HUNTING_JUNGLE_PLANT1",
+      "HUNTING_JUNGLE_PLANT2"
     ]
   },
   {
     "description": "Karamja - Jungle plant - fern style",
-    "baseMaterial": "LEAF_VEINS",
+    "baseMaterial": "LEAF_VEINS_DARK",
+    "windDisplacementMode": "VERTEX",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
       "JUNGLE2",
-      "GREENER_JUNGLE2"
+      "GREENER_JUNGLE2",
+      "MM_JUNGLE_PLANT_FERN"
     ]
   },
   {
     "description": "Karamja - Creeping plant",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "OBJECT",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
@@ -18821,7 +19069,8 @@
   },
   {
     "description": "Karamja - Curling plant",
-    "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "LEAF_VEINS_DARK",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
@@ -18885,7 +19134,7 @@
   {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "SWAMP_PLANT1",
       "SWAMP_PLANT2",
@@ -20779,8 +21028,30 @@
   {
     "description": "Objects - Tree - Banana Tree",
     "baseMaterial": "GRAY_65",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "BANANATREEFULL"
+      "BANANATREEFULL",
+      "BANANATREEFOUR",
+      "BANANATREETHREE",
+      "BANANATREETWO",
+      "BANANATREEONE",
+      "BANANATREEEMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 6", "h == 8" ],
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 22",
+        "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
     ]
   },
   {
@@ -24773,7 +25044,7 @@
     "colorOverrides": [
       {
         "colors": "h == 17",
-        "baseMaterial": "GRUNGE_3"
+        "baseMaterial": "GRAY_65"
       },
       {
         "colors": "h == 16",
@@ -25872,6 +26143,7 @@
   {
     "description": "Isle of Souls - Maple Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "objectIds": [
       "MAPLETREE_UPDATE"
@@ -25879,6 +26151,7 @@
     "colorOverrides": [
       {
         "colors": "h > 4",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -25888,6 +26161,7 @@
   {
     "description": "Isle of Souls - Yew & Mahogany Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 1.2,
     "objectIds": [
@@ -25898,6 +26172,7 @@
       {
         "colors": "h < 7",
         "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -25906,6 +26181,7 @@
   {
     "description": "Isle of Souls - Tall Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -25926,6 +26202,7 @@
     "description": "Isle of Souls - Short Tree",
     "baseMaterial": "LEAVES_1",
     "uvType": "BOX",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvScale": 0.9,
     "objectIds": [
       "SOULWARS_TOURNAMENT_TABLE_NOVIS",
@@ -25936,6 +26213,7 @@
     "colorOverrides": [
       {
         "colors": "h < 7",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -26899,6 +27177,7 @@
   {
     "description": "Varlamore - Avium Savannah - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "GROUNDCOVER_PLANT5_WITHERED",
       "PLANT_FERN_ECLIPSE01",
@@ -26912,6 +27191,7 @@
   {
     "description": "Varlamore - Avium Savannah- Plant - Spikey Bush",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
@@ -26921,6 +27201,7 @@
     "colorOverrides": [
       {
         "description": "leaf",
+        "windDisplacementMode": "OBJECT",
         "colors": "h >= 5",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
@@ -27498,23 +27779,9 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "windDisplacementMode": "OBJECT",
     "objectIds": [
-      "PRIF_MINE_MUSHROOM_1",
       "WILDY_HUB_BUSH_01",
       "WILDY_HUB_BUSH_02",
       "WILDY_HUB_BUSH_03",
-      "PLANT_MOSS01_SUN01",
-      "PLANT_MOSS01_SUN02",
-      "PLANT_MOSS01_SUN03",
-      "PLANT_MOSS01_SUN04",
-      "DUNGEONKIT_MOSS01_BUILDUP01",
-      "DUNGEONKIT_MOSS01_BUILDUP02",
-      "DUNGEONKIT_MOSS01_BUILDUP03",
-      "DUNGEONKIT_MOSS01_BUILDUP04",
-      "DUNGEONKIT_MOSS01_BUILDUP03_MIRROR",
-      "DUNGEONKIT_MOSS01_BUILDUP04_MIRROR",
-      "BUSH_GRASS01_SUNFLOWER01",
-      "BUSH_GRASS01_SUNFLOWER02",
-      "BUSH_GRASS01_SUNFLOWER03",
       "PMOON_LIZARD_BUSH",
       "PMOON_GRUB_SAPLING",
       "PLANT_FERN01_SMALL01",
@@ -27522,7 +27789,46 @@
       "PLANT_FERN_MOONLIGHT01",
       "PLANT_FERN_MOONLIGHT02",
       "PLANT_FERN_MOONLIGHT03",
-      "PLANT_FERN_MOONLIGHT04",
+      "PLANT_FERN_MOONLIGHT04"
+    ]
+  },
+  {
+    "description": "Perilous Moons Sunflower Bush",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "BUSH_GRASS01_SUNFLOWER01",
+      "BUSH_GRASS01_SUNFLOWER02",
+      "BUSH_GRASS01_SUNFLOWER03"
+    ]
+  },
+  {
+    "description": "Perilous Moons Plants with Rocks",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "PLANT_ROCKS_SWAMP02_DARK01",
+      "PLANT_ROCKS_SWAMP01_DARK01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.86
+      }
+    ]
+  },
+  {
+    "description": "Perilous Moons Ivy and Mushrooms",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "PRIF_MINE_MUSHROOM_1",
+      "DUNGEONKIT_MOSS01_BUILDUP01",
+      "DUNGEONKIT_MOSS01_BUILDUP02",
+      "DUNGEONKIT_MOSS01_BUILDUP03",
+      "DUNGEONKIT_MOSS01_BUILDUP04",
+      "DUNGEONKIT_MOSS01_BUILDUP03_MIRROR",
+      "DUNGEONKIT_MOSS01_BUILDUP04_MIRROR",
       "ROR_IVY01_LARGE01",
       "ROR_IVY01_MEDIUM01",
       "ROR_IVY01_MEDIUM01_DARK01",
@@ -27535,6 +27841,7 @@
   {
     "description": "Perilous Moons Hanging Vines - Remove Shadows",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "castShadows": false,
     "objectIds": [
       "ROR_VINE01_HANGING01",
@@ -28890,6 +29197,7 @@
   {
     "description": "Zeah - Kourend - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "GROUNDCOVER_PLANT1_ROTTEN",
       "GROUNDCOVER_PLANT2_ROTTEN",
@@ -28898,11 +29206,13 @@
   },
   {
     "description": "Zeah - Varlamore - Plant - Withered Leafy Shrub",
+    "windDisplacementMode": "OBJECT",
     "baseMaterial": "PLANT_GRUNGE_1",
     "colorOverrides": [
       {
         "colors": "h > 3",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "OBJECT",
         "uvScale": 0.25,
         "uvType": "MODEL_XZ"
       }
@@ -38649,6 +38959,7 @@
   {
     "description": "Tai Bwo Wannai Cleanup Jungle with leaves - Dynamic",
     "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 512,
@@ -38656,6 +38967,7 @@
       {
         "description": "Plant",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "colors": "h > 11",
         "uvType": "MODEL_XZ",
         "uvOrientation": 384,
@@ -44518,11 +44830,13 @@
   {
     "description": "Zeah - Kourend - Hosidius - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h > 11",
+        "windDisplacementMode": "OBJECT",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.4,
         "uvOrientation": 89,
@@ -44536,11 +44850,13 @@
   {
     "description": "Zeah - Kourend - Hosidius - Plant - Leafy grass",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.6,
     "colorOverrides": [
       {
         "colors": "h > 11",
+        "windDisplacementMode": "OBJECT",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.4,
         "uvType": "MODEL_XZ"
@@ -45105,7 +45421,9 @@
     "description": "Generic - Cabbage",
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
-      "CABBAGE"
+      "CABBAGE",
+      "AVIUM_CABBAGE01",
+      "AVIUM_CABBAGE02"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -46577,6 +46895,7 @@
     "colorOverrides": [
       {
         "description": "Needles",
+        "windDisplacementMode": "VERTEX",
         "baseMaterial": "LEAF_VEINS",
         "colors": "h > 10",
         "uvType": "BOX"
