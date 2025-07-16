@@ -46836,7 +46836,24 @@
     "uvScale": 0.6,
     "uvOrientation": 913,
     "objectIds": [
-      "CHAIR_ALDARIN01_BENCH01"
+      "CHAIR_ALDARIN01_BENCH01",
+      "CHAIR_CIVITAS01_BENCH01"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Path edges",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 777,
+    "objectIds": [
+      "FLOOR_CIVITAS_EDGE01",
+      "FLOOR_CIVITAS_EDGE02",
+      "FLOOR_CIVITAS_EDGE03",
+      "FLOOR_CIVITAS_EDGE04",
+      "FLOOR_CIVITAS_EDGE04_M",
+      "FLOOR_CIVITAS_EDGE05",
+      "FLOOR_CIVITAS_EDGE06"
     ]
   },
   {
