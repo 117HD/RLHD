@@ -5959,7 +5959,8 @@
     "name": "RANDOM_EVENT_FROG_CAVE",
     "aabbs": [
       [ 2450, 4764, 2480, 4794 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_PRISON_PETE",
