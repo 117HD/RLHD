@@ -103,7 +103,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	@Getter
 	private boolean active;
 
-	private int[] mousePos;
+	private float[] mousePos;
 	private boolean ctrlHeld;
 	private boolean ctrlToggled;
 	private boolean shiftHeld;
@@ -216,7 +216,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		Point canvasMousePos = client.getMouseCanvasPosition();
 		mousePos = null;
 		if (canvasMousePos != null && canvasMousePos.getX() != -1 && canvasMousePos.getY() != -1)
-			mousePos = new int[] { canvasMousePos.getX(), canvasMousePos.getY() };
+			mousePos = new float[] { canvasMousePos.getX(), canvasMousePos.getY() };
 		hoveredGamevals.clear();
 
 		int maxPlane = client.getPlane();
@@ -299,7 +299,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				if (mousePos != null) {
 					hoveredAreaAabb[0] = -1;
 					hoveredAreaAabb[1] = 0;
-					int[] v = new int[2];
+					float[] v = new float[2];
 					outer:
 					for (int i = 0; i < visibleAreas.length; i++) {
 						var area = visibleAreas[i];
@@ -916,18 +916,18 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		final int ne = getHeight(scene, ex, ny, sceneXYplane[2]);
 		final int nw = getHeight(scene, wx, ny, sceneXYplane[2]);
 
-		int[] p1 = localToCanvas(client, wx, sy, sw);
-		int[] p2 = localToCanvas(client, ex, sy, se);
-		int[] p3 = localToCanvas(client, ex, ny, ne);
-		int[] p4 = localToCanvas(client, wx, ny, nw);
+		float[] p1 = localToCanvas(client, wx, sy, sw);
+		float[] p2 = localToCanvas(client, ex, sy, se);
+		float[] p3 = localToCanvas(client, ex, ny, ne);
+		float[] p4 = localToCanvas(client, wx, ny, nw);
 		if (p1 == null || p2 == null || p3 == null || p4 == null)
 			return null;
 
 		Polygon poly = new Polygon();
-		poly.addPoint(p1[0], p1[1]);
-		poly.addPoint(p2[0], p2[1]);
-		poly.addPoint(p3[0], p3[1]);
-		poly.addPoint(p4[0], p4[1]);
+		poly.addPoint((int) p1[0], (int) p1[1]);
+		poly.addPoint((int) p2[0], (int) p2[1]);
+		poly.addPoint((int) p3[0], (int) p3[1]);
+		poly.addPoint((int) p4[0], (int) p4[1]);
 
 		return poly;
 	}
@@ -946,7 +946,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return y * var9 + (LOCAL_TILE_SIZE - y) * var8 >> 7;
 	}
 
-	private int[] localToCanvas(@Nonnull Client client, int x, int y, int z) {
+	private float[] localToCanvas(@Nonnull Client client, int x, int y, int z) {
 		// Using floats to support coordinates much larger than normal local coordinates
 		x -= client.getCameraX();
 		y -= client.getCameraY();
@@ -976,10 +976,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			screenX += client.getViewportWidth() / 2.f;
 			screenY += client.getViewportHeight() / 2.f;
 
-			return new int[] {
-				(int) (screenX + client.getViewportXOffset()),
-				(int) (screenY + client.getViewportYOffset()),
-				(int) Math.min(Integer.MAX_VALUE, z1)
+			return new float[] {
+				(screenX + client.getViewportXOffset()),
+				(screenY + client.getViewportYOffset()),
+				Math.min(Integer.MAX_VALUE, z1)
 			};
 		}
 
@@ -1051,7 +1051,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		var fm = g.getFontMetrics();
 		int w = fm.stringWidth(str);
 
-		drawString(g, str, p[0] - w / 2, p[1] + line * fm.getHeight(), true);
+		drawString(g, str, (int) (p[0] - w / 2.f), (int) (p[1] + line * fm.getHeight()), true);
 	}
 
 	private void drawString(Graphics2D g2d, String str, int x, int y, boolean dropShadow) {
@@ -1377,7 +1377,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		}
 	}
 
-	private int[] getAabbCanvasCenter(AABB aabb) {
+	private float[] getAabbCanvasCenter(AABB aabb) {
 		float[] c = aabb.getCenter();
 		return localToCanvas(client, (int) c[0], (int) c[1], (int) c[2]);
 	}
@@ -1403,8 +1403,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			g.setColor(BACKDROP_COLOR);
 			int pad = 4;
 			g.fillRect(
-				p[0] - totalWidth / 2 - pad,
-				p[1] - totalHeight / 2 - lineHeight / 2 - pad,
+				(int) (p[0] - totalWidth / 2.f - pad),
+				(int) (p[1] - totalHeight / 2.f - lineHeight / 2.f - pad),
 				totalWidth + pad * 2,
 				totalHeight + pad * 2
 			);
@@ -1413,8 +1413,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		for (int i = 0; i < lines.length; i++) {
 			String line = lines[i];
 			int width = fm.stringWidth(line);
-			int px = p[0] - width / 2;
-			int py = p[1] - totalHeight / 2 + lineHeight * i + lineHeight / 2;
+			int px = (int) (p[0] - width / 2.f);
+			int py = (int) (p[1] - totalHeight / 2.f + lineHeight * i + lineHeight / 2.f);
 			g.setColor(Color.BLACK);
 			g.drawString(line, px + 1, py + 1);
 			g.setColor(c);

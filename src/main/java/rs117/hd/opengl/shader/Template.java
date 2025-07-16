@@ -233,8 +233,18 @@ public class Template
 			key.equals(identifier) ? String.format("#define %s %d", identifier, value) : null);
 	}
 
-	public Template define(String identifier, double value)
-	{
+	/**
+	 * Define a single-precision float shader constant. OpenCL warns when using doubles in float contexts.
+	 */
+	public Template define(String identifier, float value) {
+		return addIncludeLoader(key ->
+			key.equals(identifier) ? String.format("#define %s %ff", identifier, value) : null);
+	}
+
+	/**
+	 * Define a double-precision float shader constant.
+	 */
+	public Template define(String identifier, double value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %f", identifier, value) : null);
 	}

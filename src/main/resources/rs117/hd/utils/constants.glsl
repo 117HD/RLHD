@@ -1,14 +1,16 @@
 #pragma once
 
-#undef PI
-#define PI 3.14159265358979323846264338327950288419716939937510582097494459230781
 #define EPS 1.0e-10
+#define PI 3.14159265f // max 32-bit float precision
+#define HALF_PI (.5*PI)
+#define TAU (2*PI)
 
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
-#define MATERIAL_INDEX_SHIFT 15
-#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 9
-#define MATERIAL_FLAG_WIND_SWAYING 6
+#define MATERIAL_INDEX_SHIFT 16
+#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 10
+#define MATERIAL_FLAG_WIND_SWAYING 7
+#define MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING 6
 #define MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING 5
 #define MATERIAL_FLAG_UPWARDS_NORMALS 4
 #define MATERIAL_FLAG_FLAT_NORMALS 3

@@ -35,11 +35,11 @@ __attribute__((work_group_size_hint(THREAD_COUNT, 1, 1)))
 void sortModel(
   __local struct shared_data *shared,
   __global const struct ModelInfo *ol,
-  __global const struct vert *vb,
-  __global const float4 *uv,
+  __global const struct VertexData *vb,
+  __global const struct UVData *uv,
   __global const float4 *normal,
-  __global struct vert *vout,
-  __global float4 *uvout,
+  __global struct VertexData *vout,
+  __global struct UVData *uvout,
   __global float4 *normalout,
   __constant struct ComputeUniforms *uni,
   read_only image3d_t tileHeightMap
@@ -79,9 +79,9 @@ void sortModel(
 
   int prio[FACES_PER_THREAD];
   int dis[FACES_PER_THREAD];
-  struct vert v1[FACES_PER_THREAD];
-  struct vert v2[FACES_PER_THREAD];
-  struct vert v3[FACES_PER_THREAD];
+  struct VertexData v1[FACES_PER_THREAD];
+  struct VertexData v2[FACES_PER_THREAD];
+  struct VertexData v3[FACES_PER_THREAD];
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
     get_face(shared, uni, vb, localId + i, minfo, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);

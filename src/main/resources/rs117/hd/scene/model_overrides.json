@@ -1101,6 +1101,7 @@
     "objectIds": [
       "TREE2",
       "TREE3",
+      "TREE4",
       "LEPRECHAUNTREE",
       "NEWBIETREE2",
       "WOM_TREE",
@@ -1111,7 +1112,6 @@
       "ARDOUGNE_LOG_BALANCE_RIGHT_SC",
       "ZEP_TREE3",
       "MACRO_FORESTERTREE2",
-      "TREE_FORROPESWING1",
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
@@ -1133,6 +1133,18 @@
         "textureMaterial": "MAPLE_LEAVES"
       }
     }
+  },
+  {
+    "description": "TREES - Rope Swing",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "TREE_ROPESWING3",
+      "TREE_FORROPESWING1",
+      "TREE_ROPESWING4",
+      "TREE_ROPESWING4_NOROPE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Tree - Double Tree",
@@ -1507,6 +1519,7 @@
   },
   {
     "description": "Objects - Tree - Mahogany",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "BARK_STONEPINE",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -1541,12 +1554,14 @@
   {
     "description": "Objects - Tree - Teak",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.66,
     "colorOverrides": [
       {
         "description": "Leaves",
         "colors": "h > 12",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.2,
         "uvOrientation": 42,
@@ -1555,10 +1570,17 @@
     ],
     "objectIds": [
       "TEAKTREE",
-      "TEAK_STUMP",
-      "CHICKEN_CRATE",
       "PRIF_TEAKTREE",
       "TEAKTREE_UPDATE"
+    ]
+  },
+  {
+    "description": "Objects - Tree - Teak - Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "TEAK_STUMP"
     ]
   },
   {
@@ -1629,7 +1651,13 @@
       "SOTE_FLOWERS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "materialOverrides": {
+      "WILLOW_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "WILLOW_LEAVES"
+      }
+    }
   },
   {
     "description": "Tirannwn - Lord Crwys Tree",
@@ -1655,7 +1683,9 @@
     "colorOverrides": [
       {
         "colors": "h == 12",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true,
+        "windDisplacementMode": "OBJECT"
       }
     ]
   },
@@ -1713,6 +1743,7 @@
         "colors": "h == 12",
         "baseMaterial": "PLANT_GRUNGE_1",
         "uvScale": 0.5,
+        "upwardsNormals": true,
         "uvType": "MODEL_XZ",
         "uvOrientation": 256
       },
@@ -2098,6 +2129,8 @@
     "objectIds": [
       "DAISYS",
       "ONION",
+      "AVIUM_ONION01",
+      "AVIUM_ONION02",
       "RAREFLOWER_BLUE",
       "RAREFLOWERS_BLUE",
       "BLUEFLOWER",
@@ -2107,6 +2140,7 @@
       "RAREFLOWER_1",
       "RAREFLOWERS_1",
       "FLOWERBED1",
+      "FLOWERBED_RED",
       "FLOWERBED_YELLOW",
       "RAREFLOWER_YELLOW",
       "RAREFLOWERS_YELLOW",
@@ -2118,9 +2152,6 @@
       "BULLRUSHES4",
       "BULLRUSHES5",
       "THISTLE",
-      "WATERLILY1",
-      "WATERLILY2",
-      "WATERLILY3",
       "POTATO",
       "FAI_VARROCK_WHEAT_CORNER",
       "FAI_VARROCK_WHEAT_SMALL",
@@ -2134,23 +2165,83 @@
       "NETTLES6",
       "HEATHER",
       "HEATHER2",
-      "HEATHER3"
+      "HEATHER3",
+      "FLOWER_SUNFLOWER_FULL01",
+      "FLOWER_SUNFLOWER_EDGE01",
+      "FLOWER_SUNFLOWER_EDGE01_RED",
+      "FLOWER_SUNFLOWER_FULL01_RED",
+      "FAIRY2_LITTLE_FLOWERS_4",
+      "FAIRY2_LITTLE_FLOWERS_3",
+      "FAIRY2_LITTLE_FLOWERS_2",
+      "FAIRY2_LITTLE_FLOWERS_1",
+      "WILDY_HUB_FLOWERS_04",
+      "WILDY_HUB_FLOWERS_03",
+      "WILDY_HUB_FLOWERS_02",
+      "WILDY_HUB_FLOWERS_01",
+      "JUNGLEFLOWER",
+      "MM_JUNGLE_PLANT_FLOWER",
+      "FAI_VARROCK_FLOWERBED_CORNER_BLUE",
+      "FAI_VARROCK_FLOWERBED_BLUE",
+      "PRIDE22_FLOWER_ORANGE_T3",
+      "PRIDE22_FLOWER_RED_T1",
+      "PRIDE22_FLOWER_RED_T3",
+      "PRIDE22_FLOWER_RED_T2",
+      "PRIDE22_FLOWER_ORANGE_T1",
+      "PRIDE22_FLOWER_ORANGE_T2",
+      "PRIDE22_FLOWER_YELLOW_T1",
+      "PRIDE22_FLOWER_YELLOW_T3",
+      "PRIDE22_FLOWER_YELLOW_T2",
+      "PRIDE22_FLOWER_GREEN_T1",
+      "PRIDE22_FLOWER_GREEN_T3",
+      "PRIDE22_FLOWER_GREEN_T2",
+      "PRIDE22_FLOWER_INDIGO_T1",
+      "PRIDE22_FLOWER_INDIGO_T3",
+      "PRIDE22_FLOWER_INDIGO_T2",
+      "PRIDE22_FLOWER_VIOLET_T3",
+      "PRIDE22_FLOWER_VIOLET_T1",
+      "PRIDE22_FLOWER_VIOLET_T2",
+      "MM_JUNGLE_PLANT_ORCHID"
     ]
   },
   {
-    "description": "Grass that should cast shadows",
+    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "VERTEX",
+    "objectIds": [
+      "FAIRY2_BULLRUSH_FALLOFF",
+      "FAIRY2_BULLRUSH_SMALL",
+      "FAIRY2_BULLRUSH_TILE",
+      "FAIRY2_BULLRUSH_LARGE",
+      "FAI_VARROCK_ROSES_EDGE",
+      "FAI_VARROCK_ROSEBUSH",
+      "FAI_VARROCK_ROSES_EDGE_SHAPE_8",
+      "FAI_VARROCK_ROSES_EDGE_B_SHAPE_8",
+      "FAI_VARROCK_ROSES_EDGE_B",
+      "AVIUM_CORN01",
+      "AVIUM_CORN02",
+      "WATERLILY1",
+      "WATERLILY2",
+      "WATERLILY3"
+    ]
+  },
+  {
+    "description": "Hunter Grass",
     "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "OBJECT",
     "flatNormals": true,
     "objectIds": [
-      "MM_JUNGLE_GRASS1",
-      "MM_JUNGLE_GRASS2",
-      "MM_JUNGLE_GRASS3",
       "HUNTING_LONG_JUNGLE_GRASS1",
       "HUNTING_LONG_JUNGLE_GRASS2",
       "HUNTING_LONG_JUNGLE_GRASS3",
       "HUNTING_JUNGLE_GRASS1",
       "HUNTING_JUNGLE_GRASS2",
-      "HUNTING_JUNGLE_GRASS3",
+      "HUNTING_JUNGLE_GRASS3"
+    ]
+  },
+  {
+    "description": "Hunter Grass with Vines",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
       "HUNTING_GREENVINE_STRAIGHT",
       "HUNTING_GREENVINE_CORNER",
       "HUNTING_GREENVINE_JUNCTION",
@@ -2159,11 +2250,16 @@
       "HUNTING_GREENVINE_DIAG3",
       "HUNTING_GREENVINE_DIAGFILLER",
       "HUNTING_GREENVINE_END",
-      "HUNTING_GREENVINE_END_DIAG",
-      "HUNTING_JUNGLE_PLANT1",
-      "MM_LONG_JUNGLE_GRASS1",
-      "MM_LONG_JUNGLE_GRASS2",
-      "MM_LONG_JUNGLE_GRASS3"
+      "HUNTING_GREENVINE_END_DIAG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
+      }
     ]
   },
   {
@@ -2172,6 +2268,7 @@
     "flatNormals": true,
     "windDisplacementMode": "OBJECT",
     "castShadows": false,
+    "terrainVertexSnap": true,
     "objectIds": [
       "GRASS_1",
       "GRASS_1_SWAMP",
@@ -2313,7 +2410,17 @@
       "PHOENIX_BURNT_GRASS_1",
       "PHOENIX_BURNT_GRASS_2",
       "PHOENIX_BURNT_GRASS_3",
-      "PHOENIX_BURNT_GRASS_4"
+      "PHOENIX_BURNT_GRASS_4",
+      "PMOON_SHORT_GRASS_1",
+      "PMOON_SHORT_GRASS_2",
+      "PMOON_SHORT_GRASS_3",
+      "PLANT_MOSS01_SUN01",
+      "PLANT_MOSS01_SUN02",
+      "PLANT_MOSS01_SUN03",
+      "PLANT_MOSS01_SUN04",
+      "REGICIDE_GRASS1_RIVER",
+      "REGICIDE_GRASS2_RIVER",
+      "REGICIDE_GRASS2L_RIVER"
     ]
   },
   {
@@ -2343,6 +2450,7 @@
     "description": "Enchanted Valley Grass - Inherit Overlay",
     "areas": [ "ENCHANTED_VALLEY" ],
     "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
     "inheritTileColorType": "OVERLAY",
     "upwardsNormals": true,
     "castShadows": false,
@@ -2356,6 +2464,7 @@
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "AVIUM_GRASS_1",
       "AVIUM_GRASS_2",
@@ -2564,6 +2673,7 @@
       {
         "colors": "h == 12",
         "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT",
         "uvType": "BOX",
         "upwardsNormals": true,
         "uvScale": 0.6
@@ -2661,6 +2771,7 @@
     "description": "Fixes weird pattern made by grass in POH",
     "areas": [ "PLAYER_OWNED_HOUSE" ],
     "baseMaterial": "GRAY_35",
+    "windDisplacementMode": "OBJECT",
     "upwardsNormals": true,
     "castShadows": false,
     "objectIds": [
@@ -5391,13 +5502,6 @@
       "LOST_TRIBE_HOLE_2",
       "SWAMP_CAVEWALL_FORMARKER",
       "COLLAPSING_ROOF_LOCATION",
-      "GOBLIN_CAVEWALL_BONEARCH",
-      "GOBLIN_CAVEWALL_BONEARCH_RAGS1",
-      "GOBLIN_CAVEWALL_BONEARCH_RAGS2",
-      "GOBLIN_CAVEWALL_BONEARCH_BROKEN1",
-      "GOBLIN_CAVEWALL_BONEARCH_BROKEN2",
-      "GOBLIN_CAVEWALL_BONE_SUPPORTED1",
-      "GOBLIN_CAVEWALL_BONE_SUPPORTED2",
       "SWAMP_CAVEWALL1_GASHOLE",
       "SWAMP_CAVEWALL1_GASHOLE2",
       "LOST_TRIBE_CELLAR_HOLE_BLOCKING",
@@ -6245,27 +6349,29 @@
   {
     "description": "DOCK_FENCES",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 1.1,
+    "uvOrientation": 512,
     "objectIds": [
       "PIER_RAIL",
       "SERIM_PIER_RAIL",
       "FAI_BARBARIAN_RAIL",
       "BREW_PIER_RAIL"
-    ],
-    "uvType": "BOX",
-    "flatNormals": true,
-    "uvScale": 1.1,
-    "uvOrientation": 512
+    ]
   },
   {
     "description": "DOCK_FENCES_TAN",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
     "objectIds": [
       "PEST_SERIM_PIER_RAIL",
       "FRISB_PIER_RAIL",
       "FRISD_WOOD_GATE_OPEN_01",
       "FRISD_WOOD_GATE_01"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "RELLEKKA_FENCES",
@@ -7119,21 +7225,27 @@
   },
   {
     "description": "PHASMATYS_DOCK_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 1.1,
+    "uvOrientation": 512,
     "objectIds": [
       "AHOY_PIER_RAIL"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "RoU_DOCK_FENCES",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.7,
+    "uvOrientation": 512,
     "objectIds": [
       "TEMPOROSS_LOBBY_DOCK_RAIL",
       "TEMPOROSS_LOBBY_BANNER_LOWER_LEFT",
       "TEMPOROSS_LOBBY_BANNER_LOWER_RIGHT"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "LIGHT_WOODEN_DOCKS",
@@ -7190,7 +7302,10 @@
   },
   {
     "description": "LUNAR_ISLE_DOCK_SUPPORTS",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 128,
     "objectIds": [
       "QUEST_LUNAR_GALLEON_PIER_LVL1_LOW",
       "QUEST_LUNAR_GALLEON_PIER_LVL2_LOW"
@@ -7431,7 +7546,10 @@
   },
   {
     "description": "Witchaven Dock Rails",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
     "objectIds": [
       "SLUG2_PIER_RAIL"
     ]
@@ -7989,11 +8107,13 @@
   },
   {
     "description": "Wooden Wall Supports - Mines",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       "WALLSUPPORT"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Ladder",
@@ -8069,7 +8189,6 @@
       "MCANNONLADDER",
       "WIZARDS_TOWER_LADDERTOP",
       "WIZARDS_TOWER_LADDER",
-      "EASTER25_CARROT_SCRAPS_NO_TRAIL",
       "MOURNER_HIDEOUT_LADDER1",
       "NEWBIELADDER1",
       "NEWBIELADDERTOP1",
@@ -8087,7 +8206,9 @@
       "MGUILD_LADDER"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "retainVanillaUvs": false
   },
   {
     "description": "Textured - Crate 1",
@@ -8127,9 +8248,15 @@
   },
   {
     "description": "Falador - Wood Railing",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "objectIds": [
       "SARIM_BANNISTER",
+      "SARIM_BANNISTER_END",
+      "SARIM_SPIRALSTAIRSTOP",
+      "SARIM_SPIRALSTAIRS_FIX",
       "FAI_WIZTOWER_SPIRALSTAIRSTOP"
     ]
   },
@@ -8487,7 +8614,6 @@
     "description": "Candelabra",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
-      "CANDLES",
       "GOLDCANDLES",
       "BLACKCANDLES",
       "FAI_VARROCK_POSH_CANDLESTICK",
@@ -8495,6 +8621,22 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.4
+  },
+  {
+    "description": "Candelabra - Wooden",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "CANDLES"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Candelabra - Dusty",
@@ -8950,7 +9092,6 @@
     "description": "Ground Hole Shortcuts",
     "baseMaterial": "DIRT_1",
     "objectIds": [
-      "YANILLE_CASTLEHOLE_SC",
       "VARROCK_SC_TUNNEL_WEST",
       "VARROCK_SC_TUNNEL_EAST",
       "HUNTING_TRAIL_VISIBLE",
@@ -9078,7 +9219,10 @@
   },
   {
     "description": "Black Knight Fortress Wood Rails",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "objectIds": [
       "DK_SPIRALSTAIRS_FIX",
       "DK_SPIRALSTAIRSTOP",
@@ -9183,6 +9327,7 @@
       "POORDOOROPEN_M",
       "INACTIVEPOORDOOR",
       "MAGICGUILD_DOOR_L",
+      "MAGICGUILD_DOOR_R",
       "LOCKEDDOOR1",
       "MEMBERDOOR",
       "POORDOOROPEN_PERM",
@@ -9375,7 +9520,6 @@
       "INACCASTLEDOUBLEDOORR",
       "INACCASTLEDOUBLEDOORLOPEN",
       "INACCASTLEDOUBLEDOORROPEN",
-      "MAGICGUILD_DOOR_R",
       "KR_DOUBLEDOOR_L",
       "KR_OPENDOUBLEDOOR_L",
       "W_ARDOUGNEDOUBLEDOORL",
@@ -9434,7 +9578,7 @@
         "colors": "s > 3",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.4,
+        "uvScale": 0.6,
         "uvOrientation": 512
       }
     ]
@@ -10861,12 +11005,13 @@
   },
   {
     "description": "Fence Gate - Static",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "PVPA_ACCESS_GATE_L_OPEN",
       "PVPA_ACCESS_GATE_R_OPEN"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Objects - Wooden - Crate",
@@ -10999,7 +11144,9 @@
       "SNP_CRATE",
       "MYQ4_EMPTY_CRATES",
       "MYQ4_VIAL_CRATE",
-      "MYQ4_MEAT_CRATE"
+      "MYQ4_MEAT_CRATE",
+      "VMQ2_COTHON_CRATE",
+      "VMQ2_COTHON_CRATES"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -11343,7 +11490,7 @@
   },
   {
     "description": "Metallic - Ground - Armor",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_2",
     "objectIds": [
       "DAMAGEDARMOUR1",
       "DAMAGEDARMOUR2",
@@ -11352,7 +11499,7 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 1.2
+    "uvScale": 0.7
   },
   {
     "description": "Objects - Metallic - Chair - Broken",
@@ -11667,7 +11814,9 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "baseMaterial": "NONE"
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
       },
       {
         "description": "Leaves",
@@ -11685,6 +11834,51 @@
       "GREENVINE_DIAGFILLER",
       "GREENVINE_END",
       "GREENVINE_END_DIAG"
+    ]
+  },
+  {
+    "description": "Objects - Ape Atoll - Vines with grass",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
+      }
+    ],
+    "objectIds": [
+      "MM_GREENVINE_END_DIAG",
+      "MM_GREENVINE_DIAG1",
+      "MM_GREENVINE_JUNCTION",
+      "MM_GREENVINE_CORNER",
+      "MM_GREENVINE_END",
+      "MM_GREENVINE_STRAIGHT",
+      "MM_GREENVINE_DIAG2",
+      "MM_GREENVINE_DIAG3",
+      "MM_GREENVINE_DIAGFILLER"
+    ]
+  },
+  {
+    "description": "Objects - Jungle grass",
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "JUNGLEFLOOR1",
+      "JUNGLEFLOOR2",
+      "JUNGLEFLOOR3",
+      "MM_JUNGLE_GRASS1",
+      "MM_JUNGLE_GRASS2",
+      "MM_JUNGLE_GRASS3",
+      "MM_LONG_JUNGLE_GRASS1",
+      "MM_LONG_JUNGLE_GRASS2",
+      "MM_LONG_JUNGLE_GRASS3",
+      "HARMLESS_DEAD_GRASS1",
+      "HARMLESS_DEAD_GRASS2",
+      "HARMLESS_DEAD_GRASS3"
     ]
   },
   {
@@ -11835,15 +12029,17 @@
   },
   {
     "description": "Morytania - Walls - Triple Slat Fence Gate",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvScale": 0.7,
+    "uvType": "BOX",
     "objectIds": [
       "BURGH_FENCEGATE_L",
       "BURGH_FENCEGATE_R",
       "BURGH_OPENFENCEGATE_L",
       "BURGH_OPENFENCEGATE_R",
       "BURGH_AGILITY_SHORTCUT_FENCE"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Morytania - Walls - Wooden - Plank - Burgh De Rott",
@@ -11908,7 +12104,7 @@
       "SANG_FLOORBOARD_BOAT_SUPPORT_TL",
       "SANG_FLOORBOARD_BOAT_SUPPORT_TR"
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX"
   },
   {
     "description": "Morytania - Floor - Wooden - Ladder - Burgh De Rott - Meiyerditch",
@@ -12014,14 +12210,14 @@
   },
   {
     "description": "Morytania - Ground  - Wooden - Boat Launch - Burgh De Rott",
-    "baseMaterial": "DOCK_FENCE_DARK",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
     "objectIds": [
       "SANG_BOATHOUSE_CHUTE",
       "SANG_BOATHOUSE_CHUTE_MIRROR",
       "SANG_BOATHOUSE_CHUTE_BROKEN",
       "SANG_BOATHOUSE_CHUTE_FIXED"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Burgh De Rott - Objects - Dirt - Rubble Pile",
@@ -12131,11 +12327,11 @@
   },
   {
     "description": "Objects - Locker - Wooden - Non Interactable",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
     "objectIds": [
       "SUROK_TUNNEL_LOCKER"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Objects - Stool - Wooden – Generic",
@@ -12229,7 +12425,8 @@
     "objectIds": [
       "PIRATETREASURE_WOODEN_TABLE_SMALL",
       "MYQ3_HIDEOUT_SMALL_TABLE",
-      "BURGH_QUEST_FOOD_TABLE"
+      "BURGH_QUEST_FOOD_TABLE",
+      "BR_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -12384,7 +12581,8 @@
   },
   {
     "description": "Lunar Island - Objects - Wooden - Hat Rack",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.6,
     "objectIds": [
       "LUNAR_MOONCLAN_HAT_EMPTY"
     ]
@@ -14063,10 +14261,21 @@
     ]
   },
   {
-    "description": "Gnome - Walls - Rope Rails",
-    "baseMaterial": "DOCK_FENCE",
+    "description": "Gnome - Walls - Wooden - Rope - Gnome Rope Rails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
       "BRIDGE_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
     ]
   },
   {
@@ -14207,7 +14416,10 @@
   },
   {
     "description": "Gnome - Objects - Wooden - Staircase Rails - Textured",
-    "baseMaterial": "DOCK_FENCE",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
     "objectIds": [
       "SPIRALSTAIRSTOP_WOODEN"
     ]
@@ -15485,7 +15697,23 @@
         "colors": "s == 7",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Potted Plants",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "POTTEDSMALLFERN",
+      "POTTEDFERN2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.2
       }
     ]
   },
@@ -16111,6 +16339,7 @@
   {
     "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
@@ -16127,6 +16356,7 @@
     "colorOverrides": [
       {
         "colors": "h > 10",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
         "uvScale": 0.25
@@ -16136,16 +16366,19 @@
   {
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "KHARAZI_JUNGLE_TREE_LOGS",
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
+      "MM_BUSH_BIG_KHARAZI_JUNGLE_TREE_LOGS",
       "AVIUM_TREE_1",
       "AVIUM_TREE_1_STUMP",
       "AVIUM_TREE_2",
       "AVIUM_TREE_2_STUMP",
       "AVIUM_TREE_ORANGE",
       "AVIUM_TREE_DARK",
-      "AVIUM_TREE_DARK_STUMP"
+      "AVIUM_TREE_DARK_STUMP",
+      "KHARAZI_JUNGLE_TREE1"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -16153,6 +16386,7 @@
     "colorOverrides": [
       {
         "colors": [ "h == 5", "h == 4" ],
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -16161,9 +16395,11 @@
   },
   {
     "description": "Jungle Tree Small",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
-      "MM_BUSH_KHARAZI_JUNGLE_TREE2"
+      "MM_BUSH_KHARAZI_JUNGLE_TREE2",
+      "KHARAZI_JUNGLE_TREE2"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.25,
@@ -16171,6 +16407,7 @@
     "colorOverrides": [
       {
         "colors": "h == 6 && s == 4",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -16202,18 +16439,71 @@
   {
     "description": "Jungle Tree Large - Unusual Plant",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 768,
     "colorOverrides": [
       {
         "description": "Leaves",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LEAF_VEINS",
         "colors": "h > 10"
       }
     ],
     "objectIds": [
       "MEDPLANT_KARAMJA"
+    ]
+  },
+  {
+    "description": "Jungle Tree Large - Ape Atoll - Unusual Plant",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "uvType": "BOX",
+    "uvScale": 0.42,
+    "uvOrientation": 768,
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "baseMaterial": "LEAF_VEINS_DARK",
+        "colors": "h > 10"
+      }
+    ],
+    "objectIds": [
+      "MM_BUSH_JUNGLE_PALM"
+    ]
+  },
+  {
+    "description": "Jungle - Pineapple Plant",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "colorOverrides": [
+      {
+        "windDisplacementMode": "OBJECT",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h > 10 && h < 21",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "PINEAPPLE_PLANT",
+      "PINEAPPLE_PLANT_FOUR",
+      "PINEAPPLE_PLANT_THREE",
+      "PINEAPPLE_PLANT_TWO",
+      "PINEAPPLE_PLANT_ONE",
+      "MM_PINEAPPLE_PLANT_ONE",
+      "PINEAPPLE_PLANT_NO_PINEAPPLES"
+    ]
+  },
+  {
+    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "windDisplacementMode": "VERTEX",
+    "flatNormals": true,
+    "objectIds": [
+      "FLYTRAP2"
     ]
   },
   {
@@ -16240,11 +16530,37 @@
       "TREE_PALM01_CLUSTER02",
       "TREE_PALM03_BASE",
       "TREE_PALM03_MID",
-      "TREE_PALM03_TOP"
+      "TREE_PALM03_TOP",
+      "_100_ILM_CLIMBABLE_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 15",
+        "baseMaterial": "GRAY_65",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Tropical Tree Top - WIND TODO",
+    "objectIds": [
+      "BAMBOO_TREE_TOP",
+      "BAMBOO_TREE_2_TOP",
+      "MM_BAMBOO_TREE_TOP",
+      "_100_ILM_CLIMBABLE_TREE_TOP",
+      "LEANING_BAMBOO_TREE_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512,
+    "materialOverrides": {
+      "TROPICAL_LEAF": {
+        "textureMaterial": "TROPICAL_LEAF"
+      }
+    }
   },
   {
     "description": "Tropical Tree Dead",
@@ -18761,30 +19077,44 @@
   },
   {
     "description": "Karamja - Jungle plant - Leafy style",
+    "windDisplacementMode": "VERTEX",
     "baseMaterial": "LEAF_VEINS",
     "uvScale": 0.25,
     "uvType": "BOX",
     "objectIds": [
       "JUNGLEPLANT4",
       "JUNGLEPLANT1",
+      "MM_JUNGLEPLANT3",
+      "MM_JUNGLEPLANT1",
       "JUNGLEPLANT1_KARAMJA",
       "JUNGLEPLANT2",
-      "JUNGLEPLANT3"
+      "JUNGLEPLANT3",
+      "KHARAZI_JUNGLE_PLANT1",
+      "KHARAZI_JUNGLE_PLANT2",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT1",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
+      "MM_JUNGLEPLANT_FAT",
+      "MM_JUNGLE_PLANT_MISC2",
+      "HUNTING_JUNGLE_PLANT1",
+      "HUNTING_JUNGLE_PLANT2"
     ]
   },
   {
     "description": "Karamja - Jungle plant - fern style",
-    "baseMaterial": "LEAF_VEINS",
+    "baseMaterial": "LEAF_VEINS_DARK",
+    "windDisplacementMode": "VERTEX",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
       "JUNGLE2",
-      "GREENER_JUNGLE2"
+      "GREENER_JUNGLE2",
+      "MM_JUNGLE_PLANT_FERN"
     ]
   },
   {
     "description": "Karamja - Creeping plant",
     "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "OBJECT",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
@@ -18793,7 +19123,8 @@
   },
   {
     "description": "Karamja - Curling plant",
-    "baseMaterial": "LEAF_VEINS",
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "LEAF_VEINS_DARK",
     "uvScale": 0.25,
     "uvType": "MODEL_XZ",
     "objectIds": [
@@ -18857,7 +19188,7 @@
   {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "SWAMP_PLANT1",
       "SWAMP_PLANT2",
@@ -20751,8 +21082,30 @@
   {
     "description": "Objects - Tree - Banana Tree",
     "baseMaterial": "GRAY_65",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "BANANATREEFULL"
+      "BANANATREEFULL",
+      "BANANATREEFOUR",
+      "BANANATREETHREE",
+      "BANANATREETWO",
+      "BANANATREEONE",
+      "BANANATREEEMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 6", "h == 8" ],
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h > 22",
+        "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
     ]
   },
   {
@@ -21083,6 +21436,7 @@
     },
     "objectIds": [
       "BANKBOOTHCLOSED_END_LEFT",
+      "BANKBOOTHCLOSED_END_RIGHT",
       "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
@@ -23094,6 +23448,7 @@
     "description": "Oak Tree",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
     "objectIds": [
       "OAKTREE_STUMP", "POH_BIG_TREE3_4", "POH_SMALL_TREE3_5", "OAK_TREE_SEEDLING", "OAK_TREE_1",
       "OAK_TREE_2", "OAK_TREE_3", "OAK_TREE_FULLYGROWN_1", "OAK_TREE_FULLYGROWN_2",
@@ -24744,7 +25099,7 @@
     "colorOverrides": [
       {
         "colors": "h == 17",
-        "baseMaterial": "GRUNGE_3"
+        "baseMaterial": "GRAY_65"
       },
       {
         "colors": "h == 16",
@@ -25237,7 +25592,7 @@
       "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF", "DS2_CORSAIR_COVE_SHIPPLANK", "SAILING_RIMMINGTON_SHIPPLANK_ON",
       "SAILING_RIMMINGTON_SHIPPLANK_OFF", "SAILING_RIMMINGTON_SHIPPLANK2_ON", "SAILING_RIMMINGTON_SHIPPLANK2_OFF", "SAILING_SARIM_VEOS_SHIPPLANK_ON",
       "SAILING_SARIM_VEOS_SHIPPLANK_OFF", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_ON_2", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_OFF_2", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON_2",
-      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2"
+      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2", "SAILING_FORTIS_SHIPPLANK_OFF", "SAILING_FORTIS_SHIPPLANK_ON", "SAILING_FORTIS_SHIPPLANK_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -25843,6 +26198,7 @@
   {
     "description": "Isle of Souls - Maple Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "objectIds": [
       "MAPLETREE_UPDATE"
@@ -25850,6 +26206,7 @@
     "colorOverrides": [
       {
         "colors": "h > 4",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -25859,6 +26216,7 @@
   {
     "description": "Isle of Souls - Yew & Mahogany Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 1.2,
     "objectIds": [
@@ -25869,6 +26227,7 @@
       {
         "colors": "h < 7",
         "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -25877,6 +26236,7 @@
   {
     "description": "Isle of Souls - Tall Tree",
     "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -25897,6 +26257,7 @@
     "description": "Isle of Souls - Short Tree",
     "baseMaterial": "LEAVES_1",
     "uvType": "BOX",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvScale": 0.9,
     "objectIds": [
       "SOULWARS_TOURNAMENT_TABLE_NOVIS",
@@ -25907,6 +26268,7 @@
     "colorOverrides": [
       {
         "colors": "h < 7",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -26870,6 +27232,7 @@
   {
     "description": "Varlamore - Avium Savannah - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "GROUNDCOVER_PLANT5_WITHERED",
       "PLANT_FERN_ECLIPSE01",
@@ -26883,6 +27246,7 @@
   {
     "description": "Varlamore - Avium Savannah- Plant - Spikey Bush",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
@@ -26892,6 +27256,7 @@
     "colorOverrides": [
       {
         "description": "leaf",
+        "windDisplacementMode": "OBJECT",
         "colors": "h >= 5",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
@@ -27469,23 +27834,9 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "windDisplacementMode": "OBJECT",
     "objectIds": [
-      "PRIF_MINE_MUSHROOM_1",
       "WILDY_HUB_BUSH_01",
       "WILDY_HUB_BUSH_02",
       "WILDY_HUB_BUSH_03",
-      "PLANT_MOSS01_SUN01",
-      "PLANT_MOSS01_SUN02",
-      "PLANT_MOSS01_SUN03",
-      "PLANT_MOSS01_SUN04",
-      "DUNGEONKIT_MOSS01_BUILDUP01",
-      "DUNGEONKIT_MOSS01_BUILDUP02",
-      "DUNGEONKIT_MOSS01_BUILDUP03",
-      "DUNGEONKIT_MOSS01_BUILDUP04",
-      "DUNGEONKIT_MOSS01_BUILDUP03_MIRROR",
-      "DUNGEONKIT_MOSS01_BUILDUP04_MIRROR",
-      "BUSH_GRASS01_SUNFLOWER01",
-      "BUSH_GRASS01_SUNFLOWER02",
-      "BUSH_GRASS01_SUNFLOWER03",
       "PMOON_LIZARD_BUSH",
       "PMOON_GRUB_SAPLING",
       "PLANT_FERN01_SMALL01",
@@ -27493,7 +27844,46 @@
       "PLANT_FERN_MOONLIGHT01",
       "PLANT_FERN_MOONLIGHT02",
       "PLANT_FERN_MOONLIGHT03",
-      "PLANT_FERN_MOONLIGHT04",
+      "PLANT_FERN_MOONLIGHT04"
+    ]
+  },
+  {
+    "description": "Perilous Moons Sunflower Bush",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "BUSH_GRASS01_SUNFLOWER01",
+      "BUSH_GRASS01_SUNFLOWER02",
+      "BUSH_GRASS01_SUNFLOWER03"
+    ]
+  },
+  {
+    "description": "Perilous Moons Plants with Rocks",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "PLANT_ROCKS_SWAMP02_DARK01",
+      "PLANT_ROCKS_SWAMP01_DARK01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.86
+      }
+    ]
+  },
+  {
+    "description": "Perilous Moons Ivy and Mushrooms",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "PRIF_MINE_MUSHROOM_1",
+      "DUNGEONKIT_MOSS01_BUILDUP01",
+      "DUNGEONKIT_MOSS01_BUILDUP02",
+      "DUNGEONKIT_MOSS01_BUILDUP03",
+      "DUNGEONKIT_MOSS01_BUILDUP04",
+      "DUNGEONKIT_MOSS01_BUILDUP03_MIRROR",
+      "DUNGEONKIT_MOSS01_BUILDUP04_MIRROR",
       "ROR_IVY01_LARGE01",
       "ROR_IVY01_MEDIUM01",
       "ROR_IVY01_MEDIUM01_DARK01",
@@ -27506,6 +27896,7 @@
   {
     "description": "Perilous Moons Hanging Vines - Remove Shadows",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "castShadows": false,
     "objectIds": [
       "ROR_VINE01_HANGING01",
@@ -27979,8 +28370,26 @@
       "HG_SHELF_HUNTERGUILD01_SKULL01",
       "HG_SHELF_HUNTERGUILD01_BOOKS01",
       "HG_SHELF_HUNTERGUILD01_BOOKS02",
-      "HG_SHELF_HUNTERGUILD01_BOW01",
-      "SHAYZIEN_GENERAL_SHELF"
+      "HG_SHELF_HUNTERGUILD01_BOW01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3", "h == 5 && s == 4" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild - Civitas - Shayzien - Shelves with bottles",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SHAYZIEN_GENERAL_SHELF",
+      "SHAYZIEN_GENERAL_SHELF2",
+      "SHAYZIEN_GENERAL_SHELF3",
+      "SHAYZIEN_GENERAL_SHELF4"
     ],
     "colorOverrides": [
       {
@@ -28344,7 +28753,8 @@
       "HG_CHAIR_TAVERN02_DEFAULT01",
       "HG_CHAIR_TAVERN02_SEWING01",
       "HG_CHAIR_TAVERN02_HIDE01",
-      "HG_CHAIR_TAVERN02_HIDE02"
+      "HG_CHAIR_TAVERN02_HIDE02",
+      "TABLE_WOODEN01_SQUARE01_FUR01"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -28861,6 +29271,7 @@
   {
     "description": "Zeah - Kourend - Plants",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "GROUNDCOVER_PLANT1_ROTTEN",
       "GROUNDCOVER_PLANT2_ROTTEN",
@@ -28869,11 +29280,13 @@
   },
   {
     "description": "Zeah - Varlamore - Plant - Withered Leafy Shrub",
+    "windDisplacementMode": "OBJECT",
     "baseMaterial": "PLANT_GRUNGE_1",
     "colorOverrides": [
       {
         "colors": "h > 3",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "OBJECT",
         "uvScale": 0.25,
         "uvType": "MODEL_XZ"
       }
@@ -29662,7 +30075,9 @@
   },
   {
     "description": "Objects - Metallic - Range on textured bricks - Textured",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "NEWBIERANGE",
       "RANGE"
@@ -30736,7 +31151,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED", "QIP_COOK_BARREL_STACKED" ]
+    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED_DARK", "QIP_COOK_BARREL_STACKED" ]
   },
   {
     "description": "Wooden Cart - Empty",
@@ -30747,7 +31162,8 @@
       "FAI_VARROCK_CART",
       "AHOY_CART",
       "AHOY_WHEEL_BARROW",
-      "SARIM_CART"
+      "SARIM_CART",
+      "BR_CART"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -33593,7 +34009,7 @@
       {
         "description": "Golden rod",
         "colors": "h == 8 && s > 6 && l > 30",
-        "baseMaterial": "GRAY_65"
+        "baseMaterial": "METALLIC_1_SMOOTH"
       },
       {
         "description": "Curtains - Black",
@@ -36154,8 +36570,7 @@
   },
   {
     "description": "Baba Yaga's House - Bookcase",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "areas": [ "Baba Yaga House Interior" ],
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "LUNAR_MOONCLAN_BOOKCASE"
     ],
@@ -36229,7 +36644,305 @@
     "flatNormals": true,
     "objectIds": [
       "FLOORKIT_WOODEN01_DEFAULT01",
-      "FLOORKIT_ALDARIN_WOOD01_DEFAULT01"
+      "FLOORKIT_WOODEN01_DEFAULT02",
+      "FLOORKIT_ALDARIN_WOOD01_DEFAULT01",
+      "FLOORKIT_WOODEN01_END01",
+      "FLOORKIT_WOODEN01_END01_M"
+    ]
+  },
+  {
+    "description": "Fortis - Aldarin - Wooden - Single row wooden fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_WOODEN01_FENCE01"
+    ]
+  },
+  {
+    "description": "Fortis - brick half wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_FORTIS03_PARAPET01",
+      "WALLKIT_FORTIS03_PARAPET02"
+    ]
+  },
+  {
+    "description": "Fortis - wall bricks - Decoration",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 222,
+    "objectIds": [
+      "WALLKIT_FORTIS02_BRICKS01",
+      "WALLKIT_FORTIS03_BRICKS01",
+      "WALLKIT_FORTIS02_BRICKS02",
+      "WALLKIT_FORTIS03_BRICKS02"
+    ]
+  },
+  {
+    "description": "Fortis - wooden plank floor attached to brick",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_FORTIS_DOCK_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - brick - Exterior walls - Middle",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_FORTIS02_WALL01",
+      "WALLKIT_FORTIS02_ARROWSLIT01",
+      "WALLKIT_FORTIS02_GATEHOUSE01"
+    ]
+  },
+  {
+    "description": "Fortis - Stone wall Bottom",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_FORTIS_DOCK_LOWER_LEFT",
+      "WALLKIT_FORTIS01_WALL01",
+      "WALLKIT_FORTIS01_WALL01_INVERSE",
+      "WALLKIT_FORTIS01_WALL02",
+      "WALLKIT_FORTIS_DOCK_LOWER_RIGHT",
+      "WALLKIT_FORTIS01_WALL01_GATEHOUSE_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 1.1
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone wall attached to brick",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_FORTIS_DOCK_MID"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Brick - Exterior wall - Gatehouse",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1,
+    "objectIds": [
+      "WALLKIT_FORTIS_GATEHOUSE_02",
+      "WALLKIT_FORTIS_GATEHOUSE_03",
+      "WALLKIT_FORTIS_GATEHOUSE_04",
+      "WALLKIT_FORTIS_GATEHOUSE_05"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Metallic - Brick - Wooden - Exterior wall - Gatehouse door",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1,
+    "objectIds": [
+      "WALLKIT_FORTIS_GATEHOUSE_02_DOOR",
+      "WALLKIT_FORTIS_GATEHOUSE_03_DOOR",
+      "WALLKIT_FORTIS_GATEHOUSE_04_DOOR",
+      "WALLKIT_FORTIS_GATEHOUSE_05_DOOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": -128
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Metallic - Wooden - Gatehouse gate",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -128,
+    "objectIds": [
+      "WALLKIT_FORTIS_GATEHOUSE_06"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Marble - Temple and aquaduct walls",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_CIVITAS01_AQUEDUCT01",
+      "WALLKIT_CIVITAS02_AQUEDUCT01",
+      "WALLKIT_CIVITAS01_AQUEDUCT02",
+      "WALLKIT_CIVITAS03_AQUEDUCT01",
+      "ARCH_CIVITAS03_AQUEDUCT01",
+      "ARCH_CIVITAS02_AQUEDUCT01_T_JUNCTION01",
+      "ARCH_CIVITAS02_AQUEDUCT01_T_JUNCTION02",
+      "ARCH_CIVITAS03_AQUEDUCT01_T_JUNCTION01",
+      "ARCH_CIVITAS03_AQUEDUCT01_T_JUNCTION02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dark bricks",
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Marble - Temple and aquaduct walls with moss",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_CIVITAS02_AQUEDUCT01_DAMAGED02",
+      "WALLKIT_CIVITAS01_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_CIVITAS02_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_CIVITAS01_AQUEDUCT01_DAMAGED02",
+      "WALLKIT_CIVITAS01_AQUEDUCT01_DAMAGED03",
+      "ARCH_CIVITAS02_AQUEDUCT01",
+      "ARCH_CIVITAS02_AQUEDUCT01_FOLIAGE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dark bricks",
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "MOss",
+        "colors": "h >= 12",
+        "baseMaterial": "GRASS_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Stone - Marble - Brick - Temple and aquaduct roof",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_CIVITAS04_AQUEDUCT01",
+      "WALLKIT_CIVITAS04_AQUEDUCT02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dark bricks",
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      },
+      {
+        "description": "Red Bricks",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256
+      }
+    ]
+  },
+  {
+    "description": "Fortis  Marble - Temple and aquaduct roof tiles",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": -256,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_CIVITAS04_AQUEDUCT02_M",
+      "WALLKIT_CIVITAS04_AQUEDUCT03",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_ALT",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_ALT_M",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_CORNER01",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_CORNER02",
+      "WALLKIT_CIVITAS04_AQUEDUCT03_STRAIGHT01"
     ]
   },
   {
@@ -36267,12 +36980,18 @@
       "FORTIS_DOOR_L_OPEN",
       "FORTIS_DOOR_L_REVERSE",
       "FORTIS_DOOR_L_REVERSE_OPEN",
+      "FORTIS_DOOR_DOUBLE_L",
+      "FORTIS_DOOR_DOUBLE_L_OPEN",
+      "FORTIS_DOOR_DOUBLE_L_OPEN_NOOP",
       "FORTIS_DOOR_R",
       "FORTIS_DOOR_R_LOCKED",
       "FORTIS_DOOR_R_NOOP",
       "FORTIS_DOOR_R_OPEN",
       "FORTIS_DOOR_R_REVERSE",
       "FORTIS_DOOR_R_REVERSE_OPEN",
+      "FORTIS_DOOR_DOUBLE_R",
+      "FORTIS_DOOR_DOUBLE_R_OPEN",
+      "FORTIS_DOOR_DOUBLE_R_OPEN_NOOP",
       "VARLAMORE_THIEVING_HOUSE_DOOR_LOCKED",
       "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN"
     ],
@@ -36308,6 +37027,22 @@
     ]
   },
   {
+    "description": "Fortis - Masonry Wall",
+    "baseMaterial": "MARBLE_2_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+
+    ],
+    "objectIds": [
+      "WALLKIT_CIVITAS01_END01_RIGHT",
+      "WALLKIT_CIVITAS01_END01_LEFT",
+      "WALLKIT_CIVITAS01_MIDDLE01",
+      "WALLKIT_CIVITAS01_MIDDLE02",
+      "WALLKIT_CIVITAS01_INNER01_TALL"
+    ]
+  },
+  {
     "description": "Fortis Masonry wall with wooden post",
     "baseMaterial": "MARBLE_2_GLOSS",
     "uvType": "BOX",
@@ -36319,9 +37054,17 @@
         "colors": "h == 5 && s > 0",
         "uvType": "BOX",
         "uvScale": 0.8
+      },
+      {
+        "description": "Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ],
     "objectIds": [
+      "WALLKIT_CIVITAS01_FRAME01",
       "WALLKIT_CIVITAS03_MIDDLE01"
     ]
   },
@@ -36422,7 +37165,23 @@
       "WALLKIT_CIVITAS07_END01",
       "WALLKIT_CIVITAS07_END02",
       "WALLKIT_CIVITAS04_MIDDLE01",
-      "WALLKIT_CIVITAS04_END01_LEFT"
+      "WALLKIT_CIVITAS04_END01_LEFT",
+      "WALLKIT_CIVITAS03_JUNCTION01_M",
+      "WALLKIT_CIVITAS01_INNER03",
+      "WALLKIT_CIVITAS04_JUNCTION01",
+      "WALLKIT_CIVITAS04_JUNCTION01_M",
+      "WALLKIT_CIVITAS04_BILLBOARD02",
+      "WALLKIT_CIVITAS04_BILLBOARD02_M",
+      "WALLKIT_CIVITAS04_BILLBOARD03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 1",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
     ]
   },
   {
@@ -36912,6 +37671,30 @@
         "colors": "h == 8 && s == 1",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "PoH - House Advertisement Board",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "POH_BOARD_YANILLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.75
       }
     ]
   },
@@ -37476,8 +38259,7 @@
       },
       {
         "colors": "h == 8",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   },
@@ -38596,6 +39378,7 @@
   {
     "description": "Tai Bwo Wannai Cleanup Jungle with leaves - Dynamic",
     "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 512,
@@ -38603,6 +39386,7 @@
       {
         "description": "Plant",
         "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "colors": "h > 11",
         "uvType": "MODEL_XZ",
         "uvOrientation": 384,
@@ -41529,7 +42313,10 @@
     "objectIds": [
       "QIP_OBS_VILLAGE_WALL_CRUMBLE3",
       "QIP_OBS_VILLAGE_WALLM_CRUMBLE3",
-      "QIP_OBS_VILLAGE_WALL_CRUMBLE4"
+      "QIP_OBS_VILLAGE_WALL_CRUMBLE4",
+      "QIP_WATCHTOWER_CRUMBLE_WALL",
+      "QIP_WATCHTOWER_CRUMBLE_WALL_R",
+      "QIP_WATCHTOWER_CRUMBLE_WALL_L"
     ]
   },
   {
@@ -44016,7 +44803,8 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "DRAGONMOUNTEDHEAD_RED"
+      "DRAGONMOUNTEDHEAD_RED",
+      "DRAGONMOUNTEDHEAD"
     ],
     "colorOverrides": [
       {
@@ -44461,11 +45249,13 @@
   {
     "description": "Zeah - Kourend - Hosidius - Plant - Leafy Shrub",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "colorOverrides": [
       {
         "colors": "h > 11",
+        "windDisplacementMode": "OBJECT",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.4,
         "uvOrientation": 89,
@@ -44479,11 +45269,13 @@
   {
     "description": "Zeah - Kourend - Hosidius - Plant - Leafy grass",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
     "uvType": "BOX",
     "uvScale": 0.6,
     "colorOverrides": [
       {
         "colors": "h > 11",
+        "windDisplacementMode": "OBJECT",
         "baseMaterial": "LEAF_VEINS",
         "uvScale": 0.4,
         "uvType": "MODEL_XZ"
@@ -45048,7 +45840,9 @@
     "description": "Generic - Cabbage",
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
-      "CABBAGE"
+      "CABBAGE",
+      "AVIUM_CABBAGE01",
+      "AVIUM_CABBAGE02"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -45488,7 +46282,10 @@
     "uvScale": 0.5,
     "uvOrientation": 168,
     "objectIds": [
-      "MM_LAB_BARREL_WOVEN01_FOOD01"
+      "MM_LAB_BARREL_WOVEN01_FOOD01",
+      "HG_BARREL_WOVEN01_FOOD01",
+      "HG_BARREL_WOVEN01_EMPTY01",
+      "HG_BARREL_POT01_EMPTY01"
     ],
     "colorOverrides": [
       {
@@ -46023,26 +46820,55 @@
     ]
   },
   {
-    "description": "Aldarin - Terracotta shingled roofs",
+    "description": "Aldarin - Fortis - Terracotta shingled roofs",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
-    "uvOrientation": 303,
+    "uvOrientation": -256,
     "objectIds": [
       "ROOFKIT_CIVITAS_ROOF01",
       "ROOFKIT_CIVITAS_ROOF02",
       "ROOFKIT_CIVITAS_ROOF03",
       "ROOFKIT_CIVITAS_ROOF04",
-      "ROOFKIT_CIVITAS_ROOF05"
+      "ROOFKIT_CIVITAS_ROOF05",
+      "ROOFKIT_CIVITAS_ROOF06",
+      "ROOFKIT_CIVITAS_ROOF_CENTER_SINGLE",
+      "ROOFKIT_CIVITAS_TOP01",
+      "ROOFKIT_CIVITAS_2X2",
+      "ROOFKIT_CIVITAS_2X2B",
+      "ROOFKIT_CIVITAS_2X2C",
+      "ROOFKIT_CIVITAS_2X1",
+      "ROOFKIT_CIVITAS_2X1_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Roof",
+        "colors": "h == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 303
+      }
     ]
   },
   {
-    "description": "Aldarin - Terracotta shingled roof with fron facade",
+    "description": "Aldarin - Fortis - Terracotta roofs facade with moon",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "objectIds": [
+      "ROOFKIT_CIVITAS_FACADE02_6X1",
+      "ROOFKIT_CIVITAS_FACADE02_6X1_M"
+    ]
+  },
+  {
+    "description": "Aldarin - Fortis - Terracotta shingled roof with fron facade",
     "baseMaterial": "GRUNGE_3_DARK",
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
       "ROOFKIT_ALDARIN_FACADE01_5X1",
-      "ROOFKIT_ALDARIN_FACADE01_5X1_M"
+      "ROOFKIT_ALDARIN_FACADE01_5X1_M",
+      "ROOFKIT_CIVITAS_FACADE01_5X1",
+      "ROOFKIT_CIVITAS_FACADE01_5X1_M"
     ],
     "colorOverrides": [
       {
@@ -46143,18 +46969,74 @@
     ]
   },
   {
-    "description": "Aldarin - Stone - Pillars",
+    "description": "Aldarin - Civitas - Stone - Pillars - Red",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 179,
     "objectIds": [
       "PILLAR_ALDARIN01_CITY01_LOWER01",
-      "PILLAR_ALDARIN01_CITY01_HIGHER01"
+      "PILLAR_ALDARIN01_CITY01_HIGHER01",
+      "PILLAR_CIVITAS01_CITY01_LOWER01",
+      "PILLAR_CIVITAS01_CITY01_HIGHER01",
+      "PILLAR_CIVITAS01_CITY01",
+      "PILLAR_CIVITAS01_CITY02_LOWER01"
     ],
     "colorOverrides": [
       {
         "colors": "h <= 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Aldarin - Civitas - Stone - Pillars - twisty  White",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_CIVITAS01_CITY06_LOWER01",
+      "PILLAR_CIVITAS01_CITY06_HIGHER01"
+
+    ]
+  },
+  {
+    "description": "Aldarin - Civitas - Stone - Pillars - White",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_CIVITAS01_CITY04_LOWER01",
+      "PILLAR_CIVITAS01_CITY04_HIGHER01",
+      "PILLAR_CIVITAS01_CITY04",
+      "PILLAR_CIVITAS01_CITY04_LOWER02",
+      "PILLAR_CIVITAS01_CITY04_HIGHER02"
+
+    ]
+  },
+  {
+    "description": "Aldarin - Civitas - Stone - Pillars - Blue",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_CIVITAS01_CITY05_SMALL",
+      "PILLAR_CIVITAS01_CITY05",
+      "PILLAR_CIVITAS01_CITY05_LOWER01",
+      "PILLAR_CIVITAS01_CITY05_HIGHER01",
+      "PILLAR_CIVITAS01_CITY05_LOWER01_NOTES01",
+      "PILLAR_CIVITAS01_CITY05_LOWER01_NOTES02"
+
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 35",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvOrientation": 89,
@@ -46222,7 +47104,21 @@
     "objectIds": [
       "VARLAMORE_STATUE01_QUOATLOS01_2X2",
       "VARLAMORE_STATUE01_TAUR01_2X2",
-      "VARLAMORE_STATUE01_XERNA01_2X2"
+      "VARLAMORE_STATUE01_XERNA01_2X2",
+      "VARLAMORE_STATUE01_ATLAZORA01_1X1",
+      "VARLAMORE_STATUE01_DIZANA01_1X1",
+      "VARLAMORE_STATUE01_MARHUITZ01_2X2",
+      "VARLAMORE_STATUE01_TAUR01_2X2",
+      "VARLAMORE_STATUE01_ATLAZORA01_2X2",
+      "VARLAMORE_STATUE01_DIZANA01_2X2",
+      "STATUES_CIVITAS01_IMAFORE02",
+      "CIVITAS_MUSEUM_STATUE_QUOATLOS",
+      "CIVITAS_MUSEUM_STATUE_MARHUITZ",
+      "CIVITAS_MUSEUM_STATUE_ATLAZORA",
+      "CIVITAS_MUSEUM_STATUE_TAUR",
+      "CIVITAS_MUSEUM_STATUE_XERNA",
+      "CIVITAS_MUSEUM_STATUE_DIZANA",
+      "CIVITAS_MUSEUM_STATUE_MAXIMUS"
     ],
     "colorOverrides": [
       {
@@ -46247,7 +47143,9 @@
       "ALDARIN_POTTED01_PALM03",
       "ALDARIN_POTTED01_FAN01",
       "ALDARIN_POTTED01_FAN02",
-      "ALDARIN_POTTED01_FAN03"
+      "ALDARIN_POTTED01_FAN03",
+      "CIVITAS_POTTED01_FAN03",
+      "CIVITAS_POTTED01_FAN04"
     ],
     "colorOverrides": [
       {
@@ -46361,7 +47259,24 @@
     "uvScale": 0.6,
     "uvOrientation": 913,
     "objectIds": [
-      "CHAIR_ALDARIN01_BENCH01"
+      "CHAIR_ALDARIN01_BENCH01",
+      "CHAIR_CIVITAS01_BENCH01"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone - Path edges",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 777,
+    "objectIds": [
+      "FLOOR_CIVITAS_EDGE01",
+      "FLOOR_CIVITAS_EDGE02",
+      "FLOOR_CIVITAS_EDGE03",
+      "FLOOR_CIVITAS_EDGE04",
+      "FLOOR_CIVITAS_EDGE04_M",
+      "FLOOR_CIVITAS_EDGE05",
+      "FLOOR_CIVITAS_EDGE06"
     ]
   },
   {
@@ -46401,7 +47316,9 @@
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
     "objectIds": [
-      "ALDARIN_SHELF02_BOOKS02"
+      "ALDARIN_SHELF02_BOOKS02",
+      "CIVITAS_SHELF01_BOOKS01",
+      "CIVITAS_SHELF01_BOOKS02"
     ],
     "colorOverrides": [
       {
@@ -46520,6 +47437,7 @@
     "colorOverrides": [
       {
         "description": "Needles",
+        "windDisplacementMode": "VERTEX",
         "baseMaterial": "LEAF_VEINS",
         "colors": "h > 10",
         "uvType": "BOX"
@@ -47075,6 +47993,7 @@
     "description": "Aldarin - Wooden - Metallic - Large barrels",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
+      "BARREL_WOODEN01_LARGE01_CIVITAS01",
       "BARREL_WOODEN01_LARGE01_ALDARIN01"
     ],
     "uvOrientationY": 512,
@@ -47361,6 +48280,268 @@
       {
         "colors": "a < 255",
         "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Yanille Wall Hole Agility Shortcut",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.75,
+    "objectIds": [
+      "YANILLE_CASTLEHOLE_SC",
+      "YANILLE_CASTLEWALL_SC"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "COLORED_GRASS",
+        "uvOrientation": 512,
+        "castShadows": false,
+        "upwardsNormals": false,
+        "colors": "h == 16",
+        "windDisplacementMode": "OBJECT"
+      },
+      {
+        "baseMaterial": "NONE",
+        "uvOrientation": 512,
+        "castShadows": false,
+        "colors": "l == 16"
+      },
+      {
+        "baseMaterial": "PURE_BLACK",
+        "colors": "h == 0 && s == 0 && l < 1"
+      }
+    ]
+  },
+  {
+    "description": "Piano Body",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationY": 512,
+    "uvScale": 0.75,
+    "objectIds": [
+      "PIANO_A"
+    ]
+  },
+  {
+    "description": "Piano Keys and Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PIANO_B"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "s == 7",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "NONE",
+        "colors": "h == 0"
+      }
+    ]
+  },
+  {
+    "description": "Dairy Churn",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DAIRY_CHURN"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s < 2"
+      }
+    ]
+  },
+  {
+    "description": "Yannile - Metal Hole",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "objectIds": [
+      "YANILLEHOLEOUT"
+    ]
+  },
+  {
+    "description": "Yanille - Bay Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "BAY_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "NONE",
+        "colors": "a < 67"
+      }
+    ]
+  },
+  {
+    "description": "Yanille - Magic Guild Bell",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ZOGRE_OUTDOOR_BELL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 8"
+      }
+    ]
+  },
+  {
+    "description": "Yanille - Pub Sign",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "DRAGONINNSIGN"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "colors": "h == 4"
+      }
+    ]
+  },
+  {
+    "description": "Yanille - Hunter Shop Shelves",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "HUNTING_SHOP_SHELVES1_YANILLE",
+      "HUNTING_SHOP_SHELVES2_YANILLE",
+      "HUNTING_SHOP_SHELVES3_YANILLE"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "colors": "h == 5 && s == 2"
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Wooden - Window Shutters - Plank",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "WALLKIT_CIVITAS03_SHUTTERS01",
+      "WALLKIT_CIVITAS03_SHUTTERS02"
+    ]
+  },
+  {
+    "description": "Varlamore - Pottery - Plant - Potted vines",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 343,
+    "objectIds": [
+      "CIVITAS_POTTERY01_PLANT01",
+      "CIVITAS_POTTERY01_PLANT02",
+      "CIVITAS_POTTERY01_PLANT03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 10",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      },
+      {
+        "description": "Shadow",
+        "baseMaterial": "NONE",
+        "colors": "h == 0 && s == 0",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Wooden - Stone - Totem support pillar",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "PILLAR_CIVITAS01_PALACE08_LOWER01",
+      "PILLAR_CIVITAS01_PALACE08_HIGHER01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": " h == 7 && s <= 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": 224
+      }
+    ]
+  },
+  {
+    "description": "Fortis - Wooden - Rope - Paper - Rope half log shelf with papers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "BRUT_BARBARIAN_SHELF"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Log",
+        "colors": " h == 7 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Fortis - ToA - Paper - Flor scrolls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TOA_VAULT_SCROLLS01",
+      "TOA_VAULT_SCROLLS02"
+    ]
+  },
+  {
+    "description": "Varlamore - Wooden - Metallic -Plank - Chest with metal latch",
+    "baseMaterial": "WOOD_GRAIN_3_DARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "upwardsNormals": true,
+    "objectIds": [
+      "VARLAMORE_NICE_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Latch",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": -89
       }
     ]
   }

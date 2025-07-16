@@ -19,7 +19,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 
-import static org.lwjgl.opengl.GL20C.*;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 
