@@ -15432,7 +15432,6 @@
   {
     "description": "Kharidian Columnar Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS3",
       "FEUD_CACTUS_ROW",
