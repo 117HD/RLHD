@@ -1848,6 +1848,16 @@
     "windStrength": 35
   },
   {
+    "area": "APE_ATOLL",
+    "ambientColor": "#97baff",
+    "directionalStrength": 4,
+    "sunAngles": [ 52, 235 ],
+    "fogDepth": 6.5,
+    "windAngle": 40,
+    "windSpeed": 17,
+    "windStrength": 55
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
