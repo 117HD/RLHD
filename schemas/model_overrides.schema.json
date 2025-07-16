@@ -131,7 +131,7 @@
       },
       "terrainVertexSnap": {
         "type": "boolean",
-        "description": "Whether the bottom most vertices of the model should snap to the tile height. Defaults to false."
+        "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
       },
       "hideVanillaShadows": {
         "type": "boolean",
