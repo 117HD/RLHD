@@ -1112,7 +1112,6 @@
       "ARDOUGNE_LOG_BALANCE_RIGHT_SC",
       "ZEP_TREE3",
       "MACRO_FORESTERTREE2",
-      "TREE_FORROPESWING1",
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
@@ -1134,6 +1133,18 @@
         "textureMaterial": "MAPLE_LEAVES"
       }
     }
+  },
+  {
+    "description": "TREES - Rope Swing",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "TREE_ROPESWING3",
+      "TREE_FORROPESWING1",
+      "TREE_ROPESWING4",
+      "TREE_ROPESWING4_NOROPE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Tree - Double Tree",
@@ -5489,13 +5500,6 @@
       "LOST_TRIBE_HOLE_2",
       "SWAMP_CAVEWALL_FORMARKER",
       "COLLAPSING_ROOF_LOCATION",
-      "GOBLIN_CAVEWALL_BONEARCH",
-      "GOBLIN_CAVEWALL_BONEARCH_RAGS1",
-      "GOBLIN_CAVEWALL_BONEARCH_RAGS2",
-      "GOBLIN_CAVEWALL_BONEARCH_BROKEN1",
-      "GOBLIN_CAVEWALL_BONEARCH_BROKEN2",
-      "GOBLIN_CAVEWALL_BONE_SUPPORTED1",
-      "GOBLIN_CAVEWALL_BONE_SUPPORTED2",
       "SWAMP_CAVEWALL1_GASHOLE",
       "SWAMP_CAVEWALL1_GASHOLE2",
       "LOST_TRIBE_CELLAR_HOLE_BLOCKING",
@@ -8167,7 +8171,6 @@
       "MCANNONLADDER",
       "WIZARDS_TOWER_LADDERTOP",
       "WIZARDS_TOWER_LADDER",
-      "EASTER25_CARROT_SCRAPS_NO_TRAIL",
       "MOURNER_HIDEOUT_LADDER1",
       "NEWBIELADDER1",
       "NEWBIELADDERTOP1",
@@ -8185,7 +8188,9 @@
       "MGUILD_LADDER"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "uvScale": 0.6,
+    "retainVanillaUvs": false
   },
   {
     "description": "Textured - Crate 1",
@@ -8585,7 +8590,6 @@
     "description": "Candelabra",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
-      "CANDLES",
       "GOLDCANDLES",
       "BLACKCANDLES",
       "FAI_VARROCK_POSH_CANDLESTICK",
@@ -8593,6 +8597,22 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.4
+  },
+  {
+    "description": "Candelabra - Wooden",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "CANDLES"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
   },
   {
     "description": "Candelabra - Dusty",
@@ -9048,7 +9068,6 @@
     "description": "Ground Hole Shortcuts",
     "baseMaterial": "DIRT_1",
     "objectIds": [
-      "YANILLE_CASTLEHOLE_SC",
       "VARROCK_SC_TUNNEL_WEST",
       "VARROCK_SC_TUNNEL_EAST",
       "HUNTING_TRAIL_VISIBLE",
@@ -9281,6 +9300,7 @@
       "POORDOOROPEN_M",
       "INACTIVEPOORDOOR",
       "MAGICGUILD_DOOR_L",
+      "MAGICGUILD_DOOR_R",
       "LOCKEDDOOR1",
       "MEMBERDOOR",
       "POORDOOROPEN_PERM",
@@ -9473,7 +9493,6 @@
       "INACCASTLEDOUBLEDOORR",
       "INACCASTLEDOUBLEDOORLOPEN",
       "INACCASTLEDOUBLEDOORROPEN",
-      "MAGICGUILD_DOOR_R",
       "KR_DOUBLEDOOR_L",
       "KR_OPENDOUBLEDOOR_L",
       "W_ARDOUGNEDOUBLEDOORL",
@@ -9532,7 +9551,7 @@
         "colors": "s > 3",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.4,
+        "uvScale": 0.6,
         "uvOrientation": 512
       }
     ]
@@ -11441,7 +11460,7 @@
   },
   {
     "description": "Metallic - Ground - Armor",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_2",
     "objectIds": [
       "DAMAGEDARMOUR1",
       "DAMAGEDARMOUR2",
@@ -11450,7 +11469,7 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 1.2
+    "uvScale": 0.7
   },
   {
     "description": "Objects - Metallic - Chair - Broken",
@@ -15624,7 +15643,23 @@
         "colors": "s == 7",
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX",
-        "uvScale": 0.3
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Potted Plants",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "POTTEDSMALLFERN",
+      "POTTEDFERN2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.2
       }
     ]
   },
@@ -21347,6 +21382,7 @@
     },
     "objectIds": [
       "BANKBOOTHCLOSED_END_LEFT",
+      "BANKBOOTHCLOSED_END_RIGHT",
       "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
@@ -29966,7 +30002,9 @@
   },
   {
     "description": "Objects - Metallic - Range on textured bricks - Textured",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "NEWBIERANGE",
       "RANGE"
@@ -33897,7 +33935,7 @@
       {
         "description": "Golden rod",
         "colors": "h == 8 && s > 6 && l > 30",
-        "baseMaterial": "GRAY_65"
+        "baseMaterial": "METALLIC_1_SMOOTH"
       },
       {
         "description": "Curtains - Black",
@@ -36458,8 +36496,7 @@
   },
   {
     "description": "Baba Yaga's House - Bookcase",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-    "areas": [ "Baba Yaga House Interior" ],
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "LUNAR_MOONCLAN_BOOKCASE"
     ],
@@ -37220,6 +37257,30 @@
     ]
   },
   {
+    "description": "PoH - House Advertisement Board",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "POH_BOARD_YANILLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Post with rope",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -37780,8 +37841,7 @@
       },
       {
         "colors": "h == 8",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX"
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   },
@@ -41835,7 +41895,10 @@
     "objectIds": [
       "QIP_OBS_VILLAGE_WALL_CRUMBLE3",
       "QIP_OBS_VILLAGE_WALLM_CRUMBLE3",
-      "QIP_OBS_VILLAGE_WALL_CRUMBLE4"
+      "QIP_OBS_VILLAGE_WALL_CRUMBLE4",
+      "QIP_WATCHTOWER_CRUMBLE_WALL",
+      "QIP_WATCHTOWER_CRUMBLE_WALL_R",
+      "QIP_WATCHTOWER_CRUMBLE_WALL_L"
     ]
   },
   {
@@ -44322,7 +44385,8 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "DRAGONMOUNTEDHEAD_RED"
+      "DRAGONMOUNTEDHEAD_RED",
+      "DRAGONMOUNTEDHEAD"
     ],
     "colorOverrides": [
       {
@@ -47674,6 +47738,160 @@
       {
         "colors": "a < 255",
         "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Yanille Wall Hole Agility Shortcut",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.75,
+    "objectIds": [
+      "YANILLE_CASTLEHOLE_SC",
+      "YANILLE_CASTLEWALL_SC"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "COLORED_GRASS",
+        "uvOrientation": 512,
+        "castShadows": false,
+        "upwardsNormals": false,
+        "colors": "h == 16",
+        "windDisplacementMode": "OBJECT"
+      },
+      {
+        "baseMaterial": "NONE",
+        "uvOrientation": 512,
+        "castShadows": false,
+        "colors": "l == 16"
+      },
+      {
+        "baseMaterial": "PURE_BLACK",
+        "colors": "h == 0 && s == 0 && l < 1"
+      }
+    ]
+  },
+  {
+    "description": "Piano Body",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientationX": 512,
+    "uvOrientationY": 512,
+    "uvScale": 0.75,
+    "objectIds": [
+      "PIANO_A"
+    ]
+  },
+  {
+    "description": "Piano Keys and Chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PIANO_B"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "s == 7",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      },
+      {
+        "baseMaterial": "NONE",
+        "colors": "h == 0"
+      }
+    ]
+  },
+  {
+    "description": "Dairy Churn",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DAIRY_CHURN"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s < 2"
+      }
+    ]
+  },
+  {
+    "description": "Yannile - Metal Hole",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "objectIds": [
+      "YANILLEHOLEOUT"
+    ]
+  },
+  {
+    "description": "Yanille - Bay Window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "BAY_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "NONE",
+        "colors": "a < 67"
+      }
+    ]
+  },
+  {
+    "description": "Yanille - Magic Guild Bell",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ZOGRE_OUTDOOR_BELL"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 8"
+      }
+    ]
+  },
+  {
+    "description": "Yanille - Pub Sign",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "DRAGONINNSIGN"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "colors": "h == 4"
+      }
+    ]
+  },
+  {
+    "description": "Yanille - Hunter Shop Shelves",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "HUNTING_SHOP_SHELVES1_YANILLE",
+      "HUNTING_SHOP_SHELVES2_YANILLE",
+      "HUNTING_SHOP_SHELVES3_YANILLE"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "colors": "h == 5 && s == 2"
       }
     ]
   }

@@ -1,4 +1,4 @@
-package rs117.hd.opengl;
+package rs117.hd.opengl.uniforms;
 
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 
-import static org.lwjgl.opengl.GL31C.*;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public abstract class UniformBuffer {

@@ -233,8 +233,12 @@ public class Template
 			key.equals(identifier) ? String.format("#define %s %d", identifier, value) : null);
 	}
 
-	public Template define(String identifier, double value)
-	{
+	public Template define(String identifier, float value) {
+		return addIncludeLoader(key ->
+			key.equals(identifier) ? String.format("#define %s %ff", identifier, value) : null);
+	}
+
+	public Template define(String identifier, double value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %f", identifier, value) : null);
 	}
