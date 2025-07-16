@@ -45,3 +45,15 @@ vec2 animationFrame(vec2 animationDuration)
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
 }
+
+float hermite(float a, float b, float t) {
+    float t2 = t * t;
+    float t3 = t2 * t;
+    return a * (1.0 - 3.0 * t2 + 2.0 * t3) + b * (3.0 * t2 - 2.0 * t3);
+}
+
+vec3 hermite(vec3 a, vec3 b, float t) {
+    float t2 = t * t;
+    float t3 = t2 * t;
+    return a * (1.0 - 3.0 * t2 + 2.0 * t3) + b * (3.0 * t2 - 2.0 * t3);
+}

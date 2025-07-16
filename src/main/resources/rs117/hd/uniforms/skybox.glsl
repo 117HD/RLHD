@@ -10,6 +10,7 @@ struct SkyboxConfig
     float hueShift;
     float rotation;
     float rotationSpeed;
+    vec3 tintColor;
 };
 
 layout(std140) uniform SkyboxUniforms {

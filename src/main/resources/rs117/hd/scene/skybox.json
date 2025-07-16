@@ -27,7 +27,8 @@
         "hue": 120,
         "saturation": 1.2,
         "lightness": 0.1,
-        "contrast": 1.1
+        "contrast": 1.1,
+        "tintColor": [0.6, 0.8, 1.0]
       }
     },
     {

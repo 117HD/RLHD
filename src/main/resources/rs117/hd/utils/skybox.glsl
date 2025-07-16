@@ -3,6 +3,7 @@
 #include uniforms/skybox.glsl
 #include uniforms/global.glsl
 #include utils/color_utils.glsl
+#include utils/misc.glsl
 
 bool canSampleSky() {
     return activeSkybox.index >= 0 || nextSkybox.index >= 0;
@@ -29,16 +30,48 @@ vec3 applyPostProcessing(vec3 skyboxColor, SkyboxConfig Config) {
 
     hsl.x = fract(hsl.x + Config.hueShift / 360.0);
 
-    return hslToSrgb(hsl);
+    vec3 result = hslToSrgb(hsl);
+
+    if (all(greaterThanEqual(Config.tintColor, vec3(0.0)))) {
+        result *= Config.tintColor;
+    }
+    return result;
+}
+
+vec3 blurSkybox(samplerCubeArray skyboxArray, vec3 dir, int index, float rotation, SkyboxConfig config) {
+    vec3 color = vec3(0.0);
+    float total = 0.0;
+    float blurStrength = 0.04;
+
+    // Center sample
+    vec3 rotatedDir = rotateSkyDirection(dir, rotation);
+    color += texture(skyboxArray, vec4(rotatedDir, index)).rgb;
+    total += 1.0;
+
+    for (int i = 0; i < 8; ++i) {
+        float angle = 3.14159 * 0.25 * float(i);
+        vec3 offset = vec3(cos(angle), 0.0, sin(angle)) * blurStrength;
+        vec3 sampleDir = normalize(rotatedDir + offset);
+        color += texture(skyboxArray, vec4(sampleDir, index)).rgb;
+        total += 1.0;
+    }
+
+    color /= total;
+
+    if (config.applyPostProcessing == 1) {
+        color = applyPostProcessing(color, config);
+    }
+    return color;
 }
 
 vec3 sampleSky(vec3 viewDir, vec3 baseColor) {
     vec3 skyboxDir = viewDir;
     skyboxDir.y = -viewDir.y;
 
-
-    float dynamicRotation = activeSkybox.rotation + elapsedTime * activeSkybox.rotationSpeed;
-    skyboxDir = rotateSkyDirection(skyboxDir, dynamicRotation);
+    float blendFactor = smoothstep(0.0, 1.0, skyboxBlend);
+    float speedFactor = 0.9;
+    float activeRotation = activeSkybox.rotation + elapsedTime * activeSkybox.rotationSpeed * speedFactor;
+    float nextRotation = nextSkybox.rotation + elapsedTime * nextSkybox.rotationSpeed * speedFactor;
 
     // Convert baseColor from sRGB to linear (fogColor is usually sRGB)
     vec3 baseLinear = srgbToLinear(baseColor);
@@ -46,20 +79,13 @@ vec3 sampleSky(vec3 viewDir, vec3 baseColor) {
     vec3 activeSkyColor = baseLinear;
     if (activeSkybox.index >= 0) {
         // Texture fetch gives linear color usually, but if stored sRGB, convert
-        activeSkyColor = texture(skyboxArray, vec4(skyboxDir, activeSkybox.index)).rgb;
-        if(activeSkybox.applyPostProcessing == 1) {
-            activeSkyColor = applyPostProcessing(activeSkyColor, activeSkybox);
-        }
+        activeSkyColor = blurSkybox(skyboxArray, skyboxDir, activeSkybox.index, activeRotation, activeSkybox);
     }
 
     vec3 nextSkyColor = baseLinear;
     if (nextSkybox.index >= 0) {
-        nextSkyColor = texture(skyboxArray, vec4(skyboxDir, nextSkybox.index)).rgb;
-
-        if(nextSkybox.applyPostProcessing == 1) {
-            nextSkyColor = applyPostProcessing(nextSkyColor, nextSkybox);
-        }
+        nextSkyColor = blurSkybox(skyboxArray, skyboxDir, nextSkybox.index, nextRotation, nextSkybox);
     }
 
-    return clamp(mix(activeSkyColor, nextSkyColor, skyboxBlend), 0.0, 1.0);
+    return clamp(hermite(activeSkyColor, nextSkyColor, blendFactor), 0.0, 1.0);
 }
