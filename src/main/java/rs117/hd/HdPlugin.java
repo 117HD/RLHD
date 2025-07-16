@@ -2124,7 +2124,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDepthMask(false);
 
 				glUniformBlockBinding(glSkyboxProgram, uniSkyboxBlockSkybox, UNIFORM_BLOCK_SKYBOX);
-				glUniformBlockBinding(glSceneProgram, uniSkyboxBlockGlobal, UNIFORM_BLOCK_GLOBAL);
+				glUniformBlockBinding(glSkyboxProgram, uniSkyboxBlockGlobal, UNIFORM_BLOCK_GLOBAL);
 
 				glBindVertexArray(vaoSkyboxHandle);
 
