@@ -36238,7 +36238,21 @@
     "flatNormals": true,
     "objectIds": [
       "FLOORKIT_WOODEN01_DEFAULT01",
-      "FLOORKIT_ALDARIN_WOOD01_DEFAULT01"
+      "FLOORKIT_WOODEN01_DEFAULT02",
+      "FLOORKIT_ALDARIN_WOOD01_DEFAULT01",
+      "FLOORKIT_WOODEN01_END01",
+      "FLOORKIT_WOODEN01_END01_M"
+    ]
+  },
+  {
+    "description": "Fortis - Aldarin - Wooden - Single row wooden fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_WOODEN01_FENCE01"
     ]
   },
   {
@@ -46553,6 +46567,18 @@
         "uvOrientation": 89,
         "uvScale": 0.8
       }
+    ]
+  },
+  {
+    "description": "Aldarin - Civitas - Stone - Pillars - twisty  White",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 179,
+    "objectIds": [
+      "PILLAR_CIVITAS01_CITY06_LOWER01",
+      "PILLAR_CIVITAS01_CITY06_HIGHER01"
+
     ]
   },
   {
