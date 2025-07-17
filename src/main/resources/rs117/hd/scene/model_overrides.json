@@ -2429,6 +2429,7 @@
     "baseMaterial": "GRAY_90",
     "flatNormals": true,
     "castShadows": false,
+    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "FRIS_LONG_GRASS_1",
       "FRIS_SHORT_GRASS_1",
@@ -12701,6 +12702,7 @@
   {
     "description": "Lunar Island - Objects - Bark - Windswept Tree",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "LUNAR_WINDSWEPT_TREE"
     ],
@@ -15581,6 +15583,7 @@
   {
     "description": "Kharidian Saguaro Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS2"
     ]
@@ -15588,6 +15591,7 @@
   {
     "description": "Kharidian Fern Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS4"
     ]
@@ -15605,6 +15609,7 @@
   {
     "description": "Kharidian Komodo Cactus",
     "baseMaterial": "PLANT_GRUNGE_2",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS",
       "DESERT_CACTUS_FULL",
@@ -15614,6 +15619,7 @@
   {
     "description": "Kharidian Sophmena Cactus",
     "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "VERTEX",
     "objectIds": [
       "PLANT_CACTUS_01",
       "PLANT_CACTUS_02",
