@@ -169,25 +169,35 @@ int tile_height(int z, int x, int y) {
     return texelFetch(tileHeightMap, ivec3(x + ESCENE_OFFSET, y + ESCENE_OFFSET, z), 0).r << 3;
 }
 
-void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float modelHeight, int plane) {
-    float heightFrac = abs(v.y - modelPosY) / modelHeight;
+void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float heightFrac, int plane) {
+    // Skip hillskew if in tile-snapping mode and the vertex is too far from the base
     if (hillskewMode == HILLSKEW_TILE_SNAPPING && heightFrac > HILLSKEW_TILE_SNAPPING_BLEND)
-        return; // Only apply tile snapping, which will only be applied to vertices close to the bottom of the model
+        return;
 
-    int x = int(v.x);
-    int z = int(v.z);
-    int px = x & 127;
-    int pz = z & 127;
-    int sx = x >> 7;
-    int sz = z >> 7;
-    int h1 = (px * tile_height(plane, sx + 1, sz) + (128 - px) * tile_height(plane, sx, sz)) >> 7;
-    int h2 = (px * tile_height(plane, sx + 1, sz + 1) + (128 - px) * tile_height(plane, sx, sz + 1)) >> 7;
-    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
+    float fx = v.x;
+    float fz = v.z;
+
+    float px = mod(fx, 128.0);
+    float pz = mod(fz, 128.0);
+    int sx = int(floor(fx / 128.0));
+    int sz = int(floor(fz / 128.0));
+
+    float h00 = float(tile_height(plane, sx,     sz));
+    float h10 = float(tile_height(plane, sx + 1, sz));
+    float h01 = float(tile_height(plane, sx,     sz + 1));
+    float h11 = float(tile_height(plane, sx + 1, sz + 1));
+
+    // Bilinear interpolation
+    float hx0 = mix(h00, h10, px / 128.0);
+    float hx1 = mix(h01, h11, px / 128.0);
+    float h = mix(hx0, hx1, pz / 128.0);
+
+    if((hillskewMode & HILLSKEW_MODEL) != 0) {
+        v.y += h - modelPosY; // Apply full hillskew
+    }
 
     if ((hillskewMode & HILLSKEW_TILE_SNAPPING) != 0 && heightFrac <= HILLSKEW_TILE_SNAPPING_BLEND) {
-        v.y = mix(h3, v.y, heightFrac / HILLSKEW_TILE_SNAPPING_BLEND); // Blend tile snapping
-    } else {
-        v.y += h3 - modelPosY; // Hillskew the whole model
+        v.y = mix(h, v.y, heightFrac / HILLSKEW_TILE_SNAPPING_BLEND); // Blend snapping to terrain
     }
 }
 
@@ -242,15 +252,16 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
 void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
     in vec3 vertA, in vec3 vertB, in vec3 vertC,
     in vec3 normA, in vec3 normB, in vec3 normC,
+    in float heightFracA, in float heightFracB, in float heightFracC,
     inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC
 ) {
     int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float strengthA = saturate(abs(vertA.y) / height);
-    float strengthB = saturate(abs(vertB.y) / height);
-    float strengthC = saturate(abs(vertC.y) / height);
+    float strengthA = heightFracA;
+    float strengthB = heightFracB;
+    float strengthC = heightFracC;
 
     #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
@@ -372,9 +383,15 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec4 normB = normal[offset + localId * 3 + 1];
         vec4 normC = normal[offset + localId * 3 + 2];
 
+        // Precompute Height Frac for each vert for Wind/Ground & Hillskew
+        float heightFracA = saturate(abs(thisrvA.pos.y) / height);
+        float heightFracB = saturate(abs(thisrvB.pos.y) / height);
+        float heightFracC = saturate(abs(thisrvC.pos.y) / height);
+
         applyWindDisplacement(windSample, vertexFlags, height, pos,
             thisrvA.pos, thisrvB.pos, thisrvC.pos,
             normA.xyz, normB.xyz, normC.xyz,
+            heightFracA, heightFracB, heightFracC,
             displacementA, displacementB, displacementC);
 
         // Rotate normals to match model orientation
@@ -415,9 +432,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         if ((vertexFlags >> MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING & 1) == 1)
             hillskewFlags |= HILLSKEW_TILE_SNAPPING;
         if (hillskewFlags != HILLSKEW_NONE) {
-            hillskew_vertex(thisrvA.pos, hillskewFlags, pos.y, height, plane);
-            hillskew_vertex(thisrvB.pos, hillskewFlags, pos.y, height, plane);
-            hillskew_vertex(thisrvC.pos, hillskewFlags, pos.y, height, plane);
+            hillskew_vertex(thisrvA.pos, hillskewFlags, pos.y, heightFracA, plane);
+            hillskew_vertex(thisrvB.pos, hillskewFlags, pos.y, heightFracB, plane);
+            hillskew_vertex(thisrvC.pos, hillskewFlags, pos.y, heightFracC, plane);
         }
 
         // position vertices in scene and write to out buffer
@@ -451,9 +468,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
 
                 // For vanilla UVs, the first 3 components are an integer position vector
                 if (hillskewFlags != HILLSKEW_NONE) {
-                    hillskew_vertex(uvA.uvw, hillskewFlags, pos.y, height, plane);
-                    hillskew_vertex(uvB.uvw, hillskewFlags, pos.y, height, plane);
-                    hillskew_vertex(uvC.uvw, hillskewFlags, pos.y, height, plane);
+                    hillskew_vertex(uvA.uvw, hillskewFlags, pos.y, heightFracA, plane);
+                    hillskew_vertex(uvB.uvw, hillskewFlags, pos.y, heightFracB, plane);
+                    hillskew_vertex(uvC.uvw, hillskewFlags, pos.y, heightFracC, plane);
                 }
             }
         }

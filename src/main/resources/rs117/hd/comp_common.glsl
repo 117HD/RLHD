@@ -36,7 +36,7 @@
 #define HILLSKEW_NONE 0
 #define HILLSKEW_MODEL 1
 #define HILLSKEW_TILE_SNAPPING 2
-#define HILLSKEW_TILE_SNAPPING_BLEND 0.35
+#define HILLSKEW_TILE_SNAPPING_BLEND 0.3
 
 struct ModelInfo {
     int offset;   // offset into buffer
