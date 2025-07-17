@@ -73,6 +73,7 @@ public class ModelOverride
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 	public int windDisplacementModifier = 0;
+	public boolean invertDisplacementStrength = false;
 
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -207,6 +208,7 @@ public class ModelOverride
 			inheritTileColorType,
 			windDisplacementMode,
 			windDisplacementModifier,
+			invertDisplacementStrength,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
