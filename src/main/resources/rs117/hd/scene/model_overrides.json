@@ -2267,7 +2267,6 @@
     "baseMaterial": "GRAY_65",
     "flatNormals": true,
     "windDisplacementMode": "OBJECT",
-    "castShadows": false,
     "terrainVertexSnap": true,
     "objectIds": [
       "GRASS_1",
@@ -21507,6 +21506,7 @@
   {
     "description": "Objects - Textured Rocks - Small",
     "textureMaterial": "HD_CONCRETE",
+    "terrainVertexSnap": true,
     "objectIds": [
       "BOULDER4",
       "BOULDER4_GDECOR"
@@ -21524,6 +21524,7 @@
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
+    "terrainVertexSnap": true,
     "uvScale": 0.65
   },
   {
