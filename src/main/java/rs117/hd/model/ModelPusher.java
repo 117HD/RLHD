@@ -188,6 +188,13 @@ public class ModelPusher {
 			model.getTexIndices2() != null &&
 			model.getTexIndices3() != null &&
 			model.getTextureFaces() != null;
+
+		// Since color overrides are frequently used to selectively override the base model override,
+		// disable the override entirely if its color overrides need to be skipped for performance reasons
+		boolean uncached = needsCaching && !useCache;
+		if (uncached && modelOverride.colorOverrides != null)
+			modelOverride = ModelOverride.NONE;
+
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
@@ -197,6 +204,7 @@ public class ModelPusher {
 			if (textureMaterial.hasTexture)
 				textureMaterial = Material.NONE;
 		}
+
 		boolean skipUVs =
 			!isVanillaTextured &&
 			packMaterialData(baseMaterial, -1, modelOverride, UvType.GEOMETRY, false) == 0 &&
@@ -407,9 +415,6 @@ public class ModelPusher {
 			return;
 		}
 
-		final int triA = model.getFaceIndices1()[face];
-		final int triB = model.getFaceIndices2()[face];
-		final int triC = model.getFaceIndices3()[face];
 		final int[] xVertexNormals = model.getVertexNormalsX();
 		final int[] yVertexNormals = model.getVertexNormalsY();
 		final int[] zVertexNormals = model.getVertexNormalsZ();
@@ -419,7 +424,11 @@ public class ModelPusher {
 			return;
 		}
 
-		float terrainData = 0x800000; // Force undo vanilla shading in compute to not use flat normals
+		final int triA = model.getFaceIndices1()[face];
+		final int triB = model.getFaceIndices2()[face];
+		final int triC = model.getFaceIndices3()[face];
+
+		float terrainData = 0;
 		sceneContext.modelFaceNormals[0] = xVertexNormals[triA];
 		sceneContext.modelFaceNormals[1] = yVertexNormals[triA];
 		sceneContext.modelFaceNormals[2] = zVertexNormals[triA];

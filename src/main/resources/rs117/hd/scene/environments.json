@@ -617,7 +617,10 @@
     "directionalColor": "#f5bc67",
     "directionalStrength": 1,
     "fogColor": "#cdaf7a",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "windStrength": 66,
+    "windAngle": 270,
+    "windSpeed": 20
   },
   {
     "area": "KHARIDIAN_DESERT_MID",
@@ -626,7 +629,10 @@
     "directionalColor": "#f5bc67",
     "directionalStrength": 1,
     "fogColor": "#c8b085",
-    "fogDepth": 40
+    "fogDepth": 40,
+    "windStrength": 28,
+    "windAngle": 270,
+    "windSpeed": 18
   },
   {
     "area": "KHARIDIAN_DESERT",
@@ -634,7 +640,9 @@
     "ambientStrength": 2.5,
     "directionalColor": "#edcfa3",
     "directionalStrength": 2.5,
-    "fogColor": "#c7b79b"
+    "fogColor": "#c7b79b",
+    "windStrength": 14,
+    "windAngle": 270
   },
   {
     "area": "DESERT_TREASURE_PYRAMID",
@@ -783,21 +791,31 @@
     "fogColor": "#969ca2",
     "fogDepth": 40,
     "groundFogEnd": -400,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "windSpeed": 17.5,
+    "windStrength": 60
   },
   {
     "area": "FREMENNIK_ISLES_MIDDLE",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
     "sunAngles": [ 52, 235 ],
-    "fogDepth": 25
+    "fogDepth": 25,
+    "windStrength": 85,
+    "windCeiling": 400,
+    "windAngle": 45,
+    "windSpeed": 22.5
   },
   {
     "area": "NEITIZNOT",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
     "sunAngles": [ 52, 235 ],
-    "fogDepth": 15
+    "fogDepth": 15,
+    "windStrength": 85,
+    "windCeiling": 400,
+    "windAngle": 45,
+    "windSpeed": 22.5
   },
   {
     "area": "JATIZSO",
@@ -808,7 +826,11 @@
     "fogColor": "#969ca2",
     "fogDepth": 40,
     "groundFogEnd": -400,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "windStrength": 85,
+    "windCeiling": 400,
+    "windAngle": 45,
+    "windSpeed": 22.5
   },
   {
     "area": "FREMENNIK_ISLES_FAR_NORTH",
@@ -819,7 +841,11 @@
     "fogColor": "#aebde0",
     "fogDepth": 60,
     "groundFogEnd": -800,
-    "groundFogOpacity": 0.3
+    "groundFogOpacity": 0.3,
+    "windStrength": 85,
+    "windCeiling": 400,
+    "windAngle": 45,
+    "windSpeed": 22.5
   },
   {
     "area": "FREMENNIK_ISLES_NORTH",
@@ -828,7 +854,11 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "windStrength": 85,
+    "windCeiling": 400,
+    "windAngle": 45,
+    "windSpeed": 22.5
   },
   {
     "area": "LIGHTHOUSE_DUNGEON",
