@@ -1209,7 +1209,7 @@ public enum Material {
 		materialsToReplace.addAll(builder.materialsToReplace);
 		replacementCondition = builder.replacementCondition;
 
-		// Determine whether the material contains some form of texture change
+		// Determine whether the material contains some form of non-vanilla texture change
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;

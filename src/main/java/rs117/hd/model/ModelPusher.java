@@ -188,6 +188,13 @@ public class ModelPusher {
 			model.getTexIndices2() != null &&
 			model.getTexIndices3() != null &&
 			model.getTextureFaces() != null;
+
+		// Since color overrides are frequently used to selectively override the base model override,
+		// disable the override entirely if its color overrides need to be skipped for performance reasons
+		boolean uncached = needsCaching && !useCache;
+		if (uncached && modelOverride.colorOverrides != null)
+			modelOverride = ModelOverride.NONE;
+
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
@@ -197,6 +204,7 @@ public class ModelPusher {
 			if (textureMaterial.hasTexture)
 				textureMaterial = Material.NONE;
 		}
+
 		boolean skipUVs =
 			!isVanillaTextured &&
 			packMaterialData(baseMaterial, -1, modelOverride, UvType.GEOMETRY, false) == 0 &&
