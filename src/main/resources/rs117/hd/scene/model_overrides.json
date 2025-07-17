@@ -4183,7 +4183,11 @@
   },
   {
     "description": "Wilderness and Shayzien - Rock Walls",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": -256,
+    "uvScale": 0.8,
     "objectIds": [
       "BKSECRETDOOR",
       "WILD1_WALL",
@@ -4225,14 +4229,29 @@
       "WILD6_WALL_SHUTTERED",
       "WILD6_WALL_BATTLEMENT",
       "WILD6_WALL_WINDOW_SML",
-      "WALLKIT_SHAYZIEN_CHURCH_WINDOW01",
-      "WALLKIT_SHAYZIEN_CHURCH_WINDOW02",
       "WILD_VETION_BRICKS01",
       "WILD_VETION_BRICKS02",
       "WILD3_WALL_BATTLEMENT_NO_GRADIENT"
-    ],
+    ]
+  },
+  {
+    "description": "Wilderness and Shayzien - Rock Walls with glass windows",
+    "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
-    "flatNormals": true
+    "flatNormals": true,
+    "uvOrientation": -256,
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_CHURCH_WINDOW01",
+      "WALLKIT_SHAYZIEN_CHURCH_WINDOW02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      }
+    ]
   },
   {
     "description": "SShayzien - Wooden - Fence",
@@ -4241,7 +4260,8 @@
     "flatNormals": true,
     "uvOrientation": 512,
     "objectIds": [
-      "WALLKIT_SHAYZIEN_FENCE01"
+      "WALLKIT_SHAYZIEN_FENCE01",
+      "AKD_SHAYZIEN_BAR_SPIRALSTAIRSTOP"
     ]
   },
   {
@@ -4255,7 +4275,7 @@
     ]
   },
   {
-    "description": "Shayzien - Wooden - Glass - Windowed wall",
+    "description": "Shayzien - Stone - Wooden - Glass - Windowed wall",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -4268,6 +4288,14 @@
         "description": "Glass",
         "baseMaterial": "BLANK_GLOSS",
         "colors": "a < 255"
+      },
+      {
+        "description": "Stone Bricks",
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.8
       }
     ]
   },
@@ -4280,8 +4308,12 @@
       "WALLKIT_SHAYZIEN_DOOR01_L_OPEN",
       "WALLKIT_SHAYZIEN_DOOR01_L_REVERSE",
       "WALLKIT_SHAYZIEN_DOOR01_L_REVERSE_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_L_OPEN_NOOP",
       "WALLKIT_SHAYZIEN_DOOR01_R",
+      "WALLKIT_SHAYZIEN_DOOR01_R_REVERSE",
+      "WALLKIT_SHAYZIEN_DOOR01_R_REVERSE_OPEN",
       "WALLKIT_SHAYZIEN_DOOR01_R_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_R_OPEN_NOOP",
       "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L",
       "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L_OPEN",
       "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L_OPEN_NOOP",
@@ -4301,7 +4333,7 @@
     ]
   },
   {
-    "description": "Shayzien - Wooden - Support Posts",
+    "description": " Support Posts",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -4310,14 +4342,49 @@
     ]
   },
   {
-    "description": "SHAYZIEN_STAIRS",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Shayzien - Wooden - Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 1024,
     "objectIds": [
-      "AKD_SHAYZIEN_BAR_SPIRALSTAIRS",
+      "SHAYZIEN_LADDER",
+      "SHAYZIEN_LADDERTOP"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": -512,
+    "flatNormals": true,
+    "objectIds": [
+      "SHAYZIEN_STAIRS_BOTTOM_02",
       "SHAYZIEN_MANOR_STAIRS",
       "SHAYZIEN_MANOR_STAIRSTOP"
+    ]
+  },
+  {
+    "description": "Shayzien - Stone - Wooden - Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": -512,
+    "flatNormals": true,
+    "objectIds": [
+      "AKD_SHAYZIEN_BAR_SPIRALSTAIRS"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.8
+      }
+    ]
   },
   {
     "description": "MOUNT_KARUULM_WALLS",
