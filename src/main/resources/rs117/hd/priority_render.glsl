@@ -197,7 +197,8 @@ void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float heig
     }
 
     if ((hillskewMode & HILLSKEW_TILE_SNAPPING) != 0 && heightFrac <= HILLSKEW_TILE_SNAPPING_BLEND) {
-        v.y = mix(h, v.y, heightFrac / HILLSKEW_TILE_SNAPPING_BLEND); // Blend snapping to terrain
+        float blend = heightFrac / HILLSKEW_TILE_SNAPPING_BLEND;
+        v.y = mix(h, v.y, blend * blend); // Blend snapping to terrain
     }
 }
 
