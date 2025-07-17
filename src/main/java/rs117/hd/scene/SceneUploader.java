@@ -1293,8 +1293,8 @@ public class SceneUploader {
 	}
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
-		// 11-bit water depth | 5-bit water type | 2-bit plane | terrain flag
-		int terrainData = waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
+		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
 		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return terrainData;
 	}
