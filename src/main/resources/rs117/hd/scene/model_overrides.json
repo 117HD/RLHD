@@ -1506,6 +1506,7 @@
     "uvOrientationZ": 128,
     "uvOrientationY": 512,
     "retainVanillaUvs": true,
+    "terrainVertexSnap": true,
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
@@ -1525,6 +1526,7 @@
     "uvScale": 0.25,
     "uvOrientation": 42,
     "retainVanillaUvs": true,
+    "terrainVertexSnap": true,
     "objectIds": [
       "MAHOGANYTREE",
       "MAHOGANY_STUMP"
@@ -1556,6 +1558,7 @@
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
+    "terrainVertexSnap": true,
     "uvScale": 0.66,
     "colorOverrides": [
       {
@@ -16510,31 +16513,17 @@
     ]
   },
   {
-    "description": "Tropical Tree Big",
+    "description": "Tropical Tree Big - Bottom",
     "baseMaterial": "LIGHT_BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "BAMBOO_TREE_BASE",
-      "BAMBOO_TREE_MID",
-      "BAMBOO_TREE_UPPERMID",
       "LEANING_BAMBOO_TREE_BASE",
       "BAMBOO_TREE_2_BASE",
-      "BAMBOO_TREE_2_MID",
-      "BAMBOO_TREE_2_UPPERMID",
       "BAMBOO_TREE_3_BASE",
-      "BAMBOO_TREE_3_MID",
-      "BAMBOO_TREE_3_TOP",
       "MM_BAMBOO_TREE_BASE",
-      "MM_BAMBOO_TREE_MID",
-      "MM_BAMBOO_TREE_UPPERMID",
       "BREW_BAMBOO_TREE_BASE",
-      "BREW_BAMBOO_TREE_MID",
-      "BREW_BAMBOO_TREE_UPPERMID",
-      "TREE_PALM01_CLUSTER01",
-      "TREE_PALM01_CLUSTER02",
-      "TREE_PALM03_BASE",
-      "TREE_PALM03_MID",
-      "TREE_PALM03_TOP",
-      "_100_ILM_CLIMBABLE_TREE"
+      "TREE_PALM03_BASE"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -16546,6 +16535,30 @@
         "upwardsNormals": true
       }
     ]
+  },
+  {
+    "description": "Tropical Tree Big - Upper",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "BAMBOO_TREE_MID",
+      "BAMBOO_TREE_UPPERMID",
+      "BAMBOO_TREE_2_MID",
+      "BAMBOO_TREE_2_UPPERMID",
+      "BAMBOO_TREE_3_MID",
+      "BAMBOO_TREE_3_TOP",
+      "MM_BAMBOO_TREE_MID",
+      "MM_BAMBOO_TREE_UPPERMID",
+      "BREW_BAMBOO_TREE_MID",
+      "BREW_BAMBOO_TREE_UPPERMID",
+      "TREE_PALM01_CLUSTER01",
+      "TREE_PALM01_CLUSTER02",
+      "TREE_PALM03_MID",
+      "TREE_PALM03_TOP",
+      "_100_ILM_CLIMBABLE_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512
   },
   {
     "description": "Tropical Tree Top - WIND TODO",
@@ -25695,6 +25708,7 @@
   {
     "description": "Isle of Souls - Dead and Burnt Trees",
     "baseMaterial": "LIGHT_BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "SNP_BURNT_TREE_01",
       "SNP_BURNT_TREE_02",
@@ -26233,6 +26247,7 @@
         "colors": "h < 7",
         "baseMaterial": "LIGHT_BARK",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "terrainVertexSnap": true,
         "uvType": "BOX",
         "uvScale": 0.6
       }
@@ -26254,6 +26269,7 @@
         "colors": "h < 7",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
+        "terrainVertexSnap": true,
         "uvScale": 0.6
       }
     ]
@@ -26276,13 +26292,15 @@
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "terrainVertexSnap": true
       }
     ]
   },
   {
     "description": "Isle of Souls - Stumps",
     "baseMaterial": "LIGHT_BARK",
+    "terrainVertexSnap": true,
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
