@@ -4235,16 +4235,79 @@
     "flatNormals": true
   },
   {
-    "description": "SHAYZIEN_WALLS_WOOD",
-    "baseMaterial": "GRUNGE_1",
+    "description": "SShayzien - Wooden - Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_FENCE01"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
     "objectIds": [
       "WALLKIT_SHAYZIEN_RESIDENTIAL01",
-      "WALLKIT_SHAYZIEN_RESIDENTIAL02",
-      "WALLKIT_SHAYZIEN_SHOP01",
-      "WALLKIT_SHAYZIEN_SUPPORT01",
-      "WALLKIT_SHAYZIEN_FENCE01"
+      "WALLKIT_SHAYZIEN_RESIDENTIAL02"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Glass - Windowed wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_SHOP01"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Door with golden ring handle",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_DOOR01_L",
+      "WALLKIT_SHAYZIEN_DOOR01_L_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_L_REVERSE",
+      "WALLKIT_SHAYZIEN_DOOR01_L_REVERSE_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_R",
+      "WALLKIT_SHAYZIEN_DOOR01_R_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L_OPEN_NOOP",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_R",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_R_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_R_OPEN_NOOP"
+
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Support Posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_SUPPORT01"
+    ]
   },
   {
     "description": "SHAYZIEN_STAIRS",
