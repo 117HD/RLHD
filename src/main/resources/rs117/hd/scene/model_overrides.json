@@ -2182,6 +2182,15 @@
       "MM_JUNGLE_PLANT_FLOWER",
       "FAI_VARROCK_FLOWERBED_CORNER_BLUE",
       "FAI_VARROCK_FLOWERBED_BLUE",
+      "MM_JUNGLE_PLANT_ORCHID"
+    ]
+  },
+  {
+    "description": "Varrock Pride Flowers",
+    "baseMaterial": "GRAY_85",
+    "windDisplacementMode": "OBJECT",
+    "terrainVertexSnap": true,
+    "objectIds": [
       "PRIDE22_FLOWER_ORANGE_T3",
       "PRIDE22_FLOWER_RED_T1",
       "PRIDE22_FLOWER_RED_T3",
@@ -2199,8 +2208,7 @@
       "PRIDE22_FLOWER_INDIGO_T2",
       "PRIDE22_FLOWER_VIOLET_T3",
       "PRIDE22_FLOWER_VIOLET_T1",
-      "PRIDE22_FLOWER_VIOLET_T2",
-      "MM_JUNGLE_PLANT_ORCHID"
+      "PRIDE22_FLOWER_VIOLET_T2"
     ]
   },
   {
@@ -2267,6 +2275,7 @@
     "baseMaterial": "GRAY_65",
     "flatNormals": true,
     "windDisplacementMode": "OBJECT",
+    "castShadows": false,
     "terrainVertexSnap": true,
     "objectIds": [
       "GRASS_1",
@@ -21518,13 +21527,13 @@
   {
     "description": "Objects - Textured Rocks - Medium",
     "textureMaterial": "HD_CONCRETE",
+    "terrainVertexSnap": true,
     "objectIds": [
       "BOULDER1",
       "BOULDER2"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
-    "terrainVertexSnap": true,
     "uvScale": 0.65
   },
   {
