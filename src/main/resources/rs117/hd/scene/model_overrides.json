@@ -7472,6 +7472,94 @@
     ]
   },
   {
+    "description": "Piscarilius - Wooden - Dock buildings walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "PISCARILIUS_WALL_LOWER_FLOOR_02",
+      "PISCARILIUS_WALL_LOWER_FLOOR_03",
+      "PISCARILIUS_WALL_LOWER_FLOOR_04",
+      "PISCARILIUS_WALL_LOWER_FLOOR_END_LEFT_01",
+      "PISCARILIUS_WALL_LOWER_FLOOR_END_RIGHT_01",
+      "PISCARILIUS_WALL_LOWER_FLOOR_END_LEFT_02",
+      "PISCARILIUS_WALL_LOWER_FLOOR_END_RIGHT_02",
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_LEFT_04",
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_RIGHT_04",
+      "PISCARILIUS_WALL_UPPER_WINDOW_LEFT_01",
+      "PISCARILIUS_WALL_UPPER_WINDOW_RIGHT_01",
+      "PISCARILIUS_WALL_UPPER_WINDOW_LEFT_02",
+      "PISCARILIUS_WALL_UPPER_WINDOW_RIGHT_02",
+      "PISCARILIUS_WALL_UPPER_02",
+      "PISCARILIUS_WALL_UPPER_03",
+      "PISCARILIUS_WALL_UPPER_04",
+      "PISCARILIUS_WALL_TOP_03",
+      "PISCARILIUS_WALL_TOP_04"
+    ]
+  },
+  {
+    "description": "Piscarilius -  Wooden - Rope - Dock buildings - walls with ropes and pillars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "PISCARILIUS_WALL_LOWER_FLOOR_01",
+      "PISCARILIUS_WALL_LOWER_FLOOR_PILLAR_01",
+      "PISCARILIUS_WALL_LOWER_FLOOR_PILLAR_02",
+      "PISCARILIUS_WALL_LOWER_FLOOR_PILLAR_03",
+      "PISCARILIUS_WALL_LOWER_FLOOR_PILLAR_04",
+      "PISCARILIUS_WALL_UPPER_01",
+      "PISCARILIUS_WALL_TOP_01",
+      "PISCARILIUS_WALL_TOP_02",
+      "PISCARILIUS_WALL_UPPER_PILLAR_01",
+      "PISCARILIUS_WALL_UPPER_PILLAR_02",
+      "PISCARILIUS_WALL_UPPER_PILLAR_03",
+      "PISCARILIUS_WALL_UPPER_PILLAR_04",
+      "PISCARILIUS_WALL_TOP_PILLAR_01",
+      "PISCARILIUS_WALL_TOP_PILLAR_02",
+      "PISCARILIUS_WALL_TOP_PILLAR_03",
+      "PISCARILIUS_WALL_TOP_PILLAR_04"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Piscarilius - Wooden - Metallic - Glass - Dock buildings - walls with window",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_LEFT_01",
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_RIGHT_01",
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_LEFT_02",
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_RIGHT_02",
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_LEFT_03",
+      "PISCARILIUS_WALL_LOWER_FLOOR_WINDOW_RIGHT_03"
+
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Piscarilius Docks with Sand overlay",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -7502,7 +7590,10 @@
   },
   {
     "description": "Picarilius docks with Carpet",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 117,
     "objectIds": [
       "PISCARILIUS_RUG_CENTRE_BROWN",
       "PISCARILIUS_RUG_CENTRE_RED",
@@ -7510,8 +7601,6 @@
       "PISCARILIUS_RUG_CORNER_01_BROWN",
       "PISCARILIUS_RUG_CORNER_01_RED",
       "PISCARILIUS_RUG_CORNER_01_GREEN",
-      "PISCARILIUS_RUG_CORNER_02_BROWN",
-      "PISCARILIUS_RUG_CORNER_02_GREEN",
       "PISCARILIUS_RUG_OUTER_CORNER_01_BROWN",
       "PISCARILIUS_RUG_OUTER_CORNER_01_RED",
       "PISCARILIUS_RUG_OUTER_CORNER_01_GREEN",
@@ -7521,15 +7610,89 @@
       "PISCARILIUS_RUG_SIDE_01_BROWN",
       "PISCARILIUS_RUG_SIDE_01_RED",
       "PISCARILIUS_RUG_SIDE_01_GREEN",
-      "PISCARILIUS_RUG_SIDE_02_BROWN",
-      "PISCARILIUS_RUG_SIDE_02_RED",
-      "PISCARILIUS_RUG_SIDE_02_GREEN",
       "PISCARILIUS_RUG_OUTER_SIDE_01_BROWN",
       "PISCARILIUS_RUG_OUTER_SIDE_01_RED",
       "PISCARILIUS_RUG_OUTER_SIDE_01_GREEN",
       "PISCARILIUS_RUG_OUTER_SIDE_02_BROWN",
       "PISCARILIUS_RUG_OUTER_SIDE_02_RED",
       "PISCARILIUS_RUG_OUTER_SIDE_02_GREEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood - Must match the Docks",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 1.1
+      }
+    ]
+  },
+  {
+    "description": "Picarilius docks with Carpet - Rotated wood",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "uvOrientation": 117,
+    "objectIds": [
+      "PISCARILIUS_RUG_CORNER_02_GREEN",
+      "PISCARILIUS_RUG_SIDE_02_GREEN",
+      "PISCARILIUS_RUG_CORNER_02_BROWN",
+      "PISCARILIUS_RUG_SIDE_02_BROWN",
+      "PISCARILIUS_RUG_CORNER_02_RED",
+      "PISCARILIUS_RUG_SIDE_02_RED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood - Must match the Docks",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 1.1,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Piscarilius -  Canvas - Dock buildings roofs",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "PISCARILIUS_ROOF_TILE_05",
+      "PISCARILIUS_ROOF_TILE_12"
+    ]
+  },
+  {
+    "description": "Piscarilius -  Canvas - Rope - Dock buildings - roofs with ropes and grommets",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "PISCARILIUS_ROOF_TILE_01",
+      "PISCARILIUS_ROOF_TILE_02",
+      "PISCARILIUS_ROOF_TILE_03",
+      "PISCARILIUS_ROOF_TILE_04",
+      "PISCARILIUS_ROOF_TILE_11",
+      "PISCARILIUS_ROOF_TILE_13",
+      "PISCARILIUS_ROOF_TILE_14"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   },
   {
@@ -37713,7 +37876,9 @@
     ],
     "objectIds": [
       "PISCARILIUS_PIER_POST_01",
-      "PISCARILIUS_PIER_POST_02"
+      "PISCARILIUS_PIER_POST_02",
+      "PISCARILIUS_PILLAR_01",
+      "PISCARILIUS_PILLAR_02"
     ]
   },
   {
