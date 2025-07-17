@@ -167,7 +167,7 @@ public class EnvironmentManager {
 	private float targetWindCeiling = 0f;
 
 	private SkyboxConfig.SkyboxEntry targetSkybox = null;
-	private SkyboxConfig.SkyboxEntry currentSkybox = null;
+	public SkyboxConfig.SkyboxEntry currentSkybox = null;
 
 	private float currentskyboxBlend = 0f;
 

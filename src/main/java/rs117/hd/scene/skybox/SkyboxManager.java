@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
@@ -30,11 +31,20 @@ public class SkyboxManager {
 
 	private static final String[] FACE_FILE_NAMES = { "px", "nx", "py", "ny", "pz", "nz" };
 	private static final int SKYBOX_FACE_SIZE = 512;
-
+	private static final int SKYBOX_RESOLUTION = 1024;
+	private static final float[] SKYBOX_VERTICES = {
+		-1.0f, -1.0f, 0.0f,
+		1.0f, -1.0f, 0.0f,
+		1.0f,  1.0f, 0.0f,
+		-1.0f, -1.0f, 0.0f,
+		1.0f,  1.0f, 0.0f,
+		-1.0f,  1.0f, 0.0f
+	};
 	@Inject
 	private HdPlugin plugin;
 
 	private int textureSkybox;
+	@Getter
 	private SkyboxConfig skyboxConfig;
 	private IntBuffer pixelBuffer;
 	private BufferedImage scaledImage;
@@ -57,7 +67,7 @@ public class SkyboxManager {
 			return;
 		}
 
-		plugin.updateSkyboxVerticies(skyboxConfig.vertices);
+		plugin.updateSkyboxVerticies(SKYBOX_VERTICES);
 
 		if (textureSkybox != 0) {
 			glDeleteTextures(textureSkybox);
@@ -68,7 +78,7 @@ public class SkyboxManager {
 		glBindTexture(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, textureSkybox);
 		GL42C.glTexStorage3D(
 			GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, 1, GL_SRGB8_ALPHA8,
-			skyboxConfig.resolution, skyboxConfig.resolution, skyboxConfig.skyboxes.size() * 6);
+			SKYBOX_RESOLUTION, SKYBOX_RESOLUTION, skyboxConfig.skyboxes.size() * 6);
 
 		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -76,7 +86,7 @@ public class SkyboxManager {
 		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
-		pixelBuffer = BufferUtils.createIntBuffer(skyboxConfig.resolution * skyboxConfig.resolution);
+		pixelBuffer = BufferUtils.createIntBuffer(SKYBOX_RESOLUTION * SKYBOX_RESOLUTION);
 
 		int validSkyboxCount = 0;
 
@@ -120,14 +130,14 @@ public class SkyboxManager {
 			if (loadedFaces.length() > 0) loadedFaces.append(", ");
 			loadedFaces.append(FACE_FILE_NAMES[faceIdx]);
 
-			BufferedImage scaled = ImageUtils.scaleTextureSimple(scaledImage,faceImage, skyboxConfig.resolution, false, false);
+			BufferedImage scaled = ImageUtils.scaleTextureSimple(scaledImage,faceImage, SKYBOX_RESOLUTION, false, false);
 			int[] pixels = ((DataBufferInt) scaled.getRaster().getDataBuffer()).getData();
 			pixelBuffer.put(pixels).flip();
 
 			glTexSubImage3D(
 				GL40C.GL_TEXTURE_CUBE_MAP_ARRAY, 0, 0, 0,
 				skyboxIndex * 6 + faceIdx,
-				skyboxConfig.resolution, skyboxConfig.resolution, 1,
+				SKYBOX_RESOLUTION, SKYBOX_RESOLUTION, 1,
 				GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer
 			);
 		}

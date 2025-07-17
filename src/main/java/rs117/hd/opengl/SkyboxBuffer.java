@@ -38,7 +38,7 @@ public class SkyboxBuffer extends UniformBuffer {
 			contrast.set(hasPost ? postConfig.getContrast() : 0f);
 			saturation.set(hasPost ? postConfig.getSaturation() : 0f);
 			hueShift.set(hasPost ? postConfig.getHue() : 0f);
-			tintColor.set((hasPost && postConfig.getTintColor() != null) ? postConfig.getTintColor() : new float[]{-1f, -1f, -1f});
+			tintColor.set((hasPost && postConfig.getTintColor() != null) ? postConfig.getTintColor() : new float[]{0f, 0f, 0f});
 			rotation.set(skyboxConfig != null ? skyboxConfig.getRotation() : 0f);
 			rotationSpeed.set(skyboxConfig != null ? skyboxConfig.getRotationSpeed() : 0f);
 		}

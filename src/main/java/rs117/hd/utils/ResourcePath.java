@@ -63,6 +63,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.Platform;
+import java.util.List;
+import java.util.ArrayList;
 
 @Slf4j
 public class ResourcePath {
@@ -258,9 +260,13 @@ public class ResourcePath {
         }
     }
 
-    public FileOutputStream toOutputStream() throws FileNotFoundException {
-        return new FileOutputStream(toFile());
-    }
+	public FileOutputStream toOutputStream() throws FileNotFoundException {
+		ResourcePath effectivePath = this;
+		if (RESOURCE_PATH != null) {
+			effectivePath = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+		}
+		return new FileOutputStream(effectivePath.toFile());
+	}
 
     public boolean isClassResource() {
         if (root != null)
@@ -641,4 +647,33 @@ public class ResourcePath {
             return is;
         }
     }
+
+    /**
+     * List all subdirectories of this ResourcePath if it is a directory on the filesystem.
+     * @return List of ResourcePath objects for each subdirectory, or empty list if not a directory or not a filesystem resource.
+     */
+    public List<ResourcePath> listSubdirectories() {
+        List<ResourcePath> dirs = new ArrayList<>();
+        ResourcePath effectivePath = this;
+
+        if (RESOURCE_PATH != null) {
+            effectivePath = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
+        }
+
+        if (!effectivePath.isFileSystemResource())
+            return dirs;
+
+        File file = effectivePath.toFile();
+        if (!file.isDirectory())
+            return dirs;
+
+        File[] subdirs = file.listFiles(File::isDirectory);
+        if (subdirs != null) {
+            for (File subdir : subdirs) {
+                dirs.add(new ResourcePath(subdir.getAbsolutePath()));
+            }
+        }
+        return dirs;
+    }
+
 }

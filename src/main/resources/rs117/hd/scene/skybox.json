@@ -1,13 +1,4 @@
 {
-  "vertices": [
-    -1.0, -1.0, 0.0,
-    1.0, -1.0, 0.0,
-    1.0, 1.0, 0.0,
-    -1.0, -1.0, 0.0,
-    1.0, 1.0, 0.0,
-    -1.0, 1.0, 0.0
-  ],
-  "resolution": 1024,
   "skyboxes": [
     {
       "name": "rs3_greenlands",
@@ -16,15 +7,15 @@
     {
       "name": "rs3_magicblue",
       "dir": "rs3_magicblue",
-      "rotation":260.3,
+      "rotation": 260.3,
       "rotationSpeed": 0.056
     },
     {
       "name": "rs3_magicblue_post",
       "dir": "rs3_magicblue",
-      "rotation":160.3,
+      "rotation": 160.3,
       "postProcessing": {
-        "hue": 120,
+        "hue": 120.0,
         "saturation": 1.2,
         "lightness": 0.1,
         "contrast": 1.1,

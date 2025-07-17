@@ -32,8 +32,14 @@ vec3 applyPostProcessing(vec3 skyboxColor, SkyboxConfig Config) {
 
     vec3 result = hslToSrgb(hsl);
 
-    if (all(greaterThanEqual(Config.tintColor, vec3(0.0)))) {
-        result *= Config.tintColor;
+    if (Config.tintColor.r > 0.1) {
+        result.r *= Config.tintColor.r;
+    }
+    if (Config.tintColor.g > 0.1) {
+        result.g *= Config.tintColor.g;
+    }
+    if (Config.tintColor.b > 0.1) {
+        result.b *= Config.tintColor.b;
     }
     return result;
 }
