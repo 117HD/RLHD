@@ -10987,6 +10987,7 @@
   {
     "description": "Objects - Swamp Root - Small",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "SWAMP_ROOTS_1",
       "SWAMP_ROOTS_2",
@@ -11000,6 +11001,7 @@
   {
     "description": "Objects - Swamp Root - Large",
     "baseMaterial": "LIGHT_BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "LARGE_SWAMP_ROOT",
       "SWAMP_ROOT",
