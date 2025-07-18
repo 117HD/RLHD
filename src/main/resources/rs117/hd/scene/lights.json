@@ -33645,25 +33645,6 @@
     ]
   },
   {
-    "description": "GREEN_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 100,
-    "strength": 5.25,
-    "color": [
-      180,
-      255,
-      175
-    ],
-    "type": "FLICKER",
-    "duration": 1250,
-    "range": 20,
-    "objectIds": [
-      "FAIRY_WALL_MUSH_GREEN",
-      "FAIRY_WALL_MUSH_GREEN_VAR"
-    ]
-  },
-  {
     "description": "ZANARIS_GREEN_MUSHROOM_CEILING",
     "height": 290,
     "alignment": "CENTER",
@@ -33701,9 +33682,8 @@
   },
   {
     "description": "RED_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 110,
+    "offset": [ 0, 152, 85 ],
+    "radius": 130,
     "strength": 19.25,
     "color": [
       225,
@@ -33716,6 +33696,24 @@
     "objectIds": [
       "FAIRY_WALL_MUSH_RED",
       "FAIRY_WALL_MUSH_RED_VAR"
+    ]
+  },
+  {
+    "description": "GREEN_MUSHROOM_WALL",
+    "offset": [ 0, 142, 85 ],
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      "FAIRY_WALL_MUSH_GREEN",
+      "FAIRY_WALL_MUSH_GREEN_VAR"
     ]
   },
   {

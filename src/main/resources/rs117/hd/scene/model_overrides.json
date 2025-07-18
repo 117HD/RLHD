@@ -14981,23 +14981,23 @@
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
       "FAIRY_WALL",
-      "FAIRY_WALL_MUSH_GREEN",
-      "FAIRY_WALL_MUSH_RED",
-      "FAIRY_WALL_MUSH_GREEN_VAR",
-      "FAIRY_WALL_MUSH_RED_VAR",
       "FAIRY_WALL_LV2",
-      "FAIRY_WALL_LV2_MUSH_GREEN",
-      "FAIRY_WALL_LV2_MUSH_RED",
-      "FAIRY_WALL_LV2_MUSH_RED_VAR",
-      "FAIRY_WALL_LV2_MUSH_GREEN_VAR",
-      "FAIRY_WALL_LV2_TENTACLE",
       "FAIRY_WALL_ALCOVE",
       "FAIRY_WALL_MID_FILL",
       "FAIRY_WALL_LV2_MID_FILL",
       "FAIRY_SC_SPEARTRAP",
-      "FAIRY_SC_JUTTINGWALL"
-    ],
-    "uvType": "BOX"
+      "FAIRY_SC_JUTTINGWALL",
+      "FAIRY_WALL_LV2_TRI",
+      "FAIRY_WALL_MUSH_GREEN",
+      "FAIRY_WALL_MUSH_RED",
+      "FAIRY_WALL_MUSH_GREEN_VAR",
+      "FAIRY_WALL_MUSH_RED_VAR",
+      "FAIRY_WALL_LV2_MUSH_GREEN",
+      "FAIRY_WALL_LV2_MUSH_RED",
+      "FAIRY_WALL_LV2_MUSH_RED_VAR",
+      "FAIRY_WALL_LV2_MUSH_GREEN_VAR",
+      "FAIRY_WALL_LV2_TENTACLE"
+    ]
   },
   {
     "description": "Zanaris - Objects - Mushroom Ceiling Objects",
