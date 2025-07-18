@@ -1098,6 +1098,7 @@
     "description": "TREES",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
     "objectIds": [
       "TREE2",
       "TREE3",
@@ -1107,15 +1108,11 @@
       "WOM_TREE",
       "MAPLETREE",
       "PEST_TREE2",
-      "ARDOUGNE_LOG_BALANCE_LEFT_SC",
-      "ARDOUGNE_LOG_BALANCE_MID_SC",
-      "ARDOUGNE_LOG_BALANCE_RIGHT_SC",
       "ZEP_TREE3",
       "MACRO_FORESTERTREE2",
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
-      "GIM_TREE",
-      "GREYBOX_NUMBER_TILE_0"
+      "GIM_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1135,6 +1132,17 @@
     }
   },
   {
+    "description": "Ardougne Log Balance",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "ARDOUGNE_LOG_BALANCE_LEFT_SC",
+      "ARDOUGNE_LOG_BALANCE_MID_SC",
+      "ARDOUGNE_LOG_BALANCE_RIGHT_SC"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
     "description": "TREES - Rope Swing",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -1150,6 +1158,7 @@
     "description": "Tree - Double Tree",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
     "objectIds": [
       "TREE", "LIGHTTREE", "NEWBIETREE", "PEST_TREE",
       "ZEP_TREE", "DRILL_TREE", "MACRO_FORESTER_TREE", "TUT2_TREE",
@@ -1329,7 +1338,6 @@
   },
   {
     "description": "Prifddinas spirit tree without leaf texture",
-    "baseMaterial": "BARK",
     "objectIds": [
       "SPIRITTREE_PRIF_1OP",
       "SPIRITTREE_PRIF_2OPS"
@@ -1347,6 +1355,7 @@
       "WILD4_FALLEN_TREE",
       "WILD3_FALLEN_TREE",
       "MY2ARM_SNOW_COVERED_TREE_FALLEN_AGILITY",
+      "WILD1_FALLEN_TREE",
       "PORCINE_CART_FALLENTREE_VISIBLE"
     ],
     "uvType": "BOX",
@@ -1357,6 +1366,7 @@
   {
     "description": "DEAD_TREES",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "DEADTREE1",
       "DEADTREE1_LARGE",
@@ -1382,13 +1392,10 @@
       "WILD1_TREE_A",
       "WILD1_TREE_B",
       "WILD1_TREE_C",
-      "WILD1_FALLEN_TREE",
       "WILD2_TREE_A",
       "WILD2_TREE_B",
       "WILD2_TREE_C",
       "MISTMYST_TREE",
-      "MY2ARM_CLIFF_SHORTCUT_3_NOROPE",
-      "MY2ARM_CLIFF_SHORTCUT_3_ROPE",
       "DEADTREE1_NOOP",
       "WILDY_HUB_TREE_BIG"
     ],
@@ -1396,8 +1403,19 @@
     "uvScale": 0.8
   },
   {
+    "description": "My Arms Big Adventure - Rope Tree",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "MY2ARM_CLIFF_SHORTCUT_3_NOROPE",
+      "MY2ARM_CLIFF_SHORTCUT_3_ROPE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
     "description": "TREE_STUMP",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "TREESTUMP",
       "TREESTUMP2",
@@ -1415,7 +1433,8 @@
       "WILD4_TREE_STUMP",
       "DOV_HUNTING_TREESTUMP_NOOP",
       "BURGH_TREE_STUMP",
-      "FAIRY2_PINE_TREE_STUMP"
+      "FAIRY2_PINE_TREE_STUMP",
+      "DEADTREE1_LARGE_STUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -1432,6 +1451,7 @@
   {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "POH_BIG_TREE6_4",
@@ -1472,7 +1492,26 @@
       "YEW_TREE_STUMP_NEW",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP",
+      "YEWTREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
+  },
+  {
+    "description": "Objects - Tree - Yew - Agility Shortcut",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
       "XBOWS_YEWTREE_BASIC",
       "XBOWS_YEWTREE_ROPE_GRAPPLED",
       "XBOWS_YEWTREE_ROPE_TIED"
@@ -1580,6 +1619,7 @@
   {
     "description": "Objects - Tree - Teak - Stump",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "uvType": "BOX",
     "uvScale": 0.66,
     "objectIds": [
@@ -1617,8 +1657,10 @@
   {
     "description": "Objects - Tree - Juniper",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
-      "MATURE_JUNIPER_TREE"
+      "MATURE_JUNIPER_TREE",
+      "MATURE_JUNIPER_TREE_STUMP"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 128,
@@ -1626,6 +1668,7 @@
   },
   {
     "description": "Objects - Trees - Arctic Pine",
+    "terrainVertexSnap": true,
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "ARCTIC_PINE",
@@ -1643,6 +1686,7 @@
   {
     "description": "Objects - Trees - Tirannwn Tree",
     "baseMaterial": "LIGHT_BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "REGICIDE_TREE_LARGE",
       "REGICIDE_TREE_STUMP",
@@ -1650,8 +1694,7 @@
       "REGICIDE_TREE_LARGE3",
       "REGICIDE_TREE_SMALL",
       "REGICIDE_TREE_STUMP_SMALL",
-      "REGICIDE_TREE_BASE",
-      "SOTE_FLOWERS"
+      "REGICIDE_TREE_BASE"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -1663,7 +1706,7 @@
     }
   },
   {
-    "description": "Tirannwn - Lord Crwys Tree",
+    "description": "Tirannwn - Lord Crwys Tree - Doesn't seem to exist anymore",
     "baseMaterial": "LIGHT_BARK",
     "npcIds": [
       "SOTE_LORD_CRWYS_VIS_TREE"
@@ -1674,6 +1717,7 @@
   {
     "description": "Objects - Trees - Tirannwn Leafless Tree",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
       "REGICIDE_TREE_DEAD1", "REGICIDE_TREE_DEAD2", "REGICIDE_TREE_DEAD1_D1", "REGICIDE_TREE_DEAD2_D1",
       "REGICIDE_TREE_DEAD1_D2", "REGICIDE_CROSS_OVER3"
@@ -1817,11 +1861,32 @@
     ]
   },
   {
+    "description": "Tirannwn - Mossy Tree",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "terrainVertexSnap": true,
+    "uvScale": 0.5,
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "objectIds": [
+      "REGICIDE_ROOTTREE"
+    ],
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "terrainVertexSnap": true,
+        "uvScale": 0.5,
+        "uvType": "BOX",
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
     "description": "Tirannwn - Mossy Rocks with Tree",
     "baseMaterial": "ROCK_1",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
-      "REGICIDE_ROOTTREE",
       "REGICIDE_TREE_FALLEN"
     ],
     "retainVanillaUvs": false,
@@ -2130,6 +2195,7 @@
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "OBJECT",
     "objectIds": [
+      "SOTE_FLOWERS",
       "DAISYS",
       "ONION",
       "AVIUM_ONION01",
