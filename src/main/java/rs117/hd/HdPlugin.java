@@ -2226,8 +2226,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-     * Convert the front framebuffer to an Image
-     */
+	 * Convert the front framebuffer to an Image
+	 */
 	private Image screenshot() {
 		int width = client.getCanvasWidth();
 		int height = client.getCanvasHeight();
@@ -2800,8 +2800,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-     * Check is a model is visible and should be drawn.
-     */
+	 * Check is a model is visible and should be drawn.
+	 */
 	private boolean isOutsideViewport(Model model, int modelRadius, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
 		if (sceneContext == null)
 			return true;
@@ -3044,8 +3044,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-     * returns the correct buffer based on triangle count and updates model count
-     */
+	 * returns the correct buffer based on triangle count and updates model count
+	 */
 	private GpuIntBuffer bufferForTriangles(int triangles) {
 		for (int i = 0; i < numSortingBins; i++) {
 			if (modelSortingBinFaceCounts[i] >= triangles) {

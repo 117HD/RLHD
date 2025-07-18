@@ -36,7 +36,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
-import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
