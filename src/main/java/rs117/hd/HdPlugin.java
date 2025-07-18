@@ -3092,7 +3092,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
 			if (renderable instanceof NPC) {
 				var anim = gamevalManager.getAnimName(((NPC) renderable).getWalkAnimation());
-				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY"))
+				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY")&& !anim.contains("IMPLING"))
 					uboCompute.addCharacterPosition(x, z, modelRadius);
 			} else {
 				uboCompute.addCharacterPosition(x, z, modelRadius);

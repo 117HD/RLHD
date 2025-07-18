@@ -60,7 +60,7 @@ public class ComputeUniforms extends SharedUniformBuffer {
 
 		pair.x = localX;
 		pair.z = localZ;
-		pair.radius = modelRadius * 1.25f;
+		pair.radius = 250; //hard-code for now
 
 		if (writeIndex == 0) {
 			playerPosX = pair.x;
