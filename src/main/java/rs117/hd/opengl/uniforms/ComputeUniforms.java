@@ -40,7 +40,7 @@ public class ComputeUniforms extends SharedUniformBuffer {
 	}
 
 	public ComputeUniforms() {
-		super("Compute", GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		super("Compute", "ComputeUniforms", GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private CharacterPositionPair getCharacterPositionPair() {

@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL33C.*;
 
 public class WaterTypeUniforms extends UniformBuffer {
 	public WaterTypeUniforms() {
-		super("WaterTypes", GL_STATIC_DRAW);
+		super("WaterTypes", "WaterTypeUniforms", GL_STATIC_DRAW);
 	}
 
 	public WaterTypeStruct[] waterTypes = addStructs(new WaterTypeStruct[WaterType.values().length], WaterTypeStruct::new);

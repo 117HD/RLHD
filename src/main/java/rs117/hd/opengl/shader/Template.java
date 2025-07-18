@@ -29,7 +29,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Supplier;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.utils.ResourcePath;
 
 @Slf4j
@@ -44,6 +46,9 @@ public class Template
 	}
 
 	private final List<IncludeLoader> loaders = new ArrayList<>();
+
+	@Getter
+	private final List<UniformBuffer> uniformBuffers = new ArrayList<>();
 
 	IncludeType includeType = IncludeType.UNKNOWN;
 	final Stack<Integer> includeStack = new Stack<>();
@@ -213,6 +218,14 @@ public class Template
 	public Template addInclude(String identifier, String value)
 	{
 		return addIncludeLoader(key -> key.equals(identifier) ? value : null);
+	}
+
+	public Template addUniformBuffer(UniformBuffer ubo)
+	{
+		if(!uniformBuffers.contains(ubo)) {
+			uniformBuffers.add(ubo);
+		}
+		return this;
 	}
 
 	public Template define(String identifier, String value)

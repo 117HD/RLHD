@@ -24,7 +24,7 @@ public class MaterialUniforms extends UniformBuffer {
 	public MaterialStruct[] materials;
 
 	public MaterialUniforms(int materialCount) {
-		super("Materials", GL_STATIC_DRAW);
+		super("Materials", "MaterialUniforms", GL_STATIC_DRAW);
 		materials = addStructs(new MaterialStruct[materialCount], MaterialStruct::new);
 	}
 }
