@@ -93,8 +93,8 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
+import rs117.hd.opengl.shader.ComputeModelShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
-import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
@@ -299,37 +299,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		"#extension GL_ARB_explicit_attrib_location : require\n";
 	private static final String WINDOWS_VERSION_HEADER = "#version 430\n";
 
-	private static final Shader COMPUTE_PROGRAM = new Shader()
-		.add(GL43C.GL_COMPUTE_SHADER, "comp.glsl");
-
 	private static final ResourcePath SHADER_PATH = Props
 		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
 
-	public SceneShaderProgram sceneProgram = new SceneShaderProgram(
-		new Shader()
-			.add(GL_VERTEX_SHADER, "vert.glsl")
-			.add(GL_GEOMETRY_SHADER, "geom.glsl")
-			.add(GL_FRAGMENT_SHADER, "frag.glsl"));
+	public SceneShaderProgram sceneProgram = new SceneShaderProgram();
+	public UIShaderProgram uiProgram = new UIShaderProgram();
 
-	public UIShaderProgram uiProgram = new UIShaderProgram(
-		new Shader()
-			.add(GL_VERTEX_SHADER, "ui_vert.glsl")
-			.add(GL_FRAGMENT_SHADER, "ui_frag.glsl"));
+	public ShadowShaderProgram fastShadowProgram = new ShadowShaderProgram(ShadowMode.FAST);
+	public ShadowShaderProgram detailedShadowProgram = new ShadowShaderProgram(ShadowMode.DETAILED);
 
-	public ShadowShaderProgram fastShadowProgram = new ShadowShaderProgram(
-		new Shader()
-			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
-			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl"));
-
-	public ShadowShaderProgram detailedShadowProgram = new ShadowShaderProgram(
-		new Shader()
-			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
-			.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl")
-			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl"));
-
-	public ShaderProgram modelPassthroughComputeProgram = new ShaderProgram().setShader(new Shader().add(GL43C.GL_COMPUTE_SHADER, "comp_unordered.glsl"));
-	public ShaderProgram[] modelSortingComputePrograms = {};
+	public ComputeModelShaderProgram modelPassthroughComputeProgram = new ComputeModelShaderProgram(true);
+	public ComputeModelShaderProgram[] modelSortingComputePrograms = {};
 
 	private int interfaceTexture;
 	private int interfacePbo;
@@ -884,20 +865,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initPrograms();
 		} else {
-			modelPassthroughComputeProgram.compile(template);;
+			modelPassthroughComputeProgram.compile(template);
 
-			modelSortingComputePrograms = new ShaderProgram[numSortingBins];
+			modelSortingComputePrograms = new ComputeModelShaderProgram[numSortingBins];
 			for (int i = 0; i < numSortingBins; i++) {
 				int faceCount = modelSortingBinFaceCounts[i];
 				int threadCount = modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
-				modelSortingComputePrograms[i] = new ShaderProgram()
-					.setShader(COMPUTE_PROGRAM)
-					.compile(template
-						.copy()
+				modelSortingComputePrograms[i] = new ComputeModelShaderProgram(false);
+				modelSortingComputePrograms[i].compile(
+					template.copy()
 						.define("THREAD_COUNT", threadCount)
-						.define("FACES_PER_THREAD", facesPerThread)
-					);
+						.define("FACES_PER_THREAD", facesPerThread));
 			}
 		}
 
