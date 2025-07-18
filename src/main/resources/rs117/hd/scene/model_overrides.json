@@ -24345,12 +24345,14 @@
     "description": "Zanaris - Objects - Wooden - Stacked Crate - Angled",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAIRY_CRATES_SMALL_BLUE"
+      "FAIRY_CRATES_SMALL_BLUE",
+      "FAIRY_CRATES_SMALL"
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
-    "uvOrientationY": 170
+    "uvOrientationY": 170,
+    "uvScale": 0.6
   },
   {
     "description": "Zanaris - Objects - Tree Houses",
@@ -24377,6 +24379,121 @@
       "FAIRY_TREE2"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Zanaris - Objects - Long Crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 256,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "FAIRY2_CRATE_WANDS",
+      "FAIRY2_BOW_CRATES"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Zanaris - Objects - Medical Table",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "FAIRY2_MEDICAL_TABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Medical Screen",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "FAIRY2_MEDICAL_SCREEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Stretcher",
+    "objectIds": [
+      "FAIRY2_STRETCHER1",
+      "FAIRY2_STRETCHER2",
+      "FAIRY2_STRETCHER3",
+      "FAIRY2_STRETCHER4",
+      "FAIRY2_STRETCHER5",
+      "FAIRY2_STRETCHER_QUEEN_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && l < 75" ],
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": [ "h == 7", "h == 32" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Stretcher - With Queen",
+    "objectIds": [
+      "FAIRY2_STRETCHER_QUEEN",
+      "FAIRY2_STRETCHER_QUEEN2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Crutch and Medical Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAIRY2_FIRST_AID_BOX",
+      "FAIRY2_CRUTCH",
+      "FAIRY2_CRUTCH2"
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Map Tables and Map Stands",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "FAIRY2_MAP_TABLE",
+      "FAIRY2_TACTICAL_MAP_FRAME",
+      "FAIRY2_WALL_MAP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && a == 255 && s < 7", "h == 32 && a == 255" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Objects - Wooden - Private Bank Booth Destroyed",
@@ -31261,7 +31378,8 @@
       "MYQ3_HIDEOUT_BARREL",
       "MYQ4_EMPTY_BARREL",
       "MYQ4_HERB_BARREL",
-      "AIDE_BARREL_TAP"
+      "AIDE_BARREL_TAP",
+      "FAIRY_BARREL_BLUE"
     ]
   },
   {
