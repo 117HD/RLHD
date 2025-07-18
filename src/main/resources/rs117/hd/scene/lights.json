@@ -21031,7 +21031,6 @@
     "range": 0,
     "objectIds": [
       "CLIMBING_ROPE",
-      "CLIMBING_ROPE_TOP",
       "CLIMBING_ROPE2",
       "DRAGON_SLAYER_QIP_CLIMBING_ROPE"
     ]
@@ -38273,5 +38272,46 @@
     "objectIds": [
       "SORCERESS_FIREPLACE"
     ]
+  },
+  {
+    "description": "Mine Spotlight",
+    "offset": [ 0, 220, 0 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      188,
+      150,
+      150
+    ],
+    "spawnDelay": 900,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 800,
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MACRO_SPOTLIGHT"
+    ],
+    "animationIds": [ 1136 ]
+  },
+  {
+    "description": "Mine Spotlight",
+    "offset": [ -30, 40, 0 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      100,
+      255,
+      100
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MACRO_EXITSIGN"
+    ],
+    "animationIds": [ 1136 ]
   }
 ]

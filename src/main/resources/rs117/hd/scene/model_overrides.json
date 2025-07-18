@@ -13806,7 +13806,8 @@
     "objectIds": [
       "QIP_SHEEP_SHEARER_CHAIR",
       "CONTACT_CHAIR4",
-      "MYQ3_HIDEOUT_CHAIR"
+      "MYQ3_HIDEOUT_CHAIR",
+      "MACRO_THEATRE_CHAIR"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -16880,6 +16881,68 @@
     "baseMaterial": "GRAY_75",
     "objectIds": [
       "BARRACK_FLAG"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Stage Top",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "uvType": "BOX",
+    "objectIds": [
+      "MACRO_THEATRE_FLOOR"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Stage Wall",
+    "baseMaterial": "GRAY_85",
+    "flatNormals": true,
+    "upwardsNormals": true,
+    "objectIds": [
+      "MACRO_SIMPLEWALL_THEATRE"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Spotlight",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MACRO_SPOTLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "upwardsNormals": true,
+        "baseMaterial": "UNLIT"
+      }
+    ]
+  },
+  {
+    "description": "Mime Random Event - Curtains",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "MACRO_THEATRE_CURTAINS_SIDE",
+      "MACRO_THEATRE_CURTAINS_LEFT",
+      "MACRO_THEATRE_CURTAINS_CORNER_RIGHT",
+      "MACRO_THEATRE_CURTAINS_CORNER_LEFT",
+      "MACRO_THEATRE_CURTAINS_RIGHT"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Exit Sign",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "MACRO_EXITSIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "l > 102",
+        "baseMaterial": "UNLIT"
+      }
     ]
   },
   {
