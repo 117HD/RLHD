@@ -8835,7 +8835,7 @@
     "description": "CANNON",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.5,
     "uvOrientation": 512,
     "objectIds": [
       "FAI_VARROCK_CANNON"
@@ -16780,7 +16780,7 @@
   },
   {
     "description": "Drill Sergent - Barrack",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
     "receiveShadows": false,
     "flatNormals": true,
     "objectIds": [
@@ -16798,6 +16798,15 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Drill Sergent - Barrack & Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "BARRACK_FENCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
   },
   {
     "description": "Drill Sergent - Tank",
