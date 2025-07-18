@@ -937,7 +937,6 @@
       "EYEGLO_BATTLE_TORTOISE_REVEAL",
       "QIP_DIGSITE_SWING_LANTERN",
       "TOURTRAP_QIP_CART_CAMEL",
-      "SHAYZIEN_WALL_LOWER_01",
       "POH_TIPJAR",
       "POH_ADVENTURE_LOG_1",
       "POH_ADVENTURE_LOG_2",
@@ -4271,7 +4270,11 @@
     "flatNormals": true,
     "objectIds": [
       "WALLKIT_SHAYZIEN_RESIDENTIAL01",
-      "WALLKIT_SHAYZIEN_RESIDENTIAL02"
+      "WALLKIT_SHAYZIEN_RESIDENTIAL02",
+      "SHAYZIEN_WALL_WOODEN",
+      "SHAYZIEN_WALL_WOODEN_LOW",
+      "SHAYZIEN_WOODEN_PLANKS",
+      "SHAYZIEN_WALL_BARRICADE"
     ]
   },
   {
@@ -4389,6 +4392,109 @@
         "uvType": "BOX",
         "uvOrientation": -89,
         "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Cloth - Wooden - Tent Roofs",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      "ROOFKIT_SHAYZIEN_TENT_EDGE01",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE01_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE02",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE02_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE03",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE03_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE04",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE05",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE05_R",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06_R",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06_MR",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07_R",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07_MR",
+      "ROOFKIT_SHAYZIEN_TENT_MIDDLE01",
+      "ROOFKIT_SHAYZIEN_TENT_MIDDLE02",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER01",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER02",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER03",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER04"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood Grain",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Cloth - Wooden - Encampment Tents",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.8,
+    "uvOrientation": 616,
+    "uvType": "BOX",
+    "objectIds": [
+      "SHAYZIEN_WALL_LOWER_01",
+      "SHAYZIEN_WALL_LOWER_02",
+      "SHAYZIEN_WALL_LOWER_END_RIGHT_01",
+      "SHAYZIEN_WALL_LOWER_END_LEFT_01",
+      "SHAYZIEN_WALL_UPPER_01",
+      "SHAYZIEN_WALL_UPPER_02",
+      "SHAYZIEN_WALL_UPPER_03",
+      "SHAYZIEN_WALL_UPPER_04",
+      "SHAYZIEN_WALL_UPPER_05",
+      "SHAYZIEN_WALL_UPPER_06",
+      "SHAYZIEN_WALL_UPPER_07",
+      "SHAYZIEN_WALL_UPPER_08",
+      "SHAYZIEN_WALL_UPPER_09",
+      "SHAYZIEN_WALL_UPPER_10",
+      "SHAYZIEN_WALL_UPPER_11",
+      "SHAYZIEN_WALL_UPPER_12",
+      "SHAYZIEN_WALL_UPPER_13",
+      "SHAYZIEN_INFIRMARY_TENTWALL",
+      "SHAYZIEN_INFIRMARY_TENTDOOR",
+      "SHAYZIEN_INFIRMARY_TENTROOF",
+      "SHAYZIEN_INFIRMARY_TENTROOF_CORNER",
+      "SHAYZIEN_INFIRMARY_TENTROOF_CENTRE"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Bark - Rope - Encampment Walls",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -124,
+    "objectIds": [
+      "SHAYZIEN_PALISADE_1",
+      "SHAYZIEN_PALISADE_2",
+      "SHAYZIEN_PALISADE_2_MIRROR",
+      "SHAYZIEN_PALISADE_3",
+      "SHAYZIEN_PALISADE_4",
+      "SHAYZIEN_PALISADE_5"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": -62,
+        "uvScale": 0.25
+      },
+      {
+        "description": "Wood Grain",
+        "colors": "h == 3 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
       }
     ]
   },
@@ -11678,7 +11784,8 @@
       "THMINEBARREL_ANA_WINCHSIDE",
       "THMINEBARREL_FULL",
       "THMINEBARREL_EMPTY",
-      "QIP_SHEEP_SHEARER_BARREL"
+      "QIP_SHEEP_SHEARER_BARREL",
+      "SHAYZIEN_BARREL_DARK"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -19587,7 +19694,9 @@
       "TIMBER_SCAFOLDTALL",
       "SHAYZIEN_TIMBER_SCAFOLDEDGE",
       "SHAYZIEN_TIMBER_SCAFOLDTOP",
-      "SHAYZIEN_TIMBER_SCAFOLDTALL"
+      "SHAYZIEN_TIMBER_SCAFOLDTALL",
+      "SHAYZIEN_TIMBER_SCAFOLDLOW",
+      "SHAYZIEN_TIMBER_SCAFOLD"
     ],
     "uvType": "BOX",
     "uvScale": 0.85,
