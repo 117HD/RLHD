@@ -4181,6 +4181,16 @@
     "flatNormals": true
   },
   {
+    "description": "Shayzien - Metallic - Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DEADMAN_FINAL_CAGE_STEEL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 655
+  },
+  {
     "description": "Wilderness and Shayzien - Rock Walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
@@ -4496,6 +4506,15 @@
         "uvType": "BOX",
         "uvScale": 0.66
       }
+    ]
+  },
+  {
+    "description": "Shayzien - Marble - Decorative Support pillar",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHAYZIEN_PILLAR_01_BASE"
     ]
   },
   {
