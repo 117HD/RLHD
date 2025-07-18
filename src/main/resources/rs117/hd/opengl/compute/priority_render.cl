@@ -371,6 +371,7 @@ void applyWindDisplacement(
     float3 worldPos,
     float3 vertA, float3 vertB, float3 vertC,
     float3 normA, float3 normB, float3 normC,
+    float heightFracA, float heightFracB, float heightFracC,
     float3* displacementA,
     float3* displacementB,
     float3* displacementC
@@ -380,9 +381,9 @@ void applyWindDisplacement(
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
-    float strengthB = clamp(fabs(vertB.y) / height, 0.0f, 1.0f);
-    float strengthC = clamp(fabs(vertC.y) / height, 0.0f, 1.0f);
+    float strengthA = heightFracA;
+    float strengthB = heightFracB;
+    float strengthC = heightFracC;
 
 #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
@@ -519,6 +520,11 @@ void sort_and_insert(
     float4 vertB = (float4)(thisrvB.x, thisrvB.y, thisrvB.z, 0);
     float4 vertC = (float4)(thisrvC.x, thisrvC.y, thisrvC.z, 0);
 
+ // Precompute Height Frac for each vert for Wind/Ground & Hillskew
+    float heightFracA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
+    float heightFracB = clamp(fabs(vertB.y) / height, 0.0f, 1.0f);
+    float heightFracC = clamp(fabs(vertC.y) / height, 0.0f, 1.0f);
+
     float3 displacementA = (float3)(0);
     float3 displacementB = (float3)(0);
     float3 displacementC = (float3)(0);
@@ -526,6 +532,7 @@ void sort_and_insert(
     applyWindDisplacement(uni, windSample, vertexFlags, height, pos.xyz,
         vertA.xyz, vertB.xyz, vertC.xyz,
         normA.xyz, normB.xyz, normC.xyz,
+        heightFracA, heightFracB, heightFracC,
         &displacementA, &displacementB, &displacementC);
 
     vertA += pos + (float4)(displacementA, 0.0);
@@ -559,9 +566,9 @@ void sort_and_insert(
     if ((vertexFlags >> MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING & 1) == 1)
         hillskewFlags |= HILLSKEW_TILE_SNAPPING;
     if (hillskewFlags != HILLSKEW_NONE) {
-        hillskew_vertex(tileHeightMap, &vertA, hillskewFlags, modelY, height, plane);
-        hillskew_vertex(tileHeightMap, &vertB, hillskewFlags, modelY, height, plane);
-        hillskew_vertex(tileHeightMap, &vertC, hillskewFlags, modelY, height, plane);
+        hillskew_vertex(tileHeightMap, &vertA, hillskewFlags, modelY, heightFracA, plane);
+        hillskew_vertex(tileHeightMap, &vertB, hillskewFlags, modelY, heightFracB, plane);
+        hillskew_vertex(tileHeightMap, &vertC, hillskewFlags, modelY, heightFracC, plane);
     }
 
     // position vertices in scene and write to out buffer
@@ -596,9 +603,9 @@ void sort_and_insert(
 
         // For vanilla UVs, the first 3 components are an integer position vector
         if (hillskewFlags != HILLSKEW_NONE) {
-            hillskew_vertex(tileHeightMap, &uvwA, hillskewFlags, modelY, height, plane);
-            hillskew_vertex(tileHeightMap, &uvwB, hillskewFlags, modelY, height, plane);
-            hillskew_vertex(tileHeightMap, &uvwC, hillskewFlags, modelY, height, plane);
+            hillskew_vertex(tileHeightMap, &uvwA, hillskewFlags, modelY, heightFracA, plane);
+            hillskew_vertex(tileHeightMap, &uvwB, hillskewFlags, modelY, heightFracB, plane);
+            hillskew_vertex(tileHeightMap, &uvwC, hillskewFlags, modelY, heightFracC, plane);
         }
       }
 
