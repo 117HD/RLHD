@@ -94,12 +94,12 @@ import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.SceneShaderProgram;
-import rs117.hd.opengl.shader.ShadowShaderProgram;
-import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.shader.Shader;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderProgram;
+import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.ComputeUniforms;
 import rs117.hd.opengl.uniforms.GlobalUniforms;
 import rs117.hd.opengl.uniforms.LightUniforms;
@@ -869,7 +869,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboCompute)
-			.addIncludePath(SHADER_PATH);
+			.addIncludePath(SHADER_PATH, true);
 
 		textureManager.appendUniformBuffers(template);
 

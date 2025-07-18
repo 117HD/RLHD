@@ -25,6 +25,8 @@
 package rs117.hd.opengl.shader;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
@@ -46,6 +48,7 @@ public class Template
 	}
 
 	private final List<IncludeLoader> loaders = new ArrayList<>();
+	private ResourcePath rootPath;
 
 	@Getter
 	private final List<UniformBuffer> uniformBuffers = new ArrayList<>();
@@ -58,28 +61,9 @@ public class Template
 	{
 		var clone = new Template();
 		clone.loaders.addAll(this.loaders);
+		clone.uniformBuffers.addAll(this.uniformBuffers);
+		clone.rootPath = this.rootPath;
 		return clone;
-	}
-
-	private String parseIncludeDerivative(String line) {
-		final String prefix = "#include";
-		if (line.startsWith(prefix)) {
-			int quoteStartIDx = line.indexOf("\"", prefix.length());
-			int quoteEndIDx = line.indexOf("\"", quoteStartIDx + 1);
-			if (quoteStartIDx > 0 && quoteEndIDx > quoteStartIDx) {
-				return line.substring(quoteStartIDx + 1, quoteEndIDx);
-			}
-
-			// Might be a constant include, search through to find the start of the word
-			for (int c = prefix.length(); c < line.length(); c++) {
-				if (!Character.isWhitespace(line.charAt(c))) {
-					String defineInclude = line.substring(c);
-					return !defineInclude.contains("/") && !defineInclude.contains("\\") ? defineInclude : null;
-				}
-			}
-		}
-
-		return null;
 	}
 
 	public String process(String str) throws IOException
@@ -90,21 +74,21 @@ public class Template
 		{
 			lineCount++;
 			String trimmed = line.trim();
-			String include = parseIncludeDerivative(trimmed);
-			if (include != null)
+			if (trimmed.startsWith("#include "))
 			{
 				int currentIndex = includeStack.peek();
 				String currentFile = includeList.get(currentIndex);
 
+				String includeFile = trimmed.substring(9);
 				int includeIndex = includeList.size();
-				includeList.add(include);
+				includeList.add(includeFile);
 				includeStack.push(includeIndex);
-				String includeContents = loadInternal(include);
+				String includeContents = loadInternal(includeFile);
 				includeStack.pop();
 
 				int nextLineOffset = 1;
 				if (Shader.DUMP_SHADERS) {
-					sb.append("// Including ").append(include).append('\n');
+					sb.append("// Including ").append(includeFile).append('\n');
 					nextLineOffset = 0;
 				}
 
@@ -141,7 +125,7 @@ public class Template
 						// Source: https://gcc.gnu.org/onlinedocs/cpp/Line-Control.html
 						sb
 							.append("#line 1 \"") // Change to line 1 in the included file
-							.append(include)
+							.append(includeFile)
 							.append("\"\n")
 							.append(includeContents)
 							.append("#line ") // Return to the next line in the parent include
@@ -156,7 +140,7 @@ public class Template
 				}
 
 				if (Shader.DUMP_SHADERS)
-					sb.append("// End include of ").append(include).append('\n');
+					sb.append("// End include of ").append(includeFile).append('\n');
 			}
 			else if (trimmed.startsWith("#pragma once"))
 			{
@@ -212,7 +196,11 @@ public class Template
 				break;
 		}
 
-		return loadInternal(filename);
+		ResourcePath resolved = rootPath.resolve(filename);
+		if (resolved != null) {
+			return process(resolved.loadString());
+		}
+		return null;
 	}
 
 	public Template addIncludeLoader(IncludeLoader resolver)
@@ -223,15 +211,44 @@ public class Template
 
 	public Template addIncludePath(Class<?> clazz)
 	{
-		return addIncludePath(ResourcePath.path(clazz));
+		return addIncludePath(ResourcePath.path(clazz), false);
 	}
 
-	public Template addIncludePath(ResourcePath includePath)
+	public Template addIncludePath(ResourcePath includePath, boolean isRoot)
 	{
+		if (isRoot) {
+			rootPath = includePath;
+		}
+
 		return addIncludeLoader(path -> {
-			ResourcePath resolved = includePath.resolve(path);
-			if (resolved.exists())
-				return resolved.loadString();
+			int quoteStartIDx = path.indexOf("\"");
+			int quoteEndIDx = path.indexOf("\"", quoteStartIDx + 1);
+			if (quoteStartIDx >= 0 && quoteEndIDx > quoteStartIDx) {
+				String relativePath = path.substring(quoteStartIDx + 1, quoteEndIDx);
+				String relativeFolder = "";
+				if (includeStack.size() >= 2) {
+					String processingFilePath = includeList.get(includeStack.get(includeStack.size() - 2));
+					Path parentFolder = Paths.get(processingFilePath).getParent();
+					if (parentFolder != null) {
+						relativeFolder = parentFolder.toString();
+					}
+				}
+
+				String fullPath = (relativeFolder.isEmpty() ? "" : relativeFolder + "/") + relativePath;
+				ResourcePath resolved = includePath.resolve(fullPath);
+				if (resolved.exists())
+					return resolved.loadString();
+				return null;
+			}
+
+			int bracketStartIDx = path.indexOf("<");
+			int bracketEndIDx = path.indexOf(">", bracketStartIDx + 1);
+			if (bracketStartIDx >= 0 && bracketEndIDx > bracketStartIDx) {
+				String absolutePath = path.substring(bracketStartIDx + 1, bracketEndIDx);
+				ResourcePath resolved = includePath.resolve(absolutePath);
+				if (resolved.exists())
+					return resolved.loadString();
+			}
 			return null;
 		});
 	}
