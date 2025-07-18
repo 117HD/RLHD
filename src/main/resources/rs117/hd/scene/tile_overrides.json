@@ -3951,12 +3951,16 @@
     "groundMaterial": "TRANSPARENT"
   },
   {
-    "name": "FISHING_TRAWLER_BOAT_FLOODED",
-    "area": "FISHING_TRAWLER_BOAT_FLOODED",
+    "name": "FISHING_TRAWLER",
+    "area": "FISHING_TRAWLER",
     "overlayIds": [
+      0,
       6
     ],
-    "waterType": "WATER_FLAT",
+    "underlayIds": [
+      75
+    ],
+    "waterType": "PLAIN_WATER",
     "blended": false
   },
   {

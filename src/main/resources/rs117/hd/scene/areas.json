@@ -5340,18 +5340,32 @@
     ]
   },
   {
-    "name": "FISHING_TRAWLER_BOAT_FLOODED",
+    "name": "FISHING_TRAWLER_MAIN",
     "aabbs": [
-      [ 2012, 4824, 2021, 4826 ]
-    ]
+      [ 1856, 4800, 1919, 4862 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "FISHING_TRAWLER_FLOODED",
+    "aabbs": [
+      [ 1984, 4800, 2047, 4862 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "FISHING_TRAWLER_SUNK",
+    "aabbs": [
+      [ 1920, 4800, 1983, 4862 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "FISHING_TRAWLER",
-    "aabbs": [
-      [ 1792, 4734, 1855, 4863 ],
-      [ 1855, 4798, 1920, 4893 ],
-      [ 1920, 4798, 1990, 4863 ],
-      [ 1990, 4798, 2047, 4917 ]
+    "areas": [
+      "FISHING_TRAWLER_FLOODED",
+      "FISHING_TRAWLER_MAIN",
+      "FISHING_TRAWLER_SUNK"
     ]
   },
   {
@@ -6128,10 +6142,7 @@
     "regions": [
       7242,
       7243,
-      7499,
       7500,
-      7755,
-      8011,
       8012
     ]
   },

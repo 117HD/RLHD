@@ -1888,6 +1888,30 @@
     "windStrength": 55
   },
   {
+    "area": "FISHING_TRAWLER_SUNK",
+    "fogColor": "#b9d6ff",
+    "fogDepth": 30,
+    "directionalStrength": 3.5,
+    "ambientStrength": 1.25,
+    "waterColor": "#b9d6ff",
+    "instantTransition": true,
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 20
+  },
+  {
+    "area": "FISHING_TRAWLER",
+    "fogColor": "#b9d6ff",
+    "fogDepth": 6.5,
+    "directionalStrength": 3.5,
+    "ambientStrength": 1.25,
+    "waterColor": "#b9d6ff",
+    "instantTransition": true,
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 20
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
