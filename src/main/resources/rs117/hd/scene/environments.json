@@ -1211,14 +1211,14 @@
   {
     "area": "ZANARIS",
     "ambientColor": "#73b5c3",
-    "ambientStrength": 0.5,
+    "ambientStrength": 0.75,
     "directionalColor": "#f5d67a",
     "directionalStrength": 1.3,
     "sunAngles": [
       80,
       190
     ],
-    "fogColor": "#163f47",
+    "fogColor": "#226470",
     "fogDepth": 30
   },
   {
