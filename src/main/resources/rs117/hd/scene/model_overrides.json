@@ -25529,7 +25529,9 @@
       "TRAWLER_HULL_01",
       "TRAWLER_HULL_03",
       "TRAWLER_HULL_12",
-      "TRAWLER_HULL_DEFAULT"
+      "TRAWLER_HULL_DEFAULT",
+      "TRAWLER_SHIPRAIL",
+      "TRAWLER_SHIPRAIL_BROKEN_FLOOR"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -25641,7 +25643,9 @@
       "SHIP_LADDER",
       "SHIP_LADDERTOP",
       "SHIP_LADDER_NOCLIMB",
-      "SHIP_LADDERTOP_NOCLIMB"
+      "SHIP_LADDERTOP_NOCLIMB",
+      "TRAWLER_LADDER",
+      "TRAWLER_LADDERTOP"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -25736,6 +25740,104 @@
     "uvType": "BOX",
     "uvScale": 1.1,
     "uvOrientation": 512
+  },
+  {
+    "description": "Fishing Trawler Boat - Net ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "TRAWLERNET_RAISED_R_BASE1_NOHULL",
+      "TRAWLERNET_RAISED_R_BASE2_NOHULL",
+      "TRAWLERNET_RAISED_R_MID2_NOHULL",
+      "TRAWLERNET_RAISED_R_MID1_NOHULL",
+      "TRAWLERNET_RAISED_R_TOP2_NOHULL",
+      "TRAWLERNET_RAISED_R_TOP1_NOHULL",
+      "TRAWLERNET_RAISED_R_MID3_NOHULL",
+      "TRAWLERNET_RAISED_R_TOP3_NOHULL",
+      "TRAWLERNET_RAISED_L_BASE1_NOHULL",
+      "TRAWLERNET_RAISED_L_BASE2_NOHULL",
+      "TRAWLERNET_RAISED_L_MID2_NOHULL",
+      "TRAWLERNET_RAISED_L_MID1_NOHULL",
+      "TRAWLERNET_RAISED_L_TOP2_NOHULL",
+      "TRAWLERNET_RAISED_L_TOP1_NOHULL",
+      "TRAWLERNET_RAISED_L_MID3_NOHULL",
+      "TRAWLERNET_RAISED_L_TOP3_NOHULL",
+      "TRAWLERNET_L",
+      "TRAWLERNET_R",
+      "TRAWLERNET_TOP_L",
+      "TRAWLERNET_TOP_R"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Fishing Trawler Boat - Item Crates & Winch",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "TRAWLER_CRATE_BUCKET",
+      "TRAWLER_CRATE_HAMMER",
+      "TRAWLER_CRATE_AXES",
+      "WINCH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0", "h == 5 && s == 4 && l < 16" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Fishing Trawler Boat - Ship Controls/Levers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SHIP_CONTROLS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Fishing Trawler Boat - Sails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "flatNormals": true,
+    "objectIds": [
+      "BACKSAIL",
+      "SAIL2_L",
+      "SAIL2_R"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Fishing Trawler Boat - Front Sail",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "FRONTSAIL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "NONE",
+        "upwardsNormals": false
+      }
+    ]
   },
   {
     "description": "Object - Wooden - Gang Plank",
@@ -31034,7 +31136,10 @@
   {
     "description": "Port Sarim - Grums front deck",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "SARIM_SHIPFLOOR" ],
+    "objectIds": [
+      "SARIM_SHIPFLOOR",
+      "SARIM_SHIPFLOOR_PUDDLE"
+    ],
     "uvType": "WORLD_XZ",
     "uvOrientation": 512
   },

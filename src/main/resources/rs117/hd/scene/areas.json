@@ -5363,8 +5363,8 @@
   {
     "name": "FISHING_TRAWLER",
     "areas": [
-      "FISHING_TRAWLER_FLOODED",
       "FISHING_TRAWLER_MAIN",
+      "FISHING_TRAWLER_FLOODED",
       "FISHING_TRAWLER_SUNK"
     ]
   },
