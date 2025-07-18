@@ -352,6 +352,13 @@ float3 applyCharacterDisplacement(
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
+float getModelWindDisplacementMod(int vertexFlags) {
+    float modifiers[7] = { 0.25f, 0.5f, 0.7f, 1.0f, 1.25f, 1.5f, 2.0f};
+    int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
+    float invertDisplacement = (vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH == 1) ? -1.0f : 1.0f;
+    return modifiers[modifierIDx] * invertDisplacement;
+}
+
 void applyWindDisplacement(
     __constant struct ComputeUniforms *uni,
     const struct ObjectWindSample windSample,
@@ -369,9 +376,10 @@ void applyWindDisplacement(
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f);
-    float strengthB = clamp(fabs(vertB.y) / height, 0.0f, 1.0f);
-    float strengthC = clamp(fabs(vertC.y) / height, 0.0f, 1.0f);
+    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
+    float strengthA = clamp(fabs(vertA.y) / height, 0.0f, 1.0f) * modelDisplacementMod;
+    float strengthB = clamp(fabs(vertB.y) / height, 0.0f, 1.0f) * modelDisplacementMod;
+    float strengthC = clamp(fabs(vertC.y) / height, 0.0f, 1.0f) * modelDisplacementMod;
 
 #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
