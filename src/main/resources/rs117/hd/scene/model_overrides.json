@@ -5190,7 +5190,8 @@
       "CAVEENTRANCE3",
       "UPASS_CAVEENTRANCE2",
       "XMAS20_GOBLIN_CAVE_ENTRANCE",
-      "GA_CAVE"
+      "GA_CAVE",
+      "SHAYZIEN_RIVER_CAVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
