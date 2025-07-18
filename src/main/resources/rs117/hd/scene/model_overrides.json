@@ -1115,7 +1115,8 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "GREYBOX_NUMBER_TILE_0"
+      "GREYBOX_NUMBER_TILE_0",
+      "DRILL_TREE3"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -8837,7 +8838,6 @@
     "uvScale": 0.6,
     "uvOrientation": 512,
     "objectIds": [
-      "CANNON",
       "FAI_VARROCK_CANNON"
     ],
     "colorOverrides": [
@@ -8845,6 +8845,26 @@
         "description": "Wood",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "colors": "h < 10",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "CANNON 2",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CANNON"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 5",
         "uvType": "BOX",
         "uvScale": 0.4,
         "uvOrientation": 512
@@ -16722,7 +16742,7 @@
   },
   {
     "description": "Exercise Mats",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       "BARRACK_MAT_1",
       "BARRACK_MAT_2",
@@ -16730,7 +16750,128 @@
       "BARRACK_MAT_4"
     ],
     "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Drill Sergent - Emote Signs",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "BARRACK_MAT_POST_SITUPS",
+      "BARRACK_MAT_POST_PUSHUPS",
+      "BARRACK_MAT_POST_RUNSPOT",
+      "BARRACK_MAT_POST_STARJUMPS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Drill Sergent - Barrack",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "receiveShadows": false,
+    "flatNormals": true,
+    "objectIds": [
+      "BARRACK",
+      "BARRACK_MID",
+      "BARRACK_ROOF",
+      "BARRACK_FRONT1",
+      "BARRACK_FRONT1_MIRROR",
+      "BARRACK_FRONT2",
+      "BARRACK_FRONT3",
+      "BARRACK_FRONT2_MIRROR",
+      "BARRACK_DOOR",
+      "BARRACK_FRONT3_MIRROR",
+      "BARRACK_DOOR_TOP"
+    ],
+    "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Drill Sergent - Tank",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "BARRACK_TANK",
+      "BATHPIPES"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Drill Sergent - Barricade, Obstacle Net, Target & Wire Post",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "DEATH_WOOD_WALL_BARRICADEL",
+      "BARRACK_OBSTICAL_NET",
+      "DRILL_RANGING_TARGET",
+      "BARRACK_WIREPOST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Drill Sergent - Rope Fence",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "BARRACK_POST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Drill Sergent - Watchtower Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "EGYPT_LOW_WALL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Drill Sergent - Log",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "BARRACK_LOG_SUPPORT_HI",
+      "BARRACK_LOG",
+      "BARRACK_LOG_MIRROR",
+      "BARRACK_LOG_SUPPORT_LOW"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.76,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Drill Sergent - Darken Flag",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "BARRACK_FLAG"
+    ]
   },
   {
     "description": "Sophanem Gate",
@@ -38373,10 +38514,11 @@
     ]
   },
   {
-    "description": "Port Sarim - Jail Bunk Bed",
+    "description": "Objects - Generic - Bunk Bed",
     "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
-      "FAVOUR_BUNKBED"
+      "FAVOUR_BUNKBED",
+      "NORMAL_BUNKBED"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
