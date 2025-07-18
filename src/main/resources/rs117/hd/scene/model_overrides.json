@@ -25742,7 +25742,7 @@
     "uvOrientation": 512
   },
   {
-    "description": "Fishing Trawler Boat - Net ",
+    "description": "Fishing Trawler Boat - Net & Support",
     "baseMaterial": "WOOD_GRAIN_3",
     "retainVanillaUvs": false,
     "objectIds": [
@@ -25834,9 +25834,32 @@
     "colorOverrides": [
       {
         "colors": "h == 0",
-        "baseMaterial": "NONE",
-        "upwardsNormals": false
+        "baseMaterial": "NONE"
       }
+    ]
+  },
+  {
+    "description": "Port Khazard - Banner",
+    "baseMaterial": "GRUNGE_3",
+    "flatNormals": true,
+    "objectIds": [
+      "STANDARD_TATTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Port Khazard - Sword Shop Banner - Fix normals and darken",
+    "baseMaterial": "GRAY_85",
+    "flatNormals": true,
+    "objectIds": [
+      "FAVOUR_SWORDSHOP_BANNER"
     ]
   },
   {
@@ -38579,7 +38602,8 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "FAVOUR_ANTIQUESHOP_ROOF"
+      "FAVOUR_ANTIQUESHOP_ROOF",
+      "FAVOUR_KIOSK_WOOD"
     ]
   },
   {
@@ -38592,11 +38616,14 @@
       "SARIM_PORT_SHACK_COUNTERWALL_MIRROR",
       "SARIM_PORT_SHACK_COUNTERWALL_FRONT",
       "SARIM_PORT_SHACK_COUNTERWALL",
-      "FAVOUR_ANTIQUSHOP_SUPPORT"
+      "FAVOUR_ANTIQUESHOP_COUNTERWALL_MIRROR",
+      "FAVOUR_ANTIQUESHOP_COUNTERWALL",
+      "FAVOUR_ANTIQUSHOP_SUPPORT",
+      "FAVOUR_ANTIQUESHOP_COUNTERWALL_FRONT"
     ],
     "colorOverrides": [
       {
-        "colors": "s < 2",
+        "colors": "h > 0 && s < 2",
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
