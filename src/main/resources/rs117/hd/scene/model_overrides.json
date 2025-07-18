@@ -4373,6 +4373,26 @@
     ]
   },
   {
+    "description": "Shayzien - Cloth - Metal - Curtains",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SLP_DRAPES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Curtain rod",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Shayzien - Wooden - Staircase",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -9883,7 +9903,9 @@
       "KR_CAM_DOUBLEDOORL",
       "KR_CAM_DOUBLEDOORL_OPEN",
       "KR_CAM_DOUBLEDOORR",
-      "KR_CAM_DOUBLEDOORR_OPEN"
+      "KR_CAM_DOUBLEDOORR_OPEN",
+      "FAI_BARBARIAN_LARGE_DOUBLEDOOR_L_INACTIVE",
+      "FAI_BARBARIAN_LARGE_DOUBLEDOOR_R_INACTIVE"
     ],
     "colorOverrides": [
       {
