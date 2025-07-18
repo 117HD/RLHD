@@ -25,7 +25,7 @@
 
 #include VERSION_HEADER
 
-#include comp_common.glsl
+#include "comp_common.glsl"
 
 layout(local_size_x = 6) in;
 

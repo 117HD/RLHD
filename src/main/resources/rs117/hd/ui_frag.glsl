@@ -30,14 +30,14 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
-#include uniforms/ui.glsl
+#include "uniforms/ui.glsl"
 
 uniform sampler2D uiTexture;
 
-#include scaling/bicubic.glsl
-#include utils/constants.glsl
-#include utils/color_blindness.glsl
-#include utils/gamma_calibration_ui.glsl
+#include "scaling/bicubic.glsl"
+#include "utils/constants.glsl"
+#include "utils/color_blindness.glsl"
+#include "utils/gamma_calibration_ui.glsl"
 
 #if SHADOW_MAP_OVERLAY
 uniform sampler2D shadowMap;
@@ -45,7 +45,7 @@ uniform ivec4 shadowMapOverlayDimensions;
 #endif
 
 #if UI_SCALING_MODE == SAMPLING_XBR
-#include scaling/xbr_lv2_frag.glsl
+#include "scaling/xbr_lv2_frag.glsl"
 
 in XBRTable xbrTable;
 #endif

@@ -25,10 +25,10 @@
  */
 #version 330
 
-#include uniforms/global.glsl
-#include uniforms/materials.glsl
-#include uniforms/water_types.glsl
-#include uniforms/lights.glsl
+#include "uniforms/global.glsl"
+#include "uniforms/materials.glsl"
+#include "uniforms/water_types.glsl"
+#include "uniforms/lights.glsl"
 
 #include MATERIAL_CONSTANTS
 
@@ -56,19 +56,19 @@ vec2 worldUvs(float scale) {
     return -IN.position.xz / (128 * scale);
 }
 
-#include utils/constants.glsl
-#include utils/misc.glsl
-#include utils/color_blindness.glsl
-#include utils/caustics.glsl
-#include utils/color_utils.glsl
-#include utils/normals.glsl
-#include utils/specular.glsl
-#include utils/displacement.glsl
-#include utils/shadows.glsl
-#include utils/water.glsl
-#include utils/color_filters.glsl
-#include utils/fog.glsl
-#include utils/wireframe.glsl
+#include "utils/constants.glsl"
+#include "utils/misc.glsl"
+#include "utils/color_blindness.glsl"
+#include "utils/caustics.glsl"
+#include "utils/color_utils.glsl"
+#include "utils/normals.glsl"
+#include "utils/specular.glsl"
+#include "utils/displacement.glsl"
+#include "utils/shadows.glsl"
+#include "utils/water.glsl"
+#include "utils/color_filters.glsl"
+#include "utils/fog.glsl"
+#include "utils/wireframe.glsl"
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);

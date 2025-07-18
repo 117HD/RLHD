@@ -61,6 +61,27 @@ public class Template
 		return clone;
 	}
 
+	private String parseIncludeDerivative(String line) {
+		final String prefix = "#include";
+		if (line.startsWith(prefix)) {
+			int quoteStartIDx = line.indexOf("\"", prefix.length());
+			int quoteEndIDx = line.indexOf("\"", quoteStartIDx + 1);
+			if (quoteStartIDx > 0 && quoteEndIDx > quoteStartIDx) {
+				return line.substring(quoteStartIDx + 1, quoteEndIDx);
+			}
+
+			// Might be a constant include, search through to find the start of the word
+			for (int c = prefix.length(); c < line.length(); c++) {
+				if (!Character.isWhitespace(line.charAt(c))) {
+					String defineInclude = line.substring(c);
+					return !defineInclude.contains("/") && !defineInclude.contains("\\") ? defineInclude : null;
+				}
+			}
+		}
+
+		return null;
+	}
+
 	public String process(String str) throws IOException
 	{
 		StringBuilder sb = new StringBuilder();
@@ -69,21 +90,21 @@ public class Template
 		{
 			lineCount++;
 			String trimmed = line.trim();
-			if (trimmed.startsWith("#include "))
+			String include = parseIncludeDerivative(trimmed);
+			if (include != null)
 			{
 				int currentIndex = includeStack.peek();
 				String currentFile = includeList.get(currentIndex);
 
-				String includeFile = trimmed.substring(9);
 				int includeIndex = includeList.size();
-				includeList.add(includeFile);
+				includeList.add(include);
 				includeStack.push(includeIndex);
-				String includeContents = loadInternal(includeFile);
+				String includeContents = loadInternal(include);
 				includeStack.pop();
 
 				int nextLineOffset = 1;
 				if (Shader.DUMP_SHADERS) {
-					sb.append("// Including ").append(includeFile).append('\n');
+					sb.append("// Including ").append(include).append('\n');
 					nextLineOffset = 0;
 				}
 
@@ -120,7 +141,7 @@ public class Template
 						// Source: https://gcc.gnu.org/onlinedocs/cpp/Line-Control.html
 						sb
 							.append("#line 1 \"") // Change to line 1 in the included file
-							.append(includeFile)
+							.append(include)
 							.append("\"\n")
 							.append(includeContents)
 							.append("#line ") // Return to the next line in the parent include
@@ -135,7 +156,7 @@ public class Template
 				}
 
 				if (Shader.DUMP_SHADERS)
-					sb.append("// End include of ").append(includeFile).append('\n');
+					sb.append("// End include of ").append(include).append('\n');
 			}
 			else if (trimmed.startsWith("#pragma once"))
 			{

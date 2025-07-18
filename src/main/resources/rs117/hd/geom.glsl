@@ -25,15 +25,15 @@
  */
 #version 330
 
-#include uniforms/global.glsl
+#include "uniforms/global.glsl"
 
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-#include utils/constants.glsl
+#include "utils/constants.glsl"
 #define USE_VANILLA_UV_PROJECTION
-#include utils/uvs.glsl
-#include utils/color_utils.glsl
+#include "utils/uvs.glsl"
+#include "utils/color_utils.glsl"
 
 in vec3 gPosition[3];
 in int gHsl[3];

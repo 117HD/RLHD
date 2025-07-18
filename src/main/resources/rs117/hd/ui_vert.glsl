@@ -31,13 +31,13 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
-#include uniforms/ui.glsl
+#include "uniforms/ui.glsl"
 
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec2 aTexCoord;
 
 #if UI_SCALING_MODE == SAMPLING_XBR
-#include scaling/xbr_lv2_vert.glsl
+#include "scaling/xbr_lv2_vert.glsl"
 
 out XBRTable xbrTable;
 #endif

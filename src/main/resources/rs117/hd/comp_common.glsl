@@ -23,7 +23,7 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include utils/constants.glsl
+#include "utils/constants.glsl"
 
 #define UNIT PI / 1024.0f
 
