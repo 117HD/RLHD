@@ -99,6 +99,7 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.opengl.shader.TiledShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.ComputeUniforms;
 import rs117.hd.opengl.uniforms.GlobalUniforms;
@@ -327,6 +328,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
 			.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl")
 			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl"));
+
+	public TiledShaderProgram tiledProgram = new TiledShaderProgram();
 
 	public ShaderProgram modelPassthroughComputeProgram = new ShaderProgram().setShader(new Shader().add(GL43C.GL_COMPUTE_SHADER, "comp_unordered.glsl"));
 	public ShaderProgram[] modelSortingComputePrograms = {};
@@ -877,6 +880,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(template);
 		fastShadowProgram.compile(template);
 		detailedShadowProgram.compile(template);
+		tiledProgram.compile(template);
 
 		fastShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 		detailedShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
