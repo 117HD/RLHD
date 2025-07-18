@@ -2839,17 +2839,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-     * Draw a Renderable in the scene
-     *
-     * @param projection
-     * @param scene
-     * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
-     * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
-     * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
-     * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
-     * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
-     * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
-     */
+	 * Draw a Renderable in the scene
+	 *
+	 * @param projection
+	 * @param scene
+	 * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
+	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
+	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
+	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
+	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
+	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
+	 */
 	@Override
 	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
 		if (sceneContext == null)
