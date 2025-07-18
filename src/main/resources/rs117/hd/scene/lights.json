@@ -26546,18 +26546,18 @@
   },
   {
     "description": "STRANGE_SHRINE",
-    "height": 70,
+    "height": 250,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 7.5,
+    "radius": 500,
+    "strength": 8.5,
     "color": [
       255,
-      216,
-      87
+      255,
+      255
     ],
     "type": "PULSE",
-    "duration": 2800,
-    "range": 30,
+    "duration": 2000,
+    "range": 20,
     "objectIds": [
       "MACRO_MAZE_COMPLETE"
     ]

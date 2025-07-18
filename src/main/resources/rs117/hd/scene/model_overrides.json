@@ -16946,6 +16946,30 @@
     ]
   },
   {
+    "description": "Maze Random Event - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 256,
+    "objectIds": [
+      "MACRO_MAZE_WALLHIGH"
+    ]
+  },
+  {
+    "description": "Maze Random Event - Gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MACRO_MAZE_WALLLOW",
+      "MACRO_MAZE_WALLLOW_SAFE1",
+      "MACRO_MAZE_WALLLOW_SAFE2",
+      "MACRO_MAZE_WALLLOW_SAFE3",
+      "MACRO_MAZE_WALLLOW_SAFE4"
+    ]
+  },
+  {
     "description": "Sophanem Gate",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
