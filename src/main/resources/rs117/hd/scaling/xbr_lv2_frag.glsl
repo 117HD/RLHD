@@ -100,7 +100,7 @@ float c_df(vec3 c1, vec3 c2)
     return df.r + df.g + df.b;
 }
 
-#include scaling/xbr_lv2_common.glsl
+#include <scaling/xbr_lv2_common.glsl>
 
 
 // xBR-level2 upscaler. Level 2 means it detects edges in 2 directions, instead of just 1 in the most basic form of the algorithm.

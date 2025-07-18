@@ -8,7 +8,7 @@
  */
 #pragma once
 
-#include utils/constants.glsl
+#include <utils/constants.glsl>
 
 /**
  * Row-major transformation matrices for conversion between RGB and XYZ color spaces.

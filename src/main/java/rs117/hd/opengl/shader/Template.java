@@ -25,11 +25,15 @@
 package rs117.hd.opengl.shader;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 import java.util.function.Supplier;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.utils.ResourcePath;
 
 @Slf4j
@@ -44,6 +48,10 @@ public class Template
 	}
 
 	private final List<IncludeLoader> loaders = new ArrayList<>();
+	private ResourcePath rootPath;
+
+	@Getter
+	private final List<UniformBuffer> uniformBuffers = new ArrayList<>();
 
 	IncludeType includeType = IncludeType.UNKNOWN;
 	final Stack<Integer> includeStack = new Stack<>();
@@ -53,6 +61,8 @@ public class Template
 	{
 		var clone = new Template();
 		clone.loaders.addAll(this.loaders);
+		clone.uniformBuffers.addAll(this.uniformBuffers);
+		clone.rootPath = this.rootPath;
 		return clone;
 	}
 
@@ -186,7 +196,11 @@ public class Template
 				break;
 		}
 
-		return loadInternal(filename);
+		ResourcePath resolved = rootPath.resolve(filename);
+		if (resolved != null) {
+			return process(resolved.loadString());
+		}
+		return null;
 	}
 
 	public Template addIncludeLoader(IncludeLoader resolver)
@@ -197,15 +211,44 @@ public class Template
 
 	public Template addIncludePath(Class<?> clazz)
 	{
-		return addIncludePath(ResourcePath.path(clazz));
+		return addIncludePath(ResourcePath.path(clazz), false);
 	}
 
-	public Template addIncludePath(ResourcePath includePath)
+	public Template addIncludePath(ResourcePath includePath, boolean isRoot)
 	{
+		if (isRoot) {
+			rootPath = includePath;
+		}
+
 		return addIncludeLoader(path -> {
-			ResourcePath resolved = includePath.resolve(path);
-			if (resolved.exists())
-				return resolved.loadString();
+			int quoteStartIDx = path.indexOf("\"");
+			int quoteEndIDx = path.indexOf("\"", quoteStartIDx + 1);
+			if (quoteStartIDx >= 0 && quoteEndIDx > quoteStartIDx) {
+				String relativePath = path.substring(quoteStartIDx + 1, quoteEndIDx);
+				String relativeFolder = "";
+				if (includeStack.size() >= 2) {
+					String processingFilePath = includeList.get(includeStack.get(includeStack.size() - 2));
+					Path parentFolder = Paths.get(processingFilePath).getParent();
+					if (parentFolder != null) {
+						relativeFolder = parentFolder.toString();
+					}
+				}
+
+				String fullPath = (relativeFolder.isEmpty() ? "" : relativeFolder + "/") + relativePath;
+				ResourcePath resolved = includePath.resolve(fullPath);
+				if (resolved.exists())
+					return resolved.loadString();
+				return null;
+			}
+
+			int bracketStartIDx = path.indexOf("<");
+			int bracketEndIDx = path.indexOf(">", bracketStartIDx + 1);
+			if (bracketStartIDx >= 0 && bracketEndIDx > bracketStartIDx) {
+				String absolutePath = path.substring(bracketStartIDx + 1, bracketEndIDx);
+				ResourcePath resolved = includePath.resolve(absolutePath);
+				if (resolved.exists())
+					return resolved.loadString();
+			}
 			return null;
 		});
 	}
@@ -213,6 +256,14 @@ public class Template
 	public Template addInclude(String identifier, String value)
 	{
 		return addIncludeLoader(key -> key.equals(identifier) ? value : null);
+	}
+
+	public Template addUniformBuffer(UniformBuffer ubo)
+	{
+		if(!uniformBuffers.contains(ubo)) {
+			uniformBuffers.add(ubo);
+		}
+		return this;
 	}
 
 	public Template define(String identifier, String value)

@@ -4,6 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
@@ -187,12 +188,16 @@ public abstract class UniformBuffer {
 	private int dirtyHighTide = 0;
 	private ByteBuffer data;
 
-	protected UniformBuffer(GLBuffer glBuffer) {
+	@Getter private final String uniformBlockName;
+	@Getter private int uniformBlockIndex;
+
+	protected UniformBuffer(GLBuffer glBuffer, String uniformBlockName) {
 		this.glBuffer = glBuffer;
+		this.uniformBlockName = uniformBlockName;
 	}
 
-	public UniformBuffer(String name, int glUsage) {
-		this(new GLBuffer("UBO " + name, GL_UNIFORM_BUFFER, glUsage));
+	public UniformBuffer(String name, String uniformBlockName, int glUsage) {
+		this(new GLBuffer("UBO " + name, GL_UNIFORM_BUFFER, glUsage), uniformBlockName);
 	}
 
 	protected final <T extends StructProperty> T addStruct(T newStructProp) {
@@ -256,6 +261,7 @@ public abstract class UniformBuffer {
 	}
 
 	public void bind(int uniformBlockIndex) {
+		this.uniformBlockIndex = uniformBlockIndex;
 		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBlockIndex, glBuffer.id);
 	}
 

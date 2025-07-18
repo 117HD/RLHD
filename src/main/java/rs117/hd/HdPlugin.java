@@ -93,9 +93,13 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
-import rs117.hd.opengl.shader.Shader;
+import rs117.hd.opengl.shader.ComputeModelShaderProgram;
+import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
+import rs117.hd.opengl.shader.ShaderProgram;
+import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.Template;
+import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.ComputeUniforms;
 import rs117.hd.opengl.uniforms.GlobalUniforms;
 import rs117.hd.opengl.uniforms.LightUniforms;
@@ -295,39 +299,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		"#extension GL_ARB_explicit_attrib_location : require\n";
 	private static final String WINDOWS_VERSION_HEADER = "#version 430\n";
 
-	private static final Shader PROGRAM = new Shader()
-		.add(GL_VERTEX_SHADER, "vert.glsl")
-		.add(GL_GEOMETRY_SHADER, "geom.glsl")
-		.add(GL_FRAGMENT_SHADER, "frag.glsl");
-
-	private static final Shader UI_PROGRAM = new Shader()
-		.add(GL_VERTEX_SHADER, "ui_vert.glsl")
-		.add(GL_FRAGMENT_SHADER, "ui_frag.glsl");
-
-	private static final Shader SHADOW_PROGRAM_FAST = new Shader()
-		.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
-		.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
-
-	private static final Shader SHADOW_PROGRAM_DETAILED = new Shader()
-		.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
-		.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl")
-		.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
-
-	private static final Shader COMPUTE_PROGRAM = new Shader()
-		.add(GL43C.GL_COMPUTE_SHADER, "comp.glsl");
-
-	private static final Shader UNORDERED_COMPUTE_PROGRAM = new Shader()
-		.add(GL43C.GL_COMPUTE_SHADER, "comp_unordered.glsl");
-
 	private static final ResourcePath SHADER_PATH = Props
 		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
 
-	public int glSceneProgram;
-	public int glUiProgram;
-	public int glShadowProgram;
-	public int glModelPassthroughComputeProgram;
-	public int[] glModelSortingComputePrograms = {};
+	public SceneShaderProgram sceneProgram = new SceneShaderProgram();
+	public UIShaderProgram uiProgram = new UIShaderProgram();
+
+	public ShadowShaderProgram fastShadowProgram = new ShadowShaderProgram(ShadowMode.FAST);
+	public ShadowShaderProgram detailedShadowProgram = new ShadowShaderProgram(ShadowMode.DETAILED);
+
+	public ComputeModelShaderProgram modelPassthroughComputeProgram = new ComputeModelShaderProgram(true);
+	public ComputeModelShaderProgram[] modelSortingComputePrograms = {};
 
 	private int interfaceTexture;
 	private int interfacePbo;
@@ -399,17 +382,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportWidth;
 	private int viewportHeight;
 
-	private int uniShadowMap;
-	private int uniShadowBlockGlobals;
 
-	private int uniUiTexture;
-	private int uniTextureArray;
-	private int uniUiBlockUi;
-
-	private int uniSceneBlockMaterials;
-	private int uniSceneBlockWaterTypes;
-	private int uniSceneBlockPointLights;
-	private int uniSceneBlockGlobals;
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -873,116 +846,67 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, ComputeUniforms.MAX_CHARACTER_POSITION_COUNT))
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("WIREFRAME", config.wireframe())
-			.addIncludePath(SHADER_PATH);
+			.addUniformBuffer(uboGlobal)
+			.addUniformBuffer(uboUI)
+			.addUniformBuffer(uboLights)
+			.addUniformBuffer(uboCompute)
+			.addIncludePath(SHADER_PATH, true);
 
-		glSceneProgram = PROGRAM.compile(template);
-		glUiProgram = UI_PROGRAM.compile(template);
+		textureManager.appendUniformBuffers(template);
 
-		switch (configShadowMode) {
-			case FAST:
-				glShadowProgram = SHADOW_PROGRAM_FAST.compile(template);
-				break;
-			case DETAILED:
-				glShadowProgram = SHADOW_PROGRAM_DETAILED.compile(template);
-				break;
-		}
+		sceneProgram.compile(template);
+		uiProgram.compile(template);
+		fastShadowProgram.compile(template);
+		detailedShadowProgram.compile(template);
+
+		fastShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		detailedShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initPrograms();
 		} else {
-			glModelPassthroughComputeProgram = UNORDERED_COMPUTE_PROGRAM.compile(template);
+			modelPassthroughComputeProgram.compile(template);
 
-			glModelSortingComputePrograms = new int[numSortingBins];
+			modelSortingComputePrograms = new ComputeModelShaderProgram[numSortingBins];
 			for (int i = 0; i < numSortingBins; i++) {
 				int faceCount = modelSortingBinFaceCounts[i];
 				int threadCount = modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
-				glModelSortingComputePrograms[i] = COMPUTE_PROGRAM.compile(template
-					.copy()
-					.define("THREAD_COUNT", threadCount)
-					.define("FACES_PER_THREAD", facesPerThread)
-				);
+				modelSortingComputePrograms[i] = new ComputeModelShaderProgram(false);
+				modelSortingComputePrograms[i].compile(
+					template.copy()
+						.define("THREAD_COUNT", threadCount)
+						.define("FACES_PER_THREAD", facesPerThread));
 			}
 		}
 
-		initUniforms();
-
 		// Bind texture samplers before validating, else the validation fails
-		glUseProgram(glSceneProgram);
-		glUniform1i(uniTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
-		glUniform1i(uniShadowMap, TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
+		sceneProgram.use();
+
+		sceneProgram.uniTextureArray.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		sceneProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
 
 		// Bind a VOA, else validation may fail on older Intel-based Macs
 		glBindVertexArray(vaoSceneHandle);
 
-		// Validate program
-		glValidateProgram(glSceneProgram);
-		if (glGetProgrami(glSceneProgram, GL_VALIDATE_STATUS) == GL_FALSE) {
-			String err = glGetProgramInfoLog(glSceneProgram);
-			throw new ShaderException(err);
-		}
+		sceneProgram.validate();
 
-		glUseProgram(glUiProgram);
-		glUniform1i(uniUiTexture, TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
+		uiProgram.use();
+		uiProgram.uniTextureArray.set(TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
 
 		glUseProgram(0);
 		checkGLErrors();
 	}
 
-	private void initUniforms() {
-		uniShadowMap = glGetUniformLocation(glSceneProgram, "shadowMap");
-		uniTextureArray = glGetUniformLocation(glSceneProgram, "textureArray");
-		uniSceneBlockMaterials = glGetUniformBlockIndex(glSceneProgram, "MaterialUniforms");
-		uniSceneBlockWaterTypes = glGetUniformBlockIndex(glSceneProgram, "WaterTypeUniforms");
-		uniSceneBlockPointLights = glGetUniformBlockIndex(glSceneProgram, "PointLightUniforms");
-		uniSceneBlockGlobals = glGetUniformBlockIndex(glSceneProgram, "GlobalUniforms");
-
-		uniUiTexture = glGetUniformLocation(glUiProgram, "uiTexture");
-		uniUiBlockUi = glGetUniformBlockIndex(glUiProgram, "UIUniforms");
-
-		if (computeMode == ComputeMode.OPENGL) {
-			for (int sortingProgram : glModelSortingComputePrograms) {
-				int uniBlock = glGetUniformBlockIndex(sortingProgram, "ComputeUniforms");
-				glUniformBlockBinding(sortingProgram, uniBlock, UNIFORM_BLOCK_COMPUTE);
-			}
-		}
-
-		// Shadow program uniforms
-		switch (configShadowMode) {
-			case DETAILED:
-				int uniShadowBlockMaterials = glGetUniformBlockIndex(glShadowProgram, "MaterialUniforms");
-				int uniShadowTextureArray = glGetUniformLocation(glShadowProgram, "textureArray");
-				glUseProgram(glShadowProgram);
-				glUniform1i(uniShadowTextureArray, TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
-				glUniformBlockBinding(glShadowProgram, uniShadowBlockMaterials, UNIFORM_BLOCK_MATERIALS);
-				// fall-through
-			case FAST:
-				uniShadowBlockGlobals = glGetUniformBlockIndex(glShadowProgram, "GlobalUniforms");
-		}
-	}
-
 	private void destroyPrograms() {
-		if (glSceneProgram != 0)
-			glDeleteProgram(glSceneProgram);
-		glSceneProgram = 0;
-
-		if (glUiProgram != 0)
-			glDeleteProgram(glUiProgram);
-		glUiProgram = 0;
-
-		if (glShadowProgram != 0)
-			glDeleteProgram(glShadowProgram);
-		glShadowProgram = 0;
+		sceneProgram.destroy();
+		uiProgram.destroy();
+		fastShadowProgram.destroy();
+		detailedShadowProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
-			if (glModelPassthroughComputeProgram != 0)
-				glDeleteProgram(glModelPassthroughComputeProgram);
-			glModelPassthroughComputeProgram = 0;
-
-			if (glModelSortingComputePrograms != null)
-				for (int program : glModelSortingComputePrograms)
-					glDeleteProgram(program);
-			glModelSortingComputePrograms = null;
+			modelPassthroughComputeProgram.destroy();
+			ShaderProgram.destroyAll(modelSortingComputePrograms);
 		} else {
 			clManager.destroyPrograms();
 		}
@@ -990,7 +914,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void recompilePrograms() throws ShaderException, IOException {
 		// Avoid recompiling if we haven't already compiled once
-		if (glSceneProgram == 0)
+		if (sceneProgram.isValid())
 			return;
 
 		destroyPrograms();
@@ -1639,7 +1563,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 6, hRenderBufferNormals.id);
 
 			// unordered
-			glUseProgram(glModelPassthroughComputeProgram);
+			modelPassthroughComputeProgram.use();
 			glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 0, hModelPassthroughBuffer.id);
 			GL43C.glDispatchCompute(numPassthroughModels, 1, 1);
 
@@ -1647,7 +1571,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (numModelsToSort[i] == 0)
 					continue;
 
-				glUseProgram(glModelSortingComputePrograms[i]);
+				modelSortingComputePrograms[i].use();
 				glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 0, hModelSortingBuffers[i].id);
 				GL43C.glDispatchCompute(numModelsToSort[i], 1, 1);
 			}
@@ -2047,7 +1971,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
 
-				glUseProgram(glShadowProgram);
+				if(configShadowMode == ShadowMode.DETAILED){
+					detailedShadowProgram.use();
+				} else {
+					fastShadowProgram.use();
+				}
 
 				final int camX = cameraFocalPoint[0];
 				final int camY = cameraFocalPoint[1];
@@ -2075,8 +2003,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
 				uboGlobal.upload();
 
-				glUniformBlockBinding(glShadowProgram, uniShadowBlockGlobals, UNIFORM_BLOCK_GLOBAL);
-
 				glEnable(GL_CULL_FACE);
 				glEnable(GL_DEPTH_TEST);
 
@@ -2094,13 +2020,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboGlobal.upload();
 			}
 
-			glUseProgram(glSceneProgram);
-
-			// Bind uniforms
-			glUniformBlockBinding(glSceneProgram, uniSceneBlockMaterials, UNIFORM_BLOCK_MATERIALS);
-			glUniformBlockBinding(glSceneProgram, uniSceneBlockWaterTypes, UNIFORM_BLOCK_WATER_TYPES);
-			glUniformBlockBinding(glSceneProgram, uniSceneBlockPointLights, UNIFORM_BLOCK_LIGHTS);
-			glUniformBlockBinding(glSceneProgram, uniSceneBlockGlobals, UNIFORM_BLOCK_GLOBAL);
+			sceneProgram.use();
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
 			glToggle(GL_MULTISAMPLE, numSamples > 1);
@@ -2239,7 +2159,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 		// Use the texture bound in the first pass
-		glUseProgram(glUiProgram);
+		uiProgram.use();
 		uboUI.sourceDimensions.set(canvasWidth, canvasHeight);
 		uboUI.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100f);
 
@@ -2260,8 +2180,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		uboUI.upload();
-
-		glUniformBlockBinding(glUiProgram, uniUiBlockUi, UNIFORM_BLOCK_UI);
 
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
@@ -2647,7 +2565,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_WIREFRAME:
 								recompilePrograms = true;
 								break;
-							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_TRANSPARENCY:
 								recompilePrograms = true;
 								// fall-through

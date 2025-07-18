@@ -18,10 +18,12 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
+import rs117.hd.opengl.uniforms.UIUniforms;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
+import static rs117.hd.HdPlugin.UNIFORM_BLOCK_UI;
 
 @Slf4j
 @Singleton
@@ -77,10 +79,11 @@ public class ShadowMapOverlay extends Overlay {
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
-			glUseProgram(plugin.glUiProgram);
-			int uniBounds = glGetUniformLocation(plugin.glUiProgram, "shadowMapOverlayDimensions");
-			if (uniBounds != -1)
-				glUniform4i(uniBounds, 0, 0, 0, 0);
+			plugin.uiProgram.use();
+			UIUniforms uboUI = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
+			if(uboUI != null) {
+				uboUI.shadowMapOverlayDimensions.set(0, 0, 0, 0);
+			}
 		}
 	}
 
@@ -89,17 +92,15 @@ public class ShadowMapOverlay extends Overlay {
 		var bounds = getBounds();
 
 		clientThread.invoke(() -> {
-			if (plugin.glUiProgram == 0)
+			if (plugin.uiProgram.isValid())
 				return;
 
-			glUseProgram(plugin.glUiProgram);
-			int uniShadowMap = glGetUniformLocation(plugin.glUiProgram, "shadowMap");
-			if (uniShadowMap != -1)
-				glUniform1i(uniShadowMap, TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
-			int uniBounds = glGetUniformLocation(plugin.glUiProgram, "shadowMapOverlayDimensions");
-			if (uniBounds != -1) {
+			plugin.uiProgram.use();
+			plugin.uiProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
+			UIUniforms uboUI = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
+			if(uboUI != null) {
 				if (client.getGameState().getState() < GameState.LOGGED_IN.getState()) {
-					glUniform4i(uniBounds, 0, 0, 0, 0);
+					uboUI.shadowMapOverlayDimensions.set(0, 0, 0, 0);
 				} else {
 					int canvasWidth = client.getCanvasWidth();
 					int canvasHeight = client.getCanvasHeight();
@@ -110,7 +111,7 @@ public class ShadowMapOverlay extends Overlay {
 						scaleX = (float) stretchedDims.width / canvasWidth;
 						scaleY = (float) stretchedDims.height / canvasHeight;
 					}
-					glUniform4i(uniBounds,
+					uboUI.shadowMapOverlayDimensions.set(
 						(int) Math.floor((bounds.x + 1) * scaleX), (int) Math.floor((canvasHeight - bounds.height - bounds.y) * scaleY),
 						(int) Math.ceil((bounds.width - 1) * scaleX), (int) Math.ceil((bounds.height - 1) * scaleY)
 					);

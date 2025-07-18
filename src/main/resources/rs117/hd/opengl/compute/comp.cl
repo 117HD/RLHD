@@ -26,9 +26,9 @@
 #include THREAD_COUNT
 #include FACES_PER_THREAD
 
-#include cl_types.cl
-#include common.cl
-#include priority_render.cl
+#include "cl_types.cl"
+#include "common.cl"
+#include "priority_render.cl"
 
 __kernel
 __attribute__((work_group_size_hint(THREAD_COUNT, 1, 1)))

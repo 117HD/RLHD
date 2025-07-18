@@ -23,9 +23,9 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include constants.cl
-#include common.cl
-#include vanilla_uvs.cl
+#include "constants.cl"
+#include "common.cl"
+#include "vanilla_uvs.cl"
 
 int priority_map(int p, int distance, int _min10, int avg1, int avg2, int avg3);
 int count_prio_offset(__local struct shared_data *shared, int priority);

@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL33C.*;
 
 public class GlobalUniforms extends UniformBuffer {
 	public GlobalUniforms() {
-		super("Global", GL_DYNAMIC_DRAW);
+		super("Global", "GlobalUniforms", GL_DYNAMIC_DRAW);
 	}
 
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");

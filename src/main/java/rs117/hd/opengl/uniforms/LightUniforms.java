@@ -6,7 +6,7 @@ import static org.lwjgl.opengl.GL33C.*;
 
 public class LightUniforms extends UniformBuffer {
 	public LightUniforms() {
-		super("Lights", GL_DYNAMIC_DRAW);
+		super("Lights", "PointLightUniforms", GL_DYNAMIC_DRAW);
 	}
 
 	public LightStruct[] lights = addStructs(new LightStruct[MaxDynamicLights.MAX_LIGHTS], LightStruct::new);

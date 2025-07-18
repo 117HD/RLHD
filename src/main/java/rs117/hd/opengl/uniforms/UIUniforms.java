@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL33C.*;
 
 public class UIUniforms extends UniformBuffer {
 	public UIUniforms() {
-		super("UI", GL_DYNAMIC_DRAW);
+		super("UI", "UIUniforms", GL_DYNAMIC_DRAW);
 	}
 
 	public Property sourceDimensions = addProperty(PropertyType.IVec2, "sourceDimensions");
@@ -12,6 +12,7 @@ public class UIUniforms extends UniformBuffer {
 
 	public Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
 	public Property alphaOverlay = addProperty(PropertyType.FVec4, "alphaOverlay");
+	public Property shadowMapOverlayDimensions = addProperty(PropertyType.IVec4, "shadowMapOverlayDimensions");
 
 	public Property showGammaCalibration = addProperty(PropertyType.Int, "showGammaCalibration");
 	public Property gammaCalibrationTimer = addProperty(PropertyType.Float, "gammaCalibrationTimer");
