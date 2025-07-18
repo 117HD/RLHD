@@ -57,7 +57,7 @@ void add_face_prio_distance(
 int map_face_priority(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int thisPriority, int thisDistance, int *prio);
 void insert_face(__local struct shared_data *shared, uint localId, struct ModelInfo minfo, int adjPrio, int distance, int prioIdx);
 int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y);
-void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int y, float height, int plane);
+void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int y, float heightFrac, int plane);
 void undoVanillaShading(struct VertexData *vertex, float3 unrotatedNormal);
 void sort_and_insert(
   __local struct shared_data *shared,
@@ -272,25 +272,36 @@ int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y) {
   return read_imagei(tileHeightMap, tileHeightSampler, coord).x << 3;
 }
 
-void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskewMode, int y, float height, int plane) {
-    float heightFrac = fabs((*v).y - y) / height;
+void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskewMode, int modelPosY, float heightFrac, int plane) {
+    // Skip hillskew if in tile-snapping mode and the vertex is too far from the base
     if (hillskewMode == HILLSKEW_TILE_SNAPPING && heightFrac > HILLSKEW_TILE_SNAPPING_BLEND)
-        return; // Only apply tile snapping, which will only be applied to vertices close to the bottom of the model
+       return;
 
-    int x = (int) (*v).x;
-    int z = (int) (*v).z;
-    int px = x & 127;
-    int pz = z & 127;
-    int sx = x >> 7;
-    int sz = z >> 7;
-    int h1 = (px * tile_height(tileHeightMap, plane, sx + 1, sz) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz)) >> 7;
-    int h2 = (px * tile_height(tileHeightMap, plane, sx + 1, sz + 1) + (128 - px) * tile_height(tileHeightMap, plane, sx, sz + 1)) >> 7;
-    int h3 = (pz * h2 + (128 - pz) * h1) >> 7;
+   float fx = (*v).x;
+   float fz = (*v).z;
+
+   float px = fmod(fx, 128.0f);
+   float pz = fmod(fz, 128.0f);
+   int sx = (int)(floor(fx / 128.0f));
+   int sz = (int)(floor(fz / 128.0f));
+
+   float h00 = (float)(tile_height(tileHeightMap, plane, sx,     sz));
+   float h10 = (float)(tile_height(tileHeightMap, plane, sx + 1, sz));
+   float h01 = (float)(tile_height(tileHeightMap, plane, sx,     sz + 1));
+   float h11 = (float)(tile_height(tileHeightMap, plane, sx + 1, sz + 1));
+
+   // Bilinear interpolation
+   float hx0 = mix(h00, h10, px / 128.0f);
+   float hx1 = mix(h01, h11, px / 128.0f);
+   float h = mix(hx0, hx1, pz / 128.0f);
+
+   if((hillskewMode & HILLSKEW_MODEL) != 0) {
+       (*v).y += h - modelPosY; // Apply full hillskew
+   }
 
     if ((hillskewMode & HILLSKEW_TILE_SNAPPING) != 0 && heightFrac <= HILLSKEW_TILE_SNAPPING_BLEND) {
-        (*v).y = mix(h3, (*v).y, heightFrac / HILLSKEW_TILE_SNAPPING_BLEND); // Blend tile snapping
-    } else {
-        (*v).y += h3 - y; // Hillskew the whole model
+        float blend = heightFrac / HILLSKEW_TILE_SNAPPING_BLEND;
+        (*v).y = mix(h, (*v).y, blend); // Blend snapping to terrain
     }
 }
 
