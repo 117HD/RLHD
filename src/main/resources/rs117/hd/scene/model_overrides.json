@@ -15248,7 +15248,6 @@
       "MAGICTRAINING_HIDDEN_PORTAL_ENTRANCE1",
       "DRAYNOR_KILLERWATT_PORTAL2",
       "DRAYNOR_KILLERWATT_PORTAL_MACHINE",
-      "_100_PORTAL_CHICKEN",
       "HUNDRED_PORTAL_ACTIVE",
       "HUNDRED_EXIT_PORTAL",
       "POH_PORTAL_TEAK_LUMBRIDGE",
@@ -24400,8 +24399,25 @@
   {
     "description": "Giant Mole Lair - Walls - Dirt Walls",
     "baseMaterial": "DIRT_2",
-    "objectIds": [ "MOLE_WALL_NO_ROOTS", "MOLE_WALL_NO_ROOTS_LVL2", "MOLE_WALL_NO_ROOTS_LVL2_BIG", "MOLE_WALL_ROOTS_START_01", "MOLE_WALL_ROOTS_START_02", "MOLE_WALL_ROOTS_BEGIN", "MOLE_WALL_ROOTS_PART_A", "MOLE_WALL_ROOTS_PART_B", "MOLE_WALL_ROOTS_PART_C", "MOLE_WALL_ROOTS_LVL2", "MOLE_WALL_TOP5_LVL2_BIG", "MOLE_WALL_RAMP_02", "MOLE_WALL_RAMP_01_MIRROR", "MOLE_WALL_RAMP_02_MIRROR" ],
-    "uvType": "BOX"
+    "objectIds": [ "MOLE_WALL_NO_ROOTS", "MOLE_WALL_NO_ROOTS_LVL2", "MOLE_WALL_NO_ROOTS_LVL2_BIG", "MOLE_WALL_ROOTS_START_01", "MOLE_WALL_TOP5_LVL2_BIG", "MOLE_WALL_RAMP_02", "MOLE_WALL_RAMP_01_MIRROR", "MOLE_WALL_RAMP_02_MIRROR" ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Giant Mole Lair - Walls - Dirt Walls - Roots",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [ "MOLE_WALL_ROOTS_START_01", "MOLE_WALL_ROOTS_START_02", "MOLE_WALL_ROOTS_BEGIN", "MOLE_WALL_ROOTS_PART_A", "MOLE_WALL_ROOTS_PART_B", "MOLE_WALL_ROOTS_PART_C", "MOLE_WALL_ROOTS_LVL2" ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      }
+    ]
   },
   {
     "description": "Giant Mole Lair - Walls - Ramp 1",
@@ -24414,6 +24430,50 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [ "MOLE_RAMP_01", "MOLE_RAMP_02", "MOLE_WALL_RAMP_01", "MOLE_RAMP_01_MIRROR", "MOLE_RAMP_02_MIRROR" ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Evil Chickens Lair - Portal",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "_100_PORTAL_CHICKEN"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 48",
+        "baseMaterial": "NONE",
+        "castShadows": false,
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Evil Chickens Lair - Dragon Egg",
+    "baseMaterial": "BLANK_SUPERGLOSS",
+    "objectIds": [
+      "CHICKENQUEST_BLACK_DRAGON_EGG"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Evil Chickens Lair - Baby Black Dragon Tunnel",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "objectIds": [
+      "CHICKENQUEST_CHAMBER_ENTRANCE",
+      "CHICKENQUEST_CHAMBER_ENTRANCE_WITHROPE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK",
+        "castShadows": false,
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Zanaris - Objects - Wooden - Stacked Crate - Angled",
