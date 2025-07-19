@@ -4525,6 +4525,7 @@
     "uvOrientation": -512,
     "flatNormals": true,
     "objectIds": [
+      "SHAYZIEN_STAIRS_BOTTOM_01",
       "SHAYZIEN_STAIRS_BOTTOM_02",
       "SHAYZIEN_MANOR_STAIRS",
       "SHAYZIEN_MANOR_STAIRSTOP"
@@ -4617,12 +4618,41 @@
     ]
   },
   {
+    "description": "Shayzien - Wooden - Stone - Stone table with wooden bottom and table cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_SMALL_TABLE_01",
+      "SHAYZIEN_SMALL_TABLE_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Shayzien - Wooden - Stone - Paper - Stone table with wooden bottom and table cloth with scrolls",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 173,
     "objectIds": [
+      "SHAYZIEN_SMALL_TABLE_01_W_PARCHMENT",
       "SHAYZIEN_SMALL_TABLE_02_W_PARCHMENT_01",
       "SHAYZIEN_SMALL_TABLE_02_W_PARCHMENT_02"
     ],
@@ -4647,6 +4677,37 @@
         "baseMaterial": "MARBLE_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Paper - Wooden shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHAYZIEN_WARDROBE"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Paper - Wooden shelf with Scrolls",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_WARDROBE_WITH_SCROLLS",
+      "SHAYZIEN_WARDROBE_WITH_SCROLLS_01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
         "uvScale": 0.8
       }
     ]
@@ -4728,6 +4789,85 @@
     "uvOrientation": 117,
     "objectIds": [
       "SHAYZIEN_BANK_BARS_DOOR"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Carpet - Floor standing cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_RACK01",
+      "SHAYZIEN_CLOTHESSHOP_RACK02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Carpet - Floor cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_FABRIC01",
+      "SHAYZIEN_CLOTHESSHOP_FABRIC02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Table with cloth thread and tools",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "colors": "s == 0 && l < 80",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Arm chair with high back",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "LOVAKENG_VELVET_CHAIR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Velvet",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 179
+      }
     ]
   },
   {
@@ -11785,7 +11925,8 @@
       "MYQ4_VIAL_CRATE",
       "MYQ4_MEAT_CRATE",
       "VMQ2_COTHON_CRATE",
-      "VMQ2_COTHON_CRATES"
+      "VMQ2_COTHON_CRATES",
+      "SHAYZIEN_CRATE_01_DARK_OP"
     ],
     "uvType": "BOX",
     "flatNormals": true,
