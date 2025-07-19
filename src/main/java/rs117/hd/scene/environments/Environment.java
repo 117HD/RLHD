@@ -2,6 +2,7 @@ package rs117.hd.scene.environments;
 
 import com.google.gson.annotations.JsonAdapter;
 import java.util.Objects;
+import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.Setter;
 import rs117.hd.scene.AreaManager;
@@ -43,6 +44,7 @@ public class Environment {
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] directionalColor = rgb("#ffffff");
 	public float directionalStrength = .25f;
+	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] waterColor;
 	@JsonAdapter(SrgbToLinearAdapter.class)
@@ -51,8 +53,10 @@ public class Environment {
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
+	@Nullable
 	@JsonAdapter(GsonUtils.DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
+	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
 	public float[] fogColor;
 	public float fogDepth = 25;
@@ -68,7 +72,7 @@ public class Environment {
 	public Environment normalize() {
 		if (area != Area.ALL && area != Area.NONE) {
 			isOverworld = Area.OVERWORLD.intersects(area);
-			// Certain nullable fields will fall back to using the current overworld theme's values,
+			// Certain nullable fields will fall back to using the current overworld theme's values later,
 			// but for environments that aren't part of the overworld, we want to fall back to the default
 			// environment's values for any unspecified fields
 			if (!isOverworld && DEFAULT != null) {
@@ -83,6 +87,13 @@ public class Environment {
 			waterCausticsColor = directionalColor;
 		if (waterCausticsStrength == -1)
 			waterCausticsStrength = directionalStrength;
+		return this;
+	}
+
+	public Environment ensureNoNulls() {
+		sunAngles = Objects.requireNonNullElse(sunAngles, DEFAULT.sunAngles);
+		fogColor = Objects.requireNonNullElse(fogColor, DEFAULT.fogColor);
+		waterColor = Objects.requireNonNullElse(waterColor, DEFAULT.waterColor);
 		return this;
 	}
 
