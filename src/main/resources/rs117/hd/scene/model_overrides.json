@@ -1115,7 +1115,8 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "GREYBOX_NUMBER_TILE_0"
+      "GREYBOX_NUMBER_TILE_0",
+      "DRILL_TREE3"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -8998,10 +8999,9 @@
     "description": "CANNON",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.5,
     "uvOrientation": 512,
     "objectIds": [
-      "CANNON",
       "FAI_VARROCK_CANNON"
     ],
     "colorOverrides": [
@@ -9009,6 +9009,26 @@
         "description": "Wood",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "colors": "h < 10",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "CANNON 2",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CANNON"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "colors": "h == 5",
         "uvType": "BOX",
         "uvScale": 0.4,
         "uvOrientation": 512
@@ -13951,7 +13971,8 @@
     "objectIds": [
       "QIP_SHEEP_SHEARER_CHAIR",
       "CONTACT_CHAIR4",
-      "MYQ3_HIDEOUT_CHAIR"
+      "MYQ3_HIDEOUT_CHAIR",
+      "MACRO_THEATRE_CHAIR"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -16891,7 +16912,7 @@
   },
   {
     "description": "Exercise Mats",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       "BARRACK_MAT_1",
       "BARRACK_MAT_2",
@@ -16899,7 +16920,230 @@
       "BARRACK_MAT_4"
     ],
     "uvType": "MODEL_XZ",
+    "uvOrientation": 512,
+    "uvScale": 0.8
+  },
+  {
+    "description": "Drill Sergent - Emote Signs",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "BARRACK_MAT_POST_SITUPS",
+      "BARRACK_MAT_POST_PUSHUPS",
+      "BARRACK_MAT_POST_RUNSPOT",
+      "BARRACK_MAT_POST_STARJUMPS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 9",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Drill Sergent - Barrack",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "receiveShadows": false,
+    "flatNormals": true,
+    "objectIds": [
+      "BARRACK",
+      "BARRACK_MID",
+      "BARRACK_ROOF",
+      "BARRACK_FRONT1",
+      "BARRACK_FRONT1_MIRROR",
+      "BARRACK_FRONT2",
+      "BARRACK_FRONT3",
+      "BARRACK_FRONT2_MIRROR",
+      "BARRACK_DOOR",
+      "BARRACK_FRONT3_MIRROR",
+      "BARRACK_DOOR_TOP"
+    ],
+    "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Drill Sergent - Barrack & Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "BARRACK_FENCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
+    "description": "Drill Sergent - Tank",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "BARRACK_TANK",
+      "BATHPIPES"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Drill Sergent - Barricade, Obstacle Net, Target & Wire Post",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "DEATH_WOOD_WALL_BARRICADEL",
+      "BARRACK_OBSTICAL_NET",
+      "DRILL_RANGING_TARGET",
+      "BARRACK_WIREPOST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 512
+  },
+  {
+    "description": "Drill Sergent - Rope Fence",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "BARRACK_POST"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Drill Sergent - Watchtower Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "EGYPT_LOW_WALL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Drill Sergent - Log",
+    "baseMaterial": "BARK",
+    "objectIds": [
+      "BARRACK_LOG_SUPPORT_HI",
+      "BARRACK_LOG",
+      "BARRACK_LOG_MIRROR",
+      "BARRACK_LOG_SUPPORT_LOW"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.76,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Drill Sergent - Darken Flag",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "BARRACK_FLAG"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Stage Top",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "uvType": "BOX",
+    "objectIds": [
+      "MACRO_THEATRE_FLOOR"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Stage Wall",
+    "baseMaterial": "GRAY_85",
+    "flatNormals": true,
+    "upwardsNormals": true,
+    "objectIds": [
+      "MACRO_SIMPLEWALL_THEATRE"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Spotlight",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MACRO_SPOTLIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "upwardsNormals": true,
+        "baseMaterial": "UNLIT"
+      }
+    ]
+  },
+  {
+    "description": "Mime Random Event - Curtains",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "MACRO_THEATRE_CURTAINS_SIDE",
+      "MACRO_THEATRE_CURTAINS_LEFT",
+      "MACRO_THEATRE_CURTAINS_CORNER_RIGHT",
+      "MACRO_THEATRE_CURTAINS_CORNER_LEFT",
+      "MACRO_THEATRE_CURTAINS_RIGHT"
+    ]
+  },
+  {
+    "description": "Mime Random Event - Exit Sign",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "MACRO_EXITSIGN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "l > 102",
+        "baseMaterial": "UNLIT"
+      }
+    ]
+  },
+  {
+    "description": "Maze Random Event - Exit Shrine - Remove Flickering Shadow",
+    "castShadows": false,
+    "objectIds": [
+      "MACRO_MAZE_COMPLETE"
+    ]
+  },
+  {
+    "description": "Maze Random Event - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 256,
+    "objectIds": [
+      "MACRO_MAZE_WALLHIGH"
+    ]
+  },
+  {
+    "description": "Maze Random Event - Gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MACRO_MAZE_WALLLOW",
+      "MACRO_MAZE_WALLLOW_SAFE1",
+      "MACRO_MAZE_WALLLOW_SAFE2",
+      "MACRO_MAZE_WALLLOW_SAFE3",
+      "MACRO_MAZE_WALLLOW_SAFE4"
+    ]
   },
   {
     "description": "Sophanem Gate",
@@ -38544,10 +38788,11 @@
     ]
   },
   {
-    "description": "Port Sarim - Jail Bunk Bed",
+    "description": "Objects - Generic - Bunk Bed",
     "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
-      "FAVOUR_BUNKBED"
+      "FAVOUR_BUNKBED",
+      "NORMAL_BUNKBED"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
