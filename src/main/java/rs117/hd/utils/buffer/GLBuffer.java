@@ -69,18 +69,18 @@ public class GLBuffer
 		ensureCapacity(0, numBytes);
 	}
 
-	public void ensureCapacity(int offset, long numBytes) {
-		long size = 4L * (offset + numBytes);
+	public void ensureCapacity(long byteOffset, long numBytes) {
+		long size = byteOffset + numBytes;
 		if (size <= this.size) {
 			glBindBuffer(target, id);
 			return;
 		}
 
 		size = HDUtils.ceilPow2(size);
-		if (log.isTraceEnabled())
-			log.trace("Buffer resize: {} {}", this, String.format("%.2f MB -> %.2f MB", this.size / 1e6, size / 1e6));
+		if (log.isDebugEnabled() && size > 1e6)
+			log.debug("Resizing buffer '{}'\t{}", name, String.format("%.2f MB -> %.2f MB", this.size / 1e6, size / 1e6));
 
-		if (offset > 0) {
+		if (byteOffset > 0) {
 			// Create a new buffer and copy the old data to it
 			int oldBuffer = id;
 			id = glGenBuffers();
@@ -88,7 +88,7 @@ public class GLBuffer
 			glBufferData(target, size, usage);
 
 			glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
-			glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
+			glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, byteOffset);
 			glDeleteBuffers(oldBuffer);
 		} else {
 			glBindBuffer(target, id);

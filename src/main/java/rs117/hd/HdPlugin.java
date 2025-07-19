@@ -3157,8 +3157,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
+		long byteOffset = 4L * offset;
+		long numBytes = 4L * data.remaining();
+		glBuffer.ensureCapacity(byteOffset, numBytes);
+		glBufferSubData(target, byteOffset, data);
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data) {
@@ -3166,8 +3168,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
+		long byteOffset = 4L * offset;
+		long numBytes = 4L * data.remaining();
+		glBuffer.ensureCapacity(offset, numBytes);
+		glBufferSubData(target, byteOffset, data);
 	}
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
