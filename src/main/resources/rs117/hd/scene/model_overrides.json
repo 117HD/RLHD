@@ -15011,8 +15011,6 @@
       "FAIRY_WALL_ALCOVE",
       "FAIRY_WALL_MID_FILL",
       "FAIRY_WALL_LV2_MID_FILL",
-      "FAIRY_SC_SPEARTRAP",
-      "FAIRY_SC_JUTTINGWALL",
       "FAIRY_WALL_LV2_TRI",
       "FAIRY_WALL_MUSH_GREEN",
       "FAIRY_WALL_MUSH_RED",
@@ -15022,7 +15020,15 @@
       "FAIRY_WALL_LV2_MUSH_RED",
       "FAIRY_WALL_LV2_MUSH_RED_VAR",
       "FAIRY_WALL_LV2_MUSH_GREEN_VAR",
-      "FAIRY_WALL_LV2_TENTACLE"
+      "FAIRY_WALL_LV2_TENTACLE",
+      "FAIRY_SC_SPEARTRAP"
+    ]
+  },
+  {
+    "description": "Zanaris - Walls - Lighten Jutting Wall Trap",
+    "baseMaterial": "GRUNGE_1_VERY_LIGHT",
+    "objectIds": [
+      "FAIRY_SC_JUTTINGWALL"
     ]
   },
   {
