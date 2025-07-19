@@ -15005,6 +15005,7 @@
   {
     "description": "Zanaris - Walls - Grass",
     "baseMaterial": "GRUNGE_1",
+    "receiveShadows": false,
     "objectIds": [
       "FAIRY_WALL",
       "FAIRY_WALL_LV2",
