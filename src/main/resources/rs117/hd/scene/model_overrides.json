@@ -4840,10 +4840,9 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 7",
+        "colors": "h == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvOrientation": 512,
         "uvScale": 0.8
       },
       {
