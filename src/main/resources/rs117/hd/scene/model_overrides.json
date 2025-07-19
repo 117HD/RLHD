@@ -4847,8 +4847,112 @@
       },
       {
         "colors": "s == 0 && l < 80",
-        "baseMaterial": "METALLIC_1_GLOSS",
+        "baseMaterial": "METALLIC_1",
         "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Shelf with thread spools",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_SHELF01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && l < 30",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 256,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Wall mounted banner",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 222,
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_HANGINGFABRICL",
+      "SHAYZIEN_CLOTHESSHOP_HANGINGFABRICR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5 || h == 6",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Metallic - Metal pots with multicolored liquid",
+    "baseMaterial": "METALLIC_1",
+    "uvScale": 0.6,
+    "uvOrientation": 117,
+    "uvType": "BOX",
+    "objectIds": [
+      "DYE_POTS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 222
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Varrock - Wooden - Cloth - Hanging coats",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 222,
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_COATS_ON_HOOKS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5 || h == 6",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Clothes model",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 117,
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_CLOTHESMODEL011"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   },
