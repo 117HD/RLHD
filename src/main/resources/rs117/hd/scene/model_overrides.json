@@ -35062,7 +35062,8 @@
       "ORANGECABINET_AXES",
       "FAI_VARROCK_BOWCASE_CROSSBOW",
       "FAI_VARROCK_ARROW_DISPLAY",
-      "FAI_VARROCK_SWORDCASE_SWORDS"
+      "FAI_VARROCK_SWORDCASE_SWORDS",
+      "FAI_VARROCK_BOWCASE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -35091,7 +35092,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_BOWCASE_LONGBOW",
-      "FAI_VARROCK_WEAPONCASE_BOWS"
+      "FAI_VARROCK_WEAPONCASE_BOWS",
+      "SHAYZIEN_WEAPONCASE_BOWS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -44986,7 +44988,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationZ": 512,
     "objectIds": [
-      "FAI_VARROCK_WEAPONCASE_LARGE"
+      "FAI_VARROCK_WEAPONCASE_LARGE",
+      "SHAYZIEN_WEAPONCASE_LARGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
