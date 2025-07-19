@@ -26545,19 +26545,19 @@
     ]
   },
   {
-    "description": "STRANGE_SHRINE",
-    "height": 250,
+    "description": "MAZE_RANDOM_STRANGE_SHRINE",
+    "height": 80,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 8.5,
+    "radius": 270,
+    "strength": 10,
     "color": [
       255,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 2000,
-    "range": 20,
+    "duration": 1750,
+    "range": 35,
     "objectIds": [
       "MACRO_MAZE_COMPLETE"
     ]

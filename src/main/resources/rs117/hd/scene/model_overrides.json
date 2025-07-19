@@ -16946,6 +16946,13 @@
     ]
   },
   {
+    "description": "Maze Random Event - Exit Shrine - Remove Flickering Shadow",
+    "castShadows": false,
+    "objectIds": [
+      "MACRO_MAZE_COMPLETE"
+    ]
+  },
+  {
     "description": "Maze Random Event - Walls",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
