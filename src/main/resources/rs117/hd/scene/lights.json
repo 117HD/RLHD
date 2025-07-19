@@ -38271,5 +38271,22 @@
     "objectIds": [
       "SORCERESS_FIREPLACE"
     ]
+  },
+  {
+    "description": "Cosmic Altar - Outside",
+    "offset": [ 5, 135, -20 ],
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      70,
+      0,
+      130
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 15,
+    "objectIds": [
+      "COSMICTEMPLE_RUINED_OLD"
+    ]
   }
 ]
