@@ -379,7 +379,7 @@ void main() {
             #if TILED_LIGHTING_USE_SUBGROUP
             int lightIdx = tileLightIndicies[idx];
             #else
-            int lightIdx = int(texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r);
+            int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
             if(lightIdx <= 0) {
                 break;
             }
@@ -404,6 +404,17 @@ void main() {
                 vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
                 pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
             }
+        }
+        #endif
+
+        #if 0
+        if(drawLightCount > 0) {
+            float level = (drawLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
+            // Time varying pixel color
+
+            outputColor.r = sin(level);
+            outputColor.g = sin(level * 2.0);
+            outputColor.b = cos(level);
         }
         #endif
 

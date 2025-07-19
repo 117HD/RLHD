@@ -40,11 +40,12 @@ void main() {
     vec4 clip = vec4(quadPos, 1.0, 1.0);
     vec4 world = invProjectionMatrix * clip;
     vec3 worldViewDir = normalize((world.xyz / world.w) - cameraPos);
+    ivec2 tileCoord = ivec2(vec2(TexCoord.x, 1.0 - TexCoord.y) * vec2(tileXCount, tileYCount));
 
     // Cache all the previous layer indicies
     int layerLightIndicies[MAX_LIGHTS_PER_TILE];
     for(int l = 0; l < layer; l++) {
-        int lightIdx = texelFetch(tiledLightingArray, ivec3(TexCoord * vec2(tileXCount, tileYCount), l), 0).r;
+        int lightIdx = texelFetch(tiledLightingArray, ivec3(tileCoord, l), 0).r;
 
         if (lightIdx == 0) {
             // A previous layer didn't overlap with any lights — early out

@@ -1894,6 +1894,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				tiledProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
 
 				glBindVertexArray(vaoQuadHandle);
+				glDisable(GL_BLEND);
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
