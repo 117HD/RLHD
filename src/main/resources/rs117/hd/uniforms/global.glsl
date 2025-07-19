@@ -6,6 +6,8 @@ layout(std140) uniform GlobalUniforms {
     int expandedMapLoadingChunks;
     float drawDistance;
     float elapsedTime;
+    int viewportWidth;
+    int viewportHeight;
 
     float colorBlindnessIntensity;
     float gammaCorrection;
@@ -21,6 +23,10 @@ layout(std140) uniform GlobalUniforms {
     vec3 underglowColor;
     float underglowStrength;
 
+    int tileXCount;
+    int tileYCount;
+
+    mat4 invProjectionMatrix;
     mat4 projectionMatrix;
     mat4 lightProjectionMatrix;
 

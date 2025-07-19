@@ -79,6 +79,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.MaxLightsPerTile;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -140,6 +141,7 @@ import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.KHRShaderSubgroup.GL_SUBGROUP_SIZE_KHR;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
@@ -168,6 +170,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
+	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = TEXTURE_UNIT_BASE + 4;
 
 	public static final int UNIFORM_BLOCK_COMPUTE = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
@@ -330,6 +333,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int fboShadowMap;
 	private int texShadowMap;
 
+	private int fboTiledLighting;
+	private int texTiledLighting;
+	private int tileCountX;
+	private int tileCountY;
+
 	private int texTileHeightMap;
 
 	private final SharedGLBuffer hStagingBufferVertices = new SharedGLBuffer(
@@ -406,7 +414,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configAsyncUICopy;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
-	public int configMaxDynamicLights;
+	public int configMaxLightsPerTile;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
@@ -429,6 +437,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean isInHouse;
 	private Scene skipScene;
 	private int previousPlane;
+	private int gpuWarpSize;
 
 	private final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
@@ -513,6 +522,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				log.info("Client is {}-bit", arch);
 				log.info("Low memory mode: {}", useLowMemoryMode);
 
+				gpuWarpSize = glGetInteger(GL_SUBGROUP_SIZE_KHR);
 				computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 
 				List<String> fallbackDevices = List.of(
@@ -832,8 +842,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
 			.define("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
-			.define("MAX_LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
-			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
+			.define("MAX_LIGHT_COUNT", LightUniforms.MAX_LIGHTS)
+			.define("MAX_LIGHTS_PER_TILE", configMaxLightsPerTile)
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
@@ -866,6 +876,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		fastShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 		detailedShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 
+		tiledProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
+
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initPrograms();
 		} else {
@@ -888,8 +900,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.use();
 
 		sceneProgram.uniTextureArray.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		sceneProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
 		sceneProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
-
 		// Bind a VOA, else validation may fail on older Intel-based Macs
 		glBindVertexArray(vaoSceneHandle);
 
@@ -907,10 +919,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
+		tiledProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
 			ShaderProgram.destroyAll(modelSortingComputePrograms);
+			modelSortingComputePrograms = null;
 		} else {
 			clManager.destroyPrograms();
 		}
@@ -918,7 +932,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void recompilePrograms() throws ShaderException, IOException {
 		// Avoid recompiling if we haven't already compiled once
-		if (sceneProgram.isValid())
+		if (!sceneProgram.isValid())
 			return;
 
 		destroyPrograms();
@@ -1124,6 +1138,53 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (interfaceTexture != 0)
 			glDeleteTextures(interfaceTexture);
 		interfaceTexture = 0;
+	}
+
+	private void initTiledLighting() {
+		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+
+		tileCountX = viewportWidth / gpuWarpSize;
+		tileCountY = viewportHeight / gpuWarpSize;
+
+		fboTiledLighting = glGenFramebuffers();
+
+		texTiledLighting = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage3D(
+			GL_TEXTURE_2D_ARRAY,
+			0,
+			GL_R16I,
+			tileCountX,
+			tileCountY,
+			MaxLightsPerTile.MAX_LIGHTS,
+			0,
+			GL_RED_INTEGER,
+			GL_UNSIGNED_SHORT,
+			0
+		);
+
+		checkGLErrors();
+
+		glActiveTexture(TEXTURE_UNIT_UI);
+
+		uboGlobal.tileXCount.set(tileCountX);
+		uboGlobal.tileYCount.set(tileCountY);
+	}
+
+	private void destroyTiledLighting() {
+		if (fboTiledLighting != 0) {
+			glDeleteFramebuffers(fboTiledLighting);
+			fboTiledLighting = 0;
+		}
+
+		if (texTiledLighting != 0) {
+			glDeleteTextures(texTiledLighting);
+			texTiledLighting = 0;
+		}
 	}
 
 	private void initSceneFbo(int width, int height, AntiAliasingMode antiAliasingMode) {
@@ -1452,7 +1513,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
-			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
+			assert sceneContext.numVisibleLights <= LightUniforms.MAX_LIGHTS;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				var struct = uboLights.lights[i];
@@ -1818,6 +1879,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				renderViewportHeight
 			);
 
+			uboGlobal.viewportWidth.set(viewportWidth);
+			uboGlobal.viewportHeight.set(viewportHeight);
+
+			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
+			if (texTiledLighting != 0 && fboTiledLighting != 0 && configMaxLightsPerTile > 0) {
+				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
+
+				glViewport(0, 0, tileCountX, tileCountY);
+				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+
+				tiledProgram.use();
+
+				tiledProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
+
+				glBindVertexArray(vaoQuadHandle);
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
+					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+					glClear(GL_COLOR_BUFFER_BIT);
+
+					tiledProgram.uniLayer.set(layer);
+
+					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+				}
+				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
+			}
+
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
 			if (computeMode == ComputeMode.OPENCL) {
 				clManager.finish();
@@ -1849,6 +1938,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					stopPlugin();
 					return;
 				}
+
+				destroyTiledLighting();
+				initTiledLighting();
 			}
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
@@ -1964,6 +2056,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				-cameraPosition[2]
 			));
 			uboGlobal.projectionMatrix.set(projectionMatrix);
+			uboGlobal.invProjectionMatrix.set(Mat4.inverse(projectionMatrix));
 
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
@@ -2432,7 +2525,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
-		configMaxDynamicLights = config.maxDynamicLights().getValue();
+		configMaxLightsPerTile = config.maxLightsPerTile().getValue();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
@@ -2558,7 +2651,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
-							case KEY_MAX_DYNAMIC_LIGHTS:
+							case KEY_MAX_LIGHTS_PER_TILE:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:

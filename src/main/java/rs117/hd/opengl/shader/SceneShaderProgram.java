@@ -8,6 +8,7 @@ import static org.lwjgl.opengl.GL32C.GL_GEOMETRY_SHADER;
 
 public class SceneShaderProgram extends ShaderProgram {
 	public UniformProperty<Integer> uniTextureArray = addUniformProperty("textureArray", GL33::glUniform1i);
+	public UniformProperty<Integer> uniTiledLightingTex = addUniformProperty("tiledLightingArray", GL33::glUniform1i);
 	public UniformProperty<Integer> uniShadowMap = addUniformProperty("shadowMap", GL33::glUniform1i);
 
 	public SceneShaderProgram() {

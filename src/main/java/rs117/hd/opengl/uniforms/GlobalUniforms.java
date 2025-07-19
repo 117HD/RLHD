@@ -11,6 +11,8 @@ public class GlobalUniforms extends UniformBuffer {
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
+	public Property viewportWidth = addProperty(PropertyType.Int, "viewportWidth");
+	public Property viewportHeight = addProperty(PropertyType.Int, "viewportHeight");
 
 	public Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
 	public Property gammaCorrection = addProperty(PropertyType.Float, "gammaCorrection");
@@ -26,6 +28,10 @@ public class GlobalUniforms extends UniformBuffer {
 	public Property underglowColor = addProperty(PropertyType.FVec3, "underglowColor");
 	public Property underglowStrength = addProperty(PropertyType.Float, "underglowStrength");
 
+	public Property tileXCount = addProperty(PropertyType.Int, "tileXCount");
+	public Property tileYCount = addProperty(PropertyType.Int, "tileYCount");
+
+	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
 	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
 

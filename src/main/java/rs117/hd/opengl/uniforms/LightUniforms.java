@@ -1,7 +1,5 @@
 package rs117.hd.opengl.uniforms;
 
-import rs117.hd.config.MaxDynamicLights;
-
 import static org.lwjgl.opengl.GL33C.*;
 
 public class LightUniforms extends UniformBuffer {
@@ -9,7 +7,8 @@ public class LightUniforms extends UniformBuffer {
 		super("Lights", "PointLightUniforms", GL_DYNAMIC_DRAW);
 	}
 
-	public LightStruct[] lights = addStructs(new LightStruct[MaxDynamicLights.MAX_LIGHTS], LightStruct::new);
+	public static final int MAX_LIGHTS = 1000; // Struct is 64 Bytes, UBO Max size is 64 KB
+	public LightStruct[] lights = addStructs(new LightStruct[MAX_LIGHTS], LightStruct::new);
 
 	public static class LightStruct extends UniformBuffer.StructProperty {
 		public Property position = addProperty(PropertyType.FVec4, "position");

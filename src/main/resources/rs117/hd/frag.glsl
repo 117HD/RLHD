@@ -33,6 +33,7 @@
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
+uniform isampler2DArray tiledLightingArray;
 uniform sampler2D shadowMap;
 
 // general HD settings
@@ -348,8 +349,45 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        for (int i = 0; i < pointLightsCount; i++) {
-            vec4 pos = PointLightArray[i].position;
+        #if MAX_LIGHTS_PER_TILE > 0
+        vec2 uResolution = vec2(viewportWidth, viewportHeight);
+        vec2 screenUV = gl_FragCoord.xy / uResolution;
+        vec2 tileCount = vec2(tileXCount, tileYCount);
+        ivec2 tileXY = ivec2(floor(screenUV * tileCount));
+        int tileLightCount = 0;
+
+        #if TILED_LIGHTING_USE_SUBGROUP
+        int tileLightIndicies[MAX_LIGHTS_PER_TILE];
+        if (subgroupElect()) {
+            for(int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
+                int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
+                if(lightIdx <= 0) {
+                    break;
+                }
+                tileLightIndicies[idx] = lightIdx - 1;
+                tileLightCount++;
+            }
+        }
+
+        tileLightCount = subgroupBroadcastFirst(tileLightCount);
+        #else
+        tileLightCount = MAX_LIGHTS_PER_TILE;
+        #endif
+
+        int drawLightCount = 0;
+        for(int idx = 0; idx < tileLightCount; idx++) {
+            #if TILED_LIGHTING_USE_SUBGROUP
+            int lightIdx = tileLightIndicies[idx];
+            #else
+            int lightIdx = int(texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r);
+            if(lightIdx <= 0) {
+                break;
+            }
+            lightIdx--;
+            #endif
+            drawLightCount++;
+
+            vec4 pos = PointLightArray[lightIdx].position;
             vec3 lightToFrag = pos.xyz - IN.position;
             float distanceSquared = dot(lightToFrag, lightToFrag);
             float radiusSquared = pos.w;
@@ -357,7 +395,7 @@ void main() {
                 float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
                 attenuation *= attenuation;
 
-                vec3 pointLightColor = PointLightArray[i].color * attenuation;
+                vec3 pointLightColor = PointLightArray[lightIdx].color * attenuation;
                 vec3 pointLightDir = normalize(lightToFrag);
 
                 float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
@@ -367,6 +405,7 @@ void main() {
                 pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
             }
         }
+        #endif
 
         // sky light
         vec3 skyLightColor = fogColor;
