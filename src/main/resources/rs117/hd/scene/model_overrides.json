@@ -2144,8 +2144,6 @@
       "FLOWERBED_YELLOW",
       "RAREFLOWER_YELLOW",
       "RAREFLOWERS_YELLOW",
-      "SUNFLOWER",
-      "SUNFLOWERS",
       "BULLRUSHES",
       "BULLRUSHES2",
       "BULLRUSHES3",
@@ -2208,6 +2206,8 @@
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "VERTEX",
     "objectIds": [
+      "SUNFLOWER",
+      "SUNFLOWERS",
       "FAIRY2_BULLRUSH_FALLOFF",
       "FAIRY2_BULLRUSH_SMALL",
       "FAIRY2_BULLRUSH_TILE",
@@ -2444,6 +2444,21 @@
       "FRIS_SHORT_GRASS_4_WALL_EDGE",
       "FRIS_SHORT_GRASS_3_WALL_EDGE",
       "FRIS_SHORT_GRASS_WALL_EDGE_2"
+    ]
+  },
+  {
+    "description": "Zanaris, Lighten Grass",
+    "areas": [ "ZANARIS" ],
+    "baseMaterial": "NONE",
+    "flatNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "inheritTileColorType": "UNDERLAY",
+    "objectIds": [
+      "FAIRY_SHORT_GRASS_4",
+      "FAIRY_SHORT_GRASS_2",
+      "FAIRY_SHORT_GRASS_3",
+      "FAIRY_SHORT_GRASS_1"
     ]
   },
   {
@@ -4785,6 +4800,7 @@
   {
     "description": "GROUND_DECORATION_ROCKS",
     "baseMaterial": "GRUNGE_2",
+    "castShadows": false,
     "objectIds": [
       "DUGUPSOIL1",
       "DUGUPSOIL3",
