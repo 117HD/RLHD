@@ -4871,6 +4871,40 @@
     ]
   },
   {
+    "description": "Shayzien - Shelves with boxes and glass",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SHAYZIEN_STORE_SHELF3",
+      "SHAYZIEN_STORE_SHELF4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Box",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_2_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Glass",
+        "colors": "h > 9",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red bottles",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "MOUNT_KARUULM_WALLS",
     "objectIds": [
       "BRIMSTONE_ROCK_CLIFF_2X2",
