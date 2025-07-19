@@ -6146,9 +6146,6 @@
     "description": "Lighthouse Spiral Stairs",
     "baseMaterial": "WOOD_GRAIN_LIGHT",
     "objectIds": [
-      "HORROR_LIGHTHOUSE_SPIRALSTAIRS_BASE",
-      "HORROR_LIGHTHOUSE_SPIRALSTAIRS_MIDDLE",
-      "HORROR_LIGHTHOUSE_SPIRALSTAIRS_TOP"
     ],
     "castShadows": false
   },
@@ -44444,7 +44441,9 @@
       "FAI_VARROCK_WINDMILL_WALL_TYPE2_MIRROR",
       "FAI_VARROCK_WINDMILL_WINDOW_LARGE_MIRROR",
       "FAI_VARROCK_WINDMILL_WINDOW_LARGE",
-      "FAI_VARROCK_WINDMILL_WINDOW"
+      "FAI_VARROCK_WINDMILL_WINDOW",
+      "FAI_VARROCK_WINDMILL_TERM",
+      "FAI_VARROCK_WINDMILL_TERM_MIRROR"
     ]
   },
   {
@@ -44462,9 +44461,44 @@
       "FAI_VARROCK_ROOF_THATCHED_3H",
       "FAI_VARROCK_ROOF_THATCHED_END",
       "FAI_VARROCK_THATCHED_ROOF_BALCONY",
-      "FAI_VARROCK_ROOF_THATCHED_CENTER"
+      "FAI_VARROCK_ROOF_THATCHED_CENTER",
+      "FAI_VARROCK_THATCHED_ROOF_BALCONY_MIRROR"
     ],
     "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Fortis - Thatch - Roofs with walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_WINDMILL_BALCONY_WALL",
+      "FAI_VARROCK_WINDMILL_BALCONY_WALL_MIRROR"
+    ],
+    "colorOverrides": [
+
+      {
+        "description": "Wall",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Hay",
+        "colors": "h == 7 && s <= 3",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
       {
         "description": "Ropes",
         "baseMaterial": "ROPE",
@@ -48727,6 +48761,18 @@
         "uvScale": 0.4,
         "uvOrientation": -89
       }
+    ]
+  },
+  {
+    "description": "Cooking Guild - Wooden Spiral Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_MILL_SPIRALSTAIRS",
+      "FAI_VARROCK_MILL_SPIRALSTAIRS_MIDDLE",
+      "FAI_VARROCK_MILL_SPIRALSTAIRS_TOP"
     ]
   }
 ]
