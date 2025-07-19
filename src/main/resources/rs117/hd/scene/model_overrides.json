@@ -4620,6 +4620,33 @@
     ]
   },
   {
+    "description": "Shayzien - Wooden - Cloth - Bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "MOURNING_NORMAL_BED_VARIATION"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6 && s >= 2 || h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Shayzien - Wooden - Stone - Stone table with wooden bottom and table cloth",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
@@ -35176,6 +35203,8 @@
       "FAI_VARROCK_BOWCASE_CROSSBOW",
       "FAI_VARROCK_ARROW_DISPLAY",
       "FAI_VARROCK_SWORDCASE_SWORDS",
+      "FAI_VARROCK_SWORDCASE_SHORTSWORDS",
+      "FAI_VARROCK_SWORDCASE_SCIMITAR",
       "FAI_VARROCK_BOWCASE"
     ],
     "uvType": "BOX",
@@ -35198,6 +35227,15 @@
         "colors": "a < 255",
         "baseMaterial": "GRAY_75"
       }
+    ]
+  },
+  {
+    "description": "Varrock - Shayzien - Metallic - Stone - Sword Display",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_SWORD_DISPLAY"
     ]
   },
   {
@@ -35931,7 +35969,10 @@
     "uvScale": 0.6,
     "uvOrientation": 179,
     "objectIds": [
-      "GZ_BOARDGAME_POSTER"
+      "GZ_BOARDGAME_POSTER",
+      "FAI_VARROCK_SWORD_SHOP_POSTER",
+      "AKD_SWORD_SHOP_POSTER01",
+      "AKD_SWORD_SHOP_POSTER02"
     ]
   },
   {
