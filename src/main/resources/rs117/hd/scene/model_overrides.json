@@ -9230,7 +9230,8 @@
       "KR_CAM_BENCH",
       "MURDER_QIP_POSH_BENCH",
       "HOS_BENCH_01",
-      "SOTE_ELF_VILLAGE_BENCH"
+      "SOTE_ELF_VILLAGE_BENCH",
+      "SHAYZIEN_BENCH01"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
