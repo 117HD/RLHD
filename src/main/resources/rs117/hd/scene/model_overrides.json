@@ -4366,7 +4366,7 @@
     ]
   },
   {
-    "description": " Support Posts",
+    "description": "Shayzien - Wooden - Support Posts",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -4549,6 +4549,185 @@
         "uvOrientation": -256,
         "uvScale": 0.8
       }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Metal - Stone - Bank table with scales weights and papers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_BANK_TABLE_01",
+      "SHAYZIEN_BANK_TABLE_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0 && l < 20",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Stone - Stone table with wooden legs and table cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_LARGE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Stone - Paper - Stone table with wooden bottom and table cloth with scrolls",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_SMALL_TABLE_02_W_PARCHMENT_01",
+      "SHAYZIEN_SMALL_TABLE_02_W_PARCHMENT_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Scroll",
+        "colors": "h == 7 || h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Carpet - Paper - Notice board with scrolls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "FAI_FALADOR_NOTICEBOARD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h <= 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Felt",
+        "colors": "h == 7 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Metal - Rope - Bone - Rope Barrier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "SHAYZIEN_BANK_BARRIER_01",
+      "SHAYZIEN_BANK_BARRIER_02",
+      "SHAYZIEN_BANK_BARRIER_03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Skull",
+        "colors": "h >= 10",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 612,
+        "uvOrientationZ": -100
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Metal - Metal bars gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 117,
+    "objectIds": [
+      "SHAYZIEN_BANK_BARS_DOOR"
     ]
   },
   {
@@ -43106,12 +43285,13 @@
     ]
   },
   {
-    "description": "Fossil Island - Wooden - Volcano - Deposit Box",
+    "description": "Shayzien - Port Sarim - Fossil Island - Wooden - Volcano - Deposit Box",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientationY": 512,
     "objectIds": [
-      "SARIM_DEPOSIT_BOX"
+      "SARIM_DEPOSIT_BOX",
+      "CLAN_MEDIEVAL_DEPOSIT_BOX"
     ]
   },
   {
