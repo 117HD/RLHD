@@ -48764,6 +48764,23 @@
     ]
   },
   {
+    "description": "Paterdomus Temple - Wooden - Textured - Temple Doors",
+    "baseMaterial": "BLANK_GLOSS",
+    "uvType": "MODEL_YZ",
+    "objectIds": [
+      "TEMPLE_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood top of walls",
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Paterdomus Temple - Wooden - Textured - Coffin",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvScale": 0.8,
