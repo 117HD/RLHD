@@ -29,6 +29,7 @@ layout (location = 1) in vec2 aTexCoord;
 
 out vec2 TexCoord;
 out vec2 quadPos;
+out vec3 worldViewDir2;
 
 void main()
 {

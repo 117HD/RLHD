@@ -374,7 +374,7 @@ void main() {
         tileLightCount = MAX_LIGHTS_PER_TILE;
         #endif
 
-        int drawLightCount = 0;
+        int debugTiledLightCount = 0;
         for(int idx = 0; idx < tileLightCount; idx++) {
             #if TILED_LIGHTING_USE_SUBGROUP
             int lightIdx = tileLightIndicies[idx];
@@ -385,7 +385,7 @@ void main() {
             }
             lightIdx--;
             #endif
-            drawLightCount++;
+            debugTiledLightCount++;
 
             vec4 pos = PointLightArray[lightIdx].position;
             vec3 lightToFrag = pos.xyz - IN.position;
@@ -405,17 +405,17 @@ void main() {
                 pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
             }
         }
-        #endif
 
         #if TILED_LIGHTING_DEBUG_OVERLAY
-        if(drawLightCount > 0) {
-            float level = (drawLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
+        if(debugTiledLightCount > 0) {
+            float level = (debugTiledLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
             // Time varying pixel color
 
             outputColor.r = sin(level);
             outputColor.g = sin(level * 2.0);
             outputColor.b = cos(level);
         }
+        #endif
         #endif
 
         // sky light

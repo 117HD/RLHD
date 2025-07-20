@@ -105,6 +105,7 @@ import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.ComputeUniforms;
 import rs117.hd.opengl.uniforms.GlobalUniforms;
 import rs117.hd.opengl.uniforms.LightUniforms;
+import rs117.hd.opengl.uniforms.TiledLightingUniforms;
 import rs117.hd.opengl.uniforms.UIUniforms;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -178,6 +179,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
 	public static final int UNIFORM_BLOCK_GLOBAL = 4;
 	public static final int UNIFORM_BLOCK_UI = 5;
+	public static final int UNIFORM_BLOCK_TILEDLIGHTS = 6;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -313,7 +315,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public ShadowShaderProgram fastShadowProgram = new ShadowShaderProgram(ShadowMode.FAST);
 	public ShadowShaderProgram detailedShadowProgram = new ShadowShaderProgram(ShadowMode.DETAILED);
 
-	public TiledShaderProgram tiledProgram = new TiledShaderProgram();
+	public TiledShaderProgram[] tiledPrograms = {};
 
 	public ComputeModelShaderProgram modelPassthroughComputeProgram = new ComputeModelShaderProgram(true);
 	public ComputeModelShaderProgram[] modelSortingComputePrograms = {};
@@ -321,8 +323,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int interfaceTexture;
 	private int interfacePbo;
 
-	private int vaoQuadHandle;
-	private int vboQuadHandle;
+	private int vaoTriHandle;
+	private int vboTriHandle;
 
 	private int vaoSceneHandle;
 	private int fboSceneHandle;
@@ -371,6 +373,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final GlobalUniforms uboGlobal = new GlobalUniforms();
 	private final UIUniforms uboUI = new UIUniforms();
 	private final LightUniforms uboLights = new LightUniforms();
+	private final TiledLightingUniforms uboTiledLights = new TiledLightingUniforms();
 
 	@Getter
 	@Nullable
@@ -868,6 +871,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboCompute)
+			.addUniformBuffer(uboTiledLights)
 			.addIncludePath(SHADER_PATH, true);
 
 		textureManager.appendUniformBuffers(template);
@@ -876,12 +880,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(template);
 		fastShadowProgram.compile(template);
 		detailedShadowProgram.compile(template);
-		tiledProgram.compile(template);
+
+		tiledPrograms = new TiledShaderProgram[MaxLightsPerTile.MAX_LIGHTS];
+		for (int layer = 0; layer < MaxLightsPerTile.MAX_LIGHTS; layer++) {
+			tiledPrograms[layer] = new TiledShaderProgram();
+			tiledPrograms[layer].compile(template.copy().define("LAYER", layer));
+		}
 
 		fastShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 		detailedShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
-
-		tiledProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
 
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initPrograms();
@@ -924,7 +931,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.destroy();
 		fastShadowProgram.destroy();
 		detailedShadowProgram.destroy();
-		tiledProgram.destroy();
+
+		ShaderProgram.destroyAll(tiledPrograms);
+		tiledPrograms = null;
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -1024,21 +1033,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		vaoSceneHandle = glGenVertexArrays();
 
 		// Create UI VAO
-		vaoQuadHandle = glGenVertexArrays();
+		vaoTriHandle = glGenVertexArrays();
 		// Create UI buffer
-		vboQuadHandle = glGenBuffers();
-		glBindVertexArray(vaoQuadHandle);
+		vboTriHandle = glGenBuffers();
+		glBindVertexArray(vaoTriHandle);
 
-		FloatBuffer vboUiData = BufferUtils.createFloatBuffer(5 * 4)
+		FloatBuffer vboUiData = BufferUtils.createFloatBuffer(5 * 3)
 			.put(new float[] {
-				// vertices, UVs
-				1, 1, 0, 1, 0, // top right
-				1, -1, 0, 1, 1, // bottom right
-				-1, -1, 0, 0, 1, // bottom left
-				-1, 1, 0, 0, 0  // top left
+				// x, y, z, u, v
+				-1.0f, 1.0f, 0.0f, 0.0f, 0.0f,  // bottom left
+				3.0f, 1.0f, 0.0f, 2.0f, 0.0f,  // bottom right (extends past screen)
+				-1.0f, -3.0f, 0.0f, 0.0f, 2.0f   // top left (extends past screen)
 			})
 			.flip();
-		glBindBuffer(GL_ARRAY_BUFFER, vboQuadHandle);
+		glBindBuffer(GL_ARRAY_BUFFER, vboTriHandle);
 		glBufferData(GL_ARRAY_BUFFER, vboUiData, GL_STATIC_DRAW);
 
 		// position attribute
@@ -1079,13 +1087,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glDeleteVertexArrays(vaoSceneHandle);
 		vaoSceneHandle = 0;
 
-		if (vboQuadHandle != 0)
-			glDeleteBuffers(vboQuadHandle);
-		vboQuadHandle = 0;
+		if (vboTriHandle != 0)
+			glDeleteBuffers(vboTriHandle);
+		vboTriHandle = 0;
 
-		if (vaoQuadHandle != 0)
-			glDeleteVertexArrays(vaoQuadHandle);
-		vaoQuadHandle = 0;
+		if (vaoTriHandle != 0)
+			glDeleteVertexArrays(vaoTriHandle);
+		vaoTriHandle = 0;
 	}
 
 	private void initBuffers() {
@@ -1103,6 +1111,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
+		uboTiledLights.initialize(UNIFORM_BLOCK_TILEDLIGHTS);
 	}
 
 	private void destroyBuffers() {
@@ -1148,8 +1157,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initTiledLighting() {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
-		tileCountX = viewportWidth / gpuWarpSize;
-		tileCountY = viewportHeight / gpuWarpSize;
+		int tileSize = (int) Math.sqrt(gpuWarpSize);
+		tileCountX = viewportWidth / tileSize;
+		tileCountY = viewportHeight / tileSize;
 
 		fboTiledLighting = glGenFramebuffers();
 
@@ -1178,6 +1188,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.tileXCount.set(tileCountX);
 		uboGlobal.tileYCount.set(tileCountY);
+
+		uboTiledLights.tileCountX.set(tileCountX);
+		uboTiledLights.tileCountY.set(tileCountY);
 	}
 
 	private void destroyTiledLighting() {
@@ -1568,28 +1581,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glViewport(0, 0, tileCountX, tileCountY);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
 
-				tiledProgram.use();
-				tiledProgram.uniCameraPos.set(cameraPosition);
-				tiledProgram.uniInvProjectionMatrix.set(invProjectionMatrix);
-				tiledProgram.uniTileCountX.set(tileCountX);
-				tiledProgram.uniTileCountY.set(tileCountY);
-				tiledProgram.uniPointLightsCount.set(sceneContext.numVisibleLights);
-
-				tiledProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
-
-				glBindVertexArray(vaoQuadHandle);
+				glBindVertexArray(vaoTriHandle);
 				glDisable(GL_BLEND);
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-				// TODO: Use Instanced Drawing here instead
+				uboTiledLights.cameraPos.set(cameraPosition);
+				uboTiledLights.invProjectionMatrix.set(invProjectionMatrix);
+				uboTiledLights.pointLightsCount.set(sceneContext.numVisibleLights);
+				uboTiledLights.upload();
 
 				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
+					tiledPrograms[layer].use();
+					tiledPrograms[layer].uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
 					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
 					glClear(GL_COLOR_BUFFER_BIT);
-
-					tiledProgram.uniLayer.set(layer);
-
-					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+					glDrawArrays(GL_TRIANGLES, 0, 3);
 				}
 				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
 			}
@@ -2306,8 +2312,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
 		// Texture on UI
-		glBindVertexArray(vaoQuadHandle);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glBindVertexArray(vaoTriHandle);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		frameTimer.end(Timer.RENDER_UI);
 

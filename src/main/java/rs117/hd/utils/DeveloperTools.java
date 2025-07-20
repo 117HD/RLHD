@@ -2,8 +2,10 @@ package rs117.hd.utils;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.inject.Inject;
 import lombok.Getter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
@@ -13,6 +15,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -105,7 +108,7 @@ public class DeveloperTools implements KeyListener {
 	}
 
 	@Subscribe
-	public void onCommandExecuted(CommandExecuted commandExecuted) {
+	public void onCommandExecuted(CommandExecuted commandExecuted) throws ShaderException, IOException {
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
 			return;
 
@@ -129,11 +132,7 @@ public class DeveloperTools implements KeyListener {
 				break;
 			case "tiledlights":
 				plugin.enableTiledLightingOverlay = !plugin.enableShadowMapOverlay;
-				try {
-					plugin.recompilePrograms();
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
+				plugin.recompilePrograms();
 				break;
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
@@ -146,6 +145,7 @@ public class DeveloperTools implements KeyListener {
 		}
 	}
 
+	@SneakyThrows
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (KEY_TOGGLE_TILE_INFO.matches(e)) {
@@ -155,7 +155,28 @@ public class DeveloperTools implements KeyListener {
 		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
 		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
-			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
+			if (plugin.enableTiledLightingOverlay) {
+				clientThread.invokeLater(() -> {
+					plugin.enableTiledLightingOverlay = false;
+					try {
+						plugin.recompilePrograms();
+					} catch (Exception ex) {
+						throw new RuntimeException(ex);
+					}
+				});
+			} else if (!lightGizmoOverlayEnabled) {
+				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = true);
+			} else if (lightGizmoOverlayEnabled) {
+				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = false);
+				clientThread.invokeLater(() -> {
+					plugin.enableTiledLightingOverlay = true;
+					try {
+						plugin.recompilePrograms();
+					} catch (Exception ex) {
+						throw new RuntimeException(ex);
+					}
+				});
+			}
 		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {

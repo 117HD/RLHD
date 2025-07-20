@@ -27,66 +27,69 @@
 #include <uniforms/lights.glsl>
 #include <utils/constants.glsl>
 
+#include LAYER
+
+layout(std140) uniform TiledLightsUniforms {
+    int tileCountX;
+    int tileCountY;
+    int pointLightsCount;
+    vec3 cameraPos;
+    mat4 invProjectionMatrix;
+};
+
 uniform isampler2DArray tiledLightingArray;
-uniform int layer;
-uniform int tileCountX;
-uniform int tileCountY;
-uniform int pointLightsCount;
-uniform vec3 cameraPos;
-uniform mat4 invProjectionMatrix;
 
 in vec2 TexCoord;
 in vec2 quadPos;
 
-out int TiledCellIndex;
+out uint TiledCellIndex;
+
+uint LightsMask[32] = uint[](0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u); // 32 * 32 = 1024 lights
 
 void main() {
-    vec4 clip = vec4(quadPos, 1.0, 1.0);
-    vec4 world = invProjectionMatrix * clip;
-    vec3 worldViewDir = normalize((world.xyz / world.w) - cameraPos);
     ivec2 tileCoord = ivec2(vec2(TexCoord.x, 1.0 - TexCoord.y) * vec2(tileCountX, tileCountY));
 
-    // Cache all the previous layer indicies
-    int layerLightIndicies[MAX_LIGHTS_PER_TILE];
-    for(int l = 0; l < layer; l++) {
-        int lightIdx = texelFetch(tiledLightingArray, ivec3(tileCoord, l), 0).r;
-
-        if (lightIdx == 0) {
-            // A previous layer didn't overlap with any lights — early out
-            TiledCellIndex = 0;
-            return;
+    // If we're not the first layer, then check the last layer if it wrote anything otherwise theres no work left to do
+    #if LAYER > 0
+    {
+        mediump int lightIdx = texelFetch(tiledLightingArray, ivec3(tileCoord, LAYER - 1), 0).r - 1;
+        if (lightIdx < 0) {
+            discard;
         }
-
-        layerLightIndicies[l] = lightIdx - 1;
+        LightsMask[lightIdx / 32] |= (1u << (lightIdx % 32));
     }
+    #endif
 
-    for (int lightIDx = 0; lightIDx < pointLightsCount; lightIDx++) {
-        vec3 lightWorldPos = PointLightArray[lightIDx].position.xyz;
-        float lightRadius = sqrt(PointLightArray[lightIDx].position.w);
+    #if LAYER > 1
+    for(int l = LAYER - 2; l >= 0; l--) {
+        mediump uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(tileCoord, l), 0).r - 1);
+        LightsMask[lightIdx >> 5] |= 1u << (lightIdx & 31u);
+    }
+    #endif
+
+    vec4 worldPos = invProjectionMatrix * vec4(quadPos, 1.0, 1.0);
+    vec3 worldViewDir = normalize((worldPos.xyz / worldPos.w) - cameraPos);
+
+    for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
+        vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
+        float lightRadius = PointLightArray[lightIdx].position.w;
 
         vec3 lightToCamera = cameraPos - lightWorldPos;
-        float b = dot(worldViewDir, lightToCamera);
-        float c = dot(lightToCamera, lightToCamera) - lightRadius * lightRadius;
-        float discriminant = b * b - c;
+        float dist = dot(lightToCamera, lightToCamera);
+        float vDotL = dot(worldViewDir, lightToCamera);
+        float discriminant = vDotL * vDotL - dist;
 
-        if (discriminant >= 0.0) {
-            bool alreadyIntersected = false;
-            for(int l = 0; l < layer; l++) {
-                if(layerLightIndicies[l] == lightIDx){
-                    alreadyIntersected = true;
-                    break;
-                }
-            }
-            if(alreadyIntersected) {
-                continue; // Keep looking for a light
+        if (discriminant >= -lightRadius) {
+            if ((LightsMask[lightIdx >> 5] & (1u << (lightIdx & 31u))) != 0u) {
+                continue; // Already seen
             }
 
             // Light hasn't been added to a previous layer, therefore we can add it and early out of the fragment shader
-            TiledCellIndex = lightIDx + 1;
+            TiledCellIndex = lightIdx + 1u;
             return;
         }
     }
 
     // Intersected with no light
-    TiledCellIndex = 0;
+    TiledCellIndex = 0u;
 }
