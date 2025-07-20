@@ -127,6 +127,14 @@ public class DeveloperTools implements KeyListener {
 			case "lights":
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 				break;
+			case "tiledlights":
+				plugin.enableTiledLightingOverlay = !plugin.enableShadowMapOverlay;
+				try {
+					plugin.recompilePrograms();
+				} catch (Exception e) {
+					throw new RuntimeException(e);
+				}
+				break;
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
 				if (keyBindingsEnabled) {

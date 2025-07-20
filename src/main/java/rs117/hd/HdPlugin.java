@@ -425,6 +425,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
 	public boolean enableShadowMapOverlay;
+	public boolean enableTiledLightingOverlay;
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
 
@@ -858,6 +859,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, ComputeUniforms.MAX_CHARACTER_POSITION_COUNT))
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
+			.define("TILED_LIGHTING_DEBUG_OVERLAY", enableTiledLightingOverlay)
 			.define("WIREFRAME", config.wireframe())
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboUI)
@@ -1882,6 +1884,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.viewportWidth.set(viewportWidth);
 			uboGlobal.viewportHeight.set(viewportHeight);
 
+			// Calculate projection matrix
+			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+			if (orthographicProjection) {
+				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+			} else {
+				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+			}
+			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+			Mat4.mul(
+				projectionMatrix, Mat4.translate(
+					-cameraPosition[0],
+					-cameraPosition[1],
+					-cameraPosition[2]
+				)
+			);
+			uboGlobal.projectionMatrix.set(projectionMatrix);
+			uboGlobal.invProjectionMatrix.set(Mat4.inverse(projectionMatrix));
+			uboGlobal.upload();
+
 			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
 			if (texTiledLighting != 0 && fboTiledLighting != 0 && configMaxLightsPerTile > 0) {
 				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
@@ -2040,24 +2063,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
 				uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
-
-			// Calculate projection matrix
-			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			if (orthographicProjection) {
-				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-			} else {
-				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-			}
-			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-			Mat4.mul(projectionMatrix, Mat4.translate(
-				-cameraPosition[0],
-				-cameraPosition[1],
-				-cameraPosition[2]
-			));
-			uboGlobal.projectionMatrix.set(projectionMatrix);
-			uboGlobal.invProjectionMatrix.set(Mat4.inverse(projectionMatrix));
 
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
