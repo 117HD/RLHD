@@ -1774,14 +1774,18 @@
     "groundMaterial": "MARBLE_2_GLOSS"
   },
   {
-    "name": "TAVERLEY_DUNGEON_GRAVEL_OVERLAY",
-    "area": "TAVERLEY_DUNGEON",
+    "name": "TAVERLEY_DUNGEON_GRAVEL",
+    "area": "TAVERLEY_DUNGEON_GRAVEL",
     "overlayIds": [
       2,
       10,
       34
     ],
-    "groundMaterial": "GRAVEL"
+    "underlayIds": [ 56 ],
+    "groundMaterial": "GRAVEL",
+    "minLightness": 22,
+    "maxSaturation": 0,
+    "maxHue": 1
   },
   {
     "name": "ASGARNIA_MOUNTAINS_VERTICAL_DIRT_FIX",
@@ -6934,7 +6938,7 @@
     "maxLightness": 100
   },
   {
-    "name": "TAVERLY_DUNGEON_DIRT",
+    "name": "TAVERLEY_DUNGEON_DIRT",
     "area": "TAVERLEY_DUNGEON",
     "underlayIds": [
       50,
@@ -6946,8 +6950,8 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
-    "name": "TAVERLY_DUNGEON_BLACK_KNIGHTS_BASE",
-    "area": "TAVERLEY_DUNGEON",
+    "name": "TAVERLEY_DUNGEON_BLACK_KNIGHTS_BASE",
+    "area": "TAVERLEY_DUNGEON_BLACK_KNIGHT_BASE",
     "underlayIds": [
       56,
       57
