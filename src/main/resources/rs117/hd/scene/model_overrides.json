@@ -48708,5 +48708,69 @@
         "uvOrientation": -89
       }
     ]
+  },
+  {
+    "description": "Paterdomus Temple - Wooden - Textured - Temple Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ORNATEWALL",
+      "WALL_SUPPORT_LARGEBOT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood top of walls",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Paterdomus Temple - Wooden - Textured - Temple support post",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "WALL_SUPPORT"
+    ]
+  },
+  {
+    "description": "Paterdomus Temple - Wooden - Textured - Temple Doors",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "uvOrientation": -42,
+    "objectIds": [
+      "PRIESTPERILTEMPLEDOORL",
+      "INACTIVETEMPLEDOORL",
+      "PRIESTPERILTEMPLEDOORR",
+      "INACTIVETEMPLEDOORR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood top of walls",
+        "colors": "h == 8 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Paterdomus Temple - Wooden - Textured - Coffin",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "PRIESTPERIL_COFFIN_NOANIM"
+    ]
   }
 ]
