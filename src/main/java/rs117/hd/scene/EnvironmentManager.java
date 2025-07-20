@@ -178,9 +178,9 @@ public class EnvironmentManager {
 					if (env.key != null)
 						map.put(env.key, env);
 
-				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
-				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
-				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
+				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT).ensureNoNulls();
+				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT).ensureNoNulls();
+				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT).ensureNoNulls();
 
 				for (var env : environments)
 					env.normalize();
