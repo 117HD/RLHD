@@ -26,6 +26,7 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -178,9 +179,9 @@ public class EnvironmentManager {
 					if (env.key != null)
 						map.put(env.key, env);
 
-				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT).ensureNoNulls();
-				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT).ensureNoNulls();
-				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT).ensureNoNulls();
+				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
+				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
+				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
 
 				for (var env : environments)
 					env.normalize();
@@ -344,7 +345,7 @@ public class EnvironmentManager {
 		var overworldEnv = getOverworldEnvironment();
 		float[] sunAngles = env.sunAngles;
 		if (sunAngles == null)
-			sunAngles = overworldEnv.sunAngles;
+			sunAngles = Objects.requireNonNullElse(overworldEnv.sunAngles, Environment.DEFAULT_SUN_ANGLES);
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
 		if (!config.atmosphericLighting() && !env.force)
