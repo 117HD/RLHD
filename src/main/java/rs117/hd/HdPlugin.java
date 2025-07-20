@@ -907,6 +907,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
 			ShaderProgram.destroyAll(modelSortingComputePrograms);
+			modelSortingComputePrograms = null;
 		} else {
 			clManager.destroyPrograms();
 		}
@@ -914,7 +915,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public void recompilePrograms() throws ShaderException, IOException {
 		// Avoid recompiling if we haven't already compiled once
-		if (sceneProgram.isValid())
+		if (!sceneProgram.isValid())
 			return;
 
 		destroyPrograms();

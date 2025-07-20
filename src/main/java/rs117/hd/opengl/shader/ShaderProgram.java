@@ -3,7 +3,6 @@ package rs117.hd.opengl.shader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -11,15 +10,15 @@ import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
 
 import static org.lwjgl.opengl.GL33.GL_FALSE;
-import static org.lwjgl.opengl.GL33.glGetUniformLocation;
 import static org.lwjgl.opengl.GL33.GL_VALIDATE_STATUS;
 import static org.lwjgl.opengl.GL33.glDeleteProgram;
 import static org.lwjgl.opengl.GL33.glGetProgramInfoLog;
 import static org.lwjgl.opengl.GL33.glGetProgrami;
+import static org.lwjgl.opengl.GL33.glGetUniformBlockIndex;
+import static org.lwjgl.opengl.GL33.glGetUniformLocation;
+import static org.lwjgl.opengl.GL33.glUniformBlockBinding;
 import static org.lwjgl.opengl.GL33.glUseProgram;
 import static org.lwjgl.opengl.GL33.glValidateProgram;
-import static org.lwjgl.opengl.GL33.glUniformBlockBinding;
-import static org.lwjgl.opengl.GL33.glGetUniformBlockIndex;
 
 @Slf4j
 public class ShaderProgram {
@@ -35,7 +34,9 @@ public class ShaderProgram {
 	private int program;
 
 	public ShaderProgram compile(Template template) throws ShaderException, IOException {
-		assert program == 0;
+		if (program != 0) {
+			destroy();
+		}
 		program = shader.compile(template);
 
 		if(program != 0) {
