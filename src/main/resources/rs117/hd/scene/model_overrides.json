@@ -48789,5 +48789,31 @@
     "objectIds": [
       "PRIESTPERIL_COFFIN_NOANIM"
     ]
+  },
+  {
+    "description": "Wilderness - Wooden - Metallic - Danger sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      "WILD_SIGN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Spear tips",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 89
+      },
+      {
+        "description": "Wood top of walls",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "BONE",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
   }
 ]
