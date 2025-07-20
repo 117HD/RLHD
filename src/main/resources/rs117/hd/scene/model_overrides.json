@@ -23019,15 +23019,6 @@
     "uvScale": 0.7
   },
   {
-    "description": "Stronghold Of Security Petilance - Dripping Tendrils",
-    "baseMaterial": "GRUNGE_3",
-    "objectIds": [
-      "SOS_PEST_TENDRILS",
-      "SOS_PEST_TENDRILS_FALLOFF",
-      "SOS_PEST_TENDRILS_CORNER"
-    ]
-  },
-  {
     "description": "Stronghold Of Security - Death - Walls",
     "baseMaterial": "GRUNGE_2",
     "objectIds": [
