@@ -25713,6 +25713,28 @@
     ]
   },
   {
+    "description": "Plank Boat - Wooden - Mast with Sails",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SAIL1_L",
+      "SAIL2_L",
+      "SAIL1_R",
+      "SAIL2_R"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "CARPET_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 256,
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
     "description": "Object - Metal - Anchor",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
@@ -43163,6 +43185,9 @@
     "retainVanillaUvs": false,
     "objectIds": [
       "ALTAR",
+      "DEVIOUS_ALTAR",
+      "DEVIOUS_ALTAR_SCORCHED",
+      "DEVIOUS_ALTAR_POUCH_NOOP",
       "CASTLEWARS_ALTAR_SARADOMIN"
     ],
     "colorOverrides": [
@@ -48781,6 +48806,23 @@
     ]
   },
   {
+    "description": "Entrana - Wooden - Textured - Temple Doors",
+    "baseMaterial": "BLANK_GLOSS",
+    "uvType": "MODEL_YZ",
+    "objectIds": [
+      "CHURCHWINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood top of walls",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.8,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Paterdomus Temple - Wooden - Textured - Coffin",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvScale": 0.8,
@@ -48813,6 +48855,54 @@
         "baseMaterial": "BONE",
         "uvScale": 0.8,
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Entrana - Metallic - Font",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "uvOrientation": -192,
+    "objectIds": [
+      "EGYPT_FONT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bowl",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Entrana - Metallic - Wooden - Pipe organ",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "CHURCHORGAN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pipes",
+        "colors": "h == 0 && l < 75",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 89
+      },
+      {
+        "description": "Keys",
+        "colors": "h == 0 && l >= 75",
+        "baseMaterial": "GRAY_65",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 89
       }
     ]
   }
