@@ -1891,6 +1891,30 @@
     "windStrength": 55
   },
   {
+    "area": "PURO_PURO",
+    "ambientColor": [
+      295.8393,
+      245.74895,
+      176.9941
+    ],
+    "ambientStrength": 1,
+    "directionalColor": [
+      295.8393,
+      245.74895,
+      176.9941
+    ],
+    "directionalStrength": 2,
+    "sunAngles": [
+      25,
+      109
+    ],
+    "fogColor": "#FCCB8F",
+    "fogDepth": 6.5,
+    "windStrength": 60,
+    "windSpeed": 15,
+    "instantTransition": true
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",

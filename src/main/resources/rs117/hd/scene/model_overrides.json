@@ -24683,6 +24683,67 @@
     ]
   },
   {
+    "description": "Puro Puro - Wheat Hedge",
+    "objectIds": [
+      "II_MAZE_WHEAT_BLOCK1",
+      "II_MAZE_WHEAT_NO_BLOCK1",
+      "II_MAZE_WHEAT_BLOCK3_TYPE8",
+      "II_MAZE_WHEAT_NO_BLOCK2",
+      "II_MAZE_WHEAT_NO_BLOCK3",
+      "II_MAZE_WHEAT_BLOCK_TYPE8",
+      "II_MAZE_WHEAT_BLOCK2_TYPE8",
+      "II_MAZE_WHEAT_SURROUND_BLOCK",
+      "II_MAZE_WHEAT_SURROUND_GATE",
+      "II_MAZE_WHEAT_BLOCK_MOVEABLE1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT"
+      },
+      {
+        "colors": "a == 225",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Puro Puro - Wheat Grass",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "II_WHEATGRND3",
+      "II_WHEATGRND2",
+      "II_WHEATGRND4M",
+      "II_WHEATGRND5",
+      "II_WHEATGRND4",
+      "II_WHEATGRND2M",
+      "II_WHEATGRND3M",
+      "II_WHEATGRND1",
+      "II_WHEATGRND6",
+      "II_WHEATGRND7",
+      "II_ROCKS_FLOOR_HARD_03",
+      "II_ROCKS_FLOOR_HARD_01"
+    ]
+  },
+  {
+    "description": "Puro Puro - Walls",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 200,
+    "objectIds": [
+      "II_MAZE_WALL1",
+      "II_MAZE_WALL_CAVE1",
+      "II_MAZE_WALL_CAVE2",
+      "II_MAZE_WALL_CAVE2_M",
+      "II_MAZE_WALL_TOP",
+      "II_ROCKS_FLOOR_HARD_02"
+    ]
+  },
+  {
     "description": "Objects - Wooden - Private Bank Booth Destroyed",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
