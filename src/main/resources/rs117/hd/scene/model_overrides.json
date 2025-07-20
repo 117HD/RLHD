@@ -1169,6 +1169,16 @@
     }
   },
   {
+    "description": "Spirit trees - Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true,
+    "objectIds": [
+      "SPIRIT_TREE_STUMP"
+    ]
+  },
+  {
     "description": "Spirit trees",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -1186,7 +1196,6 @@
       "SPIRIT_TREE_11",
       "SPIRIT_TREE_FULLYGROWN",
       "SPIRIT_TREE_CLAIMXP",
-      "SPIRIT_TREE_STUMP",
       "SPIRITTREE_BIG_1OP",
       "SPIRITTREE_BIG_2OPS",
       "SPIRITTREE_BIG_2OPS_ORBS",
@@ -1375,7 +1384,6 @@
       "MDAUGHTER_IMPASSABLE_TREE",
       "MDAUGHTER_IMPASSABLE_TREE2",
       "MDAUGHTER_PASSABLE_TREE",
-      "MDAUGHTER_PASSABLE_TREE_STUMP",
       "NEWBIEDEADTREE2",
       "MACRO_DIGGER_TREE",
       "DRAYNOR_DEADTREE",
@@ -1415,7 +1423,8 @@
       "WILD4_TREE_STUMP",
       "DOV_HUNTING_TREESTUMP_NOOP",
       "BURGH_TREE_STUMP",
-      "FAIRY2_PINE_TREE_STUMP"
+      "FAIRY2_PINE_TREE_STUMP",
+      "MDAUGHTER_PASSABLE_TREE_STUMP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -1428,6 +1437,16 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.3
+  },
+  {
+    "description": "Objects - Tree - Yew - Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "YEW_TREE_STUMP",
+      "YEW_TREE_STUMP_NEW"
+    ]
   },
   {
     "description": "Objects - Tree - Yew",
@@ -1448,7 +1467,6 @@
       "YEW_TREE_9",
       "YEW_TREE_FULLYGROWN_1",
       "YEW_TREE_FULLYGROWN_2",
-      "YEW_TREE_STUMP",
       "YEW_TREE_DISEASED_1",
       "YEW_TREE_DISEASED_2",
       "YEW_TREE_DISEASED_3",
@@ -1469,7 +1487,6 @@
       "YEW_TREE_DEAD_8",
       "YEW_TREE_DEAD_9",
       "YEW_TREE_DEAD_FULLYGROWN",
-      "YEW_TREE_STUMP_NEW",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
       "YEWTREE_NOOP",
@@ -1491,11 +1508,21 @@
     }
   },
   {
+    "description": "Objects - Tree - Willow - Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 128,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "WILLOW_TREE2OR3OR4_STUMP"
+    ]
+  },
+  {
     "description": "Objects - Tree - Willow",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
-      "WILLOW_TREE2OR3OR4_STUMP",
       "WILLOWTREE",
       "WILLOW_TREE2",
       "WILLOW_TREE3",
@@ -1518,6 +1545,17 @@
     }
   },
   {
+    "description": "Objects - Tree - Mahogany - Stump",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 42,
+    "objectIds": [
+      "MAHOGANY_STUMP",
+      "MAHOGANY_TREE_STUMP"
+    ]
+  },
+  {
     "description": "Objects - Tree - Mahogany",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "baseMaterial": "BARK_STONEPINE",
@@ -1526,8 +1564,7 @@
     "uvOrientation": 42,
     "retainVanillaUvs": true,
     "objectIds": [
-      "MAHOGANYTREE",
-      "MAHOGANY_STUMP"
+      "MAHOGANYTREE"
     ]
   },
   {
@@ -1536,6 +1573,7 @@
     "uvType": "BOX",
     "uvScale": 0.25,
     "retainVanillaUvs": true,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "MAHOGANY_TREE_1",
       "MAHOGANY_TREE_2",
@@ -1547,8 +1585,7 @@
       "MAHOGANY_TREE_8",
       "MAHOGANY_TREE_9",
       "MAHOGANY_TREE_FULLYGROWN_CLAIMXP",
-      "MAHOGANY_TREE_FULLYGROWN",
-      "MAHOGANY_TREE_STUMP"
+      "MAHOGANY_TREE_FULLYGROWN"
     ]
   },
   {
@@ -1580,7 +1617,8 @@
     "uvType": "BOX",
     "uvScale": 0.66,
     "objectIds": [
-      "TEAK_STUMP"
+      "TEAK_STUMP",
+      "TEAK_TREE_STUMP"
     ]
   },
   {
@@ -1607,8 +1645,7 @@
       "TEAK_TREE_5",
       "TEAK_TREE_6",
       "TEAK_TREE_FULLYGROWN_CLAIMXP",
-      "TEAK_TREE_FULLYGROWN",
-      "TEAK_TREE_STUMP"
+      "TEAK_TREE_FULLYGROWN"
     ]
   },
   {
@@ -1622,11 +1659,19 @@
     "retainVanillaUvs": true
   },
   {
+    "description": "Objects - Trees - Arctic Pine - Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "ARCTIC_PINE_TREE_STUMP"
+    ]
+  },
+  {
     "description": "Objects - Trees - Arctic Pine",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "ARCTIC_PINE",
-      "ARCTIC_PINE_TREE_STUMP"
+      "ARCTIC_PINE"
     ],
     "colorOverrides": [
       {
@@ -1638,15 +1683,23 @@
     ]
   },
   {
+    "description": "Objects - Trees - Tirannwn Tree - Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "REGICIDE_TREE_STUMP",
+      "REGICIDE_TREE_STUMP_SMALL"
+    ]
+  },
+  {
     "description": "Objects - Trees - Tirannwn Tree",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       "REGICIDE_TREE_LARGE",
-      "REGICIDE_TREE_STUMP",
       "REGICIDE_TREE_LARGE2",
       "REGICIDE_TREE_LARGE3",
       "REGICIDE_TREE_SMALL",
-      "REGICIDE_TREE_STUMP_SMALL",
       "REGICIDE_TREE_BASE",
       "SOTE_FLOWERS"
     ],
@@ -13552,16 +13605,24 @@
     "uvType": "BOX"
   },
   {
-    "description": "Wilderness - Artio/Callisto Trees and Roots",
+    "description": "Wilderness - Artio/Callisto Trees - Stump and roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.76,
+    "objectIds": [
+      "TREE_PETRIFIED01_STUMP01",
+      "TREE_PETRIFIED01_ROOT03",
+      "TREE_PETRIFIED01_ROOT03_DARK"
+    ]
+  },
+  {
+    "description": "Wilderness - Artio/Callisto Trees",
     "baseMaterial": "LIGHT_BARK",
     "objectIds": [
       "TREE_PETRIFIED01_DEFAULT01",
       "TREE_PETRIFIED01_DEFAULT02",
       "TREE_PETRIFIED01_DEFAULT03",
-      "TREE_PETRIFIED01_DEFAULT04",
-      "TREE_PETRIFIED01_STUMP01",
-      "TREE_PETRIFIED01_ROOT03",
-      "TREE_PETRIFIED01_ROOT03_DARK"
+      "TREE_PETRIFIED01_DEFAULT04"
     ],
     "uvType": "BOX",
     "uvScale": 0.76
@@ -16526,6 +16587,17 @@
     ]
   },
   {
+    "description": "Jungle Tree Small - Stump",
+    "baseMaterial": "BARK",
+    "uvScale": 0.75,
+    "uvType": "BOX",
+    "objectIds": [
+      "AVIUM_TREE_1_STUMP",
+      "AVIUM_TREE_2_STUMP",
+      "AVIUM_TREE_DARK_STUMP"
+    ]
+  },
+  {
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
@@ -16534,12 +16606,9 @@
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
       "MM_BUSH_BIG_KHARAZI_JUNGLE_TREE_LOGS",
       "AVIUM_TREE_1",
-      "AVIUM_TREE_1_STUMP",
       "AVIUM_TREE_2",
-      "AVIUM_TREE_2_STUMP",
       "AVIUM_TREE_ORANGE",
       "AVIUM_TREE_DARK",
-      "AVIUM_TREE_DARK_STUMP",
       "KHARAZI_JUNGLE_TREE1"
     ],
     "uvType": "MODEL_XZ",
@@ -21119,11 +21188,18 @@
     ]
   },
   {
+    "description": "Object - Dying Tree - Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_DEAD_TREE_STUMP"
+    ]
+  },
+  {
     "description": "Object - Dying Tree",
     "baseMaterial": "BARK",
     "objectIds": [
       "FAI_VARROCK_DEAD_TREE",
-      "FAI_VARROCK_DEAD_TREE_STUMP",
       "FAI_VARROCK_DEAD_TREE_NOOP"
     ],
     "uvType": "BOX"
@@ -23607,12 +23683,22 @@
     ]
   },
   {
+    "description": "Oak Tree - Stump",
+    "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "OAKTREE_STUMP"
+    ]
+  },
+  {
     "description": "Oak Tree",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "terrainVertexSnap": true,
     "objectIds": [
-      "OAKTREE_STUMP", "POH_BIG_TREE3_4", "POH_SMALL_TREE3_5", "OAK_TREE_SEEDLING", "OAK_TREE_1",
+      "POH_BIG_TREE3_4", "POH_SMALL_TREE3_5", "OAK_TREE_SEEDLING", "OAK_TREE_1",
       "OAK_TREE_2", "OAK_TREE_3", "OAK_TREE_FULLYGROWN_1", "OAK_TREE_FULLYGROWN_2",
       "NEWBIEOAKTREE", "OAKTREE", "DRILL_OAKTREE", "TUT2_OAK",
       "TUT2_OAK_NOOP", "TREE_OAK_DEFAULT01", "GIM_OAKTREE", "AVIUM_OAK_1"
@@ -42741,14 +42827,21 @@
     ]
   },
   {
-    "description": "Fossil Island - Burnt Tree",
+    "description": "Fossil Island - Burnt Tree - Stump",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "objectIds": [
       "FOSSIL_DEADTREE_SMALL1_STUMP",
+      "FOSSIL_DEADTREE_LARGE1_STUMP"
+    ]
+  },
+  {
+    "description": "Fossil Island - Burnt Tree",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "objectIds": [
       "FOSSIL_DEADTREE_SMALL1",
       "FOSSIL_DEADTREE_LARGE1",
-      "FOSSIL_DEADTREE_LARGE1_STUMP",
       "FOSSIL_DEADTREE_LARGE2"
     ]
   },
