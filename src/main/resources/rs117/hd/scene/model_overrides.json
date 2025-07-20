@@ -22739,6 +22739,8 @@
   {
     "description": "Stronghold Of Security - War - Metallic Walls",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
     "objectIds": [
       "SOS_WAR_WALL",
       "SOS_WAR_WALL_LIGHT",
@@ -22761,7 +22763,15 @@
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRAY_110"
+      }
+    ]
   },
   {
     "description": "Stronghold Of Security - War - Metallic Ladder",
@@ -22806,7 +22816,18 @@
       "SOS_WAR_CHEST"
     ],
     "flatNormals": true,
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Stronghold Of Security - Famine - Walls - Dirt",
