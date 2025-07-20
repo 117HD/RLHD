@@ -34406,7 +34406,6 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_WAR_WALL_LIGHT"
     ]
@@ -34422,7 +34421,6 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_WAR_WALL_LIGHT_UP"
     ]
@@ -34438,7 +34436,6 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ]
@@ -34454,29 +34451,29 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT_FIX" ],
     "offset": [ -30, 250, 0 ],
     "radius": 500,
-    "strength": 3.5,
+    "strength": 5.5,
     "color": [
       255,
       216,
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_FAM_WALL_LITE"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT_FIX" ],
     "height": 64,
     "alignment": "CENTER",
     "radius": 400,
