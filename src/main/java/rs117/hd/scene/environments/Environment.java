@@ -15,12 +15,13 @@ import static rs117.hd.utils.ColorUtils.rgb;
 
 @Setter(value = AccessLevel.PRIVATE)
 public class Environment {
+	public static final float[] DEFAULT_SUN_ANGLES = HDUtils.sunAngles(52, 235);
 	public static final Environment DEFAULT = new Environment()
 		.setKey("DEFAULT")
 		.setArea(Area.ALL)
 		.setFogColor(rgb("#000000"))
 		.setWaterColor(rgb("#66eaff"))
-		.setSunAngles(HDUtils.sunAngles(52, 235))
+		.setSunAngles(DEFAULT_SUN_ANGLES)
 		.normalize();
 	public static final Environment NONE = new Environment()
 		.setKey("NONE")
@@ -74,7 +75,7 @@ public class Environment {
 			isOverworld = Area.OVERWORLD.intersects(area);
 			// Certain nullable fields will fall back to using the current overworld theme's values later,
 			// but for environments that aren't part of the overworld, we want to fall back to the default
-			// environment's values for any unspecified fields
+			// (underground) environment's values for any unspecified fields
 			if (!isOverworld && DEFAULT != null) {
 				sunAngles = Objects.requireNonNullElse(sunAngles, DEFAULT.sunAngles);
 				fogColor = Objects.requireNonNullElse(fogColor, DEFAULT.fogColor);
@@ -82,18 +83,14 @@ public class Environment {
 			}
 		}
 
+		if (sunAngles != null)
+			sunAngles = HDUtils.ensureArrayLength(sunAngles, 2);
+
 		// Base water caustics on directional lighting by default
 		if (waterCausticsColor == null)
 			waterCausticsColor = directionalColor;
 		if (waterCausticsStrength == -1)
 			waterCausticsStrength = directionalStrength;
-		return this;
-	}
-
-	public Environment ensureNoNulls() {
-		sunAngles = Objects.requireNonNullElse(sunAngles, DEFAULT.sunAngles);
-		fogColor = Objects.requireNonNullElse(fogColor, DEFAULT.fogColor);
-		waterColor = Objects.requireNonNullElse(waterColor, DEFAULT.waterColor);
 		return this;
 	}
 
