@@ -24,12 +24,16 @@
  */
 #version 330
 
-#include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
 #include <utils/constants.glsl>
 
 uniform isampler2DArray tiledLightingArray;
 uniform int layer;
+uniform int tileCountX;
+uniform int tileCountY;
+uniform int pointLightsCount;
+uniform vec3 cameraPos;
+uniform mat4 invProjectionMatrix;
 
 in vec2 TexCoord;
 in vec2 quadPos;
@@ -40,7 +44,7 @@ void main() {
     vec4 clip = vec4(quadPos, 1.0, 1.0);
     vec4 world = invProjectionMatrix * clip;
     vec3 worldViewDir = normalize((world.xyz / world.w) - cameraPos);
-    ivec2 tileCoord = ivec2(vec2(TexCoord.x, 1.0 - TexCoord.y) * vec2(tileXCount, tileYCount));
+    ivec2 tileCoord = ivec2(vec2(TexCoord.x, 1.0 - TexCoord.y) * vec2(tileCountX, tileCountY));
 
     // Cache all the previous layer indicies
     int layerLightIndicies[MAX_LIGHTS_PER_TILE];

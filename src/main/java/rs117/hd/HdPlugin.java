@@ -451,6 +451,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int cameraZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+	private float[] projectionMatrix;
+	private float[] invProjectionMatrix;
+
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -1510,6 +1513,31 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getXYZMag()); // XZ radius
 				}
+
+				// Calculate projection matrix
+				projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				if (orthographicProjection) {
+					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+				} else {
+					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+				}
+				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(
+					projectionMatrix, Mat4.translate(
+						-cameraPosition[0],
+						-cameraPosition[1],
+						-cameraPosition[2]
+					)
+				);
+				invProjectionMatrix = Mat4.inverse(projectionMatrix);
+
+				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
+				uboGlobal.viewportWidth.set(viewportWidth);
+				uboGlobal.viewportHeight.set(viewportHeight);
+				uboGlobal.upload();
 			}
 		}
 
@@ -1532,6 +1560,39 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				);
 			}
 			uboLights.upload();
+
+			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
+			if (texTiledLighting != 0 && fboTiledLighting != 0 && configMaxLightsPerTile > 0) {
+				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
+
+				glViewport(0, 0, tileCountX, tileCountY);
+				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+
+				tiledProgram.use();
+				tiledProgram.uniCameraPos.set(cameraPosition);
+				tiledProgram.uniInvProjectionMatrix.set(invProjectionMatrix);
+				tiledProgram.uniTileCountX.set(tileCountX);
+				tiledProgram.uniTileCountY.set(tileCountY);
+				tiledProgram.uniPointLightsCount.set(sceneContext.numVisibleLights);
+
+				tiledProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
+
+				glBindVertexArray(vaoQuadHandle);
+				glDisable(GL_BLEND);
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+				// TODO: Use Instanced Drawing here instead
+
+				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
+					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+					glClear(GL_COLOR_BUFFER_BIT);
+
+					tiledProgram.uniLayer.set(layer);
+
+					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+				}
+				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
+			}
 		}
 	}
 
@@ -1880,56 +1941,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				renderViewportWidth,
 				renderViewportHeight
 			);
-
-			uboGlobal.viewportWidth.set(viewportWidth);
-			uboGlobal.viewportHeight.set(viewportHeight);
-
-			// Calculate projection matrix
-			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			if (orthographicProjection) {
-				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-			} else {
-				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-			}
-			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-			Mat4.mul(
-				projectionMatrix, Mat4.translate(
-					-cameraPosition[0],
-					-cameraPosition[1],
-					-cameraPosition[2]
-				)
-			);
-			uboGlobal.projectionMatrix.set(projectionMatrix);
-			uboGlobal.invProjectionMatrix.set(Mat4.inverse(projectionMatrix));
-			uboGlobal.upload();
-
-			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
-			if (texTiledLighting != 0 && fboTiledLighting != 0 && configMaxLightsPerTile > 0) {
-				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
-
-				glViewport(0, 0, tileCountX, tileCountY);
-				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
-
-				tiledProgram.use();
-
-				tiledProgram.uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
-
-				glBindVertexArray(vaoQuadHandle);
-				glDisable(GL_BLEND);
-				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
-					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
-					glClear(GL_COLOR_BUFFER_BIT);
-
-					tiledProgram.uniLayer.set(layer);
-
-					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-				}
-				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
-			}
 
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
 			if (computeMode == ComputeMode.OPENCL) {
