@@ -1157,9 +1157,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initTiledLighting() {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
-		int tileSize = (int) Math.sqrt(gpuWarpSize);
-		tileCountX = viewportWidth / tileSize;
-		tileCountY = viewportHeight / tileSize;
+		// TODO: Should this be a quality setting instead?
+		tileCountX = viewportWidth / 16;
+		tileCountY = viewportHeight / 16;
 
 		fboTiledLighting = glGenFramebuffers();
 

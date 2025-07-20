@@ -354,38 +354,15 @@ void main() {
         vec2 screenUV = gl_FragCoord.xy / uResolution;
         vec2 tileCount = vec2(tileXCount, tileYCount);
         ivec2 tileXY = ivec2(floor(screenUV * tileCount));
-        int tileLightCount = 0;
 
-        #if TILED_LIGHTING_USE_SUBGROUP
-        int tileLightIndicies[MAX_LIGHTS_PER_TILE];
-        if (subgroupElect()) {
-            for(int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
-                int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
-                if(lightIdx <= 0) {
-                    break;
-                }
-                tileLightIndicies[idx] = lightIdx - 1;
-                tileLightCount++;
-            }
-        }
-
-        tileLightCount = subgroupBroadcastFirst(tileLightCount);
-        #else
-        tileLightCount = MAX_LIGHTS_PER_TILE;
-        #endif
-
-        int debugTiledLightCount = 0;
-        for(int idx = 0; idx < tileLightCount; idx++) {
-            #if TILED_LIGHTING_USE_SUBGROUP
-            int lightIdx = tileLightIndicies[idx];
-            #else
+        int tiledLightCount = 0;
+        for(int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
             int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
             if(lightIdx <= 0) {
                 break;
             }
             lightIdx--;
-            #endif
-            debugTiledLightCount++;
+            tiledLightCount++;
 
             vec4 pos = PointLightArray[lightIdx].position;
             vec3 lightToFrag = pos.xyz - IN.position;
@@ -407,8 +384,8 @@ void main() {
         }
 
         #if TILED_LIGHTING_DEBUG_OVERLAY
-        if(debugTiledLightCount > 0) {
-            float level = (debugTiledLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
+        if(tiledLightCount > 0) {
+            float level = (tiledLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
             // Time varying pixel color
 
             outputColor.r = sin(level);
