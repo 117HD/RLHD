@@ -1548,8 +1548,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
-				uboGlobal.viewportWidth.set(viewportWidth);
-				uboGlobal.viewportHeight.set(viewportHeight);
 				uboGlobal.upload();
 			}
 		}
@@ -2059,6 +2057,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 			uboGlobal.cameraPos.set(cameraPosition);
+			uboGlobal.viewportWidth.set(renderViewportWidth);
+			uboGlobal.viewportHeight.set(renderViewportHeight);
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
