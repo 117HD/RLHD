@@ -48,6 +48,11 @@ public class ShaderProgram {
 		return program != 0;
 	}
 
+	public boolean isActive() {
+		// Meant for debugging only
+		return program == glGetInteger(GL_CURRENT_PROGRAM);
+	}
+
 	@SuppressWarnings("unchecked")
 	public <T extends UniformBuffer> T getUniformBufferBlock(int UniformBlockIndex) {
 		for (UniformBufferBlockPair pair : uniformBufferBlockPairs)
@@ -91,6 +96,7 @@ public class ShaderProgram {
 	}
 
 	private static class UniformProperty {
+		ShaderProgram program;
 		String uniformName;
 		int uniformIndex;
 
@@ -101,14 +107,16 @@ public class ShaderProgram {
 
 	public static class Uniform1i extends UniformProperty {
 		public void set(int value) {
+			assert program.isActive();
 			glUniform1i(uniformIndex, value);
 		}
 	}
 
 	public Uniform1i addUniform1i(String uniformName) {
-		var newProperty = new Uniform1i();
-		newProperty.uniformName = uniformName;
-		uniformProperties.add(newProperty);
-		return newProperty;
+		var prop = new Uniform1i();
+		prop.program = this;
+		prop.uniformName = uniformName;
+		uniformProperties.add(prop);
+		return prop;
 	}
 }
