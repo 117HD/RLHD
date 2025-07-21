@@ -43,7 +43,8 @@ public class ShaderException extends Exception
 			Matcher m = NVIDIA_ERROR_REGEX.matcher(error);
 			if (m.find()) {
 				try {
-					sb.append(String.format("Compile error when compiling shader%s: %s\n",
+					sb.append(String.format(
+						"Error when compiling shader%s: %s\n",
 						units.length == 1 ? "" : "s",
 						Arrays.stream(units)
 							.map(u -> u.filename)
