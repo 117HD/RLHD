@@ -100,6 +100,13 @@ public class ShaderProgram {
 		}
 	}
 
+	private <T extends UniformProperty> T addUniform(T property, String uniformName) {
+		property.program = this;
+		property.uniformName = uniformName;
+		uniformProperties.add(property);
+		return property;
+	}
+
 	public static class Uniform1i extends UniformProperty {
 		public void set(int value) {
 			assert program.isActive();
@@ -108,10 +115,113 @@ public class ShaderProgram {
 	}
 
 	public Uniform1i addUniform1i(String uniformName) {
-		var prop = new Uniform1i();
-		prop.program = this;
-		prop.uniformName = uniformName;
-		uniformProperties.add(prop);
-		return prop;
+		return addUniform(new Uniform1i(), uniformName);
+	}
+
+	public static class Uniform2i extends UniformProperty {
+		public void set(int x, int y) {
+			assert program.isActive();
+			glUniform2i(uniformIndex, x, y);
+		}
+
+		public void set(int... ivec2) {
+			assert program.isActive();
+			glUniform2iv(uniformIndex, ivec2);
+		}
+	}
+
+	public Uniform2i addUniform2i(String uniformName) {
+		return addUniform(new Uniform2i(), uniformName);
+	}
+
+	public static class Uniform3i extends UniformProperty {
+		public void set(int x, int y, int z) {
+			assert program.isActive();
+			glUniform3i(uniformIndex, x, y, z);
+		}
+
+		public void set(int... ivec3) {
+			assert program.isActive();
+			glUniform3iv(uniformIndex, ivec3);
+		}
+	}
+
+	public Uniform3i addUniform3i(String uniformName) {
+		return addUniform(new Uniform3i(), uniformName);
+	}
+
+	public static class Uniform4i extends UniformProperty {
+		public void set(int x, int y, int z, int w) {
+			assert program.isActive();
+			glUniform4i(uniformIndex, x, y, z, w);
+		}
+
+		public void set(int... ivec4) {
+			assert program.isActive();
+			glUniform4iv(uniformIndex, ivec4);
+		}
+	}
+
+	public Uniform4i addUniform4i(String uniformName) {
+		return addUniform(new Uniform4i(), uniformName);
+	}
+
+	public static class Uniform1f extends UniformProperty {
+		public void set(float value) {
+			assert program.isActive();
+			glUniform1f(uniformIndex, value);
+		}
+	}
+
+	public Uniform1f addUniform1f(String uniformName) {
+		return addUniform(new Uniform1f(), uniformName);
+	}
+
+	public static class Uniform2f extends UniformProperty {
+		public void set(float x, float y) {
+			assert program.isActive();
+			glUniform2f(uniformIndex, x, y);
+		}
+
+		public void set(float... vec2) {
+			assert program.isActive();
+			glUniform2fv(uniformIndex, vec2);
+		}
+	}
+
+	public Uniform2f addUniform2f(String uniformName) {
+		return addUniform(new Uniform2f(), uniformName);
+	}
+
+	public static class Uniform3f extends UniformProperty {
+		public void set(float x, float y, float z) {
+			assert program.isActive();
+			glUniform3f(uniformIndex, x, y, z);
+		}
+
+		public void set(float... vec3) {
+			assert program.isActive();
+			glUniform3fv(uniformIndex, vec3);
+		}
+	}
+
+	public Uniform3f addUniform3f(String uniformName) {
+		return addUniform(new Uniform3f(), uniformName);
+	}
+
+	public static class Uniform4f extends UniformProperty {
+		public void set(float x, float y, float z, float w) {
+			assert program.isActive();
+			glUniform4f(uniformIndex, x, y, z, w);
+		}
+
+		public void set(float... vec4) {
+			assert program.isActive();
+			glUniform4fv(uniformIndex, vec4);
+		}
+	}
+
+	public Uniform4f addUniform4f(String uniformName) {
+		return addUniform(new Uniform4f(), uniformName);
 	}
 }
