@@ -708,6 +708,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyPrograms();
 				destroyVaos();
 				destroySceneFbo();
+				destroyTiledLighting();
 				destroyShadowMapFbo();
 				destroyTileHeightMap();
 				destroyModelSortingBins();
