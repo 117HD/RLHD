@@ -191,7 +191,7 @@ public abstract class UniformBuffer {
 	@Getter
 	private final String uniformBlockName;
 	@Getter
-	private int uniformBlockIndex;
+	private int bindingIndex;
 
 	protected UniformBuffer(GLBuffer glBuffer, String uniformBlockName) {
 		this.glBuffer = glBuffer;
@@ -257,14 +257,14 @@ public abstract class UniformBuffer {
 		data = BufferUtils.createByteBuffer(size);
 	}
 
-	public void initialize(int uniformBlockIndex) {
+	public void initialize(int bindingIndex) {
 		initialize();
-		bind(uniformBlockIndex);
+		bind(bindingIndex);
 	}
 
-	public void bind(int uniformBlockIndex) {
-		this.uniformBlockIndex = uniformBlockIndex;
-		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBlockIndex, glBuffer.id);
+	public void bind(int bindingIndex) {
+		this.bindingIndex = bindingIndex;
+		glBindBufferBase(GL_UNIFORM_BUFFER, bindingIndex, glBuffer.id);
 	}
 
 	protected void preUpload() {}

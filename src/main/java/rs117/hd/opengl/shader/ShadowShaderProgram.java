@@ -6,7 +6,13 @@ import static org.lwjgl.opengl.GL33C.*;
 
 public class ShadowShaderProgram extends ShaderProgram {
 	public Uniform1i uniShadowMap = addUniform1i("textureArray");
-	private ShadowMode currentMode = ShadowMode.OFF;
+	private ShadowMode currentMode;
+
+	@Override
+	public void destroy() {
+		super.destroy();
+		currentMode = null;
+	}
 
 	public void setMode(ShadowMode mode) {
 		if (currentMode == mode)

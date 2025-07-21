@@ -3,7 +3,7 @@ package rs117.hd.opengl.shader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
@@ -12,14 +12,14 @@ import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class ShaderProgram {
-	@AllArgsConstructor
+	@RequiredArgsConstructor
 	private static class UniformBufferBlockPair {
-		public UniformBuffer buffer;
-		public int bindingIndex;
+		public final UniformBuffer buffer;
+		public final int uboProgramIndex;
 	}
 
 	private final List<UniformProperty> uniformProperties = new ArrayList<>();
-	private final List<UniformBufferBlockPair> uniformBufferBlockPairs = new ArrayList<>();
+	private final List<UniformBufferBlockPair> uniformBlockMappings = new ArrayList<>();
 
 	@Setter
 	private ShaderTemplate shaderTemplate;
@@ -40,7 +40,7 @@ public class ShaderProgram {
 		for (var ubo : includes.uniformBuffers) {
 			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
 			if (bindingIndex != -1)
-				uniformBufferBlockPairs.add(new UniformBufferBlockPair(ubo, bindingIndex));
+				uniformBlockMappings.add(new UniformBufferBlockPair(ubo, bindingIndex));
 		}
 	}
 
@@ -55,8 +55,8 @@ public class ShaderProgram {
 
 	@SuppressWarnings("unchecked")
 	public <T extends UniformBuffer> T getUniformBufferBlock(int UniformBlockIndex) {
-		for (UniformBufferBlockPair pair : uniformBufferBlockPairs)
-			if (pair.buffer.getUniformBlockIndex() == UniformBlockIndex)
+		for (UniformBufferBlockPair pair : uniformBlockMappings)
+			if (pair.buffer.getBindingIndex() == UniformBlockIndex)
 				return (T) pair.buffer;
 		return null;
 	}
@@ -65,8 +65,8 @@ public class ShaderProgram {
 		assert program != 0;
 		glUseProgram(program);
 
-		for (UniformBufferBlockPair pair : uniformBufferBlockPairs)
-			glUniformBlockBinding(program, pair.bindingIndex, pair.buffer.getUniformBlockIndex());
+		for (UniformBufferBlockPair pair : uniformBlockMappings)
+			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
 	}
 
 	public void validate() throws ShaderException {
@@ -93,6 +93,8 @@ public class ShaderProgram {
 
 		for (var prop : uniformProperties)
 			prop.destroy();
+
+		uniformBlockMappings.clear();
 	}
 
 	private static class UniformProperty {
