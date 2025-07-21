@@ -77,13 +77,6 @@ public class ShaderProgram {
 		}
 	}
 
-	public static <T extends ShaderProgram> void destroyAll(T[] programs) {
-		if (programs != null)
-			for (T program : programs)
-				if (program != null)
-					program.destroy();
-	}
-
 	public void destroy() {
 		if (program == 0)
 			return;

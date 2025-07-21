@@ -43,6 +43,7 @@ import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -98,7 +99,6 @@ import rs117.hd.opengl.shader.ModelSortingComputeProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.ComputeUniforms;
@@ -285,6 +285,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Getter
 	private Gson gson;
 
+	@Inject
+	private SceneShaderProgram sceneProgram;
+
+	@Inject
+	public UIShaderProgram uiProgram;
+
+	@Inject
+	private ShadowShaderProgram shadowProgram;
+
+	@Inject
+	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
+
+	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
+
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 
@@ -303,13 +317,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private static final ResourcePath SHADER_PATH = Props
 		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
 		.chroot();
-
-	public SceneShaderProgram sceneProgram = new SceneShaderProgram();
-	public UIShaderProgram uiProgram = new UIShaderProgram();
-	public ShadowShaderProgram shadowProgram = new ShadowShaderProgram();
-
-	public ModelPassthroughComputeProgram modelPassthroughComputeProgram = new ModelPassthroughComputeProgram();
-	public ModelSortingComputeProgram[] modelSortingComputePrograms = {};
 
 	private int interfaceTexture;
 	private int interfacePbo;
@@ -462,7 +469,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					return false;
 
 				renderBufferOffset = 0;
-				fboScene = rboSceneColor = rboSceneDepth = 0;
+				fboScene = 0;
+				rboSceneColor = 0;
+				rboSceneDepth = 0;
 				fboShadowMap = 0;
 				numPassthroughModels = 0;
 				numModelsToSort = null;
@@ -861,13 +870,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			modelPassthroughComputeProgram.compile(includes);
 			modelPassthroughComputeProgram.validate();
 
-			modelSortingComputePrograms = new ModelSortingComputeProgram[numSortingBins];
 			for (int i = 0; i < numSortingBins; i++) {
 				int faceCount = modelSortingBinFaceCounts[i];
 				int threadCount = modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
 				var program = new ModelSortingComputeProgram(threadCount, facesPerThread);
-				modelSortingComputePrograms[i] = program;
+				modelSortingComputePrograms.add(program);
 				program.compile(includes);
 				program.validate();
 			}
@@ -902,8 +910,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
-			ShaderProgram.destroyAll(modelSortingComputePrograms);
-			modelSortingComputePrograms = null;
+			for (var program : modelSortingComputePrograms)
+				program.destroy();
+			modelSortingComputePrograms.clear();
 		} else {
 			clManager.destroyPrograms();
 		}
@@ -1568,7 +1577,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (numModelsToSort[i] == 0)
 					continue;
 
-				modelSortingComputePrograms[i].use();
+				modelSortingComputePrograms.get(i).use();
 				glBindBufferBase(GL43C.GL_SHADER_STORAGE_BUFFER, 0, hModelSortingBuffers[i].id);
 				GL43C.glDispatchCompute(numModelsToSort[i], 1, 1);
 			}
