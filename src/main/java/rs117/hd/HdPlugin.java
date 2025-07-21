@@ -97,9 +97,9 @@ import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
 import rs117.hd.opengl.shader.ModelSortingComputeProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
+import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
-import rs117.hd.opengl.shader.Template;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.ComputeUniforms;
 import rs117.hd.opengl.uniforms.GlobalUniforms;
@@ -306,9 +306,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public SceneShaderProgram sceneProgram = new SceneShaderProgram();
 	public UIShaderProgram uiProgram = new UIShaderProgram();
-
-	public ShadowShaderProgram fastShadowProgram = new ShadowShaderProgram(ShadowMode.FAST);
-	public ShadowShaderProgram detailedShadowProgram = new ShadowShaderProgram(ShadowMode.DETAILED);
+	public ShadowShaderProgram shadowProgram = new ShadowShaderProgram();
 
 	public ModelPassthroughComputeProgram modelPassthroughComputeProgram = new ModelPassthroughComputeProgram();
 	public ModelSortingComputeProgram[] modelSortingComputePrograms = {};
@@ -316,13 +314,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int interfaceTexture;
 	private int interfacePbo;
 
-	private int vaoQuadHandle;
-	private int vboQuadHandle;
+	private int vaoQuad;
+	private int vboQuad;
 
-	private int vaoSceneHandle;
-	private int fboSceneHandle;
-	private int rboSceneColorHandle;
-	private int rboSceneDepthHandle;
+	private int vaoScene;
+	private int fboScene;
+	private int rboSceneColor;
+	private int rboSceneDepth;
 
 	private int shadowMapResolution;
 	private int fboShadowMap;
@@ -464,7 +462,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					return false;
 
 				renderBufferOffset = 0;
-				fboSceneHandle = rboSceneColorHandle = rboSceneDepthHandle = 0;
+				fboScene = rboSceneColor = rboSceneDepth = 0;
 				fboShadowMap = 0;
 				numPassthroughModels = 0;
 				numModelsToSort = null;
@@ -806,7 +804,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initPrograms() throws ShaderException, IOException
 	{
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
-		Template template = new Template()
+		var includes = new ShaderIncludes()
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
@@ -832,7 +830,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
-			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
@@ -851,28 +848,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addUniformBuffer(uboCompute)
 			.addIncludePath(SHADER_PATH, true);
 
-		textureManager.appendUniformBuffers(template);
+		textureManager.appendUniformBuffers(includes);
 
-		sceneProgram.compile(template);
-		uiProgram.compile(template);
-		fastShadowProgram.compile(template);
-		detailedShadowProgram.compile(template);
-
-		fastShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
-		detailedShadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		sceneProgram.compile(includes);
+		uiProgram.compile(includes);
+		shadowProgram.setMode(configShadowMode);
+		shadowProgram.compile(includes);
 
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initPrograms();
 		} else {
-			modelPassthroughComputeProgram.compile(template);
+			modelPassthroughComputeProgram.compile(includes);
+			modelPassthroughComputeProgram.validate();
 
 			modelSortingComputePrograms = new ModelSortingComputeProgram[numSortingBins];
 			for (int i = 0; i < numSortingBins; i++) {
 				int faceCount = modelSortingBinFaceCounts[i];
 				int threadCount = modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
-				modelSortingComputePrograms[i] = new ModelSortingComputeProgram(threadCount, facesPerThread);
-				modelSortingComputePrograms[i].compile(template);
+				var program = new ModelSortingComputeProgram(threadCount, facesPerThread);
+				modelSortingComputePrograms[i] = program;
+				program.compile(includes);
+				program.validate();
 			}
 		}
 
@@ -880,24 +877,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.use();
 		sceneProgram.uniTextureArray.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 		sceneProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
-
 		// Bind a VOA, else validation may fail on older Intel-based Macs
-		glBindVertexArray(vaoSceneHandle);
-
+		glBindVertexArray(vaoScene);
 		sceneProgram.validate();
 
 		uiProgram.use();
 		uiProgram.uniTextureArray.set(TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
+		// Bind a VOA, else validation may fail on older Intel-based Macs
+		glBindVertexArray(vaoQuad);
+		uiProgram.validate();
 
-		glUseProgram(0);
+		shadowProgram.use();
+		shadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		glBindVertexArray(vaoScene);
+		shadowProgram.validate();
+
 		checkGLErrors();
 	}
 
 	private void destroyPrograms() {
 		sceneProgram.destroy();
 		uiProgram.destroy();
-		fastShadowProgram.destroy();
-		detailedShadowProgram.destroy();
+		shadowProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -909,7 +910,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void recompilePrograms() throws ShaderException, IOException {
-		// Avoid recompiling if we haven't already compiled once
+		// Skip recompiling if the original compilation was unsuccessful
 		if (!sceneProgram.isValid())
 			return;
 
@@ -994,13 +995,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void initVaos() {
 		// Create scene VAO
-		vaoSceneHandle = glGenVertexArrays();
+		vaoScene = glGenVertexArrays();
 
 		// Create UI VAO
-		vaoQuadHandle = glGenVertexArrays();
+		vaoQuad = glGenVertexArrays();
 		// Create UI buffer
-		vboQuadHandle = glGenBuffers();
-		glBindVertexArray(vaoQuadHandle);
+		vboQuad = glGenBuffers();
+		glBindVertexArray(vaoQuad);
 
 		FloatBuffer vboUiData = BufferUtils.createFloatBuffer(5 * 4)
 			.put(new float[] {
@@ -1011,7 +1012,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				-1, 1, 0, 0, 0  // top left
 			})
 			.flip();
-		glBindBuffer(GL_ARRAY_BUFFER, vboQuadHandle);
+		glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
 		glBufferData(GL_ARRAY_BUFFER, vboUiData, GL_STATIC_DRAW);
 
 		// position attribute
@@ -1024,7 +1025,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateSceneVao(GLBuffer vertexBuffer, GLBuffer uvBuffer, GLBuffer normalBuffer) {
-		glBindVertexArray(vaoSceneHandle);
+		glBindVertexArray(vaoScene);
 
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.id);
@@ -1048,17 +1049,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void destroyVaos() {
-		if (vaoSceneHandle != 0)
-			glDeleteVertexArrays(vaoSceneHandle);
-		vaoSceneHandle = 0;
+		if (vaoScene != 0)
+			glDeleteVertexArrays(vaoScene);
+		vaoScene = 0;
 
-		if (vboQuadHandle != 0)
-			glDeleteBuffers(vboQuadHandle);
-		vboQuadHandle = 0;
+		if (vboQuad != 0)
+			glDeleteBuffers(vboQuad);
+		vboQuad = 0;
 
-		if (vaoQuadHandle != 0)
-			glDeleteVertexArrays(vaoQuadHandle);
-		vaoQuadHandle = 0;
+		if (vaoQuad != 0)
+			glDeleteVertexArrays(vaoQuad);
+		vaoQuad = 0;
 	}
 
 	private void initBuffers() {
@@ -1146,12 +1147,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int[] resolution = applyDpiScaling(width, height);
 
 		// Create and bind the FBO
-		fboSceneHandle = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboSceneHandle);
+		fboScene = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
 
 		// Create color render buffer
-		rboSceneColorHandle = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneColorHandle);
+		rboSceneColor = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneColor);
 
 		// Flush out all pending errors, so we can check whether the next step succeeds
 		clearGLErrors();
@@ -1161,14 +1162,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			if (glGetError() == GL_NO_ERROR) {
 				// Found a usable format. Bind the RBO to the scene FBO
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColorHandle);
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
 				checkGLErrors();
 
 				// Create depth render buffer
-				rboSceneDepthHandle = glGenRenderbuffers();
-				glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepthHandle);
+				rboSceneDepth = glGenRenderbuffers();
+				glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
 				glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, GL_DEPTH24_STENCIL8, resolution[0], resolution[1]);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepthHandle);
+				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
 				checkGLErrors();
 
 				// Reset
@@ -1183,17 +1184,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void destroySceneFbo()
 	{
-		if (fboSceneHandle != 0)
-			glDeleteFramebuffers(fboSceneHandle);
-		fboSceneHandle = 0;
+		if (fboScene != 0)
+			glDeleteFramebuffers(fboScene);
+		fboScene = 0;
 
-		if (rboSceneColorHandle != 0)
-			glDeleteRenderbuffers(rboSceneColorHandle);
-		rboSceneColorHandle = 0;
+		if (rboSceneColor != 0)
+			glDeleteRenderbuffers(rboSceneColor);
+		rboSceneColor = 0;
 
-		if (rboSceneDepthHandle != 0)
-			glDeleteRenderbuffers(rboSceneDepthHandle);
-		rboSceneDepthHandle = 0;
+		if (rboSceneDepth != 0)
+			glDeleteRenderbuffers(rboSceneDepth);
+		rboSceneDepth = 0;
 	}
 
 	private void initShadowMapFbo() {
@@ -1817,7 +1818,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			glBindVertexArray(vaoSceneHandle);
+			glBindVertexArray(vaoScene);
 
 			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
 			final Dimension stretchedDimensions = client.getStretchedDimensions();
@@ -1967,11 +1968,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
 
-				if (configShadowMode == ShadowMode.DETAILED) {
-					detailedShadowProgram.use();
-				} else {
-					fastShadowProgram.use();
-				}
+				shadowProgram.use();
 
 				final int camX = cameraFocalPoint[0];
 				final int camY = cameraFocalPoint[1];
@@ -2018,7 +2015,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			sceneProgram.use();
 
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneHandle);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
 			glToggle(GL_MULTISAMPLE, numSamples > 1);
 			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
 
@@ -2048,7 +2045,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
 
 			// Draw with buffers bound to scene VAO
-			glBindVertexArray(vaoSceneHandle);
+			glBindVertexArray(vaoScene);
 
 			// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
 			// scene doesn't support depth testing, so we only write depths for custom tiles.
@@ -2098,7 +2095,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Blit from the scene FBO to the default FBO
 			int[] dimensions = applyDpiScaling(stretchedCanvasWidth, stretchedCanvasHeight);
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneHandle);
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboScene);
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			glBlitFramebuffer(
 				0, 0, dimensions[0], dimensions[1],
@@ -2188,7 +2185,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
 		// Texture on UI
-		glBindVertexArray(vaoQuadHandle);
+		glBindVertexArray(vaoQuad);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
 		frameTimer.end(Timer.RENDER_UI);

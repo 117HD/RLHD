@@ -37,8 +37,8 @@ import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.utils.ResourcePath;
 
 @Slf4j
-public class Template {
-	enum IncludeType {GLSL, C, UNKNOWN}
+public class ShaderIncludes {
+	enum Type { GLSL, C, UNKNOWN }
 
 	@FunctionalInterface
 	public interface IncludeLoader {
@@ -51,12 +51,12 @@ public class Template {
 	@Getter
 	private final List<UniformBuffer> uniformBuffers = new ArrayList<>();
 
-	IncludeType includeType = IncludeType.UNKNOWN;
+	Type includeType = Type.UNKNOWN;
 	final Stack<Integer> includeStack = new Stack<>();
 	final ArrayList<String> includeList = new ArrayList<>();
 
-	public Template copy() {
-		var clone = new Template();
+	public ShaderIncludes copy() {
+		var clone = new ShaderIncludes();
 		clone.loaders.addAll(this.loaders);
 		clone.uniformBuffers.addAll(this.uniformBuffers);
 		clone.rootPath = this.rootPath;
@@ -81,7 +81,7 @@ public class Template {
 				includeStack.pop();
 
 				int nextLineOffset = 1;
-				if (Shader.DUMP_SHADERS) {
+				if (ShaderTemplate.DUMP_SHADERS) {
 					sb.append("// Including ").append(includeFile).append('\n');
 					nextLineOffset = 0;
 				}
@@ -129,7 +129,7 @@ public class Template {
 						break;
 				}
 
-				if (Shader.DUMP_SHADERS)
+				if (ShaderTemplate.DUMP_SHADERS)
 					sb.append("// End include of ").append(includeFile).append('\n');
 			} else if (trimmed.startsWith("#pragma once")) {
 				int currentIndex = includeList.size() - 1;
@@ -165,15 +165,15 @@ public class Template {
 
 		switch (ResourcePath.path(filename).getExtension().toLowerCase()) {
 			case "glsl":
-				includeType = IncludeType.GLSL;
+				includeType = Type.GLSL;
 				break;
 			case "c":
 			case "h":
 			case "cl":
-				includeType = IncludeType.C;
+				includeType = Type.C;
 				break;
 			default:
-				includeType = IncludeType.UNKNOWN;
+				includeType = Type.UNKNOWN;
 				break;
 		}
 
@@ -184,16 +184,16 @@ public class Template {
 		return null;
 	}
 
-	public Template addIncludeLoader(IncludeLoader resolver) {
+	public ShaderIncludes addIncludeLoader(IncludeLoader resolver) {
 		loaders.add(resolver);
 		return this;
 	}
 
-	public Template addIncludePath(Class<?> clazz) {
+	public ShaderIncludes addIncludePath(Class<?> clazz) {
 		return addIncludePath(ResourcePath.path(clazz), false);
 	}
 
-	public Template addIncludePath(ResourcePath includePath, boolean isRoot) {
+	public ShaderIncludes addIncludePath(ResourcePath includePath, boolean isRoot) {
 		if (isRoot) {
 			rootPath = includePath;
 		}
@@ -231,28 +231,28 @@ public class Template {
 		});
 	}
 
-	public Template addInclude(String identifier, String value) {
+	public ShaderIncludes addInclude(String identifier, String value) {
 		return addIncludeLoader(key -> key.equals(identifier) ? value : null);
 	}
 
-	public Template addUniformBuffer(UniformBuffer ubo) {
+	public ShaderIncludes addUniformBuffer(UniformBuffer ubo) {
 		if (!uniformBuffers.contains(ubo)) {
 			uniformBuffers.add(ubo);
 		}
 		return this;
 	}
 
-	public Template define(String identifier, String value) {
+	public ShaderIncludes define(String identifier, String value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %s", identifier, value) : null);
 	}
 
-	public Template define(String identifier, boolean value) {
+	public ShaderIncludes define(String identifier, boolean value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %d", identifier, value ? 1 : 0) : null);
 	}
 
-	public Template define(String identifier, int value) {
+	public ShaderIncludes define(String identifier, int value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %d", identifier, value) : null);
 	}
@@ -260,7 +260,7 @@ public class Template {
 	/**
 	 * Define a single-precision float shader constant. OpenCL warns when using doubles in float contexts.
 	 */
-	public Template define(String identifier, float value) {
+	public ShaderIncludes define(String identifier, float value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %ff", identifier, value) : null);
 	}
@@ -268,17 +268,17 @@ public class Template {
 	/**
 	 * Define a double-precision float shader constant.
 	 */
-	public Template define(String identifier, double value) {
+	public ShaderIncludes define(String identifier, double value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %f", identifier, value) : null);
 	}
 
-	public Template define(String identifier, Enum<?> enumValue) {
+	public ShaderIncludes define(String identifier, Enum<?> enumValue) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %d", identifier, enumValue.ordinal()) : null);
 	}
 
-	public Template define(String identifier, Supplier<String> supplier) {
+	public ShaderIncludes define(String identifier, Supplier<String> supplier) {
 		return addIncludeLoader(key -> key.equals(identifier) ? supplier.get() : null);
 	}
 }

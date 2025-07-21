@@ -43,7 +43,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
-public class Shader
+public class ShaderTemplate
 {
 	public static final boolean DUMP_SHADERS = Props.has("rlhd.dump-shaders");
 
@@ -61,13 +61,13 @@ public class Shader
 		public final String filename;
 	}
 
-	public Shader add(int type, String name)
+	public ShaderTemplate add(int type, String name)
 	{
 		units.add(new Unit(type, name));
 		return this;
 	}
 
-	public int compile(Template template) throws ShaderException, IOException
+	public int compile(ShaderIncludes includes) throws ShaderException, IOException
 	{
 		int program = glCreateProgram();
 		int[] shaders = new int[units.size()];
@@ -87,7 +87,7 @@ public class Shader
 					throw new ShaderException("Unable to create shader of type " + unit.type);
 				}
 
-				String source = template.load(unit.filename);
+				String source = includes.load(unit.filename);
 				if (DUMP_SHADERS)
 					dumpPath.resolve(unit.filename).writeString(source);
 
@@ -98,7 +98,7 @@ public class Shader
 				{
 					String err = glGetShaderInfoLog(shader);
 					glDeleteShader(shader);
-					throw ShaderException.compileError(err, template, unit);
+					throw ShaderException.compileError(err, includes, unit);
 				}
 
 				glAttachShader(program, shader);
@@ -110,7 +110,7 @@ public class Shader
 			if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE)
 			{
 				String err = glGetProgramInfoLog(program);
-				throw ShaderException.compileError(err, template, units.toArray(new Unit[0]));
+				throw ShaderException.compileError(err, includes, units.toArray(new Unit[0]));
 			}
 
 			ok = true;

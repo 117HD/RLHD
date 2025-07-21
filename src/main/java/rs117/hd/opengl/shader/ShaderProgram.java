@@ -22,11 +22,11 @@ public class ShaderProgram {
 	private final List<UniformBufferBlockPair> uniformBufferBlockPairs = new ArrayList<>();
 
 	@Setter
-	private Shader shader;
+	private ShaderTemplate shaderTemplate;
 	private int program;
 
-	public ShaderProgram compile(Template template) throws ShaderException, IOException {
-		int newProgram = shader.compile(template);
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		int newProgram = shaderTemplate.compile(includes);
 
 		if (isValid())
 			destroy();
@@ -37,13 +37,11 @@ public class ShaderProgram {
 		for (var prop : uniformProperties)
 			prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
 
-		for (UniformBuffer ubo : template.getUniformBuffers()) {
+		for (UniformBuffer ubo : includes.getUniformBuffers()) {
 			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
 			if (bindingIndex != -1)
 				uniformBufferBlockPairs.add(new UniformBufferBlockPair(ubo, bindingIndex));
 		}
-
-		return this;
 	}
 
 	public boolean isValid() {

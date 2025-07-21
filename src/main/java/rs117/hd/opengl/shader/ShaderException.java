@@ -36,10 +36,10 @@ public class ShaderException extends Exception
 {
 	private static final Pattern NVIDIA_ERROR_REGEX = Pattern.compile("^(\\d+)\\((\\d+)\\) : (.*)$", Pattern.MULTILINE);
 
-	public static ShaderException compileError(String error, Template template, Shader.Unit ...units)
+	static ShaderException compileError(String error, ShaderIncludes includes, ShaderTemplate.Unit... units)
 	{
 		StringBuilder sb = new StringBuilder();
-		if (template.includeType == Template.IncludeType.GLSL) {
+		if (includes.includeType == ShaderIncludes.Type.GLSL) {
 			Matcher m = NVIDIA_ERROR_REGEX.matcher(error);
 			if (m.find()) {
 				try {
@@ -58,7 +58,7 @@ public class ShaderException extends Exception
 						int index = Integer.parseInt(m.group(1));
 						int lineNumber = Integer.parseInt(m.group(2));
 						String errorString = m.group(3);
-						String include = template.includeList.get(index);
+						String include = includes.includeList.get(index);
 						sb.append(String.format(
 							"%s line %d - %s",
 							include, lineNumber, errorString));
@@ -80,15 +80,16 @@ public class ShaderException extends Exception
 					.append("\n")
 					.append(error)
 					.append("Included sources: [\n");
-				for (int j = 0; j < template.includeList.size(); j++) {
+				for (int j = 0; j < includes.includeList.size(); j++) {
 					String s = String.valueOf(j);
 					sb
 						.append("  ")
 						.append(String.join("", Collections.nCopies( // Left pad
-							1 + (int) Math.log10(template.includeList.size()) - s.length(), " ")))
+							1 + (int) Math.log10(includes.includeList.size()) - s.length(), " ")
+						))
 						.append(s)
 						.append(": ")
-						.append(template.includeList.get(j))
+						.append(includes.includeList.get(j))
 						.append("\n");
 				}
 				sb.append("]");

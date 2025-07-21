@@ -95,10 +95,10 @@ public class ShadowMapOverlay extends Overlay {
 
 			plugin.uiProgram.use();
 			plugin.uiProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
-			UIUniforms uboUI = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
-			if (uboUI != null) {
+			UIUniforms ubo = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
+			if (ubo != null) {
 				if (client.getGameState().getState() < GameState.LOGGED_IN.getState()) {
-					uboUI.shadowMapOverlayDimensions.set(0, 0, 0, 0);
+					ubo.shadowMapOverlayDimensions.set(0, 0, 0, 0);
 				} else {
 					int canvasWidth = client.getCanvasWidth();
 					int canvasHeight = client.getCanvasHeight();
@@ -109,9 +109,11 @@ public class ShadowMapOverlay extends Overlay {
 						scaleX = (float) stretchedDims.width / canvasWidth;
 						scaleY = (float) stretchedDims.height / canvasHeight;
 					}
-					uboUI.shadowMapOverlayDimensions.set(
-						(int) Math.floor((bounds.x + 1) * scaleX), (int) Math.floor((canvasHeight - bounds.height - bounds.y) * scaleY),
-						(int) Math.ceil((bounds.width - 1) * scaleX), (int) Math.ceil((bounds.height - 1) * scaleY)
+					ubo.shadowMapOverlayDimensions.set(
+						(int) Math.floor((bounds.x + 1) * scaleX),
+						(int) Math.floor((canvasHeight - bounds.height - bounds.y) * scaleY),
+						(int) Math.ceil((bounds.width - 1) * scaleX),
+						(int) Math.ceil((bounds.height - 1) * scaleY)
 					);
 				}
 			}

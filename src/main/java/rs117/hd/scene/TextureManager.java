@@ -49,7 +49,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.opengl.shader.Template;
+import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.MaterialUniforms;
 import rs117.hd.opengl.uniforms.WaterTypeUniforms;
 import rs117.hd.utils.HDUtils;
@@ -140,9 +140,10 @@ public class TextureManager {
 		uboWaterTypes.destroy();
 	}
 
-	public void appendUniformBuffers(Template template) {
-		template.addUniformBuffer(uboWaterTypes);
-		template.addUniformBuffer(uboMaterials);
+	public void appendUniformBuffers(ShaderIncludes includes) {
+		includes
+			.addUniformBuffer(uboWaterTypes)
+			.addUniformBuffer(uboMaterials);
 	}
 
 	@RequiredArgsConstructor

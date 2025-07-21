@@ -7,7 +7,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	public Uniform1i uniShadowMap = addUniform1i("shadowMap");
 
 	public SceneShaderProgram() {
-		setShader(new Shader()
+		setShaderTemplate(new ShaderTemplate()
 			.add(GL_VERTEX_SHADER, "vert.glsl")
 			.add(GL_GEOMETRY_SHADER, "geom.glsl")
 			.add(GL_FRAGMENT_SHADER, "frag.glsl"));

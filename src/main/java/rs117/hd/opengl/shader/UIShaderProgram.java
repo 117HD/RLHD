@@ -7,7 +7,7 @@ public class UIShaderProgram extends ShaderProgram {
 	public Uniform1i uniShadowMap = addUniform1i("shadowMap");
 
 	public UIShaderProgram() {
-		setShader(new Shader()
+		setShaderTemplate(new ShaderTemplate()
 			.add(GL_VERTEX_SHADER, "ui_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "ui_frag.glsl"));
 	}

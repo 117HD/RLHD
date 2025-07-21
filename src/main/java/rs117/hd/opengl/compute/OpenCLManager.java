@@ -48,7 +48,7 @@ import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
-import rs117.hd.opengl.shader.Template;
+import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.ComputeUniforms;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
@@ -308,12 +308,12 @@ public class OpenCLManager {
 
 	public void initPrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
-			var template = new Template()
+			var includes = new ShaderIncludes()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
 				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
-			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
+			passthroughProgram = compileProgram(stack, includes.load("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
 			sortingPrograms = new long[plugin.numSortingBins];
@@ -322,7 +322,8 @@ public class OpenCLManager {
 				int faceCount = plugin.modelSortingBinFaceCounts[i];
 				int threadCount = plugin.modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
-				sortingPrograms[i] = compileProgram(stack, template
+				sortingPrograms[i] = compileProgram(
+					stack, includes
 					.copy()
 					.define("THREAD_COUNT", threadCount)
 					.define("FACES_PER_THREAD", facesPerThread)

@@ -1,19 +1,30 @@
 package rs117.hd.opengl.shader;
 
+import java.io.IOException;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
 
 public class ShadowShaderProgram extends ShaderProgram {
 	public Uniform1i uniShadowMap = addUniform1i("textureArray");
+	private ShadowMode currentMode = ShadowMode.OFF;
 
-	public ShadowShaderProgram(ShadowMode mode) {
-		Shader shadowShader = new Shader()
+	public void setMode(ShadowMode mode) {
+		if (currentMode == mode)
+			return;
+
+		currentMode = mode;
+		var shaderTemplate = new ShaderTemplate()
 			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
-		if (mode == ShadowMode.DETAILED) {
-			shadowShader.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl");
-		}
-		setShader(shadowShader);
+		if (mode == ShadowMode.DETAILED)
+			shaderTemplate.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl");
+		setShaderTemplate(shaderTemplate);
+	}
+
+	@Override
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		super.compile(includes.copy()
+			.define("SHADOW_MODE", currentMode));
 	}
 }
