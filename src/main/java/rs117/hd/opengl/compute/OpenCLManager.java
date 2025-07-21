@@ -311,6 +311,9 @@ public class OpenCLManager {
 			var includes = new ShaderIncludes()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
+				.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
+				.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
+				.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
 				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, includes.loadFile("comp_unordered.cl"));
@@ -325,12 +328,8 @@ public class OpenCLManager {
 				sortingPrograms[i] = compileProgram(
 					stack,
 					includes
-						.copy()
 						.define("THREAD_COUNT", threadCount)
 						.define("FACES_PER_THREAD", facesPerThread)
-						.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
-						.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
-						.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
 						.loadFile("comp.cl")
 				);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);

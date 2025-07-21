@@ -808,25 +808,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
-			.define("MATERIAL_CONSTANTS", () -> {
-				StringBuilder include = new StringBuilder();
-				for (Material m : Material.values())
-				{
-					include
-						.append("#define MAT_")
-						.append(m.name().toUpperCase())
-						.append(" getMaterial(")
-						.append(textureManager.getMaterialIndex(m, m.vanillaTextureIndex))
-						.append(")\n");
-				}
-				return include.toString();
-			})
 			.define("MATERIAL_COUNT", Material.values().length)
-			.define("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
-			.define("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
 			.define("MAX_LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
-			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
@@ -842,6 +826,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, ComputeUniforms.MAX_CHARACTER_POSITION_COUNT))
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("WIREFRAME", config.wireframe())
+			.addInclude(
+				"MATERIAL_CONSTANTS", () -> {
+					StringBuilder include = new StringBuilder();
+					for (Material m : Material.values()) {
+						include
+							.append("#define MAT_")
+							.append(m.name().toUpperCase())
+							.append(" getMaterial(")
+							.append(textureManager.getMaterialIndex(m, m.vanillaTextureIndex))
+							.append(")\n");
+					}
+					return include.toString();
+				}
+			)
+			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
+			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
+			.addInclude("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(uboLights)

@@ -26,8 +26,10 @@ package rs117.hd.opengl.shader;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 import java.util.function.Supplier;
@@ -44,8 +46,9 @@ public class ShaderIncludes {
 		String load(String path) throws IOException;
 	}
 
-	private final List<ResourcePath> includePaths = new ArrayList<>();
 	private final List<IncludeLoader> includeLoaders = new ArrayList<>();
+	private final List<ResourcePath> includePaths = new ArrayList<>();
+	private final Map<String, Supplier<String>> includeSuppliers = new HashMap<>();
 
 	public final Set<UniformBuffer> uniformBuffers = new HashSet<>();
 
@@ -53,10 +56,20 @@ public class ShaderIncludes {
 	final Stack<Integer> includeStack = new Stack<>();
 	final ArrayList<String> includeList = new ArrayList<>();
 
+	public ShaderIncludes() {
+		// Load constant identifier includes
+		includeLoaders.add(key -> {
+			var supplier = includeSuppliers.get(key);
+			if (supplier == null)
+				return null;
+			return supplier.get();
+		});
+	}
+
 	public ShaderIncludes copy() {
 		var clone = new ShaderIncludes();
-		clone.includePaths.addAll(includePaths);
 		clone.includeLoaders.addAll(includeLoaders);
+		clone.includePaths.addAll(includePaths);
 		clone.uniformBuffers.addAll(uniformBuffers);
 		return clone;
 	}
@@ -264,11 +277,6 @@ public class ShaderIncludes {
 		throw new IOException("Failed to load file: " + path);
 	}
 
-	public ShaderIncludes addIncludeLoader(IncludeLoader resolver) {
-		includeLoaders.add(resolver);
-		return this;
-	}
-
 	public ShaderIncludes addIncludePath(Class<?> clazz) {
 		return addIncludePath(ResourcePath.path(clazz));
 	}
@@ -278,8 +286,13 @@ public class ShaderIncludes {
 		return this;
 	}
 
+	public ShaderIncludes addInclude(String identifier, Supplier<String> supplier) {
+		includeSuppliers.put(identifier, supplier);
+		return this;
+	}
+
 	public ShaderIncludes addInclude(String identifier, String value) {
-		return addIncludeLoader(key -> key.equals(identifier) ? value : null);
+		return addInclude(identifier, () -> value);
 	}
 
 	public ShaderIncludes addUniformBuffer(UniformBuffer ubo) {
@@ -288,42 +301,32 @@ public class ShaderIncludes {
 	}
 
 	public ShaderIncludes define(String identifier, String value) {
-		return addIncludeLoader(key ->
-			key.equals(identifier) ? String.format("#define %s %s", identifier, value) : null);
+		return addInclude(identifier, String.format("#define %s %s", identifier, value));
 	}
 
 	public ShaderIncludes define(String identifier, boolean value) {
-		return addIncludeLoader(key ->
-			key.equals(identifier) ? String.format("#define %s %d", identifier, value ? 1 : 0) : null);
+		return define(identifier, String.format("%d", value ? 1 : 0));
 	}
 
 	public ShaderIncludes define(String identifier, int value) {
-		return addIncludeLoader(key ->
-			key.equals(identifier) ? String.format("#define %s %d", identifier, value) : null);
+		return define(identifier, String.format("%d", value));
 	}
 
 	/**
 	 * Define a single-precision float shader constant. OpenCL warns when using doubles in float contexts.
 	 */
 	public ShaderIncludes define(String identifier, float value) {
-		return addIncludeLoader(key ->
-			key.equals(identifier) ? String.format("#define %s %ff", identifier, value) : null);
+		return define(identifier, String.format("%ff", value));
 	}
 
 	/**
 	 * Define a double-precision float shader constant.
 	 */
 	public ShaderIncludes define(String identifier, double value) {
-		return addIncludeLoader(key ->
-			key.equals(identifier) ? String.format("#define %s %f", identifier, value) : null);
+		return define(identifier, String.format("%f", value));
 	}
 
 	public ShaderIncludes define(String identifier, Enum<?> enumValue) {
-		return addIncludeLoader(key ->
-			key.equals(identifier) ? String.format("#define %s %d", identifier, enumValue.ordinal()) : null);
-	}
-
-	public ShaderIncludes define(String identifier, Supplier<String> supplier) {
-		return addIncludeLoader(key -> key.equals(identifier) ? supplier.get() : null);
+		return define(identifier, String.format("%d", enumValue.ordinal()));
 	}
 }

@@ -14,7 +14,7 @@ public class ModelSortingComputeProgram extends ShaderProgram {
 
 	@Override
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		super.compile(includes.copy()
+		super.compile(includes
 			.define("THREAD_COUNT", threadCount)
 			.define("FACES_PER_THREAD", facesPerThread));
 	}
