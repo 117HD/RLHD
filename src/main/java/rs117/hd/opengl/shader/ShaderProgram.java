@@ -69,11 +69,11 @@ public class ShaderProgram {
 			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
 	}
 
-	public void validate() throws ShaderException {
+	public void validate() {
 		glValidateProgram(program);
 		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
 			String err = glGetProgramInfoLog(program);
-			throw new ShaderException(err);
+			log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
 		}
 	}
 
