@@ -90,7 +90,7 @@ public class ShadowMapOverlay extends Overlay {
 		var bounds = getBounds();
 
 		clientThread.invoke(() -> {
-			if (plugin.uiProgram.isValid())
+			if (!plugin.uiProgram.isValid())
 				return;
 
 			plugin.uiProgram.use();

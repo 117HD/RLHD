@@ -6,6 +6,7 @@ layout(std140) uniform UIUniforms {
 
     float colorBlindnessIntensity;
     vec4 alphaOverlay;
+    ivec4 shadowMapOverlayDimensions;
 
     bool showGammaCalibration;
     float gammaCalibrationTimer;

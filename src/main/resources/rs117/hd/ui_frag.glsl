@@ -41,7 +41,6 @@ uniform sampler2D uiTexture;
 
 #if SHADOW_MAP_OVERLAY
 uniform sampler2D shadowMap;
-uniform ivec4 shadowMapOverlayDimensions;
 #endif
 
 #if UI_SCALING_MODE == SAMPLING_XBR
