@@ -38274,9 +38274,8 @@
     ]
   },
   {
-    "description": "Mine Spotlight",
+    "description": "Mime Spotlight",
     "offset": [ 0, 220, 0 ],
-    "alignment": "CENTER",
     "radius": 500,
     "strength": 30,
     "color": [
@@ -38296,9 +38295,8 @@
     "animationIds": [ 1136 ]
   },
   {
-    "description": "Mine Exit Sign",
+    "description": "Mime Exit Sign",
     "offset": [ -30, 40, 0 ],
-    "alignment": "CENTER",
     "radius": 125,
     "strength": 10,
     "color": [
@@ -38313,5 +38311,131 @@
       "MACRO_EXITSIGN"
     ],
     "animationIds": [ 1136 ]
+  },
+  {
+    "description": "Pinball Green Buzzer",
+    "offset": [ 60, 300, -60 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      "PINBALL_LARGE_BUZZER_QUARTER_GREEN"
+    ]
+  },
+  {
+    "description": "Pinball Blue Buzzer",
+    "offset": [ 60, 300, -60 ],
+    "radius": 475,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      "PINBALL_LARGE_BUZZER_QUARTER_BLUE"
+    ]
+  },
+  {
+    "description": "Pinball Red Buzzer",
+    "offset": [ 0, 300, 0 ],
+    "radius": 225,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      "PINBALL_ROOF_TOP_DECOR"
+    ]
+  },
+  {
+    "description": "Pinball Green Ambience 1",
+    "offset": [ 600, 600, 600 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Green Ambience 2",
+    "offset": [ 1800, 600, -500 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Blue Ambience 1",
+    "offset": [ 600, 400, -500 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Blue Ambience 2",
+    "offset": [ 1600, 500, 600 ],
+    "radius": 1000,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Red Ambience",
+    "offset": [ 1100, 500, 900 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
   }
 ]

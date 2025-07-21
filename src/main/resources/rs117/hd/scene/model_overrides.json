@@ -5772,6 +5772,7 @@
   {
     "description": "Pale rock walls - Top",
     "baseMaterial": "ROCK_3",
+    "hideInAreas": [ "RANDOM_EVENT_PINBALL"],
     "objectIds": [
       "DEATH_MOUNTAIN_CAVEWALL_TOP",
       "DEATH_MOUNTAIN_CAVEWALL_TOP5",
@@ -16974,6 +16975,28 @@
       "MACRO_MAZE_WALLLOW_SAFE2",
       "MACRO_MAZE_WALLLOW_SAFE3",
       "MACRO_MAZE_WALLLOW_SAFE4"
+    ]
+  },
+  {
+    "description": "Pinball Random Event - Everything",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PINBALL_HIGH_PURPLE_WALL",
+      "PINBALL_ROOF_TOP",
+      "PINBALL_ROOF_TOP_DECOR",
+      "PINBALL_LARGE_BUZZER_QUARTER_BLUE",
+      "PINBALL_ROOF_TOP_DIAG",
+      "PINBALL_LARGE_BUZZER_QUARTER_GREEN",
+      "PINBALL_PURPLE_LOW_WALL_END",
+      "PINBALL_TUNNEL_HOLE",
+      "PINBALL_LOW_PURPLE_WALL",
+      "PINBALL_LOW_PURPLE_WALL_FILLER",
+      "PINBALL_CHICANE_RHT",
+      "PINBALL_CHICANE_LFT",
+      "PINBALL_EXIT"
     ]
   },
   {

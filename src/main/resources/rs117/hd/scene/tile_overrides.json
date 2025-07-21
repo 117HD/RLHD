@@ -446,6 +446,18 @@
     "shiftLightness": 12
   },
   {
+    "name": "PINBALL_FLOOR",
+    "area": "RANDOM_EVENT_PINBALL",
+    "overlayIds": [
+      0,
+      29
+    ],
+    "underlayIds": [
+      55
+    ],
+    "groundMaterial": "NONE"
+  },
+  {
     "name": "Al Kharid to Varrock Gate Grass Fix",
     "area": "Al Kharid to Varrock Gate Grass Fix",
     "underlayIds": [ 52 ],

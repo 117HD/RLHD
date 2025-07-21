@@ -5982,6 +5982,10 @@
     "hideOtherAreas": true
   },
   {
+    "name": "RANDOM_EVENT_PINBALL",
+    "aabbs": [ [ 1961, 5033, 1982, 5054 ] ]
+  },
+  {
     "name": "KELDAGRIM_RAT_PITS",
     "regions": [ 7753 ],
     "hideOtherAreas": true
