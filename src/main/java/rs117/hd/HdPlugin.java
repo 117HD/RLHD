@@ -93,7 +93,8 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
-import rs117.hd.opengl.shader.ComputeModelShaderProgram;
+import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
+import rs117.hd.opengl.shader.ModelSortingComputeProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderProgram;
@@ -309,8 +310,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public ShadowShaderProgram fastShadowProgram = new ShadowShaderProgram(ShadowMode.FAST);
 	public ShadowShaderProgram detailedShadowProgram = new ShadowShaderProgram(ShadowMode.DETAILED);
 
-	public ComputeModelShaderProgram modelPassthroughComputeProgram = new ComputeModelShaderProgram(true);
-	public ComputeModelShaderProgram[] modelSortingComputePrograms = {};
+	public ModelPassthroughComputeProgram modelPassthroughComputeProgram = new ModelPassthroughComputeProgram();
+	public ModelSortingComputeProgram[] modelSortingComputePrograms = {};
 
 	private int interfaceTexture;
 	private int interfacePbo;
@@ -865,22 +866,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else {
 			modelPassthroughComputeProgram.compile(template);
 
-			modelSortingComputePrograms = new ComputeModelShaderProgram[numSortingBins];
+			modelSortingComputePrograms = new ModelSortingComputeProgram[numSortingBins];
 			for (int i = 0; i < numSortingBins; i++) {
 				int faceCount = modelSortingBinFaceCounts[i];
 				int threadCount = modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
-				modelSortingComputePrograms[i] = new ComputeModelShaderProgram(false);
-				modelSortingComputePrograms[i].compile(
-					template.copy()
-						.define("THREAD_COUNT", threadCount)
-						.define("FACES_PER_THREAD", facesPerThread));
+				modelSortingComputePrograms[i] = new ModelSortingComputeProgram(threadCount, facesPerThread);
+				modelSortingComputePrograms[i].compile(template);
 			}
 		}
 
 		// Bind texture samplers before validating, else the validation fails
 		sceneProgram.use();
-
 		sceneProgram.uniTextureArray.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 		sceneProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
 
