@@ -395,7 +395,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportOffsetY;
 	private int viewportWidth;
 	private int viewportHeight;
-
+	private int renderViewportWidth;
+	private int renderViewportHeight;
 
 
 	// Configs used frequently enough to be worth caching
@@ -1157,9 +1158,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initTiledLighting() {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
-		// TODO: Should this be a quality setting instead?
-		tileCountX = viewportWidth / 16;
-		tileCountY = viewportHeight / 16;
+		final int tileSize = 16;
+		tileCountX = renderViewportWidth / tileSize;
+		tileCountY = renderViewportHeight / tileSize;
 
 		fboTiledLighting = glGenFramebuffers();
 
@@ -1917,8 +1918,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
-			int renderViewportHeight = viewportHeight;
-			int renderViewportWidth = viewportWidth;
+			int lastRenderViewportWidth = renderViewportWidth;
+			int lastRenderViewportHeight = renderViewportHeight;
+			renderViewportHeight = viewportHeight;
+			renderViewportWidth = viewportWidth;
 
 			if (client.isStretchedEnabled()) {
 				Dimension dim = client.getStretchedDimensions();
@@ -1977,7 +1980,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					stopPlugin();
 					return;
 				}
+			}
 
+			// Check if the tiledLighting FBO needs to be recreated
+			if (lastRenderViewportWidth != renderViewportWidth ||
+				lastRenderViewportHeight != renderViewportHeight) {
 				destroyTiledLighting();
 				initTiledLighting();
 			}
