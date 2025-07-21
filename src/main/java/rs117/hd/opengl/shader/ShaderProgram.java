@@ -9,16 +9,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
 
-import static org.lwjgl.opengl.GL33.GL_FALSE;
-import static org.lwjgl.opengl.GL33.GL_VALIDATE_STATUS;
-import static org.lwjgl.opengl.GL33.glDeleteProgram;
-import static org.lwjgl.opengl.GL33.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL33.glGetProgrami;
-import static org.lwjgl.opengl.GL33.glGetUniformBlockIndex;
-import static org.lwjgl.opengl.GL33.glGetUniformLocation;
-import static org.lwjgl.opengl.GL33.glUniformBlockBinding;
-import static org.lwjgl.opengl.GL33.glUseProgram;
-import static org.lwjgl.opengl.GL33.glValidateProgram;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class ShaderProgram {
@@ -30,28 +21,29 @@ public class ShaderProgram {
 	private final List<UniformProperty<?>> uniformProperties = new ArrayList<>();
 	private final List<UniformBufferBlockPair> uniformBufferBlockPairs = new ArrayList<>();
 
-	@Setter private Shader shader;
+	@Setter
+	private Shader shader;
 	private int program;
 
 	public ShaderProgram compile(Template template) throws ShaderException, IOException {
-		if (program != 0) {
+		int newProgram = shader.compile(template);
+
+		if (isValid())
 			destroy();
-		}
-		program = shader.compile(template);
 
-		if(program != 0) {
-			for (UniformProperty<?> prop : uniformProperties) {
-				prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
-			}
+		program = newProgram;
+		assert isValid();
 
-			for(UniformBuffer ubo : template.getUniformBuffers()) {
-				int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
-				if(bindingIndex != -1) {
-					UniformBufferBlockPair newPair = new UniformBufferBlockPair();
-					newPair.bindingIndex = bindingIndex;
-					newPair.buffer = ubo;
-					uniformBufferBlockPairs.add(newPair);
-				}
+		for (UniformProperty<?> prop : uniformProperties)
+			prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
+
+		for (UniformBuffer ubo : template.getUniformBuffers()) {
+			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
+			if (bindingIndex != -1) {
+				UniformBufferBlockPair newPair = new UniformBufferBlockPair();
+				newPair.bindingIndex = bindingIndex;
+				newPair.buffer = ubo;
+				uniformBufferBlockPairs.add(newPair);
 			}
 		}
 
@@ -69,8 +61,8 @@ public class ShaderProgram {
 	}
 
 	public <T extends UniformBuffer> T getUniformBufferBlock(int UniformBlockIndex) {
-		for(UniformBufferBlockPair pair : uniformBufferBlockPairs) {
-			if(pair.buffer.getUniformBlockIndex() == UniformBlockIndex) {
+		for (UniformBufferBlockPair pair : uniformBufferBlockPairs) {
+			if (pair.buffer.getUniformBlockIndex() == UniformBlockIndex) {
 				return (T) pair.buffer;
 			}
 		}
@@ -81,9 +73,8 @@ public class ShaderProgram {
 		assert program != 0;
 		glUseProgram(program);
 
-		for(UniformBufferBlockPair pair : uniformBufferBlockPairs) {
+		for (UniformBufferBlockPair pair : uniformBufferBlockPairs)
 			glUniformBlockBinding(program, pair.bindingIndex, pair.buffer.getUniformBlockIndex());
-		}
 	}
 
 	public void validate() throws ShaderException {
@@ -95,23 +86,19 @@ public class ShaderProgram {
 	}
 
 	public static <T extends ShaderProgram> void destroyAll(T[] programs) {
-		if(programs != null){
-			for(T program : programs) {
-				if(program != null) {
+		if (programs != null)
+			for (T program : programs)
+				if (program != null)
 					program.destroy();
-				}
-			}
-		}
 	}
 
 	public void destroy() {
-		if(program != 0) {
+		if (program != 0) {
 			glDeleteProgram(program);
 			program = 0;
 
-			for(UniformProperty<?> prop : uniformProperties){
+			for (UniformProperty<?> prop : uniformProperties)
 				prop.uniformIndex = -1;
-			}
 		}
 	}
 
@@ -131,9 +118,8 @@ public class ShaderProgram {
 		}
 
 		public void set(T value) {
-			if(uniformIndex != -1) {
+			if (uniformIndex != -1)
 				glFunction.set(uniformIndex, value);
-			}
 		}
 	}
 }

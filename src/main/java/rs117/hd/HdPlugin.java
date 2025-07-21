@@ -382,8 +382,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportWidth;
 	private int viewportHeight;
 
-
-
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
@@ -1972,7 +1970,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
 
-				if(configShadowMode == ShadowMode.DETAILED){
+				if (configShadowMode == ShadowMode.DETAILED) {
 					detailedShadowProgram.use();
 				} else {
 					fastShadowProgram.use();

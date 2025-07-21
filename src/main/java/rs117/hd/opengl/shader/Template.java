@@ -37,13 +37,11 @@ import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.utils.ResourcePath;
 
 @Slf4j
-public class Template
-{
-	enum IncludeType { GLSL, C, UNKNOWN }
+public class Template {
+	enum IncludeType {GLSL, C, UNKNOWN}
 
 	@FunctionalInterface
-	public interface IncludeLoader
-	{
+	public interface IncludeLoader {
 		String load(String path) throws IOException;
 	}
 
@@ -57,8 +55,7 @@ public class Template
 	final Stack<Integer> includeStack = new Stack<>();
 	final ArrayList<String> includeList = new ArrayList<>();
 
-	public Template copy()
-	{
+	public Template copy() {
 		var clone = new Template();
 		clone.loaders.addAll(this.loaders);
 		clone.uniformBuffers.addAll(this.uniformBuffers);
@@ -66,16 +63,13 @@ public class Template
 		return clone;
 	}
 
-	public String process(String str) throws IOException
-	{
+	public String process(String str) throws IOException {
 		StringBuilder sb = new StringBuilder();
 		int lineCount = 0;
-		for (String line : str.split("\r?\n"))
-		{
+		for (String line : str.split("\r?\n")) {
 			lineCount++;
 			String trimmed = line.trim();
-			if (trimmed.startsWith("#include "))
-			{
+			if (trimmed.startsWith("#include ")) {
 				int currentIndex = includeStack.peek();
 				String currentFile = includeList.get(currentIndex);
 
@@ -92,17 +86,13 @@ public class Template
 					nextLineOffset = 0;
 				}
 
-				switch (includeType)
-				{
+				switch (includeType) {
 					case GLSL:
-						if (includeContents.trim().startsWith("#version "))
-						{
+						if (includeContents.trim().startsWith("#version ")) {
 							// In GLSL, no preprocessor directive can precede #version, so handle included files
 							// starting with a #version directive differently.
 							sb.append(includeContents);
-						}
-						else
-						{
+						} else {
 							// In GLSL, the #line directive takes a line number and a source file index, which we map to
 							// an include-filename through tracking the list of includes.
 							// Source: https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)#.23line_directive
@@ -141,9 +131,7 @@ public class Template
 
 				if (Shader.DUMP_SHADERS)
 					sb.append("// End include of ").append(includeFile).append('\n');
-			}
-			else if (trimmed.startsWith("#pragma once"))
-			{
+			} else if (trimmed.startsWith("#pragma once")) {
 				int currentIndex = includeList.size() - 1;
 				String currentInclude = includeList.get(currentIndex);
 				if (includeList.indexOf(currentInclude) != currentIndex) {
@@ -152,22 +140,17 @@ public class Template
 				} else {
 					sb.append("// #pragma once - first include\n");
 				}
-			}
-			else
-			{
+			} else {
 				sb.append(line).append('\n');
 			}
 		}
 		return sb.toString();
 	}
 
-	private String loadInternal(String path) throws IOException
-	{
-		for (var loader : loaders)
-		{
+	private String loadInternal(String path) throws IOException {
+		for (var loader : loaders) {
 			String value = loader.load(path);
-			if (value != null)
-			{
+			if (value != null) {
 				return process(value);
 			}
 		}
@@ -175,14 +158,12 @@ public class Template
 		return "";
 	}
 
-	public String load(String filename) throws IOException
-	{
+	public String load(String filename) throws IOException {
 		includeList.clear();
 		includeList.add(filename);
 		includeStack.add(0);
 
-		switch (ResourcePath.path(filename).getExtension().toLowerCase())
-		{
+		switch (ResourcePath.path(filename).getExtension().toLowerCase()) {
 			case "glsl":
 				includeType = IncludeType.GLSL;
 				break;
@@ -203,19 +184,16 @@ public class Template
 		return null;
 	}
 
-	public Template addIncludeLoader(IncludeLoader resolver)
-	{
+	public Template addIncludeLoader(IncludeLoader resolver) {
 		loaders.add(resolver);
 		return this;
 	}
 
-	public Template addIncludePath(Class<?> clazz)
-	{
+	public Template addIncludePath(Class<?> clazz) {
 		return addIncludePath(ResourcePath.path(clazz), false);
 	}
 
-	public Template addIncludePath(ResourcePath includePath, boolean isRoot)
-	{
+	public Template addIncludePath(ResourcePath includePath, boolean isRoot) {
 		if (isRoot) {
 			rootPath = includePath;
 		}
@@ -253,33 +231,28 @@ public class Template
 		});
 	}
 
-	public Template addInclude(String identifier, String value)
-	{
+	public Template addInclude(String identifier, String value) {
 		return addIncludeLoader(key -> key.equals(identifier) ? value : null);
 	}
 
-	public Template addUniformBuffer(UniformBuffer ubo)
-	{
-		if(!uniformBuffers.contains(ubo)) {
+	public Template addUniformBuffer(UniformBuffer ubo) {
+		if (!uniformBuffers.contains(ubo)) {
 			uniformBuffers.add(ubo);
 		}
 		return this;
 	}
 
-	public Template define(String identifier, String value)
-	{
+	public Template define(String identifier, String value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %s", identifier, value) : null);
 	}
 
-	public Template define(String identifier, boolean value)
-	{
+	public Template define(String identifier, boolean value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %d", identifier, value ? 1 : 0) : null);
 	}
 
-	public Template define(String identifier, int value)
-	{
+	public Template define(String identifier, int value) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %d", identifier, value) : null);
 	}
@@ -300,14 +273,12 @@ public class Template
 			key.equals(identifier) ? String.format("#define %s %f", identifier, value) : null);
 	}
 
-	public Template define(String identifier, Enum<?> enumValue)
-	{
+	public Template define(String identifier, Enum<?> enumValue) {
 		return addIncludeLoader(key ->
 			key.equals(identifier) ? String.format("#define %s %d", identifier, enumValue.ordinal()) : null);
 	}
 
-	public Template define(String identifier, Supplier<String> supplier)
-	{
+	public Template define(String identifier, Supplier<String> supplier) {
 		return addIncludeLoader(key -> key.equals(identifier) ? supplier.get() : null);
 	}
 }

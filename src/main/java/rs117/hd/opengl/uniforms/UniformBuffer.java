@@ -188,8 +188,10 @@ public abstract class UniformBuffer {
 	private int dirtyHighTide = 0;
 	private ByteBuffer data;
 
-	@Getter private final String uniformBlockName;
-	@Getter private int uniformBlockIndex;
+	@Getter
+	private final String uniformBlockName;
+	@Getter
+	private int uniformBlockIndex;
 
 	protected UniformBuffer(GLBuffer glBuffer, String uniformBlockName) {
 		this.glBuffer = glBuffer;

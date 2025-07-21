@@ -2,12 +2,11 @@ package rs117.hd.opengl.shader;
 
 import org.lwjgl.opengl.*;
 
-import static org.lwjgl.opengl.GL20C.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20C.GL_VERTEX_SHADER;
+import static org.lwjgl.opengl.GL33C.*;
 
 public class UIShaderProgram extends ShaderProgram {
-	public UniformProperty<Integer> uniTextureArray = addUniformProperty("uniUiTexture", GL33::glUniform1i);
-	public UniformProperty<Integer> uniShadowMap = addUniformProperty("shadowMap", GL33::glUniform1i);
+	public UniformProperty<Integer> uniTextureArray = addUniformProperty("uniUiTexture", GL33C::glUniform1i);
+	public UniformProperty<Integer> uniShadowMap = addUniformProperty("shadowMap", GL33C::glUniform1i);
 
 	public UIShaderProgram() {
 		setShader(new Shader()

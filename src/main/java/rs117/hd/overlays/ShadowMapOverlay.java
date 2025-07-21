@@ -20,7 +20,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.uniforms.UIUniforms;
 
-import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 import static rs117.hd.HdPlugin.UNIFORM_BLOCK_UI;
@@ -81,9 +80,8 @@ public class ShadowMapOverlay extends Overlay {
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
 			plugin.uiProgram.use();
 			UIUniforms uboUI = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
-			if(uboUI != null) {
+			if (uboUI != null)
 				uboUI.shadowMapOverlayDimensions.set(0, 0, 0, 0);
-			}
 		}
 	}
 
@@ -98,7 +96,7 @@ public class ShadowMapOverlay extends Overlay {
 			plugin.uiProgram.use();
 			plugin.uiProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
 			UIUniforms uboUI = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
-			if(uboUI != null) {
+			if (uboUI != null) {
 				if (client.getGameState().getState() < GameState.LOGGED_IN.getState()) {
 					uboUI.shadowMapOverlayDimensions.set(0, 0, 0, 0);
 				} else {
@@ -118,7 +116,7 @@ public class ShadowMapOverlay extends Overlay {
 				}
 			}
 
-			plugin.checkGLErrors();
+			HdPlugin.checkGLErrors();
 		});
 
 		g.setColor(Color.BLACK);
