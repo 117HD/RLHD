@@ -323,13 +323,14 @@ public class OpenCLManager {
 				int threadCount = plugin.modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
 				sortingPrograms[i] = compileProgram(
-					stack, includes
-					.copy()
-					.define("THREAD_COUNT", threadCount)
-					.define("FACES_PER_THREAD", facesPerThread)
-					.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
-					.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
-					.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
+					stack,
+					includes
+						.copy()
+						.define("THREAD_COUNT", threadCount)
+						.define("FACES_PER_THREAD", facesPerThread)
+						.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
+						.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
+						.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
 						.loadFile("comp.cl")
 				);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
