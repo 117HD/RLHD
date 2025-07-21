@@ -637,10 +637,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				checkGLErrors();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
-			}
-			catch (Throwable err)
-			{
-				log.error("Error while starting 117HD", err);
+			} catch (Throwable err) {
+				log.error("Error while starting 117 HD", err);
 				stopPlugin();
 			}
 			return true;
@@ -805,6 +803,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	{
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		var includes = new ShaderIncludes()
+			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
@@ -830,6 +829,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
+			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
@@ -845,8 +845,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(uboLights)
-			.addUniformBuffer(uboCompute)
-			.addIncludePath(SHADER_PATH, true);
+			.addUniformBuffer(uboCompute);
 
 		textureManager.appendUniformBuffers(includes);
 
@@ -2558,6 +2557,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_WIREFRAME:
 								recompilePrograms = true;
 								break;
+							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_TRANSPARENCY:
 								recompilePrograms = true;
 								// fall-through

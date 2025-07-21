@@ -1,6 +1,5 @@
 package rs117.hd.opengl.shader;
 
-import java.io.IOException;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -20,11 +19,5 @@ public class ShadowShaderProgram extends ShaderProgram {
 		if (mode == ShadowMode.DETAILED)
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl");
 		setShaderTemplate(shaderTemplate);
-	}
-
-	@Override
-	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		super.compile(includes.copy()
-			.define("SHADOW_MODE", currentMode));
 	}
 }

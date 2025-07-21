@@ -313,7 +313,7 @@ public class OpenCLManager {
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
 				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
-			passthroughProgram = compileProgram(stack, includes.load("comp_unordered.cl"));
+			passthroughProgram = compileProgram(stack, includes.loadFile("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
 			sortingPrograms = new long[plugin.numSortingBins];
@@ -330,7 +330,7 @@ public class OpenCLManager {
 					.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
 					.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
 					.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
-					.load("comp.cl")
+						.loadFile("comp.cl")
 				);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
 			}

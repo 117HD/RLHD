@@ -87,7 +87,7 @@ public class ShaderTemplate
 					throw new ShaderException("Unable to create shader of type " + unit.type);
 				}
 
-				String source = includes.load(unit.filename);
+				String source = includes.loadFile(unit.filename);
 				if (DUMP_SHADERS)
 					dumpPath.resolve(unit.filename).writeString(source);
 

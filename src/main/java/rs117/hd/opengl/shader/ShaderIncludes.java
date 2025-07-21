@@ -25,13 +25,12 @@
 package rs117.hd.opengl.shader;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Stack;
 import java.util.function.Supplier;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
 import rs117.hd.utils.ResourcePath;
@@ -45,11 +44,10 @@ public class ShaderIncludes {
 		String load(String path) throws IOException;
 	}
 
-	private final List<IncludeLoader> loaders = new ArrayList<>();
-	private ResourcePath rootPath;
+	private final List<ResourcePath> includePaths = new ArrayList<>();
+	private final List<IncludeLoader> includeLoaders = new ArrayList<>();
 
-	@Getter
-	private final List<UniformBuffer> uniformBuffers = new ArrayList<>();
+	public final Set<UniformBuffer> uniformBuffers = new HashSet<>();
 
 	Type includeType = Type.UNKNOWN;
 	final Stack<Integer> includeStack = new Stack<>();
@@ -57,13 +55,35 @@ public class ShaderIncludes {
 
 	public ShaderIncludes copy() {
 		var clone = new ShaderIncludes();
-		clone.loaders.addAll(this.loaders);
-		clone.uniformBuffers.addAll(this.uniformBuffers);
-		clone.rootPath = this.rootPath;
+		clone.includePaths.addAll(includePaths);
+		clone.includeLoaders.addAll(includeLoaders);
+		clone.uniformBuffers.addAll(uniformBuffers);
 		return clone;
 	}
 
-	public String process(String str) throws IOException {
+	private static int nextUnescapedMatch(String s, int offset, char targetChar) {
+		int i;
+		while ((i = s.indexOf(targetChar, offset)) != -1) {
+			// Check if the char was escaped
+			int j = i - 1;
+			while (j >= 0 && s.charAt(j) == '\\')
+				j--;
+			if ((i - j) % 2 != 0)
+				break; // Not escaped
+			offset = i + 1;
+		}
+		return i;
+	}
+
+	private static int smallestIndex(int... indices) {
+		int smallest = -1;
+		for (int i : indices)
+			if (smallest == -1 || i != -1 && i < smallest)
+				smallest = i;
+		return smallest;
+	}
+
+	private String parse(String str) throws ShaderException, IOException {
 		StringBuilder sb = new StringBuilder();
 		int lineCount = 0;
 		for (String line : str.split("\r?\n")) {
@@ -73,17 +93,75 @@ public class ShaderIncludes {
 				int currentIndex = includeStack.peek();
 				String currentFile = includeList.get(currentIndex);
 
-				String includeFile = trimmed.substring(9);
+				String includeExpression = trimmed.substring(9).trim();
+				int startIndex = 1;
+				int endIndex;
+				int commentIndex = -1;
+				boolean isPath = false;
+				boolean isRelativePath = false;
+				switch (includeExpression.charAt(0)) {
+					case '"':
+						isPath = isRelativePath = true;
+						endIndex = nextUnescapedMatch(includeExpression, startIndex, '"');
+						break;
+					case '<':
+						isPath = true;
+						endIndex = nextUnescapedMatch(includeExpression, startIndex, '>');
+						break;
+					default:
+						startIndex = 0;
+						commentIndex = smallestIndex(
+							includeExpression.indexOf("//"),
+							includeExpression.indexOf("/*")
+						);
+						endIndex = smallestIndex(commentIndex, includeExpression.length());
+						break;
+				}
+
+				String includeString = "";
+				if (endIndex != -1)
+					includeString = includeExpression.substring(startIndex, endIndex).trim();
+				if (includeString.isEmpty()) {
+					throw new ShaderException(String.format(
+						"Syntax error in shader include in '%s' on line %d: %s",
+						currentFile,
+						lineCount,
+						includeExpression
+					));
+				}
+
 				int includeIndex = includeList.size();
-				includeList.add(includeFile);
+				includeList.add(includeString);
 				includeStack.push(includeIndex);
-				String includeContents = loadInternal(includeFile);
+
+				String includeContents = null;
+				if (isPath) {
+					if (isRelativePath)
+						includeString = ResourcePath.normalize(currentFile, "..", includeString);
+					includeContents = loadFileInternal(includeString);
+				} else {
+					for (var loader : includeLoaders) {
+						String value = loader.load(includeString);
+						if (value != null) {
+							includeContents = parse(value);
+							break;
+						}
+					}
+				}
+				if (includeContents == null) {
+					log.error("Failed to load include: {}", includeString);
+					includeContents = "";
+				}
+
 				includeStack.pop();
 
 				int nextLineOffset = 1;
+				if (commentIndex != -1)
+					nextLineOffset--;
+
 				if (ShaderTemplate.DUMP_SHADERS) {
-					sb.append("// Including ").append(includeFile).append('\n');
-					nextLineOffset = 0;
+					sb.append("// Including ").append(includeString).append('\n');
+					nextLineOffset--;
 				}
 
 				switch (includeType) {
@@ -115,7 +193,7 @@ public class ShaderIncludes {
 						// Source: https://gcc.gnu.org/onlinedocs/cpp/Line-Control.html
 						sb
 							.append("#line 1 \"") // Change to line 1 in the included file
-							.append(includeFile)
+							.append(includeString)
 							.append("\"\n")
 							.append(includeContents)
 							.append("#line ") // Return to the next line in the parent include
@@ -130,7 +208,10 @@ public class ShaderIncludes {
 				}
 
 				if (ShaderTemplate.DUMP_SHADERS)
-					sb.append("// End include of ").append(includeFile).append('\n');
+					sb.append("// End include of ").append(includeString).append('\n');
+
+				if (commentIndex != -1)
+					sb.append(includeExpression.substring(commentIndex)).append('\n');
 			} else if (trimmed.startsWith("#pragma once")) {
 				int currentIndex = includeList.size() - 1;
 				String currentInclude = includeList.get(currentIndex);
@@ -147,23 +228,22 @@ public class ShaderIncludes {
 		return sb.toString();
 	}
 
-	private String loadInternal(String path) throws IOException {
-		for (var loader : loaders) {
-			String value = loader.load(path);
-			if (value != null) {
-				return process(value);
-			}
+	private String loadFileInternal(String path) throws ShaderException, IOException {
+		for (var includePath : includePaths) {
+			var resourcePath = includePath.resolve(path);
+			if (resourcePath.exists())
+				return parse(resourcePath.loadString());
 		}
 
-		return "";
+		return null;
 	}
 
-	public String load(String filename) throws IOException {
+	public String loadFile(String path) throws ShaderException, IOException {
 		includeList.clear();
-		includeList.add(filename);
+		includeList.add(path);
 		includeStack.add(0);
 
-		switch (ResourcePath.path(filename).getExtension().toLowerCase()) {
+		switch (ResourcePath.path(path).getExtension().toLowerCase()) {
 			case "glsl":
 				includeType = Type.GLSL;
 				break;
@@ -177,58 +257,25 @@ public class ShaderIncludes {
 				break;
 		}
 
-		ResourcePath resolved = rootPath.resolve(filename);
-		if (resolved != null) {
-			return process(resolved.loadString());
-		}
-		return null;
+		String source = loadFileInternal(path);
+		if (source != null)
+			return source;
+
+		throw new IOException("Failed to load file: " + path);
 	}
 
 	public ShaderIncludes addIncludeLoader(IncludeLoader resolver) {
-		loaders.add(resolver);
+		includeLoaders.add(resolver);
 		return this;
 	}
 
 	public ShaderIncludes addIncludePath(Class<?> clazz) {
-		return addIncludePath(ResourcePath.path(clazz), false);
+		return addIncludePath(ResourcePath.path(clazz));
 	}
 
-	public ShaderIncludes addIncludePath(ResourcePath includePath, boolean isRoot) {
-		if (isRoot) {
-			rootPath = includePath;
-		}
-
-		return addIncludeLoader(path -> {
-			int quoteStartIDx = path.indexOf("\"");
-			int quoteEndIDx = path.indexOf("\"", quoteStartIDx + 1);
-			if (quoteStartIDx >= 0 && quoteEndIDx > quoteStartIDx) {
-				String relativePath = path.substring(quoteStartIDx + 1, quoteEndIDx);
-				String relativeFolder = "";
-				if (includeStack.size() >= 2) {
-					String processingFilePath = includeList.get(includeStack.get(includeStack.size() - 2));
-					Path parentFolder = Paths.get(processingFilePath).getParent();
-					if (parentFolder != null) {
-						relativeFolder = parentFolder.toString();
-					}
-				}
-
-				String fullPath = (relativeFolder.isEmpty() ? "" : relativeFolder + "/") + relativePath;
-				ResourcePath resolved = includePath.resolve(fullPath);
-				if (resolved.exists())
-					return resolved.loadString();
-				return null;
-			}
-
-			int bracketStartIDx = path.indexOf("<");
-			int bracketEndIDx = path.indexOf(">", bracketStartIDx + 1);
-			if (bracketStartIDx >= 0 && bracketEndIDx > bracketStartIDx) {
-				String absolutePath = path.substring(bracketStartIDx + 1, bracketEndIDx);
-				ResourcePath resolved = includePath.resolve(absolutePath);
-				if (resolved.exists())
-					return resolved.loadString();
-			}
-			return null;
-		});
+	public ShaderIncludes addIncludePath(ResourcePath includePath) {
+		includePaths.add(includePath.chroot());
+		return this;
 	}
 
 	public ShaderIncludes addInclude(String identifier, String value) {
@@ -236,9 +283,7 @@ public class ShaderIncludes {
 	}
 
 	public ShaderIncludes addUniformBuffer(UniformBuffer ubo) {
-		if (!uniformBuffers.contains(ubo)) {
-			uniformBuffers.add(ubo);
-		}
+		uniformBuffers.add(ubo);
 		return this;
 	}
 

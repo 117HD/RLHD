@@ -23,8 +23,6 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <to_screen.glsl>
-
 /*
  * Rotate a vertex by a given orientation in JAU
  */

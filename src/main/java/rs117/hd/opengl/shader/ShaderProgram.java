@@ -37,7 +37,7 @@ public class ShaderProgram {
 		for (var prop : uniformProperties)
 			prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
 
-		for (UniformBuffer ubo : includes.getUniformBuffers()) {
+		for (var ubo : includes.uniformBuffers) {
 			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
 			if (bindingIndex != -1)
 				uniformBufferBlockPairs.add(new UniformBufferBlockPair(ubo, bindingIndex));
