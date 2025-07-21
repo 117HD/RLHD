@@ -1,12 +1,10 @@
 package rs117.hd.opengl.shader;
 
-import org.lwjgl.opengl.*;
-
 import static org.lwjgl.opengl.GL33C.*;
 
 public class SceneShaderProgram extends ShaderProgram {
-	public UniformProperty<Integer> uniTextureArray = addUniformProperty("textureArray", GL33C::glUniform1i);
-	public UniformProperty<Integer> uniShadowMap = addUniformProperty("shadowMap", GL33C::glUniform1i);
+	public Uniform1i uniTextureArray = addUniform1i("textureArray");
+	public Uniform1i uniShadowMap = addUniform1i("shadowMap");
 
 	public SceneShaderProgram() {
 		setShader(new Shader()

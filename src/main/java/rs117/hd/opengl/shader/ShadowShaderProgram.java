@@ -1,12 +1,11 @@
 package rs117.hd.opengl.shader;
 
-import org.lwjgl.opengl.*;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
 
 public class ShadowShaderProgram extends ShaderProgram {
-	public UniformProperty<Integer> uniShadowMap = addUniformProperty("textureArray", GL33C::glUniform1i);
+	public Uniform1i uniShadowMap = addUniform1i("textureArray");
 
 	public ShadowShaderProgram(ShadowMode mode) {
 		Shader shadowShader = new Shader()

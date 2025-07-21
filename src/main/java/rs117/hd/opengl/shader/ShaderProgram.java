@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
@@ -13,12 +12,13 @@ import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class ShaderProgram {
+	@AllArgsConstructor
 	private static class UniformBufferBlockPair {
 		public UniformBuffer buffer;
 		public int bindingIndex;
 	}
 
-	private final List<UniformProperty<?>> uniformProperties = new ArrayList<>();
+	private final List<UniformProperty> uniformProperties = new ArrayList<>();
 	private final List<UniformBufferBlockPair> uniformBufferBlockPairs = new ArrayList<>();
 
 	@Setter
@@ -34,17 +34,13 @@ public class ShaderProgram {
 		program = newProgram;
 		assert isValid();
 
-		for (UniformProperty<?> prop : uniformProperties)
+		for (var prop : uniformProperties)
 			prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
 
 		for (UniformBuffer ubo : template.getUniformBuffers()) {
 			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
-			if (bindingIndex != -1) {
-				UniformBufferBlockPair newPair = new UniformBufferBlockPair();
-				newPair.bindingIndex = bindingIndex;
-				newPair.buffer = ubo;
-				uniformBufferBlockPairs.add(newPair);
-			}
+			if (bindingIndex != -1)
+				uniformBufferBlockPairs.add(new UniformBufferBlockPair(ubo, bindingIndex));
 		}
 
 		return this;
@@ -54,18 +50,11 @@ public class ShaderProgram {
 		return program != 0;
 	}
 
-	public <T> UniformProperty<T> addUniformProperty(String uniformName, UniformFunction<T> glFunction) {
-		UniformProperty<T> newProperty = new UniformProperty<>(uniformName, glFunction);
-		uniformProperties.add(newProperty);
-		return newProperty;
-	}
-
+	@SuppressWarnings("unchecked")
 	public <T extends UniformBuffer> T getUniformBufferBlock(int UniformBlockIndex) {
-		for (UniformBufferBlockPair pair : uniformBufferBlockPairs) {
-			if (pair.buffer.getUniformBlockIndex() == UniformBlockIndex) {
+		for (UniformBufferBlockPair pair : uniformBufferBlockPairs)
+			if (pair.buffer.getUniformBlockIndex() == UniformBlockIndex)
 				return (T) pair.buffer;
-			}
-		}
 		return null;
 	}
 
@@ -93,33 +82,35 @@ public class ShaderProgram {
 	}
 
 	public void destroy() {
-		if (program != 0) {
-			glDeleteProgram(program);
-			program = 0;
+		if (program == 0)
+			return;
 
-			for (UniformProperty<?> prop : uniformProperties)
-				prop.uniformIndex = -1;
+		glDeleteProgram(program);
+		program = 0;
+
+		for (var prop : uniformProperties)
+			prop.destroy();
+	}
+
+	private static class UniformProperty {
+		String uniformName;
+		int uniformIndex;
+
+		void destroy() {
+			uniformIndex = -1;
 		}
 	}
 
-	public interface UniformFunction<T> {
-		void set(int uniformIDx, T value);
+	public static class Uniform1i extends UniformProperty {
+		public void set(int value) {
+			glUniform1i(uniformIndex, value);
+		}
 	}
 
-	@AllArgsConstructor
-	@RequiredArgsConstructor
-	public static class UniformProperty<T> {
-		private final String uniformName;
-		private final UniformFunction<T> glFunction;
-		private int uniformIndex = -1;
-
-		public boolean isValid() {
-			return uniformIndex != -1;
-		}
-
-		public void set(T value) {
-			if (uniformIndex != -1)
-				glFunction.set(uniformIndex, value);
-		}
+	public Uniform1i addUniform1i(String uniformName) {
+		var newProperty = new Uniform1i();
+		newProperty.uniformName = uniformName;
+		uniformProperties.add(newProperty);
+		return newProperty;
 	}
 }
