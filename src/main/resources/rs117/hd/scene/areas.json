@@ -5986,6 +5986,10 @@
     "aabbs": [ [ 1961, 5033, 1982, 5054 ] ]
   },
   {
+    "name": "RANDOM_EVENT_EVIL_TWIN",
+    "aabbs": [ [ 1856, 5120, 1879, 5143 ] ]
+  },
+  {
     "name": "KELDAGRIM_RAT_PITS",
     "regions": [ 7753 ],
     "hideOtherAreas": true

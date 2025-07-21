@@ -20359,7 +20359,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FAI_FALADOR_HOUSE_TORCH"
+      "FAI_FALADOR_HOUSE_TORCH",
+      "GRAB_EVIL_TWIN_TORCH"
     ]
   },
   {

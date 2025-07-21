@@ -458,6 +458,23 @@
     "groundMaterial": "NONE"
   },
   {
+    "name": "EVIL_TWIN_FLOOR",
+    "area": "RANDOM_EVENT_EVIL_TWIN",
+    "overlayIds": [
+      0,
+      22,
+      23,
+      36
+    ],
+    "underlayIds": [
+      64
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "uvScale": 0.75,
+    "minLightness": 16,
+    "shiftLightness": 3
+  },
+  {
     "name": "Al Kharid to Varrock Gate Grass Fix",
     "area": "Al Kharid to Varrock Gate Grass Fix",
     "underlayIds": [ 52 ],
