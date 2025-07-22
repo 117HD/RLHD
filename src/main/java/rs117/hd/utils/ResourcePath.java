@@ -37,7 +37,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.reflect.Type;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -82,11 +81,16 @@ public class ResourcePath {
 		return new ResourcePath(parts);
 	}
 
-	public static ResourcePath path(Class<?> root, String... parts) {
-		return new ClassResourcePath(root).resolve(parts);
+	public static ResourcePath path(Class<?> clazz, String... parts) {
+		String path = normalize(clazz.getPackage().getName().replace(".", "/"), parts);
+		return path(clazz.getClassLoader(), path);
 	}
 
 	public static ResourcePath path(ClassLoader root, String... parts) {
+		// Redirect class resources to the specified resource path during development
+		if (RESOURCE_PATH != null)
+			return RESOURCE_PATH.resolve(parts);
+
 		return new ClassResourcePath(root).resolve(parts);
 	}
 
@@ -117,6 +121,7 @@ public class ResourcePath {
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public ResourcePath mkdirs() {
 		var path = this;
+		// Assume paths with an extension are file paths, not directories
 		if (!getExtension().isEmpty())
 			path = path.resolve("..");
 		path.toFile().mkdirs();
@@ -202,18 +207,9 @@ public class ResourcePath {
 	}
 
 	public File toFile() {
-		if (!isFileSystemResource())
-			throw new IllegalStateException("Not a file: " + this);
-		return toPath().toFile();
-	}
-
-	public URL toURL() throws MalformedURLException {
-		assert path != null;
-		if (root != null) {
-			var rootUrl = root.toURL();
-			return new URL(rootUrl, rootUrl.getProtocol() + ":" + normalize(rootUrl.getPath(), new String[] { path }));
-		}
-		return new URL("file:" + (isAbsolute(path) ? "/" + path : "./" + path));
+		if (isFileSystemResource())
+			return toPath().toFile();
+		throw new IllegalStateException("Not a file: " + this);
 	}
 
 	public BufferedReader toReader() throws IOException {
@@ -235,14 +231,10 @@ public class ResourcePath {
 		return new FileOutputStream(toFile());
 	}
 
-	public boolean isClassResource() {
-		if (root != null)
-			return root.isClassResource();
-		return false;
-	}
-
 	public boolean isFileSystemResource() {
-		return !isClassResource();
+		if (root != null)
+			return root.isFileSystemResource();
+		return true;
 	}
 
 	/**
@@ -253,10 +245,6 @@ public class ResourcePath {
 	 */
 	public FileWatcher.UnregisterCallback watch(BiConsumer<ResourcePath, Boolean> changeHandler) {
 		var path = this;
-
-		// Redirect to the project folder during development
-		if (RESOURCE_PATH != null)
-			path = RESOURCE_PATH.resolve(path.path);
 
 		// Load once up front
 		changeHandler.accept(path, true);
@@ -491,13 +479,9 @@ public class ResourcePath {
 	private static class ClassResourcePath extends ResourcePath {
 		public final ClassLoader classLoader;
 
-		public ClassResourcePath(@Nonnull ClassLoader classLoader, String... parts) {
+		private ClassResourcePath(@Nonnull ClassLoader classLoader, String... parts) {
 			super(parts);
 			this.classLoader = classLoader;
-		}
-
-		public ClassResourcePath(@Nonnull Class<?> clazz, String... parts) {
-			this(clazz.getClassLoader(), normalize(clazz.getPackage().getName().replace(".", "/"), parts));
 		}
 
 		@Override
@@ -507,16 +491,6 @@ public class ResourcePath {
 
 		private URL toResource() {
 			assert path != null;
-
-			// Attempt to load resource from project resource folder if it's not located in a jar
-			if (RESOURCE_PATH != null) {
-				try {
-					return RESOURCE_PATH.resolve(path).toURL();
-				} catch (MalformedURLException ex) {
-					throw new RuntimeException(ex);
-				}
-			}
-
 			return classLoader.getResource(stripLeadingSlash(path));
 		}
 
@@ -531,6 +505,11 @@ public class ResourcePath {
 			if (url == null)
 				throw new IOException("Unable to load resource: " + this);
 			return url.openStream();
+		}
+
+		@Override
+		public boolean isFileSystemResource() {
+			return false;
 		}
 	}
 }
