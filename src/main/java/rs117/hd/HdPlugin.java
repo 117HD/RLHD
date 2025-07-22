@@ -395,7 +395,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportOffsetY;
 	private int viewportWidth;
 	private int viewportHeight;
-
+	private int renderViewportWidth;
+	private int renderViewportHeight;
 
 
 	// Configs used frequently enough to be worth caching
@@ -1158,9 +1159,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initTiledLighting() {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
-		// TODO: Should this be a quality setting instead?
-		tileCountX = viewportWidth / 16;
-		tileCountY = viewportHeight / 16;
+		final int tileSize = 16;
+		tileCountX = renderViewportWidth / tileSize;
+		tileCountY = renderViewportHeight / tileSize;
 
 		fboTiledLighting = glGenFramebuffers();
 
@@ -1549,8 +1550,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
-				uboGlobal.viewportWidth.set(viewportWidth);
-				uboGlobal.viewportHeight.set(viewportHeight);
 				uboGlobal.upload();
 			}
 		}
@@ -1854,12 +1853,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+			glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			frameTimer.end(Timer.UPLOAD_UI);
 		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	@Override
@@ -1920,8 +1919,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
-			int renderViewportHeight = viewportHeight;
-			int renderViewportWidth = viewportWidth;
+			int lastRenderViewportWidth = renderViewportWidth;
+			int lastRenderViewportHeight = renderViewportHeight;
+			renderViewportHeight = viewportHeight;
+			renderViewportWidth = viewportWidth;
 
 			if (client.isStretchedEnabled()) {
 				Dimension dim = client.getStretchedDimensions();
@@ -1980,7 +1981,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					stopPlugin();
 					return;
 				}
+			}
 
+			// Check if the tiledLighting FBO needs to be recreated
+			if (lastRenderViewportWidth != renderViewportWidth ||
+				lastRenderViewportHeight != renderViewportHeight) {
 				destroyTiledLighting();
 				initTiledLighting();
 			}
@@ -2060,6 +2065,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 			uboGlobal.cameraPos.set(cameraPosition);
+			uboGlobal.viewportWidth.set(renderViewportWidth);
+			uboGlobal.viewportHeight.set(renderViewportHeight);
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
@@ -3195,8 +3202,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
+		long byteOffset = 4L * offset;
+		long numBytes = 4L * data.remaining();
+		glBuffer.ensureCapacity(byteOffset, numBytes);
+		glBufferSubData(target, byteOffset, data);
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data) {
@@ -3204,8 +3213,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
+		long byteOffset = 4L * offset;
+		long numBytes = 4L * data.remaining();
+		glBuffer.ensureCapacity(offset, numBytes);
+		glBufferSubData(target, byteOffset, data);
 	}
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
