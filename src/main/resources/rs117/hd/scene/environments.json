@@ -137,7 +137,9 @@
       80,
       190
     ],
-    "fogDepth": 45
+    "fogDepth": 45,
+    "windSpeed": 10,
+    "windStrength": 35
   },
   {
     "area": "STRONGHOLD_OF_SECURITY_FAMINE",
