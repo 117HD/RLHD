@@ -36,10 +36,15 @@ import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+
+import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 public class ShaderIncludes {
+	public static final ResourcePath SHADER_DUMP_PATH = Props.getFolder("rlhd.dump-shaders", () -> null);
+
 	enum Type { GLSL, C, UNKNOWN }
 
 	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("^[a-zA-Z_]\\w*");
@@ -53,7 +58,7 @@ public class ShaderIncludes {
 	private final List<ResourcePath> includePaths = new ArrayList<>();
 	private final Map<String, Supplier<String>> includeMap = new HashMap<>();
 
-	public final Set<UniformBuffer> uniformBuffers = new HashSet<>();
+	public final Set<UniformBuffer<?>> uniformBuffers = new HashSet<>();
 
 	Type includeType = Type.UNKNOWN;
 	final Stack<Integer> includeStack = new Stack<>();
@@ -175,10 +180,9 @@ public class ShaderIncludes {
 				if (includeContents == null)
 					includeContents = String.format("// Not found: %s", expression);
 
-				int nextLineOffset = 1;
-				if (ShaderTemplate.DUMP_SHADERS) {
+				if (SHADER_DUMP_PATH != null) {
 					sb.append("// Include: ").append(expression).append('\n');
-					nextLineOffset--;
+					includeContents += String.format("\n// End include: %s", expression);
 				}
 
 				switch (includeType) {
@@ -198,7 +202,7 @@ public class ShaderIncludes {
 								.append(includeContents)
 								.append('\n')
 								.append("#line ") // Return to the next line of the current file
-								.append(lineNumber + nextLineOffset)
+								.append(lineNumber + 1)
 								.append(" ")
 								.append(currentIndex)
 								.append('\n');
@@ -216,7 +220,7 @@ public class ShaderIncludes {
 							.append(includeContents)
 							.append('\n')
 							.append("#line ") // Return to the next line in the parent include
-							.append(lineNumber + nextLineOffset)
+							.append(lineNumber + 1)
 							.append(" \"")
 							.append(currentFile)
 							.append("\"\n");
@@ -225,9 +229,6 @@ public class ShaderIncludes {
 						sb.append(includeContents).append('\n');
 						break;
 				}
-
-				if (ShaderTemplate.DUMP_SHADERS)
-					sb.append("// End include: ").append(expression).append('\n');
 
 				String comment = commentIndex == -1 ? "" : expression.substring(commentIndex).stripLeading();
 				if (!comment.isEmpty())
@@ -253,22 +254,25 @@ public class ShaderIncludes {
 		includeStack.push(includeList.size());
 		includeList.add(path);
 
+		String source = null;
 		for (var includePath : includePaths) {
 			var resourcePath = includePath.resolve(path);
-			if (resourcePath.exists())
-				return parse(resourcePath.loadString());
+			if (resourcePath.exists()) {
+				source = parse(resourcePath.loadString());
+				if (SHADER_DUMP_PATH != null)
+					SHADER_DUMP_PATH.resolve(resourcePath.path).mkdirs().writeString(source);
+				break;
+			}
 		}
 
 		includeStack.pop();
-		return null;
+		return source;
 	}
 
 	public String loadFile(String path) throws ShaderException, IOException {
 		includeList.clear();
-		includeList.add(path);
-		includeStack.add(0);
 
-		switch (ResourcePath.path(path).getExtension().toLowerCase()) {
+		switch (path(path).getExtension().toLowerCase()) {
 			case "glsl":
 				includeType = Type.GLSL;
 				break;
@@ -290,7 +294,7 @@ public class ShaderIncludes {
 	}
 
 	public ShaderIncludes addIncludePath(Class<?> clazz) {
-		return addIncludePath(ResourcePath.path(clazz));
+		return addIncludePath(path(clazz));
 	}
 
 	public ShaderIncludes addIncludePath(ResourcePath includePath) {
@@ -307,7 +311,7 @@ public class ShaderIncludes {
 		return addInclude(identifier, () -> value);
 	}
 
-	public ShaderIncludes addUniformBuffer(UniformBuffer ubo) {
+	public ShaderIncludes addUniformBuffer(UniformBuffer<?> ubo) {
 		uniformBuffers.add(ubo);
 		return this;
 	}

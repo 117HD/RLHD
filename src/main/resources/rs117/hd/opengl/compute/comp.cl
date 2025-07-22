@@ -26,7 +26,6 @@
 #include THREAD_COUNT
 #include FACES_PER_THREAD
 
-#include "cl_types.cl"
 #include "common.cl"
 #include "priority_render.cl"
 

@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include "cl_types.cl"
+
 #define PI 3.14159265f // max 32-bit float precision
 #define UNIT PI / 1024.0f
 

@@ -25,39 +25,28 @@
  */
 package rs117.hd.opengl.shader;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
-import rs117.hd.utils.Props;
-import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.opengl.shader.ShaderIncludes.SHADER_DUMP_PATH;
 
 @Slf4j
 public class ShaderTemplate
 {
-	public static final boolean DUMP_SHADERS = Props.has("rlhd.dump-shaders");
-
-	@VisibleForTesting
-	final List<Unit> units = new ArrayList<>();
+	private final List<Unit> units = new ArrayList<>();
 
 	@RequiredArgsConstructor
-	@VisibleForTesting
-	static class Unit
+	public static class Unit
 	{
-		@Getter
 		public final int type;
-
-		@Getter
 		public final String filename;
 	}
 
@@ -74,10 +63,6 @@ public class ShaderTemplate
 		int i = 0;
 		boolean ok = false;
 
-		ResourcePath dumpPath = null;
-		if (DUMP_SHADERS)
-			dumpPath = path("shader-dumps").mkdirs();
-
 		try
 		{
 			while (i < shaders.length) {
@@ -88,17 +73,14 @@ public class ShaderTemplate
 				}
 
 				String source = includes.loadFile(unit.filename);
-				if (DUMP_SHADERS)
-					dumpPath.resolve(unit.filename).writeString(source);
-
 				glShaderSource(shader, source);
 				glCompileShader(shader);
 
 				if (glGetShaderi(shader, GL_COMPILE_STATUS) != GL_TRUE)
 				{
-					String err = glGetShaderInfoLog(shader);
+					String error = glGetShaderInfoLog(shader);
 					glDeleteShader(shader);
-					throw ShaderException.compileError(err, includes, unit);
+					throw ShaderException.compileError(includes, source, error, unit.filename);
 				}
 
 				glAttachShader(program, shader);
@@ -107,15 +89,21 @@ public class ShaderTemplate
 
 			glLinkProgram(program);
 
-			if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE)
-			{
-				String err = glGetProgramInfoLog(program);
-				throw ShaderException.compileError(err, includes, units.toArray(new Unit[0]));
+			if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
+				String[] paths = units.stream()
+					.map(u -> u.filename)
+					.toArray(String[]::new);
+				throw ShaderException.compileError(
+					includes,
+					"// Linking " + String.join(" & ", paths),
+					glGetProgramInfoLog(program),
+					paths
+				);
 			}
 
 			ok = true;
 
-			if (DUMP_SHADERS) {
+			if (SHADER_DUMP_PATH != null) {
 				int[] numFormats = { 0 };
 				glGetIntegerv(GL41C.GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
 				if (numFormats[0] < 1) {
@@ -130,9 +118,9 @@ public class ShaderTemplate
 
 					String shaderName =
 						units.stream()
-							.map(Unit::getFilename)
+							.map(u -> u.filename)
 							.collect(Collectors.joining(" + ")) + ".bin";
-					dumpPath.resolve(shaderName).writeByteBuffer(binary);
+					SHADER_DUMP_PATH.resolve("binaries", shaderName).mkdirs().writeByteBuffer(binary);
 				}
 			}
 		}

@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL33C.*;
 public class ShaderProgram {
 	@RequiredArgsConstructor
 	private static class UniformBufferBlockPair {
-		public final UniformBuffer buffer;
+		public final UniformBuffer<?> buffer;
 		public final int uboProgramIndex;
 	}
 
@@ -54,7 +54,7 @@ public class ShaderProgram {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends UniformBuffer> T getUniformBufferBlock(int UniformBlockIndex) {
+	public <T extends UniformBuffer<?>> T getUniformBufferBlock(int UniformBlockIndex) {
 		for (UniformBufferBlockPair pair : uniformBlockMappings)
 			if (pair.buffer.getBindingIndex() == UniformBlockIndex)
 				return (T) pair.buffer;
