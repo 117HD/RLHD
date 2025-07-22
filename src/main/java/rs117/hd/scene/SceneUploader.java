@@ -52,7 +52,6 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.NORMAL_SIZE;
-import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
@@ -143,8 +142,8 @@ public class SceneUploader {
 			String.format(
 				"%.2f",
 				(
-					sceneContext.getVertexOffset() * (VERTEX_SIZE + NORMAL_SIZE) * SCALAR_BYTES +
-					sceneContext.getUvOffset() * UV_SIZE * SCALAR_BYTES
+					sceneContext.getVertexOffset() * 4L * (VERTEX_SIZE + NORMAL_SIZE) +
+					sceneContext.getUvOffset() * 4L * UV_SIZE
 				) / 1e6
 			)
 		);
