@@ -185,6 +185,14 @@
           "VERTEX_JIGGLE"
         ]
       },
+      "windDisplacementModifier": {
+        "type": "int",
+        "description": "Modifier value between -3 & 3 to control how strong the model applies wind."
+      },
+      "invertDisplacementStrength": {
+        "type": "boolean",
+        "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
+      },
       "materialOverrides": {
         "type": "object",
         "description": "A subset of options can be tweaked separately for specific materials of the model.",
