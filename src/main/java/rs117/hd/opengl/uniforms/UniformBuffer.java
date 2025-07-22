@@ -9,11 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
-public abstract class UniformBuffer {
+public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	protected enum PropertyType {
 		Int(4, 4, 1),
 		IVec2(8, 8, 2),
@@ -64,7 +65,7 @@ public abstract class UniformBuffer {
 	@AllArgsConstructor
 	@RequiredArgsConstructor
 	public static class Property {
-		private UniformBuffer owner;
+		private UniformBuffer<?> owner;
 		private int position;
 		private final PropertyType type;
 		private final String name;
@@ -181,7 +182,7 @@ public abstract class UniformBuffer {
 		}
 	}
 
-	public final GLBuffer glBuffer;
+	public final GLBUFFER glBuffer;
 
 	private int size;
 	private int dirtyLowTide = Integer.MAX_VALUE;
@@ -189,17 +190,16 @@ public abstract class UniformBuffer {
 	private ByteBuffer data;
 
 	@Getter
-	private final String uniformBlockName;
-	@Getter
 	private int bindingIndex;
 
-	protected UniformBuffer(GLBuffer glBuffer, String uniformBlockName) {
-		this.glBuffer = glBuffer;
-		this.uniformBlockName = uniformBlockName;
+	@SuppressWarnings("unchecked")
+	public UniformBuffer(int glUsage) {
+		glBuffer = (GLBUFFER) new GLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage);
 	}
 
-	public UniformBuffer(String name, String uniformBlockName, int glUsage) {
-		this(new GLBuffer("UBO " + name, GL_UNIFORM_BUFFER, glUsage), uniformBlockName);
+	@SuppressWarnings("unchecked")
+	public UniformBuffer(int glUsage, int clUsage) {
+		glBuffer = (GLBUFFER) new SharedGLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage, clUsage);
 	}
 
 	protected final <T extends StructProperty> T addStruct(T newStructProp) {
@@ -260,6 +260,10 @@ public abstract class UniformBuffer {
 	public void initialize(int bindingIndex) {
 		initialize();
 		bind(bindingIndex);
+	}
+
+	public String getUniformBlockName() {
+		return glBuffer.name;
 	}
 
 	public void bind(int bindingIndex) {

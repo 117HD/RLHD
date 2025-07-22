@@ -21,7 +21,7 @@ struct Material
     vec3 textureScale;
 };
 
-layout(std140) uniform MaterialUniforms {
+layout(std140) uniform UBOMaterials {
     Material MaterialArray[MATERIAL_COUNT];
 };
 

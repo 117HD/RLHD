@@ -22,7 +22,7 @@ struct WaterType
     int underwaterFlowMap;
 };
 
-layout(std140) uniform WaterTypeUniforms {
+layout(std140) uniform UBOWaterTypes {
     WaterType WaterTypeArray[WATER_TYPE_COUNT];
 };
 

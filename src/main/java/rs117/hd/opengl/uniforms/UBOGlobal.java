@@ -1,10 +1,12 @@
 package rs117.hd.opengl.uniforms;
 
+import rs117.hd.utils.buffer.GLBuffer;
+
 import static org.lwjgl.opengl.GL33C.*;
 
-public class GlobalUniforms extends UniformBuffer {
-	public GlobalUniforms() {
-		super("Global", "GlobalUniforms", GL_DYNAMIC_DRAW);
+public class UBOGlobal extends UniformBuffer<GLBuffer> {
+	public UBOGlobal() {
+		super(GL_DYNAMIC_DRAW);
 	}
 
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");

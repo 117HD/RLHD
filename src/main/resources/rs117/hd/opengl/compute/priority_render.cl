@@ -30,7 +30,7 @@ int priority_map(int p, int distance, int _min10, int avg1, int avg2, int avg3);
 int count_prio_offset(__local struct shared_data *shared, int priority);
 void get_face(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   __global const struct VertexData *vb,
   uint localId,
   struct ModelInfo minfo,
@@ -43,7 +43,7 @@ void get_face(
 );
 void add_face_prio_distance(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   struct VertexData thisrvA,
@@ -65,7 +65,7 @@ void sort_and_insert(
   __global struct VertexData *vout,
   __global struct UVData *uvout,
   __global float4 *normalout,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,
@@ -135,7 +135,7 @@ int count_prio_offset(__local struct shared_data *shared, int priority) {
 
 void get_face(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   __global const struct VertexData *vb,
   uint localId,
   struct ModelInfo minfo,
@@ -190,7 +190,7 @@ void get_face(
 
 void add_face_prio_distance(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   struct VertexData thisrvA,
@@ -352,7 +352,7 @@ float3 applyCharacterDisplacement(
 }
 
 void applyWindDisplacement(
-    __constant struct ComputeUniforms *uni,
+    __constant struct UBOCompute *uni,
     const struct ObjectWindSample windSample,
     int vertexFlags,
     float height,
@@ -460,7 +460,7 @@ void sort_and_insert(
   __global struct VertexData *vout,
   __global struct UVData *uvout,
   __global float4 *normalout,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,

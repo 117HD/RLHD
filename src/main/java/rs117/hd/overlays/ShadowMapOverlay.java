@@ -18,7 +18,7 @@ import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
-import rs117.hd.opengl.uniforms.UIUniforms;
+import rs117.hd.opengl.uniforms.UBOUI;
 
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
@@ -79,7 +79,7 @@ public class ShadowMapOverlay extends Overlay {
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {
 		if (gameStateChanged.getGameState() == GameState.LOGIN_SCREEN) {
 			plugin.uiProgram.use();
-			UIUniforms uboUI = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
+			UBOUI uboUI = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
 			if (uboUI != null)
 				uboUI.shadowMapOverlayDimensions.set(0, 0, 0, 0);
 		}
@@ -95,7 +95,7 @@ public class ShadowMapOverlay extends Overlay {
 
 			plugin.uiProgram.use();
 			plugin.uiProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
-			UIUniforms ubo = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
+			UBOUI ubo = plugin.uiProgram.getUniformBufferBlock(UNIFORM_BLOCK_UI);
 			if (ubo != null) {
 				if (client.getGameState().getState() < GameState.LOGGED_IN.getState()) {
 					ubo.shadowMapOverlayDimensions.set(0, 0, 0, 0);

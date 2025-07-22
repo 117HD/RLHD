@@ -38,13 +38,13 @@
 #define HILLSKEW_TILE_SNAPPING 2
 #define HILLSKEW_TILE_SNAPPING_BLEND 0.1f
 
-float3 to_screen(__constant struct ComputeUniforms *uni, float3 vertex);
+float3 to_screen(__constant struct UBOCompute *uni, float3 vertex);
 float4 rotate_vertex(float4 vector, int orientation);
-float vertex_distance(__constant struct ComputeUniforms *uni, float4 vertex);
-int face_distance(__constant struct ComputeUniforms *uni, float4 vA, float4 vB, float4 vC);
-bool face_visible(__constant struct ComputeUniforms *uni, float3 vA, float3 vB, float3 vC, int4 position);
+float vertex_distance(__constant struct UBOCompute *uni, float4 vertex);
+int face_distance(__constant struct UBOCompute *uni, float4 vA, float4 vB, float4 vC);
+bool face_visible(__constant struct UBOCompute *uni, float3 vA, float3 vB, float3 vC, int4 position);
 
-float3 to_screen(__constant struct ComputeUniforms *uni, float3 vertex) {
+float3 to_screen(__constant struct UBOCompute *uni, float3 vertex) {
   float yawSin = sin(uni->cameraYaw);
   float yawCos = cos(uni->cameraYaw);
 
@@ -79,7 +79,7 @@ float4 rotate_vertex(float4 vector, int orientation) {
 /*
  * Calculate the distance to a vertex given the camera angle
  */
-float vertex_distance(__constant struct ComputeUniforms *uni, float4 vertex) {
+float vertex_distance(__constant struct UBOCompute *uni, float4 vertex) {
   float j = vertex.z * cos(uni->cameraYaw) - vertex.x * sin(uni->cameraYaw);
   float l = vertex.y * sin(uni->cameraPitch) + j * cos(uni->cameraPitch);
   return l;
@@ -88,7 +88,7 @@ float vertex_distance(__constant struct ComputeUniforms *uni, float4 vertex) {
 /*
  * Calculate the distance to a face
  */
-int face_distance(__constant struct ComputeUniforms *uni, float4 vA, float4 vB, float4 vC) {
+int face_distance(__constant struct UBOCompute *uni, float4 vA, float4 vB, float4 vC) {
   float dvA = vertex_distance(uni, vA);
   float dvB = vertex_distance(uni, vB);
   float dvC = vertex_distance(uni, vC);
@@ -99,7 +99,7 @@ int face_distance(__constant struct ComputeUniforms *uni, float4 vA, float4 vB, 
 /*
  * Test if a face is visible (not backward facing)
  */
-bool face_visible(__constant struct ComputeUniforms *uni, float3 vA, float3 vB, float3 vC, int4 position) {
+bool face_visible(__constant struct UBOCompute *uni, float3 vA, float3 vB, float3 vC, int4 position) {
   // Move model to scene location, and account for camera offset
   float3 cameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ);
   float3 modelPos = convert_float3(position.xyz);

@@ -49,7 +49,7 @@ import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.uniforms.ComputeUniforms;
+import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
@@ -314,7 +314,7 @@ public class OpenCLManager {
 				.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
 				.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
 				.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
-				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
+				.define("MAX_CHARACTER_POSITION_COUNT", UBOCompute.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, includes.loadFile("comp_unordered.cl"));
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);

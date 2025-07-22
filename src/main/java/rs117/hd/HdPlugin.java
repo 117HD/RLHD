@@ -100,10 +100,10 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
-import rs117.hd.opengl.uniforms.ComputeUniforms;
-import rs117.hd.opengl.uniforms.GlobalUniforms;
-import rs117.hd.opengl.uniforms.LightUniforms;
-import rs117.hd.opengl.uniforms.UIUniforms;
+import rs117.hd.opengl.uniforms.UBOCompute;
+import rs117.hd.opengl.uniforms.UBOGlobal;
+import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
@@ -360,10 +360,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private GpuIntBuffer[] modelSortingBuffers;
 	private SharedGLBuffer[] hModelSortingBuffers;
 
-	private final ComputeUniforms uboCompute = new ComputeUniforms();
-	private final GlobalUniforms uboGlobal = new GlobalUniforms();
-	private final UIUniforms uboUI = new UIUniforms();
-	private final LightUniforms uboLights = new LightUniforms();
+	private final UBOCompute uboCompute = new UBOCompute();
+	private final UBOGlobal uboGlobal = new UBOGlobal();
+	private final UBOUI uboUI = new UBOUI();
+	private final UBOLights uboLights = new UBOLights();
 
 	@Getter
 	@Nullable
@@ -830,7 +830,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
-			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, ComputeUniforms.MAX_CHARACTER_POSITION_COUNT))
+			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("WIREFRAME", config.wireframe())
 			.addInclude(
