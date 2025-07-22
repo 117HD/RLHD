@@ -355,8 +355,6 @@ public abstract class UniformBuffer {
 		protected long address;
 		protected long elementSize;
 
-		public abstract CopyBuffer<T> ensureCapacity(int size);
-
 		public final void copy(long dstAddress, int elementCount) {
 			MemoryUtil.memCopy(address, dstAddress, elementCount * elementSize);
 			data.clear();
@@ -364,7 +362,7 @@ public abstract class UniformBuffer {
 	}
 
 	static class IntCopyBuffer extends CopyBuffer<IntBuffer> {
-		public IntCopyBuffer ensureCapacity(int size) {
+		private IntCopyBuffer ensureCapacity(int size) {
 			if(data == null || data.capacity() < size) {
 				data = BufferUtils.createIntBuffer(size);
 				address = MemoryUtil.memAddress(data);
@@ -375,7 +373,7 @@ public abstract class UniformBuffer {
 	}
 
 	static class FloatCopyBuffer extends CopyBuffer<FloatBuffer> {
-		public FloatCopyBuffer ensureCapacity(int size) {
+		private FloatCopyBuffer ensureCapacity(int size) {
 			if(data == null || data.capacity() < size) {
 				data = BufferUtils.createFloatBuffer(size);
 				address = MemoryUtil.memAddress(data);
