@@ -1,12 +1,17 @@
 package rs117.hd.opengl.uniforms;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryStack;
+import org.lwjgl.system.MemoryUtil;
+import rs117.hd.model.ModelHasher;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -65,6 +70,8 @@ public abstract class UniformBuffer {
 	public static class Property {
 		private UniformBuffer owner;
 		private int position;
+		private long address;
+		private int hash;
 		private final PropertyType type;
 		private final String name;
 
@@ -74,9 +81,16 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if (owner.data.getInt(position) != value) {
-				owner.data.putInt(position, value);
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			int newHash = Integer.hashCode(value);
+			if(newHash != hash) {
+				MemoryUtil.memPutInt(address, value);
 				owner.markWaterLine(position, type.size);
+				hash = newHash;
 			}
 		}
 
@@ -100,18 +114,24 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if (owner.data == null) {
+			if (address == 0) {
 				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
 				return;
 			}
 
-			int elementCount = type.isArray ? values.length : type.elementCount;
-			for (int elementIdx = 0, offset = position; elementIdx < elementCount; elementIdx++, offset += type.elementSize) {
-				if (owner.data.getInt(offset) != values[elementIdx]) {
-					owner.data.putInt(offset, values[elementIdx]);
-					owner.markWaterLine(offset, type.elementSize);
-				}
+			int newHash = ModelHasher.fastIntHash(values, values.length);
+			if(newHash == hash) {
+				return;
 			}
+			hash = newHash;
+
+			int elementCount = type.isArray ? values.length : type.elementCount;
+			try (MemoryStack stack = MemoryStack.stackPush()) {
+				IntBuffer copyBuffer = stack.ints(values);
+				long copyBufferAddress = MemoryUtil.memAddress(copyBuffer);
+				MemoryUtil.memCopy(copyBufferAddress, address, (long)elementCount * Integer.BYTES);
+			}
+			owner.markWaterLine(position, type.elementSize * elementCount);
 		}
 
 		public final void set(float value) {
@@ -120,9 +140,16 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if (owner.data.getFloat(position) != value) {
-				owner.data.putFloat(position, value);
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			int newHash = Float.hashCode(value);
+			if(newHash != hash) {
+				MemoryUtil.memPutFloat(address, value);
 				owner.markWaterLine(position, type.size);
+				hash = newHash;
 			}
 		}
 
@@ -151,18 +178,24 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			if (owner.data == null) {
+			if (address == 0) {
 				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
 				return;
 			}
 
-			int elementCount = type.isArray ? values.length : type.elementCount;
-			for (int elementIdx = 0, offset = position; elementIdx < elementCount; elementIdx++, offset += type.elementSize) {
-				if (owner.data.getFloat(offset) != values[elementIdx]) {
-					owner.data.putFloat(offset, values[elementIdx]);
-					owner.markWaterLine(offset, type.elementSize);
-				}
+			int newHash = ModelHasher.fastFloatHash(values);
+			if(hash == newHash) {
+				return;
 			}
+			hash = newHash;
+
+			int elementCount = type.isArray ? values.length : type.elementCount;
+			try (MemoryStack stack = MemoryStack.stackPush()) {
+				FloatBuffer copyBuffer = stack.floats(values);
+				long copyBufferAddress = MemoryUtil.memAddress(copyBuffer);
+				MemoryUtil.memCopy(copyBufferAddress, address, (long)elementCount * Float.BYTES);
+			}
+			owner.markWaterLine(position, type.elementSize * elementCount);
 		}
 	}
 
@@ -186,6 +219,7 @@ public abstract class UniformBuffer {
 	private int dirtyLowTide = Integer.MAX_VALUE;
 	private int dirtyHighTide = 0;
 	private ByteBuffer data;
+	private List<Property> properties = new ArrayList<>();
 
 	protected UniformBuffer(GLBuffer glBuffer) {
 		this.glBuffer = glBuffer;
@@ -233,6 +267,7 @@ public abstract class UniformBuffer {
 		property.position = size + padding;
 
 		size += property.type.size + padding;
+		properties.add(property);
 
 		return property;
 	}
@@ -248,6 +283,10 @@ public abstract class UniformBuffer {
 
 		glBuffer.initialize(size);
 		data = BufferUtils.createByteBuffer(size);
+
+		for(Property prop : properties) {
+			prop.address = MemoryUtil.memAddress(data, prop.position);
+		}
 	}
 
 	public void initialize(int uniformBlockIndex) {
@@ -286,6 +325,10 @@ public abstract class UniformBuffer {
 	public final void destroy() {
 		if (data == null)
 			return;
+
+		for(Property prop : properties) {
+			prop.address = 0;
+		}
 
 		glBuffer.destroy();
 		data = null;
