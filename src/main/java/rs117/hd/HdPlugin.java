@@ -313,8 +313,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private static final String WINDOWS_VERSION_HEADER = "#version 430\n";
 
 	private static final ResourcePath SHADER_PATH = Props
-		.getPathOrDefault("rlhd.shader-path", () -> path(HdPlugin.class))
-		.chroot();
+		.getFolder("rlhd.shader-path", () -> path(HdPlugin.class));
 
 	private int interfaceTexture;
 	private int interfacePbo;

@@ -66,10 +66,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
-	private static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault(
-		"rlhd.texture-path",
-		() -> path(TextureManager.class, "textures")
-	);
+	private static final ResourcePath TEXTURE_PATH = Props
+		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
 
 	@Inject
 	private Client client;
