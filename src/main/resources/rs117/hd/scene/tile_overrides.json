@@ -1783,7 +1783,7 @@
     ],
     "underlayIds": [ 56 ],
     "groundMaterial": "GRAVEL",
-    "minLightness": 22,
+    "minLightness": 19,
     "maxSaturation": 0,
     "maxHue": 1
   },
