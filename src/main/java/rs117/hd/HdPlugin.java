@@ -1183,11 +1183,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
-		glVertexAttribPointer(2, 4, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(2, 3, GL_FLOAT, false, 16, 0);
 
 		glEnableVertexAttribArray(3);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
+		glVertexAttribIPointer(3, 1, GL_INT, 16, 12);
+
+		glEnableVertexAttribArray(4);
 		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.id);
-		glVertexAttribPointer(3, 4, GL_FLOAT, false, 0, 0);
+		glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
 	}
 
 	private void destroyVaos() {
@@ -1882,12 +1886,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+			glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			frameTimer.end(Timer.UPLOAD_UI);
 		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	@Override
@@ -3276,8 +3280,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
+		long byteOffset = 4L * offset;
+		long numBytes = 4L * data.remaining();
+		glBuffer.ensureCapacity(byteOffset, numBytes);
+		glBufferSubData(target, byteOffset, data);
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data) {
@@ -3285,8 +3291,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
+		long byteOffset = 4L * offset;
+		long numBytes = 4L * data.remaining();
+		glBuffer.ensureCapacity(offset, numBytes);
+		glBufferSubData(target, byteOffset, data);
 	}
 
 	@Subscribe(priority = -1) // Run after the low detail plugin

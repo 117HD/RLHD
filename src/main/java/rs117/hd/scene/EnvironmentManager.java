@@ -26,6 +26,7 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -365,7 +366,7 @@ public class EnvironmentManager {
 		var overworldEnv = getOverworldEnvironment();
 		float[] sunAngles = env.sunAngles;
 		if (sunAngles == null)
-			sunAngles = overworldEnv.sunAngles;
+			sunAngles = Objects.requireNonNullElse(overworldEnv.sunAngles, Environment.DEFAULT_SUN_ANGLES);
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
 		if (!config.atmosphericLighting() && !env.force)

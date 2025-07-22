@@ -33,6 +33,11 @@
 #define WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND 3
 #define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
 
+#define HILLSKEW_NONE 0
+#define HILLSKEW_MODEL 1
+#define HILLSKEW_TILE_SNAPPING 2
+#define HILLSKEW_TILE_SNAPPING_BLEND 0.1f
+
 float3 to_screen(__constant struct ComputeUniforms *uni, float3 vertex);
 float4 rotate_vertex(float4 vector, int orientation);
 float vertex_distance(__constant struct ComputeUniforms *uni, float4 vertex);
