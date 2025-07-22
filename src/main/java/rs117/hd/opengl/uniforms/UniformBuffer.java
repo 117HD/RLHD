@@ -1,5 +1,6 @@
 package rs117.hd.opengl.uniforms;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -9,7 +10,6 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -86,7 +86,7 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			int newHash = Integer.hashCode(value);
+			final int newHash = Integer.hashCode(value);
 			if(newHash != hash) {
 				MemoryUtil.memPutInt(address, value);
 				owner.markWaterLine(position, type.size);
@@ -119,18 +119,17 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			int newHash = ModelHasher.fastIntHash(values, values.length);
+			final int newHash = ModelHasher.fastIntHash(values, values.length);
 			if(newHash == hash) {
 				return;
 			}
 			hash = newHash;
 
-			int elementCount = type.isArray ? values.length : type.elementCount;
-			try (MemoryStack stack = MemoryStack.stackPush()) {
-				IntBuffer copyBuffer = stack.ints(values);
-				long copyBufferAddress = MemoryUtil.memAddress(copyBuffer);
-				MemoryUtil.memCopy(copyBufferAddress, address, (long)elementCount * Integer.BYTES);
-			}
+			final int elementCount = type.isArray ? values.length : type.elementCount;
+			final IntCopyBuffer copyBuffer = owner.intCopyBuffer.ensureCapacity(elementCount);
+			copyBuffer.data.put(values, 0, elementCount);
+			copyBuffer.copy(address, elementCount);
+
 			owner.markWaterLine(position, type.elementSize * elementCount);
 		}
 
@@ -145,7 +144,7 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			int newHash = Float.hashCode(value);
+			final int newHash = Float.hashCode(value);
 			if(newHash != hash) {
 				MemoryUtil.memPutFloat(address, value);
 				owner.markWaterLine(position, type.size);
@@ -183,21 +182,56 @@ public abstract class UniformBuffer {
 				return;
 			}
 
-			int newHash = ModelHasher.fastFloatHash(values);
+			final int newHash = ModelHasher.fastFloatHash(values);
 			if(hash == newHash) {
 				return;
 			}
 			hash = newHash;
 
 			int elementCount = type.isArray ? values.length : type.elementCount;
-			try (MemoryStack stack = MemoryStack.stackPush()) {
-				FloatBuffer copyBuffer = stack.floats(values);
-				long copyBufferAddress = MemoryUtil.memAddress(copyBuffer);
-				MemoryUtil.memCopy(copyBufferAddress, address, (long)elementCount * Float.BYTES);
-			}
+			final FloatCopyBuffer copyBuffer = owner.floatCopyBuffer.ensureCapacity(elementCount);
+			copyBuffer.data.put(values, 0, elementCount);
+			copyBuffer.copy(address, elementCount);
+
 			owner.markWaterLine(position, type.elementSize * elementCount);
 		}
 	}
+
+	abstract static class CopyBuffer<T extends Buffer> {
+		public T data;
+		protected long address;
+		protected long elementSize;
+
+		public abstract CopyBuffer<T> ensureCapacity(int size);
+
+		public final void copy(long dstAddress, int elementCount) {
+			MemoryUtil.memCopy(address, dstAddress, elementCount * elementSize);
+			data.clear();
+		}
+	}
+
+	static class IntCopyBuffer extends CopyBuffer<IntBuffer> {
+		public IntCopyBuffer ensureCapacity(int size) {
+			if(data == null || data.capacity() < size) {
+				data = BufferUtils.createIntBuffer(size);
+				address = MemoryUtil.memAddress(data);
+				elementSize = Integer.BYTES;
+			}
+			return this;
+		}
+	}
+
+	static class FloatCopyBuffer extends CopyBuffer<FloatBuffer> {
+		public FloatCopyBuffer ensureCapacity(int size) {
+			if(data == null || data.capacity() < size) {
+				data = BufferUtils.createFloatBuffer(size);
+				address = MemoryUtil.memAddress(data);
+				elementSize = Float.BYTES;
+			}
+			return this;
+		}
+	}
+
 
 	public interface CreateStructProperty<T extends StructProperty> {
 		T create();
@@ -219,7 +253,9 @@ public abstract class UniformBuffer {
 	private int dirtyLowTide = Integer.MAX_VALUE;
 	private int dirtyHighTide = 0;
 	private ByteBuffer data;
-	private List<Property> properties = new ArrayList<>();
+	private final IntCopyBuffer intCopyBuffer = new IntCopyBuffer();
+	private final FloatCopyBuffer floatCopyBuffer = new FloatCopyBuffer();
+	private final List<Property> properties = new ArrayList<>();
 
 	protected UniformBuffer(GLBuffer glBuffer) {
 		this.glBuffer = glBuffer;
