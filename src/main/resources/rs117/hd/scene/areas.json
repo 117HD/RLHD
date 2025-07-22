@@ -5977,6 +5977,22 @@
     "hideOtherAreas": true
   },
   {
+    "name": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_1",
+    "aabbs": [  [ 1957, 4760, 1957, 4771 ] ]
+  },
+  {
+    "name": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_2",
+    "aabbs": [
+      [ 1958, 4763, 1958, 4768 ]
+    ]
+  },
+  {
+    "name": "RANDOM_EVENT_QUIZ_MASTER_EDGE_FIX",
+    "aabbs": [
+      [ 1920, 4794, 1983, 4799 ]
+    ]
+  },
+  {
     "name": "RANDOM_EVENT_MIME",
     "regions": [ 8010 ],
     "hideOtherAreas": true
