@@ -325,6 +325,8 @@ public enum Material {
 		.setSpecular(0.9f, 280)),
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
+	BLANK_SUPERGLOSS(WHITE, p -> p
+		.setSpecular(1.75f, 55)),
 
 	SNOW_1_N,
 	SNOW_1(p -> p.setNormalMap(SNOW_1_N).setSpecular(0.4f, 20)),
