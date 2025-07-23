@@ -3070,7 +3070,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (renderable instanceof NPC) {
 				var npc = (NPC) renderable;
 				var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY")) {
+				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY") && !anim.contains("IMPLING")) {
 					int npcId = npc.getId();
 					Integer displacementRadius = idleNPCRadius.get(npcId);
 					if (displacementRadius == null) {
