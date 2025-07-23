@@ -1,14 +1,20 @@
 package rs117.hd.opengl.shader;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 
 public class UIShaderProgram extends ShaderProgram {
-	public Uniform1i uniTextureArray = addUniform1i("uniUiTexture");
-	public Uniform1i uniShadowMap = addUniform1i("shadowMap");
+	private final Uniform1i uniTextureArray = addUniform1i("uniUiTexture");
 
 	public UIShaderProgram() {
-		setShaderTemplate(new ShaderTemplate()
+		super(t -> t
 			.add(GL_VERTEX_SHADER, "ui_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "ui_frag.glsl"));
+	}
+
+	@Override
+	protected void initialize() {
+		uniTextureArray.set(TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
 	}
 }

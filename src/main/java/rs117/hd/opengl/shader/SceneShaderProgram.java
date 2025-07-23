@@ -1,15 +1,24 @@
 package rs117.hd.opengl.shader;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 
 public class SceneShaderProgram extends ShaderProgram {
 	public Uniform1i uniTextureArray = addUniform1i("textureArray");
 	public Uniform1i uniShadowMap = addUniform1i("shadowMap");
 
 	public SceneShaderProgram() {
-		setShaderTemplate(new ShaderTemplate()
-			.add(GL_VERTEX_SHADER, "vert.glsl")
-			.add(GL_GEOMETRY_SHADER, "geom.glsl")
-			.add(GL_FRAGMENT_SHADER, "frag.glsl"));
+		super(t -> t
+			.add(GL_VERTEX_SHADER, "scene_vert.glsl")
+			.add(GL_GEOMETRY_SHADER, "scene_geom.glsl")
+			.add(GL_FRAGMENT_SHADER, "scene_frag.glsl"));
+	}
+
+	@Override
+	protected void initialize() {
+		uniTextureArray.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
 	}
 }

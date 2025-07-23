@@ -60,6 +60,7 @@ import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.plugins.Plugin;
@@ -105,6 +106,8 @@ import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.GammaCalibrationOverlay;
+import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
@@ -130,6 +133,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
@@ -221,6 +225,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private ClientThread clientThread;
 
 	@Inject
+	private EventBus eventBus;
+
+	@Inject
 	private DrawManager drawManager;
 
 	@Inject
@@ -287,15 +294,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
-	public UIShaderProgram uiProgram;
+	private ShadowShaderProgram shadowProgram;
 
 	@Inject
-	private ShadowShaderProgram shadowProgram;
+	private UIShaderProgram uiProgram;
 
 	@Inject
 	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
+
+	@Inject
+	private GammaCalibrationOverlay gammaCalibrationOverlay;
+
+	@Inject
+	private ShadowMapOverlay shadowMapOverlay;
 
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
@@ -414,7 +427,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
-	public boolean enableShadowMapOverlay;
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
 
@@ -449,7 +461,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
-	private long brightnessChangedAt;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -628,6 +639,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lightManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
+				gammaCalibrationOverlay.initialize();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -677,6 +689,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			fishingSpotReplacer.shutDown();
 			areaManager.shutDown();
 			gamevalManager.shutDown();
+			gammaCalibrationOverlay.destroy();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -805,8 +818,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return include.toString();
 	}
 
-	private void initPrograms() throws ShaderException, IOException
-	{
+	public ShaderIncludes getShaderIncludes() {
+		assert SHADER_PATH != null;
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
@@ -830,7 +843,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
-			.define("SHADOW_MAP_OVERLAY", enableShadowMapOverlay)
 			.define("WIREFRAME", config.wireframe())
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
@@ -853,19 +865,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboCompute);
-
 		textureManager.appendUniformBuffers(includes);
+		return includes;
+	}
+
+	private void initPrograms() throws ShaderException, IOException {
+		var includes = getShaderIncludes();
+
+		// Bind a valid VAO, otherwise validation may fail on older Intel-based Macs
+		glBindVertexArray(vaoQuad);
 
 		sceneProgram.compile(includes);
-		uiProgram.compile(includes);
 		shadowProgram.setMode(configShadowMode);
 		shadowProgram.compile(includes);
+		uiProgram.compile(includes);
 
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initPrograms();
 		} else {
 			modelPassthroughComputeProgram.compile(includes);
-			modelPassthroughComputeProgram.validate();
 
 			for (int i = 0; i < numSortingBins; i++) {
 				int faceCount = modelSortingBinFaceCounts[i];
@@ -874,36 +892,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				var program = new ModelSortingComputeProgram(threadCount, facesPerThread);
 				modelSortingComputePrograms.add(program);
 				program.compile(includes);
-				program.validate();
 			}
 		}
 
-		// Bind texture samplers before validating, else the validation fails
-		sceneProgram.use();
-		sceneProgram.uniTextureArray.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
-		sceneProgram.uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
-		// Bind a VOA, else validation may fail on older Intel-based Macs
-		glBindVertexArray(vaoScene);
-		sceneProgram.validate();
-
-		uiProgram.use();
-		uiProgram.uniTextureArray.set(TEXTURE_UNIT_UI - TEXTURE_UNIT_BASE);
-		// Bind a VOA, else validation may fail on older Intel-based Macs
-		glBindVertexArray(vaoQuad);
-		uiProgram.validate();
-
-		shadowProgram.use();
-		shadowProgram.uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
-		glBindVertexArray(vaoScene);
-		shadowProgram.validate();
-
 		checkGLErrors();
+
+		eventBus.post(new ShaderRecompile(includes));
 	}
 
 	private void destroyPrograms() {
 		sceneProgram.destroy();
-		uiProgram.destroy();
 		shadowProgram.destroy();
+		uiProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -1009,24 +1009,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		vboQuad = glGenBuffers();
 		glBindVertexArray(vaoQuad);
 
-		FloatBuffer vboUiData = BufferUtils.createFloatBuffer(5 * 4)
+		FloatBuffer vboQuadData = BufferUtils.createFloatBuffer(16)
 			.put(new float[] {
 				// vertices, UVs
-				1, 1, 0, 1, 0, // top right
-				1, -1, 0, 1, 1, // bottom right
-				-1, -1, 0, 0, 1, // bottom left
-				-1, 1, 0, 0, 0  // top left
+				1, 1, 1, 0, // top right
+				1, -1, 1, 1, // bottom right
+				-1, -1, 0, 1, // bottom left
+				-1, 1, 0, 0  // top left
 			})
 			.flip();
 		glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
-		glBufferData(GL_ARRAY_BUFFER, vboUiData, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, vboQuadData, GL_STATIC_DRAW);
 
 		// position attribute
-		glVertexAttribPointer(0, 3, GL_FLOAT, false, 5 * Float.BYTES, 0);
+		glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
 		glEnableVertexAttribArray(0);
 
 		// texture coord attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 5 * Float.BYTES, 3 * Float.BYTES);
+		glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
 		glEnableVertexAttribArray(1);
 	}
 
@@ -1780,8 +1780,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Dimension dim = client.getStretchedDimensions();
 				renderCanvasHeight = dim.height;
 
-				double scaleFactorY = dim.getHeight() / canvasHeight;
 				double scaleFactorX = dim.getWidth() / canvasWidth;
+				double scaleFactorY = dim.getHeight() / canvasHeight;
 
 				// Pad the viewport a little because having ints for our viewport dimensions can introduce off-by-one errors.
 				final int padding = 1;
@@ -1877,8 +1877,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.waterColorMid.set(waterColorMid);
 			uboGlobal.waterColorDark.set(waterColorDark);
 
-			float gammaCorrection = 100f / config.brightness();
-			uboGlobal.gammaCorrection.set(gammaCorrection);
+			uboGlobal.gammaCorrection.set(getGammaCorrection());
 			float ambientStrength = environmentManager.currentAmbientStrength;
 			float directionalStrength = environmentManager.currentDirectionalStrength;
 			if (config.useLegacyBrightness()) {
@@ -2013,7 +2012,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
 
-			float[] gammaCorrectedFogColor = pow(fogColor, gammaCorrection);
+			float[] gammaCorrectedFogColor = pow(fogColor, getGammaCorrection());
 			glClearColor(
 				gammaCorrectedFogColor[0],
 				gammaCorrectedFogColor[1],
@@ -2101,8 +2100,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
-		// Texture on UI
-		drawUi(overlayColor, canvasHeight, canvasWidth);
+		drawUi(overlayColor, canvasWidth, canvasHeight);
 
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
@@ -2132,8 +2130,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			SwingUtilities.invokeLater(this::processPendingConfigChanges);
 	}
 
-	private void drawUi(int overlayColor, final int canvasHeight, final int canvasWidth) {
+	private void drawUi(int overlayColor, final int canvasWidth, final int canvasHeight) {
 		frameTimer.begin(Timer.RENDER_UI);
+
+		int viewportWidth = canvasWidth;
+		int viewportHeight = canvasHeight;
+		if (client.isStretchedEnabled()) {
+			Dimension dim = client.getStretchedDimensions();
+			viewportWidth = dim.width;
+			viewportHeight = dim.height;
+		}
+		glDpiAwareViewport(0, 0, viewportWidth, viewportHeight);
+
+		// Bind quad VAO which all overlays use to render
+		glBindVertexArray(vaoQuad);
 
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
 		if (client.getGameState().getState() < GameState.LOADING.getState())
@@ -2142,27 +2152,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
-		// Use the texture bound in the first pass
 		uiProgram.use();
 		uboUI.sourceDimensions.set(canvasWidth, canvasHeight);
+		uboUI.targetDimensions.set(viewportWidth, viewportHeight);
 		uboUI.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100f);
-
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
-		uboUI.gammaCorrection.set(100f / config.brightness());
-		final int gammaCalibrationTimeout = 3000;
-		float gammaCalibrationTimer = System.currentTimeMillis() - brightnessChangedAt;
-		uboUI.showGammaCalibration.set(gammaCalibrationTimer < gammaCalibrationTimeout ? 1 : 0);
-		uboUI.gammaCalibrationTimer.set(1 - gammaCalibrationTimer / gammaCalibrationTimeout);
-
-		if (client.isStretchedEnabled()) {
-			Dimension dim = client.getStretchedDimensions();
-			glDpiAwareViewport(0, 0, dim.width, dim.height);
-			uboUI.targetDimensions.set(dim.width, dim.height);
-		} else {
-			glDpiAwareViewport(0, 0, canvasWidth, canvasHeight);
-			uboUI.targetDimensions.set(canvasWidth, canvasHeight);
-		}
-
+		uboUI.gammaCorrection.set(getGammaCorrection());
 		uboUI.upload();
 
 		// Set the sampling function used when stretching the UI.
@@ -2176,16 +2171,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
 		// Texture on UI
-		glBindVertexArray(vaoQuad);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
-		frameTimer.end(Timer.RENDER_UI);
+		shadowMapOverlay.render(canvasWidth, canvasHeight);
+		gammaCalibrationOverlay.render(canvasWidth, canvasHeight);
 
 		// Reset
-		glBindVertexArray(0);
-		glUseProgram(0);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_BLEND);
+
+		frameTimer.end(Timer.RENDER_UI);
 	}
 
 	/**
@@ -2514,9 +2509,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						}
 
 						switch (key) {
-							case KEY_BRIGHTNESS:
-								brightnessChangedAt = System.currentTimeMillis();
-								break;
 							case KEY_EXPANDED_MAP_LOADING_CHUNKS:
 								client.setExpandedMapLoading(getExpandedMapLoadingChunks());
 								// fall-through
@@ -3034,6 +3026,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public int getDrawDistance() {
 		return clamp(config.drawDistance(), 0, MAX_DISTANCE);
+	}
+
+	public float getGammaCorrection() {
+		return 100f / config.brightness();
 	}
 
 	private int getExpandedMapLoadingChunks() {

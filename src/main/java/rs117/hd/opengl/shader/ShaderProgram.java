@@ -3,8 +3,8 @@ package rs117.hd.opengl.shader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
 
@@ -21,9 +21,14 @@ public class ShaderProgram {
 	private final List<UniformProperty> uniformProperties = new ArrayList<>();
 	private final List<UniformBufferBlockPair> uniformBlockMappings = new ArrayList<>();
 
-	@Setter
-	private ShaderTemplate shaderTemplate;
+	protected final ShaderTemplate shaderTemplate;
+
 	private int program;
+
+	public ShaderProgram(Consumer<ShaderTemplate> templateConsumer) {
+		shaderTemplate = new ShaderTemplate();
+		templateConsumer.accept(shaderTemplate);
+	}
 
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
 		int newProgram = shaderTemplate.compile(includes);
@@ -42,7 +47,18 @@ public class ShaderProgram {
 			if (bindingIndex != -1)
 				uniformBlockMappings.add(new UniformBufferBlockPair(ubo, bindingIndex));
 		}
+
+		use();
+		initialize();
+
+		glValidateProgram(program);
+		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
+			String err = glGetProgramInfoLog(program);
+			log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
+		}
 	}
+
+	protected void initialize() {}
 
 	public boolean isValid() {
 		return program != 0;
@@ -67,14 +83,6 @@ public class ShaderProgram {
 
 		for (UniformBufferBlockPair pair : uniformBlockMappings)
 			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
-	}
-
-	public void validate() {
-		glValidateProgram(program);
-		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
-			String err = glGetProgramInfoLog(program);
-			log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
-		}
 	}
 
 	public void destroy() {

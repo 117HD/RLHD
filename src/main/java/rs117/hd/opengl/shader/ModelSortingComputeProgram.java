@@ -7,9 +7,9 @@ public class ModelSortingComputeProgram extends ShaderProgram {
 	public final int threadCount, facesPerThread;
 
 	public ModelSortingComputeProgram(int threadCount, int facesPerThread) {
+		super(t -> t.add(GL43C.GL_COMPUTE_SHADER, "comp.glsl"));
 		this.threadCount = threadCount;
 		this.facesPerThread = facesPerThread;
-		setShaderTemplate(new ShaderTemplate().add(GL43C.GL_COMPUTE_SHADER, "comp.glsl"));
 	}
 
 	@Override

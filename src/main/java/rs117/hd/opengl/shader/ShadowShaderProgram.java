@@ -3,27 +3,28 @@ package rs117.hd.opengl.shader;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 
 public class ShadowShaderProgram extends ShaderProgram {
-	public Uniform1i uniShadowMap = addUniform1i("textureArray");
-	private ShadowMode currentMode;
+	private final Uniform1i uniShadowMap = addUniform1i("textureArray");
+
+	public ShadowShaderProgram() {
+		super(t -> t
+			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
+			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl"));
+	}
 
 	@Override
-	public void destroy() {
-		super.destroy();
-		currentMode = null;
+	protected void initialize() {
+		uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
 	}
 
 	public void setMode(ShadowMode mode) {
-		if (currentMode == mode)
-			return;
-
-		currentMode = mode;
-		var shaderTemplate = new ShaderTemplate()
-			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
-			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
-		if (mode == ShadowMode.DETAILED)
+		if (mode == ShadowMode.DETAILED) {
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl");
-		setShaderTemplate(shaderTemplate);
+		} else {
+			shaderTemplate.remove(GL_GEOMETRY_SHADER);
+		}
 	}
 }

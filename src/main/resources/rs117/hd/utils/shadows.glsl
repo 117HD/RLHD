@@ -24,6 +24,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+#include <uniforms/global.glsl>
+
 #include <utils/constants.glsl>
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
