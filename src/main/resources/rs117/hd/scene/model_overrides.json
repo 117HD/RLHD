@@ -28865,6 +28865,25 @@
     ]
   },
   {
+    "description": "Stalked Den Rope Shortcut",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "STALKER_DEN_SHORTCUT_ROPE_TOP",
+      "STALKER_DEN_SHORTCUT_ROPE_BOTTOM"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -50
+      }
+    ]
+  },
+  {
     "description": "Hunter Guild cave, Cam Torum, Perilous Moons, Giants Den and Escape Caves - Walls, Rocky objects and Stairs",
     "baseMaterial": "ROCK_3",
     "objectIds": [
