@@ -463,7 +463,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int cameraZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
-	private final HashMap<Integer, Integer> idleNPCRadius = new HashMap<>();
+	private final HashMap<Integer, ActorDisplacementConfig> npcDisplacementConfig = new HashMap<>();
+
+	static class ActorDisplacementConfig {
+		public boolean canDisplace = true;
+		public int idleRadius = -1;
+	}
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -3069,15 +3074,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
 			if (renderable instanceof NPC) {
 				var npc = (NPC) renderable;
-				var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY") && !anim.contains("IMPLING")) {
-					int npcId = npc.getId();
-					Integer displacementRadius = idleNPCRadius.get(npcId);
-					if (displacementRadius == null) {
-						displacementRadius = modelRadius;
+				int npcId = npc.getId();
+
+				ActorDisplacementConfig displacementConfig = npcDisplacementConfig.get(npcId);
+				if (displacementConfig == null) {
+					npcDisplacementConfig.put(npcId, displacementConfig = new ActorDisplacementConfig());
+
+					// Check if NPC is allowed to displace
+					var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
+					displacementConfig.canDisplace =
+						anim == null || (!anim.contains("HOVER") && !anim.contains("FLY") && !anim.contains("IMPLING"));
+				}
+
+				if (displacementConfig.canDisplace) {
+					int displacementRadius = displacementConfig.idleRadius;
+					if (displacementRadius == -1) {
+						displacementRadius = modelRadius; // Fallback to ModelRadius since we don't know the idle radius yet
 						if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
 							displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
-							idleNPCRadius.put(npcId, displacementRadius); // Cache Radius to be used for all animations
+							displacementConfig.idleRadius = displacementRadius;
 						}
 					}
 					uboCompute.addCharacterPosition(x, z, displacementRadius);
