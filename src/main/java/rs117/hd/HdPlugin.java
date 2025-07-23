@@ -3074,7 +3074,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 
-			if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
+			if (configCharacterDisplacement && renderable instanceof Actor) {
 				if (renderable instanceof NPC) {
 					var npc = (NPC) renderable;
 					int npcId = npc.getId();
@@ -3099,7 +3099,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						}
 						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
-				} else if (renderable instanceof Player) {
+				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 				}
 			}
