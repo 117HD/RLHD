@@ -27750,6 +27750,79 @@
     ]
   },
   {
+    "description": "Varlmaore - Auburnvale - Plants",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "PLANT_FERN02_SMALL02",
+      "PLANT_FERN02_SMALL04",
+      "PLANT_BUSH03_BERRY01",
+      "PLANT_FERN02_SMALL03",
+      "PLANT_FERN02_SMALL01",
+      "PLANT_BUSH04_LEAFY02",
+      "PLANT_FERN02_SMALL04_DRY01",
+      "PLANT_FERN_ECLIPSE03",
+      "PLANT_BUSH04_LEAFY01",
+      "PLANT_FERN_ECLIPSE02",
+      "PLANT_FERN_ECLIPSE01",
+      "PLANT_BUSH02_LEAFY01",
+      "LEAVES_SPIKEY01_SPARSE01",
+      "GROUNDCOVER_PLANT5_ROTTEN",
+      "PLANT_BUSH03_LEAFY01",
+      "LEAVES_ROTTEN_EDGE",
+      "LEAVES_ROTTEN_CORNER",
+      "LEAVES_SPIKEY01_DENSE01",
+      "PLANT_BUSH01_LEAFY01",
+      "GROUNDCOVER_PLANT4_ROTTEN",
+      "PLANT_FERN01_DEFAULT02_DRY01"
+    ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Pine Tree 1",
+    "baseMaterial": "LEAVES_1",
+    "objectIds": [
+      "TREE_PINE_BRACKENTOP01",
+      "TREE_PINE_BRACKENTOP02",
+      "TREE_PINE_BRACKENTOP03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Pine Tree 2",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "TREE_PINE_DEFAULT02",
+      "TREE_PINE_DEFAULT04",
+      "TREE_PINE_DEFAULT01",
+      "TREE_PINE_DEFAULT05"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Pine Tree Dead/Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TREE_PINE_DEAD02",
+      "TREE_PINE_DEAD01"
+    ]
+  },
+  {
     "description": "Perilous Moons Murals",
     "baseMaterial": "TILE_SMALL_2",
     "uvType": "BOX",
