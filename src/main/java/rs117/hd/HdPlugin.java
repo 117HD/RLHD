@@ -3073,35 +3073,35 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (configModelBatching)
 					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
-		}
 
-		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
-			if (renderable instanceof NPC) {
-				var npc = (NPC) renderable;
-				int npcId = npc.getId();
+			if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
+				if (renderable instanceof NPC) {
+					var npc = (NPC) renderable;
+					int npcId = npc.getId();
 
-				ActorDisplacementConfig displacementConfig = npcDisplacementConfig.get(npcId);
-				if (displacementConfig == null) {
-					npcDisplacementConfig.put(npcId, displacementConfig = new ActorDisplacementConfig());
+					ActorDisplacementConfig displacementConfig = npcDisplacementConfig.get(npcId);
+					if (displacementConfig == null) {
+						npcDisplacementConfig.put(npcId, displacementConfig = new ActorDisplacementConfig());
 
-					// Check if NPC is allowed to displace
-					var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-					displacementConfig.canDisplace = anim == null || !ActorDisplacementConfig.animIgnoreList.contains(anim);
-				}
-
-				if (displacementConfig.canDisplace) {
-					int displacementRadius = displacementConfig.idleRadius;
-					if (displacementRadius == -1) {
-						displacementRadius = modelRadius; // Fallback to ModelRadius since we don't know the idle radius yet
-						if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
-							displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
-							displacementConfig.idleRadius = displacementRadius;
-						}
+						// Check if NPC is allowed to displace
+						var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
+						displacementConfig.canDisplace = anim == null || !ActorDisplacementConfig.animIgnoreList.contains(anim);
 					}
-					uboCompute.addCharacterPosition(x, z, displacementRadius);
+
+					if (displacementConfig.canDisplace) {
+						int displacementRadius = displacementConfig.idleRadius;
+						if (displacementRadius == -1) {
+							displacementRadius = modelRadius; // Fallback to ModelRadius since we don't know the idle radius yet
+							if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
+								displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
+								displacementConfig.idleRadius = displacementRadius;
+							}
+						}
+						uboCompute.addCharacterPosition(x, z, displacementRadius);
+					}
+				} else if (renderable instanceof Player) {
+					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 				}
-			} else if (renderable instanceof Player) {
-				uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 			}
 		}
 
