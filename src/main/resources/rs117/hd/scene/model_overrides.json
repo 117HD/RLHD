@@ -23678,7 +23678,10 @@
       "REDWOODTREE_MIDDLE_SIDE2",
       "REDWOODTREE_BOTTOM_CENTER",
       "REDWOODTREE_MIDDLE_SIDE3",
-      "REDWOODTREE_MIDDLE_CENTER"
+      "REDWOODTREE_MIDDLE_CENTER",
+      "TREE_REDWOOD_DEFAULT01",
+      "TREE_REDWOOD_DEFAULT02",
+      "TREE_REDWOOD_DEFAULT03"
     ],
     "uvType": "BOX",
     "uvScale": 1.2,
@@ -23717,6 +23720,38 @@
     "uvType": "BOX",
     "uvScale": 0.82,
     "uvOrientation": 256
+  },
+  {
+    "description": "Auburnvale - Redwood Giant Redwood Stump",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "objectIds": [
+      "SKEWKIT_REDWOOD01_EDGE01_1",
+      "SKEWKIT_REDWOOD01_EDGE01_2",
+      "SKEWKIT_REDWOOD01_MIDDLE01",
+      "SKEWKIT_REDWOOD01_MIDDLE02",
+      "SKEWKIT_REDWOOD01_PLAIN01",
+      "SKEWKIT_REDWOOD01_EDGE01_Q",
+      "SKEWKIT_REDWOOD01_EDGE01_3",
+      "SKEWKIT_REDWOOD01_DIAG02",
+      "SKEWKIT_REDWOOD01_DIAG01",
+      "SKEWKIT_REDWOOD01_EDGE01_T",
+      "SKEWKIT_REDWOOD01_EDGE01_W",
+      "SKEWKIT_REDWOOD01_EDGE01_R",
+      "SKEWKIT_REDWOOD01_EDGE01_4",
+      "SKEWKIT_REDWOOD01_MIDDLE03",
+      "SKEWKIT_REDWOOD01_EDGE01_E"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 70
+  },
+  {
+    "description": "Auburnvale - Redwood Giant Redwood Stump",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FUNGI_SHELF01_DEFAULT01",
+      "FUNGI_SHELF01_CLUSTER01"
+    ]
   },
   {
     "description": "Guardians Of the Rift - Rocks - Large",
