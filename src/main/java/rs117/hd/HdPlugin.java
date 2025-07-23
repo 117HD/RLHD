@@ -45,6 +45,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -466,6 +467,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final HashMap<Integer, ActorDisplacementConfig> npcDisplacementConfig = new HashMap<>();
 
 	static class ActorDisplacementConfig {
+		public static final HashSet<String> animIgnoreList = new HashSet<>(List.of(new String[] {
+			"HOVER",
+			"FLY",
+			"IMPLING",
+			"SWAN",
+			"DUCK",
+			"SWIM"
+		}));
+
 		public boolean canDisplace = true;
 		public int idleRadius = -1;
 	}
@@ -3065,12 +3075,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 
-		if (enableDetailedTimers)
-			frameTimer.end(Timer.DRAW_RENDERABLE);
-
-		if (eightIntWrite[0] == -1)
-			return; // Hidden model
-
 		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
 			if (renderable instanceof NPC) {
 				var npc = (NPC) renderable;
@@ -3082,8 +3086,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					// Check if NPC is allowed to displace
 					var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-					displacementConfig.canDisplace =
-						anim == null || (!anim.contains("HOVER") && !anim.contains("FLY") && !anim.contains("IMPLING"));
+					displacementConfig.canDisplace = anim == null || !ActorDisplacementConfig.animIgnoreList.contains(anim);
 				}
 
 				if (displacementConfig.canDisplace) {
@@ -3101,6 +3104,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 			}
 		}
+
+		if (enableDetailedTimers)
+			frameTimer.end(Timer.DRAW_RENDERABLE);
+
+		if (eightIntWrite[0] == -1)
+			return; // Hidden model
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)
