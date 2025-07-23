@@ -7414,7 +7414,8 @@
       "KR_PIER_RAIL",
       "BR_LOBBY_RAIL",
       "WALLKIT_SHAYZIEN_RAIL01",
-      "PVPA_DESERTGATE_OPEN"
+      "PVPA_DESERTGATE_OPEN",
+      "WALLKIT_AUBURN01_FENCE01_NOSHADOW"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -21853,7 +21854,8 @@
       "CAVE_TWIG1",
       "AVIUM_ROOTS01",
       "AVIUM_ROOTS02",
-      "DOTI_BAG_DUFFEL01_DEFAULT01_GONE"
+      "DOTI_BAG_DUFFEL01_DEFAULT01_GONE",
+      "ROOTS_PINE_1"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -23744,6 +23746,133 @@
     "uvType": "BOX",
     "uvScale": 1.2,
     "uvOrientation": 70
+  },
+  {
+    "description": "Auburnvale - Redwood Mushrooms",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FUNGI_SHELF01_DEFAULT01",
+      "FUNGI_SHELF01_CLUSTER01"
+    ]
+  },
+  {
+    "description": "Auburnvale - Ent Admire Log 1",
+    "objectIds": [
+      "ENT_TOTEMS_ADMIRE_LOC_1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 7 && s == 4", "h == 7 && s == 3" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 8", "h == 10", "h == 12" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Ent Admire Log 2",
+    "objectIds": [
+      "ENT_TOTEMS_ADMIRE_LOC_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 7 && s == 7" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": [ "h == 9", "h == 10", "h == 12" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Ent Admire Log 3",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "ENT_TOTEMS_ADMIRE_LOC_3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 3", "h == 7 && s == 7" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 9", "h == 10", "h == 12" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - House Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_AUBURNVALE01_MIDDLE01",
+      "WALLKIT_AUBURNVALE01_WINDOW01",
+      "WALLKIT_AUBURNVALE01_DOOR01_M",
+      "WALLKIT_AUBURNVALE01_DOOR01",
+      "SOC_WALL_INSPECT_REINFORCED",
+      "SOC_WINDOW_NOOP"
+    ]
+  },
+  {
+    "description": "Auburnvale - Palisade Walls",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_PALISADE02_DEFAULT04",
+      "WALLKIT_PALISADE02_DEFAULT01",
+      "WALLKIT_PALISADE02_DEFAULT05",
+      "WALLKIT_PALISADE02_DEFAULT05_M",
+      "WALLKIT_PALISADE02_DEFAULT03",
+      "AV_LOWWALL_CLIMB_1",
+      "AV_LOWWALL_CLIMB_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 3 && s == 7", "h == 3 && s == 1" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Log Balance",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "AV_BALANCE_1",
+      "AV_BALANCE_2",
+      "AV_BALANCE_INNER_B",
+      "AV_BALANCE_INNER_A"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Auburnvale - Redwood Giant Redwood Stump",
@@ -27856,6 +27985,15 @@
       "TREE_PINE_DEAD02",
       "TREE_PINE_DEAD01"
     ]
+  },
+  {
+    "description": "Auburnvale Awnings",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "TENT_BAZAAR01_COVER01_AUBURNVALE01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Perilous Moons Murals",
