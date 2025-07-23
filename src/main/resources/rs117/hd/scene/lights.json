@@ -38668,10 +38668,10 @@
       255
     ],
     "fadeInDuration": 200,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 100,
     "type": "FLICKER",
     "duration": 0,
     "range": 40,
-    "projectileIds": [ "CANNONBALL_TRAVEL_LEAGUE" ]
+    "projectileIds": [ "CANNONBALL_TRAVEL_LEAGUE", "CANNONBALL_TRAVEL_GRANITE_LEAGUE" ]
   }
 ]
