@@ -22240,7 +22240,8 @@
       "FAI_LEAFLESS_BUSH_LARGE_02",
       "DOV_HUNTING_PLANT2_NOOP",
       "BUSH_DESERT_DEAD01",
-      "BUSH_DESERT_DEAD02"
+      "BUSH_DESERT_DEAD02",
+      "FAI_LEAFLESS_BUSH_SMALL_01"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -23748,11 +23749,14 @@
     "uvOrientation": 70
   },
   {
-    "description": "Auburnvale - Redwood Mushrooms",
+    "description": "Auburnvale - Mushrooms",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "FUNGI_SHELF01_DEFAULT01",
-      "FUNGI_SHELF01_CLUSTER01"
+      "FUNGI_SHELF01_CLUSTER01",
+      "DORGESH_MUSHROOM_FLOOR5",
+      "DORGESH_MUSHROOM_FLOOR4",
+      "FOSSIL_MUSHROOM2"
     ]
   },
   {
@@ -23880,6 +23884,113 @@
     "objectIds": [
       "FUNGI_SHELF01_DEFAULT01",
       "FUNGI_SHELF01_CLUSTER01"
+    ]
+  },
+  {
+    "description": "Auburnvale - Cave Entrances",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.3,
+    "objectIds": [
+      "CAVE_MOUNTAIN01_WATER01",
+      "STALKER_DEN_EXTERNAL_SHORTCUT_OUTSIDE",
+      "SOC_CAVE_ENTRANCE",
+      "CAVE_MOUNTAIN01_DEFAULT03"
+    ]
+  },
+  {
+    "description": "Auburnvale - Aquaduct",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.3,
+    "objectIds": [
+      "WALLKIT_AUBURN02_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_AUBURN02_AQUEDUCT01",
+      "WALLKIT_AUBURN02_AQUEDUCT01_DAMAGED02",
+      "ARCH_AUBURN02_AQUEDUCT01",
+      "ARCH_AUBURN03_AQUEDUCT01",
+      "WALLKIT_AUBURN04_AQUEDUCT03_STRAIGHT01",
+      "WALLKIT_AUBURN04_AQUEDUCT03_CORNER01",
+      "WALLKIT_AUBURN04_AQUEDUCT01",
+      "WALLKIT_AUBURN03_AQUEDUCT01",
+      "WALLKIT_AUBURN04_AQUEDUCT02",
+      "WALLKIT_AUBURN04_AQUEDUCT02_M",
+      "WALLKIT_AUBURN01_AQUEDUCT01_TRANSITION01",
+      "WALLKIT_AUBURN01_AQUEDUCT01",
+      "WALLKIT_AUBURN01_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_AUBURN01_AQUEDUCT01_DAMAGED02",
+      "WALLKIT_AUBURN01_AQUEDUCT01_TRANSITION01_M"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Roots with Red Vines",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ROOT_CUSTODIA01_MEDIUM02",
+      "ROOT_CUSTODIA01_MEDIUM02_MIRROR",
+      "VINE_BRANCH02_HANGING03",
+      "ROOT_CUSTODIA01_SPROUTS02",
+      "VINE_BRANCH02_HANGING04",
+      "ROOT_CUSTODIA01_OPEN01",
+      "VINE_BRANCH02_HANGING01",
+      "ROOT_CUSTODIA01_OPEN02",
+      "ROOT_CUSTODIA01_SPROUTS01",
+      "ROOT_CUSTODIA01_MEDIUM01",
+      "ROOT_CUSTODIA01_SPIKES01",
+      "ROOT_CUSTODIA01_LARGE02",
+      "ROOT_CUSTODIA01_MEDIUM01_MIRROR",
+      "ROOT_CUSTODIA01_LARGE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Roots Plain",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "ROOT_CUSTODIA01_TREE01",
+      "ROOT_CUSTODIA01_TREE02",
+      "ROOT_CUSTODIA_SMALL03",
+      "ROOT_CUSTODIA_SMALL02",
+      "VINE_BRANCH02_HANGING02"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Rocks",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "CUSTODIA_ROCKSLIDE04",
+      "CUSTODIA_ROCKSLIDE03",
+      "CUSTODIA_DUGUPSOIL03_BROWN",
+      "CUSTODIA_DEBRIS_MUD03",
+      "CUSTODIA_DUGUPSOIL02_BROWN",
+      "CUSTODIA_DEBRIS_MUD02",
+      "CUSTODIA_DUGUPSOIL01_BROWN"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Mossy Rocks",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CUSTODIA_ROCK02_2X2A",
+      "CUSTODIA_ROCK02_1X1A",
+      "CUSTODIA_ROCK01_1X1A"
     ]
   },
   {
@@ -28702,7 +28813,13 @@
       "ROR_TEMPLE_CRUMBLE01_DARK01",
       "ROR_TEMPLE01_LOW01_DARK01",
       "STEPS_ROR_CORNER01_DARK01",
-      "DECOKIT_TILES_BROKEN01"
+      "DECOKIT_TILES_BROKEN01",
+      "CAVEKIT_ROCK01_WALLTOP06",
+      "CAVEKIT_ROCK01_PLANT01",
+      "CAVEKIT_ROCK01_SCRATCHES01",
+      "CAVEKIT_ROCK01_SCRATCHES02",
+      "STALKER_DEN_SHORTCUT_CAVE_1",
+      "STALKER_DEN_SHORTCUT_CAVE_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -28734,7 +28851,9 @@
     "description": "Hunter Guild Cave Exit",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "HG_CAVE_EXIT"
+      "HG_CAVE_EXIT",
+      "STALKER_DEN_EXTERNAL_SHORTCUT_INSIDE",
+      "SOC_CAVE_EXIT"
     ],
     "uvType": "BOX",
     "uvScale": 0.86,
