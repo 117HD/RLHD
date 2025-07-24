@@ -115,6 +115,17 @@ public class ShaderProgram {
 		return property;
 	}
 
+	public static class UniformBool extends UniformProperty {
+		public void set(boolean bool) {
+			assert program.isActive();
+			glUniform1i(uniformIndex, bool ? 1 : 0);
+		}
+	}
+
+	public UniformBool addUniformBool(String uniformName) {
+		return addUniform(new UniformBool(), uniformName);
+	}
+
 	public static class Uniform1i extends UniformProperty {
 		public void set(int value) {
 			assert program.isActive();
