@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <uniforms/global.glsl>
+
 // translates a value from a custom range into 0-1
 float translateRange(float rangeStart, float rangeEnd, float value)
 {

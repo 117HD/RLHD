@@ -34,9 +34,6 @@ layout(std140) uniform UBOGlobal {
     float lightningBrightness;
     vec3 lightDir;
 
-    float shadowMaxBias;
-    int shadowsEnabled;
-
     vec3 waterColorLight;
     vec3 waterColorMid;
     vec3 waterColorDark;

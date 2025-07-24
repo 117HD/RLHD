@@ -30,6 +30,7 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
+#include <uniforms/global.glsl>
 #include <uniforms/ui.glsl>
 
 uniform sampler2D uiTexture;

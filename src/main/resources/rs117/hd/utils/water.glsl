@@ -22,6 +22,11 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <uniforms/global.glsl>
+#include <uniforms/materials.glsl>
+#include <uniforms/water_types.glsl>
+#include <uniforms/lights.glsl>
+
 #include <utils/misc.glsl>
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {

@@ -172,11 +172,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
 
-	public static final int UNIFORM_BLOCK_COMPUTE = 0;
+	public static final int UNIFORM_BLOCK_GLOBAL = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
-	public static final int UNIFORM_BLOCK_GLOBAL = 4;
+	public static final int UNIFORM_BLOCK_COMPUTE = 4;
 	public static final int UNIFORM_BLOCK_UI = 5;
 
 	public static final float NEAR_PLANE = 50;
@@ -372,10 +372,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private GpuIntBuffer[] modelSortingBuffers;
 	private SharedGLBuffer[] hModelSortingBuffers;
 
-	private final UBOCompute uboCompute = new UBOCompute();
 	private final UBOGlobal uboGlobal = new UBOGlobal();
-	private final UBOUI uboUI = new UBOUI();
 	private final UBOLights uboLights = new UBOLights();
+	private final UBOCompute uboCompute = new UBOCompute();
+	private final UBOUI uboUI = new UBOUI();
 
 	@Getter
 	@Nullable
@@ -858,9 +858,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
 			.addUniformBuffer(uboGlobal)
-			.addUniformBuffer(uboUI)
 			.addUniformBuffer(uboLights)
-			.addUniformBuffer(uboCompute);
+			.addUniformBuffer(uboCompute)
+			.addUniformBuffer(uboUI);
 		textureManager.appendUniformBuffers(includes);
 		return includes;
 	}
@@ -1075,9 +1075,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		hModelPassthroughBuffer.initialize();
 
-		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
-		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
+		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 	}
 
@@ -1092,9 +1092,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		hModelPassthroughBuffer.destroy();
 
-		uboCompute.destroy();
-		uboLights.destroy();
 		uboGlobal.destroy();
+		uboLights.destroy();
+		uboCompute.destroy();
 		uboUI.destroy();
 	}
 
@@ -1426,9 +1426,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCompute.centerX.set(client.getCenterX());
 				uboCompute.centerY.set(client.getCenterY());
 				uboCompute.zoom.set(client.getScale());
-				uboCompute.cameraX.set(cameraPosition[0]);
-				uboCompute.cameraY.set(cameraPosition[1]);
-				uboCompute.cameraZ.set(cameraPosition[2]);
+				uboCompute.cameraPos.set(cameraPosition);
 
 				uboCompute.windDirectionX.set((float) Math.cos(environmentManager.currentWindAngle));
 				uboCompute.windDirectionZ.set((float) Math.sin(environmentManager.currentWindAngle));
@@ -1914,13 +1912,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// get the light's direction vector pointing away from each fragment
 			uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
-			// use a curve to calculate max bias value based on the density of the shadow map
-			float shadowPixelsPerTile = (float) shadowMapResolution / config.shadowDistance().getValue();
-			float maxBias = 26f * (float) Math.pow(0.925f, (0.4f * shadowPixelsPerTile - 10f)) + 13f;
-			uboGlobal.shadowMaxBias.set(maxBias / 10000f);
-
-			uboGlobal.shadowsEnabled.set(configShadowsEnabled ? 1 : 0);
-
 			if (configColorFilter != ColorFilter.NONE) {
 				uboGlobal.colorFilter.set(configColorFilter.ordinal());
 				uboGlobal.colorFilterPrevious.set(configColorFilterPrevious.ordinal());
@@ -2152,9 +2143,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.use();
 		uboUI.sourceDimensions.set(canvasWidth, canvasHeight);
 		uboUI.targetDimensions.set(viewportWidth, viewportHeight);
-		uboUI.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100f);
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
-		uboUI.gammaCorrection.set(getGammaCorrection());
 		uboUI.upload();
 
 		// Set the sampling function used when stretching the UI.

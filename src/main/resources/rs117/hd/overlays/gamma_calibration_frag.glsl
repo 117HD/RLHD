@@ -24,7 +24,8 @@
  */
 #version 330
 
-uniform float gammaCorrection;
+#include <uniforms/global.glsl>
+
 uniform float calibrationTimer;
 
 #include <utils/constants.glsl>

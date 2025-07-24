@@ -497,11 +497,9 @@ public class TextureManager {
 			struct.surfaceColor.set(type.surfaceColor);
 			struct.foamColor.set(type.foamColor);
 			struct.depthColor.set(type.depthColor);
-			struct.causticsStrength.set(type.causticsStrength);
 			struct.normalMap.set(getTextureLayer(type.normalMap));
 			struct.foamMap.set(getTextureLayer(Material.WATER_FOAM));
 			struct.flowMap.set(getTextureLayer(Material.WATER_FLOW_MAP));
-			struct.underwaterFlowMap.set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
 		}
 		uboWaterTypes.upload();
 	}

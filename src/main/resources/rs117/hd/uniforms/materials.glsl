@@ -2,8 +2,7 @@
 
 #include MATERIAL_COUNT
 
-struct Material
-{
+struct Material {
     int colorMap;
     int normalMap;
     int displacementMap;

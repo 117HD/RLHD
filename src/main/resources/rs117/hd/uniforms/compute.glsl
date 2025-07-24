@@ -9,9 +9,7 @@ layout(std140) uniform UBOCompute {
     int centerX;
     int centerY;
     int zoom;
-    float cameraX;
-    float cameraY;
-    float cameraZ;
+    vec3 cameraPos;
 
     // Wind uniforms
     float windDirectionX;

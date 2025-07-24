@@ -14,7 +14,6 @@ import static rs117.hd.HdPluginConfig.*;
 @Singleton
 public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverlay.Shader> {
 	static class Shader extends ShaderOverlay.Shader {
-		public Uniform1f uniGammaCorrection = addUniform1f("gammaCorrection");
 		public Uniform1f uniCalibrationTimer = addUniform1f("calibrationTimer");
 
 		public Shader() {
@@ -47,7 +46,6 @@ public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverl
 
 	@Override
 	protected void updateUniforms() {
-		shader.uniGammaCorrection.set(plugin.getGammaCorrection());
 		shader.uniCalibrationTimer.set(getTimeout());
 	}
 

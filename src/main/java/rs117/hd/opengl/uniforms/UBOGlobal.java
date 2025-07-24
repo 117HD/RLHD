@@ -42,9 +42,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property lightDir = addProperty(PropertyType.FVec3, "lightDir");
 
-	public Property shadowMaxBias = addProperty(PropertyType.Float, "shadowMaxBias");
-	public Property shadowsEnabled = addProperty(PropertyType.Int, "shadowsEnabled");
-
 	public Property waterColorLight = addProperty(PropertyType.FVec3, "waterColorLight");
 	public Property waterColorMid = addProperty(PropertyType.FVec3, "waterColorMid");
 	public Property waterColorDark = addProperty(PropertyType.FVec3, "waterColorDark");
