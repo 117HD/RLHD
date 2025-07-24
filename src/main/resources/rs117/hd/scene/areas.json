@@ -6965,6 +6965,24 @@
     ]
   },
   {
+    "name": "AMOXLIATL_ARENA",
+    "regions": [
+      5446
+    ]
+  },
+  {
+    "name": "Ruins of Tapoyauik",
+    "regions": [
+      6294,
+      6550,
+      6806
+    ]
+  },
+  {
+    "name": "Ruins of Tapoyauik Ice",
+    "aabbs": [ [ 1620, 9619, 1645, 9643 ] ]
+  },
+  {
     "name": "HUNTER_GUILD",
     "regions": [
       6291

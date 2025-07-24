@@ -1888,6 +1888,14 @@
     "windStrength": 55
   },
   {
+    "area": "Ruins of Tapoyauik",
+    "waterColor": "#2759C6"
+  },
+  {
+    "area": "AMOXLIATL_ARENA",
+    "waterColor": "#2759C6"
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",

@@ -36103,6 +36103,48 @@
     "offset": [ 0, 150, 20 ]
   },
   {
+    "description": "FROST_NAGA",
+    "npcIds": [ "FROST_NAGUA", "VMQ3_RUINS_FROST_NAGUA" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 5,
+    "radius": 350,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "offset": [ 0, 150, 20 ]
+  },
+  {
+    "description": "FROST_NAGUA_PROJECTILE",
+    "projectileIds": [ "VFX_FROST_NAGUA_PROJ", "VFX_AMOXLIATL_ICE_BLOCK_PROJECTILE_01" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 7,
+    "radius": 250,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250,
+    "offset": [ 0, 0, 0 ]
+  },
+  {
+    "description": "C",
+    "npcIds": [ "AMOXLIATL_CUTSCENE", "AMOXLIATL" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 5,
+    "radius": 1000,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "offset": [ 0, 150, 20 ]
+  },
+  {
     "description": "PERILOUS_MOONS_COOKING_STOVE",
     "objectIds": [ "PMOON_RANGE" ],
     "color": "#e58500",
@@ -38275,6 +38317,23 @@
     "range": 20,
     "objectIds": [
       "SORCERESS_FIREPLACE"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Brazier",
+    "offset": [ 0, 350, 0 ],
+    "radius": 500,
+    "strength": 3.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1050,
+    "range": 10,
+    "objectIds": [
+      "VMQ3_RUINS_BRAZIER_LIT"
     ]
   }
 ]

@@ -4686,7 +4686,7 @@
     "name": "VARLAMORE_TEMPLE_CRYPT_WATER",
     "area": "VARLAMORE_TEMPLE_CRYPT",
     "overlayIds": [ 181, 201 ],
-    "waterType": "DARK_BLUE_WATER"
+    "waterType": "PLAIN_WATER"
   },
   {
     "name": "Twilight Temple Tower Floor",
@@ -4699,6 +4699,98 @@
     "area": "Twilight Temple Main Floor",
     "overlayIds": [ 0, 232, 233, 235, 237 ],
     "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Ruins of Tapoyauik Ice",
+    "area": "Ruins of Tapoyauik Ice",
+    "overlayIds": [ 382 ],
+    "groundMaterial": "ICE_4",
+    "uvScale": 2
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow 1",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 18, 58, 72, 87, 227, 228, 229 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 30,
+    "shiftHue": 5,
+    "maxHue": 38,
+    "replacements": {
+      "Ruins of Tapoyauik Snow No Blending 1": "!blending"
+    }
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow No Blending 1",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 0 ],
+    "underlayIds": [ 18, 58, 72, 87, 227, 228, 229 ],
+    "groundMaterial": "SNOW_1",
+    "maxSaturation": 0,
+    "shiftLightness": 12
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow 2",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 263 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 32,
+    "replacements": {
+      "Ruins of Tapoyauik Snow No Blending 2": "!blending"
+    }
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow No Blending 2",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 263 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 4
+  },
+  {
+    "name": "Ruins of Tapoyauik Dirt",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 382 ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Ruins of Tapoyauik Water",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 380 ],
+    "waterType": "WATER"
+  },
+  {
+    "name": "Ruins of Tapoyauik Dirt",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 382 ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "name": "Amoxliatl Water",
+    "area": "AMOXLIATL_ARENA",
+    "overlayIds": [ 381 ],
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Amoxliatl Snow",
+    "area": "AMOXLIATL_ARENA",
+    "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 20,
+    "shiftHue": 5,
+    "maxHue": 38,
+    "replacements": {
+      "Amoxliatl Snow No Blending": "!blending"
+    }
+  },
+  {
+    "name": "Amoxliatl Snow No Blending",
+    "area": "AMOXLIATL_ARENA",
+    "overlayIds": [ 0 ],
+    "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
+    "groundMaterial": "SNOW_1",
+    "maxSaturation": 0,
+    "shiftLightness": 22,
+    "minLightness": 70
   },
   {
     "name": "COLOSSEUM_TILES",

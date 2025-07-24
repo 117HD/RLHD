@@ -48917,5 +48917,208 @@
         "uvScale": 0.75
       }
     ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Lift Base",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FLOORKIT_LOSANIUM02_DIAG02",
+      "FLOORKIT_LOSANIUM02_MIDDLE01",
+      "FLOORKIT_LOSANIUM02_DIAG02_M",
+      "FLOORKIT_LOSANIUM02_DIAG01_M",
+      "FLOORKIT_LOSANIUM02_DIAG01",
+      "FLOORKIT_LOSANIUM02_CORNER01",
+      "FLOORKIT_LOSANIUM02_CORNER01_M",
+      "FLOORKIT_LOSANIUM02_CRACK01",
+      "FLOORKIT_LOSANIUM02_CRACK02",
+      "FLOORKIT_LOSANIUM02_CRACK04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 38",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Rock and Snow Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02_LEVERBASE",
+      "CAVEKIT_SNOW03_DEFAULT01",
+      "CAVEKIT_SNOW03_DEFAULT01_DARK01",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01",
+      "TAPOYAUIK_TEMPLE_EXIT",
+      "STALAGMITE_SNOW01_DEFAULT01",
+      "VMQ3_RUINS_BLOCKAGE_START",
+      "STALAGMITE_SNOW01_DEFAULT02",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02",
+      "TAPO_DUNGEONKIT_TEMPLE01_FROZEN01",
+      "TAPO_RUBBLE_1",
+      "TAPO_RUBBLE_2",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN03_STEP",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01_LEVERBASE",
+      "TAPOYAUIK_MAIN_ENTRANCE_OP",
+      "TAPOYAUIK_MAIN_EXIT_OP",
+      "TAPO_TEMPLE_BLUE_TALL",
+      "TAPO_TEMPLE_GREY_TALL",
+      "TAPO_TEMPLE_GREY_TALL01",
+      "TAPO_TEMPLE_GREY_TALL02",
+      "TAPO_TEMPLE_GREY_TALL_DECAL01",
+      "TAPO_TEMPLE_GREY_TALL_DECAL02",
+      "TAPO_TEMPLE_GREY_TALL_DECAL03",
+      "TAPO_TEMPLE_GREY_TALL_DECAL04",
+      "TAPO_TEMPLE_BLUE_TALL_DARK03",
+      "TAPO_TEMPLE_GREY_TALL_DARK03",
+      "TAPO_TEMPLE_GRAY_TALL_DARK01",
+      "TAPO_TEMPLE_BLUE_TALL_DARK01",
+      "TAPO_TEMPLE_BLUE_TALL_DARK02",
+      "TAPO_TEMPLE_GRAY_TALL_DARK02"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Murals and Statues",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "VMQ3_RUINS_WALL_CLUE_WATER_OP",
+      "VMQ3_RUINS_WALL_CLUE_EARTH_OP",
+      "VMQ3_RUINS_WALL_CLUE_AIR_OP",
+      "VMQ3_RUINS_WALL_CLUE_FIRE_OP",
+      "VMQ3_RUINS_WALL_CLUE_WATER_NOOP",
+      "VMQ3_RUINS_WALL_CLUE_EARTH_NOOP",
+      "VMQ3_RUINS_WALL_CLUE_AIR_NOOP",
+      "VMQ3_RUINS_WALL_CLUE_FIRE_NOOP",
+      "VMQ3_RUINS_FIRE_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_AIR_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_EARTH_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_FIRE_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_WATER_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_AIR_STATUE_BROKEN",
+      "VMQ3_RUINS_FIRE_STATUE_BROKEN",
+      "VMQ3_RUINS_WATER_STATUE_BROKEN",
+      "VMQ3_RUINS_EARTH_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_AIR_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_WATER_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_FIRE_STATUE_ICON",
+      "VMQ3_RUINS_EARTH_STATUE_ICON",
+      "VMQ3_RUINS_WATER_STATUE_ICON",
+      "VMQ3_RUINS_AIR_STATUE_ICON",
+      "VMQ3_RUINS_WATER_STATUE_ICON_LIT",
+      "VMQ3_RUINS_FIRE_STATUE_ICON_LIT",
+      "VMQ3_RUINS_AIR_STATUE_ICON_LIT",
+      "VMQ3_RUINS_EARTH_STATUE_ICON_LIT",
+      "VMQ3_RUINS_DOOR_UNLOCKED"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Door",
+    "baseMaterial": "STONE_NORMALED",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "objectIds": [
+      "VMQ3_RUINS_DOOR_LOCKED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Rock and Snow Walls - Spike Trap",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "VMQ3_RUINS_SPIKE_TRAP",
+      "VMQ3_RUINS_SPIKE_TRAP_FIRE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Snow Walls",
+    "baseMaterial": "SNOW_4",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CAVEKIT_SNOW01_CHASM01",
+      "CAVEKIT_SNOW01_DEFAULT01_DARK01",
+      "TAPOYAUIK_TRAVERSE_STONE_FAIL_BOTTOM",
+      "CAVEKIT_SNOW01_DEFAULT01",
+      "CAVEKIT_SNOW01_JOIN01_M",
+      "CAVEKIT_SNOW01_ICE01",
+      "CAVEKIT_SNOW01_ICE01_DARK01",
+      "CAVEKIT_SNOW01_ICE01_DARK02",
+      "CAVEKIT_SNOW01_JOIN01",
+      "CAVEKIT_SNOW01_EDGE01_DARK01",
+      "DECOKIT_SNOW01_EDGE01_DARK01",
+      "DECOKIT_SNOW01_CORNER03_DARK01",
+      "DECOKIT_SNOW01_CORNER01_DARK01",
+      "DECOKIT_SNOW01_MIDDLE01_DARK01",
+      "CAVEKIT_SNOW01_LEDGE01",
+      "CAVEKIT_SNOW01_EDGE01",
+      "DECOKIT_SNOW01_CORNER03",
+      "DECOKIT_SNOW01_CORNER01",
+      "DECOKIT_SNOW01_EDGE01",
+      "DECOKIT_SNOW01_JOIN01",
+      "DECOKIT_SNOW01_JOIN02",
+      "DECOKIT_SNOW01_MIDDLE01",
+      "CAVEKIT_SNOW01_EDGELEDGE02",
+      "CAVEKIT_SNOW01_EDGELEDGE01",
+      "CAVEKIT_SNOW01_LEDGE02",
+      "CAVEKIT_SNOW01_EDGELEDGE02_M",
+      "CAVEKIT_SNOW01_EDGELEDGE01_M",
+      "DECOKIT_SNOW01_EDGE03",
+      "DECOKIT_SNOW01_CORNER03_DARK02",
+      "DECOKIT_SNOW01_CORNER01_DARK02",
+      "DECOKIT_SNOW01_EDGE01_DARK02",
+      "DECOKIT_SNOW01_MIDDLE01_DARK02",
+      "TAPOYAUIK_TRAVERSE_1_BOTTOM",
+      "TAPOYAUIK_TRAVERSE_WALL_FAIL_BOTTOM",
+      "TAPOYAUIK_TRAVERSE_2_BOTTOM"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Brazier",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.71,
+    "objectIds": [
+      "VMQ3_RUINS_BRAZIER_LIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Stone Chest",
+    "baseMaterial": "SNOW_2",
+    "uvType": "BOX",
+    "uvScale": 0.71,
+    "objectIds": [
+      "CHEST_ZEMA01_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.41
+      }
+    ]
   }
 ]
