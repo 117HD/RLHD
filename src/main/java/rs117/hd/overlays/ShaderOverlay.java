@@ -29,6 +29,7 @@ import rs117.hd.opengl.shader.ShaderTemplate;
 import rs117.hd.utils.ShaderRecompile;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @Singleton
@@ -72,6 +73,8 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	private long becameHiddenAt;
 	private boolean isHidden = true;
 	private boolean skipNextGetPreferredLocation;
+	private boolean isProbablyStartingResize;
+	private Rectangle resizeStartingBounds = new Rectangle();
 	private final float[] aspectRatioRoundingError = { 0, 0 };
 
 	public static class Shader extends ShaderProgram {
@@ -163,7 +166,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		return client != null && client.getGameState().getState() >= GameState.LOGGED_IN.getState();
 	}
 
-	private boolean shouldCenter() {
+	private boolean shouldKeepCentered() {
 		// If centered & not at a custom position & not in a snap corner & currently logged in to interact with overlays
 		return centered && getPreferredLocation() == null && getPreferredPosition() == null && isLoggedIn();
 	}
@@ -171,11 +174,14 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	@Override
 	public Rectangle getBounds() {
 		var bounds = super.getBounds();
-		if (shouldCenter()) {
-			// Recenter the overlay when centered
+		if (shouldKeepCentered()) {
 			bounds.setSize(getPreferredSize());
 			bounds.x = (client.getCanvasWidth() - bounds.width) / 2;
 			bounds.y = (client.getCanvasHeight() - bounds.height) / 2;
+		}
+		if (isProbablyStartingResize) {
+			isProbablyStartingResize = false;
+			resizeStartingBounds = new Rectangle(bounds);
 		}
 		return bounds;
 	}
@@ -192,24 +198,39 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 
 	@Override
 	public void setPreferredLocation(Point preferredLocation) {
-		resetHiddenTimer();
+		// Reset the hide timer while resizing
+		if (!resizeStartingBounds.isEmpty())
+			resetHideTimer();
 		super.setPreferredLocation(preferredLocation);
+	}
+
+	@Override
+	public boolean isResizable() {
+		isProbablyStartingResize = true;
+		return super.isResizable();
 	}
 
 	@Override
 	public void setPreferredSize(Dimension size) {
 		if (size != null) {
-			resetHiddenTimer();
+			// Reset the hide timer while resizing
+			if (!resizeStartingBounds.isEmpty())
+				resetHideTimer();
+
+			int minWidth, minHeight;
+			minWidth = minHeight = getMinimumSize();
+			int maxWidth = client.getCanvasWidth() - 1;
+			int maxHeight = client.getCanvasHeight() - 1;
 			var cursor = clientUI.getCurrentCursor().getType();
 
-			if (shouldCenter()) {
-				// Take over resizing when centered
+			// Take over resizing when centered
+			if (shouldKeepCentered()) {
 				var prev = getPreferredSize();
 				var mouse = client.getMouseCanvasPosition();
 				if (size.width != prev.width)
-					size.width = 2 * mouse.getX() - client.getCanvasWidth();
+					size.width = 2 * mouse.getX() - maxWidth;
 				if (size.height != prev.height)
-					size.height = 2 * mouse.getY() - client.getCanvasHeight();
+					size.height = 2 * mouse.getY() - maxHeight;
 
 				switch (cursor) {
 					case Cursor.NW_RESIZE_CURSOR:
@@ -223,90 +244,78 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 						size.height *= -1;
 						break;
 				}
-			}
 
-			int minWidth, minHeight;
-			minWidth = minHeight = getMinimumSize();
+				size.width = clamp(size.width, minWidth, maxWidth);
+				size.height = clamp(size.height, minHeight, maxHeight);
+			}
 
 			if (shouldMaintainAspectRatio()) {
 				float aspectRatio = (float) initialSize.width / initialSize.height;
 				if (aspectRatio > 1) {
 					minWidth = Math.round(minHeight * aspectRatio);
+					maxHeight = Math.round(maxWidth / aspectRatio);
 				} else {
 					minHeight = Math.round(minWidth / aspectRatio);
-				}
-				var prevSize = getPreferredSize();
-
-				boolean resizingWidth = true;
-				// This could be further improved by keeping track of the size at the start of the resize instead of the previous size
-				int widthChange = size.width - prevSize.width;
-				int heightChange = size.height - prevSize.height;
-				switch (cursor) {
-					case Cursor.N_RESIZE_CURSOR:
-					case Cursor.S_RESIZE_CURSOR:
-						resizingWidth = false;
-						break;
-					case Cursor.NW_RESIZE_CURSOR:
-					case Cursor.NE_RESIZE_CURSOR:
-					case Cursor.SW_RESIZE_CURSOR:
-					case Cursor.SE_RESIZE_CURSOR:
-						resizingWidth = widthChange > heightChange;
-						break;
+					maxWidth = Math.round(maxHeight * aspectRatio);
 				}
 
-				if (resizingWidth) {
-					size.height = Math.round(size.width / aspectRatio);
-					heightChange = size.height - prevSize.height;
-				} else {
+				boolean resizingHeight = cursor == Cursor.N_RESIZE_CURSOR || cursor == Cursor.S_RESIZE_CURSOR;
+				if (resizingHeight) {
 					size.width = Math.round(size.height * aspectRatio);
-					widthChange = size.width - prevSize.width;
+				} else {
+					size.height = Math.round(size.width / aspectRatio);
 				}
+
+				size.width = clamp(size.width, minWidth, maxWidth);
+				size.height = clamp(size.height, minHeight, maxHeight);
 
 				var loc = getPreferredLocation();
 				if (loc != null) {
+					var prevSize = getPreferredSize();
+					int widthChange = size.width - prevSize.width;
+					int heightChange = size.height - prevSize.height;
+
 					// Since we'll be skipping RuneLite's location adjustment, we must add it in ourselves
 					switch (cursor) {
 						case Cursor.N_RESIZE_CURSOR:
 						case Cursor.NE_RESIZE_CURSOR:
-							if (!resizingWidth)
-								loc.y -= heightChange;
+							loc.y -= heightChange;
 							break;
 						case Cursor.W_RESIZE_CURSOR:
 						case Cursor.SW_RESIZE_CURSOR:
-							if (resizingWidth)
-								loc.x -= widthChange;
+							loc.x -= widthChange;
 							break;
 						case Cursor.NW_RESIZE_CURSOR:
-							if (resizingWidth) {
-								loc.x -= widthChange;
+							loc.x -= widthChange;
+							loc.y -= heightChange;
+							break;
+					}
+
+					// If adjusting along one dimension, automatically adjust the other dimension to maintain the aspect ratio
+					switch (cursor) {
+						case Cursor.N_RESIZE_CURSOR:
+						case Cursor.S_RESIZE_CURSOR:
+						case Cursor.E_RESIZE_CURSOR:
+						case Cursor.W_RESIZE_CURSOR:
+							if (resizingHeight) {
+								float shouldSubtract = widthChange / 2f + aspectRatioRoundingError[0];
+								int willSubtract = (int) shouldSubtract;
+								aspectRatioRoundingError[0] = shouldSubtract - willSubtract;
+								loc.x -= willSubtract;
 							} else {
-								loc.y -= heightChange;
+								float shouldSubtract = heightChange / 2f + aspectRatioRoundingError[1];
+								int willSubtract = (int) shouldSubtract;
+								aspectRatioRoundingError[1] = shouldSubtract - willSubtract;
+								loc.y -= willSubtract;
 							}
 							break;
 					}
 
-					// Adjust the location along the dimension which was adjusted to keep the same aspect ratio
-					float shouldSubtract;
-					int willSubtract;
-					if (resizingWidth) {
-						shouldSubtract = heightChange / 2f + aspectRatioRoundingError[1];
-						willSubtract = (int) shouldSubtract;
-						aspectRatioRoundingError[1] = shouldSubtract - willSubtract;
-						loc.y -= willSubtract;
-					} else {
-						shouldSubtract = widthChange / 2f + aspectRatioRoundingError[0];
-						willSubtract = (int) shouldSubtract;
-						aspectRatioRoundingError[0] = shouldSubtract - willSubtract;
-						loc.x -= willSubtract;
-					}
-
+					// Update the location and skip the next location update to ignore RuneLite's resize location change
 					setPreferredLocation(loc);
 					skipNextGetPreferredLocation = true;
 				}
 			}
-
-			size.width = Math.max(minWidth, size.width);
-			size.height = Math.max(minHeight, size.height);
 		}
 
 		super.setPreferredSize(size);
@@ -358,7 +367,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	}
 
-	private void resetHiddenTimer() {
+	private void resetHideTimer() {
 		becameHiddenAt = System.currentTimeMillis();
 	}
 
@@ -369,7 +378,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	private boolean getUpdatedHiddenState() {
 		boolean isHidden = isHidden();
 		if (isHidden && !this.isHidden)
-			resetHiddenTimer();
+			resetHideTimer();
 		return this.isHidden = isHidden;
 	}
 
@@ -378,8 +387,10 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		var bounds = getBounds();
 		if (getUpdatedHiddenState()) {
 			// When the overlay is hidden, keep it manageable for a minute by not returning null
-			if (!isManageable() || getTimeSinceHiding() >= 60000)
+			if (!isManageable() || getTimeSinceHiding() >= 60000) {
+				resizeStartingBounds.setSize(0, 0);
 				return null;
+			}
 		} else if (!borderless) {
 			g.setColor(Color.BLACK);
 			g.drawRect(0, 0, bounds.width, bounds.height);
