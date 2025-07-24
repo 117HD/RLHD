@@ -1592,7 +1592,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					tiledLightingShaderPrograms.get(layer).use();
 					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
 					glClear(GL_COLOR_BUFFER_BIT);
-					glDrawArrays(GL_TRIANGLES, 0, 4);
+					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 				}
 				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
 			}
