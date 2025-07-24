@@ -1,6 +1,8 @@
 package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -28,6 +30,7 @@ public class ComputeUniforms extends SharedUniformBuffer {
 	private final Property characterPositionCount = addProperty(PropertyType.Int, "characterPositionCount");
 	private final Property[] characterPositions = addPropertyArray(PropertyType.FVec3, "characterPositions", MAX_CHARACTER_POSITION_COUNT);
 
+	private final Comparator<CharacterPositionPair> characterPositionsPairComparator = Comparator.comparingDouble(p -> p.dist);
 	private final ArrayList<CharacterPositionPair> characterPositionsPairs = new ArrayList<>(characterPositions.length);
 	private int writtenCharacterPositions;
 	private float playerPosX, playerPosZ;
@@ -69,11 +72,14 @@ public class ComputeUniforms extends SharedUniformBuffer {
 		} else {
 			pair.dist = Math.abs(playerPosX - pair.x) + Math.abs(playerPosZ - pair.z);
 
-			for (int i = 0; i < writeIndex; i++) {
-				if (characterPositionsPairs.get(i).dist >= pair.dist) {
-					writeIndex = i;
-					break;
-				}
+			if (writeIndex > 1) {
+				int index = Collections.binarySearch(
+					characterPositionsPairs.subList(1, writeIndex),
+					pair,
+					characterPositionsPairComparator
+				);
+
+				writeIndex = index >= 0 ? index : -index - 1;
 			}
 		}
 
