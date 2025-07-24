@@ -4691,8 +4691,14 @@
   {
     "name": "Twilight Temple Tower Floor",
     "area": "Twilight Temple Tower Floor",
-    "overlayIds": [ 0, 233, 235, 237 ],
+    "overlayIds": [ 0, 232, 233, 235, 237 ],
     "groundMaterial": "MARBLE_1_GLOSS"
+  },
+  {
+    "name": "Twilight Temple Main Floor",
+    "area": "Twilight Temple Main Floor",
+    "overlayIds": [ 0, 232, 233, 235, 237 ],
+    "groundMaterial": "MARBLE_1"
   },
   {
     "name": "COLOSSEUM_TILES",

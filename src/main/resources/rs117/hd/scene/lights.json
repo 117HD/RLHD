@@ -35735,7 +35735,8 @@
     "range": 20,
     "objectIds": [
       "FORTIS_STOVE",
-      "FORTIS_STOVE_NOOP"
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
     ]
   },
   {
