@@ -169,8 +169,9 @@ int tile_height(int z, int x, int y) {
     return texelFetch(tileHeightMap, ivec3(x + ESCENE_OFFSET, y + ESCENE_OFFSET, z), 0).r << 3;
 }
 
-void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float heightFrac, int plane) {
+void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float modelHeight, int plane) {
     // Skip hillskew if in tile-snapping mode and the vertex is too far from the base
+    float heightFrac = abs(v.y - modelPosY) / modelHeight;
     if (hillskewMode == HILLSKEW_TILE_SNAPPING && heightFrac > HILLSKEW_TILE_SNAPPING_BLEND)
         return;
 
@@ -192,9 +193,8 @@ void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float heig
     float hx1 = mix(h01, h11, px / 128.0);
     float h = mix(hx0, hx1, pz / 128.0);
 
-    if((hillskewMode & HILLSKEW_MODEL) != 0) {
+    if ((hillskewMode & HILLSKEW_MODEL) != 0)
         v.y += h - modelPosY; // Apply full hillskew
-    }
 
     if ((hillskewMode & HILLSKEW_TILE_SNAPPING) != 0 && heightFrac <= HILLSKEW_TILE_SNAPPING_BLEND) {
         float blend = heightFrac / HILLSKEW_TILE_SNAPPING_BLEND;
@@ -250,19 +250,18 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
-void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float height, vec3 worldPos,
+void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float modelHeight, vec3 worldPos,
     in vec3 vertA, in vec3 vertB, in vec3 vertC,
     in vec3 normA, in vec3 normB, in vec3 normC,
-    in float heightFracA, in float heightFracB, in float heightFracC,
     inout vec3 displacementA, inout vec3 displacementB, inout vec3 displacementC
 ) {
     int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float strengthA = heightFracA;
-    float strengthB = heightFracB;
-    float strengthC = heightFracC;
+    float strengthA = saturate(abs(vertA.y) / modelHeight);
+    float strengthB = saturate(abs(vertB.y) / modelHeight);
+    float strengthC = saturate(abs(vertC.y) / modelHeight);
 
     #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
@@ -325,9 +324,9 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
 
         float fractAccum = 0.0;
         for (int i = 0; i < characterPositionCount; i++) {
-            displacementA += applyCharacterDisplacement(characterPositions[i], worldVertA, height, strengthA, fractAccum);
-            displacementB += applyCharacterDisplacement(characterPositions[i], worldVertB, height, strengthB, fractAccum);
-            displacementC += applyCharacterDisplacement(characterPositions[i], worldVertC, height, strengthC, fractAccum);
+            displacementA += applyCharacterDisplacement(characterPositions[i], worldVertA, modelHeight, strengthA, fractAccum);
+            displacementB += applyCharacterDisplacement(characterPositions[i], worldVertB, modelHeight, strengthB, fractAccum);
+            displacementC += applyCharacterDisplacement(characterPositions[i], worldVertC, modelHeight, strengthC, fractAccum);
             if (fractAccum >= 2.0)
                 break;
         }
@@ -384,15 +383,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec4 normB = normal[offset + localId * 3 + 1];
         vec4 normC = normal[offset + localId * 3 + 2];
 
-        // Precompute Height Frac for each vert for Wind/Ground & Hillskew
-        float heightFracA = saturate(abs(thisrvA.pos.y) / height);
-        float heightFracB = saturate(abs(thisrvB.pos.y) / height);
-        float heightFracC = saturate(abs(thisrvC.pos.y) / height);
-
         applyWindDisplacement(windSample, vertexFlags, height, pos,
             thisrvA.pos, thisrvB.pos, thisrvC.pos,
             normA.xyz, normB.xyz, normC.xyz,
-            heightFracA, heightFracB, heightFracC,
             displacementA, displacementB, displacementC);
 
         // Rotate normals to match model orientation
@@ -433,9 +426,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         if ((vertexFlags >> MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING & 1) == 1)
             hillskewFlags |= HILLSKEW_TILE_SNAPPING;
         if (hillskewFlags != HILLSKEW_NONE) {
-            hillskew_vertex(thisrvA.pos, hillskewFlags, pos.y, heightFracA, plane);
-            hillskew_vertex(thisrvB.pos, hillskewFlags, pos.y, heightFracB, plane);
-            hillskew_vertex(thisrvC.pos, hillskewFlags, pos.y, heightFracC, plane);
+            hillskew_vertex(thisrvA.pos, hillskewFlags, pos.y, height, plane);
+            hillskew_vertex(thisrvB.pos, hillskewFlags, pos.y, height, plane);
+            hillskew_vertex(thisrvC.pos, hillskewFlags, pos.y, height, plane);
         }
 
         // position vertices in scene and write to out buffer
@@ -469,9 +462,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
 
                 // For vanilla UVs, the first 3 components are an integer position vector
                 if (hillskewFlags != HILLSKEW_NONE) {
-                    hillskew_vertex(uvA.uvw, hillskewFlags, pos.y, heightFracA, plane);
-                    hillskew_vertex(uvB.uvw, hillskewFlags, pos.y, heightFracB, plane);
-                    hillskew_vertex(uvC.uvw, hillskewFlags, pos.y, heightFracC, plane);
+                    hillskew_vertex(uvA.uvw, hillskewFlags, pos.y, height, plane);
+                    hillskew_vertex(uvB.uvw, hillskewFlags, pos.y, height, plane);
+                    hillskew_vertex(uvC.uvw, hillskewFlags, pos.y, height, plane);
                 }
             }
         }
