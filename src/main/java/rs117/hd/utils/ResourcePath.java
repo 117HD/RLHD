@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2025, Hooder <ahooder@protonmail.com>
  * Copyright (c) 2022, Mark <https://github.com/Mark7625>
  * All rights reserved.
  *

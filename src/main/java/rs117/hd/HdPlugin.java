@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
- * Copyright (c) 2023, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2025, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
