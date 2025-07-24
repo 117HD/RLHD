@@ -106,7 +106,6 @@ import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.opengl.uniforms.UBOTiledLights;
 import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
@@ -181,9 +180,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
-	public static final int UNIFORM_BLOCK_TILED_LIGHTS = 4;
-	public static final int UNIFORM_BLOCK_COMPUTE = 5;
-	public static final int UNIFORM_BLOCK_UI = 6;
+	public static final int UNIFORM_BLOCK_COMPUTE = 4;
+	public static final int UNIFORM_BLOCK_UI = 5;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -390,7 +388,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private final UBOGlobal uboGlobal = new UBOGlobal();
 	private final UBOLights uboLights = new UBOLights();
-	private final UBOTiledLights uboTiledLights = new UBOTiledLights();
 	private final UBOCompute uboCompute = new UBOCompute();
 	private final UBOUI uboUI = new UBOUI();
 
@@ -879,7 +876,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
-			.addUniformBuffer(uboTiledLights)
 			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI);
 		textureManager.appendUniformBuffers(includes);
@@ -1108,7 +1104,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
-		uboTiledLights.initialize(UNIFORM_BLOCK_TILED_LIGHTS);
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 	}
@@ -1126,7 +1121,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.destroy();
 		uboLights.destroy();
-		uboTiledLights.destroy();
 		uboCompute.destroy();
 		uboUI.destroy();
 	}
@@ -1188,9 +1182,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.tileCountX.set(tileCountX);
 		uboGlobal.tileCountY.set(tileCountY);
-
-		uboTiledLights.tileCountX.set(tileCountX);
-		uboTiledLights.tileCountY.set(tileCountY);
 	}
 
 	private void destroyTiledLighting() {
@@ -1547,8 +1538,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
-
-				uboTiledLights.invProjectionMatrix.set(invProjectionMatrix);
 			}
 		}
 
@@ -1582,10 +1571,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindVertexArray(vaoQuad);
 				glDisable(GL_BLEND);
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-				uboTiledLights.cameraPos.set(cameraPosition);
-				uboTiledLights.pointLightsCount.set(sceneContext.numVisibleLights);
-				uboTiledLights.upload();
 
 				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
 					tiledLightingShaderPrograms.get(layer).use();

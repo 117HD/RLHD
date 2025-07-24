@@ -31,14 +31,6 @@
 
 #include TILED_LIGHTING_LAYER
 
-//layout(std140) uniform UBOTiledLights {
-//    int tileCountX;
-//    int tileCountY;
-//    int pointLightsCount;
-//    vec3 cameraPos;
-//    mat4 invProjectionMatrix;
-//};
-
 uniform isampler2DArray tiledLightingArray;
 
 in vec2 fPos;
