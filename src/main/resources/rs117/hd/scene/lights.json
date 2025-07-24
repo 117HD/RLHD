@@ -38187,7 +38187,9 @@
       255
     ],
     "type": "STATIC",
-    "objectIds": [ "HG_CAVE_EXIT" ]
+    "objectIds": [
+      "HG_CAVE_EXIT"
+    ]
   },
   {
     "description": "Hunter Guild Cave Exit - Far",
@@ -38202,6 +38204,22 @@
     ],
     "type": "STATIC",
     "objectIds": [ "HG_CAVE_EXIT" ]
+  },
+  {
+    "description": "Stalker Den Cave Exit",
+    "offset": [ -50, 200, -50 ],
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "STALKER_DEN_EXTERNAL_SHORTCUT_INSIDE",
+      "SOC_CAVE_EXIT"
+    ]
   },
   {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
