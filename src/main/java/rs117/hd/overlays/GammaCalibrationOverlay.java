@@ -30,6 +30,7 @@ public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverl
 	public GammaCalibrationOverlay() {
 		setBorderless(true);
 		setCentered(true);
+		setMaintainAspectRatio(true);
 		setInitialSize(300, 100);
 	}
 

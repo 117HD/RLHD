@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.util.function.Consumer;
@@ -60,11 +61,18 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	@Getter
 	private boolean centered;
 
+	@Setter
+	private boolean maintainAspectRatio;
+
 	private boolean movable = true;
 	private boolean snappable = true;
 
 	private boolean initialized;
 	private final Dimension initialSize = new Dimension(256, 256);
+	private long becameHiddenAt;
+	private boolean isHidden = true;
+	private boolean skipNextGetPreferredLocation;
+	private final float[] aspectRatioRoundingError = { 0, 0 };
 
 	public static class Shader extends ShaderProgram {
 		protected final Uniform4f uniTransform = addUniform4f("transform");
@@ -98,6 +106,8 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 
 	public void destroy() {
 		initialized = false;
+		isHidden = true;
+		becameHiddenAt = 0;
 		overlayManager.remove(this);
 		eventBus.unregister(this);
 		shader.destroy();
@@ -123,7 +133,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	}
 
 	@Override
-	public void setSnappable(boolean snappable) {
+	protected void setSnappable(boolean snappable) {
 		super.setSnappable(snappable);
 		this.snappable = snappable;
 	}
@@ -133,6 +143,10 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		setPosition(centered ? OverlayPosition.DYNAMIC : OverlayPosition.TOP_LEFT);
 		super.setMovable(movable);
 		super.setSnappable(snappable);
+	}
+
+	public boolean shouldMaintainAspectRatio() {
+		return maintainAspectRatio;
 	}
 
 	protected void setInitialSize(int width, int height) {
@@ -167,33 +181,134 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	}
 
 	@Override
-	public void setPreferredSize(Dimension size) {
-		if (size != null && shouldCenter()) {
-			// Take over resizing when centered
-			var prev = getPreferredSize();
-			var mouse = client.getMouseCanvasPosition();
-			if (size.width != prev.width)
-				size.width = 2 * mouse.getX() - client.getCanvasWidth();
-			if (size.height != prev.height)
-				size.height = 2 * mouse.getY() - client.getCanvasHeight();
+	public Point getPreferredLocation() {
+		// Hacky way to prevent RuneLite from updating the location during resizing
+		if (skipNextGetPreferredLocation) {
+			skipNextGetPreferredLocation = false;
+			return null;
+		}
+		return super.getPreferredLocation();
+	}
 
-			switch (clientUI.getCurrentCursor().getType()) {
-				case Cursor.NW_RESIZE_CURSOR:
-					size.height *= -1;
-				case Cursor.W_RESIZE_CURSOR:
-				case Cursor.SW_RESIZE_CURSOR:
-					size.width *= -1;
-					break;
-				case Cursor.N_RESIZE_CURSOR:
-				case Cursor.NE_RESIZE_CURSOR:
-					size.height *= -1;
-					break;
+	@Override
+	public void setPreferredLocation(Point preferredLocation) {
+		resetHiddenTimer();
+		super.setPreferredLocation(preferredLocation);
+	}
+
+	@Override
+	public void setPreferredSize(Dimension size) {
+		if (size != null) {
+			resetHiddenTimer();
+			var cursor = clientUI.getCurrentCursor().getType();
+
+			if (shouldCenter()) {
+				// Take over resizing when centered
+				var prev = getPreferredSize();
+				var mouse = client.getMouseCanvasPosition();
+				if (size.width != prev.width)
+					size.width = 2 * mouse.getX() - client.getCanvasWidth();
+				if (size.height != prev.height)
+					size.height = 2 * mouse.getY() - client.getCanvasHeight();
+
+				switch (cursor) {
+					case Cursor.NW_RESIZE_CURSOR:
+						size.height *= -1;
+					case Cursor.W_RESIZE_CURSOR:
+					case Cursor.SW_RESIZE_CURSOR:
+						size.width *= -1;
+						break;
+					case Cursor.N_RESIZE_CURSOR:
+					case Cursor.NE_RESIZE_CURSOR:
+						size.height *= -1;
+						break;
+				}
 			}
 
-			int min = getMinimumSize();
-			size.width = Math.max(min, size.width);
-			size.height = Math.max(min, size.height);
+			int minWidth, minHeight;
+			minWidth = minHeight = getMinimumSize();
+
+			if (shouldMaintainAspectRatio()) {
+				float aspectRatio = (float) initialSize.width / initialSize.height;
+				if (aspectRatio > 1) {
+					minWidth = Math.round(minHeight * aspectRatio);
+				} else {
+					minHeight = Math.round(minWidth / aspectRatio);
+				}
+				var prevSize = getPreferredSize();
+
+				boolean resizingWidth = true;
+				// This could be further improved by keeping track of the size at the start of the resize instead of the previous size
+				int widthChange = size.width - prevSize.width;
+				int heightChange = size.height - prevSize.height;
+				switch (cursor) {
+					case Cursor.N_RESIZE_CURSOR:
+					case Cursor.S_RESIZE_CURSOR:
+						resizingWidth = false;
+						break;
+					case Cursor.NW_RESIZE_CURSOR:
+					case Cursor.NE_RESIZE_CURSOR:
+					case Cursor.SW_RESIZE_CURSOR:
+					case Cursor.SE_RESIZE_CURSOR:
+						resizingWidth = widthChange > heightChange;
+						break;
+				}
+
+				if (resizingWidth) {
+					size.height = Math.round(size.width / aspectRatio);
+					heightChange = size.height - prevSize.height;
+				} else {
+					size.width = Math.round(size.height * aspectRatio);
+					widthChange = size.width - prevSize.width;
+				}
+
+				var loc = getPreferredLocation();
+				if (loc != null) {
+					// Since we'll be skipping RuneLite's location adjustment, we must add it in ourselves
+					switch (cursor) {
+						case Cursor.N_RESIZE_CURSOR:
+						case Cursor.NE_RESIZE_CURSOR:
+							if (!resizingWidth)
+								loc.y -= heightChange;
+							break;
+						case Cursor.W_RESIZE_CURSOR:
+						case Cursor.SW_RESIZE_CURSOR:
+							if (resizingWidth)
+								loc.x -= widthChange;
+							break;
+						case Cursor.NW_RESIZE_CURSOR:
+							if (resizingWidth) {
+								loc.x -= widthChange;
+							} else {
+								loc.y -= heightChange;
+							}
+							break;
+					}
+
+					// Adjust the location along the dimension which was adjusted to keep the same aspect ratio
+					float shouldSubtract;
+					int willSubtract;
+					if (resizingWidth) {
+						shouldSubtract = heightChange / 2f + aspectRatioRoundingError[1];
+						willSubtract = (int) shouldSubtract;
+						aspectRatioRoundingError[1] = shouldSubtract - willSubtract;
+						loc.y -= willSubtract;
+					} else {
+						shouldSubtract = widthChange / 2f + aspectRatioRoundingError[0];
+						willSubtract = (int) shouldSubtract;
+						aspectRatioRoundingError[0] = shouldSubtract - willSubtract;
+						loc.x -= willSubtract;
+					}
+
+					setPreferredLocation(loc);
+					skipNextGetPreferredLocation = true;
+				}
+			}
+
+			size.width = Math.max(minWidth, size.width);
+			size.height = Math.max(minHeight, size.height);
 		}
+
 		super.setPreferredSize(size);
 	}
 
@@ -204,6 +319,10 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 
 	public boolean isHidden() {
 		return !initialized || !shader.isValid() || !isLoggedIn();
+	}
+
+	public boolean isManageable() {
+		return isMovable() || isResizable();
 	}
 
 	private void updateTransform(int canvasWidth, int canvasHeight) {
@@ -239,17 +358,32 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	}
 
+	private void resetHiddenTimer() {
+		becameHiddenAt = System.currentTimeMillis();
+	}
+
+	private long getTimeSinceHiding() {
+		return System.currentTimeMillis() - becameHiddenAt;
+	}
+
+	private boolean getUpdatedHiddenState() {
+		boolean isHidden = isHidden();
+		if (isHidden && !this.isHidden)
+			resetHiddenTimer();
+		return this.isHidden = isHidden;
+	}
+
 	@Override
 	public Dimension render(Graphics2D g) {
-		if (isHidden())
-			return null;
-
-		if (!borderless) {
-			var bounds = getBounds();
+		var bounds = getBounds();
+		if (getUpdatedHiddenState()) {
+			// When the overlay is hidden, keep it manageable for a minute by not returning null
+			if (!isManageable() || getTimeSinceHiding() >= 60000)
+				return null;
+		} else if (!borderless) {
 			g.setColor(Color.BLACK);
 			g.drawRect(0, 0, bounds.width, bounds.height);
 		}
-
-		return getBounds().getSize();
+		return bounds.getSize();
 	}
 }
