@@ -171,7 +171,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
 	public static final int TEXTURE_UNIT_BASE = GL_TEXTURE0;
-	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE; // default state
+	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE;
 	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
@@ -181,9 +181,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
-	public static final int UNIFORM_BLOCK_COMPUTE = 4;
-	public static final int UNIFORM_BLOCK_UI = 5;
-	public static final int UNIFORM_BLOCK_TILED_LIGHTS = 6;
+	public static final int UNIFORM_BLOCK_TILED_LIGHTS = 4;
+	public static final int UNIFORM_BLOCK_COMPUTE = 5;
+	public static final int UNIFORM_BLOCK_UI = 6;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -390,9 +390,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private final UBOGlobal uboGlobal = new UBOGlobal();
 	private final UBOLights uboLights = new UBOLights();
+	private final UBOTiledLights uboTiledLights = new UBOTiledLights();
 	private final UBOCompute uboCompute = new UBOCompute();
 	private final UBOUI uboUI = new UBOUI();
-	private final UBOTiledLights uboTiledLights = new UBOTiledLights();
 
 	@Getter
 	@Nullable
@@ -470,9 +470,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int cameraZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
-	private float[] projectionMatrix;
-	private float[] invProjectionMatrix;
-
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -882,7 +879,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
-			.addUniformBuffer(uboTiledLights).addUniformBuffer(uboCompute)
+			.addUniformBuffer(uboTiledLights)
+			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI);
 		textureManager.appendUniformBuffers(includes);
 		return includes;
@@ -1110,9 +1108,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+		uboTiledLights.initialize(UNIFORM_BLOCK_TILED_LIGHTS);
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
-		uboTiledLights.initialize(UNIFORM_BLOCK_TILED_LIGHTS);
 	}
 
 	private void destroyBuffers() {
@@ -1128,6 +1126,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.destroy();
 		uboLights.destroy();
+		uboTiledLights.destroy();
 		uboCompute.destroy();
 		uboUI.destroy();
 	}
@@ -1187,8 +1186,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		glActiveTexture(TEXTURE_UNIT_UI);
 
-		uboGlobal.tileXCount.set(tileCountX);
-		uboGlobal.tileYCount.set(tileCountY);
+		uboGlobal.tileCountX.set(tileCountX);
+		uboGlobal.tileCountY.set(tileCountY);
 
 		uboTiledLights.tileCountX.set(tileCountX);
 		uboTiledLights.tileCountY.set(tileCountY);
@@ -1527,7 +1526,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				// Calculate projection matrix
-				projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 				if (orthographicProjection) {
 					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
 					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
@@ -1543,11 +1542,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						-cameraPosition[2]
 					)
 				);
-				invProjectionMatrix = Mat4.inverse(projectionMatrix);
+				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
 
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
+
+				uboTiledLights.invProjectionMatrix.set(invProjectionMatrix);
 			}
 		}
 
@@ -1583,7 +1584,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 				uboTiledLights.cameraPos.set(cameraPosition);
-				uboTiledLights.invProjectionMatrix.set(invProjectionMatrix);
 				uboTiledLights.pointLightsCount.set(sceneContext.numVisibleLights);
 				uboTiledLights.upload();
 

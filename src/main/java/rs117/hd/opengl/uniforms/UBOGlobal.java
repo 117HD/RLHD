@@ -30,11 +30,11 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property underglowColor = addProperty(PropertyType.FVec3, "underglowColor");
 	public Property underglowStrength = addProperty(PropertyType.Float, "underglowStrength");
 
-	public Property tileXCount = addProperty(PropertyType.Int, "tileXCount");
-	public Property tileYCount = addProperty(PropertyType.Int, "tileYCount");
+	public Property tileCountX = addProperty(PropertyType.Int, "tileCountX");
+	public Property tileCountY = addProperty(PropertyType.Int, "tileCountY");
 
-	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
+	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
 
 	public Property useFog = addProperty(PropertyType.Int, "useFog");

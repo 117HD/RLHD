@@ -24,19 +24,20 @@
  */
 #version 330
 
+#include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
 
 #include <utils/constants.glsl>
 
 #include TILED_LIGHTING_LAYER
 
-layout(std140) uniform UBOTiledLights {
-    int tileCountX;
-    int tileCountY;
-    int pointLightsCount;
-    vec3 cameraPos;
-    mat4 invProjectionMatrix;
-};
+//layout(std140) uniform UBOTiledLights {
+//    int tileCountX;
+//    int tileCountY;
+//    int pointLightsCount;
+//    vec3 cameraPos;
+//    mat4 invProjectionMatrix;
+//};
 
 uniform isampler2DArray tiledLightingArray;
 
