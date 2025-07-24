@@ -2493,12 +2493,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								reloadTileOverrides = true;
 								break;
 							case KEY_COLOR_FILTER:
-								if (configColorFilter == ColorFilter.CEL_SHADING ||
-									configColorFilterPrevious == ColorFilter.CEL_SHADING
-								) {
-									clearModelCache = true;
-									reloadScene = true;
-								}
+								if (configColorFilter == ColorFilter.NONE || configColorFilterPrevious == ColorFilter.NONE)
+									recompilePrograms = true;
+								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
+									clearModelCache = reloadScene = true;
 								break;
 							case KEY_ASYNC_UI_COPY:
 								asyncUICopy.complete();
@@ -2520,7 +2518,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
 							case KEY_VANILLA_COLOR_BANDING:
-							case KEY_COLOR_FILTER:
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
