@@ -199,6 +199,14 @@ public class HDUtils {
 		return new float[] { (float) Math.toRadians(altitude), (float) Math.toRadians(azimuth) };
 	}
 
+	public static float[] ensureArrayLength(float[] array, int targetLength) {
+		if (array.length == targetLength)
+			return array;
+		float[] corrected = new float[targetLength];
+		System.arraycopy(array, 0, corrected, 0, Math.min(array.length, corrected.length));
+		return corrected;
+	}
+
 	public static int convertWallObjectOrientation(int orientation) {
 		// Note: this is still imperfect, since the model rotation of a wall object depends on more than just the config orientation,
 		// 		 i.e. extra rotation depending on wall type whatever. I'm not sure.

@@ -48,7 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -176,7 +175,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
 	public static final int MAX_FOG_DEPTH = 100;
-	public static final int SCALAR_BYTES = 4;
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
@@ -1564,37 +1562,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			sceneContext.stagingBufferVertices.flip();
 			sceneContext.stagingBufferUvs.flip();
 			sceneContext.stagingBufferNormals.flip();
-			updateBuffer(
-				hStagingBufferVertices,
-				GL_ARRAY_BUFFER,
-				dynamicOffsetVertices * VERTEX_SIZE,
-				sceneContext.stagingBufferVertices.getBuffer()
-			);
-			updateBuffer(
-				hStagingBufferUvs,
-				GL_ARRAY_BUFFER,
-				dynamicOffsetUvs * UV_SIZE,
-				sceneContext.stagingBufferUvs.getBuffer()
-			);
-			updateBuffer(
-				hStagingBufferNormals,
-				GL_ARRAY_BUFFER,
-				dynamicOffsetVertices * NORMAL_SIZE,
-				sceneContext.stagingBufferNormals.getBuffer()
-			);
+			hStagingBufferVertices.upload(sceneContext.stagingBufferVertices, dynamicOffsetVertices * 4L * VERTEX_SIZE);
+			hStagingBufferUvs.upload(sceneContext.stagingBufferUvs, dynamicOffsetUvs * 4L * UV_SIZE);
+			hStagingBufferNormals.upload(sceneContext.stagingBufferNormals, dynamicOffsetVertices * 4L * NORMAL_SIZE);
 			sceneContext.stagingBufferVertices.clear();
 			sceneContext.stagingBufferUvs.clear();
 			sceneContext.stagingBufferNormals.clear();
 
 			// Model buffers
 			modelPassthroughBuffer.flip();
-			updateBuffer(hModelPassthroughBuffer, GL_ARRAY_BUFFER, modelPassthroughBuffer.getBuffer());
+			hModelPassthroughBuffer.upload(modelPassthroughBuffer);
 			modelPassthroughBuffer.clear();
 
 			for (int i = 0; i < modelSortingBuffers.length; i++) {
 				var buffer = modelSortingBuffers[i];
 				buffer.flip();
-				updateBuffer(hModelSortingBuffers[i], GL_ARRAY_BUFFER, buffer.getBuffer());
+				hModelSortingBuffers[i].upload(buffer);
 				buffer.clear();
 			}
 
@@ -1795,12 +1778,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+			glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			frameTimer.end(Timer.UPLOAD_UI);
 		}
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	@Override
@@ -2444,21 +2427,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferVertices.flip();
 		sceneContext.stagingBufferUvs.flip();
 		sceneContext.stagingBufferNormals.flip();
-		updateBuffer(
-			hStagingBufferVertices,
-			GL_ARRAY_BUFFER,
-			sceneContext.stagingBufferVertices.getBuffer()
-		);
-		updateBuffer(
-			hStagingBufferUvs,
-			GL_ARRAY_BUFFER,
-			sceneContext.stagingBufferUvs.getBuffer()
-		);
-		updateBuffer(
-			hStagingBufferNormals,
-			GL_ARRAY_BUFFER,
-			sceneContext.stagingBufferNormals.getBuffer()
-		);
+		hStagingBufferVertices.upload(sceneContext.stagingBufferVertices);
+		hStagingBufferUvs.upload(sceneContext.stagingBufferUvs);
+		hStagingBufferNormals.upload(sceneContext.stagingBufferNormals);
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferUvs.clear();
 		sceneContext.stagingBufferNormals.clear();
@@ -3150,24 +3121,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (useLowMemoryMode)
 			return 0;
 		return config.expandedMapLoadingChunks();
-	}
-
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull IntBuffer data) {
-		updateBuffer(glBuffer, target, 0, data);
-	}
-
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull IntBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
-	}
-
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, @Nonnull FloatBuffer data) {
-		updateBuffer(glBuffer, target, 0, data);
-	}
-
-	private void updateBuffer(@Nonnull GLBuffer glBuffer, int target, int offset, @Nonnull FloatBuffer data) {
-		glBuffer.ensureCapacity(offset, data.remaining());
-		glBufferSubData(target, offset * 4L, data);
 	}
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
