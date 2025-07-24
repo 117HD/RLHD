@@ -46,6 +46,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Stack;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -185,6 +186,14 @@ public class ResourcePath {
 	public String toString() {
 		String path = toPosixPath();
 		return path.isEmpty() ? "." : path;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		// Used for file watcher event deduplication
+		return obj instanceof ResourcePath &&
+			   Objects.equals(root, ((ResourcePath) obj).root) &&
+			   Objects.equals(path, ((ResourcePath) obj).path);
 	}
 
 	public String toPosixPath() {

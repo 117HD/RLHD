@@ -1599,6 +1599,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void initShaderHotswapping() {
+		assert SHADER_PATH != null;
 		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Recompiling shaders: {}", path);
 			clientThread.invoke(() -> {
