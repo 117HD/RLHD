@@ -89,6 +89,9 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	@Setter
 	private boolean maintainAspectRatio;
 
+	@Getter
+	private boolean fullscreen;
+
 	private boolean movable = true;
 	private boolean snappable = true;
 
@@ -165,6 +168,15 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		this.snappable = snappable;
 	}
 
+	protected void setFullscreen(boolean fullscreen) {
+		this.fullscreen = fullscreen;
+		if (fullscreen) {
+			setPosition(OverlayPosition.DYNAMIC);
+		} else {
+			setPosition(OverlayPosition.TOP_LEFT);
+		}
+	}
+
 	protected void setCentered(boolean centered) {
 		this.centered = centered;
 		setPosition(centered ? OverlayPosition.DYNAMIC : OverlayPosition.TOP_LEFT);
@@ -182,6 +194,8 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 
 	@Override
 	public Dimension getPreferredSize() {
+		if (isFullscreen())
+			return null;
 		var size = super.getPreferredSize();
 		return size != null ? size : new Dimension(initialSize);
 	}
@@ -360,18 +374,22 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 
 	private void updateTransform(int canvasWidth, int canvasHeight) {
 		assert shader.isActive();
-		var bounds = getBounds();
-		// Calculate translation and scale in NDC
-		float[] rect = { bounds.x + 1, bounds.y + 1, bounds.width - 1, bounds.height - 1 };
-		rect[0] += rect[0] + rect[2];
-		rect[1] += rect[1] + rect[3];
-		for (int i = 0; i < 2; i++) {
-			rect[i * 2] /= canvasWidth;
-			rect[i * 2 + 1] /= canvasHeight;
-			rect[i] -= 1;
+		if (isFullscreen()) {
+			shader.uniTransform.set(0, 0, 1, 1);
+		} else {
+			var bounds = getBounds();
+			// Calculate translation and scale in NDC
+			float[] rect = { bounds.x + 1, bounds.y + 1, bounds.width - 1, bounds.height - 1 };
+			rect[0] += rect[0] + rect[2];
+			rect[1] += rect[1] + rect[3];
+			for (int i = 0; i < 2; i++) {
+				rect[i * 2] /= canvasWidth;
+				rect[i * 2 + 1] /= canvasHeight;
+				rect[i] -= 1;
+			}
+			rect[1] *= -1;
+			shader.uniTransform.set(rect);
 		}
-		rect[1] *= -1;
-		shader.uniTransform.set(rect);
 	}
 
 	public void render(int canvasWidth, int canvasHeight) {
