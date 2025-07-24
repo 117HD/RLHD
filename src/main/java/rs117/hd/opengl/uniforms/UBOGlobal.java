@@ -1,10 +1,12 @@
 package rs117.hd.opengl.uniforms;
 
+import rs117.hd.utils.buffer.GLBuffer;
+
 import static org.lwjgl.opengl.GL33C.*;
 
-public class GlobalUniforms extends UniformBuffer {
-	public GlobalUniforms() {
-		super("Global", "GlobalUniforms", GL_DYNAMIC_DRAW);
+public class UBOGlobal extends UniformBuffer<GLBuffer> {
+	public UBOGlobal() {
+		super(GL_DYNAMIC_DRAW);
 	}
 
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
@@ -28,11 +30,11 @@ public class GlobalUniforms extends UniformBuffer {
 	public Property underglowColor = addProperty(PropertyType.FVec3, "underglowColor");
 	public Property underglowStrength = addProperty(PropertyType.Float, "underglowStrength");
 
-	public Property tileXCount = addProperty(PropertyType.Int, "tileXCount");
-	public Property tileYCount = addProperty(PropertyType.Int, "tileYCount");
+	public Property tileCountX = addProperty(PropertyType.Int, "tileCountX");
+	public Property tileCountY = addProperty(PropertyType.Int, "tileCountY");
 
-	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
+	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
 
 	public Property useFog = addProperty(PropertyType.Int, "useFog");
@@ -45,9 +47,6 @@ public class GlobalUniforms extends UniformBuffer {
 	public Property pointLightsCount = addProperty(PropertyType.Int, "pointLightsCount");
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property lightDir = addProperty(PropertyType.FVec3, "lightDir");
-
-	public Property shadowMaxBias = addProperty(PropertyType.Float, "shadowMaxBias");
-	public Property shadowsEnabled = addProperty(PropertyType.Int, "shadowsEnabled");
 
 	public Property waterColorLight = addProperty(PropertyType.FVec3, "waterColorLight");
 	public Property waterColorMid = addProperty(PropertyType.FVec3, "waterColorMid");

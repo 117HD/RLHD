@@ -1,20 +1,27 @@
 package rs117.hd.opengl.shader;
 
-import org.lwjgl.opengl.*;
-
-import static org.lwjgl.opengl.GL20C.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20C.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL32C.GL_GEOMETRY_SHADER;
+import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
 
 public class SceneShaderProgram extends ShaderProgram {
-	public UniformProperty<Integer> uniTextureArray = addUniformProperty("textureArray", GL33::glUniform1i);
-	public UniformProperty<Integer> uniTiledLightingTex = addUniformProperty("tiledLightingArray", GL33::glUniform1i);
-	public UniformProperty<Integer> uniShadowMap = addUniformProperty("shadowMap", GL33::glUniform1i);
+	private final Uniform1i uniTextureArray = addUniform1i("textureArray");
+	private final Uniform1i uniShadowMap = addUniform1i("shadowMap");
+	private final Uniform1i uniTiledLightingTextureArray = addUniform1i("tiledLightingArray");
 
 	public SceneShaderProgram() {
-		setShader(new Shader()
-			.add(GL_VERTEX_SHADER, "vert.glsl")
-			.add(GL_GEOMETRY_SHADER, "geom.glsl")
-			.add(GL_FRAGMENT_SHADER, "frag.glsl"));
+		super(t -> t
+			.add(GL_VERTEX_SHADER, "scene_vert.glsl")
+			.add(GL_GEOMETRY_SHADER, "scene_geom.glsl")
+			.add(GL_FRAGMENT_SHADER, "scene_frag.glsl"));
+	}
+
+	@Override
+	protected void initialize() {
+		uniTextureArray.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP - TEXTURE_UNIT_BASE);
+		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
 	}
 }

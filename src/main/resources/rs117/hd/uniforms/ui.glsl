@@ -1,14 +1,7 @@
 #pragma once
 
-// Needs to match UIUniforms.java
-layout(std140) uniform UIUniforms {
+layout(std140) uniform UBOUI {
     ivec2 sourceDimensions;
     ivec2 targetDimensions;
-
-    float colorBlindnessIntensity;
     vec4 alphaOverlay;
-
-    bool showGammaCalibration;
-    float gammaCalibrationTimer;
-    float gammaCorrection;
 };

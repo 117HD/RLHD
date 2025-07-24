@@ -3,76 +3,77 @@ package rs117.hd.opengl.shader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import lombok.AllArgsConstructor;
+import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
 
-import static org.lwjgl.opengl.GL33.GL_FALSE;
-import static org.lwjgl.opengl.GL33.glGetUniformLocation;
-import static org.lwjgl.opengl.GL33.GL_VALIDATE_STATUS;
-import static org.lwjgl.opengl.GL33.glDeleteProgram;
-import static org.lwjgl.opengl.GL33.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL33.glGetProgrami;
-import static org.lwjgl.opengl.GL33.glUseProgram;
-import static org.lwjgl.opengl.GL33.glValidateProgram;
-import static org.lwjgl.opengl.GL33.glUniformBlockBinding;
-import static org.lwjgl.opengl.GL33.glGetUniformBlockIndex;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class ShaderProgram {
+	@RequiredArgsConstructor
 	private static class UniformBufferBlockPair {
-		public UniformBuffer buffer;
-		public int bindingIndex;
+		public final UniformBuffer<?> buffer;
+		public final int uboProgramIndex;
 	}
 
-	private final List<UniformProperty<?>> uniformProperties = new ArrayList<>();
-	private final List<UniformBufferBlockPair> uniformBufferBlockPairs = new ArrayList<>();
+	private final List<UniformProperty> uniformProperties = new ArrayList<>();
+	private final List<UniformBufferBlockPair> uniformBlockMappings = new ArrayList<>();
 
-	@Setter private Shader shader;
+	protected final ShaderTemplate shaderTemplate;
+
 	private int program;
 
-	public ShaderProgram compile(Template template) throws ShaderException, IOException {
-		assert program == 0;
-		program = shader.compile(template);
+	public ShaderProgram(Consumer<ShaderTemplate> templateConsumer) {
+		shaderTemplate = new ShaderTemplate();
+		templateConsumer.accept(shaderTemplate);
+	}
 
-		if(program != 0) {
-			for (UniformProperty<?> prop : uniformProperties) {
-				prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
-			}
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		int newProgram = shaderTemplate.compile(includes);
 
-			for(UniformBuffer ubo : template.getUniformBuffers()) {
-				int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
-				if(bindingIndex != -1) {
-					UniformBufferBlockPair newPair = new UniformBufferBlockPair();
-					newPair.bindingIndex = bindingIndex;
-					newPair.buffer = ubo;
-					uniformBufferBlockPairs.add(newPair);
-				}
-			}
+		if (isValid())
+			destroy();
+
+		program = newProgram;
+		assert isValid();
+
+		for (var prop : uniformProperties)
+			prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
+
+		for (var ubo : includes.uniformBuffers) {
+			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
+			if (bindingIndex != -1)
+				uniformBlockMappings.add(new UniformBufferBlockPair(ubo, bindingIndex));
 		}
 
-		return this;
+		use();
+		initialize();
+
+		glValidateProgram(program);
+		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
+			String err = glGetProgramInfoLog(program);
+			log.error("Failed to validate shader program: {}", getClass().getSimpleName(), new ShaderException(err));
+		}
 	}
+
+	protected void initialize() {}
 
 	public boolean isValid() {
 		return program != 0;
 	}
 
-	public <T> UniformProperty<T> addUniformProperty(String uniformName, UniformFunction<T> glFunction) {
-		UniformProperty<T> newProperty = new UniformProperty<>(uniformName, glFunction);
-		uniformProperties.add(newProperty);
-		return newProperty;
+	public boolean isActive() {
+		// Meant for debugging only
+		return program == glGetInteger(GL_CURRENT_PROGRAM);
 	}
 
-	public <T extends UniformBuffer> T getUniformBufferBlock(int UniformBlockIndex) {
-		for(UniformBufferBlockPair pair : uniformBufferBlockPairs) {
-			if(pair.buffer.getUniformBlockIndex() == UniformBlockIndex) {
+	@SuppressWarnings("unchecked")
+	public <T extends UniformBuffer<?>> T getUniformBufferBlock(int UniformBlockIndex) {
+		for (UniformBufferBlockPair pair : uniformBlockMappings)
+			if (pair.buffer.getBindingIndex() == UniformBlockIndex)
 				return (T) pair.buffer;
-			}
-		}
 		return null;
 	}
 
@@ -80,59 +81,166 @@ public class ShaderProgram {
 		assert program != 0;
 		glUseProgram(program);
 
-		for(UniformBufferBlockPair pair : uniformBufferBlockPairs) {
-			glUniformBlockBinding(program, pair.bindingIndex, pair.buffer.getUniformBlockIndex());
-		}
-	}
-
-	public void validate() throws ShaderException {
-		glValidateProgram(program);
-		if (glGetProgrami(program, GL_VALIDATE_STATUS) == GL_FALSE) {
-			String err = glGetProgramInfoLog(program);
-			throw new ShaderException(err);
-		}
-	}
-
-	public static <T extends ShaderProgram> void destroyAll(T[] programs) {
-		if(programs != null){
-			for(T program : programs) {
-				if(program != null) {
-					program.destroy();
-				}
-			}
-		}
+		for (UniformBufferBlockPair pair : uniformBlockMappings)
+			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
 	}
 
 	public void destroy() {
-		if(program != 0) {
-			glDeleteProgram(program);
-			program = 0;
+		if (program == 0)
+			return;
 
-			for(UniformProperty<?> prop : uniformProperties){
-				prop.uniformIndex = -1;
-			}
+		glDeleteProgram(program);
+		program = 0;
+
+		for (var prop : uniformProperties)
+			prop.destroy();
+
+		uniformBlockMappings.clear();
+	}
+
+	private static class UniformProperty {
+		ShaderProgram program;
+		String uniformName;
+		int uniformIndex;
+
+		void destroy() {
+			uniformIndex = -1;
 		}
 	}
 
-	public interface UniformFunction<T> {
-		void set(int uniformIDx, T value);
+	private <T extends UniformProperty> T addUniform(T property, String uniformName) {
+		property.program = this;
+		property.uniformName = uniformName;
+		uniformProperties.add(property);
+		return property;
 	}
 
-	@AllArgsConstructor
-	@RequiredArgsConstructor
-	public static class UniformProperty<T> {
-		private final String uniformName;
-		private final UniformFunction<T> glFunction;
-		private int uniformIndex = -1;
+	public static class UniformBool extends UniformProperty {
+		public void set(boolean bool) {
+			assert program.isActive();
+			glUniform1i(uniformIndex, bool ? 1 : 0);
+		}
+	}
 
-		public boolean isValid() {
-			return uniformIndex != -1;
+	public UniformBool addUniformBool(String uniformName) {
+		return addUniform(new UniformBool(), uniformName);
+	}
+
+	public static class Uniform1i extends UniformProperty {
+		public void set(int value) {
+			assert program.isActive();
+			glUniform1i(uniformIndex, value);
+		}
+	}
+
+	public Uniform1i addUniform1i(String uniformName) {
+		return addUniform(new Uniform1i(), uniformName);
+	}
+
+	public static class Uniform2i extends UniformProperty {
+		public void set(int x, int y) {
+			assert program.isActive();
+			glUniform2i(uniformIndex, x, y);
 		}
 
-		public void set(T value) {
-			if(uniformIndex != -1) {
-				glFunction.set(uniformIndex, value);
-			}
+		public void set(int... ivec2) {
+			assert program.isActive();
+			glUniform2iv(uniformIndex, ivec2);
 		}
+	}
+
+	public Uniform2i addUniform2i(String uniformName) {
+		return addUniform(new Uniform2i(), uniformName);
+	}
+
+	public static class Uniform3i extends UniformProperty {
+		public void set(int x, int y, int z) {
+			assert program.isActive();
+			glUniform3i(uniformIndex, x, y, z);
+		}
+
+		public void set(int... ivec3) {
+			assert program.isActive();
+			glUniform3iv(uniformIndex, ivec3);
+		}
+	}
+
+	public Uniform3i addUniform3i(String uniformName) {
+		return addUniform(new Uniform3i(), uniformName);
+	}
+
+	public static class Uniform4i extends UniformProperty {
+		public void set(int x, int y, int z, int w) {
+			assert program.isActive();
+			glUniform4i(uniformIndex, x, y, z, w);
+		}
+
+		public void set(int... ivec4) {
+			assert program.isActive();
+			glUniform4iv(uniformIndex, ivec4);
+		}
+	}
+
+	public Uniform4i addUniform4i(String uniformName) {
+		return addUniform(new Uniform4i(), uniformName);
+	}
+
+	public static class Uniform1f extends UniformProperty {
+		public void set(float value) {
+			assert program.isActive();
+			glUniform1f(uniformIndex, value);
+		}
+	}
+
+	public Uniform1f addUniform1f(String uniformName) {
+		return addUniform(new Uniform1f(), uniformName);
+	}
+
+	public static class Uniform2f extends UniformProperty {
+		public void set(float x, float y) {
+			assert program.isActive();
+			glUniform2f(uniformIndex, x, y);
+		}
+
+		public void set(float... vec2) {
+			assert program.isActive();
+			glUniform2fv(uniformIndex, vec2);
+		}
+	}
+
+	public Uniform2f addUniform2f(String uniformName) {
+		return addUniform(new Uniform2f(), uniformName);
+	}
+
+	public static class Uniform3f extends UniformProperty {
+		public void set(float x, float y, float z) {
+			assert program.isActive();
+			glUniform3f(uniformIndex, x, y, z);
+		}
+
+		public void set(float... vec3) {
+			assert program.isActive();
+			glUniform3fv(uniformIndex, vec3);
+		}
+	}
+
+	public Uniform3f addUniform3f(String uniformName) {
+		return addUniform(new Uniform3f(), uniformName);
+	}
+
+	public static class Uniform4f extends UniformProperty {
+		public void set(float x, float y, float z, float w) {
+			assert program.isActive();
+			glUniform4f(uniformIndex, x, y, z, w);
+		}
+
+		public void set(float... vec4) {
+			assert program.isActive();
+			glUniform4fv(uniformIndex, vec4);
+		}
+	}
+
+	public Uniform4f addUniform4f(String uniformName) {
+		return addUniform(new Uniform4f(), uniformName);
 	}
 }

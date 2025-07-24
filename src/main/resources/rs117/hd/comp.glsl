@@ -42,7 +42,7 @@ shared int renderPris[THREAD_COUNT * FACES_PER_THREAD]; // priority for face dra
 
 layout(local_size_x = THREAD_COUNT) in;
 
-#include <common.glsl>
+#include <comp_sorting_utils.glsl>
 #include <priority_render.glsl>
 
 void main() {

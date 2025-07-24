@@ -33,8 +33,8 @@
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
-uniform isampler2DArray tiledLightingArray;
 uniform sampler2D shadowMap;
+uniform isampler2DArray tiledLightingArray;
 
 // general HD settings
 
@@ -350,49 +350,36 @@ void main() {
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
         #if MAX_LIGHTS_PER_TILE > 0
-        vec2 uResolution = vec2(viewportWidth, viewportHeight);
-        vec2 screenUV = gl_FragCoord.xy / uResolution;
-        vec2 tileCount = vec2(tileXCount, tileYCount);
-        ivec2 tileXY = ivec2(floor(screenUV * tileCount));
+            vec2 uResolution = vec2(viewportWidth, viewportHeight);
+            vec2 screenUV = gl_FragCoord.xy / uResolution;
+            vec2 tileCount = vec2(tileCountX, tileCountY);
+            ivec2 tileXY = ivec2(floor(screenUV * tileCount));
 
-        int tiledLightCount = 0;
-        for(int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
-            int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
-            if(lightIdx <= 0) {
-                break;
+            for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
+                int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
+                if (lightIdx <= 0)
+                    break;
+
+                lightIdx--;
+
+                vec4 pos = PointLightArray[lightIdx].position;
+                vec3 lightToFrag = pos.xyz - IN.position;
+                float distanceSquared = dot(lightToFrag, lightToFrag);
+                float radiusSquared = pos.w;
+                if (distanceSquared <= radiusSquared) {
+                    float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
+                    attenuation *= attenuation;
+
+                    vec3 pointLightColor = PointLightArray[lightIdx].color * attenuation;
+                    vec3 pointLightDir = normalize(lightToFrag);
+
+                    float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+                    pointLightsOut += pointLightColor * pointLightDotNormals;
+
+                    vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+                    pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+                }
             }
-            lightIdx--;
-            tiledLightCount++;
-
-            vec4 pos = PointLightArray[lightIdx].position;
-            vec3 lightToFrag = pos.xyz - IN.position;
-            float distanceSquared = dot(lightToFrag, lightToFrag);
-            float radiusSquared = pos.w;
-            if (distanceSquared <= radiusSquared) {
-                float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
-                attenuation *= attenuation;
-
-                vec3 pointLightColor = PointLightArray[lightIdx].color * attenuation;
-                vec3 pointLightDir = normalize(lightToFrag);
-
-                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-                pointLightsOut += pointLightColor * pointLightDotNormals;
-
-                vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
-            }
-        }
-
-        #if TILED_LIGHTING_DEBUG_OVERLAY
-        if(tiledLightCount > 0) {
-            float level = (tiledLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
-            // Time varying pixel color
-
-            outputColor.r = sin(level);
-            outputColor.g = sin(level * 2.0);
-            outputColor.b = cos(level);
-        }
-        #endif
         #endif
 
         // sky light

@@ -1,11 +1,12 @@
 package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayList;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 
-public class ComputeUniforms extends SharedUniformBuffer {
+public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
 
 	// Camera uniforms
@@ -14,9 +15,7 @@ public class ComputeUniforms extends SharedUniformBuffer {
 	public Property centerX = addProperty(PropertyType.Int, "centerX");
 	public Property centerY = addProperty(PropertyType.Int, "centerY");
 	public Property zoom = addProperty(PropertyType.Int, "zoom");
-	public Property cameraX = addProperty(PropertyType.Float, "cameraX");
-	public Property cameraY = addProperty(PropertyType.Float, "cameraY");
-	public Property cameraZ = addProperty(PropertyType.Float, "cameraZ");
+	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
 
 	// Wind uniforms
 	public Property windDirectionX = addProperty(PropertyType.Float, "windDirectionX");
@@ -39,8 +38,8 @@ public class ComputeUniforms extends SharedUniformBuffer {
 		public float dist = Float.MAX_VALUE;
 	}
 
-	public ComputeUniforms() {
-		super("Compute", "ComputeUniforms", GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+	public UBOCompute() {
+		super(GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private CharacterPositionPair getCharacterPositionPair() {

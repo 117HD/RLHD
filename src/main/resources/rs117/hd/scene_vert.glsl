@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2021, 117 <https://twitter.com/117scape>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,16 +25,22 @@
  */
 #version 330
 
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
+layout (location = 0) in vec3 vPosition;
+layout (location = 1) in int vHsl;
+layout (location = 2) in vec3 vUv;
+layout (location = 3) in int vMaterialData;
+layout (location = 4) in vec4 vNormal;
 
-out vec2 TexCoord;
-out vec2 quadPos;
-out vec3 worldViewDir2;
+out vec3 gPosition;
+out int gHsl;
+out vec3 gUv;
+out int gMaterialData;
+out vec4 gNormal;
 
-void main()
-{
-    quadPos = aPos.xy;
-    gl_Position = vec4(aPos, 1.0);
-    TexCoord = aTexCoord;
+void main() {
+    gPosition = vPosition;
+    gHsl = vHsl;
+    gUv = vUv;
+    gMaterialData = vMaterialData;
+    gNormal = vNormal;
 }
