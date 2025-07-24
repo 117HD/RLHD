@@ -17,6 +17,7 @@ import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
+import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -56,12 +57,16 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private LightGizmoOverlay lightGizmoOverlay;
 
-	private boolean keyBindingsEnabled = false;
-	private boolean tileInfoOverlayEnabled = false;
+	@Inject
+	private TiledLightingOverlay tiledLightingOverlay;
+
+	private boolean keyBindingsEnabled;
+	private boolean tileInfoOverlayEnabled;
 	@Getter
-	private boolean frameTimingsOverlayEnabled = false;
-	private boolean shadowMapOverlayEnabled = false;
-	private boolean lightGizmoOverlayEnabled = false;
+	private boolean frameTimingsOverlayEnabled;
+	private boolean shadowMapOverlayEnabled;
+	private boolean lightGizmoOverlayEnabled;
+	private boolean tiledLightingOverlayEnabled;
 
 	public void activate() {
 		// Listen for commands
@@ -80,6 +85,7 @@ public class DeveloperTools implements KeyListener {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
+			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
 		});
 
 		// Check for any out of bounds areas
@@ -103,6 +109,7 @@ public class DeveloperTools implements KeyListener {
 		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
+		tiledLightingOverlay.setActive(false);
 	}
 
 	@Subscribe
@@ -129,14 +136,7 @@ public class DeveloperTools implements KeyListener {
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 				break;
 			case "tiledlights":
-				clientThread.invoke(() -> {
-					plugin.enableTiledLightingOverlay = !plugin.enableTiledLightingOverlay;
-					try {
-						plugin.recompilePrograms();
-					} catch (Exception ex) {
-						throw new RuntimeException(ex);
-					}
-				});
+				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 				break;
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
@@ -160,14 +160,7 @@ public class DeveloperTools implements KeyListener {
 		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 		} else if (KEY_TOGGLE_TILED_LIGHTING_OVERLAY.matches(e)) {
-			clientThread.invoke(() -> {
-				plugin.enableTiledLightingOverlay = !plugin.enableTiledLightingOverlay;
-				try {
-					plugin.recompilePrograms();
-				} catch (Exception ex) {
-					throw new RuntimeException(ex);
-				}
-			});
+			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {

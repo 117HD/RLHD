@@ -25,9 +25,10 @@
 #version 330
 
 #include <uniforms/lights.glsl>
+
 #include <utils/constants.glsl>
 
-#include LAYER
+#include TILED_LIGHTING_LAYER
 
 layout(std140) uniform UBOTiledLights {
     int tileCountX;
@@ -39,50 +40,49 @@ layout(std140) uniform UBOTiledLights {
 
 uniform isampler2DArray tiledLightingArray;
 
-in vec2 TexCoord;
-in vec2 quadPos;
+in vec2 fPos;
+in vec2 fUv;
 
 out uint TiledCellIndex;
 
 uint LightsMask[32] = uint[](0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u); // 32 * 32 = 1024 lights
 
 void main() {
-    ivec2 tileCoord = ivec2(vec2(TexCoord.x, 1.0 - TexCoord.y) * vec2(tileCountX, tileCountY));
+    ivec2 tileCoord = ivec2(vec2(fUv.x, 1.0 - fUv.y) * vec2(tileCountX, tileCountY));
 
     // If we're not the first layer, then check the last layer if it wrote anything otherwise theres no work left to do
-    #if LAYER > 0
+    #if TILED_LIGHTING_LAYER > 0
     {
-        mediump int lightIdx = texelFetch(tiledLightingArray, ivec3(tileCoord, LAYER - 1), 0).r - 1;
-        if (lightIdx < 0) {
+        int lightIdx = texelFetch(tiledLightingArray, ivec3(tileCoord, TILED_LIGHTING_LAYER - 1), 0).r - 1;
+        if (lightIdx < 0)
             discard;
-        }
         LightsMask[lightIdx / 32] |= (1u << (lightIdx % 32));
     }
     #endif
 
-    #if LAYER > 1
-    for(int l = LAYER - 2; l >= 0; l--) {
-        mediump uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(tileCoord, l), 0).r - 1);
-        LightsMask[lightIdx >> 5] |= 1u << (lightIdx & 31u);
-    }
+    #if TILED_LIGHTING_LAYER > 1
+        for (int l = TILED_LIGHTING_LAYER - 2; l >= 0; l--) {
+            uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(tileCoord, l), 0).r - 1);
+            LightsMask[lightIdx >> 5] |= 1u << (lightIdx & 31u);
+        }
     #endif
 
-    vec4 worldPos = invProjectionMatrix * vec4(quadPos, 1.0, 1.0);
+    vec4 worldPos = invProjectionMatrix * vec4(fPos, 1.0, 1.0);
     vec3 worldViewDir = normalize((worldPos.xyz / worldPos.w) - cameraPos);
 
     for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
         vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
-        float lightRadius = PointLightArray[lightIdx].position.w;
+        float lightRadiusSquared = PointLightArray[lightIdx].position.w;
 
         vec3 lightToCamera = cameraPos - lightWorldPos;
-        float dist = dot(lightToCamera, lightToCamera);
         float vDotL = dot(worldViewDir, lightToCamera);
-        float discriminant = vDotL * vDotL - dist;
+        if (vDotL > 0)
+            continue;
 
-        if (discriminant >= -lightRadius) {
-            if ((LightsMask[lightIdx >> 5] & (1u << (lightIdx & 31u))) != 0u) {
+        float dist = dot(lightToCamera, lightToCamera);
+        if (dist - vDotL * vDotL < lightRadiusSquared) {
+            if ((LightsMask[lightIdx >> 5] & (1u << (lightIdx & 31u))) != 0u)
                 continue; // Already seen
-            }
 
             // Light hasn't been added to a previous layer, therefore we can add it and early out of the fragment shader
             TiledCellIndex = lightIdx + 1u;

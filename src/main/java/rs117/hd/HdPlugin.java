@@ -111,6 +111,7 @@ import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
+import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
@@ -146,7 +147,6 @@ import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
-import static org.lwjgl.opengl.KHRShaderSubgroup.GL_SUBGROUP_SIZE_KHR;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
@@ -318,6 +318,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
 
+	@Inject
+	private TiledLightingOverlay tiledLightingOverlay;
+
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 
@@ -443,7 +446,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public boolean useLowMemoryMode;
 	public boolean enableDetailedTimers;
-	public boolean enableTiledLightingOverlay;
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
 
@@ -456,7 +458,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean isInHouse;
 	private Scene skipScene;
 	private int previousPlane;
-	private int gpuWarpSize;
 
 	private final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
@@ -545,7 +546,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				log.info("Client is {}-bit", arch);
 				log.info("Low memory mode: {}", useLowMemoryMode);
 
-				gpuWarpSize = glGetInteger(GL_SUBGROUP_SIZE_KHR);
 				computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 
 				List<String> fallbackDevices = List.of(
@@ -863,7 +863,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
-			.define("TILED_LIGHTING_DEBUG_OVERLAY", enableTiledLightingOverlay)
 			.define("WIREFRAME", config.wireframe())
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
@@ -902,7 +901,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		for (int layer = 0; layer < MaxLightsPerTile.MAX_LIGHTS; layer++) {
 			var shader = new TiledLightingShaderProgram();
-			shader.compile(includes.define("LAYER", layer));
+			shader.compile(includes.define("TILED_LIGHTING_LAYER", layer));
 			tiledLightingShaderPrograms.add(shader);
 		}
 
@@ -2261,11 +2260,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Bind quad VAO which all overlays use to render
 		glBindVertexArray(vaoQuad);
 
+		glEnable(GL_BLEND);
+
+		tiledLightingOverlay.render(canvasWidth, canvasHeight);
+
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
 		if (client.getGameState().getState() < GameState.LOADING.getState())
 			overlayColor = 0;
 
-		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 		uiProgram.use();
