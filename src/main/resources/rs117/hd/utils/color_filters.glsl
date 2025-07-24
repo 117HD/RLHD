@@ -1,6 +1,9 @@
 #pragma once
 
 #if APPLY_COLOR_FILTER
+
+#include <uniforms/global.glsl>
+
 #include <utils/constants.glsl>
 
 #define COLOR_FILTER_NONE 0

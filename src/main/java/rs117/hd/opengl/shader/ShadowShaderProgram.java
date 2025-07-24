@@ -1,22 +1,30 @@
 package rs117.hd.opengl.shader;
 
-import org.lwjgl.opengl.*;
 import rs117.hd.config.ShadowMode;
 
-import static org.lwjgl.opengl.GL20C.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20C.GL_VERTEX_SHADER;
-import static org.lwjgl.opengl.GL32C.GL_GEOMETRY_SHADER;
+import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 
 public class ShadowShaderProgram extends ShaderProgram {
-	public UniformProperty<Integer> uniShadowMap = addUniformProperty("textureArray", GL33::glUniform1i);
+	private final Uniform1i uniShadowMap = addUniform1i("textureArray");
 
-	public ShadowShaderProgram(ShadowMode mode) {
-		Shader shadowShader = new Shader()
+	public ShadowShaderProgram() {
+		super(t -> t
 			.add(GL_VERTEX_SHADER, "shadow_vert.glsl")
-			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl");
+			.add(GL_FRAGMENT_SHADER, "shadow_frag.glsl"));
+	}
+
+	@Override
+	protected void initialize() {
+		uniShadowMap.set(TEXTURE_UNIT_GAME - TEXTURE_UNIT_BASE);
+	}
+
+	public void setMode(ShadowMode mode) {
 		if (mode == ShadowMode.DETAILED) {
-			shadowShader.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl");
+			shaderTemplate.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl");
+		} else {
+			shaderTemplate.remove(GL_GEOMETRY_SHADER);
 		}
-		setShader(shadowShader);
 	}
 }

@@ -384,7 +384,7 @@ void main() {
         }
 
         #if TILED_LIGHTING_DEBUG_OVERLAY
-        if(tiledLightCount > 0) {
+        if (tiledLightCount > 0) {
             float level = (tiledLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
             // Time varying pixel color
 

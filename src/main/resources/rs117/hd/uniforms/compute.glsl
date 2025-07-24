@@ -2,16 +2,14 @@
 
 #include MAX_CHARACTER_POSITION_COUNT
 
-layout(std140) uniform ComputeUniforms {
+layout(std140) uniform UBOCompute {
     // Camera uniforms
     float cameraYaw;
     float cameraPitch;
     int centerX;
     int centerY;
     int zoom;
-    float cameraX;
-    float cameraY;
-    float cameraZ;
+    vec3 cameraPos;
 
     // Wind uniforms
     float windDirectionX;

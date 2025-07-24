@@ -54,10 +54,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class EnvironmentManager {
-	private static final ResourcePath ENVIRONMENTS_PATH = Props.getPathOrDefault(
-		"rlhd.environments-path",
-		() -> path(EnvironmentManager.class, "environments.json")
-	);
+	private static final ResourcePath ENVIRONMENTS_PATH = Props
+		.getFile("rlhd.environments-path", () -> path(EnvironmentManager.class, "environments.json"));
 
 	@Inject
 	private Client client;

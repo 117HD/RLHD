@@ -1,0 +1,21 @@
+package rs117.hd.opengl.shader;
+
+import static org.lwjgl.opengl.GL20C.GL_FRAGMENT_SHADER;
+import static org.lwjgl.opengl.GL20C.GL_VERTEX_SHADER;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_BASE;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+
+public class TiledLightingShaderProgram extends ShaderProgram {
+	private final Uniform1i uniTiledLightingTex = addUniform1i("tiledLightingArray");
+
+	public TiledLightingShaderProgram() {
+		super(t -> t
+			.add(GL_VERTEX_SHADER, "tiled_vert.glsl")
+			.add(GL_FRAGMENT_SHADER, "tiled_frag.glsl"));
+	}
+
+	@Override
+	protected void initialize() {
+		uniTiledLightingTex.set(TEXTURE_UNIT_TILED_LIGHTING_MAP - TEXTURE_UNIT_BASE);
+	}
+}

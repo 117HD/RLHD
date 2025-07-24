@@ -22,30 +22,31 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#version 330
+
+#include <uniforms/global.glsl>
+
+uniform float calibrationTimer;
+
 #include <utils/constants.glsl>
 #include <utils/color_utils.glsl>
 
-void gammaCalibrationUi(inout vec4 dst, vec2 uv, ivec2 dimensions) {
-    if (!showGammaCalibration)
-        return;
+in vec2 fUv;
 
-    const float minBrightness = .02;
+out vec4 FragColor;
+
+void main() {
     const int numDots = 3;
-    const int height = 100;
-    const vec2 dims = vec2(height * numDots, height);
-    const ivec2 pad = ivec2(32, 16);
+    const float minBrightness = .02;
     const float lineFeather = .02;
     const float dotRadius = .4;
     const float timerDotRadius = .1;
+    const vec2 timerMargin = vec2(.125);
 
-    uv *= dimensions;
-    uv -= dimensions / 2;
-    vec2 coord = abs(uv) / (dims / 2 + pad);
-    if (max(coord.x, coord.y) > 1)
-        return;
-    uv /= dims.y;
+    vec4 src = vec4(vec3(0), smoothstep(0, .05, calibrationTimer));
 
-    vec4 src = vec4(vec3(0), smoothstep(0, .05, gammaCalibrationTimer));
+    vec2 uv = fUv - .5;
+    uv.x *= numDots;
 
     float dotIndex = floor(mod(uv.x + numDots / 2. + 1, numDots + 1));
     vec2 dotUv = uv;
@@ -55,11 +56,11 @@ void gammaCalibrationUi(inout vec4 dst, vec2 uv, ivec2 dimensions) {
     dot = pow(dot, gammaCorrection);
     src.rgb += vec3(dot);
 
-    vec2 cornerDotUv = uv - (vec2(numDots / 2., .5) + (pad - 20) / dims.y);
+    vec2 cornerDotUv = uv - vec2(numDots / 2., .5) + timerMargin;
     float cornerDot = smoothstep(0, lineFeather, timerDotRadius - length(cornerDotUv));
     float angle = fract(.25 + atan(cornerDotUv.y, cornerDotUv.x) / (2 * PI));
-    cornerDot *= mix(.1, 1, smoothstep(0, lineFeather, gammaCalibrationTimer - angle));
+    cornerDot *= mix(.1, 1, smoothstep(0, lineFeather, calibrationTimer - angle));
     src.rgb += vec3(cornerDot);
 
-    dst = mix(dst, src, src.a);
+    FragColor = src;
 }

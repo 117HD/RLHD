@@ -51,7 +51,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.MaxLightsPerTile;
-import rs117.hd.opengl.uniforms.LightUniforms;
+import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.lights.Alignment;
@@ -78,10 +78,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class LightManager {
-	private static final ResourcePath LIGHTS_PATH = Props.getPathOrDefault(
-		"rlhd.lights-path",
-		() -> path(LightManager.class, "lights.json")
-	);
+	private static final ResourcePath LIGHTS_PATH = Props
+		.getFile("rlhd.lights-path", () -> path(LightManager.class, "lights.json"));
 
 	@Inject
 	private Client client;
@@ -469,7 +467,7 @@ public class LightManager {
 		sceneContext.numVisibleLights = 0;
 		for (Light light : sceneContext.lights) {
 			// Exit early once encountering the first invisible light, or the light limit is reached
-			if (!light.visible || sceneContext.numVisibleLights >= LightUniforms.MAX_LIGHTS)
+			if (!light.visible || sceneContext.numVisibleLights >= UBOLights.MAX_LIGHTS)
 				break;
 
 			sceneContext.numVisibleLights++;

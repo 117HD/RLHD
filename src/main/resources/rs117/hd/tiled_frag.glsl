@@ -29,7 +29,7 @@
 
 #include LAYER
 
-layout(std140) uniform TiledLightsUniforms {
+layout(std140) uniform UBOTiledLights {
     int tileCountX;
     int tileCountY;
     int pointLightsCount;

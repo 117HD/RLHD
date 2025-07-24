@@ -26,7 +26,7 @@
 
 #include MAX_CHARACTER_POSITION_COUNT
 
-struct ComputeUniforms {
+struct UBOCompute {
   // Camera uniforms
   float cameraYaw;
   float cameraPitch;

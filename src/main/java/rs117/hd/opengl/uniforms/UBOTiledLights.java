@@ -1,10 +1,12 @@
 package rs117.hd.opengl.uniforms;
 
-import static org.lwjgl.opengl.GL15C.GL_STATIC_DRAW;
+import rs117.hd.utils.buffer.GLBuffer;
 
-public class TiledLightingUniforms extends UniformBuffer {
-	public TiledLightingUniforms() {
-		super("TiledLights", "TiledLightsUniforms", GL_STATIC_DRAW);
+import static org.lwjgl.opengl.GL33C.*;
+
+public class UBOTiledLights extends UniformBuffer<GLBuffer> {
+	public UBOTiledLights() {
+		super(GL_STATIC_DRAW);
 	}
 
 	public Property tileCountX = addProperty(PropertyType.Int, "tileCountX");
