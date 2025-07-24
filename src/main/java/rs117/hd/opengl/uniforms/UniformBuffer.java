@@ -515,6 +515,7 @@ public abstract class UniformBuffer {
 
 		for(Property prop : properties) {
 			prop.address = 0;
+			prop.hash = 0;
 		}
 
 		glBuffer.destroy();
