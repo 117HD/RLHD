@@ -1178,8 +1178,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		checkGLErrors();
 
-		glActiveTexture(TEXTURE_UNIT_UI);
-
 		uboGlobal.tileCountX.set(tileCountX);
 		uboGlobal.tileCountY.set(tileCountY);
 	}
@@ -1535,6 +1533,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				);
 				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
 
+				uboGlobal.cameraPos.set(cameraPosition);
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
@@ -1578,6 +1577,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					glClear(GL_COLOR_BUFFER_BIT);
 					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 				}
+
 				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
 			}
 		}
@@ -2030,7 +2030,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			uboGlobal.cameraPos.set(cameraPosition);
 			uboGlobal.viewportWidth.set(renderViewportWidth);
 			uboGlobal.viewportHeight.set(renderViewportHeight);
 
