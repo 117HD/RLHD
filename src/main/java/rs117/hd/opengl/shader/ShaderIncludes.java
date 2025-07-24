@@ -107,54 +107,59 @@ public class ShaderIncludes {
 	}
 
 	private ShaderException syntaxError(int lineNumber, String error) {
-		int currentIndex = includeStack.peek();
-		String currentFile = includeList.get(currentIndex);
+		String currentFile = includeList.get(includeStack.peek());
 		return new ShaderException(String.format(
 			"Syntax error in shader include in '%s' on line %d: %s", currentFile, lineNumber, error));
 	}
 
-	private String parse(String str) throws ShaderException, IOException {
+	private ShaderException includeError(int lineNumber, String include) {
+		String currentFile = includeList.get(includeStack.peek());
+		return new ShaderException(String.format(
+			"Failed to load shader include in '%s' on line %d: #include %s", currentFile, lineNumber, include));
+	}
+
+	private String parse(String source) throws ShaderException, IOException {
 		StringBuilder sb = new StringBuilder();
 		int lineNumber = 0;
-		for (String line : str.split("\r?\n")) {
+		for (String line : source.split("\r?\n")) {
 			lineNumber++;
 			String trimmed = line.stripLeading();
 			if (trimmed.startsWith("#include ")) {
-				int includeIndex = includeList.size();
-				int currentIndex = includeStack.peek();
-				String currentFile = includeList.get(currentIndex);
+				int currentIncludeIndex = includeList.size();
+				int parentIncludeIndex = includeStack.peek();
+				String currentFile = includeList.get(parentIncludeIndex);
 
 				String expression = trimmed.substring(9).stripLeading();
 				if (expression.isEmpty())
 					throw syntaxError(lineNumber, "Empty include");
 
 				String includeContents = null;
-				char closingChar = '"';
+				char endChar = '"';
 				int commentIndex = -1;
 				switch (expression.charAt(0)) {
 					case '<':
-						closingChar = '>';
+						endChar = '>';
 					case '"':
 						// Process path includes
-						int endIndex = nextUnescapedMatch(expression, 1, closingChar);
+						int endIndex = nextUnescapedMatch(expression, 1, endChar);
 						if (endIndex == -1)
-							throw syntaxError(lineNumber, "Expected closing '" + closingChar + "' in include");
+							throw syntaxError(lineNumber, "Expected closing '" + endChar + "' in include");
 
 						commentIndex = endIndex + 1;
 						if (!isCommentOrEmpty(expression.substring(commentIndex)))
 							throw syntaxError(
 								lineNumber,
-								"Unexpected characters after closing '" + closingChar + "' in include. Only comments are allowed."
+								"Unexpected characters after closing '" + endChar + "' in include. Only comments are allowed."
 							);
 
 						// Valid include
 						String include = expression.substring(1, endIndex);
-						if (closingChar == '"')
+						if (endChar == '"')
 							include = ResourcePath.normalize(currentFile, "..", include);
 
 						includeContents = loadFileInternal(include);
 						if (includeContents == null)
-							log.error("Failed to load file include: {}", include);
+							throw includeError(lineNumber, expression.substring(0, endIndex + 1));
 						break;
 					default:
 						// Process constant identifier includes
@@ -163,11 +168,9 @@ public class ShaderIncludes {
 							commentIndex = m.end();
 							if (isCommentOrEmpty(expression.substring(commentIndex))) {
 								var supplier = includeMap.get(m.group());
-								if (supplier == null) {
-									log.error("Failed to load include constant: {}", m.group());
-								} else {
-									includeContents = supplier.get();
-								}
+								if (supplier == null)
+									throw includeError(lineNumber, m.group());
+								includeContents = supplier.get();
 								break;
 							}
 						}
@@ -198,14 +201,14 @@ public class ShaderIncludes {
 							// Source: https://www.khronos.org/opengl/wiki/Core_Language_(GLSL)#.23line_directive
 							sb
 								.append("#line 1 ") // Mark the first line of the included file
-								.append(includeIndex)
+								.append(currentIncludeIndex)
 								.append('\n')
 								.append(includeContents)
 								.append('\n')
 								.append("#line ") // Return to the next line of the current file
 								.append(lineNumber + 1)
 								.append(" ")
-								.append(currentIndex)
+								.append(parentIncludeIndex)
 								.append('\n');
 						}
 						break;
