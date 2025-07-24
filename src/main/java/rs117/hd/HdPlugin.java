@@ -404,6 +404,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int lastCanvasHeight;
 	private int lastStretchedCanvasWidth;
 	private int lastStretchedCanvasHeight;
+	private int lastRenderViewportWidth;
+	private int lastRenderViewportHeight;
 	private AntiAliasingMode lastAntiAliasingMode;
 	private int numSamples;
 
@@ -628,6 +630,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initShaderHotswapping();
 				initInterfaceTexture();
 				initShadowMapFbo();
+				initTiledLighting();
 
 				checkGLErrors();
 
@@ -644,6 +647,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				lastCanvasWidth = lastCanvasHeight = 0;
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
+				lastRenderViewportWidth = lastRenderViewportHeight = 0;
 				lastAntiAliasingMode = null;
 
 				gamevalManager.startUp();
@@ -719,6 +723,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyVaos();
 				destroySceneFbo();
 				destroyShadowMapFbo();
+				destroyTiledLighting();
 				destroyTileHeightMap();
 				destroyModelSortingBins();
 
@@ -1152,8 +1157,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
 		final int tileSize = 16;
-		tileCountX = renderViewportWidth / tileSize;
-		tileCountY = renderViewportHeight / tileSize;
+		tileCountX = Math.max(1, renderViewportWidth / tileSize);
+		tileCountY = Math.max(1, renderViewportHeight / tileSize);
 
 		fboTiledLighting = glGenFramebuffers();
 
@@ -1540,7 +1545,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 
-		if (sceneContext.scene == scene && updateUniforms) {
+		if (configMaxLightsPerTile > 0 && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
@@ -1560,8 +1565,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 			uboLights.upload();
 
+			// Check if the tiledLighting FBO needs to be recreated
+			if (lastRenderViewportWidth != renderViewportWidth || lastRenderViewportHeight != renderViewportHeight) {
+				lastRenderViewportWidth = renderViewportWidth;
+				lastRenderViewportHeight = renderViewportHeight;
+				destroyTiledLighting();
+				initTiledLighting();
+			}
+
 			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
-			if (texTiledLighting != 0 && fboTiledLighting != 0 && configMaxLightsPerTile > 0) {
+			if (texTiledLighting != 0 && fboTiledLighting != 0) {
 				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
 
 				glViewport(0, 0, tileCountX, tileCountY);
@@ -1886,10 +1899,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
-			int lastRenderViewportWidth = renderViewportWidth;
-			int lastRenderViewportHeight = renderViewportHeight;
-			renderViewportHeight = viewportHeight;
 			renderViewportWidth = viewportWidth;
+			renderViewportHeight = viewportHeight;
 
 			if (client.isStretchedEnabled()) {
 				Dimension dim = client.getStretchedDimensions();
@@ -1902,12 +1913,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final int padding = 1;
 
 				// Ceil the sizes because even if the size is 599.1 we want to treat it as size 600 (i.e. render to the x=599 pixel).
-				renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
 				renderViewportWidth = (int) Math.ceil(scaleFactorX * (renderViewportWidth)) + padding * 2;
+				renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
 
 				// Floor the offsets because even if the offset is 4.9, we want to render to the x=4 pixel anyway.
-				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 				renderWidthOff = (int) Math.floor(scaleFactorX * (renderWidthOff)) - padding;
+				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 			}
 
 			int[] dpiViewport = applyDpiScaling(
@@ -1948,13 +1959,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					stopPlugin();
 					return;
 				}
-			}
-
-			// Check if the tiledLighting FBO needs to be recreated
-			if (lastRenderViewportWidth != renderViewportWidth ||
-				lastRenderViewportHeight != renderViewportHeight) {
-				destroyTiledLighting();
-				initTiledLighting();
 			}
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);

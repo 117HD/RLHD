@@ -17,9 +17,8 @@ void main() {
     vec4 c = vec4(0);
 
     #if MAX_LIGHTS_PER_TILE > 0
-        vec2 screenUV = uv;
         vec2 tileCount = vec2(tileCountX, tileCountY);
-        ivec2 tileXY = ivec2(floor(screenUV * tileCount));
+        ivec2 tileXY = ivec2(floor(uv * tileCount));
 
         int tiledLightCount = 0;
         for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
