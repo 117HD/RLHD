@@ -2,8 +2,7 @@
 
 #include MAX_LIGHT_COUNT
 
-struct PointLight
-{
+struct PointLight {
     vec4 position;
     vec3 color;
 };
@@ -11,5 +10,3 @@ struct PointLight
 layout(std140) uniform UBOLights {
     PointLight PointLightArray[MAX_LIGHT_COUNT];
 };
-
-#include LIGHT_GETTER

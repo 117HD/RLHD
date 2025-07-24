@@ -792,8 +792,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		StringBuilder include = new StringBuilder();
 
 		boolean isAppleM1 = OSType.getOSType() == OSType.MacOS && System.getProperty("os.arch").equals("aarch64");
-		if (config.macosIntelWorkaround() && !isAppleM1)
-		{
+		if (config.macosIntelWorkaround() && !isAppleM1) {
 			// Workaround wrapper for drivers that do not support dynamic indexing,
 			// particularly Intel drivers on macOS
 			include
@@ -804,9 +803,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				.append("(int i) { return ")
 				.append(generateFetchCases(type + "Array", 0, arrayLength))
 				.append("; }\n");
-		}
-		else
-		{
+		} else {
 			include
 				.append("#define get")
 				.append(type)
@@ -860,7 +857,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			)
 			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
-			.addInclude("LIGHT_GETTER", () -> generateGetter("PointLight", configMaxDynamicLights))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(uboLights)
