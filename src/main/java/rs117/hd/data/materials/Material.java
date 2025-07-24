@@ -604,7 +604,8 @@ public enum Material {
 		.setBrightness(0.5f)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
-
+	MARBLE_3_LIGHT(MARBLE_3,p -> p
+		.setBrightness(1.25f)),
 	LASSAR_UNDERCITY_TILE_N,
 	LASSAR_UNDERCITY_TILE_D,
 	LASSAR_UNDERCITY_TILES(MARBLE_2_SEMIGLOSS, p -> p

@@ -40276,7 +40276,9 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ATES_STATUE_DARKFROST_INACTIVE",
-      "ATES_STATUE_DARKFROST_ACTIVE"
+      "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_TWILIGHT_INACTIVE",
+      "ATES_STATUE_TWILIGHT_ACTIVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -48707,6 +48709,98 @@
         "uvScale": 0.4,
         "uvOrientation": -89
       }
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Walls & Pillar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_TWILIGHT01_TOWER01",
+      "WALLKIT_TWILIGHT02_TOWER01",
+      "WALLKIT_TWILIGHT03_TOWER01",
+      "WALLKIT_TWILIGHT03_TOWER01_INNER01",
+      "PILLAR_TWILIGHT01_COMBINED04",
+      "PILLAR_TWILIGHT01_COMBINED02"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Railing",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_TWILIGHT01_FENCE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Bandage Crate",
+    "baseMaterial": "GRAY_90",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "VMQ3_TOWER_CRATE_BANDAGES_5"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Stairs",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "VMQ3_TOWER_STAIRS_EXIT",
+      "VMQ3_TOWER_STAIRS_EXIT_TOP",
+      "VMQ3_TOWER_STAIRS_START"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Tower Hole",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FLOORKIT_LOSANIUM01_CORNER01",
+      "FLOORKIT_LOSANIUM01_CORNER01_M",
+      "FLOORKIT_LOSANIUM01_MIDDLE01",
+      "FLOORKIT_LOSANIUM01_DIAG02_M",
+      "FLOORKIT_LOSANIUM01_DIAG01",
+      "FLOORKIT_LOSANIUM01_DIAG02",
+      "FLOORKIT_LOSANIUM01_DIAG01_M",
+      "TAPOYAUIK_MAIN_ENTRANCE_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Chest",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "objectIds": [
+      "VMQ3_CULTIST_OUTFIT_CHEST",
+      "VMQ3_CULTIST_OUTFIT_CHEST_OPEN",
+      "VMQ3_TOWER_CHEST_DIRECTION_CLOSED",
+      "VMQ3_TOWER_CHEST_DIRECTION_OPEB",
+      "VMQ3_TOWER_CHEST_BOOK_CLOSED",
+      "VMQ3_TOWER_CHEST_BOOK_OPEN",
+      "VMQ3_TOWER_CHEST_LETTERS_CLOSE",
+      "VMQ3_TOWER_CHEST_LETTERS_OPEND"
     ]
   }
 ]

@@ -4689,6 +4689,12 @@
     "waterType": "DARK_BLUE_WATER"
   },
   {
+    "name": "Twilight Temple Tower Floor",
+    "area": "Twilight Temple Tower Floor",
+    "overlayIds": [ 0, 233, 235, 237 ],
+    "groundMaterial": "MARBLE_1_GLOSS"
+  },
+  {
     "name": "COLOSSEUM_TILES",
     "area": "COLOSSEUM",
     "overlayIds": [ 137, 198, 199 ],
