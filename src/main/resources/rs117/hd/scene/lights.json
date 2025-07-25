@@ -20693,7 +20693,10 @@
       "BURGH_VILLAGE_FIRE",
       "TROLL_EADGAR_COOKING_POT",
       "FORESTRY_FIRE",
-      "BCS_MAISA_CAMP_FIRE"
+      "BCS_MAISA_CAMP_FIRE",
+      "VMQ4_CRYPT_ASSAULT_FIRE",
+      "VMQ4_CRYPT_ENNIUS_EXIT",
+      "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE"
     ]
   },
   {
@@ -38355,5 +38358,73 @@
       "VMQ4_KEYSTONE_CHAMBER_ENTRANCE_OPEN",
       "VMQ4_KEYSTONE_CHAMBER_EXIT"
     ]
+  },
+  {
+    "description": "ENNIUS_FIRE_SLAM_AOE",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 2500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_SLAM_LINE",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 11,
+    "spawnDelay": 1900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_LOC_MARKER_SPAWN"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_CAST",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 12,
+    "spawnDelay": 1900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_CRYPT_ENNIUS_BOSS" ],
+    "animationIds": [ "VMQ4_ENNIUS_CAST" ]
   }
 ]
