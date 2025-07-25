@@ -8363,7 +8363,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "Ladder, rotated UVs",
+    "description": "Ladder, rotated UVs - Textured",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "MCANNONLADDER",
@@ -8383,7 +8383,11 @@
       "LADDER_CELLAR",
       "LADDER_FROM_CELLAR",
       "LADDER_FROM_CELLAR_DIRECTIONAL",
-      "MGUILD_LADDER"
+      "MGUILD_LADDER",
+      "GRANDTREE_LADDERBOTTOM",
+      "GRANDTREE_LADDERMIDDLE_BOTTOM",
+      "GRANDTREE_LADDERMIDDLE_TOP",
+      "GRANDTREE_LADDERTOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -14446,7 +14450,9 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
-      "BRIDGE_WALL"
+      "BRIDGE_WALL",
+      "BRIDGE_WALLSIGNPOST_L",
+      "BRIDGE_WALLSIGNPOST_R"
     ],
     "colorOverrides": [
       {
@@ -14496,7 +14502,7 @@
     ]
   },
   {
-    "description": "Gnome - Objects - Wooden Lamp - DYNAMIC",
+    "description": "Gnome - Objects - Wooden Lamp - DYNAMIC - ANIMATED",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -14515,6 +14521,7 @@
     "description": "Gnome Stronghold tree doors",
     "baseMaterial": "BARK",
     "uvType": "BOX",
+    "uvScale": 0.8,
     "materialOverrides": {
       "SIMPLE_GRAIN_WOOD": {
         "textureMaterial": "SIMPLE_GRAIN_WOOD",
@@ -14538,6 +14545,37 @@
       "TREEDOORR",
       "TREEDOORL_OPEN",
       "TREEDOORR_OPEN"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - tree doors top with platform above - Textured",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "TREEDOORROOF"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold Wooden - Platforms - Textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "TREEWALL1B_LVL2",
+      "TREEWALL1B_LVL1"
     ]
   },
   {
@@ -48817,6 +48855,35 @@
         "uvType": "BOX",
         "uvOrientation": 222,
         "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Mushroom - Red mushroom with black spots",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "MUSHROOM2_LARGE",
+      "MUSHROOMS2",
+      "MUSHROOM2"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Gnome Stronghols - Cloth - Wooden - Standards",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "upwardsNormals": true,
+    "objectIds": [
+      "GNOMESTANDARD2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
       }
     ]
   }
