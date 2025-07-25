@@ -35,10 +35,16 @@ uniform isampler2DArray tiledLightingArray;
 
 in vec2 fPos;
 in vec2 fUv;
+in vec3 fRay;
 
 out uint TiledCellIndex;
 
-uint LightsMask[32] = uint[](0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u); // 32 * 32 = 1024 lights
+uint LightsMask[32] = uint[](
+    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
+    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
+    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
+    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u
+); // 32 * 32 = 1024 lights
 
 void main() {
     ivec2 tileCoord = ivec2(vec2(fUv.x, 1.0 - fUv.y) * vec2(tileCountX, tileCountY));
@@ -60,23 +66,25 @@ void main() {
         }
     #endif
 
-    vec4 worldPos = invProjectionMatrix * vec4(fPos, 1.0, 1.0);
-    vec3 worldViewDir = normalize((worldPos.xyz / worldPos.w) - cameraPos);
+    vec3 viewRay = normalize(fRay);
 
     for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
         vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
         float lightRadiusSquared = PointLightArray[lightIdx].position.w;
 
-        vec3 lightToCamera = cameraPos - lightWorldPos;
-        float vDotL = dot(worldViewDir, lightToCamera);
-        if (vDotL > 0)
-            continue;
+        // Check if ray intersects light sphere
+        vec3 cameraToLight = lightWorldPos - cameraPos;
+        if (dot(cameraToLight, cameraToLight) > lightRadiusSquared) {
+            float t = dot(cameraToLight, viewRay);
+            if (t < 0)
+                continue;
+            vec3 lightToClosestPoint = cameraToLight - t * viewRay;
+            float distSq = dot(lightToClosestPoint, lightToClosestPoint);
+            if (distSq > lightRadiusSquared)
+                continue;
+        }
 
-        float dist = dot(lightToCamera, lightToCamera);
-        if (dist - vDotL * vDotL < lightRadiusSquared) {
-            if ((LightsMask[lightIdx >> 5] & (1u << (lightIdx & 31u))) != 0u)
-                continue; // Already seen
-
+        if ((LightsMask[lightIdx >> 5] & (1u << (lightIdx & 31u))) == 0u) {
             // Light hasn't been added to a previous layer, therefore we can add it and early out of the fragment shader
             TiledCellIndex = lightIdx + 1u;
             return;
