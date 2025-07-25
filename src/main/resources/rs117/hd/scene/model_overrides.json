@@ -21570,17 +21570,35 @@
     "uvScale": 0.65
   },
   {
-    "description": "Objects - Concrete - Table",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Metallic - Wooden - Concrete - Table with books weights and scales- Textured",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "textureMaterial": "HD_CONCRETE",
-    "objectIds": [
-      "BANKTABLE",
-      "BANKTABLE2"
-    ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
     "uvOrientation": 512,
-    "uvScale": 0.65
+    "uvScale": 0.65,
+    "objectIds": [
+      "BANKTABLE",
+      "BANKTABLE2",
+      "BANKTABLE2_INACTIVE",
+      "BANKTABLE_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.65
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Objects - Concrete - Bank Booth",
