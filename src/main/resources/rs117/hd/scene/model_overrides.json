@@ -49188,7 +49188,8 @@
       "WALLKIT_TWILIGHT05_ARCH02_M",
       "WALLKIT_TWILIGHT05_ARCH01_M",
       "TWILIGHT_TEMPLE_METZLI_PAINTING_MISSING_A_PIECE",
-      "TWILIGHT_TEMPLE_METZLI_PAINTING_CAN_PUSH"
+      "TWILIGHT_TEMPLE_METZLI_PAINTING_CAN_PUSH",
+      "TWILIGHT_TEMPLE_STAIRS_UP"
     ]
   },
   {
@@ -49340,6 +49341,29 @@
         "uvOrientationY": 512,
         "uvScale": 0.4
       }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Chains",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TWILIGHT_SHACKLE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Metzli's Chest",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TWILIGHT_TEMPLE_METZLI_CHAMBER_CHEST_CLOSED"
     ]
   }
 ]
