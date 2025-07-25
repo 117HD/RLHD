@@ -48792,5 +48792,32 @@
       "FAI_VARROCK_MILL_SPIRALSTAIRS_MIDDLE",
       "FAI_VARROCK_MILL_SPIRALSTAIRS_TOP"
     ]
+  },
+  {
+    "description": "Gnome - Plant - Pottery - Dirt - Potted flower",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "POTTEDREDFLOWER",
+      "POTTEDBLUEFLOWER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt and pot",
+        "colors": "h == 4 && s == 7",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.65
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 222,
+        "uvScale": 0.4
+      }
+    ]
   }
 ]
