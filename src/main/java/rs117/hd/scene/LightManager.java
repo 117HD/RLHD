@@ -77,10 +77,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class LightManager {
-	private static final ResourcePath LIGHTS_PATH = Props.getPathOrDefault(
-		"rlhd.lights-path",
-		() -> path(LightManager.class, "lights.json")
-	);
+	private static final ResourcePath LIGHTS_PATH = Props
+		.getFile("rlhd.lights-path", () -> path(LightManager.class, "lights.json"));
 
 	@Inject
 	private Client client;
