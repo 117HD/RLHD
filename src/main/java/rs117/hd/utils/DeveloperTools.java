@@ -13,6 +13,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.gui.EnvironmentEditor;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -30,6 +31,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_SKYBOX = new Keybind(KeyEvent.VK_S, InputEvent.SHIFT_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -55,12 +57,16 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private LightGizmoOverlay lightGizmoOverlay;
 
+	@Inject
+	private EnvironmentEditor environmentEditor;
+
 	private boolean keyBindingsEnabled = false;
 	private boolean tileInfoOverlayEnabled = false;
 	@Getter
 	private boolean frameTimingsOverlayEnabled = false;
 	private boolean shadowMapOverlayEnabled = false;
 	private boolean lightGizmoOverlayEnabled = false;
+	private boolean skyBoxOverlayEnabled = false;
 
 	public void activate() {
 		// Listen for commands
@@ -79,6 +85,7 @@ public class DeveloperTools implements KeyListener {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
+			environmentEditor.setState(skyBoxOverlayEnabled);
 		});
 
 		// Check for any out of bounds areas
@@ -102,6 +109,7 @@ public class DeveloperTools implements KeyListener {
 		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
+		environmentEditor.setState(false);
 	}
 
 	@Subscribe
@@ -152,6 +160,8 @@ public class DeveloperTools implements KeyListener {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
+		} else if (KEY_TOGGLE_SKYBOX.matches(e)) {
+			environmentEditor.setState(skyBoxOverlayEnabled = !skyBoxOverlayEnabled);
 		} else {
 			return;
 		}

@@ -26,6 +26,7 @@ public class UBOSkybox extends UniformBuffer<GLBuffer> {
 		public Property hueShift = addProperty(PropertyType.Float, "hueShift");
 		public Property rotation = addProperty(PropertyType.Float, "rotation");
 		public Property rotationSpeed = addProperty(PropertyType.Float, "rotationSpeed");
+		public Property tintColor = addProperty(PropertyType.FVec3, "tintColor");
 
 		public void copy(int skyboxIndex, SkyboxConfig.SkyboxEntry skyboxConfig) {
 			index.set(skyboxIndex);
@@ -38,6 +39,7 @@ public class UBOSkybox extends UniformBuffer<GLBuffer> {
 			contrast.set(hasPost ? postConfig.getContrast() : 0f);
 			saturation.set(hasPost ? postConfig.getSaturation() : 0f);
 			hueShift.set(hasPost ? postConfig.getHue() : 0f);
+			tintColor.set((hasPost && postConfig.getTintColor() != null) ? postConfig.getTintColor() : new float[]{0f, 0f, 0f});
 			rotation.set(skyboxConfig != null ? skyboxConfig.getRotation() : 0f);
 			rotationSpeed.set(skyboxConfig != null ? skyboxConfig.getRotationSpeed() : 0f);
 		}
