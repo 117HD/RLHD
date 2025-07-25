@@ -8945,6 +8945,15 @@
     "uvScale": 0.2
   },
   {
+    "description": "WOODEN_PAINTINGS",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "FAI_VARROCK_SEPIA_PAINTING4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
     "description": "Metallic Guilded Chest",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
@@ -9133,9 +9142,12 @@
       "LOCKEDMETALGATEL",
       "UNDERGROUNDCELLGATEL",
       "PRISONWALL",
-      "AKD_HUGHES_GATE_1"
+      "AKD_HUGHES_GATE_1",
+      "VMQ3_TOWER_BARS",
+      "VMQ3_TOWER_DOOR_NOOP"
     ],
     "uvType": "BOX",
+    "uvScale": 0.75,
     "uvOrientation": 463
   },
   {
@@ -28733,7 +28745,9 @@
     "objectIds": [
       "BARREL_WOODEN01_CIVITAS01",
       "BARREL_WOODEN01_AVIUM01",
-      "BARREL_WOODEN01_ALDARIN01"
+      "BARREL_WOODEN01_ALDARIN01",
+      "TWILIGHT_TEMPLE_LOWER_BARREL",
+      "TWILIGHT_TEMPLE_LOWER_BARREL_EMPTY"
     ],
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
@@ -28754,7 +28768,8 @@
       "CRATE_CIVITAS01_SINGLE01"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "uvScale": 0.75
   },
   {
@@ -48428,7 +48443,7 @@
     ]
   },
   {
-    "description": "Aldarin - Carpet - Sofa",
+    "description": "Aldarin - Torch - Animated",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 88,
@@ -48912,7 +48927,7 @@
     "colorOverrides": [
       {
         "colors": "h == 0 || h == 58",
-        "baseMaterial": "GRAVEL",
+        "baseMaterial": "GRAVEL_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.75
       }
@@ -49127,6 +49142,203 @@
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.41
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Stool",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TWILIGHT_STOOL01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Table - Empty",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "TWILIGHT_TABLE_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Door",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TWILIGHT_TEMPLE_METZLI_CHAMBER_ENTRY",
+      "TWILIGHT_TEMPLE_DOOR_OPEN",
+      "TWILIGHT_TEMPLE_DOOR_CLOSED"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Wall",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "WALLKIT_TWILIGHT05_DEFAULT01",
+      "WALLKIT_TWILIGHT05_DEFAULT02",
+      "WALLKIT_TWILIGHT05_CORNER01",
+      "WALLKIT_TWILIGHT05_ARCH01",
+      "WALLKIT_TWILIGHT05_ARCH02",
+      "WALLKIT_TWILIGHT05_ARCH02_M",
+      "WALLKIT_TWILIGHT05_ARCH01_M",
+      "TWILIGHT_TEMPLE_METZLI_PAINTING_MISSING_A_PIECE",
+      "TWILIGHT_TEMPLE_METZLI_PAINTING_CAN_PUSH"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Wall Filler",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "WALLKIT_TWILIGHT05_WALLTOP01"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Table - With Food or Wine",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "TWILIGHT_TABLE_FOOD01",
+      "TWILIGHT_TABLE_WINE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Hanging Plant",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "TWILIGHT_PALACE_WALLKIT01_HANGAR02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2 || h == 3 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 120
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Bunk Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TWILIGHT_BUNK_BED",
+      "TWILIGHT_BUNK_BED_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.55
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Bookcase",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "TWILIGHT_TEMPLE_LOWER_BOOKCASE",
+      "TWILIGHT_TEMPLE_LOWER_BOOKCASE_EMPTY",
+      "TWILIGHT_TEMPLE_LOWER_BOOKCASE_NOOP",
+      "TWILIGHT_SHELF04",
+      "TWILIGHT_SHELF03",
+      "TWILIGHT_SHELF02",
+      "TWILIGHT_SHELF01",
+      "TWILIGHT_SHELF02_BOOKS02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && a == 255",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Drawers",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65,
+    "objectIds": [
+      "VMQ4_TEMPLE_CANVAS_DRAW_1_CLOSED",
+      "VMQ4_TEMPLE_CANVAS_DRAW_2_CLOSED",
+      "VMQ4_TEMPLE_CANVAS_DRAW_1_OPEN",
+      "VMQ4_TEMPLE_CANVAS_DRAW_2_OPEN"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement Rugs",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "RUG_VARLAMORE01_CORNER02_TWILIGHT01",
+      "RUG_VARLAMORE01_SIDE02_TWILIGHT01",
+      "RUG_VARLAMORE01_CORNER01_TWILIGHT01",
+      "RUG_VARLAMORE01_SIDE01_TWILIGHT01",
+      "RUG_VARLAMORE01_MIDDLE01_TWILIGHT01"
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Twilight Temple Basement - Dresser and Mirror",
+    "objectIds": [
+      "TWILIGHT_VANITY_DEFAULT01",
+      "TWILIGHT_MIRROR_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Four Poster Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "VMQ4_TEMPLE_BED_WITH_KEY_1_OP",
+      "VMQ4_TEMPLE_BED_WITH_KEY_1_NO_OP",
+      "TWILIGHT_CHAIR_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.4
       }
     ]
   }
