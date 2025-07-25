@@ -33,7 +33,6 @@
 
 uniform isampler2DArray tiledLightingArray;
 
-in vec2 fUv;
 in vec3 fRay;
 
 out uint TiledCellIndex;
@@ -46,12 +45,10 @@ uint LightsMask[32] = uint[](
 ); // 32 * 32 = 1024 lights
 
 void main() {
-    ivec2 tileCoord = ivec2(vec2(fUv.x, 1.0 - fUv.y) * vec2(tileCountX, tileCountY));
-
     // If we're not the first layer, then check the last layer if it wrote anything otherwise theres no work left to do
     #if TILED_LIGHTING_LAYER > 0
     {
-        int lightIdx = texelFetch(tiledLightingArray, ivec3(tileCoord, TILED_LIGHTING_LAYER - 1), 0).r - 1;
+        int lightIdx = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, TILED_LIGHTING_LAYER - 1), 0).r - 1;
         if (lightIdx < 0)
             discard;
         LightsMask[lightIdx / 32] |= (1u << (lightIdx % 32));
@@ -60,7 +57,7 @@ void main() {
 
     #if TILED_LIGHTING_LAYER > 1
         for (int l = TILED_LIGHTING_LAYER - 2; l >= 0; l--) {
-            uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(tileCoord, l), 0).r - 1);
+            uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0).r - 1);
             LightsMask[lightIdx >> 5] |= 1u << (lightIdx & 31u);
         }
     #endif
@@ -71,16 +68,16 @@ void main() {
         vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
         float lightRadiusSquared = PointLightArray[lightIdx].position.w;
 
-        // Check if ray intersects light sphere
         vec3 cameraToLight = lightWorldPos - cameraPos;
+        // Check if the camera is outside of the light's radius
         if (dot(cameraToLight, cameraToLight) > lightRadiusSquared) {
             float t = dot(cameraToLight, viewDir);
             if (t < 0)
-                continue;
+                continue; // Closest point is behind the light
             vec3 lightToClosestPoint = cameraToLight - t * viewDir;
             float distSq = dot(lightToClosestPoint, lightToClosestPoint);
             if (distSq > lightRadiusSquared)
-                continue;
+                continue; // View ray doesn't intersect with the light's sphere
         }
 
         if ((LightsMask[lightIdx >> 5] & (1u << (lightIdx & 31u))) == 0u) {
