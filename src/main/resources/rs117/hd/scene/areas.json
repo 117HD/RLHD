@@ -7418,6 +7418,13 @@
     ]
   },
   {
+    "name": "THE_FINAL_DAWN_KEYSTONE_ROOM",
+    "aabbs": [
+      [ 1352, 9501, 1374, 9524 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "COLOSSEUM",
     "regions": [
       7316

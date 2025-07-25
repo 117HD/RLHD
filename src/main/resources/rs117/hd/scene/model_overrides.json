@@ -28138,7 +28138,12 @@
     "objectIds": [
       "PMOON_ICOSAHEDRON",
       "ROR_GATE_WANMOON_CLOSED",
-      "ROR_GATE_WANMOON_OPEN"
+      "ROR_GATE_WANMOON_OPEN",
+      "VMQ4_KEYSTONE_BROKEN05",
+      "VMQ4_KEYSTONE_BROKEN04",
+      "VMQ4_KEYSTONE_BROKEN03",
+      "VMQ4_KEYSTONE_BROKEN02",
+      "VMQ4_KEYSTONE_BROKEN01"
     ]
   },
   {
@@ -28503,7 +28508,8 @@
     "description": "Hunter Guild Cave Exit",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "HG_CAVE_EXIT"
+      "HG_CAVE_EXIT",
+      "CAVEKIT_ROCK01_ENTRANCE02"
     ],
     "uvType": "BOX",
     "uvScale": 0.86,
@@ -47432,7 +47438,7 @@
   },
   {
     "description": "Varlamore - Stone - Table",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 313,
@@ -47444,13 +47450,14 @@
   },
   {
     "description": "Varlamore - Stone - Bench",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 913,
     "objectIds": [
       "CHAIR_ALDARIN01_BENCH01",
-      "CHAIR_CIVITAS01_BENCH01"
+      "CHAIR_CIVITAS01_BENCH01",
+      "CHAIR_CIVITAS01_STONE01"
     ]
   },
   {

@@ -35819,7 +35819,8 @@
     "type": "FLICKER",
     "range": 7.5,
     "objectIds": [
-      "DUNGEONKIT_IMCANDO02_STATUE02"
+      "DUNGEONKIT_IMCANDO02_STATUE02",
+      "VMQ4_TEUMO_BASEMENT_FIRE_LIT"
     ]
   },
   {
@@ -38232,7 +38233,10 @@
       255
     ],
     "type": "STATIC",
-    "objectIds": [ "HG_CAVE_EXIT" ]
+    "objectIds": [
+      "HG_CAVE_EXIT",
+      "CAVEKIT_ROCK01_ENTRANCE02"
+    ]
   },
   {
     "description": "Hunter Guild Cave Exit - Far",
@@ -38334,6 +38338,22 @@
     "range": 10,
     "objectIds": [
       "VMQ3_RUINS_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Brazier",
+    "offset": [ 0, 175, 0 ],
+    "radius": 300,
+    "strength": 13.5,
+    "color": "#FFD11E",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 7.5,
+    "objectIds": [
+      "VMQ4_KEYSTONE_CHAMBER_ENTRANCE_OPEN",
+      "VMQ4_KEYSTONE_CHAMBER_EXIT"
     ]
   }
 ]
