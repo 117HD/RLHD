@@ -349,6 +349,8 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
+        #define USE_TILED_LIGHTING
+        #ifdef USE_TILED_LIGHTING
         #if MAX_LIGHTS_PER_TILE > 0
             vec2 uResolution = vec2(viewportWidth, viewportHeight);
             vec2 screenUV = gl_FragCoord.xy / uResolution;
@@ -380,6 +382,27 @@ void main() {
                     pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
                 }
             }
+        #endif
+        #else
+        for (int i = 0; i < pointLightsCount; i++) {
+            vec4 pos = PointLightArray[i].position;
+            vec3 lightToFrag = pos.xyz - IN.position;
+            float distanceSquared = dot(lightToFrag, lightToFrag);
+            float radiusSquared = pos.w;
+            if (distanceSquared <= radiusSquared) {
+                float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
+                attenuation *= attenuation;
+
+                vec3 pointLightColor = PointLightArray[i].color * attenuation;
+                vec3 pointLightDir = normalize(lightToFrag);
+
+                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+                pointLightsOut += pointLightColor * pointLightDotNormals;
+
+                vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+            }
+        }
         #endif
 
         // sky light
