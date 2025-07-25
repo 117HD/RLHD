@@ -5933,7 +5933,8 @@
     "name": "RANDOM_EVENT_FREAKY_FORESTER",
     "aabbs": [
       [ 2576, 4745, 2623, 4799 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_GRAVEDIGGER",
