@@ -9621,19 +9621,6 @@
     "flatNormals": true
   },
   {
-    "description": "Wooden Door - Surprise Exam",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      "PATTERN_DOOR_A",
-      "PATTERN_DOOR_B",
-      "PATTERN_DOOR_C",
-      "PATTERN_DOOR_D"
-    ],
-    "flatNormals": true,
-    "uvType": "BOX",
-    "uvScale": 0.4
-  },
-  {
     "description": "Wooden Door - Plank",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
@@ -17053,8 +17040,8 @@
     ]
   },
   {
-    "description": "Evil Twin Random Event - Control",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "description": "Evil Twin Random Event - Claw Controls",
+    "baseMaterial": "NONE",
     "uvType": "BOX",
     "uvScale": 0.25,
     "objectIds": [
@@ -17067,6 +17054,209 @@
         "uvType": "BOX",
         "uvScale": 0.5
       }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Animated - Npcs with Tables",
+    "npcIds": [
+      "PATTERN_TEACHER",
+      "PATTERN_GIANT_DESK",
+      "PATTERN_GOBLIN1_DESK",
+      "PATTERN_GOBLIN2_DESK",
+      "PATTERN_ZOMBIE_DESK",
+      "PATTERN_ZOMBIE_DESK",
+      "PATTERN_MUMMY_DESK"
+    ],
+    "objectIds": [
+      "PATTERN_EMPTY_DESK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Animated - Teacher and Dunce",
+    "npcIds": [
+      "PATTERN_TEACHER",
+      "PATTERN_IMP_DUNCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s != 0",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Animated - Rat Wheel",
+    "objectIds": [
+      "PATTERN_RAT_WHEEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Wardrobe",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "PATTERN_WARDROBE"
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Drawers",
+    "objectIds": [
+      "PATTERN_DRAWERS",
+      "PATTERN_DRAWERS_BOOKS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Blackboard",
+    "objectIds": [
+      "PATTERN_WALL_BLK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 || h == 10",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Coat Rack",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "objectIds": [
+      "PATTERN_COAT_RACK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 10 && h > 0",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Wooden Door",
+    "objectIds": [
+      "PATTERN_DOOR_A",
+      "PATTERN_DOOR_B",
+      "PATTERN_DOOR_C",
+      "PATTERN_DOOR_D"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Rug",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DORGESH_RICH_RUG_CORNER",
+      "DORGESH_RICH_RUG_EDGE",
+      "DORGESH_RICH_RUG_CENTRE",
+      "PATTERN_CARPET_CORNER1",
+      "PATTERN_CARPET_CORNER2",
+      "PATTERN_CARPET_CORNER3",
+      "PATTERN_CARPET_CORNER4"
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Walls",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "PATTERN_WINDOW_JOIN_RIGHT",
+      "PATTERN_WALL_SHARELIGHT",
+      "PATTERN_WINDOW_JOIN_LEFT",
+      "PATTERN_WALL_TERM_RIGHT",
+      "PATTERN_WALL_TERM_LEFT",
+      "PATTERN_WINDOW"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 7 && s == 1 || h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "MODEL_XY",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "a < 48",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Toy Box",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "PATTERN_TOYS_CORNER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s < 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationY": 600,
+        "uvOrientationZ": 512,
+        "uvScale": 0.5
+      },
+      {
+        "colors":  "h == 39",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Surprise Exam Random Event - Animated - Rocking Horse",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "PATTERN_ROCKING_HORSE"
     ]
   },
   {
@@ -35112,8 +35302,21 @@
     ],
     "objectIds": [
       "DRAYNOR_CANDLE_WALL",
-      "_100_DAVE_CANDLE_WALL",
       "CANDLE_WALL"
+    ]
+  },
+  {
+    "description": "Wooden 3 candle scone with lit flame - static",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 8 && s == 3" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "_100_DAVE_CANDLE_WALL"
     ]
   },
   {
