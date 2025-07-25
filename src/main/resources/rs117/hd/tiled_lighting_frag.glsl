@@ -33,7 +33,6 @@
 
 uniform isampler2DArray tiledLightingArray;
 
-in vec2 fPos;
 in vec2 fUv;
 in vec3 fRay;
 
@@ -66,7 +65,7 @@ void main() {
         }
     #endif
 
-    vec3 viewRay = normalize(fRay);
+    vec3 viewDir = normalize(fRay);
 
     for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
         vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
@@ -75,10 +74,10 @@ void main() {
         // Check if ray intersects light sphere
         vec3 cameraToLight = lightWorldPos - cameraPos;
         if (dot(cameraToLight, cameraToLight) > lightRadiusSquared) {
-            float t = dot(cameraToLight, viewRay);
+            float t = dot(cameraToLight, viewDir);
             if (t < 0)
                 continue;
-            vec3 lightToClosestPoint = cameraToLight - t * viewRay;
+            vec3 lightToClosestPoint = cameraToLight - t * viewDir;
             float distSq = dot(lightToClosestPoint, lightToClosestPoint);
             if (distSq > lightRadiusSquared)
                 continue;
