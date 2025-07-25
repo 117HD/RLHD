@@ -26,16 +26,14 @@
 
 #include MAX_CHARACTER_POSITION_COUNT
 
-struct ComputeUniforms {
+struct UBOCompute {
   // Camera uniforms
   float cameraYaw;
   float cameraPitch;
   int centerX;
   int centerY;
   int zoom;
-  float cameraX;
-  float cameraY;
-  float cameraZ;
+  float cameraX; float cameraY; float cameraZ; // Here be dragons on macOS if converted to float3
 
   // Wind uniforms
   float windDirectionX;
