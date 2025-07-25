@@ -10,6 +10,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	}
 
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
+	public Property cameraZoom = addProperty(PropertyType.Float, "cameraZoom");
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");

@@ -1541,6 +1541,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
 
 				uboGlobal.cameraPos.set(cameraPosition);
+				uboGlobal.cameraZoom.set((float) client.getScale());
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();

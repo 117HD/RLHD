@@ -66,17 +66,20 @@ void main() {
 
     for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
         vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
-        float lightRadiusSquared = PointLightArray[lightIdx].position.w;
+        float lightRadiusSq = PointLightArray[lightIdx].position.w;
 
         vec3 cameraToLight = lightWorldPos - cameraPos;
         // Check if the camera is outside of the light's radius
-        if (dot(cameraToLight, cameraToLight) > lightRadiusSquared) {
+        if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
             float t = dot(cameraToLight, viewDir);
             if (t < 0)
-                continue; // Closest point is behind the light
+                continue; // Closest point is behind the camera
             vec3 lightToClosestPoint = cameraToLight - t * viewDir;
-            float distSq = dot(lightToClosestPoint, lightToClosestPoint);
-            if (distSq > lightRadiusSquared)
+            float dist = length(lightToClosestPoint);
+            const int tileSize = 16;
+            float pad = tileSize * (512.f / cameraZoom) * 15;
+            dist = max(0, dist - pad);
+            if (dist * dist > lightRadiusSq)
                 continue; // View ray doesn't intersect with the light's sphere
         }
 

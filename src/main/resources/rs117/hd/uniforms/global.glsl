@@ -2,6 +2,7 @@
 
 layout(std140) uniform UBOGlobal {
     vec3 cameraPos;
+    float cameraZoom;
     int expandedMapLoadingChunks;
     float drawDistance;
     float elapsedTime;
