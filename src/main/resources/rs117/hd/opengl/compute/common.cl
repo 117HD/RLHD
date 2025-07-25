@@ -106,7 +106,7 @@ int face_distance(__constant struct UBOCompute *uni, float4 vA, float4 vB, float
  */
 bool face_visible(__constant struct UBOCompute *uni, float3 vA, float3 vB, float3 vC, int4 position) {
   // Move model to scene location, and account for camera offset
-  float3 cameraPos = uni->cameraPos;
+  float3 cameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ);
   float3 modelPos = convert_float3(position.xyz);
 
   float3 lA = vA + modelPos - cameraPos;
