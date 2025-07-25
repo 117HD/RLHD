@@ -33,9 +33,7 @@ struct UBOCompute {
   int centerX;
   int centerY;
   int zoom;
-  float cameraX;
-  float cameraY;
-  float cameraZ;
+  float3 cameraPos;
 
   // Wind uniforms
   float windDirectionX;
