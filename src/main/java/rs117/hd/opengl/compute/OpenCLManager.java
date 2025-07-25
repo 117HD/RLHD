@@ -249,6 +249,7 @@ public class OpenCLManager {
 									}
 								}
 
+								log.debug("Choosing the above device for OpenCL");
 								this.device = device;
 								OpenCLManager.context = context;
 							} catch (Exception ex) {
