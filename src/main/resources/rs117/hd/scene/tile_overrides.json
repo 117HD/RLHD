@@ -4766,12 +4766,26 @@
   },
   {
     "name": "Amoxliatl Water",
-    "area": "AMOXLIATL_ARENA",
+    "area": "AMOXLIATL_ARENA_WATER",
     "overlayIds": [ 381 ],
     "waterType": "CAVE_WATER"
   },
   {
-    "name": "Amoxliatl Snow",
+    "name": "Amoxliatl Arena Dirt FIX",
+    "area": "AMOXLIATL_ARENA_DIRT_FIX",
+    "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
+    "maxLightness": 40,
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "Amoxliatl Arena Snow FIX",
+    "area": "AMOXLIATL_ARENA_SNOW_FIX",
+    "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
+    "maxLightness": 40,
+    "groundMaterial": "SNOW_1"
+  },
+  {
+    "name": "Amoxliatl Snow Main",
     "area": "AMOXLIATL_ARENA",
     "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
     "groundMaterial": "SNOW_1",
@@ -4783,14 +4797,13 @@
     }
   },
   {
-    "name": "Amoxliatl Snow No Blending",
+    "name": "Amoxliatl Snow Main No Blending",
     "area": "AMOXLIATL_ARENA",
-    "overlayIds": [ 0 ],
     "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
     "groundMaterial": "SNOW_1",
     "maxSaturation": 0,
-    "shiftLightness": 22,
-    "minLightness": 70
+    "shiftLightness": 17,
+    "minLightness": 68
   },
   {
     "name": "COLOSSEUM_TILES",

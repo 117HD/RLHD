@@ -48919,7 +48919,7 @@
     ]
   },
   {
-    "description": "Varlamore - Ruins of Tapoyauik Lift Base",
+    "description": "Varlamore - Ruins of Tapoyauik Lift",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "objectIds": [
@@ -48932,7 +48932,9 @@
       "FLOORKIT_LOSANIUM02_CORNER01_M",
       "FLOORKIT_LOSANIUM02_CRACK01",
       "FLOORKIT_LOSANIUM02_CRACK02",
-      "FLOORKIT_LOSANIUM02_CRACK04"
+      "FLOORKIT_LOSANIUM02_CRACK04",
+      "TAPOYAUIK_MAIN_ENTRANCE_OP",
+      "TAPOYAUIK_MAIN_EXIT_OP"
     ],
     "colorOverrides": [
       {
@@ -48961,8 +48963,6 @@
       "TAPO_RUBBLE_2",
       "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN03_STEP",
       "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01_LEVERBASE",
-      "TAPOYAUIK_MAIN_ENTRANCE_OP",
-      "TAPOYAUIK_MAIN_EXIT_OP",
       "TAPO_TEMPLE_BLUE_TALL",
       "TAPO_TEMPLE_GREY_TALL",
       "TAPO_TEMPLE_GREY_TALL01",
@@ -49017,7 +49017,7 @@
   },
   {
     "description": "Varlamore - Ruins of Tapoyauik Door",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "MARBLE_2",
     "uvOrientation": 256,
     "uvType": "BOX",
     "objectIds": [
@@ -49026,7 +49026,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "GRAY_65"
+        "baseMaterial": "GRAY_85"
       }
     ]
   },
@@ -49102,6 +49102,15 @@
         "baseMaterial": "NONE",
         "upwardsNormals": true
       }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Brazier",
+    "hideInAreas": [ "AMOXLIATL_ARENA_SNOW_FIX" ],
+    "objectIds": [
+      "FLOORKIT_GRADIENT07_STRAIGHT01_DARK03",
+      "FLOORKIT_GRADIENT07_STRAIGHT01_DARK02",
+      "FLOORKIT_GRADIENT07_STRAIGHT01_DARK01"
     ]
   },
   {

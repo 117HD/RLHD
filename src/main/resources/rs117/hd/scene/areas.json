@@ -6971,6 +6971,27 @@
     ]
   },
   {
+    "name": "AMOXLIATL_ARENA_WATER",
+    "aabbs": [
+      [ 1344, 4494, 1384, 4531 ]
+    ]
+  },
+  {
+    "name": "AMOXLIATL_ARENA_DIRT_FIX",
+    "aabbs": [
+      [ 1378, 4513, 1386, 4513 ],
+      [ 1378, 4509, 1386, 4509 ],
+      [ 1386, 4510, 1386, 4512 ],
+      [ 1604, 9631, 1604, 9632 ]
+    ]
+  },
+  {
+    "name": "AMOXLIATL_ARENA_SNOW_FIX",
+    "aabbs": [
+      [ 1378, 4510, 1385, 4512 ]
+    ]
+  },
+  {
     "name": "Ruins of Tapoyauik",
     "regions": [
       6294,
