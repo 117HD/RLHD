@@ -47,8 +47,9 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.opengl.uniforms.MaterialUniforms;
-import rs117.hd.opengl.uniforms.WaterTypeUniforms;
+import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.uniforms.UBOMaterials;
+import rs117.hd.opengl.uniforms.UBOWaterTypes;
 import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ImageUtils;
@@ -65,11 +66,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class TextureManager {
-	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
-	public static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault(
-		"rlhd.texture-path",
-		() -> path(TextureManager.class, "textures")
-	);
+	public static final ResourcePath TEXTURE_PATH = Props
+		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
 
 	@Inject
 	private Client client;
@@ -97,8 +95,8 @@ public class TextureManager {
 
 	private int textureArray;
 	private int textureSize;
-	private MaterialUniforms uboMaterials;
-	private final WaterTypeUniforms uboWaterTypes = new WaterTypeUniforms();
+	private UBOMaterials uboMaterials;
+	private final UBOWaterTypes uboWaterTypes = new UBOWaterTypes();
 
 	// Temporary variables for texture loading and generating material uniforms
 	private IntBuffer pixelBuffer;
@@ -163,6 +161,12 @@ public class TextureManager {
 		uboWaterTypes.destroy();
 
 		skyboxManager.freeTextures();
+	}
+
+	public void appendUniformBuffers(ShaderIncludes includes) {
+		includes
+			.addUniformBuffer(uboWaterTypes)
+			.addUniformBuffer(uboMaterials);
 	}
 
 	@RequiredArgsConstructor
@@ -362,8 +366,8 @@ public class TextureManager {
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
 		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
-		updateMaterialUniforms();
-		updateWaterTypeUniforms();
+		updateUBOMaterials();
+		updateUBOWaterTypes();
 
 		// Reset
 		pixelBuffer = null;
@@ -414,7 +418,7 @@ public class TextureManager {
 		}
 	}
 
-	private void updateMaterialUniforms() {
+	private void updateUBOMaterials() {
 		assert materialUniformEntries.size() - 1 <= ModelPusher.MAX_MATERIAL_INDEX :
 			"Too many materials (" + materialUniformEntries.size() + ") to fit into packed material data.";
 		log.debug("Uploading {} materials", materialUniformEntries.size());
@@ -423,7 +427,7 @@ public class TextureManager {
 			uboMaterials.destroy();
 			uboMaterials = null;
 		}
-		uboMaterials = new MaterialUniforms(materialUniformEntries.size());
+		uboMaterials = new UBOMaterials(materialUniformEntries.size());
 		uboMaterials.initialize(HdPlugin.UNIFORM_BLOCK_MATERIALS);
 
 		for (int i = 0; i < materialUniformEntries.size(); i++) {
@@ -447,7 +451,7 @@ public class TextureManager {
 		return materialOrdinalToTextureLayer[material.ordinal()];
 	}
 
-	private void fillMaterialStruct(MaterialUniforms.MaterialStruct struct, MaterialEntry entry) {
+	private void fillMaterialStruct(UBOMaterials.MaterialStruct struct, MaterialEntry entry) {
 		var m = entry.material;
 		var vanillaIndex = entry.vanillaIndex;
 
@@ -480,7 +484,7 @@ public class TextureManager {
 		struct.textureScale.set(1 / m.textureScale[0], 1 / m.textureScale[1], 1 / m.textureScale[2]);
 	}
 
-	private void updateWaterTypeUniforms() {
+	private void updateUBOWaterTypes() {
 		uboWaterTypes.initialize(HdPlugin.UNIFORM_BLOCK_WATER_TYPES);
 		for (WaterType type : WaterType.values()) {
 			var struct = uboWaterTypes.waterTypes[type.ordinal()];
@@ -495,11 +499,9 @@ public class TextureManager {
 			struct.surfaceColor.set(type.surfaceColor);
 			struct.foamColor.set(type.foamColor);
 			struct.depthColor.set(type.depthColor);
-			struct.causticsStrength.set(type.causticsStrength);
 			struct.normalMap.set(getTextureLayer(type.normalMap));
 			struct.foamMap.set(getTextureLayer(Material.WATER_FOAM));
 			struct.flowMap.set(getTextureLayer(Material.WATER_FLOW_MAP));
-			struct.underwaterFlowMap.set(getTextureLayer(Material.UNDERWATER_FLOW_MAP));
 		}
 		uboWaterTypes.upload();
 	}

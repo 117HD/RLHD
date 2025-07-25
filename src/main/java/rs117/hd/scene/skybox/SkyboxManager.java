@@ -39,11 +39,8 @@ public class SkyboxManager {
 	private IntBuffer pixelBuffer;
 	private BufferedImage scaledImage;
 
-	public static final ResourcePath SKYBOX_PATH = Props.getPathOrDefault(
-		"rlhd.skybox-path",
-		() -> path(LightManager.class, "skybox.json")
-	);
-
+	public static final ResourcePath SKYBOX_PATH = Props
+		.getFile("rlhd.skybox-path", () -> path(LightManager.class, "skybox.json"));
 
 	private final Map<String, Integer> skyboxes = new HashMap<>();
 
@@ -103,8 +100,8 @@ public class SkyboxManager {
 			skyboxes.put(dir, validSkyboxCount++);
 		}
 
-		log.debug("Loaded {} Skybox's", skyboxes.size());
-		plugin.checkGLErrors();
+		log.debug("Loaded {} skyboxes", skyboxes.size());
+		HdPlugin.checkGLErrors();
 
 		pixelBuffer = null;
 		scaledImage = null;

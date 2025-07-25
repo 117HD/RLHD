@@ -26,10 +26,10 @@
 
 #version 400
 
-#include uniforms/global.glsl
+#include <uniforms/global.glsl>
 
-#include utils/skybox.glsl
-#include utils/color_utils.glsl
+#include <utils/skybox.glsl>
+#include <utils/color_utils.glsl>
 
 out vec4 FragColor;
 in vec2 quadPos;

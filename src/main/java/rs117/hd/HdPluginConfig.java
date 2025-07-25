@@ -632,7 +632,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
-		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
+		description =
+			"Adds new textures to most models. If disabled, the standard game textures will be used instead.<br>" +
+			"Note, this requires model caching in order to apply to animated models.",
 		position = 7,
 		section = environmentSettings
 	)

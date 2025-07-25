@@ -70,7 +70,7 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_INDEX = (1 << 9) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 15) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
@@ -188,6 +188,13 @@ public class ModelPusher {
 			model.getTexIndices2() != null &&
 			model.getTexIndices3() != null &&
 			model.getTextureFaces() != null;
+
+		// Since color overrides are frequently used to selectively override the base model override,
+		// disable the override entirely if its color overrides need to be skipped for performance reasons
+		boolean uncached = needsCaching && !useCache;
+		if (uncached && modelOverride.colorOverrides != null)
+			modelOverride = ModelOverride.NONE;
+
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
@@ -197,6 +204,7 @@ public class ModelPusher {
 			if (textureMaterial.hasTexture)
 				textureMaterial = Material.NONE;
 		}
+
 		boolean skipUVs =
 			!isVanillaTextured &&
 			packMaterialData(baseMaterial, -1, modelOverride, UvType.GEOMETRY, false) == 0 &&
@@ -375,7 +383,7 @@ public class ModelPusher {
 					Arrays.fill(uvData, 0);
 				} else {
 					faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
-					uvData[3] = uvData[7] = uvData[11] = materialData;
+					uvData[3] = uvData[7] = uvData[11] = Float.intBitsToFloat(materialData);
 				}
 
 				sceneContext.stagingBufferUvs.put(uvData);
@@ -407,9 +415,6 @@ public class ModelPusher {
 			return;
 		}
 
-		final int triA = model.getFaceIndices1()[face];
-		final int triB = model.getFaceIndices2()[face];
-		final int triC = model.getFaceIndices3()[face];
 		final int[] xVertexNormals = model.getVertexNormalsX();
 		final int[] yVertexNormals = model.getVertexNormalsY();
 		final int[] zVertexNormals = model.getVertexNormalsZ();
@@ -419,7 +424,11 @@ public class ModelPusher {
 			return;
 		}
 
-		float terrainData = 0x800000; // Force undo vanilla shading in compute to not use flat normals
+		final int triA = model.getFaceIndices1()[face];
+		final int triB = model.getFaceIndices2()[face];
+		final int triC = model.getFaceIndices3()[face];
+
+		float terrainData = 0;
 		sceneContext.modelFaceNormals[0] = xVertexNormals[triA];
 		sceneContext.modelFaceNormals[1] = yVertexNormals[triA];
 		sceneContext.modelFaceNormals[2] = zVertexNormals[triA];
@@ -444,18 +453,17 @@ public class ModelPusher {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_INDEX;
-		int materialData =
-			(materialIndex & MAX_MATERIAL_INDEX) << 15
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 9
-			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 6
+		// The sign bit can't be used without shader changes to correctly unpack the material index
+		return (materialIndex & MAX_MATERIAL_INDEX) << 16
+			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 10
+			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 7
+		    | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (modelOverride.upwardsNormals ? 1 : 0) << 4
 			| (modelOverride.flatNormals ? 1 : 0) << 3
 			| (uvType.worldUvs ? 1 : 0) << 2
 			| (uvType == UvType.VANILLA ? 1 : 0) << 1
 			| (isOverlay ? 1 : 0);
-		assert (materialData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
-		return materialData;
 	}
 
 	private boolean isBakedGroundShading(Model model, int face) {

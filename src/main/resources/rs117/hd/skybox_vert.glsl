@@ -26,8 +26,9 @@
 
 #version 400
 
-#include utils/skybox.glsl
-#include uniforms/global.glsl
+#include <uniforms/global.glsl>
+
+#include <utils/skybox.glsl>
 
 layout (location = 0) in vec3 aPos;
 

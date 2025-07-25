@@ -1,7 +1,6 @@
 #pragma once
 
-// Needs to match GlobalUniforms.java
-layout(std140) uniform GlobalUniforms {
+layout(std140) uniform UBOGlobal {
     vec3 cameraPos;
     int expandedMapLoadingChunks;
     float drawDistance;
@@ -35,9 +34,6 @@ layout(std140) uniform GlobalUniforms {
     int pointLightsCount;
     float lightningBrightness;
     vec3 lightDir;
-
-    float shadowMaxBias;
-    int shadowsEnabled;
 
     vec3 waterColorLight;
     vec3 waterColorMid;

@@ -1,8 +1,9 @@
 #pragma once
 
-#include uniforms/skybox.glsl
-#include uniforms/global.glsl
-#include utils/color_utils.glsl
+#include <uniforms/global.glsl>
+#include <uniforms/skybox.glsl>
+
+#include <utils/color_utils.glsl>
 
 bool canSampleSky() {
     return activeSkybox.index >= 0 || nextSkybox.index >= 0;

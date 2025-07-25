@@ -1,7 +1,6 @@
 #pragma once
 
-struct SkyboxConfig
-{
+struct SkyboxConfig {
     int index;
     int applyPostProcessing;
     float brightness;
@@ -12,7 +11,7 @@ struct SkyboxConfig
     float rotationSpeed;
 };
 
-layout(std140) uniform SkyboxUniforms {
+layout(std140) uniform UBOSkybox {
     SkyboxConfig activeSkybox;
     SkyboxConfig nextSkybox;
     float skyboxBlend;

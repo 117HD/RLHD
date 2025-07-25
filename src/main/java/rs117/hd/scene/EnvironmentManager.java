@@ -26,6 +26,7 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,7 +37,7 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
-import rs117.hd.opengl.SkyboxBuffer;
+import rs117.hd.opengl.UBOSkybox;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.skybox.SkyboxConfig;
 import rs117.hd.scene.skybox.SkyboxManager;
@@ -57,10 +58,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class EnvironmentManager {
-	private static final ResourcePath ENVIRONMENTS_PATH = Props.getPathOrDefault(
-		"rlhd.environments-path",
-		() -> path(EnvironmentManager.class, "environments.json")
-	);
+	private static final ResourcePath ENVIRONMENTS_PATH = Props
+		.getFile("rlhd.environments-path", () -> path(EnvironmentManager.class, "environments.json"));
 
 	@Inject
 	private Client client;
@@ -365,7 +364,7 @@ public class EnvironmentManager {
 		var overworldEnv = getOverworldEnvironment();
 		float[] sunAngles = env.sunAngles;
 		if (sunAngles == null)
-			sunAngles = overworldEnv.sunAngles;
+			sunAngles = Objects.requireNonNullElse(overworldEnv.sunAngles, Environment.DEFAULT_SUN_ANGLES);
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
 		if (!config.atmosphericLighting() && !env.force)
@@ -511,36 +510,36 @@ public class EnvironmentManager {
 		return currentEnvironment.isUnderwater;
 	}
 
-	public boolean updateSkyboxUniformBuffer(SkyboxBuffer buffer, float[] projectionMatrix) {
+	public boolean updateSkyboxUniformBuffer(UBOSkybox ubo, float[] projectionMatrix) {
 		SkyboxConfig.SkyboxEntry overrideEntry = null;
 		if (config.renderSkybox()) {
 			overrideEntry = skyboxManager.getSkyboxTextureByName(config.overwriteSkybox().replaceAll("\\s", ""));
 			if (overrideEntry != null) {
 				int overrideIndex = skyboxManager.getSkyboxTextureByDir(overrideEntry.getDir());
-				buffer.activeSkybox.copy(overrideIndex, overrideEntry);
-				buffer.nextSkybox.copy(-1, null);
+				ubo.activeSkybox.copy(overrideIndex, overrideEntry);
+				ubo.nextSkybox.copy(-1, null);
 			} else {
-				writeSkyboxConfig(buffer.activeSkybox, currentSkybox);
-				writeSkyboxConfig(buffer.nextSkybox, targetSkybox);
+				writeSkyboxConfig(ubo.activeSkybox, currentSkybox);
+				writeSkyboxConfig(ubo.nextSkybox, targetSkybox);
 			}
 		} else {
-			buffer.activeSkybox.copy(-1, null);
-			buffer.activeSkybox.copy(-1, null);
+			ubo.activeSkybox.copy(-1, null);
+			ubo.activeSkybox.copy(-1, null);
 		}
 
 		float[] viewProj = Mat4.identity();
 		Mat4.mul(viewProj, projectionMatrix);
 		Mat4.mul(viewProj, Mat4.translate(plugin.cameraPosition[0], plugin.cameraPosition[1], plugin.cameraPosition[2]));
 
-		buffer.skyboxBlend.set(currentskyboxBlend);
-		buffer.skyboxOffset.set(HdPlugin.NEAR_PLANE * 100.0f);
-		buffer.skyboxViewProj.set(viewProj);
-		buffer.upload();
+		ubo.skyboxBlend.set(currentskyboxBlend);
+		ubo.skyboxOffset.set(HdPlugin.NEAR_PLANE * 100.0f);
+		ubo.skyboxViewProj.set(viewProj);
+		ubo.upload();
 
 		return currentSkybox != null || targetSkybox != null || overrideEntry != null;
 	}
 
-	private void writeSkyboxConfig(SkyboxBuffer.SkyboxConfigStruct uniformStruct, SkyboxConfig.SkyboxEntry skybox) {
+	private void writeSkyboxConfig(UBOSkybox.SkyboxConfigStruct uniformStruct, SkyboxConfig.SkyboxEntry skybox) {
 		int index = (skybox != null) ? skyboxManager.getSkyboxTextureByDir(skybox.getDir()) : -1;
 		uniformStruct.copy(index, skybox);
 	}

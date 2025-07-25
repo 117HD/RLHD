@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ImageUtils {
-
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
 
 	public static BufferedImage loadTextureImage(ResourcePath path,String textureName) {
