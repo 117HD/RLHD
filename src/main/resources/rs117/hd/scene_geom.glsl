@@ -25,21 +25,22 @@
  */
 #version 330
 
-#include uniforms/global.glsl
+#include <uniforms/global.glsl>
 uniform int renderPass;
 uniform int waterHeight;
 
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
-#include utils/constants.glsl
+#include <utils/constants.glsl>
 #define USE_VANILLA_UV_PROJECTION
-#include utils/uvs.glsl
-#include utils/color_utils.glsl
+#include <utils/uvs.glsl>
+#include <utils/color_utils.glsl>
 
 in vec3 gPosition[3];
 in int gHsl[3];
-in vec4 gUv[3];
+in vec3 gUv[3];
+in int gMaterialData[3];
 in vec4 gNormal[3];
 
 flat out ivec3 vHsl;
@@ -85,9 +86,8 @@ void main() {
     // One of the many wonders of Apple software...
     for (int i = 0; i < 3; i++) {
         vHsl[i] = gHsl[i];
-        vUv[i] = gUv[i].xyz;
-        // CAUTION: only 24-bit ints can be stored safely as floats
-        vMaterialData[i] = int(gUv[i].w);
+        vUv[i] = gUv[i];
+        vMaterialData[i] = gMaterialData[i];
         vTerrainData[i] = int(gNormal[i].w);
     }
 

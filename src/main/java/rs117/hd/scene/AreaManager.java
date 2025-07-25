@@ -26,10 +26,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class AreaManager {
-	private static final ResourcePath AREA_PATH = Props.getPathOrDefault(
-		"rlhd.area-path",
-		() -> path(AreaManager.class, "areas.json")
-	);
+	private static final ResourcePath AREA_PATH = Props
+		.getFile("rlhd.area-path", () -> path(AreaManager.class, "areas.json"));
 
 	@Inject
 	private Client client;

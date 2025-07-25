@@ -23,10 +23,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class ModelOverrideManager {
-	private static final ResourcePath MODEL_OVERRIDES_PATH = Props.getPathOrDefault(
-		"rlhd.model-overrides-path",
-		() -> path(ModelOverrideManager.class, "model_overrides.json")
-	);
+	private static final ResourcePath MODEL_OVERRIDES_PATH = Props
+		.getFile("rlhd.model-overrides-path", () -> path(ModelOverrideManager.class, "model_overrides.json"));
 
 	@Inject
 	private Client client;

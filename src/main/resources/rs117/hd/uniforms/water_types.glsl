@@ -2,8 +2,7 @@
 
 #include WATER_TYPE_COUNT
 
-struct WaterType
-{
+struct WaterType {
     bool isFlat;
     float specularStrength;
     float specularGloss;
@@ -15,14 +14,12 @@ struct WaterType
     vec3 surfaceColor;
     vec3 foamColor;
     vec3 depthColor;
-    float causticsStrength;
     int normalMap;
     int foamMap;
     int flowMap;
-    int underwaterFlowMap;
 };
 
-layout(std140) uniform WaterTypeUniforms {
+layout(std140) uniform UBOWaterTypes {
     WaterType WaterTypeArray[WATER_TYPE_COUNT];
 };
 

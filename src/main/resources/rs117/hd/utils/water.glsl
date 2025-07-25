@@ -22,16 +22,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include uniforms/global.glsl
-#include utils/constants.glsl
-#include utils/color_utils.glsl
-#include utils/noise.glsl
-#include utils/misc.glsl
-#include utils/water_reflection.glsl
-#include utils/shadows.glsl
+#include <uniforms/global.glsl>
+#include <uniforms/water_types.glsl>
+#include <uniforms/lights.glsl>
+
+#include <utils/constants.glsl>
+#include <utils/color_utils.glsl>
+#include <utils/noise.glsl>
+#include <utils/misc.glsl>
+#include <utils/water_reflection.glsl>
+#include <utils/shadows.glsl>
 
 #if LEGACY_WATER > 0
-#include utils/legacy_water.glsl
+#include <utils/legacy_water.glsl>
 #else
 
 float calculateFresnel(const float cosi, const float iorFrom, const float iorTo) {
@@ -449,6 +452,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 omega_h = normalize(omega_o + omega_i); // half-way vector
     vec3 omega_n = N; // surface normal
 
+    #define WATER_SPECULAR_MODE 1
     #if WATER_SPECULAR_MODE == 1 || WATER_SPECULAR_MODE == 3 // sun or sun & lights
         // TODO: this doesn't work well for water
         vec3 sunSpecular = pow(max(0, dot(N, omega_h)), specularGloss) * directionalLight * specularStrength;

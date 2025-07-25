@@ -25,10 +25,10 @@
  */
 #version 330
 
-#include uniforms/global.glsl
-#include uniforms/materials.glsl
-#include uniforms/water_types.glsl
-#include uniforms/lights.glsl
+#include <uniforms/global.glsl>
+#include <uniforms/materials.glsl>
+#include <uniforms/water_types.glsl>
+#include <uniforms/lights.glsl>
 
 #include MATERIAL_CONSTANTS
 
@@ -65,19 +65,19 @@ vec2 worldUvs(float scale) {
     return -IN.position.xz / (128 * scale);
 }
 
-#include utils/constants.glsl
-#include utils/misc.glsl
-#include utils/color_blindness.glsl
-#include utils/caustics.glsl
-#include utils/color_utils.glsl
-#include utils/normals.glsl
-#include utils/specular.glsl
-#include utils/displacement.glsl
-#include utils/shadows.glsl
-#include utils/water.glsl
-#include utils/color_filters.glsl
-#include utils/fog.glsl
-#include utils/wireframe.glsl
+#include <utils/constants.glsl>
+#include <utils/misc.glsl>
+#include <utils/color_blindness.glsl>
+#include <utils/caustics.glsl>
+#include <utils/color_utils.glsl>
+#include <utils/normals.glsl>
+#include <utils/specular.glsl>
+#include <utils/displacement.glsl>
+#include <utils/shadows.glsl>
+#include <utils/water.glsl>
+#include <utils/color_filters.glsl>
+#include <utils/fog.glsl>
+#include <utils/wireframe.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -98,9 +98,9 @@ void main() {
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    int waterDepth1 = vTerrainData[0] >> 8 & 0x7FF;
-    int waterDepth2 = vTerrainData[1] >> 8 & 0x7FF;
-    int waterDepth3 = vTerrainData[2] >> 8 & 0x7FF;
+    int waterDepth1 = vTerrainData[0] >> 8 & 0xFFFF;
+    int waterDepth2 = vTerrainData[1] >> 8 & 0xFFFF;
+    int waterDepth3 = vTerrainData[2] >> 8 & 0xFFFF;
     float waterDepth =
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +

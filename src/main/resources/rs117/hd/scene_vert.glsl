@@ -23,22 +23,24 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #version 330
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in int vHsl;
-layout (location = 2) in vec4 vUv;
-layout (location = 3) in vec4 vNormal;
+layout (location = 2) in vec3 vUv;
+layout (location = 3) in int vMaterialData;
+layout (location = 4) in vec4 vNormal;
 
 out vec3 gPosition;
 out int gHsl;
-out vec4 gUv;
+out vec3 gUv;
+out int gMaterialData;
 out vec4 gNormal;
 
 void main() {
     gPosition = vPosition;
     gHsl = vHsl;
     gUv = vUv;
+    gMaterialData = vMaterialData;
     gNormal = vNormal;
 }

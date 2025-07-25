@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#include utils/constants.glsl
+#include <utils/constants.glsl>
 
 vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     // Only use the reflection map when enabled, the height difference is negligible & the surface is roughly flat
