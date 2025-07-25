@@ -49,24 +49,27 @@ void main() {
     #if TILED_LIGHTING_LAYER > 0
     {
         int lightIdx = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, TILED_LIGHTING_LAYER - 1), 0).r - 1;
-        if (lightIdx < 0)
-            discard;
-        LightsMask[lightIdx / 32] |= (1u << (lightIdx % 32));
+        if (lightIdx < 0) {
+            TiledCellIndex = 0u;
+            return;
+        }
+
+        LightsMask[lightIdx >> 5] |= 1u << (uint(lightIdx) & 31u);
     }
     #endif
 
     #if TILED_LIGHTING_LAYER > 1
-        for (int l = TILED_LIGHTING_LAYER - 2; l >= 0; l--) {
-            uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0).r - 1);
-            LightsMask[lightIdx >> 5] |= 1u << (lightIdx & 31u);
-        }
+    for (int l = TILED_LIGHTING_LAYER - 2; l >= 0; l--) {
+        uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0).r - 1);
+        LightsMask[lightIdx >> 5] |= 1u << (lightIdx & 31u);
+    }
     #endif
 
     vec3 viewDir = normalize(fRay);
-
-    for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
-        vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
-        float lightRadiusSq = PointLightArray[lightIdx].position.w;
+    for (uint lightIdx = 0u; lightIdx < uint(pointLightsCount); lightIdx++) {
+        vec4 lightData = PointLightArray[lightIdx].position;
+        vec3 lightWorldPos = lightData.xyz;
+        float lightRadiusSq = lightData.w;
 
         vec3 cameraToLight = lightWorldPos - cameraPos;
         // Check if the camera is outside of the light's radius
