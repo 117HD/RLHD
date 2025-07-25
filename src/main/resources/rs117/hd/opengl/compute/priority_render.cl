@@ -76,7 +76,7 @@ void applyWindDisplacement(
     float3* displacementA,
     float3* displacementB,
     float3* displacementC
-)
+);
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const struct UVData *uv,
