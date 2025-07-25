@@ -11249,7 +11249,8 @@
       "SNP_CRATE_STACKED_BLUE",
       "SNP_CRATE_RED",
       "SNP_CRATE_STACKED_RED",
-      "DOTI_POISON_CRATE_OP"
+      "DOTI_POISON_CRATE_OP",
+      "VMQ4_JANUS_BASEMENT_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -13929,7 +13930,8 @@
       "BREW_CHAIR",
       "DK_CHAIR",
       "QIP_WATCHTOWER_CHAIR",
-      "CANAFIS_CHAIR"
+      "CANAFIS_CHAIR",
+      "VMQ4_CHAIR_WOODEN01"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -37352,7 +37354,11 @@
       "WALLKIT_CIVITAS04_JUNCTION01_M",
       "WALLKIT_CIVITAS04_BILLBOARD02",
       "WALLKIT_CIVITAS04_BILLBOARD02_M",
-      "WALLKIT_CIVITAS04_BILLBOARD03"
+      "WALLKIT_CIVITAS04_BILLBOARD03",
+      "VMQ4_CIVITAS_JANUS_WINDOW_DECOY_WITH_OP",
+      "VMQ4_CIVITAS_JANUS_WINDOW_LOOSE",
+      "VMQ4_CIVITAS_JANUS_WINDOW_OPEN",
+      "VMQ4_CIVITAS_JANUS_WINDOW_CLOSED"
     ],
     "colorOverrides": [
       {
@@ -49189,7 +49195,8 @@
       "WALLKIT_TWILIGHT05_ARCH01_M",
       "TWILIGHT_TEMPLE_METZLI_PAINTING_MISSING_A_PIECE",
       "TWILIGHT_TEMPLE_METZLI_PAINTING_CAN_PUSH",
-      "TWILIGHT_TEMPLE_STAIRS_UP"
+      "TWILIGHT_TEMPLE_STAIRS_UP",
+      "VMQ4_JANUS_BASEMENT_STAIRS"
     ]
   },
   {
@@ -49364,6 +49371,31 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "TWILIGHT_TEMPLE_METZLI_CHAMBER_CHEST_CLOSED"
+    ]
+  },
+  {
+    "description": "Janus Basement - Bookcase",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "COLOSSEUM_SHELF01_BOOKS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Janus Basement - Wooden Beam",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "WALLKIT_WOODEN03_DEFAULT01"
     ]
   }
 ]
