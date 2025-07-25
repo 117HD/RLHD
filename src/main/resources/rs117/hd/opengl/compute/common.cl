@@ -45,6 +45,9 @@ float4 rotate_vertex(float4 vector, int orientation);
 float vertex_distance(__constant struct UBOCompute *uni, float4 vertex);
 int face_distance(__constant struct UBOCompute *uni, float4 vA, float4 vB, float4 vC);
 bool face_visible(__constant struct UBOCompute *uni, float3 vA, float3 vB, float3 vC, int4 position);
+float saturate(float value);
+float hash(float2 st);
+float noise(float2 st);
 
 float3 to_screen(__constant struct UBOCompute *uni, float3 vertex) {
   float yawSin = sin(uni->cameraYaw);

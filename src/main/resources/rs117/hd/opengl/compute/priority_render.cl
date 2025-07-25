@@ -58,6 +58,25 @@ void insert_face(__local struct shared_data *shared, uint localId, struct ModelI
 int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y);
 void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int y, float height, int plane);
 void undoVanillaShading(struct VertexData *vertex, float3 unrotatedNormal);
+float3 applyCharacterDisplacement(
+    float3 characterPos,
+    float2 vertPos,
+    float height,
+    float strength,
+    float* offsetAccum
+);
+void applyWindDisplacement(
+    __constant struct UBOCompute *uni,
+    const struct ObjectWindSample windSample,
+    int vertexFlags,
+    float modelHeight,
+    float3 worldPos,
+    float3 vertA, float3 vertB, float3 vertC,
+    float3 normA, float3 normB, float3 normC,
+    float3* displacementA,
+    float3* displacementB,
+    float3* displacementC
+)
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const struct UVData *uv,
@@ -363,8 +382,8 @@ void applyWindDisplacement(
     float3* displacementB,
     float3* displacementC
 ) {
+#if WIND_DISPLACEMENT || CHARACTER_DISPLACEMENT
     const int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
-
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
@@ -426,6 +445,12 @@ void applyWindDisplacement(
             strengthC = clamp(strengthC - VertexDisplacementMod, 0.0f, 1.0f);
         }
     }
+
+    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+        *displacementA += windSample.displacement * strengthA;
+        *displacementB += windSample.displacement * strengthB;
+        *displacementC += windSample.displacement * strengthC;
+    }
 #endif // WIND_DISPLACEMENT
 
 #if CHARACTER_DISPLACEMENT
@@ -444,13 +469,7 @@ void applyWindDisplacement(
     }
 #endif
 
-#if WIND_DISPLACEMENT
-    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-        *displacementA += windSample.displacement * strengthA;
-        *displacementB += windSample.displacement * strengthB;
-        *displacementC += windSample.displacement * strengthC;
-    }
-#endif
+#endif // WIND_DISPLACEMENT || CHARACTER_DISPLACEMENT
 }
 
 void sort_and_insert(
