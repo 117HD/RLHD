@@ -26134,9 +26134,8 @@
   },
   {
     "description": "BA_WAVE_AREA_BARRIERS",
-    "height": 50,
-    "alignment": "BACK",
-    "radius": 150,
+    "offset": [ 0, 60, 56 ],
+    "radius": 175,
     "strength": 7.5,
     "color": [
       255,
@@ -26145,7 +26144,7 @@
     ],
     "type": "PULSE",
     "duration": 2200,
-    "range": 30,
+    "range": 10,
     "objectIds": [
       "BARBASSAULT_DOOR_10",
       "BARBASSAULT_DOOR_NO_FRIENDS",
@@ -26158,6 +26157,93 @@
       "BARBASSAULT_DOOR_07",
       "BARBASSAULT_DOOR_08",
       "BARBASSAULT_DOOR_09"
+    ]
+  },
+  {
+    "description": "BA_POISON_POOLS_BIG",
+    "offset": [ 0, 90, 0 ],
+    "radius": 375,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STAITC",
+    "objectIds": [
+      "BARBASSAULT_CRATER_POISION_BIG"
+    ]
+  },
+  {
+    "description": "BA_POISON_POOLS_SMALL",
+    "offset": [ 0, 50, 0 ],
+    "radius": 175,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "BARBASSAULT_CRATER_POISION"
+    ]
+  },
+  {
+    "description": "BA_LAVA_POOLS_BIG",
+    "offset": [ 0, 90, 0 ],
+    "radius": 275,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_CRATER_LAVA_BIG"
+    ]
+  },
+  {
+    "description": "BA_LAVA_POOLS_SMALL",
+    "offset": [ 0, 50, 0 ],
+    "radius": 175,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_CRATER_LAVA"
+    ]
+  },
+  {
+    "description": "BA_EGG_EXPLOSION",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 450,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 400,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_EGG_EXPLOSION"
     ]
   },
   {

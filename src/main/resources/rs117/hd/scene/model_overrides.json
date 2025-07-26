@@ -31261,7 +31261,8 @@
       "MYQ3_HIDEOUT_BARREL",
       "MYQ4_EMPTY_BARREL",
       "MYQ4_HERB_BARREL",
-      "AIDE_BARREL_TAP"
+      "AIDE_BARREL_TAP",
+      "FAI_BARBARIAN_BARREL"
     ]
   },
   {
@@ -31313,7 +31314,7 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED_DARK", "QIP_COOK_BARREL_STACKED" ]
+    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED_DARK", "QIP_COOK_BARREL_STACKED", "BARBASSAULT_BARREL_STACKED" ]
   },
   {
     "description": "Wooden Cart - Empty",
@@ -48680,7 +48681,7 @@
     ]
   },
   {
-    "description": "Fortis - ToA - Paper - Flor scrolls",
+    "description": "Fortis - ToA - Paper - Floor scrolls",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -48690,7 +48691,7 @@
     ]
   },
   {
-    "description": "Varlamore - Wooden - Metallic -Plank - Chest with metal latch",
+    "description": "Varlamore - Wooden - Metallic - Plank - Chest with metal latch",
     "baseMaterial": "WOOD_GRAIN_3_DARK",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -48706,6 +48707,271 @@
         "uvType": "BOX",
         "uvScale": 0.4,
         "uvOrientation": -89
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Cave Walls",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "BARBASSAULT_WALL",
+      "BARBASSAULT_WALL_TOP",
+      "BARBASSAULT_WALL_LVL2",
+      "BARBASSAULT_WALL_LVL2_TOP",
+      "BARBASSAULT_WALL_LVL2_TOP5",
+      "BARBASSAULT_WALL_TOP5",
+      "BARBASSAULT_CAVE_BIG_NO_BARRICADE",
+      "BARBASSAULT_CAVE_BIG_FIXED",
+      "BARBASSAULT_CAVE_BIG_DESTROYED",
+      "BARBASSAULT_WALL_SLOPE_04",
+      "BARBASSAULT_WALL_SLOPE_03",
+      "BARBASSAULT_WALL_SLOPE_02",
+      "BARBASSAULT_WALL_SLOPE_01",
+      "BARBASSAULT_WALL_SLOPE_05",
+      "BARBASSAULT_WALL_SLOPE_06",
+      "BARBASSAULT_CAVE_VERY_BIG"
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Stalagmite & Soil",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "BARBASSAULT_STALAGTITE_FLOOR",
+      "BARBASSAULT_STALAGTITE",
+      "BARBASSAULT_BIG_STALAGTITE_02",
+      "BARBASSAULT_BIG_STALAGTITE_01",
+      "BARBASSAULT_DUGUPSOIL_01",
+      "BARBASSAULT_DUGUPSOIL_02",
+      "BARBASSAULT_DUGUPSOIL_03",
+      "BARBASSAULT_DUGUPSOIL_04",
+      "BARBASSAULT_DUGUPSOIL_05",
+      "BARBASSAULT_DUGUPSOIL_06",
+      "BARBASSAULT_DUGUPSOIL_07"
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Craters",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "BARBASSAULT_CRATER_LAVA",
+      "BARBASSAULT_CRATER_POISION_BIG",
+      "BARBASSAULT_CRATER_LAVA_BIG",
+      "BARBASSAULT_CRATER_POISION",
+      "BARBASSAULT_CRATER_GROUND"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || s == 7",
+        "baseMaterial": "GRAY_110",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Saw Trap",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      "BARBASSAULT_TRAP",
+      "BARBASSAULT_TRAP_1USE",
+      "BARBASSAULT_TRAP_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Healer Spring",
+    "objectIds": [
+      "BARBASSAULT_NATURAL_SPRING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 8",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Dispensers",
+    "objectIds": [
+      "BARASSAULT_VENDING_MACHINE_ATTACKER",
+      "BARASSAULT_VENDING_MACHINE_DEFENDER",
+      "BARASSAULT_VENDING_MACHINE_HEALER",
+      "BARASSAULT_VENDING_MACHINE_COLLECTOR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 || h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Egg Launcher and Horn of Glory",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "BARBASSAULT_EGG_LAUNCHER_BOX_EMPTY_N",
+      "BARBASSAULT_EGG_LAUNCHER_BOX_FULL_N",
+      "BARBASSAULT_EGG_LAUNCHER_BOX_HALF_FULL_N",
+      "BARBASSAULT_TURRET_BOTTOM",
+      "BARBASSAULT_HUGEHORN"
+    ],
+    "npcIds": [
+      "BARBASSAULT_TURRET_TOP"
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "BARBASSAULT_GAME_EXIT",
+      "BARBASSAULT_RECRUITMENT_EXIT",
+      "BARBASSAULT_GAME_ENTRANCE",
+      "BARBASSAULT_RECRUITMENT_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Big Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "BARBASSAULT_TRAPDOOR_CORNER",
+      "BARBASSAULT_TRAPDOOR_TRIM_1",
+      "BARBASSAULT_TRAPDOOR_TRIM_2",
+      "BARBASSAULT_TRAPDOOR_TRIM_2_MIRROR",
+      "BARBASSAULT_TRAPDOOR_TRIM_1_MIRROR",
+      "BARBASSAULT_TRAPDOOR_CORNER_MIRROR",
+      "BARBASSAULT_TRAPDOOR_EDGE",
+      "BARBASSAULT_TRAPDOOR_MIDDLE_1",
+      "BARBASSAULT_TRAPDOOR_EDGE_MIRROR",
+      "BARBASSAULT_TRAPDOOR_MIDDLE_2",
+      "BARBASSAULT_TRAPDOOR_MIDDLE_1_MIRROR",
+      "BARBASSAULT_TRAPDOOR_MIDDLE_2_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Lobby - Wooden Walls",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "BARBASSAULT_RECRUITMENT_INNER_WALLS",
+      "BARBASSAULT_RECRUITMENT_DOOR_TOP",
+      "BARBASSAULT_ROOM_01",
+      "BARBASSAULT_ROOM_02",
+      "BARBASSAULT_ROOM_03",
+      "BARBASSAULT_ROOM_04",
+      "BARBASSAULT_ROOM_05",
+      "BARBASSAULT_ROOM_06",
+      "BARBASSAULT_ROOM_07",
+      "BARBASSAULT_ROOM_08",
+      "BARBASSAULT_ROOM_09",
+      "BARBASSAULT_ROOM_10"
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Lobby - Wooden Walls with Dirt",
+    "baseMaterial": "DIRT_1",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BARBASSAULT_RECRUITMENT_OUTER_WALLS",
+      "BARBASSAULT_RECRUITMENT_WALL_TOP",
+      "BARBASSAULT_RECRUITMENT_OUTER_WALLS_CORNER",
+      "BARBASSAULT_RECRUITMENT_WALL_TOP5_CONCAVE",
+      "BARBASSAULT_RECRUITMENT_WALL_TOP5",
+      "BARBASSAULT_RECRUITMENT_WALL_TOP5_CONVEX"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Scroll Table",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BARBASSAULT_SCROLL_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Statues",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BARBASSAULT_STATURE_FIGHTER",
+      "BARBASSAULT_STATURE_RUNNER",
+      "BARBASSAULT_STATURE_HEALER",
+      "BARBASSAULT_STATURE_SPAWN",
+      "BARBASSAULT_STATURE_RANGER"
+    ]
+  },
+  {
+    "description": "Barbarian Assault - Blackboard & Info Scroll",
+    "baseMaterial": "GRUNGE_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BARBASSAULT_BLACKBOARD",
+      "BARBASSAULT_GAME_INFO_SCROLL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   }

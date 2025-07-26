@@ -7598,6 +7598,25 @@
     "uvScale": 0.85
   },
   {
+    "name": "Barbarian Assault Darken Dirt Blending",
+    "area": "BARBARIAN_ASSAULT_WAITING_ROOMS",
+    "underlayIds": [ 63, 65, 67 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": -1,
+    "uvScale": 0.7,
+    "replacements": {
+      "Barbarian Assault Lighten Dirt No Blending": "!blending"
+    }
+  },
+  {
+    "name": "Barbarian Assault Lighten Dirt No Blending",
+    "area": "BARBARIAN_ASSAULT_WAITING_ROOMS",
+    "underlayIds": [ 63, 65, 67 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 2,
+    "uvScale": 0.7
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
