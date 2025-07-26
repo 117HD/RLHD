@@ -11,7 +11,8 @@ in vec2 fUv;
 
 out vec4 FragColor;
 
-#define DEBUG_LIGHT_COUNT_HEATMAP
+//#define DEBUG_LIGHT_COUNT_HEATMAP
+//#define DEBUG_LIGHT_RADIUS_PADDING
 
 void main() {
     vec2 uv = fUv;
@@ -40,6 +41,7 @@ void main() {
     }
 
 #else
+#ifdef DEBUG_LIGHT_RADIUS_PADDING
 
     vec2 texelCenter = (floor(fUv * tileCount) + .5) / tileCount;
 
@@ -100,6 +102,24 @@ void main() {
 
     if (length(c) > 0)
         c.a = 0.3;
+#else
+    ivec2 tileXY = ivec2(floor(uv * tileCount));
+
+    int idx = 0;
+    for (; idx < MAX_LIGHTS_PER_TILE; idx++) {
+        int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
+        if (lightIdx <= 0)
+            break;
+    }
+
+    if (idx > 0) {
+        float level = (idx / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
+        c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
+    } else {
+        c = vec4(1, 0, 1, .3);
+    }
+
+#endif
 #endif
 
     FragColor = c;
