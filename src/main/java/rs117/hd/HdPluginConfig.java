@@ -523,15 +523,66 @@ public interface HdPluginConfig extends Config
 	)
 	String environmentSettings = "environmentSettings";
 
+	@ConfigSection(
+		name = "Day/Night Cycle",
+		description = "Dynamic day and night cycle settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String daylightCycleSettings = "daylightCycleSettings";
+
+	@ConfigItem(
+		keyName = "enableDaylightCycle",
+		name = "Enable Day/Night Cycle",
+		description = "Enables the dynamic day/night cycle with realistic sun positioning and brightness changes",
+		position = 0,
+		section = daylightCycleSettings
+	)
+	default boolean enableDaylightCycle() {
+		return false;
+	}
+
 	@ConfigItem(
 		keyName = "daylightCycle",
-		name = "Daylight Cycle",
-		description = "",
-		position = -2,
-		section = environmentSettings
+		name = "Cycle Mode",
+		description = "Controls the day/night cycle behavior:<br>" +
+			"• Dynamic: Real-time day/night cycle (duration configurable below)<br>" +
+			"• Always Day: Permanent daytime lighting<br>" +
+			"• Always Night: Permanent nighttime lighting<br>" +
+			"• Always Sunrise: Permanent sunrise/golden hour lighting<br>" +
+			"• Always Sunset: Permanent sunset/golden hour lighting",
+		position = 1,
+		section = daylightCycleSettings
 	)
 	default DaylightCycle daylightCycle() {
-		return DaylightCycle.HOUR_LONG_DAYS;
+		return DaylightCycle.DYNAMIC;
+	}
+
+	@ConfigItem(
+		keyName = "enhancedSkyColors",
+		name = "Enhanced Sky Colors",
+		description = "Enables realistic sky color transitions with orangey/pinkish sunrise and sunset colors for more lifelike atmosphere",
+		position = 2,
+		section = daylightCycleSettings
+	)
+	default boolean enhancedSkyColors() {
+		return true;
+	}
+
+	@Range(min = 1, max = 720)
+	@ConfigItem(
+		keyName = "cycleDurationMinutes",
+		name = "Cycle Duration (minutes)",
+		description = "How long a complete day/night cycle should take in real-time minutes.<br>" +
+			"• 1 minute = Very fast cycle for testing<br>" +
+			"• 30 minutes = Quick atmospheric changes<br>" +
+			"• 60 minutes = Default hourly cycle<br>" +
+			"• 180+ minutes = Slow, immersive cycle",
+		position = 3,
+		section = daylightCycleSettings
+	)
+	default int cycleDurationMinutes() {
+		return 60;
 	}
 
 	String KEY_SEASONAL_THEME = "seasonalTheme";
@@ -735,7 +786,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Model caching",
 		description = "Improve performance by reusing model data",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String modelCachingSettings = "modelCachingSettings";
@@ -794,7 +845,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -909,7 +960,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

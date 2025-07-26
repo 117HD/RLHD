@@ -147,7 +147,6 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
-import static rs117.hd.scene.TimeOfDay.MINUTES_PER_DAY;
 import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.clamp;
@@ -1845,34 +1844,98 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			float[] waterColor = environmentManager.currentWaterColor;
 			float[] sunAngles = environmentManager.currentSunAngles;
 
-			if (environmentManager.isOverworld()) {
+			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
 				switch (config.daylightCycle()) {
-					case HOUR_LONG_DAYS:
-						directionalColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
-						ambientColor = TimeOfDay.getAmbientColor(latLong, MINUTES_PER_DAY);
-						directionalStrength = 1;
-						ambientStrength = 1;
+					case DYNAMIC:
+						// Use configurable cycle duration instead of hardcoded value
+						float cycleDuration = config.cycleDurationMinutes();
+						
+						directionalColor = TimeOfDay.getLightColor(latLong, cycleDuration);
+						ambientColor = TimeOfDay.getAmbientColor(latLong, cycleDuration);
+						
+						// Apply dynamic brightness scaling based on time of day
+						float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(latLong, cycleDuration);
+						directionalStrength = brightnessMultiplier;
+						ambientStrength = brightnessMultiplier;
 
-						double[] sunAnglesD = TimeOfDay.getSunAngles(latLong, MINUTES_PER_DAY);
-//						double[] sunAnglesD = TimeOfDay.getShadowAngles(latLong, MINUTES_PER_DAY);
+						double[] sunAnglesD = TimeOfDay.getSunAngles(latLong, cycleDuration);
 						sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 
-						fogColor = TimeOfDay.getSkyColor(latLong, MINUTES_PER_DAY);
-//						fogColor = ColorUtils.linearToSrgb(multiply(ambientColor, (float) clamp(Math.sin(sunAngles[1]), 0, 1)));
+						if (config.enhancedSkyColors()) {
+							// Store the original regional fog color before overriding
+							float[] originalRegionalFogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+							fogColor = TimeOfDay.getRegionalEnhancedSkyColor(latLong, cycleDuration, originalRegionalFogColor);
+						} else {
+							fogColor = TimeOfDay.getSkyColor(latLong, cycleDuration);
+						}
 						waterColor = fogColor;
 
-						// Blend shadows between day and night
-						float shadowVisibility = 1 - (float) Math.pow(1 - Math.abs(Math.sin(sunAnglesD[1])), 5);
-						shadowVisibility *= (float) (1 - Math.pow(1 - Math.sin(sunAnglesD[1]), 2));
-						shadowVisibility = clamp(shadowVisibility, 0, 1);
+						// Calculate shadow visibility based on sun altitude
+						// Shadows should remain STRONG (dark) even when they're long at sunset
+						double sunAltitudeDegrees = Math.toDegrees(sunAnglesD[1]);
+						float shadowVisibility;
+						
+						if (sunAltitudeDegrees <= 2) {
+							// No shadows once sun gets very low
+							shadowVisibility = 0.0f;
+						} else if (sunAltitudeDegrees <= 12) {
+							// Start fading shadows earlier - from 12° down to 2°
+							// At 12°: 60% visibility, at 2°: 0% visibility
+							shadowVisibility = (float) ((sunAltitudeDegrees - 2) / 10.0 * 0.6);
+						} else if (sunAltitudeDegrees <= 15) {
+							// Low to medium sun - transition to stronger shadows (12 to 15 degrees)
+							shadowVisibility = (float) (0.6 + ((sunAltitudeDegrees - 12) / 3.0) * 0.3); // 60-90%
+						} else {
+							// Higher sun angles - maintain strong shadows
+							// Use sine function for natural intensity curve
+							double sineFactor = Math.sin(sunAnglesD[1]);
+							shadowVisibility = (float) Math.max(0.9, Math.min(1.0, sineFactor));
+						}
+						
 						Vector.add(ambientColor, ambientColor, Vector.multiply(directionalColor, 1 - shadowVisibility));
 						directionalStrength *= shadowVisibility;
 						break;
+						
+					case ALWAYS_DAY:
 					case ALWAYS_NIGHT:
-						ambientColor = TimeOfDay.getNightAmbientColor();
-						ambientStrength = 1;
-						directionalColor = TimeOfDay.getNightLightColor();
-						directionalStrength = 1;
+					case ALWAYS_SUNRISE:
+					case ALWAYS_SUNSET:
+						// Fixed time modes
+						String timeMode = config.daylightCycle().name();
+						
+						directionalColor = TimeOfDay.getFixedLightColor(timeMode);
+						ambientColor = TimeOfDay.getFixedAmbientColor(timeMode);
+						
+						float fixedBrightness = TimeOfDay.getFixedBrightnessMultiplier(timeMode);
+						directionalStrength = fixedBrightness;
+						ambientStrength = fixedBrightness;
+						
+						float[] fixedSunAngles = TimeOfDay.getFixedSunAngles(timeMode);
+						sunAngles = new float[] { fixedSunAngles[0], fixedSunAngles[1] };
+						
+						fogColor = TimeOfDay.getFixedSkyColor(timeMode);
+						waterColor = fogColor;
+						
+						// Fixed shadow visibility based on time mode
+						float fixedShadowVisibility;
+						switch (config.daylightCycle()) {
+							case ALWAYS_DAY:
+								fixedShadowVisibility = 0.8f;  // Strong shadows for day
+								break;
+							case ALWAYS_NIGHT:
+								fixedShadowVisibility = 0.0f;  // No shadows at night
+								break;
+							case ALWAYS_SUNRISE:
+							case ALWAYS_SUNSET:
+								fixedShadowVisibility = 0.4f;  // Medium shadows for golden hour
+								break;
+							default:
+								fixedShadowVisibility = 0.5f;
+								break;
+						}
+						
+						Vector.add(ambientColor, ambientColor, Vector.multiply(directionalColor, 1 - fixedShadowVisibility));
+						directionalStrength *= fixedShadowVisibility;
 						break;
 				}
 			}

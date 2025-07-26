@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum DaylightCycle
 {
-	HOUR_LONG_DAYS("1-Hour Days"),
+	DYNAMIC("Dynamic"),
 	ALWAYS_DAY,
 	ALWAYS_NIGHT,
+	ALWAYS_SUNRISE,
+	ALWAYS_SUNSET,
 	;
 
 	private final String name;
