@@ -354,8 +354,7 @@ void main() {
         #if MAX_LIGHTS_PER_TILE > 0
             vec2 uResolution = viewport.zw;
             vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
-            vec2 tileCount = vec2(tileCountX, tileCountY);
-            ivec2 tileXY = ivec2(floor(screenUV * tileCount));
+            ivec2 tileXY = ivec2(floor(screenUV * tiledLightingResolution));
 
             for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
                 int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;

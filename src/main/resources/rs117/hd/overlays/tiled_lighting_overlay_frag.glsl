@@ -19,11 +19,10 @@ void main() {
     uv.y = 1 - uv.y;
 
     vec4 c = vec4(0);
-    vec2 tileCount = vec2(tileCountX, tileCountY);
 
 #ifdef DEBUG_LIGHT_COUNT_HEATMAP
 
-    ivec2 tileXY = ivec2(floor(uv * tileCount));
+    ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
 
     int tiledLightCount = 0;
     for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
@@ -43,7 +42,7 @@ void main() {
 #else
 #ifdef DEBUG_LIGHT_RADIUS_PADDING
 
-    vec2 texelCenter = (floor(fUv * tileCount) + .5) / tileCount;
+    vec2 texelCenter = (floor(fUv * tiledLightingResolution) + .5) / tiledLightingResolution;
 
     // Draw texel centers
     vec2 viewportSize = viewport.zw;
@@ -103,7 +102,7 @@ void main() {
     if (length(c) > 0)
         c.a = 0.3;
 #else
-    ivec2 tileXY = ivec2(floor(uv * tileCount));
+    ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
 
     int idx = 0;
     for (; idx < MAX_LIGHTS_PER_TILE; idx++) {
@@ -115,8 +114,6 @@ void main() {
     if (idx > 0) {
         float level = (idx / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
         c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
-    } else {
-        c = vec4(1, 0, 1, .3);
     }
 
 #endif

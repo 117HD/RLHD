@@ -22,8 +22,7 @@ layout(std140) uniform UBOGlobal {
     vec3 underglowColor;
     float underglowStrength;
 
-    int tileCountX;
-    int tileCountY;
+    ivec2 tiledLightingResolution;
 
     mat4 projectionMatrix;
     mat4 invProjectionMatrix;
