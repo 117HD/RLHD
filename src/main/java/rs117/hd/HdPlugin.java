@@ -183,6 +183,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_COMPUTE = 4;
 	public static final int UNIFORM_BLOCK_UI = 5;
 
+	public static final int TILED_LIGHTING_STORE = 6;
+
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
 	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
@@ -305,6 +307,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
+
+	@Inject
+	private TiledLightingShaderProgram tiledLightingImageStore;
 
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
 
@@ -899,6 +904,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
 
+		if (GL_CAPS.GL_ARB_shader_image_load_store) {
+			tiledLightingImageStore.compile(includes
+				.define("TILED_IMAGE_STORE", 1)
+				.define("TILED_LIGHTING_LAYER", 0));
+		}
+
 		int tiledLayerCount = MaxLightsPerTile.MAX_LIGHTS / 4;
 		for (int layer = 0; layer < tiledLayerCount; layer++) {
 			var shader = new TiledLightingShaderProgram();
@@ -930,6 +941,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
+		tiledLightingImageStore.destroy();
 
 		for (var program : tiledLightingShaderPrograms)
 			program.destroy();
@@ -1219,6 +1231,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			GL_SHORT,
 			0
 		);
+
+		if (tiledLightingImageStore.isValid()) {
+			GL42.glBindImageTexture(TILED_LIGHTING_STORE, texTiledLighting, 0, false, 0, GL_WRITE_ONLY, GL_RGBA16I);
+		}
 
 		checkGLErrors();
 
@@ -1629,13 +1645,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindVertexArray(vaoTri);
 				glDisable(GL_BLEND);
 
-				assert configMaxLightsPerTile % 4 == 0;
-				int layerCount = configMaxLightsPerTile / 4;
-				for (int layer = 0; layer < layerCount; layer++) {
-					tiledLightingShaderPrograms.get(layer).use();
-					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
-
+				if (tiledLightingImageStore.isValid()) {
+					tiledLightingImageStore.use();
 					glDrawArrays(GL_TRIANGLES, 0, 3);
+				} else {
+					assert configMaxLightsPerTile % 4 == 0;
+					int layerCount = configMaxLightsPerTile / 4;
+					for (int layer = 0; layer < layerCount; layer++) {
+						tiledLightingShaderPrograms.get(layer).use();
+						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+
+						glDrawArrays(GL_TRIANGLES, 0, 3);
+					}
 				}
 
 				frameTimer.end(Timer.TILED_LIGHTING_CULLING);

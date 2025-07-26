@@ -24,18 +24,27 @@
  */
 #version 330
 
+#include TILED_LIGHTING_LAYER
+#include TILED_IMAGE_STORE
+
+#if TILED_IMAGE_STORE
+#extension GL_EXT_shader_image_load_store : require
+
+layout(rgba32i) uniform iimage2DArray tiledLightingImage;
+#else
+uniform isampler2DArray tiledLightingArray;
+
+out ivec4 TiledData;
+#endif
+
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
 
 #include <utils/constants.glsl>
 
-#include TILED_LIGHTING_LAYER
-
-uniform isampler2DArray tiledLightingArray;
 
 in vec3 fRay;
 
-out ivec4 TiledData;
 
 void main() {
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
@@ -43,7 +52,7 @@ void main() {
     for (int i = 0; i < LightMaskSize; i++)
         LightsMask[i] = 0u;
 
-#if TILED_LIGHTING_LAYER > 0
+#if TILED_LIGHTING_LAYER > 0 && !TILED_IMAGE_STORE
     int LayerCount = TILED_LIGHTING_LAYER - 1;
     for (int l = LayerCount; l >= 0; l--) {
         ivec4 layerData = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0);
@@ -66,38 +75,46 @@ void main() {
 
     vec3 viewDir = normalize(fRay);
     int lightIdx = 0;
-    ivec4 outputTileData = ivec4(0);
-    for(int c = 0; c < 4; c++) {
-        for (; lightIdx < pointLightsCount; lightIdx++) {
-            vec4 lightData = PointLightArray[lightIdx].position;
-            vec3 lightWorldPos = lightData.xyz;
+#if TILED_IMAGE_STORE
+    for(int l = 0; l < MAX_LIGHTS_PER_TILE / 4; l++)
+#endif
+    {
+        ivec4 outputTileData = ivec4(0);
+        for(int c = 0; c < 4; c++) {
+            for (; lightIdx < pointLightsCount; lightIdx++) {
+                vec4 lightData = PointLightArray[lightIdx].position;
+                vec3 lightWorldPos = lightData.xyz;
 
-            vec3 cameraToLight = lightWorldPos - cameraPos;
-            float t = dot(cameraToLight, viewDir);
-            if (t < 0)
-                continue; // Closest point is behind the camera
+                vec3 cameraToLight = lightWorldPos - cameraPos;
+                float t = dot(cameraToLight, viewDir);
+                if (t < 0)
+                    continue; // Closest point is behind the camera
 
-            // Check if the camera is outside of the light's radiusv
-            float lightRadiusSq = lightData.w;
-            if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
-                vec3 lightToClosestPoint = cameraToLight - t * viewDir;
-                float dist = length(lightToClosestPoint);
-                dist = max(0, dist - pad);
+                // Check if the camera is outside of the light's radiusv
+                float lightRadiusSq = lightData.w;
+                if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
+                    vec3 lightToClosestPoint = cameraToLight - t * viewDir;
+                    float dist = length(lightToClosestPoint);
+                    dist = max(0, dist - pad);
 
-                if (dist * dist > lightRadiusSq)
-                    continue; // View ray doesn't intersect with the light's sphere
+                    if (dist * dist > lightRadiusSq)
+                        continue; // View ray doesn't intersect with the light's sphere
+                }
+
+                uint word = uint(lightIdx) >> 5u;
+                uint mask = 1u << (uint(lightIdx) & 31u);
+                if ((LightsMask[word] & mask) != 0u)
+                    continue;
+
+                outputTileData[c % 4] = lightIdx + 1;
+                LightsMask[word] |= mask;
+                break;
             }
-
-            uint word = uint(lightIdx) >> 5u;
-            uint mask = 1u << (uint(lightIdx) & 31u);
-            if ((LightsMask[word] & mask) != 0u)
-                continue;
-
-            outputTileData[c] = lightIdx + 1;
-            LightsMask[word] |= mask;
-            break;
         }
-    }
-
+#if TILED_IMAGE_STORE
+    imageStore(tiledLightingImage, ivec3(gl_FragCoord.xy, l), outputTileData);
+#else
     TiledData = outputTileData;
+#endif
+    }
 }
