@@ -405,7 +405,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	protected void updateUniforms() {}
 
 	protected void render() {
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	}
 

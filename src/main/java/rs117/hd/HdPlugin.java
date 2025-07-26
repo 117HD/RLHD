@@ -1985,8 +1985,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			} else {
 				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
@@ -2022,7 +2020,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Enable blending for alpha
 			glEnable(GL_BLEND);
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 			// Draw with buffers bound to scene VAO
 			glBindVertexArray(vaoScene);
@@ -2082,9 +2080,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				0, 0, dimensions[0], dimensions[1],
 				GL_COLOR_BUFFER_BIT, GL_NEAREST
 			);
-
-			// Reset
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		} else {
 			glClearColor(0, 0, 0, 1f);
 			glClear(GL_COLOR_BUFFER_BIT);
@@ -2123,6 +2118,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void drawUi(int overlayColor, final int canvasWidth, final int canvasHeight) {
 		frameTimer.begin(Timer.RENDER_UI);
 
+		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		glColorMask(true, true, true, false);
+
 		int viewportWidth = canvasWidth;
 		int viewportHeight = canvasHeight;
 		if (client.isStretchedEnabled()) {
@@ -2140,7 +2138,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			overlayColor = 0;
 
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		uiProgram.use();
 		uboUI.sourceDimensions.set(canvasWidth, canvasHeight);
@@ -2165,8 +2163,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		gammaCalibrationOverlay.render(canvasWidth, canvasHeight);
 
 		// Reset
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		glDisable(GL_BLEND);
+		glColorMask(true, true, true, true);
 
 		frameTimer.end(Timer.RENDER_UI);
 	}
