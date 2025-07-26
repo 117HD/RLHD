@@ -14687,7 +14687,8 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "objectIds": [
-      "ALUFT_GNOME_TABLE"
+      "ALUFT_GNOME_TABLE",
+      "ALUFT_GNOME_OFFICE_TABLE"
     ]
   },
   {
@@ -49022,9 +49023,45 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 313,
-
     "objectIds": [
       "ZEP_PRE_QUEST_ROCK"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Stacked Gnome Crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALUFT_GNOME_CRATES"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Gnome Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALUFT_GNOME_CRATE_SINGLE"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Barrels",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALUFT_GNOME_BARRELS"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Gnome cabinet",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ALUFT_GNOME_OFFICE_CABINET"
     ]
   }
 ]
