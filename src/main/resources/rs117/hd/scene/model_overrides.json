@@ -20238,7 +20238,8 @@
     "objectIds": [
       "FAI_VARROCK_BANK_CHEST",
       "FRIS_BANK_CHEST_OPEN",
-      "FAIRY_CHEST_BANK"
+      "FAIRY_CHEST_BANK",
+      "BARBASSAULT_BANK_CHEST"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
