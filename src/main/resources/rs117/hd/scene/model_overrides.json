@@ -48869,7 +48869,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "Gnome Stronghols - Cloth - Wooden - Standards",
+    "description": "Gnome Stronghold - Cloth - Wooden - Standards",
     "baseMaterial": "CARPET",
     "uvType": "MODEL_XY",
     "uvScale": 0.5,
@@ -48884,6 +48884,34 @@
         "uvType": "BOX",
         "uvOrientation": 512,
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Metallic - Wooden - Spear Wall",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvOrientation": 299,
+    "uvScale": 0.3,
+    "objectIds": [
+      "WATCHTOWER_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wooden post",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Wooden spear shaft",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 383
       }
     ]
   }
