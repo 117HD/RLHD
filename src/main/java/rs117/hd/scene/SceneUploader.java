@@ -48,11 +48,10 @@ import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.NORMAL_SIZE;
-import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
@@ -143,8 +142,8 @@ public class SceneUploader {
 			String.format(
 				"%.2f",
 				(
-					sceneContext.getVertexOffset() * (VERTEX_SIZE + NORMAL_SIZE) * SCALAR_BYTES +
-					sceneContext.getUvOffset() * UV_SIZE * SCALAR_BYTES
+					sceneContext.getVertexOffset() * 4L * (VERTEX_SIZE + NORMAL_SIZE) +
+					sceneContext.getUvOffset() * 4L * UV_SIZE
 				) / 1e6
 			)
 		);
@@ -705,7 +704,7 @@ public class SceneUploader {
 				swVertexIsOverlay = true;
 
 
-			int terrainData = packTerrainData(true, 0, waterType, tileZ);
+			float terrainData = (float) packTerrainData(true, 0, waterType, tileZ);
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
 			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], terrainData);
@@ -841,10 +840,10 @@ public class SceneUploader {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			int swTerrainData = packTerrainData(true, Math.max(1, swDepth), waterType, tileZ);
-			int seTerrainData = packTerrainData(true, Math.max(1, seDepth), waterType, tileZ);
-			int nwTerrainData = packTerrainData(true, Math.max(1, nwDepth), waterType, tileZ);
-			int neTerrainData = packTerrainData(true, Math.max(1, neDepth), waterType, tileZ);
+			float swTerrainData = (float) packTerrainData(true, Math.max(1, swDepth), waterType, tileZ);
+			float seTerrainData = (float) packTerrainData(true, Math.max(1, seDepth), waterType, tileZ);
+			float nwTerrainData = (float) packTerrainData(true, Math.max(1, nwDepth), waterType, tileZ);
+			float neTerrainData = (float) packTerrainData(true, Math.max(1, neDepth), waterType, tileZ);
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
 			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -1064,7 +1063,7 @@ public class SceneUploader {
 					localVertices[i][2] -= override.heightOffset;
 			}
 
-			int terrainData = packTerrainData(true, 0, waterType, tileZ);
+			float terrainData = (float) packTerrainData(true, 0, waterType, tileZ);
 
 			sceneContext.stagingBufferNormals.ensureCapacity(12);
 			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], terrainData);
@@ -1195,9 +1194,9 @@ public class SceneUploader {
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 
-				int aTerrainData = packTerrainData(true, Math.max(1, depthA), waterType, tileZ);
-				int bTerrainData = packTerrainData(true, Math.max(1, depthB), waterType, tileZ);
-				int cTerrainData = packTerrainData(true, Math.max(1, depthC), waterType, tileZ);
+				float aTerrainData = (float) packTerrainData(true, Math.max(1, depthA), waterType, tileZ);
+				float bTerrainData = (float) packTerrainData(true, Math.max(1, depthB), waterType, tileZ);
+				float cTerrainData = (float) packTerrainData(true, Math.max(1, depthC), waterType, tileZ);
 
 				sceneContext.stagingBufferNormals.ensureCapacity(12);
 				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
@@ -1260,7 +1259,7 @@ public class SceneUploader {
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
 		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
 
-		int terrainData = packTerrainData(true, 0, WaterType.NONE, tileZ);
+		float terrainData = (float) packTerrainData(true, 0, WaterType.NONE, tileZ);
 
 		sceneContext.stagingBufferNormals.ensureCapacity(24);
 		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
@@ -1293,8 +1292,8 @@ public class SceneUploader {
 	}
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
-		// 11-bit water depth | 5-bit water type | 2-bit plane | terrain flag
-		int terrainData = waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
+		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
 		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return terrainData;
 	}

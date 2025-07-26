@@ -22,9 +22,20 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <utils/constants.glsl>
 
-#define PI 3.1415926535897932384626433832795f
 #define UNIT PI / 1024.0f
+
+#define WIND_DISPLACEMENT_DISABLED 0
+#define WIND_DISPLACEMENT_OBJECT 1
+#define WIND_DISPLACEMENT_VERTEX 2
+#define WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND 3
+#define WIND_DISPLACEMENT_VERTEX_JIGGLE 4
+
+#define HILLSKEW_NONE 0
+#define HILLSKEW_MODEL 1
+#define HILLSKEW_TILE_SNAPPING 2
+#define HILLSKEW_TILE_SNAPPING_BLEND 0.125
 
 struct ModelInfo {
     int offset;   // offset into buffer
@@ -33,13 +44,24 @@ struct ModelInfo {
     int idx;      // write idx in target buffer
     int flags;    // hillskew, plane, orientation
     int x;        // scene position x
-    int y;        // scene position y
+    int y;        // scene position y & model height
     int z;        // scene position z
 };
 
-struct vert {
+struct ObjectWindSample {
+    vec3 direction;
+    vec3 displacement;
+    float heightBasedStrength;
+};
+
+struct VertexData {
     vec3 pos;
     int ahsl;
+};
+
+struct UVData {
+    vec3 uvw;
+    int materialFlags;
 };
 
 layout(std430, binding = 0) readonly buffer ModelInfoBuffer {
@@ -47,11 +69,11 @@ layout(std430, binding = 0) readonly buffer ModelInfoBuffer {
 };
 
 layout(std430, binding = 1) readonly buffer StagingBufferVertices {
-    vert vb[];
+    VertexData vb[];
 };
 
 layout(std430, binding = 2) readonly buffer StagingBufferUvs {
-    vec4 uv[];
+    UVData uv[];
 };
 
 layout(std430, binding = 3) readonly buffer StagingBufferNormals {
@@ -59,11 +81,11 @@ layout(std430, binding = 3) readonly buffer StagingBufferNormals {
 };
 
 layout(std430, binding = 4) writeonly buffer RenderBufferVertices {
-    vert vout[];
+    VertexData vout[];
 };
 
 layout(std430, binding = 5) writeonly buffer RenderBufferUvs {
-    vec4 uvout[];
+    UVData uvout[];
 };
 
 layout(std430, binding = 6) writeonly buffer RenderBufferNormals {

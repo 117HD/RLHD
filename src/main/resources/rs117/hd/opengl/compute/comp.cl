@@ -26,28 +26,27 @@
 #include THREAD_COUNT
 #include FACES_PER_THREAD
 
-#include cl_types.cl
-#include common.cl
-#include priority_render.cl
+#include "common.cl"
+#include "priority_render.cl"
 
 __kernel
 __attribute__((work_group_size_hint(THREAD_COUNT, 1, 1)))
 void sortModel(
   __local struct shared_data *shared,
   __global const struct ModelInfo *ol,
-  __global const struct vert *vb,
-  __global const float4 *uv,
+  __global const struct VertexData *vb,
+  __global const struct UVData *uv,
   __global const float4 *normal,
-  __global struct vert *vout,
-  __global float4 *uvout,
+  __global struct VertexData *vout,
+  __global struct UVData *uvout,
   __global float4 *normalout,
-  __constant struct uniform *uni,
+  __constant struct UBOCompute *uni,
   read_only image3d_t tileHeightMap
 ) {
   size_t groupId = get_group_id(0);
   size_t localId = get_local_id(0) * FACES_PER_THREAD;
   struct ModelInfo minfo = ol[groupId];
-  int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
+  int4 pos = (int4)(minfo.x, minfo.y >> 16, minfo.z, 0);
 
   if (localId == 0) {
     shared->min10 = 6000;
@@ -60,11 +59,28 @@ void sortModel(
     }
   }
 
+  struct ObjectWindSample windSample;
+  #if WIND_DISPLACEMENT
+  {
+      float2 modelPos = (float2)(minfo.x, minfo.z);
+      float modelNoise = noise((modelPos + (float2)(uni->windOffset, uni->windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+      float angle = modelNoise * (PI / 2.0f);
+      float c = cos(angle);
+      float s = sin(angle);
+      float y = (float)(minfo.y >> 16);
+      float height = (float)(minfo.y & 0xffff);
+
+      windSample.direction = normalize((float3)(uni->windDirectionX * c + uni->windDirectionZ * s, 0.0f, -uni->windDirectionX * s + uni->windDirectionZ * c));
+      windSample.heightBasedStrength = clamp((fabs(y) + height) / uni->windCeiling, 0.0f, 1.0f) * uni->windStrength;
+      windSample.displacement = windSample.direction * windSample.heightBasedStrength * modelNoise;
+  }
+  #endif
+
   int prio[FACES_PER_THREAD];
   int dis[FACES_PER_THREAD];
-  struct vert v1[FACES_PER_THREAD];
-  struct vert v2[FACES_PER_THREAD];
-  struct vert v3[FACES_PER_THREAD];
+  struct VertexData v1[FACES_PER_THREAD];
+  struct VertexData v2[FACES_PER_THREAD];
+  struct VertexData v3[FACES_PER_THREAD];
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
     get_face(shared, uni, vb, localId + i, minfo, &prio[i], &dis[i], &v1[i], &v2[i], &v3[i]);
@@ -93,6 +109,6 @@ void sortModel(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
-    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap);
+    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap, windSample);
   }
 }

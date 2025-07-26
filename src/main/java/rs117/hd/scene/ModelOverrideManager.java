@@ -23,10 +23,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class ModelOverrideManager {
-	private static final ResourcePath MODEL_OVERRIDES_PATH = Props.getPathOrDefault(
-		"rlhd.model-overrides-path",
-		() -> path(ModelOverrideManager.class, "model_overrides.json")
-	);
+	private static final ResourcePath MODEL_OVERRIDES_PATH = Props
+		.getFile("rlhd.model-overrides-path", () -> path(ModelOverrideManager.class, "model_overrides.json"));
 
 	@Inject
 	private Client client;
@@ -36,6 +34,9 @@ public class ModelOverrideManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private GamevalManager gamevalManager;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -137,16 +138,30 @@ public class ModelOverrideManager {
 			isDuplicate = current != null && !current.isDummy;
 
 			if (isDuplicate && Props.DEVELOPMENT) {
+				String name = null;
+				switch (type) {
+					case ModelHash.TYPE_NPC:
+						name = gamevalManager.getNpcName(id);
+						break;
+					case ModelHash.TYPE_OBJECT:
+						name = gamevalManager.getObjectName(id);
+						break;
+					case ModelHash.TYPE_PROJECTILE:
+					case ModelHash.TYPE_GRAPHICS_OBJECT:
+						name = gamevalManager.getSpotanimName(id);
+						break;
+				}
+
 				// This should ideally not be reached, so print helpful warnings in development mode
 				if (entry.hideInAreas.length > 0) {
 					log.error(
-						"Replacing ID {} from '{}' with hideInAreas-override '{}'. This is likely a mistake...",
-						id, current.description, entry.description
+						"Replacing {} ({}) from '{}' with hideInAreas-override '{}'. This is likely a mistake...",
+						name, id, current.description, entry.description
 					);
 				} else {
 					log.error(
-						"Replacing ID {} from '{}' with '{}'. The first-mentioned override should be removed.",
-						id, current.description, entry.description
+						"Replacing {} ({}) from '{}' with '{}'. The first-mentioned override should be removed.",
+						name, id, current.description, entry.description
 					);
 				}
 			}

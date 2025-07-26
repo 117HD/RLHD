@@ -22,16 +22,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
-struct uniform {
+#include MAX_CHARACTER_POSITION_COUNT
+
+struct UBOCompute {
+  // Camera uniforms
   float cameraYaw;
   float cameraPitch;
   int centerX;
   int centerY;
   int zoom;
-  float cameraX;
-  float cameraY;
-  float cameraZ;
+  float cameraX; float cameraY; float cameraZ; // Here be dragons on macOS if converted to float3
+
+  // Wind uniforms
+  float windDirectionX;
+  float windDirectionZ;
+  float windStrength;
+  float windCeiling;
+  float windOffset;
+
+  int characterPositionCount;
+  float3 characterPositions[MAX_CHARACTER_POSITION_COUNT];
 };
 
 struct shared_data {
@@ -49,13 +61,26 @@ struct ModelInfo {
   int idx;      // write idx in target buffer
   int flags;    // hillskew, plane, orientation
   int x;        // scene position x
-  int y;        // scene position y
+  int y;        // scene position y & model height
   int z;        // scene position z
 };
 
-struct vert {
+struct VertexData {
   float x;
   float y;
   float z;
   int ahsl;
+};
+
+struct UVData {
+    float u;
+    float v;
+    float w;
+    int materialData;
+};
+
+struct ObjectWindSample {
+    float3 direction;
+    float3 displacement;
+    float heightBasedStrength;
 };

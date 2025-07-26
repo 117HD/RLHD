@@ -9,11 +9,11 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 
-import static org.lwjgl.opengl.GL15C.*;
-import static org.lwjgl.opengl.GL21C.*;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class AsyncUICopy implements Runnable {
@@ -83,12 +83,12 @@ public class AsyncUICopy implements Runnable {
 		timer.begin(Timer.UPLOAD_UI);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+		glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 		timer.end(Timer.UPLOAD_UI);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
 
 		mappedBuffer = null;
 		pixels = null;

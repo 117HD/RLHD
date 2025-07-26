@@ -25,7 +25,7 @@
 
 #include VERSION_HEADER
 
-#include comp_common.glsl
+#include <comp_common.glsl>
 
 layout(local_size_x = 6) in;
 
@@ -39,14 +39,14 @@ void main() {
     int outOffset = minfo.idx;
     int uvOffset = minfo.uvOffset;
     int flags = minfo.flags;
-    vec3 pos = vec3(minfo.x, minfo.y, minfo.z);
+    vec3 pos = vec3(minfo.x, minfo.y >> 16, minfo.z);
 
     if (localId >= size) {
         return;
     }
 
     uint ssboOffset = localId;
-    vert thisA, thisB, thisC;
+    VertexData thisA, thisB, thisC;
 
     // Grab triangle vertices from the correct buffer
     thisA = vb[offset + ssboOffset * 3    ];
@@ -65,9 +65,9 @@ void main() {
     vout[outOffset + myOffset * 3 + 2] = thisC;
 
     if (uvOffset < 0) {
-        uvout[outOffset + myOffset * 3]     = vec4(0, 0, 0, 0);
-        uvout[outOffset + myOffset * 3 + 1] = vec4(0, 0, 0, 0);
-        uvout[outOffset + myOffset * 3 + 2] = vec4(0, 0, 0, 0);
+        uvout[outOffset + myOffset * 3]     = UVData(vec3(0.0), 0);
+        uvout[outOffset + myOffset * 3 + 1] = UVData(vec3(0.0), 0);
+        uvout[outOffset + myOffset * 3 + 2] = UVData(vec3(0.0), 0);
     } else {
         uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
         uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];

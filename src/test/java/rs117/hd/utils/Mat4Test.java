@@ -49,5 +49,15 @@ public class Mat4Test extends TestCase {
 		inverse = Mat4.inverse(invertible);
 		Mat4.mul(inverse, invertible);
 		Assert.assertEquals(identity, Mat4.format(inverse));
+
+		float[] invertible2 = {
+			0.20491976f, -0.1548707f, 0.0f, 1.8616436E-8f,
+			0.0f, -1.589505E-8f, 0.0f, -1.0f,
+			0.096459776f, 0.32900834f, 0.0f, -3.954888E-8f,
+			-1846.3291f, -1871.3298f, 100.0f, 3498.0002f
+		};
+		float[] inverse2 = Mat4.inverse(invertible2);
+		Mat4.mul(inverse2, invertible2);
+		Assert.assertEquals(identity, Mat4.format(inverse2));
 	}
 }

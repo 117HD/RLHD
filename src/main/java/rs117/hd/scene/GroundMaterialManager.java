@@ -15,10 +15,8 @@ import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 public class GroundMaterialManager {
-	private static final ResourcePath GROUND_MATERIALS_PATH = Props.getPathOrDefault(
-		"rlhd.ground-materials-path",
-		() -> path(AreaManager.class, "ground_materials.json")
-	);
+	private static final ResourcePath GROUND_MATERIALS_PATH = Props
+		.getFile("rlhd.ground-materials-path", () -> path(AreaManager.class, "ground_materials.json"));
 
 	@Inject
 	private HdPlugin plugin;
