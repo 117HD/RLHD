@@ -20696,7 +20696,8 @@
       "BCS_MAISA_CAMP_FIRE",
       "VMQ4_CRYPT_ASSAULT_FIRE",
       "VMQ4_CRYPT_ENNIUS_EXIT",
-      "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE"
+      "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE",
+      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER"
     ]
   },
   {
@@ -38426,5 +38427,300 @@
     "range": 20,
     "npcIds": [ "VMQ4_CRYPT_ENNIUS_BOSS" ],
     "animationIds": [ "VMQ4_ENNIUS_CAST" ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Fire Blue",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 18.5,
+    "fadeOutDuration": 400,
+    "color": [
+      3,
+      60,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_FIRE_1"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Fire Cyan",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 10,
+    "fadeOutDuration": 400,
+    "color": [
+      3,
+      150,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_FIRE_2"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Brazier Cyan",
+    "height": 200,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      3,
+      150,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Teleport Blue",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 200,
+    "strength": 30,
+    "color": [
+      3,
+      70,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 5,
+    "objectIds": [
+      "VMQ4_MOON_TELEPORT"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Teleport Orange",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 5,
+    "objectIds": [
+      "VMQ4_SUN_TELEPORT"
+    ]
+  },
+  {
+    "description": "Sun Shrine Fire Puzzle Fail Fire",
+    "height": 40,
+    "areas": [ "Tonil Caverns Sun Puzzle Fire" ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
+    "description": "Sun Shrine Puzzle Complete",
+    "offset": [ 0, 600, -130 ],
+    "alignment": "CENTER",
+    "radius": 2500,
+    "visibleFromOtherPlanes": true,
+    "strength": 7,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "objectIds": [ "VMQ4_SUN_PUZZLE_STATUE_NOOPS" ]
+  },
+  {
+    "description": "Moon Shrine Puzzle Complete",
+    "offset": [ 0, 700, -530 ],
+    "alignment": "CENTER",
+    "radius": 4500,
+    "visibleFromOtherPlanes": true,
+    "strength": 7,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      150,
+      150,
+      255
+    ],
+    "objectIds": [ "VMQ4_MOON_PUZZLE_STATUE_NOOPS" ]
+  },
+  {
+    "description": "METZLI_FIRE_WAVE",
+    "height": 40,
+    "radius": 350,
+    "strength": 12,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_METZLI_FIRE_WAVE" ]
+  },
+  {
+    "description": "METZLI_FIRE_ARROW",
+    "height": -25,
+    "radius": 150,
+    "strength": 12,
+    "fadeOutDuration": 175,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [ "VMQ4_PROJECTILE_CULTIST_RANGED_FIRE_01" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_FIRE_WALL",
+    "height": 50,
+    "radius": 200,
+    "strength": 17,
+    "fadeOutDuration": 1800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ "VFX_VMQ4_METZLI_FIRE_WALL_CAST" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_WATER_WALL",
+    "height": 50,
+    "radius": 300,
+    "strength": 17,
+    "fadeOutDuration": 1800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_VMQ4_METZLI_WATER_WALL_CAST" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_FIRE_WAVE",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 300,
+    "fadeOutDuration": 100,
+    "fadeInDuration": 1000,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1800,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_METZLI_BOSS" ],
+    "animationIds": [ "VMQ4_METZLI_CAST" ]
+  },
+  {
+    "description": "METZLI_WATER_PROJECTILE",
+    "height": -25,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VMQ4_PROJECTILE_METZLI_MAGIC_WATER_01",
+      "VMQ4_PROJECTILE_CULTIST_MAGIC_WATER_04"
+    ]
+  },
+  {
+    "description": "METZLI_WATER_WAVE",
+    "height": 50,
+    "radius": 275,
+    "strength": 8,
+    "fadeInDuration": 200,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ "VMQ4_METZLI_MOON_WAVE" ]
+  },
+  {
+    "description": "METZLI_FIRE_BALL",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREWAVE_TRAVEL",
+      "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
+    ]
   }
 ]

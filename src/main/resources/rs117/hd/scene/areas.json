@@ -7012,6 +7012,11 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Tonil Caverns Sun Puzzle Fire",
+    "regions": [ 5267 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "HUNTER_GUILD_SURFACE",
     "aabbs": [
       [ 1535, 3024, 1575, 3070 ]
