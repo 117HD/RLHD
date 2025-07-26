@@ -14608,7 +14608,7 @@
     ]
   },
   {
-    "description": "Gnome table with cutlery and napkins",
+    "description": "Gnome - Wooden - Stool",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 600,
@@ -14617,15 +14617,15 @@
     ]
   },
   {
-    "description": "Gnome stool",
+    "description": "Gnome - Wooden - table with cutlery and napkins with candle - Needs proper UV",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 84,
     "colorOverrides": [
       {
-        "description": "Silverware and napkin",
+        "description": "Cutlery napkins and candle",
         "colors": "s == 0",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_90"
       }
     ],
     "objectIds": [
