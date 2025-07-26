@@ -899,7 +899,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
 
-		for (int layer = 0; layer < MaxLightsPerTile.MAX_LIGHTS; layer++) {
+		int tiledLayerCount = MaxLightsPerTile.MAX_LIGHTS / 4;
+		for (int layer = 0; layer < tiledLayerCount; layer++) {
 			var shader = new TiledLightingShaderProgram();
 			shader.compile(includes.define("TILED_LIGHTING_LAYER", layer));
 			tiledLightingShaderPrograms.add(shader);
@@ -1190,6 +1191,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initTiledLighting() {
+		assert MaxLightsPerTile.MAX_LIGHTS % 4 == 0; // Max Lights needs to be divisible by 4
+
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
 		final int tileSize = 16;
@@ -1207,13 +1210,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexImage3D(
 			GL_TEXTURE_2D_ARRAY,
 			0,
-			GL_R16I,
+			GL_RGBA16I,
 			tiledLightingResolution[0],
 			tiledLightingResolution[1],
-			MaxLightsPerTile.MAX_LIGHTS,
+			MaxLightsPerTile.MAX_LIGHTS / 4,
 			0,
-			GL_RED_INTEGER,
-			GL_UNSIGNED_SHORT,
+			GL_RGBA_INTEGER,
+			GL_SHORT,
 			0
 		);
 
@@ -1626,9 +1629,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindVertexArray(vaoTri);
 				glDisable(GL_BLEND);
 
-				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
+				assert configMaxLightsPerTile % 4 == 0;
+				int layerCount = configMaxLightsPerTile / 4;
+				for (int layer = 0; layer < layerCount; layer++) {
 					tiledLightingShaderPrograms.get(layer).use();
 					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+
 					glDrawArrays(GL_TRIANGLES, 0, 3);
 				}
 

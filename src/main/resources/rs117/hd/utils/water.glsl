@@ -88,15 +88,19 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
     #if MAX_LIGHTS_PER_TILE > 0
-        vec2 uResolution = viewport.zw;
-        vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
-        ivec2 tileXY = ivec2(floor(screenUV * tiledLightingResolution));
+    vec2 uResolution = viewport.zw;
+    vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
+    ivec2 tileXY = ivec2(floor(screenUV * tiledLightingResolution));
 
-        for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
-            int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
-            if (lightIdx <= 0)
+    int tileLayerCount = MAX_LIGHTS_PER_TILE / 4;
+    for (int tileLayer = 0; tileLayer < tileLayerCount; tileLayer++) {
+        ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+        for(int c = 0; c < 4; c++) {
+            int lightIdx = tileLayerData[c];
+            if (lightIdx < 0) {
+                tileLayer = tileLayerCount;
                 break;
-            lightIdx--;
+            }
 
             vec4 pos = PointLightArray[lightIdx].position;
             vec3 lightToFrag = pos.xyz - IN.position;
@@ -116,6 +120,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
                 pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
             }
         }
+    }
     #endif
 
     // sky light

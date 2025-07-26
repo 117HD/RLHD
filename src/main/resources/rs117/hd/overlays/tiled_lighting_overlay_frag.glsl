@@ -24,14 +24,14 @@ void main() {
 
     ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
 
-    int tiledLightCount = 0;
-    for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
-        int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
-        if (lightIdx <= 0)
-            break;
-
-        lightIdx--;
-        tiledLightCount++;
+    for (int tileLayer = 0; tileLayer < tileLayerCount; tileLayer++) {
+        ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+        for(int c = 0; c < 4; c++) {
+            if(tileLayerData[c] <= 0) {
+                break;
+            }
+            tiledLightCount++;
+        }
     }
 
     if (tiledLightCount > 0) {
@@ -104,15 +104,21 @@ void main() {
 #else
     ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
 
-    int idx = 0;
-    for (; idx < MAX_LIGHTS_PER_TILE; idx++) {
-        int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
-        if (lightIdx <= 0)
-            break;
+    int tiledLightCount = 0;
+    int tileLayerCount = MAX_LIGHTS_PER_TILE / 4;
+    for (int tileLayer = 0; tileLayer < tileLayerCount; tileLayer++) {
+        ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+        for(int c = 0; c < 4; c++) {
+            int lightIdx = tileLayerData[c];
+            if(tileLayerData[c] <= 0) {
+                break;
+            }
+            tiledLightCount++;
+        }
     }
 
-    if (idx > 0) {
-        float level = (idx / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
+    if (tiledLightCount > 0) {
+        float level = (tiledLightCount / float(MAX_LIGHTS_PER_TILE)) * 3.14159265 / 2.0;
         c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
     }
 

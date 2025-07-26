@@ -35,70 +35,68 @@ uniform isampler2DArray tiledLightingArray;
 
 in vec3 fRay;
 
-out uint TiledCellIndex;
+out ivec4 TiledData;
 
 void main() {
-    // If we're not the first layer, then check the last layer if it wrote anything otherwise theres no work left to do
-    #if TILED_LIGHTING_LAYER > 0
-        int prevLayerLightIdx = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, TILED_LIGHTING_LAYER - 1), 0).r - 1;
-        if (prevLayerLightIdx < 0) {
-            TiledCellIndex = 0u;
-            return;
-        }
+    int LightMaskSize = int(ceil(pointLightsCount / 32.0));
+    int LightsMask[32]; // 32 Words = 1024 Lights
+    for (int i = 0; i < LightMaskSize; i++)
+        LightsMask[i] = 0;
 
-        int LightMaskSize = int(ceil(pointLightsCount / 32.0));
-        uint LightsMask[32]; // 32 Words = 1024 Lights
-        for (int i = 0; i < LightMaskSize; i++)
-            LightsMask[i] = 0u;
+#if TILED_LIGHTING_LAYER > 0
+    int LayerCount = TILED_LIGHTING_LAYER - 1;
+    for (int l = LayerCount; l >= 0; l--) {
+        ivec4 layerData = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0);
+        for(int c = 4; c >= 0 ; c--) {
+            int encodedLightIdx = layerData[c] - 1;
+            if(encodedLightIdx < 0) {
+                return; // No more lights are overlapping with cell since the previous layer didn't encode
+            }
 
-        {
-            uint mask = 1u << (uint(prevLayerLightIdx) & 31u);
-            LightsMask[prevLayerLightIdx >> 5] |= mask;
+            int word = encodedLightIdx >> 5;
+            int mask = 1 << (encodedLightIdx & 31);
+            LightsMask[word] |= mask;
         }
-    #endif
-
-    #if TILED_LIGHTING_LAYER > 1
-        for (int l = TILED_LIGHTING_LAYER - 2; l >= 0; l--) {
-            uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0).r - 1);
-            uint mask = 1u << (lightIdx & 31u);
-            LightsMask[lightIdx >> 5] |= mask;
-        }
-    #endif
+    }
+#endif
 
     const int tileSize = 16;
     float pad = tileSize * (512.f / cameraZoom) * 15;
+
     vec3 viewDir = normalize(fRay);
-    for (uint lightIdx = 0u; lightIdx < uint(pointLightsCount); lightIdx++) {
-        vec4 lightData = PointLightArray[lightIdx].position;
-        vec3 lightWorldPos = lightData.xyz;
+    int lightIdx = 0;
+    ivec4 output = ivec4(0);
+    for(int c = 0; c < 4; c++) {
+        for (; lightIdx < pointLightsCount; lightIdx++) {
+            vec4 lightData = PointLightArray[lightIdx].position;
+            vec3 lightWorldPos = lightData.xyz;
 
-        vec3 cameraToLight = lightWorldPos - cameraPos;
-        float t = dot(cameraToLight, viewDir);
-        if (t < 0)
-            continue; // Closest point is behind the camera
+            vec3 cameraToLight = lightWorldPos - cameraPos;
+            float t = dot(cameraToLight, viewDir);
+            if (t < 0)
+                continue; // Closest point is behind the camera
 
-        // Check if the camera is outside of the light's radiusv
-        float lightRadiusSq = lightData.w;
-        if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
-            vec3 lightToClosestPoint = cameraToLight - t * viewDir;
-            float dist = length(lightToClosestPoint);
-            dist = max(0, dist - pad);
+            // Check if the camera is outside of the light's radiusv
+            float lightRadiusSq = lightData.w;
+            if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
+                vec3 lightToClosestPoint = cameraToLight - t * viewDir;
+                float dist = length(lightToClosestPoint);
+                dist = max(0, dist - pad);
 
-            if (dist * dist > lightRadiusSq)
-                continue; // View ray doesn't intersect with the light's sphere
-        }
+                if (dist * dist > lightRadiusSq)
+                    continue; // View ray doesn't intersect with the light's sphere
+            }
 
-        #if TILED_LIGHTING_LAYER > 0
-            uint mask = 1u << (lightIdx & 31u);
-            if ((LightsMask[lightIdx >> 5] & mask) != 0u)
+            int word = lightIdx >> 5;
+            int mask = 1 << (lightIdx & 31);
+            if ((LightsMask[word] & mask) != 0)
                 continue;
-        #endif
 
-        // Light hasn't been added to a previous layer, therefore we can add it and early out of the fragment shader
-        TiledCellIndex = lightIdx + 1u;
-        return;
+            output[c] = lightIdx + 1;
+            LightsMask[word] |= mask;
+            break;
+        }
     }
 
-    // Intersected with no light
-    TiledCellIndex = 0u;
+    TiledData = output;
 }
