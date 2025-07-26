@@ -60,16 +60,27 @@ public class TimeOfDay
 		Object[][] skyColorKeyframes = {
 			// Deep night (sun well below horizon)
 			{ -30.0, new java.awt.Color(8, 8, 16) },      // Very dark blue-black
+			{ -20.0, new java.awt.Color(10, 12, 20) },    // Deep night
 			{ -18.0, new java.awt.Color(12, 15, 24) },    // Astronomical twilight
+			{ -15.0, new java.awt.Color(15, 20, 32) },    // Late astronomical twilight
 			{ -12.0, new java.awt.Color(18, 25, 40) },    // Nautical twilight
+			{ -10.0, new java.awt.Color(20, 28, 45) },    // Mid nautical twilight
 			{ -8.0,  new java.awt.Color(22, 30, 50) },    // Late nautical twilight
+			{ -7.0,  new java.awt.Color(23, 32, 55) },    // Pre-civil twilight
 			{ -6.0,  new java.awt.Color(25, 35, 65) },    // Civil twilight start
+			{ -5.5,  new java.awt.Color(27, 37, 67) },    // Early civil twilight
 			{ -5.0,  new java.awt.Color(30, 40, 70) },    // Deep twilight blue
+			{ -4.5,  new java.awt.Color(35, 45, 75) },    // Twilight blue progression
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
+			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
+			{ -2.7,  new java.awt.Color(72, 67, 100) },   // Purple-blue blend
 			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
+			{ -2.2,  new java.awt.Color(95, 72, 115) },   // Purple twilight progression
 			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
+			{ -1.7,  new java.awt.Color(115, 80, 122) },  // Purple-pink blend
 			{ -1.5,  new java.awt.Color(125, 85, 125) },  // Purple-pink transition
+			{ -1.2,  new java.awt.Color(135, 90, 127) },  // Pink-purple progression
 			{ -1.0,  new java.awt.Color(145, 95, 130) },  // Dawn pink-purple
 			{ -0.8,  new java.awt.Color(165, 105, 125) }, // Warm pink
 			{ -0.4,  new java.awt.Color(185, 115, 115) }, // Pink transition
@@ -103,16 +114,27 @@ public class TimeOfDay
 		Object[][] skyColorKeyframes = {
 			// Deep night (sun well below horizon)
 			{ -30.0, new java.awt.Color(8, 8, 16) },      // Very dark blue-black
+			{ -20.0, new java.awt.Color(10, 12, 20) },    // Deep night
 			{ -18.0, new java.awt.Color(12, 15, 24) },    // Astronomical twilight
+			{ -15.0, new java.awt.Color(15, 20, 32) },    // Late astronomical twilight
 			{ -12.0, new java.awt.Color(18, 25, 40) },    // Nautical twilight
+			{ -10.0, new java.awt.Color(20, 28, 45) },    // Mid nautical twilight
 			{ -8.0,  new java.awt.Color(22, 30, 50) },    // Late nautical twilight
+			{ -7.0,  new java.awt.Color(23, 32, 55) },    // Pre-civil twilight
 			{ -6.0,  new java.awt.Color(25, 35, 65) },    // Civil twilight start
+			{ -5.5,  new java.awt.Color(27, 37, 67) },    // Early civil twilight
 			{ -5.0,  new java.awt.Color(30, 40, 70) },    // Deep twilight blue
+			{ -4.5,  new java.awt.Color(35, 45, 75) },    // Twilight blue progression
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
+			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
+			{ -2.7,  new java.awt.Color(72, 67, 100) },   // Purple-blue blend
 			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
+			{ -2.2,  new java.awt.Color(95, 72, 115) },   // Purple twilight progression
 			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
+			{ -1.7,  new java.awt.Color(115, 80, 122) },  // Purple-pink blend
 			{ -1.5,  new java.awt.Color(125, 85, 125) },  // Purple-pink transition
+			{ -1.2,  new java.awt.Color(135, 90, 127) },  // Pink-purple progression
 			{ -1.0,  new java.awt.Color(145, 95, 130) },  // Dawn pink-purple
 			{ -0.8,  new java.awt.Color(165, 105, 125) }, // Warm pink
 			{ -0.4,  new java.awt.Color(185, 115, 115) }, // Pink transition
@@ -188,25 +210,34 @@ public class TimeOfDay
 		long millisPerCycle = (long) (dayLength * 60 * 1000);
 		double cyclePosition = (currentTimeMillis % millisPerCycle) / (double) millisPerCycle;
 		
-		// Map cycle position to time of day with 70% day, 30% night
-		// 0.0-0.35 = sunrise to noon (maps to 6am-12pm)
-		// 0.35-0.70 = noon to sunset (maps to 12pm-6pm)
-		// 0.70-1.0 = night (maps to 6pm-6am next day)
+		// Map cycle position to time of day with extended twilight periods
+		// 0.0-0.15 = dawn/sunrise twilight (maps to 5am-7am)
+		// 0.15-0.35 = morning (maps to 7am-12pm)
+		// 0.35-0.55 = afternoon (maps to 12pm-5pm)
+		// 0.55-0.70 = sunset twilight (maps to 5pm-7pm)
+		// 0.70-0.85 = early night (maps to 7pm-12am)
+		// 0.85-1.0 = late night/pre-dawn (maps to 12am-5am)
 		double mappedHour;
 		
-		if (cyclePosition < 0.35) {
-			// Morning: map 0-0.35 to 6am-12pm (6 hours)
-			mappedHour = 6.0 + (cyclePosition / 0.35) * 6.0;
+		if (cyclePosition < 0.15) {
+			// Dawn twilight: map 0-0.15 to 5am-7am (2 hours of twilight)
+			mappedHour = 5.0 + (cyclePosition / 0.15) * 2.0;
+		} else if (cyclePosition < 0.35) {
+			// Morning: map 0.15-0.35 to 7am-12pm (5 hours)
+			mappedHour = 7.0 + ((cyclePosition - 0.15) / 0.20) * 5.0;
+		} else if (cyclePosition < 0.55) {
+			// Afternoon: map 0.35-0.55 to 12pm-5pm (5 hours)
+			mappedHour = 12.0 + ((cyclePosition - 0.35) / 0.20) * 5.0;
 		} else if (cyclePosition < 0.70) {
-			// Afternoon: map 0.35-0.70 to 12pm-6pm (6 hours)
-			mappedHour = 12.0 + ((cyclePosition - 0.35) / 0.35) * 6.0;
+			// Sunset twilight: map 0.55-0.70 to 5pm-7pm (2 hours of twilight)
+			mappedHour = 17.0 + ((cyclePosition - 0.55) / 0.15) * 2.0;
+		} else if (cyclePosition < 0.85) {
+			// Early night: map 0.70-0.85 to 7pm-12am (5 hours)
+			mappedHour = 19.0 + ((cyclePosition - 0.70) / 0.15) * 5.0;
 		} else {
-			// Night: map 0.70-1.0 to 6pm-6am (12 hours)
-			double nightProgress = (cyclePosition - 0.70) / 0.30;
-			mappedHour = 18.0 + nightProgress * 12.0;
-			if (mappedHour >= 24.0) {
-				mappedHour -= 24.0;
-			}
+			// Late night/pre-dawn: map 0.85-1.0 to 12am-5am (5 hours)
+			double lateNightProgress = (cyclePosition - 0.85) / 0.15;
+			mappedHour = 0.0 + lateNightProgress * 5.0;
 		}
 		
 		// Convert mapped hour to actual time
