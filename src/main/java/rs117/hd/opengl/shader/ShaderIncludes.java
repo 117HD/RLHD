@@ -164,15 +164,13 @@ public class ShaderIncludes {
 					default:
 						// Process constant identifier includes
 						var m = IDENTIFIER_PATTERN.matcher(expression);
-						if (m.find()) {
+						if (m.find() && isCommentOrEmpty(expression.substring(m.end()))) {
 							commentIndex = m.end();
-							if (isCommentOrEmpty(expression.substring(commentIndex))) {
-								var supplier = includeMap.get(m.group());
-								if (supplier == null)
-									throw includeError(lineNumber, m.group());
-								includeContents = supplier.get();
-								break;
-							}
+							var supplier = includeMap.get(m.group());
+							if (supplier == null)
+								throw includeError(lineNumber, m.group());
+							includeContents = supplier.get();
+							break;
 						}
 
 						// Fall back to custom include processors
@@ -181,8 +179,10 @@ public class ShaderIncludes {
 								break;
 				}
 
-				if (includeContents == null)
+				if (includeContents == null) {
+					log.error("Include not found. Did you forget quotes?", includeError(lineNumber, expression));
 					includeContents = String.format("// Not found: %s", expression);
+				}
 
 				if (SHADER_DUMP_PATH != null) {
 					sb.append("// Include: ").append(expression).append('\n');

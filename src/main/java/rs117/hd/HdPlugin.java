@@ -404,6 +404,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int lastCanvasHeight;
 	private int lastStretchedCanvasWidth;
 	private int lastStretchedCanvasHeight;
+	private int lastRenderViewportWidth;
+	private int lastRenderViewportHeight;
 	private AntiAliasingMode lastAntiAliasingMode;
 	private int numSamples;
 
@@ -411,8 +413,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportOffsetY;
 	private int viewportWidth;
 	private int viewportHeight;
-	private int renderViewportWidth;
-	private int renderViewportHeight;
+	private int[] dpiViewport = new int[4];
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -628,6 +629,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initShaderHotswapping();
 				initInterfaceTexture();
 				initShadowMapFbo();
+				initTiledLighting();
 
 				checkGLErrors();
 
@@ -644,6 +646,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				lastCanvasWidth = lastCanvasHeight = 0;
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
+				lastRenderViewportWidth = lastRenderViewportHeight = 0;
 				lastAntiAliasingMode = null;
 
 				gamevalManager.startUp();
@@ -720,6 +723,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroySceneFbo();
 				destroyTiledLighting();
 				destroyShadowMapFbo();
+				destroyTiledLighting();
 				destroyTileHeightMap();
 				destroyModelSortingBins();
 
@@ -1153,8 +1157,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
 		final int tileSize = 16;
-		tileCountX = renderViewportWidth / tileSize;
-		tileCountY = renderViewportHeight / tileSize;
+		tileCountX = Math.max(1, dpiViewport[2] / tileSize);
+		tileCountY = Math.max(1, dpiViewport[3] / tileSize);
 
 		fboTiledLighting = glGenFramebuffers();
 
@@ -1178,8 +1182,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		);
 
 		checkGLErrors();
-
-		glActiveTexture(TEXTURE_UNIT_UI);
 
 		uboGlobal.tileCountX.set(tileCountX);
 		uboGlobal.tileCountY.set(tileCountY);
@@ -1502,7 +1504,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCompute.centerX.set(client.getCenterX());
 				uboCompute.centerY.set(client.getCenterY());
 				uboCompute.zoom.set(client.getScale());
-				uboCompute.cameraPos.set(cameraPosition);
+				uboCompute.cameraX.set(cameraPosition[0]);
+				uboCompute.cameraY.set(cameraPosition[1]);
+				uboCompute.cameraZ.set(cameraPosition[2]);
 
 				uboCompute.windDirectionX.set((float) Math.cos(environmentManager.currentWindAngle));
 				uboCompute.windDirectionZ.set((float) Math.sin(environmentManager.currentWindAngle));
@@ -1536,23 +1540,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				);
 				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
 
+				uboGlobal.cameraPos.set(cameraPosition);
+				uboGlobal.cameraZoom.set((float) client.getScale());
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
 			}
 		}
 
-		if (sceneContext.scene == scene && updateUniforms) {
+		if (configMaxLightsPerTile > 0 && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				var struct = uboLights.lights[i];
 				struct.position.set(
-					(float) (light.pos[0] + cameraShift[0]),
-					(float) light.pos[1],
-					(float) (light.pos[2] + cameraShift[1]),
-					(float) (light.radius * light.radius)
+					light.pos[0] + cameraShift[0],
+					light.pos[1],
+					light.pos[2] + cameraShift[1],
+					light.radius * light.radius
 				);
 				struct.color.set(
 					light.color[0] * light.strength,
@@ -1562,8 +1568,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 			uboLights.upload();
 
+			// Check if the tiledLighting FBO needs to be recreated
+			if (lastRenderViewportWidth != dpiViewport[2] || lastRenderViewportHeight != dpiViewport[3]) {
+				lastRenderViewportWidth = dpiViewport[2];
+				lastRenderViewportHeight = dpiViewport[3];
+				destroyTiledLighting();
+				initTiledLighting();
+			}
+
 			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
-			if (texTiledLighting != 0 && fboTiledLighting != 0 && configMaxLightsPerTile > 0) {
+			if (texTiledLighting != 0 && fboTiledLighting != 0) {
 				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
 
 				glViewport(0, 0, tileCountX, tileCountY);
@@ -1579,6 +1593,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					glClear(GL_COLOR_BUFFER_BIT);
 					glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 				}
+
 				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
 			}
 		}
@@ -1821,7 +1836,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-			glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
+			glActiveTexture(TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			frameTimer.end(Timer.UPLOAD_UI);
@@ -1887,10 +1902,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
-			int lastRenderViewportWidth = renderViewportWidth;
-			int lastRenderViewportHeight = renderViewportHeight;
-			renderViewportHeight = viewportHeight;
-			renderViewportWidth = viewportWidth;
+			int renderViewportWidth = viewportWidth;
+			int renderViewportHeight = viewportHeight;
 
 			if (client.isStretchedEnabled()) {
 				Dimension dim = client.getStretchedDimensions();
@@ -1903,15 +1916,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final int padding = 1;
 
 				// Ceil the sizes because even if the size is 599.1 we want to treat it as size 600 (i.e. render to the x=599 pixel).
-				renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
 				renderViewportWidth = (int) Math.ceil(scaleFactorX * (renderViewportWidth)) + padding * 2;
+				renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
 
 				// Floor the offsets because even if the offset is 4.9, we want to render to the x=4 pixel anyway.
-				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 				renderWidthOff = (int) Math.floor(scaleFactorX * (renderWidthOff)) - padding;
+				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 			}
 
-			int[] dpiViewport = applyDpiScaling(
+			dpiViewport = applyDpiScaling(
 				renderWidthOff,
 				renderCanvasHeight - renderViewportHeight - renderHeightOff,
 				renderViewportWidth,
@@ -1949,13 +1962,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					stopPlugin();
 					return;
 				}
-			}
-
-			// Check if the tiledLighting FBO needs to be recreated
-			if (lastRenderViewportWidth != renderViewportWidth ||
-				lastRenderViewportHeight != renderViewportHeight) {
-				destroyTiledLighting();
-				initTiledLighting();
 			}
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
@@ -2031,9 +2037,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			uboGlobal.cameraPos.set(cameraPosition);
-			uboGlobal.viewportWidth.set(renderViewportWidth);
-			uboGlobal.viewportHeight.set(renderViewportHeight);
+			uboGlobal.viewport.set(dpiViewport);
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));

@@ -15,7 +15,7 @@ public class TiledLightingOverlay extends ShaderOverlay<TiledLightingOverlay.Sha
 		private final Uniform1i uniTiledLightingTextureArray = addUniform1i("tiledLightingArray");
 
 		public Shader() {
-			super(t -> t.add(GL_FRAGMENT_SHADER, "overlays/tiled_lighting_frag.glsl"));
+			super(t -> t.add(GL_FRAGMENT_SHADER, "overlays/tiled_lighting_overlay_frag.glsl"));
 		}
 
 		@Override

@@ -2,11 +2,11 @@
 
 layout(std140) uniform UBOGlobal {
     vec3 cameraPos;
+    float cameraZoom;
     int expandedMapLoadingChunks;
     float drawDistance;
     float elapsedTime;
-    int viewportWidth;
-    int viewportHeight;
+    ivec4 viewport;
 
     float colorBlindnessIntensity;
     float gammaCorrection;

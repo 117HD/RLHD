@@ -15,7 +15,9 @@ public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
 	public Property centerX = addProperty(PropertyType.Int, "centerX");
 	public Property centerY = addProperty(PropertyType.Int, "centerY");
 	public Property zoom = addProperty(PropertyType.Int, "zoom");
-	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
+	public Property cameraX = addProperty(PropertyType.Float, "cameraX");
+	public Property cameraY = addProperty(PropertyType.Float, "cameraY");
+	public Property cameraZ = addProperty(PropertyType.Float, "cameraZ");
 
 	// Wind uniforms
 	public Property windDirectionX = addProperty(PropertyType.Float, "windDirectionX");

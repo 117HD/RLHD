@@ -9,7 +9,7 @@ layout(std140) uniform UBOCompute {
     int centerX;
     int centerY;
     int zoom;
-    vec3 cameraPos;
+    float cameraX; float cameraY; float cameraZ; // Here be dragons on macOS if converted to vec3
 
     // Wind uniforms
     float windDirectionX;

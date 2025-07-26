@@ -32,8 +32,8 @@ import lombok.RequiredArgsConstructor;
 public enum MaxLightsPerTile
 {
 	NONE("Disabled", 0),
-	FEW("Few", 8),
-	SOME("Some", 16),
+	FEW("Few", 12),
+	SOME("Some", 24),
 	MANY("Many", 32);
 
 	public static final int MAX_LIGHTS;
