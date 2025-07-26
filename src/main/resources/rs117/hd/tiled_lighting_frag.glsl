@@ -39,9 +39,9 @@ out ivec4 TiledData;
 
 void main() {
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
-    int LightsMask[32]; // 32 Words = 1024 Lights
+    uint LightsMask[32]; // 32 Words = 1024 Lights
     for (int i = 0; i < LightMaskSize; i++)
-        LightsMask[i] = 0;
+        LightsMask[i] = 0u;
 
 #if TILED_LIGHTING_LAYER > 0
     int LayerCount = TILED_LIGHTING_LAYER - 1;
@@ -50,11 +50,12 @@ void main() {
         for(int c = 4; c >= 0 ; c--) {
             int encodedLightIdx = layerData[c] - 1;
             if(encodedLightIdx < 0) {
+                TiledData = ivec4(0.0);
                 return; // No more lights are overlapping with cell since the previous layer didn't encode
             }
 
-            int word = encodedLightIdx >> 5;
-            int mask = 1 << (encodedLightIdx & 31);
+            uint word = uint(encodedLightIdx) >> 5u;
+            uint mask = 1u << (uint(encodedLightIdx) & 31u);
             LightsMask[word] |= mask;
         }
     }
@@ -87,9 +88,9 @@ void main() {
                     continue; // View ray doesn't intersect with the light's sphere
             }
 
-            int word = lightIdx >> 5;
-            int mask = 1 << (lightIdx & 31);
-            if ((LightsMask[word] & mask) != 0)
+            uint word = uint(lightIdx) >> 5u;
+            uint mask = 1u << (uint(lightIdx) & 31u);
+            if ((LightsMask[word] & mask) != 0u)
                 continue;
 
             outputTileData[c] = lightIdx + 1;
