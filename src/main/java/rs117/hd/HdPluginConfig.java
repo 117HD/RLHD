@@ -35,6 +35,7 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
@@ -548,6 +549,17 @@ public interface HdPluginConfig extends Config
 		position = 2
 	)
 	String environmentSettings = "environmentSettings";
+
+	@ConfigItem(
+		keyName = "daylightCycle",
+		name = "Daylight Cycle",
+		description = "",
+		position = -2,
+		section = environmentSettings
+	)
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.HOUR_LONG_DAYS;
+	}
 
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(

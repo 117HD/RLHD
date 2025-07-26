@@ -121,6 +121,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.TimeOfDay;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -134,6 +135,7 @@ import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
+import rs117.hd.utils.Vector;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
@@ -145,6 +147,7 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.scene.TimeOfDay.MINUTES_PER_DAY;
 import static rs117.hd.utils.HDUtils.MAX_FLOAT_WITH_128TH_PRECISION;
 import static rs117.hd.utils.HDUtils.PI;
 import static rs117.hd.utils.HDUtils.clamp;
@@ -432,6 +435,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean enableDetailedTimers;
 	public boolean enableFreezeFrame;
 	public boolean orthographicProjection;
+
+	public double[] latLong = { 0, 0 };
 
 	@Getter
 	private boolean isActive;
@@ -1868,7 +1873,49 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			}
 
+			float[] directionalColor = environmentManager.currentDirectionalColor;
+			float directionalStrength = environmentManager.currentDirectionalStrength;
+			float[] ambientColor = environmentManager.currentAmbientColor;
+			float ambientStrength = environmentManager.currentAmbientStrength;
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+			float[] waterColor = environmentManager.currentWaterColor;
+			float[] sunAngles = environmentManager.currentSunAngles;
+
+			if (environmentManager.isOverworld()) {
+				switch (config.daylightCycle()) {
+					case HOUR_LONG_DAYS:
+						directionalColor = TimeOfDay.getLightColor(latLong, MINUTES_PER_DAY);
+						ambientColor = TimeOfDay.getAmbientColor(latLong, MINUTES_PER_DAY);
+						directionalStrength = 1;
+						ambientStrength = 1;
+
+						double[] sunAnglesD = TimeOfDay.getSunAngles(latLong, MINUTES_PER_DAY);
+//						double[] sunAnglesD = TimeOfDay.getShadowAngles(latLong, MINUTES_PER_DAY);
+						sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
+
+						fogColor = TimeOfDay.getSkyColor(latLong, MINUTES_PER_DAY);
+//						fogColor = ColorUtils.linearToSrgb(multiply(ambientColor, (float) clamp(Math.sin(sunAngles[1]), 0, 1)));
+						waterColor = fogColor;
+
+						// Blend shadows between day and night
+						float shadowVisibility = 1 - (float) Math.pow(1 - Math.abs(Math.sin(sunAnglesD[1])), 5);
+						shadowVisibility *= (float) (1 - Math.pow(1 - Math.sin(sunAnglesD[1]), 2));
+						shadowVisibility = clamp(shadowVisibility, 0, 1);
+						Vector.add(ambientColor, ambientColor, Vector.multiply(directionalColor, 1 - shadowVisibility));
+						directionalStrength *= shadowVisibility;
+						break;
+					case ALWAYS_NIGHT:
+						ambientColor = TimeOfDay.getNightAmbientColor();
+						ambientStrength = 1;
+						directionalColor = TimeOfDay.getNightLightColor();
+						directionalStrength = 1;
+						break;
+				}
+			}
+
+			float[] lightViewMatrix = Mat4.rotateX(sunAngles[0]);
+			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - sunAngles[1]));
+
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
@@ -1887,7 +1934,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
+			float[] waterColorHsv = ColorUtils.srgbToHsv(waterColor);
 			float lightBrightnessMultiplier = 0.8f;
 			float midBrightnessMultiplier = 0.45f;
 			float darkBrightnessMultiplier = 0.05f;
@@ -1911,17 +1958,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.waterColorDark.set(waterColorDark);
 
 			uboGlobal.gammaCorrection.set(getGammaCorrection());
-			float ambientStrength = environmentManager.currentAmbientStrength;
-			float directionalStrength = environmentManager.currentDirectionalStrength;
 			if (config.useLegacyBrightness()) {
 				float factor = config.legacyBrightness() / 20f;
 				ambientStrength *= factor;
 				directionalStrength *= factor;
 			}
 			uboGlobal.ambientStrength.set(ambientStrength);
-			uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
+			uboGlobal.ambientColor.set(ambientColor);
 			uboGlobal.lightStrength.set(directionalStrength);
-			uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
+			uboGlobal.lightColor.set(directionalColor);
 
 			uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
 			uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
@@ -1943,8 +1988,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 			uboGlobal.cameraPos.set(cameraPosition);
 
-			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
 			// Extract the 3rd column from the light view matrix (the float array is column-major).
 			// This produces the light's direction vector in world space, which we negate in order to
 			// get the light's direction vector pointing away from each fragment
@@ -2326,7 +2369,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneUploader.upload(context);
 			}
 		} catch (OutOfMemoryError oom) {
-			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
+			log.error(
+				"Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
 				HDUtils.is32Bit(), useLowMemoryMode, config.modelCacheSizeMiB(), oom
 			);
 			displayOutOfMemoryMessage();

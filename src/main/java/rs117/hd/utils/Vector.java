@@ -67,6 +67,14 @@ public class Vector {
 		return multiply(new float[a.length], a, b);
 	}
 
+	public static float[] divide(float[] out, float[] a, float divisor) {
+		return multiply(out, a, divisor == 0 ? 0 : 1 / divisor);
+	}
+
+	public static float[] divide(float[] vec, float divisor) {
+		return multiply(vec, divisor == 0 ? 0 : 1 / divisor);
+	}
+
 	public static float[] pow(float[] out, float[] in, float exp) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = (float) Math.pow(in[i], exp);
@@ -92,11 +100,12 @@ public class Vector {
 		return out;
 	}
 
+	public static float lengthSquared(float... vector) {
+		return dot(vector, vector);
+	}
+
 	public static float length(float... vector) {
-		float lengthSquared = 0;
-		for (float v : vector)
-			lengthSquared += v * v;
-		return (float) Math.sqrt(lengthSquared);
+		return (float) Math.sqrt(lengthSquared(vector));
 	}
 
 	public static void normalize(float[] vector) {
