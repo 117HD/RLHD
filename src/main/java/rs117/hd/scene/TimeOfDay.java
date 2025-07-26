@@ -67,14 +67,14 @@ public class TimeOfDay
 			{ -5.0,  new java.awt.Color(30, 40, 70) },    // Deep twilight blue
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
-			{ -2.5,  new java.awt.Color(75, 70, 95) },    // Deep purple twilight
-			{ -2.0,  new java.awt.Color(90, 75, 100) },   // Purple twilight
-			{ -1.5,  new java.awt.Color(105, 80, 105) },  // Purple-pink transition
-			{ -1.0,  new java.awt.Color(120, 85, 110) },  // Dawn purple-pink
-			{ -0.8,  new java.awt.Color(140, 95, 105) },  // Warm purple
-			{ -0.4,  new java.awt.Color(160, 105, 95) },  // Warm transition
-			{ 0.8,   new java.awt.Color(180, 115, 90) },  // Intermediate warm step
-			{ 2.0,   new java.awt.Color(200, 125, 85) },  // Warm orange approaching
+			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
+			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
+			{ -1.5,  new java.awt.Color(125, 85, 125) },  // Purple-pink transition
+			{ -1.0,  new java.awt.Color(145, 95, 130) },  // Dawn pink-purple
+			{ -0.8,  new java.awt.Color(165, 105, 125) }, // Warm pink
+			{ -0.4,  new java.awt.Color(185, 115, 115) }, // Pink transition
+			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
+			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
 			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
 			{ 6.0,   new java.awt.Color(245, 170, 105) }, // Strong golden hour
 			{ 8.0,   new java.awt.Color(240, 185, 125) }, // Late golden hour
@@ -110,14 +110,14 @@ public class TimeOfDay
 			{ -5.0,  new java.awt.Color(30, 40, 70) },    // Deep twilight blue
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
-			{ -2.5,  new java.awt.Color(75, 70, 95) },    // Deep purple twilight
-			{ -2.0,  new java.awt.Color(90, 75, 100) },   // Purple twilight
-			{ -1.5,  new java.awt.Color(105, 80, 105) },  // Purple-pink transition
-			{ -1.0,  new java.awt.Color(120, 85, 110) },  // Dawn purple-pink
-			{ -0.8,  new java.awt.Color(140, 95, 105) },  // Warm purple
-			{ -0.4,  new java.awt.Color(160, 105, 95) },  // Warm transition
-			{ 0.8,   new java.awt.Color(180, 115, 90) },  // Intermediate warm step
-			{ 2.0,   new java.awt.Color(200, 125, 85) },  // Warm orange approaching
+			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
+			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
+			{ -1.5,  new java.awt.Color(125, 85, 125) },  // Purple-pink transition
+			{ -1.0,  new java.awt.Color(145, 95, 130) },  // Dawn pink-purple
+			{ -0.8,  new java.awt.Color(165, 105, 125) }, // Warm pink
+			{ -0.4,  new java.awt.Color(185, 115, 115) }, // Pink transition
+			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
+			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
 			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
 			{ 6.0,   new java.awt.Color(245, 170, 105) }, // Strong golden hour
 			{ 8.0,   new java.awt.Color(240, 185, 125) }, // Late golden hour
