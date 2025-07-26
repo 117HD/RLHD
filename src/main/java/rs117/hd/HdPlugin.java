@@ -92,6 +92,7 @@ import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
+import rs117.hd.opengl.UBOSkybox;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
@@ -99,6 +100,7 @@ import rs117.hd.opengl.shader.ModelSortingComputeProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
@@ -124,6 +126,7 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.skybox.SkyboxManager;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
@@ -171,6 +174,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
+	public static final int TEXTURE_UNIT_SKYBOX = TEXTURE_UNIT_BASE + 4;
 
 	public static final int UNIFORM_BLOCK_GLOBAL = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
@@ -178,6 +182,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
 	public static final int UNIFORM_BLOCK_COMPUTE = 4;
 	public static final int UNIFORM_BLOCK_UI = 5;
+	public static final int UNIFORM_BLOCK_SKYBOX = 6;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -243,6 +248,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private GamevalManager gamevalManager;
 
 	@Inject
+	private SkyboxManager skyboxManager;
+
+	@Inject
 	private AreaManager areaManager;
 
 	@Inject
@@ -296,6 +304,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Inject
 	private ShadowShaderProgram shadowProgram;
 
+	private final ShaderProgram skyboxProgram = new ShaderProgram(t -> t
+		.add(GL_VERTEX_SHADER, "skybox_vert.glsl")
+		.add(GL_FRAGMENT_SHADER, "skybox_frag.glsl")
+	) {
+		private final Uniform1i uniSkyboxArray = addUniform1i("skyboxArray");
+
+		@Override
+		protected void initialize() {
+			uniSkyboxArray.set(TEXTURE_UNIT_SKYBOX - TEXTURE_UNIT_BASE);
+		}
+	};
+
 	@Inject
 	private UIShaderProgram uiProgram;
 
@@ -333,6 +353,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int vaoQuad;
 	private int vboQuad;
+
+	private int vaoSkybox;
+	private int vboSkybox;
 
 	private int vaoScene;
 	private int fboScene;
@@ -376,6 +399,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final UBOLights uboLights = new UBOLights();
 	private final UBOCompute uboCompute = new UBOCompute();
 	private final UBOUI uboUI = new UBOUI();
+	private final UBOSkybox uboSkybox = new UBOSkybox();
 
 	@Getter
 	@Nullable
@@ -461,6 +485,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
+	private int[] sceneMinMaxXY = new int[4];
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -774,6 +799,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		});
 	}
 
+	private void sceneAABBEncapsulatePoint(int x, int y) {
+		sceneMinMaxXY[0] = Math.min(x, sceneMinMaxXY[0]);
+		sceneMinMaxXY[1] = Math.min(y, sceneMinMaxXY[1]);
+		sceneMinMaxXY[2] = Math.max(x, sceneMinMaxXY[2]);
+		sceneMinMaxXY[3] = Math.max(y, sceneMinMaxXY[3]);
+	}
+
 	private String generateFetchCases(String array, int from, int to)
 	{
 		int length = to - from;
@@ -783,8 +815,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 		int middle = from + length / 2;
 		return "i < " + middle +
-			" ? " + generateFetchCases(array, from, middle) +
-			" : " + generateFetchCases(array, middle, to);
+			   " ? " + generateFetchCases(array, from, middle) +
+			   " : " + generateFetchCases(array, middle, to);
 	}
 
 	private String generateGetter(String type, int arrayLength)
@@ -860,7 +892,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboCompute)
-			.addUniformBuffer(uboUI);
+			.addUniformBuffer(uboUI)
+			.addUniformBuffer(uboSkybox);
 		textureManager.appendUniformBuffers(includes);
 		return includes;
 	}
@@ -874,6 +907,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.compile(includes);
 		shadowProgram.setMode(configShadowMode);
 		shadowProgram.compile(includes);
+		skyboxProgram.compile(includes);
 		uiProgram.compile(includes);
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -1026,6 +1060,31 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glEnableVertexAttribArray(1);
 	}
 
+	public void updateSkyboxVerticies(float[] verticies) {
+
+		if (vaoSkybox == 0) {
+			vaoSkybox = glGenVertexArrays();
+		}
+
+		if (vboSkybox == 0) {
+			vboSkybox = glGenBuffers();
+		}
+
+		FloatBuffer vboSkyboxData = BufferUtils.createFloatBuffer(verticies.length)
+			.put(verticies)
+			.flip();
+
+		glBindVertexArray(vaoSkybox);
+		glBindBuffer(GL_ARRAY_BUFFER, vboSkybox);
+		glBufferData(GL_ARRAY_BUFFER, vboSkyboxData, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, 3 * Float.BYTES, 0);
+
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
 	private void updateSceneVao(GLBuffer vertexBuffer, GLBuffer uvBuffer, GLBuffer normalBuffer) {
 		glBindVertexArray(vaoScene);
 
@@ -1062,6 +1121,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (vaoQuad != 0)
 			glDeleteVertexArrays(vaoQuad);
 		vaoQuad = 0;
+
+		if (vboSkybox != 0)
+			glDeleteBuffers(vboSkybox);
+		vboSkybox = 0;
+
+		if (vaoSkybox != 0)
+			glDeleteVertexArrays(vaoSkybox);
+		vaoSkybox = 0;
 	}
 
 	private void initBuffers() {
@@ -1079,6 +1146,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
+		uboSkybox.initialize(UNIFORM_BLOCK_SKYBOX);
 	}
 
 	private void destroyBuffers() {
@@ -1096,6 +1164,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboLights.destroy();
 		uboCompute.destroy();
 		uboUI.destroy();
+		uboSkybox.destroy();
 	}
 
 	private void initInterfaceTexture()
@@ -1328,6 +1397,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		boolean updateUniforms = true;
+
+		sceneMinMaxXY[0] = Integer.MAX_VALUE;
+		sceneMinMaxXY[1] = Integer.MAX_VALUE;
+		sceneMinMaxXY[2] = Integer.MIN_VALUE;
+		sceneMinMaxXY[3] = Integer.MIN_VALUE;
 
 		Player localPlayer = client.getLocalPlayer();
 		var lp = localPlayer.getLocalLocation();
@@ -1578,6 +1652,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		int vertexCount = paint.getBufferLen();
 
+		final int localX = tileX * LOCAL_TILE_SIZE;
+		final int localZ = tileY * LOCAL_TILE_SIZE;
+
+		sceneAABBEncapsulatePoint(localX, localZ);
+		sceneAABBEncapsulatePoint(localX + LOCAL_TILE_SIZE, localZ + LOCAL_TILE_SIZE);
+
 		++numPassthroughModels;
 		modelPassthroughBuffer
 			.ensureCapacity(16)
@@ -1587,9 +1667,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(vertexCount / 3)
 			.put(renderBufferOffset)
 			.put(0)
-			.put(tileX * LOCAL_TILE_SIZE)
+			.put(localX)
 			.put(0)
-			.put(tileY * LOCAL_TILE_SIZE);
+			.put(localZ);
 
 		renderBufferOffset += vertexCount;
 	}
@@ -1618,6 +1698,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int localX = tileX * LOCAL_TILE_SIZE;
 		final int localY = 0;
 		final int localZ = tileY * LOCAL_TILE_SIZE;
+
+		sceneAABBEncapsulatePoint(localX, localZ);
+		sceneAABBEncapsulatePoint(localX + LOCAL_TILE_SIZE, localZ + LOCAL_TILE_SIZE);
 
 		GpuIntBuffer b = modelPassthroughBuffer;
 		b.ensureCapacity(16);
@@ -1799,40 +1882,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				renderViewportHeight
 			);
 
-			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
-			if (computeMode == ComputeMode.OPENCL) {
-				clManager.finish();
+			// Calculate projection matrix
+			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+			if (orthographicProjection) {
+				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 			} else {
-				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
+				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 			}
-
-			glBindVertexArray(vaoScene);
-
-			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
-			final Dimension stretchedDimensions = client.getStretchedDimensions();
-			final int stretchedCanvasWidth = client.isStretchedEnabled() ? stretchedDimensions.width : canvasWidth;
-			final int stretchedCanvasHeight = client.isStretchedEnabled() ? stretchedDimensions.height : canvasHeight;
-
-			// Check if scene FBO needs to be recreated
-			if (lastAntiAliasingMode != antiAliasingMode ||
-				lastStretchedCanvasWidth != stretchedCanvasWidth ||
-				lastStretchedCanvasHeight != stretchedCanvasHeight
-			) {
-				lastAntiAliasingMode = antiAliasingMode;
-				lastStretchedCanvasWidth = stretchedCanvasWidth;
-				lastStretchedCanvasHeight = stretchedCanvasHeight;
-
-				destroySceneFbo();
-				try {
-					initSceneFbo(stretchedCanvasWidth, stretchedCanvasHeight, antiAliasingMode);
-				} catch (Exception ex) {
-					log.error("Error while initializing scene FBO:", ex);
-					stopPlugin();
-					return;
-				}
-			}
+			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+			Mat4.mul(projectionMatrix, Mat4.translate(
+				-cameraPosition[0],
+				-cameraPosition[1],
+				-cameraPosition[2]
+			));
+			uboGlobal.projectionMatrix.set(projectionMatrix);
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
 				case USER_DEFINED:
@@ -1850,6 +1918,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.drawDistance.set((float) getDrawDistance());
 			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
+			uboGlobal.sceneAABB.set(sceneMinMaxXY);
 
 			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
 			float lightBrightnessMultiplier = 0.8f;
@@ -1920,23 +1989,82 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
 				uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
+			uboGlobal.upload();
 
-			// Calculate projection matrix
-			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			if (orthographicProjection) {
-				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
+			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
+
+			// Clear scene
+			frameTimer.begin(Timer.CLEAR_SCENE);
+			float[] gammaCorrectedFogColor = pow(fogColor, getGammaCorrection());
+			glClearColor(
+				gammaCorrectedFogColor[0],
+				gammaCorrectedFogColor[1],
+				gammaCorrectedFogColor[2],
+				1f
+			);
+			glClearDepth(0);
+
+			boolean shouldDrawSkybox = vaoSkybox != 0
+									   && skyboxManager.getSkyboxCount() > 0
+									   && config.renderSkybox();
+
+			shouldDrawSkybox &= environmentManager.updateSkyboxUniformBuffer(uboSkybox, projectionMatrix);
+
+			if(shouldDrawSkybox) {
+				// Draw Skybox
+				glClear(GL_DEPTH_BUFFER_BIT);
+				glToggle(GL_MULTISAMPLE, false);
+
+				skyboxProgram.use();
+				glDepthMask(false);
+
+				glBindVertexArray(vaoSkybox);
+
+				glDrawArrays(GL_TRIANGLES, 0, 6);
 			} else {
-				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			}
-			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-			Mat4.mul(projectionMatrix, Mat4.translate(
-				-cameraPosition[0],
-				-cameraPosition[1],
-				-cameraPosition[2]
-			));
-			uboGlobal.projectionMatrix.set(projectionMatrix);
+
+			glDepthMask(true);
+			glToggle(GL_MULTISAMPLE, numSamples > 1);
+
+			frameTimer.end(Timer.CLEAR_SCENE);
+
+			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
+			if (computeMode == ComputeMode.OPENCL) {
+				clManager.finish();
+			} else {
+				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
+			}
+
+			glBindVertexArray(vaoScene);
+
+			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
+			final Dimension stretchedDimensions = client.getStretchedDimensions();
+			final int stretchedCanvasWidth = client.isStretchedEnabled() ? stretchedDimensions.width : canvasWidth;
+			final int stretchedCanvasHeight = client.isStretchedEnabled() ? stretchedDimensions.height : canvasHeight;
+
+			// Check if scene FBO needs to be recreated
+			if (lastAntiAliasingMode != antiAliasingMode ||
+				lastStretchedCanvasWidth != stretchedCanvasWidth ||
+				lastStretchedCanvasHeight != stretchedCanvasHeight
+			) {
+				lastAntiAliasingMode = antiAliasingMode;
+				lastStretchedCanvasWidth = stretchedCanvasWidth;
+				lastStretchedCanvasHeight = stretchedCanvasHeight;
+
+				destroySceneFbo();
+				try {
+					initSceneFbo(stretchedCanvasWidth, stretchedCanvasHeight, antiAliasingMode);
+				} catch (Exception ex) {
+					log.error("Error while initializing scene FBO:", ex);
+					stopPlugin();
+					return;
+				}
+			}
+
+			sceneProgram.use();
 
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
@@ -1985,33 +2113,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);
 
-				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			} else {
 				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
 				uboGlobal.upload();
 			}
 
-			sceneProgram.use();
-
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
-			glToggle(GL_MULTISAMPLE, numSamples > 1);
 			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
 
-			// Clear scene
-			frameTimer.begin(Timer.CLEAR_SCENE);
-
-			float[] gammaCorrectedFogColor = pow(fogColor, getGammaCorrection());
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
-			glClearDepth(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			frameTimer.end(Timer.CLEAR_SCENE);
+			sceneProgram.use();
 
 			frameTimer.begin(Timer.RENDER_SCENE);
 
