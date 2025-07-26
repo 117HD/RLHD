@@ -37,57 +37,62 @@ in vec3 fRay;
 
 out uint TiledCellIndex;
 
-uint LightsMask[32] = uint[](
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u,
-    0u, 0u, 0u, 0u, 0u, 0u, 0u, 0u
-); // 32 * 32 = 1024 lights
-
 void main() {
     // If we're not the first layer, then check the last layer if it wrote anything otherwise theres no work left to do
     #if TILED_LIGHTING_LAYER > 0
+    int prevLayerLightIdx = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, TILED_LIGHTING_LAYER - 1), 0).r - 1;
+    if (prevLayerLightIdx < 0) {
+        TiledCellIndex = 0u;
+        return;
+    }
+
+    int LightMaskSize = int(ceil(pointLightsCount / 32.0));
+    uint LightsMask[32]; // 32 Words = 1024 Lights
+    for(int i = 0; i < LightMaskSize; i++) LightsMask[i] = 0u;
+
     {
-        int lightIdx = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, TILED_LIGHTING_LAYER - 1), 0).r - 1;
-        if (lightIdx < 0)
-            discard;
-        LightsMask[lightIdx / 32] |= (1u << (lightIdx % 32));
+        uint mask = 1u << (uint(prevLayerLightIdx) & 31u);
+        LightsMask[prevLayerLightIdx >> 5] |= mask;
     }
     #endif
 
     #if TILED_LIGHTING_LAYER > 1
-        for (int l = TILED_LIGHTING_LAYER - 2; l >= 0; l--) {
-            uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0).r - 1);
-            LightsMask[lightIdx >> 5] |= 1u << (lightIdx & 31u);
-        }
+    for (int l = TILED_LIGHTING_LAYER - 2; l >= 0; l--) {
+        uint lightIdx = uint(texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0).r - 1);
+        uint mask = 1u << (lightIdx & 31u);
+        LightsMask[lightIdx >> 5] |= mask;
+    }
     #endif
 
+    const int tileSize = 16;
+    float pad = tileSize * (512.f / cameraZoom) * 15;
     vec3 viewDir = normalize(fRay);
-
-    for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
-        vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
-        float lightRadiusSq = PointLightArray[lightIdx].position.w;
+    for (uint lightIdx = 0u; lightIdx < uint(pointLightsCount); lightIdx++) {
+        vec4 lightData = PointLightArray[lightIdx].position;
+        vec3 lightWorldPos = lightData.xyz;
 
         vec3 cameraToLight = lightWorldPos - cameraPos;
-        // Check if the camera is outside of the light's radius
+        float t = dot(cameraToLight, viewDir);
+        if (t < 0)  continue; // Closest point is behind the camera
+
+        // Check if the camera is outside of the light's radiusv
+        float lightRadiusSq = lightData.w;
         if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
-            float t = dot(cameraToLight, viewDir);
-            if (t < 0)
-                continue; // Closest point is behind the camera
             vec3 lightToClosestPoint = cameraToLight - t * viewDir;
             float dist = length(lightToClosestPoint);
-            const int tileSize = 16;
-            float pad = tileSize * (512.f / cameraZoom) * 15;
             dist = max(0, dist - pad);
-            if (dist * dist > lightRadiusSq)
-                continue; // View ray doesn't intersect with the light's sphere
+
+            if (dist * dist > lightRadiusSq) continue; // View ray doesn't intersect with the light's sphere
         }
 
-        if ((LightsMask[lightIdx >> 5] & (1u << (lightIdx & 31u))) == 0u) {
-            // Light hasn't been added to a previous layer, therefore we can add it and early out of the fragment shader
-            TiledCellIndex = lightIdx + 1u;
-            return;
-        }
+        #if TILED_LIGHTING_LAYER > 0
+        uint mask = 1u << (lightIdx & 31u);
+        if ((LightsMask[lightIdx >> 5] & mask) != 0u) continue;
+        #endif
+
+        // Light hasn't been added to a previous layer, therefore we can add it and early out of the fragment shader
+        TiledCellIndex = lightIdx + 1u;
+        return;
     }
 
     // Intersected with no light
