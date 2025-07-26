@@ -48974,5 +48974,17 @@
         "uvScale": 0.6
       }
     ]
+  },
+  {
+    "description": "Barbarian Assault - Spike Mushrooms",
+    "baseMaterial": "GRUNGE_2",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "BARBASSAULT_PETRIFIED_MUSHROOM_CUT",
+      "BARBASSAULT_PETRIFIED_MUSHROOM",
+      "BARBASSAULT_PETRIFIED_MUSHROOM_GROUP"
+    ]
   }
 ]
