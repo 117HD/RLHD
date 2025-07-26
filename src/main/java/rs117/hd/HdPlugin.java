@@ -413,8 +413,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportOffsetY;
 	private int viewportWidth;
 	private int viewportHeight;
-	private int renderViewportWidth;
-	private int renderViewportHeight;
+	private int[] dpiViewport = new int[4];
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -1157,8 +1156,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
 		final int tileSize = 16;
-		tileCountX = Math.max(1, renderViewportWidth / tileSize);
-		tileCountY = Math.max(1, renderViewportHeight / tileSize);
+		tileCountX = Math.max(1, dpiViewport[2] / tileSize);
+		tileCountY = Math.max(1, dpiViewport[3] / tileSize);
 
 		fboTiledLighting = glGenFramebuffers();
 
@@ -1569,9 +1568,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboLights.upload();
 
 			// Check if the tiledLighting FBO needs to be recreated
-			if (lastRenderViewportWidth != renderViewportWidth || lastRenderViewportHeight != renderViewportHeight) {
-				lastRenderViewportWidth = renderViewportWidth;
-				lastRenderViewportHeight = renderViewportHeight;
+			if (lastRenderViewportWidth != dpiViewport[2] || lastRenderViewportHeight != dpiViewport[3]) {
+				lastRenderViewportWidth = dpiViewport[2];
+				lastRenderViewportHeight = dpiViewport[3];
 				destroyTiledLighting();
 				initTiledLighting();
 			}
@@ -1902,8 +1901,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
-			renderViewportWidth = viewportWidth;
-			renderViewportHeight = viewportHeight;
+			int renderViewportWidth = viewportWidth;
+			int renderViewportHeight = viewportHeight;
 
 			if (client.isStretchedEnabled()) {
 				Dimension dim = client.getStretchedDimensions();
@@ -1924,7 +1923,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 			}
 
-			int[] dpiViewport = applyDpiScaling(
+			dpiViewport = applyDpiScaling(
 				renderWidthOff,
 				renderCanvasHeight - renderViewportHeight - renderHeightOff,
 				renderViewportWidth,
@@ -2037,8 +2036,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			uboGlobal.viewportWidth.set(renderViewportWidth);
-			uboGlobal.viewportHeight.set(renderViewportHeight);
+			uboGlobal.viewport.set(dpiViewport);
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));

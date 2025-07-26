@@ -352,8 +352,8 @@ void main() {
         #define USE_TILED_LIGHTING
         #ifdef USE_TILED_LIGHTING
         #if MAX_LIGHTS_PER_TILE > 0
-            vec2 uResolution = vec2(viewportWidth, viewportHeight);
-            vec2 screenUV = gl_FragCoord.xy / uResolution;
+            vec2 uResolution = viewport.zw;
+            vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
             vec2 tileCount = vec2(tileCountX, tileCountY);
             ivec2 tileXY = ivec2(floor(screenUV * tileCount));
 

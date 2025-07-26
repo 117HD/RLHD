@@ -88,8 +88,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
     #if MAX_LIGHTS_PER_TILE > 0
-        vec2 uResolution = vec2(viewportWidth, viewportHeight);
-        vec2 screenUV = gl_FragCoord.xy / uResolution;
+        vec2 uResolution = viewport.zw;
+        vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
         vec2 tileCount = vec2(tileCountX, tileCountY);
         ivec2 tileXY = ivec2(floor(screenUV * tileCount));
 
