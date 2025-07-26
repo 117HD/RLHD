@@ -5914,7 +5914,8 @@
     "name": "BARBARIAN_ASSAULT_WAITING_ROOMS",
     "aabbs": [
       [ 2571, 5252, 2616, 5305 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TARNS_LAIR",
