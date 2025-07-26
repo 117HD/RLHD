@@ -469,15 +469,10 @@ public class LightManager {
 			}
 		}
 
-		// Order visible lights first, and by distance. Leave hidden lights unordered at the end.
-		sceneContext.lights.sort((a, b) -> {
-			// -1 = move a left of b
-			if (a.visible && b.visible)
-				return a.distanceSquared > b.distanceSquared ? 1 : -1;
-			if (!a.visible && !b.visible)
-				return 0;
-			return a.visible ? -1 : 1;
-		});
+		// Order visible lights first, then by distance. Leave hidden lights unordered at the end.
+		sceneContext.lights.sort((a, b) -> a.visible && b.visible ?
+			Float.compare(a.distanceSquared, b.distanceSquared) :
+			Boolean.compare(b.visible, a.visible));
 
 		// Count number of visible lights
 		sceneContext.numVisibleLights = 0;
