@@ -65,7 +65,7 @@ void main() {
 
     vec3 viewDir = normalize(fRay);
     int lightIdx = 0;
-    ivec4 output = ivec4(0);
+    ivec4 outputTileData = ivec4(0);
     for(int c = 0; c < 4; c++) {
         for (; lightIdx < pointLightsCount; lightIdx++) {
             vec4 lightData = PointLightArray[lightIdx].position;
@@ -92,11 +92,11 @@ void main() {
             if ((LightsMask[word] & mask) != 0)
                 continue;
 
-            output[c] = lightIdx + 1;
+            outputTileData[c] = lightIdx + 1;
             LightsMask[word] |= mask;
             break;
         }
     }
 
-    TiledData = output;
+    TiledData = outputTileData;
 }
