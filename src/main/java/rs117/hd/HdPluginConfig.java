@@ -38,7 +38,7 @@ import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.MaxDynamicLights;
+import rs117.hd.config.MaxLightsPerTile;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
@@ -347,9 +347,9 @@ public interface HdPluginConfig extends Config
 	)
 	String lightingSettings = "lightingSettings";
 
-	String KEY_MAX_DYNAMIC_LIGHTS = "maxDynamicLights";
+	String KEY_MAX_LIGHTS_PER_TILE = "maxLightsPerTile";
 	@ConfigItem(
-		keyName = KEY_MAX_DYNAMIC_LIGHTS,
+		keyName = KEY_MAX_LIGHTS_PER_TILE,
 		name = "Dynamic Lights",
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
@@ -357,9 +357,9 @@ public interface HdPluginConfig extends Config
 		position = 1,
 		section = lightingSettings
 	)
-	default MaxDynamicLights maxDynamicLights()
+	default MaxLightsPerTile maxLightsPerTile()
 	{
-		return MaxDynamicLights.SOME;
+		return MaxLightsPerTile.SOME;
 	}
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";

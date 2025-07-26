@@ -2,9 +2,11 @@
 
 layout(std140) uniform UBOGlobal {
     vec3 cameraPos;
+    float cameraZoom;
     int expandedMapLoadingChunks;
     float drawDistance;
     float elapsedTime;
+    ivec4 viewport;
 
     float colorBlindnessIntensity;
     float gammaCorrection;
@@ -20,7 +22,11 @@ layout(std140) uniform UBOGlobal {
     vec3 underglowColor;
     float underglowStrength;
 
+    int tileCountX;
+    int tileCountY;
+
     mat4 projectionMatrix;
+    mat4 invProjectionMatrix;
     mat4 lightProjectionMatrix;
 
     int useFog;

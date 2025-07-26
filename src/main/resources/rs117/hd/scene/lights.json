@@ -31740,8 +31740,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_2",
@@ -31757,8 +31756,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_3",
@@ -31774,8 +31772,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_4",
@@ -31791,8 +31788,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_5",
@@ -31808,8 +31804,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 150
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_6",
@@ -31825,8 +31820,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 250
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_7",
@@ -31842,8 +31836,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_8",
@@ -31859,8 +31852,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_DOORWAY",

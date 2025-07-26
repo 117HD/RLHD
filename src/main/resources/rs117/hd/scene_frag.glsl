@@ -34,6 +34,7 @@
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
+uniform isampler2DArray tiledLightingArray;
 
 // general HD settings
 
@@ -348,6 +349,41 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
+        #define USE_TILED_LIGHTING
+        #ifdef USE_TILED_LIGHTING
+        #if MAX_LIGHTS_PER_TILE > 0
+            vec2 uResolution = viewport.zw;
+            vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
+            vec2 tileCount = vec2(tileCountX, tileCountY);
+            ivec2 tileXY = ivec2(floor(screenUV * tileCount));
+
+            for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
+                int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
+                if (lightIdx <= 0)
+                    break;
+
+                lightIdx--;
+
+                vec4 pos = PointLightArray[lightIdx].position;
+                vec3 lightToFrag = pos.xyz - IN.position;
+                float distanceSquared = dot(lightToFrag, lightToFrag);
+                float radiusSquared = pos.w;
+                if (distanceSquared <= radiusSquared) {
+                    float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
+                    attenuation *= attenuation;
+
+                    vec3 pointLightColor = PointLightArray[lightIdx].color * attenuation;
+                    vec3 pointLightDir = normalize(lightToFrag);
+
+                    float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+                    pointLightsOut += pointLightColor * pointLightDotNormals;
+
+                    vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+                    pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+                }
+            }
+        #endif
+        #else
         for (int i = 0; i < pointLightsCount; i++) {
             vec4 pos = PointLightArray[i].position;
             vec3 lightToFrag = pos.xyz - IN.position;
@@ -367,6 +403,7 @@ void main() {
                 pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
             }
         }
+        #endif
 
         // sky light
         vec3 skyLightColor = fogColor;

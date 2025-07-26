@@ -29,12 +29,12 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MaxDynamicLights
+public enum MaxLightsPerTile
 {
-	NONE("None", 0),
-	FEW("Few (25)", 25),
-	SOME("Some (50)", 50),
-	MANY("Many (100)", 100);
+	NONE("Disabled", 0),
+	FEW("Few", 12),
+	SOME("Some", 24),
+	MANY("Many", 32);
 
 	public static final int MAX_LIGHTS;
 

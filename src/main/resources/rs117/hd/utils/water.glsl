@@ -87,26 +87,37 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    for (int i = 0; i < pointLightsCount; i++) {
-        vec4 pos = PointLightArray[i].position;
-        vec3 lightToFrag = pos.xyz - IN.position;
-        float distanceSquared = dot(lightToFrag, lightToFrag);
-        float radiusSquared = pos.w;
-        if (distanceSquared <= radiusSquared) {
-            vec3 pointLightColor = PointLightArray[i].color;
-            vec3 pointLightDir = normalize(lightToFrag);
+    #if MAX_LIGHTS_PER_TILE > 0
+        vec2 uResolution = viewport.zw;
+        vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
+        vec2 tileCount = vec2(tileCountX, tileCountY);
+        ivec2 tileXY = ivec2(floor(screenUV * tileCount));
 
-            float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
-            pointLightColor *= attenuation * attenuation;
+        for (int idx = 0; idx < MAX_LIGHTS_PER_TILE; idx++) {
+            int lightIdx = texelFetch(tiledLightingArray, ivec3(tileXY, idx), 0).r;
+            if (lightIdx <= 0)
+                break;
+            lightIdx--;
 
-            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-            pointLightsOut += pointLightColor * pointLightDotNormals;
+            vec4 pos = PointLightArray[lightIdx].position;
+            vec3 lightToFrag = pos.xyz - IN.position;
+            float distanceSquared = dot(lightToFrag, lightToFrag);
+            float radiusSquared = pos.w;
+            if (distanceSquared <= radiusSquared) {
+                vec3 pointLightColor = PointLightArray[lightIdx].color;
+                vec3 pointLightDir = normalize(lightToFrag);
 
-            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-            pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+                float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
+                pointLightColor *= attenuation * attenuation;
+
+                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+                pointLightsOut += pointLightColor * pointLightDotNormals;
+
+                vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+            }
         }
-    }
-
+    #endif
 
     // sky light
     vec3 skyLightColor = fogColor.rgb;

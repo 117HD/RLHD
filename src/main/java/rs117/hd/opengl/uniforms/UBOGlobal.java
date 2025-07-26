@@ -10,9 +10,11 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	}
 
 	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
+	public Property cameraZoom = addProperty(PropertyType.Float, "cameraZoom");
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
+	public Property viewport = addProperty(PropertyType.IVec4, "viewport");
 
 	public Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
 	public Property gammaCorrection = addProperty(PropertyType.Float, "gammaCorrection");
@@ -28,7 +30,11 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property underglowColor = addProperty(PropertyType.FVec3, "underglowColor");
 	public Property underglowStrength = addProperty(PropertyType.Float, "underglowStrength");
 
+	public Property tileCountX = addProperty(PropertyType.Int, "tileCountX");
+	public Property tileCountY = addProperty(PropertyType.Int, "tileCountY");
+
 	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
+	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
 	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
 
 	public Property useFog = addProperty(PropertyType.Int, "useFog");

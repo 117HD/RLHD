@@ -80,6 +80,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorFilter;
+import rs117.hd.config.MaxLightsPerTile;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -100,6 +101,7 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
+import rs117.hd.opengl.shader.TiledLightingShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOGlobal;
@@ -108,6 +110,7 @@ import rs117.hd.opengl.uniforms.UBOUI;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.GammaCalibrationOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
+import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
@@ -167,10 +170,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
 	public static final int TEXTURE_UNIT_BASE = GL_TEXTURE0;
-	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE; // default state
+	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE;
 	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
+	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = TEXTURE_UNIT_BASE + 4;
 
 	public static final int UNIFORM_BLOCK_GLOBAL = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
@@ -304,11 +308,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
 
+	private final List<TiledLightingShaderProgram> tiledLightingShaderPrograms = new ArrayList<>();
+
 	@Inject
 	private GammaCalibrationOverlay gammaCalibrationOverlay;
 
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
+
+	@Inject
+	private TiledLightingOverlay tiledLightingOverlay;
 
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
@@ -334,6 +343,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int vaoQuad;
 	private int vboQuad;
 
+	private int vaoTri;
+	private int vboTri;
+
 	private int vaoScene;
 	private int fboScene;
 	private int rboSceneColor;
@@ -342,6 +354,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int shadowMapResolution;
 	private int fboShadowMap;
 	private int texShadowMap;
+
+	private int fboTiledLighting;
+	private int texTiledLighting;
+	private int tileCountX;
+	private int tileCountY;
 
 	private int texTileHeightMap;
 
@@ -390,6 +407,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int lastCanvasHeight;
 	private int lastStretchedCanvasWidth;
 	private int lastStretchedCanvasHeight;
+	private int lastRenderViewportWidth;
+	private int lastRenderViewportHeight;
 	private AntiAliasingMode lastAntiAliasingMode;
 	private int numSamples;
 
@@ -397,6 +416,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int viewportOffsetY;
 	private int viewportWidth;
 	private int viewportHeight;
+	private int[] dpiViewport = new int[4];
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -417,7 +437,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configAsyncUICopy;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
-	public int configMaxDynamicLights;
+	public int configMaxLightsPerTile;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
@@ -612,6 +632,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initShaderHotswapping();
 				initInterfaceTexture();
 				initShadowMapFbo();
+				initTiledLighting();
 
 				checkGLErrors();
 
@@ -628,6 +649,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				lastCanvasWidth = lastCanvasHeight = 0;
 				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
+				lastRenderViewportWidth = lastRenderViewportHeight = 0;
 				lastAntiAliasingMode = null;
 
 				gamevalManager.startUp();
@@ -702,7 +724,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyPrograms();
 				destroyVaos();
 				destroySceneFbo();
+				destroyTiledLighting();
 				destroyShadowMapFbo();
+				destroyTiledLighting();
 				destroyTileHeightMap();
 				destroyModelSortingBins();
 
@@ -826,7 +850,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", Material.values().length)
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
-			.define("MAX_LIGHT_COUNT", Math.max(1, configMaxDynamicLights))
+			.define("MAX_LIGHT_COUNT", UBOLights.MAX_LIGHTS)
+			.define("MAX_LIGHTS_PER_TILE", configMaxLightsPerTile)
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
@@ -876,6 +901,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
 
+		for (int layer = 0; layer < MaxLightsPerTile.MAX_LIGHTS; layer++) {
+			var shader = new TiledLightingShaderProgram();
+			shader.compile(includes.define("TILED_LIGHTING_LAYER", layer));
+			tiledLightingShaderPrograms.add(shader);
+		}
+
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initPrograms();
 		} else {
@@ -900,6 +931,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
+
+		for (var program : tiledLightingShaderPrograms)
+			program.destroy();
+		tiledLightingShaderPrograms.clear();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -999,31 +1034,58 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Create scene VAO
 		vaoScene = glGenVertexArrays();
 
-		// Create UI VAO
-		vaoQuad = glGenVertexArrays();
-		// Create UI buffer
-		vboQuad = glGenBuffers();
-		glBindVertexArray(vaoQuad);
+		{
+			// Create Quad VAO
+			vaoQuad = glGenVertexArrays();
+			vboQuad = glGenBuffers();
+			glBindVertexArray(vaoQuad);
 
-		FloatBuffer vboQuadData = BufferUtils.createFloatBuffer(16)
-			.put(new float[] {
-				// vertices, UVs
-				1, 1, 1, 0, // top right
-				1, -1, 1, 1, // bottom right
-				-1, -1, 0, 1, // bottom left
-				-1, 1, 0, 0  // top left
-			})
-			.flip();
-		glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
-		glBufferData(GL_ARRAY_BUFFER, vboQuadData, GL_STATIC_DRAW);
+			FloatBuffer vboQuadData = BufferUtils.createFloatBuffer(16)
+				.put(new float[] {
+					// vertices, UVs
+					1, 1, 1, 0, // top right
+					1, -1, 1, 1, // bottom right
+					-1, -1, 0, 1, // bottom left
+					-1, 1, 0, 0  // top left
+				})
+				.flip();
+			glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
+			glBufferData(GL_ARRAY_BUFFER, vboQuadData, GL_STATIC_DRAW);
 
-		// position attribute
-		glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
-		glEnableVertexAttribArray(0);
+			// position attribute
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
+			glEnableVertexAttribArray(0);
 
-		// texture coord attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-		glEnableVertexAttribArray(1);
+			// texture coord attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
+			glEnableVertexAttribArray(1);
+		}
+
+		{
+			// Create Tri VAO
+			vaoTri = glGenVertexArrays();
+			vboTri = glGenBuffers();
+			glBindVertexArray(vaoTri);
+
+			FloatBuffer vboTriData = BufferUtils.createFloatBuffer(12)
+				.put(new float[] {
+					// x, y, u, v
+					-1.0f, -1.0f, 0.0f, 0.0f, // bottom left
+					3.0f, -1.0f, 2.0f, 0.0f,  // bottom right (off-screen)
+					-1.0f, 3.0f, 0.0f, 2.0f  // top left (off-screen)
+				})
+				.flip();
+			glBindBuffer(GL_ARRAY_BUFFER, vboTri);
+			glBufferData(GL_ARRAY_BUFFER, vboTriData, GL_STATIC_DRAW);
+
+			// position attribute
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
+			glEnableVertexAttribArray(0);
+
+			// texture coord attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
+			glEnableVertexAttribArray(1);
+		}
 	}
 
 	private void updateSceneVao(GLBuffer vertexBuffer, GLBuffer uvBuffer, GLBuffer normalBuffer) {
@@ -1062,6 +1124,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (vaoQuad != 0)
 			glDeleteVertexArrays(vaoQuad);
 		vaoQuad = 0;
+
+		if (vboTri != 0)
+			glDeleteBuffers(vboTri);
+		vboTri = 0;
+
+		if (vaoTri != 0)
+			glDeleteVertexArrays(vaoTri);
+		vaoTri = 0;
 	}
 
 	private void initBuffers() {
@@ -1119,6 +1189,52 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (interfaceTexture != 0)
 			glDeleteTextures(interfaceTexture);
 		interfaceTexture = 0;
+	}
+
+	private void initTiledLighting() {
+		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+
+		final int tileSize = 16;
+		tileCountX = Math.max(1, dpiViewport[2] / tileSize);
+		tileCountY = Math.max(1, dpiViewport[3] / tileSize);
+
+		fboTiledLighting = glGenFramebuffers();
+
+		texTiledLighting = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexImage3D(
+			GL_TEXTURE_2D_ARRAY,
+			0,
+			GL_R16I,
+			tileCountX,
+			tileCountY,
+			MaxLightsPerTile.MAX_LIGHTS,
+			0,
+			GL_RED_INTEGER,
+			GL_UNSIGNED_SHORT,
+			0
+		);
+
+		checkGLErrors();
+
+		uboGlobal.tileCountX.set(tileCountX);
+		uboGlobal.tileCountY.set(tileCountY);
+	}
+
+	private void destroyTiledLighting() {
+		if (fboTiledLighting != 0) {
+			glDeleteFramebuffers(fboTiledLighting);
+			fboTiledLighting = 0;
+		}
+
+		if (texTiledLighting != 0) {
+			glDeleteTextures(texTiledLighting);
+			texTiledLighting = 0;
+		}
 	}
 
 	private void initSceneFbo(int width, int height, AntiAliasingMode antiAliasingMode) {
@@ -1442,20 +1558,45 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getXYZMag()); // XZ radius
 				}
+
+				// Calculate projection matrix
+				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				if (orthographicProjection) {
+					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+				} else {
+					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+				}
+				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(
+					projectionMatrix, Mat4.translate(
+						-cameraPosition[0],
+						-cameraPosition[1],
+						-cameraPosition[2]
+					)
+				);
+				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
+
+				uboGlobal.cameraPos.set(cameraPosition);
+				uboGlobal.cameraZoom.set((float) client.getScale());
+				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
+				uboGlobal.upload();
 			}
 		}
 
-		if (sceneContext.scene == scene && updateUniforms) {
+		if (configMaxLightsPerTile > 0 && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
-			assert sceneContext.numVisibleLights <= configMaxDynamicLights;
+			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				var struct = uboLights.lights[i];
 				struct.position.set(
-					(float) (light.pos[0] + cameraShift[0]),
-					(float) light.pos[1],
-					(float) (light.pos[2] + cameraShift[1]),
-					(float) (light.radius * light.radius)
+					light.pos[0] + cameraShift[0],
+					light.pos[1],
+					light.pos[2] + cameraShift[1],
+					light.radius * light.radius
 				);
 				struct.color.set(
 					light.color[0] * light.strength,
@@ -1464,6 +1605,38 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				);
 			}
 			uboLights.upload();
+
+			// Check if the tiledLighting FBO needs to be recreated
+			if (lastRenderViewportWidth != dpiViewport[2] || lastRenderViewportHeight != dpiViewport[3]) {
+				lastRenderViewportWidth = dpiViewport[2];
+				lastRenderViewportHeight = dpiViewport[3];
+				destroyTiledLighting();
+				initTiledLighting();
+			}
+
+			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
+			if (texTiledLighting != 0 && fboTiledLighting != 0) {
+				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
+
+				glViewport(0, 0, tileCountX, tileCountY);
+				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+
+				glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
+
+				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+				glClear(GL_COLOR_BUFFER_BIT);
+
+				glBindVertexArray(vaoTri);
+				glDisable(GL_BLEND);
+
+				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
+					tiledLightingShaderPrograms.get(layer).use();
+					glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+					glDrawArrays(GL_TRIANGLES, 0, 3);
+				}
+
+				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
+			}
 		}
 	}
 
@@ -1770,8 +1943,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int renderWidthOff = viewportOffsetX;
 			int renderHeightOff = viewportOffsetY;
 			int renderCanvasHeight = canvasHeight;
-			int renderViewportHeight = viewportHeight;
 			int renderViewportWidth = viewportWidth;
+			int renderViewportHeight = viewportHeight;
 
 			if (client.isStretchedEnabled()) {
 				Dimension dim = client.getStretchedDimensions();
@@ -1784,15 +1957,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				final int padding = 1;
 
 				// Ceil the sizes because even if the size is 599.1 we want to treat it as size 600 (i.e. render to the x=599 pixel).
-				renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
 				renderViewportWidth = (int) Math.ceil(scaleFactorX * (renderViewportWidth)) + padding * 2;
+				renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
 
 				// Floor the offsets because even if the offset is 4.9, we want to render to the x=4 pixel anyway.
-				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 				renderWidthOff = (int) Math.floor(scaleFactorX * (renderWidthOff)) - padding;
+				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 			}
 
-			int[] dpiViewport = applyDpiScaling(
+			dpiViewport = applyDpiScaling(
 				renderWidthOff,
 				renderCanvasHeight - renderViewportHeight - renderHeightOff,
 				renderViewportWidth,
@@ -1905,7 +2078,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			uboGlobal.cameraPos.set(cameraPosition);
+			uboGlobal.viewport.set(dpiViewport);
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
@@ -1920,23 +2093,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				long timeSinceChange = System.currentTimeMillis() - colorFilterChangedAt;
 				uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
-
-			// Calculate projection matrix
-			float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-			if (orthographicProjection) {
-				Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-			} else {
-				Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-			}
-			Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-			Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-			Mat4.mul(projectionMatrix, Mat4.translate(
-				-cameraPosition[0],
-				-cameraPosition[1],
-				-cameraPosition[2]
-			));
-			uboGlobal.projectionMatrix.set(projectionMatrix);
 
 			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
@@ -2135,11 +2291,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Bind quad VAO which all overlays use to render
 		glBindVertexArray(vaoQuad);
 
+		glEnable(GL_BLEND);
+
+		tiledLightingOverlay.render(canvasWidth, canvasHeight);
+
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
 		if (client.getGameState().getState() < GameState.LOADING.getState())
 			overlayColor = 0;
 
-		glEnable(GL_BLEND);
 		glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
 
 		uiProgram.use();
@@ -2383,7 +2542,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
-		configMaxDynamicLights = config.maxDynamicLights().getValue();
+		configMaxLightsPerTile = config.maxLightsPerTile().getValue();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
@@ -2504,7 +2663,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
-							case KEY_MAX_DYNAMIC_LIGHTS:
+							case KEY_MAX_LIGHTS_PER_TILE:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
