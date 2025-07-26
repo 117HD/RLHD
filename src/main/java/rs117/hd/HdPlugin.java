@@ -343,6 +343,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int vaoQuad;
 	private int vboQuad;
 
+	private int vaoTri;
+	private int vboTri;
+
 	private int vaoScene;
 	private int fboScene;
 	private int rboSceneColor;
@@ -1031,31 +1034,58 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Create scene VAO
 		vaoScene = glGenVertexArrays();
 
-		// Create UI VAO
-		vaoQuad = glGenVertexArrays();
-		// Create UI buffer
-		vboQuad = glGenBuffers();
-		glBindVertexArray(vaoQuad);
+		{
+			// Create Quad VAO
+			vaoQuad = glGenVertexArrays();
+			vboQuad = glGenBuffers();
+			glBindVertexArray(vaoQuad);
 
-		FloatBuffer vboQuadData = BufferUtils.createFloatBuffer(16)
-			.put(new float[] {
-				// vertices, UVs
-				1, 1, 1, 0, // top right
-				1, -1, 1, 1, // bottom right
-				-1, -1, 0, 1, // bottom left
-				-1, 1, 0, 0  // top left
-			})
-			.flip();
-		glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
-		glBufferData(GL_ARRAY_BUFFER, vboQuadData, GL_STATIC_DRAW);
+			FloatBuffer vboQuadData = BufferUtils.createFloatBuffer(16)
+				.put(new float[] {
+					// vertices, UVs
+					1, 1, 1, 0, // top right
+					1, -1, 1, 1, // bottom right
+					-1, -1, 0, 1, // bottom left
+					-1, 1, 0, 0  // top left
+				})
+				.flip();
+			glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
+			glBufferData(GL_ARRAY_BUFFER, vboQuadData, GL_STATIC_DRAW);
 
-		// position attribute
-		glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
-		glEnableVertexAttribArray(0);
+			// position attribute
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
+			glEnableVertexAttribArray(0);
 
-		// texture coord attribute
-		glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
-		glEnableVertexAttribArray(1);
+			// texture coord attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
+			glEnableVertexAttribArray(1);
+		}
+
+		{
+			// Create Tri VAO
+			vaoTri = glGenVertexArrays();
+			vboTri = glGenBuffers();
+			glBindVertexArray(vaoTri);
+
+			FloatBuffer vboTriData = BufferUtils.createFloatBuffer(12)
+				.put(new float[] {
+					// x, y, u, v
+					-1.0f, -1.0f, 0.0f, 0.0f, // bottom left
+					3.0f, -1.0f, 2.0f, 0.0f,  // bottom right (off-screen)
+					-1.0f, 3.0f, 0.0f, 2.0f  // top left (off-screen)
+				})
+				.flip();
+			glBindBuffer(GL_ARRAY_BUFFER, vboTri);
+			glBufferData(GL_ARRAY_BUFFER, vboTriData, GL_STATIC_DRAW);
+
+			// position attribute
+			glVertexAttribPointer(0, 2, GL_FLOAT, false, 4 * Float.BYTES, 0);
+			glEnableVertexAttribArray(0);
+
+			// texture coord attribute
+			glVertexAttribPointer(1, 2, GL_FLOAT, false, 4 * Float.BYTES, 2 * Float.BYTES);
+			glEnableVertexAttribArray(1);
+		}
 	}
 
 	private void updateSceneVao(GLBuffer vertexBuffer, GLBuffer uvBuffer, GLBuffer normalBuffer) {
@@ -1094,6 +1124,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (vaoQuad != 0)
 			glDeleteVertexArrays(vaoQuad);
 		vaoQuad = 0;
+
+		if (vboTri != 0)
+			glDeleteBuffers(vboTri);
+		vboTri = 0;
+
+		if (vaoTri != 0)
+			glDeleteVertexArrays(vaoTri);
+		vaoTri = 0;
 	}
 
 	private void initBuffers() {
@@ -1588,7 +1626,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 				glClear(GL_COLOR_BUFFER_BIT);
 
-				glBindVertexArray(0);
+				glBindVertexArray(vaoTri);
 				glDisable(GL_BLEND);
 
 				for (int layer = 0; layer < configMaxLightsPerTile; layer++) {
