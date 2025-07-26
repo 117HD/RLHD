@@ -38438,5 +38438,22 @@
     "objectIds": [
       "PINBALL_CHICANE_MIDDLE"
     ]
+  },
+  {
+    "description": "Evil Bob Uncooking Pot",
+    "offset": [ 0, 20, 0 ],
+    "radius": 650,
+    "strength": 10,
+    "color": [
+      0,
+      75,
+      200
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "duration": 0,
+    "objectIds": [
+      "MACRO_EVIL_BOB_UNCOOK_POT"
+    ]
   }
 ]

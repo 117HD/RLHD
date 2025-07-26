@@ -17260,6 +17260,33 @@
     ]
   },
   {
+    "description": "Evil Bob Fishing Random Event - Animated - Uncooking pot",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      "MACRO_EVIL_BOB_UNCOOK_POT"
+    ],
+    "colorOverrides": [
+      {
+        "colors":  "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Evil Bob Fishing Random Event - Statue",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "MACRO_EVIL_BOB_STATUE_1",
+      "MACRO_EVIL_BOB_STATUE_2",
+      "MACRO_EVIL_BOB_STATUE_3",
+      "MACRO_EVIL_BOB_STATUE_4"
+    ]
+  },
+  {
     "description": "Sophanem Gate",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
