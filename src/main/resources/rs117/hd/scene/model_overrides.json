@@ -8977,13 +8977,14 @@
     "uvOrientation": 512
   },
   {
-    "description": "Metallic Chest",
+    "description": "Metallic Chest - Textured",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "CHESTCLOSED",
       "TRAPCHEST1",
       "TRAPCHEST5",
-      "INACOPENCHEST"
+      "INACOPENCHEST",
+      "GRANDTREE_CHESTCLOSED"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -14397,7 +14398,8 @@
       "DRAGON_SLAYER_QIP_BURNT_TREE",
       "DRAGON_SLAYER_QIP_BURNT_FALLEN_TREE",
       "MM2_GLOUGH_BRANCH_UP_HIDDEN",
-      "AVIUM_DEADTREE_1"
+      "AVIUM_DEADTREE_1",
+      "MM2_GLOUGH_BRANCH_DOWN"
     ],
     "uvType": "BOX"
   },
@@ -14451,8 +14453,28 @@
     "uvScale": 0.7,
     "objectIds": [
       "BRIDGE_WALL",
+      "ALUFT_BRIDGE_WALL",
       "BRIDGE_WALLSIGNPOST_L",
       "BRIDGE_WALLSIGNPOST_R"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Diagonal floor - textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "ALUFT_BRIDGE_CORNERFLOOR"
     ],
     "colorOverrides": [
       {
@@ -14495,8 +14517,10 @@
     "uvScale": 0.8
   },
   {
-    "description": "Gnome - Objects - Wooden - Hammock",
+    "description": "Gnome - Wooden - Hammock - Textured",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "HAMMOCK"
     ]
@@ -14617,6 +14641,31 @@
     ]
   },
   {
+    "description": "Gnome - Wooden - Fancy gnome chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 600,
+    "objectIds": [
+      "ALUFT_GNOME_CHAIR"
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Stool with ornament",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 600,
+    "objectIds": [
+      "EYEGLO_GNOMESTOOL_CRYSTAL_COIN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ornament",
+        "colors": " a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
     "description": "Gnome - Wooden - table with cutlery and napkins with candle - Needs proper UV",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -14630,6 +14679,40 @@
     ],
     "objectIds": [
       "GNOMETABLE"
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Fancy table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALUFT_GNOME_TABLE"
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Fancy table with napkins",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "napkin",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "ALUFT_GNOME_RESTAURANT_TABLE_ONE",
+      "ALUFT_GNOME_RESTAURANT_TABLE_TWO"
     ]
   },
   {
@@ -48913,6 +48996,35 @@
         "uvScale": 0.5,
         "uvOrientation": 383
       }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Rock Grass - ANIMATED - DYNAMIC",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_50",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "upwardsNormals": true
+      }
+    ],
+    "objectIds": [
+      "ZEP_TARGET_GRASS"
+    ]
+  },
+  {
+    "description": "Quest - Gnome Stronghold - Rock - ANIMATED - DYNAMIC",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+
+    "objectIds": [
+      "ZEP_PRE_QUEST_ROCK"
     ]
   }
 ]
