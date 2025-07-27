@@ -1,32 +1,26 @@
 #pragma once
 
 layout(std140) uniform UBOGlobal {
-    vec3 cameraPos;
-    float cameraZoom;
     int expandedMapLoadingChunks;
     float drawDistance;
-    float elapsedTime;
-    ivec2 sceneResolution;
 
     float colorBlindnessIntensity;
     float gammaCorrection;
     float saturation;
 	float contrast;
+    int colorFilterPrevious;
+    int colorFilter;
+    float colorFilterFade;
+
+    ivec2 sceneResolution;
+    ivec2 tiledLightingResolution;
 
     vec3 ambientColor;
     float ambientStrength;
-
     vec3 lightColor;
     float lightStrength;
-
     vec3 underglowColor;
     float underglowStrength;
-
-    ivec2 tiledLightingResolution;
-
-    mat4 projectionMatrix;
-    mat4 invProjectionMatrix;
-    mat4 lightProjectionMatrix;
 
     int useFog;
     float fogDepth;
@@ -34,10 +28,6 @@ layout(std140) uniform UBOGlobal {
     float groundFogStart;
     float groundFogEnd;
     float groundFogOpacity;
-
-    int pointLightsCount;
-    float lightningBrightness;
-    vec3 lightDir;
 
     vec3 waterColorLight;
     vec3 waterColorMid;
@@ -48,7 +38,16 @@ layout(std140) uniform UBOGlobal {
     vec3 underwaterCausticsColor;
     float underwaterCausticsStrength;
 
-    int colorFilterPrevious;
-    int colorFilter;
-    float colorFilterFade;
+    vec3 lightDir;
+
+    int pointLightsCount;
+
+    vec3 cameraPos;
+    float cameraZoom;
+    mat4 projectionMatrix;
+    mat4 invProjectionMatrix;
+    mat4 lightProjectionMatrix;
+
+    float lightningBrightness;
+    float elapsedTime;
 };
