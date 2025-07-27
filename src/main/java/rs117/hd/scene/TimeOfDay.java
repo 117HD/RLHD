@@ -155,12 +155,12 @@ public class TimeOfDay
 			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
 			{ -2.2,  new java.awt.Color(95, 72, 115) },   // Purple twilight progression
 			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
-			{ -1.7,  new java.awt.Color(115, 80, 122) },  // Purple-pink blend
-			{ -1.5,  new java.awt.Color(125, 85, 125) },  // Purple-pink transition
-			{ -1.2,  new java.awt.Color(135, 90, 127) },  // Pink-purple progression
-			{ -1.0,  new java.awt.Color(145, 95, 130) },  // Dawn pink-purple
-			{ -0.8,  new java.awt.Color(165, 105, 125) }, // Warm pink
-			{ -0.4,  new java.awt.Color(185, 115, 115) }, // Pink transition
+			{ -1.7,  new java.awt.Color(110, 85, 115) },  // Purple-pink blend (reduced pink)
+			{ -1.5,  new java.awt.Color(115, 90, 118) },  // Purple-pink transition (more muted)
+			{ -1.2,  new java.awt.Color(125, 95, 120) },  // Pink-purple progression (less intense)
+			{ -1.0,  new java.awt.Color(135, 100, 122) }, // Dawn pink-purple (toned down)
+			{ -0.8,  new java.awt.Color(150, 110, 118) }, // Warm pink (less saturated)
+			{ -0.4,  new java.awt.Color(170, 120, 110) }, // Pink transition (more orange blend)
 			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
 			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
 			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
@@ -209,12 +209,12 @@ public class TimeOfDay
 			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
 			{ -2.2,  new java.awt.Color(95, 72, 115) },   // Purple twilight progression
 			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
-			{ -1.7,  new java.awt.Color(115, 80, 122) },  // Purple-pink blend
-			{ -1.5,  new java.awt.Color(125, 85, 125) },  // Purple-pink transition
-			{ -1.2,  new java.awt.Color(135, 90, 127) },  // Pink-purple progression
-			{ -1.0,  new java.awt.Color(145, 95, 130) },  // Dawn pink-purple
-			{ -0.8,  new java.awt.Color(165, 105, 125) }, // Warm pink
-			{ -0.4,  new java.awt.Color(185, 115, 115) }, // Pink transition
+			{ -1.7,  new java.awt.Color(110, 85, 115) },  // Purple-pink blend (reduced pink)
+			{ -1.5,  new java.awt.Color(115, 90, 118) },  // Purple-pink transition (more muted)
+			{ -1.2,  new java.awt.Color(125, 95, 120) },  // Pink-purple progression (less intense)
+			{ -1.0,  new java.awt.Color(135, 100, 122) }, // Dawn pink-purple (toned down)
+			{ -0.8,  new java.awt.Color(150, 110, 118) }, // Warm pink (less saturated)
+			{ -0.4,  new java.awt.Color(170, 120, 110) }, // Pink transition (more orange blend)
 			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
 			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
 			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
