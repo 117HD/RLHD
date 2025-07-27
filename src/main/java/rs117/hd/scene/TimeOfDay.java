@@ -12,6 +12,11 @@ import static rs117.hd.utils.ColorUtils.rgb;
 public class TimeOfDay
 {
 	public static final float MINUTES_PER_DAY = 30 / 60.f;
+	
+	// Static variables to maintain cycle state across config changes
+	private static float lastDayLength = MINUTES_PER_DAY;
+	private static long lastUpdateTime = 0;
+	private static double accumulatedCycleTime = 0.0;
 
 	/**
 	 * Get the current sun or moon angles for a given set of coordinates and simulated day length in minutes.
@@ -289,9 +294,32 @@ public class TimeOfDay
 		long currentTimeMillis = System.currentTimeMillis();
 		Instant currentInstant = Instant.ofEpochMilli(currentTimeMillis);
 
-		// Calculate position in the cycle (0.0 to 1.0)
-		long millisPerCycle = (long) (dayLength * 60 * 1000);
-		double cyclePosition = (currentTimeMillis % millisPerCycle) / (double) millisPerCycle;
+		// Initialize on first call
+		if (lastUpdateTime == 0) {
+			lastUpdateTime = currentTimeMillis;
+			lastDayLength = dayLength;
+		}
+		
+		// Calculate elapsed real time since last update
+		long realTimeElapsed = currentTimeMillis - lastUpdateTime;
+		
+		// Convert cycle duration from minutes to milliseconds for the full cycle
+		double cycleDurationMillis = dayLength * 60.0 * 1000.0; // minutes to milliseconds
+		
+		// Calculate how much cycle time has progressed based on current day length
+		double cycleTimeElapsed = realTimeElapsed / cycleDurationMillis;
+		
+		// Add to accumulated cycle time to maintain continuity
+		accumulatedCycleTime += cycleTimeElapsed;
+		
+		// Keep cycle time within [0, 1) range
+		accumulatedCycleTime = accumulatedCycleTime % 1.0;
+		
+		// Update tracking variables for next call
+		lastUpdateTime = currentTimeMillis;
+		lastDayLength = dayLength;
+		
+		double cyclePosition = accumulatedCycleTime;
 		
 		// Map cycle position to time of day with extended twilight periods
 		// 0.0-0.15 = dawn/sunrise twilight (maps to 5am-7am)
