@@ -157,20 +157,22 @@ public class TimeOfDay
 		// Get the enhanced color for current sun altitude
 		float[] enhancedColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, skyColorKeyframes);
 		
-		// Calculate blend factor based on sun altitude
-		// Keep sunset/sunrise colors pure by starting regional blending much higher
-		// During very high sun (35+ degrees), blend moderately toward regional color
-		// During sunrise/sunset/twilight, use enhanced colors only
+		// Calculate blend factor based sun altitude
+		// Use strong regional influence throughout most of the day
+		// Only preserve pure enhanced colors during deep twilight/night
 		float blendFactor;
-		if (sunAltitudeDegrees >= 40) {
-			// Very high sun - use moderate regional influence (50-60% regional)
-			blendFactor = (float) Math.min(0.6, 0.5 + (sunAltitudeDegrees - 40) / 50.0 * 0.1);
-		} else if (sunAltitudeDegrees >= 25) {
-			// High sun - blend from enhanced to regional (0-50% regional)
-			blendFactor = (float) ((sunAltitudeDegrees - 25) / 15.0 * 0.5);
+		if (sunAltitudeDegrees >= 35) {
+			// Very high sun - use very strong regional influence (85-95% regional)
+			blendFactor = (float) Math.min(0.95, 0.85 + (sunAltitudeDegrees - 35) / 55.0 * 0.1);
+		} else if (sunAltitudeDegrees >= 15) {
+			// High sun - blend from moderate to strong regional (60-85% regional)
+			blendFactor = (float) (0.6 + ((sunAltitudeDegrees - 15) / 20.0) * 0.25);
+		} else if (sunAltitudeDegrees >= 5) {
+			// Low sun - moderate regional influence (20-60% regional)
+			blendFactor = (float) (0.2 + ((sunAltitudeDegrees - 5) / 10.0) * 0.4);
 		} else {
-			// Low to medium sun/twilight/night - use enhanced colors only (0% regional)
-			blendFactor = 0.0f;
+			// Very low sun/twilight/night - minimal regional influence (0-20% regional)
+			blendFactor = (float) Math.max(0.0, sunAltitudeDegrees / 5.0 * 0.2);
 		}
 		
 		// Convert regional fog color from sRGB to linear RGB for proper blending
@@ -315,8 +317,8 @@ public class TimeOfDay
 				// Sun just above horizon (5 degrees altitude, east direction)
 				return new float[] { (float) Math.toRadians(5), (float) Math.toRadians(90) };
 			case "ALWAYS_SUNSET":
-				// Sun just above horizon (5 degrees altitude, west direction)
-				return new float[] { (float) Math.toRadians(5), (float) Math.toRadians(-90) };
+				// Sun earlier in sunset (12 degrees altitude, west direction)
+				return new float[] { (float) Math.toRadians(12), (float) Math.toRadians(-90) };
 			default:
 				return new float[] { 0, 0 };
 		}
