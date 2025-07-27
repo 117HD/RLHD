@@ -3232,7 +3232,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		if (configCharacterDisplacement && renderable != client.getLocalPlayer()) {
+		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
 			if (renderable instanceof NPC) {
 				var anim = gamevalManager.getAnimName(((NPC) renderable).getWalkAnimation());
 				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY"))
