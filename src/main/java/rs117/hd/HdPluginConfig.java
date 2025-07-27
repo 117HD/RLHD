@@ -963,7 +963,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING,
 		name = "Tiled Lighting",
-		description = "TODO: .",
+		description = "Light culling optimization, which also unlocks the amount of possible lights able to be shaded on screen.",
 		section = experimentalSettings
 	)
 	default boolean tiledLighting() {
