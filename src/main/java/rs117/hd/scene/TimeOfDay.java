@@ -38,10 +38,82 @@ public class TimeOfDay
 		Instant modifiedDate = getModifiedDate(dayLength);
 		return AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
 	}
+	
+	public static float[] getRegionalDirectionalLight(double[] latLong, float dayLength, float[] regionalDirectionalColor) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
+		
+		// Get the dynamic directional light color
+		float[] dynamicLight = AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
+		
+		// Calculate blend factor - similar to skybox but adjusted for lighting
+		float blendFactor;
+		if (sunAltitudeDegrees >= 25) {
+			// High sun - use strong regional influence (70-85% regional)
+			blendFactor = (float) Math.min(0.85, 0.70 + (sunAltitudeDegrees - 25) / 65.0 * 0.15);
+		} else if (sunAltitudeDegrees >= 10) {
+			// Medium sun - moderate regional influence (30-70% regional)
+			blendFactor = (float) (0.30 + ((sunAltitudeDegrees - 10) / 15.0) * 0.40);
+		} else if (sunAltitudeDegrees >= 0) {
+			// Low sun - minimal regional influence (0-30% regional)
+			blendFactor = (float) (sunAltitudeDegrees / 10.0 * 0.30);
+		} else {
+			// Night/twilight - no regional influence
+			blendFactor = 0.0f;
+		}
+		
+		// Convert regional color from sRGB to linear for blending
+		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalDirectionalColor);
+		
+		// Blend the colors in linear space
+		float[] blended = new float[3];
+		for (int i = 0; i < 3; i++) {
+			blended[i] = dynamicLight[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
+		}
+		
+		return blended;
+	}
 
 	public static float[] getAmbientColor(double[] latLong, float dayLength) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		return AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
+	}
+	
+	public static float[] getRegionalAmbientLight(double[] latLong, float dayLength, float[] regionalAmbientColor) {
+		Instant modifiedDate = getModifiedDate(dayLength);
+		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
+		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
+		
+		// Get the dynamic ambient light color
+		float[] dynamicAmbient = AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
+		
+		// Calculate blend factor - similar to directional but slightly different curve
+		float blendFactor;
+		if (sunAltitudeDegrees >= 25) {
+			// High sun - use strong regional influence (75-90% regional)
+			blendFactor = (float) Math.min(0.90, 0.75 + (sunAltitudeDegrees - 25) / 65.0 * 0.15);
+		} else if (sunAltitudeDegrees >= 10) {
+			// Medium sun - moderate regional influence (40-75% regional)
+			blendFactor = (float) (0.40 + ((sunAltitudeDegrees - 10) / 15.0) * 0.35);
+		} else if (sunAltitudeDegrees >= 0) {
+			// Low sun - minimal regional influence (10-40% regional)
+			blendFactor = (float) (0.10 + (sunAltitudeDegrees / 10.0) * 0.30);
+		} else {
+			// Night/twilight - minimal regional influence (0-10% regional)
+			blendFactor = (float) Math.max(0.0, (sunAltitudeDegrees + 10) / 10.0 * 0.10);
+		}
+		
+		// Convert regional color from sRGB to linear for blending
+		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalAmbientColor);
+		
+		// Blend the colors in linear space
+		float[] blended = new float[3];
+		for (int i = 0; i < 3; i++) {
+			blended[i] = dynamicAmbient[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
+		}
+		
+		return blended;
 	}
 
 	public static float[] getSkyColor(double[] latLong, float dayLength) {

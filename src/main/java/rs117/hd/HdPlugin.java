@@ -1850,8 +1850,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						// Use configurable cycle duration instead of hardcoded value
 						float cycleDuration = config.cycleDurationMinutes();
 						
-						directionalColor = TimeOfDay.getLightColor(latLong, cycleDuration);
-						ambientColor = TimeOfDay.getAmbientColor(latLong, cycleDuration);
+						// Store original regional colors before overriding
+						float[] originalRegionalDirectionalColor = ColorUtils.linearToSrgb(environmentManager.currentDirectionalColor);
+						float[] originalRegionalAmbientColor = ColorUtils.linearToSrgb(environmentManager.currentAmbientColor);
+						
+						// Use regional blending for lighting colors
+						directionalColor = TimeOfDay.getRegionalDirectionalLight(latLong, cycleDuration, originalRegionalDirectionalColor);
+						ambientColor = TimeOfDay.getRegionalAmbientLight(latLong, cycleDuration, originalRegionalAmbientColor);
 						
 						// Apply dynamic brightness scaling based on time of day
 						float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(latLong, cycleDuration);
