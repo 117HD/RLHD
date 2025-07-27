@@ -52,30 +52,30 @@ public class TimeOfDay
 		// Get the dynamic directional light color
 		float[] dynamicLight = AtmosphereUtils.getDirectionalLight(modifiedDate.toEpochMilli(), latLong);
 		
-		// Calculate blend factor - similar to skybox but adjusted for lighting
+		// Calculate blend factor - same as skybox and ambient for consistency
 		float blendFactor;
-		// Enhanced blending mode (formerly debug mode, now default)
-		if (sunAltitudeDegrees >= 25) {
-			// High sun - use very strong regional influence (85-95% regional)
-			blendFactor = (float) Math.min(0.95, 0.85 + (sunAltitudeDegrees - 25) / 65.0 * 0.10);
-		} else if (sunAltitudeDegrees >= 10) {
-			// Medium sun - strong regional influence (60-85% regional)
-			blendFactor = (float) (0.60 + ((sunAltitudeDegrees - 10) / 15.0) * 0.25);
+		if (sunAltitudeDegrees >= 30) {
+			// High sun - use pure regional color (100% regional) to match disabled behavior
+			blendFactor = 1.0f;
+		} else if (sunAltitudeDegrees >= 15) {
+			// Medium sun - strong regional influence (75-100% regional)
+			blendFactor = (float) (0.75 + ((sunAltitudeDegrees - 15) / 15.0) * 0.25);
+		} else if (sunAltitudeDegrees >= 5) {
+			// Sunset/late sunrise - moderate regional influence (50-75% regional)
+			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 5) / 10.0) * 0.25);
 		} else if (sunAltitudeDegrees >= 0) {
-			// Low sun - moderate regional influence (30-60% regional)
-			blendFactor = (float) (0.30 + (sunAltitudeDegrees / 10.0) * 0.30);
+			// Low sun - moderate regional influence (30-50% regional)
+			blendFactor = (float) (0.30 + (sunAltitudeDegrees / 5.0) * 0.20);
 		} else {
 			// Night/twilight - minimal regional influence (0-30% regional)
 			blendFactor = (float) Math.max(0.0, 0.30 + sunAltitudeDegrees / 10.0 * 0.30);
 		}
 		
-		// Convert regional color from sRGB to linear for blending
-		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalDirectionalColor);
-		
+		// Regional color is already in linear space from environment manager
 		// Blend the colors in linear space
 		float[] blended = new float[3];
 		for (int i = 0; i < 3; i++) {
-			blended[i] = dynamicLight[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
+			blended[i] = dynamicLight[i] * (1 - blendFactor) + regionalDirectionalColor[i] * blendFactor;
 		}
 		
 		return blended;
@@ -94,30 +94,29 @@ public class TimeOfDay
 		// Get the dynamic ambient light color
 		float[] dynamicAmbient = AtmosphereUtils.getAmbientColor(modifiedDate.toEpochMilli(), latLong);
 		
-		// Calculate blend factor - similar to directional but slightly different curve
+		// Calculate blend factor based on sun altitude - same as skybox for consistency
 		float blendFactor;
-		// Enhanced blending mode (formerly debug mode, now default)
-		if (sunAltitudeDegrees >= 25) {
-			// High sun - use very strong regional influence (90-98% regional)
-			blendFactor = (float) Math.min(0.98, 0.90 + (sunAltitudeDegrees - 25) / 65.0 * 0.08);
-		} else if (sunAltitudeDegrees >= 10) {
-			// Medium sun - strong regional influence (70-90% regional)
-			blendFactor = (float) (0.70 + ((sunAltitudeDegrees - 10) / 15.0) * 0.20);
+		if (sunAltitudeDegrees >= 30) {
+			// High sun - use pure regional color (100% regional) to match disabled behavior
+			blendFactor = 1.0f;
+		} else if (sunAltitudeDegrees >= 15) {
+			// Medium sun - strong regional influence (75-100% regional)
+			blendFactor = (float) (0.75 + ((sunAltitudeDegrees - 15) / 15.0) * 0.25);
+		} else if (sunAltitudeDegrees >= 5) {
+			// Sunset/late sunrise - moderate regional influence (50-75% regional)
+			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 5) / 10.0) * 0.25);
 		} else if (sunAltitudeDegrees >= 0) {
-			// Low sun - moderate regional influence (40-70% regional)
-			blendFactor = (float) (0.40 + (sunAltitudeDegrees / 10.0) * 0.30);
+			// Low sun - moderate regional influence (30-50% regional)
+			blendFactor = (float) (0.30 + (sunAltitudeDegrees / 5.0) * 0.20);
 		} else {
-			// Night/twilight - reduced regional influence (10-40% regional)
-			blendFactor = (float) Math.max(0.10, 0.40 + sunAltitudeDegrees / 10.0 * 0.30);
+			// Night/twilight - minimal regional influence (0-30% regional)
+			blendFactor = (float) Math.max(0.0, 0.30 + sunAltitudeDegrees / 10.0 * 0.30);
 		}
-		
-		// Convert regional color from sRGB to linear for blending
-		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalAmbientColor);
 		
 		// Blend the colors in linear space
 		float[] blended = new float[3];
 		for (int i = 0; i < 3; i++) {
-			blended[i] = dynamicAmbient[i] * (1 - blendFactor) + regionalLinear[i] * blendFactor;
+			blended[i] = dynamicAmbient[i] * (1 - blendFactor) + regionalAmbientColor[i] * blendFactor;
 		}
 		
 		return blended;
@@ -209,21 +208,23 @@ public class TimeOfDay
 			{ 90.0,  new java.awt.Color(115, 150, 185) }  // Zenith blue (realistic)
 		};
 		
-		// Get the enhanced color for current sun altitude
-		float[] enhancedColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, skyColorKeyframes);
+		// Get the enhanced color for current sun altitude (returns sRGB values)
+		float[] enhancedColorSrgb = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, skyColorKeyframes);
+		// Convert to linear for blending
+		float[] enhancedColor = rs117.hd.utils.ColorUtils.srgbToLinear(enhancedColorSrgb);
 		
 		// Calculate blend factor based sun altitude
 		// Maintain regional character even during sunrise/sunset in gloomy areas
 		float blendFactor;
-		if (sunAltitudeDegrees >= 35) {
-			// Very high sun - use very strong regional influence (85-95% regional)
-			blendFactor = (float) Math.min(0.95, 0.85 + (sunAltitudeDegrees - 35) / 55.0 * 0.1);
+		if (sunAltitudeDegrees >= 30) {
+			// High sun - use pure regional color (100% regional) to match disabled behavior
+			blendFactor = 1.0f;
 		} else if (sunAltitudeDegrees >= 15) {
-			// High sun - blend from moderate to strong regional (60-85% regional)
-			blendFactor = (float) (0.6 + ((sunAltitudeDegrees - 15) / 20.0) * 0.25);
+			// Medium sun - strong regional influence (75-100% regional)
+			blendFactor = (float) (0.75 + ((sunAltitudeDegrees - 15) / 15.0) * 0.25);
 		} else if (sunAltitudeDegrees >= 5) {
-			// Sunset/late sunrise - moderate regional influence (45-60% regional)
-			blendFactor = (float) (0.45 + ((sunAltitudeDegrees - 5) / 10.0) * 0.15);
+			// Sunset/late sunrise - moderate regional influence (50-75% regional)
+			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 5) / 10.0) * 0.25);
 		} else if (sunAltitudeDegrees >= -2) {
 			// Peak sunrise/sunset colors - maintain significant regional influence (30-45% regional)
 			// This ensures gloomy areas retain their atmospheric character
@@ -242,22 +243,17 @@ public class TimeOfDay
 		// Convert regional fog color from sRGB to linear RGB for proper blending
 		float[] regionalLinear = rs117.hd.utils.ColorUtils.srgbToLinear(regionalFogColor);
 		
-		// Desaturate the regional color to make it more suitable for skybox
-		float[] desaturatedRegional = new float[3];
+		// Use the regional color directly without desaturation to preserve vivid colors
+		float[] desaturatedRegional = regionalLinear;
+		
+		// Blend between enhanced color and desaturated regional color (in linear space)
+		float[] resultLinear = new float[3];
 		for (int i = 0; i < 3; i++) {
-			// Calculate luminance for desaturation
-			float luminance = regionalLinear[0] * 0.299f + regionalLinear[1] * 0.587f + regionalLinear[2] * 0.114f;
-			// Blend 70% original color with 30% luminance to reduce saturation
-			desaturatedRegional[i] = regionalLinear[i] * 0.7f + luminance * 0.3f;
+			resultLinear[i] = enhancedColor[i] * (1 - blendFactor) + desaturatedRegional[i] * blendFactor;
 		}
 		
-		// Blend between enhanced color and desaturated regional color
-		float[] result = new float[3];
-		for (int i = 0; i < 3; i++) {
-			result[i] = enhancedColor[i] * (1 - blendFactor) + desaturatedRegional[i] * blendFactor;
-		}
-		
-		return result;
+		// Convert back to sRGB for return
+		return rs117.hd.utils.ColorUtils.linearToSrgb(resultLinear);
 	}
 
 	public static float[] getNightAmbientColor() {

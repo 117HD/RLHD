@@ -1850,8 +1850,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				float cycleDuration = config.cycleDurationMinutes();
 				
 				// Store original regional colors before overriding
-				float[] originalRegionalDirectionalColor = ColorUtils.linearToSrgb(environmentManager.currentDirectionalColor);
-				float[] originalRegionalAmbientColor = ColorUtils.linearToSrgb(environmentManager.currentAmbientColor);
+				// Use the exact linear color values from the environment manager
+				float[] originalRegionalDirectionalColor = environmentManager.currentDirectionalColor;
+				float[] originalRegionalAmbientColor = new float[3];
+				System.arraycopy(environmentManager.currentAmbientColor, 0, originalRegionalAmbientColor, 0, 3);
+				
 				
 				// Use regional blending for lighting colors
 				directionalColor = TimeOfDay.getRegionalDirectionalLight(latLong, cycleDuration, originalRegionalDirectionalColor);
@@ -1868,7 +1871,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// Always use enhanced sky colors with regional blending
 				// Store the original regional fog color before overriding
-				float[] originalRegionalFogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+				// Note: fogColor is already converted to sRGB above, so use that
+				float[] originalRegionalFogColor = fogColor;
+				// getRegionalEnhancedSkyColor now returns sRGB values directly
 				fogColor = TimeOfDay.getRegionalEnhancedSkyColor(latLong, cycleDuration, originalRegionalFogColor);
 				waterColor = fogColor;
 
