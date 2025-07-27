@@ -38544,6 +38544,24 @@
     "graphicsObjectIds": [ "DRAGON_HALBERD_SPECIAL_WEST_RED" ]
   },
   {
+    "description": "Crystal Halberd Special Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 225,
+    "spawnDelay": 275,
+    "fixedDespawnTime": true,
+    "despawnDelay": 910,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 150,
+    "fadeOutDuration": 550,
+    "graphicsObjectIds": [ "DRAGON_HALBERD_SPECIAL_WEST_WHITE" ]
+  },
+  {
     "description": "Dragon Spear Special Attack",
     "offset": [ 0, 150, 80 ],
     "radius": 225,
