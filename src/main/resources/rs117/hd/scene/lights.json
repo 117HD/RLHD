@@ -38521,7 +38521,7 @@
       0
     ],
     "type": "STATIC",
-    "fadeInDuration": 220,
+    "fadeInDuration": 150,
     "fadeOutDuration": 550,
     "graphicsObjectIds": [ "DRAGON_SWORD_SPEC_SPOTANIM" ]
   },
@@ -38539,7 +38539,7 @@
       0
     ],
     "type": "STATIC",
-    "fadeInDuration": 150,
+    "fadeInDuration": 100,
     "fadeOutDuration": 550,
     "graphicsObjectIds": [ "DRAGON_HALBERD_SPECIAL_WEST_RED" ]
   },
@@ -38557,7 +38557,7 @@
       255
     ],
     "type": "STATIC",
-    "fadeInDuration": 150,
+    "fadeInDuration": 100,
     "fadeOutDuration": 550,
     "graphicsObjectIds": [ "DRAGON_HALBERD_SPECIAL_WEST_WHITE" ]
   },
@@ -38578,5 +38578,23 @@
     "fadeInDuration": 150,
     "fadeOutDuration": 550,
     "graphicsObjectIds": [ "SP_ATTACK_SHOVE_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Whip Special Attack",
+    "offset": [ 0, 50, 0 ],
+    "radius": 225,
+    "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 575,
+    "strength": 10,
+    "color": [
+      100,
+      170,
+      230
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "SP_ATTACK_ABYSSAL_WHIP" ]
   }
 ]
