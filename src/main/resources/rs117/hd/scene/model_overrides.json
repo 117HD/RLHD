@@ -49063,5 +49063,14 @@
     "objectIds": [
       "ALUFT_GNOME_OFFICE_CABINET"
     ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Textured - Spiral staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SPIRALSTAIRS_WOODEN"
+    ]
   }
 ]
