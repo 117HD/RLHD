@@ -25,6 +25,7 @@
 #version 330
 
 #include UI_SCALING_MODE
+#include HIDE_UI
 
 #define SAMPLING_MITCHELL 1
 #define SAMPLING_CATROM 2
@@ -67,6 +68,9 @@ void main() {
     #endif
 
     c = alphaBlend(c, alphaOverlay);
+    #if HIDE_UI
+    c = vec4(0);
+    #endif
     c.rgb = colorBlindnessCompensation(c.rgb);
 
     FragColor = c;

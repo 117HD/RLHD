@@ -828,6 +828,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
+			.define("HIDE_UI", developerTools.isHideUiEnabled() && hasLoggedIn)
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", Material.values().length)

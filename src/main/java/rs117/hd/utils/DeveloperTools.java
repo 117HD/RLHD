@@ -2,17 +2,22 @@ package rs117.hd.utils;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import net.runelite.api.events.*;
+import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
+import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -30,6 +35,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -42,6 +48,9 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private Client client;
 
 	@Inject
 	private TileInfoOverlay tileInfoOverlay;
@@ -61,6 +70,8 @@ public class DeveloperTools implements KeyListener {
 	private boolean frameTimingsOverlayEnabled = false;
 	private boolean shadowMapOverlayEnabled = false;
 	private boolean lightGizmoOverlayEnabled = false;
+	@Getter
+	private boolean hideUiEnabled = false;
 
 	public void activate() {
 		// Listen for commands
@@ -78,6 +89,7 @@ public class DeveloperTools implements KeyListener {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
+			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 		});
 
@@ -104,6 +116,21 @@ public class DeveloperTools implements KeyListener {
 		lightGizmoOverlay.setActive(false);
 	}
 
+	public void toggleHideUI() {
+		hideUiEnabled = !hideUiEnabled;
+		recompileShaders();
+	}
+
+	private void recompileShaders() {
+		clientThread.invoke(() -> {
+			try {
+				plugin.recompilePrograms();
+			} catch (Exception e) {
+				log.warn("Failed to recompile programs", e);
+			}
+		});
+	}
+
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
@@ -126,6 +153,9 @@ public class DeveloperTools implements KeyListener {
 				break;
 			case "lights":
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
+				break;
+			case "hideui":
+				toggleHideUI();
 				break;
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
@@ -152,6 +182,8 @@ public class DeveloperTools implements KeyListener {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
+		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
+			toggleHideUI();
 		} else {
 			return;
 		}
