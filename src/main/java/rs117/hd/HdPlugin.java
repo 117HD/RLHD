@@ -913,7 +913,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tiledLayerCount = MaxLightsPerTile.MAX_LIGHTS / 4;
 		for (int layer = 0; layer < tiledLayerCount; layer++) {
 			var shader = new TiledLightingShaderProgram();
-			shader.compile(includes.define("TILED_LIGHTING_LAYER", layer));
+			shader.compile(includes
+				.define("TILED_IMAGE_STORE", 0)
+				.define("TILED_LIGHTING_LAYER", layer));
 			tiledLightingShaderPrograms.add(shader);
 		}
 

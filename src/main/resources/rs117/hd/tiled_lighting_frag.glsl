@@ -30,7 +30,7 @@
 #if TILED_IMAGE_STORE
 #extension GL_EXT_shader_image_load_store : require
 
-layout(rgba32i) uniform iimage2DArray tiledLightingImage;
+layout(rgba16i) uniform iimage2DArray tiledLightingImage;
 #else
 uniform isampler2DArray tiledLightingArray;
 
@@ -42,9 +42,7 @@ out ivec4 TiledData;
 
 #include <utils/constants.glsl>
 
-
 in vec3 fRay;
-
 
 void main() {
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
@@ -73,10 +71,12 @@ void main() {
     const int tileSize = 16;
     float pad = tileSize * (512.f / cameraZoom) * 15;
 
+    vec2 screenUV = gl_FragCoord.xy;
     vec3 viewDir = normalize(fRay);
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
-    for(int l = 0; l < MAX_LIGHTS_PER_TILE / 4; l++)
+    const int layerCount = MAX_LIGHTS_PER_TILE / 4;
+    for(int l = 0; l < layerCount; l++)
 #endif
     {
         ivec4 outputTileData = ivec4(0);
@@ -106,13 +106,25 @@ void main() {
                 if ((LightsMask[word] & mask) != 0u)
                     continue;
 
-                outputTileData[c % 4] = lightIdx + 1;
-                LightsMask[word] |= mask;
+                outputTileData[c] = lightIdx + 1;
+
+                bool writeLightMask = c + 1 < 4;
+#if TILED_IMAGE_STORE
+                writeLightMask = writeLightMask && l < layerCount - 1;
+#endif
+                if(writeLightMask)
+                    LightsMask[word] |= mask;
                 break;
             }
         }
 #if TILED_IMAGE_STORE
-    imageStore(tiledLightingImage, ivec3(gl_FragCoord.xy, l), outputTileData);
+    if(outputTileData != ivec4(0)) {
+        imageStore(tiledLightingImage, ivec3(screenUV, l), outputTileData);
+    }
+
+    if(lightIdx >= pointLightsCount) {
+        return;
+    }
 #else
     TiledData = outputTileData;
 #endif
