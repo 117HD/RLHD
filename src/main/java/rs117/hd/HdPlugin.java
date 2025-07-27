@@ -416,7 +416,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int canvasWidth;
 	private int canvasHeight;
 	private float sceneResolutionScale;
-	private float[] sceneDpiViewport;
+	private float[] sceneDpiViewport = new float[4];
 	private AntiAliasingMode antiAliasingMode;
 	private float lastRenderViewportWidth;
 	private float lastRenderViewportHeight;
@@ -625,6 +625,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							GL43C.GL_DEBUG_SOURCE_API, GL43C.GL_DEBUG_TYPE_PERFORMANCE,
 							GL_DONT_CARE, 0x20052, false
 						);
+
+						// [LWJGL] OpenGL debug message
+						//	ID: 0x20092
+						//	Source: API
+						//	Type: PERFORMANCE
+						//	Severity: MEDIUM
+						//	Message: Program/shader state performance warning: Vertex shader in program 20 is being recompiled based on GL state.
+						GL43C.glDebugMessageControl(
+							GL43C.GL_DEBUG_SOURCE_API, GL43C.GL_DEBUG_TYPE_PERFORMANCE,
+							GL_DONT_CARE, 0x20092, false
+						);
 					}
 				}
 
@@ -670,7 +681,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				canvasWidth = canvasHeight = 0;
 				sceneResolutionScale = 0;
-				sceneDpiViewport = null;
+				Arrays.fill(sceneDpiViewport, 0);
 				antiAliasingMode = null;
 				lastRenderViewportWidth = lastRenderViewportHeight = 0;
 
@@ -1227,9 +1238,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initTiledLighting() {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
-		if (sceneDpiViewport == null)
-			sceneDpiViewport = new float[] { 0, 0, 0, 0 };
-
 		final int tileSize = 16;
 		tiledLightingResolution[0] = Math.max(1, Math.round(sceneDpiViewport[2] / tileSize));
 		tiledLightingResolution[1] = Math.max(1, Math.round(sceneDpiViewport[3] / tileSize));
@@ -1682,8 +1690,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (configTiledLighting && fboTiledLighting != 0 && texTiledLighting != 0) {
 				// TODO: Check if we can update the viewport here instead of when drawing the frame
 				// Check if the tiledLighting FBO needs to be recreated
-				if (sceneDpiViewport == null)
-					sceneDpiViewport = new float[] { 0, 0, 0, 0 };
 				if (lastRenderViewportWidth != sceneDpiViewport[2] || lastRenderViewportHeight != sceneDpiViewport[3]) {
 					lastRenderViewportWidth = sceneDpiViewport[2];
 					lastRenderViewportHeight = sceneDpiViewport[3];
