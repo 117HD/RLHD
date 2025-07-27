@@ -483,6 +483,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
+	@Getter
+	private int drawnTileCount;
+	@Getter
+	private int drawnStaticRenderableCount;
+	@Getter
+	private int drawnDynamicRenderableCount;
+
 	public double elapsedTime;
 	public double elapsedClientTime;
 	public float deltaTime;
@@ -1566,6 +1573,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// viewport buffer.
 				renderBufferOffset = sceneContext.staticVertexCount;
 
+				drawnTileCount = 0;
+				drawnStaticRenderableCount = 0;
+				drawnDynamicRenderableCount = 0;
+
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
 				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
@@ -1853,6 +1864,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(tileY * LOCAL_TILE_SIZE);
 
 		renderBufferOffset += vertexCount;
+		drawnTileCount++;
 	}
 
 	public void initShaderHotswapping() {
@@ -1909,6 +1921,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			buffer.put(localX).put(localY).put(localZ);
 
 			renderBufferOffset += bufferLength;
+			drawnTileCount++;
 		}
 
 		++numPassthroughModels;
@@ -1921,6 +1934,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		buffer.put(localX).put(localY).put(localZ);
 
 		renderBufferOffset += bufferLength;
+		drawnTileCount++;
 	}
 
 	private void prepareInterfaceTexture(int newCanvasWidth, int newCanvasHeight) {
@@ -3133,6 +3147,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			eightIntWrite[1] = uvOffset;
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
+
+			drawnStaticRenderableCount++;
 		} else {
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
 			if (enableDetailedTimers)
@@ -3204,6 +3220,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (configModelBatching)
 					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
+
+			if (eightIntWrite[0] != -1)
+				drawnDynamicRenderableCount++;
 		}
 
 		if (enableDetailedTimers)
@@ -3212,7 +3231,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
+		if (configCharacterDisplacement && renderable != client.getLocalPlayer()) {
 			if (renderable instanceof NPC) {
 				var anim = gamevalManager.getAnimName(((NPC) renderable).getWalkAnimation());
 				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY"))

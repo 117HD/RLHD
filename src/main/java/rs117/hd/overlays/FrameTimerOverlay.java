@@ -22,6 +22,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	@Inject
 	private FrameTimer frameTimer;
 
+	@Inject
+	HdPlugin plugin;
+
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final StringBuilder sb = new StringBuilder();
 
@@ -94,6 +97,33 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			panelComponent.getChildren().add(LineComponent.builder()
 				.left("Error compensation:")
 				.right(String.format("%d ns", frameTimer.errorCompensation))
+				.build());
+
+			panelComponent.getChildren().add(LineComponent.builder()
+				.leftFont(FontManager.getRunescapeBoldFont())
+				.left("Scene Stats:")
+				.build());
+
+			if (plugin.getSceneContext() != null) {
+				panelComponent.getChildren().add(LineComponent.builder()
+					.left("Lights:")
+					.right(String.format("%d/%d", plugin.getSceneContext().numVisibleLights, plugin.getSceneContext().lights.size()))
+					.build());
+			}
+
+			panelComponent.getChildren().add(LineComponent.builder()
+				.left("Tiles:")
+				.right(String.valueOf(plugin.getDrawnTileCount()))
+				.build());
+
+			panelComponent.getChildren().add(LineComponent.builder()
+				.left("Static Renderables:")
+				.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
+				.build());
+
+			panelComponent.getChildren().add(LineComponent.builder()
+				.left("Dynamic Renderables:")
+				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
 				.build());
 		}
 
