@@ -38529,7 +38529,7 @@
     "description": "Dragon Halberd Special Attack",
     "offset": [ 0, 0, 0 ],
     "radius": 225,
-    "spawnDelay": 275,
+    "spawnDelay": 200,
     "fixedDespawnTime": true,
     "despawnDelay": 910,
     "strength": 10,
@@ -38541,13 +38541,18 @@
     "type": "STATIC",
     "fadeInDuration": 100,
     "fadeOutDuration": 550,
-    "graphicsObjectIds": [ "DRAGON_HALBERD_SPECIAL_WEST_RED" ]
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_RED",
+      "DRAGON_HALBERD_SPECIAL_NORTH_RED",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
+      "DRAGON_HALBERD_SPECIAL_EAST_RED"
+    ]
   },
   {
     "description": "Crystal Halberd Special Attack",
     "offset": [ 0, 0, 0 ],
     "radius": 225,
-    "spawnDelay": 275,
+    "spawnDelay": 175,
     "fixedDespawnTime": true,
     "despawnDelay": 910,
     "strength": 10,
@@ -38559,7 +38564,12 @@
     "type": "STATIC",
     "fadeInDuration": 100,
     "fadeOutDuration": 550,
-    "graphicsObjectIds": [ "DRAGON_HALBERD_SPECIAL_WEST_WHITE" ]
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_WHITE",
+      "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_EAST_WHITE"
+    ]
   },
   {
     "description": "Dragon Spear Special Attack",
