@@ -351,8 +351,7 @@ void main() {
         vec3 pointLightsSpecularOut = vec3(0);
         #if TILED_LIGHTING
         #if MAX_LIGHTS_PER_TILE > 0
-            vec2 uResolution = viewport.zw;
-            vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
+            vec2 screenUV = gl_FragCoord.xy / sceneResolution;
             ivec2 tileXY = ivec2(floor(screenUV * tiledLightingResolution));
 
             for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {

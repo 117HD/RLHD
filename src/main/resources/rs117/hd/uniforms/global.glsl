@@ -6,7 +6,7 @@ layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;
     float elapsedTime;
-    ivec4 viewport;
+    ivec2 sceneResolution;
 
     float colorBlindnessIntensity;
     float gammaCorrection;

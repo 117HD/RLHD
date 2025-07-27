@@ -1227,6 +1227,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void initTiledLighting() {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
+		if (sceneDpiViewport == null)
+			sceneDpiViewport = new float[] { 0, 0, 0, 0 };
+
 		final int tileSize = 16;
 		tiledLightingResolution[0] = Math.max(1, Math.round(sceneDpiViewport[2] / tileSize));
 		tiledLightingResolution[1] = Math.max(1, Math.round(sceneDpiViewport[3] / tileSize));
@@ -1300,6 +1303,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			Math.round(sceneDpiViewport[2] * sceneResolutionScale),
 			Math.round(sceneDpiViewport[3] * sceneResolutionScale)
 		};
+		uboGlobal.sceneResolution.set(fboSceneResolution);
 
 		// Create and bind the FBO
 		fboScene = glGenFramebuffers();
@@ -1674,17 +1678,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 			uboLights.upload();
 
-			// TODO: Check if we can update the viewport here instead of when drawing the frame
-			// Check if the tiledLighting FBO needs to be recreated
-			if (lastRenderViewportWidth != sceneDpiViewport[2] || lastRenderViewportHeight != sceneDpiViewport[3]) {
-				lastRenderViewportWidth = sceneDpiViewport[2];
-				lastRenderViewportHeight = sceneDpiViewport[3];
-				destroyTiledLighting();
-				initTiledLighting();
-			}
-
 			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
-			if (texTiledLighting != 0 && fboTiledLighting != 0 && configTiledLighting) {
+			if (configTiledLighting && fboTiledLighting != 0 && texTiledLighting != 0) {
+				// TODO: Check if we can update the viewport here instead of when drawing the frame
+				// Check if the tiledLighting FBO needs to be recreated
+				if (sceneDpiViewport == null)
+					sceneDpiViewport = new float[] { 0, 0, 0, 0 };
+				if (lastRenderViewportWidth != sceneDpiViewport[2] || lastRenderViewportHeight != sceneDpiViewport[3]) {
+					lastRenderViewportWidth = sceneDpiViewport[2];
+					lastRenderViewportHeight = sceneDpiViewport[3];
+					destroyTiledLighting();
+					initTiledLighting();
+				}
+
 				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
 
 				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
@@ -1707,7 +1713,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					for (int layer = 0; layer < layerCount; layer++) {
 						tiledLightingShaderPrograms.get(layer).use();
 						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
-
 						glDrawArrays(GL_TRIANGLES, 0, 3);
 					}
 				}
@@ -2151,7 +2156,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
-			uboGlobal.viewport.set(sceneDpiViewport);
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
 			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));

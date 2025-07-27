@@ -46,8 +46,7 @@ void main() {
     vec2 texelCenter = (floor(fUv * tiledLightingResolution) + .5) / tiledLightingResolution;
 
     // Draw texel centers
-    vec2 viewportSize = viewport.zw;
-    if (all(equal(floor(fUv * viewportSize), floor(texelCenter * viewportSize)))) {
+    if (all(equal(floor(fUv * sceneResolution), floor(texelCenter * sceneResolution)))) {
         FragColor = vec4(1.0);
         return;
     }
