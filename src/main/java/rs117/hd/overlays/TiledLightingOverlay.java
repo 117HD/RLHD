@@ -11,6 +11,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
 
 @Slf4j
@@ -46,6 +47,7 @@ public class TiledLightingOverlay extends ShaderOverlay<TiledLightingOverlay.Sha
 	public Dimension render(Graphics2D g) {
 		if (!super.isHidden()) {
 			g.setColor(Color.YELLOW);
+			drawStringShadowed(g, String.format("GL_ARB_shader_image_load_store: %B", GL_CAPS.GL_ARB_shader_image_load_store), 4, 32);
 			if (plugin.configDynamicLights == DynamicLights.NONE) {
 				drawStringCentered(g, "Dynamic lights are disabled");
 			} else if (!plugin.configTiledLighting) {
