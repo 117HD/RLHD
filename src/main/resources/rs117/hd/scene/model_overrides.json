@@ -23823,6 +23823,7 @@
   {
     "description": "Magic Tree",
     "baseMaterial": "BARK_STONEPINE",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "POH_BIG_TREE7_4", "POH_SMALL_TREE7_5", "MAGIC_TREE_SEEDLING",
       "MAGIC_TREE_1", "MAGIC_TREE_2", "MAGIC_TREE_3",
