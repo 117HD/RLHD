@@ -137,32 +137,19 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - much brighter for gameplay visibility
+			// Deep night (sun well below horizon) - simplified progression
 			{ -30.0, new java.awt.Color(50, 65, 90) },    // Deepest night (much brighter)
-			{ -20.0, new java.awt.Color(52, 67, 93) },    // Deep night
-			{ -18.0, new java.awt.Color(54, 69, 96) },    // Late deep night
-			{ -15.0, new java.awt.Color(43, 53, 77) },    // Early astronomical twilight
-			{ -12.0, new java.awt.Color(46, 56, 82) },    // Astronomical twilight
-			{ -10.0, new java.awt.Color(50, 60, 88) },    // Late astronomical twilight
-			{ -8.0,  new java.awt.Color(42, 52, 78) },    // Late nautical twilight
-			{ -7.0,  new java.awt.Color(45, 55, 82) },    // Pre-civil twilight
-			{ -6.0,  new java.awt.Color(48, 58, 88) },    // Civil twilight start
-			{ -5.5,  new java.awt.Color(50, 60, 92) },    // Early civil twilight
-			{ -5.0,  new java.awt.Color(52, 62, 95) },    // Deep twilight blue
-			{ -4.5,  new java.awt.Color(48, 58, 88) },    // Twilight blue progression
+			{ -15.0, new java.awt.Color(50, 65, 90) },    // Stable deep night
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
 			{ -2.7,  new java.awt.Color(72, 67, 100) },   // Purple-blue blend
-			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
-			{ -2.2,  new java.awt.Color(95, 72, 115) },   // Purple twilight progression
-			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
-			{ -1.7,  new java.awt.Color(110, 85, 115) },  // Purple-pink blend (reduced pink)
-			{ -1.5,  new java.awt.Color(115, 90, 118) },  // Purple-pink transition (more muted)
-			{ -1.2,  new java.awt.Color(125, 95, 120) },  // Pink-purple progression (less intense)
-			{ -1.0,  new java.awt.Color(135, 100, 122) }, // Dawn pink-purple (toned down)
-			{ -0.8,  new java.awt.Color(150, 110, 118) }, // Warm pink (less saturated)
-			{ -0.4,  new java.awt.Color(170, 120, 110) }, // Pink transition (more orange blend)
+			{ -1.7,  new java.awt.Color(85, 70, 95) },   // Dark purple twilight
+			{ -1.5,  new java.awt.Color(90, 75, 100) },  // Dark purple transition
+			{ -1.2,  new java.awt.Color(95, 80, 105) },  // Purple progression
+			{ -1.0,  new java.awt.Color(105, 85, 105) }, // Dawn dark purple
+			{ -0.8,  new java.awt.Color(120, 95, 105) }, // Purple-orange blend
+			{ -0.4,  new java.awt.Color(140, 110, 105) }, // Orange transition
 			{ 0.0,   new java.awt.Color(185, 122, 108) }, // Horizon transition
 			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
 			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
@@ -192,32 +179,19 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - much brighter for gameplay visibility
+			// Deep night (sun well below horizon) - simplified progression
 			{ -30.0, new java.awt.Color(50, 65, 90) },    // Deepest night (much brighter)
-			{ -20.0, new java.awt.Color(52, 67, 93) },    // Deep night
-			{ -18.0, new java.awt.Color(54, 69, 96) },    // Late deep night
-			{ -15.0, new java.awt.Color(43, 53, 77) },    // Early astronomical twilight
-			{ -12.0, new java.awt.Color(46, 56, 82) },    // Astronomical twilight
-			{ -10.0, new java.awt.Color(50, 60, 88) },    // Late astronomical twilight
-			{ -8.0,  new java.awt.Color(42, 52, 78) },    // Late nautical twilight
-			{ -7.0,  new java.awt.Color(45, 55, 82) },    // Pre-civil twilight
-			{ -6.0,  new java.awt.Color(48, 58, 88) },    // Civil twilight start
-			{ -5.5,  new java.awt.Color(50, 60, 92) },    // Early civil twilight
-			{ -5.0,  new java.awt.Color(52, 62, 95) },    // Deep twilight blue
-			{ -4.5,  new java.awt.Color(48, 58, 88) },    // Twilight blue progression
+			{ -15.0, new java.awt.Color(50, 65, 90) },    // Stable deep night
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
 			{ -2.7,  new java.awt.Color(72, 67, 100) },   // Purple-blue blend
-			{ -2.5,  new java.awt.Color(85, 70, 110) },   // Deep purple twilight
-			{ -2.2,  new java.awt.Color(95, 72, 115) },   // Purple twilight progression
-			{ -2.0,  new java.awt.Color(105, 75, 120) },  // Purple twilight
-			{ -1.7,  new java.awt.Color(110, 85, 115) },  // Purple-pink blend (reduced pink)
-			{ -1.5,  new java.awt.Color(115, 90, 118) },  // Purple-pink transition (more muted)
-			{ -1.2,  new java.awt.Color(125, 95, 120) },  // Pink-purple progression (less intense)
-			{ -1.0,  new java.awt.Color(135, 100, 122) }, // Dawn pink-purple (toned down)
-			{ -0.8,  new java.awt.Color(150, 110, 118) }, // Warm pink (less saturated)
-			{ -0.4,  new java.awt.Color(170, 120, 110) }, // Pink transition (more orange blend)
+			{ -1.7,  new java.awt.Color(85, 70, 95) },   // Dark purple twilight
+			{ -1.5,  new java.awt.Color(90, 75, 100) },  // Dark purple transition
+			{ -1.2,  new java.awt.Color(95, 80, 105) },  // Purple progression
+			{ -1.0,  new java.awt.Color(105, 85, 105) }, // Dawn dark purple
+			{ -0.8,  new java.awt.Color(120, 95, 105) }, // Purple-orange blend
+			{ -0.4,  new java.awt.Color(140, 110, 105) }, // Orange transition
 			{ 0.0,   new java.awt.Color(185, 122, 108) }, // Horizon transition
 			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
 			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
