@@ -75,8 +75,7 @@ void main() {
     vec3 viewDir = normalize(fRay);
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
-    const int layerCount = MAX_LIGHTS_PER_TILE / 4;
-    for(int l = 0; l < layerCount; l++)
+    for(int l = 0; l < TILE_LAYERS; l++)
 #endif
     {
         ivec4 outputTileData = ivec4(0);
@@ -107,13 +106,7 @@ void main() {
                     continue;
 
                 outputTileData[c] = lightIdx + 1;
-
-                bool writeLightMask = c + 1 < 4;
-#if TILED_IMAGE_STORE
-                writeLightMask = writeLightMask && l < layerCount - 1;
-#endif
-                if(writeLightMask)
-                    LightsMask[word] |= mask;
+                LightsMask[word] |= mask;
                 break;
             }
         }

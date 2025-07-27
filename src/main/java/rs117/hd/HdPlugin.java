@@ -857,6 +857,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
 			.define("MAX_LIGHT_COUNT", UBOLights.MAX_LIGHTS)
 			.define("MAX_LIGHTS_PER_TILE", configMaxLightsPerTile)
+			.define("TILE_LAYERS", configMaxLightsPerTile / 4)
 			.define("USE_TILED_LIGHTING", configTiledLighting)
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
