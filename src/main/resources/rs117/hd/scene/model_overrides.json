@@ -5223,9 +5223,6 @@
       "DRAGONSECRETDOOR",
       "EYEGLO_MINE_WALL",
       "EYEGLO_MINE_WALL_ROCKY",
-      "EYEGLO_MINE_WALL_SUPPORT_LEFT",
-      "EYEGLO_MINE_WALL_SUPPORT_RIGHT",
-      "EYEGLO_MINE_WALL_SUPPORT_MID",
       "DRAGON_SLAYER_QIP_CHARRED_WALL",
       "DRAGON_SLAYER_QIP_CHARRED_WALL_L",
       "DRAGON_SLAYER_QIP_CHARRED_WALL_R",
@@ -5255,6 +5252,30 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Wooden - Rock - CAVE_WALLS_BLEND - With supports",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "EYEGLO_MINE_WALL_SUPPORT_LEFT",
+      "EYEGLO_MINE_WALL_SUPPORT_RIGHT",
+      "EYEGLO_MINE_WALL_SUPPORT_MID"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wooden Supports",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
       {
         "colors": 2,
         "baseMaterial": "BLACK"
