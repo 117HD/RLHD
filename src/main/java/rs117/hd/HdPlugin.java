@@ -1858,20 +1858,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				ambientColor = TimeOfDay.getRegionalAmbientLight(latLong, cycleDuration, originalRegionalAmbientColor);
 				
 				// Apply dynamic brightness scaling based on time of day
+				// Multiply with original area strength values to preserve unique area atmospheres
 				float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(latLong, cycleDuration, minimumBrightness);
-				directionalStrength = brightnessMultiplier;
-				ambientStrength = brightnessMultiplier;
+				directionalStrength = environmentManager.currentDirectionalStrength * brightnessMultiplier;
+				ambientStrength = environmentManager.currentAmbientStrength * brightnessMultiplier;
 
 				double[] sunAnglesD = TimeOfDay.getSunAngles(latLong, cycleDuration);
 				sunAngles = new float[] { (float) sunAnglesD[1], (float) sunAnglesD[0] };
 
-				if (config.enhancedSkyColors()) {
-					// Store the original regional fog color before overriding
-					float[] originalRegionalFogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
-					fogColor = TimeOfDay.getRegionalEnhancedSkyColor(latLong, cycleDuration, originalRegionalFogColor);
-				} else {
-					fogColor = TimeOfDay.getSkyColor(latLong, cycleDuration);
-				}
+				// Always use enhanced sky colors with regional blending
+				// Store the original regional fog color before overriding
+				float[] originalRegionalFogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+				fogColor = TimeOfDay.getRegionalEnhancedSkyColor(latLong, cycleDuration, originalRegionalFogColor);
 				waterColor = fogColor;
 
 				// Calculate shadow visibility based on sun altitude

@@ -136,17 +136,17 @@ public class TimeOfDay
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
 			// Deep night (sun well below horizon)
-			{ -30.0, new java.awt.Color(8, 8, 16) },      // Very dark blue-black
-			{ -20.0, new java.awt.Color(10, 12, 20) },    // Deep night
-			{ -18.0, new java.awt.Color(12, 15, 24) },    // Astronomical twilight
-			{ -15.0, new java.awt.Color(15, 20, 32) },    // Late astronomical twilight
-			{ -12.0, new java.awt.Color(18, 25, 40) },    // Nautical twilight
-			{ -10.0, new java.awt.Color(20, 28, 45) },    // Mid nautical twilight
-			{ -8.0,  new java.awt.Color(22, 30, 50) },    // Late nautical twilight
-			{ -7.0,  new java.awt.Color(23, 32, 55) },    // Pre-civil twilight
-			{ -6.0,  new java.awt.Color(25, 35, 65) },    // Civil twilight start
-			{ -5.5,  new java.awt.Color(27, 37, 67) },    // Early civil twilight
-			{ -5.0,  new java.awt.Color(30, 40, 70) },    // Deep twilight blue
+			{ -30.0, new java.awt.Color(18, 22, 35) },    // Deep night blue (lightened)
+			{ -20.0, new java.awt.Color(20, 25, 40) },    // Night sky blue
+			{ -18.0, new java.awt.Color(22, 28, 45) },    // Astronomical twilight
+			{ -15.0, new java.awt.Color(25, 32, 50) },    // Late astronomical twilight
+			{ -12.0, new java.awt.Color(28, 36, 55) },    // Nautical twilight
+			{ -10.0, new java.awt.Color(30, 40, 60) },    // Mid nautical twilight
+			{ -8.0,  new java.awt.Color(32, 44, 65) },    // Late nautical twilight
+			{ -7.0,  new java.awt.Color(33, 46, 68) },    // Pre-civil twilight
+			{ -6.0,  new java.awt.Color(35, 48, 72) },    // Civil twilight start
+			{ -5.5,  new java.awt.Color(37, 50, 75) },    // Early civil twilight
+			{ -5.0,  new java.awt.Color(40, 52, 78) },    // Deep twilight blue
 			{ -4.5,  new java.awt.Color(35, 45, 75) },    // Twilight blue progression
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
@@ -190,17 +190,17 @@ public class TimeOfDay
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
 			// Deep night (sun well below horizon)
-			{ -30.0, new java.awt.Color(8, 8, 16) },      // Very dark blue-black
-			{ -20.0, new java.awt.Color(10, 12, 20) },    // Deep night
-			{ -18.0, new java.awt.Color(12, 15, 24) },    // Astronomical twilight
-			{ -15.0, new java.awt.Color(15, 20, 32) },    // Late astronomical twilight
-			{ -12.0, new java.awt.Color(18, 25, 40) },    // Nautical twilight
-			{ -10.0, new java.awt.Color(20, 28, 45) },    // Mid nautical twilight
-			{ -8.0,  new java.awt.Color(22, 30, 50) },    // Late nautical twilight
-			{ -7.0,  new java.awt.Color(23, 32, 55) },    // Pre-civil twilight
-			{ -6.0,  new java.awt.Color(25, 35, 65) },    // Civil twilight start
-			{ -5.5,  new java.awt.Color(27, 37, 67) },    // Early civil twilight
-			{ -5.0,  new java.awt.Color(30, 40, 70) },    // Deep twilight blue
+			{ -30.0, new java.awt.Color(18, 22, 35) },    // Deep night blue (lightened)
+			{ -20.0, new java.awt.Color(20, 25, 40) },    // Night sky blue
+			{ -18.0, new java.awt.Color(22, 28, 45) },    // Astronomical twilight
+			{ -15.0, new java.awt.Color(25, 32, 50) },    // Late astronomical twilight
+			{ -12.0, new java.awt.Color(28, 36, 55) },    // Nautical twilight
+			{ -10.0, new java.awt.Color(30, 40, 60) },    // Mid nautical twilight
+			{ -8.0,  new java.awt.Color(32, 44, 65) },    // Late nautical twilight
+			{ -7.0,  new java.awt.Color(33, 46, 68) },    // Pre-civil twilight
+			{ -6.0,  new java.awt.Color(35, 48, 72) },    // Civil twilight start
+			{ -5.5,  new java.awt.Color(37, 50, 75) },    // Early civil twilight
+			{ -5.0,  new java.awt.Color(40, 52, 78) },    // Deep twilight blue
 			{ -4.5,  new java.awt.Color(35, 45, 75) },    // Twilight blue progression
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
@@ -410,10 +410,11 @@ public class TimeOfDay
 			double factor = Math.max(0, sunAltitudeDegrees + 18) / 18.0; // -18° to 0°
 			return (float) (minBrightness + 0.10 * factor);
 		} else {
-			// When sun is above horizon, scale brightness from horizon to 1.0
+			// When sun is above horizon, scale brightness from horizon to peak brightness
 			// Use sine function to match natural sun intensity curve
+			float peakBrightness = 1.2f; // 20% brighter than default at peak sun
 			double sineFactor = Math.sin(Math.toRadians(sunAltitudeDegrees));
-			return (float) (horizonBrightness + (1.0 - horizonBrightness) * sineFactor);
+			return (float) (horizonBrightness + (peakBrightness - horizonBrightness) * sineFactor);
 		}
 	}
 

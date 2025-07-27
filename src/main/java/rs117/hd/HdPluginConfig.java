@@ -558,16 +558,6 @@ public interface HdPluginConfig extends Config
 		return DaylightCycle.DYNAMIC;
 	}
 
-	@ConfigItem(
-		keyName = "enhancedSkyColors",
-		name = "Enhanced Sky Colors",
-		description = "Enables realistic sky color transitions with orangey/pinkish sunrise and sunset colors for more lifelike atmosphere",
-		position = 2,
-		section = daylightCycleSettings
-	)
-	default boolean enhancedSkyColors() {
-		return true;
-	}
 
 	@Range(min = 1, max = 720)
 	@ConfigItem(
