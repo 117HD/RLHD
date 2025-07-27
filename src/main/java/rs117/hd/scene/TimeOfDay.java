@@ -135,19 +135,19 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon)
-			{ -30.0, new java.awt.Color(18, 22, 35) },    // Deep night blue (lightened)
-			{ -20.0, new java.awt.Color(20, 25, 40) },    // Night sky blue
-			{ -18.0, new java.awt.Color(22, 28, 45) },    // Astronomical twilight
-			{ -15.0, new java.awt.Color(25, 32, 50) },    // Late astronomical twilight
-			{ -12.0, new java.awt.Color(28, 36, 55) },    // Nautical twilight
-			{ -10.0, new java.awt.Color(30, 40, 60) },    // Mid nautical twilight
-			{ -8.0,  new java.awt.Color(32, 44, 65) },    // Late nautical twilight
-			{ -7.0,  new java.awt.Color(33, 46, 68) },    // Pre-civil twilight
-			{ -6.0,  new java.awt.Color(35, 48, 72) },    // Civil twilight start
-			{ -5.5,  new java.awt.Color(37, 50, 75) },    // Early civil twilight
-			{ -5.0,  new java.awt.Color(40, 52, 78) },    // Deep twilight blue
-			{ -4.5,  new java.awt.Color(35, 45, 75) },    // Twilight blue progression
+			// Deep night (sun well below horizon) - smooth progression from dark to lighter
+			{ -30.0, new java.awt.Color(25, 32, 50) },    // Deepest night (darkest)
+			{ -20.0, new java.awt.Color(28, 36, 55) },    // Deep night
+			{ -18.0, new java.awt.Color(30, 38, 58) },    // Late deep night
+			{ -15.0, new java.awt.Color(33, 42, 62) },    // Early astronomical twilight
+			{ -12.0, new java.awt.Color(36, 46, 68) },    // Astronomical twilight
+			{ -10.0, new java.awt.Color(40, 50, 75) },    // Late astronomical twilight
+			{ -8.0,  new java.awt.Color(42, 52, 78) },    // Late nautical twilight
+			{ -7.0,  new java.awt.Color(45, 55, 82) },    // Pre-civil twilight
+			{ -6.0,  new java.awt.Color(48, 58, 88) },    // Civil twilight start
+			{ -5.5,  new java.awt.Color(50, 60, 92) },    // Early civil twilight
+			{ -5.0,  new java.awt.Color(52, 62, 95) },    // Deep twilight blue
+			{ -4.5,  new java.awt.Color(48, 58, 88) },    // Twilight blue progression
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
@@ -161,6 +161,7 @@ public class TimeOfDay
 			{ -1.0,  new java.awt.Color(135, 100, 122) }, // Dawn pink-purple (toned down)
 			{ -0.8,  new java.awt.Color(150, 110, 118) }, // Warm pink (less saturated)
 			{ -0.4,  new java.awt.Color(170, 120, 110) }, // Pink transition (more orange blend)
+			{ 0.0,   new java.awt.Color(185, 122, 108) }, // Horizon transition
 			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
 			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
 			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
@@ -189,19 +190,19 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon)
-			{ -30.0, new java.awt.Color(18, 22, 35) },    // Deep night blue (lightened)
-			{ -20.0, new java.awt.Color(20, 25, 40) },    // Night sky blue
-			{ -18.0, new java.awt.Color(22, 28, 45) },    // Astronomical twilight
-			{ -15.0, new java.awt.Color(25, 32, 50) },    // Late astronomical twilight
-			{ -12.0, new java.awt.Color(28, 36, 55) },    // Nautical twilight
-			{ -10.0, new java.awt.Color(30, 40, 60) },    // Mid nautical twilight
-			{ -8.0,  new java.awt.Color(32, 44, 65) },    // Late nautical twilight
-			{ -7.0,  new java.awt.Color(33, 46, 68) },    // Pre-civil twilight
-			{ -6.0,  new java.awt.Color(35, 48, 72) },    // Civil twilight start
-			{ -5.5,  new java.awt.Color(37, 50, 75) },    // Early civil twilight
-			{ -5.0,  new java.awt.Color(40, 52, 78) },    // Deep twilight blue
-			{ -4.5,  new java.awt.Color(35, 45, 75) },    // Twilight blue progression
+			// Deep night (sun well below horizon) - smooth progression from dark to lighter
+			{ -30.0, new java.awt.Color(25, 32, 50) },    // Deepest night (darkest)
+			{ -20.0, new java.awt.Color(28, 36, 55) },    // Deep night
+			{ -18.0, new java.awt.Color(30, 38, 58) },    // Late deep night
+			{ -15.0, new java.awt.Color(33, 42, 62) },    // Early astronomical twilight
+			{ -12.0, new java.awt.Color(36, 46, 68) },    // Astronomical twilight
+			{ -10.0, new java.awt.Color(40, 50, 75) },    // Late astronomical twilight
+			{ -8.0,  new java.awt.Color(42, 52, 78) },    // Late nautical twilight
+			{ -7.0,  new java.awt.Color(45, 55, 82) },    // Pre-civil twilight
+			{ -6.0,  new java.awt.Color(48, 58, 88) },    // Civil twilight start
+			{ -5.5,  new java.awt.Color(50, 60, 92) },    // Early civil twilight
+			{ -5.0,  new java.awt.Color(52, 62, 95) },    // Deep twilight blue
+			{ -4.5,  new java.awt.Color(48, 58, 88) },    // Twilight blue progression
 			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
 			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
 			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
@@ -215,6 +216,7 @@ public class TimeOfDay
 			{ -1.0,  new java.awt.Color(135, 100, 122) }, // Dawn pink-purple (toned down)
 			{ -0.8,  new java.awt.Color(150, 110, 118) }, // Warm pink (less saturated)
 			{ -0.4,  new java.awt.Color(170, 120, 110) }, // Pink transition (more orange blend)
+			{ 0.0,   new java.awt.Color(185, 122, 108) }, // Horizon transition
 			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
 			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
 			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
@@ -253,11 +255,11 @@ public class TimeOfDay
 		} else if (sunAltitudeDegrees >= -5) {
 			// Early sunrise/late sunset - moderate regional influence (30% regional)
 			blendFactor = 0.30f;
-		} else if (sunAltitudeDegrees >= -10) {
-			// Civil twilight - decreasing regional influence (30-0% regional)
-			blendFactor = (float) (0.30 * ((sunAltitudeDegrees + 10) / 5.0));
+		} else if (sunAltitudeDegrees >= -20) {
+			// Civil to deep twilight - gradually reduce regional influence (30-0% regional)
+			blendFactor = (float) (0.30 * ((sunAltitudeDegrees + 20) / 15.0));
 		} else {
-			// Deep twilight/night - no regional influence (0% regional)
+			// Deep night - no regional influence (0% regional)
 			blendFactor = 0.0f;
 		}
 		
