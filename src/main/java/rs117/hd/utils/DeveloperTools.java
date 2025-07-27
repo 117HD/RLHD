@@ -127,6 +127,7 @@ public class DeveloperTools implements KeyListener {
 				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 				break;
 			case "timers":
+			case "timings":
 				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 				break;
 			case "shadowmap":
@@ -136,6 +137,7 @@ public class DeveloperTools implements KeyListener {
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 				break;
 			case "tiledlights":
+			case "tiledlighting":
 				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 				break;
 			case "keybindings":

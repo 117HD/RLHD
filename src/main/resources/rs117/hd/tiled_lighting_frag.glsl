@@ -75,7 +75,7 @@ void main() {
     vec3 viewDir = normalize(fRay);
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
-    for(int l = 0; l < TILE_LAYERS; l++)
+    for(int l = 0; l < TILED_LIGHTING_LAYER_COUNT; l++)
 #endif
     {
         ivec4 outputTileData = ivec4(0);

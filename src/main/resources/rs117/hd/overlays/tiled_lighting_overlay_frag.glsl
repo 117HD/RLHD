@@ -20,7 +20,7 @@ void main() {
 
     vec4 c = vec4(0);
 
-#if USE_TILED_LIGHTING
+#if TILED_LIGHTING
 #ifdef DEBUG_LIGHT_COUNT_HEATMAP
 
     ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
@@ -106,7 +106,7 @@ void main() {
     ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
 
     int tiledLightCount = 0;
-    for (int tileLayer = 0; tileLayer < TILE_LAYERS; tileLayer++) {
+    for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
         ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
         for(int c = 0; c < 4; c++) {
             int lightIdx = tileLayerData[c];

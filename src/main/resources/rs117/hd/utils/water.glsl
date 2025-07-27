@@ -87,18 +87,18 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    #if USE_TILED_LIGHTING
+    #if TILED_LIGHTING
     #if MAX_LIGHTS_PER_TILE > 0
         vec2 uResolution = viewport.zw;
         vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
         ivec2 tileXY = ivec2(floor(screenUV * tiledLightingResolution));
 
-        for (int tileLayer = 0; tileLayer < TILE_LAYERS; tileLayer++) {
+        for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
             ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
             for(int c = 0; c < 4; c++) {
                 int lightIdx = tileLayerData[c] - 1;
                 if (lightIdx < 0) {
-                    tileLayer = TILE_LAYERS + 1;
+                    tileLayer = TILED_LIGHTING_LAYER_COUNT + 1;
                     break;
                 }
 

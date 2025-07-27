@@ -171,7 +171,7 @@ public class Mat4
 	}
 
 	/**
-	 * Multiplies a 4x4 matrix with a 4x1 vector, storing the result in the output vector, which may also be the input vector
+	 * Multiplies a 4x4 matrix with a 4x1 vector, storing the result in the output vector, which may be the same as the input vector.
 	 *
 	 * @param out  where the result should be stored
 	 * @param mat4 4x4 column-major matrix

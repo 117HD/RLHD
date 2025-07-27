@@ -990,7 +990,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING,
 		name = "Tiled Lighting",
-		description = "Light culling optimization, which also unlocks the amount of possible lights able to be shaded on screen.",
+		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
 		section = experimentalSettings
 	)
 	default boolean tiledLighting() {

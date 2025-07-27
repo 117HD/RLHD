@@ -36,7 +36,16 @@ public enum DynamicLights
 	SOME("Some", 24, 50),
 	MANY("Many", 32, 100);
 
-	public static final DynamicLights MAX = MANY;
+	public static final int MAX_LIGHTS_PER_TILE;
+
+	static {
+		int max = 0;
+		for (var e : values()) {
+			assert e.lightsPerTile % 4 == 0; // Max Lights needs to be divisible by 4
+			max = Math.max(max, e.lightsPerTile);
+		}
+		MAX_LIGHTS_PER_TILE = max;
+	}
 
 	private final String name;
 	private final int lightsPerTile;
