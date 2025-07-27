@@ -2652,8 +2652,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
-		configTiledLighting = config.tiledLighting();
 		configDynamicLights = config.dynamicLights();
+		configTiledLighting = config.tiledLighting();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;

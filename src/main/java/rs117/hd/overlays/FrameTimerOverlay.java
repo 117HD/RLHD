@@ -20,10 +20,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private OverlayManager overlayManager;
 
 	@Inject
-	private FrameTimer frameTimer;
+	private HdPlugin plugin;
 
 	@Inject
-	HdPlugin plugin;
+	private FrameTimer frameTimer;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final StringBuilder sb = new StringBuilder();
@@ -63,8 +63,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		long time = System.nanoTime();
 
 		var timings = getAverageTimings();
+		var children = panelComponent.getChildren();
 		if (timings.length != Timer.values().length) {
-			panelComponent.getChildren().add(TitleComponent.builder()
+			children.add(TitleComponent.builder()
 				.text("Waiting for data...")
 				.build());
 		} else {
@@ -80,48 +81,49 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				if (t.isGpuTimer && t != Timer.RENDER_FRAME)
 					addTiming(t, timings);
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Estimated bottleneck:")
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(cpuTime > gpuTime ? "CPU" : "GPU")
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Estimated FPS:")
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(String.format("%.1f FPS", 1 / (Math.max(cpuTime, gpuTime) / 1e9)))
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.left("Error compensation:")
 				.right(String.format("%d ns", frameTimer.errorCompensation))
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Scene Stats:")
 				.build());
 
 			if (plugin.getSceneContext() != null) {
-				panelComponent.getChildren().add(LineComponent.builder()
+				var sceneContext = plugin.getSceneContext();
+				children.add(LineComponent.builder()
 					.left("Lights:")
-					.right(String.format("%d/%d", plugin.getSceneContext().numVisibleLights, plugin.getSceneContext().lights.size()))
+					.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
 					.build());
 			}
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.left("Tiles:")
 				.right(String.valueOf(plugin.getDrawnTileCount()))
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.left("Static Renderables:")
 				.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.left("Dynamic Renderables:")
 				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
 				.build());
