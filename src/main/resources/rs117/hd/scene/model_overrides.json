@@ -10095,10 +10095,25 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Brimstils Cave",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Gnome Stronghold - Grass - Wooden - Rock - Brimstils Cave",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
     "objectIds": [
       "EYEGLO_BRIMSTAILS_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Doors",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Rocks",
+        "colors": "s == 0",
+        "baseMaterial": "ROCK_4",
+        "uvType": "BOX"
+      }
     ]
   },
   {
