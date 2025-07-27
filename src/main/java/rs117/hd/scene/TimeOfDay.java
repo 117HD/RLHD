@@ -329,6 +329,7 @@ public class TimeOfDay
 		return startOfDay.plusMillis(mappedMillis);
 	}
 
+
 	public static double[] getLatLong(WorldRegion currentRegion) {
 		double latitude;
 		double longitude;
@@ -388,102 +389,4 @@ public class TimeOfDay
 		}
 	}
 
-	// Fixed time modes for different times of day
-	public static float[] getFixedSunAngles(String timeMode) {
-		switch (timeMode) {
-			case "ALWAYS_DAY":
-				// Sun at high noon (90 degrees altitude, 0 degrees azimuth)
-				return new float[] { (float) Math.toRadians(90), 0 };
-			case "ALWAYS_NIGHT":
-				// Sun well below horizon (-30 degrees altitude)
-				return new float[] { (float) Math.toRadians(-30), 0 };
-			case "ALWAYS_SUNRISE":
-				// Sun just above horizon (5 degrees altitude, east direction)
-				return new float[] { (float) Math.toRadians(5), (float) Math.toRadians(90) };
-			case "ALWAYS_SUNSET":
-				// Sun earlier in sunset (12 degrees altitude, west direction)
-				return new float[] { (float) Math.toRadians(12), (float) Math.toRadians(-90) };
-			default:
-				return new float[] { 0, 0 };
-		}
-	}
-
-	public static float[] getFixedLightColor(String timeMode) {
-		switch (timeMode) {
-			case "ALWAYS_DAY":
-				return AtmosphereUtils.interpolateSrgb(45.0f, new Object[][] {
-					{ 30.0, new java.awt.Color(255, 255, 255) }  // Bright daylight
-				});
-			case "ALWAYS_NIGHT":
-				return getNightLightColor();
-			case "ALWAYS_SUNRISE":
-				return AtmosphereUtils.interpolateSrgb(0.0f, new Object[][] {
-					{ 0.0, new java.awt.Color(220, 140, 80) }  // Warm sunrise orange
-				});
-			case "ALWAYS_SUNSET":
-				return AtmosphereUtils.interpolateSrgb(0.0f, new Object[][] {
-					{ 0.0, new java.awt.Color(220, 140, 80) }  // Warm sunset orange
-				});
-			default:
-				return new float[] { 1, 1, 1 };
-		}
-	}
-
-	public static float[] getFixedAmbientColor(String timeMode) {
-		switch (timeMode) {
-			case "ALWAYS_DAY":
-				return AtmosphereUtils.interpolateSrgb(45.0f, new Object[][] {
-					{ 40.0, new java.awt.Color(185, 214, 255) }  // Bright day ambient
-				});
-			case "ALWAYS_NIGHT":
-				return getNightAmbientColor();
-			case "ALWAYS_SUNRISE":
-				return AtmosphereUtils.interpolateSrgb(0.0f, new Object[][] {
-					{ 0.0, new java.awt.Color(120, 85, 100) }  // Sunrise purple-pink ambient
-				});
-			case "ALWAYS_SUNSET":
-				return AtmosphereUtils.interpolateSrgb(0.0f, new Object[][] {
-					{ 0.0, new java.awt.Color(120, 85, 100) }  // Sunset purple-pink ambient
-				});
-			default:
-				return new float[] { 1, 1, 1 };
-		}
-	}
-
-	public static float[] getFixedSkyColor(String timeMode) {
-		switch (timeMode) {
-			case "ALWAYS_DAY":
-				return AtmosphereUtils.interpolateSrgb(45.0f, new Object[][] {
-					{ 45.0, new java.awt.Color(115, 150, 185) }  // Clear blue day sky
-				});
-			case "ALWAYS_NIGHT":
-				return AtmosphereUtils.interpolateSrgb(-20.0f, new Object[][] {
-					{ -20.0, new java.awt.Color(8, 8, 16) }  // Dark night sky
-				});
-			case "ALWAYS_SUNRISE":
-				return AtmosphereUtils.interpolateSrgb(0.0f, new Object[][] {
-					{ 0.0, new java.awt.Color(220, 140, 80) }  // Warm sunrise sky
-				});
-			case "ALWAYS_SUNSET":
-				return AtmosphereUtils.interpolateSrgb(0.0f, new Object[][] {
-					{ 0.0, new java.awt.Color(220, 140, 80) }  // Warm sunset sky
-				});
-			default:
-				return new float[] { 1, 1, 1 };
-		}
-	}
-
-	public static float getFixedBrightnessMultiplier(String timeMode, int minimumBrightness) {
-		switch (timeMode) {
-			case "ALWAYS_DAY":
-				return 1.0f;  // Full brightness
-			case "ALWAYS_NIGHT":
-				return minimumBrightness / 100.0f;  // Use configurable minimum brightness
-			case "ALWAYS_SUNRISE":
-			case "ALWAYS_SUNSET":
-				return 0.6f;  // Golden hour brightness
-			default:
-				return 1.0f;
-		}
-	}
 }
