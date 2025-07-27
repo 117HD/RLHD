@@ -230,8 +230,7 @@ public class TimeOfDay
 		float[] enhancedColor = AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, skyColorKeyframes);
 		
 		// Calculate blend factor based sun altitude
-		// Use strong regional influence throughout most of the day
-		// Only preserve pure enhanced colors during deep twilight/night
+		// Maintain regional character even during sunrise/sunset in gloomy areas
 		float blendFactor;
 		if (sunAltitudeDegrees >= 35) {
 			// Very high sun - use very strong regional influence (85-95% regional)
@@ -240,11 +239,21 @@ public class TimeOfDay
 			// High sun - blend from moderate to strong regional (60-85% regional)
 			blendFactor = (float) (0.6 + ((sunAltitudeDegrees - 15) / 20.0) * 0.25);
 		} else if (sunAltitudeDegrees >= 5) {
-			// Low sun - moderate regional influence (20-60% regional)
-			blendFactor = (float) (0.2 + ((sunAltitudeDegrees - 5) / 10.0) * 0.4);
+			// Sunset/late sunrise - moderate regional influence (45-60% regional)
+			blendFactor = (float) (0.45 + ((sunAltitudeDegrees - 5) / 10.0) * 0.15);
+		} else if (sunAltitudeDegrees >= -2) {
+			// Peak sunrise/sunset colors - maintain significant regional influence (30-45% regional)
+			// This ensures gloomy areas retain their atmospheric character
+			blendFactor = (float) (0.30 + ((sunAltitudeDegrees + 2) / 7.0) * 0.15);
+		} else if (sunAltitudeDegrees >= -5) {
+			// Early sunrise/late sunset - moderate regional influence (30% regional)
+			blendFactor = 0.30f;
+		} else if (sunAltitudeDegrees >= -10) {
+			// Civil twilight - decreasing regional influence (30-0% regional)
+			blendFactor = (float) (0.30 * ((sunAltitudeDegrees + 10) / 5.0));
 		} else {
-			// Very low sun/twilight/night - minimal regional influence (0-20% regional)
-			blendFactor = (float) Math.max(0.0, sunAltitudeDegrees / 5.0 * 0.2);
+			// Deep twilight/night - no regional influence (0% regional)
+			blendFactor = 0.0f;
 		}
 		
 		// Convert regional fog color from sRGB to linear RGB for proper blending
