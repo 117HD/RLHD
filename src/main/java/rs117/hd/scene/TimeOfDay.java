@@ -54,18 +54,19 @@ public class TimeOfDay
 		
 		// Calculate blend factor - similar to skybox but adjusted for lighting
 		float blendFactor;
+		// Enhanced blending mode (formerly debug mode, now default)
 		if (sunAltitudeDegrees >= 25) {
-			// High sun - use strong regional influence (70-85% regional)
-			blendFactor = (float) Math.min(0.85, 0.70 + (sunAltitudeDegrees - 25) / 65.0 * 0.15);
+			// High sun - use very strong regional influence (85-95% regional)
+			blendFactor = (float) Math.min(0.95, 0.85 + (sunAltitudeDegrees - 25) / 65.0 * 0.10);
 		} else if (sunAltitudeDegrees >= 10) {
-			// Medium sun - moderate regional influence (30-70% regional)
-			blendFactor = (float) (0.30 + ((sunAltitudeDegrees - 10) / 15.0) * 0.40);
+			// Medium sun - strong regional influence (60-85% regional)
+			blendFactor = (float) (0.60 + ((sunAltitudeDegrees - 10) / 15.0) * 0.25);
 		} else if (sunAltitudeDegrees >= 0) {
-			// Low sun - minimal regional influence (0-30% regional)
-			blendFactor = (float) (sunAltitudeDegrees / 10.0 * 0.30);
+			// Low sun - moderate regional influence (30-60% regional)
+			blendFactor = (float) (0.30 + (sunAltitudeDegrees / 10.0) * 0.30);
 		} else {
-			// Night/twilight - no regional influence
-			blendFactor = 0.0f;
+			// Night/twilight - minimal regional influence (0-30% regional)
+			blendFactor = (float) Math.max(0.0, 0.30 + sunAltitudeDegrees / 10.0 * 0.30);
 		}
 		
 		// Convert regional color from sRGB to linear for blending
@@ -95,18 +96,19 @@ public class TimeOfDay
 		
 		// Calculate blend factor - similar to directional but slightly different curve
 		float blendFactor;
+		// Enhanced blending mode (formerly debug mode, now default)
 		if (sunAltitudeDegrees >= 25) {
-			// High sun - use strong regional influence (75-90% regional)
-			blendFactor = (float) Math.min(0.90, 0.75 + (sunAltitudeDegrees - 25) / 65.0 * 0.15);
+			// High sun - use very strong regional influence (90-98% regional)
+			blendFactor = (float) Math.min(0.98, 0.90 + (sunAltitudeDegrees - 25) / 65.0 * 0.08);
 		} else if (sunAltitudeDegrees >= 10) {
-			// Medium sun - moderate regional influence (40-75% regional)
-			blendFactor = (float) (0.40 + ((sunAltitudeDegrees - 10) / 15.0) * 0.35);
+			// Medium sun - strong regional influence (70-90% regional)
+			blendFactor = (float) (0.70 + ((sunAltitudeDegrees - 10) / 15.0) * 0.20);
 		} else if (sunAltitudeDegrees >= 0) {
-			// Low sun - minimal regional influence (10-40% regional)
-			blendFactor = (float) (0.10 + (sunAltitudeDegrees / 10.0) * 0.30);
+			// Low sun - moderate regional influence (40-70% regional)
+			blendFactor = (float) (0.40 + (sunAltitudeDegrees / 10.0) * 0.30);
 		} else {
-			// Night/twilight - minimal regional influence (0-10% regional)
-			blendFactor = (float) Math.max(0.0, (sunAltitudeDegrees + 10) / 10.0 * 0.10);
+			// Night/twilight - reduced regional influence (10-40% regional)
+			blendFactor = (float) Math.max(0.10, 0.40 + sunAltitudeDegrees / 10.0 * 0.30);
 		}
 		
 		// Convert regional color from sRGB to linear for blending
@@ -135,13 +137,13 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - smooth progression from dark to lighter
-			{ -30.0, new java.awt.Color(25, 32, 50) },    // Deepest night (darkest)
-			{ -20.0, new java.awt.Color(28, 36, 55) },    // Deep night
-			{ -18.0, new java.awt.Color(30, 38, 58) },    // Late deep night
-			{ -15.0, new java.awt.Color(33, 42, 62) },    // Early astronomical twilight
-			{ -12.0, new java.awt.Color(36, 46, 68) },    // Astronomical twilight
-			{ -10.0, new java.awt.Color(40, 50, 75) },    // Late astronomical twilight
+			// Deep night (sun well below horizon) - much brighter for gameplay visibility
+			{ -30.0, new java.awt.Color(50, 65, 90) },    // Deepest night (much brighter)
+			{ -20.0, new java.awt.Color(52, 67, 93) },    // Deep night
+			{ -18.0, new java.awt.Color(54, 69, 96) },    // Late deep night
+			{ -15.0, new java.awt.Color(43, 53, 77) },    // Early astronomical twilight
+			{ -12.0, new java.awt.Color(46, 56, 82) },    // Astronomical twilight
+			{ -10.0, new java.awt.Color(50, 60, 88) },    // Late astronomical twilight
 			{ -8.0,  new java.awt.Color(42, 52, 78) },    // Late nautical twilight
 			{ -7.0,  new java.awt.Color(45, 55, 82) },    // Pre-civil twilight
 			{ -6.0,  new java.awt.Color(48, 58, 88) },    // Civil twilight start
@@ -190,13 +192,13 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - smooth progression from dark to lighter
-			{ -30.0, new java.awt.Color(25, 32, 50) },    // Deepest night (darkest)
-			{ -20.0, new java.awt.Color(28, 36, 55) },    // Deep night
-			{ -18.0, new java.awt.Color(30, 38, 58) },    // Late deep night
-			{ -15.0, new java.awt.Color(33, 42, 62) },    // Early astronomical twilight
-			{ -12.0, new java.awt.Color(36, 46, 68) },    // Astronomical twilight
-			{ -10.0, new java.awt.Color(40, 50, 75) },    // Late astronomical twilight
+			// Deep night (sun well below horizon) - much brighter for gameplay visibility
+			{ -30.0, new java.awt.Color(50, 65, 90) },    // Deepest night (much brighter)
+			{ -20.0, new java.awt.Color(52, 67, 93) },    // Deep night
+			{ -18.0, new java.awt.Color(54, 69, 96) },    // Late deep night
+			{ -15.0, new java.awt.Color(43, 53, 77) },    // Early astronomical twilight
+			{ -12.0, new java.awt.Color(46, 56, 82) },    // Astronomical twilight
+			{ -10.0, new java.awt.Color(50, 60, 88) },    // Late astronomical twilight
 			{ -8.0,  new java.awt.Color(42, 52, 78) },    // Late nautical twilight
 			{ -7.0,  new java.awt.Color(45, 55, 82) },    // Pre-civil twilight
 			{ -6.0,  new java.awt.Color(48, 58, 88) },    // Civil twilight start
