@@ -356,6 +356,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int vaoScene;
 	private int[] fboSceneResolution;
+	private boolean fboResized;
 	private int fboScene;
 	private int rboSceneColor;
 	private int rboSceneDepth;
@@ -418,8 +419,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private float sceneResolutionScale;
 	private float[] sceneDpiViewport = new float[4];
 	private AntiAliasingMode antiAliasingMode;
-	private float lastRenderViewportWidth;
-	private float lastRenderViewportHeight;
 	private int numSamples;
 
 	private int viewportOffsetX;
@@ -689,7 +688,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneResolutionScale = 0;
 				Arrays.fill(sceneDpiViewport, 0);
 				antiAliasingMode = null;
-				lastRenderViewportWidth = lastRenderViewportHeight = 0;
 
 				gamevalManager.startUp();
 				areaManager.startUp();
@@ -1247,8 +1245,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
 		final int tileSize = 16;
-		tiledLightingResolution[0] = Math.max(1, Math.round(sceneDpiViewport[2] / tileSize));
-		tiledLightingResolution[1] = Math.max(1, Math.round(sceneDpiViewport[3] / tileSize));
+		tiledLightingResolution[0] = Math.max(1, Math.round(sceneDpiViewport[2] * sceneResolutionScale / tileSize));
+		tiledLightingResolution[1] = Math.max(1, Math.round(sceneDpiViewport[3] * sceneResolutionScale / tileSize));
 
 		fboTiledLighting = glGenFramebuffers();
 
@@ -1401,6 +1399,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (rboSceneResolveColor != 0)
 			glDeleteRenderbuffers(rboSceneResolveColor);
 		rboSceneResolveColor = 0;
+
+		fboResized = false;
 	}
 
 	private void initShadowMapFbo() {
@@ -1703,9 +1703,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// TODO: Check if we can update the viewport here instead of when drawing the frame
 				// Check if the tiledLighting FBO needs to be recreated
 				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
-				if (lastRenderViewportWidth != sceneDpiViewport[2] || lastRenderViewportHeight != sceneDpiViewport[3]) {
-					lastRenderViewportWidth = sceneDpiViewport[2];
-					lastRenderViewportHeight = sceneDpiViewport[3];
+				if (fboResized) {
 					destroyTiledLighting();
 					initTiledLighting();
 				}
@@ -2098,11 +2096,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroySceneFbo();
 				try {
 					initSceneFbo();
+					fboResized = true;
 				} catch (Exception ex) {
 					log.error("Error while initializing scene FBO:", ex);
 					stopPlugin();
 					return;
 				}
+			} else {
+				fboResized = false;
 			}
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
