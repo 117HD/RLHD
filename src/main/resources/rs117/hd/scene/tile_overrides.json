@@ -4759,26 +4759,20 @@
     "waterType": "WATER"
   },
   {
-    "name": "Ruins of Tapoyauik Dirt",
-    "area": "Ruins of Tapoyauik",
-    "overlayIds": [ 382 ],
-    "groundMaterial": "PACKED_EARTH"
-  },
-  {
     "name": "Amoxliatl Water",
     "area": "AMOXLIATL_ARENA_WATER",
     "overlayIds": [ 381 ],
     "waterType": "CAVE_WATER"
   },
   {
-    "name": "Amoxliatl Arena Dirt FIX",
+    "name": "Amoxliatl Arena Dirt Fix",
     "area": "AMOXLIATL_ARENA_DIRT_FIX",
     "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
     "maxLightness": 40,
     "groundMaterial": "DIRT"
   },
   {
-    "name": "Amoxliatl Arena Snow FIX",
+    "name": "Amoxliatl Arena Snow Fix",
     "area": "AMOXLIATL_ARENA_SNOW_FIX",
     "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
     "maxLightness": 40,
@@ -4793,7 +4787,7 @@
     "shiftHue": 5,
     "maxHue": 38,
     "replacements": {
-      "Amoxliatl Snow No Blending": "!blending"
+      "Amoxliatl Snow Main No Blending": "!blending"
     }
   },
   {
