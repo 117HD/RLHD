@@ -170,12 +170,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
 	public static int MAX_TEXTURE_UNITS;
-	public static int TEXTURE_UNIT_COUNT = GL_TEXTURE0;
-	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = TEXTURE_UNIT_COUNT++;
+	public static int TEXTURE_UNIT_COUNT = 0;
+	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
