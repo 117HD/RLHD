@@ -45,15 +45,15 @@ void calculateLighting(vec3 position, vec3 normals, vec3 viewDir,
 
         for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
             ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
-            for(int c = 0; c < 4; c++) {
-                int lightIdx = tileLayerData[c] - 1;
-                if (lightIdx < 0) {
-                    tileLayer = TILED_LIGHTING_LAYER_COUNT + 1;
-                    break;
-                }
 
-                calculateLight(lightIdx, position, normals, viewDir, texBlend, specularGloss, specularStrength, pointLightsOut, pointLightsSpecularOut);
-            }
+            #define PROCESS_TILED_LIGHT_COMPONENT(c) \
+            if(tileLayerData[c] <= 0) break;         \
+            calculateLight(tileLayerData[c] - 1, position, normals, viewDir, texBlend, specularGloss, specularStrength, pointLightsOut, pointLightsSpecularOut);
+
+            PROCESS_TILED_LIGHT_COMPONENT(0);
+            PROCESS_TILED_LIGHT_COMPONENT(1);
+            PROCESS_TILED_LIGHT_COMPONENT(2);
+            PROCESS_TILED_LIGHT_COMPONENT(3);
         }
     #endif
     #else
