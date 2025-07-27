@@ -106,7 +106,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
                 float distanceSquared = dot(lightToFrag, lightToFrag);
                 float radiusSquared = pos.w;
                 if (distanceSquared <= radiusSquared) {
-                    float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
+                    float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
                     attenuation *= attenuation;
 
                     vec3 pointLightColor = PointLightArray[lightIdx].color * attenuation;
@@ -122,25 +122,25 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         }
     #endif
     #else
-    for (int i = 0; i < pointLightsCount; i++) {
-        vec4 pos = PointLightArray[i].position;
-        vec3 lightToFrag = pos.xyz - IN.position;
-        float distanceSquared = dot(lightToFrag, lightToFrag);
-        float radiusSquared = pos.w;
-        if (distanceSquared <= radiusSquared) {
-            float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
-            attenuation *= attenuation;
+        for (int i = 0; i < pointLightsCount; i++) {
+            vec4 pos = PointLightArray[i].position;
+            vec3 lightToFrag = pos.xyz - IN.position;
+            float distanceSquared = dot(lightToFrag, lightToFrag);
+            float radiusSquared = pos.w;
+            if (distanceSquared <= radiusSquared) {
+                float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
+                attenuation *= attenuation;
 
-            vec3 pointLightColor = PointLightArray[i].color * attenuation;
-            vec3 pointLightDir = normalize(lightToFrag);
+                vec3 pointLightColor = PointLightArray[i].color * attenuation;
+                vec3 pointLightDir = normalize(lightToFrag);
 
-            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-            pointLightsOut += pointLightColor * pointLightDotNormals;
+                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+                pointLightsOut += pointLightColor * pointLightDotNormals;
 
-            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-            pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+                vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+            }
         }
-    }
     #endif
 
     // sky light
