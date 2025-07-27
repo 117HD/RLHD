@@ -882,7 +882,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", Material.values().length)
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
-			.define("MAX_LIGHT_COUNT", UBOLights.MAX_LIGHTS)
+			.define("MAX_LIGHT_COUNT", Math.max(1, configMaxSceneLights))
 			.define("MAX_LIGHTS_PER_TILE", configMaxLightsPerTile)
 			.define("TILED_LIGHTING_LAYER_COUNT", configMaxLightsPerTile / 4)
 			.define("TILED_LIGHTING", configTiledLighting)
