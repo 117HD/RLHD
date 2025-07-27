@@ -51,7 +51,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.nanoTime();
 		while (!frames.isEmpty()) {
-			if (now - frames.peekFirst().frameTimestamp < 10e9) // remove older entries
+			if (now - frames.peekFirst().frameTimestamp < 3e9) // remove older entries
 				break;
 			frames.removeFirst();
 		}
