@@ -20,6 +20,7 @@ void main() {
 
     vec4 c = vec4(0);
 
+#if USE_TILED_LIGHTING
 #ifdef DEBUG_LIGHT_COUNT_HEATMAP
 
     ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
@@ -121,6 +122,7 @@ void main() {
         c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
     }
 
+#endif
 #endif
 #endif
 
