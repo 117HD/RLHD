@@ -1701,6 +1701,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (configTiledLighting && fboTiledLighting != 0 && texTiledLighting != 0) {
 				// TODO: Check if we can update the viewport here instead of when drawing the frame
 				// Check if the tiledLighting FBO needs to be recreated
+				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
 				if (lastRenderViewportWidth != sceneDpiViewport[2] || lastRenderViewportHeight != sceneDpiViewport[3]) {
 					lastRenderViewportWidth = sceneDpiViewport[2];
 					lastRenderViewportHeight = sceneDpiViewport[3];
@@ -1708,7 +1709,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					initTiledLighting();
 				}
 
-				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
+				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
 				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
@@ -1734,7 +1735,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 				}
 
-				frameTimer.end(Timer.TILED_LIGHTING_CULLING);
+				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
+				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 			}
 		}
 	}
