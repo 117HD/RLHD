@@ -29,24 +29,18 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum MaxLightsPerTile
+public enum DynamicLights
 {
-	NONE("Disabled", 0),
-	FEW("Few", 12),
-	SOME("Some", 24),
-	MANY("Many", 32);
+	NONE("Disabled", 0, 0),
+	FEW("Few", 12, 25),
+	SOME("Some", 24, 50),
+	MANY("Many", 32, 100);
 
-	public static final int MAX_LIGHTS;
-
-	static {
-		int max = 0;
-		for (var e : values())
-			max = Math.max(max, e.value);
-		MAX_LIGHTS = max;
-	}
+	public static final DynamicLights MAX = MANY;
 
 	private final String name;
-	private final int value;
+	private final int lightsPerTile;
+	private final int maxSceneLights;
 
 	@Override
 	public String toString()

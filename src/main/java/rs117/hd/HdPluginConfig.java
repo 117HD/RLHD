@@ -36,9 +36,9 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.MaxLightsPerTile;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
@@ -347,9 +347,9 @@ public interface HdPluginConfig extends Config
 	)
 	String lightingSettings = "lightingSettings";
 
-	String KEY_MAX_LIGHTS_PER_TILE = "maxLightsPerTile";
+	String KEY_DYNAMIC_LIGHTS = "dynamicLights";
 	@ConfigItem(
-		keyName = KEY_MAX_LIGHTS_PER_TILE,
+		keyName = KEY_DYNAMIC_LIGHTS,
 		name = "Dynamic Lights",
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
@@ -357,9 +357,9 @@ public interface HdPluginConfig extends Config
 		position = 1,
 		section = lightingSettings
 	)
-	default MaxLightsPerTile maxLightsPerTile()
+	default DynamicLights dynamicLights()
 	{
-		return MaxLightsPerTile.SOME;
+		return DynamicLights.SOME;
 	}
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
@@ -957,6 +957,17 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean flatShading() {
 		return false;
+	}
+
+	String KEY_TILED_LIGHTING = "experimentalTiledLighting";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING,
+		name = "Tiled Lighting",
+		description = "TODO: .",
+		section = experimentalSettings
+	)
+	default boolean tiledLighting() {
+		return true;
 	}
 
 	String KEY_DECOUPLE_WATER_FROM_SKY_COLOR = "experimentalDecoupleWaterFromSkyColor";

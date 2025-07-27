@@ -478,7 +478,9 @@ public class LightManager {
 		sceneContext.numVisibleLights = 0;
 		for (Light light : sceneContext.lights) {
 			// Exit early once encountering the first invisible light, or the light limit is reached
-			if (!light.visible || sceneContext.numVisibleLights >= UBOLights.MAX_LIGHTS)
+			int maxLights = plugin.configTiledLighting ?
+				UBOLights.MAX_LIGHTS : plugin.configMaxSceneLights;
+			if (!light.visible || sceneContext.numVisibleLights >= maxLights)
 				break;
 
 			sceneContext.numVisibleLights++;

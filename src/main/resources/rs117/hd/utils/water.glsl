@@ -87,38 +87,59 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
+    #ifdef USE_TILED_LIGHTING
     #if MAX_LIGHTS_PER_TILE > 0
-    vec2 uResolution = viewport.zw;
-    vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
-    ivec2 tileXY = ivec2(floor(screenUV * tiledLightingResolution));
+        vec2 uResolution = viewport.zw;
+        vec2 screenUV = (gl_FragCoord.xy - viewport.xy) / uResolution;
+        ivec2 tileXY = ivec2(floor(screenUV * tiledLightingResolution));
 
-    int tileLayerCount = MAX_LIGHTS_PER_TILE / 4;
-    for (int tileLayer = 0; tileLayer < tileLayerCount; tileLayer++) {
-        ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
-        for(int c = 0; c < 4; c++) {
-            int lightIdx = tileLayerData[c];
-            if (lightIdx < 0) {
-                tileLayer = tileLayerCount;
-                break;
+        for (int tileLayer = 0; tileLayer < MAX_LIGHTS_PER_TILE; tileLayer++) {
+            ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+            for(int c = 0; c < 4; c++) {
+                int lightIdx = tileLayerData[c] - 1;
+                if (lightIdx < 0) {
+                    tileLayer = tileLayerCount;
+                    break;
+                }
+
+                vec4 pos = PointLightArray[lightIdx].position;
+                vec3 lightToFrag = pos.xyz - IN.position;
+                float distanceSquared = dot(lightToFrag, lightToFrag);
+                float radiusSquared = pos.w;
+                if (distanceSquared <= radiusSquared) {
+                    float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
+                    attenuation *= attenuation;
+
+                    vec3 pointLightColor = PointLightArray[lightIdx].color * attenuation;
+                    vec3 pointLightDir = normalize(lightToFrag);
+
+                    float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+                    pointLightsOut += pointLightColor * pointLightDotNormals;
+
+                    vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+                    pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
+                }
             }
+        }
+    #endif
+    #else
+    for (int i = 0; i < pointLightsCount; i++) {
+        vec4 pos = PointLightArray[i].position;
+        vec3 lightToFrag = pos.xyz - IN.position;
+        float distanceSquared = dot(lightToFrag, lightToFrag);
+        float radiusSquared = pos.w;
+        if (distanceSquared <= radiusSquared) {
+            float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
+            attenuation *= attenuation;
 
-            vec4 pos = PointLightArray[lightIdx].position;
-            vec3 lightToFrag = pos.xyz - IN.position;
-            float distanceSquared = dot(lightToFrag, lightToFrag);
-            float radiusSquared = pos.w;
-            if (distanceSquared <= radiusSquared) {
-                vec3 pointLightColor = PointLightArray[lightIdx].color;
-                vec3 pointLightDir = normalize(lightToFrag);
+            vec3 pointLightColor = PointLightArray[i].color * attenuation;
+            vec3 pointLightDir = normalize(lightToFrag);
 
-                float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
-                pointLightColor *= attenuation * attenuation;
+            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+            pointLightsOut += pointLightColor * pointLightDotNormals;
 
-                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-                pointLightsOut += pointLightColor * pointLightDotNormals;
-
-                vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
-            }
+            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+            pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
         }
     }
     #endif

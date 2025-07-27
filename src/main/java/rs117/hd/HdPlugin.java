@@ -80,7 +80,7 @@ import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorFilter;
-import rs117.hd.config.MaxLightsPerTile;
+import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -441,7 +441,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configAsyncUICopy;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configTiledLighting;
 	public int configMaxLightsPerTile;
+	public int configMaxSceneLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
@@ -855,6 +857,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
 			.define("MAX_LIGHT_COUNT", UBOLights.MAX_LIGHTS)
 			.define("MAX_LIGHTS_PER_TILE", configMaxLightsPerTile)
+			.define("USE_TILED_LIGHTING", configTiledLighting)
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
@@ -910,7 +913,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				.define("TILED_LIGHTING_LAYER", 0));
 		}
 
-		int tiledLayerCount = MaxLightsPerTile.MAX_LIGHTS / 4;
+		int tiledLayerCount = DynamicLights.MAX.getLightsPerTile() / 4;
 		for (int layer = 0; layer < tiledLayerCount; layer++) {
 			var shader = new TiledLightingShaderProgram();
 			shader.compile(includes
@@ -1205,7 +1208,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initTiledLighting() {
-		assert MaxLightsPerTile.MAX_LIGHTS % 4 == 0; // Max Lights needs to be divisible by 4
+		assert DynamicLights.MAX.getLightsPerTile() % 4 == 0; // Max Lights needs to be divisible by 4
 
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 
@@ -1227,7 +1230,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			GL_RGBA16I,
 			tiledLightingResolution[0],
 			tiledLightingResolution[1],
-			MaxLightsPerTile.MAX_LIGHTS / 4,
+			DynamicLights.MAX.getLightsPerTile() / 4,
 			0,
 			GL_RGBA_INTEGER,
 			GL_SHORT,
@@ -1633,7 +1636,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
-			if (texTiledLighting != 0 && fboTiledLighting != 0) {
+			if (texTiledLighting != 0 && fboTiledLighting != 0 && configTiledLighting) {
 				frameTimer.begin(Timer.TILED_LIGHTING_CULLING);
 
 				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
@@ -2566,7 +2569,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configLegacyGreyColors = config.legacyGreyColors();
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
-		configMaxLightsPerTile = config.maxLightsPerTile().getValue();
+		configTiledLighting = config.tiledLighting();
+		configMaxLightsPerTile = config.dynamicLights().getLightsPerTile();
+		configMaxSceneLights = config.dynamicLights().getMaxSceneLights();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
@@ -2687,7 +2692,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
-							case KEY_MAX_LIGHTS_PER_TILE:
+							case KEY_DYNAMIC_LIGHTS:
+							case KEY_TILED_LIGHTING:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
