@@ -1,8 +1,13 @@
 package rs117.hd.overlays;
 
+import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.ui.overlay.OverlayLayer;
+import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
@@ -23,8 +28,25 @@ public class TiledLightingOverlay extends ShaderOverlay<TiledLightingOverlay.Sha
 		}
 	}
 
+	@Inject
+	private HdPlugin plugin;
+
 	public TiledLightingOverlay() {
-		setFullscreen(true);
 		setLayer(OverlayLayer.ABOVE_SCENE);
+		setFullscreen(true);
+	}
+
+	@Override
+	public boolean isHidden() {
+		return super.isHidden() || !plugin.configTiledLighting;
+	}
+
+	@Override
+	public Dimension render(Graphics2D g) {
+		if (!super.isHidden() && !plugin.configTiledLighting) {
+			g.setColor(Color.YELLOW);
+			drawStringCentered(g, "Tiled lighting is disabled");
+		}
+		return super.render(g);
 	}
 }

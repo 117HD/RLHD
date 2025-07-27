@@ -439,4 +439,22 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		}
 		return bounds.getSize();
 	}
+
+	protected void drawStringCentered(Graphics2D g, String s, float x, float y) {
+		var m = g.getFontMetrics();
+		int w = m.stringWidth(s);
+		int lineHeight = m.getHeight();
+		x -= w / 2.f;
+		y += lineHeight / 2.f;
+		var c = g.getColor();
+		g.setColor(Color.BLACK);
+		g.drawString(s, x + 1, y + 1);
+		g.setColor(c);
+		g.drawString(s, x, y);
+	}
+
+	protected void drawStringCentered(Graphics2D g, String s) {
+		var b = g.getClipBounds();
+		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
+	}
 }
