@@ -25,8 +25,8 @@
 #include <uniforms/global.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
-#include <uniforms/lights.glsl>
 
+#include <utils/lights.glsl>
 #include <utils/misc.glsl>
 
 vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {

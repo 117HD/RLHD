@@ -69,7 +69,7 @@ vec2 worldUvs(float scale) {
 #include <utils/color_filters.glsl>
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
-#include <uniforms/lights.glsl>
+#include <utils/lights.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
