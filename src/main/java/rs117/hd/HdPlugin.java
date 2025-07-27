@@ -447,8 +447,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
-	public int configMaxLightsPerTile;
-	public int configMaxSceneLights;
+	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
@@ -889,10 +888,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", Material.values().length)
 			.define("WATER_TYPE_COUNT", WaterType.values().length)
-			.define("MAX_LIGHT_COUNT", Math.max(1, configMaxSceneLights))
-			.define("MAX_LIGHTS_PER_TILE", configMaxLightsPerTile)
-			.define("TILED_LIGHTING_LAYER_COUNT", configMaxLightsPerTile / 4)
+			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
+			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
+			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
@@ -942,19 +941,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
 
-		if (GL_CAPS.GL_ARB_shader_image_load_store) {
-			tiledLightingImageStore.compile(includes
-				.define("TILED_IMAGE_STORE", true)
-				.define("TILED_LIGHTING_LAYER", false));
-		}
+		if (configDynamicLights != DynamicLights.NONE) {
+			if (GL_CAPS.GL_ARB_shader_image_load_store) {
+				tiledLightingImageStore.compile(includes
+					.define("TILED_IMAGE_STORE", true)
+					.define("TILED_LIGHTING_LAYER", false));
+			}
 
-		int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
-		for (int layer = 0; layer < tiledLayerCount; layer++) {
-			var shader = new TiledLightingShaderProgram();
-			shader.compile(includes
-				.define("TILED_IMAGE_STORE", false)
-				.define("TILED_LIGHTING_LAYER", layer));
-			tiledLightingShaderPrograms.add(shader);
+			int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
+			for (int layer = 0; layer < tiledLayerCount; layer++) {
+				var shader = new TiledLightingShaderProgram();
+				shader.compile(includes
+					.define("TILED_IMAGE_STORE", false)
+					.define("TILED_LIGHTING_LAYER", layer));
+				tiledLightingShaderPrograms.add(shader);
+			}
 		}
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -1677,7 +1678,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 
-		if (configMaxLightsPerTile > 0 && sceneContext.scene == scene && updateUniforms) {
+		if (configDynamicLights != DynamicLights.NONE && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
@@ -1726,8 +1727,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					tiledLightingImageStore.use();
 					glDrawArrays(GL_TRIANGLES, 0, 3);
 				} else {
-					assert configMaxLightsPerTile % 4 == 0;
-					int layerCount = configMaxLightsPerTile / 4;
+					int layerCount = configDynamicLights.getLightsPerTile() / 4;
 					for (int layer = 0; layer < layerCount; layer++) {
 						tiledLightingShaderPrograms.get(layer).use();
 						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
@@ -2653,8 +2653,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
 		configTiledLighting = config.tiledLighting();
-		configMaxLightsPerTile = config.dynamicLights().getLightsPerTile();
-		configMaxSceneLights = config.dynamicLights().getMaxSceneLights();
+		configDynamicLights = config.dynamicLights();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;

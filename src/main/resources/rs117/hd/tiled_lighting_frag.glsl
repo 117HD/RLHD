@@ -50,23 +50,23 @@ void main() {
     for (int i = 0; i < LightMaskSize; i++)
         LightsMask[i] = 0u;
 
-#if TILED_LIGHTING_LAYER > 0 && !TILED_IMAGE_STORE
-    int LayerCount = TILED_LIGHTING_LAYER - 1;
-    for (int l = LayerCount; l >= 0; l--) {
-        ivec4 layerData = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0);
-        for(int c = 4; c >= 0 ; c--) {
-            int encodedLightIdx = layerData[c] - 1;
-            if(encodedLightIdx < 0) {
-                TiledData = ivec4(0.0);
-                return; // No more lights are overlapping with cell since the previous layer didn't encode
-            }
+    #if TILED_LIGHTING_LAYER > 0 && !TILED_IMAGE_STORE
+        int LayerCount = TILED_LIGHTING_LAYER - 1;
+        for (int l = LayerCount; l >= 0; l--) {
+            ivec4 layerData = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0);
+            for (int c = 4; c >= 0 ; c--) {
+                int encodedLightIdx = layerData[c] - 1;
+                if (encodedLightIdx < 0) {
+                    TiledData = ivec4(0.0);
+                    return; // No more lights are overlapping with cell since the previous layer didn't encode
+                }
 
-            uint word = uint(encodedLightIdx) >> 5u;
-            uint mask = 1u << (uint(encodedLightIdx) & 31u);
-            LightsMask[word] |= mask;
+                uint word = uint(encodedLightIdx) >> 5u;
+                uint mask = 1u << (uint(encodedLightIdx) & 31u);
+                LightsMask[word] |= mask;
+            }
         }
-    }
-#endif
+    #endif
 
     const int tileSize = 16;
     float pad = tileSize * (512.f / cameraZoom) * 15;
@@ -75,11 +75,11 @@ void main() {
     vec3 viewDir = normalize(fRay);
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
-    for(int l = 0; l < TILED_LIGHTING_LAYER_COUNT; l++)
+    for (int l = 0; l < TILED_LIGHTING_LAYER_COUNT; l++)
 #endif
     {
         ivec4 outputTileData = ivec4(0);
-        for(int c = 0; c < 4; c++) {
+        for (int c = 0; c < 4; c++) {
             for (; lightIdx < pointLightsCount; lightIdx++) {
                 vec4 lightData = PointLightArray[lightIdx].position;
                 vec3 lightWorldPos = lightData.xyz;
@@ -113,16 +113,15 @@ void main() {
                 break;
             }
         }
-#if TILED_IMAGE_STORE
-    if(outputTileData != ivec4(0)) {
-        imageStore(tiledLightingImage, ivec3(screenUV, l), outputTileData);
-    }
 
-    if(lightIdx >= pointLightsCount) {
-        return;
-    }
-#else
-    TiledData = outputTileData;
-#endif
+        #if TILED_IMAGE_STORE
+            if (outputTileData != ivec4(0))
+                imageStore(tiledLightingImage, ivec3(screenUV, l), outputTileData);
+
+            if (lightIdx >= pointLightsCount)
+                return;
+        #else
+            TiledData = outputTileData;
+        #endif
     }
 }

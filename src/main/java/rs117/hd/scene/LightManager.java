@@ -50,6 +50,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.DynamicLights;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -175,7 +176,7 @@ public class LightManager {
 	public void update(@Nonnull SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		if (plugin.configMaxLightsPerTile == 0 || client.getGameState() != GameState.LOGGED_IN) {
+		if (plugin.configDynamicLights == DynamicLights.NONE || client.getGameState() != GameState.LOGGED_IN) {
 			sceneContext.numVisibleLights = 0;
 			return;
 		}
@@ -477,7 +478,7 @@ public class LightManager {
 
 		// Count number of visible lights
 		sceneContext.numVisibleLights = 0;
-		int maxLights = plugin.configTiledLighting ? UBOLights.MAX_LIGHTS : plugin.configMaxSceneLights;
+		int maxLights = plugin.configTiledLighting ? UBOLights.MAX_LIGHTS : plugin.configDynamicLights.getMaxSceneLights();
 		for (Light light : sceneContext.lights) {
 			// Exit early once encountering the first invisible light, or the light limit is reached
 			if (!light.visible || sceneContext.numVisibleLights >= maxLights)

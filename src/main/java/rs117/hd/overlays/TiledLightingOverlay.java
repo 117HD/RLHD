@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import rs117.hd.HdPlugin;
+import rs117.hd.config.DynamicLights;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
@@ -38,14 +39,18 @@ public class TiledLightingOverlay extends ShaderOverlay<TiledLightingOverlay.Sha
 
 	@Override
 	public boolean isHidden() {
-		return super.isHidden() || !plugin.configTiledLighting;
+		return super.isHidden() || plugin.configDynamicLights == DynamicLights.NONE || !plugin.configTiledLighting;
 	}
 
 	@Override
 	public Dimension render(Graphics2D g) {
-		if (!super.isHidden() && !plugin.configTiledLighting) {
+		if (!super.isHidden()) {
 			g.setColor(Color.YELLOW);
-			drawStringCentered(g, "Tiled lighting is disabled");
+			if (plugin.configDynamicLights == DynamicLights.NONE) {
+				drawStringCentered(g, "Dynamic lights are disabled");
+			} else if (!plugin.configTiledLighting) {
+				drawStringCentered(g, "Tiled lighting is disabled");
+			}
 		}
 		return super.render(g);
 	}
