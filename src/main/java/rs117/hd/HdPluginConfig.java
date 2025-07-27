@@ -585,6 +585,23 @@ public interface HdPluginConfig extends Config
 		return 60;
 	}
 
+	@Range(min = 10, max = 80)
+	@ConfigItem(
+		keyName = "minimumBrightness",
+		name = "Minimum Brightness (%)",
+		description = "The minimum brightness level during nighttime.<br>" +
+			"• 10% = Very dark nights<br>" +
+			"• 25% = Dark but playable<br>" +
+			"• 35% = Default comfortable darkness<br>" +
+			"• 50% = Bright nights for easy gameplay<br>" +
+			"• 70%+ = Very bright nights (minimal difference from day)",
+		position = 4,
+		section = daylightCycleSettings
+	)
+	default int minimumBrightness() {
+		return 35;
+	}
+
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
@@ -1056,6 +1073,10 @@ public interface HdPluginConfig extends Config
 	}
 
 	String KEY_ASYNC_UI_COPY = "experimentalAsyncUICopy";
+	String KEY_ENABLE_DAYLIGHT_CYCLE = "enableDaylightCycle";
+	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
+	String KEY_CYCLE_DURATION = "cycleDurationMinutes";
+	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
 	@ConfigItem(
 		keyName = KEY_ASYNC_UI_COPY,
 		name = "Perform UI copy asynchronously",

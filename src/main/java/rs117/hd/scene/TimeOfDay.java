@@ -363,25 +363,28 @@ public class TimeOfDay
 		return angleFromZenith > Math.PI / 2;
 	}
 
-	public static float getDynamicBrightnessMultiplier(double[] latLong, float dayLength) {
+	public static float getDynamicBrightnessMultiplier(double[] latLong, float dayLength, int minimumBrightness) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		
 		// Calculate sun altitude in degrees (-90 to 90, where 90 is directly overhead)
 		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
 		
+		// Convert minimum brightness from percentage to decimal
+		float minBrightness = minimumBrightness / 100.0f;
+		float horizonBrightness = minBrightness + 0.10f; // 10% brighter at horizon
+		
 		// Brightness based directly on sun altitude for perfect synchronization
 		// When sun is below horizon (negative altitude), use playable night brightness
 		if (sunAltitudeDegrees <= 0) {
-			// Gradual transition from 0.25 (deep night) to 0.4 (horizon) 
-			// Increased from 0.1-0.2 to 0.25-0.4 for better gameplay visibility
+			// Gradual transition from minimum (deep night) to horizon brightness
 			double factor = Math.max(0, sunAltitudeDegrees + 18) / 18.0; // -18° to 0°
-			return (float) (0.25 + 0.15 * factor);
+			return (float) (minBrightness + 0.10 * factor);
 		} else {
-			// When sun is above horizon, scale brightness from 0.4 to 1.0
+			// When sun is above horizon, scale brightness from horizon to 1.0
 			// Use sine function to match natural sun intensity curve
 			double sineFactor = Math.sin(Math.toRadians(sunAltitudeDegrees));
-			return (float) (0.4 + 0.6 * sineFactor);
+			return (float) (horizonBrightness + (1.0 - horizonBrightness) * sineFactor);
 		}
 	}
 
@@ -470,12 +473,12 @@ public class TimeOfDay
 		}
 	}
 
-	public static float getFixedBrightnessMultiplier(String timeMode) {
+	public static float getFixedBrightnessMultiplier(String timeMode, int minimumBrightness) {
 		switch (timeMode) {
 			case "ALWAYS_DAY":
 				return 1.0f;  // Full brightness
 			case "ALWAYS_NIGHT":
-				return 0.25f;  // Playable night brightness (increased from 0.1f)
+				return minimumBrightness / 100.0f;  // Use configurable minimum brightness
 			case "ALWAYS_SUNRISE":
 			case "ALWAYS_SUNSET":
 				return 0.6f;  // Golden hour brightness

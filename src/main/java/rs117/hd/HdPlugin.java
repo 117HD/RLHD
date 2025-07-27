@@ -1845,6 +1845,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			float[] sunAngles = environmentManager.currentSunAngles;
 
 			if (environmentManager.isOverworld() && config.enableDaylightCycle()) {
+				int minimumBrightness = config.minimumBrightness();
 				switch (config.daylightCycle()) {
 					case DYNAMIC:
 						// Use configurable cycle duration instead of hardcoded value
@@ -1859,7 +1860,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						ambientColor = TimeOfDay.getRegionalAmbientLight(latLong, cycleDuration, originalRegionalAmbientColor);
 						
 						// Apply dynamic brightness scaling based on time of day
-						float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(latLong, cycleDuration);
+						float brightnessMultiplier = TimeOfDay.getDynamicBrightnessMultiplier(latLong, cycleDuration, minimumBrightness);
 						directionalStrength = brightnessMultiplier;
 						ambientStrength = brightnessMultiplier;
 
@@ -1911,7 +1912,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						directionalColor = TimeOfDay.getFixedLightColor(timeMode);
 						ambientColor = TimeOfDay.getFixedAmbientColor(timeMode);
 						
-						float fixedBrightness = TimeOfDay.getFixedBrightnessMultiplier(timeMode);
+						float fixedBrightness = TimeOfDay.getFixedBrightnessMultiplier(timeMode, minimumBrightness);
 						directionalStrength = fixedBrightness;
 						ambientStrength = fixedBrightness;
 						
@@ -2634,6 +2635,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_ENABLE_DAYLIGHT_CYCLE:
+							case KEY_DAYLIGHT_CYCLE:
+							case KEY_CYCLE_DURATION:
+							case KEY_MINIMUM_BRIGHTNESS:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:
