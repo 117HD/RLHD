@@ -1,5 +1,7 @@
 #version 330
 
+//#define DEBUG_LIGHT_RADIUS_PADDING
+
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
 
@@ -15,67 +17,78 @@ void main() {
     vec2 uv = fUv;
     uv.y = 1 - uv.y;
 
+    vec2 texelCenter = (floor(fUv * tiledLightingResolution) + .5) / tiledLightingResolution;
+
+    const float eps = 1e-10;
+    vec2 ndcUv = (fUv * 2 - 1) * vec2(1, -1);
+    vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
+    vec3 viewDir = normalize(farPos.xyz / farPos.w);
+
     vec4 c = vec4(0);
-//    #define DEBUG_LIGHT_RADIUS_PADDING
     #ifdef DEBUG_LIGHT_RADIUS_PADDING
-       vec2 texelCenter = (floor(fUv * tiledLightingResolution) + .5) / tiledLightingResolution;
+        // Render the light as a red sphere
+        // When the light passes the central intersection test, the tile is colored green
+        // When the light passes the padded intersection test, the tile is colored blue
+        // When both tests fail to include the light, the unincluded portion is colored white
 
-       // Draw texel centers
-       if (all(equal(floor(fUv * sceneResolution), floor(texelCenter * sceneResolution)))) {
-           FragColor = vec4(1);
-           return;
-       }
+        // Draw texel centers
+        if (all(equal(floor(fUv * sceneResolution), floor(texelCenter * sceneResolution)))) {
+            FragColor = vec4(1);
+            return;
+        }
 
-       const float eps = 1e-10;
-       vec2 ndcUv = (texelCenter * 2 - 1) * vec2(1, -1);
-       vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
-       vec3 viewDirCenter = normalize(farPos.xyz / farPos.w);
+        vec2 ndcUvCenter = (texelCenter * 2 - 1) * vec2(1, -1);
+        vec4 farPosCenter = invProjectionMatrix * vec4(ndcUvCenter, eps, 1);
+        vec3 viewDirCenter = normalize(farPosCenter.xyz / farPosCenter.w);
 
-       ndcUv = (fUv * 2 - 1) * vec2(1, -1);
-       farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
-       vec3 viewDir = normalize(farPos.xyz / farPos.w);
+        for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
+            vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
+            float lightRadiusSq = PointLightArray[lightIdx].position.w;
+            vec3 cameraToLight = lightWorldPos - cameraPos;
 
-       for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
-           vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
-           float lightRadiusSq = PointLightArray[lightIdx].position.w;
+            // Calculate the distance from the camera to the point closest to the light along the view ray
+            float t = dot(cameraToLight, viewDir);
+            if (t < 0) {
+                // If the closest point lies behind the camera, the light can only contribute to the visible
+                // scene if the camera happens to be within the light's radius
+                if (dot(cameraToLight, cameraToLight) > lightRadiusSq)
+                    continue;
 
-           vec3 cameraToLight = lightWorldPos - cameraPos;
-           // Check if the camera is outside of the light's radius
-           if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
-               float t = dot(cameraToLight, viewDirCenter);
-               if (t < 0)
-                   continue; // Closest point is behind the camera
+                c.g = 1;
+            } else {
+                const int tileSize = 16;
+                float pad = tileSize * (512.f / cameraZoom) * 15;
+                float paddedLightRadiusSq = pow(sqrt(lightRadiusSq) + pad, 2.f);
 
-               const int tileSize = 16;
-               float pad = tileSize * (512.f / cameraZoom) * 15;
+                // High resolution UVs
+                vec3 accurateLightToClosestPoint = cameraToLight - t * viewDir;
+                float accurateDistSq = dot(accurateLightToClosestPoint, accurateLightToClosestPoint);
+                if (accurateDistSq < lightRadiusSq)
+                    c.r = 1;
 
-               {
-                   // Finer UVs
-                   float t = dot(cameraToLight, viewDir);
-                   vec3 lightToClosestPoint = cameraToLight - t * viewDir;
-                   float dist = length(lightToClosestPoint);
-                   if (dist * dist < lightRadiusSq) {
-                       c.b = 1;
-                   } else {
-                       dist = max(0, dist - pad);
-                       if (dist * dist < lightRadiusSq) {
-                           c.g = 1;
-                       }
-                   }
-               }
+                // If the closest point lies in front of the camera, check whether the closest point along
+                // the view ray lies within the light's radius
+                vec3 lightToClosestPoint = cameraToLight - dot(cameraToLight, viewDirCenter) * viewDirCenter;
+                float distSq = dot(lightToClosestPoint, lightToClosestPoint);
+                if (distSq < lightRadiusSq) {
+                    c.g = 1;
+                    continue;
+                }
 
-               vec3 lightToClosestPoint = cameraToLight - t * viewDirCenter;
-               float dist = length(lightToClosestPoint);
-               dist = max(0, dist - pad);
-               if (dist * dist > lightRadiusSq)
-                   continue; // View ray doesn't intersect with the light's sphere
-           }
+                if (distSq < paddedLightRadiusSq) {
+                    c.b = 1;
+                    continue;
+                }
 
-           c.r = 1;
-       }
+                if (accurateDistSq < lightRadiusSq) {
+                    c = vec4(1);
+                    continue;
+                }
+            }
+        }
 
-       if (length(c) > 0)
-           c.a = 0.3;
+        if (length(c) > 0)
+            c.a = max(c.a, 0.3);
     #else
         ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
         int tiledLightCount = 0;
@@ -83,7 +96,7 @@ void main() {
             ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
             for (int c = 0; c < 4; c++) {
                 int lightIdx = tileLayerData[c];
-                if (tileLayerData[c] <= 0)
+                if (lightIdx <= 0)
                     break;
                 tiledLightCount++;
             }

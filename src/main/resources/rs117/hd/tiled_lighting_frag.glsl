@@ -98,7 +98,7 @@ void main() {
                     // the view ray lies within the light's radius
                     vec3 lightToClosestPoint = cameraToLight - t * viewDir;
                     float dist = length(lightToClosestPoint);
-                    dist = max(0, dist - pad);
+                    dist = max(0, dist - pad); // TODO: move to Java
                     if (dist * dist > lightRadiusSq)
                         continue;
                 }
