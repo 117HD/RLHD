@@ -352,9 +352,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int vboTri;
 
 	private int vaoScene;
+	private int[] fboSceneResolution;
 	private int fboScene;
 	private int rboSceneColor;
 	private int rboSceneDepth;
+	private int fboSceneResolve;
+	private int rboSceneResolveColor;
 
 	private int shadowMapResolution;
 	private int fboShadowMap;
@@ -407,13 +410,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int dynamicOffsetUvs;
 	private int renderBufferOffset;
 
-	private int lastCanvasWidth;
-	private int lastCanvasHeight;
-	private int lastStretchedCanvasWidth;
-	private int lastStretchedCanvasHeight;
+	private int canvasWidth;
+	private int canvasHeight;
+	private float sceneResolutionScale;
+	private float[] sceneDpiViewport;
+	private AntiAliasingMode antiAliasingMode;
 	private int lastRenderViewportWidth;
 	private int lastRenderViewportHeight;
-	private AntiAliasingMode lastAntiAliasingMode;
 	private int numSamples;
 
 	private int viewportOffsetX;
@@ -506,6 +509,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				fboScene = 0;
 				rboSceneColor = 0;
 				rboSceneDepth = 0;
+				fboSceneResolve = 0;
+				rboSceneResolveColor = 0;
 				fboShadowMap = 0;
 				numPassthroughModels = 0;
 				numModelsToSort = null;
@@ -653,10 +658,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
-				lastCanvasWidth = lastCanvasHeight = 0;
-				lastStretchedCanvasWidth = lastStretchedCanvasHeight = 0;
+				canvasWidth = canvasHeight = 0;
+				sceneResolutionScale = 0;
+				sceneDpiViewport = null;
+				antiAliasingMode = null;
 				lastRenderViewportWidth = lastRenderViewportHeight = 0;
-				lastAntiAliasingMode = null;
 
 				gamevalManager.startUp();
 				areaManager.startUp();
@@ -1259,7 +1265,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	private void initSceneFbo(int width, int height, AntiAliasingMode antiAliasingMode) {
+	private void initSceneFbo() {
 		// Bind default FBO to check whether anti-aliasing is forced
 		int defaultFramebuffer = awtContext.getFramebuffer(false);
 		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
@@ -1284,7 +1290,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
 			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
 
-		int[] resolution = applyDpiScaling(width, height);
+		fboSceneResolution = new int[] {
+			Math.round(sceneDpiViewport[2] * sceneResolutionScale),
+			Math.round(sceneDpiViewport[3] * sceneResolutionScale)
+		};
 
 		// Create and bind the FBO
 		fboScene = glGenFramebuffers();
@@ -1298,7 +1307,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		clearGLErrors();
 
 		for (int format : desiredFormats) {
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, format, resolution[0], resolution[1]);
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, format, fboSceneResolution[0], fboSceneResolution[1]);
 
 			if (glGetError() == GL_NO_ERROR) {
 				// Found a usable format. Bind the RBO to the scene FBO
@@ -1308,9 +1317,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// Create depth render buffer
 				rboSceneDepth = glGenRenderbuffers();
 				glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-				glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, GL_DEPTH24_STENCIL8, resolution[0], resolution[1]);
+				glRenderbufferStorageMultisample(
+					GL_RENDERBUFFER,
+					numSamples,
+					GL_DEPTH24_STENCIL8,
+					fboSceneResolution[0],
+					fboSceneResolution[1]
+				);
 				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
 				checkGLErrors();
+
+				// If necessary, create an FBO for resolving multisampling
+				if (numSamples > 1 && sceneResolutionScale != 1) {
+					fboSceneResolve = glGenFramebuffers();
+					glBindFramebuffer(GL_FRAMEBUFFER, fboSceneResolve);
+					rboSceneResolveColor = glGenRenderbuffers();
+					glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
+					glRenderbufferStorageMultisample(
+						GL_RENDERBUFFER,
+						0,
+						format,
+						fboSceneResolution[0],
+						fboSceneResolution[1]
+					);
+					glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
+					checkGLErrors();
+				}
 
 				// Reset
 				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
@@ -1335,6 +1367,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (rboSceneDepth != 0)
 			glDeleteRenderbuffers(rboSceneDepth);
 		rboSceneDepth = 0;
+
+		if (fboSceneResolve != 0)
+			glDeleteFramebuffers(fboSceneResolve);
+		fboSceneResolve = 0;
+
+		if (rboSceneResolveColor != 0)
+			glDeleteRenderbuffers(rboSceneResolveColor);
+		rboSceneResolveColor = 0;
 	}
 
 	private void initShadowMapFbo() {
@@ -1865,11 +1905,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		renderBufferOffset += bufferLength;
 	}
 
-	private void prepareInterfaceTexture(int canvasWidth, int canvasHeight) {
-		boolean resize = canvasWidth != lastCanvasWidth || canvasHeight != lastCanvasHeight;
+	private void prepareInterfaceTexture(int newCanvasWidth, int newCanvasHeight) {
+		boolean resize = newCanvasWidth != canvasWidth || newCanvasHeight != canvasHeight;
 		if (resize) {
-			lastCanvasWidth = canvasWidth;
-			lastCanvasHeight = canvasHeight;
+			canvasWidth = newCanvasWidth;
+			canvasHeight = newCanvasHeight;
 
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 			glBufferData(GL_PIXEL_UNPACK_BUFFER, canvasWidth * canvasHeight * 4L, GL_STREAM_DRAW);
@@ -1995,13 +2035,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
 			}
 
-			dpiViewport = applyDpiScaling(
-				renderWidthOff,
-				renderCanvasHeight - renderViewportHeight - renderHeightOff,
-				renderViewportWidth,
-				renderViewportHeight
-			);
-
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
 			if (computeMode == ComputeMode.OPENCL) {
 				clManager.finish();
@@ -2011,23 +2044,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindVertexArray(vaoScene);
 
-			final AntiAliasingMode antiAliasingMode = config.antiAliasingMode();
-			final Dimension stretchedDimensions = client.getStretchedDimensions();
-			final int stretchedCanvasWidth = client.isStretchedEnabled() ? stretchedDimensions.width : canvasWidth;
-			final int stretchedCanvasHeight = client.isStretchedEnabled() ? stretchedDimensions.height : canvasHeight;
-
 			// Check if scene FBO needs to be recreated
-			if (lastAntiAliasingMode != antiAliasingMode ||
-				lastStretchedCanvasWidth != stretchedCanvasWidth ||
-				lastStretchedCanvasHeight != stretchedCanvasHeight
+			float newSceneResolutionScale = config.sceneResolutionScale() / 100f;
+			float[] newSceneDpiViewport = applyDpiScaling(
+				renderWidthOff,
+				renderCanvasHeight - renderViewportHeight - renderHeightOff,
+				renderViewportWidth,
+				renderViewportHeight
+			);
+			final AntiAliasingMode newAntiAliasingMode = config.antiAliasingMode();
+			if (sceneResolutionScale != newSceneResolutionScale ||
+				!Arrays.equals(sceneDpiViewport, newSceneDpiViewport) ||
+				antiAliasingMode != newAntiAliasingMode
 			) {
-				lastAntiAliasingMode = antiAliasingMode;
-				lastStretchedCanvasWidth = stretchedCanvasWidth;
-				lastStretchedCanvasHeight = stretchedCanvasHeight;
+				sceneResolutionScale = newSceneResolutionScale;
+				sceneDpiViewport = newSceneDpiViewport;
+				antiAliasingMode = newAntiAliasingMode;
 
 				destroySceneFbo();
 				try {
-					initSceneFbo(stretchedCanvasWidth, stretchedCanvasHeight, antiAliasingMode);
+					initSceneFbo();
 				} catch (Exception ex) {
 					log.error("Error while initializing scene FBO:", ex);
 					stopPlugin();
@@ -2181,7 +2217,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
 			glToggle(GL_MULTISAMPLE, numSamples > 1);
-			glViewport(dpiViewport[0], dpiViewport[1], dpiViewport[2], dpiViewport[3]);
+			glViewport(0, 0, fboSceneResolution[0], fboSceneResolution[1]);
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
@@ -2257,14 +2293,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glDepthMask(true);
 			glUseProgram(0);
 
-			// Blit from the scene FBO to the default FBO
-			int[] dimensions = applyDpiScaling(stretchedCanvasWidth, stretchedCanvasHeight);
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboScene);
+			if (fboSceneResolve != 0) {
+				// Blit from the scene FBO to the multisample resolve FBO
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneResolve);
+				glBlitFramebuffer(
+					0, 0, fboSceneResolution[0], fboSceneResolution[1],
+					0, 0, fboSceneResolution[0], fboSceneResolution[1],
+					GL_COLOR_BUFFER_BIT, GL_NEAREST
+				);
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneResolve);
+			}
+
+			// Blit from the resolved FBO to the default FBO
+			int[] viewport = new int[4];
+			for (int i = 0; i < 4; i++)
+				viewport[i] = Math.round(sceneDpiViewport[i]);
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			glBlitFramebuffer(
-				0, 0, dimensions[0], dimensions[1],
-				0, 0, dimensions[0], dimensions[1],
-				GL_COLOR_BUFFER_BIT, GL_NEAREST
+				0, 0, fboSceneResolution[0], fboSceneResolution[1],
+				viewport[0], viewport[1], viewport[0] + viewport[2], viewport[1] + viewport[3],
+				GL_COLOR_BUFFER_BIT, config.sceneScalingMode().glFilter
 			);
 		} else {
 			glClearColor(0, 0, 0, 1f);
@@ -2315,7 +2364,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			viewportWidth = dim.width;
 			viewportHeight = dim.height;
 		}
-		glDpiAwareViewport(0, 0, viewportWidth, viewportHeight);
+		glDpiAwareViewport(viewportWidth, viewportHeight);
 
 		// Bind quad VAO which all overlays use to render
 		glBindVertexArray(vaoQuad);
@@ -3183,20 +3232,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	// Assumes alternating x/y
-	private int[] applyDpiScaling(int... coordinates) {
+	private float[] applyDpiScaling(float... coordinates) {
 		final GraphicsConfiguration graphicsConfiguration = clientUI.getGraphicsConfiguration();
 		if (graphicsConfiguration == null)
 			return coordinates;
 
 		final AffineTransform t = graphicsConfiguration.getDefaultTransform();
+		float[] scale = { (float) t.getScaleX(), (float) t.getScaleY() };
 		for (int i = 0; i < coordinates.length; i++)
-			coordinates[i] = getScaledValue(i % 2 == 0 ? t.getScaleX() : t.getScaleY(), coordinates[i]);
+			coordinates[i] *= scale[i % 2];
 		return coordinates;
 	}
 
-	private void glDpiAwareViewport(int... xywh) {
-		applyDpiScaling(xywh);
-		glViewport(xywh[0], xywh[1], xywh[2], xywh[3]);
+	private void glDpiAwareViewport(int width, int height) {
+		float[] scaled = applyDpiScaling(width, height);
+		glViewport(0, 0, Math.round(scaled[0]), Math.round(scaled[1]));
 	}
 
 	public int getDrawDistance() {
