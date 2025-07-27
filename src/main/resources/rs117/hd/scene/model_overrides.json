@@ -31469,14 +31469,15 @@
   },
   {
     "description": "Objects - Wooden - Beehive",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT_DULL",
     "objectIds": [
       "MACRO_INACTIVE_BEEHIVE",
       "MERLIN_BEEHIVE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.85,
-    "uvOrientation": 512
+    "upwardsNormals": false,
+    "uvScale": 0.7,
+    "uvOrientationX": 512
   },
   {
     "description": "Objects - Wooden - Juliets house hand rails",
