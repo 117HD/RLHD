@@ -91,6 +91,8 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.model.modelreplaceer.ModelReplacement;
+import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
@@ -116,6 +118,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ModelReplacementManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
@@ -306,6 +309,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private GammaCalibrationOverlay gammaCalibrationOverlay;
+
+	@Inject
+	private ModelReplacementManager modelReplacementManager;
 
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
@@ -646,6 +652,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
+				modelReplacementManager.startUp();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -696,6 +703,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
+			modelReplacementManager.shutDown();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -1313,14 +1321,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initTileHeightMap(Scene scene) {
-		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * Short.BYTES;
+		final int TILE_HEIGHT_BUFFER_SIZE = MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * Short.BYTES;
 		ShortBuffer tileBuffer = ByteBuffer
 			.allocateDirect(TILE_HEIGHT_BUFFER_SIZE)
 			.order(ByteOrder.nativeOrder())
 			.asShortBuffer();
 
 		int[][][] tileHeights = scene.getTileHeights();
-		for (int z = 0; z < Constants.MAX_Z; ++z) {
+		for (int z = 0; z < MAX_Z; ++z) {
 			for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
 				for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 					int h = tileHeights[z][x][y];
@@ -1340,7 +1348,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage3D(GL_TEXTURE_3D, 0, GL_R16I,
-			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, Constants.MAX_Z,
+			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, MAX_Z,
 			0, GL_RED_INTEGER, GL_SHORT, tileBuffer
 		);
 	}
@@ -2678,7 +2686,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		client.setUnlockedFps(unlockFps);
 
 		// Without unlocked fps, the client manages sync on its 20ms timer
-		HdPluginConfig.SyncMode syncMode = unlockFps ? config.syncMode() : HdPluginConfig.SyncMode.OFF;
+		SyncMode syncMode = unlockFps ? config.syncMode() : SyncMode.OFF;
 
 		int swapInterval;
 		switch (syncMode)
@@ -2728,8 +2736,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return tileIsVisible[plane][tileExX][tileExY];
 
 		int[][][] tileHeights = scene.getTileHeights();
-		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
-		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
+		int x = ((tileExX - SCENE_OFFSET) << LOCAL_COORD_BITS) + 64;
+		int z = ((tileExY - SCENE_OFFSET) << LOCAL_COORD_BITS) + 64;
 		int y = Math.max(
 			Math.max(tileHeights[plane][tileExX][tileExY], tileHeights[plane][tileExX][tileExY + 1]),
 			Math.max(tileHeights[plane][tileExX + 1][tileExY], tileHeights[plane][tileExX + 1][tileExY + 1])
@@ -2825,7 +2833,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
 	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
 	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
-	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
+	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link ModelHash} for more details.
 	 */
 	@Override
 	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
@@ -2843,6 +2851,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return;
 		}
 
+		int id = ModelHash.getIdOrIndex(hash);
+		ModelReplacement modelReplacement = modelReplacementManager.getOverride(id);
+
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.GET_MODEL);
 
@@ -2850,12 +2861,57 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-				model = (Model) renderable;
+
+				frameTimer.begin(Timer.MODEL_REPLACEMENTS);
+
+				if (modelReplacement != ModelReplacement.NONE) {
+					ModelDefinition modelDefinition = modelReplacement.model.definition;
+					if (modelDefinition == null) {
+						return;
+					}
+
+					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+
+					Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
+					int plane = client.getTopLevelWorldView().getPlane();
+					Tile tile = extendedTiles[plane][tileExX][tileExY];
+
+					int config = sceneContext.getObjectConfig(tile, hash);
+					int type = config & 0x3F;
+					int bakedOri = (config >> 6) & 3;
+
+					model = modelDefinition.getModel(client, id, type, bakedOri);
+				} else {
+					model = (Model) renderable;
+				}
+
+				frameTimer.end(Timer.MODEL_REPLACEMENTS);
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
-				offsetModel = model = renderable.getModel();
+				if (modelReplacement != ModelReplacement.NONE) {
+					ModelDefinition modelDefinition = modelReplacement.model.definition;
+					if (modelDefinition == null) {
+						return;
+					}
+
+					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+
+					Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
+					int plane = client.getTopLevelWorldView().getPlane();
+					Tile tile = extendedTiles[plane][tileExX][tileExY];
+
+					int config = sceneContext.getObjectConfig(tile, hash);
+					int type = config & 0x3F;
+					int bakedOri = (config >> 6) & 3;
+
+					offsetModel = model = modelDefinition.getModel(client, id, type, bakedOri);
+				} else {
+					offsetModel = model =  renderable.getModel();
+				}
 			}
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces
@@ -3013,6 +3069,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCompute.addCharacterPosition(x, z, modelRadius);
 			}
 		}
+
+
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)

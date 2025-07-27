@@ -1,0 +1,41 @@
+[
+  {
+    "description": "Xmas Holly",
+    "model": "HOLLY",
+    "objectIds": [
+      "WALLSHIELD"
+    ]
+  },
+  {
+    "description": "TORCH",
+    "model": "TORCH",
+    "objectIds": [
+      "TORCH"
+    ]
+  },
+  {
+    "description": "XMAS TREEE",
+    "model": "XMAS_TREE",
+    "objectIds": [
+      "LOST_PROPERTY_MERCHANT_BUSH_FORCOMBATTY",
+      "PVPW_ARMOURSTAND_BUSH"
+    ]
+  },
+  {
+    "description": "XMAS Bush",
+    "model": "XMAS_BUSH",
+    "objectIds": [
+      "PVPW_BANKCHEST_BUSH",
+      "WILDY_HUB_LOOT_CHEST_PVPW_BUSH1",
+      "BUSH1",
+      "BUSH2"
+    ]
+  },
+  {
+    "description": "XMAS TREE",
+    "model": "XMAS_SNOW_TREE",
+    "objectIds": [
+      "TREE2"
+    ]
+  }
+]
