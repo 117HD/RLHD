@@ -169,12 +169,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
 
-	public static final int TEXTURE_UNIT_BASE = GL_TEXTURE0;
-	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_BASE;
-	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_BASE + 1;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_BASE + 2;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_BASE + 3;
-	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = TEXTURE_UNIT_BASE + 4;
+	public static int MAX_TEXTURE_UNITS;
+	public static int TEXTURE_UNIT_COUNT = GL_TEXTURE0;
+	public static final int TEXTURE_UNIT_UI = TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_GAME = TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SHADOW_MAP = TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = TEXTURE_UNIT_COUNT++;
+
+	public static int MAX_IMAGE_UNITS;
+	public static int IMAGE_UNIT_COUNT = 0;
+	public static final int IMAGE_UNIT_TILED_LIGHTING = IMAGE_UNIT_COUNT++;
 
 	public static final int UNIFORM_BLOCK_GLOBAL = 0;
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
@@ -182,8 +187,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
 	public static final int UNIFORM_BLOCK_COMPUTE = 4;
 	public static final int UNIFORM_BLOCK_UI = 5;
-
-	public static final int TILED_LIGHTING_STORE = 6;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -575,6 +578,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				lwjglInitialized = true;
 				checkGLErrors();
+
+				MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS); // Not the fixed pipeline MAX_TEXTURE_UNITS
+				if (MAX_TEXTURE_UNITS < TEXTURE_UNIT_COUNT)
+					log.warn("The GPU only supports {} texture units", MAX_TEXTURE_UNITS);
+				MAX_IMAGE_UNITS = GL_CAPS.GL_ARB_shader_image_load_store ?
+					glGetInteger(ARBShaderImageLoadStore.GL_MAX_IMAGE_UNITS) : 0;
+				if (MAX_IMAGE_UNITS < IMAGE_UNIT_COUNT)
+					log.warn("The GPU only supports {} image units", MAX_IMAGE_UNITS);
 
 				if (log.isDebugEnabled() && GL_CAPS.glDebugMessageControl != 0) {
 					debugCallback = GLUtil.setupDebugMessageCallback();
@@ -1242,7 +1253,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		);
 
 		if (tiledLightingImageStore.isValid())
-			ARBShaderImageLoadStore.glBindImageTexture(TILED_LIGHTING_STORE, texTiledLighting, 0, false, 0, GL_WRITE_ONLY, GL_RGBA16I);
+			ARBShaderImageLoadStore.glBindImageTexture(
+				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, false, 0, GL_WRITE_ONLY, GL_RGBA16I);
 
 		checkGLErrors();
 
