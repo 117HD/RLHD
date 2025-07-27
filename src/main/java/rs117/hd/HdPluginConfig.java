@@ -381,12 +381,24 @@ public interface HdPluginConfig extends Config
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
 			"Reducing this may improve performance.",
-		position = 1,
+		position = 0,
 		section = lightingSettings
 	)
 	default DynamicLights dynamicLights()
 	{
 		return DynamicLights.SOME;
+	}
+
+	String KEY_TILED_LIGHTING = "tiledLighting";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING,
+		name = "Tiled Lighting",
+		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
+		section = lightingSettings,
+		position = 1
+	)
+	default boolean tiledLighting() {
+		return true;
 	}
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
@@ -984,17 +996,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean flatShading() {
 		return false;
-	}
-
-	String KEY_TILED_LIGHTING = "experimentalTiledLighting";
-	@ConfigItem(
-		keyName = KEY_TILED_LIGHTING,
-		name = "Tiled Lighting",
-		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
-		section = experimentalSettings
-	)
-	default boolean tiledLighting() {
-		return true;
 	}
 
 	String KEY_DECOUPLE_WATER_FROM_SKY_COLOR = "experimentalDecoupleWaterFromSkyColor";
