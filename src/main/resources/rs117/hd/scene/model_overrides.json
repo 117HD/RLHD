@@ -5324,23 +5324,16 @@
     ]
   },
   {
-    "description": "CAVE_WALLS_BLEND_TUNNEL",
+    "description": "Slayer Cave - Walls - Exit",
     "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
     "objectIds": [
       "SLAYER_CAVE_TUNNEL_RIGHT",
       "SLAYER_CAVE_TUNNEL_LEFT" ,
       "EYEGLO_DUNGEON_EXIT_RIGHT",
       "EYEGLO_DUNGEON_EXIT_LEFT"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.75
-  },
-  {
-    "description": "Slayer Cave - Walls - Exit",
-    "baseMaterial": "ROCK_3",
-    "uvType": "BOX",
-    "uvScale": 0.75,
-    "objectIds": [ "SLAYER_CAVE_EXIT_LEFT", "SLAYER_CAVE_EXIT_RIGHT" ],
     "colorOverrides": [
       {
         "description": "Fake light",
