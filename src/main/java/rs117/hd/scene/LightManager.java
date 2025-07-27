@@ -337,16 +337,14 @@ public class LightManager {
 							// Interpolate between tile heights based on specific scene coordinates
 							float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
 							float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
-							int baseTileX = ((int) light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-							int baseTileY = ((int) light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 							float heightNorth = HDUtils.lerp(
-								tileHeights[plane][baseTileX][baseTileY + 1],
-								tileHeights[plane][baseTileX + 1][baseTileY + 1],
+								tileHeights[plane][tileExX][tileExY + 1],
+								tileHeights[plane][tileExX + 1][tileExY + 1],
 								lerpX
 							);
 							float heightSouth = HDUtils.lerp(
-								tileHeights[plane][baseTileX][baseTileY],
-								tileHeights[plane][baseTileX + 1][baseTileY],
+								tileHeights[plane][tileExX][tileExY],
+								tileHeights[plane][tileExX + 1][tileExY],
 								lerpX
 							);
 							float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
@@ -449,7 +447,7 @@ public class LightManager {
 				Vector.subtract(cameraToLight, light.pos, plugin.cameraPosition);
 				float distToLight = Vector.dot(cameraToLight, viewDir);
 
-				float maxRadius = light.radius;
+				float maxRadius = light.def.radius;
 				switch (light.def.type) {
 					case FLICKER:
 						maxRadius *= 1.5f;
@@ -462,7 +460,10 @@ public class LightManager {
 				// Hide lights which cannot possibly affect the visible scene,
 				// by either being behind the camera, or too far beyond the edge of the scene
 				if (-maxRadius < distToLight && distToLight < drawDistance + maxRadius) {
-					light.distanceSquared = distToLight * distToLight;
+					// Prioritize lights closer to the focal point
+					float distX = plugin.cameraFocalPoint[0] - light.pos[0];
+					float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
+					light.distanceSquared = distX * distX + distZ * distZ;
 				} else {
 					light.visible = false;
 				}
