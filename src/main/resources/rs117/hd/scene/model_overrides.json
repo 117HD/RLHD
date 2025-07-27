@@ -5425,6 +5425,15 @@
     ]
   },
   {
+    "description": "ROUNDED_CAVE_WALLS_TOP",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 256,
+    "objectIds": [
+      "CAVEWALL_TOP_HIGHER"
+    ]
+  },
+  {
     "description": "TROLL_STRONGHOLD_HIDDEN_DOOR",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -44968,7 +44977,8 @@
     "uvScale": 0.75,
     "objectIds": [
       "DRAGONMOUNTEDHEAD_RED",
-      "DRAGONMOUNTEDHEAD"
+      "DRAGONMOUNTEDHEAD",
+      "DRAGONMOUNTEDHEAD3"
     ],
     "colorOverrides": [
       {
