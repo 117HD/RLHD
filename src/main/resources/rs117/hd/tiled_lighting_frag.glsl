@@ -83,21 +83,24 @@ void main() {
             for (; lightIdx < pointLightsCount; lightIdx++) {
                 vec4 lightData = PointLightArray[lightIdx].position;
                 vec3 lightWorldPos = lightData.xyz;
-
                 vec3 cameraToLight = lightWorldPos - cameraPos;
-                float t = dot(cameraToLight, viewDir);
-                if (t < 0)
-                    continue; // Closest point is behind the camera
-
-                // Check if the camera is outside of the light's radiusv
                 float lightRadiusSq = lightData.w;
-                if (dot(cameraToLight, cameraToLight) > lightRadiusSq) {
+
+                // Calculate the distance from the camera to the point closest to the light along the view ray
+                float t = dot(cameraToLight, viewDir);
+                if (t < 0) {
+                    // If the closest point lies behind the camera, the light can only contribute to the visible
+                    // scene if the camera happens to be within the light's radius
+                    if (dot(cameraToLight, cameraToLight) > lightRadiusSq)
+                        continue;
+                } else {
+                    // If the closest point lies in front of the camera, check whether the closest point along
+                    // the view ray lies within the light's radius
                     vec3 lightToClosestPoint = cameraToLight - t * viewDir;
                     float dist = length(lightToClosestPoint);
                     dist = max(0, dist - pad);
-
                     if (dist * dist > lightRadiusSq)
-                        continue; // View ray doesn't intersect with the light's sphere
+                        continue;
                 }
 
                 uint word = uint(lightIdx) >> 5u;
