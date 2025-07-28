@@ -25,80 +25,53 @@
  */
 package rs117.hd.opengl.shader;
 
-import com.google.common.annotations.VisibleForTesting;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
-import rs117.hd.utils.Props;
-import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.utils.ResourcePath.path;
+import static rs117.hd.opengl.shader.ShaderIncludes.SHADER_DUMP_PATH;
 
 @Slf4j
-public class Shader
+public class ShaderTemplate
 {
-	public static final boolean DUMP_SHADERS = Props.has("rlhd.dump-shaders");
+	private final Map<Integer, String> shaderTypePaths = new HashMap<>();
 
-	@VisibleForTesting
-	final List<Unit> units = new ArrayList<>();
-
-	@RequiredArgsConstructor
-	@VisibleForTesting
-	static class Unit
-	{
-		@Getter
-		public final int type;
-
-		@Getter
-		public final String filename;
-	}
-
-	public Shader add(int type, String name)
-	{
-		units.add(new Unit(type, name));
+	public ShaderTemplate add(int type, String name) {
+		shaderTypePaths.put(type, name);
 		return this;
 	}
 
-	public int compile(Template template) throws ShaderException, IOException
-	{
+	public ShaderTemplate remove(int type) {
+		shaderTypePaths.remove(type);
+		return this;
+	}
+
+	public int compile(ShaderIncludes includes) throws ShaderException, IOException {
 		int program = glCreateProgram();
-		int[] shaders = new int[units.size()];
+		int[] shaders = new int[shaderTypePaths.size()];
 		int i = 0;
 		boolean ok = false;
 
-		ResourcePath dumpPath = null;
-		if (DUMP_SHADERS)
-			dumpPath = path("shader-dumps").mkdirs();
-
 		try
 		{
-			while (i < shaders.length) {
-				Unit unit = units.get(i);
-				int shader = glCreateShader(unit.type);
-				if (shader == 0) {
-					throw new ShaderException("Unable to create shader of type " + unit.type);
-				}
+			for (var entry : shaderTypePaths.entrySet()) {
+				int shader = glCreateShader(entry.getKey());
+				if (shader == 0)
+					throw new ShaderException("Unable to create shader of type " + entry.getKey());
 
-				String source = template.load(unit.filename);
-				if (DUMP_SHADERS)
-					dumpPath.resolve(unit.filename).writeString(source);
-
+				String source = includes.loadFile(entry.getValue());
 				glShaderSource(shader, source);
 				glCompileShader(shader);
 
-				if (glGetShaderi(shader, GL_COMPILE_STATUS) != GL_TRUE)
-				{
-					String err = glGetShaderInfoLog(shader);
+				if (glGetShaderi(shader, GL_COMPILE_STATUS) != GL_TRUE) {
+					String error = glGetShaderInfoLog(shader);
 					glDeleteShader(shader);
-					throw ShaderException.compileError(err, template, unit);
+					throw ShaderException.compileError(includes, source, error, entry.getValue());
 				}
 
 				glAttachShader(program, shader);
@@ -107,15 +80,20 @@ public class Shader
 
 			glLinkProgram(program);
 
-			if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE)
-			{
-				String err = glGetProgramInfoLog(program);
-				throw ShaderException.compileError(err, template, units.toArray(new Unit[0]));
+			String[] paths = shaderTypePaths.values().toArray(String[]::new);
+			String combinedName = String.join(" + ", paths);
+			if (glGetProgrami(program, GL_LINK_STATUS) == GL_FALSE) {
+				throw ShaderException.compileError(
+					includes,
+					"// Linking " + combinedName,
+					glGetProgramInfoLog(program),
+					paths
+				);
 			}
 
 			ok = true;
 
-			if (DUMP_SHADERS) {
+			if (SHADER_DUMP_PATH != null) {
 				int[] numFormats = { 0 };
 				glGetIntegerv(GL41C.GL_NUM_PROGRAM_BINARY_FORMATS, numFormats);
 				if (numFormats[0] < 1) {
@@ -128,27 +106,18 @@ public class Shader
 					ByteBuffer binary = BufferUtils.createByteBuffer(size[0]);
 					GL41C.glGetProgramBinary(program, size, format, binary);
 
-					String shaderName =
-						units.stream()
-							.map(Unit::getFilename)
-							.collect(Collectors.joining(" + ")) + ".bin";
-					dumpPath.resolve(shaderName).writeByteBuffer(binary);
+					SHADER_DUMP_PATH.resolve("binaries", combinedName + ".bin").mkdirs().writeByteBuffer(binary);
 				}
 			}
-		}
-		finally
-		{
-			while (i > 0)
-			{
+		} finally {
+			while (i > 0) {
 				int shader = shaders[--i];
 				glDetachShader(program, shader);
 				glDeleteShader(shader);
 			}
 
 			if (!ok)
-			{
 				glDeleteProgram(program);
-			}
 		}
 
 		return program;

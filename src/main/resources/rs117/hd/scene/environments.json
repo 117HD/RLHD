@@ -137,7 +137,9 @@
       80,
       190
     ],
-    "fogDepth": 45
+    "fogDepth": 45,
+    "windSpeed": 10,
+    "windStrength": 35
   },
   {
     "area": "STRONGHOLD_OF_SECURITY_FAMINE",
@@ -1211,15 +1213,18 @@
   {
     "area": "ZANARIS",
     "ambientColor": "#73b5c3",
-    "ambientStrength": 0.5,
+    "ambientStrength": 1.25,
     "directionalColor": "#f5d67a",
-    "directionalStrength": 1.3,
+    "directionalStrength": 0.8,
     "sunAngles": [
-      80,
-      190
+      70,
+      210
     ],
-    "fogColor": "#163f47",
-    "fogDepth": 30
+    "fogColor": "#226470",
+    "fogDepth": 30,
+    "windAngle": 40,
+    "windSpeed": 15,
+    "windStrength": 50
   },
   {
     "area": "THE_GAUNTLET_NORMAL",
@@ -1886,6 +1891,48 @@
     "windAngle": 40,
     "windSpeed": 17,
     "windStrength": 55
+  },
+  {
+    "area": "FISHING_TRAWLER_SUNK",
+    "fogColor": "#b9d6ff",
+    "fogDepth": 30,
+    "directionalStrength": 3.5,
+    "ambientStrength": 1.25,
+    "waterColor": "#b9d6ff",
+    "instantTransition": true
+  },
+  {
+    "area": "FISHING_TRAWLER",
+    "fogColor": "#b9d6ff",
+    "fogDepth": 6.5,
+    "directionalStrength": 3.5,
+    "ambientStrength": 1.25,
+    "waterColor": "#b9d6ff",
+    "instantTransition": true
+  },
+  {
+    "area": "PURO_PURO",
+    "ambientColor": [
+      295.8393,
+      245.74895,
+      176.9941
+    ],
+    "ambientStrength": 1,
+    "directionalColor": [
+      295.8393,
+      245.74895,
+      176.9941
+    ],
+    "directionalStrength": 2,
+    "sunAngles": [
+      25,
+      135
+    ],
+    "fogColor": "#FCCB8F",
+    "fogDepth": 6.5,
+    "windStrength": 60,
+    "windSpeed": 15,
+    "instantTransition": true
   },
   {
     "key": "OVERWORLD",

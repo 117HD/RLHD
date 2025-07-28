@@ -29,8 +29,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum UIScalingMode
-{
+public enum UIScalingMode {
 	NEAREST("Nearest", 0),
 	LINEAR("Bilinear", 0),
 	MITCHELL("Mitchell", 1),
