@@ -863,7 +863,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
-			.define("HIDE_UI", developerTools.isHideUiEnabled() && hasLoggedIn)
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", Material.values().length)
@@ -2348,6 +2347,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private void drawUi(int overlayColor) {
 		if (uiResolution == null)
+			return;
+
+		if (developerTools.isHideUiEnabled() && hasLoggedIn)
 			return;
 
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater

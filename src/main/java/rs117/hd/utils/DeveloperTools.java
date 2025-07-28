@@ -2,22 +2,17 @@ package rs117.hd.utils;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
 import net.runelite.api.events.*;
-import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
-import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
-import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -52,9 +47,6 @@ public class DeveloperTools implements KeyListener {
 	private HdPlugin plugin;
 
 	@Inject
-	private Client client;
-
-	@Inject
 	private TileInfoOverlay tileInfoOverlay;
 
 	@Inject
@@ -73,7 +65,7 @@ public class DeveloperTools implements KeyListener {
 	private boolean tileInfoOverlayEnabled;
 	@Getter
 	private boolean frameTimingsOverlayEnabled;
-	private boolean shadowMapOverlayEnabled ;
+	private boolean shadowMapOverlayEnabled;
 	private boolean lightGizmoOverlayEnabled;
 	@Getter
 	private boolean hideUiEnabled;
@@ -121,21 +113,7 @@ public class DeveloperTools implements KeyListener {
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
-	}
-
-	public void toggleHideUI() {
-		hideUiEnabled = !hideUiEnabled;
-		recompileShaders();
-	}
-
-	private void recompileShaders() {
-		clientThread.invoke(() -> {
-			try {
-				plugin.recompilePrograms();
-			} catch (Exception e) {
-				log.warn("Failed to recompile programs", e);
-			}
-		});
+		hideUiEnabled = false;
 	}
 
 	@Subscribe
@@ -163,7 +141,7 @@ public class DeveloperTools implements KeyListener {
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 				break;
 			case "hideui":
-				toggleHideUI();
+				hideUiEnabled = !hideUiEnabled;
 				break;
 			case "tiledlights":
 			case "tiledlighting":
@@ -198,7 +176,7 @@ public class DeveloperTools implements KeyListener {
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
-			toggleHideUI();
+			hideUiEnabled = !hideUiEnabled;
 		} else {
 			return;
 		}
