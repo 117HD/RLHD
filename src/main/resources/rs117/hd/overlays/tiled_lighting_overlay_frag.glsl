@@ -1,6 +1,6 @@
 #version 330
 
-//#define DEBUG_LIGHT_RADIUS_PADDING
+#define DEBUG_LIGHT_RADIUS_PADDING
 
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>

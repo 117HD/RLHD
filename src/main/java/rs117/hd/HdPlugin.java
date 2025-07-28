@@ -355,13 +355,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int vboTri;
 
 	private int vaoScene;
-	private int[] fboSceneResolution;
-	private boolean fboResized;
 	private int fboScene;
 	private int rboSceneColor;
 	private int rboSceneDepth;
 	private int fboSceneResolve;
 	private int rboSceneResolveColor;
+	private int[] fboSceneResolution;
 
 	private int shadowMapResolution;
 	private int fboShadowMap;
@@ -369,7 +368,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int fboTiledLighting;
 	private int texTiledLighting;
-	private final int[] tiledLightingResolution = { 0, 0 };
+	private int[] fboTiledLightingResolution;
 
 	private int texTileHeightMap;
 
@@ -421,8 +420,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private AntiAliasingMode antiAliasingMode;
 	private int numSamples;
 
-	private int viewportOffsetX;
-	private int viewportOffsetY;
 	private int viewportWidth;
 	private int viewportHeight;
 
@@ -669,7 +666,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initShaderHotswapping();
 				initInterfaceTexture();
 				initShadowMapFbo();
-				initTiledLighting();
 
 				checkGLErrors();
 
@@ -688,6 +684,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneResolutionScale = 0;
 				Arrays.fill(sceneDpiViewport, 0);
 				antiAliasingMode = null;
+				updateSceneFbo();
 
 				gamevalManager.startUp();
 				areaManager.startUp();
@@ -762,7 +759,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyVaos();
 				destroySceneFbo();
 				destroyShadowMapFbo();
-				destroyTiledLighting();
+				destroyTiledLightingFbo();
 				destroyTileHeightMap();
 				destroyModelSortingBins();
 
@@ -1241,16 +1238,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		interfaceTexture = 0;
 	}
 
-	private void initTiledLighting() {
-		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+	private void updateTiledLightingFbo() {
+		assert configTiledLighting;
 
 		final int tileSize = 16;
-		tiledLightingResolution[0] = Math.max(1, Math.round(sceneDpiViewport[2] * sceneResolutionScale / tileSize));
-		tiledLightingResolution[1] = Math.max(1, Math.round(sceneDpiViewport[3] * sceneResolutionScale / tileSize));
+		int[] newResolution = {
+			Math.max(1, Math.round((float) fboSceneResolution[0] / tileSize)),
+			Math.max(1, Math.round((float) fboSceneResolution[1] / tileSize))
+		};
+		if (Arrays.equals(newResolution, fboTiledLightingResolution))
+			return;
 
+		destroyTiledLightingFbo();
+
+		fboTiledLightingResolution = newResolution;
 		fboTiledLighting = glGenFramebuffers();
-
 		texTiledLighting = glGenTextures();
+		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1260,8 +1264,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			GL_TEXTURE_2D_ARRAY,
 			0,
 			GL_RGBA16I,
-			tiledLightingResolution[0],
-			tiledLightingResolution[1],
+			fboTiledLightingResolution[0],
+			fboTiledLightingResolution[1],
 			DynamicLights.MAX_LIGHTS_PER_TILE / 4,
 			0,
 			GL_RGBA_INTEGER,
@@ -1275,10 +1279,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		checkGLErrors();
 
-		uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
+		uboGlobal.tiledLightingResolution.set(fboTiledLightingResolution);
 	}
 
-	private void destroyTiledLighting() {
+	private void destroyTiledLightingFbo() {
 		if (fboTiledLighting != 0)
 			glDeleteFramebuffers(fboTiledLighting);
 		fboTiledLighting = 0;
@@ -1286,6 +1290,66 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (texTiledLighting != 0)
 			glDeleteTextures(texTiledLighting);
 		texTiledLighting = 0;
+	}
+
+	private void updateSceneFbo() {
+		int viewportOffsetX = client.getViewportXOffset();
+		int viewportOffsetY = client.getViewportYOffset();
+		viewportWidth = client.getViewportWidth();
+		viewportHeight = client.getViewportHeight();
+
+		int renderWidthOff = viewportOffsetX;
+		int renderHeightOff = viewportOffsetY;
+		int renderCanvasHeight = canvasHeight;
+		int renderViewportWidth = viewportWidth;
+		int renderViewportHeight = viewportHeight;
+
+		if (client.isStretchedEnabled()) {
+			Dimension dim = client.getStretchedDimensions();
+			renderCanvasHeight = dim.height;
+
+			double scaleFactorX = dim.getWidth() / canvasWidth;
+			double scaleFactorY = dim.getHeight() / canvasHeight;
+
+			// Pad the viewport a little because having ints for our viewport dimensions can introduce off-by-one errors.
+			final int padding = 1;
+
+			// Ceil the sizes because even if the size is 599.1 we want to treat it as size 600 (i.e. render to the x=599 pixel).
+			renderViewportWidth = (int) Math.ceil(scaleFactorX * (renderViewportWidth)) + padding * 2;
+			renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
+
+			// Floor the offsets because even if the offset is 4.9, we want to render to the x=4 pixel anyway.
+			renderWidthOff = (int) Math.floor(scaleFactorX * (renderWidthOff)) - padding;
+			renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
+		}
+
+		// Check if scene FBO needs to be recreated
+		float newSceneResolutionScale = config.sceneResolutionScale() / 100f;
+		float[] newSceneDpiViewport = applyDpiScaling(
+			renderWidthOff,
+			renderCanvasHeight - renderViewportHeight - renderHeightOff,
+			renderViewportWidth,
+			renderViewportHeight
+		);
+		newSceneDpiViewport[2] = Math.max(1, newSceneDpiViewport[2]);
+		newSceneDpiViewport[3] = Math.max(1, newSceneDpiViewport[3]);
+		final AntiAliasingMode newAntiAliasingMode = config.antiAliasingMode();
+		if (sceneResolutionScale != newSceneResolutionScale ||
+			!Arrays.equals(sceneDpiViewport, newSceneDpiViewport) ||
+			antiAliasingMode != newAntiAliasingMode
+		) {
+			sceneResolutionScale = newSceneResolutionScale;
+			sceneDpiViewport = newSceneDpiViewport;
+			antiAliasingMode = newAntiAliasingMode;
+
+			destroySceneFbo();
+			try {
+				initSceneFbo();
+			} catch (Exception ex) {
+				log.error("Error while initializing scene FBO:", ex);
+				stopPlugin();
+			}
+		}
 	}
 
 	private void initSceneFbo() {
@@ -1314,8 +1378,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
 
 		fboSceneResolution = new int[] {
-			Math.round(sceneDpiViewport[2] * sceneResolutionScale),
-			Math.round(sceneDpiViewport[3] * sceneResolutionScale)
+			Math.max(1, Math.round(sceneDpiViewport[2] * sceneResolutionScale)),
+			Math.max(1, Math.round(sceneDpiViewport[3] * sceneResolutionScale))
 		};
 		uboGlobal.sceneResolution.set(fboSceneResolution);
 
@@ -1330,52 +1394,56 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Flush out all pending errors, so we can check whether the next step succeeds
 		clearGLErrors();
 
-		for (int format : desiredFormats) {
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, format, fboSceneResolution[0], fboSceneResolution[1]);
+		int format = 0;
+		for (int desiredFormat : desiredFormats) {
+			glRenderbufferStorageMultisample(GL_RENDERBUFFER, numSamples, desiredFormat, fboSceneResolution[0], fboSceneResolution[1]);
 
 			if (glGetError() == GL_NO_ERROR) {
-				// Found a usable format. Bind the RBO to the scene FBO
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
-				checkGLErrors();
-
-				// Create depth render buffer
-				rboSceneDepth = glGenRenderbuffers();
-				glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-				glRenderbufferStorageMultisample(
-					GL_RENDERBUFFER,
-					numSamples,
-					GL_DEPTH24_STENCIL8,
-					fboSceneResolution[0],
-					fboSceneResolution[1]
-				);
-				glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
-				checkGLErrors();
-
-				// If necessary, create an FBO for resolving multisampling
-				if (numSamples > 1 && sceneResolutionScale != 1) {
-					fboSceneResolve = glGenFramebuffers();
-					glBindFramebuffer(GL_FRAMEBUFFER, fboSceneResolve);
-					rboSceneResolveColor = glGenRenderbuffers();
-					glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
-					glRenderbufferStorageMultisample(
-						GL_RENDERBUFFER,
-						0,
-						format,
-						fboSceneResolution[0],
-						fboSceneResolution[1]
-					);
-					glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
-					checkGLErrors();
-				}
-
-				// Reset
-				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-				glBindRenderbuffer(GL_RENDERBUFFER, 0);
-				return;
+				format = desiredFormat;
+				break;
 			}
 		}
 
-		throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
+		if (format == 0)
+			throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
+
+		// Found a usable format. Bind the RBO to the scene FBO
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
+		checkGLErrors();
+
+		// Create depth render buffer
+		rboSceneDepth = glGenRenderbuffers();
+		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
+		glRenderbufferStorageMultisample(
+			GL_RENDERBUFFER,
+			numSamples,
+			GL_DEPTH24_STENCIL8,
+			fboSceneResolution[0],
+			fboSceneResolution[1]
+		);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
+		checkGLErrors();
+
+		// If necessary, create an FBO for resolving multisampling
+		if (numSamples > 1 && sceneResolutionScale != 1) {
+			fboSceneResolve = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, fboSceneResolve);
+			rboSceneResolveColor = glGenRenderbuffers();
+			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
+			glRenderbufferStorageMultisample(
+				GL_RENDERBUFFER,
+				0,
+				format,
+				fboSceneResolution[0],
+				fboSceneResolution[1]
+			);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
+			checkGLErrors();
+		}
+
+		// Reset
+		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	}
 
 	private void destroySceneFbo()
@@ -1399,8 +1467,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (rboSceneResolveColor != 0)
 			glDeleteRenderbuffers(rboSceneResolveColor);
 		rboSceneResolveColor = 0;
-
-		fboResized = false;
 	}
 
 	private void initShadowMapFbo() {
@@ -1517,6 +1583,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawScene(double cameraX, double cameraY, double cameraZ, double cameraPitch, double cameraYaw, int plane) {
+		updateSceneFbo();
+
 		if (sceneContext == null)
 			return;
 
@@ -1560,11 +1628,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				redrawPreviousFrame = true;
 			}
 		}
-
-		viewportOffsetX = client.getViewportXOffset();
-		viewportOffsetY = client.getViewportYOffset();
-		viewportWidth = client.getViewportWidth();
-		viewportHeight = client.getViewportHeight();
 
 		if (!enableFreezeFrame) {
 			if (!redrawPreviousFrame) {
@@ -1698,43 +1761,41 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 			uboLights.upload();
 
-			// Perform Tiled Lighting Culling before Compute Memory Barrier, so that it's performed Asynchronously
-			if (configTiledLighting && fboTiledLighting != 0 && texTiledLighting != 0) {
-				// TODO: Check if we can update the viewport here instead of when drawing the frame
-				// Check if the tiledLighting FBO needs to be recreated
-				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
-				if (fboResized) {
-					destroyTiledLighting();
-					initTiledLighting();
-				}
+			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
+			if (configTiledLighting) {
+				updateTiledLightingFbo();
 
-				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
+				if (fboTiledLighting != 0) {
+					// Check if the tiledLighting FBO needs to be recreated
+					frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
+					frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
-				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
-				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+					glViewport(0, 0, fboTiledLightingResolution[0], fboTiledLightingResolution[1]);
+					glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
 
-				glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
+					glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
 
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT);
+					glClearColor(0, 0, 0, 0);
+					glClear(GL_COLOR_BUFFER_BIT);
 
-				glBindVertexArray(vaoTri);
-				glDisable(GL_BLEND);
+					glBindVertexArray(vaoTri);
+					glDisable(GL_BLEND);
 
-				if (tiledLightingImageStore.isValid()) {
-					tiledLightingImageStore.use();
-					glDrawArrays(GL_TRIANGLES, 0, 3);
-				} else {
-					int layerCount = configDynamicLights.getLightsPerTile() / 4;
-					for (int layer = 0; layer < layerCount; layer++) {
-						tiledLightingShaderPrograms.get(layer).use();
-						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+					if (tiledLightingImageStore.isValid()) {
+						tiledLightingImageStore.use();
 						glDrawArrays(GL_TRIANGLES, 0, 3);
+					} else {
+						int layerCount = configDynamicLights.getLightsPerTile() / 4;
+						for (int layer = 0; layer < layerCount; layer++) {
+							tiledLightingShaderPrograms.get(layer).use();
+							glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+							glDrawArrays(GL_TRIANGLES, 0, 3);
+						}
 					}
-				}
 
-				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
-				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
+					frameTimer.end(Timer.RENDER_TILED_LIGHTING);
+					frameTimer.end(Timer.DRAW_TILED_LIGHTING);
+				}
 			}
 		}
 	}
@@ -2042,30 +2103,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			textureProvider != null &&
 			client.getGameState().getState() >= GameState.LOADING.getState()
 		) {
-			int renderWidthOff = viewportOffsetX;
-			int renderHeightOff = viewportOffsetY;
-			int renderCanvasHeight = canvasHeight;
-			int renderViewportWidth = viewportWidth;
-			int renderViewportHeight = viewportHeight;
-
-			if (client.isStretchedEnabled()) {
-				Dimension dim = client.getStretchedDimensions();
-				renderCanvasHeight = dim.height;
-
-				double scaleFactorX = dim.getWidth() / canvasWidth;
-				double scaleFactorY = dim.getHeight() / canvasHeight;
-
-				// Pad the viewport a little because having ints for our viewport dimensions can introduce off-by-one errors.
-				final int padding = 1;
-
-				// Ceil the sizes because even if the size is 599.1 we want to treat it as size 600 (i.e. render to the x=599 pixel).
-				renderViewportWidth = (int) Math.ceil(scaleFactorX * (renderViewportWidth)) + padding * 2;
-				renderViewportHeight = (int) Math.ceil(scaleFactorY * (renderViewportHeight)) + padding * 2;
-
-				// Floor the offsets because even if the offset is 4.9, we want to render to the x=4 pixel anyway.
-				renderWidthOff = (int) Math.floor(scaleFactorX * (renderWidthOff)) - padding;
-				renderHeightOff = (int) Math.floor(scaleFactorY * (renderHeightOff)) - padding;
-			}
+			updateSceneFbo();
 
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
 			if (computeMode == ComputeMode.OPENCL) {
@@ -2075,36 +2113,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			glBindVertexArray(vaoScene);
-
-			// Check if scene FBO needs to be recreated
-			float newSceneResolutionScale = config.sceneResolutionScale() / 100f;
-			float[] newSceneDpiViewport = applyDpiScaling(
-				renderWidthOff,
-				renderCanvasHeight - renderViewportHeight - renderHeightOff,
-				renderViewportWidth,
-				renderViewportHeight
-			);
-			final AntiAliasingMode newAntiAliasingMode = config.antiAliasingMode();
-			if (sceneResolutionScale != newSceneResolutionScale ||
-				!Arrays.equals(sceneDpiViewport, newSceneDpiViewport) ||
-				antiAliasingMode != newAntiAliasingMode
-			) {
-				sceneResolutionScale = newSceneResolutionScale;
-				sceneDpiViewport = newSceneDpiViewport;
-				antiAliasingMode = newAntiAliasingMode;
-
-				destroySceneFbo();
-				try {
-					initSceneFbo();
-					fboResized = true;
-				} catch (Exception ex) {
-					log.error("Error while initializing scene FBO:", ex);
-					stopPlugin();
-					return;
-				}
-			} else {
-				fboResized = false;
-			}
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			float fogDepth = 0;
