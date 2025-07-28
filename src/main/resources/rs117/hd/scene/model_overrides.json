@@ -27253,9 +27253,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "SAIL1_L",
-      "SAIL2_L",
-      "SAIL1_R",
-      "SAIL2_R"
+      "SAIL1_R"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
