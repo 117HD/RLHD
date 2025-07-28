@@ -40793,6 +40793,18 @@
     ]
   },
   {
+    "description": "Fortis - Toemat - Stone - Decorative Pillar",
+    "baseMaterial": "STONE_NORMALED",
+    "uvOrientation": 768,
+    "uvType": "BOX",
+    "objectIds": [
+      "PILLAR_CIVITAS01_PALACE04_LOWER01",
+      "PILLAR_CIVITAS01_PALACE05_LOWER01",
+      "PILLAR_CIVITAS01_PALACE05_HIGHER01",
+      "PILLAR_CIVITAS01_PALACE06_LOWER01"
+    ]
+  },
+  {
     "description": "Fortis wooden railing",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
