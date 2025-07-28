@@ -102,8 +102,9 @@ public interface HdPluginConfig extends Config
 		return 3;
 	}
 
+	String KEY_ANTI_ALIASING_MODE = "antiAliasingMode";
 	@ConfigItem(
-		keyName = "antiAliasingMode",
+		keyName = KEY_ANTI_ALIASING_MODE,
 		name = "Anti-Aliasing",
 		description =
 			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
@@ -116,8 +117,9 @@ public interface HdPluginConfig extends Config
 		return AntiAliasingMode.DISABLED;
 	}
 
+	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
 	@ConfigItem(
-		keyName = "sceneResolutionScale",
+		keyName = KEY_SCENE_RESOLUTION_SCALE,
 		name = "Game Resolution",
 		description =
 			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
