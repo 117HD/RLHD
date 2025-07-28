@@ -152,6 +152,14 @@ public class HDUtils {
 		return ((x % modulus) + modulus) % modulus;
 	}
 
+	public static float sign(float value) {
+		return value < 0 ? -1 : 1;
+	}
+
+	public static int sign(int value) {
+		return value < 0 ? -1 : 1;
+	}
+
 	public static float clamp(float value, float min, float max) {
 		return Math.min(Math.max(value, min), max);
 	}
@@ -197,6 +205,14 @@ public class HDUtils {
 
 	public static float[] sunAngles(float altitude, float azimuth) {
 		return new float[] { (float) Math.toRadians(altitude), (float) Math.toRadians(azimuth) };
+	}
+
+	public static float[] ensureArrayLength(float[] array, int targetLength) {
+		if (array.length == targetLength)
+			return array;
+		float[] corrected = new float[targetLength];
+		System.arraycopy(array, 0, corrected, 0, Math.min(array.length, corrected.length));
+		return corrected;
 	}
 
 	public static int convertWallObjectOrientation(int orientation) {

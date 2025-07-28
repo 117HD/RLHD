@@ -26,6 +26,7 @@ package rs117.hd.scene;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,10 +54,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class EnvironmentManager {
-	private static final ResourcePath ENVIRONMENTS_PATH = Props.getPathOrDefault(
-		"rlhd.environments-path",
-		() -> path(EnvironmentManager.class, "environments.json")
-	);
+	private static final ResourcePath ENVIRONMENTS_PATH = Props
+		.getFile("rlhd.environments-path", () -> path(EnvironmentManager.class, "environments.json"));
 
 	@Inject
 	private Client client;
@@ -344,7 +343,7 @@ public class EnvironmentManager {
 		var overworldEnv = getOverworldEnvironment();
 		float[] sunAngles = env.sunAngles;
 		if (sunAngles == null)
-			sunAngles = overworldEnv.sunAngles;
+			sunAngles = Objects.requireNonNullElse(overworldEnv.sunAngles, Environment.DEFAULT_SUN_ANGLES);
 		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
 
 		if (!config.atmosphericLighting() && !env.force)
