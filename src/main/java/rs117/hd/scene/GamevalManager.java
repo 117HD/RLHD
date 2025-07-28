@@ -26,10 +26,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class GamevalManager {
-	private static final ResourcePath GAMEVAL_PATH = Props.getPathOrDefault(
-		"rlhd.gameval-path",
-		() -> path(GamevalManager.class, "gamevals.json")
-	);
+	private static final ResourcePath GAMEVAL_PATH = Props
+		.getFile("rlhd.gameval-path", () -> path(GamevalManager.class, "gamevals.json"));
 
 	private static final String NPC_KEY = "npcs";
 	private static final String OBJECT_KEY = "objects";

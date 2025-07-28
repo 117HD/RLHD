@@ -26,9 +26,8 @@
 #include THREAD_COUNT
 #include FACES_PER_THREAD
 
-#include cl_types.cl
-#include common.cl
-#include priority_render.cl
+#include "common.cl"
+#include "priority_render.cl"
 
 __kernel
 __attribute__((work_group_size_hint(THREAD_COUNT, 1, 1)))
@@ -41,7 +40,7 @@ void sortModel(
   __global struct VertexData *vout,
   __global struct UVData *uvout,
   __global float4 *normalout,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   read_only image3d_t tileHeightMap
 ) {
   size_t groupId = get_group_id(0);

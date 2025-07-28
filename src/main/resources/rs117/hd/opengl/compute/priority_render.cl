@@ -22,16 +22,14 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include constants.cl
-#include common.cl
-#include vanilla_uvs.cl
+#include "constants.cl"
+#include "common.cl"
 
 int priority_map(int p, int distance, int _min10, int avg1, int avg2, int avg3);
 int count_prio_offset(__local struct shared_data *shared, int priority);
 void get_face(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   __global const struct VertexData *vb,
   uint localId,
   struct ModelInfo minfo,
@@ -44,7 +42,7 @@ void get_face(
 );
 void add_face_prio_distance(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   struct VertexData thisrvA,
@@ -59,6 +57,25 @@ void insert_face(__local struct shared_data *shared, uint localId, struct ModelI
 int tile_height(read_only image3d_t tileHeightMap, int z, int x, int y);
 void hillskew_vertex(read_only image3d_t tileHeightMap, float4 *v, int hillskew, int modelPosY, float modelHeight, int plane);
 void undoVanillaShading(struct VertexData *vertex, float3 unrotatedNormal);
+float3 applyCharacterDisplacement(
+    float3 characterPos,
+    float2 vertPos,
+    float height,
+    float strength,
+    float* offsetAccum
+);
+void applyWindDisplacement(
+    __constant struct UBOCompute *uni,
+    const struct ObjectWindSample windSample,
+    int vertexFlags,
+    float modelHeight,
+    float3 worldPos,
+    float3 vertA, float3 vertB, float3 vertC,
+    float3 normA, float3 normB, float3 normC,
+    float3* displacementA,
+    float3* displacementB,
+    float3* displacementC
+);
 void sort_and_insert(
   __local struct shared_data *shared,
   __global const struct UVData *uv,
@@ -66,7 +83,7 @@ void sort_and_insert(
   __global struct VertexData *vout,
   __global struct UVData *uvout,
   __global float4 *normalout,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,
@@ -136,7 +153,7 @@ int count_prio_offset(__local struct shared_data *shared, int priority) {
 
 void get_face(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   __global const struct VertexData *vb,
   uint localId,
   struct ModelInfo minfo,
@@ -191,7 +208,7 @@ void get_face(
 
 void add_face_prio_distance(
   __local struct shared_data *shared,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   struct VertexData thisrvA,
@@ -364,7 +381,7 @@ float3 applyCharacterDisplacement(
 }
 
 void applyWindDisplacement(
-    __constant struct ComputeUniforms *uni,
+    __constant struct UBOCompute *uni,
     const struct ObjectWindSample windSample,
     int vertexFlags,
     float modelHeight,
@@ -375,8 +392,8 @@ void applyWindDisplacement(
     float3* displacementB,
     float3* displacementC
 ) {
+#if WIND_DISPLACEMENT || CHARACTER_DISPLACEMENT
     const int windDisplacementMode = (vertexFlags >> MATERIAL_FLAG_WIND_SWAYING) & 0x7;
-
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
@@ -438,6 +455,12 @@ void applyWindDisplacement(
             strengthC = clamp(strengthC - VertexDisplacementMod, 0.0f, 1.0f);
         }
     }
+
+    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+        *displacementA += windSample.displacement * strengthA;
+        *displacementB += windSample.displacement * strengthB;
+        *displacementC += windSample.displacement * strengthC;
+    }
 #endif // WIND_DISPLACEMENT
 
 #if CHARACTER_DISPLACEMENT
@@ -456,13 +479,7 @@ void applyWindDisplacement(
     }
 #endif
 
-#if WIND_DISPLACEMENT
-    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-        *displacementA += windSample.displacement * strengthA;
-        *displacementB += windSample.displacement * strengthB;
-        *displacementC += windSample.displacement * strengthC;
-    }
-#endif
+#endif // WIND_DISPLACEMENT || CHARACTER_DISPLACEMENT
 }
 
 void sort_and_insert(
@@ -472,7 +489,7 @@ void sort_and_insert(
   __global struct VertexData *vout,
   __global struct UVData *uvout,
   __global float4 *normalout,
-  __constant struct ComputeUniforms *uni,
+  __constant struct UBOCompute *uni,
   uint localId,
   struct ModelInfo minfo,
   int thisPriority,

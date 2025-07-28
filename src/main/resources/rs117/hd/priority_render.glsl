@@ -22,8 +22,9 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <uniforms/compute.glsl>
 
-#include utils/constants.glsl
+#include <utils/constants.glsl>
 
 layout(binding = 3) uniform isampler3D tileHeightMap;
 
@@ -263,7 +264,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     float strengthB = saturate(abs(vertB.y) / modelHeight);
     float strengthC = saturate(abs(vertC.y) / modelHeight);
 
-    #if WIND_DISPLACEMENT
+#if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0; // Snap so vertices which are almost overlapping will obtain the same noise value
         const float VertexDisplacementMod = 0.2; // Avoid over stretching which can cause issues in ComputeUVs
@@ -314,9 +315,16 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             }
         }
     }
-    #endif
 
-    #if CHARACTER_DISPLACEMENT
+    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
+        // Object Displacement
+        displacementA += windSample.displacement * strengthA;
+        displacementB += windSample.displacement * strengthB;
+        displacementC += windSample.displacement * strengthC;
+    }
+#endif
+
+#if CHARACTER_DISPLACEMENT
     if (windDisplacementMode == WIND_DISPLACEMENT_OBJECT) {
         vec2 worldVertA = (worldPos + vertA).xz;
         vec2 worldVertB = (worldPos + vertB).xz;
@@ -331,16 +339,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
                 break;
         }
     }
-    #endif
-
-    #if WIND_DISPLACEMENT
-    if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-        // Object Displacement
-        displacementA += windSample.displacement * strengthA;
-        displacementB += windSample.displacement * strengthB;
-        displacementC += windSample.displacement * strengthC;
-    }
-    #endif
+#endif
 }
 
 void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int thisDistance, ObjectWindSample windSample) {
@@ -351,7 +350,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         int outOffset = minfo.idx;
         int uvOffset = minfo.uvOffset;
         int flags = minfo.flags;
-        vec3 pos = vec3(minfo.x, minfo.y >> 16, minfo.z);
+        vec3 modelPos = vec3(minfo.x, minfo.y >> 16, minfo.z);
         float height = minfo.y & 0xffff;
         int orientation = flags & 0x7ff;
         int vertexFlags = uvOffset >= 0 ? uv[uvOffset + localId * 3].materialFlags : 0;
@@ -383,7 +382,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         vec4 normB = normal[offset + localId * 3 + 1];
         vec4 normC = normal[offset + localId * 3 + 2];
 
-        applyWindDisplacement(windSample, vertexFlags, height, pos,
+        applyWindDisplacement(windSample, vertexFlags, height, modelPos,
             thisrvA.pos, thisrvB.pos, thisrvC.pos,
             normA.xyz, normB.xyz, normC.xyz,
             displacementA, displacementB, displacementC);
@@ -416,9 +415,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         }
         #endif
 
-        thisrvA.pos += pos;
-        thisrvB.pos += pos;
-        thisrvC.pos += pos;
+        thisrvA.pos += modelPos;
+        thisrvB.pos += modelPos;
+        thisrvC.pos += modelPos;
 
         // apply hillskew
         int plane = flags >> 24 & 3;
@@ -426,9 +425,9 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         if ((vertexFlags >> MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING & 1) == 1)
             hillskewFlags |= HILLSKEW_TILE_SNAPPING;
         if (hillskewFlags != HILLSKEW_NONE) {
-            hillskew_vertex(thisrvA.pos, hillskewFlags, pos.y, height, plane);
-            hillskew_vertex(thisrvB.pos, hillskewFlags, pos.y, height, plane);
-            hillskew_vertex(thisrvC.pos, hillskewFlags, pos.y, height, plane);
+            hillskew_vertex(thisrvA.pos, hillskewFlags, modelPos.y, height, plane);
+            hillskew_vertex(thisrvB.pos, hillskewFlags, modelPos.y, height, plane);
+            hillskew_vertex(thisrvC.pos, hillskewFlags, modelPos.y, height, plane);
         }
 
         // position vertices in scene and write to out buffer
@@ -456,15 +455,15 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
                 uvC.uvw = rotate(uvC.uvw, orientation);
 
                 // Shift texture triangles to world space
-                uvA.uvw += pos;
-                uvB.uvw += pos;
-                uvC.uvw += pos;
+                uvA.uvw += modelPos;
+                uvB.uvw += modelPos;
+                uvC.uvw += modelPos;
 
                 // For vanilla UVs, the first 3 components are an integer position vector
                 if (hillskewFlags != HILLSKEW_NONE) {
-                    hillskew_vertex(uvA.uvw, hillskewFlags, pos.y, height, plane);
-                    hillskew_vertex(uvB.uvw, hillskewFlags, pos.y, height, plane);
-                    hillskew_vertex(uvC.uvw, hillskewFlags, pos.y, height, plane);
+                    hillskew_vertex(uvA.uvw, hillskewFlags, modelPos.y, height, plane);
+                    hillskew_vertex(uvB.uvw, hillskewFlags, modelPos.y, height, plane);
+                    hillskew_vertex(uvC.uvw, hillskewFlags, modelPos.y, height, plane);
                 }
             }
         }
