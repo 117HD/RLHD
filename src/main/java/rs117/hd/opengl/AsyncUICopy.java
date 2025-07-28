@@ -9,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 
@@ -18,6 +19,9 @@ import static org.lwjgl.opengl.GL33C.*;
 public class AsyncUICopy implements Runnable {
 	@Inject
 	private Client client;
+
+	@Inject
+	private HdPlugin plugin;
 
 	@Inject
 	private FrameTimer timer;
@@ -51,8 +55,10 @@ public class AsyncUICopy implements Runnable {
 		ByteBuffer buffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		timer.end(Timer.MAP_UI_BUFFER);
-		if (buffer == null)
+		if (buffer == null) {
+			log.error("Unable to map interface PBO. Skipping UI...");
 			return;
+		}
 
 		this.interfacePbo = interfacePbo;
 		this.interfaceTexture = interfaceTex;
@@ -79,15 +85,21 @@ public class AsyncUICopy implements Runnable {
 			throw new RuntimeException(e);
 		}
 
+		var uiResolution = plugin.getUiResolution();
+		if (uiResolution == null || width > uiResolution[0] || height > uiResolution[1]) {
+			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", width, height, uiResolution);
+			return false;
+		}
+
 		timer.begin(Timer.UPLOAD_UI);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
+		glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 		timer.end(Timer.UPLOAD_UI);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		glBindTexture(GL_TEXTURE_2D, 0);
 
 		mappedBuffer = null;
 		pixels = null;

@@ -1774,14 +1774,18 @@
     "groundMaterial": "MARBLE_2_GLOSS"
   },
   {
-    "name": "TAVERLEY_DUNGEON_GRAVEL_OVERLAY",
-    "area": "TAVERLEY_DUNGEON",
+    "name": "TAVERLEY_DUNGEON_GRAVEL",
+    "area": "TAVERLEY_DUNGEON_GRAVEL",
     "overlayIds": [
       2,
       10,
       34
     ],
-    "groundMaterial": "GRAVEL"
+    "underlayIds": [ 56 ],
+    "groundMaterial": "GRAVEL",
+    "minLightness": 19,
+    "maxSaturation": 0,
+    "maxHue": 1
   },
   {
     "name": "ASGARNIA_MOUNTAINS_VERTICAL_DIRT_FIX",
@@ -3343,6 +3347,16 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "KOUREND_CASTLE_UNDER_STATUE_FIX",
+    "area": "GREAT_KOUREND_STATUE",
+    "overlayIds": [
+      1
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "uvScale": 1.2
+  },
+  {
     "name": "KOUREND_CASTLE_BLEND_FIX",
     "area": "KOUREND_CASTLE_ENTRANCE_FIX",
     "overlayIds": [
@@ -3590,7 +3604,8 @@
     "name": "OVERLAY_ZEAH_PATHS",
     "area": "ZEAH",
     "overlayIds": [
-      11
+      11,
+      50
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
@@ -3951,12 +3966,16 @@
     "groundMaterial": "TRANSPARENT"
   },
   {
-    "name": "FISHING_TRAWLER_BOAT_FLOODED",
-    "area": "FISHING_TRAWLER_BOAT_FLOODED",
+    "name": "FISHING_TRAWLER",
+    "area": "FISHING_TRAWLER",
     "overlayIds": [
+      0,
       6
     ],
-    "waterType": "WATER_FLAT",
+    "underlayIds": [
+      75
+    ],
+    "waterType": "PLAIN_WATER",
     "blended": false
   },
   {
@@ -5526,7 +5545,9 @@
       59,
       124
     ],
-    "groundMaterial": "GRASS_1"
+    "groundMaterial": "GRASS_1",
+    "shiftHue": 1,
+    "shiftSaturation": 1
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_WAR_GRAVEL",
@@ -6934,7 +6955,7 @@
     "maxLightness": 100
   },
   {
-    "name": "TAVERLY_DUNGEON_DIRT",
+    "name": "TAVERLEY_DUNGEON_DIRT",
     "area": "TAVERLEY_DUNGEON",
     "underlayIds": [
       50,
@@ -6946,8 +6967,8 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
-    "name": "TAVERLY_DUNGEON_BLACK_KNIGHTS_BASE",
-    "area": "TAVERLEY_DUNGEON",
+    "name": "TAVERLEY_DUNGEON_BLACK_KNIGHTS_BASE",
+    "area": "TAVERLEY_DUNGEON_BLACK_KNIGHT_BASE",
     "underlayIds": [
       56,
       57

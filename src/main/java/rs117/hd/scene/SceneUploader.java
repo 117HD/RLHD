@@ -52,7 +52,6 @@ import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.NORMAL_SIZE;
-import static rs117.hd.HdPlugin.SCALAR_BYTES;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
@@ -143,8 +142,8 @@ public class SceneUploader {
 			String.format(
 				"%.2f",
 				(
-					sceneContext.getVertexOffset() * (VERTEX_SIZE + NORMAL_SIZE) * SCALAR_BYTES +
-					sceneContext.getUvOffset() * UV_SIZE * SCALAR_BYTES
+					sceneContext.getVertexOffset() * 4L * (VERTEX_SIZE + NORMAL_SIZE) +
+					sceneContext.getUvOffset() * 4L * UV_SIZE
 				) / 1e6
 			)
 		);
@@ -1293,8 +1292,8 @@ public class SceneUploader {
 	}
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
-		// 11-bit water depth | 5-bit water type | 2-bit plane | terrain flag
-		int terrainData = waterDepth << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
+		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
 		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return terrainData;
 	}

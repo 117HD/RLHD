@@ -26,6 +26,8 @@
 #include NORMAL_MAPPING
 
 #if NORMAL_MAPPING
+#include <uniforms/materials.glsl>
+
 vec3 sampleNormalMap(const Material material, const vec2 uv, const mat3 TBN) {
     if (material.normalMap == -1)
         return TBN[2];

@@ -1,8 +1,10 @@
 package rs117.hd.opengl.uniforms;
 
+import rs117.hd.utils.buffer.GLBuffer;
+
 import static org.lwjgl.opengl.GL33C.*;
 
-public class MaterialUniforms extends UniformBuffer {
+public class UBOMaterials extends UniformBuffer<GLBuffer> {
 	public static class MaterialStruct extends StructProperty {
 		public Property colorMap = addProperty(PropertyType.Int, "colorMap");
 		public Property normalMap = addProperty(PropertyType.Int, "normalMap");
@@ -23,8 +25,8 @@ public class MaterialUniforms extends UniformBuffer {
 
 	public MaterialStruct[] materials;
 
-	public MaterialUniforms(int materialCount) {
-		super("Materials", GL_STATIC_DRAW);
+	public UBOMaterials(int materialCount) {
+		super(GL_STATIC_DRAW);
 		materials = addStructs(new MaterialStruct[materialCount], MaterialStruct::new);
 	}
 }
