@@ -35,6 +35,7 @@ import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
+import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
@@ -549,6 +550,65 @@ public interface HdPluginConfig extends Config
 	)
 	String environmentSettings = "environmentSettings";
 
+	@ConfigSection(
+		name = "Day/Night Cycle",
+		description = "Dynamic day and night cycle settings",
+		position = 3,
+		closedByDefault = true
+	)
+	String daylightCycleSettings = "daylightCycleSettings";
+
+	@ConfigItem(
+		keyName = "enableDaylightCycle",
+		name = "Enable Day/Night Cycle",
+		description = "Enables the dynamic day/night cycle with realistic sun positioning and brightness changes",
+		position = 0,
+		section = daylightCycleSettings
+	)
+	default boolean enableDaylightCycle() {
+		return false;
+	}
+
+	// Hidden cycle mode - only DYNAMIC is now available
+	@ConfigItem(keyName = "daylightCycle", hidden = true, name = "", description = "")
+	default DaylightCycle daylightCycle() {
+		return DaylightCycle.DYNAMIC;
+	}
+
+
+	@Range(min = 1, max = 720)
+	@ConfigItem(
+		keyName = "cycleDurationMinutes",
+		name = "Cycle Duration (minutes)",
+		description = "How long a complete day/night cycle should take in real-time minutes.<br>" +
+			"• 1 minute = Very fast cycle for testing<br>" +
+			"• 30 minutes = Quick atmospheric changes<br>" +
+			"• 60 minutes = Default hourly cycle<br>" +
+			"• 180+ minutes = Slow, immersive cycle",
+		position = 1,
+		section = daylightCycleSettings
+	)
+	default int cycleDurationMinutes() {
+		return 60;
+	}
+
+	@Range(min = 10, max = 80)
+	@ConfigItem(
+		keyName = "minimumBrightness",
+		name = "Minimum Brightness (%)",
+		description = "The minimum brightness level during nighttime.<br>" +
+			"• 10% = Very dark nights<br>" +
+			"• 25% = Dark but playable<br>" +
+			"• 35% = Default comfortable darkness<br>" +
+			"• 50% = Bright nights for easy gameplay<br>" +
+			"• 70%+ = Very bright nights (minimal difference from day)",
+		position = 2,
+		section = daylightCycleSettings
+	)
+	default int minimumBrightness() {
+		return 35;
+	}
+
 	String KEY_SEASONAL_THEME = "seasonalTheme";
 	@ConfigItem(
 		keyName = KEY_SEASONAL_THEME,
@@ -750,7 +810,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Model caching",
 		description = "Improve performance by reusing model data",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String modelCachingSettings = "modelCachingSettings";
@@ -809,7 +869,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -924,7 +984,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
@@ -1020,6 +1080,10 @@ public interface HdPluginConfig extends Config
 	}
 
 	String KEY_ASYNC_UI_COPY = "experimentalAsyncUICopy";
+	String KEY_ENABLE_DAYLIGHT_CYCLE = "enableDaylightCycle";
+	String KEY_DAYLIGHT_CYCLE = "daylightCycle";
+	String KEY_CYCLE_DURATION = "cycleDurationMinutes";
+	String KEY_MINIMUM_BRIGHTNESS = "minimumBrightness";
 	@ConfigItem(
 		keyName = KEY_ASYNC_UI_COPY,
 		name = "Perform UI copy asynchronously",

@@ -60,6 +60,13 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     vec2 distortion = uvFlow * .00075;
     float shadow = sampleShadowMap(IN.position, waterTypeIndex, distortion, lightDotNormals);
+    
+    // Apply shadow fading based on sun angle - lightStrength already includes shadowVisibility
+    // When lightStrength is reduced due to low sun angle, reduce shadow intensity proportionally
+    // This ensures water shadows fade consistently with terrain shadows
+    float shadowFadeMultiplier = clamp(lightStrength / 0.9, 0.0, 1.0); // 0.9 is max expected lightStrength
+    shadow *= shadowFadeMultiplier;
+    
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
