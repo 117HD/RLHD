@@ -1684,13 +1684,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
 				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(
-					projectionMatrix, Mat4.translate(
-						-cameraPosition[0],
-						-cameraPosition[1],
-						-cameraPosition[2]
-					)
-				);
+				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
 				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
 
 				uboGlobal.cameraPos.set(cameraPosition);

@@ -3,7 +3,6 @@
 #include <uniforms/lights.glsl>
 
 #if DYNAMIC_LIGHTS
-
 #include <utils/specular.glsl>
 
 void calculateLight(
@@ -61,7 +60,6 @@ void calculateLighting(
                 pointLightsOut, pointLightsSpecularOut);
     #endif
 }
-
 #else
 #define calculateLighting(position, normals, viewDir, texBlend, specularGloss, specularStrength, pointLightsOut,  pointLightsSpecularOut)
 #endif
