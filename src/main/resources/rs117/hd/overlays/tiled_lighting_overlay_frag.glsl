@@ -1,6 +1,6 @@
 #version 330
 
-//#define DEBUG_LIGHT_RADIUS_PADDING
+#define DEBUG_LIGHT_RADIUS_PADDING
 
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
@@ -42,8 +42,10 @@ void main() {
         vec3 viewDirCenter = normalize(farPosCenter.xyz / farPosCenter.w);
 
         for (uint lightIdx = 0u; lightIdx < uint(MAX_LIGHT_COUNT); lightIdx++) {
-            vec3 lightWorldPos = PointLightArray[lightIdx].position.xyz;
-            float lightRadiusSq = PointLightArray[lightIdx].position.w;
+            PointLight light = PointLightArray[lightIdx];
+            vec3 lightWorldPos = light.position.xyz;
+            float paddedLightRadiusSq = light.position.w;
+            float lightRadiusSq = light.color.w;
             vec3 cameraToLight = lightWorldPos - cameraPos;
 
             // Calculate the distance from the camera to the point closest to the light along the view ray
@@ -56,9 +58,6 @@ void main() {
 
                 c.g = 1;
             } else {
-                const int tileSize = 16;
-                float pad = tileSize * (512.f / cameraZoom) * 15;
-                float paddedLightRadiusSq = pow(sqrt(lightRadiusSq) + pad, 2.f);
 
                 // High resolution UVs
                 vec3 accurateLightToClosestPoint = cameraToLight - t * viewDir;

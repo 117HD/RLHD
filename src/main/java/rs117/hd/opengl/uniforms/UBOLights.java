@@ -14,6 +14,6 @@ public class UBOLights extends UniformBuffer<GLBuffer> {
 
 	public static class LightStruct extends UniformBuffer.StructProperty {
 		public Property position = addProperty(PropertyType.FVec4, "position");
-		public Property color = addProperty(PropertyType.FVec3, "color");
+		public Property color = addProperty(PropertyType.FVec4, "color");
 	}
 }

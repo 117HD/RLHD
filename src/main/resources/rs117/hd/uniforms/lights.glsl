@@ -5,7 +5,7 @@
 #if DYNAMIC_LIGHTS
 struct PointLight {
     vec4 position;
-    vec3 color;
+    vec4 color;
 };
 
 layout(std140) uniform UBOLights {

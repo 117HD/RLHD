@@ -84,22 +84,21 @@ void main() {
                 vec4 lightData = PointLightArray[lightIdx].position;
                 vec3 lightWorldPos = lightData.xyz;
                 vec3 cameraToLight = lightWorldPos - cameraPos;
-                float lightRadiusSq = lightData.w;
+                float paddedLightRadiusSq = lightData.w;
 
                 // Calculate the distance from the camera to the point closest to the light along the view ray
                 float t = dot(cameraToLight, viewDir);
                 if (t < 0) {
                     // If the closest point lies behind the camera, the light can only contribute to the visible
                     // scene if the camera happens to be within the light's radius
-                    if (dot(cameraToLight, cameraToLight) > lightRadiusSq)
+                    if (dot(cameraToLight, cameraToLight) > paddedLightRadiusSq)
                         continue;
                 } else {
                     // If the closest point lies in front of the camera, check whether the closest point along
                     // the view ray lies within the light's radius
                     vec3 lightToClosestPoint = cameraToLight - t * viewDir;
-                    float dist = length(lightToClosestPoint);
-                    dist = max(0, dist - pad); // TODO: move to Java
-                    if (dist * dist > lightRadiusSq)
+                    float distSq = dot(lightToClosestPoint, lightToClosestPoint);
+                    if (distSq > paddedLightRadiusSq)
                         continue;
                 }
 

@@ -1701,16 +1701,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				var struct = uboLights.lights[i];
+				float paddedRadius = light.radius;
+				paddedRadius += 16 * (512.f / cameraZoom) * 15;
 				struct.position.set(
 					light.pos[0] + cameraShift[0],
 					light.pos[1],
 					light.pos[2] + cameraShift[1],
-					light.radius * light.radius
+					paddedRadius * paddedRadius
 				);
 				struct.color.set(
 					light.color[0] * light.strength,
 					light.color[1] * light.strength,
-					light.color[2] * light.strength
+					light.color[2] * light.strength,
+					light.radius * light.radius
 				);
 			}
 			uboLights.upload();
