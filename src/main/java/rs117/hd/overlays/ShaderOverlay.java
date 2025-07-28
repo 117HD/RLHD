@@ -405,7 +405,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	protected void updateUniforms() {}
 
 	protected void render() {
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 	}
 
@@ -438,5 +438,23 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 			g.drawRect(0, 0, bounds.width, bounds.height);
 		}
 		return bounds.getSize();
+	}
+
+	protected void drawStringShadowed(Graphics2D g, String s, float x, float y) {
+		var c = g.getColor();
+		g.setColor(Color.BLACK);
+		g.drawString(s, x + 1, y + 1);
+		g.setColor(c);
+		g.drawString(s, x, y);
+	}
+
+	protected void drawStringCentered(Graphics2D g, String s, float x, float y) {
+		var m = g.getFontMetrics();
+		drawStringShadowed(g, s, x - m.stringWidth(s) / 2.f, y + m.getHeight() / 2.f);
+	}
+
+	protected void drawStringCentered(Graphics2D g, String s) {
+		var b = g.getClipBounds();
+		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
 	}
 }
