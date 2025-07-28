@@ -7071,13 +7071,6 @@
     ]
   },
   {
-    "description": "Lighthouse Spiral Stairs",
-    "baseMaterial": "WOOD_GRAIN_LIGHT",
-    "objectIds": [
-    ],
-    "castShadows": false
-  },
-  {
     "description": "Lighthouse Support Pillars",
     "baseMaterial": "WOOD_GRAIN_LIGHT",
     "objectIds": [
@@ -11051,7 +11044,7 @@
     "colorOverrides": [
       {
         "description": "Doors",
-        "colors": " h == 6",
+        "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       },
@@ -15639,7 +15632,7 @@
     "colorOverrides": [
       {
         "description": "Ornament",
-        "colors": " a < 255",
+        "colors": "a < 255",
         "baseMaterial": "BLANK_GLOSS"
       }
     ]
@@ -45845,7 +45838,6 @@
       "FAI_VARROCK_WINDMILL_BALCONY_WALL_MIRROR"
     ],
     "colorOverrides": [
-
       {
         "description": "Wall",
         "colors": "h == 8",
