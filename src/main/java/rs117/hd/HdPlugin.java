@@ -920,7 +920,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
 
-		if (configDynamicLights != DynamicLights.NONE) {
+		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
 			if (GL_CAPS.GL_ARB_shader_image_load_store) {
 				tiledLightingImageStore.compile(includes
 					.define("TILED_IMAGE_STORE", true)
@@ -2303,14 +2303,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Blit from the resolved FBO to the default FBO
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			glBlitFramebuffer(
-				0,
-				0,
-				sceneResolution[0],
-				sceneResolution[1],
-				sceneViewport[0],
-				sceneViewport[1],
-				sceneViewport[0] + sceneViewport[2],
-				sceneViewport[1] + sceneViewport[3],
+				0, 0, sceneResolution[0], sceneResolution[1],
+				sceneViewport[0], sceneViewport[1], sceneViewport[0] + sceneViewport[2], sceneViewport[1] + sceneViewport[3],
 				GL_COLOR_BUFFER_BIT, config.sceneScalingMode().glFilter
 			);
 		} else {
