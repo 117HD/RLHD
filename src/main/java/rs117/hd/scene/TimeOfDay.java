@@ -137,11 +137,11 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - gradual progression
-			{ -30.0, new java.awt.Color(20, 25, 35) },    // Deepest night (much darker)
-			{ -15.0, new java.awt.Color(22, 28, 40) },    // Stable deep night
-			{ -8.0,  new java.awt.Color(23, 30, 42) },    // Very subtle brightening
-			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Peak sunset red
+			// Deep night (sun well below horizon) - lightened and gradual progression
+			{ -30.0, new java.awt.Color(35, 42, 58) },    // Deepest night (lightened)
+			{ -15.0, new java.awt.Color(35, 42, 58) },    // Stable deep night (lightened)
+			{ -8.0,  new java.awt.Color(42, 30, 80) },    // Early twilight brightening (lightened)
+			{ 0.0,   new java.awt.Color(210, 135, 95) },  // Peak sunset red
 			{ 8.0,   new java.awt.Color(220, 170, 115) }, // Late golden hour (dimmed)
 			{ 12.0,  new java.awt.Color(220, 180, 145) }, // Warm late afternoon
 			{ 15.0,  new java.awt.Color(200, 175, 160) }, // Soft warm light
@@ -162,18 +162,18 @@ public class TimeOfDay
 		// Calculate blend factor based sun altitude
 		// Maintain regional character even during sunrise/sunset in gloomy areas
 		float blendFactor;
-		// Smooth continuous linear progression throughout, increased sunset blending
+		// Smooth continuous linear progression throughout, increased sunset blending starting earlier
 		if (sunAltitudeDegrees >= 40) {
 			// Very high sun - maximum regional influence (100% regional)
 			blendFactor = 1.0f;
 		} else if (sunAltitudeDegrees >= 10) {
 			// High sun - strong regional influence (50-100% regional)
 			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 10) / 30.0) * 0.50);
-		} else if (sunAltitudeDegrees >= 0) {
-			// Sunset period - increased regional influence (0% to 50% regional)
-			blendFactor = (float) (sunAltitudeDegrees / 10.0) * 0.50f;
+		} else if (sunAltitudeDegrees >= -3) {
+			// Extended sunset period - gradual regional influence (0% to 50% regional)
+			blendFactor = (float) ((sunAltitudeDegrees + 3) / 13.0) * 0.50f;
 		} else {
-			// After sunset - no regional influence (0% regional) to show pure dynamic colors
+			// Deep twilight/night - no regional influence (0% regional) to show pure dynamic colors
 			blendFactor = 0.0f;
 		}
 		
