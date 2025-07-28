@@ -473,7 +473,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
-	private int cameraZoom;
+	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
@@ -1614,12 +1614,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int newZoom = configShadowsEnabled && configExpandShadowDraw ? client.get3dZoom() / 2 : client.get3dZoom();
 				if (!Arrays.equals(cameraPosition, newCameraPosition) ||
 					!Arrays.equals(cameraOrientation, newCameraOrientation) ||
-					cameraZoom != newZoom ||
+					visibilityCheckZoom != newZoom ||
 					drawDistanceChanged
 				) {
 					System.arraycopy(newCameraPosition, 0, cameraPosition, 0, cameraPosition.length);
 					System.arraycopy(newCameraOrientation, 0, cameraOrientation, 0, cameraOrientation.length);
-					cameraZoom = newZoom;
+					visibilityCheckZoom = newZoom;
 					tileVisibilityCached = false;
 				}
 
@@ -2940,14 +2940,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			final int transformedX = z * yawSin + yawCos * x >> 16;
 			final int leftPoint = transformedX - tileRadius;
 			// Check left and right bounds
-			if (leftPoint * cameraZoom < rightClip * depth) {
+			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
 				final int rightPoint = transformedX + tileRadius;
-				if (rightPoint * cameraZoom > leftClip * depth) {
+				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
 					// Transform the local Y using pitch (vertical rotation)
 					final int transformedY = pitchCos * y - transformedZ * pitchSin;
 					final int bottomPoint = transformedY + pitchSin * tileRadius >> 16;
 					// Check top bound (we skip bottom bound to avoid computing model heights)
-					visible = bottomPoint * cameraZoom > topClip * depth;
+					visible = bottomPoint * visibilityCheckZoom > topClip * depth;
 				}
 			}
 		}
@@ -2976,17 +2976,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (depth > NEAR_PLANE) {
 			final int transformedX = z * yawSin + yawCos * x >> 16;
 			final int leftPoint = transformedX - modelRadius;
-			if (leftPoint * cameraZoom < rightClip * depth) {
+			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
 				final int rightPoint = transformedX + modelRadius;
-				if (rightPoint * cameraZoom > leftClip * depth) {
+				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
 					final int transformedY = pitchCos * y - transformedZ * pitchSin >> 16;
 					final int transformedRadius = pitchSin * modelRadius;
 					final int bottomExtent = pitchCos * model.getBottomY() + transformedRadius >> 16;
 					final int bottomPoint = transformedY + bottomExtent;
-					if (bottomPoint * cameraZoom > topClip * depth) {
+					if (bottomPoint * visibilityCheckZoom > topClip * depth) {
 						final int topExtent = pitchCos * model.getModelHeight() + transformedRadius >> 16;
 						final int topPoint = transformedY - topExtent;
-						return topPoint * cameraZoom >= bottomClip * depth; // inverted check
+						return topPoint * visibilityCheckZoom >= bottomClip * depth; // inverted check
 					}
 				}
 			}
