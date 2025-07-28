@@ -7,7 +7,7 @@ public class XmasSnowTree extends ModelDefinition {
 
 	public XmasSnowTree() {
 		modelIds = new int[]{1637, 55839};
-		conditionalModels.add(new ConditionalModel(43082, 90));
+		conditionalModels.add(new ConditionalModel(43082, 70));
 
 		contrast = 10;
 		ambient = 20;

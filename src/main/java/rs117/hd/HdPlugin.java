@@ -747,6 +747,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
 			modelReplacementManager.shutDown();
+			ModelDefinition.release();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -2463,6 +2464,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void loadScene(Scene scene) {
 		if (!isActive)
 			return;
+
+		ModelDefinition.release();
 
 		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), areaManager.getArea("THE_GAUNTLET"))) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
