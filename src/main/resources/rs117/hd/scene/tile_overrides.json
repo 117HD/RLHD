@@ -3343,6 +3343,16 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "KOUREND_CASTLE_UNDER_STATUE_FIX",
+    "area": "GREAT_KOUREND_STATUE",
+    "overlayIds": [
+      1
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "blended": false,
+    "uvScale": 1.2
+  },
+  {
     "name": "KOUREND_CASTLE_BLEND_FIX",
     "area": "KOUREND_CASTLE_ENTRANCE_FIX",
     "overlayIds": [
@@ -3590,7 +3600,8 @@
     "name": "OVERLAY_ZEAH_PATHS",
     "area": "ZEAH",
     "overlayIds": [
-      11
+      11,
+      50
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
@@ -3951,12 +3962,16 @@
     "groundMaterial": "TRANSPARENT"
   },
   {
-    "name": "FISHING_TRAWLER_BOAT_FLOODED",
-    "area": "FISHING_TRAWLER_BOAT_FLOODED",
+    "name": "FISHING_TRAWLER",
+    "area": "FISHING_TRAWLER",
     "overlayIds": [
+      0,
       6
     ],
-    "waterType": "WATER_FLAT",
+    "underlayIds": [
+      75
+    ],
+    "waterType": "PLAIN_WATER",
     "blended": false
   },
   {
@@ -5526,7 +5541,9 @@
       59,
       124
     ],
-    "groundMaterial": "GRASS_1"
+    "groundMaterial": "GRASS_1",
+    "shiftHue": 1,
+    "shiftSaturation": 1
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_WAR_GRAVEL",

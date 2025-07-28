@@ -22,8 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include utils/constants.glsl
+#include <utils/constants.glsl>
 
 #define UNIT PI / 1024.0f
 
@@ -36,7 +35,7 @@
 #define HILLSKEW_NONE 0
 #define HILLSKEW_MODEL 1
 #define HILLSKEW_TILE_SNAPPING 2
-#define HILLSKEW_TILE_SNAPPING_BLEND 0.1
+#define HILLSKEW_TILE_SNAPPING_BLEND 0.125
 
 struct ModelInfo {
     int offset;   // offset into buffer

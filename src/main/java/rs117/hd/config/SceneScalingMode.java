@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2021, 117 <https://twitter.com/117scape>
+ * Copyright (c) 2019 logarrhytmic <https://github.com/logarrhythmic>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -27,30 +27,20 @@ package rs117.hd.config;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import static org.lwjgl.opengl.GL33C.*;
+
 @Getter
 @RequiredArgsConstructor
-public enum MaxDynamicLights
-{
-	NONE("None", 0),
-	FEW("Few (25)", 25),
-	SOME("Some (50)", 50),
-	MANY("Many (100)", 100);
-
-	public static final int MAX_LIGHTS;
-
-	static {
-		int max = 0;
-		for (var e : values())
-			max = Math.max(max, e.value);
-		MAX_LIGHTS = max;
-	}
+public enum SceneScalingMode {
+	NEAREST("Nearest", GL_NEAREST),
+	LINEAR("Bilinear", GL_LINEAR);
 
 	private final String name;
-	private final int value;
+
+	public final int glFilter;
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		return name;
 	}
 }
