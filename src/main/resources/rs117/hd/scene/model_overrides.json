@@ -6104,7 +6104,8 @@
       "CAVEENTRANCE3",
       "UPASS_CAVEENTRANCE2",
       "XMAS20_GOBLIN_CAVE_ENTRANCE",
-      "GA_CAVE"
+      "GA_CAVE",
+      "SHAYZIEN_RIVER_CAVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -6136,9 +6137,6 @@
       "DRAGONSECRETDOOR",
       "EYEGLO_MINE_WALL",
       "EYEGLO_MINE_WALL_ROCKY",
-      "EYEGLO_MINE_WALL_SUPPORT_LEFT",
-      "EYEGLO_MINE_WALL_SUPPORT_RIGHT",
-      "EYEGLO_MINE_WALL_SUPPORT_MID",
       "DRAGON_SLAYER_QIP_CHARRED_WALL",
       "DRAGON_SLAYER_QIP_CHARRED_WALL_L",
       "DRAGON_SLAYER_QIP_CHARRED_WALL_R",
@@ -6168,6 +6166,30 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Wooden - Rock - CAVE_WALLS_BLEND - With supports",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "EYEGLO_MINE_WALL_SUPPORT_LEFT",
+      "EYEGLO_MINE_WALL_SUPPORT_RIGHT",
+      "EYEGLO_MINE_WALL_SUPPORT_MID"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Wooden Supports",
+        "colors": " h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
       {
         "colors": 2,
         "baseMaterial": "BLACK"
@@ -6216,11 +6238,23 @@
     ]
   },
   {
-    "description": "CAVE_WALLS_BLEND_TUNNEL",
+    "description": "Slayer Cave - Walls - Exit",
     "baseMaterial": "ROCK_3",
-    "objectIds": [ "SLAYER_CAVE_TUNNEL_RIGHT", "SLAYER_CAVE_TUNNEL_LEFT" ],
     "uvType": "BOX",
-    "uvScale": 0.75
+    "uvScale": 0.75,
+    "objectIds": [
+      "SLAYER_CAVE_TUNNEL_RIGHT",
+      "SLAYER_CAVE_TUNNEL_LEFT" ,
+      "EYEGLO_DUNGEON_EXIT_RIGHT",
+      "EYEGLO_DUNGEON_EXIT_LEFT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake light",
+        "colors": "h == 0  && s == 0",
+        "baseMaterial": "NONE"
+      }
+    ]
   },
   {
     "description": "CAVE_WALL_ABOVE_FLOOR_TILE",
@@ -7035,16 +7069,6 @@
     "objectIds": [
       "HORROR_LIGHTHOUSE_CAP"
     ]
-  },
-  {
-    "description": "Lighthouse Spiral Stairs",
-    "baseMaterial": "WOOD_GRAIN_LIGHT",
-    "objectIds": [
-      "HORROR_LIGHTHOUSE_SPIRALSTAIRS_BASE",
-      "HORROR_LIGHTHOUSE_SPIRALSTAIRS_MIDDLE",
-      "HORROR_LIGHTHOUSE_SPIRALSTAIRS_TOP"
-    ],
-    "castShadows": false
   },
   {
     "description": "Lighthouse Support Pillars",
@@ -9261,7 +9285,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "Ladder, rotated UVs",
+    "description": "Ladder, rotated UVs - Textured",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "MCANNONLADDER",
@@ -9281,7 +9305,11 @@
       "LADDER_CELLAR",
       "LADDER_FROM_CELLAR",
       "LADDER_FROM_CELLAR_DIRECTIONAL",
-      "MGUILD_LADDER"
+      "MGUILD_LADDER",
+      "GRANDTREE_LADDERBOTTOM",
+      "GRANDTREE_LADDERMIDDLE_BOTTOM",
+      "GRANDTREE_LADDERMIDDLE_TOP",
+      "GRANDTREE_LADDERTOP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -9876,13 +9904,14 @@
     "uvOrientation": 512
   },
   {
-    "description": "Metallic Chest",
+    "description": "Metallic Chest - Textured",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "CHESTCLOSED",
       "TRAPCHEST1",
       "TRAPCHEST5",
-      "INACOPENCHEST"
+      "INACOPENCHEST",
+      "GRANDTREE_CHESTCLOSED"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -11006,10 +11035,25 @@
     "uvType": "MODEL_XZ"
   },
   {
-    "description": "Brimstils Cave",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Gnome Stronghold - Grass - Wooden - Rock - Brimstils Cave",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
     "objectIds": [
       "EYEGLO_BRIMSTAILS_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Doors",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Rocks",
+        "colors": "s == 0",
+        "baseMaterial": "ROCK_4",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -12172,7 +12216,8 @@
       "SNP_CRATE_STACKED_BLUE",
       "SNP_CRATE_RED",
       "SNP_CRATE_STACKED_RED",
-      "DOTI_POISON_CRATE_OP"
+      "DOTI_POISON_CRATE_OP",
+      "EYEGLO_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -12766,7 +12811,10 @@
       "TGOD_GARDEN_TEMPLE_STALAGTITE_01",
       "TGOD_GARDEN_TEMPLE_STALAGTITE_02",
       "STALAGMITE_ROCK01_DEFAULT01_DARK02",
-      "STALAGMITE_ROCK01_DEFAULT02_DARK02"
+      "STALAGMITE_ROCK01_DEFAULT02_DARK02",
+      "EYEGLO_MINE_STALAGTITE_01",
+      "EYEGLO_MINE_STALAGTITE_02",
+      "EYEGLO_MINE_STALAGTITE_FALLOFF"
     ],
     "uvType": "BOX"
   },
@@ -15322,7 +15370,8 @@
       "DRAGON_SLAYER_QIP_BURNT_TREE",
       "DRAGON_SLAYER_QIP_BURNT_FALLEN_TREE",
       "MM2_GLOUGH_BRANCH_UP_HIDDEN",
-      "AVIUM_DEADTREE_1"
+      "AVIUM_DEADTREE_1",
+      "MM2_GLOUGH_BRANCH_DOWN"
     ],
     "uvType": "BOX"
   },
@@ -15375,7 +15424,29 @@
     "uvType": "BOX",
     "uvScale": 0.7,
     "objectIds": [
-      "BRIDGE_WALL"
+      "BRIDGE_WALL",
+      "ALUFT_BRIDGE_WALL",
+      "BRIDGE_WALLSIGNPOST_L",
+      "BRIDGE_WALLSIGNPOST_R"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Diagonal floor - textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "retainVanillaUvs": false,
+    "objectIds": [
+      "ALUFT_BRIDGE_CORNERFLOOR"
     ],
     "colorOverrides": [
       {
@@ -15418,14 +15489,16 @@
     "uvScale": 0.8
   },
   {
-    "description": "Gnome - Objects - Wooden - Hammock",
+    "description": "Gnome - Wooden - Hammock - Textured",
     "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "HAMMOCK"
     ]
   },
   {
-    "description": "Gnome - Objects - Wooden Lamp - DYNAMIC",
+    "description": "Gnome - Objects - Wooden Lamp - DYNAMIC - ANIMATED",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -15444,6 +15517,7 @@
     "description": "Gnome Stronghold tree doors",
     "baseMaterial": "BARK",
     "uvType": "BOX",
+    "uvScale": 0.8,
     "materialOverrides": {
       "SIMPLE_GRAIN_WOOD": {
         "textureMaterial": "SIMPLE_GRAIN_WOOD",
@@ -15467,6 +15541,37 @@
       "TREEDOORR",
       "TREEDOORL_OPEN",
       "TREEDOORR_OPEN"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - tree doors top with platform above - Textured",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "TREEDOORROOF"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold Wooden - Platforms - Textured",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "TREEWALL1B_LVL2",
+      "TREEWALL1B_LVL1"
     ]
   },
   {
@@ -15499,7 +15604,7 @@
     ]
   },
   {
-    "description": "Gnome table with cutlery and napkins",
+    "description": "Gnome - Wooden - Stool",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 600,
@@ -15508,19 +15613,79 @@
     ]
   },
   {
-    "description": "Gnome stool",
+    "description": "Gnome - Wooden - Fancy gnome chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 600,
+    "objectIds": [
+      "ALUFT_GNOME_CHAIR"
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Stool with ornament",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 600,
+    "objectIds": [
+      "EYEGLO_GNOMESTOOL_CRYSTAL_COIN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Ornament",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - table with cutlery and napkins with candle - Needs proper UV",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 84,
     "colorOverrides": [
       {
-        "description": "Silverware and napkin",
+        "description": "Cutlery napkins and candle",
         "colors": "s == 0",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_90"
       }
     ],
     "objectIds": [
       "GNOMETABLE"
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Fancy table",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALUFT_GNOME_TABLE",
+      "ALUFT_GNOME_OFFICE_TABLE"
+    ]
+  },
+  {
+    "description": "Gnome - Wooden - Fancy table with napkins",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 84,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "napkin",
+        "colors": "s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "ALUFT_GNOME_RESTAURANT_TABLE_ONE",
+      "ALUFT_GNOME_RESTAURANT_TABLE_TWO"
     ]
   },
   {
@@ -22497,17 +22662,35 @@
     "uvScale": 0.65
   },
   {
-    "description": "Objects - Concrete - Table",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "description": "Metallic - Wooden - Concrete - Table with books weights and scales- Textured",
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
     "textureMaterial": "HD_CONCRETE",
-    "objectIds": [
-      "BANKTABLE",
-      "BANKTABLE2"
-    ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
     "uvOrientation": 512,
-    "uvScale": 0.65
+    "uvScale": 0.65,
+    "objectIds": [
+      "BANKTABLE",
+      "BANKTABLE2",
+      "BANKTABLE2_INACTIVE",
+      "BANKTABLE_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.65
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3_DARK",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Objects - Concrete - Bank Booth",
@@ -24579,6 +24762,7 @@
   {
     "description": "Magic Tree",
     "baseMaterial": "BARK_STONEPINE",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "POH_BIG_TREE7_4", "POH_SMALL_TREE7_5", "MAGIC_TREE_SEEDLING",
       "MAGIC_TREE_1", "MAGIC_TREE_2", "MAGIC_TREE_3",
@@ -45611,7 +45795,9 @@
       "FAI_VARROCK_WINDMILL_WALL_TYPE2_MIRROR",
       "FAI_VARROCK_WINDMILL_WINDOW_LARGE_MIRROR",
       "FAI_VARROCK_WINDMILL_WINDOW_LARGE",
-      "FAI_VARROCK_WINDMILL_WINDOW"
+      "FAI_VARROCK_WINDMILL_WINDOW",
+      "FAI_VARROCK_WINDMILL_TERM",
+      "FAI_VARROCK_WINDMILL_TERM_MIRROR"
     ]
   },
   {
@@ -45629,9 +45815,43 @@
       "FAI_VARROCK_ROOF_THATCHED_3H",
       "FAI_VARROCK_ROOF_THATCHED_END",
       "FAI_VARROCK_THATCHED_ROOF_BALCONY",
-      "FAI_VARROCK_ROOF_THATCHED_CENTER"
+      "FAI_VARROCK_ROOF_THATCHED_CENTER",
+      "FAI_VARROCK_THATCHED_ROOF_BALCONY_MIRROR"
     ],
     "colorOverrides": [
+      {
+        "description": "Ropes",
+        "baseMaterial": "ROPE",
+        "colors": "s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Kebos Farm - Fortis - Thatch - Roofs with walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_WINDMILL_BALCONY_WALL",
+      "FAI_VARROCK_WINDMILL_BALCONY_WALL_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wall",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "baseMaterial": "GRUNGE_3",
+        "uvScale": 0.65
+      },
+      {
+        "description": "Hay",
+        "colors": "h == 7 && s <= 3",
+        "baseMaterial": "HD_HAY",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
       {
         "description": "Ropes",
         "baseMaterial": "ROPE",
@@ -49894,6 +50114,176 @@
         "uvScale": 0.4,
         "uvOrientation": -89
       }
+    ]
+  },
+  {
+    "description": "Cooking Guild - Wooden Spiral Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 88,
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_MILL_SPIRALSTAIRS",
+      "FAI_VARROCK_MILL_SPIRALSTAIRS_MIDDLE",
+      "FAI_VARROCK_MILL_SPIRALSTAIRS_TOP"
+    ]
+  },
+  {
+    "description": "Gnome - Plant - Pottery - Dirt - Potted flower",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "POTTEDREDFLOWER",
+      "POTTEDBLUEFLOWER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt and pot",
+        "colors": "h == 4 && s == 7",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.65
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvOrientation": 222,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Mushroom - Red mushroom with black spots",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "MUSHROOM2_LARGE",
+      "MUSHROOMS2",
+      "MUSHROOM2"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Gnome Stronghold - Cloth - Wooden - Standards",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "upwardsNormals": true,
+    "objectIds": [
+      "GNOMESTANDARD2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Metallic - Wooden - Spear Wall",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvOrientation": 299,
+    "uvScale": 0.3,
+    "objectIds": [
+      "WATCHTOWER_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wooden post",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Wooden spear shaft",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 383
+      }
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Rock Grass - ANIMATED - DYNAMIC",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_50",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "upwardsNormals": true
+      }
+    ],
+    "objectIds": [
+      "ZEP_TARGET_GRASS"
+    ]
+  },
+  {
+    "description": "Quest - Gnome Stronghold - Rock - ANIMATED - DYNAMIC",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
+    "objectIds": [
+      "ZEP_PRE_QUEST_ROCK"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Stacked Gnome Crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALUFT_GNOME_CRATES"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Gnome Crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALUFT_GNOME_CRATE_SINGLE"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Barrels",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ALUFT_GNOME_BARRELS"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Gnome cabinet",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ALUFT_GNOME_OFFICE_CABINET"
+    ]
+  },
+  {
+    "description": "Gnome Stronghold - Wooden - Textured - Spiral staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SPIRALSTAIRS_WOODEN"
     ]
   }
 ]
