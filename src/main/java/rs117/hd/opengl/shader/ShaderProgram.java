@@ -126,6 +126,30 @@ public class ShaderProgram {
 		return addUniform(new UniformBool(), uniformName);
 	}
 
+	public static class UniformTexture extends UniformProperty {
+		public void set(int textureUnit) {
+			assert textureUnit >= GL_TEXTURE0 : "Did you accidentally pass in an image unit?";
+			assert program.isActive();
+			glUniform1i(uniformIndex, textureUnit - GL_TEXTURE0);
+		}
+	}
+
+	public UniformTexture addUniformTexture(String uniformName) {
+		return addUniform(new UniformTexture(), uniformName);
+	}
+
+	public static class UniformImage extends UniformProperty {
+		public void set(int imageUnit) {
+			assert imageUnit < GL_TEXTURE0 : "Did you accidentally pass in a texture unit?";
+			assert program.isActive();
+			glUniform1i(uniformIndex, imageUnit);
+		}
+	}
+
+	public UniformImage addUniformImage(String uniformName) {
+		return addUniform(new UniformImage(), uniformName);
+	}
+
 	public static class Uniform1i extends UniformProperty {
 		public void set(int value) {
 			assert program.isActive();

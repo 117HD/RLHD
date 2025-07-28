@@ -50,7 +50,8 @@ import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.config.MaxDynamicLights;
+import rs117.hd.config.DynamicLights;
+import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.lights.Alignment;
@@ -62,6 +63,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.Vector;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
@@ -174,7 +176,7 @@ public class LightManager {
 	public void update(@Nonnull SceneContext sceneContext) {
 		assert client.isClientThread();
 
-		if (client.getGameState() != GameState.LOGGED_IN || config.maxDynamicLights() == MaxDynamicLights.NONE) {
+		if (plugin.configDynamicLights == DynamicLights.NONE || client.getGameState() != GameState.LOGGED_IN) {
 			sceneContext.numVisibleLights = 0;
 			return;
 		}
@@ -211,6 +213,17 @@ public class LightManager {
 			currentPlane = plane;
 			changedPlanes = true;
 		}
+
+		float cosYaw = (float) Math.cos(plugin.cameraOrientation[0]);
+		float sinYaw = (float) Math.sin(plugin.cameraOrientation[0]);
+		float cosPitch = (float) Math.cos(plugin.cameraOrientation[1]);
+		float sinPitch = (float) Math.sin(plugin.cameraOrientation[1]);
+		float[] viewDir = {
+			cosPitch * -sinYaw,
+			sinPitch,
+			cosPitch * cosYaw
+		};
+		float[] cameraToLight = new float[3];
 
 		for (Light light : sceneContext.lights) {
 			// Ways lights may get deleted:
@@ -285,8 +298,8 @@ public class LightManager {
 					if (light.animationSpecific)
 						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
 
-					int tileExX = (light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = (light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExX = ((int) light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExY = ((int) light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 					// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
 					Tile tile;
@@ -325,16 +338,14 @@ public class LightManager {
 							// Interpolate between tile heights based on specific scene coordinates
 							float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
 							float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
-							int baseTileX = (light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-							int baseTileY = (light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 							float heightNorth = HDUtils.lerp(
-								tileHeights[plane][baseTileX][baseTileY + 1],
-								tileHeights[plane][baseTileX + 1][baseTileY + 1],
+								tileHeights[plane][tileExX][tileExY + 1],
+								tileHeights[plane][tileExX + 1][tileExY + 1],
 								lerpX
 							);
 							float heightSouth = HDUtils.lerp(
-								tileHeights[plane][baseTileX][baseTileY],
-								tileHeights[plane][baseTileX + 1][baseTileY],
+								tileHeights[plane][tileExX][tileExY],
+								tileHeights[plane][tileExX + 1][tileExY],
 								lerpX
 							);
 							float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
@@ -354,13 +365,13 @@ public class LightManager {
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south
-				int sin = SINE[orientation];
-				int cos = COSINE[orientation];
-				int x = light.offset[0];
-				int z = light.offset[2];
-				light.pos[0] += -cos * x - sin * z >> 16;
+				float sin = (float) Math.sin(orientation * UNIT);
+				float cos = (float) Math.cos(orientation * UNIT);
+				float x = light.offset[0];
+				float z = light.offset[2];
+				light.pos[0] += -cos * x - sin * z;
 				light.pos[1] += light.offset[1];
-				light.pos[2] += -cos * z + sin * x >> 16;
+				light.pos[2] += -cos * z + sin * x;
 			} else {
 				int localSizeX = light.sizeX * LOCAL_TILE_SIZE;
 				int localSizeY = light.sizeY * LOCAL_TILE_SIZE;
@@ -385,8 +396,8 @@ public class LightManager {
 				light.prevPlane = light.plane;
 				light.belowFloor = false;
 				light.aboveFloor = false;
-				int tileExX = (light.pos[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-				int tileExY = (light.pos[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExX = ((int) light.pos[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExY = ((int) light.pos[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 				if (light.plane >= 0 && tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
 					byte hasTile = sceneContext.filledTiles[tileExX][tileExY];
 					if ((hasTile & (1 << light.plane + 1)) != 0)
@@ -434,39 +445,43 @@ public class LightManager {
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
 			if (light.visible) {
-				// Hide lights which cannot possibly affect the visible scene
-				int distFromCamera = (int) Math.max(
-					Math.abs(plugin.cameraPosition[0] - light.pos[0]),
-					Math.abs(plugin.cameraPosition[2] - light.pos[2])
-				) - light.radius;
-				if (distFromCamera > drawDistance)
-					light.visible = false;
-			}
+				Vector.subtract(cameraToLight, light.pos, plugin.cameraPosition);
+				float distToLight = Vector.dot(cameraToLight, viewDir);
 
-			if (light.visible) {
-				// Calculate the distance between the player and the light to determine which
-				// lights to display based on the 'max dynamic lights' config option
-				int distX = plugin.cameraFocalPoint[0] - light.pos[0];
-				int distZ = plugin.cameraFocalPoint[1] - light.pos[2];
-				light.distanceSquared = distX * distX + distZ * distZ + light.pos[1] * light.pos[1];
+				float maxRadius = light.def.radius;
+				switch (light.def.type) {
+					case FLICKER:
+						maxRadius *= 1.5f;
+						break;
+					case PULSE:
+						maxRadius *= 1 + light.def.range / 100f;
+						break;
+				}
+
+				// Hide lights which cannot possibly affect the visible scene,
+				// by either being behind the camera, or too far beyond the edge of the scene
+				if (-maxRadius < distToLight && distToLight < drawDistance + maxRadius) {
+					// Prioritize lights closer to the focal point
+					float distX = plugin.cameraFocalPoint[0] - light.pos[0];
+					float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
+					light.distanceSquared = distX * distX + distZ * distZ;
+				} else {
+					light.visible = false;
+				}
 			}
 		}
 
-		// Order visible lights first, and by distance. Leave hidden lights unordered at the end.
-		sceneContext.lights.sort((a, b) -> {
-			// -1 = move a left of b
-			if (a.visible && b.visible)
-				return a.distanceSquared - b.distanceSquared;
-			if (!a.visible && !b.visible)
-				return 0;
-			return a.visible ? -1 : 1;
-		});
+		// Order visible lights first, then by distance. Leave hidden lights unordered at the end.
+		sceneContext.lights.sort((a, b) -> a.visible && b.visible ?
+			Float.compare(a.distanceSquared, b.distanceSquared) :
+			Boolean.compare(b.visible, a.visible));
 
 		// Count number of visible lights
 		sceneContext.numVisibleLights = 0;
+		int maxLights = plugin.configTiledLighting ? UBOLights.MAX_LIGHTS : plugin.configDynamicLights.getMaxSceneLights();
 		for (Light light : sceneContext.lights) {
 			// Exit early once encountering the first invisible light, or the light limit is reached
-			if (!light.visible || sceneContext.numVisibleLights >= plugin.configMaxDynamicLights)
+			if (!light.visible || sceneContext.numVisibleLights >= maxLights)
 				break;
 
 			sceneContext.numVisibleLights++;
@@ -496,13 +511,9 @@ public class LightManager {
 				light.radius = (int) (light.def.radius * 1.5f);
 			} else if (light.def.type == LightType.PULSE) {
 				light.animation = fract(light.animation + plugin.deltaClientTime / light.duration);
-
 				float output = 1 - 2 * abs(light.animation - .5f);
-				float range = light.def.range / 100f;
-				float fullRange = range * 2f;
-				float multiplier = (1.0f - range) + output * fullRange;
-
-				light.radius = (int) (light.def.radius * multiplier);
+				float multiplier = 1 + (2 * output - 1) * light.def.range / 100;
+				light.radius = light.def.radius * multiplier;
 				light.strength = light.def.strength * multiplier;
 			} else {
 				light.strength = light.def.strength;
