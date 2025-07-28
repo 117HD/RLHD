@@ -91,6 +91,8 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.model.modelreplaceer.ModelReplacement;
+import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
@@ -118,6 +120,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ModelReplacementManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
@@ -319,6 +322,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private GammaCalibrationOverlay gammaCalibrationOverlay;
+
+	@Inject
+	private ModelReplacementManager modelReplacementManager;
 
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
@@ -689,6 +695,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
+				modelReplacementManager.startUp();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -739,6 +746,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
+			modelReplacementManager.shutDown();
+			ModelDefinition.release();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -2460,6 +2469,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!isActive)
 			return;
 
+		ModelDefinition.release();
+
 		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), areaManager.getArea("THE_GAUNTLET"))) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick
@@ -2754,6 +2765,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_SEASONAL_HEMISPHERE:
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
+								modelReplacementManager.startUp();
 								// fall-through
 							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
@@ -2998,6 +3010,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return true;
 	}
 
+	public Model findModelReplacement(ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash) {
+		if (replacement == null || replacement == ModelReplacement.NONE) {
+			return originalModel;
+		}
+
+		ModelDefinition def = replacement.model.definition;
+		if (def == null) {
+			return originalModel;
+		}
+
+		int tileX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int tileY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int plane = ModelHash.getPlane(hash);
+
+		Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileX][tileY];
+		int config = sceneContext.getObjectConfig(tile, hash);
+
+		int type = config & 0x3F;
+		int orientation = (config >> 6) & 0x3;
+
+		return def.getModel(client, id, type, orientation);
+	}
+
 	/**
 	 * Draw a Renderable in the scene
 	 *
@@ -3026,6 +3061,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return;
 		}
 
+		int id = ModelHash.getIdOrIndex(hash);
+		ModelReplacement modelReplacement = modelReplacementManager.getOverride(id);
+
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.GET_MODEL);
 
@@ -3033,12 +3071,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-				model = (Model) renderable;
+				model = findModelReplacement(modelReplacement,(Model) renderable,id,x,z,hash);
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
-				offsetModel = model = renderable.getModel();
+				offsetModel = model =  findModelReplacement(modelReplacement,renderable.getModel(),id,x,z,hash);
 			}
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces
@@ -3201,6 +3239,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCompute.addCharacterPosition(x, z, modelRadius);
 			}
 		}
+
+
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)
