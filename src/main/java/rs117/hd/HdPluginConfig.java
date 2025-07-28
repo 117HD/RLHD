@@ -542,18 +542,8 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	@ConfigItem(
-		keyName = "daylightCycle",
-		name = "Cycle Mode",
-		description = "Controls the day/night cycle behavior:<br>" +
-			"• Dynamic: Real-time day/night cycle (duration configurable below)<br>" +
-			"• Always Day: Permanent daytime lighting<br>" +
-			"• Always Night: Permanent nighttime lighting<br>" +
-			"• Always Sunrise: Permanent sunrise/golden hour lighting<br>" +
-			"• Always Sunset: Permanent sunset/golden hour lighting",
-		position = 1,
-		section = daylightCycleSettings
-	)
+	// Hidden cycle mode - only DYNAMIC is now available
+	@ConfigItem(keyName = "daylightCycle", hidden = true, name = "", description = "")
 	default DaylightCycle daylightCycle() {
 		return DaylightCycle.DYNAMIC;
 	}
@@ -568,7 +558,7 @@ public interface HdPluginConfig extends Config
 			"• 30 minutes = Quick atmospheric changes<br>" +
 			"• 60 minutes = Default hourly cycle<br>" +
 			"• 180+ minutes = Slow, immersive cycle",
-		position = 3,
+		position = 1,
 		section = daylightCycleSettings
 	)
 	default int cycleDurationMinutes() {
@@ -585,7 +575,7 @@ public interface HdPluginConfig extends Config
 			"• 35% = Default comfortable darkness<br>" +
 			"• 50% = Bright nights for easy gameplay<br>" +
 			"• 70%+ = Very bright nights (minimal difference from day)",
-		position = 4,
+		position = 2,
 		section = daylightCycleSettings
 	)
 	default int minimumBrightness() {
