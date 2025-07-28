@@ -41,7 +41,7 @@ public enum DynamicLights
 	static {
 		int max = 0;
 		for (var e : values()) {
-			assert e.lightsPerTile % 4 == 0; // Max Lights needs to be divisible by 4
+			assert e.lightsPerTile % 4 == 0; // Needs to be divisible by 4
 			max = Math.max(max, e.lightsPerTile);
 		}
 		MAX_LIGHTS_PER_TILE = max;
