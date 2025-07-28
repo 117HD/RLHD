@@ -1688,7 +1688,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
 
 				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.cameraZoom.set((float) client.getScale());
 				uboGlobal.projectionMatrix.set(projectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
@@ -1702,7 +1701,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Light light = sceneContext.lights.get(i);
 				var struct = uboLights.lights[i];
 				float paddedRadius = light.radius;
-				paddedRadius += 16 * (512.f / cameraZoom) * 15;
+				paddedRadius += 16 * (512.f / client.getScale()) * 15;
 				struct.position.set(
 					light.pos[0] + cameraShift[0],
 					light.pos[1],

@@ -44,9 +44,6 @@ void main() {
         }
     #endif
 
-    const int tileSize = 16;
-    float pad = tileSize * (512.f / cameraZoom) * 15;
-
     vec2 screenUV = gl_FragCoord.xy;
     vec3 viewDir = normalize(fRay);
     int lightIdx = 0;
@@ -67,7 +64,8 @@ void main() {
                 if (t < 0) {
                     // If the closest point lies behind the camera, the light can only contribute to the visible
                     // scene if the camera happens to be within the light's radius
-                    if (dot(cameraToLight, cameraToLight) > paddedLightRadiusSq)
+                    float lightRadiusSq = PointLightArray[lightIdx].color.w;
+                    if (dot(cameraToLight, cameraToLight) > lightRadiusSq)
                         continue;
                 } else {
                     // If the closest point lies in front of the camera, check whether the closest point along
