@@ -72,11 +72,11 @@ public class DeveloperTools implements KeyListener {
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
 	@Getter
-	private boolean frameTimingsOverlayEnabled = false;
-	private boolean shadowMapOverlayEnabled = false;
-	private boolean lightGizmoOverlayEnabled = false;
+	private boolean frameTimingsOverlayEnabled;
+	private boolean shadowMapOverlayEnabled ;
+	private boolean lightGizmoOverlayEnabled;
 	@Getter
-	private boolean hideUiEnabled = false;
+	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
 
 	public void activate() {
@@ -95,7 +95,6 @@ public class DeveloperTools implements KeyListener {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled);
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled);
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
-			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
 		});
