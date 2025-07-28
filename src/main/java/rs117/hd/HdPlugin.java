@@ -1508,14 +1508,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void initTileHeightMap(Scene scene) {
-		final int TILE_HEIGHT_BUFFER_SIZE = MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * Short.BYTES;
+		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * Short.BYTES;
 		ShortBuffer tileBuffer = ByteBuffer
 			.allocateDirect(TILE_HEIGHT_BUFFER_SIZE)
 			.order(ByteOrder.nativeOrder())
 			.asShortBuffer();
 
 		int[][][] tileHeights = scene.getTileHeights();
-		for (int z = 0; z < MAX_Z; ++z) {
+		for (int z = 0; z < Constants.MAX_Z; ++z) {
 			for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
 				for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 					int h = tileHeights[z][x][y];
@@ -1535,7 +1535,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glTexImage3D(GL_TEXTURE_3D, 0, GL_R16I,
-			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, MAX_Z,
+			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, Constants.MAX_Z,
 			0, GL_RED_INTEGER, GL_SHORT, tileBuffer
 		);
 	}
@@ -2919,8 +2919,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return tileIsVisible[plane][tileExX][tileExY];
 
 		int[][][] tileHeights = scene.getTileHeights();
-		int x = ((tileExX - SCENE_OFFSET) << LOCAL_COORD_BITS) + 64;
-		int z = ((tileExY - SCENE_OFFSET) << LOCAL_COORD_BITS) + 64;
+		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
+		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
 		int y = Math.max(
 			Math.max(tileHeights[plane][tileExX][tileExY], tileHeights[plane][tileExX][tileExY + 1]),
 			Math.max(tileHeights[plane][tileExX + 1][tileExY], tileHeights[plane][tileExX + 1][tileExY + 1])
@@ -3016,7 +3016,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
 	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
 	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
-	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link ModelHash} for more details.
+	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
 	 */
 	@Override
 	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
