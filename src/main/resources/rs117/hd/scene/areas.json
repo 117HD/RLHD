@@ -7258,12 +7258,20 @@
   },
   {
     "name": "Tonil Caverns",
-    "regionBoxes": [
-      [5266, 5268 ]
+    "regions": [
+      5267,
+      5266
     ],
     "aabbs": [
       [ 1344, 9434, 1346, 9459 ],
       [ 1277, 9438, 1279, 9455 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mokhaiotl Archives",
+    "regions": [
+      5268
     ],
     "hideOtherAreas": true
   },
