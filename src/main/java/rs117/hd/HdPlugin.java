@@ -2584,6 +2584,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_SEASONAL_HEMISPHERE:
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
+								modelReplacementManager.startUp();
 								// fall-through
 							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:

@@ -4,7 +4,8 @@
     "model": "HOLLY",
     "objectIds": [
       "WALLSHIELD"
-    ]
+    ],
+    "themes": ["WINTER"]
   },
   {
     "description": "TORCH",
@@ -19,7 +20,8 @@
     "objectIds": [
       "LOST_PROPERTY_MERCHANT_BUSH_FORCOMBATTY",
       "PVPW_ARMOURSTAND_BUSH"
-    ]
+    ],
+    "themes": ["WINTER"]
   },
   {
     "description": "XMAS Bush",
@@ -29,13 +31,15 @@
       "WILDY_HUB_LOOT_CHEST_PVPW_BUSH1",
       "BUSH1",
       "BUSH2"
-    ]
+    ],
+    "themes": ["WINTER"]
   },
   {
     "description": "XMAS TREE",
     "model": "XMAS_SNOW_TREE",
     "objectIds": [
       "TREE2"
-    ]
+    ],
+    "themes": ["WINTER"]
   }
 ]

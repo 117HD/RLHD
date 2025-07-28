@@ -17,6 +17,8 @@ public class ModelReplacement
 	private static final Set<Integer> EMPTY = new HashSet<>();
 	public String description = "UNKNOWN";
 	public ModelStore model;
+	public Set<String> themes = new HashSet<>();
+	public String time = "";
 	@JsonAdapter(GamevalManager.ObjectAdapter.class)
 	public Set<Integer> objectIds = EMPTY;
 }

@@ -1,7 +1,9 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
+import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -11,13 +13,10 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.model.modelreplaceer.ModelReplacement;
-import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
@@ -38,13 +37,13 @@ public class ModelReplacementManager {
 	@Inject
 	private GamevalManager gamevalManager;
 
-	private final HashMap<Integer, ModelReplacement> modelOverrides = new HashMap<>();
+	private final HashMap<Integer, ModelReplacement> modelReplacements = new HashMap<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public void startUp() {
 		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> {
-			modelOverrides.clear();
+			modelReplacements.clear();
 
 			try {
 				ModelReplacement[] entries = path.loadJson(plugin.getGson(), ModelReplacement[].class);
@@ -54,7 +53,7 @@ public class ModelReplacementManager {
 					addOverride(override);
 				}
 
-				log.debug("Loaded {} model replacements", modelOverrides.size());
+				log.debug("Loaded {} model replacements", modelReplacements.size());
 			} catch (IOException ex) {
 				log.error("Failed to load model replacements:", ex);
 			}
@@ -73,27 +72,51 @@ public class ModelReplacementManager {
 			fileWatcher.unregister();
 		fileWatcher = null;
 
-		modelOverrides.clear();
-	}
-
-	public void reload() {
-		shutDown();
-		startUp();
+		modelReplacements.clear();
 	}
 
 	private void addOverride(@Nullable ModelReplacement override) {
+		if (override == null) return;
+
+		String currentTheme = plugin.config.seasonalTheme().name().toUpperCase();
+		Set<String> overrideThemes = override.themes;
+		if (overrideThemes != null && !overrideThemes.isEmpty()) {
+			boolean match = overrideThemes.stream().anyMatch(t -> t.equalsIgnoreCase(currentTheme));
+			if (!match) {
+				System.out.println("MATCH SKIPPING");
+				return;
+			}
+		}
+
+		String overrideTime = override.time;
+		if (overrideTime != null && !overrideTime.isEmpty()) {
+			if (!isCurrentTimeMatching(overrideTime)) {
+				return;
+			}
+		}
+
 		for (int id : override.objectIds) {
 			addEntry(id, override);
 		}
 	}
 
+	private boolean isCurrentTimeMatching(String time) {
+		LocalDate today = LocalDate.now();
+		if (time.toUpperCase().equals("HALLOWEEN")) {
+			LocalDate start = LocalDate.of(today.getYear(), 10, 25);
+			LocalDate end = LocalDate.of(today.getYear(), 11, 2);
+			return !today.isBefore(start) && !today.isAfter(end);
+		}
+		return false;
+	}
+
 	private void addEntry(int id, ModelReplacement entry) {
-		modelOverrides.put(id, entry);
+		modelReplacements.put(id, entry);
 	}
 
 	@Nonnull
 	public ModelReplacement getOverride(int id) {
-		var override = modelOverrides.get(id);
+		var override = modelReplacements.get(id);
 		if (override == null)
 			return ModelReplacement.NONE;
 		return override;
