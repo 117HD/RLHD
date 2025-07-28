@@ -39,7 +39,7 @@ public class GamevalManager {
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
-	private static final Map<String, Map<String, Integer>> GAMEVALS = new HashMap<>();
+	private static final Map<String, Map<Integer, String>> GAMEVALS = new HashMap<>();
 
 	static {
 		clearGamevals();
@@ -59,7 +59,16 @@ public class GamevalManager {
 					plugin.getGson(),
 					new TypeToken<Map<String, Map<String, Integer>>>() {}.getType()
 				);
-				GAMEVALS.replaceAll((k, v) -> gamevals.getOrDefault(k, Collections.emptyMap()));
+
+				GAMEVALS.replaceAll((key, oldMap) -> {
+					Map<String, Integer> forward = gamevals.getOrDefault(key, Collections.emptyMap());
+					Map<Integer, String> reverse = new HashMap<>();
+					for (var e : forward.entrySet()) {
+						reverse.put(e.getValue(), e.getKey());
+					}
+					return reverse;
+				});
+
 				log.debug("Loaded gameval mappings");
 			} catch (IOException ex) {
 				log.error("Failed to load gamevals:", ex);
@@ -75,30 +84,31 @@ public class GamevalManager {
 	}
 
 	private String getName(String key, int id) {
-		return GAMEVALS
-			.get(key)
-			.entrySet()
-			.stream()
-			.filter(e -> e.getValue() == id)
-			.map(Map.Entry::getKey)
-			.findFirst()
-			.orElse(null);
+		return GAMEVALS.getOrDefault(key, Collections.emptyMap()).get(id);
 	}
 
-	public int getNpcId(String name) {
-		return GAMEVALS.get(NPC_KEY).get(name);
+	private Integer getId(String key, String name) {
+		Map<Integer, String> map = GAMEVALS.getOrDefault(key, Collections.emptyMap());
+		for (var entry : map.entrySet())
+			if (entry.getValue().equals(name))
+				return entry.getKey();
+		return null;
 	}
 
-	public int getObjectId(String name) {
-		return GAMEVALS.get(OBJECT_KEY).get(name);
+	public Integer getNpcId(String name) {
+		return getId(NPC_KEY, name);
 	}
 
-	public int getAnimId(String name) {
-		return GAMEVALS.get(ANIM_KEY).get(name);
+	public Integer getObjectId(String name) {
+		return getId(OBJECT_KEY, name);
 	}
 
-	public int getSpotanimId(String name) {
-		return GAMEVALS.get(SPOTANIM_KEY).get(name);
+	public Integer getAnimId(String name) {
+		return getId(ANIM_KEY, name);
+	}
+
+	public Integer getSpotanimId(String name) {
+		return getId(SPOTANIM_KEY, name);
 	}
 
 	public String getNpcName(int id) {
@@ -140,7 +150,14 @@ public class GamevalManager {
 					}
 					case STRING:
 						String name = in.nextString();
-						Integer id = map.get(name);
+						Integer id = null;
+						for (var entry : map.entrySet()) {
+							if (entry.getValue().equals(name)) {
+								id = entry.getKey();
+								break;
+							}
+						}
+
 						if (id == null) {
 							String suggestion = "";
 							for (var gamevalMapEntry : GAMEVALS.entrySet()) {
@@ -169,8 +186,8 @@ public class GamevalManager {
 			var remainingIds = new ArrayList<>(ids);
 			var map = GAMEVALS.get(key);
 			var names = map.entrySet().stream()
-				.filter(e -> remainingIds.remove(e.getValue()))
-				.map(Map.Entry::getKey)
+				.filter(e -> remainingIds.remove(e.getKey()))
+				.map(Map.Entry::getValue)
 				.sorted()
 				.toArray(String[]::new);
 
