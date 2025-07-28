@@ -26134,9 +26134,8 @@
   },
   {
     "description": "BA_WAVE_AREA_BARRIERS",
-    "height": 50,
-    "alignment": "BACK",
-    "radius": 150,
+    "offset": [ 0, 60, 56 ],
+    "radius": 175,
     "strength": 7.5,
     "color": [
       255,
@@ -26145,7 +26144,7 @@
     ],
     "type": "PULSE",
     "duration": 2200,
-    "range": 30,
+    "range": 10,
     "objectIds": [
       "BARBASSAULT_DOOR_10",
       "BARBASSAULT_DOOR_NO_FRIENDS",
@@ -26158,6 +26157,93 @@
       "BARBASSAULT_DOOR_07",
       "BARBASSAULT_DOOR_08",
       "BARBASSAULT_DOOR_09"
+    ]
+  },
+  {
+    "description": "BA_POISON_POOLS_BIG",
+    "offset": [ 0, 90, 0 ],
+    "radius": 375,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "BARBASSAULT_CRATER_POISION_BIG"
+    ]
+  },
+  {
+    "description": "BA_POISON_POOLS_SMALL",
+    "offset": [ 0, 50, 0 ],
+    "radius": 175,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "BARBASSAULT_CRATER_POISION"
+    ]
+  },
+  {
+    "description": "BA_LAVA_POOLS_BIG",
+    "offset": [ 0, 90, 0 ],
+    "radius": 275,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_CRATER_LAVA_BIG"
+    ]
+  },
+  {
+    "description": "BA_LAVA_POOLS_SMALL",
+    "offset": [ 0, 50, 0 ],
+    "radius": 175,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_CRATER_LAVA"
+    ]
+  },
+  {
+    "description": "BA_EGG_EXPLOSION",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 500,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 400,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_EGG_EXPLOSION"
     ]
   },
   {
@@ -31740,8 +31826,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_2",
@@ -31757,8 +31842,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_3",
@@ -31774,8 +31858,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_4",
@@ -31791,8 +31874,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_5",
@@ -31808,8 +31890,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 150
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_6",
@@ -31825,8 +31906,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 250
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_7",
@@ -31842,8 +31922,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_8",
@@ -31859,8 +31938,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_DOORWAY",
@@ -33645,25 +33723,6 @@
     ]
   },
   {
-    "description": "GREEN_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 100,
-    "strength": 5.25,
-    "color": [
-      180,
-      255,
-      175
-    ],
-    "type": "FLICKER",
-    "duration": 1250,
-    "range": 20,
-    "objectIds": [
-      "FAIRY_WALL_MUSH_GREEN",
-      "FAIRY_WALL_MUSH_GREEN_VAR"
-    ]
-  },
-  {
     "description": "ZANARIS_GREEN_MUSHROOM_CEILING",
     "height": 290,
     "alignment": "CENTER",
@@ -33701,9 +33760,8 @@
   },
   {
     "description": "RED_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 110,
+    "offset": [ 0, 152, 85 ],
+    "radius": 130,
     "strength": 19.25,
     "color": [
       225,
@@ -33716,6 +33774,24 @@
     "objectIds": [
       "FAIRY_WALL_MUSH_RED",
       "FAIRY_WALL_MUSH_RED_VAR"
+    ]
+  },
+  {
+    "description": "GREEN_MUSHROOM_WALL",
+    "offset": [ 0, 142, 85 ],
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      "FAIRY_WALL_MUSH_GREEN",
+      "FAIRY_WALL_MUSH_GREEN_VAR"
     ]
   },
   {
@@ -34395,7 +34471,23 @@
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_LOWER",
+    "areas": [ "STRONGHOLD_OF_SECURITY_WAR_LIGHT_FIX" ],
+    "height": 95,
+    "radius": 400,
+    "strength": 9.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOS_WAR_WALL_LIGHT"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_UPPER",
     "height": 80,
     "radius": 400,
     "strength": 9.5,
@@ -34405,47 +34497,59 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
-      "SOS_WAR_WALL_LIGHT",
       "SOS_WAR_WALL_LIGHT_UP"
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT",
-    "height": 90,
-    "alignment": "CENTER",
-    "radius": 400,
-    "strength": 7.5,
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_1",
+    "offset": [ 10, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
     "color": [
       255,
       80,
       87
     ],
     "type": "STATIC",
-    "range": 20,
+    "objectIds": [
+      "SOS_WAR_DOOR_TOP"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_2",
+    "offset": [ -70, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT_FIX" ],
     "offset": [ -30, 250, 0 ],
     "radius": 500,
-    "strength": 3.5,
+    "strength": 4.5,
     "color": [
       255,
       216,
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_FAM_WALL_LITE"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT_FIX" ],
     "height": 64,
     "alignment": "CENTER",
     "radius": 400,
@@ -38273,6 +38377,442 @@
     "objectIds": [
       "SORCERESS_FIREPLACE"
     ]
+  },
+  {
+    "description": "SLAYER_CAVE_EXIT",
+    "height": 70,
+    "offset": [ -65, 48, -26 ],
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "SLAYER_CAVE_EXIT_LEFT",
+      "EYEGLO_DUNGEON_EXIT_LEFT"
+    ]
+  },
+  {
+    "description": "Cosmic Altar - Outside",
+    "offset": [ 5, 135, -20 ],
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      70,
+      0,
+      130
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 15,
+    "objectIds": [
+      "COSMICTEMPLE_RUINED_OLD"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Aim East",
+    "offset": [ 150, 140, 0 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_E", "CANNON_LEAGUE03_FIRE_E" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South East",
+    "offset": [ 105, 140, -105 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_SE", "CANNON_LEAGUE03_FIRE_SE" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South",
+    "offset": [ 0, 140, -150 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_S", "CANNON_LEAGUE03_FIRE_S" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South West",
+    "offset": [ -105, 140, -105 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_SW", "CANNON_LEAGUE03_FIRE_SW" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim West",
+    "offset": [ -150, 140, 0 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_W", "CANNON_LEAGUE03_FIRE_W" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North West",
+    "offset": [ -105, 140, 115 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_NW", "CANNON_LEAGUE03_FIRE_NW" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North",
+    "offset": [ 0, 140, 150 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_N", "CANNON_LEAGUE03_FIRE_N" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North East",
+    "offset": [ 115, 140, 115 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_NE", "CANNON_LEAGUE03_FIRE_NE" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire East",
+    "offset": [ 150, 160, 0 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_E" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South East",
+    "offset": [ 105, 160, -105 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_SE" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South",
+    "offset": [ 0, 160, -150 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_S" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South West",
+    "offset": [ -105, 160, -105 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_SW" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire West",
+    "offset": [ -150, 160, 0 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_W" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North West",
+    "offset": [ -105, 160, 115 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_NW" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North",
+    "offset": [ 0, 160, 150 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_N" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North East",
+    "offset": [ 115, 160, 115 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_NE" ]
+  },
+  {
+    "description": "Shattered Cannon - Top",
+    "offset": [ 0, 200, 0 ],
+    "radius": 245,
+    "strength": 7.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Candle",
+    "offset": [ 0, 45, -105 ],
+    "radius": 100,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Ball",
+    "offset": [ 0, -20, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "projectileIds": [ "CANNONBALL_TRAVEL_LEAGUE", "CANNONBALL_TRAVEL_GRANITE_LEAGUE" ]
   },
   {
     "description": "Dragon Scimitar Special Attack",
