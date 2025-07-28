@@ -43814,10 +43814,11 @@
     "colorOverrides": [
       {
         "description": "Wood",
-        "colors": "h == 7",
+        "colors": "h == 6 || h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "uvOrientation": 512
       }
     ]
   },
@@ -48812,7 +48813,8 @@
     "objectIds": [
       "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_REGULAR",
       "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_REGULAR",
-      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_TABLE_REGULAR"
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_TABLE_REGULAR",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE2_REGULAR"
     ]
   },
   {
@@ -48867,7 +48869,8 @@
     "objectIds": [
       "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_EDITABLE",
       "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_EDITABLE",
-      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_TABLE_EDITABLE"
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_TABLE_EDITABLE",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE2_EDITABLE"
     ],
     "colorOverrides": [
       {
@@ -48905,7 +48908,8 @@
     "objectIds": [
       "CON_CONTRACT_HOSIDIUS_NORTH_CUPBOARD_REGULAR",
       "CON_CONTRACT_FALADOR_NORTH_DRAWERS_REGULAR",
-      "CON_CONTRACT_HOSIDIUS_SOUTH_DRAWERS_REGULAR"
+      "CON_CONTRACT_HOSIDIUS_SOUTH_DRAWERS_REGULAR",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_CUPBOARD_REGULAR"
     ]
   },
   {
@@ -48995,7 +48999,9 @@
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "objectIds": [
-      "CON_CONTRACT_VARROCK_MID_SHELVES_EDITABLE"
+      "CON_CONTRACT_VARROCK_MID_SHELVES_EDITABLE",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_CUPBOARD_EDITABLE",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_SHELVES_EDITABLE"
     ],
     "colorOverrides": [
       {
@@ -49017,13 +49023,36 @@
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "objectIds": [
-      "CON_CONTRACT_VARROCK_MID_SHELVES_REGULAR"
+      "CON_CONTRACT_VARROCK_MID_SHELVES_REGULAR",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_SHELVES_REGULAR"
     ],
     "colorOverrides": [
       {
         "description": "Metal",
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Metallic - Wooden - Metal sink - Outlined",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTHEAST_SINK_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   }
