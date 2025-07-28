@@ -22,8 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include to_screen.glsl
+#include <uniforms/compute.glsl>
 
 /*
  * Rotate a vertex by a given orientation in JAU
@@ -87,8 +86,8 @@ vec3 toScreen(vec3 vertex) {
  * Test if a face is visible (not backward facing)
  */
 bool face_visible(vec3 vA, vec3 vB, vec3 vC, vec3 position) {
-  // Move model to scene location, and account for camera offset
   vec3 cameraPos = vec3(cameraX, cameraY, cameraZ);
+  // Move model to scene location, and account for camera offset
   vA += position - cameraPos;
   vB += position - cameraPos;
   vC += position - cameraPos;

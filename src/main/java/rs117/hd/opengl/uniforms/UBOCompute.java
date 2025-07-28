@@ -3,11 +3,12 @@ package rs117.hd.opengl.uniforms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 
-public class ComputeUniforms extends SharedUniformBuffer {
+public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
 
 	// Camera uniforms
@@ -42,8 +43,8 @@ public class ComputeUniforms extends SharedUniformBuffer {
 		public float dist = Float.MAX_VALUE;
 	}
 
-	public ComputeUniforms() {
-		super("Compute", GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+	public UBOCompute() {
+		super(GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private CharacterPositionPair getCharacterPositionPair() {
