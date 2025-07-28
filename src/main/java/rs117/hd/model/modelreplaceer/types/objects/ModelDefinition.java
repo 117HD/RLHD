@@ -1,13 +1,18 @@
 package rs117.hd.model.modelreplaceer.types.objects;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import net.runelite.api.Client;
 import net.runelite.api.Model;
 import net.runelite.api.ModelData;
 import net.runelite.api.Perspective;
+import rs117.hd.model.modelreplaceer.types.ConditionalModel;
 
 public abstract class ModelDefinition {
+
+	protected List<ConditionalModel> conditionalModels = new ArrayList<>();
 	public int[] modelIds = new int[0];
 	public int[] models = null;
 
@@ -48,7 +53,19 @@ public abstract class ModelDefinition {
 			return null;
 		}
 
-		ModelData[] datas = new ModelData[modelIds.length];
+		List<Integer> modelsToLoad = new ArrayList<>();
+
+		for (int id : modelIds) {
+			modelsToLoad.add(id);
+		}
+
+		for (ConditionalModel cm : conditionalModels) {
+			if (cm.shouldInclude()) {
+				modelsToLoad.add(cm.modelId);
+			}
+		}
+
+		ModelData[] datas = new ModelData[modelsToLoad.size()];
 		ModelData result;
 
 		boolean rotate = this.rotated;
@@ -56,8 +73,8 @@ public abstract class ModelDefinition {
 			rotate = !rotate;
 		}
 
-		for (int i = 0; i < modelIds.length; i++) {
-			ModelData model = client.loadModelData(modelIds[i]);
+		for (int i = 0; i < datas.length; i++) {
+			ModelData model = client.loadModelData(modelsToLoad.get(i));
 			if (rotate) {
 				model.rotateY90Ccw();
 			}
