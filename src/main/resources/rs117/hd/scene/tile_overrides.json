@@ -5541,7 +5541,9 @@
       59,
       124
     ],
-    "groundMaterial": "GRASS_1"
+    "groundMaterial": "GRASS_1",
+    "shiftHue": 1,
+    "shiftSaturation": 1
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_WAR_GRAVEL",

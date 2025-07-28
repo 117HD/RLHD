@@ -34385,7 +34385,23 @@
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_LOWER",
+    "areas": [ "STRONGHOLD_OF_SECURITY_WAR_LIGHT_FIX" ],
+    "height": 95,
+    "radius": 400,
+    "strength": 9.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOS_WAR_WALL_LIGHT"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_UPPER",
     "height": 80,
     "radius": 400,
     "strength": 9.5,
@@ -34395,47 +34411,59 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
-      "SOS_WAR_WALL_LIGHT",
       "SOS_WAR_WALL_LIGHT_UP"
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT",
-    "height": 90,
-    "alignment": "CENTER",
-    "radius": 400,
-    "strength": 7.5,
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_1",
+    "offset": [ 10, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
     "color": [
       255,
       80,
       87
     ],
     "type": "STATIC",
-    "range": 20,
+    "objectIds": [
+      "SOS_WAR_DOOR_TOP"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_2",
+    "offset": [ -70, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT_FIX" ],
     "offset": [ -30, 250, 0 ],
     "radius": 500,
-    "strength": 3.5,
+    "strength": 4.5,
     "color": [
       255,
       216,
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_FAM_WALL_LITE"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT_FIX" ],
     "height": 64,
     "alignment": "CENTER",
     "radius": 400,

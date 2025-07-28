@@ -16386,7 +16386,6 @@
       "MACRO_EVIL_BOB_PORTAL",
       "SOS_PEST_PORTAL",
       "SOS_DEATH_PORTAL",
-      "II_ROCKS_FLOOR_HARD_02",
       "CLANWARS_CHALLENGEPORTAL_W",
       "CLANWARS_CHALLENGEPORTAL_S",
       "CLANWARS_CHALLENGEPORTAL_E",
@@ -23941,6 +23940,8 @@
   {
     "description": "Stronghold Of Security - War - Metallic Walls",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
     "objectIds": [
       "SOS_WAR_WALL",
       "SOS_WAR_WALL_LIGHT",
@@ -23963,7 +23964,15 @@
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRAY_110"
+      }
+    ]
   },
   {
     "description": "Stronghold Of Security - War - Metallic Ladder",
@@ -24008,7 +24017,18 @@
       "SOS_WAR_CHEST"
     ],
     "flatNormals": true,
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
   },
   {
     "description": "Stronghold Of Security - Famine - Walls - Dirt",
@@ -24144,22 +24164,32 @@
   },
   {
     "description": "Stronghold Of Security - Pestilence -  Metallic - Box of Health - Chest",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "SOS_PEST_CHEST"
     ],
     "flatNormals": true,
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvScale": 0.2,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 35",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ]
   },
   {
     "description": "Stronghold Of Security - Pestilence - Textured - Hay - Gift of Plenty - Sack",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "BURLAP",
     "objectIds": [
       "SOS_FAM_SACK"
     ],
     "uvType": "BOX",
-    "uvScale": 0.85,
+    "uvScale": 0.7,
     "retainVanillaUvs": false
   },
   {
@@ -24188,15 +24218,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7
-  },
-  {
-    "description": "Stronghold Of Security Petilance - Dripping Tendrils",
-    "baseMaterial": "GRUNGE_3",
-    "objectIds": [
-      "SOS_PEST_TENDRILS",
-      "SOS_PEST_TENDRILS_FALLOFF",
-      "SOS_PEST_TENDRILS_CORNER"
-    ]
   },
   {
     "description": "Stronghold Of Security - Death - Walls",
@@ -25533,7 +25554,6 @@
       "MOLE_WALL_NO_ROOTS",
       "MOLE_WALL_NO_ROOTS_LVL2",
       "MOLE_WALL_NO_ROOTS_LVL2_BIG",
-      "MOLE_WALL_ROOTS_START_01",
       "MOLE_WALL_TOP5_LVL2_BIG",
       "MOLE_WALL_RAMP_02",
       "MOLE_WALL_RAMP_01_MIRROR",
