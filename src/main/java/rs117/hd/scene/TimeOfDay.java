@@ -127,49 +127,8 @@ public class TimeOfDay
 		return AtmosphereUtils.getSkyColor(modifiedDate.toEpochMilli(), latLong);
 	}
 
-	public static float[] getEnhancedSkyColor(double[] latLong, float dayLength) {
-		Instant modifiedDate = getModifiedDate(dayLength);
-		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
-		
-		// Convert sun altitude to degrees (-90 to +90)
-		double sunAltitudeDegrees = Math.toDegrees(sunAngles[1]);
-		
-		// Enhanced sky color palette with gradual sunset to night transition
-		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - simplified progression
-			{ -30.0, new java.awt.Color(50, 65, 90) },    // Deepest night (much brighter)
-			{ -15.0, new java.awt.Color(50, 65, 90) },    // Stable deep night
-			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
-			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
-			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
-			{ -2.7,  new java.awt.Color(72, 67, 100) },   // Purple-blue blend
-			{ -1.7,  new java.awt.Color(85, 70, 95) },   // Dark purple twilight
-			{ -1.5,  new java.awt.Color(90, 75, 100) },  // Dark purple transition
-			{ -1.2,  new java.awt.Color(95, 80, 105) },  // Purple progression
-			{ -1.0,  new java.awt.Color(105, 85, 105) }, // Dawn dark purple
-			{ -0.8,  new java.awt.Color(120, 95, 105) }, // Purple-orange blend
-			{ -0.4,  new java.awt.Color(140, 110, 105) }, // Orange transition
-			{ 0.0,   new java.awt.Color(185, 122, 108) }, // Horizon transition
-			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
-			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
-			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
-			{ 6.0,   new java.awt.Color(245, 170, 105) }, // Strong golden hour
-			{ 8.0,   new java.awt.Color(240, 185, 125) }, // Late golden hour
-			{ 12.0,  new java.awt.Color(220, 180, 145) }, // Warm late afternoon
-			{ 15.0,  new java.awt.Color(200, 175, 160) }, // Soft warm light
-			{ 18.0,  new java.awt.Color(180, 170, 175) }, // Afternoon transition
-			{ 22.0,  new java.awt.Color(165, 167, 185) }, // Subtle warm tint
-			{ 25.0,  new java.awt.Color(150, 165, 190) }, // Very subtle warmth
-			{ 30.0,  new java.awt.Color(135, 165, 200) }, // Midday blue (natural)
-			{ 50.0,  new java.awt.Color(125, 160, 195) }, // Clear blue (muted)
-			{ 70.0,  new java.awt.Color(120, 155, 190) }, // High sun blue (subdued)
-			{ 90.0,  new java.awt.Color(115, 150, 185) }  // Zenith blue (realistic)
-		};
-		
-		return AtmosphereUtils.interpolateSrgb((float) sunAltitudeDegrees, skyColorKeyframes);
-	}
 
-	public static float[] getRegionalEnhancedSkyColor(double[] latLong, float dayLength, float[] regionalFogColor) {
+	public static float[] getEnhancedSkyColor(double[] latLong, float dayLength, float[] regionalFogColor) {
 		Instant modifiedDate = getModifiedDate(dayLength);
 		double[] sunAngles = AtmosphereUtils.getSunAngles(modifiedDate.toEpochMilli(), latLong);
 		
@@ -178,25 +137,12 @@ public class TimeOfDay
 		
 		// Enhanced sky color palette with gradual sunset to night transition
 		Object[][] skyColorKeyframes = {
-			// Deep night (sun well below horizon) - simplified progression
-			{ -30.0, new java.awt.Color(50, 65, 90) },    // Deepest night (much brighter)
-			{ -15.0, new java.awt.Color(50, 65, 90) },    // Stable deep night
-			{ -4.0,  new java.awt.Color(45, 55, 85) },    // Pre-dawn blue
-			{ -3.5,  new java.awt.Color(52, 60, 87) },    // Blue-purple transition
-			{ -3.0,  new java.awt.Color(60, 65, 90) },    // Twilight purple-blue
-			{ -2.7,  new java.awt.Color(72, 67, 100) },   // Purple-blue blend
-			{ -1.7,  new java.awt.Color(85, 70, 95) },   // Dark purple twilight
-			{ -1.5,  new java.awt.Color(90, 75, 100) },  // Dark purple transition
-			{ -1.2,  new java.awt.Color(95, 80, 105) },  // Purple progression
-			{ -1.0,  new java.awt.Color(105, 85, 105) }, // Dawn dark purple
-			{ -0.8,  new java.awt.Color(120, 95, 105) }, // Purple-orange blend
-			{ -0.4,  new java.awt.Color(140, 110, 105) }, // Orange transition
-			{ 0.0,   new java.awt.Color(185, 122, 108) }, // Horizon transition
-			{ 0.8,   new java.awt.Color(200, 125, 105) }, // Pink-orange blend
-			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Warm orange approaching
-			{ 4.0,   new java.awt.Color(235, 150, 90) },  // Golden orange
-			{ 6.0,   new java.awt.Color(245, 170, 105) }, // Strong golden hour
-			{ 8.0,   new java.awt.Color(240, 185, 125) }, // Late golden hour
+			// Deep night (sun well below horizon) - gradual progression
+			{ -30.0, new java.awt.Color(20, 25, 35) },    // Deepest night (much darker)
+			{ -15.0, new java.awt.Color(22, 28, 40) },    // Stable deep night
+			{ -8.0,  new java.awt.Color(23, 30, 42) },    // Very subtle brightening
+			{ 2.0,   new java.awt.Color(210, 135, 95) },  // Peak sunset red
+			{ 8.0,   new java.awt.Color(220, 170, 115) }, // Late golden hour (dimmed)
 			{ 12.0,  new java.awt.Color(220, 180, 145) }, // Warm late afternoon
 			{ 15.0,  new java.awt.Color(200, 175, 160) }, // Soft warm light
 			{ 18.0,  new java.awt.Color(180, 170, 175) }, // Afternoon transition
@@ -216,27 +162,18 @@ public class TimeOfDay
 		// Calculate blend factor based sun altitude
 		// Maintain regional character even during sunrise/sunset in gloomy areas
 		float blendFactor;
-		if (sunAltitudeDegrees >= 30) {
-			// High sun - use pure regional color (100% regional) to match disabled behavior
+		// Smooth continuous linear progression throughout, increased sunset blending
+		if (sunAltitudeDegrees >= 40) {
+			// Very high sun - maximum regional influence (100% regional)
 			blendFactor = 1.0f;
-		} else if (sunAltitudeDegrees >= 15) {
-			// Medium sun - strong regional influence (75-100% regional)
-			blendFactor = (float) (0.75 + ((sunAltitudeDegrees - 15) / 15.0) * 0.25);
-		} else if (sunAltitudeDegrees >= 5) {
-			// Sunset/late sunrise - moderate regional influence (50-75% regional)
-			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 5) / 10.0) * 0.25);
-		} else if (sunAltitudeDegrees >= -2) {
-			// Peak sunrise/sunset colors - maintain significant regional influence (30-45% regional)
-			// This ensures gloomy areas retain their atmospheric character
-			blendFactor = (float) (0.30 + ((sunAltitudeDegrees + 2) / 7.0) * 0.15);
-		} else if (sunAltitudeDegrees >= -5) {
-			// Early sunrise/late sunset - moderate regional influence (30% regional)
-			blendFactor = 0.30f;
-		} else if (sunAltitudeDegrees >= -20) {
-			// Civil to deep twilight - gradually reduce regional influence (30-0% regional)
-			blendFactor = (float) (0.30 * ((sunAltitudeDegrees + 20) / 15.0));
+		} else if (sunAltitudeDegrees >= 10) {
+			// High sun - strong regional influence (50-100% regional)
+			blendFactor = (float) (0.50 + ((sunAltitudeDegrees - 10) / 30.0) * 0.50);
+		} else if (sunAltitudeDegrees >= 0) {
+			// Sunset period - increased regional influence (0% to 50% regional)
+			blendFactor = (float) (sunAltitudeDegrees / 10.0) * 0.50f;
 		} else {
-			// Deep night - no regional influence (0% regional)
+			// After sunset - no regional influence (0% regional) to show pure dynamic colors
 			blendFactor = 0.0f;
 		}
 		

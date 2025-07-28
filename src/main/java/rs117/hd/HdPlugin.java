@@ -1873,8 +1873,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// Store the original regional fog color before overriding
 				// Note: fogColor is already converted to sRGB above, so use that
 				float[] originalRegionalFogColor = fogColor;
-				// getRegionalEnhancedSkyColor now returns sRGB values directly
-				fogColor = TimeOfDay.getRegionalEnhancedSkyColor(latLong, cycleDuration, originalRegionalFogColor);
+				// getEnhancedSkyColor now returns sRGB values directly
+				fogColor = TimeOfDay.getEnhancedSkyColor(latLong, cycleDuration, originalRegionalFogColor);
 				waterColor = fogColor;
 
 				// Calculate shadow visibility based on sun altitude
