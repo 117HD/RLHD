@@ -2,19 +2,19 @@ package rs117.hd;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.util.HashMap;
+import java.util.Map;
 import junit.framework.TestCase;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import java.util.*;
+import static rs117.hd.utils.ResourcePath.path;
 
 public class GamevalManagerTest extends TestCase {
 	private static final String KEY = "objects";
-	private static final ResourcePath GAMEVAL_PATH = Props.getPathOrDefault(
-		"rlhd.gameval-path",
-		() -> ResourcePath.path(GamevalManager.class, "gamevals.json")
-	);
+	private static final ResourcePath GAMEVAL_PATH = Props
+		.getFile("rlhd.gameval-path", () -> path(GamevalManager.class, "gamevals.json"));
 
 	private static final Map<String, Map<String, Integer>> gamevals = new HashMap<>();
 	private static final Map<String, Map<Integer, String>> reverseGamevals = new HashMap<>();

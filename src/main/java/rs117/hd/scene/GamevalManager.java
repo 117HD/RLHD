@@ -87,30 +87,28 @@ public class GamevalManager {
 		return GAMEVALS.getOrDefault(key, Collections.emptyMap()).get(id);
 	}
 
+	private Integer getId(String key, String name) {
+		Map<Integer, String> map = GAMEVALS.getOrDefault(key, Collections.emptyMap());
+		for (var entry : map.entrySet())
+			if (entry.getValue().equals(name))
+				return entry.getKey();
+		return null;
+	}
+
 	public Integer getNpcId(String name) {
-		return getIdByName(NPC_KEY, name);
+		return getId(NPC_KEY, name);
 	}
 
 	public Integer getObjectId(String name) {
-		return getIdByName(OBJECT_KEY, name);
+		return getId(OBJECT_KEY, name);
 	}
 
 	public Integer getAnimId(String name) {
-		return getIdByName(ANIM_KEY, name);
+		return getId(ANIM_KEY, name);
 	}
 
 	public Integer getSpotanimId(String name) {
-		return getIdByName(SPOTANIM_KEY, name);
-	}
-
-	private Integer getIdByName(String key, String name) {
-		Map<Integer, String> reverseMap = GAMEVALS.getOrDefault(key, Collections.emptyMap());
-		for (var entry : reverseMap.entrySet()) {
-			if (entry.getValue().equals(name)) {
-				return entry.getKey();
-			}
-		}
-		return null;
+		return getId(SPOTANIM_KEY, name);
 	}
 
 	public String getNpcName(int id) {
