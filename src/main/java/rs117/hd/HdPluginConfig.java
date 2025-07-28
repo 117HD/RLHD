@@ -319,8 +319,8 @@ public interface HdPluginConfig extends Config
 
 	String KEY_BRIGHTNESS = "screenBrightness";
 	@Range(
-		min = 50,
-		max = 200
+		min = 25,
+		max = 400
 	)
 	@Units(Units.PERCENT)
 	@ConfigItem(
