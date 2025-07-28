@@ -22,6 +22,7 @@ import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
+import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -33,6 +34,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
@@ -64,14 +66,18 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private LightGizmoOverlay lightGizmoOverlay;
 
-	private boolean keyBindingsEnabled = false;
-	private boolean tileInfoOverlayEnabled = false;
+	@Inject
+	private TiledLightingOverlay tiledLightingOverlay;
+
+	private boolean keyBindingsEnabled;
+	private boolean tileInfoOverlayEnabled;
 	@Getter
 	private boolean frameTimingsOverlayEnabled = false;
 	private boolean shadowMapOverlayEnabled = false;
 	private boolean lightGizmoOverlayEnabled = false;
 	@Getter
 	private boolean hideUiEnabled = false;
+	private boolean tiledLightingOverlayEnabled;
 
 	public void activate() {
 		// Listen for commands
@@ -91,6 +97,7 @@ public class DeveloperTools implements KeyListener {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
+			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
 		});
 
 		// Check for any out of bounds areas
@@ -114,6 +121,7 @@ public class DeveloperTools implements KeyListener {
 		frameTimerOverlay.setActive(false);
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
+		tiledLightingOverlay.setActive(false);
 	}
 
 	public void toggleHideUI() {
@@ -146,6 +154,7 @@ public class DeveloperTools implements KeyListener {
 				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 				break;
 			case "timers":
+			case "timings":
 				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 				break;
 			case "shadowmap":
@@ -157,6 +166,11 @@ public class DeveloperTools implements KeyListener {
 			case "hideui":
 				toggleHideUI();
 				break;
+			case "tiledlights":
+			case "tiledlighting":
+				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
+				break;
+			case "keybinds":
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
 				if (keyBindingsEnabled) {
@@ -178,6 +192,8 @@ public class DeveloperTools implements KeyListener {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
 		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
+		} else if (KEY_TOGGLE_TILED_LIGHTING_OVERLAY.matches(e)) {
+			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
