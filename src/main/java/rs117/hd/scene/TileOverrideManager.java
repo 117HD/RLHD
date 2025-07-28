@@ -38,10 +38,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class TileOverrideManager {
-	private static final ResourcePath TILE_OVERRIDES_PATH = Props.getPathOrDefault(
-		"rlhd.tile-overrides-path",
-		() -> path(TileOverrideManager.class, "tile_overrides.json")
-	);
+	private static final ResourcePath TILE_OVERRIDES_PATH = Props
+		.getFile("rlhd.tile-overrides-path", () -> path(TileOverrideManager.class, "tile_overrides.json"));
 
 	@Inject
 	private Client client;

@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class Matrix {
-	private static final float EPS = 1e-7f;
+	private static final float EPS = 1e-6f;
 
 	/**
 	 * Utility class for working with column-major m x n matrices.

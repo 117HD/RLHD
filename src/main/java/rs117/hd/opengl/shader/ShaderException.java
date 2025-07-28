@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2018, Adam <Adam@sigterm.info>
+ * Copyright (c) 2025, Hooder <ahooder@protonmail.com>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,82 +25,117 @@
  */
 package rs117.hd.opengl.shader;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class ShaderException extends Exception
 {
-	private static final Pattern NVIDIA_ERROR_REGEX = Pattern.compile("^(\\d+)\\((\\d+)\\) : (.*)$", Pattern.MULTILINE);
+	private static final Pattern NVIDIA_GL_ERROR_REGEX = Pattern.compile("^(\\d+)\\((\\d+)\\) : (.*)$", Pattern.MULTILINE);
+	private static final Pattern NVIDIA_CL_ERROR_REGEX = Pattern.compile("^<kernel>:(\\d+):(\\d+): (.*)$", Pattern.MULTILINE);
+	private static final Pattern CL_LINE_REGEX = Pattern.compile("^#line (\\d+) \"(.*)\"", Pattern.MULTILINE);
 
-	public static ShaderException compileError(String error, Template template, Shader.Unit ...units)
-	{
-		StringBuilder sb = new StringBuilder();
-		if (template.includeType == Template.IncludeType.GLSL) {
-			Matcher m = NVIDIA_ERROR_REGEX.matcher(error);
-			if (m.find()) {
-				try {
-					sb.append(String.format("Compile error when compiling shader%s: %s\n",
-						units.length == 1 ? "" : "s",
-						Arrays.stream(units)
-							.map(u -> u.filename)
-							.collect(Collectors.joining(", "))));
-
-					int offset = 0;
-					do {
-						if (m.start() > offset)
-							sb.append(error, offset, m.start());
-						offset = m.end();
-
-						int index = Integer.parseInt(m.group(1));
-						int lineNumber = Integer.parseInt(m.group(2));
-						String errorString = m.group(3);
-						String include = template.includeList.get(index);
-						sb.append(String.format(
-							"%s line %d - %s",
-							include, lineNumber, errorString));
-					} while (m.find());
-				} catch (Exception ex) {
-					log.error("Error while parsing shader compilation error:", ex);
-				}
-			}
-			else
-			{
-				// Unknown error format, so include a mapping from source file index to filename
-				sb
-					.append("Compile error while compiling shader")
-					.append(units.length == 1 ? "" : "s")
-					.append(": ")
-					.append(Arrays.stream(units)
-						.map(u -> u.filename)
-						.collect(Collectors.joining(", ")))
-					.append("\n")
-					.append(error)
-					.append("Included sources: [\n");
-				for (int j = 0; j < template.includeList.size(); j++) {
-					String s = String.valueOf(j);
-					sb
-						.append("  ")
-						.append(String.join("", Collections.nCopies( // Left pad
-							1 + (int) Math.log10(template.includeList.size()) - s.length(), " ")))
-						.append(s)
-						.append(": ")
-						.append(template.includeList.get(j))
-						.append("\n");
-				}
-				sb.append("]");
-			}
-		}
-
-		return new ShaderException(sb.toString());
+	public ShaderException(String message) {
+		super(message);
 	}
 
-	public ShaderException(String message)
+	public static ShaderException compileError(ShaderIncludes includes, String source, String error, String... paths)
 	{
-		super(message);
+		boolean linkerError = paths.length > 1;
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("Error when ");
+		if (linkerError) {
+			sb.append("linking shaders");
+		} else {
+			sb.append("compiling shader");
+		}
+		sb.append(": ");
+		for (int i = 0; i < paths.length; i++) {
+			if (i > 0)
+				sb.append(" & ");
+			sb.append(paths[i]);
+		}
+		sb.append('\n');
+
+		// We can't parse linker errors without making line directives unique across different shader units
+		if (linkerError)
+			return new ShaderException(sb.append(error).toString());
+
+		switch (includes.includeType) {
+			case GLSL: {
+				Matcher m = NVIDIA_GL_ERROR_REGEX.matcher(error);
+				if (m.find()) {
+					try {
+						int prevEnd = 0;
+						do {
+							if (m.start() > prevEnd)
+								sb.append(error, prevEnd, m.start());
+							prevEnd = m.end();
+
+							int index = Integer.parseInt(m.group(1));
+							int lineNumber = Integer.parseInt(m.group(2));
+							String errorString = m.group(3);
+							String include = includes.includeList.get(index);
+							sb.append(String.format("%s line %d - %s", include, lineNumber, errorString));
+						} while (m.find());
+						return new ShaderException(sb.toString());
+					} catch (Exception ex) {
+						log.error("Error while parsing shader compilation error:", ex);
+						break;
+					}
+				}
+				break;
+			}
+			case C:
+				Matcher m = NVIDIA_CL_ERROR_REGEX.matcher(error);
+				if (m.find()) {
+					try {
+						int prevEnd = 0;
+						do {
+							if (m.start() > prevEnd)
+								sb.append(error, prevEnd, m.start());
+							prevEnd = m.end();
+
+							int lineNumber = Integer.parseInt(m.group(1));
+							String errorString = m.group(3);
+							String include = "Unknown source";
+
+							var lm = CL_LINE_REGEX.matcher("");
+							String[] lines = source.split("\n", lineNumber);
+							for (int i = lineNumber - 2; i >= 0; i--) {
+								lm.reset(lines[i]);
+								if (lm.find()) {
+									lineNumber += Integer.parseInt(lm.group(1)) - i - 2;
+									include = lm.group(2).replaceAll("\\\\\"", "\"");
+									break;
+								}
+							}
+
+							sb.append(String.format("%s line %d - %s", include, lineNumber, errorString));
+						} while (m.find());
+						return new ShaderException(sb.toString());
+					} catch (Exception ex) {
+						log.error("Error while parsing shader compilation error:", ex);
+						break;
+					}
+				}
+				break;
+		}
+
+		// Unknown error format, so include a mapping from source file indices to paths
+		sb.append(error).append("Included sources: [\n");
+		int maxIndexWidth = String.valueOf(includes.includeList.size() - 1).length();
+		String indexFormat = String.format("%%%dd", maxIndexWidth + 2);
+		for (int i = 0; i < includes.includeList.size(); i++)
+			sb
+				.append(String.format(indexFormat, i))
+				.append(": ")
+				.append(includes.includeList.get(i))
+				.append('\n');
+		sb.append("]");
+
+		return new ShaderException(error);
 	}
 }

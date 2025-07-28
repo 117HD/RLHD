@@ -31740,8 +31740,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_2",
@@ -31757,8 +31756,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_3",
@@ -31774,8 +31772,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_4",
@@ -31791,8 +31788,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_5",
@@ -31808,8 +31804,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 150
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_6",
@@ -31825,8 +31820,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 250
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_7",
@@ -31842,8 +31836,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_8",
@@ -31859,8 +31852,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_DOORWAY",
@@ -33645,25 +33637,6 @@
     ]
   },
   {
-    "description": "GREEN_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 100,
-    "strength": 5.25,
-    "color": [
-      180,
-      255,
-      175
-    ],
-    "type": "FLICKER",
-    "duration": 1250,
-    "range": 20,
-    "objectIds": [
-      "FAIRY_WALL_MUSH_GREEN",
-      "FAIRY_WALL_MUSH_GREEN_VAR"
-    ]
-  },
-  {
     "description": "ZANARIS_GREEN_MUSHROOM_CEILING",
     "height": 290,
     "alignment": "CENTER",
@@ -33701,9 +33674,8 @@
   },
   {
     "description": "RED_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 110,
+    "offset": [ 0, 152, 85 ],
+    "radius": 130,
     "strength": 19.25,
     "color": [
       225,
@@ -33716,6 +33688,24 @@
     "objectIds": [
       "FAIRY_WALL_MUSH_RED",
       "FAIRY_WALL_MUSH_RED_VAR"
+    ]
+  },
+  {
+    "description": "GREEN_MUSHROOM_WALL",
+    "offset": [ 0, 142, 85 ],
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      "FAIRY_WALL_MUSH_GREEN",
+      "FAIRY_WALL_MUSH_GREEN_VAR"
     ]
   },
   {
@@ -34395,7 +34385,23 @@
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_LOWER",
+    "areas": [ "STRONGHOLD_OF_SECURITY_WAR_LIGHT_FIX" ],
+    "height": 95,
+    "radius": 400,
+    "strength": 9.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOS_WAR_WALL_LIGHT"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_UPPER",
     "height": 80,
     "radius": 400,
     "strength": 9.5,
@@ -34405,47 +34411,59 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
-      "SOS_WAR_WALL_LIGHT",
       "SOS_WAR_WALL_LIGHT_UP"
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT",
-    "height": 90,
-    "alignment": "CENTER",
-    "radius": 400,
-    "strength": 7.5,
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_1",
+    "offset": [ 10, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
     "color": [
       255,
       80,
       87
     ],
     "type": "STATIC",
-    "range": 20,
+    "objectIds": [
+      "SOS_WAR_DOOR_TOP"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_2",
+    "offset": [ -70, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT_FIX" ],
     "offset": [ -30, 250, 0 ],
     "radius": 500,
-    "strength": 3.5,
+    "strength": 4.5,
     "color": [
       255,
       216,
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_FAM_WALL_LITE"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT_FIX" ],
     "height": 64,
     "alignment": "CENTER",
     "radius": 400,
@@ -38272,6 +38290,42 @@
     "range": 20,
     "objectIds": [
       "SORCERESS_FIREPLACE"
+    ]
+  },
+  {
+    "description": "SLAYER_CAVE_EXIT",
+    "height": 70,
+    "offset": [ -65, 48, -26 ],
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "SLAYER_CAVE_EXIT_LEFT",
+      "EYEGLO_DUNGEON_EXIT_LEFT"
+    ]
+  },
+  {
+    "description": "Cosmic Altar - Outside",
+    "offset": [ 5, 135, -20 ],
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      70,
+      0,
+      130
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 15,
+    "objectIds": [
+      "COSMICTEMPLE_RUINED_OLD"
     ]
   }
 ]
