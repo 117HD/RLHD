@@ -187,6 +187,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private static final float COLOR_FILTER_FADE_DURATION = 500;
 
+	private static final int NPC_DISPLACEMENT_CACHE_MAX_SIZE = 100;
+
 	private static final int[] eightIntWrite = new int[8];
 
 	private static final int[] RENDERBUFFER_FORMATS_SRGB = {
@@ -478,6 +480,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		public boolean canDisplace = true;
 		public int idleRadius = -1;
+		public long lastAccessMs;
 	}
 
 	public double elapsedTime;
@@ -2431,6 +2434,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
+		npcDisplacementConfig.clear();
 
 		if (sceneContext != null)
 			sceneContext.destroy();
@@ -3081,6 +3085,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					ActorDisplacementConfig displacementConfig = npcDisplacementConfig.get(npcId);
 					if (displacementConfig == null) {
+						if (npcDisplacementConfig.size() > NPC_DISPLACEMENT_CACHE_MAX_SIZE) {
+							long oldestConfigMilli = Long.MAX_VALUE;
+							int oldestNpcId = -1;
+							for (int cachedNpcId : npcDisplacementConfig.keySet()) {
+								long lastAccessMs = npcDisplacementConfig.get(cachedNpcId).lastAccessMs;
+								if (lastAccessMs < oldestConfigMilli) {
+									oldestNpcId = cachedNpcId;
+								}
+							}
+							assert oldestNpcId != -1;
+							npcDisplacementConfig.remove(oldestNpcId);
+						}
 						npcDisplacementConfig.put(npcId, displacementConfig = new ActorDisplacementConfig());
 
 						// Check if NPC is allowed to displace
@@ -3099,6 +3115,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						}
 						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
+					displacementConfig.lastAccessMs = System.currentTimeMillis();
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 				}
