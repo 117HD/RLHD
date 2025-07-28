@@ -1284,6 +1284,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (uiResolution == null)
 			return;
 
+		int[] viewport = {
+			client.getViewportXOffset(),
+			uiResolution[1] - (client.getViewportYOffset() + client.getViewportHeight()),
+			client.getViewportWidth(),
+			client.getViewportHeight()
+		};
+
+		// Skip rendering when there's no viewport to render to, which happens while world hopping
+		if (viewport[2] == 0 || viewport[3] == 0)
+			return;
+
 		float[] dpiScaling = getDpiScaling();
 		if (client.isStretchedEnabled()) {
 			Dimension dim = client.getStretchedDimensions();
@@ -1293,13 +1304,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			System.arraycopy(uiResolution, 0, scaledUiResolution, 0, 2);
 		}
 		applyScaling(dpiScaling, scaledUiResolution);
-
-		int[] viewport = {
-			client.getViewportXOffset(),
-			uiResolution[1] - (client.getViewportYOffset() + client.getViewportHeight()),
-			client.getViewportWidth(),
-			client.getViewportHeight()
-		};
 
 		sceneViewportScale = dpiScaling;
 		// UI stretching also affects the scene viewport
