@@ -1,5 +1,4 @@
 /*
- * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
  * All rights reserved.
  *
@@ -23,25 +22,38 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+package rs117.hd.config;
 
-#version 330
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
-layout (location = 0) in vec3 vPosition;
-layout (location = 1) in int vHsl;
-layout (location = 2) in vec3 vUv;
-layout (location = 3) in int vMaterialData;
-layout (location = 4) in vec4 vNormal;
+@Getter
+@RequiredArgsConstructor
+public enum DynamicLights
+{
+	NONE("Disabled", 0, 0),
+	FEW("Few", 12, 25),
+	SOME("Some", 24, 50),
+	MANY("Many", 32, 100);
 
-out vec3 gPosition;
-out int gHsl;
-out vec3 gUv;
-out int gMaterialData;
-out vec4 gNormal;
+	public static final int MAX_LIGHTS_PER_TILE;
 
-void main() {
-    gPosition = vPosition;
-    gHsl = vHsl;
-    gUv = vUv;
-    gMaterialData = vMaterialData;
-    gNormal = vNormal;
+	static {
+		int max = 0;
+		for (var e : values()) {
+			assert e.lightsPerTile % 4 == 0; // Needs to be divisible by 4
+			max = Math.max(max, e.lightsPerTile);
+		}
+		MAX_LIGHTS_PER_TILE = max;
+	}
+
+	private final String name;
+	private final int lightsPerTile;
+	private final int maxSceneLights;
+
+	@Override
+	public String toString()
+	{
+		return name;
+	}
 }

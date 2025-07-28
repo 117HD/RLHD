@@ -415,9 +415,6 @@ public class ModelPusher {
 			return;
 		}
 
-		final int triA = model.getFaceIndices1()[face];
-		final int triB = model.getFaceIndices2()[face];
-		final int triC = model.getFaceIndices3()[face];
 		final int[] xVertexNormals = model.getVertexNormalsX();
 		final int[] yVertexNormals = model.getVertexNormalsY();
 		final int[] zVertexNormals = model.getVertexNormalsZ();
@@ -427,7 +424,11 @@ public class ModelPusher {
 			return;
 		}
 
-		float terrainData = 0x800000; // Force undo vanilla shading in compute to not use flat normals
+		final int triA = model.getFaceIndices1()[face];
+		final int triB = model.getFaceIndices2()[face];
+		final int triC = model.getFaceIndices3()[face];
+
+		float terrainData = 0;
 		sceneContext.modelFaceNormals[0] = xVertexNormals[triA];
 		sceneContext.modelFaceNormals[1] = yVertexNormals[triA];
 		sceneContext.modelFaceNormals[2] = zVertexNormals[triA];

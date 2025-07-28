@@ -13,7 +13,7 @@ public class LightDefinition {
 	public Integer worldX, worldY;
 	public int plane;
 	public Alignment alignment = Alignment.CUSTOM;
-	public int[] offset = new int[3];
+	public float[] offset = new float[3];
 	public int height;
 	public int radius = 300;
 	public float strength = 5;
@@ -52,7 +52,7 @@ public class LightDefinition {
 		if (alignment == null || alignment == Alignment.CENTER)
 			alignment = Alignment.CUSTOM;
 		if (offset == null || offset.length != 3) {
-			offset = new int[3];
+			offset = new float[3];
 		} else {
 			offset[1] *= -1;
 		}

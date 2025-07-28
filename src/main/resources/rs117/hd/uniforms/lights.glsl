@@ -1,15 +1,14 @@
 #pragma once
 
-#include MAX_LIGHT_COUNT
+#include <utils/constants.glsl>
 
-struct PointLight
-{
+#if DYNAMIC_LIGHTS
+struct PointLight {
     vec4 position;
-    vec3 color;
+    vec4 color;
 };
 
-layout(std140) uniform PointLightUniforms {
+layout(std140) uniform UBOLights {
     PointLight PointLightArray[MAX_LIGHT_COUNT];
 };
-
-#include LIGHT_GETTER
+#endif
