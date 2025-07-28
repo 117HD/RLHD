@@ -2212,8 +2212,6 @@
       "FLOWERBED_YELLOW",
       "RAREFLOWER_YELLOW",
       "RAREFLOWERS_YELLOW",
-      "SUNFLOWER",
-      "SUNFLOWERS",
       "BULLRUSHES",
       "BULLRUSHES2",
       "BULLRUSHES3",
@@ -2284,6 +2282,8 @@
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "VERTEX",
     "objectIds": [
+      "SUNFLOWER",
+      "SUNFLOWERS",
       "FAIRY2_BULLRUSH_FALLOFF",
       "FAIRY2_BULLRUSH_SMALL",
       "FAIRY2_BULLRUSH_TILE",
@@ -2520,6 +2520,21 @@
       "FRIS_SHORT_GRASS_4_WALL_EDGE",
       "FRIS_SHORT_GRASS_3_WALL_EDGE",
       "FRIS_SHORT_GRASS_WALL_EDGE_2"
+    ]
+  },
+  {
+    "description": "Zanaris, Lighten Grass",
+    "areas": [ "ZANARIS" ],
+    "baseMaterial": "NONE",
+    "flatNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "inheritTileColorType": "UNDERLAY",
+    "objectIds": [
+      "FAIRY_SHORT_GRASS_4",
+      "FAIRY_SHORT_GRASS_2",
+      "FAIRY_SHORT_GRASS_3",
+      "FAIRY_SHORT_GRASS_1"
     ]
   },
   {
@@ -5699,6 +5714,7 @@
   {
     "description": "GROUND_DECORATION_ROCKS",
     "baseMaterial": "GRUNGE_2",
+    "castShadows": false,
     "objectIds": [
       "DUGUPSOIL1",
       "DUGUPSOIL3",
@@ -8007,12 +8023,14 @@
     ]
   },
   {
-    "description": "Neitiznot - Range and Clay Furnace",
+    "description": "Clay Range and Furnace",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "objectIds": [
       "IZNOT_CLAY_RANGE",
-      "IZNOT_CLAY_FORGE"
+      "IZNOT_CLAY_FORGE",
+      "FAIRY_FURNACE",
+      "FAIRY_RANGE"
     ],
     "colorOverrides": [
       {
@@ -9279,7 +9297,9 @@
       "CIVITAS_LADDER_TALL",
       "CIVITAS_LADDER_MIDDLE_TALL",
       "TOURTRAP_QIP_LADDER",
-      "KOUREND_LADDER_INACTIVE"
+      "KOUREND_LADDER_INACTIVE",
+      "FAIRY_LADDER_WIND_UP",
+      "FAIRY_LADDER_WIND_DOWN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -9541,7 +9561,9 @@
       "DADDYSHOME_TABLE_BROKEN_1OP",
       "DADDYSHOME_TABLE_FIXED",
       "AHOY_TABLE",
-      "BURGH_WOODEN_TABLE_BROKEN"
+      "BURGH_WOODEN_TABLE_BROKEN",
+      "FAIRY_WOODEN_TABLE",
+      "FAIRY_WOODEN_TABLE_LONG"
     ],
     "uvOrientationY": 512,
     "uvType": "BOX",
@@ -11175,7 +11197,9 @@
       "MILLBASE_EMPTY",
       "MILLBASE_FLOUR",
       "HOPPER1",
+      "HOPPER3",
       "HOPPERLEVERS1",
+      "HOPPERLEVERS3",
       "INACTIVEHOPPERLEVERS"
     ],
     "colorOverrides": [
@@ -12217,7 +12241,9 @@
       "SNP_CRATE_RED",
       "SNP_CRATE_STACKED_RED",
       "DOTI_POISON_CRATE_OP",
-      "EYEGLO_CRATE"
+      "EYEGLO_CRATE",
+      "FAIRY_CRATE",
+      "FAIRY_CRATE_2"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -16090,25 +16116,32 @@
   {
     "description": "Zanaris - Walls - Grass",
     "baseMaterial": "GRUNGE_1",
+    "receiveShadows": false,
     "objectIds": [
       "FAIRY_WALL",
+      "FAIRY_WALL_LV2",
+      "FAIRY_WALL_ALCOVE",
+      "FAIRY_WALL_MID_FILL",
+      "FAIRY_WALL_LV2_MID_FILL",
+      "FAIRY_WALL_LV2_TRI",
       "FAIRY_WALL_MUSH_GREEN",
       "FAIRY_WALL_MUSH_RED",
       "FAIRY_WALL_MUSH_GREEN_VAR",
       "FAIRY_WALL_MUSH_RED_VAR",
-      "FAIRY_WALL_LV2",
       "FAIRY_WALL_LV2_MUSH_GREEN",
       "FAIRY_WALL_LV2_MUSH_RED",
       "FAIRY_WALL_LV2_MUSH_RED_VAR",
       "FAIRY_WALL_LV2_MUSH_GREEN_VAR",
       "FAIRY_WALL_LV2_TENTACLE",
-      "FAIRY_WALL_ALCOVE",
-      "FAIRY_WALL_MID_FILL",
-      "FAIRY_WALL_LV2_MID_FILL",
-      "FAIRY_SC_SPEARTRAP",
+      "FAIRY_SC_SPEARTRAP"
+    ]
+  },
+  {
+    "description": "Zanaris - Walls - Lighten Jutting Wall Trap",
+    "baseMaterial": "GRUNGE_1_VERY_LIGHT",
+    "objectIds": [
       "FAIRY_SC_JUTTINGWALL"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Zanaris - Objects - Mushroom Ceiling Objects",
@@ -16123,7 +16156,10 @@
   },
   {
     "description": "Zanaris - Walls - Dirt",
-    "baseMaterial": "DIRT_2",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
     "objectIds": [
       "INVISABLE_NONBLOCKING_WALL",
       "FAIRY_WALL_TANGLE_DOOR_OPEN1",
@@ -16138,8 +16174,45 @@
       "FAIRYTALE2_WALLTOP_CORNER_BTOB",
       "FAIRYTALE2_WALLTOP_STRAIGHT_BTOB",
       "FAIRYTALE2_WALLTOP_INCORNER_BTOB",
-      "FAIRYTALE2_WALLTOP_INCORNER_INV_BTOB",
-      "FAIRYTALE2_WALLTOP_MID_FILL"
+      "FAIRYTALE2_WALLTOP_MID_FILL",
+      "FAIRY_WALL_TANGLE_DOOR_OPEN"
+    ]
+  },
+  {
+    "description": "Zanaris - Walls - Dirt",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "objectIds": [
+      "FAIRY_WALL_TANGLE_DOOR_BLEND_LFT",
+      "FAIRY_WALL_TANGLE_DOOR_BLEND_RHT",
+      "FAIRYTALE2_WALLTOP_INCORNER_INV_BTOB"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 34",
+        "baseMaterial": "GRUNGE_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Throne",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAIRY_GODFATHERS_THRONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
     ]
   },
   {
@@ -16286,7 +16359,6 @@
       "MAGICTRAINING_HIDDEN_PORTAL_ENTRANCE1",
       "DRAYNOR_KILLERWATT_PORTAL2",
       "DRAYNOR_KILLERWATT_PORTAL_MACHINE",
-      "_100_PORTAL_CHICKEN",
       "HUNDRED_PORTAL_ACTIVE",
       "HUNDRED_EXIT_PORTAL",
       "POH_PORTAL_TEAK_LUMBRIDGE",
@@ -18786,7 +18858,8 @@
       "LUNAR_PIRATE_SACK_PILE_LARGE",
       "MOURNING_SACKS",
       "WILDY_HUB_SACK",
-      "FORTIS_SACKS"
+      "FORTIS_SACKS",
+      "FAIRY_SACKS"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -25456,8 +25529,42 @@
   {
     "description": "Giant Mole Lair - Walls - Dirt Walls",
     "baseMaterial": "DIRT_2",
-    "objectIds": [ "MOLE_WALL_NO_ROOTS", "MOLE_WALL_NO_ROOTS_LVL2", "MOLE_WALL_NO_ROOTS_LVL2_BIG", "MOLE_WALL_ROOTS_START_01", "MOLE_WALL_ROOTS_START_02", "MOLE_WALL_ROOTS_BEGIN", "MOLE_WALL_ROOTS_PART_A", "MOLE_WALL_ROOTS_PART_B", "MOLE_WALL_ROOTS_PART_C", "MOLE_WALL_ROOTS_LVL2", "MOLE_WALL_TOP5_LVL2_BIG", "MOLE_WALL_RAMP_02", "MOLE_WALL_RAMP_01_MIRROR", "MOLE_WALL_RAMP_02_MIRROR" ],
-    "uvType": "BOX"
+    "objectIds": [
+      "MOLE_WALL_NO_ROOTS",
+      "MOLE_WALL_NO_ROOTS_LVL2",
+      "MOLE_WALL_NO_ROOTS_LVL2_BIG",
+      "MOLE_WALL_ROOTS_START_01",
+      "MOLE_WALL_TOP5_LVL2_BIG",
+      "MOLE_WALL_RAMP_02",
+      "MOLE_WALL_RAMP_01_MIRROR",
+      "MOLE_WALL_RAMP_02_MIRROR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Giant Mole Lair - Walls - Dirt Walls - Roots",
+    "baseMaterial": "DIRT_2",
+    "objectIds": [
+      "MOLE_WALL_ROOTS_START_01",
+      "MOLE_WALL_ROOTS_START_02",
+      "MOLE_WALL_ROOTS_BEGIN",
+      "MOLE_WALL_ROOTS_PART_A",
+      "MOLE_WALL_ROOTS_PART_B",
+      "MOLE_WALL_ROOTS_PART_C",
+      "MOLE_WALL_ROOTS_LVL2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      }
+    ]
   },
   {
     "description": "Giant Mole Lair - Walls - Ramp 1",
@@ -25472,15 +25579,61 @@
     "uvType": "BOX"
   },
   {
+    "description": "Evil Chickens Lair - Portal",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "_100_PORTAL_CHICKEN"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 48",
+        "baseMaterial": "NONE",
+        "castShadows": false,
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Evil Chickens Lair - Dragon Egg",
+    "baseMaterial": "BLANK_SUPERGLOSS",
+    "objectIds": [
+      "CHICKENQUEST_BLACK_DRAGON_EGG"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Evil Chickens Lair - Baby Black Dragon Tunnel",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "objectIds": [
+      "CHICKENQUEST_CHAMBER_ENTRANCE",
+      "CHICKENQUEST_CHAMBER_ENTRANCE_WITHROPE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "BLACK",
+        "castShadows": false,
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Zanaris - Objects - Wooden - Stacked Crate - Angled",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "FAIRY_CRATES_SMALL_BLUE"
+      "FAIRY_CRATES_SMALL_BLUE",
+      "FAIRY_CRATES_SMALL"
     ],
     "uvType": "BOX",
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
-    "uvOrientationY": 170
+    "uvOrientationY": 170,
+    "uvScale": 0.6
   },
   {
     "description": "Zanaris - Objects - Tree Houses",
@@ -25507,6 +25660,235 @@
       "FAIRY_TREE2"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Zanaris - Objects - Long Crates",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationY": 256,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "FAIRY2_CRATE_WANDS",
+      "FAIRY2_BOW_CRATES"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Zanaris - Objects - Medical Table",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "FAIRY2_MEDICAL_TABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Medical Screen",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "FAIRY2_MEDICAL_SCREEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Stretcher",
+    "objectIds": [
+      "FAIRY2_STRETCHER1",
+      "FAIRY2_STRETCHER2",
+      "FAIRY2_STRETCHER3",
+      "FAIRY2_STRETCHER4",
+      "FAIRY2_STRETCHER5",
+      "FAIRY2_STRETCHER_QUEEN_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && l < 75" ],
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": [ "h == 7", "h == 32" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Stretcher - With Queen",
+    "objectIds": [
+      "FAIRY2_STRETCHER_QUEEN",
+      "FAIRY2_STRETCHER_QUEEN2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Crutch and Medical Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAIRY2_FIRST_AID_BOX",
+      "FAIRY2_CRUTCH",
+      "FAIRY2_CRUTCH2"
+    ]
+  },
+  {
+    "description": "Zanaris - Objects - Map Tables and Map Stands",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "FAIRY2_MAP_TABLE",
+      "FAIRY2_TACTICAL_MAP_FRAME",
+      "FAIRY2_WALL_MAP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0 && a == 255 && s < 7", "h == 32 && a == 255" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Fairy House",
+    "objectIds": [
+      "FAIRYHOUSE1",
+      "FAIRYHOUSE2",
+      "FAIRYBANK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Walls - Wooden",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "objectIds": [
+      "FAIRY_TIMBERWALL"
+    ]
+  },
+  {
+    "description": "Zanaris - Fairy Nuff Shelves",
+    "objectIds": [
+      "FAIRYTALE2_SHELF_VAR_BROKEN",
+      "FAIRYTALE2_SHELVES_VAR_BROKEN",
+      "FAIRYTALE2_SHELF_BROKEN",
+      "FAIRYTALE2_SHELVES_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Zanaris - Fairy Nuff Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAIRY_BENCH_RHT",
+      "FAIRY_BENCH_LFT"
+    ]
+  },
+  {
+    "description": "Puro Puro - Wheat Hedge",
+    "objectIds": [
+      "II_MAZE_WHEAT_BLOCK1",
+      "II_MAZE_WHEAT_NO_BLOCK1",
+      "II_MAZE_WHEAT_BLOCK3_TYPE8",
+      "II_MAZE_WHEAT_NO_BLOCK2",
+      "II_MAZE_WHEAT_NO_BLOCK3",
+      "II_MAZE_WHEAT_BLOCK_TYPE8",
+      "II_MAZE_WHEAT_BLOCK2_TYPE8",
+      "II_MAZE_WHEAT_SURROUND_BLOCK",
+      "II_MAZE_WHEAT_SURROUND_GATE",
+      "II_MAZE_WHEAT_BLOCK_MOVEABLE1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "NONE",
+        "windDisplacementMode": "OBJECT"
+      },
+      {
+        "colors": "a == 225",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Puro Puro - Wheat Grass",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "II_WHEATGRND3",
+      "II_WHEATGRND2",
+      "II_WHEATGRND4M",
+      "II_WHEATGRND5",
+      "II_WHEATGRND4",
+      "II_WHEATGRND2M",
+      "II_WHEATGRND3M",
+      "II_WHEATGRND1",
+      "II_WHEATGRND6",
+      "II_WHEATGRND7",
+      "II_ROCKS_FLOOR_HARD_03",
+      "II_ROCKS_FLOOR_HARD_01"
+    ]
+  },
+  {
+    "description": "Puro Puro - Walls",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 200,
+    "objectIds": [
+      "II_MAZE_WALL1",
+      "II_MAZE_WALL_CAVE1",
+      "II_MAZE_WALL_CAVE2",
+      "II_MAZE_WALL_CAVE2_M",
+      "II_MAZE_WALL_TOP",
+      "II_ROCKS_FLOOR_HARD_02"
+    ]
   },
   {
     "description": "Objects - Wooden - Private Bank Booth Destroyed",
@@ -31711,6 +32093,23 @@
     "uvOrientation": 512
   },
   {
+    "description": "Water Trough",
+    "objectIds": [
+      "FAIRY_TROUGH"
+    ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
     "description": "Wooden food trough - With textured seed",
     "objectIds": [ "FOODTROUGH2" ],
     "baseMaterial": "WOOD_GRAIN_3",
@@ -31963,7 +32362,7 @@
   {
     "description": "Wooden shelf wall mounted",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "FAI_VARROCK_SHELF_EMPTY_LOW", "QIP_SHEEP_SHEARER_COOKINGSHELFEMPTY" ],
+    "objectIds": [ "FAI_VARROCK_SHELF_EMPTY_LOW", "QIP_SHEEP_SHEARER_COOKINGSHELFEMPTY", "FAIRY_EMPTY_SHELF" ],
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientationX": 512,
@@ -32581,7 +32980,9 @@
       "AIDE_BARREL",
       "BRAIN_BOAT_LOC_BARREL",
       "BRAIN_BOAT_LOC_BARREL_STACKED",
-      "SLUG2_BARREL"
+      "SLUG2_BARREL",
+      "FAIRY_BARREL",
+      "FAIRY_BARREL_BLUE"
     ]
   },
   {
@@ -50284,6 +50685,23 @@
     "uvScale": 0.8,
     "objectIds": [
       "SPIRALSTAIRS_WOODEN"
+    ]
+  },
+  {
+    "description": "Sandpit",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SANDPIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
     ]
   }
 ]
