@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <uniforms/global.glsl>
 
 void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
     if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {

@@ -784,8 +784,9 @@
   {
     "name": "WIZARD_TOWER_BASEMENT",
     "aabbs": [
-      [ 3094, 9554, 3122, 9579 ]
-    ]
+      [ 3092, 9551, 3125, 9581 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "MISTHALIN_MYSTERY_MANOR",
@@ -7321,7 +7322,7 @@
   {
     "name": "THE_BLOOD_MOON_ENTRANCE",
     "aabbs": [
-      [ 1408, 9626, 0, 1422, 9638 ]
+      [ 1408, 9626, 0, 1422, 9638, 0 ]
     ]
   },
   {

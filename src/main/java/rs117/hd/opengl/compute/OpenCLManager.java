@@ -48,8 +48,8 @@ import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
-import rs117.hd.opengl.shader.Template;
-import rs117.hd.opengl.uniforms.ComputeUniforms;
+import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
@@ -249,6 +249,7 @@ public class OpenCLManager {
 									}
 								}
 
+								log.debug("Choosing the above device for OpenCL");
 								this.device = device;
 								OpenCLManager.context = context;
 							} catch (Exception ex) {
@@ -280,15 +281,21 @@ public class OpenCLManager {
 		log.debug("Created command_queue {}, properties {}", commandQueue, l[0] & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE);
 	}
 
-	private long compileProgram(MemoryStack stack, String programSource) throws ShaderException {
-		log.trace("Compiling program:\n {}", programSource);
+	private long compileProgram(MemoryStack stack, String path, ShaderIncludes includes) throws ShaderException, IOException {
+		String source = includes.loadFile(path);
+		log.trace("Compiling program:\n {}", source);
 		IntBuffer errcode_ret = stack.callocInt(1);
-		long program = clCreateProgramWithSource(context, programSource, errcode_ret);
+		long program = clCreateProgramWithSource(context, source, errcode_ret);
 		checkCLError(errcode_ret);
 
 		int err = clBuildProgram(program, device, "", null, 0);
 		if (err != CL_SUCCESS)
-			throw new ShaderException(getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_LOG));
+			throw ShaderException.compileError(
+				includes,
+				source,
+				getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_LOG),
+				path
+			);
 
 		log.debug("Build status: {}", getProgramBuildInfoInt(program, device, CL_PROGRAM_BUILD_STATUS));
 		if (deviceCaps.OpenCL12)
@@ -308,12 +315,15 @@ public class OpenCLManager {
 
 	public void initPrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
-			var template = new Template()
+			var includes = new ShaderIncludes()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
-				.define("MAX_CHARACTER_POSITION_COUNT", ComputeUniforms.MAX_CHARACTER_POSITION_COUNT)
+				.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
+				.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
+				.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
+				.define("MAX_CHARACTER_POSITION_COUNT", UBOCompute.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
-			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
+			passthroughProgram = compileProgram(stack, "comp_unordered.cl", includes);
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
 			sortingPrograms = new long[plugin.numSortingBins];
@@ -322,15 +332,10 @@ public class OpenCLManager {
 				int faceCount = plugin.modelSortingBinFaceCounts[i];
 				int threadCount = plugin.modelSortingBinThreadCounts[i];
 				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
-				sortingPrograms[i] = compileProgram(stack, template
-					.copy()
+				includes = includes
 					.define("THREAD_COUNT", threadCount)
-					.define("FACES_PER_THREAD", facesPerThread)
-					.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
-					.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
-					.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
-					.load("comp.cl")
-				);
+					.define("FACES_PER_THREAD", facesPerThread);
+				sortingPrograms[i] = compileProgram(stack, "comp.cl", includes);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
 			}
 		}
