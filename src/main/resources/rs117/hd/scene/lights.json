@@ -38977,6 +38977,9 @@
     "range": 5,
     "objectIds": [
       "VMQ4_SUN_TELEPORT"
+    ],
+    "npcIds": [
+      "TONALI_PORTABLE_TELEPORTER"
     ]
   },
   {
