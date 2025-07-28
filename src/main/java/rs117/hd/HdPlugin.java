@@ -3055,9 +3055,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int plane = ModelHash.getPlane(hash);
 
 					Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
-					int plane = client.getTopLevelWorldView().getPlane();
 					Tile tile = extendedTiles[plane][tileExX][tileExY];
 
 					int config = sceneContext.getObjectConfig(tile, hash);
@@ -3084,7 +3084,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
 					Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
-					int plane = client.getTopLevelWorldView().getPlane();
+					int plane = ModelHash.getPlane(hash);
 					Tile tile = extendedTiles[plane][tileExX][tileExY];
 
 					int config = sceneContext.getObjectConfig(tile, hash);
