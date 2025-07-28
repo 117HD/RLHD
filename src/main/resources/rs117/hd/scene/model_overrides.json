@@ -937,7 +937,6 @@
       "EYEGLO_BATTLE_TORTOISE_REVEAL",
       "QIP_DIGSITE_SWING_LANTERN",
       "TOURTRAP_QIP_CART_CAMEL",
-      "SHAYZIEN_WALL_LOWER_01",
       "POH_TIPJAR",
       "POH_ADVENTURE_LOG_1",
       "POH_ADVENTURE_LOG_2",
@@ -4259,8 +4258,22 @@
     "flatNormals": true
   },
   {
+    "description": "Shayzien - Metallic - Fence",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DEADMAN_FINAL_CAGE_STEEL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 655
+  },
+  {
     "description": "Wilderness and Shayzien - Rock Walls",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": -256,
+    "uvScale": 0.8,
     "objectIds": [
       "BKSECRETDOOR",
       "WILD1_WALL",
@@ -4302,36 +4315,860 @@
       "WILD6_WALL_SHUTTERED",
       "WILD6_WALL_BATTLEMENT",
       "WILD6_WALL_WINDOW_SML",
-      "WALLKIT_SHAYZIEN_CHURCH_WINDOW01",
-      "WALLKIT_SHAYZIEN_CHURCH_WINDOW02",
       "WILD_VETION_BRICKS01",
       "WILD_VETION_BRICKS02",
       "WILD3_WALL_BATTLEMENT_NO_GRADIENT"
-    ],
-    "uvType": "BOX",
-    "flatNormals": true
+    ]
   },
   {
-    "description": "SHAYZIEN_WALLS_WOOD",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Wilderness and Shayzien - Rock Walls with glass windows",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": -256,
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_CHURCH_WINDOW01",
+      "WALLKIT_SHAYZIEN_CHURCH_WINDOW02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      }
+    ]
+  },
+  {
+    "description": "SShayzien - Wooden - Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvOrientation": 512,
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_FENCE01",
+      "AKD_SHAYZIEN_BAR_SPIRALSTAIRSTOP"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
     "objectIds": [
       "WALLKIT_SHAYZIEN_RESIDENTIAL01",
       "WALLKIT_SHAYZIEN_RESIDENTIAL02",
-      "WALLKIT_SHAYZIEN_SHOP01",
-      "WALLKIT_SHAYZIEN_SUPPORT01",
-      "WALLKIT_SHAYZIEN_FENCE01"
-    ],
-    "flatNormals": true
+      "SHAYZIEN_WALL_WOODEN",
+      "SHAYZIEN_WALL_WOODEN_LOW",
+      "SHAYZIEN_WOODEN_PLANKS",
+      "SHAYZIEN_WALL_BARRICADE"
+    ]
   },
   {
-    "description": "SHAYZIEN_STAIRS",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Shayzien - Stone - Wooden - Glass - Windowed wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "flatNormals": true,
     "objectIds": [
-      "AKD_SHAYZIEN_BAR_SPIRALSTAIRS",
+      "WALLKIT_SHAYZIEN_SHOP01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "BLANK_GLOSS",
+        "colors": "a < 255"
+      },
+      {
+        "description": "Stone Bricks",
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Stone - Wooden - Roof",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "flatNormals": true,
+    "objectIds": [
+      "ROOFKIT_SHAYZIEN_CITY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "tiles",
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Door with golden ring handle",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_DOOR01_L",
+      "WALLKIT_SHAYZIEN_DOOR01_L_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_L_REVERSE",
+      "WALLKIT_SHAYZIEN_DOOR01_L_REVERSE_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_L_OPEN_NOOP",
+      "WALLKIT_SHAYZIEN_DOOR01_R",
+      "WALLKIT_SHAYZIEN_DOOR01_R_REVERSE",
+      "WALLKIT_SHAYZIEN_DOOR01_R_REVERSE_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_R_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_R_OPEN_NOOP",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_L_OPEN_NOOP",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_R",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_R_OPEN",
+      "WALLKIT_SHAYZIEN_DOOR01_DOUBLE_R_OPEN_NOOP"
+
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Support Posts",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "WALLKIT_SHAYZIEN_SUPPORT01"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 1024,
+    "objectIds": [
+      "SHAYZIEN_LADDER",
+      "SHAYZIEN_LADDERTOP"
+    ]
+  },
+  {
+    "description": "Shayzien - Cloth - Metal - Curtains",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "_100_DAVE_CRYPT_CURTAINSL",
+      "_100_DAVE_CRYPT_CURTAINSR",
+      "SLP_DRAPES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Curtain rod",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Cloth - Wooden - Tent Roofs",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "objectIds": [
+      "ROOFKIT_SHAYZIEN_TENT_EDGE01",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE01_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE02",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE02_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE03",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE03_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE04",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE05",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE05_R",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06_R",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE06_MR",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07_R",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07_M",
+      "ROOFKIT_SHAYZIEN_TENT_EDGE07_MR",
+      "ROOFKIT_SHAYZIEN_TENT_MIDDLE01",
+      "ROOFKIT_SHAYZIEN_TENT_MIDDLE02",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER01",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER02",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER03",
+      "ROOFKIT_SHAYZIEN_TENT_CORNER04"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood Grain",
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Cloth - Wooden - Encampment Tents",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.8,
+    "uvOrientation": 616,
+    "uvType": "BOX",
+    "objectIds": [
+      "SHAYZIEN_WALL_LOWER_01",
+      "SHAYZIEN_WALL_LOWER_02",
+      "SHAYZIEN_WALL_LOWER_END_RIGHT_01",
+      "SHAYZIEN_WALL_LOWER_END_LEFT_01",
+      "SHAYZIEN_WALL_UPPER_01",
+      "SHAYZIEN_WALL_UPPER_02",
+      "SHAYZIEN_WALL_UPPER_03",
+      "SHAYZIEN_WALL_UPPER_04",
+      "SHAYZIEN_WALL_UPPER_05",
+      "SHAYZIEN_WALL_UPPER_06",
+      "SHAYZIEN_WALL_UPPER_07",
+      "SHAYZIEN_WALL_UPPER_08",
+      "SHAYZIEN_WALL_UPPER_09",
+      "SHAYZIEN_WALL_UPPER_10",
+      "SHAYZIEN_WALL_UPPER_11",
+      "SHAYZIEN_WALL_UPPER_12",
+      "SHAYZIEN_WALL_UPPER_13",
+      "SHAYZIEN_INFIRMARY_TENTWALL",
+      "SHAYZIEN_INFIRMARY_TENTDOOR",
+      "SHAYZIEN_INFIRMARY_TENTROOF",
+      "SHAYZIEN_INFIRMARY_TENTROOF_CORNER",
+      "SHAYZIEN_INFIRMARY_TENTROOF_CENTRE"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Bark - Rope - Encampment Walls",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": -124,
+    "objectIds": [
+      "SHAYZIEN_PALISADE_1",
+      "SHAYZIEN_PALISADE_2",
+      "SHAYZIEN_PALISADE_2_MIRROR",
+      "SHAYZIEN_PALISADE_3",
+      "SHAYZIEN_PALISADE_4",
+      "SHAYZIEN_PALISADE_5"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": -62,
+        "uvScale": 0.25
+      },
+      {
+        "description": "Wood Grain",
+        "colors": "h == 3 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Marble - Decorative Support pillar",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHAYZIEN_PILLAR_01_BASE"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": -512,
+    "flatNormals": true,
+    "objectIds": [
+      "SHAYZIEN_STAIRS_BOTTOM_01",
+      "SHAYZIEN_STAIRS_BOTTOM_02",
       "SHAYZIEN_MANOR_STAIRS",
       "SHAYZIEN_MANOR_STAIRSTOP"
+    ]
+  },
+  {
+    "description": "Shayzien - Stone - Wooden - Staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": -512,
+    "flatNormals": true,
+    "objectIds": [
+      "AKD_SHAYZIEN_BAR_SPIRALSTAIRS"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Metal - Stone - Bank table with scales weights and papers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_BANK_TABLE_01",
+      "SHAYZIEN_BANK_TABLE_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0 && l < 20",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Stone - Stone table with wooden legs and table cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_LARGE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "MOURNING_NORMAL_BED_VARIATION",
+      "SHAYZIEN_BIGGER_BED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6 && s >= 2 || h == 7 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Stone - Stone table with wooden bottom and table cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_SMALL_TABLE_01",
+      "SHAYZIEN_SMALL_TABLE_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Stone - Paper - Stone table with wooden bottom and table cloth with scrolls",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_SMALL_TABLE_01_W_PARCHMENT",
+      "SHAYZIEN_SMALL_TABLE_02_W_PARCHMENT_01",
+      "SHAYZIEN_SMALL_TABLE_02_W_PARCHMENT_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Scroll",
+        "colors": "h == 7 || h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "MARBLE_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Paper - Wooden shelf",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHAYZIEN_WARDROBE",
+      "LOVAKENG_SMALL_WARDROBE"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Paper - Wooden shelf with Scrolls",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "SHAYZIEN_WARDROBE_WITH_SCROLLS",
+      "SHAYZIEN_WARDROBE_WITH_SCROLLS_01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Carpet - Paper - Notice board with scrolls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "FAI_FALADOR_NOTICEBOARD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h <= 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Felt",
+        "colors": "h == 7 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Metal - Rope - Bone - Rope Barrier",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "SHAYZIEN_BANK_BARRIER_01",
+      "SHAYZIEN_BANK_BARRIER_02",
+      "SHAYZIEN_BANK_BARRIER_03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Skull",
+        "colors": "h >= 10",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "s == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.2,
+        "uvOrientationX": 612,
+        "uvOrientationZ": -100
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Metal - Metal bars gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 117,
+    "objectIds": [
+      "SHAYZIEN_BANK_BARS_DOOR"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Carpet - Floor standing cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_RACK01",
+      "SHAYZIEN_CLOTHESSHOP_RACK02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Carpet - Floor cloth",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_FABRIC01",
+      "SHAYZIEN_CLOTHESSHOP_FABRIC02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.70
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Table with cloth thread and tools",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": "s == 0 && l < 80",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Shelf with thread spools",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_SHELF01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && l < 30",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationY": 256,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Wall mounted banner",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 222,
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_HANGINGFABRICL",
+      "SHAYZIEN_CLOTHESSHOP_HANGINGFABRICR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5 || h == 6",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Metallic - Metal pots with multicolored liquid",
+    "baseMaterial": "METALLIC_1",
+    "uvScale": 0.6,
+    "uvOrientation": 117,
+    "uvType": "BOX",
+    "objectIds": [
+      "DYE_POTS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 222
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Varrock - Wooden - Cloth - Hanging coats",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 222,
+    "uvScale": 0.6,
+    "objectIds": [
+      "FAI_VARROCK_COATS_ON_HOOKS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5 || h == 6",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Clothes model",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 117,
+    "uvScale": 0.6,
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_CLOTHESMODEL011"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 5",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Arm chair with high back",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "LOVAKENG_VELVET_CHAIR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Velvet",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Cloth - Lounge chair - Bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 179,
+    "objectIds": [
+      "SHAYZIEN_LOUNGE_BED_SMALL",
+      "SHAYZIEN_LOUNGE_BED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Velvet",
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Metallic - Weapons Barrel with metal bands Zamorak Spear and Air Staff",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SHAYZIEN_WEAPON_BARREL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 && s < 2 || h == 0",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5,
+        "uvOrientation": 711
+      },
+      {
+        "description": "Glass Orb",
+        "colors": "h == 42",
+        "uvType": "BOX",
+        "baseMaterial": "BLANK_GLOSS",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Shelves with boxes and glass",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "SHAYZIEN_STORE_SHELF3",
+      "SHAYZIEN_STORE_SHELF4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Box",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_2_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Glass",
+        "colors": "h > 9",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red bottles",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Shayzien - Lovakeng - Metallic - Wooden - Dresser with metal handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "LOVAKENGJ_MEDIUM_DRAWERS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 179
+      }
+    ]
   },
   {
     "description": "MOUNT_KARUULM_WALLS",
@@ -8039,6 +8876,7 @@
       "FEUD_RUGCORNER_RED",
       "FEUD_RUGSIDE_RED",
       "FEUD_RUGMIDDLE_RED",
+      "QUEST_START_ICON_TALEOFTHERIGHTEOUS",
       "FAI_VARROCK_ZAMORAK_RUGCORNER",
       "FAI_VARROCK_ZAMORAK_RUGSIDE",
       "FAI_VARROCK_ZAMORAK_RUGMIDDLE",
@@ -8556,7 +9394,8 @@
       "KR_CAM_BENCH",
       "MURDER_QIP_POSH_BENCH",
       "HOS_BENCH_01",
-      "SOTE_ELF_VILLAGE_BENCH"
+      "SOTE_ELF_VILLAGE_BENCH",
+      "SHAYZIEN_BENCH01"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -8725,7 +9564,10 @@
     "objectIds": [
       "FAI_VARROCK_POSH_TABLE",
       "FAI_VARROCK_POSH_DININGTABLE_SMALL",
-      "WGS_SEED_COUNTER_EMPTY"
+      "WGS_SEED_COUNTER_EMPTY",
+      "SHAYZIEN_TABLE_2X1",
+      "SHAYZIEN_TABLE_2X2",
+      "SHAYZIEN_TABLE_1X1"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -8965,7 +9807,8 @@
       "WALLSHIELD3_WHITE",
       "FAI_VARROCK_WALLSHIELD",
       "WALLSHIELD",
-      "QIP_DS_COATOFARMS1"
+      "QIP_DS_COATOFARMS1",
+      "WALLSHIELD_DARKKNIGHT"
     ]
   },
   {
@@ -9114,7 +9957,8 @@
     "objectIds": [
       "BATH",
       "AKD_HUGHES_BATH_1_NOOP",
-      "FAI_VARROCK_POSH_BATH"
+      "FAI_VARROCK_POSH_BATH",
+      "AKD_POSH_BATH"
     ],
     "uvType": "BOX",
     "uvScale": 0.3
@@ -9810,7 +10654,9 @@
       "KR_CAM_DOUBLEDOORL",
       "KR_CAM_DOUBLEDOORL_OPEN",
       "KR_CAM_DOUBLEDOORR",
-      "KR_CAM_DOUBLEDOORR_OPEN"
+      "KR_CAM_DOUBLEDOORR_OPEN",
+      "FAI_BARBARIAN_LARGE_DOUBLEDOOR_L_INACTIVE",
+      "FAI_BARBARIAN_LARGE_DOUBLEDOOR_R_INACTIVE"
     ],
     "colorOverrides": [
       {
@@ -9914,6 +10760,16 @@
     "uvType": "BOX",
     "uvOrientationY": 512,
     "flatNormals": true
+  },
+  {
+    "description": "Varrock - Metallic - Stone - Water Pump - Needs proper UV",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "FAI_VARROCK_WATERPUMP"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.5
   },
   {
     "description": "Varrock Museum Staircase",
@@ -11388,7 +12244,8 @@
       "MYQ4_VIAL_CRATE",
       "MYQ4_MEAT_CRATE",
       "VMQ2_COTHON_CRATE",
-      "VMQ2_COTHON_CRATES"
+      "VMQ2_COTHON_CRATES",
+      "SHAYZIEN_CRATE_01_DARK_OP"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -11580,12 +12437,7 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvScale": 0.75,
     "objectIds": [
-      "TOURTRAP_QIP_CART_NORMAL",
-      "TOURTRAP_QIP_BARREL",
-      "THMINEBARREL_ANA_WINCHSIDE",
-      "THMINEBARREL_FULL",
-      "THMINEBARREL_EMPTY",
-      "QIP_SHEEP_SHEARER_BARREL"
+      "TOURTRAP_QIP_CART_NORMAL"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -14189,6 +15041,9 @@
       "BIGROUNDTABLE",
       "ROUNDTABLE",
       "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE2",
+      "AKD_SHAYZIEN_OUTDOOR_TABLE2",
+      "DARKM_INN_TALL_TABLE",
+      "DARKM_INN_LOW_TABLE",
       "KR_SIN_ROUNDTABLE",
       "HOS_ROUND_TABLE",
       "ROUNDTABLE_WIDE_LIGHT"
@@ -14199,9 +15054,20 @@
   },
   {
     "description": "Objects - Wooden - Tables - Round - With Umbrella",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE1"
+      "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE1",
+      "AKD_SHAYZIEN_OUTDOOR_TABLE1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h >= 3 && h <= 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "flatNormals": true,
+        "uvScale": 1.2
+      }
     ]
   },
   {
@@ -14377,7 +15243,8 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "KR_BATHMIRROR",
-      "BATHMIRROR"
+      "BATHMIRROR",
+      "GRIM_WITCH_HOUSE_BATHMIRROR"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -18745,7 +19612,7 @@
     ]
   },
   {
-    "description": "Ver Sinhaza - Metallic - Wooden - Plank - Chest with metallic banding",
+    "description": "Ver Sinhaza - Shayzien - Metallic - Wooden - Plank - Chest with metallic banding",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -18756,7 +19623,9 @@
       "TOB_REWARDS_CHEST_LOBBY_MULTI_NOOP",
       "TOB_REWARDS_CHEST_LOBBY_OPEN",
       "TOB_REWARDS_CHEST_LOBBY_OPEN_NOOP",
-      "TOB_SURFACE_GRAVESTONE_CHEST"
+      "TOB_SURFACE_GRAVESTONE_CHEST",
+      "SHAYZIEN_CHEST_STOLEN",
+      "SHAYZIEN_CHEST_CLOSED"
     ],
     "colorOverrides": [
       {
@@ -19504,7 +20373,9 @@
       "TIMBER_SCAFOLDTALL",
       "SHAYZIEN_TIMBER_SCAFOLDEDGE",
       "SHAYZIEN_TIMBER_SCAFOLDTOP",
-      "SHAYZIEN_TIMBER_SCAFOLDTALL"
+      "SHAYZIEN_TIMBER_SCAFOLDTALL",
+      "SHAYZIEN_TIMBER_SCAFOLDLOW",
+      "SHAYZIEN_TIMBER_SCAFOLD"
     ],
     "uvType": "BOX",
     "uvScale": 0.85,
@@ -21127,22 +21998,6 @@
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
     "flatNormals": true
-  },
-  {
-    "description": "Object - Wooden - Barrel",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      "FARMING_SHED_BARREL",
-      "WILD_BARREL",
-      "AIDE_BARREL",
-      "BRAIN_BOAT_LOC_BARREL",
-      "BRAIN_BOAT_LOC_BARREL_STACKED",
-      "SHAYZIEN_BARREL_LARGE_TAP",
-      "SHAYZIEN_BARREL_LARGE",
-      "SLUG2_BARREL",
-      "AP_BARREL"
-    ],
-    "uvType": "BOX"
   },
   {
     "description": "Object - Wooden - Barrel - with fish",
@@ -27560,7 +28415,10 @@
       "PILLOW_VARLAMORE01_DEFAULT01",
       "PILLOW_VARLAMORE01_STACK01",
       "PILLOW_ALDARIN01_DEFAULT01",
-      "PILLOW_ALDARIN01_STACK01"
+      "PILLOW_ALDARIN01_STACK01",
+      "AKD_CHURCH_PILLOW02",
+      "AKD_CHURCH_PILLOW01",
+      "AKD_CHURCH_PILLOW_STACK01"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -29382,6 +30240,48 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 2022
+  },
+  {
+    "description": "Keldagrim - Shayzien - Wooden Cabinet Beer glasses",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 2022,
+    "objectIds": [
+      "DWARF_KELDAGRIM_BEER_CABINET"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
+  },
+  {
+    "description": "Keldagrim - Shayzien - Wooden Cabinet Beer glasses and bottles",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 42,
+    "objectIds": [
+      "DWARF_KELDAGRIM_BEER_CABINET2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 2022
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_75"
+      }
+    ]
   },
   {
     "description": "Rat Wall",
@@ -31326,7 +32226,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "Barrel with metal bands",
+    "description": "Wooden - Metallic - Barrel with metal bands",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -31357,7 +32257,19 @@
       "MYQ3_HIDEOUT_BARREL",
       "MYQ4_EMPTY_BARREL",
       "MYQ4_HERB_BARREL",
-      "AIDE_BARREL_TAP"
+      "AIDE_BARREL_TAP",
+      "TOURTRAP_QIP_BARREL",
+      "THMINEBARREL_ANA_WINCHSIDE",
+      "THMINEBARREL_FULL",
+      "THMINEBARREL_EMPTY",
+      "QIP_SHEEP_SHEARER_BARREL",
+      "SHAYZIEN_BARREL_DARK",
+      "FARMING_SHED_BARREL",
+      "WILD_BARREL",
+      "AIDE_BARREL",
+      "BRAIN_BOAT_LOC_BARREL",
+      "BRAIN_BOAT_LOC_BARREL_STACKED",
+      "SLUG2_BARREL"
     ]
   },
   {
@@ -31375,7 +32287,29 @@
       }
     ],
     "objectIds": [
-      "HOS_BARREL_ASGARNIAN_ALE"
+      "HOS_BARREL_ASGARNIAN_ALE",
+      "SHAYZIEN_BARREL_LARGE_TAP",
+      "SHAYZIEN_BARREL_LARGE",
+      "AP_BARREL"
+    ]
+  },
+  {
+    "description": "Shayzien - Wooden - Barrel of water",
+    "objectIds": [ "SHAYZIEN_BARREL_WATER_DARK" ],
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h >= 30",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "colors": "h == 5 && s < 3",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -34397,7 +35331,10 @@
       "ORANGECABINET_AXES",
       "FAI_VARROCK_BOWCASE_CROSSBOW",
       "FAI_VARROCK_ARROW_DISPLAY",
-      "FAI_VARROCK_SWORDCASE_SWORDS"
+      "FAI_VARROCK_SWORDCASE_SWORDS",
+      "FAI_VARROCK_SWORDCASE_SHORTSWORDS",
+      "FAI_VARROCK_SWORDCASE_SCIMITAR",
+      "FAI_VARROCK_BOWCASE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -34422,11 +35359,21 @@
     ]
   },
   {
+    "description": "Varrock - Shayzien - Metallic - Stone - Sword Display",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FAI_VARROCK_SWORD_DISPLAY"
+    ]
+  },
+  {
     "description": "Weapons case With bows and arrows",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_BOWCASE_LONGBOW",
-      "FAI_VARROCK_WEAPONCASE_BOWS"
+      "FAI_VARROCK_WEAPONCASE_BOWS",
+      "SHAYZIEN_WEAPONCASE_BOWS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -35070,7 +36017,8 @@
       "CANAFIS_INN_BARSTOOL",
       "CANAFIS_INN_BARSTOOL_TALL",
       "GZ_BOARDGAMES_BARSTOOL_BLUE",
-      "HOS_STOOL_01"
+      "HOS_STOOL_01",
+      "DARKM_INN_TALL_STOOL"
     ]
   },
   {
@@ -35150,7 +36098,10 @@
     "uvScale": 0.6,
     "uvOrientation": 179,
     "objectIds": [
-      "GZ_BOARDGAME_POSTER"
+      "GZ_BOARDGAME_POSTER",
+      "FAI_VARROCK_SWORD_SHOP_POSTER",
+      "AKD_SWORD_SHOP_POSTER01",
+      "AKD_SWORD_SHOP_POSTER02"
     ]
   },
   {
@@ -35186,7 +36137,13 @@
       "FAI_VARROCK_BLUE_INN_BAR_MIDDLE2_BRIGHT",
       "FAI_VARROCK_BLUE_INN_BAR_MIDDLE3_BRIGHT",
       "FAI_VARROCK_BLUE_INN_BAR_LEFT_BRIGHT",
-      "FAI_VARROCK_BLUE_INN_BAR_RIGHT_BRIGHT"
+      "FAI_VARROCK_BLUE_INN_BAR_RIGHT_BRIGHT",
+      "AKD_SHAYZIEN_DRINKS_BAR_RIGHT",
+      "AKD_SHAYZIEN_DRINKS_BAR_MIDDLE",
+      "AKD_SHAYZIEN_DRINKS_BAR_LEFT",
+      "AKD_SHAYZIEN_BAR_RIGHT",
+      "AKD_SHAYZIEN_BAR_MIDDLE",
+      "AKD_SHAYZIEN_BAR_LEFT"
     ]
   },
   {
@@ -42899,12 +43856,13 @@
     ]
   },
   {
-    "description": "Fossil Island - Wooden - Volcano - Deposit Box",
+    "description": "Shayzien - Port Sarim - Fossil Island - Wooden - Volcano - Deposit Box",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientationY": 512,
     "objectIds": [
-      "SARIM_DEPOSIT_BOX"
+      "SARIM_DEPOSIT_BOX",
+      "CLAN_MEDIEVAL_DEPOSIT_BOX"
     ]
   },
   {
@@ -44320,7 +45278,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationZ": 512,
     "objectIds": [
-      "FAI_VARROCK_WEAPONCASE_LARGE"
+      "FAI_VARROCK_WEAPONCASE_LARGE",
+      "SHAYZIEN_WEAPONCASE_LARGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
