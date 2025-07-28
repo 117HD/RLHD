@@ -33205,7 +33205,13 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "FAI_VARROCK_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED", "SHAYZIEN_BARREL_STACKED_DARK", "QIP_COOK_BARREL_STACKED", "BARBASSAULT_BARREL_STACKED" ]
+    "objectIds": [
+      "FAI_VARROCK_BARREL_STACKED",
+      "SHAYZIEN_BARREL_STACKED",
+      "SHAYZIEN_BARREL_STACKED_DARK",
+      "QIP_COOK_BARREL_STACKED",
+      "BARBASSAULT_BARREL_STACKED"
+    ]
   },
   {
     "description": "Wooden Cart - Empty",
