@@ -4,15 +4,17 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
-public abstract class UniformBuffer {
+public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	protected enum PropertyType {
 		Int(4, 4, 1),
 		IVec2(8, 8, 2),
@@ -63,7 +65,7 @@ public abstract class UniformBuffer {
 	@AllArgsConstructor
 	@RequiredArgsConstructor
 	public static class Property {
-		private UniformBuffer owner;
+		private UniformBuffer<?> owner;
 		private int position;
 		private final PropertyType type;
 		private final String name;
@@ -180,19 +182,24 @@ public abstract class UniformBuffer {
 		}
 	}
 
-	public final GLBuffer glBuffer;
+	public final GLBUFFER glBuffer;
 
 	private int size;
 	private int dirtyLowTide = Integer.MAX_VALUE;
 	private int dirtyHighTide = 0;
 	private ByteBuffer data;
 
-	protected UniformBuffer(GLBuffer glBuffer) {
-		this.glBuffer = glBuffer;
+	@Getter
+	private int bindingIndex;
+
+	@SuppressWarnings("unchecked")
+	public UniformBuffer(int glUsage) {
+		glBuffer = (GLBUFFER) new GLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage);
 	}
 
-	public UniformBuffer(String name, int glUsage) {
-		this(new GLBuffer("UBO " + name, GL_UNIFORM_BUFFER, glUsage));
+	@SuppressWarnings("unchecked")
+	public UniformBuffer(int glUsage, int clUsage) {
+		glBuffer = (GLBUFFER) new SharedGLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage, clUsage);
 	}
 
 	protected final <T extends StructProperty> T addStruct(T newStructProp) {
@@ -250,13 +257,18 @@ public abstract class UniformBuffer {
 		data = BufferUtils.createByteBuffer(size);
 	}
 
-	public void initialize(int uniformBlockIndex) {
+	public void initialize(int bindingIndex) {
 		initialize();
-		bind(uniformBlockIndex);
+		bind(bindingIndex);
 	}
 
-	public void bind(int uniformBlockIndex) {
-		glBindBufferBase(GL_UNIFORM_BUFFER, uniformBlockIndex, glBuffer.id);
+	public String getUniformBlockName() {
+		return glBuffer.name;
+	}
+
+	public void bind(int bindingIndex) {
+		this.bindingIndex = bindingIndex;
+		glBindBufferBase(GL_UNIFORM_BUFFER, bindingIndex, glBuffer.id);
 	}
 
 	protected void preUpload() {}

@@ -36,10 +36,11 @@ import rs117.hd.config.ColorBlindMode;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
+import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
@@ -77,7 +78,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The number of tiles to draw in either direction from the camera, up to a maximum of 184.<br>" +
 			"Depending on where the scene is centered, you might only see 16 tiles in one direction, unless you extend map loading.",
-		position = 0,
+		position = 1,
 		section = generalSettings
 	)
 	default int drawDistance() {
@@ -94,25 +95,54 @@ public interface HdPluginConfig extends Config
 		description =
 			"How much further the map should be loaded. The maximum is 5 extra chunks.<br>" +
 			"Note, extending the map can have a very high impact on performance.",
-		position = 1,
+		position = 2,
 		section = generalSettings
 	)
 	default int expandedMapLoadingChunks() {
 		return 3;
 	}
 
+	String KEY_ANTI_ALIASING_MODE = "antiAliasingMode";
 	@ConfigItem(
-		keyName = "antiAliasingMode",
+		keyName = KEY_ANTI_ALIASING_MODE,
 		name = "Anti-Aliasing",
 		description =
 			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
 			"MSAA x16 is very expensive, so x8 is recommended if anti-aliasing is desired.",
-		position = 2,
+		position = 3,
 		section = generalSettings
 	)
 	default AntiAliasingMode antiAliasingMode()
 	{
 		return AntiAliasingMode.DISABLED;
+	}
+
+	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
+	@ConfigItem(
+		keyName = KEY_SCENE_RESOLUTION_SCALE,
+		name = "Game Resolution",
+		description =
+			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
+			"Reducing this can improve performance, particularly on very high resolution displays.",
+		position = 4,
+		section = generalSettings
+	)
+	@Units(Units.PERCENT)
+	@Range(min = 1, max = 200)
+	default int sceneResolutionScale() {
+		return 100;
+	}
+
+	@ConfigItem(
+		keyName = "sceneScalingMode",
+		name = "Game Scaling Mode",
+		description = "The sampling function to use when upscaling the above reduced game resolution.",
+		position = 5,
+		section = generalSettings
+	)
+	default SceneScalingMode sceneScalingMode()
+	{
+		return SceneScalingMode.LINEAR;
 	}
 
 	String KEY_UI_SCALING_MODE = "uiScalingMode";
@@ -122,11 +152,10 @@ public interface HdPluginConfig extends Config
 		description =
 			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
 			"Affects how the UI looks with non-integer scaling.",
-		position = 3,
+		position = 6,
 		section = generalSettings
 	)
-	default UIScalingMode uiScalingMode()
-	{
+	default UIScalingMode uiScalingMode() {
 		return UIScalingMode.LINEAR;
 	}
 
@@ -143,7 +172,7 @@ public interface HdPluginConfig extends Config
 			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
 			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
 			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
-		position = 4,
+		position = 7,
 		section = generalSettings
 	)
 	default int anisotropicFilteringLevel()
@@ -156,7 +185,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_UNLOCK_FPS,
 		name = "Unlock FPS",
 		description = "Removes the 50 FPS cap for some game content, such as camera movement and dynamic lighting.",
-		position = 5,
+		position = 8,
 		section = generalSettings
 	)
 	default boolean unlockFps()
@@ -182,7 +211,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
 			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
 			"Note, GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
-		position = 6,
+		position = 9,
 		section = generalSettings
 	)
 	default SyncMode syncMode()
@@ -197,7 +226,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the maximum number of frames per second.<br>" +
 			"This setting only applies if Unlock FPS is enabled, and VSync Mode is set to 'off'.",
-		position = 7,
+		position = 10,
 		section = generalSettings
 	)
 	@Range(
@@ -214,7 +243,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_COLOR_BLINDNESS,
 		name = "Color Blindness",
 		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
-		position = 8,
+		position = 11,
 		section = generalSettings
 	)
 	default ColorBlindMode colorBlindness()
@@ -226,7 +255,7 @@ public interface HdPluginConfig extends Config
 		keyName = "colorBlindnessIntensity",
 		name = "Blindness Intensity",
 		description = "Specifies how intense the color blindness adjustment should be.",
-		position = 9,
+		position = 12,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -240,7 +269,7 @@ public interface HdPluginConfig extends Config
 		keyName = "flashingEffects",
 		name = "Flashing Effects",
 		description = "Whether to show rapid flashing effects, such as lightning, in certain areas.",
-		position = 10,
+		position = 13,
 		section = generalSettings
 	)
 	default boolean flashingEffects()
@@ -253,7 +282,7 @@ public interface HdPluginConfig extends Config
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.<br>" +
 			"Intended to be kept between 0% and 120%.",
-		position = 11,
+		position = 14,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -273,7 +302,7 @@ public interface HdPluginConfig extends Config
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.<br>" +
 			"Intended to be kept between 90% and 110%.",
-		position = 12,
+		position = 15,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -300,7 +329,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the brightness of the game, excluding UI.<br>" +
 			"Adjust until the disk on the left is barely visible.",
-		position = 13,
+		position = 16,
 		section = generalSettings
 	)
 	default int brightness() {
@@ -313,7 +342,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Whether the legacy brightness option below should be applied.<br>" +
 			"We recommend leaving this disabled.",
-		position = 14,
+		position = 17,
 		section = generalSettings
 	)
 	default boolean useLegacyBrightness() {
@@ -330,7 +359,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the strength of the sun and ambient lighting.<br>" +
 			"A brightness value of 20 is recommended.",
-		position = 15,
+		position = 18,
 		section = generalSettings
 	)
 	default int legacyBrightness() {
@@ -347,19 +376,31 @@ public interface HdPluginConfig extends Config
 	)
 	String lightingSettings = "lightingSettings";
 
-	String KEY_MAX_DYNAMIC_LIGHTS = "maxDynamicLights";
+	String KEY_DYNAMIC_LIGHTS = "dynamicLights";
 	@ConfigItem(
-		keyName = KEY_MAX_DYNAMIC_LIGHTS,
+		keyName = KEY_DYNAMIC_LIGHTS,
 		name = "Dynamic Lights",
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
 			"Reducing this may improve performance.",
-		position = 1,
+		position = 0,
 		section = lightingSettings
 	)
-	default MaxDynamicLights maxDynamicLights()
+	default DynamicLights dynamicLights()
 	{
-		return MaxDynamicLights.SOME;
+		return DynamicLights.SOME;
+	}
+
+	String KEY_TILED_LIGHTING = "tiledLighting";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING,
+		name = "Tiled Lighting",
+		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
+		section = lightingSettings,
+		position = 1
+	)
+	default boolean tiledLighting() {
+		return true;
 	}
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
@@ -621,7 +662,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
-		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
+		description =
+			"Adds new textures to most models. If disabled, the standard game textures will be used instead.<br>" +
+			"Note, this requires model caching in order to apply to animated models.",
 		position = 7,
 		section = environmentSettings
 	)
