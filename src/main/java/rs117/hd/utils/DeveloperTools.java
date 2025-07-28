@@ -140,6 +140,7 @@ public class DeveloperTools implements KeyListener {
 			case "tiledlighting":
 				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 				break;
+			case "keybinds":
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
 				if (keyBindingsEnabled) {
