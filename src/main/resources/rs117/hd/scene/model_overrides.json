@@ -25529,14 +25529,31 @@
   {
     "description": "Giant Mole Lair - Walls - Dirt Walls",
     "baseMaterial": "DIRT_2",
-    "objectIds": [ "MOLE_WALL_NO_ROOTS", "MOLE_WALL_NO_ROOTS_LVL2", "MOLE_WALL_NO_ROOTS_LVL2_BIG", "MOLE_WALL_ROOTS_START_01", "MOLE_WALL_TOP5_LVL2_BIG", "MOLE_WALL_RAMP_02", "MOLE_WALL_RAMP_01_MIRROR", "MOLE_WALL_RAMP_02_MIRROR" ],
+    "objectIds": [
+      "MOLE_WALL_NO_ROOTS",
+      "MOLE_WALL_NO_ROOTS_LVL2",
+      "MOLE_WALL_NO_ROOTS_LVL2_BIG",
+      "MOLE_WALL_ROOTS_START_01",
+      "MOLE_WALL_TOP5_LVL2_BIG",
+      "MOLE_WALL_RAMP_02",
+      "MOLE_WALL_RAMP_01_MIRROR",
+      "MOLE_WALL_RAMP_02_MIRROR"
+    ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
   {
     "description": "Giant Mole Lair - Walls - Dirt Walls - Roots",
     "baseMaterial": "DIRT_2",
-    "objectIds": [ "MOLE_WALL_ROOTS_START_01", "MOLE_WALL_ROOTS_START_02", "MOLE_WALL_ROOTS_BEGIN", "MOLE_WALL_ROOTS_PART_A", "MOLE_WALL_ROOTS_PART_B", "MOLE_WALL_ROOTS_PART_C", "MOLE_WALL_ROOTS_LVL2" ],
+    "objectIds": [
+      "MOLE_WALL_ROOTS_START_01",
+      "MOLE_WALL_ROOTS_START_02",
+      "MOLE_WALL_ROOTS_BEGIN",
+      "MOLE_WALL_ROOTS_PART_A",
+      "MOLE_WALL_ROOTS_PART_B",
+      "MOLE_WALL_ROOTS_PART_C",
+      "MOLE_WALL_ROOTS_LVL2"
+    ],
     "uvType": "BOX",
     "uvScale": 0.6,
     "colorOverrides": [
