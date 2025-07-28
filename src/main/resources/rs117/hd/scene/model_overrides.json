@@ -48708,5 +48708,89 @@
         "uvOrientation": -89
       }
     ]
+  },
+  {
+    "description": "Mahogony Homes - Hosidius - Wooden - Cloth - Bed with Green blanket and bed frame - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_NORTH_MEDIUM_BED_REGULAR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Hosidius - Wooden - Square table - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_NORTH_SMALL_TABLE_REGULAR"
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Hosidius - Wooden - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_NORTH_CUPBOARD_REGULAR"
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Hosidius - Wooden - Cloth - Metallic - Hat Rack with Wizard Hat and Helm - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 84,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTHEAST_HATSTAND_FIXED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 37",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Hosidius - Wooden - Plank - Tables - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "uvScale": 0.66,
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_NORTH_SMALL_TABLE_EDITABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]
