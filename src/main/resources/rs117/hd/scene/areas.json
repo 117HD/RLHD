@@ -3828,8 +3828,7 @@
     "name": "White Wolf Mountain passage",
     "aabbs": [
       [ 2803, 9856, 2879, 9894 ]
-    ],
-    "hideOtherAreas": false
+    ]
   },
   {
     "name": "TROLL_STRONGHOLD",
