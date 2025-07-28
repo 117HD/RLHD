@@ -48758,7 +48758,8 @@
     "uvOrientationY": 512,
     "objectIds": [
       "CON_CONTRACT_HOSIDIUS_NORTH_CUPBOARD_REGULAR",
-      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_REGULAR"
+      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_REGULAR",
+      "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_REGULAR"
     ]
   },
   {
@@ -48811,7 +48812,8 @@
     "uvScale": 0.75,
     "uvOrientation": 512,
     "objectIds": [
-      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_EDITABLE"
+      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_EDITABLE",
+      "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_EDITABLE"
     ],
     "colorOverrides": [
       {
@@ -48847,16 +48849,18 @@
     "uvScale": 0.75,
     "uvOrientation": 512,
     "objectIds": [
-      "CON_CONTRACT_FALADOR_NORTH_DRAWERS_REGULAR"
+      "CON_CONTRACT_FALADOR_NORTH_DRAWERS_REGULAR",
+      "CON_CONTRACT_HOSIDIUS_SOUTH_DRAWERS_REGULAR"
     ]
   },
   {
-    "description": "Mahogony Homes - Falador - Metallic - Stone - Dresser Drawers with outline - DYNAMIC",
+    "description": "Mahogony Homes - Metallic - Stone - Broken Stove - DYNAMIC",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 179,
     "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_SOUTH_RANGE_BROKEN",
       "CON_CONTRACT_FALADOR_SOUTH_RANGE_BROKEN"
     ],
     "colorOverrides": [
@@ -48865,6 +48869,28 @@
         "colors": "h == 10",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Metallic - Wooden - Brown Drawers with metallic handles",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_SOUTH_DRAWERS_EDITABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationX": 512,
+    "colorOverrides": [
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Handles",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   }
