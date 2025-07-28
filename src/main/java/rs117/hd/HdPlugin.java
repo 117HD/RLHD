@@ -3006,6 +3006,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return true;
 	}
 
+	public Model findModelReplacement(ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash) {
+		if (replacement == null || replacement == ModelReplacement.NONE) {
+			return originalModel;
+		}
+
+		ModelDefinition def = replacement.model.definition;
+		if (def == null) {
+			return originalModel;
+		}
+
+		int tileX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int tileY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int plane = ModelHash.getPlane(hash);
+
+		Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileX][tileY];
+		int config = sceneContext.getObjectConfig(tile, hash);
+
+		int type = config & 0x3F;
+		int orientation = (config >> 6) & 0x3;
+
+		return def.getModel(client, id, type, orientation);
+	}
+
 	/**
 	 * Draw a Renderable in the scene
 	 *
@@ -3044,57 +3067,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-
-				frameTimer.begin(Timer.MODEL_REPLACEMENTS);
-
-				if (modelReplacement != ModelReplacement.NONE) {
-					ModelDefinition modelDefinition = modelReplacement.model.definition;
-					if (modelDefinition == null) {
-						return;
-					}
-
-					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int plane = ModelHash.getPlane(hash);
-
-					Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
-					Tile tile = extendedTiles[plane][tileExX][tileExY];
-
-					int config = sceneContext.getObjectConfig(tile, hash);
-					int type = config & 0x3F;
-					int bakedOri = (config >> 6) & 3;
-
-					model = modelDefinition.getModel(client, id, type, bakedOri);
-				} else {
-					model = (Model) renderable;
-				}
-
-				frameTimer.end(Timer.MODEL_REPLACEMENTS);
+				model = findModelReplacement(modelReplacement,(Model) renderable,id,x,z,hash);
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
-				if (modelReplacement != ModelReplacement.NONE) {
-					ModelDefinition modelDefinition = modelReplacement.model.definition;
-					if (modelDefinition == null) {
-						return;
-					}
-
-					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-
-					Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
-					int plane = ModelHash.getPlane(hash);
-					Tile tile = extendedTiles[plane][tileExX][tileExY];
-
-					int config = sceneContext.getObjectConfig(tile, hash);
-					int type = config & 0x3F;
-					int bakedOri = (config >> 6) & 3;
-
-					offsetModel = model = modelDefinition.getModel(client, id, type, bakedOri);
-				} else {
-					offsetModel = model =  renderable.getModel();
-				}
+				offsetModel = model =  findModelReplacement(modelReplacement,renderable.getModel(),id,x,z,hash);
 			}
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces
