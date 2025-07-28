@@ -32301,12 +32301,12 @@
     "uvScale": 0.8,
     "colorOverrides": [
       {
-        "colors": [ "h >= 30" ],
+        "colors": "h >= 30",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
         "uvType": "MODEL_XZ"
       },
       {
-        "colors": [ "h == 5 && s < 3" ],
+        "colors": "h == 5 && s < 3",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
         "uvType": "BOX"
       }
