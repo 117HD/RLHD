@@ -38327,5 +38327,405 @@
     "objectIds": [
       "COSMICTEMPLE_RUINED_OLD"
     ]
+  },
+  {
+    "description": "Shattered Cannon - Aim East",
+    "offset": [ 150, 140, 0 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_E", "CANNON_LEAGUE03_FIRE_E" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South East",
+    "offset": [ 105, 140, -105 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_SE", "CANNON_LEAGUE03_FIRE_SE" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South",
+    "offset": [ 0, 140, -150 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_S", "CANNON_LEAGUE03_FIRE_S" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South West",
+    "offset": [ -105, 140, -105 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_SW", "CANNON_LEAGUE03_FIRE_SW" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim West",
+    "offset": [ -150, 140, 0 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_W", "CANNON_LEAGUE03_FIRE_W" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North West",
+    "offset": [ -105, 140, 115 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_NW", "CANNON_LEAGUE03_FIRE_NW" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North",
+    "offset": [ 0, 140, 150 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_N", "CANNON_LEAGUE03_FIRE_N" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North East",
+    "offset": [ 115, 140, 115 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_NE", "CANNON_LEAGUE03_FIRE_NE" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire East",
+    "offset": [ 150, 160, 0 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_E" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South East",
+    "offset": [ 105, 160, -105 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_SE" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South",
+    "offset": [ 0, 160, -150 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_S" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South West",
+    "offset": [ -105, 160, -105 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_SW" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire West",
+    "offset": [ -150, 160, 0 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_W" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North West",
+    "offset": [ -105, 160, 115 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_NW" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North",
+    "offset": [ 0, 160, 150 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_N" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North East",
+    "offset": [ 115, 160, 115 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_NE" ]
+  },
+  {
+    "description": "Shattered Cannon - Top",
+    "offset": [ 0, 200, 0 ],
+    "radius": 245,
+    "strength": 7.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Candle",
+    "offset": [ 0, 45, -105 ],
+    "radius": 100,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Ball",
+    "offset": [ 0, -20, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "projectileIds": [ "CANNONBALL_TRAVEL_LEAGUE", "CANNONBALL_TRAVEL_GRANITE_LEAGUE" ]
   }
 ]
