@@ -3235,9 +3235,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboCompute.addCharacterPosition(x, z, modelRadius);
 			}
 		}
-
-
-
+		
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)
 			.put(eightIntWrite);
