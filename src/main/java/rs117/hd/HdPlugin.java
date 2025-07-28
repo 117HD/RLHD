@@ -1294,17 +1294,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (viewport[2] == 0 || viewport[3] == 0)
 			return;
 
-		float[] dpiScaling = getDpiScaling();
-		if (client.isStretchedEnabled()) {
-			Dimension dim = client.getStretchedDimensions();
-			scaledUiResolution[0] = dim.width;
-			scaledUiResolution[1] = dim.height;
-		} else {
-			System.arraycopy(uiResolution, 0, scaledUiResolution, 0, 2);
-		}
-		applyScaling(dpiScaling, scaledUiResolution);
-
-		sceneViewportScale = dpiScaling;
+		sceneViewportScale = getDpiScaling();
 		// UI stretching also affects the scene viewport
 		for (int i = 0; i < 2; i++)
 			sceneViewportScale[i] *= (float) scaledUiResolution[i] / uiResolution[i];
@@ -1975,6 +1965,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 		}
+
+		float[] dpiScaling = getDpiScaling();
+		if (client.isStretchedEnabled()) {
+			Dimension dim = client.getStretchedDimensions();
+			scaledUiResolution[0] = dim.width;
+			scaledUiResolution[1] = dim.height;
+		} else {
+			System.arraycopy(uiResolution, 0, scaledUiResolution, 0, 2);
+		}
+		applyScaling(dpiScaling, scaledUiResolution);
 
 		if (configAsyncUICopy) {
 			// Start copying the UI on a different thread, to be uploaded during the next frame
