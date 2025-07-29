@@ -1283,16 +1283,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (uiResolution == null)
 			return;
 
-		float[] dpiScaling = getDpiScaling();
-		if (client.isStretchedEnabled()) {
-			Dimension dim = client.getStretchedDimensions();
-			scaledUiResolution[0] = dim.width;
-			scaledUiResolution[1] = dim.height;
-		} else {
-			System.arraycopy(uiResolution, 0, scaledUiResolution, 0, 2);
-		}
-		applyScaling(dpiScaling, scaledUiResolution);
-
 		int[] viewport = {
 			client.getViewportXOffset(),
 			uiResolution[1] - (client.getViewportYOffset() + client.getViewportHeight()),
@@ -1300,7 +1290,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.getViewportHeight()
 		};
 
-		sceneViewportScale = dpiScaling;
+		// Skip rendering when there's no viewport to render to, which happens while world hopping
+		if (viewport[2] == 0 || viewport[3] == 0)
+			return;
+
+		sceneViewportScale = getDpiScaling();
 		// UI stretching also affects the scene viewport
 		for (int i = 0; i < 2; i++)
 			sceneViewportScale[i] *= (float) scaledUiResolution[i] / uiResolution[i];
@@ -1972,6 +1966,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 		}
 
+		float[] dpiScaling = getDpiScaling();
+		if (client.isStretchedEnabled()) {
+			Dimension dim = client.getStretchedDimensions();
+			scaledUiResolution[0] = dim.width;
+			scaledUiResolution[1] = dim.height;
+		} else {
+			System.arraycopy(uiResolution, 0, scaledUiResolution, 0, 2);
+		}
+		applyScaling(dpiScaling, scaledUiResolution);
+
 		if (configAsyncUICopy) {
 			// Start copying the UI on a different thread, to be uploaded during the next frame
 			asyncUICopy.prepare(pboUi, texUi);
@@ -2342,7 +2346,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void drawUi(int overlayColor) {
-		if (uiResolution == null)
+		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
 			return;
 
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
