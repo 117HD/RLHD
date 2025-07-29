@@ -24321,6 +24321,7 @@
     "description": "ARCEUUS_DARK_CRYSTAL_LARGE",
     "height": 200,
     "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
     "radius": 1500,
     "strength": 25,
     "color": [
@@ -24339,6 +24340,7 @@
     "description": "ARCEUUS_DARK_CRYSTAL_MEDIUM",
     "height": 180,
     "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
     "radius": 1200,
     "strength": 25,
     "color": [
@@ -24355,6 +24357,7 @@
   },
   {
     "description": "ARCEUUS_DARK_CRYSTAL_SMALL",
+    "visibleFromOtherPlanes": true,
     "height": 120,
     "alignment": "CENTER",
     "radius": 600,
