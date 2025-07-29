@@ -37,7 +37,6 @@ public abstract class ModelDefinition {
 
 	private static final int[] ROTATE_TYPE_INDICES = {6, 7, 8, 9, 13, 14, 19};
 
-	// Cache for model data and rotated models with LRU eviction
 	private static final int DATA_CACHE_SIZE = 240;
 	private static final Map<Integer, ModelData> modelDataCache = new LinkedHashMap<>(DATA_CACHE_SIZE, 0.75f, true) {
 		@Override

@@ -1128,6 +1128,10 @@
         "windDisplacementMode": "VERTEX",
         "textureMaterial": "MAPLE_LEAVES"
       }
+    },
+    "modelReplacement": {
+      "model": "XMAS_SNOW_TREE",
+      "themes": [ "WINTER" ]
     }
   },
   {
@@ -9921,7 +9925,11 @@
       "WALLSHIELD",
       "QIP_DS_COATOFARMS1",
       "WALLSHIELD_DARKKNIGHT"
-    ]
+    ],
+    "modelReplacement": {
+      "model": "HOLLY",
+      "themes": [ "WINTER" ]
+    }
   },
   {
     "description": "MARBLE_STATUE_OF_KING",
@@ -24888,8 +24896,13 @@
       "MYREQUE_BUSH_WITHOUT_LEG", "MYREQUE_BUSH1", "MYREQUE_BUSH2",
       "HUNTING_TRAIL_END_JUNGLE", "HUNTING_TRAIL_END_BUSH29", "HUNTING_TRAIL_END_BUSH35_55",
       "ZEP_BUSH", "BIM_BUSH", "SOTN_HUNTING_BUSH_OP",
-      "SOTN_HUNTING_BUSH_NOOP"
-    ]
+      "SOTN_HUNTING_BUSH_NOOP","PVPW_BANKCHEST_BUSH",
+      "WILDY_HUB_LOOT_CHEST_PVPW_BUSH1"
+    ],
+    "modelReplacement": {
+      "model": "XMAS_BUSH",
+      "themes": [ "WINTER" ]
+    }
   },
   {
     "description": "Evergreen Trees",
@@ -51306,6 +51319,17 @@
         "uvScale": 0.6
       }
     ]
+  },
+  {
+    "description": "TREES CUSTOM",
+    "baseMaterial": "ROCK_1",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
+    "custom117": [
+      "XMAS_SNOW_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
   },
   {
     "description": "Barbarian Assault - Spike Mushrooms",

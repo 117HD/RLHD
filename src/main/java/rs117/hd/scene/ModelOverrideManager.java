@@ -58,7 +58,7 @@ public class ModelOverrideManager {
 					throw new IOException("Empty or invalid: " + path);
 				for (ModelOverride override : entries) {
 					try {
-						override.normalize(plugin.configVanillaShadowMode);
+						override.normalize(plugin.configVanillaShadowMode,plugin.configSeasonalTheme);
 					} catch (IllegalStateException ex) {
 						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 						continue;
@@ -116,6 +116,13 @@ public class ModelOverrideManager {
 			addEntry(ModelHash.TYPE_PROJECTILE, id, override);
 		for (int id : override.graphicsObjectIds)
 			addEntry(ModelHash.TYPE_GRAPHICS_OBJECT, id, override);
+		for (String id : override.custom117)
+			addEntry(ModelHash.TYPE_CUSTOM, id, override);
+	}
+
+	private void addEntry(int type, String name, ModelOverride entry) {
+		int id = name.hashCode();
+		addEntry(type, id, entry);
 	}
 
 	private void addEntry(int type, int id, ModelOverride entry) {
@@ -192,8 +199,13 @@ public class ModelOverrideManager {
 	}
 
 	@Nonnull
+
 	public ModelOverride getOverride(int uuid, int[] worldPos) {
-		var override = modelOverrides.get(ModelHash.getUuidWithoutSubType(uuid));
+		return getOverride(uuid,worldPos,false);
+	}
+
+	public ModelOverride getOverride(int uuid, int[] worldPos, boolean custom) {
+		var override = custom ? modelOverrides.get(uuid) :  modelOverrides.get(ModelHash.getUuidWithoutSubType(uuid));
 		if (override == null)
 			return ModelOverride.NONE;
 
@@ -204,4 +216,5 @@ public class ModelOverrideManager {
 
 		return override;
 	}
+
 }

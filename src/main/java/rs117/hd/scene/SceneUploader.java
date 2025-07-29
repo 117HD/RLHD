@@ -326,6 +326,12 @@ public class SceneUploader {
 
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+
+		if (modelOverride != ModelOverride.NONE && modelOverride.modelReplacement != null) {
+			int customUid = ModelHash.packUuid(ModelHash.TYPE_CUSTOM, modelOverride.modelReplacement.model.name().hashCode());
+			modelOverride = modelOverrideManager.getOverride(customUid, worldPos,true);
+		}
+
 		int sceneId = modelOverride.hashCode() << 16 | sceneContext.id;
 
 		// check if the model has already been uploaded

@@ -1,5 +1,6 @@
 package rs117.hd.model.modelreplaceer.types.objects.impl;
 
+import net.runelite.api.*;
 import rs117.hd.model.modelreplaceer.types.ConditionalModel;
 import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 
@@ -16,4 +17,5 @@ public class XmasSnowTree extends ModelDefinition {
 		retextureFrom = new short[]{8, 60};
 		retextureTo = new short[]{127, 128};
 	}
+
 }
