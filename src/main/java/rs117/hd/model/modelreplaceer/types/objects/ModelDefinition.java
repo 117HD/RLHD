@@ -151,6 +151,8 @@ public abstract class ModelDefinition {
 				break;
 		}
 
+		result = postProcessModel(result,type,orientation);
+
 		if (recolorFrom != null && recolorTo != null) {
 			if (recolorFrom.length != recolorTo.length) {
 				log.error("{}: Mismatched recolor arrays: from={}, to={}", getClass().getSimpleName(), recolorFrom.length, recolorTo.length);
@@ -179,10 +181,24 @@ public abstract class ModelDefinition {
 			result.translate(offsetX, offsetZ, offsetY);
 		}
 
-		return postProcessModel(result);
+		return result;
 	}
 
-	protected ModelData postProcessModel(ModelData modelData) {
+	/**
+	 * Hook method to allow subclasses to apply additional transformations or modifications
+	 * to the {@link ModelData} after initial orientation-based rotation but before recoloring,
+	 * retexturing, scaling, and translation.
+	 *
+	 * <p>This method is invoked immediately after applying rotation based on the object's
+	 * orientation. It can be overridden to apply extra effects such as model part replacements,
+	 * offsets, or other geometry changes.</p>
+	 *
+	 * @param modelData the current {@link ModelData} after rotation
+	 * @param type an identifier representing the object or model type
+	 * @param ori the object's orientation (0–3), used earlier to determine rotation
+	 * @return the potentially modified {@link ModelData}; the default implementation returns it unchanged
+	 */
+	protected ModelData postProcessModel(ModelData modelData, int type, int ori) {
 		return modelData;
 	}
 
