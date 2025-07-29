@@ -1,6 +1,8 @@
 package rs117.hd.utils;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,6 +35,21 @@ public class NpcDisplacementCache {
 	}
 
 	private final HashMap<Integer, Entry> cache = new HashMap<>(MAX_SIZE);
+	private Set<Integer> ANIM_ID_IGNORE_LIST = Collections.emptySet();
+
+	public void initialize() {
+		HashSet<Integer> idsToIgnore = new HashSet<>();
+		for (var substringToIgnore : ANIM_IGNORE_LIST)
+			for (var entry : gamevalManager.getAnims().entrySet())
+				if (entry.getKey().contains(substringToIgnore))
+					idsToIgnore.add(entry.getValue());
+		ANIM_ID_IGNORE_LIST = Set.copyOf(idsToIgnore);
+	}
+
+	public void destroy() {
+		ANIM_ID_IGNORE_LIST = Collections.emptySet();
+		cache.clear();
+	}
 
 	public int size() {
 		return cache.size();
@@ -60,8 +77,8 @@ public class NpcDisplacementCache {
 			cache.put(npcId, entry);
 
 			// Check if NPC is allowed to displace
-			var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-			entry.canDisplace = anim == null || !ANIM_IGNORE_LIST.contains(anim);
+			int animId = npc.getWalkAnimation();
+			entry.canDisplace = animId == -1 || ANIM_ID_IGNORE_LIST.contains(animId);
 		}
 
 		entry.lastAccessMs = System.currentTimeMillis();
