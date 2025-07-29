@@ -7258,10 +7258,10 @@
     "hideOtherAreas": true
   },
   {
-    "name": "Tonil Caverns",
+    "name": "Tonali Cavern",
     "regions": [
-      5267,
-      5266
+      5266,
+      5267
     ],
     "aabbs": [
       [ 1344, 9434, 1346, 9459 ],
@@ -7277,7 +7277,7 @@
     "hideOtherAreas": true
   },
   {
-    "name": "Tonil Caverns Sun Puzzle Fire",
+    "name": "Tonali Cavern Sun Puzzle Fire",
     "regions": [ 5267 ]
   },
   {
