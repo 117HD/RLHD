@@ -127,6 +127,11 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.left("Dynamic Renderables:")
 				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
 				.build());
+
+			children.add(LineComponent.builder()
+				.left("NPC Displacement Cache Size:")
+				.right(String.valueOf(plugin.getNpcDisplacementCache().size()))
+				.build());
 		}
 
 		var result = super.render(g);

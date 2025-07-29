@@ -479,9 +479,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
-	private final HashMap<Integer, ActorDisplacementConfig> npcDisplacementConfig = new HashMap<>();
 
-	static class ActorDisplacementConfig {
+	@Getter
+	private final HashMap<Integer, NpcDisplacementConfig> npcDisplacementCache = new HashMap<>();
+
+	public static class NpcDisplacementConfig {
 		public static final HashSet<String> ANIM_IGNORE_LIST = new HashSet<>(List.of(new String[] {
 			"HOVER",
 			"FLY",
@@ -499,7 +501,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			reset();
 		}
 
-		public ActorDisplacementConfig reset() {
+		public NpcDisplacementConfig reset() {
 			canDisplace = true;
 			idleRadius = -1;
 			lastAccessMs = 0;
@@ -757,7 +759,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			npcDisplacementConfig.clear();
+			npcDisplacementCache.clear();
 
 			asyncUICopy.complete();
 			developerTools.deactivate();
@@ -2563,7 +2565,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
-		npcDisplacementConfig.clear();
+		npcDisplacementCache.clear();
 
 		if (sceneContext != null)
 			sceneContext.destroy();
@@ -3219,27 +3221,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				drawnDynamicRenderableCount++;
 
 			if (configCharacterDisplacement && renderable instanceof Actor) {
+				if (enableDetailedTimers)
+					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
 				if (renderable instanceof NPC) {
 					var npc = (NPC) renderable;
 					int npcId = npc.getId();
 
-					ActorDisplacementConfig displacementConfig = npcDisplacementConfig.get(npcId);
+					NpcDisplacementConfig displacementConfig = npcDisplacementCache.get(npcId);
 					if (displacementConfig == null) {
-						if (npcDisplacementConfig.size() > NPC_DISPLACEMENT_CACHE_MAX_SIZE) {
+						if (npcDisplacementCache.size() > NPC_DISPLACEMENT_CACHE_MAX_SIZE) {
 							long oldestConfigMilli = Long.MAX_VALUE;
 							int oldestNpcId = -1;
-							for (var entry : npcDisplacementConfig.entrySet())
+							for (var entry : npcDisplacementCache.entrySet())
 								if (entry.getValue().lastAccessMs < oldestConfigMilli)
 									oldestNpcId = entry.getKey();
-							displacementConfig = npcDisplacementConfig.remove(oldestNpcId).reset();
+							displacementConfig = npcDisplacementCache.remove(oldestNpcId).reset();
 						} else {
-							displacementConfig = new ActorDisplacementConfig();
+							displacementConfig = new NpcDisplacementConfig();
 						}
-						npcDisplacementConfig.put(npcId, displacementConfig);
+						npcDisplacementCache.put(npcId, displacementConfig);
 
 						// Check if NPC is allowed to displace
 						var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-						displacementConfig.canDisplace = anim == null || !ActorDisplacementConfig.ANIM_IGNORE_LIST.contains(anim);
+						displacementConfig.canDisplace = anim == null || !NpcDisplacementConfig.ANIM_IGNORE_LIST.contains(anim);
 					}
 
 					if (displacementConfig.canDisplace) {
@@ -3257,6 +3261,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 				}
+				if (enableDetailedTimers)
+					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
 			}
 		}
 
