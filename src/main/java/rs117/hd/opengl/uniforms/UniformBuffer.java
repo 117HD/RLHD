@@ -1,6 +1,8 @@
 package rs117.hd.opengl.uniforms;
 
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -8,6 +10,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.system.MemoryUtil;
+import rs117.hd.model.ModelHasher;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
@@ -21,44 +25,24 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		IVec3(12, 16, 3),
 		IVec4(16, 16, 4),
 
-		IntArray(4, 16, 1, true),
-		IVec2Array(8, 16, 2, true),
-		IVec3Array(12, 16, 3, true),
-		IVec4Array(16, 16, 4, true),
-
 		Float(4, 4, 1),
 		FVec2(8, 8, 2),
 		FVec3(12, 16, 3),
 		FVec4(16, 16, 4),
 
-		FloatArray(4, 16, 1, true),
-		FVec2Array(8, 16, 2, true),
-		FVec3Array(12, 16, 3, true),
-		FVec4Array(16, 16, 4, true),
-
-		Mat3(36, 16, 9),
+		Mat3(48, 16, 9),
 		Mat4(64, 16, 16);
 
 		private final int size;
 		private final int alignment;
 		private final int elementSize;
 		private final int elementCount;
-		private final boolean isArray;
 
 		PropertyType(int size, int alignment, int elementCount) {
 			this.size = size;
 			this.alignment = alignment;
 			this.elementSize = size / elementCount;
 			this.elementCount = elementCount;
-			this.isArray = false;
-		}
-
-		PropertyType(int size, int alignment, int elementCount, boolean isArray) {
-			this.size = size;
-			this.alignment = alignment;
-			this.elementSize = size / elementCount;
-			this.elementCount = elementCount;
-			this.isArray = isArray;
 		}
 	}
 
@@ -67,6 +51,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	public static class Property {
 		private UniformBuffer<?> owner;
 		private int position;
+		private long address;
+		private int hash;
 		private final PropertyType type;
 		private final String name;
 
@@ -76,43 +62,101 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			if (owner.data.getInt(position) != value) {
-				owner.data.putInt(position, value);
-				owner.markWaterLine(position, type.size);
-			}
-		}
-
-		public final void set(int... values) {
-			if (type != PropertyType.IVec2 && type != PropertyType.IVec3 && type != PropertyType.IVec4) {
-				log.warn("{} - Incorrect Setter(int[]) called for Property: {}", owner.glBuffer.name, name);
-				return;
-			}
-
-			if (values == null) {
-				log.warn("{} - Setter(int[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
-				return;
-			}
-
-			if ((type.isArray && (values.length % type.elementCount) != 0) || values.length != type.elementCount) {
-				log.warn(
-					"{} - Setter(int[]) was provided with incorrect number of elements for Property: {}",
-					owner.glBuffer.name,
-					name
-				);
-				return;
-			}
-
-			if (owner.data == null) {
+			if (address == 0) {
 				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
 				return;
 			}
 
-			int elementCount = type.isArray ? values.length : type.elementCount;
-			for (int elementIdx = 0, offset = position; elementIdx < elementCount; elementIdx++, offset += type.elementSize) {
-				if (owner.data.getInt(offset) != values[elementIdx]) {
-					owner.data.putInt(offset, values[elementIdx]);
-					owner.markWaterLine(offset, type.elementSize);
-				}
+			final int newHash = Integer.hashCode(value);
+			if (newHash != hash) {
+				MemoryUtil.memPutInt(address, value);
+				owner.markWaterLine(position, type.size);
+				hash = newHash;
+			}
+		}
+
+		public final void set(int x, int y) {
+			if (type != PropertyType.IVec2) {
+				log.warn("{} - Incorrect Setter(int, int) called for Property: {}", owner.glBuffer.name, name);
+				return;
+			}
+
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			final int newHash = ModelHasher.fastIntHash(x, y);
+			if (newHash != hash) {
+				MemoryUtil.memPutInt(address, x);
+				MemoryUtil.memPutInt(address + 4, y);
+				owner.markWaterLine(position, type.size);
+				hash = newHash;
+			}
+		}
+
+		public final void set(int x, int y, int z) {
+			if (type != PropertyType.IVec3) {
+				log.warn("{} - Incorrect Setter(int, int, int) called for Property: {}", owner.glBuffer.name, name);
+				return;
+			}
+
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			final int newHash = ModelHasher.fastIntHash(x, y, z);
+			if (newHash != hash) {
+				MemoryUtil.memPutInt(address, x);
+				MemoryUtil.memPutInt(address + 4, y);
+				MemoryUtil.memPutInt(address + 8, z);
+				owner.markWaterLine(position, type.size);
+				hash = newHash;
+			}
+		}
+
+		public final void set(int x, int y, int z, int w) {
+			if (type != PropertyType.IVec4) {
+				log.warn("{} - Incorrect Setter(int, int, int, int) called for Property: {}", owner.glBuffer.name, name);
+				return;
+			}
+
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			final int newHash = ModelHasher.fastIntHash(x, y, z, w);
+			if (newHash != hash) {
+				MemoryUtil.memPutInt(address, x);
+				MemoryUtil.memPutInt(address + 4, y);
+				MemoryUtil.memPutInt(address + 8, z);
+				MemoryUtil.memPutInt(address + 12, w);
+				owner.markWaterLine(position, type.size);
+				hash = newHash;
+			}
+		}
+
+		public final void set(int... values) {
+			if (values == null) {
+				log.warn("{} - Setter(float[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
+				return;
+			}
+
+			switch (type) {
+				case IVec2:
+					set(values[0], values[1]);
+					break;
+				case IVec3:
+					set(values[0], values[1], values[2]);
+					break;
+				case IVec4:
+					set(values[0], values[1], values[2], values[3]);
+					break;
+				default:
+					log.warn("{} - Incorrect Setter(float[]) called for Property: {}", owner.glBuffer.name, name);
+					break;
 			}
 		}
 
@@ -122,51 +166,183 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			if (owner.data.getFloat(position) != value) {
-				owner.data.putFloat(position, value);
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			final int newHash = Float.hashCode(value);
+			if (newHash != hash) {
+				MemoryUtil.memPutFloat(address, value);
 				owner.markWaterLine(position, type.size);
+				hash = newHash;
+			}
+		}
+
+		public final void set(float x, float y) {
+			if (type != PropertyType.FVec2) {
+				log.warn("{} - Incorrect Setter(float, float) called for Property: {}", owner.glBuffer.name, name);
+				return;
+			}
+
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			final int newHash = ModelHasher.fastFloatHash(x, y);
+			if (newHash != hash) {
+				MemoryUtil.memPutFloat(address, x);
+				MemoryUtil.memPutFloat(address + 4, y);
+				owner.markWaterLine(position, type.size);
+				hash = newHash;
+			}
+		}
+
+		public final void set(float x, float y, float z) {
+			if (type != PropertyType.FVec3) {
+				log.warn("{} - Incorrect Setter(float, float, float) called for Property: {}", owner.glBuffer.name, name);
+				return;
+			}
+
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			final int newHash = ModelHasher.fastFloatHash(x, y, z);
+			if (newHash != hash) {
+				MemoryUtil.memPutFloat(address, x);
+				MemoryUtil.memPutFloat(address + 4, y);
+				MemoryUtil.memPutFloat(address + 8, z);
+				owner.markWaterLine(position, type.size);
+				hash = newHash;
+			}
+		}
+
+		public final void set(float x, float y, float z, float w) {
+			if (type != PropertyType.FVec4) {
+				log.warn("{} - Incorrect Setter(float, float, float, float) called for Property: {}", owner.glBuffer.name, name);
+				return;
+			}
+
+			if (address == 0) {
+				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+				return;
+			}
+
+			final int newHash = ModelHasher.fastFloatHash(x, y, z, w);
+			if (newHash != hash) {
+				MemoryUtil.memPutFloat(address, x);
+				MemoryUtil.memPutFloat(address + 4, y);
+				MemoryUtil.memPutFloat(address + 8, z);
+				MemoryUtil.memPutFloat(address + 12, w);
+				owner.markWaterLine(position, type.size);
+				hash = newHash;
 			}
 		}
 
 		public final void set(float... values) {
-			if (type != PropertyType.FVec2 &&
-				type != PropertyType.FVec3 &&
-				type != PropertyType.FVec4 &&
-				type != PropertyType.Mat3 &&
-				type != PropertyType.Mat4
-			) {
-				log.warn("{} - Incorrect Setter(float[]) called for Property: {}", owner.glBuffer.name, name);
-				return;
-			}
-
 			if (values == null) {
 				log.warn("{} - Setter(float[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
 				return;
 			}
 
-			if ((type.isArray && (values.length % type.elementCount) != 0) || values.length != type.elementCount) {
-				log.warn(
-					"{} - Setter(float[]) was provided with incorrect number of elements for Property: {}",
-					owner.glBuffer.name,
-					name
-				);
-				return;
-			}
+			switch (type) {
+				case FVec2:
+					set(values[0], values[1]);
+					break;
+				case FVec3:
+					set(values[0], values[1], values[2]);
+					break;
+				case FVec4:
+					set(values[0], values[1], values[2], values[3]);
+					break;
+				case Mat3: {
+					if (address == 0) {
+						log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+						return;
+					}
 
-			if (owner.data == null) {
-				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
-				return;
-			}
+					if (values.length != type.elementCount) {
+						log.warn(
+							"{} - Setter(float[]) was provided with incorrect number of elements for Property: {}",
+							owner.glBuffer.name,
+							name
+						);
+						return;
+					}
 
-			int elementCount = type.isArray ? values.length : type.elementCount;
-			for (int elementIdx = 0, offset = position; elementIdx < elementCount; elementIdx++, offset += type.elementSize) {
-				if (owner.data.getFloat(offset) != values[elementIdx]) {
-					owner.data.putFloat(offset, values[elementIdx]);
-					owner.markWaterLine(offset, type.elementSize);
+					final int newHash = ModelHasher.fastFloatHash(values);
+					if (hash == newHash)
+						return;
+					hash = newHash;
+
+					int elementCount = 12;
+					final FloatCopyBuffer copyBuffer = owner.floatCopyBuffer.ensureCapacity(elementCount);
+					for (int i = 0; i < 3; i++)
+						copyBuffer.data.put(values, i * 3, 3).put(0);
+					copyBuffer.copy(address, elementCount);
+
+					owner.markWaterLine(position, type.elementSize * elementCount);
+					break;
 				}
+				case Mat4: {
+					if (address == 0) {
+						log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
+						return;
+					}
+
+					if (values.length != type.elementCount) {
+						log.warn(
+							"{} - Setter(float[]) was provided with incorrect number of elements for Property: {}",
+							owner.glBuffer.name,
+							name
+						);
+						return;
+					}
+
+					final int newHash = ModelHasher.fastFloatHash(values);
+					if (hash == newHash)
+						return;
+					hash = newHash;
+
+					final FloatCopyBuffer copyBuffer = owner.floatCopyBuffer.ensureCapacity(type.elementCount);
+					copyBuffer.data.put(values, 0, type.elementCount);
+					copyBuffer.copy(address, type.elementCount);
+
+					owner.markWaterLine(position, type.elementSize * type.elementCount);
+					break;
+				}
+				default:
+					log.warn("{} - Incorrect Setter(float[]) called for Property: {}", owner.glBuffer.name, name);
+					break;
 			}
 		}
 	}
+
+	abstract static class CopyBuffer<T extends Buffer> {
+		public T data;
+		protected long address;
+		protected long elementSize;
+
+		public final void copy(long dstAddress, int elementCount) {
+			MemoryUtil.memCopy(address, dstAddress, elementCount * elementSize);
+			data.clear();
+		}
+	}
+
+	static class FloatCopyBuffer extends CopyBuffer<FloatBuffer> {
+		private FloatCopyBuffer ensureCapacity(int size) {
+			if (data == null || data.capacity() < size) {
+				data = BufferUtils.createFloatBuffer(size);
+				address = MemoryUtil.memAddress(data);
+				elementSize = Float.BYTES;
+			}
+			return this;
+		}
+	}
+
 
 	public interface CreateStructProperty<T extends StructProperty> {
 		T create();
@@ -188,6 +364,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	private int dirtyLowTide = Integer.MAX_VALUE;
 	private int dirtyHighTide = 0;
 	private ByteBuffer data;
+	private final FloatCopyBuffer floatCopyBuffer = new FloatCopyBuffer();
+	private final List<Property> properties = new ArrayList<>();
 
 	@Getter
 	private int bindingIndex;
@@ -240,6 +418,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		property.position = size + padding;
 
 		size += property.type.size + padding;
+		properties.add(property);
 
 		return property;
 	}
@@ -255,6 +434,9 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 		glBuffer.initialize(size);
 		data = BufferUtils.createByteBuffer(size);
+
+		for (Property prop : properties)
+			prop.address = MemoryUtil.memAddress(data, prop.position);
 	}
 
 	public void initialize(int bindingIndex) {
@@ -298,6 +480,11 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	public final void destroy() {
 		if (data == null)
 			return;
+
+		for (Property prop : properties) {
+			prop.address = 0;
+			prop.hash = 0;
+		}
 
 		glBuffer.destroy();
 		data = null;
