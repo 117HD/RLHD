@@ -46,7 +46,6 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -133,6 +132,7 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -203,8 +203,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
 	private static final float COLOR_FILTER_FADE_DURATION = 500;
-
-	private static final int NPC_DISPLACEMENT_CACHE_MAX_SIZE = 100;
 
 	private static final int[] eightIntWrite = new int[8];
 
@@ -288,6 +286,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
 
 	@Inject
 	private DeveloperTools developerTools;
@@ -479,35 +480,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
-
-	@Getter
-	private final HashMap<Integer, NpcDisplacementConfig> npcDisplacementCache = new HashMap<>();
-
-	public static class NpcDisplacementConfig {
-		public static final HashSet<String> ANIM_IGNORE_LIST = new HashSet<>(List.of(new String[] {
-			"HOVER",
-			"FLY",
-			"IMPLING",
-			"SWAN",
-			"DUCK",
-			"SWIM"
-		}));
-
-		public boolean canDisplace;
-		public int idleRadius;
-		public long lastAccessMs;
-
-		{
-			reset();
-		}
-
-		public NpcDisplacementConfig reset() {
-			canDisplace = true;
-			idleRadius = -1;
-			lastAccessMs = 0;
-			return this;
-		}
-	}
 
 	@Getter
 	private int drawnTileCount;
@@ -3225,39 +3197,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
 				if (renderable instanceof NPC) {
 					var npc = (NPC) renderable;
-					int npcId = npc.getId();
-
-					NpcDisplacementConfig displacementConfig = npcDisplacementCache.get(npcId);
-					if (displacementConfig == null) {
-						if (npcDisplacementCache.size() > NPC_DISPLACEMENT_CACHE_MAX_SIZE) {
-							long oldestConfigMilli = Long.MAX_VALUE;
-							int oldestNpcId = -1;
-							for (var entry : npcDisplacementCache.entrySet())
-								if (entry.getValue().lastAccessMs < oldestConfigMilli)
-									oldestNpcId = entry.getKey();
-							displacementConfig = npcDisplacementCache.remove(oldestNpcId).reset();
-						} else {
-							displacementConfig = new NpcDisplacementConfig();
-						}
-						npcDisplacementCache.put(npcId, displacementConfig);
-
-						// Check if NPC is allowed to displace
-						var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-						displacementConfig.canDisplace = anim == null || !NpcDisplacementConfig.ANIM_IGNORE_LIST.contains(anim);
-					}
-
-					if (displacementConfig.canDisplace) {
-						int displacementRadius = displacementConfig.idleRadius;
+					var entry = npcDisplacementCache.get(npc);
+					if (entry.canDisplace) {
+						int displacementRadius = entry.idleRadius;
 						if (displacementRadius == -1) {
 							displacementRadius = modelRadius; // Fallback to ModelRadius since we don't know the idle radius yet
 							if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
 								displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
-								displacementConfig.idleRadius = displacementRadius;
+								entry.idleRadius = displacementRadius;
 							}
 						}
 						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
-					displacementConfig.lastAccessMs = System.currentTimeMillis();
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 				}

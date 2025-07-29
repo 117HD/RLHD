@@ -13,6 +13,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.utils.NpcDisplacementCache;
 
 @Singleton
 public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener {
@@ -24,6 +25,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	private FrameTimer frameTimer;
+
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final StringBuilder sb = new StringBuilder();
@@ -130,7 +134,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			children.add(LineComponent.builder()
 				.left("NPC Displacement Cache Size:")
-				.right(String.valueOf(plugin.getNpcDisplacementCache().size()))
+				.right(String.valueOf(npcDisplacementCache.size()))
 				.build());
 		}
 
