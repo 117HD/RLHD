@@ -39201,6 +39201,57 @@
     "graphicsObjectIds": [ "SP_ATTACK_ABYSSAL_WHIP" ]
   },
   {
+    "description": "Arkan Blade Special Attack",
+    "offset": [ 40, 75, 80 ],
+    "radius": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM"  ]
+  },
+  {
+    "description": "Bone Dagger Special Attack",
+    "offset": [ 30, 75, 50 ],
+    "radius": 160,
+    "spawnDelay": 710,
+    "fixedDespawnTime": true,
+    "despawnDelay": 325,
+    "strength": 11.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 75,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [ "DTTD_DAGGER_SP_ATTACK_SPOTANIM"  ]
+  },
+  {
+    "description": "Bone Crossbow Special Attack",
+    "offset": [ 0, -10, 0 ],
+    "radius": 200,
+    "strength": 11.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 75,
+    "fadeOutDuration": 100,
+    "projectileIds": [ "DTTD_BONE_CROSSBOWBOLT_TRAVEL_SP_ATTACK"  ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
