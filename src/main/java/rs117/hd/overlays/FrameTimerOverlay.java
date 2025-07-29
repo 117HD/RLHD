@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -30,6 +31,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private NpcDisplacementCache npcDisplacementCache;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
+	private final long[] timings = new long[Timer.values().length];
 	private final StringBuilder sb = new StringBuilder();
 
 	@Inject
@@ -66,9 +68,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	public Dimension render(Graphics2D g) {
 		long time = System.nanoTime();
 
-		var timings = getAverageTimings();
 		var children = panelComponent.getChildren();
-		if (timings.length != Timer.values().length) {
+		if (!getAverageTimings()) {
 			children.add(TitleComponent.builder()
 				.text("Waiting for data...")
 				.build());
@@ -143,19 +144,19 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		return result;
 	}
 
-	private long[] getAverageTimings() {
+	private boolean getAverageTimings() {
 		if (frames.isEmpty())
-			return new long[0];
+			return false;
 
-		long[] timers = new long[Timer.values().length];
+		Arrays.fill(timings, 0);
 		for (var frame : frames)
 			for (int i = 0; i < frame.timers.length; i++)
-				timers[i] += frame.timers[i];
+				timings[i] += frame.timers[i];
 
-		for (int i = 0; i < timers.length; i++)
-			timers[i] = Math.max(0, timers[i] / frames.size());
+		for (int i = 0; i < timings.length; i++)
+			timings[i] = Math.max(0, timings[i] / frames.size());
 
-		return timers;
+		return true;
 	}
 
 	private void addTiming(Timer timer, long[] timings) {
