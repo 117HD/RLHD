@@ -3007,12 +3007,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public Model findModelReplacement(ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash) {
+		frameTimer.begin(Timer.MODEL_REPLACEMENTS);
 		if (replacement == null || replacement == ModelReplacement.NONE) {
+			frameTimer.end(Timer.MODEL_REPLACEMENTS);
 			return originalModel;
 		}
 
 		ModelDefinition def = replacement.model.definition;
 		if (def == null) {
+			frameTimer.end(Timer.MODEL_REPLACEMENTS);
 			return originalModel;
 		}
 
@@ -3026,7 +3029,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int type = config & 0x3F;
 		int orientation = (config >> 6) & 0x3;
 
-		return def.getModel(client, id, type, orientation);
+		Model model = def.getModel(client, id, type, orientation);
+		frameTimer.end(Timer.MODEL_REPLACEMENTS);
+		return model;
 	}
 
 	/**
