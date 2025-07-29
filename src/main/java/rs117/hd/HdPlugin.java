@@ -2346,10 +2346,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void drawUi(int overlayColor) {
-		if (uiResolution == null)
-			return;
-
-		if (developerTools.isHideUiEnabled() && hasLoggedIn)
+		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
 			return;
 
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
