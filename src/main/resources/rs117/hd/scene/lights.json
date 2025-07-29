@@ -38292,5 +38292,43 @@
     "objectIds": [
       "SORCERESS_FIREPLACE"
     ]
+  },
+  {
+    "description": "Totem Fletching - Animals - All others",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 8,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_A",
+      "ENT_TOTEMS_ANIMAL_B",
+      "ENT_TOTEMS_ANIMAL_D",
+      "ENT_TOTEMS_ANIMAL_E",
+      "ENT_TOTEMS_ANIMAL_A_CS",
+      "ENT_TOTEMS_ANIMAL_B_CS",
+      "ENT_TOTEMS_ANIMAL_D_CS",
+      "ENT_TOTEMS_ANIMAL_E_CS"
+    ]
+  },
+  {
+    "description": "Totem Fletching - Animals - Eagle",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_C",
+      "ENT_TOTEMS_ANIMAL_C_CS"
+    ]
   }
 ]
