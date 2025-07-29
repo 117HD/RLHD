@@ -39252,6 +39252,23 @@
     "projectileIds": [ "DTTD_BONE_CROSSBOWBOLT_TRAVEL_SP_ATTACK"  ]
   },
   {
+    "description": "Excalibur Special Attack",
+    "offset": [ 0, 80, 0 ],
+    "radius": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1150,
+    "strength": 16.5,
+    "color": [
+      0,
+      100,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "SP_ATTACKGLOW_BLUE" ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
