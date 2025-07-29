@@ -16956,24 +16956,6 @@
     "range": 20
   },
   {
-    "description": "stealing creations",
-    "worldX": 3171,
-    "worldY": 10003,
-    "plane": 0,
-    "height": 200,
-    "alignment": "NORTHWEST",
-    "radius": 1000,
-    "strength": 20,
-    "color": [
-      217.66177,
-      80.17438,
-      238.4492
-    ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
     "description": "varrock west bank chandeliers",
     "worldX": 3184,
     "worldY": 3443,
