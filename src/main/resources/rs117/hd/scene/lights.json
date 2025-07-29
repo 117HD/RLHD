@@ -39646,7 +39646,6 @@
       255,
       100
     ],
-    "type": "STATIC",
     "npcIds": [
       "ENT_TOTEMS_ANIMAL_A",
       "ENT_TOTEMS_ANIMAL_B",
@@ -39668,7 +39667,6 @@
       255,
       100
     ],
-    "type": "STATIC",
     "npcIds": [
       "ENT_TOTEMS_ANIMAL_C",
       "ENT_TOTEMS_ANIMAL_C_CS"

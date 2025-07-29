@@ -25172,7 +25172,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 3", "h == 7 && s == 4", "h == 7 && s == 3" ],
+        "colors": [ "h == 3", "h == 7 && s == 4", "h == 7 && s == 3" ],
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -25198,7 +25198,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 3", "h == 7 && s == 7" ],
+        "colors": [ "h == 3", "h == 7 && s == 7" ],
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -25219,7 +25219,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 3", "h == 7 && s == 7" ],
+        "colors": [ "h == 3", "h == 7 && s == 7" ],
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -25268,7 +25268,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": ["h == 3 && s == 7", "h == 3 && s == 1" ],
+        "colors": [ "h == 3 && s == 7", "h == 3 && s == 1" ],
         "baseMaterial": "GRUNGE_3"
       }
     ]
