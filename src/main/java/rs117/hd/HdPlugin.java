@@ -491,9 +491,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			"SWIM"
 		}));
 
-		public boolean canDisplace = true;
-		public int idleRadius = -1;
+		public boolean canDisplace;
+		public int idleRadius;
 		public long lastAccessMs;
+
+		{
+			reset();
+		}
+
+		public ActorDisplacementConfig reset() {
+			canDisplace = true;
+			idleRadius = -1;
+			lastAccessMs = 0;
+			return this;
+		}
 	}
 
 	@Getter
@@ -3220,9 +3231,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							for (var entry : npcDisplacementConfig.entrySet())
 								if (entry.getValue().lastAccessMs < oldestConfigMilli)
 									oldestNpcId = entry.getKey();
-							npcDisplacementConfig.remove(oldestNpcId);
+							displacementConfig = npcDisplacementConfig.remove(oldestNpcId).reset();
+						} else {
+							displacementConfig = new ActorDisplacementConfig();
 						}
-						npcDisplacementConfig.put(npcId, displacementConfig = new ActorDisplacementConfig());
+						npcDisplacementConfig.put(npcId, displacementConfig);
 
 						// Check if NPC is allowed to displace
 						var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
