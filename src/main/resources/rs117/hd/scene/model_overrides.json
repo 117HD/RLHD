@@ -40868,7 +40868,9 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ATES_STATUE_DARKFROST_INACTIVE",
-      "ATES_STATUE_DARKFROST_ACTIVE"
+      "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_AUBURN_ACTIVE",
+      "ATES_STATUE_AUBURN_INACTIVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
