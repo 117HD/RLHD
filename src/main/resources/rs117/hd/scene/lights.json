@@ -21131,7 +21131,8 @@
     "range": 10,
     "objectIds": [
       "FAIRY_FURNACE_GLOW",
-      "FAI_FALADOR_FURNACE_GLOW"
+      "FAI_FALADOR_FURNACE_GLOW",
+      "FURNACE"
     ]
   },
   {
@@ -38361,6 +38362,22 @@
     "objectIds": [ "HG_CAVE_EXIT" ]
   },
   {
+    "description": "Stalker Den Cave Exit",
+    "offset": [ -50, 200, -50 ],
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "STALKER_DEN_EXTERNAL_SHORTCUT_INSIDE",
+      "SOC_CAVE_EXIT"
+    ]
+  },
+  {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
     "height": 235,
     "offset": [ -41, -74, 20 ],
@@ -39618,5 +39635,41 @@
     "fadeInDuration": 175,
     "fadeOutDuration": 375,
     "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM"  ]
+  },
+  {
+    "description": "Totem Fletching - Animals - All others",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 8,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_A",
+      "ENT_TOTEMS_ANIMAL_B",
+      "ENT_TOTEMS_ANIMAL_D",
+      "ENT_TOTEMS_ANIMAL_E",
+      "ENT_TOTEMS_ANIMAL_A_CS",
+      "ENT_TOTEMS_ANIMAL_B_CS",
+      "ENT_TOTEMS_ANIMAL_D_CS",
+      "ENT_TOTEMS_ANIMAL_E_CS"
+    ]
+  },
+  {
+    "description": "Totem Fletching - Animals - Eagle",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_C",
+      "ENT_TOTEMS_ANIMAL_C_CS"
+    ]
   }
 ]

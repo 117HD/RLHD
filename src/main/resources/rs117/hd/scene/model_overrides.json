@@ -8432,7 +8432,8 @@
       "KR_PIER_RAIL",
       "BR_LOBBY_RAIL",
       "WALLKIT_SHAYZIEN_RAIL01",
-      "PVPA_DESERTGATE_OPEN"
+      "PVPA_DESERTGATE_OPEN",
+      "WALLKIT_AUBURN01_FENCE01_NOSHADOW"
     ],
     "flatNormals": true,
     "uvType": "BOX",
@@ -10254,6 +10255,7 @@
     "description": "Metallic Furnace",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
+      "FURNACE",
       "VIKING_FURNACE",
       "VIKING_FURNACE2",
       "DWARF_KELDAGRIM_FURNACE",
@@ -23154,7 +23156,8 @@
       "CAVE_TWIG1",
       "AVIUM_ROOTS01",
       "AVIUM_ROOTS02",
-      "DOTI_BAG_DUFFEL01_DEFAULT01_GONE"
+      "DOTI_BAG_DUFFEL01_DEFAULT01_GONE",
+      "ROOTS_PINE_1"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -23539,7 +23542,8 @@
       "FAI_LEAFLESS_BUSH_LARGE_02",
       "DOV_HUNTING_PLANT2_NOOP",
       "BUSH_DESERT_DEAD01",
-      "BUSH_DESERT_DEAD02"
+      "BUSH_DESERT_DEAD02",
+      "FAI_LEAFLESS_BUSH_SMALL_01"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -23889,7 +23893,9 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "FAI_VARROCK_HANGING_TOOLS_02",
-      "GIM_HANGING_TOOLS_01"
+      "GIM_HANGING_TOOLS_01",
+      "FAI_VARROCK_HANGING_TOOLS_01",
+      "FAI_VARROCK_HANGING_TOOLS_03"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -25026,7 +25032,10 @@
       "REDWOODTREE_MIDDLE_SIDE2",
       "REDWOODTREE_BOTTOM_CENTER",
       "REDWOODTREE_MIDDLE_SIDE3",
-      "REDWOODTREE_MIDDLE_CENTER"
+      "REDWOODTREE_MIDDLE_CENTER",
+      "TREE_REDWOOD_DEFAULT01",
+      "TREE_REDWOOD_DEFAULT02",
+      "TREE_REDWOOD_DEFAULT03"
     ],
     "uvType": "BOX",
     "uvScale": 1.2,
@@ -25065,6 +25074,440 @@
     "uvType": "BOX",
     "uvScale": 0.82,
     "uvOrientation": 256
+  },
+  {
+    "description": "Auburnvale - Bank Booth",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BOOTH_BANK01_TALKASTI01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 10 || h == 12",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "AIDE_NORMAL_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Folding Chair",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CHAIR_CIVITAS01_WOOD01_ORANGE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Redwood Giant Redwood Stump",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "objectIds": [
+      "SKEWKIT_REDWOOD01_EDGE01_1",
+      "SKEWKIT_REDWOOD01_EDGE01_2",
+      "SKEWKIT_REDWOOD01_MIDDLE01",
+      "SKEWKIT_REDWOOD01_MIDDLE02",
+      "SKEWKIT_REDWOOD01_PLAIN01",
+      "SKEWKIT_REDWOOD01_EDGE01_Q",
+      "SKEWKIT_REDWOOD01_EDGE01_3",
+      "SKEWKIT_REDWOOD01_DIAG02",
+      "SKEWKIT_REDWOOD01_DIAG01",
+      "SKEWKIT_REDWOOD01_EDGE01_T",
+      "SKEWKIT_REDWOOD01_EDGE01_W",
+      "SKEWKIT_REDWOOD01_EDGE01_R",
+      "SKEWKIT_REDWOOD01_EDGE01_4",
+      "SKEWKIT_REDWOOD01_MIDDLE03",
+      "SKEWKIT_REDWOOD01_EDGE01_E"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.2,
+    "uvOrientation": 70
+  },
+  {
+    "description": "Auburnvale - Mushrooms",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FUNGI_SHELF01_DEFAULT01",
+      "FUNGI_SHELF01_CLUSTER01",
+      "DORGESH_MUSHROOM_FLOOR5",
+      "DORGESH_MUSHROOM_FLOOR4",
+      "FOSSIL_MUSHROOM2"
+    ]
+  },
+  {
+    "description": "Auburnvale - Ent Admire Log 1",
+    "objectIds": [
+      "ENT_TOTEMS_ADMIRE_LOC_1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3", "h == 7 && s == 4", "h == 7 && s == 3" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 8", "h == 10", "h == 12" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Ent Admire Log 2",
+    "objectIds": [
+      "ENT_TOTEMS_ADMIRE_LOC_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3", "h == 7 && s == 7" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": [ "h == 9", "h == 10", "h == 12" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Ent Admire Log 3",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "ENT_TOTEMS_ADMIRE_LOC_3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3", "h == 7 && s == 7" ],
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": [ "h == 9", "h == 10", "h == 12" ],
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - House Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_AUBURNVALE01_MIDDLE01",
+      "WALLKIT_AUBURNVALE01_WINDOW01",
+      "WALLKIT_AUBURNVALE01_DOOR01_M",
+      "WALLKIT_AUBURNVALE01_DOOR01",
+      "SOC_WALL_INSPECT_REINFORCED",
+      "SOC_WINDOW_NOOP"
+    ]
+  },
+  {
+    "description": "Auburnvale - Palisade Walls",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_PALISADE02_DEFAULT04",
+      "WALLKIT_PALISADE02_DEFAULT01",
+      "WALLKIT_PALISADE02_DEFAULT05",
+      "WALLKIT_PALISADE02_DEFAULT05_M",
+      "WALLKIT_PALISADE02_DEFAULT03",
+      "AV_LOWWALL_CLIMB_1",
+      "AV_LOWWALL_CLIMB_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 3 && s == 7", "h == 3 && s == 1" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Table with clutter",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_TABLE_ALT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Stylised Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "TALKASTI01_TABLE01_LONG01_ALT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Log Balance",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "AV_BALANCE_1",
+      "AV_BALANCE_2",
+      "AV_BALANCE_INNER_B",
+      "AV_BALANCE_INNER_A"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Auburnvale - Sawmill - Log Workbench with Tools",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOOLS_SAWMILL01_LOG01_AUBURN01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Redwood Slice",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "BUNDLE01_AUBURN01_SLICES01_REDWOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN",
+        "uvType": "BOX",
+        "uvScale": 0.47,
+        "uvOrientation": 200
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Planks and Stripped Logs",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BUNDLE01_AUBURN01_PLANKS01_STACK01",
+      "BUNDLE01_AUBURN01_LOGS01_STACK01",
+      "BUNDLE01_AUBURN01_LOGS01_LEANING01"
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Planks with Fur Sled",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "BUNDLE01_AUBURN01_LUMBER01_TRANSPORT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Logs",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BUNDLE01_AUBURN01_LUMBER02_PINE01",
+      "BUNDLE01_AUBURN01_LUMBER01_PINE01",
+      "DEBRIS01_AUBURN01_LUMBER01_BARK01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Sawdust",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "DEBRIS01_AUBURN01_LUMBER02_SAWDUST01",
+      "DEBRIS01_AUBURN01_LUMBER01_SAWDUST01"
+    ]
+  },
+  {
+    "description": "Auburnvale - Cave Entrances",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.3,
+    "objectIds": [
+      "CAVE_MOUNTAIN01_WATER01",
+      "STALKER_DEN_EXTERNAL_SHORTCUT_OUTSIDE",
+      "SOC_CAVE_ENTRANCE",
+      "CAVE_MOUNTAIN01_DEFAULT03"
+    ]
+  },
+  {
+    "description": "Auburnvale - Aquaduct",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.3,
+    "objectIds": [
+      "WALLKIT_AUBURN02_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_AUBURN02_AQUEDUCT01",
+      "WALLKIT_AUBURN02_AQUEDUCT01_DAMAGED02",
+      "ARCH_AUBURN02_AQUEDUCT01",
+      "ARCH_AUBURN03_AQUEDUCT01",
+      "WALLKIT_AUBURN04_AQUEDUCT03_STRAIGHT01",
+      "WALLKIT_AUBURN04_AQUEDUCT03_CORNER01",
+      "WALLKIT_AUBURN04_AQUEDUCT01",
+      "WALLKIT_AUBURN03_AQUEDUCT01",
+      "WALLKIT_AUBURN04_AQUEDUCT02",
+      "WALLKIT_AUBURN04_AQUEDUCT02_M",
+      "WALLKIT_AUBURN01_AQUEDUCT01_TRANSITION01",
+      "WALLKIT_AUBURN01_AQUEDUCT01",
+      "WALLKIT_AUBURN01_AQUEDUCT01_DAMAGED01",
+      "WALLKIT_AUBURN01_AQUEDUCT01_DAMAGED02",
+      "WALLKIT_AUBURN01_AQUEDUCT01_TRANSITION01_M"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Roots with Red Vines",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ROOT_CUSTODIA01_MEDIUM02",
+      "ROOT_CUSTODIA01_MEDIUM02_MIRROR",
+      "VINE_BRANCH02_HANGING03",
+      "ROOT_CUSTODIA01_SPROUTS02",
+      "VINE_BRANCH02_HANGING04",
+      "ROOT_CUSTODIA01_OPEN01",
+      "VINE_BRANCH02_HANGING01",
+      "ROOT_CUSTODIA01_OPEN02",
+      "ROOT_CUSTODIA01_SPROUTS01",
+      "ROOT_CUSTODIA01_MEDIUM01",
+      "ROOT_CUSTODIA01_SPIKES01",
+      "ROOT_CUSTODIA01_LARGE02",
+      "ROOT_CUSTODIA01_MEDIUM01_MIRROR",
+      "ROOT_CUSTODIA01_LARGE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.4,
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Roots Plain",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "ROOT_CUSTODIA01_TREE01",
+      "ROOT_CUSTODIA01_TREE02",
+      "ROOT_CUSTODIA_SMALL03",
+      "ROOT_CUSTODIA_SMALL02",
+      "VINE_BRANCH02_HANGING02"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Rocks",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "CUSTODIA_ROCKSLIDE04",
+      "CUSTODIA_ROCKSLIDE03",
+      "CUSTODIA_DUGUPSOIL03_BROWN",
+      "CUSTODIA_DEBRIS_MUD03",
+      "CUSTODIA_DUGUPSOIL02_BROWN",
+      "CUSTODIA_DEBRIS_MUD02",
+      "CUSTODIA_DUGUPSOIL01_BROWN"
+    ]
+  },
+  {
+    "description": "Auburnvale - Stalker Den - Mossy Rocks",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CUSTODIA_ROCK02_2X2A",
+      "CUSTODIA_ROCK02_1X1A",
+      "CUSTODIA_ROCK01_1X1A"
+    ]
   },
   {
     "description": "Guardians Of the Rift - Rocks - Large",
@@ -29263,7 +29706,7 @@
   },
   {
     "description": "Object - Cushions",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "BCS_MAISA_CAMP_CUSHION",
       "AFL_CATBED_NOOP",
@@ -29274,7 +29717,9 @@
       "AKD_CHURCH_PILLOW02",
       "AKD_CHURCH_PILLOW01",
       "AKD_CHURCH_PILLOW_STACK01",
-      "PILLOW_TWILIGHT01_DEFAULT"
+      "PILLOW_TWILIGHT01_DEFAULT",
+      "PILLOW_VARLAMORE01_ORANGE01",
+      "PILLOW_VARLAMORE01_STACK01_ORANGE01"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -29558,6 +30003,85 @@
       "MOUND_TERMITE01_MEDIUM01",
       "MOUND_TERMITE01_LARGE01"
     ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Plants",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "GROUNDCOVER_PLANT4_ROTTEN",
+      "GROUNDCOVER_PLANT5_ROTTEN",
+      "LEAVES_ROTTEN_CORNER",
+      "LEAVES_ROTTEN_EDGE",
+      "LEAVES_SPIKEY01_DENSE01",
+      "LEAVES_SPIKEY01_SPARSE01",
+      "PLANT_BUSH01_LEAFY01",
+      "PLANT_BUSH02_LEAFY01",
+      "PLANT_BUSH03_BERRY01",
+      "PLANT_BUSH03_LEAFY01",
+      "PLANT_BUSH04_LEAFY01",
+      "PLANT_BUSH04_LEAFY02",
+      "PLANT_FERN01_DEFAULT02_DRY01",
+      "PLANT_FERN02_SMALL01",
+      "PLANT_FERN02_SMALL02",
+      "PLANT_FERN02_SMALL03",
+      "PLANT_FERN02_SMALL04",
+      "PLANT_FERN02_SMALL04_DRY01"
+    ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Pine Tree 1",
+    "baseMaterial": "LEAVES_1",
+    "objectIds": [
+      "TREE_PINE_BRACKENTOP01",
+      "TREE_PINE_BRACKENTOP02",
+      "TREE_PINE_BRACKENTOP03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Pine Tree 2",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "objectIds": [
+      "TREE_PINE_DEFAULT02",
+      "TREE_PINE_DEFAULT04",
+      "TREE_PINE_DEFAULT01",
+      "TREE_PINE_DEFAULT05"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Varlmaore - Auburnvale - Pine Tree Dead/Stump",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TREE_PINE_DEAD02",
+      "TREE_PINE_DEAD01"
+    ]
+  },
+  {
+    "description": "Auburnvale Awnings",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "TENT_BAZAAR01_COVER01_AUBURNVALE01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
   },
   {
     "description": "Perilous Moons Murals",
@@ -30271,7 +30795,13 @@
       "ROR_TEMPLE_CRUMBLE01_DARK01",
       "ROR_TEMPLE01_LOW01_DARK01",
       "STEPS_ROR_CORNER01_DARK01",
-      "DECOKIT_TILES_BROKEN01"
+      "DECOKIT_TILES_BROKEN01",
+      "CAVEKIT_ROCK01_WALLTOP06",
+      "CAVEKIT_ROCK01_PLANT01",
+      "CAVEKIT_ROCK01_SCRATCHES01",
+      "CAVEKIT_ROCK01_SCRATCHES02",
+      "STALKER_DEN_SHORTCUT_CAVE_1",
+      "STALKER_DEN_SHORTCUT_CAVE_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -30304,7 +30834,9 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "HG_CAVE_EXIT",
-      "CAVEKIT_ROCK01_ENTRANCE02"
+      "CAVEKIT_ROCK01_ENTRANCE02",
+      "STALKER_DEN_EXTERNAL_SHORTCUT_INSIDE",
+      "SOC_CAVE_EXIT"
     ],
     "uvType": "BOX",
     "uvScale": 0.86,
@@ -30312,6 +30844,25 @@
       {
         "colors": "l > 63",
         "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Stalked Den Rope Shortcut",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "STALKER_DEN_SHORTCUT_ROPE_TOP",
+      "STALKER_DEN_SHORTCUT_ROPE_BOTTOM"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -50
       }
     ]
   },
@@ -30518,11 +31069,25 @@
     "objectIds": [
       "HG_TABLE_TAVERN02_DEFAULT01",
       "HG_TABLE_TAVERN02_CORNER01",
-      "HG_TABLE_TAVERN02_TAPS01",
       "HG_TABLE_TAVERN02_DOOR01"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512
+  },
+  {
+    "description": "Hunter Guild Cavern Counter - with Taps",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      "HG_TABLE_TAVERN02_TAPS01"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Hunter Guild Cavern Counter - Unrotate UV so it's seameless with the rest",
@@ -30571,8 +31136,8 @@
       "CRATE_CIVITAS01_SINGLE01"
     ],
     "uvType": "BOX",
-    "uvOrientationZ": 512,
     "uvOrientationX": 512,
+    "uvOrientationZ": 512,
     "uvScale": 0.75
   },
   {
@@ -30668,7 +31233,7 @@
     "description": "Hunter Guild - woven basket with handles - Empty",
     "baseMaterial": "BURLAP",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.5,
     "objectIds": [
       "HG_BARREL_BASKET01_EMPTY01"
     ],
@@ -30685,7 +31250,7 @@
     "description": "Hunter Guild - woven basket with handles - With veggies",
     "baseMaterial": "BURLAP",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.5,
     "objectIds": [
       "HG_BARREL_BASKET01_FOOD01"
     ],
@@ -30702,6 +31267,22 @@
         "colors": "h == 3",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild - woven basket with handles - With veggies 2",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "HG_BARREL_POT01_FOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plants",
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -30737,7 +31318,8 @@
       "HG_CHAIR_TAVERN02_SEWING01",
       "HG_CHAIR_TAVERN02_HIDE01",
       "HG_CHAIR_TAVERN02_HIDE02",
-      "TABLE_WOODEN01_SQUARE01_FUR01"
+      "TABLE_WOODEN01_SQUARE01_FUR01",
+      "TABLE_WOODEN01_SMALL01_FUR01"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -42230,13 +42812,15 @@
     "uvType": "BOX"
   },
   {
-    "description": "Ates Pendant Statue",
+    "description": "Ates Pendant Statue - Animated",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "ATES_STATUE_DARKFROST_INACTIVE",
       "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_DARKFROST_INACTIVE",
+      "ATES_STATUE_TWILIGHT_ACTIVE",
       "ATES_STATUE_TWILIGHT_INACTIVE",
-      "ATES_STATUE_TWILIGHT_ACTIVE"
+      "ATES_STATUE_AUBURN_ACTIVE",
+      "ATES_STATUE_AUBURN_INACTIVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -48468,6 +49052,11 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": 89
+      },
+      {
+        "description": "Food",
+        "colors": "h == 2",
+        "baseMaterial": "GRUNGE_2"
       }
     ]
   },
@@ -49655,6 +50244,7 @@
       "ALDARIN_TABLE_DEFAULT01",
       "ALDARIN_TABLE_DEFAULT01_DIAGONAL",
       "TABLE_WOODEN01_RECTANGULAR01",
+      "TABLE_WOODEN01_RECTANGULAR02",
       "TABLE_WOODEN01_SQUARE01",
       "TABLE_WOODEN01_SMALL01"
     ]
@@ -49666,7 +50256,8 @@
     "uvOrientation": 913,
     "uvScale": 0.4,
     "objectIds": [
-      "ALDARIN_TABLE_WINE01"
+      "ALDARIN_TABLE_WINE01",
+      "HG_TABLE_FOOD01"
     ],
     "colorOverrides": [
       {

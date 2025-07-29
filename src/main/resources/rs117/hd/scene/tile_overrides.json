@@ -3805,23 +3805,6 @@
     "waterType": "CAVE_WATER"
   },
   {
-    "name": "STRANGLEWOOD_HILLSIDE",
-    "area": "THE_STRANGLEWOOD_EXTENDED",
-    "overlayIds": [
-      222
-    ],
-    "groundMaterial": "DIRT",
-    "blended": false
-  },
-  {
-    "name": "STRANGLEWOOD_SNOW",
-    "area": "THE_STRANGLEWOOD_EXTENDED",
-    "overlayIds": [
-      271
-    ],
-    "groundMaterial": "SNOW_1"
-  },
-  {
     "name": "TEMPLE_OF_THE_EYE_INCORRECT_WATER",
     "area": "TEMPLE_OF_THE_EYE",
     "overlayIds": [
@@ -6985,14 +6968,6 @@
     "replacements": {
       "WINTER_GRUNGE": "season == WINTER"
     }
-  },
-  {
-    "name": "STRANGLEWOOD_SNOW_DARK",
-    "area": "THE_STRANGLEWOOD_EXTENDED",
-    "underlayIds": [
-      174
-    ],
-    "groundMaterial": "SNOW_1"
   },
   {
     "name": "JUDGE_OF_YAMA_BOSS_WATER",
