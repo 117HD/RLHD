@@ -89,7 +89,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = Integer.hashCode(value);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutInt(address, value);
 				owner.markWaterLine(position, type.size);
 				hash = newHash;
@@ -108,7 +108,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = ModelHasher.fastIntHash(x, y);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutInt(address, x);
 				MemoryUtil.memPutInt(address + 4, y);
 				owner.markWaterLine(position, type.size);
@@ -128,7 +128,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = ModelHasher.fastIntHash(x, y, z);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutInt(address, x);
 				MemoryUtil.memPutInt(address + 4, y);
 				MemoryUtil.memPutInt(address + 8, z);
@@ -149,7 +149,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = ModelHasher.fastIntHash(x, y, z, w);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutInt(address, x);
 				MemoryUtil.memPutInt(address + 4, y);
 				MemoryUtil.memPutInt(address + 8, z);
@@ -165,8 +165,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			switch (type)
-			{
+			switch (type) {
 				case IVec2:
 					set(values[0], values[1]);
 					break;
@@ -195,9 +194,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 					}
 
 					final int newHash = ModelHasher.fastIntHash(values, values.length);
-					if(hash == newHash) {
+					if (hash == newHash)
 						return;
-					}
 					hash = newHash;
 
 					final int elementCount = type.isArray ? values.length : type.elementCount;
@@ -225,7 +223,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = Float.hashCode(value);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutFloat(address, value);
 				owner.markWaterLine(position, type.size);
 				hash = newHash;
@@ -244,7 +242,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = ModelHasher.fastFloatHash(x, y);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutFloat(address, x);
 				MemoryUtil.memPutFloat(address + 4, y);
 				owner.markWaterLine(position, type.size);
@@ -264,7 +262,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = ModelHasher.fastFloatHash(x, y, z);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutFloat(address, x);
 				MemoryUtil.memPutFloat(address + 4, y);
 				MemoryUtil.memPutFloat(address + 8, z);
@@ -285,7 +283,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			}
 
 			final int newHash = ModelHasher.fastFloatHash(x, y, z, w);
-			if(newHash != hash) {
+			if (newHash != hash) {
 				MemoryUtil.memPutFloat(address, x);
 				MemoryUtil.memPutFloat(address + 4, y);
 				MemoryUtil.memPutFloat(address + 8, z);
@@ -301,8 +299,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			switch (type)
-			{
+			switch (type) {
 				case FVec2:
 					set(values[0], values[1]);
 					break;
@@ -333,9 +330,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 					}
 
 					final int newHash = ModelHasher.fastFloatHash(values);
-					if(hash == newHash) {
+					if (hash == newHash)
 						return;
-					}
 					hash = newHash;
 
 					final int elementCount = type.isArray ? values.length : type.elementCount;
@@ -365,7 +361,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 	static class IntCopyBuffer extends CopyBuffer<IntBuffer> {
 		private IntCopyBuffer ensureCapacity(int size) {
-			if(data == null || data.capacity() < size) {
+			if (data == null || data.capacity() < size) {
 				data = BufferUtils.createIntBuffer(size);
 				address = MemoryUtil.memAddress(data);
 				elementSize = Integer.BYTES;
@@ -376,7 +372,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 	static class FloatCopyBuffer extends CopyBuffer<FloatBuffer> {
 		private FloatCopyBuffer ensureCapacity(int size) {
-			if(data == null || data.capacity() < size) {
+			if (data == null || data.capacity() < size) {
 				data = BufferUtils.createFloatBuffer(size);
 				address = MemoryUtil.memAddress(data);
 				elementSize = Float.BYTES;
@@ -478,9 +474,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		glBuffer.initialize(size);
 		data = BufferUtils.createByteBuffer(size);
 
-		for(Property prop : properties) {
+		for (Property prop : properties)
 			prop.address = MemoryUtil.memAddress(data, prop.position);
-		}
 	}
 
 	public void initialize(int bindingIndex) {
@@ -525,7 +520,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		if (data == null)
 			return;
 
-		for(Property prop : properties) {
+		for (Property prop : properties) {
 			prop.address = 0;
 			prop.hash = 0;
 		}

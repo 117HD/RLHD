@@ -323,25 +323,25 @@ public class ModelHasher {
 
 	public static int fastFloatHash(float x, float y) {
 		int result = 17;
-		result = 31 * result + ((int)(x * 100));
-		result = 31 * result + ((int)(y * 100));
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
 		return result;
 	}
 
 	public static int fastFloatHash(float x, float y, float z) {
 		int result = 17;
-		result = 31 * result + ((int)(x * 100));
-		result = 31 * result + ((int)(y * 100));
-		result = 31 * result + ((int)(z * 100));
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		result = 31 * result + (int) (z * 100);
 		return result;
 	}
 
 	public static int fastFloatHash(float x, float y, float z, float w) {
 		int result = 17;
-		result = 31 * result + ((int)(x * 100));
-		result = 31 * result + ((int)(y * 100));
-		result = 31 * result + ((int)(z * 100));
-		result = 31 * result + ((int)(w * 100));
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		result = 31 * result + (int) (z * 100);
+		result = 31 * result + (int) (w * 100);
 		return result;
 	}
 
