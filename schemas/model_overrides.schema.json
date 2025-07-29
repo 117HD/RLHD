@@ -186,8 +186,8 @@
         ]
       },
       "windDisplacementModifier": {
-        "type": "int",
-        "description": "Modifier value between -3 & 3 to control how strong the model applies wind."
+        "type": "integer",
+        "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
       },
       "invertDisplacementStrength": {
         "type": "boolean",
