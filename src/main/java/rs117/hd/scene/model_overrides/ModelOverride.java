@@ -23,6 +23,7 @@ import rs117.hd.utils.Vector;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
+import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @NoArgsConstructor
@@ -125,10 +126,10 @@ public class ModelOverride
 			windDisplacementMode = ModelOverride.NONE.windDisplacementMode;
 		}
 
-		if(windDisplacementModifier < -3 || windDisplacementModifier > 3) {
+		if (windDisplacementModifier < -3 || windDisplacementModifier > 3) {
 			if (Props.DEVELOPMENT)
 				throw new IllegalStateException("Invalid windDisplacementModifier (range is -3 to 3)");
-			windDisplacementModifier = Math.min(Math.max(windDisplacementModifier, -3), 3);
+			windDisplacementModifier = clamp(windDisplacementModifier, -3, 3);
 		}
 
 		if (areas == null)
