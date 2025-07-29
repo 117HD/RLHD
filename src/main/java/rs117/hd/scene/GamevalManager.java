@@ -85,20 +85,36 @@ public class GamevalManager {
 			.orElse(null);
 	}
 
+	public Map<String, Integer> getNpcs() {
+		return GAMEVALS.get(NPC_KEY);
+	}
+
+	public Map<String, Integer> getObjects() {
+		return GAMEVALS.get(OBJECT_KEY);
+	}
+
+	public Map<String, Integer> getAnims() {
+		return GAMEVALS.get(ANIM_KEY);
+	}
+
+	public Map<String, Integer> getSpotanims() {
+		return GAMEVALS.get(SPOTANIM_KEY);
+	}
+
 	public int getNpcId(String name) {
-		return GAMEVALS.get(NPC_KEY).get(name);
+		return getNpcs().get(name);
 	}
 
 	public int getObjectId(String name) {
-		return GAMEVALS.get(OBJECT_KEY).get(name);
+		return getObjects().get(name);
 	}
 
 	public int getAnimId(String name) {
-		return GAMEVALS.get(ANIM_KEY).get(name);
+		return getAnims().get(name);
 	}
 
 	public int getSpotanimId(String name) {
-		return GAMEVALS.get(SPOTANIM_KEY).get(name);
+		return getSpotanims().get(name);
 	}
 
 	public String getNpcName(int id) {
