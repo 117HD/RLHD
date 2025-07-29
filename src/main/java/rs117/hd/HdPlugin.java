@@ -3201,7 +3201,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (entry.canDisplace) {
 						int displacementRadius = entry.idleRadius;
 						if (displacementRadius == -1) {
-							displacementRadius = modelRadius; // Fallback to ModelRadius since we don't know the idle radius yet
+							displacementRadius = modelRadius; // Fallback to model radius since we don't know the idle radius yet
 							if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
 								displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
 								entry.idleRadius = displacementRadius;
