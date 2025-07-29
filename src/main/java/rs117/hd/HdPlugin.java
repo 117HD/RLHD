@@ -2358,7 +2358,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glViewport(0, 0, scaledUiResolution[0], scaledUiResolution[1]);
 
 		// Bind quad VAO which all overlays use to render
-		glBindVertexArray(vaoQuad);
+		glBindVertexArray(vaoTri);
 
 		tiledLightingOverlay.render(uiResolution[0], uiResolution[1]);
 
@@ -2381,7 +2381,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
 		// Texture on UI
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glDrawArrays(GL_TRIANGLES, 0, 4);
 
 		shadowMapOverlay.render(uiResolution[0], uiResolution[1]);
 		gammaCalibrationOverlay.render(uiResolution[0], uiResolution[1]);
