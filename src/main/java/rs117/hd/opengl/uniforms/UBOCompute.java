@@ -1,12 +1,18 @@
 package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 
-public class ComputeUniforms extends SharedUniformBuffer {
+public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
+
+	private static final Comparator<CharacterPositionPair> CHARACTER_POSITION_PAIR_COMPARATOR =
+		Comparator.comparingDouble(p -> p.dist);
 
 	// Camera uniforms
 	public Property yaw = addProperty(PropertyType.Float, "yaw");
@@ -39,8 +45,8 @@ public class ComputeUniforms extends SharedUniformBuffer {
 		public float dist = Float.MAX_VALUE;
 	}
 
-	public ComputeUniforms() {
-		super("Compute", GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+	public UBOCompute() {
+		super(GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
 	}
 
 	private CharacterPositionPair getCharacterPositionPair() {
@@ -69,11 +75,14 @@ public class ComputeUniforms extends SharedUniformBuffer {
 		} else {
 			pair.dist = Math.abs(playerPosX - pair.x) + Math.abs(playerPosZ - pair.z);
 
-			for (int i = 0; i < writeIndex; i++) {
-				if (characterPositionsPairs.get(i).dist >= pair.dist) {
-					writeIndex = i;
-					break;
-				}
+			if (writeIndex > 1) {
+				int index = Collections.binarySearch(
+					characterPositionsPairs.subList(1, writeIndex),
+					pair,
+					CHARACTER_POSITION_PAIR_COMPARATOR
+				);
+
+				writeIndex = index >= 0 ? index : -index - 1;
 			}
 		}
 

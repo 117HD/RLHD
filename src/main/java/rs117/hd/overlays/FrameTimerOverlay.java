@@ -13,6 +13,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.utils.NpcDisplacementCache;
 
 @Singleton
 public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener {
@@ -20,7 +21,13 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private OverlayManager overlayManager;
 
 	@Inject
+	private HdPlugin plugin;
+
+	@Inject
 	private FrameTimer frameTimer;
+
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final StringBuilder sb = new StringBuilder();
@@ -48,7 +55,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.nanoTime();
 		while (!frames.isEmpty()) {
-			if (now - frames.peekFirst().frameTimestamp < 10e9) // remove older entries
+			if (now - frames.peekFirst().frameTimestamp < 3e9) // remove older entries
 				break;
 			frames.removeFirst();
 		}
@@ -60,8 +67,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		long time = System.nanoTime();
 
 		var timings = getAverageTimings();
+		var children = panelComponent.getChildren();
 		if (timings.length != Timer.values().length) {
-			panelComponent.getChildren().add(TitleComponent.builder()
+			children.add(TitleComponent.builder()
 				.text("Waiting for data...")
 				.build());
 		} else {
@@ -77,23 +85,56 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				if (t.isGpuTimer && t != Timer.RENDER_FRAME)
 					addTiming(t, timings);
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Estimated bottleneck:")
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(cpuTime > gpuTime ? "CPU" : "GPU")
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Estimated FPS:")
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(String.format("%.1f FPS", 1 / (Math.max(cpuTime, gpuTime) / 1e9)))
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.left("Error compensation:")
 				.right(String.format("%d ns", frameTimer.errorCompensation))
+				.build());
+
+			children.add(LineComponent.builder()
+				.leftFont(FontManager.getRunescapeBoldFont())
+				.left("Scene Stats:")
+				.build());
+
+			if (plugin.getSceneContext() != null) {
+				var sceneContext = plugin.getSceneContext();
+				children.add(LineComponent.builder()
+					.left("Lights:")
+					.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
+					.build());
+			}
+
+			children.add(LineComponent.builder()
+				.left("Tiles:")
+				.right(String.valueOf(plugin.getDrawnTileCount()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("Static Renderables:")
+				.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("Dynamic Renderables:")
+				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("NPC Displacement Cache Size:")
+				.right(String.valueOf(npcDisplacementCache.size()))
 				.build());
 		}
 
