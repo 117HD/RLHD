@@ -25314,14 +25314,6 @@
     "uvType": "BOX"
   },
   {
-    "description": "Auburnvale - Redwood Giant Redwood Stump",
-    "baseMaterial": "GRUNGE_3",
-    "objectIds": [
-      "FUNGI_SHELF01_DEFAULT01",
-      "FUNGI_SHELF01_CLUSTER01"
-    ]
-  },
-  {
     "description": "Auburnvale - Sawmill - Log Workbench with Tools",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationX": 512,
@@ -30017,27 +30009,24 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "windDisplacementMode": "OBJECT",
     "objectIds": [
-      "PLANT_FERN02_SMALL02",
-      "PLANT_FERN02_SMALL04",
-      "PLANT_BUSH03_BERRY01",
-      "PLANT_FERN02_SMALL03",
-      "PLANT_FERN02_SMALL01",
-      "PLANT_BUSH04_LEAFY02",
-      "PLANT_FERN02_SMALL04_DRY01",
-      "PLANT_FERN_ECLIPSE03",
-      "PLANT_BUSH04_LEAFY01",
-      "PLANT_FERN_ECLIPSE02",
-      "PLANT_FERN_ECLIPSE01",
-      "PLANT_BUSH02_LEAFY01",
-      "LEAVES_SPIKEY01_SPARSE01",
-      "GROUNDCOVER_PLANT5_ROTTEN",
-      "PLANT_BUSH03_LEAFY01",
-      "LEAVES_ROTTEN_EDGE",
-      "LEAVES_ROTTEN_CORNER",
-      "LEAVES_SPIKEY01_DENSE01",
-      "PLANT_BUSH01_LEAFY01",
       "GROUNDCOVER_PLANT4_ROTTEN",
-      "PLANT_FERN01_DEFAULT02_DRY01"
+      "GROUNDCOVER_PLANT5_ROTTEN",
+      "LEAVES_ROTTEN_CORNER",
+      "LEAVES_ROTTEN_EDGE",
+      "LEAVES_SPIKEY01_DENSE01",
+      "LEAVES_SPIKEY01_SPARSE01",
+      "PLANT_BUSH01_LEAFY01",
+      "PLANT_BUSH02_LEAFY01",
+      "PLANT_BUSH03_BERRY01",
+      "PLANT_BUSH03_LEAFY01",
+      "PLANT_BUSH04_LEAFY01",
+      "PLANT_BUSH04_LEAFY02",
+      "PLANT_FERN01_DEFAULT02_DRY01",
+      "PLANT_FERN02_SMALL01",
+      "PLANT_FERN02_SMALL02",
+      "PLANT_FERN02_SMALL03",
+      "PLANT_FERN02_SMALL04",
+      "PLANT_FERN02_SMALL04_DRY01"
     ]
   },
   {
