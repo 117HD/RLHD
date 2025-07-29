@@ -348,10 +348,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private static final ResourcePath SHADER_PATH = Props
 		.getFolder("rlhd.shader-path", () -> path(HdPlugin.class));
 
-	private int vaoQuad;
+	public int vaoQuad;
 	private int vboQuad;
 
-	private int vaoTri;
+	public int vaoTri;
 	private int vboTri;
 
 	private int vaoScene;
@@ -919,7 +919,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		var includes = getShaderIncludes();
 
 		// Bind a valid VAO, otherwise validation may fail on older Intel-based Macs
-		glBindVertexArray(vaoQuad);
+		glBindVertexArray(vaoTri);
 
 		sceneProgram.compile(includes);
 		shadowProgram.setMode(configShadowMode);
@@ -1080,10 +1080,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			FloatBuffer vboQuadData = BufferUtils.createFloatBuffer(16)
 				.put(new float[] {
 					// x, y, u, v
-					1, 1, 1, 0, // top right
-					1, -1, 1, 1, // bottom right
-					-1, -1, 0, 1, // bottom left
-					-1, 1, 0, 0  // top left
+					1, 1, 1, 1, // top right
+					-1, 1, 0, 1, // top left
+					-1, -1, 0, 0, // bottom left
+					1, -1, 1, 0 // bottom right
 				})
 				.flip();
 			glBindBuffer(GL_ARRAY_BUFFER, vboQuad);
@@ -1107,9 +1107,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			FloatBuffer vboTriData = BufferUtils.createFloatBuffer(12)
 				.put(new float[] {
 					// x, y, u, v
-					-1.0f, -1.0f, 0.0f, 0.0f, // bottom left
-					3.0f, -1.0f, 2.0f, 0.0f,  // bottom right (off-screen)
-					-1.0f, 3.0f, 0.0f, 2.0f  // top left (off-screen)
+					-1, -1, 0, 0, // bottom left
+					3, -1, 2, 0, // bottom right (off-screen)
+					-1, 3, 0, 2 // top left (off-screen)
 				})
 				.flip();
 			glBindBuffer(GL_ARRAY_BUFFER, vboTri);
@@ -2074,8 +2074,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			glBindVertexArray(vaoScene);
-
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			float fogDepth = 0;
 			switch (config.fogDepthMode()) {
@@ -2205,7 +2203,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glEnable(GL_CULL_FACE);
 				glEnable(GL_DEPTH_TEST);
 
-				// Draw with buffers bound to scene VAO
+				glBindVertexArray(vaoScene);
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 
 				glDisable(GL_CULL_FACE);
@@ -2362,17 +2360,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.begin(Timer.RENDER_UI);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		// Disable alpha writes, just in case the default FBO has an alpha channel
 		glColorMask(true, true, true, false);
-		glEnable(GL_BLEND);
 
 		glViewport(0, 0, scaledUiResolution[0], scaledUiResolution[1]);
 
-		// Bind quad VAO which all overlays use to render
-		glBindVertexArray(vaoQuad);
-
-		tiledLightingOverlay.render(uiResolution[0], uiResolution[1]);
-
-		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		tiledLightingOverlay.render();
 
 		uiProgram.use();
 		uboUI.sourceDimensions.set(uiResolution);
@@ -2390,11 +2383,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
 
-		// Texture on UI
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		glBindVertexArray(vaoTri);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		shadowMapOverlay.render(uiResolution[0], uiResolution[1]);
-		gammaCalibrationOverlay.render(uiResolution[0], uiResolution[1]);
+		shadowMapOverlay.render();
+		gammaCalibrationOverlay.render();
 
 		// Reset
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
