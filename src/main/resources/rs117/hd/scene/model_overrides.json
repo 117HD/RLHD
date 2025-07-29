@@ -10109,15 +10109,6 @@
     "uvScale": 0.3
   },
   {
-    "description": "BATH_PUMP",
-    "baseMaterial": "METALLIC_1_SEMIGLOSS",
-    "objectIds": [
-      "BATHPIPES"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
-  },
-  {
     "description": "Metal Fence Gate",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
@@ -18538,7 +18529,6 @@
   {
     "description": "Surprise Exam Random Event - Animated - Teacher and Dunce",
     "npcIds": [
-      "PATTERN_TEACHER",
       "PATTERN_IMP_DUNCE"
     ],
     "colorOverrides": [
