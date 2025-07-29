@@ -482,7 +482,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final HashMap<Integer, ActorDisplacementConfig> npcDisplacementConfig = new HashMap<>();
 
 	static class ActorDisplacementConfig {
-		public static final HashSet<String> animIgnoreList = new HashSet<>(List.of(new String[] {
+		public static final HashSet<String> ANIM_IGNORE_LIST = new HashSet<>(List.of(new String[] {
 			"HOVER",
 			"FLY",
 			"IMPLING",
@@ -1681,13 +1681,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (configCharacterDisplacement) {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
-					if (playerModel != null) {
-						uboCompute.addCharacterPosition(
-							lp.getX(),
-							lp.getY(),
-							LOCAL_TILE_SIZE
-						);
-					}
+					if (playerModel != null)
+						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), LOCAL_TILE_SIZE);
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -3222,20 +3217,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						if (npcDisplacementConfig.size() > NPC_DISPLACEMENT_CACHE_MAX_SIZE) {
 							long oldestConfigMilli = Long.MAX_VALUE;
 							int oldestNpcId = -1;
-							for (int cachedNpcId : npcDisplacementConfig.keySet()) {
-								long lastAccessMs = npcDisplacementConfig.get(cachedNpcId).lastAccessMs;
-								if (lastAccessMs < oldestConfigMilli) {
-									oldestNpcId = cachedNpcId;
-								}
-							}
-							assert oldestNpcId != -1;
+							for (var entry : npcDisplacementConfig.entrySet())
+								if (entry.getValue().lastAccessMs < oldestConfigMilli)
+									oldestNpcId = entry.getKey();
 							npcDisplacementConfig.remove(oldestNpcId);
 						}
 						npcDisplacementConfig.put(npcId, displacementConfig = new ActorDisplacementConfig());
 
 						// Check if NPC is allowed to displace
 						var anim = gamevalManager.getAnimName(npc.getWalkAnimation());
-						displacementConfig.canDisplace = anim == null || !ActorDisplacementConfig.animIgnoreList.contains(anim);
+						displacementConfig.canDisplace = anim == null || !ActorDisplacementConfig.ANIM_IGNORE_LIST.contains(anim);
 					}
 
 					if (displacementConfig.canDisplace) {
