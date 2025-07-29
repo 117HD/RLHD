@@ -39631,6 +39631,23 @@
     "type": "STATIC",
     "fadeInDuration": 255,
     "fadeOutDuration": 375,
-    "graphicsObjectIds": [ "ECTOPHIAL_POUR_SPOTANIM"  ]
+    "graphicsObjectIds": [ "ECTOPHIAL_POUR_SPOTANIM" ]
+  },
+  {
+    "description": "Pendant of Ates Teleport",
+    "offset": [ 0, 125, 0 ],
+    "radius": 250,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1100,
+    "color": [
+      0,
+      150,
+      200
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 250,
+    "fadeOutDuration": 400,
+    "graphicsObjectIds": [ "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01", "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01_REVERSE" ]
   }
 ]
