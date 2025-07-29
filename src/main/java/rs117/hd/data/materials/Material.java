@@ -325,6 +325,8 @@ public enum Material {
 		.setSpecular(0.9f, 280)),
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
+	BLANK_SUPERGLOSS(WHITE, p -> p
+		.setSpecular(1.75f, 55)),
 
 	SNOW_1_N,
 	SNOW_1(p -> p.setNormalMap(SNOW_1_N).setSpecular(0.4f, 20)),
@@ -494,6 +496,9 @@ public enum Material {
 	ROCK_3_DARK(ROCK_3,p -> p
 		.setBrightness(0.65f)
 	),
+	ROCK_3_LIGHT(ROCK_3,p -> p
+		.setBrightness(1.50f)
+	),
 	ROCK_3_SMOOTH(ROCK_3, p -> p
 		.setDisplacementScale(0)
 		.setTextureScale(1, 1, .15f)
@@ -604,7 +609,6 @@ public enum Material {
 		.setBrightness(0.5f)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
-
 	LASSAR_UNDERCITY_TILE_N,
 	LASSAR_UNDERCITY_TILE_D,
 	LASSAR_UNDERCITY_TILES(MARBLE_2_SEMIGLOSS, p -> p
@@ -1213,7 +1217,7 @@ public enum Material {
 		materialsToReplace.addAll(builder.materialsToReplace);
 		replacementCondition = builder.replacementCondition;
 
-		// Determine whether the material contains some form of texture change
+		// Determine whether the material contains some form of non-vanilla texture change
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;

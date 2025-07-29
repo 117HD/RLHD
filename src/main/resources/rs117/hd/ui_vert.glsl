@@ -31,23 +31,22 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
-#include uniforms/ui.glsl
+#include <uniforms/ui.glsl>
 
-layout (location = 0) in vec3 aPos;
-layout (location = 1) in vec2 aTexCoord;
+layout (location = 0) in vec2 vPos;
+layout (location = 1) in vec2 vUv;
 
 #if UI_SCALING_MODE == SAMPLING_XBR
-#include scaling/xbr_lv2_vert.glsl
+#include <scaling/xbr_lv2_vert.glsl>
 
 out XBRTable xbrTable;
 #endif
 
-out vec2 TexCoord;
+out vec2 fUv;
 
-void main()
-{
-    gl_Position = vec4(aPos, 1.0);
-    TexCoord = aTexCoord;
+void main() {
+    gl_Position = vec4(vPos, 0, 1);
+    fUv = vec2(vUv.x, 1.0 - vUv.y);
 
     #if UI_SCALING_MODE == SAMPLING_XBR
     xbrTable = xbr_vert(TexCoord, sourceDimensions);

@@ -24,6 +24,9 @@
  */
 package rs117.hd.utils.buffer;
 
+import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.opengl.*;
@@ -69,37 +72,83 @@ public class GLBuffer
 		ensureCapacity(0, numBytes);
 	}
 
-	public void ensureCapacity(int offset, long numBytes) {
-		long size = 4L * (offset + numBytes);
-		if (size <= this.size) {
+	public void ensureCapacity(long byteOffset, long numBytes) {
+		numBytes += byteOffset;
+		if (numBytes <= size) {
 			glBindBuffer(target, id);
 			return;
 		}
 
-		size = HDUtils.ceilPow2(size);
-		if (log.isTraceEnabled())
-			log.trace("Buffer resize: {} {}", this, String.format("%.2f MB -> %.2f MB", this.size / 1e6, size / 1e6));
+		numBytes = HDUtils.ceilPow2(numBytes);
+		if (log.isDebugEnabled() && numBytes > 1e6)
+			log.debug("Resizing buffer '{}'\t{}", name, String.format("%.2f MB -> %.2f MB", size / 1e6, numBytes / 1e6));
 
-		if (offset > 0) {
+		if (byteOffset > 0) {
 			// Create a new buffer and copy the old data to it
 			int oldBuffer = id;
 			id = glGenBuffers();
 			glBindBuffer(target, id);
-			glBufferData(target, size, usage);
+			glBufferData(target, numBytes, usage);
 
 			glBindBuffer(GL_COPY_READ_BUFFER, oldBuffer);
-			glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, offset * 4L);
+			glCopyBufferSubData(GL_COPY_READ_BUFFER, target, 0, 0, byteOffset);
 			glDeleteBuffers(oldBuffer);
 		} else {
 			glBindBuffer(target, id);
-			glBufferData(target, size, usage);
+			glBufferData(target, numBytes, usage);
 		}
 
-		this.size = size;
+		size = numBytes;
 
-		if (HdPlugin.GL_CAPS.OpenGL43 && log.isDebugEnabled()) {
+		if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43) {
 			GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
 			checkGLErrors();
 		}
+	}
+
+	public void upload(ByteBuffer data) {
+		upload(data, 0);
+	}
+
+	public void upload(ByteBuffer data, long byteOffset) {
+		long numBytes = data.remaining();
+		ensureCapacity(byteOffset, numBytes);
+		glBufferSubData(target, byteOffset, data);
+	}
+
+	public void upload(IntBuffer data) {
+		upload(data, 0);
+	}
+
+	public void upload(IntBuffer data, long byteOffset) {
+		long numBytes = 4L * data.remaining();
+		ensureCapacity(byteOffset, numBytes);
+		glBufferSubData(target, byteOffset, data);
+	}
+
+	public void upload(FloatBuffer data) {
+		upload(data, 0);
+	}
+
+	public void upload(FloatBuffer data, long byteOffset) {
+		long numBytes = 4L * data.remaining();
+		ensureCapacity(byteOffset, numBytes);
+		glBufferSubData(target, byteOffset, data);
+	}
+
+	public void upload(GpuIntBuffer data) {
+		upload(data.getBuffer());
+	}
+
+	public void upload(GpuIntBuffer data, long byteOffset) {
+		upload(data.getBuffer(), byteOffset);
+	}
+
+	public void upload(GpuFloatBuffer data) {
+		upload(data.getBuffer());
+	}
+
+	public void upload(GpuFloatBuffer data, long byteOffset) {
+		upload(data.getBuffer(), byteOffset);
 	}
 }
