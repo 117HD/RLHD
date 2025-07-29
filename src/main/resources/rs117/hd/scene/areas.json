@@ -3207,6 +3207,13 @@
     ]
   },
   {
+    "name": "Ectofuntus Slime Pool",
+    "aabbs": [
+      [ 3666, 9872, 3694, 9905 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "FENKENSTRAINS_CASTLE",
     "aabbs": [
       [ 3534, 3536, 3562, 3565 ]

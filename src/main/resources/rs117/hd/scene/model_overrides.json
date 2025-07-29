@@ -8249,7 +8249,8 @@
     "uvScale": 1.1,
     "uvOrientation": 512,
     "objectIds": [
-      "AHOY_PIER_RAIL"
+      "AHOY_PIER_RAIL",
+      "ECTOPOOL_SC_RAILDOWN"
     ]
   },
   {
@@ -12196,11 +12197,12 @@
   },
   {
     "description": "Stone - Stairs - Stone Brick",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "objectIds": [
-      "AHOY_TOWER_STAIRS_LV1"
+      "AHOY_TOWER_STAIRS_LV1",
+      "AHOY_TOWER_STAIRS_LV1_TOP"
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Phasmatys - Slime",
@@ -31736,7 +31738,21 @@
     "description": "Old Ones Dungeon Ruined Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "AHOY_TOMB_WALL", "AHOY_TOMB_WALL_LEV2", "AHOY_TOMB_WALL_TABLET_LEV2", "AHOY_TOMB_WALL_DAMAGE", "AHOY_TOMB_BLOCKPILE1", "AHOY_TOMB_WALL_TOP", "TGOD_GARDEN_BLOCKS_NOOP"
+      "AHOY_TOMB_WALL",
+      "AHOY_TOMB_WALL_LEV2",
+      "AHOY_TOMB_WALL_TABLET_LEV2",
+      "AHOY_TOMB_WALL_DAMAGE",
+      "AHOY_TOMB_BLOCKPILE1",
+      "AHOY_TOMB_WALL_TOP",
+      "TGOD_GARDEN_BLOCKS_NOOP",
+      "AHOY_TOMB_WALL_TABLET",
+      "AHOY_TOMB_WALL_TOP_G",
+      "AHOY_TOMB_WALL_TOP1",
+      "AHOY_TOMB_WALL_TOP_2",
+      "AHOY_TOMB_WALL_TOP_5",
+      "AHOY_CAVERN_STAIRS",
+      "AHOY_CAVERN_STAIRS_TOP",
+      "ECTOPOOL_SC_WALLCLIMB"
     ],
     "uvType": "BOX"
   },

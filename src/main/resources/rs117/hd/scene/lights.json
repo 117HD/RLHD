@@ -21190,11 +21190,11 @@
     ]
   },
   {
-    "description": "ECTOFUNTUS",
-    "height": 300,
-    "alignment": "CENTER",
+    "description": "ECTOFUNTUS_WIDE",
+    "offset": [ 100, 295, 0 ],
+    "visibleFromOtherPlanes": true,
     "radius": 1800,
-    "strength": 12,
+    "strength": 10,
     "color": [
       106,
       255,
@@ -21206,6 +21206,88 @@
     "objectIds": [
       "AHOY_ECTOFUNTUS"
     ]
+  },
+  {
+    "description": "ECTOFUNTUS_SHORT",
+    "visibleFromOtherPlanes": true,
+    "offset": [ 20, 275, 0 ],
+    "radius": 150,
+    "strength": 8,
+    "color": [
+      106,
+      255,
+      101
+    ],
+    "type": "PULSE",
+    "duration": 1750,
+    "range": 74,
+    "objectIds": [
+      "AHOY_ECTOFUNTUS"
+    ]
+  },
+  {
+    "description": "ECTOFUNTUS_BOWL_EAST",
+    "visibleFromOtherPlanes": true,
+    "offset": [ -80, 120, 0 ],
+    "radius": 150,
+    "strength": 5,
+    "color": [
+      106,
+      255,
+      101
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "AHOY_ECTOFUNTUS"
+    ]
+  },
+  {
+    "description": "ECTOFUNTUS_BOWL_SOUTH",
+    "visibleFromOtherPlanes": true,
+    "offset": [ -30, 150, -80 ],
+    "radius": 150,
+    "strength": 5,
+    "color": [
+      106,
+      255,
+      101
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "AHOY_ECTOFUNTUS"
+    ]
+  },
+  {
+    "description": "ECTOFUNTUS_BOWL_NORTH",
+    "offset": [ -30, 150, 80 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 150,
+    "strength": 5,
+    "color": [
+      106,
+      255,
+      101
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "AHOY_ECTOFUNTUS"
+    ]
+  },
+  {
+    "description": "ECTOFUNTUS_SLIME_POOL_HIGH",
+    "worldX": 3680,
+    "worldY": 9888,
+    "plane": 0,
+    "height": 800,
+    "alignment": "CENTER",
+    "radius": 1750,
+    "strength": 17,
+    "color": [
+      142.97115,
+      255,
+      137.02055
+    ],
+    "type": "STATIC"
   },
   {
     "description": "ECTOFUNTUS_SLIME_POOL_1_1",
@@ -21352,14 +21434,11 @@
     ]
   },
   {
-    "description": "PHASMATYS_ENERGY_BARRIER_NORTH_1",
-    "worldX": 3659,
-    "worldY": 3508,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
+    "description": "PHASMATYS_ENERGY_BARRIER__1",
+    "offset": [ 0, 175, 0 ],
+    "objectIds": [ "AHOY_TOWN_BARRIER" ],
     "radius": 800,
-    "strength": 2,
+    "strength": 4.5,
     "color": [
       168.1351,
       255,
@@ -21370,194 +21449,11 @@
     "range": 5
   },
   {
-    "description": "PHASMATYS_ENERGY_BARRIER_NORTH_2",
-    "worldX": 3660,
-    "worldY": 3508,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
+    "description": "PHASMATYS_ENERGY_BARRIER_2",
+    "offset": [ -120, 175, 0 ],
+    "objectIds": [ "AHOY_TOWN_BARRIER" ],
     "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_NORTH_3",
-    "worldX": 3659,
-    "worldY": 3507,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_NORTH_4",
-    "worldX": 3660,
-    "worldY": 3507,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_WEST_1",
-    "worldX": 3652,
-    "worldY": 3485,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_WEST_2",
-    "worldX": 3652,
-    "worldY": 3486,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_WEST_3",
-    "worldX": 3653,
-    "worldY": 3485,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_WEST_4",
-    "worldX": 3653,
-    "worldY": 3486,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_SOUTH_1",
-    "worldX": 3669,
-    "worldY": 3453,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_SOUTH_2",
-    "worldX": 3670,
-    "worldY": 3453,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_SOUTH_3",
-    "worldX": 3669,
-    "worldY": 3454,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
-    "color": [
-      168.1351,
-      255,
-      168.1351
-    ],
-    "type": "PULSE",
-    "duration": 4000,
-    "range": 5
-  },
-  {
-    "description": "PHASMATYS_ENERGY_BARRIER_SOUTH_4",
-    "worldX": 3670,
-    "worldY": 3454,
-    "plane": 0,
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 800,
-    "strength": 2,
+    "strength": 4.5,
     "color": [
       168.1351,
       255,
@@ -39712,8 +39608,6 @@
       3
     ],
     "type": "STATIC",
-    "duration": 0,
-    "range": 0,
     "fadeInDuration": 200,
     "fadeOutDuration": 250,
     "projectileIds": [
@@ -39722,23 +39616,21 @@
     ]
   },
   {
-    "description": "ARKAN_BLADE_SPECIAL",
-    "offset": [ 40, 75, 80 ],
-    "radius": 200,
-    "spawnDelay": 300,
+    "description": "Ectophial",
+    "offset": [ 0, 25, 0 ],
+    "radius": 250,
+    "spawnDelay": 610,
     "fixedDespawnTime": true,
-    "despawnDelay": 800,
-    "strength": 11.5,
+    "despawnDelay": 1250,
+    "strength": 25,
     "color": [
-      252,
-      148,
-      3
+      0,
+      255,
+      50
     ],
     "type": "STATIC",
-    "duration": 0,
-    "range": 0,
-    "fadeInDuration": 175,
+    "fadeInDuration": 255,
     "fadeOutDuration": 375,
-    "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM"  ]
+    "graphicsObjectIds": [ "ECTOPHIAL_POUR_SPOTANIM"  ]
   }
 ]
