@@ -24002,7 +24002,8 @@
         "colors": "h == 4",
         "baseMaterial": "WOOD_GRAIN",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.47,
+        "uvOrientation": 200
       }
     ]
   },
