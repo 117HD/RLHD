@@ -78,7 +78,7 @@ public class NpcDisplacementCache {
 
 			// Check if NPC is allowed to displace
 			int animId = npc.getWalkAnimation();
-			entry.canDisplace = animId == -1 || ANIM_ID_IGNORE_LIST.contains(animId);
+			entry.canDisplace = animId == -1 || !ANIM_ID_IGNORE_LIST.contains(animId);
 		}
 
 		entry.lastAccessMs = System.currentTimeMillis();
