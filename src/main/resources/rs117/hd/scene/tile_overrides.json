@@ -32,6 +32,12 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "DEFAULT_ICE",
+    "groundMaterial": "ICE_4",
+    "uvScale": 2,
+    "shiftLightness": 15
+  },
+  {
     "name": "VERTICAL_DIRT_FIX",
     "groundMaterial": "VERTICAL_DIRT"
   },
@@ -4721,55 +4727,37 @@
   },
   {
     "name": "Ruins of Tapoyauik Ice",
-    "area": "Ruins of Tapoyauik Ice",
+    "area": "Ruins of Tapoyauik",
     "overlayIds": [ 382 ],
-    "groundMaterial": "ICE_4",
-    "uvScale": 2
+    "groundMaterial": "ICE_4"
   },
   {
-    "name": "Ruins of Tapoyauik Snow 1",
+    "name": "Ruins of Tapoyauik Ice Underlay",
     "area": "Ruins of Tapoyauik",
-    "overlayIds": [ 0 ],
-    "underlayIds": [ 18, 58, 72, 87, 227, 228, 229 ],
+    "underlayIds": [ 18, 227, 228, 229 ],
     "groundMaterial": "SNOW_1",
     "shiftLightness": 30,
     "shiftHue": 5,
     "maxHue": 38,
     "replacements": {
-      "Ruins of Tapoyauik Snow No Blending 1": "!blending"
+      "DEFAULT_ICE": "s >= 1"
     }
   },
   {
-    "name": "Ruins of Tapoyauik Snow No Blending 1",
+    "name": "Ruins of Tapoyauik Snow 1",
     "area": "Ruins of Tapoyauik",
-    "overlayIds": [ 0 ],
-    "underlayIds": [ 18, 58, 72, 87, 227, 228, 229 ],
+    "underlayIds": [ 58, 72, 87 ],
     "groundMaterial": "SNOW_1",
-    "maxSaturation": 0,
-    "shiftLightness": 12
+    "shiftLightness": 30,
+    "shiftHue": 5,
+    "maxHue": 38
   },
   {
     "name": "Ruins of Tapoyauik Snow 2",
     "area": "Ruins of Tapoyauik",
-    "overlayIds": [ 263 ],
+    "overlayIds": [ 263, 379 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 32,
-    "replacements": {
-      "Ruins of Tapoyauik Snow No Blending 2": "!blending"
-    }
-  },
-  {
-    "name": "Ruins of Tapoyauik Snow No Blending 2",
-    "area": "Ruins of Tapoyauik",
-    "overlayIds": [ 263 ],
-    "groundMaterial": "SNOW_1",
-    "shiftLightness": 4
-  },
-  {
-    "name": "Ruins of Tapoyauik Dirt",
-    "area": "Ruins of Tapoyauik",
-    "overlayIds": [ 382 ],
-    "groundMaterial": "PACKED_EARTH"
+    "shiftLightness": 25
   },
   {
     "name": "Ruins of Tapoyauik Water",

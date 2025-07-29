@@ -24564,7 +24564,9 @@
       "AKD_HUGHES_SKELETON_1_NOOP",
       "GA_SKELETON",
       "GRIM_GIANT_SKELETON_2",
-      "CORPSE2_NOBLOCK"
+      "CORPSE2_NOBLOCK",
+      "TAPO_SKELETON01",
+      "TAPO_SKELETON02"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -33996,7 +33998,8 @@
     "objectIds": [
       "SLAYER_CORPSE3",
       "ROGUESDEN_CORPSE3",
-      "CORPSE3_NOBLOCK"
+      "CORPSE3_NOBLOCK",
+      "TAPO_SKELETON03"
     ],
     "colorOverrides": [
       {
