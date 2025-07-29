@@ -6135,7 +6135,8 @@
     "name": "RANDOM_EVENT_FREAKY_FORESTER",
     "aabbs": [
       [ 2576, 4745, 2623, 4799 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_GRAVEDIGGER",
@@ -6161,7 +6162,8 @@
     "name": "RANDOM_EVENT_FROG_CAVE",
     "aabbs": [
       [ 2450, 4764, 2480, 4794 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "RANDOM_EVENT_PRISON_PETE",
@@ -6178,9 +6180,35 @@
     "hideOtherAreas": true
   },
   {
+    "name": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_1",
+    "aabbs": [
+      [ 1957, 4760, 1957, 4771 ]
+    ]
+  },
+  {
+    "name": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_2",
+    "aabbs": [
+      [ 1958, 4763, 1958, 4768 ]
+    ]
+  },
+  {
+    "name": "RANDOM_EVENT_QUIZ_MASTER_EDGE_FIX",
+    "aabbs": [
+      [ 1920, 4794, 1983, 4799 ]
+    ]
+  },
+  {
     "name": "RANDOM_EVENT_MIME",
     "regions": [ 8010 ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "RANDOM_EVENT_PINBALL",
+    "aabbs": [ [ 1961, 5033, 1982, 5054 ] ]
+  },
+  {
+    "name": "RANDOM_EVENT_EVIL_TWIN",
+    "aabbs": [ [ 1856, 5120, 1879, 5143 ] ]
   },
   {
     "name": "KELDAGRIM_RAT_PITS",

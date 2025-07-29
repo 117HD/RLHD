@@ -4,9 +4,9 @@
     "ambientColor": "#c0ae94",
     "ambientStrength": 3,
     "directionalColor": "#f5bc67",
-    "directionalStrength": 1,
+    "directionalStrength": 1.25,
     "fogColor": "#b8d6ff",
-    "fogDepth": 70
+    "fogDepth": 60
   },
   {
     "area": "REVENANT_CAVES",

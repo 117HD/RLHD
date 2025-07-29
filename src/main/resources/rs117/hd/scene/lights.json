@@ -20359,7 +20359,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FAI_FALADOR_HOUSE_TORCH"
+      "FAI_FALADOR_HOUSE_TORCH",
+      "GRAB_EVIL_TWIN_TORCH"
     ]
   },
   {
@@ -21035,7 +21036,6 @@
     "range": 0,
     "objectIds": [
       "CLIMBING_ROPE",
-      "CLIMBING_ROPE_TOP",
       "CLIMBING_ROPE2",
       "DRAGON_SLAYER_QIP_CLIMBING_ROPE"
     ]
@@ -26637,19 +26637,19 @@
     ]
   },
   {
-    "description": "STRANGE_SHRINE",
-    "height": 70,
+    "description": "MAZE_RANDOM_STRANGE_SHRINE",
+    "height": 80,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 7.5,
+    "radius": 270,
+    "strength": 10,
     "color": [
       255,
-      216,
-      87
+      255,
+      255
     ],
     "type": "PULSE",
-    "duration": 2800,
-    "range": 30,
+    "duration": 1750,
+    "range": 35,
     "objectIds": [
       "MACRO_MAZE_COMPLETE"
     ]
@@ -39670,6 +39670,188 @@
     "npcIds": [
       "ENT_TOTEMS_ANIMAL_C",
       "ENT_TOTEMS_ANIMAL_C_CS"
+    ]
+  },
+  {
+    "description": "Mime Spotlight",
+    "offset": [ 0, 220, 0 ],
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      188,
+      150,
+      150
+    ],
+    "spawnDelay": 900,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 800,
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MACRO_SPOTLIGHT"
+    ],
+    "animationIds": [ 1136 ]
+  },
+  {
+    "description": "Mime Exit Sign",
+    "offset": [ -30, 40, 0 ],
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      100,
+      255,
+      100
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MACRO_EXITSIGN"
+    ],
+    "animationIds": [ 1136 ]
+  },
+  {
+    "description": "Pinball Green Buzzer",
+    "offset": [ 60, 300, -60 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      "PINBALL_LARGE_BUZZER_QUARTER_GREEN"
+    ]
+  },
+  {
+    "description": "Pinball Blue Buzzer",
+    "offset": [ 60, 300, -60 ],
+    "radius": 475,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      "PINBALL_LARGE_BUZZER_QUARTER_BLUE"
+    ]
+  },
+  {
+    "description": "Pinball Red Buzzer",
+    "offset": [ 0, 300, 0 ],
+    "radius": 225,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      "PINBALL_ROOF_TOP_DECOR"
+    ]
+  },
+  {
+    "description": "Pinball Green Ambience 1",
+    "offset": [ 600, 600, 600 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Green Ambience 2",
+    "offset": [ 1800, 600, -500 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Blue Ambience 1",
+    "offset": [ 600, 400, -500 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Blue Ambience 2",
+    "offset": [ 1600, 500, 600 ],
+    "radius": 1000,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Red Ambience",
+    "offset": [ 1100, 500, 900 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Evil Bob Uncooking Pot",
+    "offset": [ 0, 20, 0 ],
+    "radius": 650,
+    "strength": 10,
+    "color": [
+      0,
+      75,
+      200
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "duration": 0,
+    "objectIds": [
+      "MACRO_EVIL_BOB_UNCOOK_POT"
     ]
   }
 ]
