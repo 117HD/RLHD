@@ -21,6 +21,9 @@ public class AsyncUICopy implements Runnable {
 	private Client client;
 
 	@Inject
+	private HdPlugin plugin;
+
+	@Inject
 	private FrameTimer timer;
 
 	private final ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -52,8 +55,10 @@ public class AsyncUICopy implements Runnable {
 		ByteBuffer buffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		timer.end(Timer.MAP_UI_BUFFER);
-		if (buffer == null)
+		if (buffer == null) {
+			log.error("Unable to map interface PBO. Skipping UI...");
 			return;
+		}
 
 		this.interfacePbo = interfacePbo;
 		this.interfaceTexture = interfaceTex;
@@ -78,6 +83,12 @@ public class AsyncUICopy implements Runnable {
 				return false;
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
+		}
+
+		var uiResolution = plugin.getUiResolution();
+		if (uiResolution == null || width > uiResolution[0] || height > uiResolution[1]) {
+			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", width, height, uiResolution);
+			return false;
 		}
 
 		timer.begin(Timer.UPLOAD_UI);

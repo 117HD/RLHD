@@ -30,27 +30,22 @@
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
 
-#include uniforms/ui.glsl
+#include <uniforms/global.glsl>
+#include <uniforms/ui.glsl>
 
 uniform sampler2D uiTexture;
 
-#include scaling/bicubic.glsl
-#include utils/constants.glsl
-#include utils/color_blindness.glsl
-#include utils/gamma_calibration_ui.glsl
-
-#if SHADOW_MAP_OVERLAY
-uniform sampler2D shadowMap;
-uniform ivec4 shadowMapOverlayDimensions;
-#endif
+#include <scaling/bicubic.glsl>
+#include <utils/constants.glsl>
+#include <utils/color_blindness.glsl>
 
 #if UI_SCALING_MODE == SAMPLING_XBR
-#include scaling/xbr_lv2_frag.glsl
+#include <scaling/xbr_lv2_frag.glsl>
 
 in XBRTable xbrTable;
 #endif
 
-in vec2 TexCoord;
+in vec2 fUv;
 
 out vec4 FragColor;
 
@@ -62,28 +57,17 @@ vec4 alphaBlend(vec4 src, vec4 dst) {
 }
 
 void main() {
-    #if SHADOW_MAP_OVERLAY
-    {
-        vec2 uv = (gl_FragCoord.xy - shadowMapOverlayDimensions.xy) / shadowMapOverlayDimensions.zw;
-        if (0 <= uv.x && uv.x <= 1 && 0 <= uv.y && uv.y <= 1) {
-            FragColor = texture(shadowMap, uv);
-            return;
-        }
-    }
-    #endif
-
+    vec4 c;
     #if UI_SCALING_MODE == SAMPLING_MITCHELL || UI_SCALING_MODE == SAMPLING_CATROM
-    vec4 c = textureCubic(uiTexture, TexCoord);
+        c = textureCubic(uiTexture, fUv);
     #elif UI_SCALING_MODE == SAMPLING_XBR
-    vec4 c = textureXBR(uiTexture, TexCoord, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+        c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
     #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
-    vec4 c = texture(uiTexture, TexCoord);
+        c = texture(uiTexture, fUv);
     #endif
 
     c = alphaBlend(c, alphaOverlay);
     c.rgb = colorBlindnessCompensation(c.rgb);
-
-    gammaCalibrationUi(c, TexCoord, targetDimensions);
 
     FragColor = c;
 }

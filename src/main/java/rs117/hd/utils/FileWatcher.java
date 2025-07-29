@@ -98,7 +98,7 @@ public class FileWatcher {
 				while ((watchKey = watchService.take()) != null) {
 					Path dir = watchKeys.get(watchKey);
 					if (dir == null) {
-						log.error("Unknown WatchKey: " + watchKey);
+						log.error("Unknown WatchKey: {}", watchKey);
 						continue;
 					}
 					for (WatchEvent<?> event : watchKey.pollEvents()) {

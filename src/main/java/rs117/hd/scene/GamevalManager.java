@@ -26,10 +26,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class GamevalManager {
-	private static final ResourcePath GAMEVAL_PATH = Props.getPathOrDefault(
-		"rlhd.gameval-path",
-		() -> path(GamevalManager.class, "gamevals.json")
-	);
+	private static final ResourcePath GAMEVAL_PATH = Props
+		.getFile("rlhd.gameval-path", () -> path(GamevalManager.class, "gamevals.json"));
 
 	private static final String NPC_KEY = "npcs";
 	private static final String OBJECT_KEY = "objects";
@@ -87,20 +85,36 @@ public class GamevalManager {
 			.orElse(null);
 	}
 
+	public Map<String, Integer> getNpcs() {
+		return GAMEVALS.get(NPC_KEY);
+	}
+
+	public Map<String, Integer> getObjects() {
+		return GAMEVALS.get(OBJECT_KEY);
+	}
+
+	public Map<String, Integer> getAnims() {
+		return GAMEVALS.get(ANIM_KEY);
+	}
+
+	public Map<String, Integer> getSpotanims() {
+		return GAMEVALS.get(SPOTANIM_KEY);
+	}
+
 	public int getNpcId(String name) {
-		return GAMEVALS.get(NPC_KEY).get(name);
+		return getNpcs().get(name);
 	}
 
 	public int getObjectId(String name) {
-		return GAMEVALS.get(OBJECT_KEY).get(name);
+		return getObjects().get(name);
 	}
 
 	public int getAnimId(String name) {
-		return GAMEVALS.get(ANIM_KEY).get(name);
+		return getAnims().get(name);
 	}
 
 	public int getSpotanimId(String name) {
-		return GAMEVALS.get(SPOTANIM_KEY).get(name);
+		return getSpotanims().get(name);
 	}
 
 	public String getNpcName(int id) {

@@ -23,9 +23,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include cl_types.cl
-#include common.cl
+#include "common.cl"
 
 __kernel
 __attribute__((reqd_work_group_size(6, 1, 1)))

@@ -152,6 +152,14 @@ public class HDUtils {
 		return ((x % modulus) + modulus) % modulus;
 	}
 
+	public static float sign(float value) {
+		return value < 0 ? -1 : 1;
+	}
+
+	public static int sign(int value) {
+		return value < 0 ? -1 : 1;
+	}
+
 	public static float clamp(float value, float min, float max) {
 		return Math.min(Math.max(value, min), max);
 	}
