@@ -140,9 +140,6 @@ public class DeveloperTools implements KeyListener {
 			case "lights":
 				lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 				break;
-			case "hideui":
-				hideUiEnabled = !hideUiEnabled;
-				break;
 			case "tiledlights":
 			case "tiledlighting":
 				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
