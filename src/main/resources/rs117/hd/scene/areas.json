@@ -7192,11 +7192,93 @@
     ]
   },
   {
+    "name": "Twilight Temple Tower Floor",
+    "aabbs": [
+      [ 1636, 3218, 1645, 3225 ],
+      [ 1637, 3226, 1644, 3226 ],
+      [ 1640, 3227, 1641, 3227 ],
+      [ 1637, 3217, 1644, 3217 ],
+      [ 1640, 3216, 1641, 3216 ],
+      [ 1635, 3221, 1635, 3222 ],
+      [ 1646, 3221, 1647, 3222 ]
+    ]
+  },
+  {
+    "name": "Twilight Temple Main Floor",
+    "aabbs": [
+      [ 1677, 3244, 1691, 3251 ],
+      [ 1667, 3245, 1669, 3250 ],
+      [ 1667, 3245, 1669, 3250 ],
+      [ 1694, 3267, 1700, 3273 ]
+    ]
+  },
+  {
+    "name": "AMOXLIATL_ARENA",
+    "regions": [
+      5446
+    ]
+  },
+  {
+    "name": "AMOXLIATL_ARENA_WATER",
+    "aabbs": [
+      [ 1344, 4494, 1384, 4531 ]
+    ]
+  },
+  {
+    "name": "AMOXLIATL_ARENA_DIRT_FIX",
+    "aabbs": [
+      [ 1378, 4513, 1386, 4513 ],
+      [ 1378, 4509, 1386, 4509 ],
+      [ 1386, 4510, 1386, 4512 ],
+      [ 1604, 9631, 1604, 9632 ]
+    ]
+  },
+  {
+    "name": "AMOXLIATL_ARENA_SNOW_FIX",
+    "aabbs": [
+      [ 1378, 4510, 1385, 4512 ]
+    ]
+  },
+  {
+    "name": "Ruins of Tapoyauik",
+    "regionBoxes": [
+      [ 6294, 6806 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Ruins of Tapoyauik Ice",
+    "aabbs": [ [ 1620, 9619, 1645, 9643 ] ]
+  },
+  {
     "name": "HUNTER_GUILD",
     "regions": [
       6291
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "Tonali Cavern",
+    "regions": [
+      5266,
+      5267
+    ],
+    "aabbs": [
+      [ 1344, 9434, 1346, 9459 ],
+      [ 1277, 9438, 1279, 9455 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Mokhaiotl Archives",
+    "regions": [
+      5268
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Tonali Cavern Sun Puzzle Fire",
+    "regions": [ 5267 ]
   },
   {
     "name": "HUNTER_GUILD_SURFACE",
@@ -7603,6 +7685,13 @@
     "aabbs": [
       [ 1496, 9563, 1530, 9596 ]
     ]
+  },
+  {
+    "name": "THE_FINAL_DAWN_KEYSTONE_ROOM",
+    "aabbs": [
+      [ 1351, 9501, 1374, 9524 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "COLOSSEUM",

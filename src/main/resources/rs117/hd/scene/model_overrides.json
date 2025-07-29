@@ -9977,6 +9977,15 @@
     "uvScale": 0.2
   },
   {
+    "description": "WOODEN_PAINTINGS",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "FAI_VARROCK_SEPIA_PAINTING4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
     "description": "Metallic Guilded Chest",
     "baseMaterial": "METALLIC_1_LIGHT_HIGHGLOSS",
     "objectIds": [
@@ -10167,9 +10176,12 @@
       "LOCKEDMETALGATEL",
       "UNDERGROUNDCELLGATEL",
       "PRISONWALL",
-      "AKD_HUGHES_GATE_1"
+      "AKD_HUGHES_GATE_1",
+      "VMQ3_TOWER_BARS",
+      "VMQ3_TOWER_DOOR_NOOP"
     ],
     "uvType": "BOX",
+    "uvScale": 0.75,
     "uvOrientation": 463
   },
   {
@@ -12305,7 +12317,8 @@
       "DOTI_POISON_CRATE_OP",
       "EYEGLO_CRATE",
       "FAIRY_CRATE",
-      "FAIRY_CRATE_2"
+      "FAIRY_CRATE_2",
+      "VMQ4_JANUS_BASEMENT_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -14992,7 +15005,8 @@
       "BREW_CHAIR",
       "DK_CHAIR",
       "QIP_WATCHTOWER_CHAIR",
-      "CANAFIS_CHAIR"
+      "CANAFIS_CHAIR",
+      "VMQ4_CHAIR_WOODEN01"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -24550,7 +24564,9 @@
       "AKD_HUGHES_SKELETON_1_NOOP",
       "GA_SKELETON",
       "GRIM_GIANT_SKELETON_2",
-      "CORPSE2_NOBLOCK"
+      "CORPSE2_NOBLOCK",
+      "TAPO_SKELETON01",
+      "TAPO_SKELETON02"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -29257,7 +29273,8 @@
       "PILLOW_ALDARIN01_STACK01",
       "AKD_CHURCH_PILLOW02",
       "AKD_CHURCH_PILLOW01",
-      "AKD_CHURCH_PILLOW_STACK01"
+      "AKD_CHURCH_PILLOW_STACK01",
+      "PILLOW_TWILIGHT01_DEFAULT"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -29916,7 +29933,12 @@
     "objectIds": [
       "PMOON_ICOSAHEDRON",
       "ROR_GATE_WANMOON_CLOSED",
-      "ROR_GATE_WANMOON_OPEN"
+      "ROR_GATE_WANMOON_OPEN",
+      "VMQ4_KEYSTONE_BROKEN05",
+      "VMQ4_KEYSTONE_BROKEN04",
+      "VMQ4_KEYSTONE_BROKEN03",
+      "VMQ4_KEYSTONE_BROKEN02",
+      "VMQ4_KEYSTONE_BROKEN01"
     ]
   },
   {
@@ -30281,7 +30303,8 @@
     "description": "Hunter Guild Cave Exit",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "HG_CAVE_EXIT"
+      "HG_CAVE_EXIT",
+      "CAVEKIT_ROCK01_ENTRANCE02"
     ],
     "uvType": "BOX",
     "uvScale": 0.86,
@@ -30525,7 +30548,9 @@
     "objectIds": [
       "BARREL_WOODEN01_CIVITAS01",
       "BARREL_WOODEN01_AVIUM01",
-      "BARREL_WOODEN01_ALDARIN01"
+      "BARREL_WOODEN01_ALDARIN01",
+      "TWILIGHT_TEMPLE_LOWER_BARREL",
+      "TWILIGHT_TEMPLE_LOWER_BARREL_EMPTY"
     ],
     "uvOrientationZ": 512,
     "uvOrientationX": 512,
@@ -30546,7 +30571,8 @@
       "CRATE_CIVITAS01_SINGLE01"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
     "uvScale": 0.75
   },
   {
@@ -30583,7 +30609,8 @@
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "objectIds": [
-      "HG_COOKING_TABLE"
+      "HG_COOKING_TABLE",
+      "HG_COOKING_TABLE_TWILIGHT"
     ],
     "colorOverrides": [
       {
@@ -30609,7 +30636,8 @@
     "uvType": "BOX",
     "objectIds": [
       "FORTIS_STOVE",
-      "FORTIS_STOVE_NOOP"
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
     ],
     "colorOverrides": [
       {
@@ -33970,7 +33998,8 @@
     "objectIds": [
       "SLAYER_CORPSE3",
       "ROGUESDEN_CORPSE3",
-      "CORPSE3_NOBLOCK"
+      "CORPSE3_NOBLOCK",
+      "TAPO_SKELETON03"
     ],
     "colorOverrides": [
       {
@@ -39255,7 +39284,11 @@
       "WALLKIT_CIVITAS04_JUNCTION01_M",
       "WALLKIT_CIVITAS04_BILLBOARD02",
       "WALLKIT_CIVITAS04_BILLBOARD02_M",
-      "WALLKIT_CIVITAS04_BILLBOARD03"
+      "WALLKIT_CIVITAS04_BILLBOARD03",
+      "VMQ4_CIVITAS_JANUS_WINDOW_DECOY_WITH_OP",
+      "VMQ4_CIVITAS_JANUS_WINDOW_LOOSE",
+      "VMQ4_CIVITAS_JANUS_WINDOW_OPEN",
+      "VMQ4_CIVITAS_JANUS_WINDOW_CLOSED"
     ],
     "colorOverrides": [
       {
@@ -42201,7 +42234,9 @@
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "ATES_STATUE_DARKFROST_INACTIVE",
-      "ATES_STATUE_DARKFROST_ACTIVE"
+      "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_TWILIGHT_INACTIVE",
+      "ATES_STATUE_TWILIGHT_ACTIVE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -49380,7 +49415,7 @@
   },
   {
     "description": "Varlamore - Stone - Table",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 313,
@@ -49392,13 +49427,14 @@
   },
   {
     "description": "Varlamore - Stone - Bench",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 913,
     "objectIds": [
       "CHAIR_ALDARIN01_BENCH01",
-      "CHAIR_CIVITAS01_BENCH01"
+      "CHAIR_CIVITAS01_BENCH01",
+      "CHAIR_CIVITAS01_STONE01"
     ]
   },
   {
@@ -50397,7 +50433,7 @@
     ]
   },
   {
-    "description": "Aldarin - Carpet - Sofa",
+    "description": "Aldarin - Torch - Animated",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 88,
@@ -51317,6 +51353,668 @@
       "BARBASSAULT_PETRIFIED_MUSHROOM_CUT",
       "BARBASSAULT_PETRIFIED_MUSHROOM",
       "BARBASSAULT_PETRIFIED_MUSHROOM_GROUP"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_TWILIGHT01_TOWER01",
+      "WALLKIT_TWILIGHT02_TOWER01",
+      "WALLKIT_TWILIGHT03_TOWER01",
+      "WALLKIT_TWILIGHT03_TOWER01_INNER01",
+      "PILLAR_TWILIGHT01_COMBINED04",
+      "PILLAR_TWILIGHT01_COMBINED02",
+      "PILLAR_TWILIGHT01_PALACE01_LOWER01",
+      "WALLKIT_TWILIGHT01_MIDDLE01",
+      "WALLKIT_TWILIGHT01_MIDDLE02",
+      "PILLAR_TWILIGHT01_PALACE01_HIGHER01",
+      "PILLAR_TWILIGHT01_PALACE03_LOWER01",
+      "PILLAR_TWILIGHT01_PALACE03_HIGHER01",
+      "PILLAR_TWILIGHT01_PALACE02_HIGHER01",
+      "PILLAR_TWILIGHT01_PALACE02_LOWER01",
+      "PILLAR_TWILIGHT01_PALACE04_LOWER01",
+      "WALLKIT_TWILIGHT01_DAMAGED01",
+      "WALLKIT_TWILIGHT01_DAMAGED03",
+      "WALLKIT_TWILIGHT01_DAMAGED03_M",
+      "WALLKIT_TWILIGHT01_DAMAGED02",
+      "WALLKIT_TWILIGHT01_INNER01",
+      "ROOFKIT_TWILIGHT_2X2C",
+      "ROOFKIT_TWILIGHT_ROOF01",
+      "ROOFKIT_TWILIGHT_TOP01",
+      "ROOFKIT_TWILIGHT_ROOF02",
+      "ROOFKIT_TWILIGHT_ROOF03",
+      "ROOFKIT_TWILIGHT_ROOF04",
+      "ROOFKIT_TWILIGHT_ROOF05",
+      "ROOFKIT_TWILIGHT_ROOF06",
+      "WALLKIT_TWILIGHT02_END01",
+      "ROOFKIT_TWILIGHT_ROOF06_END",
+      "ROOFKIT_TWILIGHT_FACADE01_7X1",
+      "ROOFKIT_TWILIGHT_FACADE01_7X1_M",
+      "ROOFKIT_TWILIGHT_2X1",
+      "STEPS_TWILIGHT_DEFAULT01",
+      "STEPS_TWILIGHT_CORNER01"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Railing",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "WALLKIT_TWILIGHT01_FENCE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Bandage Crate",
+    "baseMaterial": "GRAY_90",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "VMQ3_TOWER_CRATE_BANDAGES_5"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Stairs",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "VMQ3_TOWER_STAIRS_EXIT",
+      "VMQ3_TOWER_STAIRS_EXIT_TOP",
+      "VMQ3_TOWER_STAIRS_START"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Tower Hole",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FLOORKIT_LOSANIUM01_CORNER01",
+      "FLOORKIT_LOSANIUM01_CORNER01_M",
+      "FLOORKIT_LOSANIUM01_MIDDLE01",
+      "FLOORKIT_LOSANIUM01_DIAG02_M",
+      "FLOORKIT_LOSANIUM01_DIAG01",
+      "FLOORKIT_LOSANIUM01_DIAG02",
+      "FLOORKIT_LOSANIUM01_DIAG01_M",
+      "TAPOYAUIK_MAIN_ENTRANCE_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "BLACK",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Chest",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "objectIds": [
+      "VMQ3_CULTIST_OUTFIT_CHEST",
+      "VMQ3_CULTIST_OUTFIT_CHEST_OPEN",
+      "VMQ3_TOWER_CHEST_DIRECTION_CLOSED",
+      "VMQ3_TOWER_CHEST_DIRECTION_OPEN",
+      "VMQ3_TOWER_CHEST_BOOK_CLOSED",
+      "VMQ3_TOWER_CHEST_BOOK_OPEN",
+      "VMQ3_TOWER_CHEST_LETTERS_CLOSED",
+      "VMQ3_TOWER_CHEST_LETTERS_OPEN"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Altar",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "ALTAR_TWILIGHT_DEFAULT02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      },
+      {
+        "colors": "h == 6 || h == 0",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Dungeon Stairs",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TWILIGHT_TEMPLE_STAIRS",
+      "TAPOYAUIK_TEMPLE_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Wooden Stage",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TWILIGHT_THEATRE_FLOOR",
+      "TWILIGHT_WOOD_SKEWSTEPS"
+    ]
+  },
+  {
+    "description": "Varlamore - Twilight Temple - Shrine",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "TWILIGHT_SHRINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.37
+      },
+      {
+        "colors": "h == 5 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "CIVITAS_COLOSSEUM_BRAZIER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 58",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Lift",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FLOORKIT_LOSANIUM02_DIAG02",
+      "FLOORKIT_LOSANIUM02_MIDDLE01",
+      "FLOORKIT_LOSANIUM02_DIAG02_M",
+      "FLOORKIT_LOSANIUM02_DIAG01_M",
+      "FLOORKIT_LOSANIUM02_DIAG01",
+      "FLOORKIT_LOSANIUM02_CORNER01",
+      "FLOORKIT_LOSANIUM02_CORNER01_M",
+      "FLOORKIT_LOSANIUM02_CRACK01",
+      "FLOORKIT_LOSANIUM02_CRACK02",
+      "FLOORKIT_LOSANIUM02_CRACK04",
+      "TAPOYAUIK_MAIN_ENTRANCE_OP",
+      "TAPOYAUIK_MAIN_EXIT_OP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 38",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Rock and Snow Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02_LEVERBASE",
+      "CAVEKIT_SNOW03_DEFAULT01",
+      "CAVEKIT_SNOW03_DEFAULT01_DARK01",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01",
+      "TAPOYAUIK_TEMPLE_EXIT",
+      "STALAGMITE_SNOW01_DEFAULT01",
+      "VMQ3_RUINS_BLOCKAGE_START",
+      "STALAGMITE_SNOW01_DEFAULT02",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN02",
+      "TAPO_DUNGEONKIT_TEMPLE01_FROZEN01",
+      "TAPO_RUBBLE_1",
+      "TAPO_RUBBLE_2",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN03_STEP",
+      "TAPOYAUIK_DUNGEONKIT_TEMPLE01_FROZEN01_LEVERBASE",
+      "TAPO_TEMPLE_BLUE_TALL",
+      "TAPO_TEMPLE_GREY_TALL",
+      "TAPO_TEMPLE_GREY_TALL02",
+      "TAPO_TEMPLE_GREY_TALL_DECAL01",
+      "TAPO_TEMPLE_GREY_TALL_DECAL02",
+      "TAPO_TEMPLE_GREY_TALL_DECAL03",
+      "TAPO_TEMPLE_GREY_TALL_DECAL04",
+      "TAPO_TEMPLE_BLUE_TALL_DARK03",
+      "TAPO_TEMPLE_GREY_TALL_DARK03",
+      "TAPO_TEMPLE_GREY_TALL_DARK01",
+      "TAPO_TEMPLE_BLUE_TALL_DARK01",
+      "TAPO_TEMPLE_BLUE_TALL_DARK02",
+      "TAPO_TEMPLE_GREY_TALL_DARK02"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Murals and Statues",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "objectIds": [
+      "VMQ3_RUINS_WALL_CLUE_WATER_OP",
+      "VMQ3_RUINS_WALL_CLUE_EARTH_OP",
+      "VMQ3_RUINS_WALL_CLUE_AIR_OP",
+      "VMQ3_RUINS_WALL_CLUE_FIRE_OP",
+      "VMQ3_RUINS_WALL_CLUE_WATER_NOOP",
+      "VMQ3_RUINS_WALL_CLUE_EARTH_NOOP",
+      "VMQ3_RUINS_WALL_CLUE_AIR_NOOP",
+      "VMQ3_RUINS_WALL_CLUE_FIRE_NOOP",
+      "VMQ3_RUINS_FIRE_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_AIR_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_EARTH_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_FIRE_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_WATER_STATUE_ICON_NOOP",
+      "VMQ3_RUINS_AIR_STATUE_BROKEN",
+      "VMQ3_RUINS_FIRE_STATUE_BROKEN",
+      "VMQ3_RUINS_WATER_STATUE_BROKEN",
+      "VMQ3_RUINS_EARTH_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_AIR_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_WATER_STATUE_ICON_INSPECT",
+      "VMQ3_RUINS_FIRE_STATUE_ICON",
+      "VMQ3_RUINS_EARTH_STATUE_ICON",
+      "VMQ3_RUINS_WATER_STATUE_ICON",
+      "VMQ3_RUINS_AIR_STATUE_ICON",
+      "VMQ3_RUINS_WATER_STATUE_ICON_LIT",
+      "VMQ3_RUINS_FIRE_STATUE_ICON_LIT",
+      "VMQ3_RUINS_AIR_STATUE_ICON_LIT",
+      "VMQ3_RUINS_EARTH_STATUE_ICON_LIT",
+      "VMQ3_RUINS_DOOR_UNLOCKED"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Door",
+    "baseMaterial": "MARBLE_2",
+    "uvOrientation": 256,
+    "uvType": "BOX",
+    "objectIds": [
+      "VMQ3_RUINS_DOOR_LOCKED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Rock and Snow Walls - Spike Trap",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "VMQ3_RUINS_SPIKE_TRAP",
+      "VMQ3_RUINS_SPIKE_TRAP_FIRE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Snow Walls",
+    "baseMaterial": "SNOW_4",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CAVEKIT_SNOW01_CHASM01",
+      "CAVEKIT_SNOW01_DEFAULT01_DARK01",
+      "TAPOYAUIK_TRAVERSE_STONE_FAIL_BOTTOM",
+      "CAVEKIT_SNOW01_DEFAULT01",
+      "CAVEKIT_SNOW01_JOIN01_M",
+      "CAVEKIT_SNOW01_ICE01",
+      "CAVEKIT_SNOW01_ICE01_DARK01",
+      "CAVEKIT_SNOW01_ICE01_DARK02",
+      "CAVEKIT_SNOW01_JOIN01",
+      "CAVEKIT_SNOW01_EDGE01_DARK01",
+      "DECOKIT_SNOW01_EDGE01_DARK01",
+      "DECOKIT_SNOW01_CORNER03_DARK01",
+      "DECOKIT_SNOW01_CORNER01_DARK01",
+      "DECOKIT_SNOW01_MIDDLE01_DARK01",
+      "CAVEKIT_SNOW01_LEDGE01",
+      "CAVEKIT_SNOW01_EDGE01",
+      "DECOKIT_SNOW01_CORNER03",
+      "DECOKIT_SNOW01_CORNER01",
+      "DECOKIT_SNOW01_EDGE01",
+      "DECOKIT_SNOW01_JOIN01",
+      "DECOKIT_SNOW01_JOIN02",
+      "DECOKIT_SNOW01_MIDDLE01",
+      "CAVEKIT_SNOW01_EDGELEDGE02",
+      "CAVEKIT_SNOW01_EDGELEDGE01",
+      "CAVEKIT_SNOW01_LEDGE02",
+      "CAVEKIT_SNOW01_EDGELEDGE02_M",
+      "CAVEKIT_SNOW01_EDGELEDGE01_M",
+      "DECOKIT_SNOW01_EDGE03",
+      "DECOKIT_SNOW01_CORNER03_DARK02",
+      "DECOKIT_SNOW01_CORNER01_DARK02",
+      "DECOKIT_SNOW01_EDGE01_DARK02",
+      "DECOKIT_SNOW01_MIDDLE01_DARK02",
+      "TAPOYAUIK_TRAVERSE_1_BOTTOM",
+      "TAPOYAUIK_TRAVERSE_WALL_FAIL_BOTTOM",
+      "TAPOYAUIK_TRAVERSE_2_BOTTOM"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Brazier",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.71,
+    "objectIds": [
+      "VMQ3_RUINS_BRAZIER_LIT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik Brazier",
+    "hideInAreas": [ "AMOXLIATL_ARENA_SNOW_FIX" ],
+    "objectIds": [
+      "FLOORKIT_GRADIENT07_STRAIGHT01_DARK03",
+      "FLOORKIT_GRADIENT07_STRAIGHT01_DARK02",
+      "FLOORKIT_GRADIENT07_STRAIGHT01_DARK01"
+    ]
+  },
+  {
+    "description": "Varlamore - Stone Chest",
+    "baseMaterial": "SNOW_2",
+    "uvType": "BOX",
+    "uvScale": 0.71,
+    "objectIds": [
+      "CHEST_ZEMA01_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.41
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Stool",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "TWILIGHT_STOOL01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Table - Empty",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "TWILIGHT_TABLE_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Door",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "TWILIGHT_TEMPLE_METZLI_CHAMBER_ENTRY",
+      "TWILIGHT_TEMPLE_DOOR_OPEN",
+      "TWILIGHT_TEMPLE_DOOR_CLOSED"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Wall",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "WALLKIT_TWILIGHT05_DEFAULT01",
+      "WALLKIT_TWILIGHT05_DEFAULT02",
+      "WALLKIT_TWILIGHT05_CORNER01",
+      "WALLKIT_TWILIGHT05_ARCH01",
+      "WALLKIT_TWILIGHT05_ARCH02",
+      "WALLKIT_TWILIGHT05_ARCH02_M",
+      "WALLKIT_TWILIGHT05_ARCH01_M",
+      "TWILIGHT_TEMPLE_METZLI_PAINTING_MISSING_A_PIECE",
+      "TWILIGHT_TEMPLE_METZLI_PAINTING_CAN_PUSH",
+      "TWILIGHT_TEMPLE_STAIRS_UP",
+      "VMQ4_JANUS_BASEMENT_STAIRS"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Wall Filler",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "WALLKIT_TWILIGHT05_WALLTOP01"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Table - With Food or Wine",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "TWILIGHT_TABLE_FOOD01",
+      "TWILIGHT_TABLE_WINE01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Hanging Plant",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "TWILIGHT_PALACE_WALLKIT01_HANGAR02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2 || h == 3 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 120
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Bunk Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TWILIGHT_BUNK_BED",
+      "TWILIGHT_BUNK_BED_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.55
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Bookcase",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "TWILIGHT_TEMPLE_LOWER_BOOKCASE",
+      "TWILIGHT_TEMPLE_LOWER_BOOKCASE_EMPTY",
+      "TWILIGHT_TEMPLE_LOWER_BOOKCASE_NOOP",
+      "TWILIGHT_SHELF04",
+      "TWILIGHT_SHELF03",
+      "TWILIGHT_SHELF02",
+      "TWILIGHT_SHELF01",
+      "TWILIGHT_SHELF02_BOOKS02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && a == 255",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Drawers",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.65,
+    "objectIds": [
+      "VMQ4_TEMPLE_CANVAS_DRAW_1_CLOSED",
+      "VMQ4_TEMPLE_CANVAS_DRAW_2_CLOSED",
+      "VMQ4_TEMPLE_CANVAS_DRAW_1_OPEN",
+      "VMQ4_TEMPLE_CANVAS_DRAW_2_OPEN"
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement Rugs",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "RUG_VARLAMORE01_CORNER02_TWILIGHT01",
+      "RUG_VARLAMORE01_SIDE02_TWILIGHT01",
+      "RUG_VARLAMORE01_CORNER01_TWILIGHT01",
+      "RUG_VARLAMORE01_SIDE01_TWILIGHT01",
+      "RUG_VARLAMORE01_MIDDLE01_TWILIGHT01"
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Twilight Temple Basement - Dresser and Mirror",
+    "objectIds": [
+      "TWILIGHT_VANITY_DEFAULT01",
+      "TWILIGHT_MIRROR_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Four Poster Bed",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "VMQ4_TEMPLE_BED_WITH_KEY_1_OP",
+      "VMQ4_TEMPLE_BED_WITH_KEY_NO_OP",
+      "TWILIGHT_CHAIR_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Chains",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TWILIGHT_SHACKLE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Twilight Temple Basement - Metzli's Chest",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "TWILIGHT_TEMPLE_METZLI_CHAMBER_CHEST_CLOSED"
+    ]
+  },
+  {
+    "description": "Janus Basement - Bookcase",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "COLOSSEUM_SHELF01_BOOKS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.65
+      }
+    ]
+  },
+  {
+    "description": "Janus Basement - Wooden Beam",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "WALLKIT_WOODEN03_DEFAULT01"
     ]
   }
 ]
