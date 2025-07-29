@@ -44,8 +44,6 @@ public class Light
 	public boolean aboveFloor;
 	public int plane;
 	public int prevPlane = -1;
-	public int prevTileX = -1;
-	public int prevTileY = -1;
 	public Alignment alignment;
 	public float[] origin = new float[3];
 	public float[] offset = new float[3];

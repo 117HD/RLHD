@@ -326,31 +326,26 @@ public class LightManager {
 						if (!hiddenTemporarily)
 							hiddenTemporarily = !isActorLightVisible(light.actor);
 
-						if (tileExX != light.prevTileX || tileExY != light.prevTileY) {
-							light.prevTileX = tileExX;
-							light.prevTileY = tileExY;
+						// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
+						// May also apply to other NPCs in instances.
+						if (tile.getBridge() != null)
+							plane++;
 
-							// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
-							// May also apply to other NPCs in instances.
-							if (tile.getBridge() != null)
-								plane++;
-
-							// Interpolate between tile heights based on specific scene coordinates
-							float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
-							float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
-							float heightNorth = HDUtils.lerp(
-								tileHeights[plane][tileExX][tileExY + 1],
-								tileHeights[plane][tileExX + 1][tileExY + 1],
-								lerpX
-							);
-							float heightSouth = HDUtils.lerp(
-								tileHeights[plane][tileExX][tileExY],
-								tileHeights[plane][tileExX + 1][tileExY],
-								lerpX
-							);
-							float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
-							light.origin[1] = (int) tileHeight - 1 - light.def.height;
-						}
+						// Interpolate between tile heights based on specific scene coordinates
+						float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
+						float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
+						float heightNorth = HDUtils.lerp(
+							tileHeights[plane][tileExX][tileExY + 1],
+							tileHeights[plane][tileExX + 1][tileExY + 1],
+							lerpX
+						);
+						float heightSouth = HDUtils.lerp(
+							tileHeights[plane][tileExX][tileExY],
+							tileHeights[plane][tileExX + 1][tileExY],
+							lerpX
+						);
+						float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
+						light.origin[1] = (int) tileHeight - 1 - light.def.height;
 					}
 				}
 			}
