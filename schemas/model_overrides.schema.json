@@ -129,10 +129,6 @@
         "type": "boolean",
         "description": "Whether normals should always point directly up. Defaults to false."
       },
-      "terrainVertexSnap": {
-        "type": "boolean",
-        "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
-      },
       "hideVanillaShadows": {
         "type": "boolean",
         "description": "Whether the model has fake shadows which should be removed. Defaults to false."
@@ -152,6 +148,10 @@
       "receiveShadows": {
         "type": "boolean",
         "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+      },
+      "terrainVertexSnap": {
+        "type": "boolean",
+        "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
       },
       "shadowOpacityThreshold": {
         "type": "number",
@@ -270,6 +270,10 @@
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
             },
+            "terrainVertexSnap": {
+              "type": "boolean",
+              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
+            },
             "shadowOpacityThreshold": {
               "type": "number",
               "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
@@ -371,6 +375,10 @@
             "receiveShadows": {
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "terrainVertexSnap": {
+              "type": "boolean",
+              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",

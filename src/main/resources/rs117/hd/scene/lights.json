@@ -20693,7 +20693,11 @@
       "BURGH_VILLAGE_FIRE",
       "TROLL_EADGAR_COOKING_POT",
       "FORESTRY_FIRE",
-      "BCS_MAISA_CAMP_FIRE"
+      "BCS_MAISA_CAMP_FIRE",
+      "VMQ4_CRYPT_ASSAULT_FIRE",
+      "VMQ4_CRYPT_ENNIUS_EXIT",
+      "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE",
+      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER"
     ]
   },
   {
@@ -21127,7 +21131,8 @@
     "range": 10,
     "objectIds": [
       "FAIRY_FURNACE_GLOW",
-      "FAI_FALADOR_FURNACE_GLOW"
+      "FAI_FALADOR_FURNACE_GLOW",
+      "FURNACE"
     ]
   },
   {
@@ -26134,9 +26139,8 @@
   },
   {
     "description": "BA_WAVE_AREA_BARRIERS",
-    "height": 50,
-    "alignment": "BACK",
-    "radius": 150,
+    "offset": [ 0, 60, 56 ],
+    "radius": 175,
     "strength": 7.5,
     "color": [
       255,
@@ -26145,7 +26149,7 @@
     ],
     "type": "PULSE",
     "duration": 2200,
-    "range": 30,
+    "range": 10,
     "objectIds": [
       "BARBASSAULT_DOOR_10",
       "BARBASSAULT_DOOR_NO_FRIENDS",
@@ -26158,6 +26162,93 @@
       "BARBASSAULT_DOOR_07",
       "BARBASSAULT_DOOR_08",
       "BARBASSAULT_DOOR_09"
+    ]
+  },
+  {
+    "description": "BA_POISON_POOLS_BIG",
+    "offset": [ 0, 90, 0 ],
+    "radius": 375,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "BARBASSAULT_CRATER_POISION_BIG"
+    ]
+  },
+  {
+    "description": "BA_POISON_POOLS_SMALL",
+    "offset": [ 0, 50, 0 ],
+    "radius": 175,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "BARBASSAULT_CRATER_POISION"
+    ]
+  },
+  {
+    "description": "BA_LAVA_POOLS_BIG",
+    "offset": [ 0, 90, 0 ],
+    "radius": 275,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_CRATER_LAVA_BIG"
+    ]
+  },
+  {
+    "description": "BA_LAVA_POOLS_SMALL",
+    "offset": [ 0, 50, 0 ],
+    "radius": 175,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_CRATER_LAVA"
+    ]
+  },
+  {
+    "description": "BA_EGG_EXPLOSION",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 500,
+    "spawnDelay": 250,
+    "fixedDespawnTime": true,
+    "despawnDelay": 750,
+    "fadeInDuration": 50,
+    "fadeOutDuration": 400,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "BARBASSAULT_EGG_EXPLOSION"
     ]
   },
   {
@@ -27639,7 +27730,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "TOXIC_TOTS_PROJECTILE"
     ]
@@ -27656,7 +27748,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "SLAYER_TOTS_PROJECTILE"
     ]
@@ -31740,8 +31833,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_2",
@@ -31757,8 +31849,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_3",
@@ -31774,8 +31865,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_4",
@@ -31791,8 +31881,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_5",
@@ -31808,8 +31897,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 150
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_6",
@@ -31825,8 +31913,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 250
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_7",
@@ -31842,8 +31929,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_LAVA_SHORE_8",
@@ -31859,8 +31945,7 @@
       20,
       0
     ],
-    "type": "STATIC",
-    "range": 200
+    "type": "STATIC"
   },
   {
     "description": "GIANTS_FOUNDRY_DOORWAY",
@@ -33645,25 +33730,6 @@
     ]
   },
   {
-    "description": "GREEN_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 100,
-    "strength": 5.25,
-    "color": [
-      180,
-      255,
-      175
-    ],
-    "type": "FLICKER",
-    "duration": 1250,
-    "range": 20,
-    "objectIds": [
-      "FAIRY_WALL_MUSH_GREEN",
-      "FAIRY_WALL_MUSH_GREEN_VAR"
-    ]
-  },
-  {
     "description": "ZANARIS_GREEN_MUSHROOM_CEILING",
     "height": 290,
     "alignment": "CENTER",
@@ -33701,9 +33767,8 @@
   },
   {
     "description": "RED_MUSHROOM_WALL",
-    "height": 132,
-    "alignment": "FRONT",
-    "radius": 110,
+    "offset": [ 0, 152, 85 ],
+    "radius": 130,
     "strength": 19.25,
     "color": [
       225,
@@ -33716,6 +33781,24 @@
     "objectIds": [
       "FAIRY_WALL_MUSH_RED",
       "FAIRY_WALL_MUSH_RED_VAR"
+    ]
+  },
+  {
+    "description": "GREEN_MUSHROOM_WALL",
+    "offset": [ 0, 142, 85 ],
+    "radius": 100,
+    "strength": 5.25,
+    "color": [
+      180,
+      255,
+      175
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      "FAIRY_WALL_MUSH_GREEN",
+      "FAIRY_WALL_MUSH_GREEN_VAR"
     ]
   },
   {
@@ -34395,7 +34478,23 @@
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT",
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_LOWER",
+    "areas": [ "STRONGHOLD_OF_SECURITY_WAR_LIGHT_FIX" ],
+    "height": 95,
+    "radius": 400,
+    "strength": 9.5,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOS_WAR_WALL_LIGHT"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_LIGHT_UPPER",
     "height": 80,
     "radius": 400,
     "strength": 9.5,
@@ -34405,47 +34504,59 @@
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
-      "SOS_WAR_WALL_LIGHT",
       "SOS_WAR_WALL_LIGHT_UP"
     ]
   },
   {
-    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT",
-    "height": 90,
-    "alignment": "CENTER",
-    "radius": 400,
-    "strength": 7.5,
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_1",
+    "offset": [ 10, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
     "color": [
       255,
       80,
       87
     ],
     "type": "STATIC",
-    "range": 20,
+    "objectIds": [
+      "SOS_WAR_DOOR_TOP"
+    ]
+  },
+  {
+    "description": "STRONGHOLD_OF_SECURITY_WAR_OVERDOOR_LIGHT_2",
+    "offset": [ -70, 115, 0 ],
+    "radius": 250,
+    "strength": 12,
+    "color": [
+      255,
+      80,
+      87
+    ],
+    "type": "STATIC",
     "objectIds": [
       "SOS_WAR_DOOR_TOP"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_FAMINE_LIGHT_FIX" ],
     "offset": [ -30, 250, 0 ],
     "radius": 500,
-    "strength": 3.5,
+    "strength": 4.5,
     "color": [
       255,
       216,
       87
     ],
     "type": "STATIC",
-    "range": 20,
     "objectIds": [
       "SOS_FAM_WALL_LITE"
     ]
   },
   {
     "description": "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT",
+    "areas": [ "STRONGHOLD_OF_SECURITY_PESTILENCE_LIGHT_FIX" ],
     "height": 64,
     "alignment": "CENTER",
     "radius": 400,
@@ -35733,7 +35844,8 @@
     "range": 20,
     "objectIds": [
       "FORTIS_STOVE",
-      "FORTIS_STOVE_NOOP"
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
     ]
   },
   {
@@ -35816,7 +35928,8 @@
     "type": "FLICKER",
     "range": 7.5,
     "objectIds": [
-      "DUNGEONKIT_IMCANDO02_STATUE02"
+      "DUNGEONKIT_IMCANDO02_STATUE02",
+      "VMQ4_TEUMO_BASEMENT_FIRE_LIT"
     ]
   },
   {
@@ -36097,6 +36210,48 @@
     "radius": 350,
     "fadeInDuration": 150,
     "fadeOutDuration": 150,
+    "offset": [ 0, 150, 20 ]
+  },
+  {
+    "description": "FROST_NAGA",
+    "npcIds": [ "FROST_NAGUA", "VMQ3_RUINS_FROST_NAGUA" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 5,
+    "radius": 350,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "offset": [ 0, 150, 20 ]
+  },
+  {
+    "description": "FROST_NAGUA_PROJECTILE",
+    "projectileIds": [ "VFX_FROST_NAGUA_PROJ", "VFX_AMOXLIATL_ICE_BLOCK_PROJECTILE_01" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 7,
+    "radius": 250,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250,
+    "offset": [ 0, 0, 0 ]
+  },
+  {
+    "description": "AMOXLIATL",
+    "npcIds": [ "AMOXLIATL_CUTSCENE", "AMOXLIATL" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 5,
+    "radius": 1000,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250,
     "offset": [ 0, 150, 20 ]
   },
   {
@@ -38187,7 +38342,10 @@
       255
     ],
     "type": "STATIC",
-    "objectIds": [ "HG_CAVE_EXIT" ]
+    "objectIds": [
+      "HG_CAVE_EXIT",
+      "CAVEKIT_ROCK01_ENTRANCE02"
+    ]
   },
   {
     "description": "Hunter Guild Cave Exit - Far",
@@ -38202,6 +38360,22 @@
     ],
     "type": "STATIC",
     "objectIds": [ "HG_CAVE_EXIT" ]
+  },
+  {
+    "description": "Stalker Den Cave Exit",
+    "offset": [ -50, 200, -50 ],
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "STALKER_DEN_EXTERNAL_SHORTCUT_INSIDE",
+      "SOC_CAVE_EXIT"
+    ]
   },
   {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
@@ -38272,6 +38446,1230 @@
     "range": 20,
     "objectIds": [
       "SORCERESS_FIREPLACE"
+    ]
+  },
+  {
+    "description": "SLAYER_CAVE_EXIT",
+    "height": 70,
+    "offset": [ -65, 48, -26 ],
+    "radius": 250,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "SLAYER_CAVE_EXIT_LEFT",
+      "EYEGLO_DUNGEON_EXIT_LEFT"
+    ]
+  },
+  {
+    "description": "Cosmic Altar - Outside",
+    "offset": [ 5, 135, -20 ],
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      70,
+      0,
+      130
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 15,
+    "objectIds": [
+      "COSMICTEMPLE_RUINED_OLD"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Aim East",
+    "offset": [ 150, 140, 0 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_E", "CANNON_LEAGUE03_FIRE_E" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South East",
+    "offset": [ 105, 140, -105 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_SE", "CANNON_LEAGUE03_FIRE_SE" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South",
+    "offset": [ 0, 140, -150 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_S", "CANNON_LEAGUE03_FIRE_S" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim South West",
+    "offset": [ -105, 140, -105 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_SW", "CANNON_LEAGUE03_FIRE_SW" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim West",
+    "offset": [ -150, 140, 0 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_W", "CANNON_LEAGUE03_FIRE_W" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North West",
+    "offset": [ -105, 140, 115 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_NW", "CANNON_LEAGUE03_FIRE_NW" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North",
+    "offset": [ 0, 140, 150 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_N", "CANNON_LEAGUE03_FIRE_N" ]
+  },
+  {
+    "description": "Shattered Cannon - Aim North East",
+    "offset": [ 115, 140, 115 ],
+    "radius": 150,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_AIM_NE", "CANNON_LEAGUE03_FIRE_NE" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire East",
+    "offset": [ 150, 160, 0 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_E" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South East",
+    "offset": [ 105, 160, -105 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_SE" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South",
+    "offset": [ 0, 160, -150 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_S" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire South West",
+    "offset": [ -105, 160, -105 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_SW" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire West",
+    "offset": [ -150, 160, 0 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_W" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North West",
+    "offset": [ -105, 160, 115 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_NW" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North",
+    "offset": [ 0, 160, 150 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_N" ]
+  },
+  {
+    "description": "Shattered Cannon - Fire North East",
+    "offset": [ 115, 160, 115 ],
+    "radius": 225,
+    "strength": 17.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ],
+    "animationIds": [ "CANNON_LEAGUE03_FIRE_NE" ]
+  },
+  {
+    "description": "Shattered Cannon - Top",
+    "offset": [ 0, 200, 0 ],
+    "radius": 245,
+    "strength": 7.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Candle",
+    "offset": [ 0, 45, -105 ],
+    "radius": 100,
+    "strength": 5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 60,
+    "objectIds": [
+      "LEAGUE03_MULTICANNON_ACTIVE"
+    ]
+  },
+  {
+    "description": "Shattered Cannon - Ball",
+    "offset": [ 0, -20, 0 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 100,
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "projectileIds": [ "CANNONBALL_TRAVEL_LEAGUE", "CANNONBALL_TRAVEL_GRANITE_LEAGUE" ]
+  },
+  {
+    "description": "Dragon Scimitar Special Attack",
+    "offset": [ 40, 75, 80 ],
+    "radius": 175,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "SP_ATTACK_DRAGON_SCIMITAR_TRAIL_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon 2H Special Attack",
+    "offset": [ 0, 40, 35 ],
+    "radius": 225,
+    "spawnDelay": 575,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "DRAGON_TWO_HANDED_SWORD_BLAST" ]
+  },
+  {
+    "description": "Dragon Dagger Special Attack Right 1",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "SP_ATTACK_PUNCTURE_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Dagger Special Attack Right 2",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 750,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "SP_ATTACK_PUNCTURE_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Dagger Special Attack Left",
+    "offset": [ -30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 12.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "SP_ATTACK_PUNCTURE_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Mace Special Attack 1",
+    "offset": [ 80, 120, -30 ],
+    "radius": 175,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "SP_ATTACK_SHATTER_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Mace Special Attack 2",
+    "offset": [ 95, 110, 40 ],
+    "radius": 140,
+    "spawnDelay": 800,
+    "fixedDespawnTime": true,
+    "despawnDelay": 400,
+    "strength": 13,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [ "SP_ATTACK_SHATTER_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Mace Special Attack 3",
+    "offset": [ 50, 140, 85 ],
+    "radius": 140,
+    "spawnDelay": 1050,
+    "fixedDespawnTime": true,
+    "despawnDelay": 200,
+    "strength": 14,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 10,
+    "fadeOutDuration": 100,
+    "graphicsObjectIds": [ "SP_ATTACK_SHATTER_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Mace Special Attack 4",
+    "offset": [ -50, 130, 80 ],
+    "radius": 175,
+    "spawnDelay": 1150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 12.5,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "SP_ATTACK_SHATTER_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Longsword Special Attack 1",
+    "offset": [ 30, 190, 40 ],
+    "radius": 250,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 650,
+    "strength": 13,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "SP_ATTACK_CLEAVE_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Longsword Special Attack 2",
+    "offset": [ 0, 140, 60 ],
+    "radius": 210,
+    "spawnDelay": 600,
+    "fixedDespawnTime": true,
+    "despawnDelay": 250,
+    "strength": 11,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "SP_ATTACK_CLEAVE_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Battleaxe Special Attack",
+    "offset": [ 0, 80, 0 ],
+    "radius": 225,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1150,
+    "strength": 12,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "SP_ATTACKGLOW_RED" ]
+  },
+  {
+    "description": "Dragon Woodcutting Axe Special Attack",
+    "offset": [ 20, 140, 50 ],
+    "radius": 225,
+    "spawnDelay": 1090,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "DRAGON_SMALLAXE_SWOOSH_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Sword/Hasta Special Attack",
+    "offset": [ 20, 130, 50 ],
+    "radius": 225,
+    "spawnDelay": 100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 875,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 150,
+    "fadeOutDuration": 550,
+    "graphicsObjectIds": [ "DRAGON_SWORD_SPEC_SPOTANIM" ]
+  },
+  {
+    "description": "Dragon Halberd Special Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 225,
+    "spawnDelay": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 910,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 550,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_RED",
+      "DRAGON_HALBERD_SPECIAL_NORTH_RED",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_RED",
+      "DRAGON_HALBERD_SPECIAL_EAST_RED"
+    ]
+  },
+  {
+    "description": "Crystal Halberd Special Attack",
+    "offset": [ 0, 0, 0 ],
+    "radius": 225,
+    "spawnDelay": 175,
+    "fixedDespawnTime": true,
+    "despawnDelay": 910,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 550,
+    "graphicsObjectIds": [
+      "DRAGON_HALBERD_SPECIAL_WEST_WHITE",
+      "DRAGON_HALBERD_SPECIAL_NORTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_SOUTH_WHITE",
+      "DRAGON_HALBERD_SPECIAL_EAST_WHITE"
+    ]
+  },
+  {
+    "description": "Dragon Spear Special Attack",
+    "offset": [ 0, 150, 80 ],
+    "radius": 225,
+    "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 810,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 150,
+    "fadeOutDuration": 550,
+    "graphicsObjectIds": [ "SP_ATTACK_SHOVE_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Whip Special Attack",
+    "offset": [ 0, 50, 0 ],
+    "radius": 225,
+    "spawnDelay": 75,
+    "fixedDespawnTime": true,
+    "despawnDelay": 575,
+    "strength": 10,
+    "color": [
+      100,
+      170,
+      230
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "SP_ATTACK_ABYSSAL_WHIP" ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Brazier",
+    "offset": [ 0, 350, 0 ],
+    "radius": 500,
+    "strength": 3.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1050,
+    "range": 10,
+    "objectIds": [
+      "VMQ3_RUINS_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Brazier",
+    "offset": [ 0, 175, 0 ],
+    "radius": 300,
+    "strength": 13.5,
+    "color": "#FFD11E",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 7.5,
+    "objectIds": [
+      "VMQ4_KEYSTONE_CHAMBER_ENTRANCE_OPEN",
+      "VMQ4_KEYSTONE_CHAMBER_EXIT"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_SLAM_AOE",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 2500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_SLAM_LINE",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 11,
+    "spawnDelay": 1900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_LOC_MARKER_SPAWN"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_CAST",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 12,
+    "spawnDelay": 1900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_CRYPT_ENNIUS_BOSS" ],
+    "animationIds": [ "VMQ4_ENNIUS_CAST" ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Fire Blue",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 18.5,
+    "fadeOutDuration": 400,
+    "color": [
+      3,
+      60,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_FIRE_1"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Fire Cyan",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 10,
+    "fadeOutDuration": 400,
+    "color": [
+      3,
+      150,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_FIRE_2"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Brazier Cyan",
+    "height": 200,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      3,
+      150,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Teleport Blue",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 200,
+    "strength": 30,
+    "color": [
+      3,
+      70,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 5,
+    "objectIds": [
+      "VMQ4_MOON_TELEPORT"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Teleport Orange",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 5,
+    "objectIds": [
+      "VMQ4_SUN_TELEPORT"
+    ],
+    "npcIds": [
+      "TONALI_PORTABLE_TELEPORTER"
+    ]
+  },
+  {
+    "description": "Sun Shrine Fire Puzzle Fail Fire",
+    "height": 40,
+    "areas": [ "Tonali Cavern Sun Puzzle Fire" ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
+    "description": "Sun Shrine Puzzle Complete",
+    "offset": [ 0, 600, -130 ],
+    "alignment": "CENTER",
+    "radius": 2500,
+    "visibleFromOtherPlanes": true,
+    "strength": 7,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "objectIds": [ "VMQ4_SUN_PUZZLE_STATUE_NOOPS" ]
+  },
+  {
+    "description": "Moon Shrine Puzzle Complete",
+    "offset": [ 0, 700, -530 ],
+    "alignment": "CENTER",
+    "radius": 4500,
+    "visibleFromOtherPlanes": true,
+    "strength": 7,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      150,
+      150,
+      255
+    ],
+    "objectIds": [ "VMQ4_MOON_PUZZLE_STATUE_NOOPS" ]
+  },
+  {
+    "description": "METZLI_FIRE_WAVE",
+    "height": 40,
+    "radius": 350,
+    "strength": 12,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_METZLI_FIRE_WAVE" ]
+  },
+  {
+    "description": "METZLI_FIRE_ARROW",
+    "height": -25,
+    "radius": 150,
+    "strength": 12,
+    "fadeOutDuration": 175,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [ "VMQ4_PROJECTILE_CULTIST_RANGED_FIRE_01" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_FIRE_WALL",
+    "height": 50,
+    "radius": 200,
+    "strength": 17,
+    "fadeOutDuration": 1800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ "VFX_VMQ4_METZLI_FIRE_WALL_CAST" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_WATER_WALL",
+    "height": 50,
+    "radius": 300,
+    "strength": 17,
+    "fadeOutDuration": 1800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_VMQ4_METZLI_WATER_WALL_CAST" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_FIRE_WAVE",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 300,
+    "fadeOutDuration": 100,
+    "fadeInDuration": 1000,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1800,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_METZLI_BOSS" ],
+    "animationIds": [ "VMQ4_METZLI_CAST" ]
+  },
+  {
+    "description": "METZLI_WATER_PROJECTILE",
+    "height": -25,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VMQ4_PROJECTILE_METZLI_MAGIC_WATER_01",
+      "VMQ4_PROJECTILE_CULTIST_MAGIC_WATER_04"
+    ]
+  },
+  {
+    "description": "METZLI_WATER_WAVE",
+    "height": 50,
+    "radius": 275,
+    "strength": 8,
+    "fadeInDuration": 200,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ "VMQ4_METZLI_MOON_WAVE" ]
+  },
+  {
+    "description": "METZLI_FIRE_BALL",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREWAVE_TRAVEL",
+      "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
+    ]
+  },
+  {
+    "description": "ARKAN_BLADE_SPECIAL",
+    "offset": [ 40, 75, 80 ],
+    "radius": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM"  ]
+  },
+  {
+    "description": "Totem Fletching - Animals - All others",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 8,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_A",
+      "ENT_TOTEMS_ANIMAL_B",
+      "ENT_TOTEMS_ANIMAL_D",
+      "ENT_TOTEMS_ANIMAL_E",
+      "ENT_TOTEMS_ANIMAL_A_CS",
+      "ENT_TOTEMS_ANIMAL_B_CS",
+      "ENT_TOTEMS_ANIMAL_D_CS",
+      "ENT_TOTEMS_ANIMAL_E_CS"
+    ]
+  },
+  {
+    "description": "Totem Fletching - Animals - Eagle",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_C",
+      "ENT_TOTEMS_ANIMAL_C_CS"
     ]
   }
 ]

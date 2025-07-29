@@ -29,8 +29,8 @@ public class SharedGLBuffer extends GLBuffer {
 	}
 
 	@Override
-	public void ensureCapacity(int offset, long numBytes) {
-		super.ensureCapacity(offset, numBytes);
+	public void ensureCapacity(long byteOffset, long numBytes) {
+		super.ensureCapacity(byteOffset, numBytes);
 		if (OpenCLManager.context == 0)
 			return;
 

@@ -11,7 +11,7 @@ public class Light
 	public final float randomOffset = HDUtils.rand.nextFloat();
 	public final LightDefinition def;
 
-	public int radius;
+	public float radius;
 	public float strength;
 	/**
 	 * Linear color space RGBA in the range [0, 1]
@@ -44,14 +44,12 @@ public class Light
 	public boolean aboveFloor;
 	public int plane;
 	public int prevPlane = -1;
-	public int prevTileX = -1;
-	public int prevTileY = -1;
 	public Alignment alignment;
-	public int[] origin = new int[3];
-	public int[] offset = new int[3];
-	public int[] pos = new int[3];
+	public float[] origin = new float[3];
+	public float[] offset = new float[3];
+	public float[] pos = new float[3];
 	public int orientation;
-	public int distanceSquared;
+	public float distanceSquared;
 
 	public Actor actor;
 	public Projectile projectile;

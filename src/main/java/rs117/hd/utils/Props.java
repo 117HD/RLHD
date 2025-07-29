@@ -16,31 +16,31 @@ public class Props
 		env.putAll(System.getProperties());
 	}
 
-	public static boolean has(String variableName)
+	public static boolean has(String key)
 	{
-		return env.containsKey(variableName);
+		return env.containsKey(key);
 	}
 
-	public static String get(String variableName)
+	public static String get(String key)
 	{
-		return env.getProperty(variableName);
+		return env.getProperty(key);
 	}
 
-	public static String getOrDefault(String variableName, String defaultValue)
+	public static String getOrDefault(String key, String defaultValue)
 	{
-		String value = get(variableName);
+		String value = get(key);
 		return value == null ? defaultValue : value;
 	}
 
-	public static String getOrDefault(String variableName, @Nonnull Supplier<String> defaultValueSupplier)
+	public static String getOrDefault(String key, @Nonnull Supplier<String> defaultValueSupplier)
 	{
-		String value = get(variableName);
+		String value = get(key);
 		return value == null ? defaultValueSupplier.get() : value;
 	}
 
-	public static boolean getBoolean(String variableName)
+	public static boolean getBoolean(String key)
 	{
-		String value = get(variableName);
+		String value = get(key);
 		if (value == null)
 			return false;
 		if (value.isEmpty())
@@ -49,32 +49,35 @@ public class Props
 		return value.equals("true") || value.equals("1") || value.equals("on") || value.equals("yes");
 	}
 
-	public static ResourcePath getPathOrDefault(String variableName, @Nonnull Supplier<ResourcePath> fallback) {
-		String path = get(variableName);
-		if (path == null)
-			return fallback.get();
-		return path(path);
+	public static ResourcePath getFile(String key, @Nonnull Supplier<ResourcePath> fallback) {
+		var path = get(key);
+		return path != null ? path(path) : fallback.get();
 	}
 
-	public static void set(String variableName, boolean value)
+	public static ResourcePath getFolder(String key, @Nonnull Supplier<ResourcePath> fallback) {
+		var path = getFile(key, fallback);
+		return path != null ? path.chroot() : null;
+	}
+
+	public static void set(String key, boolean value)
 	{
-		set(variableName, value ? "true" : "false");
+		set(key, value ? "true" : "false");
 	}
 
-	public static void set(String variableName, String value)
+	public static void set(String key, String value)
 	{
 		if (value == null)
 		{
-			unset(variableName);
+			unset(key);
 		}
 		else
 		{
-			env.put(variableName, value);
+			env.put(key, value);
 		}
 	}
 
-	public static void unset(String variableName)
+	public static void unset(String key)
 	{
-		env.remove(variableName);
+		env.remove(key);
 	}
 }
