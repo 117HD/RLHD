@@ -23919,6 +23919,94 @@
     ]
   },
   {
+    "description": "Auburnvale - Sawmill - Log Workbench with Tools",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientationX": 512,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOOLS_SAWMILL01_LOG01_AUBURN01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Redwood Slice",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "BUNDLE01_AUBURN01_SLICES01_REDWOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "WOOD_GRAIN",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Planks and Stripped Logs",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BUNDLE01_AUBURN01_PLANKS01_STACK01",
+      "BUNDLE01_AUBURN01_LOGS01_STACK01",
+      "BUNDLE01_AUBURN01_LOGS01_LEANING01"
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Planks with Fur Sled",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "BUNDLE01_AUBURN01_LUMBER01_TRANSPORT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Logs",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BUNDLE01_AUBURN01_LUMBER02_PINE01",
+      "BUNDLE01_AUBURN01_LUMBER01_PINE01",
+      "DEBRIS01_AUBURN01_LUMBER01_BARK01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 3",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Sawmill - Sawdust",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "DEBRIS01_AUBURN01_LUMBER02_SAWDUST01",
+      "DEBRIS01_AUBURN01_LUMBER01_SAWDUST01"
+    ]
+  },
+  {
     "description": "Auburnvale - Cave Entrances",
     "baseMaterial": "GRAVEL_LIGHT",
     "uvType": "BOX",
