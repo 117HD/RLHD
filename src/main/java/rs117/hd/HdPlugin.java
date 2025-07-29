@@ -132,6 +132,7 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -285,6 +286,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
+
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
 
 	@Inject
 	private DeveloperTools developerTools;
@@ -689,6 +693,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
 				gammaCalibrationOverlay.initialize();
+				npcDisplacementCache.initialize();
 
 				isActive = true;
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
@@ -739,6 +744,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
+			npcDisplacementCache.destroy();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
@@ -1661,7 +1667,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), playerModel.getXYZMag()); // XZ radius
+						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), LOCAL_TILE_SIZE);
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -2531,6 +2537,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
+		npcDisplacementCache.clear();
 
 		if (sceneContext != null)
 			sceneContext.destroy();
@@ -3184,6 +3191,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			if (eightIntWrite[0] != -1)
 				drawnDynamicRenderableCount++;
+
+			if (configCharacterDisplacement && renderable instanceof Actor) {
+				if (enableDetailedTimers)
+					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
+				if (renderable instanceof NPC) {
+					var npc = (NPC) renderable;
+					var entry = npcDisplacementCache.get(npc);
+					if (entry.canDisplace) {
+						int displacementRadius = entry.idleRadius;
+						if (displacementRadius == -1) {
+							displacementRadius = modelRadius; // Fallback to model radius since we don't know the idle radius yet
+							if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
+								displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
+								entry.idleRadius = displacementRadius;
+							}
+						}
+						uboCompute.addCharacterPosition(x, z, displacementRadius);
+					}
+				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
+					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
+				}
+				if (enableDetailedTimers)
+					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
+			}
 		}
 
 		if (enableDetailedTimers)
@@ -3191,16 +3222,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
-
-		if (configCharacterDisplacement && renderable instanceof Actor && renderable != client.getLocalPlayer()) {
-			if (renderable instanceof NPC) {
-				var anim = gamevalManager.getAnimName(((NPC) renderable).getWalkAnimation());
-				if (anim == null || !anim.contains("HOVER") && !anim.contains("FLY"))
-					uboCompute.addCharacterPosition(x, z, modelRadius);
-			} else {
-				uboCompute.addCharacterPosition(x, z, modelRadius);
-			}
-		}
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)
