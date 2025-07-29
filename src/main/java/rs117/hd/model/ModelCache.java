@@ -28,13 +28,20 @@ public class ModelCache {
 		}
 
 		void destroy() {
-			if (address != 0L) {
-				MemoryUtil.nmemFree(address);
-				address = 0;
-				byteCapacity = 0;
-				cursor = 0;
-				freeBytesAhead = 0;
-			}
+			if (address == 0L)
+				return;
+
+			MemoryUtil.nmemFree(address);
+			address = 0;
+			byteCapacity = 0;
+			cursor = 0;
+			freeBytesAhead = 0;
+		}
+
+		@Override
+		@SuppressWarnings("deprecation")
+		protected void finalize() {
+			destroy();
 		}
 
 		long reserve(long numBytes) {
@@ -149,10 +156,12 @@ public class ModelCache {
 		buffers.clear();
 		currentAllocation = null;
 
-		for (int i = 0; i < allocations.length; i++) {
-			if (allocations[i] != null) {
-				allocations[i].destroy();
-				allocations[i] = null;
+		if (allocations != null) {
+			for (int i = 0; i < allocations.length; i++) {
+				if (allocations[i] != null) {
+					allocations[i].destroy();
+					allocations[i] = null;
+				}
 			}
 		}
 	}
