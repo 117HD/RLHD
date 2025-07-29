@@ -39404,7 +39404,7 @@
   {
     "description": "Sun Shrine Fire Puzzle Fail Fire",
     "height": 40,
-    "areas": [ "Tonil Caverns Sun Puzzle Fire" ],
+    "areas": [ "Tonali Cavern Sun Puzzle Fire" ],
     "alignment": "CENTER",
     "radius": 300,
     "strength": 15,
