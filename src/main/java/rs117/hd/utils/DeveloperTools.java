@@ -32,6 +32,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -66,6 +67,8 @@ public class DeveloperTools implements KeyListener {
 	private boolean frameTimingsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
 	private boolean lightGizmoOverlayEnabled;
+	@Getter
+	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
 
 	public void activate() {
@@ -110,6 +113,7 @@ public class DeveloperTools implements KeyListener {
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
+		hideUiEnabled = false;
 	}
 
 	@Subscribe
@@ -140,6 +144,7 @@ public class DeveloperTools implements KeyListener {
 			case "tiledlighting":
 				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 				break;
+			case "keybinds":
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
 				if (keyBindingsEnabled) {
@@ -167,6 +172,8 @@ public class DeveloperTools implements KeyListener {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
+		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
+			hideUiEnabled = !hideUiEnabled;
 		} else {
 			return;
 		}

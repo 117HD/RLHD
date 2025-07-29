@@ -227,6 +227,30 @@ public class ModelHasher {
 		return r;
 	}
 
+	public static int fastIntHash(int x, int y) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		return result;
+	}
+
+	public static int fastIntHash(int x, int y, int z) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		result = 31 * result + z;
+		return result;
+	}
+
+	public static int fastIntHash(int x, int y, int z, int w) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		result = 31 * result + z;
+		result = 31 * result + w;
+		return result;
+	}
+
 	public static int fastIntHash(int[] a, int actualLength) {
 		if (a == null)
 			return 0;
@@ -295,6 +319,30 @@ public class ModelHasher {
 			r = 31 * r + a[i];
 
 		return r;
+	}
+
+	public static int fastFloatHash(float x, float y) {
+		int result = 17;
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		return result;
+	}
+
+	public static int fastFloatHash(float x, float y, float z) {
+		int result = 17;
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		result = 31 * result + (int) (z * 100);
+		return result;
+	}
+
+	public static int fastFloatHash(float x, float y, float z, float w) {
+		int result = 17;
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		result = 31 * result + (int) (z * 100);
+		result = 31 * result + (int) (w * 100);
+		return result;
 	}
 
 	public static int fastFloatHash(float[] a, int length) {

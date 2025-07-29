@@ -32,6 +32,12 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "DEFAULT_ICE",
+    "groundMaterial": "ICE_4",
+    "uvScale": 2,
+    "shiftLightness": 15
+  },
+  {
     "name": "VERTICAL_DIRT_FIX",
     "groundMaterial": "VERTICAL_DIRT"
   },
@@ -1774,14 +1780,18 @@
     "groundMaterial": "MARBLE_2_GLOSS"
   },
   {
-    "name": "TAVERLEY_DUNGEON_GRAVEL_OVERLAY",
-    "area": "TAVERLEY_DUNGEON",
+    "name": "TAVERLEY_DUNGEON_GRAVEL",
+    "area": "TAVERLEY_DUNGEON_GRAVEL",
     "overlayIds": [
       2,
       10,
       34
     ],
-    "groundMaterial": "GRAVEL"
+    "underlayIds": [ 56 ],
+    "groundMaterial": "GRAVEL",
+    "minLightness": 19,
+    "maxSaturation": 0,
+    "maxHue": 1
   },
   {
     "name": "ASGARNIA_MOUNTAINS_VERTICAL_DIRT_FIX",
@@ -4701,7 +4711,100 @@
     "name": "VARLAMORE_TEMPLE_CRYPT_WATER",
     "area": "VARLAMORE_TEMPLE_CRYPT",
     "overlayIds": [ 181, 201 ],
-    "waterType": "DARK_BLUE_WATER"
+    "waterType": "PLAIN_WATER"
+  },
+  {
+    "name": "Twilight Temple Tower Floor",
+    "area": "Twilight Temple Tower Floor",
+    "overlayIds": [ 0, 232, 233, 235, 237 ],
+    "groundMaterial": "MARBLE_1_GLOSS"
+  },
+  {
+    "name": "Twilight Temple Main Floor",
+    "area": "Twilight Temple Main Floor",
+    "overlayIds": [ 0, 232, 233, 235, 237 ],
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Ruins of Tapoyauik Ice",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 382 ],
+    "groundMaterial": "ICE_4"
+  },
+  {
+    "name": "Ruins of Tapoyauik Ice Underlay",
+    "area": "Ruins of Tapoyauik",
+    "underlayIds": [ 18, 227, 228, 229 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 30,
+    "shiftHue": 5,
+    "maxHue": 38,
+    "replacements": {
+      "DEFAULT_ICE": "s >= 1"
+    }
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow 1",
+    "area": "Ruins of Tapoyauik",
+    "underlayIds": [ 58, 72, 87 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 30,
+    "shiftHue": 5,
+    "maxHue": 38
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow 2",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 263, 379 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 25
+  },
+  {
+    "name": "Ruins of Tapoyauik Water",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 380 ],
+    "waterType": "WATER"
+  },
+  {
+    "name": "Amoxliatl Water",
+    "area": "AMOXLIATL_ARENA_WATER",
+    "overlayIds": [ 381 ],
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Amoxliatl Arena Dirt Fix",
+    "area": "AMOXLIATL_ARENA_DIRT_FIX",
+    "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
+    "maxLightness": 40,
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "Amoxliatl Arena Snow Fix",
+    "area": "AMOXLIATL_ARENA_SNOW_FIX",
+    "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
+    "maxLightness": 40,
+    "groundMaterial": "SNOW_1"
+  },
+  {
+    "name": "Amoxliatl Snow Main",
+    "area": "AMOXLIATL_ARENA",
+    "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 20,
+    "shiftHue": 5,
+    "maxHue": 38,
+    "replacements": {
+      "Amoxliatl Snow Main No Blending": "!blending"
+    }
+  },
+  {
+    "name": "Amoxliatl Snow Main No Blending",
+    "area": "AMOXLIATL_ARENA",
+    "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
+    "groundMaterial": "SNOW_1",
+    "maxSaturation": 0,
+    "shiftLightness": 17,
+    "minLightness": 68
   },
   {
     "name": "COLOSSEUM_TILES",
@@ -5541,7 +5644,9 @@
       59,
       124
     ],
-    "groundMaterial": "GRASS_1"
+    "groundMaterial": "GRASS_1",
+    "shiftHue": 1,
+    "shiftSaturation": 1
   },
   {
     "name": "STRONGHOLD_OF_SECURITY_WAR_GRAVEL",
@@ -6949,7 +7054,7 @@
     "maxLightness": 100
   },
   {
-    "name": "TAVERLY_DUNGEON_DIRT",
+    "name": "TAVERLEY_DUNGEON_DIRT",
     "area": "TAVERLEY_DUNGEON",
     "underlayIds": [
       50,
@@ -6961,8 +7066,8 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
-    "name": "TAVERLY_DUNGEON_BLACK_KNIGHTS_BASE",
-    "area": "TAVERLEY_DUNGEON",
+    "name": "TAVERLEY_DUNGEON_BLACK_KNIGHTS_BASE",
+    "area": "TAVERLEY_DUNGEON_BLACK_KNIGHT_BASE",
     "underlayIds": [
       56,
       57
@@ -7611,6 +7716,25 @@
     "minHue": 12,
     "minSaturation": 2,
     "uvScale": 0.85
+  },
+  {
+    "name": "Barbarian Assault Darken Dirt Blending",
+    "area": "BARBARIAN_ASSAULT_WAITING_ROOMS",
+    "underlayIds": [ 63, 65, 67 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": -1,
+    "uvScale": 0.7,
+    "replacements": {
+      "Barbarian Assault Lighten Dirt No Blending": "!blending"
+    }
+  },
+  {
+    "name": "Barbarian Assault Lighten Dirt No Blending",
+    "area": "BARBARIAN_ASSAULT_WAITING_ROOMS",
+    "underlayIds": [ 63, 65, 67 ],
+    "groundMaterial": "VARIED_DIRT",
+    "shiftLightness": 2,
+    "uvScale": 0.7
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
