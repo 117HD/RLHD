@@ -9209,6 +9209,7 @@
     "description": "Metallic Furnace",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
+      "FURNACE",
       "VIKING_FURNACE",
       "VIKING_FURNACE2",
       "DWARF_KELDAGRIM_FURNACE",
@@ -22591,7 +22592,9 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "FAI_VARROCK_HANGING_TOOLS_02",
-      "GIM_HANGING_TOOLS_01"
+      "GIM_HANGING_TOOLS_01",
+      "FAI_VARROCK_HANGING_TOOLS_01",
+      "FAI_VARROCK_HANGING_TOOLS_03"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -23864,6 +23867,35 @@
       {
         "colors": ["h == 3 && s == 7", "h == 3 && s == 1" ],
         "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Table with clutter",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "SHAYZIEN_CLOTHESSHOP_TABLE_ALT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Auburnvale - Stylised Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "TALKASTI01_TABLE01_LONG01_ALT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 && s < 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   },
@@ -27732,14 +27764,16 @@
   },
   {
     "description": "Object - Cushions",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "BCS_MAISA_CAMP_CUSHION",
       "AFL_CATBED_NOOP",
       "PILLOW_VARLAMORE01_DEFAULT01",
       "PILLOW_VARLAMORE01_STACK01",
       "PILLOW_ALDARIN01_DEFAULT01",
-      "PILLOW_ALDARIN01_STACK01"
+      "PILLOW_ALDARIN01_STACK01",
+      "PILLOW_VARLAMORE01_ORANGE01",
+      "PILLOW_VARLAMORE01_STACK01_ORANGE01"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -29086,11 +29120,25 @@
     "objectIds": [
       "HG_TABLE_TAVERN02_DEFAULT01",
       "HG_TABLE_TAVERN02_CORNER01",
-      "HG_TABLE_TAVERN02_TAPS01",
       "HG_TABLE_TAVERN02_DOOR01"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512
+  },
+  {
+    "description": "Hunter Guild Cavern Counter - with Taps",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      "HG_TABLE_TAVERN02_TAPS01"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Hunter Guild Cavern Counter - Unrotate UV so it's seameless with the rest",
@@ -29231,7 +29279,7 @@
     "description": "Hunter Guild - woven basket with handles - Empty",
     "baseMaterial": "BURLAP",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.5,
     "objectIds": [
       "HG_BARREL_BASKET01_EMPTY01"
     ],
@@ -29248,7 +29296,7 @@
     "description": "Hunter Guild - woven basket with handles - With veggies",
     "baseMaterial": "BURLAP",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.5,
     "objectIds": [
       "HG_BARREL_BASKET01_FOOD01"
     ],
@@ -29265,6 +29313,22 @@
         "colors": "h == 3",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Hunter Guild - woven basket with handles - With veggies 2",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "HG_BARREL_POT01_FOOD01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Plants",
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   },
@@ -29300,7 +29364,8 @@
       "HG_CHAIR_TAVERN02_SEWING01",
       "HG_CHAIR_TAVERN02_HIDE01",
       "HG_CHAIR_TAVERN02_HIDE02",
-      "TABLE_WOODEN01_SQUARE01_FUR01"
+      "TABLE_WOODEN01_SQUARE01_FUR01",
+      "TABLE_WOODEN01_SMALL01_FUR01"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -46843,6 +46908,11 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": 89
+      },
+      {
+        "description": "Food",
+        "colors": "h == 2",
+        "baseMaterial": "GRUNGE_2"
       }
     ]
   },
@@ -48040,7 +48110,8 @@
     "uvOrientation": 913,
     "uvScale": 0.4,
     "objectIds": [
-      "ALDARIN_TABLE_WINE01"
+      "ALDARIN_TABLE_WINE01",
+      "HG_TABLE_FOOD01"
     ],
     "colorOverrides": [
       {

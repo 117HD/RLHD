@@ -21127,7 +21127,8 @@
     "range": 10,
     "objectIds": [
       "FAIRY_FURNACE_GLOW",
-      "FAI_FALADOR_FURNACE_GLOW"
+      "FAI_FALADOR_FURNACE_GLOW",
+      "FURNACE"
     ]
   },
   {
