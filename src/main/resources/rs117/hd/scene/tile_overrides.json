@@ -484,7 +484,7 @@
     "name": "MIME_FLOOR",
     "area": "RANDOM_EVENT_MIME",
     "overlayIds": [
-     86
+      86
     ],
     "groundMaterial": "CARPET"
   },

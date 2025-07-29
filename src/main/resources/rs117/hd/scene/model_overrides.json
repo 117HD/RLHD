@@ -6799,7 +6799,7 @@
   {
     "description": "Pale rock walls - Top",
     "baseMaterial": "ROCK_3",
-    "hideInAreas": [ "RANDOM_EVENT_PINBALL"],
+    "hideInAreas": [ "RANDOM_EVENT_PINBALL" ],
     "objectIds": [
       "DEATH_MOUNTAIN_CAVEWALL_TOP",
       "DEATH_MOUNTAIN_CAVEWALL_TOP5",
@@ -38019,7 +38019,7 @@
     "description": "Wooden 3 candle scone with lit flame - static",
     "colorOverrides": [
       {
-        "colors": [ "h == 8 && s == 3" ],
+        "colors": "h == 8 && s == 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvScale": 0.4,
         "uvType": "BOX"

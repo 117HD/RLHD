@@ -6181,7 +6181,9 @@
   },
   {
     "name": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_1",
-    "aabbs": [  [ 1957, 4760, 1957, 4771 ] ]
+    "aabbs": [
+      [ 1957, 4760, 1957, 4771 ]
+    ]
   },
   {
     "name": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_2",
