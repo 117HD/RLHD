@@ -1935,6 +1935,14 @@
     "instantTransition": true
   },
   {
+    "area": "Ruins of Tapoyauik",
+    "waterColor": "#2759C6"
+  },
+  {
+    "area": "AMOXLIATL_ARENA",
+    "waterColor": "#0009BC"
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
