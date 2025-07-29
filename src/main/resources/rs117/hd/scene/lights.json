@@ -39101,7 +39101,7 @@
     "graphicsObjectIds": [ "DRAGON_SMALLAXE_SWOOSH_SPOTANIM" ]
   },
   {
-    "description": "Dragon Sword/Hasta Special Attack",
+    "description": "Dragon Sword Special Attack",
     "offset": [ 20, 130, 50 ],
     "radius": 225,
     "spawnDelay": 100,
@@ -39216,7 +39216,7 @@
     "type": "STATIC",
     "fadeInDuration": 175,
     "fadeOutDuration": 375,
-    "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM"  ]
+    "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM" ]
   },
   {
     "description": "Bone Dagger Special Attack",
@@ -39234,7 +39234,7 @@
     "type": "STATIC",
     "fadeInDuration": 75,
     "fadeOutDuration": 100,
-    "graphicsObjectIds": [ "DTTD_DAGGER_SP_ATTACK_SPOTANIM"  ]
+    "graphicsObjectIds": [ "DTTD_DAGGER_SP_ATTACK_SPOTANIM" ]
   },
   {
     "description": "Bone Crossbow Special Attack",
@@ -39249,7 +39249,7 @@
     "type": "STATIC",
     "fadeInDuration": 75,
     "fadeOutDuration": 100,
-    "projectileIds": [ "DTTD_BONE_CROSSBOWBOLT_TRAVEL_SP_ATTACK"  ]
+    "projectileIds": [ "DTTD_BONE_CROSSBOWBOLT_TRAVEL_SP_ATTACK" ]
   },
   {
     "description": "Excalibur Special Attack",
@@ -39267,6 +39267,60 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [ "SP_ATTACKGLOW_BLUE" ]
+  },
+  {
+    "description": "Ancient Mace/Barrelchest Anchor Special Attack",
+    "offset": [ 0, 140, 20 ],
+    "radius": 250,
+    "spawnDelay": 1100,
+    "fixedDespawnTime": true,
+    "despawnDelay": 725,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 500,
+    "graphicsObjectIds": [ "SLICE_PLAYER_MACE_SPECIAL_ATTACK_SPOTANIM", "BRAIN_ANCHOR_SPECIAL_ATTACK_SPOT" ]
+  },
+  {
+    "description": "Ancient Mace/Barrelchest Anchor Special Attack 2",
+    "offset": [ 0, 100, 50 ],
+    "radius": 230,
+    "spawnDelay": 1425,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 500,
+    "graphicsObjectIds": [ "SLICE_PLAYER_MACE_SPECIAL_ATTACK_SPOTANIM", "BRAIN_ANCHOR_SPECIAL_ATTACK_SPOT" ]
+  },
+  {
+    "description": "Ancient Mace/Barrelchest Anchor Special Attack 3",
+    "offset": [ 0, 30, 150 ],
+    "radius": 325,
+    "spawnDelay": 1500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 600,
+    "strength": 15.5,
+    "color": [
+      255,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 100,
+    "fadeOutDuration": 500,
+    "graphicsObjectIds": [ "SLICE_PLAYER_MACE_SPECIAL_ATTACK_SPOTANIM", "BRAIN_ANCHOR_SPECIAL_ATTACK_SPOT" ]
   },
   {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
