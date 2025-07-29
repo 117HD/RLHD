@@ -746,6 +746,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
+			npcDisplacementConfig.clear();
+
 			asyncUICopy.complete();
 			developerTools.deactivate();
 			modelPusher.shutDown();
