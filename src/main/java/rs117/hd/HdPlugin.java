@@ -3172,7 +3172,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
 				if (modelOverride.modelReplacement != null) {
-					int customUID = uuid = ModelHash.packUuid(ModelHash.TYPE_CUSTOM, modelOverride.modelReplacement.model.name().hashCode());
+					int customUID = ModelHash.packUuid(ModelHash.TYPE_CUSTOM, modelOverride.modelReplacement.model.name().hashCode());
 					modelOverride = modelOverrideManager.getOverride(customUID, worldPos,true);
 				}
 
