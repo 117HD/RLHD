@@ -7717,6 +7717,11 @@
     "regions": [ 7244 ]
   },
   {
+    "name": "Ferox Basement",
+    "regions": [ 12700 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
