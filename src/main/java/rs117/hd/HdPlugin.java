@@ -1584,24 +1584,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				drawnStaticRenderableCount = 0;
 				drawnDynamicRenderableCount = 0;
 
-				// Map ModelInfo Buffers for writing to
-				modelPassthroughBuffer = hModelPassthroughBuffer.map(GLBuffer.AccessFlags.Write, GLBuffer.GLMappedType.INT);
 
-				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
-				// Push unordered models that should always be drawn at the start of each frame.
-				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
+				// Unordered models have already been pushed during SceneSwap, so we just need to offset hModelPassthroughBuffer whilst mapping
 				var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
-				modelPassthroughBuffer
-					.ensureCapacity(staticUnordered.limit())
-					.put(staticUnordered);
-				staticUnordered.rewind();
-				numPassthroughModels += staticUnordered.limit() / 8;
+				numPassthroughModels += staticUnordered.limit() / ModelInfo.ELEMENT_COUNT;
+				long modelPassthroughStaticUnorderedOffset = staticUnordered.limit() * (long) Integer.BYTES;
 
-				// Flush Static Geom and remap with offset
-				hModelPassthroughBuffer.unmap(true);
-				hModelPassthroughBuffer.map(
+				// Ensure we have enough capacity
+				hModelPassthroughBuffer.ensureCapacity(EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * ModelInfo.ELEMENT_COUNT);
+				modelPassthroughBuffer = hModelPassthroughBuffer.map(
 					GLBuffer.AccessFlags.Write,
-					staticUnordered.limit() * (long) Integer.BYTES,
+					modelPassthroughStaticUnorderedOffset,
 					GLBuffer.GLMappedType.INT
 				);
 
@@ -2544,6 +2537,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneUploader.prepareBeforeSwap(sceneContext);
 
 		sceneContext.staticUnorderedModelBuffer.flip();
+
+		// Push unordered models that should always be drawn once during SceneSwap.
+		// Used to fix issues like the right-click menu causing underwater tiles to disappear.
+		var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
+		modelPassthroughBuffer = hModelPassthroughBuffer.map(GLBuffer.AccessFlags.Write, GLBuffer.GLMappedType.INT);
+		modelPassthroughBuffer
+			.ensureCapacity(staticUnordered.limit())
+			.put(staticUnordered);
+		staticUnordered.rewind();
+		hModelPassthroughBuffer.unmap(true);
 
 		dynamicOffsetVertices = sceneContext.getVertexOffset();
 		dynamicOffsetUvs = sceneContext.getUvOffset();

@@ -11,9 +11,10 @@ public class ModelInfo {
 	public static final int X_POSITION_IDX = 5;
 	public static final int Y_POSITION_AND_HEIGHT_IDX = 6;
 	public static final int Z_POSITION_IDX = 7;
+	public static final int ELEMENT_COUNT = 8;
 
 	@Getter
-	private final int[] stagingData = new int[8];
+	private final int[] stagingData = new int[ELEMENT_COUNT];
 
 	public int getVertexOffset() { return stagingData[VERTEX_OFFSET_IDX]; }
 

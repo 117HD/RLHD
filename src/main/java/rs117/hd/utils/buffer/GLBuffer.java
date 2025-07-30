@@ -209,11 +209,10 @@ public class GLBuffer
 
 	@RequiredArgsConstructor
 	public enum AccessFlags {
-		Write(GL_WRITE_ONLY, GL40.GL_MAP_WRITE_BIT | GL40.GL_MAP_FLUSH_EXPLICIT_BIT),
-		Read(GL_READ_ONLY, GL40.GL_MAP_READ_BIT | GL40.GL_MAP_FLUSH_EXPLICIT_BIT),
-		ReadWrite(GL_READ_WRITE, GL40.GL_MAP_READ_BIT | GL40.GL_MAP_WRITE_BIT | GL40.GL_MAP_FLUSH_EXPLICIT_BIT);
+		Write(GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT),
+		Read(GL_MAP_READ_BIT | GL_MAP_FLUSH_EXPLICIT_BIT),
+		ReadWrite(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT);
 
-		public final int glMapBufferType;
 		public final int glMapBufferRangeFlags;
 	}
 
