@@ -577,9 +577,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		var decorObject = tile.getDecorativeObject();
 		if (decorObject != null) {
 			lines.add(String.format(
-				"Decor Object: %s preori=%d%s",
+				"Decor Object: %s preori=%d type=%s %s",
 				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
 				HDUtils.getBakedOrientation(decorObject.getConfig()),
+				HDUtils.getObjectType(decorObject.getConfig()),
 				getModelInfo(decorObject.getRenderable())
 			));
 			lines.add("Decor Type: " + HDUtils.getObjectType(decorObject.getConfig()));

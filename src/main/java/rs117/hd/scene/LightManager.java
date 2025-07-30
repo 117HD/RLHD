@@ -831,7 +831,8 @@ public class LightManager {
 		int sizeX = 1;
 		int sizeY = 1;
 		Renderable[] renderables = new Renderable[2];
-		int[] orientations = new int[2];
+		int[] orientations = { 0, 0 };
+		int[] offset = { 0, 0 };
 
 		var tileObject = tracker.tileObject;
 		if (tileObject instanceof GroundObject) {
@@ -842,7 +843,24 @@ public class LightManager {
 			var object = (DecorativeObject) tileObject;
 			renderables[0] = object.getRenderable();
 			renderables[1] = object.getRenderable2();
-			orientations[0] = orientations[1] = HDUtils.getBakedOrientation(object.getConfig());
+			int ori = HDUtils.getBakedOrientation(object.getConfig());
+			orientations[0] = orientations[1] = ori;
+
+			int objectType = object.getConfig() & 0x3F;
+			switch (objectType) {
+				case 6: // DiagOutDeco
+				case 7: // DiagInDeco
+				case 8: // DiagInWallDeco
+					offset[0] = offset[1] = 45; // ~ 64 / sqrt(2)
+					int rot = object.getConfig() >>> 6 & 3;
+					if (rot % 3 == 0)
+						offset[0] *= -1;
+					if (rot >= 2)
+						offset[1] *= -1;
+					break;
+			}
+			offset[0] += object.getXOffset();
+			offset[1] += object.getYOffset();
 		} else if (tileObject instanceof WallObject) {
 			var object = (WallObject) tileObject;
 			renderables[0] = object.getRenderable1();
@@ -872,8 +890,8 @@ public class LightManager {
 		HashSet<LightDefinition> onlySpawnOnce = new HashSet<>();
 
 		LocalPoint lp = tileObject.getLocalLocation();
-		int lightX = lp.getX();
-		int lightZ = lp.getY();
+		int lightX = lp.getX() + offset[0];
+		int lightZ = lp.getY() + offset[1];
 		int plane = tileObject.getPlane();
 
 		// Spawn animation-specific lights for each DynamicObject renderable, and non-animation-based lights

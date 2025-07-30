@@ -245,17 +245,8 @@ public class HDUtils {
 	// (gameObject.getConfig() & 0x3F), // 6-bit object type? (10 seems to mean movement blocker)
 	// (gameObject.getConfig() >> 9) // should always be zero
 	public static int getBakedOrientation(int config) {
-		switch (config >> 6 & 3) {
-			case 0: // Rotated 180 degrees
-				return 1024;
-			case 1: // Rotated 90 degrees counter-clockwise
-				return 1536;
-			case 2: // Not rotated
-			default:
-				return 0;
-			case 3: // Rotated 90 degrees clockwise
-				return 512;
-		}
+		int orientation = 1024 + 512 * (config >>> 6 & 3);
+		return orientation % 2048;
 	}
 
 	public static String getObjectType(int config) {
