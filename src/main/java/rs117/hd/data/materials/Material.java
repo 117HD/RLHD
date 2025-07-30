@@ -325,6 +325,8 @@ public enum Material {
 		.setSpecular(0.9f, 280)),
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
+	BLANK_SUPERGLOSS(WHITE, p -> p
+		.setSpecular(1.75f, 55)),
 
 	SNOW_1_N,
 	SNOW_1(p -> p.setNormalMap(SNOW_1_N).setSpecular(0.4f, 20)),
@@ -494,6 +496,9 @@ public enum Material {
 	ROCK_3_DARK(ROCK_3,p -> p
 		.setBrightness(0.65f)
 	),
+	ROCK_3_LIGHT(ROCK_3,p -> p
+		.setBrightness(1.50f)
+	),
 	ROCK_3_SMOOTH(ROCK_3, p -> p
 		.setDisplacementScale(0)
 		.setTextureScale(1, 1, .15f)
@@ -604,7 +609,6 @@ public enum Material {
 		.setBrightness(0.5f)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
-
 	LASSAR_UNDERCITY_TILE_N,
 	LASSAR_UNDERCITY_TILE_D,
 	LASSAR_UNDERCITY_TILES(MARBLE_2_SEMIGLOSS, p -> p
@@ -697,6 +701,10 @@ public enum Material {
 		.setSpecular(0.3f, 25)
 	),
 	WOOD_GRAIN_3_LIGHT(WOOD_GRAIN_3, p -> p.setBrightness(1.6f)),
+	WOOD_GRAIN_3_SEMILIGHT_DULL(WOOD_GRAIN_3, p -> p
+		.setBrightness(1.2f)
+		.setSpecular(0f, 0)
+	),
 	WOOD_GRAIN_3_DARK(WOOD_GRAIN_3, p -> p.setBrightness(0.7f)),
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(plugin -> plugin.config.hdInfernalTexture(), INFERNAL_CAPE)

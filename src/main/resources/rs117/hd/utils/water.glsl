@@ -25,8 +25,8 @@
 #include <uniforms/global.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
-#include <uniforms/lights.glsl>
 
+#include <utils/lights.glsl>
 #include <utils/misc.glsl>
 #include <utils/skybox.glsl>
 
@@ -83,31 +83,12 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     // directional light specular
     vec3 lightReflectDir = reflect(-lightDir, normals);
-    vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+    vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
     // point lights
     vec3 pointLightsOut = vec3(0);
     vec3 pointLightsSpecularOut = vec3(0);
-    for (int i = 0; i < pointLightsCount; i++) {
-        vec4 pos = PointLightArray[i].position;
-        vec3 lightToFrag = pos.xyz - IN.position;
-        float distanceSquared = dot(lightToFrag, lightToFrag);
-        float radiusSquared = pos.w;
-        if (distanceSquared <= radiusSquared) {
-            vec3 pointLightColor = PointLightArray[i].color;
-            vec3 pointLightDir = normalize(lightToFrag);
-
-            float attenuation = 1 - min(distanceSquared / radiusSquared, 1);
-            pointLightColor *= attenuation * attenuation;
-
-            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-            pointLightsOut += pointLightColor * pointLightDotNormals;
-
-            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-            pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
-        }
-    }
-
+    calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
     // sky light
     vec3 skyLightColor = fogColor.rgb;

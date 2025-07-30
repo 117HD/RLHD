@@ -67,6 +67,9 @@ public class FrameTimer {
 
 	private void destroy() {
 		clientThread.invokeLater(() -> {
+			if (isInactive)
+				return;
+
 			isInactive = true;
 			plugin.enableDetailedTimers = false;
 

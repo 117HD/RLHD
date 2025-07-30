@@ -46,7 +46,7 @@ out vec2 fUv;
 
 void main() {
     gl_Position = vec4(vPos, 0, 1);
-    fUv = vUv;
+    fUv = vec2(vUv.x, 1.0 - vUv.y);
 
     #if UI_SCALING_MODE == SAMPLING_XBR
     xbrTable = xbr_vert(TexCoord, sourceDimensions);

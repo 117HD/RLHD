@@ -5,6 +5,7 @@ import com.google.inject.Singleton;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -13,6 +14,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.utils.NpcDisplacementCache;
 
 @Singleton
 public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener {
@@ -20,9 +22,16 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private OverlayManager overlayManager;
 
 	@Inject
+	private HdPlugin plugin;
+
+	@Inject
 	private FrameTimer frameTimer;
 
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
+
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
+	private final long[] timings = new long[Timer.values().length];
 	private final StringBuilder sb = new StringBuilder();
 
 	@Inject
@@ -48,7 +57,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.nanoTime();
 		while (!frames.isEmpty()) {
-			if (now - frames.peekFirst().frameTimestamp < 10e9) // remove older entries
+			if (now - frames.peekFirst().frameTimestamp < 3e9) // remove older entries
 				break;
 			frames.removeFirst();
 		}
@@ -59,9 +68,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	public Dimension render(Graphics2D g) {
 		long time = System.nanoTime();
 
-		var timings = getAverageTimings();
-		if (timings.length != Timer.values().length) {
-			panelComponent.getChildren().add(TitleComponent.builder()
+		var children = panelComponent.getChildren();
+		if (!getAverageTimings()) {
+			children.add(TitleComponent.builder()
 				.text("Waiting for data...")
 				.build());
 		} else {
@@ -77,23 +86,56 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				if (t.isGpuTimer && t != Timer.RENDER_FRAME)
 					addTiming(t, timings);
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Estimated bottleneck:")
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(cpuTime > gpuTime ? "CPU" : "GPU")
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Estimated FPS:")
 				.rightFont(FontManager.getRunescapeBoldFont())
 				.right(String.format("%.1f FPS", 1 / (Math.max(cpuTime, gpuTime) / 1e9)))
 				.build());
 
-			panelComponent.getChildren().add(LineComponent.builder()
+			children.add(LineComponent.builder()
 				.left("Error compensation:")
 				.right(String.format("%d ns", frameTimer.errorCompensation))
+				.build());
+
+			children.add(LineComponent.builder()
+				.leftFont(FontManager.getRunescapeBoldFont())
+				.left("Scene Stats:")
+				.build());
+
+			if (plugin.getSceneContext() != null) {
+				var sceneContext = plugin.getSceneContext();
+				children.add(LineComponent.builder()
+					.left("Lights:")
+					.right(String.format("%d/%d", sceneContext.numVisibleLights, sceneContext.lights.size()))
+					.build());
+			}
+
+			children.add(LineComponent.builder()
+				.left("Tiles:")
+				.right(String.valueOf(plugin.getDrawnTileCount()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("Static Renderables:")
+				.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("Dynamic Renderables:")
+				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("NPC Displacement Cache Size:")
+				.right(String.valueOf(npcDisplacementCache.size()))
 				.build());
 		}
 
@@ -102,19 +144,19 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		return result;
 	}
 
-	private long[] getAverageTimings() {
+	private boolean getAverageTimings() {
 		if (frames.isEmpty())
-			return new long[0];
+			return false;
 
-		long[] timers = new long[Timer.values().length];
+		Arrays.fill(timings, 0);
 		for (var frame : frames)
 			for (int i = 0; i < frame.timers.length; i++)
-				timers[i] += frame.timers[i];
+				timings[i] += frame.timers[i];
 
-		for (int i = 0; i < timers.length; i++)
-			timers[i] = Math.max(0, timers[i] / frames.size());
+		for (int i = 0; i < timings.length; i++)
+			timings[i] = Math.max(0, timings[i] / frames.size());
 
-		return timers;
+		return true;
 	}
 
 	private void addTiming(Timer timer, long[] timings) {

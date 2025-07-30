@@ -70,7 +70,7 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_INDEX = (1 << 15) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
@@ -454,9 +454,11 @@ public class ModelPusher {
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_INDEX;
 		// The sign bit can't be used without shader changes to correctly unpack the material index
-		return (materialIndex & MAX_MATERIAL_INDEX) << 16
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 10
-			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 7
+		return (materialIndex & MAX_MATERIAL_INDEX) << 20
+			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
+		    | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11
+			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 8
+			| (modelOverride.invertDisplacementStrength ? 1 : 0) << 7
 		    | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (modelOverride.upwardsNormals ? 1 : 0) << 4

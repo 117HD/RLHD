@@ -41,7 +41,7 @@ void main() {
     const float lineFeather = .02;
     const float dotRadius = .4;
     const float timerDotRadius = .1;
-    const vec2 timerMargin = vec2(.125);
+    const float timerMargin = .125;
 
     vec4 src = vec4(vec3(0), smoothstep(0, .05, calibrationTimer));
 
@@ -56,7 +56,7 @@ void main() {
     dot = pow(dot, gammaCorrection);
     src.rgb += vec3(dot);
 
-    vec2 cornerDotUv = uv - vec2(numDots / 2., .5) + timerMargin;
+    vec2 cornerDotUv = uv + vec2(-numDots / 2., .5) + timerMargin * vec2(1, -1);
     float cornerDot = smoothstep(0, lineFeather, timerDotRadius - length(cornerDotUv));
     float angle = fract(.25 + atan(cornerDotUv.y, cornerDotUv.x) / (2 * PI));
     cornerDot *= mix(.1, 1, smoothstep(0, lineFeather, calibrationTimer - angle));
