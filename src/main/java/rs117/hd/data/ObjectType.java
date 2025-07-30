@@ -4,15 +4,15 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public enum ObjectType {
-	WallStraight(0), // uses field1007
-	WallDiagonalCorner(1), // uses field1011
-	WallCorner(2), // uses field1007
-	WallSquareCorner(3), // uses field1011
-	WallDecorStraightNoOffset(4), // uses field1007
-	WallDecorStraightOffset(5), // uses field1007
-	WallDecorDiagonalOffset(6), // 256, var5
-	WallDecorDiagonalNoOffset(7), // 256, var5 + 2 & 3
-	WallDecorDiagonalBoth(8), // 256, var5
+	WallStraight(0),
+	WallDiagonalCorner(1),
+	WallCorner(2),
+	WallSquareCorner(3),
+	WallDecorStraightNoOffset(4),
+	WallDecorStraightOffset(5),
+	WallDecorDiagonalOffset(6),
+	WallDecorDiagonalNoOffset(7),
+	WallDecorDiagonalBoth(8),
 	WallDiagonal(9),
 	CentrepieceStraight(10),
 	CentrepieceDiagonal(11),
