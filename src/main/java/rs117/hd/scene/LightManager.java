@@ -847,12 +847,12 @@ public class LightManager {
 			orientations[0] = orientations[1] = ori;
 
 			int objectType = object.getConfig() & 0x3F;
+			int rot = object.getConfig() >>> 6 & 3;
 			switch (objectType) {
 				case 6: // DiagOutDeco
-				case 7: // DiagInDeco
+					rot = (rot + 2) % 4;
 				case 8: // DiagInWallDeco
 					offset[0] = offset[1] = 45; // ~ 64 / sqrt(2)
-					int rot = object.getConfig() >>> 6 & 3;
 					if (rot % 3 == 0)
 						offset[0] *= -1;
 					if (rot >= 2)
