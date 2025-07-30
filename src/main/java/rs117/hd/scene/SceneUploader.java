@@ -58,7 +58,6 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
-import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @Singleton
@@ -94,10 +93,6 @@ public class SceneUploader {
 	@Inject
 	private ModelPusher modelPusher;
 
-	// Array for mapping the heights of water tiles in the scene to inform the reflection texture position.
-	// If multiple async scene reloads happen simultaneously, this might break, but it should never be a big problem.
-	int[] waterHeightCounters = new int[10000];
-
 	public void upload(SceneContext sceneContext) {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
@@ -127,8 +122,8 @@ public class SceneUploader {
 		if (client.isClientThread())
 			prepareBeforeSwap(sceneContext);
 
-		// Reset water height counters
-		Arrays.fill(waterHeightCounters, 0);
+		// Initialize array for counting the most prevalent water level
+		sceneContext.waterHeightCounters = new int[10000]; // Probably large enough
 
 		sceneContext.staticCustomTilesOffset = sceneContext.staticVertexCount;
 		var tiles = scene.getExtendedTiles();
@@ -144,16 +139,22 @@ public class SceneUploader {
 		sceneContext.staticCustomTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticCustomTilesOffset;
 
 		// Loop through water height index, find most common value and set to waterHeight which can be read by the shader
-		int largestIndex = 0;
-		for (int i = 0; i < waterHeightCounters.length; i++)
-			if (waterHeightCounters[i] > waterHeightCounters[largestIndex])
-				largestIndex = i;
-		if (waterHeightCounters[largestIndex] > 0) {
+		int mostPrevalentIndex = 0;
+		int mostPrevalentCount = 0;
+		for (int i = 0; i < sceneContext.waterHeightCounters.length; i++) {
+			int count = sceneContext.waterHeightCounters[i];
+			if (count > mostPrevalentCount) {
+				mostPrevalentIndex = i;
+				mostPrevalentCount = count;
+			}
+		}
+		if (mostPrevalentCount > 0) {
 			sceneContext.hasWater = true;
-			sceneContext.waterHeight = -largestIndex;
+			sceneContext.waterHeight = -mostPrevalentIndex;
 		} else {
 			sceneContext.hasWater = false;
 		}
+		sceneContext.waterHeightCounters = null;
 
 		stopwatch.stop();
 		log.debug(
@@ -715,7 +716,14 @@ public class SceneUploader {
 					neColor = 0;
 
 				// Increment the corresponding water height value in array which tracks frequency
-				waterHeightCounters[clamp(-swHeight, 0, waterHeightCounters.length - 1)]++;
+				int i = Math.abs(swHeight);
+				if (i >= sceneContext.waterHeightCounters.length && i < 1e6) {
+					// This probably won't happen, but if it does, grow the array
+					int[] arr = new int[i * 2];
+					System.arraycopy(sceneContext.waterHeightCounters, 0, arr, 0, sceneContext.waterHeightCounters.length);
+					sceneContext.waterHeightCounters = arr;
+				}
+				sceneContext.waterHeightCounters[i]++;
 			}
 
 			if (sceneContext.vertexIsOverlay.containsKey(neVertexKey) && sceneContext.vertexIsUnderlay.containsKey(neVertexKey))

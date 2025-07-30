@@ -78,6 +78,7 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 	public int sceneEdge0, sceneEdge1;
+	public int[] waterHeightCounters;
 
 	// Water reflection texture height
 	public boolean hasWater;
