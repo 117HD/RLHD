@@ -39125,7 +39125,7 @@
   {
     "description": "Arkan Blade Special Attack",
     "offset": [ 40, 75, 80 ],
-    "radius": 200,
+    "radius": 230,
     "spawnDelay": 300,
     "fixedDespawnTime": true,
     "despawnDelay": 800,
@@ -39143,7 +39143,7 @@
   {
     "description": "Bone Dagger Special Attack",
     "offset": [ 30, 75, 50 ],
-    "radius": 160,
+    "radius": 170,
     "spawnDelay": 710,
     "fixedDespawnTime": true,
     "despawnDelay": 325,
