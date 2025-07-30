@@ -785,41 +785,37 @@ public class ProceduralGenerator {
 		// Loop through tris to calculate and accumulate normals
 		for (int face = 0; face < faceVertices.length; face++)
 		{
-			float[] n;
-			{
-				float[] a = {
-					faceVertices[face][0][0],
-					faceVertices[face][0][2],
-					faceVertices[face][0][1]
-				};
-				float[] b = {
-					faceVertices[face][1][0],
-					faceVertices[face][1][2],
-					faceVertices[face][1][1]
-				};
-				float[] c = {
-					faceVertices[face][2][0],
-					faceVertices[face][2][2],
-					faceVertices[face][2][1]
-				};
+			float[] a = {
+				faceVertices[face][0][0],
+				faceVertices[face][0][2],
+				faceVertices[face][0][1]
+			};
+			float[] b = {
+				faceVertices[face][1][0],
+				faceVertices[face][1][2],
+				faceVertices[face][1][1]
+			};
+			float[] c = {
+				faceVertices[face][2][0],
+				faceVertices[face][2][2],
+				faceVertices[face][2][1]
+			};
 
-				if (!isBridge) {
-					a[1] += sceneContext.vertexUnderwaterDepth.getOrDefault(faceVertexKeys[face][0], 0);
-					b[1] += sceneContext.vertexUnderwaterDepth.getOrDefault(faceVertexKeys[face][1], 0);
-					c[1] += sceneContext.vertexUnderwaterDepth.getOrDefault(faceVertexKeys[face][2], 0);
-				}
-
-				Vector.subtract(b, b, a);
-				Vector.subtract(c, c, a);
-				// The winding order is clockwise, so flip c and b to produce the normal
-				n = Vector.cross(a, c, b);
+			if (!isBridge) {
+				a[1] += sceneContext.vertexUnderwaterDepth.getOrDefault(faceVertexKeys[face][0], 0);
+				b[1] += sceneContext.vertexUnderwaterDepth.getOrDefault(faceVertexKeys[face][1], 0);
+				c[1] += sceneContext.vertexUnderwaterDepth.getOrDefault(faceVertexKeys[face][2], 0);
 			}
 
-			for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
-			{
+			Vector.subtract(b, b, a);
+			Vector.subtract(c, c, a);
+			// The winding order is clockwise, so flip c and b to produce the normal
+			float[] n = Vector.cross(a, c, b);
+
+			for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 				int vertexKey = faceVertexKeys[face][vertex];
 				// accumulate normals to hashmap
-				sceneContext.vertexTerrainNormals.merge(vertexKey, n, (a, b) -> add(a, a, b));
+				sceneContext.vertexTerrainNormals.merge(vertexKey, n, (acc, v) -> add(acc, acc, v));
 			}
 		}
 	}

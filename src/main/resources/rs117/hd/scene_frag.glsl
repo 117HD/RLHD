@@ -124,9 +124,9 @@ void main() {
 
     if (isWaterSurface) {
         #if LEGACY_WATER
-        outputColor = sampleLegacyWater(waterTypeIndex, viewDir);
+            outputColor = sampleLegacyWater(waterTypeIndex, viewDir);
         #else
-        outputColor = sampleWater(waterTypeIndex, viewDir);
+            outputColor = sampleWater(waterTypeIndex, viewDir);
         #endif
     } else {
         vec2 uv = IN.uv;
@@ -485,8 +485,8 @@ void main() {
     #endif
 
     #if LINEAR_ALPHA_BLENDING
-    // We need to output linear
-    outputColor.rgb = srgbToLinear(outputColor.rgb);
+        // We need to output linear
+        outputColor.rgb = srgbToLinear(outputColor.rgb);
     #endif
 
     // apply fog

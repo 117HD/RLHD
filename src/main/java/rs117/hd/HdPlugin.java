@@ -2985,7 +2985,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									glBindTexture(GL_TEXTURE_2D_ARRAY, textureManager.textureArray);
 									textureManager.setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, level);
 								}
-								glActiveTexture(TEXTURE_UNIT_UI);
 								break;
 							case KEY_ASYNC_UI_COPY:
 								asyncUICopy.complete();
@@ -3657,10 +3656,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void displayUpdateMessage() {
-//		int messageId = 1;
-//		if (config.getPluginUpdateMessage() >= messageId)
-//			return; // Don't show the same message multiple times
-//
+		int messageId = 1;
+		if (config.getPluginUpdateMessage() >= messageId)
+			return; // Don't show the same message multiple times
+
 //		PopupUtils.displayPopupMessage(client, "117HD Update",
 //			"<br><br>" +
 //			"If you experience any issues, please report them in the <a href=\"" + DISCORD_URL +"\">117HD Discord</a>.",
