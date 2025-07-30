@@ -3169,16 +3169,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.MODEL_PUSHING);
 
-				modelInfo.setVertexOffset(vertexOffset);
-				modelInfo.setUVOffset(uvOffset);
-
 				// add this temporary model to the map for batching purposes
 				if (configModelBatching)
 					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 
-			if (modelInfo.getVertexOffset() != -1)
-				drawnDynamicRenderableCount++;
+			drawnDynamicRenderableCount++;
 
 			if (configCharacterDisplacement && renderable instanceof Actor) {
 				if (enableDetailedTimers)
@@ -3208,7 +3204,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.end(Timer.DRAW_RENDERABLE);
 
-		if (modelInfo.getVertexOffset() == -1)
+		if (vertexOffset == -1)
 			return; // Hidden model
 
 		bufferForTriangles(faceCount)
