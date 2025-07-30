@@ -32,6 +32,12 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "name": "DEFAULT_ICE",
+    "groundMaterial": "ICE_4",
+    "uvScale": 2,
+    "shiftLightness": 15
+  },
+  {
     "name": "VERTICAL_DIRT_FIX",
     "groundMaterial": "VERTICAL_DIRT"
   },
@@ -444,6 +450,83 @@
     "minSaturation": 1,
     "maxSaturation": 1,
     "shiftLightness": 12
+  },
+  {
+    "name": "PINBALL_FLOOR",
+    "area": "RANDOM_EVENT_PINBALL",
+    "overlayIds": [
+      0,
+      29
+    ],
+    "underlayIds": [
+      55
+    ],
+    "groundMaterial": "NONE"
+  },
+  {
+    "name": "EVIL_TWIN_FLOOR",
+    "area": "RANDOM_EVENT_EVIL_TWIN",
+    "overlayIds": [
+      0,
+      22,
+      23,
+      36
+    ],
+    "underlayIds": [
+      64
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "uvScale": 0.75,
+    "minLightness": 16,
+    "shiftLightness": 3
+  },
+  {
+    "name": "MIME_FLOOR",
+    "area": "RANDOM_EVENT_MIME",
+    "overlayIds": [
+      86
+    ],
+    "groundMaterial": "CARPET"
+  },
+  {
+    "name": "QUIZ_FLOOR_SYMMETRY_FIX_1",
+    "area": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_1",
+    "overlayIds": [
+      0
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "uvScale": 2,
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "QUIZ_FLOOR_SYMMETRY_FIX_2",
+    "area": "RANDOM_EVENT_QUIZ_MASTER_SYMMETRY_FIX_2",
+    "overlayIds": [
+      0
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "uvScale": 2,
+    "shiftLightness": 1,
+    "blended": false
+  },
+  {
+    "name": "QUIZ_FLOOR_SYMMETRY_EDGE_FIX",
+    "area": "RANDOM_EVENT_QUIZ_MASTER_EDGE_FIX",
+    "overlayIds": [
+      0
+    ],
+    "groundMaterial": "TRANSPARENT"
+  },
+  {
+    "name": "QUIZ_MASTER_FLOOR",
+    "area": "RANDOM_EVENT_QUIZ_MASTER",
+    "overlayIds": [
+      0
+    ],
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "uvScale": 2,
+    "blended": false
   },
   {
     "name": "Al Kharid to Varrock Gate Grass Fix",
@@ -3799,23 +3882,6 @@
     "waterType": "CAVE_WATER"
   },
   {
-    "name": "STRANGLEWOOD_HILLSIDE",
-    "area": "THE_STRANGLEWOOD_EXTENDED",
-    "overlayIds": [
-      222
-    ],
-    "groundMaterial": "DIRT",
-    "blended": false
-  },
-  {
-    "name": "STRANGLEWOOD_SNOW",
-    "area": "THE_STRANGLEWOOD_EXTENDED",
-    "overlayIds": [
-      271
-    ],
-    "groundMaterial": "SNOW_1"
-  },
-  {
     "name": "TEMPLE_OF_THE_EYE_INCORRECT_WATER",
     "area": "TEMPLE_OF_THE_EYE",
     "overlayIds": [
@@ -4705,7 +4771,100 @@
     "name": "VARLAMORE_TEMPLE_CRYPT_WATER",
     "area": "VARLAMORE_TEMPLE_CRYPT",
     "overlayIds": [ 181, 201 ],
-    "waterType": "DARK_BLUE_WATER"
+    "waterType": "PLAIN_WATER"
+  },
+  {
+    "name": "Twilight Temple Tower Floor",
+    "area": "Twilight Temple Tower Floor",
+    "overlayIds": [ 0, 232, 233, 235, 237 ],
+    "groundMaterial": "MARBLE_1_GLOSS"
+  },
+  {
+    "name": "Twilight Temple Main Floor",
+    "area": "Twilight Temple Main Floor",
+    "overlayIds": [ 0, 232, 233, 235, 237 ],
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Ruins of Tapoyauik Ice",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 382 ],
+    "groundMaterial": "ICE_4"
+  },
+  {
+    "name": "Ruins of Tapoyauik Ice Underlay",
+    "area": "Ruins of Tapoyauik",
+    "underlayIds": [ 18, 227, 228, 229 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 30,
+    "shiftHue": 5,
+    "maxHue": 38,
+    "replacements": {
+      "DEFAULT_ICE": "s >= 1"
+    }
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow 1",
+    "area": "Ruins of Tapoyauik",
+    "underlayIds": [ 58, 72, 87 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 30,
+    "shiftHue": 5,
+    "maxHue": 38
+  },
+  {
+    "name": "Ruins of Tapoyauik Snow 2",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 263, 379 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 25
+  },
+  {
+    "name": "Ruins of Tapoyauik Water",
+    "area": "Ruins of Tapoyauik",
+    "overlayIds": [ 380 ],
+    "waterType": "WATER"
+  },
+  {
+    "name": "Amoxliatl Water",
+    "area": "AMOXLIATL_ARENA_WATER",
+    "overlayIds": [ 381 ],
+    "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Amoxliatl Arena Dirt Fix",
+    "area": "AMOXLIATL_ARENA_DIRT_FIX",
+    "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
+    "maxLightness": 40,
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "Amoxliatl Arena Snow Fix",
+    "area": "AMOXLIATL_ARENA_SNOW_FIX",
+    "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
+    "maxLightness": 40,
+    "groundMaterial": "SNOW_1"
+  },
+  {
+    "name": "Amoxliatl Snow Main",
+    "area": "AMOXLIATL_ARENA",
+    "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 20,
+    "shiftHue": 5,
+    "maxHue": 38,
+    "replacements": {
+      "Amoxliatl Snow Main No Blending": "!blending"
+    }
+  },
+  {
+    "name": "Amoxliatl Snow Main No Blending",
+    "area": "AMOXLIATL_ARENA",
+    "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
+    "groundMaterial": "SNOW_1",
+    "maxSaturation": 0,
+    "shiftLightness": 17,
+    "minLightness": 68
   },
   {
     "name": "COLOSSEUM_TILES",
@@ -6886,14 +7045,6 @@
     "replacements": {
       "WINTER_GRUNGE": "season == WINTER"
     }
-  },
-  {
-    "name": "STRANGLEWOOD_SNOW_DARK",
-    "area": "THE_STRANGLEWOOD_EXTENDED",
-    "underlayIds": [
-      174
-    ],
-    "groundMaterial": "SNOW_1"
   },
   {
     "name": "JUDGE_OF_YAMA_BOSS_WATER",

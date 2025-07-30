@@ -4,9 +4,9 @@
     "ambientColor": "#c0ae94",
     "ambientStrength": 3,
     "directionalColor": "#f5bc67",
-    "directionalStrength": 1,
+    "directionalStrength": 1.25,
     "fogColor": "#b8d6ff",
-    "fogDepth": 70
+    "fogDepth": 60
   },
   {
     "area": "REVENANT_CAVES",
@@ -1874,6 +1874,25 @@
     "windStrength": 65
   },
   {
+    "area": "AUBURNVALE",
+    "ambientColor": [
+      295.8393,
+      245.74895,
+      176.9941
+    ],
+    "ambientStrength": 0.75,
+    "directionalColor": [
+      295.8393,
+      245.74895,
+      176.9941
+    ],
+    "directionalStrength": 2,
+    "sunAngles": [ 52, 235 ],
+    "fogColor": "#fddcb4",
+    "fogDepth": 6.5,
+    "windStrength": 50
+  },
+  {
     "area": "VARLAMORE",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
@@ -1933,6 +1952,14 @@
     "windStrength": 60,
     "windSpeed": 15,
     "instantTransition": true
+  },
+  {
+    "area": "Ruins of Tapoyauik",
+    "waterColor": "#2759C6"
+  },
+  {
+    "area": "AMOXLIATL_ARENA",
+    "waterColor": "#0009BC"
   },
   {
     "key": "OVERWORLD",

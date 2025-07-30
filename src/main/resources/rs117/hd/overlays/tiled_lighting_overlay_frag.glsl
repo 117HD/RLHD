@@ -14,9 +14,6 @@ in vec2 fUv;
 out vec4 FragColor;
 
 void main() {
-    vec2 uv = fUv;
-    uv.y = 1 - uv.y;
-
     vec2 texelCenter = (floor(fUv * tiledLightingResolution) + .5) / tiledLightingResolution;
 
     const float eps = 1e-10;
@@ -89,7 +86,7 @@ void main() {
         if (length(c) > 0)
             c.a = max(c.a, 0.3);
     #else
-        ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
+        ivec2 tileXY = ivec2(floor(fUv * tiledLightingResolution));
         int tiledLightCount = 0;
         for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
             ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);

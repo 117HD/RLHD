@@ -20359,7 +20359,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FAI_FALADOR_HOUSE_TORCH"
+      "FAI_FALADOR_HOUSE_TORCH",
+      "GRAB_EVIL_TWIN_TORCH"
     ]
   },
   {
@@ -20693,7 +20694,11 @@
       "BURGH_VILLAGE_FIRE",
       "TROLL_EADGAR_COOKING_POT",
       "FORESTRY_FIRE",
-      "BCS_MAISA_CAMP_FIRE"
+      "BCS_MAISA_CAMP_FIRE",
+      "VMQ4_CRYPT_ASSAULT_FIRE",
+      "VMQ4_CRYPT_ENNIUS_EXIT",
+      "VMQ4_CRYPT_ENNIUS_ITZLA_BLOCKAGE",
+      "VMQ4_METZLI_BOSS_FINAL_SECTION_BORDER"
     ]
   },
   {
@@ -21031,7 +21036,6 @@
     "range": 0,
     "objectIds": [
       "CLIMBING_ROPE",
-      "CLIMBING_ROPE_TOP",
       "CLIMBING_ROPE2",
       "DRAGON_SLAYER_QIP_CLIMBING_ROPE"
     ]
@@ -21127,7 +21131,8 @@
     "range": 10,
     "objectIds": [
       "FAIRY_FURNACE_GLOW",
-      "FAI_FALADOR_FURNACE_GLOW"
+      "FAI_FALADOR_FURNACE_GLOW",
+      "FURNACE"
     ]
   },
   {
@@ -26632,19 +26637,19 @@
     ]
   },
   {
-    "description": "STRANGE_SHRINE",
-    "height": 70,
+    "description": "MAZE_RANDOM_STRANGE_SHRINE",
+    "height": 80,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 7.5,
+    "radius": 270,
+    "strength": 10,
     "color": [
       255,
-      216,
-      87
+      255,
+      255
     ],
     "type": "PULSE",
-    "duration": 2800,
-    "range": 30,
+    "duration": 1750,
+    "range": 35,
     "objectIds": [
       "MACRO_MAZE_COMPLETE"
     ]
@@ -27725,7 +27730,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "TOXIC_TOTS_PROJECTILE"
     ]
@@ -27742,7 +27748,8 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 1000,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
     "projectileIds": [
       "SLAYER_TOTS_PROJECTILE"
     ]
@@ -35837,7 +35844,8 @@
     "range": 20,
     "objectIds": [
       "FORTIS_STOVE",
-      "FORTIS_STOVE_NOOP"
+      "FORTIS_STOVE_NOOP",
+      "FURNACE_CLAY01_TWILIGHT"
     ]
   },
   {
@@ -35920,7 +35928,8 @@
     "type": "FLICKER",
     "range": 7.5,
     "objectIds": [
-      "DUNGEONKIT_IMCANDO02_STATUE02"
+      "DUNGEONKIT_IMCANDO02_STATUE02",
+      "VMQ4_TEUMO_BASEMENT_FIRE_LIT"
     ]
   },
   {
@@ -36201,6 +36210,48 @@
     "radius": 350,
     "fadeInDuration": 150,
     "fadeOutDuration": 150,
+    "offset": [ 0, 150, 20 ]
+  },
+  {
+    "description": "FROST_NAGA",
+    "npcIds": [ "FROST_NAGUA", "VMQ3_RUINS_FROST_NAGUA" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 5,
+    "radius": 350,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "offset": [ 0, 150, 20 ]
+  },
+  {
+    "description": "FROST_NAGUA_PROJECTILE",
+    "projectileIds": [ "VFX_FROST_NAGUA_PROJ", "VFX_AMOXLIATL_ICE_BLOCK_PROJECTILE_01" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 7,
+    "radius": 250,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250,
+    "offset": [ 0, 0, 0 ]
+  },
+  {
+    "description": "AMOXLIATL",
+    "npcIds": [ "AMOXLIATL_CUTSCENE", "AMOXLIATL" ],
+    "color": [
+      100,
+      175,
+      255
+    ],
+    "strength": 5,
+    "radius": 1000,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 250,
     "offset": [ 0, 150, 20 ]
   },
   {
@@ -38291,7 +38342,10 @@
       255
     ],
     "type": "STATIC",
-    "objectIds": [ "HG_CAVE_EXIT" ]
+    "objectIds": [
+      "HG_CAVE_EXIT",
+      "CAVEKIT_ROCK01_ENTRANCE02"
+    ]
   },
   {
     "description": "Hunter Guild Cave Exit - Far",
@@ -38306,6 +38360,22 @@
     ],
     "type": "STATIC",
     "objectIds": [ "HG_CAVE_EXIT" ]
+  },
+  {
+    "description": "Stalker Den Cave Exit",
+    "offset": [ -50, 200, -50 ],
+    "radius": 600,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "STALKER_DEN_EXTERNAL_SHORTCUT_INSIDE",
+      "SOC_CAVE_EXIT"
+    ]
   },
   {
     "description": "Karamja - Brimhaven Dungeon - Pillar Torches",
@@ -39146,5 +39216,642 @@
     "fadeInDuration": 100,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [ "SP_ATTACK_ABYSSAL_WHIP" ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Brazier",
+    "offset": [ 0, 350, 0 ],
+    "radius": 500,
+    "strength": 3.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1050,
+    "range": 10,
+    "objectIds": [
+      "VMQ3_RUINS_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Varlamore - Ruins of Tapoyauik - Brazier",
+    "offset": [ 0, 175, 0 ],
+    "radius": 300,
+    "strength": 13.5,
+    "color": "#FFD11E",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "PULSE",
+    "duration": 1500,
+    "range": 7.5,
+    "objectIds": [
+      "VMQ4_KEYSTONE_CHAMBER_ENTRANCE_OPEN",
+      "VMQ4_KEYSTONE_CHAMBER_EXIT"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_SLAM_AOE",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 2500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_SLAM_LINE",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 11,
+    "spawnDelay": 1900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_LOC_MARKER_SPAWN"
+    ]
+  },
+  {
+    "description": "ENNIUS_FIRE_CAST",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 12,
+    "spawnDelay": 1900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_CRYPT_ENNIUS_BOSS" ],
+    "animationIds": [ "VMQ4_ENNIUS_CAST" ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Fire Blue",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 18.5,
+    "fadeOutDuration": 400,
+    "color": [
+      3,
+      60,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_FIRE_1"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Fire Cyan",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 10,
+    "fadeOutDuration": 400,
+    "color": [
+      3,
+      150,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_FIRE_2"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Puzzle Brazier Cyan",
+    "height": 200,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      3,
+      150,
+      252
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "VMQ4_MOON_PUZZLE_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Teleport Blue",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 200,
+    "strength": 30,
+    "color": [
+      3,
+      70,
+      252
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 5,
+    "objectIds": [
+      "VMQ4_MOON_TELEPORT"
+    ]
+  },
+  {
+    "description": "Tonali Cavern Teleport Orange",
+    "height": 40,
+    "alignment": "CENTER",
+    "visibleFromOtherPlanes": true,
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "PULSE",
+    "duration": 1200,
+    "range": 5,
+    "objectIds": [
+      "VMQ4_SUN_TELEPORT"
+    ],
+    "npcIds": [
+      "TONALI_PORTABLE_TELEPORTER"
+    ]
+  },
+  {
+    "description": "Sun Shrine Fire Puzzle Fail Fire",
+    "height": 40,
+    "areas": [ "Tonali Cavern Sun Puzzle Fire" ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "fadeOutDuration": 500,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "VFX_VMQ4_ENNIUS_FIRE_EXPLOSION"
+    ]
+  },
+  {
+    "description": "Sun Shrine Puzzle Complete",
+    "offset": [ 0, 600, -130 ],
+    "alignment": "CENTER",
+    "radius": 2500,
+    "visibleFromOtherPlanes": true,
+    "strength": 7,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "objectIds": [ "VMQ4_SUN_PUZZLE_STATUE_NOOPS" ]
+  },
+  {
+    "description": "Moon Shrine Puzzle Complete",
+    "offset": [ 0, 700, -530 ],
+    "alignment": "CENTER",
+    "radius": 4500,
+    "visibleFromOtherPlanes": true,
+    "strength": 7,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 200,
+    "color": [
+      150,
+      150,
+      255
+    ],
+    "objectIds": [ "VMQ4_MOON_PUZZLE_STATUE_NOOPS" ]
+  },
+  {
+    "description": "METZLI_FIRE_WAVE",
+    "height": 40,
+    "radius": 350,
+    "strength": 12,
+    "fadeOutDuration": 300,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_METZLI_FIRE_WAVE" ]
+  },
+  {
+    "description": "METZLI_FIRE_ARROW",
+    "height": -25,
+    "radius": 150,
+    "strength": 12,
+    "fadeOutDuration": 175,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [ "VMQ4_PROJECTILE_CULTIST_RANGED_FIRE_01" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_FIRE_WALL",
+    "height": 50,
+    "radius": 200,
+    "strength": 17,
+    "fadeOutDuration": 1800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ "VFX_VMQ4_METZLI_FIRE_WALL_CAST" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_WATER_WALL",
+    "height": 50,
+    "radius": 300,
+    "strength": 17,
+    "fadeOutDuration": 1800,
+    "fadeInDuration": 200,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1900,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "graphicsObjectIds": [ "VFX_VMQ4_METZLI_WATER_WALL_CAST" ]
+  },
+  {
+    "description": "METZLI_SPELL_CAST_FIRE_WAVE",
+    "height": 200,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 15,
+    "spawnDelay": 300,
+    "fadeOutDuration": 100,
+    "fadeInDuration": 1000,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1800,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [ "VMQ4_METZLI_BOSS" ],
+    "animationIds": [ "VMQ4_METZLI_CAST" ]
+  },
+  {
+    "description": "METZLI_WATER_PROJECTILE",
+    "height": -25,
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "VMQ4_PROJECTILE_METZLI_MAGIC_WATER_01",
+      "VMQ4_PROJECTILE_CULTIST_MAGIC_WATER_04"
+    ]
+  },
+  {
+    "description": "METZLI_WATER_WAVE",
+    "height": 50,
+    "radius": 275,
+    "strength": 8,
+    "fadeInDuration": 200,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [ "VMQ4_METZLI_MOON_WAVE" ]
+  },
+  {
+    "description": "METZLI_FIRE_BALL",
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "FIREWAVE_TRAVEL",
+      "VFX_VMQ4_METZLI_RANGED_FIRE_PROJECTILE_ENRAGED_01"
+    ]
+  },
+  {
+    "description": "ARKAN_BLADE_SPECIAL",
+    "offset": [ 40, 75, 80 ],
+    "radius": 200,
+    "spawnDelay": 300,
+    "fixedDespawnTime": true,
+    "despawnDelay": 800,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM"  ]
+  },
+  {
+    "description": "Totem Fletching - Animals - All others",
+    "offset": [ 0, 100, 0 ],
+    "radius": 400,
+    "strength": 8,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_A",
+      "ENT_TOTEMS_ANIMAL_B",
+      "ENT_TOTEMS_ANIMAL_D",
+      "ENT_TOTEMS_ANIMAL_E",
+      "ENT_TOTEMS_ANIMAL_A_CS",
+      "ENT_TOTEMS_ANIMAL_B_CS",
+      "ENT_TOTEMS_ANIMAL_D_CS",
+      "ENT_TOTEMS_ANIMAL_E_CS"
+    ]
+  },
+  {
+    "description": "Totem Fletching - Animals - Eagle",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      100
+    ],
+    "npcIds": [
+      "ENT_TOTEMS_ANIMAL_C",
+      "ENT_TOTEMS_ANIMAL_C_CS"
+    ]
+  },
+  {
+    "description": "Mime Spotlight",
+    "offset": [ 0, 220, 0 ],
+    "radius": 500,
+    "strength": 30,
+    "color": [
+      188,
+      150,
+      150
+    ],
+    "spawnDelay": 900,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 800,
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MACRO_SPOTLIGHT"
+    ],
+    "animationIds": [ 1136 ]
+  },
+  {
+    "description": "Mime Exit Sign",
+    "offset": [ -30, 40, 0 ],
+    "radius": 125,
+    "strength": 10,
+    "color": [
+      100,
+      255,
+      100
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "MACRO_EXITSIGN"
+    ],
+    "animationIds": [ 1136 ]
+  },
+  {
+    "description": "Pinball Green Buzzer",
+    "offset": [ 60, 300, -60 ],
+    "radius": 400,
+    "strength": 20,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      "PINBALL_LARGE_BUZZER_QUARTER_GREEN"
+    ]
+  },
+  {
+    "description": "Pinball Blue Buzzer",
+    "offset": [ 60, 300, -60 ],
+    "radius": 475,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 20,
+    "objectIds": [
+      "PINBALL_LARGE_BUZZER_QUARTER_BLUE"
+    ]
+  },
+  {
+    "description": "Pinball Red Buzzer",
+    "offset": [ 0, 300, 0 ],
+    "radius": 225,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      "PINBALL_ROOF_TOP_DECOR"
+    ]
+  },
+  {
+    "description": "Pinball Green Ambience 1",
+    "offset": [ 600, 600, 600 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Green Ambience 2",
+    "offset": [ 1800, 600, -500 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Blue Ambience 1",
+    "offset": [ 600, 400, -500 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Blue Ambience 2",
+    "offset": [ 1600, 500, 600 ],
+    "radius": 1000,
+    "strength": 10,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Pinball Red Ambience",
+    "offset": [ 1100, 500, 900 ],
+    "radius": 1275,
+    "strength": 10,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "PINBALL_CHICANE_MIDDLE"
+    ]
+  },
+  {
+    "description": "Evil Bob Uncooking Pot",
+    "offset": [ 0, 20, 0 ],
+    "radius": 650,
+    "strength": 10,
+    "color": [
+      0,
+      75,
+      200
+    ],
+    "type": "FLICKER",
+    "range": 40,
+    "duration": 0,
+    "objectIds": [
+      "MACRO_EVIL_BOB_UNCOOK_POT"
+    ]
   }
 ]
