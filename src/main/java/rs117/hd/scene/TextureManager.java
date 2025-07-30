@@ -392,7 +392,6 @@ public class TextureManager {
 		);
 	}
 
-
 	private void updateUBOMaterials() {
 		assert materialUniformEntries.size() - 1 <= ModelPusher.MAX_MATERIAL_INDEX :
 			"Too many materials (" + materialUniformEntries.size() + ") to fit into packed material data.";
