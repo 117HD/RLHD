@@ -210,7 +210,7 @@ public class GLBuffer
 	@RequiredArgsConstructor
 	public enum AccessFlags {
 		Write(GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT),
-		Read(GL_MAP_READ_BIT | GL_MAP_FLUSH_EXPLICIT_BIT),
+		Read(GL_MAP_READ_BIT),
 		ReadWrite(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT);
 
 		public final int glMapBufferRangeFlags;
