@@ -192,10 +192,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_UI = 5;
 
 	public static final float NEAR_PLANE = 50;
-	public static final float APPROX_MAX_HEIGHT = 5000;
-	public static final float FAR_PLANE = (float) Math.sqrt(
-		Math.pow(EXTENDED_SCENE_SIZE * LOCAL_TILE_SIZE, 2) * 2 + Math.pow(APPROX_MAX_HEIGHT, 2)
-	);
 	public static final int MAX_FACE_COUNT = 6144;
 	public static final int MAX_DISTANCE = EXTENDED_SCENE_SIZE;
 	public static final int GROUND_MIN_Y = 350; // how far below the ground models extend
@@ -390,6 +386,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int fboTiledLighting;
 	private int texTiledLighting;
 
+	private int[] waterReflectionResolution;
 	private int fboWaterReflection;
 	private int texWaterReflection;
 	private int texWaterReflectionDepthMap;
@@ -437,11 +434,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int dynamicOffsetVertices;
 	private int dynamicOffsetUvs;
 	private int renderBufferOffset;
-
-	private boolean lastLinearAlphaBlending;
-	private boolean lastPlanarReflectionEnabled;
-	private int lastPlanarReflectionWidth;
-	private int lastPlanarReflectionHeight;
 
 	// Configs used frequently enough to be worth caching
 	public boolean configGroundTextures;
@@ -705,10 +697,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
-				lastPlanarReflectionWidth = lastPlanarReflectionHeight = 0;
-				lastPlanarReflectionEnabled = false;
-				lastLinearAlphaBlending = false;
-
 				gamevalManager.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
@@ -786,7 +774,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
 				destroyTileHeightMap();
-				destroyPlanarReflectionFbo();
+				destroyWaterReflectionsFbo();
 				destroyWaterNormalMaps();
 				destroyModelSortingBins();
 
@@ -1376,7 +1364,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
 			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
 
-		float resolutionScale = config.sceneResolutionScale() / 100f;
+		float resolutionScale = config.sceneResolution() / 100f;
 		sceneResolution = new int[] {
 			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
 			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
@@ -1569,10 +1557,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		texTileHeightMap = 0;
 	}
 
-	private void initPlanarReflectionFbo(int width, int height)
-	{
-		int[] dimensions = { width, height };
-		applyScaling(getDpiScaling(), dimensions);
+	private void updateWaterReflectionsFbo() {
+		if (!configPlanarReflections || sceneViewport == null)
+			return;
+
+		// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
+		float resolutionScale = config.waterReflectionResolution() / 100f;
+		int[] resolution = {
+			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
+			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
+		};
+		if (Arrays.equals(waterReflectionResolution, resolution))
+			return;
+
+		destroyWaterReflectionsFbo();
+		waterReflectionResolution = resolution;
 
 		// Create and bind the FBO
 		fboWaterReflection = glGenFramebuffers();
@@ -1584,7 +1583,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Create texture
 		texWaterReflection = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texWaterReflection);
-		glTexImage2D(GL_TEXTURE_2D, 0, format, dimensions[0], dimensions[1], 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, resolution[0], resolution[1], 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
 		// TODO: consider disabling mipmapping for less flickering
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -1599,19 +1598,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Create texture
 		texWaterReflectionDepthMap = glGenTextures();
 		glBindTexture(GL_TEXTURE_2D, texWaterReflectionDepthMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, dimensions[0], dimensions[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, resolution[0], resolution[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
 		checkGLErrors();
 
 		// Bind texture
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texWaterReflectionDepthMap, 0);
 		checkGLErrors();
-
-		// Reset
-		glBindTexture(GL_TEXTURE_2D, 0);
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 	}
 
-	private void destroyPlanarReflectionFbo() {
+	private void destroyWaterReflectionsFbo() {
+		waterReflectionResolution = null;
+
 		if (texWaterReflection != 0)
 			glDeleteTextures(texWaterReflection);
 		texWaterReflection = 0;
@@ -1673,7 +1670,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		textureManager.setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
+		setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
 
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
@@ -2212,8 +2209,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (renderBufferOffset > 0)
 			hasLoggedIn = true;
 
-		updateSceneFbo();
-
 		// Draw 3d scene
 		if (hasLoggedIn && sceneContext != null && sceneViewport != null) {
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
@@ -2223,27 +2218,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
 
-			// Setup planar reflection FBO
-			// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
-			final float reflectionResolution = clamp(config.reflectionResolution() / 100f, 0, 4);
-			final int reflectionWidth = Math.max(1, Math.round(sceneResolution[0] * reflectionResolution));
-			final int reflectionHeight = Math.max(1, Math.round(sceneResolution[1] * reflectionResolution));
-			// Re-create planar reflections FBO if needed
-			if (lastPlanarReflectionEnabled != configPlanarReflections ||
-				lastPlanarReflectionWidth != reflectionWidth ||
-				lastPlanarReflectionHeight != reflectionHeight ||
-				lastLinearAlphaBlending != configLinearAlphaBlending
-			) {
-				lastPlanarReflectionEnabled = configPlanarReflections;
-				lastPlanarReflectionWidth = reflectionWidth;
-				lastPlanarReflectionHeight = reflectionHeight;
-
-				destroyPlanarReflectionFbo();
-				if (configPlanarReflections)
-					initPlanarReflectionFbo(reflectionWidth, reflectionHeight);
-			}
-
-			lastLinearAlphaBlending = configLinearAlphaBlending;
+			updateSceneFbo();
+			updateWaterReflectionsFbo();
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			float fogDepth = 0;
@@ -2418,7 +2394,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				frameTimer.begin(Timer.RENDER_REFLECTIONS);
 
-				glViewport(0, 0, reflectionWidth, reflectionHeight);
+				glViewport(0, 0, waterReflectionResolution[0], waterReflectionResolution[1]);
 
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboWaterReflection);
 				glClearDepth(0);
@@ -2945,6 +2921,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					boolean recompilePrograms = false;
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
+					boolean recreateWaterReflectionsFbo = false;
 					boolean reloadTexturesAndMaterials = false;
 					boolean reloadEnvironments = false;
 					boolean reloadModelOverrides = false;
@@ -2968,6 +2945,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									clearModelCache = reloadScene = true;
 								break;
 							case KEY_LEGACY_WATER:
+								recreateSceneFbo = true;
+								recreateWaterReflectionsFbo = true;
+								recompilePrograms = true;
 								if (configLegacyWater) {
 									destroyWaterNormalMaps();
 								} else {
@@ -2976,14 +2956,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 								int level = config.anisotropicFilteringLevel();
-								glActiveTexture(TEXTURE_UNIT_GAME);
 								if (texWaterNormalMaps != 0) {
+									glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
 									glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
-									textureManager.setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, level);
+									setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, level);
 								}
 								if (textureManager.textureArray != 0) {
+									glActiveTexture(TEXTURE_UNIT_GAME);
 									glBindTexture(GL_TEXTURE_2D_ARRAY, textureManager.textureArray);
-									textureManager.setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, level);
+									setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, level);
 								}
 								break;
 							case KEY_ASYNC_UI_COPY:
@@ -2999,6 +2980,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;
+							case KEY_PLANAR_REFLECTIONS:
+								recreateWaterReflectionsFbo = true;
+								// fall-through
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_DYNAMIC_LIGHTS:
@@ -3010,8 +2994,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
-							case KEY_PLANAR_REFLECTIONS:
-							case KEY_LEGACY_WATER:
 							case KEY_WATER_FOAM:
 								recompilePrograms = true;
 								break;
@@ -3118,6 +3100,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (recreateShadowMapFbo) {
 						destroyShadowMapFbo();
 						initShadowMapFbo();
+					}
+
+					if (recreateWaterReflectionsFbo) {
+						destroyWaterReflectionsFbo();
+						updateWaterReflectionsFbo();
 					}
 
 					if (reloadEnvironments)
@@ -3608,6 +3595,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else {
 			glDisable(target);
 		}
+	}
+
+	public static void setAnisotropicFilteringAndMipMapping(int target, float level) {
+		setAnisotropicFilteringLevel(target, level);
+		if (level == 0) {
+			// level = 0 means no mipmaps and no anisotropic filtering
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		} else {
+			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
+			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
+			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
+			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
+			// that are very noticeable on terrain
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+	}
+
+	public static void setAnisotropicFilteringLevel(int target, float level) {
+		if (!GL_CAPS.GL_EXT_texture_filter_anisotropic)
+			return;
+
+		float max = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+		level = HDUtils.clamp(level, 1, max);
+		glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")

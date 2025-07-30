@@ -59,7 +59,6 @@ import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
 import static rs117.hd.utils.HDUtils.HALF_PI;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -255,7 +254,7 @@ public class TextureManager {
 
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
+		HdPlugin.setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
 
 		log.debug("Allocated {}x{} texture array with {} layers", textureSize, textureSize, textureLayers.size());
 
@@ -339,7 +338,7 @@ public class TextureManager {
 			}
 		}
 
-		log.debug("Loaded {} HD & {} vanilla textures", hdTextureCount, vanillaTextureCount);
+		log.debug("Loaded {} HD & {} vanilla textures in {}", hdTextureCount, vanillaTextureCount, stopwatch);
 
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
@@ -356,9 +355,6 @@ public class TextureManager {
 		materialOrdinalToTextureLayer = null;
 		vanillaTextureIndexToTextureLayer = null;
 		textureProvider.setBrightness(vanillaBrightness);
-		glActiveTexture(TEXTURE_UNIT_UI);
-
-		log.debug("Texture load time: {}", stopwatch);
 	}
 
 	public BufferedImage loadTextureImage(String textureName) {
@@ -396,31 +392,6 @@ public class TextureManager {
 		);
 	}
 
-	public void setAnisotropicFilteringAndMipMapping(int target, float level) {
-		setAnisotropicFilteringLevel(target, level);
-		if (level == 0) {
-			// level = 0 means no mipmaps and no anisotropic filtering
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		} else {
-			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
-			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
-			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
-			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
-			// that are very noticeable on terrain
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		}
-	}
-
-	public void setAnisotropicFilteringLevel(int target, float level) {
-		if (!HdPlugin.GL_CAPS.GL_EXT_texture_filter_anisotropic)
-			return;
-
-		float max = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-		level = HDUtils.clamp(level, 1, max);
-		glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);
-	}
 
 	private void updateUBOMaterials() {
 		assert materialUniformEntries.size() - 1 <= ModelPusher.MAX_MATERIAL_INDEX :

@@ -872,7 +872,6 @@ public class SceneUploader {
 			float nwTerrainData = (float) packTerrainData(true, Math.max(1, nwDepth), waterType, tileZ);
 			float neTerrainData = (float) packTerrainData(true, Math.max(1, neDepth), waterType, tileZ);
 
-			// Swap Y and Z, since normals have Z pointing up
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
 			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[1], neNormals[2], neTerrainData);
 			sceneContext.stagingBufferNormals.put(nwNormals[0], nwNormals[1], nwNormals[2], nwTerrainData);

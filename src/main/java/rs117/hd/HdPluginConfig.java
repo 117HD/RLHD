@@ -129,7 +129,7 @@ public interface HdPluginConfig extends Config
 	)
 	@Units(Units.PERCENT)
 	@Range(min = 1, max = 200)
-	default int sceneResolutionScale() {
+	default int sceneResolution() {
 		return 100;
 	}
 
@@ -770,7 +770,7 @@ public interface HdPluginConfig extends Config
 	String KEY_PLANAR_REFLECTIONS = "planarReflections";
 	@ConfigItem(
 		keyName = KEY_PLANAR_REFLECTIONS,
-		name = "Planar Reflections",
+		name = "Water Reflections",
 		description = "Render a reflection for the main water surface in the scene.<br><b>GPU intensive</b>.",
 		position = 2,
 		section = waterSettings
@@ -779,20 +779,20 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_PLANAR_REFLECTION_RESOLUTION = "planarReflectionResolution";
+	String KEY_WATER_REFLECTION_RESOLUTION = "waterReflectionResolution";
 	@ConfigItem(
-		keyName = KEY_PLANAR_REFLECTION_RESOLUTION,
+		keyName = KEY_WATER_REFLECTION_RESOLUTION,
 		name = "Reflection Resolution",
 		description =
-			"Percentage of screen resolution to render reflections at.<br>" +
-			"50% is a good for performance, but produces more shimmering.<br>" +
-			"Super-resolution of up to 400% is allowed, but is very costly.",
+			"Render water reflections at a different resolution.<br>" +
+			"50% is better for performance, but produces more shimmering artifacts.<br>" +
+			"Resolutions above 100% may improve visual quality, at the expense of performance.",
 		position = 3,
 		section = waterSettings
 	)
 	@Units(Units.PERCENT)
-	@Range(min = 25, max = 400)
-	default int reflectionResolution() {
+	@Range(min = 1, max = 200)
+	default int waterReflectionResolution() {
 		return 100;
 	}
 

@@ -19,6 +19,7 @@ public class SceneShaderProgram extends ShaderProgram {
 
 	public Uniform1i uniRenderPass = addUniform1i("renderPass");
 	public Uniform1i uniWaterHeight = addUniform1i("waterHeight");
+	// TODO: Convert booleans to shader defines
 	public UniformBool uniWaterReflectionEnabled = addUniformBool("waterReflectionEnabled");
 	public UniformBool uniShorelineCaustics = addUniformBool("shorelineCaustics");
 	public UniformBool uniWaterTransparency = addUniformBool("waterTransparency");

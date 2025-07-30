@@ -28,9 +28,8 @@
 
 #include <utils/lights.glsl>
 #include <utils/misc.glsl>
-#include <utils/fresnel.glsl>
 
-vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
+vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
     vec2 uv1 = worldUvs(3).yx - animationFrame(28 * waterType.duration);
@@ -46,8 +45,8 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     uv3 += uvFlow * flowMapStrength;
 
     // get diffuse textures
-    vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, MAT_LEGACY_WATER_NORMAL_MAP_1.colorMap)).xyz);
-    vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, MAT_LEGACY_WATER_NORMAL_MAP_2.colorMap)).xyz);
+    vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, waterType.normalMap)).xyz);
+    vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, waterType.normalMap)).xyz);
     float foamMask = texture(textureArray, vec3(uv3, waterType.foamMap)).r;
 
     // normals
@@ -60,7 +59,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     float viewDotNormals = dot(viewDir, normals);
 
     vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, distortion, lightDotNormals);
+    float shadow = sampleShadowMap(IN.position, waterTypeIndex, distortion, lightDotNormals);
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
@@ -114,25 +113,6 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     float finalFresnel = clamp(mix(baseOpacity, 1.0, fresnel * 1.2), 0.0, 1.0);
     vec3 surfaceColor = vec3(0);
 
-    vec3 skyColor = legacyWaterColor;
-
-    #if PLANAR_REFLECTIONS && LEGACY_WATER
-        vec3 I = -viewDir; // incident
-        // Assume the water is level
-        vec3 flatR = reflect(I, vec3(0, -1, 0));
-        vec3 R = reflect(I, normals);
-        float distortionFactor = 50;
-        vec3 reflection = sampleWaterReflection(flatR, mix(flatR, R, .5), distortionFactor);
-        float actualFresnel = calculateFresnel(viewDotNormals, IOR_WATER);
-        skyColor = mix(skyColor, reflection, actualFresnel);
-    #endif
-
-    vec3 waterColorHsv = srgbToHsv(skyColor);
-    // This looks all wrong, because it is, but legacy depends on it
-    vec3 waterColorLight = linearToSrgb(hsvToSrgb(waterColorHsv * vec3(1, 1, 0.8)));
-    vec3 waterColorMid = linearToSrgb(hsvToSrgb(waterColorHsv * vec3(1, 1, 0.45)));
-    vec3 waterColorDark = linearToSrgb(hsvToSrgb(waterColorHsv * vec3(1, 1, 0.05)));
-
     // add sky gradient
     if (finalFresnel < 0.5) {
         surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
@@ -141,6 +121,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     }
 
     vec3 surfaceColorOut = surfaceColor * max(combinedSpecularStrength, 0.2);
+
 
     // apply lighting
     vec3 compositeLight = ambientLightOut + lightOut + lightSpecularOut + skyLightOut + lightningOut +
@@ -165,33 +146,29 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
 
     float alpha = max(waterType.baseOpacity, max(foamAmount, max(finalFresnel, length(specularComposite / 3))));
 
-    bool isOpaque = !waterTransparency || waterType.isFlat;
-    if (isOpaque) {
+    if (waterType.isFlat) {
         baseColor = mix(waterType.depthColor, baseColor, alpha);
         alpha = 1;
     }
 
-    baseColor = srgbToLinear(baseColor);
     return vec4(baseColor, alpha);
 }
 
-void sampleLegacyUnderwater(inout vec3 outputColor, vec3 depthColor, float depth, float lightDotNormals) {
-    outputColor = linearToSrgb(outputColor);
-
+void sampleUnderwater(inout vec3 outputColor, WaterType waterType, float depth, float lightDotNormals) {
     // underwater terrain
     float lowestColorLevel = 500;
     float midColorLevel = 150;
     float surfaceLevel = IN.position.y - depth; // e.g. -1600
 
     if (depth < midColorLevel) {
-        outputColor *= mix(vec3(1), depthColor, translateRange(0, midColorLevel, depth));
+        outputColor *= mix(vec3(1), waterType.depthColor, translateRange(0, midColorLevel, depth));
     } else if (depth < lowestColorLevel) {
-        outputColor *= mix(depthColor, vec3(0), translateRange(midColorLevel, lowestColorLevel, depth));
+        outputColor *= mix(waterType.depthColor, vec3(0), translateRange(midColorLevel, lowestColorLevel, depth));
     } else {
         outputColor = vec3(0);
     }
 
-    if (shorelineCaustics) {
+    if (underwaterCaustics) {
         const float scale = 1.75;
         const float maxCausticsDepth = 128 * 4;
 
@@ -207,9 +184,7 @@ void sampleLegacyUnderwater(inout vec3 outputColor, vec3 depthColor, float depth
         vec2 flow2 = causticsUv * 1.5 + animationFrame(23) * -direction;
         vec3 caustics = sampleCaustics(flow1, flow2, .005);
 
-        vec3 causticsColor = underwaterCausticsColor;
+        vec3 causticsColor = underwaterCausticsColor * underwaterCausticsStrength;
         outputColor.rgb *= 1 + caustics * causticsColor * depthMultiplier * lightDotNormals * lightStrength;
     }
-
-    outputColor = srgbToLinear(outputColor);
 }

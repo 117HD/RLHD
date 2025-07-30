@@ -32,20 +32,11 @@
 #include <utils/misc.glsl>
 #include <utils/water_reflection.glsl>
 #include <utils/shadows.glsl>
+#include <utils/fresnel.glsl>
 
-#if LEGACY_WATER > 0
-#include <utils/legacy_water.glsl>
+#if LEGACY_WATER
+    #include <utils/legacy_water.glsl>
 #else
-
-float calculateFresnel(const float cosi, const float iorFrom, const float iorTo) {
-    float R0 = (iorFrom - iorTo) / (iorFrom + iorTo);
-    R0 *= R0;
-    return R0 + (1 - R0) * pow(1 - cosi, 5);
-}
-
-float calculateFresnel(const float cosi, const float iorTo) {
-    return calculateFresnel(cosi, IOR_AIR, iorTo);
-}
 
 vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
