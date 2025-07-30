@@ -845,13 +845,12 @@ public class LightManager {
 			renderables[1] = object.getRenderable2();
 			int ori = HDUtils.getBakedOrientation(object.getConfig());
 			orientations[0] = orientations[1] = ori;
-
 			int objectType = object.getConfig() & 0x3F;
 			int rot = object.getConfig() >>> 6 & 3;
 			switch (objectType) {
 				case 6: // DiagOutDeco
 					rot = (rot + 2) % 4;
-				case 8: // DiagInWallDeco
+				case 7: // DiagInDeco
 					offset[0] = offset[1] = 45; // ~ 64 / sqrt(2)
 					if (rot % 3 == 0)
 						offset[0] *= -1;
