@@ -20341,7 +20341,8 @@
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "FAI_FALADOR_HOUSE_TORCH"
+      "FAI_FALADOR_HOUSE_TORCH",
+      "AIDE_TORCH"
     ]
   },
   {
@@ -36340,11 +36341,51 @@
     "fadeOutDuration": 150
   },
   {
+    "description": "BLUE_MOON_ARENA_ICICLE_ATTACK_START",
+    "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ],
+    "visibleFromOtherPlanes": true,
+    "color": "#B1C9DB",
+    "strength": 15,
+    "radius": 170,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1950,
+    "offset": [ -30, 120, 0 ],
+    "fadeInDuration": 50
+  },
+  {
+    "description": "BLUE_MOON_ARENA_ICICLE_ATTACK_END",
+    "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ],
+    "visibleFromOtherPlanes": true,
+    "color": "#B1C9DB",
+    "strength": 10,
+    "radius": 185,
+    "fixedDespawnTime": true,
+    "spawnDelay": 1775,
+    "despawnDelay": 400,
+    "offset": [ -30, 120, 0 ],
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100
+  },
+  {
+    "description": "BLUE_MOON_ARENA_STORM_ATTACK",
+    "npcIds": [ "PMOON_BOSS_WINTER_STORM" ],
+    "visibleFromOtherPlanes": true,
+    "color": "#B1C9DB",
+    "strength": 8,
+    "radius": 220,
+    "offset": [ -30, 200, 0 ],
+    "fadeInDuration": 50,
+    "fadeOutDuration": 50,
+    "type": "FLICKER",
+    "range": 30,
+    "duration": 0
+  },
+  {
     "description": "BLOOD_MOON_ARENA_BURNING_LINE",
     "objectIds": [ "PMOON_BOSS_BLOOD_FIRE" ],
     "color": "#6f2375",
     "strength": 15,
-    "radius": 250,
+    "radius": 200,
     "offset": [ -30, 100, 0 ],
     "fadeInDuration": 200,
     "fadeOutDuration": 200
@@ -36357,10 +36398,10 @@
     ],
     "color": "#00c7c1",
     "strength": 25,
-    "radius": 320,
-    "offset": [ 0, 47, 0 ],
+    "radius": 307,
+    "offset": [ 0, 60, 0 ],
     "fadeInDuration": 600,
-    "fadeOutDuration": 125
+    "fadeOutDuration": 100
   },
   {
     "description": "SMALL_MOON_PHASE",
