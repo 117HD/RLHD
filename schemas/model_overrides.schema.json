@@ -129,10 +129,6 @@
         "type": "boolean",
         "description": "Whether normals should always point directly up. Defaults to false."
       },
-      "terrainVertexSnap": {
-        "type": "boolean",
-        "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
-      },
       "hideVanillaShadows": {
         "type": "boolean",
         "description": "Whether the model has fake shadows which should be removed. Defaults to false."
@@ -152,6 +148,10 @@
       "receiveShadows": {
         "type": "boolean",
         "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+      },
+      "terrainVertexSnap": {
+        "type": "boolean",
+        "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
       },
       "shadowOpacityThreshold": {
         "type": "number",
@@ -184,6 +184,14 @@
           "VERTEX_WITH_HEMISPHERE_BLEND",
           "VERTEX_JIGGLE"
         ]
+      },
+      "windDisplacementModifier": {
+        "type": "integer",
+        "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
+      },
+      "invertDisplacementStrength": {
+        "type": "boolean",
+        "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
       },
       "materialOverrides": {
         "type": "object",
@@ -261,6 +269,10 @@
             "receiveShadows": {
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "terrainVertexSnap": {
+              "type": "boolean",
+              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",
@@ -363,6 +375,10 @@
             "receiveShadows": {
               "type": "boolean",
               "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "terrainVertexSnap": {
+              "type": "boolean",
+              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
             },
             "shadowOpacityThreshold": {
               "type": "number",

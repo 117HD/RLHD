@@ -372,19 +372,22 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		return isMovable() || isResizable();
 	}
 
-	private void updateTransform(int canvasWidth, int canvasHeight) {
+	private void updateTransform() {
 		assert shader.isActive();
 		if (isFullscreen()) {
 			shader.uniTransform.set(0, 0, 1, 1);
 		} else {
+			int[] resolution = plugin.getUiResolution();
+			if (resolution == null)
+				return;
 			var bounds = getBounds();
 			// Calculate translation and scale in NDC
 			float[] rect = { bounds.x + 1, bounds.y + 1, bounds.width - 1, bounds.height - 1 };
 			rect[0] += rect[0] + rect[2];
 			rect[1] += rect[1] + rect[3];
 			for (int i = 0; i < 2; i++) {
-				rect[i * 2] /= canvasWidth;
-				rect[i * 2 + 1] /= canvasHeight;
+				rect[i * 2] /= resolution[0];
+				rect[i * 2 + 1] /= resolution[1];
 				rect[i] -= 1;
 			}
 			rect[1] *= -1;
@@ -392,21 +395,28 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		}
 	}
 
-	public void render(int canvasWidth, int canvasHeight) {
+	public void render() {
 		if (isHidden())
 			return;
 
 		shader.use();
-		updateTransform(canvasWidth, canvasHeight);
+		updateTransform();
 		updateUniforms();
-		render();
+		renderShader();
 	}
 
 	protected void updateUniforms() {}
 
-	protected void render() {
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+	protected void renderShader() {
+		glEnable(GL_BLEND);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+		if (fullscreen) {
+			glBindVertexArray(plugin.vaoTri);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		} else {
+			glBindVertexArray(plugin.vaoQuad);
+			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+		}
 	}
 
 	private void resetHideTimer() {
@@ -438,5 +448,23 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 			g.drawRect(0, 0, bounds.width, bounds.height);
 		}
 		return bounds.getSize();
+	}
+
+	protected void drawStringShadowed(Graphics2D g, String s, float x, float y) {
+		var c = g.getColor();
+		g.setColor(Color.BLACK);
+		g.drawString(s, x + 1, y + 1);
+		g.setColor(c);
+		g.drawString(s, x, y);
+	}
+
+	protected void drawStringCentered(Graphics2D g, String s, float x, float y) {
+		var m = g.getFontMetrics();
+		drawStringShadowed(g, s, x - m.stringWidth(s) / 2.f, y + m.getHeight() / 2.f);
+	}
+
+	protected void drawStringCentered(Graphics2D g, String s) {
+		var b = g.getClipBounds();
+		drawStringCentered(g, s, b.width / 2.f, b.height / 2.f);
 	}
 }

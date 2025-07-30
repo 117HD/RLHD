@@ -47,8 +47,7 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     vec2 distortion = vec2(x, y) * distortionFactor;
 
     vec2 uv = gl_FragCoord.xy + distortion;
-    uv -= viewport.xy;
-    uv /= viewport.zw;
+    uv /= sceneResolution;
 
     // This will be linear or sRGB depending on the linear alpha blending setting
     vec3 c = texture(waterReflectionMap, uv).rgb;

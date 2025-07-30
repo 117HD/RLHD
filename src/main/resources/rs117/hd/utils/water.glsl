@@ -24,11 +24,11 @@
  */
 #include <uniforms/global.glsl>
 #include <uniforms/water_types.glsl>
-#include <uniforms/lights.glsl>
 
 #include <utils/constants.glsl>
 #include <utils/color_utils.glsl>
 #include <utils/noise.glsl>
+#include <utils/lights.glsl>
 #include <utils/misc.glsl>
 #include <utils/water_reflection.glsl>
 #include <utils/shadows.glsl>
@@ -457,29 +457,6 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         // TODO: this doesn't work well for water
         vec3 sunSpecular = pow(max(0, dot(N, omega_h)), specularGloss) * directionalLight * specularStrength;
         additionalLight += sunSpecular;
-    #endif
-
-    // Point lights
-    #if WATER_SPECULAR_MODE >= 2 // lights or sun & lights
-        vec3 pointLightsSpecular = vec3(0);
-        float fragToCamDist = length(IN.position - cameraPos);
-        for (int i = 0; i < pointLightsCount; i++) {
-            vec4 pos = PointLightArray[i].position;
-            vec3 fragToLight = pos.xyz - IN.position;
-            float fragToLightDist = length(fragToLight);
-            float distSq = fragToLightDist + fragToCamDist;
-            distSq *= distSq;
-            float radiusSquared = pos.w;
-
-            vec3 pointLightColor = PointLightArray[i].color;
-            vec3 pointLightDir = fragToLight / fragToLightDist;
-
-            pointLightColor *= 1 / (1 + distSq) * 2e5;
-
-            vec3 halfway = normalize(omega_o + pointLightDir);
-            pointLightsSpecular += pointLightColor * pow(max(0, dot(halfway, N)), specularGloss) * specularStrength;
-        }
-        additionalLight += pointLightsSpecular;
     #endif
 
     // Begin constructing final output color
