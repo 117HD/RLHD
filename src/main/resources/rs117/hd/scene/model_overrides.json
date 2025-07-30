@@ -13656,7 +13656,6 @@
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_BROKEN",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_EDITABLE",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_REGULAR",
-      "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_OAK",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_TEAK",
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_MAHOGANY",
       "AIDE_TABLE_SMALL"
@@ -13670,7 +13669,8 @@
     "objectIds": [
       "BIGTABLE",
       "TABLE",
-      "BEDSIDETABLE"
+      "BEDSIDETABLE",
+      "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_OAK"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -35315,7 +35315,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "Grandfather Clock",
+    "description": "Grandfather Clock - ANIMATED - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "GRANDFATHERCLOCK",
@@ -41762,30 +41762,6 @@
       {
         "description": "Pillow and sheet",
         "colors": "h == 6 && s == 1 || h == 6 && s == 2",
-        "baseMaterial": "CARPET",
-        "uvType": "BOX",
-        "uvScale": 0.4
-      },
-      {
-        "description": "Green blanket",
-        "colors": "h >= 14",
-        "baseMaterial": "CARPET",
-        "uvType": "BOX"
-      }
-    ]
-  },
-  {
-    "description": "Hosidius - Wooden - Cloth - Bed with Green blanket and gray pillow",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      "CON_CONTRACT_HOSIDIUS_EAST_MEDIUM_BED_DEFAULT"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.75,
-    "colorOverrides": [
-      {
-        "description": "Pillow and sheet",
-        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -53204,6 +53180,35 @@
     ]
   },
   {
+    "description": "Mahogony Homes - Varrock - Wooden - Cloth - Bed with Yellow blanket white sheets and bed frame - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_MID_BED_EDITABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h >= 16 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Yellow blanket",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Mahogony Homes - Varrock - Wooden - Cloth - Bed with Yellow blanket and bed frame - Outlined - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -53238,7 +53243,8 @@
     "uvType": "BOX",
     "uvScale": 0.75,
     "objectIds": [
-      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_REGULAR"
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_REGULAR",
+      "CON_CONTRACT_VARROCK_MID_BED_OAK"
     ],
     "colorOverrides": [
       {
@@ -53275,7 +53281,8 @@
       "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_REGULAR",
       "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_REGULAR",
       "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_TABLE_REGULAR",
-      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE2_REGULAR"
+      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE2_REGULAR",
+      "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_OAK"
     ]
   },
   {
@@ -53321,7 +53328,7 @@
     ]
   },
   {
-    "description": "Mahogony Homes - Wooden - Tables - DYNAMIC",
+    "description": "Mahogony Homes - Wooden - Tables flat - Outlined - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -53342,6 +53349,33 @@
     ]
   },
   {
+    "description": "Mahogony Homes - Wooden - Tables - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_NORTH_DININGTABLE_EDITABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Tables - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_NORTH_DININGTABLE_OAK"
+    ]
+  },
+  {
     "description": "Mahogony Homes - Falador - Wooden - Dresser Drawers with outline - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -53349,7 +53383,8 @@
     "uvScale": 0.75,
     "uvOrientation": 512,
     "objectIds": [
-      "CON_CONTRACT_FALADOR_NORTH_DRAWERS_EDITABLE"
+      "CON_CONTRACT_FALADOR_NORTH_DRAWERS_EDITABLE",
+      "CON_CONTRACT_VARROCK_NORTH_DRAWERS_EDITABLE"
     ],
     "colorOverrides": [
       {
@@ -53374,6 +53409,33 @@
     ]
   },
   {
+    "description": "Mahogony Homes - Falador - Wooden - Drawers - Oak - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationZ": 512,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTH_DRAWERS_OAK",
+      "CON_CONTRACT_ARDY_NORTH_DRAWERS_OAK",
+      "CON_CONTRACT_HOSIDIUS_SOUTH_DRAWERS_OAK",
+      "CON_CONTRACT_FALADOR_NORTH_DRAWERS_OAK",
+      "CON_CONTRACT_VARROCK_NORTH_DRAWERS_OAK"
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Falador - Wooden - Cabinet - Oak - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTHEAST_CUPBOARD_OAK",
+      "CON_CONTRACT_VARROCK_NORTH_WARDROBE_OAK",
+      "CON_CONTRACT_HOSIDIUS_NORTH_CUPBOARD_OAK"
+    ]
+  },
+  {
     "description": "Mahogony Homes - Metallic - Stone - Broken Stove - DYNAMIC",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
@@ -53393,13 +53455,15 @@
     ]
   },
   {
-    "description": "Mahogony Homes - Metallic - Wooden - Brown Drawers with metallic handles",
+    "description": "Mahogony Homes - Metallic - Wooden - Brown Drawers with metallic handles - Outlined - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "objectIds": [
-      "CON_CONTRACT_HOSIDIUS_SOUTH_DRAWERS_EDITABLE"
+      "CON_CONTRACT_HOSIDIUS_SOUTH_DRAWERS_EDITABLE",
+      "CON_CONTRACT_FALADOR_SOUTH_DRAWERS_EDITABLE",
+      "CON_CONTRACT_ARDY_NORTH_DRAWERS_EDITABLE"
     ],
     "colorOverrides": [
       {
@@ -53415,7 +53479,7 @@
     ]
   },
   {
-    "description": "Mahogony Homes - Mirror - Wooden - Table with mirror and outline",
+    "description": "Mahogony Homes - Mirror - Wooden - Table with mirror - Outlined - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -53437,13 +53501,14 @@
     ]
   },
   {
-    "description": "Mahogony Homes - Mirror - Wooden - Table with mirror",
+    "description": "Mahogony Homes - Mirror - Wooden - Table with mirror - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationY": 512,
     "objectIds": [
-      "CON_CONTRACT_VARROCK_MID_DRESSER_REGULAR"
+      "CON_CONTRACT_VARROCK_MID_DRESSER_REGULAR",
+      "CON_CONTRACT_VARROCK_MID_DRESSER_OAK"
     ],
     "colorOverrides": [
       {
@@ -53454,7 +53519,19 @@
     ]
   },
   {
-    "description": "Mahogony Homes - Metallic - Wooden - Freestanding shelves with pots and pans - Outlined",
+    "description": "Mahogony Homes - Wooden - Plank Table - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE_OAK",
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_TABLE_OAK",
+      "CON_CONTRACT_FALADOR_SOUTHEAST_MEDIUM_TABLE2_OAK"
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Metallic - Wooden - Freestanding shelves with pots and pans - Outlined - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -53469,6 +53546,31 @@
         "description": "Metal",
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Glass - Wooden - Freestanding shelves with multicolored bottles - DYNAMIC",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 42,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTHEAST_SHELVES_OAK",
+      "CON_CONTRACT_VARROCK_MID_SHELVES_OAK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
       },
       {
         "description": "Outline",
@@ -53502,7 +53604,8 @@
     "uvScale": 0.8,
     "uvOrientationX": 512,
     "objectIds": [
-      "CON_CONTRACT_FALADOR_SOUTHEAST_SINK_BROKEN"
+      "CON_CONTRACT_FALADOR_SOUTHEAST_SINK_BROKEN",
+      "CON_CONTRACT_HOSIDIUS_NORTH_SINK_BROKEN"
     ],
     "colorOverrides": [
       {
@@ -53515,6 +53618,397 @@
         "colors": "a < 255",
         "baseMaterial": "NONE"
       }
+    ]
+  },
+  {
+    "description": "Mahogany Homes - Wooden - Cloth - Bed with Green blanket and gray pillow - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_EAST_MEDIUM_BED_EDITABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogany Homes - Wooden - Cloth - Bed with Green blanket and gray pillow - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_EAST_MEDIUM_BED_DEFAULT",
+      "CON_CONTRACT_HOSIDIUS_EAST_MEDIUM_BED_OAK",
+      "CON_CONTRACT_HOSIDIUS_NORTH_MEDIUM_BED_OAK"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Varrock - Wooden - Cloth - Bed with Blue blanket and bed frame - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTH_LARGE_BED_EDITABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Blue blanket",
+        "colors": "h == 38",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogany Homes - Wooden - Cloth - Bed with Green blanket and White pillow - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CON_CONTRACT_HOSIDIUS_NORTH_MEDIUM_BED_EDITABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Green blanket",
+        "colors": "h >= 14",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Pillow",
+        "colors": "h == 7 && s == 0",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "sheet",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Varrock - Wooden - Cloth - Bed with Yellow blanket and bed frame - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_OAK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Yellow blanket",
+        "colors": "h == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Cloth - Bed with Blue blanket and bed frame - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTH_LARGE_BED_OAK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Blue blanket",
+        "colors": "h == 38",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Bookshelf with Multicolored books - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTH_BOOKCASE_EDITABLE",
+      "CON_CONTRACT_VARROCK_NORTH_BOOKCASE_EDITABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Brown books",
+        "colors": "h == 4 || (h == 6 && s == 3) || (h == 7 && s > 4)",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green and blue books",
+        "colors": "h >= 14",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Bookshelf with Multicolored books - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "CON_CONTRACT_FALADOR_SOUTH_BOOKCASE_OAK",
+      "CON_CONTRACT_VARROCK_NORTH_BOOKCASE_OAK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Brown books",
+        "colors": "h == 4 || (h == 6 && s == 3) || (h == 7 && s > 4)",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Green books",
+        "colors": "h >= 14",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Bath Mirror - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "CON_CONTRACT_ARDY_NORTH_MIRROR_BROKEN",
+      "CON_CONTRACT_VARROCK_MID_MIRROR_BROKEN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h >= 32",
+        "baseMaterial": "GRAY_75"
+      },
+      {
+        "colors": "s == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Broken Grandfather Clock - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_NORTH_CLOCK_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 78
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Posh Cupboard with glass panels and silver dishes and golden trim - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_NORTH_CABINET1_EDITABLE",
+      "CON_CONTRACT_VARROCK_NORTH_CABINET2_EDITABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": false,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.25
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7 && s == 5",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Glass - Metallic -Posh Cupboard with glass panels and silver dishes - Oak - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_NORTH_CABINET1_OAK",
+      "CON_CONTRACT_VARROCK_NORTH_CABINET2_OAK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Mirror - Metallic - Posh Cupboard with mirrors and golden trim - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_NORTH_CABINET1_EDITABLE",
+      "CON_CONTRACT_VARROCK_NORTH_CABINET2_EDITABLE",
+      "CON_CONTRACT_VARROCK_NORTH_WARDROBE_EDITABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Mirror",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 179
+      },
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Chair - Outlined - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_MID_CHAIR_EDITABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Outline",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mahogony Homes - Wooden - Chair with fused back - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_MID_CHAIR_OAK"
     ]
   }
 ]
