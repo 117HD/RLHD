@@ -77,6 +77,7 @@ public class SceneContext {
 	public boolean[][][] skipTile;
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
+	public int sceneEdge0, sceneEdge1;
 
 	// Water reflection texture height
 	public boolean hasWater;
@@ -121,6 +122,10 @@ public class SceneContext {
 			stagingBufferUvs = new GpuFloatBuffer(previous.stagingBufferUvs.capacity());
 			stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.capacity());
 		}
+
+		final int pad = expandedMapLoadingChunks * CHUNK_SIZE;
+		sceneEdge0 = Math.max(1, SCENE_OFFSET - pad);
+		sceneEdge1 = Math.min(EXTENDED_SCENE_SIZE - 2, SCENE_OFFSET + SCENE_SIZE + pad - 1);
 	}
 
 	public synchronized void destroy() {

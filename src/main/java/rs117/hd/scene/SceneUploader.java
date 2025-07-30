@@ -876,6 +876,16 @@ public class SceneUploader {
 
 			int color = UNDERWATER_HSL;
 
+			// Clamp underwater terrain to the edge of the scene
+			if (tileExX == sceneContext.sceneEdge0)
+				swDepth = nwDepth = 0;
+			if (tileExY == sceneContext.sceneEdge0)
+				swDepth = seDepth = 0;
+			if (tileExX == sceneContext.sceneEdge1)
+				seDepth = neDepth = 0;
+			if (tileExY == sceneContext.sceneEdge1)
+				nwDepth = neDepth = 0;
+
 			sceneContext.stagingBufferVertices.ensureCapacity(24);
 			sceneContext.stagingBufferVertices.put((float) localNeVertexX, neHeight + neDepth, localNeVertexY, color);
 			sceneContext.stagingBufferVertices.put((float) localNwVertexX, nwHeight + nwDepth, localNwVertexY, color);
@@ -1158,6 +1168,10 @@ public class SceneUploader {
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 		}
 
+		boolean isEdge =
+			Math.min(tileExX, tileExY) == sceneContext.sceneEdge0 ||
+			Math.max(tileExX, tileExY) == sceneContext.sceneEdge1;
+
 		if (sceneContext.tileIsWater[tileZ][tileExX][tileExY]) {
 			underwaterTerrain = 1;
 
@@ -1184,9 +1198,11 @@ public class SceneUploader {
 				int vertexKeyB = vertexKeys[1];
 				int vertexKeyC = vertexKeys[2];
 
-				int depthA = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0);
-				int depthB = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0);
-				int depthC = sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
+				int[] depths = {
+					sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0),
+					sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0),
+					sceneContext.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0)
+				};
 
 				if (plugin.configGroundTextures) {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
@@ -1214,31 +1230,45 @@ public class SceneUploader {
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 
-				float aTerrainData = (float) packTerrainData(true, Math.max(1, depthA), waterType, tileZ);
-				float bTerrainData = (float) packTerrainData(true, Math.max(1, depthB), waterType, tileZ);
-				float cTerrainData = (float) packTerrainData(true, Math.max(1, depthC), waterType, tileZ);
+				float aTerrainData = (float) packTerrainData(true, Math.max(1, depths[0]), waterType, tileZ);
+				float bTerrainData = (float) packTerrainData(true, Math.max(1, depths[1]), waterType, tileZ);
+				float cTerrainData = (float) packTerrainData(true, Math.max(1, depths[2]), waterType, tileZ);
 
 				sceneContext.stagingBufferNormals.ensureCapacity(12);
 				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[1], normalsA[2], aTerrainData);
 				sceneContext.stagingBufferNormals.put(normalsB[0], normalsB[1], normalsB[2], bTerrainData);
 				sceneContext.stagingBufferNormals.put(normalsC[0], normalsC[1], normalsC[2], cTerrainData);
 
+				// Clamp underwater terrain to the edge of the scene
+				if (isEdge) {
+					for (int i = 0; i < 3; i++) {
+						if (tileExX == sceneContext.sceneEdge0 && localVertices[i][0] == 0)
+							depths[i] = 0;
+						if (tileExY == sceneContext.sceneEdge0 && localVertices[i][1] == 0)
+							depths[i] = 0;
+						if (tileExX == sceneContext.sceneEdge1 && localVertices[i][0] == LOCAL_TILE_SIZE)
+							depths[i] = 0;
+						if (tileExY == sceneContext.sceneEdge1 && localVertices[i][1] == LOCAL_TILE_SIZE)
+							depths[i] = 0;
+					}
+				}
+
 				sceneContext.stagingBufferVertices.ensureCapacity(12);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[0][0],
-					localVertices[0][2] + depthA,
+					localVertices[0][2] + depths[0],
 					localVertices[0][1],
 					color
 				);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[1][0],
-					localVertices[1][2] + depthB,
+					localVertices[1][2] + depths[1],
 					localVertices[1][1],
 					color
 				);
 				sceneContext.stagingBufferVertices.put(
 					(float) localVertices[2][0],
-					localVertices[2][2] + depthC,
+					localVertices[2][2] + depths[2],
 					localVertices[2][1],
 					color
 				);

@@ -156,7 +156,7 @@ void main() {
         // Apply some arbitrary displacement to mimic refraction
         // TODO: Solve the quartic equation numerically
         int waterDepth = vTerrainData[i] >> 8 & 0x7FF;
-        displaceUnderwaterPosition(position, waterDepth);
+//        displaceUnderwaterPosition(position, waterDepth);
 
         if (renderPass == RENDER_PASS_WATER_REFLECTION && isWaterSurface) {
             // Hide some Z-fighting issues with waterfalls
