@@ -28,6 +28,7 @@ import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 
@@ -242,44 +243,21 @@ public class HDUtils {
 
 	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
-	// (gameObject.getConfig() & 0x3F), // 6-bit object type? (10 seems to mean movement blocker)
 	// (gameObject.getConfig() >> 9) // should always be zero
 	public static int getBakedOrientation(int config) {
+		var objectType = ObjectType.fromConfig(config);
 		int orientation = 1024 + 512 * (config >>> 6 & 3);
+		switch (objectType) {
+			case WallDecorDiagonalNoOffset:
+				orientation += 1024;
+			case WallDiagonalCorner:
+			case WallSquareCorner:
+			case WallDecorDiagonalOffset:
+			case WallDecorDiagonalBoth:
+				orientation += 256;
+				break;
+		}
 		return orientation % 2048;
-	}
-
-	public static String getObjectType(int config) {
-		int type = config & 0x3F;
-		final String[] OBJECT_TYPES = {
-			"StraightWalls",
-			"DiagWallsConn",
-			"EntireWallsCorners",
-			"StraightWallsConn",
-			"StraightInDeco",
-			"StraightOutDeco",
-			"DiagOutDeco",
-			"DiagInDeco",
-			"DiagInWallDeco",
-			"DiagWalls",
-			"Objects",
-			"GroundObjects",
-			"StraightSlopeRoofs",
-			"DiagSlopeRoofs",
-			"DiagSlopeConnRoofs",
-			"StraightSlopeConnRoofs",
-			"StraightSlopeCorners",
-			"FlatTopRoofs",
-			"BottomEdgeRoofs",
-			"DiagBottomEdgeConn",
-			"StraightBottomEdgeConn",
-			"StraightBottomEdgeConnCorners",
-			"GroundDecoMapSigns"
-		};
-		String name = "Unknown";
-		if (type < OBJECT_TYPES.length)
-			name = OBJECT_TYPES[type];
-		return String.format("(%d) %s", type, name);
 	}
 
 	public static AABB getSceneBounds(Scene scene) {
