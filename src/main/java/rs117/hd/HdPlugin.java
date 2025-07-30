@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -86,6 +85,7 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.data.ModelInfo;
 import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
@@ -138,7 +138,6 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static net.runelite.api.Constants.*;
@@ -203,8 +202,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static float BUFFER_GROWTH_MULTIPLIER = 2; // can be less than 2 if trying to conserve memory
 
 	private static final float COLOR_FILTER_FADE_DURATION = 500;
-
-	private static final int[] eightIntWrite = new int[8];
 
 	private static final int[] RENDERBUFFER_FORMATS_SRGB = {
 		GL_SRGB8,
@@ -399,7 +396,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		"Render Normals", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
 
 	private int numPassthroughModels;
-	private GpuIntBuffer modelPassthroughBuffer;
+	private GLBuffer.GLMappedBuffer modelPassthroughBuffer;
 	private final SharedGLBuffer hModelPassthroughBuffer = new SharedGLBuffer(
 		"Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
@@ -409,8 +406,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public int[] modelSortingBinFaceCounts; // facesPerThread * threadCount
 	public int[] modelSortingBinThreadCounts;
 	private int[] numModelsToSort;
-	private GpuIntBuffer[] modelSortingBuffers;
+	private GLBuffer.GLMappedBuffer[] modelSortingBuffers;
 	private SharedGLBuffer[] hModelSortingBuffers;
+	private final ModelInfo modelInfo = new ModelInfo();
 
 	private final UBOGlobal uboGlobal = new UBOGlobal();
 	private final UBOLights uboLights = new UBOLights();
@@ -647,8 +645,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				updateCachedConfigs();
 				developerTools.activate();
 
-				modelPassthroughBuffer = new GpuIntBuffer();
-
 				int maxComputeThreadCount;
 				if (computeMode == ComputeMode.OPENCL) {
 					clManager.startUp(awtContext);
@@ -782,10 +778,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					nextSceneContext.destroy();
 				nextSceneContext = null;
 			}
-
-			if (modelPassthroughBuffer != null)
-				modelPassthroughBuffer.destroy();
-			modelPassthroughBuffer = null;
 
 			// force main buffer provider rebuild to turn off alpha channel
 			client.resizeCanvas();
@@ -1032,10 +1024,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		modelSortingBinThreadCounts = Arrays.copyOf(binThreadCounts, numBins);
 		numModelsToSort = new int[numBins];
 
-		modelSortingBuffers = new GpuIntBuffer[numSortingBins];
-		for (int i = 0; i < numSortingBins; i++)
-			modelSortingBuffers[i] = new GpuIntBuffer();
-
+		modelSortingBuffers = new GLBuffer.GLMappedBuffer[numSortingBins];
 		hModelSortingBuffers = new SharedGLBuffer[numSortingBins];
 		for (int i = 0; i < numSortingBins; i++) {
 			hModelSortingBuffers[i] = new SharedGLBuffer(
@@ -1056,11 +1045,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		modelSortingBinThreadCounts = null;
 		numModelsToSort = null;
 
-		if (modelSortingBuffers != null)
-			for (var buffer : modelSortingBuffers)
-				buffer.destroy();
-		modelSortingBuffers = null;
 
+		modelSortingBuffers = null;
 		if (hModelSortingBuffers != null)
 			for (var buffer : hModelSortingBuffers)
 				buffer.destroy();
@@ -1198,6 +1184,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		hRenderBufferNormals.destroy();
 
 		hModelPassthroughBuffer.destroy();
+		modelPassthroughBuffer = null;
 
 		uboGlobal.destroy();
 		uboLights.destroy();
@@ -1597,6 +1584,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				drawnStaticRenderableCount = 0;
 				drawnDynamicRenderableCount = 0;
 
+				// Map ModelInfo Buffers for writing to
+				modelPassthroughBuffer = hModelPassthroughBuffer.map(GLBuffer.AccessFlags.Write, GLBuffer.GLMappedType.INT);
+
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
 				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
@@ -1606,6 +1596,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.put(staticUnordered);
 				staticUnordered.rewind();
 				numPassthroughModels += staticUnordered.limit() / 8;
+
+				// Flush Static Geom and remap with offset
+				hModelPassthroughBuffer.unmap(true);
+				hModelPassthroughBuffer.map(
+					GLBuffer.AccessFlags.Write,
+					staticUnordered.limit() * (long) Integer.BYTES,
+					GLBuffer.GLMappedType.INT
+				);
+
+				for (int i = 0; i < hModelSortingBuffers.length; i++) {
+					modelSortingBuffers[i] = hModelSortingBuffers[i].map(GLBuffer.AccessFlags.Write, GLBuffer.GLMappedType.INT);
+				}
 			}
 
 			if (updateUniforms) {
@@ -1784,15 +1786,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			sceneContext.stagingBufferNormals.clear();
 
 			// Model buffers
-			modelPassthroughBuffer.flip();
-			hModelPassthroughBuffer.upload(modelPassthroughBuffer);
-			modelPassthroughBuffer.clear();
-
-			for (int i = 0; i < modelSortingBuffers.length; i++) {
-				var buffer = modelSortingBuffers[i];
-				buffer.flip();
-				hModelSortingBuffers[i].upload(buffer);
-				buffer.clear();
+			hModelPassthroughBuffer.unmap(true);
+			for (GLBuffer modelSortingBuffer : hModelSortingBuffers) {
+				modelSortingBuffer.unmap(true);
 			}
 
 			// Output buffers
@@ -1862,23 +1858,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawScenePaint(Scene scene, SceneTilePaint paint, int plane, int tileX, int tileY) {
-		if (redrawPreviousFrame || paint.getBufferLen() <= 0)
-			return;
-
 		int vertexCount = paint.getBufferLen();
+		if (redrawPreviousFrame || vertexCount <= 0)
+			return;
 
 		++numPassthroughModels;
 		modelPassthroughBuffer
-			.ensureCapacity(16)
-			.getBuffer()
-			.put(paint.getBufferOffset())
-			.put(paint.getUvBufferOffset())
-			.put(vertexCount / 3)
-			.put(renderBufferOffset)
-			.put(0)
-			.put(tileX * LOCAL_TILE_SIZE)
-			.put(0)
-			.put(tileY * LOCAL_TILE_SIZE);
+			.ensureCapacity(8)
+			.put(modelInfo
+				.setVertexOffset(paint.getBufferOffset())
+				.setUVOffset(paint.getUvBufferOffset())
+				.setFaceCount(vertexCount / 3)
+				.setRenderBufferOffset(renderBufferOffset)
+				.setModelFlags(0)
+				.setPositionX(tileX * LOCAL_TILE_SIZE)
+				.setPositionYAndHeight(0)
+				.setPositionZ(tileY * LOCAL_TILE_SIZE)
+				.getStagingData());
 
 		renderBufferOffset += vertexCount;
 		drawnTileCount++;
@@ -1902,18 +1898,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
-		if (redrawPreviousFrame || model.getBufferLen() <= 0)
+		int bufferLength = model.getBufferLen();
+		if (redrawPreviousFrame || bufferLength <= 0)
 			return;
 
 		final int localX = tileX * LOCAL_TILE_SIZE;
 		final int localY = 0;
 		final int localZ = tileY * LOCAL_TILE_SIZE;
 
-		GpuIntBuffer b = modelPassthroughBuffer;
-		b.ensureCapacity(16);
-		IntBuffer buffer = b.getBuffer();
-
-		int bufferLength = model.getBufferLen();
+		modelPassthroughBuffer.ensureCapacity(16);
 
 		// we packed a boolean into the buffer length of tiles so we can tell
 		// which tiles have procedurally-generated underwater terrain.
@@ -1929,26 +1922,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			bufferLength /= 2;
 
 			++numPassthroughModels;
-
-			buffer.put(model.getBufferOffset() + bufferLength);
-			buffer.put(model.getUvBufferOffset() + bufferLength);
-			buffer.put(bufferLength / 3);
-			buffer.put(renderBufferOffset);
-			buffer.put(0);
-			buffer.put(localX).put(localY).put(localZ);
+			modelPassthroughBuffer
+				.put(modelInfo
+					.setVertexOffset(model.getBufferOffset() + bufferLength)
+					.setUVOffset(model.getUvBufferOffset() + bufferLength)
+					.setFaceCount(bufferLength / 3)
+					.setRenderBufferOffset(renderBufferOffset)
+					.setModelFlags(0)
+					.setPositionX(localX)
+					.setPositionYAndHeight(0)
+					.setPositionZ(localZ)
+					.getStagingData());
 
 			renderBufferOffset += bufferLength;
 			drawnTileCount++;
 		}
 
 		++numPassthroughModels;
-
-		buffer.put(model.getBufferOffset());
-		buffer.put(model.getUvBufferOffset());
-		buffer.put(bufferLength / 3);
-		buffer.put(renderBufferOffset);
-		buffer.put(0);
-		buffer.put(localX).put(localY).put(localZ);
+		modelPassthroughBuffer
+			.put(modelInfo
+				.setVertexOffset(model.getBufferOffset())
+				.setUVOffset(model.getUvBufferOffset())
+				.setFaceCount(bufferLength / 3)
+				.setRenderBufferOffset(renderBufferOffset)
+				.setModelFlags(0)
+				.setPositionX(localX)
+				.setPositionYAndHeight(0)
+				.setPositionZ(localZ)
+				.getStagingData());
 
 		renderBufferOffset += bufferLength;
 		drawnTileCount++;
@@ -3089,27 +3090,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
-		eightIntWrite[3] = renderBufferOffset;
-		eightIntWrite[4] = orientation;
-		eightIntWrite[5] = x;
-		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
-		eightIntWrite[7] = z;
-
+		int modelFlags = orientation;
 		int plane = ModelHash.getPlane(hash);
 		int faceCount;
+		int vertexOffset;
+		int uvOffset;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer
 			assert model == renderable;
 
 			faceCount = Math.min(MAX_FACE_COUNT, offsetModel.getFaceCount());
-			int vertexOffset = offsetModel.getBufferOffset();
-			int uvOffset = offsetModel.getUvBufferOffset();
-			boolean hillskew = offsetModel != model;
+			vertexOffset = offsetModel.getBufferOffset();
+			uvOffset = offsetModel.getUvBufferOffset();
 
-			eightIntWrite[0] = vertexOffset;
-			eightIntWrite[1] = uvOffset;
-			eightIntWrite[2] = faceCount;
-			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
+			boolean hillskew = offsetModel != model;
+			modelFlags |= (hillskew ? 1 : 0) << 26 | plane << 24;
 
 			drawnStaticRenderableCount++;
 		} else {
@@ -3132,9 +3127,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
 				faceCount = modelOffsets.faceCount;
-				eightIntWrite[0] = modelOffsets.vertexOffset;
-				eightIntWrite[1] = modelOffsets.uvOffset;
-				eightIntWrite[2] = modelOffsets.faceCount;
+				vertexOffset = modelOffsets.vertexOffset;
+				uvOffset = modelOffsets.uvOffset;
 			} else {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
@@ -3145,8 +3139,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (modelOverride.hide)
 					return;
 
-				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
-				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
+				vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
+				uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
 
 				int preOrientation = 0;
 				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
@@ -3175,16 +3169,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.MODEL_PUSHING);
 
-				eightIntWrite[0] = vertexOffset;
-				eightIntWrite[1] = uvOffset;
-				eightIntWrite[2] = faceCount;
+				modelInfo.setVertexOffset(vertexOffset);
+				modelInfo.setUVOffset(uvOffset);
 
 				// add this temporary model to the map for batching purposes
 				if (configModelBatching)
 					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 
-			if (eightIntWrite[0] != -1)
+			if (modelInfo.getVertexOffset() != -1)
 				drawnDynamicRenderableCount++;
 
 			if (configCharacterDisplacement && renderable instanceof Actor) {
@@ -3215,19 +3208,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.end(Timer.DRAW_RENDERABLE);
 
-		if (eightIntWrite[0] == -1)
+		if (modelInfo.getVertexOffset() == -1)
 			return; // Hidden model
 
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)
-			.put(eightIntWrite);
+			.put(modelInfo
+				.setVertexOffset(vertexOffset)
+				.setUVOffset(uvOffset)
+				.setFaceCount(faceCount)
+				.setModelFlags(modelFlags)
+				.setRenderBufferOffset(renderBufferOffset)
+				.setPositionX(x)
+				.setPositionYAndHeight(y, height)
+				.setPositionZ(z)
+				.getStagingData());
 		renderBufferOffset += faceCount * 3;
 	}
 
 	/**
 	 * returns the correct buffer based on triangle count and updates model count
 	 */
-	private GpuIntBuffer bufferForTriangles(int triangles) {
+	private GLBuffer.GLMappedBuffer bufferForTriangles(int triangles) {
 		for (int i = 0; i < numSortingBins; i++) {
 			if (modelSortingBinFaceCounts[i] >= triangles) {
 				++numModelsToSort[i];
