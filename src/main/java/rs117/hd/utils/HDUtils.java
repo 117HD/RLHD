@@ -221,23 +221,23 @@ public class HDUtils {
 		// 		 i.e. extra rotation depending on wall type whatever. I'm not sure.
 		// Derived from config orientation {@link HDUtils#getBakedOrientation}
 		switch (orientation) {
-			case 1: // east (config orientation = 0)
-				return 512;
-			case 2: // south (config orientation = 1)
-				return 1024;
-			case 4: // west (config orientation = 2)
-				return 1536;
-			case 8: // north (config orientation = 3)
+			case 1:
+				return 512; // west
+			case 2:
+				return 1024; // north
+			case 4:
+				return 1536; // east
+			case 8:
 			default:
-				return 0;
-			case 16: // south-east (config orientation = 0)
-				return 768;
-			case 32: // south-west (config orientation = 1)
-				return 1280;
-			case 64: // north-west (config orientation = 2)
-				return 1792;
-			case 128: // north-east (config orientation = 3)
-				return 256;
+				return 0; // south
+			case 16:
+				return 768; // north-west
+			case 32:
+				return 1280; // north-east
+			case 64:
+				return 1792; // south-east
+			case 128:
+				return 256; // south-west
 		}
 	}
 
@@ -254,7 +254,7 @@ public class HDUtils {
 			case WallSquareCorner:
 			case WallDecorDiagonalOffset:
 			case WallDecorDiagonalBoth:
-				orientation += 256;
+				orientation -= 256;
 				break;
 		}
 		return orientation % 2048;

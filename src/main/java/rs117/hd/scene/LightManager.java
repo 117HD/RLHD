@@ -51,6 +51,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -845,17 +846,14 @@ public class LightManager {
 			renderables[1] = object.getRenderable2();
 			int ori = HDUtils.getBakedOrientation(object.getConfig());
 			orientations[0] = orientations[1] = ori;
-			int objectType = object.getConfig() & 0x3F;
-			int rot = object.getConfig() >>> 6 & 3;
-			switch (objectType) {
-				case 6: // DiagOutDeco
-					rot = (rot + 2) % 4;
-				case 7: // DiagInDeco
-					offset[0] = offset[1] = 45; // ~ 64 / sqrt(2)
-					if (rot % 3 == 0)
-						offset[0] *= -1;
-					if (rot >= 2)
-						offset[1] *= -1;
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case WallDecorDiagonalNoOffset:
+				case WallDecorDiagonalOffset:
+				case WallDecorDiagonalBoth:
+					int sin = SINE[ori];
+					int cos = COSINE[ori];
+					offset[0] = sin * 64 >> 16;
+					offset[1] = cos * 64 >> 16;
 					break;
 			}
 			offset[0] += object.getXOffset();
