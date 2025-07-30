@@ -1588,19 +1588,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// Unordered models have already been pushed during SceneSwap, so we just need to offset hModelPassthroughBuffer whilst mapping
 				var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
 				numPassthroughModels += staticUnordered.limit() / ModelInfo.ELEMENT_COUNT;
-				long modelPassthroughStaticUnorderedOffset = staticUnordered.limit() * (long) Integer.BYTES;
 
 				// Ensure we have enough capacity
+				frameTimer.begin(Timer.MAP_BUFFER);
 				hModelPassthroughBuffer.ensureCapacity(EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * ModelInfo.ELEMENT_COUNT);
 				modelPassthroughBuffer = hModelPassthroughBuffer.map(
 					GLBuffer.AccessFlags.Write,
-					modelPassthroughStaticUnorderedOffset,
+					numPassthroughModels * ModelInfo.ELEMENT_COUNT * (long) Integer.BYTES,
 					GLBuffer.GLMappedType.INT
 				);
 
 				for (int i = 0; i < hModelSortingBuffers.length; i++) {
 					modelSortingBuffers[i] = hModelSortingBuffers[i].map(GLBuffer.AccessFlags.Write, GLBuffer.GLMappedType.INT);
 				}
+				frameTimer.end(Timer.MAP_BUFFER);
 			}
 
 			if (updateUniforms) {
@@ -1779,10 +1780,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			sceneContext.stagingBufferNormals.clear();
 
 			// Model buffers
+			frameTimer.begin(Timer.UNMAP_BUFFER);
 			hModelPassthroughBuffer.unmap(true);
 			for (GLBuffer modelSortingBuffer : hModelSortingBuffers) {
 				modelSortingBuffer.unmap(true);
 			}
+			frameTimer.end(Timer.UNMAP_BUFFER);
 
 			// Output buffers
 			// each vertex is an ivec4, which is 16 bytes
@@ -2536,11 +2539,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		sceneUploader.prepareBeforeSwap(sceneContext);
 
-		sceneContext.staticUnorderedModelBuffer.flip();
-
 		// Push unordered models that should always be drawn once during SceneSwap.
 		// Used to fix issues like the right-click menu causing underwater tiles to disappear.
+
+		sceneContext.staticUnorderedModelBuffer.flip();
 		var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
+
 		modelPassthroughBuffer = hModelPassthroughBuffer.map(GLBuffer.AccessFlags.Write, GLBuffer.GLMappedType.INT);
 		modelPassthroughBuffer
 			.ensureCapacity(staticUnordered.limit())

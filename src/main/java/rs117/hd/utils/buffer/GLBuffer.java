@@ -24,7 +24,6 @@
  */
 package rs117.hd.utils.buffer;
 
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -76,16 +75,18 @@ public class GLBuffer
 	}
 
 	public GLMappedBuffer map(AccessFlags accessFlags, long bytesOffset, GLMappedType bufferType) {
+		if (mapped.isMapped() && bytesOffset != mapped.bytesOffset) {
+			unmap(true);
+		}
+
 		if (!mapped.isMapped()) {
 			glBindBuffer(target, id);
-			ByteBuffer buf = glMapBufferRange(target, bytesOffset, size - bytesOffset, accessFlags.glMapBufferRangeFlags);
+			ByteBuffer buf = glMapBufferRange(target, bytesOffset, size - bytesOffset, accessFlags.flags);
 			if (buf != null) {
-				mapped.buffer = buf;
-				mapped.bufferInt = bufferType == GLMappedType.INT ? mapped.buffer.asIntBuffer() : null;
-				mapped.bufferFloat = bufferType == GLMappedType.FLOAT ? mapped.buffer.asFloatBuffer() : null;
 				mapped.accessFlags = accessFlags;
 				mapped.bufferType = bufferType;
 				mapped.bytesOffset = bytesOffset;
+				mapped.setMappedBuffer(buf);
 			}
 			HdPlugin.checkGLErrors();
 		}
@@ -97,7 +98,8 @@ public class GLBuffer
 		if (mapped.isMapped()) {
 			glBindBuffer(target, id);
 			if (flush) {
-				glFlushMappedBufferRange(target, mapped.bytesOffset, mapped.buffer.position());
+				glFlushMappedBufferRange(target, mapped.bytesOffset, mapped.writtenBytes);
+				mapped.writtenBytes = 0;
 			}
 			glUnmapBuffer(target);
 			mapped.buffer = null;
@@ -123,10 +125,9 @@ public class GLBuffer
 		if (log.isDebugEnabled() && newSize > 1e6)
 			log.debug("Resizing buffer '{}'\t{}", name, String.format("%.2f MB -> %.2f MB", size / 1e6, newSize / 1e6));
 
-		int mappedBufferByteOffset = -1;
+		boolean shouldRemap = false;
 		if (mapped.isMapped()) {
-			mappedBufferByteOffset = mapped.position() * mapped.bufferType.stride;
-			mapped.buffer.position(mappedBufferByteOffset);
+			shouldRemap = true;
 			unmap(false);
 		}
 
@@ -147,9 +148,8 @@ public class GLBuffer
 
 		size = newSize;
 
-		if (mappedBufferByteOffset != -1) {
+		if (shouldRemap) {
 			map(mapped.accessFlags, mapped.bytesOffset, mapped.bufferType);
-			mapped.setPositionInBytes(mappedBufferByteOffset);
 		}
 
 		if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43) {
@@ -211,9 +211,13 @@ public class GLBuffer
 	public enum AccessFlags {
 		Write(GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT),
 		Read(GL_MAP_READ_BIT),
-		ReadWrite(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT);
+		ReadWrite(GL_MAP_READ_BIT | GL_MAP_WRITE_BIT | GL_MAP_FLUSH_EXPLICIT_BIT),
 
-		public final int glMapBufferRangeFlags;
+		UnsafeWrite(Write.flags | GL_MAP_UNSYNCHRONIZED_BIT),
+		UnsafeRead(Read.flags | GL_MAP_UNSYNCHRONIZED_BIT),
+		UnsafeReadWrite(ReadWrite.flags | GL_MAP_UNSYNCHRONIZED_BIT);;
+
+		public final int flags;
 	}
 
 	@RequiredArgsConstructor
@@ -231,124 +235,95 @@ public class GLBuffer
 
 		private AccessFlags accessFlags;
 		private GLMappedType bufferType;
-		private long bytesOffset;
 
 		private ByteBuffer buffer;
 		private IntBuffer bufferInt;
 		private FloatBuffer bufferFloat;
 
+		private long bytesOffset;
+		private long writtenBytes;
+
 		public boolean isMapped() {
 			return buffer != null;
 		}
 
-		public <T extends Buffer> T getBuffer() {
-			if (buffer == null) {
-				return null;
-			}
+		private void setMappedBuffer(ByteBuffer buffer) {
+			this.buffer = buffer;
 
-			switch (bufferType) {
-				case BYTE:
-					return (T) buffer;
-				case INT:
-					return (T) bufferInt;
-				case FLOAT:
-					return (T) bufferFloat;
-				default:
-					throw new IllegalStateException("Unexpected value: " + bufferType);
+			if (bufferType == GLMappedType.INT) {
+				bufferInt = buffer.asIntBuffer();
+				bufferInt.position((int) (writtenBytes / 4));
+			} else if (bufferType == GLMappedType.FLOAT) {
+				bufferFloat = buffer.asFloatBuffer();
+				bufferFloat.position((int) (writtenBytes / 4));
 			}
-		}
-
-		public int position() {
-			Buffer buf = getBuffer();
-			if (buf != null) {
-				return buf.position();
-			}
-			return 0;
-		}
-
-		public void setPositionInBytes(int bytesOffset) {
-			if (buffer != null) buffer.position(bytesOffset);
-			if (bufferInt != null) bufferInt.position(bytesOffset / 4);
-			if (bufferFloat != null) bufferFloat.position(bytesOffset / 4);
 		}
 
 		public GLMappedBuffer ensureCapacity(int size) {
-			long numBytes = bytesOffset + ((position() + size) * (long) bufferType.stride);
-			if (numBytes > owner.size) {
-				owner.ensureCapacity(numBytes);
-			}
+			owner.ensureCapacity(bytesOffset + writtenBytes + (size * (long) bufferType.stride));
 			return this;
 		}
 
 		public GLMappedBuffer put(int value) {
-			if (bufferInt != null) {
-				bufferInt.put(value);
-			}
+			bufferInt.put(value);
+			writtenBytes += Integer.BYTES;
 			return this;
 		}
 
 		public GLMappedBuffer put(float value) {
-			if (bufferFloat != null) {
-				bufferFloat.put(value);
-			}
+			bufferFloat.put(value);
+			writtenBytes += Float.BYTES;
 			return this;
 		}
 
 		public GLMappedBuffer put(int x, int y, int z, int w) {
-			if (bufferInt != null) {
-				bufferInt.put(x);
-				bufferInt.put(y);
-				bufferInt.put(z);
-				bufferInt.put(w);
-			}
+			bufferInt.put(x);
+			bufferInt.put(y);
+			bufferInt.put(z);
+			bufferInt.put(w);
+			writtenBytes += 4 * Integer.BYTES;
 			return this;
 		}
 
 		public GLMappedBuffer put(float x, float y, float z, float w) {
-			if (bufferFloat != null) {
-				bufferFloat.put(x);
-				bufferFloat.put(y);
-				bufferFloat.put(z);
-				bufferFloat.put(w);
-			}
+			bufferFloat.put(x);
+			bufferFloat.put(y);
+			bufferFloat.put(z);
+			bufferFloat.put(w);
+			writtenBytes += 4 * Float.BYTES;
 			return this;
 		}
 
 		public GLMappedBuffer put(float x, float y, float z, int w) {
-			if (bufferFloat != null) {
-				bufferFloat.put(x);
-				bufferFloat.put(y);
-				bufferFloat.put(z);
-				bufferFloat.put(Float.intBitsToFloat(w));
-			}
+			bufferFloat.put(x);
+			bufferFloat.put(y);
+			bufferFloat.put(z);
+			bufferFloat.put(Float.intBitsToFloat(w));
+			writtenBytes += 4 * Float.BYTES;
 			return this;
 		}
 
 		public GLMappedBuffer put(int[] array) {
-			if (bufferInt != null && array != null) {
-				bufferInt.put(array);
-			}
+			bufferInt.put(array);
+			writtenBytes += (long) array.length * Integer.BYTES;
 			return this;
 		}
 
 		public GLMappedBuffer put(float[] array) {
-			if (bufferFloat != null && array != null) {
-				bufferFloat.put(array);
-			}
+			bufferFloat.put(array);
+			writtenBytes += (long) array.length * Float.BYTES;
 			return this;
 		}
 
 		public GLMappedBuffer put(IntBuffer inBuffer) {
-			if (bufferInt != null) {
-				bufferInt.put(inBuffer);
-			}
+			writtenBytes += (long) bufferInt.remaining() * Integer.BYTES;
+			bufferInt.put(inBuffer);
 			return this;
 		}
 
 		public void put(FloatBuffer inBuffer) {
-			if (bufferFloat != null) {
-				bufferFloat.put(inBuffer);
-			}
+			writtenBytes += (long) bufferFloat.remaining() * Float.BYTES;
+			bufferFloat.put(inBuffer);
 		}
 	}
 }
