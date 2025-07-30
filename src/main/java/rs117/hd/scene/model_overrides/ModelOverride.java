@@ -23,6 +23,7 @@ import rs117.hd.utils.Vector;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.ExpressionParser.asExpression;
 import static rs117.hd.utils.ExpressionParser.parseExpression;
+import static rs117.hd.utils.HDUtils.clamp;
 
 @Slf4j
 @NoArgsConstructor
@@ -72,6 +73,8 @@ public class ModelOverride
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
+	public int windDisplacementModifier = 0;
+	public boolean invertDisplacementStrength = false;
 
 	@JsonAdapter(AABB.JsonAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -121,6 +124,12 @@ public class ModelOverride
 			if (Props.DEVELOPMENT)
 				throw new IllegalStateException("Invalid windDisplacementMode");
 			windDisplacementMode = ModelOverride.NONE.windDisplacementMode;
+		}
+
+		if (windDisplacementModifier < -3 || windDisplacementModifier > 3) {
+			if (Props.DEVELOPMENT)
+				throw new IllegalStateException("Invalid windDisplacementModifier (range is -3 to 3)");
+			windDisplacementModifier = clamp(windDisplacementModifier, -3, 3);
 		}
 
 		if (areas == null)
@@ -199,6 +208,8 @@ public class ModelOverride
 			tzHaarRecolorType,
 			inheritTileColorType,
 			windDisplacementMode,
+			windDisplacementModifier,
+			invertDisplacementStrength,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
