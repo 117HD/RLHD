@@ -2891,10 +2891,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public boolean tileInFrustum(
 		Scene scene,
-		int pitchSin,
-		int pitchCos,
-		int yawSin,
-		int yawCos,
+		float pitchSin,
+		float pitchCos,
+		float yawSin,
+		float yawCos,
 		int cameraX,
 		int cameraY,
 		int cameraZ,
@@ -2937,22 +2937,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 
 		// Transform the local coordinates using the yaw (horizontal rotation)
-		final int transformedZ = yawCos * z - yawSin * x >> 16;
-		final int depth = pitchCos * tileRadius + pitchSin * y + pitchCos * transformedZ >> 16;
+		final float transformedZ = yawCos * z - yawSin * x;
+		final float depth = pitchCos * tileRadius + pitchSin * y + pitchCos * transformedZ;
 
 		boolean visible = false;
 
 		// Check if the tile is within the near plane of the frustum
 		if (depth > NEAR_PLANE) {
-			final int transformedX = z * yawSin + yawCos * x >> 16;
-			final int leftPoint = transformedX - tileRadius;
+			final float transformedX = z * yawSin + yawCos * x;
+			final float leftPoint = transformedX - tileRadius;
 			// Check left and right bounds
 			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
-				final int rightPoint = transformedX + tileRadius;
+				final float rightPoint = transformedX + tileRadius;
 				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
 					// Transform the local Y using pitch (vertical rotation)
-					final int transformedY = pitchCos * y - transformedZ * pitchSin;
-					final int bottomPoint = transformedY + pitchSin * tileRadius >> 16;
+					final float transformedY = pitchCos * y - transformedZ * pitchSin;
+					final float bottomPoint = transformedY + pitchSin * tileRadius;
 					// Check top bound (we skip bottom bound to avoid computing model heights)
 					visible = bottomPoint * visibilityCheckZoom > topClip * depth;
 				}
@@ -2965,7 +2965,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	/**
 	 * Check is a model is visible and should be drawn.
 	 */
-	private boolean isOutsideViewport(Model model, int modelRadius, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
+	private boolean isOutsideViewport(Model model, int modelRadius, float pitchSin, float pitchCos, float yawSin, float yawCos, int x, int y, int z) {
 		if (sceneContext == null)
 			return true;
 
@@ -2977,22 +2977,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
-		final int transformedZ = yawCos * z - yawSin * x >> 16;
-		final int depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ >> 16;
+		final float transformedZ = yawCos * z - yawSin * x;
+		final float depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ;
 
 		if (depth > NEAR_PLANE) {
-			final int transformedX = z * yawSin + yawCos * x >> 16;
-			final int leftPoint = transformedX - modelRadius;
+			final float transformedX = z * yawSin + yawCos * x;
+			final float leftPoint = transformedX - modelRadius;
 			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
-				final int rightPoint = transformedX + modelRadius;
+				final float rightPoint = transformedX + modelRadius;
 				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
-					final int transformedY = pitchCos * y - transformedZ * pitchSin >> 16;
-					final int transformedRadius = pitchSin * modelRadius;
-					final int bottomExtent = pitchCos * model.getBottomY() + transformedRadius >> 16;
-					final int bottomPoint = transformedY + bottomExtent;
+					final float transformedY = pitchCos * y - transformedZ * pitchSin;
+					final float transformedRadius = pitchSin * modelRadius;
+					final float bottomExtent = pitchCos * model.getBottomY() + transformedRadius;
+					final float bottomPoint = transformedY + bottomExtent;
 					if (bottomPoint * visibilityCheckZoom > topClip * depth) {
-						final int topExtent = pitchCos * model.getModelHeight() + transformedRadius >> 16;
-						final int topPoint = transformedY - topExtent;
+						final float topExtent = pitchCos * model.getModelHeight() + transformedRadius;
+						final float topPoint = transformedY - topExtent;
 						return topPoint * visibilityCheckZoom >= bottomClip * depth; // inverted check
 					}
 				}
