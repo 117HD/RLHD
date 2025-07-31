@@ -121,8 +121,8 @@ import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL43C.*;
@@ -2703,10 +2703,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public boolean tileInFrustum(
 		Scene scene,
-		int pitchSin,
-		int pitchCos,
-		int yawSin,
-		int yawCos,
+		float pitchSin,
+		float pitchCos,
+		float yawSin,
+		float yawCos,
 		int cameraX,
 		int cameraY,
 		int cameraZ,
@@ -2742,19 +2742,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int Rasterizer3D_clipNegativeMidX = client.getRasterizer3D_clipNegativeMidX();
 		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
 
-		int var11 = yawCos * z - yawSin * x >> 16;
-		int var12 = pitchSin * y + pitchCos * var11 >> 16;
-		int var13 = pitchCos * radius >> 16;
-		int depth = var12 + var13;
+		float var11 = yawCos * z - yawSin * x;
+		float var12 = pitchSin * y + pitchCos * var11;
+		float var13 = pitchCos * radius;
+		float depth = var12 + var13;
 		if (depth > NEAR_PLANE) {
-			int rx = z * yawSin + yawCos * x >> 16;
-			int var16 = (rx - radius) * zoom;
-			int var17 = (rx + radius) * zoom;
+			float rx = z * yawSin + yawCos * x;
+			float var16 = (rx - radius) * zoom;
+			float var17 = (rx + radius) * zoom;
 			// left && right
 			if (var16 < Rasterizer3D_clipMidX2 * depth && var17 > Rasterizer3D_clipNegativeMidX * depth) {
-				int ry = pitchCos * y - var11 * pitchSin >> 16;
-				int ybottom = pitchSin * radius >> 16;
-				int var20 = (ry + ybottom) * zoom;
+				float ry = pitchCos * y - var11 * pitchSin;
+				float ybottom = pitchSin * radius;
+				float var20 = (ry + ybottom) * zoom;
 				// top
 				// we don't test the bottom so we don't have to find the height of all the models on the tile
 				return var20 > Rasterizer3D_clipNegativeMidY * depth;
@@ -2766,7 +2766,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	/**
 	 * Check is a model is visible and should be drawn.
 	 */
-	private boolean isOutsideViewport(Model model, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
+	private boolean isOutsideViewport(Model model, float pitchSin, float pitchCos, float yawSin, float yawCos, int x, int y, int z) {
 		if (sceneContext == null)
 			return true;
 
@@ -2780,23 +2780,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int Rasterizer3D_clipNegativeMidY = client.getRasterizer3D_clipNegativeMidY();
 		int Rasterizer3D_clipMidY2 = client.getRasterizer3D_clipMidY2();
 
-		int var11 = yawCos * z - yawSin * x >> 16;
-		int var12 = pitchSin * y + pitchCos * var11 >> 16;
-		int var13 = pitchCos * XYZMag >> 16;
-		int depth = var12 + var13;
+		float var11 = yawCos * z - yawSin * x;
+		float var12 = pitchSin * y + pitchCos * var11;
+		float var13 = pitchCos * XYZMag;
+		float depth = var12 + var13;
 		if (depth > NEAR_PLANE) {
-			int rx = z * yawSin + yawCos * x >> 16;
-			int var16 = (rx - XYZMag) * zoom;
+			float rx = z * yawSin + yawCos * x;
+			float var16 = (rx - XYZMag) * zoom;
 			if (var16 / depth < Rasterizer3D_clipMidX2) {
-				int var17 = (rx + XYZMag) * zoom;
+				float var17 = (rx + XYZMag) * zoom;
 				if (var17 / depth > Rasterizer3D_clipNegativeMidX) {
-					int ry = pitchCos * y - var11 * pitchSin >> 16;
-					int yheight = pitchSin * XYZMag >> 16;
-					int ybottom = (pitchCos * bottomY >> 16) + yheight;
-					int var20 = (ry + ybottom) * zoom;
+					float ry = pitchCos * y - var11 * pitchSin;
+					float yheight = pitchSin * XYZMag;
+					float ybottom = (pitchCos * bottomY) + yheight;
+					float var20 = (ry + ybottom) * zoom;
 					if (var20 / depth > Rasterizer3D_clipNegativeMidY) {
-						int ytop = (pitchCos * modelHeight >> 16) + yheight;
-						int var22 = (ry - ytop) * zoom;
+						float ytop = (pitchCos * modelHeight) + yheight;
+						float var22 = (ry - ytop) * zoom;
 						return var22 / depth >= Rasterizer3D_clipMidY2;
 					}
 				}
