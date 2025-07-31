@@ -116,9 +116,9 @@ void main() {
     int waterTypeIndex = 0;
     if (isTerrain) {
         #ifdef DEVELOPMENT_WATER_TYPE
-        waterTypeIndex = DEVELOPMENT_WATER_TYPE;
+            waterTypeIndex = DEVELOPMENT_WATER_TYPE;
         #else
-        waterTypeIndex = vTerrainData[0] >> 3 & 0x1F;
+            waterTypeIndex = vTerrainData[0] >> 3 & 0x1F;
         #endif
     }
 

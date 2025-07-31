@@ -112,8 +112,8 @@ void main() {
     bool isWaterSurface = isWater && !isUnderwaterTile;
 
     #ifdef DEVELOPMENT_WATER_TYPE
-    if (isWater)
-        waterTypeIndex = DEVELOPMENT_WATER_TYPE;
+        if (isWater)
+            waterTypeIndex = DEVELOPMENT_WATER_TYPE;
     #endif
 
     WaterType waterType;
@@ -377,7 +377,8 @@ void main() {
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
+        if (renderPass == RENDER_PASS_MAIN)
+            calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
         // sky light
         vec3 skyLightColor = fogColor;
@@ -429,13 +430,13 @@ void main() {
 
         // Try to match old alpha with linear blending
         #if LINEAR_ALPHA_BLENDING
-        if (outputColor.a < 1 && outputColor.a >= .004) {
-            // Blending in linear color space makes transparent glass overly opaque.
-            // Bias the opacity somewhat to look closer to vanilla colors overall.
-            vec3 hsl = unpackHsl(vHsl[0]);
-            float alphaCorrectionMask = (1 - pow(hsl.y, 5.f)) * (1 - pow(outputColor.a, 3.f));
-            outputColor.a = pow(outputColor.a, 1 + alphaCorrectionMask);
-        }
+            if (outputColor.a < 1 && outputColor.a >= .004) {
+                // Blending in linear color space makes transparent glass overly opaque.
+                // Bias the opacity somewhat to look closer to vanilla colors overall.
+                vec3 hsl = unpackHsl(vHsl[0]);
+                float alphaCorrectionMask = (1 - pow(hsl.y, 5.f)) * (1 - pow(outputColor.a, 3.f));
+                outputColor.a = pow(outputColor.a, 1 + alphaCorrectionMask);
+            }
         #endif
 
         #if VANILLA_COLOR_BANDING
@@ -503,17 +504,17 @@ void main() {
         float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
 
         #if LINEAR_ALPHA_BLENDING
-        if (isWaterSurface) {
-            outputColor.rgb = mix(outputColor.rgb * outputColor.a, srgbToLinear(fogColor), srgbToLinear(combinedFog));
-            outputColor.a = mix(outputColor.a, 1, combinedFog);
-            outputColor.rgb /= outputColor.a;
-        } else {
-            outputColor.rgb = srgbToLinear(mix(linearToSrgb(outputColor.rgb), fogColor, combinedFog));
-        }
+            if (isWaterSurface) {
+                outputColor.rgb = mix(outputColor.rgb * outputColor.a, srgbToLinear(fogColor), srgbToLinear(combinedFog));
+                outputColor.a = mix(outputColor.a, 1, combinedFog);
+                outputColor.rgb /= outputColor.a;
+            } else {
+                outputColor.rgb = srgbToLinear(mix(linearToSrgb(outputColor.rgb), fogColor, combinedFog));
+            }
         #else
-        if (isWaterSurface)
-            outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
-        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+            if (isWaterSurface)
+                outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
+            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
         #endif
     }
 

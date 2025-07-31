@@ -28,15 +28,14 @@
 #include <utils/constants.glsl>
 #include <utils/color_utils.glsl>
 #include <utils/noise.glsl>
-#include <utils/lights.glsl>
 #include <utils/misc.glsl>
 #include <utils/water_reflection.glsl>
 #include <utils/shadows.glsl>
 #include <utils/fresnel.glsl>
 
-#if LEGACY_WATER
-    #include <utils/legacy_water.glsl>
-#else
+// TODO: Fix pragma once by actually processing preprocessor directives before compilation
+//#if LEGACY_WATER
+#include <utils/legacy_water.glsl>
 
 vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     WaterType waterType = getWaterType(waterTypeIndex);
@@ -516,29 +515,27 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     }
 
     #if WATER_FOAM
-    if (waterType.hasFoam == 1) {
-        vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
-        float flowMapStrength = .25;
-        vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
-        vec2 uv = IN.uv + uvFlow * flowMapStrength;
-        float foamMask = texture(textureArray, vec3(uv, waterType.foamMap)).r;
-        foamMask *= .075;
-        float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
-        shoreLineMask *= shoreLineMask;
-        shoreLineMask *= shoreLineMask;
-        shoreLineMask *= shoreLineMask;
+        if (waterType.hasFoam == 1) {
+            vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
+            float flowMapStrength = .25;
+            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
+            vec2 uv = IN.uv + uvFlow * flowMapStrength;
+            float foamMask = texture(textureArray, vec3(uv, waterType.foamMap)).r;
+            foamMask *= .075;
+            float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
+            shoreLineMask *= shoreLineMask;
+            shoreLineMask *= shoreLineMask;
+            shoreLineMask *= shoreLineMask;
 
-        vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
-        vec4 foam = vec4(light, shoreLineMask * foamMask);
+            vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
+            vec4 foam = vec4(light, shoreLineMask * foamMask);
 
-        // Blend in foam at the very end as an overlay
-        dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1 - foam.a);
-        dst.a = foam.a + dst.a * (1 - foam.a);
-        dst.rgb /= dst.a;
-    }
+            // Blend in foam at the very end as an overlay
+            dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1 - foam.a);
+            dst.a = foam.a + dst.a * (1 - foam.a);
+            dst.rgb /= dst.a;
+        }
     #endif
 
     return dst;
 }
-
-#endif

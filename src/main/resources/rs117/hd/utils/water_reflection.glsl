@@ -53,8 +53,9 @@ vec3 sampleWaterReflection(vec3 flatR, vec3 R, float distortionFactor) {
     vec3 c = texture(waterReflectionMap, uv).rgb;
 
     #if !LINEAR_ALPHA_BLENDING
-    // When linear alpha blending is on, the texture is in sRGB, and OpenGL will automatically convert it to linear
-    c = srgbToLinear(c);
+        // When linear alpha blending is on, the texture is in sRGB, and OpenGL will automatically convert it to linear
+        c = srgbToLinear(c);
     #endif
+
     return c;
 }
