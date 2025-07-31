@@ -297,14 +297,18 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
             float heightFadeB = saturate((strengthB - 0.5) / 0.2);
             float heightFadeC = saturate((strengthC - 0.5) / 0.2);
 
-            strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA)) * modelDisplacementMod;
-            strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB)) * modelDisplacementMod;
-            strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC)) * modelDisplacementMod;
+            strengthA *= mix(0.0, mix(distBlendA, 1.0, heightFadeA), step(0.3, strengthA));
+            strengthB *= mix(0.0, mix(distBlendB, 1.0, heightFadeB), step(0.3, strengthB));
+            strengthC *= mix(0.0, mix(distBlendC, 1.0, heightFadeC), step(0.3, strengthC));
         } else {
             if (windDisplacementMode == WIND_DISPLACEMENT_VERTEX_JIGGLE) {
                 vec3 vertASkew = safe_normalize(cross(normA.xyz, vec3(0, 1, 0)));
                 vec3 vertBSkew = safe_normalize(cross(normB.xyz, vec3(0, 1, 0)));
                 vec3 vertCSkew = safe_normalize(cross(normC.xyz, vec3(0, 1, 0)));
+
+                strengthA *= modelDisplacementMod;
+                strengthB *= modelDisplacementMod;
+                strengthC *= modelDisplacementMod;
 
                 displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
                 displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
