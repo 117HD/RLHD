@@ -2,9 +2,10 @@
 
 #include <uniforms/lights.glsl>
 
-#if DYNAMIC_LIGHTS
+#include <utils/constants.glsl>
 #include <utils/specular.glsl>
 
+#if DYNAMIC_LIGHTS
 void calculateLight(
     int lightIdx, vec3 position, vec3 normals, vec3 viewDir,
     vec3 texBlend, vec3 specularGloss, vec3 specularStrength,

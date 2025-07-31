@@ -49,7 +49,6 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
@@ -64,7 +63,6 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
-import rs117.hd.utils.Vector;
 
 import static java.lang.Math.abs;
 import static java.lang.Math.cos;
@@ -97,9 +95,6 @@ public class LightManager {
 
 	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private HdPluginConfig config;
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
@@ -441,8 +436,10 @@ public class LightManager {
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
 			if (light.visible) {
-				Vector.subtract(cameraToLight, light.pos, plugin.cameraPosition);
-				float distToLight = Vector.dot(cameraToLight, viewDir);
+				// Prioritize lights closer to the focal point
+				float distX = plugin.cameraFocalPoint[0] - light.pos[0];
+				float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
+				light.distanceSquared = distX * distX + distZ * distZ;
 
 				float maxRadius = light.def.radius;
 				switch (light.def.type) {
@@ -456,14 +453,10 @@ public class LightManager {
 
 				// Hide lights which cannot possibly affect the visible scene,
 				// by either being behind the camera, or too far beyond the edge of the scene
-				if (-maxRadius < distToLight && distToLight < drawDistance + maxRadius) {
-					// Prioritize lights closer to the focal point
-					float distX = plugin.cameraFocalPoint[0] - light.pos[0];
-					float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
-					light.distanceSquared = distX * distX + distZ * distZ;
-				} else {
-					light.visible = false;
-				}
+				float near = -maxRadius * maxRadius;
+				float far = drawDistance + LOCAL_HALF_TILE_SIZE + maxRadius;
+				far *= far;
+				light.visible = near < light.distanceSquared && light.distanceSquared < far;
 			}
 		}
 

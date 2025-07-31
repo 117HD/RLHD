@@ -1,6 +1,6 @@
 #version 330
 
-//#define DEBUG_LIGHT_RADIUS_PADDING
+#define DEBUG_LIGHT_RADIUS_PADDING
 
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
@@ -14,10 +14,11 @@ in vec2 fUv;
 out vec4 FragColor;
 
 void main() {
-    vec2 texelCenter = (floor(fUv * tiledLightingResolution) + .5) / tiledLightingResolution;
+    vec2 uv = vec2(fUv.x, 1 - fUv.y);
+    vec2 texelCenter = (floor(uv * tiledLightingResolution) + .5) / tiledLightingResolution;
 
     const float eps = 1e-10;
-    vec2 ndcUv = (fUv * 2 - 1) * vec2(1, -1);
+    vec2 ndcUv = (uv * 2 - 1) * vec2(1, -1);
     vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
     vec3 viewDir = normalize(farPos.xyz / farPos.w);
 
@@ -29,7 +30,7 @@ void main() {
         // When both tests fail to include the light, the unincluded portion is colored white
 
         // Draw texel centers
-        if (all(equal(floor(fUv * sceneResolution), floor(texelCenter * sceneResolution)))) {
+        if (all(equal(floor(uv * sceneResolution), floor(texelCenter * sceneResolution)))) {
             FragColor = vec4(1);
             return;
         }
@@ -86,7 +87,7 @@ void main() {
         if (length(c) > 0)
             c.a = max(c.a, 0.3);
     #else
-        ivec2 tileXY = ivec2(floor(fUv * tiledLightingResolution));
+        ivec2 tileXY = ivec2(floor(uv * tiledLightingResolution));
         int tiledLightCount = 0;
         for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
             ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
