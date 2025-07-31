@@ -442,12 +442,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 omega_h = normalize(omega_o + omega_i); // half-way vector
     vec3 omega_n = N; // surface normal
 
-    #define WATER_SPECULAR_MODE 1
-    #if WATER_SPECULAR_MODE == 1 || WATER_SPECULAR_MODE == 3 // sun or sun & lights
-        // TODO: this doesn't work well for water
-        vec3 sunSpecular = pow(max(0, dot(N, omega_h)), specularGloss) * directionalLight * specularStrength;
-        additionalLight += sunSpecular;
-    #endif
+    vec3 sunSpecular = pow(max(0, dot(N, omega_h)), 2e3) * directionalLight;
+    additionalLight += sunSpecular;
 
     // Begin constructing final output color
     vec4 dst = reflection;
