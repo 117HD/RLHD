@@ -36089,8 +36089,8 @@
     "color": "#F9BE00",
     "strength": 20,
     "radius": 350,
-    "fadeInDuration": 150,
-    "fadeOutDuration": 150,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "offset": [ 0, 150, 20 ]
   },
   {
@@ -36099,8 +36099,8 @@
     "color": "#F9BE00",
     "strength": 30,
     "radius": 200,
-    "fadeInDuration": 150,
-    "fadeOutDuration": 150,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "offset": [ 0, 300, 0 ]
   },
   {
@@ -36109,8 +36109,8 @@
     "color": "#F9BE00",
     "strength": 17.5,
     "radius": 125,
-    "fadeInDuration": 150,
-    "fadeOutDuration": 150,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "offset": [ 0, 40, 0 ]
   },
   {
@@ -36123,8 +36123,8 @@
     ],
     "strength": 5,
     "radius": 350,
-    "fadeInDuration": 150,
-    "fadeOutDuration": 150,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "offset": [ 0, 150, 20 ]
   },
   {
