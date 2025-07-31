@@ -314,8 +314,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Inject
 	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
+	@Getter
 	@Inject
-	private TiledLightingShaderProgram tiledLightingImageStore;
+	private TiledLightingShaderProgram tiledLightingImageStoreProgram;
 
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
 
@@ -927,10 +928,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
-			if (GL_CAPS.GL_ARB_shader_image_load_store) {
-				tiledLightingImageStore.compile(includes
-					.define("TILED_IMAGE_STORE", true)
-					.define("TILED_LIGHTING_LAYER", false));
+			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
+				try {
+					tiledLightingImageStoreProgram.compile(includes
+						.define("TILED_IMAGE_STORE", true)
+						.define("TILED_LIGHTING_LAYER", false));
+				} catch (ShaderException ex) {
+					log.warn("Disabling TILED_IMAGE_STORE due to:", ex);
+				}
 			}
 
 			int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
@@ -967,7 +972,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
-		tiledLightingImageStore.destroy();
+		tiledLightingImageStoreProgram.destroy();
 
 		for (var program : tiledLightingShaderPrograms)
 			program.destroy();
@@ -1263,8 +1268,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			GL_SHORT,
 			0
 		);
+		checkGLErrors();
 
-		if (tiledLightingImageStore.isValid())
+		if (tiledLightingImageStoreProgram.isValid())
 			ARBShaderImageLoadStore.glBindImageTexture(
 				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, false, 0, GL_WRITE_ONLY, GL_RGBA16I);
 
@@ -1720,38 +1726,36 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {
 				updateTiledLightingFbo();
+				assert fboTiledLighting != 0;
 
-				if (fboTiledLighting != 0) {
-					// Check if the tiledLighting FBO needs to be recreated
-					frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
-					frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
+				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
+				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
-					glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
-					glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
+				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
 
-					glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
+				glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
 
-					glClearColor(0, 0, 0, 0);
-					glClear(GL_COLOR_BUFFER_BIT);
+				glClearColor(0, 0, 0, 0);
+				glClear(GL_COLOR_BUFFER_BIT);
 
-					glBindVertexArray(vaoTri);
-					glDisable(GL_BLEND);
+				glBindVertexArray(vaoTri);
+				glDisable(GL_BLEND);
 
-					if (tiledLightingImageStore.isValid()) {
-						tiledLightingImageStore.use();
+				if (tiledLightingImageStoreProgram.isValid()) {
+					tiledLightingImageStoreProgram.use();
+					glDrawArrays(GL_TRIANGLES, 0, 3);
+				} else {
+					int layerCount = configDynamicLights.getLightsPerTile() / 4;
+					for (int layer = 0; layer < layerCount; layer++) {
+						tiledLightingShaderPrograms.get(layer).use();
+						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
 						glDrawArrays(GL_TRIANGLES, 0, 3);
-					} else {
-						int layerCount = configDynamicLights.getLightsPerTile() / 4;
-						for (int layer = 0; layer < layerCount; layer++) {
-							tiledLightingShaderPrograms.get(layer).use();
-							glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
-							glDrawArrays(GL_TRIANGLES, 0, 3);
-						}
 					}
-
-					frameTimer.end(Timer.RENDER_TILED_LIGHTING);
-					frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 				}
+
+				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
+				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 			}
 		}
 	}
