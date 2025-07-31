@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2018, Adam <Adam@sigterm.info>
  * Copyright (c) 2021, 117 <https://twitter.com/117scape>
  * All rights reserved.
  *
@@ -22,40 +23,19 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#pragma once
+
+#version 400
 
 #include <uniforms/global.glsl>
 
-// translates a value from a custom range into 0-1
-float translateRange(float rangeStart, float rangeEnd, float value)
+#include <utils/skybox.glsl>
+
+layout (location = 0) in vec3 aPos;
+
+out vec2 quadPos;
+
+void main()
 {
-    return (value - rangeStart) / (rangeEnd - rangeStart);
-}
-
-// returns a value between 0-1 representing a frame of animation
-// based on the length of the animation
-float animationFrame(float animationDuration)
-{
-    if (animationDuration == 0)
-        return 0.0;
-    return mod(elapsedTime, animationDuration) / animationDuration;
-}
-
-vec2 animationFrame(vec2 animationDuration)
-{
-    if (animationDuration == vec2(0))
-        return vec2(0);
-    return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
-}
-
-float hermite(float a, float b, float t) {
-    float t2 = t * t;
-    float t3 = t2 * t;
-    return a * (1.0 - 3.0 * t2 + 2.0 * t3) + b * (3.0 * t2 - 2.0 * t3);
-}
-
-vec3 hermite(vec3 a, vec3 b, float t) {
-    float t2 = t * t;
-    float t3 = t2 * t;
-    return a * (1.0 - 3.0 * t2 + 2.0 * t3) + b * (3.0 * t2 - 2.0 * t3);
+    quadPos = aPos.xy;
+    gl_Position = vec4(aPos.xy, 0.0, 1.0);
 }

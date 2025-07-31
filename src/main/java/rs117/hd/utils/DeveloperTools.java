@@ -13,6 +13,7 @@ import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.input.KeyListener;
 import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.gui.EnvironmentEditor;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
@@ -33,6 +34,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_SKYBOX = new Keybind(KeyEvent.VK_S, InputEvent.SHIFT_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -61,6 +63,9 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
 
+	@Inject
+	private EnvironmentEditor environmentEditor;
+
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
 	@Getter
@@ -70,6 +75,7 @@ public class DeveloperTools implements KeyListener {
 	@Getter
 	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
+	private boolean skyBoxOverlayEnabled = false;
 
 	public void activate() {
 		// Listen for commands
@@ -89,6 +95,7 @@ public class DeveloperTools implements KeyListener {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
+			environmentEditor.setState(skyBoxOverlayEnabled);
 		});
 
 		// Check for any out of bounds areas
@@ -114,6 +121,7 @@ public class DeveloperTools implements KeyListener {
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
 		hideUiEnabled = false;
+		environmentEditor.setState(false);
 	}
 
 	@Subscribe
@@ -174,6 +182,8 @@ public class DeveloperTools implements KeyListener {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
 			hideUiEnabled = !hideUiEnabled;
+		} else if (KEY_TOGGLE_SKYBOX.matches(e)) {
+			environmentEditor.setState(skyBoxOverlayEnabled = !skyBoxOverlayEnabled);
 		} else {
 			return;
 		}
