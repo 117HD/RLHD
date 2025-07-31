@@ -138,6 +138,7 @@ import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
+import rs117.hd.utils.Vector;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
@@ -2265,11 +2266,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.contrast.set(config.contrast() / 100f);
 			uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
 			uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-			uboGlobal.underwaterCausticsColor.set(
-				environmentManager.currentUnderwaterCausticsColor[0] * environmentManager.currentUnderwaterCausticsStrength,
-				environmentManager.currentUnderwaterCausticsColor[1] * environmentManager.currentUnderwaterCausticsStrength,
-				environmentManager.currentUnderwaterCausticsColor[2] * environmentManager.currentUnderwaterCausticsStrength
-			);
+			uboGlobal.underwaterCausticsColor.set(Vector.multiply(
+				environmentManager.currentUnderwaterCausticsColor,
+				environmentManager.currentUnderwaterCausticsStrength
+			));
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
@@ -2366,6 +2366,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
 				// Calculate water reflection projection matrix
+				// TODO: Store original projection matrix so we can restore it
 				float[] projectionMatrix = Mat4.scale(client.getScale(), -client.getScale(), 1);
 				if (orthographicProjection) {
 					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));

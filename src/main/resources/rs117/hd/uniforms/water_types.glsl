@@ -39,8 +39,9 @@ layout(std140) uniform UBOWaterTypes {
 #define WATER_TYPE_MUDDY_WATER      11
 #define WATER_TYPE_SCAR_SLUDGE      12
 #define WATER_TYPE_ABYSS_BILE       13
-#define WATER_TYPE_PLAIN_WATER      14 // #2 is color-matched to model-water in caves etc, while this one isn't
+#define WATER_TYPE_PLAIN_WATER      14
 #define WATER_TYPE_DARK_BLUE_WATER  15
 #define WATER_TYPE_ARAXXOR_WASTE    16
 #define WATER_TYPE_CYAN_WATER       17
 #define WATER_TYPE_GREEN_CAVE_WATER 18
+#define WATER_TYPE_CAVE_WATER       19

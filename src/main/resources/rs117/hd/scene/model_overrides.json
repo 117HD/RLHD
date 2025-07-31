@@ -1073,6 +1073,26 @@
     "hide": true
   },
   {
+    "description": "Hide black boxes in God Wars Dungeon messing up the water reflection",
+    "objectIds": [ "CAVEWALL_TOP_SUPERBLACK" ],
+    "hideInAreas": [
+      [ 2899, 5301, 2911, 5311 ]
+    ]
+  },
+  {
+    "description": "Godwars waterfall replace cyan water",
+    "objectIds": [
+      "GODWARS_WATERFALL_TOP_OFFSET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
     "description": "Kourend - Hosidius - Apple Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -53176,26 +53196,6 @@
     "uvScale": 0.65,
     "objectIds": [
       "WALLKIT_WOODEN03_DEFAULT01"
-    ]
-  },
-  {
-    "description": "Hide black boxes in God Wars Dungeon messing up the water reflection",
-    "objectIds": [ "CAVEWALL_TOP_SUPERBLACK" ],
-    "hideInAreas": [
-      [ 2899, 5301, 2911, 5311 ]
-    ]
-  },
-  {
-    "description": "Godwars waterfall replace cyan water",
-    "objectIds": [
-      "GODWARS_WATERFALL_TOP_OFFSET"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 33",
-        "baseMaterial": "TRANSPARENT",
-        "uvType": "MODEL_XY"
-      }
     ]
   }
 ]

@@ -90,6 +90,8 @@ vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
 void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
+    // TODO: Try a simpler approach which lets you pick one or two water colors, and styles the light plausibly based on those
+
     // Ignore refraction for the underwater position, since it would require computing a quartic equation
     vec3 fragPos = IN.position;
     vec3 underwaterNormal = normalize(IN.normal);

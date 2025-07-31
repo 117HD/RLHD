@@ -836,9 +836,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_LEGACY_WATER,
 		name = "Legacy Water",
-		description =
-			"Use the water style included in the initial release of the plugin. May be removed in the future.<br>" +
-			"For reflections, Planar Reflections in Water settings must also be enabled.",
+		description = "Use the water style which was included in the initial release of the plugin.",
 		position = 7,
 		section = waterSettings
 	)

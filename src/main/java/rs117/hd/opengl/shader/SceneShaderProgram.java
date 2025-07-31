@@ -17,6 +17,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	private final UniformTexture uniWaterReflectionMap = addUniformTexture("waterReflectionMap");
 	private final UniformTexture uniWaterNormalMaps = addUniformTexture("waterNormalMaps");
 
+	// TODO: Compile different shaders for different combinations of these
 	public Uniform1i uniRenderPass = addUniform1i("renderPass");
 	public Uniform1i uniWaterHeight = addUniform1i("waterHeight");
 	public UniformBool uniWaterReflectionEnabled = addUniformBool("waterReflectionEnabled");

@@ -352,14 +352,16 @@ void main() {
 
             vec3 caustics = sampleCaustics(flow1, flow2) * 2;
 
-
             // Hard-coded depth
             float depth = 128 * 8;
             vec3 absorption = vec3(.003090, .002056, .001548);
             vec3 extinction = exp(-depth * absorption);
-
             vec3 causticsColor = underwaterCausticsColor * extinction * 10;
-            dirLightColor += caustics * causticsColor * lightDotNormals * pow(lightStrength, 1.5);
+            caustics *= causticsColor;
+
+            caustics *= lightDotNormals * pow(lightStrength, 1.5);
+
+            dirLightColor += caustics;
         }
 
         // apply shadows
