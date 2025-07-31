@@ -491,6 +491,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
+	private float[] sceneProjectionMatrix = new float[4];
+
 	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
@@ -1819,20 +1821,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
 				// Calculate projection matrix
-				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				sceneProjectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 				if (orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+					Mat4.mul(sceneProjectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(sceneProjectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+					Mat4.mul(sceneProjectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
+				Mat4.mul(sceneProjectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+				Mat4.mul(sceneProjectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(sceneProjectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
+				float[] invProjectionMatrix = Mat4.inverse(sceneProjectionMatrix);
 
 				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.projectionMatrix.set(sceneProjectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
 			}
@@ -2366,22 +2368,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
 				// Calculate water reflection projection matrix
-				// TODO: Store original projection matrix so we can restore it
-				float[] projectionMatrix = Mat4.scale(client.getScale(), -client.getScale(), 1);
+				float[] reflectionProjectionMatrix = Mat4.scale(client.getScale(), -client.getScale(), 1);
 				if (orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+					Mat4.mul(reflectionProjectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(reflectionProjectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+					Mat4.mul(reflectionProjectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(-cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(
+				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateX(-cameraOrientation[1]));
+				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(
+					reflectionProjectionMatrix, Mat4.translate(
 					-cameraPosition[0],
 					-(cameraPosition[1] + (sceneContext.waterHeight - cameraPosition[1]) * 2),
 					-cameraPosition[2]
 				));
-				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.projectionMatrix.set(reflectionProjectionMatrix);
 				uboGlobal.cameraPos.set(
 					cameraPosition[0],
 					(cameraPosition[1] + (sceneContext.waterHeight - cameraPosition[1]) * 2),
@@ -2422,18 +2424,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				frameTimer.end(Timer.RENDER_REFLECTIONS);
 
-				// Lazy coding... reset the projection
-				projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-				if (orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.projectionMatrix.set(sceneProjectionMatrix);
 				uboGlobal.cameraPos.set(cameraPosition);
 				uboGlobal.upload();
 			}
