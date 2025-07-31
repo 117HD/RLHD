@@ -30279,6 +30279,31 @@
     "uvScale": 0.86
   },
   {
+    "description": "Perilous Moons - Cave to Stream Cavern",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "PMOON_TELEBOX_CAVE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.86,
+    "colorOverrides": [
+      {
+        "colors": "l == 2 && a == 255",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "Sulfur Nagua - Hide baked lighting - TODO: proper fix using hide vanilla shadows",
+    "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
     "description": "Mastering Mixology Walls with brick walls in front of them",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
@@ -30314,21 +30339,6 @@
       {
         "colors": "l > 63",
         "baseMaterial": "NONE"
-      }
-    ]
-  },
-  {
-    "description": "Hunter Guild cave, Cam Torum, Perilous Moons, Giants Den and Escape Caves - Walls, Rocky objects and Stairs",
-    "baseMaterial": "ROCK_3",
-    "objectIds": [
-      "PMOON_TELEBOX_CAVE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.86,
-    "colorOverrides": [
-      {
-        "colors": "l == 2 && a == 255",
-        "baseMaterial": "GRAY_65"
       }
     ]
   },

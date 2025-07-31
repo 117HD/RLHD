@@ -36084,7 +36084,7 @@
     "objectIds": [ "ROCK_LAVA01_MEDIUM02", "ROCK_LAVA01_MEDIUM01" ]
   },
   {
-    "description": "SULPHUR_NAGA",
+    "description": "Sulphur Nagua Lower",
     "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
     "color": "#F9BE00",
     "strength": 20,
@@ -36092,6 +36092,26 @@
     "fadeInDuration": 150,
     "fadeOutDuration": 150,
     "offset": [ 0, 150, 20 ]
+  },
+  {
+    "description": "Sulphur Nagua Upper",
+    "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
+    "color": "#F9BE00",
+    "strength": 30,
+    "radius": 200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "offset": [ 0, 300, 0 ]
+  },
+  {
+    "description": "Sulphur Nagua Floor Hotspot",
+    "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
+    "color": "#F9BE00",
+    "strength": 17.5,
+    "radius": 125,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "offset": [ 0, 40, 0 ]
   },
   {
     "description": "FROST_NAGA",
