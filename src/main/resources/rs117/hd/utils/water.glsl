@@ -71,10 +71,8 @@ vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
     vec3 n2 = texture(waterNormalMaps, vec3(uv2, 1)).xyz;
 
     // Scale wave strength
-
     n1.z /= waveHeight * .225;
     n2.z /= waveHeight * .8;
-
     // Normalize
     n1.xy = n1.xy * 2 - 1;
     n2.xy = n2.xy * 2 - 1;
@@ -90,14 +88,12 @@ vec3 sampleWaterSurfaceNormal(int waterTypeIndex, vec3 position) {
 void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     WaterType waterType = getWaterType(waterTypeIndex);
 
-    // TODO: Try a simpler approach which lets you pick one or two water colors, and styles the light plausibly based on those
-
     // Ignore refraction for the underwater position, since it would require computing a quartic equation
     vec3 fragPos = IN.position;
     vec3 underwaterNormal = normalize(IN.normal);
-    vec3 surfaceNormal = vec3(0, -1, 0); // assume a flat surface
+    vec3 surfaceNormal = vec3(0, -1, 0); // Assume a flat surface
 
-    vec3 sunDir = -lightDir; // the light's direction from the sun towards any fragment
+    vec3 sunDir = -lightDir; // The light's direction from the sun towards any fragment
     vec3 refractedSunDir = refract(sunDir, surfaceNormal, IOR_AIR_TO_WATER);
     float sunToFragDist = depth / refractedSunDir.y;
 
@@ -108,7 +104,6 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     vec3 omega_i = -refractedSunDir;
     vec3 omega_o = -camToFrag;
 
-    // TODO: this may produce a distorted surface pos on slopes
     vec3 surfacePos = fragPos - camToFrag * fragToSurfaceDist;
     surfaceNormal = sampleWaterSurfaceNormal(waterTypeIndex, surfacePos);
     omega_o = -refract(camToFrag, surfaceNormal, IOR_AIR_TO_WATER);
@@ -136,6 +131,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
     // Initialize absorption and scattering coefficients based on water type
     vec3 sigma_a_particles = vec3(0);
     vec3 sigma_s_particles = vec3(0);
+
     // Scattering anisotropy factor (average cosine), used in the Henyey-Greenstein phase function
     // Taken from https://www.researchgate.net/figure/a-Correlation-of-Mie-scattering-coefficient-and-wavelength-and-b-anisotropy-factor_fig5_337670010
     float g = .924;
@@ -196,7 +192,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
             break;
     }
 
-    // Convert coefficients from meters to in-game units
+    // Convert coefficients from per meter to in-game units
     sigma_a_particles /= 128;
     sigma_s_particles /= 128;
     sigma_a_pureWater /= 128;
@@ -204,7 +200,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 
     vec3 sigma_a = sigma_a_pureWater + sigma_a_particles;
     vec3 sigma_s = sigma_s_pureWater + sigma_s_particles;
-    // extinction coefficient = absorption + scattering
+    // Extinction coefficient = absorption + scattering
     vec3 sigma_t = sigma_a + sigma_s;
 
     // Compute single-scattering of directional light
@@ -302,13 +298,13 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
 
     // QSSA for upwelling radiance at the surface for a given depth
     // https://www.oceanopticsbook.info/view/radiative-transfer-theory/level-2/the-quasi-single-scattering-approximation
-    float mu_sw = refractedSunDir.y; // cos(theta) between downward direction in water and the sunlight's direction
+    float mu_sw = refractedSunDir.y; // Cosine of the angle between downward direction in water and the sunlight's direction
     float mu = omega_o.y;
-    vec3 E_d0 = (directionalLight * .5 + ambientLight) * mu_sw; // downwelling plane irradiance at the surface
-    vec3 b_pureWater = sigma_s_pureWater * B_pureWater; // backscatter coefficient
-    vec3 zeta_star_pureWater = (sigma_a + b_pureWater) * depth; // optical depth
-    vec3 b_particles = sigma_s_particles * B_hg; // backscatter coefficient
-    vec3 zeta_star_particles = (sigma_a + b_particles) * depth; // optical depth
+    vec3 E_d0 = (directionalLight * .5 + ambientLight) * mu_sw; // Downwelling plane irradiance at the surface
+    vec3 b_pureWater = sigma_s_pureWater * B_pureWater; // Backscatter coefficient
+    vec3 zeta_star_pureWater = (sigma_a + b_pureWater) * depth; // Optical depth
+    vec3 b_particles = sigma_s_particles * B_hg; // Backscatter coefficient
+    vec3 zeta_star_particles = (sigma_a + b_particles) * depth; // Optical depth
 
     // Add scattering contribution from pure water and particles
     vec3 QSSA = E_d0 / (mu_sw - mu) * (
@@ -342,7 +338,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         vec3 N = IN.flatNormal;
         const float discretize = 5;
         N = floor(N * discretize) / discretize;
-        vec3 T = normalize(vec3(-N.z, 0, N.x)); // up cross n
+        vec3 T = normalize(vec3(-N.z, 0, N.x)); // Up cross normal
         vec3 B = cross(N, T);
         mat3 TBN = mat3(T, B, N);
         mat3 invTBN = transpose(TBN);
@@ -406,7 +402,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec3 N = sampleWaterSurfaceNormal(waterTypeIndex, IN.position);
 
     vec3 fragToCam = viewDir;
-    vec3 I = -viewDir; // incident
+    vec3 I = -viewDir; // Incident
 
     // Assume the water is level
     vec3 flatR = reflect(I, vec3(0, -1, 0));
@@ -439,10 +435,10 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     vec3 additionalLight = vec3(0);
 
-    vec3 omega_i = lightDir; // incoming = frag to sun
-    vec3 omega_o = viewDir; // outgoing = frag to camera
-    vec3 omega_h = normalize(omega_o + omega_i); // half-way vector
-    vec3 omega_n = N; // surface normal
+    vec3 omega_i = lightDir; // Incoming = frag to sun
+    vec3 omega_o = viewDir; // Outgoing = frag to camera
+    vec3 omega_h = normalize(omega_o + omega_i); // Half-way vector
+    vec3 omega_n = N; // Surface normal
 
     vec3 sunSpecular = pow(max(0, dot(N, omega_h)), 2e3) * directionalLight;
     additionalLight += sunSpecular;
@@ -497,8 +493,8 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     } else if (waterType.isFlat || !waterTransparency) { // If the water is opaque, blend in a fake underwater surface
         // Computed from packedHslToSrgb(6676)
         const vec3 underwaterColor = vec3(0.04856183, 0.025971446, 0.005794384);
-        int depth = 768; // works for boat cutscenes such as when going diving with Murphy
-//        int depth = 512; // works alright for the obelisk fix in Catherby
+        int depth = 768; // Works for boat cutscenes such as when going diving with Murphy
+//        int depth = 512; // Works alright for the obelisk fix in Catherby
 
         // TODO: add a way for tile overrides to specify water depth
         if (waterTypeIndex == WATER_TYPE_ABYSS_BILE)
