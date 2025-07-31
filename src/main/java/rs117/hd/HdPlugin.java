@@ -29,6 +29,7 @@ package rs117.hd;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -72,6 +73,7 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -333,6 +335,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
+	private ColorPickerManager colorPickerManager;
 
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
@@ -724,6 +729,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					client.setGameState(GameState.LOADING);
 
 				checkGLErrors();
+
+				var colorPicker = colorPickerManager.create(
+					client,
+					Color.WHITE,
+					"Shader Color Picker",
+					false
+				);
+				colorPicker.setLocationRelativeTo(canvas);
+				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
+					uboGlobal.COLOR_PICKER.set(ColorUtils.rgba(c))));
+				colorPicker.setVisible(true);
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
