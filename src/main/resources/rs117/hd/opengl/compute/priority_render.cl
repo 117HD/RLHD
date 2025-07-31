@@ -414,10 +414,6 @@ void applyWindDisplacement(
     }
 
     float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
-    strengthA *= modelDisplacementMod;
-    strengthB *= modelDisplacementMod;
-    strengthC *= modelDisplacementMod;
-
 #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0f;
@@ -451,6 +447,10 @@ void applyWindDisplacement(
             float3 skewB = normalize(cross(normB, (float3)(0.0f, 1.0f, 0.0f)));
             float3 skewC = normalize(cross(normC, (float3)(0.0f, 1.0f, 0.0f)));
 
+            strengthA *= modelDisplacementMod;
+            strengthB *= modelDisplacementMod;
+            strengthC *= modelDisplacementMod;
+
             *displacementA = windNoiseA * (windSample.heightBasedStrength * strengthA) * 0.5f * skewA;
             *displacementB = windNoiseB * (windSample.heightBasedStrength * strengthB) * 0.5f * skewB;
             *displacementC = windNoiseC * (windSample.heightBasedStrength * strengthC) * 0.5f * skewC;
@@ -467,16 +467,16 @@ void applyWindDisplacement(
             *displacementB = windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod) * windSample.direction;
             *displacementC = windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod) * windSample.direction;
 
-            strengthA = clamp(strengthA - VertexDisplacementMod, 0.0f, 1.0f);
-            strengthB = clamp(strengthB - VertexDisplacementMod, 0.0f, 1.0f);
-            strengthC = clamp(strengthC - VertexDisplacementMod, 0.0f, 1.0f);
+            strengthA = clamp(strengthA - VertexDisplacementMod, 0.0f, 1.0f) * modelDisplacementMod;
+            strengthB = clamp(strengthB - VertexDisplacementMod, 0.0f, 1.0f) * modelDisplacementMod;
+            strengthC = clamp(strengthC - VertexDisplacementMod, 0.0f, 1.0f) * modelDisplacementMod;
         }
     }
 
     if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-        *displacementA += windSample.displacement * strengthA;
-        *displacementB += windSample.displacement * strengthB;
-        *displacementC += windSample.displacement * strengthC;
+        *displacementA += windSample.displacement * strengthA * modelDisplacementMod;
+        *displacementB += windSample.displacement * strengthB * modelDisplacementMod;
+        *displacementC += windSample.displacement * strengthC * modelDisplacementMod;
     }
 #endif // WIND_DISPLACEMENT
 
