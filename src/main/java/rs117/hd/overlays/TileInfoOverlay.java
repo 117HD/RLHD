@@ -44,6 +44,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.util.Text;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
+import rs117.hd.data.ObjectType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.GamevalManager;
@@ -577,12 +578,15 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		var decorObject = tile.getDecorativeObject();
 		if (decorObject != null) {
 			lines.add(String.format(
-				"Decor Object: %s preori=%d%s",
+				"Decor Object: %s preori=%d offset=[%d, %d] type=%s %s",
 				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
 				HDUtils.getBakedOrientation(decorObject.getConfig()),
+				decorObject.getXOffset(),
+				decorObject.getYOffset(),
+				ObjectType.fromConfig(decorObject.getConfig()),
 				getModelInfo(decorObject.getRenderable())
 			));
-			lines.add("Decor Type: " + HDUtils.getObjectType(decorObject.getConfig()));
+			lines.add("Decor Type: " + ObjectType.fromConfig(decorObject.getConfig()));
 		}
 
 		GroundObject groundObject = tile.getGroundObject();
@@ -593,7 +597,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				HDUtils.getBakedOrientation(groundObject.getConfig()),
 				getModelInfo(groundObject.getRenderable())
 			));
-			lines.add("Ground Type: " + HDUtils.getObjectType(groundObject.getConfig()));
+			lines.add("Ground Type: " + ObjectType.fromConfig(groundObject.getConfig()));
 		}
 
 		WallObject wallObject = tile.getWallObject();
@@ -616,7 +620,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					getModelInfo(wallObject.getRenderable2())
 				));
 			}
-			lines.add("Wall Type: " + HDUtils.getObjectType(wallObject.getConfig()));
+			lines.add("Wall Type: " + ObjectType.fromConfig(wallObject.getConfig()));
 		}
 
 		GameObject[] gameObjects = tile.getGameObjects();
@@ -662,7 +666,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				faceCount,
 				getModelInfo(renderable)
 			));
-			lines.add("Object Type: " + HDUtils.getObjectType(gameObject.getConfig()));
+			lines.add("Object Type: " + ObjectType.fromConfig(gameObject.getConfig()));
 		}
 
 		for (var npc : client.getTopLevelWorldView().npcs()) {

@@ -42,9 +42,9 @@
 
 #include SHADOW_TRANSPARENCY
 #if SHADOW_TRANSPARENCY
-#define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.01 // Remove shadows from clickboxes
+    #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.01 // Remove shadows from clickboxes
 #else
-#define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
+    #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
 #endif
 
 #define WATER_REFLECTION_HEIGHT_THRESHOLD 32

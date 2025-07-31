@@ -975,9 +975,6 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 				case KeyEvent.VK_D:
 					showDuplicationInfo = !showDuplicationInfo;
 					break;
-				case KeyEvent.VK_H:
-					hideInvisibleLights = !hideInvisibleLights;
-					break;
 				case KeyEvent.VK_I:
 					hideInfo = !hideInfo;
 					break;
@@ -995,6 +992,12 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					break;
 				case KeyEvent.VK_U:
 					liveInfo = !liveInfo;
+					break;
+			}
+		} else {
+			switch (e.getKeyCode()) {
+				case KeyEvent.VK_H:
+					hideInvisibleLights = !hideInvisibleLights;
 					break;
 			}
 		}

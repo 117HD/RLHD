@@ -30,7 +30,6 @@
 #include <utils/constants.glsl>
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-
 float fetchShadowTexel(vec2 uv, float fragDepth) {
     #if SHADOW_TRANSPARENCY
         int alphaDepth = int(texelFetch(shadowMap, ivec2(uv), 0).r * SHADOW_COMBINED_MAX);

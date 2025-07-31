@@ -28,6 +28,7 @@ import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 
@@ -213,75 +214,43 @@ public class HDUtils {
 		// 		 i.e. extra rotation depending on wall type whatever. I'm not sure.
 		// Derived from config orientation {@link HDUtils#getBakedOrientation}
 		switch (orientation) {
-			case 1: // east (config orientation = 0)
-				return 512;
-			case 2: // south (config orientation = 1)
-				return 1024;
-			case 4: // west (config orientation = 2)
-				return 1536;
-			case 8: // north (config orientation = 3)
+			case 1:
+				return 512; // west
+			case 2:
+				return 1024; // north
+			case 4:
+				return 1536; // east
+			case 8:
 			default:
-				return 0;
-			case 16: // south-east (config orientation = 0)
-				return 768;
-			case 32: // south-west (config orientation = 1)
-				return 1280;
-			case 64: // north-west (config orientation = 2)
-				return 1792;
-			case 128: // north-east (config orientation = 3)
-				return 256;
+				return 0; // south
+			case 16:
+				return 768; // north-west
+			case 32:
+				return 1280; // north-east
+			case 64:
+				return 1792; // south-east
+			case 128:
+				return 256; // south-west
 		}
 	}
 
 	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
-	// (gameObject.getConfig() & 0x3F), // 6-bit object type? (10 seems to mean movement blocker)
 	// (gameObject.getConfig() >> 9) // should always be zero
 	public static int getBakedOrientation(int config) {
-		switch (config >> 6 & 3) {
-			case 0: // Rotated 180 degrees
-				return 1024;
-			case 1: // Rotated 90 degrees counter-clockwise
-				return 1536;
-			case 2: // Not rotated
-			default:
-				return 0;
-			case 3: // Rotated 90 degrees clockwise
-				return 512;
+		var objectType = ObjectType.fromConfig(config);
+		int orientation = 1024 + 512 * (config >>> 6 & 3);
+		switch (objectType) {
+			case WallDecorDiagonalNoOffset:
+				orientation += 1024;
+			case WallDiagonalCorner:
+			case WallSquareCorner:
+			case WallDecorDiagonalOffset:
+			case WallDecorDiagonalBoth:
+				orientation -= 256;
+				break;
 		}
-	}
-
-	public static String getObjectType(int config) {
-		int type = config & 0x3F;
-		final String[] OBJECT_TYPES = {
-			"StraightWalls",
-			"DiagWallsConn",
-			"EntireWallsCorners",
-			"StraightWallsConn",
-			"StraightInDeco",
-			"StraightOutDeco",
-			"DiagOutDeco",
-			"DiagInDeco",
-			"DiagInWallDeco",
-			"DiagWalls",
-			"Objects",
-			"GroundObjects",
-			"StraightSlopeRoofs",
-			"DiagSlopeRoofs",
-			"DiagSlopeConnRoofs",
-			"StraightSlopeConnRoofs",
-			"StraightSlopeCorners",
-			"FlatTopRoofs",
-			"BottomEdgeRoofs",
-			"DiagBottomEdgeConn",
-			"StraightBottomEdgeConn",
-			"StraightBottomEdgeConnCorners",
-			"GroundDecoMapSigns"
-		};
-		String name = "Unknown";
-		if (type < OBJECT_TYPES.length)
-			name = OBJECT_TYPES[type];
-		return String.format("(%d) %s", type, name);
+		return orientation % 2048;
 	}
 
 	public static AABB getSceneBounds(Scene scene) {

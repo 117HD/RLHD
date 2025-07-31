@@ -51,6 +51,7 @@ import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -831,7 +832,8 @@ public class LightManager {
 		int sizeX = 1;
 		int sizeY = 1;
 		Renderable[] renderables = new Renderable[2];
-		int[] orientations = new int[2];
+		int[] orientations = { 0, 0 };
+		int[] offset = { 0, 0 };
 
 		var tileObject = tracker.tileObject;
 		if (tileObject instanceof GroundObject) {
@@ -842,7 +844,20 @@ public class LightManager {
 			var object = (DecorativeObject) tileObject;
 			renderables[0] = object.getRenderable();
 			renderables[1] = object.getRenderable2();
-			orientations[0] = orientations[1] = HDUtils.getBakedOrientation(object.getConfig());
+			int ori = HDUtils.getBakedOrientation(object.getConfig());
+			orientations[0] = orientations[1] = ori;
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case WallDecorDiagonalNoOffset:
+				case WallDecorDiagonalOffset:
+				case WallDecorDiagonalBoth:
+					int sin = SINE[ori];
+					int cos = COSINE[ori];
+					offset[0] = sin * 64 >> 16;
+					offset[1] = cos * 64 >> 16;
+					break;
+			}
+			offset[0] += object.getXOffset();
+			offset[1] += object.getYOffset();
 		} else if (tileObject instanceof WallObject) {
 			var object = (WallObject) tileObject;
 			renderables[0] = object.getRenderable1();
@@ -872,8 +887,8 @@ public class LightManager {
 		HashSet<LightDefinition> onlySpawnOnce = new HashSet<>();
 
 		LocalPoint lp = tileObject.getLocalLocation();
-		int lightX = lp.getX();
-		int lightZ = lp.getY();
+		int lightX = lp.getX() + offset[0];
+		int lightZ = lp.getY() + offset[1];
 		int plane = tileObject.getPlane();
 
 		// Spawn animation-specific lights for each DynamicObject renderable, and non-animation-based lights
