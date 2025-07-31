@@ -130,7 +130,8 @@ public enum WaterType
 		.surfaceColor(rgb(120, 91, 0))
 		.foamColor(rgb(120, 81, 0))
 		.depthColor(rgb(120, 59, 0))
-		.duration(2.2f)),
+		.duration(2.2f)
+		.flat(true)),
 	PLAIN_WATER(b -> b
 		.depthColor(rgb(0, 0, 0))
 		.foamColor(rgb(64, 64, 64))
@@ -155,6 +156,8 @@ public enum WaterType
 		.foamColor(srgb(20, 255, 20))
 		.depthColor(srgb(30, 255, 26))
 		.duration(1.6f)),
+	CYAN_WATER,
+	GREEN_CAVE_WATER(SWAMP_WATER_FLAT, true),
 	CAVE_WATER(b -> b
 		.specularStrength(.2f)
 		.specularGloss(100)

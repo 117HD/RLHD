@@ -29,14 +29,9 @@ layout(std140) uniform UBOGlobal {
     float groundFogEnd;
     float groundFogOpacity;
 
-    vec3 waterColorLight;
-    vec3 waterColorMid;
-    vec3 waterColorDark;
-
     bool underwaterEnvironment;
     bool underwaterCaustics;
     vec3 underwaterCausticsColor;
-    float underwaterCausticsStrength;
 
     vec3 lightDir;
 

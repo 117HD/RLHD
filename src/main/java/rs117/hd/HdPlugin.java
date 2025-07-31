@@ -33,6 +33,7 @@ import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
@@ -137,6 +138,7 @@ import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
+import rs117.hd.utils.Vector;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
@@ -176,6 +178,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_REFLECTION_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_NORMAL_MAPS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -384,7 +388,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int fboTiledLighting;
 	private int texTiledLighting;
 
+	private int[] waterReflectionResolution;
+	private int fboWaterReflection;
+	private int texWaterReflection;
+	private int texWaterReflectionDepthMap;
+
 	private int texTileHeightMap;
+	private int texWaterNormalMaps;
 
 	private final SharedGLBuffer hStagingBufferVertices = new SharedGLBuffer(
 		"Staging Vertices", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
@@ -446,6 +456,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configAsyncUICopy;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configLinearAlphaBlending;
+	public boolean configPlanarReflections;
+	public boolean configWaterTransparency;
+	public boolean configLegacyWater;
 	public boolean configTiledLighting;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
@@ -478,6 +492,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
+	private float[] sceneProjectionMatrix = new float[4];
+
 	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
@@ -670,6 +686,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initShaderHotswapping();
 				initUiTexture();
 				initShadowMapFbo();
+				initWaterNormalMaps();
 
 				checkGLErrors();
 
@@ -761,6 +778,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
 				destroyTileHeightMap();
+				destroyWaterReflectionsFbo();
+				destroyWaterNormalMaps();
 				destroyModelSortingBins();
 
 				clManager.shutDown();
@@ -885,6 +904,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
+			.define("LEGACY_WATER", configLegacyWater)
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
@@ -892,6 +912,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", Math.max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
+			.define("LINEAR_ALPHA_BLENDING", configLinearAlphaBlending)
+			.define("WATER_FOAM", config.enableWaterFoam())
+			.define("PLANAR_REFLECTIONS", configPlanarReflections)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -1337,7 +1360,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
 		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
 		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
+		boolean sRGB = configLinearAlphaBlending;
 
 		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
 		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
@@ -1350,7 +1373,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
 			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
 
-		float resolutionScale = config.sceneResolutionScale() / 100f;
+		float resolutionScale = config.sceneResolution() / 100f;
 		sceneResolution = new int[] {
 			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
 			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
@@ -1543,6 +1566,129 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		texTileHeightMap = 0;
 	}
 
+	private void updateWaterReflectionsFbo() {
+		if (!configPlanarReflections || sceneViewport == null)
+			return;
+
+		// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
+		float resolutionScale = config.waterReflectionResolution() / 100f;
+		int[] resolution = {
+			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
+			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
+		};
+		if (Arrays.equals(waterReflectionResolution, resolution))
+			return;
+
+		destroyWaterReflectionsFbo();
+		waterReflectionResolution = resolution;
+
+		// Create and bind the FBO
+		fboWaterReflection = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboWaterReflection);
+
+		// Both of these are required color-renderable texture formats
+		int format = configLinearAlphaBlending ? GL_SRGB8 : GL_RGB8;
+
+		// Create texture
+		texWaterReflection = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texWaterReflection);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, resolution[0], resolution[1], 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		checkGLErrors();
+
+		// Bind texture
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texWaterReflection, 0);
+		glReadBuffer(GL_NONE);
+
+		// Create texture
+		texWaterReflectionDepthMap = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texWaterReflectionDepthMap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, resolution[0], resolution[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		checkGLErrors();
+
+		// Bind texture
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texWaterReflectionDepthMap, 0);
+		checkGLErrors();
+	}
+
+	private void destroyWaterReflectionsFbo() {
+		waterReflectionResolution = null;
+
+		if (texWaterReflection != 0)
+			glDeleteTextures(texWaterReflection);
+		texWaterReflection = 0;
+
+		if (texWaterReflectionDepthMap != 0)
+			glDeleteTextures(texWaterReflectionDepthMap);
+		texWaterReflectionDepthMap = 0;
+
+		if (fboWaterReflection != 0)
+			glDeleteFramebuffers(fboWaterReflection);
+		fboWaterReflection = 0;
+	}
+
+	private void initWaterNormalMaps() {
+		if (configLegacyWater || texWaterNormalMaps != 0)
+			return;
+
+		glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
+
+		texWaterNormalMaps = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
+
+		int numCascades = 2;
+		int format = GL_RGB8;
+		int textureSize = 512;
+		int mipLevels = 1 + (int) Math.floor(HDUtils.log2(textureSize));
+
+		if (GL_CAPS.glTexStorage3D != 0) {
+			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, numCascades);
+		} else {
+			// Allocate each mip level separately
+			for (int i = 0; i < mipLevels; i++) {
+				int size = textureSize >> i;
+				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, format, size, size, numCascades, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+			}
+		}
+
+		var image = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
+		for (int i = 0; i < numCascades; i++) {
+			var rawImage = textureManager.loadTextureImage(String.format("water_normal_map_%d", i + 1));
+
+			var t = new AffineTransform();
+			// Flip non-vanilla textures horizontally to match vanilla UV orientation
+			t.translate(textureSize, 0);
+			t.scale(-1, 1);
+			t.scale((double) textureSize / rawImage.getWidth(), (double) textureSize / rawImage.getHeight());
+			var scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BILINEAR);
+			scaleOp.filter(rawImage, image);
+			rawImage = image;
+
+			int[] pixels = ((DataBufferInt) rawImage.getRaster().getDataBuffer()).getData();
+			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0,
+				i, textureSize, textureSize, 1,
+				GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels
+			);
+		}
+
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
+
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	}
+
+	private void destroyWaterNormalMaps() {
+		if (texWaterNormalMaps != 0)
+			glDeleteTextures(texWaterNormalMaps);
+		texWaterNormalMaps = 0;
+	}
+
 	@Override
 	public void drawScene(double cameraX, double cameraY, double cameraZ, double cameraPitch, double cameraYaw, int plane) {
 		updateSceneFbo();
@@ -1681,20 +1827,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
 				// Calculate projection matrix
-				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				sceneProjectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 				if (orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+					Mat4.mul(sceneProjectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(sceneProjectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+					Mat4.mul(sceneProjectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
+				Mat4.mul(sceneProjectionMatrix, Mat4.rotateX(cameraOrientation[1]));
+				Mat4.mul(sceneProjectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(sceneProjectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
+				float[] invProjectionMatrix = Mat4.inverse(sceneProjectionMatrix);
 
 				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.projectionMatrix.set(sceneProjectionMatrix);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
 			}
@@ -2067,8 +2213,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (renderBufferOffset > 0)
 			hasLoggedIn = true;
 
-		updateSceneFbo();
-
 		// Draw 3d scene
 		if (hasLoggedIn && sceneContext != null && sceneViewport != null) {
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
@@ -2077,6 +2221,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			} else {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 			}
+
+			updateSceneFbo();
+			updateWaterReflectionsFbo();
 
 			float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 			float fogDepth = 0;
@@ -2096,29 +2243,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.drawDistance.set((float) getDrawDistance());
 			uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
-
-			float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
-			float lightBrightnessMultiplier = 0.8f;
-			float midBrightnessMultiplier = 0.45f;
-			float darkBrightnessMultiplier = 0.05f;
-			float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * lightBrightnessMultiplier
-			}));
-			float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * midBrightnessMultiplier
-			}));
-			float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-				waterColorHsv[0],
-				waterColorHsv[1],
-				waterColorHsv[2] * darkBrightnessMultiplier
-			}));
-			uboGlobal.waterColorLight.set(waterColorLight);
-			uboGlobal.waterColorMid.set(waterColorMid);
-			uboGlobal.waterColorDark.set(waterColorDark);
 
 			uboGlobal.gammaCorrection.set(getGammaCorrection());
 			float ambientStrength = environmentManager.currentAmbientStrength;
@@ -2148,8 +2272,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.contrast.set(config.contrast() / 100f);
 			uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
 			uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-			uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
-			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+			uboGlobal.underwaterCausticsColor.set(Vector.multiply(
+				environmentManager.currentUnderwaterCausticsColor,
+				environmentManager.currentUnderwaterCausticsStrength
+			));
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
 			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
@@ -2215,11 +2341,97 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			} else {
-				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
 				uboGlobal.upload();
 			}
 
 			sceneProgram.use();
+			sceneProgram.uniLegacyWaterColor.set(environmentManager.currentWaterColor);
+			sceneProgram.uniShorelineCaustics.set(config.shorelineCaustics());
+			sceneProgram.uniWaterTransparency.set(configWaterTransparency);
+
+			// Draw with buffers bound to scene VAO
+			glBindVertexArray(vaoScene);
+
+			if (configLinearAlphaBlending) {
+				glEnable(GL_FRAMEBUFFER_SRGB);
+				// This is kind of stupid, but our shader expects fogColor in sRGB, so we transform it back here
+				fogColor = ColorUtils.srgbToLinear(fogColor);
+			}
+
+			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
+			glEnable(GL_BLEND);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+
+			boolean renderWaterReflections = configPlanarReflections && sceneContext.hasWater;
+			if (renderWaterReflections) {
+				sceneProgram.uniWaterHeight.set(sceneContext.waterHeight);
+
+				// Calculate the viewport dimensions before scaling in order to include the extra padding
+				int viewportWidth = (int) (sceneViewport[2] / sceneViewportScale[0]);
+				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
+
+				// Calculate water reflection projection matrix
+				float[] reflectionProjectionMatrix = Mat4.scale(client.getScale(), -client.getScale(), 1);
+				if (orthographicProjection) {
+					Mat4.mul(reflectionProjectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(reflectionProjectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+				} else {
+					Mat4.mul(reflectionProjectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+				}
+				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateX(-cameraOrientation[1]));
+				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(
+					reflectionProjectionMatrix, Mat4.translate(
+					-cameraPosition[0],
+					-(cameraPosition[1] + (sceneContext.waterHeight - cameraPosition[1]) * 2),
+					-cameraPosition[2]
+				));
+				uboGlobal.projectionMatrix.set(reflectionProjectionMatrix);
+				uboGlobal.cameraPos.set(
+					cameraPosition[0],
+					(cameraPosition[1] + (sceneContext.waterHeight - cameraPosition[1]) * 2),
+					cameraPosition[2]
+				);
+				uboGlobal.upload();
+
+				frameTimer.begin(Timer.RENDER_REFLECTIONS);
+
+				glViewport(0, 0, waterReflectionResolution[0], waterReflectionResolution[1]);
+
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboWaterReflection);
+				glClearDepth(0);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+				// Since the game was never designed to be viewed from below, a lot of
+				// things are missing triangles underneath. In most cases, it's fine
+				// visually to render the top face from below.
+				glDisable(GL_CULL_FACE);
+
+				glEnable(GL_DEPTH_TEST);
+				// With LEQUAL, the insides of paper thin walls are visible from the outside
+				glDepthFunc(GL_GEQUAL);
+
+				sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
+				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+
+				// Bind the water reflection texture to index 4
+				glActiveTexture(TEXTURE_UNIT_WATER_REFLECTION_MAP);
+				glBindTexture(GL_TEXTURE_2D, texWaterReflection);
+				frameTimer.begin(Timer.REFLECTION_MIPMAPS);
+				glGenerateMipmap(GL_TEXTURE_2D);
+				frameTimer.end(Timer.REFLECTION_MIPMAPS);
+
+				// Reset everything back to the main pass' state
+				glDisable(GL_DEPTH_TEST);
+				glEnable(GL_CULL_FACE);
+
+				frameTimer.end(Timer.RENDER_REFLECTIONS);
+
+				uboGlobal.projectionMatrix.set(sceneProjectionMatrix);
+				uboGlobal.cameraPos.set(cameraPosition);
+				uboGlobal.upload();
+			}
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
 			glToggle(GL_MULTISAMPLE, msaaSamples > 1);
@@ -2250,8 +2462,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-			// Draw with buffers bound to scene VAO
-			glBindVertexArray(vaoScene);
+			sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
+			sceneProgram.uniWaterReflectionEnabled.set(renderWaterReflections);
 
 			// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
 			// scene doesn't support depth testing, so we only write depths for custom tiles.
@@ -2295,6 +2507,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glDisable(GL_BLEND);
 			glDisable(GL_CULL_FACE);
 			glDisable(GL_MULTISAMPLE);
+			glDisable(GL_FRAMEBUFFER_SRGB);
 			glDisable(GL_DEPTH_TEST);
 			glDepthMask(true);
 			glUseProgram(0);
@@ -2606,6 +2819,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configVanillaShadowMode = config.vanillaShadowMode();
 		configHideFakeShadows = configVanillaShadowMode != VanillaShadowMode.SHOW;
 		configLegacyGreyColors = config.legacyGreyColors();
+		configLegacyWater = config.legacyWater();
+		configLinearAlphaBlending = !configLegacyWater;
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
@@ -2619,6 +2834,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configCharacterDisplacement = config.characterDisplacement();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configPlanarReflections = config.enablePlanarReflections();
+		configWaterTransparency = config.waterTransparency();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2676,7 +2893,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
 
-		pendingConfigChanges.add(event.getKey());
+		synchronized (this) {
+			pendingConfigChanges.add(event.getKey());
+		}
 	}
 
 	private void processPendingConfigChanges() {
@@ -2694,6 +2913,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					boolean recompilePrograms = false;
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
+					boolean recreateWaterReflectionsFbo = false;
 					boolean reloadTexturesAndMaterials = false;
 					boolean reloadEnvironments = false;
 					boolean reloadModelOverrides = false;
@@ -2716,6 +2936,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									clearModelCache = reloadScene = true;
 								break;
+							case KEY_LEGACY_WATER:
+								recreateSceneFbo = true;
+								recreateWaterReflectionsFbo = true;
+								recompilePrograms = true;
+								if (configLegacyWater) {
+									destroyWaterNormalMaps();
+								} else {
+									initWaterNormalMaps();
+								}
+								break;
+							case KEY_ANISOTROPIC_FILTERING_LEVEL:
+								int level = config.anisotropicFilteringLevel();
+								if (texWaterNormalMaps != 0) {
+									glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
+									glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
+									setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, level);
+								}
+								if (textureManager.textureArray != 0) {
+									glActiveTexture(TEXTURE_UNIT_GAME);
+									glBindTexture(GL_TEXTURE_2D_ARRAY, textureManager.textureArray);
+									setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, level);
+								}
+								break;
 							case KEY_ASYNC_UI_COPY:
 								asyncUICopy.complete();
 								break;
@@ -2729,6 +2972,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;
+							case KEY_PLANAR_REFLECTIONS:
+								recreateWaterReflectionsFbo = true;
+								// fall-through
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_DYNAMIC_LIGHTS:
@@ -2740,6 +2986,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
+							case KEY_WATER_FOAM:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -2761,7 +3008,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
 								// fall-through
-							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:
 							case KEY_TEXTURE_RESOLUTION:
@@ -2846,6 +3092,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (recreateShadowMapFbo) {
 						destroyShadowMapFbo();
 						initShadowMapFbo();
+					}
+
+					if (recreateWaterReflectionsFbo) {
+						destroyWaterReflectionsFbo();
+						updateWaterReflectionsFbo();
 					}
 
 					if (reloadEnvironments)
@@ -3146,8 +3397,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int uuid = ModelHash.generateUuid(client, hash, renderable);
 				int[] worldPos = sceneContext.localToWorld(x, z, plane);
 				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-				if (modelOverride.hide)
+				if (modelOverride.hide) {
+					if (enableDetailedTimers)
+						frameTimer.end(Timer.MODEL_PUSHING);
 					return;
+				}
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
@@ -3335,6 +3589,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
+	public static void setAnisotropicFilteringAndMipMapping(int target, float level) {
+		setAnisotropicFilteringLevel(target, level);
+		if (level == 0) {
+			// level = 0 means no mipmaps and no anisotropic filtering
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		} else {
+			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
+			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
+			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
+			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
+			// that are very noticeable on terrain
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+	}
+
+	public static void setAnisotropicFilteringLevel(int target, float level) {
+		if (!GL_CAPS.GL_EXT_texture_filter_anisotropic)
+			return;
+
+		float max = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+		level = HDUtils.clamp(level, 1, max);
+		glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);
+	}
+
 	@SuppressWarnings("StatementWithEmptyBody")
 	public static void clearGLErrors() {
 		// @formatter:off
@@ -3472,7 +3752,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else {
 			errorMessage =
 				"The plugin ran out of memory. "
-				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ") + "closing other programs.<br>"
+				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ")
+				+ "closing other programs.<br>"
 				+ "<br>"
 				+ "If the issue persists, please join our "
 				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\" button<br>"
