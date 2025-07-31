@@ -519,14 +519,14 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
             vec2 uv = IN.uv + uvFlow * flowMapStrength;
             float foamMask = texture(textureArray, vec3(uv, waterType.foamMap)).r;
-            foamMask *= .075;
             float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
             shoreLineMask *= shoreLineMask;
             shoreLineMask *= shoreLineMask;
             shoreLineMask *= shoreLineMask;
 
             vec3 light = ambientColor * ambientStrength + lightColor * lightStrength;
-            vec4 foam = vec4(light, shoreLineMask * foamMask);
+            vec4 foam = vec4(light, shoreLineMask * foamMask * .04);
+            foam.rgb *= waterType.foamColor;
 
             // Blend in foam at the very end as an overlay
             dst.rgb = foam.rgb * foam.a + dst.rgb * dst.a * (1 - foam.a);
