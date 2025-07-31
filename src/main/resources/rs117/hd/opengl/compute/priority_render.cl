@@ -383,7 +383,7 @@ float3 applyCharacterDisplacement(
 float getModelWindDisplacementMod(int vertexFlags) {
     const float modifiers[7] = { 0.25f, 0.5f, 0.7f, 1.0f, 1.25f, 1.5f, 2.0f };
     int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
-    float invertDisplacement = vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH == 1 ? -1.0f : 1.0f;
+    float invertDisplacement = ((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) ? -1.0 : 1.0;
     return modifiers[modifierIDx] * invertDisplacement;
 }
 

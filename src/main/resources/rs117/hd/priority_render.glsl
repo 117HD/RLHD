@@ -254,7 +254,7 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
 float getModelWindDisplacementMod(int vertexFlags) {
     const float modifiers[7] = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0};
     int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
-    float invertDisplacement = (vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH == 1) ? -1.0 : 1.0;
+    float invertDisplacement = ((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) ? -1.0 : 1.0;
     return modifiers[modifierIDx] * invertDisplacement;
 }
 
