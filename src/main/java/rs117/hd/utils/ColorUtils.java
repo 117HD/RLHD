@@ -113,15 +113,15 @@ public class ColorUtils {
 	}
 
 	public static float[] linearToSrgb(float... c) {
-		float[] result = new float[c.length];
-		for (int i = 0; i < c.length; i++)
-			result[i] = linearToSrgb(c[i]);
+		float[] result = Arrays.copyOf(c, clamp(c.length, 3, 4));
+		for (int i = 0; i < 3; i++)
+			result[i] = linearToSrgb(result[i]);
 		return result;
 	}
 
 	public static float[] srgbToLinear(float... c) {
-		float[] result = new float[c.length];
-		for (int i = 0; i < c.length; i++)
+		float[] result = Arrays.copyOf(c, clamp(c.length, 3, 4));
+		for (int i = 0; i < 3; i++)
 			result[i] = srgbToLinear(c[i]);
 		return result;
 	}
@@ -275,6 +275,14 @@ public class ColorUtils {
 		return srgbToLinear(srgb(srgb));
 	}
 
+	public static float[] rgb(Color color) {
+		return srgbToLinear(srgb(color));
+	}
+
+	public static float[] rgba(Color color) {
+		return srgbToLinear(srgba(color));
+	}
+
 	/**
 	 * Convert red, green and blue in the range 0-255 from sRGB to sRGB in the range 0-1.
 	 *
@@ -285,6 +293,19 @@ public class ColorUtils {
 	 */
 	public static float[] srgb(float r, float g, float b) {
 		return new float[] { r / 255f, g / 255f, b / 255f };
+	}
+
+	/**
+	 * Convert red, green, blue and alpha in the range 0-255 from sRGBA to sRGBA in the range 0-1.
+	 *
+	 * @param r red color
+	 * @param g green color
+	 * @param b blue color
+	 * @param a alpha
+	 * @return float[3] non-linear sRGB values from 0-1
+	 */
+	public static float[] srgba(float r, float g, float b, float a) {
+		return new float[] { r / 255f, g / 255f, b / 255f, a / 255f };
 	}
 
 	/**
@@ -314,6 +335,10 @@ public class ColorUtils {
 
 	public static float[] srgb(Color c) {
 		return srgb(c.getRed(), c.getGreen(), c.getBlue());
+	}
+
+	public static float[] srgba(Color c) {
+		return srgba(c.getRed(), c.getGreen(), c.getBlue(), c.getAlpha());
 	}
 
 	/**
