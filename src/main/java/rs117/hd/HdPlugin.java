@@ -1672,8 +1672,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
 
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
-
-		glActiveTexture(TEXTURE_UNIT_UI); // default state
 	}
 
 	private void destroyWaterNormalMaps() {
@@ -2357,8 +2355,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
 
 			glEnable(GL_BLEND);
-			// We only use source alpha for blending
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ZERO);
+			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 			boolean renderWaterReflections = configPlanarReflections && sceneContext.hasWater;
 			if (renderWaterReflections) {

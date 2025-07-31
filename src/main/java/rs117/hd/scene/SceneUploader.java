@@ -138,7 +138,7 @@ public class SceneUploader {
 		}
 		sceneContext.staticCustomTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticCustomTilesOffset;
 
-		// Loop through water height index, find most common value and set to waterHeight which can be read by the shader
+		// Find the most prevalent water height
 		int mostPrevalentIndex = 0;
 		int mostPrevalentCount = 0;
 		for (int i = 0; i < sceneContext.waterHeightCounters.length; i++) {

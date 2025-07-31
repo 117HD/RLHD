@@ -391,15 +391,9 @@ public class ProceduralGenerator {
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
-					if (tiles[z][x][y] == null) {
-						sceneContext.underwaterDepthLevels[z][x][y] = 0;
-						sceneContext.underwaterDepthLevels[z][x + 1][y] = 0;
-						sceneContext.underwaterDepthLevels[z][x][y + 1] = 0;
-						sceneContext.underwaterDepthLevels[z][x + 1][y + 1] = 0;
-						continue;
-					}
-
 					Tile tile = tiles[z][x][y];
+					if (tile == null)
+						continue;
 					if (tile.getBridge() != null)
 						tile = tile.getBridge();
 
@@ -540,10 +534,6 @@ public class ProceduralGenerator {
 							}
 						}
 					}
-					else
-					{
-						sceneContext.tileIsWater[z][x][y] = true;
-					}
 				}
 			}
 		}
@@ -558,24 +548,18 @@ public class ProceduralGenerator {
 					for (int y = 0; y < sceneContext.underwaterDepthLevels[z][x].length; y++)
 					{
 						if (sceneContext.underwaterDepthLevels[z][x][y] == 0)
-							continue; // Skip the tile if it isn't water.
+							continue; // Skip the tile if it isn't water
 
-						// Lower the edge too, since we'll clamp the edge vertices to create a wall
-						if (x == 0 || y == 0 || x == EXTENDED_SCENE_SIZE || y == EXTENDED_SCENE_SIZE) {
-							sceneContext.underwaterDepthLevels[z][x][y]++;
-							continue;
-						}
-
-						int tileHeight = sceneContext.underwaterDepthLevels[z][x][y];
-						if (sceneContext.underwaterDepthLevels[z][x - 1][y] < tileHeight)
+						int depth = sceneContext.underwaterDepthLevels[z][x][y];
+						if (x > 0 && sceneContext.underwaterDepthLevels[z][x - 1][y] < depth)
 							continue; // West
 						if (x < sceneContext.underwaterDepthLevels[z].length - 1 &&
-							sceneContext.underwaterDepthLevels[z][x + 1][y] < tileHeight)
+							sceneContext.underwaterDepthLevels[z][x + 1][y] < depth)
 							continue; // East
-						if (sceneContext.underwaterDepthLevels[z][x][y - 1] < tileHeight)
+						if (y > 0 && sceneContext.underwaterDepthLevels[z][x][y - 1] < depth)
 							continue; // South
 						if (y < sceneContext.underwaterDepthLevels[z].length - 1 &&
-							sceneContext.underwaterDepthLevels[z][x][y + 1] < tileHeight)
+							sceneContext.underwaterDepthLevels[z][x][y + 1] < depth)
 							continue; // North
 
 						// At this point, it's surrounded only by other depth-adjusted vertices.

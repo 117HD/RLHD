@@ -88,12 +88,12 @@ void main() {
     Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
     Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT);
 
-    // set initial texture map ids
+    // Get initial texture map ids
     int colorMap1 = material1.colorMap;
     int colorMap2 = material2.colorMap;
     int colorMap3 = material3.colorMap;
 
-    // only use one flowMap map
+    // Only use one flow map
     int flowMap = material1.flowMap;
 
     // Water data
@@ -352,15 +352,13 @@ void main() {
 
             vec3 caustics = sampleCaustics(flow1, flow2) * 2;
 
-            vec3 absorptionColor = vec3(.003090, .002056, .001548);
 
-            // hard-coded depth
+            // Hard-coded depth
             float depth = 128 * 8;
+            vec3 absorption = vec3(.003090, .002056, .001548);
+            vec3 extinction = exp(-depth * absorption);
 
-            // Exponential falloff of light intensity when penetrating water, different for each color
-            vec3 extinctionColors = exp(-depth * absorptionColor);
-
-            vec3 causticsColor = underwaterCausticsColor * extinctionColors * 10;
+            vec3 causticsColor = underwaterCausticsColor * extinction * 10;
             dirLightColor += caustics * causticsColor * lightDotNormals * pow(lightStrength, 1.5);
         }
 
@@ -428,8 +426,8 @@ void main() {
             }
         #endif
 
-        // Try to match old alpha with linear blending
         #if LINEAR_ALPHA_BLENDING
+            // Try to match old alpha with linear blending
             if (outputColor.a < 1 && outputColor.a >= .004) {
                 // Blending in linear color space makes transparent glass overly opaque.
                 // Bias the opacity somewhat to look closer to vanilla colors overall.

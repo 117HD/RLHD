@@ -79,10 +79,8 @@ public class SceneContext {
 	public int[][][] underwaterDepthLevels;
 	public int sceneEdge0, sceneEdge1;
 	public int[] waterHeightCounters;
-
-	// Water reflection texture height
-	public boolean hasWater;
 	public int waterHeight;
+	public boolean hasWater;
 
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
