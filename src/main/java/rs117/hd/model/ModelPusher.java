@@ -10,6 +10,8 @@ import javax.inject.Singleton;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.gameval.*;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.kit.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
@@ -487,6 +489,22 @@ public class ModelPusher {
 		return heightA == heightB && heightA == heightC;
 	}
 
+	private boolean isBakedGroundShadingNew(Model model, @NonNull ModelOverride modelOverride, int face) {
+		final byte[] faceTransparencies = model.getFaceTransparencies();
+		if (faceTransparencies == null || (faceTransparencies[face] & 0xFF) >= 255 - modelOverride.vanillaShadowOpacityThreshold)
+			return false;
+
+		float threshold = -modelOverride.vanillaShadowHeightThreshold;
+		final float[] yVertices = model.getVerticesY();
+		if (yVertices[model.getFaceIndices1()[face]] < threshold ||
+			yVertices[model.getFaceIndices2()[face]] < threshold ||
+			yVertices[model.getFaceIndices3()[face]] < threshold)
+			return false;
+
+		final short[] faceTextures = model.getFaceTextures();
+		return faceTextures == null || faceTextures[face] == -1;
+	}
+
 	@SuppressWarnings({ "ReassignedVariable" })
 	private int[] getFaceVertices(
 		SceneContext sceneContext,
@@ -499,18 +517,35 @@ public class ModelPusher {
 		if (model.getFaceColors3()[face] == -2)
 			return ZEROED_INTS; // Hide the face
 
-		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-		if (plugin.configHideFakeShadows && isBakedGroundShading(model, face)) {
-			if (modelOverride.hideVanillaShadows)
-				return ZEROED_INTS; // Hide the face
+		if (config.useLegacyBrightness()) {
+			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+			if (plugin.configHideFakeShadows && isBakedGroundShading(model, face)) {
+				if (modelOverride.hideVanillaShadows)
+					return ZEROED_INTS; // Hide the face
 
-			if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER) {
-				int index = ModelHash.getUuidId(uuid);
-				var players = client.getTopLevelWorldView().players();
-				if (index >= 0 && index < 2048) {
-					Player player = players.byIndex(index);
-					if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
-						return ZEROED_INTS; // Hide the face
+				if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER) {
+					int index = ModelHash.getUuidId(uuid);
+					var players = client.getTopLevelWorldView().players();
+					if (index >= 0 && index < 2048) {
+						Player player = players.byIndex(index);
+						if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
+							return ZEROED_INTS; // Hide the face
+					}
+				}
+			}
+		} else {
+			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+			if (plugin.configHideFakeShadows) {
+				if (modelOverride.hideVanillaShadows && isBakedGroundShadingNew(model, modelOverride, face)) {
+					return ZEROED_INTS; // Hide the face
+				} else if (ModelHash.getUuidType(uuid) == ModelHash.TYPE_PLAYER && isBakedGroundShadingNew(model, modelOverride, face)) {
+					int index = ModelHash.getUuidId(uuid);
+					var players = client.getTopLevelWorldView().players();
+					if (index >= 0 && index < 2048) {
+						Player player = players.byIndex(index);
+						if (player != null && player.getPlayerComposition().getEquipmentId(KitType.WEAPON) == ItemID.MAGIC_CARPET)
+							return ZEROED_INTS; // Hide the face
+					}
 				}
 			}
 		}
