@@ -5062,10 +5062,16 @@
     "groundMaterial": "GRASS_1"
   },
   {
-    "name": "THE_BLUE_MOON_ENTRANCE",
-    "area": "THE_BLUE_MOON_ENTRANCE",
-    "underlayIds": [ 56, 73, 205, 206 ],
+    "name": "PERILOUS_MOONS_ENTRANCE_TILES",
+    "area": "PERILOUS_MOONS_ENTRANCE_TILES",
+    "underlayIds": [ 56, 72, 73, 118, 205, 212, 213 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
+    "area": "THE_BLUE_MOON_ENTRANCE",
+    "underlayIds": [ 73, 205, 206 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_BLUE_MOON_NEAR_WALLS",
@@ -5081,10 +5087,10 @@
     "groundMaterial": "SNOW_1"
   },
   {
-    "name": "THE_BLOOD_MOON_ENTRANCE",
+    "name": "THE_BLOOD_MOON_ENTRANCE_DIRT",
     "area": "THE_BLOOD_MOON_ENTRANCE",
-    "underlayIds": [ 56, 118 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+    "underlayIds": [ 56, 72, 118 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_BLOOD_MOON_BLOOD",
@@ -5106,10 +5112,10 @@
     "blended": false
   },
   {
-    "name": "THE_ECLIPSE_MOON_ENTRANCE",
+    "name": "THE_ECLIPSE_MOON_ENTRANCE_DIRT",
     "area": "THE_ECLIPSE_MOON_ENTRANCE",
-    "underlayIds": [ 212 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+    "underlayIds": [ 72, 213 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_ECLIPSE_MOON_FLOOR_BLENDING_FIX",
