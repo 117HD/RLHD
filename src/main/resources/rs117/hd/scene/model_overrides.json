@@ -53211,12 +53211,13 @@
     "uvScale": 0.75,
     "objectIds": [
       "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_OAK",
-      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_TEAK"
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_TEAK",
+      "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_MAHOGANY"
     ],
     "colorOverrides": [
       {
         "description": "Pillow and sheet",
-        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "colors": "(h == 6 && s == 1) || (h == 8 && s == 1) || (h == 0 && s == 0)",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvScale": 0.4
@@ -53226,11 +53227,6 @@
         "colors": "h == 7",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
-      },
-      {
-        "description": "Outline",
-        "colors": "a < 255",
-        "baseMaterial": "NONE"
       }
     ]
   },
@@ -53270,7 +53266,9 @@
     "uvScale": 0.75,
     "objectIds": [
       "CON_CONTRACT_VARROCK_SOUTH_MEDIUM_BED_REGULAR",
-      "CON_CONTRACT_VARROCK_MID_BED_OAK"
+      "CON_CONTRACT_VARROCK_MID_BED_OAK",
+      "CON_CONTRACT_VARROCK_MID_BED_TEAK",
+      "CON_CONTRACT_VARROCK_MID_BED_MAHOGANY"
     ],
     "colorOverrides": [
       {
@@ -53808,7 +53806,7 @@
       },
       {
         "description": "Red blanket",
-        "colors": "h == 0 && s == 7",
+        "colors": "(h == 0 && s == 7) || (h == 0 && s == 0 )",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
       },
