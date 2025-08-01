@@ -53557,7 +53557,8 @@
     "objectIds": [
       "CON_CONTRACT_VARROCK_MID_DRESSER_REGULAR",
       "CON_CONTRACT_VARROCK_MID_DRESSER_OAK",
-      "CON_CONTRACT_VARROCK_MID_DRESSER_TEAK"
+      "CON_CONTRACT_VARROCK_MID_DRESSER_TEAK",
+      "CON_CONTRACT_VARROCK_MID_DRESSER_MAHOGANY"
     ],
     "colorOverrides": [
       {
@@ -53588,6 +53589,7 @@
     "objectIds": [
       "CON_CONTRACT_VARROCK_SOUTH_SMALL_TABLE_TEAK",
       "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_TEAK",
+      "CON_CONTRACT_HOSIDIUS_NORTH_LARGE_TABLE_MAHOGANY",
       "CON_CONTRACT_VARROCK_MID_TABLE_TEAK",
       "CON_CONTRACT_VARROCK_MID_TABLE_MAHOGANY",
       "CON_CONTRACT_HOSIDIUS_NORTH_SMALL_TABLE_TEAK",
@@ -53755,7 +53757,8 @@
     "description": "Mahogany Homes - Wooden - Cloth - Bed with Red blanket and Cream pillow - Outlined - DYNAMIC",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "CON_CONTRACT_ARDY_WEST_SMALL_BED_EDITABLE"
+      "CON_CONTRACT_ARDY_WEST_SMALL_BED_EDITABLE",
+      "CON_CONTRACT_ARDY_WEST_RED_EDITABLE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -53769,7 +53772,7 @@
       },
       {
         "description": "Red blanket",
-        "colors": "h == 0 && s == 7",
+        "colors": "(h == 0 && s == 7) || (h == 0 && s == 0)",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
       },
@@ -53787,7 +53790,11 @@
       "CON_CONTRACT_ARDY_WEST_SMALL_BED_DEFAULT",
       "CON_CONTRACT_ARDY_WEST_SMALL_BED_OAK",
       "CON_CONTRACT_ARDY_WEST_SMALL_BED_TEAK",
-      "CON_CONTRACT_ARDY_WEST_SMALL_BED_MAHOGANY"
+      "CON_CONTRACT_ARDY_WEST_SMALL_BED_MAHOGANY",
+      "CON_CONTRACT_ARDY_WEST_RED_REGULAR",
+      "CON_CONTRACT_ARDY_WEST_RED_OAK",
+      "CON_CONTRACT_ARDY_WEST_RED_TEAK",
+      "CON_CONTRACT_ARDY_WEST_RED_MAHOGANY"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -54121,7 +54128,9 @@
       "CON_CONTRACT_VARROCK_NORTH_CABINET1_OAK",
       "CON_CONTRACT_VARROCK_NORTH_CABINET2_OAK",
       "CON_CONTRACT_VARROCK_NORTH_CABINET1_TEAK",
-      "CON_CONTRACT_VARROCK_NORTH_CABINET2_TEAK"
+      "CON_CONTRACT_VARROCK_NORTH_CABINET2_TEAK",
+      "CON_CONTRACT_VARROCK_NORTH_CABINET1_MAHOGANY",
+      "CON_CONTRACT_VARROCK_NORTH_CABINET2_MAHOGANY"
     ],
     "colorOverrides": [
       {
@@ -54190,10 +54199,48 @@
     "objectIds": [
       "CON_CONTRACT_VARROCK_MID_CHAIR_OAK",
       "CON_CONTRACT_VARROCK_MID_CHAIR_TEAK",
-      "CON_CONTRACT_VARROCK_MID_CHAIR_MAHOGANY",
       "CON_CONTRACT_HOSIDIUS_SOUTH_CHAIR_OAK",
-      "CON_CONTRACT_HOSIDIUS_SOUTH_CHAIR_TEAK",
+      "CON_CONTRACT_HOSIDIUS_SOUTH_CHAIR_TEAK"
+    ]
+  },
+  {
+    "description": "Mahogany Homes - Wooden - Fancy Chair with Green cushion - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
       "CON_CONTRACT_HOSIDIUS_SOUTH_CHAIR_MAHOGANY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Green Cushion",
+        "colors": "h == 16",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 222,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Mahogany Homes - Wooden - Fancy Chair with yellow cushion - DYNAMIC",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CON_CONTRACT_VARROCK_MID_CHAIR_MAHOGANY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Yellow Cushion",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 222,
+        "uvScale": 0.5
+      }
     ]
   },
   {
