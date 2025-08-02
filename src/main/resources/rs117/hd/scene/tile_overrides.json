@@ -4852,7 +4852,8 @@
     "overlayIds": [ 1 ],
     "groundMaterial": "DIRT",
     "blended": false,
-    "shiftLightness": -30
+    "shiftLightness": -10,
+    "maxLightness": 85
   },
   {
     "name": "Mons Gratia Cliff",
@@ -4860,7 +4861,7 @@
     "overlayIds": [ 1 ],
     "groundMaterial": "DIRT",
     "blended": false,
-    "shiftLightness": -30
+    "shiftLightness": -5
   },
   {
     "name": "Hueycoatl Campfire Fix",
