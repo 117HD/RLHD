@@ -4855,6 +4855,14 @@
     "shiftLightness": -30
   },
   {
+    "name": "Mons Gratia Cliff",
+    "area": "Mons Gratia Cliff Fix",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "shiftLightness": -30
+  },
+  {
     "name": "Hueycoatl Campfire Fix",
     "area": "Hueycoatl Campfire Fix",
     "overlayIds": [ 340 ],
@@ -4885,14 +4893,14 @@
   },
   {
     "name": "RALOS_RISE_SNOW_PATH",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
+    "area": "RALOS_RISE",
     "overlayIds": [ 271 ],
     "maxLightness": 75,
     "groundMaterial": "SNOW_2"
   },
   {
     "name": "Ralos Rise Snow Blending",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
+    "area": "RALOS_RISE",
     "underlayIds": [ 58, 94 ],
     "groundMaterial": "SNOW_1",
     "shiftLightness": 27,
@@ -4904,7 +4912,7 @@
   },
   {
     "name": "Ralos Rise Snow No Blending",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
+    "area": "RALOS_RISE",
     "underlayIds": [ 58, 94 ],
     "groundMaterial": "SNOW_1",
     "shiftLightness": 10,
@@ -4919,7 +4927,7 @@
   },
   {
     "name": "RALOS_RISE_GRAY_PATH",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
+    "area": "RALOS_RISE",
     "overlayIds": [ 3 ],
     "groundMaterial": "DIRT",
     "blended": false
