@@ -2674,7 +2674,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
 
-		pendingConfigChanges.add(event.getKey());
+		synchronized (this) {
+			pendingConfigChanges.add(event.getKey());
+		}
 	}
 
 	private void processPendingConfigChanges() {
