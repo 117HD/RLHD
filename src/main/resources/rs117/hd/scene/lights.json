@@ -39310,6 +39310,41 @@
     "graphicsObjectIds": [ "SPECIAL_DUAL_MACUAHUITL_SPOTANIM" ]
   },
   {
+    "description": "Eclipse Atlatl Special Attack",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1700,
+    "spawnDelay": 800,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 1100,
+    "graphicsObjectIds": [ "SPECIAL_ATLATL_IMPACT_SPOTANIM" ]
+  },
+  {
+    "description": "Eclipse Atlatl Bleed Proc",
+    "offset": [ 0, 80, 0 ],
+    "radius": 300,
+    "spawnDelay": 50,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1050,
+    "color": "#cd7c00",
+    "strength": 25,
+    "type": "STATIC",
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "SPECIAL_ATLATL_SPOTANIM" ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
