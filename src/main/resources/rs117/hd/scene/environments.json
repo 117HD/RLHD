@@ -1846,9 +1846,9 @@
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
     "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.75,
+    "ambientStrength": 1.25,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 3,
+    "directionalStrength": 2.75,
     "fogColor": "#aebde0",
     "fogDepth": 30
   },
