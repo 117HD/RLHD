@@ -366,7 +366,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Nullable
 	private int[] sceneViewport;
-	private float[] sceneViewportScale;
+	private final float[] sceneViewportScale = { 1, 1 };
 	private int msaaSamples;
 
 	private int[] sceneResolution;
@@ -1306,13 +1306,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (viewport[2] == 0 || viewport[3] == 0)
 			return;
 
-		sceneViewportScale = getDpiScaling();
-		// UI stretching also affects the scene viewport
+		// DPI scaling and stretched mode also affects the game's viewport
 		for (int i = 0; i < 2; i++)
-			sceneViewportScale[i] *= (float) scaledUiResolution[i] / uiResolution[i];
-
+			sceneViewportScale[i] = (float) scaledUiResolution[i] / uiResolution[i];
 		if (sceneViewportScale[0] != 1 || sceneViewportScale[1] != 1) {
-			// Pad the viewport before scaling, so it always covers the game viewport in the UI
+			// Pad the viewport before scaling, so it always covers the game's viewport in the UI
 			for (int i = 0; i < 2; i++) {
 				viewport[i] -= 1;
 				viewport[i + 2] += 2;
