@@ -4897,7 +4897,8 @@
     "area": "RALOS_RISE",
     "overlayIds": [ 271 ],
     "maxLightness": 75,
-    "groundMaterial": "SNOW_2"
+    "shiftLightness": 5,
+    "groundMaterial": "DIRTY_SNOW"
   },
   {
     "name": "Ralos Rise Snow Blending",
