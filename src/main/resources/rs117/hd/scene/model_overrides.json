@@ -32047,11 +32047,12 @@
   },
   {
     "description": "Ralos rise, Big door",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "ENTRANCE_CAMTORUM_CLOSED01",
       "ENTRANCE_CAMTORUM_SIDE01",
       "ENTRANCE_CAMTORUM_CORNER01_M",
+      "ENTRANCE_CAMTORUM_CORNER01",
       "ENTRANCE_CAMTORUM_TOP01",
       "ENTRANCE_CAMTORUM_TOP02",
       "ENTRANCE_CAMTORUM_TOP03"
