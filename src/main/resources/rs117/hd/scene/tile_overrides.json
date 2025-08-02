@@ -4863,6 +4863,13 @@
     "blended": false
   },
   {
+    "name": "Hueycoatl Campfire Fix",
+    "area": "Hueycoatl Campfire Fix",
+    "overlayIds": [ 340 ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
     "name": "Hueycoatl Snow Fix - Blending",
     "area": "Hueycoatl Snow Fix",
     "description": "For when ground blending is ENABLED",
