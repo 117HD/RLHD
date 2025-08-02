@@ -38,6 +38,7 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.MathUtils.*;
 
 /**
  * Pushes models
@@ -175,7 +176,7 @@ public class ModelPusher {
 		if (modelCache == null)
 			useCache = false;
 
-		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
+		final int faceCount = min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
 		int texturedFaceCount = 0;
 

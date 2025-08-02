@@ -56,7 +56,6 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
-import rs117.hd.utils.Vector;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -65,8 +64,8 @@ import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
-import static rs117.hd.utils.HDUtils.clamp;
 import static rs117.hd.utils.HDUtils.getSceneBaseExtended;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -171,7 +170,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 			hoveredAreaAabb[0] = -1;
 			hoveredAreaAabb[1] = 0;
-			System.arraycopy(hoveredAreaAabb, 0, selectedAreaAabb, 0, 2);
+			copyTo(selectedAreaAabb, hoveredAreaAabb);
 
 			baseEx = getSceneBaseExtended(sceneContext.scene, client.getPlane());
 
@@ -311,8 +310,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 							var aabb = toLocalAabb(sceneContext, cropAabb(sceneContext, area.aabbs[j]));
 							var p = getAabbCanvasCenter(aabb);
 							if (p != null) {
-								Vector.subtract(v, mousePos, p);
-								if (Vector.dot(v, v) < 26 * 26) {
+								subtract(v, mousePos, p);
+								if (dot(v) < 26 * 26) {
 									hoveredAreaAabb[0] = i;
 									hoveredAreaAabb[1] = j;
 									break outer;
@@ -757,16 +756,16 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (pair.getRight().isEmpty())
 			{
 				int halfWidth = fm.stringWidth(Text.removeTags(pair.getLeft())) / 2;
-				leftWidth = Math.max(leftWidth, halfWidth);
-				rightWidth = Math.max(rightWidth, halfWidth);
+				leftWidth = max(leftWidth, halfWidth);
+				rightWidth = max(rightWidth, halfWidth);
 			}
 			else
 			{
-				leftWidth = Math.max(leftWidth, fm.stringWidth(Text.removeTags(pair.getLeft())));
+				leftWidth = max(leftWidth, fm.stringWidth(Text.removeTags(pair.getLeft())));
 				var rfm = fm;
 				if (pair.getRight().contains("<tt>"))
 					rfm = g.getFontMetrics(MONOSPACE_FONT);
-				rightWidth = Math.max(rightWidth, rfm.stringWidth(Text.removeTags(pair.getRight())));
+				rightWidth = max(rightWidth, rfm.stringWidth(Text.removeTags(pair.getRight())));
 			}
 		}
 
@@ -883,8 +882,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					})
 					.toArray(String[]::new);
 
-				int columns = clamp((int) Math.round(Math.sqrt(colors.length / 5f)), 3, 8);
-				int rows = (int) Math.ceil(colors.length / (float) columns);
+				int columns = clamp(round(sqrt(colors.length / 5f)), 3, 8);
+				int rows = ceil(colors.length / (float) columns);
 
 				StringBuilder str = new StringBuilder();
 				for (int i = 0; i < rows; i++) {
@@ -937,8 +936,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private static int getHeight(Scene scene, int localX, int localY, int plane) {
-		int sceneExX = HDUtils.clamp((localX >> LOCAL_COORD_BITS) + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
-		int sceneExY = HDUtils.clamp((localY >> LOCAL_COORD_BITS) + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
+		int sceneExX = clamp((localX >> LOCAL_COORD_BITS) + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
+		int sceneExY = clamp((localY >> LOCAL_COORD_BITS) + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 1);
 
 		int[][][] tileHeights = scene.getTileHeights();
 		int x = localX & (LOCAL_TILE_SIZE - 1);
@@ -957,10 +956,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		z -= client.getCameraZ();
 		int cameraPitch = client.getCameraPitch();
 		int cameraYaw = client.getCameraYaw();
-		float pitchSin = (float) Math.sin(cameraPitch * UNIT);
-		float pitchCos = (float) Math.cos(cameraPitch * UNIT);
-		float yawSin = (float) Math.sin(cameraYaw * UNIT);
-		float yawCos = (float) Math.cos(cameraYaw * UNIT);
+		float pitchSin = sin(cameraPitch * JAU_TO_RAD);
+		float pitchCos = cos(cameraPitch * JAU_TO_RAD);
+		float yawSin = sin(cameraYaw * JAU_TO_RAD);
+		float yawCos = cos(cameraYaw * JAU_TO_RAD);
 		float x1 = x * yawCos + y * yawSin;
 		float y1 = y * yawCos - x * yawSin;
 		float y2 = z * pitchCos - y1 * pitchSin;
@@ -983,7 +982,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			return new float[] {
 				(screenX + client.getViewportXOffset()),
 				(screenY + client.getViewportYOffset()),
-				Math.min(Integer.MAX_VALUE, z1)
+				min(Integer.MAX_VALUE, z1)
 			};
 		}
 
@@ -1143,10 +1142,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		// Using floats to support coordinates much larger than normal local coordinates
 		int cameraPitch = client.getCameraPitch();
 		int cameraYaw = client.getCameraYaw();
-		float pitchSin = (float) Math.sin(cameraPitch * UNIT);
-		float pitchCos = (float) Math.cos(cameraPitch * UNIT);
-		float yawSin = (float) Math.sin(cameraYaw * UNIT);
-		float yawCos = (float) Math.cos(cameraYaw * UNIT);
+		float pitchSin = sin(cameraPitch * JAU_TO_RAD);
+		float pitchCos = cos(cameraPitch * JAU_TO_RAD);
+		float yawSin = sin(cameraYaw * JAU_TO_RAD);
+		float yawCos = cos(cameraYaw * JAU_TO_RAD);
 
 		x1 -= client.getCameraX();
 		y1 -= client.getCameraY();
@@ -1257,10 +1256,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			by = h;
 		}
 
-		int fromX = Math.round(ax);
-		int fromY = Math.round(ay);
-		int toX = Math.round(bx);
-		int toY = Math.round(by);
+		int fromX = round(ax);
+		int fromY = round(ay);
+		int toX = round(bx);
+		int toY = round(by);
 
 		if (fromX == toX && fromY == toY)
 			return;
@@ -1299,20 +1298,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			int ne = getHeight(ctx.scene, x2, y2, i);
 			int se = getHeight(ctx.scene, x2, y1, i);
 			if (sw != -1) {
-				z1 = Math.min(z1, sw);
-				z2 = Math.max(z2, sw);
+				z1 = min(z1, sw);
+				z2 = max(z2, sw);
 			}
 			if (nw != -1) {
-				z1 = Math.min(z1, nw);
-				z2 = Math.max(z2, nw);
+				z1 = min(z1, nw);
+				z2 = max(z2, nw);
 			}
 			if (ne != -1) {
-				z1 = Math.min(z1, ne);
-				z2 = Math.max(z2, ne);
+				z1 = min(z1, ne);
+				z2 = max(z2, ne);
 			}
 			if (se != -1) {
-				z1 = Math.min(z1, se);
-				z2 = Math.max(z2, se);
+				z1 = min(z1, se);
+				z2 = max(z2, se);
 			}
 		}
 
@@ -1327,12 +1326,12 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		int sz = (int) ((z2 - z1) / 2.f);
 
 		return new AABB(
-			Math.round(cx - sx * scale),
-			Math.round(cy - sy * scale),
-			Math.round(cz - sz * scale),
-			Math.round(cx + sx * scale),
-			Math.round(cy + sy * scale),
-			Math.round(cz + sz * scale)
+			round(cx - sx * scale),
+			round(cy - sy * scale),
+			round(cz - sz * scale),
+			round(cx + sx * scale),
+			round(cy + sy * scale),
+			round(cz + sz * scale)
 		);
 	}
 
@@ -1346,8 +1345,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int filled = ctx.filledTiles[sceneExX][sceneExY];
 				for (int plane = 0; plane < MAX_Z; plane++) {
 					if ((filled & (1 << plane)) != 0) {
-						minZ = Math.min(minZ, plane);
-						maxZ = Math.max(maxZ, plane);
+						minZ = min(minZ, plane);
+						maxZ = max(maxZ, plane);
 					}
 				}
 				return new AABB(aabb.minX, aabb.minY, minZ, aabb.minX, aabb.minY, maxZ);
@@ -1402,7 +1401,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (backdrop) {
 			int totalWidth = 0;
 			for (String line : lines)
-				totalWidth = Math.max(totalWidth, fm.stringWidth(line));
+				totalWidth = max(totalWidth, fm.stringWidth(line));
 
 			g.setColor(BACKDROP_COLOR);
 			int pad = 4;
@@ -1503,7 +1502,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 							.aabbs[TileInfoOverlay.this.hoveredAreaAabb[1]]
 							.toArgs());
 
-					System.arraycopy(hoveredAreaAabb, 0, selectedAreaAabb, 0, 2);
+					copyTo(selectedAreaAabb, hoveredAreaAabb);
 					return e;
 				}
 

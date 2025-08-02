@@ -27,11 +27,12 @@ import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
+import static rs117.hd.utils.MathUtils.*;
 
 public class SceneContext {
 	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 
-	public final int id = HDUtils.rand.nextInt() & SceneUploader.SCENE_ID_MASK;
+	public final int id = RAND.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Client client;
 	public final Scene scene;
 	public final AABB sceneBounds;

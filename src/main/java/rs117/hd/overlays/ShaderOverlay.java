@@ -53,7 +53,7 @@ import rs117.hd.opengl.shader.ShaderTemplate;
 import rs117.hd.utils.ShaderRecompile;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -290,18 +290,18 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 			if (shouldMaintainAspectRatio()) {
 				float aspectRatio = (float) initialSize.width / initialSize.height;
 				if (aspectRatio > 1) {
-					minWidth = Math.round(minHeight * aspectRatio);
-					maxHeight = Math.round(maxWidth / aspectRatio);
+					minWidth = round(minHeight * aspectRatio);
+					maxHeight = round(maxWidth / aspectRatio);
 				} else {
-					minHeight = Math.round(minWidth / aspectRatio);
-					maxWidth = Math.round(maxHeight * aspectRatio);
+					minHeight = round(minWidth / aspectRatio);
+					maxWidth = round(maxHeight * aspectRatio);
 				}
 
 				boolean resizingHeight = cursor == Cursor.N_RESIZE_CURSOR || cursor == Cursor.S_RESIZE_CURSOR;
 				if (resizingHeight) {
-					size.width = Math.round(size.height * aspectRatio);
+					size.width = round(size.height * aspectRatio);
 				} else {
-					size.height = Math.round(size.width / aspectRatio);
+					size.height = round(size.width / aspectRatio);
 				}
 
 				size.width = clamp(size.width, minWidth, maxWidth);

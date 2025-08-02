@@ -16,6 +16,8 @@ import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
 import rs117.hd.utils.NpcDisplacementCache;
 
+import static rs117.hd.utils.MathUtils.*;
+
 @Singleton
 public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener {
 	@Inject
@@ -97,7 +99,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.leftFont(FontManager.getRunescapeBoldFont())
 				.left("Estimated FPS:")
 				.rightFont(FontManager.getRunescapeBoldFont())
-				.right(String.format("%.1f FPS", 1 / (Math.max(cpuTime, gpuTime) / 1e9)))
+				.right(String.format("%.1f FPS", 1e9 / max(cpuTime, gpuTime)))
 				.build());
 
 			children.add(LineComponent.builder()
@@ -154,7 +156,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				timings[i] += frame.timers[i];
 
 		for (int i = 0; i < timings.length; i++)
-			timings[i] = Math.max(0, timings[i] / frames.size());
+			timings[i] = max(0, timings[i] / frames.size());
 
 		return true;
 	}
@@ -169,8 +171,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 		// Round timers to zero if they are less than a microsecond off
 		String result = "~0 ms";
-		if (Math.abs(nanos) > 1e3) {
-			result = sb.append(Math.round(nanos / 1e3) / 1e3).append(" ms").toString();
+		if (abs(nanos) > 1e3) {
+			result = sb.append(round(nanos / 1e3) / 1e3).append(" ms").toString();
 			sb.setLength(0);
 		}
 		var font = bold ? FontManager.getRunescapeBoldFont() : FontManager.getRunescapeFont();

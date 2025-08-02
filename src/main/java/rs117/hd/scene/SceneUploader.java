@@ -58,6 +58,7 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -739,9 +740,9 @@ public class SceneUploader {
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
-				float rad = -uvOrientation * (float) UNIT;
-				uvcos = (float) Math.cos(rad) * -uvScale;
-				uvsin = (float) Math.sin(rad) * -uvScale;
+				float rad = -uvOrientation * JAU_TO_RAD;
+				uvcos = cos(rad) * -uvScale;
+				uvsin = sin(rad) * -uvScale;
 			}
 			float uvx = worldPos[0];
 			float uvy = worldPos[1];
@@ -840,10 +841,10 @@ public class SceneUploader {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			float swTerrainData = (float) packTerrainData(true, Math.max(1, swDepth), waterType, tileZ);
-			float seTerrainData = (float) packTerrainData(true, Math.max(1, seDepth), waterType, tileZ);
-			float nwTerrainData = (float) packTerrainData(true, Math.max(1, nwDepth), waterType, tileZ);
-			float neTerrainData = (float) packTerrainData(true, Math.max(1, neDepth), waterType, tileZ);
+			float swTerrainData = (float) packTerrainData(true, max(1, swDepth), waterType, tileZ);
+			float seTerrainData = (float) packTerrainData(true, max(1, seDepth), waterType, tileZ);
+			float nwTerrainData = (float) packTerrainData(true, max(1, nwDepth), waterType, tileZ);
+			float neTerrainData = (float) packTerrainData(true, max(1, neDepth), waterType, tileZ);
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
 			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -1085,9 +1086,9 @@ public class SceneUploader {
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
-				float rad = -uvOrientation * (float) UNIT;
-				uvcos = (float) Math.cos(rad) * -uvScale;
-				uvsin = (float) Math.sin(rad) * -uvScale;
+				float rad = -uvOrientation * JAU_TO_RAD;
+				uvcos = cos(rad) * -uvScale;
+				uvsin = sin(rad) * -uvScale;
 			}
 
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
@@ -1194,9 +1195,9 @@ public class SceneUploader {
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 
-				float aTerrainData = (float) packTerrainData(true, Math.max(1, depthA), waterType, tileZ);
-				float bTerrainData = (float) packTerrainData(true, Math.max(1, depthB), waterType, tileZ);
-				float cTerrainData = (float) packTerrainData(true, Math.max(1, depthC), waterType, tileZ);
+				float aTerrainData = (float) packTerrainData(true, max(1, depthA), waterType, tileZ);
+				float bTerrainData = (float) packTerrainData(true, max(1, depthB), waterType, tileZ);
+				float cTerrainData = (float) packTerrainData(true, max(1, depthC), waterType, tileZ);
 
 				sceneContext.stagingBufferNormals.ensureCapacity(12);
 				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
