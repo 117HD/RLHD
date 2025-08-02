@@ -39292,6 +39292,24 @@
     "graphicsObjectIds": [ "SLICE_PLAYER_MACE_SPECIAL_ATTACK_SPOTANIM", "BRAIN_ANCHOR_SPECIAL_ATTACK_SPOT" ]
   },
   {
+    "description": "Dual Macuahuitl Special Attack",
+    "offset": [ 0, 80, 0 ],
+    "radius": 200,
+    "spawnDelay": 50,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1050,
+    "strength": 15,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "graphicsObjectIds": [ "SPECIAL_DUAL_MACUAHUITL_SPOTANIM" ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
