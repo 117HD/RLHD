@@ -4827,6 +4827,63 @@
     "waterType": "PLAIN_WATER"
   },
   {
+    "name": "Proudspire Snow Blending",
+    "area": "Proudspire",
+    "underlayIds": [ 58 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 25,
+    "maxLightness": 98,
+    "replacements": {
+      "Proudspire Cliff": "l < 3",
+      "Proudspire Snow No Blending": "!blending"
+    }
+  },
+  {
+    "name": "Proudspire Snow No Blending",
+    "area": "Proudspire",
+    "underlayIds": [ 58 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 98
+  },
+  {
+    "name": "Proudspire Cliff",
+    "area": "Proudspire",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "shiftLightness": -30
+  },
+  {
+    "name": "Hueycoatl Campfire Fix",
+    "area": "Hueycoatl Campfire Fix",
+    "overlayIds": [ 340 ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
+    "name": "Hueycoatl Snow Fix - Blending",
+    "area": "Hueycoatl Snow Fix",
+    "description": "For when ground blending is ENABLED",
+    "underlayIds": [ 58, 63, 94, 173 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "replacements": {
+      "Hueycoatl Snow Fix - No Blending": "!blending"
+    },
+    "shiftLightness": 25
+  },
+  {
+    "name": "Hueycoatl Snow Fix - No Blending",
+    "area": "Hueycoatl Snow Fix",
+    "underlayIds": [ 58, 173 ],
+    "description": "For when ground blending is DISABLED",
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 75,
+    "minLightness": 50,
+    "maxSaturation": 0
+  },
+  {
     "name": "RALOS_RISE_SNOW_PATH",
     "area": "VARLAMORE_SNOWY_MOUNTAINS",
     "overlayIds": [ 271 ],
@@ -4857,35 +4914,6 @@
     "overlayIds": [ 3 ],
     "groundMaterial": "DIRT",
     "blended": false
-  },
-  {
-    "name": "Hueycoatl Campfire Fix",
-    "area": "Hueycoatl Campfire Fix",
-    "overlayIds": [ 340 ],
-    "groundMaterial": "DIRT",
-    "blended": false
-  },
-  {
-    "name": "Hueycoatl Snow Fix - Blending",
-    "area": "Hueycoatl Snow Fix",
-    "description": "For when ground blending is ENABLED",
-    "underlayIds": [ 58, 63, 94, 173 ],
-    "groundMaterial": "DIRTY_SNOW",
-    "replacements": {
-      "Hueycoatl Snow Fix - No Blending": "!blending"
-    },
-    "shiftLightness": 25
-  },
-  {
-    "name": "Hueycoatl Snow Fix - No Blending",
-    "area": "Hueycoatl Snow Fix",
-    "underlayIds": [ 58, 173 ],
-    "description": "For when ground blending is DISABLED",
-    "groundMaterial": "DIRTY_SNOW",
-    "shiftLightness": 10,
-    "maxLightness": 75,
-    "minLightness": 50,
-    "maxSaturation": 0
   },
   {
     "name": "CAM_TORUM_WATER",
