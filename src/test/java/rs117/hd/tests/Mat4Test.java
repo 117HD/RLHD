@@ -1,9 +1,11 @@
-package rs117.hd.utils;
+package rs117.hd.tests;
 
-import junit.framework.TestCase;
 import org.junit.Assert;
+import org.junit.Test;
+import rs117.hd.utils.Mat4;
 
-public class Mat4Test extends TestCase {
+public class Mat4Test {
+	@Test
 	public void testTranspose() {
 		float[] m = {
 			1, 2, 3, 4,
@@ -16,6 +18,7 @@ public class Mat4Test extends TestCase {
 		System.out.println("\n" + Mat4.format(m));
 	}
 
+	@Test
 	public void testInverse() {
 		float[] nonInvertible = {
 			1, -2, 0, 2,
