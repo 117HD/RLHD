@@ -4830,6 +4830,7 @@
     "name": "RALOS_RISE_SNOW_PATH",
     "area": "VARLAMORE_SNOWY_MOUNTAINS",
     "overlayIds": [ 271 ],
+    "maxLightness": 75,
     "groundMaterial": "SNOW_2"
   },
   {
@@ -4838,15 +4839,10 @@
     "underlayIds": [ 58, 94 ],
     "groundMaterial": "SNOW_1",
     "shiftLightness": 10,
+    "maxLightness": 93,
     "replacements": {
-      "RALOS_RISE_SNOW_DARKER": "l < 55 && s == 0",
       "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0"
     }
-  },
-  {
-    "name": "RALOS_RISE_SNOW_DARKER",
-    "groundMaterial": "SNOW_1",
-    "shiftLightness": 0
   },
   {
     "name": "RALOS_RISE_GRAY_PATH_BLENDING_FIX",
