@@ -52,14 +52,13 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.opengl.uniforms.UBOWaterTypes;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
-import static rs117.hd.utils.HDUtils.HALF_PI;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
@@ -238,7 +237,7 @@ public class TextureManager {
 		glActiveTexture(TEXTURE_UNIT_GAME);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
 
-		int mipLevels = 1 + (int) Math.floor(HDUtils.log2(textureSize));
+		int mipLevels = 1 + floor(log2(textureSize));
 		int format = GL_SRGB8_ALPHA8;
 		if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
 			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
@@ -295,7 +294,7 @@ public class TextureManager {
 					log.warn("No pixels for vanilla texture at index {}", vanillaIndex);
 					continue;
 				}
-				int resolution = (int) Math.round(Math.sqrt(pixels.length));
+				int resolution = round(sqrt(pixels.length));
 				if (resolution * resolution != pixels.length) {
 					log.warn("Unknown dimensions for vanilla texture at index {} ({} pixels)", vanillaIndex, pixels.length);
 					continue;
@@ -331,8 +330,8 @@ public class TextureManager {
 			if (direction != 0) {
 				float speed = texture.getAnimationSpeed() * 50 / 128.f;
 				float radians = direction * -HALF_PI;
-				vanillaTextureAnimations[i * 2] = (float) Math.cos(radians) * speed;
-				vanillaTextureAnimations[i * 2 + 1] = (float) Math.sin(radians) * speed;
+				vanillaTextureAnimations[i * 2] = cos(radians) * speed;
+				vanillaTextureAnimations[i * 2 + 1] = sin(radians) * speed;
 			}
 		}
 
@@ -410,9 +409,7 @@ public class TextureManager {
 
 		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
 			final float maxSamples = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-			//Clamp from 1 to max GL says it supports.
-			final float anisoLevel = Math.max(1, Math.min(maxSamples, level));
-			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoLevel);
+			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
 		}
 	}
 

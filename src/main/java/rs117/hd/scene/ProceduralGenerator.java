@@ -37,6 +37,7 @@ import rs117.hd.data.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ModelHash;
 
 import static net.runelite.api.Constants.*;
@@ -45,17 +46,16 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
-import static rs117.hd.utils.HDUtils.clamp;
-import static rs117.hd.utils.HDUtils.dotLightDirectionTile;
-import static rs117.hd.utils.HDUtils.fract;
-import static rs117.hd.utils.HDUtils.lerp;
 import static rs117.hd.utils.HDUtils.vertexHash;
-import static rs117.hd.utils.Vector.add;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
 public class ProceduralGenerator {
 	public static final int[] DEPTH_LEVEL_SLOPE = new int[] { 150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380 };
+
+	// directional vectors approximately opposite of the directional light used by the client
+	public static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
 
 	public static final int VERTICES_PER_FACE = 3;
 	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]
@@ -271,29 +271,21 @@ public class ProceduralGenerator {
 			int lightenBase = 15;
 			int lightenAdd = 3;
 			float darkenMultiplier = 0.5f;
-			int darkenBase = 0;
-			int darkenAdd = 0;
 
 			float[] vNormals = sceneContext.vertexTerrainNormals.getOrDefault(vertexHashes[vertex], new float[] { 0, 0, 0 });
 
-			float dot = dotLightDirectionTile(vNormals[0], vNormals[1], vNormals[2]);
+			float dot = dot(vNormals);
+			if (dot < EPSILON) {
+				dot = 0;
+			} else {
+				// Tile normal vectors need to be normalized
+				dot = dot(LIGHT_DIR_TILE, vNormals, 2) / sqrt(dot);
+			}
 			int lightness = color & 0x7F;
-			lightness = (int) lerp(
-				lightness,
-				(int) (
-					Math.max((lightness - lightenAdd), 0) * lightenMultiplier
-				) + lightenBase,
-				Math.max(dot, 0)
-			);
-			lightness = (int) (
-				1.25f * lerp(
-					lightness,
-					(int) (Math.max((lightness - darkenAdd), 0) * darkenMultiplier) + darkenBase,
-					Math.abs(Math.min(dot, 0))
-				)
-			);
+			lightness = (int) mix(lightness, (int) (max(lightness - lightenAdd, 0) * lightenMultiplier) + lightenBase, max(dot, 0));
+			lightness = (int) (1.25f * mix(lightness, (int) (lightness * darkenMultiplier), -min(dot, 0)));
 			final int maxBrightness = 55; // reduces overexposure
-			lightness = Math.min(lightness, maxBrightness);
+			lightness = min(lightness, maxBrightness);
 			color = color & ~0x7F | lightness;
 
 			boolean isOverlay = false;
@@ -672,17 +664,12 @@ public class ProceduralGenerator {
 
 									float lerpX = fract(vertices[vertex][0] / (float) LOCAL_TILE_SIZE);
 									float lerpY = fract(vertices[vertex][1] / (float) LOCAL_TILE_SIZE);
-									float northHeightOffset = lerp(
-										underwaterDepths[z][x][y + 1],
-										underwaterDepths[z][x + 1][y + 1],
-										lerpX
-									);
-									float southHeightOffset = lerp(underwaterDepths[z][x][y], underwaterDepths[z][x + 1][y], lerpX);
-									int heightOffset = (int) lerp(southHeightOffset, northHeightOffset, lerpY);
+									float northHeightOffset = mix(underwaterDepths[z][x][y + 1], underwaterDepths[z][x + 1][y + 1], lerpX);
+									float southHeightOffset = mix(underwaterDepths[z][x][y], underwaterDepths[z][x + 1][y], lerpX);
+									int heightOffset = (int) mix(southHeightOffset, northHeightOffset, lerpY);
 
-									if (!sceneContext.vertexIsLand.containsKey(vertexKeys[vertex])) {
+									if (!sceneContext.vertexIsLand.containsKey(vertexKeys[vertex]))
 										sceneContext.vertexUnderwaterDepth.put(vertexKeys[vertex], heightOffset);
-									}
 								}
 							}
 						}
@@ -982,8 +969,8 @@ public class ProceduralGenerator {
 	private static final int[] tzHaarRecolored = new int[4];
 	// used when calculating the gradient to apply to the walls of TzHaar
 	// to emulate the style from 2008 HD rework
-	private static final int[] gradientBaseColor = new int[]{3, 4, 26};
-	private static final int[] gradientDarkColor = new int[]{3, 4, 10};
+	private static final float[] gradientBaseColor = vec(3, 4, 26);
+	private static final float[] gradientDarkColor = vec(3, 4, 10);
 	private static final int gradientBottom = 200;
 	private static final int gradientTop = -200;
 
@@ -997,23 +984,19 @@ public class ProceduralGenerator {
 		int color2,
 		int color3
 	) {
+		int[] hsl1 = ColorUtils.unpackRawHsl(color1);
+		int[] hsl2 = ColorUtils.unpackRawHsl(color2);
+		int[] hsl3 = ColorUtils.unpackRawHsl(color3);
+
 		// shift model hues from red->yellow
 		int hue = 7;
-		int color1H = hue;
-		int color2H = hue;
-		int color3H = hue;
-		int color1S = color1 >> 7 & 7;
-		int color1L = color1 & 0x7F;
-		int color2S = color2 >> 7 & 7;
-		int color2L = color2 & 0x7F;
-		int color3S = color3 >> 7 & 7;
-		int color3L = color3 & 0x7F;
+		hsl1[0] = hsl2[0] = hsl3[0] = hue;
 
 		// recolor tzhaar to look like the 2008+ HD version
 		if (ModelHash.getUuidSubType(uuid) == ModelHash.TYPE_GROUND_OBJECT) {
 			// remove the black parts of floor objects to allow the ground to show,
 			// so we can apply textures, ground blending, etc. to it
-			if (color1S <= 1)
+			if (hsl1[1] <= 1)
 				packedAlphaPriority = 0xFF << 24;
 		}
 
@@ -1027,41 +1010,35 @@ public class ProceduralGenerator {
 			float heightC = yVertices[triC];
 
 			// apply coloring to the rocky walls
-			if (color1L < 20) {
+			if (hsl1[2] < 20) {
 				float pos = clamp((heightA - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
-				color1H = (int) lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
-				color1S = (int) lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
-				color1L = (int) lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
+				round(hsl1, mix(gradientDarkColor, gradientBaseColor, pos));
 			}
 
-			if (color2L < 20)
+			if (hsl2[2] < 20)
 			{
 				float pos = clamp((heightB - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
-				color2H = (int) lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
-				color2S = (int) lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
-				color2L = (int) lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
+				round(hsl2, mix(gradientDarkColor, gradientBaseColor, pos));
 			}
 
-			if (color3L < 20)
+			if (hsl3[2] < 20)
 			{
 				float pos = clamp((heightC - gradientTop) / (float) gradientBottom, 0.0f, 1.0f);
-				color3H = (int) lerp(gradientDarkColor[0], gradientBaseColor[0], pos);
-				color3S = (int) lerp(gradientDarkColor[1], gradientBaseColor[1], pos);
-				color3L = (int) lerp(gradientDarkColor[2], gradientBaseColor[2], pos);
+				round(hsl3, mix(gradientDarkColor, gradientBaseColor, pos));
 			}
 		}
 		else if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.HUE_SHIFT)
 		{
 			// objects around the entrance to The Inferno only need a hue-shift
 			// and very slight lightening to match the lightened terrain
-			color1L += 1;
-			color2L += 1;
-			color3L += 1;
+			hsl1[2] += 1;
+			hsl2[2] += 1;
+			hsl3[2] += 1;
 		}
 
-		tzHaarRecolored[0] = color1H << 10 | color1S << 7 | color1L;
-		tzHaarRecolored[1] = color2H << 10 | color2S << 7 | color2L;
-		tzHaarRecolored[2] = color3H << 10 | color3S << 7 | color3L;
+		tzHaarRecolored[0] = ColorUtils.packRawHsl(hsl1);
+		tzHaarRecolored[1] = ColorUtils.packRawHsl(hsl2);
+		tzHaarRecolored[2] = ColorUtils.packRawHsl(hsl3);
 		tzHaarRecolored[3] = packedAlphaPriority;
 
 		return tzHaarRecolored;

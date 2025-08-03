@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 
+import static rs117.hd.utils.MathUtils.*;
+
 @Slf4j
 public class GsonUtils {
 	public static String location(JsonReader in) {
@@ -26,10 +28,8 @@ public class GsonUtils {
 			if (token == JsonToken.NULL)
 				return null;
 
-			if (token == JsonToken.NUMBER) {
-				float angle = (float) in.nextDouble();
-				return (float) Math.toRadians(angle);
-			}
+			if (token == JsonToken.NUMBER)
+				return (float) in.nextDouble() * DEG_TO_RAD;
 
 			if (token == JsonToken.BEGIN_ARRAY) {
 				ArrayList<Float> list = new ArrayList<>();
@@ -60,13 +60,13 @@ public class GsonUtils {
 			if (src instanceof float[]) {
 				out.beginArray();
 				for (float f : (float[]) src)
-					out.value(Math.toDegrees(f));
+					out.value(f * RAD_TO_DEG);
 				out.endArray();
 				return;
 			}
 
 			if (src instanceof Float) {
-				out.value(Math.toDegrees((float) src));
+				out.value((float) src * RAD_TO_DEG);
 			}
 
 			throw new IOException("Expected a float or float array. Got " + src);
