@@ -72,6 +72,10 @@ public class AsyncUICopy extends Job {
 			return;
 		}
 
+		if (mappedBuffer == null || pixels == null) {
+			return;
+		}
+
 		timer.begin(Timer.UPLOAD_UI);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);

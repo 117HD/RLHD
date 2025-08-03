@@ -5,8 +5,10 @@ import java.util.concurrent.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import rs117.hd.HdPlugin;
 
+@Slf4j
 public abstract class Job implements Runnable {
 	private final Semaphore completionSema = new Semaphore(1);
 
@@ -29,21 +31,27 @@ public abstract class Job implements Runnable {
 	public void submit() {
 		complete(true);
 
-		if (onPrepareCallback != null) {
-			onPrepareCallback.callback();
-		}
+		try {
+			if (onPrepareCallback != null) {
+				onPrepareCallback.callback();
+			}
 
-		prepare();
+			prepare();
+		} catch (Exception ex) {
+			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
+		}
 
 		inFlight = true;
 
 		if (HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY) {
-			doWork();
+			run();
 		} else {
 			completionSema.acquire();
 			HdPlugin.THREAD_POOL.execute(this);
 		}
 	}
+
+	public void complete() { complete(true); }
 
 	@SneakyThrows
 	public void complete(boolean block) {
@@ -52,19 +60,22 @@ public abstract class Job implements Runnable {
 		if (block) {
 			completionSema.acquire();
 			completionSema.release();
-			onComplete();
 			inFlight = false;
 		} else {
 			completionSema.acquire();
 			if (completionSema.tryAcquire(100, TimeUnit.NANOSECONDS)) {
 				completionSema.release();
-				onComplete();
 				inFlight = false;
 			}
 		}
 
-		if (!inFlight && onCompleteCallback != null) {
-			onCompleteCallback.callback();
+		try {
+			onComplete();
+			if (!inFlight && onCompleteCallback != null) {
+				onCompleteCallback.callback();
+			}
+		} catch (Exception ex) {
+			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
 		}
 	}
 
@@ -72,6 +83,8 @@ public abstract class Job implements Runnable {
 	public void run() {
 		try {
 			doWork();
+		} catch (Exception ex) {
+			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
 		} finally {
 			completionSema.release();
 		}

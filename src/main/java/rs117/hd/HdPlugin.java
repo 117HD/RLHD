@@ -748,7 +748,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			asyncUICopy.complete(true);
+			asyncUICopy.complete();
 			developerTools.deactivate();
 			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
@@ -1576,10 +1576,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final Scene scene = client.getScene();
 		int drawDistance = getDrawDistance();
-		boolean drawDistanceChanged = false;
 		if (scene.getDrawDistance() != drawDistance) {
 			scene.setDrawDistance(drawDistance);
-			drawDistanceChanged = true;
 		}
 
 		boolean updateUniforms = true;
@@ -1643,7 +1641,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportWidth = (int) (sceneViewport[2] / sceneViewportScale[0]);
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
-				frameTimer.begin(Timer.SCENE_VIEW);
 				sceneCamera.setZoom(client.getScale());
 				sceneCamera.setNearPlane(NEAR_PLANE);
 				sceneCamera.setViewportWidth(viewportWidth);
@@ -1658,7 +1655,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					uboGlobal.invProjectionMatrix.set(sceneCamera.getInvViewProjMatrix());
 					uboGlobal.upload();
 				}
-				frameTimer.begin(Timer.SCENE_VIEW);
 
 				if (sceneContext.scene == scene) {
 					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
@@ -1685,7 +1681,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					sceneCamera.translateZ(cameraShift[1]);
 				}
 
-				frameTimer.begin(Timer.SCENE_VIEW);
 				directionalLight.setPitch(environmentManager.currentSunAngles[0]);
 				directionalLight.setYaw(PI - environmentManager.currentSunAngles[1]);
 				if (sceneCameraChanged || directionalLight.isViewDirty()) {
@@ -1743,7 +1738,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (sceneCameraChanged) {
 					sceneCamera.performAsyncTileCulling(sceneContext, true);
 				}
-				frameTimer.end(Timer.SCENE_VIEW);
 
 				uboCompute.yaw.set(sceneCamera.getYaw());
 				uboCompute.pitch.set(sceneCamera.getPitch());
@@ -1953,7 +1947,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(0)
 			.put(tileY * LOCAL_TILE_SIZE);
 
-		frameTimer.begin(Timer.DRAW_BUFFER_ADD);
 		if (sceneCamera.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
 			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
 			if (plane != 0) {
@@ -1962,7 +1955,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		} else if (plane != 0 && configShadowCulling && directionalLight.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
-		frameTimer.end(Timer.DRAW_BUFFER_ADD);
 
 		renderBufferOffset += vertexCount;
 		drawnTileCount++;
@@ -2013,10 +2005,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			buffer.put(0);
 			buffer.put(localX).put(localY).put(localZ);
 
-			frameTimer.begin(Timer.DRAW_BUFFER_ADD);
 			sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
-			frameTimer.end(Timer.DRAW_BUFFER_ADD);
-
 			renderBufferOffset += bufferLength;
 			drawnTileCount++;
 		}
@@ -2030,9 +2019,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		buffer.put(0);
 		buffer.put(localX).put(localY).put(localZ);
 
-		frameTimer.begin(Timer.DRAW_BUFFER_ADD);
 		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
-		frameTimer.end(Timer.DRAW_BUFFER_ADD);
 
 		renderBufferOffset += bufferLength;
 		drawnTileCount++;
@@ -2045,6 +2032,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		};
 		boolean resize = !Arrays.equals(uiResolution, resolution);
 		if (resize) {
+			if (configAsyncUICopy) {
+				asyncUICopy.complete();
+			}
+
 			uiResolution = resolution;
 
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboUi);
@@ -2076,7 +2067,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			asyncUICopy.submit();
 			// If the window was just resized, upload once synchronously so there is something to show
 			if (resize)
-				asyncUICopy.complete(true);
+				asyncUICopy.complete();
 			return;
 		}
 
@@ -2765,7 +2756,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									clearModelCache = reloadScene = true;
 								break;
 							case KEY_ASYNC_UI_COPY:
-								asyncUICopy.complete(true);
+								asyncUICopy.complete();
 								break;
 						}
 
@@ -3180,13 +3171,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(eightIntWrite);
 
 		if (isVisibleInScene) {
-			frameTimer.begin(Timer.DRAW_BUFFER_ADD);
 			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
-			frameTimer.end(Timer.DRAW_BUFFER_ADD);
 		}
-		frameTimer.begin(Timer.DRAW_BUFFER_ADD);
 		directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
-		frameTimer.end(Timer.DRAW_BUFFER_ADD);
 
 		renderBufferOffset += faceCount * 3;
 	}
@@ -3236,7 +3223,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Upload the UI which we began copying during the previous frame
 		if (configAsyncUICopy)
-			asyncUICopy.complete(true);
+			asyncUICopy.complete();
 
 		if (client.getScene() == null)
 			return;

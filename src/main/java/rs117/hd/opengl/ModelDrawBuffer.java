@@ -14,7 +14,7 @@ import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15C.GL_STREAM_DRAW;
 
 public class ModelDrawBuffer extends GLBuffer {
-	private static final int STAGING_MODEL_DATA_SIZE = 1024;
+	private static final int STAGING_MODEL_DATA_SIZE = 512;
 	private static final int STAGING_MODEL_DATA_COUNT = STAGING_MODEL_DATA_SIZE / 2;
 
 	private int[] stagingModelData = new int[STAGING_MODEL_DATA_SIZE];
@@ -90,16 +90,14 @@ public class ModelDrawBuffer extends GLBuffer {
 
 	private void writeIndices(int[] modelData, int modelCount) {
 		final IntBuffer buffer = indicesData.getBuffer();
-		synchronized (buffer) {
-			int modelDataOffset = 0;
-			for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
-				int renderBufferOffset = modelData[modelDataOffset++];
-				int vertexCount = modelData[modelDataOffset++];
+		int modelDataOffset = 0;
+		for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
+			int renderBufferOffset = modelData[modelDataOffset++];
+			int vertexCount = modelData[modelDataOffset++];
 
-				for (int v = 0; v < vertexCount; v++) {
-					buffer.put(renderBufferOffset++);
-					indicesCount++;
-				}
+			for (int v = 0; v < vertexCount; v++) {
+				buffer.put(renderBufferOffset++);
+				indicesCount++;
 			}
 		}
 	}
