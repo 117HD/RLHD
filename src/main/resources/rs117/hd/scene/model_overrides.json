@@ -42241,11 +42241,26 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "DF_CAVE_SNOW01_ROCKS04",
-      "STRANGLER_DUGUPSOIL_07"
+      "STRANGLER_DUGUPSOIL_07",
+      "_100_GOBLINDUGUPSOIL1_GREY",
+      "DUGUPSOIL2_GREY",
+      "DUGUPSOIL1_GREY",
+      "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
+      "DF_CAVE_SNOW01_ENTRANCE03"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
     "uvOrientation": 200
+  },
+  {
+    "description": "Hueycoatl Ugly Shadow Body Cave",
+    "castShadows": false,
+    "areas": [ "Hueycoatl Ugly Shadow Fix" ],
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
+      "DF_CAVE_SNOW01_ENTRANCE03"
+    ]
   },
   {
     "description": "Hueycoatl Rocks",
