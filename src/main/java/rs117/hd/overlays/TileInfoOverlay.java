@@ -884,7 +884,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int columns = clamp(round(sqrt(colors.length / 5f)), 3, 8);
 				int rows = ceil(colors.length / (float) columns);
 
-				StringBuilder str = new StringBuilder();
+				StringBuilder str = new StringBuilder("\nFace colors: ").append(colors.length);
 				for (int i = 0; i < rows; i++) {
 					str.append("\n\t<tt>");
 					for (int j = 0; j < columns; j++) {
@@ -894,7 +894,23 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					}
 				}
 
-				return "\nFace colors: " + colors.length + str;
+				if (model.getFaceTextures() != null) {
+					var textureIds = new HashSet<Integer>();
+					for (int textureId : model.getFaceTextures())
+						textureIds.add(textureId);
+					textureIds.remove(-1);
+					if (!textureIds.isEmpty()) {
+						str.append("\nTexture IDs: [ ");
+						String prefix = "";
+						for (int id : textureIds) {
+							str.append(prefix).append(id);
+							prefix = ", ";
+						}
+						str.append("]");
+					}
+				}
+
+				return str.toString();
 		}
 
 		return "";
