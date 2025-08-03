@@ -502,9 +502,8 @@ public class SceneUploader {
 
 		GameObject[] gameObjects = tile.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
-			if (gameObject == null) {
+			if (gameObject == null)
 				continue;
-			}
 
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model) {

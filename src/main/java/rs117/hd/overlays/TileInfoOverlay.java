@@ -857,10 +857,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		switch (mode) {
 			case MODE_TILE_INFO:
 				return "  " + (
-					renderable instanceof Model ?
-						"<col=#00ff00>static</col>" :
-						(renderable instanceof DynamicObject || renderable instanceof Actor) ? "<col=#ff0000>dynamic</col>" :
-							"<col=#ff0000>maybe dynamic</col>"
+					renderable instanceof Model ? "<col=#00ff00>static</col>" :
+						(renderable instanceof DynamicObject || renderable instanceof Actor) ?
+							"<col=#ff0000>dynamic</col>" : "<col=#ffff00>maybe dynamic</col>"
 				);
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();

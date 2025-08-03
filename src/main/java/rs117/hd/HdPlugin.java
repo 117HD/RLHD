@@ -3099,9 +3099,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int plane = ModelHash.getPlane(hash);
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
-			// The model is part of the static scene buffer
-			assert model == renderable;
-
+			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
+			// is reuploaded without triggering the LOADING game state, it's possible for static objects which may only temporarily become
+			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
+			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
+			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
 			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
