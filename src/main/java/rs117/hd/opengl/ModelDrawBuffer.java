@@ -90,14 +90,16 @@ public class ModelDrawBuffer extends GLBuffer {
 
 	private void writeIndices(int[] modelData, int modelCount) {
 		final IntBuffer buffer = indicesData.getBuffer();
-		int modelDataOffset = 0;
-		for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
-			int renderBufferOffset = modelData[modelDataOffset++];
-			int vertexCount = modelData[modelDataOffset++];
+		synchronized (buffer) {
+			int modelDataOffset = 0;
+			for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
+				int renderBufferOffset = modelData[modelDataOffset++];
+				int vertexCount = modelData[modelDataOffset++];
 
-			for (int v = 0; v < vertexCount; v++) {
-				buffer.put(renderBufferOffset++);
-				indicesCount++;
+				for (int v = 0; v < vertexCount; v++) {
+					buffer.put(renderBufferOffset++);
+					indicesCount++;
+				}
 			}
 		}
 	}

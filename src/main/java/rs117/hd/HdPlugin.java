@@ -229,6 +229,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, PROCESSOR_COUNT - 2));
 
+	public static boolean FORCE_JOBS_RUN_SYNCHRONOUSLY = false;
+
 	@Inject
 	private Client client;
 

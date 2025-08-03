@@ -35,7 +35,12 @@ public abstract class Job implements Runnable {
 		prepare();
 
 		inFlight = true;
-		HdPlugin.THREAD_POOL.execute(this);
+
+		if (HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY) {
+			doWork();
+		} else {
+			HdPlugin.THREAD_POOL.execute(this);
+		}
 	}
 
 	@SneakyThrows

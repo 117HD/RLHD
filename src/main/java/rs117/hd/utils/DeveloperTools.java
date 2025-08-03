@@ -153,6 +153,10 @@ public class DeveloperTools implements KeyListener {
 					keyManager.unregisterKeyListener(this);
 				}
 				break;
+			case "togglejobs":
+				HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY = !HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY;
+				log.debug("HdPlugin.FORCES_JOBS_RUN_SYNCHRONOUSLY = {}", HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY);
+				break;
 		}
 	}
 
