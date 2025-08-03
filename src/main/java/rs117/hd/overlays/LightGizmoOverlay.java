@@ -39,7 +39,6 @@ import rs117.hd.scene.lights.LightType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.Mat4;
 
-import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -193,15 +192,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		Mat4.mul(projectionMatrix, Mat4.translate(.5f, .5f, .5f));
 		Mat4.mul(projectionMatrix, Mat4.scale(.5f, -.5f, .5f));
 		// NDC clip space
-		Mat4.mul(projectionMatrix, Mat4.scale(client.getScale(), client.getScale(), 1));
-		Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-		Mat4.mul(projectionMatrix, Mat4.rotateX(plugin.sceneCamera.getPitch()));
-		Mat4.mul(projectionMatrix, Mat4.rotateY(plugin.sceneCamera.getYaw()));
-		Mat4.mul(projectionMatrix, Mat4.translate(
-			-plugin.sceneCamera.getPositionX(),
-			-plugin.sceneCamera.getPositionY(),
-			-plugin.sceneCamera.getPositionZ()
-		));
+		Mat4.mul(projectionMatrix, plugin.sceneCamera.getViewProjMatrix());
 
 		float[] inverseProjection = null;
 		try {
