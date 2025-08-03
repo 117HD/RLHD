@@ -21,8 +21,10 @@ public class SceneView {
 	private static final int VIEW_PROJ_MATRIX_DIRTY = 1 << 2;
 	private static final int INV_VIEW_PROJ_MATRIX_DIRTY = 1 << 3;
 	private static final int FRUSTUM_PLANES_DIRTY = 1 << 4;
+	private static final int TILE_VISIBILITY_DIRTY = 1 << 5;
 
-	private static final int VIEW_PROJ_CHANGED = VIEW_PROJ_MATRIX_DIRTY | INV_VIEW_PROJ_MATRIX_DIRTY | FRUSTUM_PLANES_DIRTY;
+	private static final int VIEW_PROJ_CHANGED =
+		VIEW_PROJ_MATRIX_DIRTY | INV_VIEW_PROJ_MATRIX_DIRTY | FRUSTUM_PLANES_DIRTY | TILE_VISIBILITY_DIRTY;
 	private static final int PROJ_CHANGED = PROJECTION_MATRIX_DIRTY | VIEW_PROJ_CHANGED;
 	private static final int VIEW_CHANGED = VIEW_MATRIX_DIRTY | VIEW_PROJ_CHANGED;
 
@@ -47,7 +49,11 @@ public class SceneView {
 	private float farPlane = 0.0f;
 	private boolean isOrthographic = false;
 
-	public enum VisibilityResult { UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE }
+	public enum VisibilityResult {
+		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE;
+
+		public boolean isKnown() { return this == HIDDEN || this == VISIBLE; }
+	}
 
 	private VisibilityResult[] tileVisibility = new VisibilityResult[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 
@@ -233,6 +239,7 @@ public class SceneView {
 		calculateFrustumPlanes();
 		clearJob.submit();
 
+		dirtyFlags &= ~TILE_VISIBILITY_DIRTY;
 		for (AsyncCullingJob planeJob : cullingJobs) {
 			planeJob.tileHeights = ctx.scene.getTileHeights()[planeJob.plane];
 			planeJob.underwaterDepthLevels =
@@ -247,7 +254,8 @@ public class SceneView {
 		final int tileIdx = (plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE) + (tileExX * EXTENDED_SCENE_SIZE) + tileExY;
 		VisibilityResult result = tileVisibility[tileIdx];
 
-		if (result != VisibilityResult.UNKNOWN && result != VisibilityResult.IN_PROGRESS) {
+		// Check if the result is usable & known
+		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result != null && result.isKnown()) {
 			frameTimer.end(Timer.VISIBILITY_CHECK);
 			return result == VisibilityResult.VISIBLE;
 		}

@@ -530,12 +530,26 @@ public interface HdPluginConfig extends Config
 		return VanillaShadowMode.SHOW_IN_PVM;
 	}
 
+	String KEY_SHADOW_CULLING = "shadowCulling";
+	@ConfigItem(
+		keyName = KEY_SHADOW_CULLING,
+		name = "Shadow Culling",
+		description =
+			"Reduces shadows popping in and out at the edge of the screen by performing<br>" +
+			"extra culling to render geometry outside the scene view but within view for shadows, at the cost of higher GPU usage.",
+		position = 12,
+		section = lightingSettings
+	)
+	default boolean shadowCulling() {
+		return false;
+	}
+
 	String KEY_NORMAL_MAPPING = "normalMapping";
 	@ConfigItem(
 		keyName = KEY_NORMAL_MAPPING,
 		name = "Normal Mapping",
 		description = "Affects how light interacts with certain materials. Barely impacts performance.",
-		position = 12,
+		position = 13,
 		section = lightingSettings
 	)
 	default boolean normalMapping() {
@@ -547,7 +561,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
 		name = "Parallax Occlusion Mapping",
 		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
-		position = 13,
+		position = 14,
 		section = lightingSettings
 	)
 	default boolean parallaxOcclusionMapping() {

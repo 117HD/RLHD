@@ -451,6 +451,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
 	public boolean configExpandShadowDraw;
+	public boolean configShadowCulling;
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
@@ -1640,6 +1641,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportWidth = (int) (sceneViewport[2] / sceneViewportScale[0]);
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
+				frameTimer.begin(Timer.SCENE_VIEW);
 				sceneCamera.setZoom(client.getScale());
 				sceneCamera.setNearPlane(NEAR_PLANE);
 				sceneCamera.setViewportWidth(viewportWidth);
@@ -1654,6 +1656,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					uboGlobal.invProjectionMatrix.set(sceneCamera.getInvViewProjMatrix());
 					uboGlobal.upload();
 				}
+				frameTimer.begin(Timer.SCENE_VIEW);
 
 				if (sceneContext.scene == scene) {
 					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
@@ -1680,6 +1683,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					sceneCamera.translateZ(cameraShift[1]);
 				}
 
+				frameTimer.begin(Timer.SCENE_VIEW);
 				directionalLight.setPitch(environmentManager.currentSunAngles[0]);
 				directionalLight.setYaw(PI - environmentManager.currentSunAngles[1]);
 				if (sceneCameraChanged || directionalLight.isViewDirty()) {
@@ -1724,7 +1728,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					directionalLight.setZoom(1.0f);
 					directionalLight.setViewportWidth((int) radius);
 					directionalLight.setViewportHeight((int) radius);
-					directionalLight.performAsyncTileCulling(sceneContext, false);
+
+					if (configShadowCulling) {
+						directionalLight.performAsyncTileCulling(sceneContext, false);
+					}
 
 
 					// Extract the 3rd column from the light view matrix (the float array is column-major).
@@ -1738,6 +1745,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (sceneCameraChanged) {
 					sceneCamera.performAsyncTileCulling(sceneContext, true);
 				}
+				frameTimer.end(Timer.SCENE_VIEW);
 
 				uboCompute.yaw.set(sceneCamera.getYaw());
 				uboCompute.pitch.set(sceneCamera.getPitch());
@@ -1953,7 +1961,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (plane != 0) {
 				directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 			}
-		} else if (plane != 0 && directionalLight.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
+		} else if (plane != 0 && configShadowCulling && directionalLight.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 		frameTimer.end(Timer.DRAW_BUFFER_ADD);
@@ -2650,6 +2658,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
 		configExpandShadowDraw = config.expandShadowDraw();
+		configShadowCulling = config.shadowCulling();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
@@ -2948,7 +2957,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tileExX,
 		int tileExY
 	) {
-		return sceneCamera.isTileVisible(plane, tileExX, tileExY) || directionalLight.isTileVisible(plane, tileExX, tileExY);
+		return sceneCamera.isTileVisible(plane, tileExX, tileExY) || (
+			configShadowCulling && directionalLight.isTileVisible(
+				plane,
+				tileExX,
+				tileExY));
 	}
 
 	/**
