@@ -1699,16 +1699,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					float[] centerXZ = new float[2];
 					for (float[] corner : sceneFrustumCorners) {
-						centerXZ[0] += corner[0];
-						centerXZ[1] += corner[2];
+						add(centerXZ, centerXZ, corner[0], corner[2]);
 					}
 					divide(centerXZ, centerXZ, (float) sceneFrustumCorners.length);
 
 					float radius = 0f;
 					for (float[] corner : sceneFrustumCorners) {
-						float dx = corner[0] - centerXZ[0];
-						float dz = corner[2] - centerXZ[1];
-						radius = Math.max(radius, length(dx, dz));
+						radius = Math.max(radius, length(corner[0] - centerXZ[0], corner[2] - centerXZ[1]));
 					}
 
 					// Offset Center by Half radius
