@@ -30,6 +30,8 @@ public class AsyncUICopy extends Job {
 	private int interfacePbo;
 	@Setter
 	private int interfaceTexture;
+	@Setter
+	private boolean resize;
 	private int width;
 	private int height;
 
@@ -76,13 +78,13 @@ public class AsyncUICopy extends Job {
 			return;
 		}
 
-		timer.begin(Timer.UPLOAD_UI);
+		if (!resize) timer.begin(Timer.UPLOAD_UI);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
 		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
 		glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
-		timer.end(Timer.UPLOAD_UI);
+		if (!resize) timer.end(Timer.UPLOAD_UI);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		mappedBuffer = null;

@@ -2033,6 +2033,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		boolean resize = !Arrays.equals(uiResolution, resolution);
 		if (resize) {
 			if (configAsyncUICopy) {
+				// Buffers are about to be resized, complete to avoid async job running out of memory in buffer
 				asyncUICopy.complete();
 			}
 
@@ -2062,12 +2063,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				asyncUICopy.setOnPrepareCallback(() -> {
 					asyncUICopy.setInterfacePbo(pboUi);
 					asyncUICopy.setInterfaceTexture(texUi);
+					asyncUICopy.setResize(resize);
 				});
 			}
-			asyncUICopy.submit();
 			// If the window was just resized, upload once synchronously so there is something to show
-			if (resize)
-				asyncUICopy.complete();
+			asyncUICopy.submit(resize);
+			if (resize) {
+				asyncUICopy.complete(true);
+			}
 			return;
 		}
 

@@ -27,8 +27,10 @@ public abstract class Job implements Runnable {
 
 	public boolean hasCompleteCallback() { return onCompleteCallback != null; }
 
+	public void submit() { submit(false); }
+
 	@SneakyThrows
-	public void submit() {
+	public void submit(boolean runSynchronously) {
 		complete(true);
 
 		try {
@@ -43,7 +45,7 @@ public abstract class Job implements Runnable {
 
 		inFlight = true;
 
-		if (HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY) {
+		if (HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY || runSynchronously) {
 			run();
 		} else {
 			completionSema.acquire();
