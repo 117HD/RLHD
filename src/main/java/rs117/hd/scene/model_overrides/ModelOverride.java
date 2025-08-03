@@ -37,7 +37,7 @@ public class ModelOverride
 
 	// When, where or what the override should apply to
 	public SeasonalTheme seasonalTheme;
-	@JsonAdapter(AABB.JsonAdapter.class)
+	@JsonAdapter(AABB.Adapter.class)
 	public AABB[] areas = {};
 	@JsonAdapter(GamevalManager.NpcAdapter.class)
 	public Set<Integer> npcIds = EMPTY;
@@ -75,7 +75,7 @@ public class ModelOverride
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
 
-	@JsonAdapter(AABB.JsonAdapter.class)
+	@JsonAdapter(AABB.Adapter.class)
 	public AABB[] hideInAreas = {};
 
 	public Map<Material, ModelOverride> materialOverrides;

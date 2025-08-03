@@ -223,7 +223,7 @@ public class AABB {
 	}
 
 	@Slf4j
-	public static class JsonAdapter extends TypeAdapter<AABB[]> {
+	public static class Adapter extends TypeAdapter<AABB[]> {
 		@Override
 		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();

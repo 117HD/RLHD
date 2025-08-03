@@ -129,6 +129,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -503,7 +504,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	protected void startUp() {
-		gson = injector.getInstance(Gson.class).newBuilder().setLenient().create();
+		gson = GsonUtils.wrap(injector.getInstance(Gson.class));
 
 		clientThread.invoke(() -> {
 			try {

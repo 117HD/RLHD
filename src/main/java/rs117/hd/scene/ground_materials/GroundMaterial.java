@@ -48,7 +48,7 @@ public class GroundMaterial {
 	}
 
 	@Slf4j
-	public static class JsonAdapter extends TypeAdapter<GroundMaterial> {
+	public static class Adapter extends TypeAdapter<GroundMaterial> {
 		@Override
 		public GroundMaterial read(JsonReader in) throws IOException {
 			if (in.peek() == JsonToken.NULL)
