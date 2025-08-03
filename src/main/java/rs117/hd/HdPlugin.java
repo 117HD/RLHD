@@ -49,6 +49,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -91,6 +93,7 @@ import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
+import rs117.hd.opengl.ModelDrawBuffer;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
@@ -137,13 +140,13 @@ import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.SceneView;
 import rs117.hd.utils.ShaderRecompile;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -166,6 +169,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
+
+	public static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
@@ -221,6 +226,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		GL_RGBA8,
 		GL_RGBA // should be guaranteed
 	};
+
+	public static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, PROCESSOR_COUNT - 2));
 
 	@Inject
 	private Client client;
@@ -414,6 +421,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private GpuIntBuffer[] modelSortingBuffers;
 	private SharedGLBuffer[] hModelSortingBuffers;
 
+	private final ModelDrawBuffer sceneDrawBuffer = new ModelDrawBuffer("Scene");
+	private final ModelDrawBuffer directionalDrawBuffer = new ModelDrawBuffer("Directional Shadow");
+
 	private final UBOGlobal uboGlobal = new UBOGlobal();
 	private final UBOLights uboLights = new UBOLights();
 	private final UBOCompute uboCompute = new UBOCompute();
@@ -475,13 +485,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
-	public final float[] cameraPosition = new float[3];
-	public final float[] cameraOrientation = new float[2];
+	public SceneView sceneCamera;
+	public SceneView directionalLight;
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
-	private int visibilityCheckZoom;
-	private boolean tileVisibilityCached;
-	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	@Getter
 	private int drawnTileCount;
@@ -705,6 +712,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				isInHouse = false;
 				isInChambersOfXeric = false;
 
+				sceneCamera = new SceneView(frameTimer, false);
+				directionalLight = new SceneView(frameTimer, true);
+
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
 					client.setGameState(GameState.LOADING);
@@ -735,7 +745,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
 
-			asyncUICopy.complete();
+			asyncUICopy.complete(true);
 			developerTools.deactivate();
 			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
@@ -1199,6 +1209,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		hModelPassthroughBuffer.initialize();
 
+		sceneDrawBuffer.initialize();
+		directionalDrawBuffer.initialize();
+
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
@@ -1215,6 +1228,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		hRenderBufferNormals.destroy();
 
 		hModelPassthroughBuffer.destroy();
+
+		sceneDrawBuffer.destroy();
+		directionalDrawBuffer.destroy();
 
 		uboGlobal.destroy();
 		uboLights.destroy();
@@ -1605,6 +1621,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				drawnStaticRenderableCount = 0;
 				drawnDynamicRenderableCount = 0;
 
+				sceneDrawBuffer.clear();
+				directionalDrawBuffer.clear();
+
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
 				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
@@ -1617,18 +1636,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			if (updateUniforms) {
-				float[] newCameraPosition = { (float) cameraX, (float) cameraY, (float) cameraZ };
-				float[] newCameraOrientation = { (float) cameraYaw, (float) cameraPitch };
-				int newZoom = configShadowsEnabled && configExpandShadowDraw ? client.get3dZoom() / 2 : client.get3dZoom();
-				if (!Arrays.equals(cameraPosition, newCameraPosition) ||
-					!Arrays.equals(cameraOrientation, newCameraOrientation) ||
-					visibilityCheckZoom != newZoom ||
-					drawDistanceChanged
-				) {
-					copyTo(cameraPosition, newCameraPosition);
-					copyTo(cameraOrientation, newCameraOrientation);
-					visibilityCheckZoom = newZoom;
-					tileVisibilityCached = false;
+				// Calculate the viewport dimensions before scaling in order to include the extra padding
+				int viewportWidth = (int) (sceneViewport[2] / sceneViewportScale[0]);
+				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
+
+				sceneCamera.setZoom(client.getScale());
+				sceneCamera.setNearPlane(NEAR_PLANE);
+				sceneCamera.setViewportWidth(viewportWidth);
+				sceneCamera.setViewportHeight(viewportHeight);
+				sceneCamera.setPositionX((float) cameraX).setPositionY((float) cameraY).setPositionZ((float) cameraZ);
+				sceneCamera.setYaw((float) cameraYaw).setPitch((float) cameraPitch);
+				boolean sceneCameraChanged = sceneCamera.isDirty();
+
+				if (sceneCameraChanged) {
+					uboGlobal.cameraPos.set(sceneCamera.getPosition());
+					uboGlobal.projectionMatrix.set(sceneCamera.getViewProjMatrix());
+					uboGlobal.invProjectionMatrix.set(sceneCamera.getInvViewProjMatrix());
+					uboGlobal.upload();
 				}
 
 				if (sceneContext.scene == scene) {
@@ -1652,18 +1676,77 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
 					cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
-					cameraPosition[0] += cameraShift[0];
-					cameraPosition[2] += cameraShift[1];
+					sceneCamera.translateX(cameraShift[0]);
+					sceneCamera.translateZ(cameraShift[1]);
 				}
 
-				uboCompute.yaw.set(cameraOrientation[0]);
-				uboCompute.pitch.set(cameraOrientation[1]);
+				directionalLight.setPitch(environmentManager.currentSunAngles[0]);
+				directionalLight.setYaw(PI - environmentManager.currentSunAngles[1]);
+				if (sceneCameraChanged || directionalLight.isViewDirty()) {
+					// Define a Finite Plane before extracting corners
+					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
+
+					int shadowDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE * (configExpandShadowDraw ? 2 : 1);
+					int maxDistance = Math.min(shadowDistance, (int) sceneCamera.getFarPlane());
+
+					float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
+					HDUtils.clipFrustumToDistance(sceneFrustumCorners, maxDistance);
+					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+
+					float[] centerXZ = new float[2];
+					for (float[] corner : sceneFrustumCorners) {
+						centerXZ[0] += corner[0];
+						centerXZ[1] += corner[2];
+					}
+					divide(centerXZ, centerXZ, (float) sceneFrustumCorners.length);
+
+					float radius = 0f;
+					for (float[] corner : sceneFrustumCorners) {
+						float dx = corner[0] - centerXZ[0];
+						float dz = corner[2] - centerXZ[1];
+						radius = Math.max(radius, length(dx, dz));
+					}
+
+					// Offset Center by Half radius
+					{
+						float[] cameraToCenterXZ = subtract(
+							centerXZ,
+							new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
+						);
+						normalize(cameraToCenterXZ, cameraToCenterXZ);
+						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * 0.25f);
+						add(centerXZ, centerXZ, cameraToCenterXZ);
+					}
+
+					directionalLight.setPositionX(centerXZ[0]);
+					directionalLight.setPositionZ(centerXZ[1]);
+					directionalLight.setNearPlane(100000);
+					directionalLight.setZoom(1.0f);
+					directionalLight.setViewportWidth((int) radius);
+					directionalLight.setViewportHeight((int) radius);
+					directionalLight.performAsyncTileCulling(sceneContext, false);
+
+
+					// Extract the 3rd column from the light view matrix (the float array is column-major).
+					// This produces the light's direction vector in world space, which we negate in order to
+					// get the light's direction vector pointing away from each fragment
+					uboGlobal.lightDir.set(directionalLight.getForwardDirection());
+					uboGlobal.lightProjectionMatrix.set(directionalLight.getViewProjMatrix());
+					uboGlobal.upload();
+				}
+
+				if (sceneCameraChanged) {
+					sceneCamera.performAsyncTileCulling(sceneContext, true);
+				}
+
+				uboCompute.yaw.set(sceneCamera.getYaw());
+				uboCompute.pitch.set(sceneCamera.getPitch());
 				uboCompute.centerX.set(client.getCenterX());
 				uboCompute.centerY.set(client.getCenterY());
 				uboCompute.zoom.set(client.getScale());
-				uboCompute.cameraX.set(cameraPosition[0]);
-				uboCompute.cameraY.set(cameraPosition[1]);
-				uboCompute.cameraZ.set(cameraPosition[2]);
+				uboCompute.cameraX.set(sceneCamera.getPositionX());
+				uboCompute.cameraY.set(sceneCamera.getPositionY());
+				uboCompute.cameraZ.set(sceneCamera.getPositionZ());
 
 				uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
 				uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
@@ -1677,28 +1760,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), LOCAL_TILE_SIZE);
 				}
-
-				// Calculate the viewport dimensions before scaling in order to include the extra padding
-				int viewportWidth = (int) (sceneViewport[2] / sceneViewportScale[0]);
-				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
-
-				// Calculate projection matrix
-				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-				if (orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
-
-				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.projectionMatrix.set(projectionMatrix);
-				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
-				uboGlobal.upload();
 			}
 		}
 
@@ -1767,8 +1828,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
-		tileVisibilityCached = true;
-
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
@@ -1800,6 +1859,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				hModelSortingBuffers[i].upload(buffer);
 				buffer.clear();
 			}
+
+			sceneDrawBuffer.upload();
+			directionalDrawBuffer.upload();
 
 			// Output buffers
 			// each vertex is an ivec4, which is 16 bytes
@@ -1868,10 +1930,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawScenePaint(Scene scene, SceneTilePaint paint, int plane, int tileX, int tileY) {
-		if (redrawPreviousFrame || paint.getBufferLen() <= 0)
-			return;
-
 		int vertexCount = paint.getBufferLen();
+		if (redrawPreviousFrame || vertexCount <= 0)
+			return;
 
 		++numPassthroughModels;
 		modelPassthroughBuffer
@@ -1885,6 +1946,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(tileX * LOCAL_TILE_SIZE)
 			.put(0)
 			.put(tileY * LOCAL_TILE_SIZE);
+
+		frameTimer.begin(Timer.DRAW_BUFFER_ADD);
+		if (sceneCamera.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
+			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
+			if (plane != 0) {
+				directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
+			}
+		} else if (plane != 0 && directionalLight.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
+			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
+		}
+		frameTimer.end(Timer.DRAW_BUFFER_ADD);
 
 		renderBufferOffset += vertexCount;
 		drawnTileCount++;
@@ -1900,7 +1972,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
-		if (redrawPreviousFrame || model.getBufferLen() <= 0)
+		int bufferLength = model.getBufferLen();
+		if (redrawPreviousFrame || bufferLength <= 0)
 			return;
 
 		final int localX = tileX * LOCAL_TILE_SIZE;
@@ -1911,7 +1984,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		b.ensureCapacity(16);
 		IntBuffer buffer = b.getBuffer();
 
-		int bufferLength = model.getBufferLen();
 
 		// we packed a boolean into the buffer length of tiles so we can tell
 		// which tiles have procedurally-generated underwater terrain.
@@ -1935,6 +2007,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			buffer.put(0);
 			buffer.put(localX).put(localY).put(localZ);
 
+			frameTimer.begin(Timer.DRAW_BUFFER_ADD);
+			sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
+			frameTimer.end(Timer.DRAW_BUFFER_ADD);
+
 			renderBufferOffset += bufferLength;
 			drawnTileCount++;
 		}
@@ -1947,6 +2023,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		buffer.put(renderBufferOffset);
 		buffer.put(0);
 		buffer.put(localX).put(localY).put(localZ);
+
+		frameTimer.begin(Timer.DRAW_BUFFER_ADD);
+		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
+		frameTimer.end(Timer.DRAW_BUFFER_ADD);
 
 		renderBufferOffset += bufferLength;
 		drawnTileCount++;
@@ -1981,10 +2061,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (configAsyncUICopy) {
 			// Start copying the UI on a different thread, to be uploaded during the next frame
-			asyncUICopy.prepare(pboUi, texUi);
+			if (!asyncUICopy.hasPrepareCallback()) {
+				asyncUICopy.setOnPrepareCallback(() -> {
+					asyncUICopy.setInterfacePbo(pboUi);
+					asyncUICopy.setInterfaceTexture(texUi);
+				});
+			}
+			asyncUICopy.submit();
 			// If the window was just resized, upload once synchronously so there is something to show
 			if (resize)
-				asyncUICopy.complete();
+				asyncUICopy.complete(true);
 			return;
 		}
 
@@ -2145,13 +2231,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 			uboGlobal.elapsedTime.set((float) (elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
-			float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
-			Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
-			// Extract the 3rd column from the light view matrix (the float array is column-major).
-			// This produces the light's direction vector in world space, which we negate in order to
-			// get the light's direction vector pointing away from each fragment
-			uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
-
 			if (configColorFilter != ColorFilter.NONE) {
 				uboGlobal.colorFilter.set(configColorFilter.ordinal());
 				uboGlobal.colorFilterPrevious.set(configColorFilterPrevious.ordinal());
@@ -2171,45 +2250,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				shadowProgram.use();
 
-				final int camX = cameraFocalPoint[0];
-				final int camY = cameraFocalPoint[1];
-
-				final int drawDistanceSceneUnits = min(config.shadowDistance().getValue(), getDrawDistance()) * LOCAL_TILE_SIZE / 2;
-				final int east = min(camX + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
-				final int west = max(camX - drawDistanceSceneUnits, 0);
-				final int north = min(camY + drawDistanceSceneUnits, LOCAL_TILE_SIZE * SCENE_SIZE);
-				final int south = max(camY - drawDistanceSceneUnits, 0);
-				final int width = east - west;
-				final int height = north - south;
-				final int depthScale = 10000;
-
-				final int maxDrawDistance = 90;
-				final float maxScale = 0.7f;
-				final float minScale = 0.4f;
-				final float scaleMultiplier = 1.0f - (getDrawDistance() / (maxDrawDistance * maxScale));
-				float scale = mix(maxScale, minScale, scaleMultiplier);
-				float[] lightProjectionMatrix = Mat4.identity();
-				Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-				Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
-				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
-				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
-
-				uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
-				uboGlobal.upload();
-
 				glEnable(GL_CULL_FACE);
 				glEnable(GL_DEPTH_TEST);
 
 				glBindVertexArray(vaoScene);
-				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+				directionalDrawBuffer.draw();
 
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);
 
 				frameTimer.end(Timer.RENDER_SHADOWS);
-			} else {
-				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
-				uboGlobal.upload();
 			}
 
 			sceneProgram.use();
@@ -2272,16 +2322,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// Draw the rest of the scene with depth testing, but not against itself
 				glDepthMask(false);
-				glDrawArrays(
-					GL_TRIANGLES,
-					sceneContext.staticVertexCount,
-					renderBufferOffset - sceneContext.staticVertexCount
-				);
 			} else {
 				// Draw everything without depth testing
 				glDisable(GL_DEPTH_TEST);
-				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 			}
+
+			// Draw all Scene Geometry
+			sceneDrawBuffer.draw();
 
 			frameTimer.end(Timer.RENDER_SCENE);
 
@@ -2526,7 +2573,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			initTileHeightMap(scene);
 		}
 
-		tileVisibilityCached = false;
 		lightManager.loadSceneLights(nextSceneContext, sceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
@@ -2712,7 +2758,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 									clearModelCache = reloadScene = true;
 								break;
 							case KEY_ASYNC_UI_COPY:
-								asyncUICopy.complete();
+								asyncUICopy.complete(true);
 								break;
 						}
 
@@ -2902,103 +2948,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tileExX,
 		int tileExY
 	) {
-		if (sceneContext == null)
-			return false;
-
-		if (orthographicProjection)
-			return true;
-
-		if (tileVisibilityCached)
-			return tileIsVisible[plane][tileExX][tileExY];
-
-		int[][][] tileHeights = scene.getTileHeights();
-		int x = ((tileExX - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
-		int z = ((tileExY - SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
-		int y = GROUND_MIN_Y + max(
-			tileHeights[plane][tileExX][tileExY],
-			tileHeights[plane][tileExX][tileExY + 1],
-			tileHeights[plane][tileExX + 1][tileExY],
-			tileHeights[plane][tileExX + 1][tileExY + 1]
-		);
-
-		if (sceneContext.scene == scene) {
-			int depthLevel = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
-			if (depthLevel > 0)
-				y += ProceduralGenerator.DEPTH_LEVEL_SLOPE[depthLevel - 1] - GROUND_MIN_Y;
-		}
-
-		x -= (int) cameraPosition[0];
-		y -= (int) cameraPosition[1];
-		z -= (int) cameraPosition[2];
-
-		final int tileRadius = 96; // ~ 64 * sqrt(2)
-		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
-		final int rightClip = client.getRasterizer3D_clipMidX2();
-		final int topClip = client.getRasterizer3D_clipNegativeMidY();
-
-		// Transform the local coordinates using the yaw (horizontal rotation)
-		final int transformedZ = yawCos * z - yawSin * x >> 16;
-		final int depth = pitchCos * tileRadius + pitchSin * y + pitchCos * transformedZ >> 16;
-
-		boolean visible = false;
-
-		// Check if the tile is within the near plane of the frustum
-		if (depth > NEAR_PLANE) {
-			final int transformedX = z * yawSin + yawCos * x >> 16;
-			final int leftPoint = transformedX - tileRadius;
-			// Check left and right bounds
-			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
-				final int rightPoint = transformedX + tileRadius;
-				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
-					// Transform the local Y using pitch (vertical rotation)
-					final int transformedY = pitchCos * y - transformedZ * pitchSin;
-					final int bottomPoint = transformedY + pitchSin * tileRadius >> 16;
-					// Check top bound (we skip bottom bound to avoid computing model heights)
-					visible = bottomPoint * visibilityCheckZoom > topClip * depth;
-				}
-			}
-		}
-
-		return tileIsVisible[plane][tileExX][tileExY] = visible;
-	}
-
-	/**
-	 * Check is a model is visible and should be drawn.
-	 */
-	private boolean isOutsideViewport(Model model, int modelRadius, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
-		if (sceneContext == null)
-			return true;
-
-		if (orthographicProjection)
-			return false;
-
-		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
-		final int rightClip = client.getRasterizer3D_clipMidX2();
-		final int topClip = client.getRasterizer3D_clipNegativeMidY();
-		final int bottomClip = client.getRasterizer3D_clipMidY2();
-
-		final int transformedZ = yawCos * z - yawSin * x >> 16;
-		final int depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ >> 16;
-
-		if (depth > NEAR_PLANE) {
-			final int transformedX = z * yawSin + yawCos * x >> 16;
-			final int leftPoint = transformedX - modelRadius;
-			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
-				final int rightPoint = transformedX + modelRadius;
-				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
-					final int transformedY = pitchCos * y - transformedZ * pitchSin >> 16;
-					final int transformedRadius = pitchSin * modelRadius;
-					final int bottomExtent = pitchCos * model.getBottomY() + transformedRadius >> 16;
-					final int bottomPoint = transformedY + bottomExtent;
-					if (bottomPoint * visibilityCheckZoom > topClip * depth) {
-						final int topExtent = pitchCos * model.getModelHeight() + transformedRadius >> 16;
-						final int topPoint = transformedY - topExtent;
-						return topPoint * visibilityCheckZoom >= bottomClip * depth; // inverted check
-					}
-				}
-			}
-		}
-		return true;
+		return sceneCamera.isTileVisible(plane, tileExX, tileExY) || directionalLight.isTileVisible(plane, tileExX, tileExY);
 	}
 
 	/**
@@ -3065,21 +3015,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		model.calculateBoundsCylinder();
 		int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
-		if (projection instanceof IntProjection) {
-			var p = (IntProjection) projection;
-			if (isOutsideViewport(
-				model,
-				modelRadius,
-				p.getPitchSin(),
-				p.getPitchCos(),
-				p.getYawSin(),
-				p.getYawCos(),
-				x - p.getCameraX(),
-				y - p.getCameraY(),
-				z - p.getCameraZ()
-			)) {
-				return;
-			}
+		boolean isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
+		boolean isVisibleInShadow = isVisibleInScene;
+		if (!isVisibleInShadow) {
+			isVisibleInShadow = directionalLight.isModelVisible(model, x, y, z);
+		}
+
+		if (!isVisibleInScene && !isVisibleInShadow) {
+			return;
 		}
 
 		client.checkClickbox(projection, model, orientation, x, y, z, hash);
@@ -3224,6 +3167,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		bufferForTriangles(faceCount)
 			.ensureCapacity(8)
 			.put(eightIntWrite);
+
+		if (isVisibleInScene) {
+			frameTimer.begin(Timer.DRAW_BUFFER_ADD);
+			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+			frameTimer.end(Timer.DRAW_BUFFER_ADD);
+		}
+		frameTimer.begin(Timer.DRAW_BUFFER_ADD);
+		directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+		frameTimer.end(Timer.DRAW_BUFFER_ADD);
+
 		renderBufferOffset += faceCount * 3;
 	}
 
@@ -3272,7 +3225,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Upload the UI which we began copying during the previous frame
 		if (configAsyncUICopy)
-			asyncUICopy.complete();
+			asyncUICopy.complete(true);
 
 		if (client.getScene() == null)
 			return;

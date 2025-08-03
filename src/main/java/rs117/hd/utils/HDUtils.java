@@ -38,7 +38,18 @@ import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
-import static rs117.hd.utils.MathUtils.*;
+import static rs117.hd.utils.MathUtils.DEG_TO_RAD;
+import static rs117.hd.utils.MathUtils.add;
+import static rs117.hd.utils.MathUtils.cross;
+import static rs117.hd.utils.MathUtils.distanceToPlane;
+import static rs117.hd.utils.MathUtils.length;
+import static rs117.hd.utils.MathUtils.max;
+import static rs117.hd.utils.MathUtils.min;
+import static rs117.hd.utils.MathUtils.multiply;
+import static rs117.hd.utils.MathUtils.normalize;
+import static rs117.hd.utils.MathUtils.slice;
+import static rs117.hd.utils.MathUtils.subtract;
+import static rs117.hd.utils.MathUtils.vec;
 
 @Slf4j
 @Singleton
@@ -345,5 +356,135 @@ public class HDUtils {
 			ColorUtils.unpackRawHsl(out, hsl);
 		}
 		return hsl;
+	}
+
+	public static boolean isSphereInsideFrustum(float x, float y, float z, float radius, float[][] cullingPlanes) {
+		for (float[] plane : cullingPlanes) {
+			if (distanceToPlane(plane, x, y, z) < -radius) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean isModelVisible(int x, int y, int z, Model model, float[][] cullingPlanes) {
+		final int bottom = y - model.getBottomY();
+		final int radius = model.getRadius();
+		return isAABBVisible(x - radius, bottom, z - radius, x + radius, bottom + model.getModelHeight(), z + radius, cullingPlanes);
+	}
+
+	public static boolean isAABBVisible(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, float[][] cullingPlanes) {
+		for (float[] plane : cullingPlanes) {
+			if (
+				distanceToPlane(plane, minX, minY, minZ) < 0.0 &&
+				distanceToPlane(plane, maxX, minY, minZ) < 0.0 &&
+				distanceToPlane(plane, minX, maxY, minZ) < 0.0 &&
+				distanceToPlane(plane, maxX, maxY, minZ) < 0.0 &&
+				distanceToPlane(plane, minX, minY, maxZ) < 0.0 &&
+				distanceToPlane(plane, maxX, minY, maxZ) < 0.0 &&
+				distanceToPlane(plane, minX, maxY, maxZ) < 0.0 &&
+				distanceToPlane(plane, maxX, maxY, maxZ) < 0.0) {
+				// Not visible - all returned negative
+				return false;
+			}
+		}
+
+		// Potentially visible
+		return true;
+	}
+
+	public static boolean isCylinderVisible(int x, int y, int z, int height, int radius, float[][] cullingPlanes) {
+		final int SAMPLES = 8; // Number of points to test around the circle
+		final float TWO_PI = (float) (2 * Math.PI);
+		final float ANGLE_STEP = TWO_PI / SAMPLES;
+
+		float topY = y + height;
+
+		// Also check cylinder center top and bottom
+		if (isPointInsideFrustum(x, y, z, cullingPlanes) ||
+			isPointInsideFrustum(x, topY, z, cullingPlanes)) {
+			return true;
+		}
+
+		// Check top and bottom circle edge points
+		for (int i = 0; i < SAMPLES; i++) {
+			float angle = i * ANGLE_STEP;
+			float offsetX = (float) Math.cos(angle) * radius;
+			float offsetZ = (float) Math.sin(angle) * radius;
+
+			float px = x + offsetX;
+			float pz = z + offsetZ;
+
+			// Check if this point on top or bottom circle is inside the frustum
+			if (isPointInsideFrustum(px, y, pz, cullingPlanes) ||
+				isPointInsideFrustum(px, topY, pz, cullingPlanes)) {
+				return true;
+			}
+		}
+
+		return false; // All tested points are outside
+	}
+
+	public static boolean IsTileVisible(int x, int z, int h0, int h1, int h2, int h3, float[][] cullingPlanes) {
+		int x1 = x + LOCAL_TILE_SIZE;
+		int z1 = z + LOCAL_TILE_SIZE;
+		for (float[] plane : cullingPlanes) {
+			if (distanceToPlane(plane, x, h0, z) >= 0 ||
+				distanceToPlane(plane, x1, h1, z) >= 0 ||
+				distanceToPlane(plane, x, h2, z1) >= 0 ||
+				distanceToPlane(plane, x1, h3, z1) >= 0) {
+				// At least one point is inside this plane; continue testing other planes
+				continue;
+			}
+			return false; // All points outside this plane
+		}
+		return true;
+	}
+
+	public static boolean isPointInsideFrustum(float x, float y, float z, float[][] cullingPlanes) {
+		for (float[] plane : cullingPlanes) {
+			if (distanceToPlane(plane, x, y, z) < 0) {
+				return false; // Point is outside this plane
+			}
+		}
+		return true;
+	}
+
+	public enum Halfspace {
+		NEGATIVE,
+		ON_PLANE,
+		POSITIVE,
+	}
+
+	public static Halfspace classifyPoint(float[] plane, float x, float y, float z) {
+		float d = distanceToPlane(plane, x, y, z);
+		if (d < 0) return Halfspace.NEGATIVE;
+		if (d > 0) return Halfspace.POSITIVE;
+		return Halfspace.ON_PLANE;
+	}
+
+	public static int tileCoordinateToIndex(int tileExX, int tileExY, int plane) {
+		return (plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE) + (tileExX * EXTENDED_SCENE_SIZE) + tileExY;
+	}
+
+	public static void clipFrustumToDistance(float[][] frustumCorners, float maxDistance) {
+		if (frustumCorners.length != 8) {
+			return;
+		}
+
+		// Clip Far Plane Corners
+		for (int i = 4; i < frustumCorners.length; i++) {
+			float[] nearCorner = frustumCorners[i - 4];
+			float[] farCorner = frustumCorners[i];
+			float[] nearToFarVec = subtract(nearCorner, farCorner);
+			float len = length(nearToFarVec);
+
+			if (len > 1e-5f && len > maxDistance) {
+				normalize(nearToFarVec, nearToFarVec);
+				float[] clipped = multiply(nearToFarVec, maxDistance);
+				frustumCorners[i] = add(clipped, nearCorner);
+			}
+		}
 	}
 }

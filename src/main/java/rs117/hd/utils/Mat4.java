@@ -25,7 +25,11 @@
  */
 package rs117.hd.utils;
 
-import static rs117.hd.utils.MathUtils.*;
+import static rs117.hd.utils.MathUtils.cos;
+import static rs117.hd.utils.MathUtils.divide;
+import static rs117.hd.utils.MathUtils.normalizePlane;
+import static rs117.hd.utils.MathUtils.sin;
+import static rs117.hd.utils.MathUtils.slice;
 
 public class Mat4
 {
@@ -99,6 +103,31 @@ public class Mat4
 		};
 	}
 
+	/**
+	 * Create a perspective projection matrix matching vanilla OSRS projection, with a finite far plane.
+	 *
+	 * @param w viewport width
+	 * @param h viewport height
+	 * @param n near plane
+	 * @param f far plane
+	 * @return 4x4 column-major matrix
+	 */
+	public static float[] perspective(float w, float h, float n, float f) {
+		// Same projection as vanilla, except with slightly more depth precision, and a usable far plane for clipping calculations
+		w = 2 / w;
+		h = 2 / h;
+		float a = (1 + n / f) / (n / f - 1);
+		float b = a * n - n;
+		float c = -1; // perspective divide by -z
+		return new float[]
+			{
+				w, 0, 0, 0,
+				0, h, 0, 0,
+				0, 0, a, c,
+				0, 0, b, 0
+			};
+	}
+
 	public static float[] orthographic(float w, float h, float n)
 	{
 		return new float[] {
@@ -170,6 +199,95 @@ public class Mat4
 		a[3 + 1 * 4] = ai0 * b01 + ai1 * b11 + ai2 * b21 + ai3 * b31;
 		a[3 + 2 * 4] = ai0 * b02 + ai1 * b12 + ai2 * b22 + ai3 * b32;
 		a[3 + 3 * 4] = ai0 * b03 + ai1 * b13 + ai2 * b23 + ai3 * b33;
+	}
+
+	public static float[][] extractFrustumCorners(float[] invViewProj) {
+		float[][] corners = new float[8][3];
+		int index = 0;
+
+		for (int z = 0; z <= 1; z++) {
+			for (int y = 0; y <= 1; y++) {
+				for (int x = 0; x <= 1; x++) {
+					// Convert from 0/1 to -1/+1 for NDC
+					float ndcX = x * 2.0f - 1.0f;
+					float ndcY = y * 2.0f - 1.0f;
+					float ndcZ = z * 2.0f - 1.0f;
+
+					float[] ndc = new float[] { ndcX, ndcY, ndcZ, 1.0f };
+					float[] world = new float[4];
+
+					projectVec(world, invViewProj, ndc);
+
+					// Store world-space XYZ
+					corners[index][0] = world[0];
+					corners[index][1] = world[1];
+					corners[index][2] = world[2];
+					index++;
+				}
+			}
+		}
+
+		return corners;
+	}
+
+	public static void extractPlanes(
+		float[] mat,
+		float[] left, float[] right,
+		float[] bottom, float[] top,
+		float[] near, float[] far,
+		boolean normalize
+	) {
+		// Each plane is defined as: A*x + B*y + C*z + D = 0
+		// Extract rows from the matrix (column-major order)
+		float m00 = mat[0], m01 = mat[4], m02 = mat[8], m03 = mat[12];
+		float m10 = mat[1], m11 = mat[5], m12 = mat[9], m13 = mat[13];
+		float m20 = mat[2], m21 = mat[6], m22 = mat[10], m23 = mat[14];
+		float m30 = mat[3], m31 = mat[7], m32 = mat[11], m33 = mat[15];
+
+		// Left = row3 + row0
+		left[0] = m30 + m00;
+		left[1] = m31 + m01;
+		left[2] = m32 + m02;
+		left[3] = m33 + m03;
+
+		// Right = row3 - row0
+		right[0] = m30 - m00;
+		right[1] = m31 - m01;
+		right[2] = m32 - m02;
+		right[3] = m33 - m03;
+
+		// Bottom = row3 + row1
+		bottom[0] = m30 + m10;
+		bottom[1] = m31 + m11;
+		bottom[2] = m32 + m12;
+		bottom[3] = m33 + m13;
+
+		// Top = row3 - row1
+		top[0] = m30 - m10;
+		top[1] = m31 - m11;
+		top[2] = m32 - m12;
+		top[3] = m33 - m13;
+
+		// Near = row3 + row2
+		near[0] = m30 + m20;
+		near[1] = m31 + m21;
+		near[2] = m32 + m22;
+		near[3] = m33 + m23;
+
+		// Far = row3 - row2
+		far[0] = m30 - m20;
+		far[1] = m31 - m21;
+		far[2] = m32 - m22;
+		far[3] = m33 - m23;
+
+		if (normalize) {
+			normalizePlane(left);
+			normalizePlane(right);
+			normalizePlane(bottom);
+			normalizePlane(top);
+			normalizePlane(near);
+			normalizePlane(far);
+		}
 	}
 
 	/**

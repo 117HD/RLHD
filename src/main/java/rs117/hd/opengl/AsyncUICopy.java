@@ -2,21 +2,19 @@ package rs117.hd.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.utils.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
-public class AsyncUICopy implements Runnable {
+public class AsyncUICopy extends Job {
 	@Inject
 	private Client client;
 
@@ -26,28 +24,26 @@ public class AsyncUICopy implements Runnable {
 	@Inject
 	private FrameTimer timer;
 
-	private final ExecutorService executor = Executors.newSingleThreadExecutor();
-	private final Semaphore completionSemaphore = new Semaphore(0);
-
 	private IntBuffer mappedBuffer;
 	private int[] pixels;
+	@Setter
 	private int interfacePbo;
+	@Setter
 	private int interfaceTexture;
 	private int width;
 	private int height;
 
 	@Override
-	public void run() {
+	protected void doWork() {
 		long time = System.nanoTime();
 		mappedBuffer.put(pixels, 0, width * height);
 		time = System.nanoTime() - time;
-		completionSemaphore.release();
 		timer.add(Timer.COPY_UI, time);
 	}
 
-	public void prepare(int interfacePbo, int interfaceTex) {
+	protected void prepare() {
 		// Ensure there isn't already another UI copy in progress
-		if (mappedBuffer != null)
+		if (mappedBuffer != null || interfacePbo == 0 || interfaceTexture == 0)
 			return;
 
 		timer.begin(Timer.MAP_UI_BUFFER);
@@ -60,35 +56,20 @@ public class AsyncUICopy implements Runnable {
 			return;
 		}
 
-		this.interfacePbo = interfacePbo;
-		this.interfaceTexture = interfaceTex;
 		this.mappedBuffer = buffer.asIntBuffer();
 
 		var provider = client.getBufferProvider();
 		this.pixels = provider.getPixels();
 		this.width = provider.getWidth();
 		this.height = provider.getHeight();
-
-		executor.execute(this);
 	}
 
-	public boolean complete() {
-		if (mappedBuffer == null)
-			return false;
-
-		try {
-			// It shouldn't take this long even in the worst case
-			boolean acquired = completionSemaphore.tryAcquire(1, 100, TimeUnit.MILLISECONDS);
-			if (!acquired)
-				return false;
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
-
+	@Override
+	protected void onComplete() {
 		var uiResolution = plugin.getUiResolution();
 		if (uiResolution == null || width > uiResolution[0] || height > uiResolution[1]) {
 			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", width, height, uiResolution);
-			return false;
+			return;
 		}
 
 		timer.begin(Timer.UPLOAD_UI);
@@ -100,9 +81,7 @@ public class AsyncUICopy implements Runnable {
 		timer.end(Timer.UPLOAD_UI);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-
 		mappedBuffer = null;
 		pixels = null;
-		return true;
 	}
 }
