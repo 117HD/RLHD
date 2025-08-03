@@ -55,10 +55,8 @@ public class GamevalManager {
 	public void startUp() throws IOException {
 		fileWatcher = GAMEVAL_PATH.watch((path, first) -> {
 			try {
-				Map<String, Map<String, Integer>> gamevals = path.loadJson(
-					plugin.getGson(),
-					new TypeToken<Map<String, Map<String, Integer>>>() {}.getType()
-				);
+				Map<String, Map<String, Integer>> gamevals = path
+					.loadJson(plugin.getGson(), new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
 				GAMEVALS.replaceAll((k, v) -> gamevals.getOrDefault(k, Collections.emptyMap()));
 				log.debug("Loaded gameval mappings");
 			} catch (IOException ex) {

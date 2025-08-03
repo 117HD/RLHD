@@ -32,11 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
-import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ModelHash;
 
@@ -231,10 +231,7 @@ public class ProceduralGenerator {
 
 					var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
 					if (override.waterType != WaterType.NONE)
-					{
-						// skip water faces
-						continue;
-					}
+						continue; // skip water faces
 
 					vertexHashes[face * VERTICES_PER_FACE + vertex] = vertexKeys[vertex];
 
@@ -814,7 +811,8 @@ public class ProceduralGenerator {
 		// We purposefully ignore material replacements here such as ice from the winter theme
 		if (waterType == WaterType.NONE) {
 			if (textureId == Material.WATER_FLAT.vanillaTextureIndex ||
-				textureId == Material.WATER_FLAT_2.vanillaTextureIndex) {
+				textureId == Material.WATER_FLAT_2.vanillaTextureIndex
+			) {
 				waterType = WaterType.WATER_FLAT;
 			} else if (textureId == Material.SWAMP_WATER_FLAT.vanillaTextureIndex) {
 				waterType = WaterType.SWAMP_WATER_FLAT;

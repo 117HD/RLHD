@@ -36,15 +36,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.WaterType;
-import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
@@ -1294,7 +1294,8 @@ public class SceneUploader {
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
-		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		assert waterType.index < 1 << 5 : "Too many water types";
+		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
 		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return terrainData;
 	}

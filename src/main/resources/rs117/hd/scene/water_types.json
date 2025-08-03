@@ -1,0 +1,227 @@
+[
+  {
+    "name": "WATER"
+  },
+  {
+    "name": "WATER_FLAT",
+    "flat": true
+  },
+  {
+    "name": "SWAMP_WATER",
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.8,
+    "fresnelAmount": 0.3,
+    "surfaceColor": "#172114",
+    "foamColor": "#737865",
+    "depthColor": "#29521a",
+    "duration": 1.2,
+    "fishingSpotRecolor": 23454
+  },
+  {
+    "name": "MLM_WATER",
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.8,
+    "fresnelAmount": 0.3,
+    "surfaceColor": [
+      30.48,
+      41.32,
+      74.4
+    ],
+    "duration": 1.2
+  },
+  {
+    "name": "SWAMP_WATER_FLAT",
+    "flat": true,
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.8,
+    "fresnelAmount": 0.3,
+    "surfaceColor": "#172114",
+    "foamColor": "#737865",
+    "depthColor": "#29521a",
+    "duration": 1.2,
+    "fishingSpotRecolor": 23454
+  },
+  {
+    "name": "POISON_WASTE",
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.9,
+    "fresnelAmount": 0.3,
+    "surfaceColor": "#16170d",
+    "foamColor": "#6a6c64",
+    "depthColor": "#32342e",
+    "duration": 1.6
+  },
+  {
+    "name": "BLACK_TAR_FLAT",
+    "flat": true,
+    "specularStrength": 0.05,
+    "specularGloss": 300.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.9,
+    "fresnelAmount": 0.02,
+    "surfaceColor": [
+      4.94,
+      5.41,
+      6.16
+    ],
+    "foamColor": "#000000",
+    "depthColor": [
+      4.94,
+      5.41,
+      6.16
+    ],
+    "duration": 1.6
+  },
+  {
+    "name": "BLOOD",
+    "normalStrength": 0.05,
+    "baseOpacity": 0.85,
+    "fresnelAmount": 0.0,
+    "surfaceColor": "#260000",
+    "foamColor": "#753f2d",
+    "depthColor": "#321a16",
+    "duration": 2.0
+  },
+  {
+    "name": "ICE",
+    "specularStrength": 0.3,
+    "specularGloss": 200.0,
+    "normalStrength": 0.04,
+    "baseOpacity": 0.85,
+    "normalMap": "WATER_NORMAL_MAP_2",
+    "foamColor": "#969696",
+    "duration": 0.0
+  },
+  {
+    "name": "ICE_FLAT",
+    "flat": true,
+    "specularStrength": 0.3,
+    "specularGloss": 200.0,
+    "normalStrength": 0.04,
+    "baseOpacity": 0.85,
+    "normalMap": "WATER_NORMAL_MAP_2",
+    "foamColor": "#969696",
+    "duration": 0.0
+  },
+  {
+    "name": "MUDDY_WATER",
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.7,
+    "fresnelAmount": 0.3,
+    "surfaceColor": "#230a00",
+    "foamColor": "#6a6c18",
+    "depthColor": "#411700",
+    "duration": 2.7
+  },
+  {
+    "name": "SCAR_SLUDGE",
+    "specularStrength": 0.0,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.85,
+    "fresnelAmount": 0.3,
+    "surfaceColor": "#262623",
+    "foamColor": "#69775e",
+    "depthColor": "#69775e",
+    "duration": 1.2
+  },
+  {
+    "name": "ABYSS_BILE",
+    "specularStrength": 0.2,
+    "specularGloss": 100.0,
+    "normalStrength": 0.08,
+    "baseOpacity": 0.85,
+    "fresnelAmount": 0.3,
+    "surfaceColor": [
+      47.89,
+      26.68,
+      0.0
+    ],
+    "foamColor": [
+      47.89,
+      20.98,
+      0.0
+    ],
+    "depthColor": [
+      47.89,
+      11.15,
+      0.0
+    ],
+    "duration": 2.2
+  },
+  {
+    "name": "PLAIN_WATER",
+    "flat": true,
+    "foamColor": [
+      13.07,
+      13.07,
+      13.07
+    ],
+    "depthColor": "#000000"
+  },
+  {
+    "name": "DARK_BLUE_WATER",
+    "flat": true,
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.1,
+    "baseOpacity": 0.8,
+    "fresnelAmount": 0.2,
+    "surfaceColor": [
+      0.54,
+      5.65,
+      7.25
+    ],
+    "foamColor": [
+      13.07,
+      13.07,
+      13.07
+    ],
+    "depthColor": "#000000"
+  },
+  {
+    "name": "ARAXXOR_WASTE",
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.9,
+    "fresnelAmount": 0.3,
+    "surfaceColor": "#16ff0d",
+    "foamColor": "#14ff14",
+    "depthColor": "#1eff1a",
+    "duration": 1.6
+  },
+  {
+    "name": "CAVE_WATER",
+    "specularStrength": 0.2,
+    "specularGloss": 100.0,
+    "normalStrength": 0.3,
+    "baseOpacity": 0.75,
+    "fresnelAmount": 0.1,
+    "surfaceColor": [
+      5.17,
+      13.07,
+      16.99
+    ],
+    "foamColor": [
+      0.77,
+      0.77,
+      0.77
+    ],
+    "depthColor": [
+      10.79,
+      36.75,
+      41.32
+    ]
+  }
+]

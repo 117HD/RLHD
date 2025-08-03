@@ -20,7 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import static rs117.hd.utils.MathUtils.*;
 
 public class ColorUtils {
-	private static final float EPS = 1e-10f;
+	private static final float EPS = 1e-4f;
 
 	/**
 	 * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
@@ -491,9 +491,8 @@ public class ColorUtils {
 				}
 			} else {
 				out.beginArray();
-				for (int i = 0; i < src.length; i++) {
-					out.value(rgba[i]);
-				}
+				for (int i = 0; i < src.length; i++)
+					out.value((Number) (round(rgba[i] * 100) / 100.f)); // Cast to Number to remove unnecessary decimals
 				out.endArray();
 			}
 		}
