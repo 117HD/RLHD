@@ -1,14 +1,14 @@
 package rs117.hd.utils;
 
+import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import rs117.hd.HdPlugin;
 
 public abstract class Job implements Runnable {
-	private final ReentrantLock lock = new ReentrantLock();
+	private final Semaphore completionSema = new Semaphore(1);
 
 	@Getter
 	private boolean inFlight = false;
@@ -25,6 +25,7 @@ public abstract class Job implements Runnable {
 
 	public boolean hasCompleteCallback() { return onCompleteCallback != null; }
 
+	@SneakyThrows
 	public void submit() {
 		complete(true);
 
@@ -39,6 +40,7 @@ public abstract class Job implements Runnable {
 		if (HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY) {
 			doWork();
 		} else {
+			completionSema.acquire();
 			HdPlugin.THREAD_POOL.execute(this);
 		}
 	}
@@ -48,13 +50,14 @@ public abstract class Job implements Runnable {
 		if (!inFlight) return;
 
 		if (block) {
-			lock.lock();
-			lock.unlock();
+			completionSema.acquire();
+			completionSema.release();
 			onComplete();
 			inFlight = false;
 		} else {
-			if (lock.tryLock(100, TimeUnit.NANOSECONDS)) {
-				lock.unlock();
+			completionSema.acquire();
+			if (completionSema.tryAcquire(100, TimeUnit.NANOSECONDS)) {
+				completionSema.release();
 				onComplete();
 				inFlight = false;
 			}
@@ -68,10 +71,9 @@ public abstract class Job implements Runnable {
 	@Override
 	public void run() {
 		try {
-			lock.lock();
 			doWork();
 		} finally {
-			lock.unlock();
+			completionSema.release();
 		}
 	}
 
