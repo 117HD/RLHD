@@ -1733,7 +1733,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						directionalLight.performAsyncTileCulling(sceneContext, false);
 					}
 
-
 					// Extract the 3rd column from the light view matrix (the float array is column-major).
 					// This produces the light's direction vector in world space, which we negate in order to
 					// get the light's direction vector pointing away from each fragment
@@ -3030,7 +3029,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		boolean isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
 		boolean isVisibleInShadow = isVisibleInScene;
-		if (!isVisibleInShadow) {
+		if (!isVisibleInShadow && configShadowCulling) {
 			isVisibleInShadow = directionalLight.isModelVisible(model, x, y, z);
 		}
 
