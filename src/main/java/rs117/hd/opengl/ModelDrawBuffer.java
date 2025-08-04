@@ -2,11 +2,13 @@ package rs117.hd.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.utils.Job;
 import rs117.hd.utils.buffer.GLBuffer;
 
+import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL11.GL_TRIANGLES;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glDrawElements;
@@ -20,13 +22,14 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ModelDrawBuffer extends GLBuffer {
-	public static final int STAGING_MODEL_DATA_COUNT = 1024;
+	public static final int STAGING_MODEL_DATA_COUNT = EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
 
 	private int[] stagingModelData = new int[STAGING_MODEL_DATA_COUNT * 2];
 	private int stagingModelDataOffset = 0;
 	private int stagingVertexCount = 0;
-	private int indicesCount = 0;
 	private int maxIndicesCount = 0;
+	@Getter
+	private int indicesCount = 0;
 
 	private final AsyncIndicesWriter asyncIndicesWriter = new AsyncIndicesWriter(this);
 
@@ -133,20 +136,25 @@ public class ModelDrawBuffer extends GLBuffer {
 			if (isMapped) {
 				IntBuffer intBuffer = mappedBuffer.clear().asIntBuffer().position(owner.indicesCount);
 				int modelDataOffset = 0;
+				int stagingIndicesOffset = 0;
 				for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
 					int renderBufferOffset = modelDataToWrite[modelDataOffset++];
 					final int vertexCount = modelDataToWrite[modelDataOffset++];
+
+					if (stagingIndices.length < stagingIndicesOffset + vertexCount) {
+						intBuffer.put(stagingIndices, 0, stagingIndicesOffset);
+						stagingIndicesOffset = 0;
+					}
 
 					if (stagingIndices.length < vertexCount) {
 						stagingIndices = new int[vertexCount];
 					}
 
 					for (int v = 0; v < vertexCount; v++, owner.indicesCount++) {
-						stagingIndices[v] = renderBufferOffset++;
+						stagingIndices[stagingIndicesOffset++] = renderBufferOffset++;
 					}
-
-					intBuffer.put(stagingIndices, 0, vertexCount);
 				}
+				intBuffer.put(stagingIndices, 0, stagingIndicesOffset);
 			}
 		}
 	}

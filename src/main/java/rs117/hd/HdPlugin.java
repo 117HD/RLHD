@@ -498,6 +498,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int drawnStaticRenderableCount;
 	@Getter
 	private int drawnDynamicRenderableCount;
+	@Getter
+	private int drawnTrianglesScene;
+	@Getter
+	private int drawnTrianglesDirectionalLight;
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -1620,6 +1624,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				drawnTileCount = 0;
 				drawnStaticRenderableCount = 0;
 				drawnDynamicRenderableCount = 0;
+
+				drawnTrianglesScene = sceneDrawBuffer.getIndicesCount();
+				drawnTrianglesDirectionalLight = directionalDrawBuffer.getIndicesCount();
 
 				sceneDrawBuffer.clear();
 				directionalDrawBuffer.clear();
@@ -3199,10 +3206,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.ensureCapacity(8)
 			.put(eightIntWrite);
 
+		frameTimer.begin(Timer.CLICKBOX_CHECK);
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 		}
 		directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+		frameTimer.end(Timer.CLICKBOX_CHECK);
 
 		renderBufferOffset += faceCount * 3;
 	}
