@@ -24,19 +24,19 @@
  */
 package rs117.hd.data.materials;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import lombok.NonNull;
 import lombok.Setter;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.ExpressionPredicate;
 
+import static rs117.hd.utils.HDVariables.*;
 import static rs117.hd.utils.MathUtils.*;
 
 public enum Material {
@@ -709,7 +709,7 @@ public enum Material {
 	),
 	WOOD_GRAIN_3_DARK(WOOD_GRAIN_3, p -> p.setBrightness(0.7f)),
 	HD_INFERNAL_CAPE(p -> p
-		.replaceIf(plugin -> plugin.config.hdInfernalTexture(), INFERNAL_CAPE)
+		.replaceIfHdInfernalCape(INFERNAL_CAPE)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.02f, 12, 4)
@@ -718,7 +718,7 @@ public enum Material {
 	HD_BRICK_N,
 	HD_BRICK_D,
 	HD_BRICK(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, BRICK)
+		.replaceIfModelTextures(BRICK)
 		.setNormalMap(HD_BRICK_N)
 		.setDisplacementMap(HD_BRICK_D)
 		.setDisplacementScale(.05f)
@@ -727,39 +727,39 @@ public enum Material {
 	HD_ROOF_SHINGLES_N,
 	HD_ROOF_SHINGLES_D,
 	HD_ROOF_SHINGLES_1(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, ROOF_SHINGLES_1)
+		.replaceIfModelTextures(ROOF_SHINGLES_1)
 		.setSpecular(0.35f, 40)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 		.setDisplacementMap(HD_ROOF_SHINGLES_D)
 		.setDisplacementScale(0.11f)
 	),
 	HD_MARBLE_DARK(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, MARBLE_DARK)
+		.replaceIfModelTextures(MARBLE_DARK)
 		.setSpecular(1.1f, 380)),
 	HD_BRICK_BROWN_N,
 	HD_BRICK_BROWN_D,
 	HD_BRICK_BROWN(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, BRICK_BROWN)
+		.replaceIfModelTextures(BRICK_BROWN)
 		.setNormalMap(HD_BRICK_BROWN_N)
 		.setDisplacementMap(HD_BRICK_BROWN_D)
 		.setDisplacementScale(.05f)
 		.setSpecular(0.35f, 20)
 	),
 	HD_LAVA_3(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, LAVA)
+		.replaceIfModelTextures(LAVA)
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
 		.setFlowMap(LAVA_FLOW_MAP, 0.05f, 36, 22)
 		.setScroll(0, 1 / 3f)),
 	HD_ROOF_SHINGLES_2(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, ROOF_SHINGLES_2)
+		.replaceIfModelTextures(ROOF_SHINGLES_2)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
 	),
 	HD_SIMPLE_GRAIN_WOOD_D,
 	HD_SIMPLE_GRAIN_WOOD_N,
 	HD_SIMPLE_GRAIN_WOOD(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, SIMPLE_GRAIN_WOOD)
+		.replaceIfModelTextures(SIMPLE_GRAIN_WOOD)
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_SIMPLE_GRAIN_WOOD_N)
 		.setDisplacementMap(HD_SIMPLE_GRAIN_WOOD_D)
@@ -771,7 +771,7 @@ public enum Material {
 	HD_STONE_PATTERN_N,
 	HD_STONE_PATTERN_D,
 	HD_STONE_PATTERN(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, STONE_PATTERN)
+		.replaceIfModelTextures(STONE_PATTERN)
 		.setNormalMap(HD_STONE_PATTERN_N)
 		.setDisplacementMap(HD_STONE_PATTERN_D)
 		.setDisplacementScale(0.08f)
@@ -835,7 +835,6 @@ public enum Material {
 		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(1.1f, 200)),
 	ICE_1_HIGHGLOSS(ICE_1, p -> p
-		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
 		.setSpecular(3.1f, 30)),
 	ICE_2(SNOW_2, p -> p
 		.setSpecular(1.5f, 800)),
@@ -850,7 +849,7 @@ public enum Material {
 		.setSpecular(1.5f, 80)),
 	HD_WOOD_PLANKS_1_N,
 	HD_WOOD_PLANKS_1(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, WOOD_PLANKS_1)
+		.replaceIfModelTextures(WOOD_PLANKS_1)
 		.setNormalMap(HD_WOOD_PLANKS_1_N)
 		.setSpecular(0.3f, 30)
 	),
@@ -861,24 +860,24 @@ public enum Material {
 		.setBrightness(1.2f)),
 	HD_CRATE_N,
 	HD_CRATE(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, CRATE)
+		.replaceIfModelTextures(CRATE)
 		.setNormalMap(HD_CRATE_N)
 		.setSpecular(0.25f, 30)
 		.setBrightness(0.9f)
 	),
 	HD_ROOF_BRICK_TILE_N,
 	HD_ROOF_BRICK_TILE(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
+		.replaceIfModelTextures(ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_GREEN(ROOF_BRICK_TILE_GREEN, p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE_GREEN)
+		.replaceIfModelTextures(ROOF_BRICK_TILE_GREEN)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
 	HD_ROOF_BRICK_TILE_DARK(ROOF_BRICK_TILE_DARK, p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE_DARK)
+		.replaceIfModelTextures(ROOF_BRICK_TILE_DARK)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
 	),
@@ -891,7 +890,7 @@ public enum Material {
 	HD_CONCRETE_D,
 	HD_CONCRETE_N,
 	HD_CONCRETE(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, CONCRETE)
+		.replaceIfModelTextures(CONCRETE)
 		.setNormalMap(HD_CONCRETE_N)
 		.setDisplacementMap(HD_CONCRETE_D)
 		.setDisplacementScale(0.05f)
@@ -900,7 +899,7 @@ public enum Material {
 	),
 	HD_HAY_N,
 	HD_HAY(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, HAY)
+		.replaceIfModelTextures(HAY)
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
@@ -908,7 +907,7 @@ public enum Material {
 		.setBrightness(1.8f)
 	),
 	HD_IRON_BARS(p -> p
-		.replaceIf(plugin -> plugin.configModelTextures, IRON_BARS)
+		.replaceIfModelTextures(IRON_BARS)
 		.setHasTransparency(true)
 		.setSpecular(0.6f, 30)
 		.setTextureScale(0.98f)
@@ -1085,8 +1084,8 @@ public enum Material {
 	public final float specularGloss;
 	public final float[] scrollSpeed;
 	public final float[] textureScale;
-	public final List<Material> materialsToReplace = new ArrayList<>();
-	public final Function<HdPlugin, Boolean> replacementCondition;
+	private final List<Material> materialsToReplace;
+	private final ExpressionPredicate replacementCondition;
 
 	@Setter
 	private static class Builder {
@@ -1108,8 +1107,8 @@ public enum Material {
 		private float specularGloss;
 		private float[] scrollSpeed = { 0, 0 };
 		private float[] textureScale = { 1, 1, 1 };
-		private List<Material> materialsToReplace = new ArrayList<>();
-		private Function<HdPlugin, Boolean> replacementCondition;
+		private List<Material> materialsToReplace = Collections.emptyList();
+		private ExpressionPredicate replacementCondition;
 
 		Builder apply(Consumer<Builder> consumer) {
 			consumer.accept(this);
@@ -1135,7 +1134,7 @@ public enum Material {
 			this.specularGloss = parent.specularGloss;
 			this.scrollSpeed = parent.scrollSpeed;
 			this.textureScale = parent.textureScale;
-			this.materialsToReplace.addAll(parent.materialsToReplace);
+			this.materialsToReplace = parent.materialsToReplace;
 			this.replacementCondition = parent.replacementCondition;
 			return this;
 		}
@@ -1163,14 +1162,22 @@ public enum Material {
 			return this;
 		}
 
-		Builder replaceIf(@NonNull Function<HdPlugin, Boolean> condition, @NonNull Material... materialsToReplace) {
-			Collections.addAll(this.materialsToReplace, materialsToReplace);
-			this.replacementCondition = condition;
+		Builder replaceIfHdInfernalCape(@NonNull Material... materialsToReplace) {
+			this.materialsToReplace = List.of(materialsToReplace);
+			this.replacementCondition = vars -> (boolean) vars.get(VAR_HD_INFERNAL_TEXTURE);
+			return this;
+		}
+
+		Builder replaceIfModelTextures(@NonNull Material... materialsToReplace) {
+			this.materialsToReplace = List.of(materialsToReplace);
+			this.replacementCondition = vars -> (boolean) vars.get(VAR_MODEL_TEXTURES);
 			return this;
 		}
 
 		Builder replaceIf(SeasonalTheme seasonalTheme, @NonNull Material... materialsToReplace) {
-			return replaceIf(plugin -> plugin.configSeasonalTheme == seasonalTheme, materialsToReplace);
+			this.materialsToReplace = List.of(materialsToReplace);
+			this.replacementCondition = vars -> (int) vars.get(VAR_SEASONAL_THEME) == seasonalTheme.ordinal();
+			return this;
 		}
 	}
 
@@ -1215,7 +1222,7 @@ public enum Material {
 		specularGloss = builder.specularGloss;
 		scrollSpeed = builder.scrollSpeed;
 		textureScale = builder.textureScale;
-		materialsToReplace.addAll(builder.materialsToReplace);
+		materialsToReplace = builder.materialsToReplace;
 		replacementCondition = builder.replacementCondition;
 
 		// Determine whether the material contains some form of non-vanilla texture change
@@ -1241,14 +1248,14 @@ public enum Material {
 
 			// If the material is a conditional replacement material, and the condition is not met,
 			// the material shouldn't be loaded and can be mapped to NONE
-			if (material.replacementCondition != null && !material.replacementCondition.apply(plugin)) {
+			if (material.replacementCondition != null && !material.replacementCondition.test(plugin.vars)) {
 				material = NONE;
 			} else {
 				// Apply material replacements from top to bottom
 				for (int j = i + 1; j < materials.length; ++j) {
 					var replacement = materials[j];
 					if (replacement.replacementCondition != null &&
-						replacement.replacementCondition.apply(plugin) &&
+						replacement.replacementCondition.test(plugin.vars) &&
 						replacement.materialsToReplace.contains(material)) {
 						material = replacement;
 						break;

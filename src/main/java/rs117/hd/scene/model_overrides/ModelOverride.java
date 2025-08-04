@@ -285,8 +285,10 @@ public class ModelOverride
 						case "ahsl":
 							return ahsl;
 						case "hsl":
-						default:
 							return ahsl & 0xFFFF;
+						default:
+							assert false : "Unexpected variable: " + key;
+							return 0;
 					}
 				});
 			} else {

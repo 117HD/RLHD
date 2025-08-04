@@ -18,7 +18,6 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.config.SeasonalTheme;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.tile_overrides.TileOverride;
@@ -94,19 +93,15 @@ public class TileOverrideManager {
 			List<Map.Entry<Area, TileOverride>> anyMatch = new ArrayList<>();
 			ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatch = ArrayListMultimap.create();
 
-			// Substitute constants in replacement expressions and simplify
-			Map<String, Object> constants = new HashMap<>();
-			for (var season : SeasonalTheme.values())
-				constants.put(season.name(), season.ordinal());
-			constants.put("season", plugin.configSeasonalTheme.ordinal());
-			constants.put("blending", plugin.configGroundBlending);
-			constants.put("textures", plugin.configGroundTextures);
+			var tileOverrideVars = plugin.vars.aliases(Map.of(
+				"textures", "groundTextures"
+			));
 
 			for (int i = 0; i < allOverrides.length; i++) {
 				var override = allOverrides[i];
 				try {
 					override.index = i;
-					override.normalize(allOverrides, constants::get);
+					override.normalize(allOverrides, tileOverrideVars);
 				} catch (Exception ex) {
 					log.warn("Skipping invalid tile override '{}':", override.name, ex);
 					continue;

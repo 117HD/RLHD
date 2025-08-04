@@ -313,7 +313,8 @@ public class ExpressionParser {
 				if ('A' <= c && c <= 'Z' ||
 					'a' <= c && c <= 'z' ||
 					'0' <= c && c <= '9' ||
-					c == '_'
+					c == '_' ||
+					c == '.' && sb.length() > 0
 				) {
 					sb.append(c);
 					advance();
