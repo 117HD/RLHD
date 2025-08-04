@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glMapBuffer;
 import static org.lwjgl.opengl.GL15.glUnmapBuffer;
 import static org.lwjgl.opengl.GL15C.GL_STREAM_DRAW;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ModelDrawBuffer extends GLBuffer {
@@ -25,6 +26,7 @@ public class ModelDrawBuffer extends GLBuffer {
 	private int stagingModelDataOffset = 0;
 	private int stagingVertexCount = 0;
 	private int indicesCount = 0;
+	private int maxIndicesCount = 0;
 
 	private final AsyncIndicesWriter asyncIndicesWriter = new AsyncIndicesWriter(this);
 
@@ -73,6 +75,7 @@ public class ModelDrawBuffer extends GLBuffer {
 	}
 
 	public void clear() {
+		maxIndicesCount = max(maxIndicesCount, indicesCount);
 		stagingModelDataOffset = 0;
 		stagingVertexCount = 0;
 		indicesCount = 0;
@@ -88,26 +91,23 @@ public class ModelDrawBuffer extends GLBuffer {
 
 		@Override
 		protected void prepare() {
-			long numBytes = ((long) owner.indicesCount + (long) owner.stagingVertexCount) * (long) Integer.BYTES;
-			if (mappedBuffer == null || numBytes >= owner.size) {
+			long prevNumBytes = owner.maxIndicesCount * (long) Integer.BYTES;
+			long currentNumBytes = ((long) owner.indicesCount + (long) owner.stagingVertexCount) * (long) Integer.BYTES;
+			if (currentNumBytes >= owner.size) {
 				if (mappedBuffer != null) {
 					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, owner.id);
 					glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 				}
-				owner.ensureCapacity(numBytes);
-				mappedBuffer = glMapBuffer(
-					GL_ELEMENT_ARRAY_BUFFER,
-					GL_WRITE_ONLY,
-					numBytes,
-					mappedBuffer
-				);
-			} else if (mappedBuffer.capacity() < numBytes) {
+				owner.ensureCapacity(currentNumBytes);
+			}
+
+			if (mappedBuffer == null || mappedBuffer.capacity() < currentNumBytes) {
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, owner.id);
 				glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
 				mappedBuffer = glMapBuffer(
 					GL_ELEMENT_ARRAY_BUFFER,
 					GL_WRITE_ONLY,
-					numBytes,
+					max(prevNumBytes, currentNumBytes),
 					mappedBuffer
 				);
 			}
