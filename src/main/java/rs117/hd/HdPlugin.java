@@ -131,6 +131,7 @@ import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.HDVariables;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
@@ -222,6 +223,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		GL_RGBA // should be guaranteed
 	};
 
+	@Getter
+	private Gson gson;
+
 	@Inject
 	private Client client;
 
@@ -239,6 +243,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private PluginManager pluginManager;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	private OpenCLManager clManager;
@@ -298,12 +305,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public HdPluginConfig config;
-
-	@Getter
-	private Gson gson;
-
-	@Inject
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
@@ -331,6 +332,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
+	public HDVariables vars;
 
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
