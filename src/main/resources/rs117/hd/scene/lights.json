@@ -34927,5 +34927,28 @@
     "objectIds": [
       2501
     ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Fire",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      56826,
+      56827,
+      56828,
+      56829,
+      56830,
+      56831
+    ]
   }
 ]
