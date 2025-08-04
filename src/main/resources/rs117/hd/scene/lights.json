@@ -37683,8 +37683,8 @@
   {
     "description": "Hueycoatl Range Projectile",
     "offset": [ 5, 20, 5 ],
-    "radius": 210,
-    "strength": 12,
+    "radius": 230,
+    "strength": 14,
     "color": [
       0,
       255,
@@ -37793,8 +37793,8 @@
   {
     "description": "Hueycoatl Lightning Bolt Attack",
     "height": 25,
-    "radius": 105,
-    "strength": 6,
+    "radius": 110,
+    "strength": 9,
     "color": [
       0,
       200,
@@ -37802,9 +37802,9 @@
     ],
     "type": "FLICKER",
     "fixedDespawnTime": true,
-    "despawnDelay": 3500,
+    "despawnDelay": 3400,
     "fadeInDuration": 400,
-    "fadeOutDuration": 200,
+    "fadeOutDuration": 600,
     "duration": 600,
     "range": 15,
     "graphicsObjectIds": [ "VFX_HUEYCOATL_PRAYER_02" ]
