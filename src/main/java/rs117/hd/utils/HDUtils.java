@@ -38,18 +38,7 @@ import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
-import static rs117.hd.utils.MathUtils.DEG_TO_RAD;
-import static rs117.hd.utils.MathUtils.add;
-import static rs117.hd.utils.MathUtils.cross;
-import static rs117.hd.utils.MathUtils.distanceToPlane;
-import static rs117.hd.utils.MathUtils.length;
-import static rs117.hd.utils.MathUtils.max;
-import static rs117.hd.utils.MathUtils.min;
-import static rs117.hd.utils.MathUtils.multiply;
-import static rs117.hd.utils.MathUtils.normalize;
-import static rs117.hd.utils.MathUtils.slice;
-import static rs117.hd.utils.MathUtils.subtract;
-import static rs117.hd.utils.MathUtils.vec;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -430,10 +419,10 @@ public class HDUtils {
 		int x1 = x + LOCAL_TILE_SIZE;
 		int z1 = z + LOCAL_TILE_SIZE;
 		for (float[] plane : cullingPlanes) {
-			if (distanceToPlane(plane, x, h0, z) >= 0 ||
-				distanceToPlane(plane, x1, h1, z) >= 0 ||
-				distanceToPlane(plane, x, h2, z1) >= 0 ||
-				distanceToPlane(plane, x1, h3, z1) >= 0) {
+			if (distanceToPlane(plane, x, h0, z) >= -LOCAL_TILE_SIZE ||
+				distanceToPlane(plane, x1, h1, z) >= -LOCAL_TILE_SIZE ||
+				distanceToPlane(plane, x, h2, z1) >= -LOCAL_TILE_SIZE ||
+				distanceToPlane(plane, x1, h3, z1) >= -LOCAL_TILE_SIZE) {
 				// At least one point is inside this plane; continue testing other planes
 				continue;
 			}
