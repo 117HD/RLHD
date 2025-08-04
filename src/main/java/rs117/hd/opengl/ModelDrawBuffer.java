@@ -64,11 +64,7 @@ public class ModelDrawBuffer extends GLBuffer {
 		asyncIndicesWriter.complete();
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
-
-		if (asyncIndicesWriter.mappedBuffer != null) {
-			glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-			asyncIndicesWriter.mappedBuffer = null;
-		}
+		asyncIndicesWriter.unmap();
 
 		glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -87,33 +83,40 @@ public class ModelDrawBuffer extends GLBuffer {
 		private int[] stagingIndices = new int[32];
 		private int[] modelDataToWrite = new int[STAGING_MODEL_DATA_COUNT * 2];
 		private ByteBuffer mappedBuffer = null;
+		private boolean isMapped = false;
 		private int modelCount;
+
+		public void unmap() {
+			if(isMapped) {
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, owner.id);
+				glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+				isMapped = false;
+			}
+		}
 
 		@Override
 		protected void prepare() {
 			long prevNumBytes = owner.maxIndicesCount * (long) Integer.BYTES;
 			long currentNumBytes = ((long) owner.indicesCount + (long) owner.stagingVertexCount) * (long) Integer.BYTES;
 			if (currentNumBytes >= owner.size) {
-				if (mappedBuffer != null) {
-					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, owner.id);
-					glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-				}
+				unmap();
 				owner.ensureCapacity(currentNumBytes);
 			}
 
-			if (mappedBuffer == null || mappedBuffer.capacity() < currentNumBytes) {
+			if (!isMapped || mappedBuffer.capacity() < currentNumBytes) {
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, owner.id);
-				glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+				unmap();
 				mappedBuffer = glMapBuffer(
 					GL_ELEMENT_ARRAY_BUFFER,
 					GL_WRITE_ONLY,
 					max(prevNumBytes, currentNumBytes),
 					mappedBuffer
 				);
+				isMapped = mappedBuffer != null;
 			}
 
 			modelCount = 0;
-			if (mappedBuffer != null) {
+			if (isMapped) {
 				// Perform Swap, so that we can write the previous staging data whilst the next is written in
 				int[] newModelDataToWrite = owner.stagingModelData;
 				owner.stagingModelData = modelDataToWrite;
@@ -127,7 +130,7 @@ public class ModelDrawBuffer extends GLBuffer {
 
 		@Override
 		protected void doWork() {
-			if (mappedBuffer != null) {
+			if (isMapped) {
 				IntBuffer intBuffer = mappedBuffer.clear().asIntBuffer().position(owner.indicesCount);
 				int modelDataOffset = 0;
 				for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
