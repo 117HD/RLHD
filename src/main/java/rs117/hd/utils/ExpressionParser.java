@@ -1,21 +1,18 @@
 package rs117.hd.utils;
 
-import java.util.Collections;
+import com.google.gson.JsonElement;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Predicate;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 public class ExpressionParser {
-	public static Predicate<VariableSupplier> parsePredicate(String expression) {
+	public static ExpressionPredicate parsePredicate(String expression) {
 		return parsePredicate(expression, null);
 	}
 
-	public static Predicate<VariableSupplier> parsePredicate(String expression, @Nullable Map<String, Object> constants) {
+	public static ExpressionPredicate parsePredicate(String expression, @Nullable VariableSupplier constants) {
 		return asExpression(parseExpression(expression, constants)).toPredicate();
 	}
 
@@ -23,7 +20,7 @@ public class ExpressionParser {
 		return parseFunction(expression, null);
 	}
 
-	public static Function<VariableSupplier, Object> parseFunction(String expression, @Nullable Map<String, Object> constants) {
+	public static Function<VariableSupplier, Object> parseFunction(String expression, @Nullable VariableSupplier constants) {
 		return asFunction(parseExpression(expression, constants));
 	}
 
@@ -31,9 +28,29 @@ public class ExpressionParser {
 		return parseExpression(expression, null);
 	}
 
-	public static Object parseExpression(String expression, @Nullable Map<String, Object> constants) {
-		return asExpression(parseExpression(expression, 0, expression.length()))
-			.simplify(constants == null ? Collections.emptyMap() : constants);
+	public static Object parseExpression(String expression, @Nullable VariableSupplier constants) {
+		return asExpression(parseExpression(expression, 0, expression.length())).simplify(constants);
+	}
+
+	public static String mergeJsonExpressions(JsonElement jsonExpressions, String delimiter) {
+		if (jsonExpressions == null || jsonExpressions.isJsonNull())
+			throw new IllegalArgumentException("Missing expression, got null");
+
+		if (jsonExpressions.isJsonPrimitive())
+			return jsonExpressions.getAsJsonPrimitive().getAsString();
+
+		if (jsonExpressions.isJsonArray()) {
+			var array = jsonExpressions.getAsJsonArray();
+			var sb = new StringBuilder();
+			String prefix = "";
+			for (var primitive : array) {
+				sb.append(prefix).append('(').append(primitive.getAsString()).append(')');
+				prefix = delimiter;
+			}
+			return sb.toString();
+		}
+
+		throw new IllegalArgumentException("Unsupported expression format: '" + jsonExpressions + "'");
 	}
 
 	public static Expression asExpression(Object object) {
@@ -42,7 +59,7 @@ public class ExpressionParser {
 		return new Expression(object);
 	}
 
-	static Function<VariableSupplier, Object> asFunction(Object object) {
+	public static Function<VariableSupplier, Object> asFunction(Object object) {
 		if (object instanceof Expression)
 			return ((Expression) object).toFunction();
 		if (object instanceof String)
@@ -358,14 +375,22 @@ public class ExpressionParser {
 			registerVariables(ternary);
 		}
 
-		private Object simplify(@Nonnull Map<String, Object> constants) {
+		public Object simplify(@Nullable VariableSupplier constants) {
 			Object l = left instanceof Expression ? ((Expression) left).simplify(constants) : left;
 			Object r = right instanceof Expression ? ((Expression) right).simplify(constants) : right;
 
-			if (l instanceof String)
-				l = sanitizeValue(constants.getOrDefault(l, l));
-			if (r instanceof String)
-				r = sanitizeValue(constants.getOrDefault(r, r));
+			if (constants != null) {
+				if (l instanceof String) {
+					var value = constants.get((String) l);
+					if (value != null)
+						l = sanitizeValue(value);
+				}
+				if (r instanceof String) {
+					var value = constants.get((String) r);
+					if (value != null)
+						r = sanitizeValue(value);
+				}
+			}
 
 			if (op == Operator.TERNARY) {
 				Object t = asExpression(ternary).simplify(constants);
@@ -466,7 +491,7 @@ public class ExpressionParser {
 			throw new UnsupportedOperationException("Unsupported operands: " + l + " " + op + " " + r);
 		}
 
-		public Predicate<VariableSupplier> toPredicate() {
+		public ExpressionPredicate toPredicate() {
 			if (!isBoolean())
 				throw new IllegalArgumentException("Expression does not result in a boolean");
 

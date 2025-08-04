@@ -167,7 +167,7 @@ public class ProceduralGenerator {
 		if (tile.getSceneTilePaint() != null) {
 			// tile paint
 
-			var override = tileOverrideManager.getOverride(scene, tile, worldPos);
+			var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 			if (override.waterType != WaterType.NONE) {
 				// skip water tiles
 				return;
@@ -218,18 +218,16 @@ public class ProceduralGenerator {
 
 			int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+			var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+			var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
 
-			for (int face = 0; face < faceCount; face++)
-			{
+			for (int face = 0; face < faceCount; face++) {
 				int[] faceColors = new int[]{faceColorsA[face], faceColorsB[face], faceColorsC[face]};
-
 				int[] vertexKeys = faceVertexKeys(tile, face);
 
-				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++)
-				{
+				for (int vertex = 0; vertex < VERTICES_PER_FACE; vertex++) {
 					boolean isOverlay = isOverlayFace(tile, face);
-
-					var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+					var override = isOverlay ? overlayOverride : underlayOverride;
 					if (override.waterType != WaterType.NONE)
 						continue; // skip water faces
 
@@ -242,9 +240,7 @@ public class ProceduralGenerator {
 					vertexIsOverlay[face * VERTICES_PER_FACE + vertex] = isOverlay;
 
 					if (isOverlay && useDefaultColor(tile, override))
-					{
 						vertexDefaultColor[face * VERTICES_PER_FACE + vertex] = true;
-					}
 				}
 			}
 		}
@@ -384,7 +380,7 @@ public class ProceduralGenerator {
 						int[] vertexKeys = tileVertexKeys(scene, tile);
 
 						int[] worldPos = sceneContext.extendedSceneToWorld(x, y, tile.getRenderLevel());
-						var override = tileOverrideManager.getOverride(scene, tile, worldPos);
+						var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 						if (seasonalWaterType(override, tile.getSceneTilePaint().getTexture()) == WaterType.NONE) {
 							for (int vertexKey : vertexKeys)
 								if (tile.getSceneTilePaint().getNeColor() != HIDDEN_HSL || override.forced)
@@ -437,17 +433,17 @@ public class ProceduralGenerator {
 						int[] worldPos = sceneContext.extendedSceneToWorld(x, y, tileZ);
 						int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][x][y];
 						int underlayId = scene.getUnderlayIds()[tileZ][x][y];
+						var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+						var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
 
 						// Stop tiles on the same X,Y coordinates on different planes from
 						// each generating water. Prevents undesirable results in certain places.
 						if (z > 0)
 						{
 							boolean tileIncludesWater = false;
-
 							for (int face = 0; face < faceCount; face++)
 							{
-								boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-								var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+								var override = ProceduralGenerator.isOverlayFace(tile, face) ? overlayOverride : underlayOverride;
 								int textureId = model.getTriangleTextureId() == null ? -1 :
 									model.getTriangleTextureId()[face];
 								if (seasonalWaterType(override, textureId) != WaterType.NONE)
@@ -488,8 +484,7 @@ public class ProceduralGenerator {
 							int[][] vertices = faceVertices(tile, face);
 							int[] vertexKeys = faceVertexKeys(tile, face);
 
-							boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-							var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+							var override = ProceduralGenerator.isOverlayFace(tile, face) ? overlayOverride : underlayOverride;
 							int textureId = model.getTriangleTextureId() == null ? -1 :
 								model.getTriangleTextureId()[face];
 							if (seasonalWaterType(override, textureId) == WaterType.NONE)

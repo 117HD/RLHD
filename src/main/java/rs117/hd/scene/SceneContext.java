@@ -18,6 +18,7 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.TileObjectImpostorTracker;
+import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -59,17 +60,17 @@ public class SceneContext {
 	public int staticCustomTilesOffset;
 	public int staticCustomTilesVertexCount;
 
-	// statistics
+	// Statistics
 	public int uniqueModels;
 
-	// terrain data
+	// Terrain data
 	public Map<Integer, Integer> vertexTerrainColor;
 	public Map<Integer, Material> vertexTerrainTexture;
 	public Map<Integer, float[]> vertexTerrainNormals;
-	// used for overriding potentially low quality vertex colors
+	// Used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
 
-	// water-related data
+	// Water-related data
 	public boolean[][][] tileIsWater;
 	public Map<Integer, Boolean> vertexIsWater;
 	public Map<Integer, Boolean> vertexIsLand;
@@ -79,6 +80,9 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
+	// Thread safe tile override variables
+	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();
+
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
@@ -86,7 +90,7 @@ public class SceneContext {
 	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
 	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
 
-	// model pusher arrays, to avoid simultaneous usage from different threads
+	// Model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
