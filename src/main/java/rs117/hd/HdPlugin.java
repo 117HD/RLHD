@@ -2976,7 +2976,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			configShadowCulling && directionalLight.isTileVisible(
 				plane,
 				tileExX,
-				tileExY));
+				tileExY
+			)
+		);
 	}
 
 	/**
@@ -3080,6 +3082,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
+		boolean shouldCastShadow = true;
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
@@ -3121,6 +3124,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[0] = modelOffsets.vertexOffset;
 				eightIntWrite[1] = modelOffsets.uvOffset;
 				eightIntWrite[2] = modelOffsets.faceCount;
+				shouldCastShadow = modelOffsets.shouldCastShadow;
 			} else {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
@@ -3163,9 +3167,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[1] = uvOffset;
 				eightIntWrite[2] = faceCount;
 
+				shouldCastShadow = modelOverride.castShadows;
+
 				// add this temporary model to the map for batching purposes
 				if (configModelBatching)
-					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
+					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset, shouldCastShadow));
 			}
 
 			if (eightIntWrite[0] != -1)
@@ -3206,12 +3212,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.ensureCapacity(8)
 			.put(eightIntWrite);
 
-		frameTimer.begin(Timer.CLICKBOX_CHECK);
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 		}
-		directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
-		frameTimer.end(Timer.CLICKBOX_CHECK);
+		if (shouldCastShadow) {
+			directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+		}
 
 		renderBufferOffset += faceCount * 3;
 	}

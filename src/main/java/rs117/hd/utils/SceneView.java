@@ -2,7 +2,6 @@ package rs117.hd.utils;
 
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -70,6 +69,7 @@ public class SceneView {
 		for (int plane = 0; plane < MAX_Z; plane++) {
 			cullingJobs[plane] = new AsyncCullingJob(this, plane);
 		}
+		clearJob.submit(true);
 	}
 
 	public boolean isDirty() {
@@ -271,7 +271,7 @@ public class SceneView {
 		VisibilityResult result = tileVisibility[plane][tileExX][tileExY];
 
 		// Check if the result is usable & known
-		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result != null && result.isKnown()) {
+		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result.ordinal() > VisibilityResult.IN_PROGRESS.ordinal()) {
 			frameTimer.end(Timer.VISIBILITY_CHECK);
 			return result == VisibilityResult.VISIBLE;
 		}
