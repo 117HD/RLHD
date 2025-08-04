@@ -2946,10 +2946,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public boolean tileInFrustum(
 		Scene scene,
-		int pitchSin,
-		int pitchCos,
-		int yawSin,
-		int yawCos,
+		float pitchSin,
+		float pitchCos,
+		float yawSin,
+		float yawCos,
 		int cameraX,
 		int cameraY,
 		int cameraZ,
