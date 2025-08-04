@@ -452,7 +452,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
-	public boolean configExpandShadowDraw;
 	public boolean configShadowCulling;
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
@@ -1687,7 +1686,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					// Define a Finite Plane before extracting corners
 					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
 
-					int shadowDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE * (configExpandShadowDraw ? 2 : 1);
+					int shadowDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
 					int maxDistance = Math.min(shadowDistance, (int) sceneCamera.getFarPlane());
 
 					float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
@@ -1949,9 +1948,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (sceneCamera.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
 			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
-			if (plane != 0) {
-				directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
-			}
 		} else if (plane != 0 && configShadowCulling && directionalLight.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
@@ -2254,6 +2250,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glEnable(GL_DEPTH_TEST);
 
 				glBindVertexArray(vaoScene);
+				sceneDrawBuffer.draw();
 				directionalDrawBuffer.draw();
 
 				glDisable(GL_CULL_FACE);
@@ -2649,7 +2646,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
-		configExpandShadowDraw = config.expandShadowDraw();
 		configShadowCulling = config.shadowCulling();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
@@ -3020,11 +3016,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		model.calculateBoundsCylinder();
 		int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
+		frameTimer.begin(Timer.VISIBILITY_CHECK);
 		boolean isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
 		boolean isVisibleInShadow = isVisibleInScene;
 		if (!isVisibleInShadow && configShadowCulling) {
 			isVisibleInShadow = directionalLight.isModelVisible(model, x, y, z);
 		}
+		frameTimer.end(Timer.VISIBILITY_CHECK);
 
 		if (!isVisibleInScene && !isVisibleInShadow) {
 			return;
@@ -3175,8 +3173,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+		} else {
+			directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 		}
-		directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 
 		renderBufferOffset += faceCount * 3;
 	}

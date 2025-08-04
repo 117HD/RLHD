@@ -17,6 +17,7 @@ public class ModelDrawBuffer extends GLBuffer {
 	private static final int STAGING_MODEL_DATA_SIZE = 512;
 	private static final int STAGING_MODEL_DATA_COUNT = STAGING_MODEL_DATA_SIZE / 2;
 
+	private int[] stagingIndices = new int[256];
 	private int[] stagingModelData = new int[STAGING_MODEL_DATA_SIZE];
 	private GpuIntBuffer indicesData;
 
@@ -68,7 +69,7 @@ public class ModelDrawBuffer extends GLBuffer {
 	public void destroy() {
 		super.destroy();
 
-		asyncIndicesWriter.complete(true);
+		asyncIndicesWriter.complete();
 
 		if (indicesData != null) {
 			indicesData.destroy();
@@ -93,12 +94,17 @@ public class ModelDrawBuffer extends GLBuffer {
 		int modelDataOffset = 0;
 		for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
 			int renderBufferOffset = modelData[modelDataOffset++];
-			int vertexCount = modelData[modelDataOffset++];
+			final int vertexCount = modelData[modelDataOffset++];
 
-			for (int v = 0; v < vertexCount; v++) {
-				buffer.put(renderBufferOffset++);
-				indicesCount++;
+			if (stagingIndices.length < vertexCount) {
+				stagingIndices = new int[vertexCount];
 			}
+
+			for (int v = 0; v < vertexCount; v++, indicesCount++) {
+				stagingIndices[v] = renderBufferOffset++;
+			}
+
+			buffer.put(stagingIndices, 0, vertexCount);
 		}
 	}
 

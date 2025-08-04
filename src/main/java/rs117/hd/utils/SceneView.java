@@ -55,7 +55,7 @@ public class SceneView {
 		public boolean isKnown() { return this == HIDDEN || this == VISIBLE; }
 	}
 
-	private VisibilityResult[] tileVisibility = new VisibilityResult[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
+	private VisibilityResult[][][] tileVisibility = new VisibilityResult[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	private final AsyncCullingJob[] cullingJobs = new AsyncCullingJob[MAX_Z];
 	private final AsyncTileVisibilityClear clearJob = new AsyncTileVisibilityClear(this);
@@ -251,8 +251,7 @@ public class SceneView {
 	@SneakyThrows
 	public boolean isTileVisible(int plane, int tileExX, int tileExY) {
 		frameTimer.begin(Timer.VISIBILITY_CHECK);
-		final int tileIdx = (plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE) + (tileExX * EXTENDED_SCENE_SIZE) + tileExY;
-		VisibilityResult result = tileVisibility[tileIdx];
+		VisibilityResult result = tileVisibility[plane][tileExX][tileExY];
 
 		// Check if the result is usable & known
 		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result != null && result.isKnown()) {
@@ -262,13 +261,13 @@ public class SceneView {
 
 		if (result == VisibilityResult.UNKNOWN) {
 			// Process on client thread, rather than waiting for result
-			result = cullingJobs[plane].performTileCulling(tileIdx, tileExX, tileExY);
+			result = cullingJobs[plane].performTileCulling(tileExX, tileExY);
 		}
 
 		// If the Tile is still in-progress then wait for the job to complete
 		while (result == VisibilityResult.IN_PROGRESS) {
 			Thread.yield();
-			result = tileVisibility[tileIdx];
+			result = tileVisibility[plane][tileExX][tileExY];
 		}
 
 		frameTimer.end(Timer.VISIBILITY_CHECK);
@@ -397,17 +396,21 @@ public class SceneView {
 	@RequiredArgsConstructor
 	public static final class AsyncTileVisibilityClear extends Job {
 		private final SceneView view;
-		private VisibilityResult[] clearTarget = new VisibilityResult[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
+		private VisibilityResult[][][] clearTarget = new VisibilityResult[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 		protected void prepare() {
 			// Swap the Visibility results with last frames, which should have been cleared by now
-			VisibilityResult[] nextClearTarget = view.tileVisibility;
+			VisibilityResult[][][] nextClearTarget = view.tileVisibility;
 			view.tileVisibility = clearTarget;
 			clearTarget = nextClearTarget;
 		}
 
 		protected void doWork() {
-			Arrays.fill(clearTarget, VisibilityResult.UNKNOWN);
+			for (int z = 0; z < MAX_Z; z++) {
+				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
+					Arrays.fill(clearTarget[z][x], VisibilityResult.UNKNOWN);
+				}
+			}
 		}
 	}
 
@@ -421,21 +424,19 @@ public class SceneView {
 
 		@Override
 		protected void doWork() {
-			// TODO - Optimization: Read Extended Chunk Config, instead of always performing culling for the whole scene
-			int tileIdx = plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
 			for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; tileExX++) {
-				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++, tileIdx++) {
-					performTileCulling(tileIdx, tileExX, tileExY);
+				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++) {
+					performTileCulling(tileExX, tileExY);
 				}
 			}
 		}
 
-		public VisibilityResult performTileCulling(int tileIdx, int tileExX, int tileExY) {
-			VisibilityResult result = view.tileVisibility[tileIdx];
+		public VisibilityResult performTileCulling(int tileExX, int tileExY) {
+			VisibilityResult result = view.tileVisibility[plane][tileExX][tileExY];
 			if (result != VisibilityResult.UNKNOWN) { // Skip over tiles that are being processed or are known
 				return result;
 			}
-			view.tileVisibility[tileIdx] = VisibilityResult.IN_PROGRESS; // Signal that we are processing this tile (Could be Client or Job Thread doing so)
+			view.tileVisibility[plane][tileExX][tileExY] = VisibilityResult.IN_PROGRESS; // Signal that we are processing this tile (Could be Client or Job Thread doing so)
 
 			final int h0 = tileHeights[tileExX][tileExY];
 			final int h1 = tileHeights[tileExX + 1][tileExY];
@@ -465,7 +466,7 @@ public class SceneView {
 				}
 			}
 
-			return view.tileVisibility[tileIdx] = result;
+			return view.tileVisibility[plane][tileExX][tileExY] = result;
 		}
 	}
 }
