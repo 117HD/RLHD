@@ -2999,16 +2999,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.begin(Timer.GET_MODEL);
 
 		Model model, offsetModel;
-		boolean isRenderableModel = false;
+		boolean isTileRenderable = false;
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-				isRenderableModel = true;
+				isTileRenderable = true;
 				model = (Model) renderable;
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
+				isTileRenderable = renderable instanceof GraphicsObject || renderable instanceof DynamicObject;
 				offsetModel = model = renderable.getModel();
 			}
 			if (model == null || model.getFaceCount() == 0) {
@@ -3038,7 +3039,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int plane = ModelHash.getPlane(hash);
 		int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-		boolean isVisibleInScene = !isRenderableModel || sceneCamera.isTileVisible(plane, tileExX , tileExY );
+		boolean isVisibleInScene = !isTileRenderable || sceneCamera.isTileVisible(plane, tileExX , tileExY );
 		if(isVisibleInScene) {
 			isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
 		}
