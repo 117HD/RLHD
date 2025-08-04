@@ -242,6 +242,7 @@ public class SceneView {
 		dirtyFlags &= ~TILE_VISIBILITY_DIRTY;
 		for (AsyncCullingJob planeJob : cullingJobs) {
 			planeJob.tileHeights = ctx.scene.getTileHeights()[planeJob.plane];
+			planeJob.tileIsWater = checkUnderwater ? ctx.tileIsWater[planeJob.plane] : null;
 			planeJob.underwaterDepthLevels =
 				checkUnderwater && ctx.underwaterDepthLevels != null ? ctx.underwaterDepthLevels[planeJob.plane] : null;
 			planeJob.submit();
@@ -420,6 +421,7 @@ public class SceneView {
 		private final int plane;
 
 		private int[][] tileHeights;
+		private boolean[][] tileIsWater;
 		private int[][] underwaterDepthLevels;
 
 		@Override
@@ -448,7 +450,8 @@ public class SceneView {
 
 			result = HDUtils.IsTileVisible(x, z, h0, h1, h2, h3, view.frustumPlanes) ? VisibilityResult.VISIBLE : VisibilityResult.HIDDEN;
 
-			if (result == VisibilityResult.HIDDEN && underwaterDepthLevels != null) {
+			if (result == VisibilityResult.HIDDEN && underwaterDepthLevels != null && tileIsWater != null
+				&& tileIsWater[tileExX][tileExY]) {
 				final int dl0 = underwaterDepthLevels[tileExX][tileExY];
 				final int dl1 = underwaterDepthLevels[tileExX + 1][tileExY];
 				final int dl2 = underwaterDepthLevels[tileExX][tileExY + 1];
