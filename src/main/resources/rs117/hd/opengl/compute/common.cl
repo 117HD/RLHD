@@ -22,18 +22,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
-#define PI 3.1415926535897932384626433832795f
+#include "cl_types.cl"
+
+#define PI 3.14159265f // max 32-bit float precision
 #define UNIT PI / 1024.0f
 
-float3 toScreen(__constant struct uniform *uni, int4 vertex);
-int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation);
-float4 rotate_vec(float4 vector, int orientation);
-int vertex_distance(__constant struct uniform *uni, int4 vertex);
-int face_distance(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC);
-bool face_visible(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC, int4 position);
+// Needs to match Ordinal Values of WindDisplacement.Java
+#define WIND_DISPLACEMENT_DISABLED 0
+#define WIND_DISPLACEMENT_OBJECT 1
+#define WIND_DISPLACEMENT_OBJECT_NO_GROUND_DISPLACEMENT 2
+#define WIND_DISPLACEMENT_VERTEX 3
+#define WIND_DISPLACEMENT_VERTEX_WITH_HEMISPHERE_BLEND 4
+#define WIND_DISPLACEMENT_VERTEX_JIGGLE 5
 
-float3 toScreen(__constant struct uniform *uni, int4 vertex) {
+#define HILLSKEW_NONE 0
+#define HILLSKEW_MODEL 1
+#define HILLSKEW_TILE_SNAPPING 2
+#define HILLSKEW_TILE_SNAPPING_BLEND 0.125f
+
+float3 to_screen(__constant struct UBOCompute *uni, float3 vertex);
+float4 rotate_vertex(float4 vector, int orientation);
+float vertex_distance(__constant struct UBOCompute *uni, float4 vertex);
+int face_distance(__constant struct UBOCompute *uni, float4 vA, float4 vB, float4 vC);
+bool face_visible(__constant struct UBOCompute *uni, float3 vA, float3 vB, float3 vC, int4 position);
+float saturate(float value);
+float hash(float2 st);
+float noise(float2 st);
+
+float3 to_screen(__constant struct UBOCompute *uni, float3 vertex) {
   float yawSin = sin(uni->cameraYaw);
   float yawCos = cos(uni->cameraYaw);
 
@@ -56,16 +74,7 @@ float3 toScreen(__constant struct uniform *uni, int4 vertex) {
 /*
  * Rotate a vertex by a given orientation in JAU
  */
-int4 rotate_ivec(__constant struct uniform *uni, int4 vector, int orientation) {
-  int4 sinCos = uni->sinCosTable[orientation];
-  int s = sinCos.x;
-  int c = sinCos.y;
-  int x = (vector.z * s + vector.x * c) >> 16;
-  int z = (vector.z * c - vector.x * s) >> 16;
-  return (int4)(x, vector.y, z, vector.w);
-}
-
-float4 rotate_vec(float4 vector, int orientation) {
+float4 rotate_vertex(float4 vector, int orientation) {
   float rad = orientation * UNIT;
   float s = sin(rad);
   float c = cos(rad);
@@ -77,37 +86,66 @@ float4 rotate_vec(float4 vector, int orientation) {
 /*
  * Calculate the distance to a vertex given the camera angle
  */
-int vertex_distance(__constant struct uniform *uni, int4 vertex) {
+float vertex_distance(__constant struct UBOCompute *uni, float4 vertex) {
   float j = vertex.z * cos(uni->cameraYaw) - vertex.x * sin(uni->cameraYaw);
   float l = vertex.y * sin(uni->cameraPitch) + j * cos(uni->cameraPitch);
-  return (int) l;
+  return l;
 }
 
 /*
  * Calculate the distance to a face
  */
-int face_distance(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC) {
-  int dvA = vertex_distance(uni, vA);
-  int dvB = vertex_distance(uni, vB);
-  int dvC = vertex_distance(uni, vC);
-  int faceDistance = (dvA + dvB + dvC) / 3;
-  return faceDistance;
+int face_distance(__constant struct UBOCompute *uni, float4 vA, float4 vB, float4 vC) {
+  float dvA = vertex_distance(uni, vA);
+  float dvB = vertex_distance(uni, vB);
+  float dvC = vertex_distance(uni, vC);
+  float faceDistance = (dvA + dvB + dvC) / 3;
+  return (int) faceDistance;
 }
 
 /*
  * Test if a face is visible (not backward facing)
  */
-bool face_visible(__constant struct uniform *uni, int4 vA, int4 vB, int4 vC, int4 position) {
+bool face_visible(__constant struct UBOCompute *uni, float3 vA, float3 vB, float3 vC, int4 position) {
   // Move model to scene location, and account for camera offset
-  int4 cameraPos = (int4)(uni->cameraX, uni->cameraY, uni->cameraZ, 0);
-  vA += position - cameraPos;
-  vB += position - cameraPos;
-  vC += position - cameraPos;
+  float3 cameraPos = (float3)(uni->cameraX, uni->cameraY, uni->cameraZ);
+  float3 modelPos = convert_float3(position.xyz);
 
-  float3 sA = toScreen(uni, vA);
-  float3 sB = toScreen(uni, vB);
-  float3 sC = toScreen(uni, vC);
+  float3 lA = vA + modelPos - cameraPos;
+  float3 lB = vB + modelPos - cameraPos;
+  float3 lC = vC + modelPos - cameraPos;
+
+  float3 sA = to_screen(uni, lA);
+  float3 sB = to_screen(uni, lB);
+  float3 sC = to_screen(uni, lC);
 
   return (sA.x - sB.x) * (sC.y - sB.y) - (sC.x - sB.x) * (sA.y - sB.y) > 0;
 }
 
+float saturate(float value) {
+    return clamp(value, 0.0f, 1.0f);
+}
+
+// 2D Random
+float hash(float2 st) {
+    return fmod(sin(dot(st.xy, (float2)(12.9898f, 78.233f))) * 43758.5453123f, 1.0f);
+}
+
+float noise(float2 st) {
+    float2 i = floor(st);
+    float2 f = fmod(st, 1.0f);
+
+    // Four corners in 2D of a tile
+    float a = hash(i);
+    float b = hash(i + (float2)(1.0f, 0.0f));
+    float c = hash(i + (float2)(0.0f, 1.0f));
+    float d = hash(i + (float2)(1.0f, 1.0f));
+
+    // Smooth interpolation using Hermite polynomial
+    float2 u = f * f * (3.0f - 2.0f * f);
+
+    // Mix 4 corners
+    return mix(a, b, u.x) +
+        (c - a) * u.y * (1.0f - u.x) +
+        (d - b) * u.x * u.y;
+}

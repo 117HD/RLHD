@@ -30,30 +30,30 @@
       },
       "npcIds": {
         "type": "array",
-        "description": "A set of NPC IDs which the override should apply to.",
+        "description": "A set of NPC gameval names which the override should apply to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "objectIds": {
         "type": "array",
-        "description": "A set of object IDs which the override should apply to.",
+        "description": "A set of object gameval names which the override should apply to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "projectileIds": {
         "type": "array",
-        "description": "A set of projectile IDs which the override should apply to.",
+        "description": "A set of projectile gameval names which the override should apply to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "graphicsObjectIds": {
         "type": "array",
-        "description": "A set of graphics object IDs which the override should apply to.",
+        "description": "A set of graphics object gameval names which the override should apply to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "baseMaterial": {
@@ -137,6 +137,10 @@
         "type": "boolean",
         "description": "Whether the model has fake shadows which are potentially useful for PvM. Defaults to false."
       },
+      "hideHdShadowsInPvm": {
+        "type": "boolean",
+        "description": "Whether shadow casting should be disabled when Vanilla Shadows is set to 'Prefer in PvM'. Defaults to false."
+      },
       "castShadows": {
         "type": "boolean",
         "description": "Whether the model cast shadows. Defaults to true."
@@ -144,6 +148,10 @@
       "receiveShadows": {
         "type": "boolean",
         "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+      },
+      "terrainVertexSnap": {
+        "type": "boolean",
+        "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
       },
       "shadowOpacityThreshold": {
         "type": "number",
@@ -165,6 +173,26 @@
         "items": {
           "$ref": "aabb.schema.json"
         }
+      },
+      "windDisplacementMode": {
+        "type": "string",
+        "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
+        "enum": [
+          "DISABLED",
+          "OBJECT",
+          "OBJECT_NO_GROUND_DISPLACEMENT",
+          "VERTEX",
+          "VERTEX_WITH_HEMISPHERE_BLEND",
+          "VERTEX_JIGGLE"
+        ]
+      },
+      "windDisplacementModifier": {
+        "type": "integer",
+        "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
+      },
+      "invertDisplacementStrength": {
+        "type": "boolean",
+        "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
       },
       "materialOverrides": {
         "type": "object",
@@ -226,6 +254,150 @@
             "retainVanillaUvs": {
               "type": "boolean",
               "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            },
+            "flatNormals": {
+              "type": "boolean",
+              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+            },
+            "upwardsNormals": {
+              "type": "boolean",
+              "description": "Whether normals should always point directly up. Defaults to false."
+            },
+            "castShadows": {
+              "type": "boolean",
+              "description": "Whether the model cast shadows. Defaults to true."
+            },
+            "receiveShadows": {
+              "type": "boolean",
+              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "terrainVertexSnap": {
+              "type": "boolean",
+              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
+            },
+            "shadowOpacityThreshold": {
+              "type": "number",
+              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "windDisplacementMode": {
+              "type": "string",
+              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
+              "enum": [
+                "DISABLED",
+                "OBJECT",
+                "OBJECT_NO_GROUND_DISPLACEMENT",
+                "OBJECT_NO_GROUND_DISPLACEMENT",
+                "VERTEX",
+                "VERTEX_WITH_HEMISPHERE_BLEND",
+                "VERTEX_JIGGLE"
+              ]
+            }
+          }
+        }
+      },
+      "colorOverrides": {
+        "description": "A subset of options can be tweaked separately for a specific set of colors of the model.",
+        "type": "array",
+        "items": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [ "baseMaterial", "colors" ],
+          "properties": {
+            "colors": {
+              "type": [ "array", "string", "integer" ],
+              "description": "One or more expressions or values to test the HSL color against. Available variables: `hsl`, `h`, `s`, `l`.",
+              "items": {
+                "type": [ "string", "integer" ]
+              }
+            },
+            "description": {
+              "type": "string",
+              "description": "Description of which part of the object these properties apply to."
+            },
+            "baseMaterial": {
+              "type": "string",
+              "description": "Case-sensitive name of the material to apply to faces which pass the color checks."
+            },
+            "uvType": {
+              "type": "string",
+              "description": "What to base UV coordinates on for object texturing. Defaults to GEOMETRY.",
+              "enum": [
+                "VANILLA",
+                "GEOMETRY",
+                "MODEL_XY",
+                "MODEL_XY_MIRROR_A",
+                "MODEL_XY_MIRROR_B",
+                "MODEL_XZ",
+                "MODEL_XZ_MIRROR_A",
+                "MODEL_XZ_MIRROR_B",
+                "MODEL_YZ",
+                "MODEL_YZ_MIRROR_A",
+                "MODEL_YZ_MIRROR_B",
+                "WORLD_XY",
+                "WORLD_XZ",
+                "WORLD_YZ",
+                "BOX"
+              ]
+            },
+            "uvScale": {
+              "type": "number",
+              "description": "A scaling factor to apply to UV coordinates. Defaults to 1."
+            },
+            "uvOrientation": {
+              "type": "integer",
+              "description": "Extra rotation to apply to UVs with 2048 corresponding to a complete rotation. Defaults to 0."
+            },
+            "uvOrientationX": {
+              "type": "integer",
+              "description": "Rotation around the X axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationY": {
+              "type": "integer",
+              "description": "Rotation around the Y axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "uvOrientationZ": {
+              "type": "integer",
+              "description": "Rotation around the Z axis, with 2048 corresponding to a complete rotation. Defaults to uvOrientation."
+            },
+            "retainVanillaUvs": {
+              "type": "boolean",
+              "description": "Retain vanilla UVs on already textured areas of the model. Defaults to true."
+            },
+            "flatNormals": {
+              "type": "boolean",
+              "description": "Whether flat normals should be used instead of smooth normals. Defaults to false."
+            },
+            "upwardsNormals": {
+              "type": "boolean",
+              "description": "Whether normals should always point directly up. Defaults to false."
+            },
+            "castShadows": {
+              "type": "boolean",
+              "description": "Whether the model cast shadows. Defaults to true."
+            },
+            "receiveShadows": {
+              "type": "boolean",
+              "description": "Whether the model receive shadows cast by other objects. Defaults to true."
+            },
+            "terrainVertexSnap": {
+              "type": "boolean",
+              "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
+            },
+            "shadowOpacityThreshold": {
+              "type": "number",
+              "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
+            },
+            "windDisplacementMode": {
+              "type": "string",
+              "description": "What type of wind displacement should be applied to the model. Defaults to DISABLED.",
+              "enum": [
+                "DISABLED",
+                "OBJECT",
+                "OBJECT_NO_GROUND_DISPLACEMENT",
+                "VERTEX",
+                "VERTEX_WITH_HEMISPHERE_BLEND",
+                "VERTEX_JIGGLE"
+              ]
             }
           }
         }

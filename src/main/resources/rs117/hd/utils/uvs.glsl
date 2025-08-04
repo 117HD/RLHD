@@ -23,6 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#include <uniforms/global.glsl>
 
 void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
     if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
@@ -53,9 +54,9 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
         for (int i = 0; i < 3; i++) {
             vec3 p = pos[i];
             #ifdef USE_VANILLA_UV_PROJECTION
-            // Project vertex positions onto a plane going through the texture triangle
-            vec3 vertexToCamera = cameraPos - p;
-            p += vertexToCamera * dot(uvw[i] - p, uvNormal) / dot(vertexToCamera, uvNormal);
+                // Project vertex positions onto a plane going through the texture triangle
+                vec3 vertexToCamera = cameraPos - p;
+                p += vertexToCamera * dot(uvw[i] - p, uvNormal) / dot(vertexToCamera, uvNormal);
             #endif
 
             // uvw[i].x = (v4's distance along perpv3) / (v2's distance along perpv3)

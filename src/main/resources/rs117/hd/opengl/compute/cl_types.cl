@@ -22,25 +22,36 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
-struct uniform {
+#include MAX_CHARACTER_POSITION_COUNT
+
+struct UBOCompute {
+  // Camera uniforms
   float cameraYaw;
   float cameraPitch;
   int centerX;
   int centerY;
   int zoom;
-  float cameraX;
-  float cameraY;
-  float cameraZ;
-  int4 sinCosTable[2048];
+  float cameraX; float cameraY; float cameraZ; // Here be dragons on macOS if converted to float3
+
+  // Wind uniforms
+  float windDirectionX;
+  float windDirectionZ;
+  float windStrength;
+  float windCeiling;
+  float windOffset;
+
+  int characterPositionCount;
+  float3 characterPositions[MAX_CHARACTER_POSITION_COUNT];
 };
 
 struct shared_data {
-  int totalNum[12]; // number of faces with a given priority
-  int totalDistance[12]; // sum of distances to faces of a given priority
+  int totalNum[12];       // number of faces with a given priority
+  int totalDistance[12];  // sum of distances to faces of a given priority
   int totalMappedNum[18]; // number of faces with a given adjusted priority
-  int min10; // minimum distance to a face of priority 10
-  int dfs[0]; // packed face id and distance, size 512 for small, 6144 for large
+  int min10;              // minimum distance to a face of priority 10
+  int renderPris[0];     // priority for face draw order
 };
 
 struct ModelInfo {
@@ -48,8 +59,28 @@ struct ModelInfo {
   int uvOffset; // offset into uv buffer
   int size;     // length in faces
   int idx;      // write idx in target buffer
-  int flags;    // hillskew, plane, radius, orientation
+  int flags;    // hillskew, plane, orientation
   int x;        // scene position x
-  int y;        // scene position y
+  int y;        // scene position y & model height
   int z;        // scene position z
+};
+
+struct VertexData {
+  float x;
+  float y;
+  float z;
+  int ahsl;
+};
+
+struct UVData {
+    float u;
+    float v;
+    float w;
+    int materialData;
+};
+
+struct ObjectWindSample {
+    float3 direction;
+    float3 displacement;
+    float heightBasedStrength;
 };

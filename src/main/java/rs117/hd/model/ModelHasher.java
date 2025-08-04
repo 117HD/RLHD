@@ -39,9 +39,9 @@ public class ModelHasher {
 			faceColorsThreeHash = 0;
 			faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
 			faceTexturesHash = fastShortHash(model.getFaceTextures());
-			xVerticesHash = fastHash(model.getVerticesX(), model.getVerticesCount());
-			yVerticesHash = fastHash(model.getVerticesY(), model.getVerticesCount());
-			zVerticesHash = fastHash(model.getVerticesZ(), model.getVerticesCount());
+			xVerticesHash = fastFloatHash(model.getVerticesX(), model.getVerticesCount());
+			yVerticesHash = fastFloatHash(model.getVerticesY(), model.getVerticesCount());
+			zVerticesHash = fastFloatHash(model.getVerticesZ(), model.getVerticesCount());
 			faceIndicesOneHash = fastHash(model.getFaceIndices1());
 			faceIndicesTwoHash = 0;
 			faceIndicesThreeHash = 0;
@@ -59,9 +59,9 @@ public class ModelHasher {
 					final int[] texIndices1 = model.getTexIndices1();
 					final int[] texIndices2 = model.getTexIndices2();
 					final int[] texIndices3 = model.getTexIndices3();
-					final int[] vertexX = model.getVerticesX();
-					final int[] vertexY = model.getVerticesY();
-					final int[] vertexZ = model.getVerticesZ();
+					final float[] vertexX = model.getVerticesX();
+					final float[] vertexY = model.getVerticesY();
+					final float[] vertexZ = model.getVerticesZ();
 					long h = 0;
 					for (int i = 0; i < model.getFaceCount(); i++) {
 						int texFace = textureFaces[i];
@@ -71,15 +71,15 @@ public class ModelHasher {
 						final int texA = texIndices1[texFace];
 						final int texB = texIndices2[texFace];
 						final int texC = texIndices3[texFace];
-						h = h * 31L + vertexX[texA];
-						h = h * 31L + vertexY[texA];
-						h = h * 31L + vertexZ[texA];
-						h = h * 31L + vertexX[texB];
-						h = h * 31L + vertexY[texB];
-						h = h * 31L + vertexZ[texB];
-						h = h * 31L + vertexX[texC];
-						h = h * 31L + vertexY[texC];
-						h = h * 31L + vertexZ[texC];
+						h = h * 31L + Float.floatToIntBits(vertexX[texA]);
+						h = h * 31L + Float.floatToIntBits(vertexY[texA]);
+						h = h * 31L + Float.floatToIntBits(vertexZ[texA]);
+						h = h * 31L + Float.floatToIntBits(vertexX[texB]);
+						h = h * 31L + Float.floatToIntBits(vertexY[texB]);
+						h = h * 31L + Float.floatToIntBits(vertexZ[texB]);
+						h = h * 31L + Float.floatToIntBits(vertexX[texC]);
+						h = h * 31L + Float.floatToIntBits(vertexY[texC]);
+						h = h * 31L + Float.floatToIntBits(vertexZ[texC]);
 					}
 					textureTrianglesHash = h;
 				}
@@ -90,9 +90,9 @@ public class ModelHasher {
 			faceColorsThreeHash = fastHash(model.getFaceColors3());
 			faceTransparenciesHash = fastByteHash(model.getFaceTransparencies());
 			faceTexturesHash = fastShortHash(model.getFaceTextures());
-			xVerticesHash = fastHash(model.getVerticesX(), model.getVerticesCount());
-			yVerticesHash = fastHash(model.getVerticesY(), model.getVerticesCount());
-			zVerticesHash = fastHash(model.getVerticesZ(), model.getVerticesCount());
+			xVerticesHash = fastFloatHash(model.getVerticesX(), model.getVerticesCount());
+			yVerticesHash = fastFloatHash(model.getVerticesY(), model.getVerticesCount());
+			zVerticesHash = fastFloatHash(model.getVerticesZ(), model.getVerticesCount());
 			faceIndicesOneHash = fastHash(model.getFaceIndices1());
 			faceIndicesTwoHash = fastHash(model.getFaceIndices2());
 			faceIndicesThreeHash = fastHash(model.getFaceIndices3());
@@ -110,9 +110,9 @@ public class ModelHasher {
 					final int[] texIndices1 = model.getTexIndices1();
 					final int[] texIndices2 = model.getTexIndices2();
 					final int[] texIndices3 = model.getTexIndices3();
-					final int[] vertexX = model.getVerticesX();
-					final int[] vertexY = model.getVerticesY();
-					final int[] vertexZ = model.getVerticesZ();
+					final float[] vertexX = model.getVerticesX();
+					final float[] vertexY = model.getVerticesY();
+					final float[] vertexZ = model.getVerticesZ();
 					long h = 0;
 					for (int i = 0; i < model.getFaceCount(); i++) {
 						int texFace = textureFaces[i];
@@ -122,15 +122,15 @@ public class ModelHasher {
 						final int texA = texIndices1[texFace];
 						final int texB = texIndices2[texFace];
 						final int texC = texIndices3[texFace];
-						h = h * 31L + vertexX[texA];
-						h = h * 31L + vertexY[texA];
-						h = h * 31L + vertexZ[texA];
-						h = h * 31L + vertexX[texB];
-						h = h * 31L + vertexY[texB];
-						h = h * 31L + vertexZ[texB];
-						h = h * 31L + vertexX[texC];
-						h = h * 31L + vertexY[texC];
-						h = h * 31L + vertexZ[texC];
+						h = h * 31L + Float.floatToIntBits(vertexX[texA]);
+						h = h * 31L + Float.floatToIntBits(vertexY[texA]);
+						h = h * 31L + Float.floatToIntBits(vertexZ[texA]);
+						h = h * 31L + Float.floatToIntBits(vertexX[texB]);
+						h = h * 31L + Float.floatToIntBits(vertexY[texB]);
+						h = h * 31L + Float.floatToIntBits(vertexZ[texB]);
+						h = h * 31L + Float.floatToIntBits(vertexX[texC]);
+						h = h * 31L + Float.floatToIntBits(vertexY[texC]);
+						h = h * 31L + Float.floatToIntBits(vertexZ[texC]);
 					}
 					textureTrianglesHash = h;
 				}
@@ -227,6 +227,30 @@ public class ModelHasher {
 		return r;
 	}
 
+	public static int fastIntHash(int x, int y) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		return result;
+	}
+
+	public static int fastIntHash(int x, int y, int z) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		result = 31 * result + z;
+		return result;
+	}
+
+	public static int fastIntHash(int x, int y, int z, int w) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		result = 31 * result + z;
+		result = 31 * result + w;
+		return result;
+	}
+
 	public static int fastIntHash(int[] a, int actualLength) {
 		if (a == null)
 			return 0;
@@ -297,7 +321,53 @@ public class ModelHasher {
 		return r;
 	}
 
-    public static int fastFloatHash(float[] a) {
+	public static int fastFloatHash(float x, float y) {
+		int result = 17;
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		return result;
+	}
+
+	public static int fastFloatHash(float x, float y, float z) {
+		int result = 17;
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		result = 31 * result + (int) (z * 100);
+		return result;
+	}
+
+	public static int fastFloatHash(float x, float y, float z, float w) {
+		int result = 17;
+		result = 31 * result + (int) (x * 100);
+		result = 31 * result + (int) (y * 100);
+		result = 31 * result + (int) (z * 100);
+		result = 31 * result + (int) (w * 100);
+		return result;
+	}
+
+	public static int fastFloatHash(float[] a, int length) {
+		if (a == null)
+			return 0;
+
+		int i = 0;
+		int r = 1;
+
+		for (; i + 5 < length; i += 6)
+			r = 31 * 31 * 31 * 31 * 31 * 31 * r +
+				31 * 31 * 31 * 31 * 31 * (int) (a[i] * 100) +
+				31 * 31 * 31 * 31 * (int) (a[i + 1] * 100) +
+				31 * 31 * 31 * (int) (a[i + 2] * 100) +
+				31 * 31 * (int) (a[i + 3] * 100) +
+				31 * (int) (a[i + 4] * 100) +
+				(int) (a[i + 5] * 100);
+
+		for (; i < length; i++)
+			r = 31 * r + (int) (a[i] * 100);
+
+		return r;
+	}
+
+	public static int fastFloatHash(float[] a) {
 		if (a == null)
 			return 0;
 
@@ -306,15 +376,15 @@ public class ModelHasher {
 
 		for (; i + 5 < a.length; i += 6)
 			r = 31 * 31 * 31 * 31 * 31 * 31 * r +
-				31 * 31 * 31 * 31 * 31 * Float.floatToIntBits(a[i]) +
-				31 * 31 * 31 * 31 * Float.floatToIntBits(a[i + 1]) +
-				31 * 31 * 31 * Float.floatToIntBits(a[i + 2]) +
-				31 * 31 * Float.floatToIntBits(a[i + 3]) +
-				31 * Float.floatToIntBits(a[i + 4]) +
-				Float.floatToIntBits(a[i + 5]);
+				31 * 31 * 31 * 31 * 31 * (int) (a[i] * 100) +
+				31 * 31 * 31 * 31 * (int) (a[i + 1] * 100) +
+				31 * 31 * 31 * (int) (a[i + 2] * 100) +
+				31 * 31 * (int) (a[i + 3] * 100) +
+				31 * (int) (a[i + 4] * 100) +
+				(int) (a[i + 5] * 100);
 
 		for (; i < a.length; i++)
-			r = 31 * r + Float.floatToIntBits(a[i]);
+			r = 31 * r + (int) (a[i] * 100);
 
 		return r;
 	}

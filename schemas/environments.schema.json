@@ -15,17 +15,29 @@
         "type": "string",
         "description": "The area the environment should apply in."
       },
+      "description": {
+        "type": "string",
+        "description": "Optional description of what this changes or why."
+      },
       "isUnderwater": {
         "type": "boolean",
-        "description": "."
+        "description": "Whether the area is an underwater area, such as Guardians of the Rift."
+      },
+      "force": {
+        "type": "boolean",
+        "description": "Whether to force the environment to apply, even if atmospheric lighting is disabled."
       },
       "allowSkyOverride": {
         "type": "boolean",
-        "description": "."
+        "description": "Whether to allow overriding the sky with default sky."
       },
       "lightningEffects": {
         "type": "boolean",
-        "description": "."
+        "description": "Whether the area should have flashing lightning effects."
+      },
+      "instantTransition": {
+        "type": "boolean",
+        "description": "Whether transitions to and from this area should always be instant."
       },
       "ambientColor": {
         "type": [ "string", "array" ],
@@ -134,6 +146,22 @@
       "groundFogOpacity": {
         "type": "number",
         "description": "Ground fog opacity ranging from 0 to 1, meaning no ground fog and full ground fog respectively. Defaults to 0."
+      },
+      "windAngle": {
+        "type": "number",
+        "description": "Angle in degrees for the wind direction. Zero is east and positive rotates towards north. Defaults to 0."
+      },
+      "windSpeed": {
+        "type": "number",
+        "description": "Controls wind turbulence; the rate of change in the wind noise. Larger values cause more rapid changes. Defaults to 15."
+      },
+      "windStrength": {
+        "type": "number",
+        "description": "Strength of the displacement caused by wind; the maximum amount a single vertex is allowed to move. Defaults to 0."
+      },
+      "windCeiling": {
+        "type": "number",
+        "description": "The height where the `windStrength` will be reached. The closer objects are to this height, the stronger the wind will be. Defaults to 1280 (10 tiles in height)."
       }
     }
   }

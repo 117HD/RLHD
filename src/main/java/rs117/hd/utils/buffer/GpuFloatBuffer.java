@@ -38,7 +38,13 @@ public class GpuFloatBuffer
 	}
 
 	public GpuFloatBuffer(int initialCapacity) {
-		buffer = MemoryUtil.memAllocFloat(initialCapacity);
+		try {
+			buffer = MemoryUtil.memAllocFloat(initialCapacity);
+		} catch (OutOfMemoryError oom) {
+			// Force garbage collection and try again
+			System.gc();
+			buffer = MemoryUtil.memAllocFloat(initialCapacity);
+		}
 	}
 
 	public void destroy() {
@@ -55,6 +61,10 @@ public class GpuFloatBuffer
 
 	public void put(float x, float y, float z, float w) {
 		buffer.put(x).put(y).put(z).put(w);
+	}
+
+	public void put(float x, float y, float z, int w) {
+		buffer.put(x).put(y).put(z).put(Float.intBitsToFloat(w));
 	}
 
 	public void put(float[] floats) {
@@ -88,7 +98,7 @@ public class GpuFloatBuffer
 		final int position = buffer.position();
 		if ((capacity - position) < size) {
 			do {
-				capacity *= HdPlugin.BUFFER_GROWTH_MULTIPLIER;
+				capacity = (int) (capacity * HdPlugin.BUFFER_GROWTH_MULTIPLIER);
 			}
 			while ((capacity - position) < size);
 

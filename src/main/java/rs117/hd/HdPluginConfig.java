@@ -33,11 +33,15 @@ import net.runelite.client.config.Range;
 import net.runelite.client.config.Units;
 import rs117.hd.config.AntiAliasingMode;
 import rs117.hd.config.ColorBlindMode;
+import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.DynamicLights;
+import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
+import rs117.hd.config.SceneScalingMode;
+import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
@@ -49,7 +53,8 @@ import rs117.hd.config.VanillaShadowMode;
 
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
-import static rs117.hd.HdPluginConfig.CONFIG_GROUP;
+import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
@@ -74,7 +79,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The number of tiles to draw in either direction from the camera, up to a maximum of 184.<br>" +
 			"Depending on where the scene is centered, you might only see 16 tiles in one direction, unless you extend map loading.",
-		position = 0,
+		position = 1,
 		section = generalSettings
 	)
 	default int drawDistance() {
@@ -91,25 +96,54 @@ public interface HdPluginConfig extends Config
 		description =
 			"How much further the map should be loaded. The maximum is 5 extra chunks.<br>" +
 			"Note, extending the map can have a very high impact on performance.",
-		position = 1,
+		position = 2,
 		section = generalSettings
 	)
 	default int expandedMapLoadingChunks() {
 		return 3;
 	}
 
+	String KEY_ANTI_ALIASING_MODE = "antiAliasingMode";
 	@ConfigItem(
-		keyName = "antiAliasingMode",
+		keyName = KEY_ANTI_ALIASING_MODE,
 		name = "Anti-Aliasing",
 		description =
 			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
 			"MSAA x16 is very expensive, so x8 is recommended if anti-aliasing is desired.",
-		position = 2,
+		position = 3,
 		section = generalSettings
 	)
 	default AntiAliasingMode antiAliasingMode()
 	{
 		return AntiAliasingMode.DISABLED;
+	}
+
+	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
+	@ConfigItem(
+		keyName = KEY_SCENE_RESOLUTION_SCALE,
+		name = "Game Resolution",
+		description =
+			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
+			"Reducing this can improve performance, particularly on very high resolution displays.",
+		position = 4,
+		section = generalSettings
+	)
+	@Units(Units.PERCENT)
+	@Range(min = 1, max = 200)
+	default int sceneResolutionScale() {
+		return 100;
+	}
+
+	@ConfigItem(
+		keyName = "sceneScalingMode",
+		name = "Game Scaling Mode",
+		description = "The sampling function to use when upscaling the above reduced game resolution.",
+		position = 5,
+		section = generalSettings
+	)
+	default SceneScalingMode sceneScalingMode()
+	{
+		return SceneScalingMode.LINEAR;
 	}
 
 	String KEY_UI_SCALING_MODE = "uiScalingMode";
@@ -119,11 +153,10 @@ public interface HdPluginConfig extends Config
 		description =
 			"The sampling function to use when the Stretched Mode plugin is enabled.<br>" +
 			"Affects how the UI looks with non-integer scaling.",
-		position = 3,
+		position = 6,
 		section = generalSettings
 	)
-	default UIScalingMode uiScalingMode()
-	{
+	default UIScalingMode uiScalingMode() {
 		return UIScalingMode.LINEAR;
 	}
 
@@ -140,7 +173,7 @@ public interface HdPluginConfig extends Config
 			"At zero, mipmapping is disabled and textures look the most pixelated.<br>" +
 			"At 1 through 16, mipmapping is enabled, and textures look more blurry and smoothed out.<br>" +
 			"The higher you go beyond 1, the less blurry textures will look, up to a certain extent.",
-		position = 4,
+		position = 7,
 		section = generalSettings
 	)
 	default int anisotropicFilteringLevel()
@@ -153,7 +186,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_UNLOCK_FPS,
 		name = "Unlock FPS",
 		description = "Removes the 50 FPS cap for some game content, such as camera movement and dynamic lighting.",
-		position = 5,
+		position = 8,
 		section = generalSettings
 	)
 	default boolean unlockFps()
@@ -179,7 +212,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'on', the game will attempt to match your monitor's refresh rate <b>exactly</b>,<br>" +
 			"but if it can't keep up, FPS will be <u>halved until it catches up</u>. This option is rarely desired.<br>" +
 			"Note, GPUs that don't support Adaptive VSync will silently fall back to 'on'.",
-		position = 6,
+		position = 9,
 		section = generalSettings
 	)
 	default SyncMode syncMode()
@@ -194,7 +227,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Controls the maximum number of frames per second.<br>" +
 			"This setting only applies if Unlock FPS is enabled, and VSync Mode is set to 'off'.",
-		position = 7,
+		position = 10,
 		section = generalSettings
 	)
 	@Range(
@@ -211,7 +244,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_COLOR_BLINDNESS,
 		name = "Color Blindness",
 		description = "Adjust colors to make them more distinguishable for people with a certain type of color blindness.",
-		position = 8,
+		position = 11,
 		section = generalSettings
 	)
 	default ColorBlindMode colorBlindness()
@@ -223,7 +256,7 @@ public interface HdPluginConfig extends Config
 		keyName = "colorBlindnessIntensity",
 		name = "Blindness Intensity",
 		description = "Specifies how intense the color blindness adjustment should be.",
-		position = 9,
+		position = 12,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
@@ -237,7 +270,7 @@ public interface HdPluginConfig extends Config
 		keyName = "flashingEffects",
 		name = "Flashing Effects",
 		description = "Whether to show rapid flashing effects, such as lightning, in certain areas.",
-		position = 10,
+		position = 13,
 		section = generalSettings
 	)
 	default boolean flashingEffects()
@@ -250,14 +283,14 @@ public interface HdPluginConfig extends Config
 		name = "Saturation",
 		description = "Controls the saturation of the final rendered image.<br>" +
 			"Intended to be kept between 0% and 120%.",
-		position = 11,
+		position = 14,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
 	@Range(min = -500, max = 500)
 	default int saturation()
 	{
-		return Math.round(oldSaturationDropdown().getAmount() * 100);
+		return round(oldSaturationDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "saturation", hidden = true, name = "", description = "")
 	default Saturation oldSaturationDropdown()
@@ -270,19 +303,51 @@ public interface HdPluginConfig extends Config
 		name = "Contrast",
 		description = "Controls the contrast of the final rendered image.<br>" +
 			"Intended to be kept between 90% and 110%.",
-		position = 12,
+		position = 15,
 		section = generalSettings
 	)
 	@Units(Units.PERCENT)
 	@Range(min = -500, max = 500)
 	default int contrast()
 	{
-		return Math.round(oldContrastDropdown().getAmount() * 100);
+		return round(oldContrastDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "contrast", hidden = true, name = "", description = "")
 	default Contrast oldContrastDropdown()
 	{
 		return Contrast.DEFAULT;
+	}
+
+	String KEY_BRIGHTNESS = "screenBrightness";
+	@Range(
+		min = 25,
+		max = 400
+	)
+	@Units(Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_BRIGHTNESS,
+		name = "Brightness",
+		description =
+			"Controls the brightness of the game, excluding UI.<br>" +
+			"Adjust until the disk on the left is barely visible.",
+		position = 16,
+		section = generalSettings
+	)
+	default int brightness() {
+		return 100;
+	}
+
+	@ConfigItem(
+		keyName = "useLegacyBrightness",
+		name = "Enable Legacy Brightness",
+		description =
+			"Whether the legacy brightness option below should be applied.<br>" +
+			"We recommend leaving this disabled.",
+		position = 17,
+		section = generalSettings
+	)
+	default boolean useLegacyBrightness() {
+		return false;
 	}
 
 	@Range(
@@ -291,13 +356,16 @@ public interface HdPluginConfig extends Config
 	)
 	@ConfigItem(
 		keyName = "brightness2",
-		name = "Brightness",
-		description = "Controls the brightness of environmental lighting.<br>" +
+		name = "Legacy Brightness",
+		description =
+			"Controls the strength of the sun and ambient lighting.<br>" +
 			"A brightness value of 20 is recommended.",
-		position = 13,
+		position = 18,
 		section = generalSettings
 	)
-	default int brightness() { return 20; }
+	default int legacyBrightness() {
+		return 20;
+	}
 
 
 	/*====== Lighting settings ======*/
@@ -309,19 +377,31 @@ public interface HdPluginConfig extends Config
 	)
 	String lightingSettings = "lightingSettings";
 
-	String KEY_MAX_DYNAMIC_LIGHTS = "maxDynamicLights";
+	String KEY_DYNAMIC_LIGHTS = "dynamicLights";
 	@ConfigItem(
-		keyName = KEY_MAX_DYNAMIC_LIGHTS,
+		keyName = KEY_DYNAMIC_LIGHTS,
 		name = "Dynamic Lights",
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
 			"Reducing this may improve performance.",
-		position = 1,
+		position = 0,
 		section = lightingSettings
 	)
-	default MaxDynamicLights maxDynamicLights()
+	default DynamicLights dynamicLights()
 	{
-		return MaxDynamicLights.SOME;
+		return DynamicLights.SOME;
+	}
+
+	String KEY_TILED_LIGHTING = "tiledLighting";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING,
+		name = "Tiled Lighting",
+		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
+		section = lightingSettings,
+		position = 1
+	)
+	default boolean tiledLighting() {
+		return true;
 	}
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
@@ -496,6 +576,18 @@ public interface HdPluginConfig extends Config
 		return SeasonalTheme.AUTOMATIC;
 	}
 
+	String KEY_SEASONAL_HEMISPHERE = "seasonalHemisphere";
+	@ConfigItem(
+		keyName = KEY_SEASONAL_HEMISPHERE,
+		name = "Seasonal Hemisphere",
+		description = "Determines which hemisphere the 'Automatic' Seasonal Theme should consider.",
+		position = 1,
+		section = environmentSettings
+	)
+	default SeasonalHemisphere seasonalHemisphere() {
+		return SeasonalHemisphere.NORTHERN;
+	}
+
 	@ConfigItem(
 		keyName = "fogDepthMode",
 		name = "Fog Depth Mode",
@@ -503,7 +595,7 @@ public interface HdPluginConfig extends Config
 			"Determines how the fog amount is controlled.<br>" +
 			"'Dynamic' changes fog depth based on the area, while<br>" +
 			"'Static' respects the manually defined fog depth.",
-		position = 1,
+		position = 2,
 		section = environmentSettings
 	)
 	default FogDepthMode fogDepthMode()
@@ -520,7 +612,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Specify how far from the edge fog should reach.<br>" +
 			"This applies only when 'Fog Depth Mode' is set to 'Static'.",
-		position = 2,
+		position = 3,
 		section = environmentSettings
 	)
 	default int fogDepth()
@@ -532,7 +624,7 @@ public interface HdPluginConfig extends Config
 		keyName = "groundFog",
 		name = "Ground Fog",
 		description = "Enables a height-based fog effect that covers the ground in certain areas.",
-		position = 3,
+		position = 4,
 		section = environmentSettings
 	)
 	default boolean groundFog() {
@@ -548,7 +640,7 @@ public interface HdPluginConfig extends Config
 			"If set to 'RuneLite Skybox', the sky color from RuneLite's Skybox plugin will be used.<br>" +
 			"If set to 'Old School Black', the sky will be black and water will remain blue, but for any<br>" +
 			"other option, the water color will be influenced by the sky color.",
-		position = 4,
+		position = 5,
 		section = environmentSettings
 	)
 	default DefaultSkyColor defaultSkyColor()
@@ -560,7 +652,7 @@ public interface HdPluginConfig extends Config
 		keyName = "overrideSky",
 		name = "Override Sky Color",
 		description = "Forces the default sky color to be used in all environments.",
-		position = 5,
+		position = 6,
 		section = environmentSettings
 	)
 	default boolean overrideSky() {
@@ -571,8 +663,10 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
-		description = "Adds textures to some models.",
-		position = 6,
+		description =
+			"Adds new textures to most models. If disabled, the standard game textures will be used instead.<br>" +
+			"Note, this requires model caching in order to apply to animated models.",
+		position = 7,
 		section = environmentSettings
 	)
 	default boolean modelTextures() {
@@ -583,8 +677,8 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_GROUND_TEXTURES,
 		name = "Ground Textures",
-		description = "Adds textures to some ground tiles.",
-		position = 7,
+		description = "Adds new textures to most ground tiles.",
+		position = 8,
 		section = environmentSettings
 	)
 	default boolean groundTextures()
@@ -597,7 +691,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_TEXTURE_RESOLUTION,
 		name = "Texture Resolution",
 		description = "Controls the resolution used for all in-game textures.",
-		position = 8,
+		position = 9,
 		section = environmentSettings
 	)
 	default TextureResolution textureResolution()
@@ -610,7 +704,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_GROUND_BLENDING,
 		name = "Ground Blending",
 		description = "Controls whether ground tiles should blend into each other, or have distinct edges.",
-		position = 9,
+		position = 10,
 		section = environmentSettings
 	)
 	default boolean groundBlending()
@@ -622,7 +716,7 @@ public interface HdPluginConfig extends Config
 		keyName = "underwaterCaustics",
 		name = "Underwater Caustics",
 		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 10,
+		position = 11,
 		section = environmentSettings
 	)
 	default boolean underwaterCaustics()
@@ -635,13 +729,36 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_HD_TZHAAR_RESKIN,
 		name = "HD TzHaar Reskin",
 		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 11,
+		position = 12,
 		section = environmentSettings
 	)
 	default boolean hdTzHaarReskin() {
 		return true;
 	}
 
+	String KEY_WIND_DISPLACEMENT = "windDisplacement";
+	@ConfigItem(
+		keyName = KEY_WIND_DISPLACEMENT,
+		name = "Wind Displacement",
+		description = "Controls whether things like grass and leaves should be affected by wind.",
+		position = 13,
+		section = environmentSettings
+	)
+	default boolean windDisplacement() {
+		return true;
+	}
+
+	String KEY_CHARACTER_DISPLACEMENT = "characterDisplacement";
+	@ConfigItem(
+		keyName = KEY_CHARACTER_DISPLACEMENT,
+		name = "Character Displacement",
+		description = "Let players & NPCs affect things like grass whilst walking around.",
+		position = 14,
+		section = environmentSettings
+	)
+	default boolean characterDisplacement() {
+		return true;
+	}
 
 	/*====== Model caching settings ======*/
 
@@ -720,7 +837,6 @@ public interface HdPluginConfig extends Config
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
 			"Only enable it if you are seeing broken colors. Are you sure you want to enable this setting?",
-		position = 1,
 		section = miscellaneousSettings
 	)
 	default boolean macosIntelWorkaround()
@@ -735,7 +851,6 @@ public interface HdPluginConfig extends Config
 		description =
 			"Replace the infernal cape texture with a more detailed version.<br>" +
 			"Note, with Anisotropic Filtering above zero, the cape may look blurry when zoomed out.",
-		position = 2,
 		section = miscellaneousSettings
 	)
 	default boolean hdInfernalTexture() {
@@ -749,7 +864,6 @@ public interface HdPluginConfig extends Config
 		description =
 			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
 			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
-		position = 4,
 		section = miscellaneousSettings
 	)
 	default boolean legacyGreyColors() {
@@ -763,7 +877,6 @@ public interface HdPluginConfig extends Config
 		description =
 			"Blend between colors similarly to how it works in vanilla, with clearly defined bands of color.<br>" +
 			"This isn't really noticeable on textured surfaces, and is intended to be used without ground textures.",
-		position = 5,
 		section = miscellaneousSettings
 	)
 	default boolean vanillaColorBanding() {
@@ -778,11 +891,46 @@ public interface HdPluginConfig extends Config
 		warning =
 			"<html>This <b>will not</b> result in better performance. It is recommended only if you are unable to install<br>" +
 			"the 64-bit version of RuneLite, or if your computer has a very low amount of memory available.</html>",
-		position = 6,
 		section = miscellaneousSettings
 	)
 	default boolean lowMemoryMode() {
 		return false;
+	}
+
+	String KEY_FISHING_SPOT_STYLE = "fishingSpotStyle";
+	@ConfigItem(
+		keyName = KEY_FISHING_SPOT_STYLE,
+		name = "Fishing spot style",
+		description = "Choose the appearance of most fishing spots. Bubbles are the easiest to see on top of 117 HD's water style.",
+		section = miscellaneousSettings
+	)
+	default FishingSpotStyle fishingSpotStyle() {
+		return FishingSpotStyle.HD;
+	}
+
+	String KEY_COLOR_FILTER = "colorFilter";
+	@ConfigItem(
+		keyName = KEY_COLOR_FILTER,
+		name = "Color Filter",
+		description = "Apply a color filter to the game as a post-processing effect.",
+		section = miscellaneousSettings
+	)
+	default ColorFilter colorFilter() {
+		return ColorFilter.NONE;
+	}
+
+	String KEY_REMOVE_VERTEX_SNAPPING = "removeVertexSnapping";
+	@ConfigItem(
+		keyName = KEY_REMOVE_VERTEX_SNAPPING,
+		name = "Remove vertex snapping",
+		description =
+			"Removes vertex snapping from most animations.<br>" +
+			"Most animations are barely affected by this, and it only has an effect if the animation smoothing plugin is turned off.<br>" +
+			"To see quite clearly what impact this option has, a good example is the godsword idle animation.",
+		section = miscellaneousSettings
+	)
+	default boolean removeVertexSnapping() {
+		return true;
 	}
 
 
@@ -864,6 +1012,38 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_HIDE_UNRELATED_AREAS = "hideUnrelatedAreas";
+	@ConfigItem(
+		keyName = KEY_HIDE_UNRELATED_AREAS,
+		name = "Hide unrelated areas",
+		description = "Hide unrelated areas which you shouldn't see from your current position.",
+		section = experimentalSettings
+	)
+	default boolean hideUnrelatedAreas() {
+		return true;
+	}
+
+	String KEY_WIREFRAME = "wireframe";
+	@ConfigItem(
+		keyName = KEY_WIREFRAME,
+		name = "Wireframe",
+		description = "Show the edges of individual triangles in the scene.",
+		section = experimentalSettings
+	)
+	default boolean wireframe() {
+		return false;
+	}
+
+	String KEY_ASYNC_UI_COPY = "experimentalAsyncUICopy";
+	@ConfigItem(
+		keyName = KEY_ASYNC_UI_COPY,
+		name = "Perform UI copy asynchronously",
+		description = "Slightly improves performance by delaying the UI by one frame.",
+		section = experimentalSettings
+	)
+	default boolean asyncUICopy() {
+		return false;
+	}
 
 	/*====== Internal settings ======*/
 

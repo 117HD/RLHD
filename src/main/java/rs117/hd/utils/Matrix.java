@@ -1,9 +1,21 @@
+/*
+ * Matrix utility functions.
+ * Written in 2024 by Hooder <ahooder@protonmail.com>
+ * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights
+ * to this software to the public domain worldwide. This software is distributed without any warranty.
+ * You should have received a copy of the CC0 Public Domain Dedication along with this software.
+ * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ */
 package rs117.hd.utils;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
 
+import static rs117.hd.utils.MathUtils.*;
+
 public class Matrix {
+	private static final float EPS = 1e-6f;
+
 	/**
 	 * Utility class for working with column-major m x n matrices.
 	 */
@@ -13,12 +25,12 @@ public class Matrix {
 	}
 
 	public static void solve(float[] m, int rows, int columns) {
-		int square = Math.min(columns, rows);
+		int square = min(columns, rows);
 		columns:
 		for (int j = 0; j < square; j++) {
 			for (int i = j; i < rows; i++) {
 				var f = m[j * rows + i];
-				if (f == 0)
+				if (abs(f) < EPS)
 					continue;
 
 				// Swap the row into the right position
@@ -31,18 +43,20 @@ public class Matrix {
 				}
 
 				// Divide by the first entry of the row
-				f = 1 / f;
-				for (int k = 0; k < rows * columns; k += rows)
-					m[k + j] *= f;
+				if (abs(f - 1) > EPS) {
+					f = 1 / f;
+					for (int k = 0; k < rows * columns; k += rows)
+						m[k + j] *= f;
+				}
 
-				// Add or subtract multiples to reduce other rows
+				// Reduce other rows
 				for (int r = 0; r < rows; r++) {
 					if (r == j)
 						continue;
 					var g = m[j * rows + r];
-					if (g != 0)
+					if (abs(g) > EPS)
 						for (int k = 0; k < rows * columns; k += rows)
-							m[k + r] += -g * m[k + j];
+							m[k + r] -= g * m[k + j];
 				}
 
 				continue columns;
@@ -59,15 +73,15 @@ public class Matrix {
 		int maxfractions = 0;
 		for (int i = 0; i < rows * columns; i++) {
 			float v = m[i];
-			if (Math.abs(v) < .01)
+			if (abs(v) < .01)
 				v = 0;
 			f[i] = format.format(v);
 			var j = f[i].indexOf('.');
 			if (j == -1) {
-				maxdigits = Math.max(maxdigits, f[i].length());
+				maxdigits = max(maxdigits, f[i].length());
 			} else {
-				maxdigits = Math.max(maxdigits, j);
-				maxfractions = Math.max(maxfractions, f[i].length() - j);
+				maxdigits = max(maxdigits, j);
+				maxfractions = max(maxfractions, f[i].length() - j);
 			}
 		}
 

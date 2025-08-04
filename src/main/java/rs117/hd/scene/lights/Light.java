@@ -2,14 +2,17 @@ package rs117.hd.scene.lights;
 
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import rs117.hd.utils.HDUtils;
+
+import static rs117.hd.utils.MathUtils.*;
 
 public class Light
 {
-	public final float randomOffset = HDUtils.rand.nextFloat();
+	public static final float VISIBILITY_FADE = 0.1f;
+
+	public final float randomOffset = RAND.nextFloat();
 	public final LightDefinition def;
 
-	public int radius;
+	public float radius;
 	public float strength;
 	/**
 	 * Linear color space RGBA in the range [0, 1]
@@ -42,21 +45,18 @@ public class Light
 	public boolean aboveFloor;
 	public int plane;
 	public int prevPlane = -1;
-	public int prevTileX = -1;
-	public int prevTileY = -1;
 	public Alignment alignment;
-	public int[] origin = new int[3];
-	public int[] offset = new int[3];
-	public int[] pos = new int[3];
+	public float[] origin = new float[3];
+	public float[] offset = new float[3];
+	public float[] pos = new float[3];
 	public int orientation;
-	public int distanceSquared;
+	public float distanceSquared;
 
 	public Actor actor;
 	public Projectile projectile;
 	public TileObject tileObject;
 	public GraphicsObject graphicsObject;
-	public int spotAnimId = -1;
-	public int preOrientation;
+	public int spotanimId = -1;
 	public int[] projectileRefCounter;
 	public long hash;
 
@@ -65,12 +65,12 @@ public class Light
 
 	public Light(LightDefinition def) {
 		this.def = def;
-		System.arraycopy(def.offset, 0, offset, 0, 3);
-		duration = Math.max(0, def.duration) / 1000f;
-		fadeInDuration = Math.max(0, def.fadeInDuration) / 1000f;
-		fadeOutDuration = Math.max(0, def.fadeOutDuration) / 1000f;
-		spawnDelay = Math.max(0, def.spawnDelay) / 1000f;
-		despawnDelay = Math.max(0, def.despawnDelay) / 1000f;
+		copyTo(offset, def.offset);
+		duration = max(0, def.duration) / 1000f;
+		fadeInDuration = max(0, def.fadeInDuration) / 1000f;
+		fadeOutDuration = max(0, def.fadeOutDuration) / 1000f;
+		spawnDelay = max(0, def.spawnDelay) / 1000f;
+		despawnDelay = max(0, def.despawnDelay) / 1000f;
 		color = def.color;
 		radius = def.radius;
 		strength = def.strength;
@@ -86,7 +86,7 @@ public class Light
 		if (lifetime == -1) {
 			dynamicLifetime = true;
 			// If the despawn is dynamic, ensure there's enough time for the light to fade out
-			despawnDelay = Math.max(despawnDelay, fadeOutDuration);
+			despawnDelay = max(despawnDelay, fadeOutDuration);
 		} else {
 			dynamicLifetime = false;
 		}
@@ -101,5 +101,30 @@ public class Light
 				elapsedTime = lifetime;
 			}
 		}
+	}
+
+	public void toggleTemporaryVisibility(boolean changedPlanes) {
+		hiddenTemporarily = !hiddenTemporarily;
+		// If visibility changes due to something other than changing planes, fade in or out
+		if (!changedPlanes) {
+			// Begin fading in or out, while accounting for time already spent fading out or in respectively
+			float beginFadeAt = elapsedTime;
+			if (changedVisibilityAt != -1)
+				beginFadeAt -= max(0, VISIBILITY_FADE - (elapsedTime - changedVisibilityAt));
+			changedVisibilityAt = beginFadeAt;
+		}
+	}
+
+	public float getTemporaryVisibilityFade() {
+		float fade = 1;
+		if (changedVisibilityAt != -1)
+			fade = saturate((elapsedTime - changedVisibilityAt) / Light.VISIBILITY_FADE);
+		if (hiddenTemporarily)
+			fade = 1 - fade; // Fade out instead
+		return fade;
+	}
+
+	public void applyTemporaryVisibilityFade() {
+		strength *= getTemporaryVisibilityFade();
 	}
 }

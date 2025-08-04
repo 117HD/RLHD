@@ -30,9 +30,12 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import rs117.hd.data.materials.Material;
 
+import static rs117.hd.utils.ColorUtils.hsl;
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.ColorUtils.srgb;
+import static rs117.hd.utils.ColorUtils.srgbToLinear;
 
+@Deprecated
 public enum WaterType
 {
 	NONE,
@@ -47,7 +50,15 @@ public enum WaterType
 		.surfaceColor(srgb(23, 33, 20))
 		.foamColor(srgb(115, 120, 101))
 		.depthColor(srgb(41, 82, 26))
-		.causticsStrength(0)
+		.duration(1.2f)
+		.fishingSpotRecolor(hsl("#04730d"))),
+	MLM_WATER(b -> b
+		.specularStrength(.1f)
+		.specularGloss(100)
+		.normalStrength(.05f)
+		.baseOpacity(.8f)
+		.fresnelAmount(.3f)
+		.surfaceColor(rgb("#617093"))
 		.duration(1.2f)),
 	SWAMP_WATER_FLAT(SWAMP_WATER, true),
 	POISON_WASTE(b -> b
@@ -59,7 +70,6 @@ public enum WaterType
 		.surfaceColor(srgb(22, 23, 13))
 		.foamColor(srgb(106, 108, 100))
 		.depthColor(srgb(50, 52, 46))
-		.causticsStrength(0)
 		.duration(1.6f)),
 	BLACK_TAR_FLAT(b -> b
 		.specularStrength(.05f)
@@ -70,7 +80,6 @@ public enum WaterType
 		.surfaceColor(rgb(38, 40, 43))
 		.foamColor(rgb(0, 0, 0))
 		.depthColor(rgb(38, 40, 43))
-		.causticsStrength(0)
 		.duration(1.6f)
 		.flat(true)),
 	BLOOD(b -> b
@@ -82,7 +91,6 @@ public enum WaterType
 		.surfaceColor(srgb(38, 0, 0))
 		.foamColor(srgb(117, 63, 45))
 		.depthColor(srgb(50, 26, 22))
-		.causticsStrength(0)
 		.duration(2)),
 	ICE(b -> b
 		.specularStrength(.3f)
@@ -92,7 +100,6 @@ public enum WaterType
 		.fresnelAmount(1)
 		.foamColor(srgb(150, 150, 150))
 		.depthColor(srgb(0, 117, 142))
-		.causticsStrength(.4f)
 		.duration(0)
 		.normalMap(Material.WATER_NORMAL_MAP_2)),
 	ICE_FLAT(ICE, true),
@@ -105,7 +112,6 @@ public enum WaterType
 		.surfaceColor(srgb(35, 10, 0))
 		.foamColor(srgb(106, 108, 24))
 		.depthColor(srgb(65, 23, 0))
-		.causticsStrength(0)
 		.duration(2.7f)),
 	SCAR_SLUDGE(b -> b
 		.specularStrength(0)
@@ -116,7 +122,6 @@ public enum WaterType
 		.surfaceColor(srgb(0x26, 0x26, 0x23))
 		.foamColor(srgb(0x69, 0x77, 0x5e))
 		.depthColor(srgb(0x69, 0x77, 0x5e))
-		.causticsStrength(0)
 		.duration(1.2f)),
 	ABYSS_BILE(b -> b
 		.specularStrength(0.2f)
@@ -127,12 +132,10 @@ public enum WaterType
 		.surfaceColor(rgb(120, 91, 0))
 		.foamColor(rgb(120, 81, 0))
 		.depthColor(rgb(120, 59, 0))
-		.causticsStrength(0.4f)
 		.duration(2.2f)),
 	PLAIN_WATER(b -> b
 		.depthColor(rgb(0, 0, 0))
 		.foamColor(rgb(64, 64, 64))
-		.causticsStrength(0)
 		.flat(true)),
 	DARK_BLUE_WATER(b -> b
 		.specularStrength(.1f)
@@ -143,8 +146,26 @@ public enum WaterType
 		.surfaceColor(rgb("#07292f"))
 		.foamColor(rgb(64, 64, 64))
 		.depthColor(rgb("#000000"))
-		.causticsStrength(0)
 		.flat(true)),
+	ARAXXOR_WASTE(b -> b
+		.specularStrength(.1f)
+		.specularGloss(100)
+		.normalStrength(.05f)
+		.baseOpacity(.9f)
+		.fresnelAmount(.3f)
+		.surfaceColor(srgb(22, 255, 13))
+		.foamColor(srgb(20, 255, 20))
+		.depthColor(srgb(30, 255, 26))
+		.duration(1.6f)),
+	CAVE_WATER(b -> b
+		.specularStrength(.2f)
+		.specularGloss(100)
+		.normalStrength(.3f)
+		.baseOpacity(.75f)
+		.fresnelAmount(.1f)
+		.surfaceColor(rgb("#274049"))
+		.foamColor(rgb(10, 10, 10))
+		.depthColor(rgb("#3A6A70"))),
 	;
 
 	public final boolean flat;
@@ -157,9 +178,9 @@ public enum WaterType
 	public final float[] surfaceColor;
 	public final float[] foamColor;
 	public final float[] depthColor;
-	public final float causticsStrength;
 	public final boolean hasFoam;
 	public final float duration;
+	public final int fishingSpotRecolor;
 
 	@Setter
 	@Accessors(fluent = true)
@@ -175,9 +196,9 @@ public enum WaterType
 		private float[] surfaceColor = { 1, 1, 1 };
 		private float[] foamColor = srgb(176, 164, 146);
 		private float[] depthColor = srgb(0, 117, 142);
-		private float causticsStrength = 1;
 		private boolean hasFoam = true;
 		private float duration = 1;
+		private int fishingSpotRecolor = -1;
 	}
 
 	WaterType()
@@ -196,12 +217,12 @@ public enum WaterType
 		baseOpacity = builder.baseOpacity;
 		fresnelAmount = builder.fresnelAmount;
 		normalMap = builder.normalMap;
-		surfaceColor = builder.surfaceColor;
-		foamColor = builder.foamColor;
-		depthColor = builder.depthColor;
-		causticsStrength = builder.causticsStrength;
+		surfaceColor = srgbToLinear(builder.surfaceColor);
+		foamColor = srgbToLinear(builder.foamColor);
+		depthColor = srgbToLinear(builder.depthColor);
 		hasFoam = builder.hasFoam;
 		duration = builder.duration;
+		fishingSpotRecolor = builder.fishingSpotRecolor;
 	}
 
 	WaterType(WaterType parent, boolean flat)
@@ -216,8 +237,8 @@ public enum WaterType
 		surfaceColor = parent.surfaceColor;
 		foamColor = parent.foamColor;
 		depthColor = parent.depthColor;
-		causticsStrength = parent.causticsStrength;
 		hasFoam = parent.hasFoam;
 		duration = parent.duration;
+		fishingSpotRecolor = parent.fishingSpotRecolor;
 	}
 }

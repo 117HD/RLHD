@@ -24,6 +24,8 @@
  */
 #pragma once
 
+#include <uniforms/global.glsl>
+
 // translates a value from a custom range into 0-1
 float translateRange(float rangeStart, float rangeEnd, float value)
 {
@@ -44,28 +46,4 @@ vec2 animationFrame(vec2 animationDuration)
     if (animationDuration == vec2(0))
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
-}
-
-// used for blending overlays into underlays.
-// adapted from http://www.alecjacobson.com/weblog/?p=1486
-float pointToLine(vec2 lineA, vec2 lineB, vec2 point)
-{
-    // vector from A to B
-    vec2 AB = lineB - lineA;
-
-    // squared distance from A to B
-    float ABsquared = dot(AB, AB);
-
-    if (ABsquared == 0)
-    {
-        // A and B are the same point
-        return 1.0;
-    }
-    else
-    {
-        // vector from A to p
-        vec2 Ap = (point - lineA);
-        float t = dot(Ap, AB) / ABsquared;
-        return t;
-    }
 }

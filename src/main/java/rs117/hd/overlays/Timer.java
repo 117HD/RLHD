@@ -8,6 +8,7 @@ public enum Timer {
 	DRAW_FRAME,
 	DRAW_SCENE,
 	DRAW_RENDERABLE,
+	DRAW_TILED_LIGHTING,
 	GET_MODEL,
 	VISIBILITY_CHECK,
 	CLICKBOX_CHECK,
@@ -18,7 +19,13 @@ public enum Timer {
 	MODEL_PUSHING_UV(false, "Model pushing UV"),
 	UPDATE_ENVIRONMENT,
 	UPDATE_LIGHTS,
-	OBJECT_TRACKING,
+	IMPOSTOR_TRACKING,
+	REPLACE_FISHING_SPOTS,
+	CHARACTER_DISPLACEMENT,
+	MAP_UI_BUFFER(false, "Map UI Buffer"),
+	COPY_UI(false, "Copy UI"),
+	RENDER_FRAME(true, false),
+	RENDER_TILED_LIGHTING(true),
 	UPLOAD_GEOMETRY(true),
 	UPLOAD_UI(true, "Upload UI"),
 	COMPUTE(true),
@@ -29,22 +36,38 @@ public enum Timer {
 	SWAP_BUFFERS,
 	;
 
-	public final boolean isGpuTimer;
 	public final String name;
+	public final boolean isGpuTimer;
+	public final boolean gpuDebugGroup;
 
 	Timer() {
-		isGpuTimer = false;
 		name = enumToName(name());
+		isGpuTimer = false;
+		gpuDebugGroup = false;
 	}
 
 	Timer(boolean isGpuTimer) {
-		this.isGpuTimer = isGpuTimer;
 		name = enumToName(name());
+		this.isGpuTimer = isGpuTimer;
+		gpuDebugGroup = isGpuTimer;
+	}
+
+	Timer(boolean isGpuTimer, @Nonnull String name) {
+		this.name = name;
+		this.isGpuTimer = isGpuTimer;
+		gpuDebugGroup = isGpuTimer;
+	}
+
+	Timer(boolean isGpuTimer, boolean gpuDebugGroup) {
+		name = enumToName(name());
+		this.isGpuTimer = isGpuTimer;
+		this.gpuDebugGroup = gpuDebugGroup;
 	}
 
 	Timer(@Nonnull String name) {
-		isGpuTimer = false;
 		this.name = name;
+		isGpuTimer = false;
+		gpuDebugGroup = false;
 	}
 
 	private static String enumToName(String name) {

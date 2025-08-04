@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "environments.schema.json",
+  "title": "Environments",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [ "name" ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Identifier for the area which may be used in code."
+      },
+      "hideOtherAreas": {
+        "type": "boolean",
+        "description": "Whether everything outside of this area should be hidden when loading a scene within this area."
+      },
+      "fillGaps": {
+        "type": "boolean",
+        "description": "Whether to fill gaps in the ground. Can only be disabled if hideOtherAreas is true."
+      },
+      "areas": {
+        "type": "array",
+        "description": "A list of other areas to include in this area.",
+        "items": {
+          "type": "string"
+        }
+      },
+      "regions": {
+        "type": "array",
+        "description": "A list of region IDs to include in the area.",
+        "items": {
+          "type": "integer"
+        }
+      },
+      "regionBoxes": {
+        "type": "array",
+        "description": "A list of region boxes to include in the area. Each box is an array of the bottom left & top right region IDs.",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "integer"
+          },
+          "minItems": 1,
+          "maxItems": 4
+        }
+      },
+      "aabbs": {
+        "type": "array",
+        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the override should be limited to.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      }
+    }
+  }
+}

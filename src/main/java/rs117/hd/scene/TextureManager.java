@@ -28,7 +28,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
-import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,27 +46,24 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
+import rs117.hd.model.ModelPusher;
+import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.resourcepacks.ResourcePackManager;
 
-import static org.lwjgl.opengl.GL43C.*;
-import static rs117.hd.HdPlugin.SCALAR_BYTES;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
-@Singleton
 @Slf4j
+@Singleton
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
-	private static final float HALF_PI = (float) (Math.PI / 2);
-	private static final ResourcePath TEXTURE_PATH = Props.getPathOrDefault(
-		"rlhd.texture-path",
-		() -> path(TextureManager.class, "textures")
-	);
+	private static final ResourcePath TEXTURE_PATH = Props
+		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
 
 	@Inject
 	private Client client;
@@ -88,7 +84,12 @@ public class TextureManager {
 	private HdPluginConfig config;
 
 	@Inject
+	private WaterTypeManager waterTypeManager;
+
+	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	public UBOMaterials uboMaterials;
 
 	private int textureArray;
 	private int textureSize;
@@ -104,7 +105,7 @@ public class TextureManager {
 	private ScheduledFuture<?> pendingReload;
 
 	public void startUp() {
-		clientThread.invoke(this::ensureMaterialsAreLoaded);
+		ensureMaterialsAreLoaded();
 
 		TEXTURE_PATH.watch((path, first) -> {
 			if (first) return;
@@ -116,7 +117,7 @@ public class TextureManager {
 	}
 
 	public void shutDown() {
-		clientThread.invoke(this::freeTextures);
+		freeTextures();
 	}
 
 	public void reloadTextures() {
@@ -131,6 +132,12 @@ public class TextureManager {
 		if (textureArray != 0)
 			glDeleteTextures(textureArray);
 		textureArray = 0;
+
+		if (uboMaterials != null)
+			uboMaterials.destroy();
+		uboMaterials = null;
+
+		materialOrdinalToTextureLayer = null;
 	}
 
 	@RequiredArgsConstructor
@@ -155,6 +162,14 @@ public class TextureManager {
 			vanillaTextureIndex < vanillaTextureIndexToMaterialUniformIndex.length)
 			return vanillaTextureIndexToMaterialUniformIndex[vanillaTextureIndex];
 		return materialOrdinalToMaterialUniformIndex[material.ordinal()];
+	}
+
+	public int getTextureLayer(@Nullable Material material) {
+		if (material == null)
+			return -1;
+		assert materialOrdinalToTextureLayer != null : "Textures must be loaded";
+		material = material.resolveTextureMaterial();
+		return materialOrdinalToTextureLayer[material.ordinal()];
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -226,22 +241,19 @@ public class TextureManager {
 		textureArray = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_GAME);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
-		if (plugin.glCaps.glTexStorage3D != 0) {
-			glTexStorage3D(GL_TEXTURE_2D_ARRAY, 8, GL_SRGB8_ALPHA8,
-				textureSize, textureSize, textureLayers.size()
-			);
+
+		int mipLevels = 1 + floor(log2(textureSize));
+		int format = GL_SRGB8_ALPHA8;
+		if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
+			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
 		} else {
 			// Allocate each mip level separately
-			for (int i = 0, size = textureSize; size >= 1; i++, size /= 2) {
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, GL_SRGB8_ALPHA8,
-					size, size, textureLayers.size(),
-					0, GL_RGBA, GL_UNSIGNED_BYTE, 0
-				);
+			for (int i = 0; i < mipLevels; i++) {
+				int size = textureSize >> i;
+				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, format, size, size, textureLayers.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
 			}
 		}
 
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		setAnisotropicFilteringLevel();
@@ -287,7 +299,7 @@ public class TextureManager {
 					log.warn("No pixels for vanilla texture at index {}", vanillaIndex);
 					continue;
 				}
-				int resolution = (int) Math.round(Math.sqrt(pixels.length));
+				int resolution = round(sqrt(pixels.length));
 				if (resolution * resolution != pixels.length) {
 					log.warn("Unknown dimensions for vanilla texture at index {} ({} pixels)", vanillaIndex, pixels.length);
 					continue;
@@ -323,8 +335,8 @@ public class TextureManager {
 			if (direction != 0) {
 				float speed = texture.getAnimationSpeed() * 50 / 128.f;
 				float radians = direction * -HALF_PI;
-				vanillaTextureAnimations[i * 2] = (float) Math.cos(radians) * speed;
-				vanillaTextureAnimations[i * 2 + 1] = (float) Math.sin(radians) * speed;
+				vanillaTextureAnimations[i * 2] = cos(radians) * speed;
+				vanillaTextureAnimations[i * 2 + 1] = sin(radians) * speed;
 			}
 		}
 
@@ -333,8 +345,8 @@ public class TextureManager {
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
 		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
-		plugin.updateMaterialUniformBuffer(generateMaterialUniformBuffer());
-		plugin.updateWaterTypeUniformBuffer(generateWaterTypeUniformBuffer());
+		updateUBOMaterials();
+		waterTypeManager.update();
 
 		// Reset
 		pixelBuffer = null;
@@ -342,10 +354,8 @@ public class TextureManager {
 		vanillaImage = null;
 		vanillaTextureAnimations = null;
 		materialUniformEntries = null;
-		materialOrdinalToTextureLayer = null;
 		vanillaTextureIndexToTextureLayer = null;
 		textureProvider.setBrightness(vanillaBrightness);
-		glActiveTexture(TEXTURE_UNIT_UI);
 	}
 
 	private BufferedImage loadTextureImage(String textureName)
@@ -390,6 +400,7 @@ public class TextureManager {
 		if (level == 0) {
 			//level = 0 means no mipmaps and no anisotropic filtering
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		} else {
 			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
 			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
@@ -397,40 +408,42 @@ public class TextureManager {
 			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
 			// that are very noticeable on terrain
 			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 
 		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
 			final float maxSamples = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-			//Clamp from 1 to max GL says it supports.
-			final float anisoLevel = Math.max(1, Math.min(maxSamples, level));
-			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoLevel);
+			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
 		}
 	}
 
-	private ByteBuffer generateMaterialUniformBuffer() {
-		final int materialBytes = 20 * SCALAR_BYTES;
-		ByteBuffer buffer = BufferUtils.createByteBuffer(materialUniformEntries.size() * materialBytes);
+	private void updateUBOMaterials() {
+		assert materialUniformEntries.size() - 1 <= ModelPusher.MAX_MATERIAL_INDEX :
+			"Too many materials (" + materialUniformEntries.size() + ") to fit into packed material data.";
+		log.debug("Uploading {} materials", materialUniformEntries.size());
+
+		if (uboMaterials != null) {
+			uboMaterials.destroy();
+			uboMaterials = null;
+		}
+		uboMaterials = new UBOMaterials(materialUniformEntries.size());
+		uboMaterials.initialize(HdPlugin.UNIFORM_BLOCK_MATERIALS);
+
 		for (int i = 0; i < materialUniformEntries.size(); i++) {
 			MaterialEntry entry = materialUniformEntries.get(i);
 			materialOrdinalToMaterialUniformIndex[entry.material.ordinal()] = i;
 			if (entry.vanillaIndex != -1)
 				vanillaTextureIndexToMaterialUniformIndex[entry.vanillaIndex] = i;
-			writeMaterialData(buffer, entry);
+			fillMaterialStruct(uboMaterials.materials[i], entry);
 		}
 		for (var material : Material.values())
 			materialOrdinalToMaterialUniformIndex[material.ordinal()] =
 				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().ordinal()];
-		return buffer.flip();
+
+		uboMaterials.upload();
 	}
 
-	private int getTextureLayer(@Nullable Material material) {
-		if (material == null)
-			return -1;
-		material = material.resolveTextureMaterial();
-		return materialOrdinalToTextureLayer[material.ordinal()];
-	}
-
-	private void writeMaterialData(ByteBuffer buffer, MaterialEntry entry) {
+	private void fillMaterialStruct(UBOMaterials.MaterialStruct struct, MaterialEntry entry) {
 		var m = entry.material;
 		var vanillaIndex = entry.vanillaIndex;
 
@@ -441,69 +454,25 @@ public class TextureManager {
 			scrollSpeedY += vanillaTextureAnimations[vanillaIndex * 2 + 1];
 		}
 
-		int baseColorTextureIndex = -1;
-		if (m == Material.VANILLA) {
-			baseColorTextureIndex = vanillaTextureIndexToTextureLayer[vanillaIndex];
-		} else if (m != Material.NONE) {
-			baseColorTextureIndex = materialOrdinalToTextureLayer[m.ordinal()];
-		}
-
-		buffer
-			.putInt(baseColorTextureIndex)
-			.putInt(getTextureLayer(m.normalMap))
-			.putInt(getTextureLayer(m.displacementMap))
-			.putInt(getTextureLayer(m.roughnessMap))
-			.putInt(getTextureLayer(m.ambientOcclusionMap))
-			.putInt(getTextureLayer(m.flowMap))
-			.putInt(
-				(m.overrideBaseColor ? 1 : 0) << 2 |
-				(m.unlit ? 1 : 0) << 1 |
-				(m.hasTransparency ? 1 : 0)
-			)
-			.putFloat(m.brightness)
-			.putFloat(m.displacementScale)
-			.putFloat(m.specularStrength)
-			.putFloat(m.specularGloss)
-			.putFloat(m.flowMapStrength)
-			.putFloat(m.flowMapDuration[0])
-			.putFloat(m.flowMapDuration[1])
-			.putFloat(scrollSpeedX)
-			.putFloat(scrollSpeedY)
-			.putFloat(1 / m.textureScale[0])
-			.putFloat(1 / m.textureScale[1])
-			.putFloat(0).putFloat(0); // align vec4
-	}
-
-	private ByteBuffer generateWaterTypeUniformBuffer() {
-		ByteBuffer buffer = BufferUtils.createByteBuffer(WaterType.values().length * 28 * SCALAR_BYTES);
-		for (WaterType type : WaterType.values())
-			buffer
-				.putInt(type.flat ? 1 : 0)
-				.putFloat(type.specularStrength)
-				.putFloat(type.specularGloss)
-				.putFloat(type.normalStrength)
-				.putFloat(type.baseOpacity)
-				.putInt(type.hasFoam ? 1 : 0)
-				.putFloat(type.duration)
-				.putFloat(type.fresnelAmount)
-				.putFloat(type.surfaceColor[0])
-				.putFloat(type.surfaceColor[1])
-				.putFloat(type.surfaceColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.foamColor[0])
-				.putFloat(type.foamColor[1])
-				.putFloat(type.foamColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.depthColor[0])
-				.putFloat(type.depthColor[1])
-				.putFloat(type.depthColor[2])
-				.putFloat(0) // pad vec4
-				.putFloat(type.causticsStrength)
-				.putInt(getTextureLayer(type.normalMap))
-				.putInt(getTextureLayer(Material.WATER_FOAM))
-				.putInt(getTextureLayer(Material.WATER_FLOW_MAP))
-				.putInt(getTextureLayer(Material.UNDERWATER_FLOW_MAP))
-				.putFloat(0).putFloat(0).putFloat(0); // pad vec4
-		return buffer.flip();
+		struct.colorMap.set(m == Material.VANILLA ?
+			vanillaTextureIndexToTextureLayer[vanillaIndex] : getTextureLayer(m));
+		struct.normalMap.set(getTextureLayer(m.normalMap));
+		struct.displacementMap.set(getTextureLayer(m.displacementMap));
+		struct.roughnessMap.set(getTextureLayer(m.roughnessMap));
+		struct.ambientOcclusionMap.set(getTextureLayer(m.ambientOcclusionMap));
+		struct.flowMap.set(getTextureLayer(m.flowMap));
+		struct.flags.set(
+			(m.overrideBaseColor ? 1 : 0) << 2 |
+			(m.unlit ? 1 : 0) << 1 |
+			(m.hasTransparency ? 1 : 0)
+		);
+		struct.brightness.set(m.brightness);
+		struct.displacementScale.set(m.displacementScale);
+		struct.specularStrength.set(m.specularStrength);
+		struct.specularGloss.set(m.specularGloss);
+		struct.flowMapStrength.set(m.flowMapStrength);
+		struct.flowMapDuration.set(m.flowMapDuration);
+		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
+		struct.textureScale.set(1 / m.textureScale[0], 1 / m.textureScale[1], 1 / m.textureScale[2]);
 	}
 }

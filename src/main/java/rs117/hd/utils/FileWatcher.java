@@ -98,7 +98,7 @@ public class FileWatcher {
 				while ((watchKey = watchService.take()) != null) {
 					Path dir = watchKeys.get(watchKey);
 					if (dir == null) {
-						log.error("Unknown WatchKey: " + watchKey);
+						log.error("Unknown WatchKey: {}", watchKey);
 						continue;
 					}
 					for (WatchEvent<?> event : watchKey.pollEvents()) {
@@ -228,7 +228,7 @@ public class FileWatcher {
 		try {
 			watchKeys.put(dir.register(watchService, eventKinds), dir);
 			log.debug("Watching {}", path);
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException("Failed to register file watcher for path: " + path, ex);
 		}
 	}
@@ -244,7 +244,7 @@ public class FileWatcher {
 					return FileVisitResult.CONTINUE;
 				}
 			});
-		} catch (IOException ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException("Failed to register recursive file watcher for path: " + path, ex);
 		}
 	}

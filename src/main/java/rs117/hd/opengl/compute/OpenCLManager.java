@@ -37,23 +37,31 @@ import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.PointerBuffer;
-import org.lwjgl.opencl.*;
+import org.lwjgl.opencl.APPLEGLSharing;
+import org.lwjgl.opencl.CL;
+import org.lwjgl.opencl.CL10GL;
+import org.lwjgl.opencl.CL12;
+import org.lwjgl.opencl.CLCapabilities;
+import org.lwjgl.opencl.CLContextCallback;
+import org.lwjgl.opencl.CLImageFormat;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.shader.ShaderException;
-import rs117.hd.opengl.shader.Template;
-import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.uniforms.UBOCompute;
+import rs117.hd.utils.buffer.SharedGLBuffer;
 
-import static org.lwjgl.opencl.APPLEGLSharing.*;
+import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
+import static org.lwjgl.opencl.APPLEGLSharing.clGetGLContextInfoAPPLE;
 import static org.lwjgl.opencl.CL10.*;
-import static org.lwjgl.opencl.CL10GL.*;
-import static org.lwjgl.opencl.CL12.*;
-import static org.lwjgl.opencl.KHRGLSharing.*;
+import static org.lwjgl.opencl.KHRGLSharing.CL_GLX_DISPLAY_KHR;
+import static org.lwjgl.opencl.KHRGLSharing.CL_GL_CONTEXT_KHR;
+import static org.lwjgl.opencl.KHRGLSharing.CL_WGL_HDC_KHR;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 @Slf4j
@@ -66,20 +74,19 @@ public class OpenCLManager {
 	//      int totalDistance[12];
 	//      int totalMappedNum[18];
 	//      int min10;
-	//      int dfs[0];
+	//      int renderPris[0];
 	//  };
 	private static final int SHARED_SIZE = 12 + 12 + 18 + 1; // in ints
 
 	@Inject
 	private HdPlugin plugin;
 
-	@Inject
-	private HdPluginConfig config;
+	public static long context;
 
 	private boolean initialized;
 
+	private CLCapabilities deviceCaps;
 	private long device;
-	private long context;
 	private long commandQueue;
 
 	private long passthroughProgram;
@@ -97,12 +104,7 @@ public class OpenCLManager {
 	public void startUp(AWTContext awtContext) {
 		CL.create();
 		initialized = true;
-
-		if (OSType.getOSType() == OSType.MacOS) {
-			initContextMacOS(awtContext);
-		} else {
-			initContext(awtContext);
-		}
+		initContext(awtContext);
 		log.debug("Device CL_DEVICE_MAX_WORK_GROUP_SIZE: {}", getMaxWorkGroupSize());
 		initQueue();
 	}
@@ -124,8 +126,8 @@ public class OpenCLManager {
 			if (context != 0)
 				clReleaseContext(context);
 			context = 0;
-			if (device != 0)
-				clReleaseDevice(device);
+			if (device != 0 && deviceCaps.OpenCL12)
+				CL12.clReleaseDevice(device);
 			device = 0;
 		} finally {
 			CL.destroy();
@@ -142,34 +144,36 @@ public class OpenCLManager {
 
 			PointerBuffer platforms = stack.mallocPointer(pi.get(0));
 			checkCLError(clGetPlatformIDs(platforms, (IntBuffer) null));
-
-			PointerBuffer ctxProps = stack.mallocPointer(7);
-			if (OSType.getOSType() == OSType.Windows) {
-				ctxProps
-					.put(CL_CONTEXT_PLATFORM)
-					.put(0)
-					.put(CL_GL_CONTEXT_KHR)
-					.put(awtContext.getGLContext())
-					.put(CL_WGL_HDC_KHR)
-					.put(awtContext.getWGLHDC())
-					.put(0)
-					.flip();
-			} else if (OSType.getOSType() == OSType.Linux) {
-				ctxProps
-					.put(CL_CONTEXT_PLATFORM)
-					.put(0)
-					.put(CL_GL_CONTEXT_KHR)
-					.put(awtContext.getGLContext())
-					.put(CL_GLX_DISPLAY_KHR)
-					.put(awtContext.getGLXDisplay())
-					.put(0)
-					.flip();
-			} else {
-				throw new RuntimeException("unsupported platform");
-			}
-
 			if (platforms.limit() == 0)
 				throw new RuntimeException("Unable to find compute platform");
+
+			PointerBuffer ctxProps = stack.mallocPointer(7)
+				.put(CL_CONTEXT_PLATFORM)
+				.put(0);
+			switch (OSType.getOSType()) {
+				case Windows:
+					ctxProps
+						.put(CL_GL_CONTEXT_KHR)
+						.put(awtContext.getGLContext())
+						.put(CL_WGL_HDC_KHR)
+						.put(awtContext.getWGLHDC());
+					break;
+				case Linux:
+					ctxProps
+						.put(CL_GL_CONTEXT_KHR)
+						.put(awtContext.getGLContext())
+						.put(CL_GLX_DISPLAY_KHR)
+						.put(awtContext.getGLXDisplay());
+					break;
+				case MacOS:
+					ctxProps
+						.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
+						.put(awtContext.getCGLShareGroup());
+					break;
+				default:
+					throw new RuntimeException("unsupported platform");
+			}
+			ctxProps.put(0).flip();
 
 			IntBuffer errcode_ret = stack.callocInt(1);
 			for (int p = 0; p < platforms.limit(); p++) {
@@ -218,19 +222,37 @@ public class OpenCLManager {
 						if (deviceType != CL_DEVICE_TYPE_GPU)
 							continue;
 						CLCapabilities platformCaps = CL.createPlatformCapabilities(platform);
-						CLCapabilities deviceCaps = CL.createDeviceCapabilities(device, platformCaps);
+						deviceCaps = CL.createDeviceCapabilities(device, platformCaps);
 						if (!deviceCaps.cl_khr_gl_sharing && !deviceCaps.cl_APPLE_gl_sharing)
 							continue;
 
-						if (this.context == 0) {
+						// Initialize a context from the device if one hasn't already been created
+						if (context == 0) {
 							try {
 								var callback = CLContextCallback.create((errinfo, private_info, cb, user_data) ->
 									log.error("[LWJGL] cl_context_callback: {}", memUTF8(errinfo)));
 								long context = clCreateContext(ctxProps, device, callback, NULL, errcode_ret);
 								checkCLError(errcode_ret);
 
+								if (OSType.getOSType() == OSType.MacOS) {
+									var buf = stack.mallocPointer(1);
+									checkCLError(clGetGLContextInfoAPPLE(
+										context,
+										awtContext.getGLContext(),
+										CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE,
+										buf,
+										null
+									));
+									if (buf.get(0) != device) {
+										log.debug("Skipping capable but not current virtual screen device...");
+										clReleaseContext(context);
+										continue;
+									}
+								}
+
+								log.debug("Choosing the above device for OpenCL");
 								this.device = device;
-								this.context = context;
+								OpenCLManager.context = context;
 							} catch (Exception ex) {
 								log.error("Error while creating context:", ex);
 							}
@@ -241,46 +263,15 @@ public class OpenCLManager {
 				}
 			}
 
-			if (this.context == 0)
+			if (context == 0)
 				throw new RuntimeException("Unable to create suitable compute context");
-		}
-	}
-
-	private void initContextMacOS(AWTContext awtContext) {
-		try (var stack = MemoryStack.stackPush()) {
-			PointerBuffer ctxProps = stack.mallocPointer(3);
-			ctxProps
-				.put(APPLEGLSharing.CL_CONTEXT_PROPERTY_USE_CGL_SHAREGROUP_APPLE)
-				.put(awtContext.getCGLShareGroup())
-				.put(0)
-				.flip();
-
-			IntBuffer errcode_ret = stack.callocInt(1);
-			var devices = stack.mallocPointer(0);
-			long context = clCreateContext(ctxProps, devices, CLContextCallback.create((errinfo, private_info, cb, user_data) ->
-				log.error("[LWJGL] cl_context_callback: {}", memUTF8(errinfo))), NULL, errcode_ret);
-			checkCLError(errcode_ret);
-
-			var deviceBuf = stack.mallocPointer(1);
-			checkCLError(clGetGLContextInfoAPPLE(
-				context,
-				awtContext.getGLContext(),
-				CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE,
-				deviceBuf,
-				null
-			));
-			long device = deviceBuf.get(0);
-
-			log.debug("Got macOS CLGL compute device {}", device);
-			this.context = context;
-			this.device = device;
 		}
 	}
 
 	public int getMaxWorkGroupSize() {
 		long[] maxWorkGroupSize = new long[1];
 		clGetDeviceInfo(device, CL_DEVICE_MAX_WORK_GROUP_SIZE, maxWorkGroupSize, null);
-		return (int) maxWorkGroupSize[0];
+		return (int) (maxWorkGroupSize[0] * 0.6f); // Workaround for https://github.com/117HD/RLHD/issues/598
 	}
 
 	private void initQueue() {
@@ -291,18 +282,25 @@ public class OpenCLManager {
 		log.debug("Created command_queue {}, properties {}", commandQueue, l[0] & CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE);
 	}
 
-	private long compileProgram(MemoryStack stack, String programSource) throws ShaderException {
-		log.trace("Compiling program:\n {}", programSource);
+	private long compileProgram(MemoryStack stack, String path, ShaderIncludes includes) throws ShaderException, IOException {
+		String source = includes.loadFile(path);
+		log.trace("Compiling program:\n {}", source);
 		IntBuffer errcode_ret = stack.callocInt(1);
-		long program = clCreateProgramWithSource(context, programSource, errcode_ret);
+		long program = clCreateProgramWithSource(context, source, errcode_ret);
 		checkCLError(errcode_ret);
 
 		int err = clBuildProgram(program, device, "", null, 0);
 		if (err != CL_SUCCESS)
-			throw new ShaderException(getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_LOG));
+			throw ShaderException.compileError(
+				includes,
+				source,
+				getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_LOG),
+				path
+			);
 
 		log.debug("Build status: {}", getProgramBuildInfoInt(program, device, CL_PROGRAM_BUILD_STATUS));
-		log.debug("Binary type: {}", getProgramBuildInfoInt(program, device, CL_PROGRAM_BINARY_TYPE));
+		if (deviceCaps.OpenCL12)
+			log.debug("Binary type: {}", getProgramBuildInfoInt(program, device, CL12.CL_PROGRAM_BINARY_TYPE));
 		log.debug("Build options: {}", getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_OPTIONS));
 		log.debug("Build log: {}", getProgramBuildInfoStringASCII(program, device, CL_PROGRAM_BUILD_LOG));
 		return program;
@@ -318,11 +316,15 @@ public class OpenCLManager {
 
 	public void initPrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
-			var template = new Template()
+			var includes = new ShaderIncludes()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
 				.define("LEGACY_GREY_COLORS", plugin.configLegacyGreyColors)
+				.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
+				.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
+				.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
+				.define("MAX_CHARACTER_POSITION_COUNT", UBOCompute.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
-			passthroughProgram = compileProgram(stack, template.load("comp_unordered.cl"));
+			passthroughProgram = compileProgram(stack, "comp_unordered.cl", includes);
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
 			sortingPrograms = new long[plugin.numSortingBins];
@@ -330,13 +332,11 @@ public class OpenCLManager {
 			for (int i = 0; i < plugin.numSortingBins; i++) {
 				int faceCount = plugin.modelSortingBinFaceCounts[i];
 				int threadCount = plugin.modelSortingBinThreadCounts[i];
-				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
-				sortingPrograms[i] = compileProgram(stack, template
-					.copy()
+				int facesPerThread = ceil((float) faceCount / threadCount);
+				includes = includes
 					.define("THREAD_COUNT", threadCount)
-					.define("FACES_PER_THREAD", facesPerThread)
-					.load("comp.cl")
-				);
+					.define("FACES_PER_THREAD", facesPerThread);
+				sortingPrograms[i] = compileProgram(stack, "comp.cl", includes);
 				sortingKernels[i] = getKernel(stack, sortingPrograms[i], KERNEL_NAME_SORT);
 			}
 		}
@@ -401,24 +401,24 @@ public class OpenCLManager {
 	}
 
 	public void compute(
-		GLBuffer uniformBufferCamera,
+		SharedGLBuffer uboCompute,
 		int numPassthroughModels, int[] numSortingBinModels,
-		GLBuffer modelPassthroughBuffer, GLBuffer[] modelSortingBuffers,
-		GLBuffer stagingBufferVertices, GLBuffer stagingBufferUvs, GLBuffer stagingBufferNormals,
-		GLBuffer renderBufferVertices, GLBuffer renderBufferUvs, GLBuffer renderBufferNormals
+		SharedGLBuffer modelPassthroughBuffer, SharedGLBuffer[] modelSortingBuffers,
+		SharedGLBuffer stagingBufferVertices, SharedGLBuffer stagingBufferUvs, SharedGLBuffer stagingBufferNormals,
+		SharedGLBuffer renderBufferVertices, SharedGLBuffer renderBufferUvs, SharedGLBuffer renderBufferNormals
 	) {
 		try (var stack = MemoryStack.stackPush()) {
 			PointerBuffer glBuffers = stack.mallocPointer(8 + modelSortingBuffers.length)
-				.put(uniformBufferCamera.clBuffer)
-				.put(modelPassthroughBuffer.clBuffer)
-				.put(stagingBufferVertices.clBuffer)
-				.put(stagingBufferUvs.clBuffer)
-				.put(stagingBufferNormals.clBuffer)
-				.put(renderBufferVertices.clBuffer)
-				.put(renderBufferUvs.clBuffer)
-				.put(renderBufferNormals.clBuffer);
+				.put(uboCompute.clId)
+				.put(modelPassthroughBuffer.clId)
+				.put(stagingBufferVertices.clId)
+				.put(stagingBufferUvs.clId)
+				.put(stagingBufferNormals.clId)
+				.put(renderBufferVertices.clId)
+				.put(renderBufferUvs.clId)
+				.put(renderBufferNormals.clId);
 			for (var buffer : modelSortingBuffers)
-				glBuffers.put(buffer.clBuffer);
+				glBuffers.put(buffer.clId);
 			glBuffers.flip();
 
 			PointerBuffer acquireEvent = stack.mallocPointer(1);
@@ -426,13 +426,13 @@ public class OpenCLManager {
 
 			PointerBuffer computeEvents = stack.mallocPointer(1 + modelSortingBuffers.length);
 			if (numPassthroughModels > 0) {
-				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 2, stagingBufferUvs.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 3, stagingBufferNormals.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 4, renderBufferVertices.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 5, renderBufferUvs.clBuffer);
-				clSetKernelArg1p(passthroughKernel, 6, renderBufferNormals.clBuffer);
+				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clId);
+				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clId);
+				clSetKernelArg1p(passthroughKernel, 2, stagingBufferUvs.clId);
+				clSetKernelArg1p(passthroughKernel, 3, stagingBufferNormals.clId);
+				clSetKernelArg1p(passthroughKernel, 4, renderBufferVertices.clId);
+				clSetKernelArg1p(passthroughKernel, 5, renderBufferUvs.clId);
+				clSetKernelArg1p(passthroughKernel, 6, renderBufferNormals.clId);
 
 				// queue compute call after acquireGLBuffers
 				clEnqueueNDRangeKernel(commandQueue, passthroughKernel, 1, null,
@@ -452,14 +452,14 @@ public class OpenCLManager {
 				long kernel = sortingKernels[i];
 
 				clSetKernelArg(kernel, 0, (long) (SHARED_SIZE + faceCount) * Integer.BYTES);
-				clSetKernelArg1p(kernel, 1, modelSortingBuffers[i].clBuffer);
-				clSetKernelArg1p(kernel, 2, stagingBufferVertices.clBuffer);
-				clSetKernelArg1p(kernel, 3, stagingBufferUvs.clBuffer);
-				clSetKernelArg1p(kernel, 4, stagingBufferNormals.clBuffer);
-				clSetKernelArg1p(kernel, 5, renderBufferVertices.clBuffer);
-				clSetKernelArg1p(kernel, 6, renderBufferUvs.clBuffer);
-				clSetKernelArg1p(kernel, 7, renderBufferNormals.clBuffer);
-				clSetKernelArg1p(kernel, 8, uniformBufferCamera.clBuffer);
+				clSetKernelArg1p(kernel, 1, modelSortingBuffers[i].clId);
+				clSetKernelArg1p(kernel, 2, stagingBufferVertices.clId);
+				clSetKernelArg1p(kernel, 3, stagingBufferUvs.clId);
+				clSetKernelArg1p(kernel, 4, stagingBufferNormals.clId);
+				clSetKernelArg1p(kernel, 5, renderBufferVertices.clId);
+				clSetKernelArg1p(kernel, 6, renderBufferUvs.clId);
+				clSetKernelArg1p(kernel, 7, renderBufferNormals.clId);
+				clSetKernelArg1p(kernel, 8, uboCompute.clId);
 				clSetKernelArg1p(kernel, 9, tileHeightMap);
 
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, null,
@@ -562,20 +562,5 @@ public class OpenCLManager {
 	private static void checkCLError(int errcode) {
 		if (errcode != CL_SUCCESS)
 			throw new RuntimeException(String.format("OpenCL error [%d]", errcode));
-	}
-
-	public void recreateCLBuffer(GLBuffer glBuffer, long clFlags) {
-		// cleanup previous buffer
-		if (glBuffer.clBuffer != 0)
-			clReleaseMemObject(glBuffer.clBuffer);
-
-		// allocate new
-		if (glBuffer.size == 0) {
-			// opencl does not allow 0-size gl buffers, it will segfault on macOS
-			glBuffer.clBuffer = 0;
-		} else {
-			assert glBuffer.size > 0 : "Size <= 0 should not reach this point";
-			glBuffer.clBuffer = clCreateFromGLBuffer(context, clFlags, glBuffer.glBufferId, (IntBuffer) null);
-		}
 	}
 }

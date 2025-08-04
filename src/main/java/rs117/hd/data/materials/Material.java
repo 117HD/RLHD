@@ -37,6 +37,8 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
 
+import static rs117.hd.utils.MathUtils.*;
+
 public enum Material {
 	// - Each enum entry refers to a texture file by name, in lowercase. If a texture with the specified name is found,
 	//   it will be loaded and resized to fit the dimensions of the texture array.
@@ -89,6 +91,11 @@ public enum Material {
 	SIMPLE_GRAIN_WOOD(16),
 	WATER_DROPLETS(17, p -> p
 		.setHasTransparency(true)),
+	WATER_DROPS(p -> p
+		.setScroll(0, 0.9f)
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.075f)
+		.setFlowMapDuration(new float[] { 7, -7 })),
 	HAY(18),
 	NET(19, p -> p
 		.setHasTransparency(true)),
@@ -298,24 +305,40 @@ public enum Material {
 	SKULLS_FOG_LIGHT(118),
 	SKULLS_FOG_DARK(119),
 	BRICK_BROWN_HORIZONTAL(120),
+	BRICK_CAM_TORUM(125),
+	BRICK_CAM_TORUM_2(126),
 
 	WHITE(NONE),
+	GRAY_150(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.5f))),
+	GRAY_125(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.25f))),
+	GRAY_110(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(1.1f))),
+	GRAY_90(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.90f))),
+	GRAY_85(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.85f))),
 	GRAY_75(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.75f))),
+	GRAY_70(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.70f))),
 	GRAY_65(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.65f))),
 	GRAY_50(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.5f))),
+	GRAY_35(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.35f))),
 	GRAY_25(NONE, p -> p.setBrightness(ColorUtils.srgbToLinear(.25f))),
 	BLACK(NONE, p -> p.setBrightness(0)),
+	PURE_BLACK(NONE, p -> p.setOverrideBaseColor(true).setBrightness(0)),
 
 	BLANK_GLOSS(WHITE, p -> p
 		.setSpecular(0.9f, 280)),
 	BLANK_SEMIGLOSS(WHITE, p -> p
 		.setSpecular(0.35f, 80)),
+	BLANK_SUPERGLOSS(WHITE, p -> p
+		.setSpecular(1.75f, 55)),
 
 	SNOW_1_N,
 	SNOW_1(p -> p.setNormalMap(SNOW_1_N).setSpecular(0.4f, 20)),
 	SNOW_2_N,
 	SNOW_2(p -> p.setNormalMap(SNOW_2_N).setSpecular(0.4f, 20)),
 	SNOW_2_DARK(SNOW_2, p -> p.setBrightness(0.5f)),
+	SNOW_COLORED(p -> p
+		.setOverrideBaseColor(true)
+		.setNormalMap(SNOW_1_N)
+		.setSpecular(0.4f, 20)),
 	SNOW_3_N,
 	SNOW_3(p -> p.setNormalMap(SNOW_3_N).setSpecular(0.4f, 20)),
 	SNOW_4_N,
@@ -325,7 +348,8 @@ public enum Material {
 	GRASS_2,
 	GRASS_3,
 	GRASS_SCROLLING(GRASS_1, p -> p
-		.setScroll(0, 1 / 0.7f)),
+		.setScroll(0, -1 / 0.7f)),
+	COLORED_GRASS(p -> p.setOverrideBaseColor(true)),
 	DIRT_1_N,
 	DIRT_1(p -> p
 		.setNormalMap(DIRT_1_N)
@@ -336,10 +360,19 @@ public enum Material {
 		.setNormalMap(DIRT_2_N)
 		.setSpecular(0.25f, 18)),
 	DIRT_2_VERT(DIRT_2, p -> p.setNormalMap(null)),
+	DIRT_2_LIGHT(DIRT_2, p -> p
+		.setBrightness(1.2f)),
+
 	GRAVEL_N,
 	GRAVEL(p -> p
 		.setNormalMap(GRAVEL_N)
 		.setSpecular(0.4f, 130)
+	),
+	VERTICAL_GRAVEL(GRAVEL, p -> p
+		.setNormalMap(null)
+	),
+	GRAVEL_SEMI_LIGHT(GRAVEL, p -> p
+		.setBrightness(1.25f)
 	),
 	GRAVEL_LIGHT(GRAVEL, p -> p
 		.setBrightness(1.5f)
@@ -354,6 +387,13 @@ public enum Material {
 	GRAVEL_SHINY_LIGHT(GRAVEL, p -> p
 		.setSpecular(1.1f, 380)
 		.setBrightness(1.55f)
+	),
+	MUD_1_N,
+	MUD_1(p -> p
+		.setNormalMap(MUD_1_N)
+		.setSpecular(0.50f, 25)),
+	MUD_1_DARK(MUD_1, p -> p
+		.setBrightness(0.85f)
 	),
 	SAND_1_N,
 	SAND_1(p -> p
@@ -371,21 +411,66 @@ public enum Material {
 		.setSpecular(0.2f, 10)
 	),
 	GRUNGE_1,
+	GRUNGE_1_LIGHT(GRUNGE_1, p -> p.setBrightness(1.3f)),
+	GRUNGE_1_VERY_LIGHT(GRUNGE_1, p -> p.setBrightness(1.7f)),
 	GRUNGE_1_SHINY(GRUNGE_1, p -> p
+		.setSpecular(0.7f, 300)
+	),
+	GRUNGE_1_LIGHT_SHINY(GRUNGE_1, p -> p
+		.setBrightness(1.2f)
 		.setSpecular(0.7f, 300)
 	),
 	GRUNGE_2,
 	GRUNGE_2_SHINY(GRUNGE_2, p -> p
 		.setSpecular(0.7f, 300)
 	),
-	GRUNGE_2_EADGARS_CAVE_FIX(GRUNGE_2, p -> p.setBrightness(0.65f)),
-	GRUNGE_2_TROLLHEIM_WALL_FIX_1(GRUNGE_2, p -> p.setBrightness(1.8f)),
-	GRUNGE_2_TROLLHEIM_WALL_FIX_2(GRUNGE_2, p -> p.setBrightness(1.2f)),
 	SUBMERGED_GRUNGE_2(GRUNGE_2, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.075f)
 		.setFlowMapDuration(new float[] { 12, -12 })),
-
+	GRUNGE_3_N,
+	GRUNGE_3(p -> p
+		.setNormalMap(GRUNGE_3_N)
+		.setSpecular(0.25f, 30)
+	),
+	GRUNGE_3_SHINY(GRUNGE_3, p -> p
+		.setBrightness(1.45f)
+		.setSpecular(0.5f, 300)
+	),
+	GRUNGE_3_LIGHT(GRUNGE_3, p -> p
+		.setBrightness(1.45f)
+	),
+	GRUNGE_3_LIGHT_SHINY(GRUNGE_3_LIGHT, p -> p
+		.setBrightness(1.45f)
+		.setSpecular(0.5f, 300)
+		),
+	GRUNGE_3_DARK(GRUNGE_3, p -> p
+		.setBrightness(0.75f)
+		.setSpecular(0f, 0)
+	),
+	WATER_FOUNTAIN_FLAT(GRUNGE_3, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setFlowMapDuration(new float[] { 12, -12 })
+	),
+	WATER_FLAT_FORCE(WATER_FLAT, p -> p.setOverrideBaseColor(true)),
+	MOTHERLODE_MINE_WATER(WATER_FLAT, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.3f)
+		.setBrightness(0.45f)
+		.setScroll(0, 1.4f)
+		.setFlowMapDuration(new float[] { 10, -14 })
+	),
+	SWAMP_WATER_FLAT_FLOW(SWAMP_WATER_FLAT, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setScroll(0, 1.3f)
+		.setFlowMapDuration(new float[] { 7, -11 })
+	),
+	GRUNGE_3_DULL(GRUNGE_3, p -> p
+		.setNormalMap(null)
+		.setSpecular(0, 0)
+	),
 	ROCK_1_N,
 	ROCK_1(p -> p
 		.setNormalMap(ROCK_1_N)
@@ -407,9 +492,26 @@ public enum Material {
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
 	),
+	ROCK_3_MEDIUM_DARK(ROCK_3,p -> p
+		.setBrightness(0.85f)
+	),
+	ROCK_3_DARK(ROCK_3,p -> p
+		.setBrightness(0.65f)
+	),
+	ROCK_3_LIGHT(ROCK_3,p -> p
+		.setBrightness(1.50f)
+	),
+	ROCK_3_SMOOTH(ROCK_3, p -> p
+		.setDisplacementScale(0)
+		.setTextureScale(1, 1, .15f)
+		.setSpecular(0.3f, 40)
+	),
 	ROCK_3_ORE(ROCK_3, p -> p
 		.setSpecular(1, 20)
 	),
+	EADGARS_CAVE_FIX(ROCK_3, p -> p.setBrightness(0.65f)),
+	TROLLHEIM_WALL_FIX_1(ROCK_3, p -> p.setBrightness(1.8f)),
+	TROLLHEIM_WALL_FIX_2(ROCK_3, p -> p.setBrightness(1.2f)),
 
 	ROCK_4_D,
 	ROCK_4_N,
@@ -419,6 +521,9 @@ public enum Material {
 		.setDisplacementScale(.15f)
 		.setSpecular(0.4f, 20)
 		.setBrightness(1.2f)
+	),
+	ROCK_4_DARK(ROCK_4, p -> p
+		.setBrightness(0.7f)
 	),
 	ROCK_4_ORE(ROCK_4, p -> p
 		.setSpecular(1, 20)
@@ -435,29 +540,43 @@ public enum Material {
 	ROCK_5_ORE(ROCK_5, p -> p
 		.setSpecular(1, 20)
 	),
-	CARPET,
-	FINE_CARPET(CARPET, p -> p
-		.setBrightness(1.4f)
-		.setTextureScale(0.5f, 0.5f)),
-
+	ROPE,
+	CARPET_N,
+	CARPET(p -> p
+		.setNormalMap(CARPET_N)
+		.setSpecular(0.25f,30)
+	),
+	CARPET_LIGHT(CARPET, p -> p
+		.setBrightness(1.45f)),
+	CARPET_DARK(CARPET, p -> p
+		.setBrightness(0.45f)),
+	BURLAP,
 	FALADOR_PATH_BRICK_N,
+	FALADOR_PATH_BRICK_D,
 	FALADOR_PATH_BRICK(p -> p
+		.setDisplacementMap(FALADOR_PATH_BRICK_D)
+		.setDisplacementScale(.06f)
 		.setNormalMap(FALADOR_PATH_BRICK_N)
+		.setSpecular(0.25f, 30)
+	),
+	BRICK_PATH_N,
+	BRICK_PATH(p -> p
+		.setNormalMap(BRICK_PATH_N)
 		.setSpecular(0.3f, 30)
 	),
 	JAGGED_STONE_TILE_D,
 	JAGGED_STONE_TILE_N,
 	JAGGED_STONE_TILE(p -> p
 		.setDisplacementMap(JAGGED_STONE_TILE_D)
+		.setDisplacementScale(.05f)
 		.setNormalMap(JAGGED_STONE_TILE_N)
 		.setSpecular(0.5f, 30)
 	),
-	POTTERY_OVEN_STONE(
-		JAGGED_STONE_TILE,
-		p -> p.setOverrideBaseColor(JAGGED_STONE_TILE.overrideBaseColor).setBrightness(0.3f)
-	),
+	POTTERY_OVEN_STONE(JAGGED_STONE_TILE, p -> p.setBrightness(0.3f)),
 
 	TILE_SMALL_1(p -> p
+		.setSpecular(0.8f, 70)),
+	TILE_SMALL_2(p -> p
 		.setSpecular(0.8f, 70)),
 	TILES_2X2_1_N,
 	TILES_2X2_1(p -> p
@@ -466,7 +585,9 @@ public enum Material {
 		.setSpecular(1.0f, 70)),
 	TILES_2X2_1_SEMIGLOSS(TILES_2X2_1, p -> p
 		.setSpecular(0.5f, 300)),
+	TILES_2X2_2_N,
 	TILES_2X2_2(p -> p
+		.setNormalMap(TILES_2X2_2_N)
 		.setSpecular(0.3f, 30)),
 	TILES_2X2_2_GLOSS(TILES_2X2_2, p -> p
 		.setSpecular(1.0f, 70)),
@@ -486,21 +607,28 @@ public enum Material {
 		.setSpecular(0.35f, 80)),
 	MARBLE_2_SEMIGLOSS(MARBLE_2, p -> p
 		.setSpecular(0.3f, 100)),
+	MARBLE_2_DARK(MARBLE_2, p -> p
+		.setBrightness(0.5f)),
 	MARBLE_3_SEMIGLOSS(MARBLE_3, p -> p
 		.setSpecular(0.4f, 120)),
-
-	LASSAR_UNDERCITY_TILE_NORMAL,
-	LASSAR_UNDERCITY_TILE_DISP,
+	LASSAR_UNDERCITY_TILE_N,
+	LASSAR_UNDERCITY_TILE_D,
 	LASSAR_UNDERCITY_TILES(MARBLE_2_SEMIGLOSS, p -> p
-		.setNormalMap(LASSAR_UNDERCITY_TILE_NORMAL)
-		.setDisplacementMap(LASSAR_UNDERCITY_TILE_DISP)
+		.setNormalMap(LASSAR_UNDERCITY_TILE_N)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_D)
 		.setDisplacementScale(.015f)
 	),
 	LASSAR_UNDERCITY_TILES_SUBMERGED(LASSAR_UNDERCITY_TILES, p -> p
 		.setFlowMap(UNDERWATER_FLOW_MAP)
 		.setFlowMapStrength(0.025f)
 		.setFlowMapDuration(new float[] { 10, -10 })),
-
+	CAM_TORUM_TILE_AO,
+	CAM_TORUM_TILES(DIRT_1, p -> p
+		.setNormalMap(LASSAR_UNDERCITY_TILE_N)
+		.setDisplacementMap(LASSAR_UNDERCITY_TILE_D)
+		.setAmbientOcclusionMap(CAM_TORUM_TILE_AO)
+		.setDisplacementScale(.025f)
+	),
 	HD_LAVA_1(p -> p
 		.setUnlit(true)
 		.setOverrideBaseColor(true)
@@ -523,14 +651,46 @@ public enum Material {
 		.setSpecular(0.3f, 30)
 	),
 	LIGHT_BARK(BARK, p -> p.setBrightness(1.75f)),
+	VERY_LIGHT_BARK(BARK, p -> p.setBrightness(2.75f)),
+	BARK_STONEPINE_N,
+	BARK_STONEPINE(p -> p
+		.setNormalMap(BARK_STONEPINE_N)
+		.setSpecular(0.3f, 30)),
+	BARK_STONEPINE_2(p -> p
+		.setNormalMap(BARK_STONEPINE_N)
+		.setSpecular(0.3f, 30)
+		.setBrightness(1.75f)),
+	LIGHT_BARK_STONEPINE(BARK_STONEPINE, p -> p.setBrightness(1.75f)),
+	LEAF_VEINS,
+	LEAF_VEINS_LIGHT(LEAF_VEINS, p -> p.setBrightness(1.2f)),
+	LEAF_VEINS_DARK(LEAF_VEINS, p -> p.setBrightness(0.75f)),
+	LEAVES_1_N,
+	LEAVES_1(p -> p
+		.setNormalMap(LEAVES_1_N)
+		.setSpecular(0.25f, 15)
+	),
 	WOOD_GRAIN,
+	WOOD_GRAIN_LIGHT(WOOD_GRAIN, p -> p
+		.setBrightness(1.5f)
+	),
+	WOOD_GRAIN_DARK(WOOD_GRAIN, p -> p
+		.setBrightness(0.75f)
+	),
 	WOOD_GRAIN_2_N,
 	WOOD_GRAIN_2(p -> p
 		.setNormalMap(WOOD_GRAIN_2_N)
 		.setSpecular(0.3f, 30)
 	),
+	WOOD_GRAIN_2_SMOOTH(WOOD_GRAIN_2, p -> p
+		.setBrightness(1.1f)
+		.setTextureScale(1, 1, .2f)
+	),
 	WOOD_GRAIN_2_LIGHT(WOOD_GRAIN_2, p -> p
 		.setBrightness(1.1f)
+	),
+	WOOD_GRAIN_2_SMOOTH_LIGHT(WOOD_GRAIN_2, p -> p
+		.setBrightness(1.3f)
+		.setTextureScale(1, 1, .2f)
 	),
 	WOOD_GRAIN_2_WIDE(WOOD_GRAIN_2, p -> p
 		.setTextureScale(1.5f, 0.5f)
@@ -542,9 +702,12 @@ public enum Material {
 		.setNormalMap(WOOD_GRAIN_3_N)
 		.setSpecular(0.3f, 25)
 	),
-	DOCK_FENCE,
-	DOCK_FENCE_DARK(DOCK_FENCE, p -> p.setBrightness(0.6f)),
-
+	WOOD_GRAIN_3_LIGHT(WOOD_GRAIN_3, p -> p.setBrightness(1.6f)),
+	WOOD_GRAIN_3_SEMILIGHT_DULL(WOOD_GRAIN_3, p -> p
+		.setBrightness(1.2f)
+		.setSpecular(0f, 0)
+	),
+	WOOD_GRAIN_3_DARK(WOOD_GRAIN_3, p -> p.setBrightness(0.7f)),
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(plugin -> plugin.config.hdInfernalTexture(), INFERNAL_CAPE)
 		.setUnlit(true)
@@ -562,10 +725,13 @@ public enum Material {
 		.setSpecular(0.30f, 20)
 	),
 	HD_ROOF_SHINGLES_N,
+	HD_ROOF_SHINGLES_D,
 	HD_ROOF_SHINGLES_1(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_SHINGLES_1)
-		.setSpecular(0.5f, 30)
+		.setSpecular(0.35f, 40)
 		.setNormalMap(HD_ROOF_SHINGLES_N)
+		.setDisplacementMap(HD_ROOF_SHINGLES_D)
+		.setDisplacementScale(0.11f)
 	),
 	HD_MARBLE_DARK(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, MARBLE_DARK)
@@ -600,7 +766,17 @@ public enum Material {
 		.setDisplacementScale(.008f)
 	),
 
-	WORN_TILES,
+	WORN_TILES_N,
+	WORN_TILES(p -> p.setNormalMap(WORN_TILES_N).setSpecular(0.2f,25)),
+	HD_STONE_PATTERN_N,
+	HD_STONE_PATTERN_D,
+	HD_STONE_PATTERN(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, STONE_PATTERN)
+		.setNormalMap(HD_STONE_PATTERN_N)
+		.setDisplacementMap(HD_STONE_PATTERN_D)
+		.setDisplacementScale(0.08f)
+		.setSpecular(0.25f, 30)
+	),
 	STONE_N,
 	STONE,
 	STONE_NORMALED(STONE, p -> p
@@ -610,6 +786,9 @@ public enum Material {
 	STONE_NORMALED_DARK(STONE_NORMALED, p -> p
 		.setBrightness(0.88f)
 	),
+	STONE_NORMALED_LIGHT(STONE_NORMALED, p -> p
+		.setBrightness(1.3f)
+	),
 	STONE_LOWGLOSS(STONE, p -> p
 		.setSpecular(0.3f, 30)
 	),
@@ -618,23 +797,39 @@ public enum Material {
 		.setScroll(0, -1 / 0.7f)),
 
 	WALL_STONE_N,
-	WALL_STONE(p -> p.setNormalMap(WALL_STONE_N)),
-	METALLIC_1(p -> p.setSpecular(0.2f, 20)),
+	WALL_STONE(p -> p
+		.setNormalMap(WALL_STONE_N)),
+	WALL_STONE_LIGHT(WALL_STONE, p -> p
+		.setNormalMap(WALL_STONE_N)
+		.setBrightness(1.7f)),
+	METALLIC_1_N,
+	METALLIC_1(p -> p.setNormalMap(METALLIC_1_N).setSpecular(0.6f, 30)),
 	METALLIC_1_SEMIGLOSS(METALLIC_1, p -> p
-		.setSpecular(0.3f, 80)),
+		.setSpecular(0.8f, 60)),
 	METALLIC_1_GLOSS(METALLIC_1, p -> p
-		.setSpecular(0.7f, 80)),
+		.setSpecular(0.9f, 80)),
 	METALLIC_1_HIGHGLOSS(METALLIC_1, p -> p
-		.setSpecular(1.1f, 80)),
-	METALLIC_2(METALLIC_1, p -> p.setBrightness(1.8f)),
-	METALLIC_2_SEMIGLOSS(METALLIC_2, p -> p
-		.setSpecular(0.3f, 80)),
-	METALLIC_2_GLOSS(METALLIC_2, p -> p
+		.setSpecular(1.1f, 120)),
+	METALLIC_1_LIGHT(METALLIC_1, p -> p.setBrightness(1.8f)),
+	METALLIC_1_LIGHT_SEMIGLOSS(METALLIC_1_LIGHT, p -> p
 		.setSpecular(0.7f, 80)),
-	METALLIC_2_HIGHGLOSS(METALLIC_2, p -> p
-		.setSpecular(1.1f, 80)),
+	METALLIC_1_LIGHT_GLOSS(METALLIC_1_LIGHT, p -> p
+		.setSpecular(0.9f, 120)),
+	METALLIC_1_LIGHT_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
+		.setSpecular(1.1f, 160)),
+	METALLIC_1_LIGHT_SUPER_HIGHGLOSS(METALLIC_1_LIGHT, p -> p
+		.setSpecular(2.25f, 65)),
+	METALLIC_1_VERY_LIGHT(METALLIC_1, p -> p.setBrightness(2.6f)),
+	METALLIC_2_N,
+	METALLIC_2(p -> p.setNormalMap(METALLIC_2_N).setSpecular(0.7f, 35)),
 	METALLIC_NONE_GLOSS(NONE, p -> p
-		.setSpecular(0.7f, 80)),
+		.setSpecular(0.7f, 120)),
+	METALLIC_1_SMOOTH(METALLIC_1, p -> p
+		.setTextureScale(1, 1, .1f)
+	),
+	METALLIC_1_SMOOTH_LIGHT(METALLIC_1_SMOOTH, p -> p
+		.setBrightness(1.8f)
+	),
 	WATTLE_1,
 	ICE_1(SNOW_4, p -> p
 		.replaceIf(SeasonalTheme.WINTER, WATER_FLAT_2, WATER_FLAT)
@@ -672,7 +867,7 @@ public enum Material {
 		.setBrightness(0.9f)
 	),
 	HD_ROOF_BRICK_TILE_N,
-	HD_ROOF_BRICK_TILE(ROOF_BRICK_TILE, p -> p
+	HD_ROOF_BRICK_TILE(p -> p
 		.replaceIf(plugin -> plugin.configModelTextures, ROOF_BRICK_TILE)
 		.setSpecular(0.3f, 30)
 		.setNormalMap(HD_ROOF_BRICK_TILE_N)
@@ -709,10 +904,22 @@ public enum Material {
 		.setSpecular(0.3f, 20)
 		.setNormalMap(HD_HAY_N)
 	),
+	HD_HAY_BRIGHT(HD_HAY, p -> p
+		.setBrightness(1.8f)
+	),
+	HD_IRON_BARS(p -> p
+		.replaceIf(plugin -> plugin.configModelTextures, IRON_BARS)
+		.setHasTransparency(true)
+		.setSpecular(0.6f, 30)
+		.setTextureScale(0.98f)
+	),
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
 	),
-	BONE(GRUNGE_2, p -> p.setSpecular(0.25f, 20)),
+	BONE(GRUNGE_2, p -> p
+		.setSpecular(0.25f, 20)
+		.setBrightness(1.3f)
+	),
 	ABYSSAL_D,
 	ABYSSAL_N,
 	ABYSSAL(p -> p
@@ -731,6 +938,23 @@ public enum Material {
 		.setDisplacementScale(0.1f)
 		.setBrightness(1.9f)
 	),
+	ABYSSAL_FLOW(ABYSSAL, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.075f)
+		.setFlowMapDuration(new float[] { -37, 37 })
+	),
+	ABYSSAL_2_FLOW(ABYSSAL_2, p -> p
+		.setFlowMap(UNDERWATER_FLOW_MAP)
+		.setFlowMapStrength(0.2f)
+		.setFlowMapDuration(new float[] { 28, -28 })
+	),
+
+	GROUND_WEB_1_N,
+	GROUND_WEB_1(p -> p.setNormalMap(GROUND_WEB_1_N).setSpecular(0.35f,90)),
+	GROUND_WEB_2_N,
+	GROUND_WEB_2(p -> p.setNormalMap(GROUND_WEB_2_N).setSpecular(0.35f,90)),
+	GROUND_WEB_3_N,
+	GROUND_WEB_3(p -> p.setNormalMap(GROUND_WEB_3_N).setSpecular(0.35f,90)),
 
 
 	// Aliases for separately replacing textures of different trees
@@ -883,7 +1107,7 @@ public enum Material {
 		private float specularStrength;
 		private float specularGloss;
 		private float[] scrollSpeed = { 0, 0 };
-		private float[] textureScale = { 1, 1 };
+		private float[] textureScale = { 1, 1, 1 };
 		private List<Material> materialsToReplace = new ArrayList<>();
 		private Function<HdPlugin, Boolean> replacementCondition;
 
@@ -934,8 +1158,8 @@ public enum Material {
 			return this;
 		}
 
-		Builder setTextureScale(float x, float y) {
-			this.textureScale = new float[] { x, y };
+		Builder setTextureScale(float... xyz) {
+			textureScale = copyTo(copy(textureScale), xyz);
 			return this;
 		}
 
@@ -975,7 +1199,7 @@ public enum Material {
 		consumer.accept(builder);
 		parent = builder.parent;
 		normalMap = builder.normalMap;
-		displacementMap = builder.displacementMap;
+		displacementMap = builder.displacementScale == 0 ? null : builder.displacementMap;
 		roughnessMap = builder.roughnessMap;
 		ambientOcclusionMap = builder.ambientOcclusionMap;
 		flowMap = builder.flowMap;
@@ -994,7 +1218,7 @@ public enum Material {
 		materialsToReplace.addAll(builder.materialsToReplace);
 		replacementCondition = builder.replacementCondition;
 
-		// Determine whether the material contains some form of texture change
+		// Determine whether the material contains some form of non-vanilla texture change
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;

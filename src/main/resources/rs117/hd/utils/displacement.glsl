@@ -22,10 +22,13 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-
 #include PARALLAX_OCCLUSION_MAPPING
 
+#include <uniforms/global.glsl>
+#include <uniforms/materials.glsl>
+
 #if PARALLAX_OCCLUSION_MAPPING
+
 float sampleHeight(const Material material, const vec2 uv) {
     return linearToSrgb(texture(textureArray, vec3(uv, material.displacementMap)).r);
 }

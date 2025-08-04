@@ -2,8 +2,7 @@
 
 #include MATERIAL_COUNT
 
-struct Material
-{
+struct Material {
     int colorMap;
     int normalMap;
     int displacementMap;
@@ -18,11 +17,10 @@ struct Material
     float flowMapStrength;
     vec2 flowMapDuration;
     vec2 scrollDuration;
-    vec2 textureScale;
-    vec2 pad;
+    vec3 textureScale;
 };
 
-layout(std140) uniform MaterialUniforms {
+layout(std140) uniform UBOMaterials {
     Material MaterialArray[MATERIAL_COUNT];
 };
 

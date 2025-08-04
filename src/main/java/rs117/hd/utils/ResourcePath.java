@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022, Hooder <ahooder@protonmail.com>
+ * Copyright (c) 2025, Hooder <ahooder@protonmail.com>
  * Copyright (c) 2022, Mark <https://github.com/Mark7625>
  * All rights reserved.
  *
@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -45,6 +46,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Stack;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
@@ -57,7 +59,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.RegEx;
 import javax.swing.ImageIcon;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
@@ -65,9 +66,8 @@ import org.lwjgl.system.Platform;
 
 @Slf4j
 public class ResourcePath {
-	public static ResourcePath RESOURCE_PATH = Props.getPathOrDefault("rlhd.resource-path", () -> null);
-
 	private static final FileWatcher.UnregisterCallback NOOP = () -> {};
+	private static final ResourcePath RESOURCE_PATH = Props.getFolder("rlhd.resource-path", () -> null);
 
 	@Nullable
 	public final ResourcePath root;
@@ -78,20 +78,21 @@ public class ResourcePath {
 		return path(path.toString());
 	}
 
-	public static ResourcePath path(File root, String... parts) {
-		return new ResourcePath(root.getPath()).resolve(parts);
-	}
-
 	public static ResourcePath path(String... parts) {
 		return new ResourcePath(parts);
 	}
 
-	public static ResourcePath path(Class<?> root, String... parts) {
-		return new ClassResourcePath(root, parts);
+	public static ResourcePath path(Class<?> clazz, String... parts) {
+		String path = normalize(clazz.getPackage().getName().replace(".", "/"), parts);
+		return path(clazz.getClassLoader(), path);
 	}
 
-	public static ResourcePath path(ClassLoader root, String... parts)  {
-		return new ClassLoaderResourcePath(root, parts);
+	public static ResourcePath path(ClassLoader root, String... parts) {
+		// Redirect class resources to the specified resource path during development
+		if (RESOURCE_PATH != null)
+			return RESOURCE_PATH.resolve(parts);
+
+		return new ClassResourcePath(root).resolve(parts);
 	}
 
 	private ResourcePath(String... parts) {
@@ -99,6 +100,8 @@ public class ResourcePath {
 	}
 
 	private ResourcePath(@Nonnull ResourcePath root) {
+		// Encapsulate the current root and path into a new root ResourcePath.
+		// Subsequent path resolutions will not include the encapsulated path.
 		this.root = root;
 		this.path = null;
 	}
@@ -109,8 +112,6 @@ public class ResourcePath {
 	}
 
 	public ResourcePath chroot() {
-		// Encapsulate the current root and path into a new root ResourcePath.
-		// Subsequent path resolutions will not include the encapsulated path.
 		return new ResourcePath(this);
 	}
 
@@ -120,14 +121,18 @@ public class ResourcePath {
 
 	@SuppressWarnings("ResultOfMethodCallIgnored")
 	public ResourcePath mkdirs() {
-		toFile().getParentFile().mkdirs();
+		var path = this;
+		// Assume paths with an extension are file paths, not directories
+		if (!getExtension().isEmpty())
+			path = path.resolve("..");
+		path.toFile().mkdirs();
 		return this;
 	}
 
 	public boolean exists() {
-		if (root == null)
-			return toFile().exists();
-		return root.resolve(path).exists();
+		if (root != null)
+			return root.resolve(path).exists();
+		return toFile().exists();
 	}
 
 	public String getFilename() {
@@ -178,27 +183,17 @@ public class ResourcePath {
 	}
 
 	@Override
-	public boolean equals(Object other) {
-		return
-			other instanceof ResourcePath &&
-			toAbsolute().toPosixPath().equals(((ResourcePath) other).toAbsolute().toPosixPath());
-	}
-
-	@Override
 	public String toString() {
 		String path = toPosixPath();
-		if (root != null)
-			path = normalize(root.toPosixPath(), path.startsWith("/") ? path.substring(1) : path);
 		return path.isEmpty() ? "." : path;
 	}
 
-	public ResourcePath toAbsolute() {
-		if (root != null) {
-			Path rootPath = root.toPath().toAbsolutePath();
-			Path path = toPath().toAbsolutePath();
-			return new ResourcePath(root, rootPath.relativize(path).toString());
-		}
-		return path(toPath().toAbsolutePath());
+	@Override
+	public boolean equals(Object obj) {
+		// Used for file watcher event deduplication
+		return obj instanceof ResourcePath &&
+			   Objects.equals(root, ((ResourcePath) obj).root) &&
+			   Objects.equals(path, ((ResourcePath) obj).path);
 	}
 
 	public String toPosixPath() {
@@ -217,24 +212,13 @@ public class ResourcePath {
 		if (path == null)
 			return basePath;
 
-		String relativePath = path.startsWith("/") ? path.substring(1) : path;
-		return basePath.resolve(relativePath);
+		return basePath.resolve(stripLeadingSlash(path));
 	}
 
 	public File toFile() {
-		if (!isFileSystemResource())
-			throw new IllegalStateException("Not a file: " + this);
-		return toPath().toFile();
-	}
-
-	@NonNull
-	public URL toURL() throws IOException {
-		if (root == null) {
-			String path = toPath().toString();
-			return new URL("file:" + (isAbsolute(path) ? path : "./" + path));
-		}
-		URL rootURL = root.toURL();
-		return new URL(rootURL, rootURL.getProtocol() + ":" + normalize(rootURL.getPath(), new String[] { path }));
+		if (isFileSystemResource())
+			return toPath().toFile();
+		throw new IllegalStateException("Not a file: " + this);
 	}
 
 	public BufferedReader toReader() throws IOException {
@@ -242,15 +226,8 @@ public class ResourcePath {
 	}
 
 	public InputStream toInputStream() throws IOException {
-		if (path == null)
-			throw new IllegalStateException("Cannot get InputStream for root path: " + this);
-
-		if (root != null) {
-			String path = this.path;
-			if (path.startsWith("/"))
-				path = path.substring(1);
+		if (root != null)
 			return root.resolve(path).toInputStream();
-		}
 
 		try {
 			return Files.newInputStream(toPath());
@@ -263,21 +240,10 @@ public class ResourcePath {
 		return new FileOutputStream(toFile());
 	}
 
-	public boolean isClassResource() {
-		if (root != null)
-			return root.isClassResource();
-		return false;
-	}
-
-	/**
-	 * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-	 */
 	public boolean isFileSystemResource() {
-		try {
-			return toURL().getProtocol().equals("file");
-		} catch (IOException ex) {
-			return false;
-		}
+		if (root != null)
+			return root.isFileSystemResource();
+		return true;
 	}
 
 	/**
@@ -289,16 +255,12 @@ public class ResourcePath {
 	public FileWatcher.UnregisterCallback watch(BiConsumer<ResourcePath, Boolean> changeHandler) {
 		var path = this;
 
-		// Redirect to the project folder during development
-		if (RESOURCE_PATH != null)
-			path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-
 		// Load once up front
 		changeHandler.accept(path, true);
 
-		// Watch for changes if the resource is on the file system, which will exclude paths pointing into the JAR
-		// By default, unless paths are overridden by VM arguments, all of 117 HD's paths point into the JAR
-		if (isFileSystemResource())
+		// Watch for changes if the resource is on the file system, which will exclude paths pointing into the JAR.
+		// By default, unless paths are overridden by VM arguments, all of 117 HD's paths point into the JAR.
+		if (path.isFileSystemResource())
 			return FileWatcher.watchPath(path, p -> changeHandler.accept(p, false));
 
 		return NOOP;
@@ -337,6 +299,12 @@ public class ResourcePath {
 		}
 	}
 
+	public <T> T loadJson(Gson gson, Type type) throws IOException {
+		try (BufferedReader reader = toReader()) {
+			return gson.fromJson(reader, type);
+		}
+	}
+
 	public BufferedImage loadImage() throws IOException {
 		try (InputStream is = toInputStream()) {
 			byte[] bytes = is.readAllBytes();
@@ -355,6 +323,7 @@ public class ResourcePath {
 
 	/**
 	 * Reads the full InputStream into a garbage-collected ByteBuffer allocated with BufferUtils.
+	 *
 	 * @return a ByteBuffer
 	 * @throws IOException if the InputStream cannot be read
 	 */
@@ -364,6 +333,7 @@ public class ResourcePath {
 
 	/**
 	 * Reads the full InputStream into a ByteBuffer allocated with malloc, which must be explicitly freed.
+	 *
 	 * @return a ByteBuffer
 	 * @throws IOException if the InputStream cannot be read
 	 */
@@ -394,6 +364,7 @@ public class ResourcePath {
 
 	/**
 	 * Reads the full InputStream into a garbage-collected ByteBuffer allocated with BufferUtils.
+	 *
 	 * @param is the InputStream
 	 * @return a ByteBuffer
 	 * @throws IOException if the InputStream cannot be read
@@ -434,11 +405,11 @@ public class ResourcePath {
 		}
 	}
 
-	private static String normalize(String... parts) {
+	public static String normalize(String... parts) {
 		return normalize(null, parts);
 	}
 
-	private static String normalize(@Nullable String workingDirectory, String[] parts) {
+	public static String normalize(@Nullable String workingDirectory, String[] parts) {
 		Stack<String> resolvedParts = new Stack<>();
 		if (workingDirectory != null && !workingDirectory.isEmpty() && !workingDirectory.equals("."))
 			resolvedParts.addAll(Arrays.asList(normalizeSlashes(workingDirectory).split("/")));
@@ -501,6 +472,10 @@ public class ResourcePath {
 		return home.resolve(path.substring(slashIndex + 1)).toString();
 	}
 
+	private static String stripLeadingSlash(String path) {
+		return path.startsWith("/") ? path.substring(1) : path;
+	}
+
 	/**
 	 * Expects forward slashes as path delimiter, but accepts Windows-style drive letter prefixes.
 	 */
@@ -511,156 +486,39 @@ public class ResourcePath {
 	}
 
 	private static class ClassResourcePath extends ResourcePath {
-		public final Class<?> root;
+		public final ClassLoader classLoader;
 
-		public ClassResourcePath(@NonNull Class<?> root, String... parts) {
+		private ClassResourcePath(@Nonnull ClassLoader classLoader, String... parts) {
 			super(parts);
-			this.root = root;
+			this.classLoader = classLoader;
 		}
 
 		@Override
 		public ResourcePath resolve(String... parts) {
-			return new ClassResourcePath(root, normalize(path, parts));
+			return new ClassResourcePath(classLoader, normalize(path, parts));
 		}
 
-		@Override
-		public boolean exists()
-		{
+		private URL toResource() {
 			assert path != null;
-			return root.getResource(path) != null;
+			return classLoader.getResource(stripLeadingSlash(path));
 		}
 
 		@Override
-		public String toString() {
-			return super.toString() + " from class " + root.getName();
-		}
-
-		@Override
-		public ResourcePath toAbsolute() {
-			return path(root, normalize("/" + root.getPackage().getName().replace(".", "/"), path));
-		}
-
-		@Override
-		public boolean isClassResource() {
-			return true;
-		}
-
-		/**
-		 * Check if the resource root is actually on the file system.
-		 */
-		public boolean isFileSystemResource() {
-			URL url = root.getResource("/");
-			if (url == null)
-				return false;
-			return url.getProtocol().equals("file");
-		}
-
-		@Override
-		@NonNull
-		public URL toURL() throws IOException {
-			assert path != null;
-			URL url = root.getResource(path);
-			if (url == null)
-				throw new IOException("No resource found for path " + this);
-			return url;
+		public boolean exists() {
+			return toResource() != null;
 		}
 
 		@Override
 		public InputStream toInputStream() throws IOException {
-			assert path != null;
-
-			// Attempt to load resource from project resource folder if it's on the file system
-			if (RESOURCE_PATH != null) {
-				ResourcePath path = null;
-				try {
-					path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-					return path.toInputStream();
-				} catch (IOException ex) {
-					throw new IOException("Failed to load resource from project resource path: " + path, ex);
-				}
-			} else {
-				InputStream is = root.getResourceAsStream(path);
-				if (is == null)
-					throw new IOException("Missing resource: " + this);
-				return is;
-			}
-		}
-	}
-
-	private static class ClassLoaderResourcePath extends ResourcePath {
-		public final ClassLoader root;
-
-		public ClassLoaderResourcePath(ClassLoader root, String... parts) {
-			super(parts);
-			this.root = root;
+			var url = toResource();
+			if (url == null)
+				throw new IOException("Unable to load resource: " + this);
+			return url.openStream();
 		}
 
 		@Override
-		public ResourcePath resolve(String... parts) {
-			return new ClassLoaderResourcePath(root, normalize(path, parts));
-		}
-
-		@Override
-		public boolean exists()
-		{
-			assert path != null;
-			return root.getResource(path) != null;
-		}
-
-		@Override
-		public String toString() {
-			return super.toString() + " from class loader " + root;
-		}
-
-		@Override
-		public ResourcePath toAbsolute() {
-			assert path != null;
-			return path.startsWith("/") ? this : path(root, "/", path);
-		}
-
-		@Override
-		public boolean isClassResource() {
-			return true;
-		}
-
-		/**
-		 * Check if the resource pointed to is actually on the file system, even if it is loaded as a class resource.
-		 */
 		public boolean isFileSystemResource() {
-			URL url = root.getResource("/");
-			if (url == null)
-				return false;
-			return url.getProtocol().equals("file");
-		}
-
-		@Override
-		@NonNull
-		public URL toURL() throws IOException {
-			URL url = root.getResource(path);
-			if (url == null)
-				throw new IOException("No resource found for path " + this);
-			return url;
-		}
-
-		@Override
-		public InputStream toInputStream() throws IOException {
-			assert path != null;
-
-			// Attempt to load resource from project resource folder if it's not located in a jar
-			if (RESOURCE_PATH != null) {
-				ResourcePath path = null;
-				try {
-					path = RESOURCE_PATH.chroot().resolve(toAbsolute().toPath().toString());
-					return path.toInputStream();
-				} catch (Exception ex) {
-					log.warn("Failed to load resource from project resource folder: {}", path, ex);
-				}
-			}
-
-			InputStream is = root.getResourceAsStream(path);
-			if (is == null)
-				throw new IOException("Missing resource: " + this);
-			return is;
+			return false;
 		}
 	}
 }

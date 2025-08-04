@@ -23,18 +23,17 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-
-#include cl_types.cl
+#include "common.cl"
 
 __kernel
 __attribute__((reqd_work_group_size(6, 1, 1)))
 void passthroughModel(
   __global const struct ModelInfo *ol,
-  __global const int4 *vb,
-  __global const float4 *uv,
+  __global const struct VertexData *vb,
+  __global const struct UVData *uv,
   __global const float4 *normal,
-  __global int4 *vout,
-  __global float4 *uvout,
+  __global struct VertexData *vout,
+  __global struct UVData *uvout,
   __global float4 *normalout
 ) {
   size_t groupId = get_group_id(0);
@@ -45,30 +44,33 @@ void passthroughModel(
   int outOffset = minfo.idx;
   int uvOffset = minfo.uvOffset;
 
-  int4 pos = (int4)(minfo.x, minfo.y, minfo.z, 0);
-
   if (localId >= (size_t) minfo.size) {
     return;
   }
 
   uint ssboOffset = localId;
-  int4 thisA, thisB, thisC;
+  struct VertexData thisA, thisB, thisC;
 
   thisA = vb[offset + ssboOffset * 3];
   thisB = vb[offset + ssboOffset * 3 + 1];
   thisC = vb[offset + ssboOffset * 3 + 2];
 
   uint myOffset = localId;
+  float3 pos = convert_float3((int3)(minfo.x, minfo.y >> 16, minfo.z));
+
+  float3 vertA = (float3)(thisA.x, thisA.y, thisA.z) + pos;
+  float3 vertB = (float3)(thisB.x, thisB.y, thisB.z) + pos;
+  float3 vertC = (float3)(thisC.x, thisC.y, thisC.z) + pos;
 
   // position vertices in scene and write to out buffer
-  vout[outOffset + myOffset * 3]     = pos + thisA;
-  vout[outOffset + myOffset * 3 + 1] = pos + thisB;
-  vout[outOffset + myOffset * 3 + 2] = pos + thisC;
+  vout[outOffset + myOffset * 3] = (struct VertexData){vertA.x, vertA.y, vertA.z, thisA.ahsl};
+  vout[outOffset + myOffset * 3 + 1] = (struct VertexData){vertB.x, vertB.y, vertB.z, thisB.ahsl};
+  vout[outOffset + myOffset * 3 + 2] = (struct VertexData){vertC.x, vertC.y, vertC.z, thisC.ahsl};
 
   if (uvOffset < 0) {
-    uvout[outOffset + myOffset * 3]     = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
-    uvout[outOffset + myOffset * 3 + 1] = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
-    uvout[outOffset + myOffset * 3 + 2] = (float4)(0.0f, 0.0f, 0.0f, 0.0f);
+    uvout[outOffset + myOffset * 3]     = (struct UVData){0.0f, 0.0f, 0.0f, 0};
+    uvout[outOffset + myOffset * 3 + 1] = (struct UVData){0.0f, 0.0f, 0.0f, 0};
+    uvout[outOffset + myOffset * 3 + 2] = (struct UVData){0.0f, 0.0f, 0.0f, 0};
   } else {
     uvout[outOffset + myOffset * 3]     = uv[uvOffset + localId * 3];
     uvout[outOffset + myOffset * 3 + 1] = uv[uvOffset + localId * 3 + 1];

@@ -34,32 +34,21 @@ shared int totalDistance[12]; // sum of distances to faces of a given priority
 shared int totalMappedNum[18]; // number of faces with a given adjusted priority
 
 shared int min10; // minimum distance to a face of priority 10
-shared uint renderPris[THREAD_COUNT * FACES_PER_THREAD]; // packed distance and face id
+shared int renderPris[THREAD_COUNT * FACES_PER_THREAD]; // priority for face draw order
 
-layout(std140) uniform CameraUniforms {
-    float cameraYaw;
-    float cameraPitch;
-    int centerX;
-    int centerY;
-    int zoom;
-    float cameraX;
-    float cameraY;
-    float cameraZ;
-    ivec2 sinCosTable[2048];
-};
+#include <uniforms/compute.glsl>
 
-#include comp_common.glsl
+#include <comp_common.glsl>
 
 layout(local_size_x = THREAD_COUNT) in;
 
-#include common.glsl
-#include priority_render.glsl
+#include <comp_sorting_utils.glsl>
+#include <priority_render.glsl>
 
 void main() {
     uint groupId = gl_WorkGroupID.x;
     uint localId = gl_LocalInvocationID.x * FACES_PER_THREAD;
-    ModelInfo minfo = ol[groupId];
-    ivec4 pos = ivec4(minfo.x, minfo.y, minfo.z, 0);
+    const ModelInfo minfo = ol[groupId];
 
     if (localId == 0) {
         min10 = 6000;
@@ -72,22 +61,31 @@ void main() {
         }
     }
 
-    int prio[FACES_PER_THREAD];
-    int dis[FACES_PER_THREAD];
-    ivec4 vA[FACES_PER_THREAD];
-    ivec4 vB[FACES_PER_THREAD];
-    ivec4 vC[FACES_PER_THREAD];
+    ObjectWindSample windSample;
+    #if WIND_DISPLACEMENT
+    {
+        float modelNoise = noise((vec2(minfo.x, minfo.z) + vec2(windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+        float angle = modelNoise * (PI / 2.0);
+        float c = cos(angle);
+        float s = sin(angle);
+        float y = minfo.y >> 16;
+        float height = minfo.y & 0xffff;
 
-    for (int i = 0; i < FACES_PER_THREAD; i++)
-        get_face(localId + i, minfo, prio[i], dis[i], vA[i], vB[i], vC[i]);
+        windSample.direction = normalize(vec3(windDirectionX * c + windDirectionZ * s, 0.0, -windDirectionX * s + windDirectionZ * c));
+        windSample.heightBasedStrength = saturate((abs(y) + height) / windCeiling) * windStrength;
+        windSample.displacement = windSample.direction.xyz * (windSample.heightBasedStrength * modelNoise);
+    }
+    #endif
 
-    memoryBarrierShared();
+    // Ensure all invocations have their shared variables initialized
     barrier();
 
-    for (int i = 0; i < FACES_PER_THREAD; i++)
-        add_face_prio_distance(localId + i, minfo, vA[i], vB[i], vC[i], prio[i], dis[i], pos);
+    int prio[FACES_PER_THREAD];
+    int dis[FACES_PER_THREAD];
 
-    memoryBarrierShared();
+    for (int i = 0; i < FACES_PER_THREAD; i++)
+        add_face_prio_distance(localId + i, minfo, prio[i], dis[i]);
+
     barrier();
 
     int prioAdj[FACES_PER_THREAD];
@@ -95,15 +93,13 @@ void main() {
     for (int i = 0; i < FACES_PER_THREAD; i++)
         idx[i] = map_face_priority(localId + i, minfo, prio[i], dis[i], prioAdj[i]);
 
-    memoryBarrierShared();
     barrier();
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
         insert_face(localId + i, minfo, prioAdj[i], dis[i], idx[i]);
 
-    memoryBarrierShared();
     barrier();
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
-        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], vA[i], vB[i], vC[i]);
+        sort_and_insert(localId + i, minfo, prioAdj[i], dis[i], windSample);
 }

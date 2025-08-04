@@ -7,8 +7,7 @@ import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 
-import static rs117.hd.utils.HDUtils.GiB;
-import static rs117.hd.utils.HDUtils.MiB;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ModelCache {
@@ -28,13 +27,20 @@ public class ModelCache {
 		}
 
 		void destroy() {
-			if (address != 0L) {
-				MemoryUtil.nmemFree(address);
-				address = 0;
-				byteCapacity = 0;
-				cursor = 0;
-				freeBytesAhead = 0;
-			}
+			if (address == 0L)
+				return;
+
+			MemoryUtil.nmemFree(address);
+			address = 0;
+			byteCapacity = 0;
+			cursor = 0;
+			freeBytesAhead = 0;
+		}
+
+		@Override
+		@SuppressWarnings("deprecation")
+		protected void finalize() {
+			destroy();
 		}
 
 		long reserve(long numBytes) {
@@ -128,10 +134,10 @@ public class ModelCache {
 
 			try {
 				// Try allocating in chunks of up to 1 GiB each
-				int numChunks = (int) Math.ceil((double) byteCapacity / GiB);
+				int numChunks = (int) ((byteCapacity + GiB - 1) / GiB);
 				allocations = new Allocation[numChunks];
 				for (int i = 0; i < numChunks; i++) {
-					allocations[i] = new Allocation(Math.min(byteCapacity - i * GiB, GiB));
+					allocations[i] = new Allocation(min(byteCapacity - i * GiB, GiB));
 				}
 			} catch (Throwable err2) {
 				destroy();
@@ -149,10 +155,12 @@ public class ModelCache {
 		buffers.clear();
 		currentAllocation = null;
 
-		for (int i = 0; i < allocations.length; i++) {
-			if (allocations[i] != null) {
-				allocations[i].destroy();
-				allocations[i] = null;
+		if (allocations != null) {
+			for (int i = 0; i < allocations.length; i++) {
+				if (allocations[i] != null) {
+					allocations[i].destroy();
+					allocations[i] = null;
+				}
 			}
 		}
 	}

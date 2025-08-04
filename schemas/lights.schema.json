@@ -135,39 +135,57 @@
         "type": "boolean",
         "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
       },
+      "ignoreActorHiding": {
+        "type": "boolean",
+        "description": "Don't hide the light if its actor is hidden by another actor drawing on top. Defaults to false."
+      },
+      "areas": {
+        "type": "array",
+        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the light should be limited to.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
+      "excludeAreas": {
+        "type": "array",
+        "description": "An array of areas where the light shouldn't be able to spawn.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
       "npcIds": {
         "type": "array",
-        "description": "A set of NPC IDs or NpcID keys to apply the light to.",
+        "description": "A set of NPC gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "objectIds": {
         "type": "array",
-        "description": "A set of object IDs or ObjectID keys to apply the light to.",
+        "description": "A set of object gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "projectileIds": {
         "type": "array",
-        "description": "A set of projectile IDs to apply the light to.",
+        "description": "A set of projectile gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "graphicsObjectIds": {
         "type": "array",
-        "description": "A set of graphics object IDs to apply the light to.",
+        "description": "A set of graphics object gameval names to apply the light to.",
         "items": {
-          "type": "integer"
+          "type": "string"
         }
       },
       "animationIds": {
         "type": "array",
-        "description": "A set of animation IDs to display the light for. Must be specified alongside another kind of ID to apply to.",
+        "description": "A set of animation gameval names to display the light for, or the special value `-1` for no animation. Must be specified alongside an NPC or other thing to watch for animations on.",
         "items": {
-          "type": "integer"
+          "type": [ "string", "number" ]
         }
       }
     }

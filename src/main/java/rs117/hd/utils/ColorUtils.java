@@ -6,7 +6,6 @@
  * You should have received a copy of the CC0 Public Domain Dedication along with this software.
  * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
-
 package rs117.hd.utils;
 
 import com.google.gson.TypeAdapter;
@@ -18,8 +17,10 @@ import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 
+import static rs117.hd.utils.MathUtils.*;
+
 public class ColorUtils {
-	private static final float EPS = 1e-10f;
+	private static final float EPS = 1e-4f;
 
 	/**
 	 * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
@@ -101,15 +102,15 @@ public class ColorUtils {
 	// Source: https://web.archive.org/web/20220808015852/https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.pdf
 	// Page number 130 (146 in the PDF)
 	public static float linearToSrgb(float c) {
-		return c <= 0.0031308 ?
+		return c <= 0.0031308f ?
 			c * 12.92f :
-			(float) (1.055 * Math.pow(c, 1 / 2.4) - 0.055);
+			1.055f * pow(c, 1 / 2.4f) - 0.055f;
 	}
 
 	public static float srgbToLinear(float c) {
 		return c <= 0.04045f ?
 			c / 12.92f :
-			(float) Math.pow((c + 0.055) / 1.055, 2.4);
+			pow((c + 0.055f) / 1.055f, 2.4f);
 	}
 
 	public static float[] linearToSrgb(float... c) {
@@ -127,21 +128,6 @@ public class ColorUtils {
 	}
 
 	/**
-	 * Float modulo that returns the answer with the same sign as the modulus.
-	 */
-	private static float mod(float x, float modulus) {
-		return (float) (x - Math.floor(x / modulus) * modulus);
-	}
-
-	private static float clamp(float value, float min, float max) {
-		return Math.min(Math.max(value, min), max);
-	}
-
-	private static int clamp(int value, int min, int max) {
-		return Math.min(Math.max(value, min), max);
-	}
-
-	/**
 	 * Convert sRGB in the range 0-1 to HSL in the range 0-1.
 	 *
 	 * @param srgb float[3]
@@ -149,8 +135,8 @@ public class ColorUtils {
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
 	public static float[] srgbToHsl(float[] srgb) {
-		float V = Math.max(Math.max(srgb[0], srgb[1]), srgb[2]);
-		float X_min = Math.min(Math.min(srgb[0], srgb[1]), srgb[2]);
+		float V = max(srgb);
+		float X_min = min(srgb);
 		float C = V - X_min;
 
 		float H = 0;
@@ -166,8 +152,8 @@ public class ColorUtils {
 		}
 
 		float L = (V + X_min) / 2;
-		float divisor = 1 - Math.abs(2 * L - 1);
-		float S_L = Math.abs(divisor) < EPS ? 0 : C / divisor;
+		float divisor = 1 - abs(2 * L - 1);
+		float S_L = abs(divisor) < EPS ? 0 : C / divisor;
 		return new float[] { H / 6, S_L, L };
 	}
 
@@ -179,13 +165,13 @@ public class ColorUtils {
 	 * @link <a href="https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae">Wikipedia: HSL and HSV</a>
 	 */
 	public static float[] hslToSrgb(float[] hsl) {
-		float C = hsl[1] * (1 - Math.abs(2 * hsl[2] - 1));
-		float H_prime = hsl[0] * 6;
+		float C = hsl[1] * (1 - abs(2 * hsl[2] - 1));
+		float H_prime = fract(hsl[0]) * 6;
 		float m = hsl[2] - C / 2;
 
-		float r = clamp(Math.abs(H_prime - 3) - 1, 0, 1) * C + m;
-		float g = clamp(2 - Math.abs(H_prime - 2), 0, 1) * C + m;
-		float b = clamp(2 - Math.abs(H_prime - 4), 0, 1) * C + m;
+		float r = clamp(abs(H_prime - 3) - 1, 0, 1) * C + m;
+		float g = clamp(2 - abs(H_prime - 2), 0, 1) * C + m;
+		float b = clamp(2 - abs(H_prime - 4), 0, 1) * C + m;
 		return new float[] { r, g, b };
 	}
 
@@ -196,8 +182,8 @@ public class ColorUtils {
 	 * @return hsv float[3]
 	 */
 	public static float[] hslToHsv(float[] hsl) {
-		float v = hsl[2] + hsl[1] * Math.min(hsl[2], 1 - hsl[2]);
-		return new float[] { hsl[0], Math.abs(v) < EPS ? 0 : 2 * (1 - hsl[2] / v), v };
+		float v = hsl[2] + hsl[1] * min(hsl[2], 1 - hsl[2]);
+		return vec(hsl[0], abs(v) < EPS ? 0 : 2 * (1 - hsl[2] / v), v);
 	}
 
 	/**
@@ -208,8 +194,8 @@ public class ColorUtils {
 	 */
 	public static float[] hsvToHsl(float[] hsv) {
 		float l = hsv[2] * (1 - hsv[1] / 2);
-		float divisor = Math.min(l, 1 - l);
-		return new float[] { hsv[0], Math.abs(divisor) < EPS ? 0 : (hsv[2] - l) / divisor, l };
+		float divisor = min(l, 1 - l);
+		return vec(hsv[0], abs(divisor) < EPS ? 0 : (hsv[2] - l) / divisor, l);
 	}
 
 	/**
@@ -305,6 +291,10 @@ public class ColorUtils {
 		};
 	}
 
+	public static float[] srgb(Color c) {
+		return srgb(c.getRed(), c.getGreen(), c.getBlue());
+	}
+
 	/**
 	 * Convert alpha and sRGB color packed in an int as ARGB to sRGB in the range 0-1.
 	 *
@@ -359,10 +349,7 @@ public class ColorUtils {
 	}
 
 	public static int packSrgb(float[] srgb) {
-		int[] ints = new int[3];
-		for (int i = 0; i < 3; i++)
-			ints[i] = clamp(Math.round(srgb[i] * 0xFF), 0, 0xFF);
-		return packRawRgb(ints);
+		return packRawRgb(ivec(multiply(saturate(srgb), 0xFF)));
 	}
 
 	public static int packRawHsl(int... hsl) {
@@ -383,9 +370,9 @@ public class ColorUtils {
 	}
 
 	public static int packHsl(float... hsl) {
-		int H = clamp(Math.round((hsl[0] - .0078125f) * (0x3F + 1)), 0, 0x3F);
-		int S = clamp(Math.round((hsl[1] - .0625f) * (0x7 + 1)), 0, 0x7);
-		int L = clamp(Math.round(hsl[2] * (0x7F + 1)), 0, 0x7F);
+		int H = clamp(round((hsl[0] - .0078125f) * (0x3F + 1)), 0, 0x3F);
+		int S = clamp(round((hsl[1] - .0625f) * (0x7 + 1)), 0, 0x7);
+		int L = clamp(round(hsl[2] * (0x7F + 1)), 0, 0x7F);
 		return packRawHsl(H, S, L);
 	}
 
@@ -414,7 +401,7 @@ public class ColorUtils {
 	}
 
 	public static String srgbToHex(float... srgb) {
-		return String.format("#%h", packSrgb(srgb));
+		return String.format("#%06x", packSrgb(srgb));
 	}
 
 	public static String rgbToHex(float... linearRgb) {
@@ -468,9 +455,7 @@ public class ColorUtils {
 			if (i == 4)
 				return rgba;
 
-			float[] rgb = new float[3];
-			System.arraycopy(rgba, 0, rgb, 0, 3);
-			return rgb;
+			return slice(rgba, 0, 3);
 		}
 
 		@Override
@@ -490,8 +475,8 @@ public class ColorUtils {
 			boolean canfit = true;
 			for (int i = 0; i < src.length; i++) {
 				float f = rgba[i];
-				rgbaInt[i] = Math.round(f);
-				if (Math.abs(f - rgbaInt[i]) > EPS) {
+				rgbaInt[i] = round(f);
+				if (abs(f - rgbaInt[i]) > EPS) {
 					canfit = false;
 					break;
 				}
@@ -506,9 +491,8 @@ public class ColorUtils {
 				}
 			} else {
 				out.beginArray();
-				for (int i = 0; i < src.length; i++) {
-					out.value(rgba[i]);
-				}
+				for (int i = 0; i < src.length; i++)
+					out.value((Number) (round(rgba[i] * 100) / 100.f)); // Cast to Number to remove unnecessary decimals
 				out.endArray();
 			}
 		}

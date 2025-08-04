@@ -1,6 +1,7 @@
 package rs117.hd.scene.tile_overrides;
 
 import com.google.gson.JsonElement;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -11,12 +12,13 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.data.WaterType;
-import rs117.hd.data.environments.Area;
-import rs117.hd.data.materials.GroundMaterial;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.ground_materials.GroundMaterial;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.Props;
 
-import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @NoArgsConstructor
@@ -28,24 +30,33 @@ public class TileOverride {
 	@Nullable
 	public String name;
 	public String description;
+	@JsonAdapter(AreaManager.Adapter.class)
 	public Area area = Area.NONE;
 	public int[] overlayIds;
 	public int[] underlayIds;
+	@JsonAdapter(GroundMaterial.Adapter.class)
 	public GroundMaterial groundMaterial = GroundMaterial.NONE;
+	@JsonAdapter(WaterType.Adapter.class)
 	public WaterType waterType = WaterType.NONE;
 	public boolean blended = true;
-	public boolean blendedAsOpposite = false;
-	public int shiftHue;
-	public int minHue;
-	public int maxHue = 63;
-	public int shiftSaturation;
-	public int minSaturation;
-	public int maxSaturation = 7;
-	public int shiftLightness;
-	public int minLightness;
-	public int maxLightness = 127;
+	public boolean blendedAsOpposite;
+	public boolean forced;
+	public boolean depthTested;
+	private int setHue = -1;
+	private int shiftHue;
+	private int minHue;
+	private int maxHue = 63;
+	private int setSaturation = -1;
+	private int shiftSaturation;
+	private int minSaturation;
+	private int maxSaturation = 7;
+	private int setLightness = -1;
+	private int shiftLightness;
+	private int minLightness;
+	private int maxLightness = 127;
 	public int uvOrientation;
 	public float uvScale = 1;
+	public int heightOffset;
 	@SerializedName("replacements")
 	public LinkedHashMap<String, JsonElement> rawReplacements;
 
@@ -57,6 +68,7 @@ public class TileOverride {
 	private TileOverride(@Nullable String name, GroundMaterial groundMaterial) {
 		this.name = name;
 		this.groundMaterial = groundMaterial;
+		this.index = Integer.MAX_VALUE; // Prioritize any-match overrides over this
 	}
 
 	@Override
@@ -65,21 +77,26 @@ public class TileOverride {
 			return name;
 		if (description != null)
 			return description;
+		if (area != null)
+			return area.name;
 		return "Unnamed";
 	}
 
 	public void normalize(TileOverride[] allOverrides, Map<String, Object> constants) {
 		int numOverlays = overlayIds == null ? 0 : overlayIds.length;
 		int numUnderlays = underlayIds == null ? 0 : underlayIds.length;
-		ids = new int[numOverlays + numUnderlays];
-		int i = 0;
-		for (int j = 0; j < numOverlays; j++) {
-			int id = overlayIds[j];
-			ids[i++] = OVERLAY_FLAG | id;
-		}
-		for (int j = 0; j < numUnderlays; j++) {
-			int id = underlayIds[j];
-			ids[i++] = id;
+		int numIds = numOverlays + numUnderlays;
+		if (numIds > 0) {
+			ids = new int[numOverlays + numUnderlays];
+			int i = 0;
+			for (int j = 0; j < numOverlays; j++) {
+				int id = overlayIds[j];
+				ids[i++] = OVERLAY_FLAG | id;
+			}
+			for (int j = 0; j < numUnderlays; j++) {
+				int id = underlayIds[j];
+				ids[i++] = id;
+			}
 		}
 
 		if (area == null) {
@@ -94,6 +111,19 @@ public class TileOverride {
 			log.warn("Undefined water type in tile override: {}", this);
 			waterType = WaterType.NONE;
 		}
+
+		if (forced) {
+			// Replace hidden tiles with white by default
+			minHue = maxHue = minSaturation = maxSaturation = 0;
+			minLightness = maxLightness = 127;
+		}
+
+		if (setHue != -1)
+			minHue = maxHue = setHue;
+		if (setSaturation != -1)
+			minSaturation = maxSaturation = setSaturation;
+		if (setLightness != -1)
+			minLightness = maxLightness = setLightness;
 
 		// Convert UV scale to reciprocal, so we can multiply instead of dividing later
 		uvScale = 1 / uvScale;
