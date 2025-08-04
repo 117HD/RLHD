@@ -484,7 +484,8 @@ public class SceneView {
 					final int uh2 = h2 + (dl2 > 0 ? ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1] : 0);
 					final int uh3 = h3 + (dl3 > 0 ? ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1] : 0);
 
-					result = HDUtils.IsTileVisible(x, z, uh0, uh1, uh2, uh3, view.frustumPlanes) ?
+					// TODO: Had to pad the underwater tile check to get it to pass when its really close the nearPlane
+					result = HDUtils.IsTileVisible(x, z, uh0, uh1, uh2, uh3, view.frustumPlanes, -(LOCAL_TILE_SIZE * 4)) ?
 						VisibilityResult.VISIBLE :
 						VisibilityResult.HIDDEN;
 				}
