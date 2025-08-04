@@ -16,7 +16,6 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.overlays.FrameTimer;
@@ -30,6 +29,7 @@ import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.model_overrides.WindDisplacement;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
@@ -38,6 +38,7 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.MathUtils.*;
 
 /**
  * Pushes models
@@ -70,7 +71,7 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_INDEX = (1 << 15) - 1;
+	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
@@ -175,7 +176,7 @@ public class ModelPusher {
 		if (modelCache == null)
 			useCache = false;
 
-		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
+		final int faceCount = min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
 		int texturedFaceCount = 0;
 
@@ -454,9 +455,11 @@ public class ModelPusher {
 		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_INDEX;
 		// The sign bit can't be used without shader changes to correctly unpack the material index
-		return (materialIndex & MAX_MATERIAL_INDEX) << 16
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 10
-			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 7
+		return (materialIndex & MAX_MATERIAL_INDEX) << 20
+			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
+		    | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11
+			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 8
+			| (modelOverride.invertDisplacementStrength ? 1 : 0) << 7
 		    | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			| (!modelOverride.receiveShadows ? 1 : 0) << 5
 			| (modelOverride.upwardsNormals ? 1 : 0) << 4

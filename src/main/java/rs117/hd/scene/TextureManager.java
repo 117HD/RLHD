@@ -46,20 +46,15 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.UBOMaterials;
-import rs117.hd.opengl.uniforms.UBOWaterTypes;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_UI;
-import static rs117.hd.utils.HDUtils.HALF_PI;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
@@ -85,12 +80,15 @@ public class TextureManager {
 	private HdPluginConfig config;
 
 	@Inject
+	private WaterTypeManager waterTypeManager;
+
+	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	public UBOMaterials uboMaterials;
 
 	private int textureArray;
 	private int textureSize;
-	private UBOMaterials uboMaterials;
-	private final UBOWaterTypes uboWaterTypes = new UBOWaterTypes();
 
 	// Temporary variables for texture loading and generating material uniforms
 	private IntBuffer pixelBuffer;
@@ -103,7 +101,7 @@ public class TextureManager {
 	private ScheduledFuture<?> pendingReload;
 
 	public void startUp() {
-		clientThread.invoke(this::ensureMaterialsAreLoaded);
+		ensureMaterialsAreLoaded();
 
 		TEXTURE_PATH.watch((path, first) -> {
 			if (first) return;
@@ -115,7 +113,7 @@ public class TextureManager {
 	}
 
 	public void shutDown() {
-		clientThread.invoke(this::freeTextures);
+		freeTextures();
 	}
 
 	public void reloadTextures() {
@@ -135,13 +133,7 @@ public class TextureManager {
 			uboMaterials.destroy();
 		uboMaterials = null;
 
-		uboWaterTypes.destroy();
-	}
-
-	public void appendUniformBuffers(ShaderIncludes includes) {
-		includes
-			.addUniformBuffer(uboWaterTypes)
-			.addUniformBuffer(uboMaterials);
+		materialOrdinalToTextureLayer = null;
 	}
 
 	@RequiredArgsConstructor
@@ -166,6 +158,14 @@ public class TextureManager {
 			vanillaTextureIndex < vanillaTextureIndexToMaterialUniformIndex.length)
 			return vanillaTextureIndexToMaterialUniformIndex[vanillaTextureIndex];
 		return materialOrdinalToMaterialUniformIndex[material.ordinal()];
+	}
+
+	public int getTextureLayer(@Nullable Material material) {
+		if (material == null)
+			return -1;
+		assert materialOrdinalToTextureLayer != null : "Textures must be loaded";
+		material = material.resolveTextureMaterial();
+		return materialOrdinalToTextureLayer[material.ordinal()];
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -238,7 +238,7 @@ public class TextureManager {
 		glActiveTexture(TEXTURE_UNIT_GAME);
 		glBindTexture(GL_TEXTURE_2D_ARRAY, textureArray);
 
-		int mipLevels = 1 + (int) Math.floor(HDUtils.log2(textureSize));
+		int mipLevels = 1 + floor(log2(textureSize));
 		int format = GL_SRGB8_ALPHA8;
 		if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
 			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
@@ -295,7 +295,7 @@ public class TextureManager {
 					log.warn("No pixels for vanilla texture at index {}", vanillaIndex);
 					continue;
 				}
-				int resolution = (int) Math.round(Math.sqrt(pixels.length));
+				int resolution = round(sqrt(pixels.length));
 				if (resolution * resolution != pixels.length) {
 					log.warn("Unknown dimensions for vanilla texture at index {} ({} pixels)", vanillaIndex, pixels.length);
 					continue;
@@ -331,8 +331,8 @@ public class TextureManager {
 			if (direction != 0) {
 				float speed = texture.getAnimationSpeed() * 50 / 128.f;
 				float radians = direction * -HALF_PI;
-				vanillaTextureAnimations[i * 2] = (float) Math.cos(radians) * speed;
-				vanillaTextureAnimations[i * 2 + 1] = (float) Math.sin(radians) * speed;
+				vanillaTextureAnimations[i * 2] = cos(radians) * speed;
+				vanillaTextureAnimations[i * 2 + 1] = sin(radians) * speed;
 			}
 		}
 
@@ -342,7 +342,7 @@ public class TextureManager {
 
 		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
 		updateUBOMaterials();
-		updateUBOWaterTypes();
+		waterTypeManager.update();
 
 		// Reset
 		pixelBuffer = null;
@@ -350,10 +350,8 @@ public class TextureManager {
 		vanillaImage = null;
 		vanillaTextureAnimations = null;
 		materialUniformEntries = null;
-		materialOrdinalToTextureLayer = null;
 		vanillaTextureIndexToTextureLayer = null;
 		textureProvider.setBrightness(vanillaBrightness);
-		glActiveTexture(TEXTURE_UNIT_UI);
 	}
 
 	private BufferedImage loadTextureImage(Material material) {
@@ -410,9 +408,7 @@ public class TextureManager {
 
 		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
 			final float maxSamples = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-			//Clamp from 1 to max GL says it supports.
-			final float anisoLevel = Math.max(1, Math.min(maxSamples, level));
-			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoLevel);
+			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
 		}
 	}
 
@@ -440,13 +436,6 @@ public class TextureManager {
 				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().ordinal()];
 
 		uboMaterials.upload();
-	}
-
-	private int getTextureLayer(@Nullable Material material) {
-		if (material == null)
-			return -1;
-		material = material.resolveTextureMaterial();
-		return materialOrdinalToTextureLayer[material.ordinal()];
 	}
 
 	private void fillMaterialStruct(UBOMaterials.MaterialStruct struct, MaterialEntry entry) {
@@ -480,27 +469,5 @@ public class TextureManager {
 		struct.flowMapDuration.set(m.flowMapDuration);
 		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
 		struct.textureScale.set(1 / m.textureScale[0], 1 / m.textureScale[1], 1 / m.textureScale[2]);
-	}
-
-	private void updateUBOWaterTypes() {
-		uboWaterTypes.initialize(HdPlugin.UNIFORM_BLOCK_WATER_TYPES);
-		for (WaterType type : WaterType.values()) {
-			var struct = uboWaterTypes.waterTypes[type.ordinal()];
-			struct.isFlat.set(type.flat ? 1 : 0);
-			struct.specularStrength.set(type.specularStrength);
-			struct.specularGloss.set(type.specularGloss);
-			struct.normalStrength.set(type.normalStrength);
-			struct.baseOpacity.set(type.baseOpacity);
-			struct.hasFoam.set(type.hasFoam ? 1 : 0);
-			struct.duration.set(type.duration);
-			struct.fresnelAmount.set(type.fresnelAmount);
-			struct.surfaceColor.set(type.surfaceColor);
-			struct.foamColor.set(type.foamColor);
-			struct.depthColor.set(type.depthColor);
-			struct.normalMap.set(getTextureLayer(type.normalMap));
-			struct.foamMap.set(getTextureLayer(Material.WATER_FOAM));
-			struct.flowMap.set(getTextureLayer(Material.WATER_FLOW_MAP));
-		}
-		uboWaterTypes.upload();
 	}
 }

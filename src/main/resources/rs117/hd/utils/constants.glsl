@@ -7,9 +7,11 @@
 
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
-#define MATERIAL_INDEX_SHIFT 16
-#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 10
-#define MATERIAL_FLAG_WIND_SWAYING 7
+#define MATERIAL_INDEX_SHIFT 20
+#define MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT 14
+#define MATERIAL_FLAG_WIND_MODIFIER 11
+#define MATERIAL_FLAG_WIND_SWAYING 8
+#define MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH 7
 #define MATERIAL_FLAG_TERRAIN_VERTEX_SNAPPING 6
 #define MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING 5
 #define MATERIAL_FLAG_UPWARDS_NORMALS 4
@@ -32,9 +34,9 @@
 
 #include SHADOW_TRANSPARENCY
 #if SHADOW_TRANSPARENCY
-#define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.01 // Remove shadows from clickboxes
+    #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.01 // Remove shadows from clickboxes
 #else
-#define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
+    #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
 #endif
 
 #include VANILLA_COLOR_BANDING

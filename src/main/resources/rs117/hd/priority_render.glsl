@@ -224,9 +224,9 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
     int maxLightness;
     #if LEGACY_GREY_COLORS
-    maxLightness = 55;
+        maxLightness = 55;
     #else
-    maxLightness = int(127 - 72 * pow(saturation / 7., .05));
+        maxLightness = int(127 - 72 * pow(saturation / 7., .05));
     #endif
     lightness = min(lightness, maxLightness);
     hsl &= ~0x7F;
@@ -251,6 +251,13 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
+float getModelWindDisplacementMod(int vertexFlags) {
+    const float modifiers[7] = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0};
+    int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
+    float invertDisplacement = (vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH == 1) ? -1.0 : 1.0;
+    return modifiers[modifierIDx] * invertDisplacement;
+}
+
 void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float modelHeight, vec3 worldPos,
     in vec3 vertA, in vec3 vertB, in vec3 vertC,
     in vec3 normA, in vec3 normB, in vec3 normC,
@@ -260,9 +267,10 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float strengthA = saturate(abs(vertA.y) / modelHeight);
-    float strengthB = saturate(abs(vertB.y) / modelHeight);
-    float strengthC = saturate(abs(vertC.y) / modelHeight);
+    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
+    float strengthA = saturate(abs(vertA.y) / modelHeight) * modelDisplacementMod;
+    float strengthB = saturate(abs(vertB.y) / modelHeight) * modelDisplacementMod;
+    float strengthC = saturate(abs(vertC.y) / modelHeight) * modelDisplacementMod;
 
 #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
@@ -403,16 +411,16 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         thisrvC.pos = rotate(thisrvC.pos, orientation);
 
         #if UNDO_VANILLA_SHADING
-        if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
-            if (length(normA) == 0) {
-                // Compute flat normal if necessary, and rotate it back to match unrotated normals
-                vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
-                normA = normB = normC = rotate(N, -orientation);
+            if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
+                if (length(normA) == 0) {
+                    // Compute flat normal if necessary, and rotate it back to match unrotated normals
+                    vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
+                    normA = normB = normC = rotate(N, -orientation);
+                }
+                undoVanillaShading(thisrvA.ahsl, normA.xyz);
+                undoVanillaShading(thisrvB.ahsl, normB.xyz);
+                undoVanillaShading(thisrvC.ahsl, normC.xyz);
             }
-            undoVanillaShading(thisrvA.ahsl, normA.xyz);
-            undoVanillaShading(thisrvB.ahsl, normB.xyz);
-            undoVanillaShading(thisrvC.ahsl, normC.xyz);
-        }
         #endif
 
         thisrvA.pos += modelPos;

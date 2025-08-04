@@ -345,10 +345,10 @@ void undoVanillaShading(struct VertexData *vertex, float3 unrotatedNormal) {
     }
     int maxLightness;
     #if LEGACY_GREY_COLORS
-    maxLightness = 55;
+        maxLightness = 55;
     #else
-    const int MAX_BRIGHTNESS_LOOKUP_TABLE[8] = { 127, 61, 59, 57, 56, 56, 55, 55 };
-    maxLightness = MAX_BRIGHTNESS_LOOKUP_TABLE[saturation];
+        const int MAX_BRIGHTNESS_LOOKUP_TABLE[8] = { 127, 61, 59, 57, 56, 56, 55, 55 };
+        maxLightness = MAX_BRIGHTNESS_LOOKUP_TABLE[saturation];
     #endif
     lightness = min(lightness, maxLightness);
     hsl &= ~0x7F;
@@ -380,6 +380,13 @@ float3 applyCharacterDisplacement(
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
+float getModelWindDisplacementMod(int vertexFlags) {
+    const float modifiers[7] = { 0.25f, 0.5f, 0.7f, 1.0f, 1.25f, 1.5f, 2.0f };
+    int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
+    float invertDisplacement = vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH == 1 ? -1.0f : 1.0f;
+    return modifiers[modifierIDx] * invertDisplacement;
+}
+
 void applyWindDisplacement(
     __constant struct UBOCompute *uni,
     const struct ObjectWindSample windSample,
@@ -397,9 +404,10 @@ void applyWindDisplacement(
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float strengthA = clamp(fabs(vertA.y) / modelHeight, 0.0f, 1.0f);
-    float strengthB = clamp(fabs(vertB.y) / modelHeight, 0.0f, 1.0f);
-    float strengthC = clamp(fabs(vertC.y) / modelHeight, 0.0f, 1.0f);
+    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
+    float strengthA = clamp(fabs(vertA.y) / modelHeight, 0.0f, 1.0f) * modelDisplacementMod;
+    float strengthB = clamp(fabs(vertB.y) / modelHeight, 0.0f, 1.0f) * modelDisplacementMod;
+    float strengthC = clamp(fabs(vertC.y) / modelHeight, 0.0f, 1.0f) * modelDisplacementMod;
 
 #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
@@ -550,19 +558,19 @@ void sort_and_insert(
     vertC += pos + (float4)(displacementC, 0.0);
 
     #if UNDO_VANILLA_SHADING
-    if ((thisrvA.ahsl >> 20 & 1) == 0) {
-        if (fast_length(normA) == 0) {
-            // Compute flat normal if necessary, and rotate it back to match unrotated normals
-            float3 N = cross(
-              (float3)(thisrvA.x - thisrvB.x, thisrvA.y - thisrvB.y, thisrvA.z - thisrvB.z),
-              (float3)(thisrvA.x - thisrvC.x, thisrvA.y - thisrvC.y, thisrvA.z - thisrvC.z)
-            );
-            normA = normB = normC = (float4) (N, 1.f);
+        if ((thisrvA.ahsl >> 20 & 1) == 0) {
+            if (fast_length(normA) == 0) {
+                // Compute flat normal if necessary, and rotate it back to match unrotated normals
+                float3 N = cross(
+                  (float3)(thisrvA.x - thisrvB.x, thisrvA.y - thisrvB.y, thisrvA.z - thisrvB.z),
+                  (float3)(thisrvA.x - thisrvC.x, thisrvA.y - thisrvC.y, thisrvA.z - thisrvC.z)
+                );
+                normA = normB = normC = (float4) (N, 1.f);
+            }
+            undoVanillaShading(&thisrvA, normA.xyz);
+            undoVanillaShading(&thisrvB, normB.xyz);
+            undoVanillaShading(&thisrvC, normC.xyz);
         }
-        undoVanillaShading(&thisrvA, normA.xyz);
-        undoVanillaShading(&thisrvB, normB.xyz);
-        undoVanillaShading(&thisrvC, normC.xyz);
-    }
     #endif
 
     normalout[outOffset + myOffset * 3    ] = rotate_vertex(normA, orientation);

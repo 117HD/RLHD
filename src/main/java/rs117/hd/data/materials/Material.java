@@ -37,6 +37,8 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
 
+import static rs117.hd.utils.MathUtils.*;
+
 public enum Material {
 	// - Each enum entry refers to a texture file by name, in lowercase. If a texture with the specified name is found,
 	//   it will be loaded and resized to fit the dimensions of the texture array.
@@ -701,6 +703,10 @@ public enum Material {
 		.setSpecular(0.3f, 25)
 	),
 	WOOD_GRAIN_3_LIGHT(WOOD_GRAIN_3, p -> p.setBrightness(1.6f)),
+	WOOD_GRAIN_3_SEMILIGHT_DULL(WOOD_GRAIN_3, p -> p
+		.setBrightness(1.2f)
+		.setSpecular(0f, 0)
+	),
 	WOOD_GRAIN_3_DARK(WOOD_GRAIN_3, p -> p.setBrightness(0.7f)),
 	HD_INFERNAL_CAPE(p -> p
 		.replaceIf(plugin -> plugin.config.hdInfernalTexture(), INFERNAL_CAPE)
@@ -1153,8 +1159,7 @@ public enum Material {
 		}
 
 		Builder setTextureScale(float... xyz) {
-			textureScale = Arrays.copyOf(textureScale, 3);
-			System.arraycopy(xyz, 0, textureScale, 0, Math.min(3, xyz.length));
+			textureScale = copyTo(copy(textureScale), xyz);
 			return this;
 		}
 
