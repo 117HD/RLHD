@@ -39762,7 +39762,7 @@
   {
     "description": "Pendant of Ates Teleport",
     "offset": [ 0, 125, 0 ],
-    "radius": 250,
+    "radius": 275,
     "strength": 15,
     "fixedDespawnTime": true,
     "despawnDelay": 1100,
@@ -39775,5 +39775,110 @@
     "fadeInDuration": 250,
     "fadeOutDuration": 400,
     "graphicsObjectIds": [ "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01", "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01_REVERSE" ]
+  },
+  {
+    "description": "Ates Statue Active Bowl High",
+    "offset": [ 0, 530, -90 ],
+    "radius": 300,
+    "strength": 4,
+    "color": [
+      0,
+      150,
+      200
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 250,
+    "objectIds": [
+      "ATES_STATUE_TWILIGHT_ACTIVE",
+      "ATES_STATUE_AUBURN_ACTIVE",
+      "ATES_STATUE_RALOS_ACTIVE"
+    ]
+  },
+  {
+    "description": "Ates Statue Active Bowl Low",
+    "offset": [ 0, 420, -102 ],
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      0,
+      150,
+      200
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 250,
+    "objectIds": [
+      "ATES_STATUE_TWILIGHT_ACTIVE",
+      "ATES_STATUE_AUBURN_ACTIVE",
+      "ATES_STATUE_RALOS_ACTIVE"
+    ]
+  },
+  {
+    "description": "Ates Statue Active Symbol",
+    "offset": [ 5, 55, -140 ],
+    "radius": 110,
+    "strength": 10,
+    "color": [
+      0,
+      150,
+      230
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 250,
+    "objectIds": [
+      "ATES_STATUE_TWILIGHT_ACTIVE",
+      "ATES_STATUE_AUBURN_ACTIVE",
+      "ATES_STATUE_RALOS_ACTIVE"
+    ]
+  },
+  {
+    "description": "Ates Statue Active Bowl High - Rotated",
+    "offset": [ -70, 530, -70 ],
+    "radius": 300,
+    "strength": 4,
+    "color": [
+      0,
+      150,
+      200
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 250,
+    "objectIds": [
+      "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_TLATI_ACTIVE"
+    ]
+  },
+  {
+    "description": "Ates Statue Active Bowl Low - Rotated",
+    "offset": [ -72, 420, -72 ],
+    "radius": 150,
+    "strength": 7,
+    "color": [
+      0,
+      150,
+      200
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 250,
+    "objectIds": [
+      "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_TLATI_ACTIVE"
+    ]
+  },
+  {
+    "description": "Ates Statue Active Symbol - Rotated",
+    "offset": [ -100, 55, -100 ],
+    "radius": 110,
+    "strength": 10,
+    "color": [
+      0,
+      150,
+      230
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 250,
+    "objectIds": [
+      "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_TLATI_ACTIVE"
+    ]
   }
 ]
