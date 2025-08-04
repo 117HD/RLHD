@@ -228,6 +228,10 @@ public class SceneView {
 		return Arrays.copyOf(orientation, 2);
 	}
 
+	public void invalidateTileVisibility() {
+		dirtyFlags |= TILE_VISIBILITY_DIRTY;
+	}
+
 	@SneakyThrows
 	public void performAsyncTileCulling(SceneContext ctx, boolean checkUnderwater) {
 		if (ctx == null) {
@@ -255,6 +259,10 @@ public class SceneView {
 				checkUnderwater && ctx.underwaterDepthLevels != null ? ctx.underwaterDepthLevels[planeJob.plane] : null;
 			planeJob.submit();
 		}
+	}
+
+	public boolean isTileVisibleFast(int plane, int tileExX, int tileExY) {
+		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.VISIBLE;
 	}
 
 	@SneakyThrows
@@ -286,6 +294,11 @@ public class SceneView {
 	public boolean isModelVisible(Model model, int x, int y, int z) {
 		calculateFrustumPlanes();
 		return HDUtils.isModelVisible(x, y, z, model, frustumPlanes);
+	}
+
+	public boolean isSphereVisible(float x, float y, float z, int radius) {
+		calculateFrustumPlanes();
+		return HDUtils.isSphereInsideFrustum(x, y, z, radius, frustumPlanes);
 	}
 
 	public SceneView setOrientation(float[] newOrientation) {

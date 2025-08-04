@@ -1647,14 +1647,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneCamera.setPositionX((float) cameraX).setPositionY((float) cameraY).setPositionZ((float) cameraZ);
 				sceneCamera.setYaw((float) cameraYaw).setPitch((float) cameraPitch);
 				boolean sceneCameraChanged = sceneCamera.isDirty();
-
-				if (sceneCameraChanged) {
-					uboGlobal.cameraPos.set(sceneCamera.getPosition());
-					uboGlobal.projectionMatrix.set(sceneCamera.getViewProjMatrix());
-					uboGlobal.invProjectionMatrix.set(sceneCamera.getInvViewProjMatrix());
-					uboGlobal.upload();
-				}
-
 				if (sceneContext.scene == scene) {
 					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
 					cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
@@ -1735,6 +1727,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				if (sceneCameraChanged) {
+					uboGlobal.cameraPos.set(sceneCamera.getPosition());
+					uboGlobal.projectionMatrix.set(sceneCamera.getViewProjMatrix());
+					uboGlobal.invProjectionMatrix.set(sceneCamera.getInvViewProjMatrix());
+					uboGlobal.upload();
+
 					sceneCamera.performAsyncTileCulling(sceneContext, true);
 				}
 
@@ -1955,12 +1952,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			canCastShadow = !sceneContext.tileIsWater[plane][tileEeX][tileEeY];
 		}
 
-		if (sceneCamera.isTileVisible(plane, tileEeX, tileEeY)) {
+		if (sceneCamera.isTileVisibleFast(plane, tileEeX, tileEeY)) {
 			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
 			if (canCastShadow) { // Don't bother adding plane 0 to directional, since it'll be culled
 				directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 			}
-		} else if (configShadowCulling && canCastShadow && directionalLight.isTileVisible(plane, tileEeX, tileEeY)) {
+		} else if (configShadowCulling && canCastShadow && directionalLight.isTileVisibleFast(plane, tileEeX, tileEeY)) {
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 
@@ -1982,7 +1979,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (redrawPreviousFrame || bufferLength <= 0)
 			return;
 
-		if(!sceneCamera.isTileVisible(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
+		if(!sceneCamera.isTileVisibleFast(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
 			return;
 		}
 
@@ -2155,8 +2152,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
-		if (renderBufferOffset > 0)
+		if (renderBufferOffset > 0) {
+			if(!hasLoggedIn) {
+				sceneCamera.invalidateTileVisibility();
+				directionalLight.invalidateTileVisibility();
+			}
 			hasLoggedIn = true;
+		}
 
 		updateSceneFbo();
 
@@ -2456,8 +2458,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	private Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -2611,6 +2613,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferVertices.clear();
 		sceneContext.stagingBufferUvs.clear();
 		sceneContext.stagingBufferNormals.clear();
+
+		sceneCamera.invalidateTileVisibility();
+		directionalLight.invalidateTileVisibility();
 
 		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 			if (!isInHouse) {
@@ -2968,17 +2973,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-	 * Draw a Renderable in the scene
-	 *
-	 * @param projection
-	 * @param scene
-	 * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
-	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
-	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
-	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
-	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
-	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
-	 */
+     * Draw a Renderable in the scene
+     *
+     * @param projection
+     * @param scene
+     * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
+     * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
+     * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
+     * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
+     * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
+     * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
+     */
 	@Override
 	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
 		if (sceneContext == null)
@@ -3039,14 +3044,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int plane = ModelHash.getPlane(hash);
 		int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-		boolean isVisibleInScene = !isTileRenderable || sceneCamera.isTileVisible(plane, tileExX , tileExY );
+		boolean isVisibleInScene = !isTileRenderable || sceneCamera.isTileVisibleFast(plane, tileExX , tileExY );
 		if(isVisibleInScene) {
-			isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
+			isVisibleInScene = sceneCamera.isSphereVisible(x, y, z, modelRadius);
 		}
 
 		boolean isVisibleInShadow = isVisibleInScene;
 		if (!isVisibleInShadow && configShadowCulling) {
-			isVisibleInShadow = directionalLight.isTileVisible(plane, tileExX, tileExY);
+			isVisibleInShadow = directionalLight.isTileVisibleFast(plane, tileExX, tileExY);
 		}
 		frameTimer.end(Timer.VISIBILITY_CHECK);
 
@@ -3203,8 +3208,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-	 * returns the correct buffer based on triangle count and updates model count
-	 */
+     * returns the correct buffer based on triangle count and updates model count
+     */
 	private GpuIntBuffer bufferForTriangles(int triangles) {
 		for (int i = 0; i < numSortingBins; i++) {
 			if (modelSortingBinFaceCounts[i] >= triangles) {
