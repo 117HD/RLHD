@@ -599,7 +599,7 @@ public class ModelPusher {
 									tilePaint.getSeColor()
 								) / 4;
 
-							var override = tileOverrideManager.getOverride(scene, tile);
+							var override = tileOverrideManager.getOverride(sceneContext, tile);
 							averageColor = override.modifyColor(averageColor);
 							color1 = color2 = color3 = averageColor;
 
@@ -637,11 +637,10 @@ public class ModelPusher {
 									int tileExX = tileX + SCENE_OFFSET;
 									int tileExY = tileY + SCENE_OFFSET;
 									int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
-									var override = tileOverrideManager.getOverride(scene, tile, worldPos,
-										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
-											OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
-											scene.getUnderlayIds()[tileZ][tileExX][tileExY]
-									);
+									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
+										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
+										scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+									var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos, tileId);
 									color = override.modifyColor(color);
 									color1 = color2 = color3 = color;
 

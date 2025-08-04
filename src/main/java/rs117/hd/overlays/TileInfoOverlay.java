@@ -467,6 +467,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (mode == MODE_TILE_INFO) {
+			sceneContext.tileOverrideVars.setTile(tile);
 			if (tile.getBridge() != null)
 				lines.add("Bridge");
 
@@ -490,7 +491,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
 			while (true) {
-				var replacement = tileOverrideManager.resolveNextReplacement(overlay, tile);
+				var replacement = overlay.resolveNextReplacement(sceneContext.tileOverrideVars);
 				if (replacement == overlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -507,7 +508,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
 			replacementPath = new StringBuilder(underlay.toString());
 			while (true) {
-				var replacement = tileOverrideManager.resolveNextReplacement(underlay, tile);
+				var replacement = underlay.resolveNextReplacement(sceneContext.tileOverrideVars);
 				if (replacement == underlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -527,7 +528,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add(String.format("Material: %s (%d)", material.name(), tilePaint.getTexture()));
 				lines.add(String.format("HSL: %s", hslString(tile)));
 
-				var override = tileOverrideManager.getOverride(scene, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
+				var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
 				lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, tilePaint.getTexture()));
 			} else if (tileModel != null) {
 				polyColor = Color.ORANGE;
@@ -572,6 +573,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
+
+			sceneContext.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
 		}
 
 		var decorObject = tile.getDecorativeObject();

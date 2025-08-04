@@ -141,7 +141,7 @@ public class FishingSpotReplacer {
 				var worldView = client.getTopLevelWorldView();
 				int plane = worldView.getPlane();
 				Tile tile = worldView.getScene().getTiles()[plane][lp.getSceneX()][lp.getSceneY()];
-				recolor = tileOverrideManager.getOverride(sceneContext.scene, tile).waterType.fishingSpotRecolor;
+				recolor = tileOverrideManager.getOverride(sceneContext, tile).waterType.fishingSpotRecolor;
 			}
 		}
 

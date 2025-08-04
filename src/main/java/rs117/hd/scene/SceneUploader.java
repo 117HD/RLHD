@@ -361,7 +361,7 @@ public class SceneUploader {
 			upload(sceneContext, bridge, tileExX, tileExY);
 
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
-		var override = tileOverrideManager.getOverride(sceneContext.scene, tile, worldPos);
+		var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 
 		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
 		if (sceneTilePaint != null || override.forced) {
@@ -935,6 +935,8 @@ public class SceneUploader {
 
 		int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
 		int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+		var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+		var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
 
 		for (int face = 0; face < faceCount; ++face) {
 			int colorA = faceColorA[face];
@@ -973,7 +975,7 @@ public class SceneUploader {
 				colorA = colorB = colorC = 0;
 			} else {
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+				var override = isOverlay ? overlayOverride : underlayOverride;
 				if (isHidden && !override.forced)
 					continue;
 
@@ -1141,6 +1143,8 @@ public class SceneUploader {
 
 			int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+			var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+			var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
 
 			// underwater terrain
 			for (int face = 0; face < faceCount; ++face) {
@@ -1149,7 +1153,7 @@ public class SceneUploader {
 				int colorC = 6676;
 
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+				var override = isOverlay ? overlayOverride : underlayOverride;
 				if (faceColorA[face] == HIDDEN_HSL && !override.forced)
 					continue;
 
