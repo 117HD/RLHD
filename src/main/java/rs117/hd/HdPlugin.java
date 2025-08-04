@@ -1982,6 +1982,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (redrawPreviousFrame || bufferLength <= 0)
 			return;
 
+		if(!sceneCamera.isTileVisible(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
+			return;
+		}
+
 		final int localX = tileX * LOCAL_TILE_SIZE;
 		final int localY = 0;
 		final int localZ = tileY * LOCAL_TILE_SIZE;
@@ -3027,11 +3031,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		model.calculateBoundsCylinder();
 		int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
+		int plane = ModelHash.getPlane(hash);
+		int tileEeX = ModelHash.getSceneX(hash) + SCENE_OFFSET;
+		int tileEeY = ModelHash.getSceneY(hash) + SCENE_OFFSET;
+
 		frameTimer.begin(Timer.VISIBILITY_CHECK);
-		boolean isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
+		boolean isVisibleInScene = sceneCamera.isTileVisible(plane, tileEeX , tileEeY );
+		if(isVisibleInScene) {
+			isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
+		}
+
 		boolean isVisibleInShadow = isVisibleInScene;
 		if (!isVisibleInShadow && configShadowCulling) {
-			isVisibleInShadow = directionalLight.isModelVisible(model, x, y, z);
+			isVisibleInShadow = directionalLight.isTileVisible(plane, tileEeX, tileEeY);
 		}
 		frameTimer.end(Timer.VISIBILITY_CHECK);
 
@@ -3053,7 +3065,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
-		int plane = ModelHash.getPlane(hash);
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
