@@ -30,6 +30,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, InputEvent.CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_CULLING = new Keybind(KeyEvent.VK_F8, InputEvent.CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
@@ -157,6 +158,10 @@ public class DeveloperTools implements KeyListener {
 				HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY = !HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY;
 				log.debug("HdPlugin.FORCES_JOBS_RUN_SYNCHRONOUSLY = {}", HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY);
 				break;
+			case "toggleculling":
+				plugin.sceneCamera.freezeCulling = !plugin.sceneCamera.freezeCulling;
+				log.debug("Scene Camera FreezeCulling: {}", plugin.sceneCamera.freezeCulling);
+				break;
 		}
 	}
 
@@ -178,6 +183,9 @@ public class DeveloperTools implements KeyListener {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
 			hideUiEnabled = !hideUiEnabled;
+		} else if(KEY_TOGGLE_CULLING.matches(e)) {
+			plugin.sceneCamera.freezeCulling = !plugin.sceneCamera.freezeCulling;
+			log.debug("Scene Camera FreezeCulling: {}", plugin.sceneCamera.freezeCulling);
 		} else {
 			return;
 		}

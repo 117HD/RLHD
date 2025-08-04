@@ -2,6 +2,7 @@ package rs117.hd.utils;
 
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -48,6 +49,8 @@ public class SceneView {
 	private float nearPlane = 0.5f;
 	private float farPlane = 0.0f;
 	private boolean isOrthographic = false;
+
+	public boolean freezeCulling;
 
 	public enum VisibilityResult {
 		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE;
@@ -228,6 +231,11 @@ public class SceneView {
 	@SneakyThrows
 	public void performAsyncTileCulling(SceneContext ctx, boolean checkUnderwater) {
 		if (ctx == null) {
+			return;
+		}
+
+		if(freezeCulling) {
+			dirtyFlags &= ~TILE_VISIBILITY_DIRTY;
 			return;
 		}
 
