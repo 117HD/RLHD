@@ -1572,6 +1572,21 @@
     "fogDepth": 50
   },
   {
+    "area": "DOOM_FLOOR_1",
+    "directionalStrength": 0.3,
+    "ambientStrength": 2.5
+  },
+  {
+    "area": "DOOM_FLOOR_2_5",
+    "directionalStrength": 0.3,
+    "ambientStrength": 3.25
+  },
+  {
+    "area": "DOOM_FLOOR_6_8",
+    "directionalStrength": 0.3,
+    "ambientStrength": 3.25
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
