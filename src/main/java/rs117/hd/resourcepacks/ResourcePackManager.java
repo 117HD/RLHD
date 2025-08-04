@@ -35,6 +35,7 @@ import rs117.hd.resourcepacks.data.Manifest;
 import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 import rs117.hd.resourcepacks.impl.FileResourcePack;
 import rs117.hd.utils.FileDownloader;
+import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static rs117.hd.utils.ResourcePath.path;
@@ -42,7 +43,8 @@ import static rs117.hd.utils.ResourcePath.path;
 @Singleton
 @Slf4j
 public class ResourcePackManager {
-	public static ResourcePath RESOURCE_PACK_DIR = path(RuneLite.RUNELITE_DIR, "117hd-resource-packs");
+
+	public static ResourcePath RESOURCE_PACK_DIR = Props.getFolder("117hd-resource-packs", () -> path(new File(RuneLite.RUNELITE_DIR,"117hd-resource-packs").getPath()));
 
 	public static final HttpUrl GITHUB = HttpUrl.get("https://github.com/117HD/resource-packs");
 	public static final HttpUrl RESOURCE_PACKS_MANIFEST_URL = HttpUrl.get(
