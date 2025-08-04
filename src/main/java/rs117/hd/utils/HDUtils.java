@@ -416,13 +416,17 @@ public class HDUtils {
 	}
 
 	public static boolean IsTileVisible(int x, int z, int h0, int h1, int h2, int h3, float[][] cullingPlanes) {
+		return IsTileVisible(x, z, h0, h1, h2, h3, cullingPlanes, 0);
+	}
+
+	public static boolean IsTileVisible(int x, int z, int h0, int h1, int h2, int h3, float[][] cullingPlanes, int padding) {
 		int x1 = x + LOCAL_TILE_SIZE;
 		int z1 = z + LOCAL_TILE_SIZE;
 		for (float[] plane : cullingPlanes) {
-			if (distanceToPlane(plane, x, h0, z) >= -LOCAL_TILE_SIZE ||
-				distanceToPlane(plane, x1, h1, z) >= -LOCAL_TILE_SIZE ||
-				distanceToPlane(plane, x, h2, z1) >= -LOCAL_TILE_SIZE ||
-				distanceToPlane(plane, x1, h3, z1) >= -LOCAL_TILE_SIZE) {
+			if (distanceToPlane(plane, x, h0, z) >= padding ||
+				distanceToPlane(plane, x1, h1, z) >= padding ||
+				distanceToPlane(plane, x, h2, z1) >= padding ||
+				distanceToPlane(plane, x1, h3, z1) >= padding) {
 				// At least one point is inside this plane; continue testing other planes
 				continue;
 			}
