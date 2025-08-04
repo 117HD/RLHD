@@ -3036,16 +3036,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.begin(Timer.VISIBILITY_CHECK);
 
 		int plane = ModelHash.getPlane(hash);
-		int tileEeX = ModelHash.getSceneX(hash) + SCENE_OFFSET;
-		int tileEeY = ModelHash.getSceneY(hash) + SCENE_OFFSET;
-		boolean isVisibleInScene = !isRenderableModel || sceneCamera.isTileVisible(plane, tileEeX , tileEeY );
+		int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		boolean isVisibleInScene = !isRenderableModel || sceneCamera.isTileVisible(plane, tileExX , tileExY );
 		if(isVisibleInScene) {
 			isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
 		}
 
 		boolean isVisibleInShadow = isVisibleInScene;
 		if (!isVisibleInShadow && configShadowCulling) {
-			isVisibleInShadow = directionalLight.isTileVisible(plane, tileEeX, tileEeY);
+			isVisibleInShadow = directionalLight.isTileVisible(plane, tileExX, tileExY);
 		}
 		frameTimer.end(Timer.VISIBILITY_CHECK);
 
@@ -3123,8 +3123,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				int preOrientation = 0;
 				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
-					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
 						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
 						int config;
