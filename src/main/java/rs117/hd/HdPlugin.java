@@ -1837,8 +1837,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
 		if (!redrawPreviousFrame) {
 			// Build indices staging data for upload
-			sceneDrawBuffer.buildIndicesData();
-			directionalDrawBuffer.buildIndicesData();
+			sceneDrawBuffer.flush();
+			directionalDrawBuffer.flush();
 
 			// Geometry buffers
 			sceneContext.stagingBufferVertices.flip();
