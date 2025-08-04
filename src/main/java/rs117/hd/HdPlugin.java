@@ -2262,7 +2262,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glEnable(GL_DEPTH_TEST);
 
 				glBindVertexArray(vaoScene);
-				sceneDrawBuffer.draw();
 				directionalDrawBuffer.draw();
 
 				glDisable(GL_CULL_FACE);
