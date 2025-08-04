@@ -1,6 +1,7 @@
 package rs117.hd.opengl;
 
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import rs117.hd.utils.Job;
 import rs117.hd.utils.buffer.GLBuffer;
@@ -14,11 +15,8 @@ import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15C.GL_STREAM_DRAW;
 
 public class ModelDrawBuffer extends GLBuffer {
-	private static final int STAGING_MODEL_DATA_SIZE = 512;
-	private static final int STAGING_MODEL_DATA_COUNT = STAGING_MODEL_DATA_SIZE / 2;
 
-	private int[] stagingIndices = new int[256];
-	private int[] stagingModelData = new int[STAGING_MODEL_DATA_SIZE];
+	private int[] stagingModelData = new int[512];
 	private GpuIntBuffer indicesData;
 
 	private int stagingModelDataOffset = 0;
@@ -31,31 +29,30 @@ public class ModelDrawBuffer extends GLBuffer {
 		super(name + " Indices", GL_ELEMENT_ARRAY_BUFFER, GL_STREAM_DRAW);
 	}
 
-	public void addModel(int renderBufferOffset, int vertexCount) {
+	public ModelDrawBuffer addModel(int renderBufferOffset, int vertexCount) {
 		if (vertexCount > 0) {
 			stagingModelData[stagingModelDataOffset++] = renderBufferOffset;
 			stagingModelData[stagingModelDataOffset++] = vertexCount;
 			stagingVertexCount += vertexCount;
 
-			if (stagingModelDataOffset >= STAGING_MODEL_DATA_SIZE) {
-				asyncIndicesWriter.submit();
+			if (stagingModelDataOffset >= stagingModelData.length) {
+				stagingModelData = Arrays.copyOf(stagingModelData, stagingModelData.length * 2);
 			}
 		}
+		return this;
 	}
 
-	public void upload() {
-		asyncIndicesWriter.complete(true);
-
-		if (stagingModelDataOffset >= 0) {
+	public ModelDrawBuffer buildIndicesData() {
+		if (stagingModelDataOffset > 0) {
 			indicesData.ensureCapacity(stagingVertexCount);
-			writeIndices(stagingModelData, stagingModelDataOffset / 2);
+
+			asyncIndicesWriter.modelCount = stagingModelDataOffset / 2;
+			asyncIndicesWriter.submit();
+
 			stagingModelDataOffset = 0;
 			stagingVertexCount = 0;
 		}
-
-		indicesData.flip();
-		upload(indicesData);
-		indicesData.clear();
+		return this;
 	}
 
 	@Override
@@ -78,6 +75,14 @@ public class ModelDrawBuffer extends GLBuffer {
 	}
 
 	public void draw() {
+		if (!asyncIndicesWriter.isCompleted()) {
+			asyncIndicesWriter.complete();
+
+			indicesData.flip();
+			upload(indicesData);
+			indicesData.clear();
+		}
+
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, id);
 		glDrawElements(GL_TRIANGLES, indicesCount, GL_UNSIGNED_INT, 0);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -89,45 +94,31 @@ public class ModelDrawBuffer extends GLBuffer {
 		indicesCount = 0;
 	}
 
-	private void writeIndices(int[] modelData, int modelCount) {
-		final IntBuffer buffer = indicesData.getBuffer();
-		int modelDataOffset = 0;
-		for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
-			int renderBufferOffset = modelData[modelDataOffset++];
-			final int vertexCount = modelData[modelDataOffset++];
-
-			if (stagingIndices.length < vertexCount) {
-				stagingIndices = new int[vertexCount];
-			}
-
-			for (int v = 0; v < vertexCount; v++, indicesCount++) {
-				stagingIndices[v] = renderBufferOffset++;
-			}
-
-			buffer.put(stagingIndices, 0, vertexCount);
-		}
-	}
-
 	@RequiredArgsConstructor
 	public static final class AsyncIndicesWriter extends Job {
 		private final ModelDrawBuffer owner;
+		private int modelCount;
 
-		public int[] asyncModelDataToWrite = new int[STAGING_MODEL_DATA_SIZE];
-
-		public void prepare() {
-			// Swap the Buffers, so we can async write whilst the next buffer is filled
-			int[] newAsyncModelDataToWrite = owner.stagingModelData;
-			owner.stagingModelData = asyncModelDataToWrite;
-			asyncModelDataToWrite = newAsyncModelDataToWrite;
-
-			owner.indicesData.ensureCapacity(owner.stagingVertexCount);
-			owner.stagingVertexCount = 0;
-			owner.stagingModelDataOffset = 0;
-		}
+		private int[] stagingIndices = new int[256];
 
 		@Override
 		protected void doWork() {
-			owner.writeIndices(asyncModelDataToWrite, STAGING_MODEL_DATA_COUNT);
+			final IntBuffer buffer = owner.indicesData.getBuffer();
+			int modelDataOffset = 0;
+			for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
+				int renderBufferOffset = owner.stagingModelData[modelDataOffset++];
+				final int vertexCount = owner.stagingModelData[modelDataOffset++];
+
+				if (stagingIndices.length < vertexCount) {
+					stagingIndices = new int[vertexCount];
+				}
+
+				for (int v = 0; v < vertexCount; v++, owner.indicesCount++) {
+					stagingIndices[v] = renderBufferOffset++;
+				}
+
+				buffer.put(stagingIndices, 0, vertexCount);
+			}
 		}
 	}
 }

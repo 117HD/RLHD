@@ -1836,6 +1836,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Technically we could skip compute shaders as well when the camera is unchanged,
 		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
 		if (!redrawPreviousFrame) {
+			// Build indices staging data for upload
+			sceneDrawBuffer.buildIndicesData();
+			directionalDrawBuffer.buildIndicesData();
+
 			// Geometry buffers
 			sceneContext.stagingBufferVertices.flip();
 			sceneContext.stagingBufferUvs.flip();
@@ -1858,9 +1862,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				hModelSortingBuffers[i].upload(buffer);
 				buffer.clear();
 			}
-
-			sceneDrawBuffer.upload();
-			directionalDrawBuffer.upload();
 
 			// Output buffers
 			// each vertex is an ivec4, which is 16 bytes
@@ -1946,9 +1947,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(0)
 			.put(tileY * LOCAL_TILE_SIZE);
 
-		if (sceneCamera.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
+		int tileEeX = tileX + SCENE_OFFSET;
+		int tileEeY = tileY + SCENE_OFFSET;
+
+		boolean canCastShadow = plane != 0;
+		if (canCastShadow && sceneContext != null) {
+			canCastShadow = !sceneContext.tileIsWater[plane][tileEeX][tileEeY];
+		}
+
+		if (sceneCamera.isTileVisible(plane, tileEeX, tileEeY)) {
 			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
-		} else if (plane != 0 && configShadowCulling && directionalLight.isTileVisible(plane, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
+			if (canCastShadow) { // Don't bother adding plane 0 to directional, since it'll be culled
+				directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
+			}
+		} else if (configShadowCulling && canCastShadow && directionalLight.isTileVisible(plane, tileEeX, tileEeY)) {
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 
@@ -3173,9 +3185,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
-		} else {
-			directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 		}
+		directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 
 		renderBufferOffset += faceCount * 3;
 	}
