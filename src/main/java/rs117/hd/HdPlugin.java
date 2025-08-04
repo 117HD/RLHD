@@ -2999,9 +2999,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.begin(Timer.GET_MODEL);
 
 		Model model, offsetModel;
+		boolean isRenderableModel = false;
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
+				isRenderableModel = true;
 				model = (Model) renderable;
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
@@ -3031,12 +3033,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		model.calculateBoundsCylinder();
 		int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
+		frameTimer.begin(Timer.VISIBILITY_CHECK);
+
 		int plane = ModelHash.getPlane(hash);
 		int tileEeX = ModelHash.getSceneX(hash) + SCENE_OFFSET;
 		int tileEeY = ModelHash.getSceneY(hash) + SCENE_OFFSET;
-
-		frameTimer.begin(Timer.VISIBILITY_CHECK);
-		boolean isVisibleInScene = sceneCamera.isTileVisible(plane, tileEeX , tileEeY );
+		boolean isVisibleInScene = !isRenderableModel || sceneCamera.isTileVisible(plane, tileEeX , tileEeY );
 		if(isVisibleInScene) {
 			isVisibleInScene = sceneCamera.isModelVisible(model, x, y, z);
 		}
