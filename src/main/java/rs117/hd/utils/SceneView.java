@@ -492,7 +492,7 @@ public class SceneView {
 			int x = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 			int z = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 
-			result = HDUtils.IsTileVisible(x, z, h0, h1, h2, h3, view.frustumPlanes) ? VISIBILITY_TILE_VISIBLE : 0;
+			result = HDUtils.IsTileVisible(x, z, h0, h1, h2, h3, view.frustumPlanes, -LOCAL_TILE_SIZE) ? VISIBILITY_TILE_VISIBLE : 0;
 
 			if (underwaterDepthLevels != null && tileIsWater != null
 				&& tileIsWater[tileExX][tileExY]) {
@@ -516,8 +516,10 @@ public class SceneView {
 
 			// Check if Renderables are visible on tile
 			if (renderablesCullingData[tileExX][tileExY].length > 0) {
+				int avgTileHeight = (int) ((h0 + h1 + h2 + h3) / 4.0f);
 				for (SceneContext.RenderableCullingData renderable : renderablesCullingData[tileExX][tileExY]) {
-					if (HDUtils.isCylinderVisible(x, renderable.bottomY, z, renderable.height, renderable.radius, view.frustumPlanes)) {
+					int modelY = avgTileHeight + renderable.bottomY;
+					if (HDUtils.isCylinderVisible(x, modelY, z, renderable.height, renderable.radius, view.frustumPlanes)) {
 						result |= VISIBILITY_RENDERABLE_VISIBLE;
 						break;
 					}
