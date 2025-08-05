@@ -24,7 +24,8 @@ public class AsyncUICopy extends Job {
 	@Inject
 	private FrameTimer timer;
 
-	private IntBuffer mappedBuffer;
+	private ByteBuffer mappedBuffer;
+	private IntBuffer mappedIntBuffer;
 	private int[] pixels;
 	@Setter
 	private int interfacePbo;
@@ -36,34 +37,35 @@ public class AsyncUICopy extends Job {
 	private int height;
 
 	@Override
-	protected void doWork() {
-		long time = System.nanoTime();
-		mappedBuffer.put(pixels, 0, width * height);
-		time = System.nanoTime() - time;
-		timer.add(Timer.COPY_UI, time);
-	}
-
 	protected void prepare() {
-		// Ensure there isn't already another UI copy in progress
-		if (mappedBuffer != null || interfacePbo == 0 || interfaceTexture == 0)
-			return;
+		var provider = client.getBufferProvider();
+		pixels = provider.getPixels();
+		width = provider.getWidth();
+		height = provider.getHeight();
 
 		timer.begin(Timer.MAP_UI_BUFFER);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
-		ByteBuffer buffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY, width * height * (long) Integer.BYTES, mappedBuffer);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		timer.end(Timer.MAP_UI_BUFFER);
-		if (buffer == null) {
+
+		if (mappedBuffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 			return;
 		}
 
-		this.mappedBuffer = buffer.asIntBuffer();
+		mappedBuffer.clear();
+		mappedIntBuffer = mappedBuffer.asIntBuffer();
+	}
 
-		var provider = client.getBufferProvider();
-		this.pixels = provider.getPixels();
-		this.width = provider.getWidth();
-		this.height = provider.getHeight();
+	@Override
+	protected void doWork() {
+		if (mappedIntBuffer != null) {
+			long time = System.nanoTime();
+			mappedIntBuffer.put(pixels, 0, width * height);
+			time = System.nanoTime() - time;
+			timer.add(Timer.COPY_UI, time);
+		}
 	}
 
 	@Override
@@ -71,10 +73,6 @@ public class AsyncUICopy extends Job {
 		var uiResolution = plugin.getUiResolution();
 		if (uiResolution == null || width > uiResolution[0] || height > uiResolution[1]) {
 			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", width, height, uiResolution);
-			return;
-		}
-
-		if (mappedBuffer == null || pixels == null) {
 			return;
 		}
 
@@ -87,7 +85,6 @@ public class AsyncUICopy extends Job {
 		if (!resize) timer.end(Timer.UPLOAD_UI);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		mappedBuffer = null;
 		pixels = null;
 	}
 }
