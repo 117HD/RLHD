@@ -509,6 +509,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public float deltaClientTime;
 	private long lastFrameTimeMillis;
 	private double lastFrameClientTime;
+	private int lastShadowDrawDistance;
 	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
@@ -1681,15 +1682,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					sceneCamera.translateZ(cameraShift[1]);
 				}
 
+				int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+				boolean drawShadowDistanceChanged = lastShadowDrawDistance != shadowDrawDistance;
+				lastShadowDrawDistance = shadowDrawDistance;
+
 				directionalLight.setPitch(environmentManager.currentSunAngles[0]);
 				directionalLight.setYaw(PI - environmentManager.currentSunAngles[1]);
-				if (sceneCameraChanged || drawDistanceChanged || directionalLight.isViewDirty()) {
+				if (sceneCameraChanged || drawShadowDistanceChanged || drawDistanceChanged || directionalLight.isViewDirty()) {
 					// Define a Finite Plane before extracting corners
 					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
 
-					int shadowDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
-					int maxDistance = Math.min(shadowDistance, (int) sceneCamera.getFarPlane());
-
+					int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
 					float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
 					HDUtils.clipFrustumToDistance(sceneFrustumCorners, maxDistance);
 					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
