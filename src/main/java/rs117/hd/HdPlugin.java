@@ -1579,8 +1579,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final Scene scene = client.getScene();
 		int drawDistance = getDrawDistance();
+		boolean drawDistanceChanged = false;
 		if (scene.getDrawDistance() != drawDistance) {
 			scene.setDrawDistance(drawDistance);
+			drawDistanceChanged = true;
 		}
 
 		boolean updateUniforms = true;
@@ -1681,7 +1683,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				directionalLight.setPitch(environmentManager.currentSunAngles[0]);
 				directionalLight.setYaw(PI - environmentManager.currentSunAngles[1]);
-				if (sceneCameraChanged || directionalLight.isViewDirty()) {
+				if (sceneCameraChanged || drawDistanceChanged || directionalLight.isViewDirty()) {
 					// Define a Finite Plane before extracting corners
 					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
 
