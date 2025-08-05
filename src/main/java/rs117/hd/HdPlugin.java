@@ -227,7 +227,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		GL_RGBA // should be guaranteed
 	};
 
-	public static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(Math.max(1, PROCESSOR_COUNT - 2));
+	private static int THREAD_POOL_COUNT = 0;
+	public static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(
+		Math.max(1, PROCESSOR_COUNT - 1),
+		(r) -> {
+			Thread poolThread = new Thread(r);
+			poolThread.setName("117 HD - Thread: " + ++THREAD_POOL_COUNT);
+			poolThread.setPriority(Thread.NORM_PRIORITY + 3);
+			return poolThread;
+		}
+	);
 
 	public static boolean FORCE_JOBS_RUN_SYNCHRONOUSLY = false;
 
