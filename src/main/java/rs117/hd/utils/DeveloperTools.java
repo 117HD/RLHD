@@ -159,8 +159,8 @@ public class DeveloperTools implements KeyListener {
 				log.debug("HdPlugin.FORCES_JOBS_RUN_SYNCHRONOUSLY = {}", HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY);
 				break;
 			case "toggleculling":
-				plugin.sceneCamera.freezeCulling = !plugin.sceneCamera.freezeCulling;
-				log.debug("Scene Camera FreezeCulling: {}", plugin.sceneCamera.freezeCulling);
+				plugin.sceneCamera.setFreezeCulling(!plugin.sceneCamera.getFreezeCulling());
+				log.debug("Scene Camera FreezeCulling: {}", plugin.sceneCamera.getFreezeCulling());
 				break;
 		}
 	}
@@ -184,8 +184,8 @@ public class DeveloperTools implements KeyListener {
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
 			hideUiEnabled = !hideUiEnabled;
 		} else if(KEY_TOGGLE_CULLING.matches(e)) {
-			plugin.sceneCamera.freezeCulling = !plugin.sceneCamera.freezeCulling;
-			log.debug("Scene Camera FreezeCulling: {}", plugin.sceneCamera.freezeCulling);
+			plugin.sceneCamera.setFreezeCulling(!plugin.sceneCamera.getFreezeCulling());
+			log.debug("Scene Camera FreezeCulling: {}", plugin.sceneCamera.getFreezeCulling());
 		} else {
 			return;
 		}

@@ -48,8 +48,7 @@ public class SceneView {
 	private float nearPlane = 0.5f;
 	private float farPlane = 0.0f;
 	private boolean isOrthographic = false;
-
-	public boolean freezeCulling;
+	private boolean freezeCulling;
 
 	public enum VisibilityResult {
 		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE;
@@ -79,6 +78,16 @@ public class SceneView {
 	public boolean isProjDirty() { return (dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0; }
 
 	public boolean isViewDirty() { return (dirtyFlags & VIEW_MATRIX_DIRTY) != 0; }
+
+	public boolean getFreezeCulling() { return freezeCulling; }
+
+	public SceneView setFreezeCulling(boolean newFreezeCulling) {
+		if (freezeCulling != newFreezeCulling) {
+			freezeCulling = newFreezeCulling;
+			invalidateTileVisibility();
+		}
+		return this;
+	}
 
 	public SceneView setViewportWidth(int newViewportWidth) {
 		if (viewportWidth != newViewportWidth) {
