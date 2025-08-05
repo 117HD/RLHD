@@ -26,6 +26,7 @@ public class ModelDrawBuffer extends GLBuffer {
 
 	private int[] stagingModelData = new int[STAGING_MODEL_DATA_COUNT * 2];
 	private int stagingModelDataOffset = 0;
+	private int stagingModelDataNextOffset = 0;
 	private int stagingVertexCount = 0;
 	private int maxIndicesCount = 0;
 	@Getter
@@ -37,24 +38,30 @@ public class ModelDrawBuffer extends GLBuffer {
 		super(name + " Indices", GL_ELEMENT_ARRAY_BUFFER, GL_STREAM_DRAW);
 	}
 
-	public ModelDrawBuffer addModel(int renderBufferOffset, int vertexCount) {
+	public final void addModel(int renderBufferOffset, int vertexCount) {
 		if (vertexCount > 0) {
+			// Check if we're adding a continuous stream of triangles
+			if (stagingModelDataOffset > 0 && renderBufferOffset == stagingModelDataNextOffset) {
+				stagingModelData[stagingModelDataOffset - 1] += vertexCount;
+				stagingVertexCount += vertexCount;
+				return;
+			}
+
 			stagingModelData[stagingModelDataOffset++] = renderBufferOffset;
 			stagingModelData[stagingModelDataOffset++] = vertexCount;
+			stagingModelDataNextOffset = renderBufferOffset + vertexCount;
 			stagingVertexCount += vertexCount;
 
 			if (stagingModelDataOffset >= stagingModelData.length) {
 				asyncIndicesWriter.submit();
 			}
 		}
-		return this;
 	}
 
-	public ModelDrawBuffer flush() {
+	public void flush() {
 		if (stagingModelDataOffset > 0) {
 			asyncIndicesWriter.submit();
 		}
-		return this;
 	}
 
 	@Override

@@ -50,9 +50,7 @@ public class SceneView {
 	private boolean freezeCulling;
 
 	public enum VisibilityResult {
-		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE;
-
-		public boolean isKnown() { return this == HIDDEN || this == VISIBLE; }
+		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE, UNDERWATER_VISIBLE;
 	}
 
 	private VisibilityResult[][][] tileVisibility = new VisibilityResult[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
@@ -67,6 +65,9 @@ public class SceneView {
 		for (int plane = 0; plane < MAX_Z; plane++) {
 			cullingJobs[plane] = new AsyncCullingJob(this, plane);
 		}
+
+		// Clear both TileVisibility Buffers synchronously
+		clearJob.submit(true);
 		clearJob.submit(true);
 	}
 
@@ -269,8 +270,12 @@ public class SceneView {
 		}
 	}
 
+	public final boolean isTileVisibleOnlyUnderwater(int plane, int tileExX, int tileExY) {
+		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.UNDERWATER_VISIBLE;
+	}
+
 	public final boolean isTileVisibleFast(int plane, int tileExX, int tileExY) {
-		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.VISIBLE;
+		return tileVisibility[plane][tileExX][tileExY].ordinal() >= VisibilityResult.VISIBLE.ordinal();
 	}
 
 	@SneakyThrows
@@ -279,7 +284,7 @@ public class SceneView {
 
 		// Check if the result is usable & known
 		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result.ordinal() > VisibilityResult.IN_PROGRESS.ordinal()) {
-			return result == VisibilityResult.VISIBLE;
+			return result.ordinal() >= VisibilityResult.VISIBLE.ordinal();
 		}
 
 		if (result == VisibilityResult.UNKNOWN) {
@@ -293,7 +298,7 @@ public class SceneView {
 			result = tileVisibility[plane][tileExX][tileExY];
 		}
 
-		return result == VisibilityResult.VISIBLE;
+		return result.ordinal() >= VisibilityResult.VISIBLE.ordinal();
 	}
 
 	public boolean isModelVisible(Model model, int x, int y, int z) {
@@ -466,6 +471,10 @@ public class SceneView {
 			}
 			view.tileVisibility[plane][tileExX][tileExY] = VisibilityResult.IN_PROGRESS; // Signal that we are processing this tile (Could be Client or Job Thread doing so)
 
+			if (tileHeights == null) {
+				return view.tileVisibility[plane][tileExX][tileExY] = VisibilityResult.UNKNOWN;
+			}
+
 			final int h0 = tileHeights[tileExX][tileExY];
 			final int h1 = tileHeights[tileExX + 1][tileExY];
 			final int h2 = tileHeights[tileExX][tileExY + 1];
@@ -491,7 +500,7 @@ public class SceneView {
 
 					// TODO: Had to pad the underwater tile check to get it to pass when its really close the nearPlane
 					result = HDUtils.IsTileVisible(x, z, uh0, uh1, uh2, uh3, view.frustumPlanes, -(LOCAL_TILE_SIZE * 4)) ?
-						VisibilityResult.VISIBLE :
+						VisibilityResult.UNDERWATER_VISIBLE :
 						VisibilityResult.HIDDEN;
 				}
 			}

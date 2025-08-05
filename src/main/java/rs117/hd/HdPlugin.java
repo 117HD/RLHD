@@ -1660,6 +1660,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportWidth = (int) (sceneViewport[2] / sceneViewportScale[0]);
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
+				int zoom = client.getScale();
 				sceneCamera.setZoom(client.getScale());
 				sceneCamera.setNearPlane(NEAR_PLANE);
 				sceneCamera.setViewportWidth(viewportWidth);
@@ -1720,12 +1721,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					// Offset Center by Half radius
 					{
+						float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
 						float[] cameraToCenterXZ = subtract(
 							centerXZ,
 							new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
 						);
 						normalize(cameraToCenterXZ, cameraToCenterXZ);
-						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * 0.25f);
+						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * 0.33f * offsetStrength);
 						add(centerXZ, centerXZ, cameraToCenterXZ);
 					}
 
@@ -1846,6 +1848,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
+		if (!redrawPreviousFrame) {
+			sceneDrawBuffer.flush();
+			directionalDrawBuffer.flush();
+		}
+
 		if (configAsyncUICopy)
 			asyncUICopy.complete();
 
@@ -1858,10 +1865,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Technically we could skip compute shaders as well when the camera is unchanged,
 		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
 		if (!redrawPreviousFrame) {
-			// Build indices staging data for upload
-			sceneDrawBuffer.flush();
-			directionalDrawBuffer.flush();
-
 			// Geometry buffers
 			sceneContext.stagingBufferVertices.flip();
 			sceneContext.stagingBufferUvs.flip();
@@ -1953,15 +1956,36 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void drawScenePaint(Scene scene, SceneTilePaint paint, int plane, int tileX, int tileY) {
 		int vertexCount = paint.getBufferLen();
-		if (redrawPreviousFrame || vertexCount <= 0)
+		if (redrawPreviousFrame || sceneContext == null || vertexCount <= 0)
 			return;
+
+		final int tileEeX = tileX + SCENE_OFFSET;
+		final int tileEeY = tileY + SCENE_OFFSET;
+		final boolean isWater = sceneContext.tileIsWater[plane][tileEeX][tileEeY];
+		final boolean canCastShadow = plane != 0 && !isWater;
+		final boolean isVisibleInScene = sceneCamera.isTileVisibleFast(plane, tileEeX, tileEeY);
+		final boolean isVisibleInDirectional =
+			canCastShadow && (isVisibleInScene || (configShadowCulling && directionalLight.isTileVisibleFast(plane, tileEeX, tileEeY)));
+
+		if (!isVisibleInScene && !isVisibleInDirectional) {
+			return;
+		}
+
+		int vertexOffset = paint.getBufferOffset();
+		int uvOffset = paint.getBufferOffset();
+
+		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
+			if (sceneCamera.isTileVisibleOnlyUnderwater(plane, tileEeX, tileEeY)) {
+				vertexCount /= 2; // Let see if we can extract the underwater Surface tile
+			}
+		}
 
 		++numPassthroughModels;
 		modelPassthroughBuffer
 			.ensureCapacity(16)
 			.getBuffer()
-			.put(paint.getBufferOffset())
-			.put(paint.getUvBufferOffset())
+			.put(vertexOffset)
+			.put(uvOffset)
 			.put(vertexCount / 3)
 			.put(renderBufferOffset)
 			.put(0)
@@ -1969,20 +1993,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.put(0)
 			.put(tileY * LOCAL_TILE_SIZE);
 
-		int tileEeX = tileX + SCENE_OFFSET;
-		int tileEeY = tileY + SCENE_OFFSET;
-
-		boolean canCastShadow = plane != 0;
-		if (canCastShadow && sceneContext != null) {
-			canCastShadow = !sceneContext.tileIsWater[plane][tileEeX][tileEeY];
+		if (isVisibleInScene) {
+			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 
-		if (sceneCamera.isTileVisibleFast(plane, tileEeX, tileEeY)) {
-			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
-			if (canCastShadow) { // Don't bother adding plane 0 to directional, since it'll be culled
-				directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
-			}
-		} else if (configShadowCulling && canCastShadow && directionalLight.isTileVisibleFast(plane, tileEeX, tileEeY)) {
+		if (isVisibleInDirectional) {
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 
@@ -2001,12 +2016,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
 		int bufferLength = model.getBufferLen();
-		if (redrawPreviousFrame || bufferLength <= 0)
+		if (redrawPreviousFrame || bufferLength <= 0 || !sceneCamera.isTileVisibleFast(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET))
 			return;
-
-		if(!sceneCamera.isTileVisibleFast(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET)) {
-			return;
-		}
 
 		final int localX = tileX * LOCAL_TILE_SIZE;
 		final int localY = 0;
@@ -2020,9 +2031,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// we packed a boolean into the buffer length of tiles so we can tell
 		// which tiles have procedurally-generated underwater terrain.
 		// unpack the boolean:
-		boolean underwaterTerrain = (bufferLength & 1) == 1;
+		final boolean underwaterTerrain = (bufferLength & 1) == 1;
 		// restore the bufferLength variable:
 		bufferLength = bufferLength >> 1;
+
+		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 
 		if (underwaterTerrain) {
 			// draw underwater terrain tile before surface tile
@@ -2039,7 +2052,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			buffer.put(0);
 			buffer.put(localX).put(localY).put(localZ);
 
-			sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 			renderBufferOffset += bufferLength;
 			drawnTileCount++;
 		}
@@ -2052,8 +2064,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		buffer.put(renderBufferOffset);
 		buffer.put(0);
 		buffer.put(localX).put(localY).put(localZ);
-
-		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 
 		renderBufferOffset += bufferLength;
 		drawnTileCount++;
