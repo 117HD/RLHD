@@ -1638,8 +1638,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				drawnStaticRenderableCount = 0;
 				drawnDynamicRenderableCount = 0;
 
-				drawnTrianglesScene = sceneDrawBuffer.getIndicesCount();
-				drawnTrianglesDirectionalLight = directionalDrawBuffer.getIndicesCount();
+				drawnTrianglesScene = sceneDrawBuffer.getIndicesCount() / 3;
+				drawnTrianglesDirectionalLight = directionalDrawBuffer.getIndicesCount() / 3;
 
 				sceneDrawBuffer.clear();
 				directionalDrawBuffer.clear();
