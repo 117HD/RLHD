@@ -382,6 +382,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
 	private int texUi;
 	private int pboUi;
+	private boolean isResizing;
 
 	@Nullable
 	private int[] sceneViewport;
@@ -2060,8 +2061,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			max(1, client.getCanvasWidth()),
 			max(1, client.getCanvasHeight())
 		};
-		boolean resize = !Arrays.equals(uiResolution, resolution);
-		if (resize) {
+		isResizing = !Arrays.equals(uiResolution, resolution);
+		if (isResizing) {
 			if (configAsyncUICopy) {
 				// Buffers are about to be resized, complete to avoid async job running out of memory in buffer
 				asyncUICopy.complete();
@@ -2088,17 +2089,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		round(actualUiResolution, multiply(vec(actualUiResolution), getDpiScaling()));
 
 		if (configAsyncUICopy) {
-			// Start copying the UI on a different thread, to be uploaded during the next frame
+			// Upload the previous frames UI & Start copying the UI on a different thread which will uploaded during the next frame
 			if (!asyncUICopy.hasPrepareCallback()) {
 				asyncUICopy.setOnPrepareCallback(() -> {
-					asyncUICopy.setInterfacePbo(pboUi);
-					asyncUICopy.setInterfaceTexture(texUi);
-					asyncUICopy.setResize(resize);
+					asyncUICopy.setInterfacePbo(this.pboUi);
+					asyncUICopy.setInterfaceTexture(this.texUi);
+					asyncUICopy.setResize(this.isResizing);
 				});
 			}
 			// If the window was just resized, upload once synchronously so there is something to show
-			asyncUICopy.submit(resize);
-			if (resize) {
+			asyncUICopy.submit(isResizing);
+			if (isResizing) {
 				asyncUICopy.complete(true);
 			}
 			return;
@@ -3105,11 +3106,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
 			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
 			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
+
+			shouldCastShadow = ((sceneID >> 15) & 1) == 1;
+			if (!shouldCastShadow && !isVisibleInScene) {
+				if (enableDetailedTimers)
+					frameTimer.end(Timer.DRAW_RENDERABLE);
+				return; // Early out if we don't want to cast shadows, and we're also only visible in the directional shadows
+			}
+
 			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
 			boolean hillskew = offsetModel != model;
-			shouldCastShadow = ((sceneID >> 15) & 1) == 1;
 
 			eightIntWrite[0] = vertexOffset;
 			eightIntWrite[1] = uvOffset;
@@ -3148,8 +3156,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int uuid = ModelHash.generateUuid(client, hash, renderable);
 				int[] worldPos = sceneContext.localToWorld(x, z, plane);
 				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-				if (modelOverride.hide)
-					return;
+
+				shouldCastShadow = modelOverride.castShadows;
+				if (modelOverride.hide || !shouldCastShadow && !isVisibleInScene) {
+					if (enableDetailedTimers) {
+						frameTimer.end(Timer.DRAW_RENDERABLE);
+						frameTimer.end(Timer.MODEL_PUSHING);
+					}
+					return; // Early out if we don't want to cast shadows, and we're also only visible in the directional shadows
+				}
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
@@ -3183,7 +3198,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[1] = uvOffset;
 				eightIntWrite[2] = faceCount;
 
-				shouldCastShadow = modelOverride.castShadows;
 
 				// add this temporary model to the map for batching purposes
 				if (configModelBatching)
@@ -3224,15 +3238,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		if (isVisibleInScene) {
-			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
-		}
-
-		if (shouldCastShadow) {
-			directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
-		}
-
 		if (isVisibleInScene || shouldCastShadow) {
+			if (isVisibleInScene) {
+				sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+			}
+
+			if (shouldCastShadow) {
+				directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+			}
+
 			bufferForTriangles(faceCount)
 				.ensureCapacity(8)
 				.put(eightIntWrite);
@@ -3284,12 +3298,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
-		// Upload the UI which we began copying during the previous frame
-		if (configAsyncUICopy)
-			asyncUICopy.complete();
-
 		if (client.getScene() == null)
 			return;
+
+		// Make sure the copy has been completed before rendering the next frame
+		if (configAsyncUICopy)
+			asyncUICopy.wait(true);
+
 		// The game runs significantly slower with lower planes in Chambers of Xeric
 		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
 	}

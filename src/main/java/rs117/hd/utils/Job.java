@@ -92,12 +92,8 @@ public abstract class Job implements Runnable {
 		}
 	}
 
-	public Job complete() { return complete(true); }
-
 	@SneakyThrows
-	public Job complete(boolean block) {
-		if (isCompleted) return this;
-
+	public Job wait(boolean block) {
 		if (inFlight.get()) {
 			if (block) {
 				completionSema.acquire();
@@ -111,6 +107,16 @@ public abstract class Job implements Runnable {
 				}
 			}
 		}
+		return this;
+	}
+
+	public Job complete() { return complete(true); }
+
+	@SneakyThrows
+	public Job complete(boolean block) {
+		if (isCompleted) return this;
+
+		wait(block);
 
 		try {
 			onComplete();
