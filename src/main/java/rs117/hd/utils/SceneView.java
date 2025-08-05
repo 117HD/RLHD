@@ -50,7 +50,7 @@ public class SceneView {
 	private boolean freezeCulling;
 
 	public enum VisibilityResult {
-		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE, UNDERWATER_VISIBLE;
+		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE, UNDERWATER_VISIBLE, RENDERABLE_VISIBLE;
 	}
 
 	private VisibilityResult[][][] tileVisibility = new VisibilityResult[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
@@ -262,15 +262,21 @@ public class SceneView {
 
 		dirtyFlags &= ~TILE_VISIBILITY_DIRTY;
 		for (AsyncCullingJob planeJob : cullingJobs) {
+			planeJob.tiles = ctx.scene.getExtendedTiles()[planeJob.plane];
 			planeJob.tileHeights = ctx.scene.getTileHeights()[planeJob.plane];
 			planeJob.tileIsWater = checkUnderwater ? ctx.tileIsWater[planeJob.plane] : null;
+			planeJob.renderablesCullingData = ctx.tileRenderableCullingData[planeJob.plane];
 			planeJob.underwaterDepthLevels =
 				checkUnderwater && ctx.underwaterDepthLevels != null ? ctx.underwaterDepthLevels[planeJob.plane] : null;
 			planeJob.submit();
 		}
 	}
 
-	public final boolean isTileVisibleOnlyUnderwater(int plane, int tileExX, int tileExY) {
+	public final boolean isTileRenderableVisible(int plane, int tileExX, int tileExY) {
+		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.RENDERABLE_VISIBLE;
+	}
+
+	public final boolean isUnderwaterTileVisible(int plane, int tileExX, int tileExY) {
 		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.UNDERWATER_VISIBLE;
 	}
 
@@ -451,14 +457,18 @@ public class SceneView {
 		private final SceneView view;
 		private final int plane;
 
+		private Tile[][] tiles;
 		private int[][] tileHeights;
 		private boolean[][] tileIsWater;
 		private int[][] underwaterDepthLevels;
+		private SceneContext.RenderableCullingData[][][] renderablesCullingData;
 
 		@Override
 		protected void doWork() {
 			for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; tileExX++) {
 				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++) {
+					if (tiles[tileExX][tileExY] == null)
+						continue;
 					performTileCulling(tileExX, tileExY);
 				}
 			}
@@ -502,6 +512,17 @@ public class SceneView {
 					result = HDUtils.IsTileVisible(x, z, uh0, uh1, uh2, uh3, view.frustumPlanes, -(LOCAL_TILE_SIZE * 4)) ?
 						VisibilityResult.UNDERWATER_VISIBLE :
 						VisibilityResult.HIDDEN;
+				}
+			}
+
+			// Check if Renderables are visible on tile
+			SceneContext.RenderableCullingData[] tileRenderables = renderablesCullingData[tileExX][tileExY];
+			if (result.ordinal() >= VisibilityResult.VISIBLE.ordinal() && tileRenderables != null) {
+				for (SceneContext.RenderableCullingData renderable : tileRenderables) {
+					if (HDUtils.isCylinderVisible(x, renderable.bottomY, z, renderable.height, renderable.radius, view.frustumPlanes)) {
+						result = VisibilityResult.RENDERABLE_VISIBLE;
+						break;
+					}
 				}
 			}
 

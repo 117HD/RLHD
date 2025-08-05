@@ -1976,7 +1976,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int uvOffset = paint.getBufferOffset();
 
 		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
-			if (sceneCamera.isTileVisibleOnlyUnderwater(plane, tileEeX, tileEeY)) {
+			if (sceneCamera.isUnderwaterTileVisible(plane, tileEeX, tileEeY)) {
 				vertexCount /= 2; // Let see if we can extract the underwater Surface tile
 			}
 		}
@@ -3049,17 +3049,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.begin(Timer.GET_MODEL);
 
 		Model model, offsetModel;
-		boolean isTileRenderable = false;
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-				isTileRenderable = true;
 				model = (Model) renderable;
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
-				isTileRenderable = renderable instanceof GraphicsObject || renderable instanceof DynamicObject;
 				offsetModel = model = renderable.getModel();
 			}
 			if (model == null || model.getFaceCount() == 0) {
@@ -3082,21 +3079,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			renderable.setModelHeight(height);
 
 		model.calculateBoundsCylinder();
-		int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
+		final int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.VISIBILITY_CHECK);
 
+		final int sceneID = offsetModel.getSceneId();
+		final boolean isStatic = sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK);
 		final int plane = ModelHash.getPlane(hash);
 		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
-		final boolean isVisibleInScene = sceneCamera.isTileVisibleFast(plane, tileExX, tileExY);
-		boolean isVisibleInShadow = isVisibleInScene;
-
-		if (!isVisibleInShadow && configShadowCulling) {
-			isVisibleInShadow = directionalLight.isTileVisibleFast(plane, tileExX, tileExY);
+		final boolean isVisibleInScene;
+		if (isStatic && sceneContext.tileRenderableCullingData[plane][tileExX][tileExY].length > 0) {
+			isVisibleInScene = sceneCamera.isTileRenderableVisible(plane, tileExX, tileExY);
+		} else {
+			isVisibleInScene = sceneCamera.isTileVisibleFast(plane, tileExX, tileExY);
 		}
+
+		final boolean isVisibleInShadow =
+			isVisibleInScene || (configShadowCulling && directionalLight.isTileRenderableVisible(plane, tileExX, tileExY));
+
 		if (enableDetailedTimers)
 			frameTimer.end(Timer.VISIBILITY_CHECK);
 
@@ -3120,8 +3123,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		boolean shouldCastShadow;
 		int faceCount;
-		final int sceneID = offsetModel.getSceneId();
-		if (sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK)) {
+		if (isStatic) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
 			// is reuploaded without triggering the LOADING game state, it's possible for static objects which may only temporarily become
 			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
