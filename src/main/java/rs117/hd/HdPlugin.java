@@ -1720,8 +1720,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 
 					// Offset Center by Half radius
+					float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
+					if (offsetStrength > 0.0f)
 					{
-						float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
 						float[] cameraToCenterXZ = subtract(
 							centerXZ,
 							new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
