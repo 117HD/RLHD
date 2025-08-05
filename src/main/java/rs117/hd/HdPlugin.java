@@ -3053,10 +3053,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int plane = ModelHash.getPlane(hash);
 		int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-		boolean isVisibleInScene = !isTileRenderable || sceneCamera.isTileVisibleFast(plane, tileExX , tileExY );
-		if(isVisibleInScene) {
-			isVisibleInScene = sceneCamera.isSphereVisible(x, y, z, modelRadius);
-		}
+
+		boolean isVisibleInScene = isTileRenderable ?
+			sceneCamera.isTileVisibleFast(plane, tileExX, tileExY) :
+			sceneCamera.isSphereVisible(x, y, z, modelRadius);
 
 		boolean isVisibleInShadow = isVisibleInScene;
 		if (!isVisibleInShadow && configShadowCulling) {
@@ -3082,9 +3082,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
-		boolean shouldCastShadow = true;
+		boolean shouldCastShadow;
 		int faceCount;
-		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
+		final int sceneID = offsetModel.getSceneId();
+		if (sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
 			// is reuploaded without triggering the LOADING game state, it's possible for static objects which may only temporarily become
 			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
@@ -3094,6 +3095,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
 			boolean hillskew = offsetModel != model;
+			shouldCastShadow = ((sceneID >> 15) & 1) == 1;
 
 			eightIntWrite[0] = vertexOffset;
 			eightIntWrite[1] = uvOffset;
@@ -3208,18 +3210,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (eightIntWrite[0] == -1)
 			return; // Hidden model
 
-		bufferForTriangles(faceCount)
-			.ensureCapacity(8)
-			.put(eightIntWrite);
-
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 		}
+
 		if (shouldCastShadow) {
 			directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 		}
 
-		renderBufferOffset += faceCount * 3;
+		if (isVisibleInScene || shouldCastShadow) {
+			bufferForTriangles(faceCount)
+				.ensureCapacity(8)
+				.put(eightIntWrite);
+
+			renderBufferOffset += faceCount * 3;
+		}
 	}
 
 	/**

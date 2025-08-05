@@ -64,7 +64,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 @SuppressWarnings("UnnecessaryLocalVariable")
 public class SceneUploader {
-	public static final int SCENE_ID_MASK = 0xFFFF;
+	public static final int SCENE_ID_MASK = 0x7FFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 
 	private static final float[] UP_NORMAL = { 0, -1, 0 };
@@ -327,7 +327,7 @@ public class SceneUploader {
 
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-		int sceneId = modelOverride.hashCode() << 16 | sceneContext.id;
+		int sceneId = modelOverride.hashCode() << 16 | (modelOverride.castShadows ? 1 : 0) << 15 | sceneContext.id & SCENE_ID_MASK;
 
 		// check if the model has already been uploaded
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
