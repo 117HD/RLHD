@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import lombok.Getter;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -15,6 +16,7 @@ import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
 import rs117.hd.utils.NpcDisplacementCache;
+import rs117.hd.utils.SnapshotRecording;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -32,7 +34,11 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
 
+	@Inject
+	private SnapshotRecording snapshotRecoding;
+
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
+	@Getter
 	private final long[] timings = new long[Timer.values().length];
 	private final StringBuilder sb = new StringBuilder();
 
@@ -139,6 +145,16 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.left("NPC Displacement Cache Size:")
 				.right(String.valueOf(npcDisplacementCache.size()))
 				.build());
+
+
+			if (snapshotRecoding.isSnapshotActive())
+			{
+				children.add(LineComponent.builder()
+					.left("Snapshot Recording:")
+					.right(String.format("%d/%d", snapshotRecoding.getSnapshotData().size(), 20))
+				.build());
+				snapshotRecoding.recordSnapshot(timings);
+			}
 		}
 
 		var result = super.render(g);
@@ -183,4 +199,5 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			.rightFont(font)
 			.build());
 	}
+
 }
