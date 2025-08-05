@@ -729,8 +729,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				isInHouse = false;
 				isInChambersOfXeric = false;
 
-				sceneCamera = new SceneView(frameTimer, false);
-				directionalLight = new SceneView(frameTimer, true);
+				sceneCamera = new SceneView(false);
+				directionalLight = new SceneView(true);
 
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -1964,29 +1964,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int tileEeY = tileY + SCENE_OFFSET;
 		final boolean isWater = sceneContext.tileIsWater[plane][tileEeX][tileEeY];
 		final boolean canCastShadow = plane != 0 && !isWater;
-		final boolean isVisibleInScene = sceneCamera.isTileVisibleFast(plane, tileEeX, tileEeY);
-		final boolean isVisibleInDirectional =
+
+		boolean isVisibleInScene = sceneCamera.isTileVisibleFast(plane, tileEeX, tileEeY);
+		boolean isVisibleInDirectional =
 			canCastShadow && (isVisibleInScene || (configShadowCulling && directionalLight.isTileVisibleFast(plane, tileEeX, tileEeY)));
+
+		if (!isVisibleInScene && sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
+			if (sceneCamera.isUnderwaterTileVisible(plane, tileEeX, tileEeY)) {
+				vertexCount /= 2; // Let see if we can extract the underwater Surface tile
+				isVisibleInScene = true;
+			}
+		}
 
 		if (!isVisibleInScene && !isVisibleInDirectional) {
 			return;
-		}
-
-		int vertexOffset = paint.getBufferOffset();
-		int uvOffset = paint.getBufferOffset();
-
-		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
-			if (sceneCamera.isUnderwaterTileVisible(plane, tileEeX, tileEeY)) {
-				vertexCount /= 2; // Let see if we can extract the underwater Surface tile
-			}
 		}
 
 		++numPassthroughModels;
 		modelPassthroughBuffer
 			.ensureCapacity(16)
 			.getBuffer()
-			.put(vertexOffset)
-			.put(uvOffset)
+			.put(paint.getBufferOffset())
+			.put(paint.getBufferOffset())
 			.put(vertexCount / 3)
 			.put(renderBufferOffset)
 			.put(0)
@@ -3090,13 +3089,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
-		final boolean isVisibleInScene;
-		if (isStatic && sceneContext.tileRenderableCullingData[plane][tileExX][tileExY].length > 0) {
-			isVisibleInScene = sceneCamera.isTileRenderableVisible(plane, tileExX, tileExY);
-		} else {
-			isVisibleInScene = sceneCamera.isTileVisibleFast(plane, tileExX, tileExY);
-		}
-
+		final boolean isVisibleInScene = isStatic ?
+			sceneCamera.isTileRenderableVisible(plane, tileExX, tileExY) :
+			sceneCamera.isTileVisibleFast(plane, tileExX, tileExY);
 		final boolean isVisibleInShadow =
 			isVisibleInScene || (configShadowCulling && directionalLight.isTileRenderableVisible(plane, tileExX, tileExY));
 

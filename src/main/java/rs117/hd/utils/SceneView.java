@@ -5,7 +5,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.overlays.FrameTimer;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 
@@ -27,7 +26,12 @@ public class SceneView {
 	private static final int PROJ_CHANGED = PROJECTION_MATRIX_DIRTY | VIEW_PROJ_CHANGED;
 	private static final int VIEW_CHANGED = VIEW_MATRIX_DIRTY | VIEW_PROJ_CHANGED;
 
-	private final FrameTimer frameTimer;
+	private static final int VISIBILITY_UNKNOWN = -2;
+	private static final int VISIBILITY_IN_PROGRESS = -1;
+	private static final int VISIBILITY_HIDDEN = 0;
+	private static final int VISIBILITY_TILE_VISIBLE = 1;
+	private static final int VISIBILITY_UNDER_WATER_TILE_VISIBLE = 1 << 1;
+	private static final int VISIBILITY_RENDERABLE_VISIBLE = 1 << 2;
 
 	private float[] viewMatrix;
 	private float[] projectionMatrix;
@@ -49,17 +53,12 @@ public class SceneView {
 	private boolean isOrthographic = false;
 	private boolean freezeCulling;
 
-	public enum VisibilityResult {
-		UNKNOWN, IN_PROGRESS, HIDDEN, VISIBLE, UNDERWATER_VISIBLE, RENDERABLE_VISIBLE;
-	}
-
-	private VisibilityResult[][][] tileVisibility = new VisibilityResult[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+	private int[][][] tileVisibility = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	private final AsyncCullingJob[] cullingJobs = new AsyncCullingJob[MAX_Z];
 	private final AsyncTileVisibilityClear clearJob = new AsyncTileVisibilityClear(this);
 
-	public SceneView(FrameTimer frameTimer, boolean isOrthographic) {
-		this.frameTimer = frameTimer;
+	public SceneView(boolean isOrthographic) {
 		this.isOrthographic = isOrthographic;
 
 		for (int plane = 0; plane < MAX_Z; plane++) {
@@ -273,38 +272,38 @@ public class SceneView {
 	}
 
 	public final boolean isTileRenderableVisible(int plane, int tileExX, int tileExY) {
-		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.RENDERABLE_VISIBLE;
+		return (tileVisibility[plane][tileExX][tileExY] & VISIBILITY_RENDERABLE_VISIBLE) != 0;
 	}
 
 	public final boolean isUnderwaterTileVisible(int plane, int tileExX, int tileExY) {
-		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.UNDERWATER_VISIBLE;
+		return (tileVisibility[plane][tileExX][tileExY] & VISIBILITY_UNDER_WATER_TILE_VISIBLE) != 0;
 	}
 
 	public final boolean isTileVisibleFast(int plane, int tileExX, int tileExY) {
-		return tileVisibility[plane][tileExX][tileExY].ordinal() >= VisibilityResult.VISIBLE.ordinal();
+		return (tileVisibility[plane][tileExX][tileExY] & VISIBILITY_TILE_VISIBLE) != 0;
 	}
 
 	@SneakyThrows
 	public final boolean isTileVisible(int plane, int tileExX, int tileExY) {
-		VisibilityResult result = tileVisibility[plane][tileExX][tileExY];
+		int result = tileVisibility[plane][tileExX][tileExY];
 
 		// Check if the result is usable & known
-		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result.ordinal() > VisibilityResult.IN_PROGRESS.ordinal()) {
-			return result.ordinal() >= VisibilityResult.VISIBLE.ordinal();
+		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result >= VISIBILITY_HIDDEN) {
+			return result > 0;
 		}
 
-		if (result == VisibilityResult.UNKNOWN) {
+		if (result == VISIBILITY_UNKNOWN) {
 			// Process on client thread, rather than waiting for result
 			result = cullingJobs[plane].performTileCulling(tileExX, tileExY);
 		}
 
 		// If the Tile is still in-progress then wait for the job to complete
-		while (result == VisibilityResult.IN_PROGRESS) {
+		while (result == VISIBILITY_IN_PROGRESS) {
 			Thread.yield();
 			result = tileVisibility[plane][tileExX][tileExY];
 		}
 
-		return result.ordinal() >= VisibilityResult.VISIBLE.ordinal();
+		return result > 0;
 	}
 
 	public boolean isModelVisible(Model model, int x, int y, int z) {
@@ -434,11 +433,11 @@ public class SceneView {
 	@RequiredArgsConstructor
 	public static final class AsyncTileVisibilityClear extends Job {
 		private final SceneView view;
-		private VisibilityResult[][][] clearTarget = new VisibilityResult[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+		private int[][][] clearTarget = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 		protected void prepare() {
 			// Swap the Visibility results with last frames, which should have been cleared by now
-			VisibilityResult[][][] nextClearTarget = view.tileVisibility;
+			int[][][] nextClearTarget = view.tileVisibility;
 			view.tileVisibility = clearTarget;
 			clearTarget = nextClearTarget;
 		}
@@ -446,7 +445,7 @@ public class SceneView {
 		protected void doWork() {
 			for (int z = 0; z < MAX_Z; z++) {
 				for (int x = 0; x < EXTENDED_SCENE_SIZE; x++) {
-					Arrays.fill(clearTarget[z][x], VisibilityResult.UNKNOWN);
+					Arrays.fill(clearTarget[z][x], VISIBILITY_UNKNOWN);
 				}
 			}
 		}
@@ -474,15 +473,15 @@ public class SceneView {
 			}
 		}
 
-		public VisibilityResult performTileCulling(int tileExX, int tileExY) {
-			VisibilityResult result = view.tileVisibility[plane][tileExX][tileExY];
-			if (result != VisibilityResult.UNKNOWN) { // Skip over tiles that are being processed or are known
+		public int performTileCulling(int tileExX, int tileExY) {
+			int result = view.tileVisibility[plane][tileExX][tileExY];
+			if (result != VISIBILITY_UNKNOWN) { // Skip over tiles that are being processed or are known
 				return result;
 			}
-			view.tileVisibility[plane][tileExX][tileExY] = VisibilityResult.IN_PROGRESS; // Signal that we are processing this tile (Could be Client or Job Thread doing so)
+			view.tileVisibility[plane][tileExX][tileExY] = VISIBILITY_IN_PROGRESS; // Signal that we are processing this tile (Could be Client or Job Thread doing so)
 
 			if (tileHeights == null) {
-				return view.tileVisibility[plane][tileExX][tileExY] = VisibilityResult.UNKNOWN;
+				return view.tileVisibility[plane][tileExX][tileExY] = VISIBILITY_UNKNOWN;
 			}
 
 			final int h0 = tileHeights[tileExX][tileExY];
@@ -493,9 +492,9 @@ public class SceneView {
 			int x = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 			int z = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 
-			result = HDUtils.IsTileVisible(x, z, h0, h1, h2, h3, view.frustumPlanes) ? VisibilityResult.VISIBLE : VisibilityResult.HIDDEN;
+			result = HDUtils.IsTileVisible(x, z, h0, h1, h2, h3, view.frustumPlanes) ? VISIBILITY_TILE_VISIBLE : 0;
 
-			if (result == VisibilityResult.HIDDEN && underwaterDepthLevels != null && tileIsWater != null
+			if (underwaterDepthLevels != null && tileIsWater != null
 				&& tileIsWater[tileExX][tileExY]) {
 				final int dl0 = underwaterDepthLevels[tileExX][tileExY];
 				final int dl1 = underwaterDepthLevels[tileExX + 1][tileExY];
@@ -509,21 +508,23 @@ public class SceneView {
 					final int uh3 = h3 + (dl3 > 0 ? ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1] : 0);
 
 					// TODO: Had to pad the underwater tile check to get it to pass when its really close the nearPlane
-					result = HDUtils.IsTileVisible(x, z, uh0, uh1, uh2, uh3, view.frustumPlanes, -(LOCAL_TILE_SIZE * 4)) ?
-						VisibilityResult.UNDERWATER_VISIBLE :
-						VisibilityResult.HIDDEN;
+					result |= HDUtils.IsTileVisible(x, z, uh0, uh1, uh2, uh3, view.frustumPlanes, -(LOCAL_TILE_SIZE * 4)) ?
+						VISIBILITY_UNDER_WATER_TILE_VISIBLE :
+						0;
 				}
 			}
 
 			// Check if Renderables are visible on tile
-			SceneContext.RenderableCullingData[] tileRenderables = renderablesCullingData[tileExX][tileExY];
-			if (result.ordinal() >= VisibilityResult.VISIBLE.ordinal() && tileRenderables != null) {
-				for (SceneContext.RenderableCullingData renderable : tileRenderables) {
+			if (renderablesCullingData[tileExX][tileExY].length > 0) {
+				for (SceneContext.RenderableCullingData renderable : renderablesCullingData[tileExX][tileExY]) {
 					if (HDUtils.isCylinderVisible(x, renderable.bottomY, z, renderable.height, renderable.radius, view.frustumPlanes)) {
-						result = VisibilityResult.RENDERABLE_VISIBLE;
+						result |= VISIBILITY_RENDERABLE_VISIBLE;
 						break;
 					}
 				}
+			} else if (result > 0) {
+				// No Static Culling data was present, allow missed static renderables to be visible here
+				result |= VISIBILITY_RENDERABLE_VISIBLE;
 			}
 
 			return view.tileVisibility[plane][tileExX][tileExY] = result;
