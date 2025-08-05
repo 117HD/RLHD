@@ -356,14 +356,15 @@ public class SceneView {
 
 	private void calculateProjectionMatrix() {
 		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0) {
-			projectionMatrix = Mat4.scale(zoom, zoom, 1.0f);
+			final float zoomedViewportWidth = (viewportWidth / zoom);
+			final float zoomedViewportHeight = (viewportHeight / zoom);
 			if (isOrthographic) {
-				Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, nearPlane));
+				projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
 			} else {
 				if (farPlane > 0.0f) {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, nearPlane, farPlane));
+					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, nearPlane));
+					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
 				}
 			}
 			dirtyFlags &= ~PROJECTION_MATRIX_DIRTY;
