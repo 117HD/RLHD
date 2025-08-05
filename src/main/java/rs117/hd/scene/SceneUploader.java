@@ -142,6 +142,21 @@ public class SceneUploader {
 
 						renderableCullingData.toArray(sceneContext.tileRenderableCullingData[z][x][y]);
 						renderableCullingData.clear();
+
+						Tile bridge = tile.getBridge();
+						if (bridge != null) {
+							int bridgePlane = z + 1;
+							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] != null)
+								renderableCullingData.addAll(List.of(sceneContext.tileRenderableCullingData[bridgePlane][x][y]));
+
+							upload(sceneContext, renderableCullingData, bridge, x, y);
+
+							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] == null)
+								sceneContext.tileRenderableCullingData[bridgePlane][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
+
+							renderableCullingData.toArray(sceneContext.tileRenderableCullingData[bridgePlane][x][y]);
+							renderableCullingData.clear();
+						}
 					}
 				}
 			}
@@ -353,8 +368,15 @@ public class SceneUploader {
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
 			// if the same model is being uploaded, but with a different area-specific model override,
 			// exclude it from the scene buffer to avoid conflicts
-			if (model.getSceneId() != sceneId)
+			if (model.getSceneId() != sceneId) {
 				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);
+			} else {
+				SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
+				cullingData.bottomY = model.getBottomY();
+				cullingData.radius = model.getXYZMag();
+				cullingData.height = model.getModelHeight();
+				renderableCullingData.add(cullingData);
+			}
 			return;
 		}
 
@@ -369,12 +391,6 @@ public class SceneUploader {
 				uvOffset = -1;
 		}
 
-		SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
-		cullingData.bottomY = model.getBottomY();
-		cullingData.radius = model.getXYZMag();
-		cullingData.height = model.getModelHeight();
-		renderableCullingData.add(cullingData);
-
 		model.setBufferOffset(vertexOffset);
 		model.setUvBufferOffset(uvOffset);
 		model.setSceneId(sceneId);
@@ -388,10 +404,6 @@ public class SceneUploader {
 		int tileExX,
 		int tileExY
 	) {
-		Tile bridge = tile.getBridge();
-		if (bridge != null)
-			upload(sceneContext, renderableCullingData, bridge, tileExX, tileExY);
-
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		var override = tileOverrideManager.getOverride(sceneContext.scene, tile, worldPos);
 
