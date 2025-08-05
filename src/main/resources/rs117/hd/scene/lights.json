@@ -37381,7 +37381,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Full 5",
-    "offset": [ 70, 420, -70 ],
+    "offset": [ 0, 420, 0 ],
     "radius": 100,
     "strength": 10,
     "color": [
@@ -37398,7 +37398,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Almost Full 4",
-    "offset": [ 70, 350, -70 ],
+    "offset": [ 0, 350, 0 ],
     "radius": 100,
     "strength": 8,
     "color": [
@@ -37416,7 +37416,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Half 3",
-    "offset": [ 70, 255, -70 ],
+    "offset": [ 0, 255, 0 ],
     "radius": 100,
     "strength": 6,
     "color": [
@@ -37435,7 +37435,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Half Empty 2",
-    "offset": [ 70, 170, -70 ],
+    "offset": [ 0, 170, 0 ],
     "radius": 110,
     "strength": 4,
     "color": [
@@ -37455,7 +37455,7 @@
   },
   {
     "description": "Hueycoatl Melee Brazier Almost Empty 1",
-    "offset": [ 70, 70, -70 ],
+    "offset": [ 0, 70, 0 ],
     "radius": 110,
     "strength": 4,
     "color": [
@@ -37476,7 +37476,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Full 5",
-    "offset": [ 70, 420, -70 ],
+    "offset": [ 0, 420, 0 ],
     "radius": 100,
     "strength": 10,
     "color": [
@@ -37493,7 +37493,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Almost Full 4",
-    "offset": [ 70, 350, -70 ],
+    "offset": [ 0, 350, 0 ],
     "radius": 100,
     "strength": 8,
     "color": [
@@ -37511,7 +37511,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Half 3",
-    "offset": [ 70, 255, -70 ],
+    "offset": [ 0, 255, 0 ],
     "radius": 100,
     "strength": 6,
     "color": [
@@ -37530,7 +37530,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Half Empty 2",
-    "offset": [ 70, 170, -70 ],
+    "offset": [ 0, 170, 0 ],
     "radius": 100,
     "strength": 4,
     "color": [
@@ -37550,7 +37550,7 @@
   },
   {
     "description": "Hueycoatl Ranged Brazier Almost Empty 1",
-    "offset": [ 70, 70, -70 ],
+    "offset": [ 0, 70, 0 ],
     "radius": 100,
     "strength": 4,
     "color": [
@@ -37571,7 +37571,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Full 5",
-    "offset": [ 70, 420, -70 ],
+    "offset": [ 0, 420, 0 ],
     "radius": 100,
     "strength": 13,
     "color": [
@@ -37588,7 +37588,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Almost Full 4",
-    "offset": [ 70, 350, -70 ],
+    "offset": [ 0, 350, 0 ],
     "radius": 100,
     "strength": 11,
     "color": [
@@ -37606,7 +37606,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Half 3",
-    "offset": [ 70, 255, -70 ],
+    "offset": [ 0, 255, 0 ],
     "radius": 100,
     "strength": 9,
     "color": [
@@ -37625,7 +37625,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Half Empty 2",
-    "offset": [ 70, 170, -70 ],
+    "offset": [ 0, 170, 0 ],
     "radius": 100,
     "strength": 7,
     "color": [
@@ -37645,7 +37645,7 @@
   },
   {
     "description": "Hueycoatl Magic Brazier Almost Empty 1",
-    "offset": [ 70, 70, -70 ],
+    "offset": [ 0, 70, 0 ],
     "radius": 100,
     "strength": 7,
     "color": [
@@ -37770,13 +37770,22 @@
     "fadeInDuration": 800,
     "fadeOutDuration": 1600,
     "npcIds": [ "HUEY_HEAD_INVULNERABLE" ],
-    "animationIds": [ -1, "HUEY_SHIELD_ATTACK_MELEE", "HUEY_SHIELD_ATTACK_RANGE", "HUEY_SHIELD_ATTACK_MAGIC", "HUEY_SHIELD_ACTIVATION" ]
+    "animationIds": [
+      -1,
+      "HUEY_SHIELD_ATTACK_MELEE",
+      "HUEY_SHIELD_ATTACK_RANGE",
+      "HUEY_SHIELD_ATTACK_MAGIC",
+      "HUEY_SHIELD_ACTIVATION",
+      "HUEY_ATTACK_MELEE",
+      "HUEY_ATTACK_RANGE",
+      "HUEY_ATTACK_MAGIC"
+    ]
   },
   {
     "description": "Hueycoatl Shield Glow - High",
     "offset": [ 0, 400, 450 ],
     "radius": 800,
-    "strength": 6,
+    "strength": 4,
     "color": [
       0,
       200,
@@ -37789,7 +37798,14 @@
     "fadeInDuration": 800,
     "fadeOutDuration": 1600,
     "npcIds": [ "HUEY_HEAD_INVULNERABLE" ],
-    "animationIds": [ -1, "HUEY_ATTACK_MELEE", "HUEY_ATTACK_RANGE", "HUEY_ATTACK_MAGIC", "HUEY_SHIELD_ACTIVATION" ]
+    "animationIds": [ -1,
+      "HUEY_ATTACK_MELEE",
+      "HUEY_ATTACK_RANGE",
+      "HUEY_ATTACK_MAGIC",
+      "HUEY_SHIELD_ATTACK_MELEE",
+      "HUEY_SHIELD_ATTACK_RANGE",
+      "HUEY_SHIELD_ATTACK_MAGIC",
+      "HUEY_SHIELD_ACTIVATION" ]
   },
   {
     "description": "Hueycoatl Lightning Bolt Attack",
