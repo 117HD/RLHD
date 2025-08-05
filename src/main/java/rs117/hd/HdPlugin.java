@@ -1661,7 +1661,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
 
 				int zoom = client.getScale();
-				sceneCamera.setZoom(client.getScale());
+				sceneCamera.setZoom(zoom);
 				sceneCamera.setNearPlane(NEAR_PLANE);
 				sceneCamera.setViewportWidth(viewportWidth);
 				sceneCamera.setViewportHeight(viewportHeight);
@@ -1721,14 +1721,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					// Offset Center by Half radius
 					float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
-					if (offsetStrength > 0.0f)
 					{
 						float[] cameraToCenterXZ = subtract(
 							centerXZ,
 							new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
 						);
 						normalize(cameraToCenterXZ, cameraToCenterXZ);
-						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * 0.15f * offsetStrength);
+						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.2f, offsetStrength));
 						add(centerXZ, centerXZ, cameraToCenterXZ);
 					}
 
