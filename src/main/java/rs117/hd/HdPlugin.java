@@ -2991,13 +2991,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tileExX,
 		int tileExY
 	) {
-		return sceneCamera.isTileVisible(plane, tileExX, tileExY) || (
-			configShadowCulling && directionalLight.isTileVisible(
-				plane,
-				tileExX,
-				tileExY
-			)
-		);
+		try {
+			if (enableDetailedTimers)
+				frameTimer.begin(Timer.VISIBILITY_CHECK);
+
+			if (sceneCamera.isTileVisible(plane, tileExX, tileExY)) {
+				return true;
+			}
+
+			return configShadowCulling && directionalLight.isTileVisible(plane, tileExX, tileExY);
+		} finally {
+			if (enableDetailedTimers)
+				frameTimer.end(Timer.VISIBILITY_CHECK);
+		}
 	}
 
 	/**
@@ -3067,21 +3073,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		model.calculateBoundsCylinder();
 		int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
-		frameTimer.begin(Timer.VISIBILITY_CHECK);
+		if (enableDetailedTimers)
+			frameTimer.begin(Timer.VISIBILITY_CHECK);
 
-		int plane = ModelHash.getPlane(hash);
-		int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-		int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		final int plane = ModelHash.getPlane(hash);
+		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
-		boolean isVisibleInScene = isTileRenderable ?
-			sceneCamera.isTileVisibleFast(plane, tileExX, tileExY) :
-			sceneCamera.isSphereVisible(x, y, z, modelRadius);
-
+		final boolean isVisibleInScene = sceneCamera.isTileVisibleFast(plane, tileExX, tileExY);
 		boolean isVisibleInShadow = isVisibleInScene;
+
 		if (!isVisibleInShadow && configShadowCulling) {
 			isVisibleInShadow = directionalLight.isTileVisibleFast(plane, tileExX, tileExY);
 		}
-		frameTimer.end(Timer.VISIBILITY_CHECK);
+		if (enableDetailedTimers)
+			frameTimer.end(Timer.VISIBILITY_CHECK);
 
 		if (!isVisibleInScene && !isVisibleInShadow) {
 			return;

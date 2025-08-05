@@ -6,7 +6,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 
@@ -270,18 +269,16 @@ public class SceneView {
 		}
 	}
 
-	public boolean isTileVisibleFast(int plane, int tileExX, int tileExY) {
+	public final boolean isTileVisibleFast(int plane, int tileExX, int tileExY) {
 		return tileVisibility[plane][tileExX][tileExY] == VisibilityResult.VISIBLE;
 	}
 
 	@SneakyThrows
-	public boolean isTileVisible(int plane, int tileExX, int tileExY) {
-		frameTimer.begin(Timer.VISIBILITY_CHECK);
+	public final boolean isTileVisible(int plane, int tileExX, int tileExY) {
 		VisibilityResult result = tileVisibility[plane][tileExX][tileExY];
 
 		// Check if the result is usable & known
 		if ((dirtyFlags & TILE_VISIBILITY_DIRTY) == 0 && result.ordinal() > VisibilityResult.IN_PROGRESS.ordinal()) {
-			frameTimer.end(Timer.VISIBILITY_CHECK);
 			return result == VisibilityResult.VISIBLE;
 		}
 
@@ -296,7 +293,6 @@ public class SceneView {
 			result = tileVisibility[plane][tileExX][tileExY];
 		}
 
-		frameTimer.end(Timer.VISIBILITY_CHECK);
 		return result == VisibilityResult.VISIBLE;
 	}
 
