@@ -1727,7 +1727,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
 						);
 						normalize(cameraToCenterXZ, cameraToCenterXZ);
-						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * 0.33f * offsetStrength);
+						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * 0.15f * offsetStrength);
 						add(centerXZ, centerXZ, cameraToCenterXZ);
 					}
 
