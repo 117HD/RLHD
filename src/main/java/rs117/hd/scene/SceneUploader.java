@@ -364,18 +364,18 @@ public class SceneUploader {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		int sceneId = modelOverride.hashCode() << 16 | (modelOverride.castShadows ? 1 : 0) << 15 | sceneContext.id & SCENE_ID_MASK;
 
+		SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
+		cullingData.bottomY = model.getBottomY();
+		cullingData.radius = model.getXYZMag();
+		cullingData.height = model.getModelHeight();
+		renderableCullingData.add(cullingData);
+
 		// check if the model has already been uploaded
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
 			// if the same model is being uploaded, but with a different area-specific model override,
 			// exclude it from the scene buffer to avoid conflicts
 			if (model.getSceneId() != sceneId) {
 				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);
-			} else {
-				SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
-				cullingData.bottomY = model.getBottomY();
-				cullingData.radius = model.getXYZMag();
-				cullingData.height = model.getModelHeight();
-				renderableCullingData.add(cullingData);
 			}
 			return;
 		}

@@ -3057,7 +3057,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					offsetModel = model;
 				isTileModel = true;
 			} else {
-				isTileModel = renderable instanceof GraphicsObject;
+				isTileModel = renderable instanceof GraphicsObject || renderable instanceof DynamicObject;
 				offsetModel = model = renderable.getModel();
 			}
 			if (model == null || model.getFaceCount() == 0) {
@@ -3093,7 +3093,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final boolean isVisibleInScene = isStatic ?
 			sceneCamera.isTileRenderableVisible(plane, tileExX, tileExY) :
-			isTileModel ? sceneCamera.isTileVisibleFast(plane, tileExX, tileExY) : sceneCamera.isModelVisible(model, x, y, z);
+			isTileModel ? sceneCamera.isTileVisibleFast(plane, tileExX, tileExY) : sceneCamera.isSphereVisible(x, y, z, modelRadius);
 		final boolean isVisibleInShadow =
 			isVisibleInScene || (configShadowCulling && directionalLight.isTileRenderableVisible(plane, tileExX, tileExY));
 

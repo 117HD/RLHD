@@ -512,7 +512,7 @@ public class SceneView {
 			}
 
 			// Check if Renderables are visible on tile
-			if (renderablesCullingData[tileExX][tileExY].length > 0) {
+			if (renderablesCullingData[tileExX][tileExY] != null) {
 				int avgTileHeight = (int) ((h0 + h1 + h2 + h3) / 4.0f);
 				for (SceneContext.RenderableCullingData renderable : renderablesCullingData[tileExX][tileExY]) {
 					final int bottom = avgTileHeight - renderable.bottomY;
