@@ -3047,6 +3047,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.begin(Timer.GET_MODEL);
 
 		Model model, offsetModel;
+		boolean isTileModel = false;
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
@@ -3054,7 +3055,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
+				isTileModel = true;
 			} else {
+				isTileModel = renderable instanceof GraphicsObject;
 				offsetModel = model = renderable.getModel();
 			}
 			if (model == null || model.getFaceCount() == 0) {
@@ -3090,7 +3093,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final boolean isVisibleInScene = isStatic ?
 			sceneCamera.isTileRenderableVisible(plane, tileExX, tileExY) :
-			sceneCamera.isTileVisibleFast(plane, tileExX, tileExY);
+			isTileModel ? sceneCamera.isTileVisibleFast(plane, tileExX, tileExY) : sceneCamera.isModelVisible(model, x, y, z);
 		final boolean isVisibleInShadow =
 			isVisibleInScene || (configShadowCulling && directionalLight.isTileRenderableVisible(plane, tileExX, tileExY));
 
