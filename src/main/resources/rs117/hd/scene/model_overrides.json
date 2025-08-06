@@ -18012,7 +18012,9 @@
     "uvOrientation": 512,
     "materialOverrides": {
       "TROPICAL_LEAF": {
-        "textureMaterial": "TROPICAL_LEAF"
+        "textureMaterial": "TROPICAL_LEAF",
+        "windDisplacementMode": "OBJECT",
+        "windDisplacementModifier": -2
       }
     }
   },
@@ -53168,6 +53170,68 @@
     "uvScale": 0.65,
     "objectIds": [
       "WALLKIT_WOODEN03_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Tempoross - Small Tree - Override Wind Strength",
+    "areas": [ "TEMPOROSS_COVE" ],
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "JUNGLETREE1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3,
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Fern - Override Wind Strength",
+    "areas": [ "TEMPOROSS_COVE" ],
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -2,
+    "uvScale": 0.25,
+    "objectIds": [
+      "FERN"
+    ]
+  },
+  {
+    "description": "Tempoross - Tropical Tree Top - Override Wind Strength",
+    "objectIds": [
+      "BAMBOO_TREE_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512,
+    "materialOverrides": {
+      "TROPICAL_LEAF": {
+        "textureMaterial": "TROPICAL_LEAF",
+        "windDisplacementMode": "OBJECT",
+        "windDisplacementModifier": -3
+      }
+    }
+  },
+  {
+    "description": "Tempoross - Grass - Override Wind Strength",
+    "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 1,
+    "flatNormals": true,
+    "objectIds": [
+      "HUNTING_JUNGLE_GRASS1",
+      "HUNTING_JUNGLE_GRASS3"
     ]
   }
 ]
