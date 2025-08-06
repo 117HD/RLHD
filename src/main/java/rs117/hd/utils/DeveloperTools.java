@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.Keybind;
@@ -33,6 +34,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
+	private static final Keybind KEY_SNAPSHOT = new Keybind(KeyEvent.VK_S, InputEvent.SHIFT_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -50,7 +52,11 @@ public class DeveloperTools implements KeyListener {
 	private TileInfoOverlay tileInfoOverlay;
 
 	@Inject
+	@Getter
 	private FrameTimerOverlay frameTimerOverlay;
+
+	@Inject
+	private SnapshotRecording snapshotRecoding;
 
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
@@ -174,6 +180,8 @@ public class DeveloperTools implements KeyListener {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
 			hideUiEnabled = !hideUiEnabled;
+		} else if (KEY_SNAPSHOT.matches(e)) {
+			snapshotRecoding.startSnapshotSession();
 		} else {
 			return;
 		}
