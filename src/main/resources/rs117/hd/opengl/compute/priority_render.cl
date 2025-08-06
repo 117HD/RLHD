@@ -383,8 +383,7 @@ float3 applyCharacterDisplacement(
 float getModelWindDisplacementMod(int vertexFlags) {
     const float modifiers[7] = { 0.25f, 0.5f, 0.7f, 1.0f, 1.25f, 1.5f, 2.0f };
     int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
-    float invertDisplacement = vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH == 1 ? -1.0f : 1.0f;
-    return modifiers[modifierIDx] * invertDisplacement;
+    return modifiers[modifierIDx];
 }
 
 void applyWindDisplacement(
@@ -404,11 +403,17 @@ void applyWindDisplacement(
     if (windDisplacementMode <= WIND_DISPLACEMENT_DISABLED)
         return;
 
-    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
-    float strengthA = clamp(fabs(vertA.y) / modelHeight, 0.0f, 1.0f) * modelDisplacementMod;
-    float strengthB = clamp(fabs(vertB.y) / modelHeight, 0.0f, 1.0f) * modelDisplacementMod;
-    float strengthC = clamp(fabs(vertC.y) / modelHeight, 0.0f, 1.0f) * modelDisplacementMod;
+    float strengthA = saturate(fabs(vertA.y) / modelHeight);
+    float strengthB = saturate(fabs(vertB.y) / modelHeight);
+    float strengthC = saturate(fabs(vertC.y) / modelHeight);
 
+    if ((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) {
+        strengthA = 1.0f - strengthA;
+        strengthB = 1.0f - strengthB;
+        strengthC = 1.0f - strengthC;
+    }
+
+    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
 #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0f;
@@ -442,6 +447,10 @@ void applyWindDisplacement(
             float3 skewB = normalize(cross(normB, (float3)(0.0f, 1.0f, 0.0f)));
             float3 skewC = normalize(cross(normC, (float3)(0.0f, 1.0f, 0.0f)));
 
+            strengthA *= modelDisplacementMod;
+            strengthB *= modelDisplacementMod;
+            strengthC *= modelDisplacementMod;
+
             *displacementA = windNoiseA * (windSample.heightBasedStrength * strengthA) * 0.5f * skewA;
             *displacementB = windNoiseB * (windSample.heightBasedStrength * strengthB) * 0.5f * skewB;
             *displacementC = windNoiseC * (windSample.heightBasedStrength * strengthC) * 0.5f * skewC;
@@ -458,16 +467,16 @@ void applyWindDisplacement(
             *displacementB = windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod) * windSample.direction;
             *displacementC = windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod) * windSample.direction;
 
-            strengthA = clamp(strengthA - VertexDisplacementMod, 0.0f, 1.0f);
-            strengthB = clamp(strengthB - VertexDisplacementMod, 0.0f, 1.0f);
-            strengthC = clamp(strengthC - VertexDisplacementMod, 0.0f, 1.0f);
+            strengthA = clamp(strengthA - VertexDisplacementMod, 0.0f, 1.0f) * modelDisplacementMod;
+            strengthB = clamp(strengthB - VertexDisplacementMod, 0.0f, 1.0f) * modelDisplacementMod;
+            strengthC = clamp(strengthC - VertexDisplacementMod, 0.0f, 1.0f) * modelDisplacementMod;
         }
     }
 
     if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
-        *displacementA += windSample.displacement * strengthA;
-        *displacementB += windSample.displacement * strengthB;
-        *displacementC += windSample.displacement * strengthC;
+        *displacementA += windSample.displacement * strengthA * modelDisplacementMod;
+        *displacementB += windSample.displacement * strengthB * modelDisplacementMod;
+        *displacementC += windSample.displacement * strengthC * modelDisplacementMod;
     }
 #endif // WIND_DISPLACEMENT
 
