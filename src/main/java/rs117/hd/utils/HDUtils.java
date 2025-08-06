@@ -360,20 +360,29 @@ public class HDUtils {
 	public static boolean isModelVisible(int x, int y, int z, Model model, float[][] cullingPlanes) {
 		final int bottom = y - model.getBottomY();
 		final int radius = model.getRadius();
-		return isAABBVisible(x - radius, bottom, z - radius, x + radius, bottom + model.getModelHeight(), z + radius, cullingPlanes);
+		return isAABBVisible(x - radius, bottom, z - radius, x + radius, bottom + model.getModelHeight(), z + radius, cullingPlanes, 0.0f);
 	}
 
-	public static boolean isAABBVisible(int minX, int minY, int minZ, int maxX, int maxY, int maxZ, float[][] cullingPlanes) {
+	public static boolean isAABBVisible(
+		int minX,
+		int minY,
+		int minZ,
+		int maxX,
+		int maxY,
+		int maxZ,
+		float[][] cullingPlanes,
+		float padding
+	) {
 		for (float[] plane : cullingPlanes) {
 			if (
-				distanceToPlane(plane, minX, minY, minZ) < 0.0 &&
-				distanceToPlane(plane, maxX, minY, minZ) < 0.0 &&
-				distanceToPlane(plane, minX, maxY, minZ) < 0.0 &&
-				distanceToPlane(plane, maxX, maxY, minZ) < 0.0 &&
-				distanceToPlane(plane, minX, minY, maxZ) < 0.0 &&
-				distanceToPlane(plane, maxX, minY, maxZ) < 0.0 &&
-				distanceToPlane(plane, minX, maxY, maxZ) < 0.0 &&
-				distanceToPlane(plane, maxX, maxY, maxZ) < 0.0) {
+				distanceToPlane(plane, minX, minY, minZ) < padding &&
+				distanceToPlane(plane, maxX, minY, minZ) < padding &&
+				distanceToPlane(plane, minX, maxY, minZ) < padding &&
+				distanceToPlane(plane, maxX, maxY, minZ) < padding &&
+				distanceToPlane(plane, minX, minY, maxZ) < padding &&
+				distanceToPlane(plane, maxX, minY, maxZ) < padding &&
+				distanceToPlane(plane, minX, maxY, maxZ) < padding &&
+				distanceToPlane(plane, maxX, maxY, maxZ) < padding) {
 				// Not visible - all returned negative
 				return false;
 			}
