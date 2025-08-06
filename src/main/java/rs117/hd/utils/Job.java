@@ -92,6 +92,14 @@ public abstract class Job implements Runnable {
 		}
 	}
 
+	public static void completeAll(boolean block, Job... jobs) {
+		for(Job job : jobs) {
+			if(job != null) {
+				job.complete(block);
+			}
+		}
+	}
+
 	@SneakyThrows
 	public Job wait(boolean block) {
 		if (inFlight.get()) {
