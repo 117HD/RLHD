@@ -93,9 +93,9 @@ void main() {
         OUT.positionCS = projectionMatrix * vec4(OUT.position, 1);
         OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
-        OUT.normal = N;
+            OUT.normal = N;
         #else
-        OUT.normal = length(normal) == 0 ? N : normalize(normal);
+            OUT.normal = length(normal) == 0 ? N : normalize(normal);
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;

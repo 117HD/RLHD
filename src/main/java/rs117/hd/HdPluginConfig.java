@@ -54,6 +54,7 @@ import rs117.hd.config.VanillaShadowMode;
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
@@ -289,7 +290,7 @@ public interface HdPluginConfig extends Config
 	@Range(min = -500, max = 500)
 	default int saturation()
 	{
-		return Math.round(oldSaturationDropdown().getAmount() * 100);
+		return round(oldSaturationDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "saturation", hidden = true, name = "", description = "")
 	default Saturation oldSaturationDropdown()
@@ -309,7 +310,7 @@ public interface HdPluginConfig extends Config
 	@Range(min = -500, max = 500)
 	default int contrast()
 	{
-		return Math.round(oldContrastDropdown().getAmount() * 100);
+		return round(oldContrastDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "contrast", hidden = true, name = "", description = "")
 	default Contrast oldContrastDropdown()

@@ -39691,7 +39691,7 @@
     "objectIds": [
       "MACRO_SPOTLIGHT"
     ],
-    "animationIds": [ 1136 ]
+    "animationIds": [ "MACRO_SPOTLIGHT_ON" ]
   },
   {
     "description": "Mime Exit Sign",
@@ -39709,7 +39709,7 @@
     "objectIds": [
       "MACRO_EXITSIGN"
     ],
-    "animationIds": [ 1136 ]
+    "animationIds": [ "MACRO_SPOTLIGHT_ON" ]
   },
   {
     "description": "Pinball Green Buzzer",

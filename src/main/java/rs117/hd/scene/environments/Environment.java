@@ -7,7 +7,7 @@ import lombok.AccessLevel;
 import lombok.Setter;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
-import rs117.hd.utils.GsonUtils;
+import rs117.hd.utils.GsonUtils.DegreesToRadians;
 import rs117.hd.utils.HDUtils;
 
 import static rs117.hd.utils.ColorUtils.SrgbToLinearAdapter;
@@ -31,7 +31,7 @@ public class Environment {
 	public static Environment OVERWORLD, AUTUMN, WINTER;
 
 	public String key;
-	@JsonAdapter(AreaManager.JsonAdapter.class)
+	@JsonAdapter(AreaManager.Adapter.class)
 	public Area area = Area.NONE;
 	public boolean isOverworld = false;
 	public boolean isUnderwater = false;
@@ -55,7 +55,7 @@ public class Environment {
 	public float[] underglowColor = rgb("#000000");
 	public float underglowStrength = 0;
 	@Nullable
-	@JsonAdapter(GsonUtils.DegreesToRadians.class)
+	@JsonAdapter(DegreesToRadians.class)
 	public float[] sunAngles; // horizontal coordinate system, in radians
 	@Nullable
 	@JsonAdapter(SrgbToLinearAdapter.class)
@@ -64,7 +64,7 @@ public class Environment {
 	public int groundFogStart = -200;
 	public int groundFogEnd = -500;
 	public float groundFogOpacity = 0;
-	@JsonAdapter(GsonUtils.DegreesToRadians.class)
+	@JsonAdapter(DegreesToRadians.class)
 	public float windAngle = 0.0f;
 	public float windSpeed = 15.0f;
 	public float windStrength = 0.0f;

@@ -55,7 +55,7 @@ public class RegionBox {
 	}
 
 	@Slf4j
-	public static class JsonAdapter extends TypeAdapter<RegionBox[]> {
+	public static class Adapter extends TypeAdapter<RegionBox[]> {
 		@Override
 		public RegionBox[] read(JsonReader in) throws IOException {
 			in.beginArray();

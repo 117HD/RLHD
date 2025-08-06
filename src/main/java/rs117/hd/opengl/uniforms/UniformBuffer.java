@@ -16,6 +16,7 @@ import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
@@ -424,8 +425,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	}
 
 	private void markWaterLine(int position, int size) {
-		dirtyLowTide = Math.min(dirtyLowTide, position);
-		dirtyHighTide = Math.max(dirtyHighTide, position + size);
+		dirtyLowTide = min(dirtyLowTide, position);
+		dirtyHighTide = max(dirtyHighTide, position + size);
 	}
 
 	public void initialize() {

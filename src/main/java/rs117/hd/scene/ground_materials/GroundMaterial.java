@@ -1,4 +1,4 @@
-package rs117.hd.data.materials;
+package rs117.hd.scene.ground_materials;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.data.materials.Material;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.utils.GsonUtils;
 
@@ -48,7 +49,7 @@ public class GroundMaterial {
 	}
 
 	@Slf4j
-	public static class JsonAdapter extends TypeAdapter<GroundMaterial> {
+	public static class Adapter extends TypeAdapter<GroundMaterial> {
 		@Override
 		public GroundMaterial read(JsonReader in) throws IOException {
 			if (in.peek() == JsonToken.NULL)

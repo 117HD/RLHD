@@ -46,13 +46,7 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static rs117.hd.utils.HDUtils.PI;
-import static rs117.hd.utils.HDUtils.TWO_PI;
-import static rs117.hd.utils.HDUtils.clamp;
-import static rs117.hd.utils.HDUtils.hermite;
-import static rs117.hd.utils.HDUtils.lerp;
-import static rs117.hd.utils.HDUtils.mod;
-import static rs117.hd.utils.HDUtils.rand;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
@@ -247,10 +241,7 @@ public class EnvironmentManager {
 		// skip the transitional fade if the player has moved too far
 		// since the previous frame. results in an instant transition when
 		// teleporting, entering dungeons, etc.
-		int tileChange = Math.max(
-			Math.abs(focalPoint[0] - previousPosition[0]),
-			Math.abs(focalPoint[1] - previousPosition[1])
-		);
+		int tileChange = (int) max(abs(subtract(vec(focalPoint), vec(previousPosition))));
 		previousPosition = focalPoint;
 
 		boolean skipTransition = tileChange >= SKIP_TRANSITION_DISTANCE;
@@ -274,29 +265,30 @@ public class EnvironmentManager {
 			}
 		} else {
 			// interpolate between start and target values
-			float t = clamp((float) (plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION, 0, 1);
+			float t = smoothstep(0, 1, (float) (plugin.elapsedTime - transitionStartTime) / TRANSITION_DURATION);
 			if (t >= 1)
 				transitionComplete = true;
-			currentFogColor = hermite(startFogColor, targetFogColor, t);
-			currentWaterColor = hermite(startWaterColor, targetWaterColor, t);
-			currentFogDepth = hermite(startFogDepth, targetFogDepth, t);
-			currentAmbientStrength = hermite(startAmbientStrength, targetAmbientStrength, t);
-			currentAmbientColor = hermite(startAmbientColor, targetAmbientColor, t);
-			currentDirectionalStrength = hermite(startDirectionalStrength, targetDirectionalStrength, t);
-			currentDirectionalColor = hermite(startDirectionalColor, targetDirectionalColor, t);
-			currentUnderglowStrength = hermite(startUnderglowStrength, targetUnderglowStrength, t);
-			currentUnderglowColor = hermite(startUnderglowColor, targetUnderglowColor, t);
-			currentGroundFogStart = hermite(startGroundFogStart, targetGroundFogStart, t);
-			currentGroundFogEnd = hermite(startGroundFogEnd, targetGroundFogEnd, t);
-			currentGroundFogOpacity = hermite(startGroundFogOpacity, targetGroundFogOpacity, t);
+			currentFogColor = mix(startFogColor, targetFogColor, t);
+			currentWaterColor = mix(startWaterColor, targetWaterColor, t);
+			currentFogDepth = mix(startFogDepth, targetFogDepth, t);
+			currentAmbientStrength = mix(startAmbientStrength, targetAmbientStrength, t);
+			currentAmbientColor = mix(startAmbientColor, targetAmbientColor, t);
+			currentDirectionalStrength = mix(startDirectionalStrength, targetDirectionalStrength, t);
+			currentDirectionalColor = mix(startDirectionalColor, targetDirectionalColor, t);
+			currentUnderglowStrength = mix(startUnderglowStrength, targetUnderglowStrength, t);
+			currentUnderglowColor = mix(startUnderglowColor, targetUnderglowColor, t);
+			currentGroundFogStart = mix(startGroundFogStart, targetGroundFogStart, t);
+			currentGroundFogEnd = mix(startGroundFogEnd, targetGroundFogEnd, t);
+			currentGroundFogOpacity = mix(startGroundFogOpacity, targetGroundFogOpacity, t);
 			for (int i = 0; i < 2; i++)
-				currentSunAngles[i] = hermite(startSunAngles[i], targetSunAngles[i], t);
-			currentUnderwaterCausticsColor = hermite(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
-			currentUnderwaterCausticsStrength = hermite(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
-			currentWindAngle = hermite(startWindAngle, targetWindAngle, t);
-			currentWindSpeed = hermite(startWindSpeed, targetWindSpeed, t);
-			currentWindStrength = hermite(startWindStrength, targetWindStrength, t);
-			currentWindCeiling = hermite(startWindCeiling, targetWindCeiling, t);
+				currentSunAngles[i] = mix(startSunAngles[i], targetSunAngles[i], t);
+			currentUnderwaterCausticsColor = mix(startUnderwaterCausticsColor, targetUnderwaterCausticsColor, t);
+			currentUnderwaterCausticsStrength = mix(startUnderwaterCausticsStrength, targetUnderwaterCausticsStrength, t);
+			currentWindAngle = mix(startWindAngle, targetWindAngle, t);
+			currentWindSpeed = mix(startWindSpeed, targetWindSpeed, t);
+			currentWindStrength = mix(startWindStrength, targetWindStrength, t);
+			currentWindCeiling = mix(startWindCeiling, targetWindCeiling, t);
+
 			currentskyboxBlend = t;
 		}
 
@@ -365,7 +357,7 @@ public class EnvironmentManager {
 		float[] sunAngles = env.sunAngles;
 		if (sunAngles == null)
 			sunAngles = Objects.requireNonNullElse(overworldEnv.sunAngles, Environment.DEFAULT_SUN_ANGLES);
-		System.arraycopy(sunAngles, 0, targetSunAngles, 0, 2);
+		copyTo(targetSunAngles, sunAngles);
 
 		if (!config.atmosphericLighting() && !env.force)
 			env = overworldEnv;
@@ -386,8 +378,8 @@ public class EnvironmentManager {
 		// Prevent transitions from taking the long way around
 		for (int i = 0; i < 2; i++) {
 			float diff = startSunAngles[i] - targetSunAngles[i];
-			if (Math.abs(diff) > PI)
-				targetSunAngles[i] += TWO_PI * Math.signum(diff);
+			if (abs(diff) > PI)
+				targetSunAngles[i] += TWO_PI * sign(diff);
 		}
 	}
 
@@ -452,7 +444,7 @@ public class EnvironmentManager {
 	void updateLightning() {
 		if (lightningBrightness > 0) {
 			float brightnessChange = plugin.deltaTime * LIGHTNING_FADE_SPEED;
-			lightningBrightness = Math.max(lightningBrightness - brightnessChange, 0);
+			lightningBrightness = max(lightningBrightness - brightnessChange, 0);
 		}
 
 		if (nextLightningTime == -1) {
@@ -466,8 +458,8 @@ public class EnvironmentManager {
 
 		if (lightningEnabled && config.flashingEffects()) {
 			float t = clamp(lightningBrightness, 0, 1);
-			currentFogColor = lerp(currentFogColor, LIGHTNING_COLOR, t);
-			currentWaterColor = lerp(currentWaterColor, LIGHTNING_COLOR, t);
+			currentFogColor = mix(currentFogColor, LIGHTNING_COLOR, t);
+			currentWaterColor = mix(currentWaterColor, LIGHTNING_COLOR, t);
 		} else {
 			lightningBrightness = 0f;
 		}
@@ -482,10 +474,10 @@ public class EnvironmentManager {
 		nextLightningTime = plugin.elapsedTime;
 		if (Math.random() <= QUICK_LIGHTNING_CHANCE) {
 			// chain together lighting strikes in quick succession
-			nextLightningTime += lerp(MIN_QUICK_LIGHTNING_INTERVAL, MAX_QUICK_LIGHTNING_INTERVAL, rand.nextFloat());
+			nextLightningTime += mix(MIN_QUICK_LIGHTNING_INTERVAL, MAX_QUICK_LIGHTNING_INTERVAL, RAND.nextFloat());
 		} else {
 			// cool-down period before a new lightning cluster
-			nextLightningTime += lerp(MIN_LIGHTNING_INTERVAL, MAX_LIGHTNING_INTERVAL, rand.nextFloat());
+			nextLightningTime += mix(MIN_LIGHTNING_INTERVAL, MAX_LIGHTNING_INTERVAL, RAND.nextFloat());
 		}
 	}
 
