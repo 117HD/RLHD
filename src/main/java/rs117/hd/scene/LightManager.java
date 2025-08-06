@@ -838,10 +838,9 @@ public class LightManager {
 				case WallDecorDiagonalNoOffset:
 				case WallDecorDiagonalOffset:
 				case WallDecorDiagonalBoth:
-					int sin = SINE[ori];
-					int cos = COSINE[ori];
-					offset[0] = sin * 64 >> 16;
-					offset[1] = cos * 64 >> 16;
+					ori = (ori + 512) % 2048;
+					offset[0] = SINE[ori] * 64 >> 16;
+					offset[1] = COSINE[ori] * 64 >> 16;
 					break;
 			}
 			offset[0] += object.getXOffset();

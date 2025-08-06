@@ -108,13 +108,14 @@ public class HDUtils {
 		var objectType = ObjectType.fromConfig(config);
 		int orientation = 1024 + 512 * (config >>> 6 & 3);
 		switch (objectType) {
-			case WallDecorDiagonalNoOffset:
-				orientation += 1024;
 			case WallDiagonalCorner:
 			case WallSquareCorner:
 			case WallDecorDiagonalOffset:
 			case WallDecorDiagonalBoth:
-				orientation -= 256;
+				orientation += 1024;
+			case WallDecorDiagonalNoOffset:
+			case CentrepieceDiagonal:
+				orientation += 256;
 				break;
 		}
 		return orientation % 2048;
