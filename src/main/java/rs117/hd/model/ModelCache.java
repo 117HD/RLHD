@@ -7,8 +7,7 @@ import java.util.HashMap;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
 
-import static rs117.hd.utils.HDUtils.GiB;
-import static rs117.hd.utils.HDUtils.MiB;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ModelCache {
@@ -135,10 +134,10 @@ public class ModelCache {
 
 			try {
 				// Try allocating in chunks of up to 1 GiB each
-				int numChunks = (int) Math.ceil((double) byteCapacity / GiB);
+				int numChunks = (int) ((byteCapacity + GiB - 1) / GiB);
 				allocations = new Allocation[numChunks];
 				for (int i = 0; i < numChunks; i++) {
-					allocations[i] = new Allocation(Math.min(byteCapacity - i * GiB, GiB));
+					allocations[i] = new Allocation(min(byteCapacity - i * GiB, GiB));
 				}
 			} catch (Throwable err2) {
 				destroy();

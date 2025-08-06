@@ -16,7 +16,6 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.overlays.FrameTimer;
@@ -30,6 +29,7 @@ import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.model_overrides.WindDisplacement;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
@@ -38,6 +38,7 @@ import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.MathUtils.*;
 
 /**
  * Pushes models
@@ -175,7 +176,7 @@ public class ModelPusher {
 		if (modelCache == null)
 			useCache = false;
 
-		final int faceCount = Math.min(model.getFaceCount(), MAX_FACE_COUNT);
+		final int faceCount = min(model.getFaceCount(), MAX_FACE_COUNT);
 		final int bufferSize = faceCount * DATUM_PER_FACE;
 		int texturedFaceCount = 0;
 

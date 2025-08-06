@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.data.materials.Material;
+import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -29,7 +29,7 @@ public class GroundMaterialManager {
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
-	public static GroundMaterial[] GROUND_MATERIALS = new GroundMaterial[0];
+	public static GroundMaterial[] GROUND_MATERIALS = {};
 
 	public void startUp() {
 		fileWatcher = GROUND_MATERIALS_PATH.watch((path, first) -> {

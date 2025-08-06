@@ -23,12 +23,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #pragma once
-#if WIREFRAME
 
+#if WIREFRAME
 float wireframeMask() {
     const float wireframeWidth = 0.8f;
     vec3 d = smoothstep(vec3(0.0), fwidth(IN.texBlend) * wireframeWidth, IN.texBlend);
     return min(min(d.x, d.y), d.z);
 }
-
 #endif

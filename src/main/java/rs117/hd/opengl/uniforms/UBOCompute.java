@@ -7,6 +7,7 @@ import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.MathUtils.*;
 
 public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
@@ -73,7 +74,7 @@ public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
 			playerPosZ = pair.z;
 			pair.dist = 0.0f;
 		} else {
-			pair.dist = Math.abs(playerPosX - pair.x) + Math.abs(playerPosZ - pair.z);
+			pair.dist = abs(playerPosX - pair.x) + abs(playerPosZ - pair.z);
 
 			if (writeIndex > 1) {
 				int index = Collections.binarySearch(
@@ -99,7 +100,7 @@ public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
 			if (i < characterPositions.length)
 				characterPositions[i].set(pair.x, pair.z, pair.radius);
 		}
-		characterPositionCount.set(Math.min(writtenCharacterPositions, characterPositions.length));
+		characterPositionCount.set(min(writtenCharacterPositions, characterPositions.length));
 		writtenCharacterPositions = 0;
 	}
 }

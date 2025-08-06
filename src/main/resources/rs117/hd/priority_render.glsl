@@ -224,9 +224,9 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
     int maxLightness;
     #if LEGACY_GREY_COLORS
-    maxLightness = 55;
+        maxLightness = 55;
     #else
-    maxLightness = int(127 - 72 * pow(saturation / 7., .05));
+        maxLightness = int(127 - 72 * pow(saturation / 7., .05));
     #endif
     lightness = min(lightness, maxLightness);
     hsl &= ~0x7F;
@@ -420,16 +420,16 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         thisrvC.pos = rotate(thisrvC.pos, orientation);
 
         #if UNDO_VANILLA_SHADING
-        if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
-            if (length(normA) == 0) {
-                // Compute flat normal if necessary, and rotate it back to match unrotated normals
-                vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
-                normA = normB = normC = rotate(N, -orientation);
+            if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
+                if (length(normA) == 0) {
+                    // Compute flat normal if necessary, and rotate it back to match unrotated normals
+                    vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
+                    normA = normB = normC = rotate(N, -orientation);
+                }
+                undoVanillaShading(thisrvA.ahsl, normA.xyz);
+                undoVanillaShading(thisrvB.ahsl, normB.xyz);
+                undoVanillaShading(thisrvC.ahsl, normC.xyz);
             }
-            undoVanillaShading(thisrvA.ahsl, normA.xyz);
-            undoVanillaShading(thisrvB.ahsl, normB.xyz);
-            undoVanillaShading(thisrvC.ahsl, normC.xyz);
-        }
         #endif
 
         thisrvA.pos += modelPos;

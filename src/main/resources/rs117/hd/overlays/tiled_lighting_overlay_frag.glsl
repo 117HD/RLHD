@@ -17,7 +17,7 @@ void main() {
     vec2 texelCenter = (floor(fUv * tiledLightingResolution) + .5) / tiledLightingResolution;
 
     const float eps = 1e-10;
-    vec2 ndcUv = (fUv * 2 - 1) * vec2(1, -1);
+    vec2 ndcUv = fUv * 2 - 1;
     vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
     vec3 viewDir = normalize(farPos.xyz / farPos.w);
 
@@ -34,7 +34,7 @@ void main() {
             return;
         }
 
-        vec2 ndcUvCenter = (texelCenter * 2 - 1) * vec2(1, -1);
+        vec2 ndcUvCenter = texelCenter * 2 - 1;
         vec4 farPosCenter = invProjectionMatrix * vec4(ndcUvCenter, eps, 1);
         vec3 viewDirCenter = normalize(farPosCenter.xyz / farPosCenter.w);
 

@@ -1,12 +1,31 @@
+/*
+ * Gson hacks.
+ * Written in 2025 by Hooder <ahooder@protonmail.com>
+ * To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights
+ * to this software to the public domain worldwide. This software is distributed without any warranty.
+ * You should have received a copy of the CC0 Public Domain Dedication along with this software.
+ * If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+ */
 package rs117.hd.utils;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.ArrayList;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class GsonUtils {
@@ -18,6 +37,60 @@ public class GsonUtils {
 		return str;
 	}
 
+	public static Gson wrap(Gson gson) {
+		return gson.newBuilder()
+			.setLenient()
+			.setPrettyPrinting()
+			.registerTypeAdapterFactory(new ExcludeDefaultsFactory())
+			.create();
+	}
+
+	/**
+	 * Because of the way this works internally, custom formatting by calling `JsonWriter#jsonValue` is not supported.
+	 */
+	@Retention(RetentionPolicy.RUNTIME)
+	@Target(ElementType.TYPE)
+	public @interface ExcludeDefaults {}
+
+	public static class ExcludeDefaultsAdapter<T> extends TypeAdapter<T> {
+		private final Gson gson;
+		private final TypeAdapter<T> type;
+		private final JsonObject defaults;
+
+		@SneakyThrows
+		public ExcludeDefaultsAdapter(Gson gson, TypeAdapter<T> type) {
+			this.gson = gson;
+			this.type = type;
+			defaults = type.toJsonTree(type.fromJson("{}")).getAsJsonObject();
+		}
+
+		@Override
+		public void write(JsonWriter out, T t) throws IOException {
+			var json = type.toJsonTree(t).getAsJsonObject();
+			for (var e : defaults.entrySet()) {
+				var value = json.get(e.getKey());
+				if (value == null || value.equals(e.getValue()))
+					json.remove(e.getKey());
+			}
+			gson.toJson(json, out);
+		}
+
+		@Override
+		public T read(JsonReader in) throws IOException {
+			return type.read(in);
+		}
+	}
+
+	public static class ExcludeDefaultsFactory implements TypeAdapterFactory {
+		@Override
+		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+			for (var annotation : type.getRawType().getAnnotations())
+				if (annotation.annotationType() == ExcludeDefaults.class)
+					return new ExcludeDefaultsAdapter<>(gson, gson.getDelegateAdapter(this, type));
+			return null;
+		}
+	}
+
 	@Slf4j
 	public static class DegreesToRadians extends TypeAdapter<Object> {
 		@Override
@@ -26,10 +99,8 @@ public class GsonUtils {
 			if (token == JsonToken.NULL)
 				return null;
 
-			if (token == JsonToken.NUMBER) {
-				float angle = (float) in.nextDouble();
-				return (float) Math.toRadians(angle);
-			}
+			if (token == JsonToken.NUMBER)
+				return (float) in.nextDouble() * DEG_TO_RAD;
 
 			if (token == JsonToken.BEGIN_ARRAY) {
 				ArrayList<Float> list = new ArrayList<>();
@@ -60,14 +131,13 @@ public class GsonUtils {
 			if (src instanceof float[]) {
 				out.beginArray();
 				for (float f : (float[]) src)
-					out.value(Math.toDegrees(f));
+					out.value(f * RAD_TO_DEG);
 				out.endArray();
 				return;
 			}
 
-			if (src instanceof Float) {
-				out.value(Math.toDegrees((float) src));
-			}
+			if (src instanceof Float)
+				out.value((float) src * RAD_TO_DEG);
 
 			throw new IOException("Expected a float or float array. Got " + src);
 		}
