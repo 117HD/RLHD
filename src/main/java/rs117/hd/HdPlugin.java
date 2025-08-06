@@ -1719,16 +1719,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						radius = Math.max(radius, length(corner[0] - centerXZ[0], corner[2] - centerXZ[1]));
 					}
 
-					// Offset Center by Half radius
-					float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
+					// Offset Directional based on zoom
 					{
 						float[] cameraToCenterXZ = subtract(
 							centerXZ,
 							new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
 						);
-						normalize(cameraToCenterXZ, cameraToCenterXZ);
-						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.2f, offsetStrength));
-						add(centerXZ, centerXZ, cameraToCenterXZ);
+						float dist = length(cameraToCenterXZ);
+						if (dist > 0.05f) {
+							float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
+							divide(cameraToCenterXZ, cameraToCenterXZ, dist);
+							multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.1f, offsetStrength));
+							add(centerXZ, centerXZ, cameraToCenterXZ);
+						}
 					}
 
 					directionalLight.setPositionX(centerXZ[0]);
