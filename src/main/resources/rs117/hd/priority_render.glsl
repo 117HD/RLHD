@@ -270,7 +270,7 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     float strengthB = saturate(abs(vertB.y) / modelHeight);
     float strengthC = saturate(abs(vertC.y) / modelHeight);
 
-    if((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) {
+    if ((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) {
         strengthA = 1.0 - strengthA;
         strengthB = 1.0 - strengthB;
         strengthC = 1.0 - strengthC;

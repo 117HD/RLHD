@@ -407,7 +407,7 @@ void applyWindDisplacement(
     float strengthB = saturate(fabs(vertB.y) / modelHeight);
     float strengthC = saturate(fabs(vertC.y) / modelHeight);
 
-    if((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) {
+    if ((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) {
         strengthA = 1.0f - strengthA;
         strengthB = 1.0f - strengthB;
         strengthC = 1.0f - strengthC;
