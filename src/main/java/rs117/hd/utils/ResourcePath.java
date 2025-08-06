@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -294,12 +293,6 @@ public class ResourcePath {
 	}
 
 	public <T> T loadJson(Gson gson, Class<T> type) throws IOException {
-		try (BufferedReader reader = toReader()) {
-			return gson.fromJson(reader, type);
-		}
-	}
-
-	public <T> T loadJson(Gson gson, Type type) throws IOException {
 		try (BufferedReader reader = toReader()) {
 			return gson.fromJson(reader, type);
 		}
