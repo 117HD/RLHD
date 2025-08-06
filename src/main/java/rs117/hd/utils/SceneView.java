@@ -261,7 +261,6 @@ public class SceneView {
 
 		dirtyFlags &= ~TILE_VISIBILITY_DIRTY;
 		for (AsyncCullingJob planeJob : cullingJobs) {
-			planeJob.tiles = ctx.scene.getExtendedTiles()[planeJob.plane];
 			planeJob.tileHeights = ctx.scene.getTileHeights()[planeJob.plane];
 			planeJob.tileIsWater = checkUnderwater ? ctx.tileIsWater[planeJob.plane] : null;
 			planeJob.renderablesCullingData = ctx.tileRenderableCullingData[planeJob.plane];
@@ -457,7 +456,6 @@ public class SceneView {
 		private final SceneView view;
 		private final int plane;
 
-		private Tile[][] tiles;
 		private int[][] tileHeights;
 		private boolean[][] tileIsWater;
 		private int[][] underwaterDepthLevels;
@@ -467,8 +465,6 @@ public class SceneView {
 		protected void doWork() {
 			for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; tileExX++) {
 				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++) {
-					if (tiles[tileExX][tileExY] == null)
-						continue;
 					performTileCulling(tileExX, tileExY);
 				}
 			}
@@ -481,7 +477,7 @@ public class SceneView {
 			}
 			view.tileVisibility[plane][tileExX][tileExY] = VISIBILITY_IN_PROGRESS; // Signal that we are processing this tile (Could be Client or Job Thread doing so)
 
-			if (tileHeights == null) {
+			if (tileHeights == null || renderablesCullingData == null) {
 				return view.tileVisibility[plane][tileExX][tileExY] = VISIBILITY_UNKNOWN;
 			}
 
