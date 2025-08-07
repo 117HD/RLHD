@@ -118,11 +118,12 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     if (finalFresnel < 0.5) {
         surfaceColor = mix(waterColorDark, waterColorMid, finalFresnel * 2);
     } else {
-    #if 0 // Enable for the water to refract the skybox
+    #if 1 // Enable for the water to reflect the skybox
         vec3 skyColor = waterColorLight;
         if(canSampleSky()) {
-            const float waterRefractionIndex = 1.00 / 1.52;
-            skyColor = sampleSky(normalize(refract(-viewDir, normals, waterRefractionIndex)), waterColorLight);
+            vec3 reflectedDir = reflect(-viewDir, normals);
+            reflectedDir.y = -reflectedDir.y;
+            skyColor = sampleSky(reflectedDir, waterColorLight);
         }
         surfaceColor = mix(waterColorMid, skyColor, (finalFresnel - 0.5) * 2);
     #else
