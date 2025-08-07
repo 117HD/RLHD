@@ -3099,45 +3099,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
-		final boolean isVisibleInScene;
-		if (isTileModel) {
-			if (isStatic) {
-				isVisibleInScene = sceneCamera.getCullingResults().isTileRenderablesVisible(plane, tileExX, tileExY);
-			} else {
-				isVisibleInScene = sceneCamera.getCullingResults().isTileSurfaceVisible(plane, tileExX, tileExY);
-			}
-		} else {
-			if (isNPC) {
-				isVisibleInScene = sceneCamera.getCullingResults().isNPCVisible(((NPC) renderable).getId());
-			} else if (isPlayer) {
-				isVisibleInScene = sceneCamera.getCullingResults().isPlayerVisible(((Player) renderable).getId());
-			} else if (isProjectile) {
-				isVisibleInScene = sceneCamera.getCullingResults().isProjectileVisible(((Projectile) renderable).getId());
-			} else {
-				isVisibleInScene = sceneCamera.isSphereVisible(x, y, z, modelRadius);
-			}
-		}
-
-		boolean isVisibleInShadow = isVisibleInScene;
-		if (!isVisibleInShadow) {
-			if (isTileModel) {
-				if (isStatic) {
-					isVisibleInShadow = sceneCamera.getCullingResults().isTileRenderablesVisible(plane, tileExX, tileExY);
-				} else {
-					isVisibleInShadow = sceneCamera.getCullingResults().isTileSurfaceVisible(plane, tileExX, tileExY);
-				}
-			} else {
-				if (isNPC) {
-					isVisibleInShadow = sceneCamera.getCullingResults().isNPCVisible(((NPC) renderable).getId());
-				} else if (isPlayer) {
-					isVisibleInShadow = sceneCamera.getCullingResults().isPlayerVisible(((Player) renderable).getId());
-				} else if (isProjectile) {
-					isVisibleInShadow = sceneCamera.getCullingResults().isProjectileVisible(((Projectile) renderable).getId());
-				} else {
-					isVisibleInShadow = sceneCamera.isSphereVisible(x, y, z, modelRadius);
-				}
-			}
-		}
+		final boolean isVisibleInScene = sceneCamera.isRenderableVisible(
+			renderable,
+			isStatic,
+			plane,
+			tileExX,
+			tileExY,
+			x,
+			y,
+			z,
+			modelRadius
+		);
+		final boolean isVisibleInShadow = isVisibleInScene || directionalLight.isRenderableVisible(
+			renderable,
+			isStatic,
+			plane,
+			tileExX,
+			tileExY,
+			x,
+			y,
+			z,
+			modelRadius
+		);
 
 		if (enableDetailedTimers)
 			frameTimer.end(Timer.VISIBILITY_CHECK);

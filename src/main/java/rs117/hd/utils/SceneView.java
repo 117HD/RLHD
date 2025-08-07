@@ -2,6 +2,7 @@ package rs117.hd.utils;
 
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import rs117.hd.scene.SceneCullingManager.CullingResults;
 
 @Slf4j
@@ -256,6 +257,35 @@ public class SceneView {
 
 	public void invalidateTileVisibility() {
 		dirtyFlags |= TILE_VISIBILITY_DIRTY;
+	}
+
+	public boolean isRenderableVisible(
+		Renderable renderable,
+		boolean isStatic,
+		int plane,
+		int tileExX,
+		int tileExY,
+		int x,
+		int y,
+		int z,
+		int modelRadius
+	) {
+		if (renderable instanceof Model || renderable instanceof DynamicObject || renderable instanceof TileItem) {
+			if (isStatic) {
+				return cullingResults.isTileRenderablesVisible(plane, tileExX, tileExY);
+			} else {
+				return cullingResults.isTileSurfaceVisible(plane, tileExX, tileExY);
+			}
+		} else {
+			if (renderable instanceof NPC) {
+				return cullingResults.isNPCVisible(((NPC) renderable).getId());
+			} else if (renderable instanceof Player) {
+				return cullingResults.isPlayerVisible(((Player) renderable).getId());
+			} else if (renderable instanceof Projectile) {
+				return cullingResults.isProjectileVisible(((Projectile) renderable).getId());
+			}
+		}
+		return isSphereVisible(x, y, z, modelRadius);
 	}
 
 	public boolean isSphereVisible(float x, float y, float z, int radius) {

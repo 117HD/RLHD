@@ -51,9 +51,9 @@ public class SceneCullingManager {
 	private FrustumTileCullingJob[][] frustumCullingJobs;
 
 	private final ResetVisibilityArrayJob clearJob = new ResetVisibilityArrayJob(this);
-	private final FrustumActorCullingJob playerCullingJob = new FrustumActorCullingJob(this, 0);
-	private final FrustumActorCullingJob npcCullingJob = new FrustumActorCullingJob(this, 1);
-	private final FrustumActorCullingJob projectileCullingJob = new FrustumActorCullingJob(this, 2);
+	private final FrustumSphereCullingJob playerCullingJob = new FrustumSphereCullingJob(this, 0);
+	private final FrustumSphereCullingJob npcCullingJob = new FrustumSphereCullingJob(this, 1);
+	private final FrustumSphereCullingJob projectileCullingJob = new FrustumSphereCullingJob(this, 2);
 
 	public void startUp() {
 		int sqJobCount = max(1, (int)sqrt(HdPlugin.PROCESSOR_COUNT - 1));
@@ -209,12 +209,14 @@ public class SceneCullingManager {
 			}
 
 			// Build Actor Culling Job
+			int[][][] tileHeights = sceneContext.scene.getTileHeights();
 			var worldView = client.getTopLevelWorldView();
+			int plane = client.getPlane();
 			for (Player player : worldView.players()) {
-				FrustumActorCullingJob.BoundingSphere sphere = FrustumActorCullingJob.getOrCreateBoundingSphere();
+				FrustumSphereCullingJob.BoundingSphere sphere = FrustumSphereCullingJob.getOrCreateBoundingSphere();
 				var lp = player.getLocalLocation();
 				sphere.x = lp.getX();
-				sphere.y = lp.getWorldView();
+				sphere.y = tileHeights[plane][lp.getSceneX()][lp.getSceneY()];
 				sphere.z = lp.getY();
 				sphere.height = player.getModelHeight();
 				sphere.id = player.getId();
@@ -226,13 +228,13 @@ public class SceneCullingManager {
 			}
 
 			for (NPC npc : worldView.npcs()) {
-				FrustumActorCullingJob.BoundingSphere sphere = FrustumActorCullingJob.getOrCreateBoundingSphere();
+				FrustumSphereCullingJob.BoundingSphere sphere = FrustumSphereCullingJob.getOrCreateBoundingSphere();
 				var lp = npc.getLocalLocation();
 				sphere.x = lp.getX();
-				sphere.y = lp.getWorldView();
+				sphere.y = tileHeights[plane][lp.getSceneX()][lp.getSceneY()];
 				sphere.z = lp.getY();
 				sphere.height = npc.getModelHeight();
-				sphere.id = npc.getId();
+				sphere.id = npc.getIndex();
 				npcCullingJob.spheres.add(sphere);
 			}
 
@@ -241,7 +243,7 @@ public class SceneCullingManager {
 			}
 
 			for (Projectile projectile : sceneContext.knownProjectiles) {
-				FrustumActorCullingJob.BoundingSphere sphere = FrustumActorCullingJob.getOrCreateBoundingSphere();
+				FrustumSphereCullingJob.BoundingSphere sphere = FrustumSphereCullingJob.getOrCreateBoundingSphere();
 				sphere.x = (float) projectile.getX();
 				sphere.y = (float) projectile.getZ();
 				sphere.z = (float) projectile.getY();
@@ -252,10 +254,6 @@ public class SceneCullingManager {
 
 			if (!projectileCullingJob.spheres.isEmpty()) {
 				projectileCullingJob.submit();
-			}
-
-			for (WorldEntity entity : worldView.worldEntities()) {
-				log.debug(entity.toString());
 			}
 		}
 
@@ -390,7 +388,9 @@ public class SceneCullingManager {
 							if(viewCtx.parentIdx != -1) {
 								SceneViewContext parentViewCtx = cullManager.cullingViewContexts.get(viewCtx.parentIdx);
 								int parentViewResult = parentViewCtx.results.tiles[plane][tileExX][tileExY];
-								if(parentViewResult != VISIBILITY_HIDDEN) {
+								if ((parentViewResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE)) == (
+									VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE
+								)) {
 									if(plane == 0 && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) == 0){
 										parentViewResult &= ~VISIBILITY_TILE_VISIBLE;
 									}
@@ -452,7 +452,7 @@ public class SceneCullingManager {
 	}
 
 	@RequiredArgsConstructor
-	public static final class FrustumActorCullingJob extends Job {
+	public static final class FrustumSphereCullingJob extends Job {
 		private static final ArrayDeque<BoundingSphere> BOUNDING_SPHERE_BIN = new ArrayDeque<>();
 
 		public static BoundingSphere getOrCreateBoundingSphere() {
