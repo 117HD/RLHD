@@ -827,12 +827,12 @@ public class LightManager {
 		if (tileObject instanceof GroundObject) {
 			var object = (GroundObject) tileObject;
 			renderables[0] = object.getRenderable();
-			orientations[0] = HDUtils.getBakedOrientation(object.getConfig());
+			orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 		} else if (tileObject instanceof DecorativeObject) {
 			var object = (DecorativeObject) tileObject;
 			renderables[0] = object.getRenderable();
 			renderables[1] = object.getRenderable2();
-			int ori = HDUtils.getBakedOrientation(object.getConfig());
+			int ori = HDUtils.getModelOrientation(object.getConfig());
 			orientations[0] = orientations[1] = ori;
 			switch (ObjectType.fromConfig(object.getConfig())) {
 				case WallDecorDiagonalNoOffset:
@@ -856,7 +856,7 @@ public class LightManager {
 			sizeX = object.sizeX();
 			sizeY = object.sizeY();
 			renderables[0] = object.getRenderable();
-			orientations[0] = HDUtils.getBakedOrientation(object.getConfig());
+			orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 		} else {
 			log.warn("Unhandled TileObject type: id: {}, hash: {}", tileObject.getId(), tileObject.getHash());
 			return;

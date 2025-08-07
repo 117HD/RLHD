@@ -104,7 +104,12 @@ public class HDUtils {
 	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
 	// (gameObject.getConfig() >> 9) // should always be zero
-	public static int getBakedOrientation(int config) {
+
+	/**
+	 * Computes the orientation used when uploading the model.
+	 * This does not include the extra 45-degree rotation of diagonal models.
+	 */
+	public static int getModelPreOrientation(int config) {
 		var objectType = ObjectType.fromConfig(config);
 		int orientation = 1024 + 512 * (config >>> 6 & 3);
 		switch (objectType) {
@@ -113,10 +118,21 @@ public class HDUtils {
 			case WallDecorDiagonalOffset:
 			case WallDecorDiagonalBoth:
 				orientation += 1024;
+		}
+		return orientation % 2048;
+	}
+
+	/**
+	 * Computes the complete model orientation, including the pre-orientation when uploading,
+	 * and the extra 45-degree rotation of diagonal models.
+	 */
+	public static int getModelOrientation(int config) {
+		int orientation = getModelPreOrientation(config);
+		var objectType = ObjectType.fromConfig(config);
+		switch (objectType) {
 			case WallDecorDiagonalNoOffset:
 			case CentrepieceDiagonal:
 				orientation += 256;
-				break;
 		}
 		return orientation % 2048;
 	}

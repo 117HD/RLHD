@@ -316,8 +316,8 @@ public class ModelOverride
 			rad = orientation * JAU_TO_RAD;
 			cos = cos(rad);
 			sin = sin(rad);
-			temp = (float) (x * sin + z * cos);
-			x = (float) (x * cos - z * sin);
+			temp = x * sin + z * cos;
+			x = x * cos - z * sin;
 			z = temp;
 		}
 
@@ -333,8 +333,8 @@ public class ModelOverride
 			sin = sin(rad);
 			x = out[i] - .5f;
 			z = out[i + 1] - .5f;
-			temp = (float) (x * sin + z * cos);
-			x = (float) (x * cos - z * sin);
+			temp = x * sin + z * cos;
+			x = x * cos - z * sin;
 			z = temp;
 			out[i] = x + .5f;
 			out[i + 1] = z + .5f;
