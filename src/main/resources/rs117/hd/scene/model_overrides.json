@@ -30879,14 +30879,31 @@
       "WILDY_HUB_BUSH_01",
       "WILDY_HUB_BUSH_02",
       "WILDY_HUB_BUSH_03",
-      "PMOON_LIZARD_BUSH",
-      "PMOON_GRUB_SAPLING",
       "PLANT_FERN01_SMALL01",
       "PLANT_FERN01_LARGE01",
       "PLANT_FERN_MOONLIGHT01",
       "PLANT_FERN_MOONLIGHT02",
       "PLANT_FERN_MOONLIGHT03",
       "PLANT_FERN_MOONLIGHT04"
+    ]
+  },
+  {
+    "description": "Perilous Moons Grub Sapling",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
+    "objectIds": [
+      "PMOON_GRUB_SAPLING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
     ]
   },
   {
@@ -30901,10 +30918,11 @@
   {
     "description": "Perilous Moons Plants with Rocks",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
       "PLANT_ROCKS_SWAMP02_DARK01",
-      "PLANT_ROCKS_SWAMP01_DARK01"
+      "PLANT_ROCKS_SWAMP01_DARK01",
+      "PMOON_LIZARD_BUSH"
     ],
     "colorOverrides": [
       {
@@ -30938,7 +30956,8 @@
   {
     "description": "Perilous Moons Hanging Vines - Remove Shadows",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "invertDisplacementStrength": true,
     "castShadows": false,
     "objectIds": [
       "ROR_VINE01_HANGING01",
