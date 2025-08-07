@@ -123,7 +123,6 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneCullingManager;
-import rs117.hd.scene.SceneCullingManager.TileVisibility;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
@@ -1755,10 +1754,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					directionalLight.setViewportWidth((int) radius);
 					directionalLight.setViewportHeight((int) radius);
 
-					if (configShadowCulling) {
-						sceneCullingManager.addView(directionalLight);
-					}
-
 					// Extract the 3rd column from the light view matrix (the float array is column-major).
 					// This produces the light's direction vector in world space, which we negate in order to
 					// get the light's direction vector pointing away from each fragment
@@ -1772,8 +1767,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					uboGlobal.projectionMatrix.set(sceneCamera.getViewProjMatrix());
 					uboGlobal.invProjectionMatrix.set(sceneCamera.getInvViewProjMatrix());
 					uboGlobal.upload();
-
-					sceneCullingManager.addView(sceneCamera);
 				}
 
 				uboCompute.yaw.set(sceneCamera.getYaw());
@@ -1797,6 +1790,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), LOCAL_TILE_SIZE);
 				}
+
+				sceneCullingManager.addView(sceneCamera);
+				sceneCullingManager.addView(directionalLight);
 
 				sceneCullingManager.onDraw(sceneContext);
 			}
@@ -1981,11 +1977,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
 
-		boolean isVisibleInScene = sceneCamera.getTileVisibility().isTileSurfaceVisible(plane, tileEeX, tileEeY);
-		boolean isVisibleInDirectional = directionalLight.getTileVisibility().isTileSurfaceVisible(plane, tileEeX, tileEeY);
+		boolean isVisibleInScene = sceneCamera.getCullingResults().isTileSurfaceVisible(plane, tileEeX, tileEeY);
+		boolean isVisibleInDirectional = directionalLight.getCullingResults().isTileSurfaceVisible(plane, tileEeX, tileEeY);
 
 		if (!isVisibleInScene && !isVisibleInDirectional) {
-			if (sceneCamera.getTileVisibility().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
+			if (sceneCamera.getCullingResults().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
 				vertexCount /= 2; // Let see if we can extract the underwater Surface tile
 				isVisibleInScene = true;
 			}
@@ -2031,7 +2027,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
 		int bufferLength = model.getBufferLen();
-		if (redrawPreviousFrame || bufferLength <= 0 || !sceneCamera.getTileVisibility().isTileSurfaceVisible(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET))
+		if (redrawPreviousFrame || bufferLength <= 0 || !sceneCamera
+			.getCullingResults()
+			.isTileSurfaceVisible(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET))
 			return;
 
 		final int localX = tileX * LOCAL_TILE_SIZE;
@@ -3016,15 +3014,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int tileExX,
 		int tileExY
 	) {
-		try {
-			if (enableDetailedTimers)
-				frameTimer.begin(Timer.VISIBILITY_CHECK);
-
-			return sceneCullingManager.combinedTileVisibility.isTileVisibleBlocking(plane, tileExX, tileExY);
-		} finally {
-			if (enableDetailedTimers)
-				frameTimer.end(Timer.VISIBILITY_CHECK);
-		}
+		return sceneCullingManager.isTileVisibleBlocking(plane, tileExX, tileExY);
 	}
 
 	/**
@@ -3060,6 +3050,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		Model model, offsetModel;
 		boolean isTileModel = false;
+		boolean isPlayer = false;
+		boolean isNPC = false;
+		boolean isProjectile = false;
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
@@ -3070,6 +3063,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				isTileModel = true;
 			} else {
 				isTileModel = renderable instanceof GraphicsObject || renderable instanceof DynamicObject;
+				isPlayer = renderable instanceof Player;
+				isNPC = renderable instanceof NPC;
+				isProjectile = renderable instanceof Projectile;
 				offsetModel = model = renderable.getModel();
 			}
 			if (model == null || model.getFaceCount() == 0) {
@@ -3103,11 +3099,45 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 
-		boolean isVisibleInScene = isTileModel ? isStatic ?
-			sceneCamera.getTileVisibility().isTileRenderablesVisible(plane, tileExX, tileExY) :
-			sceneCamera.getTileVisibility().isTileSurfaceVisible(plane, tileExX, tileExY) :
-			sceneCamera.isSphereVisible(x, y, z, modelRadius);
-		boolean isVisibleInShadow = isVisibleInScene || directionalLight.getTileVisibility().isTileRenderablesVisible(plane, tileExX, tileExY);
+		final boolean isVisibleInScene;
+		if (isTileModel) {
+			if (isStatic) {
+				isVisibleInScene = sceneCamera.getCullingResults().isTileRenderablesVisible(plane, tileExX, tileExY);
+			} else {
+				isVisibleInScene = sceneCamera.getCullingResults().isTileSurfaceVisible(plane, tileExX, tileExY);
+			}
+		} else {
+			if (isNPC) {
+				isVisibleInScene = sceneCamera.getCullingResults().isNPCVisible(((NPC) renderable).getId());
+			} else if (isPlayer) {
+				isVisibleInScene = sceneCamera.getCullingResults().isPlayerVisible(((Player) renderable).getId());
+			} else if (isProjectile) {
+				isVisibleInScene = sceneCamera.getCullingResults().isProjectileVisible(((Projectile) renderable).getId());
+			} else {
+				isVisibleInScene = sceneCamera.isSphereVisible(x, y, z, modelRadius);
+			}
+		}
+
+		boolean isVisibleInShadow = isVisibleInScene;
+		if (!isVisibleInShadow) {
+			if (isTileModel) {
+				if (isStatic) {
+					isVisibleInShadow = sceneCamera.getCullingResults().isTileRenderablesVisible(plane, tileExX, tileExY);
+				} else {
+					isVisibleInShadow = sceneCamera.getCullingResults().isTileSurfaceVisible(plane, tileExX, tileExY);
+				}
+			} else {
+				if (isNPC) {
+					isVisibleInShadow = sceneCamera.getCullingResults().isNPCVisible(((NPC) renderable).getId());
+				} else if (isPlayer) {
+					isVisibleInShadow = sceneCamera.getCullingResults().isPlayerVisible(((Player) renderable).getId());
+				} else if (isProjectile) {
+					isVisibleInShadow = sceneCamera.getCullingResults().isProjectileVisible(((Projectile) renderable).getId());
+				} else {
+					isVisibleInShadow = sceneCamera.isSphereVisible(x, y, z, modelRadius);
+				}
+			}
+		}
 
 		if (enableDetailedTimers)
 			frameTimer.end(Timer.VISIBILITY_CHECK);
@@ -3239,10 +3269,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (eightIntWrite[0] != -1)
 				drawnDynamicRenderableCount++;
 
-			if (configCharacterDisplacement && renderable instanceof Actor) {
+			if (configCharacterDisplacement && (isPlayer || isNPC)) {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
-				if (renderable instanceof NPC) {
+				if (isNPC) {
 					var npc = (NPC) renderable;
 					var entry = npcDisplacementCache.get(npc);
 					if (entry.canDisplace) {
@@ -3256,7 +3286,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						}
 						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
-				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
+				} else if (isPlayer && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 				}
 				if (enableDetailedTimers)

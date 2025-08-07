@@ -1,18 +1,8 @@
 package rs117.hd.utils;
 
 import java.util.Arrays;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
-import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneCullingManager;
-import rs117.hd.scene.SceneCullingManager.TileVisibility;
-
-import static net.runelite.api.Constants.*;
-import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import rs117.hd.scene.SceneCullingManager.CullingResults;
 
 @Slf4j
 public class SceneView {
@@ -52,7 +42,7 @@ public class SceneView {
 	private float farPlane = 0.0f;
 	private boolean isOrthographic = false;
 
-	private TileVisibility tileVisibility = new TileVisibility();
+	private CullingResults cullingResults = new CullingResults();
 	private SceneView cullingParent;
 	private int cullingFlags;
 
@@ -60,11 +50,11 @@ public class SceneView {
 		return dirtyFlags != 0;
 	}
 
-	public TileVisibility getTileVisibility() { return tileVisibility; }
+	public CullingResults getCullingResults() { return cullingResults; }
 
-	public SceneView setTileVisibility(TileVisibility newVisibility) {
-		if(newVisibility != tileVisibility) {
-			tileVisibility = newVisibility;
+	public SceneView setCullingResults(CullingResults newVisibility) {
+		if (newVisibility != cullingResults) {
+			cullingResults = newVisibility;
 			dirtyFlags &= ~TILE_VISIBILITY_DIRTY;
 		}
 		return this;
@@ -73,6 +63,8 @@ public class SceneView {
 	public boolean isProjDirty() { return (dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0; }
 
 	public boolean isViewDirty() { return (dirtyFlags & VIEW_MATRIX_DIRTY) != 0; }
+
+	public boolean isTileVisibilityDirty() { return (dirtyFlags & TILE_VISIBILITY_DIRTY) != 0; }
 
 	public int getCullingFlags() {return cullingFlags;}
 

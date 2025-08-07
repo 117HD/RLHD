@@ -3,12 +3,13 @@ package rs117.hd.scene;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -17,7 +18,6 @@ import rs117.hd.utils.Job;
 import rs117.hd.utils.SceneView;
 
 import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.MathUtils.*;
@@ -32,37 +32,48 @@ public class SceneCullingManager {
 	public static final int VISIBILITY_RENDERABLE_VISIBLE = 1 << 2;
 
 	@Inject
+	private Client client;
+
+	@Inject
 	private FrameTimer frameTimer;
 
-	public TileVisibility combinedTileVisibility = new TileVisibility();
+	public CullingResults combinedTileVisibility = new CullingResults();
 
 	// Object Pools
-	private final ArrayDeque<TileVisibility> tileVisibilityBin = new ArrayDeque<>();
+	private final ArrayDeque<CullingResults> tileVisibilityBin = new ArrayDeque<>();
 	private final ArrayDeque<SceneViewContext> sceneViewContextBin = new ArrayDeque<>();
 
 	private final List<SceneView> cullingViews = new ArrayList<>();
 	private final List<SceneViewContext> cullingViewContexts = new ArrayList<>();
 
-	private final ResetVisibilityArrayJob clearJob = new ResetVisibilityArrayJob(this);
+
 	private int frustumCullingJobCount;
-	private FrustumCullingJob[][] frustumCullingJobs;
+	private FrustumTileCullingJob[][] frustumCullingJobs;
+
+	private final ResetVisibilityArrayJob clearJob = new ResetVisibilityArrayJob(this);
+	private final FrustumActorCullingJob playerCullingJob = new FrustumActorCullingJob(this, 0);
+	private final FrustumActorCullingJob npcCullingJob = new FrustumActorCullingJob(this, 1);
+	private final FrustumActorCullingJob projectileCullingJob = new FrustumActorCullingJob(this, 2);
 
 	public void startUp() {
 		int sqJobCount = max(1, (int)sqrt(HdPlugin.PROCESSOR_COUNT - 1));
 		frustumCullingJobCount = sqJobCount * sqJobCount;
-		frustumCullingJobs = new FrustumCullingJob[sqJobCount][sqJobCount];
+		frustumCullingJobs = new FrustumTileCullingJob[sqJobCount][sqJobCount];
 		for(int x = 0; x < sqJobCount; x++) {
 			for(int y = 0; y < sqJobCount; y++) {
-				frustumCullingJobs[x][y] = new FrustumCullingJob(this);
+				frustumCullingJobs[x][y] = new FrustumTileCullingJob(this);
 			}
 		}
 	}
 
 	public void complete() {
 		clearJob.complete();
+		playerCullingJob.complete();
+		npcCullingJob.complete();
+		projectileCullingJob.complete();
 
-		for (FrustumCullingJob[] frustumCullingJob : frustumCullingJobs) {
-			for (FrustumCullingJob cullingJob : frustumCullingJob) {
+		for (FrustumTileCullingJob[] frustumCullingJob : frustumCullingJobs) {
+			for (FrustumTileCullingJob cullingJob : frustumCullingJob) {
 				cullingJob.complete();
 			}
 		}
@@ -81,12 +92,36 @@ public class SceneCullingManager {
 		}
 	}
 
+	public boolean isTileVisibleBlocking(int plane, int tileExX, int tileExY) {
+		int result = combinedTileVisibility.tiles[plane][tileExX][tileExY];
+
+		// Check if the result is usable & known
+		if (result >= VISIBILITY_HIDDEN) {
+			return result > 0;
+		}
+
+		frameTimer.begin(Timer.VISIBILITY_CHECK);
+		// If the Tile is still in-progress then wait for the job to complete
+		long waitStart = System.currentTimeMillis();
+		while (combinedTileVisibility.inFlightTileJobCount > 0 && result == VISIBILITY_UNKNOWN) {
+			Thread.yield();
+			result = combinedTileVisibility.tiles[plane][tileExX][tileExY];
+
+			if (result == VISIBILITY_UNKNOWN && System.currentTimeMillis() - waitStart > 100) {
+				break; // Dead-Lock Prevention
+			}
+		}
+		frameTimer.end(Timer.VISIBILITY_CHECK);
+
+		return result > 0;
+	}
+
 	private SceneViewContext getAvailableSceneViewContext() {
 		return sceneViewContextBin.isEmpty() ? new SceneViewContext() : sceneViewContextBin.pop();
 	}
 
-	private TileVisibility getAvailableTileVisibility() {
-		return tileVisibilityBin.isEmpty() ? new TileVisibility() : tileVisibilityBin.pop();
+	private CullingResults getAvailableCullingResults() {
+		return tileVisibilityBin.isEmpty() ? new CullingResults() : tileVisibilityBin.pop();
 	}
 
 	public void onDraw(SceneContext sceneContext) {
@@ -98,8 +133,11 @@ public class SceneCullingManager {
 		complete();
 
 		// Ensure cullingViews is sorted such that parent SceneViews are processed first
+		boolean needTileCulling = false;
 		for(int i = 0; i < cullingViews.size(); i++) {
 			SceneView currentView = cullingViews.get(i);
+			needTileCulling = needTileCulling || currentView.isTileVisibilityDirty();
+
 			SceneView parent = currentView.getCullingParent();
 			if(parent != null) {
 				int parentIdx = cullingViews.indexOf(parent);
@@ -111,9 +149,11 @@ public class SceneCullingManager {
 			}
 		}
 
-		clearJob.clearTargets.add(combinedTileVisibility);
-		combinedTileVisibility = getAvailableTileVisibility();
-		combinedTileVisibility.inFlightCount = frustumCullingJobCount;
+		if (needTileCulling) {
+			clearJob.clearTargets.add(combinedTileVisibility);
+			combinedTileVisibility = getAvailableCullingResults();
+			combinedTileVisibility.inFlightTileJobCount = frustumCullingJobCount;
+		}
 
 		for(int i = 0; i < cullingViews.size(); i++) {
 			final SceneView view = cullingViews.get(i);
@@ -122,99 +162,152 @@ public class SceneCullingManager {
 			ctx.cullingFlags = view.getCullingFlags();
 			ctx.parentIdx = -1;
 
-			if((ctx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) == 0) {
-				if (view.getTileVisibility() != null) {
-					clearJob.clearTargets.add(view.getTileVisibility());
+			if (needTileCulling) {
+				if (!view.isTileVisibilityDirty()) {
+					ctx.cullingFlags |= SceneView.CULLING_FLAG_FREEZE;
 				}
-				view.setTileVisibility(getAvailableTileVisibility());
-			}
-			ctx.tileVisibility = view.getTileVisibility();
-			ctx.tileVisibility.inFlightCount = frustumCullingJobCount;
 
-			final SceneView parent = view.getCullingParent();
-			if(parent != null) {
-				ctx.parentIdx = cullingViews.indexOf(parent);
+				if ((ctx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) == 0) {
+					if (view.getCullingResults() != null) {
+						clearJob.clearTargets.add(view.getCullingResults());
+					}
+					view.setCullingResults(getAvailableCullingResults());
+				}
+				ctx.results = view.getCullingResults();
+				ctx.results.inFlightTileJobCount = frustumCullingJobCount;
+
+				final SceneView parent = view.getCullingParent();
+				if (parent != null) {
+					ctx.parentIdx = cullingViews.indexOf(parent);
+				}
 			}
+
+			ctx.results.npcs.clear();
+			ctx.results.players.clear();
+			ctx.results.projectiles.clear();
 
 			cullingViewContexts.add(ctx);
 		}
 
-		if(!cullingViewContexts.isEmpty()) {
-			int SceneTileCountPerJob = EXTENDED_SCENE_SIZE / frustumCullingJobs.length;
-			for (int x = 0; x < frustumCullingJobs.length; x++) {
-				for (int y = 0; y < frustumCullingJobs[x].length; y++) {
-					var cullingJob = frustumCullingJobs[x][y];
-					cullingJob.startX = SceneTileCountPerJob * x;
-					cullingJob.startY = SceneTileCountPerJob * y;
+		if (!cullingViewContexts.isEmpty()) {
+			if (needTileCulling) {
+				int SceneTileCountPerJob = EXTENDED_SCENE_SIZE / frustumCullingJobs.length;
+				for (int x = 0; x < frustumCullingJobs.length; x++) {
+					for (int y = 0; y < frustumCullingJobs[x].length; y++) {
+						var cullingJob = frustumCullingJobs[x][y];
+						cullingJob.startX = SceneTileCountPerJob * x;
+						cullingJob.startY = SceneTileCountPerJob * y;
 
-					cullingJob.endX = cullingJob.startX + SceneTileCountPerJob;
-					cullingJob.endY = cullingJob.startY + SceneTileCountPerJob;
+						cullingJob.endX = cullingJob.startX + SceneTileCountPerJob;
+						cullingJob.endY = cullingJob.startY + SceneTileCountPerJob;
 
-					cullingJob.sceneContext = sceneContext;
+						cullingJob.sceneContext = sceneContext;
 
-					cullingJob.submit();
+						cullingJob.submit();
+					}
 				}
+			}
+
+			// Build Actor Culling Job
+			var worldView = client.getTopLevelWorldView();
+			for (Player player : worldView.players()) {
+				FrustumActorCullingJob.BoundingSphere sphere = FrustumActorCullingJob.getOrCreateBoundingSphere();
+				var lp = player.getLocalLocation();
+				sphere.x = lp.getX();
+				sphere.y = lp.getWorldView();
+				sphere.z = lp.getY();
+				sphere.height = player.getModelHeight();
+				sphere.id = player.getId();
+				playerCullingJob.spheres.add(sphere);
+			}
+
+			if (!playerCullingJob.spheres.isEmpty()) {
+				playerCullingJob.submit();
+			}
+
+			for (NPC npc : worldView.npcs()) {
+				FrustumActorCullingJob.BoundingSphere sphere = FrustumActorCullingJob.getOrCreateBoundingSphere();
+				var lp = npc.getLocalLocation();
+				sphere.x = lp.getX();
+				sphere.y = lp.getWorldView();
+				sphere.z = lp.getY();
+				sphere.height = npc.getModelHeight();
+				sphere.id = npc.getId();
+				npcCullingJob.spheres.add(sphere);
+			}
+
+			if (!npcCullingJob.spheres.isEmpty()) {
+				npcCullingJob.submit();
+			}
+
+			for (Projectile projectile : sceneContext.knownProjectiles) {
+				FrustumActorCullingJob.BoundingSphere sphere = FrustumActorCullingJob.getOrCreateBoundingSphere();
+				sphere.x = (float) projectile.getX();
+				sphere.y = (float) projectile.getZ();
+				sphere.z = (float) projectile.getY();
+				sphere.height = projectile.getModelHeight();
+				sphere.id = projectile.getId();
+				projectileCullingJob.spheres.add(sphere);
+			}
+
+			if (!projectileCullingJob.spheres.isEmpty()) {
+				projectileCullingJob.submit();
+			}
+
+			for (WorldEntity entity : worldView.worldEntities()) {
+				log.debug(entity.toString());
 			}
 		}
 
-		clearJob.submit();
+
+		if (!clearJob.clearTargets.isEmpty()) {
+			clearJob.submit();
+		}
 		cullingViews.clear();
 	}
 
 	private static class SceneViewContext {
 		public float[][] frustumPlanes;
-		public TileVisibility tileVisibility;
+		public CullingResults results;
 		public int parentIdx;
 		public int cullingFlags;
 	}
 
-	public static final class TileVisibility {
-		private final int[][][] results = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
-		private int inFlightCount = 0;
+	public static final class CullingResults {
+		private final int[][][] tiles = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+		private final HashMap<Integer, Boolean> players = new HashMap<>();
+		private final HashMap<Integer, Boolean> npcs = new HashMap<>();
+		private final HashMap<Integer, Boolean> projectiles = new HashMap<>();
 
-		public TileVisibility() {
+		private int inFlightTileJobCount = 0;
+
+		public CullingResults() {
 			reset();
 		}
 
-		public boolean isTileVisibleBlocking(int plane, int tileExX, int tileExY) {
-			int result = results[plane][tileExX][tileExY];
+		public boolean isPlayerVisible(int id) { return players.getOrDefault(id, true); }
 
-			// Check if the result is usable & known
-			if (result >= VISIBILITY_HIDDEN) {
-				return result > 0;
-			}
+		public boolean isNPCVisible(int id) { return npcs.getOrDefault(id, true); }
 
-			// If the Tile is still in-progress then wait for the job to complete
-			long waitStart = System.currentTimeMillis();
-			while (inFlightCount > 0 && result == VISIBILITY_UNKNOWN) {
-				Thread.yield();
-				result = results[plane][tileExX][tileExY];
-
-				if(result == VISIBILITY_UNKNOWN && System.currentTimeMillis() - waitStart > 100) {
-					break; // Dead-Lock Prevention
-				}
-			}
-
-			return result > 0;
-		}
+		public boolean isProjectileVisible(int id) { return projectiles.getOrDefault(id, true); }
 
 		public boolean isTileSurfaceVisible(int plane, int tileExX, int tileExY) {
-			return (results[plane][tileExX][tileExY] & VISIBILITY_TILE_VISIBLE) != 0;
+			return (tiles[plane][tileExX][tileExY] & VISIBILITY_TILE_VISIBLE) != 0;
 		}
 
 		public boolean isTileUnderwaterVisible(int plane, int tileExX, int tileExY) {
-			return (results[plane][tileExX][tileExY] & VISIBILITY_UNDER_WATER_TILE_VISIBLE) != 0;
+			return (tiles[plane][tileExX][tileExY] & VISIBILITY_UNDER_WATER_TILE_VISIBLE) != 0;
 		}
 
 		public boolean isTileRenderablesVisible(int plane, int tileExX, int tileExY) {
-			return (results[plane][tileExX][tileExY] & VISIBILITY_RENDERABLE_VISIBLE) != 0;
+			return (tiles[plane][tileExX][tileExY] & VISIBILITY_RENDERABLE_VISIBLE) != 0;
 		}
 
 		public void reset() {
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for(int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; tileExX++) {
 					for(int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++) {
-						results[plane][tileExX][tileExY] = VISIBILITY_UNKNOWN;
+						tiles[plane][tileExX][tileExY] = VISIBILITY_UNKNOWN;
 					}
 				}
 			}
@@ -225,11 +318,11 @@ public class SceneCullingManager {
 	public static final class ResetVisibilityArrayJob extends Job {
 		private final SceneCullingManager cullManager;
 
-		public List<TileVisibility> clearTargets = new ArrayList<>();
+		public List<CullingResults> clearTargets = new ArrayList<>();
 
 		@Override
 		protected void doWork() {
-			for(TileVisibility target : clearTargets) {
+			for (CullingResults target : clearTargets) {
 				target.reset();
 			}
 		}
@@ -243,7 +336,7 @@ public class SceneCullingManager {
 	}
 
 	@RequiredArgsConstructor
-	public static final class FrustumCullingJob extends Job {
+	public static final class FrustumTileCullingJob extends Job {
 		private final SceneCullingManager cullManager;
 
 		public SceneContext sceneContext;
@@ -289,19 +382,19 @@ public class SceneCullingManager {
 						int combinedResult = VISIBILITY_HIDDEN;
 						for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
 							if((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
-								combinedResult |= viewCtx.tileVisibility.results[plane][tileExX][tileExY];
+								combinedResult |= viewCtx.results.tiles[plane][tileExX][tileExY];
 								continue;
 							}
 
 							// Check if Parent view has already determined that it's visible if so we can use that result and early out
 							if(viewCtx.parentIdx != -1) {
 								SceneViewContext parentViewCtx = cullManager.cullingViewContexts.get(viewCtx.parentIdx);
-								int parentViewResult = parentViewCtx.tileVisibility.results[plane][tileExX][tileExY];
+								int parentViewResult = parentViewCtx.results.tiles[plane][tileExX][tileExY];
 								if(parentViewResult != VISIBILITY_HIDDEN) {
 									if(plane == 0 && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) == 0){
 										parentViewResult &= ~VISIBILITY_TILE_VISIBLE;
 									}
-									viewCtx.tileVisibility.results[plane][tileExX][tileExY] = parentViewResult;
+									viewCtx.results.tiles[plane][tileExX][tileExY] = parentViewResult;
 									continue; // Early out, no need to perform any culling
 								}
 							}
@@ -344,17 +437,70 @@ public class SceneCullingManager {
 							}
 
 							combinedResult |= viewResult;
-							viewCtx.tileVisibility.results[plane][tileExX][tileExY] = viewResult;
+							viewCtx.results.tiles[plane][tileExX][tileExY] = viewResult;
 						}
-						cullManager.combinedTileVisibility.results[plane][tileExX][tileExY] = combinedResult;
+						cullManager.combinedTileVisibility.tiles[plane][tileExX][tileExY] = combinedResult;
 					}
 				}
 			}
 
 			for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-				viewCtx.tileVisibility.inFlightCount--;
+				viewCtx.results.inFlightTileJobCount--;
 			}
-			cullManager.combinedTileVisibility.inFlightCount--;
+			cullManager.combinedTileVisibility.inFlightTileJobCount--;
+		}
+	}
+
+	@RequiredArgsConstructor
+	public static final class FrustumActorCullingJob extends Job {
+		private static final ArrayDeque<BoundingSphere> BOUNDING_SPHERE_BIN = new ArrayDeque<>();
+
+		public static BoundingSphere getOrCreateBoundingSphere() {
+			return BOUNDING_SPHERE_BIN.isEmpty() ? new BoundingSphere() : BOUNDING_SPHERE_BIN.pop();
+		}
+
+		private final SceneCullingManager cullManager;
+		private final int type;
+
+		public static class BoundingSphere {
+			public float x, y, z;
+			public int height;
+			public int id;
+		}
+
+		public List<BoundingSphere> spheres = new ArrayList<>();
+
+		@Override
+		protected void doWork() {
+			for (BoundingSphere actor : spheres) {
+				for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
+					final boolean visible = HDUtils.isSphereInsideFrustum(
+						actor.x,
+						actor.y,
+						actor.z,
+						actor.height,
+						viewCtx.frustumPlanes
+					);
+
+					switch (type) {
+						case 0:
+							viewCtx.results.players.put(actor.id, visible);
+							break;
+						case 1:
+							viewCtx.results.npcs.put(actor.id, visible);
+							break;
+						case 2:
+							viewCtx.results.projectiles.put(actor.id, visible);
+							break;
+					}
+				}
+			}
+		}
+
+		@Override
+		protected void onComplete() {
+			BOUNDING_SPHERE_BIN.addAll(spheres);
+			spheres.clear();
 		}
 	}
 }
