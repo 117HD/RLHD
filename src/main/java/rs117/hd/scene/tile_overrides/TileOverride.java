@@ -165,7 +165,7 @@ public class TileOverride {
 					}
 				}
 
-				var result = parseExpression(ExpressionParser.mergeJsonExpressions(entry.getValue(), "||"), constants);
+				var result = parseExpression(ExpressionParser.mergeJsonExpressions("||", entry.getValue()), constants);
 				if (Props.DEVELOPMENT && result instanceof ExpressionParser.Expression) {
 					var expr = (ExpressionParser.Expression) result;
 					// Ensure all variables are defined

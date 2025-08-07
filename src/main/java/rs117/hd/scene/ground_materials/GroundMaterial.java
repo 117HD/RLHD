@@ -7,8 +7,8 @@ import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.data.materials.Material;
 import rs117.hd.scene.GroundMaterialManager;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.GsonUtils;
 
 @Getter

@@ -46,9 +46,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.uniforms.UBOMaterials;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -74,10 +74,10 @@ public class TextureManager {
 	private ScheduledExecutorService executorService;
 
 	@Inject
-	private HdPlugin plugin;
+	private HdPluginConfig config;
 
 	@Inject
-	private HdPluginConfig config;
+	private MaterialManager materialManager;
 
 	@Inject
 	private WaterTypeManager waterTypeManager;
@@ -149,7 +149,7 @@ public class TextureManager {
 		final int index;
 	}
 
-	private final int[] materialOrdinalToMaterialUniformIndex = new int[Material.values().length];
+	private int[] materialOrdinalToMaterialUniformIndex = {};
 	private int[] vanillaTextureIndexToMaterialUniformIndex = {};
 
 	public int getMaterialIndex(@Nonnull Material material, int vanillaTextureIndex) {
@@ -157,7 +157,7 @@ public class TextureManager {
 			vanillaTextureIndex >= 0 &&
 			vanillaTextureIndex < vanillaTextureIndexToMaterialUniformIndex.length)
 			return vanillaTextureIndexToMaterialUniformIndex[vanillaTextureIndex];
-		return materialOrdinalToMaterialUniformIndex[material.ordinal()];
+		return materialOrdinalToMaterialUniformIndex[material.index];
 	}
 
 	public int getTextureLayer(@Nullable Material material) {
@@ -165,7 +165,7 @@ public class TextureManager {
 			return -1;
 		assert materialOrdinalToTextureLayer != null : "Textures must be loaded";
 		material = material.resolveTextureMaterial();
-		return materialOrdinalToTextureLayer[material.ordinal()];
+		return materialOrdinalToTextureLayer[material.index];
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -197,34 +197,34 @@ public class TextureManager {
 		assert vanillaTexturesAvailable();
 		var textureProvider = client.getTextureProvider();
 		Texture[] vanillaTextures = textureProvider.getTextures();
-		Material.updateMappings(vanillaTextures, plugin);
+		materialManager.updateMappings(vanillaTextures);
 
 		// Add material uniforms for all active material definitions
 		materialUniformEntries = new ArrayList<>();
-		for (var material : Material.getActiveMaterials())
+		for (var material : materialManager.getActiveMaterials())
 			materialUniformEntries.add(new MaterialEntry(material, material.vanillaTextureIndex));
 
 		// Add texture layers for each material that adds its own texture, after resolving replacements
 		ArrayList<TextureLayer> textureLayers = new ArrayList<>();
-		materialOrdinalToTextureLayer = new int[Material.values().length];
+		materialOrdinalToTextureLayer = new int[MaterialManager.MATERIALS.length];
 		Arrays.fill(materialOrdinalToTextureLayer, -1);
-		for (var textureMaterial : Material.getTextureMaterials()) {
+		for (var textureMaterial : materialManager.getTextureMaterials()) {
 			int layerIndex = textureLayers.size();
 			textureLayers.add(new TextureLayer(textureMaterial, textureMaterial.vanillaTextureIndex, layerIndex));
-			materialOrdinalToTextureLayer[textureMaterial.ordinal()] = layerIndex;
+			materialOrdinalToTextureLayer[textureMaterial.index] = layerIndex;
 		}
 
 		// Prepare mappings for materials that don't provide their own textures
-		for (var material : Material.values())
-			if (materialOrdinalToTextureLayer[material.ordinal()] == -1)
-				materialOrdinalToTextureLayer[material.ordinal()] =
-					materialOrdinalToTextureLayer[material.resolveTextureMaterial().ordinal()];
+		for (var material : MaterialManager.MATERIALS)
+			if (materialOrdinalToTextureLayer[material.index] == -1)
+				materialOrdinalToTextureLayer[material.index] =
+					materialOrdinalToTextureLayer[material.resolveTextureMaterial().index];
 
 		// Add material uniforms and texture layers for any vanilla textures lacking a material definition
 		vanillaTextureIndexToTextureLayer = new int[vanillaTextures.length];
 		Arrays.fill(vanillaTextureIndexToTextureLayer, -1);
 		for (int i = 0; i < vanillaTextures.length; i++) {
-			if (Material.fromVanillaTexture(i) == Material.VANILLA) {
+			if (materialManager.fromVanillaTexture(i) == Material.VANILLA) {
 				materialUniformEntries.add(new MaterialEntry(Material.VANILLA, i));
 				int layerIndex = textureLayers.size();
 				textureLayers.add(new TextureLayer(Material.VANILLA, i, layerIndex));
@@ -341,6 +341,7 @@ public class TextureManager {
 		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
 
 		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
+		materialOrdinalToMaterialUniformIndex = new int[MaterialManager.MATERIALS.length];
 		updateUBOMaterials();
 		waterTypeManager.update();
 
@@ -355,7 +356,7 @@ public class TextureManager {
 	}
 
 	private BufferedImage loadTextureImage(Material material) {
-		String textureName = material.name().toLowerCase();
+		String textureName = material.name.toLowerCase();
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
 			ResourcePath path = TEXTURE_PATH.resolve(textureName + "." + ext);
 			try {
@@ -426,14 +427,14 @@ public class TextureManager {
 
 		for (int i = 0; i < materialUniformEntries.size(); i++) {
 			MaterialEntry entry = materialUniformEntries.get(i);
-			materialOrdinalToMaterialUniformIndex[entry.material.ordinal()] = i;
+			materialOrdinalToMaterialUniformIndex[entry.material.index] = i;
 			if (entry.vanillaIndex != -1)
 				vanillaTextureIndexToMaterialUniformIndex[entry.vanillaIndex] = i;
 			fillMaterialStruct(uboMaterials.materials[i], entry);
 		}
-		for (var material : Material.values())
-			materialOrdinalToMaterialUniformIndex[material.ordinal()] =
-				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().ordinal()];
+		for (var material : MaterialManager.MATERIALS)
+			materialOrdinalToMaterialUniformIndex[material.index] =
+				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().index];
 
 		uboMaterials.upload();
 	}

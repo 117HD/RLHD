@@ -1,8 +1,8 @@
 package rs117.hd.opengl.uniforms;
 
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.Material;
 import rs117.hd.scene.TextureManager;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.buffer.GLBuffer;
 
