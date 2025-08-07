@@ -53494,6 +53494,8 @@
     "description": "Tempoross - Pier",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
     "uvScale": 0.8,
     "objectIds": [
       "TEMPOROSS_DOCK_02",
