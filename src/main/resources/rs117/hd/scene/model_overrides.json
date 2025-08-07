@@ -31387,16 +31387,6 @@
     ]
   },
   {
-    "description": "Sulfur Nagua - Hide baked lighting - TODO: proper fix using hide vanilla shadows",
-    "npcIds": [ "PMOON_SULPHUR_NAGUA" ],
-    "colorOverrides": [
-      {
-        "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
-      }
-    ]
-  },
-  {
     "description": "Mastering Mixology Walls with brick walls in front of them",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
