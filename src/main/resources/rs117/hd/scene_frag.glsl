@@ -42,7 +42,6 @@ flat in vec3 T;
 flat in vec3 B;
 
 in FragmentData {
-    vec4 positionCS;
     vec3 position;
     vec2 uv;
     vec3 normal;
