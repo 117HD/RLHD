@@ -367,6 +367,17 @@ public interface HdPluginConfig extends Config
 		return 20;
 	}
 
+	@ConfigItem(
+		keyName = "renderSkybox",
+		name = "Render Skybox",
+		description = "Renders skybox instead of a solid fog.",
+		position = 14,
+		section = generalSettings
+	)
+	default boolean renderSkybox()
+	{
+		return true;
+	}
 
 	/*====== Lighting settings ======*/
 
@@ -933,6 +944,16 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	@ConfigItem(
+		keyName = "overwriteSkybox",
+		name = "Overwrite Skybox",
+		description = "Specify a Skybox id to overwrite the rendering with",
+		section = miscellaneousSettings
+	)
+	default String overwriteSkybox()
+	{
+		return "";
+	}
 
 	/*====== Experimental settings ======*/
 

@@ -45,7 +45,9 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Stack;
 import java.util.function.BiConsumer;
@@ -63,6 +65,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.system.Platform;
+import java.util.List;
+import java.util.ArrayList;
 
 @Slf4j
 public class ResourcePath {
@@ -439,6 +443,28 @@ public class ResourcePath {
 		}
 
 		return String.join("/", resolvedParts);
+	}
+
+	/**
+	 * List all subdirectories of this ResourcePath if it is a directory on the filesystem.
+	 * @return List of ResourcePath objects for each subdirectory, or empty list if not a directory or not a filesystem resource.
+	 */
+	public List<ResourcePath> listSubdirectories() {
+		List<ResourcePath> dirs = new ArrayList<>();
+		if (!isFileSystemResource())
+			return dirs;
+
+		File file = toFile();
+		if (!file.isDirectory())
+			return dirs;
+
+		File[] subdirs = file.listFiles(File::isDirectory);
+		if (subdirs != null) {
+			for (File subdir : subdirs) {
+				dirs.add(new ResourcePath(subdir.getAbsolutePath()));
+			}
+		}
+		return dirs;
 	}
 
 	private static String normalizeSlashes(String path) {

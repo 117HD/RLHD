@@ -24,8 +24,6 @@
  */
 package rs117.hd.scene;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.nio.IntBuffer;
@@ -49,19 +47,21 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.uniforms.UBOMaterials;
+import rs117.hd.scene.skybox.SkyboxManager;
+import rs117.hd.utils.ImageUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.scene.skybox.SkyboxManager.SKYBOX_PATH;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 @Singleton
 public class TextureManager {
-	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
-	private static final ResourcePath TEXTURE_PATH = Props
+	public static final ResourcePath TEXTURE_PATH = Props
 		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
 
 	@Inject
@@ -85,7 +85,14 @@ public class TextureManager {
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
+	@Inject
+	private SkyboxManager skyboxManager;
+
+	@Inject
+	private EnvironmentManager environmentManager;
+
 	public UBOMaterials uboMaterials;
+
 
 	private int textureArray;
 	private int textureSize;
@@ -98,7 +105,7 @@ public class TextureManager {
 	private ArrayList<MaterialEntry> materialUniformEntries;
 	private int[] materialOrdinalToTextureLayer;
 	private int[] vanillaTextureIndexToTextureLayer;
-	private ScheduledFuture<?> pendingReload;
+	public ScheduledFuture<?> pendingReload;
 
 	public void startUp() {
 		ensureMaterialsAreLoaded();
@@ -110,6 +117,22 @@ public class TextureManager {
 			if (pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone())
 				pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
 		});
+
+		SKYBOX_PATH.watch((path, first) -> {
+			skyboxManager.loadSkyboxConfig(plugin.getGson(), path);
+			if(first) {
+				clientThread.invoke(skyboxManager::ensureSkyboxesAreLoaded);
+			}else if(pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone()) {
+				pendingReload = executorService.schedule(this::reloadTextures, 100, TimeUnit.MILLISECONDS);
+				clientThread.invoke(() -> {
+					environmentManager.reset();
+					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null) {
+						environmentManager.loadSceneEnvironments(plugin.getSceneContext());
+					}
+				});
+			}
+		});
+
 	}
 
 	public void shutDown() {
@@ -119,6 +142,7 @@ public class TextureManager {
 	public void reloadTextures() {
 		clientThread.invoke(() -> {
 			freeTextures();
+			skyboxManager.ensureSkyboxesAreLoaded();
 			ensureMaterialsAreLoaded();
 			modelOverrideManager.reload();
 		});
@@ -133,7 +157,7 @@ public class TextureManager {
 			uboMaterials.destroy();
 		uboMaterials = null;
 
-		materialOrdinalToTextureLayer = null;
+		skyboxManager.freeTextures();
 	}
 
 	@RequiredArgsConstructor
@@ -276,7 +300,7 @@ public class TextureManager {
 			BufferedImage image = null;
 			// Check if HD provides a texture for the material
 			if (material != Material.VANILLA) {
-				image = loadTextureImage(material);
+				image = ImageUtils.loadTextureImage(TEXTURE_PATH,material.name().toLowerCase());
 				if (image == null && material.vanillaTextureIndex == -1) {
 					log.warn("No texture found for material: {}", material);
 					continue;
@@ -354,31 +378,8 @@ public class TextureManager {
 		textureProvider.setBrightness(vanillaBrightness);
 	}
 
-	private BufferedImage loadTextureImage(Material material) {
-		String textureName = material.name().toLowerCase();
-		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
-			ResourcePath path = TEXTURE_PATH.resolve(textureName + "." + ext);
-			try {
-				return path.loadImage();
-			} catch (Exception ex) {
-				log.trace("Unable to load texture: {}", path, ex);
-			}
-		}
-
-		return null;
-	}
-
 	private void uploadTexture(TextureLayer layer, BufferedImage image) {
-		// TODO: scale and transform on the GPU for better performance
-		AffineTransform t = new AffineTransform();
-		if (image != vanillaImage) {
-			// Flip non-vanilla textures horizontally to match vanilla UV orientation
-			t.translate(textureSize, 0);
-			t.scale(-1, 1);
-		}
-		t.scale((double) textureSize / image.getWidth(), (double) textureSize / image.getHeight());
-		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
-		scaleOp.filter(image, scaledImage);
+		ImageUtils.scaleTexture(scaledImage,vanillaImage,image, textureSize, true, false);
 
 		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
 		pixelBuffer.put(pixels).flip();

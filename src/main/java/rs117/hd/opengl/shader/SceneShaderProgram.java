@@ -3,12 +3,15 @@ package rs117.hd.opengl.shader;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SKYBOX;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILED_LIGHTING_MAP;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SKYBOX;
 
 public class SceneShaderProgram extends ShaderProgram {
 	private final UniformTexture uniTextureArray = addUniformTexture("textureArray");
 	private final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 	private final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
+	private final UniformTexture uniSkyboxArray = addUniformTexture("skyboxArray");
 
 	public SceneShaderProgram() {
 		super(t -> t
@@ -22,5 +25,6 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTextureArray.set(TEXTURE_UNIT_GAME);
 		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+		uniSkyboxArray.set(TEXTURE_UNIT_SKYBOX);
 	}
 }

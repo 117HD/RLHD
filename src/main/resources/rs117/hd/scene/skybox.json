@@ -1,0 +1,30 @@
+{
+  "skyboxes": [
+    {
+      "name": "rs3_greenlands",
+      "dir": "rs3_greenlands"
+    },
+    {
+      "name": "rs3_magicblue",
+      "dir": "rs3_magicblue",
+      "rotation": 260.3,
+      "rotationSpeed": 0.056
+    },
+    {
+      "name": "rs3_magicblue_post",
+      "dir": "rs3_magicblue",
+      "rotation": 160.3,
+      "postProcessing": {
+        "hue": 120.0,
+        "saturation": 1.2,
+        "lightness": 0.1,
+        "contrast": 1.1,
+        "tintColor": [0.6, 0.8, 1.0]
+      }
+    },
+    {
+      "name": "debug",
+      "dir": "debug"
+    }
+  ]
+}

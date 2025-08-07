@@ -3,6 +3,7 @@
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;
+    ivec4 sceneAABB; // Min Max Along X & Z
 
     float colorBlindnessIntensity;
     float gammaCorrection;
