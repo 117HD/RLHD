@@ -35661,6 +35661,7 @@
     "alignment": "CENTER",
     "radius": 600,
     "strength": 10,
+    "visibleFromOtherPlanes": true,
     "color": [
       252,
       148,
@@ -35680,6 +35681,7 @@
     "alignment": "CENTER",
     "radius": 300,
     "strength": 12,
+    "visibleFromOtherPlanes": true,
     "color": [
       252,
       148,
@@ -35887,8 +35889,9 @@
     "description": "ANTECHAMBER_ORANGE_BRAZIERS",
     "objectIds": [ "BRAZIER_DUNGEON01_PMOON01" ],
     "color": "#e58500",
-    "strength": 20,
-    "radius": 1000,
+    "visibleFromOtherPlanes": true,
+    "strength": 17.5,
+    "radius": 900,
     "offset": [ 0, 287, 0 ]
   },
   {
