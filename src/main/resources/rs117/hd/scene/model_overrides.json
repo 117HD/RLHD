@@ -53247,7 +53247,7 @@
     "areas": [ "TEMPOROSS_COVE" ],
     "baseMaterial": "GRAY_75",
     "windDisplacementMode": "OBJECT",
-    "windDisplacementModifier": 1,
+    "windDisplacementModifier": 2,
     "flatNormals": true,
     "objectIds": [
       "HUNTING_JUNGLE_GRASS1",

@@ -19054,27 +19054,49 @@
     "description": "TEMPOROSS_MAIN",
     "height": 50,
     "alignment": "CENTER",
-    "radius": 900,
-    "strength": 10,
+    "radius": 1100,
+    "strength": 7,
     "color": [
       0,
       255,
       255
     ],
     "type": "PULSE",
-    "duration": 3200,
-    "range": 20,
-    "fadeInDuration": 300,
-    "fadeOutDuration": 300,
+    "duration": 2000,
+    "range": 5,
+    "fadeInDuration": 700,
+    "fadeOutDuration": 200,
     "npcIds": [
       "TEMPOROSS_BOSS_READY"
-    ]
+    ],
+    "animationIds": [ -1, "FSB_LIGHTENING_CAST", "FSB_TORRENT_CAST" ]
   },
   {
-    "description": "TEMPOROSS_ACCENT",
+    "description": "TEMPOROSS_SPAWN",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 1000,
+    "npcIds": [
+      "TEMPOROSS_BOSS_READY"
+    ],
+    "animationIds": [ "FSB_SPAWN", "FSB_WHIRL_TO_READY" ]
+  },
+  {
+    "description": "TEMPOROSS_ACCENT_TOP",
     "height": 800,
     "alignment": "SOUTH",
-    "radius": 700,
+    "radius": 450,
     "strength": 6,
     "color": [
       0,
@@ -19082,8 +19104,28 @@
       255
     ],
     "type": "PULSE",
-    "duration": 3200,
-    "range": 20,
+    "duration": 2000,
+    "range": 5,
+    "npcIds": [
+      "TEMPOROSS_BOSS_READY",
+      "TEMPOROSS_BOSS_ENRAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_ACCENT_FRONT",
+    "offset": [ 0, 375, 300 ],
+    "radius": 375,
+    "strength": 2.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "fadeOutDuration": 2000,
+    "range": 10,
     "npcIds": [
       "TEMPOROSS_BOSS_READY",
       "TEMPOROSS_BOSS_ENRAGED",
@@ -19103,6 +19145,7 @@
     ],
     "type": "PULSE",
     "duration": 3200,
+    "fadeOutDuration": 2000,
     "range": 20,
     "npcIds": [
       "TEMPOROSS_BOSS_ENRAGED",
@@ -19122,6 +19165,8 @@
     ],
     "type": "PULSE",
     "duration": 3200,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
     "range": 20,
     "npcIds": [
       "TEMPOROSS_BOSS_ENRAGED",
@@ -19129,11 +19174,31 @@
     ]
   },
   {
+    "description": "TEMPOROSS_WHIRLPOOL_DEAD",
+    "height": 110,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 3.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "range": 20,
+    "npcIds": [
+      "TEMPOROSS_BOSS_UNENGAGED"
+    ]
+  },
+  {
     "description": "TEMPOROSS_SPIRIT_POOL_INACTIVE",
     "height": 20,
     "alignment": "CENTER",
     "radius": 250,
-    "strength": 3.5,
+    "strength": 5.5,
     "color": [
       0,
       255,
@@ -19214,6 +19279,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "spawnDelay": 100,
     "fadeOutDuration": 700,
     "npcIds": [ "TEMPOROSS_LIGHTNING_CLOUD" ],
     "animationIds": [ "TEMPOROSS_LIGHTNING_CLOUD_ATTACK" ]
