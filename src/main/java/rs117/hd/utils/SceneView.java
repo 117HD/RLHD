@@ -10,7 +10,8 @@ public class SceneView {
 	public static final int CULLING_FLAG_GROUND_PLANES = 1;
 	public static final int CULLING_FLAG_UNDERWATER_PLANES = 1 << 1;
 	public static final int CULLING_FLAG_RENDERABLES = 1 << 2;
-	public static final int CULLING_FLAG_FREEZE = 1 << 3;
+	public static final int CULLING_FLAG_OCCLUSION_CULLING = 1 << 3;
+	public static final int CULLING_FLAG_FREEZE = 1 << 4;
 
 	private static final int PROJECTION_MATRIX_DIRTY = 1;
 	private static final int VIEW_MATRIX_DIRTY = 1 << 1;
@@ -259,7 +260,7 @@ public class SceneView {
 		dirtyFlags |= TILE_VISIBILITY_DIRTY;
 	}
 
-	public boolean isRenderableVisible(
+	public final boolean isRenderableVisible(
 		Renderable renderable,
 		boolean isStatic,
 		int plane,
@@ -285,12 +286,7 @@ public class SceneView {
 				return cullingResults.isProjectileVisible(((Projectile) renderable).getId());
 			}
 		}
-		return isSphereVisible(x, y, z, modelRadius);
-	}
-
-	public boolean isSphereVisible(float x, float y, float z, int radius) {
-		calculateFrustumPlanes();
-		return HDUtils.isSphereInsideFrustum(x, y, z, radius, frustumPlanes);
+		return HDUtils.isSphereInsideFrustum(x, y, z, modelRadius, frustumPlanes);
 	}
 
 	public SceneView setOrientation(float[] newOrientation) {

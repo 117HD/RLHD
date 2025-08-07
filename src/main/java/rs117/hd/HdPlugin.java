@@ -1792,7 +1792,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				sceneCullingManager.addView(sceneCamera);
-				sceneCullingManager.addView(directionalLight);
+				if (configShadowCulling) {
+					sceneCullingManager.addView(directionalLight);
+				}
 
 				sceneCullingManager.onDraw(sceneContext);
 			}
@@ -1978,7 +1980,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int tileEeY = tileY + SCENE_OFFSET;
 
 		boolean isVisibleInScene = sceneCamera.getCullingResults().isTileSurfaceVisible(plane, tileEeX, tileEeY);
-		boolean isVisibleInDirectional = directionalLight.getCullingResults().isTileSurfaceVisible(plane, tileEeX, tileEeY);
+		boolean isVisibleInDirectional =
+			(isVisibleInScene && plane != 0) || (
+				configShadowCulling && directionalLight
+					.getCullingResults()
+					.isTileSurfaceVisible(plane, tileEeX, tileEeY)
+			);
 
 		if (!isVisibleInScene && !isVisibleInDirectional) {
 			if (sceneCamera.getCullingResults().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
@@ -3049,10 +3056,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.begin(Timer.GET_MODEL);
 
 		Model model, offsetModel;
-		boolean isTileModel = false;
-		boolean isPlayer = false;
-		boolean isNPC = false;
-		boolean isProjectile = false;
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
@@ -3060,12 +3063,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
-				isTileModel = true;
 			} else {
-				isTileModel = renderable instanceof GraphicsObject || renderable instanceof DynamicObject;
-				isPlayer = renderable instanceof Player;
-				isNPC = renderable instanceof NPC;
-				isProjectile = renderable instanceof Projectile;
 				offsetModel = model = renderable.getModel();
 			}
 			if (model == null || model.getFaceCount() == 0) {
@@ -3110,7 +3108,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			z,
 			modelRadius
 		);
-		final boolean isVisibleInShadow = isVisibleInScene || directionalLight.isRenderableVisible(
+		final boolean isVisibleInShadow = isVisibleInScene || (
+			configShadowCulling && directionalLight.isRenderableVisible(
 			renderable,
 			isStatic,
 			plane,
@@ -3120,6 +3119,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			y,
 			z,
 			modelRadius
+			)
 		);
 
 		if (enableDetailedTimers)
@@ -3252,10 +3252,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (eightIntWrite[0] != -1)
 				drawnDynamicRenderableCount++;
 
-			if (configCharacterDisplacement && (isPlayer || isNPC)) {
+			if (configCharacterDisplacement && renderable instanceof Actor) {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
-				if (isNPC) {
+				if (renderable instanceof NPC) {
 					var npc = (NPC) renderable;
 					var entry = npcDisplacementCache.get(npc);
 					if (entry.canDisplace) {
@@ -3269,7 +3269,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						}
 						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
-				} else if (isPlayer && renderable != client.getLocalPlayer()) {
+				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
 					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
 				}
 				if (enableDetailedTimers)
