@@ -466,7 +466,12 @@ void main() {
             distanceFromBoundary = min(distanceFromBoundary, sceneAABB.w - IN.position.z);
 
             if(distanceFromBoundary > skyboxTileBoundary || distance > skyboxCameraBoundary) {
-                blendColor = sampleSky(-viewDir, fogColor);
+                 float tileBlendFactor = smoothstep(skyboxTileBoundary, skyboxTileBoundary + 1024.0, distanceFromBoundary);
+                 float cameraBlendFactor = smoothstep(skyboxCameraBoundary, skyboxCameraBoundary + 2048.0, distance);
+                 float skyboxBlendFactor = max(tileBlendFactor, cameraBlendFactor);
+                 vec3 skyboxColor = sampleSky(-viewDir, fogColor);
+                 blendColor = mix(fogColor, skyboxColor, skyboxBlendFactor);
+                 combinedFog = mix(combinedFog, combinedFog * 0.8, skyboxBlendFactor);
             } else {
                 combinedFog = 0.0;
             }

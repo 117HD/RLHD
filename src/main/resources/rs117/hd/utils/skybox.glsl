@@ -94,5 +94,13 @@ vec3 sampleSky(vec3 viewDir, vec3 baseColor) {
         nextSkyColor = blurSkybox(skyboxArray, skyboxDir, nextSkybox.index, nextRotation, nextSkybox);
     }
 
-    return clamp(hermite(activeSkyColor, nextSkyColor, blendFactor), 0.0, 1.0);
+    vec3 skyboxColor = clamp(hermite(activeSkyColor, nextSkyColor, blendFactor), 0.0, 1.0);
+
+    float skyboxInfluence = 0.95;
+    float baseInfluence = 0.15;
+
+    vec3 finalColor = skyboxColor * skyboxInfluence + baseLinear * baseInfluence;
+    finalColor = clamp(finalColor, 0.0, 1.0);
+    
+    return finalColor;
 }
