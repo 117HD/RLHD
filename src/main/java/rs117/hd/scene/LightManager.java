@@ -856,10 +856,17 @@ public class LightManager {
 			sizeY = object.sizeY();
 			renderables[0] = object.getRenderable();
 			int ori = orientations[0] = HDUtils.getModelOrientation(object.getConfig());
-			if (ObjectType.fromConfig(object.getConfig()) == ObjectType.WallDiagonal) {
-				ori = (ori + 2048 - 256) % 2048;
-				offset[0] = SINE[ori] * 64 >> 16;
-				offset[1] = COSINE[ori] * 64 >> 16;
+			int offsetDist = 64;
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case RoofEdgeDiagonalCorner:
+				case RoofDiagonalWithRoofEdge:
+					ori += 1024;
+					offsetDist = round(offsetDist / sqrt(2));
+				case WallDiagonal:
+					ori = (ori + 2048 - 256) % 2048;
+					offset[0] = SINE[ori] * offsetDist >> 16;
+					offset[1] = COSINE[ori] * offsetDist >> 16;
+					break;
 			}
 		} else {
 			log.warn("Unhandled TileObject type: id: {}, hash: {}", tileObject.getId(), tileObject.getHash());
