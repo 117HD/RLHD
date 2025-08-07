@@ -363,13 +363,13 @@ public class SceneCullingManager {
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
-						final int h0 = tileHeights[plane][tileExX][tileExY];
-						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
-						final int h2 = tileHeights[plane][tileExX][tileExY + 1];
-						final int h3 = tileHeights[plane][tileExX + 1][tileExY + 1];
+						int h0 = tileHeights[plane][tileExX][tileExY];
+						int h1 = tileHeights[plane][tileExX + 1][tileExY];
+						int h2 = tileHeights[plane][tileExX][tileExY + 1];
+						int h3 = tileHeights[plane][tileExX + 1][tileExY + 1];
 
-						final int tileX = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-						final int tileZ = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						int tileX = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						int tileZ = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 
 						int localMinY = Math.min(Math.min(h0, h1), Math.min(h2, h3));
 						int localMaxY = Math.max(Math.max(h0, h1), Math.max(h2, h3));
@@ -381,6 +381,29 @@ public class SceneCullingManager {
 						aabb_MaxX = Math.max(aabb_MaxX, tileX + LOCAL_TILE_SIZE);
 						aabb_MaxZ = Math.max(aabb_MaxZ, tileZ + LOCAL_TILE_SIZE);
 						aabb_MaxY = Math.max(aabb_MaxY, localMaxY);
+
+						if(sceneContext.tileIsWater[plane][tileExX][tileExY]) {
+							final int dl0 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
+							final int dl1 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY];
+							final int dl2 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY + 1];
+							final int dl3 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY + 1];
+
+							if(dl0 > 0) h0 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl0 - 1];
+							if(dl1 > 0) h1 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl1 - 1];
+							if(dl2 > 0) h2 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1];
+							if(dl3 > 0) h3 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1];
+
+							localMinY = Math.min(Math.min(h0, h1), Math.min(h2, h3));
+							localMaxY = Math.max(Math.max(h0, h1), Math.max(h2, h3));
+
+							aabb_MinX = Math.min(aabb_MinX, tileX);
+							aabb_MinZ = Math.min(aabb_MinZ, tileZ);
+							aabb_MinY = Math.min(aabb_MinY, localMinY);
+
+							aabb_MaxX = Math.max(aabb_MaxX, tileX + LOCAL_TILE_SIZE);
+							aabb_MaxZ = Math.max(aabb_MaxZ, tileZ + LOCAL_TILE_SIZE);
+							aabb_MaxY = Math.max(aabb_MaxY, localMaxY);
+						}
 					}
 				}
 			}
@@ -390,7 +413,6 @@ public class SceneCullingManager {
 		protected void doWork() {
 			{
 				boolean isJobAreaVisible = false;
-
 				for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
 					if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0)
 						continue;
@@ -405,13 +427,16 @@ public class SceneCullingManager {
 					for(int plane = 0; plane < MAX_Z; plane++) {
 						for (int tileExX = startX; tileExX < endX; tileExX++) {
 							for (int tileExY = startY; tileExY < endY; tileExY++) {
+								int combinedResult = VISIBILITY_HIDDEN;
 								for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0)
+									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
+										combinedResult |= viewCtx.results.tiles[plane][tileExX][tileExY];
 										continue;
+									}
 
 									viewCtx.results.tiles[plane][tileExX][tileExY] = VISIBILITY_HIDDEN;
 								}
-								cullManager.combinedTileVisibility.tiles[plane][tileExX][tileExY] = VISIBILITY_HIDDEN;
+								cullManager.combinedTileVisibility.tiles[plane][tileExX][tileExY] = combinedResult;
 							}
 						}
 					}
@@ -429,15 +454,18 @@ public class SceneCullingManager {
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
-						final int x = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-						final int z = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-
 						// Surface Plane Heights
 						final int h0 = tileHeights[plane][tileExX][tileExY];
 						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
 						final int h2 = tileHeights[plane][tileExX][tileExY + 1];
 						final int h3 = tileHeights[plane][tileExX + 1][tileExY + 1];
-						final int ch = (int) ((h0 + h1 + h2 + h3) / 4.0f);
+
+						// Positions
+						final int x = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						final int z = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						final int cX = x + LOCAL_HALF_TILE_SIZE;
+						final int cZ = z + LOCAL_HALF_TILE_SIZE;
+						final int cH = (int) ((h0 + h1 + h2 + h3) / 4.0f);
 
 						// Underwater Plane Heights
 						boolean hasUnderwaterTile = false;
@@ -496,17 +524,16 @@ public class SceneCullingManager {
 								SceneContext.RenderableCullingData[] renderableCullingData = sceneContext.tileRenderableCullingData[plane][tileExX][tileExY];
 								if(renderableCullingData != null && renderableCullingData.length > 0) {
 									for (SceneContext.RenderableCullingData renderable : renderableCullingData) {
-										final int bottom = ch - renderable.bottomY;
 										final int radius = renderable.radius;
 										if (HDUtils.isAABBVisible(
-											x - radius,
-											bottom,
-											z - radius,
-											x + radius,
-											bottom + renderable.height,
-											z + radius,
+											cX - radius,
+											cH - renderable.bottomY,
+											cZ - radius,
+											cX + radius,
+											cH - renderable.bottomY + renderable.height,
+											cZ + radius,
 											viewCtx.frustumPlanes,
-											-LOCAL_HALF_TILE_SIZE
+											-LOCAL_TILE_SIZE
 										)) {
 											viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
 											break;

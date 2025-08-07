@@ -366,7 +366,7 @@ public class SceneUploader {
 
 		SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
 		cullingData.bottomY = model.getBottomY();
-		cullingData.radius = model.getXYZMag();
+		cullingData.radius = model.getRadius();
 		cullingData.height = model.getModelHeight();
 		renderableCullingData.add(cullingData);
 

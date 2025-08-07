@@ -275,7 +275,9 @@ public class SceneView {
 			if (isStatic) {
 				return cullingResults.isTileRenderablesVisible(plane, tileExX, tileExY);
 			} else {
-				return cullingResults.isTileSurfaceVisible(plane, tileExX, tileExY);
+				if(cullingResults.isTileSurfaceVisible(plane, tileExX, tileExY)) {
+					return true;
+				}
 			}
 		} else {
 			if (renderable instanceof NPC) {
