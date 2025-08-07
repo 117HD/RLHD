@@ -832,8 +832,7 @@ public class LightManager {
 			var object = (DecorativeObject) tileObject;
 			renderables[0] = object.getRenderable();
 			renderables[1] = object.getRenderable2();
-			int ori = HDUtils.getModelOrientation(object.getConfig());
-			orientations[0] = orientations[1] = ori;
+			int ori = orientations[0] = orientations[1] = HDUtils.getModelOrientation(object.getConfig());
 			switch (ObjectType.fromConfig(object.getConfig())) {
 				case WallDecorDiagonalNoOffset:
 				case WallDecorDiagonalOffset:
@@ -856,7 +855,12 @@ public class LightManager {
 			sizeX = object.sizeX();
 			sizeY = object.sizeY();
 			renderables[0] = object.getRenderable();
-			orientations[0] = HDUtils.getModelOrientation(object.getConfig());
+			int ori = orientations[0] = HDUtils.getModelOrientation(object.getConfig());
+			if (ObjectType.fromConfig(object.getConfig()) == ObjectType.WallDiagonal) {
+				ori = (ori + 2048 - 256) % 2048;
+				offset[0] = SINE[ori] * 64 >> 16;
+				offset[1] = COSINE[ori] * 64 >> 16;
+			}
 		} else {
 			log.warn("Unhandled TileObject type: id: {}, hash: {}", tileObject.getId(), tileObject.getHash());
 			return;
