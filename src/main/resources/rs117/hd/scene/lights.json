@@ -35656,11 +35656,30 @@
     ]
   },
   {
-    "description": "VARLAMORE_ORANGE_BRAZIER",
+    "description": "VARLAMORE_ORANGE_BRAZIER_WIDE",
     "height": 150,
     "alignment": "CENTER",
     "radius": 600,
     "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "BRAZIER_VARLAMORE01_DEFAULT01_2X3",
+      "BRAZIER_VARLAMORE01_DEFAULT01_2X2"
+    ]
+  },
+  {
+    "description": "VARLAMORE_ORANGE_BRAZIER_SHORT",
+    "height": 225,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 12,
     "color": [
       252,
       148,
@@ -35910,7 +35929,7 @@
     "color": "#ffa41b",
     "strength": 400,
     "radius": 75,
-    "offset": [ -15, 287, -15 ]
+    "offset": [ -15, 267, -15 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_2",
@@ -35918,7 +35937,7 @@
     "color": "#ffa41b",
     "strength": 400,
     "radius": 75,
-    "offset": [ 15, 287, 15 ]
+    "offset": [ 15, 267, 15 ]
   },
   {
     "description": "ANTECHAMBER_ECLIPSE_MOON_BRAZIERS_HIGHLIGHT_TOP",

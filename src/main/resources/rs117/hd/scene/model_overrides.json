@@ -31387,6 +31387,18 @@
     ]
   },
   {
+    "description": "Varlamore Orange Brazier - Animated - Dynamic",
+    "objectIds": [
+      "BRAZIER_VARLAMORE01_DEFAULT01_2X3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "GRAY_110"
+      }
+    ]
+  },
+  {
     "description": "Mastering Mixology Walls with brick walls in front of them",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
