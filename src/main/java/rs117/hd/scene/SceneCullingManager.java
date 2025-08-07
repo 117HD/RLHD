@@ -10,7 +10,6 @@ import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.HDUtils;
@@ -20,7 +19,6 @@ import rs117.hd.utils.SceneView;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
-import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -46,25 +44,25 @@ public class SceneCullingManager {
 	private final List<SceneView> cullingViews = new ArrayList<>();
 	private final List<SceneViewContext> cullingViewContexts = new ArrayList<>();
 
-
-	private int frustumCullingJobCount;
-	private FrustumTileCullingJob[][] frustumCullingJobs;
-
+	private final int frustumCullingJobCount;
+	private final FrustumTileCullingJob[][] frustumCullingJobs;
 	private final ResetVisibilityArrayJob clearJob = new ResetVisibilityArrayJob(this);
-	private final FrustumSphereCullingJob playerCullingJob = new FrustumSphereCullingJob(this, 0);
-	private final FrustumSphereCullingJob npcCullingJob = new FrustumSphereCullingJob(this, 1);
-	private final FrustumSphereCullingJob projectileCullingJob = new FrustumSphereCullingJob(this, 2);
+	private final FrustumSphereCullingJob playerCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.PLAYER);
+	private final FrustumSphereCullingJob npcCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.NPC);
+	private final FrustumSphereCullingJob projectileCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.PROJECTILES);
 
-	public void startUp() {
-		int sqJobCount = max(1, (int)sqrt(HdPlugin.PROCESSOR_COUNT - 1));
-		frustumCullingJobCount = sqJobCount * sqJobCount;
-		frustumCullingJobs = new FrustumTileCullingJob[sqJobCount][sqJobCount];
-		for(int x = 0; x < sqJobCount; x++) {
-			for(int y = 0; y < sqJobCount; y++) {
+	public SceneCullingManager() {
+		frustumCullingJobs = new FrustumTileCullingJob[EXTENDED_SCENE_SIZE / CHUNK_SIZE][EXTENDED_SCENE_SIZE / CHUNK_SIZE];
+		frustumCullingJobCount = frustumCullingJobs.length * frustumCullingJobs.length;
+
+		for(int x = 0; x < frustumCullingJobs.length; x++) {
+			for(int y = 0; y < frustumCullingJobs.length; y++) {
 				frustumCullingJobs[x][y] = new FrustumTileCullingJob(this);
 			}
 		}
 	}
+
+	public void startUp() { }
 
 	public void complete() {
 		clearJob.complete();
@@ -209,10 +207,10 @@ public class SceneCullingManager {
 			}
 
 			// Build Actor Culling Job
-			int[][][] tileHeights = sceneContext.scene.getTileHeights();
-			var worldView = client.getTopLevelWorldView();
-			int plane = client.getPlane();
-			for (Player player : worldView.players()) {
+			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
+			final WorldView wv = client.getTopLevelWorldView();
+			final int plane = wv.getPlane();
+			for (Player player : wv.players()) {
 				FrustumSphereCullingJob.BoundingSphere sphere = FrustumSphereCullingJob.getOrCreateBoundingSphere();
 				var lp = player.getLocalLocation();
 				sphere.x = lp.getX();
@@ -227,7 +225,7 @@ public class SceneCullingManager {
 				playerCullingJob.submit();
 			}
 
-			for (NPC npc : worldView.npcs()) {
+			for (NPC npc : wv.npcs()) {
 				FrustumSphereCullingJob.BoundingSphere sphere = FrustumSphereCullingJob.getOrCreateBoundingSphere();
 				var lp = npc.getLocalLocation();
 				sphere.x = lp.getX();
@@ -256,7 +254,6 @@ public class SceneCullingManager {
 				projectileCullingJob.submit();
 			}
 		}
-
 
 		if (!clearJob.clearTargets.isEmpty()) {
 			clearJob.submit();
@@ -340,10 +337,95 @@ public class SceneCullingManager {
 		public SceneContext sceneContext;
 		public int startX, endX;
 		public int startY, endY;
+		public int sceneID;
+
+		// Job AABB
+		private int aabb_MinX, aabb_MinY, aabb_MinZ;
+		private int aabb_MaxX, aabb_MaxY, aabb_MaxZ;
+
+		@Override
+		protected void onComplete() {
+			if(sceneID == sceneContext.id) {
+				return;
+			}
+			sceneID = sceneContext.id;
+
+			aabb_MinX = Integer.MAX_VALUE;
+			aabb_MinY = Integer.MAX_VALUE;
+			aabb_MinZ = Integer.MAX_VALUE;
+
+			aabb_MaxX = Integer.MIN_VALUE;
+			aabb_MaxY = Integer.MIN_VALUE;
+			aabb_MaxZ = Integer.MIN_VALUE;
+
+			// Build Job AABB, used for early out to avoid performing expensive frustum culling for all tiles
+			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
+			for(int plane = 0; plane < MAX_Z; plane++) {
+				for (int tileExX = startX; tileExX < endX; tileExX++) {
+					for (int tileExY = startY; tileExY < endY; tileExY++) {
+						final int h0 = tileHeights[plane][tileExX][tileExY];
+						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
+						final int h2 = tileHeights[plane][tileExX][tileExY + 1];
+						final int h3 = tileHeights[plane][tileExX + 1][tileExY + 1];
+
+						final int tileX = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						final int tileZ = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+
+						int localMinY = Math.min(Math.min(h0, h1), Math.min(h2, h3));
+						int localMaxY = Math.max(Math.max(h0, h1), Math.max(h2, h3));
+
+						aabb_MinX = Math.min(aabb_MinX, tileX);
+						aabb_MinZ = Math.min(aabb_MinZ, tileZ);
+						aabb_MinY = Math.min(aabb_MinY, localMinY);
+
+						aabb_MaxX = Math.max(aabb_MaxX, tileX + LOCAL_TILE_SIZE);
+						aabb_MaxZ = Math.max(aabb_MaxZ, tileZ + LOCAL_TILE_SIZE);
+						aabb_MaxY = Math.max(aabb_MaxY, localMaxY);
+					}
+				}
+			}
+		}
 
 		@Override
 		protected void doWork() {
-			int[][][] tileHeights = sceneContext.scene.getTileHeights();
+			{
+				boolean isJobAreaVisible = false;
+
+				for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
+					if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0)
+						continue;
+
+					if (HDUtils.isAABBVisible(aabb_MinX, aabb_MinY, aabb_MinZ, aabb_MaxX, aabb_MaxY, aabb_MaxZ, viewCtx.frustumPlanes, 0)) {
+						isJobAreaVisible = true;
+						break;
+					}
+				}
+
+				if (!isJobAreaVisible) {
+					for(int plane = 0; plane < MAX_Z; plane++) {
+						for (int tileExX = startX; tileExX < endX; tileExX++) {
+							for (int tileExY = startY; tileExY < endY; tileExY++) {
+								for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
+									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0)
+										continue;
+
+									viewCtx.results.tiles[plane][tileExX][tileExY] = VISIBILITY_HIDDEN;
+								}
+								cullManager.combinedTileVisibility.tiles[plane][tileExX][tileExY] = VISIBILITY_HIDDEN;
+							}
+						}
+					}
+
+					// Skip processing entirely
+					for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
+						viewCtx.results.inFlightTileJobCount--;
+					}
+					cullManager.combinedTileVisibility.inFlightTileJobCount--;
+					return;
+				}
+			}
+
+			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
@@ -459,8 +541,7 @@ public class SceneCullingManager {
 			return BOUNDING_SPHERE_BIN.isEmpty() ? new BoundingSphere() : BOUNDING_SPHERE_BIN.pop();
 		}
 
-		private final SceneCullingManager cullManager;
-		private final int type;
+		public enum JobType { PLAYER, NPC, PROJECTILES }
 
 		public static class BoundingSphere {
 			public float x, y, z;
@@ -468,29 +549,31 @@ public class SceneCullingManager {
 			public int id;
 		}
 
+		private final SceneCullingManager cullManager;
+		private final JobType type;
 		public List<BoundingSphere> spheres = new ArrayList<>();
 
 		@Override
 		protected void doWork() {
-			for (BoundingSphere actor : spheres) {
+			for (BoundingSphere sphere : spheres) {
 				for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
 					final boolean visible = HDUtils.isSphereInsideFrustum(
-						actor.x,
-						actor.y,
-						actor.z,
-						actor.height,
+						sphere.x,
+						sphere.y,
+						sphere.z,
+						sphere.height,
 						viewCtx.frustumPlanes
 					);
 
 					switch (type) {
-						case 0:
-							viewCtx.results.players.put(actor.id, visible);
+						case PLAYER:
+							viewCtx.results.players.put(sphere.id, visible);
 							break;
-						case 1:
-							viewCtx.results.npcs.put(actor.id, visible);
+						case NPC:
+							viewCtx.results.npcs.put(sphere.id, visible);
 							break;
-						case 2:
-							viewCtx.results.projectiles.put(actor.id, visible);
+						case PROJECTILES:
+							viewCtx.results.projectiles.put(sphere.id, visible);
 							break;
 					}
 				}

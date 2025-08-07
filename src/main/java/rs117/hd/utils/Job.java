@@ -100,15 +100,19 @@ public abstract class Job implements Runnable {
 		}
 	}
 
-	@SneakyThrows
 	public Job wait(boolean block) {
+		return wait(block, 100);
+	}
+
+	@SneakyThrows
+	public Job wait(boolean block, long nano) {
 		if (inFlight.get()) {
 			if (block) {
 				completionSema.acquire();
 				completionSema.release();
 			} else {
 				completionSema.acquire();
-				if (completionSema.tryAcquire(100, TimeUnit.NANOSECONDS)) {
+				if (completionSema.tryAcquire(nano, TimeUnit.NANOSECONDS)) {
 					completionSema.release();
 				} else {
 					return this;
