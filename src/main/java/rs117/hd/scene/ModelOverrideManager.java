@@ -50,12 +50,12 @@ public class ModelOverrideManager {
 
 	public void startUp() {
 		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> {
-			modelOverrides.clear();
-
 			try {
 				ModelOverride[] entries = path.loadJson(plugin.getGson(), ModelOverride[].class);
 				if (entries == null)
 					throw new IOException("Empty or invalid: " + path);
+
+				modelOverrides.clear();
 				for (ModelOverride override : entries) {
 					try {
 						override.normalize(plugin.configVanillaShadowMode);
@@ -74,19 +74,19 @@ public class ModelOverrideManager {
 					}
 				}
 
+				addOverride(fishingSpotReplacer.getModelOverride());
+
 				log.debug("Loaded {} model overrides", modelOverrides.size());
+
+				if (!first) {
+					clientThread.invoke(() -> {
+						modelPusher.clearModelCache();
+						if (client.getGameState() == GameState.LOGGED_IN)
+							client.setGameState(GameState.LOADING);
+					});
+				}
 			} catch (IOException ex) {
 				log.error("Failed to load model overrides:", ex);
-			}
-
-			addOverride(fishingSpotReplacer.getModelOverride());
-
-			if (!first) {
-				clientThread.invoke(() -> {
-					modelPusher.clearModelCache();
-					if (client.getGameState() == GameState.LOGGED_IN)
-						client.setGameState(GameState.LOADING);
-				});
 			}
 		});
 	}

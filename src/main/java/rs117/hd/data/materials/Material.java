@@ -34,11 +34,13 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.ExpressionPredicate;
 
+import static rs117.hd.utils.ExpressionParser.SerializableExpressionPredicate;
+import static rs117.hd.utils.ExpressionParser.asExpression;
+import static rs117.hd.utils.ExpressionParser.parseExpression;
 import static rs117.hd.utils.HDVariables.*;
-import static rs117.hd.utils.MathUtils.*;
 
+@Deprecated
 public enum Material {
 	// - Each enum entry refers to a texture file by name, in lowercase. If a texture with the specified name is found,
 	//   it will be loaded and resized to fit the dimensions of the texture array.
@@ -910,7 +912,7 @@ public enum Material {
 		.replaceIfModelTextures(IRON_BARS)
 		.setHasTransparency(true)
 		.setSpecular(0.6f, 30)
-		.setTextureScale(0.98f)
+		.setTextureScale(0.98f, 1)
 	),
 	OOZE(GRAY_65, p -> p
 		.setSpecular(1.5f, 600)
@@ -1075,7 +1077,7 @@ public enum Material {
 	public final boolean hasTransparency;
 	public final boolean overrideBaseColor;
 	public final boolean unlit;
-	public final boolean hasTexture;
+	public final boolean modifiesVanillaTexture;
 	public final float brightness;
 	public final float displacementScale;
 	public final float flowMapStrength;
@@ -1084,8 +1086,8 @@ public enum Material {
 	public final float specularGloss;
 	public final float[] scrollSpeed;
 	public final float[] textureScale;
-	private final List<Material> materialsToReplace;
-	private final ExpressionPredicate replacementCondition;
+	public final List<Material> materialsToReplace;
+	public final SerializableExpressionPredicate replacementCondition;
 
 	@Setter
 	private static class Builder {
@@ -1108,7 +1110,7 @@ public enum Material {
 		private float[] scrollSpeed = { 0, 0 };
 		private float[] textureScale = { 1, 1, 1 };
 		private List<Material> materialsToReplace = Collections.emptyList();
-		private ExpressionPredicate replacementCondition;
+		private SerializableExpressionPredicate replacementCondition;
 
 		Builder apply(Consumer<Builder> consumer) {
 			consumer.accept(this);
@@ -1157,26 +1159,37 @@ public enum Material {
 			return this;
 		}
 
-		Builder setTextureScale(float... xyz) {
-			textureScale = copyTo(copy(textureScale), xyz);
+		Builder setTextureScale(float x, float y) {
+			return setTextureScale(x, y, 1);
+		}
+
+		Builder setTextureScale(float x, float y, float z) {
+			textureScale = Arrays.copyOf(textureScale, 3);
+			textureScale[0] = x;
+			textureScale[1] = y;
+			textureScale[2] = z;
 			return this;
 		}
 
 		Builder replaceIfHdInfernalCape(@NonNull Material... materialsToReplace) {
 			this.materialsToReplace = List.of(materialsToReplace);
-			this.replacementCondition = vars -> (boolean) vars.get(VAR_HD_INFERNAL_TEXTURE);
+			this.replacementCondition = new SerializableExpressionPredicate(asExpression(parseExpression(VAR_HD_INFERNAL_TEXTURE)));
 			return this;
 		}
 
 		Builder replaceIfModelTextures(@NonNull Material... materialsToReplace) {
 			this.materialsToReplace = List.of(materialsToReplace);
-			this.replacementCondition = vars -> (boolean) vars.get(VAR_MODEL_TEXTURES);
+			this.replacementCondition = new SerializableExpressionPredicate(asExpression(parseExpression(VAR_MODEL_TEXTURES)));
 			return this;
 		}
 
 		Builder replaceIf(SeasonalTheme seasonalTheme, @NonNull Material... materialsToReplace) {
 			this.materialsToReplace = List.of(materialsToReplace);
-			this.replacementCondition = vars -> (int) vars.get(VAR_SEASONAL_THEME) == seasonalTheme.ordinal();
+			this.replacementCondition = new SerializableExpressionPredicate(asExpression(parseExpression(String.format(
+				"%s == SeasonalTheme.%s",
+				VAR_SEASONAL_THEME,
+				seasonalTheme
+			))));
 			return this;
 		}
 	}
@@ -1229,7 +1242,7 @@ public enum Material {
 		var base = this;
 		while (base.parent != null)
 			base = base.parent;
-		hasTexture =
+		modifiesVanillaTexture =
 			base.ordinal() != 0 ||
 			normalMap != null ||
 			displacementMap != null ||

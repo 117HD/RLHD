@@ -351,6 +351,9 @@ public class ResourcePath {
 	public ResourcePath writeString(String string) throws IOException {
 		try (OutputStream os = toOutputStream()) {
 			os.write(string.getBytes(StandardCharsets.UTF_8));
+			// Ensure there's always a blank line at the end
+			if (!string.endsWith("\n"))
+				os.write('\n');
 		}
 		return this;
 	}

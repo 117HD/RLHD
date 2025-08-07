@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.Material;
 import rs117.hd.scene.ground_materials.GroundMaterial;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -52,14 +52,9 @@ public class GroundMaterialManager {
 					}
 				}
 
-				if (!first) {
-					clientThread.invoke(() -> {
-						// Reload everything which depends on ground materials
-						tileOverrideManager.shutDown();
-						tileOverrideManager.startUp();
-						plugin.reuploadScene();
-					});
-				}
+				// Reload everything which depends on ground materials
+				if (!first)
+					clientThread.invoke(() -> tileOverrideManager.reload(true));
 			} catch (IOException ex) {
 				log.error("Failed to load ground materials:", ex);
 			}

@@ -117,7 +117,7 @@ public class WaterTypeManager {
 					}
 				});
 			} catch (IOException ex) {
-				log.error("Failed to load environments:", ex);
+				log.error("Failed to load water types:", ex);
 			}
 		});
 	}
@@ -128,7 +128,10 @@ public class WaterTypeManager {
 		fileWatcher = null;
 
 		WATER_TYPES = new WaterType[0];
-		uboWaterTypes.destroy();
+
+		if (uboWaterTypes != null)
+			uboWaterTypes.destroy();
+		uboWaterTypes = null;
 	}
 
 	public WaterType get(String name) {

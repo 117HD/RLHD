@@ -16,15 +16,16 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
@@ -60,6 +61,9 @@ public class ModelPusher {
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -200,9 +204,9 @@ public class ModelPusher {
 		Material textureMaterial = modelOverride.textureMaterial;
 		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
 		if (disableTextures) {
-			if (baseMaterial.hasTexture)
+			if (baseMaterial.modifiesVanillaTexture)
 				baseMaterial = Material.NONE;
-			if (textureMaterial.hasTexture)
+			if (textureMaterial.modifiesVanillaTexture)
 				textureMaterial = Material.NONE;
 		}
 
@@ -345,7 +349,7 @@ public class ModelPusher {
 					uvType = UvType.VANILLA;
 					material = textureMaterial;
 					if (material == Material.NONE)
-						material = Material.fromVanillaTexture(textureId);
+						material = materialManager.fromVanillaTexture(textureId);
 				}
 
 				ModelOverride faceOverride = modelOverride;

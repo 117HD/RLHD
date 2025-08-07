@@ -36,12 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
@@ -77,6 +77,9 @@ public class SceneUploader {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private AreaManager areaManager;
@@ -622,7 +625,7 @@ public class SceneUploader {
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
-					var material = Material.fromVanillaTexture(textureId);
+					var material = materialManager.fromVanillaTexture(textureId);
 					// Disable tile overrides for newly introduced vanilla textures
 					if (material == Material.VANILLA)
 						override = NONE;
@@ -983,7 +986,7 @@ public class SceneUploader {
 				waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 				if (waterType == WaterType.NONE) {
 					if (textureId != -1) {
-						var material = Material.fromVanillaTexture(textureId);
+						var material = materialManager.fromVanillaTexture(textureId);
 						// Disable tile overrides for newly introduced vanilla textures
 						if (material == Material.VANILLA)
 							override = NONE;

@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
-import rs117.hd.data.materials.Material;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.tile_overrides.TileOverride;
