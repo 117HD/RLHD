@@ -43426,8 +43426,7 @@
       "_100_GOBLINDUGUPSOIL1_GREY",
       "DUGUPSOIL2_GREY",
       "DUGUPSOIL1_GREY",
-      "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
-      "DF_CAVE_SNOW01_ENTRANCE03"
+      "HUEY_FIGHT_EXIT_SHORTCUT"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
@@ -43437,20 +43436,20 @@
     "description": "Hueycoatl Ugly Shadow Body Cave",
     "castShadows": false,
     "areas": [ "Hueycoatl Ugly Shadow Fix" ],
-    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
       "DF_CAVE_SNOW01_ENTRANCE03"
-    ]
-  },
-  {
-    "description": "Hueycoatl Rocks",
-    "baseMaterial": "STONE_NORMALED",
-    "castShadows": false,
-    "objectIds": [
-      "HUEY_FIGHT_EXIT_SHORTCUT"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "colors": "h < 2 && s == 0",
+        "baseMaterial": "STONE_NORMALED"
+      },
+      {
+        "colors": "h == 63",
+        "baseMaterial": "BLACK"
+      }
+    ]
   },
   {
     "description": "Ates Pendant Statue - Dynamic - Animated",
