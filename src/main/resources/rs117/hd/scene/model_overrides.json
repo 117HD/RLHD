@@ -4409,7 +4409,7 @@
     ]
   },
   {
-    "description": "SShayzien - Wooden - Fence",
+    "description": "Shayzien - Wooden - Fence",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -5847,7 +5847,14 @@
       "DRAGON_SLAYER_QIP_DUGUPSOIL_04",
       "DRAGON_SLAYER_QIP_DUGUPSOIL_05",
       "DRAGON_SLAYER_QIP_DUGUPSOIL_06",
-      "DRAGON_SLAYER_QIP_DUGUPSOIL_07"
+      "DRAGON_SLAYER_QIP_DUGUPSOIL_07",
+      "LUC2_MOV_DUGUPSOIL1",
+      "LUC2_MOV_DUGUPSOIL2",
+      "LUC2_MOV_DUGUPSOIL3",
+      "LUC2_MOV_DUGUPSOIL4",
+      "LUC2_MOV_DUGUPSOIL5",
+      "LUC2_MOV_DUGUPSOIL6",
+      "LUC2_MOV_DUGUPSOIL7"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.44,
@@ -9902,10 +9909,16 @@
     ]
   },
   {
+    "description": "Wooden Wall Torch with Metal Bracket",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "TORCH"
+    ]
+  },
+  {
     "description": "WALL_TORCHES",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      "TORCH",
       "TORCH_GRUBBY",
       "FENK_TORCH",
       "MYQ5_TORCH"
@@ -10115,6 +10128,10 @@
       "CTRATGATEA",
       "CTRATGATEC",
       "PRISONDOOR",
+      "ARENA_PRISONDOOR",
+      "ARENA_INACTIVEGATE",
+      "ARENA_INACTIVEGATE_R",
+      "ARENA_JEREMYDOOR",
       "PRISONDOOROPEN",
       "INACTIVEPRISONDOOR",
       "PRISONDOOR_R",
@@ -10192,7 +10209,12 @@
       "PRISONWALL",
       "AKD_HUGHES_GATE_1",
       "VMQ3_TOWER_BARS",
-      "VMQ3_TOWER_DOOR_NOOP"
+      "VMQ3_TOWER_DOOR_NOOP",
+      "LUC2_MOV_JAILBARS",
+      "LUC2_MOV_JAILBARS_END_RIGHT",
+      "LUC2_MOV_JAILBARS_END_LEFT",
+      "LUC2_MOV_KHAZARD_CELL_DOOR_CLOSED",
+      "LUC2_MOV_KHAZARD_CELL_DOOR_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -10688,7 +10710,9 @@
       "FAI_FALADOR_POOR_DOOR_FLIP",
       "FAI_FALADOR_POOR_DOOR_OPEN_FLIP",
       "FIGHTARENA_DOOR2_ESCAPE",
-      "DOTI_INTERROGATION_DOOR"
+      "DOTI_INTERROGATION_DOOR",
+      "LUC2_MOV_DOOR_CLOSED",
+      "LUC2_MOV_DOOR_OPEN"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -12396,7 +12420,8 @@
       "MYQ4_MEAT_CRATE",
       "VMQ2_COTHON_CRATE",
       "VMQ2_COTHON_CRATES",
-      "SHAYZIEN_CRATE_01_DARK_OP"
+      "SHAYZIEN_CRATE_01_DARK_OP",
+      "LUC2_MOV_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -12415,7 +12440,8 @@
       "NECROPOLIS_CRATE01_STACK01",
       "FOSSIL_CRATE2",
       "MYQ4_PESTLE_CRATE",
-      "MYQ4_EMPTY_CRATE"
+      "MYQ4_EMPTY_CRATE",
+      "LUC2_MOV_CRATES_STACKED"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -12763,7 +12789,8 @@
       "KR_SIN_RANGE",
       "CON_CONTRACT_FALADOR_SOUTH_RANGE_FIXED",
       "CON_CONTRACT_ARDY_WEST_HOTSPOT1",
-      "SORCERESS_RANGE"
+      "SORCERESS_RANGE",
+      "LUC2_MOV_KITCHEN_RANGE"
     ],
     "uvType": "BOX",
     "uvScale": 0.6
@@ -13615,7 +13642,8 @@
       "POG_STOOL",
       "HOSIDIUS_SERVERY_STOOL",
       "HOS_STOOL_03",
-      "BR_STOOL"
+      "BR_STOOL",
+      "LUC2_MOV_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13876,7 +13904,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "QIP_SHEEP_SHEARER_LARGE_TABLE",
-      "AKD_HUGHES_TABLE_1_NOOP"
+      "AKD_HUGHES_TABLE_1_NOOP",
+      "LUC2_MOV_TABLE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -15293,6 +15322,23 @@
     "uvOrientation": 512
   },
   {
+    "description": "Ardougne - Ruined Walls",
+    "objectIds": [
+      "CRUMBLYWALL2",
+      "OLDCASTLEBATTLEMENTS"
+    ],
+    "terrainVertexSnap": true
+  },
+  {
+    "description": "Ardougne - Ruined Walls - Low",
+    "objectIds": [
+      "CRUMBLYWALLLOW",
+      "CRUMBLYWALLLOW2"
+    ],
+    "receiveShadows": false,
+    "terrainVertexSnap": true
+  },
+  {
     "description": "Ardougne - Cart - Broken",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
@@ -15331,15 +15377,14 @@
   },
   {
     "description": "Objects - Ardougne Castle - Timber Defence",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "TIMBERDEFENCE_EDGEL_NEW",
       "TIMBERDEFENCE_EDGER_NEW",
       "TIMBERDEFENCE_NEW"
     ],
     "uvType": "BOX",
-    "uvScale": 0.33,
-    "uvOrientation": 512,
+    "uvScale": 0.5,
     "colorOverrides": [
       {
         "colors": "h == 7",
@@ -17833,8 +17878,20 @@
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "baseMaterial": "BARK",
         "uvScale": 0.75,
+        "terrainVertexSnap": true,
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Jungle Tree Small - Stump",
+    "baseMaterial": "BARK",
+    "uvScale": 0.75,
+    "uvType": "BOX",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "MM_BUSH_KHARAZI_JUNGLE_TREE1_STUMP",
+      "MM_BUSH_KHARAZI_JUNGLE_TREE2_STUMP"
     ]
   },
   {
@@ -21246,6 +21303,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "TIMBER_SCAFOLDTALL",
+      "TIMBER_SCAFOLDEDGE",
+      "TIMBER_SCAFOLDTOP",
       "SHAYZIEN_TIMBER_SCAFOLDEDGE",
       "SHAYZIEN_TIMBER_SCAFOLDTOP",
       "SHAYZIEN_TIMBER_SCAFOLDTALL",
@@ -21261,10 +21320,9 @@
     "description": "Hadleys House - Wattle",
     "baseMaterial": "WATTLE_1",
     "objectIds": [
+      "PAINTEDBRICKWALL_1",
       "PAINTEDBRICKWALL_2"
-    ],
-    "flatNormals": true,
-    "uvType": "VANILLA"
+    ]
   },
   {
     "description": "Metallic Pipes",
@@ -22868,7 +22926,8 @@
       "SNAKEBOSS_BANKCHEST",
       "WILD_CHEST_CLOSED",
       "WILD_CHEST_OPEN",
-      "KEBOS_CHEST_CLOSED_INACTIVE"
+      "KEBOS_CHEST_CLOSED_INACTIVE",
+      "WGS_MOVARIO_RUNE_CHEST"
     ],
     "uvType": "BOX",
     "uvOrientationZ": 512,
@@ -23524,7 +23583,8 @@
     "terrainVertexSnap": true,
     "objectIds": [
       "BOULDER4",
-      "BOULDER4_GDECOR"
+      "BOULDER4_GDECOR",
+      "BOULDER3_GDECOR"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -23686,7 +23746,6 @@
     "description": "Walls - Bricks - Light Brick with White backs",
     "flatNormals": true,
     "objectIds": [
-      "PAINTEDBRICKWALL_1",
       "BLUEPAINTEDBRICKWALL_1"
     ]
   },
@@ -27578,7 +27637,7 @@
   },
   {
     "description": "Spear Wall",
-    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "SPEARWALL_ROW2",
       "SPEARWALL_SKEW",
@@ -27586,7 +27645,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 6",
+        "colors": "h > 3",
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.25
@@ -27961,7 +28020,8 @@
     "uvType": "BOX",
     "objectIds": [
       "GB_LOG_WITHAXE",
-      "WOODCHIPPINGS_LIGHT"
+      "WOODCHIPPINGS_LIGHT",
+      "LOG_WITHAXE"
     ],
     "colorOverrides": [
       {
@@ -28503,17 +28563,31 @@
   },
   {
     "description": "Port Khazard - Banner",
-    "baseMaterial": "GRUNGE_3",
-    "flatNormals": true,
+    "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
-      "STANDARD_TATTY"
+      "STANDARD_TATTY",
+      "STANDARD_RED"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 5",
+        "colors": "h == 5 && s == 4",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Rubble - Broken Pots, Bottles",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "RUBBLE_1",
+      "RUBBLE_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l < 42",
+        "baseMaterial": "TRANSPARENT"
       }
     ]
   },
@@ -34286,7 +34360,11 @@
       "SLUG2_BARREL",
       "FAIRY_BARREL",
       "FAIRY_BARREL_BLUE",
-      "FAI_BARBARIAN_BARREL"
+      "FAI_BARBARIAN_BARREL",
+      "SOTN_HUNTING_BARREL_NOOP",
+      "SOTN_HUNTING_BARREL_OP",
+      "LUC2_MOV_BARREL_EMPTY",
+      "LUC2_MOV_BARREL"
     ]
   },
   {
@@ -41663,6 +41741,26 @@
     ]
   },
   {
+    "description": "Objects - Generic - Bunk Bed 2",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "LUC2_MOV_BARRACKS_BED_01",
+      "LUC2_MOV_BARRACKS_BED_02",
+      "LUC2_MOV_BARRACKS_BED_03",
+      "LUC2_MOV_BARRACKS_BED_04"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
     "description": "Port Sarim - Betty's Shelves",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
@@ -45324,7 +45422,7 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 89,
-    "objectIds": ["FAI_VARROCK_BANK_GOLD_BARS" ]
+    "objectIds": [ "FAI_VARROCK_BANK_GOLD_BARS" ]
   },
   {
     "description": "Varrock - Vault - Golden Bars - Stacked",
@@ -47844,6 +47942,7 @@
     "baseMaterial": "CARPET_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.75,
+    "receiveShadows": false,
     "objectIds": [
       "TANNINGLINE"
     ],
@@ -53168,6 +53267,426 @@
     "uvScale": 0.65,
     "objectIds": [
       "WALLKIT_WOODEN03_DEFAULT01"
+    ]
+  },
+  {
+    "description": "WGS - Broav Trap - Edge",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "WGS_PIT_TRAP_MUD_CORNER",
+      "WGS_PIT_TRAP_MUD_EDGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_75",
+        "windDisplacementMode": "OBJECT"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Broav Trap - Hole",
+    "baseMaterial": "GRAY_75",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "WGS_PIT_TRAP_INVISIBLE",
+      "WGS_PIT_TRAP_SET",
+      "WGS_PIT_TRAP_SET_BAITED",
+      "WGS_PIT_TRAP_BROAV_CAUGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s < 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "h == 2 || h == 7",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Movario's Base - Entrance",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "objectIds": [
+      "WGS_BF_TABLE_BROKEN2_OP",
+      "WGS_BF_TABLE_BROKEN2_OPEN2"
+    ]
+  },
+  {
+    "description": "WGS - Movario's Base - Entrance",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "WGS_BF_TABLE_BROKEN2_OPEN"
+    ]
+  },
+  {
+    "description": "WGS - Movario's Base - Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "LUC2_MOV_BARRACKS_01",
+      "LUC2_MOV_BARRACKS_02",
+      "LUC2_MOV_BARRACKS_WIRE_END",
+      "LUC2_MOV_BARRACKS_WIRE_02",
+      "LUC2_MOV_BARRACKS_LIGHT_01",
+      "LUC2_MOV_BARRACKS_WIRE_END_MIRROR",
+      "LUC2_MOV_BRICK_MIRROR",
+      "LUC2_MOV_BARRACKS_WIRE_01",
+      "LUC2_MOV_BRICK3",
+      "LUC2_MOV_BARRACKS_PILLAR",
+      "LUC2_MOV_BRICK",
+      "LUC2_MOV_BRICK2",
+      "LUC2_MOV_BARRACKS_DOOR_BACKING_02",
+      "LUC2_MOV_BARRACKS_DOUBLESIDED_JOIN_MIRROR",
+      "LUC2_MOV_BARRACKS_DOUBLESIDED_END_MIRROR",
+      "LUC2_MOV_BARRACKS_DOUBLESIDED",
+      "LUC2_MOV_BARRACKS_DOUBLESIDED_END",
+      "LUC2_MOVARIO_BASE_PAINTING_WALL_NOCLICK",
+      "LUC2_MOV_BARRACKS_DOOR_BACKING_01",
+      "LUC2_MOV_RESOURCE_ROOM_TUNNEL",
+      "LUC2_MOVARIO_BASE_PAINTING_WALL_CLICK",
+      "LUC2_MOV_JAIL_CONNECT_MIRROR",
+      "LUC2_MOV_JAIL_CONNECT",
+      "LUC2_MOV_BARRACKS_DARTS",
+      "LUC2_MOV_BARRACKS_DOUBLESIDED_JOIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 && s < 8",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": "h == 5 && s < 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Movario's Base - Kitchen Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "LUC2_MOV_KITCHEN_BLEND",
+      "LUC2_MOV_KITCHEN_01",
+      "LUC2_MOV_KITCHEN_02",
+      "LUC2_MOV_KITCHEN_03",
+      "LUC2_MOV_KITCHEN_04",
+      "LUC2_MOV_KITCHEN_BLEND_MIRROR",
+      "LUC2_MOV_TICKER_3",
+      "LUC2_MOV_TICKER_2",
+      "LUC2_MOV_TICKER_1",
+      "LUC2_MOV_TICKER_0"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 5 && s < 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "WGS - Movario's Base - Make Wall Filler Black",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "LUC2_MOV_WALL_TOP_BLACK"
+    ]
+  },
+  {
+    "description": "Movario's Base - Barrel with Orange Liquid",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "LUC2_MOV_KITCHEN_BARREL_WATER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s < 2",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 2",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Movario's Base - Larder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "LUC2_MOV_KITCHEN_LARDER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.5,
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
+    "description": "Movario's Base - Metal Door",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "LUC2_MOVARIO_MAIN_BASE_DOOR_CLOSED",
+      "LUC2_MOVARIO_MAIN_BASE_DOOR_OPEN",
+      "LUC2_MOV_DOOR_RUNE",
+      "LUC2_MOV_DOOR_RUNE_MIND",
+      "LUC2_MOV_DOOR_RUNE_AIR",
+      "LUC2_MOV_DOOR_RUNE_EARTH",
+      "LUC2_MOV_DOOR_RUNE_FIRE",
+      "LUC2_MOV_DOOR_RUNE_WATER",
+      "LUC2_MOV_DOOR_RUNE_BACK"
+    ]
+  },
+  {
+    "description": "Movario's Base - Stairs",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "LUC2_MOV_STEPS_DOWN",
+      "LUC2_MOV_STEPS_UP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Movario's Base - Library Bookcase & Desk",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LUC2_MOV_BOOKCASE_WIRE_PUZZLE_1",
+      "LUC2_MOV_BOOKCASE_WIRE_PUZZLE_2",
+      "LUC2_MOV_BOOKCASE_WIRE_PUZZLE_3",
+      "LUC2_MOV_BOOKCASE_WIRE_PUZZLE_4",
+      "LUC2_MOV_BOOKCASE_WIRE_PUZZLE_5",
+      "LUC2_MOV_BOOKCASE_WIRE_PUZZLE_6",
+      "LUC2_MOV_BOOKCASE_WIRE_PUZZLE_7",
+      "LUC2_MOV_BOOKCASE_LARGE6",
+      "LUC2_MOV_BOOKCASE_RUBY_STAIRS_LOCK",
+      "LUC2_MOV_BOOKCASE4",
+      "LUC2_MOV_BOOKCASE2",
+      "LUC2_MOV_BOOKCASE3",
+      "LUC2_MOV_DESK_EMPTY",
+      "LUC2_MOV_DESK_JOIN",
+      "LUC2_MOV_DESK_PAPERS",
+      "LUC2_MOV_DRAWERS_CLOSED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s > 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Movario's Base - Library Book Piles",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LUC2_MOV_BOOKS1",
+      "LUC2_MOV_BOOKS2",
+      "LUC2_MOV_BOOKS3"
+    ]
+  },
+  {
+    "description": "Movario's Base - Spiral Stairs",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "LUC2_MOV_SPIRAL_STAIRS",
+      "LUC2_MOV_SPIRAL_STAIRS_TOP",
+      "LUC2_MOV_STAIR_RAIL",
+      "LUC2_MOV_STAIR_RAIL_END",
+      "LUC2_MOV_STAIR_RAIL_END_MIRROR"
+    ]
+  },
+  {
+    "description": "Movario's Base - Misc Wooden Furniture",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "LUC2_MOVARIO_STAIR_MACHINE",
+      "LUC2_FOOLS_TREASURE",
+      "LUC2_MOVARIO_THERMOMETER",
+      "LUC2_MOVARIO_DRAWERS_SCALES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 0 && l > 87 && l < 89",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
+  },
+  {
+    "description": "Movario's Base - Supply Pallets - Others",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LUC2_MOV_PILE_FIRERUNE100",
+      "LUC2_MOV_PILE_FIRERUNE75",
+      "LUC2_MOV_PILE_FIRERUNE50",
+      "LUC2_MOV_PILE_FIRERUNE25",
+      "LUC2_MOV_PILE_FIRERUNE0",
+      "LUC2_MOV_PILE_COAL100",
+      "LUC2_MOV_PILE_COAL75",
+      "LUC2_MOV_PILE_COAL50",
+      "LUC2_MOV_PILE_COAL25",
+      "LUC2_MOV_PILE_COAL0",
+      "LUC2_MOV_PILE_LOGS100",
+      "LUC2_MOV_PILE_LOGS75",
+      "LUC2_MOV_PILE_LOGS50",
+      "LUC2_MOV_PILE_LOGS25",
+      "LUC2_MOV_PILE_LOGS0"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAVEL",
+        "uvType": "BOX",
+        "uvScale": 1.25
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "BARK_STONEPINE_2",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Movario's Base - Supply Pallets - Death Rune",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LUC2_MOV_PILE_DEATHRUNE100",
+      "LUC2_MOV_PILE_DEATHRUNE75",
+      "LUC2_MOV_PILE_DEATHRUNE50",
+      "LUC2_MOV_PILE_DEATHRUNE25",
+      "LUC2_MOV_PILE_DEATHRUNE0"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Movario's Base - Book Statue",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "LUC2_MOV_STATUE_ATLAS1",
+      "LUC2_MOV_STATUE_ATLAS2",
+      "LUC2_MOV_STATUE_ATLAS3",
+      "LUC2_MOV_STATUE_ATLAS4",
+      "LUC2_MOV_STATUE_ATLAS5",
+      "LUC2_MOV_STATUE_ATLAS6"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Movario's Base - Weights",
+    "baseMaterial": "METALLIC_1",
+    "objectIds": [
+      "LUC2_MOV_WEIGHTS"
+    ]
+  },
+  {
+    "description": "Movario's Base - Bed Chest",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LUC2_MOVARIO_BED_CHEST_BED",
+      "LUC2_MOVARIO_BED_CHEST_OPEN",
+      "LUC2_MOVARIO_BED_CHEST_CLOSED",
+      "LUC2_MOVARIO_BED_CHEST_OPEN_LOOTED",
+      "LUC2_MOVARIO_BED_CHEST_CLOSED_SEARCH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientation": 512
+      }
     ]
   }
 ]
