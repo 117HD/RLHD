@@ -1319,6 +1319,9 @@
     ],
     "fogColor": "#002033",
     "fogDepth": 15,
+    "windSpeed": 3,
+    "windStrength": 30,
+    "windAngle": 140,
     "groundFogOpacity": 0.75,
     "waterCausticsStrength": 40
   },

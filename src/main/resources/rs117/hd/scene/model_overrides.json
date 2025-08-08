@@ -2578,7 +2578,6 @@
   },
   {
     "description": "Zanaris, Lighten Grass",
-    "areas": [ "ZANARIS" ],
     "baseMaterial": "NONE",
     "flatNormals": true,
     "castShadows": false,
@@ -12022,7 +12021,7 @@
       "ALDARIN_DUGUPSOIL06"
     ],
     "uvType": "BOX",
-    "uvScale": 0.74
+    "uvScale": 0.45
   },
   {
     "description": "barbarian - Walls - Wooden - Planks",
@@ -26065,13 +26064,33 @@
   },
   {
     "description": "Guardians Of the Rift - Rocks - Medium",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
-      "GOTR_RUNESTONE_ROCKS_SMALL01"
+      "GOTR_RUNESTONE_ROCKS_SMALL01",
+      "GOTR_RUNESTONE_ROCKS03_SMALL02"
     ],
     "uvType": "BOX",
     "uvScale": 0.82,
     "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Archway",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "objectIds": [
+      "GOTR_ENTRY",
+      "GOTR_RUNESTONE_ENTRANCE_TOP"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 21 && s == 4",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
   },
   {
     "description": "Guardians of the Rift - Marble - Steps",
@@ -26084,8 +26103,8 @@
       "GOTR_STEPS_RUNESTONE03_EDGE02"
     ],
     "uvType": "BOX",
-    "uvOrientation": 640,
-    "flatNormals": true
+    "uvScale": 0.8,
+    "uvOrientation": 640
   },
   {
     "description": "Guardians of the Rift - Ground Decoration Grunge - Shelf Coral",
@@ -26272,10 +26291,25 @@
     "uvOrientation": 512
   },
   {
+    "description": "Guardians of the Rift - Grass",
+    "baseMaterial": "NONE",
+    "flatNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 2,
+    "objectIds": [
+      "FAIRY_SHORT_GRASS_4",
+      "FAIRY_SHORT_GRASS_2",
+      "FAIRY_SHORT_GRASS_3",
+      "FAIRY_SHORT_GRASS_1"
+    ]
+  },
+  {
     "description": "Guardians of the Rift - Yellow Kelp",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
+    "windDisplacementMode": "OBJECT",
     "uvOrientation": 42,
     "objectIds": [
       "GOTR_PLANT_ELK01_DEFAULT01",
@@ -26288,6 +26322,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
+    "windDisplacementMode": "OBJECT",
     "uvOrientation": 343,
     "objectIds": [
       "GOTR_PLANT_SPONGE01_DEFAULT01",
@@ -26300,10 +26335,39 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 2,
     "objectIds": [
       "GOTR_PLANT_LACE01_DEFAULT01",
       "GOTR_PLANT_LACE01_DEFAULT01_2X2",
       "GOTR_PLANT_LACE01_FALLOFF01"
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Dead Coral",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 2,
+    "objectIds": [
+      "GOTR_PLANT_SPONGE02_DEFAULT01_2X2",
+      "GOTR_PLANT_SPONGE02_FALLOFF01",
+      "GOTR_PLANT_SPONGE02_DEFAULT01",
+      "GOTR_PLANT_SPONGE03_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK03_DEFAULT01_2X2",
+      "GOTR_PLANT_LACE03_DEFAULT01",
+      "GOTR_PLANT_LACE02_FALLOFF01",
+      "GOTR_PLANT_LACE03_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK03_DEFAULT01",
+      "GOTR_PLANT_ELK03_FALLOFF01",
+      "GOTR_PLANT_LACE03_FALLOFF01",
+      "GOTR_PLANT_SPONGE03_DEFAULT01",
+      "GOTR_PLANT_LACE02_DEFAULT01",
+      "GOTR_PLANT_ELK02_DEFAULT01",
+      "GOTR_PLANT_LACE02_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK02_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK02_FALLOFF01"
     ]
   },
   {
