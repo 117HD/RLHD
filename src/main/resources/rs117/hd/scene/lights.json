@@ -40016,6 +40016,23 @@
     ]
   },
   {
+    "description": "Prizon Pete - Exit Barrier",
+    "offset": [ -57, 75, 0 ],
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1000,
+    "range": 10,
+    "objectIds": [
+      "PRISONPETE_ENERGYBARRIER"
+    ]
+  },
+  {
     "description": "Evil Bob Uncooking Pot",
     "offset": [ 0, 20, 0 ],
     "radius": 650,

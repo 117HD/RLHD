@@ -10166,6 +10166,7 @@
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS",
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS_BIG_MIRROR",
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS_MIRROR",
+      "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS",
       "FAI_VARROCK_PRISONBARS",
       "MURDER_QIP_METALGATECLOSEDL",
       "MURDER_QIP_METALGATECLOSEDR",
@@ -15033,6 +15034,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "AHOY_CHAIR_2",
+      "AHOY_CHAIR_3",
       "FAI_VARROCK_CHAIR1",
       "BURGH_CHAIR_3",
       "BURGH_CHAIR_4",
@@ -15091,8 +15093,18 @@
     "uvScale": 0.6,
     "objectIds": [
       "OLDCHAIR",
-      "OLDCHAIR2",
-      "BURGH_SMASHEDCHAIR"
+      "OLDCHAIR2"
+    ]
+  },
+  {
+    "description": "Smashed Chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "BURGH_SMASHEDCHAIR",
+      "AHOY_SMASHEDCHAIR"
     ]
   },
   {
@@ -18731,6 +18743,14 @@
       "MACRO_EVIL_BOB_STATUE_2",
       "MACRO_EVIL_BOB_STATUE_3",
       "MACRO_EVIL_BOB_STATUE_4"
+    ]
+  },
+  {
+    "description": "Evil Bob Fishing Random Event - Statue",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "XMAS15_EMPTY_SOFA"
     ]
   },
   {

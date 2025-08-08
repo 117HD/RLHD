@@ -1962,6 +1962,13 @@
     "waterColor": "#0009BC"
   },
   {
+    "area": "RANDOM_EVENT_PRISON_PETE",
+    "fogColor": "#303030",
+    "groundFogOpacity": 0.75,
+    "groundFogStart": -200,
+    "groundFogEnd": -400
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
