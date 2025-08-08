@@ -26280,6 +26280,25 @@
     "uvOrientation": 256
   },
   {
+    "description": "Guardians of the Rift - Columns with Abyssal Vines",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "GOTR_PILLAR_RUNESTONE01",
+      "GOTR_PILLAR_RUNESTONE02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 63 && l > 20",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256
+  },
+  {
     "description": "Guardians of the Rift - Destroyed Columns Base",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
@@ -26315,6 +26334,86 @@
         "colors": "h > 20",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Cliff Trim",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GOTR_CHASM_EDGE01",
+      "GOTR_CHASM_EDGE02",
+      "GOTR_CHASM_CORNER01",
+      "GOTR_CHASM_COMBO01"
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Stalagmites",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOTR_STALAGTITES01_SMALL01",
+      "GOTR_STALAGTITES02_SMALL01",
+      "GOTR_STALAGTITES02_SMALL02",
+      "GOTR_STALAGTITES01_LARGE02",
+      "GOTR_STALAGTITES01_SMALL02",
+      "GOTR_STALAGTITES02_LARGE01",
+      "GOTR_STALAGTITES02_LARGE02"
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 150,
+    "objectIds": [
+      "RCU_ABYSSAL_BUSH_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Vines",
+    "baseMaterial": "ABYSSAL_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "DECOKIT_VINES01_ABYSSAL03_END02",
+      "DECOKIT_VINES01_ABYSSAL03_DIAG01",
+      "DECOKIT_VINES01_ABYSSAL03_DIAGFILLER",
+      "DECOKIT_VINES01_ABYSSAL03_END01",
+      "DECOKIT_VINES01_ABYSSAL03_JUNCTION",
+      "DECOKIT_VINES01_ABYSSAL02_JUNCTION",
+      "DECOKIT_VINES01_ABYSSAL03_STRAIGHT",
+      "DECOKIT_VINES01_ABYSSAL02_CORNER",
+      "DECOKIT_VINES01_ABYSSAL02_DIAG02",
+      "DECOKIT_VINES01_ABYSSAL03_DIAG02",
+      "DECOKIT_VINES01_ABYSSAL_END01",
+      "DECOKIT_VINES01_ABYSSAL02_END01",
+      "DECOKIT_VINES01_ABYSSAL_JUNCTION",
+      "DECOKIT_VINES01_ABYSSAL_CORNER",
+      "DECOKIT_VINES01_ABYSSAL_STRAIGHT",
+      "DECOKIT_VINES01_ABYSSAL_DIAG02",
+      "DECOKIT_VINES01_ABYSSAL02_DIAG01",
+      "DECOKIT_VINES01_ABYSSAL_END02",
+      "DECOKIT_VINES01_ABYSSAL_DIAG01",
+      "DECOKIT_VINES01_ABYSSAL_DIAGFILLER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 1",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
       }
     ]
   },

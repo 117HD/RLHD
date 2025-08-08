@@ -29272,16 +29272,16 @@
     "description": "GOTR_ABYSSAL_RIFT",
     "height": 250,
     "alignment": "SOUTH",
-    "radius": 2000,
+    "radius": 2400,
     "strength": 25,
     "color": [
-      250.07925,
-      158.46326,
+      250,
+      100,
       255
     ],
     "type": "PULSE",
-    "duration": 1200,
-    "range": 15,
+    "duration": 2000,
+    "range": 10,
     "objectIds": [
       "GOTR_ABYSSAL_RIFT",
       "GOTR_ABYSSAL_RIFT_PHASE1"
