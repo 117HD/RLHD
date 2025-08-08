@@ -11088,7 +11088,7 @@
       "ENAKH_SANDY_ROCK4_SMALL"
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
