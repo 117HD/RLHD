@@ -1322,7 +1322,7 @@
     "windSpeed": 3,
     "windStrength": 30,
     "windAngle": 140,
-    "groundFogOpacity": 0.75,
+    "groundFogOpacity": 0.7,
     "waterCausticsStrength": 40
   },
   {
