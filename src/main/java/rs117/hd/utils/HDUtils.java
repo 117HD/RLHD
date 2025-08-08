@@ -347,6 +347,62 @@ public class HDUtils {
 		return hsl;
 	}
 
+	public static float triangleArea(float[] a, float[] b, float[] c) {
+		return Math.abs(a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])) * 0.5f;
+	}
+
+	public static float barycentricDepth(float[] p, float[] a, float[] b, float[] c,
+		float depthA, float depthB, float depthC) {
+
+		// Calculate the determinant of the triangle (twice the area)
+		float det = (b[1] - c[1]) * (a[0] - c[0]) +
+					(c[0] - b[0]) * (a[1] - c[1]);
+
+		// Avoid division by near-zero determinant (degenerate triangle)
+		if (Math.abs(det) < 1e-8f) return depthA;
+
+		// Compute barycentric coordinates (lambdas) for point p
+		float lambda1 = ((b[1] - c[1]) * (p[0] - c[0]) +
+						 (c[0] - b[0]) * (p[1] - c[1])) / det;
+
+		float lambda2 = ((c[1] - a[1]) * (p[0] - c[0]) +
+						 (a[0] - c[0]) * (p[1] - c[1])) / det;
+
+		float lambda3 = 1.0f - lambda1 - lambda2;
+
+		// Interpolate depth using the barycentric coordinates
+		return lambda1 * depthA + lambda2 * depthB + lambda3 * depthC;
+	}
+
+	public static boolean pointInTriangle(float[] p, float[] a, float[] b, float[] c) {
+		// Compute vectors
+		float[] edge0 = new float[2]; // c - a
+		float[] edge1 = new float[2]; // b - a
+		float[] pointVec = new float[2]; // p - a
+
+		subtract(edge0, c, a);
+		subtract(edge1, b, a);
+		subtract(pointVec, p, a);
+
+		// Compute dot products
+		float dot00 = dot(edge0, edge0);
+		float dot01 = dot(edge0, edge1);
+		float dot02 = dot(edge0, pointVec);
+		float dot11 = dot(edge1, edge1);
+		float dot12 = dot(edge1, pointVec);
+
+		// Compute barycentric coordinates
+		float denominator = dot00 * dot11 - dot01 * dot01;
+		if (denominator == 0.0f) return false; // Degenerate triangle
+
+		float invDenom = 1.0f / denominator;
+		float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+		float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+		// Check if point is inside the triangle
+		return (u >= 0) && (v >= 0) && (u + v <= 1.0f);
+	}
+
 	public static boolean isSphereInsideFrustum(float x, float y, float z, float radius, float[][] cullingPlanes) {
 		for (float[] plane : cullingPlanes) {
 			if (distanceToPlane(plane, x, y, z) < -radius) {
