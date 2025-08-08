@@ -26075,7 +26075,7 @@
   },
   {
     "description": "Guardians of the Rift - Archway",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [
       "GOTR_ENTRY",
       "GOTR_RUNESTONE_ENTRANCE_TOP"
@@ -26084,7 +26084,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "NONE",
+        "receiveShadows": false
       },
       {
         "colors": "h == 21 && s == 4",
@@ -26291,7 +26292,27 @@
     "uvOrientation": 512
   },
   {
+    "description": "Guardians of the Rift - Worktables",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "GOTR_WORKBENCH",
+      "GOTR_WEAK_CELLS",
+      "GOTR_UNCHARGED_CELLS",
+      "GOTR_BATTERIES_DECO01",
+      "GOTR_BATTERIES_DECO02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 20",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Guardians of the Rift - Grass",
+    "areas": [ "TEMPLE_OF_THE_EYE" ],
     "baseMaterial": "NONE",
     "flatNormals": true,
     "castShadows": false,
