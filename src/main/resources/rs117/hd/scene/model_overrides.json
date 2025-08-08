@@ -26122,10 +26122,10 @@
       "GOTR_PLANT_SHELF02_FALLOFF01",
       "GOTR_PLANT_SHELF02_FALLOFF02",
       "GOTR_PLANT_SHELF02_CORNER01",
-      "GOTR_PLANT_SHELF02_CORNER02"
-    ],
-    "uvType": "GEOMETRY",
-    "flatNormals": true
+      "GOTR_PLANT_SHELF02_CORNER02",
+      "GOTR_PLANT_SHELF01_CORNER02",
+      "GOTR_PLANT_SHELF01_CORNER01"
+    ]
   },
   {
     "description": "Guardians of the Rift - Large Guardian Remains",
@@ -26208,7 +26208,15 @@
       "GOTR_STATUE02"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
   },
   {
     "description": "Guardians of the Rift - Guardian Rune Portal Statues",
