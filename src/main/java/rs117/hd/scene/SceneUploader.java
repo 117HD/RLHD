@@ -625,7 +625,7 @@ public class SceneUploader {
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
-					var material = materialManager.fromVanillaTexture(textureId);
+					var material = Material.fromVanillaTexture(textureId);
 					// Disable tile overrides for newly introduced vanilla textures
 					if (material == Material.VANILLA)
 						override = NONE;
@@ -986,7 +986,7 @@ public class SceneUploader {
 				waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 				if (waterType == WaterType.NONE) {
 					if (textureId != -1) {
-						var material = materialManager.fromVanillaTexture(textureId);
+						var material = Material.fromVanillaTexture(textureId);
 						// Disable tile overrides for newly introduced vanilla textures
 						if (material == Material.VANILLA)
 							override = NONE;

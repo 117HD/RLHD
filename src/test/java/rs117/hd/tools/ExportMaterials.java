@@ -35,12 +35,15 @@ public class ExportMaterials {
 					Modifier.isStatic(oldfield.getModifiers()))
 					continue;
 
+				var f = Material.class.getDeclaredField(oldfield.getName());
+				f.setAccessible(true);
+
 				if (oldfield.getType() == rs117.hd.data.materials.Material.class) {
 					var oldmat = (rs117.hd.data.materials.Material) oldfield.get(old);
 					if (oldmat == null)
 						continue;
 
-					Material.class.getField(oldfield.getName()).set(newmat, new Material.Reference(oldmat.name()));
+					f.set(newmat, new Material.Reference(oldmat.name()));
 					continue;
 				}
 
@@ -53,7 +56,7 @@ public class ExportMaterials {
 					continue;
 				}
 
-				Material.class.getField(oldfield.getName()).set(newmat, oldfield.get(old));
+				f.set(newmat, oldfield.get(old));
 			}
 
 			list.add(newmat);

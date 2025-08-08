@@ -528,7 +528,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (tilePaint != null) {
 				polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 				lines.add("Tile type: Paint");
-				Material material = materialManager.fromVanillaTexture(tilePaint.getTexture());
+				Material material = Material.fromVanillaTexture(tilePaint.getTexture());
 				lines.add(String.format("Material: %s (%d)", material.name, tilePaint.getTexture()));
 				lines.add(String.format("HSL: %s", hslString(tile)));
 
@@ -543,7 +543,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int numChars = 0;
 				if (tileModel.getTriangleTextureId() != null) {
 					for (int texture : tileModel.getTriangleTextureId()) {
-						String material = String.format("%s (%d)", materialManager.fromVanillaTexture(texture).name, texture);
+						String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name, texture);
 						boolean unique = uniqueMaterials.add(material);
 						if (unique) {
 							numChars += material.length();

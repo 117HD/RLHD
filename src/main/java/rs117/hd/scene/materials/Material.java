@@ -6,11 +6,15 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -19,11 +23,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.Props;
+
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Accessors(fluent = true)
@@ -34,27 +41,27 @@ public class Material {
 	@JsonAdapter(Reference.Adapter.class)
 	public Material parent;
 	@JsonAdapter(Reference.Adapter.class)
-	public Material normalMap;
+	private Material normalMap;
 	@JsonAdapter(Reference.Adapter.class)
-	public Material displacementMap;
+	private Material displacementMap;
 	@JsonAdapter(Reference.Adapter.class)
-	public Material roughnessMap;
+	private Material roughnessMap;
 	@JsonAdapter(Reference.Adapter.class)
-	public Material ambientOcclusionMap;
+	private Material ambientOcclusionMap;
 	@JsonAdapter(Reference.Adapter.class)
-	public Material flowMap;
+	private Material flowMap;
 	public int vanillaTextureIndex = -1;
-	public boolean hasTransparency;
-	public boolean overrideBaseColor;
-	public boolean unlit;
-	public float brightness = 1;
-	public float displacementScale = .1f;
-	public float flowMapStrength;
-	public float[] flowMapDuration = { 0, 0 };
-	public float specularStrength;
-	public float specularGloss;
-	public float[] scrollSpeed = { 0, 0 };
-	public float[] textureScale = { 1, 1, 1 };
+	private boolean hasTransparency;
+	private boolean overrideBaseColor;
+	private boolean unlit;
+	private float brightness = 1;
+	private float displacementScale = .1f;
+	private float flowMapStrength;
+	private float[] flowMapDuration = { 0, 0 };
+	private float specularStrength;
+	private float specularGloss;
+	private float[] scrollSpeed = { 0, 0 };
+	private float[] textureScale = { 1, 1, 1 };
 	public List<String> materialsToReplace = Collections.emptyList();
 	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
 	public ExpressionPredicate replacementCondition;
@@ -66,7 +73,6 @@ public class Material {
 	public static final Material VANILLA = new Material().parent(NONE).name("VANILLA").hasTransparency(true);
 	public static final Material[] REQUIRED_MATERIALS = { NONE, VANILLA };
 
-	public static Material UNLIT;
 	public static Material BLACK;
 	public static Material WATER_FLAT;
 	public static Material WATER_FLAT_2;
@@ -77,31 +83,10 @@ public class Material {
 	public static Material DIRT_1;
 	public static Material DIRT_2;
 
-	@GsonUtils.ExcludeDefaults
-	public static class Definition extends Material implements GsonUtils.ExcludeDefaultsProvider<Material> {
-		@Override
-		public Material provideDefaults() {
-			return parent;
-		}
-	}
-
-	public static class Reference extends Material {
-		public Reference(@Nonnull String name) {
-			name(name);
-		}
-
-		@Slf4j
-		private static class Adapter extends TypeAdapter<Material> {
-			@Override
-			public Material read(JsonReader in) throws IOException {
-				return in.peek() == JsonToken.NULL ? null : new Reference(in.nextString());
-			}
-
-			@Override
-			public void write(JsonWriter out, Material material) throws IOException {
-				out.value(material == null ? null : material.name);
-			}
-		}
+	public static Material fromVanillaTexture(int vanillaTextureId) {
+		if (vanillaTextureId < 0 || vanillaTextureId >= MaterialManager.VANILLA_TEXTURE_MAPPING.length)
+			return NONE;
+		return MaterialManager.VANILLA_TEXTURE_MAPPING[vanillaTextureId];
 	}
 
 	public void normalize(int index, Map<String, Material> materials) {
@@ -146,7 +131,13 @@ public class Material {
 
 	@Override
 	public String toString() {
-		return name; // Used by Gson to map from String to Material
+		return name;
+	}
+
+	public String getTextureName() {
+		if (this == VANILLA)
+			return null;
+		return name.toLowerCase();
 	}
 
 	public Material resolveReference(@Nullable Material material, Map<String, Material> materials) {
@@ -182,6 +173,123 @@ public class Material {
 		while (source.parent != null && Objects.deepEquals(property, propertyGetter.apply(source.parent)))
 			source = source.parent;
 		return source;
+	}
+
+	public static void checkForReplacementLoops(Material[] materials) {
+		Map<String, Material> map = new HashMap<>();
+		for (var mat : materials)
+			if (!mat.materialsToReplace.isEmpty())
+				map.put(mat.name, mat);
+
+		Set<String> alreadyChecked = new HashSet<>();
+		for (var mat : map.values())
+			checkForReplacementLoops(alreadyChecked, map, mat);
+	}
+
+	public void fillMaterialStruct(
+		MaterialManager materialManager,
+		UBOMaterials.MaterialStruct struct,
+		int vanillaIndex,
+		float vanillaScrollX,
+		float vanillaScrollY
+	) {
+		float scrollSpeedX = scrollSpeed[0] + vanillaScrollX;
+		float scrollSpeedY = scrollSpeed[1] + vanillaScrollY;
+
+		struct.colorMap.set(this == Material.VANILLA ?
+			materialManager.vanillaTextureIndexToTextureLayer[vanillaIndex] : materialManager.getTextureLayer(this));
+		struct.normalMap.set(materialManager.getTextureLayer(normalMap));
+		struct.displacementMap.set(materialManager.getTextureLayer(displacementMap));
+		struct.roughnessMap.set(materialManager.getTextureLayer(roughnessMap));
+		struct.ambientOcclusionMap.set(materialManager.getTextureLayer(ambientOcclusionMap));
+		struct.flowMap.set(materialManager.getTextureLayer(flowMap));
+		struct.flags.set(
+			(overrideBaseColor ? 1 : 0) << 2 |
+			(unlit ? 1 : 0) << 1 |
+			(hasTransparency ? 1 : 0)
+		);
+		struct.brightness.set(brightness);
+		struct.displacementScale.set(displacementScale);
+		struct.specularStrength.set(specularStrength);
+		struct.specularGloss.set(specularGloss);
+		struct.flowMapStrength.set(flowMapStrength);
+		struct.flowMapDuration.set(flowMapDuration);
+		struct.scrollDuration.set(scrollSpeedX, scrollSpeedY);
+		struct.textureScale.set(divide(vec(1), textureScale));
+	}
+
+	private static void checkForReplacementLoops(Set<String> alreadyChecked, Map<String, Material> map, Material entryMaterial) {
+		if (alreadyChecked.add(entryMaterial.name))
+			checkForReplacementLoops(alreadyChecked, map, new ArrayDeque<>(), entryMaterial.name, entryMaterial);
+	}
+
+	private static void checkForReplacementLoops(
+		Set<String> alreadyChecked,
+		Map<String, Material> map,
+		ArrayDeque<String> loop,
+		String entryPointName,
+		Material toCheck
+	) {
+		loop.addLast(toCheck.findParent(m -> m.materialsToReplace).name);
+
+		for (int i = toCheck.materialsToReplace.size() - 1; i >= 0; i--) {
+			String nameToReplace = toCheck.materialsToReplace.get(i);
+			// Check if the replacement introduces a loop
+			if (entryPointName.equals(nameToReplace)) {
+				var original = map.get(nameToReplace).findParent(m -> m.materialsToReplace).name;
+				if (!nameToReplace.equals(original))
+					nameToReplace += " (parent=" + original + ")";
+				log.warn("Materials contain replacement loop: {} -> {}", String.join(" -> ", loop), nameToReplace);
+				// Remove the loop
+				toCheck.materialsToReplace.remove(i);
+				continue;
+			}
+
+			var toReplace = map.get(nameToReplace);
+			if (toReplace == null)
+				continue;
+
+			// Before continuing to check for loops back to the entrypoint name,
+			// we need to rule out any loops within the next material to check,
+			// so we don't get stuck in a loop there
+			checkForReplacementLoops(alreadyChecked, map, toReplace);
+
+			// The replacement might've already been removed to prevent a loop in the step above
+			if (!toCheck.materialsToReplace.contains(nameToReplace))
+				continue;
+
+			// Check if any further replacements result in a loop
+			checkForReplacementLoops(alreadyChecked, map, loop, entryPointName, toReplace);
+		}
+
+		loop.removeLast();
+	}
+
+	@GsonUtils.ExcludeDefaults
+	public static class Definition extends Material implements GsonUtils.ExcludeDefaultsProvider<Material> {
+		@Override
+		public Material provideDefaults() {
+			return parent;
+		}
+	}
+
+	public static class Reference extends Material {
+		public Reference(@Nonnull String name) {
+			name(name);
+		}
+
+		@Slf4j
+		private static class Adapter extends TypeAdapter<Material> {
+			@Override
+			public Material read(JsonReader in) throws IOException {
+				return in.peek() == JsonToken.NULL ? null : new Reference(in.nextString());
+			}
+
+			@Override
+			public void write(JsonWriter out, Material material) throws IOException {
+				out.value(material == null ? null : material.name);
+			}
+		}
 	}
 
 	@Slf4j

@@ -349,7 +349,7 @@ public class ModelPusher {
 					uvType = UvType.VANILLA;
 					material = textureMaterial;
 					if (material == Material.NONE)
-						material = materialManager.fromVanillaTexture(textureId);
+						material = Material.fromVanillaTexture(textureId);
 				}
 
 				ModelOverride faceOverride = modelOverride;
@@ -456,7 +456,7 @@ public class ModelPusher {
 		boolean isOverlay
 	) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
-		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
+		int materialIndex = materialManager.getMaterialIndex(material, vanillaTexture);
 		assert materialIndex <= MAX_MATERIAL_INDEX;
 		// The sign bit can't be used without shader changes to correctly unpack the material index
 		return (materialIndex & MAX_MATERIAL_INDEX) << 20

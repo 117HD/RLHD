@@ -163,7 +163,6 @@ public enum Material {
 	SNOW_FLAKES(52, p -> p
 		.setHasTransparency(true)),
 	FROZEN_ABYSSAL_WHIP(53),
-	UNUSED_UI_TEXTURE(54),
 	ROOF_BRICK_TILE_DARK(55),
 	RED_LAVA(56),
 	SMOKE_BATTLESTAFF(57),
