@@ -26019,7 +26019,25 @@
     ]
   },
   {
-    "description": "Guardians of the Rift entrance",
+    "description": "Guardians of the Rift - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "GOTR_BANKCHEST"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 6 || h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Entrance",
     "objectIds": [
       "GOTR_BARRIER",
       "GOTR_BARRIER_CLOSED"
@@ -26028,7 +26046,7 @@
     "castShadows": false
   },
   {
-    "description": "Guardians of the Rift barriers",
+    "description": "Guardians of the Rift - Barriers",
     "objectIds": [
       "GOTR_BARRIER_TIER1",
       "GOTR_BARRIER_TIER1_3X3",
@@ -26280,8 +26298,36 @@
     "uvOrientation": 256
   },
   {
+    "description": "Guardians of the Rift - Cell Tiles",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "GOTR_CELL_TILE_BROKEN_REPAIRABLE",
+      "GOTR_CELL_TILE_BROKEN",
+      "GOTR_CELL_TILE_INACTIVE_NOOP",
+      "GOTR_CELL_TILE_INACTIVE",
+      "GOTR_CELL_TILE_TIER1",
+      "GOTR_CELL_TILE_TIER2",
+      "GOTR_CELL_TILE_TIER3",
+      "GOTR_CELL_TILE_TIER4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      }
+    ]
+  },
+  {
     "description": "Guardians of the Rift - Columns with Abyssal Vines",
     "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
     "objectIds": [
       "GOTR_PILLAR_RUNESTONE01",
       "GOTR_PILLAR_RUNESTONE02"
@@ -26293,10 +26339,7 @@
         "uvType": "BOX",
         "uvScale": 0.5
       }
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.7,
-    "uvOrientation": 256
+    ]
   },
   {
     "description": "Guardians of the Rift - Destroyed Columns Base",
@@ -26442,7 +26485,9 @@
     "objectIds": [
       "GOTR_PLANT_ELK01_DEFAULT01",
       "GOTR_PLANT_ELK01_DEFAULT01_2X2",
-      "GOTR_PLANT_ELK01_FALLOFF01"
+      "GOTR_PLANT_ELK01_FALLOFF01",
+      "GOTR_PLANT_LACE01_GOLD01",
+      "GOTR_PLANT_LACE01_GOLD02"
     ]
   },
   {
@@ -26473,9 +26518,7 @@
   },
   {
     "description": "Guardians of the Rift - Dead Coral",
-    "baseMaterial": "GRUNGE_1",
-    "uvType": "BOX",
-    "uvScale": 0.5,
+    "baseMaterial": "GRUNGE_2",
     "windDisplacementMode": "OBJECT",
     "windDisplacementModifier": 2,
     "objectIds": [

@@ -29432,7 +29432,8 @@
     "duration": 0,
     "range": 10,
     "objectIds": [
-      "GOTR_BARRIER_CLOSED"
+      "GOTR_BARRIER_CLOSED",
+      "GOTR_BARRIER_NOENTRY"
     ]
   },
   {
