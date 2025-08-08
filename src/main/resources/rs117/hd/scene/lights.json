@@ -28919,13 +28919,13 @@
   },
   {
     "description": "WIZARD_TOWER_RIFT_PORTAL",
-    "height": 100,
+    "height": 70,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 80,
+    "radius": 250,
+    "strength": 150,
     "color": [
       0,
-      191.49066,
+      75,
       255
     ],
     "type": "PULSE",
