@@ -6846,30 +6846,6 @@
     "flatNormals": true
   },
   {
-    "description": "Guardians of the Rift entrance",
-    "objectIds": [
-      "GOTR_BARRIER",
-      "GOTR_BARRIER_CLOSED"
-    ],
-    "baseMaterial": "UNLIT",
-    "castShadows": false
-  },
-  {
-    "description": "Guardians of the Rift barriers",
-    "objectIds": [
-      "GOTR_BARRIER_TIER1",
-      "GOTR_BARRIER_TIER1_3X3",
-      "GOTR_BARRIER_TIER2",
-      "GOTR_BARRIER_TIER2_3X3",
-      "GOTR_BARRIER_TIER3",
-      "GOTR_BARRIER_TIER3_3X3",
-      "GOTR_BARRIER_TIER4",
-      "GOTR_BARRIER_TIER4_3X3"
-    ],
-    "baseMaterial": "UNLIT",
-    "castShadows": false
-  },
-  {
     "description": "Tombs of Amascut Baba boulders",
     "npcIds": [
       "TOA_BABA_BOULDER",
@@ -25610,16 +25586,6 @@
     ]
   },
   {
-    "description": "Guardians Of the Rift - Rocks - Medium",
-    "baseMaterial": "ROCK_4",
-    "objectIds": [
-      "GOTR_RUNESTONE_ROCKS_SMALL01"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.82,
-    "uvOrientation": 256
-  },
-  {
     "description": "Auburnvale - Bank Booth",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -26054,6 +26020,30 @@
     ]
   },
   {
+    "description": "Guardians of the Rift entrance",
+    "objectIds": [
+      "GOTR_BARRIER",
+      "GOTR_BARRIER_CLOSED"
+    ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
+  },
+  {
+    "description": "Guardians of the Rift barriers",
+    "objectIds": [
+      "GOTR_BARRIER_TIER1",
+      "GOTR_BARRIER_TIER1_3X3",
+      "GOTR_BARRIER_TIER2",
+      "GOTR_BARRIER_TIER2_3X3",
+      "GOTR_BARRIER_TIER3",
+      "GOTR_BARRIER_TIER3_3X3",
+      "GOTR_BARRIER_TIER4",
+      "GOTR_BARRIER_TIER4_3X3"
+    ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
+  },
+  {
     "description": "Guardians Of the Rift - Rocks - Large",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -26071,6 +26061,16 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.72,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians Of the Rift - Rocks - Medium",
+    "baseMaterial": "ROCK_4",
+    "objectIds": [
+      "GOTR_RUNESTONE_ROCKS_SMALL01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.82,
     "uvOrientation": 256
   },
   {
