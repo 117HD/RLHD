@@ -1,6 +1,9 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
@@ -38,23 +41,27 @@ public class GroundMaterialManager {
 				if (groundMaterials == null)
 					throw new IOException("Empty or invalid: " + path);
 
-				GROUND_MATERIALS = new GroundMaterial[groundMaterials.length + 2];
-				GROUND_MATERIALS[0] = GroundMaterial.NONE;
-				GROUND_MATERIALS[1] = GroundMaterial.DIRT;
-				for (int i = 0; i < groundMaterials.length; i++) {
-					var g = groundMaterials[i];
-					GROUND_MATERIALS[i + 2] = g;
-					for (int j = 0; j < g.materials.length; j++) {
-						if (g.materials[j] == null) {
-							g.materials[j] = Material.NONE;
-							log.error("Missing material at index {} in ground material '{}'", j, g.name);
-						}
-					}
-				}
+				for (var g : groundMaterials)
+					g.normalize();
 
-				// Reload everything which depends on ground materials
-				if (!first)
-					clientThread.invoke(() -> tileOverrideManager.reload(true));
+				clientThread.invoke(() -> {
+					GroundMaterial.DIRT = new GroundMaterial("DIRT", Material.DIRT_1, Material.DIRT_2);
+					GroundMaterial.UNDERWATER_GENERIC = new GroundMaterial("UNDERWATER_GENERIC", Material.DIRT_1, Material.DIRT_2);
+
+					var staticGroundMaterials = List.of(
+						GroundMaterial.NONE,
+						GroundMaterial.DIRT,
+						GroundMaterial.UNDERWATER_GENERIC
+					);
+					GROUND_MATERIALS = Stream.concat(
+						staticGroundMaterials.stream(),
+						Arrays.stream(groundMaterials)
+					).toArray(GroundMaterial[]::new);
+
+					// Reload everything which depends on ground materials
+					if (!first)
+						tileOverrideManager.reload(true);
+				});
 			} catch (IOException ex) {
 				log.error("Failed to load ground materials:", ex);
 			}
@@ -66,5 +73,10 @@ public class GroundMaterialManager {
 			fileWatcher.unregister();
 		fileWatcher = null;
 		GROUND_MATERIALS = new GroundMaterial[0];
+	}
+
+	public void restart() {
+		shutDown();
+		startUp();
 	}
 }

@@ -51,7 +51,7 @@ public class WaterTypeManager {
 	private HdPlugin plugin;
 
 	@Inject
-	private TextureManager textureManager;
+	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -91,7 +91,7 @@ public class WaterTypeManager {
 
 					if (uboWaterTypes != null)
 						uboWaterTypes.destroy();
-					uboWaterTypes = new UBOWaterTypes(waterTypes, textureManager);
+					uboWaterTypes = new UBOWaterTypes(waterTypes, materialManager);
 
 					if (first)
 						return;
@@ -127,11 +127,16 @@ public class WaterTypeManager {
 			fileWatcher.unregister();
 		fileWatcher = null;
 
-		WATER_TYPES = new WaterType[0];
-
 		if (uboWaterTypes != null)
 			uboWaterTypes.destroy();
 		uboWaterTypes = null;
+
+		WATER_TYPES = new WaterType[0];
+	}
+
+	public void restart() {
+		shutDown();
+		startUp();
 	}
 
 	public WaterType get(String name) {
@@ -139,10 +144,5 @@ public class WaterTypeManager {
 			if (name.equals(type.name))
 				return type;
 		return WaterType.NONE;
-	}
-
-	public void update() {
-		if (uboWaterTypes != null)
-			uboWaterTypes.update(textureManager);
 	}
 }

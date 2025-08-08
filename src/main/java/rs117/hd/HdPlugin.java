@@ -673,8 +673,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				initBuffers();
 
 				// Materials need to be initialized before compiling shader programs
-				materialManager.startUp();
 				textureManager.startUp();
+				materialManager.startUp();
 				waterTypeManager.startUp();
 
 				initPrograms();
@@ -763,8 +763,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				waitUntilIdle();
 
 				waterTypeManager.shutDown();
-				textureManager.shutDown();
 				materialManager.shutDown();
+				textureManager.shutDown();
 
 				destroyBuffers();
 				destroyUiTexture();
@@ -914,7 +914,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							.append("#define MAT_")
 							.append(m.name.toUpperCase())
 							.append(" getMaterial(")
-							.append(textureManager.getMaterialIndex(m, m.vanillaTextureIndex))
+							.append(materialManager.getMaterialIndex(m, m.vanillaTextureIndex))
 							.append(")\n");
 					}
 					return include.toString();
@@ -926,7 +926,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI)
-			.addUniformBuffer(textureManager.uboMaterials)
+			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
 	}
 
@@ -2818,7 +2818,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						waitUntilIdle();
 
 					if (reloadTexturesAndMaterials) {
-						textureManager.reloadTextures();
+						materialManager.reload();
 						recompilePrograms = true;
 						clearModelCache = true;
 					} else if (reloadModelOverrides) {

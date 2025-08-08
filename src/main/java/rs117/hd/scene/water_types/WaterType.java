@@ -6,34 +6,40 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.uniforms.UBOWaterTypes;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.GsonUtils;
 
+import static rs117.hd.utils.ColorUtils.linearToSrgb;
 import static rs117.hd.utils.ColorUtils.rgb;
 
 @NoArgsConstructor
 @GsonUtils.ExcludeDefaults
+@Setter(AccessLevel.PROTECTED)
 public class WaterType {
 	public String name;
-	public boolean flat = false;
-	public float specularStrength = .5f;
-	public float specularGloss = 500;
-	public float normalStrength = .09f;
-	public float baseOpacity = .5f;
-	public float fresnelAmount = 1;
-	public Material normalMap = Material.WATER_NORMAL_MAP_1;
+	private boolean flat = false;
+	private float specularStrength = .5f;
+	private float specularGloss = 500;
+	private float normalStrength = .09f;
+	private float baseOpacity = .5f;
+	private float fresnelAmount = 1;
+	private Material normalMap = Material.WATER_NORMAL_MAP_1;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
-	public float[] surfaceColor = { 1, 1, 1 };
+	private float[] surfaceColor = { 1, 1, 1 };
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
-	public float[] foamColor = rgb(176, 164, 146);
+	private float[] foamColor = rgb(176, 164, 146);
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
-	public float[] depthColor = rgb(0, 117, 142);
-	public boolean hasFoam = true;
-	public float duration = 1;
+	private float[] depthColor = rgb(0, 117, 142);
+	private boolean hasFoam = true;
+	private float duration = 1;
 	public int fishingSpotRecolor = -1;
 
 	public transient int index;
@@ -65,6 +71,23 @@ public class WaterType {
 	@Override
 	public String toString() {
 		return name;
+	}
+
+	public void fillStruct(MaterialManager materialManager, UBOWaterTypes.WaterTypeStruct struct) {
+		struct.isFlat.set(flat ? 1 : 0);
+		struct.specularStrength.set(specularStrength);
+		struct.specularGloss.set(specularGloss);
+		struct.normalStrength.set(normalStrength);
+		struct.baseOpacity.set(baseOpacity);
+		struct.hasFoam.set(hasFoam ? 1 : 0);
+		struct.duration.set(duration);
+		struct.fresnelAmount.set(fresnelAmount);
+		struct.surfaceColor.set(linearToSrgb(surfaceColor));
+		struct.foamColor.set(linearToSrgb(foamColor));
+		struct.depthColor.set(linearToSrgb(depthColor));
+		struct.normalMap.set(materialManager.getTextureLayer(normalMap));
+		struct.foamMap.set(materialManager.getTextureLayer(Material.WATER_FOAM));
+		struct.flowMap.set(materialManager.getTextureLayer(Material.WATER_FLOW_MAP));
 	}
 
 	@Slf4j
