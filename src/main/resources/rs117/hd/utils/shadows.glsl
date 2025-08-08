@@ -55,7 +55,7 @@ float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float l
     shadowPos = clamp(shadowPos, 0, 1);
 
     vec2 shadowRes = textureSize(shadowMap, 0);
-    float shadowMinBias = 0.0009f;
+    float shadowMinBias = 0.0002f;
     float shadowBias = shadowMinBias * max(1, (1.0 - lightDotNormals));
     float fragDepth = shadowPos.z - shadowBias;
     float shadow = 0;

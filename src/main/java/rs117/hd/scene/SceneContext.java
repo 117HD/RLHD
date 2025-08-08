@@ -79,6 +79,8 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
+	public RenderableCullingData[][][][] tileRenderableCullingData = new RenderableCullingData[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][];
+
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
@@ -242,5 +244,9 @@ public class SceneContext {
 
 	public int getBaseExY() {
 		return scene.getBaseY() - SCENE_OFFSET;
+	}
+
+	public static final class RenderableCullingData {
+		public int bottomY, radius, height;
 	}
 }

@@ -500,18 +500,17 @@ public interface HdPluginConfig extends Config
 		return ShadowDistance.DISTANCE_50;
 	}
 
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
+	String KEY_SHADOW_CULLING = "shadowCulling";
 	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand Shadow Draw",
+		keyName = KEY_SHADOW_CULLING,
+		name = "Shadow Culling",
 		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
+			"Reduces shadows popping in and out at the edge of the screen by performing<br>" +
+			"extra culling to render geometry outside the scene view but within view for shadows, at the cost of higher GPU usage.",
 		position = 10,
 		section = lightingSettings
 	)
-	default boolean expandShadowDraw()
-	{
+	default boolean shadowCulling() {
 		return false;
 	}
 
@@ -547,7 +546,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
 		name = "Parallax Occlusion Mapping",
 		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
-		position = 13,
+		position = 14,
 		section = lightingSettings
 	)
 	default boolean parallaxOcclusionMapping() {

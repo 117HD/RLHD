@@ -205,10 +205,10 @@ public class LightManager {
 			changedPlanes = true;
 		}
 
-		float cosYaw = cos(plugin.cameraOrientation[0]);
-		float sinYaw = sin(plugin.cameraOrientation[0]);
-		float cosPitch = cos(plugin.cameraOrientation[1]);
-		float sinPitch = sin(plugin.cameraOrientation[1]);
+		float cosYaw = cos(plugin.sceneCamera.getYaw());
+		float sinYaw = sin(plugin.sceneCamera.getYaw());
+		float cosPitch = cos(plugin.sceneCamera.getPitch());
+		float sinPitch = sin(plugin.sceneCamera.getPitch());
 		float[] viewDir = {
 			cosPitch * -sinYaw,
 			sinPitch,

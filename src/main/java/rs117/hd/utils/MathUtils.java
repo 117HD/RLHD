@@ -285,6 +285,10 @@ public class MathUtils {
 		return normalize(new float[v.length], v);
 	}
 
+	public static float[] normalizePlane(float[] out, float[] plane) { return divide(out, plane, length(plane[0], plane[1], plane[2])); }
+
+	public static float[] normalizePlane(float[] plane) { return normalizePlane(new float[4], plane); }
+
 	public static float abs(float v) {
 		return Math.abs(v);
 	}
@@ -581,5 +585,13 @@ public class MathUtils {
 
 	public static float cos(float rad) {
 		return (float) Math.cos(rad);
+	}
+
+	public static float distanceToPlane(float[] plane, float x, float y, float z) {
+		return plane[0] * x + plane[1] * y + plane[2] * z + plane[3];
+	}
+
+	public static float distanceToPlane(float[] plane, float[] v) {
+		return plane[0] * v[0] + plane[1] * v[1] + plane[2] * v[2] + plane[3];
 	}
 }

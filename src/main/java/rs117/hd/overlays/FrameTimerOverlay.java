@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.text.DecimalFormat;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import net.runelite.client.ui.FontManager;
@@ -35,6 +36,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.values().length];
 	private final StringBuilder sb = new StringBuilder();
+	private final DecimalFormat nf = new DecimalFormat("#,###"); // Formats whole numbers with commas
 
 	@Inject
 	public FrameTimerOverlay(HdPlugin plugin) {
@@ -122,17 +124,27 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			children.add(LineComponent.builder()
 				.left("Tiles:")
-				.right(String.valueOf(plugin.getDrawnTileCount()))
+				.right(nf.format(plugin.getDrawnTileCount()))
 				.build());
 
 			children.add(LineComponent.builder()
 				.left("Static Renderables:")
-				.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
+				.right(nf.format(plugin.getDrawnStaticRenderableCount()))
 				.build());
 
 			children.add(LineComponent.builder()
 				.left("Dynamic Renderables:")
-				.right(String.valueOf(plugin.getDrawnDynamicRenderableCount()))
+				.right(nf.format(plugin.getDrawnDynamicRenderableCount()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("Scene Triangles:")
+				.right(nf.format(plugin.getDrawnTrianglesScene()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("Directional Triangles:")
+				.right(nf.format(plugin.getDrawnTrianglesDirectionalLight()))
 				.build());
 
 			children.add(LineComponent.builder()

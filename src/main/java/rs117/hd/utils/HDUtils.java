@@ -346,4 +346,203 @@ public class HDUtils {
 		}
 		return hsl;
 	}
+
+	public static float triangleArea(float[] a, float[] b, float[] c) {
+		return Math.abs(a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])) * 0.5f;
+	}
+
+	public static float barycentricDepth(float[] p, float[] a, float[] b, float[] c,
+		float depthA, float depthB, float depthC) {
+
+		// Calculate the determinant of the triangle (twice the area)
+		float det = (b[1] - c[1]) * (a[0] - c[0]) +
+					(c[0] - b[0]) * (a[1] - c[1]);
+
+		// Avoid division by near-zero determinant (degenerate triangle)
+		if (Math.abs(det) < 1e-8f) return depthA;
+
+		// Compute barycentric coordinates (lambdas) for point p
+		float lambda1 = ((b[1] - c[1]) * (p[0] - c[0]) +
+						 (c[0] - b[0]) * (p[1] - c[1])) / det;
+
+		float lambda2 = ((c[1] - a[1]) * (p[0] - c[0]) +
+						 (a[0] - c[0]) * (p[1] - c[1])) / det;
+
+		float lambda3 = 1.0f - lambda1 - lambda2;
+
+		// Interpolate depth using the barycentric coordinates
+		return lambda1 * depthA + lambda2 * depthB + lambda3 * depthC;
+	}
+
+	public static boolean pointInTriangle(float[] p, float[] a, float[] b, float[] c) {
+		// Compute vectors
+		float[] edge0 = new float[2]; // c - a
+		float[] edge1 = new float[2]; // b - a
+		float[] pointVec = new float[2]; // p - a
+
+		subtract(edge0, c, a);
+		subtract(edge1, b, a);
+		subtract(pointVec, p, a);
+
+		// Compute dot products
+		float dot00 = dot(edge0, edge0);
+		float dot01 = dot(edge0, edge1);
+		float dot02 = dot(edge0, pointVec);
+		float dot11 = dot(edge1, edge1);
+		float dot12 = dot(edge1, pointVec);
+
+		// Compute barycentric coordinates
+		float denominator = dot00 * dot11 - dot01 * dot01;
+		if (denominator == 0.0f) return false; // Degenerate triangle
+
+		float invDenom = 1.0f / denominator;
+		float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
+		float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
+
+		// Check if point is inside the triangle
+		return (u >= 0) && (v >= 0) && (u + v <= 1.0f);
+	}
+
+	public static boolean isSphereInsideFrustum(float x, float y, float z, float radius, float[][] cullingPlanes) {
+		for (float[] plane : cullingPlanes) {
+			if (distanceToPlane(plane, x, y, z) < -radius) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static boolean isModelVisible(int x, int y, int z, Model model, float[][] cullingPlanes) {
+		final int bottom = y - model.getBottomY();
+		final int radius = model.getRadius();
+		return isAABBVisible(x - radius, bottom, z - radius, x + radius, bottom + model.getModelHeight(), z + radius, cullingPlanes, 0.0f);
+	}
+
+	public static boolean isAABBVisible(
+		int minX,
+		int minY,
+		int minZ,
+		int maxX,
+		int maxY,
+		int maxZ,
+		float[][] cullingPlanes,
+		float padding
+	) {
+		for (float[] plane : cullingPlanes) {
+			if (
+				distanceToPlane(plane, minX, minY, minZ) < padding &&
+				distanceToPlane(plane, maxX, minY, minZ) < padding &&
+				distanceToPlane(plane, minX, maxY, minZ) < padding &&
+				distanceToPlane(plane, maxX, maxY, minZ) < padding &&
+				distanceToPlane(plane, minX, minY, maxZ) < padding &&
+				distanceToPlane(plane, maxX, minY, maxZ) < padding &&
+				distanceToPlane(plane, minX, maxY, maxZ) < padding &&
+				distanceToPlane(plane, maxX, maxY, maxZ) < padding) {
+				// Not visible - all returned negative
+				return false;
+			}
+		}
+
+		// Potentially visible
+		return true;
+	}
+
+	public static boolean isCylinderVisible(int x, int y, int z, int height, int radius, float[][] cullingPlanes) {
+		final int SAMPLES = 8; // Number of points to test around the circle
+		final float TWO_PI = (float) (2 * Math.PI);
+		final float ANGLE_STEP = TWO_PI / SAMPLES;
+
+		float topY = y + height;
+
+		// Also check cylinder center top and bottom
+		if (isPointInsideFrustum(x, y, z, cullingPlanes) ||
+			isPointInsideFrustum(x, topY, z, cullingPlanes)) {
+			return true;
+		}
+
+		// Check top and bottom circle edge points
+		for (int i = 0; i < SAMPLES; i++) {
+			float angle = i * ANGLE_STEP;
+			float offsetX = (float) Math.cos(angle) * radius;
+			float offsetZ = (float) Math.sin(angle) * radius;
+
+			float px = x + offsetX;
+			float pz = z + offsetZ;
+
+			// Check if this point on top or bottom circle is inside the frustum
+			if (isPointInsideFrustum(px, y, pz, cullingPlanes) ||
+				isPointInsideFrustum(px, topY, pz, cullingPlanes)) {
+				return true;
+			}
+		}
+
+		return false; // All tested points are outside
+	}
+
+	public static boolean IsTileVisible(int x, int z, int h0, int h1, int h2, int h3, float[][] cullingPlanes) {
+		return IsTileVisible(x, z, h0, h1, h2, h3, cullingPlanes, 0);
+	}
+
+	public static boolean IsTileVisible(int x, int z, int h0, int h1, int h2, int h3, float[][] cullingPlanes, int padding) {
+		int x1 = x + LOCAL_TILE_SIZE;
+		int z1 = z + LOCAL_TILE_SIZE;
+		for (float[] plane : cullingPlanes) {
+			if (distanceToPlane(plane, x, h0, z) >= padding ||
+				distanceToPlane(plane, x1, h1, z) >= padding ||
+				distanceToPlane(plane, x, h2, z1) >= padding ||
+				distanceToPlane(plane, x1, h3, z1) >= padding) {
+				// At least one point is inside this plane; continue testing other planes
+				continue;
+			}
+			return false; // All points outside this plane
+		}
+		return true;
+	}
+
+	public static boolean isPointInsideFrustum(float x, float y, float z, float[][] cullingPlanes) {
+		for (float[] plane : cullingPlanes) {
+			if (distanceToPlane(plane, x, y, z) < 0) {
+				return false; // Point is outside this plane
+			}
+		}
+		return true;
+	}
+
+	public enum Halfspace {
+		NEGATIVE,
+		ON_PLANE,
+		POSITIVE,
+	}
+
+	public static Halfspace classifyPoint(float[] plane, float x, float y, float z) {
+		float d = distanceToPlane(plane, x, y, z);
+		if (d < 0) return Halfspace.NEGATIVE;
+		if (d > 0) return Halfspace.POSITIVE;
+		return Halfspace.ON_PLANE;
+	}
+
+	public static int tileCoordinateToIndex(int tileExX, int tileExY, int plane) {
+		return (plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE) + (tileExX * EXTENDED_SCENE_SIZE) + tileExY;
+	}
+
+	public static void clipFrustumToDistance(float[][] frustumCorners, float maxDistance) {
+		if (frustumCorners.length != 8) {
+			return;
+		}
+
+		// Clip Far Plane Corners
+		for (int i = 4; i < frustumCorners.length; i++) {
+			float[] nearCorner = frustumCorners[i - 4];
+			float[] farCorner = frustumCorners[i];
+			float[] nearToFarVec = subtract(nearCorner, farCorner);
+			float len = length(nearToFarVec);
+
+			if (len > 1e-5f && len > maxDistance) {
+				normalize(nearToFarVec, nearToFarVec);
+				float[] clipped = multiply(nearToFarVec, maxDistance);
+				frustumCorners[i] = add(clipped, nearCorner);
+			}
+		}
+	}
 }

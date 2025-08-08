@@ -39,7 +39,6 @@ import rs117.hd.scene.lights.LightType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.Mat4;
 
-import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -126,13 +125,9 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 
 		// If the orientation changed, don't consider mouse movement
 		boolean wasCameraReoriented = isProbablyRotatingCamera;
-		for (int j = 0; j < 2; j++) {
-			if (cameraOrientation[j] != plugin.cameraOrientation[j]) {
-				wasCameraReoriented = true;
-				break;
-			}
-		}
-		copyTo(cameraOrientation, plugin.cameraOrientation);
+		wasCameraReoriented |= plugin.sceneCamera.getYaw() != cameraOrientation[0];
+		wasCameraReoriented |= plugin.sceneCamera.getPitch() != cameraOrientation[1];
+		System.arraycopy(plugin.sceneCamera.getOrientation(), 0, cameraOrientation, 0, 2);
 
 		boolean isCtrlHeld = client.isKeyPressed(KeyCode.KC_CONTROL);
 		boolean isShiftHeld = client.isKeyPressed(KeyCode.KC_SHIFT);
@@ -197,15 +192,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		Mat4.mul(projectionMatrix, Mat4.translate(.5f, .5f, .5f));
 		Mat4.mul(projectionMatrix, Mat4.scale(.5f, -.5f, .5f));
 		// NDC clip space
-		Mat4.mul(projectionMatrix, Mat4.scale(client.getScale(), client.getScale(), 1));
-		Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-		Mat4.mul(projectionMatrix, Mat4.rotateX(plugin.cameraOrientation[1]));
-		Mat4.mul(projectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
-		Mat4.mul(projectionMatrix, Mat4.translate(
-			-plugin.cameraPosition[0],
-			-plugin.cameraPosition[1],
-			-plugin.cameraPosition[2]
-		));
+		Mat4.mul(projectionMatrix, plugin.sceneCamera.getViewProjMatrix());
 
 		float[] inverseProjection = null;
 		try {
@@ -290,7 +277,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 							continue;
 					} else {
 						// p1 & v1 = ray from the camera in the hovered direction
-						var p1 = plugin.cameraPosition;
+						var p1 = plugin.sceneCamera.getPosition();
 						var v1 = new float[3];
 
 						// Compute a vector from the camera to the target mouse position
@@ -390,7 +377,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			copyTo(point, l.pos);
 			point[3] = 1;
 
-			subtract(lightToCamera, plugin.cameraPosition, point);
+			subtract(lightToCamera, plugin.sceneCamera.getPosition(), point);
 			float distanceFromCamera = length(lightToCamera);
 
 			Mat4.projectVec(point, projectionMatrix, point);
