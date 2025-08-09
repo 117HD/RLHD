@@ -7789,6 +7789,22 @@
     "uvScale": 0.7
   },
   {
+    "name": "Movario's Base - Library Floor Fix",
+    "area": "Movario's Base - Library",
+    "underlayIds": [ 67 ],
+    "groundMaterial": "NONE",
+    "shiftLightness": 3,
+    "replacements": {
+      "Movario's Base - Stairs Dirt Floor": "h > 5"
+     }
+  },
+  {
+    "name": "Movario's Base - Stairs Dirt Floor",
+    "area": "Movario's Base - Library",
+    "underlayIds": [ 67 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [

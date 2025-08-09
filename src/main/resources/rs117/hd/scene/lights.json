@@ -39853,5 +39853,54 @@
     "objectIds": [
       "MACRO_EVIL_BOB_UNCOOK_POT"
     ]
+  },
+  {
+    "description": "Movario's Base - Wall Lamp",
+    "offset": [ 0, 217, 75 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      200
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "duration": 0,
+    "objectIds": [
+      "LUC2_MOV_BARRACKS_LIGHT_01"
+    ]
+  },
+  {
+    "description": "Movario's Base - Electric Door Flicker",
+    "offset": [ 0, 150, 45 ],
+    "radius": 175,
+    "strength": 25,
+    "color": [
+      40,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 80,
+    "duration": 0,
+    "objectIds": [
+      "LUC2_MOV_ELECTRIC_RAIL_GATE_LIVE"
+    ]
+  },
+  {
+    "description": "Movario's Base - Electric Door Static",
+    "offset": [ 0, 100, 45 ],
+    "radius": 200,
+    "strength": 35,
+    "color": [
+      40,
+      160,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_MOV_ELECTRIC_RAIL_GATE_LIVE"
+    ]
   }
 ]
