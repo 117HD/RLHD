@@ -47,7 +47,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.GamevalManager;
-import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
@@ -91,9 +90,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;

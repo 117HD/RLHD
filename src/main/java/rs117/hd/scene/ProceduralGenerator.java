@@ -805,11 +805,10 @@ public class ProceduralGenerator {
 		// As a fallback, always consider vanilla textured water tiles as water
 		// We purposefully ignore material replacements here such as ice from the winter theme
 		if (waterType == WaterType.NONE) {
-			if (textureId == Material.WATER_FLAT.vanillaTextureIndex ||
-				textureId == Material.WATER_FLAT_2.vanillaTextureIndex
-			) {
+			var mat = Material.fromVanillaTexture(textureId);
+			if (mat == Material.WATER_FLAT || mat == Material.WATER_FLAT_2) {
 				waterType = WaterType.WATER_FLAT;
-			} else if (textureId == Material.SWAMP_WATER_FLAT.vanillaTextureIndex) {
+			} else if (mat == Material.SWAMP_WATER_FLAT) {
 				waterType = WaterType.SWAMP_WATER_FLAT;
 			}
 			return waterType;
