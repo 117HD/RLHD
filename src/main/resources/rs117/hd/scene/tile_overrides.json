@@ -3893,6 +3893,15 @@
     "waterType": "CAVE_WATER"
   },
   {
+    "name": "TEMPLE_OF_THE_EYE_ABYSSAL_FLOOR",
+    "area": "TEMPLE_OF_THE_EYE_ABYSSAL_FLOOR",
+    "overlayIds": [ 72, 86 ],
+    "groundMaterial": "ABYSSAL_FLOOR",
+    "minHue": 1,
+    "maxHue": 1,
+    "uvScale": 1.85
+  },
+  {
     "name": "TEMPLE_OF_THE_EYE_INCORRECT_WATER",
     "area": "TEMPLE_OF_THE_EYE",
     "overlayIds": [
@@ -4083,7 +4092,6 @@
     "groundMaterial": "ABYSSAL_FLOOR",
     "uvOrientation": 39,
     "uvScale": 0.5405405
-
   },
   {
     "name": "LAW_ALTAR_SYMBOL",
@@ -7499,6 +7507,15 @@
     "maxLightness": 64
   },
   {
+    "name": "TEMPLE_OF_THE_EYE_DIRT_EDGE_FIX",
+    "area": "TEMPLE_OF_THE_EYE_DIRT_EDGE_FIX",
+    "underlayIds": [
+      60
+    ],
+    "groundMaterial": "VARIED_DIRT_SHINY",
+    "shiftLightness": 5
+  },
+  {
     "name": "TEMPLE_OF_THE_EYE_DIRT",
     "area": "TEMPLE_OF_THE_EYE",
     "underlayIds": [
@@ -7525,7 +7542,17 @@
     }
   },
   {
-    "name": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY",
+    "name": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_FIX",
+    "area": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_FIX",
+    "underlayIds": [
+      87,
+      88,
+      89
+    ],
+    "groundMaterial": "VARIED_DIRT_SHINY"
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING",
     "area": "TEMPLE_OF_THE_EYE",
     "underlayIds": [
       87,

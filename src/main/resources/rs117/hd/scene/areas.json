@@ -5823,6 +5823,31 @@
     ]
   },
   {
+    "name": "TEMPLE_OF_THE_EYE_ABYSSAL_FLOOR",
+    "aabbs": [
+      [ 3604, 9519, 3626, 9530 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_DIRT_EDGE_FIX",
+    "aabbs": [
+      [ 3621, 9491, 3622, 9491 ],
+      [ 3622, 9492, 3624, 9492 ],
+      [ 3623, 9493, 3625, 9493 ],
+      [ 3624, 9494, 3625, 9494 ]
+    ]
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_FIX",
+    "aabbs": [
+      [ 3612, 9516 ],
+      [ 3615, 9517 ],
+      [ 3614, 9515 ],
+      [ 3617, 9515 ],
+      [ 3619, 9516 ]
+    ]
+  },
+  {
     "name": "TEMPLE_OF_THE_EYE_BLEND_FIX",
     "aabbs": [
       [ 3613, 9474 ],

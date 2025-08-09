@@ -2578,7 +2578,6 @@
   },
   {
     "description": "Zanaris, Lighten Grass",
-    "areas": [ "ZANARIS" ],
     "baseMaterial": "NONE",
     "flatNormals": true,
     "castShadows": false,
@@ -6844,30 +6843,6 @@
       "FLAG_ENTRANCEBASE"
     ],
     "flatNormals": true
-  },
-  {
-    "description": "Guardians of the Rift entrance",
-    "objectIds": [
-      "GOTR_BARRIER",
-      "GOTR_BARRIER_CLOSED"
-    ],
-    "baseMaterial": "UNLIT",
-    "castShadows": false
-  },
-  {
-    "description": "Guardians of the Rift barriers",
-    "objectIds": [
-      "GOTR_BARRIER_TIER1",
-      "GOTR_BARRIER_TIER1_3X3",
-      "GOTR_BARRIER_TIER2",
-      "GOTR_BARRIER_TIER2_3X3",
-      "GOTR_BARRIER_TIER3",
-      "GOTR_BARRIER_TIER3_3X3",
-      "GOTR_BARRIER_TIER4",
-      "GOTR_BARRIER_TIER4_3X3"
-    ],
-    "baseMaterial": "UNLIT",
-    "castShadows": false
   },
   {
     "description": "Tombs of Amascut Baba boulders",
@@ -12053,7 +12028,7 @@
       "ALDARIN_DUGUPSOIL06"
     ],
     "uvType": "BOX",
-    "uvScale": 0.74
+    "uvScale": 0.45
   },
   {
     "description": "barbarian - Walls - Wooden - Planks",
@@ -25653,16 +25628,6 @@
     ]
   },
   {
-    "description": "Guardians Of the Rift - Rocks - Medium",
-    "baseMaterial": "ROCK_4",
-    "objectIds": [
-      "GOTR_RUNESTONE_ROCKS_SMALL01"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.82,
-    "uvOrientation": 256
-  },
-  {
     "description": "Auburnvale - Bank Booth",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
@@ -26097,6 +26062,48 @@
     ]
   },
   {
+    "description": "Guardians of the Rift - Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "objectIds": [
+      "GOTR_BANKCHEST"
+    ],
+    "colorOverrides": [
+      {
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "s > 6 || h == 0",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Entrance",
+    "objectIds": [
+      "GOTR_BARRIER",
+      "GOTR_BARRIER_CLOSED"
+    ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
+  },
+  {
+    "description": "Guardians of the Rift - Barriers",
+    "objectIds": [
+      "GOTR_BARRIER_TIER1",
+      "GOTR_BARRIER_TIER1_3X3",
+      "GOTR_BARRIER_TIER2",
+      "GOTR_BARRIER_TIER2_3X3",
+      "GOTR_BARRIER_TIER3",
+      "GOTR_BARRIER_TIER3_3X3",
+      "GOTR_BARRIER_TIER4",
+      "GOTR_BARRIER_TIER4_3X3"
+    ],
+    "baseMaterial": "UNLIT",
+    "castShadows": false
+  },
+  {
     "description": "Guardians Of the Rift - Rocks - Large",
     "baseMaterial": "ROCK_3",
     "objectIds": [
@@ -26117,6 +26124,37 @@
     "uvOrientation": 256
   },
   {
+    "description": "Guardians Of the Rift - Rocks - Medium",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "GOTR_RUNESTONE_ROCKS_SMALL01",
+      "GOTR_RUNESTONE_ROCKS03_SMALL02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.82,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Guardians of the Rift - Archway",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "objectIds": [
+      "GOTR_ENTRY",
+      "GOTR_RUNESTONE_ENTRANCE_TOP"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 21 && s == 4",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
     "description": "Guardians of the Rift - Marble - Steps",
     "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "objectIds": [
@@ -26127,8 +26165,8 @@
       "GOTR_STEPS_RUNESTONE03_EDGE02"
     ],
     "uvType": "BOX",
-    "uvOrientation": 640,
-    "flatNormals": true
+    "uvScale": 0.8,
+    "uvOrientation": 640
   },
   {
     "description": "Guardians of the Rift - Ground Decoration Grunge - Shelf Coral",
@@ -26145,10 +26183,10 @@
       "GOTR_PLANT_SHELF02_FALLOFF01",
       "GOTR_PLANT_SHELF02_FALLOFF02",
       "GOTR_PLANT_SHELF02_CORNER01",
-      "GOTR_PLANT_SHELF02_CORNER02"
-    ],
-    "uvType": "GEOMETRY",
-    "flatNormals": true
+      "GOTR_PLANT_SHELF02_CORNER02",
+      "GOTR_PLANT_SHELF01_CORNER02",
+      "GOTR_PLANT_SHELF01_CORNER01"
+    ]
   },
   {
     "description": "Guardians of the Rift - Large Guardian Remains",
@@ -26231,7 +26269,15 @@
       "GOTR_STATUE02"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
   },
   {
     "description": "Guardians of the Rift - Guardian Rune Portal Statues",
@@ -26295,6 +26341,50 @@
     "uvOrientation": 256
   },
   {
+    "description": "Guardians of the Rift - Cell Tiles",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "GOTR_CELL_TILE_BROKEN_REPAIRABLE",
+      "GOTR_CELL_TILE_BROKEN",
+      "GOTR_CELL_TILE_INACTIVE_NOOP",
+      "GOTR_CELL_TILE_INACTIVE",
+      "GOTR_CELL_TILE_TIER1",
+      "GOTR_CELL_TILE_TIER2",
+      "GOTR_CELL_TILE_TIER3",
+      "GOTR_CELL_TILE_TIER4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Columns with Abyssal Vines",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "GOTR_PILLAR_RUNESTONE01",
+      "GOTR_PILLAR_RUNESTONE02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 63 && l > 20",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Guardians of the Rift - Destroyed Columns Base",
     "baseMaterial": "ROCK_3_ORE",
     "objectIds": [
@@ -26315,15 +26405,132 @@
     "uvOrientation": 512
   },
   {
+    "description": "Guardians of the Rift - Worktables",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "GOTR_WORKBENCH",
+      "GOTR_WEAK_CELLS",
+      "GOTR_UNCHARGED_CELLS",
+      "GOTR_BATTERIES_DECO01",
+      "GOTR_BATTERIES_DECO02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h > 20",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Cliff Trim",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GOTR_CHASM_EDGE01",
+      "GOTR_CHASM_EDGE02",
+      "GOTR_CHASM_CORNER01",
+      "GOTR_CHASM_COMBO01"
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Stalagmites",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GOTR_STALAGTITES01_SMALL01",
+      "GOTR_STALAGTITES02_SMALL01",
+      "GOTR_STALAGTITES02_SMALL02",
+      "GOTR_STALAGTITES01_LARGE02",
+      "GOTR_STALAGTITES01_SMALL02",
+      "GOTR_STALAGTITES02_LARGE01",
+      "GOTR_STALAGTITES02_LARGE02"
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 150,
+    "objectIds": [
+      "RCU_ABYSSAL_BUSH_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Abyssal Vines",
+    "baseMaterial": "ABYSSAL_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "DECOKIT_VINES01_ABYSSAL03_END02",
+      "DECOKIT_VINES01_ABYSSAL03_DIAG01",
+      "DECOKIT_VINES01_ABYSSAL03_DIAGFILLER",
+      "DECOKIT_VINES01_ABYSSAL03_END01",
+      "DECOKIT_VINES01_ABYSSAL03_JUNCTION",
+      "DECOKIT_VINES01_ABYSSAL02_JUNCTION",
+      "DECOKIT_VINES01_ABYSSAL03_STRAIGHT",
+      "DECOKIT_VINES01_ABYSSAL02_CORNER",
+      "DECOKIT_VINES01_ABYSSAL02_DIAG02",
+      "DECOKIT_VINES01_ABYSSAL03_DIAG02",
+      "DECOKIT_VINES01_ABYSSAL_END01",
+      "DECOKIT_VINES01_ABYSSAL02_END01",
+      "DECOKIT_VINES01_ABYSSAL_JUNCTION",
+      "DECOKIT_VINES01_ABYSSAL_CORNER",
+      "DECOKIT_VINES01_ABYSSAL_STRAIGHT",
+      "DECOKIT_VINES01_ABYSSAL_DIAG02",
+      "DECOKIT_VINES01_ABYSSAL02_DIAG01",
+      "DECOKIT_VINES01_ABYSSAL_END02",
+      "DECOKIT_VINES01_ABYSSAL_DIAG01",
+      "DECOKIT_VINES01_ABYSSAL_DIAGFILLER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 1",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Grass",
+    "areas": [ "TEMPLE_OF_THE_EYE" ],
+    "baseMaterial": "NONE",
+    "flatNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 2,
+    "objectIds": [
+      "FAIRY_SHORT_GRASS_4",
+      "FAIRY_SHORT_GRASS_2",
+      "FAIRY_SHORT_GRASS_3",
+      "FAIRY_SHORT_GRASS_1"
+    ]
+  },
+  {
     "description": "Guardians of the Rift - Yellow Kelp",
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
+    "windDisplacementMode": "OBJECT",
     "uvOrientation": 42,
     "objectIds": [
       "GOTR_PLANT_ELK01_DEFAULT01",
       "GOTR_PLANT_ELK01_DEFAULT01_2X2",
-      "GOTR_PLANT_ELK01_FALLOFF01"
+      "GOTR_PLANT_ELK01_FALLOFF01",
+      "GOTR_PLANT_LACE01_GOLD01",
+      "GOTR_PLANT_LACE01_GOLD02"
     ]
   },
   {
@@ -26331,6 +26538,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
+    "windDisplacementMode": "OBJECT",
     "uvOrientation": 343,
     "objectIds": [
       "GOTR_PLANT_SPONGE01_DEFAULT01",
@@ -26343,10 +26551,37 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 2,
     "objectIds": [
       "GOTR_PLANT_LACE01_DEFAULT01",
       "GOTR_PLANT_LACE01_DEFAULT01_2X2",
       "GOTR_PLANT_LACE01_FALLOFF01"
+    ]
+  },
+  {
+    "description": "Guardians of the Rift - Dead Coral",
+    "baseMaterial": "GRUNGE_2",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 2,
+    "objectIds": [
+      "GOTR_PLANT_SPONGE02_DEFAULT01_2X2",
+      "GOTR_PLANT_SPONGE02_FALLOFF01",
+      "GOTR_PLANT_SPONGE02_DEFAULT01",
+      "GOTR_PLANT_SPONGE03_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK03_DEFAULT01_2X2",
+      "GOTR_PLANT_LACE03_DEFAULT01",
+      "GOTR_PLANT_LACE02_FALLOFF01",
+      "GOTR_PLANT_LACE03_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK03_DEFAULT01",
+      "GOTR_PLANT_ELK03_FALLOFF01",
+      "GOTR_PLANT_LACE03_FALLOFF01",
+      "GOTR_PLANT_SPONGE03_DEFAULT01",
+      "GOTR_PLANT_LACE02_DEFAULT01",
+      "GOTR_PLANT_ELK02_DEFAULT01",
+      "GOTR_PLANT_LACE02_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK02_DEFAULT01_2X2",
+      "GOTR_PLANT_ELK02_FALLOFF01"
     ]
   },
   {
