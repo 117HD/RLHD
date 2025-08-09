@@ -8251,7 +8251,8 @@
     "uvScale": 1.1,
     "uvOrientation": 512,
     "objectIds": [
-      "AHOY_PIER_RAIL"
+      "AHOY_PIER_RAIL",
+      "ECTOPOOL_SC_RAILDOWN"
     ]
   },
   {
@@ -10166,6 +10167,7 @@
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS",
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS_BIG_MIRROR",
       "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS_MIRROR",
+      "FAI_FALADOR_PARTY_NEG_ROOM_DOOR_BARS",
       "FAI_VARROCK_PRISONBARS",
       "MURDER_QIP_METALGATECLOSEDL",
       "MURDER_QIP_METALGATECLOSEDR",
@@ -12206,11 +12208,12 @@
   },
   {
     "description": "Stone - Stairs - Stone Brick",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "objectIds": [
-      "AHOY_TOWER_STAIRS_LV1"
+      "AHOY_TOWER_STAIRS_LV1",
+      "AHOY_TOWER_STAIRS_LV1_TOP"
     ],
-    "uvType": "VANILLA"
+    "uvType": "BOX"
   },
   {
     "description": "Phasmatys - Slime",
@@ -15041,6 +15044,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "AHOY_CHAIR_2",
+      "AHOY_CHAIR_3",
       "FAI_VARROCK_CHAIR1",
       "BURGH_CHAIR_3",
       "BURGH_CHAIR_4",
@@ -15100,8 +15104,18 @@
     "objectIds": [
       "OLDCHAIR",
       "OLDCHAIR2",
-      "BURGH_SMASHEDCHAIR",
       "PISCARILIUS_CHAIR_02"
+    ]
+  },
+  {
+    "description": "Smashed Chairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.6,
+    "objectIds": [
+      "BURGH_SMASHEDCHAIR",
+      "AHOY_SMASHEDCHAIR"
     ]
   },
   {
@@ -18742,6 +18756,14 @@
       "MACRO_EVIL_BOB_STATUE_2",
       "MACRO_EVIL_BOB_STATUE_3",
       "MACRO_EVIL_BOB_STATUE_4"
+    ]
+  },
+  {
+    "description": "Prison Pete Random Event - Sofa",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "XMAS15_EMPTY_SOFA"
     ]
   },
   {
@@ -30733,7 +30755,8 @@
       "FLOORKIT_MOON04_SEMI01",
       "FLOORKIT_MOON04_SEMI02",
       "FLOORKIT_MOON04_SEMI03",
-      "FLOORKIT_MOON04_SEMI04"
+      "FLOORKIT_MOON04_SEMI04",
+      "FLOORKIT_SUMMONING02_CORNER01"
     ]
   },
   {
@@ -30893,14 +30916,31 @@
       "WILDY_HUB_BUSH_01",
       "WILDY_HUB_BUSH_02",
       "WILDY_HUB_BUSH_03",
-      "PMOON_LIZARD_BUSH",
-      "PMOON_GRUB_SAPLING",
       "PLANT_FERN01_SMALL01",
       "PLANT_FERN01_LARGE01",
       "PLANT_FERN_MOONLIGHT01",
       "PLANT_FERN_MOONLIGHT02",
       "PLANT_FERN_MOONLIGHT03",
       "PLANT_FERN_MOONLIGHT04"
+    ]
+  },
+  {
+    "description": "Perilous Moons Grub Sapling",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
+    "objectIds": [
+      "PMOON_GRUB_SAPLING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "windDisplacementModifier": -2,
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
     ]
   },
   {
@@ -30915,10 +30955,11 @@
   {
     "description": "Perilous Moons Plants with Rocks",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
       "PLANT_ROCKS_SWAMP02_DARK01",
-      "PLANT_ROCKS_SWAMP01_DARK01"
+      "PLANT_ROCKS_SWAMP01_DARK01",
+      "PMOON_LIZARD_BUSH"
     ],
     "colorOverrides": [
       {
@@ -30952,7 +30993,8 @@
   {
     "description": "Perilous Moons Hanging Vines - Remove Shadows",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "invertDisplacementStrength": true,
     "castShadows": false,
     "objectIds": [
       "ROR_VINE01_HANGING01",
@@ -31365,6 +31407,18 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.86
+  },
+  {
+    "description": "Varlamore Orange Brazier - Animated - Dynamic",
+    "objectIds": [
+      "BRAZIER_VARLAMORE01_DEFAULT01_2X3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "GRAY_110"
+      }
+    ]
   },
   {
     "description": "Mastering Mixology Walls with brick walls in front of them",
@@ -32878,7 +32932,21 @@
     "description": "Old Ones Dungeon Ruined Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
-      "AHOY_TOMB_WALL", "AHOY_TOMB_WALL_LEV2", "AHOY_TOMB_WALL_TABLET_LEV2", "AHOY_TOMB_WALL_DAMAGE", "AHOY_TOMB_BLOCKPILE1", "AHOY_TOMB_WALL_TOP", "TGOD_GARDEN_BLOCKS_NOOP"
+      "AHOY_TOMB_WALL",
+      "AHOY_TOMB_WALL_LEV2",
+      "AHOY_TOMB_WALL_TABLET_LEV2",
+      "AHOY_TOMB_WALL_DAMAGE",
+      "AHOY_TOMB_BLOCKPILE1",
+      "AHOY_TOMB_WALL_TOP",
+      "TGOD_GARDEN_BLOCKS_NOOP",
+      "AHOY_TOMB_WALL_TABLET",
+      "AHOY_TOMB_WALL_TOP_G",
+      "AHOY_TOMB_WALL_TOP1",
+      "AHOY_TOMB_WALL_TOP_2",
+      "AHOY_TOMB_WALL_TOP_5",
+      "AHOY_CAVERN_STAIRS",
+      "AHOY_CAVERN_STAIRS_TOP",
+      "ECTOPOOL_SC_WALLCLIMB"
     ],
     "uvType": "BOX"
   },
@@ -33163,11 +33231,12 @@
   },
   {
     "description": "Ralos rise, Big door",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "ENTRANCE_CAMTORUM_CLOSED01",
       "ENTRANCE_CAMTORUM_SIDE01",
       "ENTRANCE_CAMTORUM_CORNER01_M",
+      "ENTRANCE_CAMTORUM_CORNER01",
       "ENTRANCE_CAMTORUM_TOP01",
       "ENTRANCE_CAMTORUM_TOP02",
       "ENTRANCE_CAMTORUM_TOP03"
@@ -43378,40 +43447,68 @@
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "DF_CAVE_SNOW01_ROCKS04",
-      "STRANGLER_DUGUPSOIL_07"
+      "STRANGLER_DUGUPSOIL_07",
+      "_100_GOBLINDUGUPSOIL1_GREY",
+      "DUGUPSOIL2_GREY",
+      "DUGUPSOIL1_GREY",
+      "HUEY_FIGHT_EXIT_SHORTCUT"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
     "uvOrientation": 200
   },
   {
-    "description": "Hueycoatl Rocks",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Hueycoatl Ugly Shadow Body Cave",
     "castShadows": false,
+    "areas": [ "Hueycoatl Ugly Shadow Fix" ],
     "objectIds": [
-      "HUEY_FIGHT_EXIT_SHORTCUT"
+      "DF_CAVE_SNOW01_ENTRANCE03_HUEY",
+      "DF_CAVE_SNOW01_ENTRANCE03"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "colors": "h < 2 && s == 0",
+        "baseMaterial": "STONE_NORMALED"
+      },
+      {
+        "colors": "h == 63",
+        "baseMaterial": "BLACK"
+      }
+    ]
   },
   {
-    "description": "Ates Pendant Statue - Animated",
+    "description": "Ates Pendant Statue - Dynamic - Animated",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "ATES_STATUE_DARKFROST_ACTIVE",
-      "ATES_STATUE_DARKFROST_INACTIVE",
       "ATES_STATUE_TWILIGHT_ACTIVE",
       "ATES_STATUE_TWILIGHT_INACTIVE",
+      "ATES_STATUE_TLATI_ACTIVE",
+      "ATES_STATUE_TLATI_INACTIVE",
       "ATES_STATUE_AUBURN_ACTIVE",
-      "ATES_STATUE_AUBURN_INACTIVE"
+      "ATES_STATUE_AUBURN_INACTIVE",
+      "ATES_STATUE_ALDARIN_ACTIVE",
+      "ATES_STATUE_ALDARIN_INACTIVE"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": "h == 35",
-        "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Ates Pendant Statue - Lighter - Dynamic - Animated",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "ATES_STATUE_RALOS_ACTIVE",
+      "ATES_STATUE_RALOS_INACTIVE",
+      "ATES_STATUE_DARKFROST_ACTIVE",
+      "ATES_STATUE_DARKFROST_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 35",
+        "baseMaterial": "GRAY_90"
       }
     ]
   },
