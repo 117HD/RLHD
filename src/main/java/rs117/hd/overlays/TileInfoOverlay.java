@@ -577,9 +577,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		var decorObject = tile.getDecorativeObject();
 		if (decorObject != null) {
 			lines.add(String.format(
-				"Decor Object: %s preori=%d offset=[%d, %d] type=%s %s",
+				"Decor Object: %s preori=%d ori=%d offset=[%d, %d] type=%s %s",
 				getIdAndImpostorId(decorObject, decorObject.getRenderable()),
-				HDUtils.getBakedOrientation(decorObject.getConfig()),
+				HDUtils.getModelPreOrientation(decorObject.getConfig()),
+				HDUtils.getModelOrientation(decorObject.getConfig()),
 				decorObject.getXOffset(),
 				decorObject.getYOffset(),
 				ObjectType.fromConfig(decorObject.getConfig()),
@@ -591,9 +592,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		GroundObject groundObject = tile.getGroundObject();
 		if (groundObject != null) {
 			lines.add(String.format(
-				"Ground Object: %s preori=%d%s",
+				"Ground Object: %s preori=%d ori=%d%s",
 				getIdAndImpostorId(groundObject, groundObject.getRenderable()),
-				HDUtils.getBakedOrientation(groundObject.getConfig()),
+				HDUtils.getModelPreOrientation(groundObject.getConfig()),
+				HDUtils.getModelOrientation(groundObject.getConfig()),
 				getModelInfo(groundObject.getRenderable())
 			));
 			lines.add("Ground Type: " + ObjectType.fromConfig(groundObject.getConfig()));
@@ -603,18 +605,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		if (wallObject != null) {
 			if (wallObject.getRenderable1() != null) {
 				lines.add(String.format(
-					"Wall Object 1: %s bakedOri=%d ori=%d%s",
+					"Wall Object 1: %s bakedOri=%d ori=%d wallori=%d%s",
 					getIdAndImpostorId(wallObject, wallObject.getRenderable1()),
-					HDUtils.getBakedOrientation(wallObject.getConfig()),
+					HDUtils.getModelPreOrientation(wallObject.getConfig()),
+					HDUtils.getModelOrientation(wallObject.getConfig()),
 					wallObject.getOrientationA(),
 					getModelInfo(wallObject.getRenderable1())
 				));
 			}
 			if (wallObject.getRenderable2() != null) {
 				lines.add(String.format(
-					"Wall Object 2: %s bakedOri=%d ori=%d%s",
+					"Wall Object 2: %s bakedOri=%d ori=%d wallori=%d%s",
 					getIdAndImpostorId(wallObject, wallObject.getRenderable2()),
-					HDUtils.getBakedOrientation(wallObject.getConfig()),
+					HDUtils.getModelPreOrientation(wallObject.getConfig()),
+					HDUtils.getModelOrientation(wallObject.getConfig()),
 					wallObject.getOrientationB(),
 					getModelInfo(wallObject.getRenderable2())
 				));
@@ -655,10 +659,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			}
 
 			lines.add(String.format(
-				"%s: %spreori=%d ori=%d height=%d anim=%d faces=%d%s",
+				"%s: %spreori=%d ori=%d objori=%d height=%d anim=%d faces=%d%s",
 				ModelHash.getTypeName(ModelHash.getType(gameObject.getHash())),
 				id,
-				HDUtils.getBakedOrientation(gameObject.getConfig()),
+				HDUtils.getModelPreOrientation(gameObject.getConfig()),
+				HDUtils.getModelOrientation(gameObject.getConfig()),
 				gameObject.getModelOrientation(),
 				height,
 				animationId,
@@ -857,10 +862,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		switch (mode) {
 			case MODE_TILE_INFO:
 				return "  " + (
-					renderable instanceof Model ?
-						"<col=#00ff00>static</col>" :
-						(renderable instanceof DynamicObject || renderable instanceof Actor) ? "<col=#ff0000>dynamic</col>" :
-							"<col=#ff0000>maybe dynamic</col>"
+					renderable instanceof Model ? "<col=#00ff00>static</col>" :
+						(renderable instanceof DynamicObject || renderable instanceof Actor) ?
+							"<col=#ff0000>dynamic</col>" : "<col=#ffff00>maybe dynamic</col>"
 				);
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();
@@ -885,7 +889,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int columns = clamp(round(sqrt(colors.length / 5f)), 3, 8);
 				int rows = ceil(colors.length / (float) columns);
 
-				StringBuilder str = new StringBuilder();
+				StringBuilder str = new StringBuilder("\nFace colors: ").append(colors.length);
 				for (int i = 0; i < rows; i++) {
 					str.append("\n\t<tt>");
 					for (int j = 0; j < columns; j++) {
@@ -895,7 +899,23 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					}
 				}
 
-				return "\nFace colors: " + colors.length + str;
+				if (model.getFaceTextures() != null) {
+					var textureIds = new HashSet<Integer>();
+					for (int textureId : model.getFaceTextures())
+						textureIds.add(textureId);
+					textureIds.remove(-1);
+					if (!textureIds.isEmpty()) {
+						str.append("\nTexture IDs: [ ");
+						String prefix = "";
+						for (int id : textureIds) {
+							str.append(prefix).append(id);
+							prefix = ", ";
+						}
+						str.append("]");
+					}
+				}
+
+				return str.toString();
 		}
 
 		return "";

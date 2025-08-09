@@ -1159,7 +1159,7 @@ public enum Material {
 		}
 
 		Builder setTextureScale(float... xyz) {
-			textureScale = slice(xyz, 0, 3);
+			textureScale = copyTo(copy(textureScale), xyz);
 			return this;
 		}
 

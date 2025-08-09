@@ -12,10 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.data.WaterType;
-import rs117.hd.data.materials.GroundMaterial;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.ground_materials.GroundMaterial;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.Props;
 
 import static rs117.hd.utils.MathUtils.*;
@@ -30,12 +30,13 @@ public class TileOverride {
 	@Nullable
 	public String name;
 	public String description;
-	@JsonAdapter(AreaManager.JsonAdapter.class)
+	@JsonAdapter(AreaManager.Adapter.class)
 	public Area area = Area.NONE;
 	public int[] overlayIds;
 	public int[] underlayIds;
-	@JsonAdapter(GroundMaterial.JsonAdapter.class)
+	@JsonAdapter(GroundMaterial.Adapter.class)
 	public GroundMaterial groundMaterial = GroundMaterial.NONE;
+	@JsonAdapter(WaterType.Adapter.class)
 	public WaterType waterType = WaterType.NONE;
 	public boolean blended = true;
 	public boolean blendedAsOpposite;

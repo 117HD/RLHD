@@ -2756,7 +2756,18 @@
     "minSaturation": 5,
     "maxSaturation": 5,
     "minLightness": 15,
-    "maxLightness": 15
+    "maxLightness": 15,
+    "replacements": {
+      "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING",
+    "area": "DRAYNOR_PATH_BLENDING_FIXES",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL"
   },
   {
     "name": "DRAYNOR_NEDS_PATH_FIX",
@@ -4887,38 +4898,46 @@
     "waterType": "PLAIN_WATER"
   },
   {
-    "name": "RALOS_RISE_SNOW_PATH",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
-    "overlayIds": [ 271 ],
-    "groundMaterial": "SNOW_2"
-  },
-  {
-    "name": "RALOS_RISE_SNOW",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
-    "underlayIds": [ 58, 94 ],
-    "groundMaterial": "SNOW_1",
-    "shiftLightness": 10,
+    "name": "Proudspire Snow Blending",
+    "area": "Proudspire",
+    "underlayIds": [ 58 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 25,
+    "maxLightness": 98,
     "replacements": {
-      "RALOS_RISE_SNOW_DARKER": "l < 55 && s == 0",
-      "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0"
+      "Proudspire Cliff": "l < 3",
+      "Proudspire Snow No Blending": "!blending"
     }
   },
   {
-    "name": "RALOS_RISE_SNOW_DARKER",
-    "groundMaterial": "SNOW_1",
-    "shiftLightness": 0
+    "name": "Proudspire Snow No Blending",
+    "area": "Proudspire",
+    "underlayIds": [ 58 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 98
   },
   {
-    "name": "RALOS_RISE_GRAY_PATH_BLENDING_FIX",
-    "area": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
-    "overlayIds": [ 3 ],
+    "name": "Proudspire Cliff",
+    "area": "Proudspire",
+    "overlayIds": [ 1 ],
     "groundMaterial": "DIRT",
-    "shiftLightness": -8
+    "blended": false,
+    "shiftLightness": -10,
+    "maxLightness": 85
   },
   {
-    "name": "RALOS_RISE_GRAY_PATH",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
-    "overlayIds": [ 3 ],
+    "name": "Mons Gratia Cliff",
+    "area": "Mons Gratia Cliff Fix",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "shiftLightness": -5
+  },
+  {
+    "name": "Hueycoatl Campfire Fix",
+    "area": "Hueycoatl Campfire Fix",
+    "overlayIds": [ 340 ],
     "groundMaterial": "DIRT",
     "blended": false
   },
@@ -4943,6 +4962,48 @@
     "maxLightness": 75,
     "minLightness": 50,
     "maxSaturation": 0
+  },
+  {
+    "name": "RALOS_RISE_SNOW_PATH",
+    "area": "RALOS_RISE",
+    "overlayIds": [ 271 ],
+    "maxLightness": 75,
+    "shiftLightness": 5,
+    "groundMaterial": "DIRTY_SNOW"
+  },
+  {
+    "name": "Ralos Rise Snow Blending",
+    "area": "RALOS_RISE",
+    "underlayIds": [ 58, 94 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 27,
+    "maxLightness": 93,
+    "replacements": {
+      "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0",
+      "Ralos Rise Snow No Blending" : "!blending"
+    }
+  },
+  {
+    "name": "Ralos Rise Snow No Blending",
+    "area": "RALOS_RISE",
+    "underlayIds": [ 58, 94 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 10,
+    "maxLightness": 93
+  },
+  {
+    "name": "RALOS_RISE_GRAY_PATH_BLENDING_FIX",
+    "area": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "DIRT",
+    "shiftLightness": -8
+  },
+  {
+    "name": "RALOS_RISE_GRAY_PATH",
+    "area": "RALOS_RISE",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "DIRT",
+    "blended": false
   },
   {
     "name": "CAM_TORUM_WATER",
@@ -5122,10 +5183,16 @@
     "groundMaterial": "GRASS_1"
   },
   {
-    "name": "THE_BLUE_MOON_ENTRANCE",
-    "area": "THE_BLUE_MOON_ENTRANCE",
-    "underlayIds": [ 56, 73, 205, 206 ],
+    "name": "PERILOUS_MOONS_ENTRANCE_TILES",
+    "area": "PERILOUS_MOONS_ENTRANCE_TILES",
+    "underlayIds": [ 56, 72, 73, 118, 205, 212, 213 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
+    "area": "THE_BLUE_MOON_ENTRANCE",
+    "underlayIds": [ 73, 205, 206 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_BLUE_MOON_NEAR_WALLS",
@@ -5141,10 +5208,10 @@
     "groundMaterial": "SNOW_1"
   },
   {
-    "name": "THE_BLOOD_MOON_ENTRANCE",
+    "name": "THE_BLOOD_MOON_ENTRANCE_DIRT",
     "area": "THE_BLOOD_MOON_ENTRANCE",
-    "underlayIds": [ 56, 118 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+    "underlayIds": [ 56, 72, 118 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_BLOOD_MOON_BLOOD",
@@ -5166,10 +5233,10 @@
     "blended": false
   },
   {
-    "name": "THE_ECLIPSE_MOON_ENTRANCE",
+    "name": "THE_ECLIPSE_MOON_ENTRANCE_DIRT",
     "area": "THE_ECLIPSE_MOON_ENTRANCE",
-    "underlayIds": [ 212 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+    "underlayIds": [ 72, 213 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_ECLIPSE_MOON_FLOOR_BLENDING_FIX",
@@ -6141,9 +6208,9 @@
     ],
     "replacements": {
       "KHARID_GRASS_CLAMPED": [
-        "h > 10",
+        "h > 11",
         "h > 9 && s > 3",
-        "h == 9 && s > 4"
+        "h == 10 && s > 4"
       ]
     }
   },

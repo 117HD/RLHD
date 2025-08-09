@@ -86,7 +86,6 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
-import rs117.hd.data.WaterType;
 import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
@@ -123,12 +122,14 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
+import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -243,9 +244,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private OpenCLManager clManager;
 
 	@Inject
-	private TextureManager textureManager;
-
-	@Inject
 	private GamevalManager gamevalManager;
 
 	@Inject
@@ -256,6 +254,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private EnvironmentManager environmentManager;
+
+	@Inject
+	private TextureManager textureManager;
+
+	@Inject
+	private WaterTypeManager waterTypeManager;
 
 	@Inject
 	private GroundMaterialManager groundMaterialManager;
@@ -503,7 +507,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	protected void startUp() {
-		gson = injector.getInstance(Gson.class).newBuilder().setLenient().create();
+		gson = GsonUtils.wrap(injector.getInstance(Gson.class));
 
 		clientThread.invoke(() -> {
 			try {
@@ -662,6 +666,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
+				waterTypeManager.startUp();
 
 				initPrograms();
 				initShaderHotswapping();
@@ -749,6 +754,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				waitUntilIdle();
 
 				textureManager.shutDown();
+				waterTypeManager.shutDown();
 
 				destroyBuffers();
 				destroyUiTexture();
@@ -863,14 +869,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public ShaderIncludes getShaderIncludes() {
 		assert SHADER_PATH != null;
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
-		var includes = new ShaderIncludes()
+		return new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", versionHeader)
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", Material.values().length)
-			.define("WATER_TYPE_COUNT", WaterType.values().length)
+			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
@@ -904,13 +910,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			)
 			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
-			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", WaterType.values().length))
+			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboCompute)
-			.addUniformBuffer(uboUI);
-		textureManager.appendUniformBuffers(includes);
-		return includes;
+			.addUniformBuffer(uboUI)
+			.addUniformBuffer(textureManager.uboMaterials)
+			.addUniformBuffer(waterTypeManager.uboWaterTypes);
 	}
 
 	private void initPrograms() throws ShaderException, IOException {
@@ -985,13 +991,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	public void recompilePrograms() throws ShaderException, IOException {
-		// Skip recompiling if the original compilation was unsuccessful
+	public void recompilePrograms() {
+		// Only recompile if the programs have been compiled successfully before
 		if (!sceneProgram.isValid())
 			return;
 
-		destroyPrograms();
-		initPrograms();
+		clientThread.invoke(() -> {
+			try {
+				waitUntilIdle();
+				destroyPrograms();
+				initPrograms();
+			} catch (ShaderException | IOException ex) {
+				// TODO: If each shader compilation leaves the previous working shader intact, we wouldn't need to shut down on failure
+				log.error("Error while recompiling shaders:", ex);
+				stopPlugin();
+			}
+		});
 	}
 
 	private void initModelSortingBins(int maxThreadCount) {
@@ -1879,15 +1894,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		assert SHADER_PATH != null;
 		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Recompiling shaders: {}", path);
-			clientThread.invoke(() -> {
-				try {
-					waitUntilIdle();
-					recompilePrograms();
-				} catch (ShaderException | IOException ex) {
-					log.error("Error while recompiling shaders:", ex);
-					stopPlugin();
-				}
-			});
+			recompilePrograms();
 		});
 	}
 
@@ -2884,10 +2891,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public boolean tileInFrustum(
 		Scene scene,
-		int pitchSin,
-		int pitchCos,
-		int yawSin,
-		int yawCos,
+		float pitchSin,
+		float pitchCos,
+		float yawSin,
+		float yawCos,
 		int cameraX,
 		int cameraY,
 		int cameraZ,
@@ -2930,22 +2937,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 
 		// Transform the local coordinates using the yaw (horizontal rotation)
-		final int transformedZ = yawCos * z - yawSin * x >> 16;
-		final int depth = pitchCos * tileRadius + pitchSin * y + pitchCos * transformedZ >> 16;
+		final float transformedZ = yawCos * z - yawSin * x;
+		final float depth = pitchCos * tileRadius + pitchSin * y + pitchCos * transformedZ;
 
 		boolean visible = false;
 
 		// Check if the tile is within the near plane of the frustum
 		if (depth > NEAR_PLANE) {
-			final int transformedX = z * yawSin + yawCos * x >> 16;
-			final int leftPoint = transformedX - tileRadius;
+			final float transformedX = z * yawSin + yawCos * x;
+			final float leftPoint = transformedX - tileRadius;
 			// Check left and right bounds
 			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
-				final int rightPoint = transformedX + tileRadius;
+				final float rightPoint = transformedX + tileRadius;
 				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
 					// Transform the local Y using pitch (vertical rotation)
-					final int transformedY = pitchCos * y - transformedZ * pitchSin;
-					final int bottomPoint = transformedY + pitchSin * tileRadius >> 16;
+					final float transformedY = pitchCos * y - transformedZ * pitchSin;
+					final float bottomPoint = transformedY + pitchSin * tileRadius;
 					// Check top bound (we skip bottom bound to avoid computing model heights)
 					visible = bottomPoint * visibilityCheckZoom > topClip * depth;
 				}
@@ -2958,7 +2965,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	/**
 	 * Check is a model is visible and should be drawn.
 	 */
-	private boolean isOutsideViewport(Model model, int modelRadius, int pitchSin, int pitchCos, int yawSin, int yawCos, int x, int y, int z) {
+	private boolean isOutsideViewport(Model model, int modelRadius, float pitchSin, float pitchCos, float yawSin, float yawCos, int x, int y, int z) {
 		if (sceneContext == null)
 			return true;
 
@@ -2970,22 +2977,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
-		final int transformedZ = yawCos * z - yawSin * x >> 16;
-		final int depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ >> 16;
+		final float transformedZ = yawCos * z - yawSin * x;
+		final float depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ;
 
 		if (depth > NEAR_PLANE) {
-			final int transformedX = z * yawSin + yawCos * x >> 16;
-			final int leftPoint = transformedX - modelRadius;
+			final float transformedX = z * yawSin + yawCos * x;
+			final float leftPoint = transformedX - modelRadius;
 			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
-				final int rightPoint = transformedX + modelRadius;
+				final float rightPoint = transformedX + modelRadius;
 				if (rightPoint * visibilityCheckZoom > leftClip * depth) {
-					final int transformedY = pitchCos * y - transformedZ * pitchSin >> 16;
-					final int transformedRadius = pitchSin * modelRadius;
-					final int bottomExtent = pitchCos * model.getBottomY() + transformedRadius >> 16;
-					final int bottomPoint = transformedY + bottomExtent;
+					final float transformedY = pitchCos * y - transformedZ * pitchSin;
+					final float transformedRadius = pitchSin * modelRadius;
+					final float bottomExtent = pitchCos * model.getBottomY() + transformedRadius;
+					final float bottomPoint = transformedY + bottomExtent;
 					if (bottomPoint * visibilityCheckZoom > topClip * depth) {
-						final int topExtent = pitchCos * model.getModelHeight() + transformedRadius >> 16;
-						final int topPoint = transformedY - topExtent;
+						final float topExtent = pitchCos * model.getModelHeight() + transformedRadius;
+						final float topPoint = transformedY - topExtent;
 						return topPoint * visibilityCheckZoom >= bottomClip * depth; // inverted check
 					}
 				}
@@ -3092,9 +3099,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int plane = ModelHash.getPlane(hash);
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
-			// The model is part of the static scene buffer
-			assert model == renderable;
-
+			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
+			// is reuploaded without triggering the LOADING game state, it's possible for static objects which may only temporarily become
+			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
+			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
+			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
 			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
@@ -3150,12 +3159,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
 						int config;
 						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
-							preOrientation = HDUtils.getBakedOrientation(config);
+							preOrientation = HDUtils.getModelPreOrientation(config);
 						} else if (plane > 0) {
 							// Might be on a bridge tile
 							tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
 							if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
-								preOrientation = HDUtils.getBakedOrientation(config);
+								preOrientation = HDUtils.getModelPreOrientation(config);
 						}
 					}
 				}

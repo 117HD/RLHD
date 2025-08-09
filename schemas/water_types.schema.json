@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "water_types.schema.json",
+  "title": "Water Types",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Identifier used to refer to the water type."
+      },
+      "flat": {
+        "type": "boolean",
+        "description": "Whether the water type should be opaque, i.e. not show any underwater geometry."
+      },
+      "specularStrength": {
+        "type": "number",
+        "description": "The strength of specular reflections on the water surface."
+      },
+      "specularGloss": {
+        "type": "number",
+        "description": "The gloss of specular reflections on the water surface."
+      },
+      "normalStrength": {
+        "type": "number",
+        "description": "How intensely the normal maps should affect the water surface."
+      },
+      "baseOpacity": {
+        "type": "number",
+        "description": "Roughly how transparent the water should be."
+      },
+      "fresnelAmount": {
+        "type": "number",
+        "description": "Mix from 0 to 1 between the specified `surfaceColor` and the sky in the reflection."
+      },
+      "normalMap": {
+        "type": "string",
+        "description": "Which normal map to use for the water surface.",
+        "enum": [
+          "WATER_NORMAL_MAP_1",
+          "WATER_NORMAL_MAP_2"
+        ]
+      },
+      "surfaceColor": {
+        "type": [ "string", "array" ],
+        "description": "The color used for the water surface when `fresnelAmount` is low, specified as a hex color code or an array in the range 0-255, in sRGB. Accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "foamColor": {
+        "type": [ "string", "array" ],
+        "description": "The color used for the foam along the shoreline, specified as a hex color code or an array in the range 0-255, in sRGB. Accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "depthColor": {
+        "type": [ "string", "array" ],
+        "description": "The color used for the underwater color gradient, specified as a hex color code or an array in the range 0-255, in sRGB. Accepts decimals.",
+        "pattern": "^#[A-Fa-f0-9]{6}$",
+        "minItems": 3,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "hasFoam": {
+        "type": "boolean",
+        "description": "Whether shoreline foam should be drawn for the water type."
+      },
+      "duration": {
+        "type": "number",
+        "description": "The duration before the UV scrolling repeats. Smaller numbers yield faster scrolling waves."
+      },
+      "fishingSpotRecolor": {
+        "type": "integer",
+        "description": "A Jagex HSL value to apply to fishing spot replacement models on this water type."
+      }
+    }
+  }
+}
