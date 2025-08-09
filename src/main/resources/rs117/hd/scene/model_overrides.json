@@ -9372,7 +9372,9 @@
       "TOURTRAP_QIP_LADDER",
       "KOUREND_LADDER_INACTIVE",
       "FAIRY_LADDER_WIND_UP",
-      "FAIRY_LADDER_WIND_DOWN"
+      "FAIRY_LADDER_WIND_DOWN",
+      "FAI_FALADOR_CASTLE_LADDER_UP",
+      "FAI_FALADOR_CASTLE_LADDERTOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -10216,7 +10218,9 @@
       "LUC2_MOV_KHAZARD_CELL_DOOR_CLOSED",
       "LUC2_MOV_KHAZARD_CELL_DOOR_OPEN",
       "LUC2_MOV_ELECTRIC_RAIL_GATE_SAFE",
-      "LUC2_MOV_ELECTRIC_RAIL_GATE_OPEN"
+      "LUC2_MOV_ELECTRIC_RAIL_GATE_OPEN",
+      "WGS_PRISON_DOOR_LOCKED",
+      "WGS_PRISON_DOOR_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -10678,6 +10682,7 @@
       "FAI_FALADOR_POOR_DOOR_TALLER",
       "FAI_FALADOR_POOR_CASTLE_DOOR",
       "FAI_FALADOR_POOR_CASTLE_DOOR_OPEN",
+      "FAI_FALADOR_POOR_DOOR_NOOP",
       "CANAFIS_DOOR_OPEN",
       "CANAFIS_DOOR_OFFSET",
       "CANAFIS_BANK_DOOR",
@@ -10822,7 +10827,11 @@
       "KR_CAM_DOUBLEDOORR",
       "KR_CAM_DOUBLEDOORR_OPEN",
       "FAI_BARBARIAN_LARGE_DOUBLEDOOR_L_INACTIVE",
-      "FAI_BARBARIAN_LARGE_DOUBLEDOOR_R_INACTIVE"
+      "FAI_BARBARIAN_LARGE_DOUBLEDOOR_R_INACTIVE",
+      "FAI_FALADOR_OPENCASTLEDOUBLEDOORL",
+      "FAI_FALADOR_OPENCASTLEDOUBLEDOORR",
+      "FAI_FALADOR_CASTLEDOUBLEDOORL",
+      "FAI_FALADOR_CASTLEDOUBLEDOORR"
     ],
     "colorOverrides": [
       {
@@ -34021,7 +34030,9 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "DRAWERS2",
-      "DRAWERS2OPEN"
+      "DRAWERS2OPEN",
+      "WGS_FALADOR_CUPBOARD",
+      "WGS_FALADOR_CUPBOARD_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -53688,6 +53699,62 @@
         "uvType": "BOX",
         "uvScale": 0.7,
         "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "WGS - Battle Plan Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "WGS_FALADOR_BATTLE_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 || h == 0 && s > 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "WGS - Counter with Seed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "WGS_SEED_COUNTER",
+      "WGS_ENRICHED_SEED_COUNTER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 15",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Snapdragon Seed Patch",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "WGS_RICH_SNAPDRAGON_PATCH_WEEDED",
+      "WGS_RICH_SNAPDRAGON_HERB_SEED",
+      "WGS_RICH_SNAPDRAGON_HERB_FULLYGROWN"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h > 11",
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   }
