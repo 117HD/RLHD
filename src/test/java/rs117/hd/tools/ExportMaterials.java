@@ -66,7 +66,7 @@ public class ExportMaterials {
 		for (var m : list)
 			map.put(m.name, m);
 		for (var m : list)
-			m.normalize(-1, map);
+			m.normalize(map);
 
 		list.subList(0, Material.REQUIRED_MATERIALS.length).clear();
 		path.writeString(gson.toJson(list));

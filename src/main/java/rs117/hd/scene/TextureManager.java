@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.callback.ClientThread;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPluginConfig;
@@ -58,7 +59,10 @@ public class TextureManager {
 	private Client client;
 
 	@Inject
-	private ScheduledExecutorService executorService;
+	private ClientThread clientThread;
+
+	@Inject
+	private ScheduledExecutorService executor;
 
 	@Inject
 	private HdPluginConfig config;
@@ -71,7 +75,7 @@ public class TextureManager {
 	private BufferedImage scaledImage;
 	private BufferedImage vanillaImage;
 
-	private ScheduledFuture<?> pendingReload;
+	private ScheduledFuture<?> debounce;
 
 	public void startUp() {
 		assert vanillaTexturesAvailable();
@@ -82,8 +86,16 @@ public class TextureManager {
 			if (first) return;
 			log.debug("Texture changed: {}", path);
 
-			if (pendingReload == null || pendingReload.cancel(false) || pendingReload.isDone())
-				pendingReload = executorService.schedule(materialManager::reload, 100, TimeUnit.MILLISECONDS);
+			// Mark texture layers that need to be reloaded
+			String filename = path.getFilename();
+			if (!filename.isEmpty())
+				for (var layer : materialManager.textureLayers)
+					if (filename.equals(layer.material.getTextureName()))
+						layer.needsUpload = true;
+
+			// Debounce texture loading in case the same file change is triggered multiple times
+			if (debounce == null || debounce.cancel(false) || debounce.isDone())
+				debounce = executor.schedule(() -> clientThread.invoke(materialManager::uploadTextures), 100, TimeUnit.MILLISECONDS);
 		});
 	}
 

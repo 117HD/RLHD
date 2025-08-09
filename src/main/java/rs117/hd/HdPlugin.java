@@ -125,7 +125,6 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
@@ -909,12 +908,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
-					for (Material m : MaterialManager.MATERIALS) {
+					for (var entry : MaterialManager.MATERIAL_MAP.entrySet()) {
 						include
 							.append("#define MAT_")
-							.append(m.name.toUpperCase())
+							.append(entry.getKey().toUpperCase())
 							.append(" getMaterial(")
-							.append(materialManager.getMaterialIndex(m, m.vanillaTextureIndex))
+							.append(entry.getValue().uboIndex)
 							.append(")\n");
 					}
 					return include.toString();
@@ -2818,7 +2817,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						waitUntilIdle();
 
 					if (reloadTexturesAndMaterials) {
-						materialManager.reload();
+						materialManager.reload(false);
+						modelOverrideManager.reload();
 						recompilePrograms = true;
 						clearModelCache = true;
 					} else if (reloadModelOverrides) {

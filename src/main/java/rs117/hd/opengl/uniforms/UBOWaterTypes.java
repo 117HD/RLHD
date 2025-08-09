@@ -1,7 +1,6 @@
 package rs117.hd.opengl.uniforms;
 
 import rs117.hd.HdPlugin;
-import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -28,24 +27,21 @@ public class UBOWaterTypes extends UniformBuffer<GLBuffer> {
 	private final WaterTypeStruct[] uboStructs;
 	private final WaterType[] waterTypes;
 
-	public UBOWaterTypes(WaterType[] waterTypes, MaterialManager materialManager) {
+	public UBOWaterTypes(WaterType[] waterTypes) {
 		super(GL_STATIC_DRAW);
 		this.waterTypes = waterTypes;
 		uboStructs = addStructs(new WaterTypeStruct[waterTypes.length], WaterTypeStruct::new);
 		initialize(HdPlugin.UNIFORM_BLOCK_WATER_TYPES);
-		update(materialManager);
+		update();
 	}
 
 	public int getCount() {
 		return uboStructs.length;
 	}
 
-	public void update(MaterialManager materialManager) {
-		if (materialManager.uboMaterials == null)
-			return;
-
+	public void update() {
 		for (int i = 0; i < waterTypes.length; i++)
-			waterTypes[i].fillStruct(materialManager, uboStructs[i]);
+			waterTypes[i].fillStruct(uboStructs[i]);
 		upload();
 	}
 }

@@ -1,12 +1,9 @@
 package rs117.hd.opengl.uniforms;
 
-import java.util.List;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -33,16 +30,8 @@ public class UBOMaterials extends UniformBuffer<GLBuffer> {
 		public Property textureScale = addProperty(PropertyType.FVec3, "textureScale");
 	}
 
-	@RequiredArgsConstructor
-	public static class MaterialEntry {
-		public final Material material;
-		public final int vanillaIndex;
-	}
-
 	public MaterialStruct[] uboStructs;
-	public List<MaterialEntry> entries;
-	public int[] materialOrdinalToMaterialUniformIndex;
-	public int[] vanillaTextureIndexToMaterialUniformIndex;
+	public Material[] materials;
 
 	public UBOMaterials(int materialCount) {
 		super(GL_STATIC_DRAW);
@@ -52,44 +41,30 @@ public class UBOMaterials extends UniformBuffer<GLBuffer> {
 		initialize(HdPlugin.UNIFORM_BLOCK_MATERIALS);
 	}
 
-	public void update(MaterialManager materialManager, List<MaterialEntry> entries, Texture[] vanillaTextures) {
-		this.entries = entries;
-		vanillaTextureIndexToMaterialUniformIndex = new int[vanillaTextures.length];
-		materialOrdinalToMaterialUniformIndex = new int[MaterialManager.MATERIALS.length];
+	public void update(Material[] materials, Texture[] vanillaTextures) {
+		this.materials = materials;
 
-		// Convert vanilla texture animations to the same format as Material scroll parameters
-		float[] vanillaTextureAnimations = new float[vanillaTextures.length * 2];
-		for (int i = 0; i < vanillaTextures.length; i++) {
-			var texture = vanillaTextures[i];
-			if (texture == null)
-				continue;
-
-			int direction = texture.getAnimationDirection();
-			if (direction != 0) {
-				float speed = texture.getAnimationSpeed() * 50 / 128.f;
-				float radians = direction * -HALF_PI;
-				vanillaTextureAnimations[i * 2] = cos(radians) * speed;
-				vanillaTextureAnimations[i * 2 + 1] = sin(radians) * speed;
-			}
-		}
-
-		for (int i = 0; i < entries.size(); i++) {
-			MaterialEntry entry = entries.get(i);
-			int vanillaIndex = entry.vanillaIndex;
-			materialOrdinalToMaterialUniformIndex[entry.material.index] = i;
-			if (vanillaIndex != -1)
-				vanillaTextureIndexToMaterialUniformIndex[vanillaIndex] = i;
+		for (int i = 0; i < materials.length; i++) {
+			var mat = materials[i];
+			mat.uboIndex = i;
 			float vanillaScrollX = 0;
 			float vanillaScrollY = 0;
-			if (vanillaIndex != -1) {
-				vanillaScrollX = vanillaTextureAnimations[vanillaIndex * 2];
-				vanillaScrollY = vanillaTextureAnimations[vanillaIndex * 2 + 1];
+			// Replacement materials will only apply vanilla scrolling if they also specify a vanillaTextureIndex
+			if (mat.vanillaTextureIndex != -1) {
+				var texture = vanillaTextures[mat.vanillaTextureIndex];
+				if (texture != null) {
+					int direction = texture.getAnimationDirection();
+					if (direction != 0) {
+						// Convert vanilla texture animations to the same format as Material scroll parameters
+						float speed = texture.getAnimationSpeed() * 50 / 128.f;
+						float radians = direction * -HALF_PI;
+						vanillaScrollX = cos(radians) * speed;
+						vanillaScrollY = sin(radians) * speed;
+					}
+				}
 			}
-			entry.material.fillMaterialStruct(materialManager, uboStructs[i], vanillaIndex, vanillaScrollX, vanillaScrollY);
+			mat.fillMaterialStruct(uboStructs[i], vanillaScrollX, vanillaScrollY);
 		}
-		for (var material : MaterialManager.MATERIALS)
-			materialOrdinalToMaterialUniformIndex[material.index] =
-				materialOrdinalToMaterialUniformIndex[material.resolveReplacements().index];
 
 		upload();
 	}
