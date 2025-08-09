@@ -45,7 +45,6 @@ import net.runelite.client.util.Text;
 import org.apache.commons.lang3.tuple.Pair;
 import rs117.hd.HdPlugin;
 import rs117.hd.data.ObjectType;
-import rs117.hd.data.materials.Material;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -53,6 +52,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
@@ -467,6 +467,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (mode == MODE_TILE_INFO) {
+			sceneContext.tileOverrideVars.setTile(tile);
 			if (tile.getBridge() != null)
 				lines.add("Bridge");
 
@@ -490,7 +491,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
 			while (true) {
-				var replacement = tileOverrideManager.resolveNextReplacement(overlay, tile);
+				var replacement = overlay.resolveNextReplacement(sceneContext.tileOverrideVars);
 				if (replacement == overlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -507,7 +508,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
 			replacementPath = new StringBuilder(underlay.toString());
 			while (true) {
-				var replacement = tileOverrideManager.resolveNextReplacement(underlay, tile);
+				var replacement = underlay.resolveNextReplacement(sceneContext.tileOverrideVars);
 				if (replacement == underlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -524,10 +525,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 				lines.add("Tile type: Paint");
 				Material material = Material.fromVanillaTexture(tilePaint.getTexture());
-				lines.add(String.format("Material: %s (%d)", material.name(), tilePaint.getTexture()));
+				lines.add(String.format("Material: %s (%d)", material.name, tilePaint.getTexture()));
 				lines.add(String.format("HSL: %s", hslString(tile)));
 
-				var override = tileOverrideManager.getOverride(scene, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
+				var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
 				lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, tilePaint.getTexture()));
 			} else if (tileModel != null) {
 				polyColor = Color.ORANGE;
@@ -538,7 +539,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int numChars = 0;
 				if (tileModel.getTriangleTextureId() != null) {
 					for (int texture : tileModel.getTriangleTextureId()) {
-						String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name(), texture);
+						String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name, texture);
 						boolean unique = uniqueMaterials.add(material);
 						if (unique) {
 							numChars += material.length();
@@ -572,6 +573,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
+
+			sceneContext.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
 		}
 
 		var decorObject = tile.getDecorativeObject();

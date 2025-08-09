@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "materials.schema.json",
+  "title": "Materials",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "name"
+    ],
+    "properties": {
+      "name": {
+        "type": "string",
+        "description": "Identifier used to refer to the material."
+      },
+      "parent": {
+        "type": "string",
+        "description": "The material which this material should inherit default values from."
+      },
+      "normalMap": {
+        "type": [ "string", "null" ],
+        "description": "A material whose texture should be used as this material's normal map. Setting this to `null` will remove the normal map inherited from the parent."
+      },
+      "displacementMap": {
+        "type": [ "string", "null" ],
+        "description": "A material whose texture should be used as this material's displacement map. Setting this to `null` will remove the displacement map inherited from the parent."
+      },
+      "roughnessMap": {
+        "type": [ "string", "null" ],
+        "description": "A material whose texture should be used as this material's roughness map. Setting this to `null` will remove the roughness map inherited from the parent."
+      },
+      "ambientOcclusionMap": {
+        "type": [ "string", "null" ],
+        "description": "A material whose texture should be used as this material's ambient occlusion map. Setting this to `null` will remove the occlusion map inherited from the parent."
+      },
+      "flowMap": {
+        "type": [ "string", "null" ],
+        "description": "A material whose texture should be used as this material's flow map. Setting this to `null` will remove the flow map inherited from the parent."
+      },
+      "vanillaTextureIndex": {
+        "type": "number",
+        "description": "If specified, the material will override the given vanilla texture ID."
+      },
+      "hasTransparency": {
+        "type": "boolean",
+        "description": "Indicates whether the texture includes transparency."
+      },
+      "overrideBaseColor": {
+        "type": "boolean",
+        "description": "Whether the material's color texture should override the colors of the underlying model."
+      },
+      "unlit": {
+        "type": "boolean",
+        "description": "Whether 117 HD should skip lighting the material, largely preserving the vanilla look."
+      },
+      "brightness": {
+        "type": "number",
+        "description": "A brightness multiplier for the material's color."
+      },
+      "displacementScale": {
+        "type": "number",
+        "description": "Specifies the maximum displacement height of the displacement map. Defaults to 0.1, i.e. one tenth of a tile."
+      },
+      "flowMapStrength": {
+        "type": "number",
+        "description": "Specifies how strongly the flow map should affect UVs. Defaults to 0."
+      },
+      "flowMapDuration": {
+        "type": "array",
+        "description": "The duration in seconds, per UV direction, before the flow map scrolling repeats. Defaults to [ 0, 0 ].",
+        "minItems": 1,
+        "maxItems": 2,
+        "items": {
+          "type": "number"
+        }
+      },
+      "specularStrength": {
+        "type": "number",
+        "description": "The strength of specular reflections. Defaults to 0. Should ideally be between 0 and 1."
+      },
+      "specularGloss": {
+        "type": "number",
+        "description": "The gloss of specular reflections. Defaults to 0. Commonly ranges from 10 to 500."
+      },
+      "scrollSpeed": {
+        "type": "array",
+        "description": "The duration in seconds, per UV direction, before texture scrolling repeats. Defaults to [ 0, 0 ], which disables scrolling.",
+        "minItems": 1,
+        "maxItems": 2,
+        "items": {
+          "type": "number"
+        }
+      },
+      "textureScale": {
+        "type": "array",
+        "description": "Scaling factors to apply along each direction. Factors below 1 shrink the texture. The third factor affects the normal map's strength. Defaults to [ 1, 1, 1 ].",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "materialsToReplace": {
+        "type": "array",
+        "description": "A list of materials which this texture should override whenever the `replacementCondition` is true.",
+        "minItems": 1,
+        "items": {
+          "type": "string"
+        }
+      },
+      "replacementCondition": {
+        "type": [ "boolean", "string", "array" ],
+        "description": "One or more boolean expressions. If any of them evaluate to true, the replacements are applied.\nSupported operators: !, %, *, /, +, -, <, <=, >, >=, !=, ==, &&, ||, ?.\nSupported variables: `modelTextures`, `groundTextures`, `blending`, `hdInfernalCape`, `season`, `SeasonalTheme.*`.",
+        "items": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

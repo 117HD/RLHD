@@ -4,20 +4,27 @@ import com.google.gson.JsonElement;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.water_types.WaterType;
+import rs117.hd.utils.ExpressionParser;
+import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.Props;
+import rs117.hd.utils.VariableSupplier;
 
+import static rs117.hd.utils.ExpressionParser.asExpression;
+import static rs117.hd.utils.ExpressionParser.parseExpression;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -62,8 +69,9 @@ public class TileOverride {
 
 	public transient int index;
 	public transient int[] ids;
-	public transient List<ExpressionBasedReplacement> replacements;
 	public transient boolean queriedAsOverlay;
+	@Nonnull
+	private transient List<Map.Entry<ExpressionPredicate, TileOverride>> replacements = Collections.emptyList();
 
 	private TileOverride(@Nullable String name, GroundMaterial groundMaterial) {
 		this.name = name;
@@ -82,7 +90,11 @@ public class TileOverride {
 		return "Unnamed";
 	}
 
-	public void normalize(TileOverride[] allOverrides, Map<String, Object> constants) {
+	public boolean isConstant() {
+		return replacements.isEmpty();
+	}
+
+	public void normalize(TileOverride[] allOverrides, VariableSupplier constants) {
 		int numOverlays = overlayIds == null ? 0 : overlayIds.length;
 		int numUnderlays = underlayIds == null ? 0 : underlayIds.length;
 		int numIds = numOverlays + numUnderlays;
@@ -131,66 +143,96 @@ public class TileOverride {
 		if (rawReplacements != null) {
 			replacements = new ArrayList<>();
 			for (var entry : rawReplacements.entrySet()) {
-				var expr = parseReplacementExpressions(entry, allOverrides, constants);
-
-				if (expr.isConstant()) {
-					if (expr.predicate.test(null)) {
-						replacements.add(expr);
-						// Parse unnecessary replacements only during development
-						if (!Props.DEVELOPMENT)
-							break;
-					} else {
-						continue;
-					}
-				}
-
-				replacements.add(expr);
-			}
-		}
-	}
-
-	@NonNull
-	private static ExpressionBasedReplacement parseReplacementExpressions(
-		Map.Entry<String, JsonElement> expressions,
-		TileOverride[] allOverrides,
-		Map<String, Object> constants
-	) {
-		var name = expressions.getKey();
-		TileOverride replacement = null;
-		if (name == null) {
-			log.warn("Null is reserved for future use");
-			replacement = NONE;
-		} else {
-			if (name.equals(NONE.name)) {
-				replacement = NONE;
-			} else {
-				for (var other : allOverrides) {
-					if (name.equals(other.name)) {
-						replacement = other;
-						break;
-					}
-				}
-				if (replacement == null) {
+				var name = entry.getKey();
+				TileOverride replacement = null;
+				if (name == null) {
+					assert false : "Null is reserved for future use";
 					replacement = NONE;
-					if (Props.DEVELOPMENT)
-						throw new IllegalStateException("Unknown tile override: '" + name + "'");
+				} else if (name.equals(NONE.name)) {
+					replacement = NONE;
+				} else {
+					for (var other : allOverrides) {
+						if (name.equals(other.name)) {
+							replacement = other;
+							break;
+						}
+					}
+					if (replacement == null) {
+						replacement = NONE;
+						// Technically, we could allow nulls, but it's indistinguishable from a parsing error atm
+						if (Props.DEVELOPMENT)
+							throw new IllegalStateException("Unknown tile override: '" + name + "'");
+					}
 				}
+
+				var result = parseExpression(ExpressionParser.mergeJsonExpressions("||", entry.getValue()), constants);
+				if (Props.DEVELOPMENT && result instanceof ExpressionParser.Expression) {
+					var expr = (ExpressionParser.Expression) result;
+					// Ensure all variables are defined
+					var acceptedVariables = Set.of("h", "s", "l");
+					for (var variable : expr.variables)
+						if (!acceptedVariables.contains(variable))
+							throw new IllegalStateException(String.format(
+								"Expression '%s' contains unknown variable '%s'. Accepted variables: %s",
+								expr, variable, String.join(", ", acceptedVariables)
+							));
+				}
+
+				ExpressionPredicate predicate;
+				boolean isConstant = result instanceof Boolean;
+				if (isConstant) {
+					if (!(boolean) result)
+						continue; // Skip replacement conditions that are always false
+					predicate = ExpressionPredicate.TRUE;
+				} else {
+					predicate = asExpression(result).toPredicate();
+				}
+
+				replacements.add(Map.entry(predicate, replacement));
+
+				// Skip parsing the remaining unnecessary replacements, unless in development mode, where we want to parse all anyway
+				if (isConstant && !Props.DEVELOPMENT)
+					break;
 			}
 		}
-
-		return new ExpressionBasedReplacement(replacement, constants, expressions.getValue());
 	}
 
 	public TileOverride resolveConstantReplacements() {
-		if (replacements != null) {
-			// Check if the override always resolves to the same replacement override
-			for (var replacement : replacements) {
-				if (!replacement.isConstant())
-					break;
+		// Check if the override always resolves to the same replacement override
+		for (var entry : replacements) {
+			var predicate = entry.getKey();
+			// Stop on the first non-constant predicate
+			if (predicate != ExpressionPredicate.TRUE)
+				break;
 
-				if (replacement.predicate.test(null))
-					return replacement.replacement;
+			if (predicate.test()) {
+				return entry.getValue();
+			} else {
+				assert false : "Constant false expressions should be filtered out by this point";
 			}
+		}
+
+		return this;
+	}
+
+	public TileOverride resolveReplacements(VariableSupplier vars) {
+		var replacement = resolveNextReplacement(vars);
+		if (replacement == this)
+			return replacement;
+		return replacement.resolveReplacements(vars);
+	}
+
+	public TileOverride resolveNextReplacement(VariableSupplier vars) {
+		for (var entry : replacements) {
+			if (!entry.getKey().test(vars))
+				continue;
+
+			var replacement = entry.getValue();
+			if (replacement == null)
+				replacement = NONE;
+
+			replacement.queriedAsOverlay = queriedAsOverlay;
+			return replacement;
 		}
 
 		return this;

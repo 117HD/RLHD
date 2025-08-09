@@ -13,10 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
-import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Props;
 
 import static net.runelite.api.Perspective.*;
@@ -37,7 +37,7 @@ public class ModelOverride
 
 	// When, where or what the override should apply to
 	public SeasonalTheme seasonalTheme;
-	@JsonAdapter(AABB.Adapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};
 	@JsonAdapter(GamevalManager.NpcAdapter.class)
 	public Set<Integer> npcIds = EMPTY;
@@ -75,7 +75,7 @@ public class ModelOverride
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
 
-	@JsonAdapter(AABB.Adapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
 
 	public Map<Material, ModelOverride> materialOverrides;
@@ -136,15 +136,12 @@ public class ModelOverride
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
-		baseMaterial = baseMaterial.resolveReplacements();
-		textureMaterial = textureMaterial.resolveReplacements();
-
 		if (materialOverrides != null) {
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
 				var override = entry.getValue();
 				override.normalize(vanillaShadowMode);
-				normalized.put(entry.getKey().resolveReplacements(), override);
+				normalized.put(entry.getKey(), override);
 			}
 			materialOverrides = normalized;
 		}
@@ -285,8 +282,10 @@ public class ModelOverride
 						case "ahsl":
 							return ahsl;
 						case "hsl":
-						default:
 							return ahsl & 0xFFFF;
+						default:
+							assert false : "Unexpected variable: " + key;
+							return 0;
 					}
 				});
 			} else {

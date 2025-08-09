@@ -51,9 +51,6 @@ public class WaterTypeManager {
 	private HdPlugin plugin;
 
 	@Inject
-	private TextureManager textureManager;
-
-	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -91,7 +88,7 @@ public class WaterTypeManager {
 
 					if (uboWaterTypes != null)
 						uboWaterTypes.destroy();
-					uboWaterTypes = new UBOWaterTypes(waterTypes, textureManager);
+					uboWaterTypes = new UBOWaterTypes(waterTypes);
 
 					if (first)
 						return;
@@ -117,7 +114,7 @@ public class WaterTypeManager {
 					}
 				});
 			} catch (IOException ex) {
-				log.error("Failed to load environments:", ex);
+				log.error("Failed to load water types:", ex);
 			}
 		});
 	}
@@ -127,8 +124,16 @@ public class WaterTypeManager {
 			fileWatcher.unregister();
 		fileWatcher = null;
 
+		if (uboWaterTypes != null)
+			uboWaterTypes.destroy();
+		uboWaterTypes = null;
+
 		WATER_TYPES = new WaterType[0];
-		uboWaterTypes.destroy();
+	}
+
+	public void restart() {
+		shutDown();
+		startUp();
 	}
 
 	public WaterType get(String name) {
@@ -136,10 +141,5 @@ public class WaterTypeManager {
 			if (name.equals(type.name))
 				return type;
 		return WaterType.NONE;
-	}
-
-	public void update() {
-		if (uboWaterTypes != null)
-			uboWaterTypes.update(textureManager);
 	}
 }

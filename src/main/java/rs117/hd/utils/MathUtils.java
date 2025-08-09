@@ -42,10 +42,10 @@ public class MathUtils {
 		return vec;
 	}
 
-	public static float[] vec(int... ivec) {
-		float[] floats = new float[ivec.length];
-		for (int i = 0; i < ivec.length; i++)
-			floats[i] = ivec[i];
+	public static float[] vec(int... vec) {
+		float[] floats = new float[vec.length];
+		for (int i = 0; i < vec.length; i++)
+			floats[i] = vec[i];
 		return floats;
 	}
 
@@ -249,6 +249,20 @@ public class MathUtils {
 
 	public static float dot(float... v) {
 		return dot(v, v);
+	}
+
+	public static int product(int... v) {
+		int product = 1;
+		for (int factor : v)
+			product *= factor;
+		return product;
+	}
+
+	public static float product(float... v) {
+		float product = 1;
+		for (float factor : v)
+			product *= factor;
+		return product;
 	}
 
 	/**
