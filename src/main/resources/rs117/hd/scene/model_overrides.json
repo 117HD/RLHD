@@ -8262,9 +8262,7 @@
     "uvScale": 0.7,
     "uvOrientation": 512,
     "objectIds": [
-      "TEMPOROSS_LOBBY_DOCK_RAIL",
-      "TEMPOROSS_LOBBY_BANNER_LOWER_LEFT",
-      "TEMPOROSS_LOBBY_BANNER_LOWER_RIGHT"
+      "TEMPOROSS_LOBBY_DOCK_RAIL"
     ]
   },
   {
@@ -8398,9 +8396,12 @@
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "TEMPOROSS_LOBBY_PIER_BROKEN",
-      "TEMPOROSS_LOBBY_PIER"
+      "TEMPOROSS_LOBBY_PIER",
+      "TEMPOROSS_LOBBY_DOCK_PILLAR"
     ],
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 512
   },
   {
     "description": "Single row fences",
@@ -11087,7 +11088,7 @@
       "ENAKH_SANDY_ROCK4_SMALL"
     ],
     "inheritTileColorType": "OVERLAY",
-    "uvType": "MODEL_XZ",
+    "uvType": "BOX",
     "uvScale": 0.6
   },
   {
@@ -11716,14 +11717,20 @@
   },
   {
     "description": "Objects - Seaweed Rock - Medium",
-    "baseMaterial": "ROCK_1",
+    "baseMaterial": "ROCK_1_LIGHT",
     "objectIds": [
       "DRAGON_SLAYER_QIP_SEAROCK_LARGE",
       "DRAGON_SLAYER_QIP_SEAROCK_1",
       "DRAGON_SLAYER_QIP_SEAROCK_2"
     ],
     "uvType": "BOX",
-    "uvScale": 0.25
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Ogre Benches",
@@ -12323,7 +12330,8 @@
       "FAIRY_CRATE_2",
       "VMQ4_JANUS_BASEMENT_CRATE",
       "GRAB_EVIL_TWIN_CRATES1",
-      "GRAB_EVIL_TWIN_CRATES2"
+      "GRAB_EVIL_TWIN_CRATES2",
+      "DEAL_CRATE2"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -12396,7 +12404,9 @@
       "MYQ4_MEAT_CRATE",
       "VMQ2_COTHON_CRATE",
       "VMQ2_COTHON_CRATES",
-      "SHAYZIEN_CRATE_01_DARK_OP"
+      "SHAYZIEN_CRATE_01_DARK_OP",
+      "DEAL_CRATE3",
+      "TEMPOROSS_LOBBY_EGG_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -15090,7 +15100,8 @@
     "objectIds": [
       "OLDCHAIR",
       "OLDCHAIR2",
-      "BURGH_SMASHEDCHAIR"
+      "BURGH_SMASHEDCHAIR",
+      "PISCARILIUS_CHAIR_02"
     ]
   },
   {
@@ -17885,7 +17896,7 @@
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "uvType": "BOX",
-    "uvScale": 0.4,
+    "uvScale": 0.41,
     "uvOrientation": 768,
     "colorOverrides": [
       {
@@ -18012,7 +18023,9 @@
     "uvOrientation": 512,
     "materialOverrides": {
       "TROPICAL_LEAF": {
-        "textureMaterial": "TROPICAL_LEAF"
+        "textureMaterial": "TROPICAL_LEAF",
+        "windDisplacementMode": "OBJECT",
+        "windDisplacementModifier": -2
       }
     }
   },
@@ -21904,10 +21917,11 @@
   },
   {
     "description": "Sleeping Bag",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
     "objectIds": [
       "FAVOUR_POORBED",
-      "LOVAKENGJ_SLEEPING_BAG"
+      "LOVAKENGJ_SLEEPING_BAG",
+      "TEMPOROSS_LOBBY_SLEEPINGBAG"
     ],
     "uvType": "BOX",
     "uvScale": 0.66
@@ -22074,7 +22088,8 @@
       "FAI_VARROCK_BANK_CHEST",
       "FRIS_BANK_CHEST_OPEN",
       "FAIRY_CHEST_BANK",
-      "BARBASSAULT_BANK_CHEST"
+      "BARBASSAULT_BANK_CHEST",
+      "TEMPOROSS_LOBBY_BANK_CHEST"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -22880,7 +22895,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "SARIM_BARREL_FISH",
-      "PISCARILIUS_FISH_BARREL_FULL"
+      "PISCARILIUS_FISH_BARREL_FULL",
+      "FISHING_CONTEST_BARREL_FISH"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -34286,7 +34302,10 @@
       "SLUG2_BARREL",
       "FAIRY_BARREL",
       "FAIRY_BARREL_BLUE",
-      "FAI_BARBARIAN_BARREL"
+      "FAI_BARBARIAN_BARREL",
+      "TEMPOROSS_BARREL",
+      "TEMPOROSS_BARREL_STACKED",
+      "FISHING_CONTEST_BARREL_RODS"
     ]
   },
   {
@@ -34381,7 +34400,8 @@
       "AHOY_WHEEL_BARROW",
       "SARIM_CART",
       "BR_CART",
-      "GRAB_EVIL_TWIN_BARROW_EMPTY"
+      "GRAB_EVIL_TWIN_BARROW_EMPTY",
+      "CONTACT_CART"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -53168,6 +53188,533 @@
     "uvScale": 0.65,
     "objectIds": [
       "WALLKIT_WOODEN03_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Tempoross - Small Tree - Override Wind Strength",
+    "areas": [ "TEMPOROSS_COVE" ],
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "JUNGLETREE1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3,
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Fern - Override Wind Strength",
+    "areas": [ "TEMPOROSS_COVE" ],
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -2,
+    "uvScale": 0.25,
+    "objectIds": [
+      "FERN"
+    ]
+  },
+  {
+    "description": "Tempoross - Tropical Tree Top - Override Wind Strength",
+    "areas": [ "TEMPOROSS_COVE" ],
+    "objectIds": [
+      "BAMBOO_TREE_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.62,
+    "uvOrientation": 512,
+    "materialOverrides": {
+      "TROPICAL_LEAF": {
+        "textureMaterial": "TROPICAL_LEAF",
+        "windDisplacementMode": "OBJECT",
+        "windDisplacementModifier": -3
+      }
+    }
+  },
+  {
+    "description": "Tempoross - Grass - Override Wind Strength",
+    "areas": [ "TEMPOROSS_COVE" ],
+    "baseMaterial": "GRAY_75",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 2,
+    "flatNormals": true,
+    "objectIds": [
+      "HUNTING_JUNGLE_GRASS1",
+      "HUNTING_JUNGLE_GRASS3"
+    ]
+  },
+  {
+    "description": "Tempoross - Ship Cabin",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "objectIds": [
+      "BRAIN_BOAT_ROOM_03",
+      "BRAIN_BOAT_ROOM_05",
+      "BRAIN_BOAT_ROOM_03_MIRROR",
+      "TEMPOROSS_SHIP_ROOM_REAR_07",
+      "BRAIN_BOAT_ROOM_TOP",
+      "TEMPOROSS_SHIP_ROOM_03",
+      "BRAIN_BOAT_ROOM_02",
+      "BRAIN_BOAT_ROOM_01",
+      "BRAIN_BOAT_ROOM_02_MIRROR",
+      "TEMPOROSS_SHIP_ROOM_03_MIRROR",
+      "BRAIN_BOAT_ROOM_05_MIRROR",
+      "TEMPOROSS_SHIP_ROOM_REAR_01",
+      "BRAIN_BOAT_HULL_FLOOR_MID_TOP"
+    ]
+  },
+  {
+    "description": "Tempoross - Ship Cabin Window",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "objectIds": [
+      "BRAIN_BOAT_ROOM_04",
+      "BRAIN_BOAT_ROOM_04_MIRROR",
+      "TEMPOROSS_SHIP_ROOM_REAR_02",
+      "TEMPOROSS_SHIP_ROOM_REAR_03",
+      "TEMPOROSS_SHIP_ROOM_REAR_04",
+      "TEMPOROSS_SHIP_ROOM_REAR_05",
+      "TEMPOROSS_SHIP_ROOM_REAR_06"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 26",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Ship Sail",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.6,
+    "objectIds": [
+      "TEMPOROSS_LOBBY_MAST_BOTTOM",
+      "BRAIN_BOAT_MAST_01_TOP",
+      "TEMPOROSS_SHIP_MAST",
+      "TEMPOROSS_MAST_BOTTOM_UNTETHERED",
+      "TEMPOROSS_MAST_BOTTOM_TETHERED",
+      "TEMPOROSS_MAST_BOTTOM_EAST_BROKEN",
+      "TEMPOROSS_MAST_BOTTOM_WEST_BROKEN",
+      "TEMPOROSS_TOTEM_SOUTH_BROKEN",
+      "TEMPOROSS_TOTEM_NORTH_BROKEN",
+      "TEMPOROSS_TOTEM_UNTETHERED",
+      "TEMPOROSS_TOTEM_TETHERED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "CARPET_LIGHT"
+      },
+      {
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Ship Hull",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BRAIN_BOAT_HULL_FLOOR_01_MIRROR",
+      "BRAIN_BOAT_HULL_FLOOR_EDGE_TOP_MIRROR",
+      "BRAIN_BOAT_HULL_FLOOR_MID",
+      "BRAIN_BOAT_HULL_FLOOR_EDGE_TOP",
+      "BRAIN_BOAT_HULL_FLOOR_01",
+      "BRAIN_BOAT_HULL_02",
+      "BRAIN_BOAT_HULL_01",
+      "BRAIN_BOAT_HULL_FRONT_2_A",
+      "BRAIN_BOAT_HULL_FRONT_2_B",
+      "BRAIN_BOAT_HULL_FRONT_3_A",
+      "BRAIN_BOAT_HULL_NOARCH",
+      "BRAIN_BOAT_HULL_REAR_CORNER",
+      "BRAIN_BOAT_HULL_BACK_01",
+      "BRAIN_BOAT_HULL_BACK_02",
+      "BRAIN_BOAT_HULL_BACK_03",
+      "BRAIN_BOAT_HULL_BACK_02_MIRROR",
+      "BRAIN_BOAT_HULL_BACK_01_MIRROR",
+      "BRAIN_BOAT_HULL_REAR_CORNER_MIRROR",
+      "BRAIN_BOAT_HULL_NOARCH_MIRROR",
+      "BRAIN_BOAT_HULL_01_MIRROR",
+      "BRAIN_BOAT_HULL_02_MIRROR",
+      "BRAIN_BOAT_HULL_FRONT_1_A_MIRROR",
+      "BRAIN_BOAT_HULL_FRONT_2_B_MIRROR",
+      "BRAIN_BOAT_HULL_FRONT_2_A_MIRROR",
+      "BRAIN_BOAT_HULL_FRONT_3_A_MIRROR",
+      "TEMPOROSS_SHIP_HULL_FRONT_BOTTOM",
+      "BRAIN_BOAT_EDGE_FLOOR",
+      "TEMPOROSS_WATER_PUMP_BOTTOM_1"
+    ]
+  },
+  {
+    "description": "Tempoross - Ship Rail",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvOrientationZ": 512,
+    "uvOrientationX": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "BRAIN_BOAT_EDGE_01",
+      "BRAIN_BOAT_EDGE_03",
+      "TEMPOROSS_SHIP_EDGE_02",
+      "TEMPOROSS_SHIP_EDGE_FRONT_2_B",
+      "BRAIN_BOAT_EDGE_FRONT_2_A",
+      "BRAIN_BOAT_EDGE_FRONT_2_B",
+      "BRAIN_BOAT_EDGE_FRONT_1_A",
+      "TEMPOROSS_SHIP_HULL_FRONT_TOP",
+      "BRAIN_BOAT_EDGE_FRONT_1_A_MIRROR",
+      "BRAIN_BOAT_EDGE_FRONT_2_B_MIRROR",
+      "BRAIN_BOAT_EDGE_FRONT_2_A_MIRROR",
+      "BRAIN_BOAT_EDGE_01_MIRROR"
+    ]
+  },
+  {
+    "description": "Tempoross - Water Pump Top",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "TEMPOROSS_WATER_PUMP",
+      "TEMPOROSS_WATER_PUMP_DOCK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 9",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Water Pump Pipe",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "TEMPOROSS_WATER_PUMP_2",
+      "TEMPOROSS_WATER_PUMP_BOTTOM_2"
+    ]
+  },
+  {
+    "description": "Tempoross - Ship - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.75,
+    "objectIds": [
+      "TEMPOROSS_LOBBY_LADDER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 2 && l > 15",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Ship Hull - Ladder",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "TEMPOROSS_ANCHOR_21",
+      "TEMPOROSS_ANCHOR_22",
+      "TEMPOROSS_ANCHOR_06",
+      "TEMPOROSS_ANCHOR_01",
+      "TEMPOROSS_ANCHOR_02",
+      "TEMPOROSS_ANCHOR_03",
+      "TEMPOROSS_ANCHOR_04",
+      "TEMPOROSS_ANCHOR_05",
+      "TEMPOROSS_ANCHOR_06",
+      "TEMPOROSS_ANCHOR_07",
+      "TEMPOROSS_ANCHOR_08",
+      "TEMPOROSS_ANCHOR_09",
+      "TEMPOROSS_ANCHOR_10",
+      "TEMPOROSS_ANCHOR_11",
+      "TEMPOROSS_ANCHOR_12",
+      "TEMPOROSS_ANCHOR_13",
+      "TEMPOROSS_ANCHOR_14",
+      "TEMPOROSS_ANCHOR_15",
+      "TEMPOROSS_ANCHOR_16",
+      "TEMPOROSS_ANCHOR_17",
+      "TEMPOROSS_ANCHOR_18",
+      "TEMPOROSS_ANCHOR_19",
+      "TEMPOROSS_ANCHOR_20"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Barrel with Metal Bands and Rope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "uvType": "BOX",
+        "baseMaterial": "ROPE",
+        "uvScale": 0.25
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1"
+      },
+      {
+        "colors": "h == 37",
+        "baseMaterial": "GRAY_75"
+      }
+    ],
+    "objectIds": [
+      "TEMPOROSS_LOBBY_BARREL"
+    ]
+  },
+  {
+    "description": "Tempoross - Pier",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "TEMPOROSS_DOCK_02",
+      "TEMPOROSS_DOCK_03",
+      "TEMPOROSS_DOCK_01",
+      "TEMPOROSS_DOCK_06",
+      "TEMPOROSS_DOCK_05",
+      "TEMPOROSS_DOCK_04",
+      "TEMPOROSS_DOCK_07",
+      "TEMPOROSS_DOCK_08",
+      "TEMPOROSS_DOCK_09",
+      "TEMPOROSS_DOCK_10",
+      "TEMPOROSS_DOCK_11",
+      "TEMPOROSS_DOCK_12",
+      "TEMPOROSS_DOCK_15",
+      "TEMPOROSS_DOCK_14",
+      "TEMPOROSS_DOCK_13",
+      "TEMPOROSS_DOCK_18",
+      "TEMPOROSS_DOCK_17",
+      "TEMPOROSS_DOCK_16",
+      "TEMPOROSS_DOCK_19",
+      "TEMPOROSS_DOCK_20",
+      "TEMPOROSS_DOCK_21",
+      "TEMPOROSS_DOCK_24",
+      "TEMPOROSS_DOCK_23",
+      "TEMPOROSS_DOCK_22"
+    ]
+  },
+  {
+    "description": "Tempoross - Supply Crates",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TEMPOROSS_CRATE_HARPOON",
+      "TEMPOROSS_CRATE_HAMMER",
+      "TEMPOROSS_CRATE_BUCKET",
+      "TEMPOROSS_CRATE_ROPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 6 && s == 5 || h == 6 && s == 3",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Row Boats",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "TEMPOROSS_DECORATIVE_BOAT",
+      "TEMPOROSS_LOBBY_BOAT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Floating Crate - Animated - Dynamic",
+    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "TEMPOROSS_DEBRIS_1",
+      "TEMPOROSS_DEBRIS_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Banner and Awning Support Top",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TEMPOROSS_LOBBY_BANNER",
+      "TEMPOROSS_LOBBY_BANNER_LOWER_LEFT",
+      "TEMPOROSS_LOBBY_BANNER_LOWER_RIGHT",
+      "TEMPOROSS_LOBBY_BARRIER_TOP",
+      "TEMPOROSS_LOBBY_STATS_BOARD",
+      "TEMPOROSS_LOBBY_ROOF_08",
+      "TEMPOROSS_LOBBY_ROOF_04",
+      "TEMPOROSS_LOBBY_ROOF_18"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Awning Support Bottom",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "TEMPOROSS_LOBBY_ROOF_03",
+      "TEMPOROSS_LOBBY_ROOF_02",
+      "TEMPOROSS_LOBBY_ROOF_01"
+    ]
+  },
+  {
+    "description": "Tempoross - Awning Fabirc",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TEMPOROSS_LOBBY_ROOF_07",
+      "TEMPOROSS_LOBBY_ROOF_06",
+      "TEMPOROSS_LOBBY_ROOF_05",
+      "TEMPOROSS_LOBBY_ROOF_12",
+      "TEMPOROSS_LOBBY_ROOF_11",
+      "TEMPOROSS_LOBBY_ROOF_10",
+      "TEMPOROSS_LOBBY_ROOF_09",
+      "TEMPOROSS_LOBBY_ROOF_15",
+      "TEMPOROSS_LOBBY_ROOF_14",
+      "TEMPOROSS_LOBBY_ROOF_13",
+      "TEMPOROSS_LOBBY_ROOF_17",
+      "TEMPOROSS_LOBBY_ROOF_16"
+    ]
+  },
+  {
+    "description": "Tempoross - Smashed Altar",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "TEMPOROSS_LOBBY_ALTAR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Tempoross - Book of Storms",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "SOAKED_PAGE_TEMPOROSS_BRAZIER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "MARBLE_2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Tables with Objects on them",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "TEMPOROSS_LOBBY_BOOKTABLE",
+      "TEMPOROSS_LOBBY_SHOP_TABLE",
+      "TEMPOROSS_LOBBY_PASS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Tempoross - Cannon and Crate - Dynamic",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "TEMPOROSS_CANNON_1",
+      "TEMPOROSS_CANNON_2",
+      "TEMPOROSS_CANNON_3",
+      "TEMPOROSS_CANNON_4",
+      "TEMPOROSS_CANNON_1_DISABLED",
+      "TEMPOROSS_CANNON_2_DISABLED",
+      "TEMPOROSS_CANNON_3_DISABLED",
+      "TEMPOROSS_CANNON_4_DISABLED",
+      "TEMPOROSS_CRATE_AMMUNITION_EMPTY_1",
+      "TEMPOROSS_CRATE_AMMUNITION_EMPTY_2",
+      "TEMPOROSS_CRATE_AMMUNITION_EMPTY_3",
+      "TEMPOROSS_CRATE_AMMUNITION_EMPTY_4",
+      "TEMPOROSS_CRATE_AMMUNITION_50_1",
+      "TEMPOROSS_CRATE_AMMUNITION_100_1",
+      "TEMPOROSS_CRATE_AMMUNITION_50_2",
+      "TEMPOROSS_CRATE_AMMUNITION_100_2",
+      "TEMPOROSS_CRATE_AMMUNITION_50_3",
+      "TEMPOROSS_CRATE_AMMUNITION_100_3",
+      "TEMPOROSS_CRATE_AMMUNITION_50_4",
+      "TEMPOROSS_CRATE_AMMUNITION_100_4"
+    ]
+  },
+  {
+    "description": "Tempoross - Hide Ripples",
+    "hideInAreas": [ "TEMPOROSS_COVE" ],
+    "objectIds": [
+      "TEMPOROSS_RIPPLE_3_NOSHADOW"
     ]
   }
 ]

@@ -19051,11 +19051,93 @@
     "objectIds": [ "HELLHOUND_IRON_GATE_ACTIVE" ]
   },
   {
-    "description": "TEMPOROSS",
+    "description": "TEMPOROSS_MAIN",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 1100,
+    "strength": 7,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "fadeInDuration": 700,
+    "fadeOutDuration": 200,
+    "npcIds": [
+      "TEMPOROSS_BOSS_READY"
+    ],
+    "animationIds": [ -1, "FSB_LIGHTENING_CAST", "FSB_TORRENT_CAST" ]
+  },
+  {
+    "description": "TEMPOROSS_SPAWN",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "fadeInDuration": 500,
+    "fadeOutDuration": 1000,
+    "npcIds": [
+      "TEMPOROSS_BOSS_READY"
+    ],
+    "animationIds": [ "FSB_SPAWN", "FSB_WHIRL_TO_READY" ]
+  },
+  {
+    "description": "TEMPOROSS_ACCENT_TOP",
+    "height": 800,
+    "alignment": "SOUTH",
+    "radius": 450,
+    "strength": 6,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "range": 5,
+    "npcIds": [
+      "TEMPOROSS_BOSS_READY",
+      "TEMPOROSS_BOSS_ENRAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_ACCENT_FRONT",
+    "offset": [ 0, 375, 300 ],
+    "radius": 375,
+    "strength": 2.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2000,
+    "fadeOutDuration": 2000,
+    "range": 10,
+    "npcIds": [
+      "TEMPOROSS_BOSS_READY",
+      "TEMPOROSS_BOSS_ENRAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_TRANSITIONS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 800,
-    "strength": 17.5,
+    "radius": 400,
+    "strength": 10,
     "color": [
       0,
       255,
@@ -19063,9 +19145,11 @@
     ],
     "type": "PULSE",
     "duration": 3200,
+    "fadeOutDuration": 2000,
     "range": 20,
     "npcIds": [
-      "TEMPOROSS_BOSS_READY"
+      "TEMPOROSS_BOSS_ENRAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL"
     ]
   },
   {
@@ -19081,18 +19165,154 @@
     ],
     "type": "PULSE",
     "duration": 3200,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
     "range": 20,
     "npcIds": [
-      "TEMPOROSS_BOSS_UNENGAGED",
+      "TEMPOROSS_BOSS_ENRAGED",
       "TEMPOROSS_BOSS_WHIRLPOOL"
     ]
   },
   {
-    "description": "TEMPOROSS_SPIRIT_POOL",
-    "height": 5,
+    "description": "TEMPOROSS_WHIRLPOOL_DEAD",
+    "height": 110,
     "alignment": "CENTER",
     "radius": 500,
-    "strength": 17.5,
+    "strength": 3.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "range": 20,
+    "npcIds": [
+      "TEMPOROSS_BOSS_UNENGAGED"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_SPIRIT_POOL_INACTIVE",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 5.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "range": 20,
+    "npcIds": [
+      "TEMPOROSS_P2_FISHINGSPOT_INACTIVE"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_SPIRIT_POOL_ACTIVE",
+    "height": 20,
+    "alignment": "CENTER",
+    "radius": 400,
+    "strength": 10.5,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "fadeOutDuration": 300,
+    "range": 20,
+    "npcIds": [
+      "TEMPOROSS_P2_FISHINGSPOT"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_SHRINE",
+    "offset": [ 0, 125, -100 ],
+    "radius": 200,
+    "strength": 8.8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "TEMPOROSS_SHRINE_FIRE"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_FIRE",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 10.0,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "objectIds": [
+      "TEMPOROSS_FIRE_VISUALS"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_LIGHTNING",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 1000,
+    "strength": 8,
+    "color": "#91c7ff",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 100,
+    "fadeOutDuration": 700,
+    "npcIds": [ "TEMPOROSS_LIGHTNING_CLOUD" ],
+    "animationIds": [ "TEMPOROSS_LIGHTNING_CLOUD_ATTACK" ]
+  },
+  {
+    "description": "ELECTRIFIED_HARPOONFISH_CANNON",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.8,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
+    "objectIds": [
+      "TEMPOROSS_CANNON_1_DISABLED",
+      "TEMPOROSS_CANNON_2_DISABLED",
+      "TEMPOROSS_CANNON_3_DISABLED",
+      "TEMPOROSS_CANNON_4_DISABLED"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_REWARD_POOL_FULL",
+    "height": 50 ,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 5.5,
     "color": [
       0,
       255,
@@ -19101,8 +19321,50 @@
     "type": "PULSE",
     "duration": 3200,
     "range": 20,
-    "npcIds": [
-      "TEMPOROSS_P2_FISHINGSPOT"
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_8",
+      "TEMPOROSS_REWARDPOOL_7",
+      "TEMPOROSS_REWARDPOOL_6",
+      "TEMPOROSS_REWARDPOOL_5"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_REWARD_POOL_HALF",
+    "height": 50 ,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 20,
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_4",
+      "TEMPOROSS_REWARDPOOL_3",
+      "TEMPOROSS_REWARDPOOL_2"
+    ]
+  },
+  {
+    "description": "TEMPOROSS_REWARD_POOL_LOW",
+    "height": 50 ,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 3,
+    "color": [
+      0,
+      255,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 3200,
+    "range": 20,
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_1",
+      "TEMPOROSS_REWARDPOOL_0"
     ]
   },
   {
@@ -25438,63 +25700,6 @@
     "range": 20,
     "objectIds": [
       "CAVEKIT_IMCANDO_STALAGMITE01"
-    ]
-  },
-  {
-    "description": "TEMPOROSS_SHRINE",
-    "height": 150,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 8.8,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 30,
-    "objectIds": [
-      "TEMPOROSS_SHRINE_FIRE"
-    ]
-  },
-  {
-    "description": "TEMPOROSS_FIRE",
-    "height": 40,
-    "alignment": "CENTER",
-    "radius": 450,
-    "strength": 10.0,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "objectIds": [
-      "TEMPOROSS_FIRE_VISUALS"
-    ]
-  },
-  {
-    "description": "ELECTRIFIED_HARPOONFISH_CANNON",
-    "height": 50,
-    "alignment": "CENTER",
-    "radius": 300,
-    "strength": 8.8,
-    "color": [
-      0,
-      255,
-      255
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 40,
-    "objectIds": [
-      "TEMPOROSS_CANNON_1_DISABLED",
-      "TEMPOROSS_CANNON_2_DISABLED",
-      "TEMPOROSS_CANNON_3_DISABLED",
-      "TEMPOROSS_CANNON_4_DISABLED"
     ]
   },
   {
