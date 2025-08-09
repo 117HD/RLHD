@@ -4344,6 +4344,7 @@
     "uvOrientation": -256,
     "uvScale": 0.8,
     "objectIds": [
+      "BKSECRETDOOR_INACTIVE",
       "BKSECRETDOOR",
       "WILD1_WALL",
       "WILD1_WALL_TOP",
@@ -5507,7 +5508,6 @@
     "description": "CASTLE_WARS_WALLS",
     "objectIds": [
       "OLDCASTLEWALL",
-      "OLDCASTLEBATTLEMENTS",
       "OLDWALL",
       "CROSS_OLDCASTLEEDGE",
       "CASTLEWARS_WALL_SARADOMIN",
@@ -6143,7 +6143,8 @@
       "DRAGON_SLAYER_QIP_STAGAMITE",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL",
       "DRAGON_SLAYER_QIP_STALAGMITE_WALL2",
-      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP"
+      "DRAGON_SLAYER_QIP_STALAGTITE_JUMP",
+      "DORGESH_CAVES_STALAGTITE_01"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -9374,7 +9375,9 @@
       "FAIRY_LADDER_WIND_UP",
       "FAIRY_LADDER_WIND_DOWN",
       "FAI_FALADOR_CASTLE_LADDER_UP",
-      "FAI_FALADOR_CASTLE_LADDERTOP"
+      "FAI_FALADOR_CASTLE_LADDERTOP",
+      "LUC2_DARKSQUALL_LADDER",
+      "LUC2_DARKSQUALL_LADDERTOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -10220,7 +10223,14 @@
       "LUC2_MOV_ELECTRIC_RAIL_GATE_SAFE",
       "LUC2_MOV_ELECTRIC_RAIL_GATE_OPEN",
       "WGS_PRISON_DOOR_LOCKED",
-      "WGS_PRISON_DOOR_OPEN"
+      "WGS_PRISON_DOOR_OPEN",
+      "LUC2_DWT_JAILBARS_END_LEFT",
+      "LUC2_DWT_JAILBARS",
+      "LUC2_DWT_JAILBARS_END_RIGHT",
+      "LUC2_DWT_JAILBARS_END_RIGHT_BLOCKRANGE",
+      "LUC2_DWT_JAILBARS_END_LEFT_BLOCKRANGE",
+      "LUC2_DARKSQUALL_CELL_DOOR_OPEN",
+      "LUC2_DWT_JAILBARS_GATE_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -10260,10 +10270,24 @@
     "objectIds": [
       "PRISONBARSENDLEFT",
       "PRISONBARSDOOR_LOCKED",
-      "SOTE_PRISON_DOOR"
+      "SOTE_PRISON_DOOR",
+      "LUC2_DWT_JAILBARS_GATE_CLOSED",
+      "LUC2_DARKSQUALL_CELL_DOOR_CLOSED",
+      "LUC2_DWT_JAILBARS_OUTER_GATE_CLOSED",
+      "LUC2_DWT_JAILBARS_OUTER_GATE_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.7
+  },
+  {
+    "description": "Metal Chain",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "objectIds": [
+      "LUC2_DWT_CHAINS1",
+      "LUC2_DWT_CHAINS2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3
   },
   {
     "description": "Marble Fountain",
@@ -12358,7 +12382,8 @@
       "FAIRY_CRATE_2",
       "VMQ4_JANUS_BASEMENT_CRATE",
       "GRAB_EVIL_TWIN_CRATES1",
-      "GRAB_EVIL_TWIN_CRATES2"
+      "GRAB_EVIL_TWIN_CRATES2",
+      "LUC2_DWT_CRATE1"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -12432,7 +12457,8 @@
       "VMQ2_COTHON_CRATE",
       "VMQ2_COTHON_CRATES",
       "SHAYZIEN_CRATE_01_DARK_OP",
-      "LUC2_MOV_CRATE"
+      "LUC2_MOV_CRATE",
+      "LUC2_DWT_CRATE3"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13529,7 +13555,8 @@
     "description": "Morytania - Objects - Wooden - Stacked Crate - Angled",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "BURGH_CRATES_SMALL"
+      "BURGH_CRATES_SMALL",
+      "LUC2_DWT_CRATE2"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -34377,7 +34404,9 @@
       "SOTN_HUNTING_BARREL_NOOP",
       "SOTN_HUNTING_BARREL_OP",
       "LUC2_MOV_BARREL_EMPTY",
-      "LUC2_MOV_BARREL"
+      "LUC2_MOV_BARREL",
+      "LUC2_DWT_BARREL1",
+      "LUC2_DWT_BARREL2"
     ]
   },
   {
@@ -53451,7 +53480,8 @@
     "baseMaterial": "PURE_BLACK",
     "objectIds": [
       "LUC2_MOV_WALL_TOP_BLACK"
-    ]
+    ],
+    "castShadows": false
   },
   {
     "description": "Movario's Base - Barrel with Orange Liquid",
@@ -53755,6 +53785,445 @@
       {
         "colors": "h > 11",
         "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Fort Basement - Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "KR_BKF_BASEMENT_WALL_EXPOSED_PLASTER",
+      "KR_BKF_BASEMENT_WALL",
+      "KR_BKF_BASEMENT_WALL_TOP",
+      "KR_BKF_BASEMENT_CRUMBLED_WALL"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "WGS - Black Knight Basement Ladder",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "KR_BKF_BASEMENT_LADDERTOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Entrance Hatch - Dynamic",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "WGS_BLACK_KNIGHTS_TUNNEL_HIDDEN",
+      "WGS_BLACK_KNIGHTS_TUNNEL_REVEALED"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 21",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_DWT_WALL",
+      "LUC2_DWT_WALL_TOP_FADE_CORNER1",
+      "LUC2_DWT_WALL_TOP",
+      "LUC2_DWT_WALL_WATER",
+      "LUC2_DWT_WALL_STEPS1_MIRROR",
+      "LUC2_DWT_WALL_STEPS6",
+      "LUC2_DWT_WALL_STEPS1",
+      "LUC2_DWT_WALL_STEPS3",
+      "LUC2_DWT_WALL_STEPS5",
+      "LUC2_DWT_WALL_STEPS4",
+      "LUC2_DWT_STEPS_01",
+      "LUC2_DWT_STEPS_02",
+      "LUC2_DWT_STEPS_03",
+      "LUC2_DWT_STEPS_04",
+      "LUC2_DWT_WALL_LVL3",
+      "LUC2_DWT_WALL_TUNNEL_BLEND",
+      "LUC2_DWT_WALL_TUNNEL_TOP",
+      "LUC2_DWT_WALL_TUNNEL_BLEND_MIRROR",
+      "LUC2_DWT_WALL_CLIMB_BLEND",
+      "LUC2_DWT_WALL_CLIMB",
+      "LUC2_DWT_WALL_CLIMB_BLEND_MIRROR",
+      "LUC2_DWT_WALL_STEPS6_LVL3_MIRROR",
+      "LUC2_DWT_WALL_STEPS1_LVL3_MIRROR",
+      "LUC2_DWT_STEPS_01_LVL3",
+      "LUC2_DWT_WALL_STEPS6_LVL3",
+      "LUC2_DWT_WALL_STEPS1_LVL3",
+      "LUC2_DWT_JAIL_CONNECT_MIRROR",
+      "LUC2_DWT_JAIL_CONNECT",
+      "LUC2_DWT_WALL_LAW",
+      "LUC2_DWT_WALL_DEATH"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "colors": "l==2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Wall Filler",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "LUC2_DWT_WALL_TOP_BLACK"
+    ],
+    "castShadows": true
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Rocks",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_DWT_ROCKSLIDE",
+      "LUC2_DWT_ROCKS_SMALL2",
+      "LUC2_DWT_ROCKS_SMALL1",
+      "LUC2_DWT_FADE_OFF_CORNER2",
+      "LUC2_DWT_FADE_OFF_EDGE",
+      "LUC2_DWT_FADE_OFF_CORNER1",
+      "LUC2_DWT_FADE_OFF",
+      "LUC2_DWT_DUGUPSOIL5",
+      "LUC2_DWT_DUGUPSOIL4",
+      "LUC2_DWT_DUGUPSOIL3",
+      "LUC2_DWT_DUGUPSOIL2",
+      "LUC2_DWT_DUGUPSOIL1",
+      "LUC2_DWT_ROCKSLIDE_LVL3",
+      "LUC2_DWT_ROCKS_SMALL2_LVL3"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "uvScale": 0.8
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Walls Stream",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_DWT_WALL_STREAM2",
+      "LUC2_DWT_GROUND_STREAM5",
+      "LUC2_DWT_GROUND_STREAM7",
+      "LUC2_DWT_GROUND_STREAM6",
+      "LUC2_DWT_GROUND_STREAM8",
+      "LUC2_DWT_GROUND_STREAM9",
+      "LUC2_DWT_GROUND_STREAM10"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l==2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Walls - Wooden Pillar",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 512,
+    "objectIds": [
+      "LUC2_DWT_WALL_PILLAR",
+      "LUC2_DWT_WALL_PILLAR_LVL3",
+      "LUC2_DWT_WALL_PILLAR2_LVL3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Walls - Wooden Pillar No Wall",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 512,
+    "objectIds": [
+      "LUC2_DWT_PILLAR_TOP",
+      "LUC2_DWT_PILLAR_FIRST_FLOOR",
+      "LUC2_DWT_PILLAR_SECOND_FLOOR"
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Walls - Torch - Animated - Dynamic",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "LUC2_DWT_WALL_STEPS1_TORCH",
+      "LUC2_DWT_WALL_STEPS1_TORCH_MIRROR",
+      "LUC2_DWT_WALL_DOOR_MIRROR",
+      "LUC2_DWT_WALL_DOOR",
+      "LUC2_DWT_WALL_DOOR_LVL3_MIRROR",
+      "LUC2_DWT_WALL_DOOR_LVL3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10 || h == 5 && s == 1 && l > 20",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 200,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Walls - Torch 2 - Animated - Dynamic",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "LUC2_DWT_WALL_TORCH",
+      "LUC2_DWT_WALL_TORCH_LVL3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 200,
+        "uvScale": 0.6
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Metal Door",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "LUC2_DWT_DOOR_STRONG_OUTER",
+      "LUC2_DWT_DOOR_STRONG_INNER",
+      "LUC2_DARKSQUALL_BASE_MAIN_DOOR_ACTIVE",
+      "LUC2_DARKSQUALL_BASE_MAIN_DOOR_EXIT_ACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "l==2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Trim Fix",
+    "areas": [ "Black Knights Fort - Trim Fix" ],
+    "baseMaterial": "ROCK_3_DARK",
+    "objectIds": [
+      "LUC2_DWT_FADE_OFF_EDGE"
+    ],
+    "uvType": "BOX",
+    "hide": false,
+    "uvOrientation": 200,
+    "uvScale": 0.8
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Rocks in Water - Hide Ripples",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_DWT_ROCK_WATER",
+      "LUC2_DWT_ROCK_WATER_SMALL",
+      "LUC2_DWT_ROCK_WATER_BITS"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Bridge",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.75,
+    "objectIds": [
+      "LUC2_ROPE_BRIDGE_FLOOR_1",
+      "LUC2_ROPE_BRIDGE_FLOOR_1_MIRROR",
+      "LUC2_DK_CATA_BRIDGE_JUMP_SOUTH",
+      "LUC2_ROPE_BRIDGE_FLOOR_4",
+      "LUC2_ROPE_BRIDGE_FLOOR_4_MIRROR",
+      "LUC2_ROPE_BRIDGE_FLOOR_6",
+      "LUC2_ROPE_BRIDGE_FLOOR_6_MIRROR",
+      "LUC2_DK_CATA_BRIDGE_JUMP_NORTH",
+      "LUC2_ROPE_BRIDGE_FLOOR_3",
+      "LUC2_ROPE_BRIDGE_FLOOR_3_MIRROR",
+      "LUC2_DWT_BRIDGE_RAIL",
+      "LUC2_ROPE_BRIDGE_FLOOR_2",
+      "LUC2_ROPE_BRIDGE_FLOOR_2_MIRROR"
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Bridge Supports",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "LUC2_DWT_BRIDGE_SUPPORT4",
+      "LUC2_DWT_BRIDGE_SUPPORT3",
+      "LUC2_DWT_BRIDGE_SUPPORT2",
+      "LUC2_DWT_BRIDGE_SUPPORT1"
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Barricade",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "LUC2_BARRICADE1",
+      "LUC2_BARRICADE2",
+      "LUC2_BARRICADE_CORNER",
+      "LUC2_BARRICADE_END",
+      "LUC2_BARRICADE_END_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Wardrobe",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "WGS_DARKSQUALL_WARDROBE_DAGONHAI_OPEN_FULL",
+      "WGS_DARKSQUALL_WARDROBE_DAGONHAI_CLOSED",
+      "WGS_DARKSQUALL_WARDROBE_DAGONHAI_OPEN_EMPTY",
+      "LUC2_DARKSQUALL_WARDROBE_CLOSED",
+      "LUC2_DARKSQUALL_WARDROBE_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s > 1 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientationY": 130
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Table with Misc Objects",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LUC2_DWT_TABLE4",
+      "WGS_DARKSQUALL_DESK_EMPTY",
+      "WGS_DARKSQUALL_DESK_SUPPLIES",
+      "LUC2_DWT_TABLE4_RUNES",
+      "LUC2_DARKSQUALL_DESK_EMPTY2",
+      "LUC2_DARKSQUALL_STUDYDESK",
+      "LUC2_DWT_TABLE3",
+      "WGS_DARKSQUALL_KEY_RACK_KEY",
+      "WGS_DARKSQUALL_KEY_RACK_KEY_TAKEN",
+      "LUC2_DARKSQUALL_STUDYDESK_SEARCHED",
+      "LUC2_DWT_TABLE4_RUNES_GONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s > 0",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "WGS - Black Knight Catacomb - Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "LUC2_DWT_TILE1",
+      "LUC2_DWT_TILE3",
+      "LUC2_DWT_TILE2",
+      "LUC2_SUROK_TILE13",
+      "LUC2_SUROK_TILE14",
+      "LUC2_SUROK_TILE15",
+      "LUC2_SUROK_TILE16",
+      "LUC2_SUROK_TILE9",
+      "LUC2_SUROK_TILE10",
+      "LUC2_SUROK_TILE11",
+      "LUC2_SUROK_TILE12",
+      "LUC2_SUROK_TILE8",
+      "LUC2_SUROK_TILE7",
+      "LUC2_SUROK_TILE6",
+      "LUC2_SUROK_TILE5",
+      "LUC2_SUROK_TILE1",
+      "LUC2_SUROK_TILE2",
+      "LUC2_SUROK_TILE3",
+      "LUC2_SUROK_TILE4"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 200,
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "colors": "l==2",
+        "baseMaterial": "PURE_BLACK",
+        "uvType": "BOX"
       }
     ]
   }

@@ -39902,5 +39902,106 @@
     "objectIds": [
       "LUC2_MOV_ELECTRIC_RAIL_GATE_LIVE"
     ]
+  },
+  {
+    "description": "Black Knights Catacombs - Wall Torch",
+    "offset": [ 0, 185, 60 ],
+    "radius": 550,
+    "strength": 10.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_DWT_WALL_TORCH",
+      "LUC2_DWT_WALL_STEPS1_TORCH_MIRROR",
+      "LUC2_DWT_WALL_STEPS1_TORCH",
+      "LUC2_DWT_WALL_DOOR_MIRROR",
+      "LUC2_DWT_WALL_DOOR",
+      "LUC2_DWT_WALL_DOOR_LVL3_MIRROR",
+      "LUC2_DWT_WALL_DOOR_LVL3",
+      "LUC2_DWT_WALL_TORCH_LVL3"
+    ]
+  },
+  {
+    "description": "Surok Wind Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 10.6,
+    "ignoreActorHiding": true,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "WIND_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Surok Water Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 13.8,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "WATER_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Surok Earth Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 12.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "EARTH_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Surok Fire Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "FIRE_SURGE_RAISED"
+    ]
   }
 ]

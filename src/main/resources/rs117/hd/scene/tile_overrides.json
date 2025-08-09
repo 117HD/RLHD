@@ -5206,6 +5206,14 @@
     "groundMaterial": "INTERIOR_DIRT_FLOOR"
   },
   {
+    "name": "Black Knights Fort - Catacombs Water",
+    "area": "Black Knights Fort - Catacombs",
+    "overlayIds": [
+      158
+    ],
+    "waterType": "CAVE_WATER"
+  },
+  {
     "name": "OVERWORLD_GRASS_OVERLAY",
     "area": "OVERWORLD",
     "overlayIds": [

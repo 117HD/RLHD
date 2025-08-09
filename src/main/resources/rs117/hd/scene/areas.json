@@ -1574,9 +1574,7 @@
   },
   {
     "name": "KEEP_LE_FAYE_JAIL",
-    "regions": [
-      7490
-    ]
+    "aabbs": [ [ 1881, 4253, 1919, 4287 ] ]
   },
   {
     "name": "KEEP_LE_FAYE_INSTANCE",
@@ -7770,6 +7768,22 @@
   {
     "name": "Movario's Base - Library",
     "regions": [ 16717 ]
+  },
+  {
+    "name": "Black Knights Fort - Basement",
+    "aabbs": [ [ 1857, 4225, 1877, 4252 ] ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Black Knights Fort - Catacombs",
+    "regionBoxes": [ [16459, 16457] ]
+  },
+  {
+    "name": "Black Knights Fort - Trim Fix",
+    "aabbs": [
+      [ 4103, 4798, 4105, 4798 ],
+      [ 4097, 4790, 4097, 4792 ]
+    ]
   },
   {
     "name": "SNOWY_REGIONS",

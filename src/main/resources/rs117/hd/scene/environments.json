@@ -1962,6 +1962,20 @@
     "waterColor": "#0009BC"
   },
   {
+    "area": "Black Knights Fort - Basement",
+    "ambientColor": "#aaafb6",
+    "directionalColor": "#878474",
+    "directionalStrength": 0.5,
+    "ambientStrength": 1,
+    "fogDepth": 60
+  },
+  {
+    "area": "Black Knights Fort - Catacombs",
+    "directionalStrength": 0.15,
+    "ambientStrength": 0.8,
+    "fogDepth": 30
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
