@@ -15104,7 +15104,6 @@
     "objectIds": [
       "OLDCHAIR",
       "OLDCHAIR2",
-      "BURGH_SMASHEDCHAIR",
       "PISCARILIUS_CHAIR_02"
     ]
   },
@@ -31408,21 +31407,6 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.86
-  },
-  {
-    "description": "Perilous Moons - Cave to Stream Cavern",
-    "baseMaterial": "ROCK_3",
-    "objectIds": [
-      "PMOON_TELEBOX_CAVE"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.86,
-    "colorOverrides": [
-      {
-        "colors": "l == 2 && a == 255",
-        "baseMaterial": "GRAY_65"
-      }
-    ]
   },
   {
     "description": "Varlamore Orange Brazier - Animated - Dynamic",

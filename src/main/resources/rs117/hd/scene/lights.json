@@ -38032,7 +38032,8 @@
       "HUEY_SHIELD_ATTACK_MELEE",
       "HUEY_SHIELD_ATTACK_RANGE",
       "HUEY_SHIELD_ATTACK_MAGIC",
-      "HUEY_SHIELD_ACTIVATION" ]
+      "HUEY_SHIELD_ACTIVATION"
+    ]
   },
   {
     "description": "Hueycoatl Lightning Bolt Attack",
@@ -40269,7 +40270,10 @@
     "type": "STATIC",
     "fadeInDuration": 250,
     "fadeOutDuration": 400,
-    "graphicsObjectIds": [ "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01", "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01_REVERSE" ]
+    "graphicsObjectIds": [
+      "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01",
+      "VFX_DJINN_BLUE_MAGIC_PLAYER_SPOTANIM_01_REVERSE"
+    ]
   },
   {
     "description": "Ates Statue Active Bowl High",
