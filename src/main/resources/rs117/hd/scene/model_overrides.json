@@ -34322,7 +34322,8 @@
   {
     "description": "Flip UVs for HD Shingle full tiles",
     "objectIds": [
-      "OLDROOF_REDSLATE", "ROOF_REDSLATE"
+      "ROOF_REDSLATE",
+      "OLDROOF_REDSLATE"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,

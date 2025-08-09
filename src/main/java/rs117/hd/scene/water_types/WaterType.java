@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UBOWaterTypes;
-import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ColorUtils;
@@ -73,7 +72,7 @@ public class WaterType {
 		return name;
 	}
 
-	public void fillStruct(MaterialManager materialManager, UBOWaterTypes.WaterTypeStruct struct) {
+	public void fillStruct(UBOWaterTypes.WaterTypeStruct struct) {
 		struct.isFlat.set(flat ? 1 : 0);
 		struct.specularStrength.set(specularStrength);
 		struct.specularGloss.set(specularGloss);
@@ -85,9 +84,9 @@ public class WaterType {
 		struct.surfaceColor.set(linearToSrgb(surfaceColor));
 		struct.foamColor.set(linearToSrgb(foamColor));
 		struct.depthColor.set(linearToSrgb(depthColor));
-		struct.normalMap.set(materialManager.getTextureLayer(normalMap));
-		struct.foamMap.set(materialManager.getTextureLayer(Material.WATER_FOAM));
-		struct.flowMap.set(materialManager.getTextureLayer(Material.WATER_FLOW_MAP));
+		struct.normalMap.set(Material.getTextureLayer(normalMap));
+		struct.foamMap.set(Material.getTextureLayer(Material.WATER_FOAM));
+		struct.flowMap.set(Material.getTextureLayer(Material.WATER_FLOW_MAP));
 	}
 
 	@Slf4j

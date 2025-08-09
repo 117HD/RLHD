@@ -136,15 +136,12 @@ public class ModelOverride
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
-		baseMaterial = baseMaterial.resolveReplacements();
-		textureMaterial = textureMaterial.resolveReplacements();
-
 		if (materialOverrides != null) {
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
 				var override = entry.getValue();
 				override.normalize(vanillaShadowMode);
-				normalized.put(entry.getKey().resolveReplacements(), override);
+				normalized.put(entry.getKey(), override);
 			}
 			materialOverrides = normalized;
 		}

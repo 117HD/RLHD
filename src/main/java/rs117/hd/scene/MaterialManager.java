@@ -29,16 +29,18 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Stream;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
@@ -103,37 +105,23 @@ public class MaterialManager {
 
 	public UBOMaterials uboMaterials;
 
-	@RequiredArgsConstructor
-	private static class TextureLayer {
-		final Material material;
-		final int vanillaIndex;
-		final int index;
+	public static class TextureLayer {
+		Material material;
+		boolean needsUpload = true;
 	}
 
 	public static final Map<String, Material> MATERIAL_MAP = new HashMap<>();
 	public static Material[] MATERIALS;
-	public static Material[] REPLACEMENT_MAPPING;
 	public static Material[] VANILLA_TEXTURE_MAPPING;
 
 	private int texMaterialTextureArray;
-
-	public int[] materialIndexToTextureLayer;
-	public int[] vanillaTextureIndexToTextureLayer;
+	private int[] textureResolution;
+	public final List<TextureLayer> textureLayers = new ArrayList<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public void startUp() {
-		fileWatcher = MATERIALS_PATH.watch((path, first) -> {
-			try {
-				Material[] materials = parseMaterials(path);
-				log.debug("Loaded {} materials", materials.length);
-				clientThread.invoke(() -> loadMaterialTextures(materials));
-			} catch (IOException ex) {
-				log.error("Failed to load materials:", ex);
-				if (first)
-					throw new IllegalStateException(ex);
-			}
-		});
+		fileWatcher = MATERIALS_PATH.watch((path, first) -> reload(first));
 	}
 
 	public void shutDown() {
@@ -141,55 +129,38 @@ public class MaterialManager {
 			fileWatcher.unregister();
 		fileWatcher = null;
 
-		freeTextures();
+		if (texMaterialTextureArray != 0)
+			glDeleteTextures(texMaterialTextureArray);
+		texMaterialTextureArray = 0;
+		textureLayers.clear();
+
+		if (uboMaterials != null)
+			uboMaterials.destroy();
+		uboMaterials = null;
 
 		MATERIAL_MAP.clear();
-		MATERIALS = REPLACEMENT_MAPPING = VANILLA_TEXTURE_MAPPING = null;
-		materialIndexToTextureLayer = vanillaTextureIndexToTextureLayer = null;
+		MATERIALS = VANILLA_TEXTURE_MAPPING = null;
 	}
 
 	public Material getMaterial(String name) {
 		return MATERIAL_MAP.getOrDefault(name, Material.NONE);
 	}
 
-	public void reload() {
+	public void reload(boolean throwOnFailure) {
 		clientThread.invoke(() -> {
-			freeTextures();
-			loadMaterialTextures(MATERIALS);
-			modelOverrideManager.reload();
+			try {
+				Material[] materials = loadMaterials(MATERIALS_PATH);
+				log.debug("Loaded {} materials", materials.length);
+				clientThread.invoke(() -> swapMaterials(materials));
+			} catch (IOException ex) {
+				log.error("Failed to load materials:", ex);
+				if (throwOnFailure)
+					throw new IllegalStateException(ex);
+			}
 		});
 	}
 
-	public int getMaterialIndex(@Nonnull Material material, int vanillaTextureIndex) {
-		assert uboMaterials != null;
-		if (material == Material.VANILLA &&
-			vanillaTextureIndex >= 0 &&
-			vanillaTextureIndex < uboMaterials.vanillaTextureIndexToMaterialUniformIndex.length)
-			return uboMaterials.vanillaTextureIndexToMaterialUniformIndex[vanillaTextureIndex];
-		return uboMaterials.materialOrdinalToMaterialUniformIndex[material.index];
-	}
-
-	public int getTextureLayer(@Nullable Material material) {
-		if (material == null)
-			return -1;
-		assert materialIndexToTextureLayer != null : "Textures must be loaded";
-		material = material.resolveTextureMaterial();
-		return materialIndexToTextureLayer[material.index];
-	}
-
-	private void freeTextures() {
-		if (texMaterialTextureArray != 0)
-			glDeleteTextures(texMaterialTextureArray);
-		texMaterialTextureArray = 0;
-
-		if (uboMaterials != null)
-			uboMaterials.destroy();
-		uboMaterials = null;
-
-		materialIndexToTextureLayer = null;
-	}
-
-	private Material[] parseMaterials(ResourcePath path) throws IOException {
+	private Material[] loadMaterials(ResourcePath path) throws IOException {
 		// Gson provides no simple way to let one object inherit defaults from another object,
 		// so we parse the JSON manually into a JsonArray, which we can process to copy default
 		// values from parent materials in the correct order.
@@ -292,7 +263,10 @@ public class MaterialManager {
 		).toArray(Material[]::new);
 
 		var materialMap = new HashMap<String, Material>();
+		int unnamedCounter = 1;
 		for (var mat : materials) {
+			if (mat.name == null)
+				mat.name = "UNNAMED_" + unnamedCounter++;
 			materialMap.put(mat.name, mat);
 
 			if (Props.DEVELOPMENT && mat.replacementCondition instanceof ExpressionParser.SerializableExpressionPredicate) {
@@ -304,37 +278,72 @@ public class MaterialManager {
 			}
 		}
 
-		for (int i = 0; i < materials.length; i++)
-			materials[i].normalize(i, materialMap);
+		for (var mat : materials)
+			mat.normalize(materialMap);
 
-		Material.checkForReplacementLoops(materials);
+		checkForReplacementLoops(materials);
 		return materials;
 	}
 
-	private Material[] getActiveMaterials() {
-		return Arrays.stream(REPLACEMENT_MAPPING)
-			.filter(m -> m != Material.VANILLA) // The VANILLA material is used for vanilla textures lacking a material definition
-			.distinct()
-			.toArray(Material[]::new);
-	}
-
-	private Material[] getTextureMaterials() {
-		return Arrays.stream(REPLACEMENT_MAPPING)
-			.map(Material::resolveTextureMaterial)
-			.filter(m -> m != Material.NONE)
-			.distinct()
-			.toArray(Material[]::new);
-	}
-
-	private void loadMaterialTextures(Material[] materials) {
+	private void swapMaterials(Material[] parsedMaterials) {
 		assert client.isClientThread();
 		assert textureManager.vanillaTexturesAvailable();
 
-		boolean isFirst = MATERIALS == null;
-		MATERIALS = materials;
+		boolean isFirstLoad = MATERIALS == null;
+		var textureProvider = client.getTextureProvider();
+		var vanillaTextures = textureProvider.getTextures();
+		VANILLA_TEXTURE_MAPPING = new Material[vanillaTextures.length];
+
+		// Assemble the material map, accounting for replacements
 		MATERIAL_MAP.clear();
-		for (var m : materials)
+		for (var original : parsedMaterials) {
+			// If the material is a conditional replacement material, and the condition is not met,
+			// the material shouldn't be loaded and can be mapped to NONE
+			Material replacement = original;
+			if (original.isInactiveReplacement(plugin.vars)) {
+				replacement = Material.NONE;
+			} else {
+				// Apply material replacements from top to bottom
+				for (var other : parsedMaterials)
+					if (other.replaces(replacement.name, plugin.vars))
+						replacement = other;
+			}
+
+			MATERIAL_MAP.put(original.name, replacement);
+
+			// Add to vanilla texture mappings if the original was a vanilla replacement
+			if (original.vanillaTextureIndex != -1 && !original.inheritsTexture()) {
+				int i = original.vanillaTextureIndex;
+				assert VANILLA_TEXTURE_MAPPING[i] == null || VANILLA_TEXTURE_MAPPING[i] == replacement : String.format(
+					"Material %s conflicts with vanilla ID %s of material %s", replacement, i, VANILLA_TEXTURE_MAPPING[i]);
+				VANILLA_TEXTURE_MAPPING[i] = replacement;
+			}
+		}
+
+		// Add dummy materials for any vanilla textures lacking one
+		for (int i = 0; i < VANILLA_TEXTURE_MAPPING.length; i++) {
+			if (vanillaTextures[i] == null || VANILLA_TEXTURE_MAPPING[i] != null)
+				continue;
+
+			var m = new Material()
+				.name("VANILLA_" + i)
+				.vanillaTextureIndex(i)
+				.isFallbackVanillaMaterial(true)
+				.hasTransparency(true);
 			MATERIAL_MAP.put(m.name, m);
+			VANILLA_TEXTURE_MAPPING[i] = m;
+		}
+
+		// Gather all unique materials after displacements into an array
+		MATERIALS = MATERIAL_MAP.values().stream().distinct().toArray(Material[]::new);
+		// Ensure that NONE is the first element
+		for (int i = 0; i < MATERIALS.length; i++) {
+			if (MATERIALS[i] == Material.NONE) {
+				MATERIALS[i] = MATERIALS[0];
+				MATERIALS[0] = Material.NONE;
+				break;
+			}
+		}
 
 		// Update statically accessible materials
 		Material.BLACK = getMaterial("BLACK");
@@ -347,148 +356,73 @@ public class MaterialManager {
 		Material.DIRT_1 = getMaterial("DIRT_1");
 		Material.DIRT_2 = getMaterial("DIRT_2");
 
-		REPLACEMENT_MAPPING = new Material[MATERIALS.length];
-		for (int i = 0; i < MATERIALS.length; ++i) {
-			var material = MATERIALS[i];
-
-			// If the material is a conditional replacement material, and the condition is not met,
-			// the material shouldn't be loaded and can be mapped to NONE
-			if (material.replacementCondition != null && !material.replacementCondition.test(plugin.vars)) {
-				material = Material.NONE;
-			} else {
-				// Apply material replacements from top to bottom
-				for (var replacement : MATERIALS) {
-					if (replacement.replacementCondition != null &&
-						replacement.materialsToReplace.contains(material.name) &&
-						replacement.replacementCondition.test(plugin.vars)
-					) {
-						material = replacement;
-						break;
-					}
-				}
-			}
-
-			REPLACEMENT_MAPPING[i] = material;
-		}
-
-		// Resolve replacements completely
-		outer:
-		for (int i = 0; i < MATERIALS.length; i++) {
-			var replacement = REPLACEMENT_MAPPING[i];
-			Material next;
-			while ((next = REPLACEMENT_MAPPING[replacement.index]) != replacement) {
-				if (next.index == i) {
-					// This should never happen, since loops should have been removed already
-					assert false : String.format("Material loop: %s -> ... -> %s -> %s", MATERIALS[i], replacement, next);
-					continue outer;
-				}
-				replacement = next;
-			}
-			REPLACEMENT_MAPPING[i] = replacement;
-		}
-
-		var textureProvider = client.getTextureProvider();
-		Texture[] vanillaTextures = textureProvider.getTextures();
-		VANILLA_TEXTURE_MAPPING = new Material[vanillaTextures.length];
-		Arrays.fill(VANILLA_TEXTURE_MAPPING, Material.VANILLA);
-		for (int i = 0; i < vanillaTextures.length; i++) {
-			for (var material : MATERIALS) {
-				if (material.vanillaTextureIndex == i && material.parent == null) {
-					assert VANILLA_TEXTURE_MAPPING[i] == Material.VANILLA :
-						"Material " + material + " conflicts with vanilla ID " + material.vanillaTextureIndex + " of material "
-						+ VANILLA_TEXTURE_MAPPING[i];
-					VANILLA_TEXTURE_MAPPING[i] = material.resolveReplacements();
-				}
-			}
-		}
-
-		// Add material uniforms for all active material definitions
-		// Temporary variables for texture loading and generating material uniforms
-		var uboEntries = new ArrayList<UBOMaterials.MaterialEntry>();
-		for (var material : getActiveMaterials())
-			uboEntries.add(new UBOMaterials.MaterialEntry(material, material.vanillaTextureIndex));
-
-		// Add texture layers for each material that adds its own texture, after resolving replacements
-		ArrayList<TextureLayer> textureLayers = new ArrayList<>();
-		materialIndexToTextureLayer = new int[MaterialManager.MATERIALS.length];
-		Arrays.fill(materialIndexToTextureLayer, -1);
-		for (var textureMaterial : getTextureMaterials()) {
-			int layerIndex = textureLayers.size();
-			textureLayers.add(new TextureLayer(textureMaterial, textureMaterial.vanillaTextureIndex, layerIndex));
-			materialIndexToTextureLayer[textureMaterial.index] = layerIndex;
-		}
-
-		// Prepare mappings for materials that don't provide their own textures
-		for (var material : MaterialManager.MATERIALS)
-			if (materialIndexToTextureLayer[material.index] == -1)
-				materialIndexToTextureLayer[material.index] =
-					materialIndexToTextureLayer[material.resolveTextureMaterial().index];
-
-		// Add material uniforms and texture layers for any vanilla textures lacking a material definition
-		vanillaTextureIndexToTextureLayer = new int[vanillaTextures.length];
-		Arrays.fill(vanillaTextureIndexToTextureLayer, -1);
-		for (int i = 0; i < vanillaTextures.length; i++) {
-			if (vanillaTextures[i] != null && Material.fromVanillaTexture(i) == Material.VANILLA) {
-				uboEntries.add(new UBOMaterials.MaterialEntry(Material.VANILLA, i));
-				int layerIndex = textureLayers.size();
-				textureLayers.add(new TextureLayer(Material.VANILLA, i, layerIndex));
-				vanillaTextureIndexToTextureLayer[i] = layerIndex;
-			}
-		}
-
-		// Allocate texture array
-		glActiveTexture(TEXTURE_UNIT_GAME);
-		texMaterialTextureArray = glGenTextures();
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
-
-		int textureSize = config.textureResolution().getSize();
-		int mipLevels = 1 + floor(log2(textureSize));
-		int format = GL_SRGB8_ALPHA8;
-		if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
-			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
-		} else {
-			// Allocate each mip level separately
-			for (int i = 0; i < mipLevels; i++) {
-				int size = textureSize >> i;
-				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, format, size, size, textureLayers.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-			}
-		}
-
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		textureManager.setAnisotropicFilteringLevel();
-
-		log.debug("Allocated {}x{} texture array with {} layers", textureSize, textureSize, textureLayers.size());
-
-		// Set brightness to 1 to upload unmodified vanilla textures
-		double vanillaBrightness = textureProvider.getBrightness();
-		textureProvider.setBrightness(1);
-		for (var textureLayer : textureLayers) {
-			var material = textureLayer.material;
-			var image = textureManager.loadTexture(material.getTextureName(), textureLayer.vanillaIndex);
-			if (image == null)
+		// Update texture layers for materials after NONE which don't inherit their texture
+		int previousLayerCount = textureLayers.size();
+		int textureLayerIndex = 0;
+		for (int i = 1; i < MATERIALS.length; i++) {
+			var mat = MATERIALS[i];
+			if (mat.inheritsTexture())
 				continue;
 
-			try {
-				textureManager.uploadTexture(GL_TEXTURE_2D_ARRAY, textureLayer.index, ivec(textureSize, textureSize), image);
-			} catch (Exception ex) {
-				log.error("Failed to upload texture {}:", material, ex);
+			TextureLayer layer;
+			if (textureLayerIndex == textureLayers.size()) {
+				layer = new TextureLayer();
+				textureLayers.add(layer);
+			} else {
+				layer = textureLayers.get(textureLayerIndex);
+				layer.needsUpload = !Objects.equals(mat.getTextureName(), layer.material.getTextureName());
 			}
+			layer.material = mat;
+			mat.textureLayer = textureLayerIndex++;
 		}
-		textureProvider.setBrightness(vanillaBrightness);
+		// Delete unused layers
+		textureLayers.subList(textureLayerIndex, textureLayers.size()).clear();
+		// Update texture layers for materials which inherit their texture
+		for (var mat : MATERIALS)
+			mat.textureLayer = mat.resolveTextureOwner().textureLayer;
 
-		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+		int textureSize = config.textureResolution().getSize();
+		textureResolution = ivec(textureSize, textureSize);
+		glActiveTexture(TEXTURE_UNIT_GAME);
+		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size()) {
+			if (texMaterialTextureArray != 0)
+				glDeleteTextures(texMaterialTextureArray);
+			texMaterialTextureArray = glGenTextures();
+			glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
+
+			// Since we're reallocating the texture array, all layers need to be reuploaded
+			for (var layer : textureLayers)
+				layer.needsUpload = true;
+
+			log.debug("Allocating {}x{} texture array with {} layers", textureSize, textureSize, textureLayers.size());
+			int mipLevels = 1 + floor(log2(textureSize));
+			int format = GL_SRGB8_ALPHA8;
+			if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
+				ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
+			} else {
+				// Allocate each mip level separately
+				for (int i = 0; i < mipLevels; i++) {
+					int size = textureSize >> i;
+					glTexImage3D(GL_TEXTURE_2D_ARRAY, i, format, size, size, textureLayers.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+				}
+			}
+
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		}
+		textureManager.setAnisotropicFilteringLevel();
+
+		uploadTextures();
 
 		boolean materialOrderChanged = true;
-		if (uboMaterials != null && uboMaterials.entries.size() == uboEntries.size()) {
+		if (uboMaterials != null && uboMaterials.materials.length == MATERIALS.length) {
 			materialOrderChanged = false;
-			for (int i = 0; i < uboEntries.size(); i++) {
-				var a = uboEntries.get(i);
-				var b = uboMaterials.entries.get(i);
-				if (a.vanillaIndex != b.vanillaIndex ||
-					a.material.index != b.material.index ||
-					a.material.modifiesVanillaTexture != b.material.modifiesVanillaTexture ||
-					!a.material.name.equals(b.material.name)
+			for (int i = 0; i < MATERIALS.length; i++) {
+				var a = MATERIALS[i];
+				var b = uboMaterials.materials[i];
+				if (a.vanillaTextureIndex != b.vanillaTextureIndex ||
+					a.modifiesVanillaTexture != b.modifiesVanillaTexture ||
+					!a.name.equals(b.name)
 				) {
 					materialOrderChanged = true;
 					break;
@@ -497,11 +431,11 @@ public class MaterialManager {
 		} else {
 			if (uboMaterials != null)
 				uboMaterials.destroy();
-			uboMaterials = new UBOMaterials(uboEntries.size());
+			uboMaterials = new UBOMaterials(MATERIALS.length);
 		}
-		uboMaterials.update(this, uboEntries, vanillaTextures);
+		uboMaterials.update(MATERIALS, vanillaTextures);
 
-		if (isFirst)
+		if (isFirstLoad)
 			return;
 
 		// Reload anything which depends on Material instances
@@ -515,5 +449,102 @@ public class MaterialManager {
 			plugin.reuploadScene();
 			plugin.recompilePrograms();
 		}
+	}
+
+	public void uploadTextures() {
+		assert client.isClientThread();
+		if (texMaterialTextureArray == 0)
+			return;
+
+		// Set brightness to 1 to upload unmodified vanilla textures
+		var textureProvider = client.getTextureProvider();
+		double vanillaBrightness = textureProvider.getBrightness();
+		textureProvider.setBrightness(1);
+
+		boolean uploadedAnything = false;
+		for (var layer : textureLayers) {
+			if (!layer.needsUpload)
+				continue;
+
+			var material = layer.material;
+			var image = textureManager.loadTexture(material.getTextureName(), material.vanillaTextureIndex);
+			if (image == null)
+				continue;
+
+			try {
+				if (!uploadedAnything) {
+					glActiveTexture(TEXTURE_UNIT_GAME);
+					glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
+					uploadedAnything = true;
+				}
+				textureManager.uploadTexture(GL_TEXTURE_2D_ARRAY, material.textureLayer, textureResolution, image);
+			} catch (Exception ex) {
+				log.error("Failed to upload texture {}:", material, ex);
+			}
+		}
+
+		// Reset the texture brightness
+		textureProvider.setBrightness(vanillaBrightness);
+
+		if (uploadedAnything)
+			glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	}
+
+	private static void checkForReplacementLoops(Material[] materials) {
+		Map<String, Material> map = new HashMap<>();
+		for (var mat : materials)
+			if (!mat.materialsToReplace.isEmpty())
+				map.put(mat.name, mat);
+
+		Set<String> alreadyChecked = new HashSet<>();
+		for (var mat : map.values())
+			checkForReplacementLoops(alreadyChecked, map, mat);
+	}
+
+	private static void checkForReplacementLoops(Set<String> alreadyChecked, Map<String, Material> map, Material entryMaterial) {
+		if (alreadyChecked.add(entryMaterial.name))
+			checkForReplacementLoops(alreadyChecked, map, new ArrayDeque<>(), entryMaterial.name, entryMaterial);
+	}
+
+	private static void checkForReplacementLoops(
+		Set<String> alreadyChecked,
+		Map<String, Material> map,
+		ArrayDeque<String> loop,
+		String entryPointName,
+		Material toCheck
+	) {
+		loop.addLast(toCheck.findParent(m -> m.materialsToReplace).name);
+
+		for (int i = toCheck.materialsToReplace.size() - 1; i >= 0; i--) {
+			String nameToReplace = toCheck.materialsToReplace.get(i);
+			// Check if the replacement introduces a loop
+			if (entryPointName.equals(nameToReplace)) {
+				var original = map.get(nameToReplace).findParent(m -> m.materialsToReplace).name;
+				if (!nameToReplace.equals(original))
+					nameToReplace += " (parent=" + original + ")";
+				log.warn("Materials contain replacement loop: {} -> {}", String.join(" -> ", loop), nameToReplace);
+				// Remove the loop
+				toCheck.materialsToReplace.remove(i);
+				continue;
+			}
+
+			var toReplace = map.get(nameToReplace);
+			if (toReplace == null)
+				continue;
+
+			// Before continuing to check for loops back to the entrypoint name,
+			// we need to rule out any loops within the next material to check,
+			// so we don't get stuck in a loop there
+			checkForReplacementLoops(alreadyChecked, map, toReplace);
+
+			// The replacement might've already been removed to prevent a loop in the step above
+			if (!toCheck.materialsToReplace.contains(nameToReplace))
+				continue;
+
+			// Check if any further replacements result in a loop
+			checkForReplacementLoops(alreadyChecked, map, loop, entryPointName, toReplace);
+		}
+
+		loop.removeLast();
 	}
 }

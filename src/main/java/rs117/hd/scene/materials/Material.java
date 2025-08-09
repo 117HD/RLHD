@@ -6,40 +6,39 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Function;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.data.materials.UvType;
+import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils;
+import rs117.hd.utils.HDVariables;
 import rs117.hd.utils.Props;
 
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
+@Setter
 @Accessors(fluent = true)
-@Setter(AccessLevel.PROTECTED)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class Material {
 	public String name;
 	@JsonAdapter(Reference.Adapter.class)
-	public Material parent;
+	protected Material parent;
 	@JsonAdapter(Reference.Adapter.class)
 	private Material normalMap;
 	@JsonAdapter(Reference.Adapter.class)
@@ -50,7 +49,6 @@ public class Material {
 	private Material ambientOcclusionMap;
 	@JsonAdapter(Reference.Adapter.class)
 	private Material flowMap;
-	public int vanillaTextureIndex = -1;
 	private boolean hasTransparency;
 	private boolean overrideBaseColor;
 	private boolean unlit;
@@ -62,16 +60,18 @@ public class Material {
 	private float specularGloss;
 	private float[] scrollSpeed = { 0, 0 };
 	private float[] textureScale = { 1, 1, 1 };
+	public int vanillaTextureIndex = -1;
 	public List<String> materialsToReplace = Collections.emptyList();
 	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
 	public ExpressionPredicate replacementCondition;
 
-	public transient int index;
+	public transient int uboIndex;
+	public transient int textureLayer = -1;
 	public transient boolean modifiesVanillaTexture;
+	public transient boolean isFallbackVanillaMaterial;
 
 	public static final Material NONE = new Material().name("NONE");
-	public static final Material VANILLA = new Material().parent(NONE).name("VANILLA").hasTransparency(true);
-	public static final Material[] REQUIRED_MATERIALS = { NONE, VANILLA };
+	public static final Material[] REQUIRED_MATERIALS = { NONE };
 
 	public static Material BLACK;
 	public static Material WATER_FLAT;
@@ -89,16 +89,17 @@ public class Material {
 		return MaterialManager.VANILLA_TEXTURE_MAPPING[vanillaTextureId];
 	}
 
-	public void normalize(int index, Map<String, Material> materials) {
-		if (index != -1) {
-			this.index = index;
-			if (name == null)
-				name = "UNNAMED_" + index;
-		}
+	public static int getTextureLayer(@Nullable Material material) {
+		return material == null ? -1 : material.textureLayer;
+	}
 
+	public void normalize(Map<String, Material> materials) {
 		parent = resolveReference(parent, materials);
-		if (parent != null)
-			parent.normalize(-1, materials);
+		if (parent == this) {
+			parent = null;
+		} else if (parent != null) {
+			parent.normalize(materials);
+		}
 
 		normalMap = resolveReference(normalMap, materials);
 		displacementMap = resolveReference(displacementMap, materials);
@@ -134,34 +135,18 @@ public class Material {
 		return name;
 	}
 
+	public boolean inheritsTexture() {
+		return parent != null;
+	}
+
 	public String getTextureName() {
-		if (this == VANILLA)
+		if (this == NONE || isFallbackVanillaMaterial)
 			return null;
 		return name.toLowerCase();
 	}
 
-	public Material resolveReference(@Nullable Material material, Map<String, Material> materials) {
-		if (material instanceof Reference) {
-			String name = material.name;
-			var m = materials.get(name);
-			if (m != null)
-				return m;
-			log.error("Error in material '{}': Unknown material referenced: '{}'", this, name);
-		}
-		return material;
-	}
-
-	/**
-	 * Returns the final material after all replacements have been made.
-	 *
-	 * @return the material after resolving all replacements
-	 */
-	public Material resolveReplacements() {
-		return MaterialManager.REPLACEMENT_MAPPING[index];
-	}
-
-	public Material resolveTextureMaterial() {
-		var base = this.resolveReplacements();
+	public Material resolveTextureOwner() {
+		var base = this;
 		while (base.parent != null)
 			base = base.parent;
 		return base;
@@ -175,34 +160,51 @@ public class Material {
 		return source;
 	}
 
-	public static void checkForReplacementLoops(Material[] materials) {
-		Map<String, Material> map = new HashMap<>();
-		for (var mat : materials)
-			if (!mat.materialsToReplace.isEmpty())
-				map.put(mat.name, mat);
+	public boolean isInactiveReplacement(HDVariables vars) {
+		if (replacementCondition == null)
+			return false;
+		return !replacementCondition.test(vars);
+	}
 
-		Set<String> alreadyChecked = new HashSet<>();
-		for (var mat : map.values())
-			checkForReplacementLoops(alreadyChecked, map, mat);
+	public boolean replaces(String name, HDVariables vars) {
+		if (replacementCondition == null || !materialsToReplace.contains(name))
+			return false;
+		return replacementCondition.test(vars);
+	}
+
+	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+		int materialIndex = uboIndex;
+		assert materialIndex <= ModelPusher.MAX_MATERIAL_INDEX;
+		// The sign bit can't be used without shader changes to correctly unpack the material index
+		return (materialIndex & ModelPusher.MAX_MATERIAL_INDEX) << 20
+			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
+			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11
+			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 8
+			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 7
+			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
+			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
+			   | (modelOverride.upwardsNormals ? 1 : 0) << 4
+			   | (modelOverride.flatNormals ? 1 : 0) << 3
+			   | (uvType.worldUvs ? 1 : 0) << 2
+			   | (uvType == UvType.VANILLA ? 1 : 0) << 1
+			   | (isOverlay ? 1 : 0);
 	}
 
 	public void fillMaterialStruct(
-		MaterialManager materialManager,
 		UBOMaterials.MaterialStruct struct,
-		int vanillaIndex,
 		float vanillaScrollX,
 		float vanillaScrollY
 	) {
 		float scrollSpeedX = scrollSpeed[0] + vanillaScrollX;
 		float scrollSpeedY = scrollSpeed[1] + vanillaScrollY;
 
-		struct.colorMap.set(this == Material.VANILLA ?
-			materialManager.vanillaTextureIndexToTextureLayer[vanillaIndex] : materialManager.getTextureLayer(this));
-		struct.normalMap.set(materialManager.getTextureLayer(normalMap));
-		struct.displacementMap.set(materialManager.getTextureLayer(displacementMap));
-		struct.roughnessMap.set(materialManager.getTextureLayer(roughnessMap));
-		struct.ambientOcclusionMap.set(materialManager.getTextureLayer(ambientOcclusionMap));
-		struct.flowMap.set(materialManager.getTextureLayer(flowMap));
+		struct.colorMap.set(textureLayer);
+		struct.normalMap.set(getTextureLayer(normalMap));
+		struct.displacementMap.set(getTextureLayer(displacementMap));
+		struct.roughnessMap.set(getTextureLayer(roughnessMap));
+		struct.ambientOcclusionMap.set(getTextureLayer(ambientOcclusionMap));
+		struct.flowMap.set(getTextureLayer(flowMap));
 		struct.flags.set(
 			(overrideBaseColor ? 1 : 0) << 2 |
 			(unlit ? 1 : 0) << 1 |
@@ -218,51 +220,15 @@ public class Material {
 		struct.textureScale.set(divide(vec(1), textureScale));
 	}
 
-	private static void checkForReplacementLoops(Set<String> alreadyChecked, Map<String, Material> map, Material entryMaterial) {
-		if (alreadyChecked.add(entryMaterial.name))
-			checkForReplacementLoops(alreadyChecked, map, new ArrayDeque<>(), entryMaterial.name, entryMaterial);
-	}
-
-	private static void checkForReplacementLoops(
-		Set<String> alreadyChecked,
-		Map<String, Material> map,
-		ArrayDeque<String> loop,
-		String entryPointName,
-		Material toCheck
-	) {
-		loop.addLast(toCheck.findParent(m -> m.materialsToReplace).name);
-
-		for (int i = toCheck.materialsToReplace.size() - 1; i >= 0; i--) {
-			String nameToReplace = toCheck.materialsToReplace.get(i);
-			// Check if the replacement introduces a loop
-			if (entryPointName.equals(nameToReplace)) {
-				var original = map.get(nameToReplace).findParent(m -> m.materialsToReplace).name;
-				if (!nameToReplace.equals(original))
-					nameToReplace += " (parent=" + original + ")";
-				log.warn("Materials contain replacement loop: {} -> {}", String.join(" -> ", loop), nameToReplace);
-				// Remove the loop
-				toCheck.materialsToReplace.remove(i);
-				continue;
-			}
-
-			var toReplace = map.get(nameToReplace);
-			if (toReplace == null)
-				continue;
-
-			// Before continuing to check for loops back to the entrypoint name,
-			// we need to rule out any loops within the next material to check,
-			// so we don't get stuck in a loop there
-			checkForReplacementLoops(alreadyChecked, map, toReplace);
-
-			// The replacement might've already been removed to prevent a loop in the step above
-			if (!toCheck.materialsToReplace.contains(nameToReplace))
-				continue;
-
-			// Check if any further replacements result in a loop
-			checkForReplacementLoops(alreadyChecked, map, loop, entryPointName, toReplace);
+	private Material resolveReference(@Nullable Material material, Map<String, Material> materials) {
+		if (material instanceof Reference) {
+			String name = material.name;
+			var m = materials.get(name);
+			if (m != null)
+				return m;
+			log.error("Error in material '{}': Unknown material referenced: '{}'", this, name);
 		}
-
-		loop.removeLast();
+		return material;
 	}
 
 	@GsonUtils.ExcludeDefaults

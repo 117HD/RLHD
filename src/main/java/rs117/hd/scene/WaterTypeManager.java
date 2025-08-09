@@ -51,9 +51,6 @@ public class WaterTypeManager {
 	private HdPlugin plugin;
 
 	@Inject
-	private MaterialManager materialManager;
-
-	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -91,7 +88,7 @@ public class WaterTypeManager {
 
 					if (uboWaterTypes != null)
 						uboWaterTypes.destroy();
-					uboWaterTypes = new UBOWaterTypes(waterTypes, materialManager);
+					uboWaterTypes = new UBOWaterTypes(waterTypes);
 
 					if (first)
 						return;
