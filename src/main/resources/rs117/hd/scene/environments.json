@@ -1306,7 +1306,13 @@
     "directionalColor": "#707070",
     "directionalStrength": 1,
     "fogColor": "#45474b",
-    "fogDepth": 60
+    "fogDepth": 55,
+    "windStrength": 65,
+    "windCeiling": 750,
+    "windSpeed": 20,
+    "groundFogStart": 0,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.3
   },
   {
     "area": "TEMPLE_OF_THE_EYE",
