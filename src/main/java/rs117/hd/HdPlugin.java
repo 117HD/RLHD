@@ -1578,10 +1578,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		Player localPlayer = client.getLocalPlayer();
 		var lp = localPlayer.getLocalLocation();
 		if (sceneContext.enableAreaHiding) {
+			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
-				sceneContext.scene.getBaseX() + lp.getSceneX(),
-				sceneContext.scene.getBaseY() + lp.getSceneY(),
-				client.getPlane()
+				sceneContext.sceneBase[0] + lp.getSceneX(),
+				sceneContext.sceneBase[1] + lp.getSceneY(),
+				sceneContext.sceneBase[2] + client.getPlane()
 			};
 
 			// We need to check all areas contained in the scene in the order they appear in the list,
@@ -1597,6 +1598,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Force a scene reload if the player is no longer in the same area
 			if (newArea != sceneContext.currentArea) {
+				log.error("Force disabling area hiding after moving from {} to {} at {}", sceneContext.currentArea, newArea, worldPos);
+				sceneContext.forceDisableAreaHiding = true;
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
@@ -3029,10 +3032,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Hide everything outside the current area if area hiding is enabled
 		if (sceneContext.currentArea != null) {
+			assert sceneContext.sceneBase != null;
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
-				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),
-				client.getPlane()
+				sceneContext.sceneBase[0] + (x >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[1] + (z >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[2] + client.getPlane()
 			);
 			if (!inArea)
 				return;

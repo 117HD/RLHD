@@ -280,7 +280,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					} else {
 						// Shift the position with mouse movement
 						for (int j = 0; j < 2; j++)
-							point[j] += (float) mouseDelta[j];
+							point[j] += mouseDelta[j];
 					}
 
 					if (numFrozenAxes == 0) { // restrict to same depth plane
