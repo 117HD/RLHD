@@ -5206,10 +5206,23 @@
     "groundMaterial": "INTERIOR_DIRT_FLOOR"
   },
   {
+    "name": "Luciens Base - Snow Fix",
+    "area": "Lucien's Base Snow",
+    "underlayIds": [
+      56,
+      57,
+      58,
+      148,
+      218
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 95
+  },
+  {
     "name": "Black Knights Fort - Catacombs Water",
     "area": "Black Knights Fort - Catacombs",
-    "overlayIds": [
-      158
+    "underlayIds": [
+      58
     ],
     "waterType": "CAVE_WATER"
   },

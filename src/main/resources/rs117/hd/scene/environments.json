@@ -57,6 +57,19 @@
     "fogDepth": 25
   },
   {
+    "area": "Lucien's Base Environment",
+    "ambientColor": "#D8EAFF",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 0.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 70,
+    "sunAngles": [
+      68,
+      190
+    ]
+  },
+  {
     "area": "WILDERNESS_HIGH",
     "lightningEffects": true,
     "ambientColor": "#d7d2d2",

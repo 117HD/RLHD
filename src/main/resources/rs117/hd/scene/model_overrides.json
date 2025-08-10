@@ -11539,6 +11539,9 @@
       "WILDERNESS_ROCKS_BIG_SHARP_01",
       "WILDERNESS_ROCKS_BIG_SHARP_02",
       "WILDERNESS_ROCKS_BIG_SHARP_03",
+      "WILDERNESS_ROCKS_FLOOR_SHARP_05",
+      "WILDERNESS_ROCKS_FLOOR_SHARP_02",
+      "WILDERNESS_ROCKS_FLOOR_SHARP_04",
       "WILDERNESS_ROCKS_SMALL_SHARP_01",
       "WILDERNESS_ROCKS_SMALL_SHARP_02",
       "WILDERNESS_ROCKS_SMALL_SHARP_03",
@@ -54193,7 +54196,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Walls",
+    "description": "WGS - Black Knight Catacomb - Floor Tiles",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "LUC2_DWT_TILE1",
@@ -54217,14 +54220,134 @@
       "LUC2_SUROK_TILE4"
     ],
     "uvType": "BOX",
-    "uvOrientation": 200,
-    "uvScale": 1.1,
+    "uvScale": 1.1
+  },
+  {
+    "description": "WGS - Lucien's Base - Snow Walls",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      "LUC2_OUTPOST_WALL_01_CUSTOM",
+      "LUC2_OUTPOST_WALL_01",
+      "LUC2_OUTPOST_WALL_02",
+      "LUC2_OUTPOST_WALL_02_CUSTOM",
+      "LUC2_OUTPOST_WALL_05_CUSTOM",
+      "LUC2_OUTPOST_WALL_05",
+      "LUC2_OUTPOST_WALL_CLIMABLE",
+      "LUC2_OUTPOST_SNOW_FADEOFF_02",
+      "LUC2_OUTPOST_SNOW_FADEOFF_01",
+      "LUC2_OUTPOST_SNOW_FADEOFF_04",
+      "LUC2_OUTPOST_SNOW_FADEOFF_03"
+    ],
+    "uvType": "BOX",
+    "castShadows": false
+  },
+  {
+    "description": "WGS - Lucien's Base - Rocks",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "DI2_CAVE_ROCKS_BIG2_BLUEGREY",
+      "DI2_CAVE_ROCKS_BIG1_BLUEGREY",
+      "LUC2_OUTPOST_ROCK_FLOOR_04",
+      "LUC2_OUTPOST_ROCK_FLOOR_08",
+      "LUC2_OUTPOST_ROCK_FLOOR_05",
+      "LUC2_OUTPOST_ROCK_FLOOR_07",
+      "LUC2_OUTPOST_ROCK_FLOOR_01",
+      "LUC2_OUTPOST_ROCK_FLOOR_03",
+      "LUC2_OUTPOST_ROCK_FLOOR_06",
+      "LUC2_OUTPOST_ROCK_FLOOR_09",
+      "LUC2_OUTPOST_ROCK_FLOOR_02",
+      "DI2_CAVE_ROCKS_SMALL3_BLUEGREY",
+      "DI2_CAVE_ROCKS_BIG3_ICE",
+      "DI2_CAVE_ROCKS_SMALL1_ICE",
+      "DI2_CAVE_ROCKS_SMALL2_ICE",
+      "DI2_CAVE_ROCKS_SMALL2_BLUEGREY",
+      "DI2_CAVE_ROCKS_SMALL1_BLUEGREY",
+      "DI2_CAVE_ROCKS_SMALL3_ICE"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "WGS - Lucien's Base - Snowy Crates and Barrels",
+    "baseMaterial": "SNOW_3",
+    "objectIds": [
+      "LUC2_OUTPOST_OUTDOOR_BARREL_BROKEN",
+      "LUC2_OUTPOST_OUTDOOR_CRATE",
+      "LUC2_OUTPOST_OUTDOOR_CRATEL_OPEN",
+      "LUC2_OUTPOST_OUTDOOR_CRATE_STACKED",
+      "LUC2_OUTPOST_OUTDOOR_BARREL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "colorOverrides": [
       {
-        "colors": "l==2",
-        "baseMaterial": "PURE_BLACK",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "WGS - Lucien's Base - Overhead Cover",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      "LUC2_OUTPOST_COVER_01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvScale": 0.7,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Lucien's Base - Teleport Sigil Edge",
+    "baseMaterial": "SNOW_1",
+    "objectIds": [
+      "LUC2_OUTPOST_TILE_CORNER",
+      "LUC2_OUTPOST_TILE_EDGE2",
+      "LUC2_OUTPOST_TILE_EDGE1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Lucien's Base - Teleport Sigil Middle",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "LUC2_OUTPOST_TILE1",
+      "LUC2_OUTPOST_TILE2",
+      "LUC2_OUTPOST_TILE3",
+      "LUC2_OUTPOST_TILE4",
+      "LUC2_OUTPOST_TILE5",
+      "LUC2_OUTPOST_TILE6",
+      "LUC2_OUTPOST_TILE7",
+      "LUC2_OUTPOST_TILE8",
+      "LUC2_OUTPOST_TILE9",
+      "LUC2_OUTPOST_TILE10",
+      "LUC2_OUTPOST_TILE11",
+      "LUC2_OUTPOST_TILE12",
+      "LUC2_OUTPOST_TILE13",
+      "LUC2_OUTPOST_TILE14",
+      "LUC2_OUTPOST_TILE15",
+      "LUC2_OUTPOST_TILE16"
+    ],
+    "uvType": "BOX"
   }
 ]
