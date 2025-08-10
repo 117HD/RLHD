@@ -1306,7 +1306,13 @@
     "directionalColor": "#B7B7B7",
     "directionalStrength": 1.5,
     "fogColor": "#45474b",
-    "fogDepth": 60
+    "fogDepth": 55,
+    "windStrength": 65,
+    "windCeiling": 750,
+    "windSpeed": 20,
+    "groundFogStart": 0,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.3
   },
   {
     "area": "TEMPLE_OF_THE_EYE",
@@ -1319,7 +1325,10 @@
     ],
     "fogColor": "#002033",
     "fogDepth": 15,
-    "groundFogOpacity": 0.75,
+    "windSpeed": 3,
+    "windStrength": 30,
+    "windAngle": 140,
+    "groundFogOpacity": 0.7,
     "waterCausticsStrength": 40
   },
   {
@@ -1846,9 +1855,9 @@
   {
     "area": "VARLAMORE_SNOWY_MOUNTAINS_LOWER",
     "ambientColor": "#6fb0ff",
-    "ambientStrength": 1.75,
+    "ambientStrength": 1.25,
     "directionalColor": "#f4e5c9",
-    "directionalStrength": 3,
+    "directionalStrength": 2.75,
     "fogColor": "#aebde0",
     "fogDepth": 30
   },
@@ -1960,6 +1969,13 @@
   {
     "area": "AMOXLIATL_ARENA",
     "waterColor": "#0009BC"
+  },
+  {
+    "area": "RANDOM_EVENT_PRISON_PETE",
+    "fogColor": "#303030",
+    "groundFogOpacity": 0.75,
+    "groundFogStart": -200,
+    "groundFogEnd": -400
   },
   {
     "key": "OVERWORLD",

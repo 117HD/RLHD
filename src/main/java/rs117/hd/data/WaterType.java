@@ -33,7 +33,9 @@ import rs117.hd.data.materials.Material;
 import static rs117.hd.utils.ColorUtils.hsl;
 import static rs117.hd.utils.ColorUtils.rgb;
 import static rs117.hd.utils.ColorUtils.srgb;
+import static rs117.hd.utils.ColorUtils.srgbToLinear;
 
+@Deprecated
 public enum WaterType
 {
 	NONE,
@@ -218,9 +220,9 @@ public enum WaterType
 		baseOpacity = builder.baseOpacity;
 		fresnelAmount = builder.fresnelAmount;
 		normalMap = builder.normalMap;
-		surfaceColor = builder.surfaceColor;
-		foamColor = builder.foamColor;
-		depthColor = builder.depthColor;
+		surfaceColor = srgbToLinear(builder.surfaceColor);
+		foamColor = srgbToLinear(builder.foamColor);
+		depthColor = srgbToLinear(builder.depthColor);
 		hasFoam = builder.hasFoam;
 		duration = builder.duration;
 		fishingSpotRecolor = builder.fishingSpotRecolor;

@@ -36,15 +36,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.WaterType;
-import rs117.hd.data.materials.GroundMaterial;
-import rs117.hd.data.materials.Material;
 import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.ground_materials.GroundMaterial;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 
@@ -58,6 +58,7 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -97,6 +98,7 @@ public class SceneUploader {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		var scene = sceneContext.scene;
+		// TODO: Allow area hiding for simple instances (consisting of only contiguous chunks)
 		sceneContext.enableAreaHiding = config.hideUnrelatedAreas() && !scene.isInstance();
 		sceneContext.fillGaps = config.fillGapsInTerrain();
 
@@ -382,7 +384,7 @@ public class SceneUploader {
 			upload(sceneContext, bridge, tileExX, tileExY);
 
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
-		var override = tileOverrideManager.getOverride(sceneContext.scene, tile, worldPos);
+		var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 
 		SceneTilePaint sceneTilePaint = tile.getSceneTilePaint();
 		if (sceneTilePaint != null || override.forced) {
@@ -490,7 +492,7 @@ public class SceneUploader {
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
 					(Model) renderable,
-					HDUtils.getBakedOrientation(groundObject.getConfig())
+					HDUtils.getModelPreOrientation(groundObject.getConfig())
 				);
 			}
 		}
@@ -498,7 +500,7 @@ public class SceneUploader {
 		DecorativeObject decorativeObject = tile.getDecorativeObject();
 		if (decorativeObject != null) {
 			Renderable renderable = decorativeObject.getRenderable();
-			int orientation = HDUtils.getBakedOrientation(decorativeObject.getConfig());
+			int orientation = HDUtils.getModelPreOrientation(decorativeObject.getConfig());
 			if (renderable instanceof Model) {
 				uploadModel(
 					sceneContext,
@@ -523,9 +525,8 @@ public class SceneUploader {
 
 		GameObject[] gameObjects = tile.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
-			if (gameObject == null) {
+			if (gameObject == null)
 				continue;
-			}
 
 			Renderable renderable = gameObject.getRenderable();
 			if (renderable instanceof Model) {
@@ -533,7 +534,7 @@ public class SceneUploader {
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
 					(Model) gameObject.getRenderable(),
-					HDUtils.getBakedOrientation(gameObject.getConfig())
+					HDUtils.getModelPreOrientation(gameObject.getConfig())
 				);
 			}
 		}
@@ -646,7 +647,7 @@ public class SceneUploader {
 				if (textureId != -1) {
 					var material = Material.fromVanillaTexture(textureId);
 					// Disable tile overrides for newly introduced vanilla textures
-					if (material == Material.VANILLA)
+					if (material.isFallbackVanillaMaterial)
 						override = NONE;
 					swMaterial = seMaterial = neMaterial = nwMaterial = material;
 				}
@@ -760,20 +761,16 @@ public class SceneUploader {
 			bufferLength += 6;
 
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(
-				swMaterial, textureId, ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
-			int packedMaterialDataSE = modelPusher.packMaterialData(
-				seMaterial, textureId, ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
-			int packedMaterialDataNW = modelPusher.packMaterialData(
-				nwMaterial, textureId, ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
-			int packedMaterialDataNE = modelPusher.packMaterialData(
-				neMaterial, textureId, ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
+			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
+			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
+			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
+			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
-				float rad = -uvOrientation * (float) UNIT;
-				uvcos = (float) Math.cos(rad) * -uvScale;
-				uvsin = (float) Math.sin(rad) * -uvScale;
+				float rad = -uvOrientation * JAU_TO_RAD;
+				uvcos = cos(rad) * -uvScale;
+				uvsin = sin(rad) * -uvScale;
 			}
 			float uvx = worldPos[0];
 			float uvy = worldPos[1];
@@ -867,10 +864,10 @@ public class SceneUploader {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			float swTerrainData = (float) packTerrainData(true, Math.max(1, swDepth), waterType, tileZ);
-			float seTerrainData = (float) packTerrainData(true, Math.max(1, seDepth), waterType, tileZ);
-			float nwTerrainData = (float) packTerrainData(true, Math.max(1, nwDepth), waterType, tileZ);
-			float neTerrainData = (float) packTerrainData(true, Math.max(1, neDepth), waterType, tileZ);
+			float swTerrainData = (float) packTerrainData(true, max(1, swDepth), waterType, tileZ);
+			float seTerrainData = (float) packTerrainData(true, max(1, seDepth), waterType, tileZ);
+			float nwTerrainData = (float) packTerrainData(true, max(1, nwDepth), waterType, tileZ);
+			float neTerrainData = (float) packTerrainData(true, max(1, neDepth), waterType, tileZ);
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
 			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[1], neNormals[2], neTerrainData);
@@ -904,14 +901,10 @@ public class SceneUploader {
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = modelPusher.packMaterialData(
-				swMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataSE = modelPusher.packMaterialData(
-				seMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataNW = modelPusher.packMaterialData(
-				nwMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataNE = modelPusher.packMaterialData(
-				neMaterial, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 			sceneContext.stagingBufferUvs.ensureCapacity(24);
 			sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialDataNE);
@@ -974,6 +967,8 @@ public class SceneUploader {
 
 		int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
 		int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+		var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+		var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
 
 		for (int face = 0; face < faceCount; ++face) {
 			int colorA = faceColorA[face];
@@ -1012,7 +1007,7 @@ public class SceneUploader {
 				colorA = colorB = colorC = 0;
 			} else {
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+				var override = isOverlay ? overlayOverride : underlayOverride;
 				if (isHidden && !override.forced)
 					continue;
 
@@ -1022,7 +1017,7 @@ public class SceneUploader {
 					if (textureId != -1) {
 						var material = Material.fromVanillaTexture(textureId);
 						// Disable tile overrides for newly introduced vanilla textures
-						if (material == Material.VANILLA)
+						if (material.isFallbackVanillaMaterial)
 							override = NONE;
 						materialA = materialB = materialC = material;
 					}
@@ -1117,16 +1112,16 @@ public class SceneUploader {
 			bufferLength += 3;
 
 			int[] packedMaterialData = {
-				modelPusher.packMaterialData(materialA, textureId, ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay),
-				modelPusher.packMaterialData(materialB, textureId, ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay),
-				modelPusher.packMaterialData(materialC, textureId, ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay)
+				materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay),
+				materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay),
+				materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay)
 			};
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
-				float rad = -uvOrientation * (float) UNIT;
-				uvcos = (float) Math.cos(rad) * -uvScale;
-				uvsin = (float) Math.sin(rad) * -uvScale;
+				float rad = -uvOrientation * JAU_TO_RAD;
+				uvcos = cos(rad) * -uvScale;
+				uvsin = sin(rad) * -uvScale;
 			}
 
 			sceneContext.stagingBufferUvs.ensureCapacity(12);
@@ -1184,13 +1179,15 @@ public class SceneUploader {
 
 			int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];
 			int underlayId = scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+			var overlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, overlayId);
+			var underlayOverride = tileOverrideManager.getOverride(sceneContext, tile, worldPos, underlayId);
 
 			// underwater terrain
 			for (int face = 0; face < faceCount; ++face) {
 				int color = UNDERWATER_HSL;
 
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-				var override = tileOverrideManager.getOverride(scene, tile, worldPos, isOverlay ? overlayId : underlayId);
+				var override = isOverlay ? overlayOverride : underlayOverride;
 				if (faceColorA[face] == HIDDEN_HSL && !override.forced)
 					continue;
 
@@ -1237,9 +1234,9 @@ public class SceneUploader {
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 
-				float aTerrainData = (float) packTerrainData(true, Math.max(1, depths[0]), waterType, tileZ);
-				float bTerrainData = (float) packTerrainData(true, Math.max(1, depths[1]), waterType, tileZ);
-				float cTerrainData = (float) packTerrainData(true, Math.max(1, depths[2]), waterType, tileZ);
+				float aTerrainData = (float) packTerrainData(true, max(1, depths[0]), waterType, tileZ);
+				float bTerrainData = (float) packTerrainData(true, max(1, depths[1]), waterType, tileZ);
+				float cTerrainData = (float) packTerrainData(true, max(1, depths[2]), waterType, tileZ);
 
 				sceneContext.stagingBufferNormals.ensureCapacity(12);
 				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[1], normalsA[2], aTerrainData);
@@ -1282,12 +1279,9 @@ public class SceneUploader {
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = modelPusher.packMaterialData(
-					materialA, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
-				int packedMaterialDataB = modelPusher.packMaterialData(
-					materialB, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
-				int packedMaterialDataC = modelPusher.packMaterialData(
-					materialC, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 				sceneContext.stagingBufferUvs.ensureCapacity(12);
 				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
@@ -1336,7 +1330,7 @@ public class SceneUploader {
 		sceneContext.stagingBufferVertices.put(toX, seHeight, fromY, color);
 		sceneContext.stagingBufferVertices.put(fromX, nwHeight, toY, color);
 
-		int packedMaterialData = modelPusher.packMaterialData(Material.BLACK, -1, ModelOverride.NONE, UvType.GEOMETRY, false);
+		int packedMaterialData = Material.BLACK.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 		sceneContext.stagingBufferUvs.ensureCapacity(24);
 		sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialData);
@@ -1350,7 +1344,8 @@ public class SceneUploader {
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
-		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.ordinal() << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		assert waterType.index < 1 << 5 : "Too many water types";
+		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
 		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return terrainData;
 	}

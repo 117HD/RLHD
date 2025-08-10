@@ -24,7 +24,6 @@
  */
 package rs117.hd.utils;
 
-import java.util.Random;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -39,143 +38,12 @@ import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
 public class HDUtils {
-	public static final long KiB = 1024;
-	public static final long MiB = KiB * KiB;
-	public static final long GiB = MiB * KiB;
-	public static final Random rand = new Random();
-
-	// The epsilon for floating point values used by jogl
-	public static final float EPSILON = 1.1920929E-7f;
-
-	public static final float PI = (float) Math.PI;
-	public static final float TWO_PI = PI * 2;
-	public static final float HALF_PI = PI / 2;
-	public static final float QUARTER_PI = PI / 2;
-
-	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
-
-	public static final int MAX_SNOW_LIGHTNESS = 70;
 	public static final int HIDDEN_HSL = 12345678;
-
-	// directional vectors approximately opposite of the directional light used by the client
-	private static final float[] LIGHT_DIR_TILE = new float[] { 0.70710678f, 0.70710678f, 0f };
-
-	public static float min(float... v) {
-		float min = v[0];
-		for (int i = 1; i < v.length; i++)
-			if (v[i] < min)
-				min = v[i];
-		return min;
-	}
-
-	public static float max(float... v) {
-		float max = v[0];
-		for (int i = 1; i < v.length; i++)
-			if (v[i] > max)
-				max = v[i];
-		return max;
-	}
-
-	public static float sum(float... v) {
-		float sum = 0;
-		for (float x : v)
-			sum += x;
-		return sum;
-	}
-
-	public static float avg(float... v) {
-		return sum(v) / v.length;
-	}
-
-	public static float lerp(float a, float b, float t) {
-		return a + (b - a) * t;
-	}
-
-	public static float[] lerp(float[] vecA, float[] vecB, float t) {
-		float[] out = new float[Math.min(vecA.length, vecB.length)];
-		for (int i = 0; i < out.length; i++)
-			out[i] = lerp(vecA[i], vecB[i], t);
-		return out;
-	}
-
-	static int[] lerp(int[] vecA, int[] vecB, float t) {
-		int[] out = new int[Math.min(vecA.length, vecB.length)];
-		for (int i = 0; i < out.length; i++)
-			out[i] = (int) lerp(vecA[i], vecB[i], t);
-		return out;
-	}
-
-	public static float hermite(float from, float to, float t) {
-		float t2 = t * t;
-		float t3 = t2 * t;
-		return
-			from * (1 - 3 * t2 + 2 * t3) +
-			to * (3 * t2 - 2 * t3);
-	}
-
-	public static float[] hermite(float[] from, float[] to, float t) {
-		float[] result = new float[from.length];
-		for (int i = 0; i < result.length; i++)
-			result[i] = hermite(from[i], to[i], t);
-		return result;
-	}
-
-	public static double fract(double x) {
-		return mod(x, 1);
-	}
-
-	public static float fract(float x) {
-		return mod(x, 1);
-	}
-
-	/**
-	 * Modulo that returns the answer with the same sign as the modulus.
-	 */
-	public static double mod(double x, double modulus) {
-		return (x - Math.floor(x / modulus) * modulus);
-	}
-
-	/**
-	 * Modulo that returns the answer with the same sign as the modulus.
-	 */
-	public static float mod(float x, float modulus) {
-		return (float) (x - Math.floor(x / modulus) * modulus);
-	}
-
-	/**
-	 * Modulo that returns the answer with the same sign as the modulus.
-	 */
-	public static int mod(int x, int modulus) {
-		return ((x % modulus) + modulus) % modulus;
-	}
-
-	public static float sign(float value) {
-		return value < 0 ? -1 : 1;
-	}
-
-	public static int sign(int value) {
-		return value < 0 ? -1 : 1;
-	}
-
-	public static float clamp(float value, float min, float max) {
-		return Math.min(Math.max(value, min), max);
-	}
-
-	public static int clamp(int value, int min, int max) {
-		return Math.min(Math.max(value, min), max);
-	}
-
-	public static long clamp(long value, long min, long max) {
-		return Math.min(Math.max(value, min), max);
-	}
-
-	public static double log2(double x) {
-		return Math.log(x) / Math.log(2);
-	}
 
 	public static int vertexHash(int[] vPos) {
 		// simple custom hashing function for vertex position data
@@ -185,28 +53,27 @@ public class HDUtils {
 		return s.toString().hashCode();
 	}
 
-	public static float dotLightDirectionTile(float... xyz) {
-		// Tile normal vectors need to be normalized
-		float length = xyz[0] * xyz[0] + xyz[1] * xyz[1] + xyz[2] * xyz[2];
-		if (length < EPSILON)
-			return 0;
-		return (xyz[0] * LIGHT_DIR_TILE[0] + xyz[2] * LIGHT_DIR_TILE[1]) / (float) Math.sqrt(length);
+	public static float[] calculateSurfaceNormals(float[] a, float[] b, float[] c) {
+		subtract(b, a, b);
+		subtract(c, a, c);
+		return cross(b, c);
 	}
 
-	public static long ceilPow2(long x) {
-		return (long) Math.pow(2, Math.ceil(Math.log(x) / Math.log(2)));
+	public static long ceilPow2(long l) {
+		assert l >= 0;
+		l--; // Reduce by 1 in case it's already a power of 2
+		// Fill in all bits below the highest active bit
+		for (int i = 1; i <= 32; i *= 2)
+			l |= l >> i;
+		return l + 1; // Bump it up to the next power of 2
 	}
 
 	public static float[] sunAngles(float altitude, float azimuth) {
-		return new float[] { (float) Math.toRadians(altitude), (float) Math.toRadians(azimuth) };
+		return multiply(vec(altitude, azimuth), DEG_TO_RAD);
 	}
 
 	public static float[] ensureArrayLength(float[] array, int targetLength) {
-		if (array.length == targetLength)
-			return array;
-		float[] corrected = new float[targetLength];
-		System.arraycopy(array, 0, corrected, 0, Math.min(array.length, corrected.length));
-		return corrected;
+		return array.length == targetLength ? array : slice(array, 0, targetLength);
 	}
 
 	public static int convertWallObjectOrientation(int orientation) {
@@ -237,18 +104,35 @@ public class HDUtils {
 	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
 	// (gameObject.getConfig() >> 9) // should always be zero
-	public static int getBakedOrientation(int config) {
+
+	/**
+	 * Computes the orientation used when uploading the model.
+	 * This does not include the extra 45-degree rotation of diagonal models.
+	 */
+	public static int getModelPreOrientation(int config) {
 		var objectType = ObjectType.fromConfig(config);
 		int orientation = 1024 + 512 * (config >>> 6 & 3);
 		switch (objectType) {
-			case WallDecorDiagonalNoOffset:
-				orientation += 1024;
 			case WallDiagonalCorner:
 			case WallSquareCorner:
 			case WallDecorDiagonalOffset:
 			case WallDecorDiagonalBoth:
-				orientation -= 256;
-				break;
+				orientation += 1024;
+		}
+		return orientation % 2048;
+	}
+
+	/**
+	 * Computes the complete model orientation, including the pre-orientation when uploading,
+	 * and the extra 45-degree rotation of diagonal models.
+	 */
+	public static int getModelOrientation(int config) {
+		int orientation = getModelPreOrientation(config);
+		var objectType = ObjectType.fromConfig(config);
+		switch (objectType) {
+			case WallDecorDiagonalNoOffset:
+			case CentrepieceDiagonal:
+				orientation += 256;
 		}
 		return orientation % 2048;
 	}
@@ -276,10 +160,10 @@ public class HDUtils {
 					// Extract chunk coordinates
 					int x = chunk >> 14 & 0x3FF;
 					int y = chunk >> 3 & 0x7FF;
-					minX = Math.min(minX, x);
-					minY = Math.min(minY, y);
-					maxX = Math.max(maxX, x + 1);
-					maxY = Math.max(maxY, y + 1);
+					minX = min(minX, x);
+					minY = min(minY, y);
+					maxX = max(maxX, x + 1);
+					maxY = max(maxY, y + 1);
 				}
 			}
 		}

@@ -31,9 +31,9 @@ public class LightDefinition {
 	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
 
-	@JsonAdapter(AABB.JsonAdapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};
-	@JsonAdapter(AABB.JsonAdapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] excludeAreas = {};
 	@JsonAdapter(GamevalManager.NpcAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();

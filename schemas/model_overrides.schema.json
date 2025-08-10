@@ -180,6 +180,7 @@
         "enum": [
           "DISABLED",
           "OBJECT",
+          "OBJECT_NO_GROUND_DISPLACEMENT",
           "VERTEX",
           "VERTEX_WITH_HEMISPHERE_BLEND",
           "VERTEX_JIGGLE"
@@ -284,10 +285,19 @@
               "enum": [
                 "DISABLED",
                 "OBJECT",
+                "OBJECT_NO_GROUND_DISPLACEMENT",
                 "VERTEX",
                 "VERTEX_WITH_HEMISPHERE_BLEND",
                 "VERTEX_JIGGLE"
               ]
+            },
+            "windDisplacementModifier": {
+              "type": "integer",
+              "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
+            },
+            "invertDisplacementStrength": {
+              "type": "boolean",
+              "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
             }
           }
         }
@@ -390,10 +400,19 @@
               "enum": [
                 "DISABLED",
                 "OBJECT",
+                "OBJECT_NO_GROUND_DISPLACEMENT",
                 "VERTEX",
                 "VERTEX_WITH_HEMISPHERE_BLEND",
                 "VERTEX_JIGGLE"
               ]
+            },
+            "windDisplacementModifier": {
+              "type": "integer",
+              "description": "Modifier value between -3 and 3 to control how strongly wind should displace the model."
+            },
+            "invertDisplacementStrength": {
+              "type": "boolean",
+              "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
             }
           }
         }

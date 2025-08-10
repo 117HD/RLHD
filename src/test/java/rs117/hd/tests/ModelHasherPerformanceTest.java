@@ -1,12 +1,12 @@
-package rs117.hd.tools;
+package rs117.hd.tests;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-import junit.framework.TestCase;
+import org.junit.Test;
 import rs117.hd.model.ModelHasher;
 
-public class ModelHasherPerformanceTest extends TestCase {
+public class ModelHasherPerformanceTest {
     private final ArrayList<int[]> intArrays;
     private final Random random;
     private final int testDataCount;
@@ -40,15 +40,6 @@ public class ModelHasherPerformanceTest extends TestCase {
 		return System.nanoTime() - start;
 	}
 
-	private long runFastIntHasher() {
-		long start = System.nanoTime();
-		for (int i = 0; i < this.testIterations; i++) {
-			accumulatedHash *= 31;
-			accumulatedHash += ModelHasher.fastHash(intArrays.get(this.random.nextInt(this.testDataCount)), -1);
-		}
-		return System.nanoTime() - start;
-	}
-
 	private long runFastHasher() {
 		long start = System.nanoTime();
 		for (int i = 0; i < this.testIterations; i++) {
@@ -64,6 +55,7 @@ public class ModelHasherPerformanceTest extends TestCase {
 		return delta * 100;
 	}
 
+	@Test
 	public void testHashPerformance() {
 		System.out.printf("Java version: %s\n\n", System.getProperty("java.version"));
 		System.out.printf("Comparing hash performance of with %,d test items and %,d iterations\n\n", testDataCount, testIterations);

@@ -2,13 +2,14 @@ package rs117.hd.scene.lights;
 
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
-import rs117.hd.utils.HDUtils;
+
+import static rs117.hd.utils.MathUtils.*;
 
 public class Light
 {
 	public static final float VISIBILITY_FADE = 0.1f;
 
-	public final float randomOffset = HDUtils.rand.nextFloat();
+	public final float randomOffset = RAND.nextFloat();
 	public final LightDefinition def;
 
 	public float radius;
@@ -64,12 +65,12 @@ public class Light
 
 	public Light(LightDefinition def) {
 		this.def = def;
-		System.arraycopy(def.offset, 0, offset, 0, 3);
-		duration = Math.max(0, def.duration) / 1000f;
-		fadeInDuration = Math.max(0, def.fadeInDuration) / 1000f;
-		fadeOutDuration = Math.max(0, def.fadeOutDuration) / 1000f;
-		spawnDelay = Math.max(0, def.spawnDelay) / 1000f;
-		despawnDelay = Math.max(0, def.despawnDelay) / 1000f;
+		copyTo(offset, def.offset);
+		duration = max(0, def.duration) / 1000f;
+		fadeInDuration = max(0, def.fadeInDuration) / 1000f;
+		fadeOutDuration = max(0, def.fadeOutDuration) / 1000f;
+		spawnDelay = max(0, def.spawnDelay) / 1000f;
+		despawnDelay = max(0, def.despawnDelay) / 1000f;
 		color = def.color;
 		radius = def.radius;
 		strength = def.strength;
@@ -85,7 +86,7 @@ public class Light
 		if (lifetime == -1) {
 			dynamicLifetime = true;
 			// If the despawn is dynamic, ensure there's enough time for the light to fade out
-			despawnDelay = Math.max(despawnDelay, fadeOutDuration);
+			despawnDelay = max(despawnDelay, fadeOutDuration);
 		} else {
 			dynamicLifetime = false;
 		}
@@ -109,7 +110,7 @@ public class Light
 			// Begin fading in or out, while accounting for time already spent fading out or in respectively
 			float beginFadeAt = elapsedTime;
 			if (changedVisibilityAt != -1)
-				beginFadeAt -= Math.max(0, VISIBILITY_FADE - (elapsedTime - changedVisibilityAt));
+				beginFadeAt -= max(0, VISIBILITY_FADE - (elapsedTime - changedVisibilityAt));
 			changedVisibilityAt = beginFadeAt;
 		}
 	}
@@ -117,7 +118,7 @@ public class Light
 	public float getTemporaryVisibilityFade() {
 		float fade = 1;
 		if (changedVisibilityAt != -1)
-			fade = HDUtils.clamp((elapsedTime - changedVisibilityAt) / Light.VISIBILITY_FADE, 0, 1);
+			fade = saturate((elapsedTime - changedVisibilityAt) / Light.VISIBILITY_FADE);
 		if (hiddenTemporarily)
 			fade = 1 - fade; // Fade out instead
 		return fade;

@@ -123,7 +123,7 @@ public class AreaManager {
 	}
 
 	@Slf4j
-	public static class JsonAdapter extends TypeAdapter<Area> {
+	public static class Adapter extends TypeAdapter<Area> {
 		@Override
 		public Area read(JsonReader in) throws IOException {
 			var token = in.peek();
