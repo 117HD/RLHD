@@ -128,8 +128,8 @@ public class SceneContext {
 		}
 
 		final int pad = expandedMapLoadingChunks * CHUNK_SIZE;
-		sceneEdge0 = Math.max(1, SCENE_OFFSET - pad);
-		sceneEdge1 = Math.min(EXTENDED_SCENE_SIZE - 2, SCENE_OFFSET + SCENE_SIZE + pad - 1);
+		sceneEdge0 = max(1, SCENE_OFFSET - pad);
+		sceneEdge1 = min(EXTENDED_SCENE_SIZE - 2, SCENE_OFFSET + SCENE_SIZE + pad - 1);
 	}
 
 	public synchronized void destroy() {

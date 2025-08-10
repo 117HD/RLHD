@@ -48,9 +48,9 @@
   },
   {
     "name": "WOOD_PLANKS_1",
+    "vanillaTextureIndex": 3,
     "specularStrength": 0.35,
-    "specularGloss": 30.0,
-    "vanillaTextureIndex": 3
+    "specularGloss": 30.0
   },
   {
     "name": "LARGE_DOOR",
@@ -62,29 +62,29 @@
   },
   {
     "name": "ROOF_SHINGLES_1",
+    "vanillaTextureIndex": 6,
     "specularStrength": 0.5,
-    "specularGloss": 30.0,
-    "vanillaTextureIndex": 6
+    "specularGloss": 30.0
   },
   {
     "name": "WOODEN_SCREEN",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 7
+    "vanillaTextureIndex": 7,
+    "hasTransparency": true
   },
   {
     "name": "LEAVES_SIDE",
+    "vanillaTextureIndex": 8,
     "hasTransparency": true,
     "textureScale": [
       1.025,
       1.025,
       1.0
-    ],
-    "vanillaTextureIndex": 8
+    ]
   },
   {
     "name": "TREE_RINGS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 9
+    "vanillaTextureIndex": 9,
+    "hasTransparency": true
   },
   {
     "name": "MOSS_BRANCH",
@@ -96,8 +96,8 @@
   },
   {
     "name": "IRON_BARS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 12
+    "vanillaTextureIndex": 12,
+    "hasTransparency": true
   },
   {
     "name": "PAINTING_LANDSCAPE",
@@ -109,9 +109,9 @@
   },
   {
     "name": "MARBLE_DARK",
+    "vanillaTextureIndex": 15,
     "specularStrength": 1.1,
-    "specularGloss": 380.0,
-    "vanillaTextureIndex": 15
+    "specularGloss": 380.0
   },
   {
     "name": "SIMPLE_GRAIN_WOOD",
@@ -119,8 +119,8 @@
   },
   {
     "name": "WATER_DROPLETS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 17
+    "vanillaTextureIndex": 17,
+    "hasTransparency": true
   },
   {
     "name": "WATER_DROPS",
@@ -141,8 +141,8 @@
   },
   {
     "name": "NET",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 19
+    "vanillaTextureIndex": 19,
+    "hasTransparency": true
   },
   {
     "name": "BOOKCASE",
@@ -150,14 +150,14 @@
   },
   {
     "name": "ROOF_WOODEN_SLATE",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 21
+    "vanillaTextureIndex": 21,
+    "hasTransparency": true
   },
   {
     "name": "CRATE",
+    "vanillaTextureIndex": 22,
     "specularStrength": 0.35,
-    "specularGloss": 30.0,
-    "vanillaTextureIndex": 22
+    "specularGloss": 30.0
   },
   {
     "name": "BRICK_BROWN",
@@ -173,8 +173,8 @@
   },
   {
     "name": "WEB",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 26
+    "vanillaTextureIndex": 26,
+    "hasTransparency": true
   },
   {
     "name": "ROOF_SLATE",
@@ -182,27 +182,28 @@
   },
   {
     "name": "MOSS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 28
+    "vanillaTextureIndex": 28,
+    "hasTransparency": true
   },
   {
     "name": "TROPICAL_LEAF",
+    "vanillaTextureIndex": 29,
     "hasTransparency": true,
-    "brightness": 0.5,
-    "vanillaTextureIndex": 29
+    "brightness": 0.5
   },
   {
     "name": "WILLOW_LEAVES",
+    "vanillaTextureIndex": 30,
     "hasTransparency": true,
     "textureScale": [
       1.025,
       1.0,
       1.0
-    ],
-    "vanillaTextureIndex": 30
+    ]
   },
   {
     "name": "LAVA",
+    "vanillaTextureIndex": 31,
     "flowMap": "LAVA_FLOW_MAP",
     "overrideBaseColor": true,
     "unlit": true,
@@ -214,8 +215,7 @@
     "scrollSpeed": [
       -0.0,
       -0.33333334
-    ],
-    "vanillaTextureIndex": 31
+    ]
   },
   {
     "name": "TREE_DOOR_BROWN",
@@ -223,20 +223,20 @@
   },
   {
     "name": "MAPLE_LEAVES",
+    "vanillaTextureIndex": 33,
     "hasTransparency": true,
     "textureScale": [
       1.3,
       1.025,
       1.0
-    ],
-    "vanillaTextureIndex": 33
+    ]
   },
   {
     "name": "MAGIC_STARS",
+    "vanillaTextureIndex": 34,
     "hasTransparency": true,
     "overrideBaseColor": true,
-    "unlit": true,
-    "vanillaTextureIndex": 34
+    "unlit": true
   },
   {
     "name": "SAND_BRICK",
@@ -260,6 +260,7 @@
   },
   {
     "name": "FIRE_CAPE",
+    "vanillaTextureIndex": 40,
     "flowMap": "LAVA_FLOW_MAP",
     "overrideBaseColor": true,
     "unlit": true,
@@ -271,24 +272,23 @@
     "scrollSpeed": [
       -0.0,
       0.33333334
-    ],
-    "vanillaTextureIndex": 40
+    ]
   },
   {
     "name": "LEAVES_DISEASED",
+    "vanillaTextureIndex": 41,
     "hasTransparency": true,
     "textureScale": [
       1.025,
       1.025,
       1.0
-    ],
-    "vanillaTextureIndex": 41
+    ]
   },
   {
     "name": "MARBLE",
+    "vanillaTextureIndex": 42,
     "specularStrength": 1.0,
-    "specularGloss": 400.0,
-    "vanillaTextureIndex": 42
+    "specularGloss": 400.0
   },
   {
     "name": "CLEAN_TILE",
@@ -328,8 +328,8 @@
   },
   {
     "name": "SNOW_FLAKES",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 52
+    "vanillaTextureIndex": 52,
+    "hasTransparency": true
   },
   {
     "name": "FROZEN_ABYSSAL_WHIP",
@@ -349,11 +349,12 @@
   },
   {
     "name": "UNUSED_LEAVES",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 58
+    "vanillaTextureIndex": 58,
+    "hasTransparency": true
   },
   {
     "name": "INFERNAL_CAPE",
+    "vanillaTextureIndex": 59,
     "flowMap": "LAVA_FLOW_MAP",
     "overrideBaseColor": true,
     "unlit": true,
@@ -361,168 +362,167 @@
     "flowMapDuration": [
       12.0,
       4.0
-    ],
-    "vanillaTextureIndex": 59
+    ]
   },
   {
     "name": "LEAVES_TOP",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 60
+    "vanillaTextureIndex": 60,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_SKULL",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 61
+    "vanillaTextureIndex": 61,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_PARTYHAT",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 62
+    "vanillaTextureIndex": 62,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_MAGIC_ICON",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 63
+    "vanillaTextureIndex": 63,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_MIME_HAPPY",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 64
+    "vanillaTextureIndex": 64,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_HELMET",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 65
+    "vanillaTextureIndex": 65,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_SWORDS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 66
+    "vanillaTextureIndex": 66,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_MIME_SAD",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 67
+    "vanillaTextureIndex": 67,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_SKILLING",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 68
+    "vanillaTextureIndex": 68,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_FARMING",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 69
+    "vanillaTextureIndex": 69,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_ARROWS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 70
+    "vanillaTextureIndex": 70,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_RUNE",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 71
+    "vanillaTextureIndex": 71,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_THIEVING",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 72
+    "vanillaTextureIndex": 72,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_BONES",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 73
+    "vanillaTextureIndex": 73,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_CABBAGE",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 74
+    "vanillaTextureIndex": 74,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_CAT",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 75
+    "vanillaTextureIndex": 75,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_COMPASS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 76
+    "vanillaTextureIndex": 76,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_FISH",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 77
+    "vanillaTextureIndex": 77,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_HITPOINTS",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 78
+    "vanillaTextureIndex": 78,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_PRAYER",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 79
+    "vanillaTextureIndex": 79,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_HUNTER",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 80
+    "vanillaTextureIndex": 80,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_RING",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 81
+    "vanillaTextureIndex": 81,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_ROBINHOOD",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 82
+    "vanillaTextureIndex": 82,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_FLOWER",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 83
+    "vanillaTextureIndex": 83,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_DEFENCE",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 84
+    "vanillaTextureIndex": 84,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_ZAMORAK",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 85
+    "vanillaTextureIndex": 85,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_GROUP",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 86
+    "vanillaTextureIndex": 86,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_GROUP_HARDCORE",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 87
+    "vanillaTextureIndex": 87,
+    "hasTransparency": true
   },
   {
     "name": "CLAN_EMPTY",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 88
+    "vanillaTextureIndex": 88,
+    "hasTransparency": true
   },
   {
     "name": "SHAYZIEN_LEAVES_TOP",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 89
+    "vanillaTextureIndex": 89,
+    "hasTransparency": true
   },
   {
     "name": "SHAYZIEN_LEAVES_SIDE",
+    "vanillaTextureIndex": 90,
     "hasTransparency": true,
     "textureScale": [
       1.025,
       1.025,
       1.0
-    ],
-    "vanillaTextureIndex": 90
+    ]
   },
   {
     "name": "WATER_ICE",
@@ -546,103 +546,103 @@
   },
   {
     "name": "HIEROGLYPHICS_LARGE",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 96
+    "vanillaTextureIndex": 96,
+    "hasTransparency": true
   },
   {
     "name": "HIEROGLYPHICS_SMALL",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 97
+    "vanillaTextureIndex": 97,
+    "hasTransparency": true
   },
   {
     "name": "FOG_STATIC",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 98
+    "vanillaTextureIndex": 98,
+    "hasTransparency": true
   },
   {
     "name": "FOG_VERY_SLOW",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 99
+    "vanillaTextureIndex": 99,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_SLOW",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 100
+    "vanillaTextureIndex": 100,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_MEDIUM",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 101
+    "vanillaTextureIndex": 101,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_FAST",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 102
+    "vanillaTextureIndex": 102,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_VERY_FAST",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 103
+    "vanillaTextureIndex": 103,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_LIGHT_STATIC",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 104
+    "vanillaTextureIndex": 104,
+    "hasTransparency": true
   },
   {
     "name": "FOG_LIGHT_VERY_SLOW",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 105
+    "vanillaTextureIndex": 105,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_SLOW",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 106
+    "vanillaTextureIndex": 106,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_MEDIUM",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 107
+    "vanillaTextureIndex": 107,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_FAST",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 108
+    "vanillaTextureIndex": 108,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_VERY_FAST",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 109
+    "vanillaTextureIndex": 109,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_HEAVY_STATIC",
-    "hasTransparency": true,
-    "vanillaTextureIndex": 110
+    "vanillaTextureIndex": 110,
+    "hasTransparency": true
   },
   {
     "name": "FOG_HEAVY_VERY_SLOW",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 111
+    "vanillaTextureIndex": 111,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_SLOW",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 112
+    "vanillaTextureIndex": 112,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_MEDIUM",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 113
+    "vanillaTextureIndex": 113,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_FAST",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 114
+    "vanillaTextureIndex": 114,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_VERY_FAST",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 115
+    "vanillaTextureIndex": 115,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "SKULLS",

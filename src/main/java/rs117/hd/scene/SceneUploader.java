@@ -720,9 +720,8 @@ public class SceneUploader {
 				int i = Math.abs(swHeight);
 				if (i >= sceneContext.waterHeightCounters.length && i < 1e6) {
 					// This probably won't happen, but if it does, grow the array
-					int[] arr = new int[i * 2];
-					System.arraycopy(sceneContext.waterHeightCounters, 0, arr, 0, sceneContext.waterHeightCounters.length);
-					sceneContext.waterHeightCounters = arr;
+					sceneContext.waterHeightCounters = slice(
+						sceneContext.waterHeightCounters, 0, sceneContext.waterHeightCounters.length * 2);
 				}
 				sceneContext.waterHeightCounters[i]++;
 			}

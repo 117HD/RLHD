@@ -91,7 +91,7 @@ public class ProceduralGenerator {
 			float A = B * (maxDepth - minDepth) / (1 - (float) Math.exp(-B));
 			for (int i = 1; i < DEPTH_LEVEL_SLOPE.length; i++)
 				ProceduralGenerator.DEPTH_LEVEL_SLOPE[i] =
-					Math.round(A / B * (1 - (float) Math.exp(-B * (float) i / DEPTH_LEVEL_SLOPE.length)) + minDepth);
+					round(A / B * (1 - (float) Math.exp(-B * (float) i / DEPTH_LEVEL_SLOPE.length)) + minDepth);
 		}
 
 		long timerTotal = System.currentTimeMillis();

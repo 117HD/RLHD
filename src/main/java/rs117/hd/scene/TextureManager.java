@@ -24,7 +24,6 @@
  */
 package rs117.hd.scene;
 
-import com.google.common.base.Stopwatch;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
