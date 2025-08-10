@@ -2217,11 +2217,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDisable(GL_DEPTH_TEST);
 
 				frameTimer.end(Timer.RENDER_SHADOWS);
-			} else {
-				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
-				uboGlobal.upload();
 			}
 
+			uboGlobal.upload();
 			sceneProgram.use();
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
