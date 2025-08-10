@@ -1616,7 +1616,8 @@
       190
     ],
     "fogColor": "#060505",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "instantTransition": true
   },
   {
     "area": "BURGH_DE_ROTT_BASEMENT",
@@ -1987,6 +1988,12 @@
     "directionalStrength": 0.15,
     "ambientStrength": 0.8,
     "fogDepth": 30
+  },
+  {
+    "area": "Guthix Temple",
+    "ambientStrength": 0.9,
+    "fogDepth": 30,
+    "sunAngles": [ 70, 220 ]
   },
   {
     "key": "OVERWORLD",

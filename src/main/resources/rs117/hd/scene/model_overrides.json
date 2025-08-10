@@ -53362,7 +53362,7 @@
     ]
   },
   {
-    "description": "WGS - Movario's Base - Entrance",
+    "description": "Movario's Base - Entrance",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -53372,14 +53372,14 @@
     ]
   },
   {
-    "description": "WGS - Movario's Base - Entrance",
+    "description": "Movario's Base - Entrance",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       "WGS_BF_TABLE_BROKEN2_OPEN"
     ]
   },
   {
-    "description": "WGS - Movario's Base - Walls",
+    "description": "Movario's Base - Walls",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -53442,7 +53442,7 @@
     ]
   },
   {
-    "description": "WGS - Movario's Base - Kitchen Walls",
+    "description": "Movario's Base - Kitchen Walls",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -53479,12 +53479,11 @@
     ]
   },
   {
-    "description": "WGS - Movario's Base - Make Wall Filler Black",
+    "description": "Movario's Base - Wall Filler",
     "baseMaterial": "PURE_BLACK",
     "objectIds": [
       "LUC2_MOV_WALL_TOP_BLACK"
-    ],
-    "castShadows": false
+    ]
   },
   {
     "description": "Movario's Base - Barrel with Orange Liquid",
@@ -53792,7 +53791,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Fort Basement - Walls",
+    "description": "Black Knight Fort Basement - Walls",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "KR_BKF_BASEMENT_WALL_EXPOSED_PLASTER",
@@ -53803,7 +53802,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "WGS - Black Knight Basement Ladder",
+    "description": "Black Knight Basement Ladder",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "KR_BKF_BASEMENT_LADDERTOP"
@@ -53820,7 +53819,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Entrance Hatch - Dynamic",
+    "description": "Black Knight Catacomb - Entrance Hatch - Dynamic",
     "baseMaterial": "DIRT_1",
     "objectIds": [
       "WGS_BLACK_KNIGHTS_TUNNEL_HIDDEN",
@@ -53838,7 +53837,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Walls",
+    "description": "Black Knight Catacomb - Walls",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_DWT_WALL",
@@ -53884,15 +53883,16 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Wall Filler",
+    "description": "Black Knight Catacomb - Wall Filler",
     "baseMaterial": "PURE_BLACK",
     "objectIds": [
       "LUC2_DWT_WALL_TOP_BLACK"
     ],
-    "castShadows": true
+    "castShadows": true,
+    "receiveShadows": false
   },
   {
-    "description": "WGS - Black Knight Catacomb - Rocks",
+    "description": "Black Knight Catacomb - Rocks",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_DWT_ROCKSLIDE",
@@ -53920,7 +53920,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "WGS - Black Knight Catacomb - Walls Stream",
+    "description": "Black Knight Catacomb - Walls Stream",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_DWT_WALL_STREAM2",
@@ -53948,7 +53948,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Walls - Wooden Pillar",
+    "description": "Black Knight Catacomb - Walls - Wooden Pillar",
     "baseMaterial": "WOOD_GRAIN_2",
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -53972,7 +53972,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Walls - Wooden Pillar No Wall",
+    "description": "Black Knight Catacomb - Walls - Wooden Pillar No Wall",
     "baseMaterial": "WOOD_GRAIN_2",
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -53984,7 +53984,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Walls - Torch - Animated - Dynamic",
+    "description": "Black Knight Catacomb - Walls - Torch - Animated - Dynamic",
     "baseMaterial": "GRAY_90",
     "objectIds": [
       "LUC2_DWT_WALL_STEPS1_TORCH",
@@ -54010,7 +54010,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Walls - Torch 2 - Animated - Dynamic",
+    "description": "Black Knight Catacomb - Walls - Torch 2 - Animated - Dynamic",
     "baseMaterial": "GRAY_90",
     "objectIds": [
       "LUC2_DWT_WALL_TORCH",
@@ -54032,7 +54032,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Metal Door",
+    "description": "Black Knight Catacomb - Metal Door",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -54056,7 +54056,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Trim Fix",
+    "description": "Black Knight Catacomb - Trim Fix",
     "areas": [ "Black Knights Fort - Trim Fix" ],
     "baseMaterial": "ROCK_3_DARK",
     "objectIds": [
@@ -54068,7 +54068,7 @@
     "uvScale": 0.8
   },
   {
-    "description": "WGS - Black Knight Catacomb - Rocks in Water - Hide Ripples",
+    "description": "Black Knight Catacomb - Rocks in Water - Hide Ripples",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_DWT_ROCK_WATER",
@@ -54087,7 +54087,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Bridge",
+    "description": "Black Knight Catacomb - Bridge",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -54109,7 +54109,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Bridge Supports",
+    "description": "Black Knight Catacomb - Bridge Supports",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -54121,7 +54121,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Barricade",
+    "description": "Black Knight Catacomb - Barricade",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -54144,7 +54144,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Wardrobe",
+    "description": "Black Knight Catacomb - Wardrobe",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -54175,7 +54175,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Table with Misc Objects",
+    "description": "Black Knight Catacomb - Table with Misc Objects",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "LUC2_DWT_TABLE4",
@@ -54201,7 +54201,7 @@
     ]
   },
   {
-    "description": "WGS - Black Knight Catacomb - Floor Tiles",
+    "description": "Black Knight Catacomb - Floor Tiles",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "LUC2_DWT_TILE1",
@@ -54228,7 +54228,7 @@
     "uvScale": 1.1
   },
   {
-    "description": "WGS - Lucien's Base - Snow Walls",
+    "description": "Lucien's Base - Snow Walls",
     "baseMaterial": "SNOW_1",
     "objectIds": [
       "LUC2_OUTPOST_WALL_01_CUSTOM",
@@ -54247,7 +54247,7 @@
     "castShadows": false
   },
   {
-    "description": "WGS - Lucien's Base - Rocks",
+    "description": "Lucien's Base - Rocks",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "DI2_CAVE_ROCKS_BIG2_BLUEGREY",
@@ -54272,7 +54272,7 @@
     "uvType": "BOX"
   },
   {
-    "description": "WGS - Lucien's Base - Snowy Crates and Barrels",
+    "description": "Lucien's Base - Snowy Crates and Barrels",
     "baseMaterial": "SNOW_3",
     "objectIds": [
       "LUC2_OUTPOST_OUTDOOR_BARREL_BROKEN",
@@ -54292,7 +54292,7 @@
     ]
   },
   {
-    "description": "WGS - Lucien's Base - Overhead Cover",
+    "description": "Lucien's Base - Overhead Cover",
     "baseMaterial": "SNOW_1",
     "objectIds": [
       "LUC2_OUTPOST_COVER_01"
@@ -54315,7 +54315,7 @@
     ]
   },
   {
-    "description": "WGS - Lucien's Base - Teleport Sigil Edge",
+    "description": "Lucien's Base - Teleport Sigil Edge",
     "baseMaterial": "SNOW_1",
     "objectIds": [
       "LUC2_OUTPOST_TILE_CORNER",
@@ -54333,7 +54333,7 @@
     ]
   },
   {
-    "description": "WGS - Lucien's Base - Teleport Sigil Middle",
+    "description": "Lucien's Base - Teleport Sigil Middle",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "LUC2_OUTPOST_TILE1",
@@ -54356,18 +54356,37 @@
     "uvType": "BOX"
   },
   {
-    "description": "WGS - Guthix Temple - Wall Filler - Hide shadows for performance gain",
+    "description": "Guthix Temple - Wall Filler - Hide shadows for performance gain",
     "baseMaterial": "PURE_BLACK",
     "objectIds": [
       "LUC2_GT_TEMPLE_CAVE_TOP_HIGH",
       "LUC2_WALL_BLACK_TALL",
-      "LUC2_GT_TEMPLE_CAVE_TOP_LOW"
+      "LUC2_GT_TEMPLE_CAVE_TOP_LOW",
+      "LUC2_GT_TEMPLE_CAVE_TOP",
+      "LUC2_LUNAR_RUNE_CAVE_WALL_TOP_BLACK"
     ],
-    "uvType": "BOX",
-    "castShadows": false
+    "castShadows": false,
+    "receiveShadows": false
   },
   {
-    "description": "WGS - Guthix Temple - Chasm Edge",
+    "description": "Guthix Temple - Wall Filler Edge - Hide shadows for performance gain",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_CAVE_WALL_TOP_CRNR_INNER",
+      "LUC2_CAVE_WALL_TOP_CRNR_OUTER",
+      "LUC2_CAVE_WALL_TOP"
+    ],
+    "receiveShadows": false,
+    "castShadows": false,
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Guthix Temple - Chasm Edge",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_GT_CHASM_01_M",
@@ -54381,12 +54400,11 @@
     "castShadows": false
   },
   {
-    "description": "WGS - Guthix Temple - Cave Walls - Bottom",
+    "description": "Guthix Temple - Cave Walls and Misc Stone - Bottom",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_GT_WALLKIT_CHASM_01_BLEND_MIRROR",
       "LUC2_GT_WALLKIT_CHASM_01",
-      "LUC2_GT_CAVEWALL_TOP06",
       "LUC2_GT_WALLKIT_LEVEL1_01",
       "LUC2_GT_WALLKIT_LEVEL0_02",
       "LUC2_GT_WALLKIT_LEVEL0_01",
@@ -54407,12 +54425,29 @@
       "LUC2_GT_GIANT_SKULL_BOTTOM_FIRE",
       "LUC2_GT_GIANT_SKULL_BOTTOM_AIR",
       "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH",
-      "LUC2_GT_MAIN_SKULL_BOTTOM_OPEN"
+      "LUC2_GT_MAIN_SKULL_BOTTOM_OPEN",
+      "LUC2_GT_WALLKIT_01",
+      "LUC2_GT_WALLKIT_02",
+      "LUC2_GT_WALLKIT_ENT",
+      "LUC2_GT_WALLKIT_ALCOVEL",
+      "LUC2_GT_WALLKIT_ALCOVER",
+      "LUC2_GT_WALLKIT_ALCOVE_MID",
+      "LUC2_GT_WALLKIT_ROCK_01",
+      "LUC2_GT_BASE_PILLAR_LEVEL2",
+      "LUC2_GT_SKEWSTEPS",
+      "LUC2_GT_SKEWSTEPS_CORNER",
+      "LUC2_GT_MAIN_PILLAR_LEVEL1_L",
+      "LUC2_GT_MAIN_PILLAR_LEVEL2_L",
+      "LUC2_GT_MAIN_PILLAR_LEVEL1_R",
+      "LUC2_GT_MAIN_PILLAR_LEVEL2_R",
+      "LUC2_GT_MAIN_PILLAR_LEVEL3",
+      "LUC2_GT_MAIN_PILLAR_LEVEL3_DAMAGED",
+      "LUC2_GT_PILLAR_TORCH"
     ],
     "uvType": "BOX"
   },
   {
-    "description": "WGS - Guthix Temple - Cave Walls - Top",
+    "description": "Guthix Temple - Cave Walls - Top",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_GT_WALLKIT_LEVEL3_01",
@@ -54420,7 +54455,9 @@
       "LUC2_GUTHIX_TEMPLE_PILLAR_TOP",
       "LUC2_GT_MAIN_SKULL_TOP",
       "LUC2_GT_MAIN_SKULL_TENDRIL_TOPL",
-      "LUC2_GT_MAIN_SKULL_TENDRIL_TOPR"
+      "LUC2_GT_MAIN_SKULL_TENDRIL_TOPR",
+      "LUC2_GT_MAIN_PILLAR_LEVEL4",
+      "LUC2_GT_MAIN_PILLAR_LEVEL4_DAMAGED"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -54431,7 +54468,15 @@
     ]
   },
   {
-    "description": "WGS - Guthix Temple - Cave Walls - Puzzle Cube",
+    "description": "Guthix Temple - Cave Walls - Top - Simple",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_GT_CAVEWALL_TOP06"
+    ],
+    "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Guthix Temple - Cave Walls - Puzzle Cube",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "LUC2_GT_MAIN_DOOR_BUTTON_OFF",
@@ -54460,7 +54505,7 @@
     ]
   },
   {
-    "description": "WGS - Guthix Temple - Cave Walls - Tunnel",
+    "description": "Guthix Temple - Cave Walls - Tunnel",
     "baseMaterial": "ROCK_3_LIGHT",
     "objectIds": [
       "LUC2_GUTHIX_TEMPLE_TUNNEL",
@@ -54481,19 +54526,57 @@
         "baseMaterial": "PURE_BLACK"
       },
       {
-        "colors": 10352,
-        "baseMaterial": "NONE",
-        "receiveShadows": false
-      },
-      {
-        "colors": "h == 10",
+        "colors": [ 10352, "h == 10" ],
         "baseMaterial": "NONE",
         "receiveShadows": false
       }
     ]
   },
   {
-    "description": "WGS - Guthix Temple - Stone Torch",
+    "description": "Guthix Temple - Cave Walls - with Dirt or Vines",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_GT_WALLKIT_ERODE_SINGLE_01",
+      "LUC2_GT_WALLKIT_ERODE_01_ENDL",
+      "LUC2_GT_WALLKIT_ERODE_01",
+      "LUC2_GT_WALLKIT_ERODE_01_VINE",
+      "LUC2_GT_WALLKIT_ERODE_01_ENDR",
+      "LUC2_GT_WALLKIT_ERODE_SINGLE_02",
+      "LUC2_GT_WALLKIT_ERODE_01_MID_VINE",
+      "LUC2_GT_WALLKIT_ERODE_01_MID",
+      "LUC2_GT_WALLKIT_ERODE_01_END_VINER",
+      "LUC2_GT_WALLKIT_ERODE_01_END_VINEL",
+      "LUC2_GT_WALLKIT_ENTRANCE_HOLE",
+      "LUC2_GT_WALLKIT_ERODE_02_ENDL",
+      "LUC2_GT_WALLKIT_ERODE_02",
+      "LUC2_GT_WALLKIT_ERODE_02_MID_VINE",
+      "LUC2_GT_WALLKIT_ERODE_02_VINE",
+      "LUC2_GT_WALLKIT_ERODE_02_ENDR",
+      "LUC2_GT_WALLKIT_ERODE_02_MID",
+      "LUC2_GT_WALLKIT_GUTHIX_SHRINEL",
+      "LUC2_GT_WALLKIT_GUTHIX_SHRINER",
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTSR",
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTSL",
+      "LUC2_HERB_STATUE_RUBBLE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_150"
+      },
+      {
+        "colors": "h == 5 || h == 10 && s > 0",
+        "baseMaterial": "DIRT_1"
+      },
+      {
+        "colors": "h == 6 || h == 4 || h == 13",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone Torch",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -54505,11 +54588,10 @@
         "colors": "a < 255",
         "baseMaterial": "GRAY_125"
       }
-
     ]
   },
   {
-    "description": "WGS - Guthix Temple - Brazier",
+    "description": "Guthix Temple - Brazier",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.2,
@@ -54527,7 +54609,7 @@
     ]
   },
   {
-    "description": "WGS - Guthix Temple - Broken Brazier",
+    "description": "Guthix Temple - Broken Brazier",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
       "LUC2_GUTHIX_TEMPLE_BRAZIER_BURIED_FIRE",
@@ -54546,11 +54628,14 @@
     ]
   },
   {
-    "description": "WGS - Guthix Temple - Goblin Remains",
+    "description": "Guthix Temple - Skeletons",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
       "LUC2_GOBLIN_REMAINS_1",
-      "LUC2_GOBLIN_REMAINS_2"
+      "LUC2_GOBLIN_REMAINS_2",
+      "LUC2_SKELETAL_DRUID_CORPSE_NOITEMS",
+      "LUC2_SKELETAL_DRUID_CORPSE_ITEMS",
+      "LUC2_SKELETAL_DRUID_CORPSE_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -54563,6 +54648,215 @@
       {
         "colors": "h == 0",
         "baseMaterial": "METALLIC_1"
+      }
+    ]
+  },
+  {
+    "description": "Guthix Temple - Vines",
+    "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      "LUC2_GT_VINE_END",
+      "LUC2_GT_VINE_CROSSOVER",
+      "LUC2_GT_VINE_DIAG2",
+      "LUC2_GT_VINE_DIAG_FILLER",
+      "LUC2_GT_VINE_END_DIAG",
+      "LUC2_GT_VINE_EMPTY",
+      "LUC2_GT_VINE_CUSTOM",
+      "LUC2_GT_VINE_STRAIGHT",
+      "LUC2_GT_VINE_JUNCTION",
+      "LUC2_GT_VINE_DIAG1",
+      "LUC2_GT_VINE_FULL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3"
+      }
+    ]
+  },
+  {
+    "description": "Guthix Temple - Vines",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "LUC2_HERB_STATUE_RANGED",
+      "LUC2_HERB_STATUE_RANGED_DONE",
+      "LUC2_HERB_STATUE_ATTACK",
+      "LUC2_HERB_STATUE_ATTACK_DONE",
+      "LUC2_HERB_STATUE_HUNTING",
+      "LUC2_HERB_STATUE_HUNTING_DONE",
+      "LUC2_HERB_STATUE_ENERGY",
+      "LUC2_HERB_STATUE_ENERGY_DONE",
+      "LUC2_HERB_STATUE_COMBAT",
+      "LUC2_HERB_STATUE_COMBAT_DONE",
+      "LUC2_HERB_STATUE_BALANCE",
+      "LUC2_HERB_STATUE_BALANCE_DONE",
+      "LUC2_HERB_STATUE_DEFENCE",
+      "LUC2_HERB_STATUE_DEFENCE_DONE",
+      "LUC2_HERB_STATUE_FISHING",
+      "LUC2_HERB_STATUE_FISHING_DONE",
+      "LUC2_HERB_STATUE_STRENGTH",
+      "LUC2_HERB_STATUE_STRENGTH_DONE",
+      "LUC2_HERB_STATUE_PRAYER",
+      "LUC2_HERB_STATUE_PRAYER_DONE",
+      "LUC2_HERB_STATUE_MAGIC",
+      "LUC2_HERB_STATUE_MAGIC_DONE",
+      "LUC2_HERB_STATUE_RESTORE",
+      "LUC2_HERB_STATUE_RESTORE_DONE",
+      "LUC2_HERB_STATUE_AGILITY",
+      "LUC2_HERB_STATUE_AGILITY_DONE"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Dolmen Table",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "LUC2_GT_HENGE_TABLE_00",
+      "LUC2_GT_HENGE_TABLE_01",
+      "LUC2_GT_HENGE_TABLE_02",
+      "LUC2_GT_HENGE_TABLE_03",
+      "LUC2_GT_HENGE_TABLE_04",
+      "LUC2_GT_HENGE_TABLE_05",
+      "LUC2_GT_HENGE_TABLE_06",
+      "LUC2_GT_HENGE_TABLE_07",
+      "LUC2_GT_HENGE_TABLE_08",
+      "LUC2_GT_HENGE_TABLE_BASE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Guthix Temple - Floor Dias",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "uvOrientation": 256,
+    "objectIds": [
+      "LUC2_GT_HENGE_PUZZLE_BASE_09",
+      "LUC2_GT_HENGE_PUZZLE_BASE_10",
+      "LUC2_GT_HENGE_PUZZLE_BASE_10_MIRROR",
+      "LUC2_GT_HENGE_PUZZLE_BASE_07",
+      "LUC2_GT_HENGE_PUZZLE_BASE_07_MIRROR",
+      "LUC2_GT_HENGE_PUZZLE_BASE_05",
+      "LUC2_GT_HENGE_PUZZLE_BASE_02_MIRROR",
+      "LUC2_GT_HENGE_PUZZLE_BASE_04",
+      "LUC2_GT_HENGE_PUZZLE_BASE_02",
+      "LUC2_GT_HENGE_PUZZLE_BASE_05_MIRROR",
+      "LUC2_GT_HENGE_PUZZLE_BASE_06_MIRROR",
+      "LUC2_GT_HENGE_PUZZLE_BASE_08",
+      "LUC2_GT_HENGE_PUZZLE_BASE_06",
+      "LUC2_GT_HENGE_PUZZLE_BASE_13",
+      "LUC2_GT_HENGE_PUZZLE_BASE_12",
+      "LUC2_GT_HENGE_PUZZLE_BASE_11"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Giant Door",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 3,
+    "uvOrientation": 256,
+    "objectIds": [
+      "LUC2_GT_HENGE_DOOR_LVL1",
+      "LUC2_GT_HENGE_DOOR_LVL2",
+      "LUC2_GT_HENGE_DOOR_LVL3",
+      "LUC2_GT_HENGE_DOOR_LVL4",
+      "LUC2_GT_HENGE_DORE_BASE_CORNER",
+      "LUC2_GT_HENGE_DORE_BASE_STRAIGHT"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Henge and Shrine Torch",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_01",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_01",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_02",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_02",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_03",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_03",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_04",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_04",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_05",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_05",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_06",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_06",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_07",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_07",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_08",
+      "LUC2_GT_HENGE_PUZZLE_HENGE_STATIC_08"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas Plinth",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_PLINTH"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_NAMED_NOOP",
+      "LUC2_STONE_OF_JAS_NAMED_SINKING",
+      "LUC2_STONE_OF_JAS_NAMED",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP_ENERGY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5 || h == 6 && a > 254",
+        "baseMaterial": "GRUNGE_3_LIGHT_VERY_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas - Cutscene",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "LUC2_LUNAR_RUNESTONE_EMBEDDED_JAS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 5 || h == 6 && a > 254 || h == 30",
+        "baseMaterial": "GRUNGE_3_LIGHT_VERY_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
       }
     ]
   }

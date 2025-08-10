@@ -444,6 +444,10 @@ public enum Material {
 		.setBrightness(1.45f)
 		.setSpecular(0.5f, 300)
 		),
+	GRUNGE_3_LIGHT_VERY_SHINY(GRUNGE_3_LIGHT, p -> p
+		.setBrightness(1.45f)
+		.setSpecular(0.9f, 30)
+	),
 	GRUNGE_3_DARK(GRUNGE_3, p -> p
 		.setBrightness(0.75f)
 		.setSpecular(0f, 0)

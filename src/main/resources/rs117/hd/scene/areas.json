@@ -7806,6 +7806,20 @@
     ]
   },
   {
+    "name": "Guthix Temple - Entrance",
+    "aabbs": [
+      [ 4021, 4607, 4108, 4544 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Guthix Temple",
+    "regionBoxes": [
+      [ 16197, 16452 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",

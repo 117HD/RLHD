@@ -40045,26 +40045,10 @@
     ]
   },
   {
-    "description": "Guthix Temple - Orange Torch Short",
-    "offset": [ 0, 165, 0 ],
-    "radius": 300,
-    "strength": 10.5,
-    "visibleFromOtherPlanes": true,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "STATIC",
-    "objectIds": [
-      "DI2_TORCH_GREY"
-    ]
-  },
-  {
-    "description": "Guthix Temple - Orange Torch Wide",
+    "description": "Guthix Temple - Stone Torch",
     "offset": [ 0, 185, 0 ],
     "radius": 550,
-    "strength": 10.5,
+    "strength": 15.5,
     "visibleFromOtherPlanes": true,
     "color": [
       252,
@@ -40076,6 +40060,92 @@
     "range": 20,
     "objectIds": [
       "DI2_TORCH_GREY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Metal Torch",
+    "offset": [ -55, 185, 0 ],
+    "radius": 400,
+    "strength": 13.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DI2_TORCH_METAL"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Shrine Torch",
+    "offset": [ 0, 125, 10 ],
+    "radius": 320,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Altar Shrine Torch",
+    "offset": [ -190, 125, 0 ],
+    "radius": 350,
+    "strength": 14.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTSL",
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTSR"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Green Torch Lit",
+    "offset": [ 0, 230, 0 ],
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "WGS_ENERGY_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Green Torch Unlit",
+    "offset": [ 0, 210, 0 ],
+    "radius": 220,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "WGS_ENERGY_BRAZIER_BASE_UNLIT"
     ]
   },
   {
@@ -40119,7 +40189,6 @@
     "offset": [ 0, 85, 0 ],
     "radius": 500,
     "strength": 10,
-    "visibleFromOtherPlanes": true,
     "color": [
       255,
       255,
@@ -40132,6 +40201,155 @@
       "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT3",
       "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT2",
       "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT1"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Druid Spirit",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      200,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "npcIds": [
+      "WGS_DRUID_SPIRIT_1",
+      "WGS_DRUID_SPIRIT_2"
+    ],
+    "animationIds": [ -1 ]
+  },
+  {
+    "description": "Guthix Temple - Pillar Torch",
+    "offset": [ -20, 100, -20 ],
+    "radius": 400,
+    "strength": 14.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GT_PILLAR_TORCH"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas 1",
+    "offset": [ -175, 550, 175 ],
+    "radius": 500,
+    "strength": 3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_NAMED_NOOP",
+      "LUC2_STONE_OF_JAS_NAMED",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP_ENERGY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas 2",
+    "offset": [ 75, 600, -150 ],
+    "radius": 500,
+    "strength": 6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_NAMED_NOOP",
+      "LUC2_STONE_OF_JAS_NAMED",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP_ENERGY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas 3",
+    "offset": [ 250, 270, 170 ],
+    "radius": 500,
+    "strength": 3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_NAMED_NOOP",
+      "LUC2_STONE_OF_JAS_NAMED",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP_ENERGY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Elemental Fire Arrow",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 100,
+    "projectileIds": [
+      "VFX_BALANCE_ELEMENTAL_FIRE_ATTACK01_PROJANIM"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Elemental Water Blast",
+    "radius": 350,
+    "strength": 20,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 100,
+    "projectileIds": [
+      "VFX_BALANCE_ELEMENTAL_WATER_ATTACK01_PROJANIM"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Jas Power Boost",
+    "offset": [ 0, 100, 0 ],
+    "radius": 200,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "PULSE",
+    "range": 5,
+    "duration": 1000,
+    "graphicsObjectIds": [
+      "LUC2_JAS_GLOW_PLAYER"
     ]
   }
 ]
