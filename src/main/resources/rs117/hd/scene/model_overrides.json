@@ -53908,7 +53908,12 @@
       "LUC2_DWT_DUGUPSOIL2",
       "LUC2_DWT_DUGUPSOIL1",
       "LUC2_DWT_ROCKSLIDE_LVL3",
-      "LUC2_DWT_ROCKS_SMALL2_LVL3"
+      "LUC2_DWT_ROCKS_SMALL2_LVL3",
+      "LUC2_GT_ROCKS_LVL2A",
+      "LUC2_GT_ROCKS_LVL2D",
+      "LUC2_GT_ROCKS_LVL2E",
+      "LUC2_GT_ROCKS_LVL2B",
+      "LUC2_GT_ROCKS_LVL2C"
     ],
     "uvType": "BOX",
     "uvOrientation": 200,
@@ -54349,5 +54354,216 @@
       "LUC2_OUTPOST_TILE16"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "WGS - Guthix Temple - Wall Filler - Hide shadows for performance gain",
+    "baseMaterial": "PURE_BLACK",
+    "objectIds": [
+      "LUC2_GT_TEMPLE_CAVE_TOP_HIGH",
+      "LUC2_WALL_BLACK_TALL",
+      "LUC2_GT_TEMPLE_CAVE_TOP_LOW"
+    ],
+    "uvType": "BOX",
+    "castShadows": false
+  },
+  {
+    "description": "WGS - Guthix Temple - Chasm Edge",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_GT_CHASM_01_M",
+      "LUC2_GT_CHASM_03",
+      "LUC2_GT_CHASM_02",
+      "LUC2_GT_CHASM_01",
+      "LUC2_GT_CHASM_01_BLEND_MIRROR",
+      "LUC2_GT_CHASM_01_BLEND"
+    ],
+    "uvType": "BOX",
+    "castShadows": false
+  },
+  {
+    "description": "WGS - Guthix Temple - Cave Walls - Bottom",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_GT_WALLKIT_CHASM_01_BLEND_MIRROR",
+      "LUC2_GT_WALLKIT_CHASM_01",
+      "LUC2_GT_CAVEWALL_TOP06",
+      "LUC2_GT_WALLKIT_LEVEL1_01",
+      "LUC2_GT_WALLKIT_LEVEL0_02",
+      "LUC2_GT_WALLKIT_LEVEL0_01",
+      "LUC2_GT_WALLKIT_LEVEL1_02",
+      "LUC2_RAID_ENTRY",
+      "LUC2_RAID_ENTRY2",
+      "LUC2_GT_TEMPLE_WALL_CLIMB2",
+      "LUC2_GT_TEMPLE_WALL_CLIMB1",
+      "LUC2_GT_WALLKIT_CHASM_01_BLEND",
+      "LUC2_GT_GIANT_SKULL_BOTTOM",
+      "LUC2_GT_GIANT_SKULL_TOP",
+      "LUC2_GT_MAIN_SKULL_TENDRIL_BOTTOML",
+      "LUC2_GT_MAIN_SKULL_TENDRIL_BOTTOMR",
+      "LUC2_GUTHIX_TEMPLE_PILLAR_BOTTOM",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_FIRE_KEY",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH_KEY",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_AIR_KEY",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_FIRE",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_AIR",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH",
+      "LUC2_GT_MAIN_SKULL_BOTTOM_OPEN"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "WGS - Guthix Temple - Cave Walls - Top",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_GT_WALLKIT_LEVEL3_01",
+      "LUC2_GT_WALLKIT_LEVEL3_02",
+      "LUC2_GUTHIX_TEMPLE_PILLAR_TOP",
+      "LUC2_GT_MAIN_SKULL_TOP",
+      "LUC2_GT_MAIN_SKULL_TENDRIL_TOPL",
+      "LUC2_GT_MAIN_SKULL_TENDRIL_TOPR"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Guthix Temple - Cave Walls - Puzzle Cube",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "LUC2_GT_MAIN_DOOR_BUTTON_OFF",
+      "LUC2_GT_MAIN_SKULL_BOTTOM_WATER_KEY",
+      "LUC2_GT_MAIN_SKULL_BOTTOM_BOTH_KEYS",
+      "LUC2_GT_MAIN_DOOR_BUTTON_01",
+      "LUC2_GT_MAIN_DOOR_BUTTON_02",
+      "LUC2_GT_MAIN_DOOR_BUTTON_03",
+      "LUC2_GT_MAIN_DOOR_BUTTON_04",
+      "LUC2_GT_MAIN_DOOR_BUTTON_05",
+      "LUC2_GT_MAIN_DOOR_BUTTON_06",
+      "LUC2_GT_MAIN_DOOR_BUTTON_07",
+      "LUC2_GT_MAIN_DOOR_BUTTON_08",
+      "LUC2_GT_MAIN_SKULL_BOTTOM_FIRE_KEY",
+      "LUC2_GT_MAIN_DOOR_BUTTON_BASE",
+      "LUC2_GT_MAIN_DOOR_BUTTON_COMPLETE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Guthix Temple - Cave Walls - Tunnel",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_TUNNEL",
+      "LUC2_GUTHIX_TEMPLE_TUNNEL_LIGHT_MIRROR",
+      "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT3",
+      "LUC2_GUTHIX_TEMPLE_TUNNEL_LIGHT",
+      "LUC2_GT_TUNNEL_LOCK_EMPTY_AIR",
+      "LUC2_GT_TUNNEL_LOCK_KEY_AIR",
+      "LUC2_GT_TUNNEL_LOCK_EMPTY_WATER",
+      "LUC2_GT_TUNNEL_LOCK_KEY_WATER",
+      "LUC2_GT_TUNNEL_LOCK_EMPTY_EARTH",
+      "LUC2_GT_TUNNEL_LOCK_KEY_EARTH"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": 10352,
+        "baseMaterial": "NONE",
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "NONE",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "WGS - Guthix Temple - Stone Torch",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DI2_TORCH_GREY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      }
+
+    ]
+  },
+  {
+    "description": "WGS - Guthix Temple - Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_AIR",
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_EMPTY",
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_WATER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      }
+
+    ]
+  },
+  {
+    "description": "WGS - Guthix Temple - Broken Brazier",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_BURIED_FIRE",
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_UNCOVERED_FIRE",
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_UNCOVERED_FIRE_EMPTY",
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_UNCOVERED_EARTH",
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_BURIED_EARTH",
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_UNCOVERED_EARTH_EMPTY"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "WGS - Guthix Temple - Goblin Remains",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      "LUC2_GOBLIN_REMAINS_1",
+      "LUC2_GOBLIN_REMAINS_2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": -256,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "BONE"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1"
+      }
+    ]
   }
 ]

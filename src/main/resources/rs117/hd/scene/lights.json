@@ -25276,18 +25276,17 @@
   },
   {
     "description": "TOG_BLUE_STREAM",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 22.5,
+    "offset": [ -30, 100, 0 ],
+    "radius": 400,
+    "strength": 25,
     "color": [
       89,
       145,
       255
     ],
     "type": "STATIC",
-    "duration": 0,
-    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "objectIds": [
       "TOG_WEEPING_WALL_GOOD_R",
       "TOG_WEEPING_WALL_GOOD_L"
@@ -25295,9 +25294,8 @@
   },
   {
     "description": "TOG_GREEN_STREAM",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 500,
+    "offset": [ -30, 100, 0 ],
+    "radius": 375,
     "strength": 15,
     "color": [
       141,
@@ -25305,11 +25303,53 @@
       92
     ],
     "type": "STATIC",
-    "duration": 0,
-    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "objectIds": [
       "TOG_WEEPING_WALL_BAD_R",
       "TOG_WEEPING_WALL_BAD_L"
+    ]
+  },
+  {
+    "description": "TOG_LIGHT_CREATURE",
+    "offset": [ 0, 120, 0 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      89,
+      145,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 500,
+    "npcIds": [
+      "TOG_LIGHT_CREATURE_OP",
+      "TOG_LIGHT_CREATURE_NOOP",
+      "TOG_LIGHT_CREATURE_TRANSITION"
+    ]
+  },
+  {
+    "description": "TOG_LIGHT_CREATURE_CARYING",
+    "offset": [ 0, 135, 0 ],
+    "radius": 300,
+    "strength": 50,
+    "color": [
+      89,
+      145,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 500,
+    "npcIds": [
+      "TOG_LIGHT_CREATURE_CARRYING"
+    ],
+    "graphicsObjectIds": [
+      "LUC2_CHASM_CUTSCENE_PLAYER_LIGHT_SPOT",
+      "LUC2_CHASM_CUTSCENE_PLAYER_LIGHT_SPOT_REVERSE"
     ]
   },
   {
@@ -40002,6 +40042,96 @@
     "fadeOutDuration": 250,
     "npcIds": [
       "FIRE_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Orange Torch Short",
+    "offset": [ 0, 165, 0 ],
+    "radius": 300,
+    "strength": 10.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DI2_TORCH_GREY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Orange Torch Wide",
+    "offset": [ 0, 185, 0 ],
+    "radius": 550,
+    "strength": 10.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DI2_TORCH_GREY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Blue Torch",
+    "offset": [ 0, 185, 0 ],
+    "radius": 350,
+    "strength": 20,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      89,
+      145,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_WATER"
+    ]
+  },
+  {
+    "description": "Guthix Temple - White Torch",
+    "offset": [ 0, 185, 0 ],
+    "radius": 350,
+    "strength": 20,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_AIR"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Tunnel Light",
+    "offset": [ 0, 85, 0 ],
+    "radius": 500,
+    "strength": 10,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT3",
+      "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT2",
+      "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT1"
     ]
   }
 ]
