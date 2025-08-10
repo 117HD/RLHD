@@ -18,11 +18,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils;
@@ -39,6 +39,8 @@ public class Material {
 	public String name;
 	@JsonAdapter(Reference.Adapter.class)
 	protected Material parent;
+	public int vanillaTextureIndex = -1;
+
 	@JsonAdapter(Reference.Adapter.class)
 	private Material normalMap;
 	@JsonAdapter(Reference.Adapter.class)
@@ -60,7 +62,6 @@ public class Material {
 	private float specularGloss;
 	private float[] scrollSpeed = { 0, 0 };
 	private float[] textureScale = { 1, 1, 1 };
-	public int vanillaTextureIndex = -1;
 	public List<String> materialsToReplace = Collections.emptyList();
 	@JsonAdapter(ExpressionParser.PredicateAdapter.class)
 	public ExpressionPredicate replacementCondition;

@@ -5,8 +5,8 @@ import javax.inject.Singleton;
 import lombok.NonNull;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.UvType;
 
 @Singleton
 public class ModelHasher {
