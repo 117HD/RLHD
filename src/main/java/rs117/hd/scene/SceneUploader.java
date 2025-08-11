@@ -183,10 +183,10 @@ public class SceneUploader {
 			sceneContext.sceneBase[2] + client.getPlane()
 		};
 
-		if (sceneContext.currentArea == null || !sceneContext.currentArea.containsPoint(worldPos)) {
+		if (sceneContext.currentArea == null || !sceneContext.currentArea.containsPoint(false, worldPos)) {
 			sceneContext.currentArea = null;
 			for (var area : sceneContext.possibleAreas) {
-				if (area.containsPoint(worldPos)) {
+				if (area.containsPoint(false, worldPos)) {
 					sceneContext.currentArea = area;
 					break;
 				}

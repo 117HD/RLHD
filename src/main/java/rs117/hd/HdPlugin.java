@@ -475,6 +475,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean redrawPreviousFrame;
 	private boolean isInChambersOfXeric;
 	private boolean isInHouse;
+	private boolean justChangedArea;
 	private Scene skipScene;
 	private int previousPlane;
 
@@ -1590,7 +1591,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// portions of the floor beneath around stairs and ladders
 			Area newArea = null;
 			for (var area : sceneContext.possibleAreas) {
-				if (area.containsPoint(worldPos)) {
+				if (area.containsPoint(false, worldPos)) {
 					newArea = area;
 					break;
 				}
@@ -1598,12 +1599,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Force a scene reload if the player is no longer in the same area
 			if (newArea != sceneContext.currentArea) {
-				log.error("Force disabling area hiding after moving from {} to {} at {}", sceneContext.currentArea, newArea, worldPos);
-				sceneContext.forceDisableAreaHiding = true;
+				if (justChangedArea) {
+					// Prevent getting stuck in a scene reloading loop if this breaks for any reason
+					sceneContext.forceDisableAreaHiding = true;
+					log.error("Force disabling area hiding after moving from {} to {} at {}", sceneContext.currentArea, newArea, worldPos);
+				} else {
+					justChangedArea = true;
+				}
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
+			} else {
+				justChangedArea = false;
 			}
+		} else {
+			justChangedArea = false;
 		}
 
 		if (!enableFreezeFrame) {

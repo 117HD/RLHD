@@ -188,7 +188,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						copy.regionBoxes = area.regionBoxes;
 						copy.rawAabbs = area.rawAabbs;
 						copy.normalize();
-						copy.aabbs = Arrays.stream(copy.aabbs)
+						copy.unhideAreas = area.unhideAreas;
+						copy.aabbs = Arrays
+							.stream(copy.aabbs)
 							.map(aabb -> sceneContext.sceneBounds.intersects(aabb) ? aabb : dummyAabb)
 							.toArray(AABB[]::new);
 						return copy;
@@ -355,6 +357,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						drawLocalAabb(g, localAabb);
 
 						g.setColor(Color.LIGHT_GRAY);
+						drawLocalAabbLabel(g, localAabb, label, false);
+					}
+
+					for (int j = 0; j < area.unhideAreas.length; j++) {
+						AABB aabb = area.unhideAreas[j];
+						String label = aabb.toArgs();
+						if (aabb.isVolume())
+							label = area.name + ".unhide[" + j + "]\n" + label;
+						if (sceneContext.currentArea != null && sceneContext.currentArea.name.equals(area.name))
+							label = "CURRENT\n" + label;
+
+						var localAabb = toLocalAabb(sceneContext, cropAabb(sceneContext, aabb));
+						g.setColor(Color.PINK);
+						drawLocalAabb(g, localAabb);
 						drawLocalAabbLabel(g, localAabb, label, false);
 					}
 				}
