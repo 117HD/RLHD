@@ -3,6 +3,7 @@ package rs117.hd.scene;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
@@ -23,11 +24,11 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 @Slf4j
 @Singleton
 public class SceneCullingManager {
-	public static final int VISIBILITY_UNKNOWN = -1;
-	public static final int VISIBILITY_HIDDEN = 0;
-	public static final int VISIBILITY_TILE_VISIBLE = 1;
-	public static final int VISIBILITY_UNDER_WATER_TILE_VISIBLE = 1 << 1;
-	public static final int VISIBILITY_RENDERABLE_VISIBLE = 1 << 2;
+	public static final byte VISIBILITY_UNKNOWN = -1;
+	public static final byte VISIBILITY_HIDDEN = 0;
+	public static final byte VISIBILITY_TILE_VISIBLE = 1;
+	public static final byte VISIBILITY_UNDER_WATER_TILE_VISIBLE = 1 << 1;
+	public static final byte VISIBILITY_RENDERABLE_VISIBLE = 1 << 2;
 
 	@Inject
 	private Client client;
@@ -91,7 +92,8 @@ public class SceneCullingManager {
 	}
 
 	public boolean isTileVisibleBlocking(int plane, int tileExX, int tileExY) {
-		int result = combinedTileVisibility.tiles[plane][tileExX][tileExY];
+		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+		int result = combinedTileVisibility.tiles[tileIdx];
 
 		// Check if the result is usable & known
 		if (result >= VISIBILITY_HIDDEN) {
@@ -103,7 +105,7 @@ public class SceneCullingManager {
 		long waitStart = System.currentTimeMillis();
 		while (combinedTileVisibility.inFlightTileJobCount > 0 && result == VISIBILITY_UNKNOWN) {
 			Thread.yield();
-			result = combinedTileVisibility.tiles[plane][tileExX][tileExY];
+			result = combinedTileVisibility.tiles[tileIdx];
 
 			if (result == VISIBILITY_UNKNOWN && System.currentTimeMillis() - waitStart > 100) {
 				break; // Dead-Lock Prevention
@@ -269,7 +271,7 @@ public class SceneCullingManager {
 	}
 
 	public static final class CullingResults {
-		private final int[][][] tiles = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+		private final byte[] tiles = new byte[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 		private final HashMap<Integer, Boolean> players = new HashMap<>();
 		private final HashMap<Integer, Boolean> npcs = new HashMap<>();
 		private final HashMap<Integer, Boolean> projectiles = new HashMap<>();
@@ -286,26 +288,56 @@ public class SceneCullingManager {
 
 		public boolean isProjectileVisible(int id) { return projectiles.getOrDefault(id, true); }
 
+		public byte getTileResult(int tileIdx) {
+			return tiles[tileIdx];
+		}
+
+		public byte getTileResult(int plane, int tileExX, int tileExY) {
+			return tiles[HDUtils.tileCoordinateToIndex(
+				plane,
+				tileExX,
+				tileExY
+			)];
+		}
+
+		public boolean isTileSurfaceVisible(int tileIdx) {
+			return isTileSurfaceVisible(getTileResult(tileIdx));
+		}
+
 		public boolean isTileSurfaceVisible(int plane, int tileExX, int tileExY) {
-			return (tiles[plane][tileExX][tileExY] & VISIBILITY_TILE_VISIBLE) != 0;
+			return isTileSurfaceVisible(getTileResult(plane, tileExX, tileExY));
+		}
+
+		public boolean isTileUnderwaterVisible(int tileIdx) {
+			return isTileUnderwaterVisible(getTileResult(tileIdx));
 		}
 
 		public boolean isTileUnderwaterVisible(int plane, int tileExX, int tileExY) {
-			return (tiles[plane][tileExX][tileExY] & VISIBILITY_UNDER_WATER_TILE_VISIBLE) != 0;
+			return isTileUnderwaterVisible(getTileResult(plane, tileExX, tileExY));
+		}
+
+		public boolean isTileRenderablesVisible(int tileIdx) {
+			return isTileRenderablesVisible(getTileResult(tileIdx));
 		}
 
 		public boolean isTileRenderablesVisible(int plane, int tileExX, int tileExY) {
-			return (tiles[plane][tileExX][tileExY] & VISIBILITY_RENDERABLE_VISIBLE) != 0;
+			return isTileRenderablesVisible(getTileResult(plane, tileExX, tileExY));
+		}
+
+		public static boolean isTileSurfaceVisible(byte tileCullingResult) {
+			return (tileCullingResult & VISIBILITY_TILE_VISIBLE) == VISIBILITY_TILE_VISIBLE;
+		}
+
+		public static boolean isTileUnderwaterVisible(byte tileCullingResult) {
+			return (tileCullingResult & VISIBILITY_UNDER_WATER_TILE_VISIBLE) == VISIBILITY_UNDER_WATER_TILE_VISIBLE;
+		}
+
+		public static boolean isTileRenderablesVisible(byte tileCullingResult) {
+			return (tileCullingResult & VISIBILITY_RENDERABLE_VISIBLE) == VISIBILITY_RENDERABLE_VISIBLE;
 		}
 
 		public void reset() {
-			for(int plane = 0; plane < MAX_Z; plane++) {
-				for(int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; tileExX++) {
-					for(int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++) {
-						tiles[plane][tileExX][tileExY] = VISIBILITY_UNKNOWN;
-					}
-				}
-			}
+			Arrays.fill(tiles, VISIBILITY_UNKNOWN);
 		}
 	}
 
@@ -427,16 +459,17 @@ public class SceneCullingManager {
 					for(int plane = 0; plane < MAX_Z; plane++) {
 						for (int tileExX = startX; tileExX < endX; tileExX++) {
 							for (int tileExY = startY; tileExY < endY; tileExY++) {
-								int combinedResult = VISIBILITY_HIDDEN;
+								final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+								byte combinedResult = VISIBILITY_HIDDEN;
 								for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
 									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
-										combinedResult |= viewCtx.results.tiles[plane][tileExX][tileExY];
+										combinedResult |= viewCtx.results.tiles[tileIdx];
 										continue;
 									}
 
-									viewCtx.results.tiles[plane][tileExX][tileExY] = VISIBILITY_HIDDEN;
+									viewCtx.results.tiles[tileIdx] = VISIBILITY_HIDDEN;
 								}
-								cullManager.combinedTileVisibility.tiles[plane][tileExX][tileExY] = combinedResult;
+								cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
 							}
 						}
 					}
@@ -454,6 +487,8 @@ public class SceneCullingManager {
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
+						final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+
 						// Surface Plane Heights
 						final int h0 = tileHeights[plane][tileExX][tileExY];
 						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
@@ -487,29 +522,29 @@ public class SceneCullingManager {
 							if(dl3 > 0) uh3 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1];
 						}
 
-						int combinedResult = VISIBILITY_HIDDEN;
+						byte combinedResult = VISIBILITY_HIDDEN;
 						for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
 							if((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
-								combinedResult |= viewCtx.results.tiles[plane][tileExX][tileExY];
+								combinedResult |= viewCtx.results.tiles[tileIdx];
 								continue;
 							}
 
 							// Check if Parent view has already determined that it's visible if so we can use that result and early out
 							if(viewCtx.parentIdx != -1) {
 								SceneViewContext parentViewCtx = cullManager.cullingViewContexts.get(viewCtx.parentIdx);
-								int parentViewResult = parentViewCtx.results.tiles[plane][tileExX][tileExY];
+								byte parentViewResult = parentViewCtx.results.tiles[tileIdx];
 								if ((parentViewResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE)) == (
 									VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE
 								)) {
 									if(plane == 0 && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) == 0){
 										parentViewResult &= ~VISIBILITY_TILE_VISIBLE;
 									}
-									viewCtx.results.tiles[plane][tileExX][tileExY] = parentViewResult;
+									viewCtx.results.tiles[tileIdx] = parentViewResult;
 									continue; // Early out, no need to perform any culling
 								}
 							}
 
-							int viewResult = VISIBILITY_HIDDEN;
+							byte viewResult = VISIBILITY_HIDDEN;
 							if(plane != 0 || (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) != 0){
 								viewResult |= HDUtils.IsTileVisible(x, z, h0, h1, h2, h3, viewCtx.frustumPlanes, -LOCAL_HALF_TILE_SIZE) ? VISIBILITY_TILE_VISIBLE : 0;// SceneView doesn't want to cull GroundPlanes, Consider them all hidden
 							}
@@ -546,9 +581,9 @@ public class SceneCullingManager {
 							}
 
 							combinedResult |= viewResult;
-							viewCtx.results.tiles[plane][tileExX][tileExY] = viewResult;
+							viewCtx.results.tiles[tileIdx] = viewResult;
 						}
-						cullManager.combinedTileVisibility.tiles[plane][tileExX][tileExY] = combinedResult;
+						cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
 					}
 				}
 			}

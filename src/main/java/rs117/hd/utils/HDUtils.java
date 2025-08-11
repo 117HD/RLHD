@@ -503,7 +503,7 @@ public class HDUtils {
 		return Halfspace.ON_PLANE;
 	}
 
-	public static int tileCoordinateToIndex(int tileExX, int tileExY, int plane) {
+	public static int tileCoordinateToIndex(int plane, int tileExX, int tileExY) {
 		return (plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE) + (tileExX * EXTENDED_SCENE_SIZE) + tileExY;
 	}
 

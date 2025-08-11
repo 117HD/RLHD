@@ -263,9 +263,7 @@ public class SceneView {
 	public final boolean isRenderableVisible(
 		Renderable renderable,
 		boolean isStatic,
-		int plane,
-		int tileExX,
-		int tileExY,
+		int tileIdx,
 		int x,
 		int y,
 		int z,
@@ -273,9 +271,9 @@ public class SceneView {
 	) {
 		if (renderable instanceof Model || renderable instanceof DynamicObject || renderable instanceof TileItem) {
 			if (isStatic) {
-				return cullingResults.isTileRenderablesVisible(plane, tileExX, tileExY);
+				return cullingResults.isTileRenderablesVisible(tileIdx);
 			} else {
-				if(cullingResults.isTileSurfaceVisible(plane, tileExX, tileExY)) {
+				if (cullingResults.isTileSurfaceVisible(tileIdx)) {
 					return true;
 				}
 			}

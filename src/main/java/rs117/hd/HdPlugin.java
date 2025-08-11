@@ -123,6 +123,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneCullingManager;
+import rs117.hd.scene.SceneCullingManager.CullingResults;
 import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
@@ -2000,13 +2001,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
+		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileEeX, tileEeY);
 
-		boolean isVisibleInScene = sceneCamera.getCullingResults().isTileSurfaceVisible(plane, tileEeX, tileEeY);
+		final byte sceneCameraCullingResults = sceneCamera.getCullingResults().getTileResult(tileIdx);
+		boolean isVisibleInScene = CullingResults.isTileSurfaceVisible(sceneCameraCullingResults);
 		boolean isVisibleInDirectional =
 			(isVisibleInScene && plane != 0) || (
 				configShadowCulling && directionalLight
 					.getCullingResults()
-					.isTileSurfaceVisible(plane, tileEeX, tileEeY)
+					.isTileSurfaceVisible(tileIdx)
 			);
 
 		int vertexOffset = paint.getBufferOffset();
@@ -2014,12 +2017,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
 			if (!isVisibleInScene && !isVisibleInDirectional) {
-				if (sceneCamera.getCullingResults().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
+				if (CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
 					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
 					isVisibleInScene = true;
 				}
 			} else if (isVisibleInScene) {
-				if (!sceneCamera.getCullingResults().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
+				if (!CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
 					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
 					vertexOffset += vertexCount;
 					uvOffset += vertexCount;
@@ -2074,8 +2077,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
-
-		if (!sceneCamera.getCullingResults().isTileSurfaceVisible(0, tileEeX, tileEeY))
+		byte sceneTileCullingResult = sceneCamera.getCullingResults().getTileResult(0, tileEeX, tileEeY);
+		if (!CullingResults.isTileSurfaceVisible(sceneTileCullingResult))
 			return;
 
 		final int localX = tileX * LOCAL_TILE_SIZE;
@@ -2107,7 +2110,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// buffer length includes the generated underwater terrain, so it must be halved
 			bufferLength /= 2;
 
-			if (sceneCamera.getCullingResults().isTileUnderwaterVisible(0, tileEeX, tileEeY)) {
+			if (CullingResults.isTileUnderwaterVisible(sceneTileCullingResult)) {
 				++numPassthroughModels;
 
 				eightIntWrite[0] = model.getBufferOffset() + bufferLength;
@@ -3142,13 +3145,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int plane = ModelHash.getPlane(hash);
 		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
 		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
 
 		final boolean isVisibleInScene = sceneCamera.isRenderableVisible(
 			renderable,
 			isStatic,
-			plane,
-			tileExX,
-			tileExY,
+			tileIdx,
 			x,
 			y,
 			z,
@@ -3156,15 +3158,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		);
 		final boolean isVisibleInShadow = isVisibleInScene || (
 			configShadowCulling && directionalLight.isRenderableVisible(
-			renderable,
-			isStatic,
-			plane,
-			tileExX,
-			tileExY,
-			x,
-			y,
-			z,
-			modelRadius
+				renderable,
+				isStatic,
+				tileIdx,
+				x,
+				y,
+				z,
+				modelRadius
 			)
 		);
 
