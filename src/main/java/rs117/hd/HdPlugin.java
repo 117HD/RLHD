@@ -2097,8 +2097,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// restore the bufferLength variable:
 		bufferLength = bufferLength >> 1;
 
-		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
-
 		eightIntWrite[4] = 0;
 		eightIntWrite[5] = localX;
 		eightIntWrite[6] = localY;
@@ -2119,9 +2117,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[3] = renderBufferOffset;
 				buffer.put(eightIntWrite);
 
+				sceneDrawBuffer.addModel(renderBufferOffset, bufferLength * 2);
+
 				renderBufferOffset += bufferLength;
 				drawnTileCount++;
+			} else {
+				sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 			}
+		} else {
+			sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 		}
 
 		++numPassthroughModels;
