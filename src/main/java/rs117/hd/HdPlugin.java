@@ -881,7 +881,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public ShaderIncludes getShaderIncludes() {
-		assert SHADER_PATH != null;
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		return new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
@@ -1938,7 +1937,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void initShaderHotswapping() {
-		assert SHADER_PATH != null;
 		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Recompiling shaders: {}", path);
 			recompilePrograms();
