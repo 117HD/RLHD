@@ -28,12 +28,12 @@
 #include <uniforms/global.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
-#include <uniforms/lights.glsl>
 
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
+uniform isampler2DArray tiledLightingArray;
 
 // general HD settings
 
@@ -69,6 +69,7 @@ vec2 worldUvs(float scale) {
 #include <utils/color_filters.glsl>
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
+#include <utils/lights.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -152,24 +153,24 @@ void main() {
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
         #if PARALLAX_OCCLUSION_MAPPING
-        mat3 invTBN = inverse(TBN);
-        vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * -lightDir;
+            mat3 invTBN = inverse(TBN);
+            vec3 tsViewDir = invTBN * viewDir;
+            vec3 tsLightDir = invTBN * -lightDir;
 
-        vec3 fragDelta = vec3(0);
+            vec3 fragDelta = vec3(0);
 
-        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
+            sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
+            sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
+            sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
 
-        // Average
-        fragDelta /= 3;
-        selfShadowing /= 3;
+            // Average
+            fragDelta /= 3;
+            selfShadowing /= 3;
 
-        // Prevent displaced surfaces from casting flat shadows onto themselves
-        fragDelta.z = max(0, fragDelta.z);
+            // Prevent displaced surfaces from casting flat shadows onto themselves
+            fragDelta.z = max(0, fragDelta.z);
 
-        fragPos += TBN * fragDelta;
+            fragPos += TBN * fragDelta;
         #endif
 
         // get vertex colors
@@ -269,8 +270,8 @@ void main() {
         float downDotNormals = dot(downDir, normals);
         float viewDotNormals = dot(viewDir, normals);
 
-        #if (DISABLE_DIRECTIONAL_SHADING)
-        lightDotNormals = .7;
+        #if DISABLE_DIRECTIONAL_SHADING
+            lightDotNormals = .7;
         #endif
 
         float shadow = 0;
@@ -343,30 +344,12 @@ void main() {
 
         // directional light specular
         vec3 lightReflectDir = reflect(-lightDir, normals);
-        vec3 lightSpecularOut = lightColor * specular(viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
+        vec3 lightSpecularOut = lightColor * specular(IN.texBlend, viewDir, lightReflectDir, vSpecularGloss, vSpecularStrength);
 
         // point lights
         vec3 pointLightsOut = vec3(0);
         vec3 pointLightsSpecularOut = vec3(0);
-        for (int i = 0; i < pointLightsCount; i++) {
-            vec4 pos = PointLightArray[i].position;
-            vec3 lightToFrag = pos.xyz - IN.position;
-            float distanceSquared = dot(lightToFrag, lightToFrag);
-            float radiusSquared = pos.w;
-            if (distanceSquared <= radiusSquared) {
-                float attenuation = max(0, 1 - sqrt(distanceSquared / radiusSquared));
-                attenuation *= attenuation;
-
-                vec3 pointLightColor = PointLightArray[i].color * attenuation;
-                vec3 pointLightDir = normalize(lightToFrag);
-
-                float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-                pointLightsOut += pointLightColor * pointLightDotNormals;
-
-                vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-                pointLightsSpecularOut += pointLightColor * specular(viewDir, pointLightReflectDir, vSpecularGloss, vSpecularStrength);
-            }
-        }
+        calculateLighting(IN.position, normals, viewDir, IN.texBlend, vSpecularGloss, vSpecularStrength, pointLightsOut, pointLightsSpecularOut);
 
         // sky light
         vec3 skyLightColor = fogColor;

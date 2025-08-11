@@ -1,12 +1,13 @@
 package rs117.hd.model;
 
+import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.UvType;
 
 @Singleton
 public class ModelHasher {
@@ -227,29 +228,28 @@ public class ModelHasher {
 		return r;
 	}
 
-	public static int fastIntHash(int[] a, int actualLength) {
-		if (a == null)
-			return 0;
+	public static int fastIntHash(int x, int y) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		return result;
+	}
 
-		int i = 0;
-		int r = 1;
-		int length = a.length;
-		if (actualLength != -1)
-			length = actualLength;
+	public static int fastIntHash(int x, int y, int z) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		result = 31 * result + z;
+		return result;
+	}
 
-		for (; i + 5 < length; i += 6)
-			r = 31 * 31 * 31 * 31 * 31 * 31 * r +
-				31 * 31 * 31 * 31 * 31 * a[i] +
-				31 * 31 * 31 * 31 * a[i + 1] +
-				31 * 31 * 31 * a[i + 2] +
-				31 * 31 * a[i + 3] +
-				31 * a[i + 4] +
-				a[i + 5];
-
-		for (; i < length; i++)
-			r = 31 * r + a[i];
-
-		return r;
+	public static int fastIntHash(int x, int y, int z, int w) {
+		int result = 17;
+		result = 31 * result + x;
+		result = 31 * result + y;
+		result = 31 * result + z;
+		result = 31 * result + w;
+		return result;
 	}
 
 	public static int fastByteHash(byte[] a) {
@@ -319,25 +319,7 @@ public class ModelHasher {
 		return r;
 	}
 
-	public static int fastFloatHash(float[] a) {
-		if (a == null)
-			return 0;
-
-		int i = 0;
-		int r = 1;
-
-		for (; i + 5 < a.length; i += 6)
-			r = 31 * 31 * 31 * 31 * 31 * 31 * r +
-				31 * 31 * 31 * 31 * 31 * (int) (a[i] * 100) +
-				31 * 31 * 31 * 31 * (int) (a[i + 1] * 100) +
-				31 * 31 * 31 * (int) (a[i + 2] * 100) +
-				31 * 31 * (int) (a[i + 3] * 100) +
-				31 * (int) (a[i + 4] * 100) +
-				(int) (a[i + 5] * 100);
-
-		for (; i < a.length; i++)
-			r = 31 * r + (int) (a[i] * 100);
-
-		return r;
+	public static int accurateFloatHash(float... a) {
+		return Arrays.hashCode(a);
 	}
 }

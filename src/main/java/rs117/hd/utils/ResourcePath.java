@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -299,12 +298,6 @@ public class ResourcePath {
 		}
 	}
 
-	public <T> T loadJson(Gson gson, Type type) throws IOException {
-		try (BufferedReader reader = toReader()) {
-			return gson.fromJson(reader, type);
-		}
-	}
-
 	public BufferedImage loadImage() throws IOException {
 		try (InputStream is = toInputStream()) {
 			byte[] bytes = is.readAllBytes();
@@ -358,6 +351,9 @@ public class ResourcePath {
 	public ResourcePath writeString(String string) throws IOException {
 		try (OutputStream os = toOutputStream()) {
 			os.write(string.getBytes(StandardCharsets.UTF_8));
+			// Ensure there's always a blank line at the end
+			if (!string.endsWith("\n"))
+				os.write('\n');
 		}
 		return this;
 	}

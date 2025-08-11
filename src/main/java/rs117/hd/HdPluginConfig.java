@@ -37,9 +37,9 @@ import rs117.hd.config.ColorFilter;
 import rs117.hd.config.Contrast;
 import rs117.hd.config.DaylightCycle;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
-import rs117.hd.config.MaxDynamicLights;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -55,6 +55,7 @@ import rs117.hd.config.VanillaShadowMode;
 import static rs117.hd.HdPlugin.MAX_DISTANCE;
 import static rs117.hd.HdPlugin.MAX_FOG_DEPTH;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @ConfigGroup(CONFIG_GROUP)
 public interface HdPluginConfig extends Config
@@ -103,8 +104,9 @@ public interface HdPluginConfig extends Config
 		return 3;
 	}
 
+	String KEY_ANTI_ALIASING_MODE = "antiAliasingMode";
 	@ConfigItem(
-		keyName = "antiAliasingMode",
+		keyName = KEY_ANTI_ALIASING_MODE,
 		name = "Anti-Aliasing",
 		description =
 			"Improves pixelated edges at the cost of significantly higher GPU usage.<br>" +
@@ -117,8 +119,9 @@ public interface HdPluginConfig extends Config
 		return AntiAliasingMode.DISABLED;
 	}
 
+	String KEY_SCENE_RESOLUTION_SCALE = "sceneResolutionScale";
 	@ConfigItem(
-		keyName = "sceneResolutionScale",
+		keyName = KEY_SCENE_RESOLUTION_SCALE,
 		name = "Game Resolution",
 		description =
 			"Render the game at a different resolution and stretch it to fit the screen.<br>" +
@@ -288,7 +291,7 @@ public interface HdPluginConfig extends Config
 	@Range(min = -500, max = 500)
 	default int saturation()
 	{
-		return Math.round(oldSaturationDropdown().getAmount() * 100);
+		return round(oldSaturationDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "saturation", hidden = true, name = "", description = "")
 	default Saturation oldSaturationDropdown()
@@ -308,7 +311,7 @@ public interface HdPluginConfig extends Config
 	@Range(min = -500, max = 500)
 	default int contrast()
 	{
-		return Math.round(oldContrastDropdown().getAmount() * 100);
+		return round(oldContrastDropdown().getAmount() * 100);
 	}
 	@ConfigItem(keyName = "contrast", hidden = true, name = "", description = "")
 	default Contrast oldContrastDropdown()
@@ -318,8 +321,8 @@ public interface HdPluginConfig extends Config
 
 	String KEY_BRIGHTNESS = "screenBrightness";
 	@Range(
-		min = 50,
-		max = 200
+		min = 25,
+		max = 400
 	)
 	@Units(Units.PERCENT)
 	@ConfigItem(
@@ -375,19 +378,31 @@ public interface HdPluginConfig extends Config
 	)
 	String lightingSettings = "lightingSettings";
 
-	String KEY_MAX_DYNAMIC_LIGHTS = "maxDynamicLights";
+	String KEY_DYNAMIC_LIGHTS = "dynamicLights";
 	@ConfigItem(
-		keyName = KEY_MAX_DYNAMIC_LIGHTS,
+		keyName = KEY_DYNAMIC_LIGHTS,
 		name = "Dynamic Lights",
 		description =
 			"The maximum number of dynamic lights visible at once.<br>" +
 			"Reducing this may improve performance.",
-		position = 1,
+		position = 0,
 		section = lightingSettings
 	)
-	default MaxDynamicLights maxDynamicLights()
+	default DynamicLights dynamicLights()
 	{
-		return MaxDynamicLights.SOME;
+		return DynamicLights.SOME;
+	}
+
+	String KEY_TILED_LIGHTING = "tiledLighting";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING,
+		name = "Tiled Lighting",
+		description = "Allows rendering <b>a lot</b> more lights simultaneously.",
+		section = lightingSettings,
+		position = 1
+	)
+	default boolean tiledLighting() {
+		return true;
 	}
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";

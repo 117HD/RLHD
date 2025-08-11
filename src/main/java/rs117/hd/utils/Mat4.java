@@ -25,6 +25,8 @@
  */
 package rs117.hd.utils;
 
+import static rs117.hd.utils.MathUtils.*;
+
 public class Mat4
 {
 	/**
@@ -63,8 +65,8 @@ public class Mat4
 
 	public static float[] rotateX(float rx)
 	{
-		float s = (float) Math.sin(rx);
-		float c = (float) Math.cos(rx);
+		float s = sin(rx);
+		float c = cos(rx);
 
 		return new float[] {
 			1, 0, 0, 0,
@@ -76,8 +78,8 @@ public class Mat4
 
 	public static float[] rotateY(float ry)
 	{
-		float s = (float) Math.sin(ry);
-		float c = (float) Math.cos(ry);
+		float s = sin(ry);
+		float c = cos(ry);
 
 		return new float[] {
 			c, 0, -s, 0,
@@ -171,7 +173,7 @@ public class Mat4
 	}
 
 	/**
-	 * Multiplies a 4x4 matrix with a 4x1 vector, storing the result in the output vector.
+	 * Multiplies a 4x4 matrix with a 4x1 vector, storing the result in the output vector, which may be the same as the input vector.
 	 *
 	 * @param out  where the result should be stored
 	 * @param mat4 4x4 column-major matrix
@@ -214,13 +216,8 @@ public class Mat4
 	 */
 	public static void projectVec(float[] out, float[] mat4, float[] vec4) {
 		mulVec(out, mat4, vec4);
-		if (out[3] != 0) {
-			// The 4th component should retain information about whether the
-			// point lies behind the camera
-			float reciprocal = 1 / Math.abs(out[3]);
-			for (int i = 0; i < 4; i++)
-				out[i] *= reciprocal;
-		}
+		// Perspective divide
+		divide(out, out, out[3]);
 	}
 
 	public static void transpose(float[] m) {
@@ -236,16 +233,10 @@ public class Mat4
 	}
 
 	public static float[] inverse(float[] m) {
-		float[] augmented = new float[32];
-		System.arraycopy(m, 0, augmented, 0, 16);
-		for (int i = 0; i < 4; i++)
-			augmented[16 + i * 5] = 1;
-
+		float[] augmented = slice(m, 0, 32);
+		augmented[16] = augmented[21] = augmented[26] = augmented[31] = 1;
 		Matrix.solve(augmented, 4, 8);
-
-		float[] inverse = new float[16];
-		System.arraycopy(augmented, 16, inverse, 0, 16);
-		return inverse;
+		return slice(augmented, 16);
 	}
 
 	public static void extractRow(float[] out, float[] mat4, int rowIndex) {

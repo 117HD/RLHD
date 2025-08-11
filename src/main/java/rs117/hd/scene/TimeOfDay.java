@@ -1,13 +1,12 @@
 package rs117.hd.scene;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import net.runelite.http.api.worlds.WorldRegion;
 import rs117.hd.utils.AtmosphereUtils;
-import rs117.hd.utils.Vector;
 
 import static rs117.hd.utils.ColorUtils.rgb;
+import static rs117.hd.utils.MathUtils.*;
 
 public class TimeOfDay
 {
@@ -194,11 +193,11 @@ public class TimeOfDay
 	}
 
 	public static float[] getNightAmbientColor() {
-		return Vector.multiply(rgb(56, 99, 161), 2);
+		return multiply(rgb(56, 99, 161), 2);
 	}
 
 	public static float[] getNightLightColor() {
-		return Vector.multiply(rgb(181, 205, 255), 0.25f);
+		return multiply(rgb(181, 205, 255), 0.25f);
 	}
 
 	public static Instant getModifiedDate(float dayLength) {

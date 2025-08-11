@@ -26,6 +26,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+
 #include <utils/constants.glsl>
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED

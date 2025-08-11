@@ -26,7 +26,9 @@
           <package name="org.lwjgl.opengl.GL33C" withSubpackages="true" static="true" />
           <package name="org.lwjgl.opencl.CL10" withSubpackages="true" static="true" />
           <package name="net.runelite.api" withSubpackages="true" static="false" />
-          <package name="rs117.hd.HdPluginConfig" withSubpackages="true" static="true" />
+          <package name="rs117.hd.HdPluginConfig" withSubpackages="false" static="true" />
+          <package name="rs117.hd.utils.HDVariables" withSubpackages="false" static="true" />
+          <package name="rs117.hd.utils.MathUtils" withSubpackages="false" static="true" />
         </value>
       </option>
       <option name="IMPORT_LAYOUT_TABLE">

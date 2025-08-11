@@ -1,4 +1,4 @@
-package rs117.hd.utils;
+package rs117.hd.tests;
 
 import org.junit.Assert;
 import org.junit.Test;

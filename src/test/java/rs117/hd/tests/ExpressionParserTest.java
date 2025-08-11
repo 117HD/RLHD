@@ -1,25 +1,18 @@
-package rs117.hd.utils;
+package rs117.hd.tests;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import org.junit.Assert;
+import org.junit.Test;
 import rs117.hd.config.SeasonalTheme;
+import rs117.hd.utils.VariableSupplier;
 
 import static rs117.hd.utils.ExpressionParser.parseExpression;
 import static rs117.hd.utils.ExpressionParser.parseFunction;
 import static rs117.hd.utils.ExpressionParser.parsePredicate;
 
 public class ExpressionParserTest {
-	public static void main(String... args) {
-		Map<String, Object> constants = new HashMap<>();
-		Enum<?>[][] enums = {
-			SeasonalTheme.values()
-		};
-		for (var anEnum : enums)
-			for (var e : anEnum)
-				constants.put(e.name(), e.ordinal());
-
+	@Test
+	public void testExpressionParser() {
 		VariableSupplier vars = name -> {
 			switch (name) {
 				case "h":
@@ -56,9 +49,8 @@ public class ExpressionParserTest {
 		Assert.assertEquals(21.f, parseExpression("(1 + 2) * (3 + 4)"));
 		Assert.assertFalse(parsePredicate("!( blending )").test(vars));
 		Assert.assertEquals(false, parseExpression("!true"));
-		Assert.assertEquals(true, parseExpression("SUMMER == 1", constants));
+		Assert.assertEquals(true, parseExpression("SUMMER == 1", name -> SeasonalTheme.valueOf(name).ordinal()));
 
-		System.out.println("Intentional errors:");
 		assertThrows(() -> parseExpression("unexpected ( indeed"));
 		assertThrows(() -> parseExpression("(5 + ( missing paren)"));
 
@@ -87,7 +79,7 @@ public class ExpressionParserTest {
 		try {
 			runnable.run();
 		} catch (Throwable ex) {
-			System.out.println(ex);
+			System.out.println("\u001B[32m" + "Case: Threw as expected: " + ex);
 			return;
 		}
 		Assert.fail("Didn't throw an exception");

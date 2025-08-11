@@ -38,8 +38,7 @@ import static java.lang.Math.cos;
 import static java.lang.Math.sin;
 import static java.lang.Math.tan;
 import static rs117.hd.utils.ColorUtils.rgb;
-import static rs117.hd.utils.HDUtils.clamp;
-import static rs117.hd.utils.HDUtils.lerp;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class AtmosphereUtils
@@ -80,7 +79,7 @@ public class AtmosphereUtils
 		double[] angles = getSunAngles(millis, latLong);
 
 		// Use night illumination as a base
-		float[] rgb = Vector.multiply(
+		float[] rgb = multiply(
 			ColorUtils.colorTemperatureToLinearRgb(4100),
 			(float) AtmosphereUtils.getMoonIllumination(millis)[0] * .2f
 		);
@@ -105,8 +104,8 @@ public class AtmosphereUtils
 			strength *= strength;
 			strength *= 3;
 			float[] sunIllumination = ColorUtils.colorTemperatureToLinearRgb(temperature);
-			sunIllumination = Vector.multiply(sunIllumination, strength);
-			Vector.add(rgb, rgb, sunIllumination);
+			sunIllumination = multiply(sunIllumination, strength);
+			add(rgb, rgb, sunIllumination);
 		}
 
 		return rgb;
@@ -152,7 +151,7 @@ public class AtmosphereUtils
 		var x2 = to[0];
 
 		float t = clamp((x - x1) / (x2 - x1), 0, 1);
-		return lerp(from[1], to[1], t);
+		return mix(from[1], to[1], t);
 	}
 
 	/**
@@ -177,7 +176,7 @@ public class AtmosphereUtils
 		var x2 = ((Number) to[0]).floatValue();
 
 		float t = clamp((x - x1) / (x2 - x1), 0, 1);
-		return lerp(rgb((Color) from[1]), rgb((Color) to[1]), t);
+		return mix(rgb((Color) from[1]), rgb((Color) to[1]), t);
 	}
 
 	/**

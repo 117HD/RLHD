@@ -13,7 +13,7 @@ public class LightDefinition {
 	public Integer worldX, worldY;
 	public int plane;
 	public Alignment alignment = Alignment.CUSTOM;
-	public int[] offset = new int[3];
+	public float[] offset = new float[3];
 	public int height;
 	public int radius = 300;
 	public float strength = 5;
@@ -31,9 +31,9 @@ public class LightDefinition {
 	public boolean ignoreActorHiding;
 	public int renderableIndex = -1;
 
-	@JsonAdapter(AABB.JsonAdapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] areas = {};
-	@JsonAdapter(AABB.JsonAdapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] excludeAreas = {};
 	@JsonAdapter(GamevalManager.NpcAdapter.class)
 	public HashSet<Integer> npcIds = new HashSet<>();
@@ -52,7 +52,7 @@ public class LightDefinition {
 		if (alignment == null || alignment == Alignment.CENTER)
 			alignment = Alignment.CUSTOM;
 		if (offset == null || offset.length != 3) {
-			offset = new int[3];
+			offset = new float[3];
 		} else {
 			offset[1] *= -1;
 		}

@@ -1,14 +1,13 @@
 package rs117.hd.overlays;
 
 import com.google.inject.Singleton;
-import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
-import rs117.hd.HdPlugin;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -20,9 +19,6 @@ public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverl
 			super(t -> t.add(GL_FRAGMENT_SHADER, "overlays/gamma_calibration_frag.glsl"));
 		}
 	}
-
-	@Inject
-	private HdPlugin plugin;
 
 	private long brightnessChangedAt;
 
@@ -36,7 +32,7 @@ public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverl
 	private float getTimeout() {
 		final int gammaCalibrationTimeout = 3000;
 		long t = System.currentTimeMillis() - brightnessChangedAt;
-		return Math.max(0, 1 - (float) t / gammaCalibrationTimeout);
+		return saturate(1 - (float) t / gammaCalibrationTimeout);
 	}
 
 	@Override

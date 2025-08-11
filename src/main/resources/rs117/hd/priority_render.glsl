@@ -224,9 +224,9 @@ void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
     }
     int maxLightness;
     #if LEGACY_GREY_COLORS
-    maxLightness = 55;
+        maxLightness = 55;
     #else
-    maxLightness = int(127 - 72 * pow(saturation / 7., .05));
+        maxLightness = int(127 - 72 * pow(saturation / 7., .05));
     #endif
     lightness = min(lightness, maxLightness);
     hsl &= ~0x7F;
@@ -251,6 +251,12 @@ vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, f
     return mix(horizontalDisplacement, verticalDisplacement, offsetFrac);
 }
 
+float getModelWindDisplacementMod(int vertexFlags) {
+    const float modifiers[7] = { 0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 2.0};
+    int modifierIDx = (vertexFlags >> MATERIAL_FLAG_WIND_MODIFIER) & 0x7;
+    return modifiers[modifierIDx];
+}
+
 void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, float modelHeight, vec3 worldPos,
     in vec3 vertA, in vec3 vertB, in vec3 vertC,
     in vec3 normA, in vec3 normB, in vec3 normC,
@@ -264,6 +270,13 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
     float strengthB = saturate(abs(vertB.y) / modelHeight);
     float strengthC = saturate(abs(vertC.y) / modelHeight);
 
+    if ((vertexFlags >> MATERIAL_FLAG_INVERT_DISPLACEMENT_STRENGTH & 1) == 1) {
+        strengthA = 1.0 - strengthA;
+        strengthB = 1.0 - strengthB;
+        strengthC = 1.0 - strengthC;
+    }
+
+    float modelDisplacementMod = getModelWindDisplacementMod(vertexFlags);
 #if WIND_DISPLACEMENT
     if (windDisplacementMode >= WIND_DISPLACEMENT_VERTEX) {
         const float VertexSnapping = 150.0; // Snap so vertices which are almost overlapping will obtain the same noise value
@@ -293,6 +306,10 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
                 vec3 vertBSkew = safe_normalize(cross(normB.xyz, vec3(0, 1, 0)));
                 vec3 vertCSkew = safe_normalize(cross(normC.xyz, vec3(0, 1, 0)));
 
+                strengthA *= modelDisplacementMod;
+                strengthB *= modelDisplacementMod;
+                strengthC *= modelDisplacementMod;
+
                 displacementA = ((windNoiseA * (windSample.heightBasedStrength * strengthA) * 0.5) * vertASkew);
                 displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB) * 0.5) * vertBSkew);
                 displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC) * 0.5) * vertCSkew);
@@ -309,18 +326,18 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
                 displacementB = ((windNoiseB * (windSample.heightBasedStrength * strengthB * VertexDisplacementMod)) * windSample.direction);
                 displacementC = ((windNoiseC * (windSample.heightBasedStrength * strengthC * VertexDisplacementMod)) * windSample.direction);
 
-                strengthA = saturate(strengthA - VertexDisplacementMod);
-                strengthB = saturate(strengthB - VertexDisplacementMod);
-                strengthC = saturate(strengthC - VertexDisplacementMod);
+                strengthA = saturate(strengthA - VertexDisplacementMod) * modelDisplacementMod;
+                strengthB = saturate(strengthB - VertexDisplacementMod) * modelDisplacementMod;
+                strengthC = saturate(strengthC - VertexDisplacementMod) * modelDisplacementMod;
             }
         }
     }
 
     if (windDisplacementMode != WIND_DISPLACEMENT_VERTEX_JIGGLE) {
         // Object Displacement
-        displacementA += windSample.displacement * strengthA;
-        displacementB += windSample.displacement * strengthB;
-        displacementC += windSample.displacement * strengthC;
+        displacementA += windSample.displacement * strengthA * modelDisplacementMod;
+        displacementB += windSample.displacement * strengthB * modelDisplacementMod;
+        displacementC += windSample.displacement * strengthC * modelDisplacementMod;
     }
 #endif
 
@@ -403,16 +420,16 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
         thisrvC.pos = rotate(thisrvC.pos, orientation);
 
         #if UNDO_VANILLA_SHADING
-        if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
-            if (length(normA) == 0) {
-                // Compute flat normal if necessary, and rotate it back to match unrotated normals
-                vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
-                normA = normB = normC = rotate(N, -orientation);
+            if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
+                if (length(normA) == 0) {
+                    // Compute flat normal if necessary, and rotate it back to match unrotated normals
+                    vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
+                    normA = normB = normC = rotate(N, -orientation);
+                }
+                undoVanillaShading(thisrvA.ahsl, normA.xyz);
+                undoVanillaShading(thisrvB.ahsl, normB.xyz);
+                undoVanillaShading(thisrvC.ahsl, normC.xyz);
             }
-            undoVanillaShading(thisrvA.ahsl, normA.xyz);
-            undoVanillaShading(thisrvB.ahsl, normB.xyz);
-            undoVanillaShading(thisrvC.ahsl, normC.xyz);
-        }
         #endif
 
         thisrvA.pos += modelPos;
