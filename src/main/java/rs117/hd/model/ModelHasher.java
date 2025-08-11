@@ -1,6 +1,5 @@
 package rs117.hd.model;
 
-import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.NonNull;
@@ -228,30 +227,6 @@ public class ModelHasher {
 		return r;
 	}
 
-	public static int fastIntHash(int x, int y) {
-		int result = 17;
-		result = 31 * result + x;
-		result = 31 * result + y;
-		return result;
-	}
-
-	public static int fastIntHash(int x, int y, int z) {
-		int result = 17;
-		result = 31 * result + x;
-		result = 31 * result + y;
-		result = 31 * result + z;
-		return result;
-	}
-
-	public static int fastIntHash(int x, int y, int z, int w) {
-		int result = 17;
-		result = 31 * result + x;
-		result = 31 * result + y;
-		result = 31 * result + z;
-		result = 31 * result + w;
-		return result;
-	}
-
 	public static int fastByteHash(byte[] a) {
 		if (a == null)
 			return 0;
@@ -317,9 +292,5 @@ public class ModelHasher {
 			r = 31 * r + (int) (a[i] * 100);
 
 		return r;
-	}
-
-	public static int accurateFloatHash(float... a) {
-		return Arrays.hashCode(a);
 	}
 }
