@@ -827,21 +827,19 @@ public class LightManager {
 		if (tileObject instanceof GroundObject) {
 			var object = (GroundObject) tileObject;
 			renderables[0] = object.getRenderable();
-			orientations[0] = HDUtils.getBakedOrientation(object.getConfig());
+			orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 		} else if (tileObject instanceof DecorativeObject) {
 			var object = (DecorativeObject) tileObject;
 			renderables[0] = object.getRenderable();
 			renderables[1] = object.getRenderable2();
-			int ori = HDUtils.getBakedOrientation(object.getConfig());
-			orientations[0] = orientations[1] = ori;
+			int ori = orientations[0] = orientations[1] = HDUtils.getModelOrientation(object.getConfig());
 			switch (ObjectType.fromConfig(object.getConfig())) {
 				case WallDecorDiagonalNoOffset:
 				case WallDecorDiagonalOffset:
 				case WallDecorDiagonalBoth:
-					int sin = SINE[ori];
-					int cos = COSINE[ori];
-					offset[0] = sin * 64 >> 16;
-					offset[1] = cos * 64 >> 16;
+					ori = (ori + 512) % 2048;
+					offset[0] = SINE[ori] * 64 >> 16;
+					offset[1] = COSINE[ori] * 64 >> 16;
 					break;
 			}
 			offset[0] += object.getXOffset();
@@ -857,7 +855,19 @@ public class LightManager {
 			sizeX = object.sizeX();
 			sizeY = object.sizeY();
 			renderables[0] = object.getRenderable();
-			orientations[0] = HDUtils.getBakedOrientation(object.getConfig());
+			int ori = orientations[0] = HDUtils.getModelOrientation(object.getConfig());
+			int offsetDist = 64;
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case RoofEdgeDiagonalCorner:
+				case RoofDiagonalWithRoofEdge:
+					ori += 1024;
+					offsetDist = round(offsetDist / sqrt(2));
+				case WallDiagonal:
+					ori = (ori + 2048 - 256) % 2048;
+					offset[0] = SINE[ori] * offsetDist >> 16;
+					offset[1] = COSINE[ori] * offsetDist >> 16;
+					break;
+			}
 		} else {
 			log.warn("Unhandled TileObject type: id: {}, hash: {}", tileObject.getId(), tileObject.getHash());
 			return;
@@ -954,20 +964,20 @@ public class LightManager {
 
 	private void addWorldLight(SceneContext sceneContext, Light light) {
 		assert light.worldPoint != null;
-		var firstlp = sceneContext.worldInstanceToLocals(light.worldPoint).findFirst();
-		if (firstlp.isEmpty())
-			return;
+		sceneContext.worldToLocals(light.worldPoint).forEach(local -> {
+			int tileExX = local[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+			int tileExY = local[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+			if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
+				return;
 
-		LocalPoint lp = firstlp.get();
-		int tileExX = lp.getSceneX() + SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SCENE_OFFSET;
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return;
-
-		light.origin[0] = lp.getX() + LOCAL_HALF_TILE_SIZE;
-		light.origin[1] = sceneContext.scene.getTileHeights()[light.plane][tileExX][tileExY] - light.def.height - 1;
-		light.origin[2] = lp.getY() + LOCAL_HALF_TILE_SIZE;
-		sceneContext.lights.add(light);
+			var copy = new Light(light.def);
+			copy.plane = local[2];
+			copy.persistent = light.persistent;
+			copy.origin[0] = local[0] + LOCAL_HALF_TILE_SIZE;
+			copy.origin[1] = sceneContext.scene.getTileHeights()[local[2]][tileExX][tileExY] - copy.def.height - 1;
+			copy.origin[2] = local[1] + LOCAL_HALF_TILE_SIZE;
+			sceneContext.lights.add(copy);
+		});
 	}
 
 	@Subscribe

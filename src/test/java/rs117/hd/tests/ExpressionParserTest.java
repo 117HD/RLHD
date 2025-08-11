@@ -1,8 +1,6 @@
 package rs117.hd.tests;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import org.junit.Assert;
 import org.junit.Test;
 import rs117.hd.config.SeasonalTheme;
@@ -15,14 +13,6 @@ import static rs117.hd.utils.ExpressionParser.parsePredicate;
 public class ExpressionParserTest {
 	@Test
 	public void testExpressionParser() {
-		Map<String, Object> constants = new HashMap<>();
-		Enum<?>[][] enums = {
-			SeasonalTheme.values()
-		};
-		for (var anEnum : enums)
-			for (var e : anEnum)
-				constants.put(e.name(), e.ordinal());
-
 		VariableSupplier vars = name -> {
 			switch (name) {
 				case "h":
@@ -59,7 +49,7 @@ public class ExpressionParserTest {
 		Assert.assertEquals(21.f, parseExpression("(1 + 2) * (3 + 4)"));
 		Assert.assertFalse(parsePredicate("!( blending )").test(vars));
 		Assert.assertEquals(false, parseExpression("!true"));
-		Assert.assertEquals(true, parseExpression("SUMMER == 1", constants));
+		Assert.assertEquals(true, parseExpression("SUMMER == 1", name -> SeasonalTheme.valueOf(name).ordinal()));
 
 		assertThrows(() -> parseExpression("unexpected ( indeed"));
 		assertThrows(() -> parseExpression("(5 + ( missing paren)"));

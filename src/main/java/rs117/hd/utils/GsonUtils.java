@@ -22,8 +22,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.ArrayList;
-import lombok.SneakyThrows;
+import java.util.Objects;
+import javax.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.scene.materials.Material;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -41,7 +44,9 @@ public class GsonUtils {
 		return gson.newBuilder()
 			.setLenient()
 			.setPrettyPrinting()
-			.registerTypeAdapterFactory(new ExcludeDefaultsFactory())
+			.disableHtmlEscaping() // Disable HTML escaping for JSON exports (Gson never escapes when parsing regardless)
+			.registerTypeAdapter(Material.class, new Material.Adapter())
+			.registerTypeAdapterFactory(new ExcludeDefaultsFactory(gson))
 			.create();
 	}
 
@@ -52,27 +57,55 @@ public class GsonUtils {
 	@Target(ElementType.TYPE)
 	public @interface ExcludeDefaults {}
 
-	public static class ExcludeDefaultsAdapter<T> extends TypeAdapter<T> {
+	public interface ExcludeDefaultsProvider<T> {
+		@Nullable
+		T provideDefaults();
+	}
+
+	@RequiredArgsConstructor
+	private static class ExcludeDefaultsAdapter<T> extends TypeAdapter<T> {
 		private final Gson gson;
 		private final TypeAdapter<T> type;
 		private final JsonObject defaults;
 
-		@SneakyThrows
-		public ExcludeDefaultsAdapter(Gson gson, TypeAdapter<T> type) {
-			this.gson = gson;
-			this.type = type;
-			defaults = type.toJsonTree(type.fromJson("{}")).getAsJsonObject();
-		}
-
 		@Override
 		public void write(JsonWriter out, T t) throws IOException {
-			var json = type.toJsonTree(t).getAsJsonObject();
-			for (var e : defaults.entrySet()) {
-				var value = json.get(e.getKey());
-				if (value == null || value.equals(e.getValue()))
-					json.remove(e.getKey());
+			var json = type.toJsonTree(t);
+			if (!json.isJsonObject()) {
+				gson.toJson(json, out);
+				return;
 			}
-			gson.toJson(json, out);
+
+			var defaults = this.defaults;
+			if (t instanceof ExcludeDefaultsProvider) {
+				var provided = ((ExcludeDefaultsProvider<?>) t).provideDefaults();
+				if (provided != null) {
+					try {
+						// noinspection unchecked
+						defaults = type.toJsonTree((T) provided).getAsJsonObject();
+					} catch (ClassCastException ex) {
+						log.error("Incorrect type provided by DefaultsProvider: {}, expected {}", provided.getClass(), t.getClass());
+					}
+				}
+			}
+
+			var obj = json.getAsJsonObject();
+			for (var e : defaults.entrySet())
+				if (Objects.equals(obj.get(e.getKey()), e.getValue()))
+					obj.remove(e.getKey());
+
+			// Make it possible to replace inherited non-null default values with explicit nulls
+			out.setSerializeNulls(true);
+			out.beginObject();
+			for (var e : obj.entrySet()) {
+				out.name(e.getKey());
+				if (e.getValue().isJsonNull()) {
+					out.nullValue();
+				} else {
+					gson.toJson(e.getValue(), out);
+				}
+			}
+			out.endObject();
 		}
 
 		@Override
@@ -81,12 +114,34 @@ public class GsonUtils {
 		}
 	}
 
-	public static class ExcludeDefaultsFactory implements TypeAdapterFactory {
+	@RequiredArgsConstructor
+	private static class ExcludeDefaultsFactory implements TypeAdapterFactory {
+		private final Gson unmodifiedGson;
+
 		@Override
 		public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
-			for (var annotation : type.getRawType().getAnnotations())
-				if (annotation.annotationType() == ExcludeDefaults.class)
-					return new ExcludeDefaultsAdapter<>(gson, gson.getDelegateAdapter(this, type));
+			for (var annotation : type.getRawType().getAnnotations()) {
+				if (annotation.annotationType() == ExcludeDefaults.class) {
+					try {
+						var defaultDelegate = unmodifiedGson.getDelegateAdapter(this, type);
+						T defaultObj;
+						try {
+							defaultObj = defaultDelegate.fromJson("{}");
+						} catch (IOException ex) {
+							return null; // Can't skip defaults for non-object types
+						}
+
+						if (defaultObj == null)
+							return null; // No defaults available
+
+						var defaults = defaultDelegate.toJsonTree(defaultObj).getAsJsonObject();
+						return new ExcludeDefaultsAdapter<>(gson, gson.getDelegateAdapter(this, type), defaults);
+					} catch (Exception ex) {
+						log.error("Unable to exclude defaults for {}", type, ex);
+						break;
+					}
+				}
+			}
 			return null;
 		}
 	}
@@ -136,8 +191,10 @@ public class GsonUtils {
 				return;
 			}
 
-			if (src instanceof Float)
+			if (src instanceof Float) {
 				out.value((float) src * RAD_TO_DEG);
+				return;
+			}
 
 			throw new IOException("Expected a float or float array. Got " + src);
 		}

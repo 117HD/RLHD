@@ -31,6 +31,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
@@ -135,6 +136,7 @@ public class AABB {
 	}
 
 	public boolean contains(int... worldPos) {
+		assert worldPos.length >= 2 : "Expected X, Y & possibly a plane, got: " + Arrays.toString(worldPos);
 		return
 			minX <= worldPos[0] && worldPos[0] <= maxX &&
 			minY <= worldPos[1] && worldPos[1] <= maxY &&
@@ -223,7 +225,7 @@ public class AABB {
 	}
 
 	@Slf4j
-	public static class Adapter extends TypeAdapter<AABB[]> {
+	public static class ArrayAdapter extends TypeAdapter<AABB[]> {
 		@Override
 		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();

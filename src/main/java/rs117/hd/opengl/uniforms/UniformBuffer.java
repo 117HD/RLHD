@@ -68,11 +68,10 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			final int newHash = Integer.hashCode(value);
-			if (newHash != hash) {
+			if (value != hash) {
 				MemoryUtil.memPutInt(address, value);
 				owner.markWaterLine(position, type.size);
-				hash = newHash;
+				hash = value;
 			}
 		}
 
@@ -191,7 +190,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			final int newHash = ModelHasher.fastFloatHash(x, y);
+			final int newHash = ModelHasher.accurateFloatHash(x, y);
 			if (newHash != hash) {
 				MemoryUtil.memPutFloat(address, x);
 				MemoryUtil.memPutFloat(address + 4, y);
@@ -211,7 +210,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			final int newHash = ModelHasher.fastFloatHash(x, y, z);
+			final int newHash = ModelHasher.accurateFloatHash(x, y, z);
 			if (newHash != hash) {
 				MemoryUtil.memPutFloat(address, x);
 				MemoryUtil.memPutFloat(address + 4, y);
@@ -232,7 +231,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 				return;
 			}
 
-			final int newHash = ModelHasher.fastFloatHash(x, y, z, w);
+			final int newHash = ModelHasher.accurateFloatHash(x, y, z, w);
 			if (newHash != hash) {
 				MemoryUtil.memPutFloat(address, x);
 				MemoryUtil.memPutFloat(address + 4, y);
@@ -274,7 +273,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 						return;
 					}
 
-					final int newHash = ModelHasher.fastFloatHash(values);
+					final int newHash = ModelHasher.accurateFloatHash(values);
 					if (hash == newHash)
 						return;
 					hash = newHash;
@@ -303,7 +302,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 						return;
 					}
 
-					final int newHash = ModelHasher.fastFloatHash(values);
+					final int newHash = ModelHasher.accurateFloatHash(values);
 					if (hash == newHash)
 						return;
 					hash = newHash;

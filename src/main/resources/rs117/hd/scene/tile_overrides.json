@@ -44,49 +44,49 @@
   {
     "name": "SEASONAL_SAND",
     "replacements": {
-      "WINTER_SAND": "season == WINTER",
+      "WINTER_SAND": "season == SeasonalTheme.WINTER",
       "DEFAULT_SAND": true
     }
   },
   {
     "name": "SEASONAL_GRASS",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER",
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER",
       "DEFAULT_GRASS": true
     }
   },
   {
     "name": "SEASONAL_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER",
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
       "DEFAULT_DIRT": true
     }
   },
   {
     "name": "SEASONAL_GRUNGE",
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER",
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER",
       "DEFAULT_GRUNGE": true
     }
   },
   {
     "name": "SEASONAL_ROCKY_GROUND",
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER",
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER",
       "DEFAULT_ROCKY_GROUND": true
     }
   },
   {
     "name": "SEASONAL_OVERWORLD_ROCK",
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER",
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER",
       "DEFAULT_OVERWORLD_ROCK": true
     }
   },
   {
     "name": "SEASONAL_VERTICAL_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER",
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
       "VERTICAL_DIRT_FIX": true
     }
   },
@@ -159,7 +159,7 @@
     ],
     "groundMaterial": "HD_WOOD_PLANKS_2",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -324,7 +324,7 @@
     "groundMaterial": "VARROCK_PATHS",
     "shiftLightness": 10,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -679,7 +679,7 @@
     ],
     "groundMaterial": "GRAVEL",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -1589,7 +1589,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2322,7 +2322,7 @@
     "groundMaterial": "VARROCK_PATHS",
     "shiftLightness": 6,
     "replacements": {
-      "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER": "season == WINTER",
+      "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER": "season == SeasonalTheme.WINTER",
       "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blending"
     }
   },
@@ -2394,7 +2394,7 @@
     "blended": false,
     "shiftLightness": 6,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == WINTER",
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
       "EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING": "blending"
     }
   },
@@ -2407,7 +2407,7 @@
     "groundMaterial": "VARROCK_PATHS",
     "shiftLightness": 6,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2532,7 +2532,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2727,7 +2727,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2756,7 +2756,18 @@
     "minSaturation": 5,
     "maxSaturation": 5,
     "minLightness": 15,
-    "maxLightness": 15
+    "maxLightness": 15,
+    "replacements": {
+      "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "DRAYNOR_PATH_BLENDING_FIX_NO_BLENDING",
+    "area": "DRAYNOR_PATH_BLENDING_FIXES",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "GRAVEL"
   },
   {
     "name": "DRAYNOR_NEDS_PATH_FIX",
@@ -2768,7 +2779,7 @@
     "minLightness": 18,
     "maxLightness": 18,
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2808,7 +2819,7 @@
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
       "DRAYNOR_BANK_ENTRANCE_PATH": "blending",
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2821,7 +2832,7 @@
     "minLightness": 8,
     "maxLightness": 8,
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2845,7 +2856,7 @@
     "minLightness": 18,
     "maxLightness": 18,
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2867,7 +2878,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -2988,7 +2999,7 @@
     "groundMaterial": "BRICK_PATHS",
     "shiftSaturation": -1,
     "replacements": {
-      "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER": "season == WINTER",
+      "WIZARDS_TOWER_PATH_BLEND_FIX_WINTER": "season == SeasonalTheme.WINTER",
       "WIZARDS_TOWER_PATH_BLEND_FIX": "blending"
     }
   },
@@ -3251,7 +3262,7 @@
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3532,7 +3543,7 @@
     "groundMaterial": "DIRT",
     "blended": false,
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3661,7 +3672,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE": "season == WINTER"
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3692,7 +3703,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT_2": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3764,7 +3775,7 @@
     "shiftLightness": 2,
     "blended": false,
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER"
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3797,7 +3808,7 @@
     "minLightness": 14,
     "maxLightness": 16,
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER"
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3826,7 +3837,7 @@
     "overlayIds": [ 377 ],
     "groundMaterial": "VERTICAL_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -3880,6 +3891,15 @@
     "area": "HUNTER_GUILD",
     "overlayIds": [ 181 ],
     "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_ABYSSAL_FLOOR",
+    "area": "TEMPLE_OF_THE_EYE_ABYSSAL_FLOOR",
+    "overlayIds": [ 72, 86 ],
+    "groundMaterial": "ABYSSAL_FLOOR",
+    "minHue": 1,
+    "maxHue": 1,
+    "uvScale": 1.85
   },
   {
     "name": "TEMPLE_OF_THE_EYE_INCORRECT_WATER",
@@ -4003,7 +4023,7 @@
     ],
     "groundMaterial": "VARIED_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -4072,7 +4092,6 @@
     "groundMaterial": "ABYSSAL_FLOOR",
     "uvOrientation": 39,
     "uvScale": 0.5405405
-
   },
   {
     "name": "LAW_ALTAR_SYMBOL",
@@ -4699,7 +4718,7 @@
     "groundMaterial": "MARBLE_1_GLOSS",
     "blended": false,
     "replacements": {
-      "SNOW_2": "season == WINTER"
+      "SNOW_2": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -4729,7 +4748,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE": "season == WINTER"
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -4887,38 +4906,46 @@
     "waterType": "PLAIN_WATER"
   },
   {
-    "name": "RALOS_RISE_SNOW_PATH",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
-    "overlayIds": [ 271 ],
-    "groundMaterial": "SNOW_2"
-  },
-  {
-    "name": "RALOS_RISE_SNOW",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
-    "underlayIds": [ 58, 94 ],
-    "groundMaterial": "SNOW_1",
-    "shiftLightness": 10,
+    "name": "Proudspire Snow Blending",
+    "area": "Proudspire",
+    "underlayIds": [ 58 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 25,
+    "maxLightness": 98,
     "replacements": {
-      "RALOS_RISE_SNOW_DARKER": "l < 55 && s == 0",
-      "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0"
+      "Proudspire Cliff": "l < 3",
+      "Proudspire Snow No Blending": "!blending"
     }
   },
   {
-    "name": "RALOS_RISE_SNOW_DARKER",
-    "groundMaterial": "SNOW_1",
-    "shiftLightness": 0
+    "name": "Proudspire Snow No Blending",
+    "area": "Proudspire",
+    "underlayIds": [ 58 ],
+    "groundMaterial": "DIRTY_SNOW",
+    "shiftLightness": 10,
+    "maxLightness": 98
   },
   {
-    "name": "RALOS_RISE_GRAY_PATH_BLENDING_FIX",
-    "area": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
-    "overlayIds": [ 3 ],
+    "name": "Proudspire Cliff",
+    "area": "Proudspire",
+    "overlayIds": [ 1 ],
     "groundMaterial": "DIRT",
-    "shiftLightness": -8
+    "blended": false,
+    "shiftLightness": -10,
+    "maxLightness": 85
   },
   {
-    "name": "RALOS_RISE_GRAY_PATH",
-    "area": "VARLAMORE_SNOWY_MOUNTAINS",
-    "overlayIds": [ 3 ],
+    "name": "Mons Gratia Cliff",
+    "area": "Mons Gratia Cliff Fix",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "shiftLightness": -5
+  },
+  {
+    "name": "Hueycoatl Campfire Fix",
+    "area": "Hueycoatl Campfire Fix",
+    "overlayIds": [ 340 ],
     "groundMaterial": "DIRT",
     "blended": false
   },
@@ -4943,6 +4970,48 @@
     "maxLightness": 75,
     "minLightness": 50,
     "maxSaturation": 0
+  },
+  {
+    "name": "RALOS_RISE_SNOW_PATH",
+    "area": "RALOS_RISE",
+    "overlayIds": [ 271 ],
+    "maxLightness": 75,
+    "shiftLightness": 5,
+    "groundMaterial": "DIRTY_SNOW"
+  },
+  {
+    "name": "Ralos Rise Snow Blending",
+    "area": "RALOS_RISE",
+    "underlayIds": [ 58, 94 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 27,
+    "maxLightness": 93,
+    "replacements": {
+      "OVERWORLD_GRASS_UNDERLAY": "l < 15 || s > 0",
+      "Ralos Rise Snow No Blending" : "!blending"
+    }
+  },
+  {
+    "name": "Ralos Rise Snow No Blending",
+    "area": "RALOS_RISE",
+    "underlayIds": [ 58, 94 ],
+    "groundMaterial": "SNOW_1",
+    "shiftLightness": 10,
+    "maxLightness": 93
+  },
+  {
+    "name": "RALOS_RISE_GRAY_PATH_BLENDING_FIX",
+    "area": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "DIRT",
+    "shiftLightness": -8
+  },
+  {
+    "name": "RALOS_RISE_GRAY_PATH",
+    "area": "RALOS_RISE",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "DIRT",
+    "blended": false
   },
   {
     "name": "CAM_TORUM_WATER",
@@ -5122,10 +5191,16 @@
     "groundMaterial": "GRASS_1"
   },
   {
-    "name": "THE_BLUE_MOON_ENTRANCE",
-    "area": "THE_BLUE_MOON_ENTRANCE",
-    "underlayIds": [ 56, 73, 205, 206 ],
+    "name": "PERILOUS_MOONS_ENTRANCE_TILES",
+    "area": "PERILOUS_MOONS_ENTRANCE_TILES",
+    "underlayIds": [ 56, 72, 73, 118, 205, 212, 213 ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS"
+  },
+  {
+    "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
+    "area": "THE_BLUE_MOON_ENTRANCE",
+    "underlayIds": [ 73, 205, 206 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_BLUE_MOON_NEAR_WALLS",
@@ -5141,10 +5216,10 @@
     "groundMaterial": "SNOW_1"
   },
   {
-    "name": "THE_BLOOD_MOON_ENTRANCE",
+    "name": "THE_BLOOD_MOON_ENTRANCE_DIRT",
     "area": "THE_BLOOD_MOON_ENTRANCE",
-    "underlayIds": [ 56, 118 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+    "underlayIds": [ 56, 72, 118 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_BLOOD_MOON_BLOOD",
@@ -5166,10 +5241,10 @@
     "blended": false
   },
   {
-    "name": "THE_ECLIPSE_MOON_ENTRANCE",
+    "name": "THE_ECLIPSE_MOON_ENTRANCE_DIRT",
     "area": "THE_ECLIPSE_MOON_ENTRANCE",
-    "underlayIds": [ 212 ],
-    "groundMaterial": "MARBLE_2_SEMIGLOSS"
+    "underlayIds": [ 72, 213 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "THE_ECLIPSE_MOON_FLOOR_BLENDING_FIX",
@@ -5213,7 +5288,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -5584,7 +5659,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -5626,7 +5701,7 @@
     "maxSaturation": 0,
     "shiftLightness": 8,
     "replacements": {
-      "WINTER_EDGEVILLE_PATH": "season == WINTER"
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -5635,7 +5710,7 @@
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
       "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH": "blending",
-      "WINTER_GRASS": "season == WINTER",
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER",
       "DEFAULT_GRASS": true
     }
   },
@@ -5852,7 +5927,7 @@
     ],
     "groundMaterial": "GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -5865,7 +5940,7 @@
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -6141,9 +6216,9 @@
     ],
     "replacements": {
       "KHARID_GRASS_CLAMPED": [
-        "h > 10",
+        "h > 11",
         "h > 9 && s > 3",
-        "h == 9 && s > 4"
+        "h == 10 && s > 4"
       ]
     }
   },
@@ -6522,7 +6597,7 @@
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -6623,7 +6698,7 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": "season == WINTER",
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
       "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_OUTER": "h == 7 && blending",
       "FREMENNIK_ISLES_NORTH_SNOW_NOBLENDING_OUTER": "h == 7",
       "FREMENNIK_ISLES_NORTH_SNOW_BLENDING_INNER": "h == 6 && l < 45 && blending",
@@ -6676,7 +6751,7 @@
     ],
     "groundMaterial": "VARIED_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -6904,7 +6979,7 @@
     ],
     "groundMaterial": "OVERWORLD_ROCKY",
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER"
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -6917,7 +6992,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7006,7 +7081,7 @@
     ],
     "groundMaterial": "VARIED_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7019,7 +7094,7 @@
     ],
     "groundMaterial": "VARIED_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7030,7 +7105,7 @@
     ],
     "groundMaterial": "GRAVEL",
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER"
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7043,7 +7118,7 @@
     ],
     "groundMaterial": "ROCKY_CAVE_FLOOR",
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER"
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7432,6 +7507,15 @@
     "maxLightness": 64
   },
   {
+    "name": "TEMPLE_OF_THE_EYE_DIRT_EDGE_FIX",
+    "area": "TEMPLE_OF_THE_EYE_DIRT_EDGE_FIX",
+    "underlayIds": [
+      60
+    ],
+    "groundMaterial": "VARIED_DIRT_SHINY",
+    "shiftLightness": 5
+  },
+  {
     "name": "TEMPLE_OF_THE_EYE_DIRT",
     "area": "TEMPLE_OF_THE_EYE",
     "underlayIds": [
@@ -7458,7 +7542,17 @@
     }
   },
   {
-    "name": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY",
+    "name": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_FIX",
+    "area": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_FIX",
+    "underlayIds": [
+      87,
+      88,
+      89
+    ],
+    "groundMaterial": "VARIED_DIRT_SHINY"
+  },
+  {
+    "name": "TEMPLE_OF_THE_EYE_ROCK_UNDERLAY_BLENDING",
     "area": "TEMPLE_OF_THE_EYE",
     "underlayIds": [
       87,
@@ -7481,7 +7575,7 @@
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7493,7 +7587,7 @@
     ],
     "groundMaterial": "GRASSY_DIRT",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7599,7 +7693,7 @@
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7819,7 +7913,7 @@
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == WINTER"
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7842,7 +7936,7 @@
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7889,7 +7983,7 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7904,7 +7998,7 @@
     ],
     "groundMaterial": "VARIED_DIRT",
     "replacements": {
-      "WINTER_DIRT": "season == WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     }
   },
   {
@@ -7931,7 +8025,7 @@
     ],
     "groundMaterial": "GRUNGE",
     "replacements": {
-      "WINTER_GRUNGE": "season == WINTER"
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
   },
   {

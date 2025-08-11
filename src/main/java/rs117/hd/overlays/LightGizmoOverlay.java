@@ -124,10 +124,11 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 			return null;
 
 		// If the orientation changed, don't consider mouse movement
-		boolean wasCameraReoriented = isProbablyRotatingCamera;
-		wasCameraReoriented |= plugin.sceneCamera.getYaw() != cameraOrientation[0];
-		wasCameraReoriented |= plugin.sceneCamera.getPitch() != cameraOrientation[1];
-		System.arraycopy(plugin.sceneCamera.getOrientation(), 0, cameraOrientation, 0, 2);
+		boolean wasCameraReoriented =
+			isProbablyRotatingCamera ||
+			plugin.sceneCamera.getYaw() != cameraOrientation[0] ||
+			plugin.sceneCamera.getPitch() != cameraOrientation[1];
+		copyTo(cameraOrientation, plugin.sceneCamera.getOrientation());
 
 		boolean isCtrlHeld = client.isKeyPressed(KeyCode.KC_CONTROL);
 		boolean isShiftHeld = client.isKeyPressed(KeyCode.KC_SHIFT);
@@ -267,7 +268,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					} else {
 						// Shift the position with mouse movement
 						for (int j = 0; j < 2; j++)
-							point[j] += (float) mouseDelta[j];
+							point[j] += mouseDelta[j];
 					}
 
 					if (numFrozenAxes == 0) { // restrict to same depth plane

@@ -3,7 +3,6 @@ package rs117.hd.model;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,18 +15,17 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.materials.Material;
-import rs117.hd.data.materials.UvType;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
-import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
+import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.model_overrides.WindDisplacement;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
@@ -40,9 +38,6 @@ import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.MathUtils.*;
 
-/**
- * Pushes models
- */
 @Singleton
 @Slf4j
 public class ModelPusher {
@@ -57,9 +52,6 @@ public class ModelPusher {
 
 	@Inject
 	private HdPluginConfig config;
-
-	@Inject
-	private TextureManager textureManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -200,15 +192,15 @@ public class ModelPusher {
 		Material textureMaterial = modelOverride.textureMaterial;
 		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
 		if (disableTextures) {
-			if (baseMaterial.hasTexture)
+			if (baseMaterial.modifiesVanillaTexture)
 				baseMaterial = Material.NONE;
-			if (textureMaterial.hasTexture)
+			if (textureMaterial.modifiesVanillaTexture)
 				textureMaterial = Material.NONE;
 		}
 
 		boolean skipUVs =
 			!isVanillaTextured &&
-			packMaterialData(baseMaterial, -1, modelOverride, UvType.GEOMETRY, false) == 0 &&
+			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false) == 0 &&
 			modelOverride.colorOverrides == null;
 
 		// ensure capacity upfront
@@ -377,7 +369,7 @@ public class ModelPusher {
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
-				int materialData = packMaterialData(material, textureId, faceOverride, uvType, false);
+				int materialData = material.packMaterialData(faceOverride, uvType, false);
 
 				final float[] uvData = sceneContext.modelFaceNormals;
 				if (materialData == 0) {
@@ -442,31 +434,6 @@ public class ModelPusher {
 		sceneContext.modelFaceNormals[9] = yVertexNormals[triC];
 		sceneContext.modelFaceNormals[10] = zVertexNormals[triC];
 		sceneContext.modelFaceNormals[11] = terrainData;
-	}
-
-	public int packMaterialData(
-		@Nonnull Material material,
-		int vanillaTexture,
-		@Nonnull ModelOverride modelOverride,
-		UvType uvType,
-		boolean isOverlay
-	) {
-		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
-		int materialIndex = textureManager.getMaterialIndex(material, vanillaTexture);
-		assert materialIndex <= MAX_MATERIAL_INDEX;
-		// The sign bit can't be used without shader changes to correctly unpack the material index
-		return (materialIndex & MAX_MATERIAL_INDEX) << 20
-			| ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
-		    | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11
-			| (modelOverride.windDisplacementMode.ordinal() & 0x7) << 8
-			| (modelOverride.invertDisplacementStrength ? 1 : 0) << 7
-		    | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
-			| (!modelOverride.receiveShadows ? 1 : 0) << 5
-			| (modelOverride.upwardsNormals ? 1 : 0) << 4
-			| (modelOverride.flatNormals ? 1 : 0) << 3
-			| (uvType.worldUvs ? 1 : 0) << 2
-			| (uvType == UvType.VANILLA ? 1 : 0) << 1
-			| (isOverlay ? 1 : 0);
 	}
 
 	private boolean isBakedGroundShading(Model model, int face) {
@@ -599,7 +566,7 @@ public class ModelPusher {
 									tilePaint.getSeColor()
 								) / 4;
 
-							var override = tileOverrideManager.getOverride(scene, tile);
+							var override = tileOverrideManager.getOverride(sceneContext, tile);
 							averageColor = override.modifyColor(averageColor);
 							color1 = color2 = color3 = averageColor;
 
@@ -637,11 +604,10 @@ public class ModelPusher {
 									int tileExX = tileX + SCENE_OFFSET;
 									int tileExY = tileY + SCENE_OFFSET;
 									int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
-									var override = tileOverrideManager.getOverride(scene, tile, worldPos,
-										modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
-											OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
-											scene.getUnderlayIds()[tileZ][tileExX][tileExY]
-									);
+									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
+										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
+										scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+									var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos, tileId);
 									color = override.modifyColor(color);
 									color1 = color2 = color3 = color;
 
