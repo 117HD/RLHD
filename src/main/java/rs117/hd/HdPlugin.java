@@ -86,7 +86,6 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
-import rs117.hd.data.materials.Material;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
@@ -116,6 +115,7 @@ import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -131,6 +131,7 @@ import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.HDVariables;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
@@ -222,6 +223,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		GL_RGBA // should be guaranteed
 	};
 
+	@Getter
+	private Gson gson;
+
 	@Inject
 	private Client client;
 
@@ -241,6 +245,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private PluginManager pluginManager;
 
 	@Inject
+	private HdPluginConfig config;
+
+	@Inject
 	private OpenCLManager clManager;
 
 	@Inject
@@ -257,6 +264,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TextureManager textureManager;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private WaterTypeManager waterTypeManager;
@@ -298,12 +308,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public HdPluginConfig config;
-
-	@Getter
-	private Gson gson;
-
-	@Inject
 	private SceneShaderProgram sceneProgram;
 
 	@Inject
@@ -331,6 +335,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
+	public HDVariables vars;
 
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
@@ -468,6 +475,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean redrawPreviousFrame;
 	private boolean isInChambersOfXeric;
 	private boolean isInHouse;
+	private boolean justChangedArea;
 	private Scene skipScene;
 	private int previousPlane;
 
@@ -666,6 +674,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
+				materialManager.startUp();
 				waterTypeManager.startUp();
 
 				initPrograms();
@@ -753,8 +762,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lwjglInitialized = false;
 				waitUntilIdle();
 
-				textureManager.shutDown();
 				waterTypeManager.shutDown();
+				materialManager.shutDown();
+				textureManager.shutDown();
 
 				destroyBuffers();
 				destroyUiTexture();
@@ -814,11 +824,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void restartPlugin() {
-		// For some reason, it's necessary to delay this like below to prevent the canvas from locking up on Linux
-		SwingUtilities.invokeLater(() -> clientThread.invokeLater(() -> {
+		clientThread.invoke(() -> {
 			shutDown();
-			clientThread.invokeLater(this::startUp);
-		}));
+			// Validate the canvas so it becomes valid without having to manually resize the client
+			canvas.validate();
+			startUp();
+		});
 	}
 
 	public void toggleFreezeFrame() {
@@ -875,7 +886,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
-			.define("MATERIAL_COUNT", Material.values().length)
+			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
@@ -898,24 +909,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
-					for (Material m : Material.values()) {
+					for (var entry : MaterialManager.MATERIAL_MAP.entrySet()) {
 						include
 							.append("#define MAT_")
-							.append(m.name().toUpperCase())
+							.append(entry.getKey().toUpperCase())
 							.append(" getMaterial(")
-							.append(textureManager.getMaterialIndex(m, m.vanillaTextureIndex))
+							.append(entry.getValue().uboIndex)
 							.append(")\n");
 					}
 					return include.toString();
 				}
 			)
-			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", Material.values().length))
+			.addInclude("MATERIAL_GETTER", () -> generateGetter("Material", MaterialManager.MATERIALS.length))
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI)
-			.addUniformBuffer(textureManager.uboMaterials)
+			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
 	}
 
@@ -1568,10 +1579,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		Player localPlayer = client.getLocalPlayer();
 		var lp = localPlayer.getLocalLocation();
 		if (sceneContext.enableAreaHiding) {
+			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
-				sceneContext.scene.getBaseX() + lp.getSceneX(),
-				sceneContext.scene.getBaseY() + lp.getSceneY(),
-				client.getPlane()
+				sceneContext.sceneBase[0] + lp.getSceneX(),
+				sceneContext.sceneBase[1] + lp.getSceneY(),
+				sceneContext.sceneBase[2] + client.getPlane()
 			};
 
 			// We need to check all areas contained in the scene in the order they appear in the list,
@@ -1579,7 +1591,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// portions of the floor beneath around stairs and ladders
 			Area newArea = null;
 			for (var area : sceneContext.possibleAreas) {
-				if (area.containsPoint(worldPos)) {
+				if (area.containsPoint(false, worldPos)) {
 					newArea = area;
 					break;
 				}
@@ -1587,10 +1599,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Force a scene reload if the player is no longer in the same area
 			if (newArea != sceneContext.currentArea) {
+				if (justChangedArea) {
+					// Prevent getting stuck in a scene reloading loop if this breaks for any reason
+					sceneContext.forceDisableAreaHiding = true;
+					log.error("Force disabling area hiding after moving from {} to {} at {}", sceneContext.currentArea, newArea, worldPos);
+				} else {
+					justChangedArea = true;
+				}
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
+			} else {
+				justChangedArea = false;
 			}
+		} else {
+			justChangedArea = false;
 		}
 
 		if (!enableFreezeFrame) {
@@ -2207,11 +2230,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDisable(GL_DEPTH_TEST);
 
 				frameTimer.end(Timer.RENDER_SHADOWS);
-			} else {
-				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
-				uboGlobal.upload();
 			}
 
+			uboGlobal.upload();
 			sceneProgram.use();
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
@@ -2807,7 +2828,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						waitUntilIdle();
 
 					if (reloadTexturesAndMaterials) {
-						textureManager.reloadTextures();
+						materialManager.reload(false);
+						modelOverrideManager.reload();
 						recompilePrograms = true;
 						clearModelCache = true;
 					} else if (reloadModelOverrides) {
@@ -3020,10 +3042,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Hide everything outside the current area if area hiding is enabled
 		if (sceneContext.currentArea != null) {
+			assert sceneContext.sceneBase != null;
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
-				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),
-				client.getPlane()
+				sceneContext.sceneBase[0] + (x >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[1] + (z >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[2] + client.getPlane()
 			);
 			if (!inArea)
 				return;
@@ -3159,12 +3182,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
 						int config;
 						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
-							preOrientation = HDUtils.getBakedOrientation(config);
+							preOrientation = HDUtils.getModelPreOrientation(config);
 						} else if (plane > 0) {
 							// Might be on a bridge tile
 							tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
 							if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
-								preOrientation = HDUtils.getBakedOrientation(config);
+								preOrientation = HDUtils.getModelPreOrientation(config);
 						}
 					}
 				}
@@ -3312,7 +3335,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 	}
 
-	private void waitUntilIdle() {
+	public void waitUntilIdle() {
 		if (computeMode == ComputeMode.OPENCL)
 			clManager.finish();
 		glFinish();
