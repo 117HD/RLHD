@@ -131,6 +131,10 @@
         "type": "boolean",
         "description": "If enabled, the light will have faded out completely after spawnDelay + despawnDelay milliseconds."
       },
+      "despawnWithParent": {
+        "type": "boolean",
+        "description": "If enabled, the light will immediately despawn if whatever it's attached to despawns."
+      },
       "visibleFromOtherPlanes": {
         "type": "boolean",
         "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to false."

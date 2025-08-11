@@ -408,6 +408,8 @@ public class LightManager {
 						if (light.dynamicLifetime)
 							light.lifetime = -1;
 					}
+				} else if (light.def.despawnWithParent) {
+					light.lifetime = 0;
 				} else if (light.lifetime == -1) {
 					// Schedule despawning of the light if the parent just despawned, and the light isn't already scheduled to despawn
 					float minLifetime = light.spawnDelay + light.fadeInDuration;
