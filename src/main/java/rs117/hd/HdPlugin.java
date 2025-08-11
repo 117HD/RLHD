@@ -61,6 +61,7 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.callback.Hooks;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -254,6 +255,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private Hooks hooks;
 
 	@Inject
 	private EventBus eventBus;
@@ -724,6 +728,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				// force rebuild of main buffer provider to enable alpha channel
 				client.resizeCanvas();
 
+				hooks.registerRenderableDrawListener(this::shouldDrawRenderable);
+
 				gamevalManager.startUp();
 				areaManager.startUp();
 				groundMaterialManager.startUp();
@@ -782,6 +788,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setDrawCallbacks(null);
 			client.setUnlockedFps(false);
 			client.setExpandedMapLoading(0);
+
+			hooks.unregisterRenderableDrawListener(this::shouldDrawRenderable);
 
 			asyncUICopy.complete();
 			developerTools.deactivate();
@@ -1764,7 +1772,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						float dist = length(cameraToCenterXZ);
 						float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
 						divide(cameraToCenterXZ, cameraToCenterXZ, dist);
-						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.1f, offsetStrength));
+						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, -0.1f, offsetStrength));
 						multiply(cameraToCenterXZ, cameraToCenterXZ, saturate(dist / 500.0f));
 						add(centerXZ, centerXZ, cameraToCenterXZ);
 					}
@@ -3059,6 +3067,29 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		client.setUnlockedFpsTarget(actualSwapInterval == 0 ? config.fpsTarget() : 0);
 		checkGLErrors();
+	}
+
+	public boolean shouldDrawRenderable(Renderable renderable, boolean drawingUI) {
+		if (renderable instanceof Player) {
+			int playerId = ((Player) renderable).getId();
+			return sceneCamera.getCullingResults().isPlayerVisible(playerId) || directionalLight
+				.getCullingResults()
+				.isPlayerVisible(playerId);
+		}
+
+		if (renderable instanceof NPC) {
+			int playerId = ((NPC) renderable).getId();
+			return sceneCamera.getCullingResults().isNPCVisible(playerId) || directionalLight.getCullingResults().isNPCVisible(playerId);
+		}
+
+		if (renderable instanceof Projectile) {
+			int playerId = ((Projectile) renderable).getId();
+			return sceneCamera.getCullingResults().isProjectileVisible(playerId) || directionalLight
+				.getCullingResults()
+				.isProjectileVisible(playerId);
+		}
+
+		return true;
 	}
 
 	@Override
