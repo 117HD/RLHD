@@ -7776,7 +7776,13 @@
   },
   {
     "name": "Black Knights Fort - Catacombs",
-    "regionBoxes": [ [16459, 16457] ]
+    "regionBoxes": [
+      [16459, 16457]
+    ],
+    "aabbs": [
+      [ 4160, 4696, 4162, 4704 ],
+      [ 4093, 4699, 4095, 4704 ]
+    ]
   },
   {
     "name": "Black Knights Fort - Trim Fix",

@@ -1979,8 +1979,8 @@
     "area": "Black Knights Fort - Basement",
     "ambientColor": "#aaafb6",
     "directionalColor": "#878474",
-    "directionalStrength": 0.5,
-    "ambientStrength": 1,
+    "directionalStrength": 0.75,
+    "ambientStrength": 1.25,
     "fogDepth": 60
   },
   {

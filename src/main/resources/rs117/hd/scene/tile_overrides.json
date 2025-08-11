@@ -5221,8 +5221,8 @@
   {
     "name": "Black Knights Fort - Catacombs Water",
     "area": "Black Knights Fort - Catacombs",
-    "underlayIds": [
-      58
+    "overlayIds": [
+      158
     ],
     "waterType": "CAVE_WATER"
   },
