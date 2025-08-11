@@ -6,7 +6,6 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import lombok.Getter;
 import net.runelite.client.ui.FontManager;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
@@ -38,7 +37,6 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private SnapshotRecording snapshotRecoding;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
-	@Getter
 	private final long[] timings = new long[Timer.values().length];
 	private final StringBuilder sb = new StringBuilder();
 
@@ -148,13 +146,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 
 			if (snapshotRecoding.isSnapshotActive())
-			{
 				children.add(LineComponent.builder()
 					.left("Snapshot Recording:")
 					.right(String.format("%d/%d", snapshotRecoding.getSnapshotData().size(), 20))
-				.build());
-				snapshotRecoding.recordSnapshot(timings);
-			}
+					.build());
 		}
 
 		var result = super.render(g);
@@ -199,5 +194,4 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			.rightFont(font)
 			.build());
 	}
-
 }

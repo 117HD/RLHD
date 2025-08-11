@@ -3,8 +3,6 @@ package rs117.hd.utils;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.protobuf.Any;
-import java.io.File;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -13,23 +11,26 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
-import net.runelite.api.ChatMessageType;
-import net.runelite.api.Client;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.FrameTimings;
 import rs117.hd.overlays.Timer;
 
 import static com.sun.jna.platform.win32.GL.GL_VENDOR;
 import static com.sun.jna.platform.win32.GL.GL_VERSION;
 import static org.lwjgl.opengl.GL11C.GL_RENDERER;
 import static org.lwjgl.opengl.GL11C.glGetString;
+import static rs117.hd.utils.ResourcePath.path;
 
+@Slf4j
 @Singleton
-public class SnapshotRecording {
-
-	private static final File SAVE_LOCATION = new File(new File(RuneLite.RUNELITE_DIR, "117HD"), "snapshot");
+public class SnapshotRecording implements FrameTimer.Listener {
+	private static final ResourcePath SAVE_LOCATION = path(RuneLite.RUNELITE_DIR, "117HD/snapshot");
 
 	@Getter
 	private boolean snapshotActive = false;
@@ -39,36 +40,42 @@ public class SnapshotRecording {
 	@Getter
 	private final List<SnapshotEntry> snapshotData = new ArrayList<>();
 
-	private static final int SNAPSHOT_DURATION_MS = 20_000; // 20 seconds
-	private static final int SNAPSHOT_INTERVAL_MS = 1_000;  // 1 second
+	private static final int SNAPSHOT_DURATION_MS = 20_000;
+	private static final int SNAPSHOT_INTERVAL_MS = 1_000;
 
 	@Inject
 	private Client client;
+
 	@Inject
 	private ClientThread clientThread;
+
 	@Inject
 	private HdPlugin plugin;
-	@Inject
-	private DeveloperTools developerTools;
+
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
+
 	@Inject
 	private ConfigManager configManager;
 
+	@Inject
+	private FrameTimer frameTimer;
+
 	public void startSnapshotSession() {
-		if (!developerTools.isFrameTimingsOverlayEnabled()) {
-			sendGameMessage("HD snapshot needs frameTimings overlay enabled");
+		if (snapshotActive)
 			return;
-		}
 
 		snapshotData.clear();
 		snapshotStartTime = System.currentTimeMillis();
 		snapshotActive = true;
 
+		frameTimer.addTimingsListener(this);
+
 		sendGameMessage("HD snapshot started (" + (SNAPSHOT_DURATION_MS / 1000) + " seconds)...");
 	}
 
-	public void recordSnapshot(long[] timings) {
+	@Override
+	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.currentTimeMillis();
 		long elapsed = now - snapshotStartTime;
 
@@ -81,33 +88,28 @@ public class SnapshotRecording {
 		if (snapshotData.isEmpty() ||
 			elapsed - snapshotData.get(snapshotData.size() - 1).elapsed >= SNAPSHOT_INTERVAL_MS) {
 			snapshotData.add(new SnapshotEntry(
+				timings,
 				elapsed,
 				now,
 				plugin.getDrawnTileCount(),
 				plugin.getDrawnStaticRenderableCount(),
 				plugin.getDrawnDynamicRenderableCount(),
-				npcDisplacementCache.size(),
-				timings
+				npcDisplacementCache.size()
 			));
 		}
 	}
 
 	private void saveSnapshot() {
+		frameTimer.removeTimingsListener(this);
+
+		SAVE_LOCATION.mkdirs();
 		String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
 
-		File dir = new File(SAVE_LOCATION, timestamp);
-		if (!dir.exists() && !dir.mkdirs()) {
-			sendGameMessage("Failed to create snapshot directory: " + dir.getAbsolutePath());
-			return;
-		}
-
-		File csvFile = new File(dir, "snapshot.csv");
-		try (PrintWriter pw = new PrintWriter(csvFile)) {
-
+		var csvPath = SAVE_LOCATION.resolve("snapshot.csv");
+		try (PrintWriter pw = new PrintWriter(csvPath.toOutputStream())) {
 			pw.print("FrameIndex,Time");
-			for (Timer t : Timer.values()) {
+			for (Timer t : Timer.values())
 				pw.print("," + t.name());
-			}
 			pw.println(",EstimatedBottleneck,EstimatedFPS,DrawnTiles,DrawnStatic,DrawnDynamic,NpcCacheSize");
 
 			int frameIndex = 0;
@@ -116,9 +118,8 @@ public class SnapshotRecording {
 					.append(frameIndex++)
 					.append(',').append(e.currentTime);
 
-				for (long n : e.timings) {
+				for (long n : e.timings)
 					sb.append(',').append(String.format("%.3f", n / 1_000_000.0));
-				}
 
 				sb.append(',').append(e.bottleneck)
 					.append(',').append(String.format("%.1f", e.estimatedFps))
@@ -130,11 +131,10 @@ public class SnapshotRecording {
 				pw.println(sb);
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error("Error while saving snapshot:", ex);
 		}
 
-		File jsonFile = new File(dir, "web_import.json");
-		try (PrintWriter pw = new PrintWriter(jsonFile)) {
+		try (PrintWriter pw = new PrintWriter(SAVE_LOCATION.resolve("web_import.json").toOutputStream())) {
 			Gson gson = plugin.getGson();
 			WebImportData data = new WebImportData();
 			data.timestamp = timestamp;
@@ -149,16 +149,16 @@ public class SnapshotRecording {
 			data.gpuName = getOpenGLGPUInfo();
 
 			for (String config : configManager.getConfigurationKeys("hd")) {
-				String configClean = config.replace("hd.","");
-				data.pluginSettings.put(configClean,configManager.getConfiguration("hd",configClean));
+				String configClean = config.replace("hd.", "");
+				data.pluginSettings.put(configClean, configManager.getConfiguration("hd", configClean));
 			}
 
 			pw.write(gson.toJson(data));
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			log.error("Error while saving snapshot:", ex);
 		}
 
-		sendGameMessage("HD snapshot complete. Saved to " + csvFile.getAbsolutePath());
+		sendGameMessage("HD snapshot complete. Saved to " + csvPath);
 	}
 
 
