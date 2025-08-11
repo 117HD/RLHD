@@ -2681,6 +2681,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
+		asyncUICopy.complete();
+
 		// If the scene wasn't loaded by a call to loadScene, load it synchronously instead
 		if (nextSceneContext == null) {
 			loadSceneInternal(scene);
