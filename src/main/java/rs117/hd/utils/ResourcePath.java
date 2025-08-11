@@ -73,12 +73,16 @@ public class ResourcePath {
 	@Nullable
 	public final String path;
 
-	public static ResourcePath path(Path path) {
-		return path(path.toString());
-	}
-
 	public static ResourcePath path(String... parts) {
 		return new ResourcePath(parts);
+	}
+
+	public static ResourcePath path(Path path, String... parts) {
+		return path(normalize(path.toString(), parts));
+	}
+
+	public static ResourcePath path(File file, String... parts) {
+		return path(normalize(file.getPath(), parts));
 	}
 
 	public static ResourcePath path(Class<?> clazz, String... parts) {
@@ -153,7 +157,7 @@ public class ResourcePath {
 		while (nthLast-- >= 0) {
 			int i = filename.lastIndexOf('.');
 			if (i == -1)
-				return nthLast >= 0 ? "" : filename;
+				break;
 			extension = filename.substring(i + 1);
 			filename = filename.substring(0, i);
 		}
