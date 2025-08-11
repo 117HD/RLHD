@@ -2009,10 +2009,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.isTileSurfaceVisible(plane, tileEeX, tileEeY)
 			);
 
-		if (!isVisibleInScene && !isVisibleInDirectional) {
-			if (sceneCamera.getCullingResults().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
-				vertexCount /= 2; // Let see if we can extract the underwater Surface tile
-				isVisibleInScene = true;
+		int vertexOffset = paint.getBufferOffset();
+		int uvOffset = paint.getBufferOffset();
+
+		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
+			if (!isVisibleInScene && !isVisibleInDirectional) {
+				if (sceneCamera.getCullingResults().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
+					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
+					isVisibleInScene = true;
+				}
+			} else if (isVisibleInScene) {
+				if (!sceneCamera.getCullingResults().isTileUnderwaterVisible(plane, tileEeX, tileEeY)) {
+					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
+					vertexOffset += vertexCount;
+					uvOffset += vertexCount;
+				}
 			}
 		}
 
@@ -2022,8 +2033,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		++numPassthroughModels;
 
-		eightIntWrite[0] = paint.getBufferOffset();
-		eightIntWrite[1] = paint.getBufferOffset();
+		eightIntWrite[0] = vertexOffset;
+		eightIntWrite[1] = uvOffset;
 		eightIntWrite[2] = vertexCount / 3;
 		eightIntWrite[3] = renderBufferOffset;
 		eightIntWrite[4] = 0;
@@ -2058,9 +2069,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
 		int bufferLength = model.getBufferLen();
-		if (redrawPreviousFrame || bufferLength <= 0 || !sceneCamera
-			.getCullingResults()
-			.isTileSurfaceVisible(0, tileX + SCENE_OFFSET, tileY + SCENE_OFFSET))
+		if (redrawPreviousFrame || bufferLength <= 0)
+			return;
+
+		final int tileEeX = tileX + SCENE_OFFSET;
+		final int tileEeY = tileY + SCENE_OFFSET;
+
+		if (!sceneCamera.getCullingResults().isTileSurfaceVisible(0, tileEeX, tileEeY))
 			return;
 
 		final int localX = tileX * LOCAL_TILE_SIZE;
@@ -2092,16 +2107,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// buffer length includes the generated underwater terrain, so it must be halved
 			bufferLength /= 2;
 
-			++numPassthroughModels;
+			if (sceneCamera.getCullingResults().isTileUnderwaterVisible(0, tileEeX, tileEeY)) {
+				++numPassthroughModels;
 
-			eightIntWrite[0] = model.getBufferOffset() + bufferLength;
-			eightIntWrite[1] = model.getUvBufferOffset() + bufferLength;
-			eightIntWrite[2] = bufferLength / 3;
-			eightIntWrite[3] = renderBufferOffset;
-			buffer.put(eightIntWrite);
+				eightIntWrite[0] = model.getBufferOffset() + bufferLength;
+				eightIntWrite[1] = model.getUvBufferOffset() + bufferLength;
+				eightIntWrite[2] = bufferLength / 3;
+				eightIntWrite[3] = renderBufferOffset;
+				buffer.put(eightIntWrite);
 
-			renderBufferOffset += bufferLength;
-			drawnTileCount++;
+				renderBufferOffset += bufferLength;
+				drawnTileCount++;
+			}
 		}
 
 		++numPassthroughModels;
