@@ -2022,17 +2022,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		++numPassthroughModels;
+
+		eightIntWrite[0] = paint.getBufferOffset();
+		eightIntWrite[1] = paint.getBufferOffset();
+		eightIntWrite[2] = vertexCount / 3;
+		eightIntWrite[3] = renderBufferOffset;
+		eightIntWrite[4] = 0;
+		eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
+		eightIntWrite[6] = 0;
+		eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
+		
 		modelPassthroughBuffer
 			.ensureCapacity(16)
-			.getBuffer()
-			.put(paint.getBufferOffset())
-			.put(paint.getBufferOffset())
-			.put(vertexCount / 3)
-			.put(renderBufferOffset)
-			.put(0)
-			.put(tileX * LOCAL_TILE_SIZE)
-			.put(0)
-			.put(tileY * LOCAL_TILE_SIZE);
+			.put(eightIntWrite);
 
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
@@ -2080,6 +2082,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 
+		eightIntWrite[4] = 0;
+		eightIntWrite[5] = localX;
+		eightIntWrite[6] = localY;
+		eightIntWrite[7] = localZ;
+
 		if (underwaterTerrain) {
 			// draw underwater terrain tile before surface tile
 
@@ -2088,12 +2095,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			++numPassthroughModels;
 
-			buffer.put(model.getBufferOffset() + bufferLength);
-			buffer.put(model.getUvBufferOffset() + bufferLength);
-			buffer.put(bufferLength / 3);
-			buffer.put(renderBufferOffset);
-			buffer.put(0);
-			buffer.put(localX).put(localY).put(localZ);
+			eightIntWrite[0] = model.getBufferOffset() + bufferLength;
+			eightIntWrite[1] = model.getUvBufferOffset() + bufferLength;
+			eightIntWrite[2] = bufferLength / 3;
+			eightIntWrite[3] = renderBufferOffset;
+			buffer.put(eightIntWrite);
 
 			renderBufferOffset += bufferLength;
 			drawnTileCount++;
@@ -2101,12 +2107,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		++numPassthroughModels;
 
-		buffer.put(model.getBufferOffset());
-		buffer.put(model.getUvBufferOffset());
-		buffer.put(bufferLength / 3);
-		buffer.put(renderBufferOffset);
-		buffer.put(0);
-		buffer.put(localX).put(localY).put(localZ);
+		eightIntWrite[0] = model.getBufferOffset();
+		eightIntWrite[1] = model.getUvBufferOffset();
+		eightIntWrite[2] = bufferLength / 3;
+		eightIntWrite[3] = renderBufferOffset;
+		buffer.put(eightIntWrite);
 
 		renderBufferOffset += bufferLength;
 		drawnTileCount++;
