@@ -50,19 +50,19 @@ public class DeveloperTools implements KeyListener {
 	private HdPlugin plugin;
 
 	@Inject
-	private SnapshotRecording snapshotRecoding;
-
-	@Inject
-	private TileInfoOverlay tileInfoOverlay;
+	private FrameTimingsRecorder frameTimingsRecorder;
 
 	@Inject
 	private FrameTimerOverlay frameTimerOverlay;
 
 	@Inject
-	private ShadowMapOverlay shadowMapOverlay;
+	private TileInfoOverlay tileInfoOverlay;
 
 	@Inject
 	private LightGizmoOverlay lightGizmoOverlay;
+
+	@Inject
+	private ShadowMapOverlay shadowMapOverlay;
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
@@ -181,7 +181,7 @@ public class DeveloperTools implements KeyListener {
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
 			hideUiEnabled = !hideUiEnabled;
 		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
-			snapshotRecoding.startSnapshotSession();
+			frameTimingsRecorder.recordSnapshot();
 		} else {
 			return;
 		}

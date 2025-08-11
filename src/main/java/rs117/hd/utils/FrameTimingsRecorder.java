@@ -13,7 +13,6 @@ import java.util.Map;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import rs117.hd.HdPlugin;
@@ -25,21 +24,11 @@ import static com.sun.jna.platform.win32.GL.GL_VENDOR;
 import static com.sun.jna.platform.win32.GL.GL_VERSION;
 import static org.lwjgl.opengl.GL11C.GL_RENDERER;
 import static org.lwjgl.opengl.GL11C.glGetString;
-import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
 @Singleton
-public class SnapshotRecording implements FrameTimer.Listener {
-	private static final ResourcePath SAVE_LOCATION = path(RuneLite.RUNELITE_DIR, "117HD/snapshot");
-
-	@Getter
-	private boolean snapshotActive = false;
-
-	private long snapshotStartTime;
-
-	@Getter
-	private final List<SnapshotEntry> snapshotData = new ArrayList<>();
-
+public class FrameTimingsRecorder implements FrameTimer.Listener {
+	private static final ResourcePath SNAPSHOTS_DIR = HdPlugin.PLUGIN_DIR.resolve("snapshots");
 	private static final int SNAPSHOT_DURATION_MS = 20_000;
 	private static final int SNAPSHOT_INTERVAL_MS = 1_000;
 
@@ -50,25 +39,32 @@ public class SnapshotRecording implements FrameTimer.Listener {
 	private ClientThread clientThread;
 
 	@Inject
-	private HdPlugin plugin;
-
-	@Inject
-	private NpcDisplacementCache npcDisplacementCache;
-
-	@Inject
 	private ConfigManager configManager;
+
+	@Inject
+	private HdPlugin plugin;
 
 	@Inject
 	private FrameTimer frameTimer;
 
-	public void startSnapshotSession() {
-		if (snapshotActive)
+	@Inject
+	private NpcDisplacementCache npcDisplacementCache;
+
+	@Getter
+	private boolean capturingSnapshot = false;
+
+	private long snapshotStartTime;
+
+	@Getter
+	private final List<SnapshotEntry> snapshotData = new ArrayList<>();
+
+	public void recordSnapshot() {
+		if (capturingSnapshot)
 			return;
 
 		snapshotData.clear();
 		snapshotStartTime = System.currentTimeMillis();
-		snapshotActive = true;
-
+		capturingSnapshot = true;
 		frameTimer.addTimingsListener(this);
 
 		sendGameMessage("HD snapshot started (" + (SNAPSHOT_DURATION_MS / 1000) + " seconds)...");
@@ -80,7 +76,7 @@ public class SnapshotRecording implements FrameTimer.Listener {
 		long elapsed = now - snapshotStartTime;
 
 		if (elapsed > SNAPSHOT_DURATION_MS) {
-			snapshotActive = false;
+			capturingSnapshot = false;
 			saveSnapshot();
 			return;
 		}
@@ -102,10 +98,10 @@ public class SnapshotRecording implements FrameTimer.Listener {
 	private void saveSnapshot() {
 		frameTimer.removeTimingsListener(this);
 
-		SAVE_LOCATION.mkdirs();
+		SNAPSHOTS_DIR.mkdirs();
 		String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
 
-		var csvPath = SAVE_LOCATION.resolve("snapshot.csv");
+		var csvPath = SNAPSHOTS_DIR.resolve("snapshot.csv");
 		try (PrintWriter pw = new PrintWriter(csvPath.toOutputStream())) {
 			pw.print("FrameIndex,Time");
 			for (Timer t : Timer.values())
@@ -134,7 +130,7 @@ public class SnapshotRecording implements FrameTimer.Listener {
 			log.error("Error while saving snapshot:", ex);
 		}
 
-		try (PrintWriter pw = new PrintWriter(SAVE_LOCATION.resolve("web_import.json").toOutputStream())) {
+		try (PrintWriter pw = new PrintWriter(SNAPSHOTS_DIR.resolve("web_import.json").toOutputStream())) {
 			Gson gson = plugin.getGson();
 			WebImportData data = new WebImportData();
 			data.timestamp = timestamp;
