@@ -1761,12 +1761,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
 						);
 						float dist = length(cameraToCenterXZ);
-						if (dist > 0.05f) {
-							float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
-							divide(cameraToCenterXZ, cameraToCenterXZ, dist);
-							multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.1f, offsetStrength));
-							add(centerXZ, centerXZ, cameraToCenterXZ);
-						}
+						float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
+						divide(cameraToCenterXZ, cameraToCenterXZ, dist);
+						multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.1f, offsetStrength));
+						multiply(cameraToCenterXZ, cameraToCenterXZ, saturate(dist / 500.0f));
+						add(centerXZ, centerXZ, cameraToCenterXZ);
 					}
 
 					directionalLight.setCullingParent(sceneCamera);
