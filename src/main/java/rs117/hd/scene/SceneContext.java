@@ -109,6 +109,10 @@ public class SceneContext {
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
 
+		final int pad = expandedMapLoadingChunks * CHUNK_SIZE;
+		sceneEdge0 = max(1, SCENE_OFFSET - pad);
+		sceneEdge1 = min(EXTENDED_SCENE_SIZE - 2, SCENE_OFFSET + SCENE_SIZE + pad - 1);
+
 		if (previous == null) {
 			staticUnorderedModelBuffer = new GpuIntBuffer();
 			stagingBufferVertices = new GpuIntBuffer();
@@ -135,10 +139,6 @@ public class SceneContext {
 				stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.capacity());
 			}
 		}
-
-		final int pad = expandedMapLoadingChunks * CHUNK_SIZE;
-		sceneEdge0 = max(1, SCENE_OFFSET - pad);
-		sceneEdge1 = min(EXTENDED_SCENE_SIZE - 2, SCENE_OFFSET + SCENE_SIZE + pad - 1);
 	}
 
 	public synchronized void destroy() {

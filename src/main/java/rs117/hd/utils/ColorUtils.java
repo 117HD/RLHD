@@ -114,14 +114,14 @@ public class ColorUtils {
 	}
 
 	public static float[] linearToSrgb(float... c) {
-		float[] result = Arrays.copyOf(c, clamp(c.length, 3, 4));
+		float[] result = slice(c, 0, clamp(c.length, 3, 4));
 		for (int i = 0; i < 3; i++)
 			result[i] = linearToSrgb(result[i]);
 		return result;
 	}
 
 	public static float[] srgbToLinear(float... c) {
-		float[] result = Arrays.copyOf(c, clamp(c.length, 3, 4));
+		float[] result = slice(c, 0, clamp(c.length, 3, 4));
 		for (int i = 0; i < 3; i++)
 			result[i] = srgbToLinear(c[i]);
 		return result;
