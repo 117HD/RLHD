@@ -493,6 +493,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean redrawPreviousFrame;
 	private boolean isInChambersOfXeric;
 	private boolean isInHouse;
+	private boolean justChangedArea;
 	private Scene skipScene;
 	private int previousPlane;
 
@@ -1739,10 +1740,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		Player localPlayer = client.getLocalPlayer();
 		var lp = localPlayer.getLocalLocation();
 		if (sceneContext.enableAreaHiding) {
+			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
-				sceneContext.scene.getBaseX() + lp.getSceneX(),
-				sceneContext.scene.getBaseY() + lp.getSceneY(),
-				client.getPlane()
+				sceneContext.sceneBase[0] + lp.getSceneX(),
+				sceneContext.sceneBase[1] + lp.getSceneY(),
+				sceneContext.sceneBase[2] + client.getPlane()
 			};
 
 			// We need to check all areas contained in the scene in the order they appear in the list,
@@ -1750,7 +1752,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// portions of the floor beneath around stairs and ladders
 			Area newArea = null;
 			for (var area : sceneContext.possibleAreas) {
-				if (area.containsPoint(worldPos)) {
+				if (area.containsPoint(false, worldPos)) {
 					newArea = area;
 					break;
 				}
@@ -1758,10 +1760,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Force a scene reload if the player is no longer in the same area
 			if (newArea != sceneContext.currentArea) {
+				if (justChangedArea) {
+					// Prevent getting stuck in a scene reloading loop if this breaks for any reason
+					sceneContext.forceDisableAreaHiding = true;
+					log.error("Force disabling area hiding after moving from {} to {} at {}", sceneContext.currentArea, newArea, worldPos);
+				} else {
+					justChangedArea = true;
+				}
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
+			} else {
+				justChangedArea = false;
 			}
+		} else {
+			justChangedArea = false;
 		}
 
 		if (!enableFreezeFrame) {
@@ -2358,10 +2371,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDisable(GL_DEPTH_TEST);
 
 				frameTimer.end(Timer.RENDER_SHADOWS);
-			} else {
-				uboGlobal.upload();
 			}
 
+			uboGlobal.upload();
 			sceneProgram.use();
 			sceneProgram.uniLegacyWaterColor.set(environmentManager.currentWaterColor);
 			sceneProgram.uniShorelineCaustics.set(config.shorelineCaustics());
@@ -3303,10 +3315,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Hide everything outside the current area if area hiding is enabled
 		if (sceneContext.currentArea != null) {
+			assert sceneContext.sceneBase != null;
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
-				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),
-				client.getPlane()
+				sceneContext.sceneBase[0] + (x >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[1] + (z >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[2] + client.getPlane()
 			);
 			if (!inArea)
 				return;

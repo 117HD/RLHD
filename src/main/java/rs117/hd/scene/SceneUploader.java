@@ -36,13 +36,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.data.materials.UvType;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
@@ -98,15 +97,16 @@ public class SceneUploader {
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		var scene = sceneContext.scene;
-		// TODO: Allow area hiding for simple instances (consisting of only contiguous chunks)
-		sceneContext.enableAreaHiding = config.hideUnrelatedAreas() && !scene.isInstance();
+		sceneContext.enableAreaHiding =
+			config.hideUnrelatedAreas() &&
+			sceneContext.sceneBase != null &&
+			!sceneContext.forceDisableAreaHiding;
 		sceneContext.fillGaps = config.fillGapsInTerrain();
 
 		if (sceneContext.enableAreaHiding) {
-			AABB sceneBounds = sceneContext.getNonInstancedSceneBounds();
 			sceneContext.possibleAreas = Arrays
 				.stream(areaManager.areasWithAreaHiding)
-				.filter(area -> sceneBounds.intersects(area.aabbs))
+				.filter(area -> sceneContext.sceneBounds.intersects(area.aabbs))
 				.toArray(Area[]::new);
 
 			if (log.isDebugEnabled() && sceneContext.possibleAreas.length > 0) {
@@ -197,17 +197,18 @@ public class SceneUploader {
 			return;
 		}
 
+		assert sceneContext.sceneBase != null;
 		var lp = client.getLocalPlayer().getLocalLocation();
 		int[] worldPos = {
-			sceneContext.scene.getBaseX() + lp.getSceneX(),
-			sceneContext.scene.getBaseY() + lp.getSceneY(),
-			client.getPlane()
+			sceneContext.sceneBase[0] + lp.getSceneX(),
+			sceneContext.sceneBase[1] + lp.getSceneY(),
+			sceneContext.sceneBase[2] + client.getPlane()
 		};
 
-		if (sceneContext.currentArea == null || !sceneContext.currentArea.containsPoint(worldPos)) {
+		if (sceneContext.currentArea == null || !sceneContext.currentArea.containsPoint(false, worldPos)) {
 			sceneContext.currentArea = null;
 			for (var area : sceneContext.possibleAreas) {
-				if (area.containsPoint(worldPos)) {
+				if (area.containsPoint(false, worldPos)) {
 					sceneContext.currentArea = area;
 					break;
 				}
@@ -216,13 +217,15 @@ public class SceneUploader {
 	}
 
 	private void removeTilesOutsideCurrentArea(SceneContext sceneContext) {
+		assert sceneContext.sceneBase != null;
 		updatePlayerArea(sceneContext);
 		if (sceneContext.currentArea == null)
 			return;
 
 		var tiles = sceneContext.scene.getExtendedTiles();
-		int baseExX = sceneContext.getBaseExX();
-		int baseExY = sceneContext.getBaseExY();
+		int baseExX = sceneContext.sceneBase[0] - SCENE_OFFSET;
+		int baseExY = sceneContext.sceneBase[1] - SCENE_OFFSET;
+		int basePlane = sceneContext.sceneBase[2];
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
@@ -230,7 +233,7 @@ public class SceneUploader {
 					if (tile == null)
 						continue;
 
-					if (!sceneContext.currentArea.containsPoint(baseExX + x, baseExY + y, z))
+					if (!sceneContext.currentArea.containsPoint(baseExX + x, baseExY + y, basePlane + z))
 						sceneContext.scene.removeTile(tile);
 				}
 			}
@@ -238,21 +241,24 @@ public class SceneUploader {
 	}
 
 	private void fillGaps(SceneContext sceneContext) {
-		if (sceneContext.currentArea != null && !sceneContext.currentArea.fillGaps)
+		if (sceneContext.sceneBase == null)
+			return;
+
+		var area = sceneContext.currentArea;
+		if (area != null && !area.fillGaps)
 			return;
 
 		int sceneMin = -sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
-
-		int baseExX = sceneContext.getBaseExX();
-		int baseExY = sceneContext.getBaseExY();
+		int baseExX = sceneContext.sceneBase[0];
+		int baseExY = sceneContext.sceneBase[1];
+		int basePlane = sceneContext.sceneBase[2];
 
 		Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
 		for (int tileZ = 0; tileZ < MAX_Z; ++tileZ) {
 			for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; ++tileExX) {
 				for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; ++tileExY) {
-					if (sceneContext.currentArea != null &&
-						!sceneContext.currentArea.containsPoint(baseExX + tileExX, baseExY + tileExY, tileZ))
+					if (area != null && !area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane + tileZ))
 						continue;
 
 					int tileX = tileExX - SCENE_OFFSET;

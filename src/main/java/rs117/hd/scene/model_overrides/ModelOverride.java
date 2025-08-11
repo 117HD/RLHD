@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
-import rs117.hd.data.materials.UvType;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.materials.Material;

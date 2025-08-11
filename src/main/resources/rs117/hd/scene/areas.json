@@ -4914,7 +4914,10 @@
       [ 1384, 9317, 1404, 9336 ],
       [ 1385, 9305, 1403, 9316 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "unhideAreas": [
+      [ 1343, 9296, 1363, 9306 ]
+    ]
   },
   {
     "name": "FOSSIL_ISLAND_WYVERN_TASK_CAVE",

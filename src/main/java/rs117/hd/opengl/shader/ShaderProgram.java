@@ -277,4 +277,15 @@ public class ShaderProgram {
 	public Uniform4f addUniform4f(String uniformName) {
 		return addUniform(new Uniform4f(), uniformName);
 	}
+
+	public static class UniformMat4 extends UniformProperty {
+		public void set(float[] mat4) {
+			assert program.isActive();
+			glUniformMatrix4fv(uniformIndex, false, mat4);
+		}
+	}
+
+	public UniformMat4 addUniformMat4(String uniformName) {
+		return addUniform(new UniformMat4(), uniformName);
+	}
 }

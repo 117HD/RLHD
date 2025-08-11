@@ -191,8 +191,10 @@ public class GsonUtils {
 				return;
 			}
 
-			if (src instanceof Float)
+			if (src instanceof Float) {
 				out.value((float) src * RAD_TO_DEG);
+				return;
+			}
 
 			throw new IOException("Expected a float or float array. Got " + src);
 		}

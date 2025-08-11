@@ -964,20 +964,20 @@ public class LightManager {
 
 	private void addWorldLight(SceneContext sceneContext, Light light) {
 		assert light.worldPoint != null;
-		var firstlp = sceneContext.worldInstanceToLocals(light.worldPoint).findFirst();
-		if (firstlp.isEmpty())
-			return;
+		sceneContext.worldToLocals(light.worldPoint).forEach(local -> {
+			int tileExX = local[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+			int tileExY = local[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+			if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
+				return;
 
-		LocalPoint lp = firstlp.get();
-		int tileExX = lp.getSceneX() + SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SCENE_OFFSET;
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return;
-
-		light.origin[0] = lp.getX() + LOCAL_HALF_TILE_SIZE;
-		light.origin[1] = sceneContext.scene.getTileHeights()[light.plane][tileExX][tileExY] - light.def.height - 1;
-		light.origin[2] = lp.getY() + LOCAL_HALF_TILE_SIZE;
-		sceneContext.lights.add(light);
+			var copy = new Light(light.def);
+			copy.plane = local[2];
+			copy.persistent = light.persistent;
+			copy.origin[0] = local[0] + LOCAL_HALF_TILE_SIZE;
+			copy.origin[1] = sceneContext.scene.getTileHeights()[local[2]][tileExX][tileExY] - copy.def.height - 1;
+			copy.origin[2] = local[1] + LOCAL_HALF_TILE_SIZE;
+			sceneContext.lights.add(copy);
+		});
 	}
 
 	@Subscribe

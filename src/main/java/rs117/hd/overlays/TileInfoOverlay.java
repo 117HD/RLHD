@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
@@ -64,7 +65,6 @@ import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
-import static rs117.hd.utils.HDUtils.getSceneBaseExtended;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -129,7 +129,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private SceneContext currentSceneContext;
 	private Area[] visibleAreas = new Area[0];
 	private final AABB dummyAabb = new AABB(0, 0);
-	private int[] baseEx;
+	private int[] sceneBase;
 	private final ArrayList<String> hoveredGamevals = new ArrayList<>();
 	private int hoveredGamevalsIndex;
 	private int hoveredGamevalsHash;
@@ -172,12 +172,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			hoveredAreaAabb[1] = 0;
 			copyTo(selectedAreaAabb, hoveredAreaAabb);
 
-			baseEx = getSceneBaseExtended(sceneContext.scene, client.getPlane());
+			sceneBase = Objects.requireNonNullElseGet(
+				sceneContext.sceneBase,
+				() -> HDUtils.getSceneBaseBestGuess(sceneContext.scene, client.getPlane())
+			);
 
-			if (sceneContext.scene.isInstance()) {
+			if (sceneContext.sceneBase == null) {
 				visibleAreas = new Area[0];
 			} else {
-				AABB sceneBounds = sceneContext.getNonInstancedSceneBounds();
 				visibleAreas = Arrays
 					.stream(AreaManager.AREAS)
 					.map(area -> {
@@ -186,8 +188,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						copy.regionBoxes = area.regionBoxes;
 						copy.rawAabbs = area.rawAabbs;
 						copy.normalize();
-						copy.aabbs = Arrays.stream(copy.aabbs)
-							.map(aabb -> sceneBounds.intersects(aabb) ? aabb : dummyAabb)
+						copy.unhideAreas = area.unhideAreas;
+						copy.aabbs = Arrays
+							.stream(copy.aabbs)
+							.map(aabb -> sceneContext.sceneBounds.intersects(aabb) ? aabb : dummyAabb)
 							.toArray(AABB[]::new);
 						return copy;
 					})
@@ -341,6 +345,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						String label = aabb.toArgs();
 						if (aabb.isVolume())
 							label = area.name + "[" + j + "]\n" + label;
+						if (sceneContext.currentArea != null && sceneContext.currentArea.name.equals(area.name))
+							label = "CURRENT\n" + label;
 
 						// Since we have a bunch of AABBs spanning all planes,
 						// it would be a bit obnoxious to always render the full AABB
@@ -351,6 +357,20 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						drawLocalAabb(g, localAabb);
 
 						g.setColor(Color.LIGHT_GRAY);
+						drawLocalAabbLabel(g, localAabb, label, false);
+					}
+
+					for (int j = 0; j < area.unhideAreas.length; j++) {
+						AABB aabb = area.unhideAreas[j];
+						String label = aabb.toArgs();
+						if (aabb.isVolume())
+							label = area.name + ".unhide[" + j + "]\n" + label;
+						if (sceneContext.currentArea != null && sceneContext.currentArea.name.equals(area.name))
+							label = "CURRENT\n" + label;
+
+						var localAabb = toLocalAabb(sceneContext, cropAabb(sceneContext, aabb));
+						g.setColor(Color.PINK);
+						drawLocalAabb(g, localAabb);
 						drawLocalAabbLabel(g, localAabb, label, false);
 					}
 				}
@@ -412,11 +432,11 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			drawLocalAabbLabel(g, localAabb, "Selection[" + selections.size() + "]\n" + pendingSelection.toArgs(), true);
 		}
 
-		if (sceneContext.scene.isInstance()) {
+		if (sceneContext.sceneBase == null) {
 			g.setColor(Color.RED);
 			g.setFont(FontManager.getRunescapeFont());
 			var b = g.getClipBounds();
-			var str = "This is an instance. AABBs may not work.";
+			var str = "This is a non-contiguous instance. AABBs may not work.";
 			int w = g.getFontMetrics().stringWidth(str);
 			g.drawString(str, (int) (b.x + b.getWidth() / 2 - w / 2.f), 16);
 		}
@@ -1163,12 +1183,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	 */
 	private void drawLine(Graphics2D g, int x1, int y1, int z1, int x2, int y2, int z2) {
 		// Using floats to support coordinates much larger than normal local coordinates
-		int cameraPitch = client.getCameraPitch();
-		int cameraYaw = client.getCameraYaw();
-		float pitchSin = sin(cameraPitch * JAU_TO_RAD);
-		float pitchCos = cos(cameraPitch * JAU_TO_RAD);
-		float yawSin = sin(cameraYaw * JAU_TO_RAD);
-		float yawCos = cos(cameraYaw * JAU_TO_RAD);
+		float yawSin = sin(plugin.cameraOrientation[0]);
+		float yawCos = cos(plugin.cameraOrientation[0]);
+		float pitchSin = sin(plugin.cameraOrientation[1]);
+		float pitchCos = cos(plugin.cameraOrientation[1]);
 
 		x1 -= client.getCameraX();
 		y1 -= client.getCameraY();
@@ -1302,10 +1320,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private AABB toLocalAabb(SceneContext ctx, AABB aabb, float scale) {
-		int x1 = (aabb.minX - baseEx[0] - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-		int y1 = (aabb.minY - baseEx[1] - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-		int x2 = (aabb.maxX + 1 - baseEx[0] - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-		int y2 = (aabb.maxY + 1 - baseEx[1] - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+		int x1 = (aabb.minX - sceneBase[0]) * LOCAL_TILE_SIZE;
+		int y1 = (aabb.minY - sceneBase[1]) * LOCAL_TILE_SIZE;
+		int x2 = (aabb.maxX + 1 - sceneBase[0]) * LOCAL_TILE_SIZE;
+		int y2 = (aabb.maxY + 1 - sceneBase[1]) * LOCAL_TILE_SIZE;
 
 		int minZ = 0, maxZ = MAX_Z;
 		if (aabb.hasZ()) {
@@ -1360,8 +1378,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	private AABB cropAabb(SceneContext ctx, AABB aabb) {
 		if (aabb.isPoint()) {
-			int sceneExX = aabb.minX - baseEx[0];
-			int sceneExY = aabb.minY - baseEx[1];
+			int sceneExX = aabb.minX - (sceneBase[0] - SCENE_OFFSET);
+			int sceneExY = aabb.minY - (sceneBase[1] - SCENE_OFFSET);
 			if (sceneExX >= 0 && sceneExY >= 0 && sceneExX < EXTENDED_SCENE_SIZE && sceneExY < EXTENDED_SCENE_SIZE) {
 				int minZ = MAX_Z - 1;
 				int maxZ = 0;
@@ -1457,14 +1475,14 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	}
 
 	private void drawRegionBoxes(Graphics2D g, SceneContext ctx) {
-		int baseExX = ctx.getBaseExX();
-		int baseExY = ctx.getBaseExY();
+		if (ctx.sceneBase == null)
+			return;
 		int regionSize = CHUNK_SIZE * 8;
 
 		for (int x = 0; x < EXTENDED_SCENE_SIZE; x += regionSize) {
 			for (int y = 0; y < EXTENDED_SCENE_SIZE; y += regionSize) {
-				int regionX = (baseExX + x) / regionSize;
-				int regionY = (baseExY + y) / regionSize;
+				int regionX = (ctx.sceneBase[0] + x) / regionSize;
+				int regionY = (ctx.sceneBase[1] + y) / regionSize;
 				int regionId = regionX << 8 | regionY;
 				int worldX = regionX * regionSize;
 				int worldY = regionY * regionSize;
@@ -1473,7 +1491,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 					worldY,
 					worldX + regionSize - 1,
 					worldY + regionSize - 1,
-					client.getPlane()
+					ctx.sceneBase[2] + client.getPlane()
 				);
 				var localAabb = toLocalAabb(ctx, aabb, .996f);
 				g.setColor(TRANSPARENT_YELLOW_50);
