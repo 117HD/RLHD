@@ -92,7 +92,7 @@ void main() {
                 vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
 
                 float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
-                float lightCos = sqrt(1.0 - lightSinSqr);
+                float lightCos = sqrt(0.999 - lightSinSqr);
                 float lightTileCos = dot(lightCenterVec, tileCenterVec);
 
                 float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
