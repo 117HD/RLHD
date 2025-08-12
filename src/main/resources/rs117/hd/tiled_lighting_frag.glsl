@@ -82,11 +82,10 @@ void main() {
         ivec4 outputTileData = ivec4(0);
         for (int c = 0; c < 4; c++) {
             for (; lightIdx < pointLightsCount; lightIdx++) {
-                vec4 lightData = PointLightArray[lightIdx].position;
-                vec3 lightWorldPos = lightData.xyz;
+                vec4 lightData = PointLightPositionsArray[lightIdx];
+                vec3 lightViewPos = lightData.xyz;
                 float lightRadiusSqr = lightData.w;
 
-                vec3 lightViewPos = (viewMatrix * vec4(lightWorldPos, 1.0)).xyz;
                 float lightDistSqr = dot(lightViewPos, lightViewPos);
 
                 vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
