@@ -184,8 +184,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
-	public static final int UNIFORM_BLOCK_COMPUTE = 4;
-	public static final int UNIFORM_BLOCK_UI = 5;
+	public static final int UNIFORM_BLOCK_LIGHTS_CULLING = 4;
+	public static final int UNIFORM_BLOCK_COMPUTE = 5;
+	public static final int UNIFORM_BLOCK_UI = 6;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -195,6 +196,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
+	public static final int TILED_LIGHTING_TILE_SIZE = 16;
 
 	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
 	public static final float WIND_DISPLACEMENT_NOISE_RESOLUTION = 0.04f;
@@ -422,7 +424,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private SharedGLBuffer[] hModelSortingBuffers;
 
 	private final UBOGlobal uboGlobal = new UBOGlobal();
-	private final UBOLights uboLights = new UBOLights();
+	private final UBOLights uboLights = new UBOLights(false);
+	private final UBOLights uboLightsCulling = new UBOLights(true);
 	private final UBOCompute uboCompute = new UBOCompute();
 	private final UBOUI uboUI = new UBOUI();
 
@@ -483,6 +486,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
+	public float[] viewMatrix;
 	public final float[] cameraPosition = new float[3];
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
@@ -891,6 +895,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
+			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
@@ -924,6 +929,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
+			.addUniformBuffer(uboLightsCulling)
 			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(materialManager.uboMaterials)
@@ -1212,6 +1218,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+		uboLightsCulling.initialize(UNIFORM_BLOCK_LIGHTS_CULLING);
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 	}
@@ -1229,6 +1236,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.destroy();
 		uboLights.destroy();
+		uboLightsCulling.destroy();
 		uboCompute.destroy();
 		uboUI.destroy();
 	}
@@ -1260,8 +1268,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateTiledLightingFbo() {
 		assert configTiledLighting;
 
-		final int tileSize = 16;
-		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), tileSize)));
+		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
 		if (Arrays.equals(resolution, tiledLightingResolution))
 			return;
 
@@ -1713,13 +1720,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
+
+				// Calculate view matrix
+				viewMatrix = Mat4.rotateX(cameraOrientation[1]);
+				Mat4.mul(viewMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(viewMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
+
+				// Calculate view proj & inv matrix
+				float[] viewProj = Mat4.identity();
+				Mat4.mul(viewProj, projectionMatrix);
+				Mat4.mul(viewProj, viewMatrix);
+				float[] invProjectionMatrix = Mat4.inverse(viewProj);
 
 				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.viewMatrix.set(viewMatrix);
+				uboGlobal.projectionMatrix.set(viewProj);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
 			}
@@ -1728,25 +1743,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configDynamicLights != DynamicLights.NONE && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
+
+			final float[] lightPosition = new float[4];
+			final float[] lightColor = new float[4];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
-				Light light = sceneContext.lights.get(i);
-				var struct = uboLights.lights[i];
-				float paddedRadius = light.radius;
-				paddedRadius += 16 * (512.f / client.getScale()) * 15;
-				struct.position.set(
-					light.pos[0] + cameraShift[0],
-					light.pos[1],
-					light.pos[2] + cameraShift[1],
-					paddedRadius * paddedRadius
-				);
-				struct.color.set(
-					light.color[0] * light.strength,
-					light.color[1] * light.strength,
-					light.color[2] * light.strength,
-					light.radius * light.radius
-				);
+				final Light light = sceneContext.lights.get(i);
+				final float lightRadiusSq = light.radius * light.radius;
+				lightPosition[0] = light.pos[0] + cameraShift[0];
+				lightPosition[1] = light.pos[1];
+				lightPosition[2] = light.pos[2] + cameraShift[1];
+				lightPosition[3] = lightRadiusSq;
+
+				lightColor[0] = light.color[0] * light.strength;
+				lightColor[1] = light.color[1] * light.strength;
+				lightColor[2] = light.color[2] * light.strength;
+				lightColor[3] = 0.0f;
+
+				uboLights.setLight(i, lightPosition, lightColor);
+
+				// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
+				lightPosition[3] = 1.0f;
+				Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
+				lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq
+
+				uboLightsCulling.setLight(i, lightPosition, lightColor);
 			}
+
 			uboLights.upload();
+			uboLightsCulling.upload();
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {
