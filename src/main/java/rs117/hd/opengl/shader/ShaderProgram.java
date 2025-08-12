@@ -95,6 +95,7 @@ public class ShaderProgram {
 	}
 
 	public void destroy() {
+		viable = true;
 		if (program == 0)
 			return;
 
@@ -105,7 +106,6 @@ public class ShaderProgram {
 			prop.destroy();
 
 		uniformBlockMappings.clear();
-		viable = true;
 	}
 
 	private static class UniformProperty {
