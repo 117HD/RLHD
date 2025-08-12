@@ -40232,7 +40232,8 @@
       "FLOORKIT_WOODEN01_DEFAULT02",
       "FLOORKIT_ALDARIN_WOOD01_DEFAULT01",
       "FLOORKIT_WOODEN01_END01",
-      "FLOORKIT_WOODEN01_END01_M"
+      "FLOORKIT_WOODEN01_END01_M",
+      "QUEST_START_ICON_HEARTOFDARKNESS"
     ]
   },
   {
@@ -40764,7 +40765,9 @@
       "VMQ4_CIVITAS_JANUS_WINDOW_CLOSED",
       "CIVITAS_PALACE_WALLKIT03",
       "CIVITAS_PALACE_WALLKIT02",
-      "CIVITAS_PALACE_WALLKIT01"
+      "CIVITAS_PALACE_WALLKIT01",
+      "CIVITAS_PALACE_WALLKIT03_JOIN01",
+      "CIVITAS_PALACE_WALLKIT03_JOIN01_M"
     ],
     "colorOverrides": [
       {
@@ -55170,6 +55173,15 @@
     "objectIds": [
       "CON_CONTRACT_ARDY_SOUTH_BATH_BROKEN",
       "CON_CONTRACT_ARDY_SOUTH_BATH_FIXED"
+    ]
+  },
+  {
+    "description": "Varlamore - Teomate - Stairs",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "TEOMAT_STAIRS_2X3"
     ]
   }
 ]
