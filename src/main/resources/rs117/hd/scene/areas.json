@@ -7579,6 +7579,12 @@
     ]
   },
   {
+    "name": "Savannah Church of Ralos",
+    "aabbs": [
+      [ 1728, 2922, 1746, 2935 ]
+    ]
+  },
+  {
     "name": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
     "aabbs": [
       [ 1443, 3104, 1444, 3105 ]

@@ -4906,6 +4906,20 @@
     "waterType": "PLAIN_WATER"
   },
   {
+    "name": "Savannah Church Tiles - White",
+    "area": "Savannah Church of Ralos",
+    "overlayIds": [ 199 ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
+    "name": "Savannah Church Tiles - Yellow",
+    "area": "Savannah Church of Ralos",
+    "overlayIds": [ 226, 227 ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
     "name": "Proudspire Snow Blending",
     "area": "Proudspire",
     "underlayIds": [ 58 ],
@@ -7147,6 +7161,12 @@
     "replacements": {
       "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "Varlamore - Clay Dirt Path",
+    "area": "VARLAMORE",
+    "overlayIds": [ 330 ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "JUDGE_OF_YAMA_BOSS_WATER",
