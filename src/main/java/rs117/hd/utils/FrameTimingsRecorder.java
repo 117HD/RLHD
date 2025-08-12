@@ -1,8 +1,8 @@
 package rs117.hd.utils;
 
-import com.google.gson.Gson;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -98,15 +98,15 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	private void saveSnapshot() {
 		frameTimer.removeTimingsListener(this);
 
-		SNAPSHOTS_DIR.mkdirs();
 		String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
 
-		var csvPath = SNAPSHOTS_DIR.resolve("snapshot.csv");
-		try (PrintWriter pw = new PrintWriter(csvPath.toOutputStream())) {
-			pw.print("FrameIndex,Time");
+		SNAPSHOTS_DIR.mkdirs();
+		var csvPath = SNAPSHOTS_DIR.resolve("snapshot-" + timestamp + ".csv");
+		try (var out = new PrintWriter(csvPath.toWriter())) {
+			out.print("FrameIndex,Time");
 			for (Timer t : Timer.values())
-				pw.print("," + t.name());
-			pw.println(",EstimatedBottleneck,EstimatedFPS,DrawnTiles,DrawnStatic,DrawnDynamic,NpcCacheSize");
+				out.print("," + t.name());
+			out.println(",EstimatedBottleneck,EstimatedFPS,DrawnTiles,DrawnStatic,DrawnDynamic,NpcCacheSize");
 
 			int frameIndex = 0;
 			for (SnapshotEntry e : snapshotData) {
@@ -124,33 +124,33 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 					.append(',').append(e.drawnDynamic)
 					.append(',').append(e.npcCacheSize);
 
-				pw.println(sb);
+				out.println(sb);
 			}
 		} catch (Exception ex) {
 			log.error("Error while saving snapshot:", ex);
 		}
 
-		try (PrintWriter pw = new PrintWriter(SNAPSHOTS_DIR.resolve("web_import.json").toOutputStream())) {
-			Gson gson = plugin.getGson();
-			WebImportData data = new WebImportData();
-			data.timestamp = timestamp;
-			data.frames = snapshotData;
+		WebImportData data = new WebImportData();
+		data.timestamp = timestamp;
+		data.frames = snapshotData;
+		data.osName = System.getProperty("os.name");
+		data.osArch = System.getProperty("os.arch");
+		data.osVersion = System.getProperty("os.version");
+		data.javaVersion = System.getProperty("java.version");
+		data.cpuCores = Runtime.getRuntime().availableProcessors();
+		data.totalMemoryMB = Runtime.getRuntime().maxMemory() / (1024 * 1024);
+		data.gpuName = getOpenGLGPUInfo();
 
-			data.osName = System.getProperty("os.name");
-			data.osArch = System.getProperty("os.arch");
-			data.osVersion = System.getProperty("os.version");
-			data.javaVersion = System.getProperty("java.version");
-			data.cpuCores = Runtime.getRuntime().availableProcessors();
-			data.totalMemoryMB = Runtime.getRuntime().maxMemory() / (1024 * 1024);
-			data.gpuName = getOpenGLGPUInfo();
+		for (String config : configManager.getConfigurationKeys("hd")) {
+			String configClean = config.replace("hd.", "");
+			data.pluginSettings.put(configClean, configManager.getConfiguration("hd", configClean));
+		}
 
-			for (String config : configManager.getConfigurationKeys("hd")) {
-				String configClean = config.replace("hd.", "");
-				data.pluginSettings.put(configClean, configManager.getConfiguration("hd", configClean));
-			}
-
-			pw.write(gson.toJson(data));
-		} catch (Exception ex) {
+		try {
+			SNAPSHOTS_DIR
+				.resolve("snapshot-" + timestamp + ".json")
+				.writeString(plugin.getGson().toJson(data));
+		} catch (IOException ex) {
 			log.error("Error while saving snapshot:", ex);
 		}
 
