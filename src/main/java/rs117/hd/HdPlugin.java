@@ -194,6 +194,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
+	public static final int TILED_LIGHTING_TILE_SIZE = 16;
 
 	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
 	public static final float WIND_DISPLACEMENT_NOISE_RESOLUTION = 0.04f;
@@ -880,6 +881,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
+			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
@@ -1249,8 +1251,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateTiledLightingFbo() {
 		assert configTiledLighting;
 
-		final int tileSize = 16;
-		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), tileSize)));
+		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
 		if (Arrays.equals(resolution, tiledLightingResolution))
 			return;
 
@@ -1690,13 +1691,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
+
+				// Calculate view matrix
+				float[] viewMatrix = Mat4.rotateX(cameraOrientation[1]);
+				Mat4.mul(viewMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(viewMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
+
+				// Calculate view proj & inv matrix
+				float[] viewProj = Mat4.identity();
+				Mat4.mul(viewProj, projectionMatrix);
+				Mat4.mul(viewProj, viewMatrix);
+				float[] invProjectionMatrix = Mat4.inverse(viewProj);
 
 				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.viewMatrix.set(viewMatrix);
+				uboGlobal.projectionMatrix.set(viewProj);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
 			}
@@ -1708,19 +1717,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
 				Light light = sceneContext.lights.get(i);
 				var struct = uboLights.lights[i];
-				float paddedRadius = light.radius;
-				paddedRadius += 16 * (512.f / client.getScale()) * 15;
 				struct.position.set(
 					light.pos[0] + cameraShift[0],
 					light.pos[1],
 					light.pos[2] + cameraShift[1],
-					paddedRadius * paddedRadius
+					light.radius * light.radius
 				);
 				struct.color.set(
 					light.color[0] * light.strength,
 					light.color[1] * light.strength,
 					light.color[2] * light.strength,
-					light.radius * light.radius
+					0.0f
 				);
 			}
 			uboLights.upload();

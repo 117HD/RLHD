@@ -18,7 +18,7 @@ out ivec4 TiledData;
 
 #include <utils/constants.glsl>
 
-in vec3 fRay;
+in vec2 fragUV;
 
 void main() {
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
@@ -44,8 +44,36 @@ void main() {
         }
     #endif
 
-    vec2 screenUV = gl_FragCoord.xy;
-    vec3 viewDir = normalize(fRay);
+    const vec2 tileSize = vec2(TILED_LIGHTING_TILE_SIZE);
+    vec2 screenUV = fragUV * sceneResolution;
+    vec2 tileOrigin = floor(screenUV / tileSize) * tileSize;
+
+    vec2 tl = tileOrigin;                          // top-left
+    vec2 tr = tileOrigin + vec2(tileSize.x, 0.0);  // top-right
+    vec2 bl = tileOrigin + vec2(0.0, tileSize.y);  // bottom-left
+    vec2 br = tileOrigin + tileSize;               // bottom-right
+
+    vec2 ndcTL = (tl / sceneResolution) * 2.0 - 1.0;
+    vec2 ndcTR = (tr / sceneResolution) * 2.0 - 1.0;
+    vec2 ndcBL = (bl / sceneResolution) * 2.0 - 1.0;
+    vec2 ndcBR = (br / sceneResolution) * 2.0 - 1.0;
+
+    const float eps = 1e-10;
+
+    vec4 pTL = invProjectionMatrix * vec4(ndcTL, eps, 1.0);
+    vec4 pTR = invProjectionMatrix * vec4(ndcTR, eps, 1.0);
+    vec4 pBL = invProjectionMatrix * vec4(ndcBL, eps, 1.0);
+    vec4 pBR = invProjectionMatrix * vec4(ndcBR, eps, 1.0);
+
+    vec3 rTL = normalize((viewMatrix * vec4((pTL.xyz / pTL.w) - cameraPos, 1.0)).xyz);
+    vec3 rTR = normalize((viewMatrix * vec4((pTR.xyz / pTR.w) - cameraPos, 1.0)).xyz);
+    vec3 rBL = normalize((viewMatrix * vec4((pBL.xyz / pBL.w) - cameraPos, 1.0)).xyz);
+    vec3 rBR = normalize((viewMatrix * vec4((pBR.xyz / pBR.w) - cameraPos, 1.0)).xyz);
+
+    vec3 tileCenterVec = normalize(rTL + rTR + rBL + rBR);
+    float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
+    float tileSin = sqrt(1.0 - tileCos * tileCos);
+
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
     for (int l = 0; l < TILED_LIGHTING_LAYER_COUNT; l++)
@@ -56,34 +84,36 @@ void main() {
             for (; lightIdx < pointLightsCount; lightIdx++) {
                 vec4 lightData = PointLightArray[lightIdx].position;
                 vec3 lightWorldPos = lightData.xyz;
-                vec3 cameraToLight = lightWorldPos - cameraPos;
-                float paddedLightRadiusSq = lightData.w;
+                float lightRadiusSqr = lightData.w;
 
-                // Calculate the distance from the camera to the point closest to the light along the view ray
-                float t = dot(cameraToLight, viewDir);
-                if (t < 0) {
-                    // If the closest point lies behind the camera, the light can only contribute to the visible
-                    // scene if the camera happens to be within the light's radius
-                    float lightRadiusSq = PointLightArray[lightIdx].color.w;
-                    if (dot(cameraToLight, cameraToLight) > lightRadiusSq)
+                vec3 lightViewPos = (viewMatrix * vec4(lightWorldPos, 1.0)).xyz;
+                float lightDistSqr = dot(lightViewPos, lightViewPos);
+
+                vec3 lightCenterVec = normalize(lightViewPos);
+
+                float lightSinSqr = clamp(lightRadiusSqr / lightDistSqr, 0.0, 1.0);
+                float lightCosSqr = 1.0 - lightSinSqr;
+
+                float lightSin = sqrt(lightSinSqr);
+                float lightCos = sqrt(lightCosSqr);
+
+                float lightTileCos = dot(lightCenterVec, tileCenterVec);
+                float lightTileSinSqr = 1.0 - lightTileCos * lightTileCos;
+                float lightTileSin = sqrt(lightTileSinSqr);
+
+                float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * lightSin);
+
+                // Angular test only — no depth slicing
+                if (lightTileCos >= sumCos) {
+                    uint word = uint(lightIdx) >> 5u;
+                    uint mask = 1u << (uint(lightIdx) & 31u);
+                    if ((LightsMask[word] & mask) != 0u)
                         continue;
-                } else {
-                    // If the closest point lies in front of the camera, check whether the closest point along
-                    // the view ray lies within the light's radius
-                    vec3 lightToClosestPoint = cameraToLight - t * viewDir;
-                    float distSq = dot(lightToClosestPoint, lightToClosestPoint);
-                    if (distSq > paddedLightRadiusSq)
-                        continue;
+
+                    outputTileData[c] = lightIdx + 1;
+                    LightsMask[word] |= mask;
+                    break;
                 }
-
-                uint word = uint(lightIdx) >> 5u;
-                uint mask = 1u << (uint(lightIdx) & 31u);
-                if ((LightsMask[word] & mask) != 0u)
-                    continue;
-
-                outputTileData[c] = lightIdx + 1;
-                LightsMask[word] |= mask;
-                break;
             }
         }
 

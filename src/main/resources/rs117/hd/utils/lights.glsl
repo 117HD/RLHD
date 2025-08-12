@@ -14,7 +14,7 @@ void calculateLight(
     PointLight light = PointLightArray[lightIdx];
     vec3 lightToFrag = light.position.xyz - position;
     float distanceSquared = dot(lightToFrag, lightToFrag);
-    float radiusSquared = light.color.w;
+    float radiusSquared = light.position.w;
     if (distanceSquared <= radiusSquared) {
         float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
         attenuation *= attenuation;
