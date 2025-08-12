@@ -96,22 +96,23 @@ void main() {
                 float lightTileCos = dot(lightCenterVec, tileCenterVec);
 
                 float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
-                if (lightTileCos >= sumCos) {
-                    uint word = uint(lightIdx) >> 5u;
-                    uint mask = 1u << (uint(lightIdx) & 31u);
-                    if ((LightsMask[word] & mask) != 0u)
-                        continue;
+                if (lightTileCos < sumCos)
+                    continue;
 
-                    outputTileData[c] = lightIdx + 1;
-                    LightsMask[word] |= mask;
-                    break;
-                }
+                uint word = uint(lightIdx) >> 5u;
+                uint mask = 1u << (uint(lightIdx) & 31u);
+                if ((LightsMask[word] & mask) != 0u)
+                    continue;
+
+                outputTileData[c] = lightIdx + 1;
+                LightsMask[word] |= mask;
+                break;
             }
         }
 
         #if TILED_IMAGE_STORE
             if (outputTileData != ivec4(0))
-                imageStore(tiledLightingImage, ivec3(screenUV, l), outputTileData);
+                imageStore(tiledLightingImage, ivec3(gl_FragCoord.xy, l), outputTileData);
 
             if (lightIdx >= pointLightsCount)
                 return;
