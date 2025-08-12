@@ -1,6 +1,6 @@
 #version 330
 
-//#define DEBUG_LIGHT_RADIUS_PADDING
+#define DEBUG_LIGHT_RADIUS_PADDING
 
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
@@ -20,6 +20,10 @@ void main() {
     vec2 ndcUv = fUv * 2 - 1;
     vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
     vec3 viewDir = normalize(farPos.xyz / farPos.w);
+
+    vec2 ndcUvCenter = texelCenter * 2 - 1;
+    farPos = invProjectionMatrix * vec4(ndcUvCenter, eps, 1);
+    vec3 viewDirCenter = normalize(farPos.xyz / farPos.w);
 
     vec4 c = vec4(0);
 
@@ -54,9 +58,9 @@ void main() {
 
         for (uint lightIdx = 0u; lightIdx < uint(pointLightsCount); lightIdx++) {
             PointLight light = PointLightArray[lightIdx];
-            vec3 lightWorldPos = light.position.xyz;
+            vec3 lightPos = light.position.xyz;
             float lightRadiusSq = light.position.w;
-            vec3 cameraToLight = lightWorldPos - cameraPos;
+            vec3 cameraToLight = lightPos - cameraPos;
 
             // Calculate the distance from the camera to the point closest to the light along the view ray
             float t = dot(cameraToLight, viewDir);
@@ -67,12 +71,21 @@ void main() {
                     continue;
                 c.g = 1;
             } else {
+                vec3 closestPointToLight = cameraToLight - t * viewDir;
+                vec3 boundaryPoint = lightPos - sqrt(lightRadiusSq) * normalize(closestPointToLight);
+                vec4 proj = projectionMatrix * vec4(boundaryPoint, 1);
+                vec2 uv = (proj.xy / proj.w + 1) / 2;
+                vec2 diff = abs(uv - texelCenter) * tiledLightingResolution;
+//                if (max(diff.x, diff.y) < .5)
+//                    c.g = 1;
+
                 // High resolution UVs
                 vec3 accurateLightToClosestPoint = cameraToLight - t * viewDir;
                 float accurateDistSq = dot(accurateLightToClosestPoint, accurateLightToClosestPoint);
                 if (accurateDistSq < lightRadiusSq)
                     c.r = 1;
             }
+//            break;
         }
 
         if (length(c) > 0 && c.a == 0)
