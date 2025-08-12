@@ -1761,7 +1761,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				uboLights.setLight(i, lightPosition, lightColor);
 
-				// Pre calculate the ViewSpace Position of the light, to save having to do the multiply in the culling shader
+				// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
 				lightPosition[3] = 1.0f;
 				Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
 				lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq

@@ -18,7 +18,7 @@ out ivec4 TiledData;
 
 #include <utils/constants.glsl>
 
-in vec2 fragUV;
+in vec2 fUv;
 
 void main() {
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
@@ -45,13 +45,13 @@ void main() {
     #endif
 
     const vec2 tileSize = vec2(TILED_LIGHTING_TILE_SIZE);
-    vec2 screenUV = fragUV * sceneResolution;
+    vec2 screenUV = fUv * sceneResolution;
     vec2 tileOrigin = floor(screenUV / tileSize) * tileSize;
 
-    vec2 tl = tileOrigin;                          // top-left
-    vec2 tr = tileOrigin + vec2(tileSize.x, 0.0);  // top-right
-    vec2 bl = tileOrigin + vec2(0.0, tileSize.y);  // bottom-left
-    vec2 br = tileOrigin + tileSize;               // bottom-right
+    vec2 tl = tileOrigin + vec2(0.0, tileSize.y); // top-left
+    vec2 tr = tileOrigin + tileSize;              // top-right
+    vec2 bl = tileOrigin;                         // bottom-left
+    vec2 br = tileOrigin + vec2(tileSize.x, 0.0); // bottom-right
 
     vec2 ndcTL = (tl / sceneResolution) * 2.0 - 1.0;
     vec2 ndcTR = (tr / sceneResolution) * 2.0 - 1.0;
