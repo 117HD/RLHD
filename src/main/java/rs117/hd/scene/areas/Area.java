@@ -19,9 +19,11 @@ public class Area {
 	public int[] regions;
 	@JsonAdapter(RegionBox.Adapter.class)
 	public RegionBox[] regionBoxes;
-	@JsonAdapter(AABB.Adapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	@SerializedName("aabbs")
 	public AABB[] rawAabbs;
+	@JsonAdapter(AABB.ArrayAdapter.class)
+	public AABB[] unhideAreas = {};
 
 	public transient AABB[] aabbs;
 	private transient boolean normalized;
@@ -62,19 +64,24 @@ public class Area {
 		}
 
 		this.aabbs = aabbs.toArray(AABB[]::new);
+
+		if (unhideAreas == null)
+			unhideAreas = new AABB[0];
 	}
 
-	public boolean containsPoint(int worldX, int worldY, int plane) {
-		for (AABB aabb : aabbs) {
-			if (aabb.contains(worldX, worldY, plane)) {
+	public boolean containsPoint(boolean includeUnhiding, int... worldPoint) {
+		for (var aabb : aabbs)
+			if (aabb.contains(worldPoint))
 				return true;
-			}
-		}
+		if (includeUnhiding)
+			for (var aabb : unhideAreas)
+				if (aabb.contains(worldPoint))
+					return true;
 		return false;
 	}
 
-	public boolean containsPoint(int[] worldPoint) {
-		return containsPoint(worldPoint[0], worldPoint[1], worldPoint[2]);
+	public boolean containsPoint(int... worldPoint) {
+		return containsPoint(true, worldPoint);
 	}
 
 	public boolean intersects(Area otherArea) {

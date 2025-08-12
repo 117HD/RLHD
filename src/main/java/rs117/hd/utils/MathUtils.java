@@ -28,6 +28,8 @@ public class MathUtils {
 	public static final float EPSILON = 1.1920929e-7f; // Float epsilon from JOGL
 	public static final float MAX_FLOAT_WITH_128TH_PRECISION = 1 << 16;
 
+	public static final float E = (float) Math.E;
+
 	public static final float PI = (float) Math.PI;
 	public static final float TWO_PI = PI * 2;
 	public static final float HALF_PI = PI / 2;
@@ -42,10 +44,10 @@ public class MathUtils {
 		return vec;
 	}
 
-	public static float[] vec(int... ivec) {
-		float[] floats = new float[ivec.length];
-		for (int i = 0; i < ivec.length; i++)
-			floats[i] = ivec[i];
+	public static float[] vec(int... vec) {
+		float[] floats = new float[vec.length];
+		for (int i = 0; i < vec.length; i++)
+			floats[i] = vec[i];
 		return floats;
 	}
 
@@ -82,6 +84,18 @@ public class MathUtils {
 
 	public static int[] copyTo(int[] out, int[] in) {
 		return copyTo(out, in, 0, min(out.length, in.length));
+	}
+
+	public static int[] slice(int[] v, int offset) {
+		return Arrays.copyOfRange(v, offset, v.length);
+	}
+
+	/**
+	 * If offset + length surpasses the end of the array, the output will be zero padded.
+	 */
+	public static int[] slice(int[] v, int offset, int length) {
+		assert offset <= v.length;
+		return Arrays.copyOfRange(v, offset, offset + length);
 	}
 
 	public static float[] slice(float[] v, int offset) {
@@ -193,6 +207,20 @@ public class MathUtils {
 		return pow2(new float[v.length], v);
 	}
 
+	public static float exp(float v) {
+		return (float) Math.exp(v);
+	}
+
+	public static float[] exp(float[] out, float... v) {
+		for (int i = 0; i < out.length; i++)
+			out[i] = exp(v[i % v.length]);
+		return out;
+	}
+
+	public static float[] exp(float... v) {
+		return exp(new float[v.length], v);
+	}
+
 	public static float log(float v) {
 		return (float) Math.log(v);
 	}
@@ -249,6 +277,20 @@ public class MathUtils {
 
 	public static float dot(float... v) {
 		return dot(v, v);
+	}
+
+	public static int product(int... v) {
+		int product = 1;
+		for (int factor : v)
+			product *= factor;
+		return product;
+	}
+
+	public static float product(float... v) {
+		float product = 1;
+		for (float factor : v)
+			product *= factor;
+		return product;
 	}
 
 	/**
@@ -581,5 +623,9 @@ public class MathUtils {
 
 	public static float cos(float rad) {
 		return (float) Math.cos(rad);
+	}
+
+	public static float tan(float rad) {
+		return (float) Math.tan(rad);
 	}
 }
