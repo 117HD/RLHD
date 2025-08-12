@@ -4408,7 +4408,7 @@
     ]
   },
   {
-    "description": "SShayzien - Wooden - Fence",
+    "description": "Shayzien - Wooden - Fence",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -40233,7 +40233,8 @@
       "FLOORKIT_ALDARIN_WOOD01_DEFAULT01",
       "FLOORKIT_WOODEN01_END01",
       "FLOORKIT_WOODEN01_END01_M",
-      "QUEST_START_ICON_HEARTOFDARKNESS"
+      "QUEST_START_ICON_HEARTOFDARKNESS",
+      "WALLKIT_CIVITAS05_FENCE04"
     ]
   },
   {
@@ -40569,6 +40570,7 @@
       "FORTIS_DOOR_DOUBLE_L",
       "FORTIS_DOOR_DOUBLE_L_OPEN",
       "FORTIS_DOOR_DOUBLE_L_OPEN_NOOP",
+      "FORTIS_DOOR_L_OPEN_NOOP",
       "FORTIS_DOOR_R",
       "FORTIS_DOOR_R_LOCKED",
       "FORTIS_DOOR_R_NOOP",
@@ -50613,7 +50615,8 @@
       "WALLKIT_CIVITAS05_SUPPORT01",
       "WALLKIT_CIVITAS05_SUPPORT02",
       "WALLKIT_ALDARIN05_SUPPORT01",
-      "WALLKIT_ALDARIN05_SUPPORT02"
+      "WALLKIT_ALDARIN05_SUPPORT02",
+      "BR_SUPPORT_WALL"
     ]
   },
   {
@@ -55182,6 +55185,103 @@
     "uvScale": 1.1,
     "objectIds": [
       "TEOMAT_STAIRS_2X3"
+    ]
+  },
+  {
+    "description": "Varlamore - Metallic - Gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 117,
+    "objectIds": [
+      "WALLKIT_CIVITAS04_AQUEDUCT03_FENCE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Scavengers Overlook - Shelves with bottles",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "OVERLOOK_GENERAL_SHELF",
+      "OVERLOOK_GENERAL_SHELF3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Scavengers Overlook - Shelves with bottles and Tinderbox with bucket",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "OVERLOOK_GENERAL_SHELF2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 0 && a == 255" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Scavengers Overlook - Metallic - Glass - Wooden - Telescope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      "VARLAMORE_TELESCOPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 38" ],
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
+    ]
+  },
+  {
+    "description": "Prifddinas - Scavengers Overlook - Furnace - Needs proper UV",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "PRIF_FURNACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h <= 4 && s > 4" ],
+        "baseMaterial": "HD_LAVA_1",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 5 && s == 2" ],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
     ]
   }
 ]
