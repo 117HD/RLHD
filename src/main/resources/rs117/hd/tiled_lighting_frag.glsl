@@ -89,21 +89,13 @@ void main() {
                 vec3 lightViewPos = (viewMatrix * vec4(lightWorldPos, 1.0)).xyz;
                 float lightDistSqr = dot(lightViewPos, lightViewPos);
 
-                vec3 lightCenterVec = normalize(lightViewPos);
+                vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
 
-                float lightSinSqr = clamp(lightRadiusSqr / lightDistSqr, 0.0, 1.0);
-                float lightCosSqr = 1.0 - lightSinSqr;
-
-                float lightSin = sqrt(lightSinSqr);
-                float lightCos = sqrt(lightCosSqr);
-
+                float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
+                float lightCos = sqrt(1.0 - lightSinSqr);
                 float lightTileCos = dot(lightCenterVec, tileCenterVec);
-                float lightTileSinSqr = 1.0 - lightTileCos * lightTileCos;
-                float lightTileSin = sqrt(lightTileSinSqr);
 
-                float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * lightSin);
-
-                // Angular test only — no depth slicing
+                float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
                 if (lightTileCos >= sumCos) {
                     uint word = uint(lightIdx) >> 5u;
                     uint mask = 1u << (uint(lightIdx) & 31u);
