@@ -25346,7 +25346,24 @@
     "fadeOutDuration": 500,
     "npcIds": [
       "TOG_LIGHT_CREATURE_CARRYING"
+    ]
+  },
+  {
+    "description": "TOG_LIGHT_CREATURE_CUTSCENE",
+    "offset": [ 0, 135, 0 ],
+    "radius": 300,
+    "strength": 50,
+    "color": [
+      89,
+      145,
+      255
     ],
+    "type": "FLICKER",
+    "range": 10,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 11500,
     "graphicsObjectIds": [
       "LUC2_CHASM_CUTSCENE_PLAYER_LIGHT_SPOT",
       "LUC2_CHASM_CUTSCENE_PLAYER_LIGHT_SPOT_REVERSE"
@@ -40082,8 +40099,8 @@
   {
     "description": "Guthix Temple - Shrine Torch",
     "offset": [ 0, 125, 10 ],
-    "radius": 320,
-    "strength": 12.5,
+    "radius": 250,
+    "strength": 14.5,
     "color": [
       252,
       148,
@@ -40351,5 +40368,163 @@
     "graphicsObjectIds": [
       "LUC2_JAS_GLOW_PLAYER"
     ]
+  },
+  {
+    "description": "Tormented Demon - Feet",
+    "offset": [ 10, 150, 10 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "npcIds": [
+      "TORMENTED_DEMON_1", "TORMENTED_DEMON_2", "TORMENTED_DEMON_QUEST_1", "TORMENTED_DEMON_QUEST_2"
+    ],
+    "animationIds": [
+      -1,
+      "LUC2_UNDEAD_DEMON_MELEE",
+      "LUC2_UNDEAD_DEMON_DEFEND",
+      "LUC2_UNDEAD_DEMON_SPARE_RIBS",
+      "LUC2_UNDEAD_DEMON_FIREY_BALLS",
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Back",
+    "offset": [ -20, 450, -20 ],
+    "radius": 150,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "npcIds": [
+      "TORMENTED_DEMON_1", "TORMENTED_DEMON_2", "TORMENTED_DEMON_QUEST_1", "TORMENTED_DEMON_QUEST_2"
+    ],
+    "animationIds": [
+      -1,
+      "LUC2_UNDEAD_DEMON_MELEE",
+      "LUC2_UNDEAD_DEMON_DEFEND",
+      "LUC2_UNDEAD_DEMON_SPARE_RIBS",
+      "LUC2_UNDEAD_DEMON_FIREY_BALLS",
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Spawn",
+    "offset": [ 0, 150, 0 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 400,
+    "range": 20,
+    "graphicsObjectIds": [ "WGS_UNDEAD_DEMON_SUMMON_SPOTANIM" ]
+  },
+  {
+    "description": "Tormented Demon - Fire Blowing Away",
+    "offset": [ 0, 150, 0 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2000,
+    "range": 20,
+    "graphicsObjectIds": [ "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE_SPOT" ]
+  },
+  {
+    "description": "Tormented Demon - Death",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3100,
+    "range": 20,
+    "graphicsObjectIds": [ "LUC2_UNDEAD_DEMON_DEATH_SPOT" ]
+  },
+  {
+    "description": "Tormented Demon - Shield",
+    "offset": [ 0, 250, 0 ],
+    "radius": 425,
+    "strength": 20,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "range": 20,
+    "graphicsObjectIds": [ "LUC2_UNDEAD_DEMON_SHIELD_SPOT" ]
+  },
+  {
+    "description": "Tormented Demon - Fire Ball Projectile",
+    "offset": [ 0, 25, 0 ],
+    "radius": 220,
+    "strength": 18,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "projectileIds": [ "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ" ]
+  },
+  {
+    "description": "Tormented Demon - Fire Bolt Projectile",
+    "offset": [ 0, -15, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "range": 20,
+    "projectileIds": [ "LUC2_UNDEAD_DEMON_FIREBALL_PROJ" ]
   }
 ]
