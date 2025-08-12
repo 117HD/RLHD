@@ -4935,6 +4935,33 @@
     "maxLightness": 85
   },
   {
+    "name": "Quetzacali Gorge - Stone Overlay",
+    "area": "Quetzacali Gorge",
+    "overlayIds": [ 376 ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Quetzacali Gorge - Stone Path",
+    "area": "Quetzacali Gorge",
+    "overlayIds": [ 280 ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "Quetzacali Gorge - Path",
+    "area": "Quetzacali Gorge",
+    "overlayIds": [ 274 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Quetzacali Gorge - Path",
+    "area": "Quetzacali Gorge",
+    "underlayIds": [ 176 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "Mons Gratia Cliff",
     "area": "Mons Gratia Cliff Fix",
     "overlayIds": [ 1 ],
