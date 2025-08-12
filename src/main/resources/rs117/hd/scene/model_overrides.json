@@ -55416,6 +55416,16 @@
     ]
   },
   {
+    "description": "Quetzacali Gorge - Stone - Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 172,
+    "objectIds": [
+      "PILLAR_STRANGLER01_CITY02"
+    ]
+  },
+  {
     "description": "Quetzacali Gorge - Rope - Bridge Supports",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
