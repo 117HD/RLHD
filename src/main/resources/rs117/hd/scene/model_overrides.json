@@ -40232,7 +40232,8 @@
       "FLOORKIT_WOODEN01_DEFAULT02",
       "FLOORKIT_ALDARIN_WOOD01_DEFAULT01",
       "FLOORKIT_WOODEN01_END01",
-      "FLOORKIT_WOODEN01_END01_M"
+      "FLOORKIT_WOODEN01_END01_M",
+      "QUEST_START_ICON_HEARTOFDARKNESS"
     ]
   },
   {
@@ -40761,7 +40762,12 @@
       "VMQ4_CIVITAS_JANUS_WINDOW_DECOY_WITH_OP",
       "VMQ4_CIVITAS_JANUS_WINDOW_LOOSE",
       "VMQ4_CIVITAS_JANUS_WINDOW_OPEN",
-      "VMQ4_CIVITAS_JANUS_WINDOW_CLOSED"
+      "VMQ4_CIVITAS_JANUS_WINDOW_CLOSED",
+      "CIVITAS_PALACE_WALLKIT03",
+      "CIVITAS_PALACE_WALLKIT02",
+      "CIVITAS_PALACE_WALLKIT01",
+      "CIVITAS_PALACE_WALLKIT03_JOIN01",
+      "CIVITAS_PALACE_WALLKIT03_JOIN01_M"
     ],
     "colorOverrides": [
       {
@@ -40785,7 +40791,20 @@
       "WALLKIT_CIVITAS06_ARCH03",
       "WALLKIT_CIVITAS06_ARCH01_TALL",
       "WALLKIT_CIVITAS06_ARCH01_TALL_MID",
-      "WALLKIT_CIVITAS06_ARCH02_TALL"
+      "WALLKIT_CIVITAS06_ARCH02_TALL",
+      "WALLKIT_CIVITAS06_ARCH03_TALL"
+    ]
+  },
+  {
+    "description": "Fortis - Toemat - Stone - Decorative Pillar",
+    "baseMaterial": "STONE_NORMALED",
+    "uvOrientation": 768,
+    "uvType": "BOX",
+    "objectIds": [
+      "PILLAR_CIVITAS01_PALACE04_LOWER01",
+      "PILLAR_CIVITAS01_PALACE05_LOWER01",
+      "PILLAR_CIVITAS01_PALACE05_HIGHER01",
+      "PILLAR_CIVITAS01_PALACE06_LOWER01"
     ]
   },
   {
@@ -55154,6 +55173,15 @@
     "objectIds": [
       "CON_CONTRACT_ARDY_SOUTH_BATH_BROKEN",
       "CON_CONTRACT_ARDY_SOUTH_BATH_FIXED"
+    ]
+  },
+  {
+    "description": "Varlamore - Teomate - Stairs",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "TEOMAT_STAIRS_2X3"
     ]
   }
 ]
