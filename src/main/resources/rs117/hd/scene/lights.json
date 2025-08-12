@@ -40370,8 +40370,8 @@
     ]
   },
   {
-    "description": "Tormented Demon - Feet",
-    "offset": [ 10, 150, 10 ],
+    "description": "Tormented Demon - Bottom",
+    "offset": [ 0, 150, 10 ],
     "radius": 300,
     "strength": 25,
     "color": [
@@ -40397,9 +40397,37 @@
     ]
   },
   {
-    "description": "Tormented Demon - Back",
-    "offset": [ -20, 450, -20 ],
-    "radius": 150,
+    "description": "Tormented Demon - Feet Hightlight",
+    "offset": [ 30, 125, -75 ],
+    "radius": 100,
+    "strength": 35,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "npcIds": [
+      "TORMENTED_DEMON_2",
+      "TORMENTED_DEMON_QUEST_2"
+    ],
+    "animationIds": [
+      -1,
+      "LUC2_UNDEAD_DEMON_MELEE",
+      "LUC2_UNDEAD_DEMON_DEFEND",
+      "LUC2_UNDEAD_DEMON_SPARE_RIBS",
+      "LUC2_UNDEAD_DEMON_FIREY_BALLS",
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Top",
+    "offset": [ 0, 425, -40 ],
+    "radius": 220,
     "strength": 25,
     "color": [
       252,
@@ -40409,8 +40437,13 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
     "npcIds": [
-      "TORMENTED_DEMON_1", "TORMENTED_DEMON_2", "TORMENTED_DEMON_QUEST_1", "TORMENTED_DEMON_QUEST_2"
+      "TORMENTED_DEMON_1",
+      "TORMENTED_DEMON_2",
+      "TORMENTED_DEMON_QUEST_1",
+      "TORMENTED_DEMON_QUEST_2"
     ],
     "animationIds": [
       -1,
@@ -40436,12 +40469,31 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 400,
     "range": 20,
-    "graphicsObjectIds": [ "WGS_UNDEAD_DEMON_SUMMON_SPOTANIM" ]
+    "graphicsObjectIds": [
+      "WGS_UNDEAD_DEMON_SUMMON_SPOTANIM"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Spawn Top",
+    "offset": [ 0, 400, -40 ],
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "WGS_UNDEAD_DEMON_SUMMON_SPOTANIM"
+    ]
   },
   {
     "description": "Tormented Demon - Fire Blowing Away",
     "offset": [ 0, 150, 0 ],
-    "radius": 350,
+    "radius": 450,
     "strength": 25,
     "color": [
       252,
@@ -40453,9 +40505,11 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 400,
     "fixedDespawnTime": true,
-    "despawnDelay": 2000,
+    "despawnDelay": 2200,
     "range": 20,
-    "graphicsObjectIds": [ "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE_SPOT" ]
+    "graphicsObjectIds": [
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE_SPOT"
+    ]
   },
   {
     "description": "Tormented Demon - Death",
@@ -40474,13 +40528,15 @@
     "fixedDespawnTime": true,
     "despawnDelay": 3100,
     "range": 20,
-    "graphicsObjectIds": [ "LUC2_UNDEAD_DEMON_DEATH_SPOT" ]
+    "graphicsObjectIds": [
+      "LUC2_UNDEAD_DEMON_DEATH_SPOT"
+    ]
   },
   {
     "description": "Tormented Demon - Shield",
     "offset": [ 0, 250, 0 ],
     "radius": 425,
-    "strength": 20,
+    "strength": 25,
     "color": [
       252,
       148,
@@ -40489,9 +40545,12 @@
     "type": "FLICKER",
     "duration": 0,
     "fadeInDuration": 300,
-    "fadeOutDuration": 300,
+    "fadeOutDuration": 200,
     "range": 20,
-    "graphicsObjectIds": [ "LUC2_UNDEAD_DEMON_SHIELD_SPOT" ]
+    "graphicsObjectIds": [
+      "LUC2_UNDEAD_DEMON_SHIELD_SPOT",
+      "LUC2_UNDEAD_DEMON_SHIELD_RESTORE_SPOT"
+    ]
   },
   {
     "description": "Tormented Demon - Fire Ball Projectile",
@@ -40508,11 +40567,13 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 600,
     "range": 20,
-    "projectileIds": [ "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ" ]
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ"
+    ]
   },
   {
     "description": "Tormented Demon - Fire Bolt Projectile",
-    "offset": [ 0, -15, 0 ],
+    "offset": [ 0, -50, 0 ],
     "radius": 200,
     "strength": 15,
     "color": [
@@ -40525,6 +40586,8 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 300,
     "range": 20,
-    "projectileIds": [ "LUC2_UNDEAD_DEMON_FIREBALL_PROJ" ]
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ"
+    ]
   }
 ]
