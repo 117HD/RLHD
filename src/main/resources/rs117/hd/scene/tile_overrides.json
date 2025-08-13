@@ -4906,6 +4906,20 @@
     "waterType": "PLAIN_WATER"
   },
   {
+    "name": "Savannah Church Tiles - White",
+    "area": "Savannah Church of Ralos",
+    "overlayIds": [ 199 ],
+    "groundMaterial": "MARBLE_1",
+    "blended": false
+  },
+  {
+    "name": "Savannah Church Tiles - Yellow",
+    "area": "Savannah Church of Ralos",
+    "overlayIds": [ 226, 227 ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
     "name": "Proudspire Snow Blending",
     "area": "Proudspire",
     "underlayIds": [ 58 ],
@@ -4933,6 +4947,33 @@
     "blended": false,
     "shiftLightness": -10,
     "maxLightness": 85
+  },
+  {
+    "name": "Quetzacalli Gorge - Stone Overlay",
+    "area": "Quetzacalli Gorge",
+    "overlayIds": [ 376 ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Quetzacalli Gorge - Stone Path",
+    "area": "Quetzacalli Gorge",
+    "overlayIds": [ 280 ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "Quetzacalli Gorge - Path",
+    "area": "Quetzacalli Gorge",
+    "overlayIds": [ 274 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Quetzacalli Gorge - Path Seasonal Snow",
+    "area": "Quetzacalli Gorge",
+    "underlayIds": [ 176 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Mons Gratia Cliff",
@@ -7120,6 +7161,12 @@
     "replacements": {
       "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "Varlamore - Clay Dirt Path",
+    "area": "VARLAMORE",
+    "overlayIds": [ 330 ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "JUDGE_OF_YAMA_BOSS_WATER",

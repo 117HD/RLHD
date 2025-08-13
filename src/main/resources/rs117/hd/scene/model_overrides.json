@@ -4408,7 +4408,7 @@
     ]
   },
   {
-    "description": "SShayzien - Wooden - Fence",
+    "description": "Shayzien - Wooden - Fence",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "flatNormals": true,
@@ -11770,7 +11770,11 @@
       "TOURTRAP_QIP_MINE_ROCKS_BIG_03",
       "BRAIN_MUD_DUGUPSOIL_06",
       "BRACKENTOP_ROCKSLIDE03",
-      "BRACKENTOP_ROCKSLIDE04"
+      "BRACKENTOP_ROCKSLIDE04",
+      "_100_GOBLINDUGUPSOIL2_UPASS",
+      "QUETZACALLI_DUGUPSOIL01",
+      "QUETZACALLI_DUGUPSOIL02",
+      "QUETZACALLI_DUGUPSOIL03"
     ],
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -40233,7 +40237,8 @@
       "FLOORKIT_ALDARIN_WOOD01_DEFAULT01",
       "FLOORKIT_WOODEN01_END01",
       "FLOORKIT_WOODEN01_END01_M",
-      "QUEST_START_ICON_HEARTOFDARKNESS"
+      "QUEST_START_ICON_HEARTOFDARKNESS",
+      "WALLKIT_CIVITAS05_FENCE04"
     ]
   },
   {
@@ -40569,6 +40574,7 @@
       "FORTIS_DOOR_DOUBLE_L",
       "FORTIS_DOOR_DOUBLE_L_OPEN",
       "FORTIS_DOOR_DOUBLE_L_OPEN_NOOP",
+      "FORTIS_DOOR_L_OPEN_NOOP",
       "FORTIS_DOOR_R",
       "FORTIS_DOOR_R_LOCKED",
       "FORTIS_DOOR_R_NOOP",
@@ -40803,6 +40809,7 @@
     "objectIds": [
       "PILLAR_CIVITAS01_PALACE04_LOWER01",
       "PILLAR_CIVITAS01_PALACE05_LOWER01",
+      "PILLAR_CIVITAS01_PALACE05",
       "PILLAR_CIVITAS01_PALACE05_HIGHER01",
       "PILLAR_CIVITAS01_PALACE06_LOWER01"
     ]
@@ -40819,7 +40826,7 @@
     ]
   },
   {
-    "description": "Fortis wooden railing X type",
+    "description": "Fortis - Wooden - Stone - railing X type",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -40827,6 +40834,15 @@
     "flatNormals": true,
     "objectIds": [
       "WALLKIT_CIVITAS05_FENCE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 128
+      }
     ]
   },
   {
@@ -50042,7 +50058,8 @@
       "MM_LAB_NOTES_BOOKSHELF_NO_OP",
       "MM_LAB_NOTES_BOOKSHELF",
       "ALDARIN_SHELF01_BOOKS03",
-      "ALDARIN_SHELF01_BOOKS04"
+      "ALDARIN_SHELF01_BOOKS04",
+      "HUEYCOATL_BOOKSHELF"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -50384,6 +50401,8 @@
     "uvScale": 0.75,
     "objectIds": [
       "AVIUM_SAVANNAH01_LOW02",
+      "AVIUM_SAVANNAH01_LOW03",
+      "AVIUM_SAVANNAH01_LOW03_M",
       "AVIUM_SAVANNAH01_UPPER01",
       "AVIUM_SAVANNAH01_WALL01",
       "AVIUM_SAVANNAH01_WINDOW01",
@@ -50613,7 +50632,8 @@
       "WALLKIT_CIVITAS05_SUPPORT01",
       "WALLKIT_CIVITAS05_SUPPORT02",
       "WALLKIT_ALDARIN05_SUPPORT01",
-      "WALLKIT_ALDARIN05_SUPPORT02"
+      "WALLKIT_ALDARIN05_SUPPORT02",
+      "BR_SUPPORT_WALL"
     ]
   },
   {
@@ -55182,6 +55202,273 @@
     "uvScale": 1.1,
     "objectIds": [
       "TEOMAT_STAIRS_2X3"
+    ]
+  },
+  {
+    "description": "Varlamore - Metallic - Gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 117,
+    "objectIds": [
+      "WALLKIT_CIVITAS04_AQUEDUCT03_FENCE01"
+    ]
+  },
+  {
+    "description": "Varlamore - Scavengers Overlook - Shelves with bottles",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "OVERLOOK_GENERAL_SHELF",
+      "OVERLOOK_GENERAL_SHELF3"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Scavengers Overlook - Shelves with bottles and Tinderbox with bucket",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "OVERLOOK_GENERAL_SHELF2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 0 && a == 255" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Scavengers Overlook - Metallic - Glass - Wooden - Telescope",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      "VARLAMORE_TELESCOPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 38" ],
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
+    ]
+  },
+  {
+    "description": "Prifddinas - Scavengers Overlook - Furnace - Needs proper UV",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "PRIF_FURNACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h <= 4 && s > 4" ],
+        "baseMaterial": "HD_LAVA_1",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 5 && s == 2" ],
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
+    ]
+  },
+  {
+    "description": "Quetzacali - Wooden - Plank Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "objectIds": [
+      "WALLKIT_QUETZACALI01_LVL0",
+      "WALLKIT_QUETZACALI01_WINDOW01",
+      "WALLKIT_QUETZACALI01_POST02",
+      "WALLKIT_QUETZACALI02_DEFAULT01",
+      "WALLKIT_QUETZACALI02_WINDOW01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h <= 4 && s > 4" ],
+        "baseMaterial": "HD_LAVA_1",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 5 && s == 2" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": [ "h == 5 &&  s == 6" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Lassar - Quesztzacali - Wooden - Cloth - Chair with purple cusion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "objectIds": [
+      "CHAIR_LASSAR01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 48",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "Quetzacali Gorg - Stone Brick Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "WALLKIT_QUETZACALLI01_DEFAULT01",
+      "WALLKIT_QUETZACALLI01_BATTLEMENT01"
+    ]
+  },
+  {
+    "description": "Quetzacalli Gorge - Gate",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "objectIds": [
+      "QUETZACALLI_GATE_IN",
+      "QUETZACALLI_GATE_OUT"
+    ]
+  },
+  {
+    "description": "Quetzacalli Gorge - Wooden - Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BRIDGEKIT_ZEMA_PLANKS01",
+      "BRIDGEKIT_ZEMA_PLANKS01_MIRROR",
+      "BRIDGEKIT_ZEMA_PLANKS02",
+      "BRIDGEKIT_ZEMA_PLANKS02_MIRROR",
+      "BRIDGEKIT_ZEMA_PLANKS03",
+      "BRIDGEKIT_ZEMA_PLANKS03_MIRROR",
+      "BRIDGEKIT_ZEMA_PLANKS04",
+      "BRIDGEKIT_ZEMA_PLANKS04_MIRROR",
+      "BRIDGEKIT_ZEMA_PLANKS05"
+    ]
+  },
+  {
+    "description": "Quetzacalli Gorge - Stone - Bridge Supports",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BRIDGEKIT_ZEMA_SIDE01_SMALL01",
+      "BRIDGEKIT_ZEMA_SIDE01_SMALL01_MIRROR",
+      "BRIDGEKIT_ZEMA_CENTRAL01_SMALL01",
+      "BRIDGEKIT_ZEMA_CENTRAL01_SMALL01_MIRROR",
+      "BRIDGEKIT_ZEMA_CENTRAL01_FLOOR01",
+      "BRIDGEKIT_ZEMA_CENTRAL01_FLOOR01_MIRROR",
+      "BRIDGEKIT_ZEMA_CENTRAL01_SMALL01_MIRROR",
+      "BRIDGEKIT_ZEMA_SIDE01_TOP01",
+      "BRIDGEKIT_ZEMA_SIDE01_TOP01_MIRROR"
+    ]
+  },
+  {
+    "description": "Quetzacalli Gorge - Stone - Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 512,
+    "objectIds": [
+      "STEPS_QUETZACALLI01_DEFAULT01",
+      "STEPS_QUETZACALLI01_CORNER01",
+      "STEPS_QUETZACALLI01_CORNER02"
+    ]
+  },
+  {
+    "description": "Quetzacalli Gorge - Stone - Steps",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 172,
+    "objectIds": [
+      "PILLAR_STRANGLER01_CITY02"
+    ]
+  },
+  {
+    "description": "Quetzacalli Gorge - Rope - Bridge Supports",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 89,
+    "objectIds": [
+      "BRIDGEKIT_ZEMA_RAILING05",
+      "BRIDGEKIT_ZEMA_RAILING05_MIRROR",
+      "BRIDGEKIT_ZEMA_RAILING06",
+      "BRIDGEKIT_ZEMA_RAILING06_MIRROR",
+      "BRIDGEKIT_ZEMA_RAILING07",
+      "BRIDGEKIT_ZEMA_RAILING07_MIRROR",
+      "BRIDGEKIT_ZEMA_RAILING08",
+      "BRIDGEKIT_ZEMA_RAILING08_MIRROR",
+      "BRIDGEKIT_ZEMA_RAILING09",
+      "BRIDGEKIT_ZEMA_RAILING09_MIRROR"
+    ]
+  },
+  {
+    "description": "Quetzacalli Gorge - Rp[e - Metallic - Bridge Supports with anchor",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 89,
+    "objectIds": [
+      "BRIDGEKIT_ZEMA_RAILING01_SMALL01",
+      "BRIDGEKIT_ZEMA_RAILING01_SMALL01_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 1",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 177
+      }
     ]
   }
 ]

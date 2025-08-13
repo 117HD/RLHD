@@ -21436,6 +21436,24 @@
     ]
   },
   {
+    "description": "Prifddinas - Scavengers Overlook - Furnace - Needs proper UV",
+    "height": 150,
+    "offset": [ -55, -88, -2 ],
+    "radius": 480,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "PRIF_FURNACE"
+    ]
+  },
+  {
     "description": "ECTOFUNTUS_WIDE",
     "offset": [ 100, 295, 0 ],
     "visibleFromOtherPlanes": true,
