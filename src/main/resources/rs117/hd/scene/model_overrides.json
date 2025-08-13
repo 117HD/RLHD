@@ -40826,7 +40826,7 @@
     ]
   },
   {
-    "description": "Fortis - Wooden - Stonen - railing X type",
+    "description": "Fortis - Wooden - Stone - railing X type",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -55364,7 +55364,7 @@
     ]
   },
   {
-    "description": "Quetzacali Gorge - Gate",
+    "description": "Quetzacalli Gorge - Gate",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -55374,7 +55374,7 @@
     ]
   },
   {
-    "description": "Quetzacali Gorge - Wooden - Planks",
+    "description": "Quetzacalli Gorge - Wooden - Planks",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 1.0,
@@ -55392,7 +55392,7 @@
     ]
   },
   {
-    "description": "Quetzacali Gorge - Stone - Bridge Supports",
+    "description": "Quetzacalli Gorge - Stone - Bridge Supports",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 1.0,
@@ -55410,7 +55410,7 @@
     ]
   },
   {
-    "description": "Quetzacali Gorge - Stone - Steps",
+    "description": "Quetzacalli Gorge - Stone - Steps",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 1.0,
@@ -55422,7 +55422,7 @@
     ]
   },
   {
-    "description": "Quetzacali Gorge - Stone - Steps",
+    "description": "Quetzacalli Gorge - Stone - Steps",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 1.0,
@@ -55432,7 +55432,7 @@
     ]
   },
   {
-    "description": "Quetzacali Gorge - Rope - Bridge Supports",
+    "description": "Quetzacalli Gorge - Rope - Bridge Supports",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -55451,7 +55451,7 @@
     ]
   },
   {
-    "description": "Quetzacali Gorge - Rp[e - Metallic - Bridge Supports with anchor",
+    "description": "Quetzacalli Gorge - Rp[e - Metallic - Bridge Supports with anchor",
     "baseMaterial": "ROPE",
     "uvType": "BOX",
     "uvScale": 0.6,

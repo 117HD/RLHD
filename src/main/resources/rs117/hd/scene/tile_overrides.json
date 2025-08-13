@@ -4949,26 +4949,26 @@
     "maxLightness": 85
   },
   {
-    "name": "Quetzacali Gorge - Stone Overlay",
-    "area": "Quetzacali Gorge",
+    "name": "Quetzacalli Gorge - Stone Overlay",
+    "area": "Quetzacalli Gorge",
     "overlayIds": [ 376 ],
     "groundMaterial": "GRUNGE"
   },
   {
-    "name": "Quetzacali Gorge - Stone Path",
-    "area": "Quetzacali Gorge",
+    "name": "Quetzacalli Gorge - Stone Path",
+    "area": "Quetzacalli Gorge",
     "overlayIds": [ 280 ],
     "groundMaterial": "STONE_CAVE_FLOOR"
   },
   {
-    "name": "Quetzacali Gorge - Path",
-    "area": "Quetzacali Gorge",
+    "name": "Quetzacalli Gorge - Path",
+    "area": "Quetzacalli Gorge",
     "overlayIds": [ 274 ],
     "groundMaterial": "VARIED_DIRT"
   },
   {
-    "name": "Quetzacali Gorge - Path",
-    "area": "Quetzacali Gorge",
+    "name": "Quetzacalli Gorge - Path Seasonal Snow",
+    "area": "Quetzacalli Gorge",
     "underlayIds": [ 176 ],
     "groundMaterial": "DIRT",
     "replacements": {
