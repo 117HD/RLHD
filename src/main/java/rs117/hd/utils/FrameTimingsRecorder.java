@@ -73,19 +73,17 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	@Override
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.currentTimeMillis();
-		long elapsed = now - snapshotStartTime;
 
-		if (elapsed > SNAPSHOT_DURATION_MS) {
+		if (now - snapshotStartTime > SNAPSHOT_DURATION_MS) {
 			capturingSnapshot = false;
 			saveSnapshot();
 			return;
 		}
 
 		if (snapshotData.isEmpty() ||
-			elapsed - snapshotData.get(snapshotData.size() - 1).elapsed >= SNAPSHOT_INTERVAL_MS) {
+			now - snapshotData.get(snapshotData.size() - 1).currentTime >= SNAPSHOT_INTERVAL_MS) {
 			snapshotData.add(new SnapshotEntry(
 				timings,
-				elapsed,
 				now,
 				plugin.getDrawnTileCount(),
 				plugin.getDrawnStaticRenderableCount(),

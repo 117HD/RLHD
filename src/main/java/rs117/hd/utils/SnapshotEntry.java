@@ -6,7 +6,6 @@ import rs117.hd.overlays.FrameTimings;
 import rs117.hd.overlays.Timer;
 
 public class SnapshotEntry {
-	public long elapsed;
 	public long currentTime;
 	public long drawnTiles;
 	public long drawnStatic;
@@ -25,14 +24,13 @@ public class SnapshotEntry {
 
 	public SnapshotEntry(
 		FrameTimings frameTimings,
-		long elapsed, long currentTime,
+		long currentTime,
 		long drawnTiles, long drawnStatic, long drawnDynamic,
 		long npcCacheSize
 	) {
 		this.timings = frameTimings.timers;
 		this.cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
 		this.gpuTime = timings[Timer.RENDER_FRAME.ordinal()];
-		this.elapsed = elapsed;
 		this.currentTime = currentTime;
 		this.drawnTiles = drawnTiles;
 		this.drawnStatic = drawnStatic;
