@@ -99,6 +99,37 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(new Date());
 
 		SNAPSHOTS_DIR.mkdirs();
+
+		JsonSnapshot data = new JsonSnapshot();
+		data.timestamp = timestamp;
+		data.frames = snapshotData;
+		data.osName = System.getProperty("os.name");
+		data.osArch = System.getProperty("os.arch");
+		data.osVersion = System.getProperty("os.version");
+		data.javaVersion = System.getProperty("java.version");
+		data.cpuCores = Runtime.getRuntime().availableProcessors();
+		data.totalMemoryMB = Runtime.getRuntime().maxMemory() / (1024 * 1024);
+		data.gpuName = getOpenGLGPUInfo();
+
+		for (String config : configManager.getConfigurationKeys("hd")) {
+			String configClean = config.replace("hd.", "");
+			data.pluginSettings.put(configClean, configManager.getConfiguration("hd", configClean));
+		}
+
+		var csvPath = saveSnapshotCSV(data, timestamp);
+
+		try {
+			SNAPSHOTS_DIR
+				.resolve("snapshot-" + timestamp + ".json")
+				.writeString(plugin.getGson().toJson(data));
+		} catch (IOException ex) {
+			log.error("Error while saving snapshot:", ex);
+		}
+
+		sendGameMessage("HD snapshot complete. Saved to " + csvPath);
+	}
+
+	private ResourcePath saveSnapshotCSV(JsonSnapshot data, String timestamp) {
 		var csvPath = SNAPSHOTS_DIR.resolve("snapshot-" + timestamp + ".csv");
 		try (var out = new PrintWriter(csvPath.toWriter())) {
 			out.print("FrameIndex,Time");
@@ -107,7 +138,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 			out.println(",EstimatedBottleneck,EstimatedFPS,DrawnTiles,DrawnStatic,DrawnDynamic,NpcCacheSize");
 
 			int frameIndex = 0;
-			for (SnapshotEntry e : snapshotData) {
+			for (SnapshotEntry e : data.frames) {
 				StringBuilder sb = new StringBuilder()
 					.append(frameIndex++)
 					.append(',').append(e.currentTime);
@@ -125,34 +156,10 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 				out.println(sb);
 			}
 		} catch (Exception ex) {
-			log.error("Error while saving snapshot:", ex);
+			log.error("Error while saving snapshot CSV:", ex);
 		}
-
-		WebImportData data = new WebImportData();
-		data.timestamp = timestamp;
-		data.frames = snapshotData;
-		data.osName = System.getProperty("os.name");
-		data.osArch = System.getProperty("os.arch");
-		data.osVersion = System.getProperty("os.version");
-		data.javaVersion = System.getProperty("java.version");
-		data.cpuCores = Runtime.getRuntime().availableProcessors();
-		data.totalMemoryMB = Runtime.getRuntime().maxMemory() / (1024 * 1024);
-		data.gpuName = getOpenGLGPUInfo();
-
-		for (String config : configManager.getConfigurationKeys("hd")) {
-			String configClean = config.replace("hd.", "");
-			data.pluginSettings.put(configClean, configManager.getConfiguration("hd", configClean));
-		}
-
-		try {
-			SNAPSHOTS_DIR
-				.resolve("snapshot-" + timestamp + ".json")
-				.writeString(plugin.getGson().toJson(data));
-		} catch (IOException ex) {
-			log.error("Error while saving snapshot:", ex);
-		}
-
-		sendGameMessage("HD snapshot complete. Saved to " + csvPath);
+		
+		return csvPath;
 	}
 
 
@@ -164,7 +171,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		return String.format("%s (%s, OpenGL %s)", renderer, vendor, version);
 	}
 
-	private static class WebImportData {
+	private static class JsonSnapshot {
 		String timestamp;
 		Map<String, String> pluginSettings = new HashMap<>();
 		List<SnapshotEntry> frames;
