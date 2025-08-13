@@ -480,7 +480,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean isInHouse;
 	private boolean justChangedArea;
 	private Scene skipScene;
-	private int previousPlane;
 
 	private final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
@@ -2503,7 +2502,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!isActive)
 			return;
 
-		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), areaManager.getArea("THE_GAUNTLET"))) {
+		int expandedChunks = getExpandedMapLoadingChunks();
+		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
+			// Reload once the POH is done loading
+			if (!isInHouse)
+				reloadSceneIn(2);
+		} else if (skipScene != scene && HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("THE_GAUNTLET"))) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick
 			reloadSceneNextGameTick();
@@ -2600,20 +2604,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferNormals.clear();
 
 		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			if (!isInHouse) {
-				// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-				reloadSceneIn(7);
-				isInHouse = true;
-			}
-
+			isInHouse = true;
 			isInChambersOfXeric = false;
 		} else {
-			// Avoid an unnecessary scene reload if the player is leaving the POH
-			if (isInHouse) {
-				abortSceneReload();
-				isInHouse = false;
-			}
-
+			isInHouse = false;
 			isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
 		}
 	}
@@ -2626,10 +2620,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		assert gameTicks > 0 : "A value <= 0 will not reload the scene";
 		if (gameTicks > gameTicksUntilSceneReload)
 			gameTicksUntilSceneReload = gameTicks;
-	}
-
-	public void abortSceneReload() {
-		gameTicksUntilSceneReload = 0;
 	}
 
 	private void updateCachedConfigs() {
@@ -3347,16 +3337,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		fishingSpotReplacer.update();
-
-		// reload the scene if the player is in a house and their plane changed
-		// this greatly improves the performance as it keeps the scene buffer up to date
-		if (isInHouse) {
-			int plane = client.getPlane();
-			if (previousPlane != plane) {
-				reloadSceneNextGameTick();
-				previousPlane = plane;
-			}
-		}
 	}
 
 	public void waitUntilIdle() {
