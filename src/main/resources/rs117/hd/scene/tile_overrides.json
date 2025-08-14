@@ -5300,6 +5300,21 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "Tal Teklan Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 330 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tal Teklan Stone Brick Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "GRUNGE",
+    "overlayIds": [ 275 ],
+    "blended": false,
+    "uvOrientation": 128
+  },
+  {
     "name": "MASTERING_MIXOLOGY_OVERLAY",
     "area": "MASTERING_MIXOLOGY",
     "overlayIds": [
