@@ -5307,12 +5307,33 @@
     "uvOrientation": -128
   },
   {
+    "name": "Tal Teklan - Indoors",
+    "area": "Varlamore - Tlati Rainforest",
+    "overlayIds": [ 272, 276 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Fake Bricks",
+    "area": "Varlamore - Tlati Rainforest",
+    "overlayIds": [ 276 ],
+    "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
     "name": "Tal Teklan Stone Brick Path",
     "area": "Varlamore - Tlati Rainforest",
     "groundMaterial": "GRUNGE",
     "overlayIds": [ 275 ],
     "blended": false,
     "uvOrientation": 128
+  },
+  {
+    "name": "Kastori Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 303 ],
+    "uvOrientation": -128
   },
   {
     "name": "MASTERING_MIXOLOGY_OVERLAY",
