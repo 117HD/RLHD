@@ -2030,13 +2030,15 @@
     "blended": false
   },
   {
-    "name": "SEERS_BANK_TILE_3",
+    "name": "SEERS_BANK_CARPET",
     "area": "SEERS_BANK",
     "overlayIds": [
-      8
+      8,
+      171
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
-    "blended": false
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftLightness": 2
   },
   {
     "name": "SEERS_HOUSE_FLOORS",
