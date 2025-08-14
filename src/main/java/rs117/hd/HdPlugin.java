@@ -2277,12 +2277,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		lastFrameTimeMillis = System.currentTimeMillis();
 		lastFrameClientTime = elapsedClientTime;
 
+		if (!hasLoggedIn) {
+			sceneCamera.invalidateTileVisibility();
+			directionalLight.invalidateTileVisibility();
+		}
+
 		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
 		if (renderBufferOffset > 0) {
-			if(!hasLoggedIn) {
-				sceneCamera.invalidateTileVisibility();
-				directionalLight.invalidateTileVisibility();
-			}
 			hasLoggedIn = true;
 		}
 
