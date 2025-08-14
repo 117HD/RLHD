@@ -5300,62 +5300,6 @@
     "groundMaterial": "DIRT"
   },
   {
-    "name": "Tlati Rainforest - Rocky ridges",
-    "area": "Varlamore - Tlati Rainforest",
-    "groundMaterial": "ROCK_PILES",
-    "overlayIds": [ 424, 425 ],
-    "uvOrientation": -128
-  },
-  {
-    "name": "Tlati Rainforest - Dirt ridges",
-    "area": "Varlamore - Tlati Rainforest",
-    "groundMaterial": "ROCK_PILES",
-    "overlayIds": [ 17 ],
-    "uvOrientation": 128
-  },
-  {
-    "name": "Tal Teklan Dirt Path",
-    "area": "Varlamore - Tlati Rainforest",
-    "groundMaterial": "VARIED_DIRT",
-    "overlayIds": [ 330 ],
-    "uvOrientation": -128
-  },
-  {
-    "name": "Tal Teklan - Indoors",
-    "area": "Varlamore - Tlati Rainforest",
-    "overlayIds": [ 272, 276 ],
-    "groundMaterial": "TERRACOTTA_FLOOR",
-    "blended": false
-  },
-  {
-    "name": "Tal Teklan - Fake Bricks",
-    "area": "Varlamore - Tlati Rainforest",
-    "overlayIds": [ 276 ],
-    "groundMaterial": "GRUNGE",
-    "blended": false
-  },
-  {
-    "name": "Tal Teklan Stone Brick Path",
-    "area": "Varlamore - Tlati Rainforest",
-    "groundMaterial": "GRUNGE",
-    "overlayIds": [ 275 ],
-    "blended": false,
-    "uvOrientation": 128
-  },
-  {
-    "name": "Kastori Dirt Path",
-    "area": "Varlamore - Tlati Rainforest",
-    "groundMaterial": "VARIED_DIRT",
-    "overlayIds": [ 303 ],
-    "uvOrientation": -128
-  },
-  {
-    "name": "Tlati Rainforest - Light dirt",
-    "area": "Varlamore - Tlati Rainforest",
-    "groundMaterial": "DIRT",
-    "underlayIds": [ 223 ]
-  },
-  {
     "name": "MASTERING_MIXOLOGY_OVERLAY",
     "area": "MASTERING_MIXOLOGY",
     "overlayIds": [
@@ -5397,6 +5341,93 @@
       158
     ],
     "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Tlati Rainforest - Rocky ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 424, 425 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tlati Rainforest - Dirt ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 17 ],
+    "uvOrientation": 128
+  },
+  {
+    "name": "Tal Teklan Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 330 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tal Teklan - Under temple walls blending fix",
+    "area": "Tal Teklan - under temple blending fix",
+    "overlayIds": [ 272 ],
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Indoors",
+    "area": "Tal Teklan - Indoors above ground floor",
+    "overlayIds": [ 275 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Indoors",
+    "area": "Tal Teklan - Indoors ground level",
+    "overlayIds": [ 272, 275, 276 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Fake Bricks",
+    "area": "Varlamore - Tlati Rainforest",
+    "overlayIds": [ 276 ],
+    "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan Stone Brick Path",
+    "area": "Tal Teklan temple path fix",
+    "groundMaterial": "GRUNGE",
+    "overlayIds": [ 275 ],
+    "shiftLightness": 3,
+    "blended": false,
+    "uvOrientation": 128,
+    "replacements": {
+      "Tal Teklan Stone Brick Path - No blend": "!blending"
+    }
+  },
+  {
+    "name": "Tal Teklan Stone Brick Path - No blend",
+    "area": "Tal Teklan temple path fix",
+    "groundMaterial": "GRUNGE",
+    "blended": false,
+    "uvOrientation": 128
+  },
+  {
+    "name": "Tlati Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "DIRT",
+    "overlayIds": [ 272, 275 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Kastori Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 303 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tlati Rainforest - Light dirt",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "DIRT",
+    "underlayIds": [ 223 ]
   },
   {
     "name": "Varlamore - Strangewood Paths - Dirt",
