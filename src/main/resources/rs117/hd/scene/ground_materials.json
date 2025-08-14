@@ -428,6 +428,14 @@
     ]
   },
   {
+    "name": "ROCK_PILES",
+    "materials": [
+      "STONE_NORMALED",
+      "GRAVEL",
+      "GRUNGE_1"
+    ]
+  },
+  {
     "name": "SANDY_STONE_FLOOR",
     "materials": [
       "SAND_2",

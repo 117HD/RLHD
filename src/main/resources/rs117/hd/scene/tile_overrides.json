@@ -5300,6 +5300,20 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "Tlati Rainforest - Rocky ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 424, 425 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tlati Rainforest - Dirt ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 17 ],
+    "uvOrientation": 128
+  },
+  {
     "name": "Tal Teklan Dirt Path",
     "area": "Varlamore - Tlati Rainforest",
     "groundMaterial": "VARIED_DIRT",
@@ -5334,6 +5348,12 @@
     "groundMaterial": "VARIED_DIRT",
     "overlayIds": [ 303 ],
     "uvOrientation": -128
+  },
+  {
+    "name": "Tlati Rainforest - Light dirt",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "DIRT",
+    "underlayIds": [ 223 ]
   },
   {
     "name": "MASTERING_MIXOLOGY_OVERLAY",
