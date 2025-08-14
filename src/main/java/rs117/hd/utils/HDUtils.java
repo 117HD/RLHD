@@ -328,8 +328,12 @@ public class HDUtils {
 		return hsl;
 	}
 
+	public static float signedTriangleArea(float[] a, float[] b, float[] c) {
+		return (a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])) * 0.5f;
+	}
+
 	public static float triangleArea(float[] a, float[] b, float[] c) {
-		return Math.abs(a[0] * (b[1] - c[1]) + b[0] * (c[1] - a[1]) + c[0] * (a[1] - b[1])) * 0.5f;
+		return Math.abs(signedTriangleArea(a, b, c));
 	}
 
 	public static float barycentricDepth(float[] p, float[] a, float[] b, float[] c,
@@ -459,6 +463,23 @@ public class HDUtils {
 		}
 
 		return false; // All tested points are outside
+	}
+
+	public static boolean isTileBackFacing(int x, int z, int h0, int h1, int h2, int h3, float[] viewProj) {
+		final float[] v0 = { x, h0, z, 1.0f };
+		final float[] v1 = { x + LOCAL_TILE_SIZE, h1, z, 1.0f };
+		final float[] v2 = { x, h2, z + LOCAL_TILE_SIZE, 1.0f };
+		final float[] v3 = { x + LOCAL_TILE_SIZE, h3, z + LOCAL_TILE_SIZE, 1.0f };
+
+		Mat4.projectVec(v0, viewProj, v0);
+		Mat4.projectVec(v1, viewProj, v1);
+		Mat4.projectVec(v2, viewProj, v2);
+
+		if (signedTriangleArea(v0, v1, v2) > 0.0f)
+			return false;
+
+		Mat4.projectVec(v3, viewProj, v3);
+		return signedTriangleArea(v2, v1, v3) < 0.0f;
 	}
 
 	public static boolean IsTileVisible(int x, int z, int h0, int h1, int h2, int h3, float[][] cullingPlanes) {

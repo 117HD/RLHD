@@ -159,6 +159,7 @@ public class SceneCullingManager {
 			final SceneView view = cullingViews.get(i);
 			final SceneViewContext ctx = getAvailableSceneViewContext();
 			ctx.frustumPlanes = view.getFrustumPlanes();
+			ctx.viewProj = view.getViewProjMatrix();
 			ctx.cullingFlags = view.getCullingFlags();
 			ctx.parentIdx = -1;
 
@@ -265,6 +266,7 @@ public class SceneCullingManager {
 
 	private static class SceneViewContext {
 		public float[][] frustumPlanes;
+		public float[] viewProj;
 		public CullingResults results;
 		public int parentIdx;
 		public int cullingFlags;
@@ -546,11 +548,31 @@ public class SceneCullingManager {
 
 							byte viewResult = VISIBILITY_HIDDEN;
 							if(plane != 0 || (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) != 0){
-								viewResult |= HDUtils.IsTileVisible(x, z, h0, h1, h2, h3, viewCtx.frustumPlanes, -LOCAL_HALF_TILE_SIZE) ? VISIBILITY_TILE_VISIBLE : 0;// SceneView doesn't want to cull GroundPlanes, Consider them all hidden
+								if (!HDUtils.isTileBackFacing(x, z, h0, h1, h2, h3, viewCtx.viewProj)) {
+									viewResult |= HDUtils.IsTileVisible(
+										x,
+										z,
+										h0,
+										h1,
+										h2,
+										h3,
+										viewCtx.frustumPlanes,
+										-LOCAL_HALF_TILE_SIZE
+									) ? VISIBILITY_TILE_VISIBLE : 0;// SceneView doesn't want to cull GroundPlanes, Consider them all hidden
+								}
 							}
 
 							if(hasUnderwaterTile && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_UNDERWATER_PLANES) != 0) {
-								viewResult |= HDUtils.IsTileVisible(x, z, uh0, uh1, uh2, uh3, viewCtx.frustumPlanes, -(LOCAL_TILE_SIZE * 4)) ?
+								viewResult |= HDUtils.IsTileVisible(
+									x,
+									z,
+									uh0,
+									uh1,
+									uh2,
+									uh3,
+									viewCtx.frustumPlanes,
+									-(LOCAL_TILE_SIZE * 4)
+								) ?
 									VISIBILITY_UNDER_WATER_TILE_VISIBLE :
 									0;
 							}
@@ -560,6 +582,12 @@ public class SceneCullingManager {
 								if(renderableCullingData != null && renderableCullingData.length > 0) {
 									for (SceneContext.RenderableCullingData renderable : renderableCullingData) {
 										final int radius = renderable.radius;
+										if (Math.abs(renderable.bottomY) < LOCAL_TILE_SIZE && renderable.height < LOCAL_TILE_SIZE) {
+											// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
+											if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
+												continue; // Surface isn't visible, skip this renderable
+											}
+										}
 										if (HDUtils.isAABBVisible(
 											cX - radius,
 											cH - renderable.bottomY,
