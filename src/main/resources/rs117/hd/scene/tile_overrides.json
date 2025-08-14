@@ -5608,7 +5608,7 @@
     "overlayIds": [
       20
     ],
-    "groundMaterial": "MARBLE_4",
+    "groundMaterial": "MARBLE_4_GLOSS",
     "uvScale": 1.15
   },
   {

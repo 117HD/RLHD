@@ -257,6 +257,12 @@
     ]
   },
   {
+    "name": "MARBLE_4_GLOSS",
+    "materials": [
+      "MARBLE_4_GLOSS"
+    ]
+  },
+  {
     "name": "MARBLE_DARK",
     "materials": [
       "MARBLE_DARK"

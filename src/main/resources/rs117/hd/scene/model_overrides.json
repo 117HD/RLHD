@@ -57211,8 +57211,9 @@
       },
       {
         "colors": "h == 8",
-        "baseMaterial": "MARBLE_2_SEMIGLOSS",
-        "uvScale": 0.4,
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+        "uvScale": 0.65,
+        "uvOrientation": 256,
         "uvType": "BOX"
       }
     ]
