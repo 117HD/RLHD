@@ -26435,8 +26435,8 @@
     "description": "MAGIC_GUILD_ORBS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 10,
+    "radius": 350,
+    "strength": 20,
     "color": [
       255,
       255,
@@ -26444,17 +26444,17 @@
     ],
     "type": "PULSE",
     "duration": 800,
-    "range": 20,
+    "range": 5,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW"
     ]
   },
   {
-    "description": "MAGIC_GUILD_PORTALS",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 7.5,
+    "description": "MAGIC_GUILD_PORTALS_OUTSIDE",
+    "offset": [ -200, 125 , 0 ],
+    "radius": 400,
+    "strength": 30,
+    "visibleFromOtherPlanes": true,
     "color": [
       0,
       0,
@@ -26462,7 +26462,26 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 10,
+    "objectIds": [
+      "WIZTOWERPORTAL",
+      "DARKWIZPORTAL",
+      "THORMACPORTAL"
+    ]
+  },
+  {
+    "description": "MAGIC_GUILD_PORTALS_INSIDE",
+    "offset": [ -40, 100 , 0 ],
+    "radius": 200,
+    "strength": 40,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 30,
     "objectIds": [
       "WIZTOWERPORTAL",
       "DARKWIZPORTAL",
