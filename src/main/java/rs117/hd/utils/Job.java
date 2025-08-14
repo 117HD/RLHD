@@ -66,6 +66,8 @@ public abstract class Job implements Runnable {
 
 	public boolean hasCompleteCallback() { return onCompleteCallback != null; }
 
+	public boolean isInFlight() { return inFlight.get(); }
+
 	public void submit() { submit(false); }
 
 	@SneakyThrows

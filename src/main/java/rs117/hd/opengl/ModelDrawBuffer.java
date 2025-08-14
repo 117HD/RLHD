@@ -1,10 +1,10 @@
 package rs117.hd.opengl;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.lwjgl.system.MemoryUtil;
 import rs117.hd.utils.Job;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -52,7 +52,8 @@ public class ModelDrawBuffer extends GLBuffer {
 			stagingModelDataNextOffset = renderBufferOffset + vertexCount;
 			stagingVertexCount += vertexCount;
 
-			if (stagingModelDataOffset >= stagingModelData.length) {
+			if (stagingModelDataOffset >= stagingModelData.length
+				|| (stagingModelDataOffset >= EXTENDED_SCENE_SIZE && !asyncIndicesWriter.isInFlight())) {
 				asyncIndicesWriter.submit();
 			}
 		}
@@ -90,11 +91,11 @@ public class ModelDrawBuffer extends GLBuffer {
 	@RequiredArgsConstructor
 	public static final class AsyncIndicesWriter extends Job {
 		private final ModelDrawBuffer owner;
-		private int[] stagingIndices = new int[32];
 		private int[] modelDataToWrite = new int[STAGING_MODEL_DATA_COUNT * 2];
 		private ByteBuffer mappedBuffer = null;
+		private long mappedBufferAddr;
 		private boolean isMapped = false;
-		private int modelCount;
+		private int modelDataToWriteCount;
 
 		public void unmap() {
 			if(isMapped) {
@@ -125,14 +126,15 @@ public class ModelDrawBuffer extends GLBuffer {
 				isMapped = mappedBuffer != null;
 			}
 
-			modelCount = 0;
+			modelDataToWriteCount = 0;
 			if (isMapped) {
 				// Perform Swap, so that we can write the previous staging data whilst the next is written in
 				int[] newModelDataToWrite = owner.stagingModelData;
 				owner.stagingModelData = modelDataToWrite;
 				modelDataToWrite = newModelDataToWrite;
 
-				modelCount = owner.stagingModelDataOffset / 2;
+				modelDataToWriteCount = owner.stagingModelDataOffset;
+				mappedBufferAddr = MemoryUtil.memAddress(mappedBuffer.clear());
 			}
 			owner.stagingModelDataOffset = 0;
 			owner.stagingVertexCount = 0;
@@ -141,27 +143,18 @@ public class ModelDrawBuffer extends GLBuffer {
 		@Override
 		protected void doWork() {
 			if (isMapped) {
-				IntBuffer intBuffer = mappedBuffer.clear().asIntBuffer().position(owner.indicesCount);
-				int modelDataOffset = 0;
-				int stagingIndicesOffset = 0;
-				for (int modelIdx = 0; modelIdx < modelCount; modelIdx++) {
-					int renderBufferOffset = modelDataToWrite[modelDataOffset++];
+				long address = mappedBufferAddr + owner.indicesCount * (long) Integer.BYTES;
+				for (int modelDataOffset = 0; modelDataOffset < modelDataToWriteCount; ) {
+					final int renderBufferOffset = modelDataToWrite[modelDataOffset++];
 					final int vertexCount = modelDataToWrite[modelDataOffset++];
 
-					if (stagingIndices.length < stagingIndicesOffset + vertexCount) {
-						intBuffer.put(stagingIndices, 0, stagingIndicesOffset);
-						stagingIndicesOffset = 0;
+					for (int v = 0; v < vertexCount; v++) {
+						MemoryUtil.memPutInt(address, renderBufferOffset + v);
+						address += 4L;
 					}
 
-					if (stagingIndices.length < vertexCount) {
-						stagingIndices = new int[vertexCount];
-					}
-
-					for (int v = 0; v < vertexCount; v++, owner.indicesCount++) {
-						stagingIndices[stagingIndicesOffset++] = renderBufferOffset++;
-					}
+					owner.indicesCount += vertexCount;
 				}
-				intBuffer.put(stagingIndices, 0, stagingIndicesOffset);
 			}
 		}
 	}

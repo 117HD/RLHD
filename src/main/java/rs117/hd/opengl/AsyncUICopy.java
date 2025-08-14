@@ -60,7 +60,7 @@ public class AsyncUICopy extends Job {
 
 	@Override
 	protected void doWork() {
-		if (mappedIntBuffer != null) {
+		if (pixels != null && mappedIntBuffer != null) {
 			long time = System.nanoTime();
 			mappedIntBuffer.put(pixels, 0, width * height);
 			time = System.nanoTime() - time;
