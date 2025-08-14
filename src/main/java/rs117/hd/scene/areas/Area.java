@@ -19,7 +19,7 @@ public class Area {
 	public int[] regions;
 	@JsonAdapter(RegionBox.Adapter.class)
 	public RegionBox[] regionBoxes;
-	@JsonAdapter(AABB.Adapter.class)
+	@JsonAdapter(AABB.ArrayAdapter.class)
 	@SerializedName("aabbs")
 	public AABB[] rawAabbs;
 
