@@ -23,6 +23,7 @@ import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.ExpressionPredicate;
 import rs117.hd.utils.GsonUtils;
@@ -34,6 +35,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Setter
 @Accessors(fluent = true)
+@JsonAdapter(Material.Adapter.class)
 @NoArgsConstructor
 public class Material {
 	public String name;
