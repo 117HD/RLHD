@@ -7236,7 +7236,8 @@
   {
     "name": "VARLAMORE",
     "regionBoxes": [
-      [ 4908, 7476 ]
+      [ 4148, 7476 ],
+      [ 4149, 5429 ]
     ],
     "areas": [ "ALDARIN" ]
   },
