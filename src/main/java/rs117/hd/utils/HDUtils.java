@@ -388,7 +388,7 @@ public class HDUtils {
 		return (u >= 0) && (v >= 0) && (u + v <= 1.0f);
 	}
 
-	public static boolean isSphereInsideFrustum(float x, float y, float z, float radius, float[][] cullingPlanes) {
+	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[][] cullingPlanes) {
 		for (float[] plane : cullingPlanes) {
 			if (distanceToPlane(plane, x, y, z) < -radius) {
 				return false;
@@ -398,13 +398,53 @@ public class HDUtils {
 		return true;
 	}
 
-	public static boolean isModelVisible(int x, int y, int z, Model model, float[][] cullingPlanes) {
-		final int bottom = y - model.getBottomY();
-		final int radius = model.getRadius();
-		return isAABBVisible(x - radius, bottom, z - radius, x + radius, bottom + model.getModelHeight(), z + radius, cullingPlanes, 0.0f);
+	public static boolean isSphereIntersectingAABB(
+		float centerX, float centerY, float centerZ,
+		float radius,
+		float minX, float minY, float minZ,
+		float maxX, float maxY, float maxZ
+	) {
+		float d = 0;
+
+		// X axis
+		if (centerX < minX) {
+			d += (centerX - minX) * (centerX - minX);
+		} else if (centerX > maxX) {
+			d += (centerX - maxX) * (centerX - maxX);
+		}
+
+		// Y axis
+		if (centerY < minY) {
+			d += (centerY - minY) * (centerY - minY);
+		} else if (centerY > maxY) {
+			d += (centerY - maxY) * (centerY - maxY);
+		}
+
+		// Z axis
+		if (centerZ < minZ) {
+			d += (centerZ - minZ) * (centerZ - minZ);
+		} else if (centerZ > maxZ) {
+			d += (centerZ - maxZ) * (centerZ - maxZ);
+		}
+
+		return d <= radius * radius;
 	}
 
-	public static boolean isAABBVisible(
+	public static boolean isAABBIntersectingAABB(
+		float minA_X, float minA_Y, float minA_Z,
+		float maxA_X, float maxA_Y, float maxA_Z,
+		float minB_X, float minB_Y, float minB_Z,
+		float maxB_X, float maxB_Y, float maxB_Z
+	) {
+		return (
+			minA_X <= maxB_X && maxA_X >= minB_X &&
+			minA_Y <= maxB_Y && maxA_Y >= minB_Y &&
+			minA_Z <= maxB_Z && maxA_Z >= minB_Z
+		);
+	}
+
+
+	public static boolean isAABBIntersectingFrustum(
 		int minX,
 		int minY,
 		int minZ,
@@ -433,7 +473,7 @@ public class HDUtils {
 		return true;
 	}
 
-	public static boolean isCylinderVisible(int x, int y, int z, int height, int radius, float[][] cullingPlanes) {
+	public static boolean isCylinderIntersectingFrustrum(int x, int y, int z, int height, int radius, float[][] cullingPlanes) {
 		final int SAMPLES = 8; // Number of points to test around the circle
 		final float TWO_PI = (float) (2 * Math.PI);
 		final float ANGLE_STEP = TWO_PI / SAMPLES;

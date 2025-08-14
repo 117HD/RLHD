@@ -759,7 +759,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				directionalLight = new SceneView()
 					.setOrthographic(true)
-					.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES);
+					.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES)
+					.setCullingFlag(SceneView.CULLING_FLAG_CULLING_BOUNDS);
 
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -1753,12 +1754,32 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
 
 					int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
-					float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
+					final float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
 					HDUtils.clipFrustumToDistance(sceneFrustumCorners, maxDistance);
 					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
 
-					float[] centerXZ = new float[2];
+					// TODO: Perform OOBB Culling instead to get finer grain, since with a world AABB its still including allot of models unnecessarily
+					final float[] lightDir = directionalLight.getForwardDirection();
+					final float[] shadowCullingBoundsMin = { Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE };
+					final float[] shadowCullingBoundsMax = { Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE };
+					final float[] centerXZ = new float[2];
 					for (float[] corner : sceneFrustumCorners) {
+						min(shadowCullingBoundsMin, shadowCullingBoundsMin, corner[0]);
+						min(
+							shadowCullingBoundsMin, shadowCullingBoundsMin,
+							corner[0] - lightDir[0] * LOCAL_TILE_SIZE,
+							corner[1] - lightDir[1] * LOCAL_TILE_SIZE,
+							corner[2] - lightDir[2] * LOCAL_TILE_SIZE
+						);
+
+						max(shadowCullingBoundsMax, shadowCullingBoundsMax, corner[0]);
+						max(
+							shadowCullingBoundsMax, shadowCullingBoundsMax,
+							corner[0] - lightDir[0] * LOCAL_TILE_SIZE,
+							corner[1] - lightDir[1] * LOCAL_TILE_SIZE,
+							corner[2] - lightDir[2] * LOCAL_TILE_SIZE
+						);
+
 						add(centerXZ, centerXZ, corner[0], corner[2]);
 					}
 					divide(centerXZ, centerXZ, (float) sceneFrustumCorners.length);
@@ -1783,6 +1804,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 
 					directionalLight.setCullingParent(sceneCamera);
+					directionalLight.setCullingMinBounds(shadowCullingBoundsMin);
+					directionalLight.setCullingMaxBounds(shadowCullingBoundsMax);
 					directionalLight.setPositionX(centerXZ[0]);
 					directionalLight.setPositionZ(centerXZ[1]);
 					directionalLight.setNearPlane(100000);
@@ -1790,10 +1813,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					directionalLight.setViewportWidth((int) radius);
 					directionalLight.setViewportHeight((int) radius);
 
-					// Extract the 3rd column from the light view matrix (the float array is column-major).
-					// This produces the light's direction vector in world space, which we negate in order to
-					// get the light's direction vector pointing away from each fragment
-					uboGlobal.lightDir.set(directionalLight.getForwardDirection());
+					uboGlobal.lightDir.set(lightDir);
 					uboGlobal.lightProjectionMatrix.set(directionalLight.getViewProjMatrix());
 					uboGlobal.upload();
 				}

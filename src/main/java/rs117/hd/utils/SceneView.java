@@ -10,7 +10,7 @@ public class SceneView {
 	public static final int CULLING_FLAG_GROUND_PLANES = 1;
 	public static final int CULLING_FLAG_UNDERWATER_PLANES = 1 << 1;
 	public static final int CULLING_FLAG_RENDERABLES = 1 << 2;
-	public static final int CULLING_FLAG_OCCLUSION_CULLING = 1 << 3;
+	public static final int CULLING_FLAG_CULLING_BOUNDS = 1 << 3;
 	public static final int CULLING_FLAG_FREEZE = 1 << 4;
 
 	private static final int PROJECTION_MATRIX_DIRTY = 1;
@@ -31,6 +31,8 @@ public class SceneView {
 	private float[] invViewProjMatrix;
 
 	private final float[][] frustumPlanes = new float[6][4];
+	private final float[] cullingMinBounds = new float[3];
+	private final float[] cullingMaxBounds = new float[3];
 	private final float[] position = new float[3];
 	private final float[] orientation = new float[2];
 
@@ -97,6 +99,24 @@ public class SceneView {
 	}
 
 	public SceneView getCullingParent() { return cullingParent;}
+
+	public SceneView setCullingMinBounds(float[] newCullingMinBounds) {
+		cullingMinBounds[0] = newCullingMinBounds[0];
+		cullingMinBounds[1] = newCullingMinBounds[1];
+		cullingMinBounds[2] = newCullingMinBounds[2];
+		return this;
+	}
+
+	public float[] getCullingMinBounds() { return cullingMinBounds.clone(); }
+
+	public SceneView setCullingMaxBounds(float[] newCullingMaxBounds) {
+		cullingMaxBounds[0] = newCullingMaxBounds[0];
+		cullingMaxBounds[1] = newCullingMaxBounds[1];
+		cullingMaxBounds[2] = newCullingMaxBounds[2];
+		return this;
+	}
+
+	public float[] getCullingMaxBounds() { return cullingMaxBounds.clone(); }
 
 	public boolean getIsOrthographic() {return isOrthographic; }
 
@@ -286,7 +306,7 @@ public class SceneView {
 				return cullingResults.isProjectileVisible(((Projectile) renderable).getId());
 			}
 		}
-		return HDUtils.isSphereInsideFrustum(x, y, z, modelRadius, frustumPlanes);
+		return HDUtils.isSphereIntersectingFrustum(x, y, z, modelRadius, frustumPlanes);
 	}
 
 	public SceneView setOrientation(float[] newOrientation) {
