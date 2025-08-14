@@ -509,4 +509,17 @@ public class ColorUtils {
 			super.write(out, linearToSrgb(src));
 		}
 	}
+
+	public static class LinearAdapter extends DelegateNumberTypeAdapter<Float> {
+		@Override
+		public Float read(JsonReader in) throws IOException {
+			var value = NUMBER_ADAPTER.read(in);
+			return value == null ? null : srgbToLinear((float) value);
+		}
+
+		@Override
+		public void write(JsonWriter out, Float value) throws IOException {
+			NUMBER_ADAPTER.write(out, value == null ? null : linearToSrgb(value));
+		}
+	}
 }
