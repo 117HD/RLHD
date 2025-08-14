@@ -1926,9 +1926,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			directionalDrawBuffer.flush();
 		}
 
-		if (configAsyncUICopy)
-			asyncUICopy.complete();
-
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 		frameTimer.begin(Timer.UPLOAD_GEOMETRY);
@@ -2258,6 +2255,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
+		try {
+			prepareInterfaceTexture();
+		} catch (Exception ex) {
+			// Fixes: https://github.com/runelite/runelite/issues/12930
+			// Gracefully Handle loss of opengl buffers and context
+			log.warn("prepareInterfaceTexture exception", ex);
+			restartPlugin();
+			return;
+		}
+
 		if (lastFrameTimeMillis > 0) {
 			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
 
@@ -2279,16 +2286,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 		lastFrameTimeMillis = System.currentTimeMillis();
 		lastFrameClientTime = elapsedClientTime;
-
-		try {
-			prepareInterfaceTexture();
-		} catch (Exception ex) {
-			// Fixes: https://github.com/runelite/runelite/issues/12930
-			// Gracefully Handle loss of opengl buffers and context
-			log.warn("prepareInterfaceTexture exception", ex);
-			restartPlugin();
-			return;
-		}
 
 		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
 		if (renderBufferOffset > 0) {
@@ -2518,6 +2515,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		drawUi(overlayColor);
+
+		if (configAsyncUICopy) {
+			asyncUICopy.complete();
+		}
 
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
@@ -3444,11 +3445,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (client.getScene() == null)
 			return;
-
-		// Make sure the copy has been completed before rendering the next frame
-		if (configAsyncUICopy)
-			asyncUICopy.wait(true);
-
+		
 		// The game runs significantly slower with lower planes in Chambers of Xeric
 		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
 	}
