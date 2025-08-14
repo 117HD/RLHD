@@ -1,6 +1,7 @@
 package rs117.hd.opengl;
 
 import java.nio.ByteBuffer;
+import java.util.Arrays;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +53,10 @@ public class ModelDrawBuffer extends GLBuffer {
 			stagingModelDataNextOffset = renderBufferOffset + vertexCount;
 			stagingVertexCount += vertexCount;
 
-			if (stagingModelDataOffset >= stagingModelData.length
-				|| (stagingModelDataOffset >= EXTENDED_SCENE_SIZE && !asyncIndicesWriter.isInFlight())) {
+			if (stagingModelDataOffset >= EXTENDED_SCENE_SIZE && !asyncIndicesWriter.isInFlight()) {
 				asyncIndicesWriter.submit();
+			} else if (stagingModelDataOffset >= stagingModelData.length) {
+				stagingModelData = Arrays.copyOf(stagingModelData, stagingModelData.length + 32);
 			}
 		}
 	}
