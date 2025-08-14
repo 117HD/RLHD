@@ -7882,7 +7882,7 @@
   {
     "name": "Black Knights Fort - Catacombs",
     "regionBoxes": [
-      [16459, 16457]
+      [ 16459, 16457 ]
     ],
     "aabbs": [
       [ 4160, 4696, 4162, 4704 ],

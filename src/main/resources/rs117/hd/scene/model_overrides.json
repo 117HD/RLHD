@@ -56242,7 +56242,7 @@
         "uvType": "BOX"
       },
       {
-        "colors": "l==2",
+        "colors": "l == 2",
         "baseMaterial": "PURE_BLACK",
         "uvType": "BOX"
       }
@@ -56350,7 +56350,7 @@
         "uvType": "BOX"
       },
       {
-        "colors": "l==2",
+        "colors": "l == 2",
         "baseMaterial": "PURE_BLACK",
         "uvType": "BOX"
       }

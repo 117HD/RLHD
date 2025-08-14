@@ -40947,7 +40947,10 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 300,
     "npcIds": [
-      "TORMENTED_DEMON_1", "TORMENTED_DEMON_2", "TORMENTED_DEMON_QUEST_1", "TORMENTED_DEMON_QUEST_2"
+      "TORMENTED_DEMON_1",
+      "TORMENTED_DEMON_2",
+      "TORMENTED_DEMON_QUEST_1",
+      "TORMENTED_DEMON_QUEST_2"
     ],
     "animationIds": [
       -1,
