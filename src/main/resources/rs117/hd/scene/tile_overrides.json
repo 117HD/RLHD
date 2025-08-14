@@ -3687,7 +3687,7 @@
   },
   {
     "name": "OVERLAY_KOUREND_PATH",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       133
     ],
@@ -3696,7 +3696,7 @@
   },
   {
     "name": "OVERLAY_ZEAH_PATHS",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       11,
       50
@@ -3842,7 +3842,7 @@
   },
   {
     "name": "FORTIS_EARTHEN_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 326 ],
     "groundMaterial": "TERRACOTTA_FLOOR",
     "uvScale": 1.1,
@@ -3850,7 +3850,7 @@
   },
   {
     "name": "FORTIS_MARBLE_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 327 ],
     "groundMaterial": "MARBLE_2",
     "uvScale": 1.1,
@@ -3865,14 +3865,14 @@
   },
   {
     "name": "FORTIS_RED_DIRT",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 324 ],
     "groundMaterial": "DIRT",
     "uvScale": 1.1
   },
   {
     "name": "FORTIS_HOUSE_TILE_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 123 ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
     "uvScale": 1.1,
@@ -3880,7 +3880,7 @@
   },
   {
     "name": "FORTIS_CASTLE_WALLS_BRICK_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 159 ],
     "groundMaterial": "BRICK_PATHS",
     "uvScale": 1.1,
@@ -4016,7 +4016,7 @@
   },
   {
     "name": "ZEAH_DIRT_OVERLAY",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       114,
       148
@@ -5397,6 +5397,12 @@
       158
     ],
     "waterType": "CAVE_WATER"
+  },
+  {
+    "name": "Varlamore - Dark cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 222 ],
+    "groundMaterial": "ROCK_PILES"
   },
   {
     "name": "OVERWORLD_GRASS_OVERLAY",
@@ -7193,7 +7199,7 @@
   },
   {
     "name": "ZEAH_GRAVEL_PATH",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       99
     ],
@@ -7204,7 +7210,7 @@
   },
   {
     "name": "ZEAH_DIRT_UNDERLAY",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       19,
       148,
@@ -7217,7 +7223,7 @@
   },
   {
     "name": "ZEAH_GRAVEL_HILLS",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       99
     ],
@@ -7228,7 +7234,7 @@
   },
   {
     "name": "ZEAH_ROCKY_GROUND",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       27,
       29,
