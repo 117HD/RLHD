@@ -518,10 +518,10 @@ public class SceneCullingManager {
 							final int dl3 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY + 1];
 
 							hasUnderwaterTile = dl0 > 0 || dl1 > 0 || dl2 > 0 || dl3 > 0;
-							if(dl0 > 0) uh0 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl0 - 1];
-							if(dl1 > 0) uh1 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl1 - 1];
-							if(dl2 > 0) uh2 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1];
-							if(dl3 > 0) uh3 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1];
+							if (dl0 > 0) uh0 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl0 - 1] * 0.55f);
+							if (dl1 > 0) uh1 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl1 - 1] * 0.55f);
+							if (dl2 > 0) uh2 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1] * 0.55f);
+							if (dl3 > 0) uh3 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1] * 0.55f);
 						}
 
 						byte combinedResult = VISIBILITY_HIDDEN;
@@ -563,18 +563,20 @@ public class SceneCullingManager {
 							}
 
 							if(hasUnderwaterTile && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_UNDERWATER_PLANES) != 0) {
-								viewResult |= HDUtils.IsTileVisible(
-									x,
-									z,
-									uh0,
-									uh1,
-									uh2,
-									uh3,
-									viewCtx.frustumPlanes,
-									-(LOCAL_TILE_SIZE * 4)
-								) ?
-									VISIBILITY_UNDER_WATER_TILE_VISIBLE :
-									0;
+								if (!HDUtils.isTileBackFacing(x, z, uh0, uh1, uh2, uh3, viewCtx.viewProj)) {
+									viewResult |= HDUtils.IsTileVisible(
+										x,
+										z,
+										uh0,
+										uh1,
+										uh2,
+										uh3,
+										viewCtx.frustumPlanes,
+										-(LOCAL_TILE_SIZE * 4)
+									) ?
+										VISIBILITY_UNDER_WATER_TILE_VISIBLE :
+										0;
+								}
 							}
 
 							if((viewCtx.cullingFlags & SceneView.CULLING_FLAG_RENDERABLES) != 0) {
