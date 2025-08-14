@@ -3336,6 +3336,34 @@
     "flatNormals": true
   },
   {
+    "description": "GRAND_EXCHANGE_BANNERS",
+    "baseMaterial": "CARPET_LIGHT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "receiveShadows": false,
+    "invertDisplacementStrength": true,
+    "objectIds": [
+      "EXCHANGE_FLAG_HERBS_LOGS_FLIPPED",
+      "EXCHANGE_FLAG_LOGS_WEAPONS",
+      "EXCHANGE_FLAG_WEAPONS_FLIPPED",
+      "EXCHANGE_FLAG_MINERALS",
+      "EXCHANGE_FLAG_MINERALS",
+      "EXCHANGE_FLAG_RUNES",
+      "EXCHANGE_FLAG_RUNES_FLIPPED",
+      "EXCHANGE_FLAG_HERBS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1
+      }
+    ]
+  },
+  {
     "description": "Brick walls with wooden boards",
     "baseMaterial": "GRUNGE_1",
     "flatNormals": true,
