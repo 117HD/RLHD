@@ -311,8 +311,16 @@ public class MathUtils {
 		return (float) Math.sqrt(dot(v, v));
 	}
 
+	public static float distanceSquared(float[] a, float[] b, int n) {
+		return dot(a, a, n) - 2 * dot(a, b, n) + dot(b, b, n);
+	}
+
+	public static float distanceSquared(float[] a, float[] b) {
+		return distanceSquared(a, b, Math.min(a.length, b.length));
+	}
+
 	public static float distance(float[] a, float[] b, int n) {
-		return (float) Math.sqrt(dot(a, a, n) - 2 * dot(a, b, n) + dot(b, b, n));
+		return (float) Math.sqrt(distanceSquared(a, b, n));
 	}
 
 	public static float distance(float[] a, float[] b) {

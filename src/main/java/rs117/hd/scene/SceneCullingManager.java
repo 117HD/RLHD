@@ -164,6 +164,7 @@ public class SceneCullingManager {
 			ctx.parentIdx = -1;
 
 			if ((ctx.cullingFlags & SceneView.CULLING_FLAG_CULLING_BOUNDS) != 0) {
+				ctx.view = view.getViewMatrix();
 				ctx.minCullingBounds = view.getCullingMinBounds();
 				ctx.maxCullingBounds = view.getCullingMaxBounds();
 			}
@@ -271,9 +272,10 @@ public class SceneCullingManager {
 
 	private static class SceneViewContext {
 		public float[][] frustumPlanes;
+		public float[] viewProj;
+		public float[] view;
 		public float[] minCullingBounds;
 		public float[] maxCullingBounds;
-		public float[] viewProj;
 		public CullingResults results;
 		public int parentIdx;
 		public int cullingFlags;
@@ -578,13 +580,9 @@ public class SceneCullingManager {
 
 									if ((viewResult & VISIBILITY_TILE_VISIBLE) != 0
 										&& (viewCtx.cullingFlags & SceneView.CULLING_FLAG_CULLING_BOUNDS) != 0) {
-										if (!HDUtils.isSphereIntersectingAABB(
-											cX,
-											cH,
-											cZ,
-											LOCAL_TILE_SIZE,
-											viewCtx.minCullingBounds[0], viewCtx.minCullingBounds[1], viewCtx.minCullingBounds[2],
-											viewCtx.maxCullingBounds[0], viewCtx.maxCullingBounds[1], viewCtx.maxCullingBounds[2]
+										if (!HDUtils.sphereIntersectsOOBB(
+											new float[] { cX, cH, cZ }, LOCAL_TILE_SIZE,
+											viewCtx.view, viewCtx.minCullingBounds, viewCtx.maxCullingBounds
 										)) {
 											viewResult &= ~VISIBILITY_TILE_VISIBLE;
 										}
@@ -622,15 +620,14 @@ public class SceneCullingManager {
 										}
 
 										if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CULLING_BOUNDS) != 0) {
-											if (!HDUtils.isAABBIntersectingAABB(
+											if (!HDUtils.aabbIntersectsOOBB(
 												cX - radius,
 												cH - renderable.bottomY,
 												cZ - radius,
 												cX + radius,
 												cH - renderable.bottomY + renderable.height,
 												cZ + radius,
-												viewCtx.minCullingBounds[0], viewCtx.minCullingBounds[1], viewCtx.minCullingBounds[2],
-												viewCtx.maxCullingBounds[0], viewCtx.maxCullingBounds[1], viewCtx.maxCullingBounds[2]
+												viewCtx.view, viewCtx.minCullingBounds, viewCtx.maxCullingBounds
 											)) {
 												continue;
 											}

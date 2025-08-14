@@ -430,6 +430,57 @@ public class HDUtils {
 		return d <= radius * radius;
 	}
 
+	public static boolean sphereIntersectsOOBB(
+		float[] sphereCenterWorld, float radius,
+		float[] viewMatrix,
+		float[] oobbMin, float[] oobbMax
+	) {
+		final float[] localCenter = new float[3];
+		Mat4.transformVecAffine(localCenter, viewMatrix, sphereCenterWorld);
+
+		float[] closest = clamp(localCenter, oobbMin, oobbMax);
+		float distSq = distanceSquared(localCenter, closest);
+
+		return distSq <= radius * radius;
+	}
+
+	public static boolean aabbIntersectsOOBB(
+		float minWorldX, float minWorldY, float minWorldZ,
+		float maxWorldX, float maxWorldY, float maxWorldZ,
+		float[] viewMatrix,
+		float[] oobbMin, // in view (light) space
+		float[] oobbMax  // in view (light) space
+	) {
+		final float[] cornerWS = new float[3];
+		final float[] cornerLS = new float[3];
+
+		// Generate all 8 corners of the world-space AABB
+		for (int x = 0; x <= 1; x++) {
+			for (int y = 0; y <= 1; y++) {
+				for (int z = 0; z <= 1; z++) {
+					cornerWS[0] = (x == 0) ? minWorldX : maxWorldX;
+					cornerWS[1] = (y == 0) ? minWorldY : maxWorldY;
+					cornerWS[2] = (z == 0) ? minWorldZ : maxWorldZ;
+
+					// Transform world-space corner to view (light) space
+					Mat4.transformVecAffine(cornerLS, viewMatrix, cornerWS);
+
+					if (pointInsideAABB(cornerLS, oobbMin, oobbMax)) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
+	}
+
+	public static boolean pointInsideAABB(float[] point, float[] min, float[] max) {
+		return point[0] >= min[0] && point[0] <= max[0] &&
+			   point[1] >= min[1] && point[1] <= max[1] &&
+			   point[2] >= min[2] && point[2] <= max[2];
+	}
+
 	public static boolean isAABBIntersectingAABB(
 		float minA_X, float minA_Y, float minA_Z,
 		float maxA_X, float maxA_Y, float maxA_Z,

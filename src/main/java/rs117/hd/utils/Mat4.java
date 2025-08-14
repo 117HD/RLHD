@@ -25,11 +25,7 @@
  */
 package rs117.hd.utils;
 
-import static rs117.hd.utils.MathUtils.cos;
-import static rs117.hd.utils.MathUtils.divide;
-import static rs117.hd.utils.MathUtils.normalizePlane;
-import static rs117.hd.utils.MathUtils.sin;
-import static rs117.hd.utils.MathUtils.slice;
+import static rs117.hd.utils.MathUtils.*;
 
 public class Mat4
 {
@@ -288,6 +284,36 @@ public class Mat4
 			normalizePlane(near);
 			normalizePlane(far);
 		}
+	}
+
+	/**
+	 * Multiplies a 4x4 matrix with a 3x1 vector, storing the result in the output vector, which may be the same as the input vector.
+	 * Transforms a 3D position by a 4x4 affine matrix (w = 1.0), ignoring the resulting W component.
+	 *
+	 * @param out  where the result should be stored
+	 * @param mat4 4x4 column-major matrix
+	 * @param vec3 3x1 vector
+	 */
+	@SuppressWarnings("PointlessArithmeticExpression")
+	public static void transformVecAffine(float[] out, float[] mat4, float[] vec3) {
+		float a =
+			mat4[0 * 4 + 0] * vec3[0] +
+			mat4[1 * 4 + 0] * vec3[1] +
+			mat4[2 * 4 + 0] * vec3[2] +
+			mat4[3 * 4 + 0] * 1.0f;
+		float b =
+			mat4[0 * 4 + 1] * vec3[0] +
+			mat4[1 * 4 + 1] * vec3[1] +
+			mat4[2 * 4 + 1] * vec3[2] +
+			mat4[3 * 4 + 1] * 1.0f;
+		float c =
+			mat4[0 * 4 + 2] * vec3[0] +
+			mat4[1 * 4 + 2] * vec3[1] +
+			mat4[2 * 4 + 2] * vec3[2] +
+			mat4[3 * 4 + 2] * 1.0f;
+		out[0] = a;
+		out[1] = b;
+		out[2] = c;
 	}
 
 	/**

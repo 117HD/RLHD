@@ -347,6 +347,16 @@ public class SceneView {
 		return Arrays.copyOf(viewMatrix, viewMatrix.length);
 	}
 
+	public float[] transformPoint(float[] out, float[] point) {
+		calculateViewMatrix();
+		Mat4.transformVecAffine(out, viewMatrix, point);
+		return out;
+	}
+
+	public float[] transformPoint(float[] point) {
+		return transformPoint(new float[3], point);
+	}
+
 	private void calculateProjectionMatrix() {
 		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0) {
 			final float zoomedViewportWidth = (viewportWidth / zoom);
