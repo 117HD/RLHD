@@ -2506,10 +2506,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		drawUi(overlayColor);
 
-		if (configAsyncUICopy) {
-			asyncUICopy.complete();
-		}
-
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
 			awtContext.swapBuffers();
@@ -2546,6 +2542,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (client.getGameState().getState() < GameState.LOADING.getState())
 			overlayColor = 0;
 
+
 		frameTimer.begin(Timer.RENDER_UI);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
@@ -2561,6 +2558,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboUI.targetDimensions.set(actualUiResolution);
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
+
+		if (configAsyncUICopy) {
+			asyncUICopy.complete();
+		}
 
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
@@ -2709,8 +2710,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			redrawPreviousFrame = true;
 			return;
 		}
-
-		asyncUICopy.complete();
 
 		// If the scene wasn't loaded by a call to loadScene, load it synchronously instead
 		if (nextSceneContext == null) {
