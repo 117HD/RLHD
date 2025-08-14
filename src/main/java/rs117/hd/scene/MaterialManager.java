@@ -24,7 +24,6 @@
  */
 package rs117.hd.scene;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -66,9 +65,6 @@ import static rs117.hd.utils.ResourcePath.path;
 public class MaterialManager {
 	private static final ResourcePath MATERIALS_PATH = Props
 		.getFile("rlhd.materials-path", () -> path(MaterialManager.class, "materials.json"));
-
-	@Inject
-	private Gson unmodifiedGson;
 
 	@Inject
 	private Client client;
@@ -173,7 +169,7 @@ public class MaterialManager {
 
 		// Add static materials
 		for (var mat : Material.REQUIRED_MATERIALS)
-			rawMaterialMap.put(mat.name, unmodifiedGson.toJsonTree(mat, Material.class).getAsJsonObject());
+			rawMaterialMap.put(mat.name, gson.toJsonTree(mat, Material.Definition.class).getAsJsonObject());
 
 		var materialToParentMap = new HashMap<String, String>();
 

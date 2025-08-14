@@ -37,7 +37,6 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.ProceduralGenerator.VERTICES_PER_FACE;
 import static rs117.hd.scene.ProceduralGenerator.faceLocalVertices;
 import static rs117.hd.scene.ProceduralGenerator.isOverlayFace;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -137,47 +136,8 @@ public class HDUtils {
 		return orientation % 2048;
 	}
 
-	public static AABB getSceneBounds(Scene scene) {
-		if (!scene.isInstance()) {
-			int x = scene.getBaseX() - SCENE_OFFSET;
-			int y = scene.getBaseY() - SCENE_OFFSET;
-			return new AABB(x, y, x + EXTENDED_SCENE_SIZE, y + EXTENDED_SCENE_SIZE);
-		}
-
-		// Assume instances are assembled from approximately adjacent chunks on the map
-		int minX = Integer.MAX_VALUE;
-		int minY = Integer.MAX_VALUE;
-		int maxX = Integer.MIN_VALUE;
-		int maxY = Integer.MIN_VALUE;
-
-		int[][][] chunks = scene.getInstanceTemplateChunks();
-		for (int[][] plane : chunks) {
-			for (int[] column : plane) {
-				for (int chunk : column) {
-					if (chunk == -1)
-						continue;
-
-					// Extract chunk coordinates
-					int x = chunk >> 14 & 0x3FF;
-					int y = chunk >> 3 & 0x7FF;
-					minX = min(minX, x);
-					minY = min(minY, y);
-					maxX = max(maxX, x + 1);
-					maxY = max(maxY, y + 1);
-				}
-			}
-		}
-
-		// Return an AABB representing no match, if there are no chunks
-		if (maxX < minX || maxY < minY)
-			return new AABB(-1, -1);
-
-		// Transform from chunk to world coordinates
-		return new AABB(minX << 3, minY << 3, maxX << 3, maxY << 3);
-	}
-
 	/**
-	 * Returns the south-west coordinate of the extended scene in world coordinates, after resolving instance template
+	 * Returns the south-west coordinate of the scene in world coordinates, after resolving instance template
 	 * chunks to their original world coordinates. If the scene is instanced, the base coordinates are computed from
 	 * the center chunk instead, or any valid chunk if the center chunk is invalid.
 	 *
@@ -185,92 +145,96 @@ public class HDUtils {
 	 * @param plane to use when resolving instance template chunks
 	 * @return the south-western coordinate of the scene in world space
 	 */
-	public static int[] getSceneBaseExtended(Scene scene, int plane)
-	{
+	public static int[] getSceneBaseBestGuess(Scene scene, int plane) {
 		int baseX = scene.getBaseX();
 		int baseY = scene.getBaseY();
 
-		if (scene.isInstance())
-		{
+		if (scene.isInstance()) {
 			// Assume the player is loaded into the center chunk, and calculate the world space position of the lower
 			// left corner of the scene, assuming well-behaved template chunks are used to create the instance.
 			int chunkX = 6, chunkY = 6;
-			int chunk = scene.getInstanceTemplateChunks()[plane][chunkX][chunkY];
-			if (chunk == -1)
-			{
+			int[][] chunks = scene.getInstanceTemplateChunks()[plane];
+			int chunk = chunks[chunkX][chunkY];
+			if (chunk == -1) {
 				// If the center chunk is invalid, pick any valid chunk and hope for the best
-				int[][] chunks = scene.getInstanceTemplateChunks()[plane];
 				outer:
-				for (chunkX = 0; chunkX < chunks.length; chunkX++)
-				{
-					for (chunkY = 0; chunkY < chunks[chunkX].length; chunkY++)
-					{
+				for (chunkX = 0; chunkX < chunks.length; chunkX++) {
+					for (chunkY = 0; chunkY < chunks[chunkX].length; chunkY++) {
 						chunk = chunks[chunkX][chunkY];
 						if (chunk != -1)
-						{
 							break outer;
-						}
 					}
 				}
 			}
 
-			// Extract chunk coordinates
-			baseX = chunk >> 14 & 0x3FF;
-			baseY = chunk >> 3 & 0x7FF;
-			// Shift to what would be the lower left corner chunk if the template chunks were contiguous on the map
-			baseX -= chunkX;
-			baseY -= chunkY;
-			// Transform to world coordinates
-			baseX <<= 3;
-			baseY <<= 3;
+			if (chunk != -1) {
+				// Extract chunk coordinates
+				baseX = chunk >> 14 & 0x3FF;
+				baseY = chunk >> 3 & 0x7FF;
+				// Shift to what would be the lower left corner chunk if the template chunks were contiguous on the map
+				baseX -= chunkX;
+				baseY -= chunkY;
+				// Transform to world coordinates
+				baseX <<= 3;
+				baseY <<= 3;
+			}
 		}
 
-		return new int[] { baseX - SCENE_OFFSET, baseY - SCENE_OFFSET };
+		return ivec(baseX, baseY, 0);
 	}
 
 	/**
-	 * The returned plane may be different, so it's not safe to use for indexing into overlay IDs for instance
+	 * The returned plane may be different
 	 */
 	public static int[] localToWorld(Scene scene, int localX, int localY, int plane) {
-		int sceneX = localX >> LOCAL_COORD_BITS;
-		int sceneY = localY >> LOCAL_COORD_BITS;
+		return sceneToWorld(scene, localX >> LOCAL_COORD_BITS, localY >> LOCAL_COORD_BITS, plane);
+	}
 
-		if (scene.isInstance() && sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
-			int chunkX = sceneX / 8;
-			int chunkY = sceneY / 8;
-			int templateChunk = scene.getInstanceTemplateChunks()[plane][chunkX][chunkY];
-			int rotation = 4 - (templateChunk >> 1 & 3);
-			int templateChunkY = (templateChunk >> 3 & 2047) * 8;
-			int templateChunkX = (templateChunk >> 14 & 1023) * 8;
-			int templateChunkPlane = templateChunk >> 24 & 3;
-			int worldX = templateChunkX + (sceneX & 7);
-			int worldY = templateChunkY + (sceneY & 7);
+	/**
+	 * The returned plane may be different
+	 */
+	public static int[] sceneToWorld(Scene scene, int sceneX, int sceneY, int plane) {
+		if (scene.isInstance()) {
+			if (sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
+				int chunkX = sceneX / CHUNK_SIZE;
+				int chunkY = sceneY / CHUNK_SIZE;
+				int templateChunk = scene.getInstanceTemplateChunks()[plane][chunkX][chunkY];
+				if (templateChunk != -1) {
+					int rotation = 4 - (templateChunk >> 1 & 3);
+					int templateChunkY = (templateChunk >> 3 & 2047) * 8;
+					int templateChunkX = (templateChunk >> 14 & 1023) * 8;
+					int templateChunkPlane = templateChunk >> 24 & 3;
+					int worldX = templateChunkX + (sceneX & 7);
+					int worldY = templateChunkY + (sceneY & 7);
 
-			int[] pos = { worldX, worldY, templateChunkPlane };
+					int[] pos = { worldX, worldY, templateChunkPlane };
 
-			chunkX = pos[0] & -8;
-			chunkY = pos[1] & -8;
-			int x = pos[0] & 7;
-			int y = pos[1] & 7;
-			switch (rotation) {
-				case 1:
-					pos[0] = chunkX + y;
-					pos[1] = chunkY + (7 - x);
-					break;
-				case 2:
-					pos[0] = chunkX + (7 - x);
-					pos[1] = chunkY + (7 - y);
-					break;
-				case 3:
-					pos[0] = chunkX + (7 - y);
-					pos[1] = chunkY + x;
-					break;
+					chunkX = pos[0] & -8;
+					chunkY = pos[1] & -8;
+					int x = pos[0] & 7;
+					int y = pos[1] & 7;
+					switch (rotation) {
+						case 1:
+							pos[0] = chunkX + y;
+							pos[1] = chunkY + (7 - x);
+							break;
+						case 2:
+							pos[0] = chunkX + (7 - x);
+							pos[1] = chunkY + (7 - y);
+							break;
+						case 3:
+							pos[0] = chunkX + (7 - y);
+							pos[1] = chunkY + x;
+							break;
+					}
+
+					return pos;
+				}
 			}
-
-			return pos;
+			return ivec(-1, -1, 0);
 		}
 
-		return new int[] { scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane };
+		return ivec(scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane);
 	}
 
 	public static int worldToRegionID(int[] worldPoint) {

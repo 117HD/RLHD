@@ -196,7 +196,7 @@ public class TextureManager {
 		if (scaledImage == null || scaledImage.getWidth() != textureSize[0] || scaledImage.getHeight() != textureSize[1])
 			scaledImage = new BufferedImage(textureSize[0], textureSize[1], BufferedImage.TYPE_INT_ARGB);
 
-		// TODO: scale and transform on the GPU for better performance
+		// TODO: scale and transform on the GPU for better performance (would save 400+ ms)
 		AffineTransform t = new AffineTransform();
 		if (image != vanillaImage) {
 			// Flip non-vanilla textures horizontally to match vanilla UV orientation

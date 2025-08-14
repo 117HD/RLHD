@@ -4912,7 +4912,10 @@
       [ 1384, 9317, 1404, 9336 ],
       [ 1385, 9305, 1403, 9316 ]
     ],
-    "hideOtherAreas": true
+    "hideOtherAreas": true,
+    "unhideAreas": [
+      [ 1343, 9296, 1363, 9306 ]
+    ]
   },
   {
     "name": "FOSSIL_ISLAND_WYVERN_TASK_CAVE",
@@ -7549,6 +7552,19 @@
     ]
   },
   {
+    "name": "Quetzacalli Gorge",
+    "aabbs": [
+      [ 1487, 3218, 1532, 3259 ],
+      [ 1487, 3211, 1532, 3217 ],
+      [ 1487, 3260, 1498, 3263 ],
+      [ 1472, 3224, 1486, 3263 ],
+      [ 1482, 3185, 1486, 3223 ],
+      [ 1478, 3209, 1481, 3223 ],
+      [ 1487, 3186, 1493, 3210 ],
+      [ 1494, 3204, 1497, 3210 ]
+    ]
+  },
+  {
     "name": "VARLAMORE_SAVANNA_HUNTER_PIT_TRAPS",
     "aabbs": [
       [ 1731, 2992, 0, 1764, 3024, 0 ]
@@ -7558,6 +7574,12 @@
     "name": "Hunter Guild Fix - Counter",
     "aabbs": [
       [ 1560, 9464 ]
+    ]
+  },
+  {
+    "name": "Savannah Church of Ralos",
+    "aabbs": [
+      [ 1728, 2922, 1746, 2935 ]
     ]
   },
   {

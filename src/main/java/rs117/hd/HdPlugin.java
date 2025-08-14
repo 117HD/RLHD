@@ -184,8 +184,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
-	public static final int UNIFORM_BLOCK_COMPUTE = 4;
-	public static final int UNIFORM_BLOCK_UI = 5;
+	public static final int UNIFORM_BLOCK_LIGHTS_CULLING = 4;
+	public static final int UNIFORM_BLOCK_COMPUTE = 5;
+	public static final int UNIFORM_BLOCK_UI = 6;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -195,6 +196,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
+	public static final int TILED_LIGHTING_TILE_SIZE = 16;
 
 	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
 	public static final float WIND_DISPLACEMENT_NOISE_RESOLUTION = 0.04f;
@@ -422,7 +424,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private SharedGLBuffer[] hModelSortingBuffers;
 
 	private final UBOGlobal uboGlobal = new UBOGlobal();
-	private final UBOLights uboLights = new UBOLights();
+	private final UBOLights uboLights = new UBOLights(false);
+	private final UBOLights uboLightsCulling = new UBOLights(true);
 	private final UBOCompute uboCompute = new UBOCompute();
 	private final UBOUI uboUI = new UBOUI();
 
@@ -475,13 +478,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean redrawPreviousFrame;
 	private boolean isInChambersOfXeric;
 	private boolean isInHouse;
+	private boolean justChangedArea;
 	private Scene skipScene;
-	private int previousPlane;
 
 	private final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
 
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
+	public float[] viewMatrix;
 	public final float[] cameraPosition = new float[3];
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
@@ -890,6 +894,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
+			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
@@ -923,6 +928,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
+			.addUniformBuffer(uboLightsCulling)
 			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(materialManager.uboMaterials)
@@ -1211,6 +1217,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+		uboLightsCulling.initialize(UNIFORM_BLOCK_LIGHTS_CULLING);
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 	}
@@ -1228,6 +1235,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.destroy();
 		uboLights.destroy();
+		uboLightsCulling.destroy();
 		uboCompute.destroy();
 		uboUI.destroy();
 	}
@@ -1259,8 +1267,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateTiledLightingFbo() {
 		assert configTiledLighting;
 
-		final int tileSize = 16;
-		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), tileSize)));
+		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
 		if (Arrays.equals(resolution, tiledLightingResolution))
 			return;
 
@@ -1578,10 +1585,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		Player localPlayer = client.getLocalPlayer();
 		var lp = localPlayer.getLocalLocation();
 		if (sceneContext.enableAreaHiding) {
+			assert sceneContext.sceneBase != null;
 			int[] worldPos = {
-				sceneContext.scene.getBaseX() + lp.getSceneX(),
-				sceneContext.scene.getBaseY() + lp.getSceneY(),
-				client.getPlane()
+				sceneContext.sceneBase[0] + lp.getSceneX(),
+				sceneContext.sceneBase[1] + lp.getSceneY(),
+				sceneContext.sceneBase[2] + client.getPlane()
 			};
 
 			// We need to check all areas contained in the scene in the order they appear in the list,
@@ -1589,7 +1597,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// portions of the floor beneath around stairs and ladders
 			Area newArea = null;
 			for (var area : sceneContext.possibleAreas) {
-				if (area.containsPoint(worldPos)) {
+				if (area.containsPoint(false, worldPos)) {
 					newArea = area;
 					break;
 				}
@@ -1597,10 +1605,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Force a scene reload if the player is no longer in the same area
 			if (newArea != sceneContext.currentArea) {
+				if (justChangedArea) {
+					// Prevent getting stuck in a scene reloading loop if this breaks for any reason
+					sceneContext.forceDisableAreaHiding = true;
+					log.error("Force disabling area hiding after moving from {} to {} at {}", sceneContext.currentArea, newArea, worldPos);
+				} else {
+					justChangedArea = true;
+				}
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
+			} else {
+				justChangedArea = false;
 			}
+		} else {
+			justChangedArea = false;
 		}
 
 		if (!enableFreezeFrame) {
@@ -1685,7 +1704,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), LOCAL_TILE_SIZE);
+						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -1700,13 +1719,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-				Mat4.mul(projectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(projectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(projectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				float[] invProjectionMatrix = Mat4.inverse(projectionMatrix);
+
+				// Calculate view matrix
+				viewMatrix = Mat4.rotateX(cameraOrientation[1]);
+				Mat4.mul(viewMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(viewMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
+
+				// Calculate view proj & inv matrix
+				float[] viewProj = Mat4.identity();
+				Mat4.mul(viewProj, projectionMatrix);
+				Mat4.mul(viewProj, viewMatrix);
+				float[] invProjectionMatrix = Mat4.inverse(viewProj);
 
 				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.projectionMatrix.set(projectionMatrix);
+				uboGlobal.viewMatrix.set(viewMatrix);
+				uboGlobal.projectionMatrix.set(viewProj);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
 				uboGlobal.upload();
 			}
@@ -1715,25 +1742,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configDynamicLights != DynamicLights.NONE && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
+
+			final float[] lightPosition = new float[4];
+			final float[] lightColor = new float[4];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
-				Light light = sceneContext.lights.get(i);
-				var struct = uboLights.lights[i];
-				float paddedRadius = light.radius;
-				paddedRadius += 16 * (512.f / client.getScale()) * 15;
-				struct.position.set(
-					light.pos[0] + cameraShift[0],
-					light.pos[1],
-					light.pos[2] + cameraShift[1],
-					paddedRadius * paddedRadius
-				);
-				struct.color.set(
-					light.color[0] * light.strength,
-					light.color[1] * light.strength,
-					light.color[2] * light.strength,
-					light.radius * light.radius
-				);
+				final Light light = sceneContext.lights.get(i);
+				final float lightRadiusSq = light.radius * light.radius;
+				lightPosition[0] = light.pos[0] + cameraShift[0];
+				lightPosition[1] = light.pos[1];
+				lightPosition[2] = light.pos[2] + cameraShift[1];
+				lightPosition[3] = lightRadiusSq;
+
+				lightColor[0] = light.color[0] * light.strength;
+				lightColor[1] = light.color[1] * light.strength;
+				lightColor[2] = light.color[2] * light.strength;
+				lightColor[3] = 0.0f;
+
+				uboLights.setLight(i, lightPosition, lightColor);
+
+				// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
+				lightPosition[3] = 1.0f;
+				Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
+				lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq
+
+				uboLightsCulling.setLight(i, lightPosition, lightColor);
 			}
+
 			uboLights.upload();
+			uboLightsCulling.upload();
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {
@@ -2217,11 +2253,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDisable(GL_DEPTH_TEST);
 
 				frameTimer.end(Timer.RENDER_SHADOWS);
-			} else {
-				uboGlobal.lightProjectionMatrix.set(Mat4.identity());
-				uboGlobal.upload();
 			}
 
+			uboGlobal.upload();
 			sceneProgram.use();
 
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
@@ -2468,7 +2502,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!isActive)
 			return;
 
-		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), areaManager.getArea("THE_GAUNTLET"))) {
+		int expandedChunks = getExpandedMapLoadingChunks();
+		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
+			// Reload once the POH is done loading
+			if (!isInHouse)
+				reloadSceneIn(2);
+		} else if (skipScene != scene && HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("THE_GAUNTLET"))) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick
 			reloadSceneNextGameTick();
@@ -2565,20 +2604,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferNormals.clear();
 
 		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			if (!isInHouse) {
-				// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-				reloadSceneIn(7);
-				isInHouse = true;
-			}
-
+			isInHouse = true;
 			isInChambersOfXeric = false;
 		} else {
-			// Avoid an unnecessary scene reload if the player is leaving the POH
-			if (isInHouse) {
-				abortSceneReload();
-				isInHouse = false;
-			}
-
+			isInHouse = false;
 			isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
 		}
 	}
@@ -2591,10 +2620,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		assert gameTicks > 0 : "A value <= 0 will not reload the scene";
 		if (gameTicks > gameTicksUntilSceneReload)
 			gameTicksUntilSceneReload = gameTicks;
-	}
-
-	public void abortSceneReload() {
-		gameTicksUntilSceneReload = 0;
 	}
 
 	private void updateCachedConfigs() {
@@ -3031,10 +3056,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		// Hide everything outside the current area if area hiding is enabled
 		if (sceneContext.currentArea != null) {
+			assert sceneContext.sceneBase != null;
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				sceneContext.scene.getBaseX() + (x >> LOCAL_COORD_BITS),
-				sceneContext.scene.getBaseY() + (z >> LOCAL_COORD_BITS),
-				client.getPlane()
+				sceneContext.sceneBase[0] + (x >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[1] + (z >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[2] + client.getPlane()
 			);
 			if (!inArea)
 				return;
@@ -3219,7 +3245,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
+					uboCompute.addCharacterPosition(x, z, (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
@@ -3311,16 +3337,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		fishingSpotReplacer.update();
-
-		// reload the scene if the player is in a house and their plane changed
-		// this greatly improves the performance as it keeps the scene buffer up to date
-		if (isInHouse) {
-			int plane = client.getPlane();
-			if (previousPlane != plane) {
-				reloadSceneNextGameTick();
-				previousPlane = plane;
-			}
-		}
 	}
 
 	public void waitUntilIdle() {
