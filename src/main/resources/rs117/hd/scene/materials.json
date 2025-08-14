@@ -2104,8 +2104,8 @@
   {
     "name": "HD_HAY",
     "normalMap": "HD_HAY_N",
-    "specularStrength": 0.3,
-    "specularGloss": 20.0,
+    "specularStrength": 0.175,
+    "specularGloss": 15.0,
     "materialsToReplace": [
       "HAY"
     ],
