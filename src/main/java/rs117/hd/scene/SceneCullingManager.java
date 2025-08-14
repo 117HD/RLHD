@@ -567,7 +567,8 @@ public class SceneCullingManager {
 
 							byte viewResult = VISIBILITY_HIDDEN;
 							if(plane != 0 || (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) != 0){
-								if (!HDUtils.isTileBackFacing(x, z, h0, h1, h2, h3, viewCtx.viewProj)) {
+								float tileTriangleArea = HDUtils.getTileTriangleArea(x, z, h0, h1, h2, h3, viewCtx.viewProj);
+								if (tileTriangleArea > 1e-6f) {
 									viewResult |= HDUtils.IsTileVisible(
 										x,
 										z,
@@ -593,7 +594,8 @@ public class SceneCullingManager {
 							}
 
 							if(hasUnderwaterTile && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_UNDERWATER_PLANES) != 0) {
-								if (!HDUtils.isTileBackFacing(x, z, uh0, uh1, uh2, uh3, viewCtx.viewProj)) {
+								float tileTriangleArea = HDUtils.getTileTriangleArea(x, z, uh0, uh1, uh2, uh3, viewCtx.viewProj);
+								if (tileTriangleArea > 1e-6f) {
 									viewResult |= HDUtils.IsTileVisible(
 										x,
 										z,
