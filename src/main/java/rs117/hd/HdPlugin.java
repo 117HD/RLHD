@@ -39,7 +39,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -2036,14 +2035,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final byte sceneCameraCullingResults = sceneCamera.getCullingResults().getTileResult(tileIdx);
 		boolean isVisibleInScene = CullingResults.isTileSurfaceVisible(sceneCameraCullingResults);
 		boolean isVisibleInDirectional =
-			(isVisibleInScene && plane != 0) || (
-				configShadowCulling && directionalLight
-					.getCullingResults()
-					.isTileSurfaceVisible(tileIdx)
-			);
+			plane != 0 && (isVisibleInScene || (configShadowCulling && directionalLight.getCullingResults().isTileSurfaceVisible(tileIdx)));
 
 		int vertexOffset = paint.getBufferOffset();
-		int uvOffset = paint.getBufferOffset();
+		int uvOffset = paint.getUvBufferOffset();
 
 		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
 			if (!isVisibleInScene && !isVisibleInDirectional) {
@@ -2064,7 +2059,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-		++numPassthroughModels;
 
 		eightIntWrite[0] = vertexOffset;
 		eightIntWrite[1] = uvOffset;
@@ -2076,7 +2070,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
 		
 		modelPassthroughBuffer
-			.ensureCapacity(16)
+			.ensureCapacity(8)
 			.put(eightIntWrite);
 
 		if (isVisibleInScene) {
@@ -2089,6 +2083,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		renderBufferOffset += vertexCount;
 		drawnTileCount++;
+		numPassthroughModels++;
 	}
 
 	public void initShaderHotswapping() {
@@ -2111,14 +2106,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!CullingResults.isTileSurfaceVisible(sceneTileCullingResult))
 			return;
 
-		final int localX = tileX * LOCAL_TILE_SIZE;
-		final int localY = 0;
-		final int localZ = tileY * LOCAL_TILE_SIZE;
-
-		GpuIntBuffer b = modelPassthroughBuffer;
-		b.ensureCapacity(16);
-		IntBuffer buffer = b.getBuffer();
-
+		modelPassthroughBuffer.ensureCapacity(16);
 
 		// we packed a boolean into the buffer length of tiles so we can tell
 		// which tiles have procedurally-generated underwater terrain.
@@ -2127,47 +2115,49 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// restore the bufferLength variable:
 		bufferLength = bufferLength >> 1;
 
+		int originRenderBufferOffset = renderBufferOffset;
+		int vertexCount = 0;
+
 		eightIntWrite[4] = 0;
-		eightIntWrite[5] = localX;
-		eightIntWrite[6] = localY;
-		eightIntWrite[7] = localZ;
+		eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
+		eightIntWrite[6] = 0;
+		eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
 
 		if (underwaterTerrain) {
 			// draw underwater terrain tile before surface tile
 
 			// buffer length includes the generated underwater terrain, so it must be halved
 			bufferLength /= 2;
+			eightIntWrite[2] = bufferLength / 3;
 
 			if (CullingResults.isTileUnderwaterVisible(sceneTileCullingResult)) {
-				++numPassthroughModels;
-
 				eightIntWrite[0] = model.getBufferOffset() + bufferLength;
 				eightIntWrite[1] = model.getUvBufferOffset() + bufferLength;
-				eightIntWrite[2] = bufferLength / 3;
 				eightIntWrite[3] = renderBufferOffset;
-				buffer.put(eightIntWrite);
+				modelPassthroughBuffer.put(eightIntWrite);
 
-				sceneDrawBuffer.addModel(renderBufferOffset, bufferLength * 2);
-
+				vertexCount += bufferLength;
 				renderBufferOffset += bufferLength;
+
 				drawnTileCount++;
-			} else {
-				sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
+				numPassthroughModels++;
 			}
 		} else {
-			sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
+			eightIntWrite[2] = bufferLength / 3;
 		}
-
-		++numPassthroughModels;
 
 		eightIntWrite[0] = model.getBufferOffset();
 		eightIntWrite[1] = model.getUvBufferOffset();
-		eightIntWrite[2] = bufferLength / 3;
 		eightIntWrite[3] = renderBufferOffset;
-		buffer.put(eightIntWrite);
+		modelPassthroughBuffer.put(eightIntWrite);
 
+		vertexCount += bufferLength;
 		renderBufferOffset += bufferLength;
+
+		sceneDrawBuffer.addModel(originRenderBufferOffset, vertexCount);
+
 		drawnTileCount++;
+		numPassthroughModels++;
 	}
 
 	private void prepareInterfaceTexture() {
@@ -3140,15 +3130,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
      */
 	@Override
 	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
-		if (sceneContext == null)
+		if (sceneContext == null || redrawPreviousFrame)
 			return;
+
+		int localX = x >> LOCAL_COORD_BITS;
+		int localZ = z >> LOCAL_COORD_BITS;
 
 		// Hide everything outside the current area if area hiding is enabled
 		if (sceneContext.currentArea != null) {
 			assert sceneContext.sceneBase != null;
 			boolean inArea = sceneContext.currentArea.containsPoint(
-				sceneContext.sceneBase[0] + (x >> LOCAL_COORD_BITS),
-				sceneContext.sceneBase[1] + (z >> LOCAL_COORD_BITS),
+				sceneContext.sceneBase[0] + localX,
+				sceneContext.sceneBase[1] + localZ,
 				sceneContext.sceneBase[2] + client.getPlane()
 			);
 			if (!inArea)
@@ -3188,18 +3181,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (model != renderable)
 			renderable.setModelHeight(height);
 
-		model.calculateBoundsCylinder();
+		final int sceneID = offsetModel.getSceneId();
+		final boolean isStatic = sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK);
+
+		if (!isStatic)
+			model.calculateBoundsCylinder();
 		final int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.VISIBILITY_CHECK);
 
-		final int sceneID = offsetModel.getSceneId();
-		final boolean isStatic = sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK);
 		final int plane = ModelHash.getPlane(hash);
-		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		final int tileExX = localX + SCENE_OFFSET;
+		final int tileExY = localZ + SCENE_OFFSET;
 		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+		boolean shouldCastShadow = !isStatic || ((sceneID >> 15) & 1) == 1;
 
 		final boolean isVisibleInScene = sceneCamera.isRenderableVisible(
 			renderable,
@@ -3210,8 +3206,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			z,
 			modelRadius
 		);
-		final boolean isVisibleInShadow = isVisibleInScene || (
-			configShadowCulling && directionalLight.isRenderableVisible(
+		final boolean isVisibleInShadow = shouldCastShadow && (
+			isVisibleInScene || (
+				configShadowCulling && directionalLight.isRenderableVisible(
 				renderable,
 				isStatic,
 				tileIdx,
@@ -3219,6 +3216,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				y,
 				z,
 				modelRadius
+				)
 			)
 		);
 
@@ -3229,10 +3227,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-		client.checkClickbox(projection, model, orientation, x, y, z, hash);
-
-		if (redrawPreviousFrame)
-			return;
+		if (isVisibleInScene) {
+			client.checkClickbox(projection, model, orientation, x, y, z, hash);
+		}
 
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
@@ -3243,7 +3240,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
-		boolean shouldCastShadow;
 		int faceCount;
 		if (isStatic) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
@@ -3251,14 +3247,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
 			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
 			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
-
-			shouldCastShadow = ((sceneID >> 15) & 1) == 1;
-			if (!shouldCastShadow && !isVisibleInScene) {
-				if (enableDetailedTimers)
-					frameTimer.end(Timer.DRAW_RENDERABLE);
-				return; // Early out if we don't want to cast shadows, and we're also only visible in the directional shadows
-			}
-
 			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
 			int vertexOffset = offsetModel.getBufferOffset();
 			int uvOffset = offsetModel.getUvBufferOffset();
