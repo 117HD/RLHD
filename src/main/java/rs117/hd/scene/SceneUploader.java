@@ -138,12 +138,6 @@ public class SceneUploader {
 
 						upload(sceneContext, renderableCullingData, tile, x, y);
 
-						if (sceneContext.tileRenderableCullingData[z][x][y] == null)
-							sceneContext.tileRenderableCullingData[z][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
-
-						renderableCullingData.toArray(sceneContext.tileRenderableCullingData[z][x][y]);
-						renderableCullingData.clear();
-
 						Tile bridge = tile.getBridge();
 						if (bridge != null) {
 							int bridgePlane = z + 1;
@@ -152,12 +146,19 @@ public class SceneUploader {
 
 							upload(sceneContext, renderableCullingData, bridge, x, y);
 
-							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] == null)
+							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] == null
+								|| sceneContext.tileRenderableCullingData[bridgePlane][x][y].length < renderableCullingData.size())
 								sceneContext.tileRenderableCullingData[bridgePlane][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
 
 							renderableCullingData.toArray(sceneContext.tileRenderableCullingData[bridgePlane][x][y]);
-							renderableCullingData.clear();
 						}
+
+						if (sceneContext.tileRenderableCullingData[z][x][y] == null
+							|| sceneContext.tileRenderableCullingData[z][x][y].length < renderableCullingData.size())
+							sceneContext.tileRenderableCullingData[z][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
+
+						renderableCullingData.toArray(sceneContext.tileRenderableCullingData[z][x][y]);
+						renderableCullingData.clear();
 					}
 				}
 			}
