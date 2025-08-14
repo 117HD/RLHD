@@ -5399,6 +5399,63 @@
     "waterType": "CAVE_WATER"
   },
   {
+    "name": "Varlamore - Strangewood Paths - Dirt",
+    "area": "VARLAMORE",
+    "overlayIds": [ 275 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Varlamore - Custodas Mountains - Snow",
+    "area": "VARLAMORE",
+    "underlayIds": [ 151 ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "DEFAULT_DIRT": "s > 0"
+    }
+  },
+  {
+    "name": "Varlamore - Custodas Mountains - Grunge",
+    "area": "VARLAMORE",
+    "underlayIds": [ 92, 173 ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Varlamore - Custodas Mountains - Dirt",
+    "area": "VARLAMORE",
+    "underlayIds": [ 176 ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "Varlamore - Auburnvale Paths - Dirt",
+    "area": "VARLAMORE",
+    "overlayIds": [ 186 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Varlamore - Auburnvale Paths - Gravel",
+    "area": "VARLAMORE",
+    "overlayIds": [ 332 ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Varlamore - Snowcaps",
+    "area": "VARLAMORE",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "Varlamore - Stone colored cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 83 ],
+    "groundMaterial": "ROCK_PILES"
+  },
+  {
+    "name": "Varlamore - Light cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
     "name": "Varlamore - Dark cliffs",
     "area": "VARLAMORE",
     "overlayIds": [ 222 ],
