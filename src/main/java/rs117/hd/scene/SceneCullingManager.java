@@ -20,6 +20,7 @@ import rs117.hd.utils.SceneView;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -580,8 +581,9 @@ public class SceneCullingManager {
 
 									if ((viewResult & VISIBILITY_TILE_VISIBLE) != 0
 										&& (viewCtx.cullingFlags & SceneView.CULLING_FLAG_CULLING_BOUNDS) != 0) {
-										if (!HDUtils.sphereIntersectsOOBB(
-											new float[] { cX, cH, cZ }, LOCAL_TILE_SIZE,
+										if (!HDUtils.aabbIntersectsOOBB(
+											x, min(h0, h1, h2, h3), z,
+											x + LOCAL_TILE_SIZE, max(h0, h1, h2, h3), z + LOCAL_TILE_SIZE,
 											viewCtx.view, viewCtx.minCullingBounds, viewCtx.maxCullingBounds
 										)) {
 											viewResult &= ~VISIBILITY_TILE_VISIBLE;
