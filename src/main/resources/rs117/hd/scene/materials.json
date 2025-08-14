@@ -1019,6 +1019,11 @@
     "specularGloss": 300.0
   },
   {
+    "name": "GRUNGE_3_LIGHT_VERY_SHINY",
+    "parent": "GRUNGE_3_LIGHT",
+    "specularStrength": 0.9
+  },
+  {
     "name": "GRUNGE_3_DARK",
     "parent": "GRUNGE_3",
     "brightness": 0.881,

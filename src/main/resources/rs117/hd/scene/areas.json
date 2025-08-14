@@ -1574,9 +1574,7 @@
   },
   {
     "name": "KEEP_LE_FAYE_JAIL",
-    "regions": [
-      7490
-    ]
+    "aabbs": [ [ 1881, 4253, 1919, 4287 ] ]
   },
   {
     "name": "KEEP_LE_FAYE_INSTANCE",
@@ -7870,6 +7868,66 @@
   {
     "name": "Ferox Basement",
     "regions": [ 12700 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Movario's Base - Library",
+    "regions": [ 16717 ]
+  },
+  {
+    "name": "Black Knights Fort - Basement",
+    "aabbs": [ [ 1857, 4225, 1877, 4252 ] ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Black Knights Fort - Catacombs",
+    "regionBoxes": [
+      [ 16459, 16457 ]
+    ],
+    "aabbs": [
+      [ 4160, 4696, 4162, 4704 ],
+      [ 4093, 4699, 4095, 4704 ]
+    ]
+  },
+  {
+    "name": "Black Knights Fort - Trim Fix",
+    "aabbs": [
+      [ 4103, 4798, 4105, 4798 ],
+      [ 4097, 4790, 4097, 4792 ]
+    ]
+  },
+  {
+    "name": "Lucien's Base Snow",
+    "aabbs": [
+      [ 2884, 3783, 2947, 3839 ],
+      [ 2929, 3770, 2943, 3782 ],
+      [ 2944, 3776, 2945, 3782 ],
+      [ 2944, 3773, 2944, 3775 ],
+      [ 2946, 3778, 2946, 3782 ]
+    ]
+  },
+  {
+    "name": "Lucien's Base Environment",
+    "aabbs": [
+      [ 2939, 3808, 2943, 3837 ],
+      [ 2936, 3808, 2943, 3837 ],
+      [ 2900, 3794, 2935, 3836 ],
+      [ 2936, 3778, 2941, 3807 ],
+      [ 2931, 3778, 2935, 3793 ]
+    ]
+  },
+  {
+    "name": "Guthix Temple - Entrance",
+    "aabbs": [
+      [ 4021, 4607, 4108, 4544 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Guthix Temple",
+    "regionBoxes": [
+      [ 16197, 16452 ]
+    ],
     "hideOtherAreas": true
   },
   {

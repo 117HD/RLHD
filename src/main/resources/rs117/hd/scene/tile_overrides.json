@@ -5322,6 +5322,27 @@
     "groundMaterial": "INTERIOR_DIRT_FLOOR"
   },
   {
+    "name": "Luciens Base - Snow Fix",
+    "area": "Lucien's Base Snow",
+    "underlayIds": [
+      56,
+      57,
+      58,
+      148,
+      218
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 95
+  },
+  {
+    "name": "Black Knights Fort - Catacombs Water",
+    "area": "Black Knights Fort - Catacombs",
+    "overlayIds": [
+      158
+    ],
+    "waterType": "CAVE_WATER"
+  },
+  {
     "name": "OVERWORLD_GRASS_OVERLAY",
     "area": "OVERWORLD",
     "overlayIds": [
@@ -7928,6 +7949,22 @@
     "groundMaterial": "VARIED_DIRT",
     "shiftLightness": 2,
     "uvScale": 0.7
+  },
+  {
+    "name": "Movario's Base - Library Floor Fix",
+    "area": "Movario's Base - Library",
+    "underlayIds": [ 67 ],
+    "groundMaterial": "NONE",
+    "shiftLightness": 3,
+    "replacements": {
+      "Movario's Base - Stairs Dirt Floor": "h > 5"
+     }
+  },
+  {
+    "name": "Movario's Base - Stairs Dirt Floor",
+    "area": "Movario's Base - Library",
+    "underlayIds": [ 67 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",
