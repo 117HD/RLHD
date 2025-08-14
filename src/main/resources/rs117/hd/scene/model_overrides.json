@@ -2915,9 +2915,8 @@
   {
     "description": "Fixes weird pattern made by grass in POH",
     "areas": [ "PLAYER_OWNED_HOUSE" ],
-    "baseMaterial": "GRAY_50",
+    "baseMaterial": "GRAY_35",
     "windDisplacementMode": "OBJECT",
-    "windDisplacementModifier": 1,
     "upwardsNormals": true,
     "castShadows": false,
     "objectIds": [
@@ -54443,7 +54442,10 @@
       "LUC2_GT_MAIN_PILLAR_LEVEL2_R",
       "LUC2_GT_MAIN_PILLAR_LEVEL3",
       "LUC2_GT_MAIN_PILLAR_LEVEL3_DAMAGED",
-      "LUC2_GT_PILLAR_TORCH"
+      "LUC2_GT_PILLAR_TORCH",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_FIRE_NOOP",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_AIR_NOOP",
+      "LUC2_GT_GIANT_SKULL_BOTTOM_EARTH_NOOP"
     ],
     "uvType": "BOX"
   },
@@ -54858,6 +54860,30 @@
       {
         "colors": "a < 255",
         "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "While Guthix Sleeps - Memorial Statues",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "LUC2_HERO_STATUE_DURADEL",
+      "LUC2_HERO_STATUE_TURAEL",
+      "LUC2_HERO_STATUE_GHOMMAL",
+      "LUC2_HERO_STATUE_SLOANE",
+      "LUC2_HERO_STATUE_CYRISUS",
+      "LUC2_HERO_STATUE_HAZELMERE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8 && s > 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvScale": 0.4,
+        "uvType": "BOX"
       }
     ]
   }
