@@ -1344,6 +1344,15 @@
     "name": "MARBLE_3"
   },
   {
+    "name": "MARBLE_4_N"
+  },
+  {
+    "name": "MARBLE_4",
+    "normalMap": "MARBLE_4_N",
+    "specularStrength": 1.8,
+    "specularGloss": 300.0
+  },
+  {
     "name": "MARBLE_1_GLOSS",
     "parent": "MARBLE_1",
     "specularStrength": 0.9,

@@ -2260,8 +2260,11 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 6
+    "groundMaterial": "CARPET",
+    "shiftLightness": -11,
+    "uvScale": 1.4,
+    "minLightness": 5,
+    "blended": false
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_HOUSE_BLENDING",
@@ -2352,10 +2355,10 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "CONCRETE",
+    "groundMaterial": "CARPET",
     "blended": false,
-    "minLightness": 40,
-    "maxLightness": 40
+    "uvScale": 1.4,
+    "shiftLightness": -2
   },
   {
     "name": "EAST_ARDOUGNE_CASTLE_DIRT_FIX",
@@ -5605,7 +5608,8 @@
     "overlayIds": [
       20
     ],
-    "groundMaterial": "MARBLE_DARK"
+    "groundMaterial": "MARBLE_4",
+    "uvScale": 1.15
   },
   {
     "name": "OVERLAY_28",

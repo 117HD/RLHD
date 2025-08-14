@@ -251,6 +251,12 @@
     ]
   },
   {
+    "name": "MARBLE_4",
+    "materials": [
+      "MARBLE_4"
+    ]
+  },
+  {
     "name": "MARBLE_DARK",
     "materials": [
       "MARBLE_DARK"
