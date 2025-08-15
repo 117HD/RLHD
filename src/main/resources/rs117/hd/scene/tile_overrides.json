@@ -5597,36 +5597,6 @@
     "uvScale": 0.85
   },
   {
-    "name": "OVERLAY_DIRT",
-    "area": "ALL",
-    "overlayIds": [
-      14,
-      15,
-      16,
-      21,
-      22,
-      23,
-      60,
-      77,
-      81,
-      82,
-      88,
-      89,
-      101,
-      102,
-      107,
-      108,
-      110,
-      115,
-      123,
-      132,
-      172,
-      173,
-      227
-    ],
-    "groundMaterial": "DIRT"
-  },
-  {
     "name": "Vet'ion Lair Entrance Fix",
     "area": "Vet'ion Lair Entrance Fix",
     "overlayIds": [
@@ -7326,6 +7296,13 @@
     "groundMaterial": "GRASSY_DIRT"
   },
   {
+    "name": "Mount Karuulm tunnels fix",
+    "area": "Molch Temple floor fix",
+    "overlayIds": [ 115 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_2"
+  },
+  {
     "name": "ZEAH_GRAVEL_PATH",
     "area": "KOUREND",
     "overlayIds": [
@@ -7372,6 +7349,13 @@
     "replacements": {
       "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "Mount Karuulm tunnels fix",
+    "area": "KOUREND",
+    "overlayIds": [ 116 ],
+    "blended": false,
+    "setLightness": 1
   },
   {
     "name": "Varlamore - Clay Dirt Path",
@@ -8261,6 +8245,36 @@
     }
   },
   {
+    "name": "OVERLAY_DIRT",
+    "area": "ALL",
+    "overlayIds": [
+      14,
+      15,
+      16,
+      21,
+      22,
+      23,
+      60,
+      77,
+      81,
+      82,
+      88,
+      89,
+      101,
+      102,
+      107,
+      108,
+      110,
+      115,
+      123,
+      132,
+      172,
+      173,
+      227
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "UNDERLAY_OVERWORLD_DIRT",
     "area": "OVERWORLD",
     "underlayIds": [
@@ -8283,7 +8297,8 @@
       73,
       98,
       112,
-      113
+      113,
+      121
     ],
     "groundMaterial": "VARIED_DIRT"
   },
