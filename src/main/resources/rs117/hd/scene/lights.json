@@ -22791,13 +22791,12 @@
   },
   {
     "description": "POH_TRAILBLAZER_RELOADED_TROPHY",
-    "height": 190,
-    "alignment": "CENTER",
-    "radius": 50,
-    "strength": 50,
+    "offset": [ 0, 190, -20 ],
+    "radius": 70,
+    "strength": 30,
     "color": [
       252,
-      148,
+      188,
       3
     ],
     "type": "FLICKER",
