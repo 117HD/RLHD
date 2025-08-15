@@ -5856,13 +5856,7 @@
       "LUC2_MOV_DUGUPSOIL7"
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 0.44,
-    "hideInAreas": [
-      [
-        3180, 3433,
-        3190, 3447
-      ]
-    ]
+    "uvScale": 0.44
   },
   {
     "description": "Ground Decoration - dirt clump colored",
@@ -11777,6 +11771,18 @@
     ]
   },
   {
+    "description": "Hide dirt clumps in Varrock west bank",
+    "hide": true,
+    "areas": [
+      [ 3180, 3433, 3190, 3447 ]
+    ],
+    "objectIds": [
+      "VIKING_DUGUPSOIL_BROWN_1",
+      "VIKING_DUGUPSOIL_BROWN_2",
+      "VIKING_DUGUPSOIL_BROWN_3"
+    ]
+  },
+  {
     "description": "Ground Decoration - Dirt Clump - Tiny - Uncolored",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -11786,12 +11792,6 @@
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.65,
-    "hideInAreas": [
-      [
-        3180, 3433,
-        3190, 3447
-      ]
-    ],
     "castShadows": false
   },
   {
@@ -11839,13 +11839,7 @@
       "QUETZACALLI_DUGUPSOIL03"
     ],
     "uvType": "BOX",
-    "uvScale": 0.65,
-    "hideInAreas": [
-      [
-        3180, 3433,
-        3190, 3447
-      ]
-    ]
+    "uvScale": 0.65
   },
   {
     "description": "Ground Decoration - Dirt Clump - Small - Colored",
@@ -25562,7 +25556,9 @@
   {
     "description": "Fix incorrectly oriented tile model in Karuulm",
     "objectIds": [ "KARUULM_FLOOR_FALLOFF_OUSIDE_CORNER" ],
-    "areas": [ [ 1288, 10205, 0 ] ],
+    "areas": [
+      [ 1288, 10205, 0 ]
+    ],
     "rotate": 270
   },
   {
