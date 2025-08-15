@@ -2505,6 +2505,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
+		if (configAsyncUICopy) {
+			asyncUICopy.complete();
+		}
+
 		drawUi(overlayColor);
 
 		try {
@@ -2559,10 +2563,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboUI.targetDimensions.set(actualUiResolution);
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
-
-		if (configAsyncUICopy) {
-			asyncUICopy.complete();
-		}
 
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
@@ -3176,16 +3176,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.GET_MODEL);
 		}
 
-		// Apply height to renderable from the model
-		int height = model.getModelHeight();
-		if (model != renderable)
-			renderable.setModelHeight(height);
-
 		final int sceneID = offsetModel.getSceneId();
 		final boolean isStatic = sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK);
 
 		if (!isStatic)
 			model.calculateBoundsCylinder();
+
 		final int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
 		if (enableDetailedTimers)
@@ -3204,10 +3200,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			x,
 			y,
 			z,
-			modelRadius
-		);
-		final boolean isVisibleInShadow = shouldCastShadow && (
-			isVisibleInScene || (
+			modelRadius);
+		final boolean isVisibleInShadow = shouldCastShadow && (isVisibleInScene || (
 				configShadowCulling && directionalLight.isRenderableVisible(
 				renderable,
 				isStatic,
@@ -3215,10 +3209,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				x,
 				y,
 				z,
-				modelRadius
-				)
-			)
-		);
+				modelRadius)));
 
 		if (enableDetailedTimers)
 			frameTimer.end(Timer.VISIBILITY_CHECK);
@@ -3227,6 +3218,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
+		// Apply height to renderable from the model
+		int height = model.getModelHeight();
+		if (model != renderable)
+			renderable.setModelHeight(height);
+
 		if (isVisibleInScene) {
 			client.checkClickbox(projection, model, orientation, x, y, z, hash);
 		}
@@ -3234,13 +3230,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
-		eightIntWrite[3] = renderBufferOffset;
-		eightIntWrite[4] = orientation;
-		eightIntWrite[5] = x;
-		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
-		eightIntWrite[7] = z;
-
-		int faceCount;
+		final int faceCount;
 		if (isStatic) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
 			// is reuploaded without triggering the LOADING game state, it's possible for static objects which may only temporarily become
@@ -3248,12 +3238,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
 			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
 			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
-			int vertexOffset = offsetModel.getBufferOffset();
-			int uvOffset = offsetModel.getUvBufferOffset();
 			boolean hillskew = offsetModel != model;
 
-			eightIntWrite[0] = vertexOffset;
-			eightIntWrite[1] = uvOffset;
+			eightIntWrite[0] = offsetModel.getBufferOffset();
+			eightIntWrite[1] = offsetModel.getUvBufferOffset();
 			eightIntWrite[2] = faceCount;
 			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
 
@@ -3379,6 +3367,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (shouldCastShadow) {
 				directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 			}
+
+			eightIntWrite[3] = renderBufferOffset;
+			eightIntWrite[4] = orientation;
+			eightIntWrite[5] = x;
+			eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
+			eightIntWrite[7] = z;
 
 			bufferForTriangles(faceCount)
 				.ensureCapacity(8)
