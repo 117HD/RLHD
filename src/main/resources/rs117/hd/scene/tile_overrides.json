@@ -1955,7 +1955,13 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": -2,
+    "blendedAsOpposite": true,
+    "uvScale": 1.25011,
+    "replacements": {
+      "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171": "!blending"
+    }
   },
   {
     "name": "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171",
@@ -1963,17 +1969,10 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": 3,
     "blended": false,
-    "shiftLightness": 3
-  },
-  {
-    "name": "SEERS_BAR_171_BLENDED",
-    "area": "SEERS_BAR_ENTRANCE",
-    "overlayIds": [
-      171
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    "uvScale": 1.25011
   },
   {
     "name": "SEERS_BAR_171",
@@ -1981,9 +1980,11 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "STONE_FLOOR",
     "blended": false,
-    "shiftLightness": 3
+    "uvScale": 2,
+    "uvOrientation": 256,
+    "shiftLightness": 1
   },
   {
     "name": "SEERS_CAMELOT_CASTLE_BLENDED",
