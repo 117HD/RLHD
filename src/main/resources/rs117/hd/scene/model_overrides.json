@@ -2273,9 +2273,6 @@
       "BULLRUSHES5",
       "THISTLE",
       "POTATO",
-      "FAI_VARROCK_WHEAT_CORNER",
-      "FAI_VARROCK_WHEAT_SMALL",
-      "FAI_VARROCK_WHEAT",
       "NETTLES",
       "NETTLES1",
       "NETTLES2",
@@ -2303,6 +2300,17 @@
       "FAI_VARROCK_FLOWERBED_CORNER_BLUE",
       "FAI_VARROCK_FLOWERBED_BLUE",
       "MM_JUNGLE_PLANT_ORCHID"
+    ]
+  },
+  {
+    "description": "Flowers or flower-like objects that should sway in the wind",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 1,
+    "objectIds": [
+      "FAI_VARROCK_WHEAT_CORNER",
+      "FAI_VARROCK_WHEAT_SMALL",
+      "FAI_VARROCK_WHEAT"
     ]
   },
   {
