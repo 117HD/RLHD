@@ -352,14 +352,15 @@ public class MaterialManager {
 		Material.DIRT_1 = getMaterial("DIRT_1");
 		Material.DIRT_2 = getMaterial("DIRT_2");
 
-		// Update texture layers for materials after NONE which don't inherit their texture
+		// Resolve all texture-owning materials, and update the list of texture layers
+		var textureMaterials = Arrays.stream(MATERIALS)
+			.map(Material::resolveTextureOwner)
+			.distinct()
+			.filter(m -> m != Material.NONE)
+			.toArray(Material[]::new);
 		int previousLayerCount = textureLayers.size();
 		int textureLayerIndex = 0;
-		for (int i = 1; i < MATERIALS.length; i++) {
-			var mat = MATERIALS[i];
-			if (mat.inheritsTexture())
-				continue;
-
+		for (var mat : textureMaterials) {
 			TextureLayer layer;
 			if (textureLayerIndex == textureLayers.size()) {
 				layer = new TextureLayer();
