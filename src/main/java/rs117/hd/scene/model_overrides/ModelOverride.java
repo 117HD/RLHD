@@ -73,6 +73,8 @@ public class ModelOverride
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
+	public int vanillaShadowOpacityThreshold = 155;
+	public float vanillaShadowHeightThreshold = 8;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -205,6 +207,8 @@ public class ModelOverride
 			windDisplacementMode,
 			windDisplacementModifier,
 			invertDisplacementStrength,
+			vanillaShadowOpacityThreshold,
+			vanillaShadowHeightThreshold,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
