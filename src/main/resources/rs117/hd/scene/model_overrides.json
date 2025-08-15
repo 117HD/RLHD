@@ -16488,7 +16488,7 @@
     "inheritTileColorType": "UNDERLAY"
   },
   {
-    "description": "POH carpets",
+    "description": "POH carpets - Untexture as it flickers when moving the camera - TODO",
     "objectIds": [
       "POH_RUGCORNER1",
       "POH_RUGSIDE1",
@@ -16500,9 +16500,8 @@
       "POH_RUGSIDE3",
       "POH_RUGMIDDLE3"
     ],
-    "baseMaterial": "CARPET",
-    "uvType": "WORLD_XZ",
-    "flatNormals": true,
+    "baseMaterial": "NONE",
+    "uvType": "VANILLA",
     "castShadows": false
   },
   {
