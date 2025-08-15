@@ -5377,7 +5377,7 @@
     "blended": false
   },
   {
-    "name": "Tal Teklan - Indoors",
+    "name": "Tal Teklan - Indoors - Above Ground",
     "area": "Tal Teklan - Indoors ground level",
     "overlayIds": [ 272, 275, 276 ],
     "groundMaterial": "TERRACOTTA_FLOOR",
@@ -7296,7 +7296,7 @@
     "groundMaterial": "GRASSY_DIRT"
   },
   {
-    "name": "Mount Karuulm tunnels fix",
+    "name": "Molch Temple floor fix",
     "area": "Molch Temple floor fix",
     "overlayIds": [ 115 ],
     "blended": false,
