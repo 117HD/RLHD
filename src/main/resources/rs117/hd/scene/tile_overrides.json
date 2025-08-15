@@ -5457,13 +5457,33 @@
     "groundMaterial": "DIRT"
   },
   {
-    "name": "Varlamore - Auburnvale Paths - Dirt",
+    "name": "Varlamore - Auburn Valley - Dirt path",
     "area": "VARLAMORE",
-    "overlayIds": [ 186 ],
+    "overlayIds": [ 186, 187 ],
     "groundMaterial": "VARIED_DIRT"
   },
   {
-    "name": "Varlamore - Auburnvale Paths - Gravel",
+    "name": "Varlamore - Auburn Valley - Complex Tiles",
+    "area": "AUBURNVALE",
+    "underlayIds": [ 63, 66, 67, 70 ],
+    "replacements": {
+      "SEASONAL_GRASS": [
+        "h >= 10 && s == 1",
+        "h == 6 && s == 5 && l >= 20",
+        "h >= 6 && s >= 6"
+      ],
+      "SEASONAL_DIRT": true
+    }
+
+  },
+  {
+    "name": "Varlamore - Gloomthorn Cobblestone",
+    "area": "Gloomthorn Trail",
+    "overlayIds": [ 139, 228 ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
+    "name": "Varlamore - Nemus Retreat - Gravel paths",
     "area": "VARLAMORE",
     "overlayIds": [ 332 ],
     "groundMaterial": "GRAVEL"
