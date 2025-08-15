@@ -19513,6 +19513,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_GHOST_GREATER",
       "ARCEUUS_THRALL_GHOST_LESSER",
@@ -19552,6 +19553,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_SKELETON_LESSER",
       "ARCEUUS_THRALL_SKELETON_SUPERIOR",
@@ -19590,6 +19592,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_ZOMBIE_LESSER",
       "ARCEUUS_THRALL_ZOMBIE_SUPERIOR",
