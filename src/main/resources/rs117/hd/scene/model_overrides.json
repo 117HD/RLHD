@@ -36388,8 +36388,6 @@
       "THRONE_ICE01_SPIKES04",
       "THRONE_ICE01_SPIKES05",
       "THRONE_ICE01_SPIKES06",
-      "ARCHEUS_CRYSTAL_SMALLEST",
-      "ARCHEUS_CRYSTAL_SMALLEST_01",
       "THRONE_ICE01_SPIKES01",
       "THRONE_ICE01_SPIKES02"
     ],
@@ -57183,5 +57181,49 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Arceuus - Crystal",
+    "baseMaterial": "CRYSTAL",
+    "uvType": "BOX",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "ARCHEUS_CRYSTAL_MEDIUM",
+      "ARCHEUS_CRYSTAL_LARGE",
+      "ARCHEUS_CRYSTAL_SMALL_DARK",
+      "ARCHEUS_CRYSTAL_MEDIUM_DARK",
+      "ARCHEUS_CRYSTAL_LARGE_DARK",
+      "ARCHEUS_CRYSTAL_MEDIUM_RED",
+      "ARCHEUS_CRYSTAL_MEDIUM_REFLECT_RED",
+      "ARCHEUS_CRYSTAL_LARGE_REFLECT_RED",
+      "ARCHEUS_CRYSTAL_SMALL_RED"
+    ]
+  },
+  {
+    "description": "Arceuus - Crystal - Vertex Snap Disabled",
+    "baseMaterial": "CRYSTAL",
+    "uvType": "BOX",
+    "objectIds": [
+      "ARCHEUS_CRYSTAL_SMALL"
+    ]
+  },
+  {
+    "description": "Arceuus - Crystal - Small",
+    "baseMaterial": "CRYSTAL",
+    "uvType": "BOX",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "ARCHEUS_CRYSTAL_SMALLEST",
+      "ARCHEUS_CRYSTAL_SMALLEST_01",
+      "ARCHEUS_CRYSTAL_SMALLEST_02",
+      "ARCHEUS_CRYSTAL_SMALLEST",
+      "ARCHEUS_CRYSTAL_SMALLEST_DARK_01",
+      "ARCHEUS_CRYSTAL_SMALLEST_DARK_02",
+      "ARCHEUS_CRYSTAL_SMALLEST_RED",
+      "ARCHEUS_CRYSTAL_SMALLEST_RED_01",
+      "ARCHEUS_CRYSTAL_SMALLEST_RED_02"
+
+    ],
+    "shadowOpacityThreshold": 0.9
   }
 ]
