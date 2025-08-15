@@ -5504,7 +5504,7 @@
   {
     "name": "Varlamore - Fortis floors",
     "area": "VARLAMORE",
-    "overlayIds": [ 326, 329 ],
+    "overlayIds": [ 324, 326, 327, 329 ],
     "blended": false,
     "groundMaterial": "TERRACOTTA_FLOOR"
   },
