@@ -2608,8 +2608,8 @@
       10
     ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
-    "minLightness": 30,
-    "maxLightness": 30
+    "minLightness": 33,
+    "maxLightness": 33
   },
   {
     "name": "GUTANOTH_CAVE",
