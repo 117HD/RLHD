@@ -39547,6 +39547,42 @@
     "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM" ]
   },
   {
+    "description": "Burning Claws Special Attack 1",
+    "offset": [ 0, 75, 90 ],
+    "radius": 270,
+    "spawnDelay": 475,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_BURNING_CLAWS_SPEC_02" ]
+  },
+  {
+    "description": "Burning Claws Special Attack 2",
+    "offset": [ 0, 75, 90 ],
+    "radius": 240,
+    "spawnDelay": 1075,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_BURNING_CLAWS_SPEC_02" ]
+  },
+  {
     "description": "Bone Dagger Special Attack",
     "offset": [ 30, 75, 50 ],
     "radius": 170,
