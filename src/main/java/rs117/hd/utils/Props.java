@@ -3,6 +3,7 @@ package rs117.hd.utils;
 import java.util.Properties;
 import java.util.function.Supplier;
 import javax.annotation.Nonnull;
+import javax.annotation.meta.When;
 
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -54,6 +55,7 @@ public class Props
 		return path != null ? path(path) : fallback.get();
 	}
 
+	@Nonnull(when = When.UNKNOWN) // Disable downstream null warnings, since they're not smart enough
 	public static ResourcePath getFolder(String key, @Nonnull Supplier<ResourcePath> fallback) {
 		var path = getFile(key, fallback);
 		return path != null ? path.chroot() : null;

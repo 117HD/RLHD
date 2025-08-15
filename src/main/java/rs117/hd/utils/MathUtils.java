@@ -66,6 +66,10 @@ public class MathUtils {
 		return Arrays.copyOf(v, v.length);
 	}
 
+	public static int[] copy(int[] v) {
+		return Arrays.copyOf(v, v.length);
+	}
+
 	public static float[] copyTo(float[] out, float[] in, int offset, int len) {
 		assert offset + len <= min(out.length, in.length);
 		System.arraycopy(in, offset, out, offset, len);
