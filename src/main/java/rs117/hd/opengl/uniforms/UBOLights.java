@@ -7,13 +7,21 @@ import static org.lwjgl.opengl.GL33C.*;
 public class UBOLights extends UniformBuffer<GLBuffer> {
 
 	public static final int MAX_LIGHTS = 1000; // Struct is 64 Bytes, UBO Max size is 64 KB
+	public final Property attenuationFactor;
 	private final LightStruct[] lights;
 	private final Property[] lightPositions;
 
 	public UBOLights(boolean isCullingUBO) {
 		super(GL_DYNAMIC_DRAW);
-		lightPositions = isCullingUBO ? addPropertyArray(PropertyType.FVec4, "lightPositions", MAX_LIGHTS) : null;
-		lights = !isCullingUBO ? addStructs(new LightStruct[MAX_LIGHTS], LightStruct::new) : null;
+		if (isCullingUBO) {
+			attenuationFactor = null;
+			lights = null;
+			lightPositions = addPropertyArray(PropertyType.FVec4, "lightPositions", MAX_LIGHTS);
+		} else {
+			attenuationFactor = addProperty(PropertyType.Float, "attenuationFactor");
+			lights = addStructs(new LightStruct[MAX_LIGHTS], LightStruct::new);
+			lightPositions = null;
+		}
 	}
 
 	@Override
