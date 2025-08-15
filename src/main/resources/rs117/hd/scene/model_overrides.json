@@ -1188,8 +1188,9 @@
     ]
   },
   {
-    "description": "Spirit trees",
+    "description": "Spirit trees - Small",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "SPIRIT_TREE_SEEDLING",
       "SPIRIT_TREE_1",
@@ -1205,11 +1206,21 @@
       "SPIRIT_TREE_11",
       "SPIRIT_TREE_FULLYGROWN",
       "SPIRIT_TREE_CLAIMXP",
+      "SPIRITTREE_SMALL_1OP",
+      "SPIRITTREE_SMALL_2OPS",
+      "POH_SPIRIT_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Spirit trees - Big",
+    "baseMaterial": "BARK",
+    "objectIds": [
       "SPIRITTREE_BIG_1OP",
       "SPIRITTREE_BIG_2OPS",
-      "SPIRITTREE_BIG_2OPS_ORBS",
-      "SPIRITTREE_SMALL_1OP",
-      "SPIRITTREE_SMALL_2OPS"
+      "SPIRITTREE_BIG_2OPS_ORBS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -2299,11 +2310,22 @@
       "MM_JUNGLE_PLANT_FLOWER",
       "FAI_VARROCK_FLOWERBED_CORNER_BLUE",
       "FAI_VARROCK_FLOWERBED_BLUE",
-      "MM_JUNGLE_PLANT_ORCHID"
+      "MM_JUNGLE_PLANT_ORCHID",
+      "POH_FLOWERB3_BIG",
+      "POH_FLOWERB2_SMALL",
+      "POH_FLOWERB3_SMALL",
+      "POH_FLOWERA2_SMALL",
+      "POH_FLOWERA3_SMALL",
+      "POH_PLANTBIG2A",
+      "POH_PLANTBSMALL1A",
+      "POH_PLANTBSMALL1B",
+      "POH_PLANTBSMALL1C",
+      "POH_PLANTBSMALL2A",
+      "POH_PLANTBSMALL2B"
     ]
   },
   {
-    "description": "Flowers or flower-like objects that should sway in the wind",
+    "description": "Wheat",
     "baseMaterial": "GRAY_90",
     "windDisplacementMode": "OBJECT",
     "windDisplacementModifier": 1,
@@ -2359,7 +2381,19 @@
       "AVIUM_CORN02",
       "WATERLILY1",
       "WATERLILY2",
-      "WATERLILY3"
+      "WATERLILY3",
+      "POH_FLOWERA1_BIG",
+      "POH_FLOWERB1_BIG",
+      "POH_FLOWERB2_BIG",
+      "POH_FLOWERA2_BIG",
+      "POH_FLOWERA3_BIG",
+      "POH_FLOWERB1_SMALL",
+      "POH_FLOWERA1_SMALL",
+      "POH_PLANTBIG1A",
+      "POH_PLANTBIG1B",
+      "POH_PLANTBSMALL2C",
+      "POH_PLANTBIG2B",
+      "POH_PLANTBIG2C"
     ]
   },
   {
@@ -2929,6 +2963,19 @@
     "windDisplacementModifier": 1,
     "objectIds": [
       "POH_GRASS"
+    ]
+  },
+  {
+    "description": "POH Trees",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "POH_SMALL_TREE2_5",
+      "POH_BIG_TREE5_4",
+      "POH_BIG_TREE2_4",
+      "POH_SMALL_TREE4_5"
     ]
   },
   {
@@ -18089,7 +18136,7 @@
     ]
   },
   {
-    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "description": "Fly Trap",
     "windDisplacementMode": "VERTEX",
     "flatNormals": true,
     "objectIds": [
