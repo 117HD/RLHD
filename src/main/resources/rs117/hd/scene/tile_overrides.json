@@ -5483,16 +5483,36 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
-    "name": "Varlamore - Nemus Retreat - Gravel paths",
+    "name": "Varlamore - Outer fortis temple - brick floors",
+    "area": "Varlamore - Outer Fortis Temples",
+    "overlayIds": [ 123, 199, 226, 227 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Varlamore - Dirt slope overlay",
     "area": "VARLAMORE",
-    "overlayIds": [ 332 ],
-    "groundMaterial": "GRAVEL"
+    "overlayIds": [ 226 ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "Varlamore - Snowcaps",
     "area": "VARLAMORE",
     "overlayIds": [ 1 ],
     "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "Varlamore - Fortis floors",
+    "area": "VARLAMORE",
+    "overlayIds": [ 326, 329 ],
+    "blended": false,
+    "groundMaterial": "TERRACOTTA_FLOOR"
+  },
+  {
+    "name": "Varlamore - Nemus Retreat - Gravel paths",
+    "area": "VARLAMORE",
+    "overlayIds": [ 332 ],
+    "groundMaterial": "GRAVEL"
   },
   {
     "name": "Varlamore - Stone colored cliffs",
