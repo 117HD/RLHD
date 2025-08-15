@@ -1980,11 +1980,10 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "STONE_FLOOR",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false,
-    "uvScale": 2,
-    "uvOrientation": 256,
-    "shiftLightness": 1
+    "uvScale": 0.85,
+    "shiftLightness": 5
   },
   {
     "name": "SEERS_CAMELOT_CASTLE_BLENDED",

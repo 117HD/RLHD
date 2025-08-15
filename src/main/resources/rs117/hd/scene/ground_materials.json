@@ -432,16 +432,6 @@
     ]
   },
   {
-    "name": "STONE_FLOOR",
-    "materials": [
-      "GRUNGE_3",
-      "GRUNGE_3",
-      "STONE",
-      "GRUNGE_3",
-      "GRUNGE_3"
-    ]
-  },
-  {
     "name": "STONE_CAVE_FLOOR",
     "materials": [
       "STONE",
