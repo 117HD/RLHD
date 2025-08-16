@@ -57315,5 +57315,53 @@
       "ARCHEUS_CRYSTAL_SMALLEST_RED_02"
     ],
     "shadowOpacityThreshold": 0.9
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava edges",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_2",
+      "BRIMSTONE_FALLOFF_3",
+      "BRIMSTONE_FALLOFF_4",
+      "BRIMSTONE_FALLOFF_5",
+      "BRIMSTONE_FALLOFF_6",
+      "BRIMSTONE_FALLOFF_R",
+      "BRIMSTONE_FALLOFF_L",
+      "BRIMSTONE_FALLOFF_E",
+      "BRIMSTONE_FALLOFF_T",
+      "BRIMSTONE_FALLOFF_W",
+      "BRIMSTONE_FALLOFF_X",
+      "BRIMSTONE_FALLOFF_Q"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 32",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava vents - ANIMATED",
+    "baseMaterial": "ROCK_4",
+    "uvOrientation": 128,
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_LAVA_CRATER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 32",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Steam",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]
