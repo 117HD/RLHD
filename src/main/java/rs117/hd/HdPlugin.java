@@ -133,6 +133,7 @@ import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
+import rs117.hd.utils.DirectionalShadowCulling;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
@@ -363,6 +364,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
+	private DirectionalShadowCulling directionalShadowCulling;
 
 	@Inject
 	public HDVariables vars;
@@ -760,17 +764,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.setOrthographic(true)
 					.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES)
 					.setCullingFlag(SceneView.CULLING_FLAG_CALLBACK)
-					.setCullingCallbacks(new SceneCullingManager.ICullingCallback() {
-						@Override
-						public boolean isTileVisible(int x, int z, int h0, int h1, int h2, int h3, boolean isVisible) {
-							return isVisible;
-						}
-
-						@Override
-						public boolean isRenderableVisible(int x, int y, int z, int radius, int height, boolean isVisible) {
-							return isVisible;
-						}
-					});
+					.setCullingCallbacks(directionalShadowCulling);
 
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -1793,6 +1787,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						add(centerXZ, centerXZ, cameraToCenterXZ);
 					}
 
+					float[] lightDir = directionalLight.getForwardDirection();
+					directionalShadowCulling.setup(sceneFrustumCorners, lightDir);
+
 					directionalLight.setCullingParent(sceneCamera);
 					directionalLight.setPositionX(centerXZ[0]);
 					directionalLight.setPositionZ(centerXZ[1]);
@@ -1801,7 +1798,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					directionalLight.setViewportWidth((int) radius);
 					directionalLight.setViewportHeight((int) radius);
 
-					uboGlobal.lightDir.set(directionalLight.getForwardDirection());
+					uboGlobal.lightDir.set(lightDir);
 					uboGlobal.lightProjectionMatrix.set(directionalLight.getViewProjMatrix());
 					uboGlobal.upload();
 				}

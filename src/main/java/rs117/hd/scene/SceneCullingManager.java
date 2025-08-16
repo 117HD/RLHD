@@ -280,7 +280,8 @@ public class SceneCullingManager {
 
 	public interface ICullingCallback {
 		boolean isTileVisible(int x, int z, int h0, int h1, int h2, int h3, boolean isVisible);
-		boolean isRenderableVisible(int x, int y, int z, int radius, int height, boolean isVisible);
+		boolean isStaticRenderableVisible(int x, int y, int z, int radius, int height, boolean isVisible);
+		boolean isBoundingSphereVisible(float x, float y, float z, float radius, boolean isVisible);
 	}
 
 	public static final class CullingResults {
@@ -633,7 +634,7 @@ public class SceneCullingManager {
 											viewCtx.frustumPlanes, 0);
 
 										if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
-											visible = viewCtx.callbacks.isRenderableVisible(cX, cH - renderable.bottomY, cZ, radius, renderable.height, visible);
+											visible = viewCtx.callbacks.isStaticRenderableVisible(cX, cH - renderable.bottomY, cZ, radius, renderable.height, visible);
 										}
 
 										if(visible) {
@@ -686,13 +687,17 @@ public class SceneCullingManager {
 		protected void doWork() {
 			for (BoundingSphere sphere : spheres) {
 				for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-					final boolean visible = HDUtils.isSphereIntersectingFrustum(
+					boolean visible = HDUtils.isSphereIntersectingFrustum(
 						sphere.x,
 						sphere.y,
 						sphere.z,
 						sphere.height,
 						viewCtx.frustumPlanes
 					);
+
+					if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+						visible = viewCtx.callbacks.isBoundingSphereVisible(sphere.x, sphere.y, sphere.z, sphere.height, visible);
+					}
 
 					switch (type) {
 						case PLAYER:
