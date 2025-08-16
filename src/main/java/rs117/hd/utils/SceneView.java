@@ -3,14 +3,16 @@ package rs117.hd.utils;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.scene.SceneCullingManager.CullingResults;
+import rs117.hd.scene.SceneCullingManager.ICullingCallback;
 
 @Slf4j
 public class SceneView {
 	public static final int CULLING_FLAG_GROUND_PLANES = 1;
 	public static final int CULLING_FLAG_UNDERWATER_PLANES = 1 << 1;
 	public static final int CULLING_FLAG_RENDERABLES = 1 << 2;
-	public static final int CULLING_FLAG_CULLING_BOUNDS = 1 << 3;
+	public static final int CULLING_FLAG_CALLBACK = 1 << 3;
 	public static final int CULLING_FLAG_FREEZE = 1 << 4;
 
 	private static final int PROJECTION_MATRIX_DIRTY = 1;
@@ -31,8 +33,6 @@ public class SceneView {
 	private float[] invViewProjMatrix;
 
 	private final float[][] frustumPlanes = new float[6][4];
-	private final float[] cullingMinBounds = new float[3];
-	private final float[] cullingMaxBounds = new float[3];
 	private final float[] position = new float[3];
 	private final float[] orientation = new float[2];
 
@@ -48,6 +48,7 @@ public class SceneView {
 
 	private CullingResults cullingResults = new CullingResults();
 	private SceneView cullingParent;
+	private ICullingCallback cullingCallbacks;
 	private int cullingFlags;
 
 	public boolean isDirty() {
@@ -93,30 +94,19 @@ public class SceneView {
 		return this;
 	}
 
+	public SceneView setCullingCallbacks(ICullingCallback newCullingCallback) {
+		cullingCallbacks = newCullingCallback;
+		return this;
+	}
+
+	public ICullingCallback getCullingCallbacks() { return cullingCallbacks; }
+
 	public SceneView setCullingParent(SceneView newCullingParent) {
 		cullingParent = newCullingParent;
 		return this;
 	}
 
 	public SceneView getCullingParent() { return cullingParent;}
-
-	public SceneView setCullingMinBounds(float[] newCullingMinBounds) {
-		cullingMinBounds[0] = newCullingMinBounds[0];
-		cullingMinBounds[1] = newCullingMinBounds[1];
-		cullingMinBounds[2] = newCullingMinBounds[2];
-		return this;
-	}
-
-	public float[] getCullingMinBounds() { return cullingMinBounds.clone(); }
-
-	public SceneView setCullingMaxBounds(float[] newCullingMaxBounds) {
-		cullingMaxBounds[0] = newCullingMaxBounds[0];
-		cullingMaxBounds[1] = newCullingMaxBounds[1];
-		cullingMaxBounds[2] = newCullingMaxBounds[2];
-		return this;
-	}
-
-	public float[] getCullingMaxBounds() { return cullingMaxBounds.clone(); }
 
 	public boolean getIsOrthographic() {return isOrthographic; }
 

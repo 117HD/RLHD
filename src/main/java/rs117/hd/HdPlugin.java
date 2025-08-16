@@ -759,7 +759,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				directionalLight = new SceneView()
 					.setOrthographic(true)
 					.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES)
-					.setCullingFlag(SceneView.CULLING_FLAG_CULLING_BOUNDS);
+					.setCullingFlag(SceneView.CULLING_FLAG_CALLBACK)
+					.setCullingCallbacks(new SceneCullingManager.ICullingCallback() {
+						@Override
+						public boolean isTileVisible(int x, int z, int h0, int h1, int h2, int h3, boolean isVisible) {
+							return isVisible;
+						}
+
+						@Override
+						public boolean isRenderableVisible(int x, int y, int z, int radius, int height, boolean isVisible) {
+							return isVisible;
+						}
+					});
 
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -1757,17 +1768,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					HDUtils.clipFrustumToDistance(sceneFrustumCorners, maxDistance);
 					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
 
-					final float[] lightDir = directionalLight.getForwardDirection();
-					final float[] viewSpaceCorner = new float[3];
-					final float[] shadowCullingBoundsMin = { Float.MAX_VALUE, Float.MAX_VALUE, Float.MAX_VALUE };
-					final float[] shadowCullingBoundsMax = { Float.MIN_VALUE, Float.MIN_VALUE, Float.MIN_VALUE };
 					final float[] centerXZ = new float[2];
 					for (float[] corner : sceneFrustumCorners) {
-						directionalLight.transformPoint(viewSpaceCorner, corner);
-
-						min(shadowCullingBoundsMin, shadowCullingBoundsMin, viewSpaceCorner);
-						max(shadowCullingBoundsMax, shadowCullingBoundsMax, viewSpaceCorner);
-
 						add(centerXZ, centerXZ, corner[0], corner[2]);
 					}
 					divide(centerXZ, centerXZ, (float) sceneFrustumCorners.length);
@@ -1792,8 +1794,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 
 					directionalLight.setCullingParent(sceneCamera);
-					directionalLight.setCullingMinBounds(shadowCullingBoundsMin);
-					directionalLight.setCullingMaxBounds(shadowCullingBoundsMax);
 					directionalLight.setPositionX(centerXZ[0]);
 					directionalLight.setPositionZ(centerXZ[1]);
 					directionalLight.setNearPlane(100000);
@@ -1801,7 +1801,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					directionalLight.setViewportWidth((int) radius);
 					directionalLight.setViewportHeight((int) radius);
 
-					uboGlobal.lightDir.set(lightDir);
+					uboGlobal.lightDir.set(directionalLight.getForwardDirection());
 					uboGlobal.lightProjectionMatrix.set(directionalLight.getViewProjMatrix());
 					uboGlobal.upload();
 				}
@@ -2078,6 +2078,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		if (isVisibleInDirectional) {
+			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 

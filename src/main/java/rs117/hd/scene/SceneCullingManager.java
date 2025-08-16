@@ -164,10 +164,8 @@ public class SceneCullingManager {
 			ctx.cullingFlags = view.getCullingFlags();
 			ctx.parentIdx = -1;
 
-			if ((ctx.cullingFlags & SceneView.CULLING_FLAG_CULLING_BOUNDS) != 0) {
-				ctx.view = view.getViewMatrix();
-				ctx.minCullingBounds = view.getCullingMinBounds();
-				ctx.maxCullingBounds = view.getCullingMaxBounds();
+			if ((ctx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+				ctx.callbacks = view.getCullingCallbacks();
 			}
 
 			if (needTileCulling) {
@@ -274,12 +272,15 @@ public class SceneCullingManager {
 	private static class SceneViewContext {
 		public float[][] frustumPlanes;
 		public float[] viewProj;
-		public float[] view;
-		public float[] minCullingBounds;
-		public float[] maxCullingBounds;
+		public ICullingCallback callbacks;
 		public CullingResults results;
 		public int parentIdx;
 		public int cullingFlags;
+	}
+
+	public interface ICullingCallback {
+		boolean isTileVisible(int x, int z, int h0, int h1, int h2, int h3, boolean isVisible);
+		boolean isRenderableVisible(int x, int y, int z, int radius, int height, boolean isVisible);
 	}
 
 	public static final class CullingResults {
@@ -569,26 +570,21 @@ public class SceneCullingManager {
 							if(plane != 0 || (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) != 0){
 								float tileTriangleArea = HDUtils.getTileTriangleArea(x, z, h0, h1, h2, h3, viewCtx.viewProj);
 								if (tileTriangleArea > 1e-6f) {
-									viewResult |= HDUtils.IsTileVisible(
+									boolean visible = HDUtils.IsTileVisible(
 										x,
 										z,
 										h0,
 										h1,
 										h2,
 										h3,
-										viewCtx.frustumPlanes,
-										-LOCAL_HALF_TILE_SIZE
-									) ? VISIBILITY_TILE_VISIBLE : 0;// SceneView doesn't want to cull GroundPlanes, Consider them all hidden
+										viewCtx.frustumPlanes);
 
-									if ((viewResult & VISIBILITY_TILE_VISIBLE) != 0
-										&& (viewCtx.cullingFlags & SceneView.CULLING_FLAG_CULLING_BOUNDS) != 0) {
-										if (!HDUtils.aabbIntersectsOOBB(
-											x, min(h0, h1, h2, h3), z,
-											x + LOCAL_TILE_SIZE, max(h0, h1, h2, h3), z + LOCAL_TILE_SIZE,
-											viewCtx.view, viewCtx.minCullingBounds, viewCtx.maxCullingBounds
-										)) {
-											viewResult &= ~VISIBILITY_TILE_VISIBLE;
-										}
+									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+										visible = viewCtx.callbacks.isTileVisible(x, z, h0, h1, h2, h3, visible);
+									}
+
+									if(visible) {
+										viewResult |= VISIBILITY_TILE_VISIBLE;
 									}
 								}
 							}
@@ -596,18 +592,22 @@ public class SceneCullingManager {
 							if(hasUnderwaterTile && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_UNDERWATER_PLANES) != 0) {
 								float tileTriangleArea = HDUtils.getTileTriangleArea(x, z, uh0, uh1, uh2, uh3, viewCtx.viewProj);
 								if (tileTriangleArea > 1e-6f) {
-									viewResult |= HDUtils.IsTileVisible(
+									boolean visible = HDUtils.IsTileVisible(
 										x,
 										z,
 										uh0,
 										uh1,
 										uh2,
 										uh3,
-										viewCtx.frustumPlanes,
-										-(LOCAL_TILE_SIZE * 4)
-									) ?
-										VISIBILITY_UNDER_WATER_TILE_VISIBLE :
-										0;
+										viewCtx.frustumPlanes);
+
+									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+										visible = viewCtx.callbacks.isTileVisible(x, z, uh0, uh1, uh2, uh3, visible);
+									}
+
+									if(visible) {
+										viewResult |= VISIBILITY_UNDER_WATER_TILE_VISIBLE;
+									}
 								}
 							}
 
@@ -623,30 +623,20 @@ public class SceneCullingManager {
 											}
 										}
 
-										if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CULLING_BOUNDS) != 0) {
-											if (!HDUtils.aabbIntersectsOOBB(
-												cX - radius,
-												cH - renderable.bottomY,
-												cZ - radius,
-												cX + radius,
-												cH - renderable.bottomY + renderable.height,
-												cZ + radius,
-												viewCtx.view, viewCtx.minCullingBounds, viewCtx.maxCullingBounds
-											)) {
-												continue;
-											}
-										}
-
-										if (HDUtils.isAABBIntersectingFrustum(
+										boolean visible =  HDUtils.isAABBIntersectingFrustum(
 											cX - radius,
 											cH - renderable.bottomY,
 											cZ - radius,
 											cX + radius,
 											cH - renderable.bottomY + renderable.height,
 											cZ + radius,
-											viewCtx.frustumPlanes,
-											-LOCAL_TILE_SIZE
-										)) {
+											viewCtx.frustumPlanes, 0);
+
+										if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+											visible = viewCtx.callbacks.isRenderableVisible(cX, cH - renderable.bottomY, cZ, radius, renderable.height, visible);
+										}
+
+										if(visible) {
 											viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
 											break;
 										}
