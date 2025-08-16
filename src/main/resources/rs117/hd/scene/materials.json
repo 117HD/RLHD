@@ -716,6 +716,11 @@
     "brightness": 0.5
   },
   {
+    "name": "GRAY_45",
+    "parent": "NONE",
+    "brightness": 0.45
+  },
+  {
     "name": "GRAY_35",
     "parent": "NONE",
     "brightness": 0.35
@@ -1339,6 +1344,13 @@
     "name": "MARBLE_3"
   },
   {
+    "name": "MARBLE_4_N"
+  },
+  {
+    "name": "MARBLE_4",
+    "normalMap": "MARBLE_4_N"
+  },
+  {
     "name": "MARBLE_1_GLOSS",
     "parent": "MARBLE_1",
     "specularStrength": 0.9,
@@ -1378,6 +1390,32 @@
     "parent": "MARBLE_3",
     "specularStrength": 0.4,
     "specularGloss": 120.0
+  },
+  {
+    "name": "MARBLE_4_GLOSS",
+    "parent": "MARBLE_4",
+    "specularStrength": 1.8,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "MARBLE_4_LIGHT_GLOSS",
+    "parent": "MARBLE_4_GLOSS",
+    "brightness": 2
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST",
+    "normalMap": "MARBLE_4_N"
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST_GLOSS",
+    "parent": "MARBLE_4_LOW_CONTRAST",
+    "specularStrength": 1,
+    "specularGloss": 80.0
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+    "parent": "MARBLE_4_LOW_CONTRAST_GLOSS",
+    "brightness": 2
   },
   {
     "name": "LASSAR_UNDERCITY_TILE_N"
@@ -2066,8 +2104,8 @@
   {
     "name": "HD_HAY",
     "normalMap": "HD_HAY_N",
-    "specularStrength": 0.3,
-    "specularGloss": 20.0,
+    "specularStrength": 0.175,
+    "specularGloss": 15.0,
     "materialsToReplace": [
       "HAY"
     ],

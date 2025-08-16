@@ -19513,6 +19513,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_GHOST_GREATER",
       "ARCEUUS_THRALL_GHOST_LESSER",
@@ -19552,6 +19553,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_SKELETON_LESSER",
       "ARCEUUS_THRALL_SKELETON_SUPERIOR",
@@ -19590,6 +19592,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_ZOMBIE_LESSER",
       "ARCEUUS_THRALL_ZOMBIE_SUPERIOR",
@@ -22788,13 +22791,12 @@
   },
   {
     "description": "POH_TRAILBLAZER_RELOADED_TROPHY",
-    "height": 190,
-    "alignment": "CENTER",
-    "radius": 50,
-    "strength": 50,
+    "offset": [ 0, 190, -20 ],
+    "radius": 70,
+    "strength": 30,
     "color": [
       252,
-      148,
+      188,
       3
     ],
     "type": "FLICKER",
@@ -26435,8 +26437,8 @@
     "description": "MAGIC_GUILD_ORBS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 10,
+    "radius": 350,
+    "strength": 20,
     "color": [
       255,
       255,
@@ -26444,17 +26446,17 @@
     ],
     "type": "PULSE",
     "duration": 800,
-    "range": 20,
+    "range": 5,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW"
     ]
   },
   {
-    "description": "MAGIC_GUILD_PORTALS",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 7.5,
+    "description": "MAGIC_GUILD_PORTALS_OUTSIDE",
+    "offset": [ -200, 125 , 0 ],
+    "radius": 400,
+    "strength": 30,
+    "visibleFromOtherPlanes": true,
     "color": [
       0,
       0,
@@ -26462,7 +26464,26 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 10,
+    "objectIds": [
+      "WIZTOWERPORTAL",
+      "DARKWIZPORTAL",
+      "THORMACPORTAL"
+    ]
+  },
+  {
+    "description": "MAGIC_GUILD_PORTALS_INSIDE",
+    "offset": [ -40, 100 , 0 ],
+    "radius": 200,
+    "strength": 40,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 30,
     "objectIds": [
       "WIZTOWERPORTAL",
       "DARKWIZPORTAL",
@@ -39523,6 +39544,42 @@
     "fadeInDuration": 175,
     "fadeOutDuration": 375,
     "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Burning Claws Special Attack 1",
+    "offset": [ 0, 75, 90 ],
+    "radius": 270,
+    "spawnDelay": 475,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_BURNING_CLAWS_SPEC_02" ]
+  },
+  {
+    "description": "Burning Claws Special Attack 2",
+    "offset": [ 0, 75, 90 ],
+    "radius": 240,
+    "spawnDelay": 1075,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_BURNING_CLAWS_SPEC_02" ]
   },
   {
     "description": "Bone Dagger Special Attack",

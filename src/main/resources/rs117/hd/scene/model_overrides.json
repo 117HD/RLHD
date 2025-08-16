@@ -1188,8 +1188,9 @@
     ]
   },
   {
-    "description": "Spirit trees",
+    "description": "Spirit trees - Small",
     "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "SPIRIT_TREE_SEEDLING",
       "SPIRIT_TREE_1",
@@ -1205,11 +1206,21 @@
       "SPIRIT_TREE_11",
       "SPIRIT_TREE_FULLYGROWN",
       "SPIRIT_TREE_CLAIMXP",
+      "SPIRITTREE_SMALL_1OP",
+      "SPIRITTREE_SMALL_2OPS",
+      "POH_SPIRIT_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "retainVanillaUvs": true
+  },
+  {
+    "description": "Spirit trees - Big",
+    "baseMaterial": "BARK",
+    "objectIds": [
       "SPIRITTREE_BIG_1OP",
       "SPIRITTREE_BIG_2OPS",
-      "SPIRITTREE_BIG_2OPS_ORBS",
-      "SPIRITTREE_SMALL_1OP",
-      "SPIRITTREE_SMALL_2OPS"
+      "SPIRITTREE_BIG_2OPS_ORBS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -2273,9 +2284,6 @@
       "BULLRUSHES5",
       "THISTLE",
       "POTATO",
-      "FAI_VARROCK_WHEAT_CORNER",
-      "FAI_VARROCK_WHEAT_SMALL",
-      "FAI_VARROCK_WHEAT",
       "NETTLES",
       "NETTLES1",
       "NETTLES2",
@@ -2302,7 +2310,29 @@
       "MM_JUNGLE_PLANT_FLOWER",
       "FAI_VARROCK_FLOWERBED_CORNER_BLUE",
       "FAI_VARROCK_FLOWERBED_BLUE",
-      "MM_JUNGLE_PLANT_ORCHID"
+      "MM_JUNGLE_PLANT_ORCHID",
+      "POH_FLOWERB3_BIG",
+      "POH_FLOWERB2_SMALL",
+      "POH_FLOWERB3_SMALL",
+      "POH_FLOWERA2_SMALL",
+      "POH_FLOWERA3_SMALL",
+      "POH_PLANTBIG2A",
+      "POH_PLANTBSMALL1A",
+      "POH_PLANTBSMALL1B",
+      "POH_PLANTBSMALL1C",
+      "POH_PLANTBSMALL2A",
+      "POH_PLANTBSMALL2B"
+    ]
+  },
+  {
+    "description": "Wheat",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": 1,
+    "objectIds": [
+      "FAI_VARROCK_WHEAT_CORNER",
+      "FAI_VARROCK_WHEAT_SMALL",
+      "FAI_VARROCK_WHEAT"
     ]
   },
   {
@@ -2351,7 +2381,19 @@
       "AVIUM_CORN02",
       "WATERLILY1",
       "WATERLILY2",
-      "WATERLILY3"
+      "WATERLILY3",
+      "POH_FLOWERA1_BIG",
+      "POH_FLOWERB1_BIG",
+      "POH_FLOWERB2_BIG",
+      "POH_FLOWERA2_BIG",
+      "POH_FLOWERA3_BIG",
+      "POH_FLOWERB1_SMALL",
+      "POH_FLOWERA1_SMALL",
+      "POH_PLANTBIG1A",
+      "POH_PLANTBIG1B",
+      "POH_PLANTBSMALL2C",
+      "POH_PLANTBIG2B",
+      "POH_PLANTBIG2C"
     ]
   },
   {
@@ -2914,12 +2956,26 @@
   {
     "description": "Fixes weird pattern made by grass in POH",
     "areas": [ "PLAYER_OWNED_HOUSE" ],
-    "baseMaterial": "GRAY_35",
+    "baseMaterial": "GRAY_45",
     "windDisplacementMode": "OBJECT",
     "upwardsNormals": true,
     "castShadows": false,
+    "windDisplacementModifier": 1,
     "objectIds": [
       "POH_GRASS"
+    ]
+  },
+  {
+    "description": "POH Trees",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "POH_SMALL_TREE2_5",
+      "POH_BIG_TREE5_4",
+      "POH_BIG_TREE2_4",
+      "POH_SMALL_TREE4_5"
     ]
   },
   {
@@ -3157,7 +3213,7 @@
   },
   {
     "description": "VARROCK_FOUNTAIN_FLOOR",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "STONE",
     "objectIds": [
       "FAI_VARROCK_CENTRAL_SQUARE_FLOOR02",
       "FAI_VARROCK_CENTRAL_SQUARE_FLOOR01",
@@ -3165,21 +3221,21 @@
       "FAI_VARROCK_CENTRAL_SQUARE_FLOOR04",
       "FAI_VARROCK_CENTRAL_SQUARE_FLOOR05"
     ],
-    "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.7
   },
   {
-    "description": "Varrock Fountain Walls and Statue",
+    "description": "Varrock Fountain Railing and Statues",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
+      "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE_FOOT01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE_RAILING01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE_RAILING_MIRROR01",
       "FAI_VARROCK_CENTRAL_SQUARE_STATUE_FOOT_MIRROR01"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.75
+    "uvType": "BOX"
   },
   {
     "description": "Varrock Fountain Rocks with Water",
@@ -3188,12 +3244,15 @@
       "FAI_VARROCK_CENTRAL_SQUARE01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.75,
     "colorOverrides": [
       {
         "colors": "h >= 34",
         "baseMaterial": "WATER_FOUNTAIN_FLAT",
-        "uvType": "BOX"
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
@@ -3333,6 +3392,34 @@
       "EXCHANGE_WALL_UPPER_PILLAR_DIAG"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "GRAND_EXCHANGE_BANNERS",
+    "baseMaterial": "CARPET_LIGHT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "receiveShadows": false,
+    "invertDisplacementStrength": true,
+    "objectIds": [
+      "EXCHANGE_FLAG_HERBS_LOGS_FLIPPED",
+      "EXCHANGE_FLAG_LOGS_WEAPONS",
+      "EXCHANGE_FLAG_WEAPONS_FLIPPED",
+      "EXCHANGE_FLAG_MINERALS",
+      "EXCHANGE_FLAG_MINERALS",
+      "EXCHANGE_FLAG_RUNES",
+      "EXCHANGE_FLAG_RUNES_FLIPPED",
+      "EXCHANGE_FLAG_HERBS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+        "invertDisplacementStrength": true,
+        "windDisplacementModifier": -1
+      }
+    ]
   },
   {
     "description": "Brick walls with wooden boards",
@@ -16442,7 +16529,7 @@
     "inheritTileColorType": "UNDERLAY"
   },
   {
-    "description": "POH carpets",
+    "description": "POH carpets - Untexture as it flickers when moving the camera - TODO",
     "objectIds": [
       "POH_RUGCORNER1",
       "POH_RUGSIDE1",
@@ -16454,9 +16541,8 @@
       "POH_RUGSIDE3",
       "POH_RUGMIDDLE3"
     ],
-    "baseMaterial": "CARPET",
-    "uvType": "WORLD_XZ",
-    "flatNormals": true,
+    "baseMaterial": "NONE",
+    "uvType": "VANILLA",
     "castShadows": false
   },
   {
@@ -18044,7 +18130,7 @@
     ]
   },
   {
-    "description": "Flowers or plants that should sway in the wind but not be displaced by characters",
+    "description": "Fly Trap",
     "windDisplacementMode": "VERTEX",
     "flatNormals": true,
     "objectIds": [
@@ -57176,8 +57262,9 @@
       },
       {
         "colors": "h == 8",
-        "baseMaterial": "MARBLE_2_SEMIGLOSS",
-        "uvScale": 0.4,
+        "baseMaterial": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+        "uvScale": 0.65,
+        "uvOrientation": 256,
         "uvType": "BOX"
       }
     ]

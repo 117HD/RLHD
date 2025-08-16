@@ -1676,6 +1676,7 @@
       12
     ],
     "groundMaterial": "VARROCK_PATHS",
+    "blendedAsOpposite": true,
     "minLightness": 32,
     "maxLightness": 32
   },
@@ -1955,7 +1956,13 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": -2,
+    "blendedAsOpposite": true,
+    "uvScale": 1.25011,
+    "replacements": {
+      "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171": "!blending"
+    }
   },
   {
     "name": "SEERS_ELEMENTAL_WORKSHOP_HOUSE_171",
@@ -1963,17 +1970,10 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "WORN_TILES",
+    "shiftLightness": 3,
     "blended": false,
-    "shiftLightness": 3
-  },
-  {
-    "name": "SEERS_BAR_171_BLENDED",
-    "area": "SEERS_BAR_ENTRANCE",
-    "overlayIds": [
-      171
-    ],
-    "groundMaterial": "VARROCK_PATHS"
+    "uvScale": 1.25011
   },
   {
     "name": "SEERS_BAR_171",
@@ -1981,9 +1981,10 @@
     "overlayIds": [
       171
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "BRICK_PATHS",
     "blended": false,
-    "shiftLightness": 3
+    "uvScale": 0.85,
+    "shiftLightness": 5
   },
   {
     "name": "SEERS_CAMELOT_CASTLE_BLENDED",
@@ -2030,13 +2031,15 @@
     "blended": false
   },
   {
-    "name": "SEERS_BANK_TILE_3",
+    "name": "SEERS_BANK_CARPET",
     "area": "SEERS_BANK",
     "overlayIds": [
-      8
+      8,
+      171
     ],
-    "groundMaterial": "MARBLE_1_GLOSS",
-    "blended": false
+    "groundMaterial": "CARPET",
+    "blended": false,
+    "shiftLightness": 2
   },
   {
     "name": "SEERS_HOUSE_FLOORS",
@@ -2260,8 +2263,11 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 6
+    "groundMaterial": "CARPET",
+    "shiftLightness": -11,
+    "uvScale": 1.4,
+    "minLightness": 5,
+    "blended": false
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_HOUSE_BLENDING",
@@ -2352,10 +2358,10 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "CONCRETE",
+    "groundMaterial": "CARPET",
     "blended": false,
-    "minLightness": 40,
-    "maxLightness": 40
+    "uvScale": 1.4,
+    "shiftLightness": -2
   },
   {
     "name": "EAST_ARDOUGNE_CASTLE_DIRT_FIX",
@@ -2602,8 +2608,7 @@
       10
     ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
-    "minLightness": 30,
-    "maxLightness": 30
+    "setLightness": 33
   },
   {
     "name": "GUTANOTH_CAVE",
@@ -5765,7 +5770,8 @@
     "overlayIds": [
       20
     ],
-    "groundMaterial": "MARBLE_DARK"
+    "groundMaterial": "MARBLE_4_GLOSS",
+    "uvScale": 1.15
   },
   {
     "name": "OVERLAY_28",
