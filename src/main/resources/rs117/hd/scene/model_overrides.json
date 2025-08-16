@@ -5327,7 +5327,11 @@
     ]
   },
   {
-    "description": "MOUNT_KARUULM_WALLS",
+    "description": "Mount Karuulm - Rock - Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
     "objectIds": [
       "BRIMSTONE_ROCK_CLIFF_2X2",
       "BRIMSTONE_ROCK_CLIFF_1",
@@ -5341,9 +5345,52 @@
       "BRIMSTONE_ROCK_CLIFF_W",
       "BRIMSTONE_ROCK_CLIFF_R",
       "BRIMSTONE_ROCK_CLIFF_T",
-      "BRIMSTONE_ROCK_CLIFF_U"
+      "BRIMSTONE_ROCK_CLIFF_U",
+      "BRIMSTONE_ROCKYOUTCROP_CORNER",
+      "BRIMSTONE_ROCKYOUTCROP_STRAIGHT"
+    ]
+  },
+
+  {
+    "description": "Mount Karuulm - Rock - Walls - Sulphur",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "BRIMSTONE_SULPHUR_CLIFF_1",
+      "BRIMSTONE_SULPHUR_CLIFF_2",
+      "BRIMSTONE_SULPHUR_CLIFF_3",
+      "BRIMSTONE_SULPHUR_CLIFF_4",
+      "BRIMSTONE_SULPHUR_CLIFF_5",
+      "BRIMSTONE_SULPHUR_CLIFF_W",
+      "BRIMSTONE_SULPHUR_CLIFF_Q"
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Building walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "objectIds": [
+      "BRIMSTONE_ROCKYFENCE"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 ",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 400
+      },
+      {
+        "description": "Sulfur stone",
+        "colors": "h == 8",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
   },
   {
     "description": "Wintertodt Terrain",
@@ -32845,7 +32892,10 @@
     "description": "Zeah Battlefield - Objects - Stone - Tiles",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "BROKEN_GREY_TILE_01"
+      "BROKEN_GREY_TILE_01",
+      "BROKEN_GREY_TILE_02",
+      "BROKEN_GREY_TILE_03",
+      "BROKEN_GREY_TILE_05"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
