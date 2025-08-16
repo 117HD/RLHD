@@ -2183,6 +2183,12 @@
     "specularGloss": 90.0
   },
   {
+    "name": "CRYSTAL",
+    "parent": "GRAY_75",
+    "specularStrength": 0.5,
+    "specularGloss": 100
+  },
+  {
     "name": "LEAVES_YELLOW_SIDE",
     "parent": "LEAVES_SIDE"
   },
