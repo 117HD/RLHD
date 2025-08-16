@@ -50,16 +50,12 @@ public class TileOverrideManager {
 	private ModelPusher modelPusher;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
-	private ResourcePath tileOverridesPath;
 	private boolean trackReplacements;
 	private List<Map.Entry<Area, TileOverride>> anyMatchOverrides;
 	private ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatchOverrides;
 
 	public void startUp() {
-		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> {
-			tileOverridesPath = path;
-			reload(!first);
-		});
+		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(!first)));
 	}
 
 	public void shutDown() {
@@ -71,13 +67,12 @@ public class TileOverrideManager {
 	}
 
 	public void reload(boolean reloadScene) {
-		if (tileOverridesPath == null)
-			return;
+		assert client.isClientThread();
 
 		try {
-			TileOverride[] allOverrides = tileOverridesPath.loadJson(plugin.getGson(), TileOverride[].class);
+			TileOverride[] allOverrides = TILE_OVERRIDES_PATH.loadJson(plugin.getGson(), TileOverride[].class);
 			if (allOverrides == null)
-				throw new IOException("Empty or invalid: " + tileOverridesPath);
+				throw new IOException("Empty or invalid: " + TILE_OVERRIDES_PATH);
 
 			HashSet<String> names = new HashSet<>();
 			for (var override : allOverrides) {
@@ -129,16 +124,14 @@ public class TileOverrideManager {
 			log.error("Failed to load tile overrides:", ex);
 		}
 
-		clientThread.invoke(() -> {
-			// Update the reference, since the underlying dirt materials may have changed
-			TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
+		// Update the reference, since the underlying dirt materials may have changed
+		TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
 
-			if (reloadScene) {
-				modelPusher.clearModelCache();
-				if (client.getGameState() == GameState.LOGGED_IN)
-					client.setGameState(GameState.LOADING);
-			}
-		});
+		if (reloadScene) {
+			modelPusher.clearModelCache();
+			if (client.getGameState() == GameState.LOGGED_IN)
+				client.setGameState(GameState.LOADING);
+		}
 	}
 
 	private void checkForReplacementLoops(TileOverride[] allOverrides) {
@@ -207,9 +200,11 @@ public class TileOverrideManager {
 	}
 
 	public void setTrackReplacements(boolean shouldTrackReplacements) {
-		trackReplacements = shouldTrackReplacements;
-		if (plugin.isActive())
-			reload(true);
+		clientThread.invoke(() -> {
+			trackReplacements = shouldTrackReplacements;
+			if (plugin.isActive())
+				reload(true);
+		});
 	}
 
 	@Nonnull
