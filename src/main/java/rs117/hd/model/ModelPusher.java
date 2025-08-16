@@ -17,6 +17,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
@@ -52,6 +53,9 @@ public class ModelPusher {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -337,7 +341,7 @@ public class ModelPusher {
 					uvType = UvType.VANILLA;
 					material = textureMaterial;
 					if (material == Material.NONE)
-						material = Material.fromVanillaTexture(textureId);
+						material = materialManager.fromVanillaTexture(textureId);
 				}
 
 				ModelOverride faceOverride = modelOverride;
