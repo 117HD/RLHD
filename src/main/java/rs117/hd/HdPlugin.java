@@ -3230,6 +3230,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
+		eightIntWrite[4] = orientation;
+		
 		final int faceCount;
 		if (isStatic) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
@@ -3369,7 +3371,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			eightIntWrite[3] = renderBufferOffset;
-			eightIntWrite[4] = orientation;
 			eightIntWrite[5] = x;
 			eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 			eightIntWrite[7] = z;
