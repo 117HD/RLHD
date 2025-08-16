@@ -3687,7 +3687,7 @@
   },
   {
     "name": "OVERLAY_KOUREND_PATH",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       133
     ],
@@ -3696,7 +3696,7 @@
   },
   {
     "name": "OVERLAY_ZEAH_PATHS",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       11,
       50
@@ -3842,7 +3842,7 @@
   },
   {
     "name": "FORTIS_EARTHEN_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 326 ],
     "groundMaterial": "TERRACOTTA_FLOOR",
     "uvScale": 1.1,
@@ -3850,7 +3850,7 @@
   },
   {
     "name": "FORTIS_MARBLE_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 327 ],
     "groundMaterial": "MARBLE_2",
     "uvScale": 1.1,
@@ -3865,14 +3865,14 @@
   },
   {
     "name": "FORTIS_RED_DIRT",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 324 ],
     "groundMaterial": "DIRT",
     "uvScale": 1.1
   },
   {
     "name": "FORTIS_HOUSE_TILE_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 123 ],
     "groundMaterial": "TILES_2X2_1_SEMIGLOSS",
     "uvScale": 1.1,
@@ -3880,7 +3880,7 @@
   },
   {
     "name": "FORTIS_CASTLE_WALLS_BRICK_FLOOR",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [ 159 ],
     "groundMaterial": "BRICK_PATHS",
     "uvScale": 1.1,
@@ -4016,7 +4016,7 @@
   },
   {
     "name": "ZEAH_DIRT_OVERLAY",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       114,
       148
@@ -5343,6 +5343,196 @@
     "waterType": "CAVE_WATER"
   },
   {
+    "name": "Tlati Rainforest - Rocky ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 424, 425 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tlati Rainforest - Dirt ridges",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "ROCK_PILES",
+    "overlayIds": [ 17 ],
+    "uvOrientation": 128
+  },
+  {
+    "name": "Tal Teklan Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 330 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tal Teklan - Under temple walls blending fix",
+    "area": "Tal Teklan - under temple blending fix",
+    "overlayIds": [ 272 ],
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Indoors",
+    "area": "Tal Teklan - Indoors above ground floor",
+    "overlayIds": [ 275 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Indoors - Above Ground",
+    "area": "Tal Teklan - Indoors ground level",
+    "overlayIds": [ 272, 275, 276 ],
+    "groundMaterial": "TERRACOTTA_FLOOR",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan - Fake Bricks",
+    "area": "Varlamore - Tlati Rainforest",
+    "overlayIds": [ 276 ],
+    "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
+    "name": "Tal Teklan Stone Brick Path",
+    "area": "Tal Teklan temple path fix",
+    "groundMaterial": "GRUNGE",
+    "overlayIds": [ 275 ],
+    "shiftLightness": 3,
+    "blended": false,
+    "uvOrientation": 128,
+    "replacements": {
+      "Tal Teklan Stone Brick Path - No blend": "!blending"
+    }
+  },
+  {
+    "name": "Tal Teklan Stone Brick Path - No blend",
+    "area": "Tal Teklan temple path fix",
+    "groundMaterial": "GRUNGE",
+    "blended": false,
+    "uvOrientation": 128
+  },
+  {
+    "name": "Tlati Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "DIRT",
+    "overlayIds": [ 272, 275 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Kastori Dirt Path",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "VARIED_DIRT",
+    "overlayIds": [ 303 ],
+    "uvOrientation": -128
+  },
+  {
+    "name": "Tlati Rainforest - Light dirt",
+    "area": "Varlamore - Tlati Rainforest",
+    "groundMaterial": "DIRT",
+    "underlayIds": [ 223 ]
+  },
+  {
+    "name": "Varlamore - Strangewood Paths - Dirt",
+    "area": "VARLAMORE",
+    "overlayIds": [ 275 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Varlamore - Custodas Mountains - Snow",
+    "area": "VARLAMORE",
+    "underlayIds": [ 151 ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "DEFAULT_DIRT": "s > 0"
+    }
+  },
+  {
+    "name": "Varlamore - Custodas Mountains - Grunge",
+    "area": "VARLAMORE",
+    "underlayIds": [ 92, 173 ],
+    "groundMaterial": "GRUNGE"
+  },
+  {
+    "name": "Varlamore - Custodas Mountains - Dirt",
+    "area": "VARLAMORE",
+    "underlayIds": [ 176 ],
+    "groundMaterial": "DIRT"
+  },
+  {
+    "name": "Varlamore - Auburn Valley - Dirt path",
+    "area": "VARLAMORE",
+    "overlayIds": [ 186, 187 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Varlamore - Auburn Valley - Complex Tiles",
+    "area": "AUBURNVALE",
+    "underlayIds": [ 63, 66, 67, 70 ],
+    "replacements": {
+      "SEASONAL_GRASS": [
+        "h >= 10 && s == 1",
+        "h == 6 && s == 5 && l >= 20",
+        "h >= 6 && s >= 6"
+      ],
+      "SEASONAL_DIRT": true
+    }
+
+  },
+  {
+    "name": "Varlamore - Gloomthorn Cobblestone",
+    "area": "Gloomthorn Trail",
+    "overlayIds": [ 139, 228 ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
+    "name": "Varlamore - Outer fortis temple - brick floors",
+    "area": "Varlamore - Outer Fortis Temples",
+    "overlayIds": [ 123, 199, 226, 227 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_1"
+  },
+  {
+    "name": "Varlamore - Dirt slope overlay",
+    "area": "VARLAMORE",
+    "overlayIds": [ 226 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Varlamore - Snowcaps",
+    "area": "VARLAMORE",
+    "overlayIds": [ 1 ],
+    "groundMaterial": "SNOW_2"
+  },
+  {
+    "name": "Varlamore - Fortis floors",
+    "area": "VARLAMORE",
+    "overlayIds": [ 324, 325, 326, 327, 329 ],
+    "blended": false,
+    "groundMaterial": "TERRACOTTA_FLOOR"
+  },
+  {
+    "name": "Varlamore - Nemus Retreat - Gravel paths",
+    "area": "VARLAMORE",
+    "overlayIds": [ 332 ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Varlamore - Stone colored cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 83 ],
+    "groundMaterial": "ROCK_PILES"
+  },
+  {
+    "name": "Varlamore - Light cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 3 ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Varlamore - Dark cliffs",
+    "area": "VARLAMORE",
+    "overlayIds": [ 222 ],
+    "groundMaterial": "ROCK_PILES"
+  },
+  {
     "name": "OVERWORLD_GRASS_OVERLAY",
     "area": "OVERWORLD",
     "overlayIds": [
@@ -5405,36 +5595,6 @@
     "overlayIds": [ 123 ],
     "groundMaterial": "MARBLE_2",
     "uvScale": 0.85
-  },
-  {
-    "name": "OVERLAY_DIRT",
-    "area": "ALL",
-    "overlayIds": [
-      14,
-      15,
-      16,
-      21,
-      22,
-      23,
-      60,
-      77,
-      81,
-      82,
-      88,
-      89,
-      101,
-      102,
-      107,
-      108,
-      110,
-      115,
-      123,
-      132,
-      172,
-      173,
-      227
-    ],
-    "groundMaterial": "DIRT"
   },
   {
     "name": "Vet'ion Lair Entrance Fix",
@@ -7136,8 +7296,15 @@
     "groundMaterial": "GRASSY_DIRT"
   },
   {
+    "name": "Molch Temple floor fix",
+    "area": "Molch Temple floor fix",
+    "overlayIds": [ 115 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_2"
+  },
+  {
     "name": "ZEAH_GRAVEL_PATH",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "overlayIds": [
       99
     ],
@@ -7148,7 +7315,7 @@
   },
   {
     "name": "ZEAH_DIRT_UNDERLAY",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       19,
       148,
@@ -7161,7 +7328,7 @@
   },
   {
     "name": "ZEAH_GRAVEL_HILLS",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       99
     ],
@@ -7172,7 +7339,7 @@
   },
   {
     "name": "ZEAH_ROCKY_GROUND",
-    "area": "ZEAH",
+    "area": "KOUREND",
     "underlayIds": [
       27,
       29,
@@ -7182,6 +7349,13 @@
     "replacements": {
       "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
     }
+  },
+  {
+    "name": "Mount Karuulm tunnels fix",
+    "area": "KOUREND",
+    "overlayIds": [ 116 ],
+    "blended": false,
+    "setLightness": 1
   },
   {
     "name": "Varlamore - Clay Dirt Path",
@@ -8071,6 +8245,36 @@
     }
   },
   {
+    "name": "OVERLAY_DIRT",
+    "area": "ALL",
+    "overlayIds": [
+      14,
+      15,
+      16,
+      21,
+      22,
+      23,
+      60,
+      77,
+      81,
+      82,
+      88,
+      89,
+      101,
+      102,
+      107,
+      108,
+      110,
+      115,
+      123,
+      132,
+      172,
+      173,
+      227
+    ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "UNDERLAY_OVERWORLD_DIRT",
     "area": "OVERWORLD",
     "underlayIds": [
@@ -8093,7 +8297,8 @@
       73,
       98,
       112,
-      113
+      113,
+      121
     ],
     "groundMaterial": "VARIED_DIRT"
   },
