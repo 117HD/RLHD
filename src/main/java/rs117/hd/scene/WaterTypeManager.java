@@ -31,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWaterTypes;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
@@ -49,6 +50,9 @@ public class WaterTypeManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -74,10 +78,11 @@ public class WaterTypeManager {
 				waterTypes[0] = WaterType.NONE;
 				System.arraycopy(rawWaterTypes, 0, waterTypes, 1, rawWaterTypes.length);
 
-				for (int i = 0; i < waterTypes.length; i++)
-					waterTypes[i].normalize(i);
-
 				clientThread.invoke(() -> {
+					Material fallbackNormalMap = materialManager.getMaterial("WATER_NORMAL_MAP_1");
+					for (int i = 0; i < waterTypes.length; i++)
+						waterTypes[i].normalize(i, fallbackNormalMap);
+
 					var oldWaterTypes = WATER_TYPES;
 					WATER_TYPES = waterTypes;
 					// Update statically accessible water types

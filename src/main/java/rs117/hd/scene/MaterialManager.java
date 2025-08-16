@@ -135,11 +135,22 @@ public class MaterialManager {
 		uboMaterials = null;
 
 		MATERIAL_MAP.clear();
+		invalidateMaterials(MATERIALS);
 		MATERIALS = VANILLA_TEXTURE_MAPPING = null;
 	}
 
 	public Material getMaterial(String name) {
-		return MATERIAL_MAP.getOrDefault(name, Material.NONE);
+		var mat = MATERIAL_MAP.get(name);
+		if (mat != null)
+			return mat;
+		log.warn("Couldn't find material '{}', falling back to NONE", name);
+		return Material.NONE;
+	}
+
+	public Material fromVanillaTexture(int vanillaTextureId) {
+		if (vanillaTextureId < 0 || vanillaTextureId >= VANILLA_TEXTURE_MAPPING.length)
+			return Material.NONE;
+		return VANILLA_TEXTURE_MAPPING[vanillaTextureId];
 	}
 
 	public void reload(boolean throwOnFailure) {
@@ -166,11 +177,6 @@ public class MaterialManager {
 			throw new IOException("Empty or invalid: " + path);
 
 		var rawMaterialMap = new HashMap<String, JsonObject>();
-
-		// Add static materials
-		for (var mat : Material.REQUIRED_MATERIALS)
-			rawMaterialMap.put(mat.name, gson.toJsonTree(mat, Material.Definition.class).getAsJsonObject());
-
 		var materialToParentMap = new HashMap<String, String>();
 
 		var validMaterials = new ArrayList<JsonObject>();
@@ -231,7 +237,12 @@ public class MaterialManager {
 					log.error("Error in material '{}': Invalid parent name '{}'", parent.get("name").getAsString(), parentField);
 					break;
 				}
-				var nextParent = rawMaterialMap.get(parentField.getAsString());
+				String parentName = parentField.getAsString();
+				// Don't allow inheriting from NONE. Those defaults will be inherited anyway
+				if (parentName.equals(Material.NONE.name))
+					break;
+
+				var nextParent = rawMaterialMap.get(parentName);
 				if (nextParent == null) {
 					log.error(
 						"Error in material '{}': Unknown parent name '{}'",
@@ -331,8 +342,9 @@ public class MaterialManager {
 		}
 
 		// Gather all unique materials after displacements into an array
+		invalidateMaterials(MATERIALS);
 		MATERIALS = MATERIAL_MAP.values().stream().distinct().toArray(Material[]::new);
-		// Ensure that NONE is the first element
+		// Ensure that NONE is the first material
 		for (int i = 0; i < MATERIALS.length; i++) {
 			if (MATERIALS[i] == Material.NONE) {
 				MATERIALS[i] = MATERIALS[0];
@@ -341,25 +353,15 @@ public class MaterialManager {
 			}
 		}
 
-		// Update statically accessible materials
-		Material.BLACK = getMaterial("BLACK");
-		Material.WATER_FLAT = getMaterial("WATER_FLAT");
-		Material.WATER_FLAT_2 = getMaterial("WATER_FLAT_2");
-		Material.SWAMP_WATER_FLAT = getMaterial("SWAMP_WATER_FLAT");
-		Material.WATER_NORMAL_MAP_1 = getMaterial("WATER_NORMAL_MAP_1");
-		Material.WATER_FOAM = getMaterial("WATER_FOAM");
-		Material.WATER_FLOW_MAP = getMaterial("WATER_FLOW_MAP");
-		Material.DIRT_1 = getMaterial("DIRT_1");
-		Material.DIRT_2 = getMaterial("DIRT_2");
-
-		// Update texture layers for materials after NONE which don't inherit their texture
+		// Resolve all texture-owning materials, and update the list of texture layers
+		var textureMaterials = Arrays.stream(MATERIALS)
+			.map(Material::resolveTextureOwner)
+			.distinct()
+			.filter(m -> m != Material.NONE)
+			.toArray(Material[]::new);
 		int previousLayerCount = textureLayers.size();
 		int textureLayerIndex = 0;
-		for (int i = 1; i < MATERIALS.length; i++) {
-			var mat = MATERIALS[i];
-			if (mat.inheritsTexture())
-				continue;
-
+		for (var mat : textureMaterials) {
 			TextureLayer layer;
 			if (textureLayerIndex == textureLayers.size()) {
 				layer = new TextureLayer();
@@ -445,6 +447,14 @@ public class MaterialManager {
 			plugin.reuploadScene();
 			plugin.recompilePrograms();
 		}
+	}
+
+	private void invalidateMaterials(Material[] materials) {
+		// Invalidate old materials to highlight issues with keeping them around accidentally
+		if (materials != null)
+			for (var mat : materials)
+				if (mat != Material.NONE)
+					mat.isValid = false;
 	}
 
 	public void uploadTextures() {

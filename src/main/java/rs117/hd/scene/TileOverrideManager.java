@@ -20,6 +20,7 @@ import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
@@ -128,13 +129,16 @@ public class TileOverrideManager {
 			log.error("Failed to load tile overrides:", ex);
 		}
 
-		if (reloadScene) {
-			clientThread.invoke(() -> {
+		clientThread.invoke(() -> {
+			// Update the reference, since the underlying dirt materials may have changed
+			TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
+
+			if (reloadScene) {
 				modelPusher.clearModelCache();
 				if (client.getGameState() == GameState.LOGGED_IN)
 					client.setGameState(GameState.LOADING);
-			});
-		}
+			}
+		});
 	}
 
 	private void checkForReplacementLoops(TileOverride[] allOverrides) {
