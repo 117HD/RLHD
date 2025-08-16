@@ -1676,6 +1676,7 @@
       12
     ],
     "groundMaterial": "VARROCK_PATHS",
+    "blendedAsOpposite": true,
     "minLightness": 32,
     "maxLightness": 32
   },
