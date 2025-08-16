@@ -590,7 +590,8 @@ public class SceneCullingManager {
 										h1,
 										h2,
 										h3,
-										viewCtx.frustumPlanes);
+										viewCtx.frustumPlanes,
+										-LOCAL_HALF_TILE_SIZE);
 
 									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
 										visible = viewCtx.callbacks.isTileVisible(x, z, h0, h1, h2, h3, visible);
