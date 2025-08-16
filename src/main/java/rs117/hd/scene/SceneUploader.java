@@ -342,7 +342,7 @@ public class SceneUploader {
 
 		// check if the model has already been uploaded
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
-			// if the same model is being uploaded, but with a different area-specific model override,
+			// if the same model is being uploaded, but with a different model override,
 			// exclude it from the scene buffer to avoid conflicts
 			if (model.getSceneId() != sceneId)
 				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);

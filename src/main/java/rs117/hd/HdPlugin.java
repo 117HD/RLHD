@@ -3150,18 +3150,46 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			drawnStaticRenderableCount++;
 		} else {
+			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			int[] worldPos = sceneContext.localToWorld(x, z, plane);
+			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+			if (modelOverride.hide)
+				return;
+
+			// Disable color overrides when caching is disabled, since they are expensive on dynamic models
+			if (!configModelCaching && modelOverride.colorOverrides != null)
+				modelOverride = ModelOverride.NONE;
+
+			int preOrientation = 0;
+			if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
+				int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
+					Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
+					int config;
+					if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
+						preOrientation = HDUtils.getModelPreOrientation(config);
+					} else if (plane > 0) {
+						// Might be on a bridge tile
+						tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
+						if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
+							preOrientation = HDUtils.getModelPreOrientation(config);
+					}
+				}
+			}
+
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
 			if (enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_BATCHING);
 			ModelOffsets modelOffsets = null;
-			long batchHash = 0;
 			if (configModelBatching || configModelCaching) {
-				modelHasher.setModel(model);
+				modelHasher.setModel(model, modelOverride, preOrientation);
 				// Disable model batching for models which have been excluded from the scene buffer,
 				// because we want to avoid having to fetch the model override
 				if (configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
-					batchHash = modelHasher.vertexHash;
-					modelOffsets = frameModelInfoMap.get(batchHash);
+					modelOffsets = frameModelInfoMap.get(modelHasher.batchHash);
+					if (modelOffsets != null && modelOffsets.faceCount != model.getFaceCount())
+						modelOffsets = null; // Assume there's been a hash collision
 				}
 			}
 			if (enableDetailedTimers)
@@ -3176,32 +3204,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
-				int uuid = ModelHash.generateUuid(client, hash, renderable);
-				int[] worldPos = sceneContext.localToWorld(x, z, plane);
-				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-				if (modelOverride.hide)
-					return;
-
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-
-				int preOrientation = 0;
-				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
-					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
-						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
-						int config;
-						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
-							preOrientation = HDUtils.getModelPreOrientation(config);
-						} else if (plane > 0) {
-							// Might be on a bridge tile
-							tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
-							if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
-								preOrientation = HDUtils.getModelPreOrientation(config);
-						}
-					}
-				}
 
 				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
 
@@ -3217,8 +3221,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[2] = faceCount;
 
 				// add this temporary model to the map for batching purposes
-				if (configModelBatching)
-					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
+				if (configModelBatching && modelOffsets == null)
+					frameModelInfoMap.put(modelHasher.batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 
 			if (eightIntWrite[0] != -1)

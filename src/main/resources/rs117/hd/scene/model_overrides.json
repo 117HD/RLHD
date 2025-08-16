@@ -16529,20 +16529,24 @@
     "inheritTileColorType": "UNDERLAY"
   },
   {
-    "description": "POH carpets - Untexture as it flickers when moving the camera - TODO",
+    "description": "POH carpets",
     "objectIds": [
+      "POH_LEAGUEHALL_RUG_CORNER_1",
+      "POH_LEAGUEHALL_RUG_MIDDLE_1",
+      "POH_LEAGUEHALL_RUG_SIDE_1",
       "POH_RUGCORNER1",
-      "POH_RUGSIDE1",
-      "POH_RUGMIDDLE1",
       "POH_RUGCORNER2",
-      "POH_RUGSIDE2",
-      "POH_RUGMIDDLE2",
       "POH_RUGCORNER3",
-      "POH_RUGSIDE3",
-      "POH_RUGMIDDLE3"
+      "POH_RUGMIDDLE1",
+      "POH_RUGMIDDLE2",
+      "POH_RUGMIDDLE3",
+      "POH_RUGSIDE1",
+      "POH_RUGSIDE2",
+      "POH_RUGSIDE3"
     ],
-    "baseMaterial": "NONE",
-    "uvType": "VANILLA",
+    "baseMaterial": "CARPET",
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
     "castShadows": false
   },
   {
