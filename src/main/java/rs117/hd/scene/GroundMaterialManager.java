@@ -37,7 +37,7 @@ public class GroundMaterialManager {
 	public static GroundMaterial[] GROUND_MATERIALS = {};
 
 	public void startUp() {
-		fileWatcher = GROUND_MATERIALS_PATH.watch((path, first) -> {
+		fileWatcher = GROUND_MATERIALS_PATH.watch((path, first) -> clientThread.invoke(() -> {
 			try {
 				GroundMaterial[] groundMaterials = path.loadJson(plugin.getGson(), GroundMaterial[].class);
 				if (groundMaterials == null)
@@ -46,30 +46,29 @@ public class GroundMaterialManager {
 				for (var g : groundMaterials)
 					g.normalize();
 
-				clientThread.invoke(() -> {
-					var dirt1 = materialManager.getMaterial("DIRT_1");
-					var dirt2 = materialManager.getMaterial("DIRT_2");
-					GroundMaterial.DIRT = new GroundMaterial("DIRT", dirt1, dirt2);
-					GroundMaterial.UNDERWATER_GENERIC = new GroundMaterial("UNDERWATER_GENERIC", dirt1, dirt2);
 
-					var staticGroundMaterials = List.of(
-						GroundMaterial.NONE,
-						GroundMaterial.DIRT,
-						GroundMaterial.UNDERWATER_GENERIC
-					);
-					GROUND_MATERIALS = Stream.concat(
-						staticGroundMaterials.stream(),
-						Arrays.stream(groundMaterials)
-					).toArray(GroundMaterial[]::new);
+				var dirt1 = materialManager.getMaterial("DIRT_1");
+				var dirt2 = materialManager.getMaterial("DIRT_2");
+				GroundMaterial.DIRT = new GroundMaterial("DIRT", dirt1, dirt2);
+				GroundMaterial.UNDERWATER_GENERIC = new GroundMaterial("UNDERWATER_GENERIC", dirt1, dirt2);
 
-					// Reload everything which depends on ground materials
-					if (!first)
-						tileOverrideManager.reload(true);
-				});
+				var staticGroundMaterials = List.of(
+					GroundMaterial.NONE,
+					GroundMaterial.DIRT,
+					GroundMaterial.UNDERWATER_GENERIC
+				);
+				GROUND_MATERIALS = Stream.concat(
+					staticGroundMaterials.stream(),
+					Arrays.stream(groundMaterials)
+				).toArray(GroundMaterial[]::new);
+
+				// Reload everything which depends on ground materials
+				if (!first)
+					tileOverrideManager.reload(true);
 			} catch (IOException ex) {
 				log.error("Failed to load ground materials:", ex);
 			}
-		});
+		}));
 	}
 
 	public void shutDown() {

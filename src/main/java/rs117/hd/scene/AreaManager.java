@@ -66,24 +66,24 @@ public class AreaManager {
 				if (areas == null)
 					throw new IOException("Empty or invalid: " + path);
 
-				AREAS = Arrays.copyOf(areas, areas.length + 2);
-				AREAS[AREAS.length - 2] = Area.ALL;
-				AREAS[AREAS.length - 1] = Area.NONE;
+				clientThread.invoke(() -> {
+					AREAS = Arrays.copyOf(areas, areas.length + 2);
+					AREAS[AREAS.length - 2] = Area.ALL;
+					AREAS[AREAS.length - 1] = Area.NONE;
 
-				ArrayList<Area> areasWithAreaHiding = new ArrayList<>();
-				for (Area area : areas) {
-					area.normalize();
-					if (area.hideOtherAreas)
-						areasWithAreaHiding.add(area);
-				}
-				this.areasWithAreaHiding = areasWithAreaHiding.toArray(Area[]::new);
+					ArrayList<Area> areasWithAreaHiding = new ArrayList<>();
+					for (Area area : areas) {
+						area.normalize();
+						if (area.hideOtherAreas)
+							areasWithAreaHiding.add(area);
+					}
+					this.areasWithAreaHiding = areasWithAreaHiding.toArray(Area[]::new);
 
-				Area.OVERWORLD = getArea("OVERWORLD");
+					Area.OVERWORLD = getArea("OVERWORLD");
 
-				log.debug("Loaded {} areas", areas.length);
+					log.debug("Loaded {} areas", areas.length);
 
-				if (!first) {
-					clientThread.invoke(() -> {
+					if (!first) {
 						// Reload everything which depends on area definitions
 						modelPusher.clearModelCache();
 						tileOverrideManager.shutDown();
@@ -99,8 +99,8 @@ public class AreaManager {
 						// Force reload the scene to reapply area hiding
 						if (client.getGameState() == GameState.LOGGED_IN)
 							client.setGameState(GameState.LOADING);
-					});
-				}
+					}
+				});
 			} catch (IOException ex) {
 				log.error("Failed to load areas:", ex);
 			}

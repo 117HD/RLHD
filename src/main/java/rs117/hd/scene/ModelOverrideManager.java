@@ -49,47 +49,45 @@ public class ModelOverrideManager {
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public void startUp() {
-		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> {
+		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> {
 			try {
 				ModelOverride[] parsedOverrides = path.loadJson(plugin.getGson(), ModelOverride[].class);
 				if (parsedOverrides == null)
 					throw new IOException("Empty or invalid: " + path);
 
-				clientThread.invoke(() -> {
-					modelOverrides.clear();
-					for (ModelOverride override : parsedOverrides) {
-						try {
-							override.normalize(plugin.configVanillaShadowMode);
-						} catch (IllegalStateException ex) {
-							log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
-							continue;
-						}
-
-						addOverride(override);
-
-						if (override.hideInAreas.length > 0) {
-							var hider = override.copy();
-							hider.hide = true;
-							hider.areas = override.hideInAreas;
-							addOverride(hider);
-						}
+				modelOverrides.clear();
+				for (ModelOverride override : parsedOverrides) {
+					try {
+						override.normalize(plugin.configVanillaShadowMode);
+					} catch (IllegalStateException ex) {
+						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
+						continue;
 					}
 
-					addOverride(fishingSpotReplacer.getModelOverride());
+					addOverride(override);
 
-					log.debug("Loaded {} model overrides", modelOverrides.size());
+					if (override.hideInAreas.length > 0) {
+						var hider = override.copy();
+						hider.hide = true;
+						hider.areas = override.hideInAreas;
+						addOverride(hider);
+					}
+				}
 
-					if (first)
-						return;
+				addOverride(fishingSpotReplacer.getModelOverride());
 
-					modelPusher.clearModelCache();
-					if (client.getGameState() == GameState.LOGGED_IN)
-						client.setGameState(GameState.LOADING);
-				});
+				log.debug("Loaded {} model overrides", modelOverrides.size());
+
+				if (first)
+					return;
+
+				modelPusher.clearModelCache();
+				if (client.getGameState() == GameState.LOGGED_IN)
+					client.setGameState(GameState.LOADING);
 			} catch (Exception ex) {
 				log.error("Failed to load model overrides:", ex);
 			}
-		});
+		}));
 	}
 
 	public void shutDown() {
