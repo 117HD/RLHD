@@ -26,7 +26,9 @@
 package rs117.hd.scene;
 
 import com.google.common.base.Stopwatch;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -63,7 +65,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 @SuppressWarnings("UnnecessaryLocalVariable")
 public class SceneUploader {
-	public static final int SCENE_ID_MASK = 0xFFFF;
+	public static final int SCENE_ID_MASK = 0x7FFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 
 	private static final float[] UP_NORMAL = { 0, -1, 0 };
@@ -127,13 +129,40 @@ public class SceneUploader {
 			prepareBeforeSwap(sceneContext);
 
 		sceneContext.staticCustomTilesOffset = sceneContext.staticVertexCount;
+		ArrayList<SceneContext.RenderableCullingData> renderableCullingData = new ArrayList<>();
 		var tiles = scene.getExtendedTiles();
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
 					Tile tile = tiles[z][x][y];
-					if (tile != null)
-						upload(sceneContext, tile, x, y);
+					if (tile != null) {
+						if (sceneContext.tileRenderableCullingData[z][x][y] != null)
+							renderableCullingData.addAll(List.of(sceneContext.tileRenderableCullingData[z][x][y]));
+
+						upload(sceneContext, renderableCullingData, tile, x, y);
+
+						Tile bridge = tile.getBridge();
+						if (bridge != null) {
+							int bridgePlane = z + 1;
+							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] != null)
+								renderableCullingData.addAll(List.of(sceneContext.tileRenderableCullingData[bridgePlane][x][y]));
+
+							upload(sceneContext, renderableCullingData, bridge, x, y);
+
+							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] == null
+								|| sceneContext.tileRenderableCullingData[bridgePlane][x][y].length < renderableCullingData.size())
+								sceneContext.tileRenderableCullingData[bridgePlane][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
+
+							renderableCullingData.toArray(sceneContext.tileRenderableCullingData[bridgePlane][x][y]);
+						}
+
+						if (sceneContext.tileRenderableCullingData[z][x][y] == null
+							|| sceneContext.tileRenderableCullingData[z][x][y].length < renderableCullingData.size())
+							sceneContext.tileRenderableCullingData[z][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
+
+						renderableCullingData.toArray(sceneContext.tileRenderableCullingData[z][x][y]);
+						renderableCullingData.clear();
+					}
 				}
 			}
 		}
@@ -328,7 +357,14 @@ public class SceneUploader {
 		}
 	}
 
-	private void uploadModel(SceneContext sceneContext, Tile tile, int uuid, Model model, int orientation) {
+	private void uploadModel(
+		SceneContext sceneContext,
+		Tile tile,
+		int uuid,
+		Model model,
+		int orientation,
+		ArrayList<SceneContext.RenderableCullingData> renderableCullingData
+	) {
 		// deduplicate hillskewed models
 		if (model.getUnskewedModel() != null)
 			model = model.getUnskewedModel();
@@ -338,14 +374,21 @@ public class SceneUploader {
 
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-		int sceneId = modelOverride.hashCode() << 16 | sceneContext.id;
+		int sceneId = modelOverride.hashCode() << 16 | (modelOverride.castShadows ? 1 : 0) << 15 | sceneContext.id & SCENE_ID_MASK;
+
+		SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
+		cullingData.bottomY = model.getBottomY();
+		cullingData.radius = model.getRadius();
+		cullingData.height = model.getModelHeight();
+		renderableCullingData.add(cullingData);
 
 		// check if the model has already been uploaded
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
 			// if the same model is being uploaded, but with a different area-specific model override,
 			// exclude it from the scene buffer to avoid conflicts
-			if (model.getSceneId() != sceneId)
+			if (model.getSceneId() != sceneId) {
 				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);
+			}
 			return;
 		}
 
@@ -366,11 +409,13 @@ public class SceneUploader {
 		++sceneContext.uniqueModels;
 	}
 
-	private void upload(SceneContext sceneContext, @Nonnull Tile tile, int tileExX, int tileExY) {
-		Tile bridge = tile.getBridge();
-		if (bridge != null)
-			upload(sceneContext, bridge, tileExX, tileExY);
-
+	private void upload(
+		SceneContext sceneContext,
+		ArrayList<SceneContext.RenderableCullingData> renderableCullingData,
+		@Nonnull Tile tile,
+		int tileExX,
+		int tileExY
+	) {
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 
@@ -455,7 +500,8 @@ public class SceneUploader {
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId()),
 					(Model) renderable1,
-					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA())
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
+					renderableCullingData
 				);
 			}
 
@@ -466,7 +512,8 @@ public class SceneUploader {
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId()),
 					(Model) renderable2,
-					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB())
+					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
+					renderableCullingData
 				);
 			}
 		}
@@ -480,7 +527,8 @@ public class SceneUploader {
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
 					(Model) renderable,
-					HDUtils.getModelPreOrientation(groundObject.getConfig())
+					HDUtils.getModelPreOrientation(groundObject.getConfig()),
+					renderableCullingData
 				);
 			}
 		}
@@ -495,7 +543,8 @@ public class SceneUploader {
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId()),
 					(Model) renderable,
-					orientation
+					orientation,
+					renderableCullingData
 				);
 			}
 
@@ -506,7 +555,8 @@ public class SceneUploader {
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId()),
 					(Model) renderable2,
-					orientation
+					orientation,
+					renderableCullingData
 				);
 			}
 		}
@@ -521,8 +571,9 @@ public class SceneUploader {
 				uploadModel(sceneContext,
 					tile,
 					ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
-					(Model) gameObject.getRenderable(),
-					HDUtils.getModelPreOrientation(gameObject.getConfig())
+					(Model) renderable,
+					HDUtils.getModelPreOrientation(gameObject.getConfig()),
+					renderableCullingData
 				);
 			}
 		}
