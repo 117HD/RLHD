@@ -3185,6 +3185,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.VISIBILITY_CHECK);
 
+		sceneCullingManager.ensureCullingComplete();
+
 		final int plane = ModelHash.getPlane(hash);
 		final int tileExX = localX + SCENE_OFFSET;
 		final int tileExY = localZ + SCENE_OFFSET;

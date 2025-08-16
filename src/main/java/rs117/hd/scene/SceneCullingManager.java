@@ -20,7 +20,6 @@ import rs117.hd.utils.SceneView;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
-import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -53,8 +52,10 @@ public class SceneCullingManager {
 	private final FrustumSphereCullingJob npcCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.NPC);
 	private final FrustumSphereCullingJob projectileCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.PROJECTILES);
 
+	private boolean cullingInFlight = false;
+
 	public SceneCullingManager() {
-		frustumCullingJobs = new FrustumTileCullingJob[EXTENDED_SCENE_SIZE / CHUNK_SIZE][EXTENDED_SCENE_SIZE / CHUNK_SIZE];
+		frustumCullingJobs = new FrustumTileCullingJob[EXTENDED_SCENE_SIZE / 4][EXTENDED_SCENE_SIZE / 4];
 		frustumCullingJobCount = frustumCullingJobs.length * frustumCullingJobs.length;
 
 		for(int x = 0; x < frustumCullingJobs.length; x++) {
@@ -66,8 +67,12 @@ public class SceneCullingManager {
 
 	public void startUp() { }
 
-	public void complete() {
-		clearJob.complete();
+	public void ensureCullingComplete() {
+		if(!cullingInFlight) {
+			return;
+		}
+		cullingInFlight = false;
+
 		playerCullingJob.complete();
 		npcCullingJob.complete();
 		projectileCullingJob.complete();
@@ -77,6 +82,12 @@ public class SceneCullingManager {
 				cullingJob.complete();
 			}
 		}
+	}
+
+	public void complete() {
+		ensureCullingComplete();
+
+		clearJob.complete();
 
 		sceneViewContextBin.addAll(cullingViewContexts);
 		cullingViewContexts.clear();
@@ -194,6 +205,8 @@ public class SceneCullingManager {
 
 			cullingViewContexts.add(ctx);
 		}
+
+		cullingInFlight = true;
 
 		if (!cullingViewContexts.isEmpty()) {
 			if (needTileCulling) {
@@ -506,6 +519,8 @@ public class SceneCullingManager {
 				}
 			}
 
+			// Pass 1 - Cull Tiles Renderables
+
 			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
@@ -521,9 +536,6 @@ public class SceneCullingManager {
 						// Positions
 						final int x = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 						final int z = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-						final int cX = x + LOCAL_HALF_TILE_SIZE;
-						final int cZ = z + LOCAL_HALF_TILE_SIZE;
-						final int cH = (int) ((h0 + h1 + h2 + h3) / 4.0f);
 
 						// Underwater Plane Heights
 						boolean hasUnderwaterTile = false;
@@ -612,46 +624,80 @@ public class SceneCullingManager {
 								}
 							}
 
-							if((viewCtx.cullingFlags & SceneView.CULLING_FLAG_RENDERABLES) != 0) {
-								SceneContext.RenderableCullingData[] renderableCullingData = sceneContext.tileRenderableCullingData[plane][tileExX][tileExY];
-								if(renderableCullingData != null && renderableCullingData.length > 0) {
-									for (SceneContext.RenderableCullingData renderable : renderableCullingData) {
-										final int radius = renderable.radius;
-										if (Math.abs(renderable.bottomY) < LOCAL_TILE_SIZE && renderable.height < LOCAL_TILE_SIZE) {
-											// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
-											if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
-												continue; // Surface isn't visible, skip this renderable
-											}
-										}
+							combinedResult |= viewResult;
+							viewCtx.results.tiles[tileIdx] = viewResult;
+						}
+						cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
+					}
+				}
+			}
 
-										boolean visible =  HDUtils.isAABBIntersectingFrustum(
-											cX - radius,
-											cH - renderable.bottomY,
-											cZ - radius,
-											cX + radius,
-											cH - renderable.bottomY + renderable.height,
-											cZ + radius,
-											viewCtx.frustumPlanes, 0);
+			// Pass 2 - Cull Static Renderables
 
-										if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
-											visible = viewCtx.callbacks.isStaticRenderableVisible(cX, cH - renderable.bottomY, cZ, radius, renderable.height, visible);
-										}
+			for(int plane = 0; plane < MAX_Z; plane++) {
+				for (int tileExX = startX; tileExX < endX; tileExX++) {
+					for (int tileExY = startY; tileExY < endY; tileExY++) {
+						final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
 
-										if(visible) {
-											viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
-											break;
+						// Surface Plane Heights
+						final int h0 = tileHeights[plane][tileExX][tileExY];
+						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
+						final int h2 = tileHeights[plane][tileExX][tileExY + 1];
+						final int h3 = tileHeights[plane][tileExX + 1][tileExY + 1];
+
+						// Positions
+						final int x = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						final int z = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						final int cX = x + LOCAL_HALF_TILE_SIZE;
+						final int cZ = z + LOCAL_HALF_TILE_SIZE;
+						final int cH = (int) ((h0 + h1 + h2 + h3) / 4.0f);
+
+						byte combinedResult = VISIBILITY_HIDDEN;
+						for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
+							if((viewCtx.cullingFlags & SceneView.CULLING_FLAG_RENDERABLES) == 0) {
+								continue;
+							}
+
+							byte viewResult = viewCtx.results.tiles[tileIdx];
+							SceneContext.RenderableCullingData[] renderableCullingData = sceneContext.tileRenderableCullingData[plane][tileExX][tileExY];
+							if(renderableCullingData != null && renderableCullingData.length > 0) {
+								for (SceneContext.RenderableCullingData renderable : renderableCullingData) {
+									final int radius = renderable.radius;
+									if (Math.abs(renderable.bottomY) < LOCAL_TILE_SIZE && renderable.height < LOCAL_TILE_SIZE) {
+										// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
+										if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
+											continue; // Surface isn't visible, skip this renderable
 										}
 									}
-								} else {
-									// No Static Culling data was present, allow missed static renderables to be visible here
-									viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
+
+									boolean visible =  HDUtils.isAABBIntersectingFrustum(
+										cX - radius,
+										cH - renderable.bottomY,
+										cZ - radius,
+										cX + radius,
+										cH - renderable.bottomY + renderable.height,
+										cZ + radius,
+										viewCtx.frustumPlanes, 0);
+
+									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+										visible = viewCtx.callbacks.isStaticRenderableVisible(cX, cH - renderable.bottomY, cZ, radius, renderable.height, visible);
+									}
+
+									if(visible) {
+										viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
+										break;
+									}
 								}
+							} else {
+								// No Static Culling data was present, allow missed static renderables to be visible here
+								viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
 							}
 
 							combinedResult |= viewResult;
 							viewCtx.results.tiles[tileIdx] = viewResult;
 						}
-						cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
+
+						cullManager.combinedTileVisibility.tiles[tileIdx] |= combinedResult;
 					}
 				}
 			}
