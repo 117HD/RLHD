@@ -73,25 +73,10 @@ public class Material {
 	public transient int textureLayer = -1;
 	public transient boolean modifiesVanillaTexture;
 	public transient boolean isFallbackVanillaMaterial;
+	public transient boolean isValid = true;
 
 	public static final Material NONE = new Material().name("NONE");
 	public static final Material[] REQUIRED_MATERIALS = { NONE };
-
-	public static Material BLACK;
-	public static Material WATER_FLAT;
-	public static Material WATER_FLAT_2;
-	public static Material SWAMP_WATER_FLAT;
-	public static Material WATER_FOAM;
-	public static Material WATER_FLOW_MAP;
-	public static Material WATER_NORMAL_MAP_1;
-	public static Material DIRT_1;
-	public static Material DIRT_2;
-
-	public static Material fromVanillaTexture(int vanillaTextureId) {
-		if (vanillaTextureId < 0 || vanillaTextureId >= MaterialManager.VANILLA_TEXTURE_MAPPING.length)
-			return NONE;
-		return MaterialManager.VANILLA_TEXTURE_MAPPING[vanillaTextureId];
-	}
 
 	public static int getTextureLayer(@Nullable Material material) {
 		return material == null ? -1 : material.textureLayer;
@@ -178,6 +163,7 @@ public class Material {
 
 	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
+		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
 		assert materialIndex <= ModelPusher.MAX_MATERIAL_INDEX;
 		// The sign bit can't be used without shader changes to correctly unpack the material index

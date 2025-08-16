@@ -20,8 +20,6 @@ public class UBOWaterTypes extends UniformBuffer<GLBuffer> {
 		public final Property foamColor = addProperty(PropertyType.FVec3, "foamColor");
 		public final Property depthColor = addProperty(PropertyType.FVec3, "depthColor");
 		public final Property normalMap = addProperty(PropertyType.Int, "normalMap");
-		public final Property foamMap = addProperty(PropertyType.Int, "foamMap");
-		public final Property flowMap = addProperty(PropertyType.Int, "flowMap");
 	}
 
 	private final WaterTypeStruct[] uboStructs;
