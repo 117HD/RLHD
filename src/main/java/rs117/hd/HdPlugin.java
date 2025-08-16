@@ -807,7 +807,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// force main buffer provider rebuild to turn off alpha channel
 			client.resizeCanvas();
 
-			// Force the client to reload the scene to reset any scene modifications we may have made
+			// Force the client to reload the scene to reset any scene modifications & update GPU flags
 			if (client.getGameState() == GameState.LOGGED_IN)
 				client.setGameState(GameState.LOADING);
 		});
@@ -1612,6 +1612,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					justChangedArea = true;
 				}
+				// Reload the scene to reapply area hiding
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
@@ -2535,14 +2536,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// in use by the client thread, meaning we can reuse all of its buffers if we are loading the
 			// next scene also on the client thread
 			boolean reuseBuffers = client.isClientThread();
-			var context = new SceneContext(client, scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
-			// noinspection SynchronizationOnLocalVariableOrMethodParameter
-			synchronized (context) {
-				nextSceneContext = context;
-				proceduralGenerator.generateSceneData(context);
-				environmentManager.loadSceneEnvironments(context);
-				sceneUploader.upload(context);
-			}
+			nextSceneContext = new SceneContext(client, scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
+			proceduralGenerator.generateSceneData(nextSceneContext);
+			environmentManager.loadSceneEnvironments(nextSceneContext);
+			sceneUploader.upload(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
 				HDUtils.is32Bit(), useLowMemoryMode, config.modelCacheSizeMiB(), oom
