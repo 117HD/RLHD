@@ -2557,7 +2557,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public synchronized void swapScene(Scene scene) {
-		if (skipScene == scene) {
+		if (!isActive || skipScene == scene) {
 			redrawPreviousFrame = true;
 			return;
 		}

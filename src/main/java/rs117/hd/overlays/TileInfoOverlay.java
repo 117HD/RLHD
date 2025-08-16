@@ -48,6 +48,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.GamevalManager;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
@@ -90,6 +91,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -544,7 +548,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (tilePaint != null) {
 				polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 				lines.add("Tile type: Paint");
-				Material material = Material.fromVanillaTexture(tilePaint.getTexture());
+				Material material = materialManager.fromVanillaTexture(tilePaint.getTexture());
 				lines.add(String.format("Material: %s (%d)", material.name, tilePaint.getTexture()));
 				lines.add(String.format("HSL: %s", hslString(tile)));
 
@@ -559,7 +563,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int numChars = 0;
 				if (tileModel.getTriangleTextureId() != null) {
 					for (int texture : tileModel.getTriangleTextureId()) {
-						String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name, texture);
+						String material = String.format("%s (%d)", materialManager.fromVanillaTexture(texture).name, texture);
 						boolean unique = uniqueMaterials.add(material);
 						if (unique) {
 							numChars += material.length();
