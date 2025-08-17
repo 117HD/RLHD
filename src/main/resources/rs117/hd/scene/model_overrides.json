@@ -4219,14 +4219,32 @@
     "objectIds": [
       "CAVEWALL_FACE1_LEV2",
       "KARAM_CAVEWALL_FACE1",
-      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGL",
-      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGR",
-      "KARAM_CAVEWALL_VINE",
-      "KARAM_CAVEWALL_VINE_LEV2",
       "KARAM_DUNGEON_CAVESTAIRS2",
       "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN2",
       "KARAM_DUNGEON_LAVAWALL_LEV1",
-      "KARAM_DUNGEON_LAVAWALL_LEV2"
+      "KARAM_DUNGEON_LAVAWALL_LEV2",
+      "KARAM_DUNGEON_CAVESTAIRS",
+      "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven Dungeon - Walls - Plant -  with vines",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGL",
+      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGR",
+      "KARAM_CAVEWALL_VINE",
+      "KARAM_CAVEWALL_VINE_LEV2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -9769,9 +9787,12 @@
     "flatNormals": true
   },
   {
-    "description": "Camelot Stone",
-    "baseMaterial": "STONE",
+    "description": "Camelot - Brimhaven Dungeon - Stone",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
     "objectIds": [
+      "KARAM_DUNGEON_STONE1",
+      "KARAM_DUNGEON_STONE2",
       "STONEDISC_DARKGREY"
     ]
   },
@@ -49993,7 +50014,9 @@
     "objectIds": [
       "KARAM_DUNGEON_VINEBLOCKING1",
       "KARAM_DUNGEON_VINEBLOCKING2",
-      "KARAM_DUNGEON_VINEBLOCKING3"
+      "KARAM_DUNGEON_VINEBLOCKING3",
+      "KARAM_DUNGEON_VINEBLOCKING4",
+      "KARAM_DUNGEON_VINEBLOCKING5"
     ],
     "colorOverrides": [
       {
