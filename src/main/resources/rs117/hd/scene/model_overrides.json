@@ -4240,7 +4240,6 @@
     ],
     "colorOverrides": [
       {
-        "description": "",
         "colors": "h == 7 && s == 3",
         "baseMaterial": "BARK",
         "uvType": "BOX"
@@ -5396,7 +5395,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 0 ",
+        "colors": "h == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvOrientation": 400
