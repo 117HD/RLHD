@@ -11839,6 +11839,7 @@
       "RAIDS_ROCKS_FLOOR1",
       "RAIDS_ROCKS_FLOOR2",
       "RAIDS_ROCKS_FLOOR3",
+      "RAIDS_ROCKS_FLOOR4",
       "HUNTING_TRAIL_SPAWN_FOSSIL1",
       "HUNTING_TRAIL_SPAWN_FOSSIL3",
       "HUNTING_TRAIL_SPAWN_FOSSIL4",
@@ -57444,6 +57445,13 @@
       "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_02_ENTRANCE",
       "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_03_ENTRANCE",
       "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_04_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "NONE"
+      }
     ]
   },
   {
@@ -57477,6 +57485,32 @@
         "colors": "h == 42",
         "baseMaterial": "NONE"
       }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Decaying Stump with Mushrooms",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_FALLEN_TRUNK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Vines",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_VINE_01"
     ]
   }
 ]
