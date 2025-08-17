@@ -41236,8 +41236,8 @@
     ]
   },
   {
-    "description": "Aldarin - Metal wall Torches",
-    "areas": [ "Doom of Mokhaiotl - Floor 1" ],
+    "description": "Doom of Mokhaiotl - Brighten Arena Torches",
+    "areas": [ "Doom of Mokhaiotl - Arena Torch Brightness" ],
     "height": 235,
     "offset": [ 0, -17, 0 ],
     "radius": 840,

@@ -8090,6 +8090,18 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Doom of Mokhaiotl - Arena Torch Brightness",
+    "aabbs": [
+      [ 1298, 9564, 1324, 9586 ]
+    ]
+  },
+  {
+    "name": "Doom of Mokhaiotl - Entrance Tiles",
+    "aabbs": [
+      [ 1310, 9539, 1312, 9556 ]
+    ]
+  },
+  {
     "name": "Doom of Mokhaiotl - Floor 1",
     "regions": [ 5269 ],
     "hideOtherAreas": true

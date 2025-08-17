@@ -107,6 +107,16 @@
     ]
   },
   {
+    "name": "PLAIN_DIRT",
+    "materials": [
+      "DIRT_1",
+      "DIRT_1",
+      "GRAVEL_LIGHT",
+      "DIRT_1",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "VARIED_DIRT",
     "materials": [
       "GRAVEL",
@@ -120,6 +130,15 @@
       "GRAVEL_SHINY",
       "DIRT_1_SHINY",
       "DIRT_2_SHINY"
+    ]
+  },
+  {
+    "name": "DIRTY_MARBLE",
+    "materials": [
+      "DIRT_1",
+      "MARBLE_1",
+      "DIRT_1",
+      "MARBLE_2"
     ]
   },
   {
