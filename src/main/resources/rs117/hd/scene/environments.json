@@ -2019,12 +2019,12 @@
   {
     "area": "Doom of Mokhaiotl - Floors 2 to 5",
     "directionalStrength": 0.35,
-    "ambientStrength": 3.5
+    "ambientStrength": 3
   },
   {
     "area": "Doom of Mokhaiotl - Floors 6 to 8",
     "directionalStrength": 0.35,
-    "ambientStrength": 3.5
+    "ambientStrength": 2.5
   },
   {
     "key": "OVERWORLD",
