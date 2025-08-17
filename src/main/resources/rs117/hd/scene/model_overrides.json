@@ -11836,10 +11836,6 @@
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
       "SWAMP_MOSS_COVERED_ROCK_2",
-      "RAIDS_ROCKS_FLOOR1",
-      "RAIDS_ROCKS_FLOOR2",
-      "RAIDS_ROCKS_FLOOR3",
-      "RAIDS_ROCKS_FLOOR4",
       "HUNTING_TRAIL_SPAWN_FOSSIL1",
       "HUNTING_TRAIL_SPAWN_FOSSIL3",
       "HUNTING_TRAIL_SPAWN_FOSSIL4",
@@ -57531,6 +57527,28 @@
         "baseMaterial": "LEAF_VEINS",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Raids - Tar Swamp - Greenish Rocks - Medium",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "RAIDS_ROCKS_FLOOR1",
+      "RAIDS_ROCKS_FLOOR4",
+      "RAIDS_ROCKS_FLOOR5"
+    ]
+  },
+  {
+    "description": "Raids - Tar Swamp - Greenish Rocks - Large",
+    "baseMaterial": "ROCK_5",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "RAIDS_ROCKS_FLOOR2",
+      "RAIDS_ROCKS_FLOOR3",
+      "RAIDS_ROCKS_FLOOR6"
     ]
   }
 ]
