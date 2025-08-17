@@ -12596,7 +12596,10 @@
       "DEAL_CRATE3",
       "TEMPOROSS_LOBBY_EGG_CRATE",
       "LUC2_MOV_CRATE",
-      "LUC2_DWT_CRATE3"
+      "LUC2_DWT_CRATE3",
+      "CRATE_WOODEN01_REINFORCED01_STACKED01_IMCANDO01",
+      "CRATE_WOODEN01_REINFORCED01_IMCANDO01",
+      "CRATE_WOODEN01_REINFORCED01_OPEN01_IMCANDO01"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -12664,9 +12667,7 @@
       "SHAYZIEN_CRATE_03_DARK",
       "CRATE_ALDARIN01_STACK01",
       "MYQ4_EMPTY_CRATES_SMALL",
-      "GRAB_EVIL_TWIN_SMALL_CRATES",
-      "CRATE_WOODEN01_REINFORCED01_STACKED01_IMCANDO01",
-      "CRATE_WOODEN01_REINFORCED01_IMCANDO01"
+      "GRAB_EVIL_TWIN_SMALL_CRATES"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13028,10 +13029,11 @@
   {
     "description": "Objects - Metallic - Iron Billets",
     "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
     "objectIds": [
-      "FAI_VARROCK_IRON_PILE"
-    ],
-    "uvType": "BOX"
+      "FAI_VARROCK_IRON_PILE",
+      "DORGESH_BLACKSMITH_IRON_PILE"
+    ]
   },
   {
     "description": "Ground - Wooden - Plank Steps",
@@ -34065,7 +34067,8 @@
       "FARM_SHELF",
       "QIP_SHEEP_SHEARER_COOKINGSHELVESEMPTY",
       "BURGH_SHELVES",
-      "BURGH_BOOKCASE3"
+      "BURGH_BOOKCASE3",
+      "SHELF_IMCANDO01_EMPTY01"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -34967,7 +34970,33 @@
     ],
     "objectIds": [
       "LOTR_MINE_BARREL",
-      "GRAB_EVIL_TWIN_BARREL"
+      "GRAB_EVIL_TWIN_BARREL",
+      "BARREL_WOODEN01_DEFAULT01_IMCANDO01"
+    ]
+  },
+  {
+    "description": "Barrel with tarnished metal bands open with coal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal bands",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      },
+      {
+        "description": "Coal",
+        "colors": "h == 42",
+        "baseMaterial": "DIRT_2_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "BARREL_WOODEN01_COAL01_IMCANDO01"
     ]
   },
   {
@@ -38192,7 +38221,8 @@
       "CAPT_SIAD_BOOKCASE",
       "ELID_BOOKCASE",
       "KR_BOOKCASE2",
-      "KR_CAM_BOOKCASE"
+      "KR_CAM_BOOKCASE",
+      "FAI_VARROCK_RUNE_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -48759,6 +48789,63 @@
     ]
   },
   {
+    "description": "Varrock - Wooden - Metallic - Glass - - Paper shelf with Crystal ball and papers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientation": 42,
+    "objectIds": [
+      "FAI_VARROCK_RUNE_SHELF1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 38",
+        "baseMaterial": "CRYSTAL",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 117
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Wall plank with drying herbs",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.35,
+    "uvOrientation": 42,
+    "objectIds": [
+      "FAI_VARROCK_HANGING_HERB"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s < 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 21 || h == 26",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
     "description": "Objects - Table - Single - Wooden – Plank - Generic",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -57868,7 +57955,9 @@
       "DUNGEONKIT_IMCANDO03_PATTERN01",
       "DUNGEONKIT_IMCANDO03_PATTERN01_M",
       "DUNGEONKIT_IMCANDO02_ENTRANCE01",
-      "DUNGEONKIT_IMCANDO02_ENTRANCE01_M"
+      "DUNGEONKIT_IMCANDO02_ENTRANCE01_M",
+      "WALLKIT_IMCANDO02_LOW01",
+      "WALLKIT_IMCANDO02_LOW02"
     ]
   },
   {
@@ -57953,6 +58042,52 @@
         "uvType": "BOX",
         "uvScale": 0.4,
         "uvOrientation": 189
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Wooden - Grunge - Wood shelves with boxs on them",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "SHELF_IMCANDO01_GENERAL01",
+      "SHELF_IMCANDO01_GENERAL02",
+      "SHELF_IMCANDO01_GENERAL03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Anvil - Rounded normals",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "CAM_TORUM_ANVIL"
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Metallic - Stone - Black smiths bench - NEEDS PROPER UV",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "CAM_TORUM_WORKBENCH01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "h == 37",
+        "baseMaterial": "ROCK_5_ORE",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   }
