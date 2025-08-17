@@ -57642,5 +57642,46 @@
       "RAIDS_ROCKS_FLOOR3",
       "RAIDS_ROCKS_FLOOR6"
     ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Wooden - Entrance Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FLOORKIT_BRIDGE01_DEFAULT01",
+      "FLOORKIT_BRIDGE01_DEFAULT02",
+      "FLOORKIT_BRIDGE01_SHADED01",
+      "FLOORKIT_BRIDGE01_SHADED02"
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Wooden - Metallic - Entrance Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "FLOORKIT_BRIDGE01_END01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Metallic - Entrance Metal Chains",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "objectIds": [
+      "FLOORKIT_BRIDGE01_CONNECT01",
+      "FLOORKIT_BRIDGE01_CONNECT01_M",
+      "ENTRANCE_CAMTORUM_CHAIN02",
+      "ENTRANCE_CAMTORUM_CHAIN02_M"
+    ]
   }
 ]
