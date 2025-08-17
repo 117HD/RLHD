@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
+import javax.annotation.Nullable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -30,7 +31,8 @@ public class WaterType {
 	private float normalStrength = .09f;
 	private float baseOpacity = .5f;
 	private float fresnelAmount = 1;
-	private Material normalMap = Material.WATER_NORMAL_MAP_1;
+	@Nullable
+	private Material normalMap;
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
 	private float[] surfaceColor = { 1, 1, 1 };
 	@JsonAdapter(ColorUtils.SrgbToLinearAdapter.class)
@@ -53,12 +55,12 @@ public class WaterType {
 		this.name = name;
 	}
 
-	public void normalize(int index) {
+	public void normalize(int index, Material fallbackNormalMap) {
 		this.index = index;
 		if (name == null)
 			name = "UNNAMED_" + index;
 		if (normalMap == null)
-			normalMap = NONE.normalMap;
+			normalMap = fallbackNormalMap;
 		if (surfaceColor == null)
 			surfaceColor = NONE.surfaceColor;
 		if (foamColor == null)
@@ -85,8 +87,6 @@ public class WaterType {
 		struct.foamColor.set(linearToSrgb(foamColor));
 		struct.depthColor.set(linearToSrgb(depthColor));
 		struct.normalMap.set(Material.getTextureLayer(normalMap));
-		struct.foamMap.set(Material.getTextureLayer(Material.WATER_FOAM));
-		struct.flowMap.set(Material.getTextureLayer(Material.WATER_FLOW_MAP));
 	}
 
 	@Slf4j

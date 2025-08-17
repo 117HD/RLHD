@@ -81,7 +81,6 @@ public class TextureManager {
 		assert vanillaTexturesAvailable();
 		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
 
-		assert TEXTURE_PATH != null;
 		TEXTURE_PATH.watch((path, first) -> {
 			if (first) return;
 			log.debug("Texture changed: {}", path);
@@ -173,7 +172,6 @@ public class TextureManager {
 
 	@Nullable
 	public BufferedImage loadTexture(String filename) {
-		assert TEXTURE_PATH != null;
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
 			ResourcePath path = TEXTURE_PATH.resolve(filename + "." + ext);
 			try {

@@ -48,8 +48,10 @@ import rs117.hd.HdPlugin;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.GamevalManager;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -90,6 +92,9 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -544,7 +549,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			if (tilePaint != null) {
 				polyColor = client.isKeyPressed(KeyCode.KC_ALT) ? Color.YELLOW : Color.CYAN;
 				lines.add("Tile type: Paint");
-				Material material = Material.fromVanillaTexture(tilePaint.getTexture());
+				Material material = materialManager.fromVanillaTexture(tilePaint.getTexture());
 				lines.add(String.format("Material: %s (%d)", material.name, tilePaint.getTexture()));
 				lines.add(String.format("HSL: %s", hslString(tile)));
 
@@ -559,7 +564,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				int numChars = 0;
 				if (tileModel.getTriangleTextureId() != null) {
 					for (int texture : tileModel.getTriangleTextureId()) {
-						String material = String.format("%s (%d)", Material.fromVanillaTexture(texture).name, texture);
+						String material = String.format("%s (%d)", materialManager.fromVanillaTexture(texture).name, texture);
 						boolean unique = uniqueMaterials.add(material);
 						if (unique) {
 							numChars += material.length();
@@ -884,11 +889,17 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		switch (mode) {
 			case MODE_TILE_INFO:
-				return "  " + (
-					renderable instanceof Model ? "<col=#00ff00>static</col>" :
+				return
+					"  " + (
+						renderable instanceof Model ? "<col=#00ff00>static</col>" :
 						(renderable instanceof DynamicObject || renderable instanceof Actor) ?
 							"<col=#ff0000>dynamic</col>" : "<col=#ffff00>maybe dynamic</col>"
-				);
+					) +
+					"  scenebuf=" + (
+						model.getSceneId() == SceneUploader.EXCLUDED_FROM_SCENE_BUFFER ? "excluded" :
+							(model.getSceneId() & SceneUploader.SCENE_ID_MASK) == currentSceneContext.id ?
+								model.getBufferOffset() : "dynamic"
+					);
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();
 				byte[] faceTransparencies = model.getFaceTransparencies();
