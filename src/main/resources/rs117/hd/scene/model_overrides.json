@@ -57683,5 +57683,115 @@
       "ENTRANCE_CAMTORUM_CHAIN02",
       "ENTRANCE_CAMTORUM_CHAIN02_M"
     ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone - Snow - Cam Torum overworld Top",
+    "baseMaterial": "SNOW_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ENTRANCE_CAMTORUM_TOP01",
+      "ENTRANCE_CAMTORUM_TOP02",
+      "ENTRANCE_CAMTORUM_TOP03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "l <= 50",
+        "baseMaterial": "ROCK_3",
+        "uvOrientation": 256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone - Snow - Cam Torum overworld walls",
+    "baseMaterial": "SNOW_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ENTRANCE_CAMTORUM_CORNER01",
+      "ENTRANCE_CAMTORUM_CORNER01_M"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "l <= 55",
+        "baseMaterial": "ROCK_3",
+        "uvOrientation": -256,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone - Snow - Metallic - Cam Torum Entrance statues",
+    "baseMaterial": "SNOW_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ENTRANCE_CAMTORUM_SIDE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "s == 0 && l <= 64",
+        "baseMaterial": "ROCK_3",
+        "uvOrientation": -256,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h >= 5 && h <= 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvOrientation": 256,
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Water",
+        "colors": "h >= 30",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone - Snow - Metallic - Wooden - Cam Torum Entrance - Closed",
+    "baseMaterial": "SNOW_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ENTRANCE_CAMTORUM_CLOSED01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "s == 0 && l <= 55",
+        "baseMaterial": "ROCK_3",
+        "uvOrientation": -256,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal",
+        "colors": "h >= 5 && h <= 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvOrientation": 256,
+        "uvScale": 0.4,
+        "uvType": "BOX"
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Paint",
+        "colors": "h >= 30",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
   }
 ]
