@@ -1,5 +1,6 @@
 package rs117.hd.utils;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -28,6 +29,9 @@ import static rs117.hd.utils.MathUtils.*;
 public class FrameTimingsRecorder implements FrameTimer.Listener {
 	private static final ResourcePath SNAPSHOTS_PATH = HdPlugin.PLUGIN_DIR.resolve("snapshots");
 	private static final int SNAPSHOT_DURATION_MS = 20_000;
+
+	@Inject
+	private Gson gson;
 
 	@Inject
 	private Client client;
@@ -164,7 +168,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 			SNAPSHOTS_PATH.mkdirs();
 			String timestamp = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss").format(snapshot.timestamp);
 			var path = SNAPSHOTS_PATH.resolve("snapshot-" + timestamp);
-			path.setExtension("json").writeString(plugin.getGson().toJson(snapshot));
+			path.setExtension("json").writeString(gson.toJson(snapshot));
 			saveCsvSnapshot(path);
 			sendGameMessage("Snapshot complete! Saved to: " + path + ".csv & json");
 		} catch (IOException ex) {
@@ -199,7 +203,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		if (snapshot.frames.isEmpty())
 			return;
 
-		var frames = plugin.getGson().toJsonTree(snapshot.frames).getAsJsonArray();
+		var frames = gson.toJsonTree(snapshot.frames).getAsJsonArray();
 		try (var out = new PrintWriter(path.setExtension("csv").toWriter())) {
 			writeCsvObject(out, true, "", frames.get(0).getAsJsonObject());
 			out.println();
