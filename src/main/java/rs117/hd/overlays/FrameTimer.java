@@ -4,6 +4,7 @@ import java.util.ArrayDeque;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import org.lwjgl.opengl.*;
@@ -31,7 +32,8 @@ public class FrameTimer {
 	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
 
-	private boolean isInactive = true;
+	@Getter
+	private boolean isActive = false;
 
 	public long cumulativeError;
 	public long errorCompensation;
@@ -46,7 +48,8 @@ public class FrameTimer {
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
 
-			isInactive = false;
+			isActive = true;
+			plugin.setupSyncMode();
 			plugin.enableDetailedTimers = true;
 
 			// Estimate the timer's own runtime, with a warm-up run first
@@ -67,10 +70,11 @@ public class FrameTimer {
 
 	private void destroy() {
 		clientThread.invokeLater(() -> {
-			if (isInactive)
+			if (!isActive)
 				return;
 
-			isInactive = true;
+			isActive = false;
+			plugin.setupSyncMode();
 			plugin.enableDetailedTimers = false;
 
 			glDeleteQueries(gpuQueries);
@@ -117,7 +121,7 @@ public class FrameTimer {
 			}
 		}
 
-		if (isInactive)
+		if (!isActive)
 			return;
 
 		if (timer.isGpuTimer) {
@@ -141,7 +145,7 @@ public class FrameTimer {
 			}
 		}
 
-		if (isInactive || !activeTimers[timer.ordinal()])
+		if (!isActive || !activeTimers[timer.ordinal()])
 			return;
 
 		if (timer.isGpuTimer) {
@@ -155,9 +159,8 @@ public class FrameTimer {
 	}
 
 	public void add(Timer timer, long time) {
-		if (isInactive)
-			return;
-		timings[timer.ordinal()] += time;
+		if (isActive)
+			timings[timer.ordinal()] += time;
 	}
 
 	public void endFrameAndReset() {
@@ -168,7 +171,7 @@ public class FrameTimer {
 			}
 		}
 
-		if (isInactive)
+		if (!isActive)
 			return;
 
 		long frameEnd = System.nanoTime();

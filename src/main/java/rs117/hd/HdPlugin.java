@@ -2890,14 +2890,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		});
 	}
 
-	private void setupSyncMode()
-	{
-		final boolean unlockFps = config.unlockFps();
-		client.setUnlockedFps(unlockFps);
-
+	public void setupSyncMode() {
 		// Without unlocked fps, the client manages sync on its 20ms timer
+		boolean unlockFps = config.unlockFps();
 		HdPluginConfig.SyncMode syncMode = unlockFps ? config.syncMode() : HdPluginConfig.SyncMode.OFF;
 
+		if (frameTimer.isActive()) {
+			unlockFps = true;
+			syncMode = SyncMode.OFF;
+		}
+
+		client.setUnlockedFps(unlockFps);
 		int swapInterval;
 		switch (syncMode)
 		{

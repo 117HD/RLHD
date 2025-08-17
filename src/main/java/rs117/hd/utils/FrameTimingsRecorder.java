@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.Getter;
@@ -51,31 +52,35 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	private NpcDisplacementCache npcDisplacementCache;
 
 	@Getter
-	private boolean capturingSnapshot = false;
+	private boolean isCapturingSnapshot;
 
-	private long snapshotStartTime;
+	private long capturedStartedAt;
 
 	@Getter
 	private final List<SnapshotEntry> snapshotData = new ArrayList<>();
 
 	public void recordSnapshot() {
-		if (capturingSnapshot)
+		if (isCapturingSnapshot)
 			return;
 
 		snapshotData.clear();
-		snapshotStartTime = System.currentTimeMillis();
-		capturingSnapshot = true;
+		capturedStartedAt = System.currentTimeMillis();
+		isCapturingSnapshot = true;
 		frameTimer.addTimingsListener(this);
 
 		sendGameMessage("HD snapshot started (" + (SNAPSHOT_DURATION_MS / 1000) + " seconds)...");
+	}
+
+	public float progress() {
+		return (float) capturedStartedAt / SNAPSHOT_DURATION_MS;
 	}
 
 	@Override
 	public void onFrameCompletion(FrameTimings timings) {
 		long now = System.currentTimeMillis();
 
-		if (now - snapshotStartTime > SNAPSHOT_DURATION_MS) {
-			capturingSnapshot = false;
+		if (now - capturedStartedAt > SNAPSHOT_DURATION_MS) {
+			isCapturingSnapshot = false;
 			saveSnapshot();
 			return;
 		}
@@ -188,5 +193,52 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		clientThread.invoke(() ->
 			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", message, null)
 		);
+	}
+
+	public static class SnapshotEntry {
+		public long currentTime;
+		public long drawnTiles;
+		public long drawnStatic;
+		public long drawnDynamic;
+		public long npcCacheSize;
+		public long[] timings;
+		public String bottleneck;
+		public Double estimatedFps;
+		public long cpuTime;
+		public long gpuTime;
+		public Map<String, Long> timingMap;
+		public long memoryUsed;
+		public long memoryTotal;
+		public long memoryFree;
+		public long memoryMax;
+
+		public SnapshotEntry(
+			FrameTimings frameTimings,
+			long currentTime,
+			long drawnTiles, long drawnStatic, long drawnDynamic,
+			long npcCacheSize
+		) {
+			this.timings = frameTimings.timers;
+			this.cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
+			this.gpuTime = timings[Timer.RENDER_FRAME.ordinal()];
+			this.currentTime = currentTime;
+			this.drawnTiles = drawnTiles;
+			this.drawnStatic = drawnStatic;
+			this.drawnDynamic = drawnDynamic;
+			this.npcCacheSize = npcCacheSize;
+
+			this.estimatedFps = 1e9 / Math.max(cpuTime, gpuTime);
+			this.bottleneck = cpuTime > gpuTime ? "CPU" : "GPU";
+
+			this.timingMap = new LinkedHashMap<>();
+			for (Timer t : Timer.values())
+				this.timingMap.put(t.name(), this.timings[t.ordinal()]);
+
+			Runtime rt = Runtime.getRuntime();
+			this.memoryTotal = rt.totalMemory();
+			this.memoryFree = rt.freeMemory();
+			this.memoryMax = rt.maxMemory();
+			this.memoryUsed = memoryTotal - memoryFree;
+		}
 	}
 }

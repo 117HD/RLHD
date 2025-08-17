@@ -146,8 +146,8 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			if (frameTimingsRecorder.isCapturingSnapshot())
 				children.add(LineComponent.builder()
-					.left("Snapshots Recorded:")
-					.right(String.format("%d/%d", frameTimingsRecorder.getSnapshotData().size(), 20))
+					.left("Snapshot Progress:")
+					.right(String.format("%d%%", round(frameTimingsRecorder.progress() * 100)))
 					.build());
 		}
 
