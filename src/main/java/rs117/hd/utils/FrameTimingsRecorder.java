@@ -25,6 +25,7 @@ import static com.sun.jna.platform.win32.GL.GL_VENDOR;
 import static com.sun.jna.platform.win32.GL.GL_VERSION;
 import static org.lwjgl.opengl.GL11C.GL_RENDERER;
 import static org.lwjgl.opengl.GL11C.glGetString;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -60,19 +61,21 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	private final List<SnapshotEntry> snapshotData = new ArrayList<>();
 
 	public void recordSnapshot() {
-		if (isCapturingSnapshot)
+		if (isCapturingSnapshot) {
+			sendGameMessage(String.format("Already capturing a snapshot (%d%% complete)", round(progress() * 100)));
 			return;
+		}
 
 		snapshotData.clear();
 		capturedStartedAt = System.currentTimeMillis();
 		isCapturingSnapshot = true;
 		frameTimer.addTimingsListener(this);
 
-		sendGameMessage("HD snapshot started (" + (SNAPSHOT_DURATION_MS / 1000) + " seconds)...");
+		sendGameMessage(String.format("Capturing frame timings for %.0f seconds...", SNAPSHOT_DURATION_MS / 1e3f));
 	}
 
 	public float progress() {
-		return (float) capturedStartedAt / SNAPSHOT_DURATION_MS;
+		return (float) (System.currentTimeMillis() - capturedStartedAt) / SNAPSHOT_DURATION_MS;
 	}
 
 	@Override
@@ -121,22 +124,20 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 			data.pluginSettings.put(configClean, configManager.getConfiguration("hd", configClean));
 		}
 
-		var csvPath = saveSnapshotCSV(data, timestamp);
+		var path = SNAPSHOTS_DIR.resolve("snapshot-" + timestamp);
+		saveCsvSnapshot(path, data);
 
 		try {
-			SNAPSHOTS_DIR
-				.resolve("snapshot-" + timestamp + ".json")
-				.writeString(plugin.getGson().toJson(data));
+			path.setExtension("json").writeString(plugin.getGson().toJson(data));
 		} catch (IOException ex) {
 			log.error("Error while saving snapshot:", ex);
 		}
 
-		sendGameMessage("HD snapshot complete. Saved to " + csvPath);
+		sendGameMessage("Snapshot complete! Saved to: " + path + ".csv & json");
 	}
 
-	private ResourcePath saveSnapshotCSV(JsonSnapshot data, String timestamp) {
-		var csvPath = SNAPSHOTS_DIR.resolve("snapshot-" + timestamp + ".csv");
-		try (var out = new PrintWriter(csvPath.toWriter())) {
+	private void saveCsvSnapshot(ResourcePath path, JsonSnapshot data) {
+		try (var out = new PrintWriter(path.setExtension("csv").toWriter())) {
 			out.print("FrameIndex,Time");
 			for (Timer t : Timer.values())
 				out.print("," + t.name());
@@ -163,8 +164,6 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		} catch (Exception ex) {
 			log.error("Error while saving snapshot CSV:", ex);
 		}
-		
-		return csvPath;
 	}
 
 
@@ -190,9 +189,8 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 	}
 
 	private void sendGameMessage(String message) {
-		clientThread.invoke(() ->
-			client.addChatMessage(ChatMessageType.GAMEMESSAGE, "", message, null)
-		);
+		clientThread.invoke(() -> client.addChatMessage(
+			ChatMessageType.GAMEMESSAGE, "117 HD", "<col=ffff00>[117 HD] " + message + "</col>", "117 HD"));
 	}
 
 	public static class SnapshotEntry {
