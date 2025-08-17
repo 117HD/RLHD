@@ -57681,7 +57681,8 @@
       "FLOORKIT_BRIDGE01_CONNECT01",
       "FLOORKIT_BRIDGE01_CONNECT01_M",
       "ENTRANCE_CAMTORUM_CHAIN02",
-      "ENTRANCE_CAMTORUM_CHAIN02_M"
+      "ENTRANCE_CAMTORUM_CHAIN02_M",
+      "ENTRANCE_CAMTORUM_CHAIN01"
     ]
   },
   {
@@ -57761,7 +57762,8 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
-      "ENTRANCE_CAMTORUM_CLOSED01"
+      "ENTRANCE_CAMTORUM_CLOSED01",
+      "ENTRANCE_CAMTORUM_INSIDE01"
     ],
     "colorOverrides": [
       {
@@ -57800,6 +57802,106 @@
     "uvType": "BOX",
     "objectIds": [
       "RALOS_RISE_SC"
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Metallic - Railing",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "WALLKIT_IMCANDO01_RAIL01",
+      "WALLKIT_IMCANDO01_RAIL01_END_R",
+      "WALLKIT_IMCANDO01_RAIL01_END_L"
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone - Metallic - Statues with railing",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -400,
+    "objectIds": [
+      "DUNGEONKIT_IMCANDO01_STATUE01_DEFAULT01",
+      "DUNGEONKIT_IMCANDO01_STATUE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 ",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Carved walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1,
+    "objectIds": [
+      "DUNGEONKIT_IMCANDO03_DEFAULT01",
+      "DUNGEONKIT_IMCANDO03_CORNER01",
+      "DUNGEONKIT_IMCANDO02_DEFAULT01",
+      "DUNGEONKIT_IMCANDO02_CORNER01",
+      "DUNGEONKIT_IMCANDO01_DOUBLE01",
+      "DUNGEONKIT_IMCANDO01_DOUBLE02",
+      "DUNGEONKIT_IMCANDO01_DOUBLE03",
+      "ARCHITECTURE_BLOCK_IMCANDO01",
+      "ARCHITECTURE_BLOCK_IMCANDO02",
+      "ARCHITECTURE_AQUEDUCT_IMCANDO01",
+      "ARCHITECTURE_AQUEDUCT_IMCANDO02",
+      "DUNGEONKIT_IMCANDO03_PATTERN01",
+      "DUNGEONKIT_IMCANDO03_PATTERN01_M",
+      "DUNGEONKIT_IMCANDO02_ENTRANCE01",
+      "DUNGEONKIT_IMCANDO02_ENTRANCE01_M"
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Carved walls with metal doors or metal window frames",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.1,
+    "objectIds": [
+      "DUNGEONKIT_IMCANDO02_DOOR01_2X1",
+      "DUNGEONKIT_IMCANDO02_WINDOW01",
+      "DUNGEONKIT_IMCANDO03_WINDOW01_2X1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 303
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Carved walls - Filler",
+    "baseMaterial": "METALLIC_1_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "DUNGEONKIT_IMCANDO02_FILLER01"
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone - Metallic - Statues with fire burners",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -400,
+    "objectIds": [
+      "DUNGEONKIT_IMCANDO02_STATUE02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 ",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX"
+      }
     ]
   }
 ]
