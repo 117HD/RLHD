@@ -5134,6 +5134,20 @@
     "maxLightness": 15
   },
   {
+    "name": "Cam Torum - Throneroom Tiles",
+    "area": "CAM_TORUM_THRONEROOM_TILES",
+    "overlayIds": [ 321 ],
+    "blended": false,
+    "groundMaterial": "CAM_TORUM_TILES"
+  },
+  {
+    "name": "Cam Torum - Purple Marble Tiles",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 285, 286 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_2"
+  },
+  {
     "name": "Cam Torum - Rocky overlay",
     "area": "CAM_TORUM",
     "overlayIds": [ 11, 228 ],
@@ -5143,6 +5157,12 @@
     "name": "Cam Torum - Dirt overlay",
     "area": "CAM_TORUM",
     "overlayIds": [ 320, 321, 323 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Cam Torum - Dirt underlay",
+    "area": "CAM_TORUM",
+    "underlayIds": [ 123 ],
     "groundMaterial": "VARIED_DIRT"
   },
   {
