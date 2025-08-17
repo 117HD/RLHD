@@ -13276,8 +13276,8 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "upwardsNormals": true,
-        "baseMaterial": "GRAY_75",
+        "flatNormals": true,
+        "baseMaterial": "GRAY_85",
         "windDisplacementMode": "OBJECT"
       },
       {
@@ -13325,9 +13325,9 @@
   },
   {
     "description": "Objects - Jungle grass",
-    "upwardsNormals": true,
+    "flatNormals": true,
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
