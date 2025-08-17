@@ -57,6 +57,19 @@
     "fogDepth": 25
   },
   {
+    "area": "Lucien's Base Environment",
+    "ambientColor": "#D8EAFF",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 0.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 70,
+    "sunAngles": [
+      68,
+      190
+    ]
+  },
+  {
     "area": "WILDERNESS_HIGH",
     "lightningEffects": true,
     "ambientColor": "#d7d2d2",
@@ -1612,7 +1625,8 @@
       190
     ],
     "fogColor": "#060505",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "instantTransition": true
   },
   {
     "area": "BURGH_DE_ROTT_BASEMENT",
@@ -1976,6 +1990,26 @@
     "groundFogOpacity": 0.75,
     "groundFogStart": -200,
     "groundFogEnd": -400
+  },
+  {
+    "area": "Black Knights Fort - Basement",
+    "ambientColor": "#aaafb6",
+    "directionalColor": "#878474",
+    "directionalStrength": 0.75,
+    "ambientStrength": 1.25,
+    "fogDepth": 60
+  },
+  {
+    "area": "Black Knights Fort - Catacombs",
+    "directionalStrength": 0.15,
+    "ambientStrength": 0.8,
+    "fogDepth": 30
+  },
+  {
+    "area": "Guthix Temple",
+    "ambientStrength": 0.9,
+    "fogDepth": 30,
+    "sunAngles": [ 70, 220 ]
   },
   {
     "key": "OVERWORLD",

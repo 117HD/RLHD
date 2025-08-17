@@ -251,6 +251,18 @@
     ]
   },
   {
+    "name": "MARBLE_4",
+    "materials": [
+      "MARBLE_4"
+    ]
+  },
+  {
+    "name": "MARBLE_4_GLOSS",
+    "materials": [
+      "MARBLE_4_GLOSS"
+    ]
+  },
+  {
     "name": "MARBLE_DARK",
     "materials": [
       "MARBLE_DARK"
@@ -425,6 +437,14 @@
       "STONE",
       "ROCK_1",
       "ROCK_2"
+    ]
+  },
+  {
+    "name": "ROCK_PILES",
+    "materials": [
+      "STONE_NORMALED",
+      "GRAVEL",
+      "GRUNGE_1"
     ]
   },
   {

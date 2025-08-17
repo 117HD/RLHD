@@ -281,13 +281,9 @@ public class ProceduralGenerator {
 			lightness = min(lightness, maxBrightness);
 			color = color & ~0x7F | lightness;
 
-			boolean isOverlay = false;
-			Material material = Material.DIRT_1;
-			if (override != TileOverride.NONE) {
-				material = override.groundMaterial.getRandomMaterial(worldPos);
-				isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
-				color = override.modifyColor(color);
-			}
+			Material material = override.groundMaterial.getRandomMaterial(worldPos);
+			boolean isOverlay = vertexIsOverlay[vertex] != override.blendedAsOpposite;
+			color = override.modifyColor(color);
 
 			vertexColors[vertex] = color;
 
@@ -805,13 +801,15 @@ public class ProceduralGenerator {
 		// As a fallback, always consider vanilla textured water tiles as water
 		// We purposefully ignore material replacements here such as ice from the winter theme
 		if (waterType == WaterType.NONE) {
-			var mat = Material.fromVanillaTexture(textureId);
-			if (mat == Material.WATER_FLAT || mat == Material.WATER_FLAT_2) {
-				waterType = WaterType.WATER_FLAT;
-			} else if (mat == Material.SWAMP_WATER_FLAT) {
-				waterType = WaterType.SWAMP_WATER_FLAT;
+			switch (textureId) {
+				case 1:
+				case 24:
+					waterType = WaterType.WATER_FLAT;
+					break;
+				case 25:
+					waterType = WaterType.SWAMP_WATER_FLAT;
+					break;
 			}
-			return waterType;
 		}
 
 		if (waterType == WaterType.WATER && plugin.configSeasonalTheme == SeasonalTheme.WINTER)
