@@ -3177,6 +3177,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final int sceneID = offsetModel.getSceneId();
 		final boolean isStatic = sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK);
+		boolean isTransparent = isStatic && ((sceneID >> 14) & 1) == 1;
+		boolean shouldCastShadow = !isStatic || ((sceneID >> 15) & 1) == 1;
 
 		if (!isStatic)
 			model.calculateBoundsCylinder();
@@ -3192,7 +3194,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int tileExX = localX + SCENE_OFFSET;
 		final int tileExY = localZ + SCENE_OFFSET;
 		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
-		boolean shouldCastShadow = !isStatic || ((sceneID >> 15) & 1) == 1;
 
 		final boolean isVisibleInScene = sceneCamera.isRenderableVisible(
 			renderable,
@@ -3253,8 +3254,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
 			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-			if (modelOverride.hide)
+			shouldCastShadow = modelOverride.castShadows;
+			if (modelOverride.hide || (!isVisibleInScene && !shouldCastShadow)) {
+				if (enableDetailedTimers)
+					frameTimer.end(Timer.DRAW_RENDERABLE);
 				return;
+			}
 
 			// Disable color overrides when caching is disabled, since they are expensive on dynamic models
 			if (!configModelCaching && modelOverride.colorOverrides != null)
@@ -3284,7 +3289,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelHasher.setModel(model, modelOverride, preOrientation);
 				// Disable model batching for models which have been excluded from the scene buffer,
 				// because we want to avoid having to fetch the model override
-				if (configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
+				if (configModelBatching && sceneID != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
 					modelOffsets = frameModelInfoMap.get(modelHasher.batchHash);
 					if (modelOffsets != null && modelOffsets.faceCount != model.getFaceCount())
 						modelOffsets = null; // Assume there's been a hash collision
@@ -3299,10 +3304,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[1] = modelOffsets.uvOffset;
 				eightIntWrite[2] = modelOffsets.faceCount;
 				shouldCastShadow = modelOffsets.shouldCastShadow;
+				isTransparent = modelOffsets.isTransparent;
 			} else {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
-
 
 				shouldCastShadow = modelOverride.castShadows;
 				if (modelOverride.hide || !shouldCastShadow && !isVisibleInScene) {
@@ -3317,6 +3322,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
 
 				faceCount = sceneContext.modelPusherResults[0];
+				isTransparent = sceneContext.modelPusherResults[2] == 1;
+
 				if (sceneContext.modelPusherResults[1] == 0)
 					uvOffset = -1;
 
@@ -3330,7 +3337,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// add this temporary model to the map for batching purposes
 				if (configModelBatching && modelOffsets == null)
-					frameModelInfoMap.put(modelHasher.batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset, shouldCastShadow));
+					frameModelInfoMap.put(
+						modelHasher.batchHash,
+						new ModelOffsets(faceCount, vertexOffset, uvOffset, shouldCastShadow, isTransparent)
+					);
 			}
 
 			if (eightIntWrite[0] != -1)

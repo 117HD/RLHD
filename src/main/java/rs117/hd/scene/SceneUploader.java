@@ -65,7 +65,8 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 @SuppressWarnings("UnnecessaryLocalVariable")
 public class SceneUploader {
-	public static final int SCENE_ID_MASK = 0x7FFF;
+	public static final int SCENE_ID_MASK = 0x3FFF;
+	public static final int MODEL_OVERRIDE_ID_MASK = 0xFFFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 
 	private static final float[] UP_NORMAL = { 0, -1, 0 };
@@ -374,7 +375,7 @@ public class SceneUploader {
 
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-		int sceneId = modelOverride.hashCode() << 16 | (modelOverride.castShadows ? 1 : 0) << 15 | sceneContext.id & SCENE_ID_MASK;
+		int modelOverrideHash = modelOverride.hashCode() & MODEL_OVERRIDE_ID_MASK;
 
 		SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
 		cullingData.bottomY = model.getBottomY();
@@ -386,12 +387,13 @@ public class SceneUploader {
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
 			// if the same model is being uploaded, but with a different model override,
 			// exclude it from the scene buffer to avoid conflicts
-			if (model.getSceneId() != sceneId) {
+			if (((model.getSceneId() >> 16) & MODEL_OVERRIDE_ID_MASK) != modelOverrideHash) {
 				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);
 			}
 			return;
 		}
 
+		boolean isModelTransparent = false;
 		int vertexOffset = sceneContext.getVertexOffset();
 		int uvOffset = sceneContext.getUvOffset();
 
@@ -401,11 +403,16 @@ public class SceneUploader {
 			modelPusher.pushModel(sceneContext, tile, uuid, model, modelOverride, orientation, false);
 			if (sceneContext.modelPusherResults[1] == 0)
 				uvOffset = -1;
+			isModelTransparent = sceneContext.modelPusherResults[2] == 1;
 		}
 
 		model.setBufferOffset(vertexOffset);
 		model.setUvBufferOffset(uvOffset);
-		model.setSceneId(sceneId);
+		model.setSceneId(
+			modelOverrideHash << 16 |
+			(modelOverride.castShadows ? 1 : 0) << 15 |
+			(isModelTransparent ? 1 : 0) << 14 |
+			sceneContext.id & SCENE_ID_MASK);
 		++sceneContext.uniqueModels;
 	}
 

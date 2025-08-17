@@ -128,6 +128,22 @@ public class Material {
 		return parent != null;
 	}
 
+	public boolean isTransparent() {
+		if (hasTransparency) {
+			return true;
+		}
+
+		var base = this;
+		while (base.parent != null) {
+			base = base.parent;
+			if (base.hasTransparency) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	public String getTextureName() {
 		if (this == NONE || isFallbackVanillaMaterial)
 			return null;
