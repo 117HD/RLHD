@@ -57793,5 +57793,13 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone - Agility shortcut",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "RALOS_RISE_SC"
+    ]
   }
 ]
