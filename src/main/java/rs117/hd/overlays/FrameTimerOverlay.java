@@ -61,9 +61,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Override
 	public void onFrameCompletion(FrameTimings timings) {
-		long now = System.nanoTime();
+		long now = System.currentTimeMillis();
 		while (!frames.isEmpty()) {
-			if (now - frames.peekFirst().frameTimestamp < 3e9) // remove older entries
+			if (now - frames.peekFirst().frameTimestamp < 10e3) // remove older entries
 				break;
 			frames.removeFirst();
 		}
@@ -73,6 +73,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	@Override
 	public Dimension render(Graphics2D g) {
 		long time = System.nanoTime();
+		var boldFont = FontManager.getRunescapeBoldFont();
 
 		var children = panelComponent.getChildren();
 		if (!getAverageTimings()) {
@@ -93,16 +94,16 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					addTiming(t, timings);
 
 			children.add(LineComponent.builder()
-				.leftFont(FontManager.getRunescapeBoldFont())
+				.leftFont(boldFont)
 				.left("Estimated bottleneck:")
-				.rightFont(FontManager.getRunescapeBoldFont())
+				.rightFont(boldFont)
 				.right(cpuTime > gpuTime ? "CPU" : "GPU")
 				.build());
 
 			children.add(LineComponent.builder()
-				.leftFont(FontManager.getRunescapeBoldFont())
+				.leftFont(boldFont)
 				.left("Estimated FPS:")
-				.rightFont(FontManager.getRunescapeBoldFont())
+				.rightFont(boldFont)
 				.right(String.format("%.1f FPS", 1e9 / max(cpuTime, gpuTime)))
 				.build());
 
@@ -112,7 +113,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				.build());
 
 			children.add(LineComponent.builder()
-				.leftFont(FontManager.getRunescapeBoldFont())
+				.leftFont(boldFont)
 				.left("Scene Stats:")
 				.build());
 
@@ -146,8 +147,10 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 			if (frameTimingsRecorder.isCapturingSnapshot())
 				children.add(LineComponent.builder()
-					.left("Snapshot Progress:")
-					.right(String.format("%d%%", round(frameTimingsRecorder.progress() * 100)))
+					.leftFont(boldFont)
+					.left("Capturing Snapshot...")
+					.rightFont(boldFont)
+					.right(String.format("%d%%", frameTimingsRecorder.getProgressPercentage()))
 					.build());
 		}
 

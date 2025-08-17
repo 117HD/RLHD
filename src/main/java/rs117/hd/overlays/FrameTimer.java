@@ -174,7 +174,8 @@ public class FrameTimer {
 		if (!isActive)
 			return;
 
-		long frameEnd = System.nanoTime();
+		long frameEndNanos = System.nanoTime();
+		long frameEndTimestamp = System.currentTimeMillis();
 
 		int[] available = { 0 };
 		for (var timer : TIMERS) {
@@ -192,12 +193,12 @@ public class FrameTimer {
 				if (activeTimers[i]) {
 					// End the CPU timer automatically, but warn about it
 					log.warn("Timer {} was never ended", timer);
-					timings[i] += frameEnd;
+					timings[i] += frameEndNanos;
 				}
 			}
 		}
 
-		var frameTimings = new FrameTimings(frameEnd, timings);
+		var frameTimings = new FrameTimings(frameEndTimestamp, timings);
 		for (var listener : listeners)
 			listener.onFrameCompletion(frameTimings);
 
