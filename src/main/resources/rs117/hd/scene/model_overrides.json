@@ -57433,5 +57433,50 @@
         "baseMaterial": "NONE"
       }
     ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Swamp edges",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_01_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_02_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_03_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_04_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Swamp edges with vines",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_CORNER_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_CORNER_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_CORNER_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]
