@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,6 @@ public class SceneCullingManager {
 	private final List<SceneView> cullingViews = new ArrayList<>();
 	private final List<SceneViewContext> cullingViewContexts = new ArrayList<>();
 
-	private final int frustumCullingJobCount;
 	private final FrustumTileCullingJob[][] frustumCullingJobs;
 	private final ResetVisibilityArrayJob clearJob = new ResetVisibilityArrayJob(this);
 	private final FrustumSphereCullingJob playerCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.PLAYER);
@@ -56,8 +56,6 @@ public class SceneCullingManager {
 
 	public SceneCullingManager() {
 		frustumCullingJobs = new FrustumTileCullingJob[EXTENDED_SCENE_SIZE / 4][EXTENDED_SCENE_SIZE / 4];
-		frustumCullingJobCount = frustumCullingJobs.length * frustumCullingJobs.length;
-
 		for(int x = 0; x < frustumCullingJobs.length; x++) {
 			for(int y = 0; y < frustumCullingJobs.length; y++) {
 				frustumCullingJobs[x][y] = new FrustumTileCullingJob(this);
@@ -67,9 +65,9 @@ public class SceneCullingManager {
 
 	public void startUp() { }
 
-	public void ensureCullingComplete() {
+	public boolean ensureCullingComplete() {
 		if(!cullingInFlight) {
-			return;
+			return false;
 		}
 		cullingInFlight = false;
 
@@ -82,6 +80,8 @@ public class SceneCullingManager {
 				cullingJob.complete();
 			}
 		}
+
+		return true;
 	}
 
 	public void complete() {
@@ -115,7 +115,7 @@ public class SceneCullingManager {
 		frameTimer.begin(Timer.VISIBILITY_CHECK);
 		// If the Tile is still in-progress then wait for the job to complete
 		long waitStart = System.currentTimeMillis();
-		while (combinedTileVisibility.inFlightTileJobCount > 0 && result == VISIBILITY_UNKNOWN) {
+		while (cullingInFlight && result == VISIBILITY_UNKNOWN) {
 			Thread.yield();
 			result = combinedTileVisibility.tiles[tileIdx];
 
@@ -164,7 +164,6 @@ public class SceneCullingManager {
 		if (needTileCulling) {
 			clearJob.clearTargets.add(combinedTileVisibility);
 			combinedTileVisibility = getAvailableCullingResults();
-			combinedTileVisibility.inFlightTileJobCount = frustumCullingJobCount;
 		}
 
 		for(int i = 0; i < cullingViews.size(); i++) {
@@ -191,7 +190,6 @@ public class SceneCullingManager {
 					view.setCullingResults(getAvailableCullingResults());
 				}
 				ctx.results = view.getCullingResults();
-				ctx.results.inFlightTileJobCount = frustumCullingJobCount;
 
 				final SceneView parent = view.getCullingParent();
 				if (parent != null) {
@@ -303,7 +301,7 @@ public class SceneCullingManager {
 		private final HashMap<Integer, Boolean> npcs = new HashMap<>();
 		private final HashMap<Integer, Boolean> projectiles = new HashMap<>();
 
-		private int inFlightTileJobCount = 0;
+		private AtomicInteger visibleTileCount = new AtomicInteger();
 
 		public CullingResults() {
 			reset();
@@ -325,6 +323,10 @@ public class SceneCullingManager {
 				tileExX,
 				tileExY
 			)];
+		}
+
+		public int getVisibleTileCount() {
+			return visibleTileCount.get();
 		}
 
 		public boolean isTileSurfaceVisible(int tileIdx) {
@@ -364,6 +366,7 @@ public class SceneCullingManager {
 		}
 
 		public void reset() {
+			visibleTileCount.set(0);
 			Arrays.fill(tiles, VISIBILITY_UNKNOWN);
 		}
 	}
@@ -447,10 +450,10 @@ public class SceneCullingManager {
 							final int dl2 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY + 1];
 							final int dl3 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY + 1];
 
-							if(dl0 > 0) h0 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl0 - 1];
-							if(dl1 > 0) h1 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl1 - 1];
-							if(dl2 > 0) h2 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1];
-							if(dl3 > 0) h3 += ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1];
+							if (dl0 > 0) h0 += (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl0 - 1] * 0.55f);
+							if (dl1 > 0) h1 += (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl1 - 1] * 0.55f);
+							if (dl2 > 0) h2 += (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1] * 0.55f);
+							if (dl3 > 0) h3 += (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1] * 0.55f);
 
 							localMinY = Math.min(Math.min(h0, h1), Math.min(h2, h3));
 							localMaxY = Math.max(Math.max(h0, h1), Math.max(h2, h3));
@@ -509,12 +512,6 @@ public class SceneCullingManager {
 							}
 						}
 					}
-
-					// Skip processing entirely
-					for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-						viewCtx.results.inFlightTileJobCount--;
-					}
-					cullManager.combinedTileVisibility.inFlightTileJobCount--;
 					return;
 				}
 			}
@@ -574,6 +571,7 @@ public class SceneCullingManager {
 									if(plane == 0 && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) == 0){
 										parentViewResult &= ~VISIBILITY_TILE_VISIBLE;
 									}
+									viewCtx.results.visibleTileCount.incrementAndGet();
 									viewCtx.results.tiles[tileIdx] = parentViewResult;
 									continue; // Early out, no need to perform any culling
 								}
@@ -625,16 +623,24 @@ public class SceneCullingManager {
 								}
 							}
 
+							if ((viewResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_UNDER_WATER_TILE_VISIBLE)) != 0) {
+								viewCtx.results.visibleTileCount.incrementAndGet();
+							}
+
 							combinedResult |= viewResult;
 							viewCtx.results.tiles[tileIdx] = viewResult;
 						}
+
+						if ((combinedResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_UNDER_WATER_TILE_VISIBLE)) != 0) {
+							cullManager.combinedTileVisibility.visibleTileCount.incrementAndGet();
+						}
+
 						cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
 					}
 				}
 			}
 
 			// Pass 2 - Cull Static Renderables
-
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
@@ -664,7 +670,7 @@ public class SceneCullingManager {
 							if(renderableCullingData != null && renderableCullingData.length > 0) {
 								for (SceneContext.RenderableCullingData renderable : renderableCullingData) {
 									final int radius = renderable.radius;
-									if (Math.abs(renderable.bottomY) < LOCAL_TILE_SIZE && renderable.height < LOCAL_TILE_SIZE) {
+									if (renderable.height < LOCAL_HALF_TILE_SIZE) {
 										// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
 										if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
 											continue; // Surface isn't visible, skip this renderable
@@ -702,11 +708,6 @@ public class SceneCullingManager {
 					}
 				}
 			}
-
-			for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-				viewCtx.results.inFlightTileJobCount--;
-			}
-			cullManager.combinedTileVisibility.inFlightTileJobCount--;
 		}
 	}
 

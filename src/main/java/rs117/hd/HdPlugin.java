@@ -524,6 +524,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
 	public SceneView sceneCamera;
 	public SceneView directionalLight;
+	public final SceneView[] pointLightCube = new SceneView[6];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
 
@@ -768,6 +769,43 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES)
 					.setCullingFlag(SceneView.CULLING_FLAG_CALLBACK)
 					.setCullingCallbacks(directionalShadowCulling);
+
+				for (int i = 0; i < 6; i++) {
+					SceneView cubeFace = pointLightCube[i] = new SceneView();
+					cubeFace.setZoom(1000.0f);
+					cubeFace.setNearPlane(NEAR_PLANE);
+					cubeFace.setViewportWidth(256);
+					cubeFace.setViewportHeight(256);
+
+					cubeFace.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES);
+
+					switch (i) {
+						case 0:
+							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
+							cubeFace.setYaw((float) Math.toRadians(0));
+							break;
+						case 1:
+							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
+							cubeFace.setYaw((float) Math.toRadians(90));
+							break;
+						case 2:
+							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
+							cubeFace.setYaw((float) Math.toRadians(180));
+							break;
+						case 3:
+							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
+							cubeFace.setYaw((float) Math.toRadians(270));
+							break;
+						case 4:
+							cubeFace.setPitch((float) (Math.PI - Math.toRadians(90)));
+							cubeFace.setYaw((float) Math.toRadians(0));
+							break;
+						case 5:
+							cubeFace.setPitch((float) (Math.PI - Math.toRadians(180)));
+							cubeFace.setYaw((float) Math.toRadians(0));
+							break;
+					}
+				}
 
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -1807,6 +1845,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				if (sceneCameraChanged) {
+
 					uboGlobal.cameraPos.set(sceneCamera.getPosition());
 					uboGlobal.viewMatrix.set(sceneCamera.getViewMatrix());
 					uboGlobal.projectionMatrix.set(sceneCamera.getViewProjMatrix());
@@ -1834,6 +1873,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
+				}
+
+				if (sceneContext.numVisibleLights > 0) {
+					var light = sceneContext.lights.get(0);
+					for (int i = 0; i < 6; i++) {
+						sceneCullingManager.addView(
+							pointLightCube[i]
+								.setPosition(light.pos)
+								.setFarPlane(light.radius * LOCAL_TILE_SIZE)
+						);
+					}
 				}
 
 				sceneCullingManager.addView(sceneCamera);
@@ -2028,6 +2078,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (redrawPreviousFrame || sceneContext == null || vertexCount <= 0)
 			return;
 
+		if (sceneCullingManager.ensureCullingComplete()) {
+			preAddTileAndRenderables();
+		}
+
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
 		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileEeX, tileEeY);
@@ -2041,12 +2095,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		int uvOffset = paint.getUvBufferOffset();
 
 		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
-			if (!isVisibleInScene && !isVisibleInDirectional) {
+			if (!isVisibleInScene) {
 				if (CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
 					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
 					isVisibleInScene = true;
 				}
-			} else if (isVisibleInScene) {
+			} else {
 				if (!CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
 					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
 					vertexOffset += vertexCount;
@@ -2059,7 +2113,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-
 		eightIntWrite[0] = vertexOffset;
 		eightIntWrite[1] = uvOffset;
 		eightIntWrite[2] = vertexCount / 3;
@@ -2068,17 +2121,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
 		eightIntWrite[6] = 0;
 		eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
-		
-		modelPassthroughBuffer
-			.ensureCapacity(8)
-			.put(eightIntWrite);
+
+		modelPassthroughBuffer.put(eightIntWrite);
 
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 
 		if (isVisibleInDirectional) {
-			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
 		}
 
@@ -2094,19 +2144,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		});
 	}
 
+	public void preAddTileAndRenderables() {
+		int visibleTileCount = sceneCullingManager.combinedTileVisibility.getVisibleTileCount();
+		modelPassthroughBuffer.ensureCapacity(visibleTileCount * 4);
+	}
+
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
 		int bufferLength = model.getBufferLen();
 		if (redrawPreviousFrame || bufferLength <= 0)
 			return;
 
+		if (sceneCullingManager.ensureCullingComplete()) {
+			preAddTileAndRenderables();
+		}
+
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
 		byte sceneTileCullingResult = sceneCamera.getCullingResults().getTileResult(0, tileEeX, tileEeY);
+
 		if (!CullingResults.isTileSurfaceVisible(sceneTileCullingResult))
 			return;
-
-		modelPassthroughBuffer.ensureCapacity(16);
 
 		// we packed a boolean into the buffer length of tiles so we can tell
 		// which tiles have procedurally-generated underwater terrain.
@@ -2114,9 +2172,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final boolean underwaterTerrain = (bufferLength & 1) == 1;
 		// restore the bufferLength variable:
 		bufferLength = bufferLength >> 1;
-
-		int originRenderBufferOffset = renderBufferOffset;
-		int vertexCount = 0;
 
 		eightIntWrite[4] = 0;
 		eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
@@ -2136,7 +2191,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[3] = renderBufferOffset;
 				modelPassthroughBuffer.put(eightIntWrite);
 
-				vertexCount += bufferLength;
+				sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
+
 				renderBufferOffset += bufferLength;
 
 				drawnTileCount++;
@@ -2151,10 +2207,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[3] = renderBufferOffset;
 		modelPassthroughBuffer.put(eightIntWrite);
 
-		vertexCount += bufferLength;
+		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
+
 		renderBufferOffset += bufferLength;
 
-		sceneDrawBuffer.addModel(originRenderBufferOffset, vertexCount);
 
 		drawnTileCount++;
 		numPassthroughModels++;
@@ -2244,6 +2300,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.end(Timer.DRAW_FRAME);
 			return;
 		}
+
 
 		try {
 			prepareInterfaceTexture();
@@ -2505,11 +2562,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
+		drawUi(overlayColor);
+
 		if (configAsyncUICopy) {
 			asyncUICopy.complete();
 		}
-
-		drawUi(overlayColor);
 
 		try {
 			frameTimer.begin(Timer.SWAP_BUFFERS);
@@ -3185,10 +3242,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
+		if (sceneCullingManager.ensureCullingComplete()) {
+			preAddTileAndRenderables();
+		}
+
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.VISIBILITY_CHECK);
-
-		sceneCullingManager.ensureCullingComplete();
 
 		final int plane = ModelHash.getPlane(hash);
 		final int tileExX = localX + SCENE_OFFSET;
