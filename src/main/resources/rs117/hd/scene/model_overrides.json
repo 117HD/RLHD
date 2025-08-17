@@ -12664,7 +12664,9 @@
       "SHAYZIEN_CRATE_03_DARK",
       "CRATE_ALDARIN01_STACK01",
       "MYQ4_EMPTY_CRATES_SMALL",
-      "GRAB_EVIL_TWIN_SMALL_CRATES"
+      "GRAB_EVIL_TWIN_SMALL_CRATES",
+      "CRATE_WOODEN01_REINFORCED01_STACKED01_IMCANDO01",
+      "CRATE_WOODEN01_REINFORCED01_IMCANDO01"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -57693,7 +57695,9 @@
       "FLOORKIT_BRIDGE01_CONNECT01_M",
       "ENTRANCE_CAMTORUM_CHAIN02",
       "ENTRANCE_CAMTORUM_CHAIN02_M",
-      "ENTRANCE_CAMTORUM_CHAIN01"
+      "ENTRANCE_CAMTORUM_CHAIN01",
+      "CHAIN_IMCANDO01_BRAZIER01",
+      "BRAZIER_IMCANDO01_RALOS01"
     ]
   },
   {
@@ -57905,6 +57909,7 @@
     "uvOrientation": -400,
     "objectIds": [
       "DUNGEONKIT_IMCANDO02_STATUE02",
+      "DUNGEONKIT_IMCANDO03_STATUE01",
       "DUNGEONKIT_IMCANDO03_STATUE02"
     ],
     "colorOverrides": [
@@ -57914,6 +57919,18 @@
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Stone Bricks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 616,
+    "uvScale": 0.66,
+    "objectIds": [
+      "FLOOR_CAMTORUM_CORNER01",
+      "FLOOR_CAMTORUM_EDGE01",
+      "DUNGEONKIT_IMCANDO02_FALLOFF01"
     ]
   }
 ]
