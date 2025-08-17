@@ -5134,6 +5134,18 @@
     "maxLightness": 15
   },
   {
+    "name": "Cam Torum - Rocky overlay",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 11, 228 ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "Cam Torum - Dirt overlay",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 320, 321, 323 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
     "name": "Perilous Moons Antechamber Tiles",
     "area": "PERILOUS_MOONS_ANTECHAMBER_TILES",
     "underlayIds": [ 19, 39, 72 ],
