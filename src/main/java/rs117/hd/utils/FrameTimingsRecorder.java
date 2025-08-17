@@ -20,10 +20,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.FrameTimings;
 import rs117.hd.overlays.Timer;
 
-import static com.sun.jna.platform.win32.GL.GL_VENDOR;
-import static com.sun.jna.platform.win32.GL.GL_VERSION;
-import static org.lwjgl.opengl.GL11C.GL_RENDERER;
-import static org.lwjgl.opengl.GL11C.glGetString;
+import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
