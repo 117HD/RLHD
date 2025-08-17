@@ -5191,6 +5191,19 @@
     "blended": false
   },
   {
+    "name": "Ancient Prison Tiles",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "overlayIds": [ 2 ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "Ancient Prison Floor",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "underlayIds": [ 7, 56 ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_FIX",
     "area": "EARTHBOUND_CAVERN_WATER_FIX",
     "underlayIds": [ 72, 105 ],

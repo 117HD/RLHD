@@ -57932,5 +57932,28 @@
       "FLOOR_CAMTORUM_EDGE01",
       "DUNGEONKIT_IMCANDO02_FALLOFF01"
     ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Wooden and Metal crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "uvScale": 0.75,
+    "objectIds": [
+      "PMOON_CAMP_SUPPLIES_1",
+      "PMOON_CAMP_SUPPLIES_2",
+      "PMOON_CAMP_SUPPLIES_3"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 189
+      }
+    ]
   }
 ]
