@@ -140,6 +140,9 @@ public class DeveloperTools implements KeyListener {
 			case "timings":
 				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 				break;
+			case "snapshot":
+				frameTimingsRecorder.recordSnapshot();
+				break;
 			case "shadowmap":
 				shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
 				break;
