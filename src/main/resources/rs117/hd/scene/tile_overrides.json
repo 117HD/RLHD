@@ -5610,6 +5610,12 @@
     "groundMaterial": "GRUNGE"
   },
   {
+    "name": "Brimhaven Dungeon - floor",
+    "area": "Brimhaven Dungeon",
+    "underlayIds": [ 63, 64, 65, 66 ],
+    "groundMaterial": "PACKED_EARTH"
+  },
+  {
     "name": "OVERLAY_GRAVEL",
     "area": "ALL",
     "overlayIds": [
