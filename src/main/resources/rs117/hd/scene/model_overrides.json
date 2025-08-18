@@ -33760,19 +33760,6 @@
     "uvScale": 0.2
   },
   {
-    "description": "Ralos rise, Big door",
-    "baseMaterial": "GRAY_85",
-    "objectIds": [
-      "ENTRANCE_CAMTORUM_CLOSED01",
-      "ENTRANCE_CAMTORUM_SIDE01",
-      "ENTRANCE_CAMTORUM_CORNER01_M",
-      "ENTRANCE_CAMTORUM_CORNER01",
-      "ENTRANCE_CAMTORUM_TOP01",
-      "ENTRANCE_CAMTORUM_TOP02",
-      "ENTRANCE_CAMTORUM_TOP03"
-    ]
-  },
-  {
     "description": "Varlamore - Objects - Stone - Stone block walls",
     "baseMaterial": "ROCK_3_SMOOTH",
     "objectIds": [
@@ -57961,7 +57948,13 @@
       "DUNGEONKIT_IMCANDO02_ENTRANCE01",
       "DUNGEONKIT_IMCANDO02_ENTRANCE01_M",
       "WALLKIT_IMCANDO02_LOW01",
-      "WALLKIT_IMCANDO02_LOW02"
+      "WALLKIT_IMCANDO02_LOW02",
+      "DUNGEONKIT_IMCANDO01_DOUBLE01_DARK01",
+      "DUNGEONKIT_IMCANDO01_ALCOVE01_DARK01",
+      "DUNGEONKIT_IMCANDO01_HALF01",
+      "DUNGEONKIT_IMCANDO01_HALF02",
+      "DUNGEONKIT_IMCANDO01_HALF03",
+      "DUNGEONKIT_IMCANDO02_INNER01"
     ]
   },
   {
@@ -58169,7 +58162,7 @@
     "hide": true
   },
   {
-    "description": "Keldagrim - Cam Torum -Metal shelf with objects on them",
+    "description": "Keldagrim - Cam Torum - Metallic - Metal shelf with objects on them",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 1.0,
@@ -58189,7 +58182,26 @@
     ]
   },
   {
-    "description": "Keldagrim - Cam Torum -Metal shelf with objects on them",
+    "description": "Keldagrim - Cam Torum - Rusty metal shelf with objects on them",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "objectIds": [
+      "DWARF_KELDAGRIM_DOUBLE_SHELF_POOR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shelf",
+        "colors": "h == 10 || h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 117,
+        "uvScale": 0.44
+      }
+    ]
+  },
+  {
+    "description": "Keldagrim - Cam Torum - Metallic - Cloth - Chair with pillow",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
     "uvScale": 1.0,
@@ -58203,6 +58215,50 @@
         "colors": "h >= 10",
         "baseMaterial": "CARPET",
         "uvType": "MODEL_XY",
+        "uvOrientation": 117,
+        "uvScale": 0.44
+      }
+    ]
+  },
+  {
+    "description": "Keldagrim - Cam Torum - Metallic - Dwarven Chair",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "flatNormals": true,
+    "objectIds": [
+      "CHAIR_IMCANDO01_BASIC01"
+    ]
+  },
+  {
+    "description": "Keldagrim - Cam Torum - Metallic - Dwarven Table",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": -117,
+    "objectIds": [
+      "TABLE_IMCANDO01_SMALL01",
+      "TABLE_IMCANDO01_BIG01"
+    ]
+  },
+  {
+    "description": "Keldagrim - Cam Torum - Rusty metal shelf with objects on them",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "uvOrientation": 256,
+    "objectIds": [
+      "STAIRS_IMCANDO01_LOWER01_SPECIFIC",
+      "STAIRS_IMCANDO01_LOWER01",
+      "STAIRS_IMCANDO01_LOWER02",
+      "STAIRS_IMCANDO01_LOWER03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shelf",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XZ",
         "uvOrientation": 117,
         "uvScale": 0.44
       }
