@@ -11836,9 +11836,6 @@
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
       "SWAMP_MOSS_COVERED_ROCK_2",
-      "RAIDS_ROCKS_FLOOR1",
-      "RAIDS_ROCKS_FLOOR2",
-      "RAIDS_ROCKS_FLOOR3",
       "HUNTING_TRAIL_SPAWN_FOSSIL1",
       "HUNTING_TRAIL_SPAWN_FOSSIL3",
       "HUNTING_TRAIL_SPAWN_FOSSIL4",
@@ -57524,6 +57521,126 @@
         "uvType": "BOX",
         "uvScale": 0.75
       }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Swamp edges",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_01_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_02_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_03_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_04_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Swamp edges with vines",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_CORNER_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_CORNER_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_CORNER_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Decaying Stump with Mushrooms",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_FALLEN_TRUNK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Mushroom",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Vines",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_VINE_01",
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_01"
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Grim Lilly",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_GRIMLILLY_LOWER",
+      "FOSSIL_FLORA_SWAMP_GRIMLILLY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Raids - Tar Swamp - Greenish Rocks - Medium",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "RAIDS_ROCKS_FLOOR1",
+      "RAIDS_ROCKS_FLOOR4",
+      "RAIDS_ROCKS_FLOOR5"
+    ]
+  },
+  {
+    "description": "Raids - Tar Swamp - Greenish Rocks - Large",
+    "baseMaterial": "ROCK_5",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "RAIDS_ROCKS_FLOOR2",
+      "RAIDS_ROCKS_FLOOR3",
+      "RAIDS_ROCKS_FLOOR6"
     ]
   }
 ]
