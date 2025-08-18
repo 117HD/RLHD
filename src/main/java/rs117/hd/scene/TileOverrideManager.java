@@ -129,8 +129,7 @@ public class TileOverrideManager {
 
 		if (reloadScene) {
 			modelPusher.clearModelCache();
-			if (client.getGameState() == GameState.LOGGED_IN)
-				client.setGameState(GameState.LOADING);
+			plugin.reuploadScene();
 		}
 	}
 

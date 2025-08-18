@@ -162,6 +162,9 @@ import static rs117.hd.utils.ResourcePath.path;
 @PluginDependency(EntityHiderPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks {
+	public static final ResourcePath PLUGIN_DIR = Props
+		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
+
 	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
 	public static final String RUNELITE_URL = "https://runelite.net";
 	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
@@ -807,7 +810,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// force main buffer provider rebuild to turn off alpha channel
 			client.resizeCanvas();
 
-			// Force the client to reload the scene to reset any scene modifications we may have made
+			// Force the client to reload the scene to reset any scene modifications & update GPU flags
 			if (client.getGameState() == GameState.LOGGED_IN)
 				client.setGameState(GameState.LOADING);
 		});
@@ -881,7 +884,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public ShaderIncludes getShaderIncludes() {
-		assert SHADER_PATH != null;
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		return new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
@@ -1612,6 +1614,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					justChangedArea = true;
 				}
+				// Reload the scene to reapply area hiding
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
@@ -1937,7 +1940,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void initShaderHotswapping() {
-		assert SHADER_PATH != null;
 		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Recompiling shaders: {}", path);
 			recompilePrograms();
@@ -2535,14 +2537,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// in use by the client thread, meaning we can reuse all of its buffers if we are loading the
 			// next scene also on the client thread
 			boolean reuseBuffers = client.isClientThread();
-			var context = new SceneContext(client, scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
-			// noinspection SynchronizationOnLocalVariableOrMethodParameter
-			synchronized (context) {
-				nextSceneContext = context;
-				proceduralGenerator.generateSceneData(context);
-				environmentManager.loadSceneEnvironments(context);
-				sceneUploader.upload(context);
-			}
+			nextSceneContext = new SceneContext(client, scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
+			proceduralGenerator.generateSceneData(nextSceneContext);
+			environmentManager.loadSceneEnvironments(nextSceneContext);
+			sceneUploader.upload(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
 				HDUtils.is32Bit(), useLowMemoryMode, config.modelCacheSizeMiB(), oom
@@ -2892,14 +2890,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		});
 	}
 
-	private void setupSyncMode()
-	{
-		final boolean unlockFps = config.unlockFps();
-		client.setUnlockedFps(unlockFps);
-
+	public void setupSyncMode() {
 		// Without unlocked fps, the client manages sync on its 20ms timer
+		boolean unlockFps = config.unlockFps();
 		HdPluginConfig.SyncMode syncMode = unlockFps ? config.syncMode() : HdPluginConfig.SyncMode.OFF;
 
+		if (frameTimer.isActive()) {
+			unlockFps = true;
+			syncMode = SyncMode.OFF;
+		}
+
+		client.setUnlockedFps(unlockFps);
 		int swapInterval;
 		switch (syncMode)
 		{
@@ -3153,18 +3154,46 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			drawnStaticRenderableCount++;
 		} else {
+			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			int[] worldPos = sceneContext.localToWorld(x, z, plane);
+			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+			if (modelOverride.hide)
+				return;
+
+			// Disable color overrides when caching is disabled, since they are expensive on dynamic models
+			if (!configModelCaching && modelOverride.colorOverrides != null)
+				modelOverride = ModelOverride.NONE;
+
+			int preOrientation = 0;
+			if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
+				int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
+					Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
+					int config;
+					if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
+						preOrientation = HDUtils.getModelPreOrientation(config);
+					} else if (plane > 0) {
+						// Might be on a bridge tile
+						tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
+						if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
+							preOrientation = HDUtils.getModelPreOrientation(config);
+					}
+				}
+			}
+
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
 			if (enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_BATCHING);
 			ModelOffsets modelOffsets = null;
-			long batchHash = 0;
 			if (configModelBatching || configModelCaching) {
-				modelHasher.setModel(model);
+				modelHasher.setModel(model, modelOverride, preOrientation);
 				// Disable model batching for models which have been excluded from the scene buffer,
 				// because we want to avoid having to fetch the model override
 				if (configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
-					batchHash = modelHasher.vertexHash;
-					modelOffsets = frameModelInfoMap.get(batchHash);
+					modelOffsets = frameModelInfoMap.get(modelHasher.batchHash);
+					if (modelOffsets != null && modelOffsets.faceCount != model.getFaceCount())
+						modelOffsets = null; // Assume there's been a hash collision
 				}
 			}
 			if (enableDetailedTimers)
@@ -3179,32 +3208,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
-				int uuid = ModelHash.generateUuid(client, hash, renderable);
-				int[] worldPos = sceneContext.localToWorld(x, z, plane);
-				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-				if (modelOverride.hide)
-					return;
-
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-
-				int preOrientation = 0;
-				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
-					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
-						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
-						int config;
-						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
-							preOrientation = HDUtils.getModelPreOrientation(config);
-						} else if (plane > 0) {
-							// Might be on a bridge tile
-							tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
-							if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
-								preOrientation = HDUtils.getModelPreOrientation(config);
-						}
-					}
-				}
 
 				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
 
@@ -3220,8 +3225,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[2] = faceCount;
 
 				// add this temporary model to the map for batching purposes
-				if (configModelBatching)
-					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
+				if (configModelBatching && modelOffsets == null)
+					frameModelInfoMap.put(modelHasher.batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 
 			if (eightIntWrite[0] != -1)

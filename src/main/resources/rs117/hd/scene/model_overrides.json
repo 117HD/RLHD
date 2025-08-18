@@ -4219,14 +4219,31 @@
     "objectIds": [
       "CAVEWALL_FACE1_LEV2",
       "KARAM_CAVEWALL_FACE1",
-      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGL",
-      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGR",
-      "KARAM_CAVEWALL_VINE",
-      "KARAM_CAVEWALL_VINE_LEV2",
       "KARAM_DUNGEON_CAVESTAIRS2",
       "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN2",
       "KARAM_DUNGEON_LAVAWALL_LEV1",
-      "KARAM_DUNGEON_LAVAWALL_LEV2"
+      "KARAM_DUNGEON_LAVAWALL_LEV2",
+      "KARAM_DUNGEON_CAVESTAIRS",
+      "KARAM_DUNGEON_CAVESTAIRS_LEV2_DOWN"
+    ]
+  },
+  {
+    "description": "Karamja - Brimhaven Dungeon - Walls - Plant -  with vines",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGL",
+      "KARAM_DUNGEON_CAVEWALL_VINEBLOCKINGR",
+      "KARAM_CAVEWALL_VINE",
+      "KARAM_CAVEWALL_VINE_LEV2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -5327,7 +5344,11 @@
     ]
   },
   {
-    "description": "MOUNT_KARUULM_WALLS",
+    "description": "Mount Karuulm - Rock - Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
     "objectIds": [
       "BRIMSTONE_ROCK_CLIFF_2X2",
       "BRIMSTONE_ROCK_CLIFF_1",
@@ -5341,9 +5362,52 @@
       "BRIMSTONE_ROCK_CLIFF_W",
       "BRIMSTONE_ROCK_CLIFF_R",
       "BRIMSTONE_ROCK_CLIFF_T",
-      "BRIMSTONE_ROCK_CLIFF_U"
+      "BRIMSTONE_ROCK_CLIFF_U",
+      "BRIMSTONE_ROCKYOUTCROP_CORNER",
+      "BRIMSTONE_ROCKYOUTCROP_STRAIGHT"
+    ]
+  },
+
+  {
+    "description": "Mount Karuulm - Rock - Walls - Sulphur",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "BRIMSTONE_SULPHUR_CLIFF_1",
+      "BRIMSTONE_SULPHUR_CLIFF_2",
+      "BRIMSTONE_SULPHUR_CLIFF_3",
+      "BRIMSTONE_SULPHUR_CLIFF_4",
+      "BRIMSTONE_SULPHUR_CLIFF_5",
+      "BRIMSTONE_SULPHUR_CLIFF_W",
+      "BRIMSTONE_SULPHUR_CLIFF_Q"
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Building walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "objectIds": [
+      "BRIMSTONE_ROCKYFENCE"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 400
+      },
+      {
+        "description": "Sulfur stone",
+        "colors": "h == 8",
+        "baseMaterial": "ROCK_3_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.66
+      }
+    ]
   },
   {
     "description": "Wintertodt Terrain",
@@ -9769,9 +9833,12 @@
     "flatNormals": true
   },
   {
-    "description": "Camelot Stone",
-    "baseMaterial": "STONE",
+    "description": "Camelot - Brimhaven Dungeon - Stone",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
     "objectIds": [
+      "KARAM_DUNGEON_STONE1",
+      "KARAM_DUNGEON_STONE2",
       "STONEDISC_DARKGREY"
     ]
   },
@@ -13209,8 +13276,8 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "upwardsNormals": true,
-        "baseMaterial": "GRAY_75",
+        "flatNormals": true,
+        "baseMaterial": "GRAY_85",
         "windDisplacementMode": "OBJECT"
       },
       {
@@ -13258,9 +13325,9 @@
   },
   {
     "description": "Objects - Jungle grass",
-    "upwardsNormals": true,
+    "flatNormals": true,
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
@@ -16529,20 +16596,24 @@
     "inheritTileColorType": "UNDERLAY"
   },
   {
-    "description": "POH carpets - Untexture as it flickers when moving the camera - TODO",
+    "description": "POH carpets",
     "objectIds": [
+      "POH_LEAGUEHALL_RUG_CORNER_1",
+      "POH_LEAGUEHALL_RUG_MIDDLE_1",
+      "POH_LEAGUEHALL_RUG_SIDE_1",
       "POH_RUGCORNER1",
-      "POH_RUGSIDE1",
-      "POH_RUGMIDDLE1",
       "POH_RUGCORNER2",
-      "POH_RUGSIDE2",
-      "POH_RUGMIDDLE2",
       "POH_RUGCORNER3",
-      "POH_RUGSIDE3",
-      "POH_RUGMIDDLE3"
+      "POH_RUGMIDDLE1",
+      "POH_RUGMIDDLE2",
+      "POH_RUGMIDDLE3",
+      "POH_RUGSIDE1",
+      "POH_RUGSIDE2",
+      "POH_RUGSIDE3"
     ],
-    "baseMaterial": "NONE",
-    "uvType": "VANILLA",
+    "baseMaterial": "CARPET",
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
     "castShadows": false
   },
   {
@@ -32840,7 +32911,10 @@
     "description": "Zeah Battlefield - Objects - Stone - Tiles",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "BROKEN_GREY_TILE_01"
+      "BROKEN_GREY_TILE_01",
+      "BROKEN_GREY_TILE_02",
+      "BROKEN_GREY_TILE_03",
+      "BROKEN_GREY_TILE_05"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -49988,7 +50062,9 @@
     "objectIds": [
       "KARAM_DUNGEON_VINEBLOCKING1",
       "KARAM_DUNGEON_VINEBLOCKING2",
-      "KARAM_DUNGEON_VINEBLOCKING3"
+      "KARAM_DUNGEON_VINEBLOCKING3",
+      "KARAM_DUNGEON_VINEBLOCKING4",
+      "KARAM_DUNGEON_VINEBLOCKING5"
     ],
     "colorOverrides": [
       {
@@ -57310,6 +57386,52 @@
       "ARCHEUS_CRYSTAL_SMALLEST_RED_02"
     ],
     "shadowOpacityThreshold": 0.9
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava edges",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_FALLOFF_1",
+      "BRIMSTONE_FALLOFF_2",
+      "BRIMSTONE_FALLOFF_3",
+      "BRIMSTONE_FALLOFF_4",
+      "BRIMSTONE_FALLOFF_6",
+      "BRIMSTONE_FALLOFF_R",
+      "BRIMSTONE_FALLOFF_E",
+      "BRIMSTONE_FALLOFF_T",
+      "BRIMSTONE_FALLOFF_W",
+      "BRIMSTONE_FALLOFF_X",
+      "BRIMSTONE_FALLOFF_Q"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 32",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Mount Karuulm - Rock - Lava vents - ANIMATED",
+    "baseMaterial": "ROCK_4",
+    "uvOrientation": 128,
+    "uvType": "BOX",
+    "objectIds": [
+      "BRIMSTONE_LAVA_CRATER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Lava",
+        "colors": "h >= 32",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Steam",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   },
   {
     "description": "Tonali Caverns - Cave Wall",

@@ -82,8 +82,7 @@ public class ModelOverrideManager {
 					return;
 
 				modelPusher.clearModelCache();
-				if (client.getGameState() == GameState.LOGGED_IN)
-					client.setGameState(GameState.LOADING);
+				plugin.reuploadScene();
 			} catch (Exception ex) {
 				log.error("Failed to load model overrides:", ex);
 			}
