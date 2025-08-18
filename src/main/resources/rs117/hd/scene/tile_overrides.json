@@ -5271,16 +5271,28 @@
     "waterType": "SWAMP_WATER_FLAT"
   },
   {
+    "name": "ANCIENT_SHRINE_OVERLAY_GRASS",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 336 ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 80, 86, 194, 226, 227, 252 ],
+    "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
     "name": "ANCIENT_SHRINE_DIRT",
     "area": "ANCIENT_SHRINE",
-    "underlayIds": [ 227 ],
-    "groundMaterial": "DIRT",
-    "blended": false
+    "underlayIds": [ 36 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "ANCIENT_SHRINE_GRASS",
     "area": "ANCIENT_SHRINE",
-    "underlayIds": [ 36, 81 ],
+    "underlayIds": [ 25, 40, 48, 81 ],
     "groundMaterial": "GRASS_1"
   },
   {
