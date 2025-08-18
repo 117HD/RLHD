@@ -41211,5 +41211,47 @@
     "projectileIds": [
       "LUC2_UNDEAD_DEMON_FIREBALL_PROJ"
     ]
+  },
+  {
+    "description": "Doom of Mokhaiotl Fire",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TONALI_FIRE01",
+      "TONALI_FIRE02",
+      "TONALI_FIRE03",
+      "TONALI_FIRE04",
+      "TONALI_FIRE01_OFFSET01",
+      "TONALI_FIRE01_OFFSET02"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Brighten Arena Torches",
+    "areas": [ "Doom of Mokhaiotl - Arena Torch Brightness" ],
+    "height": 235,
+    "offset": [ 0, -17, 0 ],
+    "radius": 840,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "ALDARIN_TORCH01_CAVE01"
+    ]
   }
 ]
