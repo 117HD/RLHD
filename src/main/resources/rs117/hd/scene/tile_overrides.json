@@ -5227,6 +5227,8 @@
   {
     "name": "EARTHBOUND_CAVERN_COMPLEX",
     "area": "EARTHBOUND_CAVERN",
+    "overlayIds": [ 131 ],
+    "underlayIds": [ 54, 56, 72, 105, 144 ],
     "replacements": {
       "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
       "EARTHBOUND_CAVERN_GRASS": "s > 2",
