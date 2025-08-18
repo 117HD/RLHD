@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
@@ -16,15 +15,19 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Job;
+import rs117.hd.utils.Mat4;
 import rs117.hd.utils.SceneView;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
 public class SceneCullingManager {
+	private static final int JOB_BATCH_SIZE = 8;
+
 	public static final byte VISIBILITY_UNKNOWN = -1;
 	public static final byte VISIBILITY_HIDDEN = 0;
 	public static final byte VISIBILITY_TILE_VISIBLE = 1;
@@ -55,7 +58,7 @@ public class SceneCullingManager {
 	private boolean cullingInFlight = false;
 
 	public SceneCullingManager() {
-		frustumCullingJobs = new FrustumTileCullingJob[EXTENDED_SCENE_SIZE / 4][EXTENDED_SCENE_SIZE / 4];
+		frustumCullingJobs = new FrustumTileCullingJob[EXTENDED_SCENE_SIZE / JOB_BATCH_SIZE][EXTENDED_SCENE_SIZE / JOB_BATCH_SIZE];
 		for(int x = 0; x < frustumCullingJobs.length; x++) {
 			for(int y = 0; y < frustumCullingJobs.length; y++) {
 				frustumCullingJobs[x][y] = new FrustumTileCullingJob(this);
@@ -71,6 +74,7 @@ public class SceneCullingManager {
 		}
 		cullingInFlight = false;
 
+		frameTimer.begin(Timer.VISIBILITY_CHECK);
 		playerCullingJob.complete();
 		npcCullingJob.complete();
 		projectileCullingJob.complete();
@@ -80,6 +84,7 @@ public class SceneCullingManager {
 				cullingJob.complete();
 			}
 		}
+		frameTimer.end(Timer.VISIBILITY_CHECK);
 
 		return true;
 	}
@@ -114,18 +119,18 @@ public class SceneCullingManager {
 
 		frameTimer.begin(Timer.VISIBILITY_CHECK);
 		// If the Tile is still in-progress then wait for the job to complete
-		long waitStart = System.currentTimeMillis();
-		while (cullingInFlight && result == VISIBILITY_UNKNOWN) {
-			Thread.yield();
-			result = combinedTileVisibility.tiles[tileIdx];
-
-			if (result == VISIBILITY_UNKNOWN && System.currentTimeMillis() - waitStart > 100) {
-				break; // Dead-Lock Prevention
+		int jobX = tileExX / JOB_BATCH_SIZE;
+		int jobY = tileExY / JOB_BATCH_SIZE;
+		if (jobX > 0 && jobX < frustumCullingJobs.length &&
+			jobY > 0 && jobY < frustumCullingJobs[jobX].length) {
+			while (frustumCullingJobs[jobX][jobY].isInFlight() && result == VISIBILITY_UNKNOWN) {
+				frustumCullingJobs[jobX][jobY].wait(false, 100);
+				result = combinedTileVisibility.tiles[tileIdx];
 			}
 		}
 		frameTimer.end(Timer.VISIBILITY_CHECK);
 
-		return result > 0;
+		return combinedTileVisibility.tiles[tileIdx] > 0;
 	}
 
 	private SceneViewContext getAvailableSceneViewContext() {
@@ -301,8 +306,6 @@ public class SceneCullingManager {
 		private final HashMap<Integer, Boolean> npcs = new HashMap<>();
 		private final HashMap<Integer, Boolean> projectiles = new HashMap<>();
 
-		private AtomicInteger visibleTileCount = new AtomicInteger();
-
 		public CullingResults() {
 			reset();
 		}
@@ -323,10 +326,6 @@ public class SceneCullingManager {
 				tileExX,
 				tileExY
 			)];
-		}
-
-		public int getVisibleTileCount() {
-			return visibleTileCount.get();
 		}
 
 		public boolean isTileSurfaceVisible(int tileIdx) {
@@ -366,7 +365,6 @@ public class SceneCullingManager {
 		}
 
 		public void reset() {
-			visibleTileCount.set(0);
 			Arrays.fill(tiles, VISIBILITY_UNKNOWN);
 		}
 	}
@@ -400,13 +398,16 @@ public class SceneCullingManager {
 		public int startX, endX;
 		public int startY, endY;
 		public int sceneID;
+		public boolean[] sceneViewCtxVisible = new boolean[4];
 
 		// Job AABB
 		private int aabb_MinX, aabb_MinY, aabb_MinZ;
 		private int aabb_MaxX, aabb_MaxY, aabb_MaxZ;
+		private int[][][] tileHeights;
+		private final float[][] tileVertices = new float[4][4];
 
 		@Override
-		protected void onComplete() {
+		protected void onPrepare() {
 			if(sceneID == sceneContext.id) {
 				return;
 			}
@@ -421,8 +422,9 @@ public class SceneCullingManager {
 			aabb_MaxZ = Integer.MIN_VALUE;
 
 			// Build Job AABB, used for early out to avoid performing expensive frustum culling for all tiles
-			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
-			for(int plane = 0; plane < MAX_Z; plane++) {
+			tileHeights = sceneContext.scene.getTileHeights();
+
+			for (int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
 						int h0 = tileHeights[plane][tileExX][tileExY];
@@ -444,7 +446,7 @@ public class SceneCullingManager {
 						aabb_MaxZ = Math.max(aabb_MaxZ, tileZ + LOCAL_TILE_SIZE);
 						aabb_MaxY = Math.max(aabb_MaxY, localMaxY);
 
-						if(sceneContext.tileIsWater[plane][tileExX][tileExY]) {
+						if (sceneContext.tileIsWater[plane][tileExX][tileExY]) {
 							final int dl0 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
 							final int dl1 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY];
 							final int dl2 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY + 1];
@@ -473,179 +475,52 @@ public class SceneCullingManager {
 
 		@Override
 		protected void doWork() {
-			{
-				boolean isJobAreaVisible = false;
-				for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-					if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0)
-						continue;
-
-					if (HDUtils.isAABBIntersectingFrustum(
-						aabb_MinX,
-						aabb_MinY,
-						aabb_MinZ,
-						aabb_MaxX,
-						aabb_MaxY,
-						aabb_MaxZ,
-						viewCtx.frustumPlanes,
-						0
-					)) {
-						isJobAreaVisible = true;
-						break;
-					}
-				}
-
-				if (!isJobAreaVisible) {
-					for(int plane = 0; plane < MAX_Z; plane++) {
-						for (int tileExX = startX; tileExX < endX; tileExX++) {
-							for (int tileExY = startY; tileExY < endY; tileExY++) {
-								final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
-								byte combinedResult = VISIBILITY_HIDDEN;
-								for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
-										combinedResult |= viewCtx.results.tiles[tileIdx];
-										continue;
-									}
-
-									viewCtx.results.tiles[tileIdx] = VISIBILITY_HIDDEN;
-								}
-								cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
-							}
-						}
-					}
-					return;
-				}
+			if (sceneViewCtxVisible.length < cullManager.cullingViewContexts.size()) {
+				sceneViewCtxVisible = new boolean[cullManager.cullingViewContexts.size()];
 			}
 
-			// Pass 1 - Cull Tiles Renderables
+			boolean isVisibleInAny = false;
+			for (int i = 0; i < cullManager.cullingViewContexts.size(); i++) {
+				SceneViewContext viewCtx = cullManager.cullingViewContexts.get(i);
+				sceneViewCtxVisible[i] = HDUtils.isAABBIntersectingFrustum(
+					aabb_MinX,
+					aabb_MinY,
+					aabb_MinZ,
+					aabb_MaxX,
+					aabb_MaxY,
+					aabb_MaxZ,
+					viewCtx.frustumPlanes,
+					0
+				);
+				isVisibleInAny = isVisibleInAny || sceneViewCtxVisible[i];
+			}
 
-			final int[][][] tileHeights = sceneContext.scene.getTileHeights();
+			// Check if we're visible in any SceneView
+			if (!isVisibleInAny) {
+				for (int plane = 0; plane < MAX_Z; plane++) {
+					for (int tileExX = startX; tileExX < endX; tileExX++) {
+						for (int tileExY = startY; tileExY < endY; tileExY++) {
+							final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+							byte combinedResult = VISIBILITY_HIDDEN;
+							for (SceneViewContext viewCtx : cullManager.cullingViewContexts) {
+								if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
+									combinedResult |= viewCtx.results.tiles[tileIdx];
+									continue;
+								}
+
+								viewCtx.results.tiles[tileIdx] = VISIBILITY_HIDDEN;
+							}
+							cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
+						}
+					}
+				}
+				return;
+			}
+
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
 						final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
-
-						// Surface Plane Heights
-						final int h0 = tileHeights[plane][tileExX][tileExY];
-						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
-						final int h2 = tileHeights[plane][tileExX][tileExY + 1];
-						final int h3 = tileHeights[plane][tileExX + 1][tileExY + 1];
-
-						// Positions
-						final int x = (tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-						final int z = (tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-
-						// Underwater Plane Heights
-						boolean hasUnderwaterTile = false;
-						int uh0 = h0;
-						int uh1 = h1;
-						int uh2 = h2;
-						int uh3 = h3;
-
-						if(sceneContext.tileIsWater[plane][tileExX][tileExY]) {
-							final int dl0 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
-							final int dl1 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY];
-							final int dl2 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY + 1];
-							final int dl3 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY + 1];
-
-							hasUnderwaterTile = dl0 > 0 || dl1 > 0 || dl2 > 0 || dl3 > 0;
-							if (dl0 > 0) uh0 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl0 - 1] * 0.55f);
-							if (dl1 > 0) uh1 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl1 - 1] * 0.55f);
-							if (dl2 > 0) uh2 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1] * 0.55f);
-							if (dl3 > 0) uh3 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1] * 0.55f);
-						}
-
-						byte combinedResult = VISIBILITY_HIDDEN;
-						for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-							if((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
-								combinedResult |= viewCtx.results.tiles[tileIdx];
-								continue;
-							}
-
-							// Check if Parent view has already determined that it's visible if so we can use that result and early out
-							if(viewCtx.parentIdx != -1) {
-								SceneViewContext parentViewCtx = cullManager.cullingViewContexts.get(viewCtx.parentIdx);
-								byte parentViewResult = parentViewCtx.results.tiles[tileIdx];
-								if ((parentViewResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE)) == (
-									VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE
-								)) {
-									if(plane == 0 && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) == 0){
-										parentViewResult &= ~VISIBILITY_TILE_VISIBLE;
-									}
-									viewCtx.results.visibleTileCount.incrementAndGet();
-									viewCtx.results.tiles[tileIdx] = parentViewResult;
-									continue; // Early out, no need to perform any culling
-								}
-							}
-
-							byte viewResult = VISIBILITY_HIDDEN;
-							if(plane != 0 || (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) != 0){
-								float tileTriangleArea = HDUtils.getTileTriangleArea(x, z, h0, h1, h2, h3, viewCtx.viewProj);
-								if (tileTriangleArea > 1e-6f) {
-									boolean visible = HDUtils.IsTileVisible(
-										x,
-										z,
-										h0,
-										h1,
-										h2,
-										h3,
-										viewCtx.frustumPlanes,
-										-LOCAL_HALF_TILE_SIZE);
-
-									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
-										visible = viewCtx.callbacks.isTileVisible(x, z, h0, h1, h2, h3, visible);
-									}
-
-									if(visible) {
-										viewResult |= VISIBILITY_TILE_VISIBLE;
-									}
-								}
-							}
-
-							if(hasUnderwaterTile && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_UNDERWATER_PLANES) != 0) {
-								float tileTriangleArea = HDUtils.getTileTriangleArea(x, z, uh0, uh1, uh2, uh3, viewCtx.viewProj);
-								if (tileTriangleArea > 1e-6f) {
-									boolean visible = HDUtils.IsTileVisible(
-										x,
-										z,
-										uh0,
-										uh1,
-										uh2,
-										uh3,
-										viewCtx.frustumPlanes);
-
-									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
-										visible = viewCtx.callbacks.isTileVisible(x, z, uh0, uh1, uh2, uh3, visible);
-									}
-
-									if(visible) {
-										viewResult |= VISIBILITY_UNDER_WATER_TILE_VISIBLE;
-									}
-								}
-							}
-
-							if ((viewResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_UNDER_WATER_TILE_VISIBLE)) != 0) {
-								viewCtx.results.visibleTileCount.incrementAndGet();
-							}
-
-							combinedResult |= viewResult;
-							viewCtx.results.tiles[tileIdx] = viewResult;
-						}
-
-						if ((combinedResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_UNDER_WATER_TILE_VISIBLE)) != 0) {
-							cullManager.combinedTileVisibility.visibleTileCount.incrementAndGet();
-						}
-
-						cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
-					}
-				}
-			}
-
-			// Pass 2 - Cull Static Renderables
-			for(int plane = 0; plane < MAX_Z; plane++) {
-				for (int tileExX = startX; tileExX < endX; tileExX++) {
-					for (int tileExY = startY; tileExY < endY; tileExY++) {
-						final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
-
 						// Surface Plane Heights
 						final int h0 = tileHeights[plane][tileExX][tileExY];
 						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
@@ -659,55 +534,187 @@ public class SceneCullingManager {
 						final int cZ = z + LOCAL_HALF_TILE_SIZE;
 						final int cH = (int) ((h0 + h1 + h2 + h3) / 4.0f);
 
+						// Underwater Plane Heights
+						boolean hasUnderwaterTile = false;
+						int uh0 = h0;
+						int uh1 = h1;
+						int uh2 = h2;
+						int uh3 = h3;
+
+						if (sceneContext.tileIsWater[plane][tileExX][tileExY]) {
+							final int dl0 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
+							final int dl1 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY];
+							final int dl2 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY + 1];
+							final int dl3 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY + 1];
+
+							hasUnderwaterTile = dl0 > 0 || dl1 > 0 || dl2 > 0 || dl3 > 0;
+							if (dl0 > 0) uh0 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl0 - 1] * 0.55f);
+							if (dl1 > 0) uh1 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl1 - 1] * 0.55f);
+							if (dl2 > 0) uh2 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl2 - 1] * 0.55f);
+							if (dl3 > 0) uh3 = (int) (ProceduralGenerator.DEPTH_LEVEL_SLOPE[dl3 - 1] * 0.55f);
+						}
+
 						byte combinedResult = VISIBILITY_HIDDEN;
-						for(SceneViewContext viewCtx : cullManager.cullingViewContexts) {
-							if((viewCtx.cullingFlags & SceneView.CULLING_FLAG_RENDERABLES) == 0) {
+						for (int i = 0; i < cullManager.cullingViewContexts.size(); i++) {
+							SceneViewContext viewCtx = cullManager.cullingViewContexts.get(i);
+							if (!sceneViewCtxVisible[i]) {
+								viewCtx.results.tiles[tileIdx] = VISIBILITY_HIDDEN;
 								continue;
 							}
 
-							byte viewResult = viewCtx.results.tiles[tileIdx];
-							SceneContext.RenderableCullingData[] renderableCullingData = sceneContext.tileRenderableCullingData[plane][tileExX][tileExY];
-							if(renderableCullingData != null && renderableCullingData.length > 0) {
-								for (SceneContext.RenderableCullingData renderable : renderableCullingData) {
-									final int radius = renderable.radius;
-									if (renderable.height < LOCAL_HALF_TILE_SIZE) {
-										// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
-										if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
-											continue; // Surface isn't visible, skip this renderable
+							if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
+								combinedResult |= viewCtx.results.tiles[tileIdx];
+								continue;
+							}
+
+							// Check if Parent view has already determined that it's visible if so we can use that result and early out
+							if (viewCtx.parentIdx != -1) {
+								SceneViewContext parentViewCtx = cullManager.cullingViewContexts.get(viewCtx.parentIdx);
+								byte parentViewResult = parentViewCtx.results.tiles[tileIdx];
+								if ((parentViewResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE)) == (
+									VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE
+								)) {
+									if (plane == 0 && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) == 0) {
+										parentViewResult &= ~VISIBILITY_TILE_VISIBLE;
+									}
+									viewCtx.results.tiles[tileIdx] = parentViewResult;
+									continue; // Early out, no need to perform any culling
+								}
+							}
+
+							byte viewResult = VISIBILITY_HIDDEN;
+							if (plane != 0 || (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) != 0) {
+								boolean visible = HDUtils.IsTileVisible(
+									x,
+									z,
+									h0,
+									h1,
+									h2,
+									h3,
+									viewCtx.frustumPlanes
+								);
+
+								if (visible && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_BACK_FACE_CULL) != 0) {
+									visible = getTileTriangleArea(x, z, h0, h1, h2, h3, viewCtx.viewProj) > 1e-6f;
+								}
+
+								if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+									visible = viewCtx.callbacks.isTileVisible(x, z, h0, h1, h2, h3, visible);
+								}
+
+								if (visible) {
+									viewResult |= VISIBILITY_TILE_VISIBLE;
+								}
+							}
+
+							if (hasUnderwaterTile && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_UNDERWATER_PLANES) != 0) {
+								boolean visible = HDUtils.IsTileVisible(
+									x,
+									z,
+									uh0,
+									uh1,
+									uh2,
+									uh3,
+									viewCtx.frustumPlanes,
+									-LOCAL_TILE_SIZE
+								);
+
+								if (visible && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_BACK_FACE_CULL) != 0) {
+									visible = getTileTriangleArea(x, z, uh0, uh1, uh2, uh3, viewCtx.viewProj) > 1e-6f;
+								}
+
+								if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+									visible = viewCtx.callbacks.isTileVisible(x, z, uh0, uh1, uh2, uh3, visible);
+								}
+
+								if (visible) {
+									viewResult |= VISIBILITY_UNDER_WATER_TILE_VISIBLE;
+								}
+							}
+
+							if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_RENDERABLES) != 0) {
+								SceneContext.RenderableCullingData[] renderableCullingData = sceneContext.tileRenderableCullingData[plane][tileExX][tileExY];
+								if (renderableCullingData != null && renderableCullingData.length > 0) {
+									for (SceneContext.RenderableCullingData renderable : renderableCullingData) {
+										if (renderable.height < LOCAL_HALF_TILE_SIZE) {
+											// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
+											if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
+												continue; // Surface isn't visible, skip this renderable
+											}
+										}
+
+										boolean visible = HDUtils.isAABBIntersectingFrustum(
+											cX - renderable.radius,
+											cH - renderable.bottomY,
+											cZ - renderable.radius,
+											cX + renderable.radius,
+											cH - renderable.bottomY + renderable.height,
+											cZ + renderable.radius,
+											viewCtx.frustumPlanes, 0
+										);
+
+										if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
+											visible = viewCtx.callbacks.isStaticRenderableVisible(
+												cX,
+												cH - renderable.bottomY,
+												cZ,
+												renderable.radius,
+												renderable.height,
+												visible
+											);
+										}
+
+										if (visible) {
+											viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
+											break;
 										}
 									}
-
-									boolean visible =  HDUtils.isAABBIntersectingFrustum(
-										cX - radius,
-										cH - renderable.bottomY,
-										cZ - radius,
-										cX + radius,
-										cH - renderable.bottomY + renderable.height,
-										cZ + radius,
-										viewCtx.frustumPlanes, 0);
-
-									if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
-										visible = viewCtx.callbacks.isStaticRenderableVisible(cX, cH - renderable.bottomY, cZ, radius, renderable.height, visible);
-									}
-
-									if(visible) {
-										viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
-										break;
-									}
+								} else {
+									// No Static Culling data was present, allow missed static renderables to be visible here
+									viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
 								}
-							} else {
-								// No Static Culling data was present, allow missed static renderables to be visible here
-								viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
 							}
 
 							combinedResult |= viewResult;
 							viewCtx.results.tiles[tileIdx] = viewResult;
 						}
 
-						cullManager.combinedTileVisibility.tiles[tileIdx] |= combinedResult;
+						cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
 					}
 				}
 			}
+		}
+
+		private float getTileTriangleArea(int x, int z, int h0, int h1, int h2, int h3, float[] viewProj) {
+			tileVertices[0][0] = x;
+			tileVertices[0][1] = h0;
+			tileVertices[0][2] = z;
+			tileVertices[0][3] = 1.0f;
+
+			tileVertices[1][0] = x + LOCAL_TILE_SIZE;
+			tileVertices[1][1] = h1;
+			tileVertices[1][2] = z;
+			tileVertices[1][3] = 1.0f;
+
+			tileVertices[2][0] = x;
+			tileVertices[2][1] = h2;
+			tileVertices[2][2] = z + LOCAL_TILE_SIZE;
+			tileVertices[2][3] = 1.0f;
+
+			tileVertices[3][0] = x + LOCAL_TILE_SIZE;
+			tileVertices[3][1] = h3;
+			tileVertices[3][2] = z + LOCAL_TILE_SIZE;
+			tileVertices[3][3] = 1.0f;
+
+			Mat4.projectVec(tileVertices[0], viewProj, tileVertices[0]);
+			Mat4.projectVec(tileVertices[1], viewProj, tileVertices[1]);
+			Mat4.projectVec(tileVertices[2], viewProj, tileVertices[2]);
+			Mat4.projectVec(tileVertices[3], viewProj, tileVertices[3]);
+
+			return max(
+				HDUtils.signedTriangleArea(tileVertices[0], tileVertices[1], tileVertices[2]),
+				HDUtils.signedTriangleArea(tileVertices[2], tileVertices[1], tileVertices[3])
+			);
 		}
 	}
 

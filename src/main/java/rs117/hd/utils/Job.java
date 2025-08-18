@@ -12,44 +12,14 @@ import rs117.hd.HdPlugin;
 public abstract class Job implements Runnable {
 	private final Semaphore completionSema = new Semaphore(1);
 	private final AtomicBoolean inFlight = new AtomicBoolean(false); // Used to track if the Async work is being processed
-	@Getter
-	private boolean isCompleted = true; // Used to track if the job has been marked as completed yet
 	private JobCallback onPrepareCallback;
 	private JobCallback onCompleteCallback;
 
-	private Job dependsOn = null;
+	@Getter
+	private boolean isCompleted = true; // Used to track if the job has been marked as completed yet
 
 	public interface JobCallback {
 		void callback();
-	}
-
-	@SneakyThrows
-	public Job setDependsOn(Job dependsOn) {
-		if (dependsOn != null) {
-			// Walk dependency list to see if this will result in a circular dependency
-			Job parent = dependsOn;
-			int walkAmount = 0;
-			final int WalkAmountUpperLimit = 100;
-			for (; walkAmount < WalkAmountUpperLimit && parent != null; walkAmount++) {
-				if (parent == this) {
-					// We've wrapped around to ourselves!
-					// To resolve circular dependency, synchronously wait for the dependency to complete
-					dependsOn.complete(true);
-					return this;
-				}
-
-				parent = parent.dependsOn;
-			}
-
-			if (walkAmount >= WalkAmountUpperLimit) {
-				// Failed to resolve dependency, synchronously wait for the dependency to complete
-				dependsOn.complete(true);
-				return this;
-			}
-
-			this.dependsOn = dependsOn;
-		}
-		return this;
 	}
 
 	public Job setOnPrepareCallback(JobCallback callback) {
@@ -79,7 +49,7 @@ public abstract class Job implements Runnable {
 				onPrepareCallback.callback();
 			}
 
-			prepare();
+			onPrepare();
 		} catch (Exception ex) {
 			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
 		}
@@ -94,14 +64,6 @@ public abstract class Job implements Runnable {
 		}
 	}
 
-	public static void completeAll(boolean block, Job... jobs) {
-		for(Job job : jobs) {
-			if(job != null) {
-				job.complete(block);
-			}
-		}
-	}
-
 	public Job wait(boolean block) {
 		return wait(block, 100);
 	}
@@ -113,7 +75,6 @@ public abstract class Job implements Runnable {
 				completionSema.acquire();
 				completionSema.release();
 			} else {
-				completionSema.acquire();
 				if (completionSema.tryAcquire(nano, TimeUnit.NANOSECONDS)) {
 					completionSema.release();
 				} else {
@@ -149,13 +110,6 @@ public abstract class Job implements Runnable {
 	@Override
 	public void run() {
 		try {
-			if (dependsOn != null) {
-				while (dependsOn.inFlight.get()) {
-					Thread.yield();
-				}
-				dependsOn = null;
-			}
-
 			doWork();
 		} catch (Exception ex) {
 			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
@@ -165,7 +119,7 @@ public abstract class Job implements Runnable {
 		}
 	}
 
-	protected void prepare() {}
+	protected void onPrepare() {}
 
 	protected abstract void doWork();
 

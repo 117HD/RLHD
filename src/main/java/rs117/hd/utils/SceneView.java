@@ -3,7 +3,6 @@ package rs117.hd.utils;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.scene.SceneCullingManager.CullingResults;
 import rs117.hd.scene.SceneCullingManager.ICullingCallback;
 
@@ -14,6 +13,7 @@ public class SceneView {
 	public static final int CULLING_FLAG_RENDERABLES = 1 << 2;
 	public static final int CULLING_FLAG_CALLBACK = 1 << 3;
 	public static final int CULLING_FLAG_FREEZE = 1 << 4;
+	public static final int CULLING_FLAG_BACK_FACE_CULL = 1 << 5;
 
 	private static final int PROJECTION_MATRIX_DIRTY = 1;
 	private static final int VIEW_MATRIX_DIRTY = 1 << 1;
@@ -283,9 +283,7 @@ public class SceneView {
 			if (isStatic) {
 				return cullingResults.isTileRenderablesVisible(tileIdx);
 			} else {
-				if (cullingResults.isTileSurfaceVisible(tileIdx)) {
-					return true;
-				}
+				return cullingResults.isTileSurfaceVisible(tileIdx);
 			}
 		} else {
 			if (renderable instanceof NPC) {

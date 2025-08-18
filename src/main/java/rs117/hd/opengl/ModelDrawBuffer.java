@@ -23,9 +23,9 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ModelDrawBuffer extends GLBuffer {
-	public static final int STAGING_MODEL_DATA_COUNT = EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
+	public static final int INITIAL_STAGING_MODEL_DATA_COUNT = EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
 
-	private int[] stagingModelData = new int[STAGING_MODEL_DATA_COUNT * 2];
+	private int[] stagingModelData = new int[INITIAL_STAGING_MODEL_DATA_COUNT * 2];
 	private int stagingModelDataOffset = 0;
 	private int stagingModelDataNextOffset = 0;
 	private int stagingVertexCount = 0;
@@ -54,7 +54,7 @@ public class ModelDrawBuffer extends GLBuffer {
 			stagingModelDataNextOffset = renderBufferOffset + vertexCount;
 			stagingVertexCount += vertexCount;
 
-			if (stagingModelDataOffset >= EXTENDED_SCENE_SIZE && !asyncIndicesWriter.isInFlight()) {
+			if (stagingModelDataOffset >= INITIAL_STAGING_MODEL_DATA_COUNT && !asyncIndicesWriter.isInFlight()) {
 				asyncIndicesWriter.submit();
 			} else if (stagingModelDataOffset >= stagingModelData.length) {
 				stagingModelData = Arrays.copyOf(stagingModelData, stagingModelData.length + 32);
@@ -94,7 +94,7 @@ public class ModelDrawBuffer extends GLBuffer {
 	@RequiredArgsConstructor
 	public static final class AsyncIndicesWriter extends Job {
 		private final ModelDrawBuffer owner;
-		private int[] modelDataToWrite = new int[STAGING_MODEL_DATA_COUNT * 2];
+		private int[] modelDataToWrite = new int[INITIAL_STAGING_MODEL_DATA_COUNT * 2];
 		private ByteBuffer mappedBuffer = null;
 		private long mappedBufferAddr;
 		private boolean isMapped = false;
@@ -109,7 +109,7 @@ public class ModelDrawBuffer extends GLBuffer {
 		}
 
 		@Override
-		protected void prepare() {
+		protected void onPrepare() {
 			long prevNumBytes = owner.maxIndicesCount * (long) Integer.BYTES;
 			long currentNumBytes = ((long) owner.indicesCount + (long) owner.stagingVertexCount) * (long) Integer.BYTES;
 			if (currentNumBytes >= owner.size) {
@@ -146,14 +146,13 @@ public class ModelDrawBuffer extends GLBuffer {
 		@Override
 		protected void doWork() {
 			if (isMapped) {
-				long address = mappedBufferAddr + owner.indicesCount * (long) Integer.BYTES;
 				for (int modelDataOffset = 0; modelDataOffset < modelDataToWriteCount; ) {
+					final long address = mappedBufferAddr + owner.indicesCount * (long) Integer.BYTES;
 					final int renderBufferOffset = modelDataToWrite[modelDataOffset++];
 					final int vertexCount = modelDataToWrite[modelDataOffset++];
 
 					for (int v = 0; v < vertexCount; v++) {
-						MemoryUtil.memPutInt(address, renderBufferOffset + v);
-						address += 4L;
+						MemoryUtil.memPutInt(address + (v * 4L), renderBufferOffset + v);
 					}
 
 					owner.indicesCount += vertexCount;

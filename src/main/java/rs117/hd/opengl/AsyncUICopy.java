@@ -37,7 +37,7 @@ public class AsyncUICopy extends Job {
 	private int height;
 
 	@Override
-	protected void prepare() {
+	protected void onPrepare() {
 		var provider = client.getBufferProvider();
 		pixels = provider.getPixels();
 		width = provider.getWidth();
@@ -85,6 +85,5 @@ public class AsyncUICopy extends Job {
 		if (!resize) timer.end(Timer.UPLOAD_UI);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-		pixels = null;
 	}
 }

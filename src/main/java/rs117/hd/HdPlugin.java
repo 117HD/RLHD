@@ -762,6 +762,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneCamera = new SceneView()
 					.setCullingFlag(SceneView.CULLING_FLAG_GROUND_PLANES)
 					.setCullingFlag(SceneView.CULLING_FLAG_UNDERWATER_PLANES)
+					.setCullingFlag(SceneView.CULLING_FLAG_BACK_FACE_CULL)
 					.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES);
 
 				directionalLight = new SceneView()
@@ -1875,6 +1876,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
+				/*
 				if (sceneContext.numVisibleLights > 0) {
 					var light = sceneContext.lights.get(0);
 					for (int i = 0; i < 6; i++) {
@@ -1884,7 +1886,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								.setFarPlane(light.radius * LOCAL_TILE_SIZE)
 						);
 					}
-				}
+				}*/
 
 				sceneCullingManager.addView(sceneCamera);
 				if (configShadowCulling) {
@@ -2145,8 +2147,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void preAddTileAndRenderables() {
-		int visibleTileCount = sceneCullingManager.combinedTileVisibility.getVisibleTileCount();
-		modelPassthroughBuffer.ensureCapacity(visibleTileCount * 4);
+		final int MAX_TILE_COUNT = MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
+		int visibleTileCount = 0;
+		for (int tileIdx = 0; tileIdx < MAX_TILE_COUNT; tileIdx++) {
+			if (sceneCullingManager.combinedTileVisibility.isTileSurfaceVisible(tileIdx)) {
+				visibleTileCount++;
+			}
+
+			if (sceneCullingManager.combinedTileVisibility.isTileUnderwaterVisible(tileIdx)) {
+				visibleTileCount++;
+			}
+		}
+		modelPassthroughBuffer.ensureCapacity(visibleTileCount * 8);
 	}
 
 	@Override
