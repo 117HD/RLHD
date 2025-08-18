@@ -10354,7 +10354,10 @@
       "LUC2_DWT_JAILBARS_END_RIGHT_BLOCKRANGE",
       "LUC2_DWT_JAILBARS_END_LEFT_BLOCKRANGE",
       "LUC2_DARKSQUALL_CELL_DOOR_OPEN",
-      "LUC2_DWT_JAILBARS_GATE_OPEN"
+      "LUC2_DWT_JAILBARS_GATE_OPEN",
+      "WALLKIT_CAMTORUM01_FENCE01",
+      "WALLKIT_CAMTORUM01_VAULT01",
+      "WALLKIT_CAMTORUM01_VAULT02"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -57913,7 +57916,8 @@
     "objectIds": [
       "WALLKIT_IMCANDO01_RAIL01",
       "WALLKIT_IMCANDO01_RAIL01_END_R",
-      "WALLKIT_IMCANDO01_RAIL01_END_L"
+      "WALLKIT_IMCANDO01_RAIL01_END_L",
+      "WALLKIT_IMCANDO01_RAIL01_NOBLOCK"
     ]
   },
   {
@@ -58088,6 +58092,119 @@
         "baseMaterial": "ROCK_5_ORE",
         "uvType": "BOX",
         "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Wooden - Metal - Bank table with scales weights and papers",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 173,
+    "objectIds": [
+      "CAM_TORUM_BANK_TABLE",
+      "CAM_TORUM_BANK_TABLE02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 7 && s == 4",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvOrientation": 117,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Varlamore - Cam Torum - Wooden - Metal - Bank table with scales weights and papers",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CLAN_MEDIEVAL_ROPE_BARRIER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 38",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 117,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Hide fake tiles Camtorum",
+    "areas": [ "CAM_TORUM_BUILDING_TILES" ],
+    "objectIds": [
+      "_1V1ARENA_DUNGEON_TILES_D",
+      "_1V1ARENA_DUNGEON_TILES_E"
+    ],
+    "hide": true
+  },
+  {
+    "description": "Keldagrim - Cam Torum -Metal shelf with objects on them",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "objectIds": [
+      "DWARF_KELDAGRIM_DOUBLE_SHELF",
+      "DWARF_KELDAGRIM_DOUBLE_SHELF2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shelf",
+        "colors": "h >= 10",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 117,
+        "uvScale": 0.44
+      }
+    ]
+  },
+  {
+    "description": "Keldagrim - Cam Torum -Metal shelf with objects on them",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "flatNormals": true,
+    "objectIds": [
+      "CHAIR_IMCANDO01_POSH01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cushion",
+        "colors": "h >= 10",
+        "baseMaterial": "CARPET",
+        "uvType": "MODEL_XY",
+        "uvOrientation": 117,
+        "uvScale": 0.44
       }
     ]
   }

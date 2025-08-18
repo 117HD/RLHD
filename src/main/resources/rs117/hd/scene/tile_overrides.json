@@ -5068,10 +5068,10 @@
   {
     "name": "Cam Torum Smith & Bank Tiles Fix",
     "area": "CAM_TORUM_BUILDING_TILES",
-    "overlayIds": [ 132 ],
+    "overlayIds": [ 132, 321],
     "underlayIds": [ 45 ],
     "blended": false,
-    "groundMaterial": "MARBLE_1"
+    "groundMaterial": "TILES_2x2_1"
   },
   {
     "name": "Cam Torum Bank Entrance Fix",
