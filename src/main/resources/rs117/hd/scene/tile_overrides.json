@@ -8153,6 +8153,35 @@
     "groundMaterial": "DIRT"
   },
   {
+    "name": "Doom of Mokhaiotl - Entrance Tiles",
+    "area": "Doom of Mokhaiotl - Entrance Tiles",
+    "underlayIds": [
+      67,
+      176
+    ],
+    "overlayIds": [
+      426
+    ],
+    "groundMaterial": "DIRTY_MARBLE",
+    "shiftSaturation": -1
+  },
+  {
+    "name": "Doom of Mokhaiotl Floor",
+    "area": "Doom of Mokhaiotl",
+    "underlayIds": [
+      63,
+      67,
+      72,
+      167,
+      176
+    ],
+    "overlayIds": [
+      427
+    ],
+    "groundMaterial": "PLAIN_DIRT",
+    "shiftSaturation": -1
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
