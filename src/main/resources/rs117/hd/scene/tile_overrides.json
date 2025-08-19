@@ -5204,6 +5204,12 @@
     "groundMaterial": "GRAVEL"
   },
   {
+    "name": "Ancient Prison Dirt",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "underlayIds": [ 118 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_FIX",
     "area": "EARTHBOUND_CAVERN_WATER_FIX",
     "underlayIds": [ 72, 105 ],
