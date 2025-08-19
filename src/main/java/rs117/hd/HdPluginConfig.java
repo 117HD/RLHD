@@ -944,6 +944,28 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_FILL_GAPS_IN_TERRAIN = "fillGapsInTerrain";
+	@ConfigItem(
+		keyName = KEY_FILL_GAPS_IN_TERRAIN,
+		name = "Fill gaps in terrain",
+		description = "Attempt to patch all holes in the ground, such as around trapdoors and ladders.",
+		section = miscellaneousSettings
+	)
+	default boolean fillGapsInTerrain() {
+		return true;
+	}
+
+	String KEY_FLAT_SHADING = "flatShading";
+	@ConfigItem(
+		keyName = KEY_FLAT_SHADING,
+		name = "Flat shading",
+		description = "Gives a more low-poly look to the game.",
+		section = miscellaneousSettings
+	)
+	default boolean flatShading() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
@@ -954,17 +976,6 @@ public interface HdPluginConfig extends Config
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
-
-	String KEY_FILL_GAPS_IN_TERRAIN = "experimentalFillGapsInTerrain2";
-	@ConfigItem(
-		keyName = KEY_FILL_GAPS_IN_TERRAIN,
-		name = "Fill gaps in terrain",
-		description = "Attempt to patch all holes in the ground, such as around trapdoors and ladders.",
-		section = experimentalSettings
-	)
-	default boolean fillGapsInTerrain() {
-		return true;
-	}
 
 	String KEY_FASTER_MODEL_HASHING = "experimentalFasterModelHashing";
 	@ConfigItem(
@@ -999,17 +1010,6 @@ public interface HdPluginConfig extends Config
 	)
 	default ShadingMode shadingMode() {
 		return ShadingMode.DEFAULT;
-	}
-
-	String KEY_FLAT_SHADING = "experimentalFlatShading";
-	@ConfigItem(
-		keyName = KEY_FLAT_SHADING,
-		name = "Flat shading",
-		description = "Gives a more low-poly look to the game.",
-		section = experimentalSettings
-	)
-	default boolean flatShading() {
-		return false;
 	}
 
 	String KEY_DECOUPLE_WATER_FROM_SKY_COLOR = "experimentalDecoupleWaterFromSkyColor";
