@@ -57922,7 +57922,8 @@
     "uvOrientation": -400,
     "objectIds": [
       "DUNGEONKIT_IMCANDO01_STATUE01_DEFAULT01",
-      "DUNGEONKIT_IMCANDO01_STATUE01"
+      "DUNGEONKIT_IMCANDO01_STATUE01",
+      "DUNGEONKIT_IMCANDO01_STATUE01_THRONE01"
     ],
     "colorOverrides": [
       {
@@ -58628,7 +58629,7 @@
     ]
   },
   {
-    "description": "Camtorum - Metallic - Boiler Equipment",
+    "description": "Cam Torum - Metallic - Boiler Equipment",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -58641,7 +58642,7 @@
     ]
   },
   {
-    "description": "Camtorum - Wooden - Metallic - Large barrels",
+    "description": "Cam Torum - Wooden - Metallic - Large barrels",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "BARREL_WOODEN01_LARGE01_IMCANDO01"
@@ -58654,5 +58655,51 @@
         "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
+  },
+  {
+    "description": "Cam Torum - Cloth - Rope - Stone - Hanging Flag",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 1.0,
+    "objectIds": [
+      "CAM_TORUM_BANNER01_LARGE01",
+      "CAM_TORUM_BANNER01_LARGE01_ODD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h >= 38",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvOrientation": 172,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Cam Torum - Metallic - Stone - Throne",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 688,
+    "objectIds": [
+      "CAM_TORUM_HIGHLORD_THRONE_VIS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX"
+      }
+    ]
+
   }
 ]
