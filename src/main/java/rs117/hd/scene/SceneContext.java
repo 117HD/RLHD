@@ -73,6 +73,8 @@ public class SceneContext {
 	// Used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
 
+	public final boolean[][][] tileIsEmpty = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+
 	// Water-related data
 	public boolean[][][] tileIsWater;
 	public Map<Integer, Boolean> vertexIsWater;

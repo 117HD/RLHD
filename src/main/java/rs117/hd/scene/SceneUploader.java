@@ -140,7 +140,7 @@ public class SceneUploader {
 						if (sceneContext.tileRenderableCullingData[z][x][y] != null)
 							renderableCullingData.addAll(List.of(sceneContext.tileRenderableCullingData[z][x][y]));
 
-						upload(sceneContext, renderableCullingData, tile, x, y);
+						sceneContext.tileIsEmpty[z][x][y] |= upload(sceneContext, renderableCullingData, tile, x, y);
 
 						Tile bridge = tile.getBridge();
 						if (bridge != null) {
@@ -148,7 +148,7 @@ public class SceneUploader {
 							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] != null)
 								renderableCullingData.addAll(List.of(sceneContext.tileRenderableCullingData[bridgePlane][x][y]));
 
-							upload(sceneContext, renderableCullingData, bridge, x, y);
+							sceneContext.tileIsEmpty[bridgePlane][x][y] |= upload(sceneContext, renderableCullingData, bridge, x, y);
 
 							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] == null
 								|| sceneContext.tileRenderableCullingData[bridgePlane][x][y].length < renderableCullingData.size())
@@ -416,13 +416,14 @@ public class SceneUploader {
 		++sceneContext.uniqueModels;
 	}
 
-	private void upload(
+	private boolean upload(
 		SceneContext sceneContext,
 		ArrayList<SceneContext.RenderableCullingData> renderableCullingData,
 		@Nonnull Tile tile,
 		int tileExX,
 		int tileExY
 	) {
+		boolean isEmpty = true;
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 
@@ -474,6 +475,7 @@ public class SceneUploader {
 				sceneTilePaint.setBufferLen(vertexCount);
 				sceneTilePaint.setBufferOffset(vertexOffset);
 				sceneTilePaint.setUvBufferOffset(uvOffset);
+				isEmpty = false;
 			}
 		}
 
@@ -496,6 +498,7 @@ public class SceneUploader {
 			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
 
 			sceneTileModel.setBufferLen(packedBufferLength);
+			isEmpty = false;
 		}
 
 		WallObject wallObject = tile.getWallObject();
@@ -510,6 +513,7 @@ public class SceneUploader {
 					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
 					renderableCullingData
 				);
+				isEmpty = false;
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
@@ -522,6 +526,7 @@ public class SceneUploader {
 					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
 					renderableCullingData
 				);
+				isEmpty = false;
 			}
 		}
 
@@ -537,6 +542,7 @@ public class SceneUploader {
 					HDUtils.getModelPreOrientation(groundObject.getConfig()),
 					renderableCullingData
 				);
+				isEmpty = false;
 			}
 		}
 
@@ -553,6 +559,7 @@ public class SceneUploader {
 					orientation,
 					renderableCullingData
 				);
+				isEmpty = false;
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
@@ -565,6 +572,7 @@ public class SceneUploader {
 					orientation,
 					renderableCullingData
 				);
+				isEmpty = false;
 			}
 		}
 
@@ -582,8 +590,11 @@ public class SceneUploader {
 					HDUtils.getModelPreOrientation(gameObject.getConfig()),
 					renderableCullingData
 				);
+				isEmpty = false;
 			}
 		}
+
+		return !isEmpty;
 	}
 
 	private int[] upload(SceneContext sceneContext, Tile tile, int[] worldPos, TileOverride override, @Nullable SceneTilePaint paint) {

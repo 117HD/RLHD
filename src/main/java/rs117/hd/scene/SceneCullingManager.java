@@ -521,6 +521,19 @@ public class SceneCullingManager {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
 						final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+
+						// Check if tile is Empty so we can skip expensive culling
+						if (sceneContext.tileIsEmpty[plane][tileExX][tileExY]) {
+							for (int i = 0; i < cullManager.cullingViewContexts.size(); i++) {
+								SceneViewContext viewCtx = cullManager.cullingViewContexts.get(i);
+								if (!sceneViewCtxVisible[i]) {
+									viewCtx.results.tiles[tileIdx] = VISIBILITY_RENDERABLE_VISIBLE;
+								}
+								cullManager.combinedTileVisibility.tiles[tileIdx] = VISIBILITY_RENDERABLE_VISIBLE;
+							}
+							continue;
+						}
+
 						// Surface Plane Heights
 						final int h0 = tileHeights[plane][tileExX][tileExY];
 						final int h1 = tileHeights[plane][tileExX + 1][tileExY];
