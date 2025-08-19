@@ -45,11 +45,11 @@ public class GsonUtils {
 			.setPrettyPrinting()
 			.disableHtmlEscaping() // Disable HTML escaping for JSON exports (Gson never escapes when parsing regardless)
 			.registerTypeAdapterFactory(new ExcludeDefaultsFactory())
-			.registerTypeAdapter(Number.class, new RoundingAdapter(3))
+			.registerTypeAdapter(Float.class, new RoundingAdapter(3))
 			.create();
 	}
 
-	public static class RoundingAdapter extends TypeAdapter<Number> {
+	public static class RoundingAdapter extends TypeAdapter<Float> {
 		private final float rounding;
 
 		public RoundingAdapter(int decimals) {
@@ -57,18 +57,18 @@ public class GsonUtils {
 		}
 
 		@Override
-		public Number read(JsonReader in) throws IOException {
+		public Float read(JsonReader in) throws IOException {
 			if (in.peek() == JsonToken.NULL)
 				return null;
 			return (float) in.nextDouble();
 		}
 
 		@Override
-		public void write(JsonWriter out, Number src) throws IOException {
+		public void write(JsonWriter out, Float src) throws IOException {
 			if (src == null) {
 				out.nullValue();
 			} else {
-				float result = round((float) src * rounding) / rounding;
+				var result = round(src * rounding) / rounding;
 				if (round(result) == result) {
 					out.value((int) result); // Remove decimals when possible
 				} else {
@@ -83,13 +83,13 @@ public class GsonUtils {
 	 */
 	@NoArgsConstructor
 	@SuppressWarnings("unchecked")
-	public static abstract class DelegateNumberTypeAdapter<T> implements TypeAdapterFactory {
-		protected TypeAdapter<Number> NUMBER_ADAPTER;
+	public static abstract class DelegateFloatAdapter<T> implements TypeAdapterFactory {
+		protected TypeAdapter<Float> FLOAT_ADAPTER;
 		protected boolean unwrapContainers; // Only apply directly to numbers, letting Gson handle any composite types
 
 		@Override
 		public <U> TypeAdapter<U> create(Gson gson, TypeToken<U> typeToken) {
-			NUMBER_ADAPTER = gson.getAdapter(TypeToken.get(Number.class));
+			FLOAT_ADAPTER = gson.getAdapter(TypeToken.get(Float.class));
 			var impl = this;
 			var adapter = new TypeAdapter<U>() {
 				@Override
@@ -113,9 +113,9 @@ public class GsonUtils {
 					public <S> TypeAdapter<S> create(Gson gson, TypeToken<S> typeToken) {
 						var type = typeToken.getRawType();
 						if (type.isPrimitive()) {
-							if (type != float.class && type != double.class && type != int.class && type != long.class)
+							if (type != float.class)
 								return null;
-						} else if (!Number.class.isAssignableFrom(type)) {
+						} else if (!Float.class.isAssignableFrom(type)) {
 							return null;
 						}
 						return (TypeAdapter<S>) adapter;
@@ -222,20 +222,20 @@ public class GsonUtils {
 		}
 	}
 
-	public static class DegreesToRadians extends DelegateNumberTypeAdapter<Float> {
+	public static class DegreesToRadians extends DelegateFloatAdapter<Float> {
 		{
 			unwrapContainers = true;
 		}
 
 		@Override
 		public Float read(JsonReader in) throws IOException {
-			var value = NUMBER_ADAPTER.read(in);
-			return value == null ? null : (float) value * DEG_TO_RAD;
+			var value = FLOAT_ADAPTER.read(in);
+			return value == null ? null : value * DEG_TO_RAD;
 		}
 
 		@Override
 		public void write(JsonWriter out, Float value) throws IOException {
-			NUMBER_ADAPTER.write(out, value == null ? null : value * RAD_TO_DEG);
+			FLOAT_ADAPTER.write(out, value == null ? null : value * RAD_TO_DEG);
 		}
 	}
 }

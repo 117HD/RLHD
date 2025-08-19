@@ -15,7 +15,7 @@ import java.awt.Color;
 import java.io.IOException;
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.utils.GsonUtils.DelegateNumberTypeAdapter;
+import rs117.hd.utils.GsonUtils.DelegateFloatAdapter;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -409,7 +409,7 @@ public class ColorUtils {
 	}
 
 	@Slf4j
-	public static class SrgbAdapter extends DelegateNumberTypeAdapter<float[]> {
+	public static class SrgbAdapter extends DelegateFloatAdapter<float[]> {
 		@Override
 		public float[] read(JsonReader in) throws IOException {
 			var token = in.peek();
@@ -435,7 +435,7 @@ public class ColorUtils {
 						break;
 					}
 
-					rgba[i++] = (float) NUMBER_ADAPTER.read(in);
+					rgba[i++] = FLOAT_ADAPTER.read(in);
 					continue;
 				}
 
@@ -491,7 +491,7 @@ public class ColorUtils {
 			} else {
 				out.beginArray();
 				for (int i = 0; i < src.length; i++)
-					NUMBER_ADAPTER.write(out, rgba[i]);
+					FLOAT_ADAPTER.write(out, rgba[i]);
 				out.endArray();
 			}
 		}
@@ -510,16 +510,16 @@ public class ColorUtils {
 		}
 	}
 
-	public static class LinearAdapter extends DelegateNumberTypeAdapter<Float> {
+	public static class LinearAdapter extends DelegateFloatAdapter<Float> {
 		@Override
 		public Float read(JsonReader in) throws IOException {
-			var value = NUMBER_ADAPTER.read(in);
-			return value == null ? null : srgbToLinear((float) value);
+			var value = FLOAT_ADAPTER.read(in);
+			return value == null ? null : srgbToLinear(value);
 		}
 
 		@Override
 		public void write(JsonWriter out, Float value) throws IOException {
-			NUMBER_ADAPTER.write(out, value == null ? null : linearToSrgb(value));
+			FLOAT_ADAPTER.write(out, value == null ? null : linearToSrgb(value));
 		}
 	}
 }
