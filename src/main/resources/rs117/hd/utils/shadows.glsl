@@ -28,18 +28,18 @@
 #include <utils/constants.glsl>
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
-float fetchShadowTexel(vec2 uv, float fragDepth) {
+float fetchShadowTexel(ivec2 uv, float fragDepth) {
     #if SHADOW_TRANSPARENCY
-        int alphaDepth = int(texelFetch(shadowMap, ivec2(uv), 0).r * SHADOW_COMBINED_MAX);
+        int alphaDepth = int(texelFetch(shadowMap, uv, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
         return depth < fragDepth ? alpha : 0;
     #else
-        return texelFetch(shadowMap, ivec2(uv), 0).r < fragDepth ? 1 : 0;
+        return texelFetch(shadowMap, uv, 0).r < fragDepth ? 1 : 0;
     #endif
 }
 
-float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float lightDotNormals) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
@@ -52,35 +52,32 @@ float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float l
     shadowPos.xyz += 1;
     shadowPos.xyz /= 2;
     shadowPos.xy += distortion;
-    shadowPos = clamp(shadowPos, 0, 1);
+    shadowPos.xy = clamp(shadowPos.xy, 0, 1);
+    shadowPos.xy *= textureSize(shadowMap, 0);
+    shadowPos.xy += .5; // Shift to texel center
 
-    vec2 shadowRes = textureSize(shadowMap, 0);
     float shadowMinBias = 0.0009f;
     float shadowBias = shadowMinBias * max(1, (1.0 - lightDotNormals));
     float fragDepth = shadowPos.z - shadowBias;
+
+    const int kernelSize = 3;
+    ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
+    #if PIXELATED_SHADOWS
+        const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
+    #else
+        const float kernelAreaReciprocal = .25; // This is effectively a 2x2 kernel
+        vec2 lerp = fract(shadowPos.xy);
+        vec3 lerpX = vec3(1 - lerp.x, 1, lerp.x);
+        vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
+    #endif
     float shadow = 0;
-
-    const int kernelSize = 2;
-    const float kernelRadius = kernelSize / 2.;
-    const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
-
-    vec2 kernelOffset = shadowPos.xy * shadowRes - kernelRadius + .5;
-    vec2 lerp = fract(kernelOffset - .5);
     for (int x = 0; x < kernelSize; ++x) {
         for (int y = 0; y < kernelSize; ++y) {
-            shadow += mix(
-                mix(
-                    fetchShadowTexel(kernelOffset + vec2(x - .5, y - .5), fragDepth),
-                    fetchShadowTexel(kernelOffset + vec2(x + .5, y - .5), fragDepth),
-                    lerp.x
-                ),
-                mix(
-                    fetchShadowTexel(kernelOffset + vec2(x - .5, y + .5), fragDepth),
-                    fetchShadowTexel(kernelOffset + vec2(x + .5, y + .5), fragDepth),
-                    lerp.x
-                ),
-                lerp.y
-            );
+            #if PIXELATED_SHADOWS
+                shadow += fetchShadowTexel(kernelOffset + ivec2(x, y), fragDepth);
+            #else
+                shadow += fetchShadowTexel(kernelOffset + ivec2(x, y), fragDepth) * lerpX[x] * lerpY[y];
+            #endif
         }
     }
     shadow *= kernelAreaReciprocal;
@@ -88,5 +85,5 @@ float sampleShadowMap(vec3 fragPos, int waterTypeIndex, vec2 distortion, float l
     return shadow * (1 - fadeOut);
 }
 #else
-#define sampleShadowMap(fragPos, waterTypeIndex, distortion, lightDotNormals) 0
+#define sampleShadowMap(fragPos, distortion, lightDotNormals) 0
 #endif
