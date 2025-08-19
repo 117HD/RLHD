@@ -11836,9 +11836,6 @@
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
       "SWAMP_MOSS_COVERED_ROCK_2",
-      "RAIDS_ROCKS_FLOOR1",
-      "RAIDS_ROCKS_FLOOR2",
-      "RAIDS_ROCKS_FLOOR3",
       "HUNTING_TRAIL_SPAWN_FOSSIL1",
       "HUNTING_TRAIL_SPAWN_FOSSIL3",
       "HUNTING_TRAIL_SPAWN_FOSSIL4",
@@ -13276,8 +13273,8 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "upwardsNormals": true,
-        "baseMaterial": "GRAY_75",
+        "flatNormals": true,
+        "baseMaterial": "GRAY_85",
         "windDisplacementMode": "OBJECT"
       },
       {
@@ -13325,9 +13322,9 @@
   },
   {
     "description": "Objects - Jungle grass",
-    "upwardsNormals": true,
+    "flatNormals": true,
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
@@ -23820,7 +23817,6 @@
     "description": "Objects - Textured Rock - Mossy Rock - Medium",
     "baseMaterial": "GRASS_3",
     "textureMaterial": "HD_CONCRETE",
-    "windDisplacementMode": "OBJECT",
     "objectIds": [
       "MOSS_COVERED_ROCK_1",
       "MOSS_COVERED_ROCK_2"
@@ -57432,6 +57428,219 @@
         "colors": "a < 255",
         "baseMaterial": "NONE"
       }
+    ]
+  },
+  {
+    "description": "Tonali Caverns - Cave Wall",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "WALLKIT_TONALI01_CAVE01",
+      "TONALI_BOSS01_ROCKSLIDE01",
+      "TONALI_BOSS01_ROCKSLIDE02",
+      "TONALI_BOSS01_ROCKSLIDE03",
+      "TONALI_BOSS01_ROCKSLIDE04"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Tonali Caverns - Temple Wall - Simple",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "WALLKIT_TONALI01_PILLAR01_NOSKEW",
+      "WALLKIT_TONALI01_DEFAULT01",
+      "WALLKIT_TONALI01_PILLAR01",
+      "WALLKIT_TONALI01_DEFAULT02",
+      "WALLKIT_TONALI01_DEFAULT03",
+      "TONALI_RUBBLE02_BRICK01",
+      "TONALI_RUBBLE01_BRICK01",
+      "STEPS_TONALI_DEFAULT01",
+      "DUNGEONKIT_TONALI01_FALLOFF01_NOBLOCK",
+      "DUNGEONKIT_TONALI01_FALLOFF01",
+      "VMQ4_MOKI_PILLAR03_SHAPE01",
+      "VMQ4_MOKI_PILLAR02_SHAPE01",
+      "VMQ4_MOKI_ARCH02_DOOR01_LEFT",
+      "VMQ4_MOKI_ARCH02_DOOR01_RIGHT",
+      "WALLKIT_TONALI02_CAVE02",
+      "WALLKIT_TONALI02_CAVE01",
+      "WALLKIT_TONALI01_BROKEN01",
+      "WALLKIT_TONALI01_BROKEN04",
+      "WALLKIT_TONALI01_BROKEN03",
+      "WALLKIT_TONALI01_BROKEN04_M",
+      "WALLKIT_TONALI02_DEFAULT01",
+      "WALLKIT_TONALI02_DEFAULT03",
+      "WALLKIT_TONALI01_PILLAR02",
+      "WALLKIT_TONALI02_DEFAULT02"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "GRAY_65"
+      },
+      {
+        "colors": "h == 4 || h == 3 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h > 8",
+        "baseMaterial": "ROCK_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Tonali Caverns - Dragon Head Wall Fountains",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "TONALI_TEMPLE_WATERFALL01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 26",
+        "baseMaterial": "GRAY_85",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Tonali Caverns - Hanging Roots",
+    "baseMaterial": "GRUNGE_2",
+    "objectIds": [
+      "VINE_BRANCH01_HANGING01",
+      "VINE_BRANCH01_HANGING02",
+      "VINE_BRANCH01_HANGING03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Swamp edges",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_01_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_02_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_03_ENTRANCE",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_04_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Swamp edges with vines",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_CORNER_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_CORNER_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_INNER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_FLAT_INNER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_EDGE_02",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_CORNER_01",
+      "FOSSIL_FLORA_SWAMP_TARPIT_OUTER_CORNER_02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Water",
+        "colors": "h == 42",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Decaying Stump with Mushrooms",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_FALLEN_TRUNK"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Mushroom",
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Vines",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_VINE_01",
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_01"
+    ]
+  },
+  {
+    "description": "Fossil Island - Tar Swamp - Grim Lilly",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "FOSSIL_FLORA_SWAMP_GRIMLILLY_LOWER",
+      "FOSSIL_FLORA_SWAMP_GRIMLILLY"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Raids - Tar Swamp - Greenish Rocks - Medium",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "RAIDS_ROCKS_FLOOR1",
+      "RAIDS_ROCKS_FLOOR4",
+      "RAIDS_ROCKS_FLOOR5"
+    ]
+  },
+  {
+    "description": "Raids - Tar Swamp - Greenish Rocks - Large",
+    "baseMaterial": "ROCK_5",
+    "uvType": "BOX",
+    "uvScale": 0.55,
+    "objectIds": [
+      "RAIDS_ROCKS_FLOOR2",
+      "RAIDS_ROCKS_FLOOR3",
+      "RAIDS_ROCKS_FLOOR6"
     ]
   }
 ]

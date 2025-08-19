@@ -5502,6 +5502,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Crash Site Cavern (Monkey Madness 2)",
+    "regionBoxes": [
+      [ 8280, 8536 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "KOUREND_CASTLE_ENTRANCE_FIX",
     "aabbs": [
       [ 1623, 3669, 0, 1623, 3677, 0 ]
@@ -8097,6 +8104,39 @@
       [ 16197, 16452 ]
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "Doom of Mokhaiotl - Arena Torch Brightness",
+    "aabbs": [
+      [ 1298, 9564, 1324, 9586 ]
+    ]
+  },
+  {
+    "name": "Doom of Mokhaiotl - Entrance Tiles",
+    "aabbs": [
+      [ 1310, 9539, 1312, 9556 ]
+    ]
+  },
+  {
+    "name": "Doom of Mokhaiotl - Floor 1",
+    "regions": [ 5269 ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "Doom of Mokhaiotl - Floors 2 to 5",
+    "regions": [ 13668 ]
+  },
+  {
+    "name": "Doom of Mokhaiotl - Floors 6 to 8",
+    "regions": [ 14180 ]
+  },
+  {
+    "name": "Doom of Mokhaiotl",
+    "areas": [
+      "Doom of Mokhaiotl - Floor 1",
+      "Doom of Mokhaiotl - Floors 2 to 5",
+      "Doom of Mokhaiotl - Floors 6 to 8"
+    ]
   },
   {
     "name": "SNOWY_REGIONS",
