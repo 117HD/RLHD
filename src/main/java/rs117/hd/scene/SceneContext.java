@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.data.StaticTileData;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
@@ -73,8 +74,6 @@ public class SceneContext {
 	// Used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
 
-	public final boolean[][][] tileIsEmpty = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
-
 	// Water-related data
 	public boolean[][][] tileIsWater;
 	public Map<Integer, Boolean> vertexIsWater;
@@ -85,7 +84,7 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
-	public RenderableCullingData[][][][] tileRenderableCullingData = new RenderableCullingData[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][];
+	public StaticTileData[][][] staticTileData = new StaticTileData[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	// Thread safe tile override variables
 	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();
@@ -359,9 +358,5 @@ public class SceneContext {
 
 		// Transform from chunk to world coordinates
 		return new AABB(minX << 3, minY << 3, minZ, (maxX << 3) + CHUNK_SIZE - 1, (maxY << 3) + CHUNK_SIZE - 1, maxZ);
-	}
-
-	public static final class RenderableCullingData {
-		public int bottomY, radius, height;
 	}
 }

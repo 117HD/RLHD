@@ -514,6 +514,19 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_BUILDING_SHADOWS = "buildingShadows";
+	@ConfigItem(
+		keyName = KEY_BUILDING_SHADOWS,
+		name = "Building Shadows",
+		description =
+			"Regardless of Roof hiding setting, shadows will always be drawn even when roofs are removed",
+		position = 11,
+		section = lightingSettings
+	)
+	default boolean buildingShadows() {
+		return false;
+	}
+
 	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
 	@ConfigItem(
 		keyName = KEY_VANILLA_SHADOW_MODE,
@@ -522,7 +535,7 @@ public interface HdPluginConfig extends Config
 			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
 			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
 			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
-		position = 11,
+		position = 12,
 		section = lightingSettings
 	)
 	default VanillaShadowMode vanillaShadowMode() {
@@ -534,7 +547,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_NORMAL_MAPPING,
 		name = "Normal Mapping",
 		description = "Affects how light interacts with certain materials. Barely impacts performance.",
-		position = 12,
+		position = 13,
 		section = lightingSettings
 	)
 	default boolean normalMapping() {
@@ -546,7 +559,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
 		name = "Parallax Occlusion Mapping",
 		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
-		position = 14,
+		position = 15,
 		section = lightingSettings
 	)
 	default boolean parallaxOcclusionMapping() {

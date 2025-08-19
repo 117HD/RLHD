@@ -88,6 +88,8 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.data.StaticTileData;
+import rs117.hd.data.StaticTileData.StaticRenderable;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
@@ -488,6 +490,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
 	public boolean configShadowCulling;
+	public boolean configBuildingShadows;
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
@@ -524,7 +527,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
 	public SceneView sceneCamera;
 	public SceneView directionalLight;
-	public final SceneView[] pointLightCube = new SceneView[6];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
 
@@ -549,6 +551,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
+	private final boolean[] drawnTiles = new boolean[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -770,43 +773,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES)
 					.setCullingFlag(SceneView.CULLING_FLAG_CALLBACK)
 					.setCullingCallbacks(directionalShadowCulling);
-
-				for (int i = 0; i < 6; i++) {
-					SceneView cubeFace = pointLightCube[i] = new SceneView();
-					cubeFace.setZoom(1000.0f);
-					cubeFace.setNearPlane(NEAR_PLANE);
-					cubeFace.setViewportWidth(256);
-					cubeFace.setViewportHeight(256);
-
-					cubeFace.setCullingFlag(SceneView.CULLING_FLAG_RENDERABLES);
-
-					switch (i) {
-						case 0:
-							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
-							cubeFace.setYaw((float) Math.toRadians(0));
-							break;
-						case 1:
-							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
-							cubeFace.setYaw((float) Math.toRadians(90));
-							break;
-						case 2:
-							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
-							cubeFace.setYaw((float) Math.toRadians(180));
-							break;
-						case 3:
-							cubeFace.setPitch((float) (Math.PI - Math.toRadians(0)));
-							cubeFace.setYaw((float) Math.toRadians(270));
-							break;
-						case 4:
-							cubeFace.setPitch((float) (Math.PI - Math.toRadians(90)));
-							cubeFace.setYaw((float) Math.toRadians(0));
-							break;
-						case 5:
-							cubeFace.setPitch((float) (Math.PI - Math.toRadians(180)));
-							cubeFace.setYaw((float) Math.toRadians(0));
-							break;
-					}
-				}
 
 				// We need to force the client to reload the scene since we're changing GPU flags
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -1740,6 +1706,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneDrawBuffer.clear();
 				directionalDrawBuffer.clear();
 
+				Arrays.fill(drawnTiles, false);
+
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
 				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
@@ -1876,18 +1844,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
-				/*
-				if (sceneContext.numVisibleLights > 0) {
-					var light = sceneContext.lights.get(0);
-					for (int i = 0; i < 6; i++) {
-						sceneCullingManager.addView(
-							pointLightCube[i]
-								.setPosition(light.pos)
-								.setFarPlane(light.radius * LOCAL_TILE_SIZE)
-						);
-					}
-				}*/
-
 				sceneCullingManager.addView(sceneCamera);
 				if (configShadowCulling) {
 					sceneCullingManager.addView(directionalLight);
@@ -1973,6 +1929,84 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		if (!redrawPreviousFrame) {
+			if (configBuildingShadows && hasLoggedIn) {
+				frameTimer.begin(Timer.DRAW_BUILDING_SHADOWS);
+				// TODO: Looping through all tiles and checking culling result is costly
+				// TODO: Since all static geom & tiles are now in a thread safe format, the drawing could be threaded. Dynamic Renderables would still need to be drawn sync
+				// TODO: It would also be useful to know if roofs have been removed and do it only then
+				// TODO: This could also be limited around the directional shadow sphere which is already calculated
+				for (int plane = 0, tileIdx = 0; plane < MAX_Z; plane++) {
+					for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; tileExX++) {
+						for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++, tileIdx++) {
+							if (drawnTiles[tileIdx]) {
+								continue;
+							}
+
+							final StaticTileData staticTileData = sceneContext.staticTileData[plane][tileExX][tileExY];
+							if (staticTileData.isEmpty()) {
+								continue;
+							}
+
+							byte directionalCullingResult = directionalLight.getCullingResults().getTileResult(tileIdx);
+							final int tileX = tileExX - SCENE_OFFSET;
+							final int tileY = tileExY - SCENE_OFFSET;
+
+							if (plane > 0 &&
+								staticTileData.scenePaint_VertexCount > 0 &&
+								!sceneContext.tileIsWater[plane][tileExX][tileExY] &&
+								CullingResults.isTileSurfaceVisible(directionalCullingResult)) {
+
+								eightIntWrite[0] = staticTileData.scenePaint_VertexOffset;
+								eightIntWrite[1] = staticTileData.scenePaint_UVOffset;
+								eightIntWrite[2] = staticTileData.scenePaint_VertexCount / 3;
+								eightIntWrite[3] = renderBufferOffset;
+								eightIntWrite[4] = 0;
+								eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
+								eightIntWrite[6] = 0;
+								eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
+
+								modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
+
+								directionalDrawBuffer.addModel(renderBufferOffset, staticTileData.scenePaint_VertexCount);
+
+								renderBufferOffset += staticTileData.scenePaint_VertexCount;
+								drawnTileCount++;
+								numPassthroughModels++;
+							}
+
+							if (CullingResults.isTileRenderablesVisible(directionalCullingResult)) {
+								for (StaticRenderable renderable : staticTileData.renderables) {
+									//boolean isTransparent = ((renderable.sceneId >> 14) & 1) == 1;
+									final boolean shouldCastShadow = ((renderable.sceneId >> 15) & 1) == 1;
+									if (!shouldCastShadow) {
+										continue;
+									}
+
+									eightIntWrite[0] = renderable.vertexOffset;
+									eightIntWrite[1] = renderable.uvOffset;
+									eightIntWrite[2] = renderable.faceCount;
+									eightIntWrite[3] = renderBufferOffset;
+									eightIntWrite[4] = renderable.orientation | (renderable.hillskew ? 1 : 0) << 26 | plane << 24;
+									eightIntWrite[5] = renderable.x;
+									eightIntWrite[6] = renderable.z << 16 | renderable.height & 0xFFFF;
+									eightIntWrite[7] = renderable.y;
+
+									bufferForTriangles(renderable.faceCount)
+										.ensureCapacity(8)
+										.put(eightIntWrite);
+
+									directionalDrawBuffer.addModel(renderBufferOffset, renderable.faceCount * 3);
+
+									renderBufferOffset += renderable.faceCount * 3;
+									drawnStaticRenderableCount++;
+								}
+							}
+						}
+					}
+				}
+				frameTimer.end(Timer.DRAW_BUILDING_SHADOWS);
+			}
+
 			sceneDrawBuffer.flush();
 			directionalDrawBuffer.flush();
 		}
@@ -2080,9 +2114,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (redrawPreviousFrame || sceneContext == null || vertexCount <= 0)
 			return;
 
-		if (sceneCullingManager.ensureCullingComplete()) {
-			preAddTileAndRenderables();
-		}
+		sceneCullingManager.ensureCullingComplete();
 
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
@@ -2111,6 +2143,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 
+		// Even if tile wasn't drawn, we still mark is as such since the function was called
+		drawnTiles[tileIdx] = true;
+
 		if (!isVisibleInScene && !isVisibleInDirectional) {
 			return;
 		}
@@ -2124,7 +2159,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = 0;
 		eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
 
-		modelPassthroughBuffer.put(eightIntWrite);
+		modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
 
 		if (isVisibleInScene) {
 			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
@@ -2146,34 +2181,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		});
 	}
 
-	public void preAddTileAndRenderables() {
-		final int MAX_TILE_COUNT = MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
-		int visibleTileCount = 0;
-		for (int tileIdx = 0; tileIdx < MAX_TILE_COUNT; tileIdx++) {
-			if (sceneCullingManager.combinedTileVisibility.isTileSurfaceVisible(tileIdx)) {
-				visibleTileCount++;
-			}
-
-			if (sceneCullingManager.combinedTileVisibility.isTileUnderwaterVisible(tileIdx)) {
-				visibleTileCount++;
-			}
-		}
-		modelPassthroughBuffer.ensureCapacity(visibleTileCount * 8);
-	}
-
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
 		int bufferLength = model.getBufferLen();
 		if (redrawPreviousFrame || bufferLength <= 0)
 			return;
 
-		if (sceneCullingManager.ensureCullingComplete()) {
-			preAddTileAndRenderables();
-		}
+		sceneCullingManager.ensureCullingComplete();
 
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
-		byte sceneTileCullingResult = sceneCamera.getCullingResults().getTileResult(0, tileEeX, tileEeY);
+		final int tileIdx = HDUtils.tileCoordinateToIndex(0, tileEeX, tileEeY);
+		byte sceneTileCullingResult = sceneCamera.getCullingResults().getTileResult(tileIdx);
+
+		// Even if tile wasn't drawn, we still mark is as such since the function was called
+		drawnTiles[tileIdx] = true;
 
 		if (!CullingResults.isTileSurfaceVisible(sceneTileCullingResult))
 			return;
@@ -2201,7 +2223,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[0] = model.getBufferOffset() + bufferLength;
 				eightIntWrite[1] = model.getUvBufferOffset() + bufferLength;
 				eightIntWrite[3] = renderBufferOffset;
-				modelPassthroughBuffer.put(eightIntWrite);
+				modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
 
 				sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 
@@ -2217,7 +2239,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[0] = model.getBufferOffset();
 		eightIntWrite[1] = model.getUvBufferOffset();
 		eightIntWrite[3] = renderBufferOffset;
-		modelPassthroughBuffer.put(eightIntWrite);
+		modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
 
 		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
 
@@ -2856,6 +2878,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
 		configShadowCulling = config.shadowCulling();
+		configBuildingShadows = config.buildingShadows();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
@@ -3249,14 +3272,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		boolean isTransparent = isStatic && ((sceneID >> 14) & 1) == 1;
 		boolean shouldCastShadow = !isStatic || ((sceneID >> 15) & 1) == 1;
 
-		if (!isStatic)
+		if (!isStatic) {
 			model.calculateBoundsCylinder();
+		}
 
 		final int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
-		if (sceneCullingManager.ensureCullingComplete()) {
-			preAddTileAndRenderables();
-		}
+		sceneCullingManager.ensureCullingComplete();
 
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.VISIBILITY_CHECK);
@@ -3286,6 +3308,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (enableDetailedTimers)
 			frameTimer.end(Timer.VISIBILITY_CHECK);
+
+		// Even if tile wasn't drawn, we still mark is as such since the function was called
+		drawnTiles[tileIdx] = true;
 
 		if (!isVisibleInScene && !isVisibleInShadow) {
 			return;

@@ -125,4 +125,8 @@ public class DirectionalShadowCulling implements SceneCullingManager.ICullingCal
 		float t = (e2x * qx + e2y * qy + e2z * qz) * invDet;
 		return t > EPS;
 	}
+
+	public void drawBuildingShadows() {
+
+	}
 }

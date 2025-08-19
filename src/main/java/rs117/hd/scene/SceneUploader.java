@@ -26,9 +26,7 @@
 package rs117.hd.scene;
 
 import com.google.common.base.Stopwatch;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -38,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.data.StaticTileData;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
@@ -130,39 +129,31 @@ public class SceneUploader {
 			prepareBeforeSwap(sceneContext);
 
 		sceneContext.staticCustomTilesOffset = sceneContext.staticVertexCount;
-		ArrayList<SceneContext.RenderableCullingData> renderableCullingData = new ArrayList<>();
 		var tiles = scene.getExtendedTiles();
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
+					StaticTileData staticTileData = sceneContext.staticTileData[z][x][y];
+					if (staticTileData == null) {
+						staticTileData = sceneContext.staticTileData[z][x][y] = new StaticTileData();
+					}
+
 					Tile tile = tiles[z][x][y];
 					if (tile != null) {
-						if (sceneContext.tileRenderableCullingData[z][x][y] != null)
-							renderableCullingData.addAll(List.of(sceneContext.tileRenderableCullingData[z][x][y]));
-
-						sceneContext.tileIsEmpty[z][x][y] |= upload(sceneContext, renderableCullingData, tile, x, y);
+						upload(sceneContext, staticTileData, tile, x, y);
 
 						Tile bridge = tile.getBridge();
 						if (bridge != null) {
 							int bridgePlane = z + 1;
-							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] != null)
-								renderableCullingData.addAll(List.of(sceneContext.tileRenderableCullingData[bridgePlane][x][y]));
+							StaticTileData bridgeStaticTileData = sceneContext.staticTileData[bridgePlane][x][y];
+							if (bridgeStaticTileData == null) {
+								bridgeStaticTileData = sceneContext.staticTileData[bridgePlane][x][y] = new StaticTileData();
+							}
 
-							sceneContext.tileIsEmpty[bridgePlane][x][y] |= upload(sceneContext, renderableCullingData, bridge, x, y);
+							upload(sceneContext, bridgeStaticTileData, bridge, x, y);
 
-							if (sceneContext.tileRenderableCullingData[bridgePlane][x][y] == null
-								|| sceneContext.tileRenderableCullingData[bridgePlane][x][y].length < renderableCullingData.size())
-								sceneContext.tileRenderableCullingData[bridgePlane][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
-
-							renderableCullingData.toArray(sceneContext.tileRenderableCullingData[bridgePlane][x][y]);
+							staticTileData.renderables.addAll(bridgeStaticTileData.renderables);
 						}
-
-						if (sceneContext.tileRenderableCullingData[z][x][y] == null
-							|| sceneContext.tileRenderableCullingData[z][x][y].length < renderableCullingData.size())
-							sceneContext.tileRenderableCullingData[z][x][y] = new SceneContext.RenderableCullingData[renderableCullingData.size()];
-
-						renderableCullingData.toArray(sceneContext.tileRenderableCullingData[z][x][y]);
-						renderableCullingData.clear();
 					}
 				}
 			}
@@ -361,14 +352,19 @@ public class SceneUploader {
 	private void uploadModel(
 		SceneContext sceneContext,
 		Tile tile,
+		TileObject tileObject,
+		StaticTileData staticTileData,
 		int uuid,
 		Model model,
-		int orientation,
-		ArrayList<SceneContext.RenderableCullingData> renderableCullingData
+		int preOrientation,
+		int fullOrientation
 	) {
 		// deduplicate hillskewed models
-		if (model.getUnskewedModel() != null)
+		boolean hillskew = false;
+		if (model.getUnskewedModel() != null) {
+			hillskew = model != model.getUnskewedModel();
 			model = model.getUnskewedModel();
+		}
 
 		if (model.getSceneId() == EXCLUDED_FROM_SCENE_BUFFER)
 			return;
@@ -377,12 +373,6 @@ public class SceneUploader {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		int modelOverrideHash = modelOverride.hashCode() & MODEL_OVERRIDE_ID_MASK;
 
-		SceneContext.RenderableCullingData cullingData = new SceneContext.RenderableCullingData();
-		cullingData.bottomY = model.getBottomY();
-		cullingData.radius = model.getRadius();
-		cullingData.height = model.getModelHeight();
-		renderableCullingData.add(cullingData);
-
 		// check if the model has already been uploaded
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
 			// if the same model is being uploaded, but with a different model override,
@@ -390,6 +380,18 @@ public class SceneUploader {
 			if (((model.getSceneId() >> 16) & MODEL_OVERRIDE_ID_MASK) != modelOverrideHash) {
 				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);
 			}
+
+			if (model.getBufferOffset() != -1) {
+				staticTileData.addStaticRenderable(
+					tileObject.getX(),
+					tileObject.getY(),
+					tileObject.getZ(),
+					hillskew,
+					fullOrientation,
+					model
+				);
+			}
+
 			return;
 		}
 
@@ -400,7 +402,7 @@ public class SceneUploader {
 		if (modelOverride.hide) {
 			vertexOffset = -1;
 		} else {
-			modelPusher.pushModel(sceneContext, tile, uuid, model, modelOverride, orientation, false);
+			modelPusher.pushModel(sceneContext, tile, uuid, model, modelOverride, preOrientation, false);
 			if (sceneContext.modelPusherResults[1] == 0)
 				uvOffset = -1;
 			isModelTransparent = sceneContext.modelPusherResults[2] == 1;
@@ -413,17 +415,28 @@ public class SceneUploader {
 			(modelOverride.castShadows ? 1 : 0) << 15 |
 			(isModelTransparent ? 1 : 0) << 14 |
 			sceneContext.id & SCENE_ID_MASK);
+
+		if (vertexOffset != -1) {
+			staticTileData.addStaticRenderable(
+				tileObject.getX(),
+				tileObject.getY(),
+				tileObject.getZ(),
+				hillskew,
+				fullOrientation,
+				model
+			);
+		}
+
 		++sceneContext.uniqueModels;
 	}
 
-	private boolean upload(
+	private void upload(
 		SceneContext sceneContext,
-		ArrayList<SceneContext.RenderableCullingData> renderableCullingData,
+		StaticTileData staticTileData,
 		@Nonnull Tile tile,
 		int tileExX,
 		int tileExY
 	) {
-		boolean isEmpty = true;
 		int[] worldPos = sceneContext.localToWorld(tile.getLocalLocation(), tile.getPlane());
 		var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos);
 
@@ -475,7 +488,10 @@ public class SceneUploader {
 				sceneTilePaint.setBufferLen(vertexCount);
 				sceneTilePaint.setBufferOffset(vertexOffset);
 				sceneTilePaint.setUvBufferOffset(uvOffset);
-				isEmpty = false;
+
+				staticTileData.scenePaint_VertexCount = vertexCount;
+				staticTileData.scenePaint_VertexOffset = vertexOffset;
+				staticTileData.scenePaint_UVOffset = uvOffset;
 			}
 		}
 
@@ -486,6 +502,9 @@ public class SceneUploader {
 			// Set offsets before pushing new data
 			sceneTileModel.setBufferOffset(sceneContext.getVertexOffset());
 			sceneTileModel.setUvBufferOffset(sceneContext.getUvOffset());
+			staticTileData.tileModel_VertexOffset = sceneContext.getVertexOffset();
+			staticTileData.tileModel_UVOffset = sceneContext.getUvOffset();
+
 			int[] uploadedTileModelData = upload(sceneContext, tile, worldPos, sceneTileModel);
 
 			final int bufferLength = uploadedTileModelData[0];
@@ -498,7 +517,7 @@ public class SceneUploader {
 			int packedBufferLength = bufferLength << 1 | underwaterTerrain;
 
 			sceneTileModel.setBufferLen(packedBufferLength);
-			isEmpty = false;
+			staticTileData.tileModel_VertexCount = packedBufferLength;
 		}
 
 		WallObject wallObject = tile.getWallObject();
@@ -508,12 +527,13 @@ public class SceneUploader {
 				uploadModel(
 					sceneContext,
 					tile,
+					wallObject,
+					staticTileData,
 					ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId()),
 					(Model) renderable1,
 					HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
-					renderableCullingData
+					wallObject.getOrientationA()
 				);
-				isEmpty = false;
 			}
 
 			Renderable renderable2 = wallObject.getRenderable2();
@@ -521,12 +541,13 @@ public class SceneUploader {
 				uploadModel(
 					sceneContext,
 					tile,
+					wallObject,
+					staticTileData,
 					ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId()),
 					(Model) renderable2,
 					HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
-					renderableCullingData
+					wallObject.getOrientationB()
 				);
-				isEmpty = false;
 			}
 		}
 
@@ -537,12 +558,13 @@ public class SceneUploader {
 				uploadModel(
 					sceneContext,
 					tile,
+					groundObject,
+					staticTileData,
 					ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
 					(Model) renderable,
 					HDUtils.getModelPreOrientation(groundObject.getConfig()),
-					renderableCullingData
+					HDUtils.getModelOrientation(groundObject.getConfig())
 				);
-				isEmpty = false;
 			}
 		}
 
@@ -554,12 +576,13 @@ public class SceneUploader {
 				uploadModel(
 					sceneContext,
 					tile,
+					decorativeObject,
+					staticTileData,
 					ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId()),
 					(Model) renderable,
 					orientation,
-					renderableCullingData
+					HDUtils.getModelOrientation(decorativeObject.getConfig())
 				);
-				isEmpty = false;
 			}
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
@@ -567,12 +590,13 @@ public class SceneUploader {
 				uploadModel(
 					sceneContext,
 					tile,
+					decorativeObject,
+					staticTileData,
 					ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId()),
 					(Model) renderable2,
 					orientation,
-					renderableCullingData
+					HDUtils.getModelOrientation(decorativeObject.getConfig())
 				);
-				isEmpty = false;
 			}
 		}
 
@@ -585,16 +609,15 @@ public class SceneUploader {
 			if (renderable instanceof Model) {
 				uploadModel(sceneContext,
 					tile,
+					gameObject,
+					staticTileData,
 					ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
 					(Model) renderable,
 					HDUtils.getModelPreOrientation(gameObject.getConfig()),
-					renderableCullingData
+					gameObject.getModelOrientation()
 				);
-				isEmpty = false;
 			}
 		}
-
-		return !isEmpty;
 	}
 
 	private int[] upload(SceneContext sceneContext, Tile tile, int[] worldPos, TileOverride override, @Nullable SceneTilePaint paint) {
