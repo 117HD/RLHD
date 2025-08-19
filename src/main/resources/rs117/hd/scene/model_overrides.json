@@ -58735,7 +58735,7 @@
     ]
   },
   {
-    "description": "Cam Torum - Metallic - Stone - Bar with taps on them",
+    "description": "Cam Torum - Metallic - Cloth - Pickaxe decoration",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -58753,7 +58753,7 @@
         "uvType": "BOX"
       },
       {
-        "description": "Metal",
+        "description": "Cloth",
         "colors": "h == 2",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
