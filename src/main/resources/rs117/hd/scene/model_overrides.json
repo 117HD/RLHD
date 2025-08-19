@@ -58386,7 +58386,7 @@
     ]
   },
   {
-    "description": "Cam Torum - Metallic - Carpet - Bed",
+    "description": "Cam Torum - Metallic - Carpet - Bed Double",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -58398,6 +58398,27 @@
       {
         "description": "Metal",
         "colors": "h == 4",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -303,
+        "uvScale": 0.44
+      }
+    ]
+  },
+  {
+    "description": "Cam Torum - Metallic - Carpet - Bed Single",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 117,
+    "objectIds": [
+      "BED_IMCANDO01_BASIC01"
+    ],
+    "colorOverrides": [
+
+      {
+        "description": "Metal",
+        "colors": "h >= 10",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvOrientation": -303,
@@ -58470,7 +58491,8 @@
     "uvScale": 0.5,
     "objectIds": [
       "SHELF_HANGINGMEAT01_IMCANDO01",
-      "SHELF_HANGINGMEAT02_IMCANDO01"
+      "SHELF_HANGINGMEAT02_IMCANDO01",
+      "DWARF_KELDAGRIM_HANGINGMEAT1"
     ],
     "colorOverrides": [
       {
@@ -58558,6 +58580,31 @@
         "colors": "h == 37",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Keldagrim - Cam Torum - Wooden - Cloth - Metallic - hanging shirts",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.42,
+    "uvOrientation": -343,
+    "objectIds": [
+      "DWARF_KELDAGRIM_CLOTHES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "(h == 0 && s == 1) || h == 10",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Cloth",
+        "colors": " h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationX": 512
       }
     ]
   }
