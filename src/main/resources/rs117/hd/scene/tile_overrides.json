@@ -5340,8 +5340,10 @@
   {
     "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
     "area": "THE_BLUE_MOON_ENTRANCE",
-    "underlayIds": [ 73, 205, 206 ],
-    "groundMaterial": "DIRT"
+    "underlayIds": [ 56, 73, 205, 206 ],
+    "groundMaterial": "CAM_TORUM_TILES",
+    "uvOrientation": -512,
+    "blended": false
   },
   {
     "name": "THE_BLUE_MOON_NEAR_WALLS",
@@ -5360,7 +5362,8 @@
     "name": "THE_BLOOD_MOON_ENTRANCE_DIRT",
     "area": "THE_BLOOD_MOON_ENTRANCE",
     "underlayIds": [ 56, 72, 118 ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "CAM_TORUM_TILES",
+    "blended": false
   },
   {
     "name": "THE_BLOOD_MOON_BLOOD",
@@ -5382,10 +5385,12 @@
     "blended": false
   },
   {
-    "name": "THE_ECLIPSE_MOON_ENTRANCE_DIRT",
+    "name": "THE_ECLIPSE_MOON_ENTRANCE",
     "area": "THE_ECLIPSE_MOON_ENTRANCE",
-    "underlayIds": [ 72, 213 ],
-    "groundMaterial": "DIRT"
+    "underlayIds": [ 56, 72, 212, 213 ],
+    "groundMaterial": "CAM_TORUM_TILES",
+    "uvOrientation": 1024,
+    "blended": false
   },
   {
     "name": "THE_ECLIPSE_MOON_FLOOR_BLENDING_FIX",

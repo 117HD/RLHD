@@ -58760,5 +58760,10 @@
         "uvOrientation": 192
       }
     ]
+  },
+  {
+    "description": "Disable fake tiles in Blue Moon area to prevent mismatched tiles",
+    "objectIds": [ "TILEKIT_BRICK01_DEFAULT01" ],
+    "hideInAreas": [ "THE_BLUE_MOON_ENTRANCE" ]
   }
 ]
