@@ -5502,6 +5502,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "Crash Site Cavern (Monkey Madness 2)",
+    "regionBoxes": [
+      [ 8280, 8536 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "KOUREND_CASTLE_ENTRANCE_FIX",
     "aabbs": [
       [ 1623, 3669, 0, 1623, 3677, 0 ]
