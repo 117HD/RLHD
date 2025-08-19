@@ -5252,17 +5252,17 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR",
     "minLightness": 7
   },
+
   {
-    "name": "STREAMBOUND_CAVERN_GRASS",
+    "name": "STREAMBOUND_CAVERN_COMPLEX",
     "area": "STREAMBOUND_CAVERN",
-    "underlayIds": [ 53 ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "STREAMBOUND_CAVERN_ROCK",
-    "area": "STREAMBOUND_CAVERN",
-    "underlayIds": [ 56, 72 ],
-    "groundMaterial": "ROCKY_CAVE_FLOOR"
+    "underlayIds": [ 53, 56, 72 ],
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
+      "EARTHBOUND_CAVERN_GRASS": "s > 2",
+      "EARTHBOUND_CAVERN_ROCK": "s < 3"
+    }
   },
   {
     "name": "STREAMBOUND_CAVERN_WATER",
