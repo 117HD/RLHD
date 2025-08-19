@@ -58427,6 +58427,26 @@
     ]
   },
   {
+    "description": "Cam Torum - Wooden - Carpet - Bunk bed",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 117,
+    "objectIds": [
+      "BED_BUNK01_IMCANDO01"
+    ],
+    "colorOverrides": [
+
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
     "description": "Cam Torum - Wooden - Carpet - Chair",
     "baseMaterial": "CARPET",
     "uvType": "BOX",
@@ -58605,6 +58625,34 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Camtorum - Metallic - Boiler Equipment",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "uvOrientation": 172,
+    "objectIds": [
+      "BREWVAT_TANK01_IMCANDO01",
+      "BREWVAT_PIPES01_IMCANDO01",
+      "BREWVAT_HOPPER01_IMCANDO01",
+      "BREWVAT_HOPPER02_IMCANDO01"
+    ]
+  },
+  {
+    "description": "Camtorum - Wooden - Metallic - Large barrels",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "BARREL_WOODEN01_LARGE01_IMCANDO01"
+    ],
+    "uvOrientationY": 512,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS"
       }
     ]
   }
