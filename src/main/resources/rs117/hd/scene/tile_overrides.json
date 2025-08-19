@@ -5277,7 +5277,7 @@
     "groundMaterial": "OVERWORLD_GRASS_1"
   },
   {
-    "name": "ANCIENT_SHRINE_OVERLAY",
+    "name": "ANCIENT_SHRINE_OVERLAY_ENDS",
     "area": "ANCIENT_SHRINE",
     "overlayIds": [ 227, 252 ],
     "groundMaterial": "GRUNGE",
@@ -5302,7 +5302,7 @@
     "blended": false
   },
   {
-    "name": "ANCIENT_SHRINE_OVERLAY",
+    "name": "ANCIENT_SHRINE_OVERLAY_TAN_DARK",
     "area": "ANCIENT_SHRINE",
     "overlayIds": [ 226 ],
     "groundMaterial": "GRUNGE",
@@ -5310,7 +5310,7 @@
     "blended": false
   },
   {
-    "name": "ANCIENT_SHRINE_OVERLAY",
+    "name": "ANCIENT_SHRINE_OVERLAY_TAN_DARKEST",
     "area": "ANCIENT_SHRINE",
     "overlayIds": [ 80 ],
     "groundMaterial": "GRUNGE",
