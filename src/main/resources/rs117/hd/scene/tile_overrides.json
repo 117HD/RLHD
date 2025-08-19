@@ -5279,8 +5279,44 @@
   {
     "name": "ANCIENT_SHRINE_OVERLAY",
     "area": "ANCIENT_SHRINE",
-    "overlayIds": [ 80, 86, 194, 226, 227, 252 ],
+    "overlayIds": [ 227, 252 ],
     "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_RED_DARK",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 194 ],
+    "groundMaterial": "GRUNGE",
+    "shiftSaturation": -1,
+    "shiftLightness": 3,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_RED_DARKEST",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 86 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 11,
+    "shiftSaturation": -5,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 226 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 4,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 80 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 10,
+    "shiftSaturation": 1,
+    "shiftHue": 1,
     "blended": false
   },
   {
