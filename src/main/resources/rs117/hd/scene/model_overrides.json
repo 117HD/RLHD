@@ -1112,7 +1112,11 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "DRILL_TREE3"
+      "DRILL_TREE3",
+      "POH_SMALL_TREE2_5",
+      "POH_BIG_TREE5_4",
+      "POH_BIG_TREE2_4",
+      "POH_SMALL_TREE4_5"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1527,11 +1531,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_RED_SIDE"
+        "textureMaterial": "LEAVES_SIDE"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_RED_TOP"
+        "textureMaterial": "LEAVES_TOP"
       }
     }
   },
@@ -2963,19 +2967,6 @@
     "windDisplacementModifier": 1,
     "objectIds": [
       "POH_GRASS"
-    ]
-  },
-  {
-    "description": "POH Trees",
-    "baseMaterial": "BARK",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "objectIds": [
-      "POH_SMALL_TREE2_5",
-      "POH_BIG_TREE5_4",
-      "POH_BIG_TREE2_4",
-      "POH_SMALL_TREE4_5"
     ]
   },
   {
@@ -6730,6 +6721,7 @@
       "TOG_CAVEWALL_OUTSIDECORNER_NO_SOIL",
       "TOG_CAVEWALLINSIDECORNER_NO_SOIL",
       "LOST_TRIBE_CAVEWALL_HOLE",
+      "GOBLIN_CAVEWALL_HOLE_INSIDE",
       "LOST_TRIBE_HOLE_2",
       "SWAMP_CAVEWALL_FORMARKER",
       "COLLAPSING_ROOF_LOCATION",
@@ -6746,13 +6738,21 @@
     "uvOrientation": 100
   },
   {
+    "description": "LUMBRIDGE_HOLE_DECALS",
+    "baseMaterial": "TRANSPARENT",
+    "objectIds": [
+      "LOST_TRIBE_CAVEWALL_HOLE_WALLDECOR"
+    ]
+  },
+  {
     "description": "LUMBRIDGE_CAVE_MAZE_MARKERS",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "SWAMP_CAVEWALL_EASTMARKER",
       "SWAMP_CAVEWALL_WESTMARKER",
       "SWAMP_CAVEWALL_NORTHMARKER",
-      "SWAMP_CAVEWALL_SOUTHMARKER"
+      "SWAMP_CAVEWALL_SOUTHMARKER",
+      "GOBLIN_CAVEWALL_HOLE_FLOORRUBBLE"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
@@ -9477,7 +9477,7 @@
     "description": "Wooden Wall Supports - Mines",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.7,
     "flatNormals": true,
     "objectIds": [
       "WALLSUPPORT"
@@ -9977,6 +9977,7 @@
     "description": "Wattle Style Houses (Ardougne, Digsite, Hosidius)",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvScale": 0.5,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -10092,19 +10093,11 @@
     "description": "Wooden Wall Torch with Metal Bracket",
     "baseMaterial": "GRAY_75",
     "objectIds": [
-      "TORCH"
-    ]
-  },
-  {
-    "description": "WALL_TORCHES",
-    "baseMaterial": "METALLIC_1_LIGHT",
-    "objectIds": [
       "TORCH_GRUBBY",
+      "TORCH",
       "FENK_TORCH",
       "MYQ5_TORCH"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.6
+    ]
   },
   {
     "description": "WALL_SHIELD",
@@ -25850,11 +25843,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_SIDE"
+        "textureMaterial": "LEAVES_RED_SIDE"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_TOP"
+        "textureMaterial": "LEAVES_RED_TOP"
       }
     }
   },
@@ -34317,6 +34310,18 @@
     ]
   },
   {
+    "description": "Lumbridge Castle Basement - Banktable",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvOrientation": 512,
+    "textureMaterial": "CONCRETE",
+    "uvScale": 0.6,
+    "retainVanillaUvs": false,
+    "uvType": "BOX",
+    "objectIds": [
+      "AIDE_BANKTABLE"
+    ]
+  },
+  {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "FAI_VARROCK_HAT_STAND", "QIP_SHEEP_SHEARER_HATSTAND" ],
@@ -36149,14 +36154,15 @@
     "description": "Sink with textured water and wood paneling - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.4,
     "objectIds": [
       "SINK",
       "SINK2",
       "KR_SINK",
       "QIP_SHEEP_SHEARER_SINK",
       "QIP_COOK_SINK",
-      "RIMMINGTON_SINK"
+      "RIMMINGTON_SINK",
+      "AIDE_SINK"
     ],
     "colorOverrides": [
       {
