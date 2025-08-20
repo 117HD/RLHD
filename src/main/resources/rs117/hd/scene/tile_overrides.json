@@ -5068,10 +5068,10 @@
   {
     "name": "Cam Torum Smith & Bank Tiles Fix",
     "area": "CAM_TORUM_BUILDING_TILES",
-    "overlayIds": [ 132 ],
+    "overlayIds": [ 132, 321],
     "underlayIds": [ 45 ],
     "blended": false,
-    "groundMaterial": "MARBLE_1"
+    "groundMaterial": "TILES_2x2_1"
   },
   {
     "name": "Cam Torum Bank Entrance Fix",
@@ -5134,6 +5134,38 @@
     "maxLightness": 15
   },
   {
+    "name": "Cam Torum - Throneroom Tiles",
+    "area": "CAM_TORUM_THRONEROOM_TILES",
+    "overlayIds": [ 321 ],
+    "blended": false,
+    "groundMaterial": "CAM_TORUM_TILES"
+  },
+  {
+    "name": "Cam Torum - Purple Marble Tiles",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 285, 286 ],
+    "blended": false,
+    "groundMaterial": "MARBLE_2"
+  },
+  {
+    "name": "Cam Torum - Rocky overlay",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 11, 228 ],
+    "groundMaterial": "STONE_CAVE_FLOOR"
+  },
+  {
+    "name": "Cam Torum - Dirt overlay",
+    "area": "CAM_TORUM",
+    "overlayIds": [ 320, 321, 323 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Cam Torum - Dirt underlay",
+    "area": "CAM_TORUM",
+    "underlayIds": [ 123 ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
     "name": "Perilous Moons Antechamber Tiles",
     "area": "PERILOUS_MOONS_ANTECHAMBER_TILES",
     "underlayIds": [ 19, 39, 72 ],
@@ -5159,6 +5191,25 @@
     "blended": false
   },
   {
+    "name": "Ancient Prison Tiles",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "overlayIds": [ 2 ],
+    "groundMaterial": "MARBLE_2",
+    "blended": false
+  },
+  {
+    "name": "Ancient Prison Floor",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "underlayIds": [ 7, 56 ],
+    "groundMaterial": "GRAVEL"
+  },
+  {
+    "name": "Ancient Prison Dirt",
+    "area": "MOONS_OF_PERIL_ANCIENT_PRISON",
+    "underlayIds": [ 118 ],
+    "groundMaterial": "DIRT"
+  },
+  {
     "name": "EARTHBOUND_CAVERN_WATER_FIX",
     "area": "EARTHBOUND_CAVERN_WATER_FIX",
     "underlayIds": [ 72, 105 ],
@@ -5182,6 +5233,8 @@
   {
     "name": "EARTHBOUND_CAVERN_COMPLEX",
     "area": "EARTHBOUND_CAVERN",
+    "overlayIds": [ 131 ],
+    "underlayIds": [ 54, 56, 72, 105, 144 ],
     "replacements": {
       "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
       "EARTHBOUND_CAVERN_GRASS": "s > 2",
@@ -5205,17 +5258,17 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR",
     "minLightness": 7
   },
+
   {
-    "name": "STREAMBOUND_CAVERN_GRASS",
+    "name": "STREAMBOUND_CAVERN_COMPLEX",
     "area": "STREAMBOUND_CAVERN",
-    "underlayIds": [ 53 ],
-    "groundMaterial": "GRASS_1"
-  },
-  {
-    "name": "STREAMBOUND_CAVERN_ROCK",
-    "area": "STREAMBOUND_CAVERN",
-    "underlayIds": [ 56, 72 ],
-    "groundMaterial": "ROCKY_CAVE_FLOOR"
+    "underlayIds": [ 53, 56, 72 ],
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "EARTHBOUND_CAVERN_ROCK_TOP" : "h == 0 && l == 2",
+      "EARTHBOUND_CAVERN_GRASS": "s > 2",
+      "EARTHBOUND_CAVERN_ROCK": "s < 3"
+    }
   },
   {
     "name": "STREAMBOUND_CAVERN_WATER",
@@ -5224,16 +5277,64 @@
     "waterType": "SWAMP_WATER_FLAT"
   },
   {
+    "name": "ANCIENT_SHRINE_OVERLAY_GRASS",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 336 ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_ENDS",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 227, 252 ],
+    "groundMaterial": "GRUNGE",
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_RED_DARK",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 194 ],
+    "groundMaterial": "GRUNGE",
+    "shiftSaturation": -1,
+    "shiftLightness": 3,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_RED_DARKEST",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 86 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 11,
+    "shiftSaturation": -5,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_TAN_DARK",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 226 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 4,
+    "blended": false
+  },
+  {
+    "name": "ANCIENT_SHRINE_OVERLAY_TAN_DARKEST",
+    "area": "ANCIENT_SHRINE",
+    "overlayIds": [ 80 ],
+    "groundMaterial": "GRUNGE",
+    "shiftLightness": 10,
+    "shiftSaturation": 1,
+    "shiftHue": 1,
+    "blended": false
+  },
+  {
     "name": "ANCIENT_SHRINE_DIRT",
     "area": "ANCIENT_SHRINE",
-    "underlayIds": [ 227 ],
-    "groundMaterial": "DIRT",
-    "blended": false
+    "underlayIds": [ 36 ],
+    "groundMaterial": "DIRT"
   },
   {
     "name": "ANCIENT_SHRINE_GRASS",
     "area": "ANCIENT_SHRINE",
-    "underlayIds": [ 36, 81 ],
+    "underlayIds": [ 25, 40, 48, 81 ],
     "groundMaterial": "GRASS_1"
   },
   {
@@ -5245,8 +5346,10 @@
   {
     "name": "THE_BLUE_MOON_ENTRANCE_DIRT",
     "area": "THE_BLUE_MOON_ENTRANCE",
-    "underlayIds": [ 73, 205, 206 ],
-    "groundMaterial": "DIRT"
+    "underlayIds": [ 56, 73, 205, 206 ],
+    "groundMaterial": "CAM_TORUM_TILES",
+    "uvOrientation": -512,
+    "blended": false
   },
   {
     "name": "THE_BLUE_MOON_NEAR_WALLS",
@@ -5265,7 +5368,8 @@
     "name": "THE_BLOOD_MOON_ENTRANCE_DIRT",
     "area": "THE_BLOOD_MOON_ENTRANCE",
     "underlayIds": [ 56, 72, 118 ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "CAM_TORUM_TILES",
+    "blended": false
   },
   {
     "name": "THE_BLOOD_MOON_BLOOD",
@@ -5287,10 +5391,12 @@
     "blended": false
   },
   {
-    "name": "THE_ECLIPSE_MOON_ENTRANCE_DIRT",
+    "name": "THE_ECLIPSE_MOON_ENTRANCE",
     "area": "THE_ECLIPSE_MOON_ENTRANCE",
-    "underlayIds": [ 72, 213 ],
-    "groundMaterial": "DIRT"
+    "underlayIds": [ 56, 72, 212, 213 ],
+    "groundMaterial": "CAM_TORUM_TILES",
+    "uvOrientation": 1024,
+    "blended": false
   },
   {
     "name": "THE_ECLIPSE_MOON_FLOOR_BLENDING_FIX",
