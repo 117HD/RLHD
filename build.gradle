@@ -37,6 +37,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 //import groovy.json.JsonOutput
+//
 //import java.lang.reflect.Modifier
 //
 //tasks.register('exportGamevals') {
@@ -77,7 +78,8 @@ tasks.withType(JavaCompile).configureEach {
 //		}
 //
 //		def outputFile = file('src/main/resources/rs117/hd/scene/gamevals.json')
-//		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n" + JsonOutput.prettyPrint(JsonOutput.toJson(fullExport))
+//		outputFile.text = "// AUTO-GENERATED FILE. DO NOT MODIFY.\n" +
+//			JsonOutput.prettyPrint(JsonOutput.toJson(fullExport))
 //		println "Exported gamevals in ${(System.nanoTime() - startTime).intdiv(1_000_000)} ms"
 //	}
 //}
