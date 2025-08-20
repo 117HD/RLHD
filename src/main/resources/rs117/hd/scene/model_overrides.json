@@ -23124,13 +23124,14 @@
     ]
   },
   {
-    "description": "Lassar Undercity, Cam Torum & Varlamore temple crypt fake brick tiles",
+    "description": "Hide fake brick tiles to replace them with tile overrides",
     "objectIds": [ "TILEKIT_BRICK01_DEFAULT01", "TILEKIT_BRICK01_DEFAULT02" ],
     "baseMaterial": "LASSAR_UNDERCITY_TILES",
     "hideInAreas": [
       "LASSAR_UNDERCITY",
       "VARLAMORE_TEMPLE_CRYPT",
-      "CAM_TORUM"
+      "CAM_TORUM",
+      "THE_BLUE_MOON_ENTRANCE"
     ]
   },
   {
@@ -57980,7 +57981,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX"
       }
@@ -58000,8 +58001,8 @@
       "DUNGEONKIT_IMCANDO01_DOUBLE01",
       "DUNGEONKIT_IMCANDO01_DOUBLE02",
       "DUNGEONKIT_IMCANDO01_DOUBLE03",
-      "ARCHITECTURE_BLOCK_IMCANDO01",
       "ARCHITECTURE_BLOCK_IMCANDO02",
+      "ARCHITECTURE_BLOCK_IMCANDO02_DARK01",
       "ARCHITECTURE_AQUEDUCT_IMCANDO01",
       "ARCHITECTURE_AQUEDUCT_IMCANDO02",
       "DUNGEONKIT_IMCANDO03_PATTERN01",
@@ -58061,7 +58062,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX"
       }
@@ -58429,7 +58430,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "(h == 10 && s == 0) || (h == 5 && s == 3)",
+        "colors": "h == 10 && s == 0 || h == 5 && s == 3",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvOrientation": 117,
@@ -58667,7 +58668,7 @@
     "colorOverrides": [
       {
         "description": "Cloth",
-        "colors": "(h == 0 && s == 1) || h == 10",
+        "colors": "h == 0 && s == 1 || h == 10",
         "baseMaterial": "CARPET",
         "uvType": "BOX"
       },
@@ -58800,7 +58801,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": "h == 5 ",
+        "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX"
       },
@@ -58812,10 +58813,5 @@
         "uvOrientation": 192
       }
     ]
-  },
-  {
-    "description": "Disable fake tiles in Blue Moon area to prevent mismatched tiles",
-    "objectIds": [ "TILEKIT_BRICK01_DEFAULT01" ],
-    "hideInAreas": [ "THE_BLUE_MOON_ENTRANCE" ]
   }
 ]
