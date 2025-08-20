@@ -5509,7 +5509,7 @@
   {
     "name": "Varlamore - Fortis floors",
     "area": "VARLAMORE",
-    "overlayIds": [ 324, 325, 326, 327, 329 ],
+    "overlayIds": [ 324, 325, 326, 327 ],
     "blended": false,
     "groundMaterial": "TERRACOTTA_FLOOR"
   },
@@ -8180,6 +8180,20 @@
     ],
     "groundMaterial": "PLAIN_DIRT",
     "shiftSaturation": -1
+  },
+  {
+    "name": "Fortis roads",
+    "area": "ALL",
+    "overlayIds": [ 328 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "uvOrientation": 1024
+  },
+  {
+    "name": "Fortis roads mirrored",
+    "area": "ALL",
+    "overlayIds": [ 329 ],
+    "groundMaterial": "FORTIS_ROADS_MIRRORED",
+    "uvOrientation": 1024
   },
   {
     "name": "OVERWORLD_GRASS_UNDERLAY",

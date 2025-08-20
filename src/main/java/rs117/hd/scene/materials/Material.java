@@ -98,6 +98,9 @@ public class Material {
 
 		if (displacementScale == 0)
 			displacementMap = NONE.displacementMap;
+		flowMapDuration = ensureDefaults(flowMapDuration, NONE.flowMapDuration);
+		scrollSpeed = ensureDefaults(scrollSpeed, NONE.scrollSpeed);
+		textureScale = ensureDefaults(textureScale, NONE.textureScale);
 
 		if (!materialsToReplace.isEmpty() && materialsToReplace.removeIf(Objects::isNull))
 			log.error("Error in material '{}': Null is not allowed as a replacement material", this);
@@ -124,8 +127,8 @@ public class Material {
 		return name;
 	}
 
-	public boolean inheritsTexture() {
-		return parent != null;
+	public boolean isVanillaReplacement() {
+		return vanillaTextureIndex != -1 && (parent == null || parent.vanillaTextureIndex != vanillaTextureIndex);
 	}
 
 	public String getTextureName() {
