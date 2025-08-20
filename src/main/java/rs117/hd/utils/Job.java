@@ -1,61 +1,88 @@
 package rs117.hd.utils;
 
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import rs117.hd.HdPlugin;
 
 @Slf4j
 public abstract class Job implements Runnable {
+
 	private final Semaphore completionSema = new Semaphore(1);
-	private final AtomicBoolean inFlight = new AtomicBoolean(false); // Used to track if the Async work is being processed
+	private final AtomicBoolean inFlight = new AtomicBoolean(false);
+
+	private final List<Job> dependencies = new ArrayList<>();
+
 	private JobCallback onPrepareCallback;
 	private JobCallback onCompleteCallback;
 
 	@Getter
-	private boolean isCompleted = true; // Used to track if the job has been marked as completed yet
+	private boolean isCompleted = true;
 
 	public interface JobCallback {
 		void callback();
 	}
 
 	public Job setOnPrepareCallback(JobCallback callback) {
-		onPrepareCallback = callback;
+		this.onPrepareCallback = callback;
 		return this;
 	}
 
 	public Job setOnCompleteCallback(JobCallback callback) {
-		onCompleteCallback = callback;
+		this.onCompleteCallback = callback;
 		return this;
 	}
 
-	public boolean hasPrepareCallback() { return onPrepareCallback != null; }
+	public Job addDependency(Job dependency) {
+		if (dependency == null || dependency == this) {
+			throw new IllegalArgumentException("Invalid dependency");
+		}
 
-	public boolean hasCompleteCallback() { return onCompleteCallback != null; }
+		if (hasCircularDependency(dependency, new HashSet<>())) {
+			throw new IllegalStateException("Circular dependency detected between " +
+											this.getClass().getSimpleName() + " and " + dependency.getClass().getSimpleName());
+		}
 
-	public boolean isInFlight() { return inFlight.get(); }
+		this.dependencies.add(dependency);
+		return this;
+	}
 
-	public void submit() { submit(false); }
+	public boolean hasPrepareCallback() {
+		return onPrepareCallback != null;
+	}
+
+	public boolean hasCompleteCallback() {
+		return onCompleteCallback != null;
+	}
+
+	public boolean isInFlight() {
+		return inFlight.get();
+	}
+
+	public void submit() {
+		submit(false);
+	}
 
 	@SneakyThrows
 	public void submit(boolean runSynchronously) {
-		complete(true);
+		complete(true); // If already done before, ensure cleanup
 
 		try {
-			if (onPrepareCallback != null) {
-				onPrepareCallback.callback();
-			}
-
+			if (onPrepareCallback != null) onPrepareCallback.callback();
 			onPrepare();
 		} catch (Exception ex) {
-			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
+			log.error("Error in prepare callback for job: " + getClass().getSimpleName(), ex);
 		}
 
 		isCompleted = false;
 		inFlight.set(true);
+
 		if (HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY || runSynchronously) {
 			run();
 		} else {
@@ -74,18 +101,16 @@ public abstract class Job implements Runnable {
 			if (block) {
 				completionSema.acquire();
 				completionSema.release();
-			} else {
-				if (completionSema.tryAcquire(nano, TimeUnit.NANOSECONDS)) {
-					completionSema.release();
-				} else {
-					return this;
-				}
+			} else if (completionSema.tryAcquire(nano, TimeUnit.NANOSECONDS)) {
+				completionSema.release();
 			}
 		}
 		return this;
 	}
 
-	public Job complete() { return complete(true); }
+	public Job complete() {
+		return complete(true);
+	}
 
 	@SneakyThrows
 	public Job complete(boolean block) {
@@ -99,7 +124,7 @@ public abstract class Job implements Runnable {
 				onCompleteCallback.callback();
 			}
 		} catch (Exception ex) {
-			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
+			log.error("Error in complete callback for job: " + getClass().getSimpleName(), ex);
 		} finally {
 			isCompleted = true;
 		}
@@ -110,18 +135,53 @@ public abstract class Job implements Runnable {
 	@Override
 	public void run() {
 		try {
+			for (Job dep : dependencies) {
+				dep.wait(true);
+			}
+		} catch (Exception ex) {
+			log.error("Error while waiting on dependencies: " + getClass().getSimpleName(), ex);
+
+			inFlight.set(false);
+			completionSema.release();
+
+			return;
+		} finally {
+			dependencies.clear();
+		}
+
+		try {
 			doWork();
 		} catch (Exception ex) {
-			log.error("Encountered an error whilst processing job: " + getClass().getSimpleName(), ex);
+			log.error("Error while running job: " + getClass().getSimpleName(), ex);
 		} finally {
 			inFlight.set(false);
 			completionSema.release();
 		}
 	}
 
-	protected void onPrepare() {}
+	protected void onPrepare() {
+	}
 
 	protected abstract void doWork();
 
-	protected void onComplete() {}
+	protected void onComplete() {
+	}
+
+	private boolean hasCircularDependency(Job target, Set<Job> visited) {
+		if (!visited.add(this)) {
+			return false;
+		}
+
+		if (this == target) {
+			return true;
+		}
+
+		for (Job dep : dependencies) {
+			if (dep.hasCircularDependency(target, visited)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }

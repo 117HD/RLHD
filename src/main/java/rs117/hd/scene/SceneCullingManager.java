@@ -143,6 +143,14 @@ public class SceneCullingManager {
 		return tileVisibilityBin.isEmpty() ? new CullingResults() : tileVisibilityBin.pop();
 	}
 
+	public void appendTileCullingJobDependencies(Job inJob) {
+		for (FrustumTileCullingJob[] frustumCullingJob : frustumCullingJobs) {
+			for (FrustumTileCullingJob cullingJob : frustumCullingJob) {
+				inJob.addDependency(cullingJob);
+			}
+		}
+	}
+
 	public void onDraw(SceneContext sceneContext) {
 		if(cullingViews.isEmpty()) {
 			return; // No work to be done

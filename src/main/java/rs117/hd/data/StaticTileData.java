@@ -25,6 +25,22 @@ public class StaticTileData {
 	public int scenePaint_UVOffset;
 	public int scenePaint_VertexCount;
 
+	// Transient
+	public int tileModel_RenderBufferOffset;
+	public int scenePaint_RenderBufferOffset;
+
+	public StaticRenderable getStaticRenderable(int x, int y, int z, Model model) {
+		for(int idx : renderables) {
+			StaticRenderable existingRenderable = owner.staticRenderableData.get(idx);
+			if (existingRenderable.x == x && existingRenderable.y == y && existingRenderable.z == z &&
+				existingRenderable.vertexOffset == model.getBufferOffset() && existingRenderable.uvOffset == model.getUvBufferOffset() &&
+				existingRenderable.sceneId == model.getSceneId()) {
+				return existingRenderable;
+			}
+		}
+		return null;
+	}
+
 	public void addStaticRenderable(int x, int y, int z, boolean hillskew, int orientation, Model model) {
 		// Probably Quite Slow ... But ok for now
 		for (int idx = 0; idx < owner.staticRenderableData.size(); idx++) {
@@ -73,6 +89,9 @@ public class StaticTileData {
 		public int vertexCount;
 		public int faceCount;
 		public int sceneId;
+
+		// Transient
+		public int renderBufferOffset;
 
 		public boolean hillskew;
 	}

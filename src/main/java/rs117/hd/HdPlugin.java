@@ -132,6 +132,9 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.jobs.BuildVisibleTileListJob;
+import rs117.hd.scene.jobs.CalculateStaticRenderBufferOffsetsJob;
+import rs117.hd.scene.jobs.PushStaticModelDataJob;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
@@ -459,6 +462,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int[] numModelsToSort;
 	private GpuIntBuffer[] modelSortingBuffers;
 	private SharedGLBuffer[] hModelSortingBuffers;
+
+	private final CalculateStaticRenderBufferOffsetsJob calculateStaticRenderBufferOffsetsJob = new CalculateStaticRenderBufferOffsetsJob();
+	private final BuildVisibleTileListJob visibleTileListJob = new BuildVisibleTileListJob();
+	private final PushStaticModelDataJob pushStaticModelDataJob = new PushStaticModelDataJob();
 
 	private final ModelDrawBuffer sceneDrawBuffer = new ModelDrawBuffer("Scene");
 	private final ModelDrawBuffer directionalDrawBuffer = new ModelDrawBuffer("Directional Shadow");
@@ -1275,6 +1282,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		hRenderBufferUvs.initialize();
 		hRenderBufferNormals.initialize();
 
+		// Initialise the ModelPassthroughBuffer with enough space to fit all tiles in
 		hModelPassthroughBuffer.initialize();
 
 		sceneDrawBuffer.initialize();
@@ -1720,7 +1728,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.ensureCapacity(staticUnordered.limit())
 					.put(staticUnordered);
 				staticUnordered.rewind();
+				// Pre-allocate enough space to fit in all tiles
+				modelPassthroughBuffer.ensureCapacity(MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * 8);
 				numPassthroughModels += staticUnordered.limit() / 8;
+
+				if(!calculateStaticRenderBufferOffsetsJob.hasCompleteCallback()) {
+					calculateStaticRenderBufferOffsetsJob.setOnCompleteCallback(() -> {
+						renderBufferOffset = calculateStaticRenderBufferOffsetsJob.renderBufferOffset;
+						for(GpuIntBuffer buf : modelSortingBuffers) {
+							buf.ensureCapacity(calculateStaticRenderBufferOffsetsJob.renderableCount * 8);
+						}
+					});
+				}
+
+				calculateStaticRenderBufferOffsetsJob.setup(sceneContext, visibleTileListJob, renderBufferOffset);
+				calculateStaticRenderBufferOffsetsJob.submit(true);
+
+				pushStaticModelDataJob.addDependency(calculateStaticRenderBufferOffsetsJob);
+				pushStaticModelDataJob.setup(sceneContext, modelPassthroughBuffer, numPassthroughModels, visibleTileListJob, this::bufferForTriangles);
+				pushStaticModelDataJob.submit(true);
 			}
 
 			if (updateUniforms) {
@@ -1854,6 +1880,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				sceneCullingManager.onDraw(sceneContext);
+
+				sceneCullingManager.appendTileCullingJobDependencies(visibleTileListJob);
+				visibleTileListJob.setCullingResults(sceneCullingManager.combinedTileVisibility);
+				visibleTileListJob.submit();
 			}
 		}
 
@@ -1933,10 +1963,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		if (!redrawPreviousFrame) {
+
+			calculateStaticRenderBufferOffsetsJob.complete();
+
 			if (configBuildingShadows && hasLoggedIn) {
 				frameTimer.begin(Timer.DRAW_BUILDING_SHADOWS);
-				final int maxTileCount = MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
-				for (int tileIdx = 0; tileIdx < maxTileCount; tileIdx++) {
+				final BuildVisibleTileListJob.VisibleTiles visibleTiles = visibleTileListJob.getResult();
+				for (int i = 0; i < visibleTiles.count; i++) {
+					final int tileIdx = visibleTiles.indices[i];
 					final byte drawState = drawnTiles[tileIdx];
 					if (drawState == 3) {
 						continue;
@@ -1958,27 +1992,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						!sceneContext.tileIsWater[staticTileData.plane][staticTileData.tileExX][staticTileData.tileExY] &&
 						CullingResults.isTileSurfaceVisible(directionalCullingResult)) {
 
-						eightIntWrite[0] = staticTileData.scenePaint_VertexOffset;
-						eightIntWrite[1] = staticTileData.scenePaint_UVOffset;
-						eightIntWrite[2] = staticTileData.scenePaint_VertexCount / 3;
-						eightIntWrite[3] = renderBufferOffset;
-						eightIntWrite[4] = 0;
-						eightIntWrite[5] = (staticTileData.tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-						eightIntWrite[6] = 0;
-						eightIntWrite[7] = (staticTileData.tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-
-						modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
-
-						directionalDrawBuffer.addModel(renderBufferOffset, staticTileData.scenePaint_VertexCount);
-
-						renderBufferOffset += staticTileData.scenePaint_VertexCount;
-						drawnTileCount++;
-						numPassthroughModels++;
+						directionalDrawBuffer.addModel(staticTileData.scenePaint_RenderBufferOffset, staticTileData.scenePaint_VertexCount);
 					}
 
 					if (CullingResults.isTileRenderablesVisible(directionalCullingResult) && ((drawState >> 1) & 1) == 0) {
 						for (int renderableIdx : staticTileData.renderables) {
-							if (drawnRenderables.contains(renderableIdx)) {
+							if (!drawnRenderables.add(renderableIdx)) {
 								continue;
 							}
 
@@ -1989,24 +2008,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								continue;
 							}
 
-							eightIntWrite[0] = renderable.vertexOffset;
-							eightIntWrite[1] = renderable.uvOffset;
-							eightIntWrite[2] = renderable.faceCount;
-							eightIntWrite[3] = renderBufferOffset;
-							eightIntWrite[4] = renderable.orientation | (renderable.hillskew ? 1 : 0) << 26 | staticTileData.plane << 24;
-							eightIntWrite[5] = renderable.x;
-							eightIntWrite[6] = renderable.z << 16 | renderable.height & 0xFFFF;
-							eightIntWrite[7] = renderable.y;
-
-							bufferForTriangles(renderable.faceCount)
-								.ensureCapacity(8)
-								.put(eightIntWrite);
-
-							directionalDrawBuffer.addModel(renderBufferOffset, renderable.faceCount * 3);
-
-							renderBufferOffset += renderable.faceCount * 3;
+							directionalDrawBuffer.addModel(renderable.renderBufferOffset, renderable.faceCount * 3);
 							drawnStaticRenderableCount++;
-							drawnRenderables.add(renderableIdx);
 						}
 					}
 				}
@@ -2015,6 +2018,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			sceneDrawBuffer.flush();
 			directionalDrawBuffer.flush();
+
+			pushStaticModelDataJob.complete();
+			numPassthroughModels = pushStaticModelDataJob.numPassthroughModels;
 		}
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -2120,7 +2126,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (redrawPreviousFrame || sceneContext == null || vertexCount <= 0)
 			return;
 
-		sceneCullingManager.ensureCullingComplete();
+		calculateStaticRenderBufferOffsetsJob.complete();
 
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
@@ -2131,9 +2137,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		boolean isVisibleInDirectional =
 			plane != 0 && (isVisibleInScene || (configShadowCulling && directionalLight.getCullingResults().isTileSurfaceVisible(tileIdx)));
 
-		int vertexOffset = paint.getBufferOffset();
-		int uvOffset = paint.getUvBufferOffset();
-
+		int tileRenderBufferOffset = sceneContext.staticTileData[tileIdx].scenePaint_RenderBufferOffset;
 		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
 			if (!isVisibleInScene) {
 				if (CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
@@ -2143,8 +2147,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			} else {
 				if (!CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
 					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
-					vertexOffset += vertexCount;
-					uvOffset += vertexCount;
+					tileRenderBufferOffset += vertexCount;
 				}
 			}
 		}
@@ -2156,28 +2159,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 		}
 
-		eightIntWrite[0] = vertexOffset;
-		eightIntWrite[1] = uvOffset;
-		eightIntWrite[2] = vertexCount / 3;
-		eightIntWrite[3] = renderBufferOffset;
-		eightIntWrite[4] = 0;
-		eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
-		eightIntWrite[6] = 0;
-		eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
-
-		modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
-
 		if (isVisibleInScene) {
-			sceneDrawBuffer.addModel(renderBufferOffset, vertexCount);
+			sceneDrawBuffer.addModel(tileRenderBufferOffset, vertexCount);
 		}
 
 		if (isVisibleInDirectional) {
-			directionalDrawBuffer.addModel(renderBufferOffset, vertexCount);
+			directionalDrawBuffer.addModel(tileRenderBufferOffset, vertexCount);
 		}
 
-		renderBufferOffset += vertexCount;
 		drawnTileCount++;
-		numPassthroughModels++;
 	}
 
 	public void initShaderHotswapping() {
@@ -2190,10 +2180,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
 		int bufferLength = model.getBufferLen();
-		if (redrawPreviousFrame || bufferLength <= 0)
+		if (redrawPreviousFrame || sceneContext == null || bufferLength <= 0)
 			return;
 
-		sceneCullingManager.ensureCullingComplete();
+		calculateStaticRenderBufferOffsetsJob.complete();
 
 		final int tileEeX = tileX + SCENE_OFFSET;
 		final int tileEeY = tileY + SCENE_OFFSET;
@@ -2213,47 +2203,23 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// restore the bufferLength variable:
 		bufferLength = bufferLength >> 1;
 
-		eightIntWrite[4] = 0;
-		eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
-		eightIntWrite[6] = 0;
-		eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
-
+		int tileRenderBufferOffset = sceneContext.staticTileData[tileIdx].tileModel_RenderBufferOffset;
 		if (underwaterTerrain) {
 			// draw underwater terrain tile before surface tile
 
 			// buffer length includes the generated underwater terrain, so it must be halved
 			bufferLength /= 2;
-			eightIntWrite[2] = bufferLength / 3;
 
 			if (CullingResults.isTileUnderwaterVisible(sceneTileCullingResult)) {
-				eightIntWrite[0] = model.getBufferOffset() + bufferLength;
-				eightIntWrite[1] = model.getUvBufferOffset() + bufferLength;
-				eightIntWrite[3] = renderBufferOffset;
-				modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
-
-				sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
-
-				renderBufferOffset += bufferLength;
-
+				//sceneDrawBuffer.addModel(tileRenderBufferOffset, bufferLength);
 				drawnTileCount++;
-				numPassthroughModels++;
 			}
-		} else {
-			eightIntWrite[2] = bufferLength / 3;
+
+			tileRenderBufferOffset += bufferLength;
 		}
 
-		eightIntWrite[0] = model.getBufferOffset();
-		eightIntWrite[1] = model.getUvBufferOffset();
-		eightIntWrite[3] = renderBufferOffset;
-		modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
-
-		sceneDrawBuffer.addModel(renderBufferOffset, bufferLength);
-
-		renderBufferOffset += bufferLength;
-
-
+		sceneDrawBuffer.addModel(tileRenderBufferOffset, bufferLength);
 		drawnTileCount++;
-		numPassthroughModels++;
 	}
 
 	private void prepareInterfaceTexture() {
@@ -3285,7 +3251,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		final int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
-		sceneCullingManager.ensureCullingComplete();
+		calculateStaticRenderBufferOffsetsJob.complete();
 
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.VISIBILITY_CHECK);
@@ -3335,24 +3301,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.DRAW_RENDERABLE);
 
-		eightIntWrite[4] = orientation;
-		
 		final int faceCount;
 		if (isStatic) {
-			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
-			// is reuploaded without triggering the LOADING game state, it's possible for static objects which may only temporarily become
-			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
-			// original static Model after the animation is done playing. One such example is in the POH, after it has been reuploaded in
-			// order to cache newly loaded static models, and you subsequently attempt to interact with a wardrobe triggering its animation.
-			faceCount = min(MAX_FACE_COUNT, offsetModel.getFaceCount());
-			boolean hillskew = offsetModel != model;
+			StaticRenderable staticRenderable = sceneContext.staticTileData[tileIdx].getStaticRenderable(x, z, y, model);
 
-			eightIntWrite[0] = offsetModel.getBufferOffset();
-			eightIntWrite[1] = offsetModel.getUvBufferOffset();
-			eightIntWrite[2] = faceCount;
-			eightIntWrite[4] |= (hillskew ? 1 : 0) << 26 | plane << 24;
+			if(staticRenderable != null) {
+				if (isVisibleInScene) {
+					sceneDrawBuffer.addModel(staticRenderable.renderBufferOffset, staticRenderable.faceCount * 3);
+				}
+
+				if (shouldCastShadow) {
+					directionalDrawBuffer.addModel(staticRenderable.renderBufferOffset, staticRenderable.faceCount * 3);
+				}
+			}
 
 			drawnStaticRenderableCount++;
+			return;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
@@ -3437,7 +3401,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[1] = uvOffset;
 				eightIntWrite[2] = faceCount;
 
-
 				// add this temporary model to the map for batching purposes
 				if (configModelBatching && modelOffsets == null)
 					frameModelInfoMap.put(
@@ -3481,6 +3444,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return; // Hidden model
 
 		if (isVisibleInScene || shouldCastShadow) {
+			// About to push dynamic ModelData, we have to wait for the static Model Data job to complete before we can push
+			pushStaticModelDataJob.complete();
+
 			if (isVisibleInScene) {
 				sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
 			}
@@ -3490,6 +3456,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			eightIntWrite[3] = renderBufferOffset;
+			eightIntWrite[4] = orientation;
 			eightIntWrite[5] = x;
 			eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 			eightIntWrite[7] = z;

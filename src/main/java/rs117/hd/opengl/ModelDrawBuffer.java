@@ -40,7 +40,7 @@ public class ModelDrawBuffer extends GLBuffer {
 	}
 
 	public final void addModel(int renderBufferOffset, int vertexCount) {
-		if (vertexCount > 0) {
+		if (renderBufferOffset > 0 && vertexCount > 0) {
 			// Check if we're adding a continuous stream of triangles
 			if (stagingModelDataOffset > 0 && renderBufferOffset == stagingModelDataNextOffset) {
 				stagingModelData[stagingModelDataOffset - 1] += vertexCount;
