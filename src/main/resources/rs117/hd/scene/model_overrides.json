@@ -3349,8 +3349,10 @@
     "shadowOpacityThreshold": 0.12
   },
   {
-    "description": "GRAND_EXCHANGE_STONE_DECORATION",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Grand Exchange - Stone - Arches and pillared walls",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "flatNormals": true,
     "objectIds": [
       "EXCHANGE_LOWER_CENTRE_PILLAR",
       "EXCHANGE_UPPER_CENTRAL_PILLAR",
@@ -3391,7 +3393,16 @@
       "EXCHANGE_WALL_UPPER_PILLAR_CORNER_FLIPPED_02",
       "EXCHANGE_WALL_UPPER_PILLAR_DIAG"
     ],
-    "flatNormals": true
+    "colorOverrides": [
+      {
+        "description": "Stone Bricks",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.66,
+        "uvOrientation": -280
+      }
+    ]
   },
   {
     "description": "GRAND_EXCHANGE_BANNERS",
