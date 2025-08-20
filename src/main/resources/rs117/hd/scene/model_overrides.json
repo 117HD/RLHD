@@ -1527,11 +1527,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_RED_SIDE"
+        "textureMaterial": "LEAVES_SIDE"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_RED_TOP"
+        "textureMaterial": "LEAVES_TOP"
       }
     }
   },
@@ -25792,11 +25792,11 @@
     "materialOverrides": {
       "LEAVES_SIDE": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_SIDE"
+        "textureMaterial": "LEAVES_RED_SIDE"
       },
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_TOP"
+        "textureMaterial": "LEAVES_RED_TOP"
       }
     }
   },
