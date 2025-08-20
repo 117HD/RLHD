@@ -1112,7 +1112,11 @@
       "TUT2_TREE2",
       "TUT2_TREE2_NOOP",
       "GIM_TREE",
-      "DRILL_TREE3"
+      "DRILL_TREE3",
+      "POH_SMALL_TREE2_5",
+      "POH_BIG_TREE5_4",
+      "POH_BIG_TREE2_4",
+      "POH_SMALL_TREE4_5"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -2963,19 +2967,6 @@
     "windDisplacementModifier": 1,
     "objectIds": [
       "POH_GRASS"
-    ]
-  },
-  {
-    "description": "POH Trees",
-    "baseMaterial": "BARK",
-    "uvType": "BOX",
-    "uvScale": 0.6,
-    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "objectIds": [
-      "POH_SMALL_TREE2_5",
-      "POH_BIG_TREE5_4",
-      "POH_BIG_TREE2_4",
-      "POH_SMALL_TREE4_5"
     ]
   },
   {
