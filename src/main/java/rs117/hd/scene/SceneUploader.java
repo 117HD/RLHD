@@ -130,12 +130,12 @@ public class SceneUploader {
 
 		sceneContext.staticCustomTilesOffset = sceneContext.staticVertexCount;
 		var tiles = scene.getExtendedTiles();
-		for (int z = 0; z < MAX_Z; ++z) {
+		for (int z = 0, idx = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
-				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
-					StaticTileData staticTileData = sceneContext.staticTileData[z][x][y];
+				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y, ++idx) {
+					StaticTileData staticTileData = sceneContext.staticTileData[idx];
 					if (staticTileData == null) {
-						staticTileData = sceneContext.staticTileData[z][x][y] = new StaticTileData();
+						staticTileData = sceneContext.staticTileData[idx] = new StaticTileData(sceneContext, z, x, y);
 					}
 
 					Tile tile = tiles[z][x][y];
@@ -145,9 +145,15 @@ public class SceneUploader {
 						Tile bridge = tile.getBridge();
 						if (bridge != null) {
 							int bridgePlane = z + 1;
-							StaticTileData bridgeStaticTileData = sceneContext.staticTileData[bridgePlane][x][y];
+							int bridgeIdx = HDUtils.tileCoordinateToIndex(bridgePlane, x, y);
+							StaticTileData bridgeStaticTileData = sceneContext.staticTileData[bridgeIdx];
 							if (bridgeStaticTileData == null) {
-								bridgeStaticTileData = sceneContext.staticTileData[bridgePlane][x][y] = new StaticTileData();
+								bridgeStaticTileData = sceneContext.staticTileData[bridgeIdx] = new StaticTileData(
+									sceneContext,
+									bridgePlane,
+									x,
+									y
+								);
 							}
 
 							upload(sceneContext, bridgeStaticTileData, bridge, x, y);

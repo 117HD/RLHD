@@ -2,12 +2,21 @@ package rs117.hd.data;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import net.runelite.api.*;
+import rs117.hd.scene.SceneContext;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.utils.MathUtils.*;
 
+@RequiredArgsConstructor
 public class StaticTileData {
+	private final SceneContext owner;
+
+	public final int plane;
+	public final int tileExX;
+	public final int tileExY;
+
 	public int tileModel_VertexOffset;
 	public int tileModel_UVOffset;
 	public int tileModel_VertexCount;
@@ -17,6 +26,17 @@ public class StaticTileData {
 	public int scenePaint_VertexCount;
 
 	public void addStaticRenderable(int x, int y, int z, boolean hillskew, int orientation, Model model) {
+		// Probably Quite Slow ... But ok for now
+		for (int idx = 0; idx < owner.staticRenderableData.size(); idx++) {
+			StaticRenderable existingRenderable = owner.staticRenderableData.get(idx);
+			if (existingRenderable.x == x && existingRenderable.y == y && existingRenderable.z == z &&
+				existingRenderable.vertexOffset == model.getBufferOffset() && existingRenderable.uvOffset == model.getUvBufferOffset() &&
+				existingRenderable.sceneId == model.getSceneId()) {
+				renderables.add(idx);
+				return;
+			}
+		}
+
 		StaticRenderable newStaticRenderable = new StaticRenderable();
 
 		newStaticRenderable.x = x;
@@ -34,10 +54,11 @@ public class StaticTileData {
 		newStaticRenderable.sceneId = model.getSceneId();
 		newStaticRenderable.faceCount = min(MAX_FACE_COUNT, model.getFaceCount());
 
-		renderables.add(newStaticRenderable);
+		renderables.add(owner.staticRenderableData.size());
+		owner.staticRenderableData.add(newStaticRenderable);
 	}
 
-	public List<StaticRenderable> renderables = new ArrayList<>();
+	public List<Integer> renderables = new ArrayList<>();
 
 	public static class StaticRenderable {
 		public int x;

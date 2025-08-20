@@ -5,6 +5,7 @@ import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -84,7 +85,8 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
-	public StaticTileData[][][] staticTileData = new StaticTileData[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+	public List<StaticTileData.StaticRenderable> staticRenderableData = new ArrayList<>();
+	public StaticTileData[] staticTileData = new StaticTileData[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 
 	// Thread safe tile override variables
 	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();

@@ -45,6 +45,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -551,7 +552,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
-	private final boolean[] drawnTiles = new boolean[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
+	private final HashSet<Integer> drawnRenderables = new HashSet<>();
+	private final byte[] drawnTiles = new byte[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -1707,7 +1709,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneDrawBuffer.clear();
 				directionalDrawBuffer.clear();
 
-				Arrays.fill(drawnTiles, false);
+				drawnRenderables.clear();
+				Arrays.fill(drawnTiles, (byte) 0);
 
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
@@ -1932,76 +1935,78 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!redrawPreviousFrame) {
 			if (configBuildingShadows && hasLoggedIn) {
 				frameTimer.begin(Timer.DRAW_BUILDING_SHADOWS);
-				// TODO: Looping through all tiles and checking culling result is costly
-				// TODO: Since all static geom & tiles are now in a thread safe format, the drawing could be threaded. Dynamic Renderables would still need to be drawn sync
-				// TODO: It would also be useful to know if roofs have been removed and do it only then
-				// TODO: This could also be limited around the directional shadow sphere which is already calculated
-				for (int plane = 0, tileIdx = 0; plane < MAX_Z; plane++) {
-					for (int tileExX = 0; tileExX < EXTENDED_SCENE_SIZE; tileExX++) {
-						for (int tileExY = 0; tileExY < EXTENDED_SCENE_SIZE; tileExY++, tileIdx++) {
-							if (drawnTiles[tileIdx]) {
+				final int maxTileCount = MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
+				for (int tileIdx = 0; tileIdx < maxTileCount; tileIdx++) {
+					final byte drawState = drawnTiles[tileIdx];
+					if (drawState == 3) {
+						continue;
+					}
+
+					final byte directionalCullingResult = directionalLight.getCullingResults().getTileResult(tileIdx);
+					if (directionalCullingResult <= 0) {
+						continue;
+					}
+
+					final StaticTileData staticTileData = sceneContext.staticTileData[tileIdx];
+					if (staticTileData.isEmpty()) {
+						continue;
+					}
+
+					if (staticTileData.plane > 0 &&
+						staticTileData.scenePaint_VertexCount > 0 &&
+						(drawState & 1) == 0 &&
+						!sceneContext.tileIsWater[staticTileData.plane][staticTileData.tileExX][staticTileData.tileExY] &&
+						CullingResults.isTileSurfaceVisible(directionalCullingResult)) {
+
+						eightIntWrite[0] = staticTileData.scenePaint_VertexOffset;
+						eightIntWrite[1] = staticTileData.scenePaint_UVOffset;
+						eightIntWrite[2] = staticTileData.scenePaint_VertexCount / 3;
+						eightIntWrite[3] = renderBufferOffset;
+						eightIntWrite[4] = 0;
+						eightIntWrite[5] = (staticTileData.tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+						eightIntWrite[6] = 0;
+						eightIntWrite[7] = (staticTileData.tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
+
+						modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
+
+						directionalDrawBuffer.addModel(renderBufferOffset, staticTileData.scenePaint_VertexCount);
+
+						renderBufferOffset += staticTileData.scenePaint_VertexCount;
+						drawnTileCount++;
+						numPassthroughModels++;
+					}
+
+					if (CullingResults.isTileRenderablesVisible(directionalCullingResult) && ((drawState >> 1) & 1) == 0) {
+						for (int renderableIdx : staticTileData.renderables) {
+							if (drawnRenderables.contains(renderableIdx)) {
 								continue;
 							}
 
-							final StaticTileData staticTileData = sceneContext.staticTileData[plane][tileExX][tileExY];
-							if (staticTileData.isEmpty()) {
+							final StaticRenderable renderable = sceneContext.staticRenderableData.get(renderableIdx);
+							//boolean isTransparent = ((renderable.sceneId >> 14) & 1) == 1;
+							final boolean shouldCastShadow = ((renderable.sceneId >> 15) & 1) == 1;
+							if (!shouldCastShadow) {
 								continue;
 							}
 
-							byte directionalCullingResult = directionalLight.getCullingResults().getTileResult(tileIdx);
-							final int tileX = tileExX - SCENE_OFFSET;
-							final int tileY = tileExY - SCENE_OFFSET;
+							eightIntWrite[0] = renderable.vertexOffset;
+							eightIntWrite[1] = renderable.uvOffset;
+							eightIntWrite[2] = renderable.faceCount;
+							eightIntWrite[3] = renderBufferOffset;
+							eightIntWrite[4] = renderable.orientation | (renderable.hillskew ? 1 : 0) << 26 | staticTileData.plane << 24;
+							eightIntWrite[5] = renderable.x;
+							eightIntWrite[6] = renderable.z << 16 | renderable.height & 0xFFFF;
+							eightIntWrite[7] = renderable.y;
 
-							if (plane > 0 &&
-								staticTileData.scenePaint_VertexCount > 0 &&
-								!sceneContext.tileIsWater[plane][tileExX][tileExY] &&
-								CullingResults.isTileSurfaceVisible(directionalCullingResult)) {
+							bufferForTriangles(renderable.faceCount)
+								.ensureCapacity(8)
+								.put(eightIntWrite);
 
-								eightIntWrite[0] = staticTileData.scenePaint_VertexOffset;
-								eightIntWrite[1] = staticTileData.scenePaint_UVOffset;
-								eightIntWrite[2] = staticTileData.scenePaint_VertexCount / 3;
-								eightIntWrite[3] = renderBufferOffset;
-								eightIntWrite[4] = 0;
-								eightIntWrite[5] = tileX * LOCAL_TILE_SIZE;
-								eightIntWrite[6] = 0;
-								eightIntWrite[7] = tileY * LOCAL_TILE_SIZE;
+							directionalDrawBuffer.addModel(renderBufferOffset, renderable.faceCount * 3);
 
-								modelPassthroughBuffer.ensureCapacity(8).put(eightIntWrite);
-
-								directionalDrawBuffer.addModel(renderBufferOffset, staticTileData.scenePaint_VertexCount);
-
-								renderBufferOffset += staticTileData.scenePaint_VertexCount;
-								drawnTileCount++;
-								numPassthroughModels++;
-							}
-
-							if (CullingResults.isTileRenderablesVisible(directionalCullingResult)) {
-								for (StaticRenderable renderable : staticTileData.renderables) {
-									//boolean isTransparent = ((renderable.sceneId >> 14) & 1) == 1;
-									final boolean shouldCastShadow = ((renderable.sceneId >> 15) & 1) == 1;
-									if (!shouldCastShadow) {
-										continue;
-									}
-
-									eightIntWrite[0] = renderable.vertexOffset;
-									eightIntWrite[1] = renderable.uvOffset;
-									eightIntWrite[2] = renderable.faceCount;
-									eightIntWrite[3] = renderBufferOffset;
-									eightIntWrite[4] = renderable.orientation | (renderable.hillskew ? 1 : 0) << 26 | plane << 24;
-									eightIntWrite[5] = renderable.x;
-									eightIntWrite[6] = renderable.z << 16 | renderable.height & 0xFFFF;
-									eightIntWrite[7] = renderable.y;
-
-									bufferForTriangles(renderable.faceCount)
-										.ensureCapacity(8)
-										.put(eightIntWrite);
-
-									directionalDrawBuffer.addModel(renderBufferOffset, renderable.faceCount * 3);
-
-									renderBufferOffset += renderable.faceCount * 3;
-									drawnStaticRenderableCount++;
-								}
-							}
+							renderBufferOffset += renderable.faceCount * 3;
+							drawnStaticRenderableCount++;
+							drawnRenderables.add(renderableIdx);
 						}
 					}
 				}
@@ -2145,7 +2150,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		// Even if tile wasn't drawn, we still mark is as such since the function was called
-		drawnTiles[tileIdx] = true;
+		drawnTiles[tileIdx] |= 1;
 
 		if (!isVisibleInScene && !isVisibleInDirectional) {
 			return;
@@ -2196,7 +2201,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		byte sceneTileCullingResult = sceneCamera.getCullingResults().getTileResult(tileIdx);
 
 		// Even if tile wasn't drawn, we still mark is as such since the function was called
-		drawnTiles[tileIdx] = true;
+		drawnTiles[tileIdx] |= 1;
 
 		if (!CullingResults.isTileSurfaceVisible(sceneTileCullingResult))
 			return;
@@ -3312,7 +3317,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			frameTimer.end(Timer.VISIBILITY_CHECK);
 
 		// Even if tile wasn't drawn, we still mark is as such since the function was called
-		drawnTiles[tileIdx] = true;
+		drawnTiles[tileIdx] |= 1 << 1;
 
 		if (!isVisibleInScene && !isVisibleInShadow) {
 			return;

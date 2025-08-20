@@ -522,8 +522,8 @@ public class SceneCullingManager {
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
-						final StaticTileData staticTileData = sceneContext.staticTileData[plane][tileExX][tileExY];
 						final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+						final StaticTileData staticTileData = sceneContext.staticTileData[tileIdx];
 
 						// Check if tile is Empty so we can skip expensive culling
 						if (staticTileData.isEmpty()) {
@@ -650,7 +650,8 @@ public class SceneCullingManager {
 
 							if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_RENDERABLES) != 0) {
 								if (!staticTileData.renderables.isEmpty()) {
-									for (StaticRenderable renderable : staticTileData.renderables) {
+									for (int renderableIdx : staticTileData.renderables) {
+										final StaticRenderable renderable = sceneContext.staticRenderableData.get(renderableIdx);
 										if (renderable.height < LOCAL_HALF_TILE_SIZE) {
 											// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
 											if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
@@ -665,7 +666,7 @@ public class SceneCullingManager {
 											renderable.x + renderable.radius,
 											renderable.z - renderable.bottomY + renderable.height,
 											renderable.y + renderable.radius,
-											viewCtx.frustumPlanes, 0
+											viewCtx.frustumPlanes, -LOCAL_TILE_SIZE
 										);
 
 										if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
