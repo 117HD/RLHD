@@ -319,7 +319,7 @@ public class MaterialManager {
 			MATERIAL_MAP.put(original.name, replacement);
 
 			// Add to vanilla texture mappings if the original was a vanilla replacement
-			if (original.vanillaTextureIndex != -1 && !original.inheritsTexture()) {
+			if (original.isVanillaReplacement()) {
 				int i = original.vanillaTextureIndex;
 				assert VANILLA_TEXTURE_MAPPING[i] == null || VANILLA_TEXTURE_MAPPING[i] == replacement : String.format(
 					"Material %s conflicts with vanilla ID %s of material %s", replacement, i, VANILLA_TEXTURE_MAPPING[i]);

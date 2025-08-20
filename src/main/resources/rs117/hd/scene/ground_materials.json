@@ -575,5 +575,13 @@
       "GRUNGE_1_LIGHT_SHINY",
       "GRUNGE_2_SHINY"
     ]
+  },
+  {
+    "name": "FORTIS_ROADS",
+    "materials": [ "FORTIS_ROADS" ]
+  },
+  {
+    "name": "FORTIS_ROADS_MIRRORED",
+    "materials": [ "FORTIS_ROADS_MIRRORED" ]
   }
 ]

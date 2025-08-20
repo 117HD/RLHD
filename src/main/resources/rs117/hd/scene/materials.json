@@ -659,6 +659,17 @@
     "vanillaTextureIndex": 120
   },
   {
+    "name": "FORTIS_ROADS",
+    "vanillaTextureIndex": 121,
+    "textureScale": [ -1, -1 ]
+  },
+  {
+    "name": "FORTIS_ROADS_MIRRORED",
+    "parent": "FORTIS_ROADS",
+    "vanillaTextureIndex": 122,
+    "textureScale": [ -1, -1 ]
+  },
+  {
     "name": "BRICK_CAM_TORUM",
     "vanillaTextureIndex": 125
   },
