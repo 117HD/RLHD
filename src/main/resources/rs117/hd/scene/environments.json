@@ -2057,7 +2057,9 @@
     ],
     "fogColor": "#fddcb4",
     "fogDepth": 18,
-    "windSpeed": 100
+    "windAngle": 40,
+    "windSpeed": 12,
+    "windStrength": 55
   },
   {
     "key": "WINTER",
@@ -2067,6 +2069,8 @@
     "sunAngles": [ 52, 235 ],
     "fogColor": "#b8c5db",
     "fogDepth": 35,
-    "windAngle": 60
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 30
   }
 ]
