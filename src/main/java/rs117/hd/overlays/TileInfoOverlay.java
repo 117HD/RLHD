@@ -71,7 +71,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class TileInfoOverlay extends Overlay implements MouseListener, MouseWheelListener {
+public class TileInfoOverlay extends HdOverlay implements MouseListener, MouseWheelListener {
 	private static final Font MONOSPACE_FONT = new Font("Courier New", Font.PLAIN, 12);
 	private static final Color BACKDROP_COLOR = new Color(0, 0, 0, 100);
 	private static final Color TRANSPARENT_YELLOW_50 = new Color(255, 255, 0, 50);

@@ -57,7 +57,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
+public class ShaderOverlay<T extends ShaderOverlay.Shader> extends HdOverlay {
 	@Inject
 	private Client client;
 
