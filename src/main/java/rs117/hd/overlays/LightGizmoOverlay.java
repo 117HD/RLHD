@@ -44,7 +44,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class LightGizmoOverlay extends Overlay implements MouseListener, KeyListener {
+public class LightGizmoOverlay extends HdOverlay implements MouseListener, KeyListener {
 	private static final Color ORANGE = Color.decode("#ff9f2c");
 
 	@Inject

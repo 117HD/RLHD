@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
@@ -38,7 +39,6 @@ import net.runelite.client.input.MouseListener;
 import net.runelite.client.input.MouseManager;
 import net.runelite.client.input.MouseWheelListener;
 import net.runelite.client.ui.FontManager;
-import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -71,7 +71,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class TileInfoOverlay extends Overlay implements MouseListener, MouseWheelListener {
+public class TileInfoOverlay extends HdOverlay implements MouseListener, MouseWheelListener {
 	private static final Font MONOSPACE_FONT = new Font("Courier New", Font.PLAIN, 12);
 	private static final Color BACKDROP_COLOR = new Color(0, 0, 0, 100);
 	private static final Color TRANSPARENT_YELLOW_50 = new Color(255, 255, 0, 50);
@@ -120,6 +120,8 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	private static final int MODE_SCENE_AABBS = 2;
 	private static final int MODE_OBJECT_IDS = 3;
 
+	@Getter
+	@Setter
 	private int mode;
 	private int aabbMarkingStage;
 	private AABB pendingSelection;

@@ -20,7 +20,7 @@ import rs117.hd.utils.NpcDisplacementCache;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
-public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener {
+public class FrameTimerOverlay extends HdOverlayPanel implements FrameTimer.Listener {
 	@Inject
 	private OverlayManager overlayManager;
 

@@ -42,7 +42,6 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.ClientUI;
-import net.runelite.client.ui.overlay.Overlay;
 import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
@@ -57,7 +56,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
+public class ShaderOverlay<T extends ShaderOverlay.Shader> extends HdOverlay {
 	@Inject
 	private Client client;
 
@@ -118,6 +117,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	}
 
 	public ShaderOverlay() {
+		super();
 		setLayer(OverlayLayer.ABOVE_WIDGETS);
 		setResizable(true);
 	}
