@@ -3316,6 +3316,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 
 			drawnStaticRenderableCount++;
+
+			if (enableDetailedTimers)
+				frameTimer.end(Timer.DRAW_RENDERABLE);
 			return;
 		} else {
 			int uuid = ModelHash.generateUuid(client, hash, renderable);
