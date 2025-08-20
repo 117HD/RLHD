@@ -92,6 +92,7 @@ public class DeveloperTools implements KeyListener {
 		eventBus.register(this);
 
 		// Don't do anything else unless we're in the development environment
+		initializeDeveloperTools();
 		if (!Props.DEVELOPMENT) {
 			return;
 		}
@@ -99,7 +100,6 @@ public class DeveloperTools implements KeyListener {
 		// Enable 117 HD's keybindings by default during development
 		keyBindingsEnabled = true;
 
-		initializeDeveloperTools();
 		keyManager.registerKeyListener(this);
 
 		clientThread.invokeLater(() -> {
