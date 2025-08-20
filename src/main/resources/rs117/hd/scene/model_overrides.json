@@ -4505,6 +4505,47 @@
     ]
   },
   {
+    "description": "Grand Exchange - Stone - Teller Wall",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 1024,
+    "objectIds": [
+      "EXCHANGE_BANK_WALL",
+      "EXCHANGE_BANK_WALL_BANK",
+      "EXCHANGE_BANK_WALL_EXCHANGE",
+      "EXCHANGE_BANK_WALL_FLAP"
+    ]
+  },
+  {
+    "description": "Grand Exchange - Stone - Wooden - Clan fence",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GZ_FENCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.66
+      }
+    ]
+  },
+  {
+    "description": "Grand Exchange - Stone - Clan fence pillar",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "GZ_WALL_FENCE_END"
+    ]
+  },
+  {
     "description": "Wilderness and Shayzien - Rock Walls with glass windows",
     "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
