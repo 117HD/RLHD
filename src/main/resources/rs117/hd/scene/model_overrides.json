@@ -36314,9 +36314,8 @@
     "colorOverrides": [
       {
         "colors": "h == 10",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX",
-        "uvScale": 1.5
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
       }
     ]
   },
@@ -36336,9 +36335,8 @@
     "colorOverrides": [
       {
         "colors": "h == 10 && l < 33",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX",
-        "uvScale": 1.5
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
       },
       {
         "colors": "h == 5",
@@ -36358,9 +36356,8 @@
     "colorOverrides": [
       {
         "colors": "h == 10 && l < 35",
-        "baseMaterial": "STONE_NORMALED",
-        "uvType": "BOX",
-        "uvScale": 1.5
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
       },
       {
         "colors": "h == 5",
@@ -36373,9 +36370,8 @@
   },
   {
     "description": "Deaths office - Walls - Exit Portal",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
-    "uvScale": 1.5,
     "objectIds": [
       "DEATH_OFFICE_EXITPORTAL"
     ],
@@ -36388,7 +36384,7 @@
   },
   {
     "description": "Deaths office - Walls - Outer Layer",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "DEATH_OFFICE_CAVEWALL_TOP",
       "DEATH_OFFICE_CAVEWALL_TOP_STRAIGHT",
@@ -36396,7 +36392,12 @@
       "DEATH_OFFICE_CAVEWALL_TOP_CORNER_INSIDE"
     ],
     "uvType": "BOX",
-    "uvScale": 1.3
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ]
   },
   {
     "description": "Deaths office - Objects - Chairs",

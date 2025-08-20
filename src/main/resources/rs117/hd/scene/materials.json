@@ -1854,6 +1854,10 @@
     ]
   },
   {
+    "name": "SMOOTH_STONE",
+    "normalMap": "STONE_N"
+  },
+  {
     "name": "WALL_STONE_N"
   },
   {
