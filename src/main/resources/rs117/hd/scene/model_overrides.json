@@ -3115,6 +3115,16 @@
     ]
   },
   {
+    "description": "Hide Grass on Wizard Cromperty's Path",
+    "areas": [ "WIZARD_CROMPERTY_PATH_2" ],
+    "hide": true,
+    "objectIds": [
+      "LONG_GRASS_1",
+      "GRASS_LIGHT_1",
+      "GRASS_LIGHT_2"
+    ]
+  },
+  {
     "description": "WOODEN_FENCES",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [

@@ -2283,16 +2283,18 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftLightness": 3
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_HOUSE",
-    "area": "EAST_ARDOUGNE_COBBLE_OFFICE",
+    "area": "EAST_ARDOUGNE_COBBLE_OFFICE_HOUSE",
     "overlayIds": [
       10
     ],
     "groundMaterial": "VARROCK_PATHS",
-    "blended": false
+    "blended": false,
+    "shiftLightness": 3
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
@@ -2501,6 +2503,52 @@
     "shiftHue": 1,
     "shiftSaturation": 3,
     "shiftLightness": -2
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX",
+    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "overlayIds": [ 5 ],
+    "groundMaterial": "WOOD_PLANKS_1",
+    "blended": false,
+    "blendedAsOpposite": true
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_1",
+    "area": "WIZARD_CROMPERTY_PATH_1",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "overlayIds": [ 10 ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 12,
+    "blended": false,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_2",
+    "area": "WIZARD_CROMPERTY_PATH_2",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 12,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
