@@ -36407,12 +36407,41 @@
       "DEATH_OFFICE_CHAIR_SKULLS"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.45,
     "colorOverrides": [
       {
         "colors": "h == 45",
         "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h > 9 || h == 0",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Npcs - Death",
+    "npcIds": [ "DEATH_OFFICE_DEATH" ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "CARPET_LIGHT"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 45",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3"
       }
     ]
   },
@@ -36420,7 +36449,6 @@
     "description": "Deaths office - Objects - Generic",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "DEATH_OFFICE_MUNCHER",
       "DEATH_OFFICE_TOB_WEAPONS",
       "DEATH_OFFICE_BOOKS_02",
       "DEATH_OFFICE_BOOKS_03",
@@ -36428,6 +36456,33 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Deaths office - Objects - Muncher",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DEATH_OFFICE_MUNCHER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Deaths office - Objects - Torch",
