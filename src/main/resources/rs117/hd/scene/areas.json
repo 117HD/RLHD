@@ -1170,7 +1170,14 @@
   {
     "name": "EDGEVILLE_BANK_WINDOW_FIX",
     "aabbs": [
-      [ 3089, 3493, 3089, 3498 ]
+      [ 3089, 3493, 3089, 3498 ],
+      [ 3090, 3497 ]
+    ]
+  },
+  {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_2",
+    "aabbs": [
+      [ 3090, 3497 ]
     ]
   },
   {

@@ -2674,12 +2674,13 @@
   },
   {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_65",
     "flatNormals": true,
     "upwardsNormals": true,
     "inheritTileColorType": "UNDERLAY",
     "castShadows": false,
     "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",

@@ -1538,6 +1538,14 @@
     "maxLightness": 22
   },
   {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_2",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX_2",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "EDGEVILLE_BANK_PERIMETER_FIX",
     "area": "EDGEVILLE_BANK_PERIMETER_FIX",
     "overlayIds": [
