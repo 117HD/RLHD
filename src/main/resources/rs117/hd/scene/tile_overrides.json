@@ -3574,6 +3574,9 @@
     "overlayIds": [
       11
     ],
+    "underlayIds": [
+      112
+    ],
     "groundMaterial": "GRASS_1",
     "blended": false
   },
