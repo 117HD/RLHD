@@ -3512,12 +3512,13 @@
     "uvScale": 1.2
   },
   {
-    "name": "KOUREND_CASTLE_BLEND_FIX",
-    "area": "KOUREND_CASTLE_ENTRANCE_FIX",
+    "name": "KOUREND_CASTLE_CARPET",
+    "area": "KOUREND_CASTLE_CARPET",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "CARPET",
+    "uvScale": 1.5,
     "blended": false
   },
   {
@@ -3526,7 +3527,18 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2x2_1",
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "KOUREND_CASTLE_BACK_COURTYARD",
+    "area": "KOUREND_CASTLE_BACK_COURTYARD",
+    "underlayIds": [
+      66,
+      72
+    ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "KOUREND_CASTLE_GUARDPOSTS_FLOORS",
