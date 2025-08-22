@@ -127,7 +127,7 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.DeveloperToolManager;
+import rs117.hd.utils.tooling.DeveloperToolManager;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;

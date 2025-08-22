@@ -1,4 +1,4 @@
-package rs117.hd.utils;
+package rs117.hd.utils.tooling;
 
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,8 @@ import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
-import rs117.hd.utils.tooling.DeveloperTool;
+import rs117.hd.utils.FrameTimingsRecorder;
+import rs117.hd.utils.Props;
 
 @Slf4j
 public class DeveloperToolManager implements KeyListener {
