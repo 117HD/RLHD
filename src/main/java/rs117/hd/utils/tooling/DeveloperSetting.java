@@ -2,10 +2,12 @@ package rs117.hd.utils.tooling;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.config.Keybind;
-import rs117.hd.overlays.HdOverlay;
+import rs117.hd.overlays.DeveloperOverlay;
 
 @Builder
+@Slf4j
 public class DeveloperSetting {
 
 	@Getter
@@ -17,7 +19,7 @@ public class DeveloperSetting {
 	@Getter
 	private final String[] chatMessages;
 	@Getter
-	private final HdOverlay overlay;
+	private final DeveloperOverlay overlay;
 	@Getter
 	private final Runnable customAction;
 	@Getter
@@ -37,23 +39,39 @@ public class DeveloperSetting {
 	public void toggle() {
 		active = !active;
 		if (overlay != null) {
-			overlay.setActive(active);
+			try {
+				overlay.setActive(active);
+			} catch (Exception e) {
+				log.error("Error toggling overlay '{}' to state {}: {}", name, active, e.getMessage(), e);
+			}
 		}
 		if (customAction != null) {
-			customAction.run();
+			try {
+				customAction.run();
+			} catch (Exception e) {
+				log.error("Error executing custom action for developer setting '{}': {}", name, e.getMessage(), e);
+			}
 		}
 	}
 
 	public void setActive(boolean state) {
 		active = state;
 		if (overlay != null) {
-			overlay.setActive(state);
+			try {
+				overlay.setActive(state);
+			} catch (Exception e) {
+				log.error("Error setting overlay '{}' to state {}: {}", name, state, e.getMessage(), e);
+			}
 		}
 	}
 
 	public void setActive() {
 		if (overlay != null) {
-			overlay.setActive(active);
+			try {
+				overlay.setActive(active);
+			} catch (Exception e) {
+				log.error("Error setting overlay '{}' to active state: {}", name, e.getMessage(), e);
+			}
 		}
 	}
 

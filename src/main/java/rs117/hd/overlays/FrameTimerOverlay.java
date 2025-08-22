@@ -20,7 +20,7 @@ import rs117.hd.utils.NpcDisplacementCache;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
-public class FrameTimerOverlay extends HdOverlayPanel implements FrameTimer.Listener {
+public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listener, DeveloperOverlay {
 	@Inject
 	private OverlayManager overlayManager;
 
@@ -48,15 +48,17 @@ public class FrameTimerOverlay extends HdOverlayPanel implements FrameTimer.List
 		panelComponent.setPreferredSize(new Dimension(215, 200));
 	}
 
-	public void setActive(boolean activate) {
-		if (activate) {
-			frameTimer.addTimingsListener(this);
-			overlayManager.add(this);
-		} else {
-			frameTimer.removeTimingsListener(this);
-			overlayManager.remove(this);
-			frames.clear();
-		}
+	@Override
+	public void activate() throws Exception {
+		frameTimer.addTimingsListener(this);
+		overlayManager.add(this);
+	}
+
+	@Override
+	public void deactivate() throws Exception {
+		frameTimer.removeTimingsListener(this);
+		overlayManager.remove(this);
+		frames.clear();
 	}
 
 	@Override

@@ -71,7 +71,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class TileInfoOverlay extends HdOverlay implements MouseListener, MouseWheelListener {
+public class TileInfoOverlay extends Overlay implements DeveloperOverlay, MouseListener, MouseWheelListener {
 	private static final Font MONOSPACE_FONT = new Font("Courier New", Font.PLAIN, 12);
 	private static final Color BACKDROP_COLOR = new Color(0, 0, 0, 100);
 	private static final Color TRANSPARENT_YELLOW_50 = new Color(255, 255, 0, 50);
@@ -145,19 +145,23 @@ public class TileInfoOverlay extends HdOverlay implements MouseListener, MouseWh
 		setPosition(OverlayPosition.DYNAMIC);
 	}
 
-	public void setActive(boolean activate) {
-		this.active = activate;
-		if (activate) {
-			overlayManager.add(this);
-			// Listen to events before they're possibly consumed in DeveloperTools
-			mouseManager.registerMouseListener(0, this);
-			mouseManager.registerMouseWheelListener(this);
-		} else {
-			overlayManager.remove(this);
-			mouseManager.unregisterMouseListener(this);
-			mouseManager.unregisterMouseWheelListener(this);
-		}
-		tileOverrideManager.setTrackReplacements(activate);
+	@Override
+	public void activate() throws Exception {
+		this.active = true;
+		overlayManager.add(this);
+		// Listen to events before they're possibly consumed in DeveloperTools
+		mouseManager.registerMouseListener(0, this);
+		mouseManager.registerMouseWheelListener(this);
+		tileOverrideManager.setTrackReplacements(true);
+	}
+
+	@Override
+	public void deactivate() throws Exception {
+		this.active = false;
+		overlayManager.remove(this);
+		mouseManager.unregisterMouseListener(this);
+		mouseManager.unregisterMouseWheelListener(this);
+		tileOverrideManager.setTrackReplacements(false);
 	}
 
 	@Override

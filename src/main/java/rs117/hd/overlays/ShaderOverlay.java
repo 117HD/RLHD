@@ -57,7 +57,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class ShaderOverlay<T extends ShaderOverlay.Shader> extends HdOverlay {
+public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay implements DeveloperOverlay {
 	@Inject
 	private Client client;
 
@@ -143,16 +143,23 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends HdOverlay {
 		shader.destroy();
 	}
 
-	public void setActive(boolean activate) {
-		if (activate == initialized)
+	@Override
+	public void activate() throws Exception {
+		if (initialized)
 			return;
 
 		clientThread.invoke(() -> {
-			if (activate) {
-				initialize();
-			} else {
-				destroy();
-			}
+			initialize();
+		});
+	}
+
+	@Override
+	public void deactivate() throws Exception {
+		if (!initialized)
+			return;
+
+		clientThread.invoke(() -> {
+			destroy();
 		});
 	}
 
