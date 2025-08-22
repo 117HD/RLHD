@@ -170,7 +170,7 @@ public class DeveloperToolManager implements KeyListener {
 			.description("Toggles UI visibility"));
 	}
 
-	public void registerTool(DeveloperTool.DeveloperSettingBuilder builder) {
+	public void registerTool(DeveloperTool.DeveloperToolBuilder builder) {
 		DeveloperTool tool = builder.build();
 
 		for (DeveloperTool existingTool : developerTools) {

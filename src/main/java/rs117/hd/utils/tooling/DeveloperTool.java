@@ -25,8 +25,8 @@ public class DeveloperTool {
 	@Getter
 	private final String description;
 
-	public static class DeveloperSettingBuilder {
-		public DeveloperSettingBuilder chatMessages(String... chatMessages) {
+	public static class DeveloperToolBuilder {
+		public DeveloperToolBuilder chatMessages(String... chatMessages) {
 			this.chatMessages = chatMessages;
 			return this;
 		}
