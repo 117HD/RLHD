@@ -662,7 +662,7 @@
     "name": "FORTIS_ROADS",
     "vanillaTextureIndex": 121,
     "textureScale": [ -1, -1 ],
-    "brightness": 0.85
+    "brightness": 0.92
   },
   {
     "name": "FORTIS_ROADS_MIRRORED",
