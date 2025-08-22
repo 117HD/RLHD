@@ -5665,6 +5665,25 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
+    "name": "FORTIS_BRIDGE_BRIGHTNESS_FIX",
+    "area": "FORTIS_BRIDGE_BRIGHTNESS_FIX",
+    "overlayIds": [ 329 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "blended": false,
+    "minLightness": 70,
+    "maxLightness": 85
+  },
+  {
+    "name": "FORTIS_BRIDGE",
+    "area": "FORTIS_BRIDGE",
+    "overlayIds": [ 132, 228 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "blended": false,
+    "shiftLightness": 65,
+    "maxHue": 0,
+    "maxSaturation": 0
+  },
+  {
     "name": "Varlamore - Outer fortis temple - brick floors",
     "area": "Varlamore - Outer Fortis Temples",
     "overlayIds": [ 123, 199, 226, 227 ],

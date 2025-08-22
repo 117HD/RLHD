@@ -8083,6 +8083,19 @@
     ]
   },
   {
+    "name": "FORTIS_BRIDGE",
+    "aabbs": [
+      [ 1730, 3106, 1746, 3107 ]
+    ]
+  },
+  {
+    "name": "FORTIS_BRIDGE_BRIGHTNESS_FIX",
+    "aabbs": [
+      [ 1730, 3106, 1730, 3107 ],
+      [ 1746, 3106, 1746, 3108 ]
+    ]
+  },
+  {
     "name": "THE_FINAL_DAWN_KEYSTONE_ROOM",
     "aabbs": [
       [ 1351, 9501, 1374, 9524 ]

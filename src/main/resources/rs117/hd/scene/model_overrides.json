@@ -41230,6 +41230,16 @@
     ]
   },
   {
+    "description": "Fortis Bridge - Hide Road Model to Replace with Tiles",
+    "areas": [ "FORTIS_BRIDGE" ],
+    "hide": true,
+    "objectIds": [
+      "FLOOR_CIVITAS_MIDDLE01",
+      "FLOOR_CIVITAS_MIDDLE02"
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Mortytania Slayer Tower Spiked Chain shortcuts",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 343,
