@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.gameval.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import rs117.hd.HdPlugin;
@@ -216,6 +217,6 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 
 	private void sendGameMessage(String message) {
 		clientThread.invoke(() -> client.addChatMessage(
-			ChatMessageType.GAMEMESSAGE, "117 HD", "<col=ffff00>[117 HD] " + message + "</col>", "117 HD"));
+			ChatMessageType.DIDYOUKNOW, "117 HD", "[117 HD] " + message, "117 HD"));
 	}
 }

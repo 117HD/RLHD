@@ -244,7 +244,7 @@ public class DeveloperTools implements KeyListener {
 		message.append("<col=0000FF>::117hd list/help/commands</col> - Show this help");
 
 		clientThread.invoke(() -> client.addChatMessage(
-			ChatMessageType.GAMEMESSAGE, "117 HD", message.toString(), "117 HD"));
+			ChatMessageType.DIDYOUKNOW, "117 HD", message.toString(), "117 HD"));
 	}
 
 
