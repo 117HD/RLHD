@@ -49,6 +49,6 @@ void main() {
     fUv = vec2(vUv.x, 1.0 - vUv.y);
 
     #if UI_SCALING_MODE == SAMPLING_XBR
-    xbrTable = xbr_vert(TexCoord, sourceDimensions);
+        xbrTable = xbr_vert(fUv, sourceDimensions);
     #endif
 }
