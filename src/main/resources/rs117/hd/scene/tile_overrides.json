@@ -1538,6 +1538,14 @@
     "maxLightness": 22
   },
   {
+    "name": "EDGEVILLE_BANK_WINDOW_FIX_2",
+    "area": "EDGEVILLE_BANK_WINDOW_FIX_2",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "EDGEVILLE_BANK_PERIMETER_FIX",
     "area": "EDGEVILLE_BANK_PERIMETER_FIX",
     "overlayIds": [
@@ -2275,16 +2283,18 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftLightness": 3
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_HOUSE",
-    "area": "EAST_ARDOUGNE_COBBLE_OFFICE",
+    "area": "EAST_ARDOUGNE_COBBLE_OFFICE_HOUSE",
     "overlayIds": [
       10
     ],
     "groundMaterial": "VARROCK_PATHS",
-    "blended": false
+    "blended": false,
+    "shiftLightness": 3
   },
   {
     "name": "EAST_ARDOUGNE_COBBLE_CHURCH",
@@ -2493,6 +2503,52 @@
     "shiftHue": 1,
     "shiftSaturation": 3,
     "shiftLightness": -2
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_BLENDING_FIX",
+    "area": "WIZARD_CROMPERTY_PATH_BLENDING_FIX",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "overlayIds": [ 5 ],
+    "groundMaterial": "WOOD_PLANKS_1",
+    "blended": false,
+    "blendedAsOpposite": true
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_1",
+    "area": "WIZARD_CROMPERTY_PATH_1",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "overlayIds": [ 10 ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 12,
+    "blended": false,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "WIZARD_CROMPERTY_PATH_2",
+    "area": "WIZARD_CROMPERTY_PATH_2",
+    "underlayIds": [
+      48,
+      64
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "maxSaturation": 0,
+    "maxHue": 0,
+    "shiftLightness": 12,
+    "blendedAsOpposite": true,
+    "replacements": {
+      "WINTER_EDGEVILLE_PATH": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "WEST_ARDOUGNE_COBBLE_HOUSES",
@@ -3456,12 +3512,13 @@
     "uvScale": 1.2
   },
   {
-    "name": "KOUREND_CASTLE_BLEND_FIX",
-    "area": "KOUREND_CASTLE_ENTRANCE_FIX",
+    "name": "KOUREND_CASTLE_CARPET",
+    "area": "KOUREND_CASTLE_CARPET",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "CARPET",
+    "uvScale": 1.5,
     "blended": false
   },
   {
@@ -3470,7 +3527,18 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "TILES_2x2_1",
+    "shiftLightness": 2,
+    "blended": false
+  },
+  {
+    "name": "KOUREND_CASTLE_BACK_COURTYARD",
+    "area": "KOUREND_CASTLE_BACK_COURTYARD",
+    "underlayIds": [
+      66,
+      72
+    ],
+    "groundMaterial": "VARIED_DIRT"
   },
   {
     "name": "KOUREND_CASTLE_GUARDPOSTS_FLOORS",
@@ -3517,6 +3585,9 @@
     "area": "GREAT_KOUREND_STATUE",
     "overlayIds": [
       11
+    ],
+    "underlayIds": [
+      112
     ],
     "groundMaterial": "GRASS_1",
     "blended": false
@@ -5592,6 +5663,25 @@
     "area": "Gloomthorn Trail",
     "overlayIds": [ 139, 228 ],
     "groundMaterial": "VARROCK_PATHS"
+  },
+  {
+    "name": "FORTIS_BRIDGE_BRIGHTNESS_FIX",
+    "area": "FORTIS_BRIDGE_BRIGHTNESS_FIX",
+    "overlayIds": [ 329 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "blended": false,
+    "minLightness": 70,
+    "maxLightness": 85
+  },
+  {
+    "name": "FORTIS_BRIDGE",
+    "area": "FORTIS_BRIDGE",
+    "overlayIds": [ 132, 228 ],
+    "groundMaterial": "FORTIS_ROADS",
+    "blended": false,
+    "shiftLightness": 65,
+    "maxHue": 0,
+    "maxSaturation": 0
   },
   {
     "name": "Varlamore - Outer fortis temple - brick floors",
