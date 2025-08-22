@@ -42,15 +42,13 @@ import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -89,8 +87,11 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
+import rs117.hd.data.DrawState;
+import rs117.hd.data.DynamicRenderableInstance;
+import rs117.hd.data.StaticRenderable;
+import rs117.hd.data.StaticRenderableInstance;
 import rs117.hd.data.StaticTileData;
-import rs117.hd.data.StaticTileData.StaticRenderable;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
@@ -132,8 +133,8 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
-import rs117.hd.scene.jobs.BuildVisibleTileListJob;
 import rs117.hd.scene.jobs.CalculateStaticRenderBufferOffsetsJob;
+import rs117.hd.scene.jobs.ClearStaticRenderBufferOffsets;
 import rs117.hd.scene.jobs.PushStaticModelDataJob;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -182,8 +183,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
-
-	public static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
@@ -241,19 +240,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		GL_RGBA8,
 		GL_RGBA // should be guaranteed
 	};
-
-	private static int THREAD_POOL_SIZE = 0;
-	public static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(
-		Math.max(1, PROCESSOR_COUNT - 1),
-		(r) -> {
-			Thread poolThread = new Thread(r);
-			poolThread.setName("117 HD - Thread: " + ++THREAD_POOL_SIZE);
-			poolThread.setPriority(Thread.NORM_PRIORITY + 3);
-			return poolThread;
-		}
-	);
-
-	public static boolean FORCE_JOBS_RUN_SYNCHRONOUSLY = false;
 
 	@Getter
 	private Gson gson;
@@ -463,12 +449,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private GpuIntBuffer[] modelSortingBuffers;
 	private SharedGLBuffer[] hModelSortingBuffers;
 
-	private final CalculateStaticRenderBufferOffsetsJob calculateStaticRenderBufferOffsetsJob = new CalculateStaticRenderBufferOffsetsJob();
-	private final BuildVisibleTileListJob visibleTileListJob = new BuildVisibleTileListJob();
-	private final PushStaticModelDataJob pushStaticModelDataJob = new PushStaticModelDataJob();
+	private final ArrayDeque<DynamicRenderableInstance> freeDynamicRenderables = new ArrayDeque<>();
 
-	private final ModelDrawBuffer sceneDrawBuffer = new ModelDrawBuffer("Scene");
-	private final ModelDrawBuffer directionalDrawBuffer = new ModelDrawBuffer("Directional Shadow");
+	private final ClearStaticRenderBufferOffsets clearStaticRenderBufferOffsets = new ClearStaticRenderBufferOffsets();
+	private final CalculateStaticRenderBufferOffsetsJob calculateStaticRenderBufferOffsetsJob = new CalculateStaticRenderBufferOffsetsJob();
+	private final PushStaticModelDataJob pushStaticModelDataJob = new PushStaticModelDataJob(true, this::bufferForTriangles);
+	private final PushStaticModelDataJob pushDynamicModelDataJob = new PushStaticModelDataJob(false, this::bufferForTriangles);
+
+	private final ModelDrawBuffer sceneDrawBuffer = new ModelDrawBuffer("Scene", calculateStaticRenderBufferOffsetsJob);
+	private final ModelDrawBuffer directionalDrawBuffer = new ModelDrawBuffer("Directional Shadow", calculateStaticRenderBufferOffsetsJob);
 
 	private final UBOGlobal uboGlobal = new UBOGlobal();
 	private final UBOLights uboLights = new UBOLights(false);
@@ -559,8 +548,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private float windOffset;
 	private int gameTicksUntilSceneReload = 0;
 	private long colorFilterChangedAt;
-	private final HashSet<Integer> drawnRenderables = new HashSet<>();
-	private final byte[] drawnTiles = new byte[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -1717,9 +1704,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneDrawBuffer.clear();
 				directionalDrawBuffer.clear();
 
-				drawnRenderables.clear();
-				Arrays.fill(drawnTiles, (byte) 0);
-
 				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
 				// Push unordered models that should always be drawn at the start of each frame.
 				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
@@ -1728,25 +1712,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.ensureCapacity(staticUnordered.limit())
 					.put(staticUnordered);
 				staticUnordered.rewind();
-				// Pre-allocate enough space to fit in all tiles
-				modelPassthroughBuffer.ensureCapacity(MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * 8);
 				numPassthroughModels += staticUnordered.limit() / 8;
-
-				if(!calculateStaticRenderBufferOffsetsJob.hasCompleteCallback()) {
-					calculateStaticRenderBufferOffsetsJob.setOnCompleteCallback(() -> {
-						renderBufferOffset = calculateStaticRenderBufferOffsetsJob.renderBufferOffset;
-						for(GpuIntBuffer buf : modelSortingBuffers) {
-							buf.ensureCapacity(calculateStaticRenderBufferOffsetsJob.renderableCount * 8);
-						}
-					});
-				}
-
-				calculateStaticRenderBufferOffsetsJob.setup(sceneContext, visibleTileListJob, renderBufferOffset);
-				calculateStaticRenderBufferOffsetsJob.submit(true);
-
-				pushStaticModelDataJob.addDependency(calculateStaticRenderBufferOffsetsJob);
-				pushStaticModelDataJob.setup(sceneContext, modelPassthroughBuffer, numPassthroughModels, visibleTileListJob, this::bufferForTriangles);
-				pushStaticModelDataJob.submit(true);
 			}
 
 			if (updateUniforms) {
@@ -1830,7 +1796,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					float[] lightDir = directionalLight.getForwardDirection();
 					directionalShadowCulling.setup(sceneFrustumCorners, lightDir);
 
-					directionalLight.setCullingParent(sceneCamera);
 					directionalLight.setPositionX(centerXZ[0]);
 					directionalLight.setPositionZ(centerXZ[1]);
 					directionalLight.setNearPlane(100000);
@@ -1874,6 +1839,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
+
 				sceneCullingManager.addView(sceneCamera);
 				if (configShadowCulling) {
 					sceneCullingManager.addView(directionalLight);
@@ -1881,9 +1847,49 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				sceneCullingManager.onDraw(sceneContext);
 
-				sceneCullingManager.appendTileCullingJobDependencies(visibleTileListJob);
-				visibleTileListJob.setCullingResults(sceneCullingManager.combinedTileVisibility);
-				visibleTileListJob.submit();
+				if (!calculateStaticRenderBufferOffsetsJob.hasCompleteCallback()) {
+					sceneCullingManager.appendTileCullingJobDependencies(calculateStaticRenderBufferOffsetsJob);
+
+					calculateStaticRenderBufferOffsetsJob.setOnCompleteCallback(() -> {
+						numPassthroughModels = calculateStaticRenderBufferOffsetsJob.numPassthroughModels;
+						renderBufferOffset = calculateStaticRenderBufferOffsetsJob.renderBufferOffset;
+
+						modelPassthroughBuffer.ensureCapacity(numPassthroughModels * 8);
+
+						for (GpuIntBuffer buf : modelSortingBuffers) {
+							buf.ensureCapacity(calculateStaticRenderBufferOffsetsJob.numRenderables * 8);
+						}
+
+						// Needs to be submitted after Staging buffers are correctly sized
+						pushStaticModelDataJob.submit();
+					});
+				}
+
+				calculateStaticRenderBufferOffsetsJob.setup(
+					sceneContext,
+					sceneCullingManager.combinedTileVisibility,
+					renderBufferOffset
+				);
+
+				pushStaticModelDataJob.setup(
+					sceneContext,
+					modelPassthroughBuffer,
+					sceneCullingManager.combinedTileVisibility
+				);
+
+				if(!pushDynamicModelDataJob.hasDependencies()) {
+					pushDynamicModelDataJob.addDependency(pushStaticModelDataJob);
+				}
+				pushDynamicModelDataJob.clearDynamicInstances(freeDynamicRenderables);
+
+				pushDynamicModelDataJob.setup(
+					sceneContext,
+					null,
+					sceneCullingManager.combinedTileVisibility
+				);
+
+				clearStaticRenderBufferOffsets.complete();
+				calculateStaticRenderBufferOffsetsJob.submit();
 			}
 		}
 
@@ -1955,6 +1961,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 			}
 		}
+
+		frameTimer.begin(Timer.DRAW_SCENE_DRAW_CALLS);
 	}
 
 	@Override
@@ -1962,55 +1970,41 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null)
 			return;
 
-		if (!redrawPreviousFrame) {
+		frameTimer.end(Timer.DRAW_SCENE_DRAW_CALLS);
 
+		if (!redrawPreviousFrame) {
 			calculateStaticRenderBufferOffsetsJob.complete();
+
+			if(pushDynamicModelDataJob.hasDynamicInstancesToPush()) {
+				for (GpuIntBuffer buf : modelSortingBuffers) {
+					buf.ensureCapacity(drawnDynamicRenderableCount * 8);
+				}
+				pushDynamicModelDataJob.submit();
+			}
 
 			if (configBuildingShadows && hasLoggedIn) {
 				frameTimer.begin(Timer.DRAW_BUILDING_SHADOWS);
-				final BuildVisibleTileListJob.VisibleTiles visibleTiles = visibleTileListJob.getResult();
-				for (int i = 0; i < visibleTiles.count; i++) {
-					final int tileIdx = visibleTiles.indices[i];
-					final byte drawState = drawnTiles[tileIdx];
-					if (drawState == 3) {
-						continue;
-					}
-
-					final byte directionalCullingResult = directionalLight.getCullingResults().getTileResult(tileIdx);
-					if (directionalCullingResult <= 0) {
-						continue;
-					}
-
+				CullingResults directionalResults = directionalLight.getCullingResults();
+				for (int i = 0; i < directionalResults.getNumVisibleTiles(); i++) {
+					final int tileIdx = directionalResults.getVisibleTile(i);
 					final StaticTileData staticTileData = sceneContext.staticTileData[tileIdx];
 					if (staticTileData.isEmpty()) {
 						continue;
 					}
 
-					if (staticTileData.plane > 0 &&
-						staticTileData.scenePaint_VertexCount > 0 &&
-						(drawState & 1) == 0 &&
-						!sceneContext.tileIsWater[staticTileData.plane][staticTileData.tileExX][staticTileData.tileExY] &&
-						CullingResults.isTileSurfaceVisible(directionalCullingResult)) {
+					if (staticTileData.plane > 0 && staticTileData.paintBuffer != null &&
+						(staticTileData.paintBuffer.state & DrawState.DRAWCALL) == 0 && !sceneContext.tileIsWater[staticTileData.plane][staticTileData.tileExX][staticTileData.tileExY]) {
 
-						directionalDrawBuffer.addModel(staticTileData.scenePaint_RenderBufferOffset, staticTileData.scenePaint_VertexCount);
+						directionalDrawBuffer.addModel(staticTileData.paintBuffer);
 					}
 
-					if (CullingResults.isTileRenderablesVisible(directionalCullingResult) && ((drawState >> 1) & 1) == 0) {
-						for (int renderableIdx : staticTileData.renderables) {
-							if (!drawnRenderables.add(renderableIdx)) {
-								continue;
-							}
-
-							final StaticRenderable renderable = sceneContext.staticRenderableData.get(renderableIdx);
-							//boolean isTransparent = ((renderable.sceneId >> 14) & 1) == 1;
-							final boolean shouldCastShadow = ((renderable.sceneId >> 15) & 1) == 1;
-							if (!shouldCastShadow) {
-								continue;
-							}
-
-							directionalDrawBuffer.addModel(renderable.renderBufferOffset, renderable.faceCount * 3);
-							drawnStaticRenderableCount++;
+					for (StaticRenderableInstance instance : staticTileData.renderables) {
+						if ((instance.renderableBuffer.state & DrawState.DRAWCALL) != 0 || !instance.renderable.ignoreRoofRemoval || !instance.renderable.modelOverride.castShadows) {
+							continue;
 						}
+
+						directionalDrawBuffer.addModel(instance.renderableBuffer);
+						drawnStaticRenderableCount++;
 					}
 				}
 				frameTimer.end(Timer.DRAW_BUILDING_SHADOWS);
@@ -2018,9 +2012,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			sceneDrawBuffer.flush();
 			directionalDrawBuffer.flush();
-
-			pushStaticModelDataJob.complete();
-			numPassthroughModels = pushStaticModelDataJob.numPassthroughModels;
 		}
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -2043,18 +2034,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			sceneContext.stagingBufferUvs.clear();
 			sceneContext.stagingBufferNormals.clear();
 
-			// Model buffers
-			modelPassthroughBuffer.flip();
-			hModelPassthroughBuffer.upload(modelPassthroughBuffer);
-			modelPassthroughBuffer.clear();
-
-			for (int i = 0; i < modelSortingBuffers.length; i++) {
-				var buffer = modelSortingBuffers[i];
-				buffer.flip();
-				hModelSortingBuffers[i].upload(buffer);
-				buffer.clear();
-			}
-
 			// Output buffers
 			// each vertex is an ivec4, which is 16 bytes
 			hRenderBufferVertices.ensureCapacity(renderBufferOffset * 16L);
@@ -2063,6 +2042,24 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// each vertex is an ivec4, which is 16 bytes
 			hRenderBufferNormals.ensureCapacity(renderBufferOffset * 16L);
 			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
+
+			// Make sure we've finished pushing the tiles
+			pushStaticModelDataJob.complete();
+
+			// Model buffers
+			modelPassthroughBuffer.flip();
+			hModelPassthroughBuffer.upload(modelPassthroughBuffer);
+			modelPassthroughBuffer.clear();
+
+			// Make sure we've finished pushing the Dynamic Renderables
+			pushDynamicModelDataJob.complete();
+
+			for (int i = 0; i < modelSortingBuffers.length; i++) {
+				var buffer = modelSortingBuffers[i];
+				buffer.flip();
+				hModelSortingBuffers[i].upload(buffer);
+				buffer.clear();
+			}
 		}
 
 		frameTimer.end(Timer.UPLOAD_GEOMETRY);
@@ -2122,52 +2119,28 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawScenePaint(Scene scene, SceneTilePaint paint, int plane, int tileX, int tileY) {
-		int vertexCount = paint.getBufferLen();
-		if (redrawPreviousFrame || sceneContext == null || vertexCount <= 0)
+		if (redrawPreviousFrame || sceneContext == null)
 			return;
 
-		calculateStaticRenderBufferOffsetsJob.complete();
-
-		final int tileEeX = tileX + SCENE_OFFSET;
-		final int tileEeY = tileY + SCENE_OFFSET;
-		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileEeX, tileEeY);
+		final int tileIdx = paint.getBufferLen();
+		final StaticTileData tileData = sceneContext.staticTileData[tileIdx];
+		tileData.paintBuffer.state |= DrawState.DRAWCALL;
 
 		final byte sceneCameraCullingResults = sceneCamera.getCullingResults().getTileResult(tileIdx);
-		boolean isVisibleInScene = CullingResults.isTileSurfaceVisible(sceneCameraCullingResults);
-		boolean isVisibleInDirectional =
-			plane != 0 && (isVisibleInScene || (configShadowCulling && directionalLight.getCullingResults().isTileSurfaceVisible(tileIdx)));
+		final boolean isVisibleInScene = CullingResults.isTileVisible(sceneCameraCullingResults);
+		final boolean isVisibleInDirectional = plane > 0 && (isVisibleInScene || (configShadowCulling && directionalLight.getCullingResults().isTileSurfaceVisible(tileIdx)));
 
-		int tileRenderBufferOffset = sceneContext.staticTileData[tileIdx].scenePaint_RenderBufferOffset;
-		if (sceneContext.tileIsWater[plane][tileEeX][tileEeY]) {
-			if (!isVisibleInScene) {
-				if (CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
-					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
-					isVisibleInScene = true;
-				}
-			} else {
-				if (!CullingResults.isTileUnderwaterVisible(sceneCameraCullingResults)) {
-					vertexCount /= 2; // Let see if we can extract the underwater Surface tile
-					tileRenderBufferOffset += vertexCount;
-				}
+		if (isVisibleInScene || isVisibleInDirectional) {
+			if (isVisibleInScene) {
+				sceneDrawBuffer.addModel(tileData.paintBuffer);
 			}
+
+			if (isVisibleInDirectional) {
+				directionalDrawBuffer.addModel(tileData.paintBuffer);
+			}
+
+			drawnTileCount++;
 		}
-
-		// Even if tile wasn't drawn, we still mark is as such since the function was called
-		drawnTiles[tileIdx] |= 1;
-
-		if (!isVisibleInScene && !isVisibleInDirectional) {
-			return;
-		}
-
-		if (isVisibleInScene) {
-			sceneDrawBuffer.addModel(tileRenderBufferOffset, vertexCount);
-		}
-
-		if (isVisibleInDirectional) {
-			directionalDrawBuffer.addModel(tileRenderBufferOffset, vertexCount);
-		}
-
-		drawnTileCount++;
 	}
 
 	public void initShaderHotswapping() {
@@ -2179,46 +2152,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public void drawSceneTileModel(Scene scene, SceneTileModel model, int tileX, int tileY) {
-		int bufferLength = model.getBufferLen();
-		if (redrawPreviousFrame || sceneContext == null || bufferLength <= 0)
+		if (redrawPreviousFrame || sceneContext == null)
 			return;
 
-		calculateStaticRenderBufferOffsetsJob.complete();
+		final int tileIdx = model.getBufferLen();
+		final StaticTileData tileData = sceneContext.staticTileData[tileIdx];
+		tileData.modelBuffer.state |= DrawState.DRAWCALL;
 
-		final int tileEeX = tileX + SCENE_OFFSET;
-		final int tileEeY = tileY + SCENE_OFFSET;
-		final int tileIdx = HDUtils.tileCoordinateToIndex(0, tileEeX, tileEeY);
 		byte sceneTileCullingResult = sceneCamera.getCullingResults().getTileResult(tileIdx);
-
-		// Even if tile wasn't drawn, we still mark is as such since the function was called
-		drawnTiles[tileIdx] |= 1;
-
 		if (!CullingResults.isTileSurfaceVisible(sceneTileCullingResult))
 			return;
 
-		// we packed a boolean into the buffer length of tiles so we can tell
-		// which tiles have procedurally-generated underwater terrain.
-		// unpack the boolean:
-		final boolean underwaterTerrain = (bufferLength & 1) == 1;
-		// restore the bufferLength variable:
-		bufferLength = bufferLength >> 1;
+		calculateStaticRenderBufferOffsetsJob.complete(false, 0);
 
-		int tileRenderBufferOffset = sceneContext.staticTileData[tileIdx].tileModel_RenderBufferOffset;
-		if (underwaterTerrain) {
-			// draw underwater terrain tile before surface tile
-
-			// buffer length includes the generated underwater terrain, so it must be halved
-			bufferLength /= 2;
-
-			if (CullingResults.isTileUnderwaterVisible(sceneTileCullingResult)) {
-				//sceneDrawBuffer.addModel(tileRenderBufferOffset, bufferLength);
-				drawnTileCount++;
-			}
-
-			tileRenderBufferOffset += bufferLength;
+		if (tileData.underwaterBuffer != null) {
+			sceneDrawBuffer.addModel(tileData.underwaterBuffer);
+			drawnTileCount++;
 		}
 
-		sceneDrawBuffer.addModel(tileRenderBufferOffset, bufferLength);
+		sceneDrawBuffer.addModel(tileData.modelBuffer);
 		drawnTileCount++;
 	}
 
@@ -2266,7 +2218,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// If the window was just resized, upload once synchronously so there is something to show
 			asyncUICopy.submit(isResizing);
 			if (isResizing) {
-				asyncUICopy.complete(true);
+				asyncUICopy.complete();
 			}
 			return;
 		}
@@ -2596,6 +2548,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
 		checkGLErrors();
+
+		if (sceneContext != null) {
+			clearStaticRenderBufferOffsets.sceneContext = sceneContext;
+			clearStaticRenderBufferOffsets.submit();
+		}
 
 		// Process pending config changes after the EDT is done with any pending work, which could include further config changes
 		if (!pendingConfigChanges.isEmpty())
@@ -3141,23 +3098,26 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public boolean shouldDrawRenderable(Renderable renderable, boolean drawingUI) {
+		if(drawingUI) {
+			return true;
+		}
+
+		sceneCullingManager.ensureCullingComplete();
+
 		if (renderable instanceof Player) {
-			int playerId = ((Player) renderable).getId();
-			return sceneCamera.getCullingResults().isPlayerVisible(playerId) || directionalLight
-				.getCullingResults()
-				.isPlayerVisible(playerId);
+			return sceneCullingManager.combinedTileVisibility.isPlayerVisible(((Player) renderable).getId());
 		}
 
 		if (renderable instanceof NPC) {
-			int playerId = ((NPC) renderable).getId();
-			return sceneCamera.getCullingResults().isNPCVisible(playerId) || directionalLight.getCullingResults().isNPCVisible(playerId);
+			return sceneCullingManager.combinedTileVisibility.isNPCVisible(((NPC) renderable).getId());
 		}
 
 		if (renderable instanceof Projectile) {
-			int playerId = ((Projectile) renderable).getId();
-			return sceneCamera.getCullingResults().isProjectileVisible(playerId) || directionalLight
-				.getCullingResults()
-				.isProjectileVisible(playerId);
+			return sceneCullingManager.combinedTileVisibility.isProjectileVisible(((Projectile) renderable).getId());
+		}
+
+		if (renderable instanceof GraphicsObject) {
+			return sceneCullingManager.combinedTileVisibility.isProjectileVisible(((GraphicsObject) renderable).getId());
 		}
 
 		return true;
@@ -3197,39 +3157,106 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (sceneContext == null || redrawPreviousFrame)
 			return;
 
-		int localX = x >> LOCAL_COORD_BITS;
-		int localZ = z >> LOCAL_COORD_BITS;
+		Model model = renderable instanceof Model ?  (Model) renderable : null;
+		// Check if Model is Static
+		boolean isStatic = false;
+		boolean isTransparent = false;
+		boolean shouldCastShadow = true;
 
-		// Hide everything outside the current area if area hiding is enabled
-		if (sceneContext.currentArea != null) {
-			assert sceneContext.sceneBase != null;
-			boolean inArea = sceneContext.currentArea.containsPoint(
-				sceneContext.sceneBase[0] + localX,
-				sceneContext.sceneBase[1] + localZ,
-				sceneContext.sceneBase[2] + client.getPlane()
+		StaticRenderable staticRenderable = null;
+		if(model != null) {
+			isStatic = sceneContext.id == (model.getSceneId() & SceneUploader.SCENE_ID_MASK);
+
+			if (isStatic) {
+				int staticRenderableIdx = (model.getSceneId() >> 16) & SceneUploader.STATIC_RENDERABLE_ID_MASK;
+				staticRenderable = staticRenderableIdx > 0 ? sceneContext.staticRenderableData.get(staticRenderableIdx - 1) : null;
+				if (staticRenderable != null) {
+					isTransparent = !staticRenderable.opaque;
+					shouldCastShadow = staticRenderable.modelOverride.castShadows;
+				}
+			}
+		}
+
+		if (enableDetailedTimers)
+			frameTimer.begin(Timer.VISIBILITY_CHECK);
+
+		final int plane = ModelHash.getPlane(hash);
+		final int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		final int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+
+		final boolean isVisibleInScene = sceneCamera.isRenderableVisible(
+			renderable,
+			isStatic,
+			tileIdx);
+		final boolean isVisibleInShadow = shouldCastShadow && (isVisibleInScene || (
+				configShadowCulling && directionalLight.isRenderableVisible(
+				renderable,
+				isStatic,
+				tileIdx)));
+
+		if (enableDetailedTimers)
+			frameTimer.end(Timer.VISIBILITY_CHECK);
+
+		if (!isVisibleInScene && !isVisibleInShadow) {
+			return;
+		}
+
+		if (staticRenderable != null) {
+			if (enableDetailedTimers)
+				frameTimer.begin(Timer.DRAW_STATIC_RENDERABLE);
+
+			if(isVisibleInScene) {
+				client.checkClickbox(projection, model, orientation, x, y, z, hash);
+			}
+
+			calculateStaticRenderBufferOffsetsJob.complete(false, 0);
+
+			final StaticTileData staticTileData = sceneContext.staticTileData[tileIdx];
+			StaticRenderableInstance renderableInstance = staticTileData.getStaticRenderableInstance(
+				staticRenderable,
+				x,
+				y,
+				z,
+				orientation
 			);
-			if (!inArea)
-				return;
+
+			if (renderableInstance != null) {
+				renderableInstance.renderableBuffer.state |= DrawState.DRAWCALL;
+
+				if (isVisibleInScene) {
+					sceneDrawBuffer.addModel(renderableInstance.renderableBuffer);
+				}
+
+				if (shouldCastShadow) {
+					directionalDrawBuffer.addModel(renderableInstance.renderableBuffer);
+				}
+				drawnStaticRenderableCount++;
+			} else {
+				staticRenderable.appendInstanceToTile(staticTileData, x, y, z, orientation);
+			}
+
+			if (enableDetailedTimers)
+				frameTimer.end(Timer.DRAW_STATIC_RENDERABLE);
+
+			return;
 		}
 
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.GET_MODEL);
 
-		Model model, offsetModel;
 		try {
 			// getModel may throw an exception from vanilla client code
-			if (renderable instanceof Model) {
-				model = (Model) renderable;
-				offsetModel = model.getUnskewedModel();
-				if (offsetModel == null)
-					offsetModel = model;
-			} else {
-				offsetModel = model = renderable.getModel();
-			}
+			model = renderable.getModel();
+
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces
 				// this does seem to happen sometimes (mostly during loading)
 				// should save some CPU cycles here and there
+
+				if (enableDetailedTimers) {
+					frameTimer.end(Timer.GET_MODEL);
+				}
 				return;
 			}
 		} catch (Exception ex) {
@@ -3240,94 +3267,38 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.GET_MODEL);
 		}
 
-		final int sceneID = offsetModel.getSceneId();
-		final boolean isStatic = sceneContext.id == (sceneID & SceneUploader.SCENE_ID_MASK);
-		boolean isTransparent = isStatic && ((sceneID >> 14) & 1) == 1;
-		boolean shouldCastShadow = !isStatic || ((sceneID >> 15) & 1) == 1;
+		if (enableDetailedTimers)
+			frameTimer.begin(Timer.DRAW_DYNAMIC_RENDERABLE);
 
-		if (!isStatic) {
-			model.calculateBoundsCylinder();
+		model.calculateBoundsCylinder();
+
+		DynamicRenderableInstance instance = freeDynamicRenderables.isEmpty() ? new DynamicRenderableInstance() : freeDynamicRenderables.pop();
+		instance.x = x;
+		instance.y = y;
+		instance.z = z;
+		instance.height = model.getModelHeight();
+		instance.orientation = orientation;
+
+		renderable.setModelHeight(instance.height);
+
+		if(isVisibleInScene) {
+			client.checkClickbox(projection, model, orientation, x, y, z, hash);
 		}
 
 		final int modelRadius = model.getXYZMag(); // Model radius excluding height (model.getRadius() includes height)
 
-		calculateStaticRenderBufferOffsetsJob.complete();
+		ModelOverride modelOverride = ModelOverride.NONE;
+		int uuid = ModelHash.generateUuid(client, hash, renderable);
+		int preOrientation = 0;
 
-		if (enableDetailedTimers)
-			frameTimer.begin(Timer.VISIBILITY_CHECK);
-
-		final int plane = ModelHash.getPlane(hash);
-		final int tileExX = localX + SCENE_OFFSET;
-		final int tileExY = localZ + SCENE_OFFSET;
-		final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
-
-		final boolean isVisibleInScene = sceneCamera.isRenderableVisible(
-			renderable,
-			isStatic,
-			tileIdx,
-			x,
-			y,
-			z,
-			modelRadius);
-		final boolean isVisibleInShadow = shouldCastShadow && (isVisibleInScene || (
-				configShadowCulling && directionalLight.isRenderableVisible(
-				renderable,
-				isStatic,
-				tileIdx,
-				x,
-				y,
-				z,
-				modelRadius)));
-
-		if (enableDetailedTimers)
-			frameTimer.end(Timer.VISIBILITY_CHECK);
-
-		// Even if tile wasn't drawn, we still mark is as such since the function was called
-		drawnTiles[tileIdx] |= 1 << 1;
-
-		if (!isVisibleInScene && !isVisibleInShadow) {
-			return;
-		}
-
-		// Apply height to renderable from the model
-		int height = model.getModelHeight();
-		if (model != renderable)
-			renderable.setModelHeight(height);
-
-		if (isVisibleInScene) {
-			client.checkClickbox(projection, model, orientation, x, y, z, hash);
-		}
-
-		if (enableDetailedTimers)
-			frameTimer.begin(Timer.DRAW_RENDERABLE);
-
-		final int faceCount;
-		if (isStatic) {
-			StaticRenderable staticRenderable = sceneContext.staticTileData[tileIdx].getStaticRenderable(x, z, y, model);
-
-			if(staticRenderable != null) {
-				if (isVisibleInScene) {
-					sceneDrawBuffer.addModel(staticRenderable.renderBufferOffset, staticRenderable.faceCount * 3);
-				}
-
-				if (shouldCastShadow) {
-					directionalDrawBuffer.addModel(staticRenderable.renderBufferOffset, staticRenderable.faceCount * 3);
-				}
-			}
-
-			drawnStaticRenderableCount++;
-
-			if (enableDetailedTimers)
-				frameTimer.end(Timer.DRAW_RENDERABLE);
-			return;
-		} else {
-			int uuid = ModelHash.generateUuid(client, hash, renderable);
+		if(!(renderable instanceof Actor)) {
 			int[] worldPos = sceneContext.localToWorld(x, z, plane);
-			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+			modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			shouldCastShadow = modelOverride.castShadows;
 			if (modelOverride.hide || (!isVisibleInScene && !shouldCastShadow)) {
-				if (enableDetailedTimers)
-					frameTimer.end(Timer.DRAW_RENDERABLE);
+				if (enableDetailedTimers) {
+					frameTimer.end(Timer.DRAW_DYNAMIC_RENDERABLE);
+				}
 				return;
 			}
 
@@ -3335,7 +3306,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (!configModelCaching && modelOverride.colorOverrides != null)
 				modelOverride = ModelOverride.NONE;
 
-			int preOrientation = 0;
 			if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
 				if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
 					Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
@@ -3350,125 +3320,113 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 				}
 			}
+		}
 
-			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
-			if (enableDetailedTimers)
-				frameTimer.begin(Timer.MODEL_BATCHING);
-			ModelOffsets modelOffsets = null;
-			if (configModelBatching || configModelCaching) {
-				modelHasher.setModel(model, modelOverride, preOrientation);
-				// Disable model batching for models which have been excluded from the scene buffer,
-				// because we want to avoid having to fetch the model override
-				if (configModelBatching && sceneID != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
-					modelOffsets = frameModelInfoMap.get(modelHasher.batchHash);
-					if (modelOffsets != null && modelOffsets.faceCount != model.getFaceCount())
-						modelOffsets = null; // Assume there's been a hash collision
-				}
-			}
-			if (enableDetailedTimers)
-				frameTimer.end(Timer.MODEL_BATCHING);
+		// Temporary model (animated or otherwise not a static Model already in the scene buffer)
+		if (enableDetailedTimers)
+			frameTimer.begin(Timer.MODEL_BATCHING);
 
-			if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
-				faceCount = modelOffsets.faceCount;
-				eightIntWrite[0] = modelOffsets.vertexOffset;
-				eightIntWrite[1] = modelOffsets.uvOffset;
-				eightIntWrite[2] = modelOffsets.faceCount;
-				shouldCastShadow = modelOffsets.shouldCastShadow;
-				isTransparent = modelOffsets.isTransparent;
-			} else {
-				if (enableDetailedTimers)
-					frameTimer.begin(Timer.MODEL_PUSHING);
-
-				shouldCastShadow = modelOverride.castShadows;
-				if (modelOverride.hide || !shouldCastShadow && !isVisibleInScene) {
-					if (enableDetailedTimers) {
-						frameTimer.end(Timer.DRAW_RENDERABLE);
-						frameTimer.end(Timer.MODEL_PUSHING);
-					}
-				}
-				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
-				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-
-				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
-
-				faceCount = sceneContext.modelPusherResults[0];
-				isTransparent = sceneContext.modelPusherResults[2] == 1;
-
-				if (sceneContext.modelPusherResults[1] == 0)
-					uvOffset = -1;
-
-				if (enableDetailedTimers)
-					frameTimer.end(Timer.MODEL_PUSHING);
-
-				eightIntWrite[0] = vertexOffset;
-				eightIntWrite[1] = uvOffset;
-				eightIntWrite[2] = faceCount;
-
-				// add this temporary model to the map for batching purposes
-				if (configModelBatching && modelOffsets == null)
-					frameModelInfoMap.put(
-						modelHasher.batchHash,
-						new ModelOffsets(faceCount, vertexOffset, uvOffset, shouldCastShadow, isTransparent)
-					);
-			}
-
-			if (eightIntWrite[0] != -1)
-				drawnDynamicRenderableCount++;
-
-			if (configCharacterDisplacement && renderable instanceof Actor) {
-				if (enableDetailedTimers)
-					frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
-				if (renderable instanceof NPC) {
-					var npc = (NPC) renderable;
-					var entry = npcDisplacementCache.get(npc);
-					if (entry.canDisplace) {
-						int displacementRadius = entry.idleRadius;
-						if (displacementRadius == -1) {
-							displacementRadius = modelRadius; // Fallback to model radius since we don't know the idle radius yet
-							if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
-								displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
-								entry.idleRadius = displacementRadius;
-							}
-						}
-						uboCompute.addCharacterPosition(x, z, displacementRadius);
-					}
-				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-					uboCompute.addCharacterPosition(x, z, (int) (LOCAL_TILE_SIZE * 1.33f));
-				}
-				if (enableDetailedTimers)
-					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
+		ModelOffsets modelOffsets = null;
+		if (configModelBatching || configModelCaching) {
+			modelHasher.setModel(model, modelOverride, preOrientation);
+			// Disable model batching for models which have been excluded from the scene buffer,
+			// because we want to avoid having to fetch the model override
+			if (configModelBatching && model.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
+				modelOffsets = frameModelInfoMap.get(modelHasher.batchHash);
+				if (modelOffsets != null && modelOffsets.faceCount != model.getFaceCount())
+					modelOffsets = null; // Assume there's been a hash collision
 			}
 		}
 
 		if (enableDetailedTimers)
-			frameTimer.end(Timer.DRAW_RENDERABLE);
+			frameTimer.end(Timer.MODEL_BATCHING);
 
-		if (eightIntWrite[0] == -1)
-			return; // Hidden model
+		if (modelOffsets != null && modelOffsets.faceCount == model.getFaceCount()) {
+			instance.renderableBuffer.vertexOffset = modelOffsets.vertexOffset;
+			instance.renderableBuffer.uvOffset = modelOffsets.uvOffset;
+			instance.renderableBuffer.vertexCount = modelOffsets.faceCount * 3;
+			shouldCastShadow = modelOffsets.shouldCastShadow;
+			isTransparent = modelOffsets.isTransparent;
+		} else {
+			if (enableDetailedTimers)
+				frameTimer.begin(Timer.MODEL_PUSHING);
+
+			shouldCastShadow = modelOverride.castShadows;
+			if (modelOverride.hide || !shouldCastShadow && !isVisibleInScene) {
+				if (enableDetailedTimers) {
+					frameTimer.end(Timer.MODEL_PUSHING);
+				}
+			}
+			int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
+			int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
+
+			modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
+
+			int faceCount = sceneContext.modelPusherResults[0];
+			isTransparent = sceneContext.modelPusherResults[2] == 1;
+
+			if (sceneContext.modelPusherResults[1] == 0)
+				uvOffset = -1;
+
+			if (enableDetailedTimers)
+				frameTimer.end(Timer.MODEL_PUSHING);
+
+			instance.renderableBuffer.vertexOffset = vertexOffset;
+			instance.renderableBuffer.uvOffset = uvOffset;
+			instance.renderableBuffer.vertexCount = faceCount * 3;
+
+			// add this temporary model to the map for batching purposes
+			if (configModelBatching && modelOffsets == null)
+				frameModelInfoMap.put(
+					modelHasher.batchHash,
+					new ModelOffsets(faceCount, vertexOffset, uvOffset, shouldCastShadow, isTransparent)
+				);
+		}
+
+		if (configCharacterDisplacement && isVisibleInScene && renderable instanceof Actor) {
+			if (enableDetailedTimers)
+				frameTimer.begin(Timer.CHARACTER_DISPLACEMENT);
+			if (renderable instanceof NPC) {
+				var npc = (NPC) renderable;
+				var entry = npcDisplacementCache.get(npc);
+				if (entry.canDisplace) {
+					int displacementRadius = entry.idleRadius;
+					if (displacementRadius == -1) {
+						displacementRadius = modelRadius; // Fallback to model radius since we don't know the idle radius yet
+						if (npc.getIdlePoseAnimation() == npc.getPoseAnimation() && npc.getAnimation() == -1) {
+							displacementRadius *= 2; // Double the idle radius, so that it fits most other animations
+							entry.idleRadius = displacementRadius;
+						}
+					}
+					uboCompute.addCharacterPosition(x, z, displacementRadius);
+				}
+			} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
+				uboCompute.addCharacterPosition(x, z, (int) (LOCAL_TILE_SIZE * 1.33f));
+			}
+			if (enableDetailedTimers)
+				frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
+		}
 
 		if (isVisibleInScene || shouldCastShadow) {
-			// About to push dynamic ModelData, we have to wait for the static Model Data job to complete before we can push
-			pushStaticModelDataJob.complete();
+			calculateStaticRenderBufferOffsetsJob.complete();
+			instance.renderableBuffer.renderBufferOffset = renderBufferOffset;
 
 			if (isVisibleInScene) {
-				sceneDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+				sceneDrawBuffer.addModel(instance.renderableBuffer);
 			}
 
 			if (shouldCastShadow) {
-				directionalDrawBuffer.addModel(renderBufferOffset, faceCount * 3);
+				directionalDrawBuffer.addModel(instance.renderableBuffer);
 			}
 
-			eightIntWrite[3] = renderBufferOffset;
-			eightIntWrite[4] = orientation;
-			eightIntWrite[5] = x;
-			eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
-			eightIntWrite[7] = z;
+			pushDynamicModelDataJob.appendDynamicInstance(instance);
 
-			bufferForTriangles(faceCount)
-				.ensureCapacity(8)
-				.put(eightIntWrite);
+			renderBufferOffset += instance.renderableBuffer.vertexCount;
+			drawnDynamicRenderableCount++;
+		}
 
-			renderBufferOffset += faceCount * 3;
+		if (enableDetailedTimers) {
+			frameTimer.end(Timer.DRAW_DYNAMIC_RENDERABLE);
 		}
 	}
 

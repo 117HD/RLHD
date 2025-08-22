@@ -101,13 +101,6 @@ public class SceneView {
 
 	public ICullingCallback getCullingCallbacks() { return cullingCallbacks; }
 
-	public SceneView setCullingParent(SceneView newCullingParent) {
-		cullingParent = newCullingParent;
-		return this;
-	}
-
-	public SceneView getCullingParent() { return cullingParent;}
-
 	public boolean getIsOrthographic() {return isOrthographic; }
 
 	public SceneView setOrthographic(boolean newOrthographic) {
@@ -273,11 +266,7 @@ public class SceneView {
 	public final boolean isRenderableVisible(
 		Renderable renderable,
 		boolean isStatic,
-		int tileIdx,
-		int x,
-		int y,
-		int z,
-		int modelRadius
+		int tileIdx
 	) {
 		if (renderable instanceof Model || renderable instanceof DynamicObject || renderable instanceof TileItem) {
 			if (isStatic) {
@@ -292,9 +281,13 @@ public class SceneView {
 				return cullingResults.isPlayerVisible(((Player) renderable).getId());
 			} else if (renderable instanceof Projectile) {
 				return cullingResults.isProjectileVisible(((Projectile) renderable).getId());
+			} else if(renderable instanceof GraphicsObject) {
+				return cullingResults.isGraphicsObjectVisible(((GraphicsObject) renderable).getId());
 			}
 		}
-		return HDUtils.isSphereIntersectingFrustum(x, y, z, modelRadius, frustumPlanes);
+
+		// Renderable type isn't know to the Culling System! Fallback to treating it as visible, but this shouldn't happen
+		return true;
 	}
 
 	public SceneView setOrientation(float[] newOrientation) {

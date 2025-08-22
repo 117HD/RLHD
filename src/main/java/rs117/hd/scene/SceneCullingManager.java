@@ -4,15 +4,18 @@ package rs117.hd.scene;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.data.StaticRenderable;
+import rs117.hd.data.StaticRenderableInstance;
 import rs117.hd.data.StaticTileData;
-import rs117.hd.data.StaticTileData.StaticRenderable;
+import rs117.hd.model.ModelPusher;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.utils.HDUtils;
@@ -28,7 +31,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class SceneCullingManager {
-	private static final int JOB_BATCH_SIZE = 8;
+	private static final int JOB_BATCH_SIZE = CHUNK_SIZE;
 
 	public static final byte VISIBILITY_UNKNOWN = -1;
 	public static final byte VISIBILITY_HIDDEN = 0;
@@ -56,6 +59,7 @@ public class SceneCullingManager {
 	private final FrustumSphereCullingJob playerCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.PLAYER);
 	private final FrustumSphereCullingJob npcCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.NPC);
 	private final FrustumSphereCullingJob projectileCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.PROJECTILES);
+	private final FrustumSphereCullingJob graphicObjectCullingJob = new FrustumSphereCullingJob(this, FrustumSphereCullingJob.JobType.GRAPHICS_OBJECTS);
 
 	private boolean cullingInFlight = false;
 
@@ -80,6 +84,7 @@ public class SceneCullingManager {
 		playerCullingJob.complete();
 		npcCullingJob.complete();
 		projectileCullingJob.complete();
+		graphicObjectCullingJob.complete();
 
 		for (FrustumTileCullingJob[] frustumCullingJob : frustumCullingJobs) {
 			for (FrustumTileCullingJob cullingJob : frustumCullingJob) {
@@ -126,7 +131,7 @@ public class SceneCullingManager {
 		if (jobX > 0 && jobX < frustumCullingJobs.length &&
 			jobY > 0 && jobY < frustumCullingJobs[jobX].length) {
 			while (frustumCullingJobs[jobX][jobY].isInFlight() && result == VISIBILITY_UNKNOWN) {
-				frustumCullingJobs[jobX][jobY].wait(false, 100);
+				frustumCullingJobs[jobX][jobY].awaitCompletion(false, 100);
 				result = combinedTileVisibility.tiles[tileIdx];
 			}
 		}
@@ -164,16 +169,6 @@ public class SceneCullingManager {
 		for(int i = 0; i < cullingViews.size(); i++) {
 			SceneView currentView = cullingViews.get(i);
 			needTileCulling = needTileCulling || currentView.isTileVisibilityDirty();
-
-			SceneView parent = currentView.getCullingParent();
-			if(parent != null) {
-				int parentIdx = cullingViews.indexOf(parent);
-				if(parentIdx > i) {
-					// Move the parent to be before this view
-					cullingViews.remove(parent);
-					cullingViews.add(i, parent);
-				}
-			}
 		}
 
 		if (needTileCulling) {
@@ -187,7 +182,6 @@ public class SceneCullingManager {
 			ctx.frustumPlanes = view.getFrustumPlanes();
 			ctx.viewProj = view.getViewProjMatrix();
 			ctx.cullingFlags = view.getCullingFlags();
-			ctx.parentIdx = -1;
 
 			if ((ctx.cullingFlags & SceneView.CULLING_FLAG_CALLBACK) != 0) {
 				ctx.callbacks = view.getCullingCallbacks();
@@ -205,11 +199,6 @@ public class SceneCullingManager {
 					view.setCullingResults(getAvailableCullingResults());
 				}
 				ctx.results = view.getCullingResults();
-
-				final SceneView parent = view.getCullingParent();
-				if (parent != null) {
-					ctx.parentIdx = cullingViews.indexOf(parent);
-				}
 			}
 
 			ctx.results.npcs.clear();
@@ -287,6 +276,21 @@ public class SceneCullingManager {
 			if (!projectileCullingJob.spheres.isEmpty()) {
 				projectileCullingJob.submit();
 			}
+
+			// Build Graphics Object Culling
+			for(GraphicsObject graphicsObject : client.getTopLevelWorldView().getGraphicsObjects()) {
+				FrustumSphereCullingJob.BoundingSphere sphere = FrustumSphereCullingJob.getOrCreateBoundingSphere();
+				sphere.x = (float) graphicsObject.getLocation().getX();
+				sphere.y = (float) graphicsObject.getZ();
+				sphere.z = (float) graphicsObject.getLocation().getY();
+				sphere.height = graphicsObject.getModelHeight();
+				sphere.id = graphicsObject.getId();
+				graphicObjectCullingJob.spheres.add(sphere);
+			}
+
+			if (!graphicObjectCullingJob.spheres.isEmpty()) {
+				graphicObjectCullingJob.submit();
+			}
 		}
 
 		if (!clearJob.clearTargets.isEmpty()) {
@@ -300,7 +304,6 @@ public class SceneCullingManager {
 		public float[] viewProj;
 		public ICullingCallback callbacks;
 		public CullingResults results;
-		public int parentIdx;
 		public int cullingFlags;
 	}
 
@@ -311,20 +314,29 @@ public class SceneCullingManager {
 	}
 
 	public static final class CullingResults {
+		private final int[] visibleTiles = new int[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
 		private final byte[] tiles = new byte[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
-		private final HashMap<Integer, Boolean> players = new HashMap<>();
-		private final HashMap<Integer, Boolean> npcs = new HashMap<>();
-		private final HashMap<Integer, Boolean> projectiles = new HashMap<>();
+		private final HashSet<Integer> players = new HashSet<>();
+		private final HashSet<Integer> npcs = new HashSet<>();
+		private final HashSet<Integer> projectiles = new HashSet<>();
+		private final HashSet<Integer> graphicsObjects = new HashSet<>();
+		private final AtomicInteger numVisibleTiles = new AtomicInteger(0);
 
 		public CullingResults() {
 			reset();
 		}
 
-		public boolean isPlayerVisible(int id) { return players.getOrDefault(id, true); }
+		public int getNumVisibleTiles() {return numVisibleTiles.get();}
 
-		public boolean isNPCVisible(int id) { return npcs.getOrDefault(id, true); }
+		public int getVisibleTile(int idx) { return visibleTiles[idx]; }
 
-		public boolean isProjectileVisible(int id) { return projectiles.getOrDefault(id, true); }
+		public boolean isPlayerVisible(int id) { return players.contains(id); }
+
+		public boolean isNPCVisible(int id) { return npcs.contains(id); }
+
+		public boolean isProjectileVisible(int id) { return projectiles.contains(id); }
+
+		public boolean isGraphicsObjectVisible(int id) { return graphicsObjects.contains(id); }
 
 		public byte getTileResult(int tileIdx) {
 			return tiles[tileIdx];
@@ -362,20 +374,29 @@ public class SceneCullingManager {
 			return isTileRenderablesVisible(getTileResult(plane, tileExX, tileExY));
 		}
 
+		public static boolean isTileVisible(byte tileCullingResult) {
+			return (tileCullingResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_UNDER_WATER_TILE_VISIBLE)) != 0;
+		}
+
 		public static boolean isTileSurfaceVisible(byte tileCullingResult) {
-			return (tileCullingResult & VISIBILITY_TILE_VISIBLE) == VISIBILITY_TILE_VISIBLE;
+			return (tileCullingResult & VISIBILITY_TILE_VISIBLE) != 0;
 		}
 
 		public static boolean isTileUnderwaterVisible(byte tileCullingResult) {
-			return (tileCullingResult & VISIBILITY_UNDER_WATER_TILE_VISIBLE) == VISIBILITY_UNDER_WATER_TILE_VISIBLE;
+			return (tileCullingResult & VISIBILITY_UNDER_WATER_TILE_VISIBLE) != 0;
 		}
 
 		public static boolean isTileRenderablesVisible(byte tileCullingResult) {
-			return (tileCullingResult & VISIBILITY_RENDERABLE_VISIBLE) == VISIBILITY_RENDERABLE_VISIBLE;
+			return (tileCullingResult & VISIBILITY_RENDERABLE_VISIBLE) != 0;
 		}
 
 		public void reset() {
 			Arrays.fill(tiles, VISIBILITY_UNKNOWN);
+			players.clear();
+			npcs.clear();
+			projectiles.clear();
+			graphicsObjects.clear();
+			numVisibleTiles.set(0);
 		}
 	}
 
@@ -408,13 +429,14 @@ public class SceneCullingManager {
 		public int startX, endX;
 		public int startY, endY;
 		public int sceneID;
+		public int worldPlane;
 		public boolean[] sceneViewCtxVisible = new boolean[4];
 
 		// Job AABB
 		private int aabb_MinX, aabb_MinY, aabb_MinZ;
 		private int aabb_MaxX, aabb_MaxY, aabb_MaxZ;
 		private int[][][] tileHeights;
-		private final float[][] tileVertices = new float[4][4];
+		private final float[][] vertices = new float[4][4];
 
 		@Override
 		protected void onPrepare() {
@@ -422,6 +444,7 @@ public class SceneCullingManager {
 				return;
 			}
 			sceneID = sceneContext.id;
+			worldPlane = cullManager.client.getPlane();
 
 			aabb_MinX = Integer.MAX_VALUE;
 			aabb_MinY = Integer.MAX_VALUE;
@@ -437,6 +460,8 @@ public class SceneCullingManager {
 			for (int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
+						final int tileIdx = HDUtils.tileCoordinateToIndex(plane, tileExX, tileExY);
+						final StaticTileData staticTileData = sceneContext.staticTileData[tileIdx];
 						int h0 = tileHeights[plane][tileExX][tileExY];
 						int h1 = tileHeights[plane][tileExX + 1][tileExY];
 						int h2 = tileHeights[plane][tileExX][tileExY + 1];
@@ -456,7 +481,7 @@ public class SceneCullingManager {
 						aabb_MaxZ = Math.max(aabb_MaxZ, tileZ + LOCAL_TILE_SIZE);
 						aabb_MaxY = Math.max(aabb_MaxY, localMaxY);
 
-						if (sceneContext.tileIsWater[plane][tileExX][tileExY]) {
+						if (staticTileData.isWater) {
 							final int dl0 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
 							final int dl1 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY];
 							final int dl2 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY + 1];
@@ -527,6 +552,9 @@ public class SceneCullingManager {
 				return;
 			}
 
+			int baseExX = sceneContext.sceneBase[0] - SCENE_OFFSET;
+			int baseExY = sceneContext.sceneBase[1] - SCENE_OFFSET;
+			int basePlane = sceneContext.sceneBase[2];
 			for(int plane = 0; plane < MAX_Z; plane++) {
 				for (int tileExX = startX; tileExX < endX; tileExX++) {
 					for (int tileExY = startY; tileExY < endY; tileExY++) {
@@ -534,7 +562,18 @@ public class SceneCullingManager {
 						final StaticTileData staticTileData = sceneContext.staticTileData[tileIdx];
 
 						// Check if tile is Empty so we can skip expensive culling
-						if (staticTileData.isEmpty()) {
+						boolean shouldProcessTile = !staticTileData.isEmpty();
+
+						if(shouldProcessTile && sceneContext.currentArea != null) {
+							// Check area hiding if this tile is hidden
+							shouldProcessTile = sceneContext.currentArea.containsPoint(
+								baseExX + tileExX,
+								baseExY + tileExY,
+								basePlane + plane
+							);
+						}
+
+						if (!shouldProcessTile) {
 							for (int i = 0; i < cullManager.cullingViewContexts.size(); i++) {
 								SceneViewContext viewCtx = cullManager.cullingViewContexts.get(i);
 								if (!sceneViewCtxVisible[i]) {
@@ -565,7 +604,7 @@ public class SceneCullingManager {
 						int uh2 = h2;
 						int uh3 = h3;
 
-						if (sceneContext.tileIsWater[plane][tileExX][tileExY]) {
+						if (staticTileData.isWater) {
 							final int dl0 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY];
 							final int dl1 = sceneContext.underwaterDepthLevels[plane][tileExX + 1][tileExY];
 							final int dl2 = sceneContext.underwaterDepthLevels[plane][tileExX][tileExY + 1];
@@ -589,21 +628,6 @@ public class SceneCullingManager {
 							if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_FREEZE) != 0) {
 								combinedResult |= viewCtx.results.tiles[tileIdx];
 								continue;
-							}
-
-							// Check if Parent view has already determined that it's visible if so we can use that result and early out
-							if (viewCtx.parentIdx != -1) {
-								SceneViewContext parentViewCtx = cullManager.cullingViewContexts.get(viewCtx.parentIdx);
-								byte parentViewResult = parentViewCtx.results.tiles[tileIdx];
-								if ((parentViewResult & (VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE)) == (
-									VISIBILITY_TILE_VISIBLE | VISIBILITY_RENDERABLE_VISIBLE
-								)) {
-									if (plane == 0 && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_GROUND_PLANES) == 0) {
-										parentViewResult &= ~VISIBILITY_TILE_VISIBLE;
-									}
-									viewCtx.results.tiles[tileIdx] = parentViewResult;
-									continue; // Early out, no need to perform any culling
-								}
 							}
 
 							byte viewResult = VISIBILITY_HIDDEN;
@@ -658,8 +682,8 @@ public class SceneCullingManager {
 
 							if ((viewCtx.cullingFlags & SceneView.CULLING_FLAG_RENDERABLES) != 0) {
 								if (!staticTileData.renderables.isEmpty()) {
-									for (int renderableIdx : staticTileData.renderables) {
-										final StaticRenderable renderable = sceneContext.staticRenderableData.get(renderableIdx);
+									for (StaticRenderableInstance instance : staticTileData.renderables) {
+										final StaticRenderable renderable = instance.renderable;
 										if (renderable.height < LOCAL_HALF_TILE_SIZE) {
 											// Renderable is probably laying along surface of tile, if surface isn't visible then its safe to cull this too
 											if ((viewResult & VISIBILITY_TILE_VISIBLE) == 0) {
@@ -668,12 +692,12 @@ public class SceneCullingManager {
 										}
 
 										boolean visible = HDUtils.isAABBIntersectingFrustum(
-											renderable.x - renderable.radius,
-											renderable.z - renderable.bottomY,
-											renderable.y - renderable.radius,
-											renderable.x + renderable.radius,
-											renderable.z - renderable.bottomY + renderable.height,
-											renderable.y + renderable.radius,
+											instance.x - renderable.radius,
+											instance.y - renderable.bottomY,
+											instance.z - renderable.radius,
+											instance.x + renderable.radius,
+											instance.y - renderable.bottomY + renderable.height,
+											instance.z + renderable.radius,
 											viewCtx.frustumPlanes, -LOCAL_TILE_SIZE
 										);
 
@@ -688,6 +712,22 @@ public class SceneCullingManager {
 											);
 										}
 
+										/*
+										if (visible && (viewCtx.cullingFlags & SceneView.CULLING_FLAG_BACK_FACE_CULL) != 0) {
+											float rad = (float)(instance.orientation * UNIT);
+											float sOrientation = sin(rad);
+											float cOrientation = cos(rad);
+
+											boolean isModelBackFacing = true;
+											for(int f = 0; f < renderable.faceCount; f++) {
+												if(getModelTriangleArea(instance, f, sOrientation, cOrientation, viewCtx.viewProj) > 0.1f) {
+													isModelBackFacing = false;
+													break;
+												}
+											}
+											visible = !isModelBackFacing;
+										} */
+
 										if (visible) {
 											viewResult |= VISIBILITY_RENDERABLE_VISIBLE;
 											break;
@@ -699,8 +739,18 @@ public class SceneCullingManager {
 								}
 							}
 
+							if(viewResult != VISIBILITY_HIDDEN) {
+								final int writeIdx = viewCtx.results.numVisibleTiles.getAndIncrement();
+								viewCtx.results.visibleTiles[writeIdx] = tileIdx;
+							}
+
 							combinedResult |= viewResult;
 							viewCtx.results.tiles[tileIdx] = viewResult;
+						}
+
+						if(combinedResult != VISIBILITY_HIDDEN) {
+							final int writeIdx = cullManager.combinedTileVisibility.numVisibleTiles.getAndIncrement();
+							cullManager.combinedTileVisibility.visibleTiles[writeIdx] = tileIdx;
 						}
 
 						cullManager.combinedTileVisibility.tiles[tileIdx] = combinedResult;
@@ -709,35 +759,70 @@ public class SceneCullingManager {
 			}
 		}
 
+		private float getModelTriangleArea(StaticRenderableInstance instance, int face, float sOrientation, float cOrientation, float[] viewProj) {
+			var vertexBuffer = sceneContext.stagingBufferVertices.getBuffer();
+			int vertexOffset = instance.renderable.vertexOffset + (face * ModelPusher.DATUM_PER_FACE);
+
+			vertices[0][0] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset));
+			vertices[0][1] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 1));
+			vertices[0][2] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 2));
+			vertices[0][3] = 1.0f;
+
+			vertices[0][0] = vertices[0][2] * sOrientation + vertices[0][0] * cOrientation;
+			vertices[0][2] = vertices[0][2] * cOrientation - vertices[0][0] * sOrientation;
+
+			vertices[1][0] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 4));
+			vertices[1][1] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 5));
+			vertices[1][2] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 6));
+			vertices[1][3] = 1.0f;
+
+			vertices[1][0] = vertices[1][2] * sOrientation + vertices[1][0] * cOrientation;
+			vertices[1][2] = vertices[1][2] * cOrientation - vertices[1][0] * sOrientation;
+
+			vertices[2][0] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 8));
+			vertices[2][1] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 9));
+			vertices[2][2] = Float.intBitsToFloat(vertexBuffer.get(vertexOffset + 10));
+			vertices[2][3] = 1.0f;
+
+			vertices[2][0] = vertices[2][2] * sOrientation + vertices[2][0] * cOrientation;
+			vertices[2][2] = vertices[2][2] * cOrientation - vertices[2][0] * sOrientation;
+
+			Mat4.projectVec(vertices[0], viewProj, vertices[0]);
+			Mat4.projectVec(vertices[1], viewProj, vertices[1]);
+			Mat4.projectVec(vertices[2], viewProj, vertices[2]);
+
+			return HDUtils.signedTriangleArea(vertices[0], vertices[1], vertices[2]);
+		}
+
 		private float getTileTriangleArea(int x, int z, int h0, int h1, int h2, int h3, float[] viewProj) {
-			tileVertices[0][0] = x;
-			tileVertices[0][1] = h0;
-			tileVertices[0][2] = z;
-			tileVertices[0][3] = 1.0f;
+			vertices[0][0] = x;
+			vertices[0][1] = h0;
+			vertices[0][2] = z;
+			vertices[0][3] = 1.0f;
 
-			tileVertices[1][0] = x + LOCAL_TILE_SIZE;
-			tileVertices[1][1] = h1;
-			tileVertices[1][2] = z;
-			tileVertices[1][3] = 1.0f;
+			vertices[1][0] = x + LOCAL_TILE_SIZE;
+			vertices[1][1] = h1;
+			vertices[1][2] = z;
+			vertices[1][3] = 1.0f;
 
-			tileVertices[2][0] = x;
-			tileVertices[2][1] = h2;
-			tileVertices[2][2] = z + LOCAL_TILE_SIZE;
-			tileVertices[2][3] = 1.0f;
+			vertices[2][0] = x;
+			vertices[2][1] = h2;
+			vertices[2][2] = z + LOCAL_TILE_SIZE;
+			vertices[2][3] = 1.0f;
 
-			tileVertices[3][0] = x + LOCAL_TILE_SIZE;
-			tileVertices[3][1] = h3;
-			tileVertices[3][2] = z + LOCAL_TILE_SIZE;
-			tileVertices[3][3] = 1.0f;
+			vertices[3][0] = x + LOCAL_TILE_SIZE;
+			vertices[3][1] = h3;
+			vertices[3][2] = z + LOCAL_TILE_SIZE;
+			vertices[3][3] = 1.0f;
 
-			Mat4.projectVec(tileVertices[0], viewProj, tileVertices[0]);
-			Mat4.projectVec(tileVertices[1], viewProj, tileVertices[1]);
-			Mat4.projectVec(tileVertices[2], viewProj, tileVertices[2]);
-			Mat4.projectVec(tileVertices[3], viewProj, tileVertices[3]);
+			Mat4.projectVec(vertices[0], viewProj, vertices[0]);
+			Mat4.projectVec(vertices[1], viewProj, vertices[1]);
+			Mat4.projectVec(vertices[2], viewProj, vertices[2]);
+			Mat4.projectVec(vertices[3], viewProj, vertices[3]);
 
 			return max(
-				HDUtils.signedTriangleArea(tileVertices[0], tileVertices[1], tileVertices[2]),
-				HDUtils.signedTriangleArea(tileVertices[2], tileVertices[1], tileVertices[3])
+				HDUtils.signedTriangleArea(vertices[0], vertices[1], vertices[2]),
+				HDUtils.signedTriangleArea(vertices[2], vertices[1], vertices[3])
 			);
 		}
 	}
@@ -750,7 +835,7 @@ public class SceneCullingManager {
 			return BOUNDING_SPHERE_BIN.isEmpty() ? new BoundingSphere() : BOUNDING_SPHERE_BIN.pop();
 		}
 
-		public enum JobType { PLAYER, NPC, PROJECTILES }
+		public enum JobType { PLAYER, NPC, PROJECTILES, GRAPHICS_OBJECTS }
 
 		public static class BoundingSphere {
 			public float x, y, z;
@@ -778,16 +863,25 @@ public class SceneCullingManager {
 						visible = viewCtx.callbacks.isBoundingSphereVisible(sphere.x, sphere.y, sphere.z, sphere.height, visible);
 					}
 
-					switch (type) {
-						case PLAYER:
-							viewCtx.results.players.put(sphere.id, visible);
-							break;
-						case NPC:
-							viewCtx.results.npcs.put(sphere.id, visible);
-							break;
-						case PROJECTILES:
-							viewCtx.results.projectiles.put(sphere.id, visible);
-							break;
+					if(visible) {
+						switch (type) {
+							case PLAYER:
+								cullManager.combinedTileVisibility.players.add(sphere.id);
+								viewCtx.results.players.add(sphere.id);
+								break;
+							case NPC:
+								cullManager.combinedTileVisibility.npcs.add(sphere.id);
+								viewCtx.results.npcs.add(sphere.id);
+								break;
+							case PROJECTILES:
+								cullManager.combinedTileVisibility.projectiles.add(sphere.id);
+								viewCtx.results.projectiles.add(sphere.id);
+								break;
+							case GRAPHICS_OBJECTS:
+								cullManager.combinedTileVisibility.graphicsObjects.add(sphere.id);
+								viewCtx.results.graphicsObjects.add(sphere.id);
+								break;
+						}
 					}
 				}
 			}

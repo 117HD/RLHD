@@ -1,8 +1,14 @@
 package rs117.hd.scene.jobs;
 
-import java.util.HashSet;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.SneakyThrows;
+import rs117.hd.data.DynamicRenderableInstance;
+import rs117.hd.data.StaticRenderableInstance;
 import rs117.hd.data.StaticTileData;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.utils.Job;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -15,88 +21,114 @@ public class PushStaticModelDataJob extends Job {
 
 	public GpuIntBuffer modelPassthroughBuffer;
 
-	public int numPassthroughModels;
-
 	public IGetRenderableBuffer getRenderableBuffer;
 
-	private BuildVisibleTileListJob visibleTileListJob;
+	private SceneCullingManager.CullingResults cullingResults;
 
+	private final List<DynamicRenderableInstance> dynamicInstances = new ArrayList<>();
+
+	private final boolean isStaticPass;
 	private final int[] eightIntWrite = new int[8];
 
-	private final HashSet<Integer> processedRenderables = new HashSet<>();
-
-	public void setup(SceneContext inSceneContext, GpuIntBuffer inModelPassthroughBuffer, int inNumPassthroughModels, BuildVisibleTileListJob inVisibleTileListJob, IGetRenderableBuffer inGetRenderableBuffer) {
-		complete();
-
-		sceneContext = inSceneContext;
-		numPassthroughModels = inNumPassthroughModels;
-		modelPassthroughBuffer = inModelPassthroughBuffer;
-		visibleTileListJob = inVisibleTileListJob;
+	public PushStaticModelDataJob(boolean staticPass, IGetRenderableBuffer inGetRenderableBuffer) {
+		isStaticPass = staticPass;
 		getRenderableBuffer = inGetRenderableBuffer;
 	}
 
+	public void setup(
+		SceneContext inSceneContext,
+		GpuIntBuffer inModelPassthroughBuffer,
+		SceneCullingManager.CullingResults inCullingResults
+	) {
+		complete();
+
+		sceneContext = inSceneContext;
+		modelPassthroughBuffer = inModelPassthroughBuffer;
+		cullingResults = inCullingResults;
+
+		dynamicInstances.clear();
+	}
+
+	public void clearDynamicInstances(ArrayDeque<DynamicRenderableInstance> inDynamicInstancesPool) {
+		for (int i = 0; i < dynamicInstances.size(); i++) {
+			var instance = dynamicInstances.get(i);
+			instance.renderableBuffer.reset();
+			inDynamicInstancesPool.add(instance);
+		}
+		dynamicInstances.clear();
+	}
+
+	public boolean hasDynamicInstancesToPush() {
+		return !dynamicInstances.isEmpty();
+	}
+
+	public void appendDynamicInstance(DynamicRenderableInstance instance) {
+		dynamicInstances.add(instance);
+	}
+
+	@SneakyThrows
 	@Override
 	protected void doWork() {
-		processedRenderables.clear();
-		BuildVisibleTileListJob.VisibleTiles visibleTiles = visibleTileListJob.getResultUnsafe();
-		for(int i = 0; i < visibleTiles.count; i++) {
-			final int tileIdx = visibleTiles.indices[i];
-			final StaticTileData tileData = sceneContext.staticTileData[tileIdx];
+		if(isStaticPass) {
+			for (int i = 0; i < cullingResults.getNumVisibleTiles(); i++) {
+				final int tileIdx = cullingResults.getVisibleTile(i);
+				final StaticTileData tileData = sceneContext.staticTileData[tileIdx];
 
-			int tileX = (tileData.tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-			int tileY = (tileData.tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
-
-			if(tileData.scenePaint_VertexCount > 0) {
-				eightIntWrite[0] = tileData.scenePaint_VertexOffset;
-				eightIntWrite[1] = tileData.scenePaint_UVOffset;
-				eightIntWrite[2] = tileData.scenePaint_VertexCount / 3;
-				eightIntWrite[3] = tileData.scenePaint_RenderBufferOffset;
 				eightIntWrite[4] = 0;
-				eightIntWrite[5] = tileX;
+				eightIntWrite[5] = (tileData.tileExX - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 				eightIntWrite[6] = 0;
-				eightIntWrite[7] = tileY;
+				eightIntWrite[7] = (tileData.tileExY - SCENE_OFFSET) * LOCAL_TILE_SIZE;
 
-				modelPassthroughBuffer.put(eightIntWrite);
-				numPassthroughModels++;
-			}
-
-			if(tileData.tileModel_VertexCount > 0) {
-				int vertexCount = tileData.tileModel_VertexCount >> 1;
-
-				eightIntWrite[0] = tileData.tileModel_VertexOffset;
-				eightIntWrite[1] = tileData.tileModel_UVOffset;
-				eightIntWrite[2] = vertexCount / 3;
-				eightIntWrite[3] = tileData.tileModel_RenderBufferOffset;
-				eightIntWrite[4] = 0;
-				eightIntWrite[5] = tileX;
-				eightIntWrite[6] = 0;
-				eightIntWrite[7] = tileY;
-
-				modelPassthroughBuffer.put(eightIntWrite);
-				numPassthroughModels++;
-			}
-
-			for(int renderableIdx : tileData.renderables) {
-				if(!processedRenderables.add(renderableIdx)) {
-					continue;
+				if (tileData.paintBuffer != null) {
+					if (tileData.paintBuffer.push(eightIntWrite)) {
+						modelPassthroughBuffer.put(eightIntWrite);
+					}
 				}
 
-				final StaticTileData.StaticRenderable renderable = sceneContext.staticRenderableData.get(renderableIdx);
-				eightIntWrite[0] = renderable.vertexOffset;
-				eightIntWrite[1] = renderable.uvOffset;
-				eightIntWrite[2] = renderable.faceCount;
-				eightIntWrite[3] = renderable.renderBufferOffset;
-				eightIntWrite[4] = renderable.orientation | (renderable.hillskew ? 1 : 0) << 26 | tileData.plane << 24;
-				eightIntWrite[5] = renderable.x;
-				eightIntWrite[6] = renderable.z << 16 | renderable.height & 0xFFFF;
-				eightIntWrite[7] = renderable.y;
+				if (tileData.modelBuffer != null) {
+					if (tileData.modelBuffer.push(eightIntWrite)) {
+						modelPassthroughBuffer.put(eightIntWrite);
+					}
+				}
 
-				getRenderableBuffer.get(renderable.faceCount).put(eightIntWrite);
+				if (tileData.underwaterBuffer != null) {
+					if (tileData.underwaterBuffer.push(eightIntWrite)) {
+						modelPassthroughBuffer.put(eightIntWrite);
+					}
+				}
+
+				for (StaticRenderableInstance staticRenderableInstance : tileData.renderables) {
+					if (staticRenderableInstance.renderableBuffer.push(eightIntWrite)) {
+						eightIntWrite[4] =
+							staticRenderableInstance.orientation |
+							(staticRenderableInstance.renderable.hillskew ? 1 : 0) << 26 |
+							tileData.plane << 24;
+						eightIntWrite[5] = staticRenderableInstance.x;
+						eightIntWrite[6] = staticRenderableInstance.y << 16 |
+										   staticRenderableInstance.renderable.height & 0xFFFF;
+						eightIntWrite[7] = staticRenderableInstance.z;
+
+						getRenderableBuffer.get(staticRenderableInstance.renderable.faceCount).put(eightIntWrite);
+					}
+				}
+			}
+		} else {
+			for (int i = 0; i < dynamicInstances.size(); i++) {
+				var dynamicInstance = dynamicInstances.get(i);
+				if (dynamicInstance.renderableBuffer.push(eightIntWrite)) {
+					eightIntWrite[4] = dynamicInstance.orientation;
+					eightIntWrite[5] = dynamicInstance.x;
+					eightIntWrite[6] = dynamicInstance.y << 16 |
+									   dynamicInstance.height & 0xFFFF;
+					eightIntWrite[7] = dynamicInstance.z;
+
+					getRenderableBuffer.get(dynamicInstance.renderableBuffer.vertexCount / 3).put(eightIntWrite);
+				}
 			}
 		}
 	}
 
 	public interface IGetRenderableBuffer {
-		public GpuIntBuffer get(int faces);
+		GpuIntBuffer get(int faces);
 	}
 }

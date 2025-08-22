@@ -1,18 +1,34 @@
 package rs117.hd.utils;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
-import rs117.hd.HdPlugin;
-
 @Slf4j
 public abstract class Job implements Runnable {
+	public static boolean FORCE_JOBS_RUN_SYNCHRONOUSLY = false;
+
+	private static final HashSet<Job> CIRCULAR_DEP_SET = new HashSet<>();
+
+	private static int THREAD_POOL_SIZE = 0;
+	private static final ExecutorService THREAD_POOL = Executors.newFixedThreadPool(
+		Math.max(1, Runtime.getRuntime().availableProcessors()),
+		(r) -> {
+			Thread poolThread = new Thread(r);
+			poolThread.setName("117 HD - Job Thread: " + ++THREAD_POOL_SIZE);
+			poolThread.setPriority(Thread.NORM_PRIORITY + 3);
+			return poolThread;
+		}
+	);
+
 
 	private final Semaphore completionSema = new Semaphore(1);
 	private final AtomicBoolean inFlight = new AtomicBoolean(false);
@@ -39,12 +55,21 @@ public abstract class Job implements Runnable {
 		return this;
 	}
 
+	public boolean hasDependencies() {
+		return !dependencies.isEmpty();
+	}
+
+	public void clearDependencies() {
+		dependencies.clear();
+	}
+
 	public Job addDependency(Job dependency) {
 		if (dependency == null || dependency == this) {
 			throw new IllegalArgumentException("Invalid dependency");
 		}
 
-		if (hasCircularDependency(dependency, new HashSet<>())) {
+		CIRCULAR_DEP_SET.clear();
+		if (hasCircularDependency(dependency)) {
 			throw new IllegalStateException("Circular dependency detected between " +
 											this.getClass().getSimpleName() + " and " + dependency.getClass().getSimpleName());
 		}
@@ -71,7 +96,7 @@ public abstract class Job implements Runnable {
 
 	@SneakyThrows
 	public void submit(boolean runSynchronously) {
-		complete(true); // If already done before, ensure cleanup
+		complete(); // If already done before, ensure cleanup
 
 		try {
 			if (onPrepareCallback != null) onPrepareCallback.callback();
@@ -80,23 +105,23 @@ public abstract class Job implements Runnable {
 			log.error("Error in prepare callback for job: " + getClass().getSimpleName(), ex);
 		}
 
-		isCompleted = false;
+		completionSema.acquire();
 		inFlight.set(true);
+		isCompleted = false;
 
-		if (HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY || runSynchronously) {
+		if (FORCE_JOBS_RUN_SYNCHRONOUSLY || runSynchronously) {
 			run();
 		} else {
-			completionSema.acquire();
-			HdPlugin.THREAD_POOL.execute(this);
+			THREAD_POOL.execute(this);
 		}
 	}
 
-	public Job wait(boolean block) {
-		return wait(block, 100);
+	public Job awaitCompletion(boolean block) {
+		return awaitCompletion(block, 100);
 	}
 
 	@SneakyThrows
-	public Job wait(boolean block, long nano) {
+	public Job awaitCompletion(boolean block, long nano) {
 		if (inFlight.get()) {
 			if (block) {
 				completionSema.acquire();
@@ -109,14 +134,18 @@ public abstract class Job implements Runnable {
 	}
 
 	public Job complete() {
-		return complete(true);
+		return complete(true, 0);
 	}
 
 	@SneakyThrows
-	public Job complete(boolean block) {
+	public Job complete(boolean block, long nano) {
 		if (isCompleted) return this;
 
-		wait(block);
+		awaitCompletion(block,  nano);
+
+		if(isInFlight()) {
+			return this;
+		}
 
 		try {
 			onComplete();
@@ -135,18 +164,15 @@ public abstract class Job implements Runnable {
 	@Override
 	public void run() {
 		try {
-			for (Job dep : dependencies) {
-				dep.wait(true);
+			for (int i = 0; i < dependencies.size(); i++) {
+				dependencies.get(i).awaitCompletion(true);
 			}
 		} catch (Exception ex) {
 			log.error("Error while waiting on dependencies: " + getClass().getSimpleName(), ex);
 
 			inFlight.set(false);
 			completionSema.release();
-
 			return;
-		} finally {
-			dependencies.clear();
 		}
 
 		try {
@@ -167,9 +193,9 @@ public abstract class Job implements Runnable {
 	protected void onComplete() {
 	}
 
-	private boolean hasCircularDependency(Job target, Set<Job> visited) {
-		if (!visited.add(this)) {
-			return false;
+	private boolean hasCircularDependency(Job target) {
+		if (!CIRCULAR_DEP_SET.add(this)) {
+			return true;
 		}
 
 		if (this == target) {
@@ -177,7 +203,7 @@ public abstract class Job implements Runnable {
 		}
 
 		for (Job dep : dependencies) {
-			if (dep.hasCircularDependency(target, visited)) {
+			if (dep.hasCircularDependency(target)) {
 				return true;
 			}
 		}

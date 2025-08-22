@@ -164,8 +164,8 @@ public class DeveloperTools implements KeyListener {
 				}
 				break;
 			case "togglejobs":
-				HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY = !HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY;
-				log.debug("HdPlugin.FORCES_JOBS_RUN_SYNCHRONOUSLY = {}", HdPlugin.FORCE_JOBS_RUN_SYNCHRONOUSLY);
+				Job.FORCE_JOBS_RUN_SYNCHRONOUSLY = !Job.FORCE_JOBS_RUN_SYNCHRONOUSLY;
+				log.debug("HdPlugin.FORCES_JOBS_RUN_SYNCHRONOUSLY = {}", Job.FORCE_JOBS_RUN_SYNCHRONOUSLY);
 				break;
 			case "toggleculling":
 				plugin.sceneCamera.toggleCullingFlag(SceneView.CULLING_FLAG_FREEZE);

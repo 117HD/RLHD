@@ -1,72 +1,64 @@
 package rs117.hd.scene.jobs;
 
-import java.util.HashSet;
+import rs117.hd.data.StaticRenderableInstance;
 import rs117.hd.data.StaticTileData;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.SceneCullingManager;
 import rs117.hd.utils.Job;
-
-import static net.runelite.api.Constants.*;
-import static net.runelite.api.Constants.EXTENDED_SCENE_SIZE;
 
 public class CalculateStaticRenderBufferOffsetsJob extends Job {
 
 	public SceneContext sceneContext;
 
 	public int renderBufferOffset;
-	public int renderableCount;
+	public int numPassthroughModels;
+	public int numRenderables;
 
-	public BuildVisibleTileListJob visibleTileListJob;
+	public SceneCullingManager.CullingResults cullingResults;
 
-	private final HashSet<Integer> processedRenderables = new HashSet<>();
-
-	public void setup(SceneContext inSceneContext, BuildVisibleTileListJob inVisibleTileListJob, int inRenderBufferOffset) {
+	public void setup(
+		SceneContext inSceneContext,
+		SceneCullingManager.CullingResults inCullingResults,
+		int inRenderBufferOffset
+	) {
 		complete();
+
 		sceneContext = inSceneContext;
-		visibleTileListJob = inVisibleTileListJob;
+		cullingResults = inCullingResults;
 		renderBufferOffset = inRenderBufferOffset;
 	}
 
 	@Override
 	protected void doWork() {
-		final int MAX_TILE_COUNT = MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
-		for(int tileIdx = 0; tileIdx < MAX_TILE_COUNT; tileIdx++) {
-			sceneContext.staticTileData[tileIdx].scenePaint_RenderBufferOffset = -1;
-			sceneContext.staticTileData[tileIdx].tileModel_RenderBufferOffset = -1;
-		}
+		numPassthroughModels = 0;
+		numRenderables = 0;
 
-		for(StaticTileData.StaticRenderable renderable : sceneContext.staticRenderableData) {
-			renderable.renderBufferOffset = -1;
-		}
-
-		processedRenderables.clear();
-
-		visibleTileListJob.wait(true);
-
-		BuildVisibleTileListJob.VisibleTiles visibleTiles = visibleTileListJob.getResultUnsafe();
-		for(int i = 0; i < visibleTiles.count; i++) {
-			final int tileIdx = visibleTiles.indices[i];
+		for(int i = 0; i < cullingResults.getNumVisibleTiles(); i++) {
+			final int tileIdx = cullingResults.getVisibleTile(i);
 			final StaticTileData tileData = sceneContext.staticTileData[tileIdx];
 
-			if(tileData.scenePaint_VertexCount > 0) {
-				tileData.scenePaint_RenderBufferOffset = renderBufferOffset;
-				renderBufferOffset += tileData.scenePaint_VertexCount;
+			if (tileData.paintBuffer != null) {
+				renderBufferOffset = tileData.paintBuffer.appendToRenderBuffer(renderBufferOffset);
+				numPassthroughModels++;
 			}
 
-			if(tileData.tileModel_VertexCount > 0) {
-				int vertexCount = tileData.tileModel_VertexCount >> 1;
-				tileData.tileModel_RenderBufferOffset = renderBufferOffset;
-				renderBufferOffset += vertexCount;
+			if (tileData.modelBuffer != null) {
+				renderBufferOffset = tileData.modelBuffer.appendToRenderBuffer(renderBufferOffset);
+				numPassthroughModels++;
 			}
 
-			for(int renderableIdx : tileData.renderables) {
-				if(!processedRenderables.add(renderableIdx)) {
+			if (tileData.underwaterBuffer != null) {
+				renderBufferOffset = tileData.underwaterBuffer.appendToRenderBuffer(renderBufferOffset);
+				numPassthroughModels++;
+			}
+
+			for (StaticRenderableInstance instance : tileData.renderables) {
+				if (instance.renderableBuffer == null || instance.renderableBuffer.renderBufferOffset >= 0) {
 					continue;
 				}
 
-				final StaticTileData.StaticRenderable renderable = sceneContext.staticRenderableData.get(renderableIdx);
-				renderable.renderBufferOffset = renderBufferOffset;
-				renderBufferOffset += renderable.faceCount * 3;
-				renderableCount++;
+				renderBufferOffset = instance.renderableBuffer.appendToRenderBuffer(renderBufferOffset);
+				numRenderables++;
 			}
 		}
 	}

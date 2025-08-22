@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryUtil;
+import rs117.hd.data.ModelBufferData;
+import rs117.hd.scene.jobs.CalculateStaticRenderBufferOffsetsJob;
 import rs117.hd.utils.Job;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -25,9 +27,8 @@ import static rs117.hd.utils.MathUtils.*;
 public class ModelDrawBuffer extends GLBuffer {
 	public static final int INITIAL_STAGING_MODEL_DATA_COUNT = EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE;
 
-	private int[] stagingModelData = new int[INITIAL_STAGING_MODEL_DATA_COUNT * 2];
+	private ModelBufferData[] stagingModelData = new ModelBufferData[INITIAL_STAGING_MODEL_DATA_COUNT * 2];
 	private int stagingModelDataOffset = 0;
-	private int stagingModelDataNextOffset = 0;
 	private int stagingVertexCount = 0;
 	private int maxIndicesCount = 0;
 	@Getter
@@ -35,24 +36,15 @@ public class ModelDrawBuffer extends GLBuffer {
 
 	private final AsyncIndicesWriter asyncIndicesWriter = new AsyncIndicesWriter(this);
 
-	public ModelDrawBuffer(String name) {
+	public ModelDrawBuffer(String name, CalculateStaticRenderBufferOffsetsJob staticRenderBufferOffsetsJob) {
 		super(name + " Indices", GL_ELEMENT_ARRAY_BUFFER, GL_STREAM_DRAW);
+		asyncIndicesWriter.addDependency(staticRenderBufferOffsetsJob);
 	}
 
-	public final void addModel(int renderBufferOffset, int vertexCount) {
-		if (renderBufferOffset > 0 && vertexCount > 0) {
-			// Check if we're adding a continuous stream of triangles
-			if (stagingModelDataOffset > 0 && renderBufferOffset == stagingModelDataNextOffset) {
-				stagingModelData[stagingModelDataOffset - 1] += vertexCount;
-				stagingModelDataNextOffset += vertexCount;
-				stagingVertexCount += vertexCount;
-				return;
-			}
-
-			stagingModelData[stagingModelDataOffset++] = renderBufferOffset;
-			stagingModelData[stagingModelDataOffset++] = vertexCount;
-			stagingModelDataNextOffset = renderBufferOffset + vertexCount;
-			stagingVertexCount += vertexCount;
+	public final void addModel(ModelBufferData buffer) {
+		if (buffer.vertexCount > 0) {
+			stagingModelData[stagingModelDataOffset++] = buffer;
+			stagingVertexCount += buffer.vertexCount;
 
 			if (stagingModelDataOffset >= INITIAL_STAGING_MODEL_DATA_COUNT && !asyncIndicesWriter.isInFlight()) {
 				asyncIndicesWriter.submit();
@@ -94,7 +86,7 @@ public class ModelDrawBuffer extends GLBuffer {
 	@RequiredArgsConstructor
 	public static final class AsyncIndicesWriter extends Job {
 		private final ModelDrawBuffer owner;
-		private int[] modelDataToWrite = new int[INITIAL_STAGING_MODEL_DATA_COUNT * 2];
+		private ModelBufferData[] modelDataToWrite = new ModelBufferData[INITIAL_STAGING_MODEL_DATA_COUNT * 2];
 		private ByteBuffer mappedBuffer = null;
 		private long mappedBufferAddr;
 		private boolean isMapped = false;
@@ -132,7 +124,7 @@ public class ModelDrawBuffer extends GLBuffer {
 			modelDataToWriteCount = 0;
 			if (isMapped) {
 				// Perform Swap, so that we can write the previous staging data whilst the next is written in
-				int[] newModelDataToWrite = owner.stagingModelData;
+				ModelBufferData[] newModelDataToWrite = owner.stagingModelData;
 				owner.stagingModelData = modelDataToWrite;
 				modelDataToWrite = newModelDataToWrite;
 
@@ -147,15 +139,16 @@ public class ModelDrawBuffer extends GLBuffer {
 		protected void doWork() {
 			if (isMapped) {
 				for (int modelDataOffset = 0; modelDataOffset < modelDataToWriteCount; ) {
-					final long address = mappedBufferAddr + owner.indicesCount * (long) Integer.BYTES;
-					final int renderBufferOffset = modelDataToWrite[modelDataOffset++];
-					final int vertexCount = modelDataToWrite[modelDataOffset++];
-
-					for (int v = 0; v < vertexCount; v++) {
-						MemoryUtil.memPutInt(address + (v * 4L), renderBufferOffset + v);
+					final ModelBufferData buffer = modelDataToWrite[modelDataOffset++];
+					if(buffer.renderBufferOffset < 0) {
+						continue;
 					}
 
-					owner.indicesCount += vertexCount;
+					final long address = mappedBufferAddr + owner.indicesCount * (long) Integer.BYTES;
+					for (int v = 0; v < buffer.vertexCount; v++) {
+						MemoryUtil.memPutInt(address + (v * 4L), buffer.renderBufferOffset + v);
+					}
+					owner.indicesCount += buffer.vertexCount;
 				}
 			}
 		}
