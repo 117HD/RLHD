@@ -39739,6 +39739,80 @@
     "graphicsObjectIds": [ "SPECIAL_ATLATL_SPOTANIM" ]
   },
   {
+    "description": "Scorching Bow Special Attack - Arrow",
+    "offset": [ 0, -25, 0 ],
+    "radius": 175,
+    "strength": 12,
+    "fadeOutDuration": 575,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [ "VFX_SCORCHING_BOW_PROJECTILE" ]
+  },
+  {
+    "description": "Emberlight Special Attack Player",
+    "offset": [ 0, 75, 0 ],
+    "radius": 230,
+    "strength": 11.5,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_EMBERLIGHT_SPEC_02" ]
+  },
+  {
+    "description": "Emberlight Special Attack Impact",
+    "offset": [ 0, 75, 90 ],
+    "radius": 260,
+    "spawnDelay": 1150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 650,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 150,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "VFX_EMBERLIGHT_SPEC_02" ]
+  },
+  {
+    "description": "Scorching Bow Special Attack - Shot Firing",
+    "offset": [ 0, 80, 50 ],
+    "radius": 165,
+    "strength": 12,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "spawnDelay": 150,
+    "fadeOutDuration": 175,
+    "fadeInDuration": 250,
+
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ "VFX_HUMAN_SCORCHING_BOW_SPECIAL_ATTACK_01" ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
