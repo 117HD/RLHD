@@ -27,7 +27,7 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.tooling.DeveloperSetting;
 
 @Slf4j
-public class DeveloperTools implements KeyListener {
+public class DeveloperToolManager implements KeyListener {
 
 	@Getter
 	private final List<DeveloperSetting> developerSettings = new ArrayList<>();
