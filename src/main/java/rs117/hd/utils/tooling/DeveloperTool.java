@@ -8,7 +8,7 @@ import rs117.hd.overlays.DeveloperOverlay;
 
 @Builder
 @Slf4j
-public class DeveloperSetting {
+public class DeveloperTool {
 
 	@Getter
 	private boolean active;

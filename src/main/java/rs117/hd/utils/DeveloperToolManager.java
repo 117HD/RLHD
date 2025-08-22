@@ -24,13 +24,13 @@ import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
-import rs117.hd.utils.tooling.DeveloperSetting;
+import rs117.hd.utils.tooling.DeveloperTool;
 
 @Slf4j
 public class DeveloperToolManager implements KeyListener {
 
 	@Getter
-	private final List<DeveloperSetting> developerSettings = new ArrayList<>();
+	private final List<DeveloperTool> developerTools = new ArrayList<>();
 
 	@Inject
 	private ClientThread clientThread;
@@ -84,9 +84,9 @@ public class DeveloperToolManager implements KeyListener {
 		keyManager.registerKeyListener(this);
 
 		clientThread.invokeLater(() -> {
-			for (DeveloperSetting developerSetting : developerSettings) {
-				if (developerSetting.getOverlay() != null) {
-					developerSetting.setActive();
+			for (DeveloperTool developerTool : developerTools) {
+				if (developerTool.getOverlay() != null) {
+					developerTool.setActive();
 				}
 			}
 		});
@@ -107,61 +107,61 @@ public class DeveloperToolManager implements KeyListener {
 
 	private void initializeDeveloperTools() {
 		// Overlay-based tools
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("TILE_INFO")
 			.keyBind(new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("tileinfo")
 			.overlay(tileInfoOverlay)
 			.description("Shows tile information overlay"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("FRAME_TIMINGS")
 			.keyBind(new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("timers", "timings")
 			.overlay(frameTimerOverlay)
 			.description("Shows frame timing overlay"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("SHADOW_MAP")
 			.keyBind(new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("shadowmap")
 			.overlay(shadowMapOverlay)
 			.description("Shows shadow map overlay"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("LIGHT_GIZMO")
 			.keyBind(new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("lights")
 			.overlay(lightGizmoOverlay)
 			.description("Shows light gizmo overlay"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("TILED_LIGHTING")
 			.keyBind(new Keybind(KeyEvent.VK_F7, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("tiledlights", "tiledlighting")
 			.overlay(tiledLightingOverlay)
 			.description("Shows tiled lighting overlay"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("RECORD_TIMINGS")
 			.keyBind(new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK))
 			.chatMessages("snapshot")
 			.customAction(() -> frameTimingsRecorder.recordSnapshot())
 			.description("Records frame timing snapshot"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("FREEZE_FRAME")
 			.keyBind(new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK))
 			.customAction(() -> plugin.toggleFreezeFrame())
 			.description("Toggles frame freezing"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("ORTHOGRAPHIC")
 			.keyBind(new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK))
 			.customAction(() -> plugin.orthographicProjection = !plugin.orthographicProjection)
 			.description("Toggles orthographic projection"));
 
-		registerTool(DeveloperSetting.builder()
+		registerTool(DeveloperTool.builder()
 			.name("HIDE_UI")
 			.keyBind(new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("hideui")
@@ -169,25 +169,25 @@ public class DeveloperToolManager implements KeyListener {
 			.description("Toggles UI visibility"));
 	}
 
-	public void registerTool(DeveloperSetting.DeveloperSettingBuilder builder) {
-		DeveloperSetting tool = builder.build();
+	public void registerTool(DeveloperTool.DeveloperSettingBuilder builder) {
+		DeveloperTool tool = builder.build();
 
-		for (DeveloperSetting existingTool : developerSettings) {
+		for (DeveloperTool existingTool : developerTools) {
 			if (existingTool.getName().equals(tool.getName())) {
 				throw new IllegalArgumentException("Developer tool with name '" + tool.getName() + "' already exists");
 			}
 		}
 
-		developerSettings.add(tool);
+		developerTools.add(tool);
 	}
 
 	public void deactivate() {
 		eventBus.unregister(this);
 		keyManager.unregisterKeyListener(this);
-		for (DeveloperSetting developerSetting : developerSettings) {
-			developerSetting.setActive(false);
+		for (DeveloperTool developerTool : developerTools) {
+			developerTool.setActive(false);
 		}
-		developerSettings.clear();
+		developerTools.clear();
 		hideUiEnabled = false;
 	}
 
@@ -201,10 +201,10 @@ public class DeveloperToolManager implements KeyListener {
 			return;
 
 		String action = args[0].toLowerCase();
-		for (DeveloperSetting developerSetting : developerSettings) {
-			for (String chatMessage : developerSetting.getChatMessages()) {
+		for (DeveloperTool developerTool : developerTools) {
+			for (String chatMessage : developerTool.getChatMessages()) {
 				if (chatMessage.equalsIgnoreCase(action)) {
-					developerSetting.toggle();
+					developerTool.toggle();
 					return;
 				}
 			}
@@ -232,7 +232,7 @@ public class DeveloperToolManager implements KeyListener {
 		StringBuilder message = new StringBuilder();
 		message.append("<col=0000FF>[117 HD] Developer Commands:</col><br>");
 
-		for (DeveloperSetting tool : developerSettings) {
+		for (DeveloperTool tool : developerTools) {
 			String commands = String.join(", ", tool.getChatMessages());
 			String description = tool.getDisplayDescription();
 			message.append("<col=0000FF>::117hd ").append(commands).append("</col> - ").append(description).append("<br>");
@@ -250,9 +250,9 @@ public class DeveloperToolManager implements KeyListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		for (DeveloperSetting developerSetting : developerSettings) {
-			if (developerSetting.getKeyBind().matches(e)) {
-				developerSetting.toggle();
+		for (DeveloperTool developerTool : developerTools) {
+			if (developerTool.getKeyBind().matches(e)) {
+				developerTool.toggle();
 				return;
 			}
 		}
