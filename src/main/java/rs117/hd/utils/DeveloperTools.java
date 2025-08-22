@@ -68,9 +68,6 @@ public class DeveloperTools implements KeyListener {
 	private boolean keyBindingsEnabled;
 
 	@Getter
-	private boolean frameTimingEnabled;
-
-	@Getter
 	private boolean hideUiEnabled;
 
 	public void activate() {
@@ -122,7 +119,6 @@ public class DeveloperTools implements KeyListener {
 			.keyBind(new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK))
 			.chatMessages("timers", "timings")
 			.overlay(frameTimerOverlay)
-			.customAction(() -> frameTimingEnabled = !frameTimingEnabled)
 			.description("Shows frame timing overlay"));
 
 		registerTool(DeveloperSetting.builder()
@@ -193,7 +189,6 @@ public class DeveloperTools implements KeyListener {
 		}
 		developerSettings.clear();
 		hideUiEnabled = false;
-		frameTimingEnabled = false;
 	}
 
 	@Subscribe

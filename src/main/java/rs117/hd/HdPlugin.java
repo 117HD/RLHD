@@ -3312,7 +3312,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingEnabled();
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || frameTimer.isActive();
 
 		// Upload the UI which we began copying during the previous frame
 		if (configAsyncUICopy)
