@@ -256,7 +256,6 @@ public class DeveloperTools implements KeyListener {
 				return;
 			}
 		}
-		e.consume();
 	}
 
 	@Override
