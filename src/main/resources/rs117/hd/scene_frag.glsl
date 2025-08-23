@@ -419,17 +419,17 @@ void main() {
         outputColor.a *= -256;
     }
 
+    outputColor.rgb *= exp(COLOR_PICKER.a) - 1;
+
     #if TONE_MAPPING
     const float comparisonTime = 4.f;
 //    if (gl_FragCoord.x > sceneResolution.x * (abs(mod(elapsedTime, comparisonTime) / comparisonTime * 2 - 1))) {
-    if (gl_FragCoord.x > sceneResolution.x / 2) {
-//    if (true) {
+//    if (gl_FragCoord.x > sceneResolution.x / 2) {
+    if (true) {
 //        const float a = 0.3;
 //        const float b = 1.5;
 //        outputColor.rgb = pow(outputColor.rgb, vec3(b)) / (a + pow(outputColor.rgb, vec3(b)));
         vec3 c = outputColor.rgb;
-
-        c *= exp(COLOR_PICKER.a) - 1;
 
 //        c = agx_custom(c);
 

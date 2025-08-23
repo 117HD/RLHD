@@ -1056,14 +1056,39 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_EXPERIMENTAL_HDR = "experimentalHdr";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_HDR,
+		name = "HDR",
+		description = "",
+		position = 1,
+		section = experimentalSettings
+	)
+	default boolean hdr() {
+		return true;
+	}
+
 	String KEY_EXPERIMENTAL_TONE_MAPPING = "experimentalToneMapping";
 	@ConfigItem(
 		keyName = KEY_EXPERIMENTAL_TONE_MAPPING,
 		name = "Tone mapping",
 		description = "",
+		position = 2,
 		section = experimentalSettings
 	)
 	default boolean toneMapping() {
+		return true;
+	}
+
+	String KEY_EXPERIMENTAL_BLOOM = "experimentalBloom";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_BLOOM,
+		name = "Bloom",
+		description = "",
+		position = 3,
+		section = experimentalSettings
+	)
+	default boolean bloom() {
 		return true;
 	}
 

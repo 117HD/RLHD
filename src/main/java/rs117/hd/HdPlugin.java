@@ -94,8 +94,10 @@ import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
+import rs117.hd.opengl.shader.BlurShaderProgram;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
 import rs117.hd.opengl.shader.ModelSortingComputeProgram;
+import rs117.hd.opengl.shader.RenderTextureShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -175,6 +177,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
+	public static final int TEXTURE_UNIT_TEMPORARY = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
@@ -324,6 +327,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private UIShaderProgram uiProgram;
 
 	@Inject
+	private BlurShaderProgram blurProgram;
+
+	@Inject
+	private RenderTextureShaderProgram renderTextureProgram;
+
+	@Inject
 	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
 	@Getter
@@ -393,6 +402,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int rboSceneDepth;
 	private int fboSceneResolve;
 	private int rboSceneResolveColor;
+	private int[] fboScenePingPong;
+	private int[] texScenePingPong;
 
 	private int shadowMapResolution;
 	private int fboShadowMap;
@@ -466,6 +477,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
+	public boolean configHdr;
+	public boolean configToneMapping;
+	public boolean configBloom;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -740,7 +754,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				colorPicker.setLocationRelativeTo(canvas);
 				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
 					uboGlobal.COLOR_PICKER.set(ColorUtils.srgba(c))));
-				colorPicker.setVisible(true);
+				if (config.toneMapping())
+					colorPicker.setVisible(true);
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
@@ -965,6 +980,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		shadowProgram.setMode(configShadowMode);
 		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
+		blurProgram.compile(includes);
+		renderTextureProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
 			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
@@ -1011,6 +1028,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
+		blurProgram.destroy();
+		renderTextureProgram.destroy();
 
 		tiledLightingImageStoreProgram.destroy();
 		for (var program : tiledLightingShaderPrograms)
@@ -1376,11 +1395,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int forcedAASamples = glGetInteger(GL_SAMPLES);
 		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
 
-		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
-		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
-		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
-
 		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
 		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
 		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
@@ -1388,9 +1402,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		checkGLErrors();
 		boolean alpha = alphaBits > 0;
 
-		int[] desiredFormats = sRGB ?
-			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
-			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
+		int[] desiredFormats;
+		if (configHdr) {
+			desiredFormats = ivec(GL_RGBA16F);
+		} else {
+			// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
+			// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
+			// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
+			boolean sRGB = false; // This is currently unused
+			desiredFormats = sRGB ?
+				alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
+				alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
+		}
 
 		float resolutionScale = config.sceneResolutionScale() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
@@ -1418,7 +1441,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		if (format == 0)
-			throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
+			throw new RuntimeException("None of the desired formats are supported: " + Arrays.toString(desiredFormats));
 
 		// Found a usable format. Bind the RBO to the scene FBO
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
@@ -1439,6 +1462,41 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
 			glRenderbufferStorageMultisample(GL_RENDERBUFFER, 0, format, sceneResolution[0], sceneResolution[1]);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
+			checkGLErrors();
+		}
+
+		if (configBloom) {
+			fboScenePingPong = new int[2];
+			glGenFramebuffers(fboScenePingPong);
+			texScenePingPong = new int[2];
+			glGenTextures(texScenePingPong);
+			int mipLevels = 1 + floor(log2(max(sceneResolution)));
+			glActiveTexture(TEXTURE_UNIT_TEMPORARY);
+			for (int i = 0; i < 2; i++) {
+				glBindFramebuffer(GL_FRAMEBUFFER, fboScenePingPong[i]);
+				glBindTexture(GL_TEXTURE_2D, texScenePingPong[i]);
+
+				// Easier but perhaps a tiny bit more costly automatic mip alloc
+//				glTexImage2D(GL_TEXTURE_2D, 0, format, sceneResolution[0], sceneResolution[1], 0, GL_RGBA, GL_FLOAT, 0);
+//				glGenerateMipmap(GL_TEXTURE_2D);
+
+				// Assume the render format is also usable for textures...
+				if (HdPlugin.GL_CAPS.glTexStorage2D != 0) {
+					ARBTextureStorage.glTexStorage2D(GL_TEXTURE_2D, mipLevels, format, sceneResolution[0], sceneResolution[1]);
+				} else {
+					// Allocate each mip level separately
+					for (int j = 0; j < mipLevels; j++)
+						glTexImage2D(GL_TEXTURE_2D, j, format, sceneResolution[0] >> j, sceneResolution[1] >> j, 0, GL_RGBA, GL_FLOAT, 0);
+				}
+
+				// Setting the min filter to mipmap is required for textureLod on Nvidia, even though by the spec it seems unnecessary
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texScenePingPong[i], 0);
+			}
 			checkGLErrors();
 		}
 
@@ -1469,6 +1527,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (rboSceneResolveColor != 0)
 			glDeleteRenderbuffers(rboSceneResolveColor);
 		rboSceneResolveColor = 0;
+
+		if (fboScenePingPong != null)
+			glDeleteFramebuffers(fboScenePingPong);
+		fboScenePingPong = null;
+
+		if (texScenePingPong != null)
+			glDeleteTextures(texScenePingPong);
+		texScenePingPong = null;
 	}
 
 	private void initShadowMapFbo() {
@@ -2371,6 +2437,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneResolve);
 			}
 
+			if (configBloom)
+				renderBloom();
+
 			// Blit from the resolved FBO to the default FBO
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
 			glBlitFramebuffer(
@@ -2461,6 +2530,70 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glColorMask(true, true, true, true);
 
 		frameTimer.end(Timer.RENDER_UI);
+	}
+
+	private void renderBloom() {
+		int fbo = fboScenePingPong[0];
+
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], 0);
+		// Copy from the currently bound GL_READ_FRAMEBUFFER
+		// TODO: could read directly from resolve FBO, or maybe always render to texture instead of RBO
+		glBlitFramebuffer(
+			0, 0, sceneResolution[0], sceneResolution[1],
+			0, 0, sceneResolution[0], sceneResolution[1],
+			GL_COLOR_BUFFER_BIT, GL_NEAREST
+		);
+
+		int mipLevels = 1 + floor(log2(max(sceneResolution)));
+		glActiveTexture(TEXTURE_UNIT_TEMPORARY);
+		glBindVertexArray(vaoTri);
+
+		// TODO: Compare with having multiple FBOs instead of constantly changing attachments
+
+		blurProgram.use();
+		glDisable(GL_BLEND);
+		for (int mipLevel = 0; mipLevel < mipLevels; mipLevel++) {
+			for (int i = 0; i < 2; i++) {
+				glBindTexture(GL_TEXTURE_2D, texScenePingPong[i]);
+				blurProgram.uniMipLevel.set(mipLevel);
+				blurProgram.uniDirection.set(i);
+				int dstMipLevel = min(mipLevel + i, mipLevels - 1);
+				glViewport(0, 0, sceneResolution[0] >> dstMipLevel, sceneResolution[1] >> dstMipLevel);
+				glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[1 - i], dstMipLevel);
+				glDrawArrays(GL_TRIANGLES, 0, 3);
+			}
+		}
+
+		renderTextureProgram.use();
+		glBindTexture(GL_TEXTURE_2D, texScenePingPong[0]);
+		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], 0);
+		glViewport(0, 0, sceneResolution[0], sceneResolution[1]);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+
+//		glEnable(GL_SCISSOR_TEST);
+//		glScissor(sceneResolution[0] / 2, 0, (sceneResolution[0] + 1) / 2, sceneResolution[1]);
+
+		for (int mipLevel = 1; mipLevel < mipLevels; mipLevel++) {
+			renderTextureProgram.uniMipLevel.set(mipLevel);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+		}
+
+//		glDisable(GL_SCISSOR_TEST);
+
+		// View a particular texture
+//		glViewport(0, 0, sceneResolution[0], sceneResolution[1]);
+//		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], 0);
+//		glDisable(GL_BLEND);
+//		glBindTexture(GL_TEXTURE_2D, texScenePingPong[0]);
+//		renderTextureProgram.uniMipLevel.set(config.legacyBrightness());
+//		glDrawArrays(GL_TRIANGLES, 0, 3);
+//		renderTextureProgram.uniMipLevel.set(0);
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+		glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], 0);
+		checkGLErrors();
 	}
 
 	/**
@@ -2666,6 +2799,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configCharacterDisplacement = config.characterDisplacement();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configHdr = config.hdr();
+		configToneMapping = config.toneMapping();
+		configBloom = config.bloom();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2795,6 +2931,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								break;
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:
+							case KEY_EXPERIMENTAL_HDR:
+							case KEY_EXPERIMENTAL_BLOOM:
 								recreateSceneFbo = true;
 								break;
 							case KEY_SHADOW_MODE:
