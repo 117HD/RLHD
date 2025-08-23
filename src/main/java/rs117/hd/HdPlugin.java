@@ -994,8 +994,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
-		tiledLightingImageStoreProgram.destroy();
 
+		tiledLightingImageStoreProgram.destroy();
 		for (var program : tiledLightingShaderPrograms)
 			program.destroy();
 		tiledLightingShaderPrograms.clear();
