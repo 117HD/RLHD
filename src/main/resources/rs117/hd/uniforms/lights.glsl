@@ -2,6 +2,9 @@
 
 #include <utils/constants.glsl>
 
+const float CUTOFF_BEGIN = .02;
+const float CUTOFF_END = .1;
+
 #if DYNAMIC_LIGHTS
 struct PointLight {
     vec4 position;
@@ -9,6 +12,7 @@ struct PointLight {
 };
 
 layout(std140) uniform UBOLights {
+    float attenuationFactor;
     PointLight PointLightArray[MAX_LIGHT_COUNT];
 };
 

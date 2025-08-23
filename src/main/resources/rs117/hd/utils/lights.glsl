@@ -14,20 +14,39 @@ void calculateLight(
     PointLight light = PointLightArray[lightIdx];
     vec3 lightToFrag = light.position.xyz - position;
     float distanceSquared = dot(lightToFrag, lightToFrag);
-    float radiusSquared = light.position.w;
-    if (distanceSquared <= radiusSquared) {
-        float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
-        attenuation *= attenuation;
 
-        vec3 pointLightColor = light.color.rgb * attenuation;
-        vec3 pointLightDir = normalize(lightToFrag);
+    #if ACCURATE_LIGHT_ATTENUATION
+        vec3 color = light.color.rgb;
+        float strength = max(max(color.r, color.g), color.b) * attenuationFactor;
+        if (strength > CUTOFF_BEGIN * distanceSquared) {
+            vec3 pointLightDir = normalize(lightToFrag);
 
-        float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
-        pointLightsOut += pointLightColor * pointLightDotNormals;
+            float attenuation = strength / distanceSquared;
+            attenuation *= smoothstep(CUTOFF_BEGIN, CUTOFF_END, attenuation);
+            color *= attenuation;
 
-        vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
-        pointLightsSpecularOut += pointLightColor * specular(texBlend, viewDir, pointLightReflectDir, specularGloss, specularStrength);
-    }
+            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+            pointLightsOut += color * pointLightDotNormals;
+
+            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+            pointLightsSpecularOut += color * specular(texBlend, viewDir, pointLightReflectDir, specularGloss, specularStrength);
+        }
+    #else
+        float radiusSquared = light.position.w;
+        if (distanceSquared <= radiusSquared) {
+            float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
+            attenuation *= attenuation;
+
+            vec3 pointLightColor = light.color.rgb * attenuation;
+            vec3 pointLightDir = normalize(lightToFrag);
+
+            float pointLightDotNormals = max(dot(normals, pointLightDir), 0);
+            pointLightsOut += pointLightColor * pointLightDotNormals;
+
+            vec3 pointLightReflectDir = reflect(-pointLightDir, normals);
+            pointLightsSpecularOut += pointLightColor * specular(texBlend, viewDir, pointLightReflectDir, specularGloss, specularStrength);
+        }
+    #endif
 }
 
 void calculateLighting(

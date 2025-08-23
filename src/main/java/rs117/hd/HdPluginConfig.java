@@ -1056,6 +1056,29 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_ACCURATE_LIGHT_ATTENUATION = "experimentalAccurateLightAttenuation";
+	@ConfigItem(
+		keyName = KEY_ACCURATE_LIGHT_ATTENUATION,
+		name = "Accurate light attenuation",
+		description = "Calculate light fading with distance more accurately.",
+		position = 6,
+		section = experimentalSettings
+	)
+	default boolean accurateLightAttenuation() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "experimentalAccurateLightAttenuationStrengthFactor",
+		name = "Conversion factor",
+		description = "",
+		position = 7,
+		section = experimentalSettings
+	)
+	default int accurateLightAttenuationStrengthFactor() {
+		return 5000;
+	}
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
