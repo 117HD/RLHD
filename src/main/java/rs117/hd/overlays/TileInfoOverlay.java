@@ -1194,10 +1194,10 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 	 */
 	private void drawLine(Graphics2D g, int x1, int y1, int z1, int x2, int y2, int z2) {
 		// Using floats to support coordinates much larger than normal local coordinates
-		float yawSin = sin(plugin.cameraOrientation[0]);
-		float yawCos = cos(plugin.cameraOrientation[0]);
-		float pitchSin = sin(plugin.cameraOrientation[1]);
-		float pitchCos = cos(plugin.cameraOrientation[1]);
+		float yawSin = sin(plugin.sceneCamera.getYaw());
+		float yawCos = cos(plugin.sceneCamera.getYaw());
+		float pitchSin = sin(plugin.sceneCamera.getPitch());
+		float pitchCos = cos(plugin.sceneCamera.getPitch());
 
 		x1 -= client.getCameraX();
 		y1 -= client.getCameraY();

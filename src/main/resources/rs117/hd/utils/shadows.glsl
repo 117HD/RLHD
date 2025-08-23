@@ -56,7 +56,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     shadowPos.xy *= textureSize(shadowMap, 0);
     shadowPos.xy += .5; // Shift to texel center
 
-    float shadowMinBias = 0.0009f;
+    float shadowMinBias = 0.0002f;
     float shadowBias = shadowMinBias * max(1, (1.0 - lightDotNormals));
     float fragDepth = shadowPos.z - shadowBias;
 

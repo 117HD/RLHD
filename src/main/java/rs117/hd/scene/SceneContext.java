@@ -5,18 +5,22 @@ import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
+import rs117.hd.data.StaticRenderable;
+import rs117.hd.data.StaticTileData;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
@@ -25,6 +29,7 @@ import rs117.hd.utils.buffer.GpuIntBuffer;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
+import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.UV_SIZE;
 import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.utils.MathUtils.*;
@@ -83,6 +88,9 @@ public class SceneContext {
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
+	public List<StaticRenderable> staticRenderableData = new ArrayList<>();
+	public StaticTileData[] staticTileData = new StaticTileData[MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE];
+
 	// Thread safe tile override variables
 	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();
 
@@ -96,7 +104,7 @@ public class SceneContext {
 	// Model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
 	public final float[] modelFaceNormals = new float[12];
-	public final int[] modelPusherResults = new int[2];
+	public final int[] modelPusherResults = new int[3];
 
 	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
 		this.client = client;
@@ -149,6 +157,27 @@ public class SceneContext {
 		if (stagingBufferNormals != null)
 			stagingBufferNormals.destroy();
 		stagingBufferNormals = null;
+	}
+
+	public StaticRenderable addStaticRenderable(boolean hillskew, boolean opaque, boolean ignoreRoofRemoval, Model model, int uuid, ModelOverride modelOverride) {
+		StaticRenderable newStaticRenderable = new StaticRenderable();
+
+		newStaticRenderable.index = staticRenderableData.size();
+		newStaticRenderable.hillskew = hillskew;
+		newStaticRenderable.opaque = opaque;
+		newStaticRenderable.ignoreRoofRemoval = ignoreRoofRemoval;
+		newStaticRenderable.uuid = uuid;
+		newStaticRenderable.modelOverride = modelOverride;
+
+		newStaticRenderable.bottomY = model.getBottomY();
+		newStaticRenderable.radius = model.getRadius();
+		newStaticRenderable.height = model.getModelHeight();
+		newStaticRenderable.vertexOffset = model.getBufferOffset();
+		newStaticRenderable.uvOffset = model.getUvBufferOffset();
+		newStaticRenderable.faceCount = min(MAX_FACE_COUNT, model.getFaceCount());
+
+		staticRenderableData.add(newStaticRenderable);
+		return newStaticRenderable;
 	}
 
 	public int getVertexOffset() {

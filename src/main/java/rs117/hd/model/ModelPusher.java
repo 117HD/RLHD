@@ -208,6 +208,7 @@ public class ModelPusher {
 		if (!skipUVs)
 			sceneContext.stagingBufferUvs.ensureCapacity(bufferSize);
 
+		boolean isModelTransparent = baseMaterial.isTransparent() || textureMaterial.isTransparent();
 		boolean foundCachedVertexData = false;
 		boolean foundCachedNormalData = false;
 		boolean foundCachedUvData = skipUVs;
@@ -291,6 +292,7 @@ public class ModelPusher {
 			for (int face = 0; face < faceCount; face++) {
 				int[] data = getFaceVertices(sceneContext, tile, uuid, model, modelOverride, face);
 				sceneContext.stagingBufferVertices.put(data);
+				isModelTransparent = isModelTransparent || (data[3] >> 24) != 0 || (data[7] >> 24) != 0 || (data[11] >> 24) != 0;
 				if (cacheVertexData)
 					fullVertexData.put(data);
 			}
@@ -360,6 +362,7 @@ public class ModelPusher {
 					uvType = faceOverride.uvType;
 					if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+					isModelTransparent = isModelTransparent || material.isTransparent();
 				}
 
 				int materialData = material.packMaterialData(faceOverride, uvType, false);
@@ -392,6 +395,7 @@ public class ModelPusher {
 
 		sceneContext.modelPusherResults[0] = faceCount;
 		sceneContext.modelPusherResults[1] = texturedFaceCount;
+		sceneContext.modelPusherResults[2] = isModelTransparent ? 1 : 0;
 	}
 
 	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
