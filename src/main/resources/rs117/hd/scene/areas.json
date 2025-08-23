@@ -2155,7 +2155,8 @@
     "name": "YANILLE_INSTANCE",
     "regions": [
       11593
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "YANILLE",
