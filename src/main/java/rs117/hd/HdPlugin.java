@@ -29,6 +29,7 @@ package rs117.hd;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
@@ -71,6 +72,7 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -340,6 +342,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
+
+	@Inject
+	private ColorPickerManager colorPickerManager;
 
 	@Inject
 	public HDVariables vars;
@@ -726,6 +731,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				checkGLErrors();
 
+				var colorPicker = colorPickerManager.create(
+					client,
+					new Color(100, 100, 100, 100),
+					"Shader Color Picker",
+					false
+				);
+				colorPicker.setLocationRelativeTo(canvas);
+				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
+					uboGlobal.COLOR_PICKER.set(ColorUtils.srgba(c))));
+				colorPicker.setVisible(true);
+
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
@@ -913,6 +929,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
+			.define("TONE_MAPPING", config.toneMapping())
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -1761,6 +1778,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lightColor[1] = light.color[1] * light.strength;
 				lightColor[2] = light.color[2] * light.strength;
 				lightColor[3] = 0.0f;
+
+				if (config.unlockFps())
+					multiply(lightColor, lightColor, exp(mod(elapsedTime, 15) * .5f));
 
 				uboLights.setLight(i, lightPosition, lightColor);
 
@@ -2770,6 +2790,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
 							case KEY_PIXELATED_SHADOWS:
+							case KEY_EXPERIMENTAL_TONE_MAPPING:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

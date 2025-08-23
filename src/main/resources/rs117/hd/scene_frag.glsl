@@ -70,6 +70,13 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/agx_custom.glsl>
+#include <utils/agx.glsl>
+//#include <utils/agx_blender.glsl>
+#include <utils/agx_alt.glsl>
+#include <utils/pbr_neutral.glsl>
+#include <utils/tone_map_hue_preserving.glsl>
+#include <utils/tone_mapping_misc.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -107,6 +114,7 @@ void main() {
 
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
+        outputColor.rgb = srgbToLinear(outputColor.rgb);
     } else {
         vec2 blendedUv = IN.uv;
 
@@ -396,10 +404,10 @@ void main() {
         #endif
 
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
-        outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
+            outputColor.rgb = srgbToLinear(outputColor.rgb);
         }
     }
 
@@ -411,6 +419,46 @@ void main() {
         outputColor.a *= -256;
     }
 
+    #if TONE_MAPPING
+    const float comparisonTime = 4.f;
+//    if (gl_FragCoord.x > sceneResolution.x * (abs(mod(elapsedTime, comparisonTime) / comparisonTime * 2 - 1))) {
+    if (gl_FragCoord.x > sceneResolution.x / 2) {
+//    if (true) {
+//        const float a = 0.3;
+//        const float b = 1.5;
+//        outputColor.rgb = pow(outputColor.rgb, vec3(b)) / (a + pow(outputColor.rgb, vec3(b)));
+        vec3 c = outputColor.rgb;
+
+        c *= exp(COLOR_PICKER.a) - 1;
+
+//        c = agx_custom(c);
+
+//        c = look(c);
+
+//        c = uncharted2_filmic(c);
+
+//        c = PBRNeutralToneMapping(c);
+
+        c = tonemap_hue_preserving(c);
+//        c = softClipColor(c);
+
+//        c = agx_tonemapping(c);
+
+//        c = agxEotf(look(agx(c)));
+
+//        c = aces(c);
+//        c = ACESFitted(c);
+
+        c = linearToSrgb(c);
+
+        outputColor.rgb = c;
+    } else {
+//        outputColor.rgb = agx_tonemapping(outputColor.rgb);
+        outputColor.rgb = linearToSrgb(outputColor.rgb);
+    }
+    #else
+        outputColor.rgb = linearToSrgb(outputColor.rgb);
+    #endif
     outputColor.rgb = clamp(outputColor.rgb, 0, 1);
 
     // Skip unnecessary color conversion if possible

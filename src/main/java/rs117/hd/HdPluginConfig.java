@@ -1056,6 +1056,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_EXPERIMENTAL_TONE_MAPPING = "experimentalToneMapping";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_TONE_MAPPING,
+		name = "Tone mapping",
+		description = "",
+		section = experimentalSettings
+	)
+	default boolean toneMapping() {
+		return true;
+	}
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
