@@ -482,7 +482,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
 	public boolean configHdr;
-	public boolean configToneMapping;
+	public ToneMapping configToneMapping;
 	public boolean configBloom;
 	public boolean configSplitScreen;
 	public DynamicLights configDynamicLights;

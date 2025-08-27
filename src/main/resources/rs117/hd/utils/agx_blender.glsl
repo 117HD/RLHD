@@ -29,7 +29,7 @@
 //   https://github.com/sobotka/AgX
 
 //// Mean error^2: 3.6705141e-06
-vec3 agxDefaultContrastApprox(vec3 x) {
+vec3 agxDefaultContrastApprox_blender(vec3 x) {
     vec3 x2 = x * x;
     vec3 x4 = x2 * x2;
     return
@@ -42,7 +42,7 @@ vec3 agxDefaultContrastApprox(vec3 x) {
         - 0.00232;
 }
 
-vec3 agx(vec3 val) {
+vec3 agx_blender(vec3 val) {
     // Values below zero cause artifacts since log2 then doesn't exist
     val = abs(val);
 
@@ -63,12 +63,12 @@ vec3 agx(vec3 val) {
     val = (val - min_ev) / (max_ev - min_ev);
 
     // Apply sigmoid function approximation
-    val = agxDefaultContrastApprox(val);
+    val = agxDefaultContrastApprox_blender(val);
 
     return val;
 }
 
-vec3 agxEotf(vec3 val) {
+vec3 agxEotf_blender(vec3 val) {
     const mat3 agx_mat_inv = mat3(
           1.1271,     -0.14133,    -0.14133,
          -0.110607,    1.15782,    -0.110607,

@@ -1068,6 +1068,19 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	enum ToneMapping {
+		NONE,
+		HUE_PRESERVING,
+		AGX_ORIGINAL,
+		AGX_FITTED,
+		AGX_BLENDER,
+		AGX_CUSTOM,
+		ACES,
+		ACES_FITTED,
+		PBR_NEUTRAL,
+		UNCHARTED_2,
+		CUSTOM
+	}
 	String KEY_EXPERIMENTAL_TONE_MAPPING = "experimentalToneMapping";
 	@ConfigItem(
 		keyName = KEY_EXPERIMENTAL_TONE_MAPPING,
@@ -1076,8 +1089,8 @@ public interface HdPluginConfig extends Config
 		position = 2,
 		section = experimentalSettings
 	)
-	default boolean toneMapping() {
-		return true;
+	default ToneMapping toneMapping() {
+		return ToneMapping.HUE_PRESERVING;
 	}
 
 	String KEY_EXPERIMENTAL_BLOOM = "experimentalBloom";
@@ -1085,7 +1098,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_EXPERIMENTAL_BLOOM,
 		name = "Bloom",
 		description = "",
-		position = 3,
+		position = 53,
 		section = experimentalSettings
 	)
 	default boolean bloom() {
@@ -1099,7 +1112,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_EXPERIMENTAL_BLOOM_FACTOR,
 		name = "Bloom factor",
 		description = "",
-		position = 4,
+		position = 54,
 		section = experimentalSettings
 	)
 	default int bloomFactor() {
@@ -1113,7 +1126,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_EXPERIMENTAL_BLOOM_BLUR_METHOD,
 		name = "Blur method",
 		description = "",
-		position = 4,
+		position = 55,
 		section = experimentalSettings
 	)
 	default BlurMethod blurMethod() {
