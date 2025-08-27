@@ -97,6 +97,7 @@ import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.BlurShaderProgram;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
 import rs117.hd.opengl.shader.ModelSortingComputeProgram;
+import rs117.hd.opengl.shader.PostProcessingShaderProgram;
 import rs117.hd.opengl.shader.RenderTextureShaderProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
@@ -333,6 +334,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private RenderTextureShaderProgram renderTextureProgram;
 
 	@Inject
+	private PostProcessingShaderProgram postProcessingProgram;
+
+	@Inject
 	private ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
 	@Getter
@@ -480,6 +484,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configHdr;
 	public boolean configToneMapping;
 	public boolean configBloom;
+	public boolean configSplitScreen;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -754,8 +759,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				colorPicker.setLocationRelativeTo(canvas);
 				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
 					uboGlobal.COLOR_PICKER.set(ColorUtils.srgba(c))));
-				if (config.toneMapping())
-					colorPicker.setVisible(true);
+				colorPicker.setVisible(true);
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
@@ -944,7 +948,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
-			.define("TONE_MAPPING", config.toneMapping())
+			.define("TONE_MAPPING", configToneMapping)
+			.define("SPLIT_SCREEN", configSplitScreen)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -982,6 +987,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(includes);
 		blurProgram.compile(includes);
 		renderTextureProgram.compile(includes);
+		postProcessingProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
 			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
@@ -1030,6 +1036,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.destroy();
 		blurProgram.destroy();
 		renderTextureProgram.destroy();
+		postProcessingProgram.destroy();
 
 		tiledLightingImageStoreProgram.destroy();
 		for (var program : tiledLightingShaderPrograms)
@@ -1465,40 +1472,44 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			checkGLErrors();
 		}
 
-		if (configBloom) {
-			fboScenePingPong = new int[2];
-			glGenFramebuffers(fboScenePingPong);
-			texScenePingPong = new int[2];
-			glGenTextures(texScenePingPong);
-			int mipLevels = 1 + floor(log2(max(sceneResolution)));
-			glActiveTexture(TEXTURE_UNIT_TEMPORARY);
-			for (int i = 0; i < 2; i++) {
-				glBindFramebuffer(GL_FRAMEBUFFER, fboScenePingPong[i]);
-				glBindTexture(GL_TEXTURE_2D, texScenePingPong[i]);
+		fboScenePingPong = new int[2];
+		glGenFramebuffers(fboScenePingPong);
+		texScenePingPong = new int[2];
+		glGenTextures(texScenePingPong);
+		int mipLevels = 1 + floor(log2(max(sceneResolution)));
+		glActiveTexture(TEXTURE_UNIT_TEMPORARY);
+		for (int i = 0; i < 2; i++) {
+			glBindFramebuffer(GL_FRAMEBUFFER, fboScenePingPong[i]);
+			glBindTexture(GL_TEXTURE_2D, texScenePingPong[i]);
 
-				// Easier but perhaps a tiny bit more costly automatic mip alloc
-//				glTexImage2D(GL_TEXTURE_2D, 0, format, sceneResolution[0], sceneResolution[1], 0, GL_RGBA, GL_FLOAT, 0);
-//				glGenerateMipmap(GL_TEXTURE_2D);
+			// Easier but perhaps a tiny bit more costly automatic mip alloc
+//			glTexImage2D(GL_TEXTURE_2D, 0, format, sceneResolution[0], sceneResolution[1], 0, GL_RGBA, GL_FLOAT, 0);
+//			glGenerateMipmap(GL_TEXTURE_2D);
 
-				// Assume the render format is also usable for textures...
-				if (HdPlugin.GL_CAPS.glTexStorage2D != 0) {
-					ARBTextureStorage.glTexStorage2D(GL_TEXTURE_2D, mipLevels, format, sceneResolution[0], sceneResolution[1]);
-				} else {
-					// Allocate each mip level separately
-					for (int j = 0; j < mipLevels; j++)
-						glTexImage2D(GL_TEXTURE_2D, j, format, sceneResolution[0] >> j, sceneResolution[1] >> j, 0, GL_RGBA, GL_FLOAT, 0);
-				}
-
-				// Setting the min filter to mipmap is required for textureLod on Nvidia, even though by the spec it seems unnecessary
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texScenePingPong[i], 0);
+			// Assume the render format is also usable for textures...
+			if (HdPlugin.GL_CAPS.glTexStorage2D != 0) {
+				ARBTextureStorage.glTexStorage2D(GL_TEXTURE_2D, mipLevels, format, sceneResolution[0], sceneResolution[1]);
+			} else {
+				// Allocate each mip level separately
+				for (int j = 0; j < mipLevels; j++)
+					glTexImage2D(GL_TEXTURE_2D, j, format, sceneResolution[0] >> j, sceneResolution[1] >> j, 0, GL_RGBA, GL_FLOAT, 0);
 			}
-			checkGLErrors();
+
+			// Setting the min filter to mipmap is required for textureLod on Nvidia, even though by the spec it seems unnecessary
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, texScenePingPong[i], 0);
 		}
+		if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43) {
+			GL43C.glObjectLabel(GL_FRAMEBUFFER, fboScenePingPong[0], "fboScenePingPong[0]");
+			GL43C.glObjectLabel(GL_FRAMEBUFFER, fboScenePingPong[1], "fboScenePingPong[1]");
+			GL43C.glObjectLabel(GL_TEXTURE, texScenePingPong[0], "texScenePingPong[0]");
+			GL43C.glObjectLabel(GL_TEXTURE, texScenePingPong[1], "texScenePingPong[1]");
+		}
+		checkGLErrors();
 
 		// Reset
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
@@ -1845,7 +1856,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				lightColor[2] = light.color[2] * light.strength;
 				lightColor[3] = 0.0f;
 
-				if (config.unlockFps())
+				if (config.cycleBrightLights())
 					multiply(lightColor, lightColor, exp(mod(elapsedTime, 15) * .5f));
 
 				uboLights.setLight(i, lightPosition, lightColor);
@@ -2439,6 +2450,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			if (configBloom)
 				renderBloom();
+			applyPostProcessing();
 
 			// Blit from the resolved FBO to the default FBO
 			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
@@ -2535,9 +2547,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void renderBloom() {
 		int fbo = fboScenePingPong[0];
 
+		// TODO: Compare with having multiple FBOs instead of constantly changing attachments
+		frameTimer.begin(Timer.BLOOM_BLUR);
+
+		// Copy from the currently bound GL_READ_FRAMEBUFFER
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], 0);
-		// Copy from the currently bound GL_READ_FRAMEBUFFER
 		// TODO: could read directly from resolve FBO, or maybe always render to texture instead of RBO
 		glBlitFramebuffer(
 			0, 0, sceneResolution[0], sceneResolution[1],
@@ -2549,38 +2564,76 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glActiveTexture(TEXTURE_UNIT_TEMPORARY);
 		glBindVertexArray(vaoTri);
 
-		// TODO: Compare with having multiple FBOs instead of constantly changing attachments
-
-		blurProgram.use();
-		glDisable(GL_BLEND);
-		for (int mipLevel = 0; mipLevel < mipLevels; mipLevel++) {
-			for (int i = 0; i < 2; i++) {
-				glBindTexture(GL_TEXTURE_2D, texScenePingPong[i]);
-				blurProgram.uniMipLevel.set(mipLevel);
-				blurProgram.uniDirection.set(i);
-				int dstMipLevel = min(mipLevel + i, mipLevels - 1);
-				glViewport(0, 0, sceneResolution[0] >> dstMipLevel, sceneResolution[1] >> dstMipLevel);
-				glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[1 - i], dstMipLevel);
-				glDrawArrays(GL_TRIANGLES, 0, 3);
-			}
+		switch (config.blurMethod()) {
+			case BLUR_KERNEL: // Blur with blur shader
+				blurProgram.use();
+				glDisable(GL_BLEND);
+				for (int mipLevel = 0; mipLevel < mipLevels; mipLevel++) {
+					for (int i = 0; i < 2; i++) {
+						glBindTexture(GL_TEXTURE_2D, texScenePingPong[i]);
+						blurProgram.uniMipLevel.set(mipLevel);
+						blurProgram.uniDirection.set(i);
+						int dstMipLevel = min(mipLevel + i, mipLevels - 1);
+						glViewport(0, 0, sceneResolution[0] >> dstMipLevel, sceneResolution[1] >> dstMipLevel);
+						glFramebufferTexture2D(
+							GL_DRAW_FRAMEBUFFER,
+							GL_COLOR_ATTACHMENT0,
+							GL_TEXTURE_2D,
+							texScenePingPong[1 - i],
+							dstMipLevel
+						);
+						glDrawArrays(GL_TRIANGLES, 0, 3);
+					}
+				}
+				break;
+			case MIPMAPPING: // Blur by generating mipmaps (effectively kernel size 2)
+				glBindTexture(GL_TEXTURE_2D, texScenePingPong[0]);
+				glGenerateMipmap(GL_TEXTURE_2D);
+				break;
+			case DOWNSCALING: // Blur by downscaling manually (effectively kernel size 2)
+				renderTextureProgram.use();
+				glBindTexture(GL_TEXTURE_2D, texScenePingPong[0]);
+				glDisable(GL_BLEND);
+				for (int mipLevel = 1; mipLevel < mipLevels; mipLevel++) {
+					renderTextureProgram.uniMipLevel.set(mipLevel - 1);
+					glViewport(0, 0, sceneResolution[0] >> mipLevel, sceneResolution[1] >> mipLevel);
+					glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], mipLevel);
+					glDrawArrays(GL_TRIANGLES, 0, 3);
+				}
+				break;
 		}
+
+		frameTimer.end(Timer.BLOOM_BLUR);
+		frameTimer.begin(Timer.BLOOM_SUM);
 
 		renderTextureProgram.use();
 		glBindTexture(GL_TEXTURE_2D, texScenePingPong[0]);
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], 0);
 		glViewport(0, 0, sceneResolution[0], sceneResolution[1]);
+
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE);
+//		glBlendFunc(GL_ONE, GL_ONE);
+		glBlendFunc(GL_CONSTANT_ALPHA, GL_ZERO); // Overwrite on the first draw
 
-//		glEnable(GL_SCISSOR_TEST);
-//		glScissor(sceneResolution[0] / 2, 0, (sceneResolution[0] + 1) / 2, sceneResolution[1]);
+		float bloomFactor = config.bloomFactor() / 100.f;
+		float blendFactor = bloomFactor == 1 ? 1.f / mipLevels :
+			(1 - bloomFactor) / (1 - pow(bloomFactor, mipLevels - 1)); // 1 / sum_{n=0}^{mips - 1} bloomFactor^n
 
-		for (int mipLevel = 1; mipLevel < mipLevels; mipLevel++) {
-			renderTextureProgram.uniMipLevel.set(mipLevel);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+		if (configSplitScreen) {
+			glEnable(GL_SCISSOR_TEST);
+			glScissor(sceneResolution[0] / 2, 0, (sceneResolution[0] + 1) / 2, sceneResolution[1]);
 		}
+		for (int mipLevel = 0; mipLevel < mipLevels; mipLevel++) {
+			renderTextureProgram.uniMipLevel.set(mipLevel);
+			glBlendColor(0, 0, 0, blendFactor);
+			glDrawArrays(GL_TRIANGLES, 0, 3);
+			blendFactor *= bloomFactor;
+			if (mipLevel == 0)
+				glBlendFunc(GL_CONSTANT_ALPHA, GL_ONE); // Add up each subsequent draw
+		}
+		glDisable(GL_SCISSOR_TEST);
 
-//		glDisable(GL_SCISSOR_TEST);
+		frameTimer.end(Timer.BLOOM_SUM);
 
 		// View a particular texture
 //		glViewport(0, 0, sceneResolution[0], sceneResolution[1]);
@@ -2594,6 +2647,42 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
 		glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texScenePingPong[0], 0);
 		checkGLErrors();
+	}
+
+	private void applyPostProcessing() {
+		frameTimer.begin(Timer.POST_PROCESSING);
+		// TODO: avoid unnecessary copies
+		int fbo = fboScenePingPong[0];
+		int tex = texScenePingPong[0];
+
+		// Copy from the currently bound GL_READ_FRAMEBUFFER
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex, 0);
+		glBlitFramebuffer(
+			0, 0, sceneResolution[0], sceneResolution[1],
+			0, 0, sceneResolution[0], sceneResolution[1],
+			GL_COLOR_BUFFER_BIT, GL_NEAREST
+		);
+
+		glActiveTexture(TEXTURE_UNIT_TEMPORARY);
+		glBindTexture(GL_TEXTURE_2D, tex);
+
+		postProcessingProgram.use();
+		glBindVertexArray(vaoTri);
+
+		glViewport(0, 0, sceneResolution[0], sceneResolution[1]);
+		glDisable(GL_BLEND);
+
+		if (configSplitScreen) {
+			glEnable(GL_SCISSOR_TEST);
+			glScissor(sceneResolution[0] / 2, 0, (sceneResolution[0] + 1) / 2, sceneResolution[1]);
+		}
+		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDisable(GL_SCISSOR_TEST);
+
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+		checkGLErrors();
+		frameTimer.end(Timer.POST_PROCESSING);
 	}
 
 	/**
@@ -2802,6 +2891,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configHdr = config.hdr();
 		configToneMapping = config.toneMapping();
 		configBloom = config.bloom();
+		configSplitScreen = config.splitScreen();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -2914,6 +3004,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;
+							case KEY_EXPERIMENTAL_TONE_MAPPING:
+								postProcessingProgram.compile(getShaderIncludes());
+								break;
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_DYNAMIC_LIGHTS:
@@ -2926,13 +3019,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
 							case KEY_PIXELATED_SHADOWS:
-							case KEY_EXPERIMENTAL_TONE_MAPPING:
+							case KEY_EXPERIMENTAL_SPLIT_SCREEN:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
 							case KEY_SCENE_RESOLUTION_SCALE:
 							case KEY_EXPERIMENTAL_HDR:
-							case KEY_EXPERIMENTAL_BLOOM:
 								recreateSceneFbo = true;
 								break;
 							case KEY_SHADOW_MODE:

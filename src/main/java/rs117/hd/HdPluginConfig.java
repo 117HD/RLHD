@@ -1092,6 +1092,58 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_EXPERIMENTAL_BLOOM_FACTOR = "experimentalBloomFactor";
+	@Range(max = 100)
+	@Units(value = Units.PERCENT)
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_BLOOM_FACTOR,
+		name = "Bloom factor",
+		description = "",
+		position = 4,
+		section = experimentalSettings
+	)
+	default int bloomFactor() {
+		return 15;
+	}
+
+	enum BlurMethod { BLUR_KERNEL, MIPMAPPING, DOWNSCALING }
+
+	String KEY_EXPERIMENTAL_BLOOM_BLUR_METHOD = "experimentalBloomBlurMethod";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_BLOOM_BLUR_METHOD,
+		name = "Blur method",
+		description = "",
+		position = 4,
+		section = experimentalSettings
+	)
+	default BlurMethod blurMethod() {
+		return BlurMethod.BLUR_KERNEL;
+	}
+
+	String KEY_EXPERIMENTAL_SPLIT_SCREEN = "experimentalSplitScreen";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_SPLIT_SCREEN,
+		name = "Split screen",
+		description = "",
+		position = 100,
+		section = experimentalSettings
+	)
+	default boolean splitScreen() {
+		return true;
+	}
+
+	String KEY_EXPERIMENTAL_CYCLE_BRIGHT_LIGHTS = "experimentalCycleBrightLights";
+	@ConfigItem(
+		keyName = KEY_EXPERIMENTAL_CYCLE_BRIGHT_LIGHTS,
+		name = "Cycle bright lights",
+		description = "",
+		position = 101,
+		section = experimentalSettings
+	)
+	default boolean cycleBrightLights() {
+		return false;
+	}
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")

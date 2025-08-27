@@ -18,13 +18,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-//float softness_scale = 0.2; // controls softness of RGB clipping
-//float offset = 0.75; // controls how colors desaturate as they brighten. 0 results in that colors never fluoresce, 1 in very saturated colors
-//float chroma_scale = 1.2; // overall scale of chroma
+float softness_scale = 0.2; // controls softness of RGB clipping
+float offset = 0.75; // controls how colors desaturate as they brighten. 0 results in that colors never fluoresce, 1 in very saturated colors
+float chroma_scale = 1.2; // overall scale of chroma
 
-float softness_scale = COLOR_PICKER.r;
-float offset = COLOR_PICKER.g;
-float chroma_scale = COLOR_PICKER.b * 2;
+//float softness_scale = COLOR_PICKER.r;
+//float offset = COLOR_PICKER.g;
+//float chroma_scale = COLOR_PICKER.b * 2;
 
 // Origin: https://knarkowicz.wordpress.com/2016/01/06/aces-filmic-tone-mapping-curve/
 // Using this since it was easy to differentiate, same technique would work for any curve

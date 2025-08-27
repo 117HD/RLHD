@@ -1,5 +1,7 @@
 #version 330
 
+#include <uniforms/global.glsl>
+
 #include <utils/constants.glsl>
 
 uniform sampler2D uniTexture;
@@ -11,24 +13,16 @@ in vec2 fUv;
 out vec3 FragColor;
 
 void main() {
-    const int kernelSize = 9;
-    const float sigma = 3;
+    const int kernelSize = 5;
     ivec2 direction = ivec2(uniDirection, 1 - uniDirection);
-    ivec2 offset = ivec2(gl_FragCoord.xy) - direction * kernelSize / 2;
-    vec3 c = vec3(0);
+    ivec2 mipSize = textureSize(uniTexture, uniMipLevel);
+    vec2 texelSize = 1.f / mipSize;
+    float offset = .5 - kernelSize / 2.f;
 
-    vec2 texelSize = 1.f / textureSize(uniTexture, uniMipLevel);
+    vec3 c = vec3(0);
     for (int i = 0; i < kernelSize; i++)
-        c += textureLod(uniTexture, fUv + texelSize * direction * (i - kernelSize / 2), uniMipLevel).rgb;
+        c += textureLod(uniTexture, fUv + texelSize * direction * (offset + i), uniMipLevel).rgb;
     c /= kernelSize;
 
-//    for (int i = 0; i < kernelSize; i++)
-//        c += texelFetch(uniTexture, offset + i * direction, uniMipLevel).rgb;
-//    c /= kernelSize;
-//    const float s2 = 2 * sigma * sigma;
-//    for (int i = 0; i < kernelSize; i++) {
-//        float x = i - kernelSize / 2.f;
-//        c += exp(-x*x / s2) / sqrt(PI * s2) * 1.7 * texelFetch(uniTexture, offset + i * direction, uniMipLevel).rgb;
-//    }
     FragColor = c;
 }

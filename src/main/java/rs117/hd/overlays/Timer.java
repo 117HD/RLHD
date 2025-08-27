@@ -33,6 +33,9 @@ public enum Timer {
 	RENDER_SHADOWS(true),
 	RENDER_SCENE(true),
 	RENDER_UI(true, "Render UI"),
+	BLOOM_BLUR(true),
+	BLOOM_SUM(true),
+	POST_PROCESSING(true),
 	SWAP_BUFFERS,
 	;
 

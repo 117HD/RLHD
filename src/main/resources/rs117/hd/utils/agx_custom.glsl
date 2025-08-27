@@ -5,8 +5,7 @@
 float middleGray = 0.18;
 float minExposure = -10;
 float maxExposure = 15;
-//float mixPercent = 40;
-float mixPercent = COLOR_PICKER.a * 255;
+float mixPercent = 40;
 
 const float normalized_log2_minimum = -10;
 const float normalized_log2_maximum = 6.5;

@@ -56,3 +56,4 @@
 #include TILED_LIGHTING_TILE_SIZE
 #include MAX_LIGHT_COUNT
 #include TONE_MAPPING
+#include SPLIT_SCREEN

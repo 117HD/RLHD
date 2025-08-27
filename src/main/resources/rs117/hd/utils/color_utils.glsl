@@ -85,8 +85,8 @@ float luminance(vec3 rgb) {
 
 vec3 look(vec3 c) {
     vec3 slope = vec3(1.0);
-    vec3 power = vec3(1 + (COLOR_PICKER.a * 255 - 100) * .005);
-    vec3 sat = vec3(1 + (COLOR_PICKER.rgb * 255 - 100) * .005);
+    vec3 power = vec3(1 + (COLOR_PICKER.r * 255 - 100) * .005);
+    vec3 sat = vec3(1 + (COLOR_PICKER.g * 255 - 100) * .005);
     c = pow(c * slope, power);
     float luma = luminance(c);
     c = luma + sat * (c - luma);
