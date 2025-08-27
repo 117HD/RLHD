@@ -20,6 +20,9 @@ void calculateLight(
         attenuation *= attenuation;
 
         vec3 pointLightColor = light.color.rgb * attenuation;
+//        if (gl_FragCoord.x > sceneResolution.x / 2) {
+//            pointLightColor = COLOR_PICKER.rgb * COLOR_PICKER.a * 255 / 100.f * 100 * attenuation;
+//        }
         vec3 pointLightDir = normalize(lightToFrag);
 
         float pointLightDotNormals = max(dot(normals, pointLightDir), 0);

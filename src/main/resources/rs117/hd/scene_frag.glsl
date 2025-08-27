@@ -70,6 +70,13 @@ vec2 worldUvs(float scale) {
 #include <utils/fog.glsl>
 #include <utils/wireframe.glsl>
 #include <utils/lights.glsl>
+#include <utils/agx_custom.glsl>
+#include <utils/agx.glsl>
+//#include <utils/agx_blender.glsl>
+#include <utils/agx_alt.glsl>
+#include <utils/pbr_neutral.glsl>
+#include <utils/tone_map_hue_preserving.glsl>
+#include <utils/tone_mapping_misc.glsl>
 
 void main() {
     vec3 downDir = vec3(0, -1, 0);
@@ -107,6 +114,7 @@ void main() {
 
     if (isWater) {
         outputColor = sampleWater(waterTypeIndex, viewDir);
+        outputColor.rgb = srgbToLinear(outputColor.rgb);
     } else {
         vec2 blendedUv = IN.uv;
 
@@ -396,10 +404,10 @@ void main() {
         #endif
 
         outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
-        outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
             sampleUnderwater(outputColor.rgb, waterType, waterDepth, lightDotNormals);
+            outputColor.rgb = srgbToLinear(outputColor.rgb);
         }
     }
 
@@ -411,56 +419,80 @@ void main() {
         outputColor.a *= -256;
     }
 
-    outputColor.rgb = clamp(outputColor.rgb, 0, 1);
+    // Apply old stuff to the left side for comparison
+    if (bool(SPLIT_SCREEN) && gl_FragCoord.x <= sceneResolution.x / 2) {
+        outputColor.rgb = clamp(outputColor.rgb, 0, 1);
+        outputColor.rgb = linearToSrgb(outputColor.rgb);
 
-    // Skip unnecessary color conversion if possible
-    if (saturation != 1 || contrast != 1) {
-        vec3 hsv = srgbToHsv(outputColor.rgb);
+        // Skip unnecessary color conversion if possible
+        if (saturation != 1 || contrast != 1) {
+            vec3 hsv = srgbToHsv(outputColor.rgb);
 
-        // Apply saturation setting
-        hsv.y *= saturation;
+            // Apply saturation setting
+            hsv.y *= saturation;
 
-        // Apply contrast setting
-        if (hsv.z > 0.5) {
-            hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
-        } else {
-            hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
+            // Apply contrast setting
+            if (hsv.z > 0.5) {
+                hsv.z = 0.5 + ((hsv.z - 0.5) * contrast);
+            } else {
+                hsv.z = 0.5 - ((0.5 - hsv.z) * contrast);
+            }
+
+            outputColor.rgb = hsvToSrgb(hsv);
         }
 
-        outputColor.rgb = hsvToSrgb(hsv);
-    }
+        outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
 
-    outputColor.rgb = colorBlindnessCompensation(outputColor.rgb);
+        #if APPLY_COLOR_FILTER
+            outputColor.rgb = applyColorFilter(outputColor.rgb);
+        #endif
 
-    #if APPLY_COLOR_FILTER
-        outputColor.rgb = applyColorFilter(outputColor.rgb);
-    #endif
+        #if WIREFRAME
+            outputColor.rgb *= wireframeMask();
+        #endif
 
-    #if WIREFRAME
-        outputColor.rgb *= wireframeMask();
-    #endif
+        // apply fog
+        if (!isUnderwater) {
+            // ground fog
+            float distance = distance(IN.position, cameraPos);
+            float closeFadeDistance = 1500;
+            float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
+            groundFog = mix(0.0, groundFogOpacity, groundFog);
+            groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
 
-    // apply fog
-    if (!isUnderwater) {
-        // ground fog
-        float distance = distance(IN.position, cameraPos);
-        float closeFadeDistance = 1500;
-        float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
-        groundFog = mix(0.0, groundFogOpacity, groundFog);
-        groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
+            // multiply the visibility of each fog
+            float fogAmount = calculateFogAmount(IN.position);
+            float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
 
-        // multiply the visibility of each fog
-        float fogAmount = calculateFogAmount(IN.position);
-        float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
+            if (isWater) {
+                outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
+            }
 
-        if (isWater) {
-            outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
+            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
         }
 
-        outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
-    }
+        outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+    } else {
+        // apply fog
+        if (!isUnderwater) {
+            // ground fog
+            float distance = distance(IN.position, cameraPos);
+            float closeFadeDistance = 1500;
+            float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
+            groundFog = mix(0.0, groundFogOpacity, groundFog);
+            groundFog *= clamp(distance / closeFadeDistance, 0.0, 1.0);
 
-    outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+            // multiply the visibility of each fog
+            float fogAmount = calculateFogAmount(IN.position);
+            float combinedFog = 1 - (1 - fogAmount) * (1 - groundFog);
+
+            if (isWater) {
+                outputColor.a = combinedFog + outputColor.a * (1 - combinedFog);
+            }
+
+            outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
+        }
+    }
 
     FragColor = outputColor;
 }

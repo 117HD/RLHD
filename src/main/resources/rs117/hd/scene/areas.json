@@ -2164,7 +2164,8 @@
     ],
     "aabbs": [
       [ 2531, 3070, 2622, 3127 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "YANILLE_DUNGEON",
