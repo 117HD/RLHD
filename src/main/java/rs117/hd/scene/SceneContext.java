@@ -63,6 +63,10 @@ public class SceneContext {
 	public int staticCustomTilesOffset;
 	public int staticCustomTilesVertexCount;
 
+	public int[][][][] minimapTilePaintColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
+	public int[][][][][] minimapTileModelColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+
+
 	// Statistics
 	public int uniqueModels;
 

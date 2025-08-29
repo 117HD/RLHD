@@ -24,6 +24,7 @@
  */
 package rs117.hd.scene;
 
+import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
@@ -41,6 +42,8 @@ import net.runelite.client.callback.ClientThread;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.scene.materials.Material;
+import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -183,6 +186,31 @@ public class TextureManager {
 
 		return null;
 	}
+
+	/**
+	 * Calculates the average Hue, Saturation, and Lightness (HSL Jagex Format) value of a given image.
+	 * This method first scales the input image down to a 1x1 pixel image, effectively
+	 * reducing it to its average color. It then extracts the RGB values from this single pixel
+	 * and converts them into HSL format. The conversion from RGB to HSL is done through
+	 * a series of utility functions that account for sRGB color space and linear RGB values.
+	 *
+	 * @param image The BufferedImage from which the average HSL value is to be calculated.
+	 * @return Jagex HSL.
+	 */
+	public float[] calculateAverageHSL(BufferedImage image) {
+		BufferedImage scaledImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = scaledImage.createGraphics();
+		g.drawImage(image, 0, 0, 1, 1, null);
+		g.dispose();
+
+		int pixel = scaledImage.getRGB(0, 0);
+		int red = (pixel >> 16) & 0xff;
+		int green = (pixel >> 8) & 0xff;
+		int blue = pixel & 0xff;
+
+		return ColorUtils.rgb(red, green, blue);
+	}
+
 
 	public void uploadTexture(int target, int textureLayer, int[] textureSize, BufferedImage image) {
 		assert client.isClientThread() : "Not thread safe";
