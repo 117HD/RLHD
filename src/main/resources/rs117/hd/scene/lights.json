@@ -28785,7 +28785,9 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 500,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100,
+    "fadeOverlap": true,
     "projectileIds": [
       "FIREBREATH_TRAVEL"
     ]
