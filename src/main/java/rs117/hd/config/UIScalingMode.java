@@ -34,7 +34,8 @@ public enum UIScalingMode {
 	LINEAR("Bilinear", 0),
 	MITCHELL("Mitchell", 1),
 	CATMULL_ROM("Catmull-Rom", 2),
-	XBR("xBR", 3);
+	XBR("xBR", 3),
+	PIXEL("Pixel", 4);
 
 	private final String name;
 	private final int mode;

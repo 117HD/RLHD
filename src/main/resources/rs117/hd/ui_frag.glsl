@@ -29,6 +29,7 @@
 #define SAMPLING_MITCHELL 1
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
+#define SAMPLING_PIXEL 4
 
 #include <uniforms/global.glsl>
 #include <uniforms/ui.glsl>
@@ -43,6 +44,8 @@ uniform sampler2D uiTexture;
 #include <scaling/xbr_lv2_frag.glsl>
 
 in XBRTable xbrTable;
+#elif UI_SCALING_MODE == SAMPLING_PIXEL
+#include <scaling/pixel.glsl>
 #endif
 
 in vec2 fUv;
@@ -62,6 +65,8 @@ void main() {
         c = textureCubic(uiTexture, fUv);
     #elif UI_SCALING_MODE == SAMPLING_XBR
         c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+    #elif UI_SCALING_MODE == SAMPLING_PIXEL
+        c = texturePixel(uiTexture, fUv);
     #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
         c = texture(uiTexture, fUv);
     #endif

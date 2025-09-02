@@ -30,6 +30,7 @@
 #define SAMPLING_MITCHELL 1
 #define SAMPLING_CATROM 2
 #define SAMPLING_XBR 3
+#define SAMPLING_PIXEL 4
 
 #include <uniforms/ui.glsl>
 
