@@ -2673,6 +2673,26 @@
     ]
   },
   {
+    "description": "Tlati Rainforest Grass",
+    "baseMaterial": "GRAY_45",
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "objectIds": [
+      "GEMSTONE_GRASS_TALL1",
+      "GEMSTONE_GRASS_TALL2",
+      "GEMSTONE_GRASS_TALL3",
+      "GEMSTONE_GRASS_TALL4",
+      "TLATI_GRASS_TALL1",
+      "TLATI_GRASS_TALL2",
+      "TLATI_GRASS_TALL3",
+      "TLATI_GRASS_TALL4",
+      "TLATI_GRASS_VERYLONG_1",
+      "TLATI_GRASS_VERYLONG_2",
+      "TLATI_GRASS_VERYLONG_3"
+    ]
+  },
+  {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
@@ -18071,6 +18091,7 @@
     "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
@@ -18088,6 +18109,7 @@
       {
         "colors": "h > 10",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2,
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
         "uvScale": 0.25
@@ -18109,6 +18131,7 @@
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "KHARAZI_JUNGLE_TREE_LOGS",
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
@@ -18126,6 +18149,7 @@
       {
         "colors": [ "h == 5", "h == 4" ],
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2,
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "terrainVertexSnap": true,
@@ -18147,6 +18171,7 @@
   {
     "description": "Jungle Tree Small",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -2,
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
       "MM_BUSH_KHARAZI_JUNGLE_TREE2",
@@ -18159,6 +18184,7 @@
       {
         "colors": "h == 6 && s == 4",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2,
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
