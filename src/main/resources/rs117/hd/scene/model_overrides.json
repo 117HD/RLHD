@@ -58819,5 +58819,68 @@
         "uvOrientation": 192
       }
     ]
+  },
+  {
+    "description": "Tlati Rainforest - Tree - Large Tops",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "TLATI_TREE_TOP01",
+      "TLATI_TREE_MIDDLE01",
+      "TLATI_TREE_MIDDLE02",
+      "TLATI_TREE_TOP02",
+      "TLATI_TREE_TOP02",
+      "TLATI_TREE_MIDDLE04",
+      "TLATI_TREE_MIDDLE03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "GEOMETRY"
+      }
+    ]
+  },
+  {
+    "description": "Tlati Rainforest - Tree - Large Bottoms",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "terrainVertexSnap": true,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "TLATI_TREE_BASE02",
+      "TLATI_TREE_BASE04",
+      "TLATI_TREE_BASE01",
+      "TLATI_TREE_BASE03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "GRUNGE_1",
+        "terrainVertexSnap": true
+      }
+    ]
+  },
+  {
+    "description": "Tlati Rainforest - Tree - Small",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "TLATI_TREE_SMALL01_DEFAULT01",
+      "TLATI_TREE_SMALL01_DEFAULT02",
+      "TLATI_TREE_SMALL01_DEFAULT03",
+      "TLATI_TREE_SMALL02_DEFAULT01",
+      "TLATI_TREE_SMALL02_DEFAULT02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "GEOMETRY",
+        "terrainVertexSnap": true
+      }
+    ]
   }
 ]
