@@ -44,8 +44,8 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+import javax.annotation.Nonnull;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
@@ -186,7 +186,7 @@ public class FileWatcher {
 		void unregister();
 	}
 
-	public static UnregisterCallback watchPath(@NonNull ResourcePath resourcePath, @NonNull Consumer<ResourcePath> changeHandler)
+	public static UnregisterCallback watchPath(@Nonnull ResourcePath resourcePath, @Nonnull Consumer<ResourcePath> changeHandler)
 	{
 		if (!resourcePath.isFileSystemResource())
 			throw new IllegalStateException("Only resources on the file system can be watched: " + resourcePath);

@@ -165,6 +165,9 @@ import static rs117.hd.utils.ResourcePath.path;
 @PluginDependency(EntityHiderPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin implements DrawCallbacks {
+	public static final ResourcePath PLUGIN_DIR = Props
+		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
+
 	public static final String DISCORD_URL = "https://discord.gg/U4p6ChjgSE";
 	public static final String RUNELITE_URL = "https://runelite.net";
 	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
@@ -189,8 +192,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int UNIFORM_BLOCK_MATERIALS = 1;
 	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
 	public static final int UNIFORM_BLOCK_LIGHTS = 3;
-	public static final int UNIFORM_BLOCK_COMPUTE = 4;
-	public static final int UNIFORM_BLOCK_UI = 5;
+	public static final int UNIFORM_BLOCK_LIGHTS_CULLING = 4;
+	public static final int UNIFORM_BLOCK_COMPUTE = 5;
+	public static final int UNIFORM_BLOCK_UI = 6;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -200,6 +204,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
+	public static final int TILED_LIGHTING_TILE_SIZE = 16;
 
 	public static final float ORTHOGRAPHIC_ZOOM = .0002f;
 	public static final float WIND_DISPLACEMENT_NOISE_RESOLUTION = 0.04f;
@@ -436,7 +441,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private SharedGLBuffer[] hModelSortingBuffers;
 
 	private final UBOGlobal uboGlobal = new UBOGlobal();
-	private final UBOLights uboLights = new UBOLights();
+	private final UBOLights uboLights = new UBOLights(false);
+	private final UBOLights uboLightsCulling = new UBOLights(true);
 	private final UBOCompute uboCompute = new UBOCompute();
 	private final UBOUI uboUI = new UBOUI();
 
@@ -495,7 +501,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private boolean isInHouse;
 	private boolean justChangedArea;
 	private Scene skipScene;
-	private int previousPlane;
 
 	private final ConcurrentHashMap.KeySetView<String, ?> pendingConfigChanges = ConcurrentHashMap.newKeySet();
 	private final Map<Long, ModelOffsets> frameModelInfoMap = new HashMap<>();
@@ -505,7 +510,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
+	private float[] sceneViewMatrix = new float[4];
 	private float[] sceneProjectionMatrix = new float[4];
+	private float[] sceneViewProjectionMatrix = new float[4];
 
 	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
@@ -838,7 +845,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// force main buffer provider rebuild to turn off alpha channel
 			client.resizeCanvas();
 
-			// Force the client to reload the scene to reset any scene modifications we may have made
+			// Force the client to reload the scene to reset any scene modifications & update GPU flags
 			if (client.getGameState() == GameState.LOGGED_IN)
 				client.setGameState(GameState.LOADING);
 		});
@@ -912,7 +919,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public ShaderIncludes getShaderIncludes() {
-		assert SHADER_PATH != null;
 		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
 		return new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
@@ -925,11 +931,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
 			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
+			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
+			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -962,6 +970,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.addInclude("WATER_TYPE_GETTER", () -> generateGetter("WaterType", waterTypeManager.uboWaterTypes.getCount()))
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
+			.addUniformBuffer(uboLightsCulling)
 			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(materialManager.uboMaterials)
@@ -1250,6 +1259,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.initialize(UNIFORM_BLOCK_GLOBAL);
 		uboLights.initialize(UNIFORM_BLOCK_LIGHTS);
+		uboLightsCulling.initialize(UNIFORM_BLOCK_LIGHTS_CULLING);
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 		uboUI.initialize(UNIFORM_BLOCK_UI);
 	}
@@ -1267,6 +1277,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		uboGlobal.destroy();
 		uboLights.destroy();
+		uboLightsCulling.destroy();
 		uboCompute.destroy();
 		uboUI.destroy();
 	}
@@ -1298,8 +1309,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateTiledLightingFbo() {
 		assert configTiledLighting;
 
-		final int tileSize = 16;
-		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), tileSize)));
+		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
 		if (Arrays.equals(resolution, tiledLightingResolution))
 			return;
 
@@ -1767,6 +1777,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					justChangedArea = true;
 				}
+				// Reload the scene to reapply area hiding
 				client.setGameState(GameState.LOADING);
 				updateUniforms = false;
 				redrawPreviousFrame = true;
@@ -1859,7 +1870,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), LOCAL_TILE_SIZE);
+						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -1874,14 +1885,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				} else {
 					Mat4.mul(sceneProjectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
-				Mat4.mul(sceneProjectionMatrix, Mat4.rotateX(cameraOrientation[1]));
-				Mat4.mul(sceneProjectionMatrix, Mat4.rotateY(cameraOrientation[0]));
-				Mat4.mul(sceneProjectionMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
-				float[] invProjectionMatrix = Mat4.inverse(sceneProjectionMatrix);
+
+				// Calculate view matrix
+				sceneViewMatrix = Mat4.rotateX(cameraOrientation[1]);
+				Mat4.mul(sceneViewMatrix, Mat4.rotateY(cameraOrientation[0]));
+				Mat4.mul(sceneViewMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
+
+				// Calculate the full view projection matrix
+				sceneViewProjectionMatrix = copy(sceneProjectionMatrix);
+				Mat4.mul(sceneViewProjectionMatrix, sceneViewMatrix);
 
 				uboGlobal.cameraPos.set(cameraPosition);
-				uboGlobal.projectionMatrix.set(sceneProjectionMatrix);
-				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
+				uboGlobal.viewMatrix.set(sceneViewMatrix);
+				uboGlobal.projectionMatrix.set(sceneViewProjectionMatrix);
+				uboGlobal.invProjectionMatrix.set(Mat4.inverse(sceneViewProjectionMatrix));
 				uboGlobal.upload();
 			}
 		}
@@ -1889,25 +1906,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (configDynamicLights != DynamicLights.NONE && sceneContext.scene == scene && updateUniforms) {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
+
+			final float[] lightPosition = new float[4];
+			final float[] lightColor = new float[4];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
-				Light light = sceneContext.lights.get(i);
-				var struct = uboLights.lights[i];
-				float paddedRadius = light.radius;
-				paddedRadius += 16 * (512.f / client.getScale()) * 15;
-				struct.position.set(
-					light.pos[0] + cameraShift[0],
-					light.pos[1],
-					light.pos[2] + cameraShift[1],
-					paddedRadius * paddedRadius
-				);
-				struct.color.set(
-					light.color[0] * light.strength,
-					light.color[1] * light.strength,
-					light.color[2] * light.strength,
-					light.radius * light.radius
-				);
+				final Light light = sceneContext.lights.get(i);
+				final float lightRadiusSq = light.radius * light.radius;
+				lightPosition[0] = light.pos[0] + cameraShift[0];
+				lightPosition[1] = light.pos[1];
+				lightPosition[2] = light.pos[2] + cameraShift[1];
+				lightPosition[3] = lightRadiusSq;
+
+				lightColor[0] = light.color[0] * light.strength;
+				lightColor[1] = light.color[1] * light.strength;
+				lightColor[2] = light.color[2] * light.strength;
+				lightColor[3] = 0.0f;
+
+				uboLights.setLight(i, lightPosition, lightColor);
+
+				// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
+				lightPosition[3] = 1.0f;
+				Mat4.mulVec(lightPosition, sceneViewMatrix, lightPosition);
+				lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq
+
+				uboLightsCulling.setLight(i, lightPosition, lightColor);
 			}
+
 			uboLights.upload();
+			uboLightsCulling.upload();
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {
@@ -2075,7 +2101,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public void initShaderHotswapping() {
-		assert SHADER_PATH != null;
 		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Recompiling shaders: {}", path);
 			recompilePrograms();
@@ -2397,18 +2422,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (renderWaterReflections) {
 				sceneProgram.uniWaterHeight.set(sceneContext.waterHeight);
 
-				// Calculate the viewport dimensions before scaling in order to include the extra padding
-				int viewportWidth = (int) (sceneViewport[2] / sceneViewportScale[0]);
-				int viewportHeight = (int) (sceneViewport[3] / sceneViewportScale[1]);
-
 				// Calculate water reflection projection matrix
-				float[] reflectionProjectionMatrix = Mat4.scale(client.getScale(), -client.getScale(), 1);
-				if (orthographicProjection) {
-					Mat4.mul(reflectionProjectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(reflectionProjectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-				} else {
-					Mat4.mul(reflectionProjectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-				}
+				float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);
+				Mat4.mul(reflectionProjectionMatrix, sceneProjectionMatrix);
 				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateX(-cameraOrientation[1]));
 				Mat4.mul(reflectionProjectionMatrix, Mat4.rotateY(cameraOrientation[0]));
 				Mat4.mul(
@@ -2458,7 +2474,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				frameTimer.end(Timer.RENDER_REFLECTIONS);
 
-				uboGlobal.projectionMatrix.set(sceneProjectionMatrix);
+				uboGlobal.projectionMatrix.set(sceneViewProjectionMatrix);
 				uboGlobal.cameraPos.set(cameraPosition);
 				uboGlobal.upload();
 			}
@@ -2708,7 +2724,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!isActive)
 			return;
 
-		if (skipScene != scene && HDUtils.sceneIntersects(scene, getExpandedMapLoadingChunks(), areaManager.getArea("THE_GAUNTLET"))) {
+		int expandedChunks = getExpandedMapLoadingChunks();
+		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
+			// Reload once the POH is done loading
+			if (!isInHouse)
+				reloadSceneIn(2);
+		} else if (skipScene != scene && HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("THE_GAUNTLET"))) {
 			// Some game objects in The Gauntlet are spawned in too late for the initial scene load,
 			// so we skip the first scene load and trigger another scene load the next game tick
 			reloadSceneNextGameTick();
@@ -2736,14 +2757,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// in use by the client thread, meaning we can reuse all of its buffers if we are loading the
 			// next scene also on the client thread
 			boolean reuseBuffers = client.isClientThread();
-			var context = new SceneContext(client, scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
-			// noinspection SynchronizationOnLocalVariableOrMethodParameter
-			synchronized (context) {
-				nextSceneContext = context;
-				proceduralGenerator.generateSceneData(context);
-				environmentManager.loadSceneEnvironments(context);
-				sceneUploader.upload(context);
-			}
+			nextSceneContext = new SceneContext(client, scene, getExpandedMapLoadingChunks(), reuseBuffers, sceneContext);
+			proceduralGenerator.generateSceneData(nextSceneContext);
+			environmentManager.loadSceneEnvironments(nextSceneContext);
+			sceneUploader.upload(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
 				HDUtils.is32Bit(), useLowMemoryMode, config.modelCacheSizeMiB(), oom
@@ -2758,7 +2775,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Override
 	public synchronized void swapScene(Scene scene) {
-		if (skipScene == scene) {
+		if (!isActive || skipScene == scene) {
 			redrawPreviousFrame = true;
 			return;
 		}
@@ -2805,20 +2822,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneContext.stagingBufferNormals.clear();
 
 		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			if (!isInHouse) {
-				// POH takes 1 game tick to enter, then 2 game ticks to load per floor
-				reloadSceneIn(7);
-				isInHouse = true;
-			}
-
+			isInHouse = true;
 			isInChambersOfXeric = false;
 		} else {
-			// Avoid an unnecessary scene reload if the player is leaving the POH
-			if (isInHouse) {
-				abortSceneReload();
-				isInHouse = false;
-			}
-
+			isInHouse = false;
 			isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
 		}
 	}
@@ -2831,10 +2838,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		assert gameTicks > 0 : "A value <= 0 will not reload the scene";
 		if (gameTicks > gameTicksUntilSceneReload)
 			gameTicksUntilSceneReload = gameTicks;
-	}
-
-	public void abortSceneReload() {
-		gameTicksUntilSceneReload = 0;
 	}
 
 	private void updateCachedConfigs() {
@@ -3016,6 +3019,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
+							case KEY_PIXELATED_SHADOWS:
 							case KEY_WATER_FOAM:
 								recompilePrograms = true;
 								break;
@@ -3143,14 +3147,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		});
 	}
 
-	private void setupSyncMode()
-	{
-		final boolean unlockFps = config.unlockFps();
-		client.setUnlockedFps(unlockFps);
-
+	public void setupSyncMode() {
 		// Without unlocked fps, the client manages sync on its 20ms timer
+		boolean unlockFps = config.unlockFps();
 		HdPluginConfig.SyncMode syncMode = unlockFps ? config.syncMode() : HdPluginConfig.SyncMode.OFF;
 
+		if (frameTimer.isActive()) {
+			unlockFps = true;
+			syncMode = SyncMode.OFF;
+		}
+
+		client.setUnlockedFps(unlockFps);
 		int swapInterval;
 		switch (syncMode)
 		{
@@ -3412,18 +3419,46 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			drawnStaticRenderableCount++;
 		} else {
+			int uuid = ModelHash.generateUuid(client, hash, renderable);
+			int[] worldPos = sceneContext.localToWorld(x, z, plane);
+			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+			if (modelOverride.hide)
+				return;
+
+			// Disable color overrides when caching is disabled, since they are expensive on dynamic models
+			if (!configModelCaching && modelOverride.colorOverrides != null)
+				modelOverride = ModelOverride.NONE;
+
+			int preOrientation = 0;
+			if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
+				int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
+					Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
+					int config;
+					if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
+						preOrientation = HDUtils.getModelPreOrientation(config);
+					} else if (plane > 0) {
+						// Might be on a bridge tile
+						tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
+						if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
+							preOrientation = HDUtils.getModelPreOrientation(config);
+					}
+				}
+			}
+
 			// Temporary model (animated or otherwise not a static Model already in the scene buffer)
 			if (enableDetailedTimers)
 				frameTimer.begin(Timer.MODEL_BATCHING);
 			ModelOffsets modelOffsets = null;
-			long batchHash = 0;
 			if (configModelBatching || configModelCaching) {
-				modelHasher.setModel(model);
+				modelHasher.setModel(model, modelOverride, preOrientation);
 				// Disable model batching for models which have been excluded from the scene buffer,
 				// because we want to avoid having to fetch the model override
 				if (configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
-					batchHash = modelHasher.vertexHash;
-					modelOffsets = frameModelInfoMap.get(batchHash);
+					modelOffsets = frameModelInfoMap.get(modelHasher.batchHash);
+					if (modelOffsets != null && modelOffsets.faceCount != model.getFaceCount())
+						modelOffsets = null; // Assume there's been a hash collision
 				}
 			}
 			if (enableDetailedTimers)
@@ -3438,35 +3473,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
 
-				int uuid = ModelHash.generateUuid(client, hash, renderable);
-				int[] worldPos = sceneContext.localToWorld(x, z, plane);
-				ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-				if (modelOverride.hide) {
-					if (enableDetailedTimers)
-						frameTimer.end(Timer.MODEL_PUSHING);
-					return;
-				}
-
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();
-
-				int preOrientation = 0;
-				if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
-					int tileExX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					if (0 <= tileExX && tileExX < EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < EXTENDED_SCENE_SIZE) {
-						Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
-						int config;
-						if (tile != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1) {
-							preOrientation = HDUtils.getModelPreOrientation(config);
-						} else if (plane > 0) {
-							// Might be on a bridge tile
-							tile = sceneContext.scene.getExtendedTiles()[plane - 1][tileExX][tileExY];
-							if (tile != null && tile.getBridge() != null && (config = sceneContext.getObjectConfig(tile, hash)) != -1)
-								preOrientation = HDUtils.getModelPreOrientation(config);
-						}
-					}
-				}
 
 				modelPusher.pushModel(sceneContext, null, uuid, model, modelOverride, preOrientation, true);
 
@@ -3482,8 +3490,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				eightIntWrite[2] = faceCount;
 
 				// add this temporary model to the map for batching purposes
-				if (configModelBatching)
-					frameModelInfoMap.put(batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
+				if (configModelBatching && modelOffsets == null)
+					frameModelInfoMap.put(modelHasher.batchHash, new ModelOffsets(faceCount, vertexOffset, uvOffset));
 			}
 
 			if (eightIntWrite[0] != -1)
@@ -3507,7 +3515,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-					uboCompute.addCharacterPosition(x, z, LOCAL_TILE_SIZE);
+					uboCompute.addCharacterPosition(x, z, (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 				if (enableDetailedTimers)
 					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);
@@ -3599,16 +3607,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		}
 
 		fishingSpotReplacer.update();
-
-		// reload the scene if the player is in a house and their plane changed
-		// this greatly improves the performance as it keeps the scene buffer up to date
-		if (isInHouse) {
-			int plane = client.getPlane();
-			if (previousPlane != plane) {
-				reloadSceneNextGameTick();
-				previousPlane = plane;
-			}
-		}
 	}
 
 	public void waitUntilIdle() {

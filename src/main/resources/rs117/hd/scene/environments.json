@@ -57,6 +57,19 @@
     "fogDepth": 25
   },
   {
+    "area": "Lucien's Base Environment",
+    "ambientColor": "#D8EAFF",
+    "ambientStrength": 1,
+    "directionalColor": "#f4e5c9",
+    "directionalStrength": 0.5,
+    "fogColor": "#aebde0",
+    "fogDepth": 70,
+    "sunAngles": [
+      68,
+      190
+    ]
+  },
+  {
     "area": "WILDERNESS_HIGH",
     "lightningEffects": true,
     "ambientColor": "#d7d2d2",
@@ -1612,7 +1625,8 @@
       190
     ],
     "fogColor": "#060505",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "instantTransition": true
   },
   {
     "area": "BURGH_DE_ROTT_BASEMENT",
@@ -1978,6 +1992,41 @@
     "groundFogEnd": -400
   },
   {
+    "area": "Black Knights Fort - Basement",
+    "ambientColor": "#aaafb6",
+    "directionalColor": "#878474",
+    "directionalStrength": 0.75,
+    "ambientStrength": 1.25,
+    "fogDepth": 60
+  },
+  {
+    "area": "Black Knights Fort - Catacombs",
+    "directionalStrength": 0.15,
+    "ambientStrength": 0.8,
+    "fogDepth": 30
+  },
+  {
+    "area": "Guthix Temple",
+    "ambientStrength": 0.9,
+    "fogDepth": 30,
+    "sunAngles": [ 70, 220 ]
+  },
+  {
+    "area": "Doom of Mokhaiotl - Floor 1",
+    "directionalStrength": 0.35,
+    "ambientStrength": 1.8
+  },
+  {
+    "area": "Doom of Mokhaiotl - Floors 2 to 5",
+    "directionalStrength": 0.35,
+    "ambientStrength": 3
+  },
+  {
+    "area": "Doom of Mokhaiotl - Floors 6 to 8",
+    "directionalStrength": 0.35,
+    "ambientStrength": 2.5
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
@@ -2008,7 +2057,9 @@
     ],
     "fogColor": "#fddcb4",
     "fogDepth": 18,
-    "windSpeed": 100
+    "windAngle": 40,
+    "windSpeed": 12,
+    "windStrength": 55
   },
   {
     "key": "WINTER",
@@ -2018,6 +2069,8 @@
     "sunAngles": [ 52, 235 ],
     "fogColor": "#b8c5db",
     "fogDepth": 35,
-    "windAngle": 60
+    "windAngle": 40,
+    "windSpeed": 10,
+    "windStrength": 30
   }
 ]

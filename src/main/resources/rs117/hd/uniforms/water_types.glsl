@@ -15,8 +15,6 @@ struct WaterType {
     vec3 foamColor;
     vec3 depthColor;
     int normalMap;
-    int foamMap;
-    int flowMap;
 };
 
 layout(std140) uniform UBOWaterTypes {

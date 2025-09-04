@@ -19513,6 +19513,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_GHOST_GREATER",
       "ARCEUUS_THRALL_GHOST_LESSER",
@@ -19552,6 +19553,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_SKELETON_LESSER",
       "ARCEUUS_THRALL_SKELETON_SUPERIOR",
@@ -19590,6 +19592,7 @@
     "type": "FLICKER",
     "duration": 0,
     "range": 10,
+    "ignoreActorHiding": true,
     "npcIds": [
       "ARCEUUS_THRALL_ZOMBIE_LESSER",
       "ARCEUUS_THRALL_ZOMBIE_SUPERIOR",
@@ -21436,6 +21439,24 @@
     ]
   },
   {
+    "description": "Prifddinas - Scavengers Overlook - Furnace - Needs proper UV",
+    "height": 150,
+    "offset": [ -55, -88, -2 ],
+    "radius": 480,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "PRIF_FURNACE"
+    ]
+  },
+  {
     "description": "ECTOFUNTUS_WIDE",
     "offset": [ 100, 295, 0 ],
     "visibleFromOtherPlanes": true,
@@ -22770,13 +22791,12 @@
   },
   {
     "description": "POH_TRAILBLAZER_RELOADED_TROPHY",
-    "height": 190,
-    "alignment": "CENTER",
-    "radius": 50,
-    "strength": 50,
+    "offset": [ 0, 190, -20 ],
+    "radius": 70,
+    "strength": 30,
     "color": [
       252,
-      148,
+      188,
       3
     ],
     "type": "FLICKER",
@@ -25420,18 +25440,17 @@
   },
   {
     "description": "TOG_BLUE_STREAM",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 22.5,
+    "offset": [ -30, 100, 0 ],
+    "radius": 400,
+    "strength": 25,
     "color": [
       89,
       145,
       255
     ],
     "type": "STATIC",
-    "duration": 0,
-    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "objectIds": [
       "TOG_WEEPING_WALL_GOOD_R",
       "TOG_WEEPING_WALL_GOOD_L"
@@ -25439,9 +25458,8 @@
   },
   {
     "description": "TOG_GREEN_STREAM",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 500,
+    "offset": [ -30, 100, 0 ],
+    "radius": 375,
     "strength": 15,
     "color": [
       141,
@@ -25449,11 +25467,70 @@
       92
     ],
     "type": "STATIC",
-    "duration": 0,
-    "range": 0,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 100,
     "objectIds": [
       "TOG_WEEPING_WALL_BAD_R",
       "TOG_WEEPING_WALL_BAD_L"
+    ]
+  },
+  {
+    "description": "TOG_LIGHT_CREATURE",
+    "offset": [ 0, 120, 0 ],
+    "radius": 200,
+    "strength": 50,
+    "color": [
+      89,
+      145,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 500,
+    "npcIds": [
+      "TOG_LIGHT_CREATURE_OP",
+      "TOG_LIGHT_CREATURE_NOOP",
+      "TOG_LIGHT_CREATURE_TRANSITION"
+    ]
+  },
+  {
+    "description": "TOG_LIGHT_CREATURE_CARYING",
+    "offset": [ 0, 135, 0 ],
+    "radius": 300,
+    "strength": 50,
+    "color": [
+      89,
+      145,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 500,
+    "npcIds": [
+      "TOG_LIGHT_CREATURE_CARRYING"
+    ]
+  },
+  {
+    "description": "TOG_LIGHT_CREATURE_CUTSCENE",
+    "offset": [ 0, 135, 0 ],
+    "radius": 300,
+    "strength": 50,
+    "color": [
+      89,
+      145,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 500,
+    "fixedDespawnTime": true,
+    "despawnDelay": 11500,
+    "graphicsObjectIds": [
+      "LUC2_CHASM_CUTSCENE_PLAYER_LIGHT_SPOT",
+      "LUC2_CHASM_CUTSCENE_PLAYER_LIGHT_SPOT_REVERSE"
     ]
   },
   {
@@ -26360,8 +26437,8 @@
     "description": "MAGIC_GUILD_ORBS",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 300,
-    "strength": 10,
+    "radius": 350,
+    "strength": 20,
     "color": [
       255,
       255,
@@ -26369,17 +26446,17 @@
     ],
     "type": "PULSE",
     "duration": 800,
-    "range": 20,
+    "range": 5,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW"
     ]
   },
   {
-    "description": "MAGIC_GUILD_PORTALS",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 500,
-    "strength": 7.5,
+    "description": "MAGIC_GUILD_PORTALS_OUTSIDE",
+    "offset": [ -200, 125 , 0 ],
+    "radius": 400,
+    "strength": 30,
+    "visibleFromOtherPlanes": true,
     "color": [
       0,
       0,
@@ -26387,7 +26464,26 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 20,
+    "range": 10,
+    "objectIds": [
+      "WIZTOWERPORTAL",
+      "DARKWIZPORTAL",
+      "THORMACPORTAL"
+    ]
+  },
+  {
+    "description": "MAGIC_GUILD_PORTALS_INSIDE",
+    "offset": [ -40, 100 , 0 ],
+    "radius": 200,
+    "strength": 40,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 1550,
+    "range": 30,
     "objectIds": [
       "WIZTOWERPORTAL",
       "DARKWIZPORTAL",
@@ -39450,6 +39546,42 @@
     "graphicsObjectIds": [ "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM_F", "VMQ4_ARKAN_BLADE_SPECIAL_SPOTANIM" ]
   },
   {
+    "description": "Burning Claws Special Attack 1",
+    "offset": [ 0, 75, 90 ],
+    "radius": 270,
+    "spawnDelay": 475,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_BURNING_CLAWS_SPEC_02" ]
+  },
+  {
+    "description": "Burning Claws Special Attack 2",
+    "offset": [ 0, 75, 90 ],
+    "radius": 240,
+    "spawnDelay": 1075,
+    "fixedDespawnTime": true,
+    "despawnDelay": 700,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_BURNING_CLAWS_SPEC_02" ]
+  },
+  {
     "description": "Bone Dagger Special Attack",
     "offset": [ 30, 75, 50 ],
     "radius": 170,
@@ -40379,6 +40511,747 @@
     "objectIds": [
       "ATES_STATUE_DARKFROST_ACTIVE",
       "ATES_STATUE_TLATI_ACTIVE"
+    ]
+  },
+  {
+    "description": "Movario's Base - Wall Lamp",
+    "offset": [ 0, 217, 75 ],
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      200
+    ],
+    "type": "FLICKER",
+    "range": 10,
+    "duration": 0,
+    "objectIds": [
+      "LUC2_MOV_BARRACKS_LIGHT_01"
+    ]
+  },
+  {
+    "description": "Movario's Base - Electric Door Flicker",
+    "offset": [ 0, 150, 45 ],
+    "radius": 175,
+    "strength": 25,
+    "color": [
+      40,
+      160,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 80,
+    "duration": 0,
+    "objectIds": [
+      "LUC2_MOV_ELECTRIC_RAIL_GATE_LIVE"
+    ]
+  },
+  {
+    "description": "Movario's Base - Electric Door Static",
+    "offset": [ 0, 100, 45 ],
+    "radius": 200,
+    "strength": 35,
+    "color": [
+      40,
+      160,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_MOV_ELECTRIC_RAIL_GATE_LIVE"
+    ]
+  },
+  {
+    "description": "Black Knights Catacombs - Wall Torch",
+    "offset": [ 0, 185, 60 ],
+    "radius": 550,
+    "strength": 10.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_DWT_WALL_TORCH",
+      "LUC2_DWT_WALL_STEPS1_TORCH_MIRROR",
+      "LUC2_DWT_WALL_STEPS1_TORCH",
+      "LUC2_DWT_WALL_DOOR_MIRROR",
+      "LUC2_DWT_WALL_DOOR",
+      "LUC2_DWT_WALL_DOOR_LVL3_MIRROR",
+      "LUC2_DWT_WALL_DOOR_LVL3",
+      "LUC2_DWT_WALL_TORCH_LVL3"
+    ]
+  },
+  {
+    "description": "Surok Wind Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 10.6,
+    "ignoreActorHiding": true,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "WIND_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Surok Water Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 13.8,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "WATER_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Surok Earth Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 12.5,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "EARTH_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Surok Fire Surge",
+    "radius": 400,
+    "height": 175,
+    "strength": 13.8,
+    "color": [
+      255,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "npcIds": [
+      "FIRE_SURGE_RAISED"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone Torch",
+    "offset": [ 0, 185, 0 ],
+    "radius": 550,
+    "strength": 15.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DI2_TORCH_GREY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Metal Torch",
+    "offset": [ -55, 185, 0 ],
+    "radius": 400,
+    "strength": 13.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DI2_TORCH_METAL"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Shrine Torch",
+    "offset": [ 0, 105, 10 ],
+    "radius": 250,
+    "strength": 14.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Shrine Torch Hotspot",
+    "offset": [ 0, 75, 10 ],
+    "radius": 25,
+    "strength": 90.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTS"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Altar Shrine Torch",
+    "offset": [ -190, 125, 0 ],
+    "radius": 350,
+    "strength": 14.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTSL",
+      "LUC2_GT_WALLKIT_SHRINE_LIGHTSR"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Green Torch Lit",
+    "offset": [ 0, 230, 0 ],
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "WGS_ENERGY_BRAZIER_LIT"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Green Torch Unlit",
+    "offset": [ 0, 210, 0 ],
+    "radius": 220,
+    "strength": 15,
+    "color": [
+      0,
+      255,
+      50
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "WGS_ENERGY_BRAZIER_BASE_UNLIT"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Blue Torch",
+    "offset": [ 0, 185, 0 ],
+    "radius": 350,
+    "strength": 20,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      89,
+      145,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_WATER"
+    ]
+  },
+  {
+    "description": "Guthix Temple - White Torch",
+    "offset": [ 0, 185, 0 ],
+    "radius": 350,
+    "strength": 20,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_BRAZIER_AIR"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Tunnel Light",
+    "offset": [ 0, 85, 0 ],
+    "radius": 500,
+    "strength": 10,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT3",
+      "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT2",
+      "LUC2_GUTHIX_TEMPLE_FLOOR_LIGHT1"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Druid Spirit",
+    "height": 80,
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      200,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 1,
+    "range": 10,
+    "fadeInDuration": 100,
+    "fadeOutDuration": 600,
+    "npcIds": [
+      "WGS_DRUID_SPIRIT_1",
+      "WGS_DRUID_SPIRIT_2"
+    ],
+    "animationIds": [ -1 ]
+  },
+  {
+    "description": "Guthix Temple - Pillar Torch",
+    "offset": [ -20, 100, -20 ],
+    "radius": 400,
+    "strength": 14.5,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "LUC2_GT_PILLAR_TORCH"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas 1",
+    "offset": [ -175, 550, 175 ],
+    "radius": 500,
+    "strength": 3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_NAMED_NOOP",
+      "LUC2_STONE_OF_JAS_NAMED",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP_ENERGY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas 2",
+    "offset": [ 75, 600, -150 ],
+    "radius": 500,
+    "strength": 6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_NAMED_NOOP",
+      "LUC2_STONE_OF_JAS_NAMED",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP_ENERGY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Stone of Jas 3",
+    "offset": [ 250, 270, 170 ],
+    "radius": 500,
+    "strength": 3,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "LUC2_STONE_OF_JAS_NAMED_NOOP",
+      "LUC2_STONE_OF_JAS_NAMED",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP",
+      "LUC2_STONE_OF_JAS_NONAME_NOOP_ENERGY"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Elemental Fire Arrow",
+    "offset": [ 0, 0, 0 ],
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 20,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 100,
+    "projectileIds": [
+      "VFX_BALANCE_ELEMENTAL_FIRE_ATTACK01_PROJANIM"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Elemental Water Blast",
+    "radius": 350,
+    "strength": 20,
+    "color": [
+      0,
+      140,
+      255
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 100,
+    "projectileIds": [
+      "VFX_BALANCE_ELEMENTAL_WATER_ATTACK01_PROJANIM"
+    ]
+  },
+  {
+    "description": "Guthix Temple - Jas Power Boost",
+    "offset": [ 0, 100, 0 ],
+    "radius": 200,
+    "strength": 30,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "type": "PULSE",
+    "range": 5,
+    "duration": 1000,
+    "graphicsObjectIds": [
+      "LUC2_JAS_GLOW_PLAYER"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Bottom",
+    "offset": [ 0, 150, 10 ],
+    "radius": 300,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "npcIds": [
+      "TORMENTED_DEMON_1",
+      "TORMENTED_DEMON_2",
+      "TORMENTED_DEMON_QUEST_1",
+      "TORMENTED_DEMON_QUEST_2"
+    ],
+    "animationIds": [
+      -1,
+      "LUC2_UNDEAD_DEMON_MELEE",
+      "LUC2_UNDEAD_DEMON_DEFEND",
+      "LUC2_UNDEAD_DEMON_SPARE_RIBS",
+      "LUC2_UNDEAD_DEMON_FIREY_BALLS",
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Feet Hightlight",
+    "offset": [ 30, 125, -75 ],
+    "radius": 100,
+    "strength": 35,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "npcIds": [
+      "TORMENTED_DEMON_2",
+      "TORMENTED_DEMON_QUEST_2"
+    ],
+    "animationIds": [
+      -1,
+      "LUC2_UNDEAD_DEMON_MELEE",
+      "LUC2_UNDEAD_DEMON_DEFEND",
+      "LUC2_UNDEAD_DEMON_SPARE_RIBS",
+      "LUC2_UNDEAD_DEMON_FIREY_BALLS",
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Top",
+    "offset": [ 0, 425, -40 ],
+    "radius": 220,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 150,
+    "npcIds": [
+      "TORMENTED_DEMON_1",
+      "TORMENTED_DEMON_2",
+      "TORMENTED_DEMON_QUEST_1",
+      "TORMENTED_DEMON_QUEST_2"
+    ],
+    "animationIds": [
+      -1,
+      "LUC2_UNDEAD_DEMON_MELEE",
+      "LUC2_UNDEAD_DEMON_DEFEND",
+      "LUC2_UNDEAD_DEMON_SPARE_RIBS",
+      "LUC2_UNDEAD_DEMON_FIREY_BALLS",
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Spawn",
+    "offset": [ 0, 150, 0 ],
+    "radius": 350,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 400,
+    "range": 20,
+    "graphicsObjectIds": [
+      "WGS_UNDEAD_DEMON_SUMMON_SPOTANIM"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Spawn Top",
+    "offset": [ 0, 400, -40 ],
+    "radius": 250,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [
+      "WGS_UNDEAD_DEMON_SUMMON_SPOTANIM"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Fire Blowing Away",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 400,
+    "fixedDespawnTime": true,
+    "despawnDelay": 2200,
+    "range": 20,
+    "graphicsObjectIds": [
+      "LUC2_UNDEAD_DEMON_EXPLOSION_FIRE_SPOT"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Death",
+    "offset": [ 0, 150, 0 ],
+    "radius": 450,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 900,
+    "fixedDespawnTime": true,
+    "despawnDelay": 3100,
+    "range": 20,
+    "graphicsObjectIds": [
+      "LUC2_UNDEAD_DEMON_DEATH_SPOT"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Shield",
+    "offset": [ 0, 250, 0 ],
+    "radius": 425,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 200,
+    "range": 20,
+    "graphicsObjectIds": [
+      "LUC2_UNDEAD_DEMON_SHIELD_SPOT",
+      "LUC2_UNDEAD_DEMON_SHIELD_RESTORE_SPOT"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Fire Ball Projectile",
+    "offset": [ 0, 25, 0 ],
+    "radius": 220,
+    "strength": 18,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 600,
+    "range": 20,
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_LARGE_PROJ"
+    ]
+  },
+  {
+    "description": "Tormented Demon - Fire Bolt Projectile",
+    "offset": [ 0, -50, 0 ],
+    "radius": 200,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 300,
+    "range": 20,
+    "projectileIds": [
+      "LUC2_UNDEAD_DEMON_FIREBALL_PROJ"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl Fire",
+    "height": 40,
+    "alignment": "CENTER",
+    "radius": 450,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TONALI_FIRE01",
+      "TONALI_FIRE02",
+      "TONALI_FIRE03",
+      "TONALI_FIRE04",
+      "TONALI_FIRE01_OFFSET01",
+      "TONALI_FIRE01_OFFSET02"
+    ]
+  },
+  {
+    "description": "Doom of Mokhaiotl - Brighten Arena Torches",
+    "areas": [ "Doom of Mokhaiotl - Arena Torch Brightness" ],
+    "height": 235,
+    "offset": [ 0, -17, 0 ],
+    "radius": 840,
+    "strength": 6,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "ALDARIN_TORCH01_CAVE01"
     ]
   }
 ]

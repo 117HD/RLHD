@@ -18,6 +18,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
+	@RequiredArgsConstructor
 	protected enum PropertyType {
 		Int(4, 4, 1),
 		IVec2(8, 8, 2),
@@ -34,17 +35,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 		private final int size;
 		private final int alignment;
-		private final int elementSize;
 		private final int elementCount;
-		private final boolean isInt;
-
-		PropertyType(int size, int alignment, int elementCount) {
-			this.size = size;
-			this.alignment = alignment;
-			this.elementSize = size / elementCount;
-			this.elementCount = elementCount;
-			isInt = name().startsWith("I");
-		}
+		private final boolean isInt = name().startsWith("I");
 	}
 
 	@AllArgsConstructor

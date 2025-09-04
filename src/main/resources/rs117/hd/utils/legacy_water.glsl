@@ -40,7 +40,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
     float flowMapStrength = 0.025;
 
-    vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
+    vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
     uv1 += uvFlow * flowMapStrength;
     uv2 += uvFlow * flowMapStrength;
     uv3 += uvFlow * flowMapStrength;
@@ -48,7 +48,7 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
     // get diffuse textures
     vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, MAT_LEGACY_WATER_NORMAL_MAP_1.colorMap)).xyz);
     vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, MAT_LEGACY_WATER_NORMAL_MAP_2.colorMap)).xyz);
-    float foamMask = texture(textureArray, vec3(uv3, waterType.foamMap)).r;
+    float foamMask = texture(textureArray, vec3(uv3, MAT_WATER_FOAM.colorMap)).r;
 
     // normals
     n1 = -vec3((n1.x * 2 - 1) * waterType.normalStrength, n1.z, (n1.y * 2 - 1) * waterType.normalStrength);

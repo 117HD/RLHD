@@ -260,7 +260,7 @@ void sampleUnderwater(inout vec3 outputColor, int waterTypeIndex, float depth) {
         {
             vec2 flowMapUv = worldUvs(26) + animationFrame(26 * waterType.duration);
             float flowMapStrength = 0.025;
-            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
+            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
             distortion = uvFlow * .001 * (1 - exp(-.01 * depth));
         }
         // TODO: This would be nicer if blurred based on optical depth
@@ -512,9 +512,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
         if (waterType.hasFoam == 1) {
             vec2 flowMapUv = worldUvs(5) + animationFrame(30 * waterType.duration);
             float flowMapStrength = .25;
-            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
+            vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
             vec2 uv = IN.uv + uvFlow * flowMapStrength;
-            float foamMask = texture(textureArray, vec3(uv, waterType.foamMap)).r;
+            float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
             float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
             shoreLineMask *= shoreLineMask;
             shoreLineMask *= shoreLineMask;
