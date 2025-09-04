@@ -29917,7 +29917,7 @@
   {
     "description": "Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 220,
+    "radius": 250,
     "strength": 20,
     "color": [
       0,
@@ -29926,16 +29926,15 @@
     ],
     "type": "FLICKER",
     "duration": 1,
-    "range": 80,
+    "range": 60,
     "projectileIds": [ "WYRM_RANGE_PROJ" ],
-    "spawnDelay": 400,
     "fadeInDuration": 300,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 300
   },
   {
     "description": "Shadow Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 220,
+    "radius": 250,
     "strength": 50,
     "color": [
       0,
@@ -29946,9 +29945,8 @@
     "duration": 10,
     "range": 70,
     "projectileIds": [ "SUPERIOR_WYRM_RANGE_PROJ" ],
-    "spawnDelay": 400,
     "fadeInDuration": 300,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 300
   },
   {
     "description": "KARUULM_INDOOR_LAVA_1",
