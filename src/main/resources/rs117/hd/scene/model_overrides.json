@@ -18072,6 +18072,7 @@
     "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
@@ -18089,6 +18090,7 @@
       {
         "colors": "h > 10",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3,
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
         "uvScale": 0.25
@@ -18110,6 +18112,7 @@
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "KHARAZI_JUNGLE_TREE_LOGS",
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
@@ -18127,6 +18130,7 @@
       {
         "colors": [ "h == 5", "h == 4" ],
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -3,
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "terrainVertexSnap": true,
