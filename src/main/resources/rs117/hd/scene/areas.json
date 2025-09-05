@@ -5001,6 +5001,12 @@
     ]
   },
   {
+    "name": "MASTERING_MIXOLOGY_WIND",
+    "aabbs": [
+      [ 1386, 9319, 1401, 9333 ]
+    ]
+  },
+  {
     "name": "FOSSIL_ISLAND_WYVERN_TASK_CAVE",
     "regions": [
       14496

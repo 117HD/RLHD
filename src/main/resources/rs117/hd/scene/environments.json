@@ -2027,6 +2027,11 @@
     "ambientStrength": 2.5
   },
   {
+    "area": "MASTERING_MIXOLOGY_WIND",
+    "windStrength": 27.5,
+    "windSpeed": 8.5
+  },
+  {
     "key": "OVERWORLD",
     "area": "OVERWORLD",
     "ambientColor": "#97baff",
