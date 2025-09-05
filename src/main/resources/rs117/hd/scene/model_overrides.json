@@ -50276,6 +50276,7 @@
     "baseMaterial": "LEAF_VEINS",
     "uvType": "BOX",
     "uvScale": 0.4,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
       "MM_HERB_DEAD",
       "MM_HERB_READY"
@@ -50297,7 +50298,7 @@
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 172,
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
       "PLANT_FERN01_TALL01",
       "PLANT_FERN01_TALL02",
