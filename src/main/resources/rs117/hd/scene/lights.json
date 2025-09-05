@@ -38724,6 +38724,35 @@
     ]
   },
   {
+    "description": "Mastering Mixology - Retort Fire",
+    "height": 90,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "objectIds": [
+      "MM_LAB_MACHINE_RETORT_MAL",
+      "MM_LAB_MACHINE_RETORT_MMM",
+      "MM_LAB_MACHINE_RETORT_MMA",
+      "MM_LAB_MACHINE_RETORT_MML",
+      "MM_LAB_MACHINE_RETORT_AAA",
+      "MM_LAB_MACHINE_RETORT_AAM",
+      "MM_LAB_MACHINE_RETORT_AAL",
+      "MM_LAB_MACHINE_RETORT_LLL",
+      "MM_LAB_MACHINE_RETORT_LLA",
+      "MM_LAB_MACHINE_RETORT_LLM"
+    ]
+  },
+  {
     "description": "Aldarin - Metal wall Torches",
     "height": 235,
     "offset": [ -36, -17, 5 ],
