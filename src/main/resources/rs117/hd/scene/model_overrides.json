@@ -9551,7 +9551,8 @@
       "FAI_FALADOR_CASTLE_LADDER_UP",
       "FAI_FALADOR_CASTLE_LADDERTOP",
       "LUC2_DARKSQUALL_LADDER",
-      "LUC2_DARKSQUALL_LADDERTOP"
+      "LUC2_DARKSQUALL_LADDERTOP",
+      "ATJUN_MINE_LADDER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -11790,7 +11791,12 @@
       "HUNTING_DEADFALL_TRAPPING_FENNEC",
       "HUNTING_DEADFALL_TRAPPING_FENNEC_M",
       "HUNTING_DEADFALL_FULL_FENNEC",
-      "CASTLEWARS_STEPING_STONE"
+      "CASTLEWARS_STEPING_STONE",
+      "ATJUN_ROCKS_SMALL_SOFT_01",
+      "ATJUN_ROCKS_SMALL_SOFT_02",
+      "ATJUN_ROCKS_FLOOR_SOFT_03",
+      "ATJUN_ROCKS_FLOOR_SOFT_02",
+      "ATJUN_ROCKS_FLOOR_SOFT_01"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
@@ -58871,16 +58877,6 @@
     "objectIds": [
       "GEMROCK",
       "GEMROCK1"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Metal",
-        "colors": "h == 6",
-        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-        "uvScale": 0.6,
-        "uvOrientationX": 512,
-        "uvType": "BOX"
-      }
     ]
   },
   {
@@ -58894,15 +58890,27 @@
     "objectIds": [
       "ROCKS1",
       "ROCKS2"
+    ]
+  },
+  {
+    "description": "Shilo Mine - Entrance Ladder",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_MINE_LADDER_HOLE"
     ],
     "colorOverrides": [
       {
-        "description": "Metal",
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
-        "uvScale": 0.6,
+        "uvOrientationZ": 512,
         "uvOrientationX": 512,
+        "uvScale": 0.6,
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
       }
     ]
   }
