@@ -1817,6 +1817,11 @@
     "name": "STONE"
   },
   {
+    "name": "STONE_DARK",
+    "parent": "STONE",
+    "brightness": 0.88
+  },
+  {
     "name": "STONE_NORMALED",
     "parent": "STONE",
     "normalMap": "STONE_N",

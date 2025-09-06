@@ -58819,5 +58819,45 @@
         "uvOrientation": 192
       }
     ]
+  },
+  {
+    "description": "Shilo Mine - Walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_MINE_WALL",
+      "ATJUN_MINE_WALL_ROCKY"
+    ]
+  },
+  {
+    "description": "Shilo Mine - Walls",
+    "baseMaterial": "STONE_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_CAVEWALL_TOP"
+    ],
+    "uvScale": 1.5,
+    "uvOrientation": -100
+  },
+  {
+    "description": "Shilo Mine - Walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_MINE_WALL_SUPPORT_LEFT",
+      "ATJUN_MINE_WALL_SUPPORT_MID",
+      "ATJUN_MINE_WALL_LAMP",
+      "ATJUN_MINE_WALL_SUPPORT_RIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.6,
+        "uvOrientationX": 512,
+        "uvType": "BOX"
+      }
+    ]
   }
 ]
