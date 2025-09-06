@@ -58857,7 +58857,6 @@
     ],
     "colorOverrides": [
       {
-        "description": "Metal",
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvScale": 0.6,
