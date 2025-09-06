@@ -1859,6 +1859,21 @@
     ]
   },
   {
+    "name": "FACETED_STONE",
+    "parent": "SMOOTH_STONE",
+    "normalMap": "METALLIC_2_N",
+    "brightness": 1.1,
+    "specularStrength": 1,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "FACETED_STONE_NO_GLOSS",
+    "parent": "FACETED_STONE",
+    "normalMap": "STONE_N",
+    "specularStrength": 0,
+    "specularGloss": 0
+  },
+  {
     "name": "WALL_STONE_N"
   },
   {

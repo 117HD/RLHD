@@ -58859,5 +58859,51 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Shilo Mine - Gem Rocks",
+    "baseMaterial": "FACETED_STONE",
+    "areas": [
+      "SHILO_VILLAGE_MINE",
+      "SHILO_VILLAGE_MINE_SURFACE"
+    ],
+    "uvType": "BOX",
+    "objectIds": [
+      "GEMROCK",
+      "GEMROCK1"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.6,
+        "uvOrientationX": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Shilo Mine - Gem Rocks - Depleted",
+    "baseMaterial": "FACETED_STONE_NO_GLOSS",
+    "areas": [
+      "SHILO_VILLAGE_MINE",
+      "SHILO_VILLAGE_MINE_SURFACE"
+    ],
+    "uvType": "BOX",
+    "objectIds": [
+      "ROCKS1",
+      "ROCKS2"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.6,
+        "uvOrientationX": 512,
+        "uvType": "BOX"
+      }
+    ]
   }
 ]
