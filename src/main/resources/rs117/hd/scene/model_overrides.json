@@ -58880,7 +58880,7 @@
   },
   {
     "description": "Shilo Mine - Gem Rocks - Depleted",
-    "baseMaterial": "FACETED_STONE_NO_GLOSS",
+    "baseMaterial": "SMOOTH_STONE",
     "areas": [
       "SHILO_VILLAGE_MINE",
       "SHILO_VILLAGE_MINE_SURFACE"
