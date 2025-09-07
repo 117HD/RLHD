@@ -58912,5 +58912,14 @@
         "baseMaterial": "BLACK"
       }
     ]
+  },
+  {
+    "description": "Shilo Mine - Bank Deposit Chest",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BANK_DEPOSIT_CHEST"
+    ]
   }
 ]
