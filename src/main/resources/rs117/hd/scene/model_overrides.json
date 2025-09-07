@@ -58867,7 +58867,7 @@
   },
   {
     "description": "Shilo Mine - Gem Rocks",
-    "baseMaterial": "FACETED_STONE",
+    "baseMaterial": "GEM_STONE",
     "uvScale": 1.1,
     "uvOrientation": 512,
     "areas": [

@@ -1859,8 +1859,7 @@
     ]
   },
   {
-    "name": "FACETED_STONE",
-    "parent": "GEM_STONE",
+    "name": "GEM_STONE",
     "normalMap": "METALLIC_2_N",
     "brightness": 1.1,
     "specularStrength": 1,
