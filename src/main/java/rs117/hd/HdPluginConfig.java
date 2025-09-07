@@ -1056,6 +1056,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_HDR_GAMMA_CORRECTION = "hdrGammaCorrection";
+	@ConfigItem(
+		keyName = KEY_HDR_GAMMA_CORRECTION,
+		name = "HDR gamma correction",
+		description = "Correctly simulates SDR gamma when Windows is in HDR mode.",
+		section = experimentalSettings
+	)
+	default boolean hdrGammaCorrection() {
+		return false;
+	}
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")
