@@ -58836,17 +58836,7 @@
     ]
   },
   {
-    "description": "Shilo Mine - Walls",
-    "baseMaterial": "STONE_DARK",
-    "uvType": "BOX",
-    "objectIds": [
-      "ATJUN_CAVEWALL_TOP"
-    ],
-    "uvScale": 1.5,
-    "uvOrientation": -100
-  },
-  {
-    "description": "Shilo Mine - Walls",
+    "description": "Shilo Mine - Walls with Wooden Supports",
     "baseMaterial": "ROCK_3",
     "uvType": "BOX",
     "objectIds": [
@@ -58864,6 +58854,16 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "Shilo Mine - Wall Top",
+    "baseMaterial": "STONE_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_CAVEWALL_TOP"
+    ],
+    "uvScale": 1.5,
+    "uvOrientation": -100
   },
   {
     "description": "Shilo Mine - Gem Rocks",
