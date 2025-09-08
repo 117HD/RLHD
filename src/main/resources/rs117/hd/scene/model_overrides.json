@@ -18325,7 +18325,7 @@
     "materialOverrides": {
       "TROPICAL_LEAF": {
         "textureMaterial": "TROPICAL_LEAF",
-        "windDisplacementMode": "OBJECT",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "windDisplacementModifier": -2
       }
     }
@@ -54049,7 +54049,7 @@
     "materialOverrides": {
       "TROPICAL_LEAF": {
         "textureMaterial": "TROPICAL_LEAF",
-        "windDisplacementMode": "OBJECT",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "windDisplacementModifier": -3
       }
     }
