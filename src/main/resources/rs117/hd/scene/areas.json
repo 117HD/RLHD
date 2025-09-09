@@ -3237,6 +3237,13 @@
     ]
   },
   {
+    "name": "MORYTANIA_SLAYER_TOWER_BASEMENT",
+    "regions": [
+      13723
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "CANIFIS",
     "regions": [
       13878
