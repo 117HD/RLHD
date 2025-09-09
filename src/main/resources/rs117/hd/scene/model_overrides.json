@@ -45973,19 +45973,6 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 89
-      },
-      {
-        "description": "Items",
-        "colors": "h == 12",
-        "baseMaterial": "GRUNGE_3_SHINY",
-        "uvType": "BOX"
-      },
-      {
-        "description": "Items",
-        "colors": "h > 13",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
       }
     ]
   },
