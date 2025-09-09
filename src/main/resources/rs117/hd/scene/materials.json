@@ -2110,6 +2110,11 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_CONCRETE_FLAT",
+    "normalMap": null,
+    "parent": "HD_CONCRETE"
+  },
+  {
     "name": "HD_HAY_N"
   },
   {

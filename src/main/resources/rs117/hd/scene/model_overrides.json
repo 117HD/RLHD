@@ -13200,6 +13200,7 @@
   {
     "description": "Mortton - Objects - Stone - Funeral Pyre",
     "baseMaterial": "STONE_NORMALED",
+    "textureMaterial": "HD_CONCRETE_FLAT",
     "objectIds": [
       "TEMPLE_PYRE"
     ],
