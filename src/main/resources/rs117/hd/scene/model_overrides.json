@@ -25465,7 +25465,14 @@
       "MY2ARM_BONES3",
       "MY2ARM_BONES4",
       "NECROPOLIS_BONES1",
-      "NECROPOLIS_BONES3"
+      "NECROPOLIS_BONES3",
+      "CHICKENQUEST_WAR_BONES1",
+      "CHICKENQUEST_WAR_BONES2",
+      "CHICKENQUEST_WAR_BONES3",
+      "CHICKENQUEST_WAR_BONES4",
+      "CHICKENQUEST_BONES_SMALL_01",
+      "CHICKENQUEST_BONES_SMALL_02",
+      "CHICKENQUEST_BONES_SMALL_03"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -33800,6 +33807,50 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 100
+  },
+  {
+    "description": "Molch Ruins Pyramid Facade",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "MOLCH_TEMPLE_FLATSKEW_CORN",
+      "MOLCH_TEMPLE_FLATSKEW",
+      "MOLCH_TEMPLE_TABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Molch Ruins Temple Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "MOLCH_TEMPLE_LIZARD_DWELLING",
+      "MOLCH_TEMPLE_LIZARD_DWELLING2",
+      "MOLCH_TEMPLE_LIZARD_DWELLING3",
+      "MOLCH_TEMPLE_LIZARD_DWELLING4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "s == 7 && l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Molch Ruins Temple Exit",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "MOLCH_TEMPLE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Olmic Halfwall",
@@ -48436,13 +48487,16 @@
     ]
   },
   {
-    "description": "Kebos Lowlands - Wooden - Log -  Molch Palisade",
+    "description": "Kebos Lowlands - Wooden - Log - Molch Palisade",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
       "MOLCH_PALISADE_1",
-      "MOLCH_PALISADE_2"
+      "MOLCH_PALISADE_2",
+      "MOLCH_SWAMP_STUMP1",
+      "MOLCH_SWAMP_STUMP2",
+      "MOLCH_SWAMP_STUMP3"
     ],
     "colorOverrides": [
       {
@@ -48458,6 +48512,64 @@
         "uvScale": 0.5,
         "uvOrientation": 212
       }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Stone - Molch Low Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "MOLCH_LOW_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 3",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Molch Swampy Lamp",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "LIZARDMAN_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Hide fake lighting",
+        "colors": "a < 255 && l > 50 && l < 70",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Lizardman Lair Entrance",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "LIZARDMAN_LAIR"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Lizardman Temple - Chest & Vase",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "MOLCH_TEMPLE_CHEST_THEIVING",
+      "MOLCH_TEMPLE_CHEST_THEIVING_OPEN",
+      "MOLCH_TEMPLE_CHEST_TABLET",
+      "MOLCH_TEMPLE_VASE1",
+      "MOLCH_TEMPLE_VASE2"
     ]
   },
   {
