@@ -682,6 +682,11 @@
     "parent": "NONE"
   },
   {
+    "name": "GRAY_300",
+    "parent": "NONE",
+    "brightness": 3
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5

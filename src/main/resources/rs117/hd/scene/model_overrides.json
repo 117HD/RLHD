@@ -48531,6 +48531,7 @@
   {
     "description": "Kebos Lowlands - Molch Swampy Lamp",
     "baseMaterial": "LEAF_VEINS",
+    "upwardsNormals": true,
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
@@ -48545,8 +48546,14 @@
       },
       {
         "description": "Hide fake lighting",
-        "colors": "a < 255 && l > 50 && l < 70",
+        "colors": "a < 255 && l > 50 && l < 60",
         "baseMaterial": "TRANSPARENT"
+      },
+      {
+        "description": "Brighten bulb",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_300",
+        "upwardsNormals": true
       }
     ]
   },

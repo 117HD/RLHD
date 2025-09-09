@@ -25172,6 +25172,23 @@
     ]
   },
   {
+    "description": "LIZARDMAN_LAMP",
+    "offset": [ 30, 120, 0 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "LIZARDMAN_LAMP"
+    ]
+  },
+  {
     "description": "LIZARDMAN_TEMPLE_SKYLIGHT",
     "height": 850,
     "alignment": "CENTER",
