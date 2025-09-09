@@ -21509,7 +21509,7 @@
   {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
       "SWAMP_PLANT1",
       "SWAMP_PLANT2",
@@ -57868,10 +57868,13 @@
   {
     "description": "Fossil Island - Tar Swamp - Vines",
     "baseMaterial": "GRUNGE_3_LIGHT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "uvType": "BOX",
     "objectIds": [
       "FOSSIL_FLORA_SWAMP_VINE_01",
-      "FOSSIL_FLORA_SWAMP_VINE_TOP_01"
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_01",
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_02",
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_03"
     ]
   },
   {

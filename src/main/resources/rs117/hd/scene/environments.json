@@ -1126,7 +1126,9 @@
     "directionalColor": "#cfe5b5",
     "directionalStrength": 1,
     "fogColor": "#292c10",
-    "fogDepth": 50
+    "fogDepth": 50,
+    "windStrength": 30,
+    "windSpeed": 10
   },
   {
     "area": "BLOOD_ALTAR",
