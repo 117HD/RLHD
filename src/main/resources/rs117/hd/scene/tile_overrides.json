@@ -7423,7 +7423,7 @@
   {
     "name": "Molch Temple floor fix inside",
     "area": "LIZARDMAN_TEMPLE",
-    "overlayIds": [ 133 ],
+    "overlayIds": [ 115, 133 ],
     "blended": false,
     "groundMaterial": "DIRTY_MARBLE_GLOSS"
   },

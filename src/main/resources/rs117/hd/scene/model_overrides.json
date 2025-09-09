@@ -48581,6 +48581,15 @@
     ]
   },
   {
+    "description": "Kebos Lowlands - Lizardman Temple - Cat Statue",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "MOLCH_TEMPLE_CAT"
+    ]
+  },
+  {
     "description": "Zeah - Kourend - Kebos Lowlands - Rock - Crystal -  Archeuus Rocks - Large",
     "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
     "uvType": "BOX",
