@@ -1131,6 +1131,11 @@
     "windSpeed": 10
   },
   {
+    "area": "LIZARDMAN_TEMPLE",
+    "ambientColor": "#FFF0D6",
+    "fogDepth": 25
+  },
+  {
     "area": "BLOOD_ALTAR",
     "ambientColor": "#be48ae",
     "directionalColor": "#4eeeff",
