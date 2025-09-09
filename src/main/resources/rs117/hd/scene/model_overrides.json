@@ -11884,6 +11884,7 @@
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
+      "SWAMP_MOSS_COVERED_ROCK_1",
       "SWAMP_MOSS_COVERED_ROCK_2",
       "HUNTING_TRAIL_SPAWN_FOSSIL1",
       "HUNTING_TRAIL_SPAWN_FOSSIL3",
@@ -21390,7 +21391,9 @@
       "AHOY_PLANT_4",
       "SMALL_PLANT1",
       "SMALL_PLANT2",
-      "SMALL_PLANT3"
+      "SMALL_PLANT3",
+      "ARCQUEST_HUNTING_PLANT_NOOP",
+      "ARCQUEST_HUNTING_PLANT_OP"
     ]
   },
   {
