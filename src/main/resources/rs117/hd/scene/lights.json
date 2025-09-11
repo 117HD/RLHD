@@ -26267,9 +26267,9 @@
   },
   {
     "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
-    "height": 250,
+    "height": 240,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -26277,8 +26277,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
-    "range": 20,
+    "duration": 700,
+    "range": 7,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW_AIR"
     ]
