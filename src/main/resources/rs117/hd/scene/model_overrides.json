@@ -9474,6 +9474,17 @@
     "uvOrientation": 256
   },
   {
+    "description": "Earth Altar - Hide stalagmite shadows",
+    "areas": [ "EARTH_ALTAR" ],
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "STAGATITE_LARGE"
+    ],
+    "castShadows": false,
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
     "description": "Wooden Wall Supports - Mines",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
