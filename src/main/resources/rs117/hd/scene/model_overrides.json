@@ -26878,7 +26878,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "uvOrientation": 42,
     "objectIds": [
       "GOTR_PLANT_ELK01_DEFAULT01",
@@ -26893,7 +26893,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "uvOrientation": 343,
     "objectIds": [
       "GOTR_PLANT_SPONGE01_DEFAULT01",
@@ -26906,7 +26906,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "windDisplacementModifier": 2,
     "objectIds": [
       "GOTR_PLANT_LACE01_DEFAULT01",
@@ -26917,7 +26917,7 @@
   {
     "description": "Guardians of the Rift - Dead Coral",
     "baseMaterial": "GRUNGE_2",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "windDisplacementModifier": 2,
     "objectIds": [
       "GOTR_PLANT_SPONGE02_DEFAULT01_2X2",
