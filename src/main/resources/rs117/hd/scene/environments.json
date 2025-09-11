@@ -1767,15 +1767,15 @@
   },
   {
     "area": "BODY_ALTAR",
-    "fogColor": "#100707",
-    "ambientStrength": 0.3,
+    "fogColor": "#1E1212",
+    "ambientStrength": 0.6,
     "ambientColor": "#AAAFB6",
     "directionalStrength": 1.7,
     "sunAngles": [
       66,
       250
     ],
-    "fogDepth": 46
+    "fogDepth": 60
   },
   {
     "area": "CHAOS_ALTAR",
