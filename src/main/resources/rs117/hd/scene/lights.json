@@ -35565,8 +35565,8 @@
     "description": "RUNECRAFTING_YELLOW_PORTALS",
     "height": 30,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 7.5,
+    "radius": 400,
+    "strength": 17.5,
     "color": [
       255,
       216,
@@ -35574,7 +35574,7 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 50,
+    "range": 20,
     "objectIds": [
       "COSMICTEMPLE_EXIT_PORTAL",
       "LAWTEMPLE_EXIT_PORTAL",
