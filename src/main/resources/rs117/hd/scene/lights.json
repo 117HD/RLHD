@@ -24717,8 +24717,8 @@
     "description": "TRUE_BLOOD_ALTAR",
     "height": 300,
     "alignment": "CENTER",
-    "radius": 4000,
-    "strength": 4,
+    "radius": 1200,
+    "strength": 3,
     "color": [
       255,
       0,
@@ -24726,7 +24726,7 @@
     ],
     "type": "PULSE",
     "duration": 2000,
-    "range": 10,
+    "range": 20,
     "objectIds": [
       "BLOOD_ALTAR"
     ]
@@ -24768,7 +24768,7 @@
     "range": 5
   },
   {
-    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE",
+    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_WIDE",
     "worldX": 3232,
     "worldY": 4847,
     "plane": 0,
@@ -24784,7 +24784,25 @@
     "type": "FLICKER",
     "duration": 1280,
     "range": 5
-  },
+  },  {
+  "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_SHORT",
+  "worldX": 3232,
+  "worldY": 4847,
+  "plane": 0,
+  "height": 600,
+  "alignment": "CENTER",
+  "radius": 700,
+  "strength": 14,
+  "color": [
+    255,
+    0,
+    255
+  ],
+  "type": "FLICKER",
+  "duration": 1280,
+  "range": 5
+},
+
   {
     "description": "TRUE_BLOOD_ALTAR_CRYSTAL_3",
     "worldX": 3232,

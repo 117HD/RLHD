@@ -5763,6 +5763,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",
+    "aabbs": [
+      [ 3231, 4846, 3233, 4848 ]
+    ]
+  },
+  {
     "name": "LITHKREN_DUNGEON",
     "regions": [
       6223

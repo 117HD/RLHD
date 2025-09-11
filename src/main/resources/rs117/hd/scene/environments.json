@@ -1459,8 +1459,16 @@
   },
   {
     "area": "TRUE_BLOOD_ALTAR",
-    "ambientColor": "#97baff",
-    "directionalStrength": 4
+    "fogColor": "#0C0000",
+    "ambientColor": "#8E7070",
+    "directionalStrength": 3.25,
+    "ambientStrength": 1.75,
+    "underglowStrength": 3,
+    "underglowColor": "#FF1414",
+    "waterCausticsStrength": 0,
+    "fogDepth": 20,
+    "windSpeed": 10,
+    "windStrength": 27.5
   },
   {
     "area": "TARNS_LAIR",

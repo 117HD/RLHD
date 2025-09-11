@@ -3251,12 +3251,19 @@
     "groundMaterial": "HD_WOOD_PLANKS_2"
   },
   {
+    "name": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",
+    "area": "TRUE_BLOOD_ALTAR_CRYSTAL_POOL",
+    "overlayIds": [
+      72
+    ]
+  },
+  {
     "name": "TRUE_BLOOD_ALTAR_BLOOD",
     "area": "TRUE_BLOOD_ALTAR",
     "overlayIds": [
       72
     ],
-    "waterType": "BLOOD",
+    "waterType": "BLOOD_FLAT",
     "blended": false
   },
   {
