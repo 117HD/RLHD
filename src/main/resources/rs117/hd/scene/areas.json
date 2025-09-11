@@ -5722,7 +5722,7 @@
   {
     "name": "FIRE_ALTAR",
     "aabbs": [
-      [ 2553, 4802, 2624, 4864 ]
+      [ 2553, 4802, 2622, 4864 ]
     ],
     "hideOtherAreas": true
   },
