@@ -13955,6 +13955,23 @@
     "flatNormals": true
   },
   {
+    "description": "Death Altar - Cave Walls",
+    "baseMaterial": "ROCK_2_LIGHT",
+    "uvOrientation": 150,
+    "uvType": "BOX",
+    "objectIds": [
+      "CAVEWALL_FACE1_BLACK",
+      "CAVEWALL_TOP_BLACK",
+      "STALAGMITE_TWIN_BLACK",
+      "CAVE_DETAIL1_BLACK",
+      "CAVE_DETAIL1R_BLACK",
+      "CAVE_DETAIL2_BLACK",
+      "CAVE_DETAIL2R_BLACK",
+      "ROCKCOLUMN2_BLACK",
+      "ROCKCOLUMN3_BLACK"
+    ]
+  },
+  {
     "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -15770,6 +15787,7 @@
       "DEADTREE2_WEB_R",
       "DEADTREE2_WEB_L",
       "DEADTREE_BURNT",
+      "DEADTREE_BURNT_INACTIVE",
       "GRANDTREE_CLIMBTREE",
       "GRANDTREE_DOWNTREE",
       "WILD3_TREE_A",
