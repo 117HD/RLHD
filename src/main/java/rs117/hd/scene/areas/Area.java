@@ -47,7 +47,7 @@ public class Area {
 			Collections.addAll(aabbs, rawAabbs);
 		if (regions != null)
 			for (int regionId : regions)
-				aabbs.add(new AABB(regionId));
+				aabbs.add(AABB.fromRegionId(regionId));
 		if (regionBoxes != null)
 			for (var box : regionBoxes)
 				aabbs.add(box.toAabb());

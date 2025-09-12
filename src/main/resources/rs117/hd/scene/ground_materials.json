@@ -107,6 +107,16 @@
     ]
   },
   {
+    "name": "PLAIN_DIRT",
+    "materials": [
+      "DIRT_1",
+      "DIRT_1",
+      "GRAVEL_LIGHT",
+      "DIRT_1",
+      "DIRT_1"
+    ]
+  },
+  {
     "name": "VARIED_DIRT",
     "materials": [
       "GRAVEL",
@@ -120,6 +130,15 @@
       "GRAVEL_SHINY",
       "DIRT_1_SHINY",
       "DIRT_2_SHINY"
+    ]
+  },
+  {
+    "name": "DIRTY_MARBLE",
+    "materials": [
+      "DIRT_1",
+      "MARBLE_1",
+      "DIRT_1",
+      "MARBLE_2"
     ]
   },
   {
@@ -248,6 +267,18 @@
       "MARBLE_3_SEMIGLOSS",
       "MARBLE_1_SEMIGLOSS",
       "MARBLE_2_SEMIGLOSS"
+    ]
+  },
+  {
+    "name": "MARBLE_4",
+    "materials": [
+      "MARBLE_4"
+    ]
+  },
+  {
+    "name": "MARBLE_4_GLOSS",
+    "materials": [
+      "MARBLE_4_GLOSS"
     ]
   },
   {
@@ -428,6 +459,14 @@
     ]
   },
   {
+    "name": "ROCK_PILES",
+    "materials": [
+      "STONE_NORMALED",
+      "GRAVEL",
+      "GRUNGE_1"
+    ]
+  },
+  {
     "name": "SANDY_STONE_FLOOR",
     "materials": [
       "SAND_2",
@@ -536,5 +575,13 @@
       "GRUNGE_1_LIGHT_SHINY",
       "GRUNGE_2_SHINY"
     ]
+  },
+  {
+    "name": "FORTIS_ROADS",
+    "materials": [ "FORTIS_ROADS" ]
+  },
+  {
+    "name": "FORTIS_ROADS_MIRRORED",
+    "materials": [ "FORTIS_ROADS_MIRRORED" ]
   }
 ]

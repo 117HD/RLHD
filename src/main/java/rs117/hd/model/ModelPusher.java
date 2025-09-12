@@ -3,12 +3,13 @@ package rs117.hd.model;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.gameval.ItemID;
 import net.runelite.api.kit.*;
 import net.runelite.client.RuneLite;
 import net.runelite.client.callback.ClientThread;
@@ -17,6 +18,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.SceneUploader;
@@ -54,6 +56,9 @@ public class ModelPusher {
 	private HdPluginConfig config;
 
 	@Inject
+	private MaterialManager materialManager;
+
+	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -72,7 +77,7 @@ public class ModelPusher {
 	public void startUp() {
 		assert WindDisplacement.values().length - 1 <= 0x7;
 
-		if (config.modelCaching() && !plugin.useLowMemoryMode) {
+		if (plugin.configModelCaching && !plugin.useLowMemoryMode) {
 			final int size = config.modelCacheSizeMiB();
 			try {
 				modelCache = new ModelCache(size, () -> {
@@ -182,12 +187,6 @@ public class ModelPusher {
 			model.getTexIndices3() != null &&
 			model.getTextureFaces() != null;
 
-		// Since color overrides are frequently used to selectively override the base model override,
-		// disable the override entirely if its color overrides need to be skipped for performance reasons
-		boolean uncached = needsCaching && !useCache;
-		if (uncached && modelOverride.colorOverrides != null)
-			modelOverride = ModelOverride.NONE;
-
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
@@ -212,23 +211,18 @@ public class ModelPusher {
 		boolean foundCachedVertexData = false;
 		boolean foundCachedNormalData = false;
 		boolean foundCachedUvData = skipUVs;
-		long vertexHash = 0;
-		long normalHash = 0;
-		long uvHash = 0;
 
 		if (useCache) {
 			assert client.isClientThread() : "Model caching isn't thread-safe";
 
-			vertexHash = modelHasher.vertexHash;
-			IntBuffer vertexData = this.modelCache.getIntBuffer(vertexHash);
+			IntBuffer vertexData = this.modelCache.getIntBuffer(modelHasher.vertexHash);
 			foundCachedVertexData = vertexData != null && vertexData.remaining() == bufferSize;
 			if (foundCachedVertexData) {
 				sceneContext.stagingBufferVertices.put(vertexData);
 				vertexData.rewind();
 			}
 
-			normalHash = modelHasher.calculateNormalCacheHash();
-			FloatBuffer normalData = this.modelCache.getFloatBuffer(normalHash);
+			FloatBuffer normalData = this.modelCache.getFloatBuffer(modelHasher.normalHash);
 			foundCachedNormalData = normalData != null && normalData.remaining() == bufferSize;
 			if (foundCachedNormalData) {
 				sceneContext.stagingBufferNormals.put(normalData);
@@ -236,8 +230,7 @@ public class ModelPusher {
 			}
 
 			if (!foundCachedUvData) {
-				uvHash = modelHasher.calculateUvCacheHash(preOrientation, modelOverride);
-				FloatBuffer uvData = this.modelCache.getFloatBuffer(uvHash);
+				FloatBuffer uvData = this.modelCache.getFloatBuffer(modelHasher.uvHash);
 				foundCachedUvData = uvData != null && uvData.remaining() == bufferSize;
 				if (foundCachedUvData) {
 					texturedFaceCount = faceCount;
@@ -266,7 +259,7 @@ public class ModelPusher {
 			cacheUvData = !foundCachedUvData;
 
 			if (cacheVertexData) {
-				fullVertexData = this.modelCache.reserveIntBuffer(vertexHash, bufferSize);
+				fullVertexData = this.modelCache.reserveIntBuffer(modelHasher.vertexHash, bufferSize);
 				if (fullVertexData == null) {
 					log.error("failed to reserve vertex buffer");
 					cacheVertexData = false;
@@ -274,7 +267,7 @@ public class ModelPusher {
 			}
 
 			if (cacheNormalData) {
-				fullNormalData = this.modelCache.reserveFloatBuffer(normalHash, bufferSize);
+				fullNormalData = this.modelCache.reserveFloatBuffer(modelHasher.normalHash, bufferSize);
 				if (fullNormalData == null) {
 					log.error("failed to reserve normal buffer");
 					cacheNormalData = false;
@@ -282,7 +275,7 @@ public class ModelPusher {
 			}
 
 			if (cacheUvData) {
-				fullUvData = this.modelCache.reserveFloatBuffer(uvHash, bufferSize);
+				fullUvData = this.modelCache.reserveFloatBuffer(modelHasher.uvHash, bufferSize);
 				if (fullUvData == null) {
 					log.error("failed to reserve uv buffer");
 					cacheUvData = false;
@@ -337,7 +330,7 @@ public class ModelPusher {
 					uvType = UvType.VANILLA;
 					material = textureMaterial;
 					if (material == Material.NONE)
-						material = Material.fromVanillaTexture(textureId);
+						material = materialManager.fromVanillaTexture(textureId);
 				}
 
 				ModelOverride faceOverride = modelOverride;
@@ -401,7 +394,7 @@ public class ModelPusher {
 		sceneContext.modelPusherResults[1] = texturedFaceCount;
 	}
 
-	private void getNormalDataForFace(SceneContext sceneContext, Model model, @NonNull ModelOverride modelOverride, int face) {
+	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
 		assert SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
@@ -461,7 +454,7 @@ public class ModelPusher {
 		Tile tile,
 		int uuid,
 		Model model,
-		@NonNull ModelOverride modelOverride,
+		@Nonnull ModelOverride modelOverride,
 		int face
 	) {
 		if (model.getFaceColors3()[face] == -2)

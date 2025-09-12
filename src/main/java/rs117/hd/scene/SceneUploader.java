@@ -81,6 +81,9 @@ public class SceneUploader {
 	private AreaManager areaManager;
 
 	@Inject
+	private MaterialManager materialManager;
+
+	@Inject
 	private TileOverrideManager tileOverrideManager;
 
 	@Inject
@@ -231,6 +234,7 @@ public class SceneUploader {
 		int baseExX = sceneContext.sceneBase[0];
 		int baseExY = sceneContext.sceneBase[1];
 		int basePlane = sceneContext.sceneBase[2];
+		Material blackMaterial = materialManager.getMaterial("BLACK");
 
 		Tile[][][] extendedTiles = sceneContext.scene.getExtendedTiles();
 		for (int tileZ = 0; tileZ < MAX_Z; ++tileZ) {
@@ -296,7 +300,7 @@ public class SceneUploader {
 						int vertexCount;
 
 						if (model == null) {
-							uploadBlackTile(sceneContext, tileExX, tileExY, renderLevel);
+							uploadCustomTile(sceneContext, tileExX, tileExY, renderLevel, blackMaterial);
 							vertexCount = 6;
 						} else {
 							int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
@@ -338,7 +342,7 @@ public class SceneUploader {
 
 		// check if the model has already been uploaded
 		if ((model.getSceneId() & SCENE_ID_MASK) == sceneContext.id) {
-			// if the same model is being uploaded, but with a different area-specific model override,
+			// if the same model is being uploaded, but with a different model override,
 			// exclude it from the scene buffer to avoid conflicts
 			if (model.getSceneId() != sceneId)
 				model.setSceneId(EXCLUDED_FROM_SCENE_BUFFER);
@@ -629,7 +633,7 @@ public class SceneUploader {
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
-					var material = Material.fromVanillaTexture(textureId);
+					var material = materialManager.fromVanillaTexture(textureId);
 					// Disable tile overrides for newly introduced vanilla textures
 					if (material.isFallbackVanillaMaterial)
 						override = NONE;
@@ -953,7 +957,7 @@ public class SceneUploader {
 			boolean vertexBIsOverlay = false;
 			boolean vertexCIsOverlay = false;
 
-			int textureId = -1;
+			int textureId;
 			Material materialA = Material.NONE;
 			Material materialB = Material.NONE;
 			Material materialC = Material.NONE;
@@ -982,7 +986,7 @@ public class SceneUploader {
 				waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 				if (waterType == WaterType.NONE) {
 					if (textureId != -1) {
-						var material = Material.fromVanillaTexture(textureId);
+						var material = materialManager.fromVanillaTexture(textureId);
 						// Disable tile overrides for newly introduced vanilla textures
 						if (material.isFallbackVanillaMaterial)
 							override = NONE;
@@ -1244,7 +1248,7 @@ public class SceneUploader {
 		return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 	}
 
-	private void uploadBlackTile(SceneContext sceneContext, int tileExX, int tileExY, int tileZ) {
+	private void uploadCustomTile(SceneContext sceneContext, int tileExX, int tileExY, int tileZ, Material material) {
 		final Scene scene = sceneContext.scene;
 
 		int color = 0;
@@ -1279,7 +1283,7 @@ public class SceneUploader {
 		sceneContext.stagingBufferVertices.put(toX, seHeight, fromY, color);
 		sceneContext.stagingBufferVertices.put(fromX, nwHeight, toY, color);
 
-		int packedMaterialData = Material.BLACK.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
 
 		sceneContext.stagingBufferUvs.ensureCapacity(24);
 		sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialData);

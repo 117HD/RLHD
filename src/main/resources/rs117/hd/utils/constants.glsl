@@ -33,6 +33,7 @@
 #define SHADOW_COMBINED_MAX ((1 << SHADOW_COMBINED_BITS) - 1)
 
 #include SHADOW_TRANSPARENCY
+#include PIXELATED_SHADOWS
 #if SHADOW_TRANSPARENCY
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.01 // Remove shadows from clickboxes
 #else

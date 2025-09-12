@@ -10,6 +10,7 @@ package rs117.hd.utils;
 
 import java.util.Arrays;
 import java.util.Random;
+import javax.annotation.Nullable;
 
 /**
  * Math utility functions similar to GLSL, including vector operations on raw float arrays.
@@ -66,24 +67,40 @@ public class MathUtils {
 		return Arrays.copyOf(v, v.length);
 	}
 
-	public static float[] copyTo(float[] out, float[] in, int offset, int len) {
-		assert offset + len <= min(out.length, in.length);
-		System.arraycopy(in, offset, out, offset, len);
+	public static int[] copy(int[] v) {
+		return Arrays.copyOf(v, v.length);
+	}
+
+	public static float[] copyTo(float[] out, @Nullable float[] in, int offset, int len) {
+		if (in != null) {
+			assert offset + len <= min(out.length, in.length);
+			System.arraycopy(in, offset, out, offset, len);
+		}
 		return out;
 	}
 
-	public static float[] copyTo(float[] out, float[] in) {
-		return copyTo(out, in, 0, min(out.length, in.length));
+	public static float[] copyTo(float[] out, @Nullable float[] in) {
+		return copyTo(out, in, 0, in == null ? out.length : min(out.length, in.length));
 	}
 
-	public static int[] copyTo(int[] out, int[] in, int offset, int len) {
-		assert offset + len <= min(out.length, in.length);
-		System.arraycopy(in, offset, out, offset, len);
+	public static int[] copyTo(int[] out, @Nullable int[] in, int offset, int len) {
+		if (in != null) {
+			assert offset + len <= min(out.length, in.length);
+			System.arraycopy(in, offset, out, offset, len);
+		}
 		return out;
 	}
 
-	public static int[] copyTo(int[] out, int[] in) {
-		return copyTo(out, in, 0, min(out.length, in.length));
+	public static int[] copyTo(int[] out, @Nullable int[] in) {
+		return copyTo(out, in, 0, in == null ? out.length : min(out.length, in.length));
+	}
+
+	public static float[] ensureDefaults(@Nullable float[] in, float[] defaults) {
+		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
+	}
+
+	public static int[] ensureDefaults(@Nullable int[] in, int[] defaults) {
+		return in != null && in.length == defaults.length ? in : copyTo(copy(defaults), in);
 	}
 
 	public static int[] slice(int[] v, int offset) {

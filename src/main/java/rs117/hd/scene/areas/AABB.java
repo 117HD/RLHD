@@ -49,15 +49,6 @@ public class AABB {
 	public final int maxY;
 	public final int maxZ;
 
-	public AABB(int regionId) {
-		minX = (regionId >>> 8) << 6;
-		minY = (regionId & 0xFF) << 6;
-		maxX = minX + REGION_SIZE - 1;
-		maxY = minY + REGION_SIZE - 1;
-		minZ = Integer.MIN_VALUE;
-		maxZ = Integer.MAX_VALUE;
-	}
-
 	public AABB(int x, int y) {
 		minX = maxX = x;
 		minY = maxY = y;
@@ -103,6 +94,14 @@ public class AABB {
 
 	public AABB(int[] from, int[] to) {
 		this(from[0], from[1], from[2], to[0], to[1], to[2]);
+	}
+
+	public static AABB fromRegionId(int regionId) {
+		int minX = (regionId >>> 8) << 6;
+		int minY = (regionId & 0xFF) << 6;
+		int maxX = minX + REGION_SIZE - 1;
+		int maxY = minY + REGION_SIZE - 1;
+		return new AABB(minX, minY, maxX, maxY);
 	}
 
 	public AABB onPlane(int plane) {
@@ -237,9 +236,8 @@ public class AABB {
 					continue;
 				}
 
-				// Parse numbers as region IDs
 				if (in.peek() == JsonToken.NUMBER) {
-					list.add(new AABB(in.nextInt()));
+					log.warn("AABBs are specified by two or more numbers. Did you forget to add an array at {}?", GsonUtils.location(in));
 					continue;
 				}
 
@@ -278,7 +276,7 @@ public class AABB {
 
 				switch (i) {
 					case 1:
-						list.add(new AABB(ints[0]));
+						log.warn("AABBs are specified by two or more numbers, only one was provided at {}", GsonUtils.location(in));
 						break;
 					case 2:
 						list.add(new AABB(ints[0], ints[1]));
