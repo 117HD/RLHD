@@ -54,3 +54,7 @@
 #include TILED_LIGHTING_LAYER_COUNT
 #include TILED_LIGHTING_TILE_SIZE
 #include MAX_LIGHT_COUNT
+
+// TODO: Once this is packed differently, this can be renabled
+#undef UNDO_VANILLA_SHADING
+#define UNDO_VANILLA_SHADING 0

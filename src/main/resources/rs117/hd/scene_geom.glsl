@@ -90,7 +90,6 @@ void main() {
         vec3 normal = gNormal[i].xyz;
 
         OUT.position = gPosition[i];
-        OUT.position.z += ((vHsl[i] >> 16) & 0xF)  / 128.0;
 
         OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
@@ -100,7 +99,10 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        gl_Position = projectionMatrix * vec4(OUT.position, 1);
+
+        vec4 csPos = projectionMatrix * vec4(OUT.position, 1);
+        csPos.z = float((vHsl[i] >> 16) & 0xFF)  / 128.0;
+        gl_Position = csPos;
         EmitVertex();
     }
 

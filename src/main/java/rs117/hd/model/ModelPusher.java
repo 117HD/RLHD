@@ -504,7 +504,7 @@ public class ModelPusher {
 		if (faceTransparencies != null && !isTextured)
 			packedAlphaDepthBias |= (faceTransparencies[face] & 0xFF) << 24;
 		if (faceBias != null)
-			packedAlphaDepthBias |= (faceBias[face] & 0xF) << 16;
+			packedAlphaDepthBias |= (faceBias[face] & 0xFF) << 16;
 
 		if (isTextured) {
 			// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
@@ -513,7 +513,7 @@ public class ModelPusher {
 			color1 = color2 = color3 = 90;
 
 			// Let the shader know vanilla shading reversal should be skipped for this face
-			packedAlphaDepthBias |= 1 << 20;
+			//packedAlphaDepthBias |= 1 << 20; TODO: This needs to be packed differently
 		} else {
 			final int overrideAmount = model.getOverrideAmount() & 0xFF;
 			if (overrideAmount > 0) {
@@ -571,7 +571,7 @@ public class ModelPusher {
 							color1 = color2 = color3 = averageColor;
 
 							// Let the shader know vanilla shading reversal should be skipped for this face
-							packedAlphaDepthBias |= 1 << 20;
+							//packedAlphaDepthBias |= 1 << 20; TODO: This needs to be packed differently
 						} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
 							int faceColorIndex = -1;
 							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
@@ -612,7 +612,7 @@ public class ModelPusher {
 									color1 = color2 = color3 = color;
 
 									// Let the shader know vanilla shading reversal should be skipped for this face
-									packedAlphaDepthBias |= 1 << 20;
+									//packedAlphaDepthBias |= 1 << 20; TODO: This needs to be packed differently
 								}
 							}
 						}
