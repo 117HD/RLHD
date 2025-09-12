@@ -29437,11 +29437,13 @@
     "height": 125,
     "alignment": "CENTER",
     "radius": 200,
-    "strength": 5.5,
+    "strength": 8.5,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 150,
     "color": [
       255,
-      240.28485,
-      0
+      255,
+      100
     ],
     "type": "FLICKER",
     "duration": 0,
