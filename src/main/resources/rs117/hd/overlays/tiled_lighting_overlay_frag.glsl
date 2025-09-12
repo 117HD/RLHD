@@ -1,6 +1,6 @@
 #version 330
 
-#define DEBUG_LIGHT_RADIUS_PADDING
+//#define DEBUG_LIGHT_RADIUS_PADDING
 
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
@@ -21,9 +21,6 @@ void main() {
     vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
     vec3 viewDir = normalize(farPos.xyz / farPos.w);
 
-    vec2 ndcUvCenter = texelCenter * 2 - 1;
-    farPos = invProjectionMatrix * vec4(ndcUvCenter, eps, 1);
-    vec3 viewDirCenter = normalize(farPos.xyz / farPos.w);
 
     vec4 c = vec4(0);
 
@@ -77,7 +74,6 @@ void main() {
                 if (accurateDistSq < lightRadiusSq)
                     c.r = 1;
             }
-//            break;
         }
 
         if (length(c) > 0 && c.a == 0)
