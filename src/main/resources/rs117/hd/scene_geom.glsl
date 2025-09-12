@@ -88,7 +88,10 @@ void main() {
     for (int i = 0; i < 3; i++) {
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i].xyz;
+
         OUT.position = gPosition[i];
+        OUT.position.z += ((vHsl[i] >> 16) & 0xF)  / 128.0;
+
         OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
             OUT.normal = N;

@@ -1402,7 +1402,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Create depth render buffer
 		rboSceneDepth = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8, sceneResolution[0], sceneResolution[1]);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32, sceneResolution[0], sceneResolution[1]);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
 		checkGLErrors();
 
@@ -2267,6 +2267,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 
+			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_GREATER);
+			glDepthMask(true);
+
 			// Enable blending for alpha
 			glEnable(GL_BLEND);
 			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
@@ -2287,11 +2291,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					);
 				}
 
-				glEnable(GL_DEPTH_TEST);
-				glDepthFunc(GL_GREATER);
-
 				// Draw custom tiles, writing depth
-				glDepthMask(true);
 				glDrawArrays(
 					GL_TRIANGLES,
 					sceneContext.staticCustomTilesOffset,
@@ -2299,7 +2299,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				);
 
 				// Draw the rest of the scene with depth testing, but not against itself
-				glDepthMask(false);
 				glDrawArrays(
 					GL_TRIANGLES,
 					sceneContext.staticVertexCount,
