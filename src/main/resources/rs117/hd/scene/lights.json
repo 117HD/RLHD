@@ -29163,7 +29163,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29280,7 +29280,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29605,11 +29605,11 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 4,
+    "strength": 8,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29623,7 +29623,7 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 6,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -29641,12 +29641,12 @@
     "description": "GOTR_WEAK_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.25,
+    "radius": 350,
+    "strength": 2,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29660,12 +29660,12 @@
     "description": "GOTR_MED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.5,
+    "radius": 300,
+    "strength": 5,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29679,8 +29679,8 @@
     "description": "GOTR_STRONG_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 2.25,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -29698,8 +29698,8 @@
     "description": "GOTR_OVERCHARGED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 3,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -29718,7 +29718,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2,
+    "strength": 4,
     "color": [
       255,
       255,
@@ -29736,7 +29736,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       0,
@@ -29754,7 +29754,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       255,
@@ -29772,7 +29772,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 7,
     "color": [
       255,
       0,
