@@ -2283,7 +2283,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			if (sceneContext.staticCustomTilesVertexCount > 0) {
 				// Draw gap filler tiles first, without depth testing
 				if (sceneContext.staticGapFillerTilesVertexCount > 0) {
-					glDisable(GL_DEPTH_TEST);
 					glDrawArrays(
 						GL_TRIANGLES,
 						sceneContext.staticGapFillerTilesOffset,
@@ -2306,7 +2305,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				);
 			} else {
 				// Draw everything without depth testing
-				glDisable(GL_DEPTH_TEST);
 				glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
 			}
 

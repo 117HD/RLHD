@@ -100,8 +100,9 @@ void main() {
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
 
+        float bias = float((vHsl[i] >> 16) & 0xFF) / 128.0;
         vec4 csPos = projectionMatrix * vec4(OUT.position, 1);
-        csPos.z = float((vHsl[i] >> 16) & 0xFF)  / 128.0;
+        csPos.z += bias;
         gl_Position = csPos;
         EmitVertex();
     }
