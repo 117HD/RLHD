@@ -26439,9 +26439,9 @@
     "description": "Guardians of the Rift - Entrance",
     "objectIds": [
       "GOTR_BARRIER",
-      "GOTR_BARRIER_CLOSED"
+      "GOTR_BARRIER_CLOSED",
+      "GOTR_BARRIER_NOENTRY"
     ],
-    "baseMaterial": "UNLIT",
     "castShadows": false
   },
   {
@@ -26456,7 +26456,6 @@
       "GOTR_BARRIER_TIER4",
       "GOTR_BARRIER_TIER4_3X3"
     ],
-    "baseMaterial": "UNLIT",
     "castShadows": false
   },
   {
