@@ -52,6 +52,7 @@ out FragmentData {
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
+    float depthBias;
 } OUT;
 
 void main() {
@@ -100,9 +101,11 @@ void main() {
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
 
-        float bias = float((vHsl[i] >> 16) & 0xFF) / 128.0;
+        OUT.depthBias = float((vHsl[i] >> 16) & 0xFF) / 128.0;
+
         vec4 csPos = projectionMatrix * vec4(OUT.position, 1);
-        csPos.z += bias;
+        csPos.z += OUT.depthBias;
+
         gl_Position = csPos;
         EmitVertex();
     }

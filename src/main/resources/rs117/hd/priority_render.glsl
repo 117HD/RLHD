@@ -222,32 +222,32 @@ void applyWindDisplacement(const ObjectWindSample windSample, int vertexFlags, f
 #endif
 }
 
-void process_face(uint localId, int faceIdx, const ModelInfo minfo, ObjectWindSample windSample) {
+void process_face(uint localIdx, const ModelInfo minfo, ObjectWindSample windSample) {
     int offset = minfo.offset;
     int size = minfo.size;
 
-    if (localId < size) {
+    if (localIdx < size) {
         int outOffset = minfo.idx;
         int uvOffset = minfo.uvOffset;
         int flags = minfo.flags;
         vec3 modelPos = vec3(minfo.x, minfo.y >> 16, minfo.z);
         float height = minfo.y & 0xffff;
         int orientation = flags & 0x7ff;
-        int vertexFlags = uvOffset >= 0 ? uv[uvOffset + localId * 3].materialFlags : 0;
+        int vertexFlags = uvOffset >= 0 ? uv[uvOffset + localIdx * 3].materialFlags : 0;
 
         vec3 displacementA = vec3(0);
         vec3 displacementB = vec3(0);
         vec3 displacementC = vec3(0);
 
         // Grab triangle vertices from the correct buffer
-        VertexData thisrvA = vb[offset + localId * 3];
-        VertexData thisrvB = vb[offset + localId * 3 + 1];
-        VertexData thisrvC = vb[offset + localId * 3 + 2];
+        VertexData thisrvA = vb[offset + localIdx * 3];
+        VertexData thisrvB = vb[offset + localIdx * 3 + 1];
+        VertexData thisrvC = vb[offset + localIdx * 3 + 2];
 
         // Grab vertex normals from the correct buffer
-        vec4 normA = normal[offset + localId * 3    ];
-        vec4 normB = normal[offset + localId * 3 + 1];
-        vec4 normC = normal[offset + localId * 3 + 2];
+        vec4 normA = normal[offset + localIdx * 3    ];
+        vec4 normB = normal[offset + localIdx * 3 + 1];
+        vec4 normC = normal[offset + localIdx * 3 + 2];
 
         applyWindDisplacement(windSample, vertexFlags, height, modelPos,
             thisrvA.pos, thisrvB.pos, thisrvC.pos,
@@ -255,9 +255,9 @@ void process_face(uint localId, int faceIdx, const ModelInfo minfo, ObjectWindSa
             displacementA, displacementB, displacementC);
 
         // Rotate normals to match model orientation
-        normalout[outOffset + localId * 3]     = rotate(normA, orientation);
-        normalout[outOffset + localId * 3 + 1] = rotate(normB, orientation);
-        normalout[outOffset + localId * 3 + 2] = rotate(normC, orientation);
+        normalout[outOffset + localIdx * 3]     = rotate(normA, orientation);
+        normalout[outOffset + localIdx * 3 + 1] = rotate(normB, orientation);
+        normalout[outOffset + localIdx * 3 + 2] = rotate(normC, orientation);
 
         // Apply any displacement
         thisrvA.pos += displacementA;
@@ -298,18 +298,18 @@ void process_face(uint localId, int faceIdx, const ModelInfo minfo, ObjectWindSa
         }
 
         // position vertices in scene and write to out buffer
-        vout[outOffset + localId * 3]     = thisrvA;
-        vout[outOffset + localId * 3 + 1] = thisrvB;
-        vout[outOffset + localId * 3 + 2] = thisrvC;
+        vout[outOffset + localIdx * 3]     = thisrvA;
+        vout[outOffset + localIdx * 3 + 1] = thisrvB;
+        vout[outOffset + localIdx * 3 + 2] = thisrvC;
 
         UVData uvA = UVData(vec3(0.0), 0);
         UVData uvB = UVData(vec3(0.0), 0);
         UVData uvC = UVData(vec3(0.0), 0);
 
         if (uvOffset >= 0) {
-            uvA = uv[uvOffset + localId * 3];
-            uvB = uv[uvOffset + localId * 3 + 1];
-            uvC = uv[uvOffset + localId * 3 + 2];
+            uvA = uv[uvOffset + localIdx * 3];
+            uvB = uv[uvOffset + localIdx * 3 + 1];
+            uvC = uv[uvOffset + localIdx * 3 + 2];
 
             if ((vertexFlags >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
                 uvA.uvw += displacementA;
@@ -335,8 +335,8 @@ void process_face(uint localId, int faceIdx, const ModelInfo minfo, ObjectWindSa
             }
         }
 
-        uvout[outOffset + localId * 3]     = uvA;
-        uvout[outOffset + localId * 3 + 1] = uvB;
-        uvout[outOffset + localId * 3 + 2] = uvC;
+        uvout[outOffset + localIdx * 3]     = uvA;
+        uvout[outOffset + localIdx * 3 + 1] = uvB;
+        uvout[outOffset + localIdx * 3 + 2] = uvC;
     }
 }

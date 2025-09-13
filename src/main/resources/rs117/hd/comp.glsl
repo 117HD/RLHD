@@ -59,5 +59,5 @@ void main() {
     #endif
 
     for (int i = 0; i < FACES_PER_THREAD; i++)
-        process_face(localId, i, minfo, windSample);
+        process_face(localId + i, minfo, windSample);
 }

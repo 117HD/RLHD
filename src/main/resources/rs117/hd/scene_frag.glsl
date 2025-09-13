@@ -48,6 +48,7 @@ in FragmentData {
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
+    float depthBias;
 } IN;
 
 out vec4 FragColor;
@@ -459,6 +460,13 @@ void main() {
 
         outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
     }
+
+#if 0
+    if(IN.depthBias != 0) {
+        FragColor = vec4(1.0, 0, 0, 1);
+        return;
+    }
+#endif
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
 
