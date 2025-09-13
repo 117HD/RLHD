@@ -1,4 +1,4 @@
-package rs117.hd.data.materials;
+package rs117.hd.scene.ground_materials;
 
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
@@ -8,25 +8,29 @@ import java.io.IOException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.scene.GroundMaterialManager;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.GsonUtils;
 
 @Getter
 @Slf4j
 public class GroundMaterial {
 	public static final GroundMaterial NONE = new GroundMaterial("NONE", Material.NONE);
-	public static final GroundMaterial DIRT = new GroundMaterial("DIRT", Material.DIRT_1, Material.DIRT_2);
-	public static final GroundMaterial UNDERWATER_GENERIC = new GroundMaterial(
-		"UNDERWATER_GENERIC",
-		Material.DIRT_1,
-		Material.DIRT_2
-	);
 
-	public String name;
-	public Material[] materials;
+	public static GroundMaterial DIRT;
+	public static GroundMaterial UNDERWATER_GENERIC;
+
+	public final String name;
+	private final Material[] materials;
 
 	public GroundMaterial(String name, Material... materials) {
 		this.name = name;
 		this.materials = materials;
+	}
+
+	public void normalize() {
+		for (int j = 0; j < materials.length; j++)
+			if (materials[j] == null)
+				materials[j] = Material.NONE;
 	}
 
 	/**
@@ -48,7 +52,7 @@ public class GroundMaterial {
 	}
 
 	@Slf4j
-	public static class JsonAdapter extends TypeAdapter<GroundMaterial> {
+	public static class Adapter extends TypeAdapter<GroundMaterial> {
 		@Override
 		public GroundMaterial read(JsonReader in) throws IOException {
 			if (in.peek() == JsonToken.NULL)

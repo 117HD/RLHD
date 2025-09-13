@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -36,7 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
+import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -74,12 +75,16 @@ public class ResourcePath {
 	@Nullable
 	public final String path;
 
-	public static ResourcePath path(Path path) {
-		return path(path.toString());
-	}
-
 	public static ResourcePath path(String... parts) {
 		return new ResourcePath(parts);
+	}
+
+	public static ResourcePath path(Path path, String... parts) {
+		return path(normalize(path.toString(), parts));
+	}
+
+	public static ResourcePath path(File file, String... parts) {
+		return path(normalize(file.getPath(), parts));
 	}
 
 	public static ResourcePath path(Class<?> clazz, String... parts) {
@@ -154,7 +159,7 @@ public class ResourcePath {
 		while (nthLast-- >= 0) {
 			int i = filename.lastIndexOf('.');
 			if (i == -1)
-				return nthLast >= 0 ? "" : filename;
+				break;
 			extension = filename.substring(i + 1);
 			filename = filename.substring(0, i);
 		}
@@ -236,6 +241,10 @@ public class ResourcePath {
 		}
 	}
 
+	public BufferedWriter toWriter() throws IOException {
+		return new BufferedWriter(new OutputStreamWriter(toOutputStream(), StandardCharsets.UTF_8));
+	}
+
 	public FileOutputStream toOutputStream() throws FileNotFoundException {
 		return new FileOutputStream(toFile());
 	}
@@ -299,12 +308,6 @@ public class ResourcePath {
 		}
 	}
 
-	public <T> T loadJson(Gson gson, Type type) throws IOException {
-		try (BufferedReader reader = toReader()) {
-			return gson.fromJson(reader, type);
-		}
-	}
-
 	public BufferedImage loadImage() throws IOException {
 		try (InputStream is = toInputStream()) {
 			byte[] bytes = is.readAllBytes();
@@ -358,6 +361,9 @@ public class ResourcePath {
 	public ResourcePath writeString(String string) throws IOException {
 		try (OutputStream os = toOutputStream()) {
 			os.write(string.getBytes(StandardCharsets.UTF_8));
+			// Ensure there's always a blank line at the end
+			if (!string.endsWith("\n"))
+				os.write('\n');
 		}
 		return this;
 	}

@@ -31,6 +31,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
@@ -38,6 +39,7 @@ import rs117.hd.scene.AreaManager;
 import rs117.hd.utils.GsonUtils;
 
 import static net.runelite.api.Constants.*;
+import static rs117.hd.utils.MathUtils.*;
 
 public class AABB {
 	public final int minX;
@@ -46,15 +48,6 @@ public class AABB {
 	public final int maxX;
 	public final int maxY;
 	public final int maxZ;
-
-	public AABB(int regionId) {
-		minX = (regionId >>> 8) << 6;
-		minY = (regionId & 0xFF) << 6;
-		maxX = minX + REGION_SIZE - 1;
-		maxY = minY + REGION_SIZE - 1;
-		minZ = Integer.MIN_VALUE;
-		maxZ = Integer.MAX_VALUE;
-	}
 
 	public AABB(int x, int y) {
 		minX = maxX = x;
@@ -70,29 +63,29 @@ public class AABB {
 	}
 
 	public AABB(int x1, int y1, int x2, int y2) {
-		minX = Math.min(x1, x2);
-		minY = Math.min(y1, y2);
+		minX = min(x1, x2);
+		minY = min(y1, y2);
 		minZ = Integer.MIN_VALUE;
-		maxX = Math.max(x1, x2);
-		maxY = Math.max(y1, y2);
+		maxX = max(x1, x2);
+		maxY = max(y1, y2);
 		maxZ = Integer.MAX_VALUE;
 	}
 
 	public AABB(int x1, int y1, int x2, int y2, int z1) {
-		minX = Math.min(x1, x2);
-		minY = Math.min(y1, y2);
-		maxX = Math.max(x1, x2);
-		maxY = Math.max(y1, y2);
+		minX = min(x1, x2);
+		minY = min(y1, y2);
+		maxX = max(x1, x2);
+		maxY = max(y1, y2);
 		minZ = maxZ = z1;
 	}
 
 	public AABB(int x1, int y1, int z1, int x2, int y2, int z2) {
-		minX = Math.min(x1, x2);
-		minY = Math.min(y1, y2);
-		minZ = Math.min(z1, z2);
-		maxX = Math.max(x1, x2);
-		maxY = Math.max(y1, y2);
-		maxZ = Math.max(z1, z2);
+		minX = min(x1, x2);
+		minY = min(y1, y2);
+		minZ = min(z1, z2);
+		maxX = max(x1, x2);
+		maxY = max(y1, y2);
+		maxZ = max(z1, z2);
 	}
 
 	public AABB(int[] point) {
@@ -103,18 +96,26 @@ public class AABB {
 		this(from[0], from[1], from[2], to[0], to[1], to[2]);
 	}
 
+	public static AABB fromRegionId(int regionId) {
+		int minX = (regionId >>> 8) << 6;
+		int minY = (regionId & 0xFF) << 6;
+		int maxX = minX + REGION_SIZE - 1;
+		int maxY = minY + REGION_SIZE - 1;
+		return new AABB(minX, minY, maxX, maxY);
+	}
+
 	public AABB onPlane(int plane) {
 		return new AABB(minX, minY, plane, maxX, maxY, plane);
 	}
 
 	public AABB expandTo(int[] point) {
 		return new AABB(
-			Math.min(minX, point[0]),
-			Math.min(minY, point[1]),
-			Math.min(minZ, point[2]),
-			Math.max(maxX, point[0]),
-			Math.max(maxY, point[1]),
-			Math.max(maxZ, point[2])
+			min(minX, point[0]),
+			min(minY, point[1]),
+			min(minZ, point[2]),
+			max(maxX, point[0]),
+			max(maxY, point[1]),
+			max(maxZ, point[2])
 		);
 	}
 
@@ -134,6 +135,7 @@ public class AABB {
 	}
 
 	public boolean contains(int... worldPos) {
+		assert worldPos.length >= 2 : "Expected X, Y & possibly a plane, got: " + Arrays.toString(worldPos);
 		return
 			minX <= worldPos[0] && worldPos[0] <= maxX &&
 			minY <= worldPos[1] && worldPos[1] <= maxY &&
@@ -222,7 +224,7 @@ public class AABB {
 	}
 
 	@Slf4j
-	public static class JsonAdapter extends TypeAdapter<AABB[]> {
+	public static class ArrayAdapter extends TypeAdapter<AABB[]> {
 		@Override
 		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();
@@ -234,9 +236,8 @@ public class AABB {
 					continue;
 				}
 
-				// Parse numbers as region IDs
 				if (in.peek() == JsonToken.NUMBER) {
-					list.add(new AABB(in.nextInt()));
+					log.warn("AABBs are specified by two or more numbers. Did you forget to add an array at {}?", GsonUtils.location(in));
 					continue;
 				}
 
@@ -275,7 +276,7 @@ public class AABB {
 
 				switch (i) {
 					case 1:
-						list.add(new AABB(ints[0]));
+						log.warn("AABBs are specified by two or more numbers, only one was provided at {}", GsonUtils.location(in));
 						break;
 					case 2:
 						list.add(new AABB(ints[0], ints[1]));

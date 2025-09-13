@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.uniforms.UniformBuffer;
@@ -24,6 +25,8 @@ public class ShaderProgram {
 	protected final ShaderTemplate shaderTemplate;
 
 	private int program;
+	@Getter
+	private boolean viable = true;
 
 	public ShaderProgram(Consumer<ShaderTemplate> templateConsumer) {
 		shaderTemplate = new ShaderTemplate();
@@ -31,7 +34,13 @@ public class ShaderProgram {
 	}
 
 	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
-		int newProgram = shaderTemplate.compile(includes);
+		int newProgram;
+		try {
+			newProgram = shaderTemplate.compile(includes);
+		} catch (ShaderException ex) {
+			viable = false;
+			throw ex;
+		}
 
 		if (isValid())
 			destroy();
@@ -86,6 +95,7 @@ public class ShaderProgram {
 	}
 
 	public void destroy() {
+		viable = true;
 		if (program == 0)
 			return;
 
@@ -266,5 +276,16 @@ public class ShaderProgram {
 
 	public Uniform4f addUniform4f(String uniformName) {
 		return addUniform(new Uniform4f(), uniformName);
+	}
+
+	public static class UniformMat4 extends UniformProperty {
+		public void set(float[] mat4) {
+			assert program.isActive();
+			glUniformMatrix4fv(uniformIndex, false, mat4);
+		}
+	}
+
+	public UniformMat4 addUniformMat4(String uniformName) {
+		return addUniform(new UniformMat4(), uniformName);
 	}
 }

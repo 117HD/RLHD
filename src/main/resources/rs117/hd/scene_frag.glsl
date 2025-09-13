@@ -153,24 +153,24 @@ void main() {
         float selfShadowing = 0;
         vec3 fragPos = IN.position;
         #if PARALLAX_OCCLUSION_MAPPING
-        mat3 invTBN = inverse(TBN);
-        vec3 tsViewDir = invTBN * viewDir;
-        vec3 tsLightDir = invTBN * -lightDir;
+            mat3 invTBN = inverse(TBN);
+            vec3 tsViewDir = invTBN * viewDir;
+            vec3 tsLightDir = invTBN * -lightDir;
 
-        vec3 fragDelta = vec3(0);
+            vec3 fragDelta = vec3(0);
 
-        sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
-        sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
-        sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
+            sampleDisplacementMap(material1, tsViewDir, tsLightDir, uv1, fragDelta, selfShadowing);
+            sampleDisplacementMap(material2, tsViewDir, tsLightDir, uv2, fragDelta, selfShadowing);
+            sampleDisplacementMap(material3, tsViewDir, tsLightDir, uv3, fragDelta, selfShadowing);
 
-        // Average
-        fragDelta /= 3;
-        selfShadowing /= 3;
+            // Average
+            fragDelta /= 3;
+            selfShadowing /= 3;
 
-        // Prevent displaced surfaces from casting flat shadows onto themselves
-        fragDelta.z = max(0, fragDelta.z);
+            // Prevent displaced surfaces from casting flat shadows onto themselves
+            fragDelta.z = max(0, fragDelta.z);
 
-        fragPos += TBN * fragDelta;
+            fragPos += TBN * fragDelta;
         #endif
 
         // get vertex colors
@@ -270,13 +270,13 @@ void main() {
         float downDotNormals = dot(downDir, normals);
         float viewDotNormals = dot(viewDir, normals);
 
-        #if (DISABLE_DIRECTIONAL_SHADING)
-        lightDotNormals = .7;
+        #if DISABLE_DIRECTIONAL_SHADING
+            lightDotNormals = .7;
         #endif
 
         float shadow = 0;
         if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, waterTypeIndex, vec2(0), lightDotNormals);
+            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
         shadow = max(shadow, selfShadowing);
         float inverseShadow = 1 - shadow;
 

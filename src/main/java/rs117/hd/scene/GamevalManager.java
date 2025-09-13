@@ -55,10 +55,8 @@ public class GamevalManager {
 	public void startUp() throws IOException {
 		fileWatcher = GAMEVAL_PATH.watch((path, first) -> {
 			try {
-				Map<String, Map<String, Integer>> gamevals = path.loadJson(
-					plugin.getGson(),
-					new TypeToken<Map<String, Map<String, Integer>>>() {}.getType()
-				);
+				Map<String, Map<String, Integer>> gamevals = plugin.getGson()
+					.fromJson(path.toReader(), new TypeToken<Map<String, Map<String, Integer>>>() {}.getType());
 				GAMEVALS.replaceAll((k, v) -> gamevals.getOrDefault(k, Collections.emptyMap()));
 				log.debug("Loaded gameval mappings");
 			} catch (IOException ex) {
@@ -85,20 +83,36 @@ public class GamevalManager {
 			.orElse(null);
 	}
 
+	public Map<String, Integer> getNpcs() {
+		return GAMEVALS.get(NPC_KEY);
+	}
+
+	public Map<String, Integer> getObjects() {
+		return GAMEVALS.get(OBJECT_KEY);
+	}
+
+	public Map<String, Integer> getAnims() {
+		return GAMEVALS.get(ANIM_KEY);
+	}
+
+	public Map<String, Integer> getSpotanims() {
+		return GAMEVALS.get(SPOTANIM_KEY);
+	}
+
 	public int getNpcId(String name) {
-		return GAMEVALS.get(NPC_KEY).get(name);
+		return getNpcs().get(name);
 	}
 
 	public int getObjectId(String name) {
-		return GAMEVALS.get(OBJECT_KEY).get(name);
+		return getObjects().get(name);
 	}
 
 	public int getAnimId(String name) {
-		return GAMEVALS.get(ANIM_KEY).get(name);
+		return getAnims().get(name);
 	}
 
 	public int getSpotanimId(String name) {
-		return GAMEVALS.get(SPOTANIM_KEY).get(name);
+		return getSpotanims().get(name);
 	}
 
 	public String getNpcName(int id) {

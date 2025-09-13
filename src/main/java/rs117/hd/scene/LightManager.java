@@ -49,8 +49,8 @@ import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderConfig;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import rs117.hd.HdPlugin;
-import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -63,17 +63,11 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
-import rs117.hd.utils.Vector;
 
-import static java.lang.Math.abs;
-import static java.lang.Math.cos;
-import static java.lang.Math.pow;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
-import static rs117.hd.utils.HDUtils.TWO_PI;
-import static rs117.hd.utils.HDUtils.fract;
-import static rs117.hd.utils.HDUtils.mod;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
@@ -96,9 +90,6 @@ public class LightManager {
 
 	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private HdPluginConfig config;
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
@@ -214,10 +205,10 @@ public class LightManager {
 			changedPlanes = true;
 		}
 
-		float cosYaw = (float) Math.cos(plugin.cameraOrientation[0]);
-		float sinYaw = (float) Math.sin(plugin.cameraOrientation[0]);
-		float cosPitch = (float) Math.cos(plugin.cameraOrientation[1]);
-		float sinPitch = (float) Math.sin(plugin.cameraOrientation[1]);
+		float cosYaw = cos(plugin.cameraOrientation[0]);
+		float sinYaw = sin(plugin.cameraOrientation[0]);
+		float cosPitch = cos(plugin.cameraOrientation[1]);
+		float sinPitch = sin(plugin.cameraOrientation[1]);
 		float[] viewDir = {
 			cosPitch * -sinYaw,
 			sinPitch,
@@ -326,31 +317,26 @@ public class LightManager {
 						if (!hiddenTemporarily)
 							hiddenTemporarily = !isActorLightVisible(light.actor);
 
-						if (tileExX != light.prevTileX || tileExY != light.prevTileY) {
-							light.prevTileX = tileExX;
-							light.prevTileY = tileExY;
+						// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
+						// May also apply to other NPCs in instances.
+						if (tile.getBridge() != null)
+							plane++;
 
-							// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
-							// May also apply to other NPCs in instances.
-							if (tile.getBridge() != null)
-								plane++;
-
-							// Interpolate between tile heights based on specific scene coordinates
-							float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
-							float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
-							float heightNorth = HDUtils.lerp(
-								tileHeights[plane][tileExX][tileExY + 1],
-								tileHeights[plane][tileExX + 1][tileExY + 1],
-								lerpX
-							);
-							float heightSouth = HDUtils.lerp(
-								tileHeights[plane][tileExX][tileExY],
-								tileHeights[plane][tileExX + 1][tileExY],
-								lerpX
-							);
-							float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpY);
-							light.origin[1] = (int) tileHeight - 1 - light.def.height;
-						}
+						// Interpolate between tile heights based on specific scene coordinates
+						float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
+						float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
+						float heightNorth = mix(
+							tileHeights[plane][tileExX][tileExY + 1],
+							tileHeights[plane][tileExX + 1][tileExY + 1],
+							lerpX
+						);
+						float heightSouth = mix(
+							tileHeights[plane][tileExX][tileExY],
+							tileHeights[plane][tileExX + 1][tileExY],
+							lerpX
+						);
+						float tileHeight = mix(heightSouth, heightNorth, lerpY);
+						light.origin[1] = (int) tileHeight - 1 - light.def.height;
 					}
 				}
 			}
@@ -361,12 +347,12 @@ public class LightManager {
 
 			int orientation = 0;
 			if (light.alignment.relative)
-				orientation = HDUtils.mod(light.orientation + light.alignment.orientation, 2048);
+				orientation = mod(light.orientation + light.alignment.orientation, 2048);
 
 			if (light.alignment == Alignment.CUSTOM) {
 				// orientation 0 = south
-				float sin = (float) Math.sin(orientation * UNIT);
-				float cos = (float) Math.cos(orientation * UNIT);
+				float sin = sin(orientation * JAU_TO_RAD);
+				float cos = cos(orientation * JAU_TO_RAD);
 				float x = light.offset[0];
 				float z = light.offset[2];
 				light.pos[0] += -cos * x - sin * z;
@@ -378,7 +364,7 @@ public class LightManager {
 
 				float radius = localSizeX / 2f;
 				if (!light.alignment.radial)
-					radius = (float) Math.sqrt(localSizeX * localSizeX + localSizeX * localSizeX) / 2;
+					radius = sqrt(localSizeX * localSizeX + localSizeX * localSizeX) / 2;
 
 				float sine = SINE[orientation] / 65536f;
 				float cosine = COSINE[orientation] / 65536f;
@@ -429,7 +415,7 @@ public class LightManager {
 				} else if (light.lifetime == -1) {
 					// Schedule despawning of the light if the parent just despawned, and the light isn't already scheduled to despawn
 					float minLifetime = light.spawnDelay + light.fadeInDuration;
-					light.lifetime = Math.max(minLifetime, light.elapsedTime) + light.despawnDelay;
+					light.lifetime = max(minLifetime, light.elapsedTime) + light.despawnDelay;
 				}
 			}
 
@@ -445,8 +431,10 @@ public class LightManager {
 				light.visible = light.changedVisibilityAt != -1 && light.elapsedTime - light.changedVisibilityAt < Light.VISIBILITY_FADE;
 
 			if (light.visible) {
-				Vector.subtract(cameraToLight, light.pos, plugin.cameraPosition);
-				float distToLight = Vector.dot(cameraToLight, viewDir);
+				// Prioritize lights closer to the focal point
+				float distX = plugin.cameraFocalPoint[0] - light.pos[0];
+				float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
+				light.distanceSquared = distX * distX + distZ * distZ;
 
 				float maxRadius = light.def.radius;
 				switch (light.def.type) {
@@ -460,14 +448,10 @@ public class LightManager {
 
 				// Hide lights which cannot possibly affect the visible scene,
 				// by either being behind the camera, or too far beyond the edge of the scene
-				if (-maxRadius < distToLight && distToLight < drawDistance + maxRadius) {
-					// Prioritize lights closer to the focal point
-					float distX = plugin.cameraFocalPoint[0] - light.pos[0];
-					float distZ = plugin.cameraFocalPoint[1] - light.pos[2];
-					light.distanceSquared = distX * distX + distZ * distZ;
-				} else {
-					light.visible = false;
-				}
+				float near = -maxRadius * maxRadius;
+				float far = drawDistance + LOCAL_HALF_TILE_SIZE + maxRadius;
+				far *= far;
+				light.visible = near < light.distanceSquared && light.distanceSquared < far;
 			}
 		}
 
@@ -492,8 +476,8 @@ public class LightManager {
 			light.withinViewingDistance = true;
 
 			if (light.def.type == LightType.FLICKER) {
-				double t = TWO_PI * (mod(plugin.elapsedTime, 60) / 60 + light.randomOffset);
-				float flicker = (float) (
+				float t = TWO_PI * (mod(plugin.elapsedTime, 60) / 60 + light.randomOffset);
+				float flicker = (
 					pow(cos(11 * t), 3) +
 					pow(cos(17 * t), 6) +
 					pow(cos(23 * t), 2) +
@@ -523,9 +507,9 @@ public class LightManager {
 
 			// Spawn & despawn fade-in and fade-out
 			if (light.fadeInDuration > 0)
-				light.strength *= HDUtils.clamp((light.elapsedTime - light.spawnDelay) / light.fadeInDuration, 0, 1);
+				light.strength *= saturate((light.elapsedTime - light.spawnDelay) / light.fadeInDuration);
 			if (light.fadeOutDuration > 0 && light.lifetime != -1)
-				light.strength *= HDUtils.clamp((light.lifetime - light.elapsedTime) / light.fadeOutDuration, 0, 1);
+				light.strength *= saturate((light.lifetime - light.elapsedTime) / light.fadeOutDuration);
 
 			light.applyTemporaryVisibilityFade();
 		}
@@ -823,7 +807,7 @@ public class LightManager {
 					impostorIndex = client.getVarpValue(tracker.impostorVarp);
 				}
 				if (impostorIndex >= 0)
-					impostorId = tracker.impostorIds[Math.min(impostorIndex, tracker.impostorIds.length - 1)];
+					impostorId = tracker.impostorIds[min(impostorIndex, tracker.impostorIds.length - 1)];
 			} catch (Exception ex) {
 				log.debug("Error getting impostor:", ex);
 			}
@@ -836,18 +820,30 @@ public class LightManager {
 		int sizeX = 1;
 		int sizeY = 1;
 		Renderable[] renderables = new Renderable[2];
-		int[] orientations = new int[2];
+		int[] orientations = { 0, 0 };
+		int[] offset = { 0, 0 };
 
 		var tileObject = tracker.tileObject;
 		if (tileObject instanceof GroundObject) {
 			var object = (GroundObject) tileObject;
 			renderables[0] = object.getRenderable();
-			orientations[0] = HDUtils.getBakedOrientation(object.getConfig());
+			orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 		} else if (tileObject instanceof DecorativeObject) {
 			var object = (DecorativeObject) tileObject;
 			renderables[0] = object.getRenderable();
 			renderables[1] = object.getRenderable2();
-			orientations[0] = orientations[1] = HDUtils.getBakedOrientation(object.getConfig());
+			int ori = orientations[0] = orientations[1] = HDUtils.getModelOrientation(object.getConfig());
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case WallDecorDiagonalNoOffset:
+				case WallDecorDiagonalOffset:
+				case WallDecorDiagonalBoth:
+					ori = (ori + 512) % 2048;
+					offset[0] = SINE[ori] * 64 >> 16;
+					offset[1] = COSINE[ori] * 64 >> 16;
+					break;
+			}
+			offset[0] += object.getXOffset();
+			offset[1] += object.getYOffset();
 		} else if (tileObject instanceof WallObject) {
 			var object = (WallObject) tileObject;
 			renderables[0] = object.getRenderable1();
@@ -859,7 +855,19 @@ public class LightManager {
 			sizeX = object.sizeX();
 			sizeY = object.sizeY();
 			renderables[0] = object.getRenderable();
-			orientations[0] = HDUtils.getBakedOrientation(object.getConfig());
+			int ori = orientations[0] = HDUtils.getModelOrientation(object.getConfig());
+			int offsetDist = 64;
+			switch (ObjectType.fromConfig(object.getConfig())) {
+				case RoofEdgeDiagonalCorner:
+				case RoofDiagonalWithRoofEdge:
+					ori += 1024;
+					offsetDist = round(offsetDist / sqrt(2));
+				case WallDiagonal:
+					ori = (ori + 2048 - 256) % 2048;
+					offset[0] = SINE[ori] * offsetDist >> 16;
+					offset[1] = COSINE[ori] * offsetDist >> 16;
+					break;
+			}
 		} else {
 			log.warn("Unhandled TileObject type: id: {}, hash: {}", tileObject.getId(), tileObject.getHash());
 			return;
@@ -877,8 +885,8 @@ public class LightManager {
 		HashSet<LightDefinition> onlySpawnOnce = new HashSet<>();
 
 		LocalPoint lp = tileObject.getLocalLocation();
-		int lightX = lp.getX();
-		int lightZ = lp.getY();
+		int lightX = lp.getX() + offset[0];
+		int lightZ = lp.getY() + offset[1];
 		int plane = tileObject.getPlane();
 
 		// Spawn animation-specific lights for each DynamicObject renderable, and non-animation-based lights
@@ -911,11 +919,11 @@ public class LightManager {
 					continue;
 				}
 
-				int tileExX = HDUtils.clamp(lp.getSceneX() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
-				int tileExY = HDUtils.clamp(lp.getSceneY() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExX = clamp(lp.getSceneX() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExY = clamp(lp.getSceneY() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
 				float lerpX = fract(lightX / (float) LOCAL_TILE_SIZE);
 				float lerpZ = fract(lightZ / (float) LOCAL_TILE_SIZE);
-				int tileZ = HDUtils.clamp(plane, 0, MAX_Z - 1);
+				int tileZ = clamp(plane, 0, MAX_Z - 1);
 
 				Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
 				Tile tile = tiles[tileZ][tileExX][tileExY];
@@ -923,17 +931,17 @@ public class LightManager {
 					tileZ++;
 
 				int[][][] tileHeights = sceneContext.scene.getTileHeights();
-				float heightNorth = HDUtils.lerp(
+				float heightNorth = mix(
 					tileHeights[tileZ][tileExX][tileExY + 1],
 					tileHeights[tileZ][tileExX + 1][tileExY + 1],
 					lerpX
 				);
-				float heightSouth = HDUtils.lerp(
+				float heightSouth = mix(
 					tileHeights[tileZ][tileExX][tileExY],
 					tileHeights[tileZ][tileExX + 1][tileExY],
 					lerpX
 				);
-				float tileHeight = HDUtils.lerp(heightSouth, heightNorth, lerpZ);
+				float tileHeight = mix(heightSouth, heightNorth, lerpZ);
 
 				Light light = new Light(def);
 				light.hash = newHash;
@@ -956,20 +964,20 @@ public class LightManager {
 
 	private void addWorldLight(SceneContext sceneContext, Light light) {
 		assert light.worldPoint != null;
-		var firstlp = sceneContext.worldInstanceToLocals(light.worldPoint).findFirst();
-		if (firstlp.isEmpty())
-			return;
+		sceneContext.worldToLocals(light.worldPoint).forEach(local -> {
+			int tileExX = local[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+			int tileExY = local[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+			if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
+				return;
 
-		LocalPoint lp = firstlp.get();
-		int tileExX = lp.getSceneX() + SCENE_OFFSET;
-		int tileExY = lp.getSceneY() + SCENE_OFFSET;
-		if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
-			return;
-
-		light.origin[0] = lp.getX() + LOCAL_HALF_TILE_SIZE;
-		light.origin[1] = sceneContext.scene.getTileHeights()[light.plane][tileExX][tileExY] - light.def.height - 1;
-		light.origin[2] = lp.getY() + LOCAL_HALF_TILE_SIZE;
-		sceneContext.lights.add(light);
+			var copy = new Light(light.def);
+			copy.plane = local[2];
+			copy.persistent = light.persistent;
+			copy.origin[0] = local[0] + LOCAL_HALF_TILE_SIZE;
+			copy.origin[1] = sceneContext.scene.getTileHeights()[local[2]][tileExX][tileExY] - copy.def.height - 1;
+			copy.origin[2] = local[1] + LOCAL_HALF_TILE_SIZE;
+			sceneContext.lights.add(copy);
+		});
 	}
 
 	@Subscribe

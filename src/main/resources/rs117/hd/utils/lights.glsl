@@ -2,9 +2,10 @@
 
 #include <uniforms/lights.glsl>
 
-#if DYNAMIC_LIGHTS
+#include <utils/constants.glsl>
 #include <utils/specular.glsl>
 
+#if DYNAMIC_LIGHTS
 void calculateLight(
     int lightIdx, vec3 position, vec3 normals, vec3 viewDir,
     vec3 texBlend, vec3 specularGloss, vec3 specularStrength,
@@ -13,7 +14,7 @@ void calculateLight(
     PointLight light = PointLightArray[lightIdx];
     vec3 lightToFrag = light.position.xyz - position;
     float distanceSquared = dot(lightToFrag, lightToFrag);
-    float radiusSquared = light.color.w;
+    float radiusSquared = light.position.w;
     if (distanceSquared <= radiusSquared) {
         float attenuation = 1 - sqrt(distanceSquared / radiusSquared);
         attenuation *= attenuation;

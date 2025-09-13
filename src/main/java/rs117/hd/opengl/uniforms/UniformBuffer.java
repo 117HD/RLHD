@@ -1,6 +1,8 @@
 package rs117.hd.opengl.uniforms;
 
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -12,54 +14,29 @@ import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
+	@RequiredArgsConstructor
 	protected enum PropertyType {
 		Int(4, 4, 1),
 		IVec2(8, 8, 2),
 		IVec3(12, 16, 3),
 		IVec4(16, 16, 4),
 
-		IntArray(4, 16, 1, true),
-		IVec2Array(8, 16, 2, true),
-		IVec3Array(12, 16, 3, true),
-		IVec4Array(16, 16, 4, true),
-
 		Float(4, 4, 1),
 		FVec2(8, 8, 2),
 		FVec3(12, 16, 3),
 		FVec4(16, 16, 4),
 
-		FloatArray(4, 16, 1, true),
-		FVec2Array(8, 16, 2, true),
-		FVec3Array(12, 16, 3, true),
-		FVec4Array(16, 16, 4, true),
-
-		Mat3(36, 16, 9),
+		Mat3(48, 16, 9),
 		Mat4(64, 16, 16);
 
 		private final int size;
 		private final int alignment;
-		private final int elementSize;
 		private final int elementCount;
-		private final boolean isArray;
-
-		PropertyType(int size, int alignment, int elementCount) {
-			this.size = size;
-			this.alignment = alignment;
-			this.elementSize = size / elementCount;
-			this.elementCount = elementCount;
-			this.isArray = false;
-		}
-
-		PropertyType(int size, int alignment, int elementCount, boolean isArray) {
-			this.size = size;
-			this.alignment = alignment;
-			this.elementSize = size / elementCount;
-			this.elementCount = elementCount;
-			this.isArray = isArray;
-		}
+		private final boolean isInt = name().startsWith("I");
 	}
 
 	@AllArgsConstructor
@@ -67,104 +44,76 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	public static class Property {
 		private UniformBuffer<?> owner;
 		private int position;
+		private int offset = -1;
 		private final PropertyType type;
 		private final String name;
 
-		public final void set(int value) {
-			if (type != PropertyType.Int) {
-				log.warn("{} - Incorrect Setter(int) called for Property: {}", owner.glBuffer.name, name);
-				return;
-			}
+		private void log(String message) {
+			log.warn("{}.{} - {}", owner.glBuffer.name, name, message);
+		}
 
-			if (owner.data.getInt(position) != value) {
-				owner.data.putInt(position, value);
-				owner.markWaterLine(position, type.size);
-			}
+		private boolean isUninitialized() {
+			if (offset >= 0)
+				return false;
+			log("Hasn't been initialized yet!");
+			return true;
 		}
 
 		public final void set(int... values) {
-			if (type != PropertyType.IVec2 && type != PropertyType.IVec3 && type != PropertyType.IVec4) {
-				log.warn("{} - Incorrect Setter(int[]) called for Property: {}", owner.glBuffer.name, name);
+			if (isUninitialized())
+				return;
+
+			if (!type.isInt) {
+				log("Int setter was used with a non-int property type");
 				return;
 			}
 
 			if (values == null) {
-				log.warn("{} - Setter(int[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
+				log("Int setter was provided with null value");
 				return;
 			}
 
-			if ((type.isArray && (values.length % type.elementCount) != 0) || values.length != type.elementCount) {
-				log.warn(
-					"{} - Setter(int[]) was provided with incorrect number of elements for Property: {}",
-					owner.glBuffer.name,
-					name
-				);
+			if (values.length != type.elementCount) {
+				log(String.format("Int setter was provided with incorrect number of elements: %d != %d", values.length, type.elementCount));
 				return;
 			}
 
-			if (owner.data == null) {
-				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
-				return;
-			}
-
-			int elementCount = type.isArray ? values.length : type.elementCount;
-			for (int elementIdx = 0, offset = position; elementIdx < elementCount; elementIdx++, offset += type.elementSize) {
-				if (owner.data.getInt(offset) != values[elementIdx]) {
-					owner.data.putInt(offset, values[elementIdx]);
-					owner.markWaterLine(offset, type.elementSize);
-				}
-			}
-		}
-
-		public final void set(float value) {
-			if (type != PropertyType.Float) {
-				log.warn("{} - Incorrect Setter(float) called for Property: {}", owner.glBuffer.name, name);
-				return;
-			}
-
-			if (owner.data.getFloat(position) != value) {
-				owner.data.putFloat(position, value);
-				owner.markWaterLine(position, type.size);
-			}
+			owner.dataInt.position(offset).put(values);
+			owner.markWaterLine(position, type.size);
 		}
 
 		public final void set(float... values) {
-			if (type != PropertyType.FVec2 &&
-				type != PropertyType.FVec3 &&
-				type != PropertyType.FVec4 &&
-				type != PropertyType.Mat3 &&
-				type != PropertyType.Mat4
-			) {
-				log.warn("{} - Incorrect Setter(float[]) called for Property: {}", owner.glBuffer.name, name);
+			if (isUninitialized())
+				return;
+
+			if (type.isInt) {
+				log("Float setter was used with an int property type");
 				return;
 			}
 
 			if (values == null) {
-				log.warn("{} - Setter(float[]) was provided with null value for Property: {}", owner.glBuffer.name, name);
+				log("Float setter was provided with null value");
 				return;
 			}
 
-			if ((type.isArray && (values.length % type.elementCount) != 0) || values.length != type.elementCount) {
-				log.warn(
-					"{} - Setter(float[]) was provided with incorrect number of elements for Property: {}",
-					owner.glBuffer.name,
-					name
-				);
+			if (values.length != type.elementCount) {
+				log(String.format(
+					"Float setter was provided with incorrect number of elements: %d != %d",
+					values.length,
+					type.elementCount
+				));
 				return;
 			}
 
-			if (owner.data == null) {
-				log.warn("{} - Hasn't been initialized yet!", owner.glBuffer.name);
-				return;
+			owner.dataFloat.position(offset);
+			if (type == PropertyType.Mat3) {
+				// Pad each column to a vec4
+				for (int i = 0; i < 3; i++)
+					owner.dataFloat.put(values, i * 3, 3).put(0);
+			} else {
+				owner.dataFloat.put(values);
 			}
-
-			int elementCount = type.isArray ? values.length : type.elementCount;
-			for (int elementIdx = 0, offset = position; elementIdx < elementCount; elementIdx++, offset += type.elementSize) {
-				if (owner.data.getFloat(offset) != values[elementIdx]) {
-					owner.data.putFloat(offset, values[elementIdx]);
-					owner.markWaterLine(offset, type.elementSize);
-				}
-			}
+			owner.markWaterLine(position, type.size);
 		}
 	}
 
@@ -188,6 +137,9 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	private int dirtyLowTide = Integer.MAX_VALUE;
 	private int dirtyHighTide = 0;
 	private ByteBuffer data;
+	private IntBuffer dataInt;
+	private FloatBuffer dataFloat;
+	private final List<Property> properties = new ArrayList<>();
 
 	@Getter
 	private int bindingIndex;
@@ -240,13 +192,14 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		property.position = size + padding;
 
 		size += property.type.size + padding;
+		properties.add(property);
 
 		return property;
 	}
 
 	private void markWaterLine(int position, int size) {
-		dirtyLowTide = Math.min(dirtyLowTide, position);
-		dirtyHighTide = Math.max(dirtyHighTide, position + size);
+		dirtyLowTide = min(dirtyLowTide, position);
+		dirtyHighTide = max(dirtyHighTide, position + size);
 	}
 
 	public void initialize() {
@@ -255,6 +208,12 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 		glBuffer.initialize(size);
 		data = BufferUtils.createByteBuffer(size);
+		dataInt = data.asIntBuffer();
+		dataFloat = data.asFloatBuffer();
+
+		// Since everything is aligned to a multiple of 4 bytes, we can easily define offsets into dataInt and dataFloat
+		for (Property prop : properties)
+			prop.offset = prop.position / 4;
 	}
 
 	public void initialize(int bindingIndex) {
@@ -299,7 +258,12 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		if (data == null)
 			return;
 
+		for (Property prop : properties)
+			prop.offset = -1;
+
 		glBuffer.destroy();
 		data = null;
+		dataInt = null;
+		dataFloat = null;
 	}
 }

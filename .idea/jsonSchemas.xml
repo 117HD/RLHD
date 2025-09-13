@@ -8,7 +8,7 @@
             <SchemaInfo>
               <option name="name" value="Areas" />
               <option name="relativePathToSchema" value="schemas/areas.schema.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -24,7 +24,7 @@
             <SchemaInfo>
               <option name="name" value="Environments" />
               <option name="relativePathToSchema" value="schemas/environments.schema.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -40,7 +40,7 @@
             <SchemaInfo>
               <option name="name" value="Ground Materials" />
               <option name="relativePathToSchema" value="schemas/ground_materials.schema.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -56,7 +56,7 @@
             <SchemaInfo>
               <option name="name" value="Lights" />
               <option name="relativePathToSchema" value="schemas/lights.schema.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -72,7 +72,7 @@
             <SchemaInfo>
               <option name="name" value="Model Overrides" />
               <option name="relativePathToSchema" value="schemas/model_overrides.schema.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
@@ -86,14 +86,45 @@
         <entry key="Tile Overrides">
           <value>
             <SchemaInfo>
-              <option name="generatedName" value="New Schema" />
               <option name="name" value="Tile Overrides" />
               <option name="relativePathToSchema" value="schemas/tile_overrides.schema.json" />
-              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="schemaVersion" value="JSON Schema 7" />
               <option name="patterns">
                 <list>
                   <Item>
                     <option name="path" value="src/main/resources/rs117/hd/scene/tile_overrides.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="Water Types">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Water Types" />
+              <option name="relativePathToSchema" value="schemas/water_types.schema.json" />
+              <option name="schemaVersion" value="JSON Schema 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="src/main/resources/rs117/hd/scene/water_types.json" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="Materials">
+          <value>
+            <SchemaInfo>
+              <option name="name" value="Materials" />
+              <option name="relativePathToSchema" value="schemas/materials.schema.json" />
+              <option name="schemaVersion" value="JSON Schema 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="path" value="src/main/resources/rs117/hd/scene/materials.json" />
                   </Item>
                 </list>
               </option>

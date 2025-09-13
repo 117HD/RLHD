@@ -1,4 +1,4 @@
-package rs117.hd.utils;
+package rs117.hd.tests;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -34,6 +34,6 @@ public class AABBTest {
 
 	@Test
 	public void testRegion() {
-		Assert.assertEquals(new AABB(3264, 5696, 3327, 5759), new AABB(13145));
+		Assert.assertEquals(new AABB(3264, 5696, 3327, 5759), AABB.fromRegionId(13145));
 	}
 }

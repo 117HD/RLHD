@@ -3,7 +3,7 @@ package rs117.hd.utils;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 
-import static rs117.hd.utils.HDUtils.clamp;
+import static rs117.hd.utils.MathUtils.*;
 
 public class ModelHash {
 	// Model hashes are composed as follows:

@@ -27,6 +27,8 @@ package rs117.hd.config;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+import static rs117.hd.utils.MathUtils.*;
+
 @Getter
 @RequiredArgsConstructor
 public enum DynamicLights
@@ -42,7 +44,7 @@ public enum DynamicLights
 		int max = 0;
 		for (var e : values()) {
 			assert e.lightsPerTile % 4 == 0; // Needs to be divisible by 4
-			max = Math.max(max, e.lightsPerTile);
+			max = max(max, e.lightsPerTile);
 		}
 		MAX_LIGHTS_PER_TILE = max;
 	}

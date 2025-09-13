@@ -61,6 +61,7 @@ import static org.lwjgl.opencl.KHRGLSharing.CL_WGL_HDC_KHR;
 import static org.lwjgl.system.MemoryUtil.NULL;
 import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
+import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 @Slf4j
@@ -331,7 +332,7 @@ public class OpenCLManager {
 			for (int i = 0; i < plugin.numSortingBins; i++) {
 				int faceCount = plugin.modelSortingBinFaceCounts[i];
 				int threadCount = plugin.modelSortingBinThreadCounts[i];
-				int facesPerThread = (int) Math.ceil((float) faceCount / threadCount);
+				int facesPerThread = ceil((float) faceCount / threadCount);
 				includes = includes
 					.define("THREAD_COUNT", threadCount)
 					.define("FACES_PER_THREAD", facesPerThread);

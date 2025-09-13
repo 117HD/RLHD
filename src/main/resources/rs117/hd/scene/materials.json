@@ -1,0 +1,2510 @@
+[
+  {
+    "name": "UNLIT",
+    "parent": "NONE",
+    "unlit": true
+  },
+  {
+    "name": "TRANSPARENT"
+  },
+  {
+    "name": "LAVA_FLOW_MAP"
+  },
+  {
+    "name": "WATER_FLOW_MAP"
+  },
+  {
+    "name": "UNDERWATER_FLOW_MAP"
+  },
+  {
+    "name": "CAUSTICS_MAP"
+  },
+  {
+    "name": "WATER_NORMAL_MAP_1"
+  },
+  {
+    "name": "WATER_NORMAL_MAP_2"
+  },
+  {
+    "name": "WATER_FOAM"
+  },
+  {
+    "name": "WOODEN_DOOR_HANDLE",
+    "vanillaTextureIndex": 0
+  },
+  {
+    "name": "WATER_FLAT",
+    "vanillaTextureIndex": 1
+  },
+  {
+    "name": "BRICK",
+    "vanillaTextureIndex": 2
+  },
+  {
+    "name": "WOOD_PLANKS_1",
+    "vanillaTextureIndex": 3,
+    "specularStrength": 0.35,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "LARGE_DOOR",
+    "vanillaTextureIndex": 4
+  },
+  {
+    "name": "DARK_WOOD",
+    "vanillaTextureIndex": 5
+  },
+  {
+    "name": "ROOF_SHINGLES_1",
+    "vanillaTextureIndex": 6,
+    "specularStrength": 0.5,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "WOODEN_SCREEN",
+    "vanillaTextureIndex": 7,
+    "hasTransparency": true
+  },
+  {
+    "name": "LEAVES_SIDE",
+    "vanillaTextureIndex": 8,
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ]
+  },
+  {
+    "name": "TREE_RINGS",
+    "vanillaTextureIndex": 9,
+    "hasTransparency": true
+  },
+  {
+    "name": "MOSS_BRANCH",
+    "vanillaTextureIndex": 10
+  },
+  {
+    "name": "CONCRETE",
+    "vanillaTextureIndex": 11
+  },
+  {
+    "name": "IRON_BARS",
+    "vanillaTextureIndex": 12,
+    "hasTransparency": true
+  },
+  {
+    "name": "PAINTING_LANDSCAPE",
+    "vanillaTextureIndex": 13
+  },
+  {
+    "name": "PAINTING_KING",
+    "vanillaTextureIndex": 14
+  },
+  {
+    "name": "MARBLE_DARK",
+    "vanillaTextureIndex": 15,
+    "specularStrength": 1.1,
+    "specularGloss": 380.0
+  },
+  {
+    "name": "SIMPLE_GRAIN_WOOD",
+    "vanillaTextureIndex": 16
+  },
+  {
+    "name": "WATER_DROPLETS",
+    "vanillaTextureIndex": 17,
+    "hasTransparency": true
+  },
+  {
+    "name": "WATER_DROPS",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.075,
+    "flowMapDuration": [
+      7.0,
+      -7.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -0.9
+    ]
+  },
+  {
+    "name": "HAY",
+    "vanillaTextureIndex": 18
+  },
+  {
+    "name": "NET",
+    "vanillaTextureIndex": 19,
+    "hasTransparency": true
+  },
+  {
+    "name": "BOOKCASE",
+    "vanillaTextureIndex": 20
+  },
+  {
+    "name": "ROOF_WOODEN_SLATE",
+    "vanillaTextureIndex": 21,
+    "hasTransparency": true
+  },
+  {
+    "name": "CRATE",
+    "vanillaTextureIndex": 22,
+    "specularStrength": 0.35,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "BRICK_BROWN",
+    "vanillaTextureIndex": 23
+  },
+  {
+    "name": "WATER_FLAT_2",
+    "vanillaTextureIndex": 24
+  },
+  {
+    "name": "SWAMP_WATER_FLAT",
+    "vanillaTextureIndex": 25
+  },
+  {
+    "name": "WEB",
+    "vanillaTextureIndex": 26,
+    "hasTransparency": true
+  },
+  {
+    "name": "ROOF_SLATE",
+    "vanillaTextureIndex": 27
+  },
+  {
+    "name": "MOSS",
+    "vanillaTextureIndex": 28,
+    "hasTransparency": true
+  },
+  {
+    "name": "TROPICAL_LEAF",
+    "vanillaTextureIndex": 29,
+    "hasTransparency": true,
+    "brightness": 0.735
+  },
+  {
+    "name": "WILLOW_LEAVES",
+    "vanillaTextureIndex": 30,
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.0,
+      1.0
+    ]
+  },
+  {
+    "name": "LAVA",
+    "vanillaTextureIndex": 31,
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.05,
+    "flowMapDuration": [
+      36.0,
+      22.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -0.33333334
+    ]
+  },
+  {
+    "name": "TREE_DOOR_BROWN",
+    "vanillaTextureIndex": 32
+  },
+  {
+    "name": "MAPLE_LEAVES",
+    "vanillaTextureIndex": 33,
+    "hasTransparency": true,
+    "textureScale": [
+      1.3,
+      1.025,
+      1.0
+    ]
+  },
+  {
+    "name": "MAGIC_STARS",
+    "vanillaTextureIndex": 34,
+    "hasTransparency": true,
+    "overrideBaseColor": true,
+    "unlit": true
+  },
+  {
+    "name": "SAND_BRICK",
+    "vanillaTextureIndex": 35
+  },
+  {
+    "name": "DOOR_TEXTURE",
+    "vanillaTextureIndex": 36
+  },
+  {
+    "name": "BLADE",
+    "vanillaTextureIndex": 37
+  },
+  {
+    "name": "SANDSTONE",
+    "vanillaTextureIndex": 38
+  },
+  {
+    "name": "PAINTING_ELF",
+    "vanillaTextureIndex": 39
+  },
+  {
+    "name": "FIRE_CAPE",
+    "vanillaTextureIndex": 40,
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.05,
+    "flowMapDuration": [
+      12.0,
+      4.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      0.33333334
+    ]
+  },
+  {
+    "name": "LEAVES_DISEASED",
+    "vanillaTextureIndex": 41,
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ]
+  },
+  {
+    "name": "MARBLE",
+    "vanillaTextureIndex": 42,
+    "specularStrength": 1.0,
+    "specularGloss": 400.0
+  },
+  {
+    "name": "CLEAN_TILE",
+    "vanillaTextureIndex": 43
+  },
+  {
+    "name": "ROOF_SHINGLES_2",
+    "vanillaTextureIndex": 44
+  },
+  {
+    "name": "ROOF_BRICK_TILE",
+    "vanillaTextureIndex": 45
+  },
+  {
+    "name": "STONE_PATTERN",
+    "vanillaTextureIndex": 46
+  },
+  {
+    "name": "TEXTURE_47",
+    "vanillaTextureIndex": 47
+  },
+  {
+    "name": "HIEROGLYPHICS",
+    "vanillaTextureIndex": 48
+  },
+  {
+    "name": "TEXTURE_49",
+    "vanillaTextureIndex": 49
+  },
+  {
+    "name": "ROOF_BRICK_TILE_GREEN",
+    "vanillaTextureIndex": 50
+  },
+  {
+    "name": "CLEAN_WOOD_FLOOR",
+    "vanillaTextureIndex": 51
+  },
+  {
+    "name": "SNOW_FLAKES",
+    "vanillaTextureIndex": 52,
+    "hasTransparency": true
+  },
+  {
+    "name": "FROZEN_ABYSSAL_WHIP",
+    "vanillaTextureIndex": 53
+  },
+  {
+    "name": "ROOF_BRICK_TILE_DARK",
+    "vanillaTextureIndex": 55
+  },
+  {
+    "name": "RED_LAVA",
+    "vanillaTextureIndex": 56
+  },
+  {
+    "name": "SMOKE_BATTLESTAFF",
+    "vanillaTextureIndex": 57
+  },
+  {
+    "name": "UNUSED_LEAVES",
+    "vanillaTextureIndex": 58,
+    "hasTransparency": true
+  },
+  {
+    "name": "INFERNAL_CAPE",
+    "vanillaTextureIndex": 59,
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.02,
+    "flowMapDuration": [
+      12.0,
+      4.0
+    ]
+  },
+  {
+    "name": "LEAVES_TOP",
+    "vanillaTextureIndex": 60,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_SKULL",
+    "vanillaTextureIndex": 61,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_PARTYHAT",
+    "vanillaTextureIndex": 62,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_MAGIC_ICON",
+    "vanillaTextureIndex": 63,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_MIME_HAPPY",
+    "vanillaTextureIndex": 64,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_HELMET",
+    "vanillaTextureIndex": 65,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_SWORDS",
+    "vanillaTextureIndex": 66,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_MIME_SAD",
+    "vanillaTextureIndex": 67,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_SKILLING",
+    "vanillaTextureIndex": 68,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_FARMING",
+    "vanillaTextureIndex": 69,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_ARROWS",
+    "vanillaTextureIndex": 70,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_RUNE",
+    "vanillaTextureIndex": 71,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_THIEVING",
+    "vanillaTextureIndex": 72,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_BONES",
+    "vanillaTextureIndex": 73,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_CABBAGE",
+    "vanillaTextureIndex": 74,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_CAT",
+    "vanillaTextureIndex": 75,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_COMPASS",
+    "vanillaTextureIndex": 76,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_FISH",
+    "vanillaTextureIndex": 77,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_HITPOINTS",
+    "vanillaTextureIndex": 78,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_PRAYER",
+    "vanillaTextureIndex": 79,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_HUNTER",
+    "vanillaTextureIndex": 80,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_RING",
+    "vanillaTextureIndex": 81,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_ROBINHOOD",
+    "vanillaTextureIndex": 82,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_FLOWER",
+    "vanillaTextureIndex": 83,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_DEFENCE",
+    "vanillaTextureIndex": 84,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_ZAMORAK",
+    "vanillaTextureIndex": 85,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_GROUP",
+    "vanillaTextureIndex": 86,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_GROUP_HARDCORE",
+    "vanillaTextureIndex": 87,
+    "hasTransparency": true
+  },
+  {
+    "name": "CLAN_EMPTY",
+    "vanillaTextureIndex": 88,
+    "hasTransparency": true
+  },
+  {
+    "name": "SHAYZIEN_LEAVES_TOP",
+    "vanillaTextureIndex": 89,
+    "hasTransparency": true
+  },
+  {
+    "name": "SHAYZIEN_LEAVES_SIDE",
+    "vanillaTextureIndex": 90,
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ]
+  },
+  {
+    "name": "WATER_ICE",
+    "vanillaTextureIndex": 91
+  },
+  {
+    "name": "SNOW_ROOF",
+    "vanillaTextureIndex": 92
+  },
+  {
+    "name": "SMALL_SNOWFLAKES",
+    "vanillaTextureIndex": 93
+  },
+  {
+    "name": "COLOR_MAP",
+    "vanillaTextureIndex": 94
+  },
+  {
+    "name": "CONCRETE_DARK",
+    "vanillaTextureIndex": 95
+  },
+  {
+    "name": "HIEROGLYPHICS_LARGE",
+    "vanillaTextureIndex": 96,
+    "hasTransparency": true
+  },
+  {
+    "name": "HIEROGLYPHICS_SMALL",
+    "vanillaTextureIndex": 97,
+    "hasTransparency": true
+  },
+  {
+    "name": "FOG_STATIC",
+    "vanillaTextureIndex": 98,
+    "hasTransparency": true
+  },
+  {
+    "name": "FOG_VERY_SLOW",
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 99
+  },
+  {
+    "name": "FOG_SLOW",
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 100
+  },
+  {
+    "name": "FOG_MEDIUM",
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 101
+  },
+  {
+    "name": "FOG_FAST",
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 102
+  },
+  {
+    "name": "FOG_VERY_FAST",
+    "parent": "FOG_STATIC",
+    "vanillaTextureIndex": 103
+  },
+  {
+    "name": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 104,
+    "hasTransparency": true
+  },
+  {
+    "name": "FOG_LIGHT_VERY_SLOW",
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 105
+  },
+  {
+    "name": "FOG_LIGHT_SLOW",
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 106
+  },
+  {
+    "name": "FOG_LIGHT_MEDIUM",
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 107
+  },
+  {
+    "name": "FOG_LIGHT_FAST",
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 108
+  },
+  {
+    "name": "FOG_LIGHT_VERY_FAST",
+    "parent": "FOG_LIGHT_STATIC",
+    "vanillaTextureIndex": 109
+  },
+  {
+    "name": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 110,
+    "hasTransparency": true
+  },
+  {
+    "name": "FOG_HEAVY_VERY_SLOW",
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 111
+  },
+  {
+    "name": "FOG_HEAVY_SLOW",
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 112
+  },
+  {
+    "name": "FOG_HEAVY_MEDIUM",
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 113
+  },
+  {
+    "name": "FOG_HEAVY_FAST",
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 114
+  },
+  {
+    "name": "FOG_HEAVY_VERY_FAST",
+    "parent": "FOG_HEAVY_STATIC",
+    "vanillaTextureIndex": 115
+  },
+  {
+    "name": "SKULLS",
+    "vanillaTextureIndex": 116
+  },
+  {
+    "name": "SKULLS_FOG",
+    "vanillaTextureIndex": 117
+  },
+  {
+    "name": "SKULLS_FOG_LIGHT",
+    "vanillaTextureIndex": 118
+  },
+  {
+    "name": "SKULLS_FOG_DARK",
+    "vanillaTextureIndex": 119
+  },
+  {
+    "name": "BRICK_BROWN_HORIZONTAL",
+    "vanillaTextureIndex": 120
+  },
+  {
+    "name": "FORTIS_ROADS",
+    "vanillaTextureIndex": 121,
+    "textureScale": [ -1, -1 ]
+  },
+  {
+    "name": "FORTIS_ROADS_MIRRORED",
+    "parent": "FORTIS_ROADS",
+    "vanillaTextureIndex": 122,
+    "textureScale": [ -1, -1 ]
+  },
+  {
+    "name": "BRICK_CAM_TORUM",
+    "vanillaTextureIndex": 125
+  },
+  {
+    "name": "BRICK_CAM_TORUM_2",
+    "vanillaTextureIndex": 126
+  },
+  {
+    "name": "WHITE",
+    "parent": "NONE"
+  },
+  {
+    "name": "GRAY_150",
+    "parent": "NONE",
+    "brightness": 1.5
+  },
+  {
+    "name": "GRAY_125",
+    "parent": "NONE",
+    "brightness": 1.25
+  },
+  {
+    "name": "GRAY_110",
+    "parent": "NONE",
+    "brightness": 1.1
+  },
+  {
+    "name": "GRAY_90",
+    "parent": "NONE",
+    "brightness": 0.9
+  },
+  {
+    "name": "GRAY_85",
+    "parent": "NONE",
+    "brightness": 0.85
+  },
+  {
+    "name": "GRAY_75",
+    "parent": "NONE",
+    "brightness": 0.75
+  },
+  {
+    "name": "GRAY_70",
+    "parent": "NONE",
+    "brightness": 0.7
+  },
+  {
+    "name": "GRAY_65",
+    "parent": "NONE",
+    "brightness": 0.65
+  },
+  {
+    "name": "GRAY_50",
+    "parent": "NONE",
+    "brightness": 0.5
+  },
+  {
+    "name": "GRAY_45",
+    "parent": "NONE",
+    "brightness": 0.45
+  },
+  {
+    "name": "GRAY_35",
+    "parent": "NONE",
+    "brightness": 0.35
+  },
+  {
+    "name": "GRAY_25",
+    "parent": "NONE",
+    "brightness": 0.25
+  },
+  {
+    "name": "BLACK",
+    "parent": "NONE",
+    "brightness": 0
+  },
+  {
+    "name": "PURE_BLACK",
+    "parent": "NONE",
+    "overrideBaseColor": true,
+    "brightness": 0
+  },
+  {
+    "name": "BLANK_GLOSS",
+    "parent": "WHITE",
+    "specularStrength": 0.9,
+    "specularGloss": 280.0
+  },
+  {
+    "name": "BLANK_SEMIGLOSS",
+    "parent": "WHITE",
+    "specularStrength": 0.35,
+    "specularGloss": 80.0
+  },
+  {
+    "name": "BLANK_SUPERGLOSS",
+    "parent": "WHITE",
+    "specularStrength": 1.75,
+    "specularGloss": 55.0
+  },
+  {
+    "name": "SNOW_1_N"
+  },
+  {
+    "name": "SNOW_1",
+    "normalMap": "SNOW_1_N",
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "SNOW_2_N"
+  },
+  {
+    "name": "SNOW_2",
+    "normalMap": "SNOW_2_N",
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "SNOW_2_DARK",
+    "parent": "SNOW_2",
+    "brightness": 0.735
+  },
+  {
+    "name": "SNOW_COLORED",
+    "normalMap": "SNOW_1_N",
+    "overrideBaseColor": true,
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "SNOW_3_N"
+  },
+  {
+    "name": "SNOW_3",
+    "normalMap": "SNOW_3_N",
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "SNOW_4_N"
+  },
+  {
+    "name": "SNOW_4",
+    "normalMap": "SNOW_4_N",
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "GRASS_1"
+  },
+  {
+    "name": "GRASS_2"
+  },
+  {
+    "name": "GRASS_3"
+  },
+  {
+    "name": "GRASS_SCROLLING",
+    "parent": "GRASS_1",
+    "scrollSpeed": [
+      -0.0,
+      1.4285715
+    ]
+  },
+  {
+    "name": "COLORED_GRASS",
+    "overrideBaseColor": true
+  },
+  {
+    "name": "DIRT_1_N"
+  },
+  {
+    "name": "DIRT_1",
+    "normalMap": "DIRT_1_N",
+    "specularStrength": 0.25,
+    "specularGloss": 18.0
+  },
+  {
+    "name": "DIRT_1_VERT",
+    "parent": "DIRT_1",
+    "normalMap": null
+  },
+  {
+    "name": "DIRT_2_N"
+  },
+  {
+    "name": "DIRT_2",
+    "normalMap": "DIRT_2_N",
+    "specularStrength": 0.25,
+    "specularGloss": 18.0
+  },
+  {
+    "name": "DIRT_2_VERT",
+    "parent": "DIRT_2",
+    "normalMap": null
+  },
+  {
+    "name": "DIRT_2_LIGHT",
+    "parent": "DIRT_2",
+    "brightness": 1.083
+  },
+  {
+    "name": "GRAVEL_N"
+  },
+  {
+    "name": "GRAVEL",
+    "normalMap": "GRAVEL_N",
+    "specularStrength": 0.4,
+    "specularGloss": 130.0
+  },
+  {
+    "name": "VERTICAL_GRAVEL",
+    "parent": "GRAVEL",
+    "normalMap": null
+  },
+  {
+    "name": "GRAVEL_SEMI_LIGHT",
+    "parent": "GRAVEL",
+    "brightness": 1.103
+  },
+  {
+    "name": "GRAVEL_LIGHT",
+    "parent": "GRAVEL",
+    "brightness": 1.194
+  },
+  {
+    "name": "DIRT_1_SHINY",
+    "parent": "DIRT_1",
+    "specularStrength": 1.1,
+    "specularGloss": 380.0
+  },
+  {
+    "name": "DIRT_2_SHINY",
+    "parent": "DIRT_2",
+    "specularStrength": 1.1,
+    "specularGloss": 380.0
+  },
+  {
+    "name": "GRAVEL_SHINY",
+    "parent": "GRAVEL",
+    "specularStrength": 1.1,
+    "specularGloss": 380.0
+  },
+  {
+    "name": "GRAVEL_SHINY_LIGHT",
+    "parent": "GRAVEL",
+    "brightness": 1.211,
+    "specularStrength": 1.1,
+    "specularGloss": 380.0
+  },
+  {
+    "name": "MUD_1_N"
+  },
+  {
+    "name": "MUD_1",
+    "normalMap": "MUD_1_N",
+    "specularStrength": 0.5,
+    "specularGloss": 25.0
+  },
+  {
+    "name": "MUD_1_DARK",
+    "parent": "MUD_1",
+    "brightness": 0.931
+  },
+  {
+    "name": "SAND_1_N"
+  },
+  {
+    "name": "SAND_1",
+    "normalMap": "SAND_1_N",
+    "specularStrength": 0.2,
+    "specularGloss": 10.0
+  },
+  {
+    "name": "SAND_2_N"
+  },
+  {
+    "name": "SAND_2",
+    "normalMap": "SAND_2_N",
+    "specularStrength": 0.2,
+    "specularGloss": 10.0
+  },
+  {
+    "name": "SAND_3_N"
+  },
+  {
+    "name": "SAND_3",
+    "normalMap": "SAND_3_N",
+    "specularStrength": 0.2,
+    "specularGloss": 10.0
+  },
+  {
+    "name": "GRUNGE_1"
+  },
+  {
+    "name": "GRUNGE_1_LIGHT",
+    "parent": "GRUNGE_1",
+    "brightness": 1.122
+  },
+  {
+    "name": "GRUNGE_1_VERY_LIGHT",
+    "parent": "GRUNGE_1",
+    "brightness": 1.261
+  },
+  {
+    "name": "GRUNGE_1_SHINY",
+    "parent": "GRUNGE_1",
+    "specularStrength": 0.7,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "GRUNGE_1_LIGHT_SHINY",
+    "parent": "GRUNGE_1",
+    "brightness": 1.083,
+    "specularStrength": 0.7,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "GRUNGE_2"
+  },
+  {
+    "name": "GRUNGE_2_SHINY",
+    "parent": "GRUNGE_2",
+    "specularStrength": 0.7,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "SUBMERGED_GRUNGE_2",
+    "parent": "GRUNGE_2",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.075,
+    "flowMapDuration": [
+      12.0,
+      -12.0
+    ]
+  },
+  {
+    "name": "GRUNGE_3_N"
+  },
+  {
+    "name": "GRUNGE_3",
+    "normalMap": "GRUNGE_3_N",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "GRUNGE_3_SHINY",
+    "parent": "GRUNGE_3",
+    "brightness": 1.177,
+    "specularStrength": 0.5,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "GRUNGE_3_LIGHT",
+    "parent": "GRUNGE_3",
+    "brightness": 1.177
+  },
+  {
+    "name": "GRUNGE_3_LIGHT_SHINY",
+    "parent": "GRUNGE_3_LIGHT",
+    "specularStrength": 0.5,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "GRUNGE_3_LIGHT_VERY_SHINY",
+    "parent": "GRUNGE_3_LIGHT",
+    "specularStrength": 0.9
+  },
+  {
+    "name": "GRUNGE_3_DARK",
+    "parent": "GRUNGE_3",
+    "brightness": 0.881,
+    "specularStrength": 0.0,
+    "specularGloss": 0.0
+  },
+  {
+    "name": "WATER_FOUNTAIN_FLAT",
+    "parent": "GRUNGE_3",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.2,
+    "flowMapDuration": [
+      12.0,
+      -12.0
+    ]
+  },
+  {
+    "name": "WATER_FLAT_FORCE",
+    "parent": "WATER_FLAT",
+    "overrideBaseColor": true
+  },
+  {
+    "name": "MOTHERLODE_MINE_WATER",
+    "parent": "WATER_FLAT",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "brightness": 0.701,
+    "flowMapStrength": 0.3,
+    "flowMapDuration": [
+      10.0,
+      -14.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -1.4
+    ]
+  },
+  {
+    "name": "SWAMP_WATER_FLAT_FLOW",
+    "parent": "SWAMP_WATER_FLAT",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.2,
+    "flowMapDuration": [
+      7.0,
+      -11.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -1.3
+    ]
+  },
+  {
+    "name": "GRUNGE_3_DULL",
+    "parent": "GRUNGE_3",
+    "normalMap": null,
+    "specularStrength": 0.0,
+    "specularGloss": 0.0
+  },
+  {
+    "name": "ROCK_1_N"
+  },
+  {
+    "name": "ROCK_1",
+    "normalMap": "ROCK_1_N",
+    "specularStrength": 0.35,
+    "specularGloss": 40.0
+  },
+  {
+    "name": "ROCK_1_LIGHT",
+    "parent": "ROCK_1",
+    "brightness": 1.159
+  },
+  {
+    "name": "ROCK_2_N"
+  },
+  {
+    "name": "ROCK_2",
+    "normalMap": "ROCK_2_N",
+    "brightness": 1.083,
+    "specularStrength": 0.35,
+    "specularGloss": 60.0
+  },
+  {
+    "name": "ROCK_3_D"
+  },
+  {
+    "name": "ROCK_3_N"
+  },
+  {
+    "name": "ROCK_3",
+    "normalMap": "ROCK_3_N",
+    "displacementMap": "ROCK_3_D",
+    "brightness": 1.083,
+    "displacementScale": 0.15,
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "ROCK_3_MEDIUM_DARK",
+    "parent": "ROCK_3",
+    "brightness": 0.931
+  },
+  {
+    "name": "ROCK_3_DARK",
+    "parent": "ROCK_3",
+    "brightness": 0.827
+  },
+  {
+    "name": "ROCK_3_LIGHT",
+    "parent": "ROCK_3",
+    "brightness": 1.194
+  },
+  {
+    "name": "ROCK_3_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "displacementScale": 0.0,
+    "specularStrength": 0.3,
+    "specularGloss": 40.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.15
+    ]
+  },
+  {
+    "name": "ROCK_3_ORE",
+    "parent": "ROCK_3",
+    "specularStrength": 1.0
+  },
+  {
+    "name": "EADGARS_CAVE_FIX",
+    "parent": "ROCK_3",
+    "brightness": 0.827
+  },
+  {
+    "name": "TROLLHEIM_WALL_FIX_1",
+    "parent": "ROCK_3",
+    "brightness": 1.293
+  },
+  {
+    "name": "TROLLHEIM_WALL_FIX_2",
+    "parent": "ROCK_3"
+  },
+  {
+    "name": "ROCK_4_D"
+  },
+  {
+    "name": "ROCK_4_N"
+  },
+  {
+    "name": "ROCK_4",
+    "normalMap": "ROCK_4_N",
+    "displacementMap": "ROCK_4_D",
+    "brightness": 1.083,
+    "displacementScale": 0.15,
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "ROCK_4_DARK",
+    "parent": "ROCK_4",
+    "brightness": 0.854
+  },
+  {
+    "name": "ROCK_4_ORE",
+    "parent": "ROCK_4",
+    "specularStrength": 1.0
+  },
+  {
+    "name": "ROCK_5_D"
+  },
+  {
+    "name": "ROCK_5_N"
+  },
+  {
+    "name": "ROCK_5",
+    "normalMap": "ROCK_5_N",
+    "displacementMap": "ROCK_5_D",
+    "brightness": 1.083,
+    "displacementScale": 0.15,
+    "specularStrength": 0.4,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "ROCK_5_ORE",
+    "parent": "ROCK_5",
+    "specularStrength": 1.0
+  },
+  {
+    "name": "ROPE"
+  },
+  {
+    "name": "CARPET_N"
+  },
+  {
+    "name": "CARPET",
+    "normalMap": "CARPET_N",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "CARPET_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.177
+  },
+  {
+    "name": "CARPET_DARK",
+    "parent": "CARPET",
+    "brightness": 0.701
+  },
+  {
+    "name": "BURLAP"
+  },
+  {
+    "name": "FALADOR_PATH_BRICK_N"
+  },
+  {
+    "name": "FALADOR_PATH_BRICK_D"
+  },
+  {
+    "name": "FALADOR_PATH_BRICK",
+    "normalMap": "FALADOR_PATH_BRICK_N",
+    "displacementMap": "FALADOR_PATH_BRICK_D",
+    "displacementScale": 0.06,
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "BRICK_PATH_N"
+  },
+  {
+    "name": "BRICK_PATH",
+    "normalMap": "BRICK_PATH_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "JAGGED_STONE_TILE_D"
+  },
+  {
+    "name": "JAGGED_STONE_TILE_N"
+  },
+  {
+    "name": "JAGGED_STONE_TILE",
+    "normalMap": "JAGGED_STONE_TILE_N",
+    "displacementMap": "JAGGED_STONE_TILE_D",
+    "displacementScale": 0.05,
+    "specularStrength": 0.5,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "POTTERY_OVEN_STONE",
+    "parent": "JAGGED_STONE_TILE",
+    "brightness": 0.584
+  },
+  {
+    "name": "TILE_SMALL_1",
+    "specularStrength": 0.8,
+    "specularGloss": 70.0
+  },
+  {
+    "name": "TILE_SMALL_2",
+    "specularStrength": 0.8,
+    "specularGloss": 70.0
+  },
+  {
+    "name": "TILES_2X2_1_N"
+  },
+  {
+    "name": "TILES_2X2_1",
+    "normalMap": "TILES_2X2_1_N"
+  },
+  {
+    "name": "TILES_2X2_1_GLOSS",
+    "parent": "TILES_2X2_1",
+    "specularStrength": 1.0,
+    "specularGloss": 70.0
+  },
+  {
+    "name": "TILES_2X2_1_SEMIGLOSS",
+    "parent": "TILES_2X2_1",
+    "specularStrength": 0.5,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "TILES_2X2_2_N"
+  },
+  {
+    "name": "TILES_2X2_2",
+    "normalMap": "TILES_2X2_2_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "TILES_2X2_2_GLOSS",
+    "parent": "TILES_2X2_2",
+    "specularStrength": 1.0,
+    "specularGloss": 70.0
+  },
+  {
+    "name": "TILES_2X2_2_SEMIGLOSS",
+    "parent": "TILES_2X2_2",
+    "specularStrength": 0.5,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "MARBLE_1"
+  },
+  {
+    "name": "MARBLE_2"
+  },
+  {
+    "name": "MARBLE_3"
+  },
+  {
+    "name": "MARBLE_4_N"
+  },
+  {
+    "name": "MARBLE_4",
+    "normalMap": "MARBLE_4_N"
+  },
+  {
+    "name": "MARBLE_1_GLOSS",
+    "parent": "MARBLE_1",
+    "specularStrength": 0.9,
+    "specularGloss": 280.0
+  },
+  {
+    "name": "MARBLE_2_GLOSS",
+    "parent": "MARBLE_2",
+    "specularStrength": 0.8,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "MARBLE_3_GLOSS",
+    "parent": "MARBLE_3",
+    "specularStrength": 0.7,
+    "specularGloss": 320.0
+  },
+  {
+    "name": "MARBLE_1_SEMIGLOSS",
+    "parent": "MARBLE_1",
+    "specularStrength": 0.35,
+    "specularGloss": 80.0
+  },
+  {
+    "name": "MARBLE_2_SEMIGLOSS",
+    "parent": "MARBLE_2",
+    "specularStrength": 0.3,
+    "specularGloss": 100.0
+  },
+  {
+    "name": "MARBLE_2_DARK",
+    "parent": "MARBLE_2",
+    "brightness": 0.735
+  },
+  {
+    "name": "MARBLE_3_SEMIGLOSS",
+    "parent": "MARBLE_3",
+    "specularStrength": 0.4,
+    "specularGloss": 120.0
+  },
+  {
+    "name": "MARBLE_4_GLOSS",
+    "parent": "MARBLE_4",
+    "specularStrength": 1.8,
+    "specularGloss": 300.0
+  },
+  {
+    "name": "MARBLE_4_LIGHT_GLOSS",
+    "parent": "MARBLE_4_GLOSS",
+    "brightness": 2
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST",
+    "normalMap": "MARBLE_4_N"
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST_GLOSS",
+    "parent": "MARBLE_4_LOW_CONTRAST",
+    "specularStrength": 1,
+    "specularGloss": 80.0
+  },
+  {
+    "name": "MARBLE_4_LOW_CONTRAST_LIGHT_GLOSS",
+    "parent": "MARBLE_4_LOW_CONTRAST_GLOSS",
+    "brightness": 2
+  },
+  {
+    "name": "LASSAR_UNDERCITY_TILE_N"
+  },
+  {
+    "name": "LASSAR_UNDERCITY_TILE_D"
+  },
+  {
+    "name": "LASSAR_UNDERCITY_TILES",
+    "parent": "MARBLE_2_SEMIGLOSS",
+    "normalMap": "LASSAR_UNDERCITY_TILE_N",
+    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "displacementScale": 0.015
+  },
+  {
+    "name": "LASSAR_UNDERCITY_TILES_SUBMERGED",
+    "parent": "LASSAR_UNDERCITY_TILES",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.025,
+    "flowMapDuration": [
+      10.0,
+      -10.0
+    ]
+  },
+  {
+    "name": "CAM_TORUM_TILE_AO"
+  },
+  {
+    "name": "CAM_TORUM_TILES",
+    "parent": "STONE",
+    "normalMap": "LASSAR_UNDERCITY_TILE_N",
+    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
+    "displacementScale": 0.025
+  },
+  {
+    "name": "HD_LAVA_1",
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.04,
+    "flowMapDuration": [
+      36.0,
+      12.0
+    ]
+  },
+  {
+    "name": "HD_LAVA_2",
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.04,
+    "flowMapDuration": [
+      36.0,
+      12.0
+    ]
+  },
+  {
+    "name": "HD_MAGMA_1",
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.04,
+    "flowMapDuration": [
+      36.0,
+      12.0
+    ]
+  },
+  {
+    "name": "HD_MAGMA_2",
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.04,
+    "flowMapDuration": [
+      36.0,
+      12.0
+    ]
+  },
+  {
+    "name": "BARK_N"
+  },
+  {
+    "name": "BARK",
+    "normalMap": "BARK_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "LIGHT_BARK",
+    "parent": "BARK",
+    "brightness": 1.277
+  },
+  {
+    "name": "VERY_LIGHT_BARK",
+    "parent": "BARK",
+    "brightness": 1.553
+  },
+  {
+    "name": "BARK_STONEPINE_N"
+  },
+  {
+    "name": "BARK_STONEPINE",
+    "normalMap": "BARK_STONEPINE_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "BARK_STONEPINE_2",
+    "normalMap": "BARK_STONEPINE_N",
+    "brightness": 1.277,
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "LIGHT_BARK_STONEPINE",
+    "parent": "BARK_STONEPINE",
+    "brightness": 1.277
+  },
+  {
+    "name": "LEAF_VEINS"
+  },
+  {
+    "name": "LEAF_VEINS_LIGHT",
+    "parent": "LEAF_VEINS",
+    "brightness": 1.083
+  },
+  {
+    "name": "LEAF_VEINS_DARK",
+    "parent": "LEAF_VEINS",
+    "brightness": 0.881
+  },
+  {
+    "name": "LEAVES_1_N"
+  },
+  {
+    "name": "LEAVES_1",
+    "normalMap": "LEAVES_1_N",
+    "specularStrength": 0.25,
+    "specularGloss": 15.0
+  },
+  {
+    "name": "WOOD_GRAIN"
+  },
+  {
+    "name": "WOOD_GRAIN_LIGHT",
+    "parent": "WOOD_GRAIN",
+    "brightness": 1.194
+  },
+  {
+    "name": "WOOD_GRAIN_DARK",
+    "parent": "WOOD_GRAIN",
+    "brightness": 0.881
+  },
+  {
+    "name": "WOOD_GRAIN_2_N"
+  },
+  {
+    "name": "WOOD_GRAIN_2",
+    "normalMap": "WOOD_GRAIN_2_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "WOOD_GRAIN_2_SMOOTH",
+    "parent": "WOOD_GRAIN_2",
+    "brightness": 1.043,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.2
+    ]
+  },
+  {
+    "name": "WOOD_GRAIN_2_LIGHT",
+    "parent": "WOOD_GRAIN_2",
+    "brightness": 1.043
+  },
+  {
+    "name": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "parent": "WOOD_GRAIN_2",
+    "brightness": 1.122,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.2
+    ]
+  },
+  {
+    "name": "WOOD_GRAIN_2_WIDE",
+    "parent": "WOOD_GRAIN_2",
+    "textureScale": [
+      1.5,
+      0.5,
+      1.0
+    ]
+  },
+  {
+    "name": "WOOD_GRAIN_3_D"
+  },
+  {
+    "name": "WOOD_GRAIN_3_N"
+  },
+  {
+    "name": "WOOD_GRAIN_3",
+    "normalMap": "WOOD_GRAIN_3_N",
+    "displacementMap": "WOOD_GRAIN_3_D",
+    "specularStrength": 0.3,
+    "specularGloss": 25.0
+  },
+  {
+    "name": "WOOD_GRAIN_3_LIGHT",
+    "parent": "WOOD_GRAIN_3",
+    "brightness": 1.228
+  },
+  {
+    "name": "WOOD_GRAIN_3_SEMILIGHT_DULL",
+    "parent": "WOOD_GRAIN_3",
+    "brightness": 1.083,
+    "specularStrength": 0.0,
+    "specularGloss": 0.0
+  },
+  {
+    "name": "WOOD_GRAIN_3_DARK",
+    "parent": "WOOD_GRAIN_3",
+    "brightness": 0.854
+  },
+  {
+    "name": "HD_INFERNAL_CAPE",
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.02,
+    "flowMapDuration": [
+      12.0,
+      4.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -0.33333334
+    ],
+    "materialsToReplace": [
+      "INFERNAL_CAPE"
+    ],
+    "replacementCondition": "hdInfernalCape"
+  },
+  {
+    "name": "HD_BRICK_N"
+  },
+  {
+    "name": "HD_BRICK_D"
+  },
+  {
+    "name": "HD_BRICK",
+    "normalMap": "HD_BRICK_N",
+    "displacementMap": "HD_BRICK_D",
+    "displacementScale": 0.05,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "BRICK"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_ROOF_SHINGLES_N"
+  },
+  {
+    "name": "HD_ROOF_SHINGLES_D"
+  },
+  {
+    "name": "HD_ROOF_SHINGLES_1",
+    "normalMap": "HD_ROOF_SHINGLES_N",
+    "displacementMap": "HD_ROOF_SHINGLES_D",
+    "displacementScale": 0.11,
+    "specularStrength": 0.35,
+    "specularGloss": 40.0,
+    "materialsToReplace": [
+      "ROOF_SHINGLES_1"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_MARBLE_DARK",
+    "specularStrength": 1.1,
+    "specularGloss": 380.0,
+    "materialsToReplace": [
+      "MARBLE_DARK"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_BRICK_BROWN_N"
+  },
+  {
+    "name": "HD_BRICK_BROWN_D"
+  },
+  {
+    "name": "HD_BRICK_BROWN",
+    "normalMap": "HD_BRICK_BROWN_N",
+    "displacementMap": "HD_BRICK_BROWN_D",
+    "displacementScale": 0.05,
+    "specularStrength": 0.35,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "BRICK_BROWN"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_LAVA_3",
+    "flowMap": "LAVA_FLOW_MAP",
+    "overrideBaseColor": true,
+    "unlit": true,
+    "flowMapStrength": 0.05,
+    "flowMapDuration": [
+      36.0,
+      22.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -0.33333334
+    ],
+    "materialsToReplace": [
+      "LAVA"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_ROOF_SHINGLES_2",
+    "normalMap": "HD_ROOF_SHINGLES_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "ROOF_SHINGLES_2"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_SIMPLE_GRAIN_WOOD_D"
+  },
+  {
+    "name": "HD_SIMPLE_GRAIN_WOOD_N"
+  },
+  {
+    "name": "HD_SIMPLE_GRAIN_WOOD",
+    "normalMap": "HD_SIMPLE_GRAIN_WOOD_N",
+    "displacementMap": "HD_SIMPLE_GRAIN_WOOD_D",
+    "displacementScale": 0.008,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "SIMPLE_GRAIN_WOOD"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "WORN_TILES_N"
+  },
+  {
+    "name": "WORN_TILES",
+    "normalMap": "WORN_TILES_N",
+    "specularStrength": 0.2,
+    "specularGloss": 25.0
+  },
+  {
+    "name": "HD_STONE_PATTERN_N"
+  },
+  {
+    "name": "HD_STONE_PATTERN_D"
+  },
+  {
+    "name": "HD_STONE_PATTERN",
+    "normalMap": "HD_STONE_PATTERN_N",
+    "displacementMap": "HD_STONE_PATTERN_D",
+    "displacementScale": 0.08,
+    "specularStrength": 0.25,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "STONE_PATTERN"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "STONE_N"
+  },
+  {
+    "name": "STONE"
+  },
+  {
+    "name": "STONE_NORMALED",
+    "parent": "STONE",
+    "normalMap": "STONE_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "STONE_NORMALED_DARK",
+    "parent": "STONE_NORMALED",
+    "brightness": 0.945
+  },
+  {
+    "name": "STONE_NORMALED_LIGHT",
+    "parent": "STONE_NORMALED",
+    "brightness": 1.122
+  },
+  {
+    "name": "STONE_LOWGLOSS",
+    "parent": "STONE",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "STONE_SEMIGLOSS",
+    "parent": "STONE",
+    "specularStrength": 0.6,
+    "specularGloss": 100.0
+  },
+  {
+    "name": "STONE_SCROLLING",
+    "parent": "STONE",
+    "scrollSpeed": [
+      -0.0,
+      1.4285715
+    ]
+  },
+  {
+    "name": "WALL_STONE_N"
+  },
+  {
+    "name": "WALL_STONE",
+    "normalMap": "WALL_STONE_N"
+  },
+  {
+    "name": "WALL_STONE_LIGHT",
+    "parent": "WALL_STONE",
+    "brightness": 1.261
+  },
+  {
+    "name": "METALLIC_1_N"
+  },
+  {
+    "name": "METALLIC_1",
+    "normalMap": "METALLIC_1_N",
+    "specularStrength": 0.6,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "METALLIC_1_SEMIGLOSS",
+    "parent": "METALLIC_1",
+    "specularStrength": 0.8,
+    "specularGloss": 60.0
+  },
+  {
+    "name": "METALLIC_1_GLOSS",
+    "parent": "METALLIC_1",
+    "specularStrength": 0.9,
+    "specularGloss": 80.0
+  },
+  {
+    "name": "METALLIC_1_HIGHGLOSS",
+    "parent": "METALLIC_1",
+    "specularStrength": 1.1,
+    "specularGloss": 120.0
+  },
+  {
+    "name": "METALLIC_1_LIGHT",
+    "parent": "METALLIC_1",
+    "brightness": 1.293
+  },
+  {
+    "name": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "parent": "METALLIC_1_LIGHT",
+    "specularStrength": 0.7,
+    "specularGloss": 80.0
+  },
+  {
+    "name": "METALLIC_1_LIGHT_GLOSS",
+    "parent": "METALLIC_1_LIGHT",
+    "specularStrength": 0.9,
+    "specularGloss": 120.0
+  },
+  {
+    "name": "METALLIC_1_LIGHT_HIGHGLOSS",
+    "parent": "METALLIC_1_LIGHT",
+    "specularStrength": 1.1,
+    "specularGloss": 160.0
+  },
+  {
+    "name": "METALLIC_1_LIGHT_SUPER_HIGHGLOSS",
+    "parent": "METALLIC_1_LIGHT",
+    "specularStrength": 2.25,
+    "specularGloss": 65.0
+  },
+  {
+    "name": "METALLIC_1_VERY_LIGHT",
+    "parent": "METALLIC_1",
+    "brightness": 1.516
+  },
+  {
+    "name": "METALLIC_2_N"
+  },
+  {
+    "name": "METALLIC_2",
+    "normalMap": "METALLIC_2_N",
+    "specularStrength": 0.7,
+    "specularGloss": 35.0
+  },
+  {
+    "name": "METALLIC_NONE_GLOSS",
+    "parent": "NONE",
+    "specularStrength": 0.7,
+    "specularGloss": 120.0
+  },
+  {
+    "name": "METALLIC_1_SMOOTH",
+    "parent": "METALLIC_1",
+    "textureScale": [
+      1.0,
+      1.0,
+      0.1
+    ]
+  },
+  {
+    "name": "METALLIC_1_SMOOTH_LIGHT",
+    "parent": "METALLIC_1_SMOOTH",
+    "brightness": 1.293
+  },
+  {
+    "name": "WATTLE_1"
+  },
+  {
+    "name": "ICE_1",
+    "parent": "SNOW_4",
+    "specularStrength": 1.1,
+    "specularGloss": 200.0,
+    "materialsToReplace": [
+      "WATER_FLAT_2",
+      "WATER_FLAT"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "ICE_1_HIGHGLOSS",
+    "parent": "ICE_1",
+    "specularStrength": 3.1,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "ICE_2",
+    "parent": "SNOW_2",
+    "specularStrength": 1.5,
+    "specularGloss": 800.0
+  },
+  {
+    "name": "ICE_3",
+    "parent": "GRUNGE_2",
+    "specularStrength": 1.9,
+    "specularGloss": 1000.0
+  },
+  {
+    "name": "ICE_4",
+    "parent": "WHITE",
+    "normalMap": "WATER_NORMAL_MAP_2",
+    "specularStrength": 1.5,
+    "specularGloss": 1000.0
+  },
+  {
+    "name": "SLIME_GRUNGE",
+    "parent": "GRUNGE_1",
+    "specularStrength": 4.1,
+    "specularGloss": 60.0
+  },
+  {
+    "name": "WATER_PUDDLE",
+    "parent": "NONE",
+    "specularStrength": 1.5,
+    "specularGloss": 80.0
+  },
+  {
+    "name": "HD_WOOD_PLANKS_1_N"
+  },
+  {
+    "name": "HD_WOOD_PLANKS_1",
+    "normalMap": "HD_WOOD_PLANKS_1_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "WOOD_PLANKS_1"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_WOOD_PLANKS_2_N"
+  },
+  {
+    "name": "HD_WOOD_PLANKS_2",
+    "normalMap": "HD_WOOD_PLANKS_2_N",
+    "brightness": 1.083,
+    "specularStrength": 0.3,
+    "specularGloss": 40.0
+  },
+  {
+    "name": "HD_CRATE_N"
+  },
+  {
+    "name": "HD_CRATE",
+    "normalMap": "HD_CRATE_N",
+    "brightness": 0.955,
+    "specularStrength": 0.25,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "CRATE"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_ROOF_BRICK_TILE_N"
+  },
+  {
+    "name": "HD_ROOF_BRICK_TILE",
+    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "ROOF_BRICK_TILE"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_ROOF_BRICK_TILE_GREEN",
+    "parent": "ROOF_BRICK_TILE_GREEN",
+    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "ROOF_BRICK_TILE_GREEN"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_ROOF_BRICK_TILE_DARK",
+    "parent": "ROOF_BRICK_TILE_DARK",
+    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "ROOF_BRICK_TILE_DARK"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "PLANT_GRUNGE_1",
+    "parent": "GRUNGE_1",
+    "specularStrength": 0.25,
+    "specularGloss": 25.0
+  },
+  {
+    "name": "PLANT_GRUNGE_2",
+    "parent": "GRUNGE_2",
+    "specularStrength": 0.2,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "HD_CONCRETE_D"
+  },
+  {
+    "name": "HD_CONCRETE_N"
+  },
+  {
+    "name": "HD_CONCRETE",
+    "normalMap": "HD_CONCRETE_N",
+    "displacementMap": "HD_CONCRETE_D",
+    "brightness": 0.881,
+    "displacementScale": 0.05,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "CONCRETE"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_HAY_N"
+  },
+  {
+    "name": "HD_HAY",
+    "normalMap": "HD_HAY_N",
+    "specularStrength": 0.175,
+    "specularGloss": 15.0,
+    "materialsToReplace": [
+      "HAY"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_HAY_BRIGHT",
+    "parent": "HD_HAY",
+    "brightness": 1.293
+  },
+  {
+    "name": "HD_IRON_BARS",
+    "hasTransparency": true,
+    "specularStrength": 0.6,
+    "specularGloss": 30.0,
+    "textureScale": [
+      0.98,
+      1.0,
+      1.0
+    ],
+    "materialsToReplace": [
+      "IRON_BARS"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "OOZE",
+    "parent": "GRAY_65",
+    "specularStrength": 1.5,
+    "specularGloss": 600.0
+  },
+  {
+    "name": "BONE",
+    "parent": "GRUNGE_2",
+    "brightness": 1.122,
+    "specularStrength": 0.25,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "ABYSSAL_D"
+  },
+  {
+    "name": "ABYSSAL_N"
+  },
+  {
+    "name": "ABYSSAL",
+    "normalMap": "ABYSSAL_N",
+    "displacementMap": "ABYSSAL_D",
+    "brightness": 1.612,
+    "displacementScale": 0.2,
+    "specularStrength": 4.5,
+    "specularGloss": 400.0
+  },
+  {
+    "name": "ABYSSAL_2_D"
+  },
+  {
+    "name": "ABYSSAL_2_N"
+  },
+  {
+    "name": "ABYSSAL_2",
+    "normalMap": "ABYSSAL_2_N",
+    "displacementMap": "ABYSSAL_2_D",
+    "brightness": 1.323,
+    "specularStrength": 7.0,
+    "specularGloss": 400.0
+  },
+  {
+    "name": "ABYSSAL_FLOW",
+    "parent": "ABYSSAL",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.075,
+    "flowMapDuration": [
+      -37.0,
+      37.0
+    ]
+  },
+  {
+    "name": "ABYSSAL_2_FLOW",
+    "parent": "ABYSSAL_2",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.2,
+    "flowMapDuration": [
+      28.0,
+      -28.0
+    ]
+  },
+  {
+    "name": "GROUND_WEB_1_N"
+  },
+  {
+    "name": "GROUND_WEB_1",
+    "normalMap": "GROUND_WEB_1_N",
+    "specularStrength": 0.35,
+    "specularGloss": 90.0
+  },
+  {
+    "name": "GROUND_WEB_2_N"
+  },
+  {
+    "name": "GROUND_WEB_2",
+    "normalMap": "GROUND_WEB_2_N",
+    "specularStrength": 0.35,
+    "specularGloss": 90.0
+  },
+  {
+    "name": "GROUND_WEB_3_N"
+  },
+  {
+    "name": "GROUND_WEB_3",
+    "normalMap": "GROUND_WEB_3_N",
+    "specularStrength": 0.35,
+    "specularGloss": 90.0
+  },
+  {
+    "name": "CRYSTAL",
+    "parent": "GRAY_75",
+    "specularStrength": 0.5,
+    "specularGloss": 100
+  },
+  {
+    "name": "LEAVES_YELLOW_SIDE",
+    "parent": "LEAVES_SIDE"
+  },
+  {
+    "name": "LEAVES_YELLOW_TOP",
+    "parent": "LEAVES_TOP"
+  },
+  {
+    "name": "LEAVES_RED_SIDE",
+    "parent": "LEAVES_SIDE"
+  },
+  {
+    "name": "LEAVES_RED_TOP",
+    "parent": "LEAVES_TOP"
+  },
+  {
+    "name": "LEAVES_ORANGE_SIDE",
+    "parent": "LEAVES_SIDE"
+  },
+  {
+    "name": "LEAVES_ORANGE_TOP",
+    "parent": "LEAVES_TOP"
+  },
+  {
+    "name": "AUTUMN_LEAVES_YELLOW_SIDE",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_YELLOW_SIDE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
+    "name": "AUTUMN_LEAVES_YELLOW_TOP",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_YELLOW_TOP"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
+    "name": "AUTUMN_LEAVES_ORANGE_SIDE",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_ORANGE_SIDE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
+    "name": "AUTUMN_LEAVES_ORANGE_TOP",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_ORANGE_TOP"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
+    "name": "AUTUMN_LEAVES_RED_SIDE",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_RED_SIDE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
+    "name": "AUTUMN_LEAVES_RED_TOP",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_RED_TOP"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
+    "name": "AUTUMN_WILLOW_LEAVES",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "WILLOW_LEAVES"
+    ],
+    "replacementCondition": "season == SeasonalTheme.AUTUMN"
+  },
+  {
+    "name": "WINTER_WILLOW_LEAVES",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "WILLOW_LEAVES"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_MAPLE_LEAVES",
+    "hasTransparency": true,
+    "textureScale": [
+      1.3,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "MAPLE_LEAVES"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_LEAVES_SIDE",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_SIDE",
+      "LEAVES_YELLOW_SIDE",
+      "LEAVES_ORANGE_SIDE",
+      "LEAVES_RED_SIDE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_LEAVES_TOP",
+    "hasTransparency": true,
+    "materialsToReplace": [
+      "LEAVES_TOP",
+      "LEAVES_YELLOW_TOP",
+      "LEAVES_ORANGE_TOP",
+      "LEAVES_RED_TOP"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_LEAVES_DISEASED",
+    "hasTransparency": true,
+    "textureScale": [
+      1.025,
+      1.025,
+      1.0
+    ],
+    "materialsToReplace": [
+      "LEAVES_DISEASED"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_PAINTING_LANDSCAPE",
+    "materialsToReplace": [
+      "PAINTING_LANDSCAPE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_PAINTING_KING",
+    "materialsToReplace": [
+      "PAINTING_KING"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_PAINTING_ELF",
+    "materialsToReplace": [
+      "PAINTING_ELF"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_HD_ROOF_SHINGLES_1",
+    "normalMap": "HD_ROOF_SHINGLES_N",
+    "specularStrength": 0.5,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "HD_ROOF_SHINGLES_1"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_HD_ROOF_SHINGLES_2",
+    "normalMap": "HD_ROOF_SHINGLES_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "HD_ROOF_SHINGLES_2"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_HD_ROOF_BRICK_TILES",
+    "normalMap": "HD_ROOF_BRICK_TILE_N",
+    "specularStrength": 0.3,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "HD_ROOF_BRICK_TILE",
+      "HD_ROOF_BRICK_TILE_GREEN",
+      "HD_ROOF_BRICK_TILE_DARK"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_HD_ROOF_SLATE",
+    "specularStrength": 0.5,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "ROOF_SLATE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_HD_ROOF_WOODEN_SLATE",
+    "specularStrength": 0.5,
+    "specularGloss": 30.0,
+    "materialsToReplace": [
+      "ROOF_WOODEN_SLATE"
+    ],
+    "replacementCondition": "season == SeasonalTheme.WINTER"
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE",
+    "normalMap": "JAGGED_STONE_TILE_N",
+    "displacementMap": "JAGGED_STONE_TILE_D",
+    "brightness": 1.159,
+    "specularStrength": 0.6,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE_LIGHT",
+    "parent": "WINTER_JAGGED_STONE_TILE",
+    "brightness": 1.825
+  },
+  {
+    "name": "WINTER_JAGGED_STONE_TILE_LIGHTER",
+    "parent": "WINTER_JAGGED_STONE_TILE",
+    "brightness": 2.916
+  }
+]
