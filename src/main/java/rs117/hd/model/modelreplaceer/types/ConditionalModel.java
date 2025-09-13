@@ -2,6 +2,7 @@ package rs117.hd.model.modelreplaceer.types;
 
 import lombok.Getter;
 import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.MathUtils;
 
 /**
  * Represents a model with a conditional chance to be included.
@@ -52,7 +53,7 @@ public class ConditionalModel {
 	 * @return true if the model is included, false otherwise.
 	 */
 	public boolean shouldInclude() {
-		return HDUtils.rand.nextInt(100) < inclusionChancePercent;
+		return MathUtils.RAND.nextInt(100) < inclusionChancePercent;
 	}
 
 }

@@ -3175,7 +3175,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
-		int plane = ModelHash.getPlane(hash);
+		plane = ModelHash.getPlane(hash);
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
