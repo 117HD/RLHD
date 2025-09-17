@@ -51,7 +51,6 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
@@ -894,11 +893,6 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						renderable instanceof Model ? "<col=#00ff00>static</col>" :
 						(renderable instanceof DynamicObject || renderable instanceof Actor) ?
 							"<col=#ff0000>dynamic</col>" : "<col=#ffff00>maybe dynamic</col>"
-					) +
-					"  scenebuf=" + (
-						model.getSceneId() == SceneUploader.EXCLUDED_FROM_SCENE_BUFFER ? "excluded" :
-							(model.getSceneId() & SceneUploader.SCENE_ID_MASK) == currentSceneContext.id ?
-								model.getBufferOffset() : "dynamic"
 					);
 			case MODE_MODEL_INFO:
 				int[] faceColors = model.getFaceColors1();

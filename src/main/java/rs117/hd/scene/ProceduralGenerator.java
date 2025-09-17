@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
+import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.TzHaarRecolorType;
@@ -99,6 +100,18 @@ public class ProceduralGenerator {
 		log.debug("-- calculateTerrainNormals: {}ms", timerCalculateTerrainNormals);
 		log.debug("-- generateTerrainData: {}ms", timerGenerateTerrainData);
 		log.debug("-- generateUnderwaterTerrain: {}ms", timerGenerateUnderwaterTerrain);
+	}
+
+	public void clearSceneData(SceneContext sceneContext) {
+		sceneContext.tileIsWater = null;
+		sceneContext.vertexIsWater = null;
+		sceneContext.vertexIsLand = null;
+		sceneContext.vertexIsOverlay = null;
+		sceneContext.vertexIsUnderlay = null;
+		sceneContext.skipTile = null;
+		sceneContext.vertexUnderwaterDepth = null;
+		if (!(sceneContext instanceof LegacySceneContext))
+			sceneContext.underwaterDepthLevels = null;
 	}
 
 	/**

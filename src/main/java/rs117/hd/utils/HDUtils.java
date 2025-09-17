@@ -103,6 +103,18 @@ public class HDUtils {
 	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
 	// (gameObject.getConfig() >> 9) // should always be zero
+	public static int getObjectConfig(Tile tile, long hash) {
+		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
+			return tile.getWallObject().getConfig();
+		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
+			return tile.getDecorativeObject().getConfig();
+		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
+			return tile.getGroundObject().getConfig();
+		for (GameObject gameObject : tile.getGameObjects())
+			if (gameObject != null && gameObject.getHash() == hash)
+				return gameObject.getConfig();
+		return -1;
+	}
 
 	/**
 	 * Computes the orientation used when uploading the model.

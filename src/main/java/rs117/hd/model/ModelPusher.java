@@ -18,6 +18,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -161,7 +162,7 @@ public class ModelPusher {
 	 * @param needsCaching   whether the model should be cached for future reuse, if enabled
 	 */
 	public void pushModel(
-		SceneContext sceneContext,
+		LegacySceneContext sceneContext,
 		@Nullable Tile tile,
 		int uuid,
 		Model model,

@@ -37,6 +37,8 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.renderer.legacy.LegacyRenderer;
+import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
@@ -50,9 +52,6 @@ import rs117.hd.utils.ModelHash;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.HdPlugin.NORMAL_SIZE;
-import static rs117.hd.HdPlugin.UV_SIZE;
-import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
@@ -95,7 +94,9 @@ public class SceneUploader {
 	@Inject
 	private ModelPusher modelPusher;
 
-	public void upload(SceneContext sceneContext) {
+	public void upload(LegacySceneContext sceneContext) {
+		proceduralGenerator.generateSceneData(sceneContext);
+
 		Stopwatch stopwatch = Stopwatch.createStarted();
 
 		var scene = sceneContext.scene;
@@ -147,11 +148,13 @@ public class SceneUploader {
 			String.format(
 				"%.2f",
 				(
-					sceneContext.getVertexOffset() * 4L * (VERTEX_SIZE + NORMAL_SIZE) +
-					sceneContext.getUvOffset() * 4L * UV_SIZE
+					sceneContext.getVertexOffset() * 4L * (LegacyRenderer.VERTEX_SIZE + LegacyRenderer.NORMAL_SIZE) +
+					sceneContext.getUvOffset() * 4L * LegacyRenderer.UV_SIZE
 				) / 1e6
 			)
 		);
+
+		proceduralGenerator.clearSceneData(sceneContext);
 	}
 
 	public void prepareBeforeSwap(SceneContext sceneContext) {
@@ -167,7 +170,11 @@ public class SceneUploader {
 		// Gaps need to be filled right before scene swap, since map regions aren't updated earlier
 		if (sceneContext.fillGaps) {
 			sceneContext.staticGapFillerTilesOffset = sceneContext.staticVertexCount;
-			fillGaps(sceneContext);
+			if (sceneContext instanceof LegacySceneContext) {
+				fillGaps((LegacySceneContext) sceneContext);
+			} else {
+				log.warn("TODO: Implementing gap filling");
+			}
 			sceneContext.staticGapFillerTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticGapFillerTilesOffset;
 		}
 	}
@@ -183,7 +190,7 @@ public class SceneUploader {
 		int[] worldPos = {
 			sceneContext.sceneBase[0] + lp.getSceneX(),
 			sceneContext.sceneBase[1] + lp.getSceneY(),
-			sceneContext.sceneBase[2] + client.getPlane()
+			sceneContext.sceneBase[2] + client.getTopLevelWorldView().getPlane()
 		};
 
 		if (sceneContext.currentArea == null || !sceneContext.currentArea.containsPoint(false, worldPos)) {
@@ -221,13 +228,15 @@ public class SceneUploader {
 		}
 	}
 
-	private void fillGaps(SceneContext sceneContext) {
+	private void fillGaps(LegacySceneContext sceneContext) {
 		if (sceneContext.sceneBase == null)
 			return;
 
 		var area = sceneContext.currentArea;
 		if (area != null && !area.fillGaps)
 			return;
+
+		log.warn("TODO: Check if scene.getMapRegions() is the same as client.getMapRegions()");
 
 		int sceneMin = -sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
@@ -328,7 +337,7 @@ public class SceneUploader {
 		}
 	}
 
-	private void uploadModel(SceneContext sceneContext, Tile tile, int uuid, Model model, int orientation) {
+	private void uploadModel(LegacySceneContext sceneContext, Tile tile, int uuid, Model model, int orientation) {
 		// deduplicate hillskewed models
 		if (model.getUnskewedModel() != null)
 			model = model.getUnskewedModel();
@@ -366,7 +375,7 @@ public class SceneUploader {
 		++sceneContext.uniqueModels;
 	}
 
-	private void upload(SceneContext sceneContext, @Nonnull Tile tile, int tileExX, int tileExY) {
+	private void upload(LegacySceneContext sceneContext, @Nonnull Tile tile, int tileExX, int tileExY) {
 		Tile bridge = tile.getBridge();
 		if (bridge != null)
 			upload(sceneContext, bridge, tileExX, tileExY);
@@ -528,7 +537,13 @@ public class SceneUploader {
 		}
 	}
 
-	private int[] upload(SceneContext sceneContext, Tile tile, int[] worldPos, TileOverride override, @Nullable SceneTilePaint paint) {
+	private int[] upload(
+		LegacySceneContext sceneContext,
+		Tile tile,
+		int[] worldPos,
+		TileOverride override,
+		@Nullable SceneTilePaint paint
+	) {
 		int bufferLength = 0;
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
@@ -552,7 +567,7 @@ public class SceneUploader {
 	}
 
 	private int[] uploadHDTilePaintSurface(
-		SceneContext sceneContext,
+		LegacySceneContext sceneContext,
 		Tile tile,
 		int[] worldPos,
 		WaterType waterType,
@@ -771,7 +786,7 @@ public class SceneUploader {
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	private int[] uploadHDTilePaintUnderwater(SceneContext sceneContext, Tile tile, int[] worldPos, WaterType waterType) {
+	private int[] uploadHDTilePaintUnderwater(LegacySceneContext sceneContext, Tile tile, int[] worldPos, WaterType waterType) {
 		final Scene scene = sceneContext.scene;
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
@@ -892,7 +907,7 @@ public class SceneUploader {
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	private int[] upload(SceneContext sceneContext, Tile tile, int[] worldPos, SceneTileModel sceneTileModel)
+	private int[] upload(LegacySceneContext sceneContext, Tile tile, int[] worldPos, SceneTileModel sceneTileModel)
 	{
 		int bufferLength = 0;
 		int uvBufferLength = 0;
@@ -914,7 +929,13 @@ public class SceneUploader {
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	private int[] uploadHDTileModelSurface(SceneContext sceneContext, Tile tile, int[] worldPos, SceneTileModel model, boolean fillGaps) {
+	private int[] uploadHDTileModelSurface(
+		LegacySceneContext sceneContext,
+		Tile tile,
+		int[] worldPos,
+		SceneTileModel model,
+		boolean fillGaps
+	) {
 		final Scene scene = sceneContext.scene;
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
@@ -923,7 +944,7 @@ public class SceneUploader {
 		final int tileExY = tileY + SCENE_OFFSET;
 		final int tileZ = tile.getRenderLevel();
 
-		if (sceneContext.skipTile[tileZ][tileExX][tileExY])
+		if (!fillGaps && sceneContext.skipTile[tileZ][tileExX][tileExY])
 			return new int[3];
 
 		int bufferLength = 0;
@@ -1112,7 +1133,7 @@ public class SceneUploader {
 		return new int[]{bufferLength, uvBufferLength, underwaterTerrain};
 	}
 
-	private int[] uploadHDTileModelUnderwater(SceneContext sceneContext, Tile tile, int[] worldPos, SceneTileModel model) {
+	private int[] uploadHDTileModelUnderwater(LegacySceneContext sceneContext, Tile tile, int[] worldPos, SceneTileModel model) {
 		final Scene scene = sceneContext.scene;
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
@@ -1125,9 +1146,8 @@ public class SceneUploader {
 		int uvBufferLength = 0;
 		int underwaterTerrain = 0;
 
-		if (sceneContext.skipTile[tileZ][tileExX][tileExY]) {
+		if (sceneContext.skipTile[tileZ][tileExX][tileExY])
 			return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
-		}
 
 		final int[] faceColorA = model.getTriangleColorA();
 		final int faceCount = model.getFaceX().length;
@@ -1248,7 +1268,7 @@ public class SceneUploader {
 		return new int[] { bufferLength, uvBufferLength, underwaterTerrain };
 	}
 
-	private void uploadCustomTile(SceneContext sceneContext, int tileExX, int tileExY, int tileZ, Material material) {
+	private void uploadCustomTile(LegacySceneContext sceneContext, int tileExX, int tileExY, int tileZ, Material material) {
 		final Scene scene = sceneContext.scene;
 
 		int color = 0;

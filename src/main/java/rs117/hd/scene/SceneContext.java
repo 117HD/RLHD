@@ -19,20 +19,15 @@ import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.buffer.GpuFloatBuffer;
-import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.HdPlugin.UV_SIZE;
-import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 public class SceneContext {
 	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 
-	public final int id = RAND.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
@@ -53,10 +48,6 @@ public class SceneContext {
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	public int staticVertexCount = 0;
-	public GpuIntBuffer staticUnorderedModelBuffer;
-	public GpuIntBuffer stagingBufferVertices;
-	public GpuFloatBuffer stagingBufferUvs;
-	public GpuFloatBuffer stagingBufferNormals;
 
 	public int staticGapFillerTilesOffset;
 	public int staticGapFillerTilesVertexCount;
@@ -98,66 +89,20 @@ public class SceneContext {
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
+	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, @Nullable SceneContext previous) {
 		this.client = client;
 		this.scene = scene;
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
 
-		if (previous == null) {
-			staticUnorderedModelBuffer = new GpuIntBuffer();
-			stagingBufferVertices = new GpuIntBuffer();
-			stagingBufferUvs = new GpuFloatBuffer();
-			stagingBufferNormals = new GpuFloatBuffer();
-		} else {
+		if (previous != null && previous.forceDisableAreaHiding) {
 			// If area hiding was determined to be incorrect previously, keep it disabled
-			forceDisableAreaHiding = previous.forceDisableAreaHiding;
-
-			if (reuseBuffers) {
-				// Avoid reallocating buffers whenever possible
-				staticUnorderedModelBuffer = previous.staticUnorderedModelBuffer.clear();
-				stagingBufferVertices = previous.stagingBufferVertices.clear();
-				stagingBufferUvs = previous.stagingBufferUvs.clear();
-				stagingBufferNormals = previous.stagingBufferNormals.clear();
-				previous.staticUnorderedModelBuffer = null;
-				previous.stagingBufferVertices = null;
-				previous.stagingBufferUvs = null;
-				previous.stagingBufferNormals = null;
-			} else {
-				staticUnorderedModelBuffer = new GpuIntBuffer(previous.staticUnorderedModelBuffer.capacity());
-				stagingBufferVertices = new GpuIntBuffer(previous.stagingBufferVertices.capacity());
-				stagingBufferUvs = new GpuFloatBuffer(previous.stagingBufferUvs.capacity());
-				stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.capacity());
-			}
+			forceDisableAreaHiding = true;
 		}
 	}
 
-	public synchronized void destroy() {
-		if (staticUnorderedModelBuffer != null)
-			staticUnorderedModelBuffer.destroy();
-		staticUnorderedModelBuffer = null;
-
-		if (stagingBufferVertices != null)
-			stagingBufferVertices.destroy();
-		stagingBufferVertices = null;
-
-		if (stagingBufferUvs != null)
-			stagingBufferUvs.destroy();
-		stagingBufferUvs = null;
-
-		if (stagingBufferNormals != null)
-			stagingBufferNormals.destroy();
-		stagingBufferNormals = null;
-	}
-
-	public int getVertexOffset() {
-		return stagingBufferVertices.position() / VERTEX_SIZE;
-	}
-
-	public int getUvOffset() {
-		return stagingBufferUvs.position() / UV_SIZE;
-	}
+	public synchronized void destroy() {}
 
 	/**
 	 * Transform local coordinates into world coordinates.
@@ -235,19 +180,6 @@ public class SceneContext {
 
 	public AABB getNonInstancedSceneBounds() {
 		return HDUtils.getNonInstancedSceneBounds(scene, expandedMapLoadingChunks);
-	}
-
-	public int getObjectConfig(Tile tile, long hash) {
-		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
-			return tile.getWallObject().getConfig();
-		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
-			return tile.getDecorativeObject().getConfig();
-		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
-			return tile.getGroundObject().getConfig();
-		for (GameObject gameObject : tile.getGameObjects())
-			if (gameObject != null && gameObject.getHash() == hash)
-				return gameObject.getConfig();
-		return -1;
 	}
 
 	/**

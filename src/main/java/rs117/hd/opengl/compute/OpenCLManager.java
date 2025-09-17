@@ -50,6 +50,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.UBOCompute;
+import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
@@ -80,6 +81,9 @@ public class OpenCLManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private LegacyRenderer legacyRenderer;
 
 	public static long context;
 
@@ -327,11 +331,11 @@ public class OpenCLManager {
 			passthroughProgram = compileProgram(stack, "comp_unordered.cl", includes);
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
-			sortingPrograms = new long[plugin.numSortingBins];
-			sortingKernels = new long[plugin.numSortingBins];
-			for (int i = 0; i < plugin.numSortingBins; i++) {
-				int faceCount = plugin.modelSortingBinFaceCounts[i];
-				int threadCount = plugin.modelSortingBinThreadCounts[i];
+			sortingPrograms = new long[legacyRenderer.numSortingBins];
+			sortingKernels = new long[legacyRenderer.numSortingBins];
+			for (int i = 0; i < legacyRenderer.numSortingBins; i++) {
+				int faceCount = legacyRenderer.modelSortingBinFaceCounts[i];
+				int threadCount = legacyRenderer.modelSortingBinThreadCounts[i];
 				int facesPerThread = ceil((float) faceCount / threadCount);
 				includes = includes
 					.define("THREAD_COUNT", threadCount)
@@ -447,8 +451,8 @@ public class OpenCLManager {
 				if (numModels == 0)
 					continue;
 
-				int faceCount = plugin.modelSortingBinFaceCounts[i];
-				int threadCount = plugin.modelSortingBinThreadCounts[i];
+				int faceCount = legacyRenderer.modelSortingBinFaceCounts[i];
+				int threadCount = legacyRenderer.modelSortingBinThreadCounts[i];
 				long kernel = sortingKernels[i];
 
 				clSetKernelArg(kernel, 0, (long) (SHARED_SIZE + faceCount) * Integer.BYTES);
