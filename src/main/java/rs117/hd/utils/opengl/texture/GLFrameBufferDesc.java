@@ -38,14 +38,14 @@ public class GLFrameBufferDesc {
 		return this;
 	}
 
-	public GLFrameBufferDesc setColorAttachment(GLAttachmentSlot slot, GLTextureFormat format, GLTextureParams filterParams) {
+	public GLFrameBufferDesc setColorAttachment(GLAttachmentSlot slot, GLTextureFormat format, GLTextureParams textureParams) {
 		assert !slot.isDepth();
-		colorDescriptors.add(new AttachmentDescriptor(slot, format, filterParams));
+		colorDescriptors.add(new AttachmentDescriptor(slot, format, textureParams));
 		return this;
 	}
 
-	public GLFrameBufferDesc setDepthAttachment(GLTextureFormat format, GLTextureParams filterParams) {
-		depthDescriptor = new AttachmentDescriptor(GLAttachmentSlot.DEPTH, format, filterParams);
+	public GLFrameBufferDesc setDepthAttachment(GLTextureFormat format, GLTextureParams textureParams) {
+		depthDescriptor = new AttachmentDescriptor(GLAttachmentSlot.DEPTH, format, textureParams);
 		return this;
 	}
 
@@ -53,6 +53,8 @@ public class GLFrameBufferDesc {
 		public GLAttachmentSlot slot;
 		public GLTextureFormat format;
 		public GLTextureParams params;
+
+		public AttachmentDescriptor() {}
 
 		public AttachmentDescriptor(GLAttachmentSlot slot, GLTextureFormat format, GLTextureParams params) {
 			this.slot = slot;

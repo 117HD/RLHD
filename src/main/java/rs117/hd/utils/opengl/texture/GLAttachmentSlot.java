@@ -1,5 +1,9 @@
 package rs117.hd.utils.opengl.texture;
 
+import static org.lwjgl.opengl.GL11.GL_BACK_LEFT;
+import static org.lwjgl.opengl.GL11.GL_BACK_RIGHT;
+import static org.lwjgl.opengl.GL11.GL_FRONT_LEFT;
+import static org.lwjgl.opengl.GL11.GL_FRONT_RIGHT;
 import static org.lwjgl.opengl.GL30C.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30C.GL_COLOR_ATTACHMENT1;
 import static org.lwjgl.opengl.GL30C.GL_COLOR_ATTACHMENT10;
@@ -69,17 +73,39 @@ public enum GLAttachmentSlot {
 	COLOR29(GL_COLOR_ATTACHMENT29),
 	COLOR30(GL_COLOR_ATTACHMENT30),
 	COLOR31(GL_COLOR_ATTACHMENT31),
-	DEPTH(GL_DEPTH_ATTACHMENT),
+
+	DEPTH(GL_DEPTH_ATTACHMENT, true),
 	STENCIL(GL_STENCIL_ATTACHMENT),
-	DEPTH_STENCIL(GL_DEPTH_STENCIL_ATTACHMENT);
+	DEPTH_STENCIL(GL_DEPTH_STENCIL_ATTACHMENT),
+
+	FRONT_LEFT(GL_FRONT_LEFT, true),
+	FRONT_RIGHT(GL_FRONT_RIGHT, true),
+	BACK_LEFT(GL_BACK_LEFT, true),
+	BACK_RIGHT(GL_BACK_RIGHT, true);
 
 	public final int glEnum;
+	public final boolean defaultFrameBufferSupport;
 
 	GLAttachmentSlot(int glEnum) {
 		this.glEnum = glEnum;
+		this.defaultFrameBufferSupport = false;
+	}
+
+	GLAttachmentSlot(int glEnum, boolean defaultFrameBufferSupport) {
+		this.glEnum = glEnum;
+		this.defaultFrameBufferSupport = defaultFrameBufferSupport;
 	}
 
 	public boolean isDepth() {
 		return this == DEPTH || this == STENCIL || this == DEPTH_STENCIL;
+	}
+
+	public static GLAttachmentSlot fromGLEnum(int glEnum) {
+		for (GLAttachmentSlot slot : values()) {
+			if (slot.glEnum == glEnum) {
+				return slot;
+			}
+		}
+		return GLAttachmentSlot.COLOR0; // Default to Zero
 	}
 }

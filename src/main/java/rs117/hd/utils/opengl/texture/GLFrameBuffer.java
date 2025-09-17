@@ -1,14 +1,41 @@
 package rs117.hd.utils.opengl.texture;
 
+import java.nio.IntBuffer;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.rlawt.AWTContext;
+import org.lwjgl.BufferUtils;
 
+import static org.lwjgl.opengl.GL11.GL_BACK_LEFT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_HEIGHT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_INTERNAL_FORMAT;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_WIDTH;
+import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glGetTexLevelParameteriv;
+import static org.lwjgl.opengl.GL11C.glDisable;
+import static org.lwjgl.opengl.GL11C.glEnable;
+import static org.lwjgl.opengl.GL11C.glGetInteger;
+import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
+import static org.lwjgl.opengl.GL13C.GL_SAMPLES;
+import static org.lwjgl.opengl.GL21.GL_SRGB;
+import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_COMPLETE;
+import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_DEFAULT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER;
 import static org.lwjgl.opengl.GL30.GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT;
@@ -20,6 +47,10 @@ import static org.lwjgl.opengl.GL30.GL_NEAREST;
 import static org.lwjgl.opengl.GL30.GL_NONE;
 import static org.lwjgl.opengl.GL30.GL_READ_FRAMEBUFFER;
 import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER_HEIGHT;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER_INTERNAL_FORMAT;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER_SAMPLES;
+import static org.lwjgl.opengl.GL30.GL_RENDERBUFFER_WIDTH;
 import static org.lwjgl.opengl.GL30.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL30.glBindFramebuffer;
 import static org.lwjgl.opengl.GL30.glBindRenderbuffer;
@@ -35,17 +66,23 @@ import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glFramebufferTextureLayer;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
+import static org.lwjgl.opengl.GL30.glGetFramebufferAttachmentParameteri;
+import static org.lwjgl.opengl.GL30.glGetFramebufferAttachmentParameteriv;
+import static org.lwjgl.opengl.GL30.glGetRenderbufferParameteriv;
 import static org.lwjgl.opengl.GL30.glReadBuffer;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL30.glViewport;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
+import static rs117.hd.HdPlugin.checkGLErrors;
 
 @Slf4j
 public class GLFrameBuffer {
 	private static class FrameBufferAttachment {
 		public GLAttachmentSlot slot;
+		public GLTextureFormat format;
 		public GLTexture texture;
 		public int renderBuffer;
+		public int resolveFboId;
 
 		public void delete() {
 			if (renderBuffer != 0) {
@@ -56,6 +93,11 @@ public class GLFrameBuffer {
 			if (texture != null) {
 				texture.delete();
 				texture = null;
+			}
+
+			if (resolveFboId != 0) {
+				glDeleteFramebuffers(resolveFboId);
+				resolveFboId = 0;
 			}
 		}
 	}
@@ -71,6 +113,12 @@ public class GLFrameBuffer {
 	private int fboId = -1;
 	@Getter
 	private boolean created = false;
+	@Getter
+	private boolean wrapper = false;
+
+	private GLFrameBuffer() {
+		descriptor = new GLFrameBufferDesc();
+	}
 
 	public GLFrameBuffer(GLFrameBufferDesc descriptor) {
 		this.descriptor = descriptor;
@@ -82,6 +130,7 @@ public class GLFrameBuffer {
 
 		FrameBufferAttachment attachment = new FrameBufferAttachment();
 		attachment.slot = attDesc.slot;
+		attachment.format = attDesc.format;
 
 		if (descriptor.samples > 0) {
 			attachment.renderBuffer = glGenRenderbuffers();
@@ -94,6 +143,25 @@ public class GLFrameBuffer {
 				descriptor.height
 			);
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, attDesc.slot.glEnum, GL_RENDERBUFFER, attachment.renderBuffer);
+
+			attachment.texture = new GLTexture(descriptor.width, descriptor.height, descriptor.depth, attDesc.format, attDesc.params);
+
+			attachment.resolveFboId = glGenFramebuffers();
+			glBindFramebuffer(GL_FRAMEBUFFER, attachment.resolveFboId);
+
+			switch (attDesc.params.type) {
+				case TEXTURE2D:
+					glFramebufferTexture2D(GL_FRAMEBUFFER, attDesc.slot.glEnum, GL_TEXTURE_2D, attachment.texture.getId(), 0);
+					break;
+				case TEXTURE2D_ARRAY:
+					glFramebufferTexture(GL_FRAMEBUFFER, attDesc.slot.glEnum, attachment.texture.getId(), 0);
+					break;
+				default:
+					log.error("Unsupported GLTextureType: {}", attDesc.params.type);
+					break;
+			}
+
+			glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 		} else {
 			attachment.texture = new GLTexture(descriptor.width, descriptor.height, descriptor.depth, attDesc.format, attDesc.params);
 			switch (attDesc.params.type) {
@@ -112,9 +180,9 @@ public class GLFrameBuffer {
 		return attachment;
 	}
 
-	public GLFrameBuffer create() {
+	public boolean create() {
 		if (created) {
-			throw new IllegalStateException("Framebuffer already created.");
+			return false;
 		}
 
 		created = true;
@@ -154,15 +222,23 @@ public class GLFrameBuffer {
 				case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE: reason = "GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE"; break;
 				default: reason = "UNKNOWN_ERROR_" + status; break;
 			};
-			throw new IllegalStateException("Framebuffer validation failed: " + reason);
+			log.error("Framebuffer validation failed: {}", reason);
+			delete();
+			return false;
 		}
+
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-		return this;
+		return true;
 	}
 
 	public void bind() {
 		glViewport(0, 0, descriptor.width, descriptor.height);
+		if (descriptor.samples > 1) {
+			glEnable(GL_MULTISAMPLE);
+		} else {
+			glDisable(GL_MULTISAMPLE);
+		}
 		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 	}
 
@@ -202,7 +278,7 @@ public class GLFrameBuffer {
 	}
 
 	public void delete() {
-		if (!created) return;
+		if (!created || wrapper) return;
 
 		if (fboId != 0) {
 			glDeleteFramebuffers(fboId);
@@ -300,43 +376,187 @@ public class GLFrameBuffer {
 		clearInternal(true, true);
 	}
 
-	public void blitTo(GLFrameBuffer target, boolean blitDepth) {
-		if (descriptor.samples <= 0) {
-			throw new IllegalStateException("resolveTo called on a non-multisampled framebuffer");
-		}
-		if (target.descriptor.samples > 0) {
-			throw new IllegalArgumentException("Target framebuffer must not be multisampled");
-		}
+	private void resolveMSAA(GLAttachmentSlot slot) {
+		if (descriptor.samples <= 1 || colorAttachments == null) return;
 
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, this.fboId);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.getFboId());
+		FrameBufferAttachment att = getColorAttachment(slot);
+		if(att != null && att.resolveFboId != 0) {
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
+			glReadBuffer(att.slot.glEnum);
 
-		for (FrameBufferAttachment colorAtt : colorAttachments) {
-			FrameBufferAttachment targetColorAtt = target.getColorAttachment(colorAtt.slot);
-			if (targetColorAtt == null || colorAtt.texture.textureFormat != targetColorAtt.texture.textureFormat) continue;
-
-			glReadBuffer(colorAtt.slot.glEnum);
-			glDrawBuffer(colorAtt.slot.glEnum);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, att.resolveFboId);
+			glDrawBuffer(att.slot.glEnum);
 
 			glBlitFramebuffer(
 				0, 0, descriptor.width, descriptor.height,
-				0, 0, target.descriptor.width, target.descriptor.height,
+				0, 0, descriptor.width, descriptor.height,
 				GL_COLOR_BUFFER_BIT,
 				GL_NEAREST
 			);
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+			checkGLErrors();
+		}
+	}
+
+	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot) {
+		blitTo(target, srcSlot, dstSlot, 0, 0, target.descriptor.width, target.descriptor.height);
+	}
+
+	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot, int dstX, int dstY, int dstWidth, int dstHeight) {
+		blitTo(target, srcSlot, dstSlot, dstX, dstY, dstWidth, dstHeight, GL_NEAREST);
+	}
+
+	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot, int dstX, int dstY, int dstWidth, int dstHeight, int glFilterMode) {
+		if (descriptor.samples > 1) {
+			resolveMSAA(srcSlot);
 		}
 
-		if (blitDepth && depthAttachment != null) {
-			// Blit depth buffer
+		FrameBufferAttachment srcAtt = getColorAttachment(srcSlot);
+		FrameBufferAttachment dstAtt = target.getColorAttachment(dstSlot);
+
+		if(srcAtt != null && dstAtt != null && srcAtt.format == dstAtt.format) {
+			int readFbo = (descriptor.samples > 1 && srcAtt.resolveFboId != 0) ? srcAtt.resolveFboId : this.fboId;
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, readFbo);
+			glReadBuffer(srcAtt.slot.glEnum);
+
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.getFboId());
+			glDrawBuffer(dstAtt.slot.glEnum);
+
 			glBlitFramebuffer(
 				0, 0, descriptor.width, descriptor.height,
-				0, 0, target.descriptor.width, target.descriptor.height,
-				GL_DEPTH_BUFFER_BIT,
-				GL_NEAREST
+				dstX, dstY, dstWidth, dstHeight,
+				srcAtt.format.isDepth() ? GL_DEPTH_BUFFER_BIT : GL_COLOR_BUFFER_BIT,
+				glFilterMode
 			);
+
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+			checkGLErrors();
+		}
+	}
+
+	public static GLFrameBuffer wrap(int fboId) {
+		GLFrameBuffer wrapper = new GLFrameBuffer();
+		wrapper.fboId = fboId;
+		wrapper.created = true;
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+
+		IntBuffer param = BufferUtils.createIntBuffer(1);
+		List<FrameBufferAttachment> colorAttachments = new ArrayList<>();
+
+		boolean isDefaultFrameBuffer = fboId == 0;
+		for (GLAttachmentSlot slot : GLAttachmentSlot.values()) {
+			if (slot.isDepth() || slot.defaultFrameBufferSupport != isDefaultFrameBuffer) {
+				continue;
+			}
+
+			int glSlot = slot.glEnum;
+			glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, glSlot, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE, param);
+			int objType = param.get(0);
+			param.rewind();
+
+			if(objType == GL_RENDERBUFFER || objType == GL_TEXTURE) {
+				glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, glSlot, GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME, param);
+				int objectName = param.get(0);
+				param.rewind();
+
+				if (objType == GL_RENDERBUFFER) {
+					glBindRenderbuffer(GL_RENDERBUFFER, objectName);
+					glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_WIDTH, param);
+					wrapper.descriptor.width = param.get(0);
+					param.rewind();
+					glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, param);
+					wrapper.descriptor.height = param.get(0);
+					param.rewind();
+
+					glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_SAMPLES, param);
+					wrapper.descriptor.samples = param.get(0);
+					param.rewind();
+
+					glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_INTERNAL_FORMAT, param);
+					int internalFormat = param.get(0);
+					param.rewind();
+
+					GLFrameBufferDesc.AttachmentDescriptor attDesc = new GLFrameBufferDesc.AttachmentDescriptor();
+					attDesc.slot = slot;
+					attDesc.format = GLTextureFormat.fromInternalFormat(internalFormat);
+
+					wrapper.descriptor.colorDescriptors.add(attDesc);
+
+					FrameBufferAttachment att = new FrameBufferAttachment();
+					att.slot = slot;
+					att.format = attDesc.format;
+					att.renderBuffer = objectName;
+					colorAttachments.add(att);
+
+				} else {
+					glBindTexture(GL_TEXTURE_2D, objectName);
+					glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_WIDTH, param);
+					wrapper.descriptor.width = param.get(0);
+					param.rewind();
+					glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_HEIGHT, param);
+					wrapper.descriptor.height = param.get(0);
+					param.rewind();
+
+					glGetTexLevelParameteriv(GL_TEXTURE_2D, 0, GL_TEXTURE_INTERNAL_FORMAT, param);
+					int internalFormat = param.get(0);
+					param.rewind();
+
+					GLFrameBufferDesc.AttachmentDescriptor attDesc = new GLFrameBufferDesc.AttachmentDescriptor();
+					attDesc.slot = slot;
+					attDesc.format = GLTextureFormat.fromInternalFormat(internalFormat);
+
+					wrapper.descriptor.colorDescriptors.add(attDesc);
+
+					FrameBufferAttachment att = new FrameBufferAttachment();
+					att.slot = slot;
+					att.format = attDesc.format;
+					colorAttachments.add(att);
+				}
+			} else if(objType == GL_FRAMEBUFFER_DEFAULT) {
+				glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, glSlot, GL_FRAMEBUFFER_ATTACHMENT_RED_SIZE, param);
+				int rsize = param.get(0);
+				param.rewind();
+				glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, glSlot, GL_FRAMEBUFFER_ATTACHMENT_GREEN_SIZE, param);
+				int gsize = param.get(0);
+				param.rewind();
+				glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, glSlot, GL_FRAMEBUFFER_ATTACHMENT_BLUE_SIZE, param);
+				int bsize = param.get(0);
+				param.rewind();
+				glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, glSlot, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE, param);
+				int asize = param.get(0);
+				param.rewind();
+				glGetFramebufferAttachmentParameteriv(GL_FRAMEBUFFER, glSlot, GL_FRAMEBUFFER_ATTACHMENT_COLOR_ENCODING, param);
+				boolean isSRGB = (param.get(0) == GL_SRGB);
+				param.rewind();
+
+				GLFrameBufferDesc.AttachmentDescriptor attDesc = new GLFrameBufferDesc.AttachmentDescriptor();
+				attDesc.slot = slot;
+				attDesc.format = GLTextureFormat.fromComponentSizes(rsize, gsize, bsize, asize, isSRGB);
+				wrapper.descriptor.colorDescriptors.add(attDesc);
+
+				FrameBufferAttachment att = new FrameBufferAttachment();
+				att.slot = slot;
+				att.format = attDesc.format;
+				att.renderBuffer = 0;
+				att.texture = null;
+
+				colorAttachments.add(att);
+			}
+			checkGLErrors();
 		}
 
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+		wrapper.colorAttachments = new FrameBufferAttachment[colorAttachments.size()];
+		colorAttachments.toArray(wrapper.colorAttachments);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		return wrapper;
 	}
 }

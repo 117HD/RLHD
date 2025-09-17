@@ -78,7 +78,7 @@ public class GLTexture {
 		this.height = height;
 		this.depth = depth;
 		this.textureFormat = textureFormat;
-		this.textureParams = textureParams;
+		this.textureParams = textureParams != null ? textureParams : new GLTextureParams();
 
 		create();
 	}

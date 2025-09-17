@@ -9,6 +9,8 @@ public class GLTextureParams {
 	public float[] borderColor = null;
 	public boolean generateMipmaps = false;
 
+	public static GLTextureParams DEFAULT() { return new GLTextureParams(); }
+
 	public GLTextureParams setType(GLTextureType type) {
 		this.type = type;
 		return this;
