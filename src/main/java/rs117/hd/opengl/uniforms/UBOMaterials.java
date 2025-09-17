@@ -5,7 +5,7 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.materials.Material;
-import rs117.hd.utils.buffer.GLBuffer;
+import rs117.hd.utils.opengl.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
