@@ -2873,7 +2873,42 @@
     "uvScale": 0.32
   },
   {
-    "description": "Short grass with rock objects usually found around Farming Patches",
+    "description": "Farming Guild - Farming patch Edges with grass made of stone and edged with wood",
+    "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
+      "KEBOS_FARMING_GUILD_BORDER_CORNER",
+      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE",
+      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_STRAIGHT",
+      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_CORNER_OUTSIDE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Farming Patch Edges with grass around them",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "castShadows": false,
@@ -2881,12 +2916,7 @@
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
-      "FARMING_BORDER_CORNER",
-      "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
-      "KEBOS_FARMING_GUILD_BORDER_CORNER",
-      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE",
-      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_STRAIGHT",
-      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_CORNER_OUTSIDE"
+      "FARMING_BORDER_CORNER"
     ],
     "colorOverrides": [
       {
