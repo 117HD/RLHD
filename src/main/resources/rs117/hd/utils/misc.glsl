@@ -26,6 +26,8 @@
 
 #include <uniforms/global.glsl>
 
+#include <utils/color_utils.glsl>
+
 // translates a value from a custom range into 0-1
 float translateRange(float rangeStart, float rangeEnd, float value)
 {
@@ -46,4 +48,10 @@ vec2 animationFrame(vec2 animationDuration)
     if (animationDuration == vec2(0))
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
+}
+
+vec3 correctHdrGamma(vec3 c)
+{
+    // https://github.com/clshortfuse/renodx (MIT license)
+    return pow(linearToSrgb(c.rgb), vec3(2.2));
 }
