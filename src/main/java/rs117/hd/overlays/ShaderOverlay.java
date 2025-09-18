@@ -51,6 +51,7 @@ import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.opengl.shader.ShaderTemplate;
 import rs117.hd.utils.ShaderRecompile;
+import rs117.hd.utils.opengl.texture.GLTexture;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
@@ -377,8 +378,8 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 		if (isFullscreen()) {
 			shader.uniTransform.set(0, 0, 1, 1);
 		} else {
-			int[] resolution = plugin.getUiResolution();
-			if (resolution == null)
+			GLTexture uiTex = plugin.getUiTex();
+			if (uiTex == null)
 				return;
 			var bounds = getBounds();
 			// Calculate translation and scale in NDC
@@ -386,8 +387,8 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 			rect[0] += rect[0] + rect[2];
 			rect[1] += rect[1] + rect[3];
 			for (int i = 0; i < 2; i++) {
-				rect[i * 2] /= resolution[0];
-				rect[i * 2 + 1] /= resolution[1];
+				rect[i * 2] /= uiTex.getWidth();
+				rect[i * 2 + 1] /= uiTex.getHeight();
 				rect[i] -= 1;
 			}
 			rect[1] *= -1;
