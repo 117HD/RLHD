@@ -460,6 +460,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configAsyncUICopy;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configAccurateLightAttenuation;
 	public boolean configTiledLighting;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
@@ -911,6 +912,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
+			.define("ACCURATE_LIGHT_ATTENUATION", configAccurateLightAttenuation)
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.addInclude(
@@ -1772,6 +1774,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboLightsCulling.setLight(i, lightPosition, lightColor);
 			}
 
+			uboLights.attenuationFactor.set((float) config.accurateLightAttenuationStrengthFactor());
 			uboLights.upload();
 			uboLightsCulling.upload();
 
@@ -2644,6 +2647,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configAsyncUICopy = config.asyncUICopy();
 		configWindDisplacement = config.windDisplacement();
 		configCharacterDisplacement = config.characterDisplacement();
+		configAccurateLightAttenuation = config.accurateLightAttenuation();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
 
@@ -2768,6 +2772,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_VANILLA_COLOR_BANDING:
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
+							case KEY_ACCURATE_LIGHT_ATTENUATION:
 							case KEY_WIREFRAME:
 							case KEY_PIXELATED_SHADOWS:
 								recompilePrograms = true;
