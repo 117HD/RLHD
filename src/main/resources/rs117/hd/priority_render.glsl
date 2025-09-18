@@ -26,7 +26,7 @@
 
 #include <utils/constants.glsl>
 
-layout(binding = 3) uniform isampler3D tileHeightMap;
+layout(binding = 4) uniform isampler3D tileHeightMap;
 
 // Calculate adjusted priority for a face with a given priority, distance, and
 // model global min10 and face distance averages. This allows positioning faces

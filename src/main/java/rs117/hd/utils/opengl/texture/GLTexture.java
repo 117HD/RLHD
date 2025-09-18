@@ -12,8 +12,10 @@ import static org.lwjgl.opengl.GL11.glReadPixels;
 import static org.lwjgl.opengl.GL11.glTexImage2D;
 import static org.lwjgl.opengl.GL11.glTexParameterfv;
 import static org.lwjgl.opengl.GL11.glTexSubImage2D;
+import static org.lwjgl.opengl.GL11C.GL_TEXTURE;
 import static org.lwjgl.opengl.GL12.glTexImage3D;
 import static org.lwjgl.opengl.GL12.glTexSubImage3D;
+import static org.lwjgl.opengl.GL13.GL_TEXTURE1;
 import static org.lwjgl.opengl.GL13C.GL_TEXTURE0;
 import static org.lwjgl.opengl.GL13C.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_STREAM_DRAW;
@@ -87,7 +89,7 @@ public class GLTexture {
 		if (created) throw new IllegalStateException("Texture already created");
 
 		if(textureParams.textureUnit > 0) {
-			assert textureParams.textureUnit >= GL_TEXTURE0;
+			assert textureParams.textureUnit >= GL_TEXTURE1;
 			glActiveTexture(textureParams.textureUnit);
 		}
 
@@ -116,9 +118,26 @@ public class GLTexture {
 		if(textureParams.imageUnit >= 0 && HdPlugin.GL_CAPS.GL_ARB_shader_image_load_store)
 			ARBShaderImageLoadStore.glBindImageTexture(textureParams.imageUnit, id, 0, false, 0, textureParams.imageUnitWriteMode, textureFormat.internalFormat);
 
+		if(!textureParams.debugName.isEmpty())
+			setDebugName(textureParams.debugName);
+
+		if(textureParams.textureUnit > 0) {
+			glActiveTexture(GL_TEXTURE0); // Switch back to GL_Texture0 before unbinding
+		}
+
+		glBindTexture(textureParams.type.glTarget, 0);
+
 		checkGLErrors();
 		created = true;
 
+		return this;
+	}
+
+	public GLTexture setDebugName(String debugName) {
+		if (HdPlugin.GL_CAPS.OpenGL43 && !debugName.isEmpty()) {
+			GL43C.glObjectLabel(GL_TEXTURE, id, debugName);
+			checkGLErrors();
+		}
 		return this;
 	}
 
@@ -183,9 +202,9 @@ public class GLTexture {
 			bind();
 
 			if(depth > 1) {
-				glTexSubImage3D(textureParams.type.glTarget, 0, xOffset, yOffset, zOffset, width, height, depth, textureFormat.internalFormat, textureFormat.type, 0);
+				glTexSubImage3D(textureParams.type.glTarget, 0, xOffset, yOffset, zOffset, width, height, depth, textureFormat.format, textureFormat.type, 0);
 			} else {
-				glTexSubImage2D(textureParams.type.glTarget, 0, xOffset, yOffset, width, height, textureFormat.internalFormat, textureFormat.type, 0);
+				glTexSubImage2D(textureParams.type.glTarget, 0, xOffset, yOffset, width, height, textureFormat.format, textureFormat.type, 0);
 			}
 
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);

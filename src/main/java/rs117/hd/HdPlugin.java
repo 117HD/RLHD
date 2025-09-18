@@ -180,11 +180,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
-	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_UI = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -657,7 +657,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				materialManager.startUp();
 				waterTypeManager.startUp();
 
-				backbufferFBO = GLFrameBuffer.wrap(awtContext.getFramebuffer(false));
+				backbufferFBO = GLFrameBuffer.wrap(awtContext.getFramebuffer(false), "backBuffer");
 
 				GLFrameBufferDesc backbufferDesc = backbufferFBO.getDescriptor();
 				if(backbufferDesc.colorDescriptors.isEmpty())
@@ -672,7 +672,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.setHeight(canvas.getHeight())
 					.setMSAASamples(msaaSamples)
 					.setColorAttachment(GLAttachmentSlot.COLOR0, backbufferFormat, GLTextureParams.DEFAULT())
-					.setDepthAttachment(GLTextureFormat.DEPTH32F, GLTextureParams.DEFAULT()));
+					.setDepthAttachment(GLTextureFormat.DEPTH32F, GLTextureParams.DEFAULT())
+					.setDebugName("SceneColor"));
+
 
 				if (!sceneFBO.isCreated())
 					throw new RuntimeException("No supported " + (backbufferFormat.isSRGB() ? "sRGB" : "linear") + " formats");
@@ -686,7 +688,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							new GLTextureParams()
 								.setSampler(GLSamplerMode.NEAREST_CLAMP)
 								.setTextureUnit(TEXTURE_UNIT_SHADOW_MAP)
-								.setBorderColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f})));
+								.setBorderColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f}))
+						.setDebugName("ShadowMap"));
 
 				tiledLightingFBO = new GLFrameBuffer(new GLFrameBufferDesc()
 					.setShouldConstructionCreate(false)
@@ -696,12 +699,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							.setType(GLTextureType.TEXTURE2D_ARRAY)
 							.setSampler(GLSamplerMode.NEAREST_CLAMP)
 							.setTextureUnit(TEXTURE_UNIT_TILED_LIGHTING_MAP)
-							.setImageUnit(IMAGE_UNIT_TILED_LIGHTING, GL_WRITE_ONLY)));
+							.setImageUnit(IMAGE_UNIT_TILED_LIGHTING, GL_WRITE_ONLY))
+					.setDebugName("TiledLighting"));
 
 				tileHeightMapTex = new GLTexture(EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, MAX_Z, GLTextureFormat.R16I, new GLTextureParams()
 					.setType(GLTextureType.TEXTURE3D)
 					.setSampler(GLSamplerMode.NEAREST_CLAMP)
-					.setTextureUnit(TEXTURE_UNIT_TILE_HEIGHT_MAP));
+					.setTextureUnit(TEXTURE_UNIT_TILE_HEIGHT_MAP)
+					.setDebugName("TileHeightMap"));
 
 				initPrograms();
 				initShaderHotswapping();
@@ -1540,9 +1545,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
 				tiledLightingFBO.bind();
-
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT);
+				tiledLightingFBO.clearColor();
 
 				glBindVertexArray(vaoTri);
 				glDisable(GL_BLEND);
@@ -1767,7 +1770,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uiTex = new GLTexture(resolution[0], resolution[1], GLTextureFormat.BGRA,
 				new GLTextureParams()
 					.setSampler(GLSamplerMode.LINEAR_CLAMP)
-					.setTextureUnit(TEXTURE_UNIT_UI));
+					.setTextureUnit(TEXTURE_UNIT_UI)
+					.setDebugName("UI"));
 		} else if (uiTex.getWidth() != resolution[0] || uiTex.getHeight() != resolution[1]) {
 			uiTex.resize(resolution[0], resolution[1]);
 			resized = true;
@@ -1961,8 +1965,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				// Render to the shadow depth map
 				shadowMapFBO.bind();
-				glClearDepth(1);
-				glClear(GL_DEPTH_BUFFER_BIT);
+				shadowMapFBO.clearDepth(1.0f);
 				glDepthFunc(GL_LEQUAL);
 
 				shadowProgram.use();
@@ -2014,16 +2017,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
-
 			float[] gammaCorrectedFogColor = pow(fogColor, getGammaCorrection());
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
-			glClearDepth(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			sceneFBO.clear(gammaCorrectedFogColor[0], gammaCorrectedFogColor[1], gammaCorrectedFogColor[2], 1.0f, 0.0f);
 			frameTimer.end(Timer.CLEAR_SCENE);
 
 			frameTimer.begin(Timer.RENDER_SCENE);
@@ -2088,15 +2083,14 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			sceneFBO.blitTo(backbufferFBO,
 				GLAttachmentSlot.COLOR0,
-				GLAttachmentSlot.FRONT_LEFT, // TODO... I think this needs to switch?
+				GLAttachmentSlot.BACK_LEFT,
 				sceneViewport[0],
 				sceneViewport[1],
 				sceneViewport[0] + sceneViewport[2],
 				sceneViewport[1] + sceneViewport[3],
 				config.sceneScalingMode().glFilter);
 		} else {
-			glClearColor(0, 0, 0, 1f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			sceneFBO.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		drawUi(overlayColor);

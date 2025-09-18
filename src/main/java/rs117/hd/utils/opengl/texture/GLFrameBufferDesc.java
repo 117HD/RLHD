@@ -9,6 +9,7 @@ public class GLFrameBufferDesc {
 	public int depth   = 1;
 	public int samples = 0;
 	public boolean shouldConstructionCreate = true;
+	public String debugName = "";
 
 	public final List<AttachmentDescriptor> colorDescriptors = new ArrayList<>();
 	public AttachmentDescriptor depthDescriptor;
@@ -30,6 +31,11 @@ public class GLFrameBufferDesc {
 
 	public GLFrameBufferDesc setMSAASamples(int samples) {
 		this.samples = samples;
+		return this;
+	}
+
+	public GLFrameBufferDesc setDebugName(String debugName) {
+		this.debugName = debugName;
 		return this;
 	}
 

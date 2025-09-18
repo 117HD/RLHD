@@ -6,23 +6,23 @@ import java.util.Comparator;
 import java.util.List;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.rlawt.AWTContext;
 import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.*;
+import rs117.hd.HdPlugin;
+import rs117.hd.opengl.GLRenderState;
 
-import static org.lwjgl.opengl.GL11.GL_BACK_LEFT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_HEIGHT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_INTERNAL_FORMAT;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_WIDTH;
 import static org.lwjgl.opengl.GL11.glBindTexture;
+import static org.lwjgl.opengl.GL11.glClearColor;
+import static org.lwjgl.opengl.GL11.glClearDepth;
 import static org.lwjgl.opengl.GL11.glGetTexLevelParameteriv;
 import static org.lwjgl.opengl.GL11C.glDisable;
 import static org.lwjgl.opengl.GL11C.glEnable;
-import static org.lwjgl.opengl.GL11C.glGetInteger;
 import static org.lwjgl.opengl.GL13C.GL_MULTISAMPLE;
-import static org.lwjgl.opengl.GL13C.GL_SAMPLES;
 import static org.lwjgl.opengl.GL21.GL_SRGB;
-import static org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0;
 import static org.lwjgl.opengl.GL30.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL30.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL30.GL_DRAW_FRAMEBUFFER;
@@ -66,7 +66,6 @@ import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glFramebufferTextureLayer;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
 import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
-import static org.lwjgl.opengl.GL30.glGetFramebufferAttachmentParameteri;
 import static org.lwjgl.opengl.GL30.glGetFramebufferAttachmentParameteriv;
 import static org.lwjgl.opengl.GL30.glGetRenderbufferParameteriv;
 import static org.lwjgl.opengl.GL30.glReadBuffer;
@@ -116,6 +115,11 @@ public class GLFrameBuffer {
 	@Getter
 	private boolean wrapper = false;
 
+	private float depthClearValue = 0.0f;
+	private float[] colorClearValue = {0.0f, 0.0f, 0.0f, 1.0f};
+
+	private final StringBuilder sb = new StringBuilder();
+
 	private GLFrameBuffer() {
 		descriptor = new GLFrameBufferDesc();
 	}
@@ -142,8 +146,13 @@ public class GLFrameBuffer {
 				descriptor.width,
 				descriptor.height
 			);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, attDesc.slot.glEnum, GL_RENDERBUFFER, attachment.renderBuffer);
 
+			if (HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+				GL43C.glObjectLabel(GL_RENDERBUFFER, attachment.renderBuffer, descriptor.debugName + " - " + attDesc.slot.toString());
+				checkGLErrors();
+			}
+
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, attDesc.slot.glEnum, GL_RENDERBUFFER, attachment.renderBuffer);
 			attachment.texture = new GLTexture(descriptor.width, descriptor.height, descriptor.depth, attDesc.format, attDesc.params);
 
 			attachment.resolveFboId = glGenFramebuffers();
@@ -161,6 +170,12 @@ public class GLFrameBuffer {
 					break;
 			}
 
+			if (HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+				attachment.texture.setDebugName(descriptor.debugName + " - " + attDesc.slot.toString() + " (MSAA Resolve)");
+				GL43C.glObjectLabel(GL_FRAMEBUFFER, attachment.resolveFboId, descriptor.debugName + " - " + attDesc.slot.toString() + " (MSAA Resolve)");
+				checkGLErrors();
+			}
+
 			glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 		} else {
 			attachment.texture = new GLTexture(descriptor.width, descriptor.height, descriptor.depth, attDesc.format, attDesc.params);
@@ -175,6 +190,11 @@ public class GLFrameBuffer {
 					log.error("GLFormat doesn't support GLTextureType: {}", attDesc.params.type);
 					break;
 			}
+
+			if (HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+				attachment.texture.setDebugName(descriptor.debugName + " - " + attDesc.slot.toString());
+				checkGLErrors();
+			}
 		}
 
 		return attachment;
@@ -188,6 +208,11 @@ public class GLFrameBuffer {
 		created = true;
 		fboId = glGenFramebuffers();
 		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+
+		if (HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+			GL43C.glObjectLabel(GL_FRAMEBUFFER, fboId, descriptor.debugName);
+			checkGLErrors();
+		}
 
 		if(!descriptor.colorDescriptors.isEmpty()) {
 			descriptor.colorDescriptors.sort(Comparator.comparingInt(a -> a.slot.glEnum));
@@ -232,17 +257,22 @@ public class GLFrameBuffer {
 		return true;
 	}
 
-	public void bind() {
-		glViewport(0, 0, descriptor.width, descriptor.height);
-		if (descriptor.samples > 1) {
-			glEnable(GL_MULTISAMPLE);
-		} else {
-			glDisable(GL_MULTISAMPLE);
+	public boolean bind() {
+		if(GLRenderState.activeFrameBuffer != this) {
+			glViewport(0, 0, descriptor.width, descriptor.height);
+			if (descriptor.samples > 1) {
+				glEnable(GL_MULTISAMPLE);
+			} else {
+				glDisable(GL_MULTISAMPLE);
+			}
+			glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+			return true;
 		}
-		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+		return false;
 	}
 
 	public void bindLayer(GLAttachmentSlot slot, int layer) {
+		assert GLRenderState.activeFrameBuffer == this;
 		FrameBufferAttachment att = getColorAttachment(slot);
 		if(att != null && layer >= 0 && att.texture.depth < layer) {
 			glFramebufferTextureLayer(GL_FRAMEBUFFER, att.slot.glEnum, att.texture.getId(), 0, layer);
@@ -250,7 +280,9 @@ public class GLFrameBuffer {
 	}
 
 	public void unbind() {
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		if(GLRenderState.activeFrameBuffer == this) {
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}
 	}
 
 	public boolean resize(int newWidth, int newHeight) {
@@ -346,33 +378,63 @@ public class GLFrameBuffer {
 		if (clearDepth && depthAttachment == null) clearDepth = false;
 		if (!clearColor && !clearDepth) return;
 
-		bind();
+		try {
+			if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+				sb.setLength(0);
+				sb.append(clearColor && clearDepth ? "Clear(Color, Depth) - " : clearColor ? "Clear(Color) - " : "Clear(Depth) - ");
+				sb.append(descriptor.debugName);
+				GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, -1, sb);
+			}
 
-		int clearMask = 0;
+			boolean shouldUnbind = bind();
+			int clearMask = 0;
 
-		if (clearColor) {
-			glDrawBuffers(drawBuffers);
-			clearMask |= GL_COLOR_BUFFER_BIT;
+			if (clearColor) {
+				glDrawBuffers(drawBuffers);
+				glClearColor(colorClearValue[0], colorClearValue[1], colorClearValue[2], colorClearValue[3]);
+				clearMask |= GL_COLOR_BUFFER_BIT;
+			}
+
+			if (clearDepth) {
+				glClearDepth(depthClearValue);
+				clearMask |= GL_DEPTH_BUFFER_BIT;
+			}
+
+			glClear(clearMask);
+
+			if(shouldUnbind) {
+				unbind();
+			}
+		} finally {
+			if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+				GL43C.glPopDebugGroup();
+			}
 		}
-
-		if (clearDepth) {
-			clearMask |= GL_DEPTH_BUFFER_BIT;
-		}
-
-		glClear(clearMask);
-
-		unbind();
 	}
 
 	public void clearColor() {
+		clearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+	public void clearColor(float r, float g, float b, float a) {
+		colorClearValue[0] = r;
+		colorClearValue[1] = g;
+		colorClearValue[2] = b;
+		colorClearValue[3] = a;
 		clearInternal(true, false);
 	}
 
-	public void clearDepth() {
+	public void clearDepth(float depth) {
+		depthClearValue = depth;
 		clearInternal(false, true);
 	}
 
-	public void clear() {
+	public void clear(float r, float g, float b, float a, float depth) {
+		colorClearValue[0] = r;
+		colorClearValue[1] = g;
+		colorClearValue[2] = b;
+		colorClearValue[3] = a;
+		depthClearValue = depth;
 		clearInternal(true, true);
 	}
 
@@ -381,23 +443,33 @@ public class GLFrameBuffer {
 
 		FrameBufferAttachment att = getColorAttachment(slot);
 		if(att != null && att.resolveFboId != 0) {
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
-			glReadBuffer(att.slot.glEnum);
+			try {
+				if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+					GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, -1, "MSAA Resolve");
+				}
 
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, att.resolveFboId);
-			glDrawBuffer(att.slot.glEnum);
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboId);
+				glReadBuffer(att.slot.glEnum);
 
-			glBlitFramebuffer(
-				0, 0, descriptor.width, descriptor.height,
-				0, 0, descriptor.width, descriptor.height,
-				GL_COLOR_BUFFER_BIT,
-				GL_NEAREST
-			);
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, att.resolveFboId);
+				glDrawBuffer(att.slot.glEnum);
 
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+				glBlitFramebuffer(
+					0, 0, descriptor.width, descriptor.height,
+					0, 0, descriptor.width, descriptor.height,
+					GL_COLOR_BUFFER_BIT,
+					GL_NEAREST
+				);
 
-			checkGLErrors();
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+				checkGLErrors();
+			} finally {
+				if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+					GL43C.glPopDebugGroup();
+				}
+			}
 		}
 	}
 
@@ -409,41 +481,61 @@ public class GLFrameBuffer {
 		blitTo(target, srcSlot, dstSlot, dstX, dstY, dstWidth, dstHeight, GL_NEAREST);
 	}
 
-	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot, int dstX, int dstY, int dstWidth, int dstHeight, int glFilterMode) {
-		if (descriptor.samples > 1) {
-			resolveMSAA(srcSlot);
-		}
 
+	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot, int dstX, int dstY, int dstWidth, int dstHeight, int glFilterMode) {
 		FrameBufferAttachment srcAtt = getColorAttachment(srcSlot);
 		FrameBufferAttachment dstAtt = target.getColorAttachment(dstSlot);
 
 		if(srcAtt != null && dstAtt != null && srcAtt.format == dstAtt.format) {
-			int readFbo = (descriptor.samples > 1 && srcAtt.resolveFboId != 0) ? srcAtt.resolveFboId : this.fboId;
+			try {
+				if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+					sb.setLength(0);
+					sb.append("Blit ");
+					sb.append(descriptor.debugName);
+					if(target.descriptor.debugName.isEmpty()) {
+						GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, -1, sb);
+					} else {
+						sb.append(" -> ");
+						sb.append(target.descriptor.debugName);
+						GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, -1, sb);
+					}
+				}
 
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, readFbo);
-			glReadBuffer(srcAtt.slot.glEnum);
+				int readFbo = (descriptor.samples > 1 && srcAtt.resolveFboId != 0) ? srcAtt.resolveFboId : this.fboId;
+				if (readFbo == srcAtt.resolveFboId) {
+					resolveMSAA(srcSlot);
+				}
 
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.getFboId());
-			glDrawBuffer(dstAtt.slot.glEnum);
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, readFbo);
+				glReadBuffer(srcAtt.slot.glEnum);
 
-			glBlitFramebuffer(
-				0, 0, descriptor.width, descriptor.height,
-				dstX, dstY, dstWidth, dstHeight,
-				srcAtt.format.isDepth() ? GL_DEPTH_BUFFER_BIT : GL_COLOR_BUFFER_BIT,
-				glFilterMode
-			);
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target.getFboId());
+				glDrawBuffer(dstAtt.slot.glEnum);
 
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+				glBlitFramebuffer(
+					0, 0, descriptor.width, descriptor.height,
+					dstX, dstY, dstWidth, dstHeight,
+					srcAtt.format.isDepth() ? GL_DEPTH_BUFFER_BIT : GL_COLOR_BUFFER_BIT,
+					glFilterMode
+				);
 
-			checkGLErrors();
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+				checkGLErrors();
+			} finally {
+				if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
+					GL43C.glPopDebugGroup();
+				}
+			}
 		}
 	}
 
-	public static GLFrameBuffer wrap(int fboId) {
+	public static GLFrameBuffer wrap(int fboId, String debugName) {
 		GLFrameBuffer wrapper = new GLFrameBuffer();
 		wrapper.fboId = fboId;
 		wrapper.created = true;
+		wrapper.descriptor.debugName = debugName;
 
 		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 

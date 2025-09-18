@@ -8,6 +8,7 @@ public class GLTextureParams {
 	public int imageUnitWriteMode;
 	public float[] borderColor = null;
 	public boolean generateMipmaps = false;
+	public String debugName = "";
 
 	public static GLTextureParams DEFAULT() { return new GLTextureParams(); }
 
@@ -39,6 +40,11 @@ public class GLTextureParams {
 
 	public GLTextureParams enableMipmaps(boolean enable) {
 		this.generateMipmaps = enable;
+		return this;
+	}
+
+	public GLTextureParams setDebugName(String debugName) {
+		this.debugName = debugName;
 		return this;
 	}
 }
