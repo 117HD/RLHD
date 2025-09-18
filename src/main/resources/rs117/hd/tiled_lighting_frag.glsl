@@ -20,7 +20,19 @@ out ivec4 TiledData;
 
 in vec2 fUv;
 
+#define USE_SORTING_BIN 1
+
+#if USE_SORTING_BIN
+    #if TILED_IMAGE_STORE
+        #define SORTING_BIN_SIZE TILED_LIGHTING_TILE_SIZE
+    #else
+        #define SORTING_BIN_SIZE 4
+    #endif
+#endif
+
 void main() {
+    ivec2 pixelCoord = ivec2(gl_FragCoord.xy);
+
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
     uint LightsMask[32]; // 32 Words = 1024 Lights
     for (int i = 0; i < LightMaskSize; i++)
@@ -29,7 +41,7 @@ void main() {
     #if TILED_LIGHTING_LAYER > 0 && !TILED_IMAGE_STORE
         int LayerCount = TILED_LIGHTING_LAYER - 1;
         for (int l = LayerCount; l >= 0; l--) {
-            ivec4 layerData = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0);
+            ivec4 layerData = texelFetch(tiledLightingArray, ivec3(pixelCoord, l), 0);
             for (int c = 3; c >= 0 ; c--) {
                 int encodedLightIdx = layerData[c] - 1;
                 if (encodedLightIdx < 0) {
@@ -72,7 +84,16 @@ void main() {
 
     vec3 tileCenterVec = normalize(rTL + rTR + rBL + rBR);
     float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
-    float tileSin = sqrt(1.0 - tileCos * tileCos);
+    float tileSin = sqrt(max(0.0, 1.0 - tileCos * tileCos));
+
+#if USE_SORTING_BIN
+    int selectedLights[SORTING_BIN_SIZE];
+    float selectedScores[SORTING_BIN_SIZE];
+    for (int i = 0; i < SORTING_BIN_SIZE; i++) {
+        selectedLights[i] = -1;
+        selectedScores[i] = -1.0;
+    }
+#endif
 
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
@@ -103,20 +124,65 @@ void main() {
                 if ((LightsMask[word] & mask) != 0u)
                     continue;
 
+#if USE_SORTING_BIN
+                const float PROXIMITY_WEIGHT = 0.02;
+                float distanceScore = 1.0 / (sqrt(lightDistSqr) + 1e-6);
+                float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+                for (int i = 0; i < SORTING_BIN_SIZE; i++) {
+                    if (combinedScore > selectedScores[i]) {
+                        for (int j = SORTING_BIN_SIZE - 1; j > i; j--) {
+                            selectedScores[j] = selectedScores[j - 1];
+                            selectedLights[j] = selectedLights[j - 1];
+                        }
+                        selectedScores[i] = combinedScore;
+                        selectedLights[i] = lightIdx;
+                        break;
+                    }
+                }
+#else
                 outputTileData[c] = lightIdx + 1;
                 LightsMask[word] |= mask;
                 break;
+#endif
             }
         }
 
-        #if TILED_IMAGE_STORE
-            if (outputTileData != ivec4(0))
-                imageStore(tiledLightingImage, ivec3(gl_FragCoord.xy, l), outputTileData);
-
-            if (lightIdx >= pointLightsCount)
-                return;
-        #else
-            TiledData = outputTileData;
-        #endif
+#if !USE_SORTING_BIN
+    #if TILED_IMAGE_STORE
+        if (outputTileData != ivec4(0)) {
+            imageStore(tiledLightingImage, ivec3(pixelCoord, l), outputTileData);
+        }
+        if (lightIdx >= pointLightsCount)
+            return;
+    #else
+        TiledData = outputTileData;
+    #endif
+#endif
     }
+
+#if USE_SORTING_BIN
+    #if TILED_IMAGE_STORE
+        for (int l = 0; l < TILED_LIGHTING_LAYER_COUNT; l++) {
+            ivec4 outputTileData = ivec4(0);
+            bool empty = true;
+            for (int c = 0; c < 4; c++) {
+                int idx = l * 4 + c;
+                if (idx >= SORTING_BIN_SIZE || selectedLights[idx] < 0) {
+                    break;
+                }
+                outputTileData[c] = selectedLights[idx] + 1;
+                empty = false;
+            }
+            if (!empty)
+                imageStore(tiledLightingImage, ivec3(pixelCoord, l), outputTileData);
+        }
+    #else
+        ivec4 outputTileData = ivec4(0);
+        for (int i = 0; i < 4; i++) {
+            if (selectedLights[i] >= 0)
+                outputTileData[i] = selectedLights[i] + 1;
+        }
+        TiledData = outputTileData;
+    #endif
+#endif
 }
