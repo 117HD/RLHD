@@ -13326,7 +13326,8 @@
         "description": "Grass",
         "colors": "s == 7",
         "flatNormals": true,
-        "baseMaterial": "GRAY_85",
+        "upwardsNormals": true,
+        "baseMaterial": "GRAY_65",
         "windDisplacementMode": "OBJECT"
       },
       {
@@ -13373,23 +13374,34 @@
     ]
   },
   {
-    "description": "Objects - Jungle grass",
-    "flatNormals": true,
+    "description": "Karamja - Mos le Harmless  - Plant - Jungle grass",
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_85",
+    "baseMaterial": "GRAY_65",
+    "castShadows": false,
     "objectIds": [
+      "JUNGLE2",
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
       "JUNGLEFLOOR3",
+      "HARMLESS_DEAD_GRASS1",
+      "HARMLESS_DEAD_GRASS2",
+      "HARMLESS_DEAD_GRASS3"
+    ]
+  },
+  {
+    "description": "Ape Atoll  - Plant - Jungle grass",
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "GRAY_50",
+    "castShadows": false,
+    "upwardsNormals": true,
+    "terrainVertexSnap": true,
+    "objectIds": [
       "MM_JUNGLE_GRASS1",
       "MM_JUNGLE_GRASS2",
       "MM_JUNGLE_GRASS3",
       "MM_LONG_JUNGLE_GRASS1",
       "MM_LONG_JUNGLE_GRASS2",
-      "MM_LONG_JUNGLE_GRASS3",
-      "HARMLESS_DEAD_GRASS1",
-      "HARMLESS_DEAD_GRASS2",
-      "HARMLESS_DEAD_GRASS3"
+      "MM_LONG_JUNGLE_GRASS3"
     ]
   },
   {
