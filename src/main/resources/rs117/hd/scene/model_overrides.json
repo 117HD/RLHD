@@ -13326,7 +13326,8 @@
         "description": "Grass",
         "colors": "s == 7",
         "baseMaterial": "GRAY_65",
-        "windDisplacementMode": "OBJECT"
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
       },
       {
         "description": "Leaves",
