@@ -21,7 +21,6 @@ out ivec4 TiledData;
 in vec2 fUv;
 
 #define USE_SORTING_BIN 1
-
 #if USE_SORTING_BIN
     #if TILED_IMAGE_STORE
         #define SORTING_BIN_SIZE TILED_LIGHTING_LAYER_COUNT * 4
@@ -34,7 +33,7 @@ in vec2 fUv;
     };
 #endif
 
-#define USE_LIGHTS_MASK !USE_SORTING_BIN
+#define USE_LIGHTS_MASK !USE_SORTING_BIN || !TILED_IMAGE_STORE
 
 void main() {
     ivec2 pixelCoord = ivec2(gl_FragCoord.xy);
