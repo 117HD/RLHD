@@ -795,11 +795,30 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				materialManager.shutDown();
 				textureManager.shutDown();
 
-				sceneFBO.delete();
-				shadowMapFBO.delete();
-				tiledLightingFBO.delete();
-				uiTex.delete();
-				tileHeightMapTex.delete();
+				if(sceneFBO != null) {
+					sceneFBO.delete();
+					sceneFBO = null;
+				}
+
+				if(shadowMapFBO != null) {
+					shadowMapFBO.delete();
+					shadowMapFBO = null;
+				}
+
+				if(tiledLightingFBO != null) {
+					tiledLightingFBO.delete();
+					tiledLightingFBO = null;
+				}
+
+				if(uiTex != null) {
+					uiTex.delete();
+					uiTex = null;
+				}
+
+				if(tileHeightMapTex != null) {
+					tileHeightMapTex.delete();
+					tileHeightMapTex = null;
+				}
 
 				destroyBuffers();
 				destroyPrograms();
