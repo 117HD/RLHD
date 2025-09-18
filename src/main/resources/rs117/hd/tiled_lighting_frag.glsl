@@ -30,7 +30,7 @@ void main() {
         int LayerCount = TILED_LIGHTING_LAYER - 1;
         for (int l = LayerCount; l >= 0; l--) {
             ivec4 layerData = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0);
-            for (int c = 4; c >= 0 ; c--) {
+            for (int c = 3; c >= 0 ; c--) {
                 int encodedLightIdx = layerData[c] - 1;
                 if (encodedLightIdx < 0) {
                     TiledData = ivec4(0.0);
