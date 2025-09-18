@@ -955,18 +955,33 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					tiledLightingImageStoreProgram.compile(includes
 						.define("TILED_IMAGE_STORE", true)
 						.define("TILED_LIGHTING_LAYER", false));
+					log.debug("TILED_IMAGE_STORE compiled successfully");
 				} catch (ShaderException ex) {
 					log.warn("Disabling TILED_IMAGE_STORE due to:", ex);
 				}
 			}
 
-			int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
-			for (int layer = 0; layer < tiledLayerCount; layer++) {
-				var shader = new TiledLightingShaderProgram();
-				shader.compile(includes
-					.define("TILED_IMAGE_STORE", false)
-					.define("TILED_LIGHTING_LAYER", layer));
-				tiledLightingShaderPrograms.add(shader);
+			// Compile Layered version if Image store wasn't supported or failed to compile
+			if(!GL_CAPS.GL_ARB_shader_image_load_store || !tiledLightingImageStoreProgram.isValid()) {
+				try {
+					int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
+					for (int layer = 0; layer < tiledLayerCount; layer++) {
+						var shader = new TiledLightingShaderProgram();
+						shader.compile(includes
+							.define("TILED_IMAGE_STORE", false)
+							.define("TILED_LIGHTING_LAYER", layer));
+						tiledLightingShaderPrograms.add(shader);
+					}
+					log.debug("TILED_LIGHTING_LAYERED compiled successfully");
+				} catch (ShaderException ex) {
+					log.warn("TILED_LIGHTING_LAYERED failed to compile due to:", ex);
+
+					// Check if both shaders failed to compile, which will be the case if we've made it to this point
+					if (!GL_CAPS.GL_ARB_shader_image_load_store || !tiledLightingImageStoreProgram.isValid()) {
+						log.warn("Using fallback lighting, due to TiledLighting shaders failing to compile");
+						configTiledLighting = false;
+					}
+				}
 			}
 		}
 
