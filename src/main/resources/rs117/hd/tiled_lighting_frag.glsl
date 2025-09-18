@@ -133,8 +133,8 @@ void main() {
 #endif
 
 #if USE_SORTING_BIN
-                const float PROXIMITY_WEIGHT = 0.7;
-                float distanceScore = sqrt(lightDistSqr) / (drawDistance * 128);
+                const float PROXIMITY_WEIGHT = 0.75;
+                float distanceScore = 1.0 - (sqrt(lightDistSqr) / (drawDistance * 128));
                 float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
 
                 for (int i = 0; i < SORTING_BIN_SIZE; i++) {
