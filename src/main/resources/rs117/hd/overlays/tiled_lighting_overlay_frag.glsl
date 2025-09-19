@@ -36,8 +36,12 @@ void main() {
     }
 
     if (tiledLightCount > 0) {
-        float level = tiledLightCount / float(TILED_LIGHTING_LAYER_COUNT * 4) * 3.14159265 / 2.0;
-        c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
+        if (tiledLightCount < TILED_LIGHTING_LAYER_COUNT * 4) {
+            float level = tiledLightCount / float(TILED_LIGHTING_LAYER_COUNT * 4) * 3.14159265 / 2.0;
+            c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
+        } else {
+            c = vec4(1, 0, 1, 0.6);
+        }
     }
 
     #ifdef DEBUG_LIGHT_RADIUS_PADDING

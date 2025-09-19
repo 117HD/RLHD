@@ -159,6 +159,7 @@ void main() {
 
             imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
         }
+        discard; // Prevent anything from being written to gl_FragColor, in case some drivers do it automatically
     #else
         ivec4 outputTileData = ivec4(0);
         for (int i = 0; i < 4; i++) {
