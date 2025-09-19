@@ -47,6 +47,7 @@ import net.runelite.client.ui.overlay.OverlayLayer;
 import net.runelite.client.ui.overlay.OverlayManager;
 import net.runelite.client.ui.overlay.OverlayPosition;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderProgram;
 import rs117.hd.opengl.shader.ShaderTemplate;
@@ -75,6 +76,9 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private HdPluginConfig config;
 
 	@Inject
 	public T shader;
@@ -365,7 +369,7 @@ public class ShaderOverlay<T extends ShaderOverlay.Shader> extends Overlay {
 	}
 
 	public boolean isHidden() {
-		return !initialized || !shader.isValid() || !isLoggedIn();
+		return !initialized || !shader.isValid() || !isLoggedIn() || config.useLegacyBrightness();
 	}
 
 	public boolean isManageable() {

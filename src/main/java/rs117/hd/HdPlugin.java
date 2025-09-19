@@ -3329,6 +3329,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public float getGammaCorrection() {
+		if (config.useLegacyBrightness())
+			return 1;
 		return 100f / config.brightness();
 	}
 
