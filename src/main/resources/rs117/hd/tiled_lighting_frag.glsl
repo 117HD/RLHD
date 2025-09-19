@@ -159,6 +159,7 @@ void main() {
 
             imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
         }
+        discard; // Prevent Fragment from writing anything out, gl_fragcolor still present even though is deprecated
     #else
         ivec4 outputTileData = ivec4(0);
         for (int i = 0; i < 4; i++) {
