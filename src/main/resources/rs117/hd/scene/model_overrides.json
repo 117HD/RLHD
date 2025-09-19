@@ -24491,6 +24491,32 @@
     ]
   },
   {
+    "description": "Ape Atoll - Tree - Banana Tree",
+    "baseMaterial": "GRUNGE_3",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "MM_BANANATREEEMPTY",
+      "MM_BANANATREEFULL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 6", "h == 8" ],
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "terrainVertexSnap": true
+      },
+      {
+        "colors": "h >= 14",
+        "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
     "description": "Barbarian Village - Wall - Wooden - Log",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
