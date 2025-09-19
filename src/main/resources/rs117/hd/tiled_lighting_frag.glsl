@@ -20,20 +20,18 @@ out ivec4 TiledData;
 
 in vec2 fUv;
 
-#define USE_SORTING_BIN 1
-#if USE_SORTING_BIN
-    #if TILED_IMAGE_STORE
-        #define SORTING_BIN_SIZE TILED_LIGHTING_LAYER_COUNT * 4
-    #else
-        #define SORTING_BIN_SIZE 4
-    #endif
-    struct SortedLight {
-        int lightIdx;
-        float score;
-    };
+#if TILED_IMAGE_STORE
+    #define SORTING_BIN_SIZE TILED_LIGHTING_LAYER_COUNT * 4
+#else
+    #define SORTING_BIN_SIZE 4
 #endif
 
-#define USE_LIGHTS_MASK !USE_SORTING_BIN || !TILED_IMAGE_STORE
+struct SortedLight {
+    int lightIdx;
+    float score;
+};
+
+#define USE_LIGHTS_MASK !TILED_IMAGE_STORE
 
 void main() {
     ivec2 pixelCoord = ivec2(gl_FragCoord.xy);
@@ -93,13 +91,11 @@ void main() {
     float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
     float tileSin = sqrt(max(0.0, 1.0 - tileCos * tileCos));
 
-#if USE_SORTING_BIN
     SortedLight sortingBin[SORTING_BIN_SIZE];
     for (int i = 0; i < SORTING_BIN_SIZE; i++) {
         sortingBin[i].lightIdx = -1;
         sortingBin[i].score = -1.0;
     }
-#endif
 
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
@@ -125,65 +121,41 @@ void main() {
                 if (lightTileCos < sumCos)
                     continue;
 
-#if USE_LIGHTS_MASK
-                uint word = uint(lightIdx) >> 5u;
-                uint mask = 1u << (uint(lightIdx) & 31u);
-                if ((LightsMask[word] & mask) != 0u)
-                    continue;
-#endif
+                #if USE_LIGHTS_MASK
+                    uint word = uint(lightIdx) >> 5u;
+                    uint mask = 1u << (uint(lightIdx) & 31u);
+                    if ((LightsMask[word] & mask) != 0u)
+                        continue;
+                #endif
 
-#if USE_SORTING_BIN
                 const float PROXIMITY_WEIGHT = 0.75;
                 float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
                 float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
 
                 for (int i = 0; i < SORTING_BIN_SIZE; i++) {
                     if (combinedScore > sortingBin[i].score) {
-                        for (int j = SORTING_BIN_SIZE - 1; j > i; j--) {
+                        for (int j = SORTING_BIN_SIZE - 1; j > i; j--)
                             sortingBin[j] = sortingBin[j - 1];
-                        }
                         sortingBin[i].score = combinedScore;
                         sortingBin[i].lightIdx = lightIdx;
                         break;
                     }
                 }
-#else
-                outputTileData[c] = lightIdx + 1;
-#if USE_LIGHTS_MASK
-                LightsMask[word] |= mask;
-#endif
-                break;
-#endif
             }
         }
-
-#if !USE_SORTING_BIN
-    #if TILED_IMAGE_STORE
-        if (outputTileData != ivec4(0)) {
-            imageStore(tiledLightingImage, ivec3(pixelCoord, l), outputTileData);
-        }
-        if (lightIdx >= pointLightsCount)
-            return;
-    #else
-        TiledData = outputTileData;
-    #endif
-#endif
     }
 
-#if USE_SORTING_BIN
     #if TILED_IMAGE_STORE
         for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++) {
             ivec4 outputTileData = ivec4(0);
             for (int c = 0; c < 4; c++, binIdx++) {
-                if (sortingBin[binIdx].lightIdx < 0) {
+                if (sortingBin[binIdx].lightIdx < 0)
                     break;
-                }
                 outputTileData[c] = sortingBin[binIdx].lightIdx + 1;
             }
 
-            if (outputTileData == ivec4(0)) {
+            if (outputTileData == ivec4(0))
                 break;
-            }
 
             imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
         }
@@ -195,5 +167,4 @@ void main() {
         }
         TiledData = outputTileData;
     #endif
-#endif
 }
