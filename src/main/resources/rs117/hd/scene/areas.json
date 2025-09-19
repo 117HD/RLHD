@@ -2155,7 +2155,8 @@
     "name": "YANILLE_INSTANCE",
     "regions": [
       11593
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "YANILLE",
@@ -4597,7 +4598,9 @@
   },
   {
     "name": "CHASM_OF_FIRE",
-    "regions": [ 5789 ],
+    "regionBoxes": [
+      [ 5789, 6045 ]
+    ],
     "hideOtherAreas": true
   },
   {
@@ -4717,7 +4720,8 @@
     "name": "KOUREND_CATACOMBS_DUNGEON",
     "aabbs": [
       [ 1584, 9976, 1751, 10111 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KOUREND_CATACOMBS",

@@ -999,13 +999,42 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			}
 
-			int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
-			for (int layer = 0; layer < tiledLayerCount; layer++) {
-				var shader = new TiledLightingShaderProgram();
-				shader.compile(includes
-					.define("TILED_IMAGE_STORE", false)
-					.define("TILED_LIGHTING_LAYER", layer));
-				tiledLightingShaderPrograms.add(shader);
+			// Compile layered version if the image store version isn't supported or failed to compile
+			if (!tiledLightingImageStoreProgram.isValid()) {
+				try {
+					int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
+					for (int layer = 0; layer < tiledLayerCount; layer++) {
+						var shader = new TiledLightingShaderProgram();
+						shader.compile(includes
+							.define("TILED_IMAGE_STORE", false)
+							.define("TILED_LIGHTING_LAYER", layer));
+						tiledLightingShaderPrograms.add(shader);
+					}
+				} catch (ShaderException ex) {
+					log.warn("Disabling TILED_LIGHTING_LAYERED due to:", ex);
+					// If both tiled lighting implementations fail, fall back to the old lighting, and warn about it
+					if (!Props.DEVELOPMENT) {
+						config.tiledLighting(false);
+						PopupUtils.displayPopupMessage(
+							client, "117 HD Error",
+							"Tiled lighting has been automatically disabled, since it failed to compile on your GPU.<br>" +
+							"<br>GPU name: " + glGetString(GL_RENDERER) + "<br><br>" +
+							"If you want to help us make it work on your system, please join our " +
+							"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and<br>" +
+							"click the \"Open logs folder\" button below, find the file named \"client\" or \"client.log\",<br>" +
+							"then drag and drop that file into one of our support channels.",
+							new String[] { "Open logs folder", "Ok" },
+							i -> {
+								if (i == 0) {
+									LinkBrowser.open(RuneLite.LOGS_DIR.toString());
+									return false;
+								}
+								return true;
+							}
+						);
+					}
+					configTiledLighting = false;
+				}
 			}
 		}
 
@@ -1033,8 +1062,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
-		tiledLightingImageStoreProgram.destroy();
 
+		tiledLightingImageStoreProgram.destroy();
 		for (var program : tiledLightingShaderPrograms)
 			program.destroy();
 		tiledLightingShaderPrograms.clear();
@@ -1868,9 +1897,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				if (configCharacterDisplacement) {
 					// The local player needs to be added first for distance culling
-					Model playerModel = localPlayer.getModel();
-					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
+					uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -3035,6 +3062,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:
@@ -3135,7 +3163,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 
 					if (reloadEnvironments)
-						environmentManager.triggerTransition();
+						environmentManager.reload();
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
@@ -3564,6 +3592,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public float getGammaCorrection() {
+		if (config.useLegacyBrightness())
+			return 1;
 		return 100f / config.brightness();
 	}
 

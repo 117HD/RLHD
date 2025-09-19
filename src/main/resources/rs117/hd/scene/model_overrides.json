@@ -2898,7 +2898,42 @@
     "uvScale": 0.32
   },
   {
-    "description": "Short grass with rock objects usually found around Farming Patches",
+    "description": "Farming Guild - Farming patch Edges with grass made of stone and edged with wood",
+    "baseMaterial": "GRAY_75",
+    "flatNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
+      "KEBOS_FARMING_GUILD_BORDER_CORNER",
+      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE",
+      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_STRAIGHT",
+      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_CORNER_OUTSIDE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROCK_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Farming Patch Edges with grass around them",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
     "castShadows": false,
@@ -2906,12 +2941,7 @@
     "objectIds": [
       "FAI_VARROCK_FARMING_BORDER_STRAIGHT",
       "FARMING_BORDER_STRAIGHT",
-      "FARMING_BORDER_CORNER",
-      "KEBOS_FARMING_GUILD_BORDER_STRAIGHT",
-      "KEBOS_FARMING_GUILD_BORDER_CORNER",
-      "KEBOS_FARMING_GUILD_BORDER_CORNER_OUTSIDE",
-      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_STRAIGHT",
-      "TGOD_GARDEN_TEMPLE_FARMING_BORDER_CORNER_OUTSIDE"
+      "FARMING_BORDER_CORNER"
     ],
     "colorOverrides": [
       {
@@ -3135,7 +3165,22 @@
       "DS2_OGRE_BROWN_GRASS_1",
       "DS2_OGRE_BROWN_GRASS_2",
       "DS2_OGRE_BROWN_GRASS_3",
-      "DS2_OGRE_BROWN_GRASS_4"
+      "DS2_OGRE_BROWN_GRASS_4",
+      "AVIUM_GRASS_1",
+      "AVIUM_GRASS_2",
+      "AVIUM_GRASS_3",
+      "AVIUM_GRASS_5",
+      "AVIUM_GRASS_6",
+      "AVIUM_GRASS_4",
+      "AVIUM_GRASS_TALL1",
+      "AVIUM_GRASS_TALL2",
+      "AVIUM_GRASS_TALL3",
+      "AVIUM_GRASS_TALL4",
+      "AVIUM_GRASS_TALL1_DRY",
+      "AVIUM_GRASS_TALL2_DRY",
+      "AVIUM_GRASS_TALL3_DRY",
+      "AVIUM_GRASS_TALL4_DRY",
+      "POH_GRASS"
     ]
   },
   {
@@ -13350,9 +13395,9 @@
       {
         "description": "Grass",
         "colors": "s == 7",
-        "flatNormals": true,
-        "baseMaterial": "GRAY_85",
-        "windDisplacementMode": "OBJECT"
+        "baseMaterial": "GRAY_65",
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
       },
       {
         "description": "Leaves",
@@ -13398,23 +13443,33 @@
     ]
   },
   {
-    "description": "Objects - Jungle grass",
-    "flatNormals": true,
+    "description": "Karamja - Mos le Harmless  - Plant - Jungle grass",
     "windDisplacementMode": "OBJECT",
-    "baseMaterial": "GRAY_85",
+    "baseMaterial": "GRAY_65",
+    "castShadows": false,
     "objectIds": [
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
       "JUNGLEFLOOR3",
+      "HARMLESS_DEAD_GRASS1",
+      "HARMLESS_DEAD_GRASS2",
+      "HARMLESS_DEAD_GRASS3"
+    ]
+  },
+  {
+    "description": "Ape Atoll  - Plant - Jungle grass",
+    "windDisplacementMode": "OBJECT",
+    "baseMaterial": "GRAY_50",
+    "castShadows": false,
+    "upwardsNormals": true,
+    "terrainVertexSnap": true,
+    "objectIds": [
       "MM_JUNGLE_GRASS1",
       "MM_JUNGLE_GRASS2",
       "MM_JUNGLE_GRASS3",
       "MM_LONG_JUNGLE_GRASS1",
       "MM_LONG_JUNGLE_GRASS2",
-      "MM_LONG_JUNGLE_GRASS3",
-      "HARMLESS_DEAD_GRASS1",
-      "HARMLESS_DEAD_GRASS2",
-      "HARMLESS_DEAD_GRASS3"
+      "MM_LONG_JUNGLE_GRASS3"
     ]
   },
   {

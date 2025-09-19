@@ -20,7 +20,23 @@ out ivec4 TiledData;
 
 in vec2 fUv;
 
+#if TILED_IMAGE_STORE
+    #define SORTING_BIN_SIZE TILED_LIGHTING_LAYER_COUNT * 4
+#else
+    #define SORTING_BIN_SIZE 4
+#endif
+
+struct SortedLight {
+    int lightIdx;
+    float score;
+};
+
+#define USE_LIGHTS_MASK !TILED_IMAGE_STORE
+
 void main() {
+    ivec2 pixelCoord = ivec2(gl_FragCoord.xy);
+
+#if USE_LIGHTS_MASK
     int LightMaskSize = int(ceil(pointLightsCount / 32.0));
     uint LightsMask[32]; // 32 Words = 1024 Lights
     for (int i = 0; i < LightMaskSize; i++)
@@ -29,8 +45,8 @@ void main() {
     #if TILED_LIGHTING_LAYER > 0 && !TILED_IMAGE_STORE
         int LayerCount = TILED_LIGHTING_LAYER - 1;
         for (int l = LayerCount; l >= 0; l--) {
-            ivec4 layerData = texelFetch(tiledLightingArray, ivec3(gl_FragCoord.xy, l), 0);
-            for (int c = 4; c >= 0 ; c--) {
+            ivec4 layerData = texelFetch(tiledLightingArray, ivec3(pixelCoord, l), 0);
+            for (int c = 3; c >= 0 ; c--) {
                 int encodedLightIdx = layerData[c] - 1;
                 if (encodedLightIdx < 0) {
                     TiledData = ivec4(0.0);
@@ -43,6 +59,7 @@ void main() {
             }
         }
     #endif
+#endif
 
     const vec2 tileSize = vec2(TILED_LIGHTING_TILE_SIZE);
     vec2 screenUV = fUv * sceneResolution;
@@ -72,7 +89,13 @@ void main() {
 
     vec3 tileCenterVec = normalize(rTL + rTR + rBL + rBR);
     float tileCos = min(min(dot(tileCenterVec, rTL), dot(tileCenterVec, rTR)), min(dot(tileCenterVec, rBL), dot(tileCenterVec, rBR)));
-    float tileSin = sqrt(1.0 - tileCos * tileCos);
+    float tileSin = sqrt(max(0.0, 1.0 - tileCos * tileCos));
+
+    SortedLight sortingBin[SORTING_BIN_SIZE];
+    for (int i = 0; i < SORTING_BIN_SIZE; i++) {
+        sortingBin[i].lightIdx = -1;
+        sortingBin[i].score = -1.0;
+    }
 
     int lightIdx = 0;
 #if TILED_IMAGE_STORE
@@ -98,25 +121,51 @@ void main() {
                 if (lightTileCos < sumCos)
                     continue;
 
-                uint word = uint(lightIdx) >> 5u;
-                uint mask = 1u << (uint(lightIdx) & 31u);
-                if ((LightsMask[word] & mask) != 0u)
-                    continue;
+                #if USE_LIGHTS_MASK
+                    uint word = uint(lightIdx) >> 5u;
+                    uint mask = 1u << (uint(lightIdx) & 31u);
+                    if ((LightsMask[word] & mask) != 0u)
+                        continue;
+                #endif
 
-                outputTileData[c] = lightIdx + 1;
-                LightsMask[word] |= mask;
-                break;
+                const float PROXIMITY_WEIGHT = 0.75;
+                float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
+                float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+
+                for (int i = 0; i < SORTING_BIN_SIZE; i++) {
+                    if (combinedScore > sortingBin[i].score) {
+                        for (int j = SORTING_BIN_SIZE - 1; j > i; j--)
+                            sortingBin[j] = sortingBin[j - 1];
+                        sortingBin[i].score = combinedScore;
+                        sortingBin[i].lightIdx = lightIdx;
+                        break;
+                    }
+                }
             }
         }
-
-        #if TILED_IMAGE_STORE
-            if (outputTileData != ivec4(0))
-                imageStore(tiledLightingImage, ivec3(gl_FragCoord.xy, l), outputTileData);
-
-            if (lightIdx >= pointLightsCount)
-                return;
-        #else
-            TiledData = outputTileData;
-        #endif
     }
+
+    #if TILED_IMAGE_STORE
+        for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++) {
+            ivec4 outputTileData = ivec4(0);
+            for (int c = 0; c < 4; c++, binIdx++) {
+                if (sortingBin[binIdx].lightIdx < 0)
+                    break;
+                outputTileData[c] = sortingBin[binIdx].lightIdx + 1;
+            }
+
+            if (outputTileData == ivec4(0))
+                break;
+
+            imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
+        }
+        discard; // Prevent anything from being written to gl_FragColor, in case some drivers do it automatically
+    #else
+        ivec4 outputTileData = ivec4(0);
+        for (int i = 0; i < 4; i++) {
+            if (sortingBin[i].lightIdx  >= 0)
+                outputTileData[i] = sortingBin[i].lightIdx + 1;
+        }
+        TiledData = outputTileData;
+    #endif
 }

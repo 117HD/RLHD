@@ -403,6 +403,8 @@ public interface HdPluginConfig extends Config
 	default boolean tiledLighting() {
 		return true;
 	}
+	@ConfigItem(keyName = KEY_TILED_LIGHTING, hidden = true, name = "", description = "")
+	void tiledLighting(boolean enabled);
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
 	@ConfigItem(
@@ -1049,6 +1051,19 @@ public interface HdPluginConfig extends Config
 		section = miscellaneousSettings
 	)
 	default boolean flatShading() {
+		return false;
+	}
+
+	String KEY_LEGACY_TOB_ENVIRONMENT = "legacyTobEnvironment";
+	@ConfigItem(
+		keyName = KEY_LEGACY_TOB_ENVIRONMENT,
+		name = "Legacy Theatre of Blood",
+		description =
+			"Previously, Theatre of Blood used to look a whole lot more blue, which<br>" +
+			"some people grew really used to. This option brings back that same old look.",
+		section = miscellaneousSettings
+	)
+	default boolean legacyTobEnvironment() {
 		return false;
 	}
 
