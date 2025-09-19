@@ -403,6 +403,8 @@ public interface HdPluginConfig extends Config
 	default boolean tiledLighting() {
 		return true;
 	}
+	@ConfigItem(keyName = KEY_TILED_LIGHTING, hidden = true, name = "", description = "")
+	void tiledLighting(boolean enabled);
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
 	@ConfigItem(
