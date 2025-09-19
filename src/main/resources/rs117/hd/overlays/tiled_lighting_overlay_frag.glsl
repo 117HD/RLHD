@@ -36,7 +36,7 @@ void main() {
     }
 
     if (tiledLightCount > 0) {
-        if(tiledLightCount < TILED_LIGHTING_LAYER_COUNT * 4) {
+        if (tiledLightCount < TILED_LIGHTING_LAYER_COUNT * 4) {
             float level = tiledLightCount / float(TILED_LIGHTING_LAYER_COUNT * 4) * 3.14159265 / 2.0;
             c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
         } else {
