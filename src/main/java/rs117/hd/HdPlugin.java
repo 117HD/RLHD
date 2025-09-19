@@ -913,6 +913,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
+			.define("NEW_BRIGHTNESS", !config.useLegacyBrightness())
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -2295,13 +2296,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
 
-			float[] gammaCorrectedFogColor = pow(fogColor, getGammaCorrection());
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
+			float[] clearColor = config.useLegacyBrightness() ? fogColor : pow(fogColor, getGammaCorrection());
+			glClearColor(clearColor[0], clearColor[1], clearColor[2], 1f);
+
 			glClearDepth(0);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			frameTimer.end(Timer.CLEAR_SCENE);
@@ -2796,6 +2793,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
+							case KEY_LEGACY_BRIGHTNESS:
 							case KEY_PIXELATED_SHADOWS:
 								recompilePrograms = true;
 								break;

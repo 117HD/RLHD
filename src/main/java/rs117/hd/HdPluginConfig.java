@@ -337,8 +337,9 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
+	String KEY_LEGACY_BRIGHTNESS = "useLegacyBrightness";
 	@ConfigItem(
-		keyName = "useLegacyBrightness",
+		keyName = KEY_LEGACY_BRIGHTNESS,
 		name = "Enable Legacy Brightness",
 		description =
 			"Whether the legacy brightness option below should be applied.<br>" +

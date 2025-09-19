@@ -460,7 +460,9 @@ void main() {
         outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
     }
 
-    outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+    #if NEW_BRIGHTNESS
+        outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+    #endif
 
     FragColor = outputColor;
 }
