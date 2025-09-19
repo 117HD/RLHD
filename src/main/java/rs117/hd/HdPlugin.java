@@ -955,7 +955,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					tiledLightingImageStoreProgram.compile(includes
 						.define("TILED_IMAGE_STORE", true)
 						.define("TILED_LIGHTING_LAYER", false));
-					log.debug("TILED_IMAGE_STORE compiled successfully");
 				} catch (ShaderException ex) {
 					log.warn("Disabling TILED_IMAGE_STORE due to:", ex);
 				}
@@ -972,7 +971,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							.define("TILED_LIGHTING_LAYER", layer));
 						tiledLightingShaderPrograms.add(shader);
 					}
-					log.debug("TILED_LIGHTING_LAYERED compiled successfully");
 				} catch (ShaderException ex) {
 					log.warn("Disabling TILED_LIGHTING_LAYERED due to:", ex);
 					// If both tiled lighting implementations fail, fall back to the old lighting, and warn about it
