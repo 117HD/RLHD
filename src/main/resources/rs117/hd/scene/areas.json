@@ -4720,7 +4720,8 @@
     "name": "KOUREND_CATACOMBS_DUNGEON",
     "aabbs": [
       [ 1584, 9976, 1751, 10111 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KOUREND_CATACOMBS",
