@@ -1009,8 +1009,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
-		tiledLightingImageStoreProgram.destroy();
 
+		tiledLightingImageStoreProgram.destroy();
 		for (var program : tiledLightingShaderPrograms)
 			program.destroy();
 		tiledLightingShaderPrograms.clear();
@@ -1721,9 +1721,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				if (configCharacterDisplacement) {
 					// The local player needs to be added first for distance culling
-					Model playerModel = localPlayer.getModel();
-					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
+					uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
