@@ -1,9 +1,11 @@
 package rs117.hd.overlays;
 
 import com.google.inject.Singleton;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import rs117.hd.HdPluginConfig;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
@@ -12,6 +14,9 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverlay.Shader> {
+	@Inject
+	private HdPluginConfig config;
+
 	static class Shader extends ShaderOverlay.Shader {
 		public Uniform1f uniCalibrationTimer = addUniform1f("calibrationTimer");
 
@@ -37,7 +42,7 @@ public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverl
 
 	@Override
 	public boolean isHidden() {
-		return super.isHidden() || getTimeout() <= 0;
+		return super.isHidden() || getTimeout() <= 0 || config.useLegacyBrightness();
 	}
 
 	@Override
