@@ -13423,7 +13423,6 @@
     "baseMaterial": "GRAY_65",
     "castShadows": false,
     "objectIds": [
-      "JUNGLE2",
       "JUNGLEFLOOR1",
       "JUNGLEFLOOR2",
       "JUNGLEFLOOR3",
