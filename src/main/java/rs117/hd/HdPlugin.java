@@ -1804,6 +1804,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 				}
 
+				glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+
 				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 			}
