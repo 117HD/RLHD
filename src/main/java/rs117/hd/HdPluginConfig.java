@@ -968,6 +968,19 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_LEGACY_TOB_ENVIRONMENT = "legacyTobEnvironment";
+	@ConfigItem(
+		keyName = KEY_LEGACY_TOB_ENVIRONMENT,
+		name = "Legacy Theatre of Blood",
+		description =
+			"Previously, Theatre of Blood used to look a whole lot more blue, which<br>" +
+			"some people grew really used to. This option brings back that same old look.",
+		section = miscellaneousSettings
+	)
+	default boolean legacyTobEnvironment() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 

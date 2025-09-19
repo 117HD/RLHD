@@ -2811,6 +2811,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:
@@ -2907,7 +2908,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 
 					if (reloadEnvironments)
-						environmentManager.triggerTransition();
+						environmentManager.reload();
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
