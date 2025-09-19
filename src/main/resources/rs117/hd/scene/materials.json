@@ -2506,6 +2506,21 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_SAND_BRICK_N"
+  },
+  {
+    "name": "HD_SAND_BRICK",
+    "normalMap": "HD_SAND_BRICK_N",
+    "brightness": 0.881,
+    "displacementScale": 0.05,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "SAND_BRICK"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
     "name": "OOZE",
     "parent": "GRAY_65",
     "specularStrength": 1.5,
