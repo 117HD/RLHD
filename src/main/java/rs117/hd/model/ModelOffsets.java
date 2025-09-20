@@ -7,4 +7,6 @@ public class ModelOffsets {
 	public final int faceCount;
 	public final int vertexOffset;
 	public final int uvOffset;
+	public final boolean shouldCastShadow;
+	public final boolean isTransparent;
 }
