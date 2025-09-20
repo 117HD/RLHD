@@ -44389,8 +44389,18 @@
       "MM_BAMBOO_WALL",
       "MM_BAMBOO_WINDOW",
       "MM_POST",
-      "MM_POST_FOUR_POST",
       "MM_JAIL_POSTS"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo posts - snaped vertex",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "MM_POST_FOUR_POST"
     ]
   },
   {
