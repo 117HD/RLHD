@@ -394,6 +394,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int texShadowMap;
 
 	private int[] tiledLightingResolution;
+	private int tiledLightingLayerCount;
 	private int fboTiledLighting;
 	private int texTiledLighting;
 
@@ -895,7 +896,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
-			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
+			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
 			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
@@ -963,8 +964,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Compile layered version if the image store version isn't supported or failed to compile
 			if (!tiledLightingImageStoreProgram.isValid()) {
 				try {
-					int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
-					for (int layer = 0; layer < tiledLayerCount; layer++) {
+					for (int layer = 0; layer < DynamicLights.MAX_LAYERS_PER_TILE; layer++) {
 						var shader = new TiledLightingShaderProgram();
 						shader.compile(includes
 							.define("TILED_IMAGE_STORE", false)
@@ -1300,7 +1300,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		assert configTiledLighting;
 
 		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
-		if (Arrays.equals(resolution, tiledLightingResolution))
+		if (Arrays.equals(resolution, tiledLightingResolution) && tiledLightingLayerCount == configDynamicLights.getTiledLightingLayers())
 			return;
 
 		destroyTiledLightingFbo();
@@ -1317,20 +1317,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexImage3D(
 			GL_TEXTURE_2D_ARRAY,
 			0,
-			GL_RGBA16I,
+			GL_RGBA16UI,
 			tiledLightingResolution[0],
 			tiledLightingResolution[1],
-			DynamicLights.MAX_LIGHTS_PER_TILE / 4,
+			configDynamicLights.getTiledLightingLayers(),
 			0,
 			GL_RGBA_INTEGER,
-			GL_SHORT,
+			GL_UNSIGNED_SHORT,
 			0
 		);
 		checkGLErrors();
 
 		if (tiledLightingImageStoreProgram.isValid())
 			ARBShaderImageLoadStore.glBindImageTexture(
-				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, false, 0, GL_WRITE_ONLY, GL_RGBA16I);
+				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
 		checkGLErrors();
 
@@ -1766,6 +1766,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboGlobal.viewMatrix.set(viewMatrix);
 				uboGlobal.projectionMatrix.set(viewProj);
 				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
+				uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				uboGlobal.upload();
 			}
 		}
@@ -1812,6 +1813,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+				glDrawBuffer(GL_COLOR_ATTACHMENT0);
 
 				glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
 
@@ -1823,9 +1825,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				if (tiledLightingImageStoreProgram.isValid()) {
 					tiledLightingImageStoreProgram.use();
+					glDrawBuffer(GL_NONE);
 					glDrawArrays(GL_TRIANGLES, 0, 3);
 				} else {
-					int layerCount = configDynamicLights.getLightsPerTile() / 4;
+					int layerCount = configDynamicLights.getTiledLightingLayers();
 					for (int layer = 0; layer < layerCount; layer++) {
 						tiledLightingShaderPrograms.get(layer).use();
 						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
@@ -1836,6 +1839,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 			}
+		} else {
+			uboGlobal.upload();
 		}
 	}
 
@@ -2209,8 +2214,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
 			uboGlobal.groundFogOpacity.set(config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
-			// Lights & lightning
-			uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
+			// Lightning
 			uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
 			uboGlobal.saturation.set(config.saturation() / 100f);
