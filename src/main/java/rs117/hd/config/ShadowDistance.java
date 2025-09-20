@@ -38,7 +38,12 @@ public enum ShadowDistance
 	DISTANCE_60("60", 60),
 	DISTANCE_70("70", 70),
 	DISTANCE_80("80", 80),
-	DISTANCE_90("90", 90);
+	DISTANCE_90("90", 90),
+	DISTANCE_100("100", 100),
+	DISTANCE_110("110", 110),
+	DISTANCE_120("120", 120),
+	DISTANCE_130("130", 130),
+	DISTANCE_140("140", 140);
 
 	private final String name;
 	private final int value;
