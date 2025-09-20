@@ -4,13 +4,11 @@
 #include TILED_IMAGE_STORE
 
 #if TILED_IMAGE_STORE
-#extension GL_EXT_shader_image_load_store : require
-
-layout(rgba16ui) uniform uimage2DArray tiledLightingImage;
-
+    #extension GL_EXT_shader_image_load_store : require
+    layout(rgba16ui) uniform uimage2DArray tiledLightingImage;
 #else
-uniform usampler2DArray tiledLightingArray;
-out uvec4 TiledData;
+    uniform usampler2DArray tiledLightingArray;
+    out uvec4 TiledData;
 #endif
 
 #include <uniforms/global.glsl>
@@ -40,14 +38,17 @@ uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], inout int binIdx) {
     if (idx0 < 0) return 0u;
     idx0 += 1;
 
-    // Try dual-pack: idx0 = 7 bits, idx1 = 8 bits
-    if (idx0 <= 127 && (binIdx + 1) < SORTING_BIN_SIZE) {
+    if((binIdx + 1) < SORTING_BIN_SIZE) {
         int idx1 = bin[binIdx + 1].lightIdx;
         if (idx1 >= 0) {
             idx1 += 1;
-            if (idx1 <= 255) {
+            // Try dual-pack: idx0 = 7 bits, idx1 = 8 bits
+            if (idx0 <= 127 && idx1 <= 255) {
                 binIdx += 2;
                 return 0x8000u | (uint(idx1 & 0xFF) << 7) | uint(idx0 & 0x7F); // MSB = 1
+            } else if(idx1 <= 127 && idx0 <= 255) {
+                binIdx += 2;
+                return 0x8000u | (uint(idx0 & 0xFF) << 7) | uint(idx1 & 0x7F); // MSB = 1
             }
         }
     }
