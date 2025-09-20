@@ -950,7 +950,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
-			if (GL_CAPS.GL_ARB_shader_image_load_store && false && tiledLightingImageStoreProgram.isViable()) {
+			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
 				try {
 					tiledLightingImageStoreProgram.compile(includes
 						.define("TILED_IMAGE_STORE", true)
@@ -1330,7 +1330,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		if (tiledLightingImageStoreProgram.isValid())
 			ARBShaderImageLoadStore.glBindImageTexture(
-				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, false, 0, GL_WRITE_ONLY, GL_RGBA16I);
+				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
 		checkGLErrors();
 
@@ -1823,6 +1823,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				if (tiledLightingImageStoreProgram.isValid()) {
 					tiledLightingImageStoreProgram.use();
+					glBindFramebuffer(GL_FRAMEBUFFER, 0); // ImageStore doesn't need FBO Binded
 					glDrawArrays(GL_TRIANGLES, 0, 3);
 				} else {
 					int layerCount = configDynamicLights.getLightsPerTile() / 4;

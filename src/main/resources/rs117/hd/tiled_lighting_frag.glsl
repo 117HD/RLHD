@@ -5,7 +5,7 @@
 
 #if TILED_IMAGE_STORE
     #extension GL_EXT_shader_image_load_store : require
-    layout(rgba16ui) uniform uimage2DArray tiledLightingImage;
+    layout(rgba16ui) coherent uniform uimage2DArray tiledLightingImage;
 #else
     uniform usampler2DArray tiledLightingArray;
     out uvec4 TiledData;
@@ -69,7 +69,7 @@ void main() {
     for (int i = 0; i < LightMaskSize; i++)
         LightsMask[i] = 0u;
 
-    #if TILED_LIGHTING_LAYER > 0 && !TILED_IMAGE_STORE
+    #if TILED_LIGHTING_LAYER > 0
         int LayerCount = TILED_LIGHTING_LAYER - 1;
         for (int l = LayerCount; l >= 0; l--) {
             uvec4 layerData = texelFetch(tiledLightingArray, ivec3(pixelCoord, l), 0);
