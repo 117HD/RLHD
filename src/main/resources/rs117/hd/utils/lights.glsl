@@ -39,11 +39,11 @@ void calculateLighting(
         ivec2 tileXY = ivec2(floor(gl_FragCoord.xy / sceneResolution * tiledLightingResolution));
 
         for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
-            ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+            uvec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
             ivec2 unpackedData = ivec2(0);
 
             #define PROCESS_TILED_LIGHT_COMPONENT(c)                 \
-                if (tileLayerData[c] <= 0)                           \
+                if (tileLayerData[c] <= 0u)                          \
                     break;                                           \
                 unpackedData = decodePackedLight(tileLayerData[c]);  \
                                                                      \

@@ -3,14 +3,20 @@
 #include TILED_LIGHTING_LAYER
 #include TILED_IMAGE_STORE
 
+// Image store isn't working with packing at the moment... Urgh
+#if TILED_IMAGE_STORE
+#undef TILED_IMAGE_STORE
+#define TILED_IMAGE_STORE 0
+#endif
+
 #if TILED_IMAGE_STORE
 #extension GL_EXT_shader_image_load_store : require
 
-layout(rgba16i) uniform iimage2DArray tiledLightingImage;
-#else
-uniform isampler2DArray tiledLightingArray;
+layout(rgba16ui) uniform uimage2DArray tiledLightingImage;
 
-out ivec4 TiledData;
+#else
+uniform usampler2DArray tiledLightingArray;
+out uvec4 TiledData;
 #endif
 
 #include <uniforms/global.glsl>
@@ -33,11 +39,11 @@ struct SortedLight {
 
 #define USE_LIGHTS_MASK !TILED_IMAGE_STORE
 
-int packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], inout int binIdx) {
-    if (binIdx >= SORTING_BIN_SIZE) return 0;
+uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], inout int binIdx) {
+    if (binIdx >= SORTING_BIN_SIZE) return 0u;
 
     int idx0 = bin[binIdx].lightIdx;
-    if (idx0 < 0) return 0;
+    if (idx0 < 0) return 0u;
     idx0 += 1;
 
     // Try dual-pack: idx0 = 7 bits, idx1 = 8 bits
@@ -47,14 +53,14 @@ int packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], inout int binIdx) {
             idx1 += 1;
             if (idx1 <= 255) {
                 binIdx += 2;
-                return 0x8000 | ((idx1 & 0xFF) << 7) | (idx0 & 0x7F); // MSB = 1
+                return 0x8000u | (uint(idx1 & 0xFF) << 7) | uint(idx0 & 0x7F); // MSB = 1
             }
         }
     }
 
     // Fallback: single 15-bit index
     binIdx += 1;
-    return (idx0 <= 32767) ? (idx0 & 0x7FFF) : 0;
+    return (idx0 <= 32767) ? uint(idx0 & 0x7FFF) : 0u;
 }
 
 void main() {
@@ -69,17 +75,21 @@ void main() {
     #if TILED_LIGHTING_LAYER > 0 && !TILED_IMAGE_STORE
         int LayerCount = TILED_LIGHTING_LAYER - 1;
         for (int l = LayerCount; l >= 0; l--) {
-            ivec4 layerData = texelFetch(tiledLightingArray, ivec3(pixelCoord, l), 0);
-            for (int c = 3; c >= 0 ; c--) {
-                int encodedLightIdx = layerData[c] - 1;
-                if (encodedLightIdx < 0) {
-                    TiledData = ivec4(0.0);
-                    return; // No more lights are overlapping with cell since the previous layer didn't encode
-                }
+            uvec4 layerData = texelFetch(tiledLightingArray, ivec3(pixelCoord, l), 0);
+            for (int c = 3; c >= 0; c--) {
+                ivec2 unpacked = decodePackedLight(layerData[c]);
+                for(int i = 2; i > 0; i--) {
+                    int encodedLightIdx = unpacked[i];
 
-                uint word = uint(encodedLightIdx) >> 5u;
-                uint mask = 1u << (uint(encodedLightIdx) & 31u);
-                LightsMask[word] |= mask;
+                    if (encodedLightIdx < 0) {
+                        TiledData = uvec4(0.0);
+                        return; // No more lights are overlapping with cell since the previous layer didn't encode
+                    }
+
+                    uint word = uint(encodedLightIdx) >> 5u;
+                    uint mask = 1u << (uint(encodedLightIdx) & 31u);
+                    LightsMask[word] |= mask;
+                }
             }
         }
     #endif
@@ -171,16 +181,16 @@ void main() {
 
 #if TILED_IMAGE_STORE
     for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; ++layer) {
-        ivec4 outputTileData = ivec4(0);
+        uvec4 outputTileData = uvec4(0);
         for (int c = 0; c < 4 && binIdx < SORTING_BIN_SIZE; ++c) {
             outputTileData[c] = packLightIndices(sortingBin, binIdx);
         }
-        if (outputTileData == ivec4(0)) break;
+        if (outputTileData == uvec4(0)) break;
         imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
     }
     discard; // Prevent gl_FragColor writes
 #else
-    ivec4 outputTileData = ivec4(0);
+    uvec4 outputTileData = uvec4(0);
     for (int c = 0, binIdx = 0; c < 4 && binIdx < SORTING_BIN_SIZE; ++c) {
         outputTileData[c] = packLightIndices(sortingBin, binIdx);
     }

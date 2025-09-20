@@ -1317,13 +1317,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexImage3D(
 			GL_TEXTURE_2D_ARRAY,
 			0,
-			GL_RGBA16I,
+			GL_RGBA16UI,
 			tiledLightingResolution[0],
 			tiledLightingResolution[1],
 			DynamicLights.MAX_LIGHTS_PER_TILE / 4,
 			0,
 			GL_RGBA_INTEGER,
-			GL_SHORT,
+			GL_UNSIGNED_SHORT,
 			0
 		);
 		checkGLErrors();
