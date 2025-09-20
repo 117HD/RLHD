@@ -19756,7 +19756,6 @@
     "description": "Nightmare of Ashihama - Encounter Active",
     "height": 125,
     "radius": 1500,
-    "spawnDelay": 2000,
     "fadeInDuration": 300,
     "fadeOutDuration": 2000,
     "strength": 15,
