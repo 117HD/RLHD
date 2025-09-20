@@ -1923,6 +1923,11 @@
     "brightness": 0.881
   },
   {
+    "name": "LEAF_VEINS_DARKER",
+    "parent": "LEAF_VEINS",
+    "brightness": 0.581
+  },
+  {
     "name": "LEAVES_1_N"
   },
   {

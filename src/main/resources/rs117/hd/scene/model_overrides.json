@@ -11711,7 +11711,8 @@
       "ZQROCKJUMP1",
       "ZQROCKJUMP2",
       "ZQROCKJUMP3",
-      "ZEAH_SALTPETRE_SHORTCUT"
+      "ZEAH_SALTPETRE_SHORTCUT",
+      "_100_ILM_STEPPING_STONE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -18338,11 +18339,12 @@
     "uvType": "BOX",
     "uvScale": 0.42,
     "uvOrientation": 768,
+    "terrainVertexSnap": true,
     "colorOverrides": [
       {
         "description": "Leaves",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "baseMaterial": "LEAF_VEINS_DARK",
+        "baseMaterial": "LEAF_VEINS_DARKER",
         "colors": "h > 10"
       }
     ],
@@ -18424,7 +18426,10 @@
       "TREE_PALM01_CLUSTER02",
       "TREE_PALM03_MID",
       "TREE_PALM03_TOP",
-      "_100_ILM_CLIMBABLE_TREE"
+      "_100_ILM_CLIMBABLE_TREE",
+      "_100_ILM_AGILITY_TREE_BASE",
+      "_100_ILM_BAMBOO_TREE_MID",
+      "_100_ILM_LEANING_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -22420,10 +22425,19 @@
       "FERN",
       "FERN1",
       "FERN2",
-      "MM_JUNGLEPLANT2",
       "AREA_SANGUINE_OUTER_WALL_PLANT",
       "FAIRY2_PLANT_2",
       "FAIRY2_PLANT_4"
+    ]
+  },
+  {
+    "description": "Generic - Plant - Fern - Small Overbright",
+    "baseMaterial": "LEAF_VEINS_DARK",
+    "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
+    "uvScale": 0.25,
+    "objectIds": [
+      "MM_JUNGLEPLANT2"
     ]
   },
   {
@@ -22463,8 +22477,6 @@
     "objectIds": [
       "JUNGLEPLANT4",
       "JUNGLEPLANT1",
-      "MM_JUNGLEPLANT3",
-      "MM_JUNGLEPLANT1",
       "JUNGLEPLANT1_KARAMJA",
       "JUNGLEPLANT2",
       "JUNGLEPLANT3",
@@ -22487,7 +22499,9 @@
     "objectIds": [
       "JUNGLE2",
       "GREENER_JUNGLE2",
-      "MM_JUNGLE_PLANT_FERN"
+      "MM_JUNGLE_PLANT_FERN",
+      "MM_JUNGLEPLANT3",
+      "MM_JUNGLEPLANT1"
     ]
   },
   {
@@ -44388,6 +44402,7 @@
       "MM_BAMBOO_DOORWAY",
       "MM_BAMBOO_WALL",
       "MM_BAMBOO_WINDOW",
+      "MM_BAMBOO_DOOR",
       "MM_POST",
       "MM_JAIL_POSTS"
     ]
@@ -44459,6 +44474,107 @@
     ]
   },
   {
+    "description": "Ape Atoll - Agility Course - Bamboo Floor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 162,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": "h == 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "MM_BAMBOO_MONKEYFLOOR",
+      "_100_ILM_BAMBOO_FLOOR_EDGE"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Guide Rope",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 162,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "ROPEBRIDGE_RAIL",
+      "ROPEBRIDGE_RAIL2"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Monkeybars",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "_100_ILM_MONKEYBARS_START",
+      "_100_ILM_MONKEYBARS_MID_SUPPORT",
+      "_100_ILM_MONKEYBARS_MID",
+      "_100_ILM_MONKEYBARS_END"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Skulls",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "_100_ILM_CLIFF_CLIMB_1",
+      "_100_ILM_CLIFF_CLIMB_2"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Vines",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "_100_ILM_ROPE_SWING",
+      "_100_ILM_SLIDING_VINE",
+      "_100_ILM_SLIDING_VINE_PLAIN",
+      "_100_ILM_SLIDING_VINE_DIAG"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Vine hole",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "_100_ILM_VINE_HOLE",
+      "_100_ILM_VINE_HOLE_LEFT",
+      "_100_ILM_VINE_HOLE_RIGHT",
+      "_100_ILM_VINE_HOLE_BOTTOM",
+      "_100_ILM_VINE_HOLE_TOP"
+    ]
+  },
+  {
     "description": "Karamja - Ape Atoll - Bamboo potted plant",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
@@ -44503,7 +44619,7 @@
     ]
   },
   {
-    "description": "Karamja Bamboo bookshelf - Has a really bad UV even with boxed.",
+    "description": "Karamja Bamboo bookshelf with books",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
     "uvType": "BOX",
     "uvScale": 0.5,
