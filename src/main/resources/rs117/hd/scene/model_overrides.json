@@ -44319,7 +44319,7 @@
     ]
   },
   {
-    "description": "Karamja hut walls",
+    "description": "Karamja - Bamboo hut walls",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -44328,6 +44328,82 @@
       "BAMBOO_DOORWAY",
       "BAMBOO_WALL",
       "BAMBOO_WINDOW"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo floor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM_MONKEYFLOOR",
+      "MM_MONKEYFLOOR2",
+      "MM_POST_LOWER"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Metallic -  Bamboo Cell Doors",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_JAIL_DOOR",
+      "MM_JAIL_DOOR_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal Lock",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Metallic -  Bamboo Cell Doors",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_JAIL_DOOR_UNPICKABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal Lock",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.42
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo hut walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_BAMBOO_DOORWAY",
+      "MM_BAMBOO_WALL",
+      "MM_BAMBOO_WINDOW",
+      "MM_POST",
+      "MM_POST_FOUR_POST",
+      "MM_JAIL_POSTS"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo Ladder",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_BAMBOO_LADDER_TOP",
+      "MM_BAMBOO_LADDER",
+      "MM_BRIDGE_LADDER_TOP",
+      "MM_BRIDGE_LADDER"
     ]
   },
   {
@@ -44353,7 +44429,7 @@
   },
   {
     "description": "Karamja Bamboo bridge",
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 1024,
@@ -44373,7 +44449,7 @@
     ]
   },
   {
-    "description": "Karamja Bamboo potted plant",
+    "description": "Karamja - Ape Atoll - Bamboo potted plant",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -44389,18 +44465,21 @@
       }
     ],
     "objectIds": [
-      "POTTEDPLANT_BAMBOO"
+      "POTTEDPLANT_BAMBOO",
+      "MM_POTTEDPLANT_BAMBOO"
     ]
   },
   {
-    "description": "Karamja Bamboo pots",
+    "description": "Karamja - Ape Atoll - Bamboo pots",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 512,
     "objectIds": [
       "POT_BAMBOO",
-      "POTS_BAMBOO"
+      "POTS_BAMBOO",
+      "MM_POTS_BAMBOO",
+      "MM_POT_BAMBOO"
     ]
   },
   {
@@ -44415,12 +44494,21 @@
   },
   {
     "description": "Karamja Bamboo bookshelf - Has a really bad UV even with boxed.",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
     "uvType": "BOX",
-    "uvScale": 0.25,
+    "uvScale": 0.5,
     "uvOrientation": 512,
     "objectIds": [
-      "SHELVES_BAMBOO"
+      "SHELVES_BAMBOO",
+      "MM_BOOKCASE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Books",
+        "colors": "h == 4 || (h == 6 && s == 1)",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -44440,17 +44528,103 @@
       }
     ],
     "objectIds": [
-      "TABLE_BAMBOO"
+      "TABLE_BAMBOO",
+      "MM_DESK"
     ]
   },
   {
-    "description": "Karamja Bamboo stool",
+    "description": "Ape Atoll - Wooden - Metallic -  Scimitar Stall",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "s == 0 || h == 8",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      },
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": "h == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      "MM_STALL_SCIMITAR"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Wooden - Metallic -  General Stall",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "s == 0 ",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Pot",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 4",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "MM_STALL_GENERAL"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Wooden - Metallic -  Magic Stall",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Runes",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "s == 0 ",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": "h == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      "MM_STALL_MAGIC"
+    ]
+  },
+  {
+    "description": "Karamja - Ape Atoll - Bamboo stool",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 512,
     "objectIds": [
-      "STOOL_BAMBOO"
+      "STOOL_BAMBOO",
+      "MM_STOOL_BAMBOO"
     ]
   },
   {
@@ -59987,6 +60161,48 @@
       {
         "description": "Cloth",
         "colors": "h == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Textured - Wooden - Temple Stairs with wooden rails",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_STAIRS_BASE",
+      "MM_STAIRS_TOP"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Textured - Stone - Stone Idols of Monkeys",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_MONKEYSTATUE1",
+      "MM_GORILLASTATUE1",
+      "MM_GORILLASTATUE2"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Textured - Cloth - Wooden - Bed on bamboo",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_BED_BAMBOO_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 8",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 192

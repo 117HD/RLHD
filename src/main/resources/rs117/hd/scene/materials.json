@@ -1964,6 +1964,18 @@
     ]
   },
   {
+    "name": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "parent": "WOOD_GRAIN_2",
+    "brightness": 1.043,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.2
+    ],
+    "specularStrength": 0.3,
+    "specularGloss": 40.0
+  },
+  {
     "name": "WOOD_GRAIN_2_LIGHT",
     "parent": "WOOD_GRAIN_2",
     "brightness": 1.043
