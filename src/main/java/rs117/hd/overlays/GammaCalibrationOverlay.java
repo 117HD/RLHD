@@ -2,6 +2,7 @@ package rs117.hd.overlays;
 
 import com.google.inject.Singleton;
 import javax.inject.Inject;
+import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
@@ -52,7 +53,11 @@ public class GammaCalibrationOverlay extends ShaderOverlay<GammaCalibrationOverl
 
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event) {
-		if (event.getGroup().equals(CONFIG_GROUP) && event.getKey().equals(KEY_BRIGHTNESS))
+		// Try showing the overlay only in response to manually changing the brightness setting
+		if (event.getGroup().equals(CONFIG_GROUP) &&
+			event.getKey().equals(KEY_BRIGHTNESS) &&
+			event.getOldValue() != null &&
+			SwingUtilities.isEventDispatchThread())
 			brightnessChangedAt = System.currentTimeMillis();
 	}
 }
