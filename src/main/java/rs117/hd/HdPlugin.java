@@ -351,6 +351,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private AWTContext awtContext;
 	private Callback debugCallback;
 	private ComputeMode computeMode = ComputeMode.OPENGL;
+	private boolean isAMDGPU = false;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -570,9 +571,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
 				String glRenderer = glGetString(GL_RENDERER);
+				String glVendor = glGetString(GL_VENDOR);
 				String arch = System.getProperty("sun.arch.data.model", "Unknown");
 				if (glRenderer == null)
 					glRenderer = "Unknown";
+				else
+					isAMDGPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				log.info("Using device: {}", glRenderer);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
@@ -950,7 +954,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
-			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
+			// TiledLighting ImageStore disabled on AMD cards whilst we debug issues with flicking on them
+			if (GL_CAPS.GL_ARB_shader_image_load_store && !isAMDGPU && tiledLightingImageStoreProgram.isViable()) {
 				try {
 					tiledLightingImageStoreProgram.compile(includes
 						.define("TILED_IMAGE_STORE", true)
