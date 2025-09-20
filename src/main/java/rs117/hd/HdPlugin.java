@@ -950,7 +950,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
-			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
+			if (GL_CAPS.GL_ARB_shader_image_load_store && false && tiledLightingImageStoreProgram.isViable()) {
 				try {
 					tiledLightingImageStoreProgram.compile(includes
 						.define("TILED_IMAGE_STORE", true)

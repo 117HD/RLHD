@@ -3,12 +3,6 @@
 #include TILED_LIGHTING_LAYER
 #include TILED_IMAGE_STORE
 
-// Image store isn't working with packing at the moment... Urgh
-#if TILED_IMAGE_STORE
-#undef TILED_IMAGE_STORE
-#define TILED_IMAGE_STORE 0
-#endif
-
 #if TILED_IMAGE_STORE
 #extension GL_EXT_shader_image_load_store : require
 
@@ -78,7 +72,7 @@ void main() {
             uvec4 layerData = texelFetch(tiledLightingArray, ivec3(pixelCoord, l), 0);
             for (int c = 3; c >= 0; c--) {
                 ivec2 unpacked = decodePackedLight(layerData[c]);
-                for(int i = 2; i > 0; i--) {
+                for(int i = 0; i < (isDualPacked(layerData[c]) ? 2 : 1); i++) {
                     int encodedLightIdx = unpacked[i];
 
                     if (encodedLightIdx < 0) {
@@ -131,58 +125,49 @@ void main() {
         sortingBin[i].score = -1.0;
     }
 
-    int lightIdx = 0;
-#if TILED_IMAGE_STORE
-    for (int l = 0; l < TILED_LIGHTING_LAYER_COUNT; l++)
-#endif
-    {
-        ivec4 outputTileData = ivec4(0);
-        for (int c = 0; c < 4; c++) {
-            for (; lightIdx < pointLightsCount; lightIdx++) {
-                vec4 lightData = PointLightPositionsArray[lightIdx];
-                vec3 lightViewPos = lightData.xyz;
-                float lightRadiusSqr = lightData.w;
+    for (int lightIdx = 0; lightIdx < pointLightsCount; lightIdx++) {
+        vec4 lightData = PointLightPositionsArray[lightIdx];
+        vec3 lightViewPos = lightData.xyz;
+        float lightRadiusSqr = lightData.w;
 
-                float lightDistSqr = dot(lightViewPos, lightViewPos);
+        float lightDistSqr = dot(lightViewPos, lightViewPos);
 
-                vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
+        vec3 lightCenterVec = (lightDistSqr > 0.0) ? lightViewPos / sqrt(lightDistSqr) : vec3(0.0);
 
-                float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
-                float lightCos = sqrt(0.999 - lightSinSqr);
-                float lightTileCos = dot(lightCenterVec, tileCenterVec);
+        float lightSinSqr = clamp(lightRadiusSqr / max(lightDistSqr, 1e-6), 0.0, 1.0);
+        float lightCos = sqrt(0.999 - lightSinSqr);
+        float lightTileCos = dot(lightCenterVec, tileCenterVec);
 
-                float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
-                if (lightTileCos < sumCos)
-                    continue;
+        float sumCos = (lightRadiusSqr > lightDistSqr) ? -1.0 : (tileCos * lightCos - tileSin * sqrt(lightSinSqr));
+        if (lightTileCos < sumCos)
+            continue;
 
-                #if USE_LIGHTS_MASK
-                    uint word = uint(lightIdx) >> 5u;
-                    uint mask = 1u << (uint(lightIdx) & 31u);
-                    if ((LightsMask[word] & mask) != 0u)
-                        continue;
-                #endif
+        #if USE_LIGHTS_MASK
+            uint word = uint(lightIdx) >> 5u;
+            uint mask = 1u << (uint(lightIdx) & 31u);
+            if ((LightsMask[word] & mask) != 0u)
+                continue;
+        #endif
 
-                const float PROXIMITY_WEIGHT = 0.75;
-                float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
-                float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
+        const float PROXIMITY_WEIGHT = 0.75;
+        float distanceScore = clamp(1.0 - sqrt(lightDistSqr) / (sqrt(lightRadiusSqr) + 1e-6), 0.0, 1.0);
+        float combinedScore = (lightTileCos * PROXIMITY_WEIGHT) + distanceScore * (1.0 - PROXIMITY_WEIGHT);
 
-                for (int i = 0; i < SORTING_BIN_SIZE; i++) {
-                    if (combinedScore > sortingBin[i].score) {
-                        for (int j = SORTING_BIN_SIZE - 1; j > i; j--)
-                            sortingBin[j] = sortingBin[j - 1];
-                        sortingBin[i].score = combinedScore;
-                        sortingBin[i].lightIdx = lightIdx;
-                        break;
-                    }
-                }
+        for (int i = 0; i < SORTING_BIN_SIZE; i++) {
+            if (combinedScore > sortingBin[i].score) {
+                for (int j = SORTING_BIN_SIZE - 1; j > i; j--)
+                    sortingBin[j] = sortingBin[j - 1];
+                sortingBin[i].score = combinedScore;
+                sortingBin[i].lightIdx = lightIdx;
+                break;
             }
         }
     }
 
 #if TILED_IMAGE_STORE
-    for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; ++layer) {
+    for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++) {
         uvec4 outputTileData = uvec4(0);
-        for (int c = 0; c < 4 && binIdx < SORTING_BIN_SIZE; ++c) {
+        for (int c = 0; c < 4 && binIdx < SORTING_BIN_SIZE; c++) {
             outputTileData[c] = packLightIndices(sortingBin, binIdx);
         }
         if (outputTileData == uvec4(0)) break;
@@ -191,7 +176,7 @@ void main() {
     discard; // Prevent gl_FragColor writes
 #else
     uvec4 outputTileData = uvec4(0);
-    for (int c = 0, binIdx = 0; c < 4 && binIdx < SORTING_BIN_SIZE; ++c) {
+    for (int c = 0, binIdx = 0; c < 4 && binIdx < SORTING_BIN_SIZE; c++) {
         outputTileData[c] = packLightIndices(sortingBin, binIdx);
     }
     TiledData = outputTileData;
