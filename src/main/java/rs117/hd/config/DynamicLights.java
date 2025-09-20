@@ -34,7 +34,7 @@ import static rs117.hd.utils.MathUtils.*;
 public enum DynamicLights
 {
 	NONE("Disabled", 0, 0),
-	FEW("Few", 12, 25),
+	FEW("Few", 16, 25),
 	SOME("Some", 24, 50),
 	MANY("Many", 32, 100);
 

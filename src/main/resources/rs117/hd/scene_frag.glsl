@@ -33,7 +33,7 @@
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
-uniform isampler2DArray tiledLightingArray;
+uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
 
