@@ -1397,10 +1397,10 @@
   },
   {
     "area": "NIGHTMARE_OF_ASHIHAMA_ARENA",
-    "ambientColor": "#a36bff",
+    "ambientColor": "#A371FF",
     "ambientStrength": 2.5,
-    "directionalColor": "#c9c9c9",
-    "directionalStrength": 2,
+    "directionalColor": "#DBDBDB",
+    "directionalStrength": 3,
     "sunAngles": [
       80,
       190
