@@ -4537,8 +4537,8 @@
       [ 5022, 5535, 1 ],
       [ 5280, 5536, 1 ]
     ],
-    "regions": [
-      5279
+    "unhideAreas": [
+      [ 1280, 10176, 1343, 10239 ]
     ],
     "hideOtherAreas": true
   },
@@ -4547,8 +4547,8 @@
     "regionBoxes": [
       [ 5022, 5535, 2 ]
     ],
-    "regions": [
-      5279
+    "unhideAreas": [
+      [ 1280, 10176, 1343, 10239 ]
     ],
     "hideOtherAreas": true
   },
