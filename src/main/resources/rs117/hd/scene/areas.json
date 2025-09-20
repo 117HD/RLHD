@@ -3616,7 +3616,8 @@
     "name": "TREE_GNOME_STRONGHOLD_INSTANCE",
     "regionBoxes": [
       [ 7766, 8023 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TREE_GNOME_STRONGHOLD",
