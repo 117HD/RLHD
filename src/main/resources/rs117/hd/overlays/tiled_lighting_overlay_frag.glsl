@@ -28,11 +28,10 @@ void main() {
     for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
         ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
         for (int c = 0; c < 4; c++) {
-            int tileLayerData = tileLayerData[c];
-            if (tileLayerData <= 0)
+            if (tileLayerData[c] <= 0)
                 break;
 
-            ivec2 unpacked = decodePackedLight(tileLayerData);
+            ivec2 unpacked = decodePackedLight(tileLayerData[c]);
             if(unpacked[0] >= 0) tiledLightCount++;
             if(unpacked[1] >= 0) tiledLightCount++;
         }

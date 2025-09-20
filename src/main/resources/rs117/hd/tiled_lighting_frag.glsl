@@ -21,7 +21,7 @@ out ivec4 TiledData;
 in vec2 fUv;
 
 #if TILED_IMAGE_STORE
-    #define SORTING_BIN_SIZE TILED_LIGHTING_LAYER_COUNT * 4 * 2
+    #define SORTING_BIN_SIZE TILED_LIGHTING_MAX_TILE_LIGHT_COUNT
 #else
     #define SORTING_BIN_SIZE 8
 #endif
