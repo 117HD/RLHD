@@ -28,16 +28,19 @@ void main() {
     for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
         ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
         for (int c = 0; c < 4; c++) {
-            int lightIdx = tileLayerData[c];
-            if (lightIdx <= 0)
+            int tileLayerData = tileLayerData[c];
+            if (tileLayerData <= 0)
                 break;
-            tiledLightCount++;
+
+            ivec2 unpacked = decodePackedLight(tileLayerData);
+            if(unpacked[0] >= 0) tiledLightCount++;
+            if(unpacked[1] >= 0) tiledLightCount++;
         }
     }
 
     if (tiledLightCount > 0) {
-        if (tiledLightCount < TILED_LIGHTING_LAYER_COUNT * 4) {
-            float level = tiledLightCount / float(TILED_LIGHTING_LAYER_COUNT * 4) * 3.14159265 / 2.0;
+        if (tiledLightCount < TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) {
+            float level = tiledLightCount / float(TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) * 3.14159265 / 2.0;
             c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
         } else {
             c = vec4(1, 0, 1, 0.6);

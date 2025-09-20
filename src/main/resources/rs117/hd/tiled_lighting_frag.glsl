@@ -21,9 +21,9 @@ out ivec4 TiledData;
 in vec2 fUv;
 
 #if TILED_IMAGE_STORE
-    #define SORTING_BIN_SIZE TILED_LIGHTING_LAYER_COUNT * 4
+    #define SORTING_BIN_SIZE TILED_LIGHTING_LAYER_COUNT * 4 * 2
 #else
-    #define SORTING_BIN_SIZE 4
+    #define SORTING_BIN_SIZE 8
 #endif
 
 struct SortedLight {
@@ -32,6 +32,30 @@ struct SortedLight {
 };
 
 #define USE_LIGHTS_MASK !TILED_IMAGE_STORE
+
+int packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], inout int binIdx) {
+    if (binIdx >= SORTING_BIN_SIZE) return 0;
+
+    int idx0 = bin[binIdx].lightIdx;
+    if (idx0 < 0) return 0;
+    idx0 += 1;
+
+    // Try dual-pack: idx0 = 7 bits, idx1 = 8 bits
+    if (idx0 <= 127 && (binIdx + 1) < SORTING_BIN_SIZE) {
+        int idx1 = bin[binIdx + 1].lightIdx;
+        if (idx1 >= 0) {
+            idx1 += 1;
+            if (idx1 <= 255) {
+                binIdx += 2;
+                return 0x8000 | ((idx1 & 0xFF) << 7) | (idx0 & 0x7F); // MSB = 1
+            }
+        }
+    }
+
+    // Fallback: single 15-bit index
+    binIdx += 1;
+    return (idx0 <= 32767) ? (idx0 & 0x7FFF) : 0;
+}
 
 void main() {
     ivec2 pixelCoord = ivec2(gl_FragCoord.xy);
@@ -145,27 +169,21 @@ void main() {
         }
     }
 
-    #if TILED_IMAGE_STORE
-        for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++) {
-            ivec4 outputTileData = ivec4(0);
-            for (int c = 0; c < 4; c++, binIdx++) {
-                if (sortingBin[binIdx].lightIdx < 0)
-                    break;
-                outputTileData[c] = sortingBin[binIdx].lightIdx + 1;
-            }
-
-            if (outputTileData == ivec4(0))
-                break;
-
-            imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
-        }
-        discard; // Prevent anything from being written to gl_FragColor, in case some drivers do it automatically
-    #else
+#if TILED_IMAGE_STORE
+    for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; ++layer) {
         ivec4 outputTileData = ivec4(0);
-        for (int i = 0; i < 4; i++) {
-            if (sortingBin[i].lightIdx  >= 0)
-                outputTileData[i] = sortingBin[i].lightIdx + 1;
+        for (int c = 0; c < 4 && binIdx < SORTING_BIN_SIZE; ++c) {
+            outputTileData[c] = packLightIndices(sortingBin, binIdx);
         }
-        TiledData = outputTileData;
-    #endif
+        if (outputTileData == ivec4(0)) break;
+        imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
+    }
+    discard; // Prevent gl_FragColor writes
+#else
+    ivec4 outputTileData = ivec4(0);
+    for (int c = 0, binIdx = 0; c < 4 && binIdx < SORTING_BIN_SIZE; ++c) {
+        outputTileData[c] = packLightIndices(sortingBin, binIdx);
+    }
+    TiledData = outputTileData;
+#endif
 }
