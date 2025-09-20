@@ -44550,7 +44550,7 @@
   },
   {
     "description": "Nightmare of Ashihama - Arena Floor",
-    "baseMaterial": "CARPET",
+    "baseMaterial": "CARPET_LIGHT",
     "uvType": "MODEL_XZ",
     "objectIds": [
       "NIGHTMARE_PLATFORM_LVL2_01",
@@ -44590,9 +44590,7 @@
       },
       {
         "colors": "h == 25",
-        "baseMaterial": "GRUNGE_3_LIGHT_SHINY",
-        "uvType": "MODEL_XZ",
-        "uvOrientation": 156
+        "baseMaterial": "NONE"
       }
     ]
   },
