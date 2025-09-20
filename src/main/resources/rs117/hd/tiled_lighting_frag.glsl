@@ -35,26 +35,28 @@ uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], inout int binIdx) {
     if (binIdx >= SORTING_BIN_SIZE) return 0u;
 
     int idx0 = bin[binIdx].lightIdx;
-    if (idx0 < 0) return 0u;
-    idx0 += 1;
+    if (idx0 < 0)
+        return 0u;
 
-    if((binIdx + 1) < SORTING_BIN_SIZE) {
-        int idx1 = bin[binIdx + 1].lightIdx;
+    idx0 += 1;
+    binIdx += 1;
+
+    if(binIdx < SORTING_BIN_SIZE) {
+        int idx1 = bin[binIdx].lightIdx;
         if (idx1 >= 0) {
             idx1 += 1;
             // Try dual-pack: idx0 = 7 bits, idx1 = 8 bits
             if (idx0 <= 127 && idx1 <= 255) {
-                binIdx += 2;
+                binIdx += 1;
                 return 0x8000u | (uint(idx1 & 0xFF) << 7) | uint(idx0 & 0x7F); // MSB = 1
             } else if(idx1 <= 127 && idx0 <= 255) {
-                binIdx += 2;
+                binIdx += 1;
                 return 0x8000u | (uint(idx0 & 0xFF) << 7) | uint(idx1 & 0x7F); // MSB = 1
             }
         }
     }
 
     // Fallback: single 15-bit index
-    binIdx += 1;
     return (idx0 <= 32767) ? uint(idx0 & 0x7FFF) : 0u;
 }
 
