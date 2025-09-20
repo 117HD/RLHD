@@ -273,8 +273,13 @@ public class Mat4
 	 */
 	public static void projectVec(float[] out, float[] mat4, float[] vec4) {
 		mulVec(out, mat4, vec4);
-		// Perspective divide
-		divide(out, out, out[3]);
+		if (out[3] != 0) {
+			// The 4th component should retain information about whether the
+			// point lies behind the camera
+			float reciprocal = 1 / Math.abs(out[3]);
+			for (int i = 0; i < 4; i++)
+				out[i] *= reciprocal;
+		}
 	}
 
 	public static void transpose(float[] m) {
