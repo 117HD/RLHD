@@ -1,4 +1,4 @@
-package rs117.hd.utils.buffer;
+package rs117.hd.utils;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;

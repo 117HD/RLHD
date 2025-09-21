@@ -1,4 +1,4 @@
-package rs117.hd.utils.buffer;
+package rs117.hd.utils;
 
 import java.util.ArrayList;
 import java.util.List;
