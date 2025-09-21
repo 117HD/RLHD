@@ -141,7 +141,7 @@
       },
       "areas": {
         "type": "array",
-        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the light should be limited to.",
+        "description": "An array of bounding boxes and/or area enums specifying which areas the light should be limited to.",
         "items": {
           "$ref": "aabb.schema.json"
         }

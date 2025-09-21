@@ -5,7 +5,7 @@
 #include <uniforms/global.glsl>
 #include <uniforms/lights.glsl>
 
-uniform isampler2DArray tiledLightingArray;
+uniform usampler2DArray tiledLightingArray;
 
 #include <utils/constants.glsl>
 
@@ -26,18 +26,20 @@ void main() {
     ivec2 tileXY = ivec2(floor(fUv * tiledLightingResolution));
     int tiledLightCount = 0;
     for (int tileLayer = 0; tileLayer < TILED_LIGHTING_LAYER_COUNT; tileLayer++) {
-        ivec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
+        uvec4 tileLayerData = texelFetch(tiledLightingArray, ivec3(tileXY, tileLayer), 0);
         for (int c = 0; c < 4; c++) {
-            int lightIdx = tileLayerData[c];
-            if (lightIdx <= 0)
+            if (tileLayerData[c] <= 0u)
                 break;
-            tiledLightCount++;
+
+            ivec2 unpacked = decodePackedLight(tileLayerData[c]);
+            if (unpacked[0] >= 0) tiledLightCount++;
+            if (unpacked[1] >= 0) tiledLightCount++;
         }
     }
 
     if (tiledLightCount > 0) {
-        if (tiledLightCount < TILED_LIGHTING_LAYER_COUNT * 4) {
-            float level = tiledLightCount / float(TILED_LIGHTING_LAYER_COUNT * 4) * 3.14159265 / 2.0;
+        if (tiledLightCount < TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) {
+            float level = tiledLightCount / float(TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) * HALF_PI;
             c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
         } else {
             c = vec4(1, 0, 1, 0.6);

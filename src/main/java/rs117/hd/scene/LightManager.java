@@ -67,6 +67,7 @@ import rs117.hd.utils.ResourcePath;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -164,7 +165,7 @@ public class LightManager {
 		eventBus.unregister(this);
 	}
 
-	public void update(@Nonnull SceneContext sceneContext) {
+	public void update(@Nonnull SceneContext sceneContext, int[] cameraShift, float[][] cameraFrustum) {
 		assert client.isClientThread();
 
 		if (plugin.configDynamicLights == DynamicLights.NONE || client.getGameState() != GameState.LOGGED_IN) {
@@ -452,6 +453,21 @@ public class LightManager {
 				float far = drawDistance + LOCAL_HALF_TILE_SIZE + maxRadius;
 				far *= far;
 				light.visible = near < light.distanceSquared && light.distanceSquared < far;
+
+				// Check that the light is within the camera's frustum specifically: left, right, bottom, top
+				// The above check already covers the near plane
+				if (plugin.configTiledLighting && light.visible) {
+					light.visible = isSphereIntersectingFrustum(
+						light.pos[0] + cameraShift[0],
+						light.pos[1],
+						light.pos[2] + cameraShift[1],
+						maxRadius, // use max radius, since the radius hasn't been updated yet
+						cameraFrustum[0],
+						cameraFrustum[1],
+						cameraFrustum[2],
+						cameraFrustum[3]
+					);
+				}
 			}
 		}
 
