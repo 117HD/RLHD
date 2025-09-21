@@ -8481,6 +8481,24 @@
     "uvOrientation": 1024
   },
   {
+    "name": "SISTERHOOD_SANCTUARY_CAVE_OVERLAY",
+    "area": "SISTERHOOD_SANCTUARY",
+    "overlayIds": [
+      88
+    ],
+    "groundMaterial": "GRUNGE",
+    "uvScale": 1.1
+  },
+  {
+    "name": "SISTERHOOD_SANCTUARY_CAVE_UNDERLAY",
+    "area": "SISTERHOOD_SANCTUARY",
+    "underlayIds": [
+      98
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvScale": 1.1
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [

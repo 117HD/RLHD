@@ -12662,6 +12662,8 @@
       "DEAL_CRATE2",
       "LUC2_DWT_CRATE1",
       "SLP_CRATE",
+      "SLP_CRATE_NOOP",
+      "SANCTUARY_CRATE",
       "MOTD_CRATE",
       "DARKM_MIDDLE_CRATE_SINGLE"
     ],
@@ -13408,7 +13410,8 @@
       "SANCTUARY_CAVE_CORNER",
       "SANCTUARY_CAVE_PLANE",
       "SANCTUARY_CAVE_WALL_FALLOFF",
-      "SANCTUARY_CAVE_WALL_FALLOFF_ALT"
+      "SANCTUARY_CAVE_WALL_FALLOFF_ALT",
+      "SANCTUARY_CAVE_PLANE_SB"
     ],
     "uvType": "BOX",
     "uvScale": 0.74
@@ -15532,7 +15535,10 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POOR_CHAIR2",
-      "AREA_SANGUINE_GHETTO_CHAIR1"
+      "AREA_SANGUINE_GHETTO_CHAIR1",
+      "AREA_SANGUINE_GOTHIC_CHAIR1",
+      "AREA_SANGUINE_GOTHIC_CHAIR2",
+      "AREA_SANGUINE_GOTHIC_CHAIR5"
     ],
     "uvType": "BOX"
   },
@@ -21212,6 +21218,393 @@
     ],
     "objectIds": [
       "SLP_CLOTH_STATUE"
+    ]
+  },
+  {
+    "description": "Tile",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [ "SANCTUARY_WALL_TALL_TOP" ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Tile",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_WALL_BRICK",
+      "SANCTUARY_WALL_BRICK_M",
+      "SANCTUARY_WALL_UPPER",
+      "SANCTUARY_WALL_UPPER_M",
+      "SANCTUARY_WALL_PARAPET",
+      "SANCTUARY_WALL_PARAPET_M",
+      "SANCTUARY_CAVE",
+      "SANCTUARY_CAVE_ALT",
+      "SANCTUARY_WALL_UPPER_ARCH",
+      "SANCTUARY_WALL_OPEN",
+      "SANCTUARY_WALL_OPEN_M"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Inner Sanctuary Walls",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_WALL",
+      "SANCTUARY_WALL_M",
+      "SANCTUARY_WALL_TALL"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Walls with webbing",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Tile",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_WALL_UPPER_WEB_A",
+      "SANCTUARY_WALL_UPPER_WEB_A_M",
+      "SANCTUARY_WALL_BRICK_WEBBY_A",
+      "SANCTUARY_WALL_BRICK_WEBBY_A_M",
+      "SANCTUARY_WALL_UPPER_WEB_B",
+      "SANCTUARY_WALL_UPPER_WEB_B_M",
+      "SANCTUARY_WALL_BRICK_WEBBY_B",
+      "SANCTUARY_WALL_BRICK_WEBBY_B_M"
+    ]
+  },
+  {
+    "description": "Wall Decoration Webbing",
+    "baseMaterial": "GROUND_WEB_1",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [ "QIP_OBS_SPIDERWEBS" ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "edges",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_TILES_CORN",
+      "SANCTUARY_TILES_INCORN",
+      "SANCTUARY_TILES_SIDE",
+      "SANCTUARY_TILES"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles with carpet",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": "(h == 0 && s == 2) || (h == 21 && l == 3)",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_RUG_CORNER",
+      "SANCTUARY_RUG_SIDE"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles with sigil",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "sigil",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_ZAM_SIGIL_CORN_NE",
+      "SANCTUARY_ZAM_SIGIL_CORN_SE",
+      "SANCTUARY_ZAM_SIGIL_BOT",
+      "SANCTUARY_ZAM_SIGIL_CORN_SW",
+      "SANCTUARY_ZAM_SIGIL_CORN_NW",
+      "SANCTUARY_ZAM_SIGIL_TOP"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles Broken",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Holes in tile",
+        "colors": "h == 21 && s == 1",
+        "baseMaterial": "GRAY_65"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_TILES_DMG1",
+      "SANCTUARY_TILES_DMG2"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Pillar",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.66,
+    "objectIds": [
+      "SANCTUARY_GATE_PILLAR",
+      "SANCTUARY_CAVE_WALL_PILLAR"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Statue carrying scythe",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.66,
+    "objectIds": [
+      "SANCTUARY_STATUE_TOP",
+      "SANCTUARY_STATUE_TOP_M"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Pillar - large",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_PILLAR_2X2",
+      "SANCTUARY_PILLAR_FADE_2X2"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary statue of armor",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_STATUE_2X2"
+    ]
+  },
+  {
+    "description": "Slepe - Metallic - Sanctuary Coffin with Vampyre inside",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "colors": "s >= 3",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_COFFIN_FLOOR",
+      "SANCTUARY_COFFIN_WALL",
+      "SANCTUARY_COFFIN_MOTHER"
+    ]
+  },
+  {
+    "description": "Slepe - Sisterhood Sanctuary - Metallic - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -42,
+    "objectIds": [
+      "SANCTUARY_CHEST_1X1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 600
+      }
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Brazier - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "SANCTUARY_BRAZIER"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Scoreboard",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "NIGHTMARE_SCOREBOARD"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary brick edges",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 289,
+    "objectIds": [
+      "SANCTUARY_BRICK_FALLOFF"
+    ]
+  },
+  {
+    "description": "Slepe - Sanctuary - Wooden - Cloth - Table with tablecloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Tablecloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [ "SANCTUARY_TABLE_2X1" ]
+  },
+  {
+    "description": "Slepe - Sanctuary - Wooden - Cloth - Table with Books and vials on it",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "WOOD_GRAIN_3",
+        "baseMaterial": "CARPET",
+        "colors": "h == 21",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [ "SANCTUARY_TABLE_2X2" ]
+  },
+  {
+    "description": "Slepe - Sanctuary - Wooden - Cloth - Table with tablecloth",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Tablecloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Cobwebs",
+        "baseMaterial": "GROUND_WEB_1",
+        "colors": "a < 255",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Cobwebs",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "colors": "h == 12",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_TABLE_MID",
+      "SANCTUARY_TABLE_END1",
+      "SANCTUARY_TABLE_END2"
     ]
   },
   {
@@ -46011,6 +46404,7 @@
       "NIGHTMARE_TOTEM_4_READY",
       "NIGHTMARE_TOTEM_4_CHARGED"
     ],
+    "objectIds": [ "SISTERHOOD_TOTEM" ],
     "colorOverrides": [
       {
         "colors": "h == 7 || h == 8 || h == 9 || h == 60",
@@ -46142,7 +46536,7 @@
       "HOLLOW_TREE",
       "HOLLOW_TREE_BIG",
       "HOLLOW_TREE_STUMP",
-      "HOLLOW_TREE_BIG_STUMP"
+      "HOLLOW_TREE_STUMP_BIG"
     ]
   },
   {
@@ -47530,7 +47924,9 @@
     "uvOrientation": -256,
     "objectIds": [
       "SLP_CHURCH_CRYPT_SOUTH_LADDER_DOWN",
-      "SLP_CHURCH_CRYPT_SOUTH_LADDER_EXIT"
+      "SLP_CHURCH_CRYPT_SOUTH_LADDER_EXIT",
+      "SANCTUARY_STAIRS_TALL_2X3",
+      "SANCTUARY_STAIRS_TALL_3X3"
     ]
   },
   {

@@ -41723,5 +41723,42 @@
     "objectIds": [
       "TOBQUEST_CRYPT_CANDLES_2"
     ]
+  },
+  {
+    "description": "Ghosts Ahoy Range",
+    "height": 100,
+    "offset": [ 53, -53, 48 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "AHOY_RANGE"
+
+    ]
+  },
+  {
+    "description": "Sisterhood Sanctuary Ghost",
+    "height": 88,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "SANCTUARY_GHOST"
+    ]
   }
 ]
