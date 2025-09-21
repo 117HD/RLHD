@@ -12661,6 +12661,7 @@
       "GRAB_EVIL_TWIN_CRATES2",
       "DEAL_CRATE2",
       "LUC2_DWT_CRATE1",
+      "SLP_CRATE",
       "MOTD_CRATE",
       "DARKM_MIDDLE_CRATE_SINGLE"
     ],
@@ -22709,10 +22710,20 @@
     "uvScale": 0.75
   },
   {
-    "description": "Morytania - Giant Tree",
+    "description": "Morytania - Giant Tree - Base",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
-      "SPOOKY_TREE_BASE",
+      "SPOOKY_TREE_BASE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Morytania - Giant Tree - upper",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
       "SPOOKY_TREE_MID",
       "SPOOKY_TREE_TOP"
     ],
@@ -26663,7 +26674,8 @@
       "GRIM_GIANT_SKELETON_2",
       "CORPSE2_NOBLOCK",
       "TAPO_SKELETON01",
-      "TAPO_SKELETON02"
+      "TAPO_SKELETON02",
+      "TOBQUEST_SKELETON_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -35484,6 +35496,24 @@
     ]
   },
   {
+    "description": "Lumbridge Castle - Range",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "AHOY_RANGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Lumbridge Castle - Kitchen Trapdoor",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
@@ -37225,6 +37255,14 @@
     "objectIds": [ "GALLOWS" ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Gallows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [ "DRAYNOR_GALLOWS_STEPS" ]
   },
   {
     "description": "Brown brick wall with metal spikes - Textured",
@@ -40522,7 +40560,8 @@
     "description": "Farming Guild - Water Barrel",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "FARM_WATER_BARREL1"
+      "FARM_WATER_BARREL1",
+      "FARM_WATER_BARREL2"
     ],
     "uvType": "BOX",
     "uvScale": 0.55,
@@ -46034,11 +46073,13 @@
     "uvOrientation": 188,
     "uvType": "BOX",
     "uvScale": 0.8,
+    "terrainVertexSnap": true,
     "colorOverrides": [
       {
         "description": "Grass",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_50"
+        "baseMaterial": "GRAY_50",
+        "windDisplacementMode": "OBJECT"
       }
     ],
     "objectIds": [
@@ -46054,6 +46095,21 @@
     "uvScale": 0.8,
     "objectIds": [
       "BURGH_TREE_DEAD"
+    ]
+  },
+  {
+    "description": "Morytania - Hollow trees",
+    "baseMaterial": "BARK",
+    "uvOrientation": -189,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "terrainVertexSnap": true,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "HOLLOW_TREE",
+      "HOLLOW_TREE_BIG",
+      "HOLLOW_TREE_STUMP",
+      "HOLLOW_TREE_BIG_STUMP"
     ]
   },
   {
@@ -47321,6 +47377,43 @@
         "uvScale": 0.25,
         "uvOrientation": 128
       }
+    ]
+  },
+  {
+    "description": "Canafis - Wooden - Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h >= 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CANAFIS_WALL_LVL1_VAR1",
+      "CANAFIS_WALL_VAR1",
+      "CANAFIS_WALL_VAR3",
+      "CANAFIS_WALL_WINDOW_END",
+      "CANAFIS_WALL_WINDOW_END2",
+      "CANAFIS_WALL_WINDOW",
+      "CANAFIS_WALL_LVL1_VAR2",
+      "CANAFIS_WALL_LVL1_VAR3",
+      "CANAFIS_WALL_LVL1_WINDOW",
+      "CANAFIS_WALL_LVL1_WINDOW_END",
+      "CANAFIS_WALL_LVL1_WINDOW_END2",
+      "CANAFIS_INSIDE_WALL_MID",
+      "CANAFIS_INSIDE_WALL_TRM",
+      "CANAFIS_INSIDE_WALL_TRM2",
+      "CANAFIS_INSIDE_WALL_CRNR",
+      "CANAFIS_WALL_LVL1_DOOR",
+      "CANAFIS_WALL_DOOR_OFFSET",
+      "CANAFIS_WALL_DOOR_RT_OFFSET",
+      "CANAFIS_WALL_LVL1_DOOR_RT"
     ]
   },
   {
@@ -62259,6 +62352,22 @@
     "uvType": "BOX",
     "projectileIds": [
       "GODWARS_BLACK_DEMON_FIREBALL_PROJ"
+    ]
+  },
+  {
+    "description": "Objects - White Mushrooms - Small",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MUSHROOM_DARK"
+    ]
+  },
+  {
+    "description": "Slepe - Post",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GOBLIN_OUTPOST_FORT_WALL"
     ]
   }
 ]
