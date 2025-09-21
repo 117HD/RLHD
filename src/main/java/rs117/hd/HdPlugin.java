@@ -463,6 +463,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
+	public boolean configTiledLightingImageLoadStore;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -955,7 +956,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
-			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
+			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable() && configTiledLightingImageLoadStore) {
 				try {
 					tiledLightingImageStoreProgram.compile(includes
 						.define("TILED_IMAGE_STORE", true)
@@ -2677,6 +2678,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
+		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
@@ -2802,6 +2804,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_DYNAMIC_LIGHTS:
 							case KEY_TILED_LIGHTING:
+							case KEY_TILED_LIGHTING_IMAGE_STORE:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
