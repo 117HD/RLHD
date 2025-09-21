@@ -20891,6 +20891,7 @@
   },
   {
     "description": "FIRE",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "height": 40,
     "alignment": "CENTER",
     "radius": 450,
