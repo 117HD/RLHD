@@ -1766,7 +1766,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
 
 						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(sceneContext, cameraShift, configTiledLighting ? cameraFrustum : null);
+						lightManager.update(sceneContext, cameraShift, cameraFrustum);
 						frameTimer.end(Timer.UPDATE_LIGHTS);
 					} catch (Exception ex) {
 						log.error("Error while updating environment or lights:", ex);
