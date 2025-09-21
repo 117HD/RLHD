@@ -24736,7 +24736,7 @@
     "height": 20,
     "alignment": "CENTER",
     "radius": 400,
-    "strength": 6,
+    "strength": 8,
     "color": [
       255,
       0,
@@ -35583,7 +35583,7 @@
   },
   {
     "description": "RUNECRAFTING_YELLOW_PORTALS",
-    "height": 30,
+    "height": 50,
     "alignment": "CENTER",
     "radius": 400,
     "strength": 17.5,
