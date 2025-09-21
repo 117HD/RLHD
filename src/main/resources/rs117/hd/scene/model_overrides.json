@@ -46501,7 +46501,6 @@
   {
     "description": "Morytania ground webs",
     "baseMaterial": "GROUND_WEB_2_LIGHT",
-    "uvOrientation": 188,
     "objectIds": [
       "CAVEKIT_WEB01_FLOOR01",
       "CAVEKIT_WEB01_FLOOR02",
@@ -46509,6 +46508,35 @@
       "CAVEKIT_WEB01_FLOOR04",
       "CAVEKIT_WEB01_FLOOR05",
       "CAVEKIT_WEB01_FLOOR06"
+    ]
+  },
+  {
+    "description": "Araaxor Cave - Eggs",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      "EGGS_SPIDER02_DEFAULT",
+      "EGGS_SPIDER02_FALLOFF01",
+      "EGGS_SPIDER02_FALLOFF02",
+      "EGGS_SPIDER02_FALLOFF03",
+      "EGGS_SPIDER02_FALLOFF04",
+      "EGGS_SPIDER02_FALLOFF05",
+      "EGGS_SPIDER02_FALLOFF06"
+    ]
+  },
+  {
+    "description": "Araaxor Cave - Quest Egg sack",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "TOBQUEST_EGG_SAC_FULL",
+      "TOBQUEST_EGG_SAC_EMPTY"
     ]
   },
   {
@@ -46617,10 +46645,10 @@
       {
         "description": "Web backing",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
-        "description": "Web",
+        "description": "Exit",
         "colors": "h == 0",
         "baseMaterial": "NONE"
       }
@@ -46638,7 +46666,7 @@
       {
         "description": "Web backing",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
         "description": "Web",
@@ -46662,7 +46690,7 @@
       {
         "description": "Web backing",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       }
     ],
     "objectIds": [
@@ -63081,6 +63109,143 @@
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Morytania - Wooden - Nature Spirit Grotto Jump Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "DRUIDJUMP_LOC"
+    ]
+  },
+  {
+    "description": "Morytania - Wooden - Nature Spirit Grotto",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "colors": "h == 13",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "GROTTO_DRUIDICSPIRIT"
+    ]
+  },
+  {
+    "description": "Morytania - Wooden - Nature Spirit Grotto",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "GROTTO_ROOF2_DRUIDICSPIRIT",
+      "GROTTO_ROOF1_DRUIDICSPIRIT"
+    ]
+  },
+  {
+    "description": "Mortania - Wooden - Nature Spirit Druid Bench",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [ "DRUID_BENCH" ]
+  },
+  {
+    "description": "Mortania - Rock - Nature Spirit rocks",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "objectIds": [
+      "STONEDISC_DS_SPIRIT",
+      "STONEDISC_DS_FAITH",
+      "STONEDISC_DS_NATURE"
+    ]
+  },
+  {
+    "description": "Mortania - Grass - Nature Spirit Grotto Walls",
+    "baseMaterial": "GRASS_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.9,
+    "objectIds": [
+      "UNDERGROUND_ROOTWALL_TOPLVL1_GREEN",
+      "UNDERGROUND_ROOTWALL_TOP2LVL1_GREEN"
+    ]
+  },
+  {
+    "description": "Mortania - Grass - Stone - Nature Spirit Grotto Walls with rocks",
+    "baseMaterial": "GRASS_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "s == 0",
+        "baseMaterial": "ROCK_5",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UNDERGROUND_ROOTWALL_DIAG_GREEN",
+      "UNDERGROUND_ROOTWALL_CORNER_GREEN",
+      "UNDERGROUND_ROOTWALL_SIDE4_GREEN",
+      "UNDERGROUND_ROOTWALL_DOOR_GREEN"
+    ]
+  },
+  {
+    "description": "Mortania - Grass - Stone - Vines- Nature Spirit Grotto Walls with rocks and vines",
+    "baseMaterial": "GRASS_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "s == 5",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Rocks",
+        "colors": "s == 0",
+        "baseMaterial": "ROCK_5",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UNDERGROUND_ROOTWALL_SIDE_GREEN",
+      "UNDERGROUND_ROOTWALL_SIDE2_GREEN",
+      "UNDERGROUND_ROOTWALL_SIDE3_GREEN"
+    ]
+  },
+  {
+    "description": "Mortania - Rock - Dirt - Tree - Altar of Nature",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Dirt Basin",
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 145
+      },
+      {
+        "description": "Tree",
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "DRUIDIC_SPIRIT_GROTTO_NATUREALTAR"
     ]
   }
 ]
