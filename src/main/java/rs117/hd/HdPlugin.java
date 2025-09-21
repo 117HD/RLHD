@@ -491,6 +491,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
 	public float[] viewMatrix;
+	public float[] viewProjMatrix;
+	public float[] invViewProjMatrix;
 	public final float[] cameraPosition = new float[3];
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
@@ -1753,11 +1755,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Mat4.mul(viewMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
 
 				// Calculate view proj & inv matrix
-				float[] viewProj = Mat4.identity();
-				Mat4.mul(viewProj, projectionMatrix);
-				Mat4.mul(viewProj, viewMatrix);
-				float[] invProjectionMatrix = Mat4.inverse(viewProj);
-				extractPlanes(viewProj, cameraFrustum);
+				viewProjMatrix = Mat4.identity();
+				Mat4.mul(viewProjMatrix, projectionMatrix);
+				Mat4.mul(viewProjMatrix, viewMatrix);
+				extractPlanes(viewProjMatrix, cameraFrustum);
+				invViewProjMatrix = Mat4.inverse(viewProjMatrix);
 
 				if (sceneContext.scene == scene) {
 					try {
@@ -1777,8 +1779,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				uboGlobal.cameraPos.set(cameraPosition);
 				uboGlobal.viewMatrix.set(viewMatrix);
-				uboGlobal.projectionMatrix.set(viewProj);
-				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
+				uboGlobal.projectionMatrix.set(viewProjMatrix);
+				uboGlobal.invProjectionMatrix.set(invViewProjMatrix);
 				uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				uboGlobal.upload();
 			}

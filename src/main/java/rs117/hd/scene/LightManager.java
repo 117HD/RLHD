@@ -454,14 +454,14 @@ public class LightManager {
 				far *= far;
 				light.visible = near < light.distanceSquared && light.distanceSquared < far;
 
-				// Check that the light is within the camera's frustum specifically: Left, Right, Top Down.
+				// Check that the light is within the camera's frustum specifically: left, right, bottom, top
 				// The above check already covers the near plane
 				if (plugin.configTiledLighting && light.visible) {
 					light.visible = isSphereIntersectingFrustum(
 						light.pos[0] + cameraShift[0],
 						light.pos[1],
 						light.pos[2] + cameraShift[1],
-						light.radius * 4.0f,
+						light.radius,
 						cameraFrustum[0],
 						cameraFrustum[1],
 						cameraFrustum[2],

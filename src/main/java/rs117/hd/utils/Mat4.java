@@ -221,7 +221,7 @@ public class Mat4
 		left[1] = m31 + m01;
 		left[2] = m32 + m02;
 		left[3] = m33 + m03;
-		normalizePlane(left);
+		normalizePlane(left, left);
 
 		// Right = row3 - row0
 		float[] right = planes[1];
@@ -229,7 +229,7 @@ public class Mat4
 		right[1] = m31 - m01;
 		right[2] = m32 - m02;
 		right[3] = m33 - m03;
-		normalizePlane(right);
+		normalizePlane(right, right);
 
 		// Bottom = row3 + row1
 		float[] bottom = planes[2];
@@ -237,7 +237,7 @@ public class Mat4
 		bottom[1] = m31 + m11;
 		bottom[2] = m32 + m12;
 		bottom[3] = m33 + m13;
-		normalizePlane(bottom);
+		normalizePlane(bottom, bottom);
 
 		// Top = row3 - row1
 		float[] top = planes[3];
@@ -245,7 +245,7 @@ public class Mat4
 		top[1] = m31 - m11;
 		top[2] = m32 - m12;
 		top[3] = m33 - m13;
-		normalizePlane(top);
+		normalizePlane(top, top);
 
 		// Near = row3 + row2
 		float[] near = planes[4];
@@ -253,7 +253,7 @@ public class Mat4
 		near[1] = m31 + m21;
 		near[2] = m32 + m22;
 		near[3] = m33 + m23;
-		normalizePlane(near);
+		normalizePlane(near, near);
 
 		// Far = row3 - row2
 		float[] far = planes[5];
@@ -261,7 +261,7 @@ public class Mat4
 		far[1] = m31 - m21;
 		far[2] = m32 - m22;
 		far[3] = m33 - m23;
-		normalizePlane(far);
+		normalizePlane(far, far);
 	}
 
 	/**
