@@ -26,7 +26,7 @@
 
 #include <utils/constants.glsl>
 
-layout(binding = 3) uniform isampler3D tileHeightMap;
+uniform isampler3D tileHeightMap;
 
 int tile_height(int z, int x, int y) {
     #define ESCENE_OFFSET 40 // (184-104)/2

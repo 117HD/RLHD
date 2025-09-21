@@ -344,6 +344,18 @@ public class MathUtils {
 		return normalize(new float[v.length], v);
 	}
 
+	public static float[] normalizePlane(float[] out, float... plane) {
+		return divide(out, plane, length(slice(plane, 0, 3)));
+	}
+
+	public static float[] normalizePlane(float... plane) {
+		return normalizePlane(new float[4], plane);
+	}
+
+	public static float distanceToPlane(float[] plane, float... v) {
+		return dot(plane, v, 3) + plane[3];
+	}
+
 	public static float abs(float v) {
 		return Math.abs(v);
 	}
