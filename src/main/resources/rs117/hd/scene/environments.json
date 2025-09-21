@@ -1400,7 +1400,7 @@
     "ambientColor": "#A371FF",
     "ambientStrength": 2.5,
     "directionalColor": "#DBDBDB",
-    "directionalStrength": 3,
+    "directionalStrength": 2,
     "sunAngles": [
       80,
       190
