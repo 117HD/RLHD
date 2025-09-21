@@ -46469,7 +46469,7 @@
       {
         "description": "Web",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
         "description": "Grass that needs upward normals to fix",
@@ -46491,11 +46491,24 @@
       {
         "description": "Web",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       }
     ],
     "objectIds": [
       "REGICIDE_TREE_DEAD1SWAMP_WEB"
+    ]
+  },
+  {
+    "description": "Morytania ground webs",
+    "baseMaterial": "GROUND_WEB_2_LIGHT",
+    "uvOrientation": 188,
+    "objectIds": [
+      "CAVEKIT_WEB01_FLOOR01",
+      "CAVEKIT_WEB01_FLOOR02",
+      "CAVEKIT_WEB01_FLOOR03",
+      "CAVEKIT_WEB01_FLOOR04",
+      "CAVEKIT_WEB01_FLOOR05",
+      "CAVEKIT_WEB01_FLOOR06"
     ]
   },
   {

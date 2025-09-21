@@ -7805,6 +7805,15 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "ARAXXOR_CAVE_UNDER_ENTRANCE_FIX",
+    "area": "MORYTANIA",
+    "overlayIds": [193 ],
+    "blended": false,
+    "groundMaterial": "GROUND_WEBS",
+    "uvOrientation": 89,
+    "shiftLightness": 16
+  },
+  {
     "name": "ARAXXOR_WEB_OVERLAY",
     "area": "MORYTANIA_SPIDER_CAVES",
     "overlayIds": [
