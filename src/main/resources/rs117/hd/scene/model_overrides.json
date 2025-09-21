@@ -29787,13 +29787,7 @@
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [
-      "SANCTUARY_CAVE_WALL_OUTER",
-      "SANCTUARY_CAVE_WALL_UPPER",
-      "SANCTUARY_CAVE_WALL_TOP",
-      "SANCTUARY_CAVE_WALL_UPPER_ALT",
-      "MYQ3_LAB_WALL_TOP"
-    ],
+    "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER", "SANCTUARY_CAVE_WALL_TOP" ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 768
