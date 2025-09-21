@@ -10485,7 +10485,9 @@
       "WALLKIT_CAMTORUM01_VAULT02",
       "DARKM_PRISON_BARS_WALL",
       "MYQ5_PRISONER_DOOR",
-      "MYQ5_PRISONER_DOOR_2"
+      "MYQ5_PRISONER_DOOR_2",
+      "TOBQUEST_CRYPT_INNER_DOOR",
+      "TOBQUEST_CRYPT_INNER_DOOR_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -20821,6 +20823,16 @@
     ]
   },
   {
+    "description": "Ver Sinhaza - Statue with plinth - Needs proper UV",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOBQUEST_CRYPT_LARGE_STATUE"
+    ]
+  },
+  {
     "description": "Ver Sinhaza - Metallic - Fences",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
@@ -20964,6 +20976,149 @@
         "uvType": "BOX",
         "uvScale": 0.6
       }
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Darkmeyer - Metal fence with red stone",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 89,
+    "colorOverrides": [
+      {
+        "colors": "h == 63 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DARKM_SMALL_FENCE"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 89,
+    "objectIds": [
+      "TOBQUEST_CRYPT_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 89,
+    "objectIds": [
+      "TOBQUEST_CRYPT_WALL03"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CAVEFALLOFF_01",
+      "TOBQUEST_CRYPT_CAVEFALLOFF_02",
+      "TOBQUEST_CRYPT_CAVEFALLOFF_03",
+      "TOBQUEST_CRYPT_CAVEFALLOFF_04"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": -256,
+    "objectIds": [
+      "TOBQUEST_CRYPT_EDGE_HALF01",
+      "TOBQUEST_CRYPT_EDGE_HALF02",
+      "TOBQUEST_CRYPT_EDGE_HALF03",
+      "TOBQUEST_CRYPT_CORNER_INNER01",
+      "TOBQUEST_CRYPT_CORNER_INNER03"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Brick tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 67,
+    "objectIds": [
+      "TOBQUEST_FLOOR_TILE02_02",
+      "TOBQUEST_FLOOR_TILE02_04",
+      "TOBQUEST_FLOOR_TILE02_06",
+      "TOBQUEST_FLOOR_TILE01_02",
+      "TOBQUEST_FLOOR_TILE01_03",
+      "TOBQUEST_FLOOR_TILE01_04",
+      "TOBQUEST_FLOOR_TILE01_05",
+      "TOBQUEST_FLOOR_TILE01_06"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Brick tiles with rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 67,
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "TOBQUEST_FLOOR_TILE03_01",
+      "TOBQUEST_FLOOR_TILE03_03",
+      "TOBQUEST_FLOOR_TILE03_04",
+      "TOBQUEST_FLOOR_TILE03_05",
+      "TOBQUEST_FLOOR_TILE03_06",
+      "TOBQUEST_FLOOR_TILE04_01",
+      "TOBQUEST_FLOOR_TILE04_03",
+      "TOBQUEST_FLOOR_TILE04_06",
+      "TOBQUEST_FLOOR_TILE_TRANS01",
+      "TOBQUEST_FLOOR_TILE_TRANS02"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Brick steps",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 579,
+    "objectIds": [
+      "TOBQUEST_CRYPT_SKEWSTEPS01",
+      "TOBQUEST_CRYPT_SKEWSTEPS02",
+      "TOBQUEST_CRYPT_SKEWSTEPS03",
+      "TOBQUEST_CRYPT_SKEWSTEPS04",
+      "TOBQUEST_CRYPT_SKEWSTEPS_CORNER01",
+      "TOBQUEST_CRYPT_SKEWSTEPS_CORNER03",
+      "TOBQUEST_CRYPT_SKEWSTEPS_CORNER04"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Coffin - DYNAMIC",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 828,
+    "objectIds": [
+      "TOBQUEST_CRYPT_COFFIN_OP"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Night at the Theatre crypt exit",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 289,
+    "objectIds": [
+      "TOBQUEST_CRYPT_EXIT"
     ]
   },
   {
