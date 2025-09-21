@@ -461,7 +461,7 @@ public class LightManager {
 						light.pos[0] + cameraShift[0],
 						light.pos[1],
 						light.pos[2] + cameraShift[1],
-						light.radius,
+						maxRadius, // use max radius, since the radius hasn't been updated yet
 						cameraFrustum[0],
 						cameraFrustum[1],
 						cameraFrustum[2],
