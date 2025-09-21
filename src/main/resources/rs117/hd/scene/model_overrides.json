@@ -63247,5 +63247,42 @@
     "objectIds": [
       "DRUIDIC_SPIRIT_GROTTO_NATUREALTAR"
     ]
+  },
+  {
+    "description": "Mortania - Quest Hespori object - DYNAMIC",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h <= 27 && s < 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "TOBQUEST_HESPORI_READY",
+      "TOBQUEST_HESPORI_DEAD"
+    ]
+  },
+  {
+    "description": "Mortania - Quest Hespori Seedling - DYNAMIC - ANIMATED",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 14",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "npcIds": [
+      "TOBQUEST_HESPORI_HEALER_INACTIVE"
+    ]
   }
 ]
