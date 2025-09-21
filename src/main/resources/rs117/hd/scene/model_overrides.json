@@ -21159,7 +21159,8 @@
       "MYQ3_HIDEOUT_WALL",
       "MYQ3_HIDEOUT_WALL_FALLOFF",
       "MYQ3_HIDEOUT_WALL_FALLOFF_MIRROR",
-      "MYQ3_HIDEOUT_WALL_EXPOSED_PLASTER"
+      "MYQ3_HIDEOUT_WALL_EXPOSED_PLASTER",
+      "SANCTUARY_CAVE_WALL_UPPER_ALT"
     ],
     "uvType": "BOX",
     "uvOrientation": 1536,
@@ -21179,6 +21180,38 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       "MYQ3_HIDEOUT_WALL_MUD"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Slepe - Wooden Support Post",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 536,
+    "uvScale": 0.66,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "MYQ3_SUPPORT_PILLAR",
+      "MYQ3_SUPPORT_PILLAR_2",
+      "MYQ3_SUPPORT_PILLAR_MIDDLE"
+    ]
+  },
+  {
+    "description": "Slepe - Cloth - Stone - Cloth covered statue",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 536,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors":  "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLP_CLOTH_STATUE"
     ]
   },
   {
@@ -47487,6 +47520,34 @@
     "objectIds": [
       "SLEPE_WALL_WINDOW",
       "SLEPE_CHURCH_WINDOW"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -256,
+    "objectIds": [
+      "SLP_CHURCH_CRYPT_SOUTH_LADDER_DOWN",
+      "SLP_CHURCH_CRYPT_SOUTH_LADDER_EXIT"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": " h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_STATUE"
     ]
   },
   {
