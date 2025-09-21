@@ -16,7 +16,9 @@ layout(std140) uniform UBOLightsCulling {
     vec4 PointLightPositionsArray[MAX_LIGHT_COUNT];
 };
 
-bool isDualPacked(uint packedValue) { return (packedValue & 0x8000u) != 0u; }
+bool isDualPacked(uint packedValue) {
+    return (packedValue & 0x8000u) != 0u;
+}
 
 ivec2 decodePackedLight(uint packedValue) {
     if (isDualPacked(packedValue)) {

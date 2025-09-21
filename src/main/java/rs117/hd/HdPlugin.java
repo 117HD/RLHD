@@ -1851,8 +1851,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
 			}
-		} else {
-			uboGlobal.upload();
 		}
 	}
 

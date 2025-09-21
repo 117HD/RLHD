@@ -39,7 +39,7 @@ void main() {
 
     if (tiledLightCount > 0) {
         if (tiledLightCount < TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) {
-            float level = tiledLightCount / float(TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) * 3.14159265 / 2.0;
+            float level = tiledLightCount / float(TILED_LIGHTING_MAX_TILE_LIGHT_COUNT) * HALF_PI;
             c = vec4(sin(level), sin(level * 2), cos(level), 0.3);
         } else {
             c = vec4(1, 0, 1, 0.6);
