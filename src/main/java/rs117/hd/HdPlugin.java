@@ -1301,13 +1301,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateTiledLightingFbo() {
 		assert configTiledLighting;
 
-		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
-		if (Arrays.equals(resolution, tiledLightingResolution) && tiledLightingLayerCount == configDynamicLights.getTiledLightingLayers())
+		int[] newResolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
+		int newLayerCount = configDynamicLights.getTiledLightingLayers();
+		if (Arrays.equals(newResolution, tiledLightingResolution) && tiledLightingLayerCount == newLayerCount)
 			return;
 
 		destroyTiledLightingFbo();
 
-		tiledLightingResolution = resolution;
+		tiledLightingResolution = newResolution;
+		tiledLightingLayerCount = newLayerCount;
+
 		fboTiledLighting = glGenFramebuffers();
 		texTiledLighting = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
@@ -1322,17 +1325,22 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			GL_RGBA16UI,
 			tiledLightingResolution[0],
 			tiledLightingResolution[1],
-			configDynamicLights.getTiledLightingLayers(),
+			tiledLightingLayerCount,
 			0,
 			GL_RGBA_INTEGER,
 			GL_UNSIGNED_SHORT,
 			0
 		);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
 		checkGLErrors();
 
 		if (tiledLightingImageStoreProgram.isValid())
 			ARBShaderImageLoadStore.glBindImageTexture(
 				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		checkGLErrors();
 
@@ -1826,21 +1834,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
-				glDrawBuffer(GL_COLOR_ATTACHMENT0);
-
-				glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
-
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT);
 
 				glBindVertexArray(vaoTri);
-				glDisable(GL_BLEND);
 
 				if (tiledLightingImageStoreProgram.isValid()) {
 					tiledLightingImageStoreProgram.use();
 					glDrawBuffer(GL_NONE);
 					glDrawArrays(GL_TRIANGLES, 0, 3);
 				} else {
+					glDrawBuffer(GL_COLOR_ATTACHMENT0);
 					int layerCount = configDynamicLights.getTiledLightingLayers();
 					for (int layer = 0; layer < layerCount; layer++) {
 						tiledLightingShaderPrograms.get(layer).use();
