@@ -35520,6 +35520,23 @@
     ]
   },
   {
+    "description": "STOVE",
+    "offset": [ -49, 88, -40 ],
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SLP_STOVE"
+    ]
+  },
+  {
     "description": "SLEPE_WALL_CANDLE",
     "height": 220,
     "alignment": "CENTER",

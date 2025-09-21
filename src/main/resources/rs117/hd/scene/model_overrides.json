@@ -11114,7 +11114,9 @@
       "FAI_FALADOR_OPENCASTLEDOUBLEDOORL",
       "FAI_FALADOR_OPENCASTLEDOUBLEDOORR",
       "FAI_FALADOR_CASTLEDOUBLEDOORL",
-      "FAI_FALADOR_CASTLEDOUBLEDOORR"
+      "FAI_FALADOR_CASTLEDOUBLEDOORR",
+      "SLP_MANSION_DOOR_L",
+      "SLP_MANSION_DOOR_R"
     ],
     "colorOverrides": [
       {
@@ -39991,7 +39993,9 @@
       "FAI_VARROCK_RUNE_BOOKCASE",
       "SLUG2_BOOKCASE",
       "SARIM_BOOKCASE2_OFFSET",
-      "SARIM_BOOKCASE2_OFFSET_WESTFACING"
+      "SARIM_BOOKCASE2_OFFSET_WESTFACING",
+      "CANAFIS_BOOKSHELF_OLD_SHORT",
+      "CANAFIS_BOOKSHELF_OLD_SHORT3"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -48896,11 +48900,12 @@
     ]
   },
   {
-    "description": "Seers Village - Wooden - Church Organ",
+    "description": "Seers Village - Slepe - Metallic - Wooden - Church Organ",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
-      "KR_CHURCHORGAN"
+      "KR_CHURCHORGAN",
+      "SLP_CHURCHORGAN"
     ],
     "colorOverrides": [
       {
@@ -49676,6 +49681,25 @@
     "objectIds": [
       "ARCHEUSS_CHURCH_PEW_RIGHT",
       "ARCHEUUS_CHURCH_PEW_LEFT"
+    ]
+  },
+  {
+    "description": "Lovakengj - Slepe - Cloth - Wooden - Red Cushioned church pew with foot rest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 3 && s == 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "LOVAKENGJ_PEW"
     ]
   },
   {
@@ -62901,7 +62925,149 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
-      "GOBLIN_OUTPOST_FORT_WALL"
+      "GOBLIN_OUTPOST_FORT_WALL",
+      "SLEPE_CHURCH_RAIL"
+    ]
+  },
+  {
+    "description": "Slepe - Cloth - Stone - Metallic - Paper - Altar",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 333,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Paper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "uvOrientation": -333,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "s == 7",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLP_CHURCH_ALTAR"
+    ]
+  },
+  {
+    "description": "Slepe - Cloth - Zamorak Carpet",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLP_CHURCH_RUGCORNER_OUTER",
+      "SLP_CHURCH_RUGSIDE",
+      "SLP_CHURCH_RUGSIDE_M"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Metallic - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SLP_CHURCH_CHEST_CLOSED"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Metallic - Church door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "WARGUILD_BASEMENT_DOOR_INACTIVE"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Zamorak Statue",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 313,
+    "objectIds": [
+      "SLP_STATUE_ZAMORAK"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Wide staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLP_POSH_STAIRS_UPPER",
+      "SLP_POSH_STAIRS_LOWER"
+    ]
+  },
+  {
+    "description": "Slepe - Canafis - Shelves with bottles and Tinderbox with bucket",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "CANAFIS_GENERAL_SHELF2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 0 && a == 255" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
+    ]
+  },
+  {
+    "description": "Slepe - Metallic - Stone - Stove",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 179,
+    "objectIds": [
+      "SLP_STOVE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone Platform",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
     ]
   }
 ]
