@@ -1757,11 +1757,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Mat4.mul(viewProj, projectionMatrix);
 				Mat4.mul(viewProj, viewMatrix);
 				float[] invProjectionMatrix = Mat4.inverse(viewProj);
-
-				extractPlanes(viewProj,
-					cameraFrustum[0], cameraFrustum[1],
-					cameraFrustum[2], cameraFrustum[3],
-					cameraFrustum[4], cameraFrustum[5]);
+				extractPlanes(viewProj, cameraFrustum);
 
 				if (sceneContext.scene == scene) {
 					try {
@@ -1810,12 +1806,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				uboLights.setLight(i, lightPosition, lightColor);
 
-				if(configTiledLighting) {
-					// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
+				if (configTiledLighting) {
+					// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
 					lightPosition[3] = 1.0f;
 					Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
-					lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq
-
+					lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
 					uboLightsCulling.setLight(i, lightPosition, lightColor);
 				}
 			}
@@ -2229,7 +2224,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
 			uboGlobal.groundFogOpacity.set(config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
-			// Lightning
 			uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
 			uboGlobal.saturation.set(config.saturation() / 100f);

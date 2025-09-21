@@ -47,13 +47,13 @@ void calculateLighting(
                     break;                                           \
                 unpackedData = decodePackedLight(tileLayerData[c]);  \
                                                                      \
-                if(unpackedData[0] >= 0)                             \
+                if (unpackedData[0] >= 0)                            \
                     calculateLight(unpackedData[0],                  \
                         position, normals, viewDir,                  \
                         texBlend, specularGloss, specularStrength,   \
                         pointLightsOut, pointLightsSpecularOut);     \
                                                                      \
-                if(unpackedData[1] >= 0)                             \
+                if (unpackedData[1] >= 0)                            \
                     calculateLight(unpackedData[1],                  \
                         position, normals, viewDir,                  \
                         texBlend, specularGloss, specularStrength,   \

@@ -32,7 +32,7 @@ struct SortedLight {
 #define USE_LIGHTS_MASK !TILED_IMAGE_STORE
 
 uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inout int binIdx) {
-    if (binIdx >= binSize)  return 0u;
+    if (binIdx >= binSize) return 0u;
 
     int idx0 = bin[binIdx].lightIdx;
     if (idx0 < 0) return 0u;
@@ -40,7 +40,7 @@ uint packLightIndices(in SortedLight bin[SORTING_BIN_SIZE], in int binSize, inou
     idx0 += 1;
     binIdx += 1;
 
-    if(binIdx < binSize) {
+    if (binIdx < binSize) {
         int idx1 = bin[binIdx].lightIdx;
         if (idx1 >= 0) {
             idx1 += 1;
@@ -74,7 +74,7 @@ void main() {
             uvec4 layerData = texelFetch(tiledLightingArray, ivec3(pixelCoord, l), 0);
             for (int c = 3; c >= 0; c--) {
                 ivec2 unpacked = decodePackedLight(layerData[c]);
-                for(int i = 0; i < (isDualPacked(layerData[c]) ? 2 : 1); i++) {
+                for (int i = 0; i < (isDualPacked(layerData[c]) ? 2 : 1); i++) {
                     int encodedLightIdx = unpacked[i];
 
                     if (encodedLightIdx < 0) {
@@ -170,17 +170,15 @@ void main() {
 #if TILED_IMAGE_STORE
     uvec4 outputTileData = uvec4(0);
     for (int layer = 0, binIdx = 0; layer < TILED_LIGHTING_LAYER_COUNT; layer++) {
-        for(int c = 0; c < 4; c++) {
+        for (int c = 0; c < 4; c++)
             outputTileData[c] = packLightIndices(sortingBin, sortingBinSize, binIdx);
-        }
         imageStore(tiledLightingImage, ivec3(pixelCoord, layer), outputTileData);
     }
     discard;
 #else
     uvec4 outputTileData = uvec4(0);
-    for (int c = 0, binIdx = 0; c < 4 && binIdx < sortingBinSize; c++) {
+    for (int c = 0, binIdx = 0; c < 4 && binIdx < sortingBinSize; c++)
         outputTileData[c] = packLightIndices(sortingBin, sortingBinSize, binIdx);
-    }
     TiledData = outputTileData;
 #endif
 }

@@ -165,7 +165,7 @@ public class LightManager {
 		eventBus.unregister(this);
 	}
 
-	public void update(@Nonnull SceneContext sceneContext, int[] cameraShift, float[][] cameraFrustum) {
+	public void update(@Nonnull SceneContext sceneContext, int[] cameraShift, @Nullable float[][] cameraFrustum) {
 		assert client.isClientThread();
 
 		if (plugin.configDynamicLights == DynamicLights.NONE || client.getGameState() != GameState.LOGGED_IN) {
@@ -454,15 +454,19 @@ public class LightManager {
 				far *= far;
 				light.visible = near < light.distanceSquared && light.distanceSquared < far;
 
-				// Check that the light is within the cameras frustum specifically: Left, Right, Top Down.
+				// Check that the light is within the camera's frustum specifically: Left, Right, Top Down.
 				// The above check already covers the near plane
-				if(light.visible && cameraFrustum != null) {
+				if (light.visible && cameraFrustum != null) {
 					light.visible = isSphereIntersectingFrustum(
 						light.pos[0] + cameraShift[0],
 						light.pos[1],
 						light.pos[2] + cameraShift[1],
 						light.radius * 4.0f,
-						cameraFrustum[0], cameraFrustum[1], cameraFrustum[2], cameraFrustum[3]);
+						cameraFrustum[0],
+						cameraFrustum[1],
+						cameraFrustum[2],
+						cameraFrustum[3]
+					);
 				}
 			}
 		}

@@ -32,8 +32,8 @@ void main() {
                 break;
 
             ivec2 unpacked = decodePackedLight(tileLayerData[c]);
-            if(unpacked[0] >= 0) tiledLightCount++;
-            if(unpacked[1] >= 0) tiledLightCount++;
+            if (unpacked[0] >= 0) tiledLightCount++;
+            if (unpacked[1] >= 0) tiledLightCount++;
         }
     }
 
