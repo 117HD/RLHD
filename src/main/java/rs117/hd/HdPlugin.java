@@ -150,6 +150,7 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.Mat4.extractPlanes;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -494,6 +495,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
+	private final float[][] cameraFrustum = new float[6][4];
 	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
@@ -1697,20 +1699,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
 					cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
 					Arrays.fill(cameraShift, 0);
-
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						stopPlugin();
-						return;
-					}
 				} else {
 					cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
 					cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
@@ -1762,6 +1750,27 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Mat4.mul(viewProj, viewMatrix);
 				float[] invProjectionMatrix = Mat4.inverse(viewProj);
 
+				extractPlanes(viewProj,
+					cameraFrustum[0], cameraFrustum[1],
+					cameraFrustum[2], cameraFrustum[3],
+					cameraFrustum[4], cameraFrustum[5]);
+
+				if (sceneContext.scene == scene) {
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(sceneContext, cameraShift, configTiledLighting ? cameraFrustum : null);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						stopPlugin();
+						return;
+					}
+				}
+
 				uboGlobal.cameraPos.set(cameraPosition);
 				uboGlobal.viewMatrix.set(viewMatrix);
 				uboGlobal.projectionMatrix.set(viewProj);
@@ -1775,6 +1784,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 
+			frameTimer.begin(Timer.UPDATE_LIGHTS);
 			final float[] lightPosition = new float[4];
 			final float[] lightColor = new float[4];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
@@ -1792,16 +1802,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				uboLights.setLight(i, lightPosition, lightColor);
 
-				// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
-				lightPosition[3] = 1.0f;
-				Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
-				lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq
+				if(configTiledLighting) {
+					// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
+					lightPosition[3] = 1.0f;
+					Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
+					lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq
 
-				uboLightsCulling.setLight(i, lightPosition, lightColor);
+					uboLightsCulling.setLight(i, lightPosition, lightColor);
+				}
 			}
 
 			uboLights.upload();
 			uboLightsCulling.upload();
+			frameTimer.end(Timer.UPDATE_LIGHTS);
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {

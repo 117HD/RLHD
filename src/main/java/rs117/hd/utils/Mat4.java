@@ -207,6 +207,62 @@ public class Mat4
 		out[3] = d;
 	}
 
+
+	public static void extractPlanes(
+		float[] mat,
+		float[] left, float[] right,
+		float[] bottom, float[] top,
+		float[] near, float[] far) {
+		// Each plane is defined as: A*x + B*y + C*z + D = 0
+		// Extract rows from the matrix (column-major order)
+		float m00 = mat[0], m01 = mat[4], m02 = mat[8], m03 = mat[12];
+		float m10 = mat[1], m11 = mat[5], m12 = mat[9], m13 = mat[13];
+		float m20 = mat[2], m21 = mat[6], m22 = mat[10], m23 = mat[14];
+		float m30 = mat[3], m31 = mat[7], m32 = mat[11], m33 = mat[15];
+
+		// Left = row3 + row0
+		left[0] = m30 + m00;
+		left[1] = m31 + m01;
+		left[2] = m32 + m02;
+		left[3] = m33 + m03;
+		normalizePlane(left);
+
+		// Right = row3 - row0
+		right[0] = m30 - m00;
+		right[1] = m31 - m01;
+		right[2] = m32 - m02;
+		right[3] = m33 - m03;
+		normalizePlane(right);
+
+		// Bottom = row3 + row1
+		bottom[0] = m30 + m10;
+		bottom[1] = m31 + m11;
+		bottom[2] = m32 + m12;
+		bottom[3] = m33 + m13;
+		normalizePlane(bottom);
+
+		// Top = row3 - row1
+		top[0] = m30 - m10;
+		top[1] = m31 - m11;
+		top[2] = m32 - m12;
+		top[3] = m33 - m13;
+		normalizePlane(top);
+
+		// Near = row3 + row2
+		near[0] = m30 + m20;
+		near[1] = m31 + m21;
+		near[2] = m32 + m22;
+		near[3] = m33 + m23;
+		normalizePlane(near);
+
+		// Far = row3 - row2
+		far[0] = m30 - m20;
+		far[1] = m31 - m21;
+		far[2] = m32 - m22;
+		far[3] = m33 - m23;
+		normalizePlane(far);
+	}
+
 	/**
 	 * Transforms the vector by the matrix, and does a perspective divide.
 	 *
