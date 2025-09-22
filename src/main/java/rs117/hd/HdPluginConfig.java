@@ -1157,6 +1157,17 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
+		name = "Tiled lighting image store",
+		description = "If you experience any issues with tiled lighting, disabling this <i>might</i> help.",
+		section = experimentalSettings
+	)
+	default boolean tiledLightingImageLoadStore() {
+		return true;
+	}
+
 	/*====== Internal settings ======*/
 
 	@ConfigItem(keyName = "pluginUpdateMessage", hidden = true, name = "", description = "")

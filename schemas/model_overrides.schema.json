@@ -23,7 +23,7 @@
       },
       "areas": {
         "type": "array",
-        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the override should be limited to.",
+        "description": "An array of bounding boxes and/or area enums specifying which areas the override should be limited to.",
         "items": {
           "$ref": "aabb.schema.json"
         }
@@ -169,7 +169,7 @@
       },
       "hideInAreas": {
         "type": "array",
-        "description": "An array of bounding boxes, region IDs and/or area enums specifying where the model should be hidden.",
+        "description": "An array of bounding boxes and/or area enums specifying where the model should be hidden.",
         "items": {
           "$ref": "aabb.schema.json"
         }

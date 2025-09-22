@@ -41253,5 +41253,61 @@
     "objectIds": [
       "ALDARIN_TORCH01_CAVE01"
     ]
+  },
+  {
+    "description": "Nightmare Floor Glow 1",
+    "offset": [ 100, 100, 100 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 1800,
+    "strength": 5,
+    "color": "#47E6A3",
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "NIGHTMARE_PLATFORM_LVL2_14"
+    ]
+  },
+  {
+    "description": "Nightmare Floor Glow 2",
+    "offset": [ -200, 100, 200 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 1800,
+    "strength": 7,
+    "color": "#47E6A3",
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "NIGHTMARE_PLATFORM_LVL2_21"
+    ]
+  },
+  {
+    "description": "Nightmare Floor Glow 3",
+    "offset": [ 300, 100, 100 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 1800,
+    "strength": 5,
+    "color": "#47E6A3",
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "NIGHTMARE_PLATFORM_LVL2_17"
+    ]
+  },
+  {
+    "description": "Nightmare Floor Glow 4",
+    "offset": [ 0, 100, 200 ],
+    "visibleFromOtherPlanes": true,
+    "radius": 1800,
+    "strength": 7,
+    "color": "#47E6A3",
+    "type": "STATIC",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "NIGHTMARE_PLATFORM_LVL2_23"
+    ]
   }
 ]
