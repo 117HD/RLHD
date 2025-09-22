@@ -1,4 +1,4 @@
-package rs117.hd.utils;
+package rs117.hd.renderer;
 
 
 import java.nio.IntBuffer;
@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.BufferUtils;
+import rs117.hd.utils.buffer.GLVBO;
 
 import static org.lwjgl.opengl.GL30C.GL_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL30C.GL_INT;
@@ -30,53 +31,46 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 
 @Slf4j
 @RequiredArgsConstructor
-class Zone
+public class Zone
 {
-	private static final int MAX_VERTEX_COUNT = 6500;
-	private static final int MAX_DIAMETER = 6000;
-	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
-
-	static final int[] distances;
-	static final char[] distanceFaceCount;
-	static final char[][] distanceToFaces;
-
-	static
-	{
-		distances = new int[MAX_VERTEX_COUNT];
-		distanceFaceCount = new char[MAX_DIAMETER];
-		distanceToFaces = new char[MAX_DIAMETER][ZSORT_GROUP_SIZE];
-	}
+	public static final int MAX_VERTEX_COUNT = 6500;
+	public static final int MAX_DIAMETER = 6000;
+	public static final int ZSORT_GROUP_SIZE = 1024; // was 512
 
 	// Zone vertex format
+	// TODO: Our Zone Format will be different for sure
 	// index 0: -FLOAT.MAX_VALUE (non-array)
 	// index 1: short vec3(x, y, z)
 	// index 2: int abhsl
 	// index 3: short vec4(id, x, y, z)
-	static final int VERT_SIZE = 20;
+	public static final int VERT_SIZE = 20;
 
-	int glVao;
-	int bufLen;
+	private static final char[] distanceFaceCount = new char[MAX_DIAMETER];
+	private static final char[][] distanceToFaces = new char[MAX_DIAMETER][ZSORT_GROUP_SIZE];
 
-	int glVaoA;
-	int bufLenA;
+	private int glVao;
+	private int bufLen;
 
-	int sizeO, sizeA;
-	GLVBO vboO, vboA;
+	private int glVaoA;
+	private int bufLenA;
 
-	boolean initialized; // whether the zone vao and vbos are ready
-	boolean cull; // whether the zone is queued for deletion
-	boolean dirty; // whether the zone has temporary modifications
-	boolean invalidate; // whether the zone needs rebuilding
+	private int sizeO, sizeA;
+	private GLVBO vboO, vboA;
 
-	int[] levelOffsets = new int[4]; // buffer pos in ints for the end of the level
+	private boolean initialized; // whether the zone vao and vbos are ready
+	private boolean cull; // whether the zone is queued for deletion
+	private boolean dirty; // whether the zone has temporary modifications
+	private boolean invalidate; // whether the zone needs rebuilding
 
-	int[][] rids;
-	int[][] roofStart;
-	int[][] roofEnd;
+	private int[] levelOffsets = new int[4]; // buffer pos in ints for the end of the level
 
-	final List<AlphaModel> alphaModels = new ArrayList<>(0);
+	private int[][] rids;
+	private int[][] roofStart;
+	private int[][] roofEnd;
 
-	void init(GLVBO o, GLVBO a)
+	private final List<AlphaModel> alphaModels = new ArrayList<>(0);
+
+	public void init(GLVBO o, GLVBO a)
 	{
 		assert glVao == 0;
 		assert glVaoA == 0;
@@ -85,18 +79,18 @@ class Zone
 		{
 			vboO = o;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.bufId);
+			setupVao(glVao, o.id);
 		}
 
 		if (a != null)
 		{
 			vboA = a;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.bufId);
+			setupVao(glVaoA, a.id);
 		}
 	}
 
-	void free()
+	public void destroy()
 	{
 		if (vboO != null)
 		{
@@ -127,7 +121,7 @@ class Zone
 		alphaModels.clear();
 	}
 
-	void unmap()
+	public void unmap()
 	{
 		if (vboO != null)
 		{
@@ -169,7 +163,7 @@ class Zone
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void updateRoofs(Map<Integer, Integer> updates)
+	public void updateRoofs(Map<Integer, Integer> updates)
 	{
 		for (int level = 0; level < 4; ++level)
 		{
@@ -208,7 +202,7 @@ class Zone
 		glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(int zx, int zz, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds)
+	public void renderOpaque(int zx, int zz, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds)
 	{
 		drawIdx = 0;
 
@@ -284,7 +278,7 @@ class Zone
 		}
 	}
 
-	static class AlphaModel
+	private static class AlphaModel
 	{
 		int id;
 		int startpos, endpos;
@@ -309,9 +303,9 @@ class Zone
 		}
 	}
 
-	static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
+	private static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
 
-	void addAlphaModel(int vao, Model model, int startpos, int endpos, int x, int y, int z, int lx, int lz, int ux, int uz, int rid, int level, int id)
+	public void addAlphaModel(int vao, Model model, int startpos, int endpos, int x, int y, int z, int lx, int lz, int ux, int uz, int rid, int level, int id)
 	{
 		AlphaModel m = new AlphaModel();
 		m.id = id;
@@ -415,7 +409,7 @@ class Zone
 		alphaModels.add(m);
 	}
 
-	void addTempAlphaModel(int vao, int startpos, int endpos, int level, int x, int y, int z)
+	public void addTempAlphaModel(int vao, int startpos, int endpos, int level, int x, int y, int z)
 	{
 		AlphaModel m = modelCache.poll();
 		if (m == null)
@@ -437,7 +431,7 @@ class Zone
 		alphaModels.add(m);
 	}
 
-	void removeTemp()
+	public void removeTemp()
 	{
 		for (int i = alphaModels.size() - 1; i >= 0; --i)
 		{
@@ -463,7 +457,7 @@ class Zone
 	private static int lastVao;
 	private static int lastzx, lastzz;
 
-	void alphaSort(int zx, int zz, int cx, int cy, int cz)
+	public void alphaSort(int zx, int zz, int cx, int cy, int cz)
 	{
 		alphaModels.sort(Comparator.comparingInt((AlphaModel m) ->
 					{
@@ -478,7 +472,7 @@ class Zone
 		);
 	}
 
-	void renderAlpha(int zx, int zz, int cyaw, int cpitch, int minLevel, int currentLevel, int maxLevel, int level, Set<Integer> hiddenRoofIds)
+	public void renderAlpha(int zx, int zz, int cyaw, int cpitch, int minLevel, int currentLevel, int maxLevel, int level, Set<Integer> hiddenRoofIds)
 	{
 		drawIdx = 0;
 		alphaElements.clear();
@@ -597,7 +591,7 @@ class Zone
 		// TODO: Figure out drawing, since we can't exactly follow 1-1 how gpue works
 	}
 
-	void multizoneLocs(Scene scene, int zx, int zz, int cx, int cz, Zone[][] zones)
+	public void multizoneLocs(Scene scene, int zx, int zz, int cx, int cz, Zone[][] zones)
 	{
 		int offset = scene.getWorldViewId() == -1 ? SCENE_OFFSET >> 3 : 0;
 		for (AlphaModel m : alphaModels)
