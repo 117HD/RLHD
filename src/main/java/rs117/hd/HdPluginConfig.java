@@ -981,6 +981,19 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_WINDOWS_HDR_CORRECTION = "windowsHdrCorrection";
+	@ConfigItem(
+		keyName = KEY_WINDOWS_HDR_CORRECTION,
+		name = "Windows HDR correction",
+		description =
+			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode. Note, this does not<br>" +
+			"enable HDR, it only works around an issue within Windows' HDR implementation.",
+		section = miscellaneousSettings
+	)
+	default boolean windowsHdrCorrection() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
@@ -1081,6 +1094,7 @@ public interface HdPluginConfig extends Config
 	default boolean tiledLightingImageLoadStore() {
 		return true;
 	}
+
 
 	/*====== Internal settings ======*/
 

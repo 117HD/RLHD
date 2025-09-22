@@ -462,5 +462,9 @@ void main() {
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
 
+    #if WINDOWS_HDR_CORRECTION
+        outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
+    #endif
+
     FragColor = outputColor;
 }
