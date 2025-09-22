@@ -460,11 +460,11 @@ void main() {
         outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
     }
 
+    outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+
     #if WINDOWS_HDR_CORRECTION
         outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
     #endif
-
-    outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
 
     FragColor = outputColor;
 }
