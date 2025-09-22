@@ -3442,20 +3442,9 @@
   {
     "description": "GRAND_EXCHANGE_FLOOR",
     "baseMaterial": "GRUNGE_2",
+    "flatNormals": true,
+    "uvType": "MODEL_XZ",
     "objectIds": [
-      "EXCHANGE_STAIRS_VAR01_MIRROR",
-      "EXCHANGE_STAIRS_VAR01",
-      "EXCHANGE_STAIRS_VAR01_63",
-      "EXCHANGE_STAIRS_VAR01_64",
-      "EXCHANGE_STAIRS_VAR01_65",
-      "EXCHANGE_STAIRS_VAR01_66",
-      "EXCHANGE_STAIRS_VAR01_67",
-      "EXCHANGE_STAIRS_VAR01_69",
-      "EXCHANGE_STAIRS_VAR01_70",
-      "EXCHANGE_STAIRS_VAR01_63_MIRROR",
-      "EXCHANGE_STAIRS_VAR01_64_MIRROR",
-      "EXCHANGE_STAIRS_VAR01_69_MIRROR",
-      "EXCHANGE_STAIRS_VAR01_70_MIRROR",
       "EXCHANGE_FLOOR_ARMOURY01_1X1",
       "EXCHANGE_FLOOR_ARMOURY02_1X1",
       "EXCHANGE_FLOOR_ARMOURY03_1X1",
@@ -3481,13 +3470,36 @@
       "EXCHANGE_FLOOR_VAR02_1X1",
       "EXCHANGE_FLOOR_VAR03_1X1",
       "EXCHANGE_FLOOR_VAR04_1X1"
-    ],
+    ]
+  },
+  {
+    "description": "GRAND_EXCHANGE_FLOOR",
+    "baseMaterial": "GRUNGE_2",
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "objectIds": [
+      "EXCHANGE_STAIRS_VAR01_MIRROR",
+      "EXCHANGE_STAIRS_VAR01",
+      "EXCHANGE_STAIRS_VAR01_63",
+      "EXCHANGE_STAIRS_VAR01_64",
+      "EXCHANGE_STAIRS_VAR01_65",
+      "EXCHANGE_STAIRS_VAR01_66",
+      "EXCHANGE_STAIRS_VAR01_67",
+      "EXCHANGE_STAIRS_VAR01_69",
+      "EXCHANGE_STAIRS_VAR01_70",
+      "EXCHANGE_STAIRS_VAR01_63_MIRROR",
+      "EXCHANGE_STAIRS_VAR01_64_MIRROR",
+      "EXCHANGE_STAIRS_VAR01_69_MIRROR",
+      "EXCHANGE_STAIRS_VAR01_70_MIRROR"
+    ]
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
     "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.5,
     "objectIds": [
       "FAI_VARROCK_SMALL_WALL",
       "FAI_VARROCK_CASTLE_BATTLEMENT_CAPPED",
@@ -3495,8 +3507,7 @@
       "FAI_VARROCK_CASTLE_BATTLEMENT_HILLSKEW_SHARELIGHT",
       "FAI_VARROCK_CASTLE_WALL_NO_BACK",
       "FAI_VARROCK_CASTLE_WALL_NO_BACK_HILLSKEW"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "GRAND_EXCHANGE_CLAN_PORTAL",
@@ -4226,6 +4237,9 @@
   {
     "description": "STONE_SIGNPOST",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
     "objectIds": [
       "FAI_STONE_SIGN_BOTTOM",
       "FAI_STONE_SIGN_TOP"
@@ -4234,11 +4248,14 @@
   {
     "description": "FALADOR_STEPS_1",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "flatNormals": true,
+    "uvScale": 0.8,
     "objectIds": [
       "RD_SKEWSTEPS",
       "RD_SKEWSTEPS_CORNER"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Falador - Stone - Dirt - Plant - Rockery",
@@ -4339,6 +4356,9 @@
   {
     "description": "CITHAREDE_ABBEY_WALLS",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       "GH_WALL_01",
       "GH_WALL_02",
@@ -4356,8 +4376,7 @@
       "GH_WALL_ARCH_L",
       "GH_WALL_ARCH_R",
       "GH_STONE_PILE1"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Seers Village - Wall - Courthouse Walls",
@@ -4560,7 +4579,26 @@
   },
   {
     "description": "Sinclair Mansion - exterior walls",
-    "baseMaterial": "STONE",
+    "baseMaterial": "GRUNGE_2",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Exterior Stone Bricks",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Wooden Panels",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       "KR_MANSION_INTERNAL_WALLS_JUNCTION2",
       "KR_MANSION_EXTERNAL_WALLS",
@@ -4575,12 +4613,23 @@
       "KR_MANSION_WINDOW_MULTI_01",
       "KR_MANSION_WINDOW_MULTI_02",
       "KR_MANSION_WINDOW_MULTI_03"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Murder Mystery house - interior walls",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden Panels",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       "KR_MANSION_INTERNAL_WALLS",
       "KR_MANSION_INTERNAL_WALLS_CAP",
@@ -4589,8 +4638,7 @@
       "KR_MANSION_INTERNAL_WALLS_JUNCTION1_CAP",
       "KR_MANSION_INTERNAL_WALLS_DIAG",
       "KR_MANSION_INTERNAL_WALLS_DIAG_02"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "STONE_WALL_FENCES",
@@ -4772,14 +4820,18 @@
   {
     "description": "KOUREND_WALLS",
     "baseMaterial": "GRUNGE_1",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "FAI_VARROCK_CASTLEWALL_HILLSKEW"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "KOUREND_WALLS_COLUMNS",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "AKD_PISCARILIUS_PILLAR_BROKEN_NOOP",
       "AKD_PISCARILIUS_PILLAR_NOOP"
@@ -4807,6 +4859,8 @@
   {
     "description": "SHAYZIEN_HERO_STATUE",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "DRAGON_SLAYER_QIP_DRAGON_STATUE"
     ]
@@ -4821,6 +4875,8 @@
   {
     "description": "SHAYZIEN_GRAVE",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "ARCHEUUS_LONG_GRAVE_02"
     ]
@@ -6328,7 +6384,10 @@
   },
   {
     "description": "COX_OUTSIDE_RUINS",
+    "flatNormals": true,
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "TOX_PILLAR1",
       "TOX_PILLAR2",
@@ -6353,25 +6412,29 @@
       "TOX_GATES_OF_XERIC_RIGHT",
       "TOX_XERICIAN_ALTAR",
       "TOX_XERIC_STATUE"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "COX_PILLAR",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       "RAIDS_PILLAR1",
       "RAIDS_PILLAR2",
       "RAIDS_PILLAR3",
       "RAIDS_PILLAR4",
       "RAIDS_PILLAR5"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "GROUND_DECORATION_ROCKS",
     "baseMaterial": "GRUNGE_2",
     "castShadows": false,
+    "inheritTileColorType": "OVERLAY",
+    "uvType": "BOX",
+    "uvScale": 0.85,
     "objectIds": [
       "DUGUPSOIL1",
       "DUGUPSOIL3",
@@ -6408,10 +6471,7 @@
       "AGILITY_PYRAMID_DUGUPSOIL2",
       "AGILITY_PYRAMID_DUGUPSOIL3",
       "AGILITY_PYRAMID_DUGUPSOIL4"
-    ],
-    "inheritTileColorType": "OVERLAY",
-    "uvType": "BOX",
-    "uvScale": 0.85
+    ]
   },
   {
     "description": "GROUND_DECORATION_DIRT_UNCOLORED",
@@ -7452,11 +7512,13 @@
   {
     "description": "BEIGE_WALLS",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       "FAI_VARROCK_POOR_INT_FENCE_JOIN",
       "FAI_VARROCK_POOR_INT_FENCE_JOIN_MIRROR"
-    ],
-    "flatNormals": true
+    ]
   },
   {
     "description": "Grunge Caves",
@@ -7496,13 +7558,15 @@
   },
   {
     "description": "Desert Quarry Fence",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
     "objectIds": [
       "ENAKH_OLDFENCING",
       "ENAKH_OLDFENCING_2",
       "ENAKH_OLDFENCING_3"
-    ],
-    "uvScale": 0.15
+    ]
   },
   {
     "description": "Desert Quarry Table",
@@ -8076,7 +8140,7 @@
         "uvType": "BOX"
       },
       {
-        "baseMaterial": "GRUNGE_1",
+        "baseMaterial": "CARPET",
         "colors": [ "h == 5", "h == 7" ]
       }
     ]
@@ -12145,8 +12209,11 @@
   {
     "description": "Khandarian Eagles Landing",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
-      "EAGLEPEAK_CAVEIN_DESERT"
+      "EAGLEPEAK_CAVEIN_DESERT",
+      "EAGLEPEAK_CAVEIN_BIG_DESERT"
     ]
   },
   {
@@ -12311,16 +12378,16 @@
   },
   {
     "description": "GuTanoth bridges rope",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "flatNormals": true,
     "objectIds": [
       "QIP_WATCHTOWER_ROPE_BRIDGE_MIDDLE",
       "QIP_WATCHTOWER_ROPE_BRIDGE_MIDDLE_MIRROR",
       "QIP_WATCHTOWER_ROPE_BRIDGE_END",
       "QIP_WATCHTOWER_ROPE_BRIDGE_END_MIRROR"
-    ],
-    "uvOrientation": 512,
-    "uvType": "MODEL_XY",
-    "flatNormals": true
+    ]
   },
   {
     "description": "Lighthouse broken bridge",
@@ -23852,11 +23919,12 @@
   {
     "description": "Digsite - Object - Giant Vase",
     "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.66,
     "objectIds": [
       "EGYPT_LARGEURN",
       "QIP_DIGSITE_URN"
-    ],
-    "uvType": "GEOMETRY"
+    ]
   },
   {
     "description": "Digsite - Ground Decoration - Wooden Plank Path",
@@ -35583,7 +35651,7 @@
   },
   {
     "description": "Bear Rugs",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "CARPET",
     "objectIds": [
       "FUR1",
       "FUR2",
@@ -39809,7 +39877,9 @@
   },
   {
     "description": "Royal Trouble Dungeon - Eggs",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "ROYAL_SNAKE_EGGS_1",
       "ROYAL_SNAKE_EGGS_2",
