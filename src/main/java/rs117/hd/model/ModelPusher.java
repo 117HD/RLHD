@@ -487,17 +487,17 @@ public class ModelPusher {
 		final float[] zVertices = model.getVerticesZ();
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] faceTransparencies = model.getFaceTransparencies();
-		final byte[] facePriorities = model.getFaceRenderPriorities();
+		final byte[] faceBias = model.getFaceBias();
 		boolean isTextured = faceTextures != null && faceTextures[face] != -1;
 
 		if (color3 == -1)
 			color2 = color3 = color1;
 
-		int packedAlphaPriorityFlags = 0;
+		int packedAlphaDepthBias = 0;
 		if (faceTransparencies != null && !isTextured)
-			packedAlphaPriorityFlags |= (faceTransparencies[face] & 0xFF) << 24;
-		if (facePriorities != null)
-			packedAlphaPriorityFlags |= (facePriorities[face] & 0xF) << 16;
+			packedAlphaDepthBias |= (faceTransparencies[face] & 0xFF) << 24;
+		if (faceBias != null)
+			packedAlphaDepthBias |= (faceBias[face] & 0xFF) << 16;
 
 		if (isTextured) {
 			// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
@@ -506,7 +506,7 @@ public class ModelPusher {
 			color1 = color2 = color3 = 90;
 
 			// Let the shader know vanilla shading reversal should be skipped for this face
-			packedAlphaPriorityFlags |= 1 << 20;
+			//packedAlphaDepthBias |= 1 << 20; TODO: This needs to be packed differently
 		} else {
 			final int overrideAmount = model.getOverrideAmount() & 0xFF;
 			if (overrideAmount > 0) {
@@ -564,7 +564,7 @@ public class ModelPusher {
 							color1 = color2 = color3 = averageColor;
 
 							// Let the shader know vanilla shading reversal should be skipped for this face
-							packedAlphaPriorityFlags |= 1 << 20;
+							//packedAlphaDepthBias |= 1 << 20; TODO: This needs to be packed differently
 						} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
 							int faceColorIndex = -1;
 							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
@@ -605,7 +605,7 @@ public class ModelPusher {
 									color1 = color2 = color3 = color;
 
 									// Let the shader know vanilla shading reversal should be skipped for this face
-									packedAlphaPriorityFlags |= 1 << 20;
+									//packedAlphaDepthBias |= 1 << 20; TODO: This needs to be packed differently
 								}
 							}
 						}
@@ -618,7 +618,7 @@ public class ModelPusher {
 						modelOverride,
 						model,
 						face,
-						packedAlphaPriorityFlags,
+						packedAlphaDepthBias,
 						color1,
 						color2,
 						color3
@@ -626,14 +626,14 @@ public class ModelPusher {
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];
 					color3 = tzHaarRecolored[2];
-					packedAlphaPriorityFlags = tzHaarRecolored[3];
+					packedAlphaDepthBias = tzHaarRecolored[3];
 				}
 			}
 		}
 
-		color1 |= packedAlphaPriorityFlags;
-		color2 |= packedAlphaPriorityFlags;
-		color3 |= packedAlphaPriorityFlags;
+		color1 |= packedAlphaDepthBias;
+		color2 |= packedAlphaDepthBias;
+		color3 |= packedAlphaDepthBias;
 
 		int[] data = sceneContext.modelFaceVertices;
 		data[0] = Float.floatToIntBits(xVertices[triA]);

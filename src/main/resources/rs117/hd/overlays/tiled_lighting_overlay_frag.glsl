@@ -21,6 +21,7 @@ void main() {
     vec4 farPos = invProjectionMatrix * vec4(ndcUv, eps, 1);
     vec3 viewDir = normalize(farPos.xyz / farPos.w);
 
+
     vec4 c = vec4(0);
 
     ivec2 tileXY = ivec2(floor(fUv * tiledLightingResolution));

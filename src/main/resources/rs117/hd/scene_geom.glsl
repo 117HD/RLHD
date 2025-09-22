@@ -52,6 +52,7 @@ out FragmentData {
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
+    float depthBias;
 } OUT;
 
 void main() {
@@ -88,7 +89,9 @@ void main() {
     for (int i = 0; i < 3; i++) {
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i].xyz;
+
         OUT.position = gPosition[i];
+
         OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
             OUT.normal = N;
@@ -97,7 +100,13 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        gl_Position = projectionMatrix * vec4(OUT.position, 1);
+
+        OUT.depthBias = float((vHsl[i] >> 16) & 0xFF) / 128.0;
+
+        vec4 csPos = projectionMatrix * vec4(OUT.position, 1);
+        csPos.z += OUT.depthBias;
+
+        gl_Position = csPos;
         EmitVertex();
     }
 
