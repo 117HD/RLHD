@@ -70,8 +70,8 @@ void main() {
     c = alphaBlend(c, alphaOverlay);
     c.rgb = colorBlindnessCompensation(c.rgb);
 
-    #if HDR_GAMMA_CORRECTION
-        c.rgb = correctHdrGamma(c.rgb);
+    #if WINDOWS_HDR_CORRECTION
+        c.rgb = windowsHdrCorrection(c.rgb);
     #endif
 
     FragColor = c;

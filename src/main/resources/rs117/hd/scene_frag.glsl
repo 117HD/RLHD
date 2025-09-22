@@ -460,8 +460,8 @@ void main() {
         outputColor.rgb = mix(outputColor.rgb, fogColor, combinedFog);
     }
 
-    #if HDR_GAMMA_CORRECTION
-        outputColor.rgb = correctHdrGamma(outputColor.rgb);
+    #if WINDOWS_HDR_CORRECTION
+        outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
     #endif
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));

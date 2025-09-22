@@ -29,29 +29,34 @@
 #include <utils/color_utils.glsl>
 
 // translates a value from a custom range into 0-1
-float translateRange(float rangeStart, float rangeEnd, float value)
-{
+float translateRange(float rangeStart, float rangeEnd, float value) {
     return (value - rangeStart) / (rangeEnd - rangeStart);
 }
 
 // returns a value between 0-1 representing a frame of animation
 // based on the length of the animation
-float animationFrame(float animationDuration)
-{
+float animationFrame(float animationDuration) {
     if (animationDuration == 0)
         return 0.0;
     return mod(elapsedTime, animationDuration) / animationDuration;
 }
 
-vec2 animationFrame(vec2 animationDuration)
-{
+vec2 animationFrame(vec2 animationDuration) {
     if (animationDuration == vec2(0))
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
 }
 
-vec3 correctHdrGamma(vec3 c)
-{
+vec3 windowsHdrCorrection(vec3 c) {
+    // SDR monitors *usually* apply a gamma 2.2 curve, instead of the piece-wise sRGB curve, leading to the following
+    // technically incorrect operation for *most* SDR monitors, producing our *expected* final result (first line).
+    // In Windows' SDR-in-HDR implementation however, the piewe-wise sRGB EOTF is used, leading to technically correct
+    // linear colors before transformation to HDR, but this is *not* the *expected* output. To counteract this, we can
+    // transform out output from linear to sRGB, then from gamma 2.2 to linear, to replace Windows' HDR sRGB conversion
+    // with the expected gamma 2.2 to linear operation for SDR content.
+    // sRGB ----------------------------------> SDR screen gammaToLinear --> expected (although technically incorrect)
+    // sRGB ----------------------------------> Windows' HDR srgbToLinear -> linear (technically correct, not expected)
+    // sRGB -> linearToSrgb -> gammaToLinear -> Windows' HDR srgbToLinear -> expected (same as the SDR case)
     // https://github.com/clshortfuse/renodx (MIT license)
-    return pow(linearToSrgb(c.rgb), vec3(2.2));
+    return pow(linearToSrgb(c), vec3(2.2));
 }
