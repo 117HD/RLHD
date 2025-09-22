@@ -117,6 +117,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.MinimapRenderer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -301,6 +302,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Inject
 	private ModelHasher modelHasher;
+
+	@Inject
+	public MinimapRenderer minimapRenderer;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
@@ -789,6 +793,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				destroyTiledLightingFbo();
 				destroyTileHeightMap();
 				destroyModelSortingBins();
+				minimapRenderer.sendApiMessage(null,null);
 
 				clManager.shutDown();
 			}
@@ -2589,6 +2594,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			proceduralGenerator.generateSceneData(nextSceneContext);
 			environmentManager.loadSceneEnvironments(nextSceneContext);
 			sceneUploader.upload(nextSceneContext);
+			minimapRenderer.prepareScene(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error("Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
 				HDUtils.is32Bit(), useLowMemoryMode, config.modelCacheSizeMiB(), oom

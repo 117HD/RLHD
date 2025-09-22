@@ -65,6 +65,9 @@ public class EnvironmentManager {
 	@Inject
 	private HdPluginConfig config;
 
+	@Inject
+	private MinimapRenderer minimapRenderer;
+
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
 	// walking across a loading line causes a movement of 40-41 tiles
@@ -279,9 +282,13 @@ public class EnvironmentManager {
 			currentWindSpeed = mix(startWindSpeed, targetWindSpeed, t);
 			currentWindStrength = mix(startWindStrength, targetWindStrength, t);
 			currentWindCeiling = mix(startWindCeiling, targetWindCeiling, t);
+			minimapRenderer.updateMinimapLighting = true;
 		}
 
 		updateLightning();
+		if (minimapRenderer.updateMinimapLighting) {
+			minimapRenderer.applyLighting(sceneContext);
+		}
 	}
 
 	/**
@@ -409,6 +416,7 @@ public class EnvironmentManager {
 
 		// Fall back to the default environment
 		sceneContext.environments.add(Environment.DEFAULT);
+		minimapRenderer.updateMinimapLighting = true;
 	}
 
 	/* lightning */

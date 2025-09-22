@@ -478,6 +478,7 @@ public class MaterialManager {
 				continue;
 
 			try {
+				material.averageColor = textureManager.calculateAverageHSL(image);
 				if (!uploadedAnything) {
 					glActiveTexture(TEXTURE_UNIT_GAME);
 					glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
