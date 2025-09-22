@@ -845,8 +845,8 @@
   {
     "name": "DIRT_1",
     "normalMap": "DIRT_1_N",
-    "specularStrength": 0.25,
-    "specularGloss": 18.0
+    "specularStrength": 0.18,
+    "specularGloss": 20.0
   },
   {
     "name": "DIRT_1_VERT",
@@ -859,8 +859,8 @@
   {
     "name": "DIRT_2",
     "normalMap": "DIRT_2_N",
-    "specularStrength": 0.25,
-    "specularGloss": 18.0
+    "specularStrength": 0.18,
+    "specularGloss": 20.0
   },
   {
     "name": "DIRT_2_VERT",
