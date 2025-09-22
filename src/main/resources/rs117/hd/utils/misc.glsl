@@ -50,10 +50,10 @@ vec2 animationFrame(vec2 animationDuration) {
 vec3 windowsHdrCorrection(vec3 c) {
     // SDR monitors *usually* apply a gamma 2.2 curve, instead of the piece-wise sRGB curve, leading to the following
     // technically incorrect operation for *most* SDR monitors, producing our *expected* final result (first line).
-    // In Windows' SDR-in-HDR implementation however, the piewe-wise sRGB EOTF is used, leading to technically correct
+    // In Windows' SDR-in-HDR implementation however, the piece-wise sRGB EOTF is used, leading to technically correct
     // linear colors before transformation to HDR, but this is *not* the *expected* output. To counteract this, we can
-    // transform our output from linear to sRGB, then from gamma 2.2 to linear, to replace Windows' HDR sRGB conversion
-    // with the expected gamma 2.2 to linear operation for SDR content.
+    // transform our output from linear to sRGB, then from gamma 2.2 to linear, effectively replacing Windows' HDR sRGB
+    // conversion with our expected gamma 2.2 conversion for SDR content, to within rounding error of the output format.
     // sRGB ----------------------------------> SDR screen gammaToLinear --> expected (although technically incorrect)
     // sRGB ----------------------------------> Windows' HDR srgbToLinear -> linear (technically correct, not expected)
     // sRGB -> linearToSrgb -> gammaToLinear -> Windows' HDR srgbToLinear -> expected (same as the SDR case)

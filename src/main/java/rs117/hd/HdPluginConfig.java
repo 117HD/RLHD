@@ -986,8 +986,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_WINDOWS_HDR_CORRECTION,
 		name = "Windows HDR correction",
 		description =
-			"Correctly simulates SDR when Windows is in HDR mode. This does not enable HDR<br>" +
-			"for the plugin, it only works around an issue with Windows' HDR implementation.",
+			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode. Note, this does not<br>" +
+			"enable HDR, it only works around an issue within Windows' HDR implementation.",
 		section = miscellaneousSettings
 	)
 	default boolean windowsHdrCorrection() {
