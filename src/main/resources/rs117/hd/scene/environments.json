@@ -1485,8 +1485,16 @@
   },
   {
     "area": "TRUE_BLOOD_ALTAR",
-    "ambientColor": "#97baff",
-    "directionalStrength": 4
+    "fogColor": "#0C0000",
+    "ambientColor": "#8E7070",
+    "directionalStrength": 3.25,
+    "ambientStrength": 1.75,
+    "underglowStrength": 3,
+    "underglowColor": "#FF1414",
+    "waterCausticsStrength": 0,
+    "fogDepth": 20,
+    "windSpeed": 10,
+    "windStrength": 27.5
   },
   {
     "area": "TARNS_LAIR",
@@ -1758,11 +1766,11 @@
   {
     "area": "MIND_ALTAR",
     "fogColor": "#000000",
-    "ambientStrength": 0.3,
+    "ambientStrength": 0.6,
     "ambientColor": "#AAAFB6",
     "directionalStrength": 1.6,
     "sunAngles": [
-      76,
+      70,
       222
     ],
     "fogDepth": 50
@@ -1770,7 +1778,7 @@
   {
     "area": "EARTH_ALTAR",
     "fogColor": "#000000",
-    "ambientStrength": 0.3,
+    "ambientStrength": 0.6,
     "ambientColor": "#AAAFB6",
     "directionalStrength": 1.6,
     "sunAngles": [
@@ -1793,15 +1801,15 @@
   },
   {
     "area": "BODY_ALTAR",
-    "fogColor": "#100707",
-    "ambientStrength": 0.3,
+    "fogColor": "#1E1212",
+    "ambientStrength": 0.6,
     "ambientColor": "#AAAFB6",
     "directionalStrength": 1.7,
     "sunAngles": [
       66,
       250
     ],
-    "fogDepth": 46
+    "fogDepth": 60
   },
   {
     "area": "CHAOS_ALTAR",
@@ -1815,7 +1823,7 @@
   },
   {
     "area": "LAW_ALTAR",
-    "ambientStrength": 0.3,
+    "ambientStrength": 0.6,
     "directionalStrength": 2,
     "sunAngles": [
       74,
