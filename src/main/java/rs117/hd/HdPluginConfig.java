@@ -981,6 +981,19 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_WINDOWS_HDR_CORRECTION = "windowsHdrCorrection";
+	@ConfigItem(
+		keyName = KEY_WINDOWS_HDR_CORRECTION,
+		name = "Windows HDR correction",
+		description =
+			"Correctly simulates SDR when Windows is in HDR mode. This does not enable HDR<br>" +
+			"for the plugin, it only works around an issue with Windows' HDR implementation.",
+		section = miscellaneousSettings
+	)
+	default boolean windowsHdrCorrection() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
@@ -1082,16 +1095,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_WINDOWS_HDR_CORRECTION = "windowsHdrCorrection";
-	@ConfigItem(
-		keyName = KEY_WINDOWS_HDR_CORRECTION,
-		name = "Windows HDR correction",
-		description = "Correctly simulates SDR when Windows is in HDR mode.",
-		section = experimentalSettings
-	)
-	default boolean windowsHdrCorrection() {
-		return false;
-	}
 
 	/*====== Internal settings ======*/
 
