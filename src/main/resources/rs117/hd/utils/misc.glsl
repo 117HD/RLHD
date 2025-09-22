@@ -52,7 +52,7 @@ vec3 windowsHdrCorrection(vec3 c) {
     // technically incorrect operation for *most* SDR monitors, producing our *expected* final result (first line).
     // In Windows' SDR-in-HDR implementation however, the piewe-wise sRGB EOTF is used, leading to technically correct
     // linear colors before transformation to HDR, but this is *not* the *expected* output. To counteract this, we can
-    // transform out output from linear to sRGB, then from gamma 2.2 to linear, to replace Windows' HDR sRGB conversion
+    // transform our output from linear to sRGB, then from gamma 2.2 to linear, to replace Windows' HDR sRGB conversion
     // with the expected gamma 2.2 to linear operation for SDR content.
     // sRGB ----------------------------------> SDR screen gammaToLinear --> expected (although technically incorrect)
     // sRGB ----------------------------------> Windows' HDR srgbToLinear -> linear (technically correct, not expected)
