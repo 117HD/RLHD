@@ -128,7 +128,7 @@ import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.DeveloperTools;
+import rs117.hd.utils.tooling.DeveloperToolManager;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
@@ -309,7 +309,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private NpcDisplacementCache npcDisplacementCache;
 
 	@Inject
-	private DeveloperTools developerTools;
+	private DeveloperToolManager developerToolManager;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -669,7 +669,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 
 				updateCachedConfigs();
-				developerTools.activate();
+				developerToolManager.activate();
 
 				modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -759,7 +759,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			client.setExpandedMapLoading(0);
 
 			asyncUICopy.complete();
-			developerTools.deactivate();
+			developerToolManager.deactivate();
 			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
 			groundMaterialManager.shutDown();
@@ -2441,7 +2441,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void drawUi(int overlayColor) {
-		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
+		if (uiResolution == null || developerToolManager.isHideUiEnabled() && hasLoggedIn)
 			return;
 
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
@@ -3365,7 +3365,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || frameTimer.isActive();
 
 		// Upload the UI which we began copying during the previous frame
 		if (configAsyncUICopy)
