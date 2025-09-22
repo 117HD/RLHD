@@ -2155,7 +2155,8 @@
     "name": "YANILLE_INSTANCE",
     "regions": [
       11593
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "YANILLE",
@@ -3615,7 +3616,8 @@
     "name": "TREE_GNOME_STRONGHOLD_INSTANCE",
     "regionBoxes": [
       [ 7766, 8023 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "TREE_GNOME_STRONGHOLD",
@@ -4536,8 +4538,8 @@
       [ 5022, 5535, 1 ],
       [ 5280, 5536, 1 ]
     ],
-    "regions": [
-      5279
+    "unhideAreas": [
+      [ 1280, 10176, 1343, 10239 ]
     ],
     "hideOtherAreas": true
   },
@@ -4546,8 +4548,8 @@
     "regionBoxes": [
       [ 5022, 5535, 2 ]
     ],
-    "regions": [
-      5279
+    "unhideAreas": [
+      [ 1280, 10176, 1343, 10239 ]
     ],
     "hideOtherAreas": true
   },
@@ -4597,7 +4599,9 @@
   },
   {
     "name": "CHASM_OF_FIRE",
-    "regions": [ 5789 ],
+    "regionBoxes": [
+      [ 5789, 6045 ]
+    ],
     "hideOtherAreas": true
   },
   {
@@ -4717,7 +4721,8 @@
     "name": "KOUREND_CATACOMBS_DUNGEON",
     "aabbs": [
       [ 1584, 9976, 1751, 10111 ]
-    ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "KOUREND_CATACOMBS",
