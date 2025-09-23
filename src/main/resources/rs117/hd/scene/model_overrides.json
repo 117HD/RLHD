@@ -21232,10 +21232,95 @@
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_CORNER",
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_INSIDE_CORNER",
       "DARKM_CASTLE_WALL_LVL0_WINDOW_ROOF",
-      "DARKM_CASTLE_WALL_LVL0_DOOR_ROOF"
+      "DARKM_CASTLE_WALL_LVL0_DOOR_ROOF",
+      "DARKM_INNER_WALL_LVL0_01",
+      "DARKM_INNER_WALL_FLOOR_A",
+      "DARKM_WALL_PILLAR_SMALL_02",
+      "DARKM_OUTER_WALL_2H_TO_1H",
+      "DARKM_INNER_WALL_PILLAR_2H_TO_1H",
+      "DARKM_OUTER_WALL_OUTSIDE_2H",
+      "DARKM_OUTER_WALL_2H",
+      "DARKM_OUTER_WALL_INSIDE_2H",
+      "DARKM_OUTER_WALL_2H_SHORTCUT_NO_ROPE",
+      "DARKM_OUTER_WALL_3H_SHORTCUT_NO_ROPE",
+      "DARKM_OUTER_WALL_TOP_TILE2_SHORTCUT_ICON",
+      "DARKM_OUTER_WALL_3H_TO_2H",
+      "DARKM_INNER_WALL_PILLAR_3H_TO_2H",
+      "DARKM_OUTER_WALL_3H_TO_1H",
+      "DARKM_STEPS_SIDE_MID_LEFT",
+      "DARKM_STEPS_SIDE_MID_RIGHT",
+      "DARKM_INNER_WALL_LVL0_DOUBLE_HEIGHT",
+      "DARKM_WALL_PILLAR_SMALL_01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.8
+  },
+  {
+    "description": "Darkmeyer Walls - Lighter",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_STEPS_SIDE_TOP_RIGHT",
+      "DARKM_STEPS_SIDE_TOP_LEFT",
+      "DARKM_STEPS_TOP",
+      "DARKM_WALL_PILLAR_LARGE_01",
+      "DARKM_WALL_PILLAR_LARGE_02",
+      "DARKM_STEPS_BOTTOM"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Darkmeyer Stairs - End Cap",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_STEPS_SIDE_FRONT_LEFT",
+      "DARKM_STEPS_SIDE_FRONT_RIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Stone Walls with cloth flag",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DARKM_OUTER_WALL_3H_FLAG"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Flag",
+        "colors": "h > 6 && s >= 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Flag pole",
+        "colors": "h > 0 && h <= 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Stone Tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "DARKM_OUTER_WALL_TOP_TILE",
+      "DARKM_OUTER_WALL_TOP_TILE2",
+      "DARKM_OUTER_WALL_TOP_TILE2_SICKLE"
+    ],
+    "uvType": "MODEL_XZ"
   },
   {
     "description": "Darkmeyer Houses - Walls",
@@ -21266,7 +21351,7 @@
       "DARKM_MIDDLE_WALL_CORNER"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.65
   },
   {
     "description": "Darkmeyer Houses - Rich Walls",
@@ -21280,7 +21365,7 @@
       "DARKM_RICH_WALL01_1B05PLAQUE"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": "h == 5",
@@ -21309,7 +21394,7 @@
       "DARKM_MIDDLE_ROOF4_WALL10"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": "s > 0",
@@ -21362,7 +21447,7 @@
       "DARKM_POOR_WALL01"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.65,
     "colorOverrides": [
       {
         "colors": "a < 255",
@@ -21384,7 +21469,7 @@
   },
   {
     "description": "Darkmeyer Red Street Lights",
-    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.2,
     "objectIds": [
@@ -21398,40 +21483,32 @@
     ]
   },
   {
-    "description": "Darkmeyer Stone Walls with cloth flag",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Darkmeyer Metal Fences",
+    "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.7,
+    "uvScale": 0.2,
     "objectIds": [
-      "DARKM_OUTER_WALL_3H_FLAG"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Flag",
-        "colors": "h > 6 && s >= 1",
-        "baseMaterial": "CARPET",
-        "uvType": "BOX",
-        "uvScale": 0.8,
-        "uvOrientation": 192
-      },
-      {
-        "description": "Flag pole",
-        "colors": "h > 0 && h <= 6",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX",
-        "uvScale": 0.8
-      }
+      "DARKM_INNER_WALL_FENCE",
+      "DARKM_INNER_WALL_FENCE_RAISED",
+      "DARKM_SMALL_FENCE",
+      "SEPULCHRE_OW_FENCE",
+      "SEPULCHRE_OW_GATE_OPEN_M",
+      "SEPULCHRE_OW_GATE_OPEN",
+      "DARKM_SMALL_FENCE_CORNER"
     ]
   },
   {
-    "description": "Darkmeyer Stone Tiles",
-    "baseMaterial": "STONE_NORMALED",
+    "description": "Darkmeyer Fence Arch",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
     "objectIds": [
-      "DARKM_OUTER_WALL_TOP_TILE",
-      "DARKM_OUTER_WALL_TOP_TILE2",
-      "DARKM_OUTER_WALL_TOP_TILE2_SICKLE"
-    ],
-    "uvType": "MODEL_XZ"
+      "DARKM_POOR_AREA_ARCHWAY_RIGHT",
+      "DARKM_POOR_AREA_ARCHWAY_LEFT",
+      "DARKM_MID_ARCHWAY_LEFT",
+      "DARKM_MID_ARCHWAY_TOP",
+      "DARKM_MID_ARCHWAY_RIGHT"
+    ]
   },
   {
     "description": "Vampyre Statue",
