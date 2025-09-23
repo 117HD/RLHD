@@ -1017,6 +1017,11 @@
     "specularGloss": 30.0
   },
   {
+    "name": "GRUNGE_3_SMOOTH",
+    "parent": "GRUNGE_3",
+    "normalMap": null
+  },
+  {
     "name": "GRUNGE_3_SHINY",
     "parent": "GRUNGE_3",
     "brightness": 1.177,
