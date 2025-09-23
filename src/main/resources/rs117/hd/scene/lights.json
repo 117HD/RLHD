@@ -25904,8 +25904,26 @@
     "description": "RED_STREET_LAMP",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 5,
+    "radius": 450,
+    "strength": 8,
+    "color": [
+      255,
+      100,
+      100
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_STREET_LAMP"
+    ]
+  },
+  {
+    "description": "RED_STREET_LAMP_2",
+    "height": 50,
+    "alignment": "CENTER",
+    "radius": 175,
+    "strength": 10,
     "color": [
       255,
       100,

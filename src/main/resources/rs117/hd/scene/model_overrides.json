@@ -21239,6 +21239,21 @@
     "uvScale": 0.7
   },
   {
+    "description": "Darkmeyer Red Street Lights",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_STREET_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 1",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
     "description": "Darkmeyer Stone Walls with cloth flag",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
