@@ -26012,7 +26012,7 @@
     "height": 100,
     "offset": [ 93, -20, -48 ],
     "radius": 150,
-    "strength": 8,
+    "strength": 15,
     "color": [
       252,
       148,
@@ -26029,8 +26029,8 @@
     "description": "DARKMEYER_COOKING_RANGE_2",
     "height": 100,
     "offset": [ 70, -20, -88 ],
-    "radius": 150,
-    "strength": 8,
+    "radius": 175,
+    "strength": 15,
     "color": [
       252,
       148,
@@ -26040,7 +26040,44 @@
     "duration": 0,
     "range": 5,
     "objectIds": [
-      "DARKM_MIDDLE_RANGE"
+      "DARKM_MIDDLE_RANGE",
+      "DARKM_POOR_RANGE"
+    ]
+  },
+  {
+    "description": "DARKMEYRE_PUB_LIGHT",
+    "worldX": 3598,
+    "worldY": 3390,
+    "plane": 0,
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 15,
+    "color": [
+      253,
+      140,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "DARKMEYER_POTTERY_OVEN",
+    "height": 100,
+    "offset": [ 90, 55, 0 ],
+    "radius": 250,
+    "strength": 11,
+    "color": [
+      252,
+      75,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_POOR_POTTERY_OVEN"
     ]
   },
   {

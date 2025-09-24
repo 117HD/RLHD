@@ -10461,7 +10461,10 @@
       "LUC2_DWT_JAILBARS_GATE_OPEN",
       "WALLKIT_CAMTORUM01_FENCE01",
       "WALLKIT_CAMTORUM01_VAULT01",
-      "WALLKIT_CAMTORUM01_VAULT02"
+      "WALLKIT_CAMTORUM01_VAULT02",
+      "DARKM_PRISON_BARS_WALL",
+      "MYQ5_PRISONER_DOOR",
+      "MYQ5_PRISONER_DOOR_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -10558,7 +10561,8 @@
       "VIKING_FURNACE_DOOR_RIGHT_MIRROR",
       "FAI_FALADOR_FURNACE",
       "FAI_FALADOR_FURNACE_DOOR_LEFT",
-      "FAI_FALADOR_FURNACE_DOOR_RIGHT_MIRROR"
+      "FAI_FALADOR_FURNACE_DOOR_RIGHT_MIRROR",
+      "DARKM_FURNACE"
     ],
     "uvType": "BOX"
   },
@@ -10589,10 +10593,11 @@
       "ANVIL",
       "VIKING_ANVIL",
       "DWARF_KELDAGRIM_ANVIL",
-      "GIM_ANVIL"
+      "GIM_ANVIL",
+      "DARKM_ANVIL"
     ],
     "uvType": "BOX",
-    "uvScale": 1.1,
+    "uvScale": 0.6,
     "flatNormals": true
   },
   {
@@ -13148,6 +13153,7 @@
     "description": "Objects - Metallic - Iron Billets",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_IRON_PILE",
       "DORGESH_BLACKSMITH_IRON_PILE"
@@ -20781,7 +20787,7 @@
   },
   {
     "description": "Ver Sinhaza - Metallic - Stone - Vyre Well",
-    "baseMaterial": "ROCK_3_LIGHT",
+    "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvOrientation": 256,
     "uvScale": 0.8,
@@ -21558,11 +21564,12 @@
     "uvScale": 0.8,
     "objectIds": [
       "DARKM_MIDDLE_DOUBLE_BED",
-      "DARKM_RICH_COFFIN_OPEN"
+      "DARKM_RICH_COFFIN_OPEN",
+      "DARKM_POOR_BED_SINGLE"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 14 || h == 9 || h == 48",
+        "colors": "h == 14 || h == 9 || h == 48 || h == 0 && s == 1 || h == 3 && s == 1",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -21573,6 +21580,21 @@
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Prison Bed",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_MIDDLE_PRISON_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s > 0 || h == 3",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   },
@@ -21648,7 +21670,24 @@
     "uvScale": 0.2,
     "objectIds": [
       "DARKM_RICH_RANGE",
-      "DARKM_MIDDLE_RANGE"
+      "DARKM_MIDDLE_RANGE",
+      "DARKM_POOR_RANGE",
+      "DARKM_POOR_POTTERY_OVEN"
+    ]
+  },
+  {
+    "description": "Darkmeyer Pottery Wheel",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_POOR_POTTERYWHEEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_2"
+      }
     ]
   },
   {
@@ -21658,12 +21697,15 @@
     "uvScale": 0.2,
     "objectIds": [
       "DARKM_RICH_SINK",
-      "DARKM_MIDDLE_SINK"
+      "DARKM_MIDDLE_SINK",
+      "DARKM_POOR_SINK"
     ],
     "colorOverrides": [
       {
         "colors": "h == 40",
-        "baseMaterial": "NONE"
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.3
       }
     ]
   },
