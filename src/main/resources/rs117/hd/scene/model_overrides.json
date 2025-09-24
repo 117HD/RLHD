@@ -21512,6 +21512,24 @@
     ]
   },
   {
+    "description": "Darkmeyer Prayer Altar",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DARKM_ALTAR",
+      "DARKM_ALTAR_CANDLES_01",
+      "DARKM_ALTAR_CANDLES_02",
+      "DARKM_ALTAR_CANDLES_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 1",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Vampyre Statue",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [

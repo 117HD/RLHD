@@ -25901,11 +25901,11 @@
     ]
   },
   {
-    "description": "RED_STREET_LAMP",
+    "description": "DARKMEYER_RED_STREET_LAMP",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 450,
-    "strength": 8,
+    "radius": 400,
+    "strength": 15,
     "color": [
       255,
       100,
@@ -25919,21 +25919,74 @@
     ]
   },
   {
-    "description": "RED_STREET_LAMP_2",
-    "height": 50,
+    "description": "DARKMEYER_RED_CANDLES",
+    "height": 210,
     "alignment": "CENTER",
-    "radius": 175,
-    "strength": 10,
+    "radius": 220,
+    "strength": 13,
     "color": [
       255,
-      100,
-      100
+      85,
+      85
     ],
     "type": "FLICKER",
     "duration": 0,
     "range": 20,
     "objectIds": [
-      "DARKM_STREET_LAMP"
+      "DARKM_ALTAR_CANDLES_01",
+      "DARKM_ALTAR_CANDLES_02",
+      "DARKM_ALTAR_CANDLES_03"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_LEFT",
+    "offset": [ -140, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_RIGHT",
+    "offset": [ 140, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_MIDDLE",
+    "offset": [ 0, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_ALTAR"
     ]
   },
   {

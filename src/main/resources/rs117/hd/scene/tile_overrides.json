@@ -3289,7 +3289,7 @@
     "overlayIds": [
       49
     ],
-    "groundMaterial": "MARBLE_2",
+    "groundMaterial": "MARBLE_2_GLOSS",
     "blended": false
   },
   {
@@ -3319,7 +3319,8 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "blended": false,
-    "shiftLightness": 5
+    "shiftLightness": 5,
+    "uvScale": 1.4
   },
   {
     "name": "DARKMEYER_LOWER_HOUSE_FLOORS",
