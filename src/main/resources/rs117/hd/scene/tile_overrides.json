@@ -3294,7 +3294,7 @@
   },
   {
     "name": "DARKMEYER_UPPER_HOUSE_ROOFS",
-    "area": "DARKMEYER_UPPER_HOUSES",
+    "area": "DARKMEYER_UPPER_HOUSE_ROOFS",
     "underlayIds": [
       57
     ],
@@ -3313,7 +3313,7 @@
   },
   {
     "name": "DARKMEYER_MIDDLE_HOUSE_ROOFS",
-    "area": "DARKMEYER_MIDDLE_HOUSES",
+    "area": "DARKMEYER_MIDDLE_HOUSE_ROOFS",
     "underlayIds": [
       57
     ],

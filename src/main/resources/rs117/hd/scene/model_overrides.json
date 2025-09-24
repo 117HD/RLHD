@@ -21296,7 +21296,8 @@
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "objectIds": [
       "DARKM_STEPS_SIDE_FRONT_LEFT",
-      "DARKM_STEPS_SIDE_FRONT_RIGHT"
+      "DARKM_STEPS_SIDE_FRONT_RIGHT",
+      "DARKM_MINE_ENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
