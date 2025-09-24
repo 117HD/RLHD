@@ -3293,6 +3293,16 @@
     "blended": false
   },
   {
+    "name": "DARKMEYER_UPPER_HOUSE_ROOFS",
+    "area": "DARKMEYER_UPPER_HOUSES",
+    "underlayIds": [
+      57
+    ],
+    "groundMaterial": "TILES_2x2_1",
+    "blended": false,
+    "shiftLightness": 12
+  },
+  {
     "name": "DARKMEYER_MIDDLE_HOUSE_FLOORS",
     "area": "DARKMEYER_MIDDLE",
     "overlayIds": [
@@ -3300,6 +3310,16 @@
     ],
     "groundMaterial": "GRUNGE_3",
     "blended": false
+  },
+  {
+    "name": "DARKMEYER_MIDDLE_HOUSE_ROOFS",
+    "area": "DARKMEYER_MIDDLE_HOUSES",
+    "underlayIds": [
+      57
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "blended": false,
+    "shiftLightness": 5
   },
   {
     "name": "DARKMEYER_LOWER_HOUSE_FLOORS",
