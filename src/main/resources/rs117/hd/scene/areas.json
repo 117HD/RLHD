@@ -6802,9 +6802,8 @@
   },
   {
     "name": "GIANT_MOLE_LAIR",
-    "regions": [
-      6992,
-      6993
+    "aabbs": [
+      [ 1728, 5125, 1791, 5247 ]
     ],
     "hideOtherAreas": true
   },

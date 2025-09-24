@@ -27295,7 +27295,42 @@
   {
     "description": "Giant Mole Lair - Object - Dirt Floor",
     "baseMaterial": "DIRT_1",
-    "objectIds": [ "MOLE_WALL_TOP", "MOLE_WALL_TOP_LVL2", "MOLE_WALL_TOP5_LVL2", "MOLE_WALL_TOP_LVL2_BIG" ]
+    "objectIds": [
+      "MOLE_WALL_TOP",
+      "MOLE_WALL_TOP_LVL2",
+      "MOLE_WALL_TOP5_LVL2",
+      "MOLE_WALL_TOP_LVL2_BIG"
+    ]
+  },
+  {
+    "description": "Giant Mole Lair - Object - Dirt Floor with Water",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "objectIds": [
+      "MOLE_WATER_CORNER",
+      "MOLE_WATER_EDGE_STEP",
+      "MOLE_WATER_EDGE_CURVED",
+      "MOLE_WATER_STEP",
+      "MOLE_WATER_TIP",
+      "MOLE_WATER_EDGE",
+      "MOLE_WATER_PLAIN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Giant Mole Lair - Object - Exit Rope",
+    "baseMaterial": "ROPE",
+    "uvScale": 0.45,
+    "uvType": "BOX",
+    "objectIds": [
+      "MOLE_ROPE_01",
+      "MOLE_ROPE_02"
+    ]
   },
   {
     "description": "Giant Mole Lair - Walls - Dirt Walls",
