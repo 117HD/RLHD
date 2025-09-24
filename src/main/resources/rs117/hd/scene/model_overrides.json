@@ -1426,6 +1426,18 @@
     "uvScale": 0.8
   },
   {
+    "description": "DEAD_TREES_LIGHTER",
+    "baseMaterial": "LIGHT_BARK",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "DARKM_DEAD_TREE_01",
+      "DARKM_DEAD_TREE_02",
+      "DARKM_DEAD_TREE_03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
     "description": "My Arms Big Adventure - Rope Tree",
     "baseMaterial": "BARK",
     "objectIds": [
