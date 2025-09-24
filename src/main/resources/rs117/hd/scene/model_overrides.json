@@ -27358,7 +27358,7 @@
   },
   {
     "description": "Giant Mole Lair - Object - Mole Hill",
-    "baseMaterial": "DIRT_1",
+    "baseMaterial": "DIRT_1_LIGHT",
     "objectIds": [
       "MOLE_HILL"
     ],

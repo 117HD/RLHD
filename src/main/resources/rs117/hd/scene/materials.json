@@ -849,6 +849,11 @@
     "specularGloss": 18.0
   },
   {
+    "name": "DIRT_1_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.1
+  },
+  {
     "name": "DIRT_1_VERT",
     "parent": "DIRT_1",
     "normalMap": null
