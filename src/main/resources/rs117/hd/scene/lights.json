@@ -33968,10 +33968,30 @@
     ]
   },
   {
+    "description": "RED_MUSHROOM_WALL_TOP",
+    "offset": [ 0, 102, 85 ],
+    "radius": 180,
+    "strength": 25.25,
+    "visibleFromOtherPlanes": true,
+    "color": [
+      225,
+      30,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1250,
+    "range": 20,
+    "objectIds": [
+      "FAIRY_WALL_LV2_MUSH_RED",
+      "FAIRY_WALL_LV2_MUSH_RED_VAR"
+    ]
+  },
+  {
     "description": "GREEN_MUSHROOM_WALL",
     "offset": [ 0, 142, 85 ],
-    "radius": 100,
+    "radius": 150,
     "strength": 5.25,
+    "visibleFromOtherPlanes": true,
     "color": [
       180,
       255,
@@ -33982,7 +34002,9 @@
     "range": 20,
     "objectIds": [
       "FAIRY_WALL_MUSH_GREEN",
-      "FAIRY_WALL_MUSH_GREEN_VAR"
+      "FAIRY_WALL_MUSH_GREEN_VAR",
+      "FAIRY_WALL_LV2_MUSH_GREEN_VAR",
+      "FAIRY_WALL_LV2_MUSH_GREEN"
     ]
   },
   {
