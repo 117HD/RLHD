@@ -180,6 +180,12 @@
     ]
   },
   {
+    "name": "GRUNGE_3",
+    "materials": [
+      "GRUNGE_3"
+    ]
+  },
+  {
     "name": "SUBMERGED_GRUNGE_2",
     "materials": [
       "SUBMERGED_GRUNGE_2"
