@@ -9248,7 +9248,19 @@
       "SORCERESS_RUG_END",
       "SORCERESS_RUG_END_M",
       "SORCERESS_RUG_CORNER_M",
-      "SORCERESS_RUG_CORNER"
+      "SORCERESS_RUG_CORNER",
+      "DARKM_MIDDLE_RUG_CORNER",
+      "DARKM_MIDDLE_RUG_STRAIGHT"
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
+    "description": "Fine Carpet - Lighter",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "DARKM_MIDDLE_RUG_CORNER",
+      "DARKM_MIDDLE_RUG_STRAIGHT"
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
@@ -21574,6 +21586,16 @@
     ]
   },
   {
+    "description": "Darkmeyer Trunk",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "DARKM_POOR_BED_TRUNK"
+    ]
+  },
+  {
     "description": "Darkmeyer Chair and Sofa",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -21603,7 +21625,8 @@
       "DARKM_MIDDLE_TABLE_1X1",
       "DARKM_RICH_COFFEE_TABLE_BOOK",
       "DARKM_MIDDLE_TABLE_2X1",
-      "BREW_BIGTABLE"
+      "BREW_BIGTABLE",
+      "DARKM_POOR_SHOP_COUNTER"
     ],
     "colorOverrides": [
       {
@@ -21624,16 +21647,18 @@
     "uvType": "BOX",
     "uvScale": 0.2,
     "objectIds": [
-      "DARKM_RICH_RANGE"
+      "DARKM_RICH_RANGE",
+      "DARKM_MIDDLE_RANGE"
     ]
   },
   {
-    "description": "Darkmeyer Range",
+    "description": "Darkmeyer Sinks",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.2,
     "objectIds": [
-      "DARKM_RICH_SINK"
+      "DARKM_RICH_SINK",
+      "DARKM_MIDDLE_SINK"
     ],
     "colorOverrides": [
       {
@@ -21649,7 +21674,10 @@
       "DARKM_MIDDLE_SHELF_GENERAL_01",
       "DARKM_MIDDLE_SHELF_GENERAL_02",
       "DARKM_MIDDLE_SHELF_STANDING_04",
-      "DARKM_MIDDLE_SHELF_STANDING_02"
+      "DARKM_MIDDLE_SHELF_STANDING_02",
+      "DARKM_MIDDLE_SHELF_STANDING_03",
+      "DARKM_MIDDLE_SHELF_STANDING_01",
+      "DARKM_MIDDLE_SHELF_KITCHEN_01"
     ],
     "colorOverrides": [
       {
@@ -21657,6 +21685,62 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Shelves Bottles or Glasses",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_MIDDLE_WINE_RACK_01",
+      "DARKM_INN_DRINKS_BAR_LEFT",
+      "DARKM_INN_DRINKS_BAR_MIDDLE2",
+      "DARKM_INN_DRINKS_BAR_MIDDLE",
+      "DARKM_INN_DRINKS_BAR_RIGHT",
+      "DARKM_INN_BAR_LEFT",
+      "DARKM_INN_BAR_MIDDLE",
+      "DARKM_INN_BAR_MIDDLE2",
+      "DARKM_INN_BAR_MIDDLE3",
+      "DARKM_INN_BAR_RIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Cupboard Bottles or Glasses",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_POOR_CUPBOARD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Shelves Sewing Machine",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DARKM_SEWING_MACHINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
       }
     ]
   },
@@ -34783,7 +34867,11 @@
   {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "FAI_VARROCK_HAT_STAND", "QIP_SHEEP_SHEARER_HATSTAND" ],
+    "objectIds": [
+      "FAI_VARROCK_HAT_STAND",
+      "QIP_SHEEP_SHEARER_HATSTAND",
+      "DARKM_HAT_STAND"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,

@@ -26010,7 +26010,7 @@
   {
     "description": "DARKMEYER_COOKING_RANGE",
     "height": 100,
-    "offset": [ 93, 0, -48 ],
+    "offset": [ 93, -20, -48 ],
     "radius": 150,
     "strength": 8,
     "color": [
@@ -26023,6 +26023,24 @@
     "range": 5,
     "objectIds": [
       "DARKM_RICH_RANGE"
+    ]
+  },
+  {
+    "description": "DARKMEYER_COOKING_RANGE_2",
+    "height": 100,
+    "offset": [ 70, -20, -88 ],
+    "radius": 150,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_MIDDLE_RANGE"
     ]
   },
   {
