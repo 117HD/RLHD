@@ -20781,35 +20781,14 @@
     "uvOrientation": 256,
     "uvScale": 0.6,
     "objectIds": [
-      "TOB_SURFACE_BANKBOOTH"
+      "TOB_SURFACE_BANKBOOTH",
+      "TOB_SURFACE_BANKBOOTH_CLOSED",
+      "DARKM_BANKBOOTH"
     ],
     "colorOverrides": [
       {
         "baseMaterial": "BLANK_GLOSS",
         "colors": "a < 255"
-      }
-    ]
-  },
-  {
-    "description": "Ver Sinhaza - Metallic - Stone - Bank closed",
-    "baseMaterial": "STONE_NORMALED",
-    "uvType": "BOX",
-    "uvOrientation": 256,
-    "uvScale": 0.6,
-    "objectIds": [
-      "TOB_SURFACE_BANKBOOTH_CLOSED"
-    ],
-    "colorOverrides": [
-      {
-        "baseMaterial": "BLANK_GLOSS",
-        "colors": "a < 255"
-      },
-      {
-        "description": "Wooden Panels",
-        "colors": "s > 2",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX",
-        "uvScale": 0.8
       }
     ]
   },
@@ -21526,6 +21505,23 @@
       {
         "colors": "s > 1",
         "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Chest of Gold",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "DARKM_BANK_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
       }
     ]
   },
