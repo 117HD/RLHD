@@ -25990,6 +25990,24 @@
     ]
   },
   {
+    "description": "DARKMEYER_TABLE_CANDLE",
+    "height": 40,
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_MIDDLE_TABLE_1X1_LAMP"
+    ],
+    "offset": [ 3, 90, 0 ]
+  },
+  {
     "description": "MONUMENTAL_CHEST_NORMAL",
     "offset": [ 0, 300, -100 ],
     "alignment": "CENTER",

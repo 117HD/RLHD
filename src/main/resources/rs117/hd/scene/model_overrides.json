@@ -21530,6 +21530,25 @@
     ]
   },
   {
+    "description": "Darkmeyer Table with Candle Lantern",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DARKM_MIDDLE_TABLE_1X1_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "CARPET"
+      }
+    ]
+  },
+  {
     "description": "Vampyre Statue",
     "baseMaterial": "MARBLE_1_SEMIGLOSS",
     "objectIds": [
