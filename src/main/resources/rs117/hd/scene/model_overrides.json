@@ -25826,14 +25826,38 @@
     "description": "Textured Bushes",
     "windDisplacementMode": "VERTEX_JIGGLE",
     "objectIds": [
-      "HEDGE", "HEDGECORNER", "WILDBUSH1", "WILDBUSH2",
-      "WILDBUSH3", "WILDBUSH4", "BUSH1", "BUSH2",
-      "DIGSITEBUSH", "DIGSITEBUSHSAMPLE", "WATCHTOWERBUSH", "WATCHTOWERBUSHNAIL",
-      "WATCHTOWERBUSHDAGGER", "WATCHTOWERBUSHROBE", "WATCHTOWERBUSHARMOUR",
-      "MYREQUE_BUSH_WITHOUT_LEG", "MYREQUE_BUSH1", "MYREQUE_BUSH2",
-      "HUNTING_TRAIL_END_JUNGLE", "HUNTING_TRAIL_END_BUSH29", "HUNTING_TRAIL_END_BUSH35_55",
-      "ZEP_BUSH", "BIM_BUSH", "SOTN_HUNTING_BUSH_OP",
+      "HEDGE",
+      "HEDGECORNER",
+      "WILDBUSH2",
+      "WILDBUSH3",
+      "WILDBUSH4",
+      "BUSH2",
+      "MYREQUE_BUSH_WITHOUT_LEG",
+      "MYREQUE_BUSH1",
+      "MYREQUE_BUSH2",
+      "SOTN_HUNTING_BUSH_OP",
       "SOTN_HUNTING_BUSH_NOOP"
+    ]
+  },
+  {
+    "description": "Bushes - Alternate Wind Displacement",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -2,
+    "objectIds": [
+      "BUSH1",
+      "DIGSITEBUSH",
+      "DIGSITEBUSHSAMPLE",
+      "WATCHTOWERBUSH",
+      "WATCHTOWERBUSHNAIL",
+      "WATCHTOWERBUSHDAGGER",
+      "WATCHTOWERBUSHROBE",
+      "WATCHTOWERBUSHARMOUR",
+      "HUNTING_TRAIL_END_JUNGLE",
+      "HUNTING_TRAIL_END_BUSH29",
+      "HUNTING_TRAIL_END_BUSH35_55",
+      "ZEP_BUSH",
+      "BIM_BUSH",
+      "WILDBUSH1"
     ]
   },
   {
@@ -27333,6 +27357,15 @@
     ]
   },
   {
+    "description": "Giant Mole Lair - Object - Mole Hill",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "MOLE_HILL"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
     "description": "Giant Mole Lair - Walls - Dirt Walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -27345,7 +27378,7 @@
       "MOLE_WALL_RAMP_02_MIRROR"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6
+    "uvScale": 0.5
   },
   {
     "description": "Giant Mole Lair - Walls - Dirt Walls - Roots",
