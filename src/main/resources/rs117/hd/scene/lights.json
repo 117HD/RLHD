@@ -26008,6 +26008,24 @@
     "offset": [ 3, 90, 0 ]
   },
   {
+    "description": "DARKMEYER_COOKING_RANGE",
+    "height": 100,
+    "offset": [ 93, 0, -48 ],
+    "radius": 150,
+    "strength": 8,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_RICH_RANGE"
+    ]
+  },
+  {
     "description": "MONUMENTAL_CHEST_NORMAL",
     "offset": [ 0, 300, -100 ],
     "alignment": "CENTER",

@@ -9830,7 +9830,9 @@
       "POOR_STAIRS",
       "POOR_STAIRSTOP",
       "KR_CAM_WOODENSTAIRSTOP",
-      "KR_CAM_WOODENSTAIRS"
+      "KR_CAM_WOODENSTAIRS",
+      "DARKM_RICH_STAIRCASE_BOTTOM",
+      "DARKM_RICH_STAIRCASE_RAILING"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -12612,9 +12614,20 @@
       "GRAB_EVIL_TWIN_CRATES1",
       "GRAB_EVIL_TWIN_CRATES2",
       "DEAL_CRATE2",
-      "LUC2_DWT_CRATE1"
+      "LUC2_DWT_CRATE1",
+      "DARKM_MIDDLE_CRATE_SINGLE"
     ],
     "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Crate - Stacked - 256 degree angled top",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DARKM_MIDDLE_CRATE_DOUBLE"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 256,
     "flatNormals": true
   },
   {
@@ -21350,7 +21363,8 @@
         "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvScale": 0.6,
+        "uvOrientationY": 256
       },
       {
         "colors": "s == 1",
@@ -21526,12 +21540,70 @@
     ]
   },
   {
-    "description": "Darkmeyer Table with Candle Lantern",
+    "description": "Darkmeyer Coffin Bed",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DARKM_MIDDLE_DOUBLE_BED",
+      "DARKM_RICH_COFFIN_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14 || h == 9 || h == 48",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Wardrobe",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DARKM_RICH_WARDROBE"
+    ]
+  },
+  {
+    "description": "Darkmeyer Chair and Sofa",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DARKM_POOR_CHAIR",
+      "DARKM_RICH_SOFA",
+      "DARKM_RICH_CHAIR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 || s == 4 || h == 48",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Tables",
     "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
-      "DARKM_MIDDLE_TABLE_1X1_LAMP"
+      "DARKM_MIDDLE_TABLE_1X1_LAMP",
+      "DARKM_MIDDLE_TABLE_1X1",
+      "DARKM_RICH_COFFEE_TABLE_BOOK",
+      "DARKM_MIDDLE_TABLE_2X1",
+      "BREW_BIGTABLE"
     ],
     "colorOverrides": [
       {
@@ -21540,7 +21612,69 @@
       },
       {
         "colors": "s == 2",
-        "baseMaterial": "CARPET"
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Range",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_RICH_RANGE"
+    ]
+  },
+  {
+    "description": "Darkmeyer Range",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_RICH_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Shelves with Assorted Items",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_MIDDLE_SHELF_GENERAL_01",
+      "DARKM_MIDDLE_SHELF_GENERAL_02",
+      "DARKM_MIDDLE_SHELF_STANDING_04",
+      "DARKM_MIDDLE_SHELF_STANDING_02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Planter with Plants",
+    "baseMaterial": "GRUNGE_3",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
+    "objectIds": [
+      "DARKM_RICH_PLANTER_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
       }
     ]
   },
@@ -36344,7 +36478,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "KR_SEERS_VILLAGE_GRANDFATHERCLOCK",
-      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK"
+      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK",
+      "_100_DAVE_GRANDFATHERCLOCK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
