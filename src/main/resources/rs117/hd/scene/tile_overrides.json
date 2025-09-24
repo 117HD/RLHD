@@ -3238,24 +3238,23 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "DARKMEYER_BRICK_PATH",
+    "groundMaterial": "DARKMEYER_BRICK_PATH_BLEND",
     "shiftLightness": 3,
-    "uvScale": 0.760009,
     "minLightness": 12,
     "replacements": {
-      "DARKMEYER_PATH_UPPER_BLENDING": "blending"
+      "DARKMEYER_PATH_UPPER_NO_BLENDING": "!blending"
     }
   },
   {
-    "name": "DARKMEYER_PATH_UPPER_BLEND",
+    "name": "DARKMEYER_PATH_UPPER_NO_BLENDING",
     "area": "DARKMEYER_UPPER",
     "overlayIds": [
       11
     ],
-    "groundMaterial": "DARKMEYER_BRICK_PATH_BLEND",
+    "groundMaterial": "DARKMEYER_BRICK_PATH",
     "shiftLightness": 3,
-    "minLightness": 12,
-    "blendedAsOpposite": false
+    "uvScale": 0.760009,
+    "minLightness": 12
   },
   {
     "name": "DARKMEYER_PATH_MIDDLE",
@@ -3263,7 +3262,8 @@
     "overlayIds": [
       11
     ],
-    "groundMaterial": "PLAIN_DIRT"
+    "groundMaterial": "PLAIN_DIRT",
+    "minLightness": 8
   },
   {
     "name": "DARKMEYER_PATH_LOWER",
