@@ -1468,6 +1468,28 @@
     "displacementScale": 0.025
   },
   {
+    "name": "DARKMEYER_BRICK_PATH",
+    "parent": "MARBLE_2",
+    "normalMap": "LASSAR_UNDERCITY_TILE_N",
+    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
+    "displacementScale": 0.025,
+    "textureScale": [
+      1,
+      1.1,
+      1
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH_BLEND",
+    "parent": "DARKMEYER_BRICK_PATH",
+    "textureScale": [
+      0.76,
+      0.76,
+      1
+    ]
+  },
+  {
     "name": "HD_LAVA_1",
     "flowMap": "LAVA_FLOW_MAP",
     "overrideBaseColor": true,

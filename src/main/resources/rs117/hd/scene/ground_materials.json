@@ -306,6 +306,18 @@
     ]
   },
   {
+    "name": "DARKMEYER_BRICK_PATH",
+    "materials": [
+      "DARKMEYER_BRICK_PATH"
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH_BLEND",
+    "materials": [
+      "DARKMEYER_BRICK_PATH_BLEND"
+    ]
+  },
+  {
     "name": "BLANK_SEMIGLOSS",
     "materials": [
       "BLANK_SEMIGLOSS"

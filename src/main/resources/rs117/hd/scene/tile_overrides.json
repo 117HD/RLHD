@@ -3233,6 +3233,57 @@
     "groundMaterial": "GRAVEL"
   },
   {
+    "name": "DARKMEYER_PATH_UPPER",
+    "area": "DARKMEYER_UPPER",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "DARKMEYER_BRICK_PATH",
+    "shiftLightness": 3,
+    "uvScale": 0.760009,
+    "minLightness": 12,
+    "replacements": {
+      "DARKMEYER_PATH_UPPER_BLENDING": "blending"
+    }
+  },
+  {
+    "name": "DARKMEYER_PATH_UPPER_BLEND",
+    "area": "DARKMEYER_UPPER",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "DARKMEYER_BRICK_PATH_BLEND",
+    "shiftLightness": 3,
+    "minLightness": 12,
+    "blendedAsOpposite": false
+  },
+  {
+    "name": "DARKMEYER_PATH_MIDDLE",
+    "area": "DARKMEYER_MIDDLE",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "PLAIN_DIRT"
+  },
+  {
+    "name": "DARKMEYER_PATH_LOWER",
+    "area": "DARKMEYER_LOWER",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "shiftLightness": -2
+  },
+  {
+    "name": "DARKMEYER_ARBORETUM_BLENDING_FIX",
+    "area": "DARKMEYER_ARBORETUM_BLENDING_FIX",
+    "overlayIds": [
+      49
+    ],
+    "groundMaterial": "DIRT",
+    "blended": false
+  },
+  {
     "name": "ABANDONED_MINE_ROCK",
     "area": "MORYTANIA",
     "overlayIds": [
