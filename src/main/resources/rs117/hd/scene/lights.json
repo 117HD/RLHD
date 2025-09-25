@@ -35022,7 +35022,7 @@
     "description": "FIRE_OF_ETERNAL_LIGHT",
     "height": 300,
     "radius": 650,
-    "strength": 30,
+    "strength": 20,
     "color": "#ffffff",
     "type": "FLICKER",
     "range": 10,
