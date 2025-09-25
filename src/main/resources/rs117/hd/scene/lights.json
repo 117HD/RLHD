@@ -35021,8 +35021,8 @@
   {
     "description": "FIRE_OF_ETERNAL_LIGHT",
     "height": 300,
-    "radius": 850,
-    "strength": 5,
+    "radius": 650,
+    "strength": 30,
     "color": "#ffffff",
     "type": "FLICKER",
     "range": 10,
@@ -41309,5 +41309,13 @@
     "objectIds": [
       "NIGHTMARE_PLATFORM_LVL2_23"
     ]
+  },
+  {
+    "description": "GIANT_MOLE_LIGHT_SHAFT",
+    "objectIds": [ "MOLE_LIGHT_STREAMING" ],
+    "radius": 700,
+    "strength": 25,
+    "color": "#ffffff",
+    "offset": [ 0, 300, 0 ]
   }
 ]

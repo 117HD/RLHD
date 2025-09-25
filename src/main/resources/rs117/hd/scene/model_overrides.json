@@ -27366,6 +27366,13 @@
     "uvScale": 0.6
   },
   {
+    "description": "Eternal Light Fire Pit",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "MY2ARM_FIRE_ETERNALLIGHT"
+    ]
+  },
+  {
     "description": "Giant Mole Lair - Walls - Dirt Walls",
     "baseMaterial": "DIRT_2",
     "objectIds": [
