@@ -58964,5 +58964,19 @@
       "ZEAH_CATA_EXIT_03",
       "ZEAH_CATA_EXIT_04"
     ]
+  },
+  {
+    "description": "Catacombs of Kourend - Skotizo Altar - Dynamic - Animated",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "CATA_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]
