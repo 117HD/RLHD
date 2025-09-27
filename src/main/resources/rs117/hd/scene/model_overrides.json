@@ -3810,18 +3810,24 @@
     ]
   },
   {
-    "description": "FALADOR_WALLS",
+    "description": "Falador - Stone - Brick Walls",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
     "uvScale": 0.3,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Interior Wall",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       "FAI_VARROCK_CRUMBLY_WALL_JOINT",
       "FAI_FALADOR_WALLS",
-      "FAI_FALADOR_WALL_WINDOW",
       "FAI_FALADOR_INTERIOR_WALLS_FLIPPED",
-      "FAI_FALADOR_LOW_WALL",
-      "FAI_FALADOR_LOW_BRIDGE_WALL",
-      "FAI_FALADOR_LOW_WALL_INVERSE",
       "FAI_FALADOR_BATTLEMENTS_HILLSKEW",
       "FAI_FALADOR_BATTLEMENTS_TERMINATOR_RIGHT",
       "FAI_FALADOR_BATTLEMENTS_TERMINATOR_LEFT",
@@ -3833,7 +3839,6 @@
       "FAI_FALADOR_CASTLE_WALLS_HILLSKEW_TERMINATOR_LEFT",
       "FAI_FALADOR_CRENELATION_HILLSKEW",
       "FAI_FALADOR_INTERIOR_TALLER",
-      "FAI_FALADOR_INTERIOR_WINDOW_TALLER",
       "FAI_FALADOR_WALLS_TALLER",
       "FAI_FALADOR_WALL_WINDOW_TALLER",
       "FAI_FALADOR_ROOFKIT_SLATE",
@@ -3897,12 +3902,63 @@
       "FAI_FALADOR_PARTY_ROOM_WALL_END",
       "FAI_FALADOR_PARTY_ROOM_WALL_END_MIRROR",
       "FAI_FALADOR_PARTY_ROOM_DOUBLE_WALL",
+      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER",
+      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER_MIRROR",
+      "FAI_FALADOR_CASTLE_CRUMBLE_MID",
+      "FAI_FALADOR_INTERIOR_DOUBLE_TALLER"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Glass - Brick Walls - With Windows",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Interior Wall",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Window Frame",
+        "colors": "h == 6 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stained Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_WALL_WINDOW",
+      "FAI_FALADOR_INTERIOR_WINDOW_TALLER",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM_MIRROR",
-      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW",
-      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER",
-      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW"
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - Main Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -169
+      }
+    ],
+    "objectIds": [
       "FAI_WALLGATE_START",
       "FAI_WALLGATE_MID",
       "FAI_WALLGATE_END",
@@ -3914,10 +3970,89 @@
       "FAI_WALLGATE_END_MIRROR",
       "FAI_WALLGATE_TOP_START_MIRROR",
       "FAI_WALLGATE_TOP_MID_MIRROR",
-      "FAI_WALLGATE_TOP_END_MIRROR",
-      "FAI_FALADOR_CASTLE_CRUMBLE_MID"
+      "FAI_WALLGATE_TOP_END_MIRROR"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Masonry - White Knight Castle Bridge and low wall",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_FALADOR_LOW_WALL",
+      "FAI_FALADOR_LOW_BRIDGE_WALL",
+      "FAI_FALADOR_LOW_WALL_INVERSE",
+      "FAI_FALADOR_LOW_BRIDGE_WALL",
+      "FAI_FALADOR_BRIDGE",
+      "FAI_FALADOR_BRIDGE_HIGH"
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - Shield Shop sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0 && l < 40",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -606
+      }
     ],
-    "flatNormals": true
+    "objectIds": [
+      "FAI_FALADOR_SHIELD_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - pub sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0 && l < 40",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -606
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_RISING_SUN_PUB_SIGN"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Agility course hand holds",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ROOFTOPS_FALADOR_WALLCLIMB",
+      "ROOFTOPS_FALADOR_HANDHOLDS"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Agility course hand holds",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": "h == 5 && s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "ROOFTOPS_FALADOR_TIGHTROPE_1",
+      "ROOFTOPS_FALADOR_TIGHTROPE_2",
+      "ROOFTOPS_FALADOR_TIGHTROPE_3",
+      "ROOFTOPS_FALADOR_TIGHTROPE_END",
+      "ROOFTOPS_FALADOR_TIGHTROPE_END_FORDIAGONAL"
+    ]
   },
   {
     "description": "STATUE_OF_SARADOMIN_1",
@@ -9497,6 +9632,9 @@
   {
     "description": "Mining Guild statue",
     "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 299,
     "objectIds": [
       "STATUE_DWARFMINER"
     ]
@@ -10696,7 +10834,7 @@
     "uvScale": 0.66,
     "colorOverrides": [
       {
-        "colors": "h == 7 && s > 2",
+        "colors": "(h == 7 && s > 2) || (h == 5 && s == 2)",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8
@@ -25850,7 +25988,8 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "FAI_VARROCK_WORKBENCH",
-      "FAI_DWARF_WORKBENCH"
+      "FAI_DWARF_WORKBENCH",
+      "FAI_FALADOR_WORKBENCH"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -36998,7 +37137,11 @@
   {
     "description": "Wooden shelves - Triple - Filled with Boxes",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "WAREHOUSE_SHELVES2", "WAREHOUSE_SHELVES3", "WAREHOUSE_SHELVES4" ],
+    "objectIds": [
+      "WAREHOUSE_SHELVES2",
+      "WAREHOUSE_SHELVES3",
+      "WAREHOUSE_SHELVES4"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -37012,6 +37155,24 @@
       {
         "colors": 2,
         "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Falador - Light Wooden shelves - Triple - Filled with Boxes",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_FALADOR_WAREHOUSE_SHELVES",
+      "FAI_FALADOR_WAREHOUSE_SHELVES2"
+    ],
+    "uvType": "BOX",
+
+    "colorOverrides": [
+      {
+        "colors": [6417, 6418, 6419, 6420, 6445, 6451],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   },
@@ -39372,7 +39533,8 @@
       "FAI_VARROCK_RUNE_BOOKCASE",
       "SLUG2_BOOKCASE",
       "SARIM_BOOKCASE2_OFFSET",
-      "SARIM_BOOKCASE2_OFFSET_WESTFACING"
+      "SARIM_BOOKCASE2_OFFSET_WESTFACING",
+      "BOOKCASE_POLYBOOKS"
     ],
     "uvType": "BOX",
     "colorOverrides": [
