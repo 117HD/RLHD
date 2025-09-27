@@ -15491,7 +15491,11 @@
       "WILD_ESCAPECAVE_ROCKSLIDE2",
       "WILD_ESCAPECAVE_ROCKSLIDE3",
       "WILD_ESCAPECAVE_ROCKSLIDE4",
-      "PUNISHROCKS"
+      "PUNISHROCKS",
+      "TLATI_ROCKSLIDE01_GREY",
+      "TLATI_ROCKSLIDE02_GREY",
+      "TLATI_ROCKSLIDE03_GREY",
+      "TLATI_ROCKSLIDE04_GREY"
     ],
     "uvType": "BOX",
     "uvScale": 0.33
@@ -65452,6 +65456,107 @@
         "baseMaterial": "NONE",
         "depthBias": 110
       }
+    ]
+  },
+  {
+    "description": "Dirt - Dirt clumps - Tiny",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvOrientation": 232,
+    "objectIds": [
+      "ROCK_GEMSTONE_DUGUPSOIL_2"
+    ]
+  },
+  {
+    "description": "Dirt - Dirt clumps - Small",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvOrientation": 192,
+    "objectIds": [
+      "ROCK_GEMSTONE_DUGUPSOIL_1",
+      "ROCK_GEMSTONE_DUGUPSOIL_3"
+    ]
+  },
+  {
+    "description": "Rock - Gem Crab Burrow",
+    "baseMaterial": "ROCK_5",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "uvScale": 0.5,
+    "objectIds": [
+      "CAVE_ROCK02_ENTRANCE01_GEMSTONE"
+    ]
+  },
+  {
+    "description": "Rock - Gems - Gem rocks - Small",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "ROCK_4",
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "ROCK_GEMSTONE01_SMALL01",
+      "ROCK_GEMSTONE01_SMALL02"
+    ]
+  },
+  {
+    "description": "Rock - Gems - Gem rocks - Large",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rock",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "ROCK_5",
+        "uvType": "BOX",
+        "uvOrientation": -256,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 12 && s == 2",
+        "baseMaterial": "GRASS_2",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "ROCK_GEMSTONE01_MEDIUM01",
+      "ROCK_GEMSTONE01_MEDIUM02",
+      "ROCK_GEMSTONE01_LONG01",
+      "ROCK_GEMSTONE01_LARGE01"
+    ]
+  },
+  {
+    "description": "Tlati Grass - Tall",
+    "baseMaterial": "GRAY_50",
+    "upwardsNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "TLATI_GRASS_VERYLONG_1",
+      "TLATI_GRASS_VERYLONG_2",
+      "TLATI_GRASS_TALL1",
+      "TLATI_GRASS_TALL2",
+      "TLATI_GRASS_TALL3",
+      "TLATI_GRASS_TALL4"
+    ]
+  },
+  {
+    "description": "Tlati Grass - Gemstone - Short",
+    "baseMaterial": "GRAY_50",
+    "upwardsNormals": true,
+    "castShadows": false,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [
+      "GEMSTONE_GRASS_TALL1"
     ]
   }
 ]
