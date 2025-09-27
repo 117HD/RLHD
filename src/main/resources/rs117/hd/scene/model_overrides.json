@@ -65563,7 +65563,8 @@
     "description": "Tlati Grass - Gemstone Crab - Brightness correction",
     "baseMaterial": "BASE_SEMIGLOSS",
     "npcIds": [
-      "GEMSTONE_CRAB"
+      "GEMSTONE_CRAB",
+      "GEMSTONE_CRAB_REMAINS"
     ]
   }
 ]
