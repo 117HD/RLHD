@@ -65558,5 +65558,12 @@
     "objectIds": [
       "GEMSTONE_GRASS_TALL1"
     ]
+  },
+  {
+    "description": "Tlati Grass - Gemstone Crab - Brightness correction",
+    "baseMaterial": "BASE_SEMIGLOSS",
+    "npcIds": [
+      "GEMSTONE_CRAB"
+    ]
   }
 ]

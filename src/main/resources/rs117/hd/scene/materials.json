@@ -1098,6 +1098,12 @@
     "specularGloss": 55.0
   },
   {
+    "name": "BASE_SEMIGLOSS",
+    "parent": "GRAY_85",
+    "specularStrength": 0.35,
+    "specularGloss": 80.0
+  },
+  {
     "name": "SNOW_1_N"
   },
   {
