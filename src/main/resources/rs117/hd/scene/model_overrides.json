@@ -58864,7 +58864,7 @@
     "colorOverrides": [
       {
         "colors": "h > 11",
-        "baseMaterial": "GRUNGE_1",
+        "baseMaterial": "PLANT_GRUNGE_1",
         "uvType": "GEOMETRY"
       }
     ]
@@ -58884,7 +58884,7 @@
     "colorOverrides": [
       {
         "colors": "h > 11",
-        "baseMaterial": "GRUNGE_1",
+        "baseMaterial": "PLANT_GRUNGE_1",
         "terrainVertexSnap": true
       }
     ]
@@ -58904,7 +58904,7 @@
     "colorOverrides": [
       {
         "colors": "h > 8",
-        "baseMaterial": "GRUNGE_1",
+        "baseMaterial": "PLANT_GRUNGE_1",
         "uvType": "GEOMETRY",
         "terrainVertexSnap": true
       }
