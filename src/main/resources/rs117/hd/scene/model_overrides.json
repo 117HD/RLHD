@@ -65535,31 +65535,6 @@
     ]
   },
   {
-    "description": "Tlati Grass - Tall",
-    "baseMaterial": "GRAY_50",
-    "upwardsNormals": true,
-    "castShadows": false,
-    "windDisplacementMode": "OBJECT",
-    "objectIds": [
-      "TLATI_GRASS_VERYLONG_1",
-      "TLATI_GRASS_VERYLONG_2",
-      "TLATI_GRASS_TALL1",
-      "TLATI_GRASS_TALL2",
-      "TLATI_GRASS_TALL3",
-      "TLATI_GRASS_TALL4"
-    ]
-  },
-  {
-    "description": "Tlati Grass - Gemstone - Short",
-    "baseMaterial": "GRAY_50",
-    "upwardsNormals": true,
-    "castShadows": false,
-    "windDisplacementMode": "OBJECT",
-    "objectIds": [
-      "GEMSTONE_GRASS_TALL1"
-    ]
-  },
-  {
     "description": "Tlati Grass - Gemstone Crab - Brightness correction",
     "baseMaterial": "BASE_SEMIGLOSS",
     "npcIds": [
