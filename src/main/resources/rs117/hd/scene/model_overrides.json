@@ -3909,6 +3909,30 @@
     ]
   },
   {
+    "description": "Falador - Stone - Glass - Wooden walls With Windows",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Window Frame",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stained Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_SHOP_WINDOW"
+    ]
+  },
+  {
     "description": "Falador - Stone - Glass - Brick Walls - With Windows",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
@@ -4088,6 +4112,32 @@
       "RD_SKEWSTEPS_CORNER"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Falador - Stone - Dirt - Plant - Rockery",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Plant",
+        "colors": "h >= 8",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROCKERY",
+      "TREASUREFLOWER"
+    ]
   },
   {
     "description": "Al Kharid and PoH Whitewashed Walls",
