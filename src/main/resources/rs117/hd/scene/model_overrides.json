@@ -3811,7 +3811,7 @@
   },
   {
     "description": "Falador - Stone - Brick Walls",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -3905,14 +3905,16 @@
       "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER",
       "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER_MIRROR",
       "FAI_FALADOR_CASTLE_CRUMBLE_MID",
-      "FAI_FALADOR_INTERIOR_DOUBLE_TALLER"
+      "FAI_FALADOR_INTERIOR_DOUBLE_TALLER",
+      "FAI_FALADOR_CRENELATION",
+      "FAI_FALADOR_ROOF_EDGE_SHORT1"
     ]
   },
   {
     "description": "Falador - Stone - Glass - Wooden walls With Windows",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3929,14 +3931,15 @@
       }
     ],
     "objectIds": [
-      "FAI_FALADOR_SHOP_WINDOW"
+      "FAI_FALADOR_SHOP_WINDOW",
+      "FAI_FALADOR_SHOP_WINDOW_CROSSED"
     ]
   },
   {
     "description": "Falador - Stone - Glass - Brick Walls - With Windows",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -4139,6 +4142,53 @@
       "ROCKERY",
       "TREASUREFLOWER"
     ]
+  },
+  {
+    "description": "Falador - Cloth - Metallic - Barbers Chair with mirror",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "seat and back",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Mirror",
+        "colors": "h >= 37",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_BARBERS_CHAIR",
+      "FAI_FALADOR_BARBERS_CHAIR_BRIGHTER"
+    ]
+  },
+  {
+    "description": "Falador - Cloth - Metallic - Wall Mirror",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "Mirror",
+        "colors": "h >= 37",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_BARBERS_MIRROR"
+    ]
+  },
+  {
+    "description": "Falador - Hair Clippings",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [ "FAI_FALADOR_HAIRCLIPPINGS_SMALL" ]
   },
   {
     "description": "Al Kharid and PoH Whitewashed Walls",
@@ -9804,6 +9854,7 @@
       "BARROWS_LADDER",
       "FAI_FALADOR_LADDER",
       "FAI_FALADOR_LADDER_TOP",
+      "FAI_FALADOR_LADDER_TALLER",
       "KR_CAM_LADDERTOP",
       "KR_UNDERGROUND_JAIL_LADDER",
       "KR_BKF_BASEMENT_LADDER",
@@ -10036,6 +10087,64 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Table Boxed Legs with maces on it",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_MACE_SHOP_TABLE"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Barrel with maces in it",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_MACE_FILLED_BARREL"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Metal wall rack with maces",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Handles",
+        "colors": "s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_MACE_FILLED_BARREL",
+      "FAI_FALADOR_MACE_RACK"
+    ]
   },
   {
     "description": "Wooden Benches - Plank",
@@ -10387,7 +10496,8 @@
     "description": "Falador - Wooden - Metallic - Wall torch - DYNAMIC - ANIMATED",
     "baseMaterial": "GRAY_75",
     "objectIds": [
-      "FAI_FALADOR_TORCH"
+      "FAI_FALADOR_TORCH",
+      "FAI_FALADOR_HOUSE_TORCH"
     ]
   },
   {
