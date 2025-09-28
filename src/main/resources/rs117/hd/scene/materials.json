@@ -1112,6 +1112,11 @@
     "brightness": 1.159
   },
   {
+    "name": "ROCK_1_LIGHT_SMOOTH",
+    "parent": "ROCK_1_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "ROCK_2_N"
   },
   {
