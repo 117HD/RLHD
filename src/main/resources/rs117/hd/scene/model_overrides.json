@@ -3894,7 +3894,6 @@
       "FAI_INV_FALADOR_BATTLEMENTS",
       "FAI_WALL_FIX_ONE",
       "FAI_WALL_FIX_TWO",
-      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_RAILING",
       "FAI_FALADOR_PARTY_ROOM_WALL_BIG",
       "FAI_FALADOR_PARTY_ROOM_WALL",
       "FAI_FALADOR_PARTY_ROOM_WALL_CORNER",
@@ -10299,6 +10298,137 @@
     "objectIds": [
       "FAI_FALADOR_MACE_FILLED_BARREL",
       "FAI_FALADOR_MACE_RACK"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Paper - Party Room Pillars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Streamers",
+        "colors": "h >= 39",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 192,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_SUPPORT"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Marble - Party Room staircase",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Railing",
+        "colors": "h == 6 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_SMALL",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP_SMALL",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_MIRROR_SMALL",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP_SMALL_MIRROR"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Party Room railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_RAILING",
+      "FAI_FALADOR_PARTY_ROOM_BALCONY_RAILING"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Carpet - Party Room Curtains",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Curtain bar",
+        "colors": "h == 42",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_CURTAINS",
+      "FAI_FALADOR_PARTY_ROOM_CURTAINS_BIG"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Glass - Party Room Bar",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bottles",
+        "colors": "h >= 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_BAR_CORNER",
+      "FAI_FALADOR_PARTY_ROOM_BAR_MIDDLE",
+      "FAI_FALADOR_PARTY_ROOM_BAR_CORNER_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_BAR_BACK_CORNER",
+      "FAI_FALADOR_PARTY_ROOM_BAR_BACK_MIDDLE",
+      "FAI_FALADOR_PARTY_ROOM_BAR_BACK_CORNER_MIRROR"
+
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Carpet - Party Room Table",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 9",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_TABLE",
+      "FAI_FALADOR_PARTY_ROOM_TABLE_END",
+      "FAI_FALADOR_PARTY_ROOM_TABLE_END_MIRROR"
     ]
   },
   {
