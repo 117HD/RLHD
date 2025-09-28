@@ -4001,9 +4001,10 @@
   },
   {
     "description": "Falador - Stone - Masonry - White Knight Castle Bridge and low wall",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "uvOrientation": 600,
     "objectIds": [
       "FAI_FALADOR_LOW_WALL",
       "FAI_FALADOR_LOW_BRIDGE_WALL",
