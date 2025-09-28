@@ -10089,6 +10089,161 @@
     "uvOrientation": 512
   },
   {
+    "description": "Falador - Metallic - Wooden - Table Boxed Legs with Gem displays on it",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      },
+      {
+        "description": "Tools",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_COUNTER"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Cupboard with glass doors and Gem displays in it",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Cupboard",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255 && h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_SMALL_TABLE_DISPLAY"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Cupboard with glass doors and Gem displays in it",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Cupboard",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255 && h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_DISPLAY_CABIN"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Gem wall display",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_WALL_DECOR"
+    ]
+  },
+  {
     "description": "Falador - Metallic - Wooden - Table Boxed Legs with maces on it",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
