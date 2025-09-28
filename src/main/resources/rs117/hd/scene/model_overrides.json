@@ -3813,7 +3813,7 @@
     "description": "Falador - Stone - Brick Walls",
     "baseMaterial": "GRUNGE_1",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3984,6 +3984,16 @@
       "FAI_FALADOR_LOW_BRIDGE_WALL",
       "FAI_FALADOR_BRIDGE",
       "FAI_FALADOR_BRIDGE_HIGH"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - White Knight Armor",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_FALADOR_SUITOFAMOUR",
+      "SUITOFARMOUR_WHITEKNIGHT"
     ]
   },
   {
@@ -9859,7 +9869,9 @@
       "FAI_FALADOR_CASTLE_STAIRS",
       "FAI_FALADOR_CASTLE_STAIRSTOP",
       "FAI_FALADOR_STAIRS",
-      "FAI_FALADOR_STAIRSTOP"
+      "FAI_FALADOR_STAIRSTOP",
+      "FAI_FALADOR_OUTDOORSTAIRS_TOP",
+      "FAI_FALADOR_OUTDOORSTAIRS_BOTTOM"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
@@ -9869,20 +9881,97 @@
     "description": "Falador - Tables",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "RD_WOODEN_TABLE",
       "FAI_FALADOR_WOODEN_TABLE_SMALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
+    "description": "Falador - Wooden - Metallic - Throne",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 268,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": -313
+      }
+    ],
+    "objectIds": [
+      "THRONE_WHITE"
+    ]
+  },
+  {
+    "description": "Falador - Cloth - Wooden - Standard",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "upwardsNormals": true,
+    "objectIds": [
+      "STANDARD1_ASGARNIA",
+      "STANDARD2_ASGARNIA"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 4" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Falador - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "RD_WOODEN_TABLE",
-      "FAI_FALADOR_BIG_WOODEN_TABLE"
+      "FAI_FALADOR_BIG_WOODEN_TABLE",
+      "FAI_FALADOR_BANQUET_TABLE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Falador - Wooden - Matellic - Plank Bar with pumps",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 3",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Handle",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_BAR",
+      "FAI_FALADOR_BAR_NO_PUMPS"
+    ]
   },
   {
     "description": "Generic - Table Boxed Legs",
@@ -10227,7 +10316,9 @@
   },
   {
     "description": "Candelabra - Wooden",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "CANDLES"
     ],
@@ -10236,9 +10327,16 @@
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "colors": "h == 6",
         "uvType": "BOX",
-        "uvScale": 0.3,
+        "uvScale": 0.4,
         "uvOrientation": 512
       }
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - Wall torch - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "FAI_FALADOR_TORCH"
     ]
   },
   {
@@ -11250,7 +11348,11 @@
       "FAI_FALADOR_OPENCASTLEDOUBLEDOORL",
       "FAI_FALADOR_OPENCASTLEDOUBLEDOORR",
       "FAI_FALADOR_CASTLEDOUBLEDOORL",
-      "FAI_FALADOR_CASTLEDOUBLEDOORR"
+      "FAI_FALADOR_CASTLEDOUBLEDOORR",
+      "FAI_FALADOR_DOUBLE_DOOR_L",
+      "FAI_FALADOR_DOUBLE_DOOR_L_OPEN",
+      "FAI_FALADOR_DOUBLE_DOOR_R",
+      "FAI_FALADOR_DOUBLE_DOOR_R_OPEN"
     ],
     "colorOverrides": [
       {
@@ -37542,13 +37644,49 @@
     ]
   },
   {
-    "description": "Deaths office - Entrances - Falador",
-    "baseMaterial": "GRUNGE_3",
+    "description": "Deaths office - Entrances roof - Falador",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 2 && s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "FAI_DEATH_CRYPT_ENTRANCE_TOP"
+    ]
+  },
+  {
+    "description": "Deaths office - Entrances - Falador",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden Door",
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "(h == 6 && s == 4)|| s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       "FAI_DEATH_CRYPT_ENTRANCE"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Deaths office - Walls - Stone",
@@ -39318,7 +39456,8 @@
       "FAI_VARROCK_SWORDCASE_SWORDS",
       "FAI_VARROCK_SWORDCASE_SHORTSWORDS",
       "FAI_VARROCK_SWORDCASE_SCIMITAR",
-      "FAI_VARROCK_BOWCASE"
+      "FAI_VARROCK_BOWCASE",
+      "CABINET_BOWS_OFFSET_FOR_FALADOR_CASTLE_WALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -39338,7 +39477,7 @@
       {
         "description": "Glass",
         "colors": "a < 255",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
@@ -39392,7 +39531,9 @@
       "GRANDTREE_CUPBOARDCLOSED",
       "GRANDTREE_CUPBOARDOPEN",
       "GARLICCUPBOARDSHUT",
-      "GARLICCUPBOARDOPEN"
+      "GARLICCUPBOARDOPEN",
+      "VYVINCUPBOARDSHUT",
+      "VYVINCUPBOARDOPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -43727,7 +43868,8 @@
     "description": "Double bed with red blanket with golden trim and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "BIGBED3"
+      "BIGBED3",
+      "BIGBED4"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
