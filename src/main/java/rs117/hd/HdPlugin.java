@@ -48,6 +48,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
@@ -150,6 +151,7 @@ import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.Mat4.extractPlanes;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -351,6 +353,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private AWTContext awtContext;
 	private Callback debugCallback;
 	private ComputeMode computeMode = ComputeMode.OPENGL;
+	private boolean isAmdGpu;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -394,6 +397,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int texShadowMap;
 
 	private int[] tiledLightingResolution;
+	private int tiledLightingLayerCount;
 	private int fboTiledLighting;
 	private int texTiledLighting;
 
@@ -461,6 +465,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
+	public boolean configTiledLightingImageLoadStore;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -489,10 +494,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	// Camera position and orientation may be reused from the old scene while hopping, prior to drawScene being called
 	public float[] viewMatrix;
+	public float[] viewProjMatrix;
+	public float[] invViewProjMatrix;
 	public final float[] cameraPosition = new float[3];
 	public final float[] cameraOrientation = new float[2];
 	public final int[] cameraFocalPoint = new int[2];
 	private final int[] cameraShift = new int[2];
+	private final float[][] cameraFrustum = new float[6][4];
 	private int visibilityCheckZoom;
 	private boolean tileVisibilityCached;
 	private final boolean[][][] tileIsVisible = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
@@ -569,11 +577,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
-				String glRenderer = glGetString(GL_RENDERER);
+				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
+				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
 				String arch = System.getProperty("sun.arch.data.model", "Unknown");
-				if (glRenderer == null)
-					glRenderer = "Unknown";
-				log.info("Using device: {}", glRenderer);
+				isAmdGpu = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
+				log.info("Using device: {} ({})", glRenderer, glVendor);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
 				log.info("Low memory mode: {}", useLowMemoryMode);
@@ -895,7 +903,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("WATER_TYPE_COUNT", waterTypeManager.uboWaterTypes.getCount())
 			.define("DYNAMIC_LIGHTS", configDynamicLights != DynamicLights.NONE)
 			.define("TILED_LIGHTING", configTiledLighting)
-			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getLightsPerTile() / 4)
+			.define("TILED_LIGHTING_LAYER_COUNT", configDynamicLights.getTiledLightingLayers())
 			.define("TILED_LIGHTING_TILE_SIZE", TILED_LIGHTING_TILE_SIZE)
 			.define("MAX_LIGHT_COUNT", configTiledLighting ? UBOLights.MAX_LIGHTS : configDynamicLights.getMaxSceneLights())
 			.define("NORMAL_MAPPING", config.normalMapping())
@@ -913,6 +921,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
+			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -950,7 +959,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
-			if (GL_CAPS.GL_ARB_shader_image_load_store && tiledLightingImageStoreProgram.isViable()) {
+			if (!isAmdGpu && configTiledLightingImageLoadStore &&
+				GL_CAPS.GL_ARB_shader_image_load_store &&
+				tiledLightingImageStoreProgram.isViable()
+			) {
 				try {
 					tiledLightingImageStoreProgram.compile(includes
 						.define("TILED_IMAGE_STORE", true)
@@ -960,13 +972,41 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				}
 			}
 
-			int tiledLayerCount = DynamicLights.MAX_LIGHTS_PER_TILE / 4;
-			for (int layer = 0; layer < tiledLayerCount; layer++) {
-				var shader = new TiledLightingShaderProgram();
-				shader.compile(includes
-					.define("TILED_IMAGE_STORE", false)
-					.define("TILED_LIGHTING_LAYER", layer));
-				tiledLightingShaderPrograms.add(shader);
+			// Compile layered version if the image store version isn't supported or failed to compile
+			if (!tiledLightingImageStoreProgram.isValid()) {
+				try {
+					for (int layer = 0; layer < DynamicLights.MAX_LAYERS_PER_TILE; layer++) {
+						var shader = new TiledLightingShaderProgram();
+						shader.compile(includes
+							.define("TILED_IMAGE_STORE", false)
+							.define("TILED_LIGHTING_LAYER", layer));
+						tiledLightingShaderPrograms.add(shader);
+					}
+				} catch (ShaderException ex) {
+					log.warn("Disabling TILED_LIGHTING_LAYERED due to:", ex);
+					// If both tiled lighting implementations fail, fall back to the old lighting, and warn about it
+					if (!Props.DEVELOPMENT) {
+						config.tiledLighting(false);
+						PopupUtils.displayPopupMessage(
+							client, "117 HD Error",
+							"Tiled lighting has been automatically disabled, since it failed to compile on your GPU.<br>" +
+							"<br>GPU name: " + glGetString(GL_RENDERER) + "<br><br>" +
+							"If you want to help us make it work on your system, please join our " +
+							"<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and<br>" +
+							"click the \"Open logs folder\" button below, find the file named \"client\" or \"client.log\",<br>" +
+							"then drag and drop that file into one of our support channels.",
+							new String[] { "Open logs folder", "Ok" },
+							i -> {
+								if (i == 0) {
+									LinkBrowser.open(RuneLite.LOGS_DIR.toString());
+									return false;
+								}
+								return true;
+							}
+						);
+					}
+					configTiledLighting = false;
+				}
 			}
 		}
 
@@ -994,8 +1034,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		sceneProgram.destroy();
 		shadowProgram.destroy();
 		uiProgram.destroy();
-		tiledLightingImageStoreProgram.destroy();
 
+		tiledLightingImageStoreProgram.destroy();
 		for (var program : tiledLightingShaderPrograms)
 			program.destroy();
 		tiledLightingShaderPrograms.clear();
@@ -1270,13 +1310,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private void updateTiledLightingFbo() {
 		assert configTiledLighting;
 
-		int[] resolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
-		if (Arrays.equals(resolution, tiledLightingResolution))
+		int[] newResolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
+		int newLayerCount = configDynamicLights.getTiledLightingLayers();
+		if (Arrays.equals(newResolution, tiledLightingResolution) && tiledLightingLayerCount == newLayerCount)
 			return;
 
 		destroyTiledLightingFbo();
 
-		tiledLightingResolution = resolution;
+		tiledLightingResolution = newResolution;
+		tiledLightingLayerCount = newLayerCount;
+
 		fboTiledLighting = glGenFramebuffers();
 		texTiledLighting = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
@@ -1288,20 +1331,25 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		glTexImage3D(
 			GL_TEXTURE_2D_ARRAY,
 			0,
-			GL_RGBA16I,
+			GL_RGBA16UI,
 			tiledLightingResolution[0],
 			tiledLightingResolution[1],
-			DynamicLights.MAX_LIGHTS_PER_TILE / 4,
+			tiledLightingLayerCount,
 			0,
 			GL_RGBA_INTEGER,
-			GL_SHORT,
+			GL_UNSIGNED_SHORT,
 			0
 		);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
 		checkGLErrors();
 
 		if (tiledLightingImageStoreProgram.isValid())
 			ARBShaderImageLoadStore.glBindImageTexture(
-				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, false, 0, GL_WRITE_ONLY, GL_RGBA16I);
+				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
 		checkGLErrors();
 
@@ -1668,20 +1716,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					cameraFocalPoint[0] = client.getOculusOrbFocalPointX();
 					cameraFocalPoint[1] = client.getOculusOrbFocalPointY();
 					Arrays.fill(cameraShift, 0);
-
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						stopPlugin();
-						return;
-					}
 				} else {
 					cameraShift[0] = cameraFocalPoint[0] - client.getOculusOrbFocalPointX();
 					cameraShift[1] = cameraFocalPoint[1] - client.getOculusOrbFocalPointY();
@@ -1706,9 +1740,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				if (configCharacterDisplacement) {
 					// The local player needs to be added first for distance culling
-					Model playerModel = localPlayer.getModel();
-					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
+					uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -1730,15 +1762,33 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				Mat4.mul(viewMatrix, Mat4.translate(-cameraPosition[0], -cameraPosition[1], -cameraPosition[2]));
 
 				// Calculate view proj & inv matrix
-				float[] viewProj = Mat4.identity();
-				Mat4.mul(viewProj, projectionMatrix);
-				Mat4.mul(viewProj, viewMatrix);
-				float[] invProjectionMatrix = Mat4.inverse(viewProj);
+				viewProjMatrix = Mat4.identity();
+				Mat4.mul(viewProjMatrix, projectionMatrix);
+				Mat4.mul(viewProjMatrix, viewMatrix);
+				extractPlanes(viewProjMatrix, cameraFrustum);
+				invViewProjMatrix = Mat4.inverse(viewProjMatrix);
+
+				if (sceneContext.scene == scene) {
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(sceneContext, cameraShift, cameraFrustum);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						stopPlugin();
+						return;
+					}
+				}
 
 				uboGlobal.cameraPos.set(cameraPosition);
 				uboGlobal.viewMatrix.set(viewMatrix);
-				uboGlobal.projectionMatrix.set(viewProj);
-				uboGlobal.invProjectionMatrix.set(invProjectionMatrix);
+				uboGlobal.projectionMatrix.set(viewProjMatrix);
+				uboGlobal.invProjectionMatrix.set(invViewProjMatrix);
+				uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				uboGlobal.upload();
 			}
 		}
@@ -1747,6 +1797,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			// Update lights UBO
 			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
 
+			frameTimer.begin(Timer.UPDATE_LIGHTS);
 			final float[] lightPosition = new float[4];
 			final float[] lightColor = new float[4];
 			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
@@ -1764,16 +1815,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				uboLights.setLight(i, lightPosition, lightColor);
 
-				// Pre-calculate the ViewSpace Position of the light, to save having to do the multiplication in the culling shader
-				lightPosition[3] = 1.0f;
-				Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
-				lightPosition[3] = lightRadiusSq; // Restore LightRadiusSq
-
-				uboLightsCulling.setLight(i, lightPosition, lightColor);
+				if (configTiledLighting) {
+					// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
+					lightPosition[3] = 1.0f;
+					Mat4.mulVec(lightPosition, viewMatrix, lightPosition);
+					lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
+					uboLightsCulling.setLight(i, lightPosition, lightColor);
+				}
 			}
 
 			uboLights.upload();
 			uboLightsCulling.upload();
+			frameTimer.end(Timer.UPDATE_LIGHTS);
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {
@@ -1786,19 +1839,15 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
 				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
 
-				glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
-
-				glClearColor(0, 0, 0, 0);
-				glClear(GL_COLOR_BUFFER_BIT);
-
 				glBindVertexArray(vaoTri);
-				glDisable(GL_BLEND);
 
 				if (tiledLightingImageStoreProgram.isValid()) {
 					tiledLightingImageStoreProgram.use();
+					glDrawBuffer(GL_NONE);
 					glDrawArrays(GL_TRIANGLES, 0, 3);
 				} else {
-					int layerCount = configDynamicLights.getLightsPerTile() / 4;
+					glDrawBuffer(GL_COLOR_ATTACHMENT0);
+					int layerCount = configDynamicLights.getTiledLightingLayers();
 					for (int layer = 0; layer < layerCount; layer++) {
 						tiledLightingShaderPrograms.get(layer).use();
 						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
@@ -2182,8 +2231,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
 			uboGlobal.groundFogOpacity.set(config.groundFog() ? environmentManager.currentGroundFogOpacity : 0);
 
-			// Lights & lightning
-			uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 			uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
 
 			uboGlobal.saturation.set(config.saturation() / 100f);
@@ -2637,6 +2684,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
+		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
@@ -2762,6 +2810,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_DYNAMIC_LIGHTS:
 							case KEY_TILED_LIGHTING:
+							case KEY_TILED_LIGHTING_IMAGE_STORE:
 							case KEY_NORMAL_MAPPING:
 							case KEY_PARALLAX_OCCLUSION_MAPPING:
 							case KEY_UI_SCALING_MODE:
@@ -2770,6 +2819,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
 							case KEY_PIXELATED_SHADOWS:
+							case KEY_WINDOWS_HDR_CORRECTION:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -2784,6 +2834,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								recreateShadowMapFbo = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
+							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
 								break;
 							case KEY_SEASONAL_THEME:
@@ -2880,7 +2931,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					}
 
 					if (reloadEnvironments)
-						environmentManager.triggerTransition();
+						environmentManager.reload();
 				}
 			} catch (Throwable ex) {
 				log.error("Error while changing settings:", ex);
@@ -3301,6 +3352,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	public float getGammaCorrection() {
+		if (config.useLegacyBrightness())
+			return 1;
 		return 100f / config.brightness();
 	}
 

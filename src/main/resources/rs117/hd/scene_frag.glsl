@@ -33,7 +33,7 @@
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
-uniform isampler2DArray tiledLightingArray;
+uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
 
@@ -461,6 +461,10 @@ void main() {
     }
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+
+    #if WINDOWS_HDR_CORRECTION
+        outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
+    #endif
 
     FragColor = outputColor;
 }
