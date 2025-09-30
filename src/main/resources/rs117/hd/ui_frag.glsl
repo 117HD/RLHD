@@ -38,6 +38,7 @@ uniform sampler2D uiTexture;
 #include <scaling/bicubic.glsl>
 #include <utils/constants.glsl>
 #include <utils/color_blindness.glsl>
+#include <utils/misc.glsl>
 
 #if UI_SCALING_MODE == SAMPLING_XBR
 #include <scaling/xbr_lv2_frag.glsl>
@@ -68,6 +69,10 @@ void main() {
 
     c = alphaBlend(c, alphaOverlay);
     c.rgb = colorBlindnessCompensation(c.rgb);
+
+    #if WINDOWS_HDR_CORRECTION
+        c.rgb = windowsHdrCorrection(c.rgb);
+    #endif
 
     FragColor = c;
 }

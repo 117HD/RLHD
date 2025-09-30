@@ -403,6 +403,8 @@ public interface HdPluginConfig extends Config
 	default boolean tiledLighting() {
 		return true;
 	}
+	@ConfigItem(keyName = KEY_TILED_LIGHTING, hidden = true, name = "", description = "")
+	void tiledLighting(boolean enabled);
 
 	String KEY_PROJECTILE_LIGHTS = "projectileLights";
 	@ConfigItem(
@@ -966,6 +968,32 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_LEGACY_TOB_ENVIRONMENT = "legacyTobEnvironment";
+	@ConfigItem(
+		keyName = KEY_LEGACY_TOB_ENVIRONMENT,
+		name = "Legacy Theatre of Blood",
+		description =
+			"Previously, Theatre of Blood used to look a whole lot more blue, which<br>" +
+			"some people grew really used to. This option brings back that same old look.",
+		section = miscellaneousSettings
+	)
+	default boolean legacyTobEnvironment() {
+		return false;
+	}
+
+	String KEY_WINDOWS_HDR_CORRECTION = "windowsHdrCorrection";
+	@ConfigItem(
+		keyName = KEY_WINDOWS_HDR_CORRECTION,
+		name = "Windows HDR correction",
+		description =
+			"Correctly simulates SDR gamma 2.2 when Windows is in HDR mode. Note, this does not<br>" +
+			"enable HDR, it only works around an issue within Windows' HDR implementation.",
+		section = miscellaneousSettings
+	)
+	default boolean windowsHdrCorrection() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
@@ -1055,6 +1083,18 @@ public interface HdPluginConfig extends Config
 	default boolean asyncUICopy() {
 		return false;
 	}
+
+	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
+	@ConfigItem(
+		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
+		name = "Tiled lighting image store",
+		description = "If you experience any issues with tiled lighting, disabling this <i>might</i> help.",
+		section = experimentalSettings
+	)
+	default boolean tiledLightingImageLoadStore() {
+		return true;
+	}
+
 
 	/*====== Internal settings ======*/
 
