@@ -40018,7 +40018,7 @@
   },
   {
     "description": "Gauntlet - Walls and Unlit Node",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -40031,7 +40031,7 @@
   },
   {
     "description": "Gauntlet - Walls - With Blue Symbol",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -40049,7 +40049,7 @@
   },
   {
     "description": "Gauntlet - Walls - Corner Pillar and Lit Node",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -40088,7 +40088,7 @@
   },
   {
     "description": "Gauntlet - Floor",
-    "baseMaterial": "MARBLE_1",
+    "baseMaterial": "MARBLE_1_LIGHT",
     "uvType": "MODEL_XZ",
     "objectIds": [
       "PRIF_GAUNTLET_FLOOR_TILE_01_HM",
@@ -40292,7 +40292,7 @@
   },
   {
     "description": "Corrupted Gauntlet - Walls and Unlit Node",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -40305,7 +40305,7 @@
   },
   {
     "description": "Corrupted Gauntlet - Walls - With Red Symbol",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
@@ -40322,7 +40322,7 @@
   },
   {
     "description": "Corrupted Gauntlet - Walls - Corner Pillar and Lit Node",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "ROCK_3_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [

@@ -1268,7 +1268,7 @@
   {
     "area": "THE_GAUNTLET_NORMAL",
     "ambientColor": "#d2c0b7",
-    "ambientStrength": 1.5,
+    "ambientStrength": 1.65,
     "directionalColor": "#78ffe3",
     "directionalStrength": 3,
     "sunAngles": [
@@ -1281,7 +1281,7 @@
   {
     "area": "THE_GAUNTLET_CORRUPTED",
     "ambientColor": "#bb9eae",
-    "ambientStrength": 1.5,
+    "ambientStrength": 1.65,
     "directionalColor": "#c58c9e",
     "directionalStrength": 3,
     "sunAngles": [

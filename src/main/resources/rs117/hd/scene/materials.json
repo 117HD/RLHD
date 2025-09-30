@@ -1368,6 +1368,11 @@
     "specularGloss": 280.0
   },
   {
+    "name": "MARBLE_1_LIGHT",
+    "parent": "MARBLE_1",
+    "brightness": 1.15
+  },
+  {
     "name": "MARBLE_2_GLOSS",
     "parent": "MARBLE_2",
     "specularStrength": 0.8,
