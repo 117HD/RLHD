@@ -53789,6 +53789,24 @@
     ]
   },
   {
+    "description": "Amoxaliatl - Ruins of Tapoyauik Brazier",
+    "inheritTileColorType": "OVERLAY",
+    "objectIds": [
+      "DUGUPSOIL3_AMOXLIATL01",
+      "DUGUPSOIL3_AMOXLIATL02"
+    ]
+  },
+  {
+    "description": "Amoxaliatl - Ice Spikes",
+    "baseMaterial": "GRAY_125",
+    "graphicsObjectIds": [
+      "VFX_AMOXLIATL_ICE_FLOOR_COMBINED_01"
+    ],
+    "objectIds": [
+      "AMOXLIATL_ICE"
+    ]
+  },
+  {
     "description": "Varlamore - Stone Chest",
     "baseMaterial": "SNOW_2",
     "uvType": "BOX",

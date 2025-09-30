@@ -36474,8 +36474,8 @@
       175,
       255
     ],
-    "strength": 5,
-    "radius": 1000,
+    "strength": 3.5,
+    "radius": 750,
     "fadeInDuration": 150,
     "fadeOutDuration": 250,
     "offset": [ 0, 150, 20 ]

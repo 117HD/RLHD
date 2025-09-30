@@ -1988,7 +1988,9 @@
   },
   {
     "area": "AMOXLIATL_ARENA",
-    "waterColor": "#0009BC"
+    "waterColor": "#0009BC",
+    "ambientColor": "#EAF4FF",
+    "directionalStrength": 0.4
   },
   {
     "area": "RANDOM_EVENT_PRISON_PETE",
