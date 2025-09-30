@@ -5,6 +5,7 @@ public class GLTextureParams {
 	public GLTextureType type = GLTextureType.TEXTURE2D;
 	public int textureUnit = -1;
 	public int imageUnit = -1;
+	public int imageUnitLayer = -1;
 	public int imageUnitWriteMode;
 	public float[] borderColor = null;
 	public boolean generateMipmaps = false;
@@ -29,6 +30,13 @@ public class GLTextureParams {
 
 	public GLTextureParams setImageUnit(int imageUnit, int writeMode) {
 		this.imageUnit = imageUnit;
+		this.imageUnitWriteMode = writeMode;
+		return this;
+	}
+
+	public GLTextureParams setImageUnit(int imageUnit, int writeMode, int imageUnitLayer) {
+		this.imageUnit = imageUnit;
+		this.imageUnitLayer = imageUnitLayer;
 		this.imageUnitWriteMode = writeMode;
 		return this;
 	}

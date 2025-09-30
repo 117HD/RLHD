@@ -700,7 +700,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 				tiledLightingFBO = new GLFrameBuffer(new GLFrameBufferDesc()
 					.setShouldConstructionCreate(false)
-					.setDepth(DynamicLights.MAX_LIGHTS_PER_TILE / 4)
+					.setDepth(DynamicLights.MAX_LAYERS_PER_TILE)
 					.setColorAttachment(
 						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16I, new GLTextureParams()
 							.setType(GLTextureType.TEXTURE2D_ARRAY)

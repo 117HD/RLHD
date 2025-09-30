@@ -115,8 +115,12 @@ public class GLTexture {
 			glGenerateMipmap(textureParams.type.glTarget);
 		}
 
-		if(textureParams.imageUnit >= 0 && HdPlugin.GL_CAPS.GL_ARB_shader_image_load_store)
-			ARBShaderImageLoadStore.glBindImageTexture(textureParams.imageUnit, id, 0, false, 0, textureParams.imageUnitWriteMode, textureFormat.internalFormat);
+		if(textureParams.imageUnit >= 0 && HdPlugin.GL_CAPS.GL_ARB_shader_image_load_store) {
+			boolean layered = textureParams.imageUnitLayer >= 0;
+			int layer = layered ? textureParams.imageUnitLayer : 0;
+			ARBShaderImageLoadStore.glBindImageTexture(textureParams.imageUnit, id, 0, layered, layer, textureParams.imageUnitWriteMode, textureFormat.internalFormat);
+		}
+
 
 		if(!textureParams.debugName.isEmpty())
 			setDebugName(textureParams.debugName);
