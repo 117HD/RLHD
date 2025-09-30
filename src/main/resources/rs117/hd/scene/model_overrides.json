@@ -41681,6 +41681,8 @@
   {
     "description": "PoH - Stone - Fancy Brick wall",
     "baseMaterial": "STONE_NORMALED",
+    "uvOrientation": 512,
+    "flatNormals": true,
     "uvType": "BOX",
     "objectIds": [
       "YANILLE_POH_WALL",
