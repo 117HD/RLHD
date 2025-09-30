@@ -82,6 +82,10 @@ public class SceneContext {
 	public boolean[][][] skipTile;
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
+	public int sceneEdge0, sceneEdge1;
+	public int[] waterHeightCounters;
+	public int waterHeight;
+	public boolean hasWater;
 
 	// Thread safe tile override variables
 	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();
@@ -104,6 +108,10 @@ public class SceneContext {
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
+
+		final int pad = expandedMapLoadingChunks * CHUNK_SIZE;
+		sceneEdge0 = max(1, SCENE_OFFSET - pad);
+		sceneEdge1 = min(EXTENDED_SCENE_SIZE - 2, SCENE_OFFSET + SCENE_SIZE + pad - 1);
 
 		if (previous == null) {
 			staticUnorderedModelBuffer = new GpuIntBuffer();
