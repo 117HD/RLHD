@@ -85,7 +85,6 @@ import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
-import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
@@ -896,7 +895,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
 			.addInclude("VERSION_HEADER", versionHeader)
-			.define("UI_SCALING_MODE", config.uiScalingMode().getMode())
+			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
 			.define("MATERIAL_COUNT", MaterialManager.MATERIALS.length)
@@ -2467,8 +2466,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
 		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear isn't
-		final int function = config.uiScalingMode() == UIScalingMode.LINEAR ? GL_LINEAR : GL_NEAREST;
+		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
+		final int function = config.uiScalingMode().glSamplingFunction;
 		glActiveTexture(TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, texUi);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);

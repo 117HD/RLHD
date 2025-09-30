@@ -206,17 +206,6 @@ public class LightManager {
 			changedPlanes = true;
 		}
 
-		float cosYaw = cos(plugin.cameraOrientation[0]);
-		float sinYaw = sin(plugin.cameraOrientation[0]);
-		float cosPitch = cos(plugin.cameraOrientation[1]);
-		float sinPitch = sin(plugin.cameraOrientation[1]);
-		float[] viewDir = {
-			cosPitch * -sinYaw,
-			sinPitch,
-			cosPitch * cosYaw
-		};
-		float[] cameraToLight = new float[3];
-
 		for (Light light : sceneContext.lights) {
 			// Ways lights may get deleted:
 			// - animation-specific:
@@ -425,7 +414,7 @@ public class LightManager {
 
 			light.elapsedTime += plugin.deltaClientTime;
 
-			light.visible = light.spawnDelay < light.elapsedTime && (light.lifetime == -1 || light.elapsedTime < light.lifetime);
+			light.visible = light.spawnDelay <= light.elapsedTime && (light.lifetime == -1 || light.elapsedTime < light.lifetime);
 
 			// If the light is temporarily hidden, keep it visible only while fading out
 			if (light.visible && light.hiddenTemporarily)
@@ -664,6 +653,13 @@ public class LightManager {
 				}
 			}
 		}
+
+		// Force lights to instantly appear when spawning them as part of a new scene
+		for (var light : sceneContext.lights)
+			light.fadeInDuration = 0;
+
+		// Set the plane to an unreachable plane, forcing the first `toggleTemporaryVisibility` call to not fade
+		currentPlane = -1;
 	}
 
 	private void removeLightIf(Predicate<Light> predicate) {
