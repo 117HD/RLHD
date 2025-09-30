@@ -36717,7 +36717,7 @@
     "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ],
     "visibleFromOtherPlanes": true,
     "color": "#B1C9DB",
-    "strength": 15,
+    "strength": 10,
     "radius": 170,
     "fixedDespawnTime": true,
     "despawnDelay": 1950,

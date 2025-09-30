@@ -5083,7 +5083,10 @@
     "minSaturation": 2,
     "maxSaturation": 2,
     "minLightness": 9,
-    "maxLightness": 9
+    "maxLightness": 9,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Cam Torum Fix Dirt on tiles in front of furnace",
@@ -5103,7 +5106,10 @@
     "minSaturation": 1,
     "maxSaturation": 1,
     "minLightness": 15,
-    "maxLightness": 15
+    "maxLightness": 15,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Cam Torum Paths Keep Vanilla Colour",
