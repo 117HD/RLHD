@@ -89,6 +89,7 @@ import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
+import rs117.hd.model.modelreplaceer.types.objects.ModelDefinition;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
@@ -126,6 +127,7 @@ import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.ModelReplacement;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.FileWatcher;
@@ -769,6 +771,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			areaManager.shutDown();
 			gamevalManager.shutDown();
 			gammaCalibrationOverlay.destroy();
+			ModelDefinition.release();
 			npcDisplacementCache.destroy();
 
 			if (lwjglInitialized) {
@@ -2551,6 +2554,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (!isActive)
 			return;
 
+		ModelDefinition.release();
+
 		int expandedChunks = getExpandedMapLoadingChunks();
 		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 			// Reload once the POH is done loading
@@ -3090,6 +3095,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		return true;
 	}
 
+	public Model findModelReplacement(ModelReplacement replacement, Model originalModel, int id, int x, int z, long hash) {
+		frameTimer.begin(Timer.MODEL_REPLACEMENTS);
+		if (replacement == null || replacement == null) {
+			frameTimer.end(Timer.MODEL_REPLACEMENTS);
+			return originalModel;
+		}
+
+		ModelDefinition def = replacement.model.definition;
+		if (def == null) {
+			frameTimer.end(Timer.MODEL_REPLACEMENTS);
+			return originalModel;
+		}
+
+		int tileX = (x >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int tileY = (z >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+		int plane = ModelHash.getPlane(hash);
+
+		Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileX][tileY];
+		int config = sceneContext.getObjectConfig(tile, hash);
+
+		int type = config & 0x3F;
+		int orientation = (config >> 6) & 0x3;
+
+		Model model = def.getModel(client, id, type, orientation);
+		frameTimer.end(Timer.MODEL_REPLACEMENTS);
+		return model;
+	}
+
 	/**
 	 * Draw a Renderable in the scene
 	 *
@@ -3119,6 +3152,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				return;
 		}
 
+		int plane = ModelHash.getPlane(hash);
+		int id = ModelHash.getIdOrIndex(hash);
+		int uuid = ModelHash.generateUuid(client, hash, renderable);
+		int[] worldPos = sceneContext.localToWorld(x, z, plane);
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+
 		if (enableDetailedTimers)
 			frameTimer.begin(Timer.GET_MODEL);
 
@@ -3126,12 +3165,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		try {
 			// getModel may throw an exception from vanilla client code
 			if (renderable instanceof Model) {
-				model = (Model) renderable;
+				model = findModelReplacement(modelOverride.modelReplacement,(Model) renderable,id,x,z,hash);
 				offsetModel = model.getUnskewedModel();
 				if (offsetModel == null)
 					offsetModel = model;
 			} else {
-				offsetModel = model = renderable.getModel();
+				offsetModel = model =  findModelReplacement(modelOverride.modelReplacement,renderable.getModel(),id,x,z,hash);
 			}
 			if (model == null || model.getFaceCount() == 0) {
 				// skip models with zero faces
@@ -3186,7 +3225,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		eightIntWrite[6] = y << 16 | height & 0xFFFF; // Pack Y into the upper bits to easily preserve the sign
 		eightIntWrite[7] = z;
 
-		int plane = ModelHash.getPlane(hash);
+		plane = ModelHash.getPlane(hash);
 		int faceCount;
 		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
@@ -3206,9 +3245,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			drawnStaticRenderableCount++;
 		} else {
-			int uuid = ModelHash.generateUuid(client, hash, renderable);
-			int[] worldPos = sceneContext.localToWorld(x, z, plane);
-			ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 			if (modelOverride.hide)
 				return;
 
@@ -3259,6 +3295,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			} else {
 				if (enableDetailedTimers)
 					frameTimer.begin(Timer.MODEL_PUSHING);
+
+
+				if (modelOverride.modelReplacement != null) {
+					int customUID = ModelHash.packUuid(ModelHash.TYPE_CUSTOM, modelOverride.modelReplacement.model.name().hashCode());
+					modelOverride = modelOverrideManager.getOverride(customUID, worldPos,true);
+				}
 
 				int vertexOffset = dynamicOffsetVertices + sceneContext.getVertexOffset();
 				int uvOffset = dynamicOffsetUvs + sceneContext.getUvOffset();

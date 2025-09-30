@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -46,7 +48,7 @@ public class ModelOverride
 	public Set<Integer> projectileIds = EMPTY;
 	@JsonAdapter(GamevalManager.SpotanimAdapter.class)
 	public Set<Integer> graphicsObjectIds = EMPTY;
-
+	public Set<String> custom117 = new HashSet<>();
 	public Material baseMaterial = Material.NONE;
 	public Material textureMaterial = Material.NONE;
 	public UvType uvType = UvType.VANILLA;
@@ -79,7 +81,7 @@ public class ModelOverride
 
 	public Map<Material, ModelOverride> materialOverrides;
 	public ModelOverride[] colorOverrides;
-
+	public ModelReplacement modelReplacement;
 	private JsonElement colors;
 
 	public transient boolean isDummy;
@@ -91,7 +93,7 @@ public class ModelOverride
 		boolean test(int ahsl);
 	}
 
-	public void normalize(VanillaShadowMode vanillaShadowMode) {
+	public void normalize(VanillaShadowMode vanillaShadowMode, SeasonalTheme seasonalTheme) {
 		// Ensure there are no nulls in case of invalid configuration during development
 		if (baseMaterial == null) {
 			if (Props.DEVELOPMENT)
@@ -139,7 +141,7 @@ public class ModelOverride
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
 				var override = entry.getValue();
-				override.normalize(vanillaShadowMode);
+				override.normalize(vanillaShadowMode,seasonalTheme);
 				normalized.put(entry.getKey(), override);
 			}
 			materialOverrides = normalized;
@@ -147,7 +149,7 @@ public class ModelOverride
 
 		if (colorOverrides != null) {
 			for (var override : colorOverrides) {
-				override.normalize(vanillaShadowMode);
+				override.normalize(vanillaShadowMode,seasonalTheme);
 				override.ahslCondition = parseAhslConditions(override.colors);
 			}
 		}
@@ -166,6 +168,12 @@ public class ModelOverride
 				castShadows = false;
 		}
 
+		if (modelReplacement != null) {
+			if (!modelReplacement.themes.contains(seasonalTheme.name())) {
+				modelReplacement = null;
+			}
+		}
+
 		if (!castShadows && shadowOpacityThreshold == 0)
 			shadowOpacityThreshold = 1;
 	}
@@ -179,6 +187,7 @@ public class ModelOverride
 			objectIds,
 			projectileIds,
 			graphicsObjectIds,
+			custom117,
 			baseMaterial,
 			textureMaterial,
 			uvType,
@@ -208,6 +217,7 @@ public class ModelOverride
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
+			modelReplacement,
 			colors,
 			isDummy,
 			areaOverrides,
@@ -568,4 +578,5 @@ public class ModelOverride
 				break;
 		}
 	}
+
 }
