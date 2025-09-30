@@ -133,7 +133,7 @@
       },
       "visibleFromOtherPlanes": {
         "type": "boolean",
-        "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
+        "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to false."
       },
       "ignoreActorHiding": {
         "type": "boolean",

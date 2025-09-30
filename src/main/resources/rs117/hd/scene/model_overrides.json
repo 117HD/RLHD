@@ -12057,7 +12057,8 @@
     "objectIds": [
       "VIKING_DUGUPSOIL_BROWN_2",
       "FAVOUR_DUGUPSOIL_2",
-      "EYEGLO_DUGUPSOIL_2"
+      "EYEGLO_DUGUPSOIL_2",
+      "DUGUPSOIL2_BROWNMUD"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.65,
@@ -39185,8 +39186,7 @@
     ],
     "objectIds": [
       "HAUNTEDMINE_BACK_ENTRANCE1",
-      "HAUNTEDMINE_BACK_ENTRANCE2",
-      "DUGUPSOIL2_BROWNMUD"
+      "HAUNTEDMINE_BACK_ENTRANCE2"
     ]
   },
   {
@@ -41709,6 +41709,8 @@
   {
     "description": "PoH - Stone - Fancy Brick wall",
     "baseMaterial": "STONE_NORMALED",
+    "uvOrientation": 512,
+    "flatNormals": true,
     "uvType": "BOX",
     "objectIds": [
       "YANILLE_POH_WALL",
