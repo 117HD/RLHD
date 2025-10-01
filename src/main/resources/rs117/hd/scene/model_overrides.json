@@ -12548,7 +12548,6 @@
       "FEVER_CRATE",
       "GOBLIN_OUTPOST_LARGE_CRATE",
       "GOBLIN_OUTPOST_LARGE_CRATES",
-      "DWARF_KELDAGRIM_WOODEN_BOXES_NO_OPS",
       "AIDE_CRATES_STACKED",
       "FAIRY_CRATE_2_BLUE",
       "FAIRY_CRATE_BLUE",
@@ -12771,7 +12770,8 @@
       "MCANNON_CRATES",
       "FAI_FALADOR_BOXES",
       "FAI_FALADOR_BOXES_NOOP",
-      "FAI_VARROCK_BOXES_NOOP"
+      "FAI_VARROCK_BOXES_NOOP",
+      "DWARF_KELDAGRIM_WOODEN_BOXES_NO_OPS"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -22586,7 +22586,8 @@
       "BLAST_FURNACE_PIPES7",
       "BLAST_FURNACE_PIPES7_SMOKE",
       "BLAST_FURNACE_PIPES8",
-      "BLAST_FURNACE_PIPES9"
+      "BLAST_FURNACE_PIPES9",
+      "BLAST_FURNACE_PEDALS"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -22616,7 +22617,8 @@
     "baseMaterial": "METALLIC_1",
     "objectIds": [
       "BLAST_FURNACE_CONVEYER_COGS",
-      "BLAST_FURNACE_CONVEYER_COGS4"
+      "BLAST_FURNACE_CONVEYER_COGS4",
+      "BLAST_FURNACE_CONVEYER_COGS_BROKEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -22626,6 +22628,16 @@
         "baseMaterial": "GRUNGE_3"
       }
     ]
+  },
+  {
+    "description": "Blast Furnace - Ramp to Ore Belt",
+    "areas": [ "BLAST_FURNACE" ],
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.75,
+    "objectIds": [
+      "PIER_HILLSKEW"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Blast Furnace - Ore Belt",
@@ -22688,6 +22700,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": [ "h == 6" ],
@@ -30664,7 +30677,7 @@
   {
     "description": "Objects - Stone - Stairs - Keldagrim Double Staircase",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "DWARF_KELDAGRIM_WIDE_STAIRS_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_UPPER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_UPPER", "DWARF_KELDAGRIM_FACTORY_STAIRS", "BLAST_FURNACE_STAIRS_UP" ],
+    "objectIds": [ "DWARF_KELDAGRIM_WIDE_STAIRS_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_UPPER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_UPPER", "DWARF_KELDAGRIM_FACTORY_STAIRS" ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
@@ -30752,7 +30765,23 @@
       "BLAST_FURNACE_SINK"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.5
+  },
+  {
+    "description": "Blast Furnace - Objects - Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "BLAST_FURNACE_STAIRS_UP"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Blast Furnace - Objects - Metallic - Scaffolding",
