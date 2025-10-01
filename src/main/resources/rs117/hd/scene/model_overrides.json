@@ -6126,6 +6126,7 @@
       "ELID_DUGUPSOIL_3",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_1",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_2",
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_3",
       "BARBASSAULT_DUGUPSOIL_RECRUITMENT_01",
       "BARBASSAULT_DUGUPSOIL_RECRUITMENT_02",
       "BARBASSAULT_DUGUPSOIL_RECRUITMENT_03",
@@ -30967,8 +30968,20 @@
     "uvType": "MODEL_YZ"
   },
   {
+    "description": "Colossal Wyrm Agility Course - Stone Chips",
+    "baseMaterial": "DIRT_1",
+    "areas": [ "Colossal Wyrm Agility Course" ],
+    "objectIds": [
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_1",
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_2",
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_3"
+    ],
+    "uvType": "WORLD_XZ",
+    "castShadows": false
+  },
+  {
     "description": "Colossal Wyrm Agility Course Hay Bale",
-    "baseMaterial": "HD_HAY",
+    "baseMaterial": "HD_HAY_BRIGHT",
     "objectIds": [
       "AVIUM_BUNDLE_HAY01_LANDING01",
       "AVIUM_BUNDLE_HAY01_FLOOR01",
@@ -30981,7 +30994,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Skull",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_ENTRANCE_JAW01",
       "SKELETON_WYRM01_ENTRANCE_JAW02",
@@ -30994,7 +31007,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Bones",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_RIB01",
       "SKELETON_WYRM01_RIB01_DIAGONAL",
@@ -31007,7 +31020,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Bones with Dirt",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_VERTEBRAE02",
       "SKELETON_WYRM01_VERTEBRAE03"
@@ -31023,7 +31036,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Bones with Wood",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_VERTEBRAE04"
     ],
@@ -31045,11 +31058,20 @@
     "objectIds": [
       "SKEWSTEPS_WOOD01_OASIS",
       "WALLKIT_SCAFFOLD01_DECKING01",
-      "WALLKIT_SCAFFOLD01_DECKING03",
-      "VARLAMORE_WYRM_AGILITY_ADVANCED_BALANCE_1_TRIGGER"
+      "WALLKIT_SCAFFOLD01_DECKING03"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Floor - Angled",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "VARLAMORE_WYRM_AGILITY_ADVANCED_BALANCE_1_TRIGGER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256
   },
   {
     "description": "Colossal Wyrm Agility Course Scaffolding",

@@ -2161,6 +2161,12 @@
     "specularGloss": 20.0
   },
   {
+    "name": "BONE_DARK",
+    "parent": "GRUNGE_2",
+    "specularStrength": 0.25,
+    "specularGloss": 20.0
+  },
+  {
     "name": "ABYSSAL_D"
   },
   {

@@ -7763,6 +7763,25 @@
     ]
   },
   {
+    "name": "Colossal Wyrm Agility Course",
+    "aabbs": [
+      [ 1612, 2892, 1668, 2946 ]
+    ]
+  },
+  {
+    "name": "Colossal Wyrm Agility Course - Shadow Fix",
+    "aabbs": [
+      [ 1649, 2932, 1649, 2933 ],
+      [ 1648, 2930 ],
+      [ 1651, 2929 ],
+      [ 1650, 2924 ],
+      [ 1649, 2915, 1650, 2915 ],
+      [ 1632, 2938 ],
+      [ 1638, 2911, 1638, 2913 ],
+      [ 1646, 2912 ]
+    ]
+  },
+  {
     "name": "VARLAMORE_CAM_TORUM_ENTRANCE_PATH_BLENDING_FIX",
     "aabbs": [
       [ 1443, 3104, 1444, 3105 ]
