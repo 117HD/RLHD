@@ -22719,7 +22719,7 @@
   },
   {
     "description": "Objects - Stone - Giants Foundry - Moulds",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "GIANTS_FOUNDRY_MOLD_LIBRARY"
     ],
@@ -22736,17 +22736,28 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
-    "uvOrientation": 128
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7 || h == 4" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Giants Foundry - Preform storage",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "GIANTS_FOUNDRY_PREFORM_STORAGE_EMPTY"
+      "GIANTS_FOUNDRY_PREFORM_STORAGE_EMPTY",
+      "GIANTS_FOUNDRY_PREFORM_STORAGE_FULL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 1024
+    "colorOverrides": [
+      {
+        "colors": [ "h < 4 || s == 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
@@ -22804,7 +22815,13 @@
       "GIANTS_FOUNDRY_CRUCIBLE_FULL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 4 && s == 7" ],
+        "baseMaterial": "GRAY_150"
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lava Rocks",
@@ -23059,7 +23076,13 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "GIANTS_FOUNDRY_CHEST" ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Waterfalls - Replace Vanilla Droplets",

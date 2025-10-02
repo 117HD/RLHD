@@ -32151,8 +32151,7 @@
   },
   {
     "description": "GIANTS_FOUNDRY_CRUCIBLE",
-    "height": 270,
-    "alignment": "CENTER",
+    "offset": [ 13, 270, -25 ],
     "radius": 130,
     "strength": 40,
     "color": [
@@ -32168,9 +32167,25 @@
     "range": 30
   },
   {
-    "description": "GIANTS_FOUNDRY_POURED_METAL_MOULD_JIG",
-    "height": 100,
-    "alignment": "CENTER",
+    "description": "GIANTS_FOUNDRY_POURED_METAL_MOULD_JIG_1",
+    "offset": [ 0, 130, 0 ],
+    "radius": 130,
+    "strength": 12,
+    "color": [
+      255,
+      182,
+      38
+    ],
+    "objectIds": [
+      "GIANTS_FOUNDRY_JIG_MOULD_FILLED"
+    ],
+    "type": "PULSE",
+    "duration": 7000,
+    "range": 30
+  },
+  {
+    "description": "GIANTS_FOUNDRY_POURED_METAL_MOULD_JIG_2",
+    "offset": [ 0, 120, 120 ],
     "radius": 130,
     "strength": 12,
     "color": [
