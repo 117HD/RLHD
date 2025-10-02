@@ -1521,7 +1521,9 @@
       67,
       60
     ],
-    "fogDepth": 12
+    "fogDepth": 12,
+    "waterCausticsStrength": 30,
+    "waterCausticsColor": "#5EA7FF"
   },
   {
     "area": "ELID_CAVE",

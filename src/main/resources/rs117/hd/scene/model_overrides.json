@@ -13130,9 +13130,6 @@
       "GIANTS_FOUNDRY_WALL_LVL0_CAVETOP01",
       "GIANTS_FOUNDRY_WALL_LVL1",
       "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP03",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04",
       "GIANTS_FOUNDRY_WALL_LVL0_LAVA",
       "GIANTS_FOUNDRY_WALL_LVL0_LAVA_CONNECT",
       "GIANTS_FOUNDRY_WALL_LVL0_LAVA_CONNECT_MIRROR",
@@ -13153,15 +13150,34 @@
       "GIANTS_FOUNDRY_WATERFALL_WALL_FADE03",
       "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE01",
       "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE02",
-      "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE03",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE01",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE02",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE03",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04_FADE01"
+      "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE03"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
     "uvOrientation": 256
+  },
+  {
+    "description": "Walls - Stone - Giants Foundry - Edge",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP03",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE01",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE02",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE03",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04_FADE01",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Ground Decoration - Flat Stone - Small - Uncolored",
@@ -25800,10 +25816,10 @@
   },
   {
     "description": "Black overhead tiles",
-    "baseMaterial": "GRAY_25",
+    "baseMaterial": "PURE_BLACK",
     "objectIds": [ "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP01" ],
-    "uvType": "BOX",
-    "uvOrientation": 64
+    "castShadows": false,
+    "receiveShadows": false
   },
   {
     "description": "Throne of Weiss",
