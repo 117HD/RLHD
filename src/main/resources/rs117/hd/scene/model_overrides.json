@@ -9329,6 +9329,16 @@
     "uvScale": 0.7
   },
   {
+    "description": "Amethyst Mine Walls",
+    "baseMaterial": "GRUNGE_1_LIGHT",
+    "objectIds": [
+      "MGUILD_WALL",
+      "MGUILD_WALL_LEFT",
+      "MGUILD_WALL_RIGHT"
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Motherlode Mine Walls Lighten",
     "baseMaterial": "DIRT_2_LIGHT",
     "areas": [ "Motherlode Mine Dark Wall Fix" ],
@@ -9377,7 +9387,7 @@
   },
   {
     "description": "Amathyst mine walls",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "GRUNGE_1_LIGHT",
     "objectIds": [
       "AMETHYSTROCK1",
       "AMETHYSTROCK2",
