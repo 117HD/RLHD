@@ -2599,7 +2599,10 @@
     "shiftHue": 3,
     "shiftSaturation": -3,
     "minLightness": 35,
-    "maxLightness": 35
+    "maxLightness": 35,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "YANILLE_MAGIC_GUILD_FLOOR_FIX",
