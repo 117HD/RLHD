@@ -1986,7 +1986,8 @@
   },
   {
     "area": "Ruins of Tapoyauik",
-    "waterColor": "#2759C6"
+    "waterColor": "#2759C6",
+    "sunAngles": [ 75, 235 ]
   },
   {
     "area": "AMOXLIATL_ARENA",
