@@ -2599,7 +2599,10 @@
     "shiftHue": 3,
     "shiftSaturation": -3,
     "minLightness": 35,
-    "maxLightness": 35
+    "maxLightness": 35,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "YANILLE_MAGIC_GUILD_FLOOR_FIX",
@@ -4820,7 +4823,7 @@
     "area": "Ruins of Tapoyauik",
     "underlayIds": [ 18, 227, 228, 229 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 30,
+    "shiftLightness": 27,
     "shiftHue": 5,
     "maxHue": 38,
     "replacements": {
@@ -4832,7 +4835,7 @@
     "area": "Ruins of Tapoyauik",
     "underlayIds": [ 58, 72, 87 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 30,
+    "shiftLightness": 27,
     "shiftHue": 5,
     "maxHue": 38
   },
@@ -4841,7 +4844,7 @@
     "area": "Ruins of Tapoyauik",
     "overlayIds": [ 263, 379 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 25
+    "shiftLightness": 22
   },
   {
     "name": "Ruins of Tapoyauik Water",
@@ -4866,7 +4869,6 @@
     "name": "Amoxliatl Arena Snow Fix",
     "area": "AMOXLIATL_ARENA_SNOW_FIX",
     "overlayIds": [ 183, 184, 389, 390, 391, 392 ],
-    "maxLightness": 40,
     "groundMaterial": "SNOW_1"
   },
   {
@@ -4874,7 +4876,7 @@
     "area": "AMOXLIATL_ARENA",
     "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
     "groundMaterial": "SNOW_1",
-    "shiftLightness": 20,
+    "shiftLightness": 10,
     "shiftHue": 5,
     "maxHue": 38,
     "replacements": {
@@ -4887,8 +4889,8 @@
     "overlayIds": [ 182, 183, 184, 384, 385, 386, 387, 388, 389, 390, 391, 392 ],
     "groundMaterial": "SNOW_1",
     "maxSaturation": 0,
-    "shiftLightness": 17,
-    "minLightness": 68
+    "shiftLightness": 10,
+    "minLightness": 20
   },
   {
     "name": "COLOSSEUM_TILES",
@@ -5084,7 +5086,10 @@
     "minSaturation": 2,
     "maxSaturation": 2,
     "minLightness": 9,
-    "maxLightness": 9
+    "maxLightness": 9,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Cam Torum Fix Dirt on tiles in front of furnace",
@@ -5104,7 +5109,10 @@
     "minSaturation": 1,
     "maxSaturation": 1,
     "minLightness": 15,
-    "maxLightness": 15
+    "maxLightness": 15,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "Cam Torum Paths Keep Vanilla Colour",
