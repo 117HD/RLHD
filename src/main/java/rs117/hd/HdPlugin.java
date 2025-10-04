@@ -373,7 +373,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int[] sceneResolution;
 
-	private GLFrameBuffer backbufferFBO;
+	private GLFrameBuffer backBufferFBO;
 	private GLFrameBuffer sceneFBO;
 	private GLFrameBuffer shadowMapFBO;
 	private GLFrameBuffer tiledLightingFBO;
@@ -663,9 +663,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				materialManager.startUp();
 				waterTypeManager.startUp();
 
-				backbufferFBO = GLFrameBuffer.wrap(awtContext.getFramebuffer(false), "backBuffer");
+				backBufferFBO = GLFrameBuffer.wrap(awtContext.getFramebuffer(false), "backBuffer");
 
-				GLFrameBufferDesc backbufferDesc = backbufferFBO.getDescriptor();
+				GLFrameBufferDesc backbufferDesc = backBufferFBO.getDescriptor();
 				if(backbufferDesc.colorDescriptors.isEmpty())
 					throw new RuntimeException("Couldn't determine BackBuffer descriptor");
 
@@ -701,7 +701,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.setShouldConstructionCreate(false)
 					.setDepth(DynamicLights.MAX_LAYERS_PER_TILE)
 					.setColorAttachment(
-						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16I, new GLTextureParams()
+						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16UI, new GLTextureParams()
 							.setType(GLTextureType.TEXTURE2D_ARRAY)
 							.setSampler(GLSamplerMode.NEAREST_CLAMP)
 							.setTextureUnit(TEXTURE_UNIT_TILED_LIGHTING_MAP)
@@ -2142,7 +2142,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glDepthMask(true);
 			glUseProgram(0);
 
-			sceneFBO.blitTo(backbufferFBO,
+			sceneFBO.blitTo(
+				backBufferFBO,
 				GLAttachmentSlot.COLOR0,
 				GLAttachmentSlot.BACK_LEFT,
 				sceneViewport[0],
@@ -2171,7 +2172,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			log.error("Unable to swap buffers:", ex);
 		}
 
-		backbufferFBO.bind();
+		backBufferFBO.bind();
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
@@ -2194,7 +2195,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.begin(Timer.RENDER_UI);
 
-		backbufferFBO.bind();
+		backBufferFBO.bind();
 		// Disable alpha writes, just in case the default FBO has an alpha channel
 		glColorMask(true, true, true, false);
 

@@ -58,20 +58,14 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glClear;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
-import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
 import static org.lwjgl.opengl.GL30.glDrawBuffer;
 import static org.lwjgl.opengl.GL30.glDrawBuffers;
-import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
-import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glFramebufferTextureLayer;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
-import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glGetFramebufferAttachmentParameteriv;
 import static org.lwjgl.opengl.GL30.glGetRenderbufferParameteriv;
 import static org.lwjgl.opengl.GL30.glReadBuffer;
-import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL30.glViewport;
-import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 import static rs117.hd.HdPlugin.checkGLErrors;
 
 @Slf4j
@@ -175,7 +169,15 @@ public class GLFrameBuffer {
 				glDisable(GL_MULTISAMPLE);
 			}
 			glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+			GLRenderState.activeFrameBuffer = this;
 			return true;
+		}
+		return false;
+	}
+
+	public boolean bind(GLAttachmentSlot slot) {
+		if(bind()) {
+			glDrawBuffer(slot.glEnum);
 		}
 		return false;
 	}
@@ -401,7 +403,6 @@ public class GLFrameBuffer {
 		blitTo(target, srcSlot, dstSlot, dstX, dstY, dstWidth, dstHeight, GL_NEAREST);
 	}
 
-
 	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot, int dstX, int dstY, int dstWidth, int dstHeight, int glFilterMode) {
 		GLFrameBufferAttachment srcAtt = getColorAttachment(srcSlot);
 		GLFrameBufferAttachment dstAtt = target.getColorAttachment(dstSlot);
@@ -566,6 +567,11 @@ public class GLFrameBuffer {
 
 		wrapper.colorAttachments = new GLFrameBufferAttachment[colorAttachments.size()];
 		colorAttachments.toArray(wrapper.colorAttachments);
+
+		wrapper.drawBuffers = new int[wrapper.colorAttachments.length];
+		for(int i = 0; i < wrapper.colorAttachments.length; i++) {
+			wrapper.drawBuffers[i] = wrapper.colorAttachments[i].slot.glEnum;
+		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
