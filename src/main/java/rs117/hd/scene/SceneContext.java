@@ -19,8 +19,8 @@ import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.buffer.GpuFloatBuffer;
-import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.opengl.buffer.GpuFloatBuffer;
+import rs117.hd.utils.opengl.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;

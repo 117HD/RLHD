@@ -1,4 +1,4 @@
-package rs117.hd.utils.buffer;
+package rs117.hd.utils.opengl.buffer;
 
 import java.nio.IntBuffer;
 import rs117.hd.opengl.compute.OpenCLManager;

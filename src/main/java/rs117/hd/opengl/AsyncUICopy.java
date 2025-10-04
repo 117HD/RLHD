@@ -12,6 +12,7 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.utils.opengl.texture.GLTexture;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -31,8 +32,7 @@ public class AsyncUICopy implements Runnable {
 
 	private IntBuffer mappedBuffer;
 	private int[] pixels;
-	private int interfacePbo;
-	private int interfaceTexture;
+	private GLTexture uiTex;
 	private int width;
 	private int height;
 
@@ -45,23 +45,20 @@ public class AsyncUICopy implements Runnable {
 		timer.add(Timer.COPY_UI, time);
 	}
 
-	public void prepare(int interfacePbo, int interfaceTex) {
+	public void prepare(GLTexture uiTex) {
 		// Ensure there isn't already another UI copy in progress
 		if (mappedBuffer != null)
 			return;
 
 		timer.begin(Timer.MAP_UI_BUFFER);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
-		ByteBuffer buffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
+		ByteBuffer buffer = uiTex.map(GL_WRITE_ONLY);
 		timer.end(Timer.MAP_UI_BUFFER);
 		if (buffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 			return;
 		}
 
-		this.interfacePbo = interfacePbo;
-		this.interfaceTexture = interfaceTex;
+		this.uiTex = uiTex;
 		this.mappedBuffer = buffer.asIntBuffer();
 
 		var provider = client.getBufferProvider();
@@ -85,18 +82,13 @@ public class AsyncUICopy implements Runnable {
 			throw new RuntimeException(e);
 		}
 
-		var uiResolution = plugin.getUiResolution();
-		if (uiResolution == null || width > uiResolution[0] || height > uiResolution[1]) {
-			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", width, height, uiResolution);
+		if (width > uiTex.getWidth() || height > uiTex.getHeight()) {
+			log.error("UI texture resolution mismatch ({}x{} > {}x{}). Skipping UI...", width, height, uiTex.getWidth(), uiTex.getHeight());
 			return false;
 		}
 
 		timer.begin(Timer.UPLOAD_UI);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
-		glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-		glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
-		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+		uiTex.unmap(0, 0, width, height);
 		timer.end(Timer.UPLOAD_UI);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);

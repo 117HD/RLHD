@@ -22,28 +22,28 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.utils.buffer;
+package rs117.hd.utils.opengl.buffer;
 
-import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
-public class GpuFloatBuffer
+public class GpuIntBuffer
 {
-	private FloatBuffer buffer;
+	private IntBuffer buffer;
 
-	public GpuFloatBuffer()
+	public GpuIntBuffer()
 	{
 		this(65536);
 	}
 
-	public GpuFloatBuffer(int initialCapacity) {
+	public GpuIntBuffer(int initialCapacity) {
 		try {
-			buffer = MemoryUtil.memAllocFloat(initialCapacity);
+			buffer = MemoryUtil.memAllocInt(initialCapacity);
 		} catch (OutOfMemoryError oom) {
 			// Force garbage collection and try again
 			System.gc();
-			buffer = MemoryUtil.memAllocFloat(initialCapacity);
+			buffer = MemoryUtil.memAllocInt(initialCapacity);
 		}
 	}
 
@@ -59,19 +59,23 @@ public class GpuFloatBuffer
 		destroy();
 	}
 
-	public void put(float x, float y, float z, float w) {
-		buffer.put(x).put(y).put(z).put(w);
+	public void put(int x, int y, int z) {
+		buffer.put(x).put(y).put(z);
 	}
 
 	public void put(float x, float y, float z, int w) {
-		buffer.put(x).put(y).put(z).put(Float.intBitsToFloat(w));
+		buffer
+			.put(Float.floatToIntBits(x))
+			.put(Float.floatToIntBits(y))
+			.put(Float.floatToIntBits(z))
+			.put(w);
 	}
 
-	public void put(float[] floats) {
-		buffer.put(floats);
+	public void put(int[] ints) {
+		buffer.put(ints);
 	}
 
-	public void put(FloatBuffer buffer) {
+	public void put(IntBuffer buffer) {
 		this.buffer.put(buffer);
 	}
 
@@ -84,7 +88,7 @@ public class GpuFloatBuffer
 		buffer.flip();
 	}
 
-	public GpuFloatBuffer clear() {
+	public GpuIntBuffer clear() {
 		buffer.clear();
 		return this;
 	}
@@ -93,7 +97,7 @@ public class GpuFloatBuffer
 		return buffer.capacity();
 	}
 
-	public void ensureCapacity(int size) {
+	public GpuIntBuffer ensureCapacity(int size) {
 		int capacity = buffer.capacity();
 		final int position = buffer.position();
 		if ((capacity - position) < size) {
@@ -102,15 +106,17 @@ public class GpuFloatBuffer
 			}
 			while ((capacity - position) < size);
 
-			FloatBuffer newB = MemoryUtil.memAllocFloat(capacity);
+			IntBuffer newB = MemoryUtil.memAllocInt(capacity);
 			buffer.flip();
 			newB.put(buffer);
 			MemoryUtil.memFree(buffer);
 			buffer = newB;
 		}
+
+		return this;
 	}
 
-	public FloatBuffer getBuffer()
+	public IntBuffer getBuffer()
 	{
 		return buffer;
 	}
