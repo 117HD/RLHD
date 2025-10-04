@@ -198,7 +198,7 @@ public class LightManager {
 		int[][][] tileHeights = sceneContext.scene.getTileHeights();
 		var cachedNpcs = client.getTopLevelWorldView().npcs();
 		var cachedPlayers = client.getTopLevelWorldView().players();
-		int plane = client.getPlane();
+		final int plane = client.getPlane();
 		boolean changedPlanes = false;
 
 		if (plane != currentPlane) {
@@ -297,8 +297,11 @@ public class LightManager {
 									continue;
 
 								// Assume only the first actor at the same exact location will be rendered
-								if (gameObject.getX() == light.origin[0] && gameObject.getY() == light.origin[2]) {
-									hiddenTemporarily = gameObject.getRenderable() != light.actor;
+								if (gameObject.getX() == round(light.origin[0]) &&
+									gameObject.getY() == round(light.origin[2]) &&
+									gameObject.getRenderable() != light.actor
+								) {
+									hiddenTemporarily = true;
 									break;
 								}
 							}
@@ -307,22 +310,20 @@ public class LightManager {
 						if (!hiddenTemporarily)
 							hiddenTemporarily = !isActorLightVisible(light.actor);
 
-						// Tile null check is to prevent oddities caused by - once again - Crystalline Hunllef.
-						// May also apply to other NPCs in instances.
-						if (tile.getBridge() != null)
-							plane++;
-
 						// Interpolate between tile heights based on specific scene coordinates
+						int tileZ = plane;
+						if (tile.getBridge() != null)
+							tileZ++;
 						float lerpX = fract(light.origin[0] / (float) LOCAL_TILE_SIZE);
 						float lerpY = fract(light.origin[2] / (float) LOCAL_TILE_SIZE);
 						float heightNorth = mix(
-							tileHeights[plane][tileExX][tileExY + 1],
-							tileHeights[plane][tileExX + 1][tileExY + 1],
+							tileHeights[tileZ][tileExX][tileExY + 1],
+							tileHeights[tileZ][tileExX + 1][tileExY + 1],
 							lerpX
 						);
 						float heightSouth = mix(
-							tileHeights[plane][tileExX][tileExY],
-							tileHeights[plane][tileExX + 1][tileExY],
+							tileHeights[tileZ][tileExX][tileExY],
+							tileHeights[tileZ][tileExX + 1][tileExY],
 							lerpX
 						);
 						float tileHeight = mix(heightSouth, heightNorth, lerpY);
