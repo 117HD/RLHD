@@ -43,7 +43,6 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
-import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.model.ModelPusher;
@@ -54,10 +53,12 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.HDVariables;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.opengl.texture.GLTexture;
+import rs117.hd.utils.opengl.texture.GLTextureFormat;
+import rs117.hd.utils.opengl.texture.GLTextureParams;
+import rs117.hd.utils.opengl.texture.GLTextureType;
 
-import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
-import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
@@ -110,8 +111,7 @@ public class MaterialManager {
 	public static Material[] MATERIALS;
 	public static Material[] VANILLA_TEXTURE_MAPPING;
 
-	private int texMaterialTextureArray;
-	private int[] textureResolution;
+	private GLTexture texMaterialTextureArray;
 	public final List<TextureLayer> textureLayers = new ArrayList<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
@@ -125,9 +125,9 @@ public class MaterialManager {
 			fileWatcher.unregister();
 		fileWatcher = null;
 
-		if (texMaterialTextureArray != 0)
-			glDeleteTextures(texMaterialTextureArray);
-		texMaterialTextureArray = 0;
+		if (texMaterialTextureArray != null)
+			texMaterialTextureArray.delete();
+		texMaterialTextureArray = null;
 		textureLayers.clear();
 
 		if (uboMaterials != null)
@@ -380,35 +380,24 @@ public class MaterialManager {
 			mat.textureLayer = mat.resolveTextureOwner().textureLayer;
 
 		int textureSize = config.textureResolution().getSize();
-		textureResolution = ivec(textureSize, textureSize);
-		glActiveTexture(TEXTURE_UNIT_GAME);
-		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size()) {
-			if (texMaterialTextureArray != 0)
-				glDeleteTextures(texMaterialTextureArray);
-			texMaterialTextureArray = glGenTextures();
-			glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
+		if (texMaterialTextureArray == null || previousLayerCount != textureLayers.size()) {
+			if (texMaterialTextureArray != null)
+				texMaterialTextureArray.delete();
+
+			int anisotropySamples = config.anisotropicFilteringLevel();
+			texMaterialTextureArray = new GLTexture(textureSize, textureSize, textureLayers.size(), GLTextureFormat.SRGB8_ALPHA8,
+				GLTextureParams.DEFAULT()
+					.setType(GLTextureType.TEXTURE2D_ARRAY)
+					.setTextureUnit(TEXTURE_UNIT_GAME)
+					.setGenerateMipmaps(anisotropySamples > 0)
+					.setAnisotropySamples(anisotropySamples)
+					.setImmutable(true)
+					.setDebugName("Material Textures Array"));
 
 			// Since we're reallocating the texture array, all layers need to be reuploaded
 			for (var layer : textureLayers)
 				layer.needsUpload = true;
-
-			log.debug("Allocating {}x{} texture array with {} layers", textureSize, textureSize, textureLayers.size());
-			int mipLevels = 1 + floor(log2(textureSize));
-			int format = GL_SRGB8_ALPHA8;
-			if (HdPlugin.GL_CAPS.glTexStorage3D != 0) {
-				ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, textureLayers.size());
-			} else {
-				// Allocate each mip level separately
-				for (int i = 0; i < mipLevels; i++) {
-					int size = textureSize >> i;
-					glTexImage3D(GL_TEXTURE_2D_ARRAY, i, format, size, size, textureLayers.size(), 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-				}
-			}
-
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
 		}
-		textureManager.setAnisotropicFilteringLevel();
 
 		uploadTextures();
 
@@ -460,7 +449,7 @@ public class MaterialManager {
 
 	public void uploadTextures() {
 		assert client.isClientThread();
-		if (texMaterialTextureArray == 0)
+		if (texMaterialTextureArray == null)
 			return;
 
 		// Set brightness to 1 to upload unmodified vanilla textures
@@ -479,12 +468,8 @@ public class MaterialManager {
 				continue;
 
 			try {
-				if (!uploadedAnything) {
-					glActiveTexture(TEXTURE_UNIT_GAME);
-					glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
-					uploadedAnything = true;
-				}
-				textureManager.uploadTexture(GL_TEXTURE_2D_ARRAY, material.textureLayer, textureResolution, image);
+				textureManager.uploadTexture(texMaterialTextureArray, material.textureLayer, image);
+				uploadedAnything = true;
 			} catch (Exception ex) {
 				log.error("Failed to upload texture {}:", material, ex);
 			}
@@ -494,7 +479,7 @@ public class MaterialManager {
 		textureProvider.setBrightness(vanillaBrightness);
 
 		if (uploadedAnything)
-			glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+			texMaterialTextureArray.generateMipMaps();
 	}
 
 	private static void checkForReplacementLoops(Material[] materials) {

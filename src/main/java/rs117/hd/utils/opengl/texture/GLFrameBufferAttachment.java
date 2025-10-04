@@ -17,8 +17,6 @@ import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.utils.opengl.texture.GLTextureType.TEXTURE2D;
-import static rs117.hd.utils.opengl.texture.GLTextureType.TEXTURE2D_ARRAY;
 
 @Slf4j
 public class GLFrameBufferAttachment {
@@ -97,6 +95,7 @@ public class GLFrameBufferAttachment {
 				checkGLErrors();
 			}
 		}
+		checkGLErrors();
 		glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.getFboId());
 
 		return this;
@@ -121,7 +120,7 @@ public class GLFrameBufferAttachment {
 			glFramebufferRenderbuffer(GL_FRAMEBUFFER, slot.glEnum, GL_RENDERBUFFER, renderBuffer);
 
 			// Resize resolve texture
-			texture.resize(descriptor.width, descriptor.height);
+			texture.resize(descriptor.width, descriptor.height, descriptor.depth);
 
 			// Reattach to resolve framebuffer
 			if (resolveFboId != 0) {
@@ -139,7 +138,7 @@ public class GLFrameBufferAttachment {
 				}
 			}
 		} else {
-			texture.resize(descriptor.width, descriptor.height);
+			texture.resize(descriptor.width, descriptor.height, descriptor.depth);
 
 			glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer.getFboId());
 			switch (params.type) {

@@ -103,8 +103,9 @@ public class GLBuffer
 
 		if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43) {
 			GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
-			checkGLErrors();
 		}
+
+		checkGLErrors(() -> name);
 	}
 
 	public void upload(ByteBuffer data) {

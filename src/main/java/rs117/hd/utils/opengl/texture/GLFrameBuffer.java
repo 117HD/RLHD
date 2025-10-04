@@ -58,20 +58,14 @@ import static org.lwjgl.opengl.GL30.glBlitFramebuffer;
 import static org.lwjgl.opengl.GL30.glCheckFramebufferStatus;
 import static org.lwjgl.opengl.GL30.glClear;
 import static org.lwjgl.opengl.GL30.glDeleteFramebuffers;
-import static org.lwjgl.opengl.GL30.glDeleteRenderbuffers;
 import static org.lwjgl.opengl.GL30.glDrawBuffer;
 import static org.lwjgl.opengl.GL30.glDrawBuffers;
-import static org.lwjgl.opengl.GL30.glFramebufferRenderbuffer;
-import static org.lwjgl.opengl.GL30.glFramebufferTexture2D;
 import static org.lwjgl.opengl.GL30.glFramebufferTextureLayer;
 import static org.lwjgl.opengl.GL30.glGenFramebuffers;
-import static org.lwjgl.opengl.GL30.glGenRenderbuffers;
 import static org.lwjgl.opengl.GL30.glGetFramebufferAttachmentParameteriv;
 import static org.lwjgl.opengl.GL30.glGetRenderbufferParameteriv;
 import static org.lwjgl.opengl.GL30.glReadBuffer;
-import static org.lwjgl.opengl.GL30.glRenderbufferStorageMultisample;
 import static org.lwjgl.opengl.GL30.glViewport;
-import static org.lwjgl.opengl.GL32.glFramebufferTexture;
 import static rs117.hd.HdPlugin.checkGLErrors;
 
 @Slf4j
@@ -86,10 +80,9 @@ public class GLFrameBuffer {
 	@Getter
 	private int fboId = -1;
 	@Getter
-	private boolean created = false;
-	@Getter
 	private boolean wrapper = false;
 
+	private boolean internallyBinded = false;
 	private float depthClearValue = 0.0f;
 	private float[] colorClearValue = {0.0f, 0.0f, 0.0f, 1.0f};
 
@@ -104,18 +97,19 @@ public class GLFrameBuffer {
 		create();
 	}
 
+	public boolean isCreated() {return fboId != -1; }
+
 	public boolean create() {
-		if (created) {
+		if (isCreated()) {
 			return false;
 		}
 
-		created = true;
 		fboId = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+		bind(true);
 
 		if (HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
 			GL43C.glObjectLabel(GL_FRAMEBUFFER, fboId, descriptor.debugName);
-			checkGLErrors();
+			checkGLErrors(() -> descriptor.debugName);
 		}
 
 		if(!descriptor.colorDescriptors.isEmpty()) {
@@ -161,36 +155,57 @@ public class GLFrameBuffer {
 			return false;
 		}
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		unbind(true);
 
 		return true;
 	}
 
-	public boolean bind() {
-		if(GLRenderState.activeFrameBuffer != this) {
+	public boolean bind() { return bind(false);}
+
+	private boolean bind(boolean internal) {
+		if(!GLRenderState.frameBuffer.isActive(this)) {
 			glViewport(0, 0, descriptor.width, descriptor.height);
 			if (descriptor.samples > 1) {
 				glEnable(GL_MULTISAMPLE);
 			} else {
 				glDisable(GL_MULTISAMPLE);
 			}
+
 			glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+			internallyBinded = internal;
+
+			GLRenderState.frameBuffer.push(this);
 			return true;
 		}
 		return false;
 	}
 
+	public boolean bind(GLAttachmentSlot slot) {
+		if(bind()) {
+			glDrawBuffer(slot.glEnum);
+		}
+		return false;
+	}
+
 	public void bindLayer(GLAttachmentSlot slot, int layer) {
-		assert GLRenderState.activeFrameBuffer == this;
+		bind();
 		GLFrameBufferAttachment att = getColorAttachment(slot);
 		if(att != null && layer >= 0 && att.texture.depth < layer) {
 			glFramebufferTextureLayer(GL_FRAMEBUFFER, att.slot.glEnum, att.texture.getId(), 0, layer);
 		}
 	}
 
-	public void unbind() {
-		if(GLRenderState.activeFrameBuffer == this) {
+	public void unbind() { unbind(false);}
+
+	public void unbind(boolean internal) {
+		if(GLRenderState.frameBuffer.isActive(this)) {
+			if(internal && !internallyBinded) {
+				return; // Texture was bound outside of class, so should be left alone
+			}
+			internallyBinded = false;
+
 			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+			GLRenderState.frameBuffer.pop();
 		}
 	}
 
@@ -199,7 +214,7 @@ public class GLFrameBuffer {
 	}
 
 	public boolean resize(int newWidth, int newHeight, boolean recreate) {
-		if (created && newWidth == descriptor.width && newHeight == descriptor.height)
+		if (isCreated() && newWidth == descriptor.width && newHeight == descriptor.height)
 			return false;
 
 		descriptor.width = newWidth;
@@ -236,7 +251,7 @@ public class GLFrameBuffer {
 	}
 
 	public void delete() {
-		if (!created || wrapper) return;
+		if (!isCreated() || wrapper) return;
 
 		if (fboId != 0) {
 			glDeleteFramebuffers(fboId);
@@ -257,7 +272,6 @@ public class GLFrameBuffer {
 		}
 
 		drawBuffers = null;
-		created = false;
 	}
 
 	private GLFrameBufferAttachment getColorAttachment(GLAttachmentSlot slot) {
@@ -278,21 +292,8 @@ public class GLFrameBuffer {
 		return depthAttachment.texture;
 	}
 
-	private void checkCreated() {
-		if (!created) {
-			throw new IllegalStateException("Framebuffer not yet created.");
-		}
-	}
-
-	private void checkNotCreated() {
-		if (created) {
-			throw new IllegalStateException("Cannot modify framebuffer after creation.");
-		}
-	}
-
 	private void clearInternal(boolean clearColor, boolean clearDepth) {
-		checkCreated();
-
+		if (!isCreated()) return;
 		if (!clearColor && !clearDepth) return;
 		if (clearColor && colorAttachments == null) clearColor = false;
 		if (clearDepth && depthAttachment == null) clearDepth = false;
@@ -306,7 +307,7 @@ public class GLFrameBuffer {
 				GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, -1, sb);
 			}
 
-			boolean shouldUnbind = bind();
+			bind(true);
 			int clearMask = 0;
 
 			if (clearColor) {
@@ -322,9 +323,7 @@ public class GLFrameBuffer {
 
 			glClear(clearMask);
 
-			if(shouldUnbind) {
-				unbind();
-			}
+			unbind(true);
 		} finally {
 			if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
 				GL43C.glPopDebugGroup();
@@ -384,7 +383,7 @@ public class GLFrameBuffer {
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-				checkGLErrors();
+				checkGLErrors(() -> descriptor.debugName);
 			} finally {
 				if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
 					GL43C.glPopDebugGroup();
@@ -400,7 +399,6 @@ public class GLFrameBuffer {
 	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot, int dstX, int dstY, int dstWidth, int dstHeight) {
 		blitTo(target, srcSlot, dstSlot, dstX, dstY, dstWidth, dstHeight, GL_NEAREST);
 	}
-
 
 	public void blitTo(GLFrameBuffer target, GLAttachmentSlot srcSlot, GLAttachmentSlot dstSlot, int dstX, int dstY, int dstWidth, int dstHeight, int glFilterMode) {
 		GLFrameBufferAttachment srcAtt = getColorAttachment(srcSlot);
@@ -442,7 +440,7 @@ public class GLFrameBuffer {
 				glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-				checkGLErrors();
+				checkGLErrors(() -> String.format("Blit %s (%s) -> %s (%s)", descriptor.debugName, srcSlot.toString(), target.descriptor.debugName, dstSlot.toString()));
 			} finally {
 				if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43 && !descriptor.debugName.isEmpty()) {
 					GL43C.glPopDebugGroup();
@@ -454,10 +452,9 @@ public class GLFrameBuffer {
 	public static GLFrameBuffer wrap(int fboId, String debugName) {
 		GLFrameBuffer wrapper = new GLFrameBuffer();
 		wrapper.fboId = fboId;
-		wrapper.created = true;
 		wrapper.descriptor.debugName = debugName;
 
-		glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+		wrapper.bind(true);
 
 		IntBuffer param = BufferUtils.createIntBuffer(1);
 		List<GLFrameBufferAttachment> colorAttachments = new ArrayList<>();
@@ -561,13 +558,18 @@ public class GLFrameBuffer {
 
 				colorAttachments.add(att);
 			}
-			checkGLErrors();
+			checkGLErrors(() -> debugName);
 		}
 
 		wrapper.colorAttachments = new GLFrameBufferAttachment[colorAttachments.size()];
 		colorAttachments.toArray(wrapper.colorAttachments);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		wrapper.drawBuffers = new int[wrapper.colorAttachments.length];
+		for(int i = 0; i < wrapper.colorAttachments.length; i++) {
+			wrapper.drawBuffers[i] = wrapper.colorAttachments[i].slot.glEnum;
+		}
+
+		wrapper.unbind(true);
 
 		return wrapper;
 	}

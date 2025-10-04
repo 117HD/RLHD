@@ -9,9 +9,21 @@ public class GLTextureParams {
 	public int imageUnitWriteMode;
 	public float[] borderColor = null;
 	public boolean generateMipmaps = false;
+	public boolean immutable = false;
+	public int anisotropySamples = -1;
 	public String debugName = "";
 
 	public static GLTextureParams DEFAULT() { return new GLTextureParams(); }
+
+	public GLTextureParams setImmutable(boolean immutable) {
+		this.immutable = immutable;
+		return this;
+	}
+
+	public GLTextureParams setAnisotropySamples(int anisotropySamples) {
+		this.anisotropySamples = anisotropySamples;
+		return this;
+	}
 
 	public GLTextureParams setType(GLTextureType type) {
 		this.type = type;
@@ -46,8 +58,8 @@ public class GLTextureParams {
 		return this;
 	}
 
-	public GLTextureParams enableMipmaps(boolean enable) {
-		this.generateMipmaps = enable;
+	public GLTextureParams setGenerateMipmaps(boolean generateMipmaps) {
+		this.generateMipmaps = generateMipmaps;
 		return this;
 	}
 

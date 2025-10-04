@@ -89,6 +89,7 @@ import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
+import rs117.hd.opengl.GLRenderState;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
@@ -373,7 +374,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	private int[] sceneResolution;
 
-	private GLFrameBuffer backbufferFBO;
+	private GLFrameBuffer backBufferFBO;
 	private GLFrameBuffer sceneFBO;
 	private GLFrameBuffer shadowMapFBO;
 	private GLFrameBuffer tiledLightingFBO;
@@ -663,9 +664,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				materialManager.startUp();
 				waterTypeManager.startUp();
 
-				backbufferFBO = GLFrameBuffer.wrap(awtContext.getFramebuffer(false), "backBuffer");
+				backBufferFBO = GLFrameBuffer.wrap(awtContext.getFramebuffer(false), "backBuffer");
 
-				GLFrameBufferDesc backbufferDesc = backbufferFBO.getDescriptor();
+				GLFrameBufferDesc backbufferDesc = backBufferFBO.getDescriptor();
 				if(backbufferDesc.colorDescriptors.isEmpty())
 					throw new RuntimeException("Couldn't determine BackBuffer descriptor");
 
@@ -701,7 +702,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.setShouldConstructionCreate(false)
 					.setDepth(DynamicLights.MAX_LAYERS_PER_TILE)
 					.setColorAttachment(
-						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16I, new GLTextureParams()
+						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16UI, new GLTextureParams()
 							.setType(GLTextureType.TEXTURE2D_ARRAY)
 							.setSampler(GLSamplerMode.NEAREST_CLAMP)
 							.setTextureUnit(TEXTURE_UNIT_TILED_LIGHTING_MAP)
@@ -1597,6 +1598,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {
+				tiledLightingFBO.bind();
+
 				int[] tiledLightingResolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
 				if (tiledLightingFBO.resize(tiledLightingResolution[0], tiledLightingResolution[1])) {
 					uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
@@ -1606,7 +1609,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
 				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
-				tiledLightingFBO.bind();
 				tiledLightingFBO.clearColor();
 
 				glBindVertexArray(vaoTri);
@@ -1830,7 +1832,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		boolean resized = false;
 		if(uiTex == null) {
-			uiTex = new GLTexture(resolution[0], resolution[1], GLTextureFormat.BGRA,
+			uiTex = new GLTexture(resolution[0], resolution[1], GLTextureFormat.BGRA8,
 				new GLTextureParams()
 					.setSampler(GLSamplerMode.LINEAR_CLAMP)
 					.setTextureUnit(TEXTURE_UNIT_UI)
@@ -2142,7 +2144,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glDepthMask(true);
 			glUseProgram(0);
 
-			sceneFBO.blitTo(backbufferFBO,
+			sceneFBO.blitTo(
+				backBufferFBO,
 				GLAttachmentSlot.COLOR0,
 				GLAttachmentSlot.BACK_LEFT,
 				sceneViewport[0],
@@ -2171,7 +2174,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			log.error("Unable to swap buffers:", ex);
 		}
 
-		backbufferFBO.bind();
+		GLRenderState.frameBuffer.clear();
+		GLRenderState.texture.clear();
+
+		backBufferFBO.bind();
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
@@ -2194,7 +2200,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.begin(Timer.RENDER_UI);
 
-		backbufferFBO.bind();
+		backBufferFBO.bind();
 		// Disable alpha writes, just in case the default FBO has an alpha channel
 		glColorMask(true, true, true, false);
 
@@ -2208,10 +2214,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
 
-		// Set the sampling function used when stretching the UI.
-		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
-		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		uiTex.setSampler(config.uiScalingMode() == UIScalingMode.LINEAR ? GLSamplerMode.LINEAR_CLAMP : GLSamplerMode.NEAREST_CLAMP);
+		uiTex.setSampler(config.uiScalingMode().getSamplerMode());
 
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
@@ -3153,7 +3156,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// @formatter:on
 	}
 
+	@FunctionalInterface
+	public interface DebugContextGetter {
+		String get();
+	}
+
 	public static void checkGLErrors() {
+		checkGLErrors(null);
+	}
+
+	public static void checkGLErrors(DebugContextGetter getter) {
 		if (SKIP_GL_ERROR_CHECKS)
 			return;
 
@@ -3187,7 +3199,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					break;
 			}
 
-			log.debug("glGetError:", new Exception(errStr));
+			if(getter == null) {
+				log.debug("glGetError:", new Exception(errStr));
+			} else {
+				log.debug("{} - glGetError:", getter.get(), new Exception(errStr));
+			}
 		}
 	}
 

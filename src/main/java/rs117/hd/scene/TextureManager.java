@@ -39,12 +39,12 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.*;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
+import rs117.hd.utils.opengl.texture.GLTexture;
+import rs117.hd.utils.opengl.texture.GLTextureFormat;
 
-import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -184,57 +184,30 @@ public class TextureManager {
 		return null;
 	}
 
-	public void uploadTexture(int target, int textureLayer, int[] textureSize, BufferedImage image) {
+	public void uploadTexture(GLTexture texture, int textureLayer, BufferedImage image) {
 		assert client.isClientThread() : "Not thread safe";
 
 		// Allocate resources for storing temporary image data
-		int numPixels = product(textureSize);
+		int numPixels = product(texture.getWidth(), texture.getHeight());
 		if (pixelBuffer == null || pixelBuffer.capacity() < numPixels)
 			pixelBuffer = BufferUtils.createIntBuffer(numPixels);
-		if (scaledImage == null || scaledImage.getWidth() != textureSize[0] || scaledImage.getHeight() != textureSize[1])
-			scaledImage = new BufferedImage(textureSize[0], textureSize[1], BufferedImage.TYPE_INT_ARGB);
+		if (scaledImage == null || scaledImage.getWidth() != texture.getWidth() || scaledImage.getHeight() != texture.getHeight())
+			scaledImage = new BufferedImage(texture.getWidth(), texture.getHeight(), BufferedImage.TYPE_INT_ARGB);
 
 		// TODO: scale and transform on the GPU for better performance (would save 400+ ms)
 		AffineTransform t = new AffineTransform();
 		if (image != vanillaImage) {
 			// Flip non-vanilla textures horizontally to match vanilla UV orientation
-			t.translate(textureSize[1], 0);
+			t.translate(texture.getHeight(), 0);
 			t.scale(-1, 1);
 		}
-		t.scale((double) textureSize[0] / image.getWidth(), (double) textureSize[1] / image.getHeight());
+		t.scale((double) texture.getWidth() / image.getWidth(), (double) texture.getHeight() / image.getHeight());
 		AffineTransformOp scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BICUBIC);
 		scaleOp.filter(image, scaledImage);
 
 		int[] pixels = ((DataBufferInt) scaledImage.getRaster().getDataBuffer()).getData();
 		pixelBuffer.put(pixels).flip();
 
-		// Go from TYPE_4BYTE_ABGR in the BufferedImage to RGBA
-		glTexSubImage3D(
-			target, 0, 0, 0,
-			textureLayer, textureSize[0], textureSize[1], 1,
-			GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixelBuffer
-		);
-	}
-
-	public void setAnisotropicFilteringLevel() {
-		int level = config.anisotropicFilteringLevel();
-		if (level == 0) {
-			//level = 0 means no mipmaps and no anisotropic filtering
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		} else {
-			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
-			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
-			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
-			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
-			// that are very noticeable on terrain
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		}
-
-		if (GL.getCapabilities().GL_EXT_texture_filter_anisotropic) {
-			final float maxSamples = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
-			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
-		}
+		texture.uploadSubPixels3D(textureLayer, texture.getWidth(), texture.getHeight(), pixelBuffer, GLTextureFormat.BGRA8);
 	}
 }
