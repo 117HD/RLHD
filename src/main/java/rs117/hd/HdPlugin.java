@@ -2208,10 +2208,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
 
-		// Set the sampling function used when stretching the UI.
-		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
-		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		uiTex.setSampler(config.uiScalingMode() == UIScalingMode.LINEAR ? GLSamplerMode.LINEAR_CLAMP : GLSamplerMode.NEAREST_CLAMP);
+		uiTex.setSampler(config.uiScalingMode().getSamplerMode());
 
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
