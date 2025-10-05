@@ -682,7 +682,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					.setDepthAttachment(GLTextureFormat.DEPTH32F, GLTextureParams.DEFAULT())
 					.setDebugName("SceneColor"));
 
-
 				if (!sceneFBO.isCreated())
 					throw new RuntimeException("No supported " + (backbufferFormat.isSRGB() ? "sRGB" : "linear") + " formats");
 
@@ -2154,7 +2153,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				sceneViewport[1] + sceneViewport[3],
 				config.sceneScalingMode().glFilter);
 		} else {
-			sceneFBO.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
+			backBufferFBO.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		drawUi(overlayColor);
