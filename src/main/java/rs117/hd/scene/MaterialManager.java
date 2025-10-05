@@ -457,7 +457,6 @@ public class MaterialManager {
 		double vanillaBrightness = textureProvider.getBrightness();
 		textureProvider.setBrightness(1);
 
-		boolean uploadedAnything = false;
 		for (var layer : textureLayers) {
 			if (!layer.needsUpload)
 				continue;
@@ -469,7 +468,6 @@ public class MaterialManager {
 
 			try {
 				textureManager.uploadTexture(texMaterialTextureArray, material.textureLayer, image);
-				uploadedAnything = true;
 			} catch (Exception ex) {
 				log.error("Failed to upload texture {}:", material, ex);
 			}
@@ -477,9 +475,7 @@ public class MaterialManager {
 
 		// Reset the texture brightness
 		textureProvider.setBrightness(vanillaBrightness);
-
-		if (uploadedAnything)
-			texMaterialTextureArray.generateMipMaps();
+		texMaterialTextureArray.generateMipMaps();
 	}
 
 	private static void checkForReplacementLoops(Material[] materials) {
