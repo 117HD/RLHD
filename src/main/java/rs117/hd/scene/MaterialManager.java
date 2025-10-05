@@ -413,24 +413,25 @@ public class MaterialManager {
 		uploadTextures();
 
 		boolean materialOrderChanged = true;
-		if (uboMaterials != null && uboMaterials.materials.length == MATERIALS.length) {
-			materialOrderChanged = false;
-			for (int i = 0; i < MATERIALS.length; i++) {
-				var a = MATERIALS[i];
-				var b = uboMaterials.materials[i];
-				if (a.vanillaTextureIndex != b.vanillaTextureIndex ||
-					a.modifiesVanillaTexture != b.modifiesVanillaTexture ||
-					!a.name.equals(b.name)
-				) {
-					materialOrderChanged = true;
-					break;
-				}
-			}
-		} else {
+		// TODO: Fix material loading issues with profile switching
+//		if (uboMaterials != null && uboMaterials.materials.length == MATERIALS.length) {
+//			materialOrderChanged = false;
+//			for (int i = 0; i < MATERIALS.length; i++) {
+//				var a = MATERIALS[i];
+//				var b = uboMaterials.materials[i];
+//				if (a.vanillaTextureIndex != b.vanillaTextureIndex ||
+//					a.modifiesVanillaTexture != b.modifiesVanillaTexture ||
+//					!a.name.equals(b.name)
+//				) {
+//					materialOrderChanged = true;
+//					break;
+//				}
+//			}
+//		} else {
 			if (uboMaterials != null)
 				uboMaterials.destroy();
 			uboMaterials = new UBOMaterials(MATERIALS.length);
-		}
+//		}
 		uboMaterials.update(MATERIALS, vanillaTextures);
 
 		if (isFirstLoad)

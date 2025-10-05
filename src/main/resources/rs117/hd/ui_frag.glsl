@@ -24,12 +24,6 @@
  */
 #version 330
 
-#include UI_SCALING_MODE
-
-#define SAMPLING_MITCHELL 1
-#define SAMPLING_CATROM 2
-#define SAMPLING_XBR 3
-
 #include <uniforms/global.glsl>
 #include <uniforms/ui.glsl>
 
@@ -40,10 +34,12 @@ uniform sampler2D uiTexture;
 #include <utils/color_blindness.glsl>
 #include <utils/misc.glsl>
 
-#if UI_SCALING_MODE == SAMPLING_XBR
-#include <scaling/xbr_lv2_frag.glsl>
+#if UI_SCALING_MODE == UI_SCALING_MODE_XBR
+    #include <scaling/xbr_lv2_frag.glsl>
 
-in XBRTable xbrTable;
+    in XBRTable xbrTable;
+#elif UI_SCALING_MODE == UI_SCALING_MODE_PIXEL
+    #include <scaling/pixel.glsl>
 #endif
 
 in vec2 fUv;
@@ -59,10 +55,12 @@ vec4 alphaBlend(vec4 src, vec4 dst) {
 
 void main() {
     vec4 c;
-    #if UI_SCALING_MODE == SAMPLING_MITCHELL || UI_SCALING_MODE == SAMPLING_CATROM
+    #if UI_SCALING_MODE == UI_SCALING_MODE_MITCHELL || UI_SCALING_MODE == UI_SCALING_MODE_CATROM
         c = textureCubic(uiTexture, fUv);
-    #elif UI_SCALING_MODE == SAMPLING_XBR
+    #elif UI_SCALING_MODE == UI_SCALING_MODE_XBR
         c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
+    #elif UI_SCALING_MODE == UI_SCALING_MODE_PIXEL
+        c = texturePixel(uiTexture, fUv);
     #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
         c = texture(uiTexture, fUv);
     #endif
