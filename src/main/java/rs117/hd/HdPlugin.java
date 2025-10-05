@@ -2141,7 +2141,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glDisable(GL_MULTISAMPLE);
 			glDisable(GL_DEPTH_TEST);
 			glDepthMask(true);
-			glUseProgram(0);
+			GLRenderState.clearActiveShader();
 
 			sceneFBO.blitTo(
 				backBufferFBO,
@@ -2173,8 +2173,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			log.error("Unable to swap buffers:", ex);
 		}
 
-		GLRenderState.frameBuffer.clear();
-		GLRenderState.texture.clear();
+		GLRenderState.clear();
 
 		backBufferFBO.bind();
 
