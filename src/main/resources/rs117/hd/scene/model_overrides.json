@@ -21233,6 +21233,16 @@
   },
   {
     "description": "Darkmeyer Stone Walls",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "HIDEY_UNBUILT_ROCK_MASTER_SHORTCUT",
+      "DARKM_WALL_ROCK_SHORTCUT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Darkmeyer Stone Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
       "DARKM_OUTER_WALL_3H",
