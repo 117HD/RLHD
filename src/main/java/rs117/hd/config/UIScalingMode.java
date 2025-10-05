@@ -35,7 +35,7 @@ public enum UIScalingMode {
 	LINEAR("Bilinear", GLSamplerMode.LINEAR_CLAMP),
 	MITCHELL("Mitchell", GLSamplerMode.NEAREST_CLAMP),
 	CATMULL_ROM("Catmull-Rom", GLSamplerMode.NEAREST_CLAMP),
-	XBR("xBR", GLSamplerMode.LINEAR_CLAMP),
+	XBR("xBR", GLSamplerMode.NEAREST_CLAMP),
 	PIXEL("Pixel", GLSamplerMode.LINEAR_CLAMP);
 
 	private final String name;
