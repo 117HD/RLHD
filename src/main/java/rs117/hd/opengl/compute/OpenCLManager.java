@@ -50,7 +50,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.UBOCompute;
-import rs117.hd.utils.buffer.SharedGLBuffer;
+import rs117.hd.utils.opengl.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
 import static org.lwjgl.opencl.APPLEGLSharing.clGetGLContextInfoAPPLE;

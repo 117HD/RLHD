@@ -10,8 +10,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
-import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.SharedGLBuffer;
+import rs117.hd.utils.opengl.buffer.GLBuffer;
+import rs117.hd.utils.opengl.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;

@@ -37,7 +37,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
@@ -90,6 +89,7 @@ import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
+import rs117.hd.opengl.GLRenderState;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
@@ -139,9 +139,17 @@ import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 import rs117.hd.utils.ShaderRecompile;
-import rs117.hd.utils.buffer.GLBuffer;
-import rs117.hd.utils.buffer.GpuIntBuffer;
-import rs117.hd.utils.buffer.SharedGLBuffer;
+import rs117.hd.utils.opengl.buffer.GLBuffer;
+import rs117.hd.utils.opengl.buffer.GpuIntBuffer;
+import rs117.hd.utils.opengl.buffer.SharedGLBuffer;
+import rs117.hd.utils.opengl.texture.GLAttachmentSlot;
+import rs117.hd.utils.opengl.texture.GLFrameBuffer;
+import rs117.hd.utils.opengl.texture.GLFrameBufferDesc;
+import rs117.hd.utils.opengl.texture.GLSamplerMode;
+import rs117.hd.utils.opengl.texture.GLTexture;
+import rs117.hd.utils.opengl.texture.GLTextureFormat;
+import rs117.hd.utils.opengl.texture.GLTextureParams;
+import rs117.hd.utils.opengl.texture.GLTextureType;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -174,11 +182,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
-	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_UI = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE1 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -210,24 +218,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private static final float COLOR_FILTER_FADE_DURATION = 500;
 
 	private static final int[] eightIntWrite = new int[8];
-
-	private static final int[] RENDERBUFFER_FORMATS_SRGB = {
-		GL_SRGB8,
-		GL_SRGB8_ALPHA8 // should be guaranteed
-	};
-	private static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
-		GL_SRGB8_ALPHA8 // should be guaranteed
-	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR = {
-		GL_RGB8,
-		GL_RGBA8,
-		GL_RGB, // should be guaranteed
-		GL_RGBA // should be guaranteed
-	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
-		GL_RGBA8,
-		GL_RGBA // should be guaranteed
-	};
 
 	@Getter
 	private Gson gson;
@@ -374,10 +364,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 	@Getter
 	@Nullable
-	private int[] uiResolution;
+	private GLTexture uiTex;
 	private final int[] actualUiResolution = { 0, 0 }; // Includes stretched mode and DPI scaling
-	private int texUi;
-	private int pboUi;
 
 	@Nullable
 	private int[] sceneViewport;
@@ -385,22 +373,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	private int msaaSamples;
 
 	private int[] sceneResolution;
-	private int fboScene;
-	private int rboSceneColor;
-	private int rboSceneDepth;
-	private int fboSceneResolve;
-	private int rboSceneResolveColor;
 
-	private int shadowMapResolution;
-	private int fboShadowMap;
-	private int texShadowMap;
+	private GLFrameBuffer backBufferFBO;
+	private GLFrameBuffer sceneFBO;
+	private GLFrameBuffer shadowMapFBO;
+	private GLFrameBuffer tiledLightingFBO;
 
-	private int[] tiledLightingResolution;
-	private int tiledLightingLayerCount;
-	private int fboTiledLighting;
-	private int texTiledLighting;
-
-	private int texTileHeightMap;
+	private GLTexture tileHeightMapTex;
 
 	private final SharedGLBuffer hStagingBufferVertices = new SharedGLBuffer(
 		"Staging Vertices", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
@@ -536,12 +515,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					return false;
 
 				renderBufferOffset = 0;
-				fboScene = 0;
-				rboSceneColor = 0;
-				rboSceneDepth = 0;
-				fboSceneResolve = 0;
-				rboSceneResolveColor = 0;
-				fboShadowMap = 0;
+
 				numPassthroughModels = 0;
 				numModelsToSort = null;
 				elapsedTime = 0;
@@ -690,10 +664,58 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				materialManager.startUp();
 				waterTypeManager.startUp();
 
+				backBufferFBO = GLFrameBuffer.wrap(awtContext.getFramebuffer(false), "backBuffer");
+
+				GLFrameBufferDesc backbufferDesc = backBufferFBO.getDescriptor();
+				if(backbufferDesc.colorDescriptors.isEmpty())
+					throw new RuntimeException("Couldn't determine BackBuffer descriptor");
+
+				final int forcedAASamples = backbufferDesc.samples;
+				msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
+
+				GLTextureFormat backbufferFormat = backbufferDesc.colorDescriptors.get(0).format;
+				sceneFBO = new GLFrameBuffer(new GLFrameBufferDesc()
+					.setWidth(canvas.getWidth())
+					.setHeight(canvas.getHeight())
+					.setMSAASamples(msaaSamples)
+					.setColorAttachment(GLAttachmentSlot.COLOR0, backbufferFormat, GLTextureParams.DEFAULT())
+					.setDepthAttachment(GLTextureFormat.DEPTH32F, GLTextureParams.DEFAULT())
+					.setDebugName("SceneColor"));
+
+				if (!sceneFBO.isCreated())
+					throw new RuntimeException("No supported " + (backbufferFormat.isSRGB() ? "sRGB" : "linear") + " formats");
+
+				int shadowFBOSize = configShadowsEnabled ? config.shadowResolution().getValue() : 1;
+				shadowMapFBO = new GLFrameBuffer(
+					new GLFrameBufferDesc()
+						.setWidth(shadowFBOSize)
+						.setHeight(shadowFBOSize)
+						.setDepthAttachment(GLTextureFormat.DEPTH32F,
+							new GLTextureParams()
+								.setSampler(GLSamplerMode.NEAREST_CLAMP)
+								.setTextureUnit(TEXTURE_UNIT_SHADOW_MAP)
+								.setBorderColor(new float[] { 1.0f, 1.0f, 1.0f, 1.0f}))
+						.setDebugName("ShadowMap"));
+
+				tiledLightingFBO = new GLFrameBuffer(new GLFrameBufferDesc()
+					.setShouldConstructionCreate(false)
+					.setDepth(DynamicLights.MAX_LAYERS_PER_TILE)
+					.setColorAttachment(
+						GLAttachmentSlot.COLOR0, GLTextureFormat.RGBA16UI, new GLTextureParams()
+							.setType(GLTextureType.TEXTURE2D_ARRAY)
+							.setSampler(GLSamplerMode.NEAREST_CLAMP)
+							.setTextureUnit(TEXTURE_UNIT_TILED_LIGHTING_MAP)
+							.setImageUnit(IMAGE_UNIT_TILED_LIGHTING, GL_WRITE_ONLY))
+					.setDebugName("TiledLighting"));
+
+				tileHeightMapTex = new GLTexture(EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, MAX_Z, GLTextureFormat.R16I, new GLTextureParams()
+					.setType(GLTextureType.TEXTURE3D)
+					.setSampler(GLSamplerMode.NEAREST_CLAMP)
+					.setTextureUnit(TEXTURE_UNIT_TILE_HEIGHT_MAP)
+					.setDebugName("TileHeightMap"));
+
 				initPrograms();
 				initShaderHotswapping();
-				initUiTexture();
-				initShadowMapFbo();
 
 				checkGLErrors();
 
@@ -779,14 +801,34 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				materialManager.shutDown();
 				textureManager.shutDown();
 
+				if(sceneFBO != null) {
+					sceneFBO.delete();
+					sceneFBO = null;
+				}
+
+				if(shadowMapFBO != null) {
+					shadowMapFBO.delete();
+					shadowMapFBO = null;
+				}
+
+				if(tiledLightingFBO != null) {
+					tiledLightingFBO.delete();
+					tiledLightingFBO = null;
+				}
+
+				if(uiTex != null) {
+					uiTex.delete();
+					uiTex = null;
+				}
+
+				if(tileHeightMapTex != null) {
+					tileHeightMapTex.delete();
+					tileHeightMapTex = null;
+				}
+
 				destroyBuffers();
-				destroyUiTexture();
 				destroyPrograms();
 				destroyVaos();
-				destroySceneFbo();
-				destroyShadowMapFbo();
-				destroyTiledLightingFbo();
-				destroyTileHeightMap();
 				destroyModelSortingBins();
 
 				clManager.shutDown();
@@ -1282,98 +1324,13 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		uboUI.destroy();
 	}
 
-	private void initUiTexture() {
-		pboUi = glGenBuffers();
-
-		texUi = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, texUi);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
-
-	private void destroyUiTexture() {
-		uiResolution = null;
-
-		if (pboUi != 0)
-			glDeleteBuffers(pboUi);
-		pboUi = 0;
-
-		if (texUi != 0)
-			glDeleteTextures(texUi);
-		texUi = 0;
-	}
-
-	private void updateTiledLightingFbo() {
-		assert configTiledLighting;
-
-		int[] newResolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
-		int newLayerCount = configDynamicLights.getTiledLightingLayers();
-		if (Arrays.equals(newResolution, tiledLightingResolution) && tiledLightingLayerCount == newLayerCount)
-			return;
-
-		destroyTiledLightingFbo();
-
-		tiledLightingResolution = newResolution;
-		tiledLightingLayerCount = newLayerCount;
-
-		fboTiledLighting = glGenFramebuffers();
-		texTiledLighting = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
-		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage3D(
-			GL_TEXTURE_2D_ARRAY,
-			0,
-			GL_RGBA16UI,
-			tiledLightingResolution[0],
-			tiledLightingResolution[1],
-			tiledLightingLayerCount,
-			0,
-			GL_RGBA_INTEGER,
-			GL_UNSIGNED_SHORT,
-			0
-		);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
-		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0);
-		checkGLErrors();
-
-		if (tiledLightingImageStoreProgram.isValid())
-			ARBShaderImageLoadStore.glBindImageTexture(
-				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-
-		checkGLErrors();
-
-		uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
-	}
-
-	private void destroyTiledLightingFbo() {
-		tiledLightingResolution = null;
-
-		if (fboTiledLighting != 0)
-			glDeleteFramebuffers(fboTiledLighting);
-		fboTiledLighting = 0;
-
-		if (texTiledLighting != 0)
-			glDeleteTextures(texTiledLighting);
-		texTiledLighting = 0;
-	}
-
 	private void updateSceneFbo() {
-		if (uiResolution == null)
+		if (uiTex == null)
 			return;
 
 		int[] viewport = {
 			client.getViewportXOffset(),
-			uiResolution[1] - (client.getViewportYOffset() + client.getViewportHeight()),
+			uiTex.getHeight() - (client.getViewportYOffset() + client.getViewportHeight()),
 			client.getViewportWidth(),
 			client.getViewportHeight()
 		};
@@ -1383,7 +1340,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			return;
 
 		// DPI scaling and stretched mode also affects the game's viewport
-		divide(sceneViewportScale, vec(actualUiResolution), vec(uiResolution));
+		divide(sceneViewportScale, vec(actualUiResolution), vec(uiTex.getWidth(), uiTex.getHeight()));
 		if (sceneViewportScale[0] != 1 || sceneViewportScale[1] != 1) {
 			// Pad the viewport before scaling, so it always covers the game's viewport in the UI
 			for (int i = 0; i < 2; i++) {
@@ -1397,189 +1354,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		if (Arrays.equals(sceneViewport, viewport))
 			return;
 
-		destroySceneFbo();
 		sceneViewport = viewport;
-
-		// Bind default FBO to check whether anti-aliasing is forced
-		int defaultFramebuffer = awtContext.getFramebuffer(false);
-		glBindFramebuffer(GL_FRAMEBUFFER, defaultFramebuffer);
-		final int forcedAASamples = glGetInteger(GL_SAMPLES);
-		msaaSamples = forcedAASamples != 0 ? forcedAASamples : min(config.antiAliasingMode().getSamples(), glGetInteger(GL_MAX_SAMPLES));
-
-		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
-		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
-		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
-
-		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
-		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
-		int defaultColorAttachment = defaultFramebuffer == 0 ? GL_BACK_LEFT : GL_COLOR_ATTACHMENT0;
-		int alphaBits = glGetFramebufferAttachmentParameteri(GL_FRAMEBUFFER, defaultColorAttachment, GL_FRAMEBUFFER_ATTACHMENT_ALPHA_SIZE);
-		checkGLErrors();
-		boolean alpha = alphaBits > 0;
-
-		int[] desiredFormats = sRGB ?
-			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
-			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
 
 		float resolutionScale = config.sceneResolutionScale() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
 
-		// Create and bind the FBO
-		fboScene = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboScene);
-
-		// Create color render buffer
-		rboSceneColor = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneColor);
-
-		// Flush out all pending errors, so we can check whether the next step succeeds
-		clearGLErrors();
-
-		int format = 0;
-		for (int desiredFormat : desiredFormats) {
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, desiredFormat, sceneResolution[0], sceneResolution[1]);
-
-			if (glGetError() == GL_NO_ERROR) {
-				format = desiredFormat;
-				break;
-			}
-		}
-
-		if (format == 0)
-			throw new RuntimeException("No supported " + (sRGB ? "sRGB" : "linear") + " formats");
-
-		// Found a usable format. Bind the RBO to the scene FBO
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneColor);
-		checkGLErrors();
-
-		// Create depth render buffer
-		rboSceneDepth = glGenRenderbuffers();
-		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8, sceneResolution[0], sceneResolution[1]);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
-		checkGLErrors();
-
-		// If necessary, create an FBO for resolving multisampling
-		if (msaaSamples > 1 && resolutionScale != 1) {
-			fboSceneResolve = glGenFramebuffers();
-			glBindFramebuffer(GL_FRAMEBUFFER, fboSceneResolve);
-			rboSceneResolveColor = glGenRenderbuffers();
-			glBindRenderbuffer(GL_RENDERBUFFER, rboSceneResolveColor);
-			glRenderbufferStorageMultisample(GL_RENDERBUFFER, 0, format, sceneResolution[0], sceneResolution[1]);
-			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, rboSceneResolveColor);
-			checkGLErrors();
-		}
-
-		// Reset
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	}
-
-	private void destroySceneFbo() {
-		sceneViewport = null;
-
-		if (fboScene != 0)
-			glDeleteFramebuffers(fboScene);
-		fboScene = 0;
-
-		if (rboSceneColor != 0)
-			glDeleteRenderbuffers(rboSceneColor);
-		rboSceneColor = 0;
-
-		if (rboSceneDepth != 0)
-			glDeleteRenderbuffers(rboSceneDepth);
-		rboSceneDepth = 0;
-
-		if (fboSceneResolve != 0)
-			glDeleteFramebuffers(fboSceneResolve);
-		fboSceneResolve = 0;
-
-		if (rboSceneResolveColor != 0)
-			glDeleteRenderbuffers(rboSceneResolveColor);
-		rboSceneResolveColor = 0;
-	}
-
-	private void initShadowMapFbo() {
-		if (!configShadowsEnabled) {
-			initDummyShadowMap();
-			return;
-		}
-
-		// Create and bind the FBO
-		fboShadowMap = glGenFramebuffers();
-		glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
-
-		// Create texture
-		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
-		glBindTexture(GL_TEXTURE_2D, texShadowMap);
-
-		shadowMapResolution = config.shadowResolution().getValue();
-		int maxResolution = glGetInteger(GL_MAX_TEXTURE_SIZE);
-		if (maxResolution < shadowMapResolution) {
-			log.info("Capping shadow resolution from {} to {}", shadowMapResolution, maxResolution);
-			shadowMapResolution = maxResolution;
-		}
-
-		glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			GL_DEPTH_COMPONENT24,
-			shadowMapResolution,
-			shadowMapResolution,
-			0,
-			GL_DEPTH_COMPONENT,
-			GL_FLOAT,
-			0
-		);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-
-		float[] color = { 1, 1, 1, 1 };
-		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
-
-		// Bind texture
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texShadowMap, 0);
-		glDrawBuffer(GL_NONE);
-		glReadBuffer(GL_NONE);
-
-		// Reset FBO
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
-	}
-
-	private void initDummyShadowMap() {
-		// Create dummy texture
-		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
-		glBindTexture(GL_TEXTURE_2D, texShadowMap);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-	}
-
-	private void destroyShadowMapFbo() {
-		if (texShadowMap != 0)
-			glDeleteTextures(texShadowMap);
-		texShadowMap = 0;
-
-		if (fboShadowMap != 0)
-			glDeleteFramebuffers(fboShadowMap);
-		fboShadowMap = 0;
+		sceneFBO.resize(sceneResolution[0], sceneResolution[1]);
 	}
 
 	private void initTileHeightMap(Scene scene) {
-		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE * Short.BYTES;
-		ShortBuffer tileBuffer = ByteBuffer
-			.allocateDirect(TILE_HEIGHT_BUFFER_SIZE)
-			.order(ByteOrder.nativeOrder())
-			.asShortBuffer();
-
+		ShortBuffer tileBuffer = tileHeightMapTex.map(GL_WRITE_ONLY).asShortBuffer();
 		int[][][] tileHeights = scene.getTileHeights();
 		for (int z = 0; z < Constants.MAX_Z; ++z) {
 			for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
@@ -1592,24 +1377,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			}
 		}
 		tileBuffer.flip();
-
-		texTileHeightMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILE_HEIGHT_MAP);
-		glBindTexture(GL_TEXTURE_3D, texTileHeightMap);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexImage3D(GL_TEXTURE_3D, 0, GL_R16I,
-			EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, Constants.MAX_Z,
-			0, GL_RED_INTEGER, GL_SHORT, tileBuffer
-		);
-	}
-
-	private void destroyTileHeightMap() {
-		if (texTileHeightMap != 0)
-			glDeleteTextures(texTileHeightMap);
-		texTileHeightMap = 0;
+		tileHeightMapTex.unmap(0, 0, 0, EXTENDED_SCENE_SIZE, EXTENDED_SCENE_SIZE, Constants.MAX_Z);
 	}
 
 	@Override
@@ -1829,14 +1597,18 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
 			if (configTiledLighting) {
-				updateTiledLightingFbo();
-				assert fboTiledLighting != 0;
+				tiledLightingFBO.bind();
+
+				int[] tiledLightingResolution = max(ivec(1), round(divide(vec(sceneResolution), TILED_LIGHTING_TILE_SIZE)));
+				if (tiledLightingFBO.resize(tiledLightingResolution[0], tiledLightingResolution[1])) {
+					uboGlobal.tiledLightingResolution.set(tiledLightingResolution);
+					uboGlobal.upload();
+				}
 
 				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
 				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
 
-				glViewport(0, 0, tiledLightingResolution[0], tiledLightingResolution[1]);
-				glBindFramebuffer(GL_FRAMEBUFFER, fboTiledLighting);
+				tiledLightingFBO.clearColor();
 
 				glBindVertexArray(vaoTri);
 
@@ -1849,10 +1621,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					int layerCount = configDynamicLights.getTiledLightingLayers();
 					for (int layer = 0; layer < layerCount; layer++) {
 						tiledLightingShaderPrograms.get(layer).use();
-						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, texTiledLighting, 0, layer);
+						tiledLightingFBO.bindLayer(GLAttachmentSlot.COLOR0, layer);
 						glDrawArrays(GL_TRIANGLES, 0, 3);
 					}
 				}
+
+				tiledLightingFBO.unbind();
 
 				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
 				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
@@ -2054,17 +1828,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			max(1, client.getCanvasWidth()),
 			max(1, client.getCanvasHeight())
 		};
-		boolean resize = !Arrays.equals(uiResolution, resolution);
-		if (resize) {
-			uiResolution = resolution;
 
-			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboUi);
-			glBufferData(GL_PIXEL_UNPACK_BUFFER, uiResolution[0] * uiResolution[1] * 4L, GL_STREAM_DRAW);
-			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
-
-			glActiveTexture(TEXTURE_UNIT_UI);
-			glBindTexture(GL_TEXTURE_2D, texUi);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+		boolean resized = false;
+		if(uiTex == null) {
+			uiTex = new GLTexture(resolution[0], resolution[1], GLTextureFormat.BGRA8,
+				new GLTextureParams()
+					.setSampler(GLSamplerMode.LINEAR_CLAMP)
+					.setTextureUnit(TEXTURE_UNIT_UI)
+					.setDebugName("UI"));
+		} else if (uiTex.getWidth() != resolution[0] || uiTex.getHeight() != resolution[1]) {
+			uiTex.resize(resolution[0], resolution[1]);
+			resized = true;
 		}
 
 		if (client.isStretchedEnabled()) {
@@ -2072,15 +1846,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			actualUiResolution[0] = dim.width;
 			actualUiResolution[1] = dim.height;
 		} else {
-			copyTo(actualUiResolution, uiResolution);
+			actualUiResolution[0] = uiTex.getWidth();
+			actualUiResolution[1] = uiTex.getHeight();
 		}
 		round(actualUiResolution, multiply(vec(actualUiResolution), getDpiScaling()));
 
 		if (configAsyncUICopy) {
 			// Start copying the UI on a different thread, to be uploaded during the next frame
-			asyncUICopy.prepare(pboUi, texUi);
+			asyncUICopy.prepare(uiTex);
 			// If the window was just resized, upload once synchronously so there is something to show
-			if (resize)
+			if (resized)
 				asyncUICopy.complete();
 			return;
 		}
@@ -2089,28 +1864,21 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		final int[] pixels = bufferProvider.getPixels();
 		final int width = bufferProvider.getWidth();
 		final int height = bufferProvider.getHeight();
-
 		frameTimer.begin(Timer.MAP_UI_BUFFER);
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, pboUi);
-		ByteBuffer mappedBuffer = glMapBuffer(GL_PIXEL_UNPACK_BUFFER, GL_WRITE_ONLY);
+		ByteBuffer mappedBuffer = uiTex.map(GL_WRITE_ONLY);
 		frameTimer.end(Timer.MAP_UI_BUFFER);
 		if (mappedBuffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
-		} else if (width > uiResolution[0] || height > uiResolution[1]) {
-			log.error("UI texture resolution mismatch ({}x{} > {}). Skipping UI...", width, height, uiResolution);
+		} else if(width > uiTex.getWidth() || height > uiTex.getHeight()) {
+			log.error("UI texture resolution mismatch ({}x{} > {}x{}). Skipping UI...", width, height, uiTex.getWidth(), uiTex.getHeight());
 		} else {
 			frameTimer.begin(Timer.COPY_UI);
 			mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
 			frameTimer.end(Timer.COPY_UI);
-
 			frameTimer.begin(Timer.UPLOAD_UI);
-			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-			glActiveTexture(TEXTURE_UNIT_UI);
-			glBindTexture(GL_TEXTURE_2D, texUi);
-			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
+			uiTex.unmap(0, 0, width, height);
 			frameTimer.end(Timer.UPLOAD_UI);
 		}
-		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 	}
 
 	@Override
@@ -2254,14 +2022,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
 
-			if (configShadowsEnabled && fboShadowMap != 0 && environmentManager.currentDirectionalStrength > 0) {
+			if (configShadowsEnabled && shadowMapFBO != null && environmentManager.currentDirectionalStrength > 0) {
 				frameTimer.begin(Timer.RENDER_SHADOWS);
 
 				// Render to the shadow depth map
-				glViewport(0, 0, shadowMapResolution, shadowMapResolution);
-				glBindFramebuffer(GL_FRAMEBUFFER, fboShadowMap);
-				glClearDepth(1);
-				glClear(GL_DEPTH_BUFFER_BIT);
+				shadowMapFBO.bind();
+				shadowMapFBO.clearDepth(1.0f);
 				glDepthFunc(GL_LEQUAL);
 
 				shadowProgram.use();
@@ -2301,28 +2067,20 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 				glDisable(GL_CULL_FACE);
 				glDisable(GL_DEPTH_TEST);
 
+				shadowMapFBO.unbind();
+
 				frameTimer.end(Timer.RENDER_SHADOWS);
 			}
 
 			uboGlobal.upload();
 			sceneProgram.use();
 
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboScene);
-			glToggle(GL_MULTISAMPLE, msaaSamples > 1);
-			glViewport(0, 0, sceneResolution[0], sceneResolution[1]);
+			sceneFBO.bind();
 
 			// Clear scene
 			frameTimer.begin(Timer.CLEAR_SCENE);
-
 			float[] gammaCorrectedFogColor = pow(fogColor, getGammaCorrection());
-			glClearColor(
-				gammaCorrectedFogColor[0],
-				gammaCorrectedFogColor[1],
-				gammaCorrectedFogColor[2],
-				1f
-			);
-			glClearDepth(0);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			sceneFBO.clear(gammaCorrectedFogColor[0], gammaCorrectedFogColor[1], gammaCorrectedFogColor[2], 1.0f, 0.0f);
 			frameTimer.end(Timer.CLEAR_SCENE);
 
 			frameTimer.begin(Timer.RENDER_SCENE);
@@ -2383,30 +2141,19 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			glDisable(GL_MULTISAMPLE);
 			glDisable(GL_DEPTH_TEST);
 			glDepthMask(true);
-			glUseProgram(0);
+			GLRenderState.clearActiveShader();
 
-			glBindFramebuffer(GL_READ_FRAMEBUFFER, fboScene);
-			if (fboSceneResolve != 0) {
-				// Blit from the scene FBO to the multisample resolve FBO
-				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fboSceneResolve);
-				glBlitFramebuffer(
-					0, 0, sceneResolution[0], sceneResolution[1],
-					0, 0, sceneResolution[0], sceneResolution[1],
-					GL_COLOR_BUFFER_BIT, GL_NEAREST
-				);
-				glBindFramebuffer(GL_READ_FRAMEBUFFER, fboSceneResolve);
-			}
-
-			// Blit from the resolved FBO to the default FBO
-			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
-			glBlitFramebuffer(
-				0, 0, sceneResolution[0], sceneResolution[1],
-				sceneViewport[0], sceneViewport[1], sceneViewport[0] + sceneViewport[2], sceneViewport[1] + sceneViewport[3],
-				GL_COLOR_BUFFER_BIT, config.sceneScalingMode().glFilter
-			);
+			sceneFBO.blitTo(
+				backBufferFBO,
+				GLAttachmentSlot.COLOR0,
+				GLAttachmentSlot.BACK_LEFT,
+				sceneViewport[0],
+				sceneViewport[1],
+				sceneViewport[0] + sceneViewport[2],
+				sceneViewport[1] + sceneViewport[3],
+				config.sceneScalingMode().glFilter);
 		} else {
-			glClearColor(0, 0, 0, 1f);
-			glClear(GL_COLOR_BUFFER_BIT);
+			backBufferFBO.clearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		}
 
 		drawUi(overlayColor);
@@ -2426,7 +2173,9 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 			log.error("Unable to swap buffers:", ex);
 		}
 
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		GLRenderState.clear();
+
+		backBufferFBO.bind();
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
@@ -2440,7 +2189,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	private void drawUi(int overlayColor) {
-		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
+		if (uiTex == null || developerTools.isHideUiEnabled() && hasLoggedIn)
 			return;
 
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
@@ -2449,7 +2198,7 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 		frameTimer.begin(Timer.RENDER_UI);
 
-		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		backBufferFBO.bind();
 		// Disable alpha writes, just in case the default FBO has an alpha channel
 		glColorMask(true, true, true, false);
 
@@ -2458,20 +2207,12 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		tiledLightingOverlay.render();
 
 		uiProgram.use();
-		uboUI.sourceDimensions.set(uiResolution);
+		uboUI.sourceDimensions.set(uiTex.getWidth(), uiTex.getHeight());
 		uboUI.targetDimensions.set(actualUiResolution);
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
 
-		// Set the sampling function used when stretching the UI.
-		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
-		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
-		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
-		final int function = config.uiScalingMode().glSamplingFunction;
-		glActiveTexture(TEXTURE_UNIT_UI);
-		glBindTexture(GL_TEXTURE_2D, texUi);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);
+		uiTex.setSampler(config.uiScalingMode().getSamplerMode());
 
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_ONE, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
@@ -2490,10 +2231,10 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	private Image screenshot() {
-		if (uiResolution == null)
+		if (uiTex == null)
 			return null;
 
 		int width = actualUiResolution[0];
@@ -2769,7 +2510,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					boolean recompilePrograms = false;
 					boolean recreateSceneFbo = false;
-					boolean recreateShadowMapFbo = false;
 					boolean reloadTexturesAndMaterials = false;
 					boolean reloadEnvironments = false;
 					boolean reloadModelOverrides = false;
@@ -2830,7 +2570,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 								recompilePrograms = true;
 								// fall-through
 							case KEY_SHADOW_RESOLUTION:
-								recreateShadowMapFbo = true;
+								int shadowFBOSize = configShadowsEnabled ? config.shadowResolution().getValue() : 1;
+								shadowMapFBO.resize(shadowFBOSize, shadowFBOSize);
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
@@ -2910,7 +2651,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 						recompilePrograms();
 
 					if (recreateSceneFbo) {
-						destroySceneFbo();
 						updateSceneFbo();
 					}
 
@@ -2923,11 +2663,6 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 
 					if (reloadScene)
 						reuploadScene();
-
-					if (recreateShadowMapFbo) {
-						destroyShadowMapFbo();
-						initShadowMapFbo();
-					}
 
 					if (reloadEnvironments)
 						environmentManager.reload();
@@ -3052,8 +2787,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-	 * Check is a model is visible and should be drawn.
-	 */
+     * Check is a model is visible and should be drawn.
+     */
 	private boolean isOutsideViewport(Model model, int modelRadius, float pitchSin, float pitchCos, float yawSin, float yawCos, int x, int y, int z) {
 		if (sceneContext == null)
 			return true;
@@ -3091,17 +2826,17 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-	 * Draw a Renderable in the scene
-	 *
-	 * @param projection
-	 * @param scene
-	 * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
-	 * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
-	 * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
-	 * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
-	 * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
-	 * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
-	 */
+     * Draw a Renderable in the scene
+     *
+     * @param projection
+     * @param scene
+     * @param renderable  Can be an Actor (Player or NPC), DynamicObject, GraphicsObject, TileItem, Projectile or a raw Model.
+     * @param orientation Rotation around the up-axis, from 0 to 2048 exclusive, 2048 indicating a complete rotation.
+     * @param x           The Renderable's X offset relative to {@link Client#getCameraX()}.
+     * @param y           The Renderable's Y offset relative to {@link Client#getCameraZ()}.
+     * @param z           The Renderable's Z offset relative to {@link Client#getCameraY()}.
+     * @param hash        A unique hash of the renderable consisting of some useful information. See {@link rs117.hd.utils.ModelHash} for more details.
+     */
 	@Override
 	public void draw(Projection projection, @Nullable Scene scene, Renderable renderable, int orientation, int x, int y, int z, long hash) {
 		if (sceneContext == null)
@@ -3322,8 +3057,8 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 	}
 
 	/**
-	 * returns the correct buffer based on triangle count and updates model count
-	 */
+     * returns the correct buffer based on triangle count and updates model count
+     */
 	private GpuIntBuffer bufferForTriangles(int triangles) {
 		for (int i = 0; i < numSortingBins; i++) {
 			if (modelSortingBinFaceCounts[i] >= triangles) {
@@ -3419,7 +3154,16 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 		// @formatter:on
 	}
 
+	@FunctionalInterface
+	public interface DebugContextGetter {
+		String get();
+	}
+
 	public static void checkGLErrors() {
+		checkGLErrors(null);
+	}
+
+	public static void checkGLErrors(DebugContextGetter getter) {
 		if (SKIP_GL_ERROR_CHECKS)
 			return;
 
@@ -3453,7 +3197,11 @@ public class HdPlugin extends Plugin implements DrawCallbacks {
 					break;
 			}
 
-			log.debug("glGetError:", new Exception(errStr));
+			if(getter == null) {
+				log.debug("glGetError:", new Exception(errStr));
+			} else {
+				log.debug("{} - glGetError:", getter.get(), new Exception(errStr));
+			}
 		}
 	}
 

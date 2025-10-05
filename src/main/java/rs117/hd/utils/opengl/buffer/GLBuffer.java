@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.utils.buffer;
+package rs117.hd.utils.opengl.buffer;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -103,8 +103,9 @@ public class GLBuffer
 
 		if (log.isDebugEnabled() && HdPlugin.GL_CAPS.OpenGL43) {
 			GL43C.glObjectLabel(GL43C.GL_BUFFER, id, name);
-			checkGLErrors();
 		}
+
+		checkGLErrors(() -> name);
 	}
 
 	public void upload(ByteBuffer data) {

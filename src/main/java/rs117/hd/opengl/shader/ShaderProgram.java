@@ -7,6 +7,7 @@ import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.GLRenderState;
 import rs117.hd.opengl.uniforms.UniformBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -91,10 +92,13 @@ public class ShaderProgram {
 
 	public void use() {
 		assert program != 0;
-		glUseProgram(program);
+		if(GLRenderState.activeShaderProgram != this) {
+			GLRenderState.activeShaderProgram = this;
+			glUseProgram(program);
 
-		for (UniformBufferBlockPair pair : uniformBlockMappings)
-			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
+			for (UniformBufferBlockPair pair : uniformBlockMappings)
+				glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
+		}
 	}
 
 	public void destroy() {

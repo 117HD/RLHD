@@ -29,7 +29,7 @@ public enum Timer {
 	UPLOAD_GEOMETRY(true),
 	UPLOAD_UI(true, "Upload UI"),
 	COMPUTE(true),
-	CLEAR_SCENE(true),
+	CLEAR_SCENE(true, false),
 	RENDER_SHADOWS(true),
 	RENDER_SCENE(true),
 	RENDER_UI(true, "Render UI"),

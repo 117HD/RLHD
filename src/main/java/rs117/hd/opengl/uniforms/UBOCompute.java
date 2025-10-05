@@ -3,7 +3,7 @@ package rs117.hd.opengl.uniforms;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import rs117.hd.utils.buffer.SharedGLBuffer;
+import rs117.hd.utils.opengl.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
