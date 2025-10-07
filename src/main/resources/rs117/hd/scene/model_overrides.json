@@ -28310,7 +28310,13 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.68,
-    "uvOrientationX": 400
+    "uvOrientationX": 400,
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Mourners Tunnels - Wall Caps - Dirt",
