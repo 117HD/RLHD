@@ -21498,10 +21498,208 @@
       "DARKM_MIDDLE_DOOR_CLOSED",
       "DARKM_MIDDLE_DOOR_OPEN",
       "DARKM_POOR_DOOR_CLOSED",
-      "DARKM_POOR_DOOR_OPEN"
+      "DARKM_POOR_DOOR_OPEN",
+      "DARKM_ARBORETUM_DOUBLEDOORL",
+      "DARKM_ARBORETUM_DOUBLEDOORR"
     ],
     "uvType": "BOX",
     "uvScale": 0.2
+  },
+  {
+    "description": "Darkmeyer - Arboretum",
+    "objectIds": [
+      "DARKM_ARBORETUM_ENTRANCE_PILLAR_LEFT",
+      "DARKM_ARBORETUM_ENTRANCE_RIGHT",
+      "DARKM_ARBORETUM_ENTRANCE_LEFT",
+      "DARKM_ARBORETUM_WALL_RIGHT",
+      "DARKM_ARBORETUM_WALL_LEFT",
+      "DARKM_ARBORETUM_ENTRANCE_PILLAR_RIGHT",
+      "DARKM_ARBORETUM_WALL_2",
+      "DARKM_ARBORETUM_WALL",
+      "DARKM_ARBORETUM_ROOF01",
+      "DARKM_ARBORETUM_ROOF02",
+      "DARKM_ARBORETUM_ROOF03",
+      "DARKM_ARBORETUM_ROOF04",
+      "DARKM_ARBORETUM_ROOF05",
+      "DARKM_ARBORETUM_ROOF06",
+      "DARKM_ARBORETUM_ROOF07",
+      "DARKM_ARBORETUM_ROOF08",
+      "DARKM_ARBORETUM_ROOF09",
+      "DARKM_ARBORETUM_ROOF10",
+      "DARKM_ARBORETUM_ROOF11",
+      "DARKM_ARBORETUM_ROOF12",
+      "DARKM_ARBORETUM_ROOF13",
+      "DARKM_ARBORETUM_ROOF14",
+      "DARKM_ARBORETUM_ROOF15",
+      "DARKM_ARBORETUM_ROOF16",
+      "DARKM_ARBORETUM_ROOF17",
+      "DARKM_ARBORETUM_ROOF17",
+      "DARKM_ARBORETUM_ROOF18",
+      "DARKM_ARBORETUM_ROOF19",
+      "DARKM_ARBORETUM_ROOF20",
+      "DARKM_ARBORETUM_ROOF21",
+      "DARKM_ARBORETUM_ROOF22",
+      "DARKM_ARBORETUM_ROOF23",
+      "DARKM_ARBORETUM_ROOF24",
+      "DARKM_ARBORETUM_ROOF25",
+      "DARKM_ARBORETUM_ROOF26",
+      "DARKM_ARBORETUM_ROOF27",
+      "DARKM_ARBORETUM_ROOF28",
+      "DARKM_ARBORETUM_ROOF29",
+      "DARKM_ARBORETUM_ROOF30",
+      "DARKM_ARBORETUM_ROOF31",
+      "DARKM_ARBORETUM_ROOF32",
+      "DARKM_ARBORETUM_ROOF33",
+      "DARKM_ARBORETUM_ROOF34",
+      "DARKM_ARBORETUM_ROOF35",
+      "DARKM_ARBORETUM_ROOF36",
+      "DARKM_ARBORETUM_ROOF37",
+      "DARKM_ARBORETUM_ROOF38",
+      "DARKM_ARBORETUM_ROOF39"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.9
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum Shelves on Floor",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_ARBORETUM_SHELVES_FLOOR",
+      "MYQ5_ARBORETUM_SHELVES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 256,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum Shelves Standing",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_ARBORETUM_SHELVES_STANDING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum Blood Fountain",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "DARKM_FOUNTAIN"
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Floor with Roots or Dirt",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_01",
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_02",
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_03",
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_04",
+      "DARKM_ARBORETUM_FLOOR_TILE_04",
+      "DARKM_ARBORETUM_FLOOR_TILE_03",
+      "DARKM_ARBORETUM_DEAD_PLANT_02",
+      "DARKM_ARBORETUM_FLOOR_TILE_02",
+      "DARKM_ARBORETUM_DEAD_PLANT_01",
+      "DARKM_RARE_TREES_ICON"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 17",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Floor Tile",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "DARKM_ARBORETUM_FLOOR_TILE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Floor with Rug",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "DARKM_ARBORETUM_RUG_CORNER",
+      "DARKM_ARBORETUM_RUG_STRAIGHT",
+      "DARKM_ARBORETUM_RUG_MIDDLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Blisterwood Tree",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "BLISTERWOOD_TREE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Valves",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvScale": 0.3,
+    "uvType": "BOX",
+    "objectIds": [
+      "MYQ5_VALVE_NORTH",
+      "MYQ5_VALVE_SOUTH"
+    ]
   },
   {
     "description": "Darkmeyer Red Street Lights",
