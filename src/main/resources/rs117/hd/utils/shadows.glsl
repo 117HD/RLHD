@@ -33,9 +33,9 @@ float fetchShadowTexel(ivec2 uv, float fragDepth) {
         int alphaDepth = int(texelFetch(shadowMap, uv, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
         float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-        return depth < fragDepth ? alpha : 0;
+        return depth < fragDepth ? alpha : 0.f;
     #else
-        return texelFetch(shadowMap, uv, 0).r < fragDepth ? 1 : 0;
+        return texelFetch(shadowMap, uv, 0).r < fragDepth ? 1.f : 0.f;
     #endif
 }
 
