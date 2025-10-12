@@ -157,7 +157,7 @@ public interface HdPluginConfig extends Config
 		section = generalSettings
 	)
 	default UIScalingMode uiScalingMode() {
-		return UIScalingMode.PIXEL;
+		return UIScalingMode.HYBRID;
 	}
 
 	String KEY_ANISOTROPIC_FILTERING_LEVEL = "anisotropicFilteringLevel";
