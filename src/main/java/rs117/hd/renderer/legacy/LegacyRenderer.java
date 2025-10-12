@@ -954,7 +954,7 @@ public class LegacyRenderer implements Renderer {
 		}
 
 		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
-		if (renderBufferOffset > 0)
+		if (gameState.getState() >= GameState.LOGGED_IN.getState() && renderBufferOffset > 0)
 			plugin.hasLoggedIn = true;
 
 		plugin.updateSceneFbo();
