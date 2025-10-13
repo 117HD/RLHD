@@ -13,8 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.BufferUtils;
+import rs117.hd.opengl.uniforms.UBOGlobal;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
@@ -22,8 +24,6 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 @Slf4j
 @RequiredArgsConstructor
 class Zone {
-	public static final int ZONE_SIZE = 8;
-
 	// Zone vertex format
 	// index 0: -FLOAT.MAX_VALUE (non-array)
 	// index 1: short vec3(x, y, z)
@@ -117,16 +117,39 @@ class Zone {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-		glVertexAttrib3f(0, -Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+//		glVertexAttrib3f(0, -Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
+//
+//		glEnableVertexAttribArray(1);
+//		glVertexAttribIPointer(1, 3, GL_SHORT, VERT_SIZE, 0);
+//
+//		glEnableVertexAttribArray(2);
+//		glVertexAttribIPointer(2, 1, GL_INT, VERT_SIZE, 8);
+//
+//		glEnableVertexAttribArray(3);
+//		glVertexAttribIPointer(3, 4, GL_SHORT, VERT_SIZE, 12);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_SHORT, false, VERT_SIZE, 0);
 
 		glEnableVertexAttribArray(1);
-		glVertexAttribIPointer(1, 3, GL_SHORT, VERT_SIZE, 0);
+		glVertexAttribIPointer(1, 1, GL_INT, VERT_SIZE, 8);
 
-		glEnableVertexAttribArray(2);
-		glVertexAttribIPointer(2, 1, GL_INT, VERT_SIZE, 8);
+		// TODO: UVs
+		glVertexAttrib3f(2, 0, 0, 0);
+//		glEnableVertexAttribArray(2);
+//		glVertexAttribPointer(2, 3, GL_FLOAT, false, 16, 0);
 
-		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 4, GL_SHORT, VERT_SIZE, 12);
+		// TODO: Materials
+		glVertexAttribI1i(3, 0);
+//		glEnableVertexAttribArray(3);
+//		glVertexAttribIPointer(3, 1, GL_INT, 16, 12);
+
+		// TODO: Normals
+		glVertexAttrib4f(4, 0, 0, 0, 0);
+//		glEnableVertexAttribArray(4);
+//		glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
+
+		checkGLErrors();
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -165,7 +188,7 @@ class Zone {
 		glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(int zx, int zz, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
+	void renderOpaque(UBOGlobal uboGlobal, int zx, int zz, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
 		drawIdx = 0;
 
 		for (int level = minLevel; level <= maxLevel; ++level) {
@@ -207,7 +230,8 @@ class Zone {
 
 		convertForDraw(VERT_SIZE);
 
-//		glProgramUniform3i(glProgram, uniBase, zx << 10, 0, zz << 10);
+		uboGlobal.sceneBase.set(zx << 10, 0, zz << 10);
+		uboGlobal.upload();
 		glBindVertexArray(glVao);
 		glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
 	}
@@ -422,6 +446,7 @@ class Zone {
 	}
 
 	void renderAlpha(
+		UBOGlobal uboGlobal,
 		int zx,
 		int zz,
 		int cyaw,
@@ -459,7 +484,7 @@ class Zone {
 			if (lastVao != m.vao
 				|| lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz)
 			) {
-				flush();
+				flush(uboGlobal);
 			}
 
 			lastVao = m.vao;
@@ -507,7 +532,7 @@ class Zone {
 			}
 
 			if (bufferIdx * 3 > alphaElements.remaining()) {
-				flush();
+				flush(uboGlobal);
 			}
 
 			int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
@@ -528,25 +553,28 @@ class Zone {
 			}
 		}
 
-		flush();
+		flush(uboGlobal);
 	}
 
-	private void flush() {
+	private void flush(UBOGlobal uboGlobal) {
 		if (lastDrawMode == TEMP) {
 			convertForDraw(VAO.VERT_SIZE);
-//			glProgramUniform3i(glProgram, uniBase, 0, 0, 0);
+			uboGlobal.sceneBase.set(0, 0, 0);
+			uboGlobal.upload();
 			glBindVertexArray(lastVao);
 			glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
 			drawIdx = 0;
 		} else if (lastDrawMode == STATIC) {
 			alphaElements.flip();
-//			glProgramUniform3i(glProgram, uniBase, lastzx << 10, 0, lastzz << 10);
+			uboGlobal.sceneBase.set(lastzx << 10, 0, lastzz << 10);
+			uboGlobal.upload();
 			glBindVertexArray(lastVao);
 			glDrawElements(GL_TRIANGLES, alphaElements);
 			alphaElements.clear();
 		} else if (lastDrawMode == STATIC_UNSORTED) {
 			convertForDraw(VERT_SIZE);
-//			glProgramUniform3i(glProgram, uniBase, lastzx << 10, 0, lastzz << 10);
+			uboGlobal.sceneBase.set(lastzx << 10, 0, lastzz << 10);
+			uboGlobal.upload();
 			glBindVertexArray(lastVao);
 			glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
 			drawIdx = 0;

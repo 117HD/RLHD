@@ -31,6 +31,7 @@ import rs117.hd.HdPlugin;
 public class GpuIntBuffer
 {
 	private IntBuffer buffer;
+	private final boolean ownsBuffer;
 
 	public GpuIntBuffer()
 	{
@@ -45,14 +46,16 @@ public class GpuIntBuffer
 			System.gc();
 			buffer = MemoryUtil.memAllocInt(initialCapacity);
 		}
+		ownsBuffer = true;
 	}
 
 	public GpuIntBuffer(IntBuffer buffer) {
 		this.buffer = buffer;
+		ownsBuffer = false;
 	}
 
 	public void destroy() {
-		if (buffer != null)
+		if (buffer != null && ownsBuffer)
 			MemoryUtil.memFree(buffer);
 		buffer = null;
 	}

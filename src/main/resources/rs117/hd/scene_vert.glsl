@@ -25,6 +25,8 @@
  */
 #version 330
 
+#include <uniforms/global.glsl>
+
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in int vHsl;
 layout (location = 2) in vec3 vUv;
@@ -38,7 +40,7 @@ out int gMaterialData;
 out vec4 gNormal;
 
 void main() {
-    gPosition = vPosition;
+    gPosition = sceneBase + vPosition;
     gHsl = vHsl;
     gUv = vUv;
     gMaterialData = vMaterialData;

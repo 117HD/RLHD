@@ -587,10 +587,7 @@ public class HdPlugin extends Plugin {
 				materialManager.startUp();
 				waterTypeManager.startUp();
 
-				int gpuFlags =
-					DrawCallbacks.GPU |
-					DrawCallbacks.HILLSKEW |
-					DrawCallbacks.NORMALS;
+				int gpuFlags = DrawCallbacks.GPU;
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
 
@@ -602,6 +599,9 @@ public class HdPlugin extends Plugin {
 						break;
 					case LEGACY:
 					default:
+						gpuFlags |=
+							DrawCallbacks.HILLSKEW |
+							DrawCallbacks.NORMALS;
 						rendererClass = LegacyRenderer.class;
 						break;
 				}
@@ -1333,6 +1333,8 @@ public class HdPlugin extends Plugin {
 			glActiveTexture(TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
+
+			updateSceneFbo();
 		}
 
 		if (client.isStretchedEnabled()) {

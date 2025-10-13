@@ -30,16 +30,37 @@ class VAO {
 		vbo.init();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo.bufId);
 
+//		glEnableVertexAttribArray(0);
+//		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
+//
+//		glVertexAttribI3i(1, Short.MIN_VALUE, Short.MIN_VALUE, Short.MIN_VALUE);
+//
+//		glEnableVertexAttribArray(2);
+//		glVertexAttribIPointer(2, 1, GL_INT, VERT_SIZE, 12);
+//
+//		glEnableVertexAttribArray(3);
+//		glVertexAttribIPointer(3, 4, GL_SHORT, VERT_SIZE, 16);
+
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
 
-		glVertexAttribI3i(1, Short.MIN_VALUE, Short.MIN_VALUE, Short.MIN_VALUE);
+		glEnableVertexAttribArray(1);
+		glVertexAttribIPointer(1, 1, GL_INT, VERT_SIZE, 12);
 
-		glEnableVertexAttribArray(2);
-		glVertexAttribIPointer(2, 1, GL_INT, VERT_SIZE, 12);
+		// TODO: UVs
+		glVertexAttrib3f(2, 0, 0, 0);
+//		glEnableVertexAttribArray(2);
+//		glVertexAttribPointer(2, 3, GL_FLOAT, false, 16, 0);
 
-		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 4, GL_SHORT, VERT_SIZE, 16);
+		// TODO: Materials
+		glVertexAttribI1i(3, 0);
+//		glEnableVertexAttribArray(3);
+//		glVertexAttribIPointer(3, 1, GL_INT, 16, 12);
+
+		// TODO: Normals
+		glVertexAttrib4f(4, 0, 0, 0, 0);
+//		glEnableVertexAttribArray(4);
+//		glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);

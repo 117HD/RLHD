@@ -25,10 +25,13 @@
 package rs117.hd.renderer.zone;
 
 import com.google.common.base.Stopwatch;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -38,18 +41,24 @@ import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.config.ColorFilter;
+import rs117.hd.config.DynamicLights;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.SceneShaderProgram;
+import rs117.hd.opengl.shader.ShaderException;
+import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
+import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
-import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.renderer.legacy.LegacySceneUploader;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
@@ -63,12 +72,18 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
+import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.lights.Light;
+import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.NpcDisplacementCache;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
@@ -81,6 +96,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private ClientThread clientThread;
+
+	@Inject
+	private EventBus eventBus;
 
 	@Inject
 	private DrawManager drawManager;
@@ -152,12 +170,12 @@ public class ZoneRenderer implements Renderer {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public SceneShaderProgram sceneProgram;
+	private SceneShaderProgram sceneProgram;
 
 	@Getter
 	@Nullable
-	private LegacySceneContext sceneContext;
-	private LegacySceneContext nextSceneContext;
+	private ZoneSceneContext sceneContext;
+	private ZoneSceneContext nextSceneContext;
 
 	private int cameraX, cameraY, cameraZ;
 	private int cameraYaw, cameraPitch;
@@ -236,8 +254,11 @@ public class ZoneRenderer implements Renderer {
 //		uniExpandedMapLoadingChunks = glGetUniformLocation(glProgram, "expandedMapLoadingChunks");
 //		uniBase = glGetUniformLocation(glProgram, "base");
 
-		if (client.getGameState() == GameState.LOGGED_IN)
-			startupWorldLoad();
+		// TODO: This is done by forcing the loading state in HdPlugin
+//		if (client.getGameState() == GameState.LOGGED_IN)
+//			startupWorldLoad();
+
+		eventBus.register(this);
 	}
 
 	private void startupWorldLoad() {
@@ -256,12 +277,37 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void destroy() {
+		eventBus.unregister(this);
+
 		root.free();
 
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();
 		vaoO = vaoA = vaoPO = null;
+
+		if (sceneContext != null)
+			sceneContext.destroy();
+		sceneContext = null;
+
+		if (nextSceneContext != null)
+			nextSceneContext.destroy();
+		nextSceneContext = null;
+	}
+
+	@Override
+	public void waitUntilIdle() {
+		glFinish();
+	}
+
+	@Override
+	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
+		sceneProgram.compile(includes);
+	}
+
+	@Override
+	public void destroyShaders() {
+		sceneProgram.destroy();
 	}
 
 	private Projection lastProjection;
@@ -280,6 +326,20 @@ public class ZoneRenderer implements Renderer {
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw,
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
+		log.trace(
+			"preSceneDraw({}, cameraPos=[{}, {}, {}], cameraOri=[{}, {}], minLevel={}, level={}, maxLevel={}, hideRoofIds=[{}])",
+			scene,
+			cameraX,
+			cameraY,
+			cameraZ,
+			cameraPitch,
+			cameraYaw,
+			minLevel,
+			level,
+			maxLevel,
+			hideRoofIds.stream().map(i -> Integer.toString(i)).collect(
+				Collectors.joining(", "))
+		);
 		this.cameraX = (int) cameraX;
 		this.cameraY = (int) cameraY;
 		this.cameraZ = (int) cameraZ;
@@ -311,77 +371,516 @@ public class ZoneRenderer implements Renderer {
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw
 	) {
 		scene.setDrawDistance(plugin.getDrawDistance());
+		plugin.updateSceneFbo();
 
-//		// UBO
-//		uniformBuffer.clear();
-//		uniformBuffer
-//			.put(cameraYaw)
-//			.put(cameraPitch)
-//			.put(cameraX)
-//			.put(cameraY)
-//			.put(cameraZ);
-//		uniformBuffer.flip();
-//
-//		glBindBuffer(GL_UNIFORM_BUFFER, glUniformBuffer.glBufferId);
-//		glBufferData(GL_UNIFORM_BUFFER, uniformBuffer.getBuffer(), GL_DYNAMIC_DRAW);
-//		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-//		uniformBuffer.clear();
-//
-//		glBindBufferBase(GL_UNIFORM_BUFFER, 0, glUniformBuffer.glBufferId);
-//
-//		checkGLErrors();
-//
-//		final int canvasHeight = client.getCanvasHeight();
-//		final int canvasWidth = client.getCanvasWidth();
-//
-//		final int viewportHeight = client.getViewportHeight();
-//		final int viewportWidth = client.getViewportWidth();
-//
-//		// Setup FBO and anti-aliasing
-//
-//		// Clear scene
-//		int sky = client.getSkyboxColor();
-//		glClearColor((sky >> 16 & 0xFF) / 255f, (sky >> 8 & 0xFF) / 255f, (sky & 0xFF) / 255f, 1f);
-//		glClearDepthf(0f);
-//		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-//
-//		// Setup uniforms
-//		final int drawDistance = getDrawDistance();
-//		glUniform1i(uniDrawDistance, drawDistance * Perspective.LOCAL_TILE_SIZE);
-//		glUniform1i(uniExpandedMapLoadingChunks, client.getExpandedMapLoading());
-//
-//		// Calculate projection matrix
-//		float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-//		Mat4.mul(projectionMatrix, Mat4.projection(viewportWidth, viewportHeight, 50));
-//		Mat4.mul(projectionMatrix, Mat4.rotateX(cameraPitch));
-//		Mat4.mul(projectionMatrix, Mat4.rotateY(cameraYaw));
-//		Mat4.mul(projectionMatrix, Mat4.translate(-cameraX, -cameraY, -cameraZ));
-//		glUniformMatrix4fv(uniWorldProj, false, projectionMatrix);
-//
-//		projectionMatrix = Mat4.identity();
-//		glUniformMatrix4fv(uniEntityProj, false, projectionMatrix);
-//
-//		glUniform4i(uniEntityTint, 0, 0, 0, 0);
-//
-//		// Bind uniforms
-//		glUniformBlockBinding(glProgram, uniBlockMain, 0);
+		if (sceneContext == null || plugin.sceneViewport == null)
+			return;
 
-		// Enable face culling
+		frameTimer.begin(Timer.DRAW_FRAME);
+		frameTimer.begin(Timer.DRAW_SCENE);
+
+		boolean updateUniforms = true;
+
+		Player localPlayer = client.getLocalPlayer();
+		var lp = localPlayer.getLocalLocation();
+		if (sceneContext.enableAreaHiding) {
+			assert sceneContext.sceneBase != null;
+			int[] worldPos = {
+				sceneContext.sceneBase[0] + lp.getSceneX(),
+				sceneContext.sceneBase[1] + lp.getSceneY(),
+				sceneContext.sceneBase[2] + client.getTopLevelWorldView().getPlane()
+			};
+
+			// We need to check all areas contained in the scene in the order they appear in the list,
+			// in order to ensure lower floors can take precedence over higher floors which include tiny
+			// portions of the floor beneath around stairs and ladders
+			Area newArea = null;
+			for (var area : sceneContext.possibleAreas) {
+				if (area.containsPoint(false, worldPos)) {
+					newArea = area;
+					break;
+				}
+			}
+
+			// Force a scene reload if the player is no longer in the same area
+			if (newArea != sceneContext.currentArea) {
+				if (plugin.justChangedArea) {
+					// Prevent getting stuck in a scene reloading loop if this breaks for any reason
+					sceneContext.forceDisableAreaHiding = true;
+					log.error(
+						"Force disabling area hiding after moving from {} to {} at {}",
+						sceneContext.currentArea,
+						newArea,
+						worldPos
+					);
+				} else {
+					plugin.justChangedArea = true;
+				}
+				// Reload the scene to reapply area hiding
+				client.setGameState(GameState.LOADING);
+				updateUniforms = false;
+				plugin.redrawPreviousFrame = true;
+			} else {
+				plugin.justChangedArea = false;
+			}
+		} else {
+			plugin.justChangedArea = false;
+		}
+
+		if (!plugin.enableFreezeFrame) {
+			if (!plugin.redrawPreviousFrame) {
+//				// Only reset the target buffer offset right before drawing the scene. That way if there are frames
+//				// after this that don't involve a scene draw, like during LOADING/HOPPING/CONNECTION_LOST, we can
+//				// still redraw the previous frame's scene to emulate the client behavior of not painting over the
+//				// viewport buffer.
+//				renderBufferOffset = sceneContext.staticVertexCount;
+
+				plugin.drawnTileCount = 0;
+				plugin.drawnStaticRenderableCount = 0;
+				plugin.drawnDynamicRenderableCount = 0;
+
+//				// TODO: this could be done only once during scene swap, but is a bit of a pain to do
+//				// Push unordered models that should always be drawn at the start of each frame.
+//				// Used to fix issues like the right-click menu causing underwater tiles to disappear.
+//				var staticUnordered = sceneContext.staticUnorderedModelBuffer.getBuffer();
+//				modelPassthroughBuffer
+//					.ensureCapacity(staticUnordered.limit())
+//					.put(staticUnordered);
+//				staticUnordered.rewind();
+//				numPassthroughModels += staticUnordered.limit() / 8;
+			}
+
+			if (updateUniforms) {
+				copyTo(plugin.cameraPosition, vec(cameraX, cameraY, cameraZ));
+				copyTo(plugin.cameraOrientation, vec(cameraYaw, cameraPitch));
+
+				if (sceneContext.scene == scene) {
+					copyTo(plugin.cameraFocalPoint, ivec((int) client.getCameraFocalPointX(), (int) client.getCameraFocalPointZ()));
+					Arrays.fill(plugin.cameraShift, 0);
+
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(sceneContext, plugin.cameraShift, plugin.cameraFrustum);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						plugin.stopPlugin();
+						return;
+					}
+				} else {
+					plugin.cameraShift[0] = plugin.cameraFocalPoint[0] - (int) client.getCameraFocalPointX();
+					plugin.cameraShift[1] = plugin.cameraFocalPoint[1] - (int) client.getCameraFocalPointZ();
+					plugin.cameraPosition[0] += plugin.cameraShift[0];
+					plugin.cameraPosition[2] += plugin.cameraShift[1];
+				}
+
+				plugin.uboCompute.yaw.set(plugin.cameraOrientation[0]);
+				plugin.uboCompute.pitch.set(plugin.cameraOrientation[1]);
+				plugin.uboCompute.centerX.set(client.getCenterX());
+				plugin.uboCompute.centerY.set(client.getCenterY());
+				plugin.uboCompute.zoom.set(client.getScale());
+				plugin.uboCompute.cameraX.set(plugin.cameraPosition[0]);
+				plugin.uboCompute.cameraY.set(plugin.cameraPosition[1]);
+				plugin.uboCompute.cameraZ.set(plugin.cameraPosition[2]);
+
+				plugin.uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
+				plugin.uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+				plugin.uboCompute.windStrength.set(environmentManager.currentWindStrength);
+				plugin.uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
+				plugin.uboCompute.windOffset.set(plugin.windOffset);
+
+				if (plugin.configCharacterDisplacement) {
+					// The local player needs to be added first for distance culling
+					Model playerModel = localPlayer.getModel();
+					if (playerModel != null)
+						plugin.uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+				}
+
+				// Calculate the viewport dimensions before scaling in order to include the extra padding
+				int viewportWidth = (int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]);
+				int viewportHeight = (int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]);
+
+				// Calculate projection matrix
+				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
+				if (plugin.orthographicProjection) {
+					Mat4.mul(projectionMatrix, Mat4.scale(HdPlugin.ORTHOGRAPHIC_ZOOM, HdPlugin.ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
+				} else {
+					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, HdPlugin.NEAR_PLANE));
+				}
+
+
+				// Calculate view matrix
+				plugin.viewMatrix = Mat4.rotateX(plugin.cameraOrientation[1]);
+				Mat4.mul(plugin.viewMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
+				Mat4.mul(
+					plugin.viewMatrix,
+					Mat4.translate(-plugin.cameraPosition[0], -plugin.cameraPosition[1], -plugin.cameraPosition[2])
+				);
+
+				// Calculate view proj & inv matrix
+				plugin.viewProjMatrix = Mat4.identity();
+				Mat4.mul(plugin.viewProjMatrix, projectionMatrix);
+				Mat4.mul(plugin.viewProjMatrix, plugin.viewMatrix);
+				Mat4.extractPlanes(plugin.viewProjMatrix, plugin.cameraFrustum);
+				plugin.invViewProjMatrix = Mat4.inverse(plugin.viewProjMatrix);
+
+				if (sceneContext.scene == scene) {
+					try {
+						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
+						environmentManager.update(sceneContext);
+						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
+
+						frameTimer.begin(Timer.UPDATE_LIGHTS);
+						lightManager.update(sceneContext, plugin.cameraShift, plugin.cameraFrustum);
+						frameTimer.end(Timer.UPDATE_LIGHTS);
+					} catch (Exception ex) {
+						log.error("Error while updating environment or lights:", ex);
+						plugin.stopPlugin();
+						return;
+					}
+				}
+
+				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
+				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
+				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
+				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
+				plugin.uboGlobal.upload();
+			}
+		}
+
+		if (plugin.configDynamicLights != DynamicLights.NONE && sceneContext.scene == scene && updateUniforms) {
+			// Update lights UBO
+			assert sceneContext.numVisibleLights <= UBOLights.MAX_LIGHTS;
+
+			frameTimer.begin(Timer.UPDATE_LIGHTS);
+			final float[] lightPosition = new float[4];
+			final float[] lightColor = new float[4];
+			for (int i = 0; i < sceneContext.numVisibleLights; i++) {
+				final Light light = sceneContext.lights.get(i);
+				final float lightRadiusSq = light.radius * light.radius;
+				lightPosition[0] = light.pos[0] + plugin.cameraShift[0];
+				lightPosition[1] = light.pos[1];
+				lightPosition[2] = light.pos[2] + plugin.cameraShift[1];
+				lightPosition[3] = lightRadiusSq;
+
+				lightColor[0] = light.color[0] * light.strength;
+				lightColor[1] = light.color[1] * light.strength;
+				lightColor[2] = light.color[2] * light.strength;
+				lightColor[3] = 0.0f;
+
+				plugin.uboLights.setLight(i, lightPosition, lightColor);
+
+				if (plugin.configTiledLighting) {
+					// Pre-calculate the view space position of the light, to save having to do the multiplication in the culling shader
+					lightPosition[3] = 1.0f;
+					Mat4.mulVec(lightPosition, plugin.viewMatrix, lightPosition);
+					lightPosition[3] = lightRadiusSq; // Restore lightRadiusSq
+					plugin.uboLightsCulling.setLight(i, lightPosition, lightColor);
+				}
+			}
+
+			plugin.uboLights.upload();
+			plugin.uboLightsCulling.upload();
+			frameTimer.end(Timer.UPDATE_LIGHTS);
+
+			// Perform tiled lighting culling before the compute memory barrier, so it's performed asynchronously
+			if (plugin.configTiledLighting) {
+				plugin.updateTiledLightingFbo();
+				assert plugin.fboTiledLighting != 0;
+
+				frameTimer.begin(Timer.DRAW_TILED_LIGHTING);
+				frameTimer.begin(Timer.RENDER_TILED_LIGHTING);
+
+				glViewport(0, 0, plugin.tiledLightingResolution[0], plugin.tiledLightingResolution[1]);
+				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboTiledLighting);
+
+				glBindVertexArray(plugin.vaoTri);
+
+				if (plugin.tiledLightingImageStoreProgram.isValid()) {
+					plugin.tiledLightingImageStoreProgram.use();
+					glDrawBuffer(GL_NONE);
+					glDrawArrays(GL_TRIANGLES, 0, 3);
+				} else {
+					glDrawBuffer(GL_COLOR_ATTACHMENT0);
+					int layerCount = plugin.configDynamicLights.getTiledLightingLayers();
+					for (int layer = 0; layer < layerCount; layer++) {
+						plugin.tiledLightingShaderPrograms.get(layer).use();
+						glFramebufferTextureLayer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, plugin.texTiledLighting, 0, layer);
+						glDrawArrays(GL_TRIANGLES, 0, 3);
+					}
+				}
+
+				frameTimer.end(Timer.RENDER_TILED_LIGHTING);
+				frameTimer.end(Timer.DRAW_TILED_LIGHTING);
+			}
+		}
+
+		if (plugin.lastFrameTimeMillis > 0) {
+			plugin.deltaTime = (float) ((System.currentTimeMillis() - plugin.lastFrameTimeMillis) / 1000.);
+
+			// Restart the plugin to avoid potential buffer corruption if the computer has likely resumed from suspension
+			if (plugin.deltaTime > 300) {
+				log.debug("Restarting the plugin after probable OS suspend ({} second delta)", plugin.deltaTime);
+				plugin.restartPlugin();
+				return;
+			}
+
+			// If system time changes between frames, clamp the delta to a more sensible value
+			if (abs(plugin.deltaTime) > 10)
+				plugin.deltaTime = 1 / 60.f;
+			plugin.elapsedTime += plugin.deltaTime;
+			plugin.windOffset += plugin.deltaTime * environmentManager.currentWindSpeed;
+
+			// The client delta doesn't need clamping
+			plugin.deltaClientTime = (float) (plugin.elapsedClientTime - plugin.lastFrameClientTime);
+		}
+		plugin.lastFrameTimeMillis = System.currentTimeMillis();
+		plugin.lastFrameClientTime = plugin.elapsedClientTime;
+
+		// Upon logging in, the client will draw some frames with zero geometry before it hides the login screen
+		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
+			plugin.hasLoggedIn = true;
+
+		plugin.updateSceneFbo();
+
+		// Draw 3d scene
+//		if (plugin.hasLoggedIn && sceneContext != null && plugin.sceneViewport != null) {
+//		} else {
+//			// TODO
+//		}
+
+		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+		float fogDepth = 0;
+		switch (config.fogDepthMode()) {
+			case USER_DEFINED:
+				fogDepth = config.fogDepth();
+				break;
+			case DYNAMIC:
+				fogDepth = environmentManager.currentFogDepth;
+				break;
+		}
+		fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
+		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
+		plugin.uboGlobal.fogDepth.set(fogDepth);
+		plugin.uboGlobal.fogColor.set(fogColor);
+
+		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
+		plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
+		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
+
+		float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
+		float lightBrightnessMultiplier = 0.8f;
+		float midBrightnessMultiplier = 0.45f;
+		float darkBrightnessMultiplier = 0.05f;
+		float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+			waterColorHsv[0],
+			waterColorHsv[1],
+			waterColorHsv[2] * lightBrightnessMultiplier
+		}));
+		float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+			waterColorHsv[0],
+			waterColorHsv[1],
+			waterColorHsv[2] * midBrightnessMultiplier
+		}));
+		float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
+			waterColorHsv[0],
+			waterColorHsv[1],
+			waterColorHsv[2] * darkBrightnessMultiplier
+		}));
+		plugin.uboGlobal.waterColorLight.set(waterColorLight);
+		plugin.uboGlobal.waterColorMid.set(waterColorMid);
+		plugin.uboGlobal.waterColorDark.set(waterColorDark);
+
+		plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
+		float ambientStrength = environmentManager.currentAmbientStrength;
+		float directionalStrength = environmentManager.currentDirectionalStrength;
+		if (config.useLegacyBrightness()) {
+			float factor = config.legacyBrightness() / 20f;
+			ambientStrength *= factor;
+			directionalStrength *= factor;
+		}
+		plugin.uboGlobal.ambientStrength.set(ambientStrength);
+		plugin.uboGlobal.ambientColor.set(environmentManager.currentAmbientColor);
+		plugin.uboGlobal.lightStrength.set(directionalStrength);
+		plugin.uboGlobal.lightColor.set(environmentManager.currentDirectionalColor);
+
+		plugin.uboGlobal.underglowStrength.set(environmentManager.currentUnderglowStrength);
+		plugin.uboGlobal.underglowColor.set(environmentManager.currentUnderglowColor);
+
+		plugin.uboGlobal.groundFogStart.set(environmentManager.currentGroundFogStart);
+		plugin.uboGlobal.groundFogEnd.set(environmentManager.currentGroundFogEnd);
+		plugin.uboGlobal.groundFogOpacity.set(config.groundFog() ?
+			environmentManager.currentGroundFogOpacity :
+			0);
+
+		// Lights & lightning
+		plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
+		plugin.uboGlobal.lightningBrightness.set(environmentManager.getLightningBrightness());
+
+		plugin.uboGlobal.saturation.set(config.saturation() / 100f);
+		plugin.uboGlobal.contrast.set(config.contrast() / 100f);
+		plugin.uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
+		plugin.uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
+		plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
+		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
+
+		float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
+		Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
+		// Extract the 3rd column from the light view matrix (the float array is column-major).
+		// This produces the light's direction vector in world space, which we negate in order to
+		// get the light's direction vector pointing away from each fragment
+		plugin.uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
+
+		if (plugin.configColorFilter != ColorFilter.NONE) {
+			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
+			plugin.uboGlobal.colorFilterPrevious.set(plugin.configColorFilterPrevious.ordinal());
+			long timeSinceChange = System.currentTimeMillis() - plugin.colorFilterChangedAt;
+			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
+		}
+
+		// TODO: shadows
+//		if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
+//			&& environmentManager.currentDirectionalStrength > 0) {
+//			frameTimer.begin(Timer.RENDER_SHADOWS);
+//
+//			// Render to the shadow depth map
+//			glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+//			glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
+//			glClearDepth(1);
+//			glClear(GL_DEPTH_BUFFER_BIT);
+//			glDepthFunc(GL_LEQUAL);
+//
+//			plugin.shadowProgram.use();
+//
+//			final int camX = plugin.cameraFocalPoint[0];
+//			final int camY = plugin.cameraFocalPoint[1];
+//
+//			final int drawDistanceSceneUnits =
+//				min(config.shadowDistance().getValue(), plugin.getDrawDistance())
+//				* Perspective.LOCAL_TILE_SIZE / 2;
+//			final int east = min(camX + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
+//			final int west = max(camX - drawDistanceSceneUnits, 0);
+//			final int north = min(camY + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
+//			final int south = max(camY - drawDistanceSceneUnits, 0);
+//			final int width = east - west;
+//			final int height = north - south;
+//			final int depthScale = 10000;
+//
+//			final int maxDrawDistance = 90;
+//			final float maxScale = 0.7f;
+//			final float minScale = 0.4f;
+//			final float scaleMultiplier = 1.0f - (plugin.getDrawDistance() / (maxDrawDistance * maxScale));
+//			float scale = mix(maxScale, minScale, scaleMultiplier);
+//			float[] lightProjectionMatrix = Mat4.identity();
+//			Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
+//			Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
+//			Mat4.mul(lightProjectionMatrix, lightViewMatrix);
+//			Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
+//
+//			plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+//			plugin.uboGlobal.upload();
+//
+//			glEnable(GL_CULL_FACE);
+//			glEnable(GL_DEPTH_TEST);
+//
+//			glBindVertexArray(vaoScene);
+//			glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
+//
+//			glDisable(GL_CULL_FACE);
+//			glDisable(GL_DEPTH_TEST);
+//
+//			frameTimer.end(Timer.RENDER_SHADOWS);
+//		}
+
+		plugin.uboGlobal.upload();
+		sceneProgram.use();
+
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
+		if (plugin.msaaSamples > 1) {
+			glEnable(GL_MULTISAMPLE);
+		} else {
+			glDisable(GL_MULTISAMPLE);
+		}
+		glViewport(0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1]);
+
+		// Clear scene
+		frameTimer.begin(Timer.CLEAR_SCENE);
+
+		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
+		glClearColor(
+			gammaCorrectedFogColor[0],
+			gammaCorrectedFogColor[1],
+			gammaCorrectedFogColor[2],
+			1f
+		);
+		glClearDepth(0);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		frameTimer.end(Timer.CLEAR_SCENE);
+
+		frameTimer.begin(Timer.RENDER_SCENE);
+
+		// We just allow the GL to do face culling. Note this requires the priority renderer
+		// to have logic to disregard culled faces in the priority depth testing.
 		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 
-		// Enable blending
+		// Enable blending for alpha
 		glEnable(GL_BLEND);
-		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ONE);
+		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
-		// Enable depth testing
-		glDepthFunc(GL_GREATER);
 		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_GREATER);
+
+		// Draw with buffers bound to scene VAO
+//		glBindVertexArray(vaoScene);
+
+		// TODO
+//		// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
+//		// scene doesn't support depth testing, so we only write depths for custom tiles.
+//		if (sceneContext.staticCustomTilesVertexCount > 0) {
+//			// Draw gap filler tiles first, without depth testing
+//			if (sceneContext.staticGapFillerTilesVertexCount > 0) {
+//				glDisable(GL_DEPTH_TEST);
+//				glDrawArrays(
+//					GL_TRIANGLES,
+//					sceneContext.staticGapFillerTilesOffset,
+//					sceneContext.staticGapFillerTilesVertexCount
+//				);
+//			}
+//
+//			glEnable(GL_DEPTH_TEST);
+//			glDepthFunc(GL_GREATER);
+//
+//			// Draw custom tiles, writing depth
+//			glDepthMask(true);
+//			glDrawArrays(
+//				GL_TRIANGLES,
+//				sceneContext.staticCustomTilesOffset,
+//				sceneContext.staticCustomTilesVertexCount
+//			);
+//
+//			// Draw the rest of the scene with depth testing, but not against itself
+//			glDepthMask(false);
+//			glDrawArrays(
+//				GL_TRIANGLES,
+//				sceneContext.staticVertexCount,
+//				renderBufferOffset - sceneContext.staticVertexCount
+//			);
+//		}
 
 		checkGLErrors();
 	}
 
 	@Override
 	public void postSceneDraw(Scene scene) {
+		log.trace("postSceneDraw({})", scene);
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			postDrawToplevel();
 		} else {
@@ -396,10 +895,32 @@ public class ZoneRenderer implements Renderer {
 
 //		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
 //		sceneFboValid = true;
+
+		if (sceneContext == null)
+			return;
+
+		frameTimer.end(Timer.DRAW_SCENE);
+		frameTimer.end(Timer.RENDER_SCENE);
+		frameTimer.begin(Timer.RENDER_FRAME);
+
+		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
+		// but the compute shaders should still be executed in case the camera angle has changed.
+		// Technically we could skip compute shaders as well when the camera is unchanged,
+		// but it would only lead to micro stuttering when rotating the camera, compared to no rotation.
+//		if (!plugin.redrawPreviousFrame) {
+//			updateSceneVao(hRenderBufferVertices, hRenderBufferUvs, hRenderBufferNormals);
+//		}
+
+//		frameTimer.begin(Timer.COMPUTE);
+//		plugin.uboCompute.upload();
+//		frameTimer.end(Timer.COMPUTE);
+
+		checkGLErrors();
 	}
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
+		log.trace("drawZoneOpaque({}, {}, zx={}, zz={})", entityProjection, scene, zx, zz);
 		updateEntityProject(entityProjection);
 
 		WorldViewContext ctx = context(scene);
@@ -413,13 +934,14 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		int offset = scene.getWorldViewId() == -1 ? (SCENE_OFFSET >> 3) : 0;
-		z.renderOpaque(zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
+		z.renderOpaque(plugin.uboGlobal, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
 
 		checkGLErrors();
 	}
 
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
+		log.trace("drawZoneAlpha({}, {}, zx={}, zz={})", entityProjection, scene, zx, zz);
 		updateEntityProject(entityProjection);
 
 		WorldViewContext ctx = context(scene);
@@ -442,7 +964,18 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		glDepthMask(false);
-		z.renderAlpha(zx - offset, zz - offset, cameraYaw, cameraPitch, minLevel, this.level, maxLevel, level, hideRoofIds);
+		z.renderAlpha(
+			plugin.uboGlobal,
+			zx - offset,
+			zz - offset,
+			cameraYaw,
+			cameraPitch,
+			minLevel,
+			this.level,
+			maxLevel,
+			level,
+			hideRoofIds
+		);
 		glDepthMask(true);
 
 		checkGLErrors();
@@ -450,6 +983,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawPass(Projection projection, Scene scene, int pass) {
+		log.trace("drawPass({}, {}, pass={})", projection, scene, pass);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null) {
 			return;
@@ -462,7 +996,8 @@ public class ZoneRenderer implements Renderer {
 			vaoPO.addRange(projection, scene);
 
 			if (scene.getWorldViewId() == -1) {
-//				glProgramUniform3i(glProgram, uniBase, 0, 0, 0);
+				plugin.uboGlobal.sceneBase.set(0, 0, 0);
+				plugin.uboGlobal.upload();
 
 //				if (client.getGameCycle() % 100 == 0)
 //				{
@@ -512,6 +1047,10 @@ public class ZoneRenderer implements Renderer {
 		int y,
 		int z
 	) {
+		log.trace(
+			"drawDynamic({}, {}, tileObject={}, renderable={}, model={}, orientation={}, modelPos=[{}, {}, {}])",
+			worldProjection, scene, tileObject, r, m, orient, x, y, z
+		);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null) {
 			return;
@@ -541,6 +1080,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m) {
+		log.trace("drawTemp({}, {}, gameObject={}, model={})", worldProjection, scene, gameObject, m);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null) {
 			return;
@@ -602,6 +1142,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void invalidateZone(Scene scene, int zx, int zz) {
+		log.trace("invalidateZone({}, zoneX={}, zoneZ={})", scene, zx, zz);
 		WorldViewContext ctx = context(scene);
 		Zone z = ctx.zones[zx][zz];
 		if (!z.invalidate) {
@@ -675,53 +1216,75 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void draw(int overlayColor) {
+		log.trace("draw(overlaySrgba={})", overlayColor);
 		final GameState gameState = client.getGameState();
 		if (gameState == GameState.STARTING) {
+			frameTimer.end(Timer.DRAW_FRAME);
 			return;
 		}
 
-		final int canvasHeight = client.getCanvasHeight();
-		final int canvasWidth = client.getCanvasWidth();
+		try {
+			plugin.prepareInterfaceTexture();
+		} catch (Exception ex) {
+			// Fixes: https://github.com/runelite/runelite/issues/12930
+			// Gracefully Handle loss of opengl buffers and context
+			log.warn("prepareInterfaceTexture exception", ex);
+			plugin.restartPlugin();
+			return;
+		}
 
-//		prepareInterfaceTexture(canvasWidth, canvasHeight);
-//
-//		glClearColor(0, 0, 0, 1);
-//		glClear(GL_COLOR_BUFFER_BIT);
-//
-//		if (sceneFboValid) {
-//			blitSceneFbo();
-//		}
-//
-//		// Texture on UI
-//		drawUi(overlayColor, canvasHeight, canvasWidth);
-//
-//		try {
-//			awtContext.swapBuffers();
-//		} catch (RuntimeException ex) {
-//			// this is always fatal
-//			if (!canvas.isValid()) {
-//				// this might be AWT shutting down on VM shutdown, ignore it
-//				return;
-//			}
-//
-//			log.error("error swapping buffers", ex);
-//
-//			// try to stop the plugin
-//			SwingUtilities.invokeLater(() ->
-//			{
-//				try {
-//					pluginManager.stopPlugin(this);
-//				} catch (PluginInstantiationException ex2) {
-//					log.error("error stopping plugin", ex2);
-//				}
-//			});
-//			return;
-//		}
-//
-//		drawManager.processDrawComplete(this::screenshot);
-//
-//		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		if (plugin.sceneResolution != null && plugin.sceneViewport != null) {
+			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
+			if (plugin.fboSceneResolve != 0) {
+				// Blit from the scene FBO to the multisample resolve FBO
+				glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboSceneResolve);
+				glBlitFramebuffer(
+					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
+					0, 0, plugin.sceneResolution[0], plugin.sceneResolution[1],
+					GL_COLOR_BUFFER_BIT, GL_NEAREST
+				);
+				glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboSceneResolve);
+			}
 
+			// Blit from the resolved FBO to the default FBO
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+			glBlitFramebuffer(
+				0,
+				0,
+				plugin.sceneResolution[0],
+				plugin.sceneResolution[1],
+				plugin.sceneViewport[0],
+				plugin.sceneViewport[1],
+				plugin.sceneViewport[0] + plugin.sceneViewport[2],
+				plugin.sceneViewport[1] + plugin.sceneViewport[3],
+				GL_COLOR_BUFFER_BIT,
+				config.sceneScalingMode().glFilter
+			);
+		}
+
+		plugin.drawUi(overlayColor);
+
+		try {
+			frameTimer.begin(Timer.SWAP_BUFFERS);
+			plugin.awtContext.swapBuffers();
+			frameTimer.end(Timer.SWAP_BUFFERS);
+			drawManager.processDrawComplete(plugin::screenshot);
+		} catch (RuntimeException ex) {
+			// this is always fatal
+			if (!plugin.canvas.isValid()) {
+				// this might be AWT shutting down on VM shutdown, ignore it
+				return;
+			}
+
+			log.error("Unable to swap buffers:", ex);
+		}
+
+		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+
+		frameTimer.end(Timer.DRAW_FRAME);
+		frameTimer.end(Timer.RENDER_FRAME);
+		frameTimer.endFrameAndReset();
+//		frameModelInfoMap.clear();
 		checkGLErrors();
 	}
 
@@ -743,7 +1306,26 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	@Override
+	public void reuploadScene() {
+		assert client.isClientThread() : "Loading a scene is unsafe while the client can modify it";
+		if (client.getGameState().getState() < GameState.LOGGED_IN.getState())
+			return;
+		// TODO
+//		Scene scene = client.getTopLevelWorldView().getScene();
+//		loadScene(scene);
+//		if (plugin.skipScene == scene)
+//			plugin.skipScene = null;
+//		swapScene(scene);
+	}
+
+	@Override
+	public boolean isLoadingScene() {
+		return nextSceneContext != null;
+	}
+
+	@Override
 	public void loadScene(WorldView worldView, Scene scene) {
+		log.trace("loadScene({}, {})", worldView, scene);
 		if (scene.getWorldViewId() > -1) {
 			loadSubScene(worldView, scene);
 			return;
@@ -755,9 +1337,38 @@ public class ZoneRenderer implements Renderer {
 			throw new RuntimeException("Double zone load!");
 		}
 
+		if (nextSceneContext != null)
+			nextSceneContext.destroy();
+		nextSceneContext = null;
+
+		try {
+			nextSceneContext = new ZoneSceneContext(
+				client,
+				worldView,
+				scene,
+				plugin.getExpandedMapLoadingChunks(),
+				sceneContext
+			);
+			// If area hiding was determined to be incorrect previously, keep it disabled
+			nextSceneContext.forceDisableAreaHiding = sceneContext != null && sceneContext.forceDisableAreaHiding;
+
+			environmentManager.loadSceneEnvironments(nextSceneContext);
+		} catch (OutOfMemoryError oom) {
+			log.error(
+				"Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
+				HDUtils.is32Bit(), plugin.useLowMemoryMode, config.modelCacheSizeMiB(), oom
+			);
+			plugin.displayOutOfMemoryMessage();
+			plugin.stopPlugin();
+		} catch (Throwable ex) {
+			log.error("Error while loading scene:", ex);
+			plugin.stopPlugin();
+		}
+
 		WorldViewContext ctx = root;
 		Scene prev = client.getTopLevelWorldView().getScene();
 
+		// TODO: We can't prepare this early
 //		regionManager.prepare(scene);
 
 		int dx = scene.getBaseX() - prev.getBaseX() >> 3;
@@ -1049,6 +1660,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void despawnWorldView(WorldView worldView) {
+		log.trace("despawnWorldView({})", worldView);
 		int worldViewId = worldView.getId();
 		if (worldViewId > -1) {
 			log.debug("WorldView despawn: {}", worldViewId);
@@ -1059,9 +1671,42 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void swapScene(Scene scene) {
+		log.trace("swapScene({})", scene);
 		if (scene.getWorldViewId() > -1) {
 			swapSub(scene);
 			return;
+		}
+
+		if (!plugin.isActive() || plugin.skipScene == scene) {
+			plugin.redrawPreviousFrame = true;
+			return;
+		}
+
+		// If the scene wasn't loaded by a call to loadScene, load it synchronously instead
+		if (nextSceneContext == null) {
+//			loadSceneInternal(scene);
+			if (nextSceneContext == null)
+				return; // Return early if scene loading failed
+		}
+
+		lightManager.loadSceneLights(nextSceneContext, sceneContext);
+		fishingSpotReplacer.despawnRuneLiteObjects();
+		npcDisplacementCache.clear();
+
+		if (sceneContext != null)
+			sceneContext.destroy();
+		sceneContext = nextSceneContext;
+		nextSceneContext = null;
+		assert sceneContext != null;
+
+//		sceneUploader.prepareBeforeSwap(sceneContext);
+
+		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
+			plugin.isInHouse = true;
+			plugin.isInChambersOfXeric = false;
+		} else {
+			plugin.isInHouse = false;
+			plugin.isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
 		}
 
 		WorldViewContext ctx = root;

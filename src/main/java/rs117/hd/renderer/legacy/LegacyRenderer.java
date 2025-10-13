@@ -66,7 +66,12 @@ import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
+import static rs117.hd.HdPlugin.NEAR_PLANE;
+import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
+import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -244,6 +249,7 @@ public class LegacyRenderer implements Renderer {
 		nextSceneContext = null;
 	}
 
+	@Override
 	public void waitUntilIdle() {
 		if (plugin.computeMode == ComputeMode.OPENCL)
 			clManager.finish();
@@ -436,7 +442,7 @@ public class LegacyRenderer implements Renderer {
 		tileBuffer.flip();
 
 		texTileHeightMap = glGenTextures();
-		glActiveTexture(HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP);
+		glActiveTexture(TEXTURE_UNIT_TILE_HEIGHT_MAP);
 		glBindTexture(GL_TEXTURE_3D, texTileHeightMap);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -615,10 +621,10 @@ public class LegacyRenderer implements Renderer {
 				// Calculate projection matrix
 				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
 				if (plugin.orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(HdPlugin.ORTHOGRAPHIC_ZOOM, HdPlugin.ORTHOGRAPHIC_ZOOM, -1));
+					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
 					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, HdPlugin.NEAR_PLANE));
+					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
 
 
@@ -826,7 +832,7 @@ public class LegacyRenderer implements Renderer {
 
 		frameTimer.end(Timer.COMPUTE);
 
-		HdPlugin.checkGLErrors();
+		checkGLErrors();
 
 		if (!plugin.redrawPreviousFrame) {
 			numPassthroughModels = 0;
@@ -1054,7 +1060,7 @@ public class LegacyRenderer implements Renderer {
 				plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
 				plugin.uboGlobal.colorFilterPrevious.set(plugin.configColorFilterPrevious.ordinal());
 				long timeSinceChange = System.currentTimeMillis() - plugin.colorFilterChangedAt;
-				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / HdPlugin.COLOR_FILTER_FADE_DURATION, 0, 1));
+				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
 
 			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
@@ -1249,7 +1255,7 @@ public class LegacyRenderer implements Renderer {
 		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
 		frameModelInfoMap.clear();
-		HdPlugin.checkGLErrors();
+		checkGLErrors();
 	}
 
 	@Override
@@ -1449,7 +1455,7 @@ public class LegacyRenderer implements Renderer {
 		boolean visible = false;
 
 		// Check if the tile is within the near plane of the frustum
-		if (depth > HdPlugin.NEAR_PLANE) {
+		if (depth > NEAR_PLANE) {
 			final float transformedX = z * yawSin + yawCos * x;
 			final float leftPoint = transformedX - tileRadius;
 			// Check left and right bounds
@@ -1496,7 +1502,7 @@ public class LegacyRenderer implements Renderer {
 		final float transformedZ = yawCos * z - yawSin * x;
 		final float depth = pitchCos * modelRadius + pitchSin * y + pitchCos * transformedZ;
 
-		if (depth > HdPlugin.NEAR_PLANE) {
+		if (depth > NEAR_PLANE) {
 			final float transformedX = z * yawSin + yawCos * x;
 			final float leftPoint = transformedX - modelRadius;
 			if (leftPoint * visibilityCheckZoom < rightClip * depth) {
