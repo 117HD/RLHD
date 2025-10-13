@@ -37,7 +37,7 @@ uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
 
-flat in ivec3 vHsl;
+flat in ivec3 vAlphaBiasHsl;
 flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
 flat in vec3 T;
@@ -174,9 +174,9 @@ void main() {
         #endif
 
         // get vertex colors
-        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vHsl[0])), 1 - float(vHsl[0] >> 24 & 0xff) / 255.);
-        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vHsl[1])), 1 - float(vHsl[1] >> 24 & 0xff) / 255.);
-        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vHsl[2])), 1 - float(vHsl[2] >> 24 & 0xff) / 255.);
+        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vAlphaBiasHsl[0])), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
+        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vAlphaBiasHsl[1])), 1 - float(vAlphaBiasHsl[1] >> 24 & 0xff) / 255.);
+        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vAlphaBiasHsl[2])), 1 - float(vAlphaBiasHsl[2] >> 24 & 0xff) / 255.);
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);

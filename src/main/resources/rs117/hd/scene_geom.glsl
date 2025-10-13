@@ -36,12 +36,12 @@ layout(triangle_strip, max_vertices = 3) out;
 #include <utils/color_utils.glsl>
 
 in vec3 gPosition[3];
-in int gHsl[3];
+in int gAlphaBiasHsl[3];
 in vec3 gUv[3];
 in int gMaterialData[3];
 in vec4 gNormal[3];
 
-flat out ivec3 vHsl;
+flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
 flat out vec3 T;
@@ -60,7 +60,7 @@ void main() {
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     for (int i = 0; i < 3; i++) {
-        vHsl[i] = gHsl[i];
+        vAlphaBiasHsl[i] = gAlphaBiasHsl[i];
         vUv[i] = gUv[i];
         vMaterialData[i] = gMaterialData[i];
         vTerrainData[i] = int(gNormal[i].w);
@@ -97,7 +97,11 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        gl_Position = projectionMatrix * vec4(OUT.position, 1);
+
+        vec4 pos = projectionMatrix * vec4(OUT.position, 1);
+        float bias = (gAlphaBiasHsl[i] >> 16) & 0xff;
+        pos.z += bias / 128.0;
+        gl_Position = pos;
         EmitVertex();
     }
 

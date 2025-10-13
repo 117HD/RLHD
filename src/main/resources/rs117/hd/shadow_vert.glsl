@@ -28,7 +28,7 @@
 #include <uniforms/global.glsl>
 
 layout (location = 0) in vec3 vPosition;
-layout (location = 1) in int vHsl;
+layout (location = 1) in int vAlphaBiasHsl;
 layout (location = 2) in vec3 vUv;
 layout (location = 3) in int vMaterialData;
 layout (location = 4) in vec4 vNormal;
@@ -54,7 +54,7 @@ layout (location = 4) in vec4 vNormal;
 void main() {
     int terrainData = int(vNormal.w);
     int waterTypeIndex = terrainData >> 3 & 0x1F;
-    float opacity = 1 - (vHsl >> 24 & 0xFF) / float(0xFF);
+    float opacity = 1 - (vAlphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
     float opacityThreshold = float(vMaterialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
     if (opacityThreshold == 0)

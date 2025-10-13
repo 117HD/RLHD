@@ -129,7 +129,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
-    float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
+    float shoreLineMask = 1 - dot(IN.texBlend, vAlphaBiasHsl / 127.f);
     float maxFoamAmount = 0.8;
     float foamAmount = min(shoreLineMask, maxFoamAmount);
     float foamDistance = 0.7;
