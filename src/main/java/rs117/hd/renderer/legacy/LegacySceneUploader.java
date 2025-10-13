@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package rs117.hd.scene;
+package rs117.hd.renderer.legacy;
 
 import com.google.common.base.Stopwatch;
 import java.util.Arrays;
@@ -37,8 +37,12 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.model.ModelPusher;
-import rs117.hd.renderer.legacy.LegacyRenderer;
-import rs117.hd.renderer.legacy.LegacySceneContext;
+import rs117.hd.scene.AreaManager;
+import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
@@ -61,7 +65,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @Singleton
 @SuppressWarnings("UnnecessaryLocalVariable")
-public class SceneUploader {
+public class LegacySceneUploader {
 	public static final int SCENE_ID_MASK = 0xFFFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 

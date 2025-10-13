@@ -89,17 +89,12 @@ public class SceneContext {
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, @Nullable SceneContext previous) {
+	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
 		this.scene = scene;
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
-
-		if (previous != null && previous.forceDisableAreaHiding) {
-			// If area hiding was determined to be incorrect previously, keep it disabled
-			forceDisableAreaHiding = true;
-		}
 	}
 
 	public synchronized void destroy() {}

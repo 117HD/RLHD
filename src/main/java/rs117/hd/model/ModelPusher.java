@@ -19,10 +19,10 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.legacy.LegacySceneContext;
+import rs117.hd.renderer.legacy.LegacySceneUploader;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -396,7 +396,7 @@ public class ModelPusher {
 	}
 
 	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
-		assert SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
+		assert LegacySceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
 			return;

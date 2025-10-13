@@ -3,14 +3,13 @@ package rs117.hd.renderer.legacy;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneUploader;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static rs117.hd.utils.MathUtils.*;
 
 public class LegacySceneContext extends SceneContext {
-	public final int id = RAND.nextInt() & SceneUploader.SCENE_ID_MASK;
+	public final int id = RAND.nextInt() & LegacySceneUploader.SCENE_ID_MASK;
 
 	public GpuIntBuffer staticUnorderedModelBuffer;
 	public GpuIntBuffer stagingBufferVertices;
@@ -23,7 +22,7 @@ public class LegacySceneContext extends SceneContext {
 		int expandedMapLoadingChunks,
 		@Nullable LegacySceneContext previous
 	) {
-		super(client, scene, expandedMapLoadingChunks, previous);
+		super(client, scene, expandedMapLoadingChunks);
 
 		if (previous == null) {
 			staticUnorderedModelBuffer = new GpuIntBuffer();

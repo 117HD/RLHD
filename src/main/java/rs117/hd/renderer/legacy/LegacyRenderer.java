@@ -49,7 +49,6 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
@@ -136,7 +135,7 @@ public class LegacyRenderer implements Renderer {
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private SceneUploader sceneUploader;
+	private LegacySceneUploader sceneUploader;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -1310,6 +1309,9 @@ public class LegacyRenderer implements Renderer {
 				plugin.getExpandedMapLoadingChunks(),
 				sceneContext
 			);
+			// If area hiding was determined to be incorrect previously, keep it disabled
+			nextSceneContext.forceDisableAreaHiding = sceneContext != null && sceneContext.forceDisableAreaHiding;
+
 			environmentManager.loadSceneEnvironments(nextSceneContext);
 			sceneUploader.upload(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
@@ -1613,7 +1615,7 @@ public class LegacyRenderer implements Renderer {
 
 		int plane = ModelHash.getPlane(hash);
 		int faceCount;
-		if (sceneContext.id == (offsetModel.getSceneId() & SceneUploader.SCENE_ID_MASK)) {
+		if (sceneContext.id == (offsetModel.getSceneId() & LegacySceneUploader.SCENE_ID_MASK)) {
 			// The model is part of the static scene buffer. The Renderable will then almost always be the Model instance, but if the scene
 			// is reuploaded without triggering the LOADING game state, it's possible for static objects which may only temporarily become
 			// animated to also be uploaded. This results in the Renderable being converted to a DynamicObject, whose `getModel` returns the
@@ -1668,7 +1670,7 @@ public class LegacyRenderer implements Renderer {
 				modelHasher.setModel(model, modelOverride, preOrientation);
 				// Disable model batching for models which have been excluded from the scene buffer,
 				// because we want to avoid having to fetch the model override
-				if (plugin.configModelBatching && offsetModel.getSceneId() != SceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
+				if (plugin.configModelBatching && offsetModel.getSceneId() != LegacySceneUploader.EXCLUDED_FROM_SCENE_BUFFER) {
 					modelOffsets = frameModelInfoMap.get(modelHasher.batchHash);
 					if (modelOffsets != null && modelOffsets.faceCount != model.getFaceCount())
 						modelOffsets = null; // Assume there's been a hash collision

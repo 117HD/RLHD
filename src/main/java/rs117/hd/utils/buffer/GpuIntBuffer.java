@@ -47,6 +47,10 @@ public class GpuIntBuffer
 		}
 	}
 
+	public GpuIntBuffer(IntBuffer buffer) {
+		this.buffer = buffer;
+	}
+
 	public void destroy() {
 		if (buffer != null)
 			MemoryUtil.memFree(buffer);
@@ -77,6 +81,17 @@ public class GpuIntBuffer
 
 	public void put(IntBuffer buffer) {
 		this.buffer.put(buffer);
+	}
+
+	public void put22224(int x, int y, int z, int w) {
+		buffer.put(((y & 0xffff) << 16) | (x & 0xffff));
+		buffer.put(z & 0xffff);
+		buffer.put(w);
+	}
+
+	public void put2222(int x, int y, int z, int w) {
+		buffer.put(((y & 0xffff) << 16) | (x & 0xffff));
+		buffer.put(((w & 0xffff) << 16) | (z & 0xffff));
 	}
 
 	public int position()
