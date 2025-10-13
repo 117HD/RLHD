@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.BufferUtils;
 import rs117.hd.opengl.uniforms.UBOGlobal;
+import rs117.hd.scene.materials.Material;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.checkGLErrors;
@@ -302,6 +303,7 @@ class Zone {
 		int faceCount = model.getFaceCount();
 		int[] color3 = model.getFaceColors3();
 		byte[] transparencies = model.getFaceTransparencies();
+		short[] faceTextures = model.getFaceTextures();
 		float[] vertexX = model.getVerticesX();
 		float[] vertexY = model.getVerticesY();
 		float[] vertexZ = model.getVerticesZ();
@@ -313,9 +315,14 @@ class Zone {
 		int maxX = Integer.MIN_VALUE, maxY = maxX, maxZ = maxY;
 
 		for (int f = 0; f < faceCount; ++f) {
-			if (color3[f] == -2 || transparencies[f] == 0) {
+			if (color3[f] == -2)
 				continue;
-			}
+
+			boolean alpha =
+				transparencies != null && transparencies[f] != 0 ||
+				faceTextures != null && Material.hasVanillaTransparency(faceTextures[f]);
+			if (!alpha)
+				continue;
 
 			int fx = (int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]);
 			int fy = (int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]);
@@ -351,9 +358,14 @@ class Zone {
 		int radius = 0;
 		char bufferIdx = 0;
 		for (int f = 0; f < faceCount; ++f) {
-			if (color3[f] == -2 || transparencies[f] == 0) {
+			if (color3[f] == -2)
 				continue;
-			}
+
+			boolean alpha =
+				transparencies != null && transparencies[f] != 0 ||
+				faceTextures != null && Material.hasVanillaTransparency(faceTextures[f]);
+			if (!alpha)
+				continue;
 
 			int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
 			int fy = (((int) (vertexY[indices1[f]] + vertexY[indices2[f]] + vertexY[indices3[f]]) / 3) - cy) >> shift;
@@ -372,7 +384,7 @@ class Zone {
 		m.radius = 2 + (int) Math.sqrt(radius);
 
 		assert packedFaces.length > 0;
-		assert bufferIdx == packedFaces.length;
+		assert bufferIdx == packedFaces.length : String.format("%d != %d", (int) bufferIdx, packedFaces.length);
 
 		alphaModels.add(m);
 	}

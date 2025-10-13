@@ -53,7 +53,7 @@ public class Material {
 	private Material ambientOcclusionMap;
 	@JsonAdapter(Reference.Adapter.class)
 	private Material flowMap;
-	private boolean hasTransparency;
+	public boolean hasTransparency;
 	private boolean overrideBaseColor;
 	private boolean unlit;
 	@JsonAdapter(ColorUtils.LinearAdapter.class)
@@ -80,6 +80,12 @@ public class Material {
 
 	public static int getTextureLayer(@Nullable Material material) {
 		return material == null ? -1 : material.textureLayer;
+	}
+
+	public static boolean hasVanillaTransparency(int vanillaTextureId) {
+		if (vanillaTextureId < 0 || vanillaTextureId >= MaterialManager.VANILLA_TEXTURE_MAPPING.length)
+			return false;
+		return MaterialManager.VANILLA_TEXTURE_MAPPING[vanillaTextureId].hasTransparency;
 	}
 
 	public void normalize(Map<String, Material> materials) {

@@ -114,15 +114,8 @@ void main() {
         // Vanilla tree textures rely on UVs being clamped horizontally, which HD doesn't do at the texture level.
         // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
         // allows texture wrapping to work correctly for the mirror shield.
-        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1)) {
+        if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
             blendedUv.x = clamp(blendedUv.x, 0, .984375);
-
-            #if RENDERER == ZONE_RENDERER
-                vec4 texColor = textureLod(textureArray, vec3(blendedUv, colorMap1), 0.0f);
-                if (texColor.a < 1.f)
-                    discard; // TODO: Alpha hack
-            #endif
-        }
 
         vec2 uv1 = blendedUv;
         vec2 uv2 = blendedUv;

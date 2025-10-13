@@ -31,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -378,11 +379,16 @@ class SceneUploader {
 			return;
 		}
 
-		byte[] transparencies = m.getFaceTransparencies();
 		int faceCount = m.getFaceCount();
-		if (transparencies != null) {
+
+		byte[] transparencies = m.getFaceTransparencies();
+		short[] faceTextures = m.getFaceTextures();
+
+		if (transparencies != null || faceTextures != null) {
 			for (int face = 0; face < faceCount; ++face) {
-				boolean alpha = transparencies[face] != 0;
+				boolean alpha =
+					transparencies != null && transparencies[face] != 0 ||
+					faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 				if (alpha) {
 					z.sizeA++;
 				} else {
@@ -391,6 +397,7 @@ class SceneUploader {
 			}
 			return;
 		}
+
 		z.sizeO += faceCount;
 	}
 
@@ -696,8 +703,6 @@ class SceneUploader {
 			int color2 = color2s[face];
 			int color3 = color3s[face];
 
-			boolean alpha = (transparencies != null && transparencies[face] != 0);
-
 			if (color3 == -1) {
 				color2 = color3 = color1;
 			} else if (color3 == -2) {
@@ -733,14 +738,16 @@ class SceneUploader {
 				texC = triangleC;
 			}
 
+			int texture = faceTextures != null ? faceTextures[face] : -1;
+			var material = materialManager.fromVanillaTexture(texture);
+			int materialData = material.packMaterialData(ModelOverride.NONE, UvType.VANILLA, false);
+
+			boolean alpha = transparencies != null && transparencies[face] != 0 || material.hasTransparency;
+
 			int alphaBias = 0;
 			alphaBias |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
 			alphaBias |= bias != null ? (bias[face] & 0xff) << 16 : 0;
 			GpuIntBuffer vb = alpha ? ab : vertexBuffer;
-
-			int texture = faceTextures != null ? faceTextures[face] : -1;
-			var material = materialManager.fromVanillaTexture(texture);
-			int materialData = material.packMaterialData(ModelOverride.NONE, UvType.VANILLA, false);
 
 			vb.putVertex(
 				vx1, vy1, vz1, alphaBias | color1,
