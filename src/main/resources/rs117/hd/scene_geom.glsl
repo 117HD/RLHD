@@ -86,9 +86,11 @@ void main() {
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     for (int i = 0; i < 3; i++) {
+        vec4 pos = vec4(gPosition[i], 1);
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i].xyz;
-        OUT.position = gPosition[i];
+
+        OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
             OUT.normal = N;
@@ -98,9 +100,11 @@ void main() {
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
 
-        vec4 pos = projectionMatrix * vec4(OUT.position, 1);
-        float bias = (gAlphaBiasHsl[i] >> 16) & 0xff;
-        pos.z += bias / 128.0;
+        pos = projectionMatrix * pos;
+        #if RENDERER == ZONE_RENDERER
+            int depthBias = (gAlphaBiasHsl[i] >> 16) & 0xff;
+            pos.z += depthBias / 128.0;
+        #endif
         gl_Position = pos;
         EmitVertex();
     }

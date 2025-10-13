@@ -27,14 +27,20 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.Set;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 
 @Slf4j
+@RequiredArgsConstructor
 class SceneUploader {
+	private final MaterialManager materialManager;
 	private int basex, basez, rid, level;
 
 	void zoneSize(Scene scene, Zone zone, int mzx, int mzz) {
@@ -480,38 +486,60 @@ class SceneUploader {
 		final int lz3 = lz + Perspective.LOCAL_TILE_SIZE;
 		final int hsl3 = nwColor;
 
-		int tex = tile.getTexture() + 1;
+		var material = materialManager.fromVanillaTexture(tile.getTexture());
+		int materialData = material.packMaterialData(ModelOverride.NONE, UvType.VANILLA, false);
 
-		vertexBuffer.put22224(lx2, ly2, lz2, hsl2);
 		if (tile.isFlat()) {
-			vertexBuffer.put2222(tex, lx0 - lx2, ly0 - ly2, lz0 - lz2);
+			vertexBuffer.putVertex(
+				lx2, ly2, lz2, hsl2,
+				lx0 - lx2, ly0 - ly2, lz0 - lz2, materialData
+			);
 		} else {
-			vertexBuffer.put2222(tex, lx2 - lx2, ly2 - ly2, lz2 - lz2);
+			vertexBuffer.putVertex(
+				lx2, ly2, lz2, hsl2,
+				lx2 - lx2, ly2 - ly2, lz2 - lz2, materialData
+			);
 		}
 
-		vertexBuffer.put22224(lx3, ly3, lz3, hsl3);
 		if (tile.isFlat()) {
-			vertexBuffer.put2222(tex, lx1 - lx3, ly1 - ly3, lz1 - lz3);
+			vertexBuffer.putVertex(
+				lx3, ly3, lz3, hsl3,
+				lx1 - lx3, ly1 - ly3, lz1 - lz3, materialData
+			);
 		} else {
-			vertexBuffer.put2222(tex, lx3 - lx3, ly3 - ly3, lz3 - lz3);
+			vertexBuffer.putVertex(
+				lx3, ly3, lz3, hsl3,
+				lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData
+			);
 		}
 
 
-		vertexBuffer.put22224(lx1, ly1, lz1, hsl1);
 		if (tile.isFlat()) {
-			vertexBuffer.put2222(tex, lx3 - lx1, ly3 - ly1, lz3 - lz1);
+			vertexBuffer.putVertex(
+				lx1, ly1, lz1, hsl1,
+				lx3 - lx1, ly3 - ly1, lz3 - lz1, materialData
+			);
 		} else {
-			vertexBuffer.put2222(tex, lx1 - lx1, ly1 - ly1, lz1 - lz1);
+			vertexBuffer.putVertex(
+				lx1, ly1, lz1, hsl1,
+				lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData
+			);
 		}
 
-		vertexBuffer.put22224(lx0, ly0, lz0, hsl0);
-		vertexBuffer.put2222(tex, lx0 - lx0, ly0 - ly0, lz0 - lz0);
+		vertexBuffer.putVertex(
+			lx0, ly0, lz0, hsl0,
+			lx0 - lx0, ly0 - ly0, lz0 - lz0, materialData
+		);
 
-		vertexBuffer.put22224(lx1, ly1, lz1, hsl1);
-		vertexBuffer.put2222(tex, lx1 - lx1, ly1 - ly1, lz1 - lz1);
+		vertexBuffer.putVertex(
+			lx1, ly1, lz1, hsl1,
+			lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData
+		);
 
-		vertexBuffer.put22224(lx3, ly3, lz3, hsl3);
-		vertexBuffer.put2222(tex, lx3 - lx3, ly3 - ly3, lz3 - lz3);
+		vertexBuffer.putVertex(
+			lx3, ly3, lz3, hsl3,
+			lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData
+		);
 
 		return 6;
 	}
@@ -565,26 +593,44 @@ class SceneUploader {
 			int ly2 = vertexY[vertex2];
 			int lz2 = vertexZ[vertex2] - lz;
 
-			int tex = triangleTextures != null ? triangleTextures[i] + 1 : 0;
-			vertexBuffer.put22224(lx0, ly0, lz0, hsl0);
+			int texture = triangleTextures != null ? triangleTextures[i] : -1;
+			var material = materialManager.fromVanillaTexture(texture);
+			int materialData = material.packMaterialData(ModelOverride.NONE, UvType.VANILLA, false);
+
 			if (sceneTileModel.isFlat()) {
-				vertexBuffer.put2222(tex, vertexX[0] - lx - lx0, vertexY[0] - ly0, vertexZ[0] - lz - lz0);
+				vertexBuffer.putVertex(
+					lx0, ly0, lz0, hsl0,
+					vertexX[0] - lx - lx0, vertexY[0] - ly0, vertexZ[0] - lz - lz0, materialData
+				);
 			} else {
-				vertexBuffer.put2222(tex, vertexX[vertex0] - lx - lx0, vertexY[vertex0] - ly0, vertexZ[vertex0] - lz - lz0);
+				vertexBuffer.putVertex(
+					lx0, ly0, lz0, hsl0,
+					vertexX[vertex0] - lx - lx0, vertexY[vertex0] - ly0, vertexZ[vertex0] - lz - lz0, materialData
+				);
 			}
 
-			vertexBuffer.put22224(lx1, ly1, lz1, hsl1);
 			if (sceneTileModel.isFlat()) {
-				vertexBuffer.put2222(tex, vertexX[1] - lx - lx1, vertexY[1] - ly1, vertexZ[1] - lz - lz1);
+				vertexBuffer.putVertex(
+					lx1, ly1, lz1, hsl1,
+					vertexX[1] - lx - lx1, vertexY[1] - ly1, vertexZ[1] - lz - lz1, materialData
+				);
 			} else {
-				vertexBuffer.put2222(tex, vertexX[vertex1] - lx - lx1, vertexY[vertex1] - ly1, vertexZ[vertex1] - lz - lz1);
+				vertexBuffer.putVertex(
+					lx1, ly1, lz1, hsl1,
+					vertexX[vertex1] - lx - lx1, vertexY[vertex1] - ly1, vertexZ[vertex1] - lz - lz1, materialData
+				);
 			}
 
-			vertexBuffer.put22224(lx2, ly2, lz2, hsl2);
 			if (sceneTileModel.isFlat()) {
-				vertexBuffer.put2222(tex, vertexX[3] - lx - lx2, vertexY[3] - ly2, vertexZ[3] - lz - lz2);
+				vertexBuffer.putVertex(
+					lx2, ly2, lz2, hsl2,
+					vertexX[3] - lx - lx2, vertexY[3] - ly2, vertexZ[3] - lz - lz2, materialData
+				);
 			} else {
-				vertexBuffer.put2222(tex, vertexX[vertex2] - lx - lx2, vertexY[vertex2] - ly2, vertexZ[vertex2] - lz - lz2);
+				vertexBuffer.putVertex(
+					lx2, ly2, lz2, hsl2,
+					vertexX[vertex2] - lx - lx2, vertexY[vertex2] - ly2, vertexZ[vertex2] - lz - lz2, materialData
+				);
 			}
 		}
 
@@ -690,17 +736,26 @@ class SceneUploader {
 			int alphaBias = 0;
 			alphaBias |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
 			alphaBias |= bias != null ? (bias[face] & 0xff) << 16 : 0;
-			int texture = faceTextures != null ? faceTextures[face] + 1 : 0;
 			GpuIntBuffer vb = alpha ? ab : vertexBuffer;
 
-			vb.put22224(vx1, vy1, vz1, alphaBias | color1);
-			vb.put2222(texture, modelLocalXI[texA] - vx1, modelLocalYI[texA] - vy1, modelLocalZI[texA] - vz1);
+			int texture = faceTextures != null ? faceTextures[face] : -1;
+			var material = materialManager.fromVanillaTexture(texture);
+			int materialData = material.packMaterialData(ModelOverride.NONE, UvType.VANILLA, false);
 
-			vb.put22224(vx2, vy2, vz2, alphaBias | color2);
-			vb.put2222(texture, modelLocalXI[texB] - vx2, modelLocalYI[texB] - vy2, modelLocalZI[texB] - vz2);
+			vb.putVertex(
+				vx1, vy1, vz1, alphaBias | color1,
+				modelLocalXI[texA] - vx1, modelLocalYI[texA] - vy1, modelLocalZI[texA] - vz1, materialData
+			);
 
-			vb.put22224(vx3, vy3, vz3, alphaBias | color3);
-			vb.put2222(texture, modelLocalXI[texC] - vx3, modelLocalYI[texC] - vy3, modelLocalZI[texC] - vz3);
+			vb.putVertex(
+				vx2, vy2, vz2, alphaBias | color2,
+				modelLocalXI[texB] - vx2, modelLocalYI[texB] - vy2, modelLocalZI[texB] - vz2, materialData
+			);
+
+			vb.putVertex(
+				vx3, vy3, vz3, alphaBias | color3,
+				modelLocalXI[texC] - vx3, modelLocalYI[texC] - vy3, modelLocalZI[texC] - vz3, materialData
+			);
 
 			len += 3;
 		}

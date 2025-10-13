@@ -30,17 +30,6 @@ class VAO {
 		vbo.init();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo.bufId);
 
-//		glEnableVertexAttribArray(0);
-//		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
-//
-//		glVertexAttribI3i(1, Short.MIN_VALUE, Short.MIN_VALUE, Short.MIN_VALUE);
-//
-//		glEnableVertexAttribArray(2);
-//		glVertexAttribIPointer(2, 1, GL_INT, VERT_SIZE, 12);
-//
-//		glEnableVertexAttribArray(3);
-//		glVertexAttribIPointer(3, 4, GL_SHORT, VERT_SIZE, 16);
-
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
 

@@ -40,6 +40,10 @@
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
 #endif
 
+#include RENDERER
+#define LEGACY_RENDERER 0
+#define ZONE_RENDERER 1
+
 #include VANILLA_COLOR_BANDING
 #include UNDO_VANILLA_SHADING
 #include LEGACY_GREY_COLORS

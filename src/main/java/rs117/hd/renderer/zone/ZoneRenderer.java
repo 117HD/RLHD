@@ -1183,7 +1183,7 @@ public class ZoneRenderer implements Renderer {
 				zone = ctx.zones[x][z] = new Zone();
 
 				Scene scene = wv.getScene();
-				SceneUploader sceneUploader = new SceneUploader();
+				SceneUploader sceneUploader = new SceneUploader(materialManager);
 				sceneUploader.zoneSize(scene, zone, x, z);
 
 				VBO o = null, a = null;
@@ -1448,7 +1448,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		// size the zones which require upload
-		SceneUploader sceneUploader = new SceneUploader();
+		SceneUploader sceneUploader = new SceneUploader(materialManager);
 		Stopwatch sw = Stopwatch.createStarted();
 		int len = 0, lena = 0;
 		int reused = 0, newzones = 0;
@@ -1606,7 +1606,7 @@ public class ZoneRenderer implements Renderer {
 		final WorldViewContext ctx = new WorldViewContext(worldView.getSizeX() >> 3, worldView.getSizeY() >> 3);
 		subs[worldViewId] = ctx;
 
-		SceneUploader sceneUploader = new SceneUploader();
+		SceneUploader sceneUploader = new SceneUploader(materialManager);
 		for (int x = 0; x < ctx.sizeX; ++x) {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
 				Zone zone = ctx.zones[x][z];

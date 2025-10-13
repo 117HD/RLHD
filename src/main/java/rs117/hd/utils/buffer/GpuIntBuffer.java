@@ -86,15 +86,16 @@ public class GpuIntBuffer
 		this.buffer.put(buffer);
 	}
 
-	public void put22224(int x, int y, int z, int w) {
-		buffer.put(((y & 0xffff) << 16) | (x & 0xffff));
-		buffer.put(z & 0xffff);
-		buffer.put(w);
-	}
-
-	public void put2222(int x, int y, int z, int w) {
-		buffer.put(((y & 0xffff) << 16) | (x & 0xffff));
-		buffer.put(((w & 0xffff) << 16) | (z & 0xffff));
+	public void putVertex(
+		int x, int y, int z, int alphaBiasHsl,
+		int u, int v, int w, int materialData
+	) {
+		// pos.xyz | uvw | alphaBiasHsl | materialData | normal.xyz | terrainData
+		buffer.put((y & 0xffff) << 16 | x & 0xffff);
+		buffer.put((u & 0xffff) << 16 | z & 0xffff);
+		buffer.put((w & 0xffff) << 16 | v & 0xffff);
+		buffer.put(alphaBiasHsl);
+		buffer.put(materialData);
 	}
 
 	public int position()

@@ -25,10 +25,12 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 @RequiredArgsConstructor
 class Zone {
 	// Zone vertex format
-	// index 0: -FLOAT.MAX_VALUE (non-array)
-	// index 1: short vec3(x, y, z)
-	// index 2: int abhsl
-	// index 3: short vec4(id, x, y, z)
+	// pos short vec3(x, y, z)
+	// uvw short vec3(u, v, w)
+	// alphaBiasHsl int
+	// materialData int
+	// normal short vec3(x, y, z)
+	// terrainData int
 	static final int VERT_SIZE = 20;
 
 	int glVao;
@@ -117,32 +119,19 @@ class Zone {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
-//		glVertexAttrib3f(0, -Float.MAX_VALUE, -Float.MAX_VALUE, -Float.MAX_VALUE);
-//
-//		glEnableVertexAttribArray(1);
-//		glVertexAttribIPointer(1, 3, GL_SHORT, VERT_SIZE, 0);
-//
-//		glEnableVertexAttribArray(2);
-//		glVertexAttribIPointer(2, 1, GL_INT, VERT_SIZE, 8);
-//
-//		glEnableVertexAttribArray(3);
-//		glVertexAttribIPointer(3, 4, GL_SHORT, VERT_SIZE, 12);
-
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_SHORT, false, VERT_SIZE, 0);
 
 		glEnableVertexAttribArray(1);
-		glVertexAttribIPointer(1, 1, GL_INT, VERT_SIZE, 8);
+		glVertexAttribIPointer(1, 1, GL_INT, VERT_SIZE, 12);
 
-		// TODO: UVs
-		glVertexAttrib3f(2, 0, 0, 0);
-//		glEnableVertexAttribArray(2);
-//		glVertexAttribPointer(2, 3, GL_FLOAT, false, 16, 0);
+		// TODO: Currently only vanilla UVs
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 6);
 
 		// TODO: Materials
-		glVertexAttribI1i(3, 0);
-//		glEnableVertexAttribArray(3);
-//		glVertexAttribIPointer(3, 1, GL_INT, 16, 12);
+		glEnableVertexAttribArray(3);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 16);
 
 		// TODO: Normals
 		glVertexAttrib4f(4, 0, 0, 0, 0);
@@ -432,16 +421,13 @@ class Zone {
 	private static int lastzx, lastzz;
 
 	void alphaSort(int zx, int zz, int cx, int cy, int cz) {
-		alphaModels.sort(Comparator.comparingInt((AlphaModel m) ->
-					{
-						final int mx = (m.x + ((zx - m.zofx) << 10));
-						final int mz = (m.z + ((zz - m.zofz) << 10));
-						return (mx - cx) * (mx - cx) +
-							   (m.y - cy) * (m.y - cy) +
-							   (mz - cz) * (mz - cz);
-					}
-				)
-				.reversed()
+		alphaModels.sort(Comparator
+			.comparingInt((AlphaModel m) -> {
+				final int mx = m.x + ((zx - m.zofx) << 10);
+				final int mz = m.z + ((zz - m.zofz) << 10);
+				return (mx - cx) * (mx - cx) + (m.y - cy) * (m.y - cy) + (mz - cz) * (mz - cz);
+			})
+			.reversed()
 		);
 	}
 
