@@ -898,6 +898,24 @@ class SceneUploader {
 				uvs = round(fUvs);
 			}
 
+			int[] normals = new int[9];
+			if (!modelOverride.flatNormals && (plugin.configPreserveVanillaNormals || model.getFaceColors3()[face] != -1)) {
+				final int[] xVertexNormals = model.getVertexNormalsX();
+				final int[] yVertexNormals = model.getVertexNormalsY();
+				final int[] zVertexNormals = model.getVertexNormalsZ();
+				if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
+					normals[0] = xVertexNormals[triangleA];
+					normals[1] = yVertexNormals[triangleA];
+					normals[2] = zVertexNormals[triangleA];
+					normals[3] = xVertexNormals[triangleB];
+					normals[4] = yVertexNormals[triangleB];
+					normals[5] = zVertexNormals[triangleB];
+					normals[6] = xVertexNormals[triangleC];
+					normals[7] = yVertexNormals[triangleC];
+					normals[8] = zVertexNormals[triangleC];
+				}
+			}
+
 			boolean alpha =
 				transparencies != null && transparencies[face] != 0 ||
 				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
@@ -910,19 +928,19 @@ class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1, alphaBias | color1,
 				uvs[0], uvs[1], uvs[2], materialData,
-				0, 0, 0, 0
+				normals[0], normals[1], normals[2], 0
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, alphaBias | color2,
 				uvs[4], uvs[5], uvs[6], materialData,
-				0, 0, 0, 0
+				normals[3], normals[4], normals[5], 0
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, alphaBias | color3,
 				uvs[8], uvs[9], uvs[10], materialData,
-				0, 0, 0, 0
+				normals[6], normals[7], normals[8], 0
 			);
 
 			len += 3;
