@@ -27,21 +27,33 @@ package rs117.hd.renderer.zone;
 import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.Set;
-import lombok.RequiredArgsConstructor;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
+import rs117.hd.utils.HDUtils;
+import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-@RequiredArgsConstructor
 class SceneUploader {
-	private final MaterialManager materialManager;
+	@Inject
+	private HdPlugin plugin;
+
+	@Inject
+	private MaterialManager materialManager;
+
+	@Inject
+	private ModelOverrideManager modelOverrideManager;
+
 	private int basex, basez, rid, level;
 
 	void zoneSize(Scene scene, Zone zone, int mzx, int mzz) {
@@ -59,8 +71,8 @@ class SceneUploader {
 		}
 	}
 
-	void uploadZone(Scene scene, Zone zone, int mzx, int mzz) {
-		int[][][] roofs = scene.getRoofs();
+	void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
+		int[][][] roofs = ctx.scene.getRoofs();
 		Set<Integer> roofIds = new HashSet<>();
 
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.vb) : null;
@@ -83,13 +95,13 @@ class SceneUploader {
 
 		for (int z = 0; z <= 3; ++z) {
 			if (z == 0) {
-				uploadZoneLevel(scene, zone, mzx, mzz, z, false, roofIds, vb, ab);
-				uploadZoneLevel(scene, zone, mzx, mzz, z, true, roofIds, vb, ab);
-				uploadZoneLevel(scene, zone, mzx, mzz, 1, true, roofIds, vb, ab);
-				uploadZoneLevel(scene, zone, mzx, mzz, 2, true, roofIds, vb, ab);
-				uploadZoneLevel(scene, zone, mzx, mzz, 3, true, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, true, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 1, true, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 2, true, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, 3, true, roofIds, vb, ab);
 			} else {
-				uploadZoneLevel(scene, zone, mzx, mzz, z, false, roofIds, vb, ab);
+				uploadZoneLevel(ctx, zone, mzx, mzz, z, false, roofIds, vb, ab);
 			}
 
 			if (zone.vboO != null) {
@@ -100,7 +112,7 @@ class SceneUploader {
 	}
 
 	private void uploadZoneLevel(
-		Scene scene,
+		ZoneSceneContext ctx,
 		Zone zone,
 		int mzx,
 		int mzz,
@@ -116,7 +128,7 @@ class SceneUploader {
 		for (int id : roofIds) {
 			int pos = zone.vboO != null ? zone.vboO.vb.position() : 0;
 
-			uploadZoneLevelRoof(scene, zone, mzx, mzz, level, id, visbelow, vb, ab);
+			uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, id, visbelow, vb, ab);
 
 			int endpos = zone.vboO != null ? zone.vboO.vb.position() : 0;
 
@@ -129,11 +141,11 @@ class SceneUploader {
 		}
 
 		// upload everything else
-		uploadZoneLevelRoof(scene, zone, mzx, mzz, level, 0, visbelow, vb, ab);
+		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab);
 	}
 
 	private void uploadZoneLevelRoof(
-		Scene scene,
+		ZoneSceneContext ctx,
 		Zone zone,
 		int mzx,
 		int mzz,
@@ -143,11 +155,11 @@ class SceneUploader {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab
 	) {
-		byte[][][] settings = scene.getExtendedTileSettings();
-		int[][][] roofs = scene.getRoofs();
-		Tile[][][] tiles = scene.getExtendedTiles();
+		byte[][][] settings = ctx.scene.getExtendedTileSettings();
+		int[][][] roofs = ctx.scene.getRoofs();
+		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 
-		int offset = scene.getWorldViewId() == -1 ? SCENE_OFFSET >> 3 : 0;
+		int offset = ctx.scene.getWorldViewId() == -1 ? SCENE_OFFSET >> 3 : 0;
 		this.level = level;
 		this.basex = (mzx - offset) << 10;
 		this.basez = (mzz - offset) << 10;
@@ -179,7 +191,7 @@ class SceneUploader {
 					Tile t = tiles[level][msx][msz];
 					if (t != null) {
 						this.rid = rid;
-						uploadZoneTile(scene, zone, t, vb, ab);
+						uploadZoneTile(ctx, zone, t, vb, ab);
 					}
 				}
 			}
@@ -234,14 +246,16 @@ class SceneUploader {
 		}
 	}
 
-	private int uploadZoneTile(Scene scene, Zone zone, Tile t, GpuIntBuffer vertexBuffer, GpuIntBuffer ab) {
+	private int uploadZoneTile(ZoneSceneContext ctx, Zone zone, Tile t, GpuIntBuffer vertexBuffer, GpuIntBuffer ab) {
 		int len = 0;
+
+		int[] worldPos = ctx.localToWorld(t.getLocalLocation(), t.getPlane());
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null) {
 			Point tilePoint = t.getSceneLocation();
 			len = upload(
-				scene, paint,
+				ctx, paint,
 				t.getRenderLevel(), tilePoint.getX(), tilePoint.getY(),
 				vertexBuffer,
 				tilePoint.getX() * 128 - basex, tilePoint.getY() * 128 - basez
@@ -250,16 +264,21 @@ class SceneUploader {
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null) {
-			int len_ = upload(model, basex, basez, vertexBuffer);
+			int len_ = upload(ctx, model, basex, basez, vertexBuffer);
 			len += len_;
 		}
 
 		WallObject wallObject = t.getWallObject();
 		if (wallObject != null) {
+			int uuid = ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId());
 			Renderable renderable1 = wallObject.getRenderable1();
 			uploadZoneRenderable(
+				ctx,
 				renderable1,
 				zone,
+				uuid,
+				worldPos,
+				HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
 				0,
 				wallObject.getX(),
 				wallObject.getZ(),
@@ -275,8 +294,12 @@ class SceneUploader {
 
 			Renderable renderable2 = wallObject.getRenderable2();
 			uploadZoneRenderable(
+				ctx,
 				renderable2,
 				zone,
+				uuid,
+				worldPos,
+				HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
 				0,
 				wallObject.getX(),
 				wallObject.getZ(),
@@ -293,10 +316,16 @@ class SceneUploader {
 
 		DecorativeObject decorativeObject = t.getDecorativeObject();
 		if (decorativeObject != null) {
+			int uuid = ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId());
+			int preOrientation = HDUtils.getModelPreOrientation(decorativeObject.getConfig());
 			Renderable renderable = decorativeObject.getRenderable();
 			uploadZoneRenderable(
+				ctx,
 				renderable,
 				zone,
+				uuid,
+				worldPos,
+				preOrientation,
 				0,
 				decorativeObject.getX() + decorativeObject.getXOffset(),
 				decorativeObject.getZ(),
@@ -312,8 +341,12 @@ class SceneUploader {
 
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			uploadZoneRenderable(
+				ctx,
 				renderable2,
 				zone,
+				uuid,
+				worldPos,
+				preOrientation,
 				0,
 				decorativeObject.getX(),
 				decorativeObject.getZ(),
@@ -332,10 +365,18 @@ class SceneUploader {
 		if (groundObject != null) {
 			Renderable renderable = groundObject.getRenderable();
 			uploadZoneRenderable(
-				renderable, zone, 0, groundObject.getX(), groundObject.getZ(), groundObject.getY(),
-				-1, -1, -1, -1,
+				ctx,
+				renderable, zone,
+				ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
+				worldPos,
+				HDUtils.getModelPreOrientation(groundObject.getConfig()),
+				0,
+				groundObject.getX(), groundObject.getZ(), groundObject.getY(), -1,
+				-1,
+				-1, -1,
 				groundObject.getId(),
-				vertexBuffer, ab
+				vertexBuffer,
+				ab
 			);
 		}
 
@@ -353,16 +394,24 @@ class SceneUploader {
 
 			Renderable renderable = gameObject.getRenderable();
 			uploadZoneRenderable(
-				renderable, zone, gameObject.getModelOrientation(), gameObject.getX(), gameObject.getZ(), gameObject.getY(),
-				min.getX(), min.getY(), max.getX(), max.getY(),
+				ctx,
+				renderable, zone,
+				ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
+				worldPos,
+				HDUtils.getModelPreOrientation(gameObject.getConfig()),
+				gameObject.getModelOrientation(),
+				gameObject.getX(), gameObject.getZ(), gameObject.getY(), min.getX(),
+				min.getY(),
+				max.getX(), max.getY(),
 				gameObject.getId(),
-				vertexBuffer, ab
+				vertexBuffer,
+				ab
 			);
 		}
 
 		Tile bridge = t.getBridge();
 		if (bridge != null) {
-			len += uploadZoneTile(scene, zone, bridge, vertexBuffer, ab);
+			len += uploadZoneTile(ctx, zone, bridge, vertexBuffer, ab);
 		}
 
 		return len;
@@ -402,8 +451,12 @@ class SceneUploader {
 	}
 
 	private void uploadZoneRenderable(
+		ZoneSceneContext ctx,
 		Renderable r,
 		Zone zone,
+		int uuid,
+		int[] worldPos,
+		int preOrientation,
 		int orient,
 		int x,
 		int y,
@@ -416,15 +469,17 @@ class SceneUploader {
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer ab
 	) {
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+
 		int pos = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		Model model = null;
 		if (r instanceof Model) {
 			model = (Model) r;
-			uploadStaticModel(model, orient, x - basex, y, z - basez, vertexBuffer, ab);
+			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
 			if (model != null) {
-				uploadStaticModel(model, orient, x - basex, y, z - basez, vertexBuffer, ab);
+				uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
 			}
 		}
 		int endpos = zone.vboA != null ? zone.vboA.vb.position() : 0;
@@ -450,11 +505,20 @@ class SceneUploader {
 	}
 
 	@SuppressWarnings({ "PointlessArithmeticExpression", "UnnecessaryLocalVariable", "ConstantValue" })
-	private int upload(Scene scene, SceneTilePaint tile, int tileZ, int tileX, int tileY, GpuIntBuffer vertexBuffer, int lx, int lz) {
-		tileX += scene.getWorldViewId() == -1 ? SCENE_OFFSET : 0;
-		tileY += scene.getWorldViewId() == -1 ? SCENE_OFFSET : 0;
+	private int upload(
+		ZoneSceneContext ctx,
+		SceneTilePaint tile,
+		int tileZ,
+		int tileX,
+		int tileY,
+		GpuIntBuffer vertexBuffer,
+		int lx,
+		int lz
+	) {
+		tileX += ctx.scene.getWorldViewId() == -1 ? SCENE_OFFSET : 0;
+		tileY += ctx.scene.getWorldViewId() == -1 ? SCENE_OFFSET : 0;
 
-		final int[][][] tileHeights = scene.getTileHeights();
+		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int swHeight = tileHeights[tileZ][tileX][tileY];
 		final int seHeight = tileHeights[tileZ][tileX + 1][tileY];
 		final int neHeight = tileHeights[tileZ][tileX + 1][tileY + 1];
@@ -499,60 +563,67 @@ class SceneUploader {
 		if (tile.isFlat()) {
 			vertexBuffer.putVertex(
 				lx2, ly2, lz2, hsl2,
-				lx0 - lx2, ly0 - ly2, lz0 - lz2, materialData
+				lx0 - lx2, ly0 - ly2, lz0 - lz2, materialData,
+				0, 0, 0, 0
+			);
+
+			vertexBuffer.putVertex(
+				lx3, ly3, lz3, hsl3,
+				lx1 - lx3, ly1 - ly3, lz1 - lz3, materialData,
+				0, 0, 0, 0
+			);
+
+			vertexBuffer.putVertex(
+				lx1, ly1, lz1, hsl1,
+				lx3 - lx1, ly3 - ly1, lz3 - lz1, materialData,
+				0, 0, 0, 0
 			);
 		} else {
 			vertexBuffer.putVertex(
 				lx2, ly2, lz2, hsl2,
-				lx2 - lx2, ly2 - ly2, lz2 - lz2, materialData
+				lx2 - lx2, ly2 - ly2, lz2 - lz2, materialData,
+				0, 0, 0, 0
 			);
-		}
 
-		if (tile.isFlat()) {
 			vertexBuffer.putVertex(
 				lx3, ly3, lz3, hsl3,
-				lx1 - lx3, ly1 - ly3, lz1 - lz3, materialData
+				lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData,
+				0, 0, 0, 0
 			);
-		} else {
-			vertexBuffer.putVertex(
-				lx3, ly3, lz3, hsl3,
-				lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData
-			);
-		}
 
-
-		if (tile.isFlat()) {
 			vertexBuffer.putVertex(
 				lx1, ly1, lz1, hsl1,
-				lx3 - lx1, ly3 - ly1, lz3 - lz1, materialData
-			);
-		} else {
-			vertexBuffer.putVertex(
-				lx1, ly1, lz1, hsl1,
-				lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData
+				lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData,
+				0, 0, 0, 0
 			);
 		}
 
 		vertexBuffer.putVertex(
 			lx0, ly0, lz0, hsl0,
-			lx0 - lx0, ly0 - ly0, lz0 - lz0, materialData
+			lx0 - lx0, ly0 - ly0, lz0 - lz0, materialData,
+			0, 0, 0, 0
 		);
 
 		vertexBuffer.putVertex(
 			lx1, ly1, lz1, hsl1,
-			lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData
+			lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData,
+			0, 0, 0, 0
 		);
 
 		vertexBuffer.putVertex(
 			lx3, ly3, lz3, hsl3,
-			lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData
+			lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData,
+			0, 0, 0, 0
 		);
 
 		return 6;
 	}
 
 	private int upload(
-		SceneTileModel sceneTileModel, int lx, int lz,
+		ZoneSceneContext ctx,
+		SceneTileModel sceneTileModel,
+		int lx,
+		int lz,
 		GpuIntBuffer vertexBuffer
 	) {
 		final int[] faceX = sceneTileModel.getFaceX();
@@ -607,36 +678,38 @@ class SceneUploader {
 			if (sceneTileModel.isFlat()) {
 				vertexBuffer.putVertex(
 					lx0, ly0, lz0, hsl0,
-					vertexX[0] - lx - lx0, vertexY[0] - ly0, vertexZ[0] - lz - lz0, materialData
+					vertexX[0] - lx - lx0, vertexY[0] - ly0, vertexZ[0] - lz - lz0, materialData,
+					0, 0, 0, 0
+				);
+
+				vertexBuffer.putVertex(
+					lx1, ly1, lz1, hsl1,
+					vertexX[1] - lx - lx1, vertexY[1] - ly1, vertexZ[1] - lz - lz1, materialData,
+					0, 0, 0, 0
+				);
+
+				vertexBuffer.putVertex(
+					lx2, ly2, lz2, hsl2,
+					vertexX[3] - lx - lx2, vertexY[3] - ly2, vertexZ[3] - lz - lz2, materialData,
+					0, 0, 0, 0
 				);
 			} else {
 				vertexBuffer.putVertex(
 					lx0, ly0, lz0, hsl0,
-					vertexX[vertex0] - lx - lx0, vertexY[vertex0] - ly0, vertexZ[vertex0] - lz - lz0, materialData
+					vertexX[vertex0] - lx - lx0, vertexY[vertex0] - ly0, vertexZ[vertex0] - lz - lz0, materialData,
+					0, 0, 0, 0
 				);
-			}
 
-			if (sceneTileModel.isFlat()) {
 				vertexBuffer.putVertex(
 					lx1, ly1, lz1, hsl1,
-					vertexX[1] - lx - lx1, vertexY[1] - ly1, vertexZ[1] - lz - lz1, materialData
+					vertexX[vertex1] - lx - lx1, vertexY[vertex1] - ly1, vertexZ[vertex1] - lz - lz1, materialData,
+					0, 0, 0, 0
 				);
-			} else {
-				vertexBuffer.putVertex(
-					lx1, ly1, lz1, hsl1,
-					vertexX[vertex1] - lx - lx1, vertexY[vertex1] - ly1, vertexZ[vertex1] - lz - lz1, materialData
-				);
-			}
 
-			if (sceneTileModel.isFlat()) {
 				vertexBuffer.putVertex(
 					lx2, ly2, lz2, hsl2,
-					vertexX[3] - lx - lx2, vertexY[3] - ly2, vertexZ[3] - lz - lz2, materialData
-				);
-			} else {
-				vertexBuffer.putVertex(
-					lx2, ly2, lz2, hsl2,
-					vertexX[vertex2] - lx - lx2, vertexY[vertex2] - ly2, vertexZ[vertex2] - lz - lz2, materialData
+					vertexX[vertex2] - lx - lx2, vertexY[vertex2] - ly2, vertexZ[vertex2] - lz - lz2, materialData,
+					0, 0, 0, 0
 				);
 			}
 		}
@@ -645,7 +718,11 @@ class SceneUploader {
 	}
 
 	// scene upload
-	private int uploadStaticModel(Model model, int orient, int x, int y, int z, GpuIntBuffer vertexBuffer, GpuIntBuffer ab) {
+	private int uploadStaticModel(
+		Model model,
+		ModelOverride modelOverride,
+		int preOrientation, int orient, int x, int y, int z, GpuIntBuffer vertexBuffer, GpuIntBuffer ab
+	) {
 		final int vertexCount = model.getVerticesCount();
 		final int triangleCount = model.getFaceCount();
 
@@ -697,6 +774,21 @@ class SceneUploader {
 			modelLocalZI[v] = vz;
 		}
 
+		boolean isVanillaTextured = faceTextures != null;
+		boolean isVanillaUVMapped =
+			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
+			model.getTextureFaces() != null;
+
+		Material baseMaterial = modelOverride.baseMaterial;
+		Material textureMaterial = modelOverride.textureMaterial;
+		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
+		if (disableTextures) {
+			if (baseMaterial.modifiesVanillaTexture)
+				baseMaterial = Material.NONE;
+			if (textureMaterial.modifiesVanillaTexture)
+				textureMaterial = Material.NONE;
+		}
+
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
 			int color1 = color1s[face];
@@ -727,7 +819,7 @@ class SceneUploader {
 
 			int texA, texB, texC;
 
-			if (textureFaces != null && textureFaces[face] != -1) {
+			if (isVanillaUVMapped && textureFaces[face] != -1) {
 				int tface = textureFaces[face] & 0xff;
 				texA = texIndices1[tface];
 				texB = texIndices2[tface];
@@ -738,11 +830,77 @@ class SceneUploader {
 				texC = triangleC;
 			}
 
-			int texture = faceTextures != null ? faceTextures[face] : -1;
-			var material = materialManager.fromVanillaTexture(texture);
-			int materialData = material.packMaterialData(ModelOverride.NONE, UvType.VANILLA, false);
+			UvType uvType = UvType.GEOMETRY;
+			Material material = baseMaterial;
 
-			boolean alpha = transparencies != null && transparencies[face] != 0 || material.hasTransparency;
+			int textureId = isVanillaTextured ? faceTextures[face] : -1;
+			if (textureId != -1) {
+				uvType = UvType.VANILLA;
+				material = textureMaterial;
+				if (material == Material.NONE)
+					material = materialManager.fromVanillaTexture(textureId);
+			}
+
+			ModelOverride faceOverride = modelOverride;
+			if (!disableTextures) {
+				if (modelOverride.materialOverrides != null) {
+					var override = modelOverride.materialOverrides.get(material);
+					if (override != null) {
+						faceOverride = override;
+						material = faceOverride.textureMaterial;
+					}
+				}
+
+				// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
+				if (modelOverride.colorOverrides != null) {
+					int ahsl = (transparencies == null ? 0xFF : 0xFF - (transparencies[face] & 0xFF)) << 16 | color1s[face];
+					for (var override : modelOverride.colorOverrides) {
+						if (override.ahslCondition.test(ahsl)) {
+							faceOverride = override;
+							material = faceOverride.baseMaterial;
+							break;
+						}
+					}
+				}
+			}
+
+			if (material != Material.NONE) {
+				uvType = faceOverride.uvType;
+				if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
+					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+			}
+
+			int materialData = material.packMaterialData(faceOverride, uvType, false);
+
+			int[] uvs;
+			if (uvType == UvType.VANILLA) {
+				uvs = new int[] {
+					modelLocalXI[texA] - vx1,
+					modelLocalYI[texA] - vy1,
+					modelLocalZI[texA] - vz1,
+					0,
+					modelLocalXI[texB] - vx2,
+					modelLocalYI[texB] - vy2,
+					modelLocalZI[texB] - vz2,
+					0,
+					modelLocalXI[texC] - vx3,
+					modelLocalYI[texC] - vy3,
+					modelLocalZI[texC] - vz3,
+					0
+				};
+			} else {
+				float[] fUvs = new float[12];
+				faceOverride.fillUvsForFace(fUvs, model, preOrientation, uvType, face);
+				// Assume all UVs are in the range [-100, 100], and map that to signed short
+				divide(fUvs, fUvs, 100.f);
+				clamp(fUvs, fUvs, -1, 1);
+				multiply(fUvs, fUvs, Short.MAX_VALUE);
+				uvs = round(fUvs);
+			}
+
+			boolean alpha =
+				transparencies != null && transparencies[face] != 0 ||
+				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
 			int alphaBias = 0;
 			alphaBias |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
@@ -751,17 +909,20 @@ class SceneUploader {
 
 			vb.putVertex(
 				vx1, vy1, vz1, alphaBias | color1,
-				modelLocalXI[texA] - vx1, modelLocalYI[texA] - vy1, modelLocalZI[texA] - vz1, materialData
+				uvs[0], uvs[1], uvs[2], materialData,
+				0, 0, 0, 0
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, alphaBias | color2,
-				modelLocalXI[texB] - vx2, modelLocalYI[texB] - vy2, modelLocalZI[texB] - vz2, materialData
+				uvs[4], uvs[5], uvs[6], materialData,
+				0, 0, 0, 0
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, alphaBias | color3,
-				modelLocalXI[texC] - vx3, modelLocalYI[texC] - vy3, modelLocalZI[texC] - vz3, materialData
+				uvs[8], uvs[9], uvs[10], materialData,
+				0, 0, 0, 0
 			);
 
 			len += 3;

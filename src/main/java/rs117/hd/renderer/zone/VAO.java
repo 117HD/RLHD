@@ -10,10 +10,10 @@ import static org.lwjgl.opengl.GL33C.*;
 
 class VAO {
 	// Temporary vertex format
-	// index 0: vec3(x, y, z)
-	// index 1: Short.MIN_VALUE (non-array)
-	// index 2: int abhsl
-	// index 3: short vec4(id, x, y, z)
+	// pos float vec3(x, y, z)
+	// alphaBiasHsl int
+	// short tex
+	// uvw short vec3(u, v, w)
 	static final int VERT_SIZE = 24;
 
 	final VBO vbo;
@@ -30,26 +30,33 @@ class VAO {
 		vbo.init();
 		glBindBuffer(GL_ARRAY_BUFFER, vbo.bufId);
 
+		// Position
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
 
-		glEnableVertexAttribArray(1);
-		glVertexAttribIPointer(1, 1, GL_INT, VERT_SIZE, 12);
+		// UVs
+		glVertexAttrib3f(1, 0, 0, 0);
+//		glEnableVertexAttribArray(1);
+//		glVertexAttribPointer(1, 3, GL_SHORT, false, VERT_SIZE, 6);
 
-		// TODO: UVs
+		// Normals
 		glVertexAttrib3f(2, 0, 0, 0);
 //		glEnableVertexAttribArray(2);
-//		glVertexAttribPointer(2, 3, GL_FLOAT, false, 16, 0);
+//		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
 
-		// TODO: Materials
-		glVertexAttribI1i(3, 0);
-//		glEnableVertexAttribArray(3);
-//		glVertexAttribIPointer(3, 1, GL_INT, 16, 12);
+		// Alpha, bias & HSL
+		glEnableVertexAttribArray(3);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 12);
 
-		// TODO: Normals
-		glVertexAttrib4f(4, 0, 0, 0, 0);
+		// Material data
+		glVertexAttribI1i(4, 0);
 //		glEnableVertexAttribArray(4);
-//		glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
+//		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 24);
+
+		// Terrain data
+		glVertexAttribI1i(5, 0);
+//		glEnableVertexAttribArray(5);
+//		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);

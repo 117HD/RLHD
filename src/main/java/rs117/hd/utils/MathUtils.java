@@ -542,22 +542,22 @@ public class MathUtils {
 		return min(max(v, min), max);
 	}
 
-	public static float[] clamp(float[] out, float[] v, float[] min, float... max) {
+	public static float[] clamp(float[] out, float[] v, float[] min, float[] max) {
 		for (int i = 0; i < out.length; i++)
 			out[i] = clamp(v[i % v.length], min[i % min.length], max[i % max.length]);
 		return out;
 	}
 
-	public static float[] clamp(float[] out, float[] v, float min, float... max) {
-		return clamp(out, v, vec(min), max);
+	public static float[] clamp(float[] out, float[] v, float min, float max) {
+		return clamp(out, v, vec(min), vec(max));
 	}
 
-	public static float[] clamp(float[] v, float[] min, float... max) {
+	public static float[] clamp(float[] v, float[] min, float[] max) {
 		return clamp(new float[max(v.length, min.length, max.length)], v, min, max);
 	}
 
-	public static float[] clamp(float[] v, float min, float... max) {
-		return clamp(new float[max(v.length, max.length)], v, vec(min), max);
+	public static float[] clamp(float[] v, float min, float max) {
+		return clamp(new float[v.length], v, vec(min), vec(max));
 	}
 
 	public static float saturate(float v) {

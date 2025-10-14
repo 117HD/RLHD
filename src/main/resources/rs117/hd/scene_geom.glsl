@@ -36,10 +36,11 @@ layout(triangle_strip, max_vertices = 3) out;
 #include <utils/color_utils.glsl>
 
 in vec3 gPosition[3];
-in int gAlphaBiasHsl[3];
 in vec3 gUv[3];
+in vec3 gNormal[3];
+in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
-in vec4 gNormal[3];
+in int gTerrainData[3];
 
 flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
@@ -63,7 +64,7 @@ void main() {
         vAlphaBiasHsl[i] = gAlphaBiasHsl[i];
         vUv[i] = gUv[i];
         vMaterialData[i] = gMaterialData[i];
-        vTerrainData[i] = int(gNormal[i].w);
+        vTerrainData[i] = gTerrainData[i];
     }
 
     computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
@@ -88,7 +89,7 @@ void main() {
     for (int i = 0; i < 3; i++) {
         vec4 pos = vec4(gPosition[i], 1);
         // Flat normals must be applied separately per vertex
-        vec3 normal = gNormal[i].xyz;
+        vec3 normal = gNormal[i];
 
         OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
@@ -101,7 +102,7 @@ void main() {
         OUT.texBlend[i] = 1;
 
         pos = projectionMatrix * pos;
-        #if RENDERER == ZONE_RENDERER
+        #if ZONE_RENDERER
             int depthBias = (gAlphaBiasHsl[i] >> 16) & 0xff;
             pos.z += depthBias / 128.0;
         #endif

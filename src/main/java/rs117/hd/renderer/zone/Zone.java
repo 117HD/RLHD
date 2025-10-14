@@ -28,11 +28,11 @@ class Zone {
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
+	// normal short vec3(nx, ny, nz)
 	// alphaBiasHsl int
 	// materialData int
-	// normal short vec3(x, y, z)
 	// terrainData int
-	static final int VERT_SIZE = 20;
+	static final int VERT_SIZE = 32;
 
 	int glVao;
 	int bufLen;
@@ -120,24 +120,29 @@ class Zone {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
+		// Position
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 3, GL_SHORT, false, VERT_SIZE, 0);
 
+		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribIPointer(1, 1, GL_INT, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 3, GL_SHORT, false, VERT_SIZE, 6);
 
-		// TODO: Currently only vanilla UVs
+		// Normals
 		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 6);
+		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
 
-		// TODO: Materials
+		// Alpha, bias & HSL
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 16);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 20);
 
-		// TODO: Normals
-		glVertexAttrib4f(4, 0, 0, 0, 0);
-//		glEnableVertexAttribArray(4);
-//		glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
+		// Material data
+		glEnableVertexAttribArray(4);
+		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 24);
+
+		// Terrain data
+		glEnableVertexAttribArray(5);
+		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
 
 		checkGLErrors();
 

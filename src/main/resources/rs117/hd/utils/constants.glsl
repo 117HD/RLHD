@@ -5,6 +5,12 @@
 #define HALF_PI (.5*PI)
 #define TAU (2*PI)
 
+#define SHORT_MAX 32767 // 2^15 - 1
+
+#include RENDERER
+#define LEGACY_RENDERER (RENDERER == 0)
+#define ZONE_RENDERER (RENDERER == 1)
+
 // Any changes here may need to be reflected in OpenCL's constants.cl
 // They are kept separate to avoid accidentally breaking OpenCL compatibility
 #define MATERIAL_INDEX_SHIFT 20
@@ -39,10 +45,6 @@
 #else
     #define SHADOW_DEFAULT_OPACITY_THRESHOLD 0.71 // Lowest while keeping Prifddinas glass walkways transparent
 #endif
-
-#include RENDERER
-#define LEGACY_RENDERER 0
-#define ZONE_RENDERER 1
 
 #include VANILLA_COLOR_BANDING
 #include UNDO_VANILLA_SHADING

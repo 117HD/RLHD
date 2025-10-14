@@ -98,8 +98,6 @@ import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
-import rs117.hd.renderer.legacy.LegacyRenderer;
-import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -587,26 +585,11 @@ public class HdPlugin extends Plugin {
 				materialManager.startUp();
 				waterTypeManager.startUp();
 
-				int gpuFlags = DrawCallbacks.GPU;
+				renderer = injector.getInstance(config.renderer().rendererClass);
+				renderer.initialize();
+				int gpuFlags = DrawCallbacks.GPU | renderer.getGpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
-
-				Class<? extends Renderer> rendererClass;
-				switch (config.renderer()) {
-					case ZONE:
-						rendererClass = ZoneRenderer.class;
-						gpuFlags |= DrawCallbacks.ZBUF;
-						break;
-					case LEGACY:
-					default:
-						gpuFlags |=
-							DrawCallbacks.HILLSKEW |
-							DrawCallbacks.NORMALS;
-						rendererClass = LegacyRenderer.class;
-						break;
-				}
-				renderer = injector.getInstance(rendererClass);
-				renderer.initialize();
 
 				initPrograms();
 				initShaderHotswapping();

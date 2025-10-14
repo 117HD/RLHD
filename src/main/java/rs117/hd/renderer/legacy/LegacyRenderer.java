@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.plugins.PluginManager;
@@ -207,6 +208,11 @@ public class LegacyRenderer implements Renderer {
 	private LegacySceneContext nextSceneContext;
 
 	@Override
+	public int getGpuFlags() {
+		return DrawCallbacks.NORMALS | DrawCallbacks.HILLSKEW;
+	}
+
+	@Override
 	public void initialize() {
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;
@@ -366,25 +372,35 @@ public class LegacyRenderer implements Renderer {
 	public void updateSceneVao(GLBuffer vertexBuffer, GLBuffer uvBuffer, GLBuffer normalBuffer) {
 		glBindVertexArray(vaoScene);
 
+		// Position
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.id);
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, 16, 0);
 
+		// UVs
 		glEnableVertexAttribArray(1);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.id);
-		glVertexAttribIPointer(1, 1, GL_INT, 16, 12);
-
-		glEnableVertexAttribArray(2);
 		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
+		glVertexAttribPointer(1, 3, GL_FLOAT, false, 16, 0);
+
+		// Normals
+		glEnableVertexAttribArray(2);
+		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.id);
 		glVertexAttribPointer(2, 3, GL_FLOAT, false, 16, 0);
 
+		// Alpha, HSL
 		glEnableVertexAttribArray(3);
-		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
+		glBindBuffer(GL_ARRAY_BUFFER, vertexBuffer.id);
 		glVertexAttribIPointer(3, 1, GL_INT, 16, 12);
 
+		// Material data
 		glEnableVertexAttribArray(4);
+		glBindBuffer(GL_ARRAY_BUFFER, uvBuffer.id);
+		glVertexAttribIPointer(4, 1, GL_INT, 16, 12);
+
+		// Terrain data
+		glEnableVertexAttribArray(5);
 		glBindBuffer(GL_ARRAY_BUFFER, normalBuffer.id);
-		glVertexAttribPointer(4, 4, GL_FLOAT, false, 0, 0);
+		glVertexAttribIPointer(5, 1, GL_INT, 16, 12);
 	}
 
 	private void initBuffers() {

@@ -25,6 +25,7 @@
 package rs117.hd.renderer.zone;
 
 import com.google.common.base.Stopwatch;
+import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -90,6 +91,9 @@ import static rs117.hd.utils.MathUtils.*;
 public class ZoneRenderer implements Renderer {
 	private static final int NUM_ZONES = Constants.EXTENDED_SCENE_SIZE >> 3;
 	private static final int MAX_WORLDVIEWS = 4096;
+
+	@Inject
+	private Injector injector;
 
 	@Inject
 	private Client client;
@@ -237,6 +241,11 @@ public class ZoneRenderer implements Renderer {
 	static int uniEntityProj;
 	static int uniEntityTint;
 	static int uniBase;
+
+	@Override
+	public int getGpuFlags() {
+		return DrawCallbacks.ZBUF | DrawCallbacks.NORMALS;
+	}
 
 	@Override
 	public void initialize() {
@@ -1167,7 +1176,7 @@ public class ZoneRenderer implements Renderer {
 
 	private void rebuild(WorldView wv) {
 		WorldViewContext ctx = context(wv);
-		if (ctx == null) {
+		if (ctx == null || sceneContext == null) {
 			return;
 		}
 
@@ -1183,7 +1192,7 @@ public class ZoneRenderer implements Renderer {
 				zone = ctx.zones[x][z] = new Zone();
 
 				Scene scene = wv.getScene();
-				SceneUploader sceneUploader = new SceneUploader(materialManager);
+				SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 				sceneUploader.zoneSize(scene, zone, x, z);
 
 				VBO o = null, a = null;
@@ -1203,7 +1212,7 @@ public class ZoneRenderer implements Renderer {
 
 				zone.init(o, a);
 
-				sceneUploader.uploadZone(scene, zone, x, z);
+				sceneUploader.uploadZone(sceneContext, zone, x, z);
 
 				zone.unmap();
 				zone.initialized = true;
@@ -1353,6 +1362,7 @@ public class ZoneRenderer implements Renderer {
 			nextSceneContext.forceDisableAreaHiding = sceneContext != null && sceneContext.forceDisableAreaHiding;
 
 			environmentManager.loadSceneEnvironments(nextSceneContext);
+			proceduralGenerator.generateSceneData(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error(
 				"Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
@@ -1448,7 +1458,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		// size the zones which require upload
-		SceneUploader sceneUploader = new SceneUploader(materialManager);
+		SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 		Stopwatch sw = Stopwatch.createStarted();
 		int len = 0, lena = 0;
 		int reused = 0, newzones = 0;
@@ -1520,11 +1530,12 @@ public class ZoneRenderer implements Renderer {
 				Zone zone = newZones[x][z];
 
 				if (!zone.initialized) {
-					sceneUploader.uploadZone(scene, zone, x, z);
+					sceneUploader.uploadZone(nextSceneContext, zone, x, z);
 				}
 			}
 		}
 		log.debug("Scene upload time {}", sw);
+		proceduralGenerator.clearSceneData(nextSceneContext);
 
 		// Roof ids aren't consistent between scenes, so build a mapping of old -> new roof ids
 		Map<Integer, Integer> roofChanges;
@@ -1603,10 +1614,13 @@ public class ZoneRenderer implements Renderer {
 		}
 		assert ctx0 == null;
 
+		var subSceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
+		proceduralGenerator.generateSceneData(subSceneContext);
+
 		final WorldViewContext ctx = new WorldViewContext(worldView.getSizeX() >> 3, worldView.getSizeY() >> 3);
 		subs[worldViewId] = ctx;
 
-		SceneUploader sceneUploader = new SceneUploader(materialManager);
+		SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 		for (int x = 0; x < ctx.sizeX; ++x) {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
 				Zone zone = ctx.zones[x][z];
@@ -1653,9 +1667,11 @@ public class ZoneRenderer implements Renderer {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
 				Zone zone = ctx.zones[x][z];
 
-				sceneUploader.uploadZone(scene, zone, x, z);
+				sceneUploader.uploadZone(subSceneContext, zone, x, z);
 			}
 		}
+
+		proceduralGenerator.clearSceneData(subSceneContext);
 	}
 
 	@Override

@@ -28,21 +28,24 @@
 #include <uniforms/global.glsl>
 
 layout (location = 0) in vec3 vPosition;
-layout (location = 1) in int vAlphaBiasHsl;
-layout (location = 2) in vec3 vUv;
-layout (location = 3) in int vMaterialData;
-layout (location = 4) in vec4 vNormal;
+layout (location = 1) in vec3 vUv;
+layout (location = 2) in vec3 vNormal;
+layout (location = 3) in int vAlphaBiasHsl;
+layout (location = 4) in int vMaterialData;
+layout (location = 5) in int vTerrainData;
 
 out vec3 gPosition;
-out int gAlphaBiasHsl;
 out vec3 gUv;
+out vec3 gNormal;
+out int gAlphaBiasHsl;
 out int gMaterialData;
-out vec4 gNormal;
+out int gTerrainData;
 
 void main() {
     gPosition = sceneBase + vPosition;
-    gAlphaBiasHsl = vAlphaBiasHsl;
     gUv = vUv;
-    gMaterialData = vMaterialData;
     gNormal = vNormal;
+    gAlphaBiasHsl = vAlphaBiasHsl;
+    gMaterialData = vMaterialData;
+    gTerrainData = vTerrainData;
 }

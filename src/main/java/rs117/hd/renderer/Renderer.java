@@ -8,6 +8,9 @@ import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.scene.SceneContext;
 
 public interface Renderer extends DrawCallbacks {
+	default int getGpuFlags() {
+		return 0;
+	}
 	default void initialize() {}
 	default void destroy() {}
 	default void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {}

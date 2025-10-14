@@ -25,6 +25,8 @@
  */
 #include <uniforms/global.glsl>
 
+#include <utils/constants.glsl>
+
 void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
     if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
         // Treat the input uvw as a normal vector for a plane that goes through origo,
@@ -41,7 +43,7 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
         for (int i = 0; i < 3; i++)
             uvw[i].xy = (TBN * pos[i]).xy / 128. * scale;
     } else if ((materialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
-        #if RENDERER == ZONE_RENDERER
+        #if ZONE_RENDERER
             // Vanilla UVs are relative to vertex positions
             for (int i = 0; i < 3; i++)
                 uvw[i] += pos[i];
@@ -73,5 +75,11 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
                 dot(perpv2, v) * dv
             );
         }
+    } else {
+        #if ZONE_RENDERER
+            // Other UVs range from -100 to 100, encoded as shorts
+            for (int i = 0; i < 3; i++)
+                uvw[i] *= 100.f / SHORT_MAX;
+        #endif
     }
 }

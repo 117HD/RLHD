@@ -734,7 +734,7 @@ public class LegacySceneUploader {
 				swVertexIsOverlay = true;
 
 
-			float terrainData = (float) packTerrainData(true, 0, waterType, tileZ);
+			float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
 			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], terrainData);
@@ -866,10 +866,10 @@ public class LegacySceneUploader {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			float swTerrainData = (float) packTerrainData(true, max(1, swDepth), waterType, tileZ);
-			float seTerrainData = (float) packTerrainData(true, max(1, seDepth), waterType, tileZ);
-			float nwTerrainData = (float) packTerrainData(true, max(1, nwDepth), waterType, tileZ);
-			float neTerrainData = (float) packTerrainData(true, max(1, neDepth), waterType, tileZ);
+			float swTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, swDepth), waterType, tileZ));
+			float seTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, seDepth), waterType, tileZ));
+			float nwTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, nwDepth), waterType, tileZ));
+			float neTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, neDepth), waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(24);
 			sceneContext.stagingBufferNormals.put(neNormals[0], neNormals[2], neNormals[1], neTerrainData);
@@ -1093,7 +1093,7 @@ public class LegacySceneUploader {
 					localVertices[i][2] -= override.heightOffset;
 			}
 
-			float terrainData = (float) packTerrainData(true, 0, waterType, tileZ);
+			float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, waterType, tileZ));
 
 			sceneContext.stagingBufferNormals.ensureCapacity(12);
 			sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], terrainData);
@@ -1225,9 +1225,9 @@ public class LegacySceneUploader {
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 
-				float aTerrainData = (float) packTerrainData(true, max(1, depthA), waterType, tileZ);
-				float bTerrainData = (float) packTerrainData(true, max(1, depthB), waterType, tileZ);
-				float cTerrainData = (float) packTerrainData(true, max(1, depthC), waterType, tileZ);
+				float aTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, depthA), waterType, tileZ));
+				float bTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, depthB), waterType, tileZ));
+				float cTerrainData = Float.intBitsToFloat(packTerrainData(true, max(1, depthC), waterType, tileZ));
 
 				sceneContext.stagingBufferNormals.ensureCapacity(12);
 				sceneContext.stagingBufferNormals.put(normalsA[0], normalsA[2], normalsA[1], aTerrainData);
@@ -1287,7 +1287,7 @@ public class LegacySceneUploader {
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
 		int nwHeight = tileHeights[tileZ][tileExX][tileExY + 1];
 
-		float terrainData = (float) packTerrainData(true, 0, WaterType.NONE, tileZ);
+		float terrainData = Float.intBitsToFloat(packTerrainData(true, 0, WaterType.NONE, tileZ));
 
 		sceneContext.stagingBufferNormals.ensureCapacity(24);
 		sceneContext.stagingBufferNormals.put(0, -1, 0, terrainData);
