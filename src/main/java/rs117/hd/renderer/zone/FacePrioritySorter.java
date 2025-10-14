@@ -450,6 +450,8 @@ class FacePrioritySorter {
 			material = textureMaterial;
 			if (material == Material.NONE)
 				material = materialManager.fromVanillaTexture(textureId);
+
+			color1 = color2 = color3 = 90;
 		}
 
 		ModelOverride faceOverride = modelOverride;
