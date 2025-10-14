@@ -563,56 +563,56 @@ class SceneUploader {
 		if (tile.isFlat()) {
 			vertexBuffer.putVertex(
 				lx2, ly2, lz2, hsl2,
-				lx0 - lx2, ly0 - ly2, lz0 - lz2, materialData,
+				lx0, ly0, lz0, materialData,
 				0, 0, 0, 0
 			);
 
 			vertexBuffer.putVertex(
 				lx3, ly3, lz3, hsl3,
-				lx1 - lx3, ly1 - ly3, lz1 - lz3, materialData,
+				lx1, ly1, lz1, materialData,
 				0, 0, 0, 0
 			);
 
 			vertexBuffer.putVertex(
 				lx1, ly1, lz1, hsl1,
-				lx3 - lx1, ly3 - ly1, lz3 - lz1, materialData,
+				lx3, ly3, lz3, materialData,
 				0, 0, 0, 0
 			);
 		} else {
 			vertexBuffer.putVertex(
 				lx2, ly2, lz2, hsl2,
-				lx2 - lx2, ly2 - ly2, lz2 - lz2, materialData,
+				lx2, ly2, lz2, materialData,
 				0, 0, 0, 0
 			);
 
 			vertexBuffer.putVertex(
 				lx3, ly3, lz3, hsl3,
-				lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData,
+				lx3, ly3, lz3, materialData,
 				0, 0, 0, 0
 			);
 
 			vertexBuffer.putVertex(
 				lx1, ly1, lz1, hsl1,
-				lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData,
+				lx1, ly1, lz1, materialData,
 				0, 0, 0, 0
 			);
 		}
 
 		vertexBuffer.putVertex(
 			lx0, ly0, lz0, hsl0,
-			lx0 - lx0, ly0 - ly0, lz0 - lz0, materialData,
+			lx0, ly0, lz0, materialData,
 			0, 0, 0, 0
 		);
 
 		vertexBuffer.putVertex(
 			lx1, ly1, lz1, hsl1,
-			lx1 - lx1, ly1 - ly1, lz1 - lz1, materialData,
+			lx1, ly1, lz1, materialData,
 			0, 0, 0, 0
 		);
 
 		vertexBuffer.putVertex(
 			lx3, ly3, lz3, hsl3,
-			lx3 - lx3, ly3 - ly3, lz3 - lz3, materialData,
+			lx3, ly3, lz3, materialData,
 			0, 0, 0, 0
 		);
 
@@ -678,37 +678,37 @@ class SceneUploader {
 			if (sceneTileModel.isFlat()) {
 				vertexBuffer.putVertex(
 					lx0, ly0, lz0, hsl0,
-					vertexX[0] - lx - lx0, vertexY[0] - ly0, vertexZ[0] - lz - lz0, materialData,
+					vertexX[0], vertexY[0], vertexZ[0], materialData,
 					0, 0, 0, 0
 				);
 
 				vertexBuffer.putVertex(
 					lx1, ly1, lz1, hsl1,
-					vertexX[1] - lx - lx1, vertexY[1] - ly1, vertexZ[1] - lz - lz1, materialData,
+					vertexX[1], vertexY[1], vertexZ[1], materialData,
 					0, 0, 0, 0
 				);
 
 				vertexBuffer.putVertex(
 					lx2, ly2, lz2, hsl2,
-					vertexX[3] - lx - lx2, vertexY[3] - ly2, vertexZ[3] - lz - lz2, materialData,
+					vertexX[3], vertexY[3], vertexZ[3], materialData,
 					0, 0, 0, 0
 				);
 			} else {
 				vertexBuffer.putVertex(
 					lx0, ly0, lz0, hsl0,
-					vertexX[vertex0] - lx - lx0, vertexY[vertex0] - ly0, vertexZ[vertex0] - lz - lz0, materialData,
+					vertexX[vertex0], vertexY[vertex0], vertexZ[vertex0], materialData,
 					0, 0, 0, 0
 				);
 
 				vertexBuffer.putVertex(
 					lx1, ly1, lz1, hsl1,
-					vertexX[vertex1] - lx - lx1, vertexY[vertex1] - ly1, vertexZ[vertex1] - lz - lz1, materialData,
+					vertexX[vertex1], vertexY[vertex1], vertexZ[vertex1], materialData,
 					0, 0, 0, 0
 				);
 
 				vertexBuffer.putVertex(
 					lx2, ly2, lz2, hsl2,
-					vertexX[vertex2] - lx - lx2, vertexY[vertex2] - ly2, vertexZ[vertex2] - lz - lz2, materialData,
+					vertexX[vertex2], vertexY[vertex2], vertexZ[vertex2], materialData,
 					0, 0, 0, 0
 				);
 			}
@@ -877,17 +877,17 @@ class SceneUploader {
 			int[] uvs;
 			if (uvType == UvType.VANILLA) {
 				uvs = new int[] {
-					modelLocalXI[texA] - vx1,
-					modelLocalYI[texA] - vy1,
-					modelLocalZI[texA] - vz1,
+					modelLocalXI[texA],
+					modelLocalYI[texA],
+					modelLocalZI[texA],
 					0,
-					modelLocalXI[texB] - vx2,
-					modelLocalYI[texB] - vy2,
-					modelLocalZI[texB] - vz2,
+					modelLocalXI[texB],
+					modelLocalYI[texB],
+					modelLocalZI[texB],
 					0,
-					modelLocalXI[texC] - vx3,
-					modelLocalYI[texC] - vy3,
-					modelLocalZI[texC] - vz3,
+					modelLocalXI[texC],
+					modelLocalYI[texC],
+					modelLocalZI[texC],
 					0
 				};
 			} else {
@@ -1128,17 +1128,17 @@ class SceneUploader {
 			int[] uvs;
 			if (uvType == UvType.VANILLA) {
 				uvs = new int[] {
-					(int) (modelLocalX[texA] - vx1),
-					(int) (modelLocalY[texA] - vy1),
-					(int) (modelLocalZ[texA] - vz1),
+					round(modelLocalX[texA]),
+					round(modelLocalY[texA]),
+					round(modelLocalZ[texA]),
 					0,
-					(int) (modelLocalX[texB] - vx2),
-					(int) (modelLocalY[texB] - vy2),
-					(int) (modelLocalZ[texB] - vz2),
+					round(modelLocalX[texB]),
+					round(modelLocalY[texB]),
+					round(modelLocalZ[texB]),
 					0,
-					(int) (modelLocalX[texC] - vx3),
-					(int) (modelLocalY[texC] - vy3),
-					(int) (modelLocalZ[texC] - vz3),
+					round(modelLocalX[texC]),
+					round(modelLocalY[texC]),
+					round(modelLocalZ[texC]),
 					0
 				};
 			} else {

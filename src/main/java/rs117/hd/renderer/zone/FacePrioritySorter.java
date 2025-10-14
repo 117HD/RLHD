@@ -488,17 +488,17 @@ class FacePrioritySorter {
 		int[] uvs;
 		if (uvType == UvType.VANILLA) {
 			uvs = new int[] {
-				(int) (modelLocalX[texA] - vx1),
-				(int) (modelLocalY[texA] - vy1),
-				(int) (modelLocalZ[texA] - vz1),
+				round(modelLocalX[texA]),
+				round(modelLocalY[texA]),
+				round(modelLocalZ[texA]),
 				0,
-				(int) (modelLocalX[texB] - vx2),
-				(int) (modelLocalY[texB] - vy2),
-				(int) (modelLocalZ[texB] - vz2),
+				round(modelLocalX[texB]),
+				round(modelLocalY[texB]),
+				round(modelLocalZ[texB]),
 				0,
-				(int) (modelLocalX[texC] - vx3),
-				(int) (modelLocalY[texC] - vy3),
-				(int) (modelLocalZ[texC] - vz3),
+				round(modelLocalX[texC]),
+				round(modelLocalY[texC]),
+				round(modelLocalZ[texC]),
 				0
 			};
 		} else {
