@@ -9,12 +9,14 @@ import net.runelite.api.*;
 import static org.lwjgl.opengl.GL33C.*;
 
 class VAO {
-	// Temporary vertex format
+	// Zone vertex format
 	// pos float vec3(x, y, z)
-	// alphaBiasHsl int
-	// short tex
 	// uvw short vec3(u, v, w)
-	static final int VERT_SIZE = 24;
+	// normal short vec3(nx, ny, nz)
+	// alphaBiasHsl int
+	// materialData int
+	// terrainData int
+	static final int VERT_SIZE = 36;
 
 	final VBO vbo;
 	int vao;
@@ -35,28 +37,24 @@ class VAO {
 		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
 
 		// UVs
-		glVertexAttrib3f(1, 0, 0, 0);
-//		glEnableVertexAttribArray(1);
-//		glVertexAttribPointer(1, 3, GL_SHORT, false, VERT_SIZE, 6);
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_SHORT, false, VERT_SIZE, 12);
 
 		// Normals
-		glVertexAttrib3f(2, 0, 0, 0);
-//		glEnableVertexAttribArray(2);
-//		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 12);
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
 
 		// Alpha, bias & HSL
 		glEnableVertexAttribArray(3);
-		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 12);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
 
 		// Material data
-		glVertexAttribI1i(4, 0);
-//		glEnableVertexAttribArray(4);
-//		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 24);
+		glEnableVertexAttribArray(4);
+		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 28);
 
 		// Terrain data
-		glVertexAttribI1i(5, 0);
-//		glEnableVertexAttribArray(5);
-//		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
+		glEnableVertexAttribArray(5);
+		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);

@@ -60,7 +60,6 @@ import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
-import rs117.hd.renderer.legacy.LegacySceneUploader;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -75,9 +74,11 @@ import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
+import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -153,7 +154,7 @@ public class ZoneRenderer implements Renderer {
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private LegacySceneUploader sceneUploader;
+	private SceneUploader sceneUploader;
 
 	@Inject
 	private ModelPusher modelPusher;
@@ -1061,19 +1062,27 @@ public class ZoneRenderer implements Renderer {
 			worldProjection, scene, tileObject, r, m, orient, x, y, z
 		);
 		WorldViewContext ctx = context(scene);
-		if (ctx == null) {
+		if (ctx == null || sceneContext == null) {
 			return;
 		}
+
+		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
+		int[] worldPos = sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		if (modelOverride.hide)
+			return;
+
+		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		if (m.getFaceTransparencies() == null) {
 			VAO o = vaoO.get(size);
-			SceneUploader.uploadTempModel(m, orient, x, y, z, o.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb);
 		} else {
 			m.calculateBoundsCylinder();
 			VAO o = vaoO.get(size), a = vaoA.get(size);
 			int start = a.vbo.vb.position();
-			facePrioritySorter.uploadSortedModel(worldProjection, m, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			facePrioritySorter.uploadSortedModel(worldProjection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
 			int end = a.vbo.vb.position();
 
 			if (end > start) {
@@ -1091,16 +1100,25 @@ public class ZoneRenderer implements Renderer {
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m) {
 		log.trace("drawTemp({}, {}, gameObject={}, model={})", worldProjection, scene, gameObject, m);
 		WorldViewContext ctx = context(scene);
-		if (ctx == null) {
+		if (ctx == null || sceneContext == null) {
 			return;
 		}
 
+		Renderable renderable = gameObject.getRenderable();
+		int uuid = ModelHash.generateUuid(client, gameObject.getHash(), renderable);
+		int[] worldPos = sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane());
+		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		if (modelOverride.hide)
+			return;
+
+		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
+
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		if (gameObject.getRenderable() instanceof Player || m.getFaceTransparencies() != null) {
+		if (renderable instanceof Player || m.getFaceTransparencies() != null) {
 			// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 			// because they are not depth tested. transparent player faces don't need their own vao because normal
 			// transparent faces are already not depth tested
-			VAO o = gameObject.getRenderable() instanceof Player ? vaoPO.get(size) : vaoO.get(size);
+			VAO o = renderable instanceof Player ? vaoPO.get(size) : vaoO.get(size);
 			VAO a = vaoA.get(size);
 
 			int start = a.vbo.vb.position();
@@ -1109,6 +1127,8 @@ public class ZoneRenderer implements Renderer {
 				facePrioritySorter.uploadSortedModel(
 					worldProjection,
 					m,
+					modelOverride,
+					preOrientation,
 					gameObject.getModelOrientation(),
 					gameObject.getX(),
 					gameObject.getZ(),
@@ -1132,14 +1152,16 @@ public class ZoneRenderer implements Renderer {
 					end,
 					gameObject.getPlane(),
 					gameObject.getX() & 1023,
-					gameObject.getZ() - gameObject.getRenderable().getModelHeight() /* to render players over locs */,
+					gameObject.getZ() - renderable.getModelHeight() /* to render players over locs */,
 					gameObject.getY() & 1023
 				);
 			}
 		} else {
 			VAO o = vaoO.get(size);
-			SceneUploader.uploadTempModel(
+			sceneUploader.uploadTempModel(
 				m,
+				modelOverride,
+				preOrientation,
 				gameObject.getModelOrientation(),
 				gameObject.getX(),
 				gameObject.getZ(),

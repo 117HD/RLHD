@@ -116,6 +116,18 @@ public class HDUtils {
 		return -1;
 	}
 
+	public static int getObjectConfig(TileObject tileObject) {
+		if (tileObject instanceof WallObject)
+			return ((WallObject) tileObject).getConfig();
+		if (tileObject instanceof DecorativeObject)
+			return ((DecorativeObject) tileObject).getConfig();
+		if (tileObject instanceof GroundObject)
+			return ((GroundObject) tileObject).getConfig();
+		if (tileObject instanceof GameObject)
+			return ((GameObject) tileObject).getConfig();
+		return -1;
+	}
+
 	/**
 	 * Computes the orientation used when uploading the model.
 	 * This does not include the extra 45-degree rotation of diagonal models.

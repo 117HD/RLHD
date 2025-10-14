@@ -28,11 +28,17 @@ import java.nio.IntBuffer;
 import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.RequiredArgsConstructor;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
+import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.materials.Material;
+import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.UvType;
+import rs117.hd.utils.buffer.GpuIntBuffer;
+
+import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
 class FacePrioritySorter {
 	static final int[] distances;
 	static final char[] distanceFaceCount;
@@ -75,11 +81,20 @@ class FacePrioritySorter {
 		orderedFaces = new int[12][MAX_FACES_PER_PRIORITY];
 	}
 
-	private final Client client;
+	@Inject
+	private Client client;
+
+	@Inject
+	private HdPlugin plugin;
+
+	@Inject
+	private MaterialManager materialManager;
 
 	int uploadSortedModel(
 		Projection proj,
 		Model model,
+		ModelOverride modelOverride,
+		int preOrientation,
 		int orientation,
 		int x,
 		int y,
@@ -183,7 +198,7 @@ class FacePrioritySorter {
 
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
-						len += pushFace(model, face, opaqueBuffer, alphaBuffer);
+						len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
 					}
 				}
 			}
@@ -249,7 +264,7 @@ class FacePrioritySorter {
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -267,7 +282,7 @@ class FacePrioritySorter {
 
 				while (pri == 3 && currFaceDistance > avg34) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -285,7 +300,7 @@ class FacePrioritySorter {
 
 				while (pri == 5 && currFaceDistance > avg68) {
 					final int face = dynFaces[drawnFaces++];
-					len += pushFace(model, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
 
 					if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 						drawnFaces = 0;
@@ -306,13 +321,13 @@ class FacePrioritySorter {
 
 				for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
 					final int face = priFaces[faceIdx];
-					len += pushFace(model, face, opaqueBuffer, alphaBuffer);
+					len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
 				}
 			}
 
 			while (currFaceDistance != -1000) {
 				final int face = dynFaces[drawnFaces++];
-				len += pushFace(model, face, opaqueBuffer, alphaBuffer);
+				len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
 
 				if (drawnFaces == numDynFaces && dynFaces != orderedFaces[11]) {
 					drawnFaces = 0;
@@ -332,7 +347,14 @@ class FacePrioritySorter {
 		return len;
 	}
 
-	private int pushFace(Model model, int face, IntBuffer opaqueBuffer, IntBuffer alphaBuffer) {
+	private int pushFace(
+		Model model,
+		ModelOverride modelOverride,
+		int preOrientation,
+		int face,
+		IntBuffer opaqueBuffer,
+		IntBuffer alphaBuffer
+	) {
 		final int[] indices1 = model.getFaceIndices1();
 		final int[] indices2 = model.getFaceIndices2();
 		final int[] indices3 = model.getFaceIndices3();
@@ -354,6 +376,22 @@ class FacePrioritySorter {
 
 		final byte[] transparencies = model.getFaceTransparencies();
 		final byte[] bias = model.getFaceBias();
+
+
+		boolean isVanillaTextured = faceTextures != null;
+		boolean isVanillaUVMapped =
+			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
+			model.getTextureFaces() != null;
+
+		Material baseMaterial = modelOverride.baseMaterial;
+		Material textureMaterial = modelOverride.textureMaterial;
+		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
+		if (disableTextures) {
+			if (baseMaterial.modifiesVanillaTexture)
+				baseMaterial = Material.NONE;
+			if (textureMaterial.modifiesVanillaTexture)
+				textureMaterial = Material.NONE;
+		}
 
 		final int triangleA = indices1[face];
 		final int triangleB = indices2[face];
@@ -392,7 +430,7 @@ class FacePrioritySorter {
 
 		int texA, texB, texC;
 
-		if (textureFaces != null && textureFaces[face] != -1) {
+		if (isVanillaUVMapped && textureFaces[face] != -1) {
 			int tface = textureFaces[face] & 0xff;
 			texA = texIndices1[tface];
 			texB = texIndices2[tface];
@@ -403,38 +441,117 @@ class FacePrioritySorter {
 			texC = triangleC;
 		}
 
+		UvType uvType = UvType.GEOMETRY;
+		Material material = baseMaterial;
+
+		int textureId = isVanillaTextured ? faceTextures[face] : -1;
+		if (textureId != -1) {
+			uvType = UvType.VANILLA;
+			material = textureMaterial;
+			if (material == Material.NONE)
+				material = materialManager.fromVanillaTexture(textureId);
+		}
+
+		ModelOverride faceOverride = modelOverride;
+		if (!disableTextures) {
+			if (modelOverride.materialOverrides != null) {
+				var override = modelOverride.materialOverrides.get(material);
+				if (override != null) {
+					faceOverride = override;
+					material = faceOverride.textureMaterial;
+				}
+			}
+
+			// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
+			if (modelOverride.colorOverrides != null) {
+				int ahsl = (transparencies == null ? 0xFF : 0xFF - (transparencies[face] & 0xFF)) << 16 | faceColors1[face];
+				for (var override : modelOverride.colorOverrides) {
+					if (override.ahslCondition.test(ahsl)) {
+						faceOverride = override;
+						material = faceOverride.baseMaterial;
+						break;
+					}
+				}
+			}
+		}
+
+		if (material != Material.NONE) {
+			uvType = faceOverride.uvType;
+			if (uvType == UvType.VANILLA || (textureId != -1 && faceOverride.retainVanillaUvs))
+				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
+		}
+
+		int materialData = material.packMaterialData(faceOverride, uvType, false);
+
+		int[] uvs;
+		if (uvType == UvType.VANILLA) {
+			uvs = new int[] {
+				(int) (modelLocalX[texA] - vx1),
+				(int) (modelLocalY[texA] - vy1),
+				(int) (modelLocalZ[texA] - vz1),
+				0,
+				(int) (modelLocalX[texB] - vx2),
+				(int) (modelLocalY[texB] - vy2),
+				(int) (modelLocalZ[texB] - vz2),
+				0,
+				(int) (modelLocalX[texC] - vx3),
+				(int) (modelLocalY[texC] - vy3),
+				(int) (modelLocalZ[texC] - vz3),
+				0
+			};
+		} else {
+			float[] fUvs = new float[12];
+			faceOverride.fillUvsForFace(fUvs, model, preOrientation, uvType, face);
+			// Assume all UVs are in the range [-100, 100], and map that to signed short
+			divide(fUvs, fUvs, 100.f);
+			clamp(fUvs, fUvs, -1, 1);
+			multiply(fUvs, fUvs, Short.MAX_VALUE);
+			uvs = round(fUvs);
+		}
+
+		int[] normals = new int[9];
+		if (!modelOverride.flatNormals && (plugin.configPreserveVanillaNormals || model.getFaceColors3()[face] != -1)) {
+			final int[] xVertexNormals = model.getVertexNormalsX();
+			final int[] yVertexNormals = model.getVertexNormalsY();
+			final int[] zVertexNormals = model.getVertexNormalsZ();
+			if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
+				normals[0] = xVertexNormals[triangleA];
+				normals[1] = yVertexNormals[triangleA];
+				normals[2] = zVertexNormals[triangleA];
+				normals[3] = xVertexNormals[triangleB];
+				normals[4] = yVertexNormals[triangleB];
+				normals[5] = zVertexNormals[triangleB];
+				normals[6] = xVertexNormals[triangleC];
+				normals[7] = yVertexNormals[triangleC];
+				normals[8] = zVertexNormals[triangleC];
+			}
+		}
+
 		int alphaBias = 0;
 		alphaBias |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
 		alphaBias |= bias != null ? (bias[face] & 0xff) << 16 : 0;
-		int texture = faceTextures != null ? faceTextures[face] + 1 : 0;
 
 		var vb = alpha ? alphaBuffer : opaqueBuffer;
 
-		SceneUploader.putfff4(vb, vx1, vy1, vz1, alphaBias | color1);
-		SceneUploader.put2222(
+		GpuIntBuffer.putFloatVertex(
 			vb,
-			texture,
-			(int) modelLocalX[texA] - (int) vx1,
-			(int) modelLocalY[texA] - (int) vy1,
-			(int) modelLocalZ[texA] - (int) vz1
+			vx1, vy1, vz1, alphaBias | color1,
+			uvs[0], uvs[1], uvs[2], materialData,
+			normals[0], normals[1], normals[2], 0
 		);
 
-		SceneUploader.putfff4(vb, vx2, vy2, vz2, alphaBias | color2);
-		SceneUploader.put2222(
+		GpuIntBuffer.putFloatVertex(
 			vb,
-			texture,
-			(int) modelLocalX[texB] - (int) vx2,
-			(int) modelLocalY[texB] - (int) vy2,
-			(int) modelLocalZ[texB] - (int) vz2
+			vx2, vy2, vz2, alphaBias | color2,
+			uvs[4], uvs[5], uvs[6], materialData,
+			normals[3], normals[4], normals[5], 0
 		);
 
-		SceneUploader.putfff4(vb, vx3, vy3, vz3, alphaBias | color3);
-		SceneUploader.put2222(
+		GpuIntBuffer.putFloatVertex(
 			vb,
-			texture,
-			(int) modelLocalX[texC] - (int) vx3,
-			(int) modelLocalY[texC] - (int) vy3,
-			(int) modelLocalZ[texC] - (int) vz3
+			vx3, vy3, vz3, alphaBias | color3,
+			uvs[8], uvs[9], uvs[10], materialData,
+			normals[6], normals[7], normals[8], 0
 		);
 
 		return 3;
