@@ -36,8 +36,6 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
-import static rs117.hd.utils.MathUtils.*;
-
 @Singleton
 class FacePrioritySorter {
 	static final int[] distances;
@@ -485,30 +483,25 @@ class FacePrioritySorter {
 
 		int materialData = material.packMaterialData(faceOverride, uvType, false);
 
-		int[] uvs;
+		float[] uvs;
 		if (uvType == UvType.VANILLA) {
-			uvs = new int[] {
-				(int) (modelLocalX[texA] - vx1),
-				(int) (modelLocalY[texA] - vy1),
-				(int) (modelLocalZ[texA] - vz1),
+			uvs = new float[] {
+				modelLocalX[texA] - vx1,
+				modelLocalY[texA] - vy1,
+				modelLocalZ[texA] - vz1,
 				0,
-				(int) (modelLocalX[texB] - vx2),
-				(int) (modelLocalY[texB] - vy2),
-				(int) (modelLocalZ[texB] - vz2),
+				modelLocalX[texB] - vx2,
+				modelLocalY[texB] - vy2,
+				modelLocalZ[texB] - vz2,
 				0,
-				(int) (modelLocalX[texC] - vx3),
-				(int) (modelLocalY[texC] - vy3),
-				(int) (modelLocalZ[texC] - vz3),
+				modelLocalX[texC] - vx3,
+				modelLocalY[texC] - vy3,
+				modelLocalZ[texC] - vz3,
 				0
 			};
 		} else {
-			float[] fUvs = new float[12];
-			faceOverride.fillUvsForFace(fUvs, model, preOrientation, uvType, face);
-			// Assume all UVs are in the range [-100, 100], and map that to signed short
-			divide(fUvs, fUvs, 100.f);
-			clamp(fUvs, fUvs, -1, 1);
-			multiply(fUvs, fUvs, Short.MAX_VALUE);
-			uvs = round(fUvs);
+			uvs = new float[12];
+			faceOverride.fillUvsForFace(uvs, model, preOrientation, uvType, face);
 		}
 
 		int[] normals = new int[9];

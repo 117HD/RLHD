@@ -38,7 +38,7 @@ class VAO {
 
 		// UVs
 		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_SHORT, false, VERT_SIZE, 12);
+		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
 
 		// Normals
 		glEnableVertexAttribArray(2);

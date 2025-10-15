@@ -46,7 +46,7 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
         #if ZONE_RENDERER
             // Vanilla UVs are relative to vertex positions
             for (int i = 0; i < 3; i++)
-                uvw[i] = uvw[i] + trunc(pos[i]);
+                uvw[i] += pos[i];
         #endif
 
         vec3 v1 = uvw[0];
@@ -75,11 +75,5 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
                 dot(perpv2, v) * dv
             );
         }
-    } else {
-        #if ZONE_RENDERER
-            // Other UVs range from -100 to 100, encoded as shorts
-            for (int i = 0; i < 3; i++)
-                uvw[i] *= 100.f / SHORT_MAX;
-        #endif
     }
 }
