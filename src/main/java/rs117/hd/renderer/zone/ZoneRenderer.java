@@ -231,6 +231,8 @@ public class ZoneRenderer implements Renderer {
 		return subs[wvid];
 	}
 
+	private boolean sceneFboValid;
+
 	private WorldViewContext root;
 	private WorldViewContext[] subs;
 	private Zone[][] nextZones;
@@ -903,8 +905,7 @@ public class ZoneRenderer implements Renderer {
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
 
-//		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, awtContext.getFramebuffer(false));
-//		sceneFboValid = true;
+		sceneFboValid = true;
 
 		if (sceneContext == null)
 			return;
@@ -1264,7 +1265,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		if (plugin.sceneResolution != null && plugin.sceneViewport != null) {
+		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);
 			if (plugin.fboSceneResolve != 0) {
 				// Blit from the scene FBO to the multisample resolve FBO
@@ -1291,6 +1292,10 @@ public class ZoneRenderer implements Renderer {
 				GL_COLOR_BUFFER_BIT,
 				config.sceneScalingMode().glFilter
 			);
+		} else {
+			glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+			glClearColor(0, 0, 0, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
 		}
 
 		plugin.drawUi(overlayColor);
@@ -1322,11 +1327,11 @@ public class ZoneRenderer implements Renderer {
 	@Subscribe
 	public void onGameStateChanged(GameStateChanged gameStateChanged) {
 		GameState state = gameStateChanged.getGameState();
-//		if (state.getState() < GameState.LOADING.getState()) {
-//			// this is to avoid scene fbo blit when going from <loading to >=loading,
-//			// but keep it when doing >loading to loading
-//			sceneFboValid = false;
-//		}
+		if (state.getState() < GameState.LOADING.getState()) {
+			// this is to avoid scene fbo blit when going from <loading to >=loading,
+			// but keep it when doing >loading to loading
+			sceneFboValid = false;
+		}
 //		if (state == GameState.STARTING) {
 //			if (textureArrayId != -1) {
 //				textureManager.freeTextureArray(textureArrayId);
