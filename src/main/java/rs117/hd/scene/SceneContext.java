@@ -35,6 +35,7 @@ public class SceneContext {
 	@Nullable
 	public final int[] sceneBase;
 	public final AABB sceneBounds;
+	public int sceneOffset;
 
 	public boolean enableAreaHiding;
 	public boolean forceDisableAreaHiding;
@@ -60,7 +61,7 @@ public class SceneContext {
 	// Terrain data
 	public Map<Integer, Integer> vertexTerrainColor;
 	public Map<Integer, Material> vertexTerrainTexture;
-	public Map<Integer, float[]> vertexTerrainNormals;
+	public Map<Integer, int[]> vertexTerrainNormals;
 	// Used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
 
@@ -93,6 +94,7 @@ public class SceneContext {
 		this.client = client;
 		this.scene = scene;
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
+		sceneOffset = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
 	}
@@ -134,7 +136,7 @@ public class SceneContext {
 	}
 
 	public int[] extendedSceneToWorld(int sceneExX, int sceneExY, int plane) {
-		return sceneToWorld(sceneExX - SCENE_OFFSET, sceneExY - SCENE_OFFSET, plane);
+		return sceneToWorld(sceneExX - sceneOffset, sceneExY - sceneOffset, plane);
 	}
 
 	public Stream<int[]> worldToLocals(WorldPoint worldPoint) {
@@ -242,8 +244,8 @@ public class SceneContext {
 	 */
 	private AABB findSceneBounds(@Nullable int[] sceneBase) {
 		if (sceneBase != null) {
-			int x = sceneBase[0] - SCENE_OFFSET;
-			int y = sceneBase[1] - SCENE_OFFSET;
+			int x = sceneBase[0] - sceneOffset;
+			int y = sceneBase[1] - sceneOffset;
 			return new AABB(x, y, x + EXTENDED_SCENE_SIZE - 1, y + EXTENDED_SCENE_SIZE - 1);
 		}
 

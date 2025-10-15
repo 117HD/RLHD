@@ -1557,7 +1557,8 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 		log.debug("Scene upload time {}", sw);
-		proceduralGenerator.clearSceneData(nextSceneContext);
+		// TODO: Can't clear since zone invalidation may need it
+//		proceduralGenerator.clearSceneData(nextSceneContext);
 
 		// Roof ids aren't consistent between scenes, so build a mapping of old -> new roof ids
 		Map<Integer, Integer> roofChanges;
@@ -1693,7 +1694,8 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		proceduralGenerator.clearSceneData(subSceneContext);
+		// TODO: Can't clear since zone invalidation may need it
+//		proceduralGenerator.clearSceneData(subSceneContext);
 	}
 
 	@Override

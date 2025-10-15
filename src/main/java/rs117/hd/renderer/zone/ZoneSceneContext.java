@@ -7,7 +7,6 @@ import rs117.hd.scene.SceneContext;
 public class ZoneSceneContext extends SceneContext {
 //	public final WorldView worldView;
 //	public final Zone[][] zones;
-//	public final int sceneOffset;
 //	public final int numZonesX, numZonesY;
 
 	public ZoneSceneContext(
@@ -19,7 +18,8 @@ public class ZoneSceneContext extends SceneContext {
 	) {
 		super(client, scene, expandedMapLoadingChunks);
 //		this.worldView = worldView;
-//		sceneOffset = worldView.getId() == -1 ? SCENE_OFFSET : 0;
+		if (worldView.getId() != -1)
+			sceneOffset = 0;
 //		numZonesX = worldView.getSizeX();
 //		numZonesY = worldView.getSizeY();
 //		zones = new Zone[numZonesX][numZonesY];

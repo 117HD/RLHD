@@ -69,7 +69,7 @@ public class LegacySceneUploader {
 	public static final int SCENE_ID_MASK = 0xFFFF;
 	public static final int EXCLUDED_FROM_SCENE_BUFFER = 0xFFFFFFFF;
 
-	private static final float[] UP_NORMAL = { 0, -1, 0 };
+	private static final int[] UP_NORMAL = { 0, -1, 0 };
 
 	@Inject
 	private Client client;
@@ -608,7 +608,7 @@ public class LegacySceneUploader {
 		int localNeVertexX = localX + LOCAL_TILE_SIZE;
 		int localNeVertexY = localY + LOCAL_TILE_SIZE;
 
-		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(scene, tile);
+		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(sceneContext, tile);
 		int swVertexKey = vertexKeys[0];
 		int seVertexKey = vertexKeys[1];
 		int nwVertexKey = vertexKeys[2];
@@ -645,10 +645,10 @@ public class LegacySceneUploader {
 			Material neMaterial = Material.NONE;
 			Material nwMaterial = Material.NONE;
 
-			float[] swNormals = UP_NORMAL;
-			float[] seNormals = UP_NORMAL;
-			float[] neNormals = UP_NORMAL;
-			float[] nwNormals = UP_NORMAL;
+			int[] swNormals = UP_NORMAL;
+			int[] seNormals = UP_NORMAL;
+			int[] neNormals = UP_NORMAL;
+			int[] nwNormals = UP_NORMAL;
 
 			if (waterType == WaterType.NONE) {
 				if (textureId != -1) {
@@ -711,7 +711,6 @@ public class LegacySceneUploader {
 			else
 			{
 				// set colors for the shoreline to create a foam effect in the water shader
-
 				swColor = seColor = nwColor = neColor = 127;
 
 				if (sceneContext.vertexIsWater.containsKey(swVertexKey) && sceneContext.vertexIsLand.containsKey(swVertexKey))
@@ -826,7 +825,7 @@ public class LegacySceneUploader {
 		int localNeVertexX = LOCAL_TILE_SIZE;
 		int localNeVertexY = LOCAL_TILE_SIZE;
 
-		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(scene, tile);
+		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(sceneContext, tile);
 		int swVertexKey = vertexKeys[0];
 		int seVertexKey = vertexKeys[1];
 		int nwVertexKey = vertexKeys[2];
@@ -847,10 +846,10 @@ public class LegacySceneUploader {
 			int nwDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(nwVertexKey, 0);
 			int neDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(neVertexKey, 0);
 
-			float[] swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, UP_NORMAL);
-			float[] seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, UP_NORMAL);
-			float[] nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, UP_NORMAL);
-			float[] neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, UP_NORMAL);
+			int[] swNormals = sceneContext.vertexTerrainNormals.getOrDefault(swVertexKey, UP_NORMAL);
+			int[] seNormals = sceneContext.vertexTerrainNormals.getOrDefault(seVertexKey, UP_NORMAL);
+			int[] nwNormals = sceneContext.vertexTerrainNormals.getOrDefault(nwVertexKey, UP_NORMAL);
+			int[] neNormals = sceneContext.vertexTerrainNormals.getOrDefault(neVertexKey, UP_NORMAL);
 
 			Material swMaterial = Material.NONE;
 			Material seMaterial = Material.NONE;
@@ -990,9 +989,9 @@ public class LegacySceneUploader {
 			int uvOrientation = 0;
 			float uvScale = 1;
 
-			float[] normalsA = UP_NORMAL;
-			float[] normalsB = UP_NORMAL;
-			float[] normalsC = UP_NORMAL;
+			int[] normalsA = UP_NORMAL;
+			int[] normalsB = UP_NORMAL;
+			int[] normalsC = UP_NORMAL;
 
 			WaterType waterType = WaterType.NONE;
 
@@ -1072,7 +1071,6 @@ public class LegacySceneUploader {
 					}
 				} else {
 					// set colors for the shoreline to create a foam effect in the water shader
-					textureId = -1;
 					colorA = colorB = colorC = 127;
 					if (sceneContext.vertexIsWater.containsKey(vertexKeyA) && sceneContext.vertexIsLand.containsKey(vertexKeyA))
 						colorA = 0;
@@ -1218,9 +1216,9 @@ public class LegacySceneUploader {
 					);
 				}
 
-				float[] normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, UP_NORMAL);
-				float[] normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, UP_NORMAL);
-				float[] normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, UP_NORMAL);
+				int[] normalsA = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyA, UP_NORMAL);
+				int[] normalsB = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyB, UP_NORMAL);
+				int[] normalsC = sceneContext.vertexTerrainNormals.getOrDefault(vertexKeyC, UP_NORMAL);
 
 				int textureId = faceTextures == null ? -1 : faceTextures[face];
 				WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);

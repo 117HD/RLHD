@@ -28,6 +28,8 @@ import java.nio.IntBuffer;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
+import static rs117.hd.utils.MathUtils.*;
+
 public class GpuIntBuffer
 {
 	private IntBuffer buffer;
@@ -94,6 +96,46 @@ public class GpuIntBuffer
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put((u & 0xFFFF) << 16 | z & 0xFFFF);
 		buffer.put((w & 0xFFFF) << 16 | v & 0xFFFF);
+		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
+		buffer.put(nz & 0xFFFF);
+		buffer.put(alphaBiasHsl);
+		buffer.put(materialData);
+		buffer.put(terrainData);
+	}
+
+	public static int normShort(float f) {
+		return round(clamp(f, -1, 1) * Short.MAX_VALUE);
+	}
+
+	private int normUv(float f) {
+		return round(clamp(f / 100.f, -1, 1) * Short.MAX_VALUE);
+	}
+
+	public void putVertex(
+		int x, int y, int z, int alphaBiasHsl,
+		float u, float v, float w, int materialData,
+		float nx, float ny, float nz, int terrainData
+	) {
+		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
+		buffer.put((normUv(u) & 0xFFFF) << 16 | z & 0xFFFF);
+		buffer.put((normUv(w) & 0xFFFF) << 16 | (normUv(v) & 0xFFFF));
+		// This only works with normalized normals
+		buffer.put((normShort(ny) & 0xFFFF) << 16 | (normShort(nx) & 0xFFFF));
+		buffer.put((normShort(nz) & 0xFFFF));
+		buffer.put(alphaBiasHsl);
+		buffer.put(materialData);
+		buffer.put(terrainData);
+	}
+
+	public void putVertex(
+		int x, int y, int z, int alphaBiasHsl,
+		float u, float v, float w, int materialData,
+		int nx, int ny, int nz, int terrainData
+	) {
+		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
+		buffer.put((normUv(u) & 0xFFFF) << 16 | z & 0xFFFF);
+		buffer.put((normUv(w) & 0xFFFF) << 16 | (normUv(v) & 0xFFFF));
+		// Unnormalized normals, assumed to be within short max
 		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
 		buffer.put(nz & 0xFFFF);
 		buffer.put(alphaBiasHsl);
