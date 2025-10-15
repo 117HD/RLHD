@@ -1116,17 +1116,17 @@ class SceneUploader {
 			int[] uvs;
 			if (uvType == UvType.VANILLA) {
 				uvs = new int[] {
-					modelLocalXI[texA],
-					modelLocalYI[texA],
-					modelLocalZI[texA],
+					modelLocalXI[texA] - vx1,
+					modelLocalYI[texA] - vy1,
+					modelLocalZI[texA] - vz1,
 					0,
-					modelLocalXI[texB],
-					modelLocalYI[texB],
-					modelLocalZI[texB],
+					modelLocalXI[texB] - vx2,
+					modelLocalYI[texB] - vy2,
+					modelLocalZI[texB] - vz2,
 					0,
-					modelLocalXI[texC],
-					modelLocalYI[texC],
-					modelLocalZI[texC],
+					modelLocalXI[texC] - vx3,
+					modelLocalYI[texC] - vy3,
+					modelLocalZI[texC] - vz3,
 					0
 				};
 			} else {
@@ -1367,17 +1367,17 @@ class SceneUploader {
 			int[] uvs;
 			if (uvType == UvType.VANILLA) {
 				uvs = new int[] {
-					round(modelLocalX[texA]),
-					round(modelLocalY[texA]),
-					round(modelLocalZ[texA]),
+					(int) (modelLocalX[texA] - vx1),
+					(int) (modelLocalY[texA] - vy1),
+					(int) (modelLocalZ[texA] - vz1),
 					0,
-					round(modelLocalX[texB]),
-					round(modelLocalY[texB]),
-					round(modelLocalZ[texB]),
+					(int) (modelLocalX[texB] - vx2),
+					(int) (modelLocalY[texB] - vy2),
+					(int) (modelLocalZ[texB] - vz2),
 					0,
-					round(modelLocalX[texC]),
-					round(modelLocalY[texC]),
-					round(modelLocalZ[texC]),
+					(int) (modelLocalX[texC] - vx3),
+					(int) (modelLocalY[texC] - vy3),
+					(int) (modelLocalZ[texC] - vz3),
 					0
 				};
 			} else {

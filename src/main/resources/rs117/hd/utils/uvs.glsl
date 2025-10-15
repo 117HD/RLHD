@@ -43,6 +43,12 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
         for (int i = 0; i < 3; i++)
             uvw[i].xy = (TBN * pos[i]).xy / 128. * scale;
     } else if ((materialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+        #if ZONE_RENDERER
+            // Vanilla UVs are relative to vertex positions
+            for (int i = 0; i < 3; i++)
+                uvw[i] = uvw[i] + trunc(pos[i]);
+        #endif
+
         vec3 v1 = uvw[0];
         vec3 v2 = uvw[1] - v1;
         vec3 v3 = uvw[2] - v1;
@@ -54,7 +60,7 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
         float dv = 1.0f / dot(perpv2, v3);
 
         for (int i = 0; i < 3; i++) {
-            vec3 p = pos[i] - sceneBase;
+            vec3 p = pos[i];
             #ifdef USE_VANILLA_UV_PROJECTION
                 // Project vertex positions onto a plane going through the texture triangle
                 vec3 vertexToCamera = cameraPos - p;
