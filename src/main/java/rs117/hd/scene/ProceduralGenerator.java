@@ -54,6 +54,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class ProceduralGenerator {
 	public static final int[] DEPTH_LEVEL_SLOPE = new int[] { 150, 300, 470, 610, 700, 750, 820, 920, 1080, 1300, 1350, 1380 };
+	public static final int MAX_DEPTH = DEPTH_LEVEL_SLOPE[DEPTH_LEVEL_SLOPE.length - 1];
 
 	public static final int VERTICES_PER_FACE = 3;
 	public static final boolean[][] TILE_OVERLAY_TRIS = new boolean[][]

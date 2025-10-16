@@ -81,6 +81,7 @@ import rs117.hd.utils.NpcDisplacementCache;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
+import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.MathUtils.*;
@@ -174,6 +175,9 @@ public class ZoneRenderer implements Renderer {
 
 	private int cameraX, cameraY, cameraZ;
 	private int cameraYaw, cameraPitch;
+	private int cameraZoom;
+	private int cameraYawSin, cameraYawCos;
+	private int cameraPitchSin, cameraPitchCos;
 	private int minLevel, level, maxLevel;
 	private Set<Integer> hideRoofIds;
 
@@ -249,7 +253,10 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public int getGpuFlags() {
-		return DrawCallbacks.ZBUF | DrawCallbacks.NORMALS;
+		return
+			DrawCallbacks.ZBUF |
+			DrawCallbacks.ZBUF_ZONE_FRUSTUM_CHECK |
+			DrawCallbacks.NORMALS;
 	}
 
 	@Override
@@ -348,6 +355,11 @@ public class ZoneRenderer implements Renderer {
 		this.cameraZ = (int) cameraZ;
 		this.cameraYaw = client.getCameraYaw();
 		this.cameraPitch = client.getCameraPitch();
+		this.cameraYawSin = Perspective.SINE[this.cameraYaw];
+		this.cameraYawCos = Perspective.COSINE[this.cameraYaw];
+		this.cameraPitchSin = Perspective.SINE[this.cameraPitch];
+		this.cameraPitchCos = Perspective.COSINE[this.cameraPitch];
+		this.cameraZoom = client.get3dZoom();
 		this.minLevel = minLevel;
 		this.level = level;
 		this.maxLevel = maxLevel;
@@ -918,6 +930,51 @@ public class ZoneRenderer implements Renderer {
 //		frameTimer.end(Timer.COMPUTE);
 
 		checkGLErrors();
+	}
+
+	@Override
+	public boolean zoneInFrustum(int zx, int zz, int maxY, int minY) {
+		if (root.sceneContext == null)
+			return false;
+
+		int x = (((zx << 3) - SCENE_OFFSET) << 7) + 512 - cameraX;
+		int z = (((zz << 3) - SCENE_OFFSET) << 7) + 512 - cameraZ;
+		int y = maxY - cameraY;
+		int zoneRadius = 724; // ~ 512 * sqrt(2)
+		int waterDepth = root.zones[zx][zz].hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
+
+		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
+		final int rightClip = client.getRasterizer3D_clipMidX2();
+		final int topClip = client.getRasterizer3D_clipNegativeMidY();
+		final int bottomClip = client.getRasterizer3D_clipMidY2();
+
+		// Check if the tile is within the near plane of the frustum
+		int transformedZ = z * cameraYawCos - x * cameraYawSin >> 16;
+		int depth = (y + waterDepth) * cameraPitchSin + (transformedZ + zoneRadius) * cameraPitchCos >> 16;
+		if (depth > NEAR_PLANE) {
+			// Check left bound
+			int transformedX = z * cameraYawSin + x * cameraYawCos >> 16;
+			int left = transformedX - zoneRadius;
+			if (left * cameraZoom < rightClip * depth) {
+				// Check right bound
+				int right = transformedX + zoneRadius;
+				if (right * cameraZoom > leftClip * depth) {
+					// Check top bound
+					int transformedY = y * cameraPitchCos - transformedZ * cameraPitchSin >> 16;
+					int transformedRadius = zoneRadius * cameraPitchSin >> 16;
+					int transformedWaterDepth = waterDepth * cameraPitchCos >> 16;
+					int bottom = transformedY + transformedRadius + transformedWaterDepth;
+					if (bottom * cameraZoom > topClip * depth) {
+						// Check bottom bound
+						int transformedZoneHeight = minY * cameraPitchCos >> 16;
+						int top = transformedY - transformedRadius + transformedZoneHeight;
+						return top * cameraZoom < bottomClip * depth;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@Override

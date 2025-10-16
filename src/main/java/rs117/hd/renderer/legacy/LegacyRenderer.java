@@ -212,7 +212,9 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public int getGpuFlags() {
-		return DrawCallbacks.NORMALS | DrawCallbacks.HILLSKEW;
+		return
+			DrawCallbacks.NORMALS |
+			DrawCallbacks.HILLSKEW;
 	}
 
 	@Override
