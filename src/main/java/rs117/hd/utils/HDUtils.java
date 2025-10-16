@@ -44,6 +44,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
+	public static final int UNDERWATER_HSL = 6676;
 
 	public static int vertexHash(int[] vPos) {
 		// simple custom hashing function for vertex position data

@@ -60,6 +60,7 @@ import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.HDUtils.UNDERWATER_HSL;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -836,10 +837,8 @@ public class LegacySceneUploader {
 
 			underwaterTerrain = 1;
 
-			int swColor = 6676;
-			int seColor = 6676;
-			int neColor = 6676;
-			int nwColor = 6676;
+			int swColor, seColor, neColor, nwColor;
+			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
 
 			int swDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(swVertexKey, 0);
 			int seDepth = sceneContext.vertexUnderwaterDepth.getOrDefault(seVertexKey, 0);
@@ -1173,9 +1172,8 @@ public class LegacySceneUploader {
 
 			// underwater terrain
 			for (int face = 0; face < faceCount; ++face) {
-				int colorA = 6676;
-				int colorB = 6676;
-				int colorC = 6676;
+				int colorA, colorB, colorC;
+				colorA = colorB = colorC = UNDERWATER_HSL;
 
 				boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
 				var override = isOverlay ? overlayOverride : underlayOverride;

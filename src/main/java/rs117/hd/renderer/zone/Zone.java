@@ -34,6 +34,8 @@ class Zone {
 	// terrainData int
 	static final int VERT_SIZE = 32;
 
+	static final int LEVEL_WATER_SURFACE = 4;
+
 	int glVao;
 	int bufLen;
 
@@ -47,8 +49,9 @@ class Zone {
 	boolean cull; // whether the zone is queued for deletion
 	boolean dirty; // whether the zone has temporary modifications
 	boolean invalidate; // whether the zone needs rebuilding
+	boolean hasWater; // whether the zone has any water tiles
 
-	int[] levelOffsets = new int[4]; // buffer pos in ints for the end of the level
+	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
 	int[][] rids;
 	int[][] roofStart;
@@ -222,6 +225,20 @@ class Zone {
 			// draw the non roofs
 			pushRange(endpos, this.levelOffsets[level]);
 		}
+
+		convertForDraw(VERT_SIZE);
+
+		uboGlobal.sceneBase.set(zx << 10, 0, zz << 10);
+		uboGlobal.upload();
+		glBindVertexArray(glVao);
+		glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+	}
+
+	void renderOpaqueLevel(UBOGlobal uboGlobal, int zx, int zz, int level) {
+		drawIdx = 0;
+
+		// draw the specific level
+		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
 
 		convertForDraw(VERT_SIZE);
 
