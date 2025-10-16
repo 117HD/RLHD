@@ -1228,14 +1228,14 @@ public class ZoneRenderer implements Renderer {
 				int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 				if (sz > 0) {
 					o = new VBO(sz);
-					o.init();
+					o.init(GL_STATIC_DRAW);
 					o.map();
 				}
 
 				sz = zone.sizeA * Zone.VERT_SIZE * 3;
 				if (sz > 0) {
 					a = new VBO(sz);
-					a.init();
+					a.init(GL_STATIC_DRAW);
 					a.map();
 				}
 
@@ -1533,14 +1533,14 @@ public class ZoneRenderer implements Renderer {
 					int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						o = new VBO(sz);
-						o.init();
+						o.init(GL_STATIC_DRAW);
 						o.map();
 					}
 
 					sz = zone.sizeA * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						a = new VBO(sz);
-						a.init();
+						a.init(GL_STATIC_DRAW);
 						a.map();
 					}
 
@@ -1671,14 +1671,14 @@ public class ZoneRenderer implements Renderer {
 					int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						o = new VBO(sz);
-						o.init();
+						o.init(GL_STATIC_DRAW);
 						o.map();
 					}
 
 					sz = zone.sizeA * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						a = new VBO(sz);
-						a.init();
+						a.init(GL_STATIC_DRAW);
 						a.map();
 					}
 

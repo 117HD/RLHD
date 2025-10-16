@@ -29,7 +29,7 @@ class VAO {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 
-		vbo.init();
+		vbo.init(GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo.bufId);
 
 		// Position

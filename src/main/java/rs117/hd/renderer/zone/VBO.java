@@ -8,7 +8,6 @@ import static org.lwjgl.opengl.GL33C.*;
 class VBO {
 	final int size;
 	int bufId;
-	private ByteBuffer buffer;
 	IntBuffer vb;
 	int len;
 	boolean mapped;
@@ -17,11 +16,10 @@ class VBO {
 		this.size = size;
 	}
 
-	void init() {
+	void init(int glUsage) {
 		bufId = glGenBuffers();
-
 		glBindBuffer(GL_ARRAY_BUFFER, bufId);
-		glBufferData(GL_ARRAY_BUFFER, size, GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, size, glUsage);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
@@ -39,16 +37,9 @@ class VBO {
 	void map() {
 		assert !mapped;
 		glBindBuffer(GL_ARRAY_BUFFER, bufId);
-		buffer = glMapBufferRange(
-			GL_ARRAY_BUFFER,
-			0,
-			size,
-			GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT | GL_MAP_UNSYNCHRONIZED_BIT,
-			buffer
-		);
-		if (buffer == null) {
+		ByteBuffer buffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		if (buffer == null)
 			throw new RuntimeException("unable to map GL buffer " + bufId + " size " + size);
-		}
 		this.vb = buffer.asIntBuffer();
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		mapped = true;
