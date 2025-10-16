@@ -36,7 +36,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -97,7 +96,7 @@ public class LegacySceneUploader {
 	public ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private ModelPusher modelPusher;
+	private LegacyModelPusher modelPusher;
 
 	public void upload(LegacySceneContext sceneContext) {
 		proceduralGenerator.generateSceneData(sceneContext);

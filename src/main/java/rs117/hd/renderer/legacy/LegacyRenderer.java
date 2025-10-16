@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -23,6 +24,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
+import net.runelite.client.util.OSType;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -30,7 +32,6 @@ import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
@@ -38,6 +39,7 @@ import rs117.hd.opengl.shader.ModelSortingComputeProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
@@ -75,6 +77,7 @@ import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -146,7 +149,7 @@ public class LegacyRenderer implements Renderer {
 	private LegacySceneUploader sceneUploader;
 
 	@Inject
-	private ModelPusher modelPusher;
+	private LegacyModelPusher modelPusher;
 
 	@Inject
 	private ModelHasher modelHasher;
@@ -166,7 +169,8 @@ public class LegacyRenderer implements Renderer {
 	@Inject
 	public ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
-	public final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
+	private final ComputeMode computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
+	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
 
 	public int vaoScene;
 	public int texTileHeightMap;
@@ -210,8 +214,15 @@ public class LegacyRenderer implements Renderer {
 	private LegacySceneContext nextSceneContext;
 	private int gameTicksUntilSceneReload;
 
+	private final UBOCompute uboCompute = new UBOCompute();
+
 	@Override
-	public int getGpuFlags() {
+	public boolean supportsGpu(GLCapabilities glCaps) {
+		return computeMode == ComputeMode.OPENGL ? glCaps.OpenGL43 : glCaps.OpenGL31;
+	}
+
+	@Override
+	public int gpuFlags() {
 		return
 			DrawCallbacks.NORMALS |
 			DrawCallbacks.HILLSKEW;
@@ -219,6 +230,8 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public void initialize() {
+		modelPusher.startUp();
+
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;
 		numModelsToSort = null;
@@ -226,20 +239,22 @@ public class LegacyRenderer implements Renderer {
 		// Create scene VAO
 		vaoScene = glGenVertexArrays();
 
-		initBuffers();
+		initializeBuffers();
 
 		int maxComputeThreadCount;
-		if (plugin.computeMode == ComputeMode.OPENCL) {
+		if (computeMode == ComputeMode.OPENCL) {
 			clManager.startUp(plugin.awtContext);
 			maxComputeThreadCount = clManager.getMaxWorkGroupSize();
 		} else {
 			maxComputeThreadCount = glGetInteger(GL43C.GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS);
 		}
-		initModelSortingBins(maxComputeThreadCount);
+		initializeModelSortingBins(maxComputeThreadCount);
 	}
 
 	@Override
 	public synchronized void destroy() {
+		modelPusher.shutDown();
+
 		if (vaoScene != 0)
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
@@ -262,7 +277,7 @@ public class LegacyRenderer implements Renderer {
 
 	@Override
 	public void waitUntilIdle() {
-		if (plugin.computeMode == ComputeMode.OPENCL)
+		if (computeMode == ComputeMode.OPENCL)
 			clManager.finish();
 		glFinish();
 	}
@@ -277,11 +292,26 @@ public class LegacyRenderer implements Renderer {
 	}
 
 	@Override
+	public void processConfigChanges(Set<String> keys) {
+		if (keys.contains(KEY_MODEL_CACHING) || keys.contains(KEY_MODEL_CACHE_SIZE)) {
+			modelPusher.shutDown();
+			modelPusher.startUp();
+		}
+	}
+
+	@Override
+	public void clearCaches() {
+		modelPusher.clearModelCache();
+	}
+
+	@Override
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
+		includes.addUniformBuffer(uboCompute);
+
 		sceneProgram.compile(includes);
 
-		if (plugin.computeMode == ComputeMode.OPENCL) {
-			clManager.initPrograms();
+		if (computeMode == ComputeMode.OPENCL) {
+			clManager.initializePrograms();
 		} else {
 			modelPassthroughComputeProgram.compile(includes);
 
@@ -300,7 +330,7 @@ public class LegacyRenderer implements Renderer {
 	public void destroyShaders() {
 		sceneProgram.destroy();
 
-		if (plugin.computeMode == ComputeMode.OPENGL) {
+		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
 			for (var program : modelSortingComputePrograms)
 				program.destroy();
@@ -310,7 +340,7 @@ public class LegacyRenderer implements Renderer {
 		}
 	}
 
-	public void initModelSortingBins(int maxThreadCount) {
+	public void initializeModelSortingBins(int maxThreadCount) {
 		int[] targetFaceCounts = {
 			128,
 			512,
@@ -417,7 +447,9 @@ public class LegacyRenderer implements Renderer {
 		glVertexAttribIPointer(5, 1, GL_INT, 16, 12);
 	}
 
-	private void initBuffers() {
+	private void initializeBuffers() {
+		uboCompute.initialize(HdPlugin.UNIFORM_BLOCK_COMPUTE);
+
 		modelPassthroughBuffer = new GpuIntBuffer();
 
 		hStagingBufferVertices.initialize();
@@ -432,6 +464,8 @@ public class LegacyRenderer implements Renderer {
 	}
 
 	private void destroyBuffers() {
+		uboCompute.destroy();
+
 		hStagingBufferVertices.destroy();
 		hStagingBufferUvs.destroy();
 		hStagingBufferNormals.destroy();
@@ -442,16 +476,10 @@ public class LegacyRenderer implements Renderer {
 
 		hModelPassthroughBuffer.destroy();
 
-		plugin.uboGlobal.destroy();
-		plugin.uboLights.destroy();
-		plugin.uboLightsCulling.destroy();
-		plugin.uboCompute.destroy();
-		plugin.uboUI.destroy();
-
 		clManager.shutDown();
 	}
 
-	public void initTileHeightMap(Scene scene) {
+	public void initializeTileHeightMap(Scene scene) {
 		final int TILE_HEIGHT_BUFFER_SIZE = Constants.MAX_Z * Constants.EXTENDED_SCENE_SIZE * Constants.EXTENDED_SCENE_SIZE * Short.BYTES;
 		ShortBuffer tileBuffer = ByteBuffer
 			.allocateDirect(TILE_HEIGHT_BUFFER_SIZE)
@@ -622,26 +650,26 @@ public class LegacyRenderer implements Renderer {
 					plugin.cameraPosition[2] += plugin.cameraShift[1];
 				}
 
-				plugin.uboCompute.yaw.set(plugin.cameraOrientation[0]);
-				plugin.uboCompute.pitch.set(plugin.cameraOrientation[1]);
-				plugin.uboCompute.centerX.set(client.getCenterX());
-				plugin.uboCompute.centerY.set(client.getCenterY());
-				plugin.uboCompute.zoom.set(client.getScale());
-				plugin.uboCompute.cameraX.set(plugin.cameraPosition[0]);
-				plugin.uboCompute.cameraY.set(plugin.cameraPosition[1]);
-				plugin.uboCompute.cameraZ.set(plugin.cameraPosition[2]);
+				uboCompute.yaw.set(plugin.cameraOrientation[0]);
+				uboCompute.pitch.set(plugin.cameraOrientation[1]);
+				uboCompute.centerX.set(client.getCenterX());
+				uboCompute.centerY.set(client.getCenterY());
+				uboCompute.zoom.set(client.getScale());
+				uboCompute.cameraX.set(plugin.cameraPosition[0]);
+				uboCompute.cameraY.set(plugin.cameraPosition[1]);
+				uboCompute.cameraZ.set(plugin.cameraPosition[2]);
 
-				plugin.uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
-				plugin.uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
-				plugin.uboCompute.windStrength.set(environmentManager.currentWindStrength);
-				plugin.uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
-				plugin.uboCompute.windOffset.set(plugin.windOffset);
+				uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
+				uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+				uboCompute.windStrength.set(environmentManager.currentWindStrength);
+				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
+				uboCompute.windOffset.set(plugin.windOffset);
 
 				if (plugin.configCharacterDisplacement) {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
-						plugin.uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -818,16 +846,16 @@ public class LegacyRenderer implements Renderer {
 		frameTimer.end(Timer.UPLOAD_GEOMETRY);
 		frameTimer.begin(Timer.COMPUTE);
 
-		plugin.uboCompute.upload();
+		uboCompute.upload();
 
-		if (plugin.computeMode == ComputeMode.OPENCL) {
+		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
 			// clEnqueueAcquireGLObjects, and recommends calling glFinish() as the only portable way to do that.
 			// However, no issues have been observed from not calling it, and so will leave disabled for now.
 			// glFinish();
 
 			clManager.compute(
-				plugin.uboCompute.glBuffer,
+				uboCompute.glBuffer,
 				numPassthroughModels, numModelsToSort,
 				hModelPassthroughBuffer, hModelSortingBuffers,
 				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
@@ -997,7 +1025,7 @@ public class LegacyRenderer implements Renderer {
 		// Draw 3d scene
 		if (plugin.hasLoggedIn && sceneContext != null && plugin.sceneViewport != null) {
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier
-			if (plugin.computeMode == ComputeMode.OPENCL) {
+			if (computeMode == ComputeMode.OPENCL) {
 				clManager.finish();
 			} else {
 				GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
@@ -1293,6 +1321,7 @@ public class LegacyRenderer implements Renderer {
 		assert client.isClientThread() : "Loading a scene is unsafe while the client can modify it";
 		if (client.getGameState().getState() < GameState.LOGGED_IN.getState())
 			return;
+
 		Scene scene = client.getTopLevelWorldView().getScene();
 		loadScene(scene);
 		if (plugin.skipScene == scene)
@@ -1377,10 +1406,10 @@ public class LegacyRenderer implements Renderer {
 				return; // Return early if scene loading failed
 		}
 
-		if (plugin.computeMode == ComputeMode.OPENCL) {
+		if (computeMode == ComputeMode.OPENCL) {
 			clManager.uploadTileHeights(scene);
 		} else {
-			initTileHeightMap(scene);
+			initializeTileHeightMap(scene);
 		}
 
 		tileVisibilityCached = false;
@@ -1763,10 +1792,10 @@ public class LegacyRenderer implements Renderer {
 								entry.idleRadius = displacementRadius;
 							}
 						}
-						plugin.uboCompute.addCharacterPosition(x, z, displacementRadius);
+						uboCompute.addCharacterPosition(x, z, displacementRadius);
 					}
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-					plugin.uboCompute.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+					uboCompute.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
 				if (plugin.enableDetailedTimers)
 					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);

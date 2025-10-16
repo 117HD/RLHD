@@ -18,7 +18,6 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
@@ -45,9 +44,6 @@ public class TileOverrideManager {
 
 	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private ModelPusher modelPusher;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 	private boolean trackReplacements;
@@ -128,8 +124,8 @@ public class TileOverrideManager {
 		TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
 
 		if (reloadScene) {
-			modelPusher.clearModelCache();
-			plugin.reuploadScene();
+			plugin.renderer.clearCaches();
+			plugin.renderer.reloadScene();
 		}
 	}
 

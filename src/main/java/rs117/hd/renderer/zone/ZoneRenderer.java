@@ -42,15 +42,12 @@ import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
+import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
-import rs117.hd.model.ModelHasher;
-import rs117.hd.model.ModelPusher;
-import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -61,15 +58,9 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
-import rs117.hd.scene.GamevalManager;
-import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
-import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.TextureManager;
-import rs117.hd.scene.TileOverrideManager;
-import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -105,19 +96,10 @@ public class ZoneRenderer implements Renderer {
 	private DrawManager drawManager;
 
 	@Inject
-	private PluginManager pluginManager;
-
-	@Inject
 	private HdPlugin plugin;
 
 	@Inject
 	private HdPluginConfig config;
-
-	@Inject
-	private OpenCLManager clManager;
-
-	@Inject
-	private GamevalManager gamevalManager;
 
 	@Inject
 	private AreaManager areaManager;
@@ -129,21 +111,6 @@ public class ZoneRenderer implements Renderer {
 	private EnvironmentManager environmentManager;
 
 	@Inject
-	private TextureManager textureManager;
-
-	@Inject
-	private MaterialManager materialManager;
-
-	@Inject
-	private WaterTypeManager waterTypeManager;
-
-	@Inject
-	private GroundMaterialManager groundMaterialManager;
-
-	@Inject
-	private TileOverrideManager tileOverrideManager;
-
-	@Inject
 	private ModelOverrideManager modelOverrideManager;
 
 	@Inject
@@ -151,12 +118,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SceneUploader sceneUploader;
-
-	@Inject
-	private ModelPusher modelPusher;
-
-	@Inject
-	private ModelHasher modelHasher;
 
 	@Inject
 	private FacePrioritySorter facePrioritySorter;
@@ -252,7 +213,12 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	@Override
-	public int getGpuFlags() {
+	public boolean supportsGpu(GLCapabilities glCaps) {
+		return glCaps.OpenGL33;
+	}
+
+	@Override
+	public int gpuFlags() {
 		return
 			DrawCallbacks.ZBUF |
 			DrawCallbacks.ZBUF_ZONE_FRUSTUM_CHECK |
@@ -261,9 +227,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void initialize() {
-		vaoO = new VAO.VAOList();
-		vaoA = new VAO.VAOList();
-		vaoPO = new VAO.VAOList();
+		initializeVaos();
 
 //		uniWorldProj = glGetUniformLocation(glProgram, "worldProj");
 //		uniEntityProj = glGetUniformLocation(glProgram, "entityProj");
@@ -295,10 +259,7 @@ public class ZoneRenderer implements Renderer {
 	public void destroy() {
 		root.free();
 
-		vaoO.free();
-		vaoA.free();
-		vaoPO.free();
-		vaoO = vaoA = vaoPO = null;
+		destroyVaos();
 
 		if (nextSceneContext != null)
 			nextSceneContext.destroy();
@@ -318,6 +279,19 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+	}
+
+	private void initializeVaos() {
+		vaoO = new VAO.VAOList();
+		vaoA = new VAO.VAOList();
+		vaoPO = new VAO.VAOList();
+	}
+
+	private void destroyVaos() {
+		vaoO.free();
+		vaoA.free();
+		vaoPO.free();
+		vaoO = vaoA = vaoPO = null;
 	}
 
 	private Projection lastProjection;
@@ -493,27 +467,19 @@ public class ZoneRenderer implements Renderer {
 					plugin.cameraPosition[2] += plugin.cameraShift[1];
 				}
 
-				plugin.uboCompute.yaw.set(plugin.cameraOrientation[0]);
-				plugin.uboCompute.pitch.set(plugin.cameraOrientation[1]);
-				plugin.uboCompute.centerX.set(client.getCenterX());
-				plugin.uboCompute.centerY.set(client.getCenterY());
-				plugin.uboCompute.zoom.set(client.getScale());
-				plugin.uboCompute.cameraX.set(plugin.cameraPosition[0]);
-				plugin.uboCompute.cameraY.set(plugin.cameraPosition[1]);
-				plugin.uboCompute.cameraZ.set(plugin.cameraPosition[2]);
-
-				plugin.uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
-				plugin.uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
-				plugin.uboCompute.windStrength.set(environmentManager.currentWindStrength);
-				plugin.uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
-				plugin.uboCompute.windOffset.set(plugin.windOffset);
-
-				if (plugin.configCharacterDisplacement) {
-					// The local player needs to be added first for distance culling
-					Model playerModel = localPlayer.getModel();
-					if (playerModel != null)
-						plugin.uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
-				}
+				// TODO: Wind & character displacement
+//				plugin.uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
+//				plugin.uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+//				plugin.uboCompute.windStrength.set(environmentManager.currentWindStrength);
+//				plugin.uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
+//				plugin.uboCompute.windOffset.set(plugin.windOffset);
+//
+//				if (plugin.configCharacterDisplacement) {
+//					// The local player needs to be added first for distance culling
+//					Model playerModel = localPlayer.getModel();
+//					if (playerModel != null)
+//						plugin.uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+//				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
 				int viewportWidth = (int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]);
@@ -1277,18 +1243,18 @@ public class ZoneRenderer implements Renderer {
 				int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 				if (sz > 0) {
 					o = new VBO(sz);
-					o.init(GL_STATIC_DRAW);
+					o.initialize(GL_STATIC_DRAW);
 					o.map();
 				}
 
 				sz = zone.sizeA * Zone.VERT_SIZE * 3;
 				if (sz > 0) {
 					a = new VBO(sz);
-					a.init(GL_STATIC_DRAW);
+					a.initialize(GL_STATIC_DRAW);
 					a.map();
 				}
 
-				zone.init(o, a);
+				zone.initialize(o, a);
 
 				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
 
@@ -1580,18 +1546,18 @@ public class ZoneRenderer implements Renderer {
 					int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						o = new VBO(sz);
-						o.init(GL_STATIC_DRAW);
+						o.initialize(GL_STATIC_DRAW);
 						o.map();
 					}
 
 					sz = zone.sizeA * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						a = new VBO(sz);
-						a.init(GL_STATIC_DRAW);
+						a.initialize(GL_STATIC_DRAW);
 						a.map();
 					}
 
-					zone.init(o, a);
+					zone.initialize(o, a);
 				}
 			}
 
@@ -1718,18 +1684,18 @@ public class ZoneRenderer implements Renderer {
 					int sz = zone.sizeO * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						o = new VBO(sz);
-						o.init(GL_STATIC_DRAW);
+						o.initialize(GL_STATIC_DRAW);
 						o.map();
 					}
 
 					sz = zone.sizeA * Zone.VERT_SIZE * 3;
 					if (sz > 0) {
 						a = new VBO(sz);
-						a.init(GL_STATIC_DRAW);
+						a.initialize(GL_STATIC_DRAW);
 						a.map();
 					}
 
-					zone.init(o, a);
+					zone.initialize(o, a);
 				}
 			}
 

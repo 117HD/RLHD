@@ -108,9 +108,9 @@ public class OpenCLManager {
 	public void startUp(AWTContext awtContext) {
 		CL.create();
 		initialized = true;
-		initContext(awtContext);
+		initializeContext(awtContext);
 		log.debug("Device CL_DEVICE_MAX_WORK_GROUP_SIZE: {}", getMaxWorkGroupSize());
-		initQueue();
+		initializeQueue();
 	}
 
 	public void shutDown() {
@@ -139,7 +139,7 @@ public class OpenCLManager {
 		}
 	}
 
-	private void initContext(AWTContext awtContext) {
+	private void initializeContext(AWTContext awtContext) {
 		try (var stack = MemoryStack.stackPush()) {
 			IntBuffer pi = stack.mallocInt(1);
 			checkCLError(clGetPlatformIDs(null, pi));
@@ -278,7 +278,7 @@ public class OpenCLManager {
 		return (int) (maxWorkGroupSize[0] * 0.6f); // Workaround for https://github.com/117HD/RLHD/issues/598
 	}
 
-	private void initQueue() {
+	private void initializeQueue() {
 		long[] l = new long[1];
 		clGetDeviceInfo(device, CL_DEVICE_QUEUE_PROPERTIES, l, null);
 
@@ -318,7 +318,7 @@ public class OpenCLManager {
 		return kernel;
 	}
 
-	public void initPrograms() throws ShaderException, IOException {
+	public void initializePrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
 			var includes = new ShaderIncludes()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)

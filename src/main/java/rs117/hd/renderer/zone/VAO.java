@@ -25,11 +25,11 @@ class VAO {
 		vbo = new VBO(size);
 	}
 
-	void init() {
+	void initialize() {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 
-		vbo.init(GL_DYNAMIC_DRAW);
+		vbo.initialize(GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo.bufId);
 
 		// Position
@@ -153,7 +153,7 @@ class VAO {
 			}
 
 			VAO vao = new VAO(VAO_SIZE);
-			vao.init();
+			vao.initialize();
 			vao.vbo.map();
 			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);

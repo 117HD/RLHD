@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
@@ -50,9 +49,6 @@ public class AreaManager {
 	@Inject
 	private LightManager lightManager;
 
-	@Inject
-	private ModelPusher modelPusher;
-
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public static Area[] AREAS = new Area[0];
@@ -85,7 +81,7 @@ public class AreaManager {
 
 					if (!first) {
 						// Reload everything which depends on area definitions
-						modelPusher.clearModelCache();
+						plugin.renderer.clearCaches();
 						tileOverrideManager.shutDown();
 						modelOverrideManager.shutDown();
 						lightManager.shutDown();

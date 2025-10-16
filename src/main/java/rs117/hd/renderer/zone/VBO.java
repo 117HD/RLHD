@@ -16,7 +16,7 @@ class VBO {
 		this.size = size;
 	}
 
-	void init(int glUsage) {
+	void initialize(int glUsage) {
 		bufId = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, bufId);
 		glBufferData(GL_ARRAY_BUFFER, size, glUsage);

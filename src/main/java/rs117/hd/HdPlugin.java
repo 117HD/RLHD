@@ -80,9 +80,7 @@ import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.AsyncUICopy;
-import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
@@ -252,9 +250,6 @@ public class HdPlugin extends Plugin {
 	private AsyncUICopy asyncUICopy;
 
 	@Inject
-	private ModelPusher modelPusher;
-
-	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
@@ -290,16 +285,15 @@ public class HdPlugin extends Plugin {
 	@Inject
 	public HDVariables vars;
 
-	private Renderer renderer;
+	public Renderer renderer;
 
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
+	public static boolean AMD_GPU;
 
 	public Canvas canvas;
 	public AWTContext awtContext;
 	private Callback debugCallback;
-	public ComputeMode computeMode = ComputeMode.OPENGL;
-	private boolean isAmdGpu;
 
 	private static final String LINUX_VERSION_HEADER =
 		"#version 420\n" +
@@ -348,7 +342,6 @@ public class HdPlugin extends Plugin {
 	public final UBOGlobal uboGlobal = new UBOGlobal();
 	public final UBOLights uboLights = new UBOLights(false);
 	public final UBOLights uboLightsCulling = new UBOLights(true);
-	public final UBOCompute uboCompute = new UBOCompute();
 	public final UBOUI uboUI = new UBOUI();
 
 	// Configs used frequently enough to be worth caching
@@ -478,30 +471,27 @@ public class HdPlugin extends Plugin {
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
 				String arch = System.getProperty("sun.arch.data.model", "Unknown");
-				isAmdGpu = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
+				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				log.info("Using device: {} ({})", glRenderer, glVendor);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
 				log.info("Client is {}-bit", arch);
 				log.info("Low memory mode: {}", useLowMemoryMode);
 
-				computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
+				renderer = injector.getInstance(config.renderer().rendererClass);
 
-				List<String> fallbackDevices = List.of(
-					"GDI Generic",
-					"D3D12 (Microsoft Basic Render Driver)",
-					"softpipe"
-				);
-				boolean isFallbackGpu = fallbackDevices.contains(glRenderer) && !Props.has("rlhd.allowFallbackGpu");
-				boolean isUnsupportedGpu =
-					isFallbackGpu || (computeMode == ComputeMode.OPENGL ? !GL_CAPS.OpenGL43 : !GL_CAPS.OpenGL31);
-				if (isUnsupportedGpu) {
-					log.error(
-						"The GPU is lacking OpenGL {} support. Stopping the plugin...",
-						computeMode == ComputeMode.OPENGL ? "4.3" : "3.1"
+				if (!Props.has("rlhd.skipGpuChecks")) {
+					List<String> fallbackDevices = List.of(
+						"GDI Generic",
+						"D3D12 (Microsoft Basic Render Driver)",
+						"softpipe"
 					);
-					displayUnsupportedGpuMessage(isFallbackGpu, glRenderer);
-					stopPlugin();
-					return true;
+					boolean isFallbackGpu = fallbackDevices.contains(glRenderer);
+					if (isFallbackGpu || !renderer.supportsGpu(GL_CAPS)) {
+						log.error("Unsupported GPU. Stopping the plugin...");
+						displayUnsupportedGpuMessage(isFallbackGpu, glRenderer);
+						stopPlugin();
+						return true;
+					}
 				}
 
 				lwjglInitialized = true;
@@ -571,30 +561,24 @@ public class HdPlugin extends Plugin {
 				developerTools.activate();
 
 				setupSyncMode();
-				initVaos();
-
-				uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
-				uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
-				uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
-				uboCompute.initialize(HdPlugin.UNIFORM_BLOCK_COMPUTE);
-				uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+				initializeVaos();
+				initializeUbos();
 
 				// Materials need to be initialized before compiling shader programs
 				textureManager.startUp();
 				materialManager.startUp();
 				waterTypeManager.startUp();
 
-				renderer = injector.getInstance(config.renderer().rendererClass);
 				renderer.initialize();
 				eventBus.register(renderer);
-				int gpuFlags = DrawCallbacks.GPU | renderer.getGpuFlags();
+				int gpuFlags = DrawCallbacks.GPU | renderer.gpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
 
-				initPrograms();
-				initShaderHotswapping();
-				initUiTexture();
-				initShadowMapFbo();
+				initializePrograms();
+				initializeShaderHotswapping();
+				initializeUiTexture();
+				initializeShadowMapFbo();
 
 				checkGLErrors();
 
@@ -609,7 +593,6 @@ public class HdPlugin extends Plugin {
 				groundMaterialManager.startUp();
 				tileOverrideManager.startUp();
 				modelOverrideManager.startUp();
-				modelPusher.startUp();
 				lightManager.startUp();
 				environmentManager.startUp();
 				fishingSpotReplacer.startUp();
@@ -655,7 +638,6 @@ public class HdPlugin extends Plugin {
 
 			asyncUICopy.complete();
 			developerTools.deactivate();
-			modelPusher.shutDown();
 			tileOverrideManager.shutDown();
 			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();
@@ -678,6 +660,7 @@ public class HdPlugin extends Plugin {
 				destroyUiTexture();
 				destroyPrograms();
 				destroyVaos();
+				destroyUbos();
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
@@ -829,13 +812,12 @@ public class HdPlugin extends Plugin {
 			.addUniformBuffer(uboGlobal)
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboLightsCulling)
-			.addUniformBuffer(uboCompute)
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
 	}
 
-	private void initPrograms() throws ShaderException, IOException {
+	private void initializePrograms() throws ShaderException, IOException {
 		var includes = getShaderIncludes();
 
 		// Bind a valid VAO, otherwise validation may fail on older Intel-based Macs
@@ -847,7 +829,7 @@ public class HdPlugin extends Plugin {
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
-			if (!isAmdGpu && configTiledLightingImageLoadStore &&
+			if (!AMD_GPU && configTiledLightingImageLoadStore &&
 				GL_CAPS.GL_ARB_shader_image_load_store &&
 				tiledLightingImageStoreProgram.isViable()
 			) {
@@ -923,7 +905,7 @@ public class HdPlugin extends Plugin {
 			try {
 				renderer.waitUntilIdle();
 				destroyPrograms();
-				initPrograms();
+				initializePrograms();
 			} catch (ShaderException | IOException ex) {
 				// TODO: If each shader compilation leaves the previous working shader intact, we wouldn't need to shut down on failure
 				log.error("Error while recompiling shaders:", ex);
@@ -932,7 +914,7 @@ public class HdPlugin extends Plugin {
 		});
 	}
 
-	private void initVaos() {
+	private void initializeVaos() {
 		{
 			// Create quad VAO
 			vaoQuad = glGenVertexArrays();
@@ -1005,7 +987,21 @@ public class HdPlugin extends Plugin {
 		vaoTri = 0;
 	}
 
-	private void initUiTexture() {
+	private void initializeUbos() {
+		uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
+		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
+		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
+		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+	}
+
+	private void destroyUbos() {
+		uboGlobal.destroy();
+		uboLights.destroy();
+		uboLightsCulling.destroy();
+		uboUI.destroy();
+	}
+
+	private void initializeUiTexture() {
 		pboUi = glGenBuffers();
 
 		texUi = glGenTextures();
@@ -1224,9 +1220,9 @@ public class HdPlugin extends Plugin {
 		rboSceneResolveColor = 0;
 	}
 
-	private void initShadowMapFbo() {
+	private void initializeShadowMapFbo() {
 		if (!configShadowsEnabled) {
-			initDummyShadowMap();
+			initializeDummyShadowMap();
 			return;
 		}
 
@@ -1274,7 +1270,7 @@ public class HdPlugin extends Plugin {
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 	}
 
-	private void initDummyShadowMap() {
+	private void initializeDummyShadowMap() {
 		// Create dummy texture
 		texShadowMap = glGenTextures();
 		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
@@ -1296,7 +1292,7 @@ public class HdPlugin extends Plugin {
 		fboShadowMap = 0;
 	}
 
-	public void initShaderHotswapping() {
+	public void initializeShaderHotswapping() {
 		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
 			log.info("Recompiling shaders: {}", path);
 			recompilePrograms();
@@ -1461,10 +1457,6 @@ public class HdPlugin extends Plugin {
 		}
 	}
 
-	public void reuploadScene() {
-		renderer.reloadScene();
-	}
-
 	public boolean isLoadingScene() {
 		return renderer.isLoadingScene();
 	}
@@ -1571,6 +1563,8 @@ public class HdPlugin extends Plugin {
 
 					log.debug("Processing {} pending config changes: {}", pendingConfigChanges.size(), pendingConfigChanges);
 
+					renderer.processConfigChanges(pendingConfigChanges);
+
 					boolean recompilePrograms = false;
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
@@ -1579,8 +1573,6 @@ public class HdPlugin extends Plugin {
 					boolean reloadModelOverrides = false;
 					boolean reloadTileOverrides = false;
 					boolean reloadScene = false;
-					boolean clearModelCache = false;
-					boolean resizeModelCache = false;
 
 					for (var key : pendingConfigChanges) {
 						switch (key) {
@@ -1600,7 +1592,7 @@ public class HdPlugin extends Plugin {
 								if (configColorFilter == ColorFilter.NONE || configColorFilterPrevious == ColorFilter.NONE)
 									recompilePrograms = true;
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
-									clearModelCache = reloadScene = true;
+									reloadScene = true;
 								break;
 							case KEY_ASYNC_UI_COPY:
 								asyncUICopy.complete();
@@ -1661,7 +1653,6 @@ public class HdPlugin extends Plugin {
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
 							case KEY_HD_TZHAAR_RESKIN:
-								clearModelCache = true;
 								reloadScene = true;
 								break;
 							case KEY_VANILLA_SHADOW_MODE:
@@ -1673,17 +1664,12 @@ public class HdPlugin extends Plugin {
 							case KEY_SHADING_MODE:
 							case KEY_FLAT_SHADING:
 								recompilePrograms = true;
-								clearModelCache = true;
 								reloadScene = true;
 								break;
 							case KEY_FPS_TARGET:
 							case KEY_UNLOCK_FPS:
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
-								break;
-							case KEY_MODEL_CACHE_SIZE:
-							case KEY_MODEL_CACHING:
-								resizeModelCache = true;
 								break;
 							case KEY_FISHING_SPOT_STYLE:
 								reloadModelOverrides = true;
@@ -1700,10 +1686,8 @@ public class HdPlugin extends Plugin {
 						materialManager.reload(false);
 						modelOverrideManager.reload();
 						recompilePrograms = true;
-						clearModelCache = true;
 					} else if (reloadModelOverrides) {
 						modelOverrideManager.reload();
-						clearModelCache = true;
 					}
 
 					if (reloadTileOverrides) {
@@ -1719,19 +1703,14 @@ public class HdPlugin extends Plugin {
 						updateSceneFbo();
 					}
 
-					if (resizeModelCache) {
-						modelPusher.shutDown();
-						modelPusher.startUp();
-					} else if (clearModelCache) {
-						modelPusher.clearModelCache();
-					}
-
-					if (reloadScene)
+					if (reloadScene) {
+						renderer.clearCaches();
 						renderer.reloadScene();
+					}
 
 					if (recreateShadowMapFbo) {
 						destroyShadowMapFbo();
-						initShadowMapFbo();
+						initializeShadowMapFbo();
 					}
 
 					if (reloadEnvironments)
@@ -1899,7 +1878,7 @@ public class HdPlugin extends Plugin {
 //		);
 	}
 
-	private void displayUnsupportedGpuMessage(boolean isGenericGpu, String glRenderer) {
+	private void displayUnsupportedGpuMessage(boolean isFallbackGpu, String glRenderer) {
 		String hint32Bit = "";
 		if (HDUtils.is32Bit()) {
 			hint32Bit =
@@ -1916,7 +1895,7 @@ public class HdPlugin extends Plugin {
 
 		String errorMessage =
 			(
-				isGenericGpu ? (
+				isFallbackGpu ? (
 					"Your graphics driver appears to be broken.<br>"
 					+ "<br>"
 					+ "Some things to try:<br>"

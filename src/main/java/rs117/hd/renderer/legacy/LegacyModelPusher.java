@@ -1,4 +1,4 @@
-package rs117.hd.model;
+package rs117.hd.renderer.legacy;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -16,10 +16,10 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.model.ModelCache;
+import rs117.hd.model.ModelHasher;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
-import rs117.hd.renderer.legacy.LegacySceneContext;
-import rs117.hd.renderer.legacy.LegacySceneUploader;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
@@ -43,7 +43,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 @Slf4j
-public class ModelPusher {
+public class LegacyModelPusher {
 	@Inject
 	private Client client;
 
@@ -69,7 +69,6 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 

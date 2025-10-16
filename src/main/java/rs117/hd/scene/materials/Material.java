@@ -18,7 +18,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -75,6 +74,7 @@ public class Material {
 	public transient boolean isFallbackVanillaMaterial;
 	public transient boolean isValid = true;
 
+	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 	public static final Material NONE = new Material().name("NONE");
 	public static final Material[] REQUIRED_MATERIALS = { NONE };
 
@@ -174,9 +174,9 @@ public class Material {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
-		assert materialIndex <= ModelPusher.MAX_MATERIAL_INDEX;
+		assert materialIndex <= MAX_MATERIAL_INDEX;
 		// The sign bit can't be used without shader changes to correctly unpack the material index
-		return (materialIndex & ModelPusher.MAX_MATERIAL_INDEX) << 20
+		return (materialIndex & MAX_MATERIAL_INDEX) << 20
 			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11
 			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 8

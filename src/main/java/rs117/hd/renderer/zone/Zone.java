@@ -59,7 +59,7 @@ class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void init(VBO o, VBO a) {
+	void initialize(VBO o, VBO a) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
