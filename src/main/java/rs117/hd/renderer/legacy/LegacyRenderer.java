@@ -16,9 +16,11 @@ import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
@@ -206,6 +208,7 @@ public class LegacyRenderer implements Renderer {
 	@Nullable
 	private LegacySceneContext sceneContext;
 	private LegacySceneContext nextSceneContext;
+	private int gameTicksUntilSceneReload;
 
 	@Override
 	public int getGpuFlags() {
@@ -260,6 +263,15 @@ public class LegacyRenderer implements Renderer {
 		if (plugin.computeMode == ComputeMode.OPENCL)
 			clManager.finish();
 		glFinish();
+	}
+
+	@Subscribe
+	public void onGameTick(GameTick gameTick) {
+		if (gameTicksUntilSceneReload > 0) {
+			if (gameTicksUntilSceneReload == 1)
+				reloadScene();
+			--gameTicksUntilSceneReload;
+		}
 	}
 
 	@Override
@@ -1275,7 +1287,7 @@ public class LegacyRenderer implements Renderer {
 	}
 
 	@Override
-	public void reuploadScene() {
+	public void reloadScene() {
 		assert client.isClientThread() : "Loading a scene is unsafe while the client can modify it";
 		if (client.getGameState().getState() < GameState.LOGGED_IN.getState())
 			return;
@@ -1406,14 +1418,14 @@ public class LegacyRenderer implements Renderer {
 		}
 	}
 
-	public void reloadSceneNextGameTick() {
+	private void reloadSceneNextGameTick() {
 		reloadSceneIn(1);
 	}
 
-	public void reloadSceneIn(int gameTicks) {
+	private void reloadSceneIn(int gameTicks) {
 		assert gameTicks > 0 : "A value <= 0 will not reload the scene";
-		if (gameTicks > plugin.gameTicksUntilSceneReload)
-			plugin.gameTicksUntilSceneReload = gameTicks;
+		if (gameTicks > gameTicksUntilSceneReload)
+			gameTicksUntilSceneReload = gameTicks;
 	}
 
 	@Override

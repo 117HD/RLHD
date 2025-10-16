@@ -15,7 +15,7 @@ public interface Renderer extends DrawCallbacks {
 	default void destroy() {}
 	default void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {}
 	default void destroyShaders() {}
-	default void reuploadScene() {}
+	default void reloadScene() {}
 	default boolean isLoadingScene() {
 		return false;
 	}

@@ -421,7 +421,6 @@ public class HdPlugin extends Plugin {
 	public long lastFrameTimeMillis;
 	public double lastFrameClientTime;
 	public float windOffset;
-	public int gameTicksUntilSceneReload = 0;
 	public long colorFilterChangedAt;
 
 	@Provides
@@ -587,6 +586,7 @@ public class HdPlugin extends Plugin {
 
 				renderer = injector.getInstance(config.renderer().rendererClass);
 				renderer.initialize();
+				eventBus.register(renderer);
 				int gpuFlags = DrawCallbacks.GPU | renderer.getGpuFlags();
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
@@ -682,8 +682,10 @@ public class HdPlugin extends Plugin {
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
 
-				if (renderer != null)
+				if (renderer != null) {
+					eventBus.unregister(renderer);
 					renderer.destroy();
+				}
 				renderer = null;
 			}
 
@@ -1460,7 +1462,7 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void reuploadScene() {
-		renderer.reuploadScene();
+		renderer.reloadScene();
 	}
 
 	public boolean isLoadingScene() {
@@ -1725,7 +1727,7 @@ public class HdPlugin extends Plugin {
 					}
 
 					if (reloadScene)
-						renderer.reuploadScene();
+						renderer.reloadScene();
 
 					if (recreateShadowMapFbo) {
 						destroyShadowMapFbo();
@@ -1831,12 +1833,6 @@ public class HdPlugin extends Plugin {
 	public void onGameTick(GameTick gameTick) {
 		if (!isActive)
 			return;
-
-		if (gameTicksUntilSceneReload > 0) {
-			if (gameTicksUntilSceneReload == 1)
-				renderer.reuploadScene();
-			--gameTicksUntilSceneReload;
-		}
 
 		fishingSpotReplacer.update();
 	}

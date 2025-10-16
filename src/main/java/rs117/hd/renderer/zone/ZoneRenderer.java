@@ -41,7 +41,6 @@ import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
@@ -100,9 +99,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private ClientThread clientThread;
-
-	@Inject
-	private EventBus eventBus;
 
 	@Inject
 	private DrawManager drawManager;
@@ -272,8 +268,6 @@ public class ZoneRenderer implements Renderer {
 		// TODO: This is done by forcing the loading state in HdPlugin
 //		if (client.getGameState() == GameState.LOGGED_IN)
 //			startupWorldLoad();
-
-		eventBus.register(this);
 	}
 
 	private void startupWorldLoad() {
@@ -292,8 +286,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void destroy() {
-		eventBus.unregister(this);
-
 		root.free();
 
 		vaoO.free();
@@ -1247,7 +1239,7 @@ public class ZoneRenderer implements Renderer {
 				zone.initialized = true;
 				zone.dirty = true;
 
-				log.debug("Rebuilt zone wv={} x={} z={}", wv.getId(), x, z);
+				log.trace("Rebuilt zone wv={} x={} z={}", wv.getId(), x, z);
 			}
 		}
 	}
@@ -1348,16 +1340,14 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	@Override
-	public void reuploadScene() {
-		assert client.isClientThread() : "Loading a scene is unsafe while the client can modify it";
-		if (client.getGameState().getState() < GameState.LOGGED_IN.getState())
+	public void reloadScene() {
+		if (client.getGameState().getState() < GameState.LOGGED_IN.getState() || root.sceneContext == null)
 			return;
-		// TODO
-//		Scene scene = client.getTopLevelWorldView().getScene();
-//		loadScene(scene);
-//		if (plugin.skipScene == scene)
-//			plugin.skipScene = null;
-//		swapScene(scene);
+
+		proceduralGenerator.generateSceneData(root.sceneContext);
+		for (int i = 0; i < NUM_ZONES; i++)
+			for (int j = 0; j < NUM_ZONES; j++)
+				root.zones[i][j].invalidate = true;
 	}
 
 	@Override
