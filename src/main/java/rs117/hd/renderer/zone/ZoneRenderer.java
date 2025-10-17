@@ -970,15 +970,13 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		if (level == 0 && z.hasWater) {
-			int offset = ctx.sceneContext.sceneOffset >> 3;
+		int offset = ctx.sceneContext.sceneOffset >> 3;
+		if (level == 0 && z.hasWater)
 			z.renderOpaqueLevel(plugin.uboGlobal, zx - offset, zz - offset, Zone.LEVEL_WATER_SURFACE);
-		}
 
-		if (z.sizeA == 0)
+		if (z.sizeA == 0 && z.alphaModels.isEmpty())
 			return;
 
-		int offset = scene.getWorldViewId() == -1 ? (SCENE_OFFSET >> 3) : 0;
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, cameraX, cameraY, cameraZ);
 			z.multizoneLocs(scene, zx - offset, zz - offset, cameraX, cameraZ, ctx.zones);

@@ -474,27 +474,28 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 		return infoDrawn;
 	}
 
-	private Rectangle drawTileInfo(Graphics2D g, SceneContext sceneContext, Tile tile, Polygon poly, Rectangle dodgeRect)
+	private Rectangle drawTileInfo(Graphics2D g, SceneContext ctx, Tile tile, Polygon poly, Rectangle dodgeRect)
 	{
 		SceneTilePaint tilePaint = tile.getSceneTilePaint();
 		SceneTileModel tileModel = tile.getSceneTileModel();
 
-		Scene scene = sceneContext.scene;
+		Scene scene = ctx.scene;
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
 		int tileZ = tile.getRenderLevel();
-		int tileExX = tileX + SCENE_OFFSET;
-		int tileExY = tileY + SCENE_OFFSET;
-		int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
+		int tileExX = tileX + ctx.sceneOffset;
+		int tileExY = tileY + ctx.sceneOffset;
+		int[] worldPos = ctx.sceneToWorld(tileX, tileY, tileZ);
 
 		ArrayList<String> lines = new ArrayList<>();
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (mode == MODE_TILE_INFO) {
-			sceneContext.tileOverrideVars.setTile(tile);
+			ctx.tileOverrideVars.setTile(tile);
 			if (tile.getBridge() != null)
 				lines.add("Bridge");
 
+			lines.add("Zone: " + (tileExX / 8) + ", " + (tileExY / 8) + ", " + tileZ);
 			lines.add("Scene point: " + tileX + ", " + tileY + ", " + tileZ);
 			lines.add("World point: " + Arrays.toString(worldPos));
 			lines.add(String.format(
@@ -504,7 +505,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				worldPos[1] >> 6
 			));
 
-			for (var environment : sceneContext.environments) {
+			for (var environment : ctx.environments) {
 				if (environment.area.containsPoint(worldPos)) {
 					lines.add("Environment: " + environment);
 					break;
@@ -515,7 +516,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
 			while (true) {
-				var replacement = overlay.resolveNextReplacement(sceneContext.tileOverrideVars);
+				var replacement = overlay.resolveNextReplacement(ctx.tileOverrideVars);
 				if (replacement == overlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -532,7 +533,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
 			replacementPath = new StringBuilder(underlay.toString());
 			while (true) {
-				var replacement = underlay.resolveNextReplacement(sceneContext.tileOverrideVars);
+				var replacement = underlay.resolveNextReplacement(ctx.tileOverrideVars);
 				if (replacement == underlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -552,7 +553,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add(String.format("Material: %s (%d)", material.name, tilePaint.getTexture()));
 				lines.add(String.format("HSL: %s", hslString(tile)));
 
-				var override = tileOverrideManager.getOverride(sceneContext, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
+				var override = tileOverrideManager.getOverride(ctx, tile, worldPos, OVERLAY_FLAG | overlayId, underlayId);
 				lines.add("WaterType: " + proceduralGenerator.seasonalWaterType(override, tilePaint.getTexture()));
 			} else if (tileModel != null) {
 				polyColor = Color.ORANGE;
@@ -598,7 +599,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
 
-			sceneContext.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
+			ctx.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
 		}
 
 		var decorObject = tile.getDecorativeObject();
