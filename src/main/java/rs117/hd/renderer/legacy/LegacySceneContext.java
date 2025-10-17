@@ -22,7 +22,7 @@ public class LegacySceneContext extends SceneContext {
 		int expandedMapLoadingChunks,
 		@Nullable LegacySceneContext previous
 	) {
-		super(client, scene, expandedMapLoadingChunks);
+		super(client, scene, expandedMapLoadingChunks, Constants.EXTENDED_SCENE_SIZE >> 3, Constants.EXTENDED_SCENE_SIZE >> 3);
 
 		if (previous == null) {
 			staticUnorderedModelBuffer = new GpuIntBuffer();

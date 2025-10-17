@@ -332,8 +332,10 @@ public class ProceduralGenerator {
 	 */
 	private void generateUnderwaterTerrain(SceneContext sceneContext)
 	{
+		int sizeX = sceneContext.sizeX;
+		int sizeY = sceneContext.sizeZ;
 		// true if a tile contains at least 1 face which qualifies as water
-		sceneContext.tileIsWater = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+		sceneContext.tileIsWater = new boolean[MAX_Z][sizeX][sizeY];
 		// true if a vertex is part of a face which qualifies as water; non-existent if not
 		sceneContext.vertexIsWater = new HashMap<>();
 		// true if a vertex is part of a face which qualifies as land; non-existent if not
@@ -341,21 +343,21 @@ public class ProceduralGenerator {
 		sceneContext.vertexIsLand = new HashMap<>();
 		// if true, the tile will be skipped when the scene is drawn
 		// this is due to certain edge cases with water on the same X/Y on different planes
-		sceneContext.skipTile = new boolean[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
+		sceneContext.skipTile = new boolean[MAX_Z][sizeX][sizeY];
 		// the height adjustment for each vertex, to be applied to the vertex'
 		// real height to create the underwater terrain
 		sceneContext.vertexUnderwaterDepth = new HashMap<>();
 		// the basic 'levels' of underwater terrain, used to sink terrain based on its distance
 		// from the shore, then used to produce the world-space height offset
 		// 0 = land
-		sceneContext.underwaterDepthLevels = new int[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
+		sceneContext.underwaterDepthLevels = new int[MAX_Z][sizeX + 1][sizeY + 1];
 		// the world-space height offsets of each vertex on the tile grid
 		// these offsets are interpolated to calculate offsets for vertices not on the grid (tilemodels)
-		final int[][][] underwaterDepths = new int[MAX_Z][EXTENDED_SCENE_SIZE + 1][EXTENDED_SCENE_SIZE + 1];
+		final int[][][] underwaterDepths = new int[MAX_Z][sizeX + 1][sizeY + 1];
 
 		for (int z = 0; z < MAX_Z; ++z)
 		{
-			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
+			for (int x = 0; x < sizeX; ++x) {
 				// set the array to 1 initially
 				// this assumes that all vertices are water;
 				// we will set non-water vertices to 0 in the next loop
@@ -368,8 +370,8 @@ public class ProceduralGenerator {
 
 		// figure out which vertices are water and assign some data
 		for (int z = 0; z < MAX_Z; ++z) {
-			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
-				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
+			for (int x = 0; x < sizeX; ++x) {
+				for (int y = 0; y < sizeY; ++y) {
 					if (tiles[z][x][y] == null) {
 						sceneContext.underwaterDepthLevels[z][x][y] = 0;
 						sceneContext.underwaterDepthLevels[z][x + 1][y] = 0;
@@ -604,8 +606,8 @@ public class ProceduralGenerator {
 		// Store the height offsets in a hashmap and calculate interpolated
 		// height offsets for non-corner vertices.
 		for (int z = 0; z < MAX_Z; ++z) {
-			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
-				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
+			for (int x = 0; x < sizeX; ++x) {
+				for (int y = 0; y < sizeY; ++y) {
 					if (!sceneContext.tileIsWater[z][x][y]) {
 						continue;
 					}
