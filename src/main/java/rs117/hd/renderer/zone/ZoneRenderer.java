@@ -244,8 +244,16 @@ public class ZoneRenderer implements Renderer {
 	public void destroy() {
 		root.free();
 
+		for (int i = 0; i < subs.length; i++) {
+			if (subs[i] != null)
+				subs[i].free();
+			subs[i] = null;
+		}
+
 		destroyVaos();
 
+		nextZones = null;
+		nextRoofChanges = null;
 		if (nextSceneContext != null)
 			nextSceneContext.destroy();
 		nextSceneContext = null;
