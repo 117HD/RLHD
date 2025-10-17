@@ -34,7 +34,7 @@ layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
 
-out vec4 gPosition;
+out vec3 gPosition;
 out vec3 gUv;
 out vec3 gNormal;
 out int gAlphaBiasHsl;
@@ -42,7 +42,7 @@ out int gMaterialData;
 out int gTerrainData;
 
 void main() {
-    gPosition = entityProjectionMatrix * vec4(sceneBase + vPosition, 1);
+    gPosition = sceneBase + vPosition;
     gUv = vUv;
     gNormal = vNormal;
     gAlphaBiasHsl = vAlphaBiasHsl;

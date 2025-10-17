@@ -36,7 +36,7 @@ layout(triangle_strip, max_vertices = 3) out;
 #include <utils/misc.glsl>
 #include <utils/uvs.glsl>
 
-flat in vec4 gPosition[3];
+flat in vec3 gPosition[3];
 flat in vec3 gUv[3];
 flat in int gMaterialData[3];
 flat in int gCastShadow[3];
@@ -59,7 +59,7 @@ void main() {
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     vec3 uvw[3] = vec3[](gUv[0], gUv[1], gUv[2]);
-    computeUvs(materialData, vec3[](gPosition[0].xyz, gPosition[1].xyz, gPosition[2].xyz), uvw);
+    computeUvs(materialData, vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
 
     fMaterialData = materialData;
 
@@ -74,7 +74,7 @@ void main() {
             fOpacity = gOpacity[i];
         #endif
 
-        gl_Position = lightProjectionMatrix * gPosition[i];
+        gl_Position = lightProjectionMatrix * entityProjectionMatrix * vec4(gPosition[i], 1);
         EmitVertex();
     }
     EndPrimitive();
