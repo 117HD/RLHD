@@ -219,9 +219,8 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeVaos();
 
-		// TODO: This is done by forcing the loading state in HdPlugin
-//		if (client.getGameState() == GameState.LOGGED_IN)
-//			startupWorldLoad();
+		if (client.getGameState() == GameState.LOGGED_IN)
+			startupWorldLoad();
 	}
 
 	private void startupWorldLoad() {
