@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.opengl.uniforms.UBOGlobal;
+import rs117.hd.utils.Mat4;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -91,7 +93,7 @@ class VAO {
 		off++;
 	}
 
-	void draw() {
+	void draw(UBOGlobal ubo) {
 		assert !vbo.mapped;
 
 		int start = 0;
@@ -102,6 +104,8 @@ class VAO {
 
 			int count = end - start;
 
+			ubo.entityProjectionMatrix.set(p instanceof FloatProjection ? ((FloatProjection) p).getProjection() : Mat4.identity());
+			ubo.upload();
 //			glUniformMatrix4fv(
 //				uniEntityProj,
 //				false,

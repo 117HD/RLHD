@@ -1024,20 +1024,20 @@ public class ZoneRenderer implements Renderer {
 //				}
 				var vaos = vaoO.unmap();
 				for (VAO vao : vaos) {
-					vao.draw();
+					vao.draw(plugin.uboGlobal);
 					vao.reset();
 				}
 
 				vaos = vaoPO.unmap();
 				glDepthMask(false);
 				for (VAO vao : vaos) {
-					vao.draw();
+					vao.draw(plugin.uboGlobal);
 				}
 				glDepthMask(true);
 
 				glColorMask(false, false, false, false);
 				for (VAO vao : vaos) {
-					vao.draw();
+					vao.draw(plugin.uboGlobal);
 					vao.reset();
 				}
 				glColorMask(true, true, true, true);
