@@ -16,10 +16,13 @@ public class ZoneSceneContext extends SceneContext {
 		int expandedMapLoadingChunks,
 		@Nullable SceneContext previous
 	) {
-		super(client, scene, expandedMapLoadingChunks, worldView.getSizeX() >> 3, worldView.getSizeY() >> 3);
+		super(client, scene, expandedMapLoadingChunks);
 //		this.worldView = worldView;
-		if (worldView.getId() != -1)
+		if (worldView.getId() != -1) {
 			sceneOffset = 0;
+			sizeX = worldView.getSizeX();
+			sizeZ = worldView.getSizeY();
+		}
 //		numZonesX = worldView.getSizeX();
 //		numZonesY = worldView.getSizeY();
 //		zones = new Zone[numZonesX][numZonesY];

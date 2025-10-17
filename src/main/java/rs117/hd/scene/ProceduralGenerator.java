@@ -825,6 +825,8 @@ public class ProceduralGenerator {
 			switch (textureId) {
 				case 1:
 				case 24:
+				case 130:
+				case 131:
 					waterType = WaterType.WATER_FLAT;
 					break;
 				case 25:

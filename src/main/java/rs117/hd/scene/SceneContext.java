@@ -31,7 +31,7 @@ public class SceneContext {
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
-	public final int sizeX, sizeZ;
+	public int sizeX, sizeZ;
 
 	@Nullable
 	public final int[] sceneBase;
@@ -91,12 +91,13 @@ public class SceneContext {
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, int sizeX, int sizeZ) {
+	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
 		this.scene = scene;
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
-		this.sizeX = sizeX;
-		this.sizeZ = sizeZ;
+//		this.sizeX = SCENE_SIZE + expandedMapLoadingChunks * CHUNK_SIZE;
+//		this.sizeZ = SCENE_SIZE + expandedMapLoadingChunks * CHUNK_SIZE;
+		sizeX = sizeZ = EXTENDED_SCENE_SIZE;
 		sceneOffset = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);

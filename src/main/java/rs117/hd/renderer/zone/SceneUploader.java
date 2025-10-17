@@ -248,7 +248,8 @@ class SceneUploader {
 			z.sizeO += 2;
 
 			TileOverride override = tileOverrideManager.getOverride(ctx, t, worldPos);
-			if (override.waterType != WaterType.NONE) {
+			WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
+			if (waterType != WaterType.NONE) {
 				z.hasWater = true;
 				// Since these are surface tiles, they should perhaps technically be in the alpha buffer,
 				// but we'll render them in the correct order without needing face sorting,
@@ -270,7 +271,21 @@ class SceneUploader {
 			var overlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, overlayId);
 			var underlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, underlayId);
 
-			if (overlayOverride.waterType != WaterType.NONE || underlayOverride.waterType != WaterType.NONE) {
+			final int[] triangleTextures = model.getTriangleTextureId();
+			boolean isFallbackWater = false;
+			if (triangleTextures != null) {
+				for (int textureId : triangleTextures) {
+					if (textureId != -1 && proceduralGenerator.seasonalWaterType(TileOverride.NONE, textureId) != WaterType.NONE) {
+						isFallbackWater = true;
+						break;
+					}
+				}
+			}
+			WaterType overlayWaterType = proceduralGenerator.seasonalWaterType(overlayOverride, 0);
+			WaterType underlayWaterType = proceduralGenerator.seasonalWaterType(underlayOverride, 0);
+			boolean isOverlayWater = overlayWaterType != WaterType.NONE;
+			boolean isUnderlayWater = underlayWaterType != WaterType.NONE;
+			if (isFallbackWater || isOverlayWater || isUnderlayWater) {
 				z.hasWater = true;
 				z.sizeO += len;
 			}
@@ -611,7 +626,8 @@ class SceneUploader {
 			return;
 
 		TileOverride override = tileOverrideManager.getOverride(ctx, tile, worldPos);
-		if (onlyWaterSurface && override.waterType == WaterType.NONE)
+		WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
+		if (onlyWaterSurface && waterType == WaterType.NONE)
 			return;
 
 		final int[][][] tileHeights = ctx.scene.getTileHeights();
@@ -660,7 +676,6 @@ class SceneUploader {
 		int[] neNormals = UP_NORMAL;
 		int[] nwNormals = UP_NORMAL;
 
-		WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 		int swTerrainData, seTerrainData, nwTerrainData, neTerrainData;
 		swTerrainData = seTerrainData = nwTerrainData = neTerrainData = HDUtils.packTerrainData(true, 0, waterType, tileZ);
 
@@ -833,13 +848,25 @@ class SceneUploader {
 		int basex, int basez,
 		GpuIntBuffer vb
 	) {
+		final int[] triangleTextures = model.getTriangleTextureId();
+		boolean isFallbackWater = false;
+		if (triangleTextures != null) {
+			for (int textureId : triangleTextures) {
+				if (textureId != -1 && proceduralGenerator.seasonalWaterType(TileOverride.NONE, textureId) != WaterType.NONE) {
+					isFallbackWater = true;
+					break;
+				}
+			}
+		}
 		int overlayId = OVERLAY_FLAG | ctx.scene.getOverlayIds()[tileZ][tileExX][tileExY];
 		int underlayId = ctx.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
 		var overlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, overlayId);
 		var underlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, underlayId);
-		boolean isOverlayWater = overlayOverride.waterType != WaterType.NONE;
-		boolean isUnderlayWater = underlayOverride.waterType != WaterType.NONE;
-		if (onlyWaterSurface && !isOverlayWater && !isUnderlayWater)
+		WaterType overlayWaterType = proceduralGenerator.seasonalWaterType(overlayOverride, 0);
+		WaterType underlayWaterType = proceduralGenerator.seasonalWaterType(underlayOverride, 0);
+		boolean isOverlayWater = overlayWaterType != WaterType.NONE;
+		boolean isUnderlayWater = underlayWaterType != WaterType.NONE;
+		if (onlyWaterSurface && !isFallbackWater && !isOverlayWater && !isUnderlayWater)
 			return;
 
 		final int[] faceX = model.getFaceX();
@@ -854,8 +881,6 @@ class SceneUploader {
 		final int[] triangleColorB = model.getTriangleColorB();
 		final int[] triangleColorC = model.getTriangleColorC();
 
-		final int[] triangleTextures = model.getTriangleTextureId();
-
 		final int faceCount = faceX.length;
 
 		var sceneLoc = tile.getSceneLocation();
@@ -869,8 +894,11 @@ class SceneUploader {
 			if (colorA == HIDDEN_HSL)
 				continue;
 
+			int textureId = triangleTextures == null ? -1 : triangleTextures[face];
 			boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, face);
-			boolean isWater = isOverlay ? isOverlayWater : isUnderlayWater;
+			var override = isOverlay ? overlayOverride : underlayOverride;
+			WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
+			boolean isWater = waterType != WaterType.NONE;
 			if (onlyWaterSurface && !isWater)
 				continue;
 
@@ -902,7 +930,6 @@ class SceneUploader {
 			boolean vertexBIsOverlay = false;
 			boolean vertexCIsOverlay = false;
 
-			int textureId;
 			Material materialA = Material.NONE;
 			Material materialB = Material.NONE;
 			Material materialC = Material.NONE;
@@ -913,10 +940,6 @@ class SceneUploader {
 			int[] normalsA = UP_NORMAL;
 			int[] normalsB = UP_NORMAL;
 			int[] normalsC = UP_NORMAL;
-
-			textureId = triangleTextures == null ? -1 : triangleTextures[face];
-			var override = isOverlay ? overlayOverride : underlayOverride;
-			WaterType waterType = proceduralGenerator.seasonalWaterType(override, textureId);
 
 			int terrainDataA, terrainDataB, terrainDataC;
 			terrainDataA = terrainDataB = terrainDataC = HDUtils.packTerrainData(true, 0, waterType, tileZ);
