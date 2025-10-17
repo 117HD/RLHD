@@ -132,14 +132,16 @@ public class ProceduralGenerator {
 		sceneContext.vertexIsOverlay = new HashMap<>();
 
 		Tile[][][] tiles = sceneContext.scene.getExtendedTiles();
+		int sizeX = sceneContext.sizeX;
+		int sizeY = sceneContext.sizeZ;
 		for (int z = 0; z < MAX_Z; ++z) {
-			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x)
-				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y)
+			for (int x = 0; x < sizeX; ++x)
+				for (int y = 0; y < sizeY; ++y)
 					if (tiles[z][x][y] != null)
 						generateDataForTile(sceneContext, tiles[z][x][y], x, y);
 
-			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x)
-				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y)
+			for (int x = 0; x < sizeX; ++x)
+				for (int y = 0; y < sizeY; ++y)
 					if (tiles[z][x][y] != null && tiles[z][x][y].getBridge() != null)
 						generateDataForTile(sceneContext, tiles[z][x][y].getBridge(), x, y);
 		}
