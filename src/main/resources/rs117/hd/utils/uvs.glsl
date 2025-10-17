@@ -45,8 +45,10 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
     } else if ((materialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
         #if ZONE_RENDERER
             // Vanilla UVs are relative to vertex positions
-            for (int i = 0; i < 3; i++)
-                uvw[i] += pos[i];
+            for (int i = 0; i < 3; i++) {
+                uvw[i] += sceneBase + pos[i];
+                uvw[i] = (entityProjectionMatrix * vec4(uvw[i], 1)).xyz;
+            }
         #endif
 
         vec3 v1 = uvw[0];
