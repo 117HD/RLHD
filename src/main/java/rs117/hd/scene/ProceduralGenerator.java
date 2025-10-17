@@ -827,6 +827,7 @@ public class ProceduralGenerator {
 				case 24:
 				case 130:
 				case 131:
+				case 132:
 					waterType = WaterType.WATER_FLAT;
 					break;
 				case 25:
