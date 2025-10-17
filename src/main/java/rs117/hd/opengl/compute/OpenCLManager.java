@@ -30,7 +30,6 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.util.OSType;
@@ -64,7 +63,6 @@ import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static rs117.hd.utils.MathUtils.*;
 
-@Singleton
 @Slf4j
 public class OpenCLManager {
 	private static final String KERNEL_NAME_PASSTHROUGH = "passthroughModel";
@@ -82,7 +80,6 @@ public class OpenCLManager {
 	@Inject
 	private HdPlugin plugin;
 
-	@Inject
 	private LegacyRenderer legacyRenderer;
 
 	public static long context;
@@ -105,7 +102,8 @@ public class OpenCLManager {
 		Configuration.OPENCL_EXPLICIT_INIT.set(true);
 	}
 
-	public void startUp(AWTContext awtContext) {
+	public void startUp(LegacyRenderer legacyRenderer, AWTContext awtContext) {
+		this.legacyRenderer = legacyRenderer;
 		CL.create();
 		initialized = true;
 		initializeContext(awtContext);
