@@ -218,20 +218,6 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		initializeVaos();
-
-		// The main scene is loaded by setting the GameState to LOADING in HdPlugin,
-		// but we still need to load any already spawned sub scenes
-		if (client.getGameState() == GameState.LOGGED_IN)
-			loadExistingSubScenes();
-	}
-
-	private void loadExistingSubScenes() {
-		for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
-			WorldView sub = subEntity.getWorldView();
-			log.debug("WorldView loading: {}", sub.getId());
-			loadSubScene(sub, sub.getScene());
-			swapSub(sub.getScene());
-		}
 	}
 
 	@Override
@@ -1755,8 +1741,9 @@ public class ZoneRenderer implements Renderer {
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
 
-		if (root.sceneContext != null)
-			root.sceneContext.destroy();
+		boolean isFirst = root.sceneContext == null;
+		if (!isFirst)
+			root.sceneContext.destroy(); // Destroy the old context before replacing it
 		root.sceneContext = nextSceneContext;
 		nextSceneContext = null;
 
@@ -1797,6 +1784,16 @@ public class ZoneRenderer implements Renderer {
 					zone.unmap();
 					zone.initialized = true;
 				}
+			}
+		}
+
+		if (isFirst) {
+			// Load all pre-existing sub scenes on the first scene load
+			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
+				WorldView sub = subEntity.getWorldView();
+				log.debug("WorldView loading: {}", sub.getId());
+				loadSubScene(sub, sub.getScene());
+				swapSub(sub.getScene());
 			}
 		}
 

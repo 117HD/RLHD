@@ -606,7 +606,7 @@ public class HdPlugin extends Plugin {
 				isInHouse = false;
 				isInChambersOfXeric = false;
 
-				// We need to force the client to reload the scene since we're changing GPU flags
+				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
 					client.setGameState(GameState.LOADING);
 
