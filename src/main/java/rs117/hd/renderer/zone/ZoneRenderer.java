@@ -219,17 +219,14 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeVaos();
 
+		// The main scene is loaded by setting the GameState to LOADING in HdPlugin,
+		// but we still need to load any already spawned sub scenes
 		if (client.getGameState() == GameState.LOGGED_IN)
-			startupWorldLoad();
+			loadExistingSubScenes();
 	}
 
-	private void startupWorldLoad() {
-		WorldView root = client.getTopLevelWorldView();
-		Scene scene = root.getScene();
-		loadScene(root, scene);
-		swapScene(scene);
-
-		for (WorldEntity subEntity : root.worldEntities()) {
+	private void loadExistingSubScenes() {
+		for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 			WorldView sub = subEntity.getWorldView();
 			log.debug("WorldView loading: {}", sub.getId());
 			loadSubScene(sub, sub.getScene());
