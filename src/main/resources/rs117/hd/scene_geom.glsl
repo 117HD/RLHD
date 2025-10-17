@@ -87,7 +87,7 @@ void main() {
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     for (int i = 0; i < 3; i++) {
-        vec4 pos = entityProjectionMatrix * vec4(gPosition[i], 1);
+        vec4 pos = vec4(gPosition[i], 1);
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i];
 

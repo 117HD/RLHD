@@ -42,7 +42,7 @@ out int gMaterialData;
 out int gTerrainData;
 
 void main() {
-    gPosition = sceneBase + vPosition;
+    gPosition = vec3(entityProjectionMatrix * vec4(sceneBase + vPosition, 1));
     gUv = vUv;
     gNormal = vNormal;
     gAlphaBiasHsl = vAlphaBiasHsl;
