@@ -1619,20 +1619,18 @@ public class ZoneRenderer implements Renderer {
 		// For tile blending, sharelight, and shadows to work correctly, the zones surrounding
 		// the zone must be valid.
 		for (int x = zx - 1; x <= zx + 1; ++x) {
-			if (x < 0 || x >= NUM_ZONES) {
+			if (x < 0 || x >= NUM_ZONES)
 				return false;
-			}
 			for (int z = zz - 1; z <= zz + 1; ++z) {
-				if (z < 0 || z >= NUM_ZONES) {
+				if (z < 0 || z >= NUM_ZONES)
 					return false;
-				}
 				Zone zone = zones[x][z];
-				if (!zone.initialized) {
+				if (!zone.initialized)
 					return false;
-				}
-				if (zone.sizeO == 0 && zone.sizeA == 0) {
+				if (zone.sizeO == 0 && zone.sizeA == 0)
 					return false;
-				}
+				if (zone.hasWater)
+					return false; // TODO: Regenerate underwater geometry instead of discarding entire zones
 			}
 		}
 		return true;
