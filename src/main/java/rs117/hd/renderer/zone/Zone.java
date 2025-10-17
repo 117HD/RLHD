@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.BufferUtils;
 import rs117.hd.opengl.uniforms.UBOGlobal;
+import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -607,8 +607,8 @@ class Zone {
 		}
 	}
 
-	void multizoneLocs(Scene scene, int zx, int zz, int cx, int cz, Zone[][] zones) {
-		int offset = scene.getWorldViewId() == -1 ? SCENE_OFFSET >> 3 : 0;
+	void multizoneLocs(SceneContext ctx, int zx, int zz, int cx, int cz, Zone[][] zones) {
+		int offset = ctx.sceneOffset >> 3;
 		for (AlphaModel m : alphaModels) {
 			if (m.lx == -1) {
 				continue;

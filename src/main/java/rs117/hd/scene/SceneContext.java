@@ -26,8 +26,6 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.utils.MathUtils.*;
 
 public class SceneContext {
-	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
-
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;

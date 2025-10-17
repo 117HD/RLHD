@@ -53,7 +53,6 @@ import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
@@ -1483,8 +1482,8 @@ public class LegacyRenderer implements Renderer {
 			return tileIsVisible[plane][tileExX][tileExY];
 
 		int[][][] tileHeights = scene.getTileHeights();
-		int x = ((tileExX - SceneContext.SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
-		int z = ((tileExY - SceneContext.SCENE_OFFSET) << Perspective.LOCAL_COORD_BITS) + 64;
+		int x = ((tileExX - sceneContext.sceneOffset) << Perspective.LOCAL_COORD_BITS) + 64;
+		int z = ((tileExY - sceneContext.sceneOffset) << Perspective.LOCAL_COORD_BITS) + 64;
 		int y = GROUND_MIN_Y + max(
 			tileHeights[plane][tileExX][tileExY],
 			tileHeights[plane][tileExX][tileExY + 1],
@@ -1710,8 +1709,8 @@ public class LegacyRenderer implements Renderer {
 
 			int preOrientation = 0;
 			if (ModelHash.getType(hash) == ModelHash.TYPE_OBJECT) {
-				int tileExX = (x >> Perspective.LOCAL_COORD_BITS) + SceneContext.SCENE_OFFSET;
-				int tileExY = (z >> Perspective.LOCAL_COORD_BITS) + SceneContext.SCENE_OFFSET;
+				int tileExX = (x >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+				int tileExY = (z >> Perspective.LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 				if (0 <= tileExX && tileExX < Constants.EXTENDED_SCENE_SIZE && 0 <= tileExY && tileExY < Constants.EXTENDED_SCENE_SIZE) {
 					Tile tile = sceneContext.scene.getExtendedTiles()[plane][tileExX][tileExY];
 					int config;

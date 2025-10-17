@@ -36,7 +36,6 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.MathUtils.*;
@@ -594,8 +593,8 @@ public class LegacyModelPusher {
 									int tileX = scenePos.getX();
 									int tileY = scenePos.getY();
 									int tileZ = tile.getRenderLevel();
-									int tileExX = tileX + SCENE_OFFSET;
-									int tileExY = tileY + SCENE_OFFSET;
+									int tileExX = tileX + sceneContext.sceneOffset;
+									int tileExY = tileY + sceneContext.sceneOffset;
 									int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
 										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :

@@ -74,7 +74,6 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -892,8 +891,8 @@ public class ZoneRenderer implements Renderer {
 		if (root.sceneContext == null)
 			return false;
 
-		int x = (((zx << 3) - SCENE_OFFSET) << 7) + 512 - cameraX;
-		int z = (((zz << 3) - SCENE_OFFSET) << 7) + 512 - cameraZ;
+		int x = (((zx << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraX;
+		int z = (((zz << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraZ;
 		int y = maxY - cameraY;
 		int zoneRadius = 724; // ~ 512 * sqrt(2)
 		int waterDepth = root.zones[zx][zz].hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
@@ -947,7 +946,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		int offset = scene.getWorldViewId() == -1 ? (SCENE_OFFSET >> 3) : 0;
+		int offset = ctx.sceneContext.sceneOffset >> 3;
 		z.renderOpaque(plugin.uboGlobal, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
 
 		checkGLErrors();
@@ -980,7 +979,7 @@ public class ZoneRenderer implements Renderer {
 
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, cameraX, cameraY, cameraZ);
-			z.multizoneLocs(scene, zx - offset, zz - offset, cameraX, cameraZ, ctx.zones);
+			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, cameraX, cameraZ, ctx.zones);
 		}
 
 		glDepthMask(false);
@@ -1072,12 +1071,12 @@ public class ZoneRenderer implements Renderer {
 			worldProjection, scene, tileObject, r, m, orient, x, y, z
 		);
 		WorldViewContext ctx = context(scene);
-		if (ctx == null || root.sceneContext == null) {
+		if (ctx == null || ctx.sceneContext == null) {
 			return;
 		}
 
 		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
-		int[] worldPos = root.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
+		int[] worldPos = ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
@@ -1096,7 +1095,7 @@ public class ZoneRenderer implements Renderer {
 			int end = a.vbo.vb.position();
 
 			if (end > start) {
-				int offset = scene.getWorldViewId() == -1 ? (SCENE_OFFSET >> 3) : 0;
+				int offset = ctx.sceneContext.sceneOffset >> 3;
 				int zx = (x >> 10) + offset;
 				int zz = (z >> 10) + offset;
 				Zone zone = ctx.zones[zx][zz];
@@ -1152,7 +1151,7 @@ public class ZoneRenderer implements Renderer {
 			int end = a.vbo.vb.position();
 
 			if (end > start) {
-				int offset = scene.getWorldViewId() == -1 ? (SCENE_OFFSET >> 3) : 0;
+				int offset = ctx.sceneContext.sceneOffset >> 3;
 				int zx = (gameObject.getX() >> 10) + offset;
 				int zz = (gameObject.getY() >> 10) + offset;
 				Zone zone = ctx.zones[zx][zz];
@@ -1444,10 +1443,10 @@ public class ZoneRenderer implements Renderer {
 					if (canReuse(ctx.zones, ox, oz)) {
 						if (scene.isInstance()) {
 							// Convert from modified chunk coordinates to Jagex chunk coordinates
-							int jx = x - (SCENE_OFFSET / 8);
-							int jz = z - (SCENE_OFFSET / 8);
-							int jox = ox - (SCENE_OFFSET / 8);
-							int joz = oz - (SCENE_OFFSET / 8);
+							int jx = x - nextSceneContext.sceneOffset / 8;
+							int jz = z - nextSceneContext.sceneOffset / 8;
+							int jox = ox - nextSceneContext.sceneOffset / 8;
+							int joz = oz - nextSceneContext.sceneOffset / 8;
 							// Check Jagex chunk coordinates are within the Jagex scene
 							if (jx >= 0 && jx < Constants.SCENE_SIZE / 8 && jz >= 0 && jz < Constants.SCENE_SIZE / 8) {
 								if (jox >= 0 && jox < Constants.SCENE_SIZE / 8 && joz >= 0 && joz < Constants.SCENE_SIZE / 8) {

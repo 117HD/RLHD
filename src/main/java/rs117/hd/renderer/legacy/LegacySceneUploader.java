@@ -55,7 +55,6 @@ import rs117.hd.utils.ModelHash;
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
@@ -215,8 +214,8 @@ public class LegacySceneUploader {
 			return;
 
 		var tiles = sceneContext.scene.getExtendedTiles();
-		int baseExX = sceneContext.sceneBase[0] - SCENE_OFFSET;
-		int baseExY = sceneContext.sceneBase[1] - SCENE_OFFSET;
+		int baseExX = sceneContext.sceneBase[0] - sceneContext.sceneOffset;
+		int baseExY = sceneContext.sceneBase[1] - sceneContext.sceneOffset;
 		int basePlane = sceneContext.sceneBase[2];
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
@@ -256,8 +255,8 @@ public class LegacySceneUploader {
 					if (area != null && !area.containsPoint(baseExX + tileExX, baseExY + tileExY, basePlane + tileZ))
 						continue;
 
-					int tileX = tileExX - SCENE_OFFSET;
-					int tileY = tileExY - SCENE_OFFSET;
+					int tileX = tileExX - sceneContext.sceneOffset;
+					int tileY = tileExY - sceneContext.sceneOffset;
 					Tile tile = extendedTiles[tileZ][tileExX][tileExY];
 
 					SceneTilePaint paint;
@@ -406,8 +405,8 @@ public class LegacySceneUploader {
 			// below the boats at Pest Control, or any other custom tile. To work around this, we can instead draw all hidden tiles at once
 			// at the start of the frame. This currently means they will only draw correctly if they're always behind everything else.
 			if (vertexCount > 0 && depthTested) {
-				int tileX = tileExX - SCENE_OFFSET;
-				int tileY = tileExY - SCENE_OFFSET;
+				int tileX = tileExX - sceneContext.sceneOffset;
+				int tileY = tileExY - sceneContext.sceneOffset;
 
 				// Draw the tile at the start of each frame
 				sceneContext.staticUnorderedModelBuffer
@@ -582,8 +581,8 @@ public class LegacySceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SCENE_OFFSET;
-		final int tileExY = tileY + SCENE_OFFSET;
+		final int tileExX = tileX + sceneContext.sceneOffset;
+		final int tileExY = tileY + sceneContext.sceneOffset;
 		final int tileZ = tile.getRenderLevel();
 
 		final int localX = 0;
@@ -794,8 +793,8 @@ public class LegacySceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SCENE_OFFSET;
-		final int tileExY = tileY + SCENE_OFFSET;
+		final int tileExX = tileX + sceneContext.sceneOffset;
+		final int tileExY = tileY + sceneContext.sceneOffset;
 		final int tileZ = tile.getRenderLevel();
 
 		int baseX = scene.getBaseX();
@@ -941,8 +940,8 @@ public class LegacySceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SCENE_OFFSET;
-		final int tileExY = tileY + SCENE_OFFSET;
+		final int tileExX = tileX + sceneContext.sceneOffset;
+		final int tileExY = tileY + sceneContext.sceneOffset;
 		final int tileZ = tile.getRenderLevel();
 
 		if (!fillGaps && sceneContext.skipTile[tileZ][tileExX][tileExY])
@@ -1138,8 +1137,8 @@ public class LegacySceneUploader {
 		final Point tilePoint = tile.getSceneLocation();
 		final int tileX = tilePoint.getX();
 		final int tileY = tilePoint.getY();
-		final int tileExX = tileX + SCENE_OFFSET;
-		final int tileExY = tileY + SCENE_OFFSET;
+		final int tileExX = tileX + sceneContext.sceneOffset;
+		final int tileExY = tileY + sceneContext.sceneOffset;
 		final int tileZ = tile.getRenderLevel();
 
 		int bufferLength = 0;
