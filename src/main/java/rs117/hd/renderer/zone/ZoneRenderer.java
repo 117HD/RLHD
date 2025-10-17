@@ -970,7 +970,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		if (z.hasWater) {
+		if (level == 0 && z.hasWater) {
 			int offset = ctx.sceneContext.sceneOffset >> 3;
 			z.renderOpaqueLevel(plugin.uboGlobal, zx - offset, zz - offset, Zone.LEVEL_WATER_SURFACE);
 		}

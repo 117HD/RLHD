@@ -228,6 +228,9 @@ class Zone {
 
 		convertForDraw(VERT_SIZE);
 
+		if (glDrawLength.length == 0)
+			return;
+
 		uboGlobal.sceneBase.set(zx << 10, 0, zz << 10);
 		uboGlobal.upload();
 		glBindVertexArray(glVao);
@@ -241,6 +244,9 @@ class Zone {
 		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
 
 		convertForDraw(VERT_SIZE);
+
+		if (glDrawLength.length == 0)
+			return;
 
 		uboGlobal.sceneBase.set(zx << 10, 0, zz << 10);
 		uboGlobal.upload();
@@ -578,25 +584,25 @@ class Zone {
 
 	private void flush(UBOGlobal uboGlobal) {
 		if (lastDrawMode == TEMP) {
-			convertForDraw(VAO.VERT_SIZE);
 			uboGlobal.sceneBase.set(0, 0, 0);
-			uboGlobal.upload();
-			glBindVertexArray(lastVao);
-			glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
-			drawIdx = 0;
-		} else if (lastDrawMode == STATIC) {
+		} else {
+			uboGlobal.sceneBase.set(lastzx << 10, 0, lastzz << 10);
+		}
+		uboGlobal.upload();
+
+		if (lastDrawMode == STATIC) {
 			alphaElements.flip();
-			uboGlobal.sceneBase.set(lastzx << 10, 0, lastzz << 10);
-			uboGlobal.upload();
-			glBindVertexArray(lastVao);
-			glDrawElements(GL_TRIANGLES, alphaElements);
+			if (alphaElements.limit() > 0) {
+				glBindVertexArray(lastVao);
+				glDrawElements(GL_TRIANGLES, alphaElements);
+			}
 			alphaElements.clear();
-		} else if (lastDrawMode == STATIC_UNSORTED) {
-			convertForDraw(VERT_SIZE);
-			uboGlobal.sceneBase.set(lastzx << 10, 0, lastzz << 10);
-			uboGlobal.upload();
-			glBindVertexArray(lastVao);
-			glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+		} else {
+			convertForDraw(VAO.VERT_SIZE);
+			if (glDrawLength.length > 0) {
+				glBindVertexArray(lastVao);
+				glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+			}
 			drawIdx = 0;
 		}
 	}
