@@ -332,12 +332,12 @@ public class ZoneRenderer implements Renderer {
 			Scene toplevel = client.getScene();
 			vaoO.addRange(null, toplevel);
 			vaoPO.addRange(null, toplevel);
-//			plugin.uboGlobal.entityTint.set(
-//				scene.getOverrideHue(),
-//				scene.getOverrideSaturation(),
-//				scene.getOverrideLuminance(),
-//				scene.getOverrideAmount()
-//			);
+			plugin.uboGlobal.entityTint.set(
+				scene.getOverrideHue(),
+				scene.getOverrideSaturation(),
+				scene.getOverrideLuminance(),
+				scene.getOverrideAmount()
+			);
 		}
 	}
 
