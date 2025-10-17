@@ -282,12 +282,13 @@ public class ZoneRenderer implements Renderer {
 
 	private Projection lastProjection;
 
-	private void updateEntityProject(Projection projection) {
+	void updateEntityProjection(Projection projection) {
 		if (lastProjection == projection)
 			return;
 
 		plugin.uboGlobal.entityProjectionMatrix.set(projection instanceof FloatProjection ?
 			((FloatProjection) projection).getProjection() : Mat4.identity());
+		plugin.uboGlobal.upload();
 		lastProjection = projection;
 	}
 
@@ -934,7 +935,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
 		log.trace("drawZoneOpaque({}, {}, zx={}, zz={})", entityProjection, scene, zx, zz);
-		updateEntityProject(entityProjection);
+		updateEntityProjection(entityProjection);
 
 		WorldViewContext ctx = context(scene);
 		if (ctx == null) {
@@ -955,7 +956,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		log.trace("drawZoneAlpha({}, {}, level={}, zx={}, zz={})", entityProjection, scene, level, zx, zz);
-		updateEntityProject(entityProjection);
+		updateEntityProjection(entityProjection);
 
 		WorldViewContext ctx = context(scene);
 		if (ctx == null || ctx.sceneContext == null) {
@@ -1008,7 +1009,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		updateEntityProject(projection);
+		updateEntityProjection(projection);
 
 		if (pass == DrawCallbacks.PASS_OPAQUE) {
 			vaoO.addRange(projection, scene);
@@ -1024,20 +1025,20 @@ public class ZoneRenderer implements Renderer {
 //				}
 				var vaos = vaoO.unmap();
 				for (VAO vao : vaos) {
-					vao.draw(plugin.uboGlobal);
+					vao.draw(this);
 					vao.reset();
 				}
 
 				vaos = vaoPO.unmap();
 				glDepthMask(false);
 				for (VAO vao : vaos) {
-					vao.draw(plugin.uboGlobal);
+					vao.draw(this);
 				}
 				glDepthMask(true);
 
 				glColorMask(false, false, false, false);
 				for (VAO vao : vaos) {
-					vao.draw(plugin.uboGlobal);
+					vao.draw(this);
 					vao.reset();
 				}
 				glColorMask(true, true, true, true);
