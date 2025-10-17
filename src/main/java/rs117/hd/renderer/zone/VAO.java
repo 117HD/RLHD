@@ -108,13 +108,7 @@ class VAO {
 //				false,
 //				p instanceof FloatProjection ? ((FloatProjection) p).getProjection() : Mat4.identity()
 //			);
-//			glUniform4i(
-//				uniEntityTint,
-//				scene.getOverrideHue(),
-//				scene.getOverrideSaturation(),
-//				scene.getOverrideLuminance(),
-//				scene.getOverrideAmount()
-//			);
+			renderer.updateEntityTint(scene);
 			glBindVertexArray(vao);
 			glDrawArrays(GL_TRIANGLES, start / (VERT_SIZE / 4), count / (VAO.VERT_SIZE / 4));
 

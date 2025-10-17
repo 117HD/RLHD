@@ -291,6 +291,20 @@ public class ZoneRenderer implements Renderer {
 		lastProjection = projection;
 	}
 
+	void updateEntityTint(@Nullable Scene scene) {
+		if (scene == null) {
+			plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
+		} else {
+			plugin.uboGlobal.entityTint.set(
+				scene.getOverrideHue(),
+				scene.getOverrideSaturation(),
+				scene.getOverrideLuminance(),
+				scene.getOverrideAmount()
+			);
+		}
+		plugin.uboGlobal.upload();
+	}
+
 	@Override
 	public void preSceneDraw(
 		Scene scene,
@@ -332,12 +346,14 @@ public class ZoneRenderer implements Renderer {
 			Scene toplevel = client.getScene();
 			vaoO.addRange(null, toplevel);
 			vaoPO.addRange(null, toplevel);
-			plugin.uboGlobal.entityTint.set(
-				scene.getOverrideHue(),
-				scene.getOverrideSaturation(),
-				scene.getOverrideLuminance(),
-				scene.getOverrideAmount()
-			);
+//			log.debug(
+//				"tint: [{}, {}, {} ,{}]",
+//				scene.getOverrideHue(),
+//				scene.getOverrideSaturation(),
+//				scene.getOverrideLuminance(),
+//				scene.getOverrideAmount()
+//			);
+			updateEntityTint(scene);
 		}
 	}
 
@@ -712,7 +728,7 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
 
-		plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
+		updateEntityTint(null);
 
 		// TODO: shadows
 //		if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
@@ -853,7 +869,7 @@ public class ZoneRenderer implements Renderer {
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			postDrawToplevel();
 		} else {
-			plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
+			updateEntityTint(null);
 		}
 	}
 
