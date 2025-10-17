@@ -35,7 +35,7 @@ layout(triangle_strip, max_vertices = 3) out;
 #include <utils/uvs.glsl>
 #include <utils/color_utils.glsl>
 
-in vec3 gPosition[3];
+in vec4 gPosition[3];
 in vec3 gUv[3];
 in vec3 gNormal[3];
 in int gAlphaBiasHsl[3];
@@ -67,7 +67,7 @@ void main() {
         vTerrainData[i] = gTerrainData[i];
     }
 
-    computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    computeUvs(vMaterialData[0], vec3[](gPosition[0].xyz, gPosition[1].xyz, gPosition[2].xyz), vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(
@@ -78,8 +78,8 @@ void main() {
         triToUv = mat2(1);
     mat2 uvToTri = inverse(triToUv) * -1; // Flip UV direction, since OSRS UVs are oriented strangely
     mat2x3 triToWorld = mat2x3(
-        gPosition[1] - gPosition[0],
-        gPosition[2] - gPosition[0]
+        gPosition[1].xyz - gPosition[0].xyz,
+        gPosition[2].xyz - gPosition[0].xyz
     );
     mat2x3 TB = triToWorld * uvToTri; // Preserve scale in order for displacement to interact properly with shadow mapping
     T = TB[0];
@@ -87,7 +87,7 @@ void main() {
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     for (int i = 0; i < 3; i++) {
-        vec4 pos = vec4(gPosition[i], 1);
+        vec4 pos = gPosition[i];
         // Flat normals must be applied separately per vertex
         vec3 normal = gNormal[i];
 

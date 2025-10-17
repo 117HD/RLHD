@@ -52,4 +52,6 @@ layout(std140) uniform UBOGlobal {
     float elapsedTime;
 
     ivec3 sceneBase;
+    mat4 entityProjectionMatrix;
+    ivec4 entityTint;
 };

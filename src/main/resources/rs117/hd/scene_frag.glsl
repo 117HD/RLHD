@@ -174,9 +174,19 @@ void main() {
         #endif
 
         // get vertex colors
-        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vAlphaBiasHsl[0])), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
-        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vAlphaBiasHsl[1])), 1 - float(vAlphaBiasHsl[1] >> 24 & 0xff) / 255.);
-        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vAlphaBiasHsl[2])), 1 - float(vAlphaBiasHsl[2] >> 24 & 0xff) / 255.);
+        vec4 baseColor1 = vec4(unpackHsl(vAlphaBiasHsl[0]), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
+        vec4 baseColor2 = vec4(unpackHsl(vAlphaBiasHsl[1]), 1 - float(vAlphaBiasHsl[1] >> 24 & 0xff) / 255.);
+        vec4 baseColor3 = vec4(unpackHsl(vAlphaBiasHsl[2]), 1 - float(vAlphaBiasHsl[2] >> 24 & 0xff) / 255.);
+
+        // Apply entity tint in HSL
+        baseColor1.xyz += (entityTint.xyz - baseColor1.xyz) * entityTint.w / 128;
+        baseColor2.xyz += (entityTint.xyz - baseColor2.xyz) * entityTint.w / 128;
+        baseColor3.xyz += (entityTint.xyz - baseColor3.xyz) * entityTint.w / 128;
+
+        // Convert to linear RGB
+        baseColor1.rgb = srgbToLinear(hslToSrgb(baseColor1.xyz));
+        baseColor2.rgb = srgbToLinear(hslToSrgb(baseColor2.xyz));
+        baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);

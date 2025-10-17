@@ -37,7 +37,7 @@ layout (location = 5) in int vTerrainData;
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     // Pass to geometry shader
-    flat out vec3 gPosition;
+    flat out vec4 gPosition;
     flat out vec3 gUv;
     flat out int gMaterialData;
     flat out int gCastShadow;
@@ -70,8 +70,10 @@ void main() {
 
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
+    vec4 pos = entityProjectionMatrix * vec4(sceneBase + vPosition, 1);
+
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
-        gPosition = vPosition;
+        gPosition = pos;
         gUv = vUv;
         gMaterialData = vMaterialData;
         gCastShadow = shouldCastShadow;
@@ -79,7 +81,8 @@ void main() {
             gOpacity = opacity;
         #endif
     #else
-        gl_Position = lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
+        pos.w *= shouldCastShadow;
+        gl_Position = lightProjectionMatrix * pos;
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
         #endif

@@ -200,13 +200,6 @@ public class ZoneRenderer implements Renderer {
 	private Zone[][] nextZones;
 	private Map<Integer, Integer> nextRoofChanges;
 
-	private int uniDrawDistance;
-	private int uniExpandedMapLoadingChunks;
-	private int uniWorldProj;
-	static int uniEntityProj;
-	static int uniEntityTint;
-	static int uniBase;
-
 	@Nullable
 	public ZoneSceneContext getSceneContext() {
 		return root.sceneContext;
@@ -228,13 +221,6 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		initializeVaos();
-
-//		uniWorldProj = glGetUniformLocation(glProgram, "worldProj");
-//		uniEntityProj = glGetUniformLocation(glProgram, "entityProj");
-//		uniEntityTint = glGetUniformLocation(glProgram, "entityTint");
-//		uniDrawDistance = glGetUniformLocation(glProgram, "drawDistance");
-//		uniExpandedMapLoadingChunks = glGetUniformLocation(glProgram, "expandedMapLoadingChunks");
-//		uniBase = glGetUniformLocation(glProgram, "base");
 
 		// TODO: This is done by forcing the loading state in HdPlugin
 //		if (client.getGameState() == GameState.LOGGED_IN)
@@ -297,11 +283,12 @@ public class ZoneRenderer implements Renderer {
 	private Projection lastProjection;
 
 	private void updateEntityProject(Projection projection) {
-		if (lastProjection != projection) {
-			float[] p = projection instanceof FloatProjection ? ((FloatProjection) projection).getProjection() : Mat4.identity();
-			glUniformMatrix4fv(uniEntityProj, false, p);
-			lastProjection = projection;
-		}
+		if (lastProjection == projection)
+			return;
+
+		plugin.uboGlobal.entityProjectionMatrix.set(projection instanceof FloatProjection ?
+			((FloatProjection) projection).getProjection() : Mat4.identity());
+		lastProjection = projection;
 	}
 
 	@Override
@@ -345,8 +332,7 @@ public class ZoneRenderer implements Renderer {
 			Scene toplevel = client.getScene();
 			vaoO.addRange(null, toplevel);
 			vaoPO.addRange(null, toplevel);
-			glUniform4i(
-				uniEntityTint,
+			plugin.uboGlobal.entityTint.set(
 				scene.getOverrideHue(),
 				scene.getOverrideSaturation(),
 				scene.getOverrideLuminance(),
@@ -726,6 +712,8 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 		}
 
+		plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
+
 		// TODO: shadows
 //		if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
 //			&& environmentManager.currentDirectionalStrength > 0) {
@@ -865,7 +853,7 @@ public class ZoneRenderer implements Renderer {
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			postDrawToplevel();
 		} else {
-			glUniform4i(uniEntityTint, 0, 0, 0, 0);
+			plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
 		}
 	}
 
