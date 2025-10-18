@@ -25,6 +25,7 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -1528,7 +1529,9 @@ class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face);
 			}
 
-			if (!modelOverride.flatNormals && (plugin.configPreserveVanillaNormals || model.getFaceColors3()[face] != -1)) {
+			if (modelOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
+				Arrays.fill(modelNormals, 0);
+			} else {
 				final int[] xVertexNormals = model.getVertexNormalsX();
 				final int[] yVertexNormals = model.getVertexNormalsY();
 				final int[] zVertexNormals = model.getVertexNormalsZ();
