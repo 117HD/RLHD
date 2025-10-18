@@ -944,7 +944,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		Zone z = ctx.zones[zx][zz];
-		if (!z.initialized || z.sizeO == 0 || !z.inSceneFrustum) {
+		if (!z.initialized || z.sizeO == 0 || ctx == root && !z.inSceneFrustum) {
 			return;
 		}
 
@@ -968,7 +968,7 @@ public class ZoneRenderer implements Renderer {
 		vaoA.unmap();
 
 		Zone z = ctx.zones[zx][zz];
-		if (!z.initialized || !z.inSceneFrustum) {
+		if (!z.initialized || ctx == root && !z.inSceneFrustum) {
 			return;
 		}
 
