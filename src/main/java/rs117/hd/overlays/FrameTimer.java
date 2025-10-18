@@ -21,10 +21,9 @@ public class FrameTimer {
 	@Inject
 	private HdPlugin plugin;
 
-	private static final Timer[] TIMERS = Timer.values();
-	private static final int NUM_TIMERS = TIMERS.length;
-	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(TIMERS).filter(t -> t.isGpuTimer).count();
-	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(TIMERS).filter(t -> t.gpuDebugGroup).count();
+	private static final int NUM_TIMERS = Timer.TIMERS.length;
+	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(Timer.TIMERS).filter(t -> t.isGpuTimer).count();
+	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(t -> t.gpuDebugGroup).count();
 
 	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
 	private final long[] timings = new long[NUM_TIMERS];
@@ -43,7 +42,7 @@ public class FrameTimer {
 			int[] queryNames = new int[NUM_GPU_TIMERS * 2];
 			glGenQueries(queryNames);
 			int queryIndex = 0;
-			for (var timer : TIMERS)
+			for (var timer : Timer.TIMERS)
 				if (timer.isGpuTimer)
 					for (int j = 0; j < 2; ++j)
 						gpuQueries[timer.ordinal() * 2 + j] = queryNames[queryIndex++];
@@ -178,7 +177,7 @@ public class FrameTimer {
 		long frameEndTimestamp = System.currentTimeMillis();
 
 		int[] available = { 0 };
-		for (var timer : TIMERS) {
+		for (var timer : Timer.TIMERS) {
 			int i = timer.ordinal();
 			if (timer.isGpuTimer) {
 				if (!activeTimers[i])
