@@ -918,6 +918,11 @@ public class ZoneRenderer implements Renderer {
 		int maxX = minX + 1024;
 		int maxZ = minZ + 1024;
 
+		if (zone.hasWater) {
+			maxY += ProceduralGenerator.MAX_DEPTH;
+			minY -= ProceduralGenerator.MAX_DEPTH;
+		}
+
 		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 
 		if (zone.inSceneFrustum) {
