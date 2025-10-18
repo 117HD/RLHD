@@ -69,6 +69,7 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 
+import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
@@ -77,7 +78,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ZoneRenderer implements Renderer {
-	private static final int NUM_ZONES = Constants.EXTENDED_SCENE_SIZE >> 3;
+	private static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
 	private static final int MAX_WORLDVIEWS = 4096;
 
 	@Inject
@@ -145,7 +146,6 @@ public class ZoneRenderer implements Renderer {
 
 	static class WorldViewContext {
 		final int sizeX, sizeZ;
-		@Nullable
 		ZoneSceneContext sceneContext;
 		Zone[][] zones;
 
@@ -172,21 +172,20 @@ public class ZoneRenderer implements Renderer {
 		}
 	}
 
-
 	WorldViewContext context(Scene scene) {
-		int wvid = scene.getWorldViewId();
-		if (wvid == -1) {
-			return root;
-		}
-		return subs[wvid];
+		return context(scene.getWorldViewId());
 	}
 
 	WorldViewContext context(WorldView wv) {
-		int wvid = wv.getId();
-		if (wvid == -1) {
-			return root;
-		}
-		return subs[wvid];
+		return context(wv.getId());
+	}
+
+	WorldViewContext context(int worldViewId) {
+		if (worldViewId != -1)
+			return subs[worldViewId];
+		if (root.sceneContext == null)
+			return null;
+		return root;
 	}
 
 	private boolean sceneFboValid;
@@ -329,23 +328,16 @@ public class ZoneRenderer implements Renderer {
 		this.hideRoofIds = hideRoofIds;
 
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
-			preSceneDrawToplevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
+			preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
 		} else {
-			Scene toplevel = client.getScene();
-			vaoO.addRange(null, toplevel);
-			vaoPO.addRange(null, toplevel);
-//			log.debug(
-//				"tint: [{}, {}, {} ,{}]",
-//				scene.getOverrideHue(),
-//				scene.getOverrideSaturation(),
-//				scene.getOverrideLuminance(),
-//				scene.getOverrideAmount()
-//			);
+			Scene topLevel = client.getScene();
+			vaoO.addRange(null, topLevel);
+			vaoPO.addRange(null, topLevel);
 			updateEntityTint(scene);
 		}
 	}
 
-	private void preSceneDrawToplevel(
+	private void preSceneDrawTopLevel(
 		Scene scene,
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw
 	) {
@@ -855,13 +847,13 @@ public class ZoneRenderer implements Renderer {
 	public void postSceneDraw(Scene scene) {
 		log.trace("postSceneDraw({})", scene);
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
-			postDrawToplevel();
+			postDrawTopLevel();
 		} else {
 			updateEntityTint(null);
 		}
 	}
 
-	private void postDrawToplevel() {
+	private void postDrawTopLevel() {
 		glDisable(GL_BLEND);
 		glDisable(GL_CULL_FACE);
 		glDisable(GL_DEPTH_TEST);
@@ -962,7 +954,7 @@ public class ZoneRenderer implements Renderer {
 		updateEntityProjection(entityProjection);
 
 		WorldViewContext ctx = context(scene);
-		if (ctx == null || ctx.sceneContext == null) {
+		if (ctx == null) {
 			return;
 		}
 
@@ -1075,7 +1067,7 @@ public class ZoneRenderer implements Renderer {
 			worldProjection, scene, tileObject, r, m, orient, x, y, z
 		);
 		WorldViewContext ctx = context(scene);
-		if (ctx == null || ctx.sceneContext == null) {
+		if (ctx == null) {
 			return;
 		}
 
@@ -1113,7 +1105,7 @@ public class ZoneRenderer implements Renderer {
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m) {
 		log.trace("drawTemp({}, {}, gameObject={}, model={})", worldProjection, scene, gameObject, m);
 		WorldViewContext ctx = context(scene);
-		if (ctx == null || root.sceneContext == null) {
+		if (ctx == null) {
 			return;
 		}
 
@@ -1211,7 +1203,7 @@ public class ZoneRenderer implements Renderer {
 
 	private void rebuild(WorldView wv) {
 		WorldViewContext ctx = context(wv);
-		if (ctx == null || ctx.sceneContext == null) {
+		if (ctx == null) {
 			return;
 		}
 
@@ -1452,8 +1444,8 @@ public class ZoneRenderer implements Renderer {
 							int jox = ox - nextSceneContext.sceneOffset / 8;
 							int joz = oz - nextSceneContext.sceneOffset / 8;
 							// Check Jagex chunk coordinates are within the Jagex scene
-							if (jx >= 0 && jx < Constants.SCENE_SIZE / 8 && jz >= 0 && jz < Constants.SCENE_SIZE / 8) {
-								if (jox >= 0 && jox < Constants.SCENE_SIZE / 8 && joz >= 0 && joz < Constants.SCENE_SIZE / 8) {
+							if (jx >= 0 && jx < SCENE_SIZE / 8 && jz >= 0 && jz < SCENE_SIZE / 8) {
+								if (jox >= 0 && jox < SCENE_SIZE / 8 && joz >= 0 && joz < SCENE_SIZE / 8) {
 									for (int level = 0; level < 4; ++level) {
 										int prevTemplate = prevTemplates[level][jox][joz];
 										int curTemplate = curTemplates[level][jx][jz];
@@ -1524,8 +1516,8 @@ public class ZoneRenderer implements Renderer {
 		CountDownLatch latch = new CountDownLatch(1);
 		clientThread.invoke(() ->
 		{
-			for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE >> 3; ++x) {
-				for (int z = 0; z < Constants.EXTENDED_SCENE_SIZE >> 3; ++z) {
+			for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
+				for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
 					Zone zone = newZones[x][z];
 
 					if (zone.initialized) {
@@ -1561,8 +1553,8 @@ public class ZoneRenderer implements Renderer {
 
 		// upload zones
 		sw = Stopwatch.createStarted();
-		for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE >> 3; ++x) {
-			for (int z = 0; z < Constants.EXTENDED_SCENE_SIZE >> 3; ++z) {
+		for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
+			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
 				Zone zone = newZones[x][z];
 
 				if (!zone.initialized) {
@@ -1585,13 +1577,13 @@ public class ZoneRenderer implements Renderer {
 
 			sw = Stopwatch.createStarted();
 			for (int level = 0; level < 4; ++level) {
-				for (int x = 0; x < Constants.EXTENDED_SCENE_SIZE; ++x) {
-					for (int z = 0; z < Constants.EXTENDED_SCENE_SIZE; ++z) {
+				for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
+					for (int z = 0; z < EXTENDED_SCENE_SIZE; ++z) {
 						int ox = x + dx;
 						int oz = z + dy;
 
 						// old zone still in scene?
-						if (ox >= 0 && oz >= 0 && ox < Constants.EXTENDED_SCENE_SIZE && oz < Constants.EXTENDED_SCENE_SIZE) {
+						if (ox >= 0 && oz >= 0 && ox < EXTENDED_SCENE_SIZE && oz < EXTENDED_SCENE_SIZE) {
 							int prid = prids[level][ox][oz];
 							int nrid = nrids[level][x][z];
 							if (prid > 0 && nrid > 0 && prid != nrid) {
