@@ -1,7 +1,9 @@
 #pragma once
 
+#include <utils/constants.glsl>
+
 #if ZONE_RENDERER
-    #include WORLD_VIEW_COUNT
+    #include MAX_SIMULTANEOUS_WORLD_VIEWS
 
     struct WorldView {
         mat4 projectionMatrix;
@@ -9,7 +11,7 @@
     };
 
     layout(std140) uniform UBOWorldViews {
-        WorldView WorldViewArray[WORLD_VIEW_COUNT];
+        WorldView WorldViewArray[MAX_SIMULTANEOUS_WORLD_VIEWS];
     };
 
     #include WORLD_VIEW_GETTER

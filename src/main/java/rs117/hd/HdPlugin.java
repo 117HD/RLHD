@@ -792,7 +792,7 @@ public class HdPlugin extends Plugin {
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("RENDERER", config.renderer())
-			.define("WORLD_VIEW_COUNT", 0)
+			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
