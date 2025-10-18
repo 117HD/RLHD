@@ -49,7 +49,7 @@ public class Camera {
 	public boolean getIsOrthographic() {return isOrthographic; }
 
 	public Camera setOrthographic(boolean newOrthographic) {
-		if(isOrthographic != newOrthographic) {
+		if (isOrthographic != newOrthographic) {
 			isOrthographic = newOrthographic;
 			dirtyFlags |= PROJ_CHANGED;
 		}
@@ -363,7 +363,7 @@ public class Camera {
 
 	public float[][] getFrustumPlanes(float[][] out) {
 		calculateFrustumPlanes();
-		for(int i = 0; i < out.length; i++) {
+		for (int i = 0; i < out.length; i++) {
 			copyTo(out[i], frustumPlanes[i]);
 		}
 		return out;

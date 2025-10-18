@@ -23,7 +23,7 @@ public class UBOLights extends UniformBuffer<GLBuffer> {
 
 	public void setLight(int lightIdx, float[] position, float[] color) {
 		if (lightIdx >= 0 && lightIdx < MAX_LIGHTS) {
-			if(lights != null) {
+			if (lights != null) {
 				var struct = lights[lightIdx];
 				struct.position.set(position);
 				struct.color.set(color);

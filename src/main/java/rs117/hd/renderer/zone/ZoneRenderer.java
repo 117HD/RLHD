@@ -528,7 +528,7 @@ public class ZoneRenderer implements Renderer {
 				{
 					float[] cameraToCenterXZ = subtract(
 						centerXZ,
-						new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
+						vec(sceneCamera.getPositionX(), sceneCamera.getPositionZ())
 					);
 					float dist = length(cameraToCenterXZ);
 					float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
@@ -758,7 +758,6 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		updateEntityTint(null);
-
 		plugin.uboGlobal.upload();
 		uboWorldViews.update(client);
 		sceneProgram.use();
@@ -840,10 +839,10 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void renderShadows(WorldViewContext viewCtx) {
-		for(int zx = 0; zx < viewCtx.sizeX; zx++) {
-			for(int zz = 0; zz < viewCtx.sizeX; zz++) {
+		for (int zx = 0; zx < viewCtx.sizeX; zx++) {
+			for (int zz = 0; zz < viewCtx.sizeX; zz++) {
 				Zone z = viewCtx.zones[zx][zz];
-				if(root == viewCtx && !z.inShadowFrustum) {
+				if (root == viewCtx && !z.inShadowFrustum) {
 					continue;
 				}
 
@@ -913,8 +912,8 @@ public class ZoneRenderer implements Renderer {
 			return false;
 
 		Zone zone = root.zones[zx][zz];
-		int minX = (((zx << 3) - root.sceneContext.sceneOffset) << 7);
-		int minZ = (((zz << 3) - root.sceneContext.sceneOffset) << 7);
+		int minX = ((zx << 3) - root.sceneContext.sceneOffset) << 7;
+		int minZ = ((zz << 3) - root.sceneContext.sceneOffset) << 7;
 		int maxX = minX + 1024;
 		int maxZ = minZ + 1024;
 
@@ -1265,8 +1264,10 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
-			&& environmentManager.currentDirectionalStrength > 0){
+		if (plugin.configShadowsEnabled &&
+			plugin.fboShadowMap != 0 &&
+			environmentManager.currentDirectionalStrength > 0
+		) {
 			frameTimer.begin(Timer.RENDER_SHADOWS);
 
 			// Render to the shadow depth map
@@ -1291,13 +1292,13 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal.sceneBase.set(0, 0, 0);
 			plugin.uboGlobal.upload();
 
-			if(vaoO_DrawList != null) {
+			if (vaoO_DrawList != null) {
 				for (VAO vao : vaoO_DrawList) {
 					vao.draw(this);
 				}
 			}
 
-			if(vaoPO_DrawList != null) {
+			if (vaoPO_DrawList != null) {
 				for (VAO vao : vaoPO_DrawList) {
 					vao.draw(this);
 				}
@@ -1308,14 +1309,14 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.RENDER_SHADOWS);
 		}
 
-		if(vaoO_DrawList != null) {
+		if (vaoO_DrawList != null) {
 			for (VAO vao : vaoO_DrawList) {
 				vao.reset();
 			}
 			vaoO_DrawList = null;
 		}
 
-		if(vaoPO_DrawList != null) {
+		if (vaoPO_DrawList != null) {
 			for (VAO vao : vaoPO_DrawList) {
 				vao.reset();
 			}

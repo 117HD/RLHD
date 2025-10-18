@@ -12,7 +12,9 @@ import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class UBOWorldViews extends UniformBuffer<GLBuffer> {
-	public static final int MAX_SIMULTANEOUS_WORLD_VIEWS = 512;
+	// The max concurrent visible worldviews is 25
+	// Source: https://discord.com/channels/886733267284398130/1419633364817674351/1429129853592146041
+	public static final int MAX_SIMULTANEOUS_WORLD_VIEWS = 128;
 
 	public static class WorldViewStruct extends StructProperty {
 		public final Property projection = addProperty(PropertyType.Mat4, "projection");
