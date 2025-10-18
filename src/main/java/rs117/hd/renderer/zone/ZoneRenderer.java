@@ -71,7 +71,6 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 
-import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
@@ -845,11 +844,11 @@ public class ZoneRenderer implements Renderer {
 	private void renderShadows(WorldViewContext viewCtx) {
 		for(int zx = 0; zx < viewCtx.sizeX; zx++) {
 			for(int zz = 0; zz < viewCtx.sizeX; zz++) {
-				if(root == viewCtx && !zoneInFrustum(zx, zz, 0, MAX_Z)) {
+				Zone z = viewCtx.zones[zx][zz];
+				if(root == viewCtx && !z.inShadowFrustum) {
 					continue;
 				}
 
-				Zone z = viewCtx.zones[zx][zz];
 				if (!z.initialized || z.sizeO == 0) {
 					continue;
 				}
