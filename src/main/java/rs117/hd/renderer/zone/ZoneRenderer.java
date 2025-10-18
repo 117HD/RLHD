@@ -71,6 +71,7 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 
+import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
