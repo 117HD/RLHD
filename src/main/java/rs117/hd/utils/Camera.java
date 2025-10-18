@@ -104,6 +104,10 @@ public class Camera {
 		return this;
 	}
 
+	public float getZoom() {
+		return zoom;
+	}
+
 	public float getPositionX() {
 		return position[0];
 	}

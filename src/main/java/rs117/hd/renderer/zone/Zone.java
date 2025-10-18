@@ -481,12 +481,11 @@ class Zone {
 		UBOGlobal uboGlobal,
 		int zx,
 		int zz,
-		int cyaw,
-		int cpitch,
 		int minLevel,
 		int currentLevel,
 		int maxLevel,
 		int level,
+		Camera camera,
 		Set<Integer> hiddenRoofIds
 	) {
 		drawIdx = 0;
@@ -495,10 +494,10 @@ class Zone {
 		lastzx = zx;
 		lastzz = zz;
 
-		int yawsin = Perspective.SINE[cyaw];
-		int yawcos = Perspective.COSINE[cyaw];
-		int pitchsin = Perspective.SINE[cpitch];
-		int pitchcos = Perspective.COSINE[cpitch];
+		int yawsin = camera.getYawSin();
+		int yawcos = camera.getYawCos();
+		int pitchsin = camera.getPitchSin();
+		int pitchcos = camera.getPitchCos();
 		for (AlphaModel m : alphaModels) {
 			if ((m.flags & AlphaModel.SKIP) != 0) continue;
 			if (m.level != level) continue;

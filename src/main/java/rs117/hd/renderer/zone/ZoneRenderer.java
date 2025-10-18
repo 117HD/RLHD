@@ -140,8 +140,6 @@ public class ZoneRenderer implements Renderer {
 
 	private final Camera sceneCamera = new Camera();
 
-	private int cameraYaw, cameraPitch;
-	private int cameraZoom;
 	private int minLevel, level, maxLevel;
 	private Set<Integer> hideRoofIds;
 
@@ -835,12 +833,11 @@ public class ZoneRenderer implements Renderer {
 					plugin.uboGlobal,
 					zx - offset,
 					zz - offset,
-					(int)sceneCamera.getYaw(),
-					(int)sceneCamera.getPitch(),
 					minLevel,
 					this.level,
 					maxLevel,
 					level,
+					sceneCamera,
 					hideRoofIds
 				);
 			}
@@ -907,6 +904,7 @@ public class ZoneRenderer implements Renderer {
 		final int cameraYawSin = sceneCamera.getYawSin();
 		final int cameraPitchCos = sceneCamera.getPitchCos();
 		final int cameraPitchSin = sceneCamera.getPitchSin();
+		final int cameraZoom = (int)sceneCamera.getZoom();
 
 		// Check if the tile is within the near plane of the frustum
 		zone.inSceneFrustum = false;
@@ -1003,12 +1001,11 @@ public class ZoneRenderer implements Renderer {
 			plugin.uboGlobal,
 			zx - offset,
 			zz - offset,
-			cameraYaw,
-			cameraPitch,
 			minLevel,
 			this.level,
 			maxLevel,
 			level,
+			sceneCamera,
 			hideRoofIds
 		);
 		glDepthMask(true);
