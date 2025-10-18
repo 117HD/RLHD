@@ -363,11 +363,11 @@ public class LegacyModelPusher {
 
 				int materialData = material.packMaterialData(faceOverride, uvType, false);
 
-				final float[] uvData = sceneContext.modelFaceNormals;
+				final float[] uvData = sceneContext.modelFaceUvs;
 				if (materialData == 0) {
 					Arrays.fill(uvData, 0);
 				} else {
-					faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
+					faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face, sceneContext.modelFaceNormals);
 					uvData[3] = uvData[7] = uvData[11] = Float.intBitsToFloat(materialData);
 				}
 

@@ -86,6 +86,7 @@ public class SceneContext {
 
 	// Model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
+	public final float[] modelFaceUvs = new float[12];
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 

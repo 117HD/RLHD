@@ -49,6 +49,7 @@ class FacePrioritySorter {
 	private static final float[] modelLocalY;
 	private static final float[] modelLocalZ;
 
+	private static final float[] workingSpace;
 	private static final float[] modelUvs;
 	private static final int[] modelNormals;
 
@@ -75,6 +76,7 @@ class FacePrioritySorter {
 		modelLocalY = SceneUploader.modelLocalY;
 		modelLocalZ = SceneUploader.modelLocalZ;
 
+		workingSpace = new float[9];
 		modelUvs = new float[12];
 		modelNormals = new int[9];
 
@@ -500,7 +502,7 @@ class FacePrioritySorter {
 			modelUvs[9] = modelLocalY[texC] - vy3;
 			modelUvs[10] = modelLocalZ[texC] - vz3;
 		} else {
-			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face);
+			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 		}
 
 		if (modelOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {

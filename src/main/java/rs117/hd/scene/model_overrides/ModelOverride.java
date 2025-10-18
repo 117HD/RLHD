@@ -339,7 +339,7 @@ public class ModelOverride
 		}
 	}
 
-	public void fillUvsForFace(float[] out, Model model, int orientation, UvType uvType, int face) {
+	public void fillUvsForFace(float[] out, Model model, int orientation, UvType uvType, int face, float[] workingSpace) {
 		switch (uvType) {
 			case WORLD_XY:
 			case WORLD_XZ:
@@ -370,7 +370,7 @@ public class ModelOverride
 				break;
 			}
 			case BOX:
-				computeBoxUvw(out, model, orientation, face);
+				computeBoxUvw(out, model, orientation, face, workingSpace);
 				break;
 			case VANILLA: {
 				final byte[] textureFaces = model.getTextureFaces();
@@ -412,23 +412,26 @@ public class ModelOverride
 		}
 	}
 
-	@SuppressWarnings("PointlessArithmeticExpression")
-	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face) {
-		final float[][] vertexXYZ = {
-			model.getVerticesX(),
-			model.getVerticesY(),
-			model.getVerticesZ()
-		};
-		final int[] triABC = {
-			model.getFaceIndices1()[face],
-			model.getFaceIndices2()[face],
-			model.getFaceIndices3()[face]
-		};
+	@SuppressWarnings({ "PointlessArithmeticExpression", "UnnecessaryLocalVariable" })
+	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face, float[] workingSpace) {
+		final float[] verticesX = model.getVerticesX();
+		final float[] verticesY = model.getVerticesY();
+		final float[] verticesZ = model.getVerticesZ();
 
-		float[] v = new float[9];
-		for (int tri = 0; tri < 3; tri++)
-			for (int i = 0; i < 3; i++)
-				v[tri * 3 + i] = vertexXYZ[i][triABC[tri]];
+		final float[] v = workingSpace;
+		int vidx;
+		vidx = model.getFaceIndices1()[face];
+		v[0 * 3 + 0] = verticesX[vidx];
+		v[0 * 3 + 1] = verticesY[vidx];
+		v[0 * 3 + 2] = verticesZ[vidx];
+		vidx = model.getFaceIndices2()[face];
+		v[1 * 3 + 0] = verticesX[vidx];
+		v[1 * 3 + 1] = verticesY[vidx];
+		v[1 * 3 + 2] = verticesZ[vidx];
+		vidx = model.getFaceIndices3()[face];
+		v[2 * 3 + 0] = verticesX[vidx];
+		v[2 * 3 + 1] = verticesY[vidx];
+		v[2 * 3 + 2] = verticesZ[vidx];
 
 		float rad, cos, sin;
 		float temp;
