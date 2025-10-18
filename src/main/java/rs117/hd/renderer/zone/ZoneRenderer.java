@@ -29,6 +29,7 @@ import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -147,6 +148,9 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
+
+	private List<VAO> vaoO_DrawList;
+	private List<VAO> vaoPO_DrawList;
 
 	static class WorldViewContext {
 		final int sizeX, sizeZ;
@@ -723,6 +727,32 @@ public class ZoneRenderer implements Renderer {
 		// get the light's direction vector pointing away from each fragment
 		plugin.uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
 
+		final int camX = plugin.cameraFocalPoint[0];
+		final int camY = plugin.cameraFocalPoint[1];
+
+		final int drawDistanceSceneUnits =
+			min(config.shadowDistance().getValue(), plugin.getDrawDistance())
+			* Perspective.LOCAL_TILE_SIZE / 2;
+		final int east = min(camX + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
+		final int west = max(camX - drawDistanceSceneUnits, 0);
+		final int north = min(camY + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
+		final int south = max(camY - drawDistanceSceneUnits, 0);
+		final int width = east - west;
+		final int height = north - south;
+		final int depthScale = 10000;
+
+		final int maxDrawDistance = 90;
+		final float maxScale = 0.7f;
+		final float minScale = 0.4f;
+		final float scaleMultiplier = 1.0f - (plugin.getDrawDistance() / (maxDrawDistance * maxScale));
+		float scale = mix(maxScale, minScale, scaleMultiplier);
+		float[] lightProjectionMatrix = Mat4.identity();
+		Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
+		Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
+		Mat4.mul(lightProjectionMatrix, lightViewMatrix);
+		Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
+		plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
 			plugin.uboGlobal.colorFilterPrevious.set(plugin.configColorFilterPrevious.ordinal());
@@ -731,6 +761,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		updateEntityTint(null);
+
 		plugin.uboGlobal.upload();
 		uboWorldViews.update(client);
 		sceneProgram.use();
@@ -809,6 +840,36 @@ public class ZoneRenderer implements Renderer {
 //		}
 
 		checkGLErrors();
+	}
+
+	private void renderShadows(WorldViewContext viewCtx) {
+		for(int zx = 0; zx < viewCtx.sizeX; zx++) {
+			for(int zz = 0; zz < viewCtx.sizeX; zz++) {
+				if(root == viewCtx && !zoneInFrustum(zx, zz, 0, MAX_Z)) {
+					continue;
+				}
+
+				Zone z = viewCtx.zones[zx][zz];
+				if (!z.initialized || z.sizeO == 0) {
+					continue;
+				}
+
+				int offset = viewCtx.sceneContext.sceneOffset >> 3;
+				z.renderOpaque(plugin.uboGlobal, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
+				z.renderAlpha(
+					plugin.uboGlobal,
+					zx - offset,
+					zz - offset,
+					this.cameraYaw,
+					this.cameraPitch,
+					minLevel,
+					this.level,
+					maxLevel,
+					level,
+					hideRoofIds
+				);
+			}
+		}
 	}
 
 	@Override
@@ -997,32 +1058,23 @@ public class ZoneRenderer implements Renderer {
 //				{
 //					vaoO.debug();
 //				}
-				var vaos = vaoO.unmap();
-				for (VAO vao : vaos) {
+				vaoO_DrawList = vaoO.unmap();
+				for (VAO vao : vaoO_DrawList) {
 					vao.draw(this);
-					vao.reset();
 				}
 
-				vaos = vaoPO.unmap();
+				vaoPO_DrawList = vaoPO.unmap();
 				glDepthMask(false);
-				for (VAO vao : vaos) {
+				for (VAO vao : vaoPO_DrawList) {
 					vao.draw(this);
 				}
 				glDepthMask(true);
 
 				glColorMask(false, false, false, false);
-				for (VAO vao : vaos) {
+				for (VAO vao : vaoPO_DrawList) {
 					vao.draw(this);
-					vao.reset();
 				}
 				glColorMask(true, true, true, true);
-			}
-		} else if (pass == DrawCallbacks.PASS_ALPHA) {
-			for (int x = 0; x < ctx.sizeX; ++x) {
-				for (int z = 0; z < ctx.sizeZ; ++z) {
-					Zone zone = ctx.zones[x][z];
-					zone.removeTemp();
-				}
 			}
 		}
 
@@ -1245,6 +1297,79 @@ public class ZoneRenderer implements Renderer {
 			log.warn("prepareInterfaceTexture exception", ex);
 			plugin.restartPlugin();
 			return;
+		}
+
+		if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
+			&& environmentManager.currentDirectionalStrength > 0){
+			frameTimer.begin(Timer.RENDER_SHADOWS);
+
+			// Render to the shadow depth map
+			glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+			glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
+			glClearDepth(1);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glDepthFunc(GL_LEQUAL);
+
+			plugin.shadowProgram.use();
+
+			glEnable(GL_DEPTH_TEST);
+
+			renderShadows(root);
+
+			for (WorldViewContext sub : subs) {
+				if (sub != null) {
+					renderShadows(sub);
+				}
+			}
+
+			plugin.uboGlobal.sceneBase.set(0, 0, 0);
+			plugin.uboGlobal.upload();
+
+			if(vaoO_DrawList != null) {
+				for (VAO vao : vaoO_DrawList) {
+					vao.draw(this);
+				}
+			}
+
+			if(vaoPO_DrawList != null) {
+				for (VAO vao : vaoPO_DrawList) {
+					vao.draw(this);
+				}
+			}
+
+			glDisable(GL_DEPTH_TEST);
+
+			frameTimer.end(Timer.RENDER_SHADOWS);
+		}
+
+		if(vaoO_DrawList != null) {
+			for (VAO vao : vaoO_DrawList) {
+				vao.reset();
+			}
+			vaoO_DrawList = null;
+		}
+
+		if(vaoPO_DrawList != null) {
+			for (VAO vao : vaoPO_DrawList) {
+				vao.reset();
+			}
+			vaoPO_DrawList = null;
+		}
+
+		for (int x = 0; x < root.sizeX; ++x) {
+			for (int z = 0; z < root.sizeZ; ++z) {
+				root.zones[x][z].removeTemp();
+			}
+		}
+
+		for (WorldViewContext sub : subs) {
+			if (sub != null) {
+				for (int x = 0; x < sub.sizeX; ++x) {
+					for (int z = 0; z < sub.sizeZ; ++z) {
+						sub.zones[x][z].removeTemp();
+					}
+				}
+			}
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
