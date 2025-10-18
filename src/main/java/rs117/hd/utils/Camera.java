@@ -377,4 +377,9 @@ public class Camera {
 		calculateInvViewProjMatrix();
 		return Mat4.extractFrustumCorners(invViewProjMatrix);
 	}
+
+	public boolean intersectsAABB(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
+		calculateFrustumPlanes();
+		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes, 0.0f);
+	}
 }

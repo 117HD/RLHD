@@ -361,6 +361,35 @@ public class HDUtils {
 		return true;
 	}
 
+	public static boolean isAABBIntersectingFrustum(
+		int minX,
+		int minY,
+		int minZ,
+		int maxX,
+		int maxY,
+		int maxZ,
+		float[][] cullingPlanes,
+		float padding
+	) {
+		for (float[] plane : cullingPlanes) {
+			if (
+				distanceToPlane(plane, minX, minY, minZ) < padding &&
+				distanceToPlane(plane, maxX, minY, minZ) < padding &&
+				distanceToPlane(plane, minX, maxY, minZ) < padding &&
+				distanceToPlane(plane, maxX, maxY, minZ) < padding &&
+				distanceToPlane(plane, minX, minY, maxZ) < padding &&
+				distanceToPlane(plane, maxX, minY, maxZ) < padding &&
+				distanceToPlane(plane, minX, maxY, maxZ) < padding &&
+				distanceToPlane(plane, maxX, maxY, maxZ) < padding) {
+				// Not visible - all returned negative
+				return false;
+			}
+		}
+
+		// Potentially visible
+		return true;
+	}
+
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
 		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
 		assert waterType.index < 1 << 5 : "Too many water types";
