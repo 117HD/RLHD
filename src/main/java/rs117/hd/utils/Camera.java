@@ -230,7 +230,7 @@ public class Camera {
 		if (orientation[0] != newOrientation[0] || orientation[1] != newOrientation[1]) {
 			orientation[0] = newOrientation[0];
 			orientation[1] = newOrientation[1];
-			dirtyFlags |= PROJ_CHANGED;
+			dirtyFlags |= VIEW_CHANGED;
 		}
 		return this;
 	}

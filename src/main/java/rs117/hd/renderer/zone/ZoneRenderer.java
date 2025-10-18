@@ -533,7 +533,7 @@ public class ZoneRenderer implements Renderer {
 					float dist = length(cameraToCenterXZ);
 					float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
 					divide(cameraToCenterXZ, cameraToCenterXZ, dist);
-					multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, -0.1f, offsetStrength));
+					multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.1f, offsetStrength));
 					multiply(cameraToCenterXZ, cameraToCenterXZ, saturate(dist / 500.0f));
 					add(centerXZ, centerXZ, cameraToCenterXZ);
 				}
