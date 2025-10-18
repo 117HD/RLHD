@@ -801,14 +801,20 @@ public class ProceduralGenerator {
 		// As a fallback, always consider vanilla textured water tiles as water
 		// We purposefully ignore material replacements here such as ice from the winter theme
 		if (waterType == WaterType.NONE) {
-			switch (textureId) {
-				case 1:
-				case 24:
-					waterType = WaterType.WATER_FLAT;
-					break;
-				case 25:
-					waterType = WaterType.SWAMP_WATER_FLAT;
-					break;
+			if (130 <= textureId && textureId <= 189) {
+				// New sailing water textures
+				waterType = WaterType.WATER;
+			} else {
+				switch (textureId) {
+					case 1:
+					case 24:
+					case 208:
+						waterType = WaterType.WATER; // This used to be WATER_FLAT, but for sailing we want translucent water
+						break;
+					case 25:
+						waterType = WaterType.SWAMP_WATER_FLAT;
+						break;
+				}
 			}
 		}
 
