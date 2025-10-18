@@ -829,6 +829,7 @@ public class ProceduralGenerator {
 				case 131:
 				case 132:
 				case 133:
+				case 138:
 					waterType = WaterType.WATER; // This used to be WATER_FLAT, but for sailing we want translucent water
 					break;
 				case 25:
