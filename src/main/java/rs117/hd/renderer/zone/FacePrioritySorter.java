@@ -49,6 +49,9 @@ class FacePrioritySorter {
 	private static final float[] modelLocalY;
 	private static final float[] modelLocalZ;
 
+	private static final float[] modelUvs;
+	private static final int[] modelNormals;
+
 	private static final int[] numOfPriority;
 	private static final int[] eq10;
 	private static final int[] eq11;
@@ -71,6 +74,9 @@ class FacePrioritySorter {
 		modelLocalX = SceneUploader.modelLocalX;
 		modelLocalY = SceneUploader.modelLocalY;
 		modelLocalZ = SceneUploader.modelLocalZ;
+
+		modelUvs = new float[12];
+		modelNormals = new int[9];
 
 		numOfPriority = new int[12];
 		eq10 = new int[MAX_FACES_PER_PRIORITY];
@@ -483,42 +489,34 @@ class FacePrioritySorter {
 
 		int materialData = material.packMaterialData(faceOverride, uvType, false);
 
-		float[] uvs;
 		if (uvType == UvType.VANILLA) {
-			uvs = new float[] {
-				modelLocalX[texA] - vx1,
-				modelLocalY[texA] - vy1,
-				modelLocalZ[texA] - vz1,
-				0,
-				modelLocalX[texB] - vx2,
-				modelLocalY[texB] - vy2,
-				modelLocalZ[texB] - vz2,
-				0,
-				modelLocalX[texC] - vx3,
-				modelLocalY[texC] - vy3,
-				modelLocalZ[texC] - vz3,
-				0
-			};
+			modelUvs[0] = modelLocalX[texA] - vx1;
+			modelUvs[1] = modelLocalY[texA] - vy1;
+			modelUvs[2] = modelLocalZ[texA] - vz1;
+			modelUvs[4] = modelLocalX[texB] - vx2;
+			modelUvs[5] = modelLocalY[texB] - vy2;
+			modelUvs[6] = modelLocalZ[texB] - vz2;
+			modelUvs[8] = modelLocalX[texC] - vx3;
+			modelUvs[9] = modelLocalY[texC] - vy3;
+			modelUvs[10] = modelLocalZ[texC] - vz3;
 		} else {
-			uvs = new float[12];
-			faceOverride.fillUvsForFace(uvs, model, preOrientation, uvType, face);
+			faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face);
 		}
 
-		int[] normals = new int[9];
 		if (!modelOverride.flatNormals && (plugin.configPreserveVanillaNormals || model.getFaceColors3()[face] != -1)) {
 			final int[] xVertexNormals = model.getVertexNormalsX();
 			final int[] yVertexNormals = model.getVertexNormalsY();
 			final int[] zVertexNormals = model.getVertexNormalsZ();
 			if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
-				normals[0] = xVertexNormals[triangleA];
-				normals[1] = yVertexNormals[triangleA];
-				normals[2] = zVertexNormals[triangleA];
-				normals[3] = xVertexNormals[triangleB];
-				normals[4] = yVertexNormals[triangleB];
-				normals[5] = zVertexNormals[triangleB];
-				normals[6] = xVertexNormals[triangleC];
-				normals[7] = yVertexNormals[triangleC];
-				normals[8] = zVertexNormals[triangleC];
+				modelNormals[0] = xVertexNormals[triangleA];
+				modelNormals[1] = yVertexNormals[triangleA];
+				modelNormals[2] = zVertexNormals[triangleA];
+				modelNormals[3] = xVertexNormals[triangleB];
+				modelNormals[4] = yVertexNormals[triangleB];
+				modelNormals[5] = zVertexNormals[triangleB];
+				modelNormals[6] = xVertexNormals[triangleC];
+				modelNormals[7] = yVertexNormals[triangleC];
+				modelNormals[8] = zVertexNormals[triangleC];
 			}
 		}
 
@@ -531,22 +529,22 @@ class FacePrioritySorter {
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx1, vy1, vz1, alphaBias | color1,
-			uvs[0], uvs[1], uvs[2], materialData,
-			normals[0], normals[1], normals[2], 0
+			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
+			modelNormals[0], modelNormals[1], modelNormals[2], 0
 		);
 
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx2, vy2, vz2, alphaBias | color2,
-			uvs[4], uvs[5], uvs[6], materialData,
-			normals[3], normals[4], normals[5], 0
+			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
+			modelNormals[3], modelNormals[4], modelNormals[5], 0
 		);
 
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx3, vy3, vz3, alphaBias | color3,
-			uvs[8], uvs[9], uvs[10], materialData,
-			normals[6], normals[7], normals[8], 0
+			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
+			modelNormals[6], modelNormals[7], modelNormals[8], 0
 		);
 
 		return 3;
