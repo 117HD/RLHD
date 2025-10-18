@@ -70,7 +70,6 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 
-import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
@@ -831,11 +830,11 @@ public class ZoneRenderer implements Renderer {
 	private void renderShadows(WorldViewContext viewCtx) {
 		for(int zx = 0; zx < viewCtx.sizeX; zx++) {
 			for(int zz = 0; zz < viewCtx.sizeX; zz++) {
-				if(root == viewCtx && !zoneInFrustum(zx, zz, 0, MAX_Z)) {
+				Zone z = viewCtx.zones[zx][zz];
+				if(root == viewCtx && !z.inShadowFrustum) {
 					continue;
 				}
 
-				Zone z = viewCtx.zones[zx][zz];
 				if (!z.initialized || z.sizeO == 0) {
 					continue;
 				}
@@ -902,11 +901,12 @@ public class ZoneRenderer implements Renderer {
 		if (root.sceneContext == null)
 			return false;
 
+		Zone zone = root.zones[zx][zz];
 		int x = (((zx << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraX;
 		int z = (((zz << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraZ;
 		int y = maxY - cameraY;
 		int zoneRadius = 724; // ~ 512 * sqrt(2)
-		int waterDepth = root.zones[zx][zz].hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
+		int waterDepth = zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
 
 		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
 		final int rightClip = client.getRasterizer3D_clipMidX2();
@@ -933,13 +933,22 @@ public class ZoneRenderer implements Renderer {
 						// Check bottom bound
 						int transformedZoneHeight = minY * cameraPitchCos >> 16;
 						int top = transformedY - transformedRadius + transformedZoneHeight;
-						return top * cameraZoom < bottomClip * depth;
+						zone.inSceneFrustum = top * cameraZoom < bottomClip * depth;
 					}
 				}
 			}
 		}
 
-		return false;
+		if (zone.inSceneFrustum) {
+			zone.inShadowFrustum = true;
+			return true;
+		}
+
+		// TODO: Shadow frustum checks
+		float[] angles = environmentManager.currentSunAngles;
+		zone.inShadowFrustum = true;
+
+		return zone.inShadowFrustum;
 	}
 
 	@Override

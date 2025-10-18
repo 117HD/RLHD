@@ -50,6 +50,8 @@ class Zone {
 	boolean dirty; // whether the zone has temporary modifications
 	boolean invalidate; // whether the zone needs rebuilding
 	boolean hasWater; // whether the zone has any water tiles
+	boolean inSceneFrustum;
+	boolean inShadowFrustum;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
