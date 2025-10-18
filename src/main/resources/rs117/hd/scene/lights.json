@@ -21102,6 +21102,26 @@
     ]
   },
   {
+    "description": "Recipe for Disaster - Time Bubble",
+    "offset": [ -30, 50, 0 ],
+    "radius": 150,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 40,
+    "objectIds": [
+      "_100_BUBBLE3",
+      "_100_BUBBLEB3",
+      "HUNDRED_PORTAL_DOOR2",
+      "HUNDRED_PORTAL_DOOR3"
+    ]
+  },
+  {
     "description": "AIR_BALLOON_FIRE",
     "height": 400,
     "alignment": "CENTER",
