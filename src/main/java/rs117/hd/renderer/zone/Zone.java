@@ -18,6 +18,7 @@ import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Camera;
 
+import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
@@ -494,10 +495,10 @@ class Zone {
 		lastzx = zx;
 		lastzz = zz;
 
-		int yawsin = camera.getYawSin();
-		int yawcos = camera.getYawCos();
-		int pitchsin = camera.getPitchSin();
-		int pitchcos = camera.getPitchCos();
+		int yawsin = Perspective.COSINE[camera.getFixedYaw()];
+		int yawcos = SINE[camera.getFixedYaw()];
+		int pitchsin = COSINE[camera.getFixedPitch()];
+		int pitchcos = SINE[camera.getFixedPitch()];
 		for (AlphaModel m : alphaModels) {
 			if ((m.flags & AlphaModel.SKIP) != 0) continue;
 			if (m.level != level) continue;

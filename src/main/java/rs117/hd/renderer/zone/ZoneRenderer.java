@@ -73,10 +73,13 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 
 import static net.runelite.api.Constants.*;
+import static net.runelite.api.Constants.SCENE_SIZE;
+import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -139,6 +142,7 @@ public class ZoneRenderer implements Renderer {
 	private SceneShaderProgram sceneProgram;
 
 	private final Camera sceneCamera = new Camera();
+	private final Camera directionalCamera = new Camera().setOrthographic(true);
 
 	private int minLevel, level, maxLevel;
 	private Set<Integer> hideRoofIds;
@@ -477,19 +481,72 @@ public class ZoneRenderer implements Renderer {
 //						plugin.uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 //				}
 
+				float zoom = client.get3dZoom();
+				float drawDistance = (float) plugin.getDrawDistance();
+
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
 				sceneCamera.setPosition(plugin.cameraPosition);
 				sceneCamera.setOrientation(plugin.cameraOrientation);
+				sceneCamera.setFixedYaw(client.getCameraYaw());
+				sceneCamera.setFixedPitch(client.getCameraPitch());
 				sceneCamera.setViewportWidth((int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]));
 				sceneCamera.setViewportHeight((int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]));
 				sceneCamera.setNearPlane(NEAR_PLANE);
-				sceneCamera.setZoom(client.get3dZoom());
+				sceneCamera.setZoom(zoom);
+
 
 				// Calculate view matrix, view proj & inv matrix
 				sceneCamera.getViewMatrix(plugin.viewMatrix);
 				sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
 				sceneCamera.getInvViewProjMatrix(plugin.invViewProjMatrix);
 				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
+
+				int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
+				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
+
+				// Define a Finite Plane before extracting corners
+				sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
+
+				int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
+				final float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
+				clipFrustumToDistance(sceneFrustumCorners, maxDistance);
+				sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+
+				final float[] centerXZ = new float[2];
+				for (float[] corner : sceneFrustumCorners) {
+					add(centerXZ, centerXZ, corner[0], corner[2]);
+				}
+				divide(centerXZ, centerXZ, (float) sceneFrustumCorners.length);
+
+				float radius = 0f;
+				for (float[] corner : sceneFrustumCorners) {
+					radius = Math.max(radius, length(corner[0] - centerXZ[0], corner[2] - centerXZ[1]));
+				}
+
+				// Offset Directional based on zoom
+				{
+					float[] cameraToCenterXZ = subtract(
+						centerXZ,
+						new float[] { sceneCamera.getPositionX(), sceneCamera.getPositionZ() }
+					);
+					float dist = length(cameraToCenterXZ);
+					float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
+					divide(cameraToCenterXZ, cameraToCenterXZ, dist);
+					multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, -0.1f, offsetStrength));
+					multiply(cameraToCenterXZ, cameraToCenterXZ, saturate(dist / 500.0f));
+					add(centerXZ, centerXZ, cameraToCenterXZ);
+				}
+
+				directionalCamera.setPositionX(centerXZ[0]);
+				directionalCamera.setPositionZ(centerXZ[1]);
+				directionalCamera.setNearPlane(10000);
+				directionalCamera.setZoom(1.0f);
+				directionalCamera.setViewportWidth((int) radius);
+				directionalCamera.setViewportHeight((int) radius);
+
+				plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
+				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 
 				if (root.sceneContext.scene == scene) {
 					try {
@@ -693,39 +750,6 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
-		float[] lightViewMatrix = Mat4.rotateX(environmentManager.currentSunAngles[0]);
-		Mat4.mul(lightViewMatrix, Mat4.rotateY(PI - environmentManager.currentSunAngles[1]));
-		// Extract the 3rd column from the light view matrix (the float array is column-major).
-		// This produces the light's direction vector in world space, which we negate in order to
-		// get the light's direction vector pointing away from each fragment
-		plugin.uboGlobal.lightDir.set(-lightViewMatrix[2], -lightViewMatrix[6], -lightViewMatrix[10]);
-
-		final int camX = plugin.cameraFocalPoint[0];
-		final int camY = plugin.cameraFocalPoint[1];
-
-		final int drawDistanceSceneUnits =
-			min(config.shadowDistance().getValue(), plugin.getDrawDistance())
-			* Perspective.LOCAL_TILE_SIZE / 2;
-		final int east = min(camX + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
-		final int west = max(camX - drawDistanceSceneUnits, 0);
-		final int north = min(camY + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
-		final int south = max(camY - drawDistanceSceneUnits, 0);
-		final int width = east - west;
-		final int height = north - south;
-		final int depthScale = 10000;
-
-		final int maxDrawDistance = 90;
-		final float maxScale = 0.7f;
-		final float minScale = 0.4f;
-		final float scaleMultiplier = 1.0f - (plugin.getDrawDistance() / (maxDrawDistance * maxScale));
-		float scale = mix(maxScale, minScale, scaleMultiplier);
-		float[] lightProjectionMatrix = Mat4.identity();
-		Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-		Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
-		Mat4.mul(lightProjectionMatrix, lightViewMatrix);
-		Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
-		plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
-
 		if (plugin.configColorFilter != ColorFilter.NONE) {
 			plugin.uboGlobal.colorFilter.set(plugin.configColorFilter.ordinal());
 			plugin.uboGlobal.colorFilterPrevious.set(plugin.configColorFilterPrevious.ordinal());
@@ -900,10 +924,10 @@ public class ZoneRenderer implements Renderer {
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
-		final int cameraYawCos = sceneCamera.getYawCos();
-		final int cameraYawSin = sceneCamera.getYawSin();
-		final int cameraPitchCos = sceneCamera.getPitchCos();
-		final int cameraPitchSin = sceneCamera.getPitchSin();
+		final int cameraYawCos = Perspective.COSINE[sceneCamera.getFixedYaw()];
+		final int cameraYawSin = SINE[sceneCamera.getFixedYaw()];
+		final int cameraPitchCos = COSINE[sceneCamera.getFixedPitch()];
+		final int cameraPitchSin = SINE[sceneCamera.getFixedPitch()];
 		final int cameraZoom = (int)sceneCamera.getZoom();
 
 		// Check if the tile is within the near plane of the frustum
@@ -940,7 +964,7 @@ public class ZoneRenderer implements Renderer {
 
 		// TODO: Shadow frustum checks
 		float[] angles = environmentManager.currentSunAngles;
-		zone.inShadowFrustum = true;
+		zone.inShadowFrustum = false;
 
 		return zone.inShadowFrustum;
 	}

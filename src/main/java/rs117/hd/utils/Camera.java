@@ -2,7 +2,6 @@ package rs117.hd.utils;
 
 import java.util.Arrays;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
 
 import static rs117.hd.utils.MathUtils.*;
 
@@ -27,6 +26,7 @@ public class Camera {
 	private final float[][] frustumPlanes = new float[6][4];
 	private final float[] position = new float[3];
 	private final float[] orientation = new float[2];
+	private final int[] fixedOrientation = new int[2]; // TODO: Is there a reliable way to go from orientation -> Fixed?
 
 	private int dirtyFlags = PROJ_CHANGED | VIEW_CHANGED;
 
@@ -188,17 +188,16 @@ public class Camera {
 		return this;
 	}
 
+	public Camera setFixedYaw(int yaw) {
+		fixedOrientation[0] = yaw;
+		return this;
+	}
+
 	public float getYaw() {
 		return orientation[0];
 	}
 
-	public int getYawCos() {
-		return Perspective.COSINE[(int)getYaw()];
-	}
-
-	public int getYawSin() {
-		return Perspective.SINE[(int)getYaw()];
-	}
+	public int getFixedYaw() { return fixedOrientation[0]; }
 
 	public Camera setPitch(float pitch) {
 		if (orientation[1] != pitch) {
@@ -208,20 +207,23 @@ public class Camera {
 		return this;
 	}
 
+	public Camera setFixedPitch(int pitch) {
+		fixedOrientation[1] = pitch;
+		return this;
+	}
+
 	public float getPitch() {
 		return orientation[1];
 	}
 
-	public int getPitchCos() {
-		return Perspective.COSINE[(int)getPitch()];
-	}
-
-	public int getPitchSin() {
-		return Perspective.SINE[(int)getPitch()];
-	}
+	public int getFixedPitch() { return fixedOrientation[1]; }
 
 	public float[] getOrientation() {
 		return Arrays.copyOf(orientation, 2);
+	}
+
+	public int[] getFixedOrientation() {
+		return Arrays.copyOf(fixedOrientation, 2);
 	}
 
 	public Camera setOrientation(float[] newOrientation) {

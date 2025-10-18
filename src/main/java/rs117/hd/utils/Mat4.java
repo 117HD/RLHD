@@ -385,6 +385,26 @@ public class Mat4
 		return slice(augmented, 16);
 	}
 
+	public static void clipFrustumToDistance(float[][] frustumCorners, float maxDistance) {
+		if (frustumCorners.length != 8) {
+			return;
+		}
+
+		// Clip Far Plane Corners
+		for (int i = 4; i < frustumCorners.length; i++) {
+			float[] nearCorner = frustumCorners[i - 4];
+			float[] farCorner = frustumCorners[i];
+			float[] nearToFarVec = subtract(nearCorner, farCorner);
+			float len = length(nearToFarVec);
+
+			if (len > 1e-5f && len > maxDistance) {
+				normalize(nearToFarVec, nearToFarVec);
+				float[] clipped = multiply(nearToFarVec, maxDistance);
+				frustumCorners[i] = add(clipped, nearCorner);
+			}
+		}
+	}
+
 	public static void extractRow(float[] out, float[] mat4, int rowIndex) {
 		System.arraycopy(mat4, 4 * rowIndex, out, 0, out.length);
 	}
