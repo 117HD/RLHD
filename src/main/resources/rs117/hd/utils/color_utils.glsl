@@ -182,17 +182,16 @@ int packHsl(vec3 hsl) {
 }
 
 // Unpack HSL from Jagex format
-ivec3 unpackRawHsl(int hsl) {
+vec3 unpackRawHsl(int hsl) {
     // 6-bit hue | 3-bit saturation | 7-bit lightness
     float H = hsl >> 10 & 63;
     float S = hsl >> 7 & 7;
     float L = hsl & 127;
-    return ivec3(H, S, L);
+    return vec3(H, S, L);
 }
 
 // Unpack HSL from Jagex format
-vec3 unpackHsl(int hsl) {
-    ivec3 HSL = unpackRawHsl(hsl);
+vec3 convertHsl(vec3 HSL) {
     // 6-bit hue | 3-bit saturation | 7-bit lightness
     float H = HSL[0] / 64.f + .0078125f;
     float S = HSL[1] / 8.f + .0625f;
@@ -205,5 +204,5 @@ int srgbToPackedHsl(vec3 srgb) {
 }
 
 vec3 packedHslToSrgb(int hsl) {
-    return hslToSrgb(unpackHsl(hsl));
+    return hslToSrgb(convertHsl(unpackRawHsl(hsl)));
 }

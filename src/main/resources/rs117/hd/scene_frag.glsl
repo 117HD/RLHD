@@ -173,15 +173,18 @@ void main() {
             fragPos += TBN * fragDelta;
         #endif
 
-        // get vertex colors
-        vec4 baseColor1 = vec4(unpackHsl(vAlphaBiasHsl[0]), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
-        vec4 baseColor2 = vec4(unpackHsl(vAlphaBiasHsl[1]), 1 - float(vAlphaBiasHsl[1] >> 24 & 0xff) / 255.);
-        vec4 baseColor3 = vec4(unpackHsl(vAlphaBiasHsl[2]), 1 - float(vAlphaBiasHsl[2] >> 24 & 0xff) / 255.);
+        vec3 hsl1 = unpackRawHsl(vAlphaBiasHsl[0]);
+        vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
+        vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
 
-        // Apply entity tint in HSL
-        baseColor1.xyz += (entityTint.xyz - baseColor1.xyz) * entityTint.w / 128;
-        baseColor2.xyz += (entityTint.xyz - baseColor2.xyz) * entityTint.w / 128;
-        baseColor3.xyz += (entityTint.xyz - baseColor3.xyz) * entityTint.w / 128;
+        hsl1 += ((entityTint.xyz - hsl1) * entityTint.w) / 128;
+        hsl2 += ((entityTint.xyz - hsl2) * entityTint.w) / 128;
+        hsl3 += ((entityTint.xyz - hsl3) * entityTint.w) / 128;
+
+        // get vertex colors
+        vec4 baseColor1 = vec4(convertHsl(hsl1), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
+        vec4 baseColor2 = vec4(convertHsl(hsl2), 1 - float(vAlphaBiasHsl[1] >> 24 & 0xff) / 255.);
+        vec4 baseColor3 = vec4(convertHsl(hsl3), 1 - float(vAlphaBiasHsl[2] >> 24 & 0xff) / 255.);
 
         // Convert to linear RGB
         baseColor1.rgb = srgbToLinear(hslToSrgb(baseColor1.xyz));
