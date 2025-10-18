@@ -402,7 +402,7 @@ public class MathUtils {
 		return normalizePlane(new float[4], plane);
 	}
 
-	public static float distanceToPlane(float[] plane, float... v) {
+	public static float distanceToPlane(float[] plane, float[] v) {
 		return dot(plane, v, 3) + plane[3];
 	}
 

@@ -354,10 +354,12 @@ public class HDUtils {
 		return hsl;
 	}
 
-	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[]... cullingPlanes) {
-		for (float[] plane : cullingPlanes)
-			if (distanceToPlane(plane, x, y, z) < -radius)
+	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[][] cullingPlanes, int numPlanes) {
+		for (int i = 0; i < numPlanes; i++) {
+			var p = cullingPlanes[i];
+			if (p[0] * x + p[1] * y + p[2] * z + p[3] < -radius)
 				return false;
+		}
 		return true;
 	}
 
