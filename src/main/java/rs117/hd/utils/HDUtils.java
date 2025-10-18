@@ -373,14 +373,15 @@ public class HDUtils {
 	) {
 		for (float[] plane : cullingPlanes) {
 			if (
-				distanceToPlane(plane, minX, minY, minZ) < padding &&
-				distanceToPlane(plane, maxX, minY, minZ) < padding &&
-				distanceToPlane(plane, minX, maxY, minZ) < padding &&
-				distanceToPlane(plane, maxX, maxY, minZ) < padding &&
-				distanceToPlane(plane, minX, minY, maxZ) < padding &&
-				distanceToPlane(plane, maxX, minY, maxZ) < padding &&
-				distanceToPlane(plane, minX, maxY, maxZ) < padding &&
-				distanceToPlane(plane, maxX, maxY, maxZ) < padding) {
+				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < padding &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < padding &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < padding &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < padding &&
+				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < padding &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < padding &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < padding &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < padding
+			) {
 				// Not visible - all returned negative
 				return false;
 			}

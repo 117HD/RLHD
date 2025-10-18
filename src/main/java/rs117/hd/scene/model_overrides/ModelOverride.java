@@ -412,6 +412,7 @@ public class ModelOverride
 		}
 	}
 
+	@SuppressWarnings("PointlessArithmeticExpression")
 	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face) {
 		final float[][] vertexXYZ = {
 			model.getVerticesX(),
@@ -424,10 +425,10 @@ public class ModelOverride
 			model.getFaceIndices3()[face]
 		};
 
-		float[][] v = new float[3][3];
+		float[] v = new float[9];
 		for (int tri = 0; tri < 3; tri++)
 			for (int i = 0; i < 3; i++)
-				v[tri][i] = vertexXYZ[i][triABC[tri]];
+				v[tri * 3 + i] = vertexXYZ[i][triABC[tri]];
 
 		float rad, cos, sin;
 		float temp;
@@ -438,31 +439,33 @@ public class ModelOverride
 			sin = sin(rad);
 
 			for (int i = 0; i < 3; i++) {
-				temp = v[i][0] * sin + v[i][2] * cos;
-				v[i][0] = v[i][0] * cos - v[i][2] * sin;
-				v[i][2] = temp;
+				temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+				v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+				v[i * 3 + 2] = temp;
 			}
 		}
 
 		for (int i = 0; i < 3; i++) {
-			v[i][0] = (v[i][0] / LOCAL_TILE_SIZE + .5f) / uvScale;
-			v[i][1] = (v[i][1] / LOCAL_TILE_SIZE + .5f) / uvScale;
-			v[i][2] = (v[i][2] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3] = (v[i * 3] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3 + 1] = (v[i * 3 + 1] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3 + 2] = (v[i * 3 + 2] / LOCAL_TILE_SIZE + .5f) / uvScale;
 		}
 
-		// Compute face normal
-		float[] a = subtract(v[1], v[0]);
-		float[] b = subtract(v[2], v[0]);
-		float[] n = cross(a, b);
-		float[] absN = abs(n);
+		// Compute face normal as cross(v[1] - v[0], v[2] - v[0])
+		float nx = (v[3 + 1] - v[1]) * (v[6 + 2] - v[2]) - (v[3 + 2] - v[2]) * (v[6 + 1] - v[1]);
+		float ny = (v[3 + 2] - v[2]) * (v[6 + 0] - v[0]) - (v[3 + 0] - v[0]) * (v[6 + 2] - v[2]);
+		float nz = (v[3 + 0] - v[0]) * (v[6 + 1] - v[1]) - (v[3 + 1] - v[1]) * (v[6 + 0] - v[0]);
+		float absNx = abs(nx);
+		float absNy = abs(ny);
+		float absNz = abs(nz);
 
 		out[2] = out[6] = out[10] = 0;
-		if (absN[0] > absN[1] && absN[0] > absN[2]) {
+		if (absNx > absNy && absNx > absNz) {
 			// YZ plane
-			float flip = sign(n[0]);
+			float flip = sign(nx);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * -v[tri][2];
-				out[tri * 4 + 1] = v[tri][1];
+				out[tri * 4] = flip * -v[tri * 3 + 2];
+				out[tri * 4 + 1] = v[tri * 3 + 1];
 			}
 
 			if (uvOrientationX % 2048 != 0) {
@@ -472,21 +475,21 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
-		} else if (absN[1] > absN[0] && absN[1] > absN[2]) {
+		} else if (absNy > absNx && absNy > absNz) {
 			// XZ
-			float flip = sign(n[1]);
+			float flip = sign(ny);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * -v[tri][0];
-				out[tri * 4 + 1] = v[tri][2];
+				out[tri * 4] = flip * -v[tri * 3];
+				out[tri * 4 + 1] = v[tri * 3 + 2];
 			}
 
 			if (uvOrientationY % 2048 != 0) {
@@ -496,21 +499,21 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
 		} else {
 			// XY
-			float flip = sign(n[2]);
+			float flip = sign(nz);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * v[tri][0];
-				out[tri * 4 + 1] = v[tri][1];
+				out[tri * 4] = flip * v[tri * 3];
+				out[tri * 4 + 1] = v[tri * 3 + 1];
 			}
 
 			if (uvOrientationZ % 2048 != 0) {
@@ -520,13 +523,13 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
 		}
