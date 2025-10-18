@@ -228,7 +228,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void initialize() {
-		initializeVaos();
+		initializeBuffers();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 	}
 
@@ -242,7 +242,7 @@ public class ZoneRenderer implements Renderer {
 			subs[i] = null;
 		}
 
-		destroyVaos();
+		destroyBuffers();
 		uboWorldViews.destroy();
 
 		nextZones = null;
@@ -275,13 +275,15 @@ public class ZoneRenderer implements Renderer {
 		sceneProgram.destroy();
 	}
 
-	private void initializeVaos() {
+	private void initializeBuffers() {
+		Zone.initializeBuffers();
 		vaoO = new VAO.VAOList();
 		vaoA = new VAO.VAOList();
 		vaoPO = new VAO.VAOList();
 	}
 
-	private void destroyVaos() {
+	private void destroyBuffers() {
+		Zone.destroyBuffers();
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();

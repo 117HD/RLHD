@@ -464,6 +464,18 @@ class Zone {
 	private static int lastVao;
 	private static int lastzx, lastzz;
 
+	private static int eboAlpha;
+
+	static void initializeBuffers() {
+		eboAlpha = glGenBuffers();
+	}
+
+	static void destroyBuffers() {
+		if (eboAlpha != 0)
+			glDeleteBuffers(eboAlpha);
+		eboAlpha = 0;
+	}
+
 	void alphaSort(int zx, int zz, Camera camera) {
 		int cx = (int) camera.getPositionX();
 		int cy = (int) camera.getPositionY();
@@ -600,7 +612,10 @@ class Zone {
 			alphaElements.flip();
 			if (alphaElements.limit() > 0) {
 				glBindVertexArray(lastVao);
-				glDrawElements(GL_TRIANGLES, alphaElements);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, alphaElements, GL_STREAM_DRAW);
+				glDrawElements(GL_TRIANGLES, alphaElements.limit(), GL_UNSIGNED_INT, 0L);
+				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 			}
 			alphaElements.clear();
 		} else {
