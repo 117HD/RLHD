@@ -219,6 +219,12 @@
     ]
   },
   {
+    "name": "Recipe for Disaster Instance",
+    "aabbs": [
+      [ 1859, 5355, 1868, 5316 ]
+    ]
+  },
+  {
     "name": "GOBLIN_MAZE",
     "aabbs": [
       [ 3221, 9600, 3263, 9659 ],

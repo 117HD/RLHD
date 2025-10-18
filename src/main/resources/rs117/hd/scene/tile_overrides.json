@@ -5585,7 +5585,6 @@
       ],
       "SEASONAL_DIRT": true
     }
-
   },
   {
     "name": "Varlamore - Gloomthorn Cobblestone",
@@ -5982,6 +5981,15 @@
     ],
     "groundMaterial": "MARBLE_2_SEMIGLOSS",
     "blended": false
+  },
+  {
+    "name": "Recipe for Disaster Instance Floor",
+    "area": "Recipe for Disaster Instance",
+    "underlayIds": [
+      56
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "uvScale": 1.25
   },
   {
     "name": "DRAYNOR_SEWERS_UNDERLAY",
