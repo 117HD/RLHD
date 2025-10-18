@@ -16,6 +16,7 @@ import org.lwjgl.BufferUtils;
 import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.utils.Camera;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.checkGLErrors;
@@ -462,7 +463,10 @@ class Zone {
 	private static int lastVao;
 	private static int lastzx, lastzz;
 
-	void alphaSort(int zx, int zz, int cx, int cy, int cz) {
+	void alphaSort(int zx, int zz, Camera camera) {
+		int cx = (int) camera.getPositionX();
+		int cy = (int) camera.getPositionY();
+		int cz = (int) camera.getPositionZ();
 		alphaModels.sort(Comparator
 			.comparingInt((AlphaModel m) -> {
 				final int mx = m.x + ((zx - m.zofx) << 10);
@@ -609,8 +613,10 @@ class Zone {
 		}
 	}
 
-	void multizoneLocs(SceneContext ctx, int zx, int zz, int cx, int cz, Zone[][] zones) {
+	void multizoneLocs(SceneContext ctx, int zx, int zz, Camera camera, Zone[][] zones) {
 		int offset = ctx.sceneOffset >> 3;
+		int cx = (int) camera.getPositionX();
+		int cz = (int) camera.getPositionZ();
 		for (AlphaModel m : alphaModels) {
 			if (m.lx == -1) {
 				continue;

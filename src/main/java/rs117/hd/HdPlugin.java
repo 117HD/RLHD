@@ -396,9 +396,9 @@ public class HdPlugin extends Plugin {
 	public final int[] cameraFocalPoint = new int[2];
 	public final float[] cameraOrientation = new float[2];
 	public final float[][] cameraFrustum = new float[6][4];
-	public float[] viewMatrix;
-	public float[] viewProjMatrix;
-	public float[] invViewProjMatrix;
+	public float[] viewMatrix = new float[16];
+	public float[] viewProjMatrix = new float[16];
+	public float[] invViewProjMatrix = new float[16];
 
 	@Getter
 	public int drawnTileCount;

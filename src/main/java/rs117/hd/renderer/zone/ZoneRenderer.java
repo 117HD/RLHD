@@ -65,6 +65,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
@@ -137,11 +138,10 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private SceneShaderProgram sceneProgram;
 
-	private int cameraX, cameraY, cameraZ;
+	private final Camera sceneCamera = new Camera();
+
 	private int cameraYaw, cameraPitch;
 	private int cameraZoom;
-	private int cameraYawSin, cameraYawCos;
-	private int cameraPitchSin, cameraPitchCos;
 	private int minLevel, level, maxLevel;
 	private Set<Integer> hideRoofIds;
 
@@ -338,16 +338,6 @@ public class ZoneRenderer implements Renderer {
 			hideRoofIds.stream().map(i -> Integer.toString(i)).collect(
 				Collectors.joining(", "))
 		);
-		this.cameraX = (int) cameraX;
-		this.cameraY = (int) cameraY;
-		this.cameraZ = (int) cameraZ;
-		this.cameraYaw = client.getCameraYaw();
-		this.cameraPitch = client.getCameraPitch();
-		this.cameraYawSin = Perspective.SINE[this.cameraYaw];
-		this.cameraYawCos = Perspective.COSINE[this.cameraYaw];
-		this.cameraPitchSin = Perspective.SINE[this.cameraPitch];
-		this.cameraPitchCos = Perspective.COSINE[this.cameraPitch];
-		this.cameraZoom = client.get3dZoom();
 		this.minLevel = minLevel;
 		this.level = level;
 		this.maxLevel = maxLevel;
@@ -490,33 +480,18 @@ public class ZoneRenderer implements Renderer {
 //				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
-				int viewportWidth = (int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]);
-				int viewportHeight = (int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]);
+				sceneCamera.setPosition(plugin.cameraPosition);
+				sceneCamera.setOrientation(plugin.cameraOrientation);
+				sceneCamera.setViewportWidth((int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]));
+				sceneCamera.setViewportHeight((int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]));
+				sceneCamera.setNearPlane(NEAR_PLANE);
+				sceneCamera.setZoom(client.get3dZoom());
 
-				// Calculate projection matrix
-				float[] projectionMatrix = Mat4.scale(client.getScale(), client.getScale(), 1);
-				if (plugin.orthographicProjection) {
-					Mat4.mul(projectionMatrix, Mat4.scale(HdPlugin.ORTHOGRAPHIC_ZOOM, HdPlugin.ORTHOGRAPHIC_ZOOM, -1));
-					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
-				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, HdPlugin.NEAR_PLANE));
-				}
-
-
-				// Calculate view matrix
-				plugin.viewMatrix = Mat4.rotateX(plugin.cameraOrientation[1]);
-				Mat4.mul(plugin.viewMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
-				Mat4.mul(
-					plugin.viewMatrix,
-					Mat4.translate(-plugin.cameraPosition[0], -plugin.cameraPosition[1], -plugin.cameraPosition[2])
-				);
-
-				// Calculate view proj & inv matrix
-				plugin.viewProjMatrix = Mat4.identity();
-				Mat4.mul(plugin.viewProjMatrix, projectionMatrix);
-				Mat4.mul(plugin.viewProjMatrix, plugin.viewMatrix);
-				Mat4.extractPlanes(plugin.viewProjMatrix, plugin.cameraFrustum);
-				plugin.invViewProjMatrix = Mat4.inverse(plugin.viewProjMatrix);
+				// Calculate view matrix, view proj & inv matrix
+				sceneCamera.getViewMatrix(plugin.viewMatrix);
+				sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
+				sceneCamera.getInvViewProjMatrix(plugin.invViewProjMatrix);
+				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
 
 				if (root.sceneContext.scene == scene) {
 					try {
@@ -860,8 +835,8 @@ public class ZoneRenderer implements Renderer {
 					plugin.uboGlobal,
 					zx - offset,
 					zz - offset,
-					this.cameraYaw,
-					this.cameraPitch,
+					(int)sceneCamera.getYaw(),
+					(int)sceneCamera.getPitch(),
 					minLevel,
 					this.level,
 					maxLevel,
@@ -917,9 +892,9 @@ public class ZoneRenderer implements Renderer {
 			return false;
 
 		Zone zone = root.zones[zx][zz];
-		int x = (((zx << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraX;
-		int z = (((zz << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraZ;
-		int y = maxY - cameraY;
+		int x = (((zx << 3) - root.sceneContext.sceneOffset) << 7) + 512 - (int)sceneCamera.getPositionX();
+		int z = (((zz << 3) - root.sceneContext.sceneOffset) << 7) + 512 - (int)sceneCamera.getPositionZ();
+		int y = maxY - (int)sceneCamera.getPositionY();
 		int zoneRadius = 724; // ~ 512 * sqrt(2)
 		int waterDepth = zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
 
@@ -927,6 +902,11 @@ public class ZoneRenderer implements Renderer {
 		final int rightClip = client.getRasterizer3D_clipMidX2();
 		final int topClip = client.getRasterizer3D_clipNegativeMidY();
 		final int bottomClip = client.getRasterizer3D_clipMidY2();
+
+		final int cameraYawCos = sceneCamera.getYawCos();
+		final int cameraYawSin = sceneCamera.getYawSin();
+		final int cameraPitchCos = sceneCamera.getPitchCos();
+		final int cameraPitchSin = sceneCamera.getPitchSin();
 
 		// Check if the tile is within the near plane of the frustum
 		zone.inSceneFrustum = false;
@@ -1014,8 +994,8 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		if (level == 0) {
-			z.alphaSort(zx - offset, zz - offset, cameraX, cameraY, cameraZ);
-			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, cameraX, cameraZ, ctx.zones);
+			z.alphaSort(zx - offset, zz - offset, sceneCamera);
+			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
 		}
 
 		glDepthMask(false);
