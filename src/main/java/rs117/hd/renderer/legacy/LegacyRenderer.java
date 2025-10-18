@@ -85,6 +85,9 @@ public class LegacyRenderer implements Renderer {
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
 
+	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
+	public static final int UNIFORM_BLOCK_COMPUTE = UNIFORM_BLOCK_COUNT++;
+
 	@Inject
 	private Client client;
 
@@ -302,9 +305,12 @@ public class LegacyRenderer implements Renderer {
 	}
 
 	@Override
-	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
+	public void addShaderIncludes(ShaderIncludes includes) {
 		includes.addUniformBuffer(uboCompute);
+	}
 
+	@Override
+	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 
 		if (computeMode == ComputeMode.OPENCL) {
@@ -445,7 +451,7 @@ public class LegacyRenderer implements Renderer {
 	}
 
 	private void initializeBuffers() {
-		uboCompute.initialize(HdPlugin.UNIFORM_BLOCK_COMPUTE);
+		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 
 		modelPassthroughBuffer = new GpuIntBuffer();
 

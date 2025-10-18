@@ -102,7 +102,7 @@ class VAO {
 
 			int count = end - start;
 
-			renderer.updateEntityProjection(p);
+			renderer.updateEntityProjection(scene, p);
 //			glUniformMatrix4fv(
 //				uniEntityProj,
 //				false,

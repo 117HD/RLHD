@@ -51,7 +51,6 @@ layout(std140) uniform UBOGlobal {
     float lightningBrightness;
     float elapsedTime;
 
+    int worldViewId;
     ivec3 sceneBase;
-    mat4 entityProjectionMatrix;
-    ivec4 entityTint;
 };

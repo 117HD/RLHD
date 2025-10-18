@@ -51,6 +51,7 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.UBOLights;
+import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
@@ -80,6 +81,9 @@ import static rs117.hd.utils.MathUtils.*;
 public class ZoneRenderer implements Renderer {
 	private static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
 	private static final int MAX_WORLDVIEWS = 4096;
+
+	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
+	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
 	private Injector injector;
@@ -190,6 +194,8 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 
+	private final UBOWorldViews uboWorldViews = new UBOWorldViews(MAX_WORLDVIEWS);
+
 	private final WorldViewContext root = new WorldViewContext(null, NUM_ZONES, NUM_ZONES);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
 	private ZoneSceneContext nextSceneContext;
@@ -217,6 +223,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		initializeVaos();
+		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
 	}
 
 	@Override
@@ -230,6 +237,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		destroyVaos();
+		uboWorldViews.destroy();
 
 		nextZones = null;
 		nextRoofChanges = null;
@@ -241,6 +249,14 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void waitUntilIdle() {
 		glFinish();
+	}
+
+	@Override
+	public void addShaderIncludes(ShaderIncludes includes) {
+		includes
+			.define("WORLD_VIEW_COUNT", MAX_WORLDVIEWS)
+			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", MAX_WORLDVIEWS))
+			.addUniformBuffer(uboWorldViews);
 	}
 
 	@Override
@@ -268,28 +284,34 @@ public class ZoneRenderer implements Renderer {
 
 	private Projection lastProjection;
 
-	void updateEntityProjection(Projection projection) {
-		if (lastProjection == projection)
-			return;
-
-		plugin.uboGlobal.entityProjectionMatrix.set(projection instanceof FloatProjection ?
-			((FloatProjection) projection).getProjection() : Mat4.identity());
+	void updateEntityProjection(Scene scene, Projection projection) {
+		plugin.uboGlobal.worldViewId.set(uboWorldViews.getIndex(scene));
 		plugin.uboGlobal.upload();
-		lastProjection = projection;
+		// TODO: Remove this
+//		if (lastProjection == projection)
+//			return;
+//
+//		plugin.uboGlobal.entityProjectionMatrix.set(projection instanceof FloatProjection ?
+//			((FloatProjection) projection).getProjection() : Mat4.identity());
+//		plugin.uboGlobal.upload();
+//		lastProjection = projection;
 	}
 
 	void updateEntityTint(@Nullable Scene scene) {
-		if (scene == null) {
-			plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
-		} else {
-			plugin.uboGlobal.entityTint.set(
-				scene.getOverrideHue(),
-				scene.getOverrideSaturation(),
-				scene.getOverrideLuminance(),
-				scene.getOverrideAmount()
-			);
-		}
+		plugin.uboGlobal.worldViewId.set(uboWorldViews.getIndex(scene));
 		plugin.uboGlobal.upload();
+		// TODO: Remove this
+//		if (scene == null) {
+//			plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
+//		} else {
+//			plugin.uboGlobal.entityTint.set(
+//				scene.getOverrideHue(),
+//				scene.getOverrideSaturation(),
+//				scene.getOverrideLuminance(),
+//				scene.getOverrideAmount()
+//			);
+//		}
+//		plugin.uboGlobal.upload();
 	}
 
 	@Override
@@ -709,62 +731,8 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		updateEntityTint(null);
-
-		// TODO: shadows
-//		if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
-//			&& environmentManager.currentDirectionalStrength > 0) {
-//			frameTimer.begin(Timer.RENDER_SHADOWS);
-//
-//			// Render to the shadow depth map
-//			glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-//			glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
-//			glClearDepth(1);
-//			glClear(GL_DEPTH_BUFFER_BIT);
-//			glDepthFunc(GL_LEQUAL);
-//
-//			plugin.shadowProgram.use();
-//
-//			final int camX = plugin.cameraFocalPoint[0];
-//			final int camY = plugin.cameraFocalPoint[1];
-//
-//			final int drawDistanceSceneUnits =
-//				min(config.shadowDistance().getValue(), plugin.getDrawDistance())
-//				* Perspective.LOCAL_TILE_SIZE / 2;
-//			final int east = min(camX + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
-//			final int west = max(camX - drawDistanceSceneUnits, 0);
-//			final int north = min(camY + drawDistanceSceneUnits, Perspective.LOCAL_TILE_SIZE * Constants.SCENE_SIZE);
-//			final int south = max(camY - drawDistanceSceneUnits, 0);
-//			final int width = east - west;
-//			final int height = north - south;
-//			final int depthScale = 10000;
-//
-//			final int maxDrawDistance = 90;
-//			final float maxScale = 0.7f;
-//			final float minScale = 0.4f;
-//			final float scaleMultiplier = 1.0f - (plugin.getDrawDistance() / (maxDrawDistance * maxScale));
-//			float scale = mix(maxScale, minScale, scaleMultiplier);
-//			float[] lightProjectionMatrix = Mat4.identity();
-//			Mat4.mul(lightProjectionMatrix, Mat4.scale(scale, scale, scale));
-//			Mat4.mul(lightProjectionMatrix, Mat4.orthographic(width, height, depthScale));
-//			Mat4.mul(lightProjectionMatrix, lightViewMatrix);
-//			Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
-//
-//			plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
-//			plugin.uboGlobal.upload();
-//
-//			glEnable(GL_CULL_FACE);
-//			glEnable(GL_DEPTH_TEST);
-//
-//			glBindVertexArray(vaoScene);
-//			glDrawArrays(GL_TRIANGLES, 0, renderBufferOffset);
-//
-//			glDisable(GL_CULL_FACE);
-//			glDisable(GL_DEPTH_TEST);
-//
-//			frameTimer.end(Timer.RENDER_SHADOWS);
-//		}
-
 		plugin.uboGlobal.upload();
+		uboWorldViews.update(client);
 		sceneProgram.use();
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
@@ -887,11 +855,12 @@ public class ZoneRenderer implements Renderer {
 		if (root.sceneContext == null)
 			return false;
 
+		Zone zone = root.zones[zx][zz];
 		int x = (((zx << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraX;
 		int z = (((zz << 3) - root.sceneContext.sceneOffset) << 7) + 512 - cameraZ;
 		int y = maxY - cameraY;
 		int zoneRadius = 724; // ~ 512 * sqrt(2)
-		int waterDepth = root.zones[zx][zz].hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
+		int waterDepth = zone.hasWater ? ProceduralGenerator.MAX_DEPTH : 0;
 
 		final int leftClip = client.getRasterizer3D_clipNegativeMidX();
 		final int rightClip = client.getRasterizer3D_clipMidX2();
@@ -899,6 +868,7 @@ public class ZoneRenderer implements Renderer {
 		final int bottomClip = client.getRasterizer3D_clipMidY2();
 
 		// Check if the tile is within the near plane of the frustum
+		zone.inSceneFrustum = false;
 		int transformedZ = z * cameraYawCos - x * cameraYawSin >> 16;
 		int depth = (y + waterDepth) * cameraPitchSin + (transformedZ + zoneRadius) * cameraPitchCos >> 16;
 		if (depth > NEAR_PLANE) {
@@ -918,19 +888,28 @@ public class ZoneRenderer implements Renderer {
 						// Check bottom bound
 						int transformedZoneHeight = minY * cameraPitchCos >> 16;
 						int top = transformedY - transformedRadius + transformedZoneHeight;
-						return top * cameraZoom < bottomClip * depth;
+						zone.inSceneFrustum = top * cameraZoom < bottomClip * depth;
 					}
 				}
 			}
 		}
 
-		return false;
+		if (zone.inSceneFrustum) {
+			zone.inShadowFrustum = true;
+			return true;
+		}
+
+		// TODO: Shadow frustum checks
+		float[] angles = environmentManager.currentSunAngles;
+		zone.inShadowFrustum = true;
+
+		return zone.inShadowFrustum;
 	}
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
 		log.trace("drawZoneOpaque({}, {}, zx={}, zz={})", entityProjection, scene, zx, zz);
-		updateEntityProjection(entityProjection);
+		updateEntityProjection(scene, entityProjection);
 
 		WorldViewContext ctx = context(scene);
 		if (ctx == null) {
@@ -951,7 +930,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		log.trace("drawZoneAlpha({}, {}, level={}, zx={}, zz={})", entityProjection, scene, level, zx, zz);
-		updateEntityProjection(entityProjection);
+		updateEntityProjection(scene, entityProjection);
 
 		WorldViewContext ctx = context(scene);
 		if (ctx == null) {
@@ -1004,7 +983,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		updateEntityProjection(projection);
+		updateEntityProjection(scene, projection);
 
 		if (pass == DrawCallbacks.PASS_OPAQUE) {
 			vaoO.addRange(projection, scene);

@@ -26,6 +26,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
@@ -42,7 +43,7 @@ out int gMaterialData;
 out int gTerrainData;
 
 void main() {
-    gPosition = vec3(entityProjectionMatrix * vec4(sceneBase + vPosition, 1));
+    gPosition = vec3(getWorldViewProjection(worldViewId) * vec4(sceneBase + vPosition, 1));
     gUv = vUv;
     gNormal = vNormal;
     gAlphaBiasHsl = vAlphaBiasHsl;

@@ -1,6 +1,5 @@
 package rs117.hd.opengl.uniforms;
 
-import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -13,7 +12,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	@Override
 	public void initialize() {
 		super.initialize();
-		entityProjectionMatrix.set(Mat4.identity());
 	}
 
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
@@ -66,7 +64,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
 
+	public Property worldViewId = addProperty(PropertyType.Int, "worldViewId");
 	public Property sceneBase = addProperty(PropertyType.IVec3, "sceneBase");
-	public Property entityProjectionMatrix = addProperty(PropertyType.Mat4, "entityProjectionMatrix");
-	public Property entityTint = addProperty(PropertyType.IVec4, "entityTint");
 }

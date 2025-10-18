@@ -18,6 +18,7 @@ public interface Renderer extends DrawCallbacks {
 	}
 	default void initialize() {}
 	default void destroy() {}
+	default void addShaderIncludes(ShaderIncludes includes) {}
 	default void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {}
 	default void destroyShaders() {}
 	default void waitUntilIdle() {}

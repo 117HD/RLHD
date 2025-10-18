@@ -26,6 +26,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
@@ -81,7 +82,7 @@ void main() {
             gOpacity = opacity;
         #endif
     #else
-        gl_Position = lightProjectionMatrix * entityProjectionMatrix * vec4(pos, shouldCastShadow);
+        gl_Position = lightProjectionMatrix * getWorldViewProjection(worldViewId) * vec4(pos, shouldCastShadow);
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
         #endif

@@ -26,6 +26,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
@@ -177,9 +178,13 @@ void main() {
         vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
         vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
 
-        hsl1 += ((entityTint.xyz - hsl1) * entityTint.w) / 128;
-        hsl2 += ((entityTint.xyz - hsl2) * entityTint.w) / 128;
-        hsl3 += ((entityTint.xyz - hsl3) * entityTint.w) / 128;
+        {
+            // Apply entity tint to HSL
+            ivec4 tint = getWorldViewTint(worldViewId);
+            hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
+            hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
+            hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;
+        }
 
         // get vertex colors
         vec4 baseColor1 = vec4(convertHsl(hsl1), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);

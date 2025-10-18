@@ -156,13 +156,13 @@ public class HdPlugin extends Plugin {
 	public static int IMAGE_UNIT_COUNT = 0;
 	public static final int IMAGE_UNIT_TILED_LIGHTING = IMAGE_UNIT_COUNT++;
 
-	public static final int UNIFORM_BLOCK_GLOBAL = 0;
-	public static final int UNIFORM_BLOCK_MATERIALS = 1;
-	public static final int UNIFORM_BLOCK_WATER_TYPES = 2;
-	public static final int UNIFORM_BLOCK_LIGHTS = 3;
-	public static final int UNIFORM_BLOCK_LIGHTS_CULLING = 4;
-	public static final int UNIFORM_BLOCK_COMPUTE = 5;
-	public static final int UNIFORM_BLOCK_UI = 6;
+	public static int UNIFORM_BLOCK_COUNT = 0;
+	public static final int UNIFORM_BLOCK_GLOBAL = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_MATERIALS = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_WATER_TYPES = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_LIGHTS = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_LIGHTS_CULLING = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_UI = UNIFORM_BLOCK_COUNT++;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -575,7 +575,7 @@ public class HdPlugin extends Plugin {
 				if (config.removeVertexSnapping())
 					gpuFlags |= DrawCallbacks.NO_VERTEX_SNAPPING;
 
-				initializePrograms();
+				initializeShaders();
 				initializeShaderHotswapping();
 				initializeUiTexture();
 				initializeShadowMapFbo();
@@ -658,7 +658,7 @@ public class HdPlugin extends Plugin {
 				textureManager.shutDown();
 
 				destroyUiTexture();
-				destroyPrograms();
+				destroyShaders();
 				destroyVaos();
 				destroyUbos();
 				destroySceneFbo();
@@ -734,7 +734,7 @@ public class HdPlugin extends Plugin {
 			" : " + generateFetchCases(array, middle, to);
 	}
 
-	private String generateGetter(String type, int arrayLength) {
+	public String generateGetter(String type, int arrayLength) {
 		StringBuilder include = new StringBuilder();
 
 		boolean isAppleM1 = OSType.getOSType() == OSType.MacOS && System.getProperty("os.arch").equals("aarch64");
@@ -762,10 +762,9 @@ public class HdPlugin extends Plugin {
 	}
 
 	public ShaderIncludes getShaderIncludes() {
-		String versionHeader = OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER;
-		return new ShaderIncludes()
+		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
-			.addInclude("VERSION_HEADER", versionHeader)
+			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
@@ -793,6 +792,8 @@ public class HdPlugin extends Plugin {
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("RENDERER", config.renderer())
+			.define("WORLD_VIEW_COUNT", 0)
+			.define("WORLD_VIEW_GETTER", "")
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -815,9 +816,11 @@ public class HdPlugin extends Plugin {
 			.addUniformBuffer(uboUI)
 			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
+		renderer.addShaderIncludes(includes);
+		return includes;
 	}
 
-	private void initializePrograms() throws ShaderException, IOException {
+	private void initializeShaders() throws ShaderException, IOException {
 		var includes = getShaderIncludes();
 
 		// Bind a valid VAO, otherwise validation may fail on older Intel-based Macs
@@ -885,7 +888,7 @@ public class HdPlugin extends Plugin {
 		eventBus.post(new ShaderRecompile(includes));
 	}
 
-	private void destroyPrograms() {
+	private void destroyShaders() {
 		renderer.destroyShaders();
 		shadowProgram.destroy();
 		uiProgram.destroy();
@@ -904,8 +907,8 @@ public class HdPlugin extends Plugin {
 		clientThread.invoke(() -> {
 			try {
 				renderer.waitUntilIdle();
-				destroyPrograms();
-				initializePrograms();
+				destroyShaders();
+				initializeShaders();
 			} catch (ShaderException | IOException ex) {
 				// TODO: If each shader compilation leaves the previous working shader intact, we wouldn't need to shut down on failure
 				log.error("Error while recompiling shaders:", ex);

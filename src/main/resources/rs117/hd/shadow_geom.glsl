@@ -27,6 +27,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 
 layout(triangles) in;
@@ -74,7 +75,7 @@ void main() {
             fOpacity = gOpacity[i];
         #endif
 
-        gl_Position = lightProjectionMatrix * entityProjectionMatrix * vec4(gPosition[i], 1);
+        gl_Position = lightProjectionMatrix * getWorldViewProjection(worldViewId) * vec4(gPosition[i], 1);
         EmitVertex();
     }
     EndPrimitive();
