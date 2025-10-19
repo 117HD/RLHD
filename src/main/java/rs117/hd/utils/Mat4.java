@@ -261,7 +261,7 @@ public class Mat4
 		return corners;
 	}
 
-	public static void extractPlanes(float[] mat, float[]... planes) {
+	public static void extractPlanes(float[] mat, float[][] planes) {
 		// Each plane is defined as: ax + by + cz + d = 0
 		// Extract rows from the matrix (column-major order)
 		float m00 = mat[0], m01 = mat[4], m02 = mat[8], m03 = mat[12];

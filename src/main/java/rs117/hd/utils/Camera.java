@@ -349,23 +349,17 @@ public class Camera {
 	}
 
 	private void calculateFrustumPlanes() {
-		if ((dirtyFlags & FRUSTUM_PLANES_DIRTY) != 0) {
-			calculateViewProjMatrix();
-			Mat4.extractPlanes(
-				viewProjMatrix,
-				frustumPlanes[0], frustumPlanes[1],
-				frustumPlanes[2], frustumPlanes[3],
-				frustumPlanes[4], frustumPlanes[5]
-			);
-			dirtyFlags &= ~FRUSTUM_PLANES_DIRTY;
-		}
+		if ((dirtyFlags & FRUSTUM_PLANES_DIRTY) == 0)
+			return;
+		calculateViewProjMatrix();
+		Mat4.extractPlanes(viewProjMatrix, frustumPlanes);
+		dirtyFlags &= ~FRUSTUM_PLANES_DIRTY;
 	}
 
 	public float[][] getFrustumPlanes(float[][] out) {
 		calculateFrustumPlanes();
-		for (int i = 0; i < out.length; i++) {
+		for (int i = 0; i < out.length; i++)
 			copyTo(out[i], frustumPlanes[i]);
-		}
 		return out;
 	}
 
@@ -380,6 +374,6 @@ public class Camera {
 
 	public boolean intersectsAABB(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		calculateFrustumPlanes();
-		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes, 0.0f);
+		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes);
 	}
 }

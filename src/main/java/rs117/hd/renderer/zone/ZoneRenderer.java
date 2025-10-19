@@ -518,20 +518,6 @@ public class ZoneRenderer implements Renderer {
 					radius = Math.max(radius, length(corner[0] - centerXZ[0], corner[2] - centerXZ[1]));
 				}
 
-				// Offset Directional based on zoom
-				{
-					float[] cameraToCenterXZ = subtract(
-						centerXZ,
-						vec(sceneCamera.getPositionX(), sceneCamera.getPositionZ())
-					);
-					float dist = length(cameraToCenterXZ);
-					float offsetStrength = 1.0f - saturate(max(0.0f, zoom - 1000) / 4000.0f);
-					divide(cameraToCenterXZ, cameraToCenterXZ, dist);
-					multiply(cameraToCenterXZ, cameraToCenterXZ, radius * mix(-0.5f, 0.1f, offsetStrength));
-					multiply(cameraToCenterXZ, cameraToCenterXZ, saturate(dist / 500.0f));
-					add(centerXZ, centerXZ, cameraToCenterXZ);
-				}
-
 				directionalCamera.setPositionX(centerXZ[0]);
 				directionalCamera.setPositionZ(centerXZ[1]);
 				directionalCamera.setNearPlane(10000);
@@ -911,25 +897,20 @@ public class ZoneRenderer implements Renderer {
 			return false;
 
 		Zone zone = root.zones[zx][zz];
-		int minX = ((zx << 3) - root.sceneContext.sceneOffset) << 7;
-		int minZ = ((zz << 3) - root.sceneContext.sceneOffset) << 7;
-		int maxX = minX + 1024;
-		int maxZ = minZ + 1024;
-
+		int minX = (zx << 3) - root.sceneContext.sceneOffset << 7;
+		int minZ = (zz << 3) - root.sceneContext.sceneOffset << 7;
+		int maxX = minX + CHUNK_SIZE * LOCAL_TILE_SIZE;
+		int maxZ = minZ + CHUNK_SIZE * LOCAL_TILE_SIZE;
 		if (zone.hasWater) {
 			maxY += ProceduralGenerator.MAX_DEPTH;
 			minY -= ProceduralGenerator.MAX_DEPTH;
 		}
 
 		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+		if (zone.inSceneFrustum)
+			return zone.inShadowFrustum = true;
 
-		if (zone.inSceneFrustum) {
-			zone.inShadowFrustum = true;
-			return true;
-		}
-
-		zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-		return zone.inShadowFrustum;
+		return zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
 	@Override
@@ -941,7 +922,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		Zone z = ctx.zones[zx][zz];
-		if (!z.initialized || z.sizeO == 0 || ctx == root && !z.inSceneFrustum)
+		if (!z.initialized || z.sizeO == 0 || ctx == root && !z.inShadowFrustum)
 			return;
 
 		sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
@@ -964,7 +945,7 @@ public class ZoneRenderer implements Renderer {
 		vaoA.unmap();
 
 		Zone z = ctx.zones[zx][zz];
-		if (!z.initialized || ctx == root && !z.inSceneFrustum)
+		if (!z.initialized || ctx == root && !z.inShadowFrustum)
 			return;
 
 		boolean hasNoAlpha = z.sizeA == 0 && z.alphaModels.isEmpty();

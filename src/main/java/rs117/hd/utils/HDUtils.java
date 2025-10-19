@@ -370,21 +370,19 @@ public class HDUtils {
 		int maxX,
 		int maxY,
 		int maxZ,
-		float[][] cullingPlanes,
-		float padding
+		float[][] cullingPlanes
 	) {
 		for (float[] plane : cullingPlanes) {
 			if (
-				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < padding &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < padding &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < padding &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < padding &&
-				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < padding &&
-				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < padding &&
-				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < padding &&
-				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < padding
+				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0
 			) {
-				// Not visible - all returned negative
 				return false;
 			}
 		}
