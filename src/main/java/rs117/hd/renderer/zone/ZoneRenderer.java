@@ -346,6 +346,7 @@ public class ZoneRenderer implements Renderer {
 			vaoO.addRange(null, topLevel);
 			vaoPO.addRange(null, topLevel);
 			sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
+			directionalCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
 		}
 	}
 
@@ -736,11 +737,17 @@ public class ZoneRenderer implements Renderer {
 		// Reset buffers for the next frame
 		eboAlphaStaging.clear();
 		sceneCmd.reset();
+		directionalCmd.reset();
 
 		sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
 		sceneCmd.ColorMask(true, true, true, true);
 		sceneCmd.DepthMask(true);
 		sceneCmd.Enable(GL_DEPTH_TEST);
+
+		directionalCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
+		directionalCmd.ColorMask(true, true, true, true);
+		directionalCmd.DepthMask(true);
+		directionalCmd.Enable(GL_DEPTH_TEST);
 
 		checkGLErrors();
 	}
@@ -752,6 +759,7 @@ public class ZoneRenderer implements Renderer {
 			postDrawTopLevel();
 		} else {
 			sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
+			directionalCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
 		}
 	}
 
@@ -791,6 +799,7 @@ public class ZoneRenderer implements Renderer {
 			glEnable(GL_DEPTH_TEST);
 
 			sceneCmd.execute();
+			directionalCmd.execute();
 
 			glDisable(GL_DEPTH_TEST);
 
@@ -922,13 +931,14 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		Zone z = ctx.zones[zx][zz];
-		if (!z.initialized || z.sizeO == 0 || ctx == root && !z.inShadowFrustum)
+		if (!z.initialized || z.sizeO == 0)
 			return;
 
-		sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
+		CommandBuffer cmd = ctx != root || z.inSceneFrustum ? sceneCmd : directionalCmd;
+		cmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
-		z.renderOpaque(sceneCmd, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
+		z.renderOpaque(cmd, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
 
 		checkGLErrors();
 	}
@@ -945,18 +955,19 @@ public class ZoneRenderer implements Renderer {
 		vaoA.unmap();
 
 		Zone z = ctx.zones[zx][zz];
-		if (!z.initialized || ctx == root && !z.inShadowFrustum)
+		if (!z.initialized)
 			return;
 
+		CommandBuffer cmd = ctx != root || z.inSceneFrustum ? sceneCmd : directionalCmd;
 		boolean hasNoAlpha = z.sizeA == 0 && z.alphaModels.isEmpty();
 		boolean renderWater = level == 0 && z.hasWater;
 
 		if (renderWater || !hasNoAlpha)
-			sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
+			cmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (renderWater)
-			z.renderOpaqueLevel(sceneCmd, zx - offset, zz - offset, Zone.LEVEL_WATER_SURFACE);
+			z.renderOpaqueLevel(cmd, zx - offset, zz - offset, Zone.LEVEL_WATER_SURFACE);
 
 		if (hasNoAlpha)
 			return;
@@ -967,7 +978,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		z.renderAlpha(
-			sceneCmd,
+			cmd,
 			zx - offset,
 			zz - offset,
 			minLevel,
