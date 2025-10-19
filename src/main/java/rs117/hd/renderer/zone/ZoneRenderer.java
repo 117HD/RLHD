@@ -761,6 +761,8 @@ public class ZoneRenderer implements Renderer {
 
 		sceneFboValid = true;
 
+		vaoA.unmap();
+
 		// Scene draw state to apply before all recorded commands
 		if (eboAlphaStaging.position() > 0) {
 			eboAlphaStaging.flip();
@@ -909,9 +911,6 @@ public class ZoneRenderer implements Renderer {
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
-
-		// this is a noop after the first zone
-		vaoA.unmap();
 
 		Zone z = ctx.zones[zx][zz];
 		if (!z.initialized)

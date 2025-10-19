@@ -529,15 +529,12 @@ class SceneUploader {
 		} else if (r instanceof DynamicObject) {
 			m = ((DynamicObject) r).getModelZbuf();
 		}
-		if (m == null) {
+		if (m == null)
 			return;
-		}
 
 		int faceCount = m.getFaceCount();
-
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
-
 		if (transparencies != null || faceTextures != null) {
 			for (int face = 0; face < faceCount; ++face) {
 				boolean alpha =
@@ -549,10 +546,9 @@ class SceneUploader {
 					z.sizeO++;
 				}
 			}
-			return;
+		} else {
+			z.sizeO += faceCount;
 		}
-
-		z.sizeO += faceCount;
 	}
 
 	private void uploadZoneRenderable(

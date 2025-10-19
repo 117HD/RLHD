@@ -490,6 +490,9 @@ class Zone {
 		Camera camera,
 		Set<Integer> hiddenRoofIds
 	) {
+		if (alphaModels.isEmpty())
+			return;
+
 		cmd.DepthMask(false);
 
 		drawIdx = 0;
@@ -522,20 +525,13 @@ class Zone {
 				continue;
 			}
 
-			if (false) {
-				lastDrawMode = STATIC_UNSORTED;
-				pushRange(m.startpos, m.endpos);
-				continue;
-			}
-
 			lastDrawMode = STATIC;
 
 			final int radius = m.radius;
 			int diameter = 1 + radius * 2;
 			final int[] packedFaces = m.packedFaces;
-			if (diameter >= 6000) {
+			if (diameter >= 6000)
 				continue;
-			}
 
 			Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
 
@@ -545,8 +541,8 @@ class Zone {
 				int y = (packed << 11) >> 22;
 				int z = (packed << 21) >> 21;
 
-				int t = z * yawcos - x * yawsin >> 16;
-				int fz = y * pitchsin + t * pitchcos >> 16;
+				int t = z * yawCos - x * yawSin >> 16;
+				int fz = y * pitchSin + t * pitchCos >> 16;
 				fz += radius;
 
 				assert fz >= 0 && fz < diameter : fz;
