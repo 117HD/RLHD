@@ -1,5 +1,10 @@
 #pragma once
 
+layout(std140) uniform UBOCommandBuffer {
+    int worldViewId;
+    ivec3 sceneBase;
+};
+
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;
@@ -50,7 +55,4 @@ layout(std140) uniform UBOGlobal {
 
     float lightningBrightness;
     float elapsedTime;
-
-    int worldViewId;
-    ivec3 sceneBase;
 };

@@ -29,7 +29,6 @@ import com.google.inject.Injector;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -51,6 +50,7 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.uniforms.UBOCommandBuffer;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
@@ -67,6 +67,7 @@ import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
+import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
@@ -88,6 +89,7 @@ public class ZoneRenderer implements Renderer {
 	private static final int MAX_WORLDVIEWS = 4096;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
+	public static final int UNIFORM_BLOCK_COMMAND_BUFFER = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
@@ -147,12 +149,12 @@ public class ZoneRenderer implements Renderer {
 	private int minLevel, level, maxLevel;
 	private Set<Integer> hideRoofIds;
 
+	private final CommandBuffer sceneCmd = new CommandBuffer();
+	private final CommandBuffer directionalCmd = new CommandBuffer();
+
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
-
-	private List<VAO> vaoO_DrawList;
-	private List<VAO> vaoPO_DrawList;
 
 	static class WorldViewContext {
 		final int sizeX, sizeZ;
@@ -200,6 +202,7 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 
+	private final UBOCommandBuffer uboCommandBuffer = new UBOCommandBuffer();
 	private final UBOWorldViews uboWorldViews = new UBOWorldViews(MAX_WORLDVIEWS);
 
 	private final WorldViewContext root = new WorldViewContext(null, NUM_ZONES, NUM_ZONES);
@@ -229,7 +232,12 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void initialize() {
 		initializeBuffers();
+
+		uboCommandBuffer.initialize(UNIFORM_BLOCK_COMMAND_BUFFER);
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
+
+		sceneCmd.setUboCommandBuffer(uboCommandBuffer);
+		directionalCmd.setUboCommandBuffer(uboCommandBuffer);
 	}
 
 	@Override
@@ -243,6 +251,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		destroyBuffers();
+		uboCommandBuffer.destroy();
 		uboWorldViews.destroy();
 
 		nextZones = null;
@@ -262,7 +271,8 @@ public class ZoneRenderer implements Renderer {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", MAX_WORLDVIEWS))
-			.addUniformBuffer(uboWorldViews);
+			.addUniformBuffer(uboWorldViews)
+			.addUniformBuffer(uboCommandBuffer);
 	}
 
 	@Override
@@ -293,8 +303,8 @@ public class ZoneRenderer implements Renderer {
 	private Projection lastProjection;
 
 	void updateEntityProjection(Scene scene, Projection projection) {
-		plugin.uboGlobal.worldViewId.set(uboWorldViews.getIndex(scene));
-		plugin.uboGlobal.upload();
+		sceneCmd.SetWorldViewId(uboWorldViews.getIndex(scene));
+
 		// TODO: Remove this
 //		if (lastProjection == projection)
 //			return;
@@ -306,8 +316,8 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	void updateEntityTint(@Nullable Scene scene) {
-		plugin.uboGlobal.worldViewId.set(uboWorldViews.getIndex(scene));
-		plugin.uboGlobal.upload();
+		sceneCmd.SetWorldViewId(uboWorldViews.getIndex(scene));
+
 		// TODO: Remove this
 //		if (scene == null) {
 //			plugin.uboGlobal.entityTint.set(0, 0, 0, 0);
@@ -764,6 +774,9 @@ public class ZoneRenderer implements Renderer {
 		uboWorldViews.update(client);
 		sceneProgram.use();
 
+		sceneCmd.ColorMask(true, true, true, true);
+		sceneCmd.DepthMask(true);
+
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
 		if (plugin.msaaSamples > 1) {
 			glEnable(GL_MULTISAMPLE);
@@ -840,35 +853,6 @@ public class ZoneRenderer implements Renderer {
 		checkGLErrors();
 	}
 
-	private void renderShadows(WorldViewContext viewCtx) {
-		for (int zx = 0; zx < viewCtx.sizeX; zx++) {
-			for (int zz = 0; zz < viewCtx.sizeX; zz++) {
-				Zone z = viewCtx.zones[zx][zz];
-				if (root == viewCtx && !z.inShadowFrustum) {
-					continue;
-				}
-
-				if (!z.initialized || z.sizeO == 0) {
-					continue;
-				}
-
-				int offset = viewCtx.sceneContext.sceneOffset >> 3;
-				z.renderOpaque(plugin.uboGlobal, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
-				z.renderAlpha(
-					plugin.uboGlobal,
-					zx - offset,
-					zz - offset,
-					minLevel,
-					this.level,
-					maxLevel,
-					level,
-					sceneCamera,
-					hideRoofIds
-				);
-			}
-		}
-	}
-
 	@Override
 	public void postSceneDraw(Scene scene) {
 		log.trace("postSceneDraw({})", scene);
@@ -888,6 +872,8 @@ public class ZoneRenderer implements Renderer {
 
 		if (root.sceneContext == null)
 			return;
+
+		sceneCmd.execute();
 
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.end(Timer.RENDER_SCENE);
@@ -951,7 +937,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
-		z.renderOpaque(plugin.uboGlobal, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
+		z.renderOpaque(sceneCmd, zx - offset, zz - offset, minLevel, level, maxLevel, hideRoofIds);
 
 		checkGLErrors();
 	}
@@ -976,7 +962,7 @@ public class ZoneRenderer implements Renderer {
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (level == 0 && z.hasWater)
-			z.renderOpaqueLevel(plugin.uboGlobal, zx - offset, zz - offset, Zone.LEVEL_WATER_SURFACE);
+			z.renderOpaqueLevel(sceneCmd, zx - offset, zz - offset, Zone.LEVEL_WATER_SURFACE);
 
 		if (z.sizeA == 0 && z.alphaModels.isEmpty())
 			return;
@@ -988,7 +974,7 @@ public class ZoneRenderer implements Renderer {
 
 		glDepthMask(false);
 		z.renderAlpha(
-			plugin.uboGlobal,
+			sceneCmd,
 			zx - offset,
 			zz - offset,
 			minLevel,
@@ -1018,33 +1004,42 @@ public class ZoneRenderer implements Renderer {
 			vaoPO.addRange(projection, scene);
 
 			if (scene.getWorldViewId() == -1) {
-				plugin.uboGlobal.sceneBase.set(0, 0, 0);
-				plugin.uboGlobal.upload();
+				sceneCmd.SetBaseOffset(0, 0, 0);
 
 //				if (client.getGameCycle() % 100 == 0)
 //				{
 //					vaoO.debug();
 //				}
-				vaoO_DrawList = vaoO.unmap();
-				for (VAO vao : vaoO_DrawList) {
-					vao.draw(this);
+				var vaos = vaoO.unmap();
+				for (VAO vao : vaos) {
+					vao.draw(this, sceneCmd);
+					vao.reset();
 				}
 
-				vaoPO_DrawList = vaoPO.unmap();
+				vaos = vaoPO.unmap();
+				sceneCmd.DepthMask(false);
 				glDepthMask(false);
-				for (VAO vao : vaoPO_DrawList) {
-					vao.draw(this);
+				for (VAO vao : vaos) {
+					vao.draw(this, sceneCmd);
 				}
-				glDepthMask(true);
+				sceneCmd.DepthMask(true);
 
+				sceneCmd.ColorMask(false, false, false, false);
 				glColorMask(false, false, false, false);
-				for (VAO vao : vaoPO_DrawList) {
-					vao.draw(this);
+				for (VAO vao : vaos) {
+					vao.draw(this, sceneCmd);
+					vao.reset();
 				}
-				glColorMask(true, true, true, true);
+				sceneCmd.ColorMask(true, true, true, true);
+			}
+		} else if (pass == DrawCallbacks.PASS_ALPHA) {
+			for (int x = 0; x < ctx.sizeX; ++x) {
+				for (int z = 0; z < ctx.sizeZ; ++z) {
+					Zone zone = ctx.zones[x][z];
+					zone.removeTemp();
+				}
 			}
 		}
-
 		checkGLErrors();
 	}
 
@@ -1283,63 +1278,14 @@ public class ZoneRenderer implements Renderer {
 
 			glEnable(GL_DEPTH_TEST);
 
-			renderShadows(root);
-
-			for (WorldViewContext sub : subs) {
-				if (sub != null) {
-					renderShadows(sub);
-				}
-			}
-
-			plugin.uboGlobal.sceneBase.set(0, 0, 0);
-			plugin.uboGlobal.upload();
-
-			if (vaoO_DrawList != null) {
-				for (VAO vao : vaoO_DrawList) {
-					vao.draw(this);
-				}
-			}
-
-			if (vaoPO_DrawList != null) {
-				for (VAO vao : vaoPO_DrawList) {
-					vao.draw(this);
-				}
-			}
+			sceneCmd.execute();
 
 			glDisable(GL_DEPTH_TEST);
 
 			frameTimer.end(Timer.RENDER_SHADOWS);
 		}
 
-		if (vaoO_DrawList != null) {
-			for (VAO vao : vaoO_DrawList) {
-				vao.reset();
-			}
-			vaoO_DrawList = null;
-		}
-
-		if (vaoPO_DrawList != null) {
-			for (VAO vao : vaoPO_DrawList) {
-				vao.reset();
-			}
-			vaoPO_DrawList = null;
-		}
-
-		for (int x = 0; x < root.sizeX; ++x) {
-			for (int z = 0; z < root.sizeZ; ++z) {
-				root.zones[x][z].removeTemp();
-			}
-		}
-
-		for (WorldViewContext sub : subs) {
-			if (sub != null) {
-				for (int x = 0; x < sub.sizeX; ++x) {
-					for (int z = 0; z < sub.sizeZ; ++z) {
-						sub.zones[x][z].removeTemp();
-					}
-				}
-			}
-		}
+		sceneCmd.reset();
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
 			glBindFramebuffer(GL_READ_FRAMEBUFFER, plugin.fboScene);

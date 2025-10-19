@@ -63,7 +63,4 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
-
-	public Property worldViewId = addProperty(PropertyType.Int, "worldViewId");
-	public Property sceneBase = addProperty(PropertyType.IVec3, "sceneBase");
 }

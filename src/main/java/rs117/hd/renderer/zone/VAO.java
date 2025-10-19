@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.utils.CommandBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -91,7 +92,7 @@ class VAO {
 		off++;
 	}
 
-	void draw(ZoneRenderer renderer) {
+	void draw(ZoneRenderer renderer, CommandBuffer cmd) {
 		assert !vbo.mapped;
 
 		int start = 0;
@@ -109,8 +110,8 @@ class VAO {
 //				p instanceof FloatProjection ? ((FloatProjection) p).getProjection() : Mat4.identity()
 //			);
 			renderer.updateEntityTint(scene);
-			glBindVertexArray(vao);
-			glDrawArrays(GL_TRIANGLES, start / (VERT_SIZE / 4), count / (VAO.VERT_SIZE / 4));
+			cmd.BindVertexArray(vao);
+			cmd.DrawArrays(GL_TRIANGLES, start / (VERT_SIZE / 4), count / (VAO.VERT_SIZE / 4));
 
 			start = end;
 		}

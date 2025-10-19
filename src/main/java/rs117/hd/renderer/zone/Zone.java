@@ -13,10 +13,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import org.lwjgl.BufferUtils;
-import rs117.hd.opengl.uniforms.UBOGlobal;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Camera;
+import rs117.hd.utils.CommandBuffer;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -190,7 +190,7 @@ class Zone {
 		glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(UBOGlobal uboGlobal, int zx, int zz, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
+	void renderOpaque(CommandBuffer cmd, int zx, int zz, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
 		drawIdx = 0;
 
 		for (int level = minLevel; level <= maxLevel; ++level) {
@@ -235,13 +235,12 @@ class Zone {
 		if (glDrawLength.length == 0)
 			return;
 
-		uboGlobal.sceneBase.set(zx << 10, 0, zz << 10);
-		uboGlobal.upload();
-		glBindVertexArray(glVao);
-		glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+		cmd.SetBaseOffset(zx << 10, 0, zz << 10);
+		cmd.BindVertexArray(glVao);
+		cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
 	}
 
-	void renderOpaqueLevel(UBOGlobal uboGlobal, int zx, int zz, int level) {
+	void renderOpaqueLevel(CommandBuffer cmd, int zx, int zz, int level) {
 		drawIdx = 0;
 
 		// draw the specific level
@@ -252,10 +251,9 @@ class Zone {
 		if (glDrawLength.length == 0)
 			return;
 
-		uboGlobal.sceneBase.set(zx << 10, 0, zz << 10);
-		uboGlobal.upload();
-		glBindVertexArray(glVao);
-		glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+		cmd.SetBaseOffset(zx << 10, 0, zz << 10);
+		cmd.BindVertexArray(glVao);
+		cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
 	}
 
 	private static void pushRange(int start, int end) {
@@ -491,7 +489,7 @@ class Zone {
 	}
 
 	void renderAlpha(
-		UBOGlobal uboGlobal,
+		CommandBuffer cmd,
 		int zx,
 		int zz,
 		int minLevel,
@@ -528,7 +526,7 @@ class Zone {
 			if (lastVao != m.vao
 				|| lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz)
 			) {
-				flush(uboGlobal);
+				flush(cmd);
 			}
 
 			lastVao = m.vao;
@@ -576,7 +574,7 @@ class Zone {
 			}
 
 			if (bufferIdx * 3 > alphaElements.remaining()) {
-				flush(uboGlobal);
+				flush(cmd);
 			}
 
 			int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
@@ -597,32 +595,33 @@ class Zone {
 			}
 		}
 
-		flush(uboGlobal);
+		flush(cmd);
 	}
 
-	private void flush(UBOGlobal uboGlobal) {
+	private void flush(CommandBuffer cmd) {
 		if (lastDrawMode == TEMP) {
-			uboGlobal.sceneBase.set(0, 0, 0);
+			cmd.SetBaseOffset(0, 0, 0);
 		} else {
-			uboGlobal.sceneBase.set(lastzx << 10, 0, lastzz << 10);
+			cmd.SetBaseOffset(lastzx << 10, 0, lastzz << 10);
 		}
-		uboGlobal.upload();
 
 		if (lastDrawMode == STATIC) {
 			alphaElements.flip();
 			if (alphaElements.limit() > 0) {
-				glBindVertexArray(lastVao);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
 				glBufferData(GL_ELEMENT_ARRAY_BUFFER, alphaElements, GL_STREAM_DRAW);
-				glDrawElements(GL_TRIANGLES, alphaElements.limit(), GL_UNSIGNED_INT, 0L);
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+				cmd.BindVertexArray(lastVao);
+				cmd.BindElementsArray(eboAlpha);
+				cmd.DrawElements(GL_TRIANGLES, alphaElements.limit());
 			}
 			alphaElements.clear();
 		} else {
 			convertForDraw(VAO.VERT_SIZE);
 			if (glDrawLength.length > 0) {
-				glBindVertexArray(lastVao);
-				glMultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+				cmd.BindVertexArray(lastVao);
+				cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
 			}
 			drawIdx = 0;
 		}

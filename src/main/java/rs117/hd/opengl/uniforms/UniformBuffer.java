@@ -258,6 +258,10 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		glBuffer = (GLBUFFER) new SharedGLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage, clUsage);
 	}
 
+	public boolean isDirty() {
+		return dirtyHighTide > 0 && dirtyLowTide < glBuffer.size;
+	}
+
 	protected final <T extends StructProperty> T addStruct(T newStructProp) {
 		for (Property property : newStructProp.properties)
 			appendToBuffer(property);
@@ -342,7 +346,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 		preUpload();
 
-		if (dirtyHighTide <= 0 || dirtyLowTide >= glBuffer.size)
+		if (!isDirty())
 			return;
 
 		data.position(dirtyLowTide);
