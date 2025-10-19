@@ -11,7 +11,7 @@ import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class CommandBuffer {
-	public static boolean SKIP_DEPTH_CHANGES;
+	public static boolean SKIP_DEPTH_MASKING;
 
 	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 0;
 	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 1;
@@ -67,19 +67,19 @@ public class CommandBuffer {
 		cmd[writeHead++] = ebo;
 	}
 
-	public void DepthMask(boolean state) {
+	public void DepthMask(boolean writeDepth) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DEPTH_MASK_TYPE;
-		cmd[writeHead++] = state ? 1 : 0;
+		cmd[writeHead++] = writeDepth ? 1 : 0;
 	}
 
-	public void ColorMask(boolean red, boolean green, boolean blue, boolean alpha) {
+	public void ColorMask(boolean writeRed, boolean writeGreen, boolean writeBlue, boolean writeAlpha) {
 		ensureCapacity(5);
 		cmd[writeHead++] = GL_COLOR_MASK_TYPE;
-		cmd[writeHead++] = red ? 1 : 0;
-		cmd[writeHead++] = green ? 1 : 0;
-		cmd[writeHead++] = blue ? 1 : 0;
-		cmd[writeHead++] = alpha ? 1 : 0;
+		cmd[writeHead++] = writeRed ? 1 : 0;
+		cmd[writeHead++] = writeGreen ? 1 : 0;
+		cmd[writeHead++] = writeBlue ? 1 : 0;
+		cmd[writeHead++] = writeAlpha ? 1 : 0;
 	}
 
 	public void MultiDrawArrays(int mode, int[] offsets, int[] counts) {
@@ -148,7 +148,7 @@ public class CommandBuffer {
 					}
 					case GL_DEPTH_MASK_TYPE: {
 						int state = (int) cmd[readHead++];
-						if (SKIP_DEPTH_CHANGES)
+						if (SKIP_DEPTH_MASKING)
 							continue;
 						glDepthMask(state == 1);
 						break;
@@ -220,9 +220,6 @@ public class CommandBuffer {
 					case GL_TOGGLE_TYPE: {
 						long packed = cmd[readHead++];
 						int capability = (int) (packed & INT_MASK);
-						if (SKIP_DEPTH_CHANGES && capability == GL_DEPTH_TEST)
-							continue;
-
 						if ((packed >> 32) != 0) {
 							glEnable(capability);
 						} else {

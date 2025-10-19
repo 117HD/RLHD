@@ -739,14 +739,7 @@ public class ZoneRenderer implements Renderer {
 		directionalCmd.reset();
 
 		sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
-		sceneCmd.ColorMask(true, true, true, true);
-		sceneCmd.DepthMask(true);
-		sceneCmd.Enable(GL_DEPTH_TEST);
-
 		directionalCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
-		directionalCmd.ColorMask(true, true, true, true);
-		directionalCmd.DepthMask(true);
-		directionalCmd.Enable(GL_DEPTH_TEST);
 
 		checkGLErrors();
 	}
@@ -768,10 +761,6 @@ public class ZoneRenderer implements Renderer {
 
 		sceneFboValid = true;
 
-		sceneCmd.Disable(GL_BLEND);
-		sceneCmd.Disable(GL_CULL_FACE);
-		sceneCmd.Disable(GL_DEPTH_TEST);
-
 		// Scene draw state to apply before all recorded commands
 		if (eboAlphaStaging.position() > 0) {
 			eboAlphaStaging.flip();
@@ -790,17 +779,18 @@ public class ZoneRenderer implements Renderer {
 			glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
 			glClearDepth(1);
 			glClear(GL_DEPTH_BUFFER_BIT);
-			glDepthFunc(GL_LEQUAL);
 
 			plugin.shadowProgram.use();
 
 			// TODO: Depth test will get changed by the command buffer, but we'll be adding a shadowCmd anyway
 			glEnable(GL_DEPTH_TEST);
+			glDepthFunc(GL_LEQUAL);
+			glDisable(GL_CULL_FACE);
 
-			CommandBuffer.SKIP_DEPTH_CHANGES = true;
+			CommandBuffer.SKIP_DEPTH_MASKING = true;
 			sceneCmd.execute();
 			directionalCmd.execute();
-			CommandBuffer.SKIP_DEPTH_CHANGES = false;
+			CommandBuffer.SKIP_DEPTH_MASKING = false;
 
 			glDisable(GL_DEPTH_TEST);
 
@@ -834,57 +824,25 @@ public class ZoneRenderer implements Renderer {
 
 		frameTimer.begin(Timer.RENDER_SCENE);
 
-		// We just allow the GL to do face culling. Note this requires the priority renderer
-		// to have logic to disregard culled faces in the priority depth testing.
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-
-		// Enable blending for alpha
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-
-		// TODO
-//		// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
-//		// scene doesn't support depth testing, so we only write depths for custom tiles.
-//		if (sceneContext.staticCustomTilesVertexCount > 0) {
-//			// Draw gap filler tiles first, without depth testing
-//			if (sceneContext.staticGapFillerTilesVertexCount > 0) {
-//				glDisable(GL_DEPTH_TEST);
-//				glDrawArrays(
-//					GL_TRIANGLES,
-//					sceneContext.staticGapFillerTilesOffset,
-//					sceneContext.staticGapFillerTilesVertexCount
-//				);
-//			}
-//
-//			glEnable(GL_DEPTH_TEST);
-//			glDepthFunc(GL_GREATER);
-//
-//			// Draw custom tiles, writing depth
-//			glDepthMask(true);
-//			glDrawArrays(
-//				GL_TRIANGLES,
-//				sceneContext.staticCustomTilesOffset,
-//				sceneContext.staticCustomTilesVertexCount
-//			);
-//
-//			// Draw the rest of the scene with depth testing, but not against itself
-//			glDepthMask(false);
-//			glDrawArrays(
-//				GL_TRIANGLES,
-//				sceneContext.staticVertexCount,
-//				renderBufferOffset - sceneContext.staticVertexCount
-//			);
-//		}
-
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_GREATER);
 
 		// Render the scene
 		sceneCmd.execute();
 
+		// TODO: Filler tiles
+
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.end(Timer.RENDER_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
+
+		// Done rendering the scene
+		glDisable(GL_BLEND);
+		glDisable(GL_CULL_FACE);
+		glDisable(GL_DEPTH_TEST);
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
 		// but the compute shaders should still be executed in case the camera angle has changed.
