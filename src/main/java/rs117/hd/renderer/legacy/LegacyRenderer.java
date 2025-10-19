@@ -1023,8 +1023,6 @@ public class LegacyRenderer implements Renderer {
 		if (gameState.getState() >= GameState.LOGGED_IN.getState() && renderBufferOffset > 0)
 			plugin.hasLoggedIn = true;
 
-		plugin.updateSceneFbo();
-
 		// Draw 3d scene
 		if (plugin.hasLoggedIn && sceneContext != null && plugin.sceneViewport != null) {
 			// Before reading the SSBOs written to from postDrawScene() we must insert a barrier

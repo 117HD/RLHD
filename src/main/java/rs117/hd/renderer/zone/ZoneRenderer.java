@@ -647,8 +647,6 @@ public class ZoneRenderer implements Renderer {
 		if (client.getGameState().getState() >= GameState.LOGGED_IN.getState())
 			plugin.hasLoggedIn = true;
 
-		plugin.updateSceneFbo();
-
 		float fogDepth = 0;
 		switch (config.fogDepthMode()) {
 			case USER_DEFINED:
@@ -764,10 +762,10 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void postDrawTopLevel() {
-		sceneFboValid = true;
-
-		if (root.sceneContext == null)
+		if (root.sceneContext == null || plugin.sceneViewport == null)
 			return;
+
+		sceneFboValid = true;
 
 		sceneCmd.Disable(GL_BLEND);
 		sceneCmd.Disable(GL_CULL_FACE);

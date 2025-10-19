@@ -1318,8 +1318,6 @@ public class HdPlugin extends Plugin {
 			glActiveTexture(TEXTURE_UNIT_UI);
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
-
-			updateSceneFbo();
 		}
 
 		if (client.isStretchedEnabled()) {
