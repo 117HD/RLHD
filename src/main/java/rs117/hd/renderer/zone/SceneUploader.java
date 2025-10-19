@@ -86,9 +86,8 @@ class SceneUploader {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
-					if (t != null) {
+					if (t != null)
 						zoneSize(ctx, zone, t);
-					}
 				}
 			}
 		}

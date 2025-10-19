@@ -1,7 +1,7 @@
 #pragma once
 
 layout(std140) uniform UBOCommandBuffer {
-    int worldViewId;
+    int worldViewIndex;
     ivec3 sceneBase;
 };
 

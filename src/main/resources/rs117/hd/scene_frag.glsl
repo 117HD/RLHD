@@ -180,7 +180,7 @@ void main() {
 
         {
             // Apply entity tint to HSL
-            ivec4 tint = getWorldViewTint(worldViewId);
+            ivec4 tint = getWorldViewTint(worldViewIndex);
             hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
             hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
             hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;

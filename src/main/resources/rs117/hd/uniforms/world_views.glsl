@@ -16,18 +16,18 @@
 
     #include WORLD_VIEW_GETTER
 
-    mat4 getWorldViewProjection(int worldViewId) {
-        if (worldViewId == -1)
+    mat4 getWorldViewProjection(int worldViewIndex) {
+        if (worldViewIndex == -1)
             return mat4(1);
-        return getWorldView(worldViewId).projectionMatrix;
+        return getWorldView(worldViewIndex).projectionMatrix;
     }
 
-    ivec4 getWorldViewTint(int worldViewId) {
-        if (worldViewId == -1)
+    ivec4 getWorldViewTint(int worldViewIndex) {
+        if (worldViewIndex == -1)
             return ivec4(0);
-        return getWorldView(worldViewId).tint;
+        return getWorldView(worldViewIndex).tint;
     }
 #else
-    #define getWorldViewProjection(worldViewId) mat4(1)
-    #define getWorldViewTint(worldViewId) ivec4(0)
+    #define getWorldViewProjection(worldViewIndex) mat4(1)
+    #define getWorldViewTint(worldViewIndex) ivec4(0)
 #endif

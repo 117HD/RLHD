@@ -75,7 +75,7 @@ void main() {
             fOpacity = gOpacity[i];
         #endif
 
-        gl_Position = lightProjectionMatrix * getWorldViewProjection(worldViewId) * vec4(gPosition[i], 1);
+        gl_Position = lightProjectionMatrix * getWorldViewProjection(worldViewIndex) * vec4(gPosition[i], 1);
         EmitVertex();
     }
     EndPrimitive();

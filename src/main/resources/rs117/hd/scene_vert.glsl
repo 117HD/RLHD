@@ -43,7 +43,7 @@ out int gMaterialData;
 out int gTerrainData;
 
 void main() {
-    gPosition = vec3(getWorldViewProjection(worldViewId) * vec4(sceneBase + vPosition, 1));
+    gPosition = vec3(getWorldViewProjection(worldViewIndex) * vec4(sceneBase + vPosition, 1));
     gUv = vUv;
     gNormal = vNormal;
     gAlphaBiasHsl = vAlphaBiasHsl;

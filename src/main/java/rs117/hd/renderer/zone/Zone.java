@@ -230,10 +230,10 @@ class Zone {
 			pushRange(endpos, this.levelOffsets[level]);
 		}
 
-		convertForDraw(VERT_SIZE);
-
-		if (glDrawLength.length == 0)
+		if (drawIdx == 0)
 			return;
+
+		convertForDraw(VERT_SIZE);
 
 		cmd.SetBaseOffset(zx << 10, 0, zz << 10);
 		cmd.BindVertexArray(glVao);
@@ -246,10 +246,10 @@ class Zone {
 		// draw the specific level
 		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
 
-		convertForDraw(VERT_SIZE);
-
-		if (glDrawLength.length == 0)
+		if (drawIdx == 0)
 			return;
+
+		convertForDraw(VERT_SIZE);
 
 		cmd.SetBaseOffset(zx << 10, 0, zz << 10);
 		cmd.BindVertexArray(glVao);
@@ -421,9 +421,8 @@ class Zone {
 
 	void addTempAlphaModel(int vao, int startpos, int endpos, int level, int x, int y, int z) {
 		AlphaModel m = modelCache.poll();
-		if (m == null) {
+		if (m == null)
 			m = new AlphaModel();
-		}
 		m.id = -1;
 		m.startpos = startpos;
 		m.endpos = endpos;
@@ -499,6 +498,8 @@ class Zone {
 		Camera camera,
 		Set<Integer> hiddenRoofIds
 	) {
+		cmd.DepthMask(false);
+
 		drawIdx = 0;
 		alphaElements.clear();
 		lastDrawMode = lastVao = 0;
@@ -513,21 +514,11 @@ class Zone {
 			if ((m.flags & AlphaModel.SKIP) != 0) continue;
 			if (m.level != level) continue;
 
-			boolean ok = false;
-			if (level >= minLevel && level <= maxLevel) {
-				if (level <= currentLevel || !hiddenRoofIds.contains((int) m.rid)) {
-					ok = true;
-				}
-			}
-			if (!ok) {
+			if (level < minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
 				continue;
-			}
 
-			if (lastVao != m.vao
-				|| lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz)
-			) {
+			if (lastVao != m.vao || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
 				flush(cmd);
-			}
 
 			lastVao = m.vao;
 			lastzx = zx - m.zofx;
@@ -558,12 +549,10 @@ class Zone {
 			Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
 
 			char bufferIdx = 0;
-			for (int i = 0; i < packedFaces.length; ++i) {
-				int pack = packedFaces[i];
-
-				int x = pack >> 21;
-				int y = (pack << 11) >> 22;
-				int z = (pack << 21) >> 21;
+			for (int packed : packedFaces) {
+				int x = packed >> 21;
+				int y = (packed << 11) >> 22;
+				int z = (packed << 21) >> 21;
 
 				int t = z * yawcos - x * yawsin >> 16;
 				int fz = y * pitchsin + t * pitchcos >> 16;
@@ -573,9 +562,8 @@ class Zone {
 				distanceToFaces[fz][distanceFaceCount[fz]++] = bufferIdx++;
 			}
 
-			if (bufferIdx * 3 > alphaElements.remaining()) {
+			if (bufferIdx * 3 > alphaElements.remaining())
 				flush(cmd);
-			}
 
 			int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
 			for (int i = diameter - 1; i >= 0; --i) {
@@ -596,6 +584,7 @@ class Zone {
 		}
 
 		flush(cmd);
+		cmd.DepthMask(true);
 	}
 
 	private void flush(CommandBuffer cmd) {
@@ -617,12 +606,10 @@ class Zone {
 				cmd.DrawElements(GL_TRIANGLES, alphaElements.limit());
 			}
 			alphaElements.clear();
-		} else {
+		} else if (drawIdx != 0) {
 			convertForDraw(VAO.VERT_SIZE);
-			if (glDrawLength.length > 0) {
-				cmd.BindVertexArray(lastVao);
-				cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
-			}
+			cmd.BindVertexArray(lastVao);
+			cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
 			drawIdx = 0;
 		}
 	}

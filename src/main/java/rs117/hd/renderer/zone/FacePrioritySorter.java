@@ -254,7 +254,6 @@ class FacePrioritySorter {
 			int[] dynFaces = orderedFaces[10];
 			int[] dynFaceDistances = eq10;
 			if (drawnFaces == numDynFaces) {
-				drawnFaces = 0;
 				numDynFaces = numOfPriority[11];
 				dynFaces = orderedFaces[11];
 				dynFaceDistances = eq11;

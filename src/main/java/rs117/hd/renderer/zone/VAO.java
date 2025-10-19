@@ -98,18 +98,11 @@ class VAO {
 		int start = 0;
 		for (int i = 0; i < off; ++i) {
 			int end = lengths[i];
-			Projection p = projs[i];
 			Scene scene = scenes[i];
 
 			int count = end - start;
 
-			renderer.updateEntityProjection(scene, p);
-//			glUniformMatrix4fv(
-//				uniEntityProj,
-//				false,
-//				p instanceof FloatProjection ? ((FloatProjection) p).getProjection() : Mat4.identity()
-//			);
-			renderer.updateEntityTint(scene);
+			cmd.SetWorldViewIndex(renderer.uboWorldViews.getIndex(scene));
 			cmd.BindVertexArray(vao);
 			cmd.DrawArrays(GL_TRIANGLES, start / (VERT_SIZE / 4), count / (VAO.VERT_SIZE / 4));
 
@@ -181,9 +174,8 @@ class VAO {
 		void addRange(Projection projection, Scene scene) {
 			for (int i = 0; i <= curIdx && i < vaos.size(); ++i) {
 				VAO vao = vaos.get(i);
-				if (vao.vbo.mapped) {
+				if (vao.vbo.mapped)
 					vao.addRange(projection, scene);
-				}
 			}
 		}
 

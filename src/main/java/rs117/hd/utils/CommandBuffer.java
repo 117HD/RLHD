@@ -10,8 +10,10 @@ import rs117.hd.opengl.uniforms.UBOCommandBuffer;
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glColorMask;
 import static org.lwjgl.opengl.GL11.glDepthMask;
+import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glDrawElements;
+import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL14C.glMultiDrawArrays;
 import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
 import static org.lwjgl.opengl.GL15C.glBindBuffer;
@@ -30,6 +32,10 @@ public class CommandBuffer {
 
 	private static final int UNIFORM_BASE_OFFSET = 7;
 	private static final int UNIFORM_WORLD_VIEW_ID = 8;
+
+	private static final int GL_TOGGLE_TYPE = 9; // Combined glEnable & glDisable
+
+	private static final long INT_MASK = 0xFFFF_FFFFL;
 
 	@Setter
 	private UBOCommandBuffer uboCommandBuffer;
@@ -51,10 +57,10 @@ public class CommandBuffer {
 		cmd[writeHead++] = z;
 	}
 
-	public void SetWorldViewId(int id) {
+	public void SetWorldViewIndex(int index) {
 		ensureCapacity(2);
 		cmd[writeHead++] = UNIFORM_WORLD_VIEW_ID;
-		cmd[writeHead++] = id;
+		cmd[writeHead++] = index;
 	}
 
 	public void BindVertexArray(int vao) {
@@ -91,7 +97,7 @@ public class CommandBuffer {
 		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_TYPE;
 		cmd[writeHead++] = mode;
 		cmd[writeHead++] = offsets.length;
-		for(int i = 0; i < offsets.length; i++){
+		for (int i = 0; i < offsets.length; i++) {
 			cmd[writeHead++] = offsets[i];
 			cmd[writeHead++] = counts[i];
 		}
@@ -112,37 +118,51 @@ public class CommandBuffer {
 		cmd[writeHead++] = count;
 	}
 
+	public void Enable(int capability) {
+		Toggle(capability, true);
+	}
+
+	public void Disable(int capability) {
+		Toggle(capability, false);
+	}
+
+	public void Toggle(int capability, boolean enabled) {
+		ensureCapacity(2);
+		cmd[writeHead++] = GL_TOGGLE_TYPE;
+		cmd[writeHead++] = (enabled ? 1L : 0) << 32 | capability & INT_MASK;
+	}
+
 	public void execute() {
-		try(MemoryStack stack = MemoryStack.stackPush()) {
+		try (MemoryStack stack = MemoryStack.stackPush()) {
 			IntBuffer offsets = null, counts = null;
 			readHead = 0;
 			while (readHead < writeHead) {
 				int type = (int) cmd[readHead++];
 				switch (type) {
 					case UNIFORM_BASE_OFFSET: {
-						int x = (int)cmd[readHead++];
-						int y = (int)cmd[readHead++];
-						int z = (int)cmd[readHead++];
-						if(uboCommandBuffer != null)
+						int x = (int) cmd[readHead++];
+						int y = (int) cmd[readHead++];
+						int z = (int) cmd[readHead++];
+						if (uboCommandBuffer != null)
 							uboCommandBuffer.sceneBase.set(x, y, z);
 						break;
 					}
 					case UNIFORM_WORLD_VIEW_ID: {
-						int id = (int)cmd[readHead++];
-						if(uboCommandBuffer != null)
-							uboCommandBuffer.worldViewId.set(id);
+						int id = (int) cmd[readHead++];
+						if (uboCommandBuffer != null)
+							uboCommandBuffer.worldViewIndex.set(id);
 						break;
 					}
 					case GL_DEPTH_MASK_TYPE: {
-						int state = (int)cmd[readHead++];
+						int state = (int) cmd[readHead++];
 						glDepthMask(state == 1);
 						break;
 					}
 					case GL_COLOR_MASK_TYPE: {
-						int red = (int)cmd[readHead++];
-						int green = (int)cmd[readHead++];
-						int blue = (int)cmd[readHead++];
-						int alpha = (int)cmd[readHead++];
+						int red = (int) cmd[readHead++];
+						int green = (int) cmd[readHead++];
+						int blue = (int) cmd[readHead++];
+						int alpha = (int) cmd[readHead++];
 						glColorMask(red == 1, green == 1, blue == 1, alpha == 1);
 						break;
 					}
@@ -159,7 +179,7 @@ public class CommandBuffer {
 						int offset = (int) cmd[readHead++];
 						int count = (int) cmd[readHead++];
 
-						if(uboCommandBuffer != null && uboCommandBuffer.isDirty())
+						if (uboCommandBuffer != null && uboCommandBuffer.isDirty())
 							uboCommandBuffer.upload();
 
 						glDrawArrays(mode, offset, count);
@@ -169,7 +189,7 @@ public class CommandBuffer {
 						int mode = (int) cmd[readHead++];
 						int elementCount = (int) cmd[readHead++];
 
-						if(uboCommandBuffer != null && uboCommandBuffer.isDirty())
+						if (uboCommandBuffer != null && uboCommandBuffer.isDirty())
 							uboCommandBuffer.upload();
 
 						glDrawElements(mode, elementCount, GL_UNSIGNED_INT, 0L);
@@ -179,26 +199,36 @@ public class CommandBuffer {
 						int mode = (int) cmd[readHead++];
 						int drawCount = (int) cmd[readHead++];
 
-						if(offsets == null || offsets.capacity() < drawCount) {
+						if (offsets == null || offsets.capacity() < drawCount) {
 							offsets = stack.callocInt(drawCount);
 							counts = stack.callocInt(drawCount);
 						}
 
-						for(int i = 0; i < drawCount; i++) {
-							offsets.put((int)cmd[readHead++]);
-							counts.put((int)cmd[readHead++]);
+						for (int i = 0; i < drawCount; i++) {
+							offsets.put((int) cmd[readHead++]);
+							counts.put((int) cmd[readHead++]);
 						}
 
 						offsets.flip();
 						counts.flip();
 
-						if(uboCommandBuffer != null && uboCommandBuffer.isDirty())
+						if (uboCommandBuffer != null && uboCommandBuffer.isDirty())
 							uboCommandBuffer.upload();
 
 						glMultiDrawArrays(mode, offsets, counts);
 
 						offsets.clear();
 						counts.clear();
+						break;
+					}
+					case GL_TOGGLE_TYPE: {
+						long packed = cmd[readHead++];
+						int capability = (int) (packed & INT_MASK);
+						if ((packed >> 32) != 0) {
+							glEnable(capability);
+						} else {
+							glDisable(capability);
+						}
 						break;
 					}
 					default:
