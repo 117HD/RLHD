@@ -3,6 +3,7 @@ package rs117.hd.renderer.zone;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.utils.CommandBuffer;
@@ -26,9 +27,12 @@ class VAO {
 		vbo = new VBO(size);
 	}
 
-	void initialize() {
+	void initialize(int ebo) {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
+
+		// The element buffer is part of VAO state
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
 		vbo.initialize(GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_ARRAY_BUFFER, vbo.bufId);
@@ -117,6 +121,7 @@ class VAO {
 	}
 
 	@Slf4j
+	@RequiredArgsConstructor
 	static class VAOList {
 		// this needs to be larger than the largest single model
 		private static final int VAO_SIZE = 4 * 1024 * 1024;
@@ -124,6 +129,7 @@ class VAO {
 		private int curIdx;
 		private int drawCount;
 		private final List<VAO> vaos = new ArrayList<>();
+		private final int eboAlpha;
 
 		VAO get(int size) {
 			assert size <= VAO_SIZE;
@@ -143,7 +149,7 @@ class VAO {
 			}
 
 			VAO vao = new VAO(VAO_SIZE);
-			vao.initialize();
+			vao.initialize(eboAlpha);
 			vao.vbo.map();
 			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);

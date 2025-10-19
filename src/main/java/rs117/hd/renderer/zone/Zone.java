@@ -61,20 +61,20 @@ class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void initialize(VBO o, VBO a) {
+	void initialize(VBO o, VBO a, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
 		if (o != null) {
 			vboO = o;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.bufId);
+			setupVao(glVao, o.bufId, eboShared);
 		}
 
 		if (a != null) {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.bufId);
+			setupVao(glVaoA, a.bufId, eboShared);
 		}
 	}
 
@@ -121,9 +121,12 @@ class Zone {
 		}
 	}
 
-	private void setupVao(int vao, int buffer) {
+	private void setupVao(int vao, int buffer, int ebo) {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
+
+		// The element buffer is part of VAO state
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 
 		// Position
 		glEnableVertexAttribArray(0);

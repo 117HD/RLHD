@@ -6,19 +6,8 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.uniforms.UBOCommandBuffer;
-import rs117.hd.renderer.zone.ZoneRenderer;
 
-import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
-import static org.lwjgl.opengl.GL11.glColorMask;
-import static org.lwjgl.opengl.GL11.glDepthMask;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
-import static org.lwjgl.opengl.GL11.glDrawElements;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL14C.glMultiDrawArrays;
-import static org.lwjgl.opengl.GL15C.GL_ELEMENT_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL15C.glBindBuffer;
-import static org.lwjgl.opengl.GL30C.glBindVertexArray;
+import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class CommandBuffer {
@@ -195,12 +184,6 @@ public class CommandBuffer {
 						if (uboCommandBuffer != null && uboCommandBuffer.isDirty())
 							uboCommandBuffer.upload();
 
-						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ZoneRenderer.eboAlpha);
-//						log.debug("Current EBO: {}", glGetInteger(GL_ELEMENT_ARRAY_BUFFER_BINDING));
-//						log.debug(
-//							"glDrawElements(mode={}, vertexCount={}, type=GL_UNSIGNED_INT, byteOffset={})",
-//							mode, elementCount, offset
-//						);
 						glDrawElements(mode, vertexCount, GL_UNSIGNED_INT, byteOffset);
 						break;
 					}

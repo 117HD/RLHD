@@ -291,12 +291,12 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void initializeBuffers() {
-		vaoO = new VAO.VAOList();
-		vaoA = new VAO.VAOList();
-		vaoPO = new VAO.VAOList();
-
 		eboAlpha = glGenBuffers();
 		eboAlphaStaging = new GpuIntBuffer();
+
+		vaoO = new VAO.VAOList(eboAlpha);
+		vaoA = new VAO.VAOList(eboAlpha);
+		vaoPO = new VAO.VAOList(eboAlpha);
 	}
 
 	private void destroyBuffers() {
@@ -1219,7 +1219,7 @@ public class ZoneRenderer implements Renderer {
 					a.map();
 				}
 
-				zone.initialize(o, a);
+				zone.initialize(o, a, eboAlpha);
 
 				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
 
@@ -1522,7 +1522,7 @@ public class ZoneRenderer implements Renderer {
 						a.map();
 					}
 
-					zone.initialize(o, a);
+					zone.initialize(o, a, eboAlpha);
 				}
 			}
 
@@ -1658,7 +1658,7 @@ public class ZoneRenderer implements Renderer {
 						a.map();
 					}
 
-					zone.initialize(o, a);
+					zone.initialize(o, a, eboAlpha);
 				}
 			}
 
