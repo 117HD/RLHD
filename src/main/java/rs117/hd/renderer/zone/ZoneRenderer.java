@@ -662,13 +662,6 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.updateSceneFbo();
 
-		// Draw 3d scene
-//		if (plugin.hasLoggedIn && sceneContext != null && plugin.sceneViewport != null) {
-//		} else {
-//			// TODO
-//		}
-
-		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float fogDepth = 0;
 		switch (config.fogDepthMode()) {
 			case USER_DEFINED:
@@ -681,7 +674,7 @@ public class ZoneRenderer implements Renderer {
 		fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
-		plugin.uboGlobal.fogColor.set(fogColor);
+		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 		plugin.uboGlobal.expandedMapLoadingChunks.set(root.sceneContext.expandedMapLoadingChunks);
@@ -753,6 +746,71 @@ public class ZoneRenderer implements Renderer {
 
 		plugin.uboGlobal.upload();
 		uboWorldViews.update(client);
+
+		// Reset buffers for the next frame
+		eboAlphaStaging.clear();
+		sceneCmd.reset();
+
+		sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
+		sceneCmd.ColorMask(true, true, true, true);
+		sceneCmd.DepthMask(true);
+		sceneCmd.Enable(GL_DEPTH_TEST);
+
+		checkGLErrors();
+	}
+
+	@Override
+	public void postSceneDraw(Scene scene) {
+		log.trace("postSceneDraw({})", scene);
+		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
+			postDrawTopLevel();
+		} else {
+			sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
+		}
+	}
+
+	private void postDrawTopLevel() {
+		sceneFboValid = true;
+
+		if (root.sceneContext == null)
+			return;
+
+		sceneCmd.Disable(GL_BLEND);
+		sceneCmd.Disable(GL_CULL_FACE);
+		sceneCmd.Disable(GL_DEPTH_TEST);
+
+		// Scene draw state to apply before all recorded commands
+		if (eboAlphaStaging.position() > 0) {
+			eboAlphaStaging.flip();
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboAlphaStaging.getBuffer(), GL_STREAM_DRAW);
+		}
+
+		if (plugin.configShadowsEnabled &&
+			plugin.fboShadowMap != 0 &&
+			environmentManager.currentDirectionalStrength > 0
+		) {
+			frameTimer.begin(Timer.RENDER_SHADOWS);
+
+			// Render to the shadow depth map
+			glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+			glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
+			glClearDepth(1);
+			glClear(GL_DEPTH_BUFFER_BIT);
+			glDepthFunc(GL_LEQUAL);
+
+			plugin.shadowProgram.use();
+
+			// TODO: Depth test will get changed by the command buffer, but we'll be adding a shadowCmd anyway
+			glEnable(GL_DEPTH_TEST);
+
+			sceneCmd.execute();
+
+			glDisable(GL_DEPTH_TEST);
+
+			frameTimer.end(Timer.RENDER_SHADOWS);
+		}
+
 		sceneProgram.use();
 
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
@@ -766,6 +824,7 @@ public class ZoneRenderer implements Renderer {
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
+		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
 		glClearColor(
 			gammaCorrectedFogColor[0],
@@ -787,18 +846,6 @@ public class ZoneRenderer implements Renderer {
 		// Enable blending for alpha
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
-
-		// Reset buffers for the next frame
-		eboAlphaStaging.clear();
-		sceneCmd.reset();
-
-		sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
-		sceneCmd.ColorMask(true, true, true, true);
-		sceneCmd.DepthMask(true);
-		sceneCmd.Enable(GL_DEPTH_TEST);
-
-		// Draw with buffers bound to scene VAO
-//		glBindVertexArray(vaoScene);
 
 		// TODO
 //		// When there are custom tiles, we need depth testing to draw them in the correct order, but the rest of the
@@ -834,35 +881,6 @@ public class ZoneRenderer implements Renderer {
 //			);
 //		}
 
-		checkGLErrors();
-	}
-
-	@Override
-	public void postSceneDraw(Scene scene) {
-		log.trace("postSceneDraw({})", scene);
-		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
-			postDrawTopLevel();
-		} else {
-			sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
-		}
-	}
-
-	private void postDrawTopLevel() {
-		sceneFboValid = true;
-
-		if (root.sceneContext == null)
-			return;
-
-		sceneCmd.Disable(GL_BLEND);
-		sceneCmd.Disable(GL_CULL_FACE);
-		sceneCmd.Disable(GL_DEPTH_TEST);
-
-		// Scene draw state to apply before all recorded commands
-		if (eboAlphaStaging.position() > 0) {
-			eboAlphaStaging.flip();
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboAlphaStaging.getBuffer(), GL_STREAM_DRAW);
-		}
 		glDepthFunc(GL_GREATER);
 
 		// Render the scene
@@ -1231,31 +1249,6 @@ public class ZoneRenderer implements Renderer {
 			log.warn("prepareInterfaceTexture exception", ex);
 			plugin.restartPlugin();
 			return;
-		}
-
-		if (plugin.configShadowsEnabled &&
-			plugin.fboShadowMap != 0 &&
-			environmentManager.currentDirectionalStrength > 0
-		) {
-			frameTimer.begin(Timer.RENDER_SHADOWS);
-
-			// Render to the shadow depth map
-			glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-			glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
-			glClearDepth(1);
-			glClear(GL_DEPTH_BUFFER_BIT);
-			glDepthFunc(GL_LEQUAL);
-
-			plugin.shadowProgram.use();
-
-			// TODO: Depth test will get changed by the command buffer, but we'll be adding a shadowCmd anyway
-			glEnable(GL_DEPTH_TEST);
-
-			sceneCmd.execute();
-
-			glDisable(GL_DEPTH_TEST);
-
-			frameTimer.end(Timer.RENDER_SHADOWS);
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
