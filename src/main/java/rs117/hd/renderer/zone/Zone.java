@@ -554,6 +554,7 @@ class Zone {
 					continue;
 
 				final char[] faces = distanceToFaces[i];
+				ZoneRenderer.eboAlphaStaging.ensureCapacity(faceCount * 3);
 				for (int faceIdx = 0; faceIdx < faceCount; ++faceIdx) {
 					int face = faces[faceIdx] * 3 + start;
 					ZoneRenderer.eboAlphaStaging.put(face, face + 1, face + 2);
