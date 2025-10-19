@@ -798,8 +798,10 @@ public class ZoneRenderer implements Renderer {
 			// TODO: Depth test will get changed by the command buffer, but we'll be adding a shadowCmd anyway
 			glEnable(GL_DEPTH_TEST);
 
+			CommandBuffer.SKIP_DEPTH_CHANGES = true;
 			sceneCmd.execute();
 			directionalCmd.execute();
+			CommandBuffer.SKIP_DEPTH_CHANGES = false;
 
 			glDisable(GL_DEPTH_TEST);
 

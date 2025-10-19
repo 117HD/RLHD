@@ -11,6 +11,8 @@ import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
 public class CommandBuffer {
+	public static boolean SKIP_DEPTH_CHANGES;
+
 	private static final int GL_BIND_VERTEX_ARRAY_TYPE = 0;
 	private static final int GL_BIND_ELEMENTS_ARRAY_TYPE = 1;
 	private static final int GL_MULTI_DRAW_ARRAYS_TYPE = 2;
@@ -146,6 +148,8 @@ public class CommandBuffer {
 					}
 					case GL_DEPTH_MASK_TYPE: {
 						int state = (int) cmd[readHead++];
+						if (SKIP_DEPTH_CHANGES)
+							continue;
 						glDepthMask(state == 1);
 						break;
 					}
@@ -216,6 +220,9 @@ public class CommandBuffer {
 					case GL_TOGGLE_TYPE: {
 						long packed = cmd[readHead++];
 						int capability = (int) (packed & INT_MASK);
+						if (SKIP_DEPTH_CHANGES && capability == GL_DEPTH_TEST)
+							continue;
+
 						if ((packed >> 32) != 0) {
 							glEnable(capability);
 						} else {
