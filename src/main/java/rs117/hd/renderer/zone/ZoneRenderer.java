@@ -64,6 +64,7 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
+import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
@@ -1060,8 +1061,23 @@ public class ZoneRenderer implements Renderer {
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
+		byte[] transparencies = m.getFaceTransparencies();
+		short[] faceTextures = m.getFaceTextures();
+		boolean hasAlpha = false;
+		if (transparencies != null || faceTextures != null) {
+			for (int face = 0; face < m.getFaceCount(); ++face) {
+				boolean alpha =
+					transparencies != null && transparencies[face] != 0 ||
+					faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
+				if (alpha) {
+					hasAlpha = true;
+					break;
+				}
+			}
+		}
+
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		if (m.getFaceTransparencies() == null) {
+		if (!hasAlpha) {
 			VAO o = vaoO.get(size);
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb);
 		} else {

@@ -53,11 +53,11 @@ class FacePrioritySorter {
 	private static final float[] modelUvs;
 	private static final int[] modelNormals;
 
-	private static final int[] numOfPriority;
+	static final int[] numOfPriority;
 	private static final int[] eq10;
 	private static final int[] eq11;
 	private static final int[] lt10;
-	private static final int[][] orderedFaces;
+	static final int[][] orderedFaces;
 
 	private static final int MAX_VERTEX_COUNT = SceneUploader.MAX_VERTEX_COUNT;
 	private static final int MAX_DIAMETER = 6000;
@@ -201,7 +201,6 @@ class FacePrioritySorter {
 				final int cnt = distanceFaceCount[i];
 				if (cnt > 0) {
 					final char[] faces = distanceToFaces[i];
-
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
 						len += pushFace(model, modelOverride, preOrientation, face, opaqueBuffer, alphaBuffer);
@@ -216,7 +215,6 @@ class FacePrioritySorter {
 				final int cnt = distanceFaceCount[i];
 				if (cnt > 0) {
 					final char[] faces = distanceToFaces[i];
-
 					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
 						final int face = faces[faceIdx];
 						final byte pri = faceRenderPriorities[face];
@@ -235,19 +233,16 @@ class FacePrioritySorter {
 			}
 
 			int avg12 = 0;
-			if (numOfPriority[1] > 0 || numOfPriority[2] > 0) {
+			if (numOfPriority[1] > 0 || numOfPriority[2] > 0)
 				avg12 = (lt10[1] + lt10[2]) / (numOfPriority[1] + numOfPriority[2]);
-			}
 
 			int avg34 = 0;
-			if (numOfPriority[3] > 0 || numOfPriority[4] > 0) {
+			if (numOfPriority[3] > 0 || numOfPriority[4] > 0)
 				avg34 = (lt10[3] + lt10[4]) / (numOfPriority[3] + numOfPriority[4]);
-			}
 
 			int avg68 = 0;
-			if (numOfPriority[6] > 0 || numOfPriority[8] > 0) {
+			if (numOfPriority[6] > 0 || numOfPriority[8] > 0)
 				avg68 = (lt10[8] + lt10[6]) / (numOfPriority[8] + numOfPriority[6]);
-			}
 
 			int drawnFaces = 0;
 			int numDynFaces = numOfPriority[10];
@@ -406,11 +401,12 @@ class FacePrioritySorter {
 		int color2 = faceColors2[face];
 		int color3 = faceColors3[face];
 
-		boolean alpha = (transparencies != null && transparencies[face] != 0);
+		boolean alpha =
+			transparencies != null && transparencies[face] != 0 ||
+			faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
-		if (color3 == -1) {
+		if (color3 == -1)
 			color2 = color3 = color1;
-		}
 
 		// HSL override is not applied to textured faces
 		if (faceTextures == null || faceTextures[face] == -1) {

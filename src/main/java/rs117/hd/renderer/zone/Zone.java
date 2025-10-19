@@ -285,6 +285,7 @@ class Zone {
 		// only set for static geometry as they require sorting
 		int radius;
 		int[] packedFaces;
+		byte[] renderPriorities;
 
 		static final int SKIP = 1; // temporary model is in a closer zone
 		static final int TEMP = 2; // temporary model added to a closer zone
@@ -412,6 +413,7 @@ class Zone {
 
 		assert radius >= 0;
 
+		m.renderPriorities = model.getFaceRenderPriorities();
 		m.radius = 2 + (int) Math.sqrt(radius);
 
 		assert packedFaces.length > 0;
@@ -445,6 +447,7 @@ class Zone {
 			if (m.isTemp() || (m.flags & AlphaModel.TEMP) != 0) {
 				alphaModels.remove(i);
 				m.packedFaces = null;
+				m.renderPriorities = null;
 				modelCache.add(m);
 			}
 			m.flags &= ~AlphaModel.SKIP;
@@ -458,6 +461,9 @@ class Zone {
 	private static int lastDrawMode;
 	private static int lastVao;
 	private static int lastzx, lastzz;
+
+	private static final int[] numOfPriority = FacePrioritySorter.numOfPriority;
+	private static final int[][] orderedFaces = FacePrioritySorter.orderedFaces;
 
 	void alphaSort(int zx, int zz, Camera camera) {
 		int cx = (int) camera.getPositionX();
@@ -547,19 +553,57 @@ class Zone {
 				distanceToFaces[fz][distanceFaceCount[fz]++] = bufferIdx++;
 			}
 
-			int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
-			for (int i = diameter - 1; i >= 0; --i) {
-				final int faceCount = distanceFaceCount[i];
-				if (faceCount <= 0)
-					continue;
+			byte[] faceRenderPriorities = m.renderPriorities;
+			final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
+			if (faceRenderPriorities == null) {
+				for (int i = diameter - 1; i >= 0; --i) {
+					final int cnt = distanceFaceCount[i];
+					if (cnt > 0) {
+						final char[] faces = distanceToFaces[i];
 
-				final char[] faces = distanceToFaces[i];
-				ZoneRenderer.eboAlphaStaging.ensureCapacity(faceCount * 3);
-				for (int faceIdx = 0; faceIdx < faceCount; ++faceIdx) {
-					int face = faces[faceIdx] * 3 + start;
-					ZoneRenderer.eboAlphaStaging.put(face, face + 1, face + 2);
+						ZoneRenderer.eboAlphaStaging.ensureCapacity(cnt * 3);
+						ZoneRenderer.alphaFaceCount += cnt;
+						for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
+							final int face = faces[faceIdx];
+							int idx = face * 3 + start;
+							ZoneRenderer.eboAlphaStaging.put(idx, idx + 1, idx + 2);
+						}
+					}
 				}
-				ZoneRenderer.alphaFaceCount += faceCount;
+			} else {
+				// Vanilla uses priority draw order for alpha faces and not depth draw order
+				// And since we don't have the full model here, only the alpha faces, we can't compute the
+				// 10/11 insertion points either. Just ignore those since I think they are mostly for players,
+				// which are rendered differently anyway.
+				Arrays.fill(numOfPriority, 0);
+
+				for (int i = diameter - 1; i >= 0; --i) {
+					final int cnt = distanceFaceCount[i];
+					if (cnt > 0) {
+						final char[] faces = distanceToFaces[i];
+
+						for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
+							final int face = faces[faceIdx];
+							final byte pri = faceRenderPriorities[face];
+							final int distIdx = numOfPriority[pri]++;
+
+							orderedFaces[pri][distIdx] = face;
+						}
+					}
+				}
+
+				for (int pri = 0; pri < 12; ++pri) {
+					final int priNum = numOfPriority[pri];
+					final int[] priFaces = orderedFaces[pri];
+
+					ZoneRenderer.eboAlphaStaging.ensureCapacity(priNum * 3);
+					ZoneRenderer.alphaFaceCount += priNum;
+					for (int faceIdx = 0; faceIdx < priNum; ++faceIdx) {
+						final int face = priFaces[faceIdx];
+						int idx = face * 3 + start;
+						ZoneRenderer.eboAlphaStaging.put(idx, idx + 1, idx + 2);
+					}
+				}
 			}
 		}
 
@@ -648,6 +692,7 @@ class Zone {
 				m2.zofz = (byte) (closestZoneZ - zz);
 
 				m2.packedFaces = m.packedFaces;
+				m2.renderPriorities = m.renderPriorities;
 				m2.radius = m.radius;
 
 				m2.flags = AlphaModel.TEMP;
