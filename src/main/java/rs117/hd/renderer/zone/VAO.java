@@ -72,11 +72,10 @@ class VAO {
 	}
 
 	int[] lengths = new int[4];
-	Projection[] projs = new Projection[4];
 	Scene[] scenes = new Scene[4];
 	int off = 0;
 
-	void addRange(Projection projection, Scene scene) {
+	void addRange(Scene scene) {
 		assert vbo.mapped;
 
 		if (off > 0 && lengths[off - 1] == vbo.vb.position()) {
@@ -86,12 +85,10 @@ class VAO {
 		if (lengths.length == off) {
 			int l = lengths.length << 1;
 			lengths = Arrays.copyOf(lengths, l);
-			projs = Arrays.copyOf(projs, l);
 			scenes = Arrays.copyOf(scenes, l);
 		}
 
 		lengths[off] = vbo.vb.position();
-		projs[off] = projection;
 		scenes[off] = scene;
 		off++;
 	}
@@ -115,7 +112,6 @@ class VAO {
 	}
 
 	void reset() {
-		Arrays.fill(projs, 0, off, null);
 		Arrays.fill(scenes, 0, off, null);
 		off = 0;
 	}
@@ -177,11 +173,11 @@ class VAO {
 			drawCount = 0;
 		}
 
-		void addRange(Projection projection, Scene scene) {
+		void addRange(Scene scene) {
 			for (int i = 0; i <= curIdx && i < vaos.size(); ++i) {
 				VAO vao = vaos.get(i);
 				if (vao.vbo.mapped)
-					vao.addRange(projection, scene);
+					vao.addRange(scene);
 			}
 		}
 
@@ -193,24 +189,6 @@ class VAO {
 		void resetAll() {
 			for (int i = 0; i < drawCount; ++i)
 				vaos.get(i).reset();
-		}
-
-		void debug() {
-			log.debug("{} vaos allocated", vaos.size());
-			for (VAO vao : vaos) {
-				log.debug(
-					"vao {} mapped: {} num ranges: {} length: {}",
-					vao,
-					vao.vbo.mapped,
-					vao.off,
-					vao.vbo.mapped ? vao.vbo.vb.position() : -1
-				);
-				if (vao.off > 1) {
-					for (int i = 0; i < vao.off; ++i) {
-						log.debug("  {} {} {}", vao.lengths[i], vao.projs[i], vao.scenes[i]);
-					}
-				}
-			}
 		}
 	}
 }

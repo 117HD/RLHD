@@ -344,8 +344,8 @@ public class ZoneRenderer implements Renderer {
 			preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);
 		} else {
 			Scene topLevel = client.getScene();
-			vaoO.addRange(null, topLevel);
-			vaoPO.addRange(null, topLevel);
+			vaoO.addRange(topLevel);
+			vaoPO.addRange(topLevel);
 			sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
 			directionalCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
 		}
@@ -958,35 +958,39 @@ public class ZoneRenderer implements Renderer {
 		if (ctx == null)
 			return;
 
-		if (pass == DrawCallbacks.PASS_OPAQUE) {
-			vaoO.addRange(projection, scene);
-			vaoPO.addRange(projection, scene);
+		switch (pass) {
+			case DrawCallbacks.PASS_OPAQUE:
+				vaoO.addRange(scene);
+				vaoPO.addRange(scene);
 
-			if (scene.getWorldViewId() == -1) {
-				sceneCmd.SetBaseOffset(0, 0, 0);
+				if (scene.getWorldViewId() == -1) {
+					sceneCmd.SetBaseOffset(0, 0, 0);
 
-//				if (client.getGameCycle() % 100 == 0)
-//				{
-//					vaoO.debug();
-//				}
-				vaoO.unmap();
-				vaoO.drawAll(this, sceneCmd);
-				vaoO.resetAll();
+					// Draw opaque
+					vaoO.unmap();
+					vaoO.drawAll(this, sceneCmd);
+					vaoO.resetAll();
 
-				vaoPO.unmap();
-				sceneCmd.DepthMask(false);
-				vaoPO.drawAll(this, sceneCmd);
-				sceneCmd.DepthMask(true);
+					vaoPO.unmap();
 
-				sceneCmd.ColorMask(false, false, false, false);
-				vaoPO.drawAll(this, sceneCmd);
-				vaoPO.resetAll();
-				sceneCmd.ColorMask(true, true, true, true);
-			}
-		} else if (pass == DrawCallbacks.PASS_ALPHA) {
-			for (int x = 0; x < ctx.sizeX; ++x)
-				for (int z = 0; z < ctx.sizeZ; ++z)
-					ctx.zones[x][z].removeTemp();
+					// Draw players opaque, without depth writes
+					sceneCmd.DepthMask(false);
+					vaoPO.drawAll(this, sceneCmd);
+					sceneCmd.DepthMask(true);
+
+					// Draw players opaque, writing only depth
+					sceneCmd.ColorMask(false, false, false, false);
+					vaoPO.drawAll(this, sceneCmd);
+					sceneCmd.ColorMask(true, true, true, true);
+
+					vaoPO.resetAll();
+				}
+				break;
+			case DrawCallbacks.PASS_ALPHA:
+				for (int x = 0; x < ctx.sizeX; ++x)
+					for (int z = 0; z < ctx.sizeZ; ++z)
+						ctx.zones[x][z].removeTemp();
+				break;
 		}
 		checkGLErrors();
 	}
