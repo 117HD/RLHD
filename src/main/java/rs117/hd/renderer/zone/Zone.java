@@ -573,7 +573,7 @@ class Zone {
 		if (lastDrawMode == STATIC) {
 			if (ZoneRenderer.alphaFaceCount > 0) {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
-				long byteOffset = ZoneRenderer.eboAlphaStaging.position() - vertexCount;
+				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
 				cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset); // The EBO is bound by in ZoneRenderer
 				ZoneRenderer.alphaFaceCount = 0;

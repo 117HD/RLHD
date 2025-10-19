@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.uniforms.UBOCommandBuffer;
+import rs117.hd.renderer.zone.ZoneRenderer;
 
 import static org.lwjgl.opengl.GL11.GL_UNSIGNED_INT;
 import static org.lwjgl.opengl.GL11.glColorMask;
@@ -188,13 +189,19 @@ public class CommandBuffer {
 					}
 					case GL_DRAW_ELEMENTS_TYPE: {
 						int mode = (int) cmd[readHead++];
-						int elementCount = (int) cmd[readHead++];
-						long offset = cmd[readHead++];
+						int vertexCount = (int) cmd[readHead++];
+						long byteOffset = cmd[readHead++];
 
 						if (uboCommandBuffer != null && uboCommandBuffer.isDirty())
 							uboCommandBuffer.upload();
 
-						glDrawElements(mode, elementCount, GL_UNSIGNED_INT, offset);
+						glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ZoneRenderer.eboAlpha);
+//						log.debug("Current EBO: {}", glGetInteger(GL_ELEMENT_ARRAY_BUFFER_BINDING));
+//						log.debug(
+//							"glDrawElements(mode={}, vertexCount={}, type=GL_UNSIGNED_INT, byteOffset={})",
+//							mode, elementCount, offset
+//						);
+						glDrawElements(mode, vertexCount, GL_UNSIGNED_INT, byteOffset);
 						break;
 					}
 					case GL_MULTI_DRAW_ARRAYS_TYPE: {

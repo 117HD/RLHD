@@ -858,9 +858,11 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.Disable(GL_DEPTH_TEST);
 
 		// Scene draw state to apply before all recorded commands
-		eboAlphaStaging.flip();
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboAlphaStaging.getBuffer(), GL_STREAM_DRAW);
+		if (eboAlphaStaging.position() > 0) {
+			eboAlphaStaging.flip();
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboAlphaStaging.getBuffer(), GL_STREAM_DRAW);
+		}
 		glDepthFunc(GL_GREATER);
 
 		// Render the scene
