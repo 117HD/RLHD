@@ -1,6 +1,5 @@
 package rs117.hd.renderer.zone;
 
-import java.nio.IntBuffer;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +11,6 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import org.lwjgl.BufferUtils;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Camera;
@@ -450,9 +448,6 @@ class Zone {
 		}
 	}
 
-	// this needs to be larger than the max model alpha face count * 3
-	private static final IntBuffer alphaElements = BufferUtils.createIntBuffer(16384);
-
 	private static final int STATIC = 1;
 	private static final int TEMP = 2;
 	private static final int STATIC_UNSORTED = 3;
@@ -460,18 +455,6 @@ class Zone {
 	private static int lastDrawMode;
 	private static int lastVao;
 	private static int lastzx, lastzz;
-
-	private static int eboAlpha;
-
-	static void initializeBuffers() {
-		eboAlpha = glGenBuffers();
-	}
-
-	static void destroyBuffers() {
-		if (eboAlpha != 0)
-			glDeleteBuffers(eboAlpha);
-		eboAlpha = 0;
-	}
 
 	void alphaSort(int zx, int zz, Camera camera) {
 		int cx = (int) camera.getPositionX();
@@ -501,7 +484,6 @@ class Zone {
 		cmd.DepthMask(false);
 
 		drawIdx = 0;
-		alphaElements.clear();
 		lastDrawMode = lastVao = 0;
 		lastzx = zx;
 		lastzz = zz;
@@ -562,24 +544,18 @@ class Zone {
 				distanceToFaces[fz][distanceFaceCount[fz]++] = bufferIdx++;
 			}
 
-			if (bufferIdx * 3 > alphaElements.remaining())
-				flush(cmd);
-
 			int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
 			for (int i = diameter - 1; i >= 0; --i) {
-				final int cnt = distanceFaceCount[i];
-				if (cnt > 0) {
-					final char[] faces = distanceToFaces[i];
+				final int faceCount = distanceFaceCount[i];
+				if (faceCount <= 0)
+					continue;
 
-					for (int faceIdx = 0; faceIdx < cnt; ++faceIdx) {
-						int face = faces[faceIdx];
-						face *= 3;
-						face += start;
-						alphaElements.put(face++);
-						alphaElements.put(face++);
-						alphaElements.put(face++);
-					}
+				final char[] faces = distanceToFaces[i];
+				for (int faceIdx = 0; faceIdx < faceCount; ++faceIdx) {
+					int face = faces[faceIdx] * 3 + start;
+					ZoneRenderer.eboAlphaStaging.put(face, face + 1, face + 2);
 				}
+				ZoneRenderer.alphaFaceCount += faceCount;
 			}
 		}
 
@@ -595,17 +571,13 @@ class Zone {
 		}
 
 		if (lastDrawMode == STATIC) {
-			alphaElements.flip();
-			if (alphaElements.limit() > 0) {
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
-				glBufferData(GL_ELEMENT_ARRAY_BUFFER, alphaElements, GL_STREAM_DRAW);
-				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-
+			if (ZoneRenderer.alphaFaceCount > 0) {
+				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
+				long byteOffset = ZoneRenderer.eboAlphaStaging.position() - vertexCount;
 				cmd.BindVertexArray(lastVao);
-				cmd.BindElementsArray(eboAlpha);
-				cmd.DrawElements(GL_TRIANGLES, alphaElements.limit());
+				cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset); // The EBO is bound by in ZoneRenderer
+				ZoneRenderer.alphaFaceCount = 0;
 			}
-			alphaElements.clear();
 		} else if (drawIdx != 0) {
 			convertForDraw(VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
@@ -619,9 +591,8 @@ class Zone {
 		int cx = (int) camera.getPositionX();
 		int cz = (int) camera.getPositionZ();
 		for (AlphaModel m : alphaModels) {
-			if (m.lx == -1) {
+			if (m.lx == -1)
 				continue;
-			}
 
 			// calculate which zone this model should be drawn from
 			// TODO fix for boats
@@ -654,9 +625,8 @@ class Zone {
 				assert z != this;
 
 				AlphaModel m2 = modelCache.poll();
-				if (m2 == null) {
+				if (m2 == null)
 					m2 = new AlphaModel();
-				}
 				m2.id = m.id;
 				m2.startpos = m.startpos;
 				m2.endpos = m.endpos;

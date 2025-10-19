@@ -103,19 +103,20 @@ public class CommandBuffer {
 		}
 	}
 
-	public void DrawElements(int mode, int count) {
-		ensureCapacity(3);
+	public void DrawElements(int mode, int vertexCount, long offset) {
+		ensureCapacity(4);
 		cmd[writeHead++] = GL_DRAW_ELEMENTS_TYPE;
 		cmd[writeHead++] = mode;
-		cmd[writeHead++] = count;
+		cmd[writeHead++] = vertexCount;
+		cmd[writeHead++] = offset;
 	}
 
-	public void DrawArrays(int mode, int offset, int count) {
+	public void DrawArrays(int mode, int offset, int vertexCount) {
 		ensureCapacity(4);
 		cmd[writeHead++] = GL_DRAW_ARRAYS_TYPE;
 		cmd[writeHead++] = mode;
 		cmd[writeHead++] = offset;
-		cmd[writeHead++] = count;
+		cmd[writeHead++] = vertexCount;
 	}
 
 	public void Enable(int capability) {
@@ -188,11 +189,12 @@ public class CommandBuffer {
 					case GL_DRAW_ELEMENTS_TYPE: {
 						int mode = (int) cmd[readHead++];
 						int elementCount = (int) cmd[readHead++];
+						long offset = cmd[readHead++];
 
 						if (uboCommandBuffer != null && uboCommandBuffer.isDirty())
 							uboCommandBuffer.upload();
 
-						glDrawElements(mode, elementCount, GL_UNSIGNED_INT, 0L);
+						glDrawElements(mode, elementCount, GL_UNSIGNED_INT, offset);
 						break;
 					}
 					case GL_MULTI_DRAW_ARRAYS_TYPE: {

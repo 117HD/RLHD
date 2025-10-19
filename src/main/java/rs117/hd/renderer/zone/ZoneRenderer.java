@@ -72,6 +72,7 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
+import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -155,6 +156,10 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
+
+	public static int eboAlpha;
+	public static GpuIntBuffer eboAlphaStaging;
+	public static int alphaFaceCount;
 
 	static class WorldViewContext {
 		final int sizeX, sizeZ;
@@ -286,18 +291,27 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void initializeBuffers() {
-		Zone.initializeBuffers();
 		vaoO = new VAO.VAOList();
 		vaoA = new VAO.VAOList();
 		vaoPO = new VAO.VAOList();
+
+		eboAlpha = glGenBuffers();
+		eboAlphaStaging = new GpuIntBuffer();
 	}
 
 	private void destroyBuffers() {
-		Zone.destroyBuffers();
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();
 		vaoO = vaoA = vaoPO = null;
+
+		if (eboAlpha != 0)
+			glDeleteBuffers(eboAlpha);
+		eboAlpha = 0;
+
+		if (eboAlphaStaging != null)
+			eboAlphaStaging.destroy();
+		eboAlphaStaging = null;
 	}
 
 	@Override
@@ -774,7 +788,10 @@ public class ZoneRenderer implements Renderer {
 		glEnable(GL_BLEND);
 		glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
+		// Reset buffers for the next frame
+		eboAlphaStaging.clear();
 		sceneCmd.reset();
+
 		sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(null));
 		sceneCmd.ColorMask(true, true, true, true);
 		sceneCmd.DepthMask(true);
@@ -841,7 +858,12 @@ public class ZoneRenderer implements Renderer {
 		sceneCmd.Disable(GL_DEPTH_TEST);
 
 		// Scene draw state to apply before all recorded commands
+		eboAlphaStaging.flip();
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, eboAlpha);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, eboAlphaStaging.getBuffer(), GL_STREAM_DRAW);
 		glDepthFunc(GL_GREATER);
+
+		// Render the scene
 		sceneCmd.execute();
 
 		frameTimer.end(Timer.DRAW_SCENE);
