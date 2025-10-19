@@ -129,6 +129,7 @@ class VAO {
 		private static final int VAO_SIZE = 4 * 1024 * 1024;
 
 		private int curIdx;
+		private int drawCount;
 		private final List<VAO> vaos = new ArrayList<>();
 
 		VAO get(int size) {
@@ -156,7 +157,7 @@ class VAO {
 			return vao;
 		}
 
-		List<VAO> unmap() {
+		void unmap() {
 			int sz = 0;
 			for (VAO vao : vaos) {
 				if (vao.vbo.mapped) {
@@ -165,7 +166,7 @@ class VAO {
 				}
 			}
 			curIdx = 0;
-			return vaos.subList(0, sz);
+			drawCount = sz;
 		}
 
 		void free() {
@@ -174,6 +175,7 @@ class VAO {
 			}
 			vaos.clear();
 			curIdx = 0;
+			drawCount = 0;
 		}
 
 		void addRange(Projection projection, Scene scene) {
@@ -183,6 +185,16 @@ class VAO {
 					vao.addRange(projection, scene);
 				}
 			}
+		}
+
+		void drawAll(ZoneRenderer renderer, CommandBuffer cmd) {
+			for (int i = 0; i < drawCount; ++i)
+				vaos.get(i).draw(renderer, cmd);
+		}
+
+		void resetAll() {
+			for (int i = 0; i < drawCount; ++i)
+				vaos.get(i).reset();
 		}
 
 		void debug() {

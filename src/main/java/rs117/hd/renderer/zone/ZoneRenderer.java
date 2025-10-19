@@ -1010,26 +1010,18 @@ public class ZoneRenderer implements Renderer {
 //				{
 //					vaoO.debug();
 //				}
-				var vaos = vaoO.unmap();
-				for (VAO vao : vaos) {
-					vao.draw(this, sceneCmd);
-					vao.reset();
-				}
+				vaoO.unmap();
+				vaoO.drawAll(this, sceneCmd);
+				vaoO.resetAll();
 
-				vaos = vaoPO.unmap();
+				vaoPO.unmap();
 				sceneCmd.DepthMask(false);
-				glDepthMask(false);
-				for (VAO vao : vaos) {
-					vao.draw(this, sceneCmd);
-				}
+				vaoPO.drawAll(this, sceneCmd);
 				sceneCmd.DepthMask(true);
 
 				sceneCmd.ColorMask(false, false, false, false);
-				glColorMask(false, false, false, false);
-				for (VAO vao : vaos) {
-					vao.draw(this, sceneCmd);
-					vao.reset();
-				}
+				vaoPO.drawAll(this, sceneCmd);
+				vaoPO.resetAll();
 				sceneCmd.ColorMask(true, true, true, true);
 			}
 		} else if (pass == DrawCallbacks.PASS_ALPHA) {
