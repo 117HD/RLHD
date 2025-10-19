@@ -1,4 +1,4 @@
-package rs117.hd.model;
+package rs117.hd.renderer.legacy;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -16,12 +16,13 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.util.LinkBrowser;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.model.ModelCache;
+import rs117.hd.model.ModelHasher;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
-import rs117.hd.scene.SceneUploader;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.InheritTileColorType;
@@ -35,14 +36,13 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.PopupUtils;
 
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 @Slf4j
-public class ModelPusher {
+public class LegacyModelPusher {
 	@Inject
 	private Client client;
 
@@ -68,7 +68,6 @@ public class ModelPusher {
 	private FrameTimer frameTimer;
 
 	public static final int DATUM_PER_FACE = 12;
-	public static final int MAX_MATERIAL_INDEX = (1 << 12) - 1;
 
 	private static final int[] ZEROED_INTS = new int[12];
 
@@ -161,7 +160,7 @@ public class ModelPusher {
 	 * @param needsCaching   whether the model should be cached for future reuse, if enabled
 	 */
 	public void pushModel(
-		SceneContext sceneContext,
+		LegacySceneContext sceneContext,
 		@Nullable Tile tile,
 		int uuid,
 		Model model,
@@ -364,11 +363,11 @@ public class ModelPusher {
 
 				int materialData = material.packMaterialData(faceOverride, uvType, false);
 
-				final float[] uvData = sceneContext.modelFaceNormals;
+				final float[] uvData = sceneContext.modelFaceUvs;
 				if (materialData == 0) {
 					Arrays.fill(uvData, 0);
 				} else {
-					faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face);
+					faceOverride.fillUvsForFace(uvData, model, preOrientation, uvType, face, sceneContext.modelFaceNormals);
 					uvData[3] = uvData[7] = uvData[11] = Float.intBitsToFloat(materialData);
 				}
 
@@ -395,7 +394,7 @@ public class ModelPusher {
 	}
 
 	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
-		assert SceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
+		assert LegacySceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
 			return;
@@ -594,8 +593,8 @@ public class ModelPusher {
 									int tileX = scenePos.getX();
 									int tileY = scenePos.getY();
 									int tileZ = tile.getRenderLevel();
-									int tileExX = tileX + SCENE_OFFSET;
-									int tileExY = tileY + SCENE_OFFSET;
+									int tileExX = tileX + sceneContext.sceneOffset;
+									int tileExY = tileY + sceneContext.sceneOffset;
 									int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
 										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :

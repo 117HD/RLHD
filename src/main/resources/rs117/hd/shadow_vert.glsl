@@ -26,12 +26,13 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 
 layout (location = 0) in vec3 vPosition;
-layout (location = 1) in int vHsl;
-layout (location = 2) in vec3 vUv;
-layout (location = 3) in int vMaterialData;
-layout (location = 4) in vec4 vNormal;
+layout (location = 1) in vec3 vUv;
+layout (location = 3) in int vAlphaBiasHsl;
+layout (location = 4) in int vMaterialData;
+layout (location = 5) in int vTerrainData;
 
 #include <utils/constants.glsl>
 
@@ -52,16 +53,15 @@ layout (location = 4) in vec4 vNormal;
 #endif
 
 void main() {
-    int terrainData = int(vNormal.w);
-    int waterTypeIndex = terrainData >> 3 & 0x1F;
-    float opacity = 1 - (vHsl >> 24 & 0xFF) / float(0xFF);
+    int waterTypeIndex = vTerrainData >> 3 & 0x1F;
+    float opacity = 1 - (vAlphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
     float opacityThreshold = float(vMaterialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
     if (opacityThreshold == 0)
         opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
     bool isTransparent = opacity <= opacityThreshold;
-    bool isGroundPlaneTile = (terrainData & 0xF) == 1; // plane == 0 && isTerrain
+    bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
     bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
     bool isShadowDisabled =
@@ -71,16 +71,18 @@ void main() {
 
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
+    vec3 pos = sceneBase + vPosition;
+
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
-        gPosition = vPosition;
-        gUv = vec3(vUv);
+        gPosition = pos;
+        gUv = vUv;
         gMaterialData = vMaterialData;
         gCastShadow = shouldCastShadow;
         #if SHADOW_TRANSPARENCY
             gOpacity = opacity;
         #endif
     #else
-        gl_Position = lightProjectionMatrix * vec4(vPosition, shouldCastShadow);
+        gl_Position = lightProjectionMatrix * getWorldViewProjection(worldViewIndex) * vec4(pos, shouldCastShadow);
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
         #endif

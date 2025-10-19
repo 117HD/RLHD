@@ -178,19 +178,38 @@ vec3 hsvToSrgb(vec3 hsv) {
 }
 
 // Pack HSL int Jagex format
-int packHsl(vec3 hsl) {
-    int H = clamp(int(round((hsl[0] - .0078125f) * 64)), 0, 63);
-    int S = clamp(int(round((hsl[1] - .0625f) * 8)), 0, 7);
-    int L = clamp(int(round(hsl[2] * 128)), 0, 127);
+int packRawHsl(ivec3 hsl) {
+    int H = clamp(hsl[0], 0, 63);
+    int S = clamp(hsl[1], 0, 7);
+    int L = clamp(hsl[2], 0, 127);
     return H << 10 | S << 7 | L;
 }
 
+// Pack HSL int Jagex format
+int packHsl(vec3 hsl) {
+    ivec3 rawHsl = ivec3(
+        round((hsl[0] - .0078125f) * 64),
+        round((hsl[1] - .0625f) * 8),
+        round(hsl[2] * 128)
+    );
+    return packRawHsl(rawHsl);
+}
+
 // Unpack HSL from Jagex format
-vec3 unpackHsl(int hsl) {
+vec3 unpackRawHsl(int hsl) {
     // 6-bit hue | 3-bit saturation | 7-bit lightness
-    float H = (hsl >> 10 & 63) / 64.f + .0078125f;
-    float S = (hsl >> 7 & 7) / 8.f + .0625f;
-    float L = (hsl & 127) / 128.f;
+    float H = hsl >> 10 & 63;
+    float S = hsl >> 7 & 7;
+    float L = hsl & 127;
+    return vec3(H, S, L);
+}
+
+// Unpack HSL from Jagex format
+vec3 convertHsl(vec3 HSL) {
+    // 6-bit hue | 3-bit saturation | 7-bit lightness
+    float H = HSL[0] / 64.f + .0078125f;
+    float S = HSL[1] / 8.f + .0625f;
+    float L = HSL[2] / 128.f;
     return vec3(H, S, L);
 }
 
@@ -199,7 +218,7 @@ int srgbToPackedHsl(vec3 srgb) {
 }
 
 vec3 packedHslToSrgb(int hsl) {
-    return hslToSrgb(unpackHsl(hsl));
+    return hslToSrgb(convertHsl(unpackRawHsl(hsl)));
 }
 
 vec3 unpackSrgb(int srgb) {

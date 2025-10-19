@@ -26,6 +26,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+
 uniform int renderPass;
 uniform int waterHeight;
 
@@ -38,12 +39,13 @@ layout(triangle_strip, max_vertices = 3) out;
 #include <utils/color_utils.glsl>
 
 in vec3 gPosition[3];
-in int gHsl[3];
 in vec3 gUv[3];
+in vec3 gNormal[3];
+in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
-in vec4 gNormal[3];
+in int gTerrainData[3];
 
-flat out ivec3 vHsl;
+flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
 flat out vec3 T;
@@ -74,7 +76,7 @@ void displaceUnderwaterPosition(inout vec3 position, int waterDepth) {
 }
 
 void main() {
-    float alpha = 1 - float(gHsl[0] >> 24 & 0xFF) / 0xFF;
+    float alpha = 1 - float(gAlphaBiasHsl[0] >> 24 & 0xFF) / 0xFF;
     // Hide vertices with barely any opacity, since Jagex often includes hitboxes as part of the model.
     // This prevents them from showing up in planar reflections due to depth testing.
     if (alpha < .004)
@@ -85,10 +87,10 @@ void main() {
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     for (int i = 0; i < 3; i++) {
-        vHsl[i] = gHsl[i];
+        vAlphaBiasHsl[i] = gAlphaBiasHsl[i];
         vUv[i] = gUv[i];
         vMaterialData[i] = gMaterialData[i];
-        vTerrainData[i] = int(gNormal[i].w);
+        vTerrainData[i] = gTerrainData[i];
     }
 
     computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
@@ -139,10 +141,11 @@ void main() {
     }
 
     for (int i = 0; i < 3; i++) {
+        vec4 pos = vec4(gPosition[i], 1);
         // Flat normals must be applied separately per vertex
-        vec3 normal = gNormal[i].xyz;
-        vec3 position = gPosition[i];
-        OUT.position = position;
+        vec3 normal = gNormal[i];
+
+        OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
         OUT.flatNormal = N;
         #if FLAT_SHADING
@@ -160,10 +163,15 @@ void main() {
 
         if (renderPass == RENDER_PASS_WATER_REFLECTION && isWaterSurface) {
             // Hide some Z-fighting issues with waterfalls
-            position += 16 * N * vec3(1, 0, 1);
+            pos.xyz += 16 * N * vec3(1, 0, 1);
         }
 
-        gl_Position = projectionMatrix * vec4(position, 1);
+        pos = projectionMatrix * pos;
+        #if ZONE_RENDERER
+            int depthBias = (gAlphaBiasHsl[i] >> 16) & 0xff;
+            pos.z += depthBias / 128.0;
+        #endif
+        gl_Position = pos;
         EmitVertex();
     }
 

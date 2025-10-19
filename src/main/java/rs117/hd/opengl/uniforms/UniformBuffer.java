@@ -82,6 +82,58 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
+		public final void set(int x) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.Int) {
+				log("Int setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataInt.position(offset).put(x);
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(int x, int y) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.IVec2) {
+				log("Int setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataInt.position(offset).put(x).put(y);
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(int x, int y, int z) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.IVec3) {
+				log("Int setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataInt.position(offset).put(x).put(y).put(z);
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(int x, int y, int z, int w) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.IVec4) {
+				log("Int setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataInt.position(offset).put(x).put(y).put(z).put(w);
+			owner.markWaterLine(position, type.size);
+		}
+
 		public final void set(float... values) {
 			if (isUninitialized())
 				return;
@@ -113,6 +165,58 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			} else {
 				owner.dataFloat.put(values);
 			}
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(float x) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.Float) {
+				log("Float setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataFloat.position(offset).put(x);
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(float x, float y) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.FVec2) {
+				log("Float setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataFloat.position(offset).put(x).put(y);
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(float x, float y, float z) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.FVec3) {
+				log("Float setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataFloat.position(offset).put(x).put(y).put(z);
+			owner.markWaterLine(position, type.size);
+		}
+
+		public final void set(float x, float y, float z, float w) {
+			if (isUninitialized())
+				return;
+
+			if (type != PropertyType.FVec4) {
+				log("Float setter was used with the wrong property type: " + type);
+				return;
+			}
+
+			owner.dataFloat.position(offset).put(x).put(y).put(z).put(w);
 			owner.markWaterLine(position, type.size);
 		}
 	}
@@ -152,6 +256,10 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	@SuppressWarnings("unchecked")
 	public UniformBuffer(int glUsage, int clUsage) {
 		glBuffer = (GLBUFFER) new SharedGLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage, clUsage);
+	}
+
+	public boolean isDirty() {
+		return dirtyHighTide > 0 && dirtyLowTide < glBuffer.size;
 	}
 
 	protected final <T extends StructProperty> T addStruct(T newStructProp) {
@@ -238,7 +346,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 		preUpload();
 
-		if (dirtyHighTide <= 0 || dirtyLowTide >= glBuffer.size)
+		if (!isDirty())
 			return;
 
 		data.position(dirtyLowTide);

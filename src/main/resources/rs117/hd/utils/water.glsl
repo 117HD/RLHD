@@ -515,7 +515,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
             vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
             vec2 uv = IN.uv + uvFlow * flowMapStrength;
             float foamMask = texture(textureArray, vec3(uv, MAT_WATER_FOAM.colorMap)).r;
-            float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
+            float shoreLineMask = 1 - dot(IN.texBlend, vAlphaBiasHsl / 127.f);
             shoreLineMask *= shoreLineMask;
             shoreLineMask *= shoreLineMask;
             shoreLineMask *= shoreLineMask;

@@ -26,6 +26,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
@@ -44,7 +45,7 @@ uniform bool shorelineCaustics;
 uniform bool waterTransparency;
 uniform vec3 legacyWaterColor;
 
-flat in ivec3 vHsl;
+flat in ivec3 vAlphaBiasHsl;
 flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
 flat in vec3 T;
@@ -195,10 +196,27 @@ void main() {
             fragPos += TBN * fragDelta;
         #endif
 
+        vec3 hsl1 = unpackRawHsl(vAlphaBiasHsl[0]);
+        vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
+        vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
+
+        {
+            // Apply entity tint to HSL
+            ivec4 tint = getWorldViewTint(worldViewIndex);
+            hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
+            hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
+            hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;
+        }
+
         // get vertex colors
-        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vHsl[0])), 1 - float(vHsl[0] >> 24 & 0xff) / 255.);
-        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vHsl[1])), 1 - float(vHsl[1] >> 24 & 0xff) / 255.);
-        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vHsl[2])), 1 - float(vHsl[2] >> 24 & 0xff) / 255.);
+        vec4 baseColor1 = vec4(convertHsl(hsl1), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
+        vec4 baseColor2 = vec4(convertHsl(hsl2), 1 - float(vAlphaBiasHsl[1] >> 24 & 0xff) / 255.);
+        vec4 baseColor3 = vec4(convertHsl(hsl3), 1 - float(vAlphaBiasHsl[2] >> 24 & 0xff) / 255.);
+
+        // Convert to linear RGB
+        baseColor1.rgb = srgbToLinear(hslToSrgb(baseColor1.xyz));
+        baseColor2.rgb = srgbToLinear(hslToSrgb(baseColor2.xyz));
+        baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
@@ -433,7 +451,7 @@ void main() {
             if (outputColor.a < 1 && outputColor.a >= .004) {
                 // Blending in linear color space makes transparent glass overly opaque.
                 // Bias the opacity somewhat to look closer to vanilla colors overall.
-                vec3 hsl = unpackHsl(vHsl[0]);
+                vec3 hsl = convertHsl(unpackRawHsl(vAlphaBiasHsl[0]));
                 float alphaCorrectionMask = (1 - pow(hsl.y, 5.f)) * (1 - pow(outputColor.a, 3.f));
                 outputColor.a = pow(outputColor.a, 1 + alphaCorrectionMask);
             }

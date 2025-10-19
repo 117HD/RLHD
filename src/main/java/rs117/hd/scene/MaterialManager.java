@@ -46,7 +46,6 @@ import net.runelite.client.callback.ClientThread;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.opengl.uniforms.UBOMaterials;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ExpressionParser;
@@ -95,9 +94,6 @@ public class MaterialManager {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
-
-	@Inject
-	private ModelPusher modelPusher;
 
 	public UBOMaterials uboMaterials;
 
@@ -444,8 +440,8 @@ public class MaterialManager {
 		modelOverrideManager.reload();
 
 		if (materialOrderChanged) {
-			modelPusher.clearModelCache();
-			plugin.reuploadScene();
+			plugin.renderer.clearCaches();
+			plugin.renderer.reloadScene();
 			plugin.recompilePrograms();
 		}
 	}

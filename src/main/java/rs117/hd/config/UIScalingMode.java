@@ -37,7 +37,7 @@ public enum UIScalingMode {
 	MITCHELL("Mitchell", GL_NEAREST),
 	CATMULL_ROM("Catmull-Rom", GL_NEAREST),
 	XBR("xBR", GL_NEAREST),
-	PIXEL("Pixel", GL_LINEAR);
+	HYBRID("Hybrid", GL_LINEAR);
 
 	private final String name;
 	public final int glSamplingFunction;

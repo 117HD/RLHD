@@ -339,7 +339,7 @@ public class ModelOverride
 		}
 	}
 
-	public void fillUvsForFace(float[] out, Model model, int orientation, UvType uvType, int face) {
+	public void fillUvsForFace(float[] out, Model model, int orientation, UvType uvType, int face, float[] workingSpace) {
 		switch (uvType) {
 			case WORLD_XY:
 			case WORLD_XZ:
@@ -370,7 +370,7 @@ public class ModelOverride
 				break;
 			}
 			case BOX:
-				computeBoxUvw(out, model, orientation, face);
+				computeBoxUvw(out, model, orientation, face, workingSpace);
 				break;
 			case VANILLA: {
 				final byte[] textureFaces = model.getTextureFaces();
@@ -412,22 +412,26 @@ public class ModelOverride
 		}
 	}
 
-	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face) {
-		final float[][] vertexXYZ = {
-			model.getVerticesX(),
-			model.getVerticesY(),
-			model.getVerticesZ()
-		};
-		final int[] triABC = {
-			model.getFaceIndices1()[face],
-			model.getFaceIndices2()[face],
-			model.getFaceIndices3()[face]
-		};
+	@SuppressWarnings({ "PointlessArithmeticExpression", "UnnecessaryLocalVariable" })
+	private void computeBoxUvw(float[] out, Model model, int modelOrientation, int face, float[] workingSpace) {
+		final float[] verticesX = model.getVerticesX();
+		final float[] verticesY = model.getVerticesY();
+		final float[] verticesZ = model.getVerticesZ();
 
-		float[][] v = new float[3][3];
-		for (int tri = 0; tri < 3; tri++)
-			for (int i = 0; i < 3; i++)
-				v[tri][i] = vertexXYZ[i][triABC[tri]];
+		final float[] v = workingSpace;
+		int vidx;
+		vidx = model.getFaceIndices1()[face];
+		v[0 * 3 + 0] = verticesX[vidx];
+		v[0 * 3 + 1] = verticesY[vidx];
+		v[0 * 3 + 2] = verticesZ[vidx];
+		vidx = model.getFaceIndices2()[face];
+		v[1 * 3 + 0] = verticesX[vidx];
+		v[1 * 3 + 1] = verticesY[vidx];
+		v[1 * 3 + 2] = verticesZ[vidx];
+		vidx = model.getFaceIndices3()[face];
+		v[2 * 3 + 0] = verticesX[vidx];
+		v[2 * 3 + 1] = verticesY[vidx];
+		v[2 * 3 + 2] = verticesZ[vidx];
 
 		float rad, cos, sin;
 		float temp;
@@ -438,31 +442,33 @@ public class ModelOverride
 			sin = sin(rad);
 
 			for (int i = 0; i < 3; i++) {
-				temp = v[i][0] * sin + v[i][2] * cos;
-				v[i][0] = v[i][0] * cos - v[i][2] * sin;
-				v[i][2] = temp;
+				temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+				v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+				v[i * 3 + 2] = temp;
 			}
 		}
 
 		for (int i = 0; i < 3; i++) {
-			v[i][0] = (v[i][0] / LOCAL_TILE_SIZE + .5f) / uvScale;
-			v[i][1] = (v[i][1] / LOCAL_TILE_SIZE + .5f) / uvScale;
-			v[i][2] = (v[i][2] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3] = (v[i * 3] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3 + 1] = (v[i * 3 + 1] / LOCAL_TILE_SIZE + .5f) / uvScale;
+			v[i * 3 + 2] = (v[i * 3 + 2] / LOCAL_TILE_SIZE + .5f) / uvScale;
 		}
 
-		// Compute face normal
-		float[] a = subtract(v[1], v[0]);
-		float[] b = subtract(v[2], v[0]);
-		float[] n = cross(a, b);
-		float[] absN = abs(n);
+		// Compute face normal as cross(v[1] - v[0], v[2] - v[0])
+		float nx = (v[3 + 1] - v[1]) * (v[6 + 2] - v[2]) - (v[3 + 2] - v[2]) * (v[6 + 1] - v[1]);
+		float ny = (v[3 + 2] - v[2]) * (v[6 + 0] - v[0]) - (v[3 + 0] - v[0]) * (v[6 + 2] - v[2]);
+		float nz = (v[3 + 0] - v[0]) * (v[6 + 1] - v[1]) - (v[3 + 1] - v[1]) * (v[6 + 0] - v[0]);
+		float absNx = abs(nx);
+		float absNy = abs(ny);
+		float absNz = abs(nz);
 
 		out[2] = out[6] = out[10] = 0;
-		if (absN[0] > absN[1] && absN[0] > absN[2]) {
+		if (absNx > absNy && absNx > absNz) {
 			// YZ plane
-			float flip = sign(n[0]);
+			float flip = sign(nx);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * -v[tri][2];
-				out[tri * 4 + 1] = v[tri][1];
+				out[tri * 4] = flip * -v[tri * 3 + 2];
+				out[tri * 4 + 1] = v[tri * 3 + 1];
 			}
 
 			if (uvOrientationX % 2048 != 0) {
@@ -472,21 +478,21 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
-		} else if (absN[1] > absN[0] && absN[1] > absN[2]) {
+		} else if (absNy > absNx && absNy > absNz) {
 			// XZ
-			float flip = sign(n[1]);
+			float flip = sign(ny);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * -v[tri][0];
-				out[tri * 4 + 1] = v[tri][2];
+				out[tri * 4] = flip * -v[tri * 3];
+				out[tri * 4 + 1] = v[tri * 3 + 2];
 			}
 
 			if (uvOrientationY % 2048 != 0) {
@@ -496,21 +502,21 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
 		} else {
 			// XY
-			float flip = sign(n[2]);
+			float flip = sign(nz);
 			for (int tri = 0; tri < 3; tri++) {
-				out[tri * 4] = flip * v[tri][0];
-				out[tri * 4 + 1] = v[tri][1];
+				out[tri * 4] = flip * v[tri * 3];
+				out[tri * 4 + 1] = v[tri * 3 + 1];
 			}
 
 			if (uvOrientationZ % 2048 != 0) {
@@ -520,13 +526,13 @@ public class ModelOverride
 
 				for (int i = 0; i < 3; i++) {
 					int j = i * 4;
-					v[i][0] = out[j] - .5f;
-					v[i][2] = out[j + 1] - .5f;
-					temp = v[i][0] * sin + v[i][2] * cos;
-					v[i][0] = v[i][0] * cos - v[i][2] * sin;
-					v[i][2] = temp;
-					out[j] = v[i][0] + .5f;
-					out[j + 1] = v[i][2] + .5f;
+					v[i * 3] = out[j] - .5f;
+					v[i * 3 + 2] = out[j + 1] - .5f;
+					temp = v[i * 3] * sin + v[i * 3 + 2] * cos;
+					v[i * 3] = v[i * 3] * cos - v[i * 3 + 2] * sin;
+					v[i * 3 + 2] = temp;
+					out[j] = v[i * 3] + .5f;
+					out[j + 1] = v[i * 3 + 2] + .5f;
 				}
 			}
 		}

@@ -38,8 +38,8 @@ uniform sampler2D uiTexture;
     #include <scaling/xbr_lv2_frag.glsl>
 
     in XBRTable xbrTable;
-#elif UI_SCALING_MODE == UI_SCALING_MODE_PIXEL
-    #include <scaling/pixel.glsl>
+#elif UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
+    #include <scaling/hybrid.glsl>
 #endif
 
 in vec2 fUv;
@@ -59,8 +59,8 @@ void main() {
         c = textureCubic(uiTexture, fUv);
     #elif UI_SCALING_MODE == UI_SCALING_MODE_XBR
         c = textureXBR(uiTexture, fUv, xbrTable, ceil(1.0 * targetDimensions.x / sourceDimensions.x));
-    #elif UI_SCALING_MODE == UI_SCALING_MODE_PIXEL
-        c = texturePixel(uiTexture, fUv);
+    #elif UI_SCALING_MODE == UI_SCALING_MODE_HYBRID
+        c = textureHybrid(uiTexture, fUv);
     #else // NEAREST or LINEAR, which uses GL_TEXTURE_MIN_FILTER/GL_TEXTURE_MAG_FILTER to affect sampling
         c = texture(uiTexture, fUv);
     #endif

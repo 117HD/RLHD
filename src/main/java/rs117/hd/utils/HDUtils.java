@@ -30,6 +30,7 @@ import net.runelite.api.*;
 import rs117.hd.data.ObjectType;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.water_types.WaterType;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
@@ -43,6 +44,7 @@ import static rs117.hd.utils.MathUtils.*;
 @Singleton
 public class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
+	public static final int UNDERWATER_HSL = 6676;
 
 	public static int vertexHash(int[] vPos) {
 		// simple custom hashing function for vertex position data
@@ -52,7 +54,7 @@ public class HDUtils {
 		return s.toString().hashCode();
 	}
 
-	public static float[] calculateSurfaceNormals(float[] a, float[] b, float[] c) {
+	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
 		subtract(b, a, b);
 		subtract(c, a, c);
 		return cross(b, c);
@@ -103,6 +105,30 @@ public class HDUtils {
 	// (gameObject.getConfig() >> 6) & 3, // 2-bit orientation
 	// (gameObject.getConfig() >> 8) & 1, // 1-bit interactType != 0 (supports items)
 	// (gameObject.getConfig() >> 9) // should always be zero
+	public static int getObjectConfig(Tile tile, long hash) {
+		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
+			return tile.getWallObject().getConfig();
+		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
+			return tile.getDecorativeObject().getConfig();
+		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
+			return tile.getGroundObject().getConfig();
+		for (GameObject gameObject : tile.getGameObjects())
+			if (gameObject != null && gameObject.getHash() == hash)
+				return gameObject.getConfig();
+		return -1;
+	}
+
+	public static int getObjectConfig(TileObject tileObject) {
+		if (tileObject instanceof WallObject)
+			return ((WallObject) tileObject).getConfig();
+		if (tileObject instanceof DecorativeObject)
+			return ((DecorativeObject) tileObject).getConfig();
+		if (tileObject instanceof GroundObject)
+			return ((GroundObject) tileObject).getConfig();
+		if (tileObject instanceof GameObject)
+			return ((GameObject) tileObject).getConfig();
+		return -1;
+	}
 
 	/**
 	 * Computes the orientation used when uploading the model.
@@ -328,10 +354,48 @@ public class HDUtils {
 		return hsl;
 	}
 
-	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[]... cullingPlanes) {
-		for (float[] plane : cullingPlanes)
-			if (distanceToPlane(plane, x, y, z) < -radius)
+	public static boolean isSphereIntersectingFrustum(float x, float y, float z, float radius, float[][] cullingPlanes, int numPlanes) {
+		for (int i = 0; i < numPlanes; i++) {
+			var p = cullingPlanes[i];
+			if (p[0] * x + p[1] * y + p[2] * z + p[3] < -radius)
 				return false;
+		}
 		return true;
+	}
+
+	public static boolean isAABBIntersectingFrustum(
+		int minX,
+		int minY,
+		int minZ,
+		int maxX,
+		int maxY,
+		int maxZ,
+		float[][] cullingPlanes
+	) {
+		for (float[] plane : cullingPlanes) {
+			if (
+				plane[0] * minX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * minZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * minY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * minX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0 &&
+				plane[0] * maxX + plane[1] * maxY + plane[2] * maxZ + plane[3] < 0
+			) {
+				return false;
+			}
+		}
+
+		// Potentially visible
+		return true;
+	}
+
+	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
+		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
+		assert waterType.index < 1 << 5 : "Too many water types";
+		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
+		return terrainData;
 	}
 }

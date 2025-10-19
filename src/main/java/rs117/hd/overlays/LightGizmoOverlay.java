@@ -195,7 +195,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		Mat4.mul(projectionMatrix, Mat4.scale(viewportWidth, viewportHeight, 1));
 		Mat4.mul(projectionMatrix, Mat4.translate(.5f, .5f, .5f));
 		Mat4.mul(projectionMatrix, Mat4.scale(.5f, -.5f, .5f));
-		Mat4.mul(projectionMatrix, plugin.sceneViewProjectionMatrix);
+		Mat4.mul(projectionMatrix, plugin.viewProjMatrix);
 
 		float[] inverseProjection = null;
 		try {

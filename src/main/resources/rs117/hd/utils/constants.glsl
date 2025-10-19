@@ -5,6 +5,12 @@
 #define HALF_PI (.5*PI)
 #define TAU (2*PI)
 
+#define SHORT_MAX 32767 // 2^15 - 1
+
+#include RENDERER
+#define LEGACY_RENDERER (RENDERER == 0)
+#define ZONE_RENDERER (RENDERER == 1)
+
 #define IOR_AIR 1
 #define IOR_WATER 1.333
 #define IOR_WATER_TO_AIR (IOR_WATER / IOR_AIR)

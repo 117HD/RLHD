@@ -8,10 +8,8 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
@@ -27,9 +25,6 @@ public class ModelOverrideManager {
 		.getFile("rlhd.model-overrides-path", () -> path(ModelOverrideManager.class, "model_overrides.json"));
 
 	@Inject
-	private Client client;
-
-	@Inject
 	private ClientThread clientThread;
 
 	@Inject
@@ -37,9 +32,6 @@ public class ModelOverrideManager {
 
 	@Inject
 	private GamevalManager gamevalManager;
-
-	@Inject
-	private ModelPusher modelPusher;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
@@ -81,8 +73,8 @@ public class ModelOverrideManager {
 				if (first)
 					return;
 
-				modelPusher.clearModelCache();
-				plugin.reuploadScene();
+				plugin.renderer.clearCaches();
+				plugin.renderer.reloadScene();
 			} catch (Exception ex) {
 				log.error("Failed to load model overrides:", ex);
 			}
