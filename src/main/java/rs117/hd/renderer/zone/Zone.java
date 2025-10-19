@@ -497,10 +497,10 @@ class Zone {
 		lastzx = zx;
 		lastzz = zz;
 
-		int yawsin = Perspective.COSINE[camera.getFixedYaw()];
-		int yawcos = SINE[camera.getFixedYaw()];
-		int pitchsin = COSINE[camera.getFixedPitch()];
-		int pitchcos = SINE[camera.getFixedPitch()];
+		int yawSin = SINE[camera.getFixedYaw()];
+		int yawCos = COSINE[camera.getFixedYaw()];
+		int pitchSin = SINE[camera.getFixedPitch()];
+		int pitchCos = COSINE[camera.getFixedPitch()];
 		for (AlphaModel m : alphaModels) {
 			if ((m.flags & AlphaModel.SKIP) != 0) continue;
 			if (m.level != level) continue;
