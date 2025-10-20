@@ -642,7 +642,7 @@ public class HdPlugin extends Plugin {
 				colorPicker.setLocationRelativeTo(canvas);
 				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
 					uboGlobal.COLOR_PICKER.set(ColorUtils.rgba(c))));
-				colorPicker.setVisible(true);
+//				colorPicker.setVisible(true);
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
