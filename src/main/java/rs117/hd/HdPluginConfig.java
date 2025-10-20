@@ -497,6 +497,18 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_ROOF_SHADOWS = "roofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof Shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		position = 8,
+		section = lightingSettings
+	)
+	default boolean roofShadows() {
+		return true;
+	}
+
 	String KEY_SHADOW_RESOLUTION = "shadowResolution";
 	@ConfigItem(
 		keyName = KEY_SHADOW_RESOLUTION,
@@ -504,7 +516,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The resolution of the shadow map.<br>" +
 			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		position = 8,
+		position = 9,
 		section = lightingSettings
 	)
 	default ShadowResolution shadowResolution()
@@ -518,7 +530,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The maximum draw distance for shadows.<br>" +
 			"Shorter distances result in higher quality shadows.",
-		position = 9,
+		position = 10,
 		section = lightingSettings
 	)
 	default ShadowDistance shadowDistance()
@@ -533,7 +545,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
 			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 10,
+		position = 11,
 		section = lightingSettings
 	)
 	default boolean expandShadowDraw()
@@ -549,7 +561,7 @@ public interface HdPluginConfig extends Config
 			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
 			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
 			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
-		position = 11,
+		position = 12,
 		section = lightingSettings
 	)
 	default VanillaShadowMode vanillaShadowMode() {
@@ -561,7 +573,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_NORMAL_MAPPING,
 		name = "Normal Mapping",
 		description = "Affects how light interacts with certain materials. Barely impacts performance.",
-		position = 12,
+		position = 13,
 		section = lightingSettings
 	)
 	default boolean normalMapping() {
@@ -573,7 +585,7 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_PARALLAX_OCCLUSION_MAPPING,
 		name = "Parallax Occlusion Mapping",
 		description = "Adds more depth to some materials, at the cost of higher GPU usage.",
-		position = 13,
+		position = 14,
 		section = lightingSettings
 	)
 	default boolean parallaxOcclusionMapping() {
