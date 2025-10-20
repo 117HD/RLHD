@@ -939,7 +939,7 @@ public class ZoneRenderer implements Renderer {
 		if (renderWater)
 			z.renderOpaqueLevel(sceneCmd, zx - offset, zz - offset, Zone.LEVEL_WATER_SURFACE);
 
-		if (hasAlpha)
+		if (!hasAlpha)
 			return;
 
 		if (level == 0) {
