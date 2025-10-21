@@ -199,6 +199,13 @@ public class MathUtils {
 	/**
 	 * Modulo which returns the answer with the same sign as the modulus.
 	 */
+	public static int mod(int v, int mod) {
+		return v - (v / mod) * mod;
+	}
+
+	/**
+	 * Modulo which returns the answer with the same sign as the modulus.
+	 */
 	public static int mod(long v, int mod) {
 		return (int) (v - (v / mod) * mod);
 	}
