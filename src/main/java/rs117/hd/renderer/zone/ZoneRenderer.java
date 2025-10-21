@@ -158,6 +158,7 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
+	private VAO.VAOList vaoPOShadow;
 
 	public static int eboAlpha;
 	public static GpuIntBuffer eboAlphaStaging;
@@ -299,13 +300,15 @@ public class ZoneRenderer implements Renderer {
 		vaoO = new VAO.VAOList(eboAlpha);
 		vaoA = new VAO.VAOList(eboAlpha);
 		vaoPO = new VAO.VAOList(eboAlpha);
+		vaoPOShadow = new VAO.VAOList(eboAlpha);
 	}
 
 	private void destroyBuffers() {
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();
-		vaoO = vaoA = vaoPO = null;
+		vaoPOShadow.free();
+		vaoO = vaoA = vaoPO = vaoPOShadow = null;
 
 		if (eboAlpha != 0)
 			glDeleteBuffers(eboAlpha);
@@ -347,6 +350,7 @@ public class ZoneRenderer implements Renderer {
 			Scene topLevel = client.getScene();
 			vaoO.addRange(topLevel);
 			vaoPO.addRange(topLevel);
+			vaoPOShadow.addRange(topLevel);
 			sceneCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
 			directionalCmd.SetWorldViewIndex(uboWorldViews.getIndex(scene));
 		}
@@ -523,7 +527,7 @@ public class ZoneRenderer implements Renderer {
 
 				directionalCamera.setPositionX(centerXZ[0]);
 				directionalCamera.setPositionZ(centerXZ[1]);
-				directionalCamera.setNearPlane(10000);
+				directionalCamera.setNearPlane(radius);
 				directionalCamera.setZoom(1.0f);
 				directionalCamera.setViewportWidth((int) radius);
 				directionalCamera.setViewportHeight((int) radius);
@@ -990,6 +994,7 @@ public class ZoneRenderer implements Renderer {
 			case DrawCallbacks.PASS_OPAQUE:
 				vaoO.addRange(scene);
 				vaoPO.addRange(scene);
+				vaoPOShadow.addRange(scene);
 
 				if (scene.getWorldViewId() == -1) {
 					sceneCmd.SetBaseOffset(0, 0, 0);
@@ -1003,6 +1008,11 @@ public class ZoneRenderer implements Renderer {
 
 					vaoPO.unmap();
 
+					// Draw player shadows
+					vaoPOShadow.unmap();
+					vaoPOShadow.drawAll(this, directionalCmd);
+					vaoPOShadow.resetAll();
+
 					// Draw players opaque, without depth writes
 					sceneCmd.DepthMask(false);
 					vaoPO.drawAll(this, sceneCmd);
@@ -1011,7 +1021,6 @@ public class ZoneRenderer implements Renderer {
 					// Draw players opaque, writing only depth
 					sceneCmd.ColorMask(false, false, false, false);
 					vaoPO.drawAll(this, sceneCmd);
-					vaoPO.drawAll(this, directionalCmd);
 					sceneCmd.ColorMask(true, true, true, true);
 
 					vaoPO.resetAll();
@@ -1109,17 +1118,56 @@ public class ZoneRenderer implements Renderer {
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		if (renderable instanceof Player || m.getFaceTransparencies() != null) {
-			// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
-			// because they are not depth tested. transparent player faces don't need their own vao because normal
-			// transparent faces are already not depth tested
-			VAO o = renderable instanceof Player ? vaoPO.get(size) : vaoO.get(size);
-			VAO a = vaoA.get(size);
+			int offset = ctx.sceneContext.sceneOffset >> 3;
+			int zx = (gameObject.getX() >> 10) + offset;
+			int zz = (gameObject.getY() >> 10) + offset;
+			Zone zone = ctx.zones[zx][zz];
 
-			int start = a.vbo.vb.position();
-			m.calculateBoundsCylinder();
-			try {
-				facePrioritySorter.uploadSortedModel(
-					worldProjection,
+			if (zone.inSceneFrustum) {
+				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
+				// because they are not depth tested. transparent player faces don't need their own vao because normal
+				// transparent faces are already not depth tested
+				VAO o = renderable instanceof Player ? vaoPO.get(size) : vaoO.get(size);
+				VAO a = vaoA.get(size);
+
+				int start = a.vbo.vb.position();
+				m.calculateBoundsCylinder();
+				try {
+					facePrioritySorter.uploadSortedModel(
+						worldProjection,
+						m,
+						modelOverride,
+						preOrientation,
+						gameObject.getModelOrientation(),
+						gameObject.getX(),
+						gameObject.getZ(),
+						gameObject.getY(),
+						o.vbo.vb,
+						a.vbo.vb
+					);
+				} catch (Exception ex) {
+					log.debug("error drawing entity", ex);
+				}
+				int end = a.vbo.vb.position();
+
+				if (end > start) {
+					zone.addTempAlphaModel(
+						a.vao,
+						start,
+						end,
+						gameObject.getPlane(),
+						gameObject.getX() & 1023,
+						gameObject.getZ() - renderable.getModelHeight() /* to render players over locs */,
+						gameObject.getY() & 1023
+					);
+				}
+			}
+
+			if (zone.inShadowFrustum) {
+				// Since priority sorting of models includes back-face culling,
+				// we need to upload the entire model again for shadows
+				VAO o = vaoPOShadow.get(size);
+				sceneUploader.uploadTempModel(
 					m,
 					modelOverride,
 					preOrientation,
@@ -1127,27 +1175,7 @@ public class ZoneRenderer implements Renderer {
 					gameObject.getX(),
 					gameObject.getZ(),
 					gameObject.getY(),
-					o.vbo.vb,
-					a.vbo.vb
-				);
-			} catch (Exception ex) {
-				log.debug("error drawing entity", ex);
-			}
-			int end = a.vbo.vb.position();
-
-			if (end > start) {
-				int offset = ctx.sceneContext.sceneOffset >> 3;
-				int zx = (gameObject.getX() >> 10) + offset;
-				int zz = (gameObject.getY() >> 10) + offset;
-				Zone zone = ctx.zones[zx][zz];
-				zone.addTempAlphaModel(
-					a.vao,
-					start,
-					end,
-					gameObject.getPlane(),
-					gameObject.getX() & 1023,
-					gameObject.getZ() - renderable.getModelHeight() /* to render players over locs */,
-					gameObject.getY() & 1023
+					o.vbo.vb
 				);
 			}
 		} else {

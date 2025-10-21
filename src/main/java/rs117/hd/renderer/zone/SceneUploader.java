@@ -1374,8 +1374,8 @@ class SceneUploader {
 		float orientSine = 0;
 		float orientCosine = 0;
 		if (orientation != 0) {
-			orientSine = Perspective.SINE[orientation] / 65536f;
-			orientCosine = Perspective.COSINE[orientation] / 65536f;
+			orientSine = SINE[mod(orientation, 2048)] / 65536f;
+			orientCosine = COSINE[mod(orientation, 2048)] / 65536f;
 		}
 
 		boolean isVanillaTextured = faceTextures != null;

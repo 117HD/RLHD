@@ -181,17 +181,16 @@ class FacePrioritySorter {
 			final int v2 = indices2[i];
 			final int v3 = indices3[i];
 
-			// TODO: Enable this for the scene buffer?
-//			final float
-//				aX = modelCanvasX[v1],
-//				aY = modelCanvasY[v1],
-//				bX = modelCanvasX[v2],
-//				bY = modelCanvasY[v2],
-//				cX = modelCanvasX[v3],
-//				cY = modelCanvasY[v3];
-//			// Back-face culling
-//			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0)
-//				continue;
+			final float
+				aX = modelCanvasX[v1],
+				aY = modelCanvasY[v1],
+				bX = modelCanvasX[v2],
+				bY = modelCanvasY[v2],
+				cX = modelCanvasX[v3],
+				cY = modelCanvasY[v3];
+			// Back-face culling
+			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0)
+				continue;
 
 			int distance = radius + (distances[v1] + distances[v2] + distances[v3]) / 3;
 			assert distance >= 0 && distance < diameter;
