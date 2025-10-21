@@ -1112,7 +1112,7 @@ class SceneUploader {
 	private int uploadStaticModel(
 		Model model,
 		ModelOverride modelOverride,
-		int preOrientation, int orient, int x, int y, int z, GpuIntBuffer vertexBuffer, GpuIntBuffer ab
+		int preOrientation, int orientation, int x, int y, int z, GpuIntBuffer vertexBuffer, GpuIntBuffer ab
 	) {
 		final int vertexCount = model.getVerticesCount();
 		final int triangleCount = model.getFaceCount();
@@ -1140,9 +1140,10 @@ class SceneUploader {
 
 		int orientSin = 0;
 		int orientCos = 0;
-		if (orient != 0) {
-			orientSin = Perspective.SINE[orient];
-			orientCos = Perspective.COSINE[orient];
+		if (orientation != 0) {
+			orientation = mod(orientation, 2048);
+			orientSin = SINE[orientation];
+			orientCos = COSINE[orientation];
 		}
 
 		for (int v = 0; v < vertexCount; ++v) {
@@ -1150,7 +1151,7 @@ class SceneUploader {
 			int vy = (int) vertexY[v];
 			int vz = (int) vertexZ[v];
 
-			if (orient != 0) {
+			if (orientation != 0) {
 				int x0 = vx;
 				vx = vz * orientSin + x0 * orientCos >> 16;
 				vz = vz * orientCos - x0 * orientSin >> 16;

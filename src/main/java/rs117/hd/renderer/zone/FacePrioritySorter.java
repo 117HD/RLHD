@@ -36,6 +36,9 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
+import static net.runelite.api.Perspective.*;
+import static rs117.hd.utils.MathUtils.*;
+
 @Singleton
 class FacePrioritySorter {
 	static final int[] distances;
@@ -128,8 +131,9 @@ class FacePrioritySorter {
 		float orientSine = 0;
 		float orientCosine = 0;
 		if (orientation != 0) {
-			orientSine = Perspective.SINE[orientation] / 65536f;
-			orientCosine = Perspective.COSINE[orientation] / 65536f;
+			orientation = mod(orientation, 2048);
+			orientSine = SINE[orientation] / 65536f;
+			orientCosine = COSINE[orientation] / 65536f;
 		}
 
 		float[] p = proj.project(x, y, z);
