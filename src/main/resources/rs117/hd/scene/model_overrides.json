@@ -9260,9 +9260,7 @@
       "SORCERESS_RUG_END",
       "SORCERESS_RUG_END_M",
       "SORCERESS_RUG_CORNER_M",
-      "SORCERESS_RUG_CORNER",
-      "DARKM_MIDDLE_RUG_CORNER",
-      "DARKM_MIDDLE_RUG_STRAIGHT"
+      "SORCERESS_RUG_CORNER"
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
@@ -21242,6 +21240,74 @@
     "uvScale": 0.8
   },
   {
+    "description": "Castle Drakan - Stone Gatehouse and Fence",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_CASTLE_DOOR_LEFT",
+      "DARKM_CASTLE_DOOR_ROOF_LEFT",
+      "DARKM_CASTLE_DOOR_RIGHT",
+      "DARKM_CASTLE_DOOR_ROOF_RIGHT",
+      "DARKM_CASTLE_DOOR_LEFT_TOP",
+      "DARKM_CASTLE_DOOR_RIGHT_TOP",
+      "DARKM_CASTLE_DOOR_ROOF_MIDDLE",
+      "DARKM_CASTLE_DOOR_WALL_STRAIGHT",
+      "DARKM_CASTLE_DOOR_WALL_CORNER_LEFT",
+      "DARKM_CASTLE_DOOR_WALL_CORNER_RIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Castle Drakan - Wooden Gate",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "DARKM_CASTLE_DOOR_OUTSIDE",
+      "DARKM_CASTLE_DOOR_OUTSIDE_TOP",
+      "DARKM_CASTLE_DOOR_INSIDE",
+      "DARKM_CASTLE_DOOR_INSIDE_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Stone Walls - Windows, Fountain or Door",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "DARKM_CASTLE_WALL_WINDOW",
+      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_LEFT",
+      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_RIGHT",
+      "DARKM_CASTLE_WALL_WINDOW_ROOF_DIAGONAL_LEFT",
+      "DARKM_CASTLE_WALL_WINDOW_ROOF_DIAGONAL_RIGHT",
+      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW",
+      "DARKM_CASTLE_WALL_WINDOW_ROOF_DIAGONAL",
+      "DARKM_CASTLE_WALL_LVL0_WINDOW_ROOF",
+      "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_FOUNTAIN",
+      "DARKM_CASTLE_WALL_LVL0_DOOR_ROOF",
+      "DARKM_CASTLE_FRONT_DOOR_04",
+      "DARKM_CASTLE_FRONT_DOOR_02",
+      "DARKM_CASTLE_FRONT_DOOR_03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 1 || s == 2 || s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 5 || h == 6 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Darkmeyer Stone Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -21256,16 +21322,10 @@
       "DARKM_OUTER_WALL_INSIDE_1H",
       "DARKM_CASTLE_WALL",
       "DARKM_CASTLE_WALL_OUTSIDE_CORNER",
-      "DARKM_CASTLE_WALL_WINDOW",
-      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_LEFT",
-      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_RIGHT",
-      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW",
+      "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_TOP",
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF",
-      "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_FOUNTAIN",
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_CORNER",
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_INSIDE_CORNER",
-      "DARKM_CASTLE_WALL_LVL0_WINDOW_ROOF",
-      "DARKM_CASTLE_WALL_LVL0_DOOR_ROOF",
       "DARKM_INNER_WALL_LVL0_01",
       "DARKM_INNER_WALL_FLOOR_A",
       "DARKM_WALL_PILLAR_SMALL_02",
@@ -21283,7 +21343,19 @@
       "DARKM_STEPS_SIDE_MID_LEFT",
       "DARKM_STEPS_SIDE_MID_RIGHT",
       "DARKM_INNER_WALL_LVL0_DOUBLE_HEIGHT",
-      "DARKM_WALL_PILLAR_SMALL_01"
+      "DARKM_WALL_PILLAR_SMALL_01",
+      "DARKM_CASTLE_FRONT_DOOR_01",
+      "DARKM_CASTLE_FRONT_DOOR_05",
+      "DARKM_CASTLE_FRONT_DOOR_06",
+      "DARKM_CASTLE_FRONT_DOOR_07",
+      "DARKM_CASTLE_FRONT_DOOR_08",
+      "DARKM_CASTLE_FRONT_DOOR_09",
+      "DARKM_CASTLE_FRONT_DOOR_10",
+      "DARKM_CASTLE_FRONT_DOOR_11",
+      "DARKM_CASTLE_FRONT_DOOR_12",
+      "DARKM_CASTLE_FRONT_DOOR_13",
+      "DARKM_CASTLE_FRONT_DOOR_14",
+      "DARKM_CASTLE_WALL_ENTRANCE_DOOR_03"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -21763,6 +21835,24 @@
     ]
   },
   {
+    "description": "Darkmeyer - Banner",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "DARKM_HIGH_FLAG"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 43",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
     "description": "Darkmeyer Chest of Gold",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
@@ -21848,11 +21938,12 @@
     "objectIds": [
       "DARKM_POOR_CHAIR",
       "DARKM_RICH_SOFA",
-      "DARKM_RICH_CHAIR"
+      "DARKM_RICH_CHAIR",
+      "DARKM_CASTLE_BENCH"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 3 || s == 4 || h == 48",
+        "colors": "h == 3 || s == 4 || h == 48 || h == 0 && s == 2",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.6
