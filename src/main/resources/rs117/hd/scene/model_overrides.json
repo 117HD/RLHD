@@ -22121,7 +22121,9 @@
     "description": "Darkmeyer Caged Humans",
     "baseMaterial": "GRAY_75",
     "objectIds": [
-      "DARKM_PRISONER_CAGED_01"
+      "DARKM_PRISONER_CAGED_01",
+      "DARKM_PRISONER_CAGED_02",
+      "DARKM_PRISONER_CAGED_03"
     ]
   },
   {
