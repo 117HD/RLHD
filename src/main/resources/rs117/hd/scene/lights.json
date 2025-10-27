@@ -26045,14 +26045,32 @@
     ]
   },
   {
-    "description": "DARKMEYRE_PUB_LIGHT",
+    "description": "DARKMEYRE_PUB_LIGHT_1",
     "worldX": 3598,
     "worldY": 3390,
     "plane": 0,
-    "height": 250,
+    "offset": [ 150, 170, 50 ],
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 12,
+    "radius": 300,
+    "strength": 8.5,
+    "color": [
+      253,
+      140,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "DARKMEYRE_PUB_LIGHT_2",
+    "worldX": 3600,
+    "worldY": 3390,
+    "plane": 0,
+    "offset": [ 0, 170, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.5,
     "color": [
       253,
       140,
