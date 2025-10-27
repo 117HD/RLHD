@@ -1170,6 +1170,11 @@
     ]
   },
   {
+    "name": "ROCK_3_SMOOTH_LIGHT",
+    "parent": "ROCK_3_SMOOTH",
+    "brightness": 1.194
+  },
+  {
     "name": "ROCK_3_ORE",
     "parent": "ROCK_3",
     "specularStrength": 1.0

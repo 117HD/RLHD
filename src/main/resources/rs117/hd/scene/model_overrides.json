@@ -21230,7 +21230,67 @@
     ]
   },
   {
-    "description": "Darkmeyer Stone Walls",
+    "description": "Hallowed Sepulcher - Mausoleum - Plants",
+    "baseMaterial": "NONE",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "HS_WALL_PLANT_01",
+      "HS_WALL_PLANT_03",
+      "HS_WALL_PLANT_04",
+      "HS_WALL_PLANT_05"
+    ]
+  },
+  {
+    "description": "Hallowed Sepulcher - Mausoleum - Building",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "SEPULCHRE_OW_WALL_CORNER",
+      "SEPULCHRE_OW_WALL_EDGE_L",
+      "SEPULCHRE_OW_WALL_EDGE_R",
+      "SEPULCHRE_OW_WALL",
+      "SEPULCHRE_OW_ROOF_CENTER",
+      "SEPULCHRE_OW_ROOF_EDGE",
+      "SEPULCHRE_OW_ROOF_CORNER",
+      "SEPULCHRE_OW_ROOF_ARCH"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Hallowed Sepulcher - Mausoleum - Door",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "SEPULCHRE_OW_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Hallowed Sepulcher - Mausoleum - Statues",
+    "baseMaterial": "NONE",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "SEPULCHRE_OW_STATUE_01",
+      "SEPULCHRE_OW_STATUE_02",
+      "SEPULCHRE_OW_STATUE_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROCK_3_SMOOTH_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Stone Walls - Clue Hidey Hole and Shortcut",
     "baseMaterial": "ROCK_3",
     "objectIds": [
       "HIDEY_UNBUILT_ROCK_MASTER_SHORTCUT",
