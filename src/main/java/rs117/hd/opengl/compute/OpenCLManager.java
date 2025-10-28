@@ -476,6 +476,18 @@ public class OpenCLManager {
 				computeEvents.flip();
 				CL10GL.clEnqueueReleaseGLObjects(commandQueue, glBuffers, computeEvents, null);
 			}
+
+			// Release OpenCL events to prevent memory leak
+			// Events are reference-counted host memory objects that must be explicitly freed
+			long acquireEventPtr = acquireEvent.get(0);
+			if (acquireEventPtr != 0)
+				clReleaseEvent(acquireEventPtr);
+
+			for (int i = 0; i < computeEvents.limit(); i++) {
+				long eventPtr = computeEvents.get(i);
+				if (eventPtr != 0)
+					clReleaseEvent(eventPtr);
+			}
 		}
 	}
 
