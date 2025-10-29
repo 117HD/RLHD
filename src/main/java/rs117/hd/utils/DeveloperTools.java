@@ -2,6 +2,7 @@ package rs117.hd.utils;
 
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.events.*;
@@ -22,9 +23,11 @@ import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
 import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
 
 @Slf4j
+@Singleton
 public class DeveloperTools implements KeyListener {
 	// This could be part of the config if we had developer mode config sections
 	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_HIGHLIGHT = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
 	private static final Keybind KEY_RECORD_TIMINGS_SNAPSHOT = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
@@ -67,6 +70,8 @@ public class DeveloperTools implements KeyListener {
 
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
+	@Getter
+	private boolean highlightModelOverridesEnabled;
 	@Getter
 	private boolean frameTimingsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
@@ -121,6 +126,9 @@ public class DeveloperTools implements KeyListener {
 			case "tileinfo":
 				tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 				break;
+			case "highlight":
+				highlightModelOverridesEnabled = !highlightModelOverridesEnabled;
+				break;
 			case "timers":
 			case "timings":
 				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
@@ -160,6 +168,8 @@ public class DeveloperTools implements KeyListener {
 	public void keyPressed(KeyEvent e) {
 		if (KEY_TOGGLE_TILE_INFO.matches(e)) {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
+		} else if (KEY_TOGGLE_HIGHLIGHT.matches(e)) {
+			highlightModelOverridesEnabled = !highlightModelOverridesEnabled;
 		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {

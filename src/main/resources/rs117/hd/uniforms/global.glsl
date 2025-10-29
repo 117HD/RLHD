@@ -24,6 +24,8 @@ layout(std140) uniform UBOGlobal {
     vec3 underglowColor;
     float underglowStrength;
 
+    int highlightModelOverrides;
+
     int useFog;
     float fogDepth;
     vec3 fogColor;

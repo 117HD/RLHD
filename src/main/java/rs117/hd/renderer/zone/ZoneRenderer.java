@@ -61,6 +61,7 @@ import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.DeveloperTools;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.RenderState;
@@ -115,6 +116,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private DeveloperTools developerTools;
 
 	@Inject
 	private LightManager lightManager;
@@ -573,6 +577,7 @@ public class ZoneRenderer implements Renderer {
 			}
 			fogDepth *= min(plugin.getDrawDistance(), 90) / 10.f;
 		}
+		plugin.uboGlobal.highlightModelOverrides.set(developerTools.isHighlightModelOverridesEnabled());
 		plugin.uboGlobal.useFog.set(fogDepth > 0 ? 1 : 0);
 		plugin.uboGlobal.fogDepth.set(fogDepth);
 		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
