@@ -38,6 +38,7 @@ public class DeveloperTools implements KeyListener {
 	public static final float[] COLOR_PICKER_LINEAR = new float[4]; // linear sRGB, non-linear alpha
 
 	public static Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
+	public static Keybind KEY_TOGGLE_HIGHLIGHT = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	public static Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
 	public static Keybind KEY_RECORD_TIMINGS_SNAPSHOT = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
 	public static Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
@@ -100,6 +101,8 @@ public class DeveloperTools implements KeyListener {
 
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
+	@Getter
+	private boolean highlightModelOverridesEnabled;
 	private boolean frameTimingsOverlayEnabled;
 	private boolean shadowMapOverlayEnabled;
 	private boolean lightGizmoOverlayEnabled;
@@ -148,6 +151,17 @@ public class DeveloperTools implements KeyListener {
 		hideUiEnabled = false;
 	}
 
+	private void toggleModelOverrideHighlighter() {
+		highlightModelOverridesEnabled = !highlightModelOverridesEnabled;
+		clientThread.invoke(() -> client.addChatMessage(
+			ChatMessageType.GAMEMESSAGE,
+			"117 HD",
+			"<col=006600>[117 HD] " + (highlightModelOverridesEnabled ? "Enabled" : "Disabled") + " Model Override Highlighter",
+			"117 HD"
+		));
+		plugin.recompilePrograms();
+	}
+
 	@Subscribe
 	public void onCommandExecuted(CommandExecuted commandExecuted) {
 		if (!commandExecuted.getCommand().equalsIgnoreCase("117hd"))
@@ -159,6 +173,9 @@ public class DeveloperTools implements KeyListener {
 
 		String action = args[0].toLowerCase();
 		switch (action) {
+			case "highlight":
+				toggleModelOverrideHighlighter();
+				break;
 			case "timers":
 			case "timings":
 				if (developerPluginActive)
@@ -356,7 +373,9 @@ public class DeveloperTools implements KeyListener {
 	@Override
 	public void keyPressed(KeyEvent e)
 	{
-		if (!developerPluginActive && KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
+		if (KEY_TOGGLE_HIGHLIGHT.matches(e)) {
+			toggleModelOverrideHighlighter();
+		} else if (!developerPluginActive && KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
 			frameTimingsRecorder.recordSnapshot();

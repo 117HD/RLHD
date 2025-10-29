@@ -90,6 +90,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
+		public final void set(boolean val) { set(val ? 1 : 0); }
+
 		public final void set(int v) {
 			if (type.isFloat) {
 				set((float) v);

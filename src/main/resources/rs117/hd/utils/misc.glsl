@@ -232,3 +232,8 @@ float unpackHalfFloat(uint h) {
 
     return uintBitsToFloat(f32);
 }
+
+float checkerboard(vec3 fragPos, float size) {
+    vec2 p = floor(fragPos.xz / size);
+    return mod(p.x + mod(p.y, 2.0), 2.0);
+}
