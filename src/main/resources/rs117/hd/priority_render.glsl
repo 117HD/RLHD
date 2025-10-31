@@ -25,6 +25,7 @@
 #include <uniforms/compute.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/misc.glsl>
 
 uniform isampler3D tileHeightMap;
 
@@ -201,36 +202,6 @@ void hillskew_vertex(inout vec3 v, int hillskewMode, float modelPosY, float mode
         float blend = heightFrac / HILLSKEW_TILE_SNAPPING_BLEND;
         v.y = mix(h, v.y, blend); // Blend snapping to terrain
     }
-}
-
-void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
-    const vec3 LIGHT_DIR_MODEL = vec3(0.57735026, 0.57735026, 0.57735026);
-    // subtracts the X lowest lightness levels from the formula.
-    // helps keep darker colors appropriately dark
-    const int IGNORE_LOW_LIGHTNESS = 3;
-    // multiplier applied to vertex' lightness value.
-    // results in greater lightening of lighter colors
-    const float LIGHTNESS_MULTIPLIER = 3.f;
-    // the minimum amount by which each color will be lightened
-    const int BASE_LIGHTEN = 10;
-
-    int saturation = hsl >> 7 & 0x7;
-    int lightness = hsl & 0x7F;
-    float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
-    if (vanillaLightDotNormals > 0) {
-        vanillaLightDotNormals /= length(unrotatedNormal);
-        float lighten = max(0, lightness - IGNORE_LOW_LIGHTNESS);
-        lightness += int((lighten * LIGHTNESS_MULTIPLIER + BASE_LIGHTEN - lightness) * vanillaLightDotNormals);
-    }
-    int maxLightness;
-    #if LEGACY_GREY_COLORS
-        maxLightness = 55;
-    #else
-        maxLightness = int(127 - 72 * pow(saturation / 7., .05));
-    #endif
-    lightness = min(lightness, maxLightness);
-    hsl &= ~0x7F;
-    hsl |= lightness;
 }
 
 vec3 applyCharacterDisplacement(vec3 characterPos, vec2 vertPos, float height, float strength, inout float offsetAccum) {

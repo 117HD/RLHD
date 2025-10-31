@@ -1303,25 +1303,38 @@ class SceneUploader {
 				transparencies != null && transparencies[face] != 0 ||
 				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
-			int alphaBias = 0;
-			alphaBias |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
-			alphaBias |= bias != null ? (bias[face] & 0xff) << 16 : 0;
-			GpuIntBuffer vb = alpha ? ab : vertexBuffer;
+			int packedAlphaBiasHsl = 0;
+			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
+			packedAlphaBiasHsl |= bias != null ? (bias[face] & 0xff) << 16 : 0;
 
+			boolean isTextured = faceTextures != null && faceTextures[face] != -1;
+			if (isTextured) {
+				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
+				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
+				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
+				color1 = color2 = color3 = 90;
+			}
+
+			if (isTextured || !modelOverride.undoVanillaShading) {
+				// Let the shader know vanilla shading reversal should be skipped for this face
+				packedAlphaBiasHsl |= 1 << 20;
+			}
+
+			GpuIntBuffer vb = alpha ? ab : vertexBuffer;
 			vb.putVertex(
-				vx1, vy1, vz1, alphaBias | color1,
+				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 				modelNormals[0], modelNormals[1], modelNormals[2], 0
 			);
 
 			vb.putVertex(
-				vx2, vy2, vz2, alphaBias | color2,
+				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 				modelNormals[3], modelNormals[4], modelNormals[5], 0
 			);
 
 			vb.putVertex(
-				vx3, vy3, vz3, alphaBias | color3,
+				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 				modelNormals[6], modelNormals[7], modelNormals[8], 0
 			);

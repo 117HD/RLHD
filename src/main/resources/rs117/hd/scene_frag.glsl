@@ -25,6 +25,8 @@
  */
 #version 330
 
+#define DISPLAY_BASE_COLOR 0
+
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
@@ -195,6 +197,15 @@ void main() {
         baseColor1.rgb = srgbToLinear(hslToSrgb(baseColor1.xyz));
         baseColor2.rgb = srgbToLinear(hslToSrgb(baseColor2.xyz));
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
+
+        #if DISPLAY_BASE_COLOR
+        {
+            outputColor = baseColor1 * IN.texBlend.x + baseColor2 * IN.texBlend.y + baseColor3 * IN.texBlend.z;
+            outputColor.rgb = linearToSrgb(outputColor.rgb);
+            FragColor = outputColor;
+            return;
+        }
+        #endif
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
