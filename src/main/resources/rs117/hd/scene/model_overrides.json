@@ -16285,8 +16285,6 @@
       "PENG_AVAL_ROCK1",
       "PENG_AVAL_ROCK2",
       "PENG_FORMATION_STALAGMITE2",
-      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS01",
-      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS02",
       "ARCHEUUS_SNOW_LARGE_01"
     ],
     "uvType": "WORLD_XZ",
@@ -58888,9 +58886,18 @@
     ],
     "colorOverrides": [
       {
-        "colors": "l == 54",
+        "colors": "h == 33 && l == 54",
         "baseMaterial": "TRANSPARENT",
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SNOW_4_DARK"
       }
     ]
   },
@@ -58924,7 +58931,8 @@
     "colorOverrides": [
       {
         "colors": "h == 34 || h == 33 || h == 32",
-        "baseMaterial": "GRAY_85"
+        "baseMaterial": "SNOW_4_DARK",
+        "uvType": "BOX"
       },
       {
         "colors": "l == 2",
@@ -58978,12 +58986,14 @@
       "GODWARS_ENTRANCE_BOULDER_ROCK03",
       "GODWARS_ENTRANCE_BOULDER_ROCK04",
       "GODWARS_ENTRANCE_BOULDER_MOVEROCK01",
-      "GODWARS_ENTRANCE_BOULDER_OPEN_MOVEROCK01"
+      "GODWARS_ENTRANCE_BOULDER_OPEN_MOVEROCK01",
+      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS01",
+      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS02"
     ],
     "colorOverrides": [
       {
         "colors": "h == 32",
-        "baseMaterial": "SNOW_2_DARK"
+        "baseMaterial": "SNOW_4_DARK"
       }
     ]
   },
@@ -59209,5 +59219,22 @@
       "GODWARS_HOTSPRING"
     ],
     "castShadows": false
+  },
+  {
+    "description": "God Wars Dungeon - Snow Statues",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK04",
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK01",
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK02",
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
   }
 ]
