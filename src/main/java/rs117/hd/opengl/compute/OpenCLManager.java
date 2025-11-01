@@ -425,6 +425,7 @@ public class OpenCLManager {
 			CL10GL.clEnqueueAcquireGLObjects(commandQueue, glBuffers, null, acquireEvent);
 
 			PointerBuffer computeEvents = stack.mallocPointer(1 + modelSortingBuffers.length);
+			int numComputeEvents = 0;
 			if (numPassthroughModels > 0) {
 				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clId);
 				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clId);
@@ -440,6 +441,7 @@ public class OpenCLManager {
 					acquireEvent, computeEvents
 				);
 				computeEvents.position(computeEvents.position() + 1);
+				numComputeEvents++;
 			}
 
 			for (int i = 0; i < numSortingBinModels.length; i++) {
@@ -468,6 +470,7 @@ public class OpenCLManager {
 					acquireEvent, computeEvents
 				);
 				computeEvents.position(computeEvents.position() + 1);
+				numComputeEvents++;
 			}
 
 			if (computeEvents.position() == 0) {
@@ -483,7 +486,8 @@ public class OpenCLManager {
 			if (acquireEventPtr != 0)
 				clReleaseEvent(acquireEventPtr);
 
-			for (int i = 0; i < computeEvents.limit(); i++) {
+			// Only release the compute events that were actually created
+			for (int i = 0; i < numComputeEvents; i++) {
 				long eventPtr = computeEvents.get(i);
 				if (eventPtr != 0)
 					clReleaseEvent(eventPtr);
