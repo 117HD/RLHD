@@ -16992,58 +16992,71 @@
     "range": 20
   },
   {
-    "description": "god wars dungeon\nlight from entrance",
-    "worldX": 2882,
-    "worldY": 5314,
-    "plane": 2,
-    "height": 300,
-    "alignment": "SOUTH",
-    "radius": 600,
-    "strength": 10,
+    "description": "God Wars Dungeon - Light from Entrance",
+    "objectIds": [
+      "GODWARS_BIG_HOLE_LIGHT"
+    ],
+    "height": 600,
+    "radius": 1200,
+    "strength": 5,
     "color": [
       255,
       255,
       255
     ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
+    "type": "FLICKER",
+    "range": 15
   },
   {
-    "description": "god wars dungeon\nlight from entrance",
-    "worldX": 2882,
-    "worldY": 5314,
-    "plane": 2,
-    "height": 50,
-    "alignment": "SOUTH",
-    "radius": 2000,
-    "strength": 7.5,
-    "color": [
-      255,
-      255,
-      255
+    "description": "God Wars Dungeon - Zamorak Altar Left",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
     ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
-    "description": "zammy altar",
-    "worldX": 2937,
-    "worldY": 5324,
-    "plane": 2,
-    "height": 200,
-    "alignment": "NORTHEAST",
+    "offset": [ 120, 120, -30 ],
     "radius": 300,
-    "strength": 10,
+    "strength": 4,
     "color": [
       253.63197,
       182.39111,
       33.847893
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 1000,
-    "range": 0.2
+    "range": 10
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar Middle",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "offset": [ 0, 120, -90 ],
+    "radius": 400,
+    "strength":8,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar Right",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "offset": [ -120, 120, -20 ],
+    "radius": 300,
+    "strength": 4,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 10
   },
   {
     "description": "ver sinhaza",
