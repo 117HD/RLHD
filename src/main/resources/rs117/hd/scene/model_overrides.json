@@ -58936,7 +58936,14 @@
       "NEX_FROZEN_DOOR_OUTER_1",
       "NEX_FROZEN_DOOR_OUTER_2",
       "NEX_FROZEN_DOOR_INNER_2",
-      "NEX_FROZEN_DOOR_INNER_1"
+      "NEX_FROZEN_DOOR_INNER_1",
+      "GODWARS_1_CAVEWALLTOP",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_R",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_R_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_L_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_L",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_TOP_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_TOP"
     ],
     "colorOverrides": [
       {
@@ -59020,7 +59027,6 @@
     "uvScale": 0.5,
     "terrainVertexSnap": true,
     "objectIds": [
-      "GODWARS_DEBRIS_TOWER",
       "GODWARS_DEBRIS_BARRICADE_SPIKES",
       "GODWARS_DEBRIS_BARRICADE_SPIKES2",
       "GODWARS_DEBRIS_BARRICADE_BROKEN_CROSSBOW",
@@ -59075,6 +59081,7 @@
     "uvScale": 0.5,
     "terrainVertexSnap": true,
     "objectIds": [
+      "GODWARS_DEBRIS_TOWER",
       "GODWARS_DEBRIS_BALLANDCHAIN",
       "GODWARS_DEBRIS_BARRELS",
       "GODWARS_DEBRIS_BARRICADE_VARIOUS_WOOD",
@@ -59284,6 +59291,91 @@
       "GODWARS_ICECAVE_BRIDGE02",
       "GODWARS_ICECAVE_BRIDGE03",
       "GODWARS_ICECAVE_BRIDGE04"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.35,
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7 || h == 8",
+        "baseMaterial": "HD_MAGMA_2",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Bandos Altar",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "GODWARS_DUNGEON_BANDOS_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 21 && s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Armadyl Altar",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GODWARS_DUNGEON_ARMADYL_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255 || h == 7 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 2,
+    "objectIds": [
+      "GODWARS_DUNGEON_SARADOMIN_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "upwardsNormals": true
+      }
     ]
   }
 ]
