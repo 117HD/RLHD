@@ -59247,7 +59247,7 @@
     "castShadows": false
   },
   {
-    "description": "God Wars Dungeon - Snow Statues",
+    "description": "God Wars Dungeon - Floating Water Rocks",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "objectIds": [
@@ -59261,6 +59261,29 @@
         "colors": "a < 255",
         "baseMaterial": "TRANSPARENT"
       }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Broken Bridge to Zamorak Base",
+    "baseMaterial": "SNOW_4_DARK",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "GODWARS_ICECAVE_BRIDGE02_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE01_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE03_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE04_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE05_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE05",
+      "GODWARS_ICECAVE_BRIDGE05",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE04",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE03",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE02",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE01",
+      "GODWARS_ICECAVE_BRIDGE01",
+      "GODWARS_ICECAVE_BRIDGE02",
+      "GODWARS_ICECAVE_BRIDGE03",
+      "GODWARS_ICECAVE_BRIDGE04"
     ]
   }
 ]
