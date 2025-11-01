@@ -58874,5 +58874,29 @@
         "uvOrientation": 192
       }
     ]
+  },
+  {
+    "description": "God Wars Dungeon - Waterfalls and Rapids Top",
+    "baseMaterial": "GRAY_75",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "GODWARS_WATERFALL_TOP_OFFSET",
+      "GODWARS_WATERFALL_TOP_OFFSET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 54",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Waterfalls and Rapids Bottom",
+    "baseMaterial": "GRAY_70",
+    "objectIds": [
+      "GODWARS_WATERFALL_BOTTOM_OFFSET"
+    ]
   }
 ]
