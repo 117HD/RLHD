@@ -35045,9 +35045,9 @@
   },
   {
     "description": "FIRE_OF_UNSEASONAL_WARMTH",
-    "height": 300,
+    "height": 200,
     "radius": 750,
-    "strength": 2.5,
+    "strength": 7,
     "color": [ 255, 85, 0 ],
     "type": "FLICKER",
     "range": 10,
