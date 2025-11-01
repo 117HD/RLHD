@@ -5728,14 +5728,6 @@
     "uvScale": 1.5
   },
   {
-    "description": "Wintertodt Snow Pile with Wooden Wheel",
-    "baseMaterial": "SNOW_4",
-    "objectIds": [
-      "GODWARS_DEBRIS_DAMAGEDBIGWHEEL"
-    ],
-    "uvType": "BOX"
-  },
-  {
     "description": "STATUE_BUST",
     "baseMaterial": "MARBLE_1_GLOSS",
     "objectIds": [
@@ -58886,7 +58878,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 33 && l == 54",
+        "colors": "h == 33 && l == 54 || h == 33 && l == 66",
         "baseMaterial": "TRANSPARENT",
         "uvType": "BOX"
       },
@@ -58926,13 +58918,37 @@
       "GODWARS_1",
       "GODWARS_1A",
       "GODWARS_1A_PILLAR",
-      "GODWARS_1_TOP"
+      "GODWARS_1_TOP",
+      "GODWARS_DUNGEON_BOSS_DOOR_L_MIRROR",
+      "GODWARS_DUNGEON_DOOR_PRIVATE",
+      "GODWARS_DUNGEON_BOSS_DOOR_R_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOP",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOP_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_R",
+      "GODWARS_DUNGEON_BOSS_DOOR_L",
+      "GODWARS_ICECAVE_BANDOS_LEFT_MIRROR",
+      "GODWARS_ICECAVE_BANDOS_RIGHT_MIRROR",
+      "GODWARS_ICECAVE_BANDOS_DOOR",
+      "GODWARS_ICECAVE_BANDOS_LEFT",
+      "GODWARS_ICECAVE_BANDOS_RIGHT",
+      "GODWARS_ICECAVE_BANDOS_TOP_MIRROR",
+      "GODWARS_ICECAVE_BANDOS_TOP",
+      "NEX_FROZEN_DOOR_OUTER_1",
+      "NEX_FROZEN_DOOR_OUTER_2",
+      "NEX_FROZEN_DOOR_INNER_2",
+      "NEX_FROZEN_DOOR_INNER_1"
     ],
     "colorOverrides": [
       {
         "colors": "h == 34 || h == 33 || h == 32",
         "baseMaterial": "SNOW_4_DARK",
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
       },
       {
         "colors": "l == 2",
@@ -59017,7 +59033,6 @@
       "GODWARS_DEBRIS_POLE",
       "GODWARS_DEBRIS_LADDER",
       "GODWARS_DEBRIS_WOOD1",
-      "GODWARS_DEBRIS_BALLANDCHAIN",
       "GODWARS_DEBRIS_HANDLE",
       "GODWARS_DEBRIS_BARRICADE_BROKEN_CATAPULT",
       "GODWARS_DEBRIS_CATAPULT",
@@ -59026,7 +59041,6 @@
       "GODWARS_DEBRIS_BARRICADE_SKULLSHIELD",
       "GODWARS_DEBRIS_BURIEDSKELETON",
       "GODWARS_DEBRIS_BARRICADE_SPIKEBLOCK",
-      "GODWARS_DEBRIS_BARRELS",
       "GODWARS_DEBRIS_SMASHEDCRATE",
       "GODWARS_DEBRIS_BROKENMAST",
       "GODWARS_DEBRIS_BARRICADE_RAMS_HEAD",
@@ -59110,7 +59124,10 @@
       "GODWARS_DUNGEON_ARCHITECTURE_WALL_END02",
       "GODWARS_DUNGEON_ARCHITECTURE_WALL_BROKEN05",
       "GODWARS_DUNGEON_ARCHITECTURE_WALL_END04",
-      "GODWARS_DUNGEON_ARCHITECTURE_WALL_END01"
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_END01",
+      "GODWARS_GRAPPLE_PILLAR_BOTTOM",
+      "GODWARS_GRAPPLE_PILLAR",
+      "GODWARS_GRAPPLE_SHORTCUT"
     ],
     "colorOverrides": [
       {
@@ -59122,7 +59139,7 @@
     ]
   },
   {
-    "description": "God Wars Dungeon - Broken Tiles",
+    "description": "God Wars Dungeon - Broken Tiles - Complex",
     "baseMaterial": "STONE_NORMALED_LIGHT",
     "uvType": "BOX",
     "objectIds": [
@@ -59137,6 +59154,15 @@
         "colors": "h < 37",
         "baseMaterial": "SNOW_4"
       }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Broken Tiles - Simple",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_ENTRANCE_FLOOR01A",
+      "GODWARS_ENTRANCE_FLOOR01"
     ]
   },
   {
