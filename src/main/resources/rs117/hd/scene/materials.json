@@ -1237,6 +1237,11 @@
     "name": "ROPE"
   },
   {
+    "name": "ROPE_LIGHT",
+    "parent": "ROPE",
+    "brightness": 1.5
+  },
+  {
     "name": "CARPET_N"
   },
   {

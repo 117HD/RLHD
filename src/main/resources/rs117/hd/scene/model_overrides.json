@@ -59377,5 +59377,41 @@
         "upwardsNormals": true
       }
     ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Rope Rock - Top",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "GODWARS_ROCK_ROPE1",
+      "GODWARS_ROCK_ROPE2",
+      "GODWARS_ROCK_NO_ROPE1",
+      "GODWARS_ROCK_NO_ROPE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "ROPE_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SNOW_4_DARK"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Rope Rock - Bottom",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "GODWARS_ROCK_ROPE_BOTTOM1"
+    ]
   }
 ]
