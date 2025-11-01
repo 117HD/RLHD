@@ -6175,6 +6175,7 @@
       "SNOW_DUGUPSOIL_1",
       "SNOW_DUGUPSOIL_2",
       "SNOW_DUGUPSOIL_3",
+      "GODWARS_ENTRANCE_SNOW1",
       "GODWARS_ENTRANCE_SNOW2",
       "GODWARS_ENTRANCE_SNOW3"
     ],
@@ -58897,6 +58898,63 @@
     "baseMaterial": "GRAY_70",
     "objectIds": [
       "GODWARS_WATERFALL_BOTTOM_OFFSET"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Walls",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "GODWARS_2",
+      "GODWARS_2_PILLAR",
+      "GODWARS_2A_PILLAR",
+      "GODWARS_2_LIGHT",
+      "GODWARS_2A",
+      "GODWARS_2_LIGHT_LARGER",
+      "GODWARS_2B",
+      "GODWARS_WALLKIT_TOP_COVER",
+      "GODWARS_1_PILLAR",
+      "GODWARS_1",
+      "GODWARS_1A",
+      "GODWARS_1A_PILLAR",
+      "GODWARS_1_TOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 34 || h == 33 || h == 32",
+        "baseMaterial": "GRAY_85"
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Darken Entrance Rock",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_ICECAVE_CIRCLE_OF_ROCKS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Brighten Entrance God Rays",
+    "baseMaterial": "GRAY_125",
+    "upwardsNormals": true,
+    "objectIds": [
+      "GODWARS_BIG_HOLE_LIGHT"
     ]
   }
 ]

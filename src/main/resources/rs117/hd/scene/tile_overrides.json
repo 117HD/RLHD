@@ -6859,7 +6859,20 @@
       58,
       59
     ],
-    "groundMaterial": "SNOW_1"
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "GOD_WARS_DUNGEON_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GOD_WARS_DUNGEON_SNOW_NO_BLENDING",
+    "area": "GOD_WARS_DUNGEON",
+    "underlayIds": [
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 65
   },
   {
     "name": "INFERNO_1",
