@@ -5794,7 +5794,21 @@
       33,
       254
     ],
-    "groundMaterial": "SNOW_1"
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "OVERLAY_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "OVERLAY_SNOW_NO_BLENDING",
+    "area": "ALL",
+    "overlayIds": [
+      30,
+      33,
+      254
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 90
   },
   {
     "name": "OVERLAY_VARIED_DIRT",
@@ -8415,8 +8429,27 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
+      "UNDERLAY_SNOW_NO_BLENDING": "!blending"
     }
+  },
+  {
+    "name": "UNDERLAY_SNOW_NO_BLENDING",
+    "area": "SNOWY_REGIONS",
+    "underlayIds": [
+      16,
+      55,
+      58,
+      59,
+      92
+    ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "SEASONAL_GRASS": "s >= 2",
+      "SEASONAL_DIRT": "s == 1",
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    },
+    "maxLightness": 75
   },
   {
     "name": "OVERLAY_DIRT",
