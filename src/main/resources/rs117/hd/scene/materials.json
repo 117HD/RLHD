@@ -819,6 +819,11 @@
     "specularGloss": 20.0
   },
   {
+    "name": "SNOW_4_DARK",
+    "parent": "SNOW_4",
+    "brightness": 0.9
+  },
+  {
     "name": "GRASS_1"
   },
   {
