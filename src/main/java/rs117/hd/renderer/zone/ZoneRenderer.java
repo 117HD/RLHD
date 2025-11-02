@@ -667,6 +667,9 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.fogDepth.set(fogDepth);
 		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
 
+		plugin.uboGlobal.nearPlane.set(NEAR_PLANE);
+		plugin.uboGlobal.farPlane.set(NEAR_PLANE + (plugin.getDrawDistance() * LOCAL_TILE_SIZE));
+
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
 		plugin.uboGlobal.expandedMapLoadingChunks.set(root.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);

@@ -15,6 +15,8 @@
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;
+    float nearPlane;
+    float farPlane;
 
     float colorBlindnessIntensity;
     float gammaCorrection;

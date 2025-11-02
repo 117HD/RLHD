@@ -123,6 +123,7 @@ void main() {
         #if ZONE_RENDERER
             int depthBias = (gAlphaBiasHsl[i] >> 16) & 0xff;
             pos.z += depthBias / 128.0;
+            pos = linearToLog(pos, nearPlane, farPlane);
         #endif
         gl_Position = pos;
         EmitVertex();

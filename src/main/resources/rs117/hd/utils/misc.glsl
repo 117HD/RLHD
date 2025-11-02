@@ -48,6 +48,52 @@ vec2 animationFrame(vec2 animationDuration) {
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
 }
 
+float encodeLogDepth(float linearDepth, float near, float far) {
+    float C = 1.0;
+    float logz = log2(C * linearDepth + 1.0);
+    float logFar = log2(C * far + 1.0);
+    float logNear = log2(C * near + 1.0);
+    return (logz - logNear) / (logFar - logNear);
+}
+
+float decodeLogDepth(float logDepth, float near, float far) {
+    float C = 1.0;
+    float logFar = log2(C * far + 1.0);
+    float logNear = log2(C * near + 1.0);
+    float logz = mix(logNear, logFar, logDepth);
+    return (exp2(logz) - 1.0) / C;
+}
+
+
+vec4 linearToLog(vec4 positionCS, float near, float far) {
+    float C = 1.0;
+    float logz = log2(C * positionCS.w + 1.0);
+    float logFar = log2(C * far + 1.0);
+    float logNear = log2(C * near + 1.0);
+    float logDepth = (logz - logNear) / (logFar - logNear);
+
+    positionCS.z = (1.0 - logDepth) * positionCS.w;
+    return positionCS;
+}
+
+vec4 logToLinear(vec4 positionCS, float near, float far) {
+    float C = 1.0;
+
+    float logDepth = 1.0 - (positionCS.z / positionCS.w);
+
+    float logFar = log2(C * far + 1.0);
+    float logNear = log2(C * near + 1.0);
+
+    float logz = mix(logNear, logFar, logDepth);
+    float w = (exp2(logz) - 1.0) / C;
+
+    positionCS.z = w;
+    positionCS.w = w;
+
+    return positionCS;
+}
+
+
 vec3 windowsHdrCorrection(vec3 c) {
     // SDR monitors *usually* apply a gamma 2.2 curve, instead of the piece-wise sRGB curve, leading to the following
     // technically incorrect operation for *most* SDR monitors, producing our *expected* final result (first line).
