@@ -17059,6 +17059,24 @@
     "range": 10
   },
   {
+    "description": "God Wars Dungeon - Zamorak Balfrug Magic Projectile",
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      252,
+      120,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "GODWARS_BLACK_DEMON_FIREBALL_PROJ"
+    ]
+  },
+  {
     "description": "God Wars Dungeon - Saradomin Growler Magic Projectile",
     "projectileIds": [ "GODWARS_LION_MAGIC_PROJ" ],
     "offset": [ 0, 70, 0 ],

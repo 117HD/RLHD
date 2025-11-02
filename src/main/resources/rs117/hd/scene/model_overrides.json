@@ -59468,5 +59468,13 @@
         "uvType": "BOX"
       }
     ]
+  },
+  {
+    "description": "God Wars Dungeon - Nex Ancient Forge",
+    "baseMaterial": "GRAY_150",
+    "uvType": "BOX",
+    "projectileIds": [
+      "GODWARS_BLACK_DEMON_FIREBALL_PROJ"
+    ]
   }
 ]
