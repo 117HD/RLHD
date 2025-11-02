@@ -1101,7 +1101,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	@Override
-	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m) {
+	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		log.trace("drawTemp({}, {}, gameObject={}, model={})", worldProjection, scene, gameObject, m);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
@@ -1138,10 +1138,8 @@ public class ZoneRenderer implements Renderer {
 						m,
 						modelOverride,
 						preOrientation,
-						gameObject.getModelOrientation(),
-						gameObject.getX(),
-						gameObject.getZ(),
-						gameObject.getY(),
+						orientation,
+						x, y, z,
 						o.vbo.vb,
 						a.vbo.vb
 					);
@@ -1156,9 +1154,9 @@ public class ZoneRenderer implements Renderer {
 						start,
 						end,
 						gameObject.getPlane(),
-						gameObject.getX() & 1023,
-						gameObject.getZ() - renderable.getModelHeight() /* to render players over locs */,
-						gameObject.getY() & 1023
+						x & 1023,
+						y - renderable.getModelHeight() /* to render players over locs */,
+						z & 1023
 					);
 				}
 			}
@@ -1171,10 +1169,8 @@ public class ZoneRenderer implements Renderer {
 					m,
 					modelOverride,
 					preOrientation,
-					gameObject.getModelOrientation(),
-					gameObject.getX(),
-					gameObject.getZ(),
-					gameObject.getY(),
+					orientation,
+					x, y, z,
 					o.vbo.vb
 				);
 			}
@@ -1184,10 +1180,8 @@ public class ZoneRenderer implements Renderer {
 				m,
 				modelOverride,
 				preOrientation,
-				gameObject.getModelOrientation(),
-				gameObject.getX(),
-				gameObject.getZ(),
-				gameObject.getY(),
+				orientation,
+				x, y, z,
 				o.vbo.vb
 			);
 		}
