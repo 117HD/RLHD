@@ -54,7 +54,7 @@ void main() {
             if ((fMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
                 uvw.x = clamp(uvw.x, 0, .984375);
 
-            opacity = texture(textureArray, uvw).a;
+            opacity = fOpacity * texture(textureArray, uvw).a;
 
             #if !SHADOW_TRANSPARENCY
                 if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
