@@ -17059,6 +17059,37 @@
     "range": 10
   },
   {
+    "description": "God Wars Dungeon - Saradomin Growler Magic Projectile",
+    "projectileIds": [ "GODWARS_LION_MAGIC_PROJ" ],
+    "offset": [ 0, 70, 0 ],
+    "radius": 450,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "color": [
+      100,
+      100,
+      200
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Growler Magic Cast",
+    "graphicsObjectIds": [ "GODWARS_LION_MAGIC_SPOT" ],
+    "offset": [ 0, 120, 200 ],
+    "radius": 400,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "spawnDelay": 500,
+    "color": [
+      100,
+      100,
+      200
+    ],
+    "type": "STATIC"
+  },
+  {
     "description": "God Wars Dungeon - Bandos Steelwill Magic Projectile",
     "projectileIds": [ "GODWARS_GOBLIN2_SONIC_ATTK_PROJ" ],
     "offset": [ 0, 20, 0 ],
