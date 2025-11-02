@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +64,6 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
@@ -325,20 +323,6 @@ public class ZoneRenderer implements Renderer {
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw,
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
-		log.trace(
-			"preSceneDraw({}, cameraPos=[{}, {}, {}], cameraOri=[{}, {}], minLevel={}, level={}, maxLevel={}, hideRoofIds=[{}])",
-			scene,
-			cameraX,
-			cameraY,
-			cameraZ,
-			cameraPitch,
-			cameraYaw,
-			minLevel,
-			level,
-			maxLevel,
-			hideRoofIds.stream().map(i -> Integer.toString(i)).collect(
-				Collectors.joining(", "))
-		);
 		this.minLevel = minLevel;
 		this.level = level;
 		this.maxLevel = maxLevel;
@@ -495,45 +479,56 @@ public class ZoneRenderer implements Renderer {
 				sceneCamera.setNearPlane(NEAR_PLANE);
 				sceneCamera.setZoom(zoom);
 
-
 				// Calculate view matrix, view proj & inv matrix
 				sceneCamera.getViewMatrix(plugin.viewMatrix);
 				sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
 				sceneCamera.getInvViewProjMatrix(plugin.invViewProjMatrix);
 				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
 
-				int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
-				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
-				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
+				if (sceneCamera.isDirty()) {
+					int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+					directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
+					directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
-				// Define a Finite Plane before extracting corners
-				sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
+					// Define a Finite Plane before extracting corners
+					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
 
-				int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
-				final float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
-				clipFrustumToDistance(sceneFrustumCorners, maxDistance);
-				sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+					int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
+					final float[][] sceneFrustumCorners = sceneCamera.getFrustumCorners();
+					clipFrustumToDistance(sceneFrustumCorners, maxDistance);
 
-				final float[] centerXZ = new float[2];
-				for (float[] corner : sceneFrustumCorners) {
-					add(centerXZ, centerXZ, corner[0], corner[2]);
+					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+
+					final float[] sceneCenter = new float[3];
+					for (float[] corner : sceneFrustumCorners)
+						add(sceneCenter, sceneCenter, corner);
+					divide(sceneCenter, sceneCenter, (float) sceneFrustumCorners.length);
+
+					float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
+					float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
+					float radius = 0f;
+					for (float[] corner : sceneFrustumCorners) {
+						radius = max(radius, distance(sceneCenter, corner));
+
+						directionalCamera.transformPoint(corner, corner);
+
+						minX = min(minX, corner[0]);
+						maxX = max(maxX, corner[0]);
+
+						minZ = min(minZ, corner[2]);
+						maxZ = max(maxZ, corner[2]);
+					}
+					int directionalSize = (int) max(abs(maxX - minX), abs(maxZ - minZ));
+
+					directionalCamera.setPosition(sceneCenter);
+					directionalCamera.setNearPlane(radius * 2.0f);
+					directionalCamera.setZoom(1.0f);
+					directionalCamera.setViewportWidth(directionalSize);
+					directionalCamera.setViewportHeight(directionalSize);
+
+					plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
+					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 				}
-				divide(centerXZ, centerXZ, (float) sceneFrustumCorners.length);
-
-				float radius = 0f;
-				for (float[] corner : sceneFrustumCorners) {
-					radius = Math.max(radius, length(corner[0] - centerXZ[0], corner[2] - centerXZ[1]));
-				}
-
-				directionalCamera.setPositionX(centerXZ[0]);
-				directionalCamera.setPositionZ(centerXZ[1]);
-				directionalCamera.setNearPlane(radius);
-				directionalCamera.setZoom(1.0f);
-				directionalCamera.setViewportWidth((int) radius);
-				directionalCamera.setViewportHeight((int) radius);
-
-				plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
-				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 
 				if (root.sceneContext.scene == scene) {
 					try {
@@ -754,7 +749,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void postSceneDraw(Scene scene) {
-		log.trace("postSceneDraw({})", scene);
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			postDrawTopLevel();
 		} else {
@@ -892,8 +886,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
-		log.trace("drawZoneOpaque({}, {}, zx={}, zz={})", entityProjection, scene, zx, zz);
-
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -926,8 +918,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
-		log.trace("drawZoneAlpha({}, {}, level={}, zx={}, zz={})", entityProjection, scene, level, zx, zz);
-
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -978,7 +968,7 @@ public class ZoneRenderer implements Renderer {
 				this.level,
 				plugin.configRoofShadows ? 3 : maxLevel,
 				level,
-				sceneCamera,
+				directionalCamera,
 				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds
 			);
 		}
@@ -988,7 +978,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawPass(Projection projection, Scene scene, int pass) {
-		log.trace("drawPass({}, {}, pass={})", projection, scene, pass);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1050,10 +1039,6 @@ public class ZoneRenderer implements Renderer {
 		int y,
 		int z
 	) {
-		log.trace(
-			"drawDynamic({}, {}, tileObject={}, renderable={}, model={}, orientation={}, modelPos=[{}, {}, {}])",
-			worldProjection, scene, tileObject, r, m, orient, x, y, z
-		);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1066,46 +1051,31 @@ public class ZoneRenderer implements Renderer {
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
-		byte[] transparencies = m.getFaceTransparencies();
-		short[] faceTextures = m.getFaceTextures();
-		boolean hasAlpha = false;
-		if (transparencies != null || faceTextures != null) {
-			for (int face = 0; face < m.getFaceCount(); ++face) {
-				boolean alpha =
-					transparencies != null && transparencies[face] != 0 ||
-					faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
-				if (alpha) {
-					hasAlpha = true;
-					break;
-				}
-			}
-		}
+		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int zx = (x >> 10) + offset;
+		int zz = (z >> 10) + offset;
+		Zone zone = ctx.zones[zx][zz];
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		if (!hasAlpha) {
+		boolean hasAlpha = m.getFaceTransparencies() != null;
+		if (hasAlpha) {
 			VAO o = vaoO.get(size);
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb);
-		} else {
-			m.calculateBoundsCylinder();
-			VAO o = vaoO.get(size), a = vaoA.get(size);
+			VAO a = vaoA.get(size);
 			int start = a.vbo.vb.position();
-			facePrioritySorter.uploadSortedModel(worldProjection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
 			int end = a.vbo.vb.position();
-
 			if (end > start) {
-				int offset = ctx.sceneContext.sceneOffset >> 3;
-				int zx = (x >> 10) + offset;
-				int zz = (z >> 10) + offset;
-				Zone zone = ctx.zones[zx][zz];
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
 				zone.addTempAlphaModel(a.vao, start, end, tileObject.getPlane(), x & 1023, y, z & 1023);
 			}
+		} else {
+			VAO o = vaoO.get(size);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
 	}
 
 	@Override
-	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m) {
-		log.trace("drawTemp({}, {}, gameObject={}, model={})", worldProjection, scene, gameObject, m);
+	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1141,10 +1111,8 @@ public class ZoneRenderer implements Renderer {
 						m,
 						modelOverride,
 						preOrientation,
-						gameObject.getModelOrientation(),
-						gameObject.getX(),
-						gameObject.getZ(),
-						gameObject.getY(),
+						orientation,
+						x, y, z,
 						o.vbo.vb,
 						a.vbo.vb
 					);
@@ -1152,16 +1120,15 @@ public class ZoneRenderer implements Renderer {
 					log.debug("error drawing entity", ex);
 				}
 				int end = a.vbo.vb.position();
-
 				if (end > start) {
 					zone.addTempAlphaModel(
 						a.vao,
 						start,
 						end,
 						gameObject.getPlane(),
-						gameObject.getX() & 1023,
-						gameObject.getZ() - renderable.getModelHeight() /* to render players over locs */,
-						gameObject.getY() & 1023
+						x & 1023,
+						y - renderable.getModelHeight() /* to render players over locs */,
+						z & 1023
 					);
 				}
 			}
@@ -1174,10 +1141,9 @@ public class ZoneRenderer implements Renderer {
 					m,
 					modelOverride,
 					preOrientation,
-					gameObject.getModelOrientation(),
-					gameObject.getX(),
-					gameObject.getZ(),
-					gameObject.getY(),
+					orientation,
+					x, y, z,
+					o.vbo.vb,
 					o.vbo.vb
 				);
 			}
@@ -1187,10 +1153,9 @@ public class ZoneRenderer implements Renderer {
 				m,
 				modelOverride,
 				preOrientation,
-				gameObject.getModelOrientation(),
-				gameObject.getX(),
-				gameObject.getZ(),
-				gameObject.getY(),
+				orientation,
+				x, y, z,
+				o.vbo.vb,
 				o.vbo.vb
 			);
 		}
@@ -1198,7 +1163,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void invalidateZone(Scene scene, int zx, int zz) {
-		log.trace("invalidateZone({}, zoneX={}, zoneZ={})", scene, zx, zz);
 		WorldViewContext ctx = context(scene);
 		Zone z = ctx.zones[zx][zz];
 		if (!z.invalidate) {
@@ -1266,7 +1230,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void draw(int overlayColor) {
-		log.trace("draw(overlaySrgba={})", overlayColor);
 		final GameState gameState = client.getGameState();
 		if (gameState == GameState.STARTING) {
 			frameTimer.end(Timer.DRAW_FRAME);
@@ -1377,7 +1340,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void loadScene(WorldView worldView, Scene scene) {
-		log.trace("loadScene({}, {})", worldView, scene);
 		if (scene.getWorldViewId() > -1) {
 			loadSubScene(worldView, scene);
 			return;
@@ -1712,7 +1674,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void despawnWorldView(WorldView worldView) {
-		log.trace("despawnWorldView({})", worldView);
 		int worldViewId = worldView.getId();
 		if (worldViewId > -1) {
 			log.debug("WorldView despawn: {}", worldViewId);
@@ -1723,7 +1684,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void swapScene(Scene scene) {
-		log.trace("swapScene({})", scene);
 		if (scene.getWorldViewId() > -1) {
 			swapSub(scene);
 			return;

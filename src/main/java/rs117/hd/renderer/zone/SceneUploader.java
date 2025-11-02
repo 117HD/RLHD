@@ -579,9 +579,8 @@ class SceneUploader {
 			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
-			if (model != null) {
+			if (model != null)
 				uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
-			}
 		}
 		int endpos = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		if (endpos > pos) {
@@ -1112,10 +1111,11 @@ class SceneUploader {
 	private int uploadStaticModel(
 		Model model,
 		ModelOverride modelOverride,
-		int preOrientation, int orientation, int x, int y, int z, GpuIntBuffer vertexBuffer, GpuIntBuffer ab
+		int preOrientation, int orientation, int x, int y, int z,
+		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
-		final int vertexCount = model.getVerticesCount();
 		final int triangleCount = model.getFaceCount();
+		final int vertexCount = model.getVerticesCount();
 
 		final float[] vertexX = model.getVerticesX();
 		final float[] vertexY = model.getVerticesY();
@@ -1135,8 +1135,8 @@ class SceneUploader {
 		final int[] texIndices2 = model.getTexIndices2();
 		final int[] texIndices3 = model.getTexIndices3();
 
-		final byte[] transparencies = model.getFaceTransparencies();
 		final byte[] bias = model.getFaceBias();
+		final byte[] transparencies = model.getFaceTransparencies();
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -1320,7 +1320,7 @@ class SceneUploader {
 				packedAlphaBiasHsl |= 1 << 20;
 			}
 
-			GpuIntBuffer vb = alpha ? ab : vertexBuffer;
+			GpuIntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
@@ -1354,7 +1354,8 @@ class SceneUploader {
 		int x,
 		int y,
 		int z,
-		IntBuffer opaqueBuffer
+		IntBuffer opaqueBuffer,
+		IntBuffer alphaBuffer
 	) {
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1388,23 +1389,9 @@ class SceneUploader {
 		float orientSine = 0;
 		float orientCosine = 0;
 		if (orientation != 0) {
-			orientSine = SINE[mod(orientation, 2048)] / 65536f;
-			orientCosine = COSINE[mod(orientation, 2048)] / 65536f;
-		}
-
-		boolean isVanillaTextured = faceTextures != null;
-		boolean isVanillaUVMapped =
-			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			model.getTextureFaces() != null;
-
-		Material baseMaterial = modelOverride.baseMaterial;
-		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
+			orientation = mod(orientation, 2048);
+			orientSine = SINE[orientation] / 65536f;
+			orientCosine = COSINE[orientation] / 65536f;
 		}
 
 		for (int v = 0; v < vertexCount; ++v) {
@@ -1425,6 +1412,21 @@ class SceneUploader {
 			modelLocalX[v] = vertexX;
 			modelLocalY[v] = vertexY;
 			modelLocalZ[v] = vertexZ;
+		}
+
+		boolean isVanillaTextured = faceTextures != null;
+		boolean isVanillaUVMapped =
+			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
+			model.getTextureFaces() != null;
+
+		Material baseMaterial = modelOverride.baseMaterial;
+		Material textureMaterial = modelOverride.textureMaterial;
+		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
+		if (disableTextures) {
+			if (baseMaterial.modifiesVanillaTexture)
+				baseMaterial = Material.NONE;
+			if (textureMaterial.modifiesVanillaTexture)
+				textureMaterial = Material.NONE;
 		}
 
 		int len = 0;
@@ -1552,26 +1554,45 @@ class SceneUploader {
 				}
 			}
 
-			int alphaBias = 0;
-			alphaBias |= bias != null ? (bias[face] & 0xff) << 16 : 0;
+			boolean alpha =
+				transparencies != null && transparencies[face] != 0 ||
+				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
+			int packedAlphaBiasHsl = 0;
+			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
+			packedAlphaBiasHsl |= bias != null ? (bias[face] & 0xff) << 16 : 0;
+
+			boolean isTextured = faceTextures != null && faceTextures[face] != -1;
+			if (isTextured) {
+				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
+				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
+				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
+				color1 = color2 = color3 = 90;
+			}
+
+			if (isTextured || !modelOverride.undoVanillaShading) {
+				// Let the shader know vanilla shading reversal should be skipped for this face
+				packedAlphaBiasHsl |= 1 << 20;
+			}
+
+			IntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
 			GpuIntBuffer.putFloatVertex(
-				opaqueBuffer,
-				vx1, vy1, vz1, alphaBias | color1,
+				vb,
+				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 				modelNormals[0], modelNormals[1], modelNormals[2], 0
 			);
 
 			GpuIntBuffer.putFloatVertex(
-				opaqueBuffer,
-				vx2, vy2, vz2, alphaBias | color2,
+				vb,
+				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 				modelNormals[3], modelNormals[4], modelNormals[5], 0
 			);
 
 			GpuIntBuffer.putFloatVertex(
-				opaqueBuffer,
-				vx3, vy3, vz3, alphaBias | color3,
+				vb,
+				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 				modelNormals[6], modelNormals[7], modelNormals[8], 0
 			);
