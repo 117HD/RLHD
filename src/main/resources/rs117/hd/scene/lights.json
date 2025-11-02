@@ -26759,11 +26759,10 @@
     ]
   },
   {
-    "description": "GWD_NEX_ANCIENT_BARRIER_RED",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
+    "description": "GWD_NEX_ANCIENT_BARRIER_RED_OUTSIDE",
+    "offset": [ 0, 200, 125 ],
+    "radius": 550,
+    "strength": 7.5,
     "color": [
       255,
       51,
@@ -26779,11 +26778,46 @@
     ]
   },
   {
-    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
+    "description": "GWD_NEX_ANCIENT_BARRIER_RED_INSIDE",
+    "offset": [ 0, 200, -125 ],
+    "radius": 550,
+    "strength": 7.5,
+    "color": [
+      255,
+      51,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 10,
+    "objectIds": [
+      "NEX_FIGHT_BARRIER_OUTER_BUSY",
+      "NEX_FIGHT_BARRIER_OUTER_PRIV_BUSY",
+      "NEX_FIGHT_BARRIER_INNER_BUSY"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE_INSIDE",
+    "offset": [ 0, 200, -125 ],
+    "radius": 550,
+    "strength": 7.5,
+    "color": [
+      183,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 10,
+    "objectIds": [
+      "NEX_FIGHT_BARRIER_OUTER", "NEX_FIGHT_BARRIER_OUTER_PRIV"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE_OUTSIDE",
+    "offset": [ 0, 200, 125 ],
+    "radius": 550,
+    "strength": 7.5,
     "color": [
       183,
       0,
@@ -26812,6 +26846,60 @@
     "range": 10,
     "objectIds": [
       "NEX_FURNACE_NOOP"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE",
+    "offset": [ 0, 140, -160 ],
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE_TOP",
+    "offset": [ 0, 280, 0 ],
+    "radius": 100,
+    "strength": 100,
+    "color": [
+      0,
+      200,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE_TOP_2",
+    "offset": [ 0, 375, 0 ],
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      0,
+      200,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
     ]
   },
   {

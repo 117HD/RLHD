@@ -10570,10 +10570,11 @@
       "ANVIL",
       "VIKING_ANVIL",
       "DWARF_KELDAGRIM_ANVIL",
-      "GIM_ANVIL"
+      "GIM_ANVIL",
+      "LOVAKENGJ_ANVIL"
     ],
     "uvType": "BOX",
-    "uvScale": 1.1,
+    "uvScale": 0.6,
     "flatNormals": true
   },
   {
@@ -58943,7 +58944,8 @@
       "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_L_MIRROR",
       "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_L",
       "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_TOP_MIRROR",
-      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_TOP"
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_TOP",
+      "NEX_BARRIER_SIDE"
     ],
     "colorOverrides": [
       {
@@ -59050,7 +59052,8 @@
       "GODWARS_DEBRIS_SMASHEDCRATE",
       "GODWARS_DEBRIS_BROKENMAST",
       "GODWARS_DEBRIS_BARRICADE_RAMS_HEAD",
-      "GODWARS_DEBRIS_COLUMNS"
+      "GODWARS_DEBRIS_COLUMNS",
+      "GODWARS_DEBRIS_CRATE_CANNONBALL"
     ],
     "colorOverrides": [
       {
@@ -59134,7 +59137,16 @@
       "GODWARS_DUNGEON_ARCHITECTURE_WALL_END01",
       "GODWARS_GRAPPLE_PILLAR_BOTTOM",
       "GODWARS_GRAPPLE_PILLAR",
-      "GODWARS_GRAPPLE_SHORTCUT"
+      "GODWARS_GRAPPLE_SHORTCUT",
+      "GODWARS_ENTRANCE_PILLAR_BROKEN04",
+      "NEX_ZAROS_ALTAR",
+      "NEX_STONE_PLAQUE",
+      "NEX_SCOREBOARD",
+      "NEX_ALTAR05",
+      "NEX_ALTAR04",
+      "NEX_ALTAR02",
+      "NEX_ALTAR03",
+      "NEX_ALTAR01"
     ],
     "colorOverrides": [
       {
@@ -59152,14 +59164,16 @@
     "objectIds": [
       "GODWARS_ENTRANCE_FLOOR02",
       "GODWARS_ENTRANCE_FLOOR03",
+      "GODWARS_ENTRANCE_FLOOR04",
       "GODWARS_DUNGEON_ARCHITECTURE_RUBBLE01",
       "GODWARS_DUNGEON_ARCHITECTURE_RUBBLE02",
       "GODWARS_DUNGEON_ARCHITECTURE_RUBBLE03"
     ],
     "colorOverrides": [
       {
-        "colors": "h < 37",
-        "baseMaterial": "SNOW_4"
+        "colors": "h == 32 && l > 25 || h == 34",
+        "baseMaterial": "SNOW_4",
+        "uvType": "MODEL_XZ"
       }
     ]
   },
@@ -59412,6 +59426,47 @@
     "uvScale": 0.5,
     "objectIds": [
       "GODWARS_ROCK_ROPE_BOTTOM1"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Nex Chasm Edge",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CHASM_SNOW3_LEFT",
+      "CHASM_SNOW3_LEFT_FADE",
+      "CHASM_SNOWQ_LEFT_FADE",
+      "CHASM_SNOWQ_LEFT",
+      "CHASM_SNOWR",
+      "CHASM_SNOW2",
+      "CHASM_SNOW1",
+      "CHASM_SNOWW_RIGHT",
+      "CHASM_SNOW4_RIGHT",
+      "CHASM_SNOWW_RIGHT_FADE",
+      "CHASM_SNOW4_RIGHT_FADE",
+      "CHASM_SNOW1_SYMBOLL",
+      "CHASM_SNOW1_SYMBOLR"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Nex Ancient Forge",
+    "baseMaterial": "SNOW_4",
+    "uvType": "BOX",
+    "objectIds": [
+      "NEX_FURNACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 58",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h > 36",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
     ]
   }
 ]
