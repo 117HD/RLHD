@@ -198,7 +198,7 @@ public class LegacyModelPusher {
 
 		boolean skipUVs =
 			!isVanillaTextured &&
-			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false) == 0 &&
+			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false, false) == 0 &&
 			modelOverride.colorOverrides == null;
 
 		// ensure capacity upfront
@@ -361,7 +361,7 @@ public class LegacyModelPusher {
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
-				int materialData = material.packMaterialData(faceOverride, uvType, false);
+				int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
 
 				final float[] uvData = sceneContext.modelFaceUvs;
 				if (materialData == 0) {

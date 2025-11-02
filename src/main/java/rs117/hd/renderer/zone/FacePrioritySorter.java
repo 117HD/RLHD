@@ -388,6 +388,7 @@ class FacePrioritySorter {
 		boolean isVanillaUVMapped =
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
 			model.getTextureFaces() != null;
+		boolean isTextured = isVanillaTextured && faceTextures[face] != -1;
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
@@ -415,12 +416,10 @@ class FacePrioritySorter {
 			color2 = color3 = color1;
 
 		// HSL override is not applied to textured faces
-		if (faceTextures == null || faceTextures[face] == -1) {
-			if (overrideAmount > 0) {
-				color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-				color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-				color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
-			}
+		if (overrideAmount > 0 && !isTextured) {
+			color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
 		}
 
 		float vx1 = modelLocalX[triangleA];
@@ -490,7 +489,7 @@ class FacePrioritySorter {
 				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 		}
 
-		int materialData = material.packMaterialData(faceOverride, uvType, false);
+		int materialData = material.packMaterialData(faceOverride, uvType, false, isTextured);
 
 		if (uvType == UvType.VANILLA) {
 			modelUvs[0] = modelLocalX[texA] - vx1;
