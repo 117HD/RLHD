@@ -495,45 +495,56 @@ public class ZoneRenderer implements Renderer {
 				sceneCamera.setNearPlane(NEAR_PLANE);
 				sceneCamera.setZoom(zoom);
 
-
 				// Calculate view matrix, view proj & inv matrix
 				sceneCamera.getViewMatrix(plugin.viewMatrix);
 				sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
 				sceneCamera.getInvViewProjMatrix(plugin.invViewProjMatrix);
 				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
 
-				int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
-				directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
-				directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
+				if (sceneCamera.isDirty()) {
+					int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+					directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
+					directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
-				// Define a Finite Plane before extracting corners
-				sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
+					// Define a Finite Plane before extracting corners
+					sceneCamera.setFarPlane(drawDistance * LOCAL_TILE_SIZE);
 
-				int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
-				final float[][] sceneFrustumCorners = Mat4.extractFrustumCorners(sceneCamera.getInvViewProjMatrix());
-				clipFrustumToDistance(sceneFrustumCorners, maxDistance);
-				sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+					int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
+					final float[][] sceneFrustumCorners = sceneCamera.getFrustumCorners();
+					clipFrustumToDistance(sceneFrustumCorners, maxDistance);
 
-				final float[] centerXZ = new float[2];
-				for (float[] corner : sceneFrustumCorners) {
-					add(centerXZ, centerXZ, corner[0], corner[2]);
+					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
+
+					final float[] sceneCenter = new float[3];
+					for (float[] corner : sceneFrustumCorners)
+						add(sceneCenter, sceneCenter, corner);
+					divide(sceneCenter, sceneCenter, (float) sceneFrustumCorners.length);
+
+					float minX = Float.POSITIVE_INFINITY, maxX = Float.NEGATIVE_INFINITY;
+					float minZ = Float.POSITIVE_INFINITY, maxZ = Float.NEGATIVE_INFINITY;
+					float radius = 0f;
+					for (float[] corner : sceneFrustumCorners) {
+						radius = max(radius, distance(sceneCenter, corner));
+
+						directionalCamera.transformPoint(corner, corner);
+
+						minX = min(minX, corner[0]);
+						maxX = max(maxX, corner[0]);
+
+						minZ = min(minZ, corner[2]);
+						maxZ = max(maxZ, corner[2]);
+					}
+					int directionalSize = (int) max(abs(maxX - minX), abs(maxZ - minZ));
+
+					directionalCamera.setPosition(sceneCenter);
+					directionalCamera.setNearPlane(radius * 2.0f);
+					directionalCamera.setZoom(1.0f);
+					directionalCamera.setViewportWidth(directionalSize);
+					directionalCamera.setViewportHeight(directionalSize);
+
+					plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
+					plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 				}
-				divide(centerXZ, centerXZ, (float) sceneFrustumCorners.length);
-
-				float radius = 0f;
-				for (float[] corner : sceneFrustumCorners) {
-					radius = Math.max(radius, length(corner[0] - centerXZ[0], corner[2] - centerXZ[1]));
-				}
-
-				directionalCamera.setPositionX(centerXZ[0]);
-				directionalCamera.setPositionZ(centerXZ[1]);
-				directionalCamera.setNearPlane(radius);
-				directionalCamera.setZoom(1.0f);
-				directionalCamera.setViewportWidth((int) radius);
-				directionalCamera.setViewportHeight((int) radius);
-
-				plugin.uboGlobal.lightDir.set(directionalCamera.getForwardDirection());
-				plugin.uboGlobal.lightProjectionMatrix.set(directionalCamera.getViewProjMatrix());
 
 				if (root.sceneContext.scene == scene) {
 					try {

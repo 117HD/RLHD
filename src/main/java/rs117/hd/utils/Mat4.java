@@ -232,8 +232,7 @@ public class Mat4
 		out[3] = d;
 	}
 
-	public static float[][] extractFrustumCorners(float[] invViewProj) {
-		float[][] corners = new float[8][3];
+	public static float[][] extractFrustumCorners(float[] invViewProj, float[][] corners) {
 		int index = 0;
 
 		for (int z = 0; z <= 1; z++) {
