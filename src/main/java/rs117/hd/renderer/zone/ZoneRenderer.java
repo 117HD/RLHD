@@ -325,20 +325,6 @@ public class ZoneRenderer implements Renderer {
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw,
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
-		log.trace(
-			"preSceneDraw({}, cameraPos=[{}, {}, {}], cameraOri=[{}, {}], minLevel={}, level={}, maxLevel={}, hideRoofIds=[{}])",
-			scene,
-			cameraX,
-			cameraY,
-			cameraZ,
-			cameraPitch,
-			cameraYaw,
-			minLevel,
-			level,
-			maxLevel,
-			hideRoofIds.stream().map(i -> Integer.toString(i)).collect(
-				Collectors.joining(", "))
-		);
 		this.minLevel = minLevel;
 		this.level = level;
 		this.maxLevel = maxLevel;
@@ -762,7 +748,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void postSceneDraw(Scene scene) {
-		log.trace("postSceneDraw({})", scene);
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			postDrawTopLevel();
 		} else {
@@ -900,8 +885,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
-		log.trace("drawZoneOpaque({}, {}, zx={}, zz={})", entityProjection, scene, zx, zz);
-
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -934,8 +917,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
-		log.trace("drawZoneAlpha({}, {}, level={}, zx={}, zz={})", entityProjection, scene, level, zx, zz);
-
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -996,7 +977,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawPass(Projection projection, Scene scene, int pass) {
-		log.trace("drawPass({}, {}, pass={})", projection, scene, pass);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1058,10 +1038,6 @@ public class ZoneRenderer implements Renderer {
 		int y,
 		int z
 	) {
-		log.trace(
-			"drawDynamic({}, {}, tileObject={}, renderable={}, model={}, orientation={}, modelPos=[{}, {}, {}])",
-			worldProjection, scene, tileObject, r, m, orient, x, y, z
-		);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1113,7 +1089,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
-		log.trace("drawTemp({}, {}, gameObject={}, model={})", worldProjection, scene, gameObject, m);
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1200,7 +1175,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void invalidateZone(Scene scene, int zx, int zz) {
-		log.trace("invalidateZone({}, zoneX={}, zoneZ={})", scene, zx, zz);
 		WorldViewContext ctx = context(scene);
 		Zone z = ctx.zones[zx][zz];
 		if (!z.invalidate) {
@@ -1268,7 +1242,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void draw(int overlayColor) {
-		log.trace("draw(overlaySrgba={})", overlayColor);
 		final GameState gameState = client.getGameState();
 		if (gameState == GameState.STARTING) {
 			frameTimer.end(Timer.DRAW_FRAME);
@@ -1379,7 +1352,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void loadScene(WorldView worldView, Scene scene) {
-		log.trace("loadScene({}, {})", worldView, scene);
 		if (scene.getWorldViewId() > -1) {
 			loadSubScene(worldView, scene);
 			return;
@@ -1714,7 +1686,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void despawnWorldView(WorldView worldView) {
-		log.trace("despawnWorldView({})", worldView);
 		int worldViewId = worldView.getId();
 		if (worldViewId > -1) {
 			log.debug("WorldView despawn: {}", worldViewId);
@@ -1725,7 +1696,6 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void swapScene(Scene scene) {
-		log.trace("swapScene({})", scene);
 		if (scene.getWorldViewId() > -1) {
 			swapSub(scene);
 			return;
