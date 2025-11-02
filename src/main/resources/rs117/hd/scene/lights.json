@@ -17059,6 +17059,37 @@
     "range": 10
   },
   {
+    "description": "God Wars Dungeon - Bandos Steelwill Magic Projectile",
+    "projectileIds": [ "GODWARS_GOBLIN2_SONIC_ATTK_PROJ" ],
+    "offset": [ 0, 20, 0 ],
+    "radius": 300,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "color": [
+      200,
+      255,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Bandos Steelwill Magic Cast",
+    "graphicsObjectIds": [ "GODWARS_GOBLIN2_SONIC_ATTK_SPOT" ],
+    "offset": [ 0, 200, -20 ],
+    "radius": 400,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "spawnDelay": 500,
+    "color": [
+      200,
+      255,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
     "description": "ver sinhaza",
     "worldX": 3656,
     "worldY": 3227,
