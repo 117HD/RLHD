@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +64,6 @@ import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.ColorUtils;
@@ -967,7 +965,7 @@ public class ZoneRenderer implements Renderer {
 				this.level,
 				plugin.configRoofShadows ? 3 : maxLevel,
 				level,
-				sceneCamera,
+				directionalCamera,
 				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds
 			);
 		}
@@ -1050,40 +1048,26 @@ public class ZoneRenderer implements Renderer {
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
-		byte[] transparencies = m.getFaceTransparencies();
-		short[] faceTextures = m.getFaceTextures();
-		boolean hasAlpha = false;
-		if (transparencies != null || faceTextures != null) {
-			for (int face = 0; face < m.getFaceCount(); ++face) {
-				boolean alpha =
-					transparencies != null && transparencies[face] != 0 ||
-					faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
-				if (alpha) {
-					hasAlpha = true;
-					break;
-				}
-			}
-		}
+		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int zx = (x >> 10) + offset;
+		int zz = (z >> 10) + offset;
+		Zone zone = ctx.zones[zx][zz];
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
-		if (!hasAlpha) {
+		boolean hasAlpha = m.getFaceTransparencies() != null;
+		if (hasAlpha) {
 			VAO o = vaoO.get(size);
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb);
-		} else {
-			m.calculateBoundsCylinder();
-			VAO o = vaoO.get(size), a = vaoA.get(size);
+			VAO a = vaoA.get(size);
 			int start = a.vbo.vb.position();
-			facePrioritySorter.uploadSortedModel(worldProjection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
 			int end = a.vbo.vb.position();
-
 			if (end > start) {
-				int offset = ctx.sceneContext.sceneOffset >> 3;
-				int zx = (x >> 10) + offset;
-				int zz = (z >> 10) + offset;
-				Zone zone = ctx.zones[zx][zz];
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
 				zone.addTempAlphaModel(a.vao, start, end, tileObject.getPlane(), x & 1023, y, z & 1023);
 			}
+		} else {
+			VAO o = vaoO.get(size);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
 	}
 
@@ -1133,7 +1117,6 @@ public class ZoneRenderer implements Renderer {
 					log.debug("error drawing entity", ex);
 				}
 				int end = a.vbo.vb.position();
-
 				if (end > start) {
 					zone.addTempAlphaModel(
 						a.vao,
@@ -1157,6 +1140,7 @@ public class ZoneRenderer implements Renderer {
 					preOrientation,
 					orientation,
 					x, y, z,
+					o.vbo.vb,
 					o.vbo.vb
 				);
 			}
@@ -1168,6 +1152,7 @@ public class ZoneRenderer implements Renderer {
 				preOrientation,
 				orientation,
 				x, y, z,
+				o.vbo.vb,
 				o.vbo.vb
 			);
 		}
