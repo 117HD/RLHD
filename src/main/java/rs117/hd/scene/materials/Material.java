@@ -175,7 +175,6 @@ public class Material {
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
 		assert materialIndex <= MAX_MATERIAL_INDEX;
-		// The sign bit can't be used without shader changes to correctly unpack the material index
 		return (materialIndex & MAX_MATERIAL_INDEX) << 20
 			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
 			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11

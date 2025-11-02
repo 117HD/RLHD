@@ -55,7 +55,7 @@ void main() {
         return;
 
     int materialData = gMaterialData[0];
-    Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT);
+    Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
