@@ -14623,11 +14623,20 @@
       "DITCH_WILDERNESS4_GROUND",
       "DITCH_WILDERNESS4A_GROUND",
       "DITCH_WILDERNESSE_GROUND",
-      "DITCH_WILDERNESSEA_GROUND",
-      "DITCH_WILDERNESS_COVER"
+      "DITCH_WILDERNESSEA_GROUND"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Wilderness Ditch Cover",
+    "baseMaterial": "DIRT_1",
+    "objectIds": [
+      "DITCH_WILDERNESS_COVER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "castShadows": false
   },
   {
     "description": "Wilderness Ditch with fence",

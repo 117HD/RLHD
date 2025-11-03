@@ -79,9 +79,9 @@ void main() {
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 
-    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
-    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
-    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT);
+    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
@@ -180,13 +180,14 @@ void main() {
         vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
         vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
 
-        {
+/*
+        { TODO: FIX ME :)
             // Apply entity tint to HSL
             ivec4 tint = getWorldViewTint(worldViewIndex);
             hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
             hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
             hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;
-        }
+        }*/
 
         // get vertex colors
         vec4 baseColor1 = vec4(convertHsl(hsl1), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);

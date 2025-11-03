@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
@@ -302,6 +303,9 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		size += property.type.size + padding;
 		properties.add(property);
 
+		if (size > 65536)
+			log.warn("Uniform buffer {} is too large! ({} bytes)", glBuffer.name, size);
+
 		return property;
 	}
 
@@ -332,6 +336,10 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 	}
 
 	public final void upload() {
+		upload(null);
+	}
+
+	public final void upload(@Nullable RenderState state) {
 		if (data == null)
 			return;
 

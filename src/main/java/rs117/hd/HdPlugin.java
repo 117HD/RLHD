@@ -87,7 +87,6 @@ import rs117.hd.opengl.buffer.uniforms.UBOLights;
 import rs117.hd.opengl.buffer.uniforms.UBOUI;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.overlays.FrameTimer;
@@ -262,9 +261,6 @@ public class HdPlugin extends Plugin {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public ShadowShaderProgram shadowProgram;
-
-	@Inject
 	private UIShaderProgram uiProgram;
 
 	@Getter
@@ -290,6 +286,8 @@ public class HdPlugin extends Plugin {
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
+	public static boolean APPLE;
+	public static boolean APPLE_ARM;
 
 	public Canvas canvas;
 	public AWTContext awtContext;
@@ -468,6 +466,9 @@ public class HdPlugin extends Plugin {
 				GL_CAPS = GL.createCapabilities();
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
+
+				APPLE = OSType.getOSType() == OSType.MacOS;
+				APPLE_ARM = APPLE && System.getProperty("os.arch").equals("aarch64");
 
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
@@ -738,8 +739,7 @@ public class HdPlugin extends Plugin {
 	public String generateGetter(String type, int arrayLength) {
 		StringBuilder include = new StringBuilder();
 
-		boolean isAppleM1 = OSType.getOSType() == OSType.MacOS && System.getProperty("os.arch").equals("aarch64");
-		if (config.macosIntelWorkaround() && !isAppleM1) {
+		if (config.macosIntelWorkaround() && !APPLE_ARM) {
 			// Workaround wrapper for drivers that do not support dynamic indexing,
 			// particularly Intel drivers on macOS
 			include
@@ -828,8 +828,6 @@ public class HdPlugin extends Plugin {
 		glBindVertexArray(vaoTri);
 
 		renderer.initializeShaders(includes);
-		shadowProgram.setMode(configShadowMode);
-		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
@@ -891,7 +889,6 @@ public class HdPlugin extends Plugin {
 
 	private void destroyShaders() {
 		renderer.destroyShaders();
-		shadowProgram.destroy();
 		uiProgram.destroy();
 
 		tiledLightingImageStoreProgram.destroy();
@@ -1180,7 +1177,7 @@ public class HdPlugin extends Plugin {
 		// Create depth render buffer
 		rboSceneDepth = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8, sceneResolution[0], sceneResolution[1]);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
 		checkGLErrors();
 

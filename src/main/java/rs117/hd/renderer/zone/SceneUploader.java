@@ -31,6 +31,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -57,6 +58,9 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 class SceneUploader {
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
+
+	@Inject
+	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -104,9 +108,8 @@ class SceneUploader {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					int rid = roofs[level][(mzx << 3) + xoff][(mzz << 3) + zoff];
-					if (rid > 0) {
+					if (rid > 0)
 						roofIds.add(rid);
-					}
 				}
 			}
 		}
@@ -346,8 +349,13 @@ class SceneUploader {
 		int tileZ = t.getRenderLevel();
 		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
 
+		if (ctx.currentArea != null && !ctx.currentArea.containsPoint(worldPos))
+			return;
+
+		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
+
 		SceneTilePaint paint = t.getSceneTilePaint();
-		if (paint != null) {
+		if (paint != null && drawTile) {
 			upload(
 				ctx,
 				worldPos,
@@ -361,7 +369,7 @@ class SceneUploader {
 		}
 
 		SceneTileModel model = t.getSceneTileModel();
-		if (model != null)
+		if (model != null && drawTile)
 			upload(ctx, worldPos, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer);
 
 		if (!onlyWaterSurface)
@@ -381,7 +389,7 @@ class SceneUploader {
 		GpuIntBuffer alphaBuffer
 	) {
 		WallObject wallObject = t.getWallObject();
-		if (wallObject != null) {
+		if (wallObject != null && renderCallbackManager.drawObject(ctx.scene, wallObject)) {
 			int uuid = ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId());
 			Renderable renderable1 = wallObject.getRenderable1();
 			uploadZoneRenderable(
@@ -427,7 +435,7 @@ class SceneUploader {
 		}
 
 		DecorativeObject decorativeObject = t.getDecorativeObject();
-		if (decorativeObject != null) {
+		if (decorativeObject != null && renderCallbackManager.drawObject(ctx.scene, decorativeObject)) {
 			int uuid = ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId());
 			int preOrientation = HDUtils.getModelPreOrientation(decorativeObject.getConfig());
 			Renderable renderable = decorativeObject.getRenderable();
@@ -474,7 +482,7 @@ class SceneUploader {
 		}
 
 		GroundObject groundObject = t.getGroundObject();
-		if (groundObject != null) {
+		if (groundObject != null && renderCallbackManager.drawObject(ctx.scene, groundObject)) {
 			Renderable renderable = groundObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
@@ -494,16 +502,14 @@ class SceneUploader {
 
 		GameObject[] gameObjects = t.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
-			if (gameObject == null) {
+			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
-			}
 
-			Point min = gameObject.getSceneMinLocation(), max = gameObject.getSceneMaxLocation();
-
-			if (!min.equals(t.getSceneLocation())) {
+			Point min = gameObject.getSceneMinLocation();
+			if (!min.equals(t.getSceneLocation()))
 				continue;
-			}
 
+			Point max = gameObject.getSceneMaxLocation();
 			Renderable renderable = gameObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
@@ -571,6 +577,8 @@ class SceneUploader {
 		GpuIntBuffer ab
 	) {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		if (modelOverride.hide)
+			return;
 
 		int pos = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		Model model = null;
@@ -579,9 +587,8 @@ class SceneUploader {
 			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
-			if (model != null) {
+			if (model != null)
 				uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
-			}
 		}
 		int endpos = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		if (endpos > pos) {
@@ -757,6 +764,9 @@ class SceneUploader {
 				nwColor = 0;
 			if (ctx.vertexIsWater.containsKey(neVertexKey) && ctx.vertexIsLand.containsKey(neVertexKey))
 				neColor = 0;
+
+			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
+				swColor = seColor = nwColor = neColor = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
 		} else {
 			// Underwater geometry
 			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
@@ -784,10 +794,10 @@ class SceneUploader {
 			neTerrainData = HDUtils.packTerrainData(true, max(1, neDepth), waterType, tileZ);
 		}
 
-		int swMaterialData = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
-		int seMaterialData = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
-		int nwMaterialData = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
-		int neMaterialData = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
+		int swMaterialData = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay, true);
+		int seMaterialData = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay, true);
+		int nwMaterialData = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay, true);
+		int neMaterialData = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay, true);
 
 		float uvcos = -uvScale, uvsin = 0;
 		if (uvOrientation % 2048 != 0) {
@@ -1014,6 +1024,8 @@ class SceneUploader {
 					colorB = 0;
 				if (ctx.vertexIsWater.containsKey(vertexKeyC) && ctx.vertexIsLand.containsKey(vertexKeyC))
 					colorC = 0;
+				if (colorA == 0 && colorB == 0 && colorC == 0)
+					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
 			} else {
 				// Underwater geometry
 				colorA = colorB = colorC = UNDERWATER_HSL;
@@ -1060,9 +1072,9 @@ class SceneUploader {
 			ly1 -= override.heightOffset;
 			ly2 -= override.heightOffset;
 
-			int materialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay);
-			int materialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay);
-			int materialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay);
+			int materialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay, true);
+			int materialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay, true);
+			int materialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay, true);
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
@@ -1112,10 +1124,11 @@ class SceneUploader {
 	private int uploadStaticModel(
 		Model model,
 		ModelOverride modelOverride,
-		int preOrientation, int orientation, int x, int y, int z, GpuIntBuffer vertexBuffer, GpuIntBuffer ab
+		int preOrientation, int orientation, int x, int y, int z,
+		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
-		final int vertexCount = model.getVerticesCount();
 		final int triangleCount = model.getFaceCount();
+		final int vertexCount = model.getVerticesCount();
 
 		final float[] vertexX = model.getVerticesX();
 		final float[] vertexY = model.getVerticesY();
@@ -1135,8 +1148,8 @@ class SceneUploader {
 		final int[] texIndices2 = model.getTexIndices2();
 		final int[] texIndices3 = model.getTexIndices3();
 
-		final byte[] transparencies = model.getFaceTransparencies();
 		final byte[] bias = model.getFaceBias();
+		final byte[] transparencies = model.getFaceTransparencies();
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -1226,12 +1239,16 @@ class SceneUploader {
 			Material material = baseMaterial;
 
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
-			if (textureId != -1) {
+			boolean isTextured = textureId != -1;
+			if (isTextured) {
 				uvType = UvType.VANILLA;
 				material = textureMaterial;
 				if (material == Material.NONE)
 					material = materialManager.fromVanillaTexture(textureId);
 
+				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
+				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
+				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
 				color1 = color2 = color3 = 90;
 			}
 
@@ -1264,7 +1281,7 @@ class SceneUploader {
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false);
+			int materialData = material.packMaterialData(faceOverride, uvType, false, isTextured);
 
 			if (uvType == UvType.VANILLA) {
 				modelUvs[0] = modelLocalXI[texA] - vx1;
@@ -1307,20 +1324,7 @@ class SceneUploader {
 			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
 			packedAlphaBiasHsl |= bias != null ? (bias[face] & 0xff) << 16 : 0;
 
-			boolean isTextured = faceTextures != null && faceTextures[face] != -1;
-			if (isTextured) {
-				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
-				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
-				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
-				color1 = color2 = color3 = 90;
-			}
-
-			if (isTextured || !modelOverride.undoVanillaShading) {
-				// Let the shader know vanilla shading reversal should be skipped for this face
-				packedAlphaBiasHsl |= 1 << 20;
-			}
-
-			GpuIntBuffer vb = alpha ? ab : vertexBuffer;
+			GpuIntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
@@ -1354,7 +1358,8 @@ class SceneUploader {
 		int x,
 		int y,
 		int z,
-		IntBuffer opaqueBuffer
+		IntBuffer opaqueBuffer,
+		IntBuffer alphaBuffer
 	) {
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1388,23 +1393,9 @@ class SceneUploader {
 		float orientSine = 0;
 		float orientCosine = 0;
 		if (orientation != 0) {
-			orientSine = SINE[mod(orientation, 2048)] / 65536f;
-			orientCosine = COSINE[mod(orientation, 2048)] / 65536f;
-		}
-
-		boolean isVanillaTextured = faceTextures != null;
-		boolean isVanillaUVMapped =
-			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
-			model.getTextureFaces() != null;
-
-		Material baseMaterial = modelOverride.baseMaterial;
-		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
+			orientation = mod(orientation, 2048);
+			orientSine = SINE[orientation] / 65536f;
+			orientCosine = COSINE[orientation] / 65536f;
 		}
 
 		for (int v = 0; v < vertexCount; ++v) {
@@ -1425,6 +1416,21 @@ class SceneUploader {
 			modelLocalX[v] = vertexX;
 			modelLocalY[v] = vertexY;
 			modelLocalZ[v] = vertexZ;
+		}
+
+		boolean isVanillaTextured = faceTextures != null;
+		boolean isVanillaUVMapped =
+			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
+			model.getTextureFaces() != null;
+
+		Material baseMaterial = modelOverride.baseMaterial;
+		Material textureMaterial = modelOverride.textureMaterial;
+		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
+		if (disableTextures) {
+			if (baseMaterial.modifiesVanillaTexture)
+				baseMaterial = Material.NONE;
+			if (textureMaterial.modifiesVanillaTexture)
+				textureMaterial = Material.NONE;
 		}
 
 		int len = 0;
@@ -1479,12 +1485,16 @@ class SceneUploader {
 			Material material = baseMaterial;
 
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
-			if (textureId != -1) {
+			boolean isTextured = textureId != -1;
+			if (isTextured) {
 				uvType = UvType.VANILLA;
 				material = textureMaterial;
 				if (material == Material.NONE)
 					material = materialManager.fromVanillaTexture(textureId);
 
+				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
+				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
+				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
 				color1 = color2 = color3 = 90;
 			}
 
@@ -1517,7 +1527,7 @@ class SceneUploader {
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false);
+			int materialData = material.packMaterialData(faceOverride, uvType, false, isTextured);
 
 			if (uvType == UvType.VANILLA) {
 				modelUvs[0] = modelLocalX[texA] - vx1;
@@ -1552,26 +1562,32 @@ class SceneUploader {
 				}
 			}
 
-			int alphaBias = 0;
-			alphaBias |= bias != null ? (bias[face] & 0xff) << 16 : 0;
+			boolean alpha =
+				transparencies != null && transparencies[face] != 0 ||
+				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
+			int packedAlphaBiasHsl = 0;
+			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
+			packedAlphaBiasHsl |= bias != null ? (bias[face] & 0xff) << 16 : 0;
+
+			IntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
 			GpuIntBuffer.putFloatVertex(
-				opaqueBuffer,
-				vx1, vy1, vz1, alphaBias | color1,
+				vb,
+				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 				modelNormals[0], modelNormals[1], modelNormals[2], 0
 			);
 
 			GpuIntBuffer.putFloatVertex(
-				opaqueBuffer,
-				vx2, vy2, vz2, alphaBias | color2,
+				vb,
+				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 				modelNormals[3], modelNormals[4], modelNormals[5], 0
 			);
 
 			GpuIntBuffer.putFloatVertex(
-				opaqueBuffer,
-				vx3, vy3, vz3, alphaBias | color3,
+				vb,
+				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 				modelNormals[6], modelNormals[7], modelNormals[8], 0
 			);

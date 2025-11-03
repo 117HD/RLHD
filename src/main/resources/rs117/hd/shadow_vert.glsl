@@ -33,6 +33,8 @@ layout (location = 1) in vec3 vUv;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
+layout (location = 6) in int vWorldViewId;
+layout (location = 7) in ivec2 vSceneBase;
 
 #include <utils/constants.glsl>
 
@@ -42,6 +44,7 @@ layout (location = 5) in int vTerrainData;
     flat out vec3 gUv;
     flat out int gMaterialData;
     flat out int gCastShadow;
+    flat out int gWorldViewId;
     #if SHADOW_TRANSPARENCY
         flat out float gOpacity;
     #endif
@@ -71,18 +74,20 @@ void main() {
 
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
-    vec3 pos = sceneBase + vPosition;
+    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+    vec3 pos = sceneOffset + vPosition;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         gPosition = pos;
         gUv = vUv;
         gMaterialData = vMaterialData;
         gCastShadow = shouldCastShadow;
+        gWorldViewId = vWorldViewId;
         #if SHADOW_TRANSPARENCY
             gOpacity = opacity;
         #endif
     #else
-        gl_Position = lightProjectionMatrix * getWorldViewProjection(worldViewIndex) * vec4(pos, shouldCastShadow);
+        gl_Position = lightProjectionMatrix * getWorldViewProjection(vWorldViewId) * vec4(pos, shouldCastShadow);
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
         #endif

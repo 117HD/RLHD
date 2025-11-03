@@ -42,6 +42,7 @@ in vec3 gNormal[3];
 in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
+in int gWorldViewId[3];
 
 flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
@@ -68,7 +69,9 @@ void main() {
         vTerrainData[i] = gTerrainData[i];
     }
 
-    computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    int materialData = vMaterialData[0];
+
+    computeUvs(materialData, gWorldViewId[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(
@@ -88,20 +91,15 @@ void main() {
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
     #if UNDO_VANILLA_SHADING && ZONE_RENDERER
-    bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    if (!isTerrain) {
-        for (int i = 0; i < 3; i++) {
-            if ((int(vAlphaBiasHsl[i]) >> 20 & 1) == 0) {
-                vec3 normal;
-                #if FLAT_SHADING
-                    normal = N;
-                #else
+        if ((materialData >> MATERIAL_FLAG_UNDO_VANILLA_SHADING & 1) == 1) {
+            vec3 normal = N;
+            for (int i = 0; i < 3; i++) {
+                #if !FLAT_SHADING
                     normal = length(gNormal[i]) == 0 ? N : normalize(gNormal[i]);
                 #endif
                 undoVanillaShading(vAlphaBiasHsl[i], normal);
             }
         }
-    }
     #endif
 
     for (int i = 0; i < 3; i++) {

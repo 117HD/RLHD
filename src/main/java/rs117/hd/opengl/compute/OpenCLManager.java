@@ -236,7 +236,7 @@ public class OpenCLManager {
 								long context = clCreateContext(ctxProps, device, callback, NULL, errcode_ret);
 								checkCLError(errcode_ret);
 
-								if (OSType.getOSType() == OSType.MacOS) {
+								if (HdPlugin.APPLE) {
 									var buf = stack.mallocPointer(1);
 									checkCLError(clGetGLContextInfoAPPLE(
 										context,
