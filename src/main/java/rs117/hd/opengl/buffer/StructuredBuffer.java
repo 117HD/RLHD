@@ -310,7 +310,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		dirtyHighTide = max(dirtyHighTide, position + size);
 	}
 
-	protected void preUpload() {}
+	protected boolean preUpload() { return true; }
 
 	public void initialize() {
 		if (data != null)
@@ -335,7 +335,8 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		if (data == null)
 			return;
 
-		preUpload();
+		if(!preUpload())
+			return;
 
 		if (!isDirty())
 			return;

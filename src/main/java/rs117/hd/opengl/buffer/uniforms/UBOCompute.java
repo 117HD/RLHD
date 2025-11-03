@@ -93,7 +93,7 @@ public class UBOCompute extends UniformStructuredBuffer<SharedGLBuffer> {
 	}
 
 	@Override
-	protected void preUpload() {
+	protected boolean preUpload() {
 		for (int i = 0; i < writtenCharacterPositions; i++) {
 			CharacterPositionPair pair = characterPositionsPairs.get(i);
 			pair.dist = Float.MAX_VALUE;
@@ -103,5 +103,7 @@ public class UBOCompute extends UniformStructuredBuffer<SharedGLBuffer> {
 		}
 		characterPositionCount.set(min(writtenCharacterPositions, characterPositions.length));
 		writtenCharacterPositions = 0;
+
+		return true;
 	}
 }

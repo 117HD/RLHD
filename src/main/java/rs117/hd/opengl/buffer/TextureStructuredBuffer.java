@@ -11,6 +11,7 @@ import static org.lwjgl.opengl.GL11.glGenTextures;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
+import static org.lwjgl.opengl.GL15C.glBufferSubData;
 import static org.lwjgl.opengl.GL30.GL_R32I;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 import static org.lwjgl.opengl.GL31.glTexBuffer;
@@ -37,18 +38,20 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 	}
 
 	@Override
-	protected void preUpload() {
+	protected boolean preUpload() {
 		if (size > currentCapacity) {
 			resize(size * 2);
+			return false;
 		}
+
+		return true;
 	}
 
-	public void resize(int newSize) {
+	private void resize(int newSize) {
 		if (newSize <= currentCapacity) return;
 
 		log.info("{} resizing from {} -> {}", glBuffer.name, currentCapacity, newSize);
 
-		// Create a new larger buffer
 		ByteBuffer newData = BufferUtils.createByteBuffer(newSize);
 		if (data != null) {
 			data.position(0);
@@ -58,6 +61,7 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 
 		glBindBuffer(glBuffer.target, glBuffer.id);
 		glBufferData(glBuffer.target, newSize, GL_DYNAMIC_DRAW);
+		glBufferSubData(glBuffer.target, 0, newData);
 		glBindBuffer(glBuffer.target, 0);
 
 		glBindTexture(GL_TEXTURE_BUFFER, textureId);
@@ -69,6 +73,10 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 		dataFloat = data.asFloatBuffer();
 
 		currentCapacity = newSize;
+
+		// Reset Tide, since we've uploaded the data as part of the resize
+		dirtyLowTide = Integer.MAX_VALUE;
+		dirtyHighTide = 0;
 	}
 
 	@Override
