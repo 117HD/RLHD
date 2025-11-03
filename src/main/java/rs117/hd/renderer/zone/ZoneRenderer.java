@@ -88,6 +88,7 @@ import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
+import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
@@ -455,14 +456,18 @@ public class ZoneRenderer implements Renderer {
 				float zoom = client.get3dZoom();
 				float drawDistance = (float) plugin.getDrawDistance();
 
+				if (plugin.orthographicProjection)
+					zoom *= ORTHOGRAPHIC_ZOOM;
+
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
+				sceneCamera.setOrthographic(plugin.orthographicProjection);
 				sceneCamera.setPosition(plugin.cameraPosition);
 				sceneCamera.setOrientation(plugin.cameraOrientation);
 				sceneCamera.setFixedYaw(client.getCameraYaw());
 				sceneCamera.setFixedPitch(client.getCameraPitch());
 				sceneCamera.setViewportWidth((int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]));
 				sceneCamera.setViewportHeight((int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]));
-				sceneCamera.setNearPlane(NEAR_PLANE);
+				sceneCamera.setNearPlane(plugin.orthographicProjection ? -40000 : NEAR_PLANE);
 				sceneCamera.setZoom(zoom);
 
 				// Calculate view matrix, view proj & inv matrix
@@ -948,6 +953,9 @@ public class ZoneRenderer implements Renderer {
 
 		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw)
 			return zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+
+		if (plugin.orthographicProjection)
+			return zone.inSceneFrustum = true;
 
 		return false;
 	}
