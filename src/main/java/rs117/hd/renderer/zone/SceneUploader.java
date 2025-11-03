@@ -686,6 +686,13 @@ class SceneUploader {
 		int swTerrainData, seTerrainData, nwTerrainData, neTerrainData;
 		swTerrainData = seTerrainData = nwTerrainData = neTerrainData = HDUtils.packTerrainData(true, 0, waterType, tileZ);
 
+		if (!onlyWaterSurface) {
+			swNormals = ctx.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
+			seNormals = ctx.vertexTerrainNormals.getOrDefault(seVertexKey, seNormals);
+			neNormals = ctx.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
+			nwNormals = ctx.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
+		}
+
 		if (waterType == WaterType.NONE) {
 			if (textureId != -1) {
 				var material = materialManager.fromVanillaTexture(textureId);
@@ -694,11 +701,6 @@ class SceneUploader {
 					override = NONE;
 				swMaterial = seMaterial = neMaterial = nwMaterial = material;
 			}
-
-			swNormals = ctx.vertexTerrainNormals.getOrDefault(swVertexKey, swNormals);
-			seNormals = ctx.vertexTerrainNormals.getOrDefault(seVertexKey, seNormals);
-			neNormals = ctx.vertexTerrainNormals.getOrDefault(neVertexKey, neNormals);
-			nwNormals = ctx.vertexTerrainNormals.getOrDefault(nwVertexKey, nwNormals);
 
 			boolean useBlendedMaterialAndColor =
 				plugin.configGroundBlending &&
@@ -954,6 +956,12 @@ class SceneUploader {
 			int terrainDataA, terrainDataB, terrainDataC;
 			terrainDataA = terrainDataB = terrainDataC = HDUtils.packTerrainData(true, 0, waterType, tileZ);
 
+			if (!onlyWaterSurface) {
+				normalsA = ctx.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
+				normalsB = ctx.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
+				normalsC = ctx.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
+			}
+
 			if (!isWater) {
 				if (textureId != -1) {
 					var material = materialManager.fromVanillaTexture(textureId);
@@ -962,10 +970,6 @@ class SceneUploader {
 						override = NONE;
 					materialA = materialB = materialC = material;
 				}
-
-				normalsA = ctx.vertexTerrainNormals.getOrDefault(vertexKeyA, normalsA);
-				normalsB = ctx.vertexTerrainNormals.getOrDefault(vertexKeyB, normalsB);
-				normalsC = ctx.vertexTerrainNormals.getOrDefault(vertexKeyC, normalsC);
 
 				GroundMaterial groundMaterial = null;
 

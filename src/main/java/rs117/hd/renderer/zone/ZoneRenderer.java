@@ -98,7 +98,6 @@ public class ZoneRenderer implements Renderer {
 	private static final int MAX_WORLDVIEWS = 4096;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
-	public static final int UNIFORM_BLOCK_COMMAND_BUFFER = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
