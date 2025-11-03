@@ -40,6 +40,7 @@ import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.callback.RenderCallbackManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
@@ -104,6 +105,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private DrawManager drawManager;
+
+	@Inject
+	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -1037,7 +1041,7 @@ public class ZoneRenderer implements Renderer {
 		int z
 	) {
 		WorldViewContext ctx = context(scene);
-		if (ctx == null)
+		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
 		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
@@ -1074,7 +1078,7 @@ public class ZoneRenderer implements Renderer {
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		WorldViewContext ctx = context(scene);
-		if (ctx == null)
+		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
 		Renderable renderable = gameObject.getRenderable();

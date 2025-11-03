@@ -31,6 +31,7 @@ import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -57,6 +58,9 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 class SceneUploader {
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
+
+	@Inject
+	private RenderCallbackManager renderCallbackManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -340,6 +344,8 @@ class SceneUploader {
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
+		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
+
 		var tilePoint = t.getSceneLocation();
 		int tileExX = tilePoint.getX() + ctx.sceneOffset;
 		int tileExY = tilePoint.getY() + ctx.sceneOffset;
@@ -347,7 +353,7 @@ class SceneUploader {
 		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
 
 		SceneTilePaint paint = t.getSceneTilePaint();
-		if (paint != null) {
+		if (paint != null && drawTile) {
 			upload(
 				ctx,
 				worldPos,
@@ -361,7 +367,7 @@ class SceneUploader {
 		}
 
 		SceneTileModel model = t.getSceneTileModel();
-		if (model != null)
+		if (model != null && drawTile)
 			upload(ctx, worldPos, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer);
 
 		if (!onlyWaterSurface)
@@ -381,7 +387,7 @@ class SceneUploader {
 		GpuIntBuffer alphaBuffer
 	) {
 		WallObject wallObject = t.getWallObject();
-		if (wallObject != null) {
+		if (wallObject != null && renderCallbackManager.drawObject(ctx.scene, wallObject)) {
 			int uuid = ModelHash.packUuid(ModelHash.TYPE_WALL_OBJECT, wallObject.getId());
 			Renderable renderable1 = wallObject.getRenderable1();
 			uploadZoneRenderable(
@@ -427,7 +433,7 @@ class SceneUploader {
 		}
 
 		DecorativeObject decorativeObject = t.getDecorativeObject();
-		if (decorativeObject != null) {
+		if (decorativeObject != null && renderCallbackManager.drawObject(ctx.scene, decorativeObject)) {
 			int uuid = ModelHash.packUuid(ModelHash.TYPE_DECORATIVE_OBJECT, decorativeObject.getId());
 			int preOrientation = HDUtils.getModelPreOrientation(decorativeObject.getConfig());
 			Renderable renderable = decorativeObject.getRenderable();
@@ -474,7 +480,7 @@ class SceneUploader {
 		}
 
 		GroundObject groundObject = t.getGroundObject();
-		if (groundObject != null) {
+		if (groundObject != null && renderCallbackManager.drawObject(ctx.scene, groundObject)) {
 			Renderable renderable = groundObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
@@ -494,16 +500,14 @@ class SceneUploader {
 
 		GameObject[] gameObjects = t.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
-			if (gameObject == null) {
+			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
-			}
 
-			Point min = gameObject.getSceneMinLocation(), max = gameObject.getSceneMaxLocation();
-
-			if (!min.equals(t.getSceneLocation())) {
+			Point min = gameObject.getSceneMinLocation();
+			if (!min.equals(t.getSceneLocation()))
 				continue;
-			}
 
+			Point max = gameObject.getSceneMaxLocation();
 			Renderable renderable = gameObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
