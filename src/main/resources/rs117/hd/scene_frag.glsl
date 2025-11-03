@@ -85,14 +85,14 @@ void main() {
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    int waterDepth1 = vTerrainData[0] >> 8 & 0xFFFF;
-    int waterDepth2 = vTerrainData[1] >> 8 & 0xFFFF;
-    int waterDepth3 = vTerrainData[2] >> 8 & 0xFFFF;
+    int waterDepth1 = vTerrainData[0] >> 11 & 0xFFF;
+    int waterDepth2 = vTerrainData[1] >> 11 & 0xFFF;
+    int waterDepth3 = vTerrainData[2] >> 11 & 0xFFF;
     float waterDepth =
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +
         waterDepth3 * IN.texBlend.z;
-    int waterTypeIndex = isTerrain ? vTerrainData[0] >> 3 & 0x1F : 0;
+    int waterTypeIndex = isTerrain ? vTerrainData[0] >> 3 & 0xFF : 0;
     WaterType waterType = getWaterType(waterTypeIndex);
 
     // set initial texture map ids

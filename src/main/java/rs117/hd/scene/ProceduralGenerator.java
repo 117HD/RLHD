@@ -79,6 +79,9 @@ public class ProceduralGenerator {
 	@Inject
 	private TileOverrideManager tileOverrideManager;
 
+	@Inject
+	private WaterTypeManager waterTypeManager;
+
 	public void generateSceneData(SceneContext sceneContext)
 	{
 		long timerTotal = System.currentTimeMillis();
@@ -824,7 +827,7 @@ public class ProceduralGenerator {
 		if (waterType == WaterType.NONE) {
 			if (130 <= textureId && textureId <= 189) {
 				// New sailing water textures
-				waterType = WaterType.WATER;
+				waterType = waterTypeManager.get(String.format("VANILLA_%d", textureId));
 			} else {
 				switch (textureId) {
 					case 1:

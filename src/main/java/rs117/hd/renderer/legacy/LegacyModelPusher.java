@@ -38,6 +38,7 @@ import rs117.hd.utils.PopupUtils;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.HDUtils.packTerrainData;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
@@ -384,7 +385,7 @@ public class LegacyModelPusher {
 	}
 
 	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
-		assert LegacySceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
+		assert packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
 			return;

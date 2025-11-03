@@ -56,7 +56,7 @@ layout (location = 7) in ivec2 vSceneBase;
 #endif
 
 void main() {
-    int waterTypeIndex = vTerrainData >> 3 & 0x1F;
+    int waterTypeIndex = vTerrainData >> 3 & 0xFF;
     float opacity = 1 - (vAlphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
     float opacityThreshold = float(vMaterialData >> MATERIAL_SHADOW_OPACITY_THRESHOLD_SHIFT & 0x3F) / 0x3F;
