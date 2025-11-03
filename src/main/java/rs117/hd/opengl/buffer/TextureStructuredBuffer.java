@@ -35,6 +35,7 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 		glBindTexture(GL_TEXTURE_BUFFER, textureId);
 		glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
 		glBindTexture(GL_TEXTURE_BUFFER, 0);
+		currentCapacity = size;
 	}
 
 	@Override
@@ -50,6 +51,7 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 				newData.flip();
 			}
 
+			// TODO: Could this be moved to StructuredBuffer?
 			glBindBuffer(glBuffer.target, glBuffer.id);
 			glBufferData(glBuffer.target, newSize, GL_DYNAMIC_DRAW);
 			glBufferSubData(glBuffer.target, 0, newData);
