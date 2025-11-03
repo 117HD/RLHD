@@ -577,6 +577,8 @@ class SceneUploader {
 		GpuIntBuffer ab
 	) {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
+		if (modelOverride.hide)
+			return;
 
 		int pos = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		Model model = null;
