@@ -25967,7 +25967,8 @@
     "description": "Magic Tree Stump",
     "baseMaterial": "BARK_STONEPINE",
     "objectIds": [
-      "MAGIC_TREE_STUMP_NEW"
+      "MAGIC_TREE_STUMP_NEW",
+      "MAGIC_TREE_STUMP"
     ],
     "uvType": "BOX",
     "uvOrientation": 150,
