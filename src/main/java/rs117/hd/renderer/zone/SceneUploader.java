@@ -57,6 +57,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 class SceneUploader {
+	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
 
 	@Inject
@@ -82,6 +83,14 @@ class SceneUploader {
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
 	private final int[] modelNormals = new int[9];
+
+	private final float[] modelLocalX = new float[MAX_VERTEX_COUNT];
+	private final float[] modelLocalY = new float[MAX_VERTEX_COUNT];
+	private final float[] modelLocalZ = new float[MAX_VERTEX_COUNT];
+
+	private final int[] modelLocalXI = new int[MAX_VERTEX_COUNT];
+	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
+	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
 	void zoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		Tile[][][] tiles = ctx.scene.getExtendedTiles();
@@ -1600,27 +1609,6 @@ class SceneUploader {
 		}
 
 		return len;
-	}
-
-	static float[] modelLocalX;
-	static float[] modelLocalY;
-	static float[] modelLocalZ;
-
-	// uploadModelScene runs on the maploader thread, so requires its own buffers
-	private final static int[] modelLocalXI;
-	private final static int[] modelLocalYI;
-	private final static int[] modelLocalZI;
-
-	static final int MAX_VERTEX_COUNT = 6500;
-
-	static {
-		modelLocalX = new float[MAX_VERTEX_COUNT];
-		modelLocalY = new float[MAX_VERTEX_COUNT];
-		modelLocalZ = new float[MAX_VERTEX_COUNT];
-
-		modelLocalXI = new int[MAX_VERTEX_COUNT];
-		modelLocalYI = new int[MAX_VERTEX_COUNT];
-		modelLocalZI = new int[MAX_VERTEX_COUNT];
 	}
 
 	static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {

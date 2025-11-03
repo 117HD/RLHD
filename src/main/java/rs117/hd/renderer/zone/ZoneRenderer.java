@@ -140,6 +140,9 @@ public class ZoneRenderer implements Renderer {
 	private SceneUploader sceneUploader;
 
 	@Inject
+	private SceneUploader asyncSceneUploader;
+
+	@Inject
 	private FacePrioritySorter facePrioritySorter;
 
 	@Inject
@@ -1265,6 +1268,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void rebuild(WorldView wv) {
+		assert client.isClientThread();
 		WorldViewContext ctx = context(wv);
 		if (ctx == null)
 			return;
@@ -1279,7 +1283,6 @@ public class ZoneRenderer implements Renderer {
 				zone.free();
 				zone = ctx.zones[x][z] = new Zone();
 
-				SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 				sceneUploader.zoneSize(ctx.sceneContext, zone, x, z);
 
 				VBO o = null, a = null;
@@ -1579,7 +1582,6 @@ public class ZoneRenderer implements Renderer {
 					newZones[x][z] = new Zone();
 
 		// Determine zone buffer requirements before uploading
-		SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 		Stopwatch sw = Stopwatch.createStarted();
 		int len = 0, lena = 0;
 		int reused = 0, newzones = 0;
@@ -1589,7 +1591,7 @@ public class ZoneRenderer implements Renderer {
 				if (!zone.initialized) {
 					assert zone.glVao == 0;
 					assert zone.glVaoA == 0;
-					sceneUploader.zoneSize(nextSceneContext, zone, x, z);
+					asyncSceneUploader.zoneSize(nextSceneContext, zone, x, z);
 					len += zone.sizeO;
 					lena += zone.sizeA;
 					newzones++;
@@ -1648,7 +1650,7 @@ public class ZoneRenderer implements Renderer {
 			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
 				Zone zone = newZones[x][z];
 				if (!zone.initialized)
-					sceneUploader.uploadZone(nextSceneContext, zone, x, z);
+					asyncSceneUploader.uploadZone(nextSceneContext, zone, x, z);
 			}
 		}
 		log.debug("Scene upload time {}", sw);
@@ -1734,10 +1736,9 @@ public class ZoneRenderer implements Renderer {
 		final WorldViewContext ctx = new WorldViewContext(sceneContext, worldView.getSizeX() >> 3, worldView.getSizeY() >> 3);
 		subs[worldViewId] = ctx;
 
-		SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				sceneUploader.zoneSize(sceneContext, ctx.zones[x][z], x, z);
+				asyncSceneUploader.zoneSize(sceneContext, ctx.zones[x][z], x, z);
 
 		// allocate buffers for zones which require upload
 		CountDownLatch latch = new CountDownLatch(1);
@@ -1777,10 +1778,7 @@ public class ZoneRenderer implements Renderer {
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				sceneUploader.uploadZone(sceneContext, ctx.zones[x][z], x, z);
-
-		// TODO: Can't clear since zone invalidation may need it
-//		proceduralGenerator.clearSceneData(subSceneContext);
+				asyncSceneUploader.uploadZone(sceneContext, ctx.zones[x][z], x, z);
 	}
 
 	@Override
