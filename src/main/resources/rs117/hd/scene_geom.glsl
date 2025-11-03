@@ -42,6 +42,7 @@ in vec3 gNormal[3];
 in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
+in int gWorldViewId[3];
 
 flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
@@ -70,7 +71,7 @@ void main() {
 
     int materialData = vMaterialData[0];
 
-    computeUvs(materialData, vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    computeUvs(materialData, gWorldViewId[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(

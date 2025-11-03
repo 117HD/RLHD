@@ -23,7 +23,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
-import net.runelite.client.util.OSType;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -38,6 +37,7 @@ import rs117.hd.opengl.shader.ModelSortingComputeProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
@@ -169,7 +169,10 @@ public class LegacyRenderer implements Renderer {
 	@Inject
 	public ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
-	private final ComputeMode computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
+	@Inject
+	public ShadowShaderProgram shadowProgram;
+
+	private final ComputeMode computeMode = HdPlugin.APPLE ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
 
 	public int vaoScene;
@@ -308,6 +311,9 @@ public class LegacyRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 
+		shadowProgram.setMode(plugin.configShadowMode);
+		shadowProgram.compile(includes);
+
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initializePrograms();
 		} else {
@@ -327,6 +333,7 @@ public class LegacyRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		shadowProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -1146,7 +1153,7 @@ public class LegacyRenderer implements Renderer {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
 
-				plugin.shadowProgram.use();
+				shadowProgram.use();
 
 				final int camX = plugin.cameraFocalPoint[0];
 				final int camY = plugin.cameraFocalPoint[1];

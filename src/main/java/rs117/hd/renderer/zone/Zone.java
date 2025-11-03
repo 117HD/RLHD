@@ -18,6 +18,7 @@ import rs117.hd.utils.CommandBuffer;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
@@ -34,6 +35,11 @@ class Zone {
 	// terrainData int
 	static final int VERT_SIZE = 32;
 
+	// Metadata format
+	// worldViewId int int
+	// sceneOffset int vec2(x, y)
+	static final int METADATA_SIZE = 12;
+
 	static final int LEVEL_WATER_SURFACE = 4;
 
 	int glVao;
@@ -43,11 +49,12 @@ class Zone {
 	int bufLenA;
 
 	int sizeO, sizeA;
-	VBO vboO, vboA;
+	VBO vboO, vboA, vboM;
 
 	boolean initialized; // whether the zone vao and vbos are ready
 	boolean cull; // whether the zone is queued for deletion
 	boolean dirty; // whether the zone has temporary modifications
+	boolean metadataDirty; // whether the zone needs metadata updating
 	boolean invalidate; // whether the zone needs rebuilding
 	boolean hasWater; // whether the zone has any water tiles
 	boolean inSceneFrustum; // whether the zone is visible to the scene camera
@@ -65,17 +72,38 @@ class Zone {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
+		if (o != null || a != null) {
+			vboM = new VBO(METADATA_SIZE);
+			vboM.initialize(GL_STATIC_DRAW);
+			metadataDirty = true;
+		}
+
 		if (o != null) {
 			vboO = o;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.bufId, eboShared);
+			setupVao(glVao, o.bufId, vboM.bufId, eboShared);
 		}
 
 		if (a != null) {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.bufId, eboShared);
+			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
 		}
+	}
+
+	void setMetadata(int worldViewIdx, ZoneSceneContext ctx, int mx, int mz) {
+		if (!metadataDirty)
+			return;
+		metadataDirty = false;
+
+		int baseX = (mx - (ctx.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (ctx.sceneOffset >> 3)) << 10;
+
+		vboM.map();
+		vboM.vb.put(worldViewIdx + 1);
+		vboM.vb.put(baseX);
+		vboM.vb.put(baseZ);
+		vboM.unmap();
 	}
 
 	void free() {
@@ -87,6 +115,11 @@ class Zone {
 		if (vboA != null) {
 			vboA.destroy();
 			vboA = null;
+		}
+
+		if (vboM != null) {
+			vboM.destroy();
+			vboM = null;
 		}
 
 		if (glVao != 0) {
@@ -121,7 +154,7 @@ class Zone {
 		}
 	}
 
-	private void setupVao(int vao, int buffer, int ebo) {
+	private void setupVao(int vao, int buffer, int metadata, int ebo) {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
@@ -151,6 +184,18 @@ class Zone {
 		// Terrain data
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
+
+		glBindBuffer(GL_ARRAY_BUFFER, metadata);
+
+		// worldViewIndex
+		glEnableVertexAttribArray(6);
+		glVertexAttribDivisor(6, 1);
+		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+
+		// scene offset
+		glEnableVertexAttribArray(7);
+		glVertexAttribDivisor(7, 1);
+		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
 
 		checkGLErrors();
 
@@ -191,7 +236,7 @@ class Zone {
 		glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
 	}
 
-	void renderOpaque(CommandBuffer cmd, int zx, int zz, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
+	void renderOpaque(CommandBuffer cmd, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
 		drawIdx = 0;
 
 		for (int level = minLevel; level <= maxLevel; ++level) {
@@ -234,27 +279,22 @@ class Zone {
 		if (drawIdx == 0)
 			return;
 
-		convertForDraw(VERT_SIZE);
-
-		cmd.SetBaseOffset(zx << 10, 0, zz << 10);
-		cmd.BindVertexArray(glVao);
-		cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+		lastDrawMode = STATIC_UNSORTED;
+		lastVao = glVao;
+		flush(cmd);
 	}
 
-	void renderOpaqueLevel(CommandBuffer cmd, int zx, int zz, int level) {
+	void renderOpaqueLevel(CommandBuffer cmd, int level) {
 		drawIdx = 0;
 
-		// draw the specific level
 		pushRange(this.levelOffsets[level - 1], this.levelOffsets[level]);
 
 		if (drawIdx == 0)
 			return;
 
-		convertForDraw(VERT_SIZE);
-
-		cmd.SetBaseOffset(zx << 10, 0, zz << 10);
-		cmd.BindVertexArray(glVao);
-		cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+		lastDrawMode = STATIC_UNSORTED;
+		lastVao = glVao;
+		flush(cmd);
 	}
 
 	private static void pushRange(int start, int end) {
@@ -496,9 +536,6 @@ class Zone {
 		cmd.DepthMask(false);
 
 		drawIdx = 0;
-		lastDrawMode = lastVao = 0;
-		lastzx = zx;
-		lastzz = zz;
 
 		int yawSin = SINE[camera.getFixedYaw()];
 		int yawCos = COSINE[camera.getFixedYaw()];
@@ -608,24 +645,35 @@ class Zone {
 	}
 
 	private void flush(CommandBuffer cmd) {
-		if (lastDrawMode == TEMP) {
-			cmd.SetBaseOffset(0, 0, 0);
-		} else {
-			cmd.SetBaseOffset(lastzx << 10, 0, lastzz << 10);
-		}
-
 		if (lastDrawMode == STATIC) {
 			if (ZoneRenderer.alphaFaceCount > 0) {
 				int vertexCount = ZoneRenderer.alphaFaceCount * 3;
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
-				cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset); // The EBO is bound by in ZoneRenderer
+				// The EBO & IDO is bound by in ZoneRenderer
+				if (GL_CAPS.OpenGL43) {
+					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
+				} else {
+					cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset);
+				}
 				ZoneRenderer.alphaFaceCount = 0;
 			}
 		} else if (drawIdx != 0) {
-			convertForDraw(VAO.VERT_SIZE);
+			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
-			cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+			if (glDrawOffset.length == 1) {
+				if (GL_CAPS.OpenGL43) {
+					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
+				} else {
+					cmd.DrawArrays(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0]);
+				}
+			} else {
+				if (GL_CAPS.OpenGL43) {
+					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, ZoneRenderer.indirectDrawCmdsStaging);
+				} else {
+					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);
+				}
+			}
 			drawIdx = 0;
 		}
 	}

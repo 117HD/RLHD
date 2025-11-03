@@ -4,7 +4,6 @@ import java.util.Arrays;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.HdPlugin;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -27,7 +26,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 	public UBOWorldViews(int maxWorldViews) {
 		super(GL_DYNAMIC_DRAW);
 		indexMapping = new int[maxWorldViews];
-		initialize(HdPlugin.UNIFORM_BLOCK_WATER_TYPES);
 	}
 
 	public void update(Client client) {
