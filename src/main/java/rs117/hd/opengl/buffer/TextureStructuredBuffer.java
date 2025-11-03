@@ -40,43 +40,38 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 	@Override
 	protected boolean preUpload() {
 		if (size > currentCapacity) {
-			resize(size * 2);
+			int newSize = size * 2;
+			log.info("{} resizing from {} -> {}", glBuffer.name, currentCapacity, newSize);
+
+			ByteBuffer newData = BufferUtils.createByteBuffer(newSize);
+			if (data != null) {
+				data.position(0);
+				newData.put(data);
+				newData.flip();
+			}
+
+			glBindBuffer(glBuffer.target, glBuffer.id);
+			glBufferData(glBuffer.target, newSize, GL_DYNAMIC_DRAW);
+			glBufferSubData(glBuffer.target, 0, newData);
+			glBindBuffer(glBuffer.target, 0);
+
+			glBindTexture(GL_TEXTURE_BUFFER, textureId);
+			glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
+			glBindTexture(GL_TEXTURE_BUFFER, 0);
+
+			data = newData;
+			dataInt = data.asIntBuffer();
+			dataFloat = data.asFloatBuffer();
+
+			currentCapacity = newSize;
+
+			// Reset Tide, since we've uploaded the data as part of the resize
+			dirtyLowTide = Integer.MAX_VALUE;
+			dirtyHighTide = 0;
 			return false;
 		}
 
 		return true;
-	}
-
-	private void resize(int newSize) {
-		if (newSize <= currentCapacity) return;
-
-		log.info("{} resizing from {} -> {}", glBuffer.name, currentCapacity, newSize);
-
-		ByteBuffer newData = BufferUtils.createByteBuffer(newSize);
-		if (data != null) {
-			data.position(0);
-			newData.put(data);
-			newData.flip();
-		}
-
-		glBindBuffer(glBuffer.target, glBuffer.id);
-		glBufferData(glBuffer.target, newSize, GL_DYNAMIC_DRAW);
-		glBufferSubData(glBuffer.target, 0, newData);
-		glBindBuffer(glBuffer.target, 0);
-
-		glBindTexture(GL_TEXTURE_BUFFER, textureId);
-		glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
-		glBindTexture(GL_TEXTURE_BUFFER, 0);
-
-		data = newData;
-		dataInt = data.asIntBuffer();
-		dataFloat = data.asFloatBuffer();
-
-		currentCapacity = newSize;
-
-		// Reset Tide, since we've uploaded the data as part of the resize
-		dirtyLowTide = Integer.MAX_VALUE;
-		dirtyHighTide = 0;
 	}
 
 	@Override
