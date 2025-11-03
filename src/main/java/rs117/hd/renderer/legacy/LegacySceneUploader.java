@@ -40,7 +40,6 @@ import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
@@ -160,7 +159,7 @@ public class LegacySceneUploader {
 		proceduralGenerator.clearSceneData(sceneContext);
 	}
 
-	public void prepareBeforeSwap(SceneContext sceneContext) {
+	public void prepareBeforeSwap(LegacySceneContext sceneContext) {
 		assert client.isClientThread();
 		if (sceneContext.isPrepared)
 			return;
@@ -173,16 +172,12 @@ public class LegacySceneUploader {
 		// Gaps need to be filled right before scene swap, since map regions aren't updated earlier
 		if (sceneContext.fillGaps) {
 			sceneContext.staticGapFillerTilesOffset = sceneContext.staticVertexCount;
-			if (sceneContext instanceof LegacySceneContext) {
-				fillGaps((LegacySceneContext) sceneContext);
-			} else {
-				log.warn("TODO: Implementing gap filling");
-			}
+			fillGaps(sceneContext);
 			sceneContext.staticGapFillerTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticGapFillerTilesOffset;
 		}
 	}
 
-	public void updatePlayerArea(SceneContext sceneContext) {
+	public void updatePlayerArea(LegacySceneContext sceneContext) {
 		if (!sceneContext.enableAreaHiding) {
 			sceneContext.currentArea = null;
 			return;
@@ -207,7 +202,7 @@ public class LegacySceneUploader {
 		}
 	}
 
-	private void removeTilesOutsideCurrentArea(SceneContext sceneContext) {
+	private void removeTilesOutsideCurrentArea(LegacySceneContext sceneContext) {
 		assert sceneContext.sceneBase != null;
 		updatePlayerArea(sceneContext);
 		if (sceneContext.currentArea == null)
@@ -239,7 +234,7 @@ public class LegacySceneUploader {
 		if (area != null && !area.fillGaps)
 			return;
 
-		log.warn("TODO: Check if scene.getMapRegions() is the same as client.getMapRegions()");
+//		log.warn("TODO: Check if scene.getMapRegions() is the same as client.getMapRegions()");
 
 		int sceneMin = -sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
