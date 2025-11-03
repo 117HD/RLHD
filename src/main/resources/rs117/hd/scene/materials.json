@@ -971,6 +971,16 @@
     "brightness": 1.122
   },
   {
+    "name": "GRUNGE_1_DARK",
+    "parent": "GRUNGE_1",
+    "brightness": 0.9
+  },
+  {
+    "name": "GRUNGE_1_VERY_DARK",
+    "parent": "GRUNGE_1",
+    "brightness": 0.82
+  },
+  {
     "name": "GRUNGE_1_VERY_LIGHT",
     "parent": "GRUNGE_1",
     "brightness": 1.261

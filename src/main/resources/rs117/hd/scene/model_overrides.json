@@ -6607,6 +6607,13 @@
     "uvOrientation": 512
   },
   {
+    "description": "Hide triangle wall tops where they are not needed",
+    "hideInAreas": [ "TAVERLEY_DUNGEON" ],
+    "objectIds": [
+      "CAVEWALL_TOP5"
+    ]
+  },
+  {
     "description": "ROUNDED_CAVE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -6685,6 +6692,22 @@
   {
     "description": "ROUNDED_CAVE_WALLS_TOP",
     "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      "CAVEWALL_TOP"
+    ]
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_TOP",
+    "areas": [ "TAVERLEY_DUNGEON_DARKEN_WALL_TOPS" ],
+    "baseMaterial": "GRUNGE_1_DARK",
+    "objectIds": [
+      "CAVEWALL_TOP"
+    ]
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_TOP",
+    "areas": [ "TAVERLEY_DUNGEON_DARKEN_WALL_TOPS_DARKER" ],
+    "baseMaterial": "GRUNGE_1_VERY_DARK",
     "objectIds": [
       "CAVEWALL_TOP"
     ]
