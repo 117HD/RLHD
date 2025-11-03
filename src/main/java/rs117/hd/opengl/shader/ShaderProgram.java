@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL33C.*;
 public class ShaderProgram {
 	@RequiredArgsConstructor
 	private static class UniformBufferBlockPair {
-		public final UniformBuffer<?> buffer;
+		public final UniformStructuredBuffer<?> buffer;
 		public final int uboProgramIndex;
 	}
 
@@ -82,7 +82,7 @@ public class ShaderProgram {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends UniformBuffer<?>> T getUniformBufferBlock(int UniformBlockIndex) {
+	public <T extends UniformStructuredBuffer<?>> T getUniformBufferBlock(int UniformBlockIndex) {
 		for (UniformBufferBlockPair pair : uniformBlockMappings)
 			if (pair.buffer.getBindingIndex() == UniformBlockIndex)
 				return (T) pair.buffer;

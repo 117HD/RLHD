@@ -1,8 +1,9 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer.uniforms;
 
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -10,7 +11,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class UBOMaterials extends UniformBuffer<GLBuffer> {
+public class UBOMaterials extends UniformStructuredBuffer<GLBuffer> {
 	public static class MaterialStruct extends StructProperty {
 		public Property colorMap = addProperty(PropertyType.Int, "colorMap");
 		public Property normalMap = addProperty(PropertyType.Int, "normalMap");

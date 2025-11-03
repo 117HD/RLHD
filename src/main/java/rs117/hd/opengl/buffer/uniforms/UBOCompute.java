@@ -1,15 +1,16 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer.uniforms;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
 
-public class UBOCompute extends UniformBuffer<SharedGLBuffer> {
+public class UBOCompute extends UniformStructuredBuffer<SharedGLBuffer> {
 	public static final int MAX_CHARACTER_POSITION_COUNT = 50;
 
 	private static final Comparator<CharacterPositionPair> CHARACTER_POSITION_PAIR_COMPARATOR =

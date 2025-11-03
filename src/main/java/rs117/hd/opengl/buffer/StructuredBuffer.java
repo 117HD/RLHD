@@ -1,10 +1,11 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +14,13 @@ import org.lwjgl.BufferUtils;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
-import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.GL15C.glBindBuffer;
+import static org.lwjgl.opengl.GL15C.glBufferSubData;
+import static org.lwjgl.opengl.GL30C.glBindBufferBase;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
+public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 	@RequiredArgsConstructor
 	protected enum PropertyType {
 		Int(4, 4, 1),
@@ -42,11 +45,11 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	@AllArgsConstructor
 	@RequiredArgsConstructor
 	public static class Property {
-		private UniformBuffer<?> owner;
-		private int position;
-		private int offset = -1;
-		private final PropertyType type;
-		private final String name;
+		protected StructuredBuffer<?> owner;
+		protected int position;
+		protected int offset = -1;
+		protected final PropertyType type;
+		protected final String name;
 
 		private void log(String message) {
 			log.warn("{}.{} - {}", owner.glBuffer.name, name, message);
@@ -221,11 +224,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		}
 	}
 
-	public interface CreateStructProperty<T extends StructProperty> {
-		T create();
-	}
-
 	public abstract static class StructProperty {
+		@Getter
 		protected List<Property> properties = new ArrayList<>();
 
 		protected final Property addProperty(PropertyType type, String name) {
@@ -237,25 +237,25 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 
 	public final GLBUFFER glBuffer;
 
-	private int size;
-	private int dirtyLowTide = Integer.MAX_VALUE;
-	private int dirtyHighTide = 0;
-	private ByteBuffer data;
-	private IntBuffer dataInt;
-	private FloatBuffer dataFloat;
-	private final List<Property> properties = new ArrayList<>();
+	protected int size;
+	protected int dirtyLowTide = Integer.MAX_VALUE;
+	protected int dirtyHighTide = 0;
+	protected ByteBuffer data;
+	protected IntBuffer dataInt;
+	protected FloatBuffer dataFloat;
+	protected final List<Property> properties = new ArrayList<>();
 
 	@Getter
-	private int bindingIndex;
+	protected int bindingIndex;
 
 	@SuppressWarnings("unchecked")
-	public UniformBuffer(int glUsage) {
-		glBuffer = (GLBUFFER) new GLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage);
+	public StructuredBuffer(int glTarget, int glUsage) {
+		glBuffer = (GLBUFFER) new GLBuffer(getClass().getSimpleName(), glTarget, glUsage);
 	}
 
 	@SuppressWarnings("unchecked")
-	public UniformBuffer(int glUsage, int clUsage) {
-		glBuffer = (GLBUFFER) new SharedGLBuffer(getClass().getSimpleName(), GL_UNIFORM_BUFFER, glUsage, clUsage);
+	public StructuredBuffer(int glTarget, int glUsage, int clUsage) {
+		glBuffer = (GLBUFFER) new SharedGLBuffer(getClass().getSimpleName(), glTarget, glUsage, clUsage);
 	}
 
 	public boolean isDirty() {
@@ -273,9 +273,9 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		return newStructProp;
 	}
 
-	protected final <T extends StructProperty> T[] addStructs(T[] newStructPropArray, CreateStructProperty<T> createFunction) {
+	protected final <T extends StructProperty> T[] addStructs(T[] newStructPropArray, Supplier<T> createFunction) {
 		for (int i = 0; i < newStructPropArray.length; i++) {
-			newStructPropArray[i] = createFunction.create();
+			newStructPropArray[i] = createFunction.get();
 			addStruct(newStructPropArray[i]);
 		}
 
@@ -310,6 +310,8 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		dirtyHighTide = max(dirtyHighTide, position + size);
 	}
 
+	protected void preUpload() {}
+
 	public void initialize() {
 		if (data != null)
 			destroy();
@@ -324,21 +326,10 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 			prop.offset = prop.position / 4;
 	}
 
-	public void initialize(int bindingIndex) {
-		initialize();
-		bind(bindingIndex);
-	}
-
-	public String getUniformBlockName() {
-		return glBuffer.name;
-	}
-
 	public void bind(int bindingIndex) {
 		this.bindingIndex = bindingIndex;
-		glBindBufferBase(GL_UNIFORM_BUFFER, bindingIndex, glBuffer.id);
+		glBindBufferBase(glBuffer.target, bindingIndex, glBuffer.id);
 	}
-
-	protected void preUpload() {}
 
 	public final void upload() {
 		if (data == null)
@@ -352,9 +343,9 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		data.position(dirtyLowTide);
 		data.limit(dirtyHighTide);
 
-		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer.id);
-		glBufferSubData(GL_UNIFORM_BUFFER, dirtyLowTide, data);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		glBindBuffer(glBuffer.target, glBuffer.id);
+		glBufferSubData(glBuffer.target, dirtyLowTide, data);
+		glBindBuffer(glBuffer.target, 0);
 
 		data.clear();
 
@@ -362,7 +353,7 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		dirtyHighTide = 0;
 	}
 
-	public final void destroy() {
+	public void destroy() {
 		if (data == null)
 			return;
 

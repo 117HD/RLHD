@@ -48,12 +48,12 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
+import rs117.hd.opengl.buffer.uniforms.UBOCommandStructuredBuffer;
+import rs117.hd.opengl.buffer.uniforms.UBOLights;
+import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.uniforms.UBOCommandBuffer;
-import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
@@ -210,7 +210,7 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 
-	private final UBOCommandBuffer uboCommandBuffer = new UBOCommandBuffer();
+	private final UBOCommandStructuredBuffer uboCommandBuffer = new UBOCommandStructuredBuffer();
 	public final UBOWorldViews uboWorldViews = new UBOWorldViews(MAX_WORLDVIEWS);
 
 	private final WorldViewContext root = new WorldViewContext(null, NUM_ZONES, NUM_ZONES);

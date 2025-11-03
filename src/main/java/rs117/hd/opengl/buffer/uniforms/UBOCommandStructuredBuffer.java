@@ -1,11 +1,12 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer.uniforms;
 
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
-public class UBOCommandBuffer extends UniformBuffer<GLBuffer> {
-	public UBOCommandBuffer() {
+public class UBOCommandStructuredBuffer extends UniformStructuredBuffer<GLBuffer> {
+	public UBOCommandStructuredBuffer() {
 		super(GL_STREAM_DRAW);
 	}
 

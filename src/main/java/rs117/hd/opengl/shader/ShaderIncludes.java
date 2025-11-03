@@ -36,7 +36,7 @@ import java.util.Stack;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -59,7 +59,7 @@ public class ShaderIncludes {
 	private final List<ResourcePath> includePaths = new ArrayList<>();
 	private final Map<String, Supplier<String>> includeMap = new HashMap<>();
 
-	public final Set<UniformBuffer<?>> uniformBuffers = new HashSet<>();
+	public final Set<UniformStructuredBuffer<?>> uniformBuffers = new HashSet<>();
 
 	Type includeType = Type.UNKNOWN;
 	final Stack<Integer> includeStack = new Stack<>();
@@ -315,7 +315,7 @@ public class ShaderIncludes {
 		return addInclude(identifier, () -> value);
 	}
 
-	public ShaderIncludes addUniformBuffer(UniformBuffer<?> ubo) {
+	public ShaderIncludes addUniformBuffer(UniformStructuredBuffer<?> ubo) {
 		uniformBuffers.add(ubo);
 		return this;
 	}

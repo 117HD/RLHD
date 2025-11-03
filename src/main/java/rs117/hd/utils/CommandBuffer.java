@@ -5,7 +5,7 @@ import java.util.Arrays;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
-import rs117.hd.opengl.uniforms.UBOCommandBuffer;
+import rs117.hd.opengl.buffer.uniforms.UBOCommandStructuredBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -30,7 +30,7 @@ public class CommandBuffer {
 	private static final long INT_MASK = 0xFFFF_FFFFL;
 
 	@Setter
-	private UBOCommandBuffer uboCommandBuffer;
+	private UBOCommandStructuredBuffer uboCommandBuffer;
 
 	private long[] cmd = new long[1 << 20]; // ~1 million calls
 	private int writeHead = 0;

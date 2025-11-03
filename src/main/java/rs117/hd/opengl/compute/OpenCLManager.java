@@ -46,9 +46,9 @@ import org.lwjgl.opencl.CLImageFormat;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.buffer.uniforms.UBOCompute;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
