@@ -28,13 +28,18 @@
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 
+// Vertex Data
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
-layout (location = 6) in int vWorldViewId;
-layout (location = 7) in ivec2 vSceneBase;
+layout (location = 6) in int vModelOffset;
+
+// Draw Metadata
+layout (location = 7) in int vWorldViewId;
+layout (location = 8) in ivec2 vSceneBase;
+layout (location = 9) in ivec2 vZoneModelOffset;
 
 #include <utils/constants.glsl>
 

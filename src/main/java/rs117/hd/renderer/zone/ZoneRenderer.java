@@ -1132,7 +1132,7 @@ public class ZoneRenderer implements Renderer {
 			VAO o = vaoO.get(size);
 			VAO a = vaoA.get(size);
 			int start = a.vbo.vb.position();
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, (short)0, o.vbo.vb, a.vbo.vb); // TODO: Dynamic Model Data Offset
 			int end = a.vbo.vb.position();
 			if (end > start) {
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
@@ -1140,7 +1140,7 @@ public class ZoneRenderer implements Renderer {
 			}
 		} else {
 			VAO o = vaoO.get(size);
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, (short)0, o.vbo.vb, o.vbo.vb); // TODO: Dynamic Model Data Offset
 		}
 	}
 
@@ -1225,7 +1225,7 @@ public class ZoneRenderer implements Renderer {
 					modelOverride,
 					preOrientation,
 					orientation,
-					x, y, z,
+					x, y, z, (short)0, // TODO: Dynamic Model Data Offset
 					o.vbo.vb,
 					o.vbo.vb
 				);
@@ -1237,7 +1237,7 @@ public class ZoneRenderer implements Renderer {
 				modelOverride,
 				preOrientation,
 				orientation,
-				x, y, z,
+				x, y, z, (short)0, // TODO: Dynamic Model Data Offset
 				o.vbo.vb,
 				o.vbo.vb
 			);

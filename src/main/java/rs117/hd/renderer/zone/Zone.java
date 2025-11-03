@@ -33,7 +33,8 @@ class Zone {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	static final int VERT_SIZE = 32;
+	// modelOffset int TODO: Make short
+	static final int VERT_SIZE = 36;
 
 	// Metadata format
 	// worldViewId int int
@@ -65,6 +66,8 @@ class Zone {
 	int[][] rids;
 	int[][] roofStart;
 	int[][] roofEnd;
+	short modelCount;
+	int modelOffset;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
@@ -185,17 +188,21 @@ class Zone {
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
 
+		// modelOffset
+		glEnableVertexAttribArray(6);
+		glVertexAttribIPointer(6, 1, GL_INT, VERT_SIZE, 32);
+
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
 		// worldViewIndex
-		glEnableVertexAttribArray(6);
-		glVertexAttribDivisor(6, 1);
-		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
-
-		// scene offset
 		glEnableVertexAttribArray(7);
 		glVertexAttribDivisor(7, 1);
-		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
+		glVertexAttribIPointer(7, 1, GL_INT, METADATA_SIZE, 0);
+
+		// scene offset
+		glEnableVertexAttribArray(8);
+		glVertexAttribDivisor(8, 1);
+		glVertexAttribIPointer(8, 2, GL_INT, METADATA_SIZE, 4);
 
 		checkGLErrors();
 

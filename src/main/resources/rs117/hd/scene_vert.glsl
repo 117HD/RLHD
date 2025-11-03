@@ -34,8 +34,9 @@ layout (location = 2) in vec3 vNormal;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
-layout (location = 6) in int vWorldViewId;
-layout (location = 7) in ivec2 vSceneBase;
+layout (location = 6) in int vModelOffset;
+layout (location = 7) in int vWorldViewId;
+layout (location = 8) in ivec2 vSceneBase;
 
 out vec3 gPosition;
 out vec3 gUv;

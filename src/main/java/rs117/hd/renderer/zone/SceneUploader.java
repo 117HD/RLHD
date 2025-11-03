@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.buffer.storage.TBOModelData;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -77,7 +78,11 @@ class SceneUploader {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
+	@Inject
+	private TBOModelData modelData;
+
 	private int basex, basez, rid, level;
+	private short modelIdx;
 
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
@@ -117,6 +122,8 @@ class SceneUploader {
 		zone.rids = new int[4][roofIds.size()];
 		zone.roofStart = new int[4][roofIds.size()];
 		zone.roofEnd = new int[4][roofIds.size()];
+		zone.modelOffset = 0; // TODO: Zone Model Count is known, therefore we can find a free chunk within the TBO
+		modelIdx = 0;
 
 		for (int z = 0; z <= 3; ++z) {
 			if (z == 0) {
@@ -250,6 +257,8 @@ class SceneUploader {
 		var tilePoint = t.getSceneLocation();
 		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
 
+		z.modelCount = 0;
+
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && paint.getNeColor() != HIDDEN_HSL) {
 			z.sizeO += 2;
@@ -378,6 +387,7 @@ class SceneUploader {
 		Tile bridge = t.getBridge();
 		if (bridge != null)
 			uploadZoneTile(ctx, zone, bridge, onlyWaterSurface, vertexBuffer, alphaBuffer);
+
 	}
 
 	private void uploadZoneTileRenderables(
@@ -555,6 +565,7 @@ class SceneUploader {
 		} else {
 			z.sizeO += faceCount;
 		}
+		z.modelCount++;
 	}
 
 	private void uploadZoneRenderable(
@@ -584,11 +595,23 @@ class SceneUploader {
 		Model model = null;
 		if (r instanceof Model) {
 			model = (Model) r;
-			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
+			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, modelIdx++, vertexBuffer, ab);
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
-			if (model != null)
-				uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
+			if (model != null) {
+				uploadStaticModel(
+					model,
+					modelOverride,
+					preOrientation,
+					orient,
+					x - basex,
+					y,
+					z - basez,
+					modelIdx++,
+					vertexBuffer,
+					ab
+				);
+			}
 		}
 		int endpos = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		if (endpos > pos) {
@@ -814,37 +837,37 @@ class SceneUploader {
 		vb.putVertex(
 			lx2, neHeight, lz2, neColor,
 			uvx, uvy, 0, neMaterialData,
-			neNormals[0], neNormals[2], neNormals[1], neTerrainData
+			neNormals[0], neNormals[2], neNormals[1], neTerrainData, (short)0
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3, nwColor,
 			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData
+			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, (short)0
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1, seColor,
 			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData
+			seNormals[0], seNormals[2], seNormals[1], seTerrainData, (short)0
 		);
 
 		vb.putVertex(
 			lx0, swHeight, lz0, swColor,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0, swMaterialData,
-			swNormals[0], swNormals[2], swNormals[1], swTerrainData
+			swNormals[0], swNormals[2], swNormals[1], swTerrainData, (short)0
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1, seColor,
 			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData
+			seNormals[0], seNormals[2], seNormals[1], seTerrainData, (short)0
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3, nwColor,
 			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData
+			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, (short)0
 		);
 	}
 
@@ -1103,19 +1126,19 @@ class SceneUploader {
 			vb.putVertex(
 				lx0, ly0, lz0, colorA,
 				uvAx, uvAy, 0, materialDataA,
-				normalsA[0], normalsA[2], normalsA[1], terrainDataA
+				normalsA[0], normalsA[2], normalsA[1], terrainDataA, (short)0
 			);
 
 			vb.putVertex(
 				lx1, ly1, lz1, colorB,
 				uvBx, uvBy, 0, materialDataB,
-				normalsB[0], normalsB[2], normalsB[1], terrainDataB
+				normalsB[0], normalsB[2], normalsB[1], terrainDataB, (short)0
 			);
 
 			vb.putVertex(
 				lx2, ly2, lz2, colorC,
 				uvCx, uvCy, 0, materialDataC,
-				normalsC[0], normalsC[2], normalsC[1], terrainDataC
+				normalsC[0], normalsC[2], normalsC[1], terrainDataC, (short)0
 			);
 		}
 	}
@@ -1124,7 +1147,7 @@ class SceneUploader {
 	private int uploadStaticModel(
 		Model model,
 		ModelOverride modelOverride,
-		int preOrientation, int orientation, int x, int y, int z,
+		int preOrientation, int orientation, int x, int y, int z, short modelOffset,
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
 		final int triangleCount = model.getFaceCount();
@@ -1328,19 +1351,19 @@ class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				modelNormals[0], modelNormals[1], modelNormals[2], 0, modelOffset
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				modelNormals[3], modelNormals[4], modelNormals[5], 0, modelOffset
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				modelNormals[6], modelNormals[7], modelNormals[8], 0, modelOffset
 			);
 
 			len += 3;
@@ -1358,6 +1381,7 @@ class SceneUploader {
 		int x,
 		int y,
 		int z,
+		short modelOffset,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {
@@ -1575,21 +1599,21 @@ class SceneUploader {
 				vb,
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				modelNormals[0], modelNormals[1], modelNormals[2], 0, modelOffset
 			);
 
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				modelNormals[3], modelNormals[4], modelNormals[5], 0, modelOffset
 			);
 
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				modelNormals[6], modelNormals[7], modelNormals[8], 0, modelOffset
 			);
 
 			len += 3;

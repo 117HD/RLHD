@@ -91,7 +91,7 @@ public class GpuIntBuffer
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		int u, int v, int w, int materialData,
-		int nx, int ny, int nz, int terrainData
+		int nx, int ny, int nz, int terrainData, short modelOffset
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put((u & 0xFFFF) << 16 | z & 0xFFFF);
@@ -101,6 +101,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
+		buffer.put(modelOffset); // TODO: This should be a short
 	}
 
 	public static int normShort(float f) {
@@ -110,7 +111,7 @@ public class GpuIntBuffer
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		float nx, float ny, float nz, int terrainData
+		float nx, float ny, float nz, int terrainData, short modelOffset
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(float16(u) << 16 | z & 0xFFFF);
@@ -121,12 +122,13 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
+		buffer.put(modelOffset); // TODO: This should be a short
 	}
 
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		int nx, int ny, int nz, int terrainData
+		int nx, int ny, int nz, int terrainData, short modelOffset
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(float16(u) << 16 | z & 0xFFFF);
@@ -137,13 +139,14 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
+		buffer.put(modelOffset); // TODO: This should be a short
 	}
 
 	public static void putFloatVertex(
 		IntBuffer buffer,
 		float x, float y, float z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		int nx, int ny, int nz, int terrainData
+		int nx, int ny, int nz, int terrainData, short modelOffset
 	) {
 		buffer.put(Float.floatToRawIntBits(x));
 		buffer.put(Float.floatToRawIntBits(y));
@@ -154,6 +157,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
+		buffer.put(modelOffset); // TODO: This should be a short
 	}
 
 	public int position()
