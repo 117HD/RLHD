@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -64,6 +65,7 @@ import rs117.hd.scene.FishingSpotReplacer;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
+import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -381,51 +383,7 @@ public class ZoneRenderer implements Renderer {
 
 		boolean updateUniforms = true;
 
-		Player localPlayer = client.getLocalPlayer();
-		var lp = localPlayer.getLocalLocation();
-		if (root.sceneContext.enableAreaHiding) {
-			assert root.sceneContext.sceneBase != null;
-			int[] worldPos = {
-				root.sceneContext.sceneBase[0] + lp.getSceneX(),
-				root.sceneContext.sceneBase[1] + lp.getSceneY(),
-				root.sceneContext.sceneBase[2] + client.getTopLevelWorldView().getPlane()
-			};
-
-			// We need to check all areas contained in the scene in the order they appear in the list,
-			// in order to ensure lower floors can take precedence over higher floors which include tiny
-			// portions of the floor beneath around stairs and ladders
-			Area newArea = null;
-			for (var area : root.sceneContext.possibleAreas) {
-				if (area.containsPoint(false, worldPos)) {
-					newArea = area;
-					break;
-				}
-			}
-
-			// Force a scene reload if the player is no longer in the same area
-			if (newArea != root.sceneContext.currentArea) {
-				if (plugin.justChangedArea) {
-					// Prevent getting stuck in a scene reloading loop if this breaks for any reason
-					root.sceneContext.forceDisableAreaHiding = true;
-					log.error(
-						"Force disabling area hiding after moving from {} to {} at {}",
-						root.sceneContext.currentArea,
-						newArea,
-						worldPos
-					);
-				} else {
-					plugin.justChangedArea = true;
-				}
-				// Reload the scene to reapply area hiding
-				client.setGameState(GameState.LOADING);
-				updateUniforms = false;
-				plugin.redrawPreviousFrame = true;
-			} else {
-				plugin.justChangedArea = false;
-			}
-		} else {
-			plugin.justChangedArea = false;
-		}
+		updateAreaHiding();
 
 		if (!plugin.enableFreezeFrame) {
 			if (!plugin.redrawPreviousFrame) {
@@ -770,6 +728,57 @@ public class ZoneRenderer implements Renderer {
 		checkGLErrors();
 	}
 
+	private void updateAreaHiding() {
+		Player localPlayer = client.getLocalPlayer();
+		var lp = localPlayer.getLocalLocation();
+		if (root.sceneContext.enableAreaHiding) {
+			var base = root.sceneContext.sceneBase;
+			assert base != null;
+			int[] worldPos = {
+				base[0] + lp.getSceneX(),
+				base[1] + lp.getSceneY(),
+				base[2] + client.getTopLevelWorldView().getPlane()
+			};
+
+			// We need to check all areas contained in the scene in the order they appear in the list,
+			// in order to ensure lower floors can take precedence over higher floors which include tiny
+			// portions of the floor beneath around stairs and ladders
+			Area newArea = null;
+			for (var area : root.sceneContext.possibleAreas) {
+				if (area.containsPoint(false, worldPos)) {
+					newArea = area;
+					break;
+				}
+			}
+
+			// Force a scene reload if the player is no longer in the same area
+			if (newArea != root.sceneContext.currentArea) {
+				if (plugin.justChangedArea) {
+					// Disable area hiding if it somehow gets stuck in a loop switching areas
+					root.sceneContext.enableAreaHiding = false;
+					log.error(
+						"Disabling area hiding after moving from {} to {} at {}",
+						root.sceneContext.currentArea,
+						newArea,
+						worldPos
+					);
+					newArea = null;
+				} else {
+					plugin.justChangedArea = true;
+					// This should happen very rarely, so we invalidate all zones for simplicity
+					for (int i = 0; i < NUM_ZONES; i++)
+						for (int j = 0; j < NUM_ZONES; j++)
+							root.zones[i][j].invalidate = true;
+				}
+				root.sceneContext.currentArea = newArea;
+			} else {
+				plugin.justChangedArea = false;
+			}
+		} else {
+			plugin.justChangedArea = false;
+		}
+	}
+
 	@Override
 	public void postSceneDraw(Scene scene) {
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL)
@@ -910,11 +919,22 @@ public class ZoneRenderer implements Renderer {
 		if (root.sceneContext == null)
 			return false;
 
-		Zone zone = root.zones[zx][zz];
-		int minX = (zx << 3) - root.sceneContext.sceneOffset << 7;
-		int minZ = (zz << 3) - root.sceneContext.sceneOffset << 7;
+		int minX = zx * CHUNK_SIZE - root.sceneContext.sceneOffset;
+		int minZ = zz * CHUNK_SIZE - root.sceneContext.sceneOffset;
+		if (root.sceneContext.currentArea != null) {
+			var base = root.sceneContext.sceneBase;
+			assert base != null;
+			boolean inArea = root.sceneContext.currentArea.intersects(
+				true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
+			if (!inArea)
+				return false;
+		}
+
+		minX *= LOCAL_TILE_SIZE;
+		minZ *= LOCAL_TILE_SIZE;
 		int maxX = minX + CHUNK_SIZE * LOCAL_TILE_SIZE;
 		int maxZ = minZ + CHUNK_SIZE * LOCAL_TILE_SIZE;
+		Zone zone = root.zones[zx][zz];
 		if (zone.hasWater) {
 			maxY += ProceduralGenerator.MAX_DEPTH;
 			minY -= ProceduralGenerator.MAX_DEPTH;
@@ -1080,8 +1100,21 @@ public class ZoneRenderer implements Renderer {
 		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
-		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
 		int[] worldPos = ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
+		// Hide everything outside the current area if area hiding is enabled
+		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
+			var base = ctx.sceneContext.sceneBase;
+			assert base != null;
+			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
+				base[0] + (x >> Perspective.LOCAL_COORD_BITS),
+				base[1] + (z >> Perspective.LOCAL_COORD_BITS),
+				base[2] + client.getTopLevelWorldView().getPlane()
+			);
+			if (!inArea)
+				return;
+		}
+
+		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
@@ -1117,9 +1150,22 @@ public class ZoneRenderer implements Renderer {
 		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
+		int[] worldPos = root.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane());
+		// Hide everything outside the current area if area hiding is enabled
+		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
+			var base = ctx.sceneContext.sceneBase;
+			assert base != null;
+			boolean inArea = ctx.sceneContext.currentArea.containsPoint(
+				base[0] + (x >> Perspective.LOCAL_COORD_BITS),
+				base[1] + (z >> Perspective.LOCAL_COORD_BITS),
+				base[2] + client.getTopLevelWorldView().getPlane()
+			);
+			if (!inArea)
+				return;
+		}
+
 		Renderable renderable = gameObject.getRenderable();
 		int uuid = ModelHash.generateUuid(client, gameObject.getHash(), renderable);
-		int[] worldPos = root.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane());
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
@@ -1406,107 +1452,134 @@ public class ZoneRenderer implements Renderer {
 				plugin.getExpandedMapLoadingChunks(),
 				root.sceneContext
 			);
-			// If area hiding was determined to be incorrect previously, keep it disabled
-			nextSceneContext.forceDisableAreaHiding = root.sceneContext != null && root.sceneContext.forceDisableAreaHiding;
+			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 
 			environmentManager.loadSceneEnvironments(nextSceneContext);
 			proceduralGenerator.generateSceneData(nextSceneContext);
+
+			if (nextSceneContext.enableAreaHiding) {
+				nextSceneContext.possibleAreas = Arrays
+					.stream(areaManager.areasWithAreaHiding)
+					.filter(area -> nextSceneContext.sceneBounds.intersects(area.aabbs))
+					.toArray(Area[]::new);
+
+				if (log.isDebugEnabled() && nextSceneContext.possibleAreas.length > 0) {
+					log.debug(
+						"Area hiding areas: {}",
+						Arrays.stream(nextSceneContext.possibleAreas)
+							.distinct()
+							.map(Area::toString)
+							.collect(Collectors.joining(", "))
+					);
+				}
+
+				// If area hiding can be decided based on the central chunk, apply it early
+				var base = nextSceneContext.sceneBase;
+				assert base != null;
+				int centerOffset = SCENE_SIZE / 2 & ~7;
+				int centerX = base[0] + centerOffset;
+				int centerY = base[1] + centerOffset;
+				AABB centerChunk = new AABB(centerX, centerY, centerX + 7, centerY + 7);
+				for (Area possibleArea : nextSceneContext.possibleAreas) {
+					if (!possibleArea.intersects(centerChunk))
+						continue;
+
+					if (nextSceneContext.currentArea != null) {
+						// Multiple possible areas, so let's defer this until swapScene
+						nextSceneContext.currentArea = null;
+						break;
+					}
+					nextSceneContext.currentArea = possibleArea;
+				}
+			}
 		} catch (OutOfMemoryError oom) {
 			log.error(
-				"Ran out of memory while loading scene (32-bit: {}, low memory mode: {}, cache size: {})",
+				"Ran out of memory while generating scene data (32-bit: {}, low memory mode: {}, cache size: {})",
 				HDUtils.is32Bit(), plugin.useLowMemoryMode, config.modelCacheSizeMiB(), oom
 			);
 			plugin.displayOutOfMemoryMessage();
 			plugin.stopPlugin();
+			return;
 		} catch (Throwable ex) {
 			log.error("Error while loading scene:", ex);
 			plugin.stopPlugin();
+			return;
 		}
 
 		WorldViewContext ctx = root;
 		Scene prev = client.getTopLevelWorldView().getScene();
 
-		// TODO: We can't prepare this early
-//		regionManager.prepare(scene);
-
 		int dx = scene.getBaseX() - prev.getBaseX() >> 3;
 		int dy = scene.getBaseY() - prev.getBaseY() >> 3;
 
-		final int SCENE_ZONES = NUM_ZONES;
-
-		// initially mark every zone as needing culled
-		for (int x = 0; x < SCENE_ZONES; ++x) {
-			for (int z = 0; z < SCENE_ZONES; ++z) {
+		// Initially mark every zone as being no longer in use
+		for (int x = 0; x < NUM_ZONES; ++x)
+			for (int z = 0; z < NUM_ZONES; ++z)
 				ctx.zones[x][z].cull = true;
-			}
-		}
 
-		// find zones which overlap and copy them
-		Zone[][] newZones = new Zone[SCENE_ZONES][SCENE_ZONES];
-		if (prev.isInstance() == scene.isInstance()
-			&& prev.getRoofRemovalMode() == scene.getRoofRemovalMode()) {
-			int[][][] prevTemplates = prev.getInstanceTemplateChunks();
-			int[][][] curTemplates = scene.getInstanceTemplateChunks();
+		Zone[][] newZones = new Zone[NUM_ZONES][NUM_ZONES];
+		if (ctx.sceneContext != null && ctx.sceneContext.currentArea == nextSceneContext.currentArea) {
+			// Find zones which overlap, and reuse them
+			if (prev.isInstance() == scene.isInstance() && prev.getRoofRemovalMode() == scene.getRoofRemovalMode()) {
+				int[][][] prevTemplates = prev.getInstanceTemplateChunks();
+				int[][][] curTemplates = scene.getInstanceTemplateChunks();
 
-			for (int x = 0; x < SCENE_ZONES; ++x) {
-				next:
-				for (int z = 0; z < SCENE_ZONES; ++z) {
-					int ox = x + dx;
-					int oz = z + dy;
+				for (int x = 0; x < NUM_ZONES; ++x) {
+					next:
+					for (int z = 0; z < NUM_ZONES; ++z) {
+						int ox = x + dx;
+						int oz = z + dy;
 
-					// Reused the old zone if it is also in the new scene, except for the edges, to work around
-					// tile blending, (edge) shadows, sharelight, etc.
-					if (canReuse(ctx.zones, ox, oz)) {
-						if (scene.isInstance()) {
-							// Convert from modified chunk coordinates to Jagex chunk coordinates
-							int jx = x - nextSceneContext.sceneOffset / 8;
-							int jz = z - nextSceneContext.sceneOffset / 8;
-							int jox = ox - nextSceneContext.sceneOffset / 8;
-							int joz = oz - nextSceneContext.sceneOffset / 8;
-							// Check Jagex chunk coordinates are within the Jagex scene
-							if (jx >= 0 && jx < SCENE_SIZE / 8 && jz >= 0 && jz < SCENE_SIZE / 8) {
-								if (jox >= 0 && jox < SCENE_SIZE / 8 && joz >= 0 && joz < SCENE_SIZE / 8) {
-									for (int level = 0; level < 4; ++level) {
-										int prevTemplate = prevTemplates[level][jox][joz];
-										int curTemplate = curTemplates[level][jx][jz];
-										if (prevTemplate != curTemplate) {
-											// Does this ever happen?
-											log.warn("Instance template reuse mismatch! prev={} cur={}", prevTemplate, curTemplate);
-											continue next;
+						// Reused the old zone if it is also in the new scene, except for the edges, to work around
+						// tile blending, (edge) shadows, sharelight, etc.
+						if (canReuse(ctx.zones, ox, oz)) {
+							if (scene.isInstance()) {
+								// Convert from modified chunk coordinates to Jagex chunk coordinates
+								int jx = x - nextSceneContext.sceneOffset / 8;
+								int jz = z - nextSceneContext.sceneOffset / 8;
+								int jox = ox - nextSceneContext.sceneOffset / 8;
+								int joz = oz - nextSceneContext.sceneOffset / 8;
+								// Check Jagex chunk coordinates are within the Jagex scene
+								if (jx >= 0 && jx < SCENE_SIZE / 8 && jz >= 0 && jz < SCENE_SIZE / 8) {
+									if (jox >= 0 && jox < SCENE_SIZE / 8 && joz >= 0 && joz < SCENE_SIZE / 8) {
+										for (int level = 0; level < 4; ++level) {
+											int prevTemplate = prevTemplates[level][jox][joz];
+											int curTemplate = curTemplates[level][jx][jz];
+											if (prevTemplate != curTemplate) {
+												// Does this ever happen?
+												log.warn("Instance template reuse mismatch! prev={} cur={}", prevTemplate, curTemplate);
+												continue next;
+											}
 										}
 									}
 								}
 							}
+
+							Zone old = ctx.zones[ox][oz];
+							assert old.initialized;
+
+							if (old.dirty)
+								continue;
+							assert old.sizeO > 0 || old.sizeA > 0;
+
+							assert old.cull;
+							old.cull = false;
+							old.metadataDirty = true;
+
+							newZones[x][z] = old;
 						}
-
-						Zone old = ctx.zones[ox][oz];
-						assert old.initialized;
-
-						if (old.dirty) {
-							continue;
-						}
-						assert old.sizeO > 0 || old.sizeA > 0;
-
-						assert old.cull;
-						old.cull = false;
-						old.metadataDirty = true;
-
-						newZones[x][z] = old;
 					}
 				}
 			}
 		}
 
-		// Fill out any zones that weren't copied
-		for (int x = 0; x < SCENE_ZONES; ++x) {
-			for (int z = 0; z < SCENE_ZONES; ++z) {
-				if (newZones[x][z] == null) {
+		// Allocate new zones wherever we couldn't reuse old ones
+		for (int x = 0; x < NUM_ZONES; ++x)
+			for (int z = 0; z < NUM_ZONES; ++z)
+				if (newZones[x][z] == null)
 					newZones[x][z] = new Zone();
-				}
-			}
-		}
 
-		// size the zones which require upload
+		// Determine zone buffer requirements before uploading
 		SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 		Stopwatch sw = Stopwatch.createStarted();
 		int len = 0, lena = 0;
@@ -1527,23 +1600,20 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 		log.debug(
-			"Scene size time {} reused {} new {} len opaque {} size opaque {}kb len alpha {} size alpha {}kb",
+			"Scene size time {} reused {} new {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
 			sw, reused, newzones,
-			len, ((long) len * Zone.VERT_SIZE * 3) / 1024,
-			lena, ((long) lena * Zone.VERT_SIZE * 3) / 1024
+			len, ((long) len * Zone.VERT_SIZE * 3) / KiB,
+			lena, ((long) lena * Zone.VERT_SIZE * 3) / KiB
 		);
 
 		// allocate buffers for zones which require upload
 		CountDownLatch latch = new CountDownLatch(1);
-		clientThread.invoke(() ->
-		{
+		clientThread.invoke(() -> {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
 				for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
 					Zone zone = newZones[x][z];
-
-					if (zone.initialized) {
+					if (zone.initialized)
 						continue;
-					}
 
 					VBO o = null, a = null;
 					int sz = zone.sizeO * Zone.VERT_SIZE * 3;
@@ -1573,20 +1643,16 @@ public class ZoneRenderer implements Renderer {
 			throw new RuntimeException(e);
 		}
 
-		// upload zones
+		// Upload new zones
 		sw = Stopwatch.createStarted();
 		for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
 			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
 				Zone zone = newZones[x][z];
-
-				if (!zone.initialized) {
+				if (!zone.initialized)
 					sceneUploader.uploadZone(nextSceneContext, zone, x, z);
-				}
 			}
 		}
 		log.debug("Scene upload time {}", sw);
-		// TODO: Can't clear since zone invalidation may need it
-//		proceduralGenerator.clearSceneData(nextSceneContext);
 
 		// Roof ids aren't consistent between scenes, so build a mapping of old -> new roof ids
 		Map<Integer, Integer> roofChanges;
@@ -1758,7 +1824,7 @@ public class ZoneRenderer implements Renderer {
 		root.sceneContext = nextSceneContext;
 		nextSceneContext = null;
 
-//		sceneUploader.prepareBeforeSwap(sceneContext);
+		updateAreaHiding();
 
 		if (root.sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
 			plugin.isInHouse = true;

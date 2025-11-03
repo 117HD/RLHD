@@ -108,9 +108,8 @@ class SceneUploader {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					int rid = roofs[level][(mzx << 3) + xoff][(mzz << 3) + zoff];
-					if (rid > 0) {
+					if (rid > 0)
 						roofIds.add(rid);
-					}
 				}
 			}
 		}
@@ -344,13 +343,16 @@ class SceneUploader {
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
-		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
-
 		var tilePoint = t.getSceneLocation();
 		int tileExX = tilePoint.getX() + ctx.sceneOffset;
 		int tileExY = tilePoint.getY() + ctx.sceneOffset;
 		int tileZ = t.getRenderLevel();
 		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
+
+		if (ctx.currentArea != null && !ctx.currentArea.containsPoint(worldPos))
+			return;
+
+		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && drawTile) {

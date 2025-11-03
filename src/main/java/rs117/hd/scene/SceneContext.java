@@ -37,7 +37,6 @@ public class SceneContext {
 	public int sceneOffset;
 
 	public boolean enableAreaHiding;
-	public boolean forceDisableAreaHiding;
 	public boolean fillGaps;
 	public boolean isPrepared;
 
