@@ -764,6 +764,9 @@ class SceneUploader {
 				nwColor = 0;
 			if (ctx.vertexIsWater.containsKey(neVertexKey) && ctx.vertexIsLand.containsKey(neVertexKey))
 				neColor = 0;
+
+			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
+				swColor = seColor = nwColor = neColor = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
 		} else {
 			// Underwater geometry
 			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
@@ -1021,6 +1024,8 @@ class SceneUploader {
 					colorB = 0;
 				if (ctx.vertexIsWater.containsKey(vertexKeyC) && ctx.vertexIsLand.containsKey(vertexKeyC))
 					colorC = 0;
+				if (colorA == 0 && colorB == 0 && colorC == 0)
+					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
 			} else {
 				// Underwater geometry
 				colorA = colorB = colorC = UNDERWATER_HSL;
