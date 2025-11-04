@@ -15,7 +15,8 @@ public abstract class UniformStructuredBuffer<GLBUFFER extends GLBuffer> extends
 
 	public void initialize(int bindingIndex) {
 		initialize();
-		bind(bindingIndex);
+		this.bindingIndex = bindingIndex;
+		glBindBufferBase(glBuffer.target, bindingIndex, glBuffer.id);
 	}
 
 	@Override

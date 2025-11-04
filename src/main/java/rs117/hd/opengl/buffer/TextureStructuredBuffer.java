@@ -16,6 +16,7 @@ import static org.lwjgl.opengl.GL30.GL_R32I;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 import static org.lwjgl.opengl.GL31.glTexBuffer;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_UNUSED;
+import static rs117.hd.HdPlugin.checkGLErrors;
 
 @Slf4j
 public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
@@ -30,16 +31,20 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 
 	public void initialize(int bindingIndex) {
 		super.initialize();
-		bind(bindingIndex);
+		this.bindingIndex = bindingIndex;
 
 		// Create the texture buffer
 		textureId = glGenTextures();
 		glActiveTexture(bindingIndex);
 		glBindTexture(GL_TEXTURE_BUFFER, textureId);
+
 		glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
+
 		glActiveTexture(TEXTURE_UNIT_UNUSED);
 		glBindTexture(GL_TEXTURE_BUFFER, 0);
 		currentCapacity = size;
+
+		checkGLErrors();
 	}
 
 	@Override

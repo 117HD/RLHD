@@ -18,7 +18,6 @@ import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opengl.GL15C.glBindBuffer;
 import static org.lwjgl.opengl.GL15C.glBufferSubData;
-import static org.lwjgl.opengl.GL30C.glBindBufferBase;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -361,11 +360,6 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 
 		for(Property prop : properties)
 			prop.offset = prop.position / 4;
-	}
-
-	public void bind(int bindingIndex) {
-		this.bindingIndex = bindingIndex;
-		glBindBufferBase(glBuffer.target, bindingIndex, glBuffer.id);
 	}
 
 	public final void upload() {
