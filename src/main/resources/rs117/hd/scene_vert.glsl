@@ -52,7 +52,7 @@ void main() {
 
     if(vModelOffset > 0) {
         ModelData modelData = getModelData(vModelOffset);
-        //sceneOffset.y += modelData.flags * 2;
+        sceneOffset.y += modelData.flags * 2;
     }
 
     gPosition = vec3(getWorldViewProjection(vWorldViewId) * vec4(sceneOffset + vPosition, 1));

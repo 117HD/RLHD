@@ -358,6 +358,9 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		data = BufferUtils.createByteBuffer(size);
 		dataInt = data.asIntBuffer();
 		dataFloat = data.asFloatBuffer();
+
+		for(Property prop : properties)
+			prop.offset = prop.position / 4;
 	}
 
 	public void bind(int bindingIndex) {
