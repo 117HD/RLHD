@@ -1333,9 +1333,12 @@ class SceneUploader {
 				transparencies != null && transparencies[face] != 0 ||
 				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
+			int depthBias = modelOverride.depthBias != -1 ? modelOverride.depthBias :
+				bias == null ? 0 : bias[face] & 0xFF;
+
 			int packedAlphaBiasHsl = 0;
 			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
-			packedAlphaBiasHsl |= bias != null ? (bias[face] & 0xff) << 16 : 0;
+			packedAlphaBiasHsl |= depthBias << 16;
 
 			GpuIntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
 			vb.putVertex(
@@ -1579,9 +1582,12 @@ class SceneUploader {
 				transparencies != null && transparencies[face] != 0 ||
 				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
+			int depthBias = modelOverride.depthBias != -1 ? modelOverride.depthBias :
+				bias == null ? 0 : bias[face] & 0xFF;
+
 			int packedAlphaBiasHsl = 0;
 			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
-			packedAlphaBiasHsl |= bias != null ? (bias[face] & 0xff) << 16 : 0;
+			packedAlphaBiasHsl |= depthBias << 16;
 
 			IntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
 			GpuIntBuffer.putFloatVertex(

@@ -74,6 +74,7 @@ public class ModelOverride
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
+	public int depthBias = -1;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -207,6 +208,7 @@ public class ModelOverride
 			windDisplacementMode,
 			windDisplacementModifier,
 			invertDisplacementStrength,
+			depthBias,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
