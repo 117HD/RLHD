@@ -1277,7 +1277,7 @@ public class ZoneRenderer implements Renderer {
 				zone.free();
 				zone = ctx.zones[x][z] = new Zone();
 
-				sceneUploader.zoneSize(ctx.sceneContext, zone, x, z);
+				sceneUploader.estimateZoneSize(ctx.sceneContext, zone, x, z);
 
 				VBO o = null, a = null;
 				int sz = zone.sizeO * Zone.VERT_SIZE * 3;
@@ -1585,7 +1585,7 @@ public class ZoneRenderer implements Renderer {
 				if (!zone.initialized) {
 					assert zone.glVao == 0;
 					assert zone.glVaoA == 0;
-					asyncSceneUploader.zoneSize(nextSceneContext, zone, x, z);
+					asyncSceneUploader.estimateZoneSize(nextSceneContext, zone, x, z);
 					len += zone.sizeO;
 					lena += zone.sizeA;
 					newzones++;
@@ -1732,7 +1732,7 @@ public class ZoneRenderer implements Renderer {
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				asyncSceneUploader.zoneSize(sceneContext, ctx.zones[x][z], x, z);
+				asyncSceneUploader.estimateZoneSize(sceneContext, ctx.zones[x][z], x, z);
 
 		// allocate buffers for zones which require upload
 		CountDownLatch latch = new CountDownLatch(1);

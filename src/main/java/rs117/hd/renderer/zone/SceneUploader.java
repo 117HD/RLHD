@@ -92,7 +92,7 @@ class SceneUploader {
 	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
-	void zoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
+	void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 
 		for (int z = 3; z >= 0; --z) {
@@ -100,7 +100,7 @@ class SceneUploader {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
 					if (t != null)
-						zoneSize(ctx, zone, t);
+						estimateZoneTileSize(ctx, zone, t);
 				}
 			}
 		}
@@ -146,7 +146,7 @@ class SceneUploader {
 
 		// Upload water surface tiles to be drawn after everything else
 		if (zone.hasWater && vb != null) {
-			uploadWaterSurfaceTiles(ctx, zone, mzx, mzz, vb);
+			uploadZoneWater(ctx, zone, mzx, mzz, vb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 		}
 	}
@@ -237,7 +237,7 @@ class SceneUploader {
 		}
 	}
 
-	private void uploadWaterSurfaceTiles(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb) {
+	private void uploadZoneWater(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb) {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
@@ -255,7 +255,7 @@ class SceneUploader {
 		}
 	}
 
-	private void zoneSize(ZoneSceneContext ctx, Zone z, Tile t) {
+	private void estimateZoneTileSize(ZoneSceneContext ctx, Zone z, Tile t) {
 		var tilePoint = t.getSceneLocation();
 		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
 
@@ -309,19 +309,19 @@ class SceneUploader {
 
 		WallObject wallObject = t.getWallObject();
 		if (wallObject != null) {
-			zoneRenderableSize(z, wallObject.getRenderable1());
-			zoneRenderableSize(z, wallObject.getRenderable2());
+			estimateRenderableSize(z, wallObject.getRenderable1());
+			estimateRenderableSize(z, wallObject.getRenderable2());
 		}
 
 		DecorativeObject decorativeObject = t.getDecorativeObject();
 		if (decorativeObject != null) {
-			zoneRenderableSize(z, decorativeObject.getRenderable());
-			zoneRenderableSize(z, decorativeObject.getRenderable2());
+			estimateRenderableSize(z, decorativeObject.getRenderable());
+			estimateRenderableSize(z, decorativeObject.getRenderable2());
 		}
 
 		GroundObject groundObject = t.getGroundObject();
 		if (groundObject != null) {
-			zoneRenderableSize(z, groundObject.getRenderable());
+			estimateRenderableSize(z, groundObject.getRenderable());
 		}
 
 		GameObject[] gameObjects = t.getGameObjects();
@@ -335,12 +335,12 @@ class SceneUploader {
 			}
 
 			Renderable renderable = gameObject.getRenderable();
-			zoneRenderableSize(z, renderable);
+			estimateRenderableSize(z, renderable);
 		}
 
 		Tile bridge = t.getBridge();
 		if (bridge != null) {
-			zoneSize(ctx, z, bridge);
+			estimateZoneTileSize(ctx, z, bridge);
 		}
 	}
 
@@ -365,7 +365,7 @@ class SceneUploader {
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && drawTile) {
-			upload(
+			uploadTilePaint(
 				ctx,
 				worldPos,
 				t,
@@ -379,7 +379,7 @@ class SceneUploader {
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null && drawTile)
-			upload(ctx, worldPos, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer);
+			uploadTileModel(ctx, worldPos, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer);
 
 		if (!onlyWaterSurface)
 			uploadZoneTileRenderables(ctx, zone, t, worldPos, vertexBuffer, alphaBuffer);
@@ -537,7 +537,7 @@ class SceneUploader {
 		}
 	}
 
-	private void zoneRenderableSize(Zone z, Renderable r) {
+	private void estimateRenderableSize(Zone z, Renderable r) {
 		Model m = null;
 		if (r instanceof Model) {
 			m = (Model) r;
@@ -622,7 +622,7 @@ class SceneUploader {
 	}
 
 	@SuppressWarnings({ "UnnecessaryLocalVariable" })
-	private void upload(
+	private void uploadTilePaint(
 		ZoneSceneContext ctx,
 		int[] worldPos,
 		Tile tile,
@@ -859,7 +859,7 @@ class SceneUploader {
 		);
 	}
 
-	private void upload(
+	private void uploadTileModel(
 		ZoneSceneContext ctx,
 		int[] worldPos,
 		Tile tile,
@@ -1366,7 +1366,7 @@ class SceneUploader {
 	}
 
 	// temp draw
-	int uploadTempModel(
+	public int uploadTempModel(
 		Model model,
 		ModelOverride modelOverride,
 		int preOrientation,
@@ -1617,23 +1617,17 @@ class SceneUploader {
 		return len;
 	}
 
-	static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {
+	public static int interpolateHSL(int hsl, byte hue2, byte sat2, byte lum2, byte lerp) {
 		int hue = hsl >> 10 & 63;
 		int sat = hsl >> 7 & 7;
 		int lum = hsl & 127;
-		int var9 = lerp & 255;
-		if (hue2 != -1) {
-			hue += var9 * (hue2 - hue) >> 7;
-		}
-
-		if (sat2 != -1) {
-			sat += var9 * (sat2 - sat) >> 7;
-		}
-
-		if (lum2 != -1) {
-			lum += var9 * (lum2 - lum) >> 7;
-		}
-
+		int lerpInt = lerp & 255;
+		if (hue2 != -1)
+			hue += lerpInt * (hue2 - hue) >> 7;
+		if (sat2 != -1)
+			sat += lerpInt * (sat2 - sat) >> 7;
+		if (lum2 != -1)
+			lum += lerpInt * (lum2 - lum) >> 7;
 		return (hue << 10 | sat << 7 | lum) & 65535;
 	}
 }
