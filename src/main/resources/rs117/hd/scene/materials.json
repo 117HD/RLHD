@@ -127,7 +127,8 @@
     "scrollSpeed": [
       -0.0,
       -0.9
-    ]
+    ],
+    "hasTransparency": true
   },
   {
     "name": "HAY",

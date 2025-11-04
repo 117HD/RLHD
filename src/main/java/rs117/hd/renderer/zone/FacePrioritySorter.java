@@ -392,13 +392,6 @@ class FacePrioritySorter {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
-		}
 
 		final int triangleA = indices1[face];
 		final int triangleB = indices2[face];
@@ -407,10 +400,6 @@ class FacePrioritySorter {
 		int color1 = faceColors1[face];
 		int color2 = faceColors2[face];
 		int color3 = faceColors3[face];
-
-		boolean alpha =
-			transparencies != null && transparencies[face] != 0 ||
-			faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
 
 		if (color3 == -1)
 			color2 = color3 = color1;
@@ -450,6 +439,7 @@ class FacePrioritySorter {
 		UvType uvType = UvType.GEOMETRY;
 		Material material = baseMaterial;
 
+		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 		int textureId = isVanillaTextured ? faceTextures[face] : -1;
 		if (textureId != -1) {
 			uvType = UvType.VANILLA;
@@ -461,24 +451,20 @@ class FacePrioritySorter {
 		}
 
 		ModelOverride faceOverride = modelOverride;
-		if (!disableTextures) {
-			if (modelOverride.materialOverrides != null) {
-				var override = modelOverride.materialOverrides.get(material);
-				if (override != null) {
-					faceOverride = override;
-					material = faceOverride.textureMaterial;
-				}
+		if (modelOverride.materialOverrides != null) {
+			var override = modelOverride.materialOverrides.get(material);
+			if (override != null) {
+				faceOverride = override;
+				material = faceOverride.textureMaterial;
 			}
-
-			// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-			if (modelOverride.colorOverrides != null) {
-				int ahsl = (transparencies == null ? 0xFF : 0xFF - (transparencies[face] & 0xFF)) << 16 | faceColors1[face];
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						faceOverride = override;
-						material = faceOverride.baseMaterial;
-						break;
-					}
+		}
+		if (modelOverride.colorOverrides != null) {
+			int ahsl = (0xFF - transparency) << 16 | faceColors1[face];
+			for (var override : modelOverride.colorOverrides) {
+				if (override.ahslCondition.test(ahsl)) {
+					faceOverride = override;
+					material = faceOverride.baseMaterial;
+					break;
 				}
 			}
 		}
@@ -524,36 +510,29 @@ class FacePrioritySorter {
 			}
 		}
 
-		int depthBias = modelOverride.depthBias != -1 ? modelOverride.depthBias :
+		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 			bias == null ? 0 : bias[face] & 0xFF;
-
-		int packedAlphaBiasHsl = 0;
-		packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
-		packedAlphaBiasHsl |= depthBias << 16;
-
-		var vb = alpha ? alphaBuffer : opaqueBuffer;
-
+		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
+		boolean hasAlpha = material.hasTransparency || transparency != 0;
+		var vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 			modelNormals[0], modelNormals[1], modelNormals[2], 0
 		);
-
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 			modelNormals[3], modelNormals[4], modelNormals[5], 0
 		);
-
 		GpuIntBuffer.putFloatVertex(
 			vb,
 			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 			modelNormals[6], modelNormals[7], modelNormals[8], 0
 		);
-
 		return 3;
 	}
 }

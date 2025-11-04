@@ -39,7 +39,9 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.scene.model_overrides.InheritTileColorType;
 import rs117.hd.scene.model_overrides.ModelOverride;
+import rs117.hd.scene.model_overrides.TzHaarRecolorType;
 import rs117.hd.scene.model_overrides.UvType;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
@@ -309,33 +311,39 @@ class SceneUploader {
 
 		WallObject wallObject = t.getWallObject();
 		if (wallObject != null) {
-			estimateRenderableSize(z, wallObject.getRenderable1());
-			estimateRenderableSize(z, wallObject.getRenderable2());
+			ModelOverride modelOverride = modelOverrideManager.getOverride(wallObject, worldPos);
+			if (!modelOverride.hide) {
+				estimateRenderableSize(z, wallObject.getRenderable1(), modelOverride);
+				estimateRenderableSize(z, wallObject.getRenderable2(), modelOverride);
+			}
 		}
 
 		DecorativeObject decorativeObject = t.getDecorativeObject();
 		if (decorativeObject != null) {
-			estimateRenderableSize(z, decorativeObject.getRenderable());
-			estimateRenderableSize(z, decorativeObject.getRenderable2());
+			ModelOverride modelOverride = modelOverrideManager.getOverride(decorativeObject, worldPos);
+			if (!modelOverride.hide) {
+				estimateRenderableSize(z, decorativeObject.getRenderable(), modelOverride);
+				estimateRenderableSize(z, decorativeObject.getRenderable2(), modelOverride);
+			}
 		}
 
 		GroundObject groundObject = t.getGroundObject();
 		if (groundObject != null) {
-			estimateRenderableSize(z, groundObject.getRenderable());
+			ModelOverride modelOverride = modelOverrideManager.getOverride(groundObject, worldPos);
+			if (!modelOverride.hide)
+				estimateRenderableSize(z, groundObject.getRenderable(), modelOverride);
 		}
 
 		GameObject[] gameObjects = t.getGameObjects();
 		for (GameObject gameObject : gameObjects) {
-			if (gameObject == null) {
+			if (gameObject == null || !gameObject.getSceneMinLocation().equals(t.getSceneLocation()))
 				continue;
-			}
 
-			if (!gameObject.getSceneMinLocation().equals(t.getSceneLocation())) {
+			ModelOverride modelOverride = modelOverrideManager.getOverride(gameObject, worldPos);
+			if (modelOverride.hide)
 				continue;
-			}
 
-			Renderable renderable = gameObject.getRenderable();
-			estimateRenderableSize(z, renderable);
+			estimateRenderableSize(z, gameObject.getRenderable(), modelOverride);
 		}
 
 		Tile bridge = t.getBridge();
@@ -403,8 +411,9 @@ class SceneUploader {
 			Renderable renderable1 = wallObject.getRenderable1();
 			uploadZoneRenderable(
 				ctx,
-				renderable1,
 				zone,
+				t,
+				renderable1,
 				uuid,
 				worldPos,
 				HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
@@ -424,8 +433,9 @@ class SceneUploader {
 			Renderable renderable2 = wallObject.getRenderable2();
 			uploadZoneRenderable(
 				ctx,
-				renderable2,
 				zone,
+				t,
+				renderable2,
 				uuid,
 				worldPos,
 				HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
@@ -450,8 +460,9 @@ class SceneUploader {
 			Renderable renderable = decorativeObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
-				renderable,
 				zone,
+				t,
+				renderable,
 				uuid,
 				worldPos,
 				preOrientation,
@@ -471,8 +482,9 @@ class SceneUploader {
 			Renderable renderable2 = decorativeObject.getRenderable2();
 			uploadZoneRenderable(
 				ctx,
-				renderable2,
 				zone,
+				t,
+				renderable2,
 				uuid,
 				worldPos,
 				preOrientation,
@@ -495,14 +507,17 @@ class SceneUploader {
 			Renderable renderable = groundObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
-				renderable, zone,
+				zone,
+				t,
+				renderable,
 				ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
 				worldPos,
 				HDUtils.getModelPreOrientation(groundObject.getConfig()),
 				0,
-				groundObject.getX(), groundObject.getZ(), groundObject.getY(), -1,
+				groundObject.getX(), groundObject.getZ(), groundObject.getY(),
 				-1,
 				-1, -1,
+				-1,
 				groundObject.getId(),
 				vertexBuffer,
 				alphaBuffer
@@ -522,14 +537,17 @@ class SceneUploader {
 			Renderable renderable = gameObject.getRenderable();
 			uploadZoneRenderable(
 				ctx,
-				renderable, zone,
+				zone,
+				t,
+				renderable,
 				ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
 				worldPos,
 				HDUtils.getModelPreOrientation(gameObject.getConfig()),
 				gameObject.getModelOrientation(),
-				gameObject.getX(), gameObject.getZ(), gameObject.getY(), min.getX(),
-				min.getY(),
-				max.getX(), max.getY(),
+				gameObject.getX(), gameObject.getZ(), gameObject.getY(),
+				min.getX(),
+				min.getY(), max.getX(),
+				max.getY(),
 				gameObject.getId(),
 				vertexBuffer,
 				alphaBuffer
@@ -537,7 +555,7 @@ class SceneUploader {
 		}
 	}
 
-	private void estimateRenderableSize(Zone z, Renderable r) {
+	private void estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
 		Model m = null;
 		if (r instanceof Model) {
 			m = (Model) r;
@@ -548,28 +566,36 @@ class SceneUploader {
 			return;
 
 		int faceCount = m.getFaceCount();
+		if (modelOverride.mightHaveTransparency) {
+			z.sizeO += faceCount;
+			z.sizeA += faceCount;
+			return;
+		}
+
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
-		if (transparencies != null || faceTextures != null) {
-			for (int face = 0; face < faceCount; ++face) {
-				boolean alpha =
-					transparencies != null && transparencies[face] != 0 ||
-					faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
-				if (alpha) {
-					z.sizeA++;
-				} else {
-					z.sizeO++;
-				}
-			}
-		} else {
+		if (transparencies == null && faceTextures == null) {
 			z.sizeO += faceCount;
+			return;
+		}
+
+		for (int face = 0; face < faceCount; ++face) {
+			boolean alpha =
+				transparencies != null && transparencies[face] != 0 ||
+				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
+			if (alpha) {
+				z.sizeA++;
+			} else {
+				z.sizeO++;
+			}
 		}
 	}
 
 	private void uploadZoneRenderable(
 		ZoneSceneContext ctx,
-		Renderable r,
 		Zone zone,
+		Tile tile,
+		Renderable r,
 		int uuid,
 		int[] worldPos,
 		int preOrientation,
@@ -593,11 +619,18 @@ class SceneUploader {
 		Model model = null;
 		if (r instanceof Model) {
 			model = (Model) r;
-			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
+			uploadStaticModel(
+				ctx, tile, model, modelOverride, uuid,
+				preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab
+			);
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
-			if (model != null)
-				uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
+			if (model != null) {
+				uploadStaticModel(
+					ctx, tile, model, modelOverride, uuid,
+					preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab
+				);
+			}
 		}
 		int endpos = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		if (endpos > pos) {
@@ -613,7 +646,8 @@ class SceneUploader {
 				assert uz < 25 : uz;
 			}
 			zone.addAlphaModel(
-				zone.glVaoA, model, pos, endpos,
+				materialManager,
+				zone.glVaoA, model, modelOverride, pos, endpos,
 				x - basex, y, z - basez,
 				lx, lz, ux, uz,
 				rid, level, id
@@ -1135,8 +1169,11 @@ class SceneUploader {
 
 	// scene upload
 	private int uploadStaticModel(
+		ZoneSceneContext ctx,
+		Tile tile,
 		Model model,
 		ModelOverride modelOverride,
+		int uuid,
 		int preOrientation, int orientation, int x, int y, int z,
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
@@ -1199,13 +1236,6 @@ class SceneUploader {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
-		}
 
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
@@ -1251,6 +1281,7 @@ class SceneUploader {
 			UvType uvType = UvType.GEOMETRY;
 			Material material = baseMaterial;
 
+			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
 			if (isTextured) {
@@ -1263,27 +1294,110 @@ class SceneUploader {
 				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
 				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
 				color1 = color2 = color3 = 90;
-			}
+			} else {
+				if (modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
+					final Scene scene = ctx.scene;
+					SceneTileModel tileModel = tile.getSceneTileModel();
+					SceneTilePaint tilePaint = tile.getSceneTilePaint();
 
-			ModelOverride faceOverride = modelOverride;
-			if (!disableTextures) {
-				if (modelOverride.materialOverrides != null) {
-					var override = modelOverride.materialOverrides.get(material);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
+					if (tilePaint != null || tileModel != null) {
+						// No point in inheriting tilepaint color if the ground tile does not have a color, for example above a cave wall
+						if (
+							tilePaint != null &&
+							tilePaint.getTexture() == -1 &&
+							tilePaint.getRBG() != 0 &&
+							tilePaint.getNeColor() != HIDDEN_HSL
+						) {
+							// Since tile colors are guaranteed to have the same hue and saturation per face,
+							// we can blend without converting from HSL to RGB
+							int averageColor =
+								(tilePaint.getSwColor() + tilePaint.getNwColor() + tilePaint.getNeColor() + tilePaint.getSeColor()) / 4;
+
+							var override = tileOverrideManager.getOverride(ctx, tile);
+							averageColor = override.modifyColor(averageColor);
+							color1 = color2 = color3 = averageColor;
+
+							// Let the shader know vanilla shading reversal should be skipped for this face
+							isTextured = true;
+						} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
+							int faceColorIndex = -1;
+							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
+								boolean isOverlay = ProceduralGenerator.isOverlayFace(tile, i);
+								// Use underlay if the tile does not have an overlay, useful for rocks in cave corners.
+								if (modelOverride.inheritTileColorType == InheritTileColorType.UNDERLAY
+									|| tileModel.getModelOverlay() == 0) {
+									// pulling the color from UNDERLAY is more desirable for green grass tiles
+									// OVERLAY pulls in path color which is not desirable for grass next to paths
+									if (!isOverlay) {
+										faceColorIndex = i;
+										break;
+									}
+								} else if (modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY) {
+									if (isOverlay) {
+										// OVERLAY used in dirt/path/house tile color blend better with rubbles/rocks
+										faceColorIndex = i;
+										break;
+									}
+								}
+							}
+
+							if (faceColorIndex != -1) {
+								int color = tileModel.getTriangleColorA()[faceColorIndex];
+								if (color != HIDDEN_HSL) {
+									var scenePos = tile.getSceneLocation();
+									int tileX = scenePos.getX();
+									int tileY = scenePos.getY();
+									int tileZ = tile.getRenderLevel();
+									int tileExX = tileX + ctx.sceneOffset;
+									int tileExY = tileY + ctx.sceneOffset;
+									int[] worldPos = ctx.sceneToWorld(tileX, tileY, tileZ);
+									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
+										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
+										scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+									var override = tileOverrideManager.getOverride(ctx, tile, worldPos, tileId);
+									color = override.modifyColor(color);
+									color1 = color2 = color3 = color;
+
+									// Let the shader know vanilla shading reversal should be skipped for this face
+									isTextured = true;
+								}
+							}
+						}
 					}
 				}
 
-				// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-				if (modelOverride.colorOverrides != null) {
-					int ahsl = (transparencies == null ? 0xFF : 0xFF - (transparencies[face] & 0xFF)) << 16 | color1s[face];
-					for (var override : modelOverride.colorOverrides) {
-						if (override.ahslCondition.test(ahsl)) {
-							faceOverride = override;
-							material = faceOverride.baseMaterial;
-							break;
-						}
+				if (plugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
+					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
+						uuid,
+						modelOverride,
+						model,
+						face,
+						color1,
+						color2,
+						color3
+					);
+					color1 = tzHaarRecolored[0];
+					color2 = tzHaarRecolored[1];
+					color3 = tzHaarRecolored[2];
+					transparency |= tzHaarRecolored[3];
+				}
+			}
+
+			ModelOverride faceOverride = modelOverride;
+			if (modelOverride.materialOverrides != null) {
+				var override = modelOverride.materialOverrides.get(material);
+				if (override != null) {
+					faceOverride = override;
+					material = faceOverride.textureMaterial;
+				}
+			}
+			if (modelOverride.colorOverrides != null) {
+				int ahsl = (0xFF - transparency) << 16 | color1s[face];
+				for (var override : modelOverride.colorOverrides) {
+					if (override.ahslCondition.test(ahsl)) {
+						faceOverride = override;
+						material = faceOverride.baseMaterial;
+						break;
 					}
 				}
 			}
@@ -1310,7 +1424,7 @@ class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			if (modelOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
+			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
 				Arrays.fill(modelNormals, 0);
 			} else {
 				final int[] xVertexNormals = model.getVertexNormalsX();
@@ -1329,18 +1443,11 @@ class SceneUploader {
 				}
 			}
 
-			boolean alpha =
-				transparencies != null && transparencies[face] != 0 ||
-				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
-
-			int depthBias = modelOverride.depthBias != -1 ? modelOverride.depthBias :
+			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
-
-			int packedAlphaBiasHsl = 0;
-			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
-			packedAlphaBiasHsl |= depthBias << 16;
-
-			GpuIntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
+			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
+			boolean hasAlpha = material.hasTransparency || transparency != 0;
+			GpuIntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
@@ -1441,13 +1548,6 @@ class SceneUploader {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
-		}
 
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
@@ -1500,6 +1600,7 @@ class SceneUploader {
 			UvType uvType = UvType.GEOMETRY;
 			Material material = baseMaterial;
 
+			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
 			if (isTextured) {
@@ -1515,24 +1616,20 @@ class SceneUploader {
 			}
 
 			ModelOverride faceOverride = modelOverride;
-			if (!disableTextures) {
-				if (modelOverride.materialOverrides != null) {
-					var override = modelOverride.materialOverrides.get(material);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
-					}
+			if (modelOverride.materialOverrides != null) {
+				var override = modelOverride.materialOverrides.get(material);
+				if (override != null) {
+					faceOverride = override;
+					material = faceOverride.textureMaterial;
 				}
-
-				// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-				if (modelOverride.colorOverrides != null) {
-					int ahsl = (transparencies == null ? 0xFF : 0xFF - (transparencies[face] & 0xFF)) << 16 | color1s[face];
-					for (var override : modelOverride.colorOverrides) {
-						if (override.ahslCondition.test(ahsl)) {
-							faceOverride = override;
-							material = faceOverride.baseMaterial;
-							break;
-						}
+			}
+			if (modelOverride.colorOverrides != null) {
+				int ahsl = (0xFF - transparency) << 16 | color1s[face];
+				for (var override : modelOverride.colorOverrides) {
+					if (override.ahslCondition.test(ahsl)) {
+						faceOverride = override;
+						material = faceOverride.baseMaterial;
+						break;
 					}
 				}
 			}
@@ -1559,7 +1656,7 @@ class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			if (modelOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
+			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
 				Arrays.fill(modelNormals, 0);
 			} else {
 				final int[] xVertexNormals = model.getVertexNormalsX();
@@ -1578,39 +1675,29 @@ class SceneUploader {
 				}
 			}
 
-			boolean alpha =
-				transparencies != null && transparencies[face] != 0 ||
-				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
-
-			int depthBias = modelOverride.depthBias != -1 ? modelOverride.depthBias :
+			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
-
-			int packedAlphaBiasHsl = 0;
-			packedAlphaBiasHsl |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
-			packedAlphaBiasHsl |= depthBias << 16;
-
-			IntBuffer vb = alpha ? alphaBuffer : opaqueBuffer;
+			int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
+			boolean hasAlpha = material.hasTransparency || transparency != 0;
+			IntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 				modelNormals[0], modelNormals[1], modelNormals[2], 0
 			);
-
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 				modelNormals[3], modelNormals[4], modelNormals[5], 0
 			);
-
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 				modelNormals[6], modelNormals[7], modelNormals[8], 0
 			);
-
 			len += 3;
 		}
 

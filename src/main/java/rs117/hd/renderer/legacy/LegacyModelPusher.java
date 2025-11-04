@@ -188,13 +188,6 @@ public class LegacyModelPusher {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
-		}
 
 		boolean skipUVs =
 			!isVanillaTextured &&
@@ -333,24 +326,21 @@ public class LegacyModelPusher {
 				}
 
 				ModelOverride faceOverride = modelOverride;
-				if (!disableTextures) {
-					if (modelOverride.materialOverrides != null) {
-						var override = modelOverride.materialOverrides.get(material);
-						if (override != null) {
-							faceOverride = override;
-							material = faceOverride.textureMaterial;
-						}
+				if (modelOverride.materialOverrides != null) {
+					var override = modelOverride.materialOverrides.get(material);
+					if (override != null) {
+						faceOverride = override;
+						material = faceOverride.textureMaterial;
 					}
-
-					// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-					if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
-						int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
-						for (var override : modelOverride.colorOverrides) {
-							if (override.ahslCondition.test(ahsl)) {
-								faceOverride = override;
-								material = faceOverride.baseMaterial;
-								break;
-							}
+				}
+				// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
+				if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
+					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
+					for (var override : modelOverride.colorOverrides) {
+						if (override.ahslCondition.test(ahsl)) {
+							faceOverride = override;
+							material = faceOverride.baseMaterial;
+							break;
 						}
 					}
 				}
@@ -617,7 +607,6 @@ public class LegacyModelPusher {
 						modelOverride,
 						model,
 						face,
-						packedAlphaPriorityFlags,
 						color1,
 						color2,
 						color3
@@ -625,7 +614,7 @@ public class LegacyModelPusher {
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];
 					color3 = tzHaarRecolored[2];
-					packedAlphaPriorityFlags = tzHaarRecolored[3];
+					packedAlphaPriorityFlags |= tzHaarRecolored[3] << 24;
 				}
 			}
 		}

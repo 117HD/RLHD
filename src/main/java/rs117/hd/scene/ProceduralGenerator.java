@@ -996,7 +996,6 @@ public class ProceduralGenerator {
 		ModelOverride modelOverride,
 		Model model,
 		int face,
-		int packedAlphaPriority,
 		int color1,
 		int color2,
 		int color3
@@ -1009,12 +1008,14 @@ public class ProceduralGenerator {
 		int hue = 7;
 		hsl1[0] = hsl2[0] = hsl3[0] = hue;
 
+		int transparency = 0;
+
 		// recolor tzhaar to look like the 2008+ HD version
 		if (ModelHash.getUuidSubType(uuid) == ModelHash.TYPE_GROUND_OBJECT) {
 			// remove the black parts of floor objects to allow the ground to show,
 			// so we can apply textures, ground blending, etc. to it
 			if (hsl1[1] <= 1)
-				packedAlphaPriority = 0xFF << 24;
+				transparency = 0xFF;
 		}
 
 		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT) {
@@ -1056,7 +1057,7 @@ public class ProceduralGenerator {
 		tzHaarRecolored[0] = ColorUtils.packRawHsl(hsl1);
 		tzHaarRecolored[1] = ColorUtils.packRawHsl(hsl2);
 		tzHaarRecolored[2] = ColorUtils.packRawHsl(hsl3);
-		tzHaarRecolored[3] = packedAlphaPriority;
+		tzHaarRecolored[3] = transparency;
 
 		return tzHaarRecolored;
 	}
