@@ -17,6 +17,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 		private int size;
 
 		public ModelData getStruct(int idx) {
+			assert idx >= offset && idx < offset + size;
 			return data.modelDataProperties.get(offset + idx);
 		}
 
