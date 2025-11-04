@@ -9596,7 +9596,8 @@
       "FAI_FALADOR_CASTLE_LADDER_UP",
       "FAI_FALADOR_CASTLE_LADDERTOP",
       "LUC2_DARKSQUALL_LADDER",
-      "LUC2_DARKSQUALL_LADDERTOP"
+      "LUC2_DARKSQUALL_LADDERTOP",
+      "ATJUN_MINE_LADDER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -11835,7 +11836,12 @@
       "HUNTING_DEADFALL_TRAPPING_FENNEC",
       "HUNTING_DEADFALL_TRAPPING_FENNEC_M",
       "HUNTING_DEADFALL_FULL_FENNEC",
-      "CASTLEWARS_STEPING_STONE"
+      "CASTLEWARS_STEPING_STONE",
+      "ATJUN_ROCKS_SMALL_SOFT_01",
+      "ATJUN_ROCKS_SMALL_SOFT_02",
+      "ATJUN_ROCKS_FLOOR_SOFT_03",
+      "ATJUN_ROCKS_FLOOR_SOFT_02",
+      "ATJUN_ROCKS_FLOOR_SOFT_01"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
@@ -58873,6 +58879,104 @@
         "uvType": "BOX",
         "uvOrientation": 192
       }
+    ]
+  },
+  {
+    "description": "Shilo Mine - Walls",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_MINE_WALL",
+      "ATJUN_MINE_WALL_ROCKY"
+    ]
+  },
+  {
+    "description": "Shilo Mine - Walls with Wooden Supports",
+    "baseMaterial": "ROCK_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_MINE_WALL_SUPPORT_LEFT",
+      "ATJUN_MINE_WALL_SUPPORT_MID",
+      "ATJUN_MINE_WALL_LAMP",
+      "ATJUN_MINE_WALL_SUPPORT_RIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.6,
+        "uvOrientationX": 512,
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Shilo Mine - Wall Top",
+    "baseMaterial": "STONE_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_CAVEWALL_TOP"
+    ],
+    "uvScale": 1.5,
+    "uvOrientation": -100
+  },
+  {
+    "description": "Shilo Mine - Gem Rocks",
+    "baseMaterial": "GEM_STONE",
+    "uvScale": 1.1,
+    "uvOrientation": 512,
+    "areas": [
+      "SHILO_VILLAGE_MINE",
+      "SHILO_VILLAGE_MINE_SURFACE"
+    ],
+    "uvType": "BOX",
+    "objectIds": [
+      "GEMROCK",
+      "GEMROCK1"
+    ]
+  },
+  {
+    "description": "Shilo Mine - Gem Rocks - Depleted",
+    "baseMaterial": "SMOOTH_STONE",
+    "areas": [
+      "SHILO_VILLAGE_MINE",
+      "SHILO_VILLAGE_MINE_SURFACE"
+    ],
+    "uvType": "BOX",
+    "objectIds": [
+      "ROCKS1",
+      "ROCKS2"
+    ]
+  },
+  {
+    "description": "Shilo Mine - Entrance Ladder",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "objectIds": [
+      "ATJUN_MINE_LADDER_HOLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512,
+        "uvScale": 0.6,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Shilo Mine - Bank Deposit Chest",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BANK_DEPOSIT_CHEST"
     ]
   }
 ]
