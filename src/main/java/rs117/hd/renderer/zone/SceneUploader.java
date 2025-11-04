@@ -1387,7 +1387,7 @@ class SceneUploader {
 		int x,
 		int y,
 		int z,
-		short modelOffset,
+		int modelOffset,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {

@@ -126,7 +126,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 		@Getter
 		private final TBOModelData data;
 		@Getter
-		private int offset;
+		private final int offset;
 		@Getter
 		private int size;
 

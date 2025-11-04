@@ -101,7 +101,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(modelOffset); // TODO: This should be a short
+		buffer.put(modelOffset);
 	}
 
 	public static int normShort(float f) {
@@ -122,7 +122,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(modelOffset); // TODO: This should be a short
+		buffer.put(modelOffset);
 	}
 
 	public void putVertex(
@@ -139,14 +139,14 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(modelOffset); // TODO: This should be a short
+		buffer.put(modelOffset);
 	}
 
 	public static void putFloatVertex(
 		IntBuffer buffer,
 		float x, float y, float z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		int nx, int ny, int nz, int terrainData, short modelOffset
+		int nx, int ny, int nz, int terrainData, int modelOffset
 	) {
 		buffer.put(Float.floatToRawIntBits(x));
 		buffer.put(Float.floatToRawIntBits(y));
@@ -157,7 +157,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(modelOffset); // TODO: This should be a short
+		buffer.put(modelOffset);
 	}
 
 	public int position()
