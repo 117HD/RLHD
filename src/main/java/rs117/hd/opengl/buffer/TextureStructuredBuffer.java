@@ -12,7 +12,6 @@ import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
-import static org.lwjgl.opengl.GL15C.glBufferSubData;
 import static org.lwjgl.opengl.GL30.GL_R32I;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 import static org.lwjgl.opengl.GL31.glTexBuffer;
@@ -53,28 +52,22 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 			if (data != null) {
 				data.position(0);
 				newData.put(data);
-				newData.flip();
+				newData.clear();
 			}
 
 			glBindBuffer(glBuffer.target, glBuffer.id);
-			glBufferData(glBuffer.target, newSize, GL_DYNAMIC_DRAW);
-			glBufferSubData(glBuffer.target, 0, newData);
+			glBufferData(glBuffer.target, newData, GL_DYNAMIC_DRAW);
 			glBindBuffer(glBuffer.target, 0);
 
 			glBindTexture(GL_TEXTURE_BUFFER, textureId);
 			glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
 			glBindTexture(GL_TEXTURE_BUFFER, 0);
 
-			newData.limit(newSize);
 			data = newData;
 			dataInt = data.asIntBuffer();
 			dataFloat = data.asFloatBuffer();
 
 			currentCapacity = newSize;
-
-			// Reset Tide, since we've uploaded the data as part of the resize
-			dirtyLowTide = Integer.MAX_VALUE;
-			dirtyHighTide = 0;
 			return false;
 		}
 
