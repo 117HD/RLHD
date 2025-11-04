@@ -27,6 +27,7 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <buffers/model_data.glsl>
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
