@@ -17,7 +17,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 		private int size;
 
 		public ModelData getStruct(int idx) {
-			assert idx >= offset && idx < offset + size;
+			assert idx >= 0 && idx < size;
 			return data.modelDataProperties.get(offset + idx);
 		}
 
@@ -96,7 +96,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 			modelCount++;
 		}
 
-		upload();
+		upload(); //TODO: We don't need to upload, but reinitialise the staging buffers
 
 		return slice;
 	}

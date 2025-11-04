@@ -61,6 +61,7 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 			glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
 			glBindTexture(GL_TEXTURE_BUFFER, 0);
 
+			newData.limit(newSize);
 			data = newData;
 			dataInt = data.asIntBuffer();
 			dataFloat = data.asFloatBuffer();
