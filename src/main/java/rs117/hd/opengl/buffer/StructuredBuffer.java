@@ -38,10 +38,10 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		Mat3(48, 16, 9),
 		Mat4(64, 16, 16);
 
-		private final int size;
-		private final int alignment;
-		private final int elementCount;
-		private final boolean isInt = name().startsWith("I");
+		public final int size;
+		public final int alignment;
+		public final int elementCount;
+		public final boolean isInt = name().startsWith("I");
 	}
 
 	@AllArgsConstructor
@@ -237,6 +237,19 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		}
 	}
 
+	public static class StructDefinition {
+		public final String name;
+		public final int basePosition; // absolute base position where the first property of this struct was placed
+		public final int sizeBytes;
+		public final List<Property> properties = new ArrayList<>();
+
+		public StructDefinition(String name, int basePosition, int sizeBytes) {
+			this.name = name;
+			this.basePosition = basePosition;
+			this.sizeBytes = sizeBytes;
+		}
+	}
+
 	public final GLBUFFER glBuffer;
 
 	protected int size;
@@ -246,6 +259,8 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 	protected IntBuffer dataInt;
 	protected FloatBuffer dataFloat;
 	protected final List<Property> properties = new ArrayList<>();
+	protected final List<StructDefinition> structDefinitions = new ArrayList<>();
+	protected boolean alignStructs = true;
 
 	@Getter
 	protected int bindingIndex;
@@ -264,12 +279,28 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		return dirtyHighTide > 0 && dirtyLowTide < glBuffer.size;
 	}
 
+	protected StructDefinition getStructDefinition(String structName) {
+		for (StructDefinition def : structDefinitions)
+			if (def.name.equals(structName))
+				return def;
+		return null;
+	}
+
 	protected final <T extends StructProperty> T addStruct(T newStructProp) {
+		int structStart = size;
 		for (Property property : newStructProp.properties)
 			appendToBuffer(property);
 
-		// Structs need to align to 16 bytes
-		size += (16 - (size % 16)) % 16;
+		if(alignStructs)
+			size += (16 - (size % 16)) % 16;
+
+		String structName = newStructProp.getClass().getSimpleName();
+		if(getStructDefinition(structName) == null) {
+			int structSize = size - structStart;
+			StructDefinition def = new StructDefinition(structName, structStart, structSize);
+			def.properties.addAll(newStructProp.properties);
+			structDefinitions.add(def);
+		}
 
 		newStructProp.properties.clear();
 		return newStructProp;

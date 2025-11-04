@@ -796,6 +796,7 @@ public class HdPlugin extends Plugin {
 			.define("RENDERER", config.renderer())
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
+			.define("WORLD_VIEW_GETTER", "")
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();

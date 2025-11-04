@@ -7,7 +7,8 @@
         int flags;
     };
 
-    uniform usampler1D shadowMap;
+    uniform isampler1D modelData;
 
-    // TODO: make TextureStructuredBuffer generate a getter!
+    #include MODEL_DATA_GETTER
+#else
 #endif

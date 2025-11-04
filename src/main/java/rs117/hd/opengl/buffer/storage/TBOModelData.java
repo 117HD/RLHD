@@ -47,6 +47,19 @@ public class TBOModelData extends TextureStructuredBuffer {
 	private final List<Slice> freeSlices = new ArrayList<>();
 	private int modelCount = 0;
 
+	public TBOModelData() {
+		super();
+
+		Slice slice = new Slice();
+		slice.data = this;
+		slice.offset = 0;
+		slice.size = modelCount = 1000;
+		for(int i = 0; i < 1000; i++) {
+			modelDataProperties.add(addStruct(new ModelData()));
+		}
+		freeSlices.add(slice);
+	}
+
 	public Slice obtainSlice(int size) {
 		assert size > 0;
 		Slice bestFit = null;

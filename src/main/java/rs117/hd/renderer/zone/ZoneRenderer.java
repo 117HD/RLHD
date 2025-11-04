@@ -300,6 +300,7 @@ public class ZoneRenderer implements Renderer {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", MAX_WORLDVIEWS))
+			.addInclude("MODEL_DATA_GETTER", () -> modelData.generateGetter("ModelData", "MODEL_DATA_GETTER"))
 			.addUniformBuffer(uboWorldViews);
 	}
 
@@ -815,6 +816,8 @@ public class ZoneRenderer implements Renderer {
 
 		if (GL_CAPS.OpenGL43) // TODO: Specify why & gate it behind some other check, since it really supports OpenGL 4.2. Possibly even allow extensions.
 			GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
+
+		modelData.upload();
 
 		directionalShadowPass();
 		frameTimer.end(Timer.DRAW_SCENE);
