@@ -125,7 +125,8 @@ class SceneUploader {
 		zone.rids = new int[4][roofIds.size()];
 		zone.roofStart = new int[4][roofIds.size()];
 		zone.roofEnd = new int[4][roofIds.size()];
-		zone.modelDataSlice = modelDataSlice = modelData.obtainSlice(zone.modelCount);
+
+		modelDataSlice = zone.modelDataSlice;
 		modelIdx = 0;
 
 		for (int z = 0; z <= 3; ++z) {

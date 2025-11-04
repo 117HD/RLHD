@@ -1304,7 +1304,7 @@ public class ZoneRenderer implements Renderer {
 					a.map();
 				}
 
-				zone.initialize(o, a, eboAlpha);
+				zone.initialize(modelData, o, a, eboAlpha);
 				zone.setMetadata(wv.getId(), ctx.sceneContext, x, z);
 
 				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
@@ -1636,7 +1636,7 @@ public class ZoneRenderer implements Renderer {
 						a.map();
 					}
 
-					zone.initialize(o, a, eboAlpha);
+					zone.initialize(modelData, o, a, eboAlpha);
 					zone.setMetadata(worldView.getId(), nextSceneContext, x, z);
 				}
 			}
@@ -1769,7 +1769,7 @@ public class ZoneRenderer implements Renderer {
 						a.map();
 					}
 
-					zone.initialize(o, a, eboAlpha);
+					zone.initialize(modelData, o, a, eboAlpha);
 					zone.setMetadata(worldView.getId(), ctx.sceneContext, x, z);
 				}
 			}

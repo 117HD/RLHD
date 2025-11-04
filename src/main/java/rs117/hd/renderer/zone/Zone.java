@@ -72,7 +72,7 @@ class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void initialize(VBO o, VBO a, int eboShared) {
+	void initialize(TBOModelData modelData, VBO o, VBO a, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
@@ -92,6 +92,10 @@ class Zone {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
+		}
+
+		if(modelCount > 0) {
+			modelDataSlice = modelData.obtainSlice(modelCount);
 		}
 	}
 
