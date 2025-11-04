@@ -246,16 +246,14 @@ public class ZoneRenderer implements Renderer {
 	private Map<Integer, Integer> nextRoofChanges;
 
 	private final List<TBOModelData.Slice> frameModelDataSlices = new ArrayList<>();
-	private int sliceModelDataOffset = 0;
 	private int sliceModelDataCount = 0;
 
-	private void addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
+	private int addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
 		TBOModelData.ModelData dynamicModelData = null;
 		if(!frameModelDataSlices.isEmpty()) {
 			// Check room in the last one
 			TBOModelData.Slice currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
 			if(sliceModelDataCount < currentSlice.getSize()) {
-				sliceModelDataOffset = currentSlice.getOffset() + sliceModelDataCount;
 				dynamicModelData = currentSlice.getStruct(sliceModelDataCount++);
 			}
 		}
@@ -264,11 +262,11 @@ public class ZoneRenderer implements Renderer {
 			TBOModelData.Slice newSlice = modelData.obtainSlice(100);
 			frameModelDataSlices.add(newSlice);
 			sliceModelDataCount = 0;
-			sliceModelDataOffset = newSlice.getOffset();
 			dynamicModelData = newSlice.getStruct(sliceModelDataCount++);
 		}
 
 		dynamicModelData.setDynamic(renderable, model, override, x, y, z);
+		return dynamicModelData.modelOffset;
 	}
 
 	@Nullable
@@ -1157,8 +1155,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		addDynamicModelData(r, m, modelOverride, x, y, z);
-
+		int modelDataOffset = addDynamicModelData(r, m, modelOverride, x, y, z);
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1172,7 +1169,7 @@ public class ZoneRenderer implements Renderer {
 			VAO o = vaoO.get(size);
 			VAO a = vaoA.get(size);
 			int start = a.vbo.vb.position();
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, sliceModelDataOffset, o.vbo.vb, a.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, modelDataOffset, o.vbo.vb, a.vbo.vb);
 			int end = a.vbo.vb.position();
 			if (end > start) {
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
@@ -1180,7 +1177,7 @@ public class ZoneRenderer implements Renderer {
 			}
 		} else {
 			VAO o = vaoO.get(size);
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, sliceModelDataOffset, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, modelDataOffset, o.vbo.vb, o.vbo.vb);
 		}
 	}
 
@@ -1210,8 +1207,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		addDynamicModelData(renderable, m, modelOverride, x, y, z);
-
+		int modelDataOffset = addDynamicModelData(renderable, m, modelOverride, x, y, z);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
@@ -1238,7 +1234,7 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orientation,
 						x, y, z,
-						sliceModelDataOffset,
+						modelDataOffset,
 						o.vbo.vb,
 						a.vbo.vb
 					);
@@ -1268,7 +1264,7 @@ public class ZoneRenderer implements Renderer {
 					modelOverride,
 					preOrientation,
 					orientation,
-					x, y, z, sliceModelDataOffset,
+					x, y, z, modelDataOffset,
 					o.vbo.vb,
 					o.vbo.vb
 				);
@@ -1280,7 +1276,7 @@ public class ZoneRenderer implements Renderer {
 				modelOverride,
 				preOrientation,
 				orientation,
-				x, y, z, sliceModelDataOffset,
+				x, y, z, modelDataOffset,
 				o.vbo.vb,
 				o.vbo.vb
 			);

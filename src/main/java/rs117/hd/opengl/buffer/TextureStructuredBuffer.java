@@ -26,7 +26,7 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 	public TextureStructuredBuffer() {
 		super(GL_TEXTURE_BUFFER, GL_DYNAMIC_DRAW);
 		this.currentCapacity = 0;
-		this.alignStructs = false;
+		this.alignment = false;
 	}
 
 	public void initialize(int bindingIndex) {

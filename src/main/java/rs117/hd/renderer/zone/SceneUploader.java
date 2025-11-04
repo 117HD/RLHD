@@ -78,9 +78,6 @@ class SceneUploader {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
-	@Inject
-	private TBOModelData modelData;
-
 	private int basex, basez, rid, level;
 
 	private TBOModelData.Slice modelDataSlice;
@@ -1151,10 +1148,8 @@ class SceneUploader {
 		int preOrientation, int orientation, int x, int y, int z,
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
-		final int modelOffset = modelDataSlice.getOffset() + modelIdx;
-		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelIdx);
+		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelIdx++);
 		modelData.setStatic(model, modelOverride, x, y, z);
-		modelIdx++;
 
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1357,19 +1352,19 @@ class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0, modelOffset
+				modelNormals[0], modelNormals[1], modelNormals[2], 0, modelData.modelOffset
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0, modelOffset
+				modelNormals[3], modelNormals[4], modelNormals[5], 0, modelData.modelOffset
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0, modelOffset
+				modelNormals[6], modelNormals[7], modelNormals[8], 0, modelData.modelOffset
 			);
 
 			len += 3;

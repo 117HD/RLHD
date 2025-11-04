@@ -17,7 +17,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 
 	@RequiredArgsConstructor
 	public static class ModelData extends StructProperty {
-		public final int modelIdx;
+		public final int modelOffset;
 		public final Property position = addProperty(PropertyType.IVec3, "position");
 		public final Property height = addProperty(PropertyType.Int, "height");
 		public final Property flags = addProperty(PropertyType.Int, "flags");
@@ -25,13 +25,13 @@ public class TBOModelData extends TextureStructuredBuffer {
 		public void setStatic(Model model, ModelOverride override, int x, int y, int z ) {
 			position.set(x, y, z);
 			height.set(model.getModelHeight());
-			flags.set(modelIdx);
+			flags.set(modelOffset);
 		}
 
 		public void setDynamic(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
 			position.set(x, y, z);
 			height.set(model.getModelHeight());
-			flags.set(modelIdx);
+			flags.set(modelOffset);
 		}
 	}
 

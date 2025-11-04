@@ -259,7 +259,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 	protected FloatBuffer dataFloat;
 	protected final List<Property> properties = new ArrayList<>();
 	protected final List<StructDefinition> structDefinitions = new ArrayList<>();
-	protected boolean alignStructs = true;
+	protected boolean alignment = true;
 
 	@Getter
 	protected int bindingIndex;
@@ -290,8 +290,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		for (Property property : newStructProp.properties)
 			appendToBuffer(property);
 
-		if(alignStructs)
-			size += (16 - (size % 16)) % 16;
+		if(alignment) size += (16 - (size % 16)) % 16;
 
 		String structName = newStructProp.getClass().getSimpleName();
 		if(getStructDefinition(structName) == null) {
@@ -330,7 +329,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 	private Property appendToBuffer(Property property) {
 		property.owner = this;
 
-		int padding = (property.type.alignment - (size % property.type.alignment)) % property.type.alignment;
+		int padding = alignment ? (property.type.alignment - (size % property.type.alignment)) % property.type.alignment : 0;
 		property.position = size + padding;
 		property.offset = property.position / 4;
 
