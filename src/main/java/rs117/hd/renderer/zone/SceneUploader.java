@@ -82,6 +82,8 @@ class SceneUploader {
 	private TBOModelData modelData;
 
 	private int basex, basez, rid, level;
+
+	private TBOModelData.Slice modelDataSlice;
 	private short modelIdx;
 
 	private final float[] workingSpace = new float[9];
@@ -91,6 +93,7 @@ class SceneUploader {
 	void zoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 
+		zone.modelCount = 0;
 		for (int z = 3; z >= 0; --z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -122,7 +125,7 @@ class SceneUploader {
 		zone.rids = new int[4][roofIds.size()];
 		zone.roofStart = new int[4][roofIds.size()];
 		zone.roofEnd = new int[4][roofIds.size()];
-		zone.modelOffset = 0; // TODO: Zone Model Count is known, therefore we can find a free chunk within the TBO
+		zone.modelDataSlice = modelDataSlice = modelData.obtainSlice(zone.modelCount);
 		modelIdx = 0;
 
 		for (int z = 0; z <= 3; ++z) {
@@ -256,8 +259,6 @@ class SceneUploader {
 	private void zoneSize(ZoneSceneContext ctx, Zone z, Tile t) {
 		var tilePoint = t.getSceneLocation();
 		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
-
-		z.modelCount = 0;
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && paint.getNeColor() != HIDDEN_HSL) {
@@ -1150,6 +1151,9 @@ class SceneUploader {
 		int preOrientation, int orientation, int x, int y, int z, short modelOffset,
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
+		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelOffset);
+		modelData.value.set(modelOffset); // TODO: Whatever we need?
+
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 

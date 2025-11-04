@@ -18,6 +18,12 @@ public abstract class UniformStructuredBuffer<GLBUFFER extends GLBuffer> extends
 		bind(bindingIndex);
 	}
 
+	@Override
+	protected void onAppendToBuffer(Property property) {
+		if (size > 65536)
+			log.warn("Uniform buffer {} is too large when adding property: {}! ({} bytes)", glBuffer.name, property.name, size);
+	}
+
 	public String getUniformBlockName() {
 		return glBuffer.name;
 	}

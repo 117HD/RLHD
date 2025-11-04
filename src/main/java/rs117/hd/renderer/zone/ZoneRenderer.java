@@ -50,6 +50,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.opengl.buffer.storage.TBOModelData;
 import rs117.hd.opengl.buffer.uniforms.UBOLights;
 import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 import rs117.hd.opengl.shader.SceneShaderProgram;
@@ -138,6 +139,9 @@ public class ZoneRenderer implements Renderer {
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
+	private TBOModelData modelData;
+
+	@Inject
 	private SceneUploader sceneUploader;
 
 	@Inject
@@ -200,14 +204,14 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		void free() {
+		void free(TBOModelData modelData) {
 			if (sceneContext != null)
 				sceneContext.destroy();
 			sceneContext = null;
 
 			for (int x = 0; x < sizeX; ++x)
 				for (int z = 0; z < sizeZ; ++z)
-					zones[x][z].free();
+					zones[x][z].free(modelData);
 		}
 	}
 
@@ -261,20 +265,22 @@ public class ZoneRenderer implements Renderer {
 		initializeBuffers();
 
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
+		modelData.initialize();
 	}
 
 	@Override
 	public void destroy() {
-		root.free();
+		root.free(modelData);
 
 		for (int i = 0; i < subs.length; i++) {
 			if (subs[i] != null)
-				subs[i].free();
+				subs[i].free(modelData);
 			subs[i] = null;
 		}
 
 		destroyBuffers();
 		uboWorldViews.destroy();
+		modelData.destroy();
 
 		nextZones = null;
 		nextRoofChanges = null;
@@ -1277,7 +1283,7 @@ public class ZoneRenderer implements Renderer {
 					continue;
 
 				assert zone.initialized;
-				zone.free();
+				zone.free(modelData);
 				zone = ctx.zones[x][z] = new Zone();
 
 				SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
@@ -1725,7 +1731,7 @@ public class ZoneRenderer implements Renderer {
 		WorldViewContext prevCtx = subs[worldViewId];
 		if (prevCtx != null) {
 			log.error("Reload of an already loaded sub scene?");
-			prevCtx.free();
+			prevCtx.free(modelData);
 		}
 		assert prevCtx == null;
 
@@ -1789,7 +1795,7 @@ public class ZoneRenderer implements Renderer {
 		int worldViewId = worldView.getId();
 		if (worldViewId > -1) {
 			log.debug("WorldView despawn: {}", worldViewId);
-			subs[worldViewId].free();
+			subs[worldViewId].free(modelData);
 			subs[worldViewId] = null;
 		}
 	}
@@ -1840,7 +1846,7 @@ public class ZoneRenderer implements Renderer {
 				Zone zone = ctx.zones[x][z];
 
 				if (zone.cull) {
-					zone.free();
+					zone.free(modelData);
 				} else {
 					// reused zone
 					zone.updateRoofs(nextRoofChanges);

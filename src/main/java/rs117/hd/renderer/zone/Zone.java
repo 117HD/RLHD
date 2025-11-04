@@ -11,6 +11,7 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.opengl.buffer.storage.TBOModelData;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.Camera;
@@ -67,7 +68,7 @@ class Zone {
 	int[][] roofStart;
 	int[][] roofEnd;
 	short modelCount;
-	int modelOffset;
+	TBOModelData.Slice modelDataSlice;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
@@ -109,7 +110,7 @@ class Zone {
 		vboM.unmap();
 	}
 
-	void free() {
+	void free(TBOModelData tboModelData) {
 		if (vboO != null) {
 			vboO.destroy();
 			vboO = null;
@@ -134,6 +135,12 @@ class Zone {
 			glDeleteVertexArrays(glVaoA);
 			glVaoA = 0;
 		}
+
+		if(modelDataSlice != null) {
+			modelDataSlice.free();
+			modelDataSlice = null;
+		}
+		modelCount = 0;
 
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache

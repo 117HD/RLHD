@@ -295,17 +295,19 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		return result;
 	}
 
+	protected void onAppendToBuffer(Property property) { }
+
 	private Property appendToBuffer(Property property) {
 		property.owner = this;
 
 		int padding = (property.type.alignment - (size % property.type.alignment)) % property.type.alignment;
 		property.position = size + padding;
+		property.offset = property.position / 4;
 
 		size += property.type.size + padding;
 		properties.add(property);
 
-		if (size > 65536)
-			log.warn("Uniform buffer {} is too large! ({} bytes)", glBuffer.name, size);
+		onAppendToBuffer(property);
 
 		return property;
 	}
@@ -325,10 +327,6 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 		data = BufferUtils.createByteBuffer(size);
 		dataInt = data.asIntBuffer();
 		dataFloat = data.asFloatBuffer();
-
-		// Since everything is aligned to a multiple of 4 bytes, we can easily define offsets into dataInt and dataFloat
-		for (Property prop : properties)
-			prop.offset = prop.position / 4;
 	}
 
 	public void bind(int bindingIndex) {
