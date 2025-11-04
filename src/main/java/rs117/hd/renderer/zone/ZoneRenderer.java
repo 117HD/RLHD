@@ -99,8 +99,9 @@ public class ZoneRenderer implements Renderer {
 	private static final int MAX_WORLDVIEWS = 4096;
 
 	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
-	public static final int UNIFORM_BLOCK_COMMAND_BUFFER = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
+
+	public static final int TEXTURE_UNIT_MODEL_DATA = GL_TEXTURE0 + HdPlugin.TEXTURE_UNIT_COUNT++;
 
 	@Inject
 	private Injector injector;
@@ -265,7 +266,7 @@ public class ZoneRenderer implements Renderer {
 		initializeBuffers();
 
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
-		modelData.initialize();
+		modelData.initialize(TEXTURE_UNIT_MODEL_DATA);
 	}
 
 	@Override

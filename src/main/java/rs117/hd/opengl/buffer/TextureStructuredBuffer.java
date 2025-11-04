@@ -8,6 +8,7 @@ import rs117.hd.utils.buffer.GLBuffer;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glGenTextures;
+import static org.lwjgl.opengl.GL13.glActiveTexture;
 import static org.lwjgl.opengl.GL15.GL_DYNAMIC_DRAW;
 import static org.lwjgl.opengl.GL15.glBindBuffer;
 import static org.lwjgl.opengl.GL15.glBufferData;
@@ -15,6 +16,7 @@ import static org.lwjgl.opengl.GL15C.glBufferSubData;
 import static org.lwjgl.opengl.GL30.GL_R32I;
 import static org.lwjgl.opengl.GL31.GL_TEXTURE_BUFFER;
 import static org.lwjgl.opengl.GL31.glTexBuffer;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_UNUSED;
 
 @Slf4j
 public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
@@ -26,14 +28,16 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 		this.currentCapacity = 0;
 	}
 
-	@Override
-	public void initialize() {
+	public void initialize(int bindingIndex) {
 		super.initialize();
+		bind(bindingIndex);
 
 		// Create the texture buffer
 		textureId = glGenTextures();
+		glActiveTexture(bindingIndex);
 		glBindTexture(GL_TEXTURE_BUFFER, textureId);
 		glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
+		glActiveTexture(TEXTURE_UNIT_UNUSED);
 		glBindTexture(GL_TEXTURE_BUFFER, 0);
 		currentCapacity = size;
 	}

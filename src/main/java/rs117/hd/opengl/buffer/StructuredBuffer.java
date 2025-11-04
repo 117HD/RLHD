@@ -319,7 +319,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 
 	protected boolean preUpload() { return true; }
 
-	public void initialize() {
+	protected void initialize() {
 		if (data != null)
 			destroy();
 
