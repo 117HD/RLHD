@@ -1,14 +1,20 @@
 #pragma once
 
-#include <utils/constants.glsl>
+struct ModelData {
+    int flags;
+};
 
 #if ZONE_RENDERER
-    struct ModelData {
-        int flags;
-    };
-
-    uniform isampler1D modelData;
+    uniform isampler1D modelDataBuffer;
 
     #include MODEL_DATA_GETTER
+
+    ModelData getModelData(int idx) {
+        return MODEL_DATA_GETTER(idx, modelDataBuffer);
+    }
 #else
+    ModelData getModelData(int idx) {
+        ModelData ret;
+        return ret;
+    }
 #endif

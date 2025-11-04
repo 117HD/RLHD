@@ -597,7 +597,7 @@ class SceneUploader {
 		Model model = null;
 		if (r instanceof Model) {
 			model = (Model) r;
-			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, modelIdx++, vertexBuffer, ab);
+			uploadStaticModel(model, modelOverride, preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab);
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
 			if (model != null) {
@@ -609,7 +609,6 @@ class SceneUploader {
 					x - basex,
 					y,
 					z - basez,
-					modelIdx++,
 					vertexBuffer,
 					ab
 				);
@@ -1149,11 +1148,13 @@ class SceneUploader {
 	private int uploadStaticModel(
 		Model model,
 		ModelOverride modelOverride,
-		int preOrientation, int orientation, int x, int y, int z, short modelOffset,
+		int preOrientation, int orientation, int x, int y, int z,
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
-		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelOffset);
-		modelData.value.set(modelOffset); // TODO: Whatever we need?
+		final short modelOffset = (short) (modelDataSlice.getOffset() + modelIdx);
+		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelIdx);
+		modelData.value.set(modelIdx); // TODO: Whatever we need?
+		modelIdx++;
 
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();

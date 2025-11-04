@@ -48,7 +48,8 @@ out int gTerrainData;
 out int gWorldViewId;
 
 void main() {
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+    ModelData modelData = getModelData(vModelOffset);
+    vec3 sceneOffset = vec3(vSceneBase.x, modelData.flags * 100, vSceneBase.y);
     gPosition = vec3(getWorldViewProjection(vWorldViewId) * vec4(sceneOffset + vPosition, 1));
     gUv = vUv;
     gNormal = vNormal;
