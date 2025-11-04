@@ -7,24 +7,44 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 import javax.inject.Singleton;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import net.runelite.api.*;
 import rs117.hd.opengl.buffer.TextureStructuredBuffer;
+import rs117.hd.scene.model_overrides.ModelOverride;
 
 @Singleton
 public class TBOModelData extends TextureStructuredBuffer {
 
+	@RequiredArgsConstructor
 	public static class ModelData extends StructProperty {
-		public final Property value = addProperty(PropertyType.Int, "flags");
+		public final int modelIdx;
+		public final Property position = addProperty(PropertyType.IVec3, "position");
+		public final Property height = addProperty(PropertyType.Int, "height");
+		public final Property flags = addProperty(PropertyType.Int, "flags");
+
+		public void setStatic(Model model, ModelOverride override, int x, int y, int z ) {
+			position.set(x, y, z);
+			height.set(model.getModelHeight());
+			flags.set(modelIdx);
+		}
+
+		public void setDynamic(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
+			position.set(x, y, z);
+			height.set(model.getModelHeight());
+			flags.set(modelIdx);
+		}
 	}
 
 	private final List<ModelData> modelDataProperties = new ArrayList<>();
-	private final NavigableSet<Slice> freeSlices = new TreeSet<>(Comparator.comparingInt(Slice::getOffset));
 	private final List<Slice> activeSlices = new ArrayList<>();
+	private final NavigableSet<Slice> freeSlices = new TreeSet<>(Comparator.comparingInt(Slice::getOffset));
+	private final boolean VALIDATE_SLICES = false;
 
 	public TBOModelData() {
 		super();
 		Slice initialSlice = new Slice(this, 0, 1000);
 		for (int i = 0; i < 1000; i++) {
-			modelDataProperties.add(addStruct(new ModelData()));
+			modelDataProperties.add(addStruct(new ModelData(i)));
 		}
 		freeSlices.add(initialSlice);
 	}
@@ -58,8 +78,9 @@ public class TBOModelData extends TextureStructuredBuffer {
 
 		// Expand buffer if no free slice is available
 		Slice newSlice = new Slice(this, modelDataProperties.size(), size);
+		int modelCount = modelDataProperties.size();
 		for (int i = 0; i < size; i++)
-			modelDataProperties.add(addStruct(new ModelData()));
+			modelDataProperties.add(addStruct(new ModelData(modelCount + i)));
 
 		activeSlices.add(newSlice);
 		upload();
@@ -90,13 +111,15 @@ public class TBOModelData extends TextureStructuredBuffer {
 	}
 
 	private void validateSlices() {
+		if(!VALIDATE_SLICES)
+			return;
+
 		// Validate freeSlices are sorted and non-overlapping
 		Slice prev = null;
 		for (Slice curr : freeSlices) {
 			if (prev != null) {
 				assert prev.offset + prev.size <= curr.offset :
-					"Free slices overlap! Previous: [" + prev.offset + ", " + (prev.offset + prev.size) +
-					"] Current: [" + curr.offset + ", " + (curr.offset + curr.size) + "]";
+					"Free slices overlap! Previous: " + prev + " Current: " + curr;
 			}
 			prev = curr;
 		}
@@ -107,8 +130,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 			Slice a = activeSlices.get(i - 1);
 			Slice b = activeSlices.get(i);
 			assert a.offset + a.size <= b.offset :
-				"Active slices overlap! Previous: [" + a.offset + ", " + (a.offset + a.size) +
-				"] Current: [" + b.offset + ", " + (b.offset + b.size) + "]";
+				"Active slices overlap! Previous: " + a + " Current: " + b;
 		}
 
 		// Validate freeSlices do not overlap activeSlices
@@ -116,8 +138,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 			for (Slice active : activeSlices) {
 				boolean overlap = free.offset < active.offset + active.size && active.offset < free.offset + free.size;
 				assert !overlap :
-					"Free slice [" + free.offset + ", " + (free.offset + free.size) +
-					"] overlaps active slice [" + active.offset + ", " + (active.offset + active.size) + "]";
+					"Free slice " + free + " overlaps active slice " + active;
 			}
 		}
 	}
@@ -168,5 +189,8 @@ public class TBOModelData extends TextureStructuredBuffer {
 
 			data.validateSlices();
 		}
+
+		@Override
+		public String toString() { return "[" + offset + ", " + (offset + size) + "]"; }
 	}
 }

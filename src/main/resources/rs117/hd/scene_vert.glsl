@@ -52,7 +52,7 @@ void main() {
 
     if(vModelOffset > 0) {
         ModelData modelData = getModelData(vModelOffset);
-        if(modelData.flags == vModelOffset) {
+        if(modelData.flags == (vModelOffset - 1)) {
            sceneOffset.y += 1000;
         }
     }

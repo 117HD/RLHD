@@ -249,22 +249,26 @@ public class ZoneRenderer implements Renderer {
 	private int sliceModelDataOffset = 0;
 	private int sliceModelDataCount = 0;
 
-	private TBOModelData.ModelData getFrameModelData() {
+	private void addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
+		TBOModelData.ModelData dynamicModelData = null;
 		if(!frameModelDataSlices.isEmpty()) {
 			// Check room in the last one
 			TBOModelData.Slice currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
 			if(sliceModelDataCount < currentSlice.getSize()) {
 				sliceModelDataOffset = currentSlice.getOffset() + sliceModelDataCount;
-				return currentSlice.getStruct(sliceModelDataCount++);
+				dynamicModelData = currentSlice.getStruct(sliceModelDataCount++);
 			}
 		}
 
-		// grab a new slice
-		TBOModelData.Slice newSlice = modelData.obtainSlice(100);
-		frameModelDataSlices.add(newSlice);
-		sliceModelDataCount = 0;
-		sliceModelDataOffset = newSlice.getOffset();
-		return newSlice.getStruct(sliceModelDataCount++);
+		if(dynamicModelData == null) {
+			TBOModelData.Slice newSlice = modelData.obtainSlice(100);
+			frameModelDataSlices.add(newSlice);
+			sliceModelDataCount = 0;
+			sliceModelDataOffset = newSlice.getOffset();
+			dynamicModelData = newSlice.getStruct(sliceModelDataCount++);
+		}
+
+		dynamicModelData.setDynamic(renderable, model, override, x, y, z);
 	}
 
 	@Nullable
@@ -1153,8 +1157,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		TBOModelData.ModelData modelData = getFrameModelData();
-		modelData.value.set(sliceModelDataOffset);
+		addDynamicModelData(r, m, modelOverride, x, y, z);
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
@@ -1207,8 +1210,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		TBOModelData.ModelData modelData = getFrameModelData();
-		modelData.value.set(sliceModelDataOffset);
+		addDynamicModelData(renderable, m, modelOverride, x, y, z);
 
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 

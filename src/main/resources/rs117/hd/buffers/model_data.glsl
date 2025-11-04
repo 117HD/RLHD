@@ -1,6 +1,8 @@
 #pragma once
 
 struct ModelData {
+    ivec3 position;
+    int height;
     int flags;
 };
 
@@ -14,7 +16,7 @@ struct ModelData {
         if(idx <= 0) {
             return ret;
         }
-        ret  = MODEL_DATA_GETTER(idx, modelDataBuffer);
+        ret = MODEL_DATA_GETTER(idx - 1, modelDataBuffer);
         return ret;
     }
 #else

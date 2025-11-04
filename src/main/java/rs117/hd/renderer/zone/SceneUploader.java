@@ -838,37 +838,37 @@ class SceneUploader {
 		vb.putVertex(
 			lx2, neHeight, lz2, neColor,
 			uvx, uvy, 0, neMaterialData,
-			neNormals[0], neNormals[2], neNormals[1], neTerrainData, (short)0
+			neNormals[0], neNormals[2], neNormals[1], neTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3, nwColor,
 			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, (short)0
+			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1, seColor,
 			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData, (short)0
+			seNormals[0], seNormals[2], seNormals[1], seTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx0, swHeight, lz0, swColor,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0, swMaterialData,
-			swNormals[0], swNormals[2], swNormals[1], swTerrainData, (short)0
+			swNormals[0], swNormals[2], swNormals[1], swTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1, seColor,
 			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData, (short)0
+			seNormals[0], seNormals[2], seNormals[1], seTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3, nwColor,
 			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, (short)0
+			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, -1
 		);
 	}
 
@@ -1127,19 +1127,19 @@ class SceneUploader {
 			vb.putVertex(
 				lx0, ly0, lz0, colorA,
 				uvAx, uvAy, 0, materialDataA,
-				normalsA[0], normalsA[2], normalsA[1], terrainDataA, (short)0
+				normalsA[0], normalsA[2], normalsA[1], terrainDataA, -1
 			);
 
 			vb.putVertex(
 				lx1, ly1, lz1, colorB,
 				uvBx, uvBy, 0, materialDataB,
-				normalsB[0], normalsB[2], normalsB[1], terrainDataB, (short)0
+				normalsB[0], normalsB[2], normalsB[1], terrainDataB, -1
 			);
 
 			vb.putVertex(
 				lx2, ly2, lz2, colorC,
 				uvCx, uvCy, 0, materialDataC,
-				normalsC[0], normalsC[2], normalsC[1], terrainDataC, (short)0
+				normalsC[0], normalsC[2], normalsC[1], terrainDataC, -1
 			);
 		}
 	}
@@ -1153,7 +1153,7 @@ class SceneUploader {
 	) {
 		final int modelOffset = modelDataSlice.getOffset() + modelIdx;
 		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelIdx);
-		modelData.value.set(modelOffset); // TODO: Whatever we need?
+		modelData.setStatic(model, modelOverride, x, y, z);
 		modelIdx++;
 
 		final int triangleCount = model.getFaceCount();
