@@ -92,11 +92,15 @@ void main() {
 
     #if UNDO_VANILLA_SHADING && ZONE_RENDERER
         if ((materialData >> MATERIAL_FLAG_UNDO_VANILLA_SHADING & 1) == 1) {
-            vec3 normal = N;
             for (int i = 0; i < 3; i++) {
-                #if !FLAT_SHADING
-                    normal = length(gNormal[i]) == 0 ? N : normalize(gNormal[i]);
-                #endif
+                vec3 normal = gNormal[i];
+                float magnitude = length(normal);
+                if (magnitude == 0) {
+                    normal = N;
+                } else {
+                    normal /= magnitude;
+                }
+                // TODO: Rotate normal for player shading reversal
                 undoVanillaShading(vAlphaBiasHsl[i], normal);
             }
         }
