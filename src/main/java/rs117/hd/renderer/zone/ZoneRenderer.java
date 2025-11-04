@@ -1886,6 +1886,8 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
+		modelData.defrag();
+
 		checkGLErrors();
 	}
 

@@ -56,7 +56,6 @@ public class TextureStructuredBuffer extends StructuredBuffer<GLBuffer> {
 				newData.flip();
 			}
 
-			// TODO: Could this be moved to StructuredBuffer?
 			glBindBuffer(glBuffer.target, glBuffer.id);
 			glBufferData(glBuffer.target, newSize, GL_DYNAMIC_DRAW);
 			glBufferSubData(glBuffer.target, 0, newData);

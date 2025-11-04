@@ -1151,9 +1151,9 @@ class SceneUploader {
 		int preOrientation, int orientation, int x, int y, int z,
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
-		final short modelOffset = (short) (modelDataSlice.getOffset() + modelIdx);
+		final int modelOffset = modelDataSlice.getOffset() + modelIdx;
 		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelIdx);
-		modelData.value.set(modelIdx); // TODO: Whatever we need?
+		modelData.value.set(modelOffset); // TODO: Whatever we need?
 		modelIdx++;
 
 		final int triangleCount = model.getFaceCount();

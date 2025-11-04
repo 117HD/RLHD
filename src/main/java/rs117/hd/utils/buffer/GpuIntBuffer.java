@@ -91,7 +91,7 @@ public class GpuIntBuffer
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		int u, int v, int w, int materialData,
-		int nx, int ny, int nz, int terrainData, short modelOffset
+		int nx, int ny, int nz, int terrainData, int modelOffset
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put((u & 0xFFFF) << 16 | z & 0xFFFF);
@@ -111,7 +111,7 @@ public class GpuIntBuffer
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		float nx, float ny, float nz, int terrainData, short modelOffset
+		float nx, float ny, float nz, int terrainData, int modelOffset
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(float16(u) << 16 | z & 0xFFFF);
@@ -128,7 +128,7 @@ public class GpuIntBuffer
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		int nx, int ny, int nz, int terrainData, short modelOffset
+		int nx, int ny, int nz, int terrainData, int modelOffset
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(float16(u) << 16 | z & 0xFFFF);
