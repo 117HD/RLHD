@@ -11113,7 +11113,8 @@
       "VMQ1_BANDIT_DOOR_OPEN",
       "VMQ1_BANDIT_DOOR_NOOP",
       "ELID_GENIE_DOOR",
-      "ELID_GENIE_DOOR_OPEN"
+      "ELID_GENIE_DOOR_OPEN",
+      "SLUG2_VILLAGE_POORDOOR"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -23197,7 +23198,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POOR_WALL_SUPPORT",
-      "FAI_VARROCK_POOR_WALL_SUPPORT2"
+      "FAI_VARROCK_POOR_WALL_SUPPORT2",
+      "SLUG2_POOR_WALL_SUPPORT"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -58870,6 +58872,116 @@
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 192
+      }
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Barrels",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_ROTTEN_BARREL"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Metallic - Barrels",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_ROTTEN_BARREL_BROKEN"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      }
+    ],
+    "objectIds": [
+      "SLUG2_VILLAGE_WALL",
+      "SLUG2_VILLAGE_WALLEND_LEFT",
+      "SLUG2_VILLAGE_WALLEND_RIGHT",
+      "SLUG2_VILLAGE_WINDOW",
+      "SLUG2_VILLAGE_WALL_TYPE2",
+      "SLUG2_VILLAGE_WALL_LEVEL_TWO",
+      "SLUG2_VILLAGE_WALL_LEVEL_TWO_WINDOW",
+      "SLUG2_MAYOR_WALL",
+      "SLUG2_MAYOR_WINDOW",
+      "SLUG2_MAYOR_WALLEND_LEFT",
+      "SLUG2_MAYOR_WALLEND_RIGHT",
+      "SLUG2_MAYOR_WALL_LEVEL_TWO",
+      "SLUG2_MAYOR_WALL_LEVEL_TWO_WINDOW",
+      "SLUG2_MAYOR_LEVEL_TWO_WALL_END",
+      "SLUG2_MAYOR_LEVEL_TWO_WALL_END_MIRROR"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Church Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLUG2_CHURCH_WALL",
+      "SLUG2_CHURCH_WALLEND_LEFT",
+      "SLUG2_CHURCH_WALLEND_RIGHT",
+      "SLUG2_CHURCH_WINDOW",
+      "SLUG2_CHURCH_WINDOW_LEV_TWO",
+      "SLUG2_CHURCH_WALL_LEVEL_TWO",
+      "SLUG2_CHURCH_WALL_LEVEL_TWO_END",
+      "SLUG2_CHURCH_WALL_LEVEL_TWO_END_MIRROR",
+      "SLUG2_CHURCH_PINNACLE"
+    ]
+  },
+  {
+    "description": "Witchaven -  Glass - Church Stained glass",
+    "baseMaterial": "BLANK_GLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLUG2_STAIN_WINDOW_OUTSIDE"
+    ]
+  },
+  {
+    "description": "Kourend - Hosidius - Tithe Farm - Water Barrel",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "SLUG2_WATER_BARREL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h >= 30",
+        "baseMaterial": "WATER_FLAT",
+        "uvType": "BOX"
       }
     ]
   }
