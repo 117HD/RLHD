@@ -463,6 +463,7 @@ public class LegacyRenderer implements Renderer {
 
 		uboCompute = new UBOCompute();
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
+		plugin.uboDisplacement.initialize(HdPlugin.UNIFORM_BLOCK_DISPLACEMENT);
 
 		modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -480,6 +481,8 @@ public class LegacyRenderer implements Renderer {
 	private void destroyBuffers() {
 		uboCompute.destroy();
 		uboCompute = null;
+
+		plugin.uboDisplacement.destroy();
 
 		hStagingBufferVertices.destroy();
 		hStagingBufferUvs.destroy();

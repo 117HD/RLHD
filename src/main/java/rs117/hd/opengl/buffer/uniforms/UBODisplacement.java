@@ -17,7 +17,6 @@ public class UBODisplacement extends UniformStructuredBuffer<SharedGLBuffer> {
 	private static final Comparator<CharacterPositionPair> CHARACTER_POSITION_PAIR_COMPARATOR =
 		Comparator.comparingDouble(p -> p.dist);
 
-
 	public Property windDirectionX = addProperty(PropertyType.Float, "windDirectionX");
 	public Property windDirectionZ = addProperty(PropertyType.Float, "windDirectionZ");
 	public Property windStrength = addProperty(PropertyType.Float, "windStrength");

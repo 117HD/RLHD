@@ -89,6 +89,7 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.UNIFORM_BLOCK_DISPLACEMENT;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
@@ -239,6 +240,7 @@ public class ZoneRenderer implements Renderer {
 		initializeBuffers();
 
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
+		plugin.uboDisplacement.initialize(UNIFORM_BLOCK_DISPLACEMENT);
 		modelData.initialize(TEXTURE_UNIT_MODEL_DATA);
 	}
 
@@ -254,6 +256,7 @@ public class ZoneRenderer implements Renderer {
 
 		destroyBuffers();
 		uboWorldViews.destroy();
+		plugin.uboDisplacement.destroy();
 		modelData.destroy();
 
 		nextZones = null;

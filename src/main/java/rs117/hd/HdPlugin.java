@@ -81,7 +81,6 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.AsyncUICopy;
-import rs117.hd.opengl.buffer.uniforms.UBOCompute;
 import rs117.hd.opengl.buffer.uniforms.UBODisplacement;
 import rs117.hd.opengl.buffer.uniforms.UBOGlobal;
 import rs117.hd.opengl.buffer.uniforms.UBOLights;
@@ -999,7 +998,6 @@ public class HdPlugin extends Plugin {
 		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
 		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
 		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
-		uboDisplacement.initialize(HdPlugin.UNIFORM_BLOCK_DISPLACEMENT);
 	}
 
 	private void destroyUbos() {
@@ -1007,7 +1005,6 @@ public class HdPlugin extends Plugin {
 		uboLights.destroy();
 		uboLightsCulling.destroy();
 		uboUI.destroy();
-		uboDisplacement.destroy();
 	}
 
 	private void initializeUiTexture() {
