@@ -52,6 +52,7 @@ public class SliceAllocator<SLICE extends SliceAllocator.Slice> {
 		for (int i = 0; i < initialSliceCount; i++) {
 			SLICE slice = allocator.createSlice(offset, initialSliceSize);
 			slice.owner = this;
+			slice.allocate();
 			freeSlices.add(slice);
 			offset += initialSliceSize;
 		}
