@@ -7483,7 +7483,9 @@
       "DUEL_SCAFFOLD_EDGE",
       "SARIM_SEAGULL_DROPPINGS",
       "SERIM_PIER",
-      "SKEWSTEPS_WOOD01_DEFAULT"
+      "QUEST_START_ICON_PANDEMONIUM",
+      "SKEWSTEPS_WOOD01_DEFAULT",
+      "SALVAGING_STATION_ICON_SERIM_PIER"
     ],
     "uvType": "BOX"
   },
@@ -28813,7 +28815,9 @@
       "TRAWLER_HULL_12",
       "TRAWLER_HULL_DEFAULT",
       "TRAWLER_SHIPRAIL",
-      "TRAWLER_SHIPRAIL_BROKEN_FLOOR"
+      "TRAWLER_SHIPRAIL_BROKEN_FLOOR",
+      "DRAGONSHIPLADDER",
+      "DRAGONSHIPLADDERTOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -29067,7 +29071,8 @@
       "TRAWLERNET_L",
       "TRAWLERNET_R",
       "TRAWLERNET_TOP_L",
-      "TRAWLERNET_TOP_R"
+      "TRAWLERNET_TOP_R",
+      "TRAWLER_UPDATE_NET_RAISED"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -29195,7 +29200,8 @@
       "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF", "DS2_CORSAIR_COVE_SHIPPLANK", "SAILING_RIMMINGTON_SHIPPLANK_ON",
       "SAILING_RIMMINGTON_SHIPPLANK_OFF", "SAILING_RIMMINGTON_SHIPPLANK2_ON", "SAILING_RIMMINGTON_SHIPPLANK2_OFF", "SAILING_SARIM_VEOS_SHIPPLANK_ON",
       "SAILING_SARIM_VEOS_SHIPPLANK_OFF", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_ON_2", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_OFF_2", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON_2",
-      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2", "SAILING_FORTIS_SHIPPLANK_OFF", "SAILING_FORTIS_SHIPPLANK_ON", "SAILING_FORTIS_SHIPPLANK_NOOP"
+      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2", "SAILING_FORTIS_SHIPPLANK_OFF", "SAILING_FORTIS_SHIPPLANK_ON", "SAILING_FORTIS_SHIPPLANK_NOOP",
+      "SAILING_ALDARIN_SHIPPLANK_OFF", "SAILING_ALDARIN_SHIPPLANK_ON"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -58870,6 +58876,94 @@
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 192
+      }
+    ]
+  },
+  {
+    "description": "Ship - Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BOATKIT_SHIPHULL_STRAIGHT01",
+      "BOATKIT_SHIPHULL_DIAGONAL01",
+      "BOATKIT_SHIPHULL_DIAGONAL02",
+      "BOATKIT_SHIPHULL_DIAGONAL02_MIRROR",
+      "BOATKIT_DECK_DIAGONAL01",
+      "BOATKIT_DECK_DIAGONAL01_MIRROR",
+      "BOATKIT_DECK_STRAIGHT01",
+      "BOATKIT_DECK_STRAIGHT02",
+      "BOATKIT_DECK_STRAIGHT03",
+      "BOATKIT_SHIPHULL_WALL_LOW01",
+      "BOATKIT_SHIPHULL_BACKBOARD_RIGHT",
+      "BOATKIT_SHIPHULL_BACKBOARD_MIDDLE",
+      "BOATKIT_SHIPHULL_BACKBOARD_LEFT",
+      "BOATKIT_DECK_HOLE01",
+      "BOATKIT_SHIPHULL_DIAGONAL01_FILLER",
+      "TRAWLER_UPDATE_HULLWALL01",
+      "TRAWLER_UPDATE_HULLWALL01_MIRROR",
+      "TRAWLER_UPDATE_HULLWALL02"
+    ]
+  },
+  {
+    "description": "Ship - Wood with Sails or Metal",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "BOATKIT_SHIPHULL_FIGUREHEAD01",
+      "BOATKIT_SHIPHULL_PORTHOLE01",
+      "BOATKIT_MAST_FRONTMAST_HOISTED",
+      "BOATKIT_SHIPHULL_RAILING01",
+      "BOATKIT_HELM01",
+      "BOATKIT_SHIPHULL_RAILING01_STAIR",
+      "BOATKIT_SHIPHULL_CANNON01",
+      "BOATKIT_SHIPHULL_RAILING01_STAIR_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Hull",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Ship - Wood with Sails or Metal - Rotated",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "BOATKIT_MAST_MIDDLEMAST_HOISTED",
+      "BOATKIT_MAST_REARMAST_HOISTED",
+      "BOATKIT_MAST_MIDDLEMAST_UNFURLED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Hull",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
       }
     ]
   }
