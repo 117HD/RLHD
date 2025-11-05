@@ -265,7 +265,7 @@ public class ZoneRenderer implements Renderer {
 			dynamicModelData = newSlice.getStruct(sliceModelDataCount++);
 		}
 
-		dynamicModelData.setDynamic(renderable, model, override, x, y, z);
+		dynamicModelData.set(renderable, model, override, x, y, z);
 		return dynamicModelData.modelOffset;
 	}
 

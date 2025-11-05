@@ -1149,7 +1149,7 @@ class SceneUploader {
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
 		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelIdx++);
-		modelData.setStatic(model, modelOverride, x, y, z);
+		modelData.set(null, model, modelOverride, x, y, z);
 
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();

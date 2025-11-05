@@ -22,16 +22,12 @@ public class TBOModelData extends TextureStructuredBuffer {
 		public final Property height = addProperty(PropertyType.Int, "height");
 		public final Property flags = addProperty(PropertyType.Int, "flags");
 
-		public void setStatic(Model model, ModelOverride override, int x, int y, int z ) {
+		public void set(Renderable renderable, Model model, ModelOverride override, int x, int y, int z ) {
 			position.set(x, y, z);
 			height.set(model.getModelHeight());
-			flags.set(modelOffset);
-		}
-
-		public void setDynamic(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
-			position.set(x, y, z);
-			height.set(model.getModelHeight());
-			flags.set(modelOffset);
+			flags.set(((override.windDisplacementModifier + 3) & 0x7) << 12
+					  | (override.windDisplacementMode.ordinal() & 0x7) << 9
+					  | (override.invertDisplacementStrength ? 1 : 0) << 8);
 		}
 	}
 
