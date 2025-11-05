@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.opengl.buffer.storage.TBOModelData;
+import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
+import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.SliceAllocator;
@@ -206,12 +208,12 @@ class Zone {
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
-		// worldViewIndex
+		// WorldView index (not ID)
 		glEnableVertexAttribArray(7);
 		glVertexAttribDivisor(7, 1);
 		glVertexAttribIPointer(7, 1, GL_INT, METADATA_SIZE, 0);
 
-		// scene offset
+		// Scene offset
 		glEnableVertexAttribArray(8);
 		glVertexAttribDivisor(8, 1);
 		glVertexAttribIPointer(8, 2, GL_INT, METADATA_SIZE, 4);
@@ -357,8 +359,10 @@ class Zone {
 	static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
 
 	void addAlphaModel(
+		MaterialManager materialManager,
 		int vao,
 		Model model,
+		ModelOverride modelOverride,
 		int startpos,
 		int endpos,
 		int x,
@@ -392,6 +396,7 @@ class Zone {
 		}
 
 		int faceCount = model.getFaceCount();
+		int[] color1 = model.getFaceColors1();
 		int[] color3 = model.getFaceColors3();
 		byte[] transparencies = model.getFaceTransparencies();
 		short[] faceTextures = model.getFaceTextures();
@@ -409,10 +414,8 @@ class Zone {
 			if (color3[f] == -2)
 				continue;
 
-			boolean alpha =
-				transparencies != null && transparencies[f] != 0 ||
-				faceTextures != null && Material.hasVanillaTransparency(faceTextures[f]);
-			if (!alpha)
+			boolean hasAlpha = modelOverride.mightHaveTransparency || transparencies != null && transparencies[f] != 0;
+			if (!hasAlpha)
 				continue;
 
 			int fx = (int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]);
@@ -452,10 +455,33 @@ class Zone {
 			if (color3[f] == -2)
 				continue;
 
-			boolean alpha =
-				transparencies != null && transparencies[f] != 0 ||
-				faceTextures != null && Material.hasVanillaTransparency(faceTextures[f]);
-			if (!alpha)
+			Material material = modelOverride.baseMaterial;
+			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
+			int textureId = faceTextures != null ? faceTextures[f] : -1;
+			boolean isTextured = textureId != -1;
+			if (isTextured) {
+				material = modelOverride.textureMaterial;
+				if (material == Material.NONE)
+					material = materialManager.fromVanillaTexture(textureId);
+			}
+
+			if (modelOverride.materialOverrides != null) {
+				var override = modelOverride.materialOverrides.get(material);
+				if (override != null)
+					material = override.textureMaterial;
+			}
+			if (modelOverride.colorOverrides != null) {
+				int ahsl = (0xFF - transparency) << 16 | color1[f];
+				for (var override : modelOverride.colorOverrides) {
+					if (override.ahslCondition.test(ahsl)) {
+						material = override.baseMaterial;
+						break;
+					}
+				}
+			}
+
+			boolean hasAlpha = material.hasTransparency || transparency != 0;
+			if (!hasAlpha)
 				continue;
 
 			int fx = (((int) (vertexX[indices1[f]] + vertexX[indices2[f]] + vertexX[indices3[f]]) / 3) - cx) >> shift;
@@ -476,7 +502,8 @@ class Zone {
 		m.radius = 2 + (int) Math.sqrt(radius);
 
 		assert packedFaces.length > 0;
-		assert bufferIdx == packedFaces.length : String.format("%d != %d", (int) bufferIdx, packedFaces.length);
+		// Normally these will be equal, but transparency is used to hide faces in the TzHaar reskin
+		assert bufferIdx <= packedFaces.length : String.format("%d > %d", (int) bufferIdx, packedFaces.length);
 
 		alphaModels.add(m);
 	}

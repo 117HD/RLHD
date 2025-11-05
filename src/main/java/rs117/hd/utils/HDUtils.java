@@ -392,9 +392,9 @@ public class HDUtils {
 	}
 
 	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
-		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
-		assert waterType.index < 1 << 5 : "Too many water types";
-		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
+		// Up to 12-bit water depth | 8-bit water type | 2-bit plane | terrain flag
+		assert waterType.index < 1 << 7 : "Too many water types";
+		int terrainData = (waterDepth & 0xFFF) << 11 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
 		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
 		return terrainData;
 	}

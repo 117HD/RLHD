@@ -652,20 +652,6 @@ public class LegacyRenderer implements Renderer {
 					plugin.cameraFocalPoint[0] = (int) client.getCameraFocalPointX();
 					plugin.cameraFocalPoint[1] = (int) client.getCameraFocalPointZ();
 					Arrays.fill(plugin.cameraShift, 0);
-
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						plugin.stopPlugin();
-						return;
-					}
 				} else {
 					plugin.cameraShift[0] = plugin.cameraFocalPoint[0] - (int) client.getCameraFocalPointX();
 					plugin.cameraShift[1] = plugin.cameraFocalPoint[1] - (int) client.getCameraFocalPointZ();

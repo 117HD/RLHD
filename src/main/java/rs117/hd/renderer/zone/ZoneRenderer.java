@@ -92,6 +92,7 @@ import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
+import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
@@ -147,6 +148,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private SceneUploader sceneUploader;
+
+	@Inject
+	private SceneUploader asyncSceneUploader;
 
 	@Inject
 	private FacePrioritySorter facePrioritySorter;
@@ -450,20 +454,6 @@ public class ZoneRenderer implements Renderer {
 				if (root.sceneContext.scene == scene) {
 					copyTo(plugin.cameraFocalPoint, ivec((int) client.getCameraFocalPointX(), (int) client.getCameraFocalPointZ()));
 					Arrays.fill(plugin.cameraShift, 0);
-
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(root.sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(root.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						plugin.stopPlugin();
-						return;
-					}
 				} else {
 					plugin.cameraShift[0] = plugin.cameraFocalPoint[0] - (int) client.getCameraFocalPointX();
 					plugin.cameraShift[1] = plugin.cameraFocalPoint[1] - (int) client.getCameraFocalPointZ();
@@ -488,14 +478,18 @@ public class ZoneRenderer implements Renderer {
 				float zoom = client.get3dZoom();
 				float drawDistance = (float) plugin.getDrawDistance();
 
+				if (plugin.orthographicProjection)
+					zoom *= ORTHOGRAPHIC_ZOOM;
+
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
+				sceneCamera.setOrthographic(plugin.orthographicProjection);
 				sceneCamera.setPosition(plugin.cameraPosition);
 				sceneCamera.setOrientation(plugin.cameraOrientation);
 				sceneCamera.setFixedYaw(client.getCameraYaw());
 				sceneCamera.setFixedPitch(client.getCameraPitch());
 				sceneCamera.setViewportWidth((int) (plugin.sceneViewport[2] / plugin.sceneViewportScale[0]));
 				sceneCamera.setViewportHeight((int) (plugin.sceneViewport[3] / plugin.sceneViewportScale[1]));
-				sceneCamera.setNearPlane(NEAR_PLANE);
+				sceneCamera.setNearPlane(plugin.orthographicProjection ? -40000 : NEAR_PLANE);
 				sceneCamera.setZoom(zoom);
 
 				// Calculate view matrix, view proj & inv matrix
@@ -933,7 +927,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.depthFunc.set(GL_GREATER);
+		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		// Render the scene
@@ -984,6 +978,9 @@ public class ZoneRenderer implements Renderer {
 		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw)
 			return zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 
+		if (plugin.orthographicProjection)
+			return zone.inSceneFrustum = true;
+
 		return false;
 	}
 
@@ -1024,16 +1021,15 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized)
 			return;
 
-		boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
-
-		int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (renderWater)
 			z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
 
+		boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		if (!hasAlpha)
 			return;
 
+		int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
 			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
@@ -1306,6 +1302,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void rebuild(WorldView wv) {
+		assert client.isClientThread();
 		WorldViewContext ctx = context(wv);
 		if (ctx == null)
 			return;
@@ -1320,8 +1317,7 @@ public class ZoneRenderer implements Renderer {
 				zone.free(modelData);
 				zone = ctx.zones[x][z] = new Zone();
 
-				SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
-				sceneUploader.zoneSize(ctx.sceneContext, zone, x, z);
+				sceneUploader.estimateZoneSize(ctx.sceneContext, zone, x, z);
 
 				VBO o = null, a = null;
 				int sz = zone.sizeO * Zone.VERT_SIZE * 3;
@@ -1339,7 +1335,7 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				zone.initialize(modelData, o, a, eboAlpha);
-				zone.setMetadata(wv.getId(), ctx.sceneContext, x, z);
+				zone.setMetadata(uboWorldViews.getIndex(wv), ctx.sceneContext, x, z);
 
 				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
 
@@ -1625,7 +1621,6 @@ public class ZoneRenderer implements Renderer {
 					newZones[x][z] = new Zone();
 
 		// Determine zone buffer requirements before uploading
-		SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 		Stopwatch sw = Stopwatch.createStarted();
 		int len = 0, lena = 0;
 		int reused = 0, newzones = 0;
@@ -1635,7 +1630,7 @@ public class ZoneRenderer implements Renderer {
 				if (!zone.initialized) {
 					assert zone.glVao == 0;
 					assert zone.glVaoA == 0;
-					sceneUploader.zoneSize(nextSceneContext, zone, x, z);
+					asyncSceneUploader.estimateZoneSize(nextSceneContext, zone, x, z);
 					len += zone.sizeO;
 					lena += zone.sizeA;
 					newzones++;
@@ -1676,7 +1671,7 @@ public class ZoneRenderer implements Renderer {
 					}
 
 					zone.initialize(modelData, o, a, eboAlpha);
-					zone.setMetadata(worldView.getId(), nextSceneContext, x, z);
+					zone.setMetadata(uboWorldViews.getIndex(worldView), nextSceneContext, x, z);
 				}
 			}
 
@@ -1694,7 +1689,7 @@ public class ZoneRenderer implements Renderer {
 			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
 				Zone zone = newZones[x][z];
 				if (!zone.initialized)
-					sceneUploader.uploadZone(nextSceneContext, zone, x, z);
+					asyncSceneUploader.uploadZone(nextSceneContext, zone, x, z);
 			}
 		}
 		log.debug("Scene upload time {}", sw);
@@ -1780,10 +1775,9 @@ public class ZoneRenderer implements Renderer {
 		final WorldViewContext ctx = new WorldViewContext(sceneContext, worldView.getSizeX() >> 3, worldView.getSizeY() >> 3);
 		subs[worldViewId] = ctx;
 
-		SceneUploader sceneUploader = injector.getInstance(SceneUploader.class);
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				sceneUploader.zoneSize(sceneContext, ctx.zones[x][z], x, z);
+				asyncSceneUploader.estimateZoneSize(sceneContext, ctx.zones[x][z], x, z);
 
 		// allocate buffers for zones which require upload
 		CountDownLatch latch = new CountDownLatch(1);
@@ -1809,7 +1803,7 @@ public class ZoneRenderer implements Renderer {
 					}
 
 					zone.initialize(modelData, o, a, eboAlpha);
-					zone.setMetadata(worldView.getId(), ctx.sceneContext, x, z);
+					zone.setMetadata(uboWorldViews.getIndex(worldView), ctx.sceneContext, x, z);
 				}
 			}
 
@@ -1823,10 +1817,7 @@ public class ZoneRenderer implements Renderer {
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				sceneUploader.uploadZone(sceneContext, ctx.zones[x][z], x, z);
-
-		// TODO: Can't clear since zone invalidation may need it
-//		proceduralGenerator.clearSceneData(subSceneContext);
+				asyncSceneUploader.uploadZone(sceneContext, ctx.zones[x][z], x, z);
 	}
 
 	@Override
@@ -1907,7 +1898,7 @@ public class ZoneRenderer implements Renderer {
 					zone.initialized = true;
 				}
 
-				zone.setMetadata(scene.getWorldViewId(), ctx.sceneContext, x, z);
+				zone.setMetadata(uboWorldViews.getIndex(scene), ctx.sceneContext, x, z);
 			}
 		}
 
@@ -1938,7 +1929,7 @@ public class ZoneRenderer implements Renderer {
 					zone.initialized = true;
 				}
 
-				zone.setMetadata(scene.getWorldViewId(), ctx.sceneContext, x, z);
+				zone.setMetadata(uboWorldViews.getIndex(scene), ctx.sceneContext, x, z);
 			}
 		}
 		log.debug("WorldView ready: {}", scene.getWorldViewId());

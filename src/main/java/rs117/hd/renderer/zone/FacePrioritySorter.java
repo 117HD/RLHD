@@ -62,10 +62,23 @@ class FacePrioritySorter {
 	private static final int[] lt10;
 	static final int[][] orderedFaces;
 
-	private static final int MAX_VERTEX_COUNT = SceneUploader.MAX_VERTEX_COUNT;
+	private static int orientSin, orientCos;
+
+	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int MAX_DIAMETER = 6000;
 	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
 	private static final int MAX_FACES_PER_PRIORITY = 4000; // was 2500
+
+	private static final int[] MAX_BRIGHTNESS_LOOKUP_TABLE = new int[8];
+	private static final float[] LIGHT_DIR_MODEL = new float[] { 0.57735026f, 0.57735026f, 0.57735026f };
+	// subtracts the X lowest lightness levels from the formula.
+	// helps keep darker colors appropriately dark
+	private static final int IGNORE_LOW_LIGHTNESS = 3;
+	// multiplier applied to vertex' lightness value.
+	// results in greater lightening of lighter colors
+	private static final float LIGHTNESS_MULTIPLIER = 3;
+	// the minimum amount by which each color will be lightened
+	private static final int BASE_LIGHTEN = 10;
 
 	static {
 		distances = new int[MAX_VERTEX_COUNT];
@@ -75,9 +88,9 @@ class FacePrioritySorter {
 		modelCanvasX = new float[MAX_VERTEX_COUNT];
 		modelCanvasY = new float[MAX_VERTEX_COUNT];
 
-		modelLocalX = SceneUploader.modelLocalX;
-		modelLocalY = SceneUploader.modelLocalY;
-		modelLocalZ = SceneUploader.modelLocalZ;
+		modelLocalX = new float[MAX_VERTEX_COUNT];
+		modelLocalY = new float[MAX_VERTEX_COUNT];
+		modelLocalZ = new float[MAX_VERTEX_COUNT];
 
 		workingSpace = new float[9];
 		modelUvs = new float[12];
@@ -88,6 +101,9 @@ class FacePrioritySorter {
 		eq11 = new int[MAX_FACES_PER_PRIORITY];
 		lt10 = new int[12];
 		orderedFaces = new int[12][MAX_FACES_PER_PRIORITY];
+
+		for (int i = 0; i < 8; i++)
+			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
 	}
 
 	@Inject
@@ -129,13 +145,11 @@ class FacePrioritySorter {
 		final int centerY = client.getCenterY();
 		final int zoom = client.get3dZoom();
 
-		float orientSine = 0;
-		float orientCosine = 0;
-		if (orientation != 0) {
-			orientation = mod(orientation, 2048);
-			orientSine = SINE[orientation] / 65536f;
-			orientCosine = COSINE[orientation] / 65536f;
-		}
+		orientation = mod(orientation, 2048);
+		orientSin = SINE[orientation];
+		orientCos = COSINE[orientation];
+		float orientSinf = orientSin / 65536f;
+		float orientCosf = orientCos / 65536f;
 
 		float[] p = proj.project(x, y, z);
 		int zero = (int) p[2];
@@ -147,8 +161,8 @@ class FacePrioritySorter {
 
 			if (orientation != 0) {
 				float x0 = vertexX;
-				vertexX = vertexZ * orientSine + x0 * orientCosine;
-				vertexZ = vertexZ * orientCosine - x0 * orientSine;
+				vertexX = vertexZ * orientSinf + x0 * orientCosf;
+				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
 			}
 
 			// move to local position
@@ -371,6 +385,10 @@ class FacePrioritySorter {
 		final int[] faceColors2 = model.getFaceColors2();
 		final int[] faceColors3 = model.getFaceColors3();
 
+		final int[] xVertexNormals = model.getVertexNormalsX();
+		final int[] yVertexNormals = model.getVertexNormalsY();
+		final int[] zVertexNormals = model.getVertexNormalsZ();
+
 		final byte overrideAmount = model.getOverrideAmount();
 		final byte overrideHue = model.getOverrideHue();
 		final byte overrideSat = model.getOverrideSaturation();
@@ -394,35 +412,10 @@ class FacePrioritySorter {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
-		}
 
 		final int triangleA = indices1[face];
 		final int triangleB = indices2[face];
 		final int triangleC = indices3[face];
-
-		int color1 = faceColors1[face];
-		int color2 = faceColors2[face];
-		int color3 = faceColors3[face];
-
-		boolean alpha =
-			transparencies != null && transparencies[face] != 0 ||
-			faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
-
-		if (color3 == -1)
-			color2 = color3 = color1;
-
-		// HSL override is not applied to textured faces
-		if (overrideAmount > 0 && !isTextured) {
-			color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
-			color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
-		}
 
 		float vx1 = modelLocalX[triangleA];
 		float vy1 = modelLocalY[triangleA];
@@ -435,6 +428,92 @@ class FacePrioritySorter {
 		float vx3 = modelLocalX[triangleC];
 		float vy3 = modelLocalY[triangleC];
 		float vz3 = modelLocalZ[triangleC];
+
+		int color1 = faceColors1[face];
+		int color2 = faceColors2[face];
+		int color3 = faceColors3[face];
+
+		if (color3 == -1)
+			color2 = color3 = color1;
+
+		if (plugin.configUndoVanillaShading) {
+			int color1H = color1 >> 10 & 0x3F;
+			int color1S = color1 >> 7 & 0x7;
+			int color1L = color1 & 0x7F;
+			int color2H = color2 >> 10 & 0x3F;
+			int color2S = color2 >> 7 & 0x7;
+			int color2L = color2 & 0x7F;
+			int color3H = color3 >> 10 & 0x3F;
+			int color3S = color3 >> 7 & 0x7;
+			int color3L = color3 & 0x7F;
+
+			// Approximately invert vanilla shading by brightening vertices that were likely darkened by vanilla based on
+			// vertex normals. This process is error-prone, as not all models are lit by vanilla with the same light
+			// direction, and some models even have baked lighting built into the model itself. In some cases, increasing
+			// brightness in this way leads to overly bright colors, so we are forced to cap brightness at a relatively
+			// low value for it to look acceptable in most cases.
+			float[] L = LIGHT_DIR_MODEL;
+			float color1Adjust =
+				BASE_LIGHTEN - color1L + (color1L < IGNORE_LOW_LIGHTNESS ? 0 : (color1L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+			float color2Adjust =
+				BASE_LIGHTEN - color2L + (color2L < IGNORE_LOW_LIGHTNESS ? 0 : (color2L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+			float color3Adjust =
+				BASE_LIGHTEN - color3L + (color3L < IGNORE_LOW_LIGHTNESS ? 0 : (color3L - IGNORE_LOW_LIGHTNESS) * LIGHTNESS_MULTIPLIER);
+
+			// Normals are currently unrotated, so we don't need to do any rotation for this
+			float nx, ny, nz, lightDotNormal;
+			nx = xVertexNormals[triangleA];
+			ny = yVertexNormals[triangleA];
+			nz = zVertexNormals[triangleA];
+			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
+			if (lightDotNormal > 0) {
+				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
+				color1L += (int) (lightDotNormal * color1Adjust);
+			}
+
+			nx = xVertexNormals[triangleB];
+			ny = yVertexNormals[triangleB];
+			nz = zVertexNormals[triangleB];
+			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
+			if (lightDotNormal > 0) {
+				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
+				color2L += (int) (lightDotNormal * color2Adjust);
+			}
+
+			nx = xVertexNormals[triangleC];
+			ny = yVertexNormals[triangleC];
+			nz = zVertexNormals[triangleC];
+			lightDotNormal = nx * L[0] + ny * L[1] + nz * L[2];
+			if (lightDotNormal > 0) {
+				lightDotNormal /= sqrt(nx * nx + ny * ny + nz * nz);
+				color3L += (int) (lightDotNormal * color3Adjust);
+			}
+
+			int maxBrightness1 = 55;
+			int maxBrightness2 = 55;
+			int maxBrightness3 = 55;
+			if (!plugin.configLegacyGreyColors) {
+				maxBrightness1 = MAX_BRIGHTNESS_LOOKUP_TABLE[color1S];
+				maxBrightness2 = MAX_BRIGHTNESS_LOOKUP_TABLE[color2S];
+				maxBrightness3 = MAX_BRIGHTNESS_LOOKUP_TABLE[color3S];
+			}
+
+			// Clamp brightness as detailed above
+			color1L = min(color1L, maxBrightness1);
+			color2L = min(color2L, maxBrightness2);
+			color3L = min(color3L, maxBrightness3);
+
+			color1 = color1H << 10 | color1S << 7 | color1L;
+			color2 = color2H << 10 | color2S << 7 | color2L;
+			color3 = color3H << 10 | color3S << 7 | color3L;
+		}
+
+		// HSL override is not applied to textured faces
+		if (overrideAmount > 0 && !isTextured) {
+			color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
+			color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
+		}
 
 		int texA, texB, texC;
 
@@ -452,6 +531,7 @@ class FacePrioritySorter {
 		UvType uvType = UvType.GEOMETRY;
 		Material material = baseMaterial;
 
+		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 		int textureId = isVanillaTextured ? faceTextures[face] : -1;
 		if (textureId != -1) {
 			uvType = UvType.VANILLA;
@@ -463,24 +543,20 @@ class FacePrioritySorter {
 		}
 
 		ModelOverride faceOverride = modelOverride;
-		if (!disableTextures) {
-			if (modelOverride.materialOverrides != null) {
-				var override = modelOverride.materialOverrides.get(material);
-				if (override != null) {
-					faceOverride = override;
-					material = faceOverride.textureMaterial;
-				}
+		if (modelOverride.materialOverrides != null) {
+			var override = modelOverride.materialOverrides.get(material);
+			if (override != null) {
+				faceOverride = override;
+				material = faceOverride.textureMaterial;
 			}
-
-			// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-			if (modelOverride.colorOverrides != null) {
-				int ahsl = (transparencies == null ? 0xFF : 0xFF - (transparencies[face] & 0xFF)) << 16 | faceColors1[face];
-				for (var override : modelOverride.colorOverrides) {
-					if (override.ahslCondition.test(ahsl)) {
-						faceOverride = override;
-						material = faceOverride.baseMaterial;
-						break;
-					}
+		}
+		if (modelOverride.colorOverrides != null) {
+			int ahsl = (0xFF - transparency) << 16 | faceColors1[face];
+			for (var override : modelOverride.colorOverrides) {
+				if (override.ahslCondition.test(ahsl)) {
+					faceOverride = override;
+					material = faceOverride.baseMaterial;
+					break;
 				}
 			}
 		}
@@ -491,6 +567,7 @@ class FacePrioritySorter {
 				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 		}
 
+		isTextured = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
 		int materialData = material.packMaterialData(faceOverride, uvType, false, isTextured);
 
 		if (uvType == UvType.VANILLA) {
@@ -509,50 +586,49 @@ class FacePrioritySorter {
 
 		if (modelOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
 			Arrays.fill(modelNormals, 0);
-		} else {
-			final int[] xVertexNormals = model.getVertexNormalsX();
-			final int[] yVertexNormals = model.getVertexNormalsY();
-			final int[] zVertexNormals = model.getVertexNormalsZ();
-			if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
-				modelNormals[0] = xVertexNormals[triangleA];
-				modelNormals[1] = yVertexNormals[triangleA];
-				modelNormals[2] = zVertexNormals[triangleA];
-				modelNormals[3] = xVertexNormals[triangleB];
-				modelNormals[4] = yVertexNormals[triangleB];
-				modelNormals[5] = zVertexNormals[triangleB];
-				modelNormals[6] = xVertexNormals[triangleC];
-				modelNormals[7] = yVertexNormals[triangleC];
-				modelNormals[8] = zVertexNormals[triangleC];
+		} else if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
+			modelNormals[0] = xVertexNormals[triangleA];
+			modelNormals[1] = yVertexNormals[triangleA];
+			modelNormals[2] = zVertexNormals[triangleA];
+			modelNormals[3] = xVertexNormals[triangleB];
+			modelNormals[4] = yVertexNormals[triangleB];
+			modelNormals[5] = zVertexNormals[triangleB];
+			modelNormals[6] = xVertexNormals[triangleC];
+			modelNormals[7] = yVertexNormals[triangleC];
+			modelNormals[8] = zVertexNormals[triangleC];
+
+			// Rotate normals
+			for (int i = 0; i < 9; i += 3) {
+				int x = modelNormals[i];
+				int z = modelNormals[i + 2];
+				modelNormals[i] = z * orientSin + x * orientCos >> 16;
+				modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
 			}
 		}
 
-		int alphaBias = 0;
-		alphaBias |= transparencies != null ? (transparencies[face] & 0xff) << 24 : 0;
-		alphaBias |= bias != null ? (bias[face] & 0xff) << 16 : 0;
-
-		var vb = alpha ? alphaBuffer : opaqueBuffer;
-
+		int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
+			bias == null ? 0 : bias[face] & 0xFF;
+		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
+		boolean hasAlpha = material.hasTransparency || transparency != 0;
+		var vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 		GpuIntBuffer.putFloatVertex(
 			vb,
-			vx1, vy1, vz1, alphaBias | color1,
+			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 			modelNormals[0], modelNormals[1], modelNormals[2], 0, modelOffset
 		);
-
 		GpuIntBuffer.putFloatVertex(
 			vb,
-			vx2, vy2, vz2, alphaBias | color2,
+			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 			modelNormals[3], modelNormals[4], modelNormals[5], 0, modelOffset
 		);
-
 		GpuIntBuffer.putFloatVertex(
 			vb,
-			vx3, vy3, vz3, alphaBias | color3,
+			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 			modelNormals[6], modelNormals[7], modelNormals[8], 0, modelOffset
 		);
-
 		return 3;
 	}
 }

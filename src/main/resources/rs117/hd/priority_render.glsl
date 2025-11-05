@@ -392,7 +392,7 @@ void sort_and_insert(uint localId, const ModelInfo minfo, int thisPriority, int 
 
         #if UNDO_VANILLA_SHADING
             if ((int(thisrvA.ahsl) >> 20 & 1) == 0) {
-                if (length(normA) == 0) {
+                if (length(normA.xyz) == 0) {
                     // Compute flat normal if necessary, and rotate it back to match unrotated normals
                     vec4 N = vec4(cross(thisrvA.pos - thisrvB.pos, thisrvA.pos - thisrvC.pos), 0);
                     normA = normB = normC = rotate(N, -orientation);
