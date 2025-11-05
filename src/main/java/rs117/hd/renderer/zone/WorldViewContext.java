@@ -23,6 +23,8 @@ public class WorldViewContext {
 	}
 
 	void updateWorldViewIndex(UBOWorldViews uboWorldViews) {
+		if (vboM == null)
+			return;
 		vboM.map();
 		vboM.vb.put(uboWorldViews.getIndex(worldViewId) + 1);
 		vboM.unmap();
