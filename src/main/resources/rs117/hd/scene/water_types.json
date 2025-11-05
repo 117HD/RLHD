@@ -1,9 +1,13 @@
 [
   {
-    "name": "WATER"
+    "name": "WATER",
+    "surfaceColor": "#69809C",
+    "fresnelAmount": 0.85
   },
   {
     "name": "WATER_FLAT",
+    "surfaceColor": "#69809C",
+    "fresnelAmount": 0.85,
     "flat": true
   },
   {
