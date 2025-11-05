@@ -58931,7 +58931,7 @@
         "uvOrientation": 512
       },
       {
-        "description": "Hull",
+        "description": "Sail",
         "colors": "h == 8",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
@@ -58959,11 +58959,44 @@
         "uvOrientationY": 512
       },
       {
-        "description": "Hull",
+        "description": "Sail",
         "colors": "h == 8",
         "baseMaterial": "CARPET_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Ocean Rocks - Plain",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "OCEAN_OUTCROP_ROCK01",
+      "OCEAN_OUTCROP_ROCK02",
+      "OCEAN_OUTCROP_ROCK03",
+      "OCEAN_OUTCROP_ROCK04",
+      "OCEAN_OUTCROP_ROCK05",
+      "OCEAN_OUTCROP_ROCK06",
+      "OCEAN_OUTCROP_ROCK07",
+      "OCEAN_OUTCROP_ROCK08",
+      "OCEAN_OUTCROP_ROCK09"
+    ]
+  },
+  {
+    "description": "Ocean Rocks - Skeleton",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_ROCK_BAY_OF_SARIM",
+      "SAILING_CHARTING_GENERIC_ROCK_LUMBRIDGE_BASIN",
+      "SAILING_CHARTING_GENERIC_ROCK_RIMMINGTON_STRAIT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Skeleton",
+        "colors": "h == 10",
+        "baseMaterial": "BONE"
       }
     ]
   }
