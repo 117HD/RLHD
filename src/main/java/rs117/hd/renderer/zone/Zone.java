@@ -40,7 +40,7 @@ class Zone {
 	static final int VERT_SIZE = 36;
 
 	// Metadata format
-	// worldViewId int int
+	// worldViewIndex int int
 	// sceneOffset int vec2(x, y)
 	static final int METADATA_SIZE = 12;
 
@@ -101,22 +101,7 @@ class Zone {
 		}
 	}
 
-	void setMetadata(int worldViewIdx, ZoneSceneContext ctx, int mx, int mz) {
-		if (!metadataDirty)
-			return;
-		metadataDirty = false;
-
-		int baseX = (mx - (ctx.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (ctx.sceneOffset >> 3)) << 10;
-
-		vboM.map();
-		vboM.vb.put(worldViewIdx + 1);
-		vboM.vb.put(baseX);
-		vboM.vb.put(baseZ);
-		vboM.unmap();
-	}
-
-	void free(TBOModelData tboModelData) {
+	void free() {
 		if (vboO != null) {
 			vboO.destroy();
 			vboO = null;
@@ -221,6 +206,21 @@ class Zone {
 
 		glBindVertexArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	void setMetadata(int worldViewIdx, ZoneSceneContext ctx, int mx, int mz) {
+		if (!metadataDirty)
+			return;
+		metadataDirty = false;
+
+		int baseX = (mx - (ctx.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (ctx.sceneOffset >> 3)) << 10;
+
+		vboM.map();
+		vboM.vb.put(worldViewIdx + 1);
+		vboM.vb.put(baseX);
+		vboM.vb.put(baseZ);
+		vboM.unmap();
 	}
 
 	void updateRoofs(Map<Integer, Integer> updates) {

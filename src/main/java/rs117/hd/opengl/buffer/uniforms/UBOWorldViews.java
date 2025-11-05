@@ -2,10 +2,12 @@ package rs117.hd.opengl.buffer.uniforms;
 
 import java.util.Arrays;
 import javax.annotation.Nullable;
+import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.buffer.UniformStructuredBuffer;
+import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -22,15 +24,18 @@ public class UBOWorldViews extends UniformStructuredBuffer<GLBuffer> {
 		public final Property tint = addProperty(PropertyType.IVec4, "tint");
 	}
 
+	@Inject
+	private Client client;
+
 	private final WorldViewStruct[] uboStructs = addStructs(new WorldViewStruct[MAX_SIMULTANEOUS_WORLD_VIEWS], WorldViewStruct::new);
 	private final int[] indexMapping;
 
-	public UBOWorldViews(int maxWorldViews) {
+	public UBOWorldViews() {
 		super(GL_DYNAMIC_DRAW);
-		indexMapping = new int[maxWorldViews];
+		indexMapping = new int[ZoneRenderer.MAX_WORLDVIEWS];
 	}
 
-	public void update(Client client) {
+	public void update() {
 		Arrays.fill(indexMapping, -1);
 
 		int index = 0;

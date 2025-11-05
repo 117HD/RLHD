@@ -3,6 +3,7 @@ package rs117.hd.renderer.zone;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -22,14 +23,19 @@ class VAO {
 	// modelOffset int TODO: Make short
 	static final int VERT_SIZE = 40;
 
+	// Metadata format
+	// worldViewIndex int int
+	static final int METADATA_SIZE = 4;
+
 	final VBO vbo;
 	int vao;
+	int vboMetadata;
 
 	VAO(int size) {
 		vbo = new VBO(size);
 	}
 
-	void initialize(int ebo) {
+	void initialize(int ebo, @Nullable VBO vboMetadata) {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 
@@ -66,6 +72,16 @@ class VAO {
 		// modelOffset
 		glEnableVertexAttribArray(6);
 		glVertexAttribIPointer(6, 1, GL_INT, VERT_SIZE, 36);
+		
+		if (vboMetadata != null) {
+			this.vboMetadata = vboMetadata.bufId;
+			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
+
+			// WorldView index (not ID)
+			glEnableVertexAttribArray(6);
+			glVertexAttribDivisor(7, 1);
+			glVertexAttribIPointer(7, 1, GL_INT, METADATA_SIZE, 0);
+		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
@@ -140,7 +156,7 @@ class VAO {
 		private final List<VAO> vaos = new ArrayList<>();
 		private final int eboAlpha;
 
-		VAO get(int size) {
+		VAO get(int size, @Nullable VBO vboMetadata) {
 			assert size <= VAO_SIZE;
 
 			while (curIdx < vaos.size()) {
@@ -150,7 +166,7 @@ class VAO {
 				}
 
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
-				if (size <= rem) {
+				if (size <= rem && vao.vboMetadata == (vboMetadata == null ? 0 : vboMetadata.bufId)) {
 					return vao;
 				}
 
@@ -158,7 +174,7 @@ class VAO {
 			}
 
 			VAO vao = new VAO(VAO_SIZE);
-			vao.initialize(eboAlpha);
+			vao.initialize(eboAlpha, vboMetadata);
 			vao.vbo.map();
 			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);
