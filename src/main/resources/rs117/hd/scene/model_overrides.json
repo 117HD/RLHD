@@ -3742,15 +3742,28 @@
     "uvScale": 0.75
   },
   {
-    "description": "LUMBRIDGE_CASTLE_WALLS",
+    "description": "Lumbridge - Castle Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "flatNormals": true,
+    "textureMaterial": "HD_BRICKWALL",
     "objectIds": [
       "CASTLEWALL",
       "BIGSTONE_CASTLEWALL",
       "CASTLEBATTLEMENTS",
       "CASTLECRUMBLY_L",
       "CASTLECRUMBLY_R"
-    ],
-    "flatNormals": true
+    ]
+  },
+  {
+    "description": "CASTLE_WALLS",
+    "objectIds": [
+      "CROSS_CASTLEEDGE",
+      "CASTLEWALL",
+      "BIGSTONE_CASTLEWALL",
+      "CASTLEBATTLEMENTS",
+      "CASTLECRUMBLY_L",
+      "CASTLECRUMBLY_R"
+    ]
   },
   {
     "description": "LUMBRIDGE_CASTLE_WALL_CROSS_TOPS",
