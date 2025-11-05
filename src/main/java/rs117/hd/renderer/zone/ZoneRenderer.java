@@ -1146,7 +1146,7 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
-			if (ctx != root || zone.inSceneFrustum) {
+			if ((ctx != root || zone.inSceneFrustum) && sceneCamera.intersectsSphere(x, y, z, m.getRadius())) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
