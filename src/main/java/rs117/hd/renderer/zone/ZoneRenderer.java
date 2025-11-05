@@ -1092,6 +1092,9 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
+		if(!modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius()))
+			return;
+
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
