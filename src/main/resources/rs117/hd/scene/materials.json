@@ -2399,8 +2399,8 @@
     "normalMap": "HD_BRICK_N",
     "displacementMap": "HD_BRICK_D",
     "displacementScale": 0.05,
-    "specularStrength": 0.3,
-    "specularGloss": 20.0,
+    "specularStrength": 0.25,
+    "specularGloss": 10.0,
     "materialsToReplace": [
       "BRICK"
     ],
