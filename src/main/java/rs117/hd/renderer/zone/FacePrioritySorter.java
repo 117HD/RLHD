@@ -144,17 +144,11 @@ class FacePrioritySorter {
 		final int centerY = client.getCenterY();
 		final int zoom = client.get3dZoom();
 
-		float orientSinf = 0;
-		float orientCosf = 0;
-		if (orientation != 0) {
-			orientation = mod(orientation, 2048);
-			orientSin = SINE[orientation];
-			orientCos = COSINE[orientation];
-			orientSinf = orientSin / 65536f;
-			orientCosf = orientCos / 65536f;
-		} else {
-			orientSin = orientCos = 0;
-		}
+		orientation = mod(orientation, 2048);
+		orientSin = SINE[orientation];
+		orientCos = COSINE[orientation];
+		float orientSinf = orientSin / 65536f;
+		float orientCosf = orientCos / 65536f;
 
 		float[] p = proj.project(x, y, z);
 		int zero = (int) p[2];
