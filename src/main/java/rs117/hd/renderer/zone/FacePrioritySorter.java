@@ -62,6 +62,8 @@ class FacePrioritySorter {
 	private static final int[] lt10;
 	static final int[][] orderedFaces;
 
+	private static int orientSin, orientCos;
+
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int MAX_DIAMETER = 6000;
 	private static final int ZSORT_GROUP_SIZE = 1024; // was 512
@@ -128,12 +130,16 @@ class FacePrioritySorter {
 		final int centerY = client.getCenterY();
 		final int zoom = client.get3dZoom();
 
-		float orientSine = 0;
-		float orientCosine = 0;
+		float orientSinf = 0;
+		float orientCosf = 0;
 		if (orientation != 0) {
 			orientation = mod(orientation, 2048);
-			orientSine = SINE[orientation] / 65536f;
-			orientCosine = COSINE[orientation] / 65536f;
+			orientSin = SINE[orientation];
+			orientCos = COSINE[orientation];
+			orientSinf = orientSin / 65536f;
+			orientCosf = orientCos / 65536f;
+		} else {
+			orientSin = orientCos = 0;
 		}
 
 		float[] p = proj.project(x, y, z);
@@ -146,8 +152,8 @@ class FacePrioritySorter {
 
 			if (orientation != 0) {
 				float x0 = vertexX;
-				vertexX = vertexZ * orientSine + x0 * orientCosine;
-				vertexZ = vertexZ * orientCosine - x0 * orientSine;
+				vertexX = vertexZ * orientSinf + x0 * orientCosf;
+				vertexZ = vertexZ * orientCosf - x0 * orientSinf;
 			}
 
 			// move to local position
@@ -369,6 +375,10 @@ class FacePrioritySorter {
 		final int[] faceColors2 = model.getFaceColors2();
 		final int[] faceColors3 = model.getFaceColors3();
 
+		final int[] xVertexNormals = model.getVertexNormalsX();
+		final int[] yVertexNormals = model.getVertexNormalsY();
+		final int[] zVertexNormals = model.getVertexNormalsZ();
+
 		final byte overrideAmount = model.getOverrideAmount();
 		final byte overrideHue = model.getOverrideHue();
 		final byte overrideSat = model.getOverrideSaturation();
@@ -493,20 +503,23 @@ class FacePrioritySorter {
 
 		if (modelOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
 			Arrays.fill(modelNormals, 0);
-		} else {
-			final int[] xVertexNormals = model.getVertexNormalsX();
-			final int[] yVertexNormals = model.getVertexNormalsY();
-			final int[] zVertexNormals = model.getVertexNormalsZ();
-			if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
-				modelNormals[0] = xVertexNormals[triangleA];
-				modelNormals[1] = yVertexNormals[triangleA];
-				modelNormals[2] = zVertexNormals[triangleA];
-				modelNormals[3] = xVertexNormals[triangleB];
-				modelNormals[4] = yVertexNormals[triangleB];
-				modelNormals[5] = zVertexNormals[triangleB];
-				modelNormals[6] = xVertexNormals[triangleC];
-				modelNormals[7] = yVertexNormals[triangleC];
-				modelNormals[8] = zVertexNormals[triangleC];
+		} else if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
+			modelNormals[0] = xVertexNormals[triangleA];
+			modelNormals[1] = yVertexNormals[triangleA];
+			modelNormals[2] = zVertexNormals[triangleA];
+			modelNormals[3] = xVertexNormals[triangleB];
+			modelNormals[4] = yVertexNormals[triangleB];
+			modelNormals[5] = zVertexNormals[triangleB];
+			modelNormals[6] = xVertexNormals[triangleC];
+			modelNormals[7] = yVertexNormals[triangleC];
+			modelNormals[8] = zVertexNormals[triangleC];
+
+			// Rotate normals
+			for (int i = 0; i < 9; i += 3) {
+				int x = modelNormals[i];
+				int z = modelNormals[i + 2];
+				modelNormals[i] = z * orientSin + x * orientCos >> 16;
+				modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
 			}
 		}
 
