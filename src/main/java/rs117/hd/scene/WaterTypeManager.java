@@ -114,7 +114,8 @@ public class WaterTypeManager {
 					// Reload everything which depends on water type indices
 					tileOverrideManager.shutDown();
 					tileOverrideManager.startUp();
-					plugin.reuploadScene();
+					plugin.renderer.clearCaches();
+					plugin.renderer.reloadScene();
 				}
 			} catch (IOException ex) {
 				log.error("Failed to load water types:", ex);

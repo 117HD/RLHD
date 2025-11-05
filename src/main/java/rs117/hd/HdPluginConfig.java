@@ -39,6 +39,7 @@ import rs117.hd.config.DefaultSkyColor;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.config.FogDepthMode;
+import rs117.hd.config.Renderers;
 import rs117.hd.config.Saturation;
 import rs117.hd.config.SceneScalingMode;
 import rs117.hd.config.SeasonalHemisphere;
@@ -69,6 +70,18 @@ public interface HdPluginConfig extends Config
 		position = 0
 	)
 	String generalSettings = "generalSettings";
+
+	String KEY_RENDERER = "renderer";
+	@ConfigItem(
+		keyName = KEY_RENDERER,
+		name = "Renderer",
+		description = "",
+		section = generalSettings,
+		position = 0
+	)
+	default Renderers renderer() {
+		return Renderers.ZONE;
+	}
 
 	@Range(
 		max = MAX_DISTANCE
@@ -1095,6 +1108,16 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof Shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		section = experimentalSettings
+	)
+	default boolean roofShadows() {
+		return false;
+	}
 
 	/*====== Internal settings ======*/
 
