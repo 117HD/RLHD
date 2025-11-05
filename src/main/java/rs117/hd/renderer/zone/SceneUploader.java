@@ -46,6 +46,7 @@ import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
+import rs117.hd.utils.SliceAllocator;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
@@ -80,7 +81,7 @@ class SceneUploader {
 
 	private int basex, basez, rid, level;
 
-	private TBOModelData.Slice modelDataSlice;
+	private SliceAllocator<TBOModelData.ModelData>.Slice modelDataSlice;
 	private short modelIdx;
 
 	private final float[] workingSpace = new float[9];
@@ -1148,7 +1149,7 @@ class SceneUploader {
 		int preOrientation, int orientation, int x, int y, int z,
 		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
 	) {
-		final TBOModelData.ModelData modelData = modelDataSlice.getStruct(modelIdx++);
+		final var modelData = modelDataSlice.get(modelIdx++);
 		modelData.set(null, model, modelOverride, x, y, z);
 
 		final int triangleCount = model.getFaceCount();
