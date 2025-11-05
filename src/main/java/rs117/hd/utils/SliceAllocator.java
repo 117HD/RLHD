@@ -1,48 +1,34 @@
 package rs117.hd.utils;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 import lombok.Getter;
-import java.util.*;
 
-public class SliceAllocator<T> {
+public class SliceAllocator<SLICE extends SliceAllocator.Slice> {
 	@Getter
-	public class Slice {
-		private final int offset;
-		private int size;
+	public static abstract class Slice {
+		protected SliceAllocator<?> owner;
+		protected final int offset;
+		protected int size;
+		private boolean freed = false;
 
 		public Slice(int offset, int size) {
 			this.offset = offset;
 			this.size = size;
 		}
 
-		public T get(int index) {
-			assert index >= 0 && index < size;
-			return elements.get(offset + index);
-		}
+		protected abstract void allocate();
+		protected abstract void onFreed();
 
 		public void free() {
-			boolean removed = activeSlices.remove(this);
-			assert removed : "Slice being freed was not in active slices!";
-
-			int newOffset = this.offset;
-			int newEnd = this.offset + this.size;
-
-			// Merge with overlapping or adjacent free slices
-			NavigableSet<Slice> overlapping = freeSlices.subSet(
-				new Slice(newOffset, 0),
-				true,
-				new Slice(newEnd, 0),
-				true
-			);
-
-			List<Slice> toRemove = new ArrayList<>(overlapping);
-			for (Slice other : toRemove) {
-				newOffset = Math.min(newOffset, other.offset);
-				newEnd = Math.max(newEnd, other.offset + other.size);
-			}
-
-			freeSlices.removeAll(toRemove);
-			freeSlices.add(new Slice(newOffset, newEnd - newOffset));
-			validateSlices();
+			if (freed) return;
+			freed = true;
+			assert owner != null : "Slice has no owner!";
+			onFreed();
+			owner.free(this);
 		}
 
 		@Override
@@ -51,31 +37,34 @@ public class SliceAllocator<T> {
 		}
 	}
 
-	private final List<T> elements;
-	private final NavigableSet<Slice> freeSlices = new TreeSet<>(Comparator.comparingInt(Slice::getOffset));
-	private final List<Slice> activeSlices = new ArrayList<>();
+	private final NavigableSet<SLICE> freeSlices = new TreeSet<>(Comparator.comparingInt(Slice::getOffset));
+	private final List<SLICE> activeSlices = new ArrayList<>();
 
 	private final boolean validate;
-	private final Allocator<T> allocator;
+	private final Allocator<SLICE> allocator;
+	private int totalSize = 0;
 
-	public SliceAllocator(List<T> elements, Allocator<T> allocator, int initialCapacity, boolean validate) {
-		this.elements = elements;
+	public SliceAllocator(Allocator<SLICE> allocator, int initialSliceCount, int initialSliceSize, boolean validate) {
 		this.allocator = allocator;
 		this.validate = validate;
 
-		Slice initialSlice = new Slice(0, initialCapacity);
-		for (int i = 0; i < initialCapacity; i++) {
-			elements.add(allocator.allocate(i));
+		int offset = 0;
+		for (int i = 0; i < initialSliceCount; i++) {
+			SLICE slice = allocator.createSlice(offset, initialSliceSize);
+			slice.owner = this;
+			freeSlices.add(slice);
+			offset += initialSliceSize;
 		}
-		freeSlices.add(initialSlice);
+		this.totalSize = offset;
 	}
 
-	public Slice allocate(int size) {
+	public SLICE allocate(int size) {
 		assert size > 0;
 		defrag();
 
-		Slice bestFit = null;
-		for (Slice candidate : freeSlices) {
+		// Find best-fit free slice
+		SLICE bestFit = null;
+		for (SLICE candidate : freeSlices) {
 			if (candidate.size >= size) {
 				bestFit = candidate;
 				break;
@@ -84,36 +73,69 @@ public class SliceAllocator<T> {
 
 		if (bestFit != null) {
 			freeSlices.remove(bestFit);
-			Slice allocated = new Slice(bestFit.offset, size);
+			SLICE allocated = allocator.createSlice(bestFit.offset, size);
+			allocated.owner = this;
 			activeSlices.add(allocated);
 
 			int remaining = bestFit.size - size;
 			if (remaining > 0) {
-				freeSlices.add(new Slice(bestFit.offset + size, remaining));
+				SLICE remainder = allocator.createSlice(bestFit.offset + size, remaining);
+				remainder.owner = this;
+				freeSlices.add(remainder);
 			}
 
 			validateSlices();
 			return allocated;
 		}
 
-		// Expand buffer if no free slice fits
-		int oldSize = elements.size();
-		Slice newSlice = new Slice(oldSize, size);
-		for (int i = 0; i < size; i++) {
-			elements.add(allocator.allocate(oldSize + i));
-		}
+		int newOffset = totalSize;
+		SLICE newSlice = allocator.createSlice(newOffset, size);
+		newSlice.owner = this;
+		newSlice.allocate();
 
+		totalSize = newOffset + size;
 		activeSlices.add(newSlice);
 		validateSlices();
 		return newSlice;
 	}
 
+	private void free(Slice slice) {
+		@SuppressWarnings("unchecked")
+		SLICE typed = (SLICE) slice;
+
+		boolean removed = activeSlices.remove(typed);
+		assert removed : "Slice being freed was not in active slices!";
+
+		int newOffset = typed.offset;
+		int newEnd = typed.offset + typed.size;
+
+		// Merge with adjacent free slices
+		List<SLICE> toMerge = new ArrayList<>();
+		for (SLICE free : freeSlices) {
+			if (free.offset <= newEnd && free.offset + free.size >= newOffset) {
+				toMerge.add(free);
+			}
+		}
+
+		for (SLICE other : toMerge) {
+			freeSlices.remove(other);
+			newOffset = Math.min(newOffset, other.offset);
+			newEnd = Math.max(newEnd, other.offset + other.size);
+		}
+
+		SLICE merged = allocator.createSlice(newOffset, newEnd - newOffset);
+		merged.owner = this;
+		freeSlices.add(merged);
+
+		validateSlices();
+	}
+
 	public void defrag() {
 		if (freeSlices.isEmpty()) return;
 
-		List<Slice> merged = new ArrayList<>();
-		Slice current = null;
-		for (Slice slice : freeSlices) {
+		List<SLICE> merged = new ArrayList<>();
+		SLICE current = null;
+		for (SLICE slice : freeSlices) {
 			if (current == null) {
 				current = slice;
 			} else if (current.offset + current.size >= slice.offset) {
@@ -159,7 +181,7 @@ public class SliceAllocator<T> {
 	}
 
 	@FunctionalInterface
-	public interface Allocator<T> {
-		T allocate(int index);
+	public interface Allocator<T extends SliceAllocator.Slice> {
+		T createSlice(int offset, int size);
 	}
 }

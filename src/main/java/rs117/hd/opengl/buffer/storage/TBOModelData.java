@@ -30,43 +30,35 @@ public class TBOModelData extends TextureStructuredBuffer {
 	}
 
 	private final List<ModelData> modelDataProperties = new ArrayList<>();
-	private final SliceAllocator<ModelData> allocator;
-	private final List<SliceAllocator<TBOModelData.ModelData>.Slice> frameModelDataSlices = new ArrayList<>();
-	private int sliceModelDataCount = 0;
+	private final SliceAllocator<Slice> allocator = new SliceAllocator<>(Slice::new, 1, 100, false);
 
-	public TBOModelData() {
-		super();
-		this.allocator = new SliceAllocator<>(
-			modelDataProperties,
-			i -> addStruct(new ModelData(i)),
-			1000,
-			false
-		);
-	}
+	// Dynamic Model Data
+	private final List<Slice> frameModelDataSlices = new ArrayList<>();
+	private int maxDynamicModelCount = 100;
+	private int frameDynamicModelCount;
 
-	public SliceAllocator<ModelData>.Slice obtainSlice(int size) {
-		SliceAllocator<ModelData>.Slice slice = allocator.allocate(size);
-		upload(); // keep texture buffer in sync with GPU
+	public Slice obtainSlice(int size) {
+		Slice slice = allocator.allocate(size);
+		upload();
 		return slice;
 	}
 
 	public int addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
 		TBOModelData.ModelData dynamicModelData = null;
 		if(!frameModelDataSlices.isEmpty()) {
-			// Check room in the last one
-			var currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
-			if(sliceModelDataCount < currentSlice.getSize()) {
-				dynamicModelData = currentSlice.get(sliceModelDataCount++);
+			Slice currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
+			if(currentSlice.hasSpace()) {
+				dynamicModelData = currentSlice.add();
 			}
 		}
 
 		if(dynamicModelData == null) {
-			var newSlice = obtainSlice(100);
+			Slice newSlice = obtainSlice(maxDynamicModelCount);
 			frameModelDataSlices.add(newSlice);
-			sliceModelDataCount = 0;
-			dynamicModelData = newSlice.get(sliceModelDataCount++);
+			dynamicModelData = newSlice.add();
 		}
 
+		frameDynamicModelCount++;
 		dynamicModelData.set(renderable, model, override, x, y, z);
 		return dynamicModelData.modelOffset;
 	}
@@ -75,8 +67,37 @@ public class TBOModelData extends TextureStructuredBuffer {
 		for(var slice : frameModelDataSlices)
 			slice.free();
 		frameModelDataSlices.clear();
-		sliceModelDataCount = 0;
+
+		if(frameDynamicModelCount > maxDynamicModelCount)
+			maxDynamicModelCount = frameDynamicModelCount;
+		frameDynamicModelCount = 0;
 	}
 
 	public void defrag() { allocator.defrag(); }
+
+	public class Slice extends SliceAllocator.Slice {
+		private int modelCount;
+
+		public Slice(int offset, int size) {
+			super(offset, size);
+		}
+
+		@Override
+		protected void allocate() {
+			while (modelDataProperties.size() < offset + size)
+				modelDataProperties.add(addStruct(new ModelData(modelDataProperties.size())));
+		}
+
+		@Override
+		protected void onFreed() { modelCount = 0; }
+
+		public boolean hasSpace() { return modelCount < size; }
+
+		public ModelData add() {
+			if(!hasSpace()) {
+				return null;
+			}
+			return modelDataProperties.get(offset + modelCount++);
+		}
+	}
 }

@@ -18,7 +18,6 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
-import rs117.hd.utils.SliceAllocator;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -71,7 +70,7 @@ class Zone {
 	int[][] roofStart;
 	int[][] roofEnd;
 	short modelCount;
-	SliceAllocator<TBOModelData.ModelData>.Slice modelDataSlice;
+	TBOModelData.Slice modelDataSlice;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
