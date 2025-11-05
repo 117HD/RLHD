@@ -31,7 +31,6 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.config.SeasonalTheme;
 import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -825,14 +824,13 @@ public class ProceduralGenerator {
 		// As a fallback, always consider vanilla textured water tiles as water
 		// We purposefully ignore material replacements here such as ice from the winter theme
 		if (waterType == WaterType.NONE) {
-			if (130 <= textureId && textureId <= 189) {
+			if (130 <= textureId && textureId <= 189 || textureId == 208) {
 				// New sailing water textures
 				waterType = waterTypeManager.get(String.format("VANILLA_%d", textureId));
 			} else {
 				switch (textureId) {
 					case 1:
 					case 24:
-					case 208:
 						waterType = WaterType.WATER; // This used to be WATER_FLAT, but for sailing we want translucent water
 						break;
 					case 25:
@@ -842,8 +840,9 @@ public class ProceduralGenerator {
 			}
 		}
 
-		if (waterType == WaterType.WATER && plugin.configSeasonalTheme == SeasonalTheme.WINTER)
-			return WaterType.ICE;
+		// Disable the winter theme ice
+//		if (waterType == WaterType.WATER && plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+//			return WaterType.ICE;
 
 		return waterType;
 	}
