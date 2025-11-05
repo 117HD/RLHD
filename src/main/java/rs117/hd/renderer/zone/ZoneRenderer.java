@@ -889,7 +889,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.enable.set(GL_BLEND);
 		renderState.enable.set(GL_CULL_FACE);
 		renderState.enable.set(GL_DEPTH_TEST);
-		renderState.depthFunc.set(GL_GREATER);
+		renderState.depthFunc.set(GL_GEQUAL);
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		// Render the scene
@@ -983,16 +983,15 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized)
 			return;
 
-		boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		boolean renderWater = z.inSceneFrustum && level == 0 && z.hasWater;
-
-		int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (renderWater)
 			z.renderOpaqueLevel(sceneCmd, Zone.LEVEL_WATER_SURFACE);
 
+		boolean hasAlpha = z.sizeA != 0 || !z.alphaModels.isEmpty();
 		if (!hasAlpha)
 			return;
 
+		int offset = ctx.sceneContext.sceneOffset >> 3;
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
 			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
