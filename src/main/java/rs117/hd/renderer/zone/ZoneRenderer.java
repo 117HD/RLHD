@@ -1177,7 +1177,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int modelDataOffset = modelData.addDynamicModelData(renderable, m, modelOverride, x, y, z);
+		int modelDataOffset = modelData.addDynamicModelDataz(renderable, m, modelOverride, x, y, z);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
@@ -1334,7 +1334,6 @@ public class ZoneRenderer implements Renderer {
 			deferScenePass = false;
 		}
 
-
 		try {
 			plugin.prepareInterfaceTexture();
 		} catch (Exception ex) {
@@ -1396,6 +1395,8 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+
+		modelData.freeDynamicModelData();
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
