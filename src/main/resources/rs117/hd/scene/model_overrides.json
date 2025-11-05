@@ -11066,7 +11066,7 @@
     "colorOverrides": [
       {
         "description": "Golden Handles",
-        "colors": "s > 3",
+        "colors": "h == 6 && s == 7",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.6,
