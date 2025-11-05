@@ -27,11 +27,9 @@ package rs117.hd.renderer.zone;
 import com.google.common.base.Stopwatch;
 import com.google.inject.Injector;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -80,7 +78,6 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
-import rs117.hd.utils.SliceAllocator;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
@@ -249,30 +246,6 @@ public class ZoneRenderer implements Renderer {
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
 	private Map<Integer, Integer> nextRoofChanges;
-
-	private final List<SliceAllocator<TBOModelData.ModelData>.Slice> frameModelDataSlices = new ArrayList<>();
-	private int sliceModelDataCount = 0;
-
-	private int addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
-		TBOModelData.ModelData dynamicModelData = null;
-		if(!frameModelDataSlices.isEmpty()) {
-			// Check room in the last one
-			var currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
-			if(sliceModelDataCount < currentSlice.getSize()) {
-				dynamicModelData = currentSlice.get(sliceModelDataCount++);
-			}
-		}
-
-		if(dynamicModelData == null) {
-			var newSlice = modelData.obtainSlice(100);
-			frameModelDataSlices.add(newSlice);
-			sliceModelDataCount = 0;
-			dynamicModelData = newSlice.get(sliceModelDataCount++);
-		}
-
-		dynamicModelData.set(renderable, model, override, x, y, z);
-		return dynamicModelData.modelOffset;
-	}
 
 	@Nullable
 	public ZoneSceneContext getSceneContext() {
@@ -1152,7 +1125,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int modelDataOffset = addDynamicModelData(r, m, modelOverride, x, y, z);
+		int modelDataOffset = modelData.addDynamicModelData(r, m, modelOverride, x, y, z);
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1204,7 +1177,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int modelDataOffset = addDynamicModelData(renderable, m, modelOverride, x, y, z);
+		int modelDataOffset = modelData.addDynamicModelData(renderable, m, modelOverride, x, y, z);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
@@ -1361,10 +1334,6 @@ public class ZoneRenderer implements Renderer {
 			deferScenePass = false;
 		}
 
-		for(var slice : frameModelDataSlices)
-			slice.free();
-		frameModelDataSlices.clear();
-		sliceModelDataCount = 0;
 
 		try {
 			plugin.prepareInterfaceTexture();

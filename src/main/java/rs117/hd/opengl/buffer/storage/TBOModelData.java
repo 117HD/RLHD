@@ -31,6 +31,8 @@ public class TBOModelData extends TextureStructuredBuffer {
 
 	private final List<ModelData> modelDataProperties = new ArrayList<>();
 	private final SliceAllocator<ModelData> allocator;
+	private final List<SliceAllocator<TBOModelData.ModelData>.Slice> frameModelDataSlices = new ArrayList<>();
+	private int sliceModelDataCount = 0;
 
 	public TBOModelData() {
 		super();
@@ -46,6 +48,34 @@ public class TBOModelData extends TextureStructuredBuffer {
 		SliceAllocator<ModelData>.Slice slice = allocator.allocate(size);
 		upload(); // keep texture buffer in sync with GPU
 		return slice;
+	}
+
+	public int addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
+		TBOModelData.ModelData dynamicModelData = null;
+		if(!frameModelDataSlices.isEmpty()) {
+			// Check room in the last one
+			var currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
+			if(sliceModelDataCount < currentSlice.getSize()) {
+				dynamicModelData = currentSlice.get(sliceModelDataCount++);
+			}
+		}
+
+		if(dynamicModelData == null) {
+			var newSlice = obtainSlice(100);
+			frameModelDataSlices.add(newSlice);
+			sliceModelDataCount = 0;
+			dynamicModelData = newSlice.get(sliceModelDataCount++);
+		}
+
+		dynamicModelData.set(renderable, model, override, x, y, z);
+		return dynamicModelData.modelOffset;
+	}
+
+	public void freeDynamicModelData() {
+		for(var slice : frameModelDataSlices)
+			slice.free();
+		frameModelDataSlices.clear();
+		sliceModelDataCount = 0;
 	}
 
 	public void defrag() { allocator.defrag(); }
