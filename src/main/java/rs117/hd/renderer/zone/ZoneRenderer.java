@@ -366,6 +366,8 @@ public class ZoneRenderer implements Renderer {
 //				renderBufferOffset = sceneContext.staticVertexCount;
 
 				plugin.drawnTileCount = 0;
+				plugin.drawnZoneCount = 0;
+				plugin.drawCallCount = 0;
 				plugin.drawnStaticRenderableCount = 0;
 				plugin.drawnDynamicRenderableCount = 0;
 
@@ -825,6 +827,7 @@ public class ZoneRenderer implements Renderer {
 			renderState.disable.set(GL_DEPTH_TEST);
 
 			frameTimer.end(Timer.RENDER_SHADOWS);
+			plugin.drawCallCount += directionalCmd.getDrawCallCount();
 		}
 	}
 
@@ -877,6 +880,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
+
+		plugin.drawCallCount += sceneCmd.getDrawCallCount();
 	}
 
 	@Override
@@ -928,6 +933,7 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized || z.sizeO == 0)
 			return;
 
+		plugin.drawnZoneCount++;
 		if (ctx != root || z.inSceneFrustum)
 			z.renderOpaque(sceneCmd, minLevel, level, maxLevel, hideRoofIds);
 
@@ -1109,6 +1115,7 @@ public class ZoneRenderer implements Renderer {
 			VAO o = vaoO.get(size, ctx.vboM);
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
+		plugin.drawnDynamicRenderableCount++;
 	}
 
 	@Override
@@ -1180,6 +1187,7 @@ public class ZoneRenderer implements Renderer {
 						y - renderable.getModelHeight() /* to render players over locs */,
 						z & 1023
 					);
+					plugin.drawnDynamicRenderableCount++;
 				}
 			}
 

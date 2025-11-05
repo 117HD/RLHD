@@ -617,6 +617,8 @@ public class LegacyRenderer implements Renderer {
 				renderBufferOffset = sceneContext.staticVertexCount;
 
 				plugin.drawnTileCount = 0;
+				plugin.drawnZoneCount = 0;
+				plugin.drawCallCount = 0;
 				plugin.drawnStaticRenderableCount = 0;
 				plugin.drawnDynamicRenderableCount = 0;
 
