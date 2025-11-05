@@ -74,9 +74,18 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 	public int getIndex(@Nullable Scene scene) {
 		if (scene == null)
 			return -1;
-		int id = scene.getWorldViewId();
-		if (id < 0 || id >= indexMapping.length)
+		return getIndex(scene.getWorldViewId());
+	}
+
+	public int getIndex(@Nullable WorldView worldView) {
+		if (worldView == null)
 			return -1;
-		return indexMapping[id];
+		return getIndex(worldView.getId());
+	}
+
+	public int getIndex(int worldViewId) {
+		if (worldViewId < 0 || worldViewId >= indexMapping.length)
+			return -1;
+		return indexMapping[worldViewId];
 	}
 }

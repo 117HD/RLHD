@@ -189,12 +189,12 @@ class Zone {
 
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
-		// worldViewIndex
+		// WorldView index (not ID)
 		glEnableVertexAttribArray(6);
 		glVertexAttribDivisor(6, 1);
 		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
 
-		// scene offset
+		// Scene offset
 		glEnableVertexAttribArray(7);
 		glVertexAttribDivisor(7, 1);
 		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
