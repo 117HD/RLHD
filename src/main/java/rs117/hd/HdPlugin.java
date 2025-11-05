@@ -82,6 +82,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.buffer.uniforms.UBOCompute;
+import rs117.hd.opengl.buffer.uniforms.UBODisplacement;
 import rs117.hd.opengl.buffer.uniforms.UBOGlobal;
 import rs117.hd.opengl.buffer.uniforms.UBOLights;
 import rs117.hd.opengl.buffer.uniforms.UBOUI;
@@ -163,6 +164,7 @@ public class HdPlugin extends Plugin {
 	public static final int UNIFORM_BLOCK_LIGHTS = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_LIGHTS_CULLING = UNIFORM_BLOCK_COUNT++;
 	public static final int UNIFORM_BLOCK_UI = UNIFORM_BLOCK_COUNT++;
+	public static final int UNIFORM_BLOCK_DISPLACEMENT = UNIFORM_BLOCK_COUNT++;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -339,6 +341,7 @@ public class HdPlugin extends Plugin {
 	public int texTiledLighting;
 
 	public final UBOGlobal uboGlobal = new UBOGlobal();
+	public final UBODisplacement uboDisplacement = new UBODisplacement();
 	public final UBOLights uboLights = new UBOLights(false);
 	public final UBOLights uboLightsCulling = new UBOLights(true);
 	public final UBOUI uboUI = new UBOUI();
@@ -790,13 +793,13 @@ public class HdPlugin extends Plugin {
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
 			.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", WIND_DISPLACEMENT_NOISE_RESOLUTION)
 			.define("CHARACTER_DISPLACEMENT", configCharacterDisplacement)
-			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
+			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBODisplacement.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
 			.define("RENDERER", config.renderer())
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
-			.define("WORLD_VIEW_GETTER", "")
+			.define("MODEL_DATA_GETTER", "")
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -817,6 +820,7 @@ public class HdPlugin extends Plugin {
 			.addUniformBuffer(uboLights)
 			.addUniformBuffer(uboLightsCulling)
 			.addUniformBuffer(uboUI)
+			.addUniformBuffer(uboDisplacement)
 			.addUniformBuffer(materialManager.uboMaterials)
 			.addUniformBuffer(waterTypeManager.uboWaterTypes);
 		renderer.addShaderIncludes(includes);
@@ -995,6 +999,7 @@ public class HdPlugin extends Plugin {
 		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
 		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
 		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+		uboDisplacement.initialize(HdPlugin.UNIFORM_BLOCK_DISPLACEMENT);
 	}
 
 	private void destroyUbos() {
@@ -1002,6 +1007,7 @@ public class HdPlugin extends Plugin {
 		uboLights.destroy();
 		uboLightsCulling.destroy();
 		uboUI.destroy();
+		uboDisplacement.destroy();
 	}
 
 	private void initializeUiTexture() {

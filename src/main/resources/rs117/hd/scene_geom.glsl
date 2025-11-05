@@ -26,6 +26,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <buffers/model_data.glsl>
 
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
@@ -43,6 +44,7 @@ in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
 in int gWorldViewId[3];
+in int gModelOffset[3];
 
 flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
@@ -58,6 +60,7 @@ out FragmentData {
 } OUT;
 
 void main() {
+    ModelData modelData = getModelData(gModelOffset[0]);
     vec3 vUv[3];
 
     // MacOS doesn't allow assigning these arrays directly.

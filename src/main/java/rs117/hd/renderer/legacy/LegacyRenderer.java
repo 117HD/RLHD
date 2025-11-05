@@ -682,17 +682,17 @@ public class LegacyRenderer implements Renderer {
 				uboCompute.cameraY.set(plugin.cameraPosition[1]);
 				uboCompute.cameraZ.set(plugin.cameraPosition[2]);
 
-				uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
-				uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
-				uboCompute.windStrength.set(environmentManager.currentWindStrength);
-				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
-				uboCompute.windOffset.set(plugin.windOffset);
+				plugin.uboDisplacement.windDirectionX.set(cos(environmentManager.currentWindAngle));
+				plugin.uboDisplacement.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+				plugin.uboDisplacement.windStrength.set(environmentManager.currentWindStrength);
+				plugin.uboDisplacement.windCeiling.set(environmentManager.currentWindCeiling);
+				plugin.uboDisplacement.windOffset.set(plugin.windOffset);
 
 				if (plugin.configCharacterDisplacement) {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+						plugin.uboDisplacement.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -870,6 +870,7 @@ public class LegacyRenderer implements Renderer {
 		frameTimer.begin(Timer.COMPUTE);
 
 		uboCompute.upload();
+		plugin.uboDisplacement.upload();
 
 		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
@@ -878,7 +879,7 @@ public class LegacyRenderer implements Renderer {
 			// glFinish();
 
 			clManager.compute(
-				uboCompute.glBuffer,
+				uboCompute.glBuffer, plugin.uboDisplacement.glBuffer,
 				numPassthroughModels, numModelsToSort,
 				hModelPassthroughBuffer, hModelSortingBuffers,
 				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
@@ -1141,6 +1142,8 @@ public class LegacyRenderer implements Renderer {
 				long timeSinceChange = System.currentTimeMillis() - plugin.colorFilterChangedAt;
 				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
+
+			plugin.uboDisplacement.upload();
 
 			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
 				&& environmentManager.currentDirectionalStrength > 0) {
@@ -1813,10 +1816,10 @@ public class LegacyRenderer implements Renderer {
 								entry.idleRadius = displacementRadius;
 							}
 						}
-						uboCompute.addCharacterPosition(x, z, displacementRadius);
+						plugin.uboDisplacement.addCharacterPosition(x, z, displacementRadius);
 					}
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-					uboCompute.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+					plugin.uboDisplacement.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
 				if (plugin.enableDetailedTimers)
 					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);

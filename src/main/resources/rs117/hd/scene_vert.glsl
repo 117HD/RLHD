@@ -46,22 +46,16 @@ out int gAlphaBiasHsl;
 out int gMaterialData;
 out int gTerrainData;
 out int gWorldViewId;
+out int gModelOffset;
 
 void main() {
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    /*
-    if(vModelOffset > 0) {
-        ModelData modelData = getModelData(vModelOffset);
-        if(modelData.flags == (vModelOffset - 1)) {
-           sceneOffset.y += 1000;
-        }
-    }*/
     gPosition = vec3(getWorldViewProjection(vWorldViewId) * vec4(sceneOffset + vPosition, 1));
-
     gUv = vUv;
     gNormal = vNormal;
     gAlphaBiasHsl = vAlphaBiasHsl;
     gMaterialData = vMaterialData;
     gTerrainData = vTerrainData;
     gWorldViewId = vWorldViewId;
+    gModelOffset = vModelOffset;
 }
