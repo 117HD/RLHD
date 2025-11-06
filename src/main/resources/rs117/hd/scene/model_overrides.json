@@ -8937,14 +8937,14 @@
   {
     "description": "Witchaven Docks",
     "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
     "objectIds": [
       "SLUG2_PIER",
       "SLUG2_PIER2_EDGE",
       "SLUG2_PIER2_EDGE_MIRROR",
       "SLUG2_PIER3_EDGE",
       "SLUG2_PIER3_EDGE_MIRROR"
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
     "description": "Witchaven Dock Rails",
