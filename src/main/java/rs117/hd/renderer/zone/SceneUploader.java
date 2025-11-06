@@ -1560,6 +1560,10 @@ class SceneUploader {
 
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
+			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			if (transparency == 255)
+				continue;
+
 			int color1 = color1s[face];
 			int color2 = color2s[face];
 			int color3 = color3s[face];
@@ -1606,7 +1610,6 @@ class SceneUploader {
 				texC = triangleC;
 			}
 
-			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 
 			UvType uvType = UvType.GEOMETRY;
