@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -91,6 +92,16 @@ class Zone {
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
 		}
+	}
+
+	public static void freeZones(@Nullable Zone[][] zones) {
+		if (zones == null)
+			return;
+
+		for (Zone[] column : zones)
+			for (Zone zone : column)
+				if (zone != null)
+					zone.free();
 	}
 
 	void free() {
