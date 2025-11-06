@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
@@ -67,6 +68,9 @@ class SceneUploader {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	public GamevalManager gamevalManager;
 
 	@Inject
 	private MaterialManager materialManager;
@@ -608,32 +612,45 @@ class SceneUploader {
 		int ux,
 		int uz,
 		int id,
-		GpuIntBuffer vertexBuffer,
-		GpuIntBuffer ab
+		GpuIntBuffer opaqueBuffer,
+		GpuIntBuffer alphaBuffer
 	) {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
 
-		int pos = zone.vboA != null ? zone.vboA.vb.position() : 0;
+		int alphaStart = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		Model model = null;
 		if (r instanceof Model) {
 			model = (Model) r;
-			uploadStaticModel(
-				ctx, tile, model, modelOverride, uuid,
-				preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab
-			);
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
-			if (model != null) {
+		}
+
+		if (model != null) {
+			try {
 				uploadStaticModel(
 					ctx, tile, model, modelOverride, uuid,
-					preOrientation, orient, x - basex, y, z - basez, vertexBuffer, ab
+					preOrientation, orient, x - basex, y, z - basez, opaqueBuffer, alphaBuffer
+				);
+			} catch (Throwable ex) {
+				throw new RuntimeException(
+					String.format(
+						"Error uploading static %s %s (ID %d), override=\"%s\", opaque=%s, alpha=%s",
+						ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+						gamevalManager.getObjectName(id),
+						id,
+						modelOverride.description,
+						opaqueBuffer,
+						alphaBuffer
+					),
+					ex
 				);
 			}
 		}
-		int endpos = zone.vboA != null ? zone.vboA.vb.position() : 0;
-		if (endpos > pos) {
+
+		int alphaEnd = zone.vboA != null ? zone.vboA.vb.position() : 0;
+		if (alphaEnd > alphaStart) {
 			assert model != null;
 			if (lx > -1) {
 				lx -= basex >> 7;
@@ -647,7 +664,7 @@ class SceneUploader {
 			}
 			zone.addAlphaModel(
 				materialManager,
-				zone.glVaoA, model, modelOverride, pos, endpos,
+				zone.glVaoA, model, modelOverride, alphaStart, alphaEnd,
 				x - basex, y, z - basez,
 				lx, lz, ux, uz,
 				rid, level, id
