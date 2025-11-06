@@ -9711,7 +9711,8 @@
       "FARMING_COUNTER",
       "FAI_FALADOR_COUNTER",
       "RIMMINGTON_TABLE",
-      "FARMING_COUNTER_MORY"
+      "FARMING_COUNTER_MORY",
+      "PEST_COUNTER"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
@@ -11113,7 +11114,8 @@
       "VMQ1_BANDIT_DOOR_OPEN",
       "VMQ1_BANDIT_DOOR_NOOP",
       "ELID_GENIE_DOOR",
-      "ELID_GENIE_DOOR_OPEN"
+      "ELID_GENIE_DOOR_OPEN",
+      "PEST_POORDOOROPEN"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -12022,7 +12024,8 @@
       "VIKING_DUGUPSOIL_BROWN_2",
       "FAVOUR_DUGUPSOIL_2",
       "EYEGLO_DUGUPSOIL_2",
-      "DUGUPSOIL2_BROWNMUD"
+      "DUGUPSOIL2_BROWNMUD",
+      "PEST_OUTPOST_SOIL_2"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.65,
@@ -12702,7 +12705,8 @@
       "FOSSIL_CRATE2",
       "MYQ4_PESTLE_CRATE",
       "MYQ4_EMPTY_CRATE",
-      "LUC2_MOV_CRATES_STACKED"
+      "LUC2_MOV_CRATES_STACKED",
+      "PEST_CRATES"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -12750,7 +12754,8 @@
       "SHAYZIEN_CRATE_03_DARK",
       "CRATE_ALDARIN01_STACK01",
       "MYQ4_EMPTY_CRATES_SMALL",
-      "GRAB_EVIL_TWIN_SMALL_CRATES"
+      "GRAB_EVIL_TWIN_SMALL_CRATES",
+      "PEST_SMALL_CRATES"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13924,7 +13929,8 @@
       "HOSIDIUS_SERVERY_STOOL",
       "HOS_STOOL_03",
       "BR_STOOL",
-      "LUC2_MOV_STOOL"
+      "LUC2_MOV_STOOL",
+      "PEST_STOOL"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -48010,7 +48016,8 @@
     "description": "Kourend - Varrock - Metallic - Barrel with Bow and Arrows",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "BARREL_RANGING"
+      "BARREL_RANGING",
+      "PEST_BARREL_RANGING"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -58871,6 +58878,184 @@
         "uvType": "BOX",
         "uvOrientation": 192
       }
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shelves - Empty",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "PEST_WAREHOUSE_SHELVES"
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "PEST_WAREHOUSE_SHELVES2",
+      "PEST_WAREHOUSE_SHELVES3",
+      "PEST_WAREHOUSE_SHELVES4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "PEST_WAREHOUSE_SHELVES1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Metallic - Wooden - Blacksmiths tools",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [ "PEST_BLACKSMITHTOOLS" ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shalves with ladels and bottles",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h >= 19",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 240
+      }
+    ],
+    "objectIds": [ "PEST_RUNE_SHELVES" ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shelves - runes and talisman",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [ "PEST_SHELVES_RUNES_2" ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || (h == 5 && s == 1) || (h == 4 && s == 1)",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shelves - runes and books",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [ "PEST_SHELVES_RUNES_1" ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || (h == 5 && s == 1) || (h == 4 && s == 1)",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Shelves - Skull and bottles",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "objectIds": [ "PEST_SHELVES_RUNES_3" ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || (h == 5 && s == 1) || (h == 4 && s == 1)",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 5 && s ==4",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Bank Booth - Closed",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [ "PEST_BANKBOOTH_CLOSED" ]
+  },
+  {
+    "description": "Pest Control Isle - Wooden - Glass - Bank Booth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [ "PEST_BANKBOOTH", "PEST_BANKBOOTH_MULTI" ]
+  },
+  {
+    "description": "Pest Control Isle - Metallic - Wooden - Archery Display",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [ "PEST_BOWS_RANGING" ]
+  },
+  {
+    "description": "Pest Control Isle - Stone - Building Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": -343,
+    "objectIds": [
+      "PEST_OUTPOST_WALL",
+      "PEST_OUTPOST_CRUMBLYSTONE_LEFT",
+      "PEST_OUTPOST_WALL_VARI"
     ]
   }
 ]
