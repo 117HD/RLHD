@@ -12702,7 +12702,8 @@
       "FOSSIL_CRATE2",
       "MYQ4_PESTLE_CRATE",
       "MYQ4_EMPTY_CRATE",
-      "LUC2_MOV_CRATES_STACKED"
+      "LUC2_MOV_CRATES_STACKED",
+      "LANDS_END_HUNTER_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -34166,7 +34167,8 @@
       "QIP_SHEEP_SHEARER_COOKINGSHELVESEMPTY",
       "BURGH_SHELVES",
       "BURGH_BOOKCASE3",
-      "SHELF_IMCANDO01_EMPTY01"
+      "SHELF_IMCANDO01_EMPTY01",
+      "RIMMINGTON_WAREHOUSE_SHELVES"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -38333,7 +38335,9 @@
       "ELID_BOOKCASE",
       "KR_BOOKCASE2",
       "KR_CAM_BOOKCASE",
-      "FAI_VARROCK_RUNE_BOOKCASE"
+      "FAI_VARROCK_RUNE_BOOKCASE",
+      "SARIM_BOOKCASE2_OFFSET",
+      "SARIM_BOOKCASE2_OFFSET_WESTFACING"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -58870,6 +58874,22 @@
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 192
+      }
+    ]
+  },
+  {
+    "description": "Remmington - Lands End - Wooden - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "RIMMINGTON_WAREHOUSE_SHELVES3",
+      "RIMMINGTON_WAREHOUSE_SHELVES4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
       }
     ]
   }
