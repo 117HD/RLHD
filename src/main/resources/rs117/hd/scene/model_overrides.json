@@ -8308,7 +8308,8 @@
       "IZNOT_CLAY_RANGE",
       "IZNOT_CLAY_FORGE",
       "FAIRY_FURNACE",
-      "FAIRY_RANGE"
+      "FAIRY_RANGE",
+      "SLUG2_CLAY_RANGE"
     ],
     "colorOverrides": [
       {
@@ -9585,7 +9586,10 @@
       "FAI_FALADOR_CASTLE_LADDER_UP",
       "FAI_FALADOR_CASTLE_LADDERTOP",
       "LUC2_DARKSQUALL_LADDER",
-      "LUC2_DARKSQUALL_LADDERTOP"
+      "LUC2_DARKSQUALL_LADDERTOP",
+      "SLUG2_LADDER",
+      "SLUG2_LADDERTOP",
+      "SLUG2_BAITSHOP_LADDERTOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -10110,7 +10114,8 @@
       "DRAGON_SLAYER_QIP_SUITOFARMOUR",
       "KR_SUITOFARMOUR_DARKKNIGHT",
       "KR_CAM_SUITOFARMOR",
-      "SUITOFARMOUR_DARKKNIGHT"
+      "SUITOFARMOUR_DARKKNIGHT",
+      "SLUG2_SUITOFARMOUR_WHITEKNIGHT_BLACK"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -12635,7 +12640,8 @@
       "TOURTRAP_QIP_CRATE_SINGLE",
       "TOURTRAP_QIP_CRATE_STACKED",
       "FOSSIL_CRATE3_INACTIVE",
-      "FAI_WIZTOWER_CRATE"
+      "FAI_WIZTOWER_CRATE",
+      "SLUG2_CRATE_STACK2"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -34844,15 +34850,16 @@
   },
   {
     "description": "Wooden Wardrobe",
-    "objectIds": [
-      "FAI_VARROCK_WARDROBE",
-      "FAI_VARROCK_WARDROBE_POSH2",
-      "AKD_HUGHES_WARDROBE_1_NOOP"
-    ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationY": 512,
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_WARDROBE",
+      "FAI_VARROCK_WARDROBE_POSH2",
+      "AKD_HUGHES_WARDROBE_1_NOOP",
+      "SLUG2_WARDROBE"
+    ]
   },
   {
     "description": "Drawers with backsplash",
@@ -34862,7 +34869,8 @@
       "FAI_VARROCK_POSH_DRAWERS",
       "KR_SEERS_VILLAGE_DRAWERS1",
       "AKD_HUGHES_DRAWERS_1_NOOP",
-      "FAI_FALADOR_DRAWERS"
+      "FAI_FALADOR_DRAWERS",
+      "SLUG2_DRAWERS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -35023,7 +35031,8 @@
       "LUC2_MOV_BARREL_EMPTY",
       "LUC2_MOV_BARREL",
       "LUC2_DWT_BARREL1",
-      "LUC2_DWT_BARREL2"
+      "LUC2_DWT_BARREL2",
+      "SLUG2_BARREL_STACKED"
     ]
   },
   {
@@ -35334,13 +35343,15 @@
     "uvScale": 0.4
   },
   {
-    "description": "Camdozaal Fish Bones",
+    "description": "Camdozaal - Witchaven - Bone - Fish Bones",
     "baseMaterial": "BONE",
     "objectIds": [
       "MYQ3_FISHBONE1",
       "MYQ3_FISHBONE2",
       "MYQ3_FISHBONE3",
-      "MYQ3_FISHBONE4"
+      "MYQ3_FISHBONE4",
+      "SLUG2_FISHBONE1",
+      "SLUG2_FISHBONE2"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.7
@@ -38335,7 +38346,8 @@
       "ELID_BOOKCASE",
       "KR_BOOKCASE2",
       "KR_CAM_BOOKCASE",
-      "FAI_VARROCK_RUNE_BOOKCASE"
+      "FAI_VARROCK_RUNE_BOOKCASE",
+      "SLUG2_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -42496,7 +42508,7 @@
     ]
   },
   {
-    "description": "Double bed with red blanket and bed frame",
+    "description": "Double bed with red blanket with golden trim and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BIGBED3"
@@ -48877,6 +48889,30 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Ceramic - Glass - Shelves with various objects",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_SINGLE_SHELF_MIXED1",
+      "FAI_VARROCK_SINGLE_SHELF_FOOD",
+      "FAI_VARROCK_SINGLE_SHELF_GLASSES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shelf",
+        "colors": "h == 7 && s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Vase",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
@@ -58965,10 +59001,11 @@
     ]
   },
   {
-    "description": "Kourend - Hosidius - Tithe Farm - Water Barrel",
+    "description": "Witchaven - Wooden - Metallic - Water Barrel and sink",
     "baseMaterial": "METALLIC_1_LIGHT",
     "objectIds": [
-      "SLUG2_WATER_BARREL"
+      "SLUG2_WATER_BARREL",
+      "SLUG2_SINK2"
     ],
     "colorOverrides": [
       {
@@ -58979,10 +59016,120 @@
         "uvType": "BOX"
       },
       {
-        "colors": "h >= 30",
+        "colors": "h == 37",
         "baseMaterial": "WATER_FLAT",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Witchaven - Dirty Double bed with red blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "(h == 6 || h == 8) && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red blanket",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_DOUBLE_BED"
+    ]
+  },
+  {
+    "description": "Witchaven - childs bed with yellow blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "(h == 6 || h == 8) && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Yellow blanket",
+        "colors": "h == 8 && s == 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_CHILDS_BUNKBED"
+    ]
+  },
+  {
+    "description": "Witchaven - wooden - Leaning wall planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_PLANKS1",
+      "SLUG2_PLANKS2"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SLUG2_MAYOR_BENCH"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Cloth - Training Dummy",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLUG2_SWORDDUMMY"
+    ]
+  },
+  {
+    "description": "Witchaven - Hammock - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SLUG2_HAMMOCK_SWINGING"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Paper - Church Lectern",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 || (h >= 30)",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLUG2_LECTERN"
     ]
   }
 ]
