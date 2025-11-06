@@ -719,6 +719,8 @@ public class MathUtils {
 	}
 
 	public static int float16(float value) {
+		if (value == 0)
+			return 0;
 		// float32: (-1)^sign * 2^(exponent - 127) * (1.mantissa)
 		// float16: (-1)^sign * 2^(exponent -  15) * (1.mantissa)
 		int f = Float.floatToRawIntBits(value);

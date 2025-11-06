@@ -1298,6 +1298,7 @@ class SceneUploader {
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
+			boolean keepShading = isTextured;
 			if (isTextured) {
 				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
 				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
@@ -1327,7 +1328,7 @@ class SceneUploader {
 							color1 = color2 = color3 = averageColor;
 
 							// Let the shader know vanilla shading reversal should be skipped for this face
-							isTextured = true;
+							keepShading = true;
 						} else if (tileModel != null && tileModel.getTriangleTextureId() == null) {
 							int faceColorIndex = -1;
 							for (int i = 0; i < tileModel.getTriangleColorA().length; i++) {
@@ -1368,7 +1369,7 @@ class SceneUploader {
 									color1 = color2 = color3 = color;
 
 									// Let the shader know vanilla shading reversal should be skipped for this face
-									isTextured = true;
+									keepShading = true;
 								}
 							}
 						}
@@ -1397,7 +1398,6 @@ class SceneUploader {
 			ModelOverride faceOverride = modelOverride;
 
 			if (isTextured) {
-				color1 = color2 = color3 = 90;
 				uvType = UvType.VANILLA;
 				if (textureMaterial != Material.NONE) {
 					material = textureMaterial;
@@ -1428,7 +1428,7 @@ class SceneUploader {
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false, isTextured);
+			int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading);
 
 			if (uvType == UvType.VANILLA) {
 				modelUvs[0] = modelLocalXI[texA] - vx1;
@@ -1572,6 +1572,10 @@ class SceneUploader {
 
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
+			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+			if (transparency == 255)
+				continue;
+
 			int color1 = color1s[face];
 			int color2 = color2s[face];
 			int color3 = color3s[face];
@@ -1618,7 +1622,6 @@ class SceneUploader {
 				texC = triangleC;
 			}
 
-			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 
 			UvType uvType = UvType.GEOMETRY;
