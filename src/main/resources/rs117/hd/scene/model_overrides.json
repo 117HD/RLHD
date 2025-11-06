@@ -35352,7 +35352,8 @@
       "MYQ3_FISHBONE3",
       "MYQ3_FISHBONE4",
       "SLUG2_FISHBONE1",
-      "SLUG2_FISHBONE2"
+      "SLUG2_FISHBONE2",
+      "SLUG2_FISHBONE3"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.7
@@ -59301,7 +59302,8 @@
       }
     ],
     "objectIds": [
-      "SLUG2_LIFE_BUOY"
+      "SLUG2_LIFE_BUOY",
+      "SLUG2_LIFE_BUOY_OUTSIDE"
     ]
   },
   {
@@ -59330,5 +59332,64 @@
     "objectIds": [
       "SLUG2_HARPOON_DECOR"
     ]
+  },
+  {
+    "description": "Witchaven - Wooden - Ship debris",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_WRECK1_MID_SIDE",
+      "SLUG2_WRECK1_MID1",
+      "SLUG2_WRECK1_MID2",
+      "SLUG2_WRECK1_BACK",
+      "SLUG2_ROWBOAT_SKELETON",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND2",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND3",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND4"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Broken Lobster Trap",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLUG2_LOBSTER_TRAP"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Rope - Floaters",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLUG2_FLOATERS"
+    ]
+  },
+  {
+    "description": "Varrock - Witchaven - Glass - Broken bottles on ground",
+    "baseMaterial": "BLANK_GLOSS",
+    "objectIds": [
+      "FAI_VARROCK_BOTTLES2",
+      "FAI_VARROCK_BOTTLES3"
+    ]
+  },
+  {
+    "description": "Witchaven - GWooden - Onialls empty chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "npcIds": [ "SLUG2_ONIALL_GONE" ]
   }
 ]
