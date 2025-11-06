@@ -1366,6 +1366,11 @@
     ]
   },
   {
+    "name": "WATER_FOUNTAIN_FLAT_LIGHT",
+    "parent": "WATER_FOUNTAIN_FLAT",
+    "brightness": 1.1
+  },
+  {
     "name": "WATER_FLAT_FORCE",
     "parent": "WATER_FLAT",
     "overrideBaseColor": true
@@ -1561,6 +1566,11 @@
   },
   {
     "name": "BURLAP"
+  },
+  {
+    "name": "BURLAP_LIGHT",
+    "parent": "BURLAP",
+    "brightness": 1.1
   },
   {
     "name": "FALADOR_PATH_BRICK_N"
