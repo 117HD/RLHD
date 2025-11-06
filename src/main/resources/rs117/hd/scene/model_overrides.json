@@ -59391,5 +59391,126 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "npcIds": [ "SLUG2_ONIALL_GONE" ]
+  },
+  {
+    "description": "Witchaven - Metallic - Anchor",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -313,
+    "objectIds": [
+      "SLUG2_ANCHOR"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Mayor's House Support",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLUG2_MAYOR_PILLAR"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Grass - Paving stone with grass",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 17",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
+      }
+    ],
+    "objectIds": [
+      "SLUG2_STONE_FLOOR_EDGE1",
+      "SLUG2_STONE_FLOOR_EDGE2"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Grass - Stone ruins with grass",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
+      }
+    ],
+    "objectIds": [
+      "SLUG2_RUIN_WALL_PIECES",
+      "SLUG2_RUIN_WALL2",
+      "SLUG2_RUIN_WALL_ENTRANCE",
+      "SLUG2_RUIN_WALL_ENTRANCE_MIRROR"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Stone ruins",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -128,
+    "objectIds": [
+      "SLUG2_DUNGEON_PILLAR",
+      "SLUG2_DUNGEON_PILLAR_ARCH",
+      "SLUG2_RUIN_PILLAR",
+      "SLUG2_RUIN_PILLAR_TWO",
+      "SLUG2_RUIN_WALL",
+      "SLUG2_RUIN_WALL_MIRROR",
+      "SLUG2_RUIN_ENTRANCE",
+      "SLUG2_DONGEON_RUIN_EXIT"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Dirt - Witchaven Dungeon Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grunge",
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_CAVE_DUNGEON_WALL",
+      "SLUG2_CAVE_DUNGEON_WALL_TWO",
+      "SLUG2_CAVE_DUNGEON_WALL_MIRROR",
+      "SLUG2_CAVE_DUNGEON_WALL_TWO_MIRROR",
+      "SLUG2_DUNGEON_WALL",
+      "SLUG2_DUNGEON_WALL2",
+      "SLUG2_HIDDEN_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Witchaven - Metallic - Chests",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SLUG2_CHEST"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Dirt - Witchaven Dungeon Walls",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grunge",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_TORTURE_RACK"
+    ]
   }
 ]
