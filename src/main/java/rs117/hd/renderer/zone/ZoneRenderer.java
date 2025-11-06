@@ -1223,7 +1223,7 @@ public class ZoneRenderer implements Renderer {
 	@Subscribe
 	public void onPostClientTick(PostClientTick event) {
 		WorldView wv = client.getTopLevelWorldView();
-		if (wv == null)
+		if (wv == null || !plugin.isActive())
 			return;
 
 		rebuild(wv);
