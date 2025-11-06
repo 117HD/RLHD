@@ -7485,7 +7485,10 @@
       "SERIM_PIER",
       "QUEST_START_ICON_PANDEMONIUM",
       "SKEWSTEPS_WOOD01_DEFAULT",
-      "SALVAGING_STATION_ICON_SERIM_PIER"
+      "SALVAGING_STATION_ICON_SERIM_PIER",
+      "PORT_TASK_BOARD_ICON_SERIM_PIER",
+      "LEDGER_TABLE_ICON_SERIM_PIER",
+      "PORT_TASK_BOARD_ICON_PIER"
     ],
     "uvType": "BOX"
   },
@@ -23259,7 +23262,8 @@
     "objectIds": [
       "SARIM_BARREL_FISH",
       "PISCARILIUS_FISH_BARREL_FULL",
-      "FISHING_CONTEST_BARREL_FISH"
+      "FISHING_CONTEST_BARREL_FISH",
+      "DOCK_LOADING_BAY_BARREL_FISH"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -42401,7 +42405,7 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 512,
+    "uvOrientation": 256,
     "objectIds": [
       "SERIM_FISHINGCRANE_NOSCRIPT"
     ],
@@ -46743,7 +46747,8 @@
     "uvOrientationY": 512,
     "objectIds": [
       "SARIM_DEPOSIT_BOX",
-      "CLAN_MEDIEVAL_DEPOSIT_BOX"
+      "CLAN_MEDIEVAL_DEPOSIT_BOX",
+      "BANK_DEPOSIT_BOX_2"
     ]
   },
   {
@@ -58997,6 +59002,293 @@
         "description": "Skeleton",
         "colors": "h == 10",
         "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Salvaging Station",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "SAILING_PORT_SALVAGING_STATION_PORT_SARIM",
+      "SAILING_PORT_SALVAGING_STATION"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 6",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Seaweed",
+        "colors": "h == 15",
+        "baseMaterial": "GRUNGE_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipwright Workbench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SHIPWRIGHT_WORKBENCH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Port Task Board",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "PORT_TASK_BOARD_PORT_SARIM",
+      "PORT_TASK_BOARD_LUNAR_ISLE",
+      "PORT_TASK_BOARD_PRIFDDINAS",
+      "PORT_TASK_BOARD_DEEPFIN_POINT",
+      "PORT_TASK_BOARD_PORT_TYRAS",
+      "PORT_TASK_BOARD_ETCETERIA",
+      "PORT_TASK_BOARD_BARRACUDA_HQ",
+      "PORT_TASK_BOARD_RED_ROCK",
+      "PORT_TASK_BOARD_PORT_ROBERTS",
+      "PORT_TASK_BOARD_VOID_KNIGHTS_OUTPOST",
+      "PORT_TASK_BOARD_ALDARIN",
+      "PORT_TASK_BOARD_THE_SUMMER_SHORE",
+      "PORT_TASK_BOARD_CORSAIR_COVE",
+      "PORT_TASK_BOARD_BRIMHAVEN",
+      "PORT_TASK_BOARD_ARDOUGNE",
+      "PORT_TASK_BOARD_MUSA_POINT",
+      "PORT_TASK_BOARD_LANDS_END",
+      "PORT_TASK_BOARD_CIVITAS_ILLA_FORTIS",
+      "PORT_TASK_BOARD_PORT_PISCARILIUS",
+      "PORT_TASK_BOARD_RELLEKKA",
+      "PORT_TASK_BOARD_RUINS_OF_UNKAH",
+      "PORT_TASK_BOARD_PORT_KHAZARD",
+      "PORT_TASK_BOARD_CATHERBY",
+      "PORT_TASK_BOARD_PANDEMONIUM"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shark Jaw",
+        "colors": "h == 8 || h == 4",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 6 && s != 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Ledger Table",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DOCK_LOADING_BAY_LEDGER_TABLE_WITHDRAW",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_DEPOSIT",
+      "DOCK_LOADING_BAY_LEDGER_TABLE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_SARIM",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_MUSA_POINT",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CATHERBY",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PANDEMONIUM",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ENTRANA",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ARDOUGNE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_BRIMHAVEN",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_KHAZARD",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CORSAIR_COVE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_RUINS_OF_UNKAH",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_PISCARILIUS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CIVITAS_ILLA_FORTIS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_RELLEKKA",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_LANDS_END",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_HOSIDIUS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CAIRN_ISLE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_SUNSET_COAST",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_THE_SUMMER_SHORE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ALDARIN",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_VOID_KNIGHTS_OUTPOST",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_ROBERTS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_RED_ROCK",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_BARRACUDA_HQ",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ETCETERIA",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_TYRAS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_DEEPFIN_POINT",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PRIFDDINAS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PISCATORIS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_LUNAR_ISLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Pouch",
+        "colors": "h == 8",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Decorative Loading Crates",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DOCK_LOADING_BAY_CRATE_BARS_MITHRIL",
+      "DOCK_LOADING_BAY_CRATE_SEEDS",
+      "DOCK_LOADING_BAY_CRATE",
+      "DOCK_LOADING_BAY_CRATE_CANONBALLS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Seeds",
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Cannonball",
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Mithril",
+        "colors": "h == 42",
+        "baseMaterial": "GRAY_85"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Decorative Barrel with Purple Liquid",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DOCK_LOADING_BAY_BARREL_LIQUID"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Liquid",
+        "colors": "h == 42 || h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Player Ship Dock",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      "SAILING_GANGPLANK_PROXY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Wind Sock",
+        "colors": "h == 5 && s == 0 || h == 1",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Pier - Crane with Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": -256,
+    "objectIds": [
+      "DOCK_LOADING_BAY_CRANE_CRATE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && l < 60 || h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
       }
     ]
   }
