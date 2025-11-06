@@ -10997,7 +10997,6 @@
     "description": "Wooden Door 3 - Fake Plank Golden Handle",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "flatNormals": true,
     "objectIds": [
       "LEFAYEUNOPENABLEDOORL",
       "LEFAYEUNOPENABLEDOORR",
