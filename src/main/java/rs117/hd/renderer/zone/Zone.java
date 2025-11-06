@@ -447,22 +447,23 @@ class Zone {
 			if (color3[f] == -2)
 				continue;
 
-			Material material = modelOverride.baseMaterial;
 			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
 			int textureId = faceTextures != null ? faceTextures[f] : -1;
-			boolean isTextured = textureId != -1;
-			if (isTextured) {
-				material = modelOverride.textureMaterial;
-				if (material == Material.NONE)
-					material = materialManager.fromVanillaTexture(textureId);
-			}
 
-			if (modelOverride.materialOverrides != null) {
-				var override = modelOverride.materialOverrides.get(material);
-				if (override != null)
-					material = override.textureMaterial;
-			}
-			if (modelOverride.colorOverrides != null) {
+			Material material = Material.NONE;
+			if (textureId != -1) {
+				if (modelOverride.textureMaterial != Material.NONE) {
+					material = modelOverride.textureMaterial;
+				} else {
+					material = materialManager.fromVanillaTexture(textureId);
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
+							material = override.textureMaterial;
+						}
+					}
+				}
+			} else if (modelOverride.colorOverrides != null) {
 				int ahsl = (0xFF - transparency) << 16 | color1[f];
 				for (var override : modelOverride.colorOverrides) {
 					if (override.ahslCondition.test(ahsl)) {

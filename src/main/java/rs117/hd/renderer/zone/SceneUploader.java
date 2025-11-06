@@ -611,32 +611,34 @@ class SceneUploader {
 		} else if (r instanceof DynamicObject) {
 			model = ((DynamicObject) r).getModelZbuf();
 		}
+		if (model == null)
+			return;
 
-		if (model != null) {
-			try {
-				uploadStaticModel(
-					ctx, tile, model, modelOverride, uuid,
-					preOrientation, orient, x - basex, y, z - basez, opaqueBuffer, alphaBuffer
-				);
-			} catch (Throwable ex) {
-				throw new RuntimeException(
-					String.format(
-						"Error uploading static %s %s (ID %d), override=\"%s\", opaque=%s, alpha=%s",
-						ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
-						gamevalManager.getObjectName(id),
-						id,
-						modelOverride.description,
-						opaqueBuffer,
-						alphaBuffer
-					),
-					ex
-				);
-			}
+		try {
+			uploadStaticModel(
+				ctx, tile, model, modelOverride, uuid,
+				preOrientation, orient,
+				x - basex, y, z - basez,
+				opaqueBuffer,
+				alphaBuffer
+			);
+		} catch (Throwable ex) {
+			throw new RuntimeException(
+				String.format(
+					"Error uploading static %s %s (ID %d), override=\"%s\", opaque=%s, alpha=%s",
+					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+					gamevalManager.getObjectName(id),
+					id,
+					modelOverride.description,
+					opaqueBuffer,
+					alphaBuffer
+				),
+				ex
+			);
 		}
 
 		int alphaEnd = zone.vboA != null ? zone.vboA.vb.position() : 0;
 		if (alphaEnd > alphaStart) {
-			assert model != null;
 			if (lx > -1) {
 				lx -= basex >> 7;
 				lz -= basez >> 7;
@@ -1176,8 +1178,10 @@ class SceneUploader {
 		Model model,
 		ModelOverride modelOverride,
 		int uuid,
-		int preOrientation, int orientation, int x, int y, int z,
-		GpuIntBuffer opaqueBuffer, GpuIntBuffer alphaBuffer
+		int preOrientation, int orientation,
+		int x, int y, int z,
+		GpuIntBuffer opaqueBuffer,
+		GpuIntBuffer alphaBuffer
 	) {
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1236,8 +1240,8 @@ class SceneUploader {
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
 			model.getTextureFaces() != null;
 
-		Material baseMaterial = modelOverride.baseMaterial;
-		Material textureMaterial = modelOverride.textureMaterial;
+		final Material baseMaterial = modelOverride.baseMaterial;
+		final Material textureMaterial = modelOverride.textureMaterial;
 
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
@@ -1280,18 +1284,10 @@ class SceneUploader {
 				texC = triangleC;
 			}
 
-			UvType uvType = UvType.GEOMETRY;
-			Material material = baseMaterial;
-
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
 			boolean isTextured = textureId != -1;
 			if (isTextured) {
-				uvType = UvType.VANILLA;
-				material = textureMaterial;
-				if (material == Material.NONE)
-					material = materialManager.fromVanillaTexture(textureId);
-
 				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
 				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
 				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
@@ -1385,16 +1381,27 @@ class SceneUploader {
 				}
 			}
 
+			UvType uvType = UvType.GEOMETRY;
+			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
-			if (modelOverride.materialOverrides != null) {
-				var override = modelOverride.materialOverrides.get(material);
-				if (override != null) {
-					faceOverride = override;
-					material = faceOverride.textureMaterial;
+
+			if (isTextured) {
+				color1 = color2 = color3 = 90;
+				uvType = UvType.VANILLA;
+				if (textureMaterial != Material.NONE) {
+					material = textureMaterial;
+				} else {
+					material = materialManager.fromVanillaTexture(textureId);
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
+							faceOverride = override;
+							material = faceOverride.textureMaterial;
+						}
+					}
 				}
-			}
-			if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1s[face];
+			} else if (modelOverride.colorOverrides != null) {
+				int ahsl = (0xFF - transparency) << 16 | color1;
 				for (var override : modelOverride.colorOverrides) {
 					if (override.ahslCondition.test(ahsl)) {
 						faceOverride = override;
@@ -1599,34 +1606,30 @@ class SceneUploader {
 				texC = triangleC;
 			}
 
-			UvType uvType = UvType.GEOMETRY;
-			Material material = baseMaterial;
-
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
 			int textureId = isVanillaTextured ? faceTextures[face] : -1;
-			boolean isTextured = textureId != -1;
-			if (isTextured) {
-				uvType = UvType.VANILLA;
-				material = textureMaterial;
-				if (material == Material.NONE)
-					material = materialManager.fromVanillaTexture(textureId);
 
-				// Without overriding the color for textured faces, vanilla shading remains pretty noticeable even after
-				// the approximate reversal above. Ardougne rooftops is a good example, where vanilla shading results in a
-				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
-				color1 = color2 = color3 = 90;
-			}
-
+			UvType uvType = UvType.GEOMETRY;
+			Material material = baseMaterial;
 			ModelOverride faceOverride = modelOverride;
-			if (modelOverride.materialOverrides != null) {
-				var override = modelOverride.materialOverrides.get(material);
-				if (override != null) {
-					faceOverride = override;
-					material = faceOverride.textureMaterial;
+
+			if (textureId != -1) {
+				color1 = color2 = color3 = 90;
+				uvType = UvType.VANILLA;
+				if (textureMaterial != Material.NONE) {
+					material = textureMaterial;
+				} else {
+					material = materialManager.fromVanillaTexture(textureId);
+					if (modelOverride.materialOverrides != null) {
+						var override = modelOverride.materialOverrides.get(material);
+						if (override != null) {
+							faceOverride = override;
+							material = faceOverride.textureMaterial;
+						}
+					}
 				}
-			}
-			if (modelOverride.colorOverrides != null) {
-				int ahsl = (0xFF - transparency) << 16 | color1s[face];
+			} else if (modelOverride.colorOverrides != null) {
+				int ahsl = (0xFF - transparency) << 16 | color1;
 				for (var override : modelOverride.colorOverrides) {
 					if (override.ahslCondition.test(ahsl)) {
 						faceOverride = override;
@@ -1642,7 +1645,7 @@ class SceneUploader {
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			int materialData = material.packMaterialData(faceOverride, uvType, false, isTextured);
+			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
 
 			if (uvType == UvType.VANILLA) {
 				modelUvs[0] = modelLocalX[texA] - vx1;
