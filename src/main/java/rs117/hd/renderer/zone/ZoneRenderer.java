@@ -259,6 +259,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboDisplacement.destroy();
 		modelData.destroy();
 
+		Zone.freeZones(nextZones);
 		nextZones = null;
 		nextRoofChanges = null;
 		if (nextSceneContext != null)
@@ -743,9 +744,7 @@ public class ZoneRenderer implements Renderer {
 				} else {
 					plugin.justChangedArea = true;
 					// This should happen very rarely, so we invalidate all zones for simplicity
-					for (int i = 0; i < NUM_ZONES; i++)
-						for (int j = 0; j < NUM_ZONES; j++)
-							root.zones[i][j].invalidate = true;
+					root.invalidate();
 				}
 				root.sceneContext.currentArea = newArea;
 			} else {
@@ -1241,7 +1240,7 @@ public class ZoneRenderer implements Renderer {
 	@Subscribe
 	public void onPostClientTick(PostClientTick event) {
 		WorldView wv = client.getTopLevelWorldView();
-		if (wv == null)
+		if (wv == null || !plugin.isActive())
 			return;
 
 		rebuild(wv);
@@ -1403,9 +1402,10 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		proceduralGenerator.generateSceneData(root.sceneContext);
-		for (int i = 0; i < NUM_ZONES; i++)
-			for (int j = 0; j < NUM_ZONES; j++)
-				root.zones[i][j].invalidate = true;
+		root.invalidate();
+		for (var sub : subs)
+			if (sub != null)
+				sub.invalidate();
 	}
 
 	@Override
@@ -1415,81 +1415,81 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void loadScene(WorldView worldView, Scene scene) {
+		try {
+			loadSceneInternal(worldView, scene);
+		} catch (OutOfMemoryError oom) {
+			log.error(
+				"Ran out of memory while generating scene data (32-bit: {}, low memory mode: {})",
+				HDUtils.is32Bit(), plugin.useLowMemoryMode, oom
+			);
+			plugin.displayOutOfMemoryMessage();
+			plugin.stopPlugin();
+		} catch (Throwable ex) {
+			log.error("Error while loading scene:", ex);
+			plugin.stopPlugin();
+		}
+	}
+
+	private void loadSceneInternal(WorldView worldView, Scene scene) {
 		if (scene.getWorldViewId() > -1) {
 			loadSubScene(worldView, scene);
 			return;
 		}
 
 		assert scene.getWorldViewId() == -1;
-		if (nextZones != null) {
-			// does this happen? this needs to free nextZones?
-			throw new RuntimeException("Double zone load!");
-		}
+		if (nextZones != null)
+			throw new RuntimeException("Double zone load!"); // does this happen?
 
 		if (nextSceneContext != null)
 			nextSceneContext.destroy();
 		nextSceneContext = null;
 
-		try {
-			nextSceneContext = new ZoneSceneContext(
-				client,
-				worldView,
-				scene,
-				plugin.getExpandedMapLoadingChunks(),
-				root.sceneContext
-			);
-			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
+		nextSceneContext = new ZoneSceneContext(
+			client,
+			worldView,
+			scene,
+			plugin.getExpandedMapLoadingChunks(),
+			root.sceneContext
+		);
+		nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 
-			environmentManager.loadSceneEnvironments(nextSceneContext);
-			proceduralGenerator.generateSceneData(nextSceneContext);
+		environmentManager.loadSceneEnvironments(nextSceneContext);
+		proceduralGenerator.generateSceneData(nextSceneContext);
 
-			if (nextSceneContext.enableAreaHiding) {
-				nextSceneContext.possibleAreas = Arrays
-					.stream(areaManager.areasWithAreaHiding)
-					.filter(area -> nextSceneContext.sceneBounds.intersects(area.aabbs))
-					.toArray(Area[]::new);
+		if (nextSceneContext.enableAreaHiding) {
+			nextSceneContext.possibleAreas = Arrays
+				.stream(areaManager.areasWithAreaHiding)
+				.filter(area -> nextSceneContext.sceneBounds.intersects(area.aabbs))
+				.toArray(Area[]::new);
 
-				if (log.isDebugEnabled() && nextSceneContext.possibleAreas.length > 0) {
-					log.debug(
-						"Area hiding areas: {}",
-						Arrays.stream(nextSceneContext.possibleAreas)
-							.distinct()
-							.map(Area::toString)
-							.collect(Collectors.joining(", "))
-					);
-				}
-
-				// If area hiding can be decided based on the central chunk, apply it early
-				var base = nextSceneContext.sceneBase;
-				assert base != null;
-				int centerOffset = SCENE_SIZE / 2 & ~7;
-				int centerX = base[0] + centerOffset;
-				int centerY = base[1] + centerOffset;
-				AABB centerChunk = new AABB(centerX, centerY, centerX + 7, centerY + 7);
-				for (Area possibleArea : nextSceneContext.possibleAreas) {
-					if (!possibleArea.intersects(centerChunk))
-						continue;
-
-					if (nextSceneContext.currentArea != null) {
-						// Multiple possible areas, so let's defer this until swapScene
-						nextSceneContext.currentArea = null;
-						break;
-					}
-					nextSceneContext.currentArea = possibleArea;
-				}
+			if (log.isDebugEnabled() && nextSceneContext.possibleAreas.length > 0) {
+				log.debug(
+					"Area hiding areas: {}",
+					Arrays.stream(nextSceneContext.possibleAreas)
+						.distinct()
+						.map(Area::toString)
+						.collect(Collectors.joining(", "))
+				);
 			}
-		} catch (OutOfMemoryError oom) {
-			log.error(
-				"Ran out of memory while generating scene data (32-bit: {}, low memory mode: {}, cache size: {})",
-				HDUtils.is32Bit(), plugin.useLowMemoryMode, config.modelCacheSizeMiB(), oom
-			);
-			plugin.displayOutOfMemoryMessage();
-			plugin.stopPlugin();
-			return;
-		} catch (Throwable ex) {
-			log.error("Error while loading scene:", ex);
-			plugin.stopPlugin();
-			return;
+
+			// If area hiding can be decided based on the central chunk, apply it early
+			var base = nextSceneContext.sceneBase;
+			assert base != null;
+			int centerOffset = SCENE_SIZE / 2 & ~7;
+			int centerX = base[0] + centerOffset;
+			int centerY = base[1] + centerOffset;
+			AABB centerChunk = new AABB(centerX, centerY, centerX + 7, centerY + 7);
+			for (Area possibleArea : nextSceneContext.possibleAreas) {
+				if (!possibleArea.intersects(centerChunk))
+					continue;
+
+				if (nextSceneContext.currentArea != null) {
+					// Multiple possible areas, so let's defer this until swapScene
+					nextSceneContext.currentArea = null;
+					break;
+				}
+				nextSceneContext.currentArea = possibleArea;
+			}
 		}
 
 		WorldViewContext ctx = root;
@@ -1503,7 +1503,7 @@ public class ZoneRenderer implements Renderer {
 			for (int z = 0; z < NUM_ZONES; ++z)
 				ctx.zones[x][z].cull = true;
 
-		Zone[][] newZones = new Zone[NUM_ZONES][NUM_ZONES];
+		nextZones = new Zone[NUM_ZONES][NUM_ZONES];
 		if (ctx.sceneContext != null && ctx.sceneContext.currentArea == nextSceneContext.currentArea) {
 			// Find zones which overlap, and reuse them
 			if (prev.isInstance() == scene.isInstance() && prev.getRoofRemovalMode() == scene.getRoofRemovalMode()) {
@@ -1552,7 +1552,7 @@ public class ZoneRenderer implements Renderer {
 							old.cull = false;
 							old.metadataDirty = true;
 
-							newZones[x][z] = old;
+							nextZones[x][z] = old;
 						}
 					}
 				}
@@ -1562,8 +1562,8 @@ public class ZoneRenderer implements Renderer {
 		// Allocate new zones wherever we couldn't reuse old ones
 		for (int x = 0; x < NUM_ZONES; ++x)
 			for (int z = 0; z < NUM_ZONES; ++z)
-				if (newZones[x][z] == null)
-					newZones[x][z] = new Zone();
+				if (nextZones[x][z] == null)
+					nextZones[x][z] = new Zone();
 
 		// Determine zone buffer requirements before uploading
 		Stopwatch sw = Stopwatch.createStarted();
@@ -1571,7 +1571,7 @@ public class ZoneRenderer implements Renderer {
 		int reused = 0, newzones = 0;
 		for (int x = 0; x < NUM_ZONES; ++x) {
 			for (int z = 0; z < NUM_ZONES; ++z) {
-				Zone zone = newZones[x][z];
+				Zone zone = nextZones[x][z];
 				if (!zone.initialized) {
 					assert zone.glVao == 0;
 					assert zone.glVaoA == 0;
@@ -1596,7 +1596,7 @@ public class ZoneRenderer implements Renderer {
 		clientThread.invoke(() -> {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
 				for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
-					Zone zone = newZones[x][z];
+					Zone zone = nextZones[x][z];
 					if (zone.initialized)
 						continue;
 
@@ -1632,7 +1632,7 @@ public class ZoneRenderer implements Renderer {
 		sw = Stopwatch.createStarted();
 		for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
 			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
-				Zone zone = newZones[x][z];
+				Zone zone = nextZones[x][z];
 				if (!zone.initialized)
 					asyncSceneUploader.uploadZone(nextSceneContext, zone, x, z);
 			}
@@ -1676,7 +1676,6 @@ public class ZoneRenderer implements Renderer {
 			log.debug("Roof remapping time {}", sw);
 		}
 
-		nextZones = newZones;
 		nextRoofChanges = roofChanges;
 	}
 
@@ -1780,13 +1779,13 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void swapScene(Scene scene) {
-		if (scene.getWorldViewId() > -1) {
-			swapSub(scene);
+		if (!plugin.isActive() || plugin.skipScene == scene) {
+			plugin.redrawPreviousFrame = true;
 			return;
 		}
 
-		if (!plugin.isActive() || plugin.skipScene == scene) {
-			plugin.redrawPreviousFrame = true;
+		if (scene.getWorldViewId() > -1) {
+			swapSub(scene);
 			return;
 		}
 
@@ -1867,6 +1866,9 @@ public class ZoneRenderer implements Renderer {
 
 	private void swapSub(Scene scene) {
 		WorldViewContext ctx = context(scene);
+		if (ctx == null)
+			return;
+
 		// setup vaos
 		for (int x = 0; x < ctx.sizeX; ++x) {
 			for (int z = 0; z < ctx.sizeZ; ++z) {

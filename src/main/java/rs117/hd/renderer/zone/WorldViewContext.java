@@ -23,6 +23,8 @@ public class WorldViewContext {
 	}
 
 	void updateWorldViewIndex(UBOWorldViews uboWorldViews) {
+		if (vboM == null)
+			return;
 		vboM.map();
 		vboM.vb.put(uboWorldViews.getIndex(worldViewId) + 1);
 		vboM.unmap();
@@ -40,5 +42,11 @@ public class WorldViewContext {
 		if (vboM != null)
 			vboM.destroy();
 		vboM = null;
+	}
+
+	void invalidate() {
+		for (Zone[] column : zones)
+			for (Zone zone : column)
+				zone.invalidate = true;
 	}
 }

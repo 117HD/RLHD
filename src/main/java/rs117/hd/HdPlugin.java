@@ -95,6 +95,8 @@ import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.legacy.LegacyRenderer;
+import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -482,7 +484,9 @@ public class HdPlugin extends Plugin {
 				log.info("Client is {}-bit", arch);
 				log.info("Low memory mode: {}", useLowMemoryMode);
 
-				renderer = injector.getInstance(config.renderer().rendererClass);
+				renderer = config.legacyRenderer() ?
+					injector.getInstance(LegacyRenderer.class) :
+					injector.getInstance(ZoneRenderer.class);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -795,7 +799,8 @@ public class HdPlugin extends Plugin {
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBODisplacement.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
-			.define("RENDERER", config.renderer())
+			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
+			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
 			.define("MODEL_DATA_GETTER", "")
@@ -1583,7 +1588,7 @@ public class HdPlugin extends Plugin {
 						switch (key) {
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
-							case KEY_RENDERER:
+							case KEY_LEGACY_RENDERER:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
