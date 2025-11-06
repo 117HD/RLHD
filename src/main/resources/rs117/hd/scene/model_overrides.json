@@ -4721,6 +4721,7 @@
     "objectIds": [
       "_100_DAVE_CRYPT_CURTAINSL",
       "_100_DAVE_CRYPT_CURTAINSR",
+      "_100_DAVE_CRYPT_DRAPES_BRIGHT",
       "SLP_DRAPES"
     ],
     "colorOverrides": [
@@ -36147,7 +36148,8 @@
     "description": "Kebos - Baby Blue Double wide Bed with pillows - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_VARROCK_DOUBLE_BED"
+      "FAI_VARROCK_DOUBLE_BED",
+      "SLUG2_MAYOR_DOUBLE_BED"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
@@ -38424,6 +38426,30 @@
         "colors": "h == 7 && s == 3",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Witchaven- Wooden - bookshelf with Multicolored books",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_SHELVES_BOOKS"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Shelf",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
@@ -58971,7 +58997,10 @@
       "SLUG2_MAYOR_WALL_LEVEL_TWO",
       "SLUG2_MAYOR_WALL_LEVEL_TWO_WINDOW",
       "SLUG2_MAYOR_LEVEL_TWO_WALL_END",
-      "SLUG2_MAYOR_LEVEL_TWO_WALL_END_MIRROR"
+      "SLUG2_MAYOR_LEVEL_TWO_WALL_END_MIRROR",
+      "SLUG2_VILLAGE_BALCONY",
+      "SLUG2_VILLAGE_BALCONY_END_LEFT",
+      "SLUG2_VILLAGE_BALCONY_END"
     ]
   },
   {
@@ -59130,6 +59159,65 @@
     ],
     "objectIds": [
       "SLUG2_LECTERN"
+    ]
+  },
+  {
+    "description": "Witchaven - Ceramic - Vase",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLUG2_VASE_SET",
+      "SLUG2_VASE_LARGE"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Metallic - Mayors Desk",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_MAYORS_DESK"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Metallic - Trophies",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "SLUG2_SHARKHEAD",
+      "SLUG2_SAILFISH"
     ]
   }
 ]
