@@ -59205,7 +59205,7 @@
         "colors": "h == 7",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.4
+        "uvScale": 0.8
       },
       {
         "description": "Metal",
@@ -59218,6 +59218,117 @@
     "objectIds": [
       "SLUG2_SHARKHEAD",
       "SLUG2_SAILFISH"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Bait shop shelf",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_SHELF2"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Bait shop Plank table with Register",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SLUG2_BIG_WOODEN_TABLE"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - giant Stacked crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_CRATE_STACK"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Glass - Bait shop display case",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_BAIT_DISPLAY1",
+      "SLUG2_BAIT_DISPLAY2"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Rope - Life Buoy",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "SLUG2_LIFE_BUOY"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Meallic - Fish hooks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": -128
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "SLUG2_HARPOON_DECOR"
     ]
   }
 ]
