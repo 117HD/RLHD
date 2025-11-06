@@ -570,28 +570,13 @@ class SceneUploader {
 			return;
 
 		int faceCount = m.getFaceCount();
-		if (modelOverride.mightHaveTransparency) {
-			z.sizeO += faceCount;
-			z.sizeA += faceCount;
-			return;
-		}
-
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
-		if (transparencies == null && faceTextures == null) {
+		if (transparencies == null && faceTextures == null && !modelOverride.mightHaveTransparency) {
 			z.sizeO += faceCount;
-			return;
-		}
-
-		for (int face = 0; face < faceCount; ++face) {
-			boolean alpha =
-				transparencies != null && transparencies[face] != 0 ||
-				faceTextures != null && Material.hasVanillaTransparency(faceTextures[face]);
-			if (alpha) {
-				z.sizeA++;
-			} else {
-				z.sizeO++;
-			}
+		} else {
+			z.sizeO += faceCount;
+			z.sizeA += faceCount;
 		}
 	}
 
