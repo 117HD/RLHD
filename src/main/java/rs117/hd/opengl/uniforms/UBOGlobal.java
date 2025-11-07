@@ -9,6 +9,11 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 		super(GL_DYNAMIC_DRAW);
 	}
 
+	@Override
+	public void initialize() {
+		super.initialize();
+	}
+
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 
