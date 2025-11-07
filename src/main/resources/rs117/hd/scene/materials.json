@@ -1130,6 +1130,11 @@
     "specularGloss": 20.0
   },
   {
+    "name": "SNOW_4_DARK",
+    "parent": "SNOW_4",
+    "brightness": 0.9
+  },
+  {
     "name": "GRASS_1"
   },
   {
@@ -1546,6 +1551,11 @@
   },
   {
     "name": "ROPE"
+  },
+  {
+    "name": "ROPE_LIGHT",
+    "parent": "ROPE",
+    "brightness": 1.5
   },
   {
     "name": "CARPET_N"

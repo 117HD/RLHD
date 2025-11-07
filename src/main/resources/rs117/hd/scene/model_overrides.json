@@ -919,7 +919,6 @@
       "FAIRY_MUSHROOM_TORCH_RED",
       "FAIRY_MUSHROOM_TORCH_BLUE",
       "POH_DEMON",
-      "PEST_BLACKSMITHTOOLS",
       "POH_DUNGEON_TREASURE_2",
       "II_FENCEGATE_L",
       "II_FENCEGATE_LC",
@@ -5603,14 +5602,17 @@
     "description": "Wintertodt Barrel Group",
     "baseMaterial": "SNOW_1",
     "objectIds": [
-      "GODWARS_DEBRIS_BARRICADE_3BARRELS"
+      "GODWARS_DEBRIS_BARRICADE_3BARRELS",
+      "GODWARS_DEBRIS_BARRICADE_3BARRELS_AXE",
+      "GODWARS_DEBRIS_BARRICADE_BARRELS_SPIKES",
+      "GODWARS_DEBRIS_BARRICADE_CRATES_BARREL"
     ],
     "colorOverrides": [
       {
         "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvType": "BOX",
-        "uvScale": 0.75
+        "uvScale": 0.4
       }
     ]
   },
@@ -5713,14 +5715,6 @@
     "uvType": "BOX",
     "uvOrientation": 512,
     "uvScale": 1.5
-  },
-  {
-    "description": "Wintertodt Snow Pile with Wooden Wheel",
-    "baseMaterial": "SNOW_4",
-    "objectIds": [
-      "GODWARS_DEBRIS_DAMAGEDBIGWHEEL"
-    ],
-    "uvType": "BOX"
   },
   {
     "description": "STATUE_BUST",
@@ -6165,10 +6159,10 @@
       "SNOW_DUGUPSOIL_1",
       "SNOW_DUGUPSOIL_2",
       "SNOW_DUGUPSOIL_3",
+      "GODWARS_ENTRANCE_SNOW1",
       "GODWARS_ENTRANCE_SNOW2",
       "GODWARS_ENTRANCE_SNOW3"
     ],
-    "inheritTileColorType": "OVERLAY",
     "uvScale": 0.25,
     "uvType": "WORLD_XZ"
   },
@@ -10592,10 +10586,11 @@
       "ANVIL",
       "VIKING_ANVIL",
       "DWARF_KELDAGRIM_ANVIL",
-      "GIM_ANVIL"
+      "GIM_ANVIL",
+      "LOVAKENGJ_ANVIL"
     ],
     "uvType": "BOX",
-    "uvScale": 1.1,
+    "uvScale": 0.6,
     "flatNormals": true
   },
   {
@@ -16319,10 +16314,6 @@
       "PENG_AVAL_ROCK1",
       "PENG_AVAL_ROCK2",
       "PENG_FORMATION_STALAGMITE2",
-      "GODWARS_ENTRANCE_BOULDER_ROCK03",
-      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS01",
-      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS02",
-      "GODWARS_ENTRANCE_ROCK01",
       "ARCHEUUS_SNOW_LARGE_01"
     ],
     "uvType": "WORLD_XZ",
@@ -21758,6 +21749,7 @@
   },
   {
     "description": "Remove the shadow cast by objects that look weird with them",
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "OLAF2_DUNGEON_ENTRANCE",
       "GODWARS_LITTLE_HOLE"
@@ -60525,6 +60517,615 @@
     "uvScale": 0.8,
     "objectIds": [
       "PEST_FORT_WALL_INACTIVE"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Waterfalls and Rapids Top",
+    "baseMaterial": "GRAY_75",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "GODWARS_WATERFALL_TOP_OFFSET",
+      "GODWARS_WATERFALL_TOP_OFFSET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33 && l == 54 || h == 33 && l == 66",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SNOW_4_DARK"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Waterfalls and Rapids Bottom",
+    "baseMaterial": "GRAY_70",
+    "objectIds": [
+      "GODWARS_WATERFALL_BOTTOM_OFFSET"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Walls",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "GODWARS_2",
+      "GODWARS_2_PILLAR",
+      "GODWARS_2A_PILLAR",
+      "GODWARS_2_LIGHT",
+      "GODWARS_2A",
+      "GODWARS_2_LIGHT_LARGER",
+      "GODWARS_2B",
+      "GODWARS_WALLKIT_TOP_COVER",
+      "GODWARS_1_PILLAR",
+      "GODWARS_1",
+      "GODWARS_1A",
+      "GODWARS_1A_PILLAR",
+      "GODWARS_1_TOP",
+      "GODWARS_DUNGEON_BOSS_DOOR_L_MIRROR",
+      "GODWARS_DUNGEON_DOOR_PRIVATE",
+      "GODWARS_DUNGEON_BOSS_DOOR_R_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOP",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOP_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_R",
+      "GODWARS_DUNGEON_BOSS_DOOR_L",
+      "GODWARS_ICECAVE_BANDOS_LEFT_MIRROR",
+      "GODWARS_ICECAVE_BANDOS_RIGHT_MIRROR",
+      "GODWARS_ICECAVE_BANDOS_DOOR",
+      "GODWARS_ICECAVE_BANDOS_LEFT",
+      "GODWARS_ICECAVE_BANDOS_RIGHT",
+      "GODWARS_ICECAVE_BANDOS_TOP_MIRROR",
+      "GODWARS_ICECAVE_BANDOS_TOP",
+      "NEX_FROZEN_DOOR_OUTER_1",
+      "NEX_FROZEN_DOOR_OUTER_2",
+      "NEX_FROZEN_DOOR_INNER_2",
+      "NEX_FROZEN_DOOR_INNER_1",
+      "GODWARS_1_CAVEWALLTOP",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_R",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_R_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_L_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_L",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_TOP_MIRROR",
+      "GODWARS_DUNGEON_BOSS_DOOR_TOPPED_TOP",
+      "NEX_BARRIER_SIDE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 34 || h == 33 || h == 32",
+        "baseMaterial": "SNOW_4_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAY_125"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Darken Entrance Rock",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_ICECAVE_CIRCLE_OF_ROCKS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "GRAY_65"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Brighten Entrance God Rays",
+    "baseMaterial": "GRAY_125",
+    "upwardsNormals": true,
+    "objectIds": [
+      "GODWARS_BIG_HOLE_LIGHT"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Snowy Rocks",
+    "baseMaterial": "SNOW_2_DARK",
+    "objectIds": [
+      "GODWARS_ENTRANCE_ROCK01",
+      "GODWARS_CLIMBING_ROCKS_UP",
+      "GODWARS_CLIMBING_ROCKS_INACTIVE",
+      "GODWARS_CLIMBING_ROCKS_DOWN",
+      "GODWARS_CLIMBING_ROCKS_FALLOFF"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Snow Covered Rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "GODWARS_ENTRANCE_BOULDER_ROCK01",
+      "GODWARS_ENTRANCE_BOULDER_ROCK02",
+      "GODWARS_ENTRANCE_BOULDER_ROCK03",
+      "GODWARS_ENTRANCE_BOULDER_ROCK04",
+      "GODWARS_ENTRANCE_BOULDER_MOVEROCK01",
+      "GODWARS_ENTRANCE_BOULDER_OPEN_MOVEROCK01",
+      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS01",
+      "GODWARS_DUNGEON_ARCHITECTURE_BIGROCKS02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SNOW_4_DARK"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Wooden or Metal Debris and Structures",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "GODWARS_DEBRIS_BARRICADE_SPIKES",
+      "GODWARS_DEBRIS_BARRICADE_SPIKES2",
+      "GODWARS_DEBRIS_BARRICADE_BROKEN_CROSSBOW",
+      "GODWARS_DEBRIS_HAMMER",
+      "GODWARS_DEBRIS_DAMAGEDBIGWHEEL",
+      "GODWARS_DEBRIS_MAST_CUT",
+      "GODWARS_DEBRIS_BROKENARROW",
+      "GODWARS_DEBRIS_BARRICADE_MAST_SPIKES",
+      "GODWARS_DEBRIS_IMPALEDARMOUR",
+      "GODWARS_DEBRIS_POLE",
+      "GODWARS_DEBRIS_LADDER",
+      "GODWARS_DEBRIS_WOOD1",
+      "GODWARS_DEBRIS_HANDLE",
+      "GODWARS_DEBRIS_BARRICADE_BROKEN_CATAPULT",
+      "GODWARS_DEBRIS_CATAPULT",
+      "GODWARS_DEBRIS_CROSSBOW",
+      "GODWARS_DEBRIS_CRANE",
+      "GODWARS_DEBRIS_BARRICADE_SKULLSHIELD",
+      "GODWARS_DEBRIS_BURIEDSKELETON",
+      "GODWARS_DEBRIS_BARRICADE_SPIKEBLOCK",
+      "GODWARS_DEBRIS_SMASHEDCRATE",
+      "GODWARS_DEBRIS_BROKENMAST",
+      "GODWARS_DEBRIS_BARRICADE_RAMS_HEAD",
+      "GODWARS_DEBRIS_COLUMNS",
+      "GODWARS_DEBRIS_CRATE_CANNONBALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "SNOW_2_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.99,
+        "terrainVertexSnap": true
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 10 && s == 1 || h == 36 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Wooden or Metal Debris and Structures - Lighter",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "GODWARS_DEBRIS_TOWER",
+      "GODWARS_DEBRIS_BALLANDCHAIN",
+      "GODWARS_DEBRIS_BARRELS",
+      "GODWARS_DEBRIS_BARRICADE_VARIOUS_WOOD",
+      "GODWARS_DEBRIS_BATTERINGRAM",
+      "GODWARS_DEBRIS_WARRIORARM"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "SNOW_4_DARK",
+        "terrainVertexSnap": true
+      },
+      {
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 10 && s == 1 || h == 36 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Broken Pillars",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_ENTRANCE_PILLAR_BROKEN02",
+      "GODWARS_ENTRANCE_PILLAR02",
+      "GODWARS_ENTRANCE_PILLAR_BROKEN01",
+      "GODWARS_ENTRANCE_PILLAR_BROKEN03",
+      "GODWARS_ENTRANCE_RUBBISH01",
+      "GODWARS_ENTRANCE_PILLAR01",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL01",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_BROKEN03",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_BROKEN04",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_END03",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL02",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_BROKEN02",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_BROKEN01",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_WINDOW02",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_WINDOW01",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_END02",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_BROKEN05",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_END04",
+      "GODWARS_DUNGEON_ARCHITECTURE_WALL_END01",
+      "GODWARS_GRAPPLE_PILLAR_BOTTOM",
+      "GODWARS_GRAPPLE_PILLAR",
+      "GODWARS_GRAPPLE_SHORTCUT",
+      "GODWARS_ENTRANCE_PILLAR_BROKEN04",
+      "NEX_ZAROS_ALTAR",
+      "NEX_STONE_PLAQUE",
+      "NEX_SCOREBOARD",
+      "NEX_ALTAR05",
+      "NEX_ALTAR04",
+      "NEX_ALTAR02",
+      "NEX_ALTAR03",
+      "NEX_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 37",
+        "baseMaterial": "SNOW_4_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.99
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Broken Tiles - Complex",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_ENTRANCE_FLOOR02",
+      "GODWARS_ENTRANCE_FLOOR03",
+      "GODWARS_ENTRANCE_FLOOR04",
+      "GODWARS_DUNGEON_ARCHITECTURE_RUBBLE01",
+      "GODWARS_DUNGEON_ARCHITECTURE_RUBBLE02",
+      "GODWARS_DUNGEON_ARCHITECTURE_RUBBLE03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 && l > 25 || h == 34",
+        "baseMaterial": "SNOW_4",
+        "uvType": "MODEL_XZ"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Broken Tiles - Simple",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_ENTRANCE_FLOOR01A",
+      "GODWARS_ENTRANCE_FLOOR01"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Entrance Hole",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_ENTRANCE_GROUNDHOLE01",
+      "GODWARS_ENTRANCE_GROUNDHOLE02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 38 || h == 32 || h == 34",
+        "baseMaterial": "SNOW_4_DARK",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Wooden Crates",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "GODWARS_DEBRIS_BARRICADE_CRATE_WHEEL",
+      "GODWARS_DEBRIS_BARRICADE_CRATEANDSHIELD",
+      "GODWARS_DEBRIS_BARRICADE_CRATES_HAMMER",
+      "GODWARS_DEBRIS_BARRICADE_CRATES_STACKED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "SNOW_2_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.99
+      },
+      {
+        "colors": "h == 0 && s == 0 || h == 10 && s == 1 || h == 36 || h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "MODEL_XY",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Snow Statues",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "GODWARS_ICECAVE_ICECORPSE_DEMON02",
+      "GODWARS_ICECAVE_ICECORPSE11",
+      "GODWARS_ICECAVE_ICECORPSE07",
+      "GODWARS_ICECAVE_ICECORPSE04",
+      "GODWARS_ICECAVE_ICECORPSE_ORC01",
+      "GODWARS_ICECAVE_ICECORPSE_ORC03",
+      "GODWARS_ICECAVE_ICECORPSE09",
+      "GODWARS_ICECAVE_ICECORPSE03",
+      "GODWARS_ICECAVE_ICECORPSE_DEMON01",
+      "GODWARS_ICECAVE_ICECORPSE10",
+      "GODWARS_ICECAVE_ICECORPSE08",
+      "GODWARS_ICECAVE_ICECORPSE_ORC02",
+      "GODWARS_ICECAVE_ICECORPSE02",
+      "GODWARS_ICECAVE_ICECORPSE01"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Snow Statues",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "GODWARS_HOTSPRING"
+    ],
+    "castShadows": false
+  },
+  {
+    "description": "God Wars Dungeon - Floating Water Rocks",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK04",
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK01",
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK02",
+      "GODWARS_DUNGEON_ARCHITECTURE_WATERROCK03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Broken Bridge to Zamorak Base",
+    "baseMaterial": "SNOW_4_DARK",
+    "uvType": "BOX",
+    "flatNormals": true,
+    "objectIds": [
+      "GODWARS_ICECAVE_BRIDGE02_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE01_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE03_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE04_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE05_MIRROR",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE05",
+      "GODWARS_ICECAVE_BRIDGE05",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE04",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE03",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE02",
+      "GODWARS_ICECAVE_BRIDGE_MIDDLE01",
+      "GODWARS_ICECAVE_BRIDGE01",
+      "GODWARS_ICECAVE_BRIDGE02",
+      "GODWARS_ICECAVE_BRIDGE03",
+      "GODWARS_ICECAVE_BRIDGE04"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.35,
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7 || h == 8",
+        "baseMaterial": "HD_MAGMA_2",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Bandos Altar",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "objectIds": [
+      "GODWARS_DUNGEON_BANDOS_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 21 && s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 16",
+        "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Armadyl Altar",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "objectIds": [
+      "GODWARS_DUNGEON_ARMADYL_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255 || h == 7 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 2,
+    "objectIds": [
+      "GODWARS_DUNGEON_SARADOMIN_ALTAR01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Rope Rock - Top",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "GODWARS_ROCK_ROPE1",
+      "GODWARS_ROCK_ROPE2",
+      "GODWARS_ROCK_NO_ROPE1",
+      "GODWARS_ROCK_NO_ROPE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "ROPE_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 42",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "SNOW_4_DARK"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Rope Rock - Bottom",
+    "baseMaterial": "ROPE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "GODWARS_ROCK_ROPE_BOTTOM1"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Nex Chasm Edge",
+    "baseMaterial": "SNOW_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CHASM_SNOW3_LEFT",
+      "CHASM_SNOW3_LEFT_FADE",
+      "CHASM_SNOWQ_LEFT_FADE",
+      "CHASM_SNOWQ_LEFT",
+      "CHASM_SNOWR",
+      "CHASM_SNOW2",
+      "CHASM_SNOW1",
+      "CHASM_SNOWW_RIGHT",
+      "CHASM_SNOW4_RIGHT",
+      "CHASM_SNOWW_RIGHT_FADE",
+      "CHASM_SNOW4_RIGHT_FADE",
+      "CHASM_SNOW1_SYMBOLL",
+      "CHASM_SNOW1_SYMBOLR"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Nex Ancient Forge",
+    "baseMaterial": "SNOW_4",
+    "uvType": "BOX",
+    "objectIds": [
+      "NEX_FURNACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 58",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h > 36",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Nex Ancient Forge",
+    "baseMaterial": "GRAY_150",
+    "uvType": "BOX",
+    "projectileIds": [
+      "GODWARS_BLACK_DEMON_FIREBALL_PROJ"
     ]
   }
 ]

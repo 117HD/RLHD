@@ -194,6 +194,26 @@
     "depthColor": "#000000"
   },
   {
+    "name": "LIGHT_BLUE_WATER",
+    "flat": true,
+    "specularStrength": 0.1,
+    "specularGloss": 400.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.7,
+    "fresnelAmount": 0.3,
+    "surfaceColor": [
+      90,
+      110.65,
+      100
+    ],
+    "foamColor": [
+      13.07,
+      13.07,
+      13.07
+    ],
+    "depthColor": "#000000"
+  },
+  {
     "name": "ARAXXOR_WASTE",
     "specularStrength": 0.1,
     "specularGloss": 100.0,
