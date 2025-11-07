@@ -66,7 +66,6 @@ import rs117.hd.utils.ResourcePath;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.utils.HDUtils.isSphereIntersectingFrustum;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -279,8 +278,8 @@ public class LightManager {
 					if (light.animationSpecific)
 						parentExists = light.def.animationIds.contains(light.actor.getAnimation());
 
-					int tileExX = ((int) light.origin[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-					int tileExY = ((int) light.origin[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+					int tileExX = ((int) light.origin[0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+					int tileExY = ((int) light.origin[2] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 
 					// Some NPCs, such as Crystalline Hunllef in The Gauntlet, sometimes return scene X/Y values far outside the possible range.
 					Tile tile;
@@ -373,8 +372,8 @@ public class LightManager {
 				light.prevPlane = light.plane;
 				light.belowFloor = false;
 				light.aboveFloor = false;
-				int tileExX = ((int) light.pos[0] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
-				int tileExY = ((int) light.pos[2] >> LOCAL_COORD_BITS) + SCENE_OFFSET;
+				int tileExX = ((int) light.pos[0] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
+				int tileExY = ((int) light.pos[2] >> LOCAL_COORD_BITS) + sceneContext.sceneOffset;
 				if (light.plane >= 0 && tileExX >= 0 && tileExY >= 0 && tileExX < EXTENDED_SCENE_SIZE && tileExY < EXTENDED_SCENE_SIZE) {
 					byte hasTile = sceneContext.filledTiles[tileExX][tileExY];
 					if ((hasTile & (1 << light.plane + 1)) != 0)
@@ -452,10 +451,8 @@ public class LightManager {
 						light.pos[1],
 						light.pos[2] + cameraShift[1],
 						maxRadius, // use max radius, since the radius hasn't been updated yet
-						cameraFrustum[0],
-						cameraFrustum[1],
-						cameraFrustum[2],
-						cameraFrustum[3]
+						cameraFrustum,
+						4
 					);
 				}
 			}
@@ -932,8 +929,8 @@ public class LightManager {
 					continue;
 				}
 
-				int tileExX = clamp(lp.getSceneX() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
-				int tileExY = clamp(lp.getSceneY() + SCENE_OFFSET, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExX = clamp(lp.getSceneX() + sceneContext.sceneOffset, 0, EXTENDED_SCENE_SIZE - 2);
+				int tileExY = clamp(lp.getSceneY() + sceneContext.sceneOffset, 0, EXTENDED_SCENE_SIZE - 2);
 				float lerpX = fract(lightX / (float) LOCAL_TILE_SIZE);
 				float lerpZ = fract(lightZ / (float) LOCAL_TILE_SIZE);
 				int tileZ = clamp(plane, 0, MAX_Z - 1);
@@ -978,8 +975,8 @@ public class LightManager {
 	private void addWorldLight(SceneContext sceneContext, Light light) {
 		assert light.worldPoint != null;
 		sceneContext.worldToLocals(light.worldPoint).forEach(local -> {
-			int tileExX = local[0] / LOCAL_TILE_SIZE + SCENE_OFFSET;
-			int tileExY = local[1] / LOCAL_TILE_SIZE + SCENE_OFFSET;
+			int tileExX = local[0] / LOCAL_TILE_SIZE + sceneContext.sceneOffset;
+			int tileExY = local[1] / LOCAL_TILE_SIZE + sceneContext.sceneOffset;
 			if (tileExX < 0 || tileExY < 0 || tileExX >= EXTENDED_SCENE_SIZE || tileExY >= EXTENDED_SCENE_SIZE)
 				return;
 

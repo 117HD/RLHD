@@ -1,9 +1,13 @@
 [
   {
-    "name": "WATER"
+    "name": "WATER",
+    "surfaceColor": "#69809C",
+    "fresnelAmount": 0.85
   },
   {
     "name": "WATER_FLAT",
+    "surfaceColor": "#69809C",
+    "fresnelAmount": 0.85,
     "flat": true
   },
   {
@@ -190,6 +194,26 @@
     "depthColor": "#000000"
   },
   {
+    "name": "LIGHT_BLUE_WATER",
+    "flat": true,
+    "specularStrength": 0.1,
+    "specularGloss": 400.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.7,
+    "fresnelAmount": 0.3,
+    "surfaceColor": [
+      90,
+      110.65,
+      100
+    ],
+    "foamColor": [
+      13.07,
+      13.07,
+      13.07
+    ],
+    "depthColor": "#000000"
+  },
+  {
     "name": "ARAXXOR_WASTE",
     "specularStrength": 0.1,
     "specularGloss": 100.0,
@@ -223,5 +247,310 @@
       36.75,
       41.32
     ]
+  },
+  {
+    "name": "VANILLA_130",
+    "surfaceColor": "#556F8F",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_131",
+    "surfaceColor": "#536B88",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_132",
+    "surfaceColor": "#4D5D81",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_133",
+    "surfaceColor": "#3C4B71",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_134",
+    "surfaceColor": "#374467",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_135",
+    "surfaceColor": "#688B9C",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_136",
+    "surfaceColor": "#60808F",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_137",
+    "surfaceColor": "#537788",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_138",
+    "surfaceColor": "#4D6881",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_139",
+    "surfaceColor": "#445C72",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_140",
+    "surfaceColor": "#4D6B7F",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_141",
+    "surfaceColor": "#4A6578",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_142",
+    "surfaceColor": "#446175",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_143",
+    "surfaceColor": "#425B71",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_144",
+    "surfaceColor": "#3F586C",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_145",
+    "surfaceColor": "#6C78A2",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_146",
+    "surfaceColor": "#606B99",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_147",
+    "surfaceColor": "#585E8F",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_148",
+    "surfaceColor": "#545888",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_149",
+    "surfaceColor": "#454779",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_150",
+    "surfaceColor": "#68799D",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_151",
+    "surfaceColor": "#606E90",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_152",
+    "surfaceColor": "#536489",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_153",
+    "surfaceColor": "#4F5781",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_154",
+    "surfaceColor": "#3F4672",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_155",
+    "surfaceColor": "#6E7595",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_156",
+    "surfaceColor": "#656B88",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_157",
+    "surfaceColor": "#596181",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_158",
+    "surfaceColor": "#585874",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_159",
+    "surfaceColor": "#484664",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_160",
+    "surfaceColor": "#7A8DA3",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_161",
+    "surfaceColor": "#728397",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_162",
+    "surfaceColor": "#667A91",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_163",
+    "surfaceColor": "#616E8B",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_164",
+    "surfaceColor": "#505C7A",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_165",
+    "surfaceColor": "#8898AD",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_166",
+    "surfaceColor": "#8290A3",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_167",
+    "surfaceColor": "#79899E",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_168",
+    "surfaceColor": "#747F99",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_169",
+    "surfaceColor": "#68728D",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_170",
+    "surfaceColor": "#7298B4",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_171",
+    "surfaceColor": "#5F86A3",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_172",
+    "surfaceColor": "#547A99",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_173",
+    "surfaceColor": "#496E91",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_174",
+    "surfaceColor": "#43688B",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_175",
+    "surfaceColor": "#627E82",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_176",
+    "surfaceColor": "#577478",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_177",
+    "surfaceColor": "#4A686D",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_178",
+    "surfaceColor": "#4A686D",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_179",
+    "surfaceColor": "#3D595C",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_180",
+    "surfaceColor": "#5A7B90",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_181",
+    "surfaceColor": "#537084",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_182",
+    "surfaceColor": "#49677B",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_183",
+    "surfaceColor": "#506574",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_184",
+    "surfaceColor": "#324E6C",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_185",
+    "surfaceColor": "#4D5E74",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_186",
+    "surfaceColor": "#445267",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_187",
+    "surfaceColor": "#39485E",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_188",
+    "surfaceColor": "#394D63",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_189",
+    "surfaceColor": "#314157",
+    "fresnelAmount": 0.85
+  },
+  {
+    "name": "VANILLA_208",
+    "surfaceColor": "#262D45",
+    "fresnelAmount": 0.85
   }
 ]

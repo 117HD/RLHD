@@ -2515,12 +2515,67 @@
     "blended": false
   },
   {
+    "name": "Witchaven Mayors house floor - Overlay",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "MARBLE_1",
+    "blended": false,
+    "overlayIds": [ 38 ]
+  },
+  {
+    "name": "Witchaven Mayors house floor - Underlay",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "MARBLE_2",
+    "blended": false,
+    "underlayIds": [ 9 ],
+    "minLightness": 35,
+    "maxLightness": 35
+  },
+  {
+    "name": "Witchaven Bait Shop Wooden Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftSaturation": -3,
+    "shiftLightness": 8,
+    "overlayIds": [ 91 ],
+    "underlayIds": [ 126 ]
+  },
+  {
+    "name": "Witchaven Interior Ground Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "overlayIds": [ 26, 106 ]
+  },
+  {
+    "name": "Witchaven Interior Wooden Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "overlayIds": [ 171, 172 ],
+    "underlayIds": [ 124 ]
+  },
+  {
+    "name": "WITCHAVEN_CHUCK_BRICKS",
+    "area": "WITCHAVEN_CHURCH_EXTERIOR_TILES",
+    "overlayIds": [
+      106
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "replacements": {
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "WITCHAVEN_PATHS",
     "area": "WITCHAVEN",
     "overlayIds": [
       106
     ],
-    "groundMaterial": "VARIED_DIRT"
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "KHAZARD_BATTLEFIELD_COBBLE_INDOORS",
@@ -4105,7 +4160,7 @@
     "overlayIds": [
       104
     ],
-    "waterType": "ICE_FLAT",
+    "waterType": "LIGHT_BLUE_WATER",
     "blended": false
   },
   {
@@ -4840,19 +4895,6 @@
       67
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
-  },
-  {
-    "name": "VARROCK_PATHS",
-    "area": "OVERWORLD",
-    "overlayIds": [
-      11,
-      171,
-      179
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "replacements": {
-      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
-    }
   },
   {
     "name": "SOUL_WARS_DIRT_PATH",
@@ -5769,8 +5811,7 @@
       41,
       104,
       151,
-      158,
-      196
+      158
     ],
     "waterType": "WATER"
   },
@@ -5892,7 +5933,21 @@
       33,
       254
     ],
-    "groundMaterial": "SNOW_1"
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "OVERLAY_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "OVERLAY_SNOW_NO_BLENDING",
+    "area": "ALL",
+    "overlayIds": [
+      30,
+      33,
+      254
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 90
   },
   {
     "name": "OVERLAY_VARIED_DIRT",
@@ -6957,7 +7012,20 @@
       58,
       59
     ],
-    "groundMaterial": "SNOW_1"
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "GOD_WARS_DUNGEON_SNOW_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "GOD_WARS_DUNGEON_SNOW_NO_BLENDING",
+    "area": "GOD_WARS_DUNGEON",
+    "underlayIds": [
+      58,
+      59
+    ],
+    "groundMaterial": "SNOW_1",
+    "maxLightness": 65
   },
   {
     "name": "INFERNO_1",
@@ -8500,8 +8568,27 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 2",
       "SEASONAL_DIRT": "s == 1",
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
+      "UNDERLAY_SNOW_NO_BLENDING": "!blending"
     }
+  },
+  {
+    "name": "UNDERLAY_SNOW_NO_BLENDING",
+    "area": "SNOWY_REGIONS",
+    "underlayIds": [
+      16,
+      55,
+      58,
+      59,
+      92
+    ],
+    "groundMaterial": "SNOW_1",
+    "replacements": {
+      "SEASONAL_GRASS": "s >= 2",
+      "SEASONAL_DIRT": "s == 1",
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    },
+    "maxLightness": 75
   },
   {
     "name": "OVERLAY_DIRT",
