@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import rs117.hd.opengl.GLBinding;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
@@ -262,7 +263,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer>  {
 	protected boolean alignment = true;
 
 	@Getter
-	protected int bindingIndex;
+	protected GLBinding binding;
 
 	@SuppressWarnings("unchecked")
 	public StructuredBuffer(int glTarget, int glUsage) {

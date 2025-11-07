@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
-import rs117.hd.opengl.buffer.storage.TBOModelData;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -87,7 +87,7 @@ class SceneUploader {
 
 	private int basex, basez, rid, level;
 
-	private TBOModelData.Slice modelDataSlice;
+	private SSBOModelData.Slice modelDataSlice;
 
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];

@@ -73,9 +73,11 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.GLBinding.TEXTURE_TILE_HEIGHT_MAP;
+import static rs117.hd.opengl.GLBinding.UNIFORM_COMPUTE;
+import static rs117.hd.opengl.GLBinding.UNIFORM_DISPLACEMENT;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -84,9 +86,6 @@ public class LegacyRenderer implements Renderer {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
-
-	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
-	public static final int UNIFORM_BLOCK_COMPUTE = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
 	private Client client;
@@ -462,8 +461,8 @@ public class LegacyRenderer implements Renderer {
 		hModelPassthroughBuffer = new SharedGLBuffer("Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		uboCompute = new UBOCompute();
-		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
-		plugin.uboDisplacement.initialize(HdPlugin.UNIFORM_BLOCK_DISPLACEMENT);
+		uboCompute.initialize(UNIFORM_COMPUTE);
+		plugin.uboDisplacement.initialize(UNIFORM_DISPLACEMENT);
 
 		modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -526,7 +525,7 @@ public class LegacyRenderer implements Renderer {
 		tileBuffer.flip();
 
 		texTileHeightMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILE_HEIGHT_MAP);
+		TEXTURE_TILE_HEIGHT_MAP.setActive();
 		glBindTexture(GL_TEXTURE_3D, texTileHeightMap);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

@@ -81,6 +81,7 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.AsyncUICopy;
+import rs117.hd.opengl.GLBinding;
 import rs117.hd.opengl.buffer.uniforms.UBODisplacement;
 import rs117.hd.opengl.buffer.uniforms.UBOGlobal;
 import rs117.hd.opengl.buffer.uniforms.UBOLights;
@@ -124,6 +125,8 @@ import rs117.hd.utils.ShaderRecompile;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.GLBinding.TEXTURE_TILE_LIGHTING_MAP;
+import static rs117.hd.opengl.GLBinding.TEXTURE_UI;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -144,28 +147,6 @@ public class HdPlugin extends Plugin {
 	public static final String AMD_DRIVER_URL = "https://www.amd.com/en/support";
 	public static final String INTEL_DRIVER_URL = "https://www.intel.com/content/www/us/en/support/detect.html";
 	public static final String NVIDIA_DRIVER_URL = "https://www.nvidia.com/en-us/geforce/drivers/";
-
-	public static int MAX_TEXTURE_UNITS;
-	public static int TEXTURE_UNIT_COUNT = 0;
-	public static final int TEXTURE_UNIT_UNUSED = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
-
-	public static int MAX_IMAGE_UNITS;
-	public static int IMAGE_UNIT_COUNT = 0;
-	public static final int IMAGE_UNIT_TILED_LIGHTING = IMAGE_UNIT_COUNT++;
-
-	public static int UNIFORM_BLOCK_COUNT = 0;
-	public static final int UNIFORM_BLOCK_GLOBAL = UNIFORM_BLOCK_COUNT++;
-	public static final int UNIFORM_BLOCK_MATERIALS = UNIFORM_BLOCK_COUNT++;
-	public static final int UNIFORM_BLOCK_WATER_TYPES = UNIFORM_BLOCK_COUNT++;
-	public static final int UNIFORM_BLOCK_LIGHTS = UNIFORM_BLOCK_COUNT++;
-	public static final int UNIFORM_BLOCK_LIGHTS_CULLING = UNIFORM_BLOCK_COUNT++;
-	public static final int UNIFORM_BLOCK_UI = UNIFORM_BLOCK_COUNT++;
-	public static final int UNIFORM_BLOCK_DISPLACEMENT = UNIFORM_BLOCK_COUNT++;
 
 	public static final float NEAR_PLANE = 50;
 	public static final int MAX_FACE_COUNT = 6144;
@@ -296,13 +277,6 @@ public class HdPlugin extends Plugin {
 	public Canvas canvas;
 	public AWTContext awtContext;
 	private Callback debugCallback;
-
-	private static final String LINUX_VERSION_HEADER =
-		"#version 420\n" +
-		"#extension GL_ARB_compute_shader : require\n" +
-		"#extension GL_ARB_shader_storage_buffer_object : require\n" +
-		"#extension GL_ARB_explicit_attrib_location : require\n";
-	private static final String WINDOWS_VERSION_HEADER = "#version 430\n";
 
 	private static final ResourcePath SHADER_PATH = Props
 		.getFolder("rlhd.shader-path", () -> path(HdPlugin.class));
@@ -505,14 +479,6 @@ public class HdPlugin extends Plugin {
 
 				lwjglInitialized = true;
 				checkGLErrors();
-
-				MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS); // Not the fixed pipeline MAX_TEXTURE_UNITS
-				if (MAX_TEXTURE_UNITS < TEXTURE_UNIT_COUNT)
-					log.warn("The GPU only supports {} texture units", MAX_TEXTURE_UNITS);
-				MAX_IMAGE_UNITS = GL_CAPS.GL_ARB_shader_image_load_store ?
-					glGetInteger(ARBShaderImageLoadStore.GL_MAX_IMAGE_UNITS) : 0;
-				if (MAX_IMAGE_UNITS < IMAGE_UNIT_COUNT)
-					log.warn("The GPU only supports {} image units", MAX_IMAGE_UNITS);
 
 				if (log.isDebugEnabled() && GL_CAPS.glDebugMessageControl != 0) {
 					debugCallback = GLUtil.setupDebugMessageCallback();
@@ -772,7 +738,7 @@ public class HdPlugin extends Plugin {
 	public ShaderIncludes getShaderIncludes() {
 		var includes = new ShaderIncludes()
 			.addIncludePath(SHADER_PATH)
-			.addInclude("VERSION_HEADER", OSType.getOSType() == OSType.Linux ? LINUX_VERSION_HEADER : WINDOWS_VERSION_HEADER)
+			.addInclude("VERSION_HEADER", GL_CAPS.OpenGL44 ? "#version 440" : "#version 410")
 			.define("UI_SCALING_MODE", config.uiScalingMode())
 			.define("COLOR_BLINDNESS", config.colorBlindness())
 			.define("APPLY_COLOR_FILTER", configColorFilter != ColorFilter.NONE)
@@ -999,10 +965,10 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeUbos() {
-		uboGlobal.initialize(HdPlugin.UNIFORM_BLOCK_GLOBAL);
-		uboLights.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS);
-		uboLightsCulling.initialize(HdPlugin.UNIFORM_BLOCK_LIGHTS_CULLING);
-		uboUI.initialize(HdPlugin.UNIFORM_BLOCK_UI);
+		uboGlobal.initialize(GLBinding.UNIFORM_GLOBAL);
+		uboLights.initialize(GLBinding.UNIFORM_LIGHTS);
+		uboLightsCulling.initialize(GLBinding.UNIFORM_LIGHTS_CULLING);
+		uboUI.initialize(GLBinding.UNIFORM_UI);
 	}
 
 	private void destroyUbos() {
@@ -1016,7 +982,7 @@ public class HdPlugin extends Plugin {
 		pboUi = glGenBuffers();
 
 		texUi = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_UI);
+		TEXTURE_UI.setActive();
 		glBindTexture(GL_TEXTURE_2D, texUi);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -1051,7 +1017,7 @@ public class HdPlugin extends Plugin {
 
 		fboTiledLighting = glGenFramebuffers();
 		texTiledLighting = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILED_LIGHTING_MAP);
+		TEXTURE_TILE_LIGHTING_MAP.setActive();
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1076,7 +1042,7 @@ public class HdPlugin extends Plugin {
 
 		if (tiledLightingImageStoreProgram.isValid())
 			ARBShaderImageLoadStore.glBindImageTexture(
-				IMAGE_UNIT_TILED_LIGHTING, texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
+				GLBinding.IMAGE_TILE_LIGHTING_MAP.getImageUnit(), texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
@@ -1243,7 +1209,7 @@ public class HdPlugin extends Plugin {
 
 		// Create texture
 		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
+		GLBinding.TEXTURE_SHADOW_MAP.setActive();
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 
 		shadowMapResolution = config.shadowResolution().getValue();
@@ -1284,7 +1250,7 @@ public class HdPlugin extends Plugin {
 	private void initializeDummyShadowMap() {
 		// Create dummy texture
 		texShadowMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_SHADOW_MAP);
+		GLBinding.TEXTURE_SHADOW_MAP.setActive();
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1323,7 +1289,7 @@ public class HdPlugin extends Plugin {
 			glBufferData(GL_PIXEL_UNPACK_BUFFER, uiResolution[0] * uiResolution[1] * 4L, GL_STREAM_DRAW);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-			glActiveTexture(TEXTURE_UNIT_UI);
+			TEXTURE_UI.setActive();
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 		}
@@ -1366,7 +1332,7 @@ public class HdPlugin extends Plugin {
 
 			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-			glActiveTexture(TEXTURE_UNIT_UI);
+			TEXTURE_UI.setActive();
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			frameTimer.end(Timer.UPLOAD_UI);
@@ -1403,7 +1369,7 @@ public class HdPlugin extends Plugin {
 		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
 		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
 		final int function = config.uiScalingMode().glSamplingFunction;
-		glActiveTexture(TEXTURE_UNIT_UI);
+		TEXTURE_UI.setActive();
 		glBindTexture(GL_TEXTURE_2D, texUi);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);

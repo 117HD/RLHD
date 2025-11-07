@@ -5,13 +5,13 @@ import java.util.List;
 import javax.inject.Singleton;
 import lombok.RequiredArgsConstructor;
 import net.runelite.api.*;
-import rs117.hd.opengl.buffer.TextureStructuredBuffer;
+import rs117.hd.opengl.buffer.ShaderStructuredBuffer;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.SliceAllocator;
 
 
 @Singleton
-public class TBOModelData extends TextureStructuredBuffer {
+public class SSBOModelData extends ShaderStructuredBuffer {
 
 	@RequiredArgsConstructor
 	public static class ModelData extends StructProperty {
@@ -44,7 +44,7 @@ public class TBOModelData extends TextureStructuredBuffer {
 	}
 
 	public int addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
-		TBOModelData.ModelData dynamicModelData = null;
+		ModelData dynamicModelData = null;
 		if(!frameModelDataSlices.isEmpty()) {
 			Slice currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
 			if(currentSlice.hasSpace()) {

@@ -22,7 +22,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include VERSION_HEADER
 
 #include <uniforms/global.glsl>
 
@@ -43,23 +43,23 @@ void main() {
     const float timerDotRadius = .1;
     const float timerMargin = .125;
 
-    vec4 src = vec4(vec3(0), smoothstep(0, .05, calibrationTimer));
+    vec4 src = vec4(vec3(0), smoothstep(0.0, 0.05, calibrationTimer));
 
     vec2 uv = fUv - .5;
     uv.x *= numDots;
 
     float dotIndex = floor(mod(uv.x + numDots / 2. + 1, numDots + 1));
     vec2 dotUv = uv;
-    dotUv.x = fract(dotUv.x + .5) - .5;
+    dotUv.x = fract(dotUv.x + 0.5) - .05;
     float dot = smoothstep(dotRadius, dotRadius - lineFeather, length(dotUv));
-    dot *= mix(minBrightness, 1, (dotIndex - 1) / (numDots - 1));
+    dot *= mix(minBrightness, 1.0, (dotIndex - 1.0) / (numDots - 1.0));
     dot = pow(dot, gammaCorrection);
     src.rgb += vec3(dot);
 
-    vec2 cornerDotUv = uv + vec2(-numDots / 2., .5) + timerMargin * vec2(1, -1);
+    vec2 cornerDotUv = uv + vec2(-numDots / 2.0, 0.5) + timerMargin * vec2(1, -1);
     float cornerDot = smoothstep(0, lineFeather, timerDotRadius - length(cornerDotUv));
-    float angle = fract(.25 + atan(cornerDotUv.y, cornerDotUv.x) / (2 * PI));
-    cornerDot *= mix(.1, 1, smoothstep(0, lineFeather, calibrationTimer - angle));
+    float angle = fract(0.25 + atan(cornerDotUv.y, cornerDotUv.x) / (2.0 * PI));
+    cornerDot *= mix(0.1, 1.0, smoothstep(0.0, lineFeather, calibrationTimer - angle));
     src.rgb += vec3(cornerDot);
 
     FragColor = src;

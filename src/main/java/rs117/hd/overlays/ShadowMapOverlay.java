@@ -2,9 +2,9 @@ package rs117.hd.overlays;
 
 import com.google.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.GLBinding;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 
 @Slf4j
 @Singleton
@@ -18,7 +18,7 @@ public class ShadowMapOverlay extends ShaderOverlay<ShadowMapOverlay.Shader> {
 
 		@Override
 		protected void initialize() {
-			uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
+			uniShadowMap.set(GLBinding.TEXTURE_SHADOW_MAP);
 		}
 	}
 }

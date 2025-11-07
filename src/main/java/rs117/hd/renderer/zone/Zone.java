@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.opengl.buffer.storage.TBOModelData;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -71,11 +71,11 @@ class Zone {
 	int[][] roofStart;
 	int[][] roofEnd;
 	short modelCount;
-	TBOModelData.Slice modelDataSlice;
+	SSBOModelData.Slice modelDataSlice;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void initialize(TBOModelData modelData, VBO o, VBO a, int eboShared) {
+	void initialize(SSBOModelData modelData, VBO o, VBO a, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 

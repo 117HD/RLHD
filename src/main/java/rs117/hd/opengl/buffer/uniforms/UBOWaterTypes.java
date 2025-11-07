@@ -1,11 +1,11 @@
 package rs117.hd.opengl.buffer.uniforms;
 
-import rs117.hd.HdPlugin;
 import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.opengl.GLBinding.UNIFORM_WATER_TYPES;
 
 public class UBOWaterTypes extends UniformStructuredBuffer<GLBuffer> {
 	public static class WaterTypeStruct extends StructProperty {
@@ -30,7 +30,7 @@ public class UBOWaterTypes extends UniformStructuredBuffer<GLBuffer> {
 		super(GL_STATIC_DRAW);
 		this.waterTypes = waterTypes;
 		uboStructs = addStructs(new WaterTypeStruct[waterTypes.length], WaterTypeStruct::new);
-		initialize(HdPlugin.UNIFORM_BLOCK_WATER_TYPES);
+		initialize(UNIFORM_WATER_TYPES);
 		update();
 	}
 

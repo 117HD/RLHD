@@ -68,7 +68,7 @@ float calculateFogAmount(vec3 position) {
 
     float fogStart1 = drawDistance2 * 0.85;
     float distance1 = length(cameraPos.xz - position.xz);
-    float distanceFogAmount1 = clamp((distance1 - fogStart1) / (drawDistance2 * .15), 0, 1);
+    float distanceFogAmount1 = clamp((distance1 - fogStart1) / (drawDistance2 * .15), 0.0, 1.0);
 
     float minFogStart = 0.0;
     float maxFogStart = 0.3;
@@ -78,7 +78,7 @@ float calculateFogAmount(vec3 position) {
     float camToVertex = length(cameraPos - vec3(position.x, (position.y + cameraPos.y) / 2, position.z));
     float distance2 = max(camToVertex - fogStart2, 0) / max(drawDistance2 - fogStart2, 1);
     float density = fogDepth / 100.0;
-    float distanceFogAmount2 = 1 - clamp(exp(-distance2 * density), 0, 1);
+    float distanceFogAmount2 = 1 - clamp(exp(-distance2 * density), 0.0, 1.0);
 
     // Combine distance fogs
     float distanceFogAmount = max(distanceFogAmount1, distanceFogAmount2);

@@ -1,6 +1,7 @@
 package rs117.hd.opengl.buffer;
 
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.GLBinding;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -13,10 +14,10 @@ public abstract class UniformStructuredBuffer<GLBUFFER extends GLBuffer> extends
 	@SuppressWarnings("unchecked")
 	public UniformStructuredBuffer(int glUsage, int clUsage) { super(GL_UNIFORM_BUFFER, glUsage, clUsage);}
 
-	public void initialize(int bindingIndex) {
+	public void initialize(GLBinding binding) {
 		initialize();
-		this.bindingIndex = bindingIndex;
-		glBindBufferBase(glBuffer.target, bindingIndex, glBuffer.id);
+		this.binding = binding;
+		glBindBufferBase(glBuffer.target, binding.getBufferBindingIndex(), glBuffer.id);
 	}
 
 	@Override

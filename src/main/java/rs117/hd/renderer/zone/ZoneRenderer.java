@@ -49,7 +49,7 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
-import rs117.hd.opengl.buffer.storage.TBOModelData;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.opengl.buffer.uniforms.UBOLights;
 import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 import rs117.hd.opengl.shader.SceneShaderProgram;
@@ -89,8 +89,10 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
-import static rs117.hd.HdPlugin.UNIFORM_BLOCK_DISPLACEMENT;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.opengl.GLBinding.STORAGE_MODEL_DATA;
+import static rs117.hd.opengl.GLBinding.UNIFORM_DISPLACEMENT;
+import static rs117.hd.opengl.GLBinding.UNIFORM_WORLD_VIEW;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -98,11 +100,6 @@ import static rs117.hd.utils.MathUtils.*;
 public class ZoneRenderer implements Renderer {
 	public static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
 	public static final int MAX_WORLDVIEWS = 4096;
-
-	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
-	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
-	public static final int TEXTURE_UNIT_MODEL_DATA = GL_TEXTURE0 + HdPlugin.TEXTURE_UNIT_COUNT++;
-
 
 	@Inject
 	private Client client;
@@ -138,7 +135,7 @@ public class ZoneRenderer implements Renderer {
 	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private TBOModelData modelData;
+	private SSBOModelData modelData;
 
 	@Inject
 	private SceneUploader sceneUploader;
@@ -239,9 +236,9 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
-		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
-		plugin.uboDisplacement.initialize(UNIFORM_BLOCK_DISPLACEMENT);
-		modelData.initialize(TEXTURE_UNIT_MODEL_DATA);
+		uboWorldViews.initialize(UNIFORM_WORLD_VIEW);
+		plugin.uboDisplacement.initialize(UNIFORM_DISPLACEMENT);
+		modelData.initialize(STORAGE_MODEL_DATA);
 	}
 
 	@Override
@@ -785,7 +782,9 @@ public class ZoneRenderer implements Renderer {
 		if (GL_CAPS.OpenGL43) // TODO: Specify why & gate it behind some other check, since it really supports OpenGL 4.2. Possibly even allow extensions.
 			GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 
+		frameTimer.begin(Timer.CLICKBOX_CHECK);
 		modelData.upload();
+		frameTimer.end(Timer.CLICKBOX_CHECK);
 
 		directionalShadowPass();
 		frameTimer.end(Timer.DRAW_SCENE);

@@ -7,8 +7,6 @@ struct ModelData {
 };
 
 #if ZONE_RENDERER
-    uniform isamplerBuffer modelDataBuffer;
-
     #include MODEL_DATA_GETTER
 
     ModelData getModelData(int idx) {
@@ -16,7 +14,7 @@ struct ModelData {
         if(idx <= 0) {
             return ret;
         }
-        ret = MODEL_DATA_GETTER(idx - 1, modelDataBuffer);
+        ret = MODEL_DATA_GETTER(idx - 1);
         return ret;
     }
 #else
