@@ -7484,7 +7484,22 @@
       "DUEL_SCAFFOLD_EDGE",
       "SARIM_SEAGULL_DROPPINGS",
       "SERIM_PIER",
-      "SKEWSTEPS_WOOD01_DEFAULT"
+      "QUEST_START_ICON_PANDEMONIUM",
+      "SKEWSTEPS_WOOD01_DEFAULT",
+      "SALVAGING_STATION_ICON_SERIM_PIER",
+      "PORT_TASK_BOARD_ICON_SERIM_PIER",
+      "LEDGER_TABLE_ICON_SERIM_PIER",
+      "PORT_TASK_BOARD_ICON_PIER",
+      "SALVAGING_STATION_ICON_PIER",
+      "SALVAGING_STATION_ICON_PEST_SERIM_PIER",
+      "FLOORKIT_WOOD01_STRAIGHT01_SALVAGING_STATION_ICON",
+      "PANDEMONIUM_SALVAGING_STATION_ICON",
+      "VIKING_PIER_SALVAGING_STATION_ICON",
+      "VIKING_PIER_PORT_TASK_BOARD_ICON",
+      "VIKING_PIER_LEDGER_TABLE_ICON",
+      "PORT_TASK_BOARD_ICON_PEST_SERIM_PIER",
+      "LEDGER_TABLE_ICON_PEST_SERIM_PIER",
+      "LEDGER_TABLE_ICON_PIER"
     ],
     "uvType": "BOX"
   },
@@ -8498,7 +8513,8 @@
     "description": "LIGHT_WOODEN_DOCKS_MIRRORED",
     "baseMaterial": "WOOD_GRAIN_2",
     "objectIds": [
-      "PEST_SERIM_PIER_JOIN_CORNER_MIRROR"
+      "PEST_SERIM_PIER_JOIN_CORNER_MIRROR",
+      "PEST_SERIM_PIER_JOIN_CORNER_MIRROR_LEDGER_TABLE_ICON"
     ],
     "uvType": "MODEL_XZ_MIRROR_B"
   },
@@ -8614,7 +8630,9 @@
     "objectIds": [
       "TEMPOROSS_LOBBY_PIER_BROKEN",
       "TEMPOROSS_LOBBY_PIER",
-      "TEMPOROSS_LOBBY_DOCK_PILLAR"
+      "TEMPOROSS_LOBBY_DOCK_PILLAR",
+      "TEMPOROSS_LOBBY_PIER_PORT_TASK_BOARD_ICON",
+      "TEMPOROSS_LOBBY_PIER_LEDGER_TABLE_ICON"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -8708,7 +8726,10 @@
       "PISCARILIUS_PIER_SIDE_END_03",
       "PISCARILIUS_PIER_SAND_END_02",
       "PISCARILIUS_PIER_SAND_END_03",
-      "QUEST_START_ICON_CLIENTOFKOUREND"
+      "QUEST_START_ICON_CLIENTOFKOUREND",
+      "SALVAGING_STATION_ICON_PISCARILIUS",
+      "PORT_TASK_BOARD_ICON_PISCARILIUS",
+      "LEDGER_TABLE_ICON_PISCARILIUS"
     ]
   },
   {
@@ -12608,7 +12629,8 @@
       "GRAB_EVIL_TWIN_CRATES1",
       "GRAB_EVIL_TWIN_CRATES2",
       "DEAL_CRATE2",
-      "LUC2_DWT_CRATE1"
+      "LUC2_DWT_CRATE1",
+      "MOTD_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -15544,6 +15566,7 @@
       "BIGROUNDTABLE",
       "ROUNDTABLE",
       "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE2",
+      "FAI_VARROCK_BLUE_INN_OUTDOOR_TABLE4",
       "AKD_SHAYZIEN_OUTDOOR_TABLE2",
       "DARKM_INN_TALL_TABLE",
       "DARKM_INN_LOW_TABLE",
@@ -19851,6 +19874,16 @@
     "uvScale": 0.6
   },
   {
+    "description": "Sacks - Yellow - Light",
+    "baseMaterial": "BURLAP_LIGHT",
+    "objectIds": [
+      "PRY_SACKS"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.45
+  },
+  {
     "description": "Sacks - Grey",
     "baseMaterial": "BURLAP",
     "objectIds": [
@@ -23265,7 +23298,8 @@
     "objectIds": [
       "SARIM_BARREL_FISH",
       "PISCARILIUS_FISH_BARREL_FULL",
-      "FISHING_CONTEST_BARREL_FISH"
+      "FISHING_CONTEST_BARREL_FISH",
+      "DOCK_LOADING_BAY_BARREL_FISH"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -28821,7 +28855,9 @@
       "TRAWLER_HULL_12",
       "TRAWLER_HULL_DEFAULT",
       "TRAWLER_SHIPRAIL",
-      "TRAWLER_SHIPRAIL_BROKEN_FLOOR"
+      "TRAWLER_SHIPRAIL_BROKEN_FLOOR",
+      "DRAGONSHIPLADDER",
+      "DRAGONSHIPLADDERTOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -29030,13 +29066,14 @@
     "description": "Object - Metal - Anchor",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
-      "ANCHOR"
+      "ANCHOR",
+      "DOCK_CLEAT01"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
     "colorOverrides": [
       {
-        "colors": "h == 0",
+        "colors": "h == 0 || h == 37",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.25
@@ -29075,7 +29112,8 @@
       "TRAWLERNET_L",
       "TRAWLERNET_R",
       "TRAWLERNET_TOP_L",
-      "TRAWLERNET_TOP_R"
+      "TRAWLERNET_TOP_R",
+      "TRAWLER_UPDATE_NET_RAISED"
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
@@ -29203,7 +29241,10 @@
       "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF", "DS2_CORSAIR_COVE_SHIPPLANK", "SAILING_RIMMINGTON_SHIPPLANK_ON",
       "SAILING_RIMMINGTON_SHIPPLANK_OFF", "SAILING_RIMMINGTON_SHIPPLANK2_ON", "SAILING_RIMMINGTON_SHIPPLANK2_OFF", "SAILING_SARIM_VEOS_SHIPPLANK_ON",
       "SAILING_SARIM_VEOS_SHIPPLANK_OFF", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_ON_2", "ZEAH_TRAVEL_KOUREND_SHIPPLANK_OFF_2", "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_ON_2",
-      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2", "SAILING_FORTIS_SHIPPLANK_OFF", "SAILING_FORTIS_SHIPPLANK_ON", "SAILING_FORTIS_SHIPPLANK_NOOP"
+      "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2", "SAILING_FORTIS_SHIPPLANK_OFF", "SAILING_FORTIS_SHIPPLANK_ON", "SAILING_FORTIS_SHIPPLANK_NOOP",
+      "SAILING_ALDARIN_SHIPPLANK_OFF", "SAILING_ALDARIN_SHIPPLANK_ON", "PEST_SHIP_ISLAND_ON", "PEST_SHIP_ISLAND_OFF", "SAILING_SUNSETCOAST_SHIPPLANK_ON",
+      "SAILING_SUNSETCOAST_SHIPPLANK_OFF", "SAILING_PRIF_SHIPPLANK_OFF", "SAILING_PRIF_SHIPPLANK_ON", "SAILING_PANDEMONIUM_SHIPPLANK_OFF_A",
+      "SAILING_PANDEMONIUM_SHIPPLANK_ON_A", "SAILING_PANDEMONIUM_SHIPPLANK_ON_B", "SAILING_PANDEMONIUM_SHIPPLANK_OFF_B"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -40687,7 +40728,10 @@
     "uvScale": 0.8,
     "flatNormals": true,
     "objectIds": [
-      "ALDARIN_PIER_RAISED"
+      "ALDARIN_PIER_RAISED",
+      "ALDARIN_PIER_RAISED_SHIPWRIGHT_ICON",
+      "ALDARIN_PIER_RAISED_PORT_TASK_BOARD_ICON",
+      "ALDARIN_PIER_RAISED_SALVAGING_STATION_ICON"
     ]
   },
   {
@@ -40704,7 +40748,9 @@
       "FLOORKIT_WOODEN01_END01",
       "FLOORKIT_WOODEN01_END01_M",
       "QUEST_START_ICON_HEARTOFDARKNESS",
-      "WALLKIT_CIVITAS05_FENCE04"
+      "WALLKIT_CIVITAS05_FENCE04",
+      "FLOORKIT_WOODEN01_DEFAULT01_LEDGER_TABLE",
+      "FLOORKIT_WOODEN01_DEFAULT01_SALVAGING_STATION"
     ]
   },
   {
@@ -42435,7 +42481,7 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 512,
+    "uvOrientation": 256,
     "objectIds": [
       "SERIM_FISHINGCRANE_NOSCRIPT"
     ],
@@ -46777,7 +46823,8 @@
     "uvOrientationY": 512,
     "objectIds": [
       "SARIM_DEPOSIT_BOX",
-      "CLAN_MEDIEVAL_DEPOSIT_BOX"
+      "CLAN_MEDIEVAL_DEPOSIT_BOX",
+      "BANK_DEPOSIT_BOX_2"
     ]
   },
   {
@@ -54310,13 +54357,13 @@
   },
   {
     "description": "Tempoross - Water Pump Top",
-    "baseMaterial": "WOOD_GRAIN_2_LIGHT",
-    "uvOrientation": 512,
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.75,
+    "uvScale": 0.6,
     "objectIds": [
       "TEMPOROSS_WATER_PUMP",
-      "TEMPOROSS_WATER_PUMP_DOCK"
+      "TEMPOROSS_WATER_PUMP_DOCK",
+      "PANDEMONIUM_WATER_PUMP"
     ],
     "colorOverrides": [
       {
@@ -59510,6 +59557,707 @@
     ],
     "objectIds": [
       "SLUG2_TORTURE_RACK"
+    ]
+  },
+  {
+    "description": "Ship - Wood",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientation": 512,
+    "objectIds": [
+      "BOATKIT_SHIPHULL_STRAIGHT01",
+      "BOATKIT_SHIPHULL_DIAGONAL01",
+      "BOATKIT_SHIPHULL_DIAGONAL02",
+      "BOATKIT_SHIPHULL_DIAGONAL02_MIRROR",
+      "BOATKIT_DECK_DIAGONAL01",
+      "BOATKIT_DECK_DIAGONAL01_MIRROR",
+      "BOATKIT_DECK_STRAIGHT01",
+      "BOATKIT_DECK_STRAIGHT02",
+      "BOATKIT_DECK_STRAIGHT03",
+      "BOATKIT_SHIPHULL_WALL_LOW01",
+      "BOATKIT_SHIPHULL_BACKBOARD_RIGHT",
+      "BOATKIT_SHIPHULL_BACKBOARD_MIDDLE",
+      "BOATKIT_SHIPHULL_BACKBOARD_LEFT",
+      "BOATKIT_DECK_HOLE01",
+      "BOATKIT_SHIPHULL_DIAGONAL01_FILLER",
+      "TRAWLER_UPDATE_HULLWALL01",
+      "TRAWLER_UPDATE_HULLWALL01_MIRROR",
+      "TRAWLER_UPDATE_HULLWALL02",
+      "PANDEMONIUM_REGISTRAR_ICON",
+      "PANDEMONIUM_BEER_STORE_ICON",
+      "PANDEMONIUM_BAR_FLOOR_BROKEN01",
+      "PANDEMONIUM_LADDER_UP_INACTIVE",
+      "PANDEMONIUM_DUNGEONENTRANCE_ICON_CLICKABLE",
+      "PANDEMONIUM_FISHING_STORE_ICON",
+      "PANDEMONIUM_WATER_SOURCE_ICON",
+      "QUEST_START_ICON_PRYINGTIMES",
+      "PANDEMONIUM_SHIPWRIGHT_ICON"
+    ]
+  },
+  {
+    "description": "Ship - Wood with Sails or Metal",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "BOATKIT_SHIPHULL_FIGUREHEAD01",
+      "BOATKIT_SHIPHULL_PORTHOLE01",
+      "BOATKIT_MAST_FRONTMAST_HOISTED",
+      "BOATKIT_SHIPHULL_RAILING01",
+      "BOATKIT_HELM01",
+      "BOATKIT_SHIPHULL_RAILING01_STAIR",
+      "BOATKIT_SHIPHULL_CANNON01",
+      "BOATKIT_SHIPHULL_RAILING01_STAIR_MIRROR",
+      "BOATKIT_MAST_FRONTMAST_HOISTED_PANDEMONIUM01",
+      "BOATKIT_MAST_FRONTMAST_HOISTED_PANDEMONIUM02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Ship - Wood with Sails or Metal - Rotated",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "BOATKIT_MAST_MIDDLEMAST_HOISTED",
+      "BOATKIT_MAST_REARMAST_HOISTED",
+      "BOATKIT_MAST_MIDDLEMAST_UNFURLED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Hull",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Ocean Rocks - Plain",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "OCEAN_OUTCROP_ROCK01",
+      "OCEAN_OUTCROP_ROCK02",
+      "OCEAN_OUTCROP_ROCK03",
+      "OCEAN_OUTCROP_ROCK04",
+      "OCEAN_OUTCROP_ROCK05",
+      "OCEAN_OUTCROP_ROCK06",
+      "OCEAN_OUTCROP_ROCK07",
+      "OCEAN_OUTCROP_ROCK08",
+      "OCEAN_OUTCROP_ROCK09"
+    ]
+  },
+  {
+    "description": "Ocean Rocks - Skeleton",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_ROCK_BAY_OF_SARIM",
+      "SAILING_CHARTING_GENERIC_ROCK_LUMBRIDGE_BASIN",
+      "SAILING_CHARTING_GENERIC_ROCK_RIMMINGTON_STRAIT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Skeleton",
+        "colors": "h == 10",
+        "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Salvaging Station",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "SAILING_PORT_SALVAGING_STATION_PORT_SARIM",
+      "SAILING_PORT_SALVAGING_STATION"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 6",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Seaweed",
+        "colors": "h == 15",
+        "baseMaterial": "GRUNGE_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipwright Workbench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SHIPWRIGHT_WORKBENCH",
+      "SHIPWRIGHT_WORKBENCH_SMALL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Paper",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Port Task Board",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "PORT_TASK_BOARD_PORT_SARIM",
+      "PORT_TASK_BOARD_LUNAR_ISLE",
+      "PORT_TASK_BOARD_PRIFDDINAS",
+      "PORT_TASK_BOARD_DEEPFIN_POINT",
+      "PORT_TASK_BOARD_PORT_TYRAS",
+      "PORT_TASK_BOARD_ETCETERIA",
+      "PORT_TASK_BOARD_RED_ROCK",
+      "PORT_TASK_BOARD_PORT_ROBERTS",
+      "PORT_TASK_BOARD_VOID_KNIGHTS_OUTPOST",
+      "PORT_TASK_BOARD_ALDARIN",
+      "PORT_TASK_BOARD_THE_SUMMER_SHORE",
+      "PORT_TASK_BOARD_CORSAIR_COVE",
+      "PORT_TASK_BOARD_BRIMHAVEN",
+      "PORT_TASK_BOARD_ARDOUGNE",
+      "PORT_TASK_BOARD_MUSA_POINT",
+      "PORT_TASK_BOARD_LANDS_END",
+      "PORT_TASK_BOARD_CIVITAS_ILLA_FORTIS",
+      "PORT_TASK_BOARD_PORT_PISCARILIUS",
+      "PORT_TASK_BOARD_RELLEKKA",
+      "PORT_TASK_BOARD_RUINS_OF_UNKAH",
+      "PORT_TASK_BOARD_PORT_KHAZARD",
+      "PORT_TASK_BOARD_CATHERBY",
+      "PORT_TASK_BOARD_PANDEMONIUM"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shark Jaw",
+        "colors": "h == 8 || h == 4",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 6 && s != 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationZ": 512
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Ledger Table",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DOCK_LOADING_BAY_LEDGER_TABLE_WITHDRAW",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_DEPOSIT",
+      "DOCK_LOADING_BAY_LEDGER_TABLE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_SARIM",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_MUSA_POINT",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CATHERBY",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PANDEMONIUM",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ENTRANA",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ARDOUGNE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_BRIMHAVEN",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_KHAZARD",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CORSAIR_COVE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_RUINS_OF_UNKAH",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_PISCARILIUS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CIVITAS_ILLA_FORTIS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_RELLEKKA",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_LANDS_END",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_HOSIDIUS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_CAIRN_ISLE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_SUNSET_COAST",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_THE_SUMMER_SHORE",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ALDARIN",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_VOID_KNIGHTS_OUTPOST",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_ROBERTS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_RED_ROCK",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_ETCETERIA",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PORT_TYRAS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_DEEPFIN_POINT",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PRIFDDINAS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_PISCATORIS",
+      "DOCK_LOADING_BAY_LEDGER_TABLE_LUNAR_ISLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Pouch",
+        "colors": "h == 8",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Gold",
+        "colors": "h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Decorative Loading Crates",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DOCK_LOADING_BAY_CRATE_BARS_MITHRIL",
+      "DOCK_LOADING_BAY_CRATE_SEEDS",
+      "DOCK_LOADING_BAY_CRATE",
+      "DOCK_LOADING_BAY_CRATE_CANONBALLS",
+      "DOCK_LOADING_BAY_CRATE_COAL"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Seeds",
+        "colors": "h == 16",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Cannonball",
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Mithril",
+        "colors": "h == 42",
+        "baseMaterial": "GRAY_85"
+      },
+      {
+        "description": "Coal",
+        "colors": "h == 10",
+        "baseMaterial": "ROCK_2",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Decorative Barrel with Liquid",
+    "baseMaterial": "WATER_FOUNTAIN_FLAT_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "DOCK_LOADING_BAY_BARREL_LIQUID",
+      "SHAYZIEN_BARREL_WATER"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Liquid",
+        "colors": "h == 42 || h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Player Ship Dock",
+    "baseMaterial": "WOOD_GRAIN_2",
+    "objectIds": [
+      "SAILING_GANGPLANK_PROXY"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Wind Sock",
+        "colors": "h == 5 && s == 0 || h == 1",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Port Sarim - Pier - Crane with Crate",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "objectIds": [
+      "DOCK_LOADING_BAY_CRANE_CRATE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 && l < 31 || h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Docks",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "PANDEMONIUM_PIER",
+      "PANDEMONIUM_LEDGER_TABLE_ICON",
+      "PANDEMONIUM_PORT_TASK_BOARD_ICON"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "The Pandemonium - Dock Support",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "PANDEMONIUM_PIER_SUPPORT_PILLAR",
+      "PANDEMONIUM_PIER_SUPPORT_STRAIGHT01",
+      "PANDEMONIUM_PIER_SUPPORT_STRAIGHT02",
+      "PANDEMONIUM_PIER_SUPPORT_CORNER_OUTSIDE"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 32",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 12",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Rail",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "FENCE_WOOD_BASIC01_MIRROR",
+      "FENCE_WOOD_BASIC01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512
+  },
+  {
+    "description": "The Pandemonium - Bar Wall",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "PANDEMONIUM_BAR_01A",
+      "PANDEMONIUM_BAR_01A_WINDOW",
+      "PANDEMONIUM_BAR_01C"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512
+  },
+  {
+    "description": "The Pandemonium - Bar Wall with Objects or Taps",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "PANDEMONIUM_BAR_WINDOW_LONG",
+      "PANDEMONIUM_BAR_PUMPS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Curtain",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 32 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Shelves",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "PANDEMONIUM_BARSHELF_FULL1",
+      "PANDEMONIUM_BARSHELF_FULL2",
+      "PANDEMONIUM_CABINET_SHARK",
+      "PANDEMONIUM_DRAWERS01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 && s != 1",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Bar Door",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "PANDEMONIUM_DOOR_DOUBLE_L_OPEN_NOOP_ALT",
+      "PANDEMONIUM_DOOR_DOUBLE_R_OPEN_NOOP",
+      "PANDEMONIUM_DOOR_REVERSE",
+      "PANDEMONIUM_DOOR_DOUBLE_L_OPEN_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 && s == 1 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "description": "Window",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Bar Roof",
+    "objectIds": [
+      "PANDEMONIUM_BAR_ROOF",
+      "PANDEMONIUM_BAR_ROOF_SUPPORT01",
+      "PANDEMONIUM_BAR_ROOF_SUPPORT02"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Canvas Roof",
+        "baseMaterial": "CARPET_LIGHT",
+        "colors": "h > 6  && h < 11",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Window",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Window",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Bar Stool",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256,
+    "objectIds": [
+      "PANDEMONIUM_BAR_STOOL04",
+      "PANDEMONIUM_BAR_STOOL03",
+      "PANDEMONIUM_BAR_STOOL01",
+      "PANDEMONIUM_BAR_STOOL02",
+      "PANDEMONIUM_BAR_STOOL05"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Bar Table with Parrot",
+    "objectIds": [
+      "PANDEMONIUM_TABLE_PARROT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 300
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Rug with Barrel",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "PANDEMONIUM_BAR_FLOOR_RUG01"
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5 && s == 1 || h == 5 && s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 5 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Palm Tree",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "PALM_UPDATE01",
+      "PALM_UPDATE02",
+      "PALM_UPDATE03"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 6",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "The Pandemonium - Cave Dungeon Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "PANDEMONIUM_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "terrainVertexSnap": true
+      },
+      {
+        "description": "Hole",
+        "colors": "h == 10",
+        "baseMaterial": "PURE_BLACK"
+      }
     ]
   }
 ]
