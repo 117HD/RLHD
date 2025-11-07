@@ -43,4 +43,10 @@ public class WorldViewContext {
 			vboM.destroy();
 		vboM = null;
 	}
+
+	void invalidate() {
+		for (Zone[] column : zones)
+			for (Zone zone : column)
+				zone.invalidate = true;
+	}
 }

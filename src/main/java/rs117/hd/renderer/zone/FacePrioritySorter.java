@@ -406,7 +406,7 @@ class FacePrioritySorter {
 		boolean isVanillaUVMapped =
 			isVanillaTextured && // Vanilla UV mapped models don't always have sensible UVs for untextured faces
 			model.getTextureFaces() != null;
-		boolean isTextured = isVanillaTextured && faceTextures[face] != -1;
+		int textureId = isVanillaTextured ? faceTextures[face] : -1;
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
@@ -507,7 +507,7 @@ class FacePrioritySorter {
 		}
 
 		// HSL override is not applied to textured faces
-		if (overrideAmount > 0 && !isTextured) {
+		if (overrideAmount > 0 && textureId == -1) {
 			color1 = SceneUploader.interpolateHSL(color1, overrideHue, overrideSat, overrideLum, overrideAmount);
 			color2 = SceneUploader.interpolateHSL(color2, overrideHue, overrideSat, overrideLum, overrideAmount);
 			color3 = SceneUploader.interpolateHSL(color3, overrideHue, overrideSat, overrideLum, overrideAmount);
@@ -526,30 +526,29 @@ class FacePrioritySorter {
 			texC = triangleC;
 		}
 
+		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
+
 		UvType uvType = UvType.GEOMETRY;
 		Material material = baseMaterial;
-
-		int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
-		int textureId = isVanillaTextured ? faceTextures[face] : -1;
-		if (textureId != -1) {
-			uvType = UvType.VANILLA;
-			material = textureMaterial;
-			if (material == Material.NONE)
-				material = materialManager.fromVanillaTexture(textureId);
-
-			color1 = color2 = color3 = 90;
-		}
-
 		ModelOverride faceOverride = modelOverride;
-		if (modelOverride.materialOverrides != null) {
-			var override = modelOverride.materialOverrides.get(material);
-			if (override != null) {
-				faceOverride = override;
-				material = faceOverride.textureMaterial;
+
+		if (textureId != -1) {
+			color1 = color2 = color3 = 90;
+			uvType = UvType.VANILLA;
+			if (textureMaterial != Material.NONE) {
+				material = textureMaterial;
+			} else {
+				material = materialManager.fromVanillaTexture(textureId);
+				if (modelOverride.materialOverrides != null) {
+					var override = modelOverride.materialOverrides.get(material);
+					if (override != null) {
+						faceOverride = override;
+						material = faceOverride.textureMaterial;
+					}
+				}
 			}
-		}
-		if (modelOverride.colorOverrides != null) {
-			int ahsl = (0xFF - transparency) << 16 | faceColors1[face];
+		} else if (modelOverride.colorOverrides != null) {
+			int ahsl = (0xFF - transparency) << 16 | color1;
 			for (var override : modelOverride.colorOverrides) {
 				if (override.ahslCondition.test(ahsl)) {
 					faceOverride = override;
@@ -565,8 +564,8 @@ class FacePrioritySorter {
 				uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 		}
 
-		isTextured = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
-		int materialData = material.packMaterialData(faceOverride, uvType, false, isTextured);
+		boolean keepShading = true; // Skip vanilla shading reversal in the shader, since we do it on the CPU
+		int materialData = material.packMaterialData(faceOverride, uvType, false, keepShading);
 
 		if (uvType == UvType.VANILLA) {
 			modelUvs[0] = modelLocalX[texA] - vx1;

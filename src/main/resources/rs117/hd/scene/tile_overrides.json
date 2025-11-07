@@ -2515,12 +2515,67 @@
     "blended": false
   },
   {
+    "name": "Witchaven Mayors house floor - Overlay",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "MARBLE_1",
+    "blended": false,
+    "overlayIds": [ 38 ]
+  },
+  {
+    "name": "Witchaven Mayors house floor - Underlay",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "MARBLE_2",
+    "blended": false,
+    "underlayIds": [ 9 ],
+    "minLightness": 35,
+    "maxLightness": 35
+  },
+  {
+    "name": "Witchaven Bait Shop Wooden Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftSaturation": -3,
+    "shiftLightness": 8,
+    "overlayIds": [ 91 ],
+    "underlayIds": [ 126 ]
+  },
+  {
+    "name": "Witchaven Interior Ground Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "DIRT",
+    "blended": false,
+    "overlayIds": [ 26, 106 ]
+  },
+  {
+    "name": "Witchaven Interior Wooden Floor",
+    "area": "WITCHAVEN_INTERIORS",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "overlayIds": [ 171, 172 ],
+    "underlayIds": [ 124 ]
+  },
+  {
+    "name": "WITCHAVEN_CHUCK_BRICKS",
+    "area": "WITCHAVEN_CHURCH_EXTERIOR_TILES",
+    "overlayIds": [
+      106
+    ],
+    "groundMaterial": "BRICK_PATHS",
+    "replacements": {
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "WITCHAVEN_PATHS",
     "area": "WITCHAVEN",
     "overlayIds": [
       106
     ],
-    "groundMaterial": "VARIED_DIRT"
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "KHAZARD_BATTLEFIELD_COBBLE_INDOORS",
@@ -4742,19 +4797,6 @@
       67
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
-  },
-  {
-    "name": "VARROCK_PATHS",
-    "area": "OVERWORLD",
-    "overlayIds": [
-      11,
-      171,
-      179
-    ],
-    "groundMaterial": "VARROCK_PATHS",
-    "replacements": {
-      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
-    }
   },
   {
     "name": "SOUL_WARS_DIRT_PATH",

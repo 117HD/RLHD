@@ -4721,6 +4721,7 @@
     "objectIds": [
       "_100_DAVE_CRYPT_CURTAINSL",
       "_100_DAVE_CRYPT_CURTAINSR",
+      "_100_DAVE_CRYPT_DRAPES_BRIGHT",
       "SLP_DRAPES"
     ],
     "colorOverrides": [
@@ -8323,7 +8324,8 @@
       "IZNOT_CLAY_RANGE",
       "IZNOT_CLAY_FORGE",
       "FAIRY_FURNACE",
-      "FAIRY_RANGE"
+      "FAIRY_RANGE",
+      "SLUG2_CLAY_RANGE"
     ],
     "colorOverrides": [
       {
@@ -8957,14 +8959,14 @@
   {
     "description": "Witchaven Docks",
     "baseMaterial": "WOOD_GRAIN_2",
+    "uvType": "BOX",
     "objectIds": [
       "SLUG2_PIER",
       "SLUG2_PIER2_EDGE",
       "SLUG2_PIER2_EDGE_MIRROR",
       "SLUG2_PIER3_EDGE",
       "SLUG2_PIER3_EDGE_MIRROR"
-    ],
-    "uvType": "MODEL_XZ"
+    ]
   },
   {
     "description": "Witchaven Dock Rails",
@@ -9606,7 +9608,10 @@
       "FAI_FALADOR_CASTLE_LADDER_UP",
       "FAI_FALADOR_CASTLE_LADDERTOP",
       "LUC2_DARKSQUALL_LADDER",
-      "LUC2_DARKSQUALL_LADDERTOP"
+      "LUC2_DARKSQUALL_LADDERTOP",
+      "SLUG2_LADDER",
+      "SLUG2_LADDERTOP",
+      "SLUG2_BAITSHOP_LADDERTOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -10131,7 +10136,8 @@
       "DRAGON_SLAYER_QIP_SUITOFARMOUR",
       "KR_SUITOFARMOUR_DARKKNIGHT",
       "KR_CAM_SUITOFARMOR",
-      "SUITOFARMOUR_DARKKNIGHT"
+      "SUITOFARMOUR_DARKKNIGHT",
+      "SLUG2_SUITOFARMOUR_WHITEKNIGHT_BLACK"
     ],
     "uvType": "BOX",
     "uvScale": 0.4
@@ -11012,7 +11018,6 @@
     "description": "Wooden Door 3 - Fake Plank Golden Handle",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "flatNormals": true,
     "objectIds": [
       "LEFAYEUNOPENABLEDOORL",
       "LEFAYEUNOPENABLEDOORR",
@@ -11087,7 +11092,7 @@
     "colorOverrides": [
       {
         "description": "Golden Handles",
-        "colors": "s > 3",
+        "colors": "h == 6 && s == 7",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
         "uvType": "BOX",
         "uvScale": 0.6,
@@ -11134,7 +11139,8 @@
       "VMQ1_BANDIT_DOOR_OPEN",
       "VMQ1_BANDIT_DOOR_NOOP",
       "ELID_GENIE_DOOR",
-      "ELID_GENIE_DOOR_OPEN"
+      "ELID_GENIE_DOOR_OPEN",
+      "SLUG2_VILLAGE_POORDOOR"
     ],
     "uvOrientation": 512,
     "uvScale": 0.4,
@@ -12656,7 +12662,8 @@
       "TOURTRAP_QIP_CRATE_SINGLE",
       "TOURTRAP_QIP_CRATE_STACKED",
       "FOSSIL_CRATE3_INACTIVE",
-      "FAI_WIZTOWER_CRATE"
+      "FAI_WIZTOWER_CRATE",
+      "SLUG2_CRATE_STACK2"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -23230,7 +23237,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POOR_WALL_SUPPORT",
-      "FAI_VARROCK_POOR_WALL_SUPPORT2"
+      "FAI_VARROCK_POOR_WALL_SUPPORT2",
+      "SLUG2_POOR_WALL_SUPPORT"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -34883,15 +34891,16 @@
   },
   {
     "description": "Wooden Wardrobe",
-    "objectIds": [
-      "FAI_VARROCK_WARDROBE",
-      "FAI_VARROCK_WARDROBE_POSH2",
-      "AKD_HUGHES_WARDROBE_1_NOOP"
-    ],
     "baseMaterial": "WOOD_GRAIN_3",
     "uvOrientationY": 512,
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.7,
+    "objectIds": [
+      "FAI_VARROCK_WARDROBE",
+      "FAI_VARROCK_WARDROBE_POSH2",
+      "AKD_HUGHES_WARDROBE_1_NOOP",
+      "SLUG2_WARDROBE"
+    ]
   },
   {
     "description": "Drawers with backsplash",
@@ -34901,7 +34910,8 @@
       "FAI_VARROCK_POSH_DRAWERS",
       "KR_SEERS_VILLAGE_DRAWERS1",
       "AKD_HUGHES_DRAWERS_1_NOOP",
-      "FAI_FALADOR_DRAWERS"
+      "FAI_FALADOR_DRAWERS",
+      "SLUG2_DRAWERS"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -35062,7 +35072,8 @@
       "LUC2_MOV_BARREL_EMPTY",
       "LUC2_MOV_BARREL",
       "LUC2_DWT_BARREL1",
-      "LUC2_DWT_BARREL2"
+      "LUC2_DWT_BARREL2",
+      "SLUG2_BARREL_STACKED"
     ]
   },
   {
@@ -35373,13 +35384,16 @@
     "uvScale": 0.4
   },
   {
-    "description": "Camdozaal Fish Bones",
+    "description": "Camdozaal - Witchaven - Bone - Fish Bones",
     "baseMaterial": "BONE",
     "objectIds": [
       "MYQ3_FISHBONE1",
       "MYQ3_FISHBONE2",
       "MYQ3_FISHBONE3",
-      "MYQ3_FISHBONE4"
+      "MYQ3_FISHBONE4",
+      "SLUG2_FISHBONE1",
+      "SLUG2_FISHBONE2",
+      "SLUG2_FISHBONE3"
     ],
     "uvType": "MODEL_XZ",
     "uvScale": 0.7
@@ -36175,7 +36189,8 @@
     "description": "Kebos - Baby Blue Double wide Bed with pillows - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_VARROCK_DOUBLE_BED"
+      "FAI_VARROCK_DOUBLE_BED",
+      "SLUG2_MAYOR_DOUBLE_BED"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
@@ -38374,7 +38389,8 @@
       "ELID_BOOKCASE",
       "KR_BOOKCASE2",
       "KR_CAM_BOOKCASE",
-      "FAI_VARROCK_RUNE_BOOKCASE"
+      "FAI_VARROCK_RUNE_BOOKCASE",
+      "SLUG2_BOOKCASE"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -38451,6 +38467,30 @@
         "colors": "h == 7 && s == 3",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Witchaven- Wooden - bookshelf with Multicolored books",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_VARROCK_SHELVES_BOOKS"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Paper",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "GRAY_65",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Shelf",
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.4
       }
     ]
   },
@@ -42540,7 +42580,7 @@
     ]
   },
   {
-    "description": "Double bed with red blanket and bed frame",
+    "description": "Double bed with red blanket with golden trim and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "BIGBED3"
@@ -48922,6 +48962,30 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 89
+      }
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Metallic - Ceramic - Glass - Shelves with various objects",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "FAI_VARROCK_SINGLE_SHELF_MIXED1",
+      "FAI_VARROCK_SINGLE_SHELF_FOOD",
+      "FAI_VARROCK_SINGLE_SHELF_GLASSES"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Shelf",
+        "colors": "h == 7 && s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      },
+      {
+        "description": "Vase",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
@@ -58918,6 +58982,581 @@
         "uvType": "BOX",
         "uvOrientation": 192
       }
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Barrels",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_ROTTEN_BARREL"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Metallic - Barrels",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_ROTTEN_BARREL_BROKEN"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Walls",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 128
+      }
+    ],
+    "objectIds": [
+      "SLUG2_VILLAGE_WALL",
+      "SLUG2_VILLAGE_WALLEND_LEFT",
+      "SLUG2_VILLAGE_WALLEND_RIGHT",
+      "SLUG2_VILLAGE_WINDOW",
+      "SLUG2_VILLAGE_WALL_TYPE2",
+      "SLUG2_VILLAGE_WALL_LEVEL_TWO",
+      "SLUG2_VILLAGE_WALL_LEVEL_TWO_WINDOW",
+      "SLUG2_MAYOR_WALL",
+      "SLUG2_MAYOR_WINDOW",
+      "SLUG2_MAYOR_WALLEND_LEFT",
+      "SLUG2_MAYOR_WALLEND_RIGHT",
+      "SLUG2_MAYOR_WALL_LEVEL_TWO",
+      "SLUG2_MAYOR_WALL_LEVEL_TWO_WINDOW",
+      "SLUG2_MAYOR_LEVEL_TWO_WALL_END",
+      "SLUG2_MAYOR_LEVEL_TWO_WALL_END_MIRROR",
+      "SLUG2_VILLAGE_BALCONY",
+      "SLUG2_VILLAGE_BALCONY_END_LEFT",
+      "SLUG2_VILLAGE_BALCONY_END"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Church Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLUG2_CHURCH_WALL",
+      "SLUG2_CHURCH_WALLEND_LEFT",
+      "SLUG2_CHURCH_WALLEND_RIGHT",
+      "SLUG2_CHURCH_WINDOW",
+      "SLUG2_CHURCH_WINDOW_LEV_TWO",
+      "SLUG2_CHURCH_WALL_LEVEL_TWO",
+      "SLUG2_CHURCH_WALL_LEVEL_TWO_END",
+      "SLUG2_CHURCH_WALL_LEVEL_TWO_END_MIRROR",
+      "SLUG2_CHURCH_PINNACLE"
+    ]
+  },
+  {
+    "description": "Witchaven -  Glass - Church Stained glass",
+    "baseMaterial": "BLANK_GLOSS",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLUG2_STAIN_WINDOW_OUTSIDE"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Metallic - Water Barrel and sink",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "SLUG2_WATER_BARREL",
+      "SLUG2_SINK2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.4,
+        "uvOrientation": 512,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 37",
+        "baseMaterial": "WATER_FLAT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Witchaven - Dirty Double bed with red blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "(h == 6 || h == 8) && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Red blanket",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_DOUBLE_BED"
+    ]
+  },
+  {
+    "description": "Witchaven - childs bed with yellow blanket and bed frame",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Pillow and sheet",
+        "colors": "(h == 6 || h == 8) && s == 1",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Yellow blanket",
+        "colors": "h == 8 && s == 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_CHILDS_BUNKBED"
+    ]
+  },
+  {
+    "description": "Witchaven - wooden - Leaning wall planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_PLANKS1",
+      "SLUG2_PLANKS2"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Bench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SLUG2_MAYOR_BENCH"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Cloth - Training Dummy",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLUG2_SWORDDUMMY"
+    ]
+  },
+  {
+    "description": "Witchaven - Hammock - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SLUG2_HAMMOCK_SWINGING"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Paper - Church Lectern",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 || h >= 30",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLUG2_LECTERN"
+    ]
+  },
+  {
+    "description": "Witchaven - Ceramic - Vase",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLUG2_VASE_SET",
+      "SLUG2_VASE_LARGE"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Metallic - Mayors Desk",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.8
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_MAYORS_DESK"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Metallic - Trophies",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "SLUG2_SHARKHEAD",
+      "SLUG2_SAILFISH"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Bait shop shelf",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_SHELF2"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Bait shop Plank table with Register",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SLUG2_BIG_WOODEN_TABLE"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - giant Stacked crate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_CRATE_STACK"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Glass - Bait shop display case",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_BAIT_DISPLAY1",
+      "SLUG2_BAIT_DISPLAY2"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Rope - Life Buoy",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 7 && s > 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 7 && s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "SLUG2_LIFE_BUOY",
+      "SLUG2_LIFE_BUOY_OUTSIDE"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Meallic - Fish hooks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": -128
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "SLUG2_HARPOON_DECOR"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Ship debris",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SLUG2_WRECK1_MID_SIDE",
+      "SLUG2_WRECK1_MID1",
+      "SLUG2_WRECK1_MID2",
+      "SLUG2_WRECK1_BACK",
+      "SLUG2_ROWBOAT_SKELETON",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND2",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND3",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND4"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Broken Lobster Trap",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLUG2_LOBSTER_TRAP"
+    ]
+  },
+  {
+    "description": "Witchaven - Wooden - Rope - Floaters",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 6",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLUG2_FLOATERS"
+    ]
+  },
+  {
+    "description": "Varrock - Witchaven - Glass - Broken bottles on ground",
+    "baseMaterial": "BLANK_GLOSS",
+    "objectIds": [
+      "FAI_VARROCK_BOTTLES2",
+      "FAI_VARROCK_BOTTLES3"
+    ]
+  },
+  {
+    "description": "Witchaven - GWooden - Onialls empty chair",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "npcIds": [ "SLUG2_ONIALL_GONE" ]
+  },
+  {
+    "description": "Witchaven - Metallic - Anchor",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -313,
+    "objectIds": [
+      "SLUG2_ANCHOR"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Mayor's House Support",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLUG2_MAYOR_PILLAR"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Grass - Paving stone with grass",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 17",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
+      }
+    ],
+    "objectIds": [
+      "SLUG2_STONE_FLOOR_EDGE1",
+      "SLUG2_STONE_FLOOR_EDGE2"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Grass - Stone ruins with grass",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grass",
+        "colors": "h == 12",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false
+      }
+    ],
+    "objectIds": [
+      "SLUG2_RUIN_WALL_PIECES",
+      "SLUG2_RUIN_WALL2",
+      "SLUG2_RUIN_WALL_ENTRANCE",
+      "SLUG2_RUIN_WALL_ENTRANCE_MIRROR"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Stone ruins",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": -128,
+    "objectIds": [
+      "SLUG2_DUNGEON_PILLAR",
+      "SLUG2_DUNGEON_PILLAR_ARCH",
+      "SLUG2_RUIN_PILLAR",
+      "SLUG2_RUIN_PILLAR_TWO",
+      "SLUG2_RUIN_WALL",
+      "SLUG2_RUIN_WALL_MIRROR",
+      "SLUG2_RUIN_ENTRANCE",
+      "SLUG2_DONGEON_RUIN_EXIT"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Dirt - Witchaven Dungeon Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grunge",
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ],
+    "objectIds": [
+      "SLUG2_CAVE_DUNGEON_WALL",
+      "SLUG2_CAVE_DUNGEON_WALL_TWO",
+      "SLUG2_CAVE_DUNGEON_WALL_MIRROR",
+      "SLUG2_CAVE_DUNGEON_WALL_TWO_MIRROR",
+      "SLUG2_DUNGEON_WALL",
+      "SLUG2_DUNGEON_WALL2",
+      "SLUG2_HIDDEN_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Witchaven - Metallic - Chests",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SLUG2_CHEST"
+    ]
+  },
+  {
+    "description": "Witchaven - Stone - Dirt - Witchaven Dungeon Walls",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Grunge",
+        "colors": "h == 10 && s == 1",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLUG2_TORTURE_RACK"
     ]
   },
   {

@@ -315,27 +315,27 @@ public class LegacyModelPusher {
 			int[] faceColors = model.getFaceColors1();
 			byte[] faceTransparencies = model.getFaceTransparencies();
 			for (int face = 0; face < faceCount; face++) {
+				short textureId = isVanillaTextured ? faceTextures[face] : -1;
 				UvType uvType = UvType.GEOMETRY;
 				Material material = baseMaterial;
+				ModelOverride faceOverride = modelOverride;
 
-				short textureId = isVanillaTextured ? faceTextures[face] : -1;
 				if (textureId != -1) {
 					uvType = UvType.VANILLA;
-					material = textureMaterial;
-					if (material == Material.NONE)
+					if (textureMaterial != Material.NONE) {
+						material = textureMaterial;
+					} else {
 						material = materialManager.fromVanillaTexture(textureId);
-				}
-
-				ModelOverride faceOverride = modelOverride;
-				if (modelOverride.materialOverrides != null) {
-					var override = modelOverride.materialOverrides.get(material);
-					if (override != null) {
-						faceOverride = override;
-						material = faceOverride.textureMaterial;
+						if (modelOverride.materialOverrides != null) {
+							var override = modelOverride.materialOverrides.get(material);
+							if (override != null) {
+								faceOverride = override;
+								material = faceOverride.textureMaterial;
+							}
+						}
 					}
-				}
-				// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-				if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
+				} else if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
+					// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
 					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
 					for (var override : modelOverride.colorOverrides) {
 						if (override.ahslCondition.test(ahsl)) {
