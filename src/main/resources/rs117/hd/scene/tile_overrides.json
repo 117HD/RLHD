@@ -4897,6 +4897,19 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "VARROCK_PATHS",
+    "area": "OVERWORLD",
+    "overlayIds": [
+      11,
+      171,
+      179
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "SOUL_WARS_DIRT_PATH",
     "area": "ISLE_OF_SOULS",
     "overlayIds": [
