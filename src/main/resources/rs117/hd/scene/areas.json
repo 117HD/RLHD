@@ -315,6 +315,24 @@
     ]
   },
   {
+    "name": "VARROCK_ZAFFS",
+    "aabbs": [
+      [ 3201, 3431, 3204, 3437 ]
+    ]
+  },
+  {
+    "name": "VARROCK_DUMMY_TRAINING_ROOM",
+    "aabbs": [
+      [ 3249, 3431, 3260, 3438 ]
+    ]
+  },
+  {
+    "name": "VARROCK_HOUSE_3",
+    "aabbs": [
+      [ 3237, 3446, 3242, 3454 ]
+    ]
+  },
+  {
     "name": "VARROCK_CHAMPIONS_GUILD",
     "aabbs": [
       [ 3188, 3352, 0, 3194, 3362, 0 ]
