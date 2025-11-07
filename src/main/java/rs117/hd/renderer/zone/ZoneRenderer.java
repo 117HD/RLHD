@@ -679,10 +679,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		plugin.uboGlobal.upload();
-		uboWorldViews.update();
-		for (var ctx : subs)
-			if (ctx != null)
-				ctx.updateWorldViewIndex(uboWorldViews);
+		updateWorldViews();
 
 		// Reset buffers for the next frame
 		eboAlphaStaging.clear();
@@ -692,6 +689,13 @@ public class ZoneRenderer implements Renderer {
 		renderState.reset();
 
 		checkGLErrors();
+	}
+
+	private void updateWorldViews() {
+		uboWorldViews.update();
+		for (var ctx : subs)
+			if (ctx != null)
+				ctx.updateWorldViewIndex(uboWorldViews);
 	}
 
 	private void updateAreaHiding() {
@@ -1413,7 +1417,8 @@ public class ZoneRenderer implements Renderer {
 
 	private void loadSceneInternal(WorldView worldView, Scene scene) {
 		if (scene.getWorldViewId() > -1) {
-			loadSubScene(worldView, scene);
+			// TODO: Fix async sub scene loading when hopping worlds
+//			loadSubScene(worldView, scene);
 			return;
 		}
 
@@ -1848,6 +1853,10 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void swapSub(Scene scene) {
+		// TODO: Fix async sub scene loading when hopping worlds
+		updateWorldViews();
+		loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
+
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
