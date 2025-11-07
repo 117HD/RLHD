@@ -469,21 +469,26 @@ public class HdPlugin extends Plugin {
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
-				APPLE = OSType.getOSType() == OSType.MacOS;
-				APPLE_ARM = APPLE && System.getProperty("os.arch").equals("aarch64");
+				OSType osType = OSType.getOSType();
+				String arch = System.getProperty("os.arch", "Unknown");
+				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
+				log.info("Operating system: {}", osType);
+				log.info("Architecture: {}", arch);
+				log.info("Client is {}-bit", wordSize);
+				APPLE = osType == OSType.MacOS;
+				APPLE_ARM = APPLE && arch.equals("aarch64");
 
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				String arch = System.getProperty("sun.arch.data.model", "Unknown");
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				log.info("Using device: {} ({})", glRenderer, glVendor);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
-				log.info("Client is {}-bit", arch);
 				log.info("Low memory mode: {}", useLowMemoryMode);
 
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
 					injector.getInstance(ZoneRenderer.class);
+				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
