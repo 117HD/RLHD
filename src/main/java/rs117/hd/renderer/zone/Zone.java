@@ -52,6 +52,7 @@ class Zone {
 	int bufLenA;
 
 	int sizeO, sizeA;
+	@Nullable
 	VBO vboO, vboA, vboM;
 
 	boolean initialized; // whether the zone vao and vbos are ready
@@ -202,7 +203,7 @@ class Zone {
 	}
 
 	void setMetadata(int worldViewIdx, ZoneSceneContext ctx, int mx, int mz) {
-		if (!metadataDirty)
+		if (vboM == null || !metadataDirty)
 			return;
 		metadataDirty = false;
 
