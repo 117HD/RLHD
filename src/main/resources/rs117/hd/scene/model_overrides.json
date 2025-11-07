@@ -1414,6 +1414,18 @@
     "uvScale": 0.8
   },
   {
+    "description": "DEAD_TREES_LIGHTER",
+    "baseMaterial": "LIGHT_BARK",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "DARKM_DEAD_TREE_01",
+      "DARKM_DEAD_TREE_02",
+      "DARKM_DEAD_TREE_03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
     "description": "My Arms Big Adventure - Rope Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -9260,6 +9272,16 @@
     "flatNormals": true
   },
   {
+    "description": "Fine Carpet - Lighter",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "DARKM_MIDDLE_RUG_CORNER",
+      "DARKM_MIDDLE_RUG_STRAIGHT"
+    ],
+    "uvType": "WORLD_XZ",
+    "flatNormals": true
+  },
+  {
     "description": "Dirt Cave Entrance",
     "baseMaterial": "DIRT_2",
     "objectIds": [
@@ -9840,7 +9862,9 @@
       "POOR_STAIRS",
       "POOR_STAIRSTOP",
       "KR_CAM_WOODENSTAIRSTOP",
-      "KR_CAM_WOODENSTAIRS"
+      "KR_CAM_WOODENSTAIRS",
+      "DARKM_RICH_STAIRCASE_BOTTOM",
+      "DARKM_RICH_STAIRCASE_RAILING"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -10458,7 +10482,10 @@
       "LUC2_DWT_JAILBARS_GATE_OPEN",
       "WALLKIT_CAMTORUM01_FENCE01",
       "WALLKIT_CAMTORUM01_VAULT01",
-      "WALLKIT_CAMTORUM01_VAULT02"
+      "WALLKIT_CAMTORUM01_VAULT02",
+      "DARKM_PRISON_BARS_WALL",
+      "MYQ5_PRISONER_DOOR",
+      "MYQ5_PRISONER_DOOR_2"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -10555,7 +10582,8 @@
       "VIKING_FURNACE_DOOR_RIGHT_MIRROR",
       "FAI_FALADOR_FURNACE",
       "FAI_FALADOR_FURNACE_DOOR_LEFT",
-      "FAI_FALADOR_FURNACE_DOOR_RIGHT_MIRROR"
+      "FAI_FALADOR_FURNACE_DOOR_RIGHT_MIRROR",
+      "DARKM_FURNACE"
     ],
     "uvType": "BOX"
   },
@@ -10587,7 +10615,8 @@
       "VIKING_ANVIL",
       "DWARF_KELDAGRIM_ANVIL",
       "GIM_ANVIL",
-      "LOVAKENGJ_ANVIL"
+      "LOVAKENGJ_ANVIL",
+      "DARKM_ANVIL"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -12630,9 +12659,20 @@
       "GRAB_EVIL_TWIN_CRATES2",
       "DEAL_CRATE2",
       "LUC2_DWT_CRATE1",
-      "MOTD_CRATE"
+      "MOTD_CRATE",
+      "DARKM_MIDDLE_CRATE_SINGLE"
     ],
     "uvType": "BOX",
+    "flatNormals": true
+  },
+  {
+    "description": "Objects - Wooden - Crate - Stacked - 256 degree angled top",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "DARKM_MIDDLE_CRATE_DOUBLE"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 256,
     "flatNormals": true
   },
   {
@@ -13145,6 +13185,7 @@
     "description": "Objects - Metallic - Iron Billets",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_IRON_PILE",
       "DORGESH_BLACKSMITH_IRON_PILE"
@@ -20795,10 +20836,10 @@
   },
   {
     "description": "Ver Sinhaza - Metallic - Stone - Vyre Well",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "ROCK_3_SMOOTH",
     "uvType": "BOX",
     "uvOrientation": 256,
-    "uvScale": 0.6,
+    "uvScale": 0.8,
     "objectIds": [
       "TOB_SURFACE_BLOOD_WELL_EMPTY",
       "MYQ4_TOB_SURFACE_BLOOD_WELL_EMPTY"
@@ -20820,35 +20861,14 @@
     "uvOrientation": 256,
     "uvScale": 0.6,
     "objectIds": [
-      "TOB_SURFACE_BANKBOOTH"
+      "TOB_SURFACE_BANKBOOTH",
+      "TOB_SURFACE_BANKBOOTH_CLOSED",
+      "DARKM_BANKBOOTH"
     ],
     "colorOverrides": [
       {
         "baseMaterial": "BLANK_GLOSS",
         "colors": "a < 255"
-      }
-    ]
-  },
-  {
-    "description": "Ver Sinhaza - Metallic - Stone - Bank closed",
-    "baseMaterial": "STONE_NORMALED",
-    "uvType": "BOX",
-    "uvOrientation": 256,
-    "uvScale": 0.6,
-    "objectIds": [
-      "TOB_SURFACE_BANKBOOTH_CLOSED"
-    ],
-    "colorOverrides": [
-      {
-        "baseMaterial": "BLANK_GLOSS",
-        "colors": "a < 255"
-      },
-      {
-        "description": "Wooden Panels",
-        "colors": "s > 2",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX",
-        "uvScale": 0.8
       }
     ]
   },
@@ -21248,6 +21268,144 @@
     ]
   },
   {
+    "description": "Hallowed Sepulcher - Mausoleum - Plants",
+    "baseMaterial": "NONE",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "HS_WALL_PLANT_01",
+      "HS_WALL_PLANT_03",
+      "HS_WALL_PLANT_04",
+      "HS_WALL_PLANT_05"
+    ]
+  },
+  {
+    "description": "Hallowed Sepulcher - Mausoleum - Building",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "SEPULCHRE_OW_WALL_CORNER",
+      "SEPULCHRE_OW_WALL_EDGE_L",
+      "SEPULCHRE_OW_WALL_EDGE_R",
+      "SEPULCHRE_OW_WALL",
+      "SEPULCHRE_OW_ROOF_CENTER",
+      "SEPULCHRE_OW_ROOF_EDGE",
+      "SEPULCHRE_OW_ROOF_CORNER",
+      "SEPULCHRE_OW_ROOF_ARCH"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Hallowed Sepulcher - Mausoleum - Door",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "SEPULCHRE_OW_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "STONE_NORMALED_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ]
+  },
+  {
+    "description": "Hallowed Sepulcher - Mausoleum - Statues",
+    "baseMaterial": "NONE",
+    "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -3,
+    "objectIds": [
+      "SEPULCHRE_OW_STATUE_01",
+      "SEPULCHRE_OW_STATUE_02",
+      "SEPULCHRE_OW_STATUE_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROCK_3_SMOOTH_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Stone Walls - Clue Hidey Hole and Shortcut",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "HIDEY_UNBUILT_ROCK_MASTER_SHORTCUT",
+      "DARKM_WALL_ROCK_SHORTCUT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Castle Drakan - Stone Gatehouse and Fence",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_CASTLE_DOOR_LEFT",
+      "DARKM_CASTLE_DOOR_ROOF_LEFT",
+      "DARKM_CASTLE_DOOR_RIGHT",
+      "DARKM_CASTLE_DOOR_ROOF_RIGHT",
+      "DARKM_CASTLE_DOOR_LEFT_TOP",
+      "DARKM_CASTLE_DOOR_RIGHT_TOP",
+      "DARKM_CASTLE_DOOR_ROOF_MIDDLE",
+      "DARKM_CASTLE_DOOR_WALL_STRAIGHT",
+      "DARKM_CASTLE_DOOR_WALL_CORNER_LEFT",
+      "DARKM_CASTLE_DOOR_WALL_CORNER_RIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Castle Drakan - Wooden Gate",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "DARKM_CASTLE_DOOR_OUTSIDE",
+      "DARKM_CASTLE_DOOR_OUTSIDE_TOP",
+      "DARKM_CASTLE_DOOR_INSIDE",
+      "DARKM_CASTLE_DOOR_INSIDE_TOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_VERY_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Stone Walls - Windows, Fountain or Door",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "DARKM_CASTLE_WALL_WINDOW",
+      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_LEFT",
+      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_RIGHT",
+      "DARKM_CASTLE_WALL_WINDOW_ROOF_DIAGONAL_LEFT",
+      "DARKM_CASTLE_WALL_WINDOW_ROOF_DIAGONAL_RIGHT",
+      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW",
+      "DARKM_CASTLE_WALL_WINDOW_ROOF_DIAGONAL",
+      "DARKM_CASTLE_WALL_LVL0_WINDOW_ROOF",
+      "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_FOUNTAIN",
+      "DARKM_CASTLE_WALL_LVL0_DOOR_ROOF",
+      "DARKM_CASTLE_FRONT_DOOR_04",
+      "DARKM_CASTLE_FRONT_DOOR_02",
+      "DARKM_CASTLE_FRONT_DOOR_03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 1 || s == 2 || s == 7",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 5 || h == 6 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Darkmeyer Stone Walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -21262,20 +21420,75 @@
       "DARKM_OUTER_WALL_INSIDE_1H",
       "DARKM_CASTLE_WALL",
       "DARKM_CASTLE_WALL_OUTSIDE_CORNER",
-      "DARKM_CASTLE_WALL_WINDOW",
-      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_LEFT",
-      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW_RIGHT",
-      "DARKM_CASTLE_WALL_DIAGONAL_WINDOW",
+      "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_TOP",
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF",
-      "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_FOUNTAIN",
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_CORNER",
       "DARKM_CASTLE_WALL_LVL0_NO_WINDOW_ROOF_INSIDE_CORNER",
-      "DARKM_CASTLE_WALL_LVL0_WINDOW_ROOF",
-      "DARKM_CASTLE_WALL_LVL0_DOOR_ROOF",
-      "DARKM_RICH_WALL02"
+      "DARKM_INNER_WALL_LVL0_01",
+      "DARKM_INNER_WALL_FLOOR_A",
+      "DARKM_WALL_PILLAR_SMALL_02",
+      "DARKM_OUTER_WALL_2H_TO_1H",
+      "DARKM_INNER_WALL_PILLAR_2H_TO_1H",
+      "DARKM_OUTER_WALL_OUTSIDE_2H",
+      "DARKM_OUTER_WALL_2H",
+      "DARKM_OUTER_WALL_INSIDE_2H",
+      "DARKM_OUTER_WALL_2H_SHORTCUT_NO_ROPE",
+      "DARKM_OUTER_WALL_3H_SHORTCUT_NO_ROPE",
+      "DARKM_OUTER_WALL_TOP_TILE2_SHORTCUT_ICON",
+      "DARKM_OUTER_WALL_3H_TO_2H",
+      "DARKM_INNER_WALL_PILLAR_3H_TO_2H",
+      "DARKM_OUTER_WALL_3H_TO_1H",
+      "DARKM_STEPS_SIDE_MID_LEFT",
+      "DARKM_STEPS_SIDE_MID_RIGHT",
+      "DARKM_INNER_WALL_LVL0_DOUBLE_HEIGHT",
+      "DARKM_WALL_PILLAR_SMALL_01",
+      "DARKM_CASTLE_FRONT_DOOR_01",
+      "DARKM_CASTLE_FRONT_DOOR_05",
+      "DARKM_CASTLE_FRONT_DOOR_06",
+      "DARKM_CASTLE_FRONT_DOOR_07",
+      "DARKM_CASTLE_FRONT_DOOR_08",
+      "DARKM_CASTLE_FRONT_DOOR_09",
+      "DARKM_CASTLE_FRONT_DOOR_10",
+      "DARKM_CASTLE_FRONT_DOOR_11",
+      "DARKM_CASTLE_FRONT_DOOR_12",
+      "DARKM_CASTLE_FRONT_DOOR_13",
+      "DARKM_CASTLE_FRONT_DOOR_14",
+      "DARKM_CASTLE_WALL_ENTRANCE_DOOR_03"
     ],
     "uvType": "BOX",
-    "uvScale": 0.7
+    "uvScale": 0.8
+  },
+  {
+    "description": "Darkmeyer Walls - Lighter",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_STEPS_SIDE_TOP_RIGHT",
+      "DARKM_STEPS_SIDE_TOP_LEFT",
+      "DARKM_STEPS_TOP",
+      "DARKM_WALL_PILLAR_LARGE_01",
+      "DARKM_WALL_PILLAR_LARGE_02",
+      "DARKM_STEPS_BOTTOM"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Darkmeyer Stairs - End Cap",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_STEPS_SIDE_FRONT_LEFT",
+      "DARKM_STEPS_SIDE_FRONT_RIGHT",
+      "DARKM_MINE_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "s == 7",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
   },
   {
     "description": "Darkmeyer Stone Walls with cloth flag",
@@ -21312,6 +21525,766 @@
       "DARKM_OUTER_WALL_TOP_TILE2_SICKLE"
     ],
     "uvType": "MODEL_XZ"
+  },
+  {
+    "description": "Darkmeyer Houses - Walls",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_POOR_WALL_CORNER",
+      "DARKM_MIDDLE_WALL02",
+      "DARKM_POOR_WALL02",
+      "DARKM_POOR_WALL_CORNER_CRUMBLE01",
+      "DARKM_POOR_WALL_CORNER_CRUMBLE02",
+      "DARKM_MIDDLE_WALL_CORNER",
+      "DARKM_MIDDLE_ROOF_WALL01",
+      "DARKM_MIDDLE_ROOF_WALL_CORNER_OUTSIDE",
+      "DARKM_MIDDLE_ROOF_WALL_CORNER_INSIDE",
+      "DARKM_MIDDLE_WALL_CORNER_INSIDE",
+      "DARKM_MIDDLE_ROOF4_WALL06",
+      "DARKM_MIDDLE_ROOF4_WALL02",
+      "DARKM_MIDDLE_ROOF4_WALL03",
+      "DARKM_MIDDLE_ROOF4_WALL05",
+      "DARKM_MIDDLE_ROOF4_WALL09",
+      "DARKM_MIDDLE_ROOF4_WALL07",
+      "DARKM_MIDDLE_ROOF4_WALL11",
+      "DARKM_MIDDLE_ROOF4_WALL12",
+      "DARKM_MIDDLE_ROOF2_WALL04",
+      "DARKM_MIDDLE_ROOF2_WALL03",
+      "DARKM_MIDDLE_ROOF2_WALL02",
+      "DARKM_MIDDLE_ROOF2_WALL01",
+      "DARKM_MIDDLE_WALL_CORNER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65
+  },
+  {
+    "description": "Darkmeyer Houses - Rich Walls",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_RICH_WALL02",
+      "DARKM_RICH_WALL02_INSIDE_CORNER",
+      "DARKM_RICH_WALL02_INSIDE",
+      "DARKM_RICH_WALL02_INSIDE_PAINTING01",
+      "DARKM_RICH_WALL01",
+      "DARKM_RICH_WALL01_1B05PLAQUE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 256
+      },
+      {
+        "colors": "s == 1",
+        "baseMaterial": "GRUNGE_3_SMOOTH",
+        "uvType": "MODEL_XY"
+      },
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Houses - Walls with Banners",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_MIDDLE_ROOF4_WALL01",
+      "DARKM_MIDDLE_ROOF4_WALL04",
+      "DARKM_MIDDLE_ROOF4_WALL08",
+      "DARKM_MIDDLE_ROOF4_WALL10"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Houses - Roof Tiles",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_MIDDLE_ROOF3_WALL02",
+      "DARKM_MIDDLE_ROOF3_STRAIGHT02",
+      "DARKM_MIDDLE_ROOF3_WALL04",
+      "DARKM_MIDDLE_ROOF3_WALL03",
+      "DARKM_MIDDLE_ROOF3_WALL01",
+      "DARKM_MIDDLE_ROOF3_STRAIGHT01",
+      "DARKM_POOR_ROOF_MID_1",
+      "DARKM_POOR_ROOF_MID_2",
+      "DARKM_POOR_ROOF_MID_3",
+      "DARKM_POOR_ROOF_MID_4",
+      "DARKM_POOR_ROOF_MID_5",
+      "DARKM_POOR_ROOF_END_5",
+      "DARKM_POOR_ROOF_END_4",
+      "DARKM_POOR_ROOF_END_3",
+      "DARKM_POOR_ROOF_END_2",
+      "DARKM_POOR_ROOF_END_1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7
+  },
+  {
+    "description": "Darkmeyer Houses - Roof Middle",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_MIDDLE_ROOF3_TOP_MIDDLE_CORNER",
+      "DARKM_MIDDLE_ROOF3_TOP_MIDDLE_EDGE",
+      "DARKM_MIDDLE_ROOF3_TOP_MIDDLE_MID",
+      "DARKM_MIDDLE_ROOF3_TOP_MIDDLE_END",
+      "DARKM_MIDDLE_ROOF3_TOP_MIDDLE_CENTER"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Darkmeyer Houses - Windows",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "objectIds": [
+      "DARKM_MIDDLE_WALL01",
+      "DARKM_POOR_WALL01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.65,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Houses - Doors",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "objectIds": [
+      "DARKM_MIDDLE_DOOR_CLOSED",
+      "DARKM_MIDDLE_DOOR_OPEN",
+      "DARKM_POOR_DOOR_CLOSED",
+      "DARKM_POOR_DOOR_OPEN",
+      "DARKM_ARBORETUM_DOUBLEDOORL",
+      "DARKM_ARBORETUM_DOUBLEDOORR"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.2
+  },
+  {
+    "description": "Darkmeyer - Arboretum",
+    "objectIds": [
+      "DARKM_ARBORETUM_ENTRANCE_PILLAR_LEFT",
+      "DARKM_ARBORETUM_ENTRANCE_RIGHT",
+      "DARKM_ARBORETUM_ENTRANCE_LEFT",
+      "DARKM_ARBORETUM_WALL_RIGHT",
+      "DARKM_ARBORETUM_WALL_LEFT",
+      "DARKM_ARBORETUM_ENTRANCE_PILLAR_RIGHT",
+      "DARKM_ARBORETUM_WALL_2",
+      "DARKM_ARBORETUM_WALL",
+      "DARKM_ARBORETUM_ROOF01",
+      "DARKM_ARBORETUM_ROOF02",
+      "DARKM_ARBORETUM_ROOF03",
+      "DARKM_ARBORETUM_ROOF04",
+      "DARKM_ARBORETUM_ROOF05",
+      "DARKM_ARBORETUM_ROOF06",
+      "DARKM_ARBORETUM_ROOF07",
+      "DARKM_ARBORETUM_ROOF08",
+      "DARKM_ARBORETUM_ROOF09",
+      "DARKM_ARBORETUM_ROOF10",
+      "DARKM_ARBORETUM_ROOF11",
+      "DARKM_ARBORETUM_ROOF12",
+      "DARKM_ARBORETUM_ROOF13",
+      "DARKM_ARBORETUM_ROOF14",
+      "DARKM_ARBORETUM_ROOF15",
+      "DARKM_ARBORETUM_ROOF16",
+      "DARKM_ARBORETUM_ROOF17",
+      "DARKM_ARBORETUM_ROOF17",
+      "DARKM_ARBORETUM_ROOF18",
+      "DARKM_ARBORETUM_ROOF19",
+      "DARKM_ARBORETUM_ROOF20",
+      "DARKM_ARBORETUM_ROOF21",
+      "DARKM_ARBORETUM_ROOF22",
+      "DARKM_ARBORETUM_ROOF23",
+      "DARKM_ARBORETUM_ROOF24",
+      "DARKM_ARBORETUM_ROOF25",
+      "DARKM_ARBORETUM_ROOF26",
+      "DARKM_ARBORETUM_ROOF27",
+      "DARKM_ARBORETUM_ROOF28",
+      "DARKM_ARBORETUM_ROOF29",
+      "DARKM_ARBORETUM_ROOF30",
+      "DARKM_ARBORETUM_ROOF31",
+      "DARKM_ARBORETUM_ROOF32",
+      "DARKM_ARBORETUM_ROOF33",
+      "DARKM_ARBORETUM_ROOF34",
+      "DARKM_ARBORETUM_ROOF35",
+      "DARKM_ARBORETUM_ROOF36",
+      "DARKM_ARBORETUM_ROOF37",
+      "DARKM_ARBORETUM_ROOF38",
+      "DARKM_ARBORETUM_ROOF39"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0",
+        "baseMaterial": "GRUNGE_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.9
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum Shelves on Floor",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_ARBORETUM_SHELVES_FLOOR",
+      "MYQ5_ARBORETUM_SHELVES"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 256,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum Shelves Standing",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_ARBORETUM_SHELVES_STANDING"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationY": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum Blood Fountain",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "DARKM_FOUNTAIN"
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Floor with Roots or Dirt",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_01",
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_02",
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_03",
+      "DARKM_ARBORETUM_FLOOR_TILE_ROOT_04",
+      "DARKM_ARBORETUM_FLOOR_TILE_04",
+      "DARKM_ARBORETUM_FLOOR_TILE_03",
+      "DARKM_ARBORETUM_DEAD_PLANT_02",
+      "DARKM_ARBORETUM_FLOOR_TILE_02",
+      "DARKM_ARBORETUM_DEAD_PLANT_01",
+      "DARKM_RARE_TREES_ICON"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && l > 17",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Floor Tile",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "DARKM_ARBORETUM_FLOOR_TILE_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Floor with Rug",
+    "baseMaterial": "MARBLE_2",
+    "objectIds": [
+      "DARKM_ARBORETUM_RUG_CORNER",
+      "DARKM_ARBORETUM_RUG_STRAIGHT",
+      "DARKM_ARBORETUM_RUG_MIDDLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Blisterwood Tree",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "BLISTERWOOD_TREE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Arboretum - Valves",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvScale": 0.3,
+    "uvType": "BOX",
+    "objectIds": [
+      "MYQ5_VALVE_NORTH",
+      "MYQ5_VALVE_SOUTH"
+    ]
+  },
+  {
+    "description": "Darkmeyer Red Street Lights",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_STREET_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 1",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Metal Fences",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_INNER_WALL_FENCE",
+      "DARKM_INNER_WALL_FENCE_RAISED",
+      "DARKM_SMALL_FENCE",
+      "SEPULCHRE_OW_FENCE",
+      "SEPULCHRE_OW_GATE_OPEN_M",
+      "SEPULCHRE_OW_GATE_OPEN",
+      "DARKM_SMALL_FENCE_CORNER"
+    ]
+  },
+  {
+    "description": "Darkmeyer Fence Arch",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "DARKM_POOR_AREA_ARCHWAY_RIGHT",
+      "DARKM_POOR_AREA_ARCHWAY_LEFT",
+      "DARKM_MID_ARCHWAY_LEFT",
+      "DARKM_MID_ARCHWAY_TOP",
+      "DARKM_MID_ARCHWAY_RIGHT"
+    ]
+  },
+  {
+    "description": "Darkmeyer Prayer Altar",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DARKM_ALTAR",
+      "DARKM_ALTAR_CANDLES_01",
+      "DARKM_ALTAR_CANDLES_02",
+      "DARKM_ALTAR_CANDLES_03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 1",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer - Banner",
+    "baseMaterial": "CARPET_LIGHT",
+    "objectIds": [
+      "DARKM_HIGH_FLAG"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0 && l < 43",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Chest of Gold",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "DARKM_BANK_CHEST"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Coffin Bed",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DARKM_MIDDLE_DOUBLE_BED",
+      "DARKM_RICH_COFFIN_OPEN",
+      "DARKM_POOR_BED_SINGLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 14 || h == 9 || h == 48 || h == 0 && s == 1 || h == 3 && s == 1",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientationX": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Prison Bed",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_MIDDLE_PRISON_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s > 0 || h == 3",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Wardrobe",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DARKM_RICH_WARDROBE"
+    ]
+  },
+  {
+    "description": "Darkmeyer Trunk",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "DARKM_POOR_BED_TRUNK"
+    ]
+  },
+  {
+    "description": "Darkmeyer Chair and Sofa",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "DARKM_POOR_CHAIR",
+      "DARKM_RICH_SOFA",
+      "DARKM_RICH_CHAIR",
+      "DARKM_CASTLE_BENCH"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 3 || s == 4 || h == 48 || h == 0 && s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Tables",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "DARKM_MIDDLE_TABLE_1X1_LAMP",
+      "DARKM_MIDDLE_TABLE_1X1",
+      "DARKM_RICH_COFFEE_TABLE_BOOK",
+      "DARKM_MIDDLE_TABLE_2X1",
+      "BREW_BIGTABLE",
+      "DARKM_POOR_SHOP_COUNTER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_125"
+      },
+      {
+        "colors": "s == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Range",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_RICH_RANGE",
+      "DARKM_MIDDLE_RANGE",
+      "DARKM_POOR_RANGE",
+      "DARKM_POOR_POTTERY_OVEN"
+    ]
+  },
+  {
+    "description": "Darkmeyer Pottery Wheel",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_POOR_POTTERYWHEEL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_2"
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Sinks",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "DARKM_RICH_SINK",
+      "DARKM_MIDDLE_SINK",
+      "DARKM_POOR_SINK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 40",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Shelves with Assorted Items",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_MIDDLE_SHELF_GENERAL_01",
+      "DARKM_MIDDLE_SHELF_GENERAL_02",
+      "DARKM_MIDDLE_SHELF_STANDING_04",
+      "DARKM_MIDDLE_SHELF_STANDING_02",
+      "DARKM_MIDDLE_SHELF_STANDING_03",
+      "DARKM_MIDDLE_SHELF_STANDING_01",
+      "DARKM_MIDDLE_SHELF_KITCHEN_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Shelves Bottles or Glasses",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_MIDDLE_WINE_RACK_01",
+      "DARKM_INN_DRINKS_BAR_LEFT",
+      "DARKM_INN_DRINKS_BAR_MIDDLE2",
+      "DARKM_INN_DRINKS_BAR_MIDDLE",
+      "DARKM_INN_DRINKS_BAR_RIGHT",
+      "DARKM_INN_BAR_LEFT",
+      "DARKM_INN_BAR_MIDDLE",
+      "DARKM_INN_BAR_MIDDLE2",
+      "DARKM_INN_BAR_MIDDLE3",
+      "DARKM_INN_BAR_RIGHT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Cupboard Bottles or Glasses",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DARKM_POOR_CUPBOARD"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Shelves Sewing Machine",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DARKM_SEWING_MACHINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Planter with Plants",
+    "baseMaterial": "GRUNGE_3",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "windDisplacementModifier": -1,
+    "objectIds": [
+      "DARKM_RICH_PLANTER_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Caged Humans",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "DARKM_PRISONER_CAGED_01",
+      "DARKM_PRISONER_CAGED_02",
+      "DARKM_PRISONER_CAGED_03"
+    ]
+  },
+  {
+    "description": "Darkmeyer Corpse Cart",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "DARKM_CORPSE_CART",
+      "DARKM_CORPSE_CART_DIAGONAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 3 || h == 2",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Darkmeyer Auction Platform",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "DARKM_AUCTION_PLATFORM_1",
+      "DARKM_AUCTION_PLATFORM_2",
+      "DARKM_AUCTION_PLATFORM_3",
+      "DARKM_AUCTION_PLATFORM_4"
+    ]
+  },
+  {
+    "description": "Darkmeyer Auction Platform Stairs",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "DARKM_AUCTION_PLATFORM_STEPS"
+    ]
+  },
+  {
+    "description": "Darkmeyer Teleport Platform",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "objectIds": [
+      "TOB_SURFACE_TELEPORT_PAD_01",
+      "TOB_SURFACE_TELEPORT_PAD_02",
+      "TOB_SURFACE_TELEPORT_PAD_03",
+      "TOB_SURFACE_TELEPORT_PAD_04",
+      "TOB_SURFACE_TELEPORT_PAD_05",
+      "TOB_SURFACE_TELEPORT_PAD_06",
+      "TOB_SURFACE_TELEPORT_PAD_07",
+      "TOB_SURFACE_TELEPORT_PAD_08",
+      "TOB_SURFACE_TELEPORT_PAD_09",
+      "TOB_SURFACE_TELEPORT_PAD_10",
+      "TOB_SURFACE_TELEPORT_PAD_11",
+      "TOB_SURFACE_TELEPORT_PAD_12"
+    ]
   },
   {
     "description": "Vampyre Statue",
@@ -34429,7 +35402,11 @@
   {
     "description": "Wooden hat stand",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "FAI_VARROCK_HAT_STAND", "QIP_SHEEP_SHEARER_HATSTAND" ],
+    "objectIds": [
+      "FAI_VARROCK_HAT_STAND",
+      "QIP_SHEEP_SHEARER_HATSTAND",
+      "DARKM_HAT_STAND"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -36130,7 +37107,8 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "KR_SEERS_VILLAGE_GRANDFATHERCLOCK",
-      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK"
+      "FAI_VARROCK_POSH_GRANDFATHER_CLOCK",
+      "_100_DAVE_GRANDFATHERCLOCK"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
