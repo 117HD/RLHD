@@ -1753,8 +1753,12 @@ public class ZoneRenderer implements Renderer {
 		int worldViewId = worldView.getId();
 		if (worldViewId > -1) {
 			log.debug("WorldView despawn: {}", worldViewId);
-			subs[worldViewId].free();
-			subs[worldViewId] = null;
+			if (subs[worldViewId] == null) {
+				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
+			} else {
+				subs[worldViewId].free();
+				subs[worldViewId] = null;
+			}
 		}
 	}
 
