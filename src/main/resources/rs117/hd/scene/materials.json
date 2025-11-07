@@ -5,7 +5,8 @@
     "unlit": true
   },
   {
-    "name": "TRANSPARENT"
+    "name": "TRANSPARENT",
+    "hasTransparency": true
   },
   {
     "name": "LAVA_FLOW_MAP"
@@ -672,7 +673,8 @@
   },
   {
     "name": "LEAFY_ACACIA01",
-    "vanillaTextureIndex": 123
+    "vanillaTextureIndex": 123,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_STONEPINE01",
