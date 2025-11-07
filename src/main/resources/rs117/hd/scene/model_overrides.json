@@ -59150,7 +59150,7 @@
     "uvScale": 0.75,
     "colorOverrides": [
       {
-        "colors": "s == 0 || (h >= 30)",
+        "colors": "s == 0 || h >= 30",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvOrientation": 512,
