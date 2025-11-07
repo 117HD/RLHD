@@ -90,6 +90,7 @@ public class ModelOverride
 	public transient AhslPredicate ahslCondition;
 	public transient boolean hasTransparency;
 	public transient boolean mightHaveTransparency;
+	public transient boolean modifiesVanillaTexture;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
@@ -135,6 +136,8 @@ public class ModelOverride
 			windDisplacementModifier = clamp(windDisplacementModifier, -3, 3);
 		}
 
+		modifiesVanillaTexture = textureMaterial.modifiesVanillaTexture;
+
 		boolean disableTextures = !plugin.configModelTextures && !forceMaterialChanges;
 		if (disableTextures) {
 			if (baseMaterial.modifiesVanillaTexture)
@@ -158,9 +161,13 @@ public class ModelOverride
 			for (var entry : materialOverrides.entrySet()) {
 				var override = entry.getValue();
 				override.normalize(plugin);
+				if (disableTextures && override.modifiesVanillaTexture)
+					continue;
 				mightHaveTransparency |= override.mightHaveTransparency;
 				normalized.put(entry.getKey(), override);
 			}
+			if (normalized.isEmpty())
+				normalized = null;
 			materialOverrides = normalized;
 		}
 
@@ -235,7 +242,8 @@ public class ModelOverride
 			areaOverrides,
 			ahslCondition,
 			hasTransparency,
-			mightHaveTransparency
+			mightHaveTransparency,
+			modifiesVanillaTexture
 		);
 	}
 
