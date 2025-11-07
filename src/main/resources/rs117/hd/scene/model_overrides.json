@@ -60259,5 +60259,40 @@
         "baseMaterial": "PURE_BLACK"
       }
     ]
+  },
+  {
+    "description": "Karamja - Musa Point - Wooden - Plank Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "PIRATETREASURE_BAR_WALL",
+      "PIRATETREASURE_BAR_WALL_WINDOW"
+    ]
+  },
+  {
+    "description": "Karamja - Musa Point - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "PIRATETREASURE_WAREHOUSE_SHELVES"
+    ]
+  },
+  {
+    "description": "Karamja - Musa Point - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "PIRATETREASURE_WAREHOUSE_SHELVES2",
+      "PIRATETREASURE_WAREHOUSE_SHELVES3",
+      "PIRATETREASURE_WAREHOUSE_SHELVES4"
+    ]
   }
 ]
