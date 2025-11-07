@@ -23148,16 +23148,16 @@
     "description": "POH_PORTAL_NEXUS",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 600,
+    "strength": 16.5,
     "color": [
       31,
       225,
       255
     ],
     "type": "PULSE",
-    "duration": 1250,
-    "range": 20,
+    "duration": 2250,
+    "range": 8,
     "objectIds": [
       "LEAGUE_5_POH_SPIRIT_RING",
       "POH_NEXUS_PORTAL_1",
@@ -23414,11 +23414,11 @@
     "description": "SCRYING_POOL",
     "height": 170,
     "alignment": "CENTER",
-    "radius": 400,
-    "strength": 12.5,
+    "radius": 600,
+    "strength": 22.5,
     "color": [
-      144,
-      0,
+      120,
+      100,
       255
     ],
     "type": "PULSE",
@@ -23449,9 +23449,9 @@
   },
   {
     "description": "POH_PORTAL_ARCEUUS_LIBRARY",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       235,
@@ -23471,7 +23471,7 @@
     "description": "POH_PORTAL_DRAYNOR_MANOR",
     "height": 120,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       172,
@@ -23489,9 +23489,9 @@
   },
   {
     "description": "POH_PORTAL_BATTLEFRONT",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       79,
@@ -23509,7 +23509,7 @@
   },
   {
     "description": "POH_PORTAL_VARROCK",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 12.5,
@@ -23536,7 +23536,7 @@
   },
   {
     "description": "POH_PORTAL_MIND_ALTAR",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 12.5,
@@ -23556,7 +23556,7 @@
   },
   {
     "description": "POH_PORTAL_LUMBRIDGE",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
     "radius": 400,
     "strength": 12.5,
@@ -23576,9 +23576,9 @@
   },
   {
     "description": "POH_PORTAL_FALADOR",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       174,
@@ -23596,9 +23596,9 @@
   },
   {
     "description": "POH_PORTAL_SALVE_GRAVEYARD",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23616,9 +23616,9 @@
   },
   {
     "description": "POH_PORTAL_CAMELOT",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23639,9 +23639,9 @@
   },
   {
     "description": "POH_PORTAL_FENKENSTRAINS_CASTLE",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23659,9 +23659,9 @@
   },
   {
     "description": "POH_PORTAL_ARDOUGNE",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23679,9 +23679,9 @@
   },
   {
     "description": "POH_PORTAL_YANILLE",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       0,
@@ -23702,9 +23702,9 @@
   },
   {
     "description": "POH_PORTAL_SENNTISTEN",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       55,
@@ -23722,9 +23722,9 @@
   },
   {
     "description": "POH_PORTAL_WEST_ARDOUGNE",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23742,9 +23742,9 @@
   },
   {
     "description": "POH_PORTAL_MARIM",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23762,9 +23762,9 @@
   },
   {
     "description": "POH_PORTAL_HARMONY_ISLAND",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       153,
@@ -23782,9 +23782,9 @@
   },
   {
     "description": "POH_PORTAL_KHARYLL",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23802,9 +23802,9 @@
   },
   {
     "description": "POH_PORTAL_LUNAR_ISLE",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       219,
@@ -23822,9 +23822,9 @@
   },
   {
     "description": "POH_PORTAL_KOUREND",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       69,
@@ -23842,9 +23842,9 @@
   },
   {
     "description": "POH_PORTAL_CEMETERY",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       247,
@@ -23853,7 +23853,7 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 15,
     "objectIds": [
       "POH_PORTAL_MAG_CEMETERY",
       "POH_PORTAL_TEAK_CEMETERY",
@@ -23862,9 +23862,9 @@
   },
   {
     "description": "POH_PORTAL_WATERBIRTH_ISLE",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       122,
@@ -23873,7 +23873,7 @@
     ],
     "type": "PULSE",
     "duration": 4100,
-    "range": 20,
+    "range": 15,
     "objectIds": [
       "POH_PORTAL_MAG_WATERBIRTH",
       "POH_PORTAL_TEAK_WATERBIRTH",
@@ -23882,9 +23882,9 @@
   },
   {
     "description": "POH_PORTAL_BARROWS",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       202,
@@ -23902,9 +23902,9 @@
   },
   {
     "description": "POH_PORTAL_CARRALANGAR",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       226,
@@ -23922,9 +23922,9 @@
   },
   {
     "description": "POH_PORTAL_FISHING_GUILD",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       0,
@@ -23942,9 +23942,9 @@
   },
   {
     "description": "POH_PORTAL_CATHERBY",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -23962,9 +23962,9 @@
   },
   {
     "description": "POH_PORTAL_ANNAKARL",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       150,
@@ -23982,9 +23982,9 @@
   },
   {
     "description": "POH_PORTAL_APE_ATOLL_DUNGEON",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -24002,9 +24002,9 @@
   },
   {
     "description": "POH_PORTAL_GHORROCK",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       252,
@@ -24022,9 +24022,9 @@
   },
   {
     "description": "POH_PORTAL_TROLL_STRONGHOLD",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -24042,9 +24042,9 @@
   },
   {
     "description": "POH_PORTAL_WEISS",
-    "height": 120,
+    "offset": [ 0, 120, 75 ],
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       0,
@@ -24350,7 +24350,7 @@
     "description": "TELEPORT_PLATFORM",
     "height": 50,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       0,
@@ -24573,7 +24573,7 @@
     "description": "CORRUPTED_TELEPORT_PLATFORM",
     "height": 50,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
@@ -24591,7 +24591,7 @@
     "description": "CORRUPTED_GAUNTLET_TOOL_STORAGE",
     "height": 180,
     "alignment": "CENTER",
-    "radius": 400,
+    "radius": 520,
     "strength": 12.5,
     "color": [
       255,
