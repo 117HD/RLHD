@@ -12731,7 +12731,8 @@
       "FOSSIL_CRATE2",
       "MYQ4_PESTLE_CRATE",
       "MYQ4_EMPTY_CRATE",
-      "LUC2_MOV_CRATES_STACKED"
+      "LUC2_MOV_CRATES_STACKED",
+      "LANDS_END_HUNTER_CRATE"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -34215,7 +34216,8 @@
       "QIP_SHEEP_SHEARER_COOKINGSHELVESEMPTY",
       "BURGH_SHELVES",
       "BURGH_BOOKCASE3",
-      "SHELF_IMCANDO01_EMPTY01"
+      "SHELF_IMCANDO01_EMPTY01",
+      "RIMMINGTON_WAREHOUSE_SHELVES"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -34830,7 +34832,7 @@
     "uvOrientation": 1024
   },
   {
-    "description": "Remmington House Walls",
+    "description": "Rimmington House Walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "RIMMINGTON_POOR_WALLS", "RIMMINGTON_POOR_WALLS_INTERNAL", "RIMMINGTON_WOOD_WALLS_WINDOW_SINGLE01", "RIMMINGTON_WOOD_WALLS_WINDOW_DOUBLE01" ],
     "uvType": "BOX",
@@ -34840,7 +34842,7 @@
     "flatNormals": true
   },
   {
-    "description": "Remmington House Roof - Corner",
+    "description": "Rimmington House Roof - Corner",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "RIMMINGTON_POOR_ROOF_EDGE", "RIMMINGTON_POOR_ROOF_EDGE_2", "RIMMINGTON_POOR_ROOF_EDGE_2_MIRROR", "RIMMINGTON_POOR_ROOF_EDGE_MIRROR", "RIMMINGTON_ROOFTOP3_FLAT", "RIMMINGTON_ROOFTOP1_MIRROR", "RIMMINGTON_ROOFTOP2_MIRROR", "RIMMINGTON_ROOFTOP3_MIRROR", "RIMMINGTON_ROOFTOP4_MIRROR", "RIMMINGTON_ROOFTOPEDGE", "RIMMINGTON_ROOFTOPEDGE_MIRROR", "RIMMINGTON_ROOFTOP2X2", "RIMMINGTON_ROOFTOP2X2_MIRROR" ],
     "uvType": "BOX",
@@ -34849,7 +34851,7 @@
     "flatNormals": true
   },
   {
-    "description": "Remmington House Roof - some models have weird rotations",
+    "description": "Rimmington House Roof - some models have weird rotations",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "RIMMINGTON_POOR_ROOF_EXTERNALWALL1", "RIMMINGTON_POOR_ROOF1", "RIMMINGTON_POOR_ROOF_EXTERNALWALL1_MIRROR", "RIMMINGTON_POOR_ROOF_MID2", "RIMMINGTON_ROOFTOP1", "RIMMINGTON_ROOFTOP2", "RIMMINGTON_ROOFTOP2_FLAT", "RIMMINGTON_ROOFTOP3", "RIMMINGTON_ROOFTOP4", "RIMMINGTON_ROOFTOP_EXTERNALWALL1", "RIMMINGTON_ROOFTOP_EXTERNALWALL2", "RIMMINGTON_ROOFTOP_EXTERNALWALL3", "RIMMINGTON_ROOFTOP_EXTERNALWALL1_MIRROR", "RIMMINGTON_ROOFTOP_EXTERNALWALL2_MIRROR", "RIMMINGTON_ROOFTOP_EXTERNALWALL3_MIRROR", "RIMMINGTON_ROOFTOP4X4" ],
     "uvType": "BOX",
@@ -38390,7 +38392,9 @@
       "KR_BOOKCASE2",
       "KR_CAM_BOOKCASE",
       "FAI_VARROCK_RUNE_BOOKCASE",
-      "SLUG2_BOOKCASE"
+      "SLUG2_BOOKCASE",
+      "SARIM_BOOKCASE2_OFFSET",
+      "SARIM_BOOKCASE2_OFFSET_WESTFACING"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -60293,6 +60297,22 @@
       "PIRATETREASURE_WAREHOUSE_SHELVES2",
       "PIRATETREASURE_WAREHOUSE_SHELVES3",
       "PIRATETREASURE_WAREHOUSE_SHELVES4"
+    ]
+  },
+  {
+    "description": "Rimmington - Lands End - Wooden - Shelves - With Boxes",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "RIMMINGTON_WAREHOUSE_SHELVES3",
+      "RIMMINGTON_WAREHOUSE_SHELVES4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
     ]
   }
 ]
