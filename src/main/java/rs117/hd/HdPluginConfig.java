@@ -1112,7 +1112,7 @@ public interface HdPluginConfig extends Config
 	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
-		name = "Tiled lighting image store",
+		name = "Use tiled lighting image store",
 		description = "If you experience any issues with tiled lighting, disabling this <i>might</i> help.",
 		section = experimentalSettings
 	)
@@ -1128,6 +1128,19 @@ public interface HdPluginConfig extends Config
 		section = experimentalSettings
 	)
 	default boolean roofShadows() {
+		return false;
+	}
+
+	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";
+	@ConfigItem(
+		keyName = KEY_FORCE_INDIRECT_DRAW,
+		name = "Force indirect draw",
+		description =
+			"Indirect draw is currently only enabled automatically for Nvidia GPUs.<br>" +
+			"Enabling this <i>might</i> improve performance, if it is supported by your system.",
+		section = experimentalSettings
+	)
+	default boolean forceIndirectDraw() {
 		return false;
 	}
 

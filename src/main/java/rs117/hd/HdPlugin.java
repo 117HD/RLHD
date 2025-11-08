@@ -293,6 +293,8 @@ public class HdPlugin extends Plugin {
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
 
+	public static boolean SUPPORTS_INDIRECT_DRAW;
+
 	public Canvas canvas;
 	public AWTContext awtContext;
 	private Callback debugCallback;
@@ -487,6 +489,8 @@ public class HdPlugin extends Plugin {
 				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
+
+				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU || config.forceIndirectDraw();
 
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
@@ -1594,6 +1598,7 @@ public class HdPlugin extends Plugin {
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
+							case KEY_FORCE_INDIRECT_DRAW:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
