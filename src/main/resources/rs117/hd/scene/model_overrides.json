@@ -2677,6 +2677,26 @@
     ]
   },
   {
+    "description": "Tlati Rainforest Grass",
+    "baseMaterial": "GRAY_45",
+    "upwardsNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "objectIds": [
+      "GEMSTONE_GRASS_TALL1",
+      "GEMSTONE_GRASS_TALL2",
+      "GEMSTONE_GRASS_TALL3",
+      "GEMSTONE_GRASS_TALL4",
+      "TLATI_GRASS_TALL1",
+      "TLATI_GRASS_TALL2",
+      "TLATI_GRASS_TALL3",
+      "TLATI_GRASS_TALL4",
+      "TLATI_GRASS_VERYLONG_1",
+      "TLATI_GRASS_VERYLONG_2",
+      "TLATI_GRASS_VERYLONG_3"
+    ]
+  },
+  {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
@@ -18981,6 +19001,7 @@
     "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
@@ -18998,6 +19019,7 @@
       {
         "colors": "h > 10",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2,
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
         "uvScale": 0.25
@@ -19019,6 +19041,7 @@
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "KHARAZI_JUNGLE_TREE_LOGS",
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
@@ -19036,6 +19059,7 @@
       {
         "colors": [ "h == 5", "h == 4" ],
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2,
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "terrainVertexSnap": true,
@@ -19057,6 +19081,7 @@
   {
     "description": "Jungle Tree Small",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -2,
     "baseMaterial": "LEAF_VEINS",
     "objectIds": [
       "MM_BUSH_KHARAZI_JUNGLE_TREE2",
@@ -19069,6 +19094,7 @@
       {
         "colors": "h == 6 && s == 4",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "windDisplacementModifier": -2,
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "uvType": "BOX"
@@ -28334,6 +28360,7 @@
   {
     "description": "Magic Tree",
     "baseMaterial": "BARK_STONEPINE",
+    "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
       "POH_BIG_TREE7_4", "POH_SMALL_TREE7_5", "MAGIC_TREE_SEEDLING",
@@ -64494,5 +64521,68 @@
       "NIGHTMARE_GARDEN_TREE_03"
     ],
     "uvType": "BOX"
+  },
+  {
+    "description": "Tlati Rainforest - Tree - Large Tops",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "TLATI_TREE_TOP01",
+      "TLATI_TREE_MIDDLE01",
+      "TLATI_TREE_MIDDLE02",
+      "TLATI_TREE_TOP02",
+      "TLATI_TREE_TOP02",
+      "TLATI_TREE_MIDDLE04",
+      "TLATI_TREE_MIDDLE03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "GEOMETRY"
+      }
+    ]
+  },
+  {
+    "description": "Tlati Rainforest - Tree - Large Bottoms",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "terrainVertexSnap": true,
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "objectIds": [
+      "TLATI_TREE_BASE02",
+      "TLATI_TREE_BASE04",
+      "TLATI_TREE_BASE01",
+      "TLATI_TREE_BASE03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 11",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "terrainVertexSnap": true
+      }
+    ]
+  },
+  {
+    "description": "Tlati Rainforest - Tree - Small",
+    "baseMaterial": "BARK_STONEPINE_2",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "TLATI_TREE_SMALL01_DEFAULT01",
+      "TLATI_TREE_SMALL01_DEFAULT02",
+      "TLATI_TREE_SMALL01_DEFAULT03",
+      "TLATI_TREE_SMALL02_DEFAULT01",
+      "TLATI_TREE_SMALL02_DEFAULT02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 8",
+        "baseMaterial": "PLANT_GRUNGE_1",
+        "uvType": "GEOMETRY",
+        "terrainVertexSnap": true
+      }
+    ]
   }
 ]
