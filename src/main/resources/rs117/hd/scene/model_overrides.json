@@ -32613,7 +32613,7 @@
   },
   {
     "description": "Abyss - Rocks",
-    "baseMaterial": "ROCK_4",
+    "baseMaterial": "ROCK_3",
     "objectIds": [
       "RCU_ABYSSAL_BARRIER_TEETH1",
       "RCU_ABYSSAL_BARRIER_TEETH3"
@@ -32678,15 +32678,6 @@
     "uvOrientation": 256
   },
   {
-    "description": "Abyss - Object - Ground Tendrils - Small",
-    "baseMaterial": "GRUNGE_1",
-    "objectIds": [
-      "RCU_ABYSSAL_TENDRILS",
-      "RCU_ABYSSAL_TENDRILS_FALLOFF",
-      "RCU_ABYSSAL_TENDRILS_CORNER"
-    ]
-  },
-  {
     "description": "Abyss - Object - Popped Pustules - Small",
     "baseMaterial": "ABYSSAL_2",
     "objectIds": [
@@ -32718,7 +32709,7 @@
   },
   {
     "description": "Abyss - Peak Eye",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "GRAY_85",
     "objectIds": [
       "NEXUS_EYE_YELLOW_MIDDLE",
       "NEXUS_EYE_YELLOW_LEFT",
@@ -32726,23 +32717,14 @@
       "NEXUS_EYE_GREEN_MIDDLE",
       "NEXUS_EYE_GREEN_LEFT",
       "NEXUS_EYE_GREEN_RIGHT"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 1 || h == 7",
-        "baseMaterial": "ABYSSAL",
-        "uvType": "BOX",
-        "uvScale": 0.75
-      }
     ]
   },
   {
-    "description": "Abyssal Nexus - Green-tipped Tendrils & Pustules",
+    "description": "Abyssal Nexus - Boils",
     "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
     "objectIds": [
-      "NEXUS_TENDRILS",
-      "NEXUS_TENDRILS_CORNER",
-      "NEXUS_TENDRILS_FALLOFF",
       "NEXUS_BOIL_01",
       "NEXUS_BOIL_02",
       "NEXUS_BOIL_03",
@@ -32862,7 +32844,8 @@
       "NEXUS_STASIS_CHAMBER_39",
       "NEXUS_STASIS_CHAMBER_40",
       "NEXUS_ABYSS_WALL_CORNER_02",
-      "NEXUS_ABYSS_WALL_CORNER_03"
+      "NEXUS_ABYSS_WALL_CORNER_03",
+      "NEXUS_LUNG_CEILING"
     ],
     "uvType": "BOX",
     "uvScale": 0.65,
@@ -32870,6 +32853,10 @@
       {
         "colors": "h == 6 || h == 7",
         "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "s == 0 && l == 2",
+        "baseMaterial": "BLACK"
       }
     ]
   },
