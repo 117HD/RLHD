@@ -35383,8 +35383,8 @@
   {
     "description": "FIRE_OF_ETERNAL_LIGHT",
     "height": 300,
-    "radius": 850,
-    "strength": 5,
+    "radius": 650,
+    "strength": 20,
     "color": "#ffffff",
     "type": "FLICKER",
     "range": 10,
@@ -36853,8 +36853,8 @@
       175,
       255
     ],
-    "strength": 5,
-    "radius": 1000,
+    "strength": 3.5,
+    "radius": 750,
     "fadeInDuration": 150,
     "fadeOutDuration": 250,
     "offset": [ 0, 150, 20 ]
@@ -37096,7 +37096,7 @@
     "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ],
     "visibleFromOtherPlanes": true,
     "color": "#B1C9DB",
-    "strength": 15,
+    "strength": 10,
     "radius": 170,
     "fixedDespawnTime": true,
     "despawnDelay": 1950,
@@ -41688,6 +41688,14 @@
     "objectIds": [
       "NIGHTMARE_PLATFORM_LVL2_23"
     ]
+  },
+  {
+    "description": "GIANT_MOLE_LIGHT_SHAFT",
+    "objectIds": [ "MOLE_LIGHT_STREAMING" ],
+    "radius": 700,
+    "strength": 25,
+    "color": "#ffffff",
+    "offset": [ 0, 300, 0 ]
   },
   {
     "description": "Night at the Theatre crypt - Wall Torches",

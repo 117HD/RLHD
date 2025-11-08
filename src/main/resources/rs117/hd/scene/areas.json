@@ -1075,6 +1075,13 @@
     ]
   },
   {
+    "name": "AMETHYST_MINES",
+    "aabbs": [
+      [ 3001, 9705, 3015, 9727 ],
+      [ 3017, 9698, 3029, 9710 ]
+    ]
+  },
+  {
     "name": "MOTHERLODE_MINE",
     "aabbs": [
       [ 3710, 5631, 3775, 5695 ]
@@ -4825,6 +4832,19 @@
     "hideOtherAreas": true
   },
   {
+    "name": "KOUREND_CATACOMBS_DUNGEON_WATER",
+    "aabbs": [
+      [ 1601, 10054, 0, 1631, 10108, 0 ],
+      [ 1599, 10028, 0, 1617, 10053, 0 ],
+      [ 1600, 9985, 0, 1619, 10026, 0 ],
+      [ 1620, 9986, 0, 1636, 10004, 0 ],
+      [ 1666, 9985, 0, 1724, 9995, 0 ],
+      [ 1695, 9981, 0, 1708, 9984, 0 ],
+      [ 1673, 9998, 0, 1728, 10045, 0 ],
+      [ 1714, 9996, 0, 1719, 9997, 0 ]
+    ]
+  },
+  {
     "name": "KOUREND_CATACOMBS",
     "areas": [
       "KOUREND_CATACOMBS_DUNGEON",
@@ -6902,10 +6922,10 @@
   },
   {
     "name": "GIANT_MOLE_LAIR",
-    "regions": [
-      6992,
-      6993
-    ]
+    "aabbs": [
+      [ 1728, 5125, 1791, 5247 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "WATERBIRTH_DUNGEON_LEVEL_1",

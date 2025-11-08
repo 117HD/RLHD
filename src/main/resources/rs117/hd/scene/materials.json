@@ -1165,6 +1165,11 @@
     "specularGloss": 18.0
   },
   {
+    "name": "DIRT_1_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.1
+  },
+  {
     "name": "DIRT_1_VERT",
     "parent": "DIRT_1",
     "normalMap": null
@@ -1478,6 +1483,17 @@
     "brightness": 1.194
   },
   {
+    "name": "ROCK_3_VERY_LIGHT_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "textureScale": [
+      1,
+      1,
+      0.3
+    ],
+    "brightness": 1.45
+  },
+  {
     "name": "ROCK_3_SMOOTH",
     "parent": "ROCK_3",
     "displacementMap": null,
@@ -1707,6 +1723,11 @@
     "parent": "MARBLE_1",
     "specularStrength": 0.9,
     "specularGloss": 280.0
+  },
+  {
+    "name": "MARBLE_1_LIGHT",
+    "parent": "MARBLE_1",
+    "brightness": 1.15
   },
   {
     "name": "MARBLE_2_GLOSS",
@@ -2195,6 +2216,11 @@
     "name": "STONE_NORMALED_LIGHT",
     "parent": "STONE_NORMALED",
     "brightness": 1.122
+  },
+  {
+    "name": "STONE_NORMALED_VERY_LIGHT",
+    "parent": "STONE_NORMALED",
+    "brightness": 1.2
   },
   {
     "name": "STONE_LOWGLOSS",
