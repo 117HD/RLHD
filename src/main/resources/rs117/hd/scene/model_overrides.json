@@ -54,6 +54,10 @@
       "BLUE_DRAGON3",
       "BLUE_DRAGON4",
       "BLUE_DRAGON5",
+      "BLUE_DRAGON_TAPOYAUIK_1",
+      "BLUE_DRAGON_TAPOYAUIK_2",
+      "BABY_BLUE_DRAGON_TAPOYAUIK_1",
+      "BABY_BLUE_DRAGON_TAPOYAUIK_2",
       "BRONZE_DRAGON",
       "BRONZE_DRAGON_STRONGHOLDCAVE",
       "IRON_DRAGON",
@@ -6392,6 +6396,7 @@
       "ELID_DUGUPSOIL_3",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_1",
       "_100_OSMAN_AUTUMN_DUGUPSOIL_2",
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_3",
       "BARBASSAULT_DUGUPSOIL_RECRUITMENT_01",
       "BARBASSAULT_DUGUPSOIL_RECRUITMENT_02",
       "BARBASSAULT_DUGUPSOIL_RECRUITMENT_03",
@@ -6593,7 +6598,9 @@
       "TOG_CLIMBING_ROCKS_DOWN",
       "TOG_CLIMBING_ROCKS_UP",
       "STALAGMITES",
+      "DUGUPSOIL_MIDGREY1",
       "DUGUPSOIL_MIDGREY2",
+      "DUGUPSOIL_MIDGREY3",
       "_100_GOBLINDUGUPSOIL2_SOOT",
       "BURGH_ROCK_DUGUPSOIL_2",
       "_100_OSMAN_WINTER_DUGUPSOIL_2",
@@ -6866,6 +6873,14 @@
     "uvOrientation": 512
   },
   {
+    "description": "Hide triangle wall tops where they are not needed",
+    "areas": [ "TAVERLEY_DUNGEON" ],
+    "hide": true,
+    "objectIds": [
+      "CAVEWALL_TOP5"
+    ]
+  },
+  {
     "description": "ROUNDED_CAVE_WALLS",
     "baseMaterial": "GRUNGE_1",
     "objectIds": [
@@ -6944,6 +6959,22 @@
   {
     "description": "ROUNDED_CAVE_WALLS_TOP",
     "baseMaterial": "GRUNGE_1",
+    "objectIds": [
+      "CAVEWALL_TOP"
+    ]
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_TOP",
+    "areas": [ "TAVERLEY_DUNGEON_DARKEN_WALL_TOPS" ],
+    "baseMaterial": "GRUNGE_1_DARK",
+    "objectIds": [
+      "CAVEWALL_TOP"
+    ]
+  },
+  {
+    "description": "ROUNDED_CAVE_WALLS_TOP",
+    "areas": [ "TAVERLEY_DUNGEON_DARKEN_WALL_TOPS_DARKER" ],
+    "baseMaterial": "GRUNGE_1_VERY_DARK",
     "objectIds": [
       "CAVEWALL_TOP"
     ]
@@ -12577,20 +12608,6 @@
       "AREA_SANGUINE_MINE_ROCKS_SMALL_01",
       "AREA_SANGUINE_MINE_ROCKS_SMALL_02",
       "AREA_SANGUINE_MINE_ROCKS_SMALL_03",
-      "HUNTING_DEADFALL_BOULDER",
-      "HUNTING_DEADFALL_SETTING",
-      "HUNTING_DEADFALL_TRAP",
-      "HUNTING_DEADFALL_TRAPPING_SPIKE",
-      "HUNTING_DEADFALL_TRAPPING_SPIKE_M",
-      "HUNTING_DEADFALL_TRAPPING_SABRE",
-      "HUNTING_DEADFALL_TRAPPING_BARBED",
-      "HUNTING_DEADFALL_TRAPPING_BARBED_M",
-      "HUNTING_DEADFALL_TRAPPING_CLAW",
-      "HUNTING_DEADFALL_FULL_SPIKE",
-      "HUNTING_DEADFALL_FULL_SABRE",
-      "HUNTING_DEADFALL_FULL_BARBED",
-      "HUNTING_DEADFALL_FULL_CLAW",
-      "HUNTING_DEADFALL_FAILING",
       "BARROWS_MOUNTAINROCKS_1",
       "BARROWS_MOUNTAINROCKS_1_LARGE",
       "BARROWS_ROCKSLIDE1",
@@ -12630,9 +12647,6 @@
       "ROCKS_SEAROCK_BARE02",
       "QUEST_START_ICON_DIGSITE",
       "ROCKS_SEAROCK_BARE03",
-      "HUNTING_DEADFALL_TRAPPING_FENNEC",
-      "HUNTING_DEADFALL_TRAPPING_FENNEC_M",
-      "HUNTING_DEADFALL_FULL_FENNEC",
       "CASTLEWARS_STEPING_STONE"
     ],
     "uvType": "BOX",
@@ -13392,7 +13406,6 @@
       "FEVER_CRATE",
       "GOBLIN_OUTPOST_LARGE_CRATE",
       "GOBLIN_OUTPOST_LARGE_CRATES",
-      "DWARF_KELDAGRIM_WOODEN_BOXES_NO_OPS",
       "AIDE_CRATES_STACKED",
       "FAIRY_CRATE_2_BLUE",
       "FAIRY_CRATE_BLUE",
@@ -13634,7 +13647,8 @@
       "MCANNON_CRATES",
       "FAI_FALADOR_BOXES",
       "FAI_FALADOR_BOXES_NOOP",
-      "FAI_VARROCK_BOXES_NOOP"
+      "FAI_VARROCK_BOXES_NOOP",
+      "DWARF_KELDAGRIM_WOODEN_BOXES_NO_OPS"
     ],
     "uvType": "BOX",
     "flatNormals": true,
@@ -13994,9 +14008,6 @@
       "GIANTS_FOUNDRY_WALL_LVL0_CAVETOP01",
       "GIANTS_FOUNDRY_WALL_LVL1",
       "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP03",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04",
       "GIANTS_FOUNDRY_WALL_LVL0_LAVA",
       "GIANTS_FOUNDRY_WALL_LVL0_LAVA_CONNECT",
       "GIANTS_FOUNDRY_WALL_LVL0_LAVA_CONNECT_MIRROR",
@@ -14017,7 +14028,19 @@
       "GIANTS_FOUNDRY_WATERFALL_WALL_FADE03",
       "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE01",
       "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE02",
-      "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE03",
+      "GIANTS_FOUNDRY_WALL_LVL1_CAVETOP01_FADE03"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 256
+  },
+  {
+    "description": "Walls - Stone - Giants Foundry - Edge",
+    "baseMaterial": "ROCK_2",
+    "objectIds": [
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP03",
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04",
       "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE01",
       "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE02",
       "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE03",
@@ -14025,7 +14048,13 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
-    "uvOrientation": 256
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Ground Decoration - Flat Stone - Small - Uncolored",
@@ -25026,7 +25055,8 @@
       "BLAST_FURNACE_PIPES7",
       "BLAST_FURNACE_PIPES7_SMOKE",
       "BLAST_FURNACE_PIPES8",
-      "BLAST_FURNACE_PIPES9"
+      "BLAST_FURNACE_PIPES9",
+      "BLAST_FURNACE_PEDALS"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -25056,7 +25086,8 @@
     "baseMaterial": "METALLIC_1",
     "objectIds": [
       "BLAST_FURNACE_CONVEYER_COGS",
-      "BLAST_FURNACE_CONVEYER_COGS4"
+      "BLAST_FURNACE_CONVEYER_COGS4",
+      "BLAST_FURNACE_CONVEYER_COGS_BROKEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -25066,6 +25097,16 @@
         "baseMaterial": "GRUNGE_3"
       }
     ]
+  },
+  {
+    "description": "Blast Furnace - Ramp to Ore Belt",
+    "areas": [ "BLAST_FURNACE" ],
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvScale": 0.75,
+    "objectIds": [
+      "PIER_HILLSKEW"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Blast Furnace - Ore Belt",
@@ -25128,6 +25169,7 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
+    "uvOrientation": 512,
     "colorOverrides": [
       {
         "colors": [ "h == 6" ],
@@ -25146,7 +25188,7 @@
   },
   {
     "description": "Objects - Stone - Giants Foundry - Moulds",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "GRUNGE_3",
     "objectIds": [
       "GIANTS_FOUNDRY_MOLD_LIBRARY"
     ],
@@ -25163,17 +25205,28 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.7,
-    "uvOrientation": 128
+    "uvOrientation": 128,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7 || h == 4" ],
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Giants Foundry - Preform storage",
-    "baseMaterial": "ROCK_3",
+    "baseMaterial": "STONE_NORMALED",
     "objectIds": [
-      "GIANTS_FOUNDRY_PREFORM_STORAGE_EMPTY"
+      "GIANTS_FOUNDRY_PREFORM_STORAGE_EMPTY",
+      "GIANTS_FOUNDRY_PREFORM_STORAGE_FULL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 1024
+    "colorOverrides": [
+      {
+        "colors": [ "h < 4 || s == 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lavapool Rocks",
@@ -25231,7 +25284,13 @@
       "GIANTS_FOUNDRY_CRUCIBLE_FULL"
     ],
     "uvType": "BOX",
-    "uvScale": 0.5
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 4 && s == 7" ],
+        "baseMaterial": "GRAY_150"
+      }
+    ]
   },
   {
     "description": "Objects - Stone - Giants Foundry - Lava Rocks",
@@ -25486,7 +25545,13 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [ "GIANTS_FOUNDRY_CHEST" ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": [ "h == 6" ],
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
   },
   {
     "description": "Waterfalls - Replace Vanilla Droplets",
@@ -28257,10 +28322,10 @@
   },
   {
     "description": "Black overhead tiles",
-    "baseMaterial": "GRAY_25",
+    "baseMaterial": "PURE_BLACK",
     "objectIds": [ "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP01" ],
-    "uvType": "BOX",
-    "uvOrientation": 64
+    "castShadows": false,
+    "receiveShadows": false
   },
   {
     "description": "Throne of Weiss",
@@ -28427,7 +28492,8 @@
     "description": "Magic Tree Stump",
     "baseMaterial": "BARK_STONEPINE",
     "objectIds": [
-      "MAGIC_TREE_STUMP_NEW"
+      "MAGIC_TREE_STUMP_NEW",
+      "MAGIC_TREE_STUMP"
     ],
     "uvType": "BOX",
     "uvOrientation": 150,
@@ -30824,7 +30890,13 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.68,
-    "uvOrientationX": 400
+    "uvOrientationX": 400,
+    "colorOverrides": [
+      {
+        "colors": 2,
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Mourners Tunnels - Wall Caps - Dirt",
@@ -33228,7 +33300,7 @@
   {
     "description": "Objects - Stone - Stairs - Keldagrim Double Staircase",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "DWARF_KELDAGRIM_WIDE_STAIRS_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_UPPER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_UPPER", "DWARF_KELDAGRIM_FACTORY_STAIRS", "BLAST_FURNACE_STAIRS_UP" ],
+    "objectIds": [ "DWARF_KELDAGRIM_WIDE_STAIRS_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_UPPER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_LOWER", "DWARF_KELDAGRIM_WIDE_STAIRS_3_UPPER", "DWARF_KELDAGRIM_FACTORY_STAIRS" ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 512
@@ -33316,7 +33388,23 @@
       "BLAST_FURNACE_SINK"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.5
+  },
+  {
+    "description": "Blast Furnace - Objects - Stairs",
+    "baseMaterial": "STONE",
+    "objectIds": [
+      "BLAST_FURNACE_STAIRS_UP"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.25
+      }
+    ]
   },
   {
     "description": "Blast Furnace - Objects - Metallic - Scaffolding",
@@ -33532,8 +33620,20 @@
     "uvType": "MODEL_YZ"
   },
   {
+    "description": "Colossal Wyrm Agility Course - Stone Chips",
+    "baseMaterial": "DIRT_1",
+    "areas": [ "Colossal Wyrm Agility Course" ],
+    "objectIds": [
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_1",
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_2",
+      "_100_OSMAN_AUTUMN_DUGUPSOIL_3"
+    ],
+    "uvType": "WORLD_XZ",
+    "castShadows": false
+  },
+  {
     "description": "Colossal Wyrm Agility Course Hay Bale",
-    "baseMaterial": "HD_HAY",
+    "baseMaterial": "HD_HAY_BRIGHT",
     "objectIds": [
       "AVIUM_BUNDLE_HAY01_LANDING01",
       "AVIUM_BUNDLE_HAY01_FLOOR01",
@@ -33546,7 +33646,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Skull",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_ENTRANCE_JAW01",
       "SKELETON_WYRM01_ENTRANCE_JAW02",
@@ -33559,7 +33659,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Bones",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_RIB01",
       "SKELETON_WYRM01_RIB01_DIAGONAL",
@@ -33572,7 +33672,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Bones with Dirt",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_VERTEBRAE02",
       "SKELETON_WYRM01_VERTEBRAE03"
@@ -33588,7 +33688,7 @@
   },
   {
     "description": "Colossal Wyrm Agility Course Bones with Wood",
-    "baseMaterial": "BONE",
+    "baseMaterial": "BONE_DARK",
     "objectIds": [
       "SKELETON_WYRM01_VERTEBRAE04"
     ],
@@ -33610,11 +33710,20 @@
     "objectIds": [
       "SKEWSTEPS_WOOD01_OASIS",
       "WALLKIT_SCAFFOLD01_DECKING01",
-      "WALLKIT_SCAFFOLD01_DECKING03",
-      "VARLAMORE_WYRM_AGILITY_ADVANCED_BALANCE_1_TRIGGER"
+      "WALLKIT_SCAFFOLD01_DECKING03"
     ],
     "uvType": "BOX",
     "uvScale": 0.75
+  },
+  {
+    "description": "Colossal Wyrm Agility Course Scaffolding Floor - Angled",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "objectIds": [
+      "VARLAMORE_WYRM_AGILITY_ADVANCED_BALANCE_1_TRIGGER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 256
   },
   {
     "description": "Colossal Wyrm Agility Course Scaffolding",
@@ -35338,6 +35447,31 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.33
+  },
+  {
+    "description": "Hunter Deadfall Traps",
+    "baseMaterial": "ROCK_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "HUNTING_DEADFALL_BOULDER",
+      "HUNTING_DEADFALL_SETTING",
+      "HUNTING_DEADFALL_TRAP",
+      "HUNTING_DEADFALL_TRAPPING_SPIKE",
+      "HUNTING_DEADFALL_TRAPPING_SPIKE_M",
+      "HUNTING_DEADFALL_TRAPPING_SABRE",
+      "HUNTING_DEADFALL_TRAPPING_SABRE_M",
+      "HUNTING_DEADFALL_TRAPPING_BARBED",
+      "HUNTING_DEADFALL_TRAPPING_BARBED_M",
+      "HUNTING_DEADFALL_TRAPPING_CLAW",
+      "HUNTING_DEADFALL_TRAPPING_CLAW_M",
+      "HUNTING_DEADFALL_FULL_SPIKE",
+      "HUNTING_DEADFALL_FULL_SABRE",
+      "HUNTING_DEADFALL_FULL_BARBED",
+      "HUNTING_DEADFALL_FULL_CLAW",
+      "HUNTING_DEADFALL_FAILING",
+      "HUNTING_DEADFALL_TRAPPING_FENNEC",
+      "HUNTING_DEADFALL_TRAPPING_FENNEC_M",
+      "HUNTING_DEADFALL_FULL_FENNEC"
+    ]
   },
   {
     "description": "Bear Rugs",
@@ -47766,7 +47900,6 @@
       "NIGHTMARE_GARDEN_ISLAND_01",
       "NIGHTMARE_GARDEN_ISLAND_02",
       "NIGHTMARE_GARDEN_ISLAND_03"
-
     ],
     "colorOverrides": [
       {
@@ -47783,7 +47916,6 @@
   {
     "description": "Morytania Spider Cave",
     "baseMaterial": "GRASS_3",
-    "windDisplacementMode": "OBJECT",
     "uvOrientation": 512,
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -47797,12 +47929,16 @@
       {
         "description": "Web",
         "colors": "h == 10",
-        "baseMaterial": "GROUND_WEB_2_LIGHT"
+        "baseMaterial": "GROUND_WEB_2_LIGHT",
+        "windDisplacementMode": "OBJECT",
+        "windDisplacementModifier": -3
       },
       {
         "description": "Grass that needs upward normals to fix",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_50"
+        "baseMaterial": "GRAY_50",
+        "upwardsNormals": true,
+        "castShadows": false
       }
     ],
     "objectIds": [
