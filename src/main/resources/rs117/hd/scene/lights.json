@@ -20651,7 +20651,7 @@
   },
   {
     "description": "Varrock Lantern",
-    "excludeAreas": [ "VARROCK_HOUSES", "VARROCK_HOUSES_2" ],
+    "excludeAreas": [ "VARROCK_HOUSES", "VARROCK_HOUSES_2", "VARROCK_MOON_INN_FLOOR" ],
     "offset": [ -10, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
@@ -20687,7 +20687,7 @@
   },
   {
     "description": "Varrock Indoors Lantern Dim",
-    "areas": [ "VARROCK_HOUSES_2" ],
+    "areas": [ "VARROCK_HOUSES_2", "VARROCK_MOON_INN_FLOOR" ],
     "offset": [ 30, 155, 0 ],
     "radius": 250,
     "strength": 3.5,
@@ -20704,6 +20704,108 @@
     ]
   },
   {
+    "description": "Varrock Blue Moon Inn Light 1",
+    "worldX": 3225,
+    "worldY": 3399,
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 2",
+    "worldX": 3221,
+    "worldY": 3398,
+    "offset": [ 0, 300, 0 ],
+    "radius": 600,
+    "strength": 12,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 3",
+    "worldX": 3230,
+    "worldY": 3400,
+    "offset": [ -50, 300, 50 ],
+    "radius": 425,
+    "strength": 12,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Blue Moon Inn Light 4",
+    "worldX": 3231,
+    "worldY": 3395,
+    "offset": [ 0, 250, 0 ],
+    "radius": 350,
+    "strength": 12,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Weapon Shop Light 1",
+    "worldX": 3205,
+    "worldY": 3397,
+    "offset": [ -50, 300, 0 ],
+    "radius": 550,
+    "strength": 7,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Weapon Shop Light 2",
+    "worldX": 3207,
+    "worldY": 3401,
+    "offset": [ 50, 250, 0 ],
+    "radius": 450,
+    "strength": 6,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
     "description": "Varrock Clothes Shop Light 1",
     "worldX": 3205,
     "worldY": 3417,
@@ -20718,7 +20820,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Clothes Shop Light 2",
@@ -20735,7 +20837,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Mahogany Homes Light",
@@ -20752,7 +20854,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock West Bank Light 1",
@@ -20973,7 +21075,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Estate Agent Light 2",
@@ -20990,7 +21092,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Hair Dresser Light 1",
@@ -21007,7 +21109,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Hair Dresser Light 2",
@@ -21024,7 +21126,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Church Light 1",
@@ -21041,7 +21143,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Church Light 1",
@@ -21058,7 +21160,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock General Store Light 1",
@@ -21075,7 +21177,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock General Store Light 2",
@@ -21092,7 +21194,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Varrock Archery Store Light 1",
@@ -21109,39 +21211,7 @@
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20
-  },
-  {
-    "description": "Varrock Archery Store Light 2",
-    "worldX": 3237,
-    "worldY": 3425,
-    "offset": [ 0, 250, 0 ],
-    "radius": 300,
-    "strength": 8,
-    "visibleFromOtherPlanes": false,
-    "color": [
-      253.63197,
-      182.39111,
-      33.847893
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20
-  },
-  {
-    "description": "Varrock Dummy Training Room Light 1",
-    "offset": [ 0, 250, 0 ],
-    "radius": 300,
-    "strength": 8,
-    "visibleFromOtherPlanes": false,
-    "color": [
-      253.63197,
-      182.39111,
-      33.847893
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20
+    "range": 10
   },
   {
     "description": "Wall torch - Shades of Mort'ton & Morytania underground",
@@ -27459,6 +27529,42 @@
     "range": 20,
     "objectIds": [
       "RANGE"
+    ]
+  },
+  {
+    "description": "VARROCK_RANGE_1",
+    "offset": [ 0, 95, 60 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 5,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_RANGE_WITH_PIPE"
+    ]
+  },
+  {
+    "description": "VARROCK_RANGE_2",
+    "offset": [ 65, 50, -60 ],
+    "alignment": "CENTER",
+    "radius": 125,
+    "strength": 3,
+    "color": [
+      252,
+      100,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "FAI_VARROCK_RANGE_WITH_PIPE"
     ]
   },
   {
