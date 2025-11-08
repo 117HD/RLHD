@@ -46257,7 +46257,7 @@
     "colorOverrides": [
       {
         "description": "Books",
-        "colors": "h == 4 || (h == 6 && s == 1)",
+        "colors": "h == 4 || h == 6 && s == 1",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX"
       }
@@ -46350,7 +46350,7 @@
       {
         "description": "Runes",
         "baseMaterial": "STONE_NORMALED",
-        "colors": "s == 0 ",
+        "colors": "s == 0",
         "uvType": "BOX",
         "uvOrientation": 42,
         "uvScale": 0.5
