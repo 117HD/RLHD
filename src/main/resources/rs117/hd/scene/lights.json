@@ -20720,6 +20720,244 @@
     "range": 20
   },
   {
+    "description": "Varrock Mahogany Homes Light",
+    "worldX": 3238,
+    "worldY": 3487,
+    "offset": [ 0, 250, 0 ],
+    "radius": 475,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Varrock West Bank Light 1",
+    "worldX": 3255,
+    "worldY": 3418,
+    "offset": [ 0, 300, 0 ],
+    "radius": 425,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock West Bank Light 2",
+    "worldX": 3252,
+    "worldY": 3418,
+    "offset": [ 0, 300, 0 ],
+    "radius": 425,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock West Bank Light 3",
+    "worldX": 3254,
+    "worldY": 3421,
+    "offset": [ 65, 300, 0 ],
+    "radius": 425,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Museum Light 1",
+    "worldX": 3257,
+    "worldY": 3452,
+    "offset": [ 0, 350, 0 ],
+    "radius": 625,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Museum Light 2",
+    "worldX": 3263,
+    "worldY": 3452,
+    "offset": [ 0, 350, 0 ],
+    "radius": 625,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Museum Light 3",
+    "worldX": 3257,
+    "worldY": 3445,
+    "offset": [ 0, 350, 0 ],
+    "radius": 625,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Museum Light 4",
+    "worldX": 3263,
+    "worldY": 3445,
+    "offset": [ 0, 350, 0 ],
+    "radius": 625,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10
+  },
+  {
+    "description": "Varrock Estate Agent Light 1",
+    "worldX": 3240,
+    "worldY": 3475,
+    "offset": [ 0, 250, 0 ],
+    "radius": 425,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Varrock Estate Agent Light 2",
+    "worldX": 3240,
+    "worldY": 3471,
+    "offset": [ 0, 250, 0 ],
+    "radius": 274,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Varrock Hair Dresser Light 1",
+    "worldX": 3258,
+    "worldY": 3462,
+    "offset": [ -150, 300, 0 ],
+    "radius": 475,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Varrock Hair Dresser Light 2",
+    "worldX": 3255,
+    "worldY": 3461,
+    "offset": [ 0, 300, 100 ],
+    "radius": 375,
+    "strength": 8,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Varrock Church Light 1",
+    "worldX": 3255,
+    "worldY": 3481,
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 4,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
+    "description": "Varrock Church Light 1",
+    "worldX": 3255,
+    "worldY": 3475,
+    "offset": [ 0, 300, 0 ],
+    "radius": 500,
+    "strength": 4,
+    "visibleFromOtherPlanes": false,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20
+  },
+  {
     "description": "Varrock General Store Light 1",
     "worldX": 3216,
     "worldY": 3413,
