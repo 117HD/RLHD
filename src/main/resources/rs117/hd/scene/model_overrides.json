@@ -3810,18 +3810,24 @@
     ]
   },
   {
-    "description": "FALADOR_WALLS",
-    "baseMaterial": "GRUNGE_1",
+    "description": "Falador - Stone - Brick Walls",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.6,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Interior Wall",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       "FAI_VARROCK_CRUMBLY_WALL_JOINT",
       "FAI_FALADOR_WALLS",
-      "FAI_FALADOR_WALL_WINDOW",
       "FAI_FALADOR_INTERIOR_WALLS_FLIPPED",
-      "FAI_FALADOR_LOW_WALL",
-      "FAI_FALADOR_LOW_BRIDGE_WALL",
-      "FAI_FALADOR_LOW_WALL_INVERSE",
       "FAI_FALADOR_BATTLEMENTS_HILLSKEW",
       "FAI_FALADOR_BATTLEMENTS_TERMINATOR_RIGHT",
       "FAI_FALADOR_BATTLEMENTS_TERMINATOR_LEFT",
@@ -3833,7 +3839,6 @@
       "FAI_FALADOR_CASTLE_WALLS_HILLSKEW_TERMINATOR_LEFT",
       "FAI_FALADOR_CRENELATION_HILLSKEW",
       "FAI_FALADOR_INTERIOR_TALLER",
-      "FAI_FALADOR_INTERIOR_WINDOW_TALLER",
       "FAI_FALADOR_WALLS_TALLER",
       "FAI_FALADOR_WALL_WINDOW_TALLER",
       "FAI_FALADOR_ROOFKIT_SLATE",
@@ -3889,7 +3894,6 @@
       "FAI_INV_FALADOR_BATTLEMENTS",
       "FAI_WALL_FIX_ONE",
       "FAI_WALL_FIX_TWO",
-      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_RAILING",
       "FAI_FALADOR_PARTY_ROOM_WALL_BIG",
       "FAI_FALADOR_PARTY_ROOM_WALL",
       "FAI_FALADOR_PARTY_ROOM_WALL_CORNER",
@@ -3897,12 +3901,90 @@
       "FAI_FALADOR_PARTY_ROOM_WALL_END",
       "FAI_FALADOR_PARTY_ROOM_WALL_END_MIRROR",
       "FAI_FALADOR_PARTY_ROOM_DOUBLE_WALL",
+      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER",
+      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER_MIRROR",
+      "FAI_FALADOR_CASTLE_CRUMBLE_MID",
+      "FAI_FALADOR_INTERIOR_DOUBLE_TALLER",
+      "FAI_FALADOR_CRENELATION",
+      "FAI_FALADOR_ROOF_EDGE_SHORT1"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Glass - Wooden walls With Windows",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Window Frame",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stained Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_SHOP_WINDOW",
+      "FAI_FALADOR_SHOP_WINDOW_CROSSED"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Glass - Brick Walls - With Windows",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Interior Wall",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Window Frame",
+        "colors": "h == 6 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Stained Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_WALL_WINDOW",
+      "FAI_FALADOR_INTERIOR_WINDOW_TALLER",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM",
       "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW_BIG_TERM_MIRROR",
-      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW",
-      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER",
-      "FAI_FALADOR_PARTY_ROOM_BATTLEMENT_CORNER_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_WALL_WINDOW"
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - Main Gate",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -169
+      }
+    ],
+    "objectIds": [
       "FAI_WALLGATE_START",
       "FAI_WALLGATE_MID",
       "FAI_WALLGATE_END",
@@ -3914,10 +3996,101 @@
       "FAI_WALLGATE_END_MIRROR",
       "FAI_WALLGATE_TOP_START_MIRROR",
       "FAI_WALLGATE_TOP_MID_MIRROR",
-      "FAI_WALLGATE_TOP_END_MIRROR",
-      "FAI_FALADOR_CASTLE_CRUMBLE_MID"
+      "FAI_WALLGATE_TOP_END_MIRROR"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Masonry - White Knight Castle Bridge and low wall",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 600,
+    "objectIds": [
+      "FAI_FALADOR_LOW_WALL",
+      "FAI_FALADOR_LOW_BRIDGE_WALL",
+      "FAI_FALADOR_LOW_WALL_INVERSE",
+      "FAI_FALADOR_LOW_BRIDGE_WALL",
+      "FAI_FALADOR_BRIDGE",
+      "FAI_FALADOR_BRIDGE_HIGH"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - White Knight Armor",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "FAI_FALADOR_SUITOFAMOUR",
+      "SUITOFARMOUR_WHITEKNIGHT"
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - Shield Shop sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0 && l < 40",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -606
+      }
     ],
-    "flatNormals": true
+    "objectIds": [
+      "FAI_FALADOR_SHIELD_SHOP_SIGN"
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - pub sign",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0 && l < 40",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -606
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_RISING_SUN_PUB_SIGN"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Agility course hand holds",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "ROOFTOPS_FALADOR_WALLCLIMB",
+      "ROOFTOPS_FALADOR_HANDHOLDS"
+    ]
+  },
+  {
+    "description": "Falador - Stone - Agility course hand holds",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": "h == 5 && s == 3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "ROOFTOPS_FALADOR_TIGHTROPE_1",
+      "ROOFTOPS_FALADOR_TIGHTROPE_2",
+      "ROOFTOPS_FALADOR_TIGHTROPE_3",
+      "ROOFTOPS_FALADOR_TIGHTROPE_END",
+      "ROOFTOPS_FALADOR_TIGHTROPE_END_FORDIAGONAL"
+    ]
   },
   {
     "description": "STATUE_OF_SARADOMIN_1",
@@ -3943,6 +4116,79 @@
       "RD_SKEWSTEPS_CORNER"
     ],
     "flatNormals": true
+  },
+  {
+    "description": "Falador - Stone - Dirt - Plant - Rockery",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "terrainVertexSnap": true,
+    "colorOverrides": [
+      {
+        "description": "Dirt",
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_2",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Plant",
+        "colors": "h >= 8",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "ROCKERY",
+      "TREASUREFLOWER"
+    ]
+  },
+  {
+    "description": "Falador - Cloth - Metallic - Barbers Chair with mirror",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "seat and back",
+        "colors": "s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Mirror",
+        "colors": "h >= 37",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_BARBERS_CHAIR",
+      "FAI_FALADOR_BARBERS_CHAIR_BRIGHTER"
+    ]
+  },
+  {
+    "description": "Falador - Cloth - Metallic - Wall Mirror",
+    "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "description": "Mirror",
+        "colors": "h >= 37",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_BARBERS_MIRROR"
+    ]
+  },
+  {
+    "description": "Falador - Hair Clippings",
+    "baseMaterial": "CARPET",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [ "FAI_FALADOR_HAIRCLIPPINGS_SMALL" ]
   },
   {
     "description": "Al Kharid and PoH Whitewashed Walls",
@@ -9545,6 +9791,9 @@
   {
     "description": "Mining Guild statue",
     "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 299,
     "objectIds": [
       "STATUE_DWARFMINER"
     ]
@@ -9653,6 +9902,7 @@
       "BARROWS_LADDER",
       "FAI_FALADOR_LADDER",
       "FAI_FALADOR_LADDER_TOP",
+      "FAI_FALADOR_LADDER_TALLER",
       "KR_CAM_LADDERTOP",
       "KR_UNDERGROUND_JAIL_LADDER",
       "KR_BKF_BASEMENT_LADDER",
@@ -9769,7 +10019,9 @@
       "FAI_FALADOR_CASTLE_STAIRS",
       "FAI_FALADOR_CASTLE_STAIRSTOP",
       "FAI_FALADOR_STAIRS",
-      "FAI_FALADOR_STAIRSTOP"
+      "FAI_FALADOR_STAIRSTOP",
+      "FAI_FALADOR_OUTDOORSTAIRS_TOP",
+      "FAI_FALADOR_OUTDOORSTAIRS_BOTTOM"
     ],
     "uvType": "BOX",
     "uvScale": 0.9,
@@ -9779,20 +10031,97 @@
     "description": "Falador - Tables",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
+      "RD_WOODEN_TABLE",
       "FAI_FALADOR_WOODEN_TABLE_SMALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
   },
   {
+    "description": "Falador - Wooden - Metallic - Throne",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 268,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 42 && s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": -313
+      }
+    ],
+    "objectIds": [
+      "THRONE_WHITE"
+    ]
+  },
+  {
+    "description": "Falador - Cloth - Wooden - Standard",
+    "baseMaterial": "CARPET",
+    "uvType": "MODEL_XY",
+    "uvScale": 0.5,
+    "upwardsNormals": true,
+    "objectIds": [
+      "STANDARD1_ASGARNIA",
+      "STANDARD2_ASGARNIA"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5", "h == 4" ],
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Falador - Tables - Rotated",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "RD_WOODEN_TABLE",
-      "FAI_FALADOR_BIG_WOODEN_TABLE"
+      "FAI_FALADOR_BIG_WOODEN_TABLE",
+      "FAI_FALADOR_BANQUET_TABLE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Falador - Wooden - Matellic - Plank Bar with pumps",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 3",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      },
+      {
+        "description": "Handle",
+        "colors": "h == 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 404
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_BAR",
+      "FAI_FALADOR_BAR_NO_PUMPS"
+    ]
   },
   {
     "description": "Generic - Table Boxed Legs",
@@ -9806,6 +10135,332 @@
     ],
     "uvType": "BOX",
     "uvOrientation": 512
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Table Boxed Legs with Gem displays on it",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      },
+      {
+        "description": "Tools",
+        "colors": "h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_COUNTER"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Cupboard with glass doors and Gem displays in it",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Cupboard",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255 && h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_SMALL_TABLE_DISPLAY"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Cupboard with glass doors and Gem displays in it",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Cupboard",
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255 && h == 32",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_DISPLAY_CABIN"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Gem wall display",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      },
+      {
+        "description": "Golden metal",
+        "colors": "h == 8",
+        "baseMaterial": "METALLIC_1_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 192
+      },
+      {
+        "description": "Cushion",
+        "colors": "h == 49 || h == 50",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_GEM_WALL_DECOR"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Table Boxed Legs with maces on it",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_MACE_SHOP_TABLE"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Metal wall rack with maces",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 404,
+    "colorOverrides": [
+      {
+        "description": "Handles",
+        "colors": "s >= 1",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_MACE_FILLED_BARREL",
+      "FAI_FALADOR_MACE_RACK"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Paper - Party Room Pillars",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Streamers",
+        "colors": "h >= 39",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvOrientation": 192,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_SUPPORT"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Marble - Party Room staircase",
+    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Railing",
+        "colors": "h == 6 && s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_SMALL",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP_SMALL",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_MIRROR_SMALL",
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_TOP_SMALL_MIRROR"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Party Room railing",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_SPIRALSTAIRS_RAILING",
+      "FAI_FALADOR_PARTY_ROOM_BALCONY_RAILING"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Carpet - Party Room Curtains",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Curtain bar",
+        "colors": "h == 42",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_CURTAINS",
+      "FAI_FALADOR_PARTY_ROOM_CURTAINS_BIG"
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Glass - Party Room Bar",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bottles",
+        "colors": "h >= 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvOrientation": 313,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_BAR_CORNER",
+      "FAI_FALADOR_PARTY_ROOM_BAR_MIDDLE",
+      "FAI_FALADOR_PARTY_ROOM_BAR_CORNER_MIRROR",
+      "FAI_FALADOR_PARTY_ROOM_BAR_BACK_CORNER",
+      "FAI_FALADOR_PARTY_ROOM_BAR_BACK_MIDDLE",
+      "FAI_FALADOR_PARTY_ROOM_BAR_BACK_CORNER_MIRROR"
+
+    ]
+  },
+  {
+    "description": "Falador - Metallic - Wooden - Carpet - Party Room Table",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Table",
+        "colors": "h == 9",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "FAI_FALADOR_PARTY_ROOM_TABLE",
+      "FAI_FALADOR_PARTY_ROOM_TABLE_END",
+      "FAI_FALADOR_PARTY_ROOM_TABLE_END_MIRROR"
+    ]
   },
   {
     "description": "Wooden Benches - Plank",
@@ -10137,7 +10792,9 @@
   },
   {
     "description": "Candelabra - Wooden",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
     "objectIds": [
       "CANDLES"
     ],
@@ -10146,9 +10803,17 @@
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "colors": "h == 6",
         "uvType": "BOX",
-        "uvScale": 0.3,
+        "uvScale": 0.4,
         "uvOrientation": 512
       }
+    ]
+  },
+  {
+    "description": "Falador - Wooden - Metallic - Wall torch - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "FAI_FALADOR_TORCH",
+      "FAI_FALADOR_HOUSE_TORCH"
     ]
   },
   {
@@ -10744,7 +11409,7 @@
     "uvScale": 0.66,
     "colorOverrides": [
       {
-        "colors": "h == 7 && s > 2",
+        "colors": "(h == 7 && s > 2) || (h == 5 && s == 2)",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.8
@@ -11160,7 +11825,11 @@
       "FAI_FALADOR_OPENCASTLEDOUBLEDOORL",
       "FAI_FALADOR_OPENCASTLEDOUBLEDOORR",
       "FAI_FALADOR_CASTLEDOUBLEDOORL",
-      "FAI_FALADOR_CASTLEDOUBLEDOORR"
+      "FAI_FALADOR_CASTLEDOUBLEDOORR",
+      "FAI_FALADOR_DOUBLE_DOOR_L",
+      "FAI_FALADOR_DOUBLE_DOOR_L_OPEN",
+      "FAI_FALADOR_DOUBLE_DOOR_R",
+      "FAI_FALADOR_DOUBLE_DOOR_R_OPEN"
     ],
     "colorOverrides": [
       {
@@ -25898,7 +26567,8 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "FAI_VARROCK_WORKBENCH",
-      "FAI_DWARF_WORKBENCH"
+      "FAI_DWARF_WORKBENCH",
+      "FAI_FALADOR_WORKBENCH"
     ],
     "uvType": "BOX",
     "uvScale": 0.3,
@@ -37046,7 +37716,11 @@
   {
     "description": "Wooden shelves - Triple - Filled with Boxes",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [ "WAREHOUSE_SHELVES2", "WAREHOUSE_SHELVES3", "WAREHOUSE_SHELVES4" ],
+    "objectIds": [
+      "WAREHOUSE_SHELVES2",
+      "WAREHOUSE_SHELVES3",
+      "WAREHOUSE_SHELVES4"
+    ],
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientationX": 512,
@@ -37060,6 +37734,24 @@
       {
         "colors": 2,
         "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Falador - Light Wooden shelves - Triple - Filled with Boxes",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "FAI_FALADOR_WAREHOUSE_SHELVES",
+      "FAI_FALADOR_WAREHOUSE_SHELVES2"
+    ],
+    "uvType": "BOX",
+
+    "colorOverrides": [
+      {
+        "colors": [6417, 6418, 6419, 6420, 6445, 6451],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
       }
     ]
   },
@@ -37429,13 +38121,49 @@
     ]
   },
   {
-    "description": "Deaths office - Entrances - Falador",
-    "baseMaterial": "GRUNGE_3",
+    "description": "Deaths office - Entrances roof - Falador",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 2 && s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "FAI_DEATH_CRYPT_ENTRANCE_TOP"
+    ]
+  },
+  {
+    "description": "Deaths office - Entrances - Falador",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Wooden Door",
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "colors": "(h == 6 && s == 4)|| s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
     "objectIds": [
       "FAI_DEATH_CRYPT_ENTRANCE"
-    ],
-    "uvType": "BOX"
+    ]
   },
   {
     "description": "Deaths office - Walls - Stone",
@@ -39205,7 +39933,8 @@
       "FAI_VARROCK_SWORDCASE_SWORDS",
       "FAI_VARROCK_SWORDCASE_SHORTSWORDS",
       "FAI_VARROCK_SWORDCASE_SCIMITAR",
-      "FAI_VARROCK_BOWCASE"
+      "FAI_VARROCK_BOWCASE",
+      "CABINET_BOWS_OFFSET_FOR_FALADOR_CASTLE_WALL"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -39225,7 +39954,7 @@
       {
         "description": "Glass",
         "colors": "a < 255",
-        "baseMaterial": "GRAY_75"
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
@@ -39279,7 +40008,9 @@
       "GRANDTREE_CUPBOARDCLOSED",
       "GRANDTREE_CUPBOARDOPEN",
       "GARLICCUPBOARDSHUT",
-      "GARLICCUPBOARDOPEN"
+      "GARLICCUPBOARDOPEN",
+      "VYVINCUPBOARDSHUT",
+      "VYVINCUPBOARDOPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -39420,7 +40151,8 @@
       "FAI_VARROCK_RUNE_BOOKCASE",
       "SLUG2_BOOKCASE",
       "SARIM_BOOKCASE2_OFFSET",
-      "SARIM_BOOKCASE2_OFFSET_WESTFACING"
+      "SARIM_BOOKCASE2_OFFSET_WESTFACING",
+      "BOOKCASE_POLYBOOKS"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -43613,7 +44345,8 @@
     "description": "Double bed with red blanket with golden trim and bed frame",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "BIGBED3"
+      "BIGBED3",
+      "BIGBED4"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
