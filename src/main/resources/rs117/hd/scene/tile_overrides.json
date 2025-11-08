@@ -7813,6 +7813,15 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
+    "name": "ARAXXOR_CAVE_UNDER_ENTRANCE_FIX",
+    "area": "MORYTANIA",
+    "overlayIds": [193 ],
+    "blended": false,
+    "groundMaterial": "GROUND_WEBS",
+    "uvOrientation": 89,
+    "shiftLightness": 16
+  },
+  {
     "name": "ARAXXOR_WEB_OVERLAY",
     "area": "MORYTANIA_SPIDER_CAVES",
     "overlayIds": [
@@ -8489,6 +8498,24 @@
     "uvOrientation": 1024
   },
   {
+    "name": "SISTERHOOD_SANCTUARY_CAVE_OVERLAY",
+    "area": "SISTERHOOD_SANCTUARY",
+    "overlayIds": [
+      88
+    ],
+    "groundMaterial": "GRUNGE",
+    "uvScale": 1.1
+  },
+  {
+    "name": "SISTERHOOD_SANCTUARY_CAVE_UNDERLAY",
+    "area": "SISTERHOOD_SANCTUARY",
+    "underlayIds": [
+      98
+    ],
+    "groundMaterial": "EARTHEN_CAVE_FLOOR",
+    "uvScale": 1.1
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
@@ -8665,7 +8692,8 @@
       98,
       112,
       113,
-      121
+      121,
+      139
     ],
     "groundMaterial": "VARIED_DIRT"
   },

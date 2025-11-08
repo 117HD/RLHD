@@ -35520,6 +35520,23 @@
     ]
   },
   {
+    "description": "STOVE",
+    "offset": [ -49, 88, -40 ],
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SLP_STOVE"
+    ]
+  },
+  {
     "description": "SLEPE_WALL_CANDLE",
     "height": 220,
     "alignment": "CENTER",
@@ -41679,5 +41696,94 @@
     "strength": 25,
     "color": "#ffffff",
     "offset": [ 0, 300, 0 ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Wall Torches",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TOBQUEST_CRYPT_TORCH"
+    ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Candles - Large bunch",
+    "offset": [ -5, 82, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CANDLES_1"
+    ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Candles angled small bunch",
+    "offset": [ -5, 67, 33 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CANDLES_2"
+    ]
+  },
+  {
+    "description": "Ghosts Ahoy Range",
+    "height": 100,
+    "offset": [ 53, -53, 48 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "AHOY_RANGE"
+
+    ]
+  },
+  {
+    "description": "Sisterhood Sanctuary Ghost",
+    "height": 88,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "SANCTUARY_GHOST"
+    ]
   }
 ]

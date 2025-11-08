@@ -11198,7 +11198,9 @@
       "WALLKIT_CAMTORUM01_VAULT02",
       "DARKM_PRISON_BARS_WALL",
       "MYQ5_PRISONER_DOOR",
-      "MYQ5_PRISONER_DOOR_2"
+      "MYQ5_PRISONER_DOOR_2",
+      "TOBQUEST_CRYPT_INNER_DOOR",
+      "TOBQUEST_CRYPT_INNER_DOOR_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -11829,7 +11831,9 @@
       "FAI_FALADOR_DOUBLE_DOOR_L",
       "FAI_FALADOR_DOUBLE_DOOR_L_OPEN",
       "FAI_FALADOR_DOUBLE_DOOR_R",
-      "FAI_FALADOR_DOUBLE_DOOR_R_OPEN"
+      "FAI_FALADOR_DOUBLE_DOOR_R_OPEN",
+      "SLP_MANSION_DOOR_L",
+      "SLP_MANSION_DOOR_R"
     ],
     "colorOverrides": [
       {
@@ -12525,7 +12529,6 @@
       "ROYAL_ROCKS_1_LARGE",
       "ROYAL_MINING_STONE_PICKAXE",
       "ROYAL_MINING_STONE",
-      "ROYAL_SPADE",
       "ROYAL_ROCK1",
       "ROYAL_ROCK2",
       "ROYAL_ROCK3",
@@ -12598,6 +12601,31 @@
     ],
     "uvType": "BOX",
     "uvScale": 0.32
+  },
+  {
+    "description": "Ground Decoration - Dirt - Metallic - Wooden - Small - Uncolored - Shovel",
+    "baseMaterial": "ROCK_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.32,
+    "colorOverrides": [
+      {
+        "description": "Wood Handle",
+        "colors": "s >= 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Metal head",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": -189,
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "ROYAL_SPADE"
+    ]
   },
   {
     "description": "Objects - Climbing Rocks - Medium",
@@ -13376,6 +13404,9 @@
       "GRAB_EVIL_TWIN_CRATES2",
       "DEAL_CRATE2",
       "LUC2_DWT_CRATE1",
+      "SLP_CRATE",
+      "SLP_CRATE_NOOP",
+      "SANCTUARY_CRATE",
       "MOTD_CRATE",
       "DARKM_MIDDLE_CRATE_SINGLE"
     ],
@@ -14070,7 +14101,7 @@
       "MYQ5_WALL_CAVE_SUPPORT_LEFT",
       "MYQ5_WALL_CAVE_MID"
     ],
-    "uvType": "MODEL_XY",
+    "uvType": "BOX",
     "uvScale": 0.46,
     "uvOrientation": 300
   },
@@ -14122,7 +14153,8 @@
       "SANCTUARY_CAVE_CORNER",
       "SANCTUARY_CAVE_PLANE",
       "SANCTUARY_CAVE_WALL_FALLOFF",
-      "SANCTUARY_CAVE_WALL_FALLOFF_ALT"
+      "SANCTUARY_CAVE_WALL_FALLOFF_ALT",
+      "SANCTUARY_CAVE_PLANE_SB"
     ],
     "uvType": "BOX",
     "uvScale": 0.74
@@ -14965,7 +14997,6 @@
       "FISHING_CONTEST_WOODEN_TABLE",
       "FISHING_CONTEST_JACK_TABLE",
       "QUEST_LUNAR_TABLE_SMALL",
-      "CANAFIS_TABLE",
       "POG_WOODEN_TABLE"
     ],
     "uvType": "BOX"
@@ -14985,7 +15016,8 @@
     "description": "Objects - Wooden - Plank tables - Wide",
     "baseMaterial": "WOOD_GRAIN_2_WIDE",
     "objectIds": [
-      "_100_DAVE_BIG_WOODEN_TABLE"
+      "_100_DAVE_BIG_WOODEN_TABLE",
+      "CANAFIS_TABLE"
     ],
     "uvType": "BOX",
     "flatNormals": true
@@ -16246,7 +16278,10 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
       "FAI_VARROCK_POOR_CHAIR2",
-      "AREA_SANGUINE_GHETTO_CHAIR1"
+      "AREA_SANGUINE_GHETTO_CHAIR1",
+      "AREA_SANGUINE_GOTHIC_CHAIR1",
+      "AREA_SANGUINE_GOTHIC_CHAIR2",
+      "AREA_SANGUINE_GOTHIC_CHAIR5"
     ],
     "uvType": "BOX"
   },
@@ -21538,6 +21573,16 @@
     ]
   },
   {
+    "description": "Ver Sinhaza - Statue with plinth - Needs proper UV",
+    "baseMaterial": "MARBLE_1_GLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "TOBQUEST_CRYPT_LARGE_STATUE"
+    ]
+  },
+  {
     "description": "Ver Sinhaza - Metallic - Fences",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
@@ -21684,6 +21729,149 @@
     ]
   },
   {
+    "description": "Ver Sinhaza - Darkmeyer - Metal fence with red stone",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 89,
+    "colorOverrides": [
+      {
+        "colors": "h == 63 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "DARKM_SMALL_FENCE"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 89,
+    "objectIds": [
+      "TOBQUEST_CRYPT_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt Walls",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 89,
+    "objectIds": [
+      "TOBQUEST_CRYPT_WALL03"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "BOX",
+    "uvOrientation": -256,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CAVEFALLOFF_01",
+      "TOBQUEST_CRYPT_CAVEFALLOFF_02",
+      "TOBQUEST_CRYPT_CAVEFALLOFF_03",
+      "TOBQUEST_CRYPT_CAVEFALLOFF_04"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt Walls",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": -256,
+    "objectIds": [
+      "TOBQUEST_CRYPT_EDGE_HALF01",
+      "TOBQUEST_CRYPT_EDGE_HALF02",
+      "TOBQUEST_CRYPT_EDGE_HALF03",
+      "TOBQUEST_CRYPT_CORNER_INNER01",
+      "TOBQUEST_CRYPT_CORNER_INNER03"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Brick tiles",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 67,
+    "objectIds": [
+      "TOBQUEST_FLOOR_TILE02_02",
+      "TOBQUEST_FLOOR_TILE02_04",
+      "TOBQUEST_FLOOR_TILE02_06",
+      "TOBQUEST_FLOOR_TILE01_02",
+      "TOBQUEST_FLOOR_TILE01_03",
+      "TOBQUEST_FLOOR_TILE01_04",
+      "TOBQUEST_FLOOR_TILE01_05",
+      "TOBQUEST_FLOOR_TILE01_06"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Brick tiles with rocks",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 67,
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "ROCK_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "TOBQUEST_FLOOR_TILE03_01",
+      "TOBQUEST_FLOOR_TILE03_03",
+      "TOBQUEST_FLOOR_TILE03_04",
+      "TOBQUEST_FLOOR_TILE03_05",
+      "TOBQUEST_FLOOR_TILE03_06",
+      "TOBQUEST_FLOOR_TILE04_01",
+      "TOBQUEST_FLOOR_TILE04_03",
+      "TOBQUEST_FLOOR_TILE04_06",
+      "TOBQUEST_FLOOR_TILE_TRANS01",
+      "TOBQUEST_FLOOR_TILE_TRANS02"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Brick steps",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 579,
+    "objectIds": [
+      "TOBQUEST_CRYPT_SKEWSTEPS01",
+      "TOBQUEST_CRYPT_SKEWSTEPS02",
+      "TOBQUEST_CRYPT_SKEWSTEPS03",
+      "TOBQUEST_CRYPT_SKEWSTEPS04",
+      "TOBQUEST_CRYPT_SKEWSTEPS_CORNER01",
+      "TOBQUEST_CRYPT_SKEWSTEPS_CORNER03",
+      "TOBQUEST_CRYPT_SKEWSTEPS_CORNER04"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Stone - Night at the Theatre crypt - Coffin - DYNAMIC",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 828,
+    "objectIds": [
+      "TOBQUEST_CRYPT_COFFIN_OP"
+    ]
+  },
+  {
+    "description": "Ver Sinhaza - Metallic - Night at the Theatre crypt exit",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 289,
+    "objectIds": [
+      "TOBQUEST_CRYPT_EXIT"
+    ]
+  },
+  {
     "description": "Meiyerditch Poor Wooden Stairs",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -21720,7 +21908,8 @@
       "MYQ3_HIDEOUT_WALL",
       "MYQ3_HIDEOUT_WALL_FALLOFF",
       "MYQ3_HIDEOUT_WALL_FALLOFF_MIRROR",
-      "MYQ3_HIDEOUT_WALL_EXPOSED_PLASTER"
+      "MYQ3_HIDEOUT_WALL_EXPOSED_PLASTER",
+      "SANCTUARY_CAVE_WALL_UPPER_ALT"
     ],
     "uvType": "BOX",
     "uvOrientation": 1536,
@@ -21740,6 +21929,425 @@
     "baseMaterial": "DIRT_2",
     "objectIds": [
       "MYQ3_HIDEOUT_WALL_MUD"
+    ]
+  },
+  {
+    "description": "Meiyerditch - Slepe - Wooden Support Post",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 536,
+    "uvScale": 0.66,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "MYQ3_SUPPORT_PILLAR",
+      "MYQ3_SUPPORT_PILLAR_2",
+      "MYQ3_SUPPORT_PILLAR_MIDDLE"
+    ]
+  },
+  {
+    "description": "Slepe - Cloth - Stone - Cloth covered statue",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 536,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors":  "h == 6",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SLP_CLOTH_STATUE"
+    ]
+  },
+  {
+    "description": "Tile",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "MODEL_XZ",
+    "objectIds": [ "SANCTUARY_WALL_TALL_TOP" ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Walls",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Tile",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "MODEL_XZ"
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_WALL_BRICK",
+      "SANCTUARY_WALL_BRICK_M",
+      "SANCTUARY_WALL_UPPER",
+      "SANCTUARY_WALL_UPPER_M",
+      "SANCTUARY_WALL_PARAPET",
+      "SANCTUARY_WALL_PARAPET_M",
+      "SANCTUARY_CAVE",
+      "SANCTUARY_CAVE_ALT",
+      "SANCTUARY_WALL_UPPER_ARCH",
+      "SANCTUARY_WALL_OPEN",
+      "SANCTUARY_WALL_OPEN_M"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Inner Sanctuary Walls",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Stone",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_WALL",
+      "SANCTUARY_WALL_M",
+      "SANCTUARY_WALL_TALL"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Walls with webbing",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "cobwebs",
+        "colors": "a < 255",
+        "baseMaterial": "GROUND_WEB_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Tile",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_WALL_UPPER_WEB_A",
+      "SANCTUARY_WALL_UPPER_WEB_A_M",
+      "SANCTUARY_WALL_BRICK_WEBBY_A",
+      "SANCTUARY_WALL_BRICK_WEBBY_A_M",
+      "SANCTUARY_WALL_UPPER_WEB_B",
+      "SANCTUARY_WALL_UPPER_WEB_B_M",
+      "SANCTUARY_WALL_BRICK_WEBBY_B",
+      "SANCTUARY_WALL_BRICK_WEBBY_B_M"
+    ]
+  },
+  {
+    "description": "Wall Decoration Webbing",
+    "baseMaterial": "GROUND_WEB_1",
+    "uvType": "BOX",
+    "uvScale": 0.66,
+    "objectIds": [ "QIP_OBS_SPIDERWEBS" ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "edges",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_TILES_CORN",
+      "SANCTUARY_TILES_INCORN",
+      "SANCTUARY_TILES_SIDE",
+      "SANCTUARY_TILES"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles with carpet",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Carpet",
+        "colors": "(h == 0 && s == 2) || (h == 21 && l == 3)",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_RUG_CORNER",
+      "SANCTUARY_RUG_SIDE"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles with sigil",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "sigil",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1_GLOSS",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_ZAM_SIGIL_CORN_NE",
+      "SANCTUARY_ZAM_SIGIL_CORN_SE",
+      "SANCTUARY_ZAM_SIGIL_BOT",
+      "SANCTUARY_ZAM_SIGIL_CORN_SW",
+      "SANCTUARY_ZAM_SIGIL_CORN_NW",
+      "SANCTUARY_ZAM_SIGIL_TOP"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Sanctuary Tiles Broken",
+    "baseMaterial": "MARBLE_2_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "colorOverrides": [
+      {
+        "description": "Holes in tile",
+        "colors": "h == 21 && s == 1",
+        "baseMaterial": "GRAY_65"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_TILES_DMG1",
+      "SANCTUARY_TILES_DMG2"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Pillar",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.66,
+    "objectIds": [
+      "SANCTUARY_GATE_PILLAR",
+      "SANCTUARY_CAVE_WALL_PILLAR"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Statue carrying scythe",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 42,
+    "uvScale": 0.66,
+    "objectIds": [
+      "SANCTUARY_STATUE_TOP",
+      "SANCTUARY_STATUE_TOP_M"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Pillar - large",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_1",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_PILLAR_2X2",
+      "SANCTUARY_PILLAR_FADE_2X2"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary statue of armor",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "colors": "h == 0 && s == 2",
+        "baseMaterial": "MARBLE_2_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_STATUE_2X2"
+    ]
+  },
+  {
+    "description": "Slepe - Metallic - Sanctuary Coffin with Vampyre inside",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 89,
+    "uvScale": 0.66,
+    "colorOverrides": [
+      {
+        "description": "Marble",
+        "colors": "s >= 3",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.66
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_COFFIN_FLOOR",
+      "SANCTUARY_COFFIN_WALL",
+      "SANCTUARY_COFFIN_MOTHER"
+    ]
+  },
+  {
+    "description": "Slepe - Sisterhood Sanctuary - Metallic - Wooden - Plank - Chest with metallic banding",
+    "baseMaterial": "METALLIC_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -42,
+    "objectIds": [
+      "SANCTUARY_CHEST_1X1"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 600
+      }
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Brazier - DYNAMIC - ANIMATED",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "SANCTUARY_BRAZIER"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Scoreboard",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "NIGHTMARE_SCOREBOARD"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary brick edges",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 289,
+    "objectIds": [
+      "SANCTUARY_BRICK_FALLOFF"
+    ]
+  },
+  {
+    "description": "Slepe - Sanctuary - Wooden - Cloth - Table with tablecloth",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Tablecloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [ "SANCTUARY_TABLE_2X1" ]
+  },
+  {
+    "description": "Slepe - Sanctuary - Wooden - Cloth - Table with Books and vials on it",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "WOOD_GRAIN_3",
+        "baseMaterial": "CARPET",
+        "colors": "h == 21",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [ "SANCTUARY_TABLE_2X2" ]
+  },
+  {
+    "description": "Slepe - Sanctuary - Wooden - Cloth - Table with tablecloth",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Tablecloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0 && s == 2",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "description": "Cobwebs",
+        "baseMaterial": "GROUND_WEB_1",
+        "colors": "a < 255",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Cobwebs",
+        "baseMaterial": "LEAF_VEINS_LIGHT",
+        "colors": "h == 12",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_TABLE_MID",
+      "SANCTUARY_TABLE_END1",
+      "SANCTUARY_TABLE_END2"
     ]
   },
   {
@@ -22611,7 +23219,6 @@
     "objectIds": [
       "DARKM_INNER_WALL_FENCE",
       "DARKM_INNER_WALL_FENCE_RAISED",
-      "DARKM_SMALL_FENCE",
       "SEPULCHRE_OW_FENCE",
       "SEPULCHRE_OW_GATE_OPEN_M",
       "SEPULCHRE_OW_GATE_OPEN",
@@ -23271,10 +23878,20 @@
     "uvScale": 0.75
   },
   {
-    "description": "Morytania - Giant Tree",
+    "description": "Morytania - Giant Tree - Base",
     "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
     "objectIds": [
-      "SPOOKY_TREE_BASE",
+      "SPOOKY_TREE_BASE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Morytania - Giant Tree - upper",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
       "SPOOKY_TREE_MID",
       "SPOOKY_TREE_TOP"
     ],
@@ -27226,7 +27843,8 @@
       "GRIM_GIANT_SKELETON_2",
       "CORPSE2_NOBLOCK",
       "TAPO_SKELETON01",
-      "TAPO_SKELETON02"
+      "TAPO_SKELETON02",
+      "TOBQUEST_SKELETON_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -29749,7 +30367,9 @@
     "description": "Crombwick Maynor - Ground Object - Deck",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "SLEPE_DECKING"
+      "SLEPE_DECKING",
+      "SLEPE_DECKING_HALF1",
+      "SLEPE_DECKING_HALF2"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -36122,6 +36742,24 @@
     ]
   },
   {
+    "description": "Lumbridge Castle - Range",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "AHOY_RANGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 512,
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Lumbridge Castle - Kitchen Trapdoor",
     "baseMaterial": "METALLIC_1",
     "uvType": "BOX",
@@ -37885,6 +38523,14 @@
     "objectIds": [ "GALLOWS" ],
     "uvType": "BOX",
     "uvScale": 0.8
+  },
+  {
+    "description": "Gallows",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [ "DRAYNOR_GALLOWS_STEPS" ]
   },
   {
     "description": "Brown brick wall with metal spikes - Textured",
@@ -40227,7 +40873,9 @@
       "SLUG2_BOOKCASE",
       "SARIM_BOOKCASE2_OFFSET",
       "SARIM_BOOKCASE2_OFFSET_WESTFACING",
-      "BOOKCASE_POLYBOOKS"
+      "BOOKCASE_POLYBOOKS",
+      "CANAFIS_BOOKSHELF_OLD_SHORT",
+      "CANAFIS_BOOKSHELF_OLD_SHORT3"
     ],
     "uvType": "BOX",
     "colorOverrides": [
@@ -41222,7 +41870,8 @@
     "description": "Farming Guild - Water Barrel",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "FARM_WATER_BARREL1"
+      "FARM_WATER_BARREL1",
+      "FARM_WATER_BARREL2"
     ],
     "uvType": "BOX",
     "uvScale": 0.55,
@@ -46640,6 +47289,7 @@
       "NIGHTMARE_TOTEM_4_READY",
       "NIGHTMARE_TOTEM_4_CHARGED"
     ],
+    "objectIds": [ "SISTERHOOD_TOTEM" ],
     "colorOverrides": [
       {
         "colors": "h == 7 || h == 8 || h == 9 || h == 60",
@@ -46700,7 +47350,7 @@
       {
         "description": "Web",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
         "description": "Grass that needs upward normals to fix",
@@ -46722,11 +47372,52 @@
       {
         "description": "Web",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       }
     ],
     "objectIds": [
       "REGICIDE_TREE_DEAD1SWAMP_WEB"
+    ]
+  },
+  {
+    "description": "Morytania ground webs",
+    "baseMaterial": "GROUND_WEB_2_LIGHT",
+    "objectIds": [
+      "CAVEKIT_WEB01_FLOOR01",
+      "CAVEKIT_WEB01_FLOOR02",
+      "CAVEKIT_WEB01_FLOOR03",
+      "CAVEKIT_WEB01_FLOOR04",
+      "CAVEKIT_WEB01_FLOOR05",
+      "CAVEKIT_WEB01_FLOOR06"
+    ]
+  },
+  {
+    "description": "Araaxor Cave - Eggs",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      "EGGS_SPIDER02_DEFAULT",
+      "EGGS_SPIDER02_FALLOFF01",
+      "EGGS_SPIDER02_FALLOFF02",
+      "EGGS_SPIDER02_FALLOFF03",
+      "EGGS_SPIDER02_FALLOFF04",
+      "EGGS_SPIDER02_FALLOFF05",
+      "EGGS_SPIDER02_FALLOFF06"
+    ]
+  },
+  {
+    "description": "Araaxor Cave - Quest Egg sack",
+    "baseMaterial": "GRUNGE_3_SHINY",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
+      }
+    ],
+    "objectIds": [
+      "TOBQUEST_EGG_SAC_FULL",
+      "TOBQUEST_EGG_SAC_EMPTY"
     ]
   },
   {
@@ -46735,11 +47426,13 @@
     "uvOrientation": 188,
     "uvType": "BOX",
     "uvScale": 0.8,
+    "terrainVertexSnap": true,
     "colorOverrides": [
       {
         "description": "Grass",
         "colors": "h == 12",
-        "baseMaterial": "GRAY_50"
+        "baseMaterial": "GRAY_50",
+        "windDisplacementMode": "OBJECT"
       }
     ],
     "objectIds": [
@@ -46755,6 +47448,21 @@
     "uvScale": 0.8,
     "objectIds": [
       "BURGH_TREE_DEAD"
+    ]
+  },
+  {
+    "description": "Morytania - Hollow trees",
+    "baseMaterial": "BARK",
+    "uvOrientation": -189,
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "terrainVertexSnap": true,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "HOLLOW_TREE",
+      "HOLLOW_TREE_BIG",
+      "HOLLOW_TREE_STUMP",
+      "HOLLOW_TREE_STUMP_BIG"
     ]
   },
   {
@@ -46818,10 +47526,10 @@
       {
         "description": "Web backing",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
-        "description": "Web",
+        "description": "Exit",
         "colors": "h == 0",
         "baseMaterial": "NONE"
       }
@@ -46839,7 +47547,7 @@
       {
         "description": "Web backing",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       },
       {
         "description": "Web",
@@ -46863,7 +47571,7 @@
       {
         "description": "Web backing",
         "colors": "h == 10",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GROUND_WEB_2_LIGHT"
       }
     ],
     "objectIds": [
@@ -48025,6 +48733,150 @@
     ]
   },
   {
+    "description": "Canafis - Slepe - Wooden - Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h >= 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "CANAFIS_WALL_LVL1_VAR1",
+      "CANAFIS_WALL_VAR1",
+      "CANAFIS_WALL_VAR3",
+      "CANAFIS_WALL_WINDOW_END",
+      "CANAFIS_WALL_WINDOW_END2",
+      "CANAFIS_WALL_WINDOW",
+      "CANAFIS_WALL_LVL1_VAR2",
+      "CANAFIS_WALL_LVL1_VAR3",
+      "CANAFIS_WALL_LVL1_WINDOW",
+      "CANAFIS_WALL_LVL1_WINDOW_END",
+      "CANAFIS_WALL_LVL1_WINDOW_END2",
+      "CANAFIS_INSIDE_WALL_MID",
+      "CANAFIS_INSIDE_WALL_TRM",
+      "CANAFIS_INSIDE_WALL_TRM2",
+      "CANAFIS_INSIDE_WALL_CRNR",
+      "CANAFIS_WALL_LVL1_DOOR",
+      "CANAFIS_WALL_DOOR_OFFSET",
+      "CANAFIS_WALL_DOOR_RT_OFFSET",
+      "CANAFIS_WALL_LVL1_DOOR_RT",
+      "SLEPE_CHURCH_WALL_INNER"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Wooden - Stone Brick parapet",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 768,
+    "objectIds": [
+      "SLEPE_CHURCH_PARAPET",
+      "SLP_CHURCH_BUTTRESS"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Wooden - Stone Brick Walls",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 768
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "SLEPE_CHURCH_WALL_UPPER",
+      "SLEPE_CHURCH_WALL"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Wooden - Stone Brick Wall with window",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Bricks",
+        "colors": "a == 255 && h == 21",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 768
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Glass",
+        "colors": "a < 255",
+        "baseMaterial": "BLANK_GLOSS"
+      }
+    ],
+    "objectIds": [
+      "SLEPE_WALL_WINDOW",
+      "SLEPE_CHURCH_WINDOW",
+      "SLEPE_CHURCH_STAINED_UPP_LEFT",
+      "SLEPE_CHURCH_STAINED_UPP_RIGHT",
+      "SLEPE_CHURCH_STAINED_LOW_LEFT",
+      "SLEPE_CHURCH_STAINED_LOW_RIGHT"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -256,
+    "objectIds": [
+      "SLP_CHURCH_CRYPT_SOUTH_LADDER_DOWN",
+      "SLP_CHURCH_CRYPT_SOUTH_LADDER_EXIT",
+      "SANCTUARY_STAIRS_TALL_2X3",
+      "SANCTUARY_STAIRS_TALL_3X3"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Sanctuary Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Blood",
+        "colors": " h == 0 && s == 7",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "MODEL_XZ"
+      }
+    ],
+    "objectIds": [
+      "SANCTUARY_STATUE"
+    ]
+  },
+  {
     "description": "Decoration - Wall - Saradomin wall flag",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -48970,11 +49822,12 @@
     ]
   },
   {
-    "description": "Seers Village - Wooden - Church Organ",
+    "description": "Seers Village - Slepe - Metallic - Wooden - Church Organ",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
-      "KR_CHURCHORGAN"
+      "KR_CHURCHORGAN",
+      "SLP_CHURCHORGAN"
     ],
     "colorOverrides": [
       {
@@ -49750,6 +50603,25 @@
     "objectIds": [
       "ARCHEUSS_CHURCH_PEW_RIGHT",
       "ARCHEUUS_CHURCH_PEW_LEFT"
+    ]
+  },
+  {
+    "description": "Lovakengj - Slepe - Cloth - Wooden - Red Cushioned church pew with foot rest",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 3 && s == 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ],
+    "objectIds": [
+      "LOVAKENGJ_PEW"
     ]
   },
   {
@@ -63084,6 +63956,485 @@
         "colors": "a < 255",
         "baseMaterial": "NONE"
       }
+    ]
+  },
+  {
+    "description": "Objects - White Mushrooms - Small",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "MUSHROOM_DARK"
+    ]
+  },
+  {
+    "description": "Slepe - Post",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
+      "GOBLIN_OUTPOST_FORT_WALL",
+      "SLEPE_CHURCH_RAIL"
+    ]
+  },
+  {
+    "description": "Slepe - Cloth - Stone - Metallic - Paper - Altar",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "baseMaterial": "CARPET",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientation": 333,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Paper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 10",
+        "uvType": "BOX",
+        "uvOrientation": -333,
+        "uvScale": 0.8
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "s == 7",
+        "uvType": "BOX",
+        "uvOrientation": -89,
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SLP_CHURCH_ALTAR"
+    ]
+  },
+  {
+    "description": "Slepe - Cloth - Zamorak Carpet",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "objectIds": [
+      "SLP_CHURCH_RUGCORNER_OUTER",
+      "SLP_CHURCH_RUGSIDE",
+      "SLP_CHURCH_RUGSIDE_M"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Metallic - Chest with metallic banding",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "SLP_CHURCH_CHEST_CLOSED"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Metallic - Church door",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "WARGUILD_BASEMENT_DOOR_INACTIVE"
+    ]
+  },
+  {
+    "description": "Slepe - Marble - Zamorak Statue",
+    "baseMaterial": "MARBLE_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 313,
+    "objectIds": [
+      "SLP_STATUE_ZAMORAK"
+    ]
+  },
+  {
+    "description": "Slepe - Wooden - Wide staircase",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLP_POSH_STAIRS_UPPER",
+      "SLP_POSH_STAIRS_LOWER"
+    ]
+  },
+  {
+    "description": "Slepe - Canafis - Shelves with bottles and Tinderbox with bucket",
+    "baseMaterial": "GRUNGE_3",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 5" ],
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientationX": 512
+      },
+      {
+        "colors": [ "h == 0 && a == 255" ],
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "uvType": "BOX",
+        "uvScale": 0.25,
+        "uvOrientation": 117
+      }
+    ],
+    "objectIds": [
+      "CANAFIS_GENERAL_SHELF",
+      "CANAFIS_GENERAL_SHELF2",
+      "CANAFIS_GENERAL_STORE_SHELF3",
+      "CANAFIS_GENERAL_STORE_SHELF4"
+    ]
+  },
+  {
+    "description": "Slepe - Metallic - Stone - Stove",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 179,
+    "objectIds": [
+      "SLP_STOVE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Stone Platform",
+        "colors": "h == 10",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Morytania - Wooden - Nature Spirit Grotto Jump Planks",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "DRUIDJUMP_LOC"
+    ]
+  },
+  {
+    "description": "Morytania - Wooden - Nature Spirit Grotto",
+    "baseMaterial": "GRASS_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Roots",
+        "colors": "h == 13",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "GROTTO_DRUIDICSPIRIT"
+    ]
+  },
+  {
+    "description": "Morytania - Wooden - Nature Spirit Grotto",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "GROTTO_ROOF2_DRUIDICSPIRIT",
+      "GROTTO_ROOF1_DRUIDICSPIRIT"
+    ]
+  },
+  {
+    "description": "Mortania - Wooden - Nature Spirit Druid Bench",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [ "DRUID_BENCH" ]
+  },
+  {
+    "description": "Mortania - Rock - Nature Spirit rocks",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "objectIds": [
+      "STONEDISC_DS_SPIRIT",
+      "STONEDISC_DS_FAITH",
+      "STONEDISC_DS_NATURE"
+    ]
+  },
+  {
+    "description": "Mortania - Grass - Nature Spirit Grotto Walls",
+    "baseMaterial": "GRASS_1",
+    "uvType": "MODEL_XZ",
+    "uvScale": 0.9,
+    "objectIds": [
+      "UNDERGROUND_ROOTWALL_TOPLVL1_GREEN",
+      "UNDERGROUND_ROOTWALL_TOP2LVL1_GREEN"
+    ]
+  },
+  {
+    "description": "Mortania - Grass - Stone - Nature Spirit Grotto Walls with rocks",
+    "baseMaterial": "GRASS_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Rocks",
+        "colors": "s == 0",
+        "baseMaterial": "ROCK_5",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UNDERGROUND_ROOTWALL_DIAG_GREEN",
+      "UNDERGROUND_ROOTWALL_CORNER_GREEN",
+      "UNDERGROUND_ROOTWALL_SIDE4_GREEN",
+      "UNDERGROUND_ROOTWALL_DOOR_GREEN"
+    ]
+  },
+  {
+    "description": "Mortania - Grass - Stone - Vines- Nature Spirit Grotto Walls with rocks and vines",
+    "baseMaterial": "GRASS_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Vines",
+        "colors": "s == 5",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.33,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Rocks",
+        "colors": "s == 0",
+        "baseMaterial": "ROCK_5",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UNDERGROUND_ROOTWALL_SIDE_GREEN",
+      "UNDERGROUND_ROOTWALL_SIDE2_GREEN",
+      "UNDERGROUND_ROOTWALL_SIDE3_GREEN"
+    ]
+  },
+  {
+    "description": "Mortania - Rock - Dirt - Tree - Altar of Nature",
+    "baseMaterial": "ROCK_4",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Dirt Basin",
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 145
+      },
+      {
+        "description": "Tree",
+        "colors": "h == 6",
+        "baseMaterial": "BARK",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "DRUIDIC_SPIRIT_GROTTO_NATUREALTAR"
+    ]
+  },
+  {
+    "description": "Mortania - Quest Hespori object - DYNAMIC",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h <= 27 && s < 3",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "TOBQUEST_HESPORI_READY",
+      "TOBQUEST_HESPORI_DEAD"
+    ]
+  },
+  {
+    "description": "Mortania - Quest Hespori Seedling - DYNAMIC - ANIMATED",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 14",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "npcIds": [
+      "TOBQUEST_HESPORI_HEALER_INACTIVE"
+    ]
+  },
+  {
+    "description": "Slepe - Shayzien - Cloth - Wooden - Bed with lots of pillows and folded up blanket",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Bedframe",
+        "colors": "h == 10",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      }
+    ],
+    "objectIds": [
+      "SHAYZIEN_BIG_BED"
+    ]
+  },
+  {
+    "description": "Canafis - Slepe - Table with thread scissors and other items",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      },
+      {
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CANAFIS_CLOTHESEQUIP_TABLE"
+    ]
+  },
+  {
+    "description": "Canafis - Slepe - Table with thread scissors and other items",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h >= 7",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "SLP_BASEMENT_TRAPDOOR_OPEN"
+    ]
+  },
+  {
+    "description": "Canafis - Slepe - Table with thread scissors and other items",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.4,
+    "objectIds": [
+      "SLP_BASEMENT_EXIT"
+    ]
+  },
+  {
+    "description": "Dorgeshkaan - Slepe - Stone - Bench",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "DORGESH_MARKET_BENCH"
+    ]
+  },
+  {
+    "description": "Slepe - Crate with an overhanging top",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.8,
+    "objectIds": [
+      "MYQ3_BAR_END"
+    ]
+  },
+  {
+    "description": "Slepe - Stone - Large Gravestones",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "SLP_LARGE_GRAVE"
+    ]
+  },
+  {
+    "description": "Archeuus - Slepe - Stone - Gravestones",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "ARCHEUUS_GRAVE_06"
+    ]
+  },
+  {
+    "description": "Varrock - Slepe - Stone - Gravestones",
+    "baseMaterial": "CARPET",
+    "uvType": "BOX",
+    "uvOrientation": -272,
+    "colorOverrides": [
+      {
+        "description": "Flesh",
+        "colors": "h == 2",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_DEAD_RAT"
+    ]
+  },
+  {
+    "description": "Slepe - Plant - Red Flower",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvOrientation": -272,
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Stalk",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "ZIG_FLOWER_RED"
     ]
   }
 ]
