@@ -25,22 +25,33 @@
  */
 #version 330
 
+#include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
+
 layout (location = 0) in vec3 vPosition;
-layout (location = 1) in int vHsl;
-layout (location = 2) in vec3 vUv;
-layout (location = 3) in int vMaterialData;
-layout (location = 4) in vec4 vNormal;
+layout (location = 1) in vec3 vUv;
+layout (location = 2) in vec3 vNormal;
+layout (location = 3) in int vAlphaBiasHsl;
+layout (location = 4) in int vMaterialData;
+layout (location = 5) in int vTerrainData;
+layout (location = 6) in int vWorldViewId;
+layout (location = 7) in ivec2 vSceneBase;
 
 out vec3 gPosition;
-out int gHsl;
 out vec3 gUv;
+out vec3 gNormal;
+out int gAlphaBiasHsl;
 out int gMaterialData;
-out vec4 gNormal;
+out int gTerrainData;
+out int gWorldViewId;
 
 void main() {
-    gPosition = vPosition;
-    gHsl = vHsl;
+    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+    gPosition = vec3(getWorldViewProjection(vWorldViewId) * vec4(sceneOffset + vPosition, 1));
     gUv = vUv;
-    gMaterialData = vMaterialData;
     gNormal = vNormal;
+    gAlphaBiasHsl = vAlphaBiasHsl;
+    gMaterialData = vMaterialData;
+    gTerrainData = vTerrainData;
+    gWorldViewId = vWorldViewId;
 }

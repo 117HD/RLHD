@@ -16992,58 +16992,151 @@
     "range": 20
   },
   {
-    "description": "god wars dungeon\nlight from entrance",
-    "worldX": 2882,
-    "worldY": 5314,
-    "plane": 2,
-    "height": 300,
-    "alignment": "SOUTH",
-    "radius": 600,
-    "strength": 10,
+    "description": "God Wars Dungeon - Light from Entrance",
+    "objectIds": [
+      "GODWARS_BIG_HOLE_LIGHT"
+    ],
+    "height": 600,
+    "radius": 1200,
+    "strength": 5,
     "color": [
       255,
       255,
       255
     ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
+    "type": "FLICKER",
+    "range": 15
   },
   {
-    "description": "god wars dungeon\nlight from entrance",
-    "worldX": 2882,
-    "worldY": 5314,
-    "plane": 2,
-    "height": 50,
-    "alignment": "SOUTH",
-    "radius": 2000,
-    "strength": 7.5,
-    "color": [
-      255,
-      255,
-      255
+    "description": "God Wars Dungeon - Zamorak Altar Left",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
     ],
-    "type": "STATIC",
-    "duration": 1000,
-    "range": 0.2
-  },
-  {
-    "description": "zammy altar",
-    "worldX": 2937,
-    "worldY": 5324,
-    "plane": 2,
-    "height": 200,
-    "alignment": "NORTHEAST",
+    "offset": [ 120, 120, -30 ],
     "radius": 300,
-    "strength": 10,
+    "strength": 4,
     "color": [
       253.63197,
       182.39111,
       33.847893
     ],
-    "type": "STATIC",
+    "type": "FLICKER",
     "duration": 1000,
-    "range": 0.2
+    "range": 10
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar Middle",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "offset": [ 0, 120, -90 ],
+    "radius": 400,
+    "strength":8,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Altar Right",
+    "objectIds": [
+      "GODWARS_DUNGEON_ZAMORAK_ALTAR01"
+    ],
+    "offset": [ -120, 120, -20 ],
+    "radius": 300,
+    "strength": 4,
+    "color": [
+      253.63197,
+      182.39111,
+      33.847893
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 10
+  },
+  {
+    "description": "God Wars Dungeon - Zamorak Balfrug Magic Projectile",
+    "radius": 350,
+    "strength": 10,
+    "color": [
+      252,
+      120,
+      3
+    ],
+    "type": "STATIC",
+    "duration": 0,
+    "range": 0,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 250,
+    "projectileIds": [
+      "GODWARS_BLACK_DEMON_FIREBALL_PROJ"
+    ]
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Growler Magic Projectile",
+    "projectileIds": [ "GODWARS_LION_MAGIC_PROJ" ],
+    "offset": [ 0, 70, 0 ],
+    "radius": 450,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "color": [
+      100,
+      100,
+      200
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Saradomin Growler Magic Cast",
+    "graphicsObjectIds": [ "GODWARS_LION_MAGIC_SPOT" ],
+    "offset": [ 0, 120, 200 ],
+    "radius": 400,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "spawnDelay": 500,
+    "color": [
+      100,
+      100,
+      200
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Bandos Steelwill Magic Projectile",
+    "projectileIds": [ "GODWARS_GOBLIN2_SONIC_ATTK_PROJ" ],
+    "offset": [ 0, 20, 0 ],
+    "radius": 300,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "color": [
+      200,
+      255,
+      0
+    ],
+    "type": "STATIC"
+  },
+  {
+    "description": "God Wars Dungeon - Bandos Steelwill Magic Cast",
+    "graphicsObjectIds": [ "GODWARS_GOBLIN2_SONIC_ATTK_SPOT" ],
+    "offset": [ 0, 200, -20 ],
+    "radius": 400,
+    "strength": 6,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "spawnDelay": 500,
+    "color": [
+      200,
+      255,
+      0
+    ],
+    "type": "STATIC"
   },
   {
     "description": "ver sinhaza",
@@ -20868,7 +20961,8 @@
     "range": 20,
     "objectIds": [
       "FIREPLACECOOKINGPOT",
-      "FOSSIL_RANGE_BUILT"
+      "FOSSIL_RANGE_BUILT",
+      "PANDEMONIUM_COOKING_POT"
     ]
   },
   {
@@ -25901,11 +25995,11 @@
     ]
   },
   {
-    "description": "RED_STREET_LAMP",
+    "description": "DARKMEYER_RED_STREET_LAMP",
     "height": 250,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 5,
+    "radius": 400,
+    "strength": 15,
     "color": [
       255,
       100,
@@ -25916,6 +26010,186 @@
     "range": 20,
     "objectIds": [
       "DARKM_STREET_LAMP"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLES",
+    "height": 210,
+    "alignment": "CENTER",
+    "radius": 220,
+    "strength": 13,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_ALTAR_CANDLES_01",
+      "DARKM_ALTAR_CANDLES_02",
+      "DARKM_ALTAR_CANDLES_03"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_LEFT",
+    "offset": [ -140, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_RIGHT",
+    "offset": [ 140, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_RED_CANDLE_ALTAR_MIDDLE",
+    "offset": [ 0, 210, 50 ],
+    "radius": 200,
+    "strength": 8,
+    "color": [
+      255,
+      85,
+      85
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_ALTAR"
+    ]
+  },
+  {
+    "description": "DARKMEYER_TABLE_CANDLE",
+    "height": 40,
+    "radius": 250,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "DARKM_MIDDLE_TABLE_1X1_LAMP"
+    ],
+    "offset": [ 3, 90, 0 ]
+  },
+  {
+    "description": "DARKMEYER_COOKING_RANGE",
+    "height": 100,
+    "offset": [ 93, -20, -48 ],
+    "radius": 150,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_RICH_RANGE"
+    ]
+  },
+  {
+    "description": "DARKMEYER_COOKING_RANGE_2",
+    "height": 100,
+    "offset": [ 70, -20, -88 ],
+    "radius": 175,
+    "strength": 15,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_MIDDLE_RANGE",
+      "DARKM_POOR_RANGE"
+    ]
+  },
+  {
+    "description": "DARKMEYRE_PUB_LIGHT_1",
+    "worldX": 3598,
+    "worldY": 3390,
+    "plane": 0,
+    "offset": [ 150, 170, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.5,
+    "color": [
+      253,
+      140,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "DARKMEYRE_PUB_LIGHT_2",
+    "worldX": 3600,
+    "worldY": 3390,
+    "plane": 0,
+    "offset": [ 0, 170, 50 ],
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 8.5,
+    "color": [
+      253,
+      140,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 1000,
+    "range": 20
+  },
+  {
+    "description": "DARKMEYER_POTTERY_OVEN",
+    "height": 100,
+    "offset": [ 90, 55, 0 ],
+    "radius": 250,
+    "strength": 11,
+    "color": [
+      252,
+      75,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "DARKM_POOR_POTTERY_OVEN"
     ]
   },
   {
@@ -26746,11 +27020,10 @@
     ]
   },
   {
-    "description": "GWD_NEX_ANCIENT_BARRIER_RED",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
+    "description": "GWD_NEX_ANCIENT_BARRIER_RED_OUTSIDE",
+    "offset": [ 0, 200, 125 ],
+    "radius": 550,
+    "strength": 7.5,
     "color": [
       255,
       51,
@@ -26766,11 +27039,46 @@
     ]
   },
   {
-    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE",
-    "height": 100,
-    "alignment": "CENTER",
-    "radius": 700,
-    "strength": 10,
+    "description": "GWD_NEX_ANCIENT_BARRIER_RED_INSIDE",
+    "offset": [ 0, 200, -125 ],
+    "radius": 550,
+    "strength": 7.5,
+    "color": [
+      255,
+      51,
+      0
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 10,
+    "objectIds": [
+      "NEX_FIGHT_BARRIER_OUTER_BUSY",
+      "NEX_FIGHT_BARRIER_OUTER_PRIV_BUSY",
+      "NEX_FIGHT_BARRIER_INNER_BUSY"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE_INSIDE",
+    "offset": [ 0, 200, -125 ],
+    "radius": 550,
+    "strength": 7.5,
+    "color": [
+      183,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 2200,
+    "range": 10,
+    "objectIds": [
+      "NEX_FIGHT_BARRIER_OUTER", "NEX_FIGHT_BARRIER_OUTER_PRIV"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_BARRIER_PURPLE_OUTSIDE",
+    "offset": [ 0, 200, 125 ],
+    "radius": 550,
+    "strength": 7.5,
     "color": [
       183,
       0,
@@ -26799,6 +27107,60 @@
     "range": 10,
     "objectIds": [
       "NEX_FURNACE_NOOP"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE",
+    "offset": [ 0, 140, -160 ],
+    "radius": 400,
+    "strength": 12,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE_TOP",
+    "offset": [ 0, 280, 0 ],
+    "radius": 100,
+    "strength": 100,
+    "color": [
+      0,
+      200,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 0,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
+    ]
+  },
+  {
+    "description": "GWD_NEX_ANCIENT_FORGE_TOP_2",
+    "offset": [ 0, 375, 0 ],
+    "radius": 150,
+    "strength": 30,
+    "color": [
+      0,
+      200,
+      200
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "objectIds": [
+      "NEX_FURNACE_NOOP",
+      "NEX_FURNACE"
     ]
   },
   {
@@ -35032,9 +35394,9 @@
   },
   {
     "description": "FIRE_OF_UNSEASONAL_WARMTH",
-    "height": 300,
+    "height": 200,
     "radius": 750,
-    "strength": 2.5,
+    "strength": 7,
     "color": [ 255, 85, 0 ],
     "type": "FLICKER",
     "range": 10,

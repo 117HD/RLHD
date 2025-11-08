@@ -30,12 +30,14 @@ public enum ObjectType {
 	GroundDecor(22),
 	Unknown(-1);
 
+	public static final ObjectType[] TYPES = values();
+
 	public final int id;
 
 	public static ObjectType fromConfig(int config) {
 		int type = config & 0x3F;
-		if (type >= values().length - 1)
+		if (type >= TYPES.length - 1)
 			return Unknown;
-		return values()[type];
+		return TYPES[type];
 	}
 }

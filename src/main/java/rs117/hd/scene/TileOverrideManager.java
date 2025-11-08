@@ -18,7 +18,6 @@ import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
@@ -26,7 +25,6 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.localToWorld;
 import static rs117.hd.utils.ResourcePath.path;
@@ -45,9 +43,6 @@ public class TileOverrideManager {
 
 	@Inject
 	private HdPlugin plugin;
-
-	@Inject
-	private ModelPusher modelPusher;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
 	private boolean trackReplacements;
@@ -128,8 +123,8 @@ public class TileOverrideManager {
 		TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
 
 		if (reloadScene) {
-			modelPusher.clearModelCache();
-			plugin.reuploadScene();
+			plugin.renderer.clearCaches();
+			plugin.renderer.reloadScene();
 		}
 	}
 
@@ -217,8 +212,8 @@ public class TileOverrideManager {
 	public TileOverride getOverride(SceneContext sceneContext, @Nonnull Tile tile, @Nonnull int[] worldPos, int... ids) {
 		if (ids.length == 0) {
 			var pos = tile.getSceneLocation();
-			int x = pos.getX() + SCENE_OFFSET;
-			int y = pos.getY() + SCENE_OFFSET;
+			int x = pos.getX() + sceneContext.sceneOffset;
+			int y = pos.getY() + sceneContext.sceneOffset;
 			int z = tile.getRenderLevel();
 			int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[z][x][y];
 			int underlayId = sceneContext.scene.getUnderlayIds()[z][x][y];

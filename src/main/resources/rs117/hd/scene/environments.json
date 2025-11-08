@@ -475,7 +475,9 @@
     "fogDepth": 40,
     "groundFogStart": -150,
     "groundFogEnd": -350,
-    "groundFogOpacity": 0.5
+    "groundFogOpacity": 0.5,
+    "windSpeed": 10,
+    "windStrength": 30
   },
   {
     "area": "MEIYERDITCH",
