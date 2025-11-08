@@ -10940,6 +10940,14 @@
     ]
   },
   {
+    "description": "Wattle Style House (Ardougne, Digsite, Hosidius) - Wooden overhang",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "objectIds": [ "TIMBER_OVERHANG" ]
+  },
+  {
     "description": "Candelabra",
     "baseMaterial": "METALLIC_1_HIGHGLOSS",
     "objectIds": [
