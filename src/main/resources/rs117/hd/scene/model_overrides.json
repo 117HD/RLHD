@@ -2268,18 +2268,11 @@
     "windDisplacementMode": "OBJECT",
     "objectIds": [
       "SOTE_FLOWERS",
-      "DAISYS",
       "ONION",
       "AVIUM_ONION01",
       "AVIUM_ONION02",
       "RAREFLOWER_BLUE",
-      "RAREFLOWERS_BLUE",
-      "BLUEFLOWER",
-      "REDFLOWER",
-      "TULIPS",
       "FLAX",
-      "RAREFLOWER_1",
-      "RAREFLOWERS_1",
       "FLOWERBED1",
       "FLOWERBED_RED",
       "FLOWERBED_YELLOW",
@@ -2291,7 +2284,6 @@
       "BULLRUSHES4",
       "BULLRUSHES5",
       "THISTLE",
-      "POTATO",
       "NETTLES",
       "NETTLES1",
       "NETTLES2",
@@ -2376,7 +2368,6 @@
     "windDisplacementMode": "VERTEX",
     "objectIds": [
       "SUNFLOWER",
-      "SUNFLOWERS",
       "FAIRY2_BULLRUSH_FALLOFF",
       "FAIRY2_BULLRUSH_SMALL",
       "FAIRY2_BULLRUSH_TILE",
@@ -53656,6 +53647,15 @@
     "uvOrientation": 179
   },
   {
+    "description": "Generic - Potato Plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [ "POTATO" ]
+  },
+  {
     "description": "Hosidius - White brick walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -65460,6 +65460,62 @@
         "baseMaterial": "NONE",
         "depthBias": 110
       }
+    ]
+  },
+  {
+    "description": "Ardougne - Red, Yellow, and blue flowers and tulips",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "RAREFLOWER_1",
+      "RAREFLOWERS_1",
+      "RAREFLOWERS_BLUE",
+      "TULIPS"
+    ]
+  },
+  {
+    "description": "Ardougne - Sunflowers",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "VERTEX",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "SUNFLOWERS"
+    ]
+  },
+  {
+    "description": "Ardougne - small  Red and blue flowers and Daisies",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "BLUEFLOWER",
+      "REDFLOWER",
+      "DAISYS"
     ]
   }
 ]
