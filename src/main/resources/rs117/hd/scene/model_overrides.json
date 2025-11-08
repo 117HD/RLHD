@@ -2787,7 +2787,8 @@
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
-      "GRASS_LIGHT_3"
+      "GRASS_LIGHT_3",
+      "GRASS_2"
     ]
   },
   {
@@ -16599,13 +16600,14 @@
   {
     "description": "Objects - Stone - Large Gravestone - Large",
     "baseMaterial": "STONE_SEMIGLOSS",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "flatNormals": true,
+    "terrainVertexSnap": true,
     "objectIds": [
       "LARGEGRAVE",
       "GLARIALS_TOMBSTONE_WATERFALL_QUEST"
-    ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false,
-    "flatNormals": true
+    ]
   },
   {
     "description": "Ardougne - Walls - Stone - Zoo Fence",
@@ -20950,7 +20952,8 @@
       "SACK_FULL",
       "SACK_GRAIN01_FULL01",
       "SOTE_LLETYA_SACK_FULL",
-      "VC_SACK_FULL_DWARF"
+      "VC_SACK_FULL_DWARF",
+      "MOURNING_SACK_FULL_BURNT"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -26445,13 +26448,14 @@
   {
     "description": "Objects - Concrete - Gravestone",
     "textureMaterial": "HD_CONCRETE",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65,
+    "terrainVertexSnap": true,
     "objectIds": [
       "GRAVESTONE1",
       "GRAVESTONE2"
-    ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false,
-    "uvScale": 0.65
+    ]
   },
   {
     "description": "Objects - Concrete - Salve Tunnel Entrance",
