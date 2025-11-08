@@ -66,7 +66,8 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "General",
 		description = "General settings",
-		position = 0
+		position = 0,
+		closedByDefault = true
 	)
 	String generalSettings = "generalSettings";
 
@@ -157,7 +158,7 @@ public interface HdPluginConfig extends Config
 		section = generalSettings
 	)
 	default UIScalingMode uiScalingMode() {
-		return UIScalingMode.LINEAR;
+		return UIScalingMode.HYBRID;
 	}
 
 	String KEY_ANISOTROPIC_FILTERING_LEVEL = "anisotropicFilteringLevel";
@@ -337,43 +338,14 @@ public interface HdPluginConfig extends Config
 		return 100;
 	}
 
-	@ConfigItem(
-		keyName = "useLegacyBrightness",
-		name = "Enable Legacy Brightness",
-		description =
-			"Whether the legacy brightness option below should be applied.<br>" +
-			"We recommend leaving this disabled.",
-		position = 17,
-		section = generalSettings
-	)
-	default boolean useLegacyBrightness() {
-		return false;
-	}
-
-	@Range(
-		min = 1,
-		max = 50
-	)
-	@ConfigItem(
-		keyName = "brightness2",
-		name = "Legacy Brightness",
-		description =
-			"Controls the strength of the sun and ambient lighting.<br>" +
-			"A brightness value of 20 is recommended.",
-		position = 18,
-		section = generalSettings
-	)
-	default int legacyBrightness() {
-		return 20;
-	}
-
 
 	/*====== Lighting settings ======*/
 
 	@ConfigSection(
 		name = "Lighting",
 		description = "Lighting settings",
-		position = 1
+		position = 1,
+		closedByDefault = true
 	)
 	String lightingSettings = "lightingSettings";
 
@@ -573,7 +545,8 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 2
+		position = 2,
+		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
 
@@ -737,18 +710,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_HD_TZHAAR_RESKIN = "tzhaarHD";
-	@ConfigItem(
-		keyName = KEY_HD_TZHAAR_RESKIN,
-		name = "HD TzHaar Reskin",
-		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		position = 12,
-		section = environmentSettings
-	)
-	default boolean hdTzHaarReskin() {
-		return true;
-	}
-
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,
@@ -870,19 +831,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
-	@ConfigItem(
-		keyName = KEY_LEGACY_GREY_COLORS,
-		name = "Legacy Grey Colors",
-		description =
-			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
-			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
-		section = miscellaneousSettings
-	)
-	default boolean legacyGreyColors() {
-		return false;
-	}
-
 	String KEY_VANILLA_COLOR_BANDING = "vanillaColorBanding";
 	@ConfigItem(
 		keyName = KEY_VANILLA_COLOR_BANDING,
@@ -968,19 +916,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_LEGACY_TOB_ENVIRONMENT = "legacyTobEnvironment";
-	@ConfigItem(
-		keyName = KEY_LEGACY_TOB_ENVIRONMENT,
-		name = "Legacy Theatre of Blood",
-		description =
-			"Previously, Theatre of Blood used to look a whole lot more blue, which<br>" +
-			"some people grew really used to. This option brings back that same old look.",
-		section = miscellaneousSettings
-	)
-	default boolean legacyTobEnvironment() {
-		return false;
-	}
-
 	String KEY_WINDOWS_HDR_CORRECTION = "windowsHdrCorrection";
 	@ConfigItem(
 		keyName = KEY_WINDOWS_HDR_CORRECTION,
@@ -994,13 +929,103 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_HD_TZHAAR_RESKIN = "tzhaarHD";
+	@ConfigItem(
+		keyName = KEY_HD_TZHAAR_RESKIN,
+		name = "HD TzHaar Reskin",
+		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
+		section = miscellaneousSettings
+	)
+	default boolean hdTzHaarReskin() {
+		return true;
+	}
+
+
+	/*====== Legacy settings ======*/
+
+	@ConfigSection(
+		name = "Legacy",
+		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
+		position = 5,
+		closedByDefault = true
+	)
+	String legacySettings = "legacySettings";
+
+	String KEY_LEGACY_RENDERER = "legacyRenderer";
+	@ConfigItem(
+		keyName = KEY_LEGACY_RENDERER,
+		name = "Use legacy renderer",
+		description = "The new renderer is required for sailing content, but it is not 100% feature complete yet.",
+		section = legacySettings,
+		position = -100
+	)
+	default boolean legacyRenderer() {
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "useLegacyBrightness",
+		name = "Use legacy brightness",
+		description =
+			"Whether the legacy brightness option below should be applied.<br>" +
+			"We recommend leaving this disabled.",
+		section = legacySettings,
+		position = -99
+	)
+	default boolean useLegacyBrightness() {
+		return false;
+	}
+
+	@Range(
+		min = 1,
+		max = 50
+	)
+	@ConfigItem(
+		keyName = "brightness2",
+		name = "Legacy brightness",
+		description =
+			"Controls the strength of the sun and ambient lighting.<br>" +
+			"A brightness value of 20 is the default.",
+		section = legacySettings,
+		position = -98
+	)
+	default int legacyBrightness() {
+		return 20;
+	}
+
+	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
+	@ConfigItem(
+		keyName = KEY_LEGACY_GREY_COLORS,
+		name = "Legacy gray colors",
+		description =
+			"Previously, HD attempted to reduce over-exposure by capping the maximum color brightness,<br>" +
+			"which changed white colors into dull shades of grey. This option brings back that old behaviour.",
+		section = legacySettings
+	)
+	default boolean legacyGreyColors() {
+		return false;
+	}
+
+	String KEY_LEGACY_TOB_ENVIRONMENT = "legacyTobEnvironment";
+	@ConfigItem(
+		keyName = KEY_LEGACY_TOB_ENVIRONMENT,
+		name = "Legacy Theatre of Blood",
+		description =
+			"Previously, Theatre of Blood used to look a whole lot more blue, which<br>" +
+			"some people grew really used to. This option brings back that same old look.",
+		section = legacySettings
+	)
+	default boolean legacyTobEnvironment() {
+		return false;
+	}
+
 
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
 		name = "Experimental",
-		description = "Experimental features - if you're experiencing issues you should consider disabling these",
-		position = 5,
+		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
+		position = 6,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";
@@ -1087,7 +1112,7 @@ public interface HdPluginConfig extends Config
 	String KEY_TILED_LIGHTING_IMAGE_STORE = "experimentalTiledLightingImageStore";
 	@ConfigItem(
 		keyName = KEY_TILED_LIGHTING_IMAGE_STORE,
-		name = "Tiled lighting image store",
+		name = "Use tiled lighting image store",
 		description = "If you experience any issues with tiled lighting, disabling this <i>might</i> help.",
 		section = experimentalSettings
 	)
@@ -1095,6 +1120,29 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_ROOF_SHADOWS = "experimentalRoofShadows";
+	@ConfigItem(
+		keyName = KEY_ROOF_SHADOWS,
+		name = "Roof Shadows",
+		description = "Always cast shadows from roofs, even when they are hidden.",
+		section = experimentalSettings
+	)
+	default boolean roofShadows() {
+		return false;
+	}
+
+	String KEY_FORCE_INDIRECT_DRAW = "experimentalForceIndirectDraw";
+	@ConfigItem(
+		keyName = KEY_FORCE_INDIRECT_DRAW,
+		name = "Force indirect draw",
+		description =
+			"Indirect draw is currently only enabled automatically for Nvidia GPUs.<br>" +
+			"Enabling this <i>might</i> improve performance, if it is supported by your system.",
+		section = experimentalSettings
+	)
+	default boolean forceIndirectDraw() {
+		return false;
+	}
 
 	/*====== Internal settings ======*/
 

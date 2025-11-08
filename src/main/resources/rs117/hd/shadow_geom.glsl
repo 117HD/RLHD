@@ -27,6 +27,7 @@
 #version 330
 
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 
 layout(triangles) in;
@@ -36,10 +37,12 @@ layout(triangle_strip, max_vertices = 3) out;
 #include <utils/misc.glsl>
 #include <utils/uvs.glsl>
 
+flat in vec3 gWorldPos[3];
 flat in vec3 gPosition[3];
 flat in vec3 gUv[3];
 flat in int gMaterialData[3];
 flat in int gCastShadow[3];
+flat in int gWorldViewId[3];
 
 out vec3 fUvw;
 flat out int fMaterialData;
@@ -54,12 +57,13 @@ void main() {
         return;
 
     int materialData = gMaterialData[0];
-    Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT);
+    Material material = getMaterial(materialData >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
     vec3 uvw[3] = vec3[](gUv[0], gUv[1], gUv[2]);
-    computeUvs(materialData, vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
+    int worldViewIndex = gWorldViewId[0];
+    computeUvs(materialData, worldViewIndex, vec3[](gPosition[0], gPosition[1], gPosition[2]), uvw);
 
     fMaterialData = materialData;
 
@@ -74,7 +78,7 @@ void main() {
             fOpacity = gOpacity[i];
         #endif
 
-        gl_Position = lightProjectionMatrix * vec4(gPosition[i], 1);
+        gl_Position = lightProjectionMatrix * getWorldViewProjection(worldViewIndex) * vec4(gPosition[i], 1);
         EmitVertex();
     }
     EndPrimitive();

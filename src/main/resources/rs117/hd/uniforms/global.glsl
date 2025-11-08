@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utils/constants.glsl>
+
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;

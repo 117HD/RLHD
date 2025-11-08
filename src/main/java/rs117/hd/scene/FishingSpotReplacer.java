@@ -160,7 +160,7 @@ public class FishingSpotReplacer {
 
 		RuneLiteObject fishingSpot = client.createRuneLiteObject();
 		fishingSpot.setAnimationController(animController);
-		fishingSpot.setOrientation(RAND.nextInt(5) * 512);
+		fishingSpot.setOrientation(RAND.nextInt(4) * 512);
 		fishingSpot.setDrawFrontTilesFirst(false);
 		fishingSpot.setActive(true);
 		fishingSpot.setModel(modelData.light());
