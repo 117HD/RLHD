@@ -1,0 +1,219 @@
+package rs117.hd.renderer.zone;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import javax.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
+import rs117.hd.utils.CommandBuffer;
+
+import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+
+class VAO {
+	// Zone vertex format
+	// pos float vec3(x, y, z)
+	// uvw short vec3(u, v, w)
+	// normal short vec3(nx, ny, nz)
+	// alphaBiasHsl int
+	// materialData int
+	// terrainData int
+	static final int VERT_SIZE = 36;
+
+	// Metadata format
+	// worldViewIndex int int
+	static final int METADATA_SIZE = 4;
+
+	final VBO vbo;
+	int vao;
+	int vboMetadata;
+
+	VAO(int size) {
+		vbo = new VBO(size);
+	}
+
+	void initialize(int ebo, @Nullable VBO vboMetadata) {
+		vao = glGenVertexArrays();
+		glBindVertexArray(vao);
+
+		// The element buffer is part of VAO state
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+
+		vbo.initialize(GL_DYNAMIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, vbo.bufId);
+
+		// Position
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, false, VERT_SIZE, 0);
+
+		// UVs
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(1, 3, GL_HALF_FLOAT, false, VERT_SIZE, 12);
+
+		// Normals
+		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(2, 3, GL_SHORT, false, VERT_SIZE, 18);
+
+		// Alpha, bias & HSL
+		glEnableVertexAttribArray(3);
+		glVertexAttribIPointer(3, 1, GL_INT, VERT_SIZE, 24);
+
+		// Material data
+		glEnableVertexAttribArray(4);
+		glVertexAttribIPointer(4, 1, GL_INT, VERT_SIZE, 28);
+
+		// Terrain data
+		glEnableVertexAttribArray(5);
+		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
+
+		if (vboMetadata != null) {
+			this.vboMetadata = vboMetadata.bufId;
+			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
+
+			// WorldView index (not ID)
+			glEnableVertexAttribArray(6);
+			glVertexAttribDivisor(6, 1);
+			glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+		}
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+
+	void destroy() {
+		vbo.destroy();
+		glDeleteVertexArrays(vao);
+		vao = 0;
+	}
+
+	int[] lengths = new int[4];
+	Scene[] scenes = new Scene[4];
+	int off = 0;
+
+	void addRange(Scene scene) {
+		assert vbo.mapped;
+
+		if (off > 0 && lengths[off - 1] == vbo.vb.position()) {
+			return;
+		}
+
+		if (lengths.length == off) {
+			int l = lengths.length << 1;
+			lengths = Arrays.copyOf(lengths, l);
+			scenes = Arrays.copyOf(scenes, l);
+		}
+
+		lengths[off] = vbo.vb.position();
+		scenes[off] = scene;
+		off++;
+	}
+
+	void draw(CommandBuffer cmd) {
+		assert !vbo.mapped;
+
+		cmd.BindVertexArray(vao);
+
+		int start = 0;
+		for (int i = 0; i < off; ++i) {
+			int end = lengths[i];
+			int count = end - start;
+
+			if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
+				cmd.DrawArraysIndirect(
+					GL_TRIANGLES,
+					start / (VERT_SIZE / 4),
+					count / (VAO.VERT_SIZE / 4),
+					ZoneRenderer.indirectDrawCmdsStaging
+				);
+			} else {
+				cmd.DrawArrays(GL_TRIANGLES, start / (VERT_SIZE / 4), count / (VAO.VERT_SIZE / 4));
+			}
+
+			start = end;
+		}
+	}
+
+	void reset() {
+		Arrays.fill(scenes, 0, off, null);
+		off = 0;
+	}
+
+	@Slf4j
+	@RequiredArgsConstructor
+	static class VAOList {
+		// this needs to be larger than the largest single model
+		private static final int VAO_SIZE = 4 * 1024 * 1024;
+
+		private int curIdx;
+		private int drawCount;
+		private final List<VAO> vaos = new ArrayList<>();
+		private final int eboAlpha;
+
+		VAO get(int size, @Nullable VBO vboMetadata) {
+			assert size <= VAO_SIZE;
+
+			while (curIdx < vaos.size()) {
+				VAO vao = vaos.get(curIdx);
+				if (!vao.vbo.mapped) {
+					vao.vbo.map();
+				}
+
+				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
+				if (size <= rem && vao.vboMetadata == (vboMetadata == null ? 0 : vboMetadata.bufId)) {
+					return vao;
+				}
+
+				curIdx++;
+			}
+
+			VAO vao = new VAO(VAO_SIZE);
+			vao.initialize(eboAlpha, vboMetadata);
+			vao.vbo.map();
+			vaos.add(vao);
+			log.debug("Allocated VAO {} request {}", vao.vao, size);
+			return vao;
+		}
+
+		void unmap() {
+			int sz = 0;
+			for (VAO vao : vaos) {
+				if (vao.vbo.mapped) {
+					++sz;
+					vao.vbo.unmap();
+				}
+			}
+			curIdx = 0;
+			drawCount = sz;
+		}
+
+		void free() {
+			for (VAO vao : vaos) {
+				vao.destroy();
+			}
+			vaos.clear();
+			curIdx = 0;
+			drawCount = 0;
+		}
+
+		void addRange(Scene scene) {
+			for (int i = 0; i <= curIdx && i < vaos.size(); ++i) {
+				VAO vao = vaos.get(i);
+				if (vao.vbo.mapped)
+					vao.addRange(scene);
+			}
+		}
+
+		void drawAll(CommandBuffer cmd) {
+			for (int i = 0; i < drawCount; ++i)
+				vaos.get(i).draw(cmd);
+		}
+
+		void resetAll() {
+			for (int i = 0; i < drawCount; ++i)
+				vaos.get(i).reset();
+		}
+	}
+}

@@ -180,6 +180,12 @@
     ]
   },
   {
+    "name": "GRUNGE_3",
+    "materials": [
+      "GRUNGE_3"
+    ]
+  },
+  {
     "name": "SUBMERGED_GRUNGE_2",
     "materials": [
       "SUBMERGED_GRUNGE_2"
@@ -303,6 +309,18 @@
     "name": "CAM_TORUM_TILES",
     "materials": [
       "CAM_TORUM_TILES"
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH",
+    "materials": [
+      "DARKMEYER_BRICK_PATH"
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH_BLEND",
+    "materials": [
+      "DARKMEYER_BRICK_PATH_BLEND"
     ]
   },
   {

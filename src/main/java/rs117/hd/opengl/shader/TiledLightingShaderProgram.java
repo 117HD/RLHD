@@ -12,6 +12,8 @@ public class TiledLightingShaderProgram extends ShaderProgram {
 		super(t -> t
 			.add(GL_VERTEX_SHADER, "tiled_lighting_vert.glsl")
 			.add(GL_FRAGMENT_SHADER, "tiled_lighting_frag.glsl"));
+		uniTiledLightingTextureArray.ignoreMissing = true;
+		uniTiledLightingTextureStore.ignoreMissing = true;
 	}
 
 	@Override
