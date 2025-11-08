@@ -36836,8 +36836,8 @@
       175,
       255
     ],
-    "strength": 5,
-    "radius": 1000,
+    "strength": 3.5,
+    "radius": 750,
     "fadeInDuration": 150,
     "fadeOutDuration": 250,
     "offset": [ 0, 150, 20 ]
@@ -37079,7 +37079,7 @@
     "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ],
     "visibleFromOtherPlanes": true,
     "color": "#B1C9DB",
-    "strength": 15,
+    "strength": 10,
     "radius": 170,
     "fixedDespawnTime": true,
     "despawnDelay": 1950,

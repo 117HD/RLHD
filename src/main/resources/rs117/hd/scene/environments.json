@@ -1270,7 +1270,7 @@
   {
     "area": "THE_GAUNTLET_NORMAL",
     "ambientColor": "#d2c0b7",
-    "ambientStrength": 1.5,
+    "ambientStrength": 1.65,
     "directionalColor": "#78ffe3",
     "directionalStrength": 3,
     "sunAngles": [
@@ -1283,7 +1283,7 @@
   {
     "area": "THE_GAUNTLET_CORRUPTED",
     "ambientColor": "#bb9eae",
-    "ambientStrength": 1.5,
+    "ambientStrength": 1.65,
     "directionalColor": "#c58c9e",
     "directionalStrength": 3,
     "sunAngles": [
@@ -1990,7 +1990,9 @@
   },
   {
     "area": "AMOXLIATL_ARENA",
-    "waterColor": "#0009BC"
+    "waterColor": "#0009BC",
+    "ambientColor": "#EAF4FF",
+    "directionalStrength": 0.4
   },
   {
     "area": "RANDOM_EVENT_PRISON_PETE",
@@ -2033,6 +2035,11 @@
     "area": "Doom of Mokhaiotl - Floors 6 to 8",
     "directionalStrength": 0.35,
     "ambientStrength": 2.5
+  },
+  {
+    "area": "CERBERUS ENTRANCE",
+    "directionalStrength": 0.5,
+    "ambientStrength": 1.5
   },
   {
     "key": "OVERWORLD",
