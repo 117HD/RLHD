@@ -1954,6 +1954,11 @@
     "brightness": 0.881
   },
   {
+    "name": "LEAF_VEINS_DARKER",
+    "parent": "LEAF_VEINS",
+    "brightness": 0.581
+  },
+  {
     "name": "LEAVES_1_N"
   },
   {
@@ -1993,6 +1998,18 @@
       1.0,
       0.2
     ]
+  },
+  {
+    "name": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "parent": "WOOD_GRAIN_2",
+    "brightness": 1.043,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.2
+    ],
+    "specularStrength": 0.3,
+    "specularGloss": 40.0
   },
   {
     "name": "WOOD_GRAIN_2_LIGHT",
@@ -2543,6 +2560,21 @@
     ],
     "materialsToReplace": [
       "IRON_BARS"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_SAND_BRICK_N"
+  },
+  {
+    "name": "HD_SAND_BRICK",
+    "normalMap": "HD_SAND_BRICK_N",
+    "brightness": 0.881,
+    "displacementScale": 0.05,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "SAND_BRICK"
     ],
     "replacementCondition": "modelTextures"
   },

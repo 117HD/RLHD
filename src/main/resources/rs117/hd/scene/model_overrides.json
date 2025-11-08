@@ -12467,7 +12467,8 @@
       "ZQROCKJUMP1",
       "ZQROCKJUMP2",
       "ZQROCKJUMP3",
-      "ZEAH_SALTPETRE_SHORTCUT"
+      "ZEAH_SALTPETRE_SHORTCUT",
+      "_100_ILM_STEPPING_STONE"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -19151,11 +19152,12 @@
     "uvType": "BOX",
     "uvScale": 0.42,
     "uvOrientation": 768,
+    "terrainVertexSnap": true,
     "colorOverrides": [
       {
         "description": "Leaves",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "baseMaterial": "LEAF_VEINS_DARK",
+        "baseMaterial": "LEAF_VEINS_DARKER",
         "colors": "h > 10"
       }
     ],
@@ -19237,7 +19239,10 @@
       "TREE_PALM01_CLUSTER02",
       "TREE_PALM03_MID",
       "TREE_PALM03_TOP",
-      "_100_ILM_CLIMBABLE_TREE"
+      "_100_ILM_CLIMBABLE_TREE",
+      "_100_ILM_AGILITY_TREE_BASE",
+      "_100_ILM_BAMBOO_TREE_MID",
+      "_100_ILM_LEANING_TREE"
     ],
     "uvType": "BOX",
     "uvScale": 0.62,
@@ -23805,10 +23810,19 @@
       "FERN",
       "FERN1",
       "FERN2",
-      "MM_JUNGLEPLANT2",
       "AREA_SANGUINE_OUTER_WALL_PLANT",
       "FAIRY2_PLANT_2",
       "FAIRY2_PLANT_4"
+    ]
+  },
+  {
+    "description": "Generic - Plant - Fern - Small Overbright",
+    "baseMaterial": "LEAF_VEINS_DARK",
+    "uvType": "MODEL_XZ",
+    "windDisplacementMode": "OBJECT",
+    "uvScale": 0.25,
+    "objectIds": [
+      "MM_JUNGLEPLANT2"
     ]
   },
   {
@@ -23850,8 +23864,6 @@
     "objectIds": [
       "JUNGLEPLANT4",
       "JUNGLEPLANT1",
-      "MM_JUNGLEPLANT3",
-      "MM_JUNGLEPLANT1",
       "JUNGLEPLANT1_KARAMJA",
       "JUNGLEPLANT2",
       "JUNGLEPLANT3",
@@ -23874,7 +23886,9 @@
     "objectIds": [
       "JUNGLE2",
       "GREENER_JUNGLE2",
-      "MM_JUNGLE_PLANT_FERN"
+      "MM_JUNGLE_PLANT_FERN",
+      "MM_JUNGLEPLANT3",
+      "MM_JUNGLEPLANT1"
     ]
   },
   {
@@ -25880,6 +25894,32 @@
       },
       {
         "colors": "h > 22",
+        "baseMaterial": "LEAF_VEINS",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Tree - Banana Tree",
+    "baseMaterial": "GRUNGE_3",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "MM_BANANATREEEMPTY",
+      "MM_BANANATREEFULL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": ["h == 6", "h == 8" ],
+        "baseMaterial": "LIGHT_BARK",
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "terrainVertexSnap": true
+      },
+      {
+        "colors": "h >= 14",
         "baseMaterial": "LEAF_VEINS",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
         "uvType": "BOX",
@@ -45919,7 +45959,7 @@
     ]
   },
   {
-    "description": "Karamja hut walls",
+    "description": "Karamja - Bamboo hut walls",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -45928,6 +45968,93 @@
       "BAMBOO_DOORWAY",
       "BAMBOO_WALL",
       "BAMBOO_WINDOW"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo floor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "objectIds": [
+      "MM_MONKEYFLOOR",
+      "MM_MONKEYFLOOR2",
+      "MM_POST_LOWER"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Metallic -  Bamboo Cell Doors",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_JAIL_DOOR",
+      "MM_JAIL_DOOR_INACTIVE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal Lock",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Metallic -  Bamboo Cell Doors",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_JAIL_DOOR_UNPICKABLE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal Lock",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.42
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo hut walls",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_BAMBOO_DOORWAY",
+      "MM_BAMBOO_WALL",
+      "MM_BAMBOO_WINDOW",
+      "MM_BAMBOO_DOOR",
+      "MM_POST",
+      "MM_JAIL_POSTS"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo posts - snaped vertex",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "MM_POST_FOUR_POST"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Bamboo Ladder",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "MM_BAMBOO_LADDER_TOP",
+      "MM_BAMBOO_LADDER",
+      "MM_BRIDGE_LADDER_TOP",
+      "MM_BRIDGE_LADDER"
     ]
   },
   {
@@ -45953,7 +46080,7 @@
   },
   {
     "description": "Karamja Bamboo bridge",
-    "baseMaterial": "LIGHT_BARK",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 1024,
@@ -45973,7 +46100,108 @@
     ]
   },
   {
-    "description": "Karamja Bamboo potted plant",
+    "description": "Ape Atoll - Agility Course - Bamboo Floor",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "uvOrientationZ": 162,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": "h == 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "MM_BAMBOO_MONKEYFLOOR",
+      "_100_ILM_BAMBOO_FLOOR_EDGE"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Guide Rope",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 162,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "baseMaterial": "ROPE",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "ROPEBRIDGE_RAIL",
+      "ROPEBRIDGE_RAIL2"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Monkeybars",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "_100_ILM_MONKEYBARS_START",
+      "_100_ILM_MONKEYBARS_MID_SUPPORT",
+      "_100_ILM_MONKEYBARS_MID",
+      "_100_ILM_MONKEYBARS_END"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Skulls",
+    "baseMaterial": "BONE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "_100_ILM_CLIFF_CLIMB_1",
+      "_100_ILM_CLIFF_CLIMB_2"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Vines",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "_100_ILM_ROPE_SWING",
+      "_100_ILM_SLIDING_VINE",
+      "_100_ILM_SLIDING_VINE_PLAIN",
+      "_100_ILM_SLIDING_VINE_DIAG"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Agility Course - Vine hole",
+    "baseMaterial": "DIRT_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Plant",
+        "baseMaterial": "LEAF_VEINS",
+        "colors": "h >= 11",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.25
+      }
+    ],
+    "objectIds": [
+      "_100_ILM_VINE_HOLE",
+      "_100_ILM_VINE_HOLE_LEFT",
+      "_100_ILM_VINE_HOLE_RIGHT",
+      "_100_ILM_VINE_HOLE_BOTTOM",
+      "_100_ILM_VINE_HOLE_TOP"
+    ]
+  },
+  {
+    "description": "Karamja - Ape Atoll - Bamboo potted plant",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -45989,18 +46217,21 @@
       }
     ],
     "objectIds": [
-      "POTTEDPLANT_BAMBOO"
+      "POTTEDPLANT_BAMBOO",
+      "MM_POTTEDPLANT_BAMBOO"
     ]
   },
   {
-    "description": "Karamja Bamboo pots",
+    "description": "Karamja - Ape Atoll - Bamboo pots",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 512,
     "objectIds": [
       "POT_BAMBOO",
-      "POTS_BAMBOO"
+      "POTS_BAMBOO",
+      "MM_POTS_BAMBOO",
+      "MM_POT_BAMBOO"
     ]
   },
   {
@@ -46014,13 +46245,22 @@
     ]
   },
   {
-    "description": "Karamja Bamboo bookshelf - Has a really bad UV even with boxed.",
-    "baseMaterial": "GRUNGE_2",
+    "description": "Karamja Bamboo bookshelf with books",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
     "uvType": "BOX",
-    "uvScale": 0.25,
+    "uvScale": 0.5,
     "uvOrientation": 512,
     "objectIds": [
-      "SHELVES_BAMBOO"
+      "SHELVES_BAMBOO",
+      "MM_BOOKCASE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Books",
+        "colors": "h == 4 || h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX"
+      }
     ]
   },
   {
@@ -46040,17 +46280,103 @@
       }
     ],
     "objectIds": [
-      "TABLE_BAMBOO"
+      "TABLE_BAMBOO",
+      "MM_DESK"
     ]
   },
   {
-    "description": "Karamja Bamboo stool",
+    "description": "Ape Atoll - Wooden - Metallic -  Scimitar Stall",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "colors": "s == 0 || h == 8",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      },
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": "h == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      "MM_STALL_SCIMITAR"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Wooden - Metallic -  General Stall",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_SEMIGLOSS",
+        "colors": "s == 0 ",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Pot",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 4",
+        "uvType": "BOX",
+        "uvOrientation": 343,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "MM_STALL_GENERAL"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Wooden - Metallic -  Magic Stall",
+    "baseMaterial": "LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Runes",
+        "baseMaterial": "STONE_NORMALED",
+        "colors": "s == 0",
+        "uvType": "BOX",
+        "uvOrientation": 42,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Dirt",
+        "baseMaterial": "DIRT_2",
+        "colors": "h == 4",
+        "uvType": "MODEL_XZ",
+        "uvOrientation": 128,
+        "uvScale": 0.33
+      }
+    ],
+    "objectIds": [
+      "MM_STALL_MAGIC"
+    ]
+  },
+  {
+    "description": "Karamja - Ape Atoll - Bamboo stool",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
     "uvScale": 0.25,
     "uvOrientation": 512,
     "objectIds": [
-      "STOOL_BAMBOO"
+      "STOOL_BAMBOO",
+      "MM_STOOL_BAMBOO"
     ]
   },
   {
@@ -61896,6 +62222,48 @@
       {
         "description": "Cloth",
         "colors": "h == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ]
+  },
+  {
+    "description": "Ape Atoll - Textured - Wooden - Temple Stairs with wooden rails",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_STAIRS_BASE",
+      "MM_STAIRS_TOP"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Textured - Stone - Stone Idols of Monkeys",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_MONKEYSTATUE1",
+      "MM_GORILLASTATUE1",
+      "MM_GORILLASTATUE2"
+    ]
+  },
+  {
+    "description": "Ape Atoll - Textured - Cloth - Wooden - Bed on bamboo",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "MM_BED_BAMBOO_MIRROR"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 8",
         "baseMaterial": "CARPET",
         "uvType": "BOX",
         "uvOrientation": 192
