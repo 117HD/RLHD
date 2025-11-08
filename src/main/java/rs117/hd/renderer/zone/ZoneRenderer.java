@@ -433,7 +433,7 @@ public class ZoneRenderer implements Renderer {
 				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
 
 				if (sceneCamera.isDirty()) {
-					int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+					int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 					directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 					directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
