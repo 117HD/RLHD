@@ -288,6 +288,8 @@ public class HdPlugin extends Plugin {
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
+	public static boolean INTEL_GPU;
+	public static boolean NVIDIA_GPU;
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
 
@@ -480,15 +482,18 @@ public class HdPlugin extends Plugin {
 
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				log.info("Using device: {} ({})", glRenderer, glVendor);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
-				log.info("Low memory mode: {}", useLowMemoryMode);
+				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
+				INTEL_GPU = glRenderer.contains("Intel");
+				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
 					injector.getInstance(ZoneRenderer.class);
 				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
+
+				log.info("Low memory mode: {}", useLowMemoryMode);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
