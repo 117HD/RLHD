@@ -1453,6 +1453,11 @@
     "specularGloss": 60.0
   },
   {
+    "name": "ROCK_2_LIGHT",
+    "parent": "ROCK_2",
+    "brightness": 1.2
+  },
+  {
     "name": "ROCK_3_D"
   },
   {

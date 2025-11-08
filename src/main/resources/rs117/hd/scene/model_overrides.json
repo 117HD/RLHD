@@ -2325,7 +2325,8 @@
       "POH_PLANTBSMALL1B",
       "POH_PLANTBSMALL1C",
       "POH_PLANTBSMALL2A",
-      "POH_PLANTBSMALL2B"
+      "POH_PLANTBSMALL2B",
+      "DARKM_BRAMBLE_BUSH_2"
     ]
   },
   {
@@ -2596,7 +2597,10 @@
       "PLANT_MOSS01_SUN04",
       "REGICIDE_GRASS1_RIVER",
       "REGICIDE_GRASS2_RIVER",
-      "REGICIDE_GRASS2L_RIVER"
+      "REGICIDE_GRASS2L_RIVER",
+      "NIGHTMARE_GARDEN_GRASS_LONG",
+      "NIGHTMARE_GARDEN_GRASS_SPARSE",
+      "NIGHTMARE_GARDEN_GRASS_SHORT"
     ]
   },
   {
@@ -9844,6 +9848,17 @@
     "uvOrientation": 256
   },
   {
+    "description": "Earth Altar - Hide stalagmite shadows",
+    "areas": [ "EARTH_ALTAR" ],
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "STAGATITE_LARGE"
+    ],
+    "castShadows": false,
+    "uvType": "BOX",
+    "uvOrientation": 256
+  },
+  {
     "description": "Wooden Wall Supports - Mines",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -14812,6 +14827,23 @@
     "flatNormals": true
   },
   {
+    "description": "Death Altar - Cave Walls",
+    "baseMaterial": "ROCK_2_LIGHT",
+    "uvOrientation": 150,
+    "uvType": "BOX",
+    "objectIds": [
+      "CAVEWALL_FACE1_BLACK",
+      "CAVEWALL_TOP_BLACK",
+      "STALAGMITE_TWIN_BLACK",
+      "CAVE_DETAIL1_BLACK",
+      "CAVE_DETAIL1R_BLACK",
+      "CAVE_DETAIL2_BLACK",
+      "CAVE_DETAIL2R_BLACK",
+      "ROCKCOLUMN2_BLACK",
+      "ROCKCOLUMN3_BLACK"
+    ]
+  },
+  {
     "description": "Ground - Chaos Altar - Path -  Wooden – Plank",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
@@ -16640,6 +16672,7 @@
       "DEADTREE2_WEB_R",
       "DEADTREE2_WEB_L",
       "DEADTREE_BURNT",
+      "DEADTREE_BURNT_INACTIVE",
       "GRANDTREE_CLIMBTREE",
       "GRANDTREE_DOWNTREE",
       "WILD3_TREE_A",
@@ -28019,7 +28052,24 @@
   {
     "description": "Weiss Saltmine Walls",
     "baseMaterial": "ROCK_4",
-    "objectIds": [ "MY2ARM_MINE_WALL", "MY2ARM_MINE_WALL_SNOWTOP", "MY2ARM_MINE_WALL_SNOWTOP_TRANSITION", "MY2ARM_MINE_WALL_SNOWTOP_TRANSITION_MIRROR", "MY2ARM_MINE_WALL_TOP", "MY2ARM_MINE_WALL_TOP_SNOW01", "DECOKIT_TILES_BROKEN02", "DECOKIT_TILES_BROKEN03", "MY2ARM_MINE_WALL_TOP_FALLOFF_STRAIGHT", "MY2ARM_MINE_WALL_TOP_FALLOFF_STRAIGHT_SNOW", "MY2ARM_MINE_WALL_TOP_FALLOFF_INSIDE_CORNER", "MY2ARM_MINE_WALL_TOP_FALLOFF_INSIDE_CORNER_SNOW", "MY2ARM_MINE_WALL_TOP_FALLOFF_OUTSIDE_CORNER", "MY2ARM_MINE_WALL_TOP_FALLOFF_OUTSIDE_CORNER_SNOW", "MY2ARM_MINE_WALL_3WIDE" ],
+    "objectIds": [
+      "MY2ARM_MINE_WALL",
+      "MY2ARM_MINE_WALL_SNOWTOP",
+      "MY2ARM_MINE_WALL_SNOWTOP_TRANSITION",
+      "MY2ARM_MINE_WALL_SNOWTOP_TRANSITION_MIRROR",
+      "MY2ARM_MINE_WALL_TOP",
+      "MY2ARM_MINE_WALL_TOP_SNOW01",
+      "DECOKIT_TILES_BROKEN02",
+      "DECOKIT_TILES_BROKEN03",
+      "DECOKIT_TILES_DEFAULT01",
+      "MY2ARM_MINE_WALL_TOP_FALLOFF_STRAIGHT",
+      "MY2ARM_MINE_WALL_TOP_FALLOFF_STRAIGHT_SNOW",
+      "MY2ARM_MINE_WALL_TOP_FALLOFF_INSIDE_CORNER",
+      "MY2ARM_MINE_WALL_TOP_FALLOFF_INSIDE_CORNER_SNOW",
+      "MY2ARM_MINE_WALL_TOP_FALLOFF_OUTSIDE_CORNER",
+      "MY2ARM_MINE_WALL_TOP_FALLOFF_OUTSIDE_CORNER_SNOW",
+      "MY2ARM_MINE_WALL_3WIDE"
+    ],
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 128
@@ -28819,9 +28869,9 @@
     "description": "Guardians of the Rift - Entrance",
     "objectIds": [
       "GOTR_BARRIER",
-      "GOTR_BARRIER_CLOSED"
+      "GOTR_BARRIER_CLOSED",
+      "GOTR_BARRIER_NOENTRY"
     ],
-    "baseMaterial": "UNLIT",
     "castShadows": false
   },
   {
@@ -28836,7 +28886,6 @@
       "GOTR_BARRIER_TIER4",
       "GOTR_BARRIER_TIER4_3X3"
     ],
-    "baseMaterial": "UNLIT",
     "castShadows": false
   },
   {
@@ -29259,7 +29308,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "uvOrientation": 42,
     "objectIds": [
       "GOTR_PLANT_ELK01_DEFAULT01",
@@ -29274,7 +29323,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "uvOrientation": 343,
     "objectIds": [
       "GOTR_PLANT_SPONGE01_DEFAULT01",
@@ -29287,7 +29336,7 @@
     "baseMaterial": "GRUNGE_2",
     "uvType": "BOX",
     "uvScale": 0.67,
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "windDisplacementModifier": 2,
     "objectIds": [
       "GOTR_PLANT_LACE01_DEFAULT01",
@@ -29298,7 +29347,7 @@
   {
     "description": "Guardians of the Rift - Dead Coral",
     "baseMaterial": "GRUNGE_2",
-    "windDisplacementMode": "OBJECT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "windDisplacementModifier": 2,
     "objectIds": [
       "GOTR_PLANT_SPONGE02_DEFAULT01_2X2",
@@ -38408,7 +38457,11 @@
     "uvScale": 0.6,
     "objectIds": [
       "WEREWOLF_SKULL_CLIMB_1",
-      "WEREWOLF_SKULL_CLIMB_2"
+      "WEREWOLF_SKULL_CLIMB_2",
+      "BLOODTEMPLE_SKULL_PILE01",
+      "BLOODTEMPLE_SKULL_FLOATING01",
+      "BLOODTEMPLE_SKULL_FLOATING02",
+      "BLOODTEMPLE_SKULL_FLOATING03"
     ]
   },
   {
@@ -64436,5 +64489,23 @@
     "objectIds": [
       "ZIG_FLOWER_RED"
     ]
+  },
+  {
+    "description": "Hide shadows cast by fog in the true blood altar",
+    "objectIds": [
+      "BLOODTEMPLE_DARK_WAVE"
+    ],
+    "castShadows": false
+  },
+  {
+    "description": "True Blood Altar - Dead Trees",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "NIGHTMARE_GARDEN_TREE_01",
+      "NIGHTMARE_GARDEN_TREE_02",
+      "NIGHTMARE_GARDEN_TREE_03"
+    ],
+    "uvType": "BOX"
   }
 ]

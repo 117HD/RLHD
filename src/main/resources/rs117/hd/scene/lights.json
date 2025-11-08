@@ -20985,6 +20985,7 @@
   },
   {
     "description": "FIRE",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "height": 40,
     "alignment": "CENTER",
     "radius": 450,
@@ -24811,8 +24812,8 @@
     "description": "TRUE_BLOOD_ALTAR",
     "height": 300,
     "alignment": "CENTER",
-    "radius": 4000,
-    "strength": 4,
+    "radius": 1200,
+    "strength": 3,
     "color": [
       255,
       0,
@@ -24820,7 +24821,7 @@
     ],
     "type": "PULSE",
     "duration": 2000,
-    "range": 10,
+    "range": 20,
     "objectIds": [
       "BLOOD_ALTAR"
     ]
@@ -24830,7 +24831,7 @@
     "height": 20,
     "alignment": "CENTER",
     "radius": 400,
-    "strength": 6,
+    "strength": 8,
     "color": [
       255,
       0,
@@ -24862,7 +24863,7 @@
     "range": 5
   },
   {
-    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE",
+    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_WIDE",
     "worldX": 3232,
     "worldY": 4847,
     "plane": 0,
@@ -24878,7 +24879,25 @@
     "type": "FLICKER",
     "duration": 1280,
     "range": 5
-  },
+  },  {
+  "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_SHORT",
+  "worldX": 3232,
+  "worldY": 4847,
+  "plane": 0,
+  "height": 600,
+  "alignment": "CENTER",
+  "radius": 700,
+  "strength": 14,
+  "color": [
+    255,
+    0,
+    255
+  ],
+  "type": "FLICKER",
+  "duration": 1280,
+  "range": 5
+},
+
   {
     "description": "TRUE_BLOOD_ALTAR_CRYSTAL_3",
     "worldX": 3232,
@@ -26541,9 +26560,9 @@
   },
   {
     "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
-    "height": 250,
+    "height": 240,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -26551,8 +26570,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
-    "range": 20,
+    "duration": 700,
+    "range": 7,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW_AIR"
     ]
@@ -29507,7 +29526,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29624,7 +29643,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29781,11 +29800,13 @@
     "height": 125,
     "alignment": "CENTER",
     "radius": 200,
-    "strength": 5.5,
+    "strength": 8.5,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 150,
     "color": [
       255,
-      240.28485,
-      0
+      255,
+      100
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29949,11 +29970,11 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 4,
+    "strength": 8,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29967,7 +29988,7 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 6,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -29985,12 +30006,12 @@
     "description": "GOTR_WEAK_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.25,
+    "radius": 350,
+    "strength": 2,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -30004,12 +30025,12 @@
     "description": "GOTR_MED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.5,
+    "radius": 300,
+    "strength": 5,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -30023,8 +30044,8 @@
     "description": "GOTR_STRONG_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 2.25,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -30042,8 +30063,8 @@
     "description": "GOTR_OVERCHARGED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 3,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -30062,7 +30083,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2,
+    "strength": 4,
     "color": [
       255,
       255,
@@ -30080,7 +30101,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       0,
@@ -30098,7 +30119,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       255,
@@ -30116,7 +30137,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -35942,10 +35963,10 @@
   },
   {
     "description": "RUNECRAFTING_YELLOW_PORTALS",
-    "height": 30,
+    "height": 50,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 7.5,
+    "radius": 400,
+    "strength": 17.5,
     "color": [
       255,
       216,
@@ -35953,11 +35974,12 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 50,
+    "range": 20,
     "objectIds": [
       "COSMICTEMPLE_EXIT_PORTAL",
       "LAWTEMPLE_EXIT_PORTAL",
-      "NATURETEMPLE_EXIT_PORTAL"
+      "NATURETEMPLE_EXIT_PORTAL",
+      "DEATHTEMPLE_EXIT_PORTAL"
     ]
   },
   {
