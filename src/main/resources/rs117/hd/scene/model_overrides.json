@@ -9357,6 +9357,9 @@
     "uvScale": 0.7
   },
   {
+    "areas": [
+      "AMETHYST_MINES"
+    ],
     "description": "Amethyst Mine Walls",
     "baseMaterial": "GRUNGE_1_LIGHT",
     "objectIds": [
