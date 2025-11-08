@@ -16700,7 +16700,8 @@
   },
   {
     "description": "Objects - Ardougne Castle - Standard",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "upwardsNormals": true,
     "objectIds": [
       "STANDARD1_KANDARIN",
       "STANDARD2_KANDARIN"
