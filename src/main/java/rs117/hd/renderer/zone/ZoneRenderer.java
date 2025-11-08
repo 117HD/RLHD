@@ -85,7 +85,6 @@ import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
@@ -433,7 +432,7 @@ public class ZoneRenderer implements Renderer {
 				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
 
 				if (sceneCamera.isDirty()) {
-					int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+					int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 					directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 					directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
@@ -773,9 +772,6 @@ public class ZoneRenderer implements Renderer {
 			glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmds);
 			glBufferData(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmdsStaging.getBuffer(), GL_STREAM_DRAW);
 		}
-
-		if (GL_CAPS.OpenGL43) // TODO: Specify why & gate it behind some other check, since it really supports OpenGL 4.2. Possibly even allow extensions.
-			GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 
 		directionalShadowPass();
 		frameTimer.end(Timer.DRAW_SCENE);
