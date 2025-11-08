@@ -993,6 +993,11 @@
     "parent": "NONE"
   },
   {
+    "name": "GRAY_300",
+    "parent": "NONE",
+    "brightness": 3
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5
@@ -1163,6 +1168,11 @@
     "normalMap": "DIRT_1_N",
     "specularStrength": 0.13,
     "specularGloss": 18.0
+  },
+  {
+    "name": "DIRT_1_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.1
   },
   {
     "name": "DIRT_1_VERT",
@@ -1448,6 +1458,11 @@
     "specularGloss": 60.0
   },
   {
+    "name": "ROCK_2_LIGHT",
+    "parent": "ROCK_2",
+    "brightness": 1.2
+  },
+  {
     "name": "ROCK_3_D"
   },
   {
@@ -1476,6 +1491,17 @@
     "name": "ROCK_3_LIGHT",
     "parent": "ROCK_3",
     "brightness": 1.194
+  },
+  {
+    "name": "ROCK_3_VERY_LIGHT_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "textureScale": [
+      1,
+      1,
+      0.3
+    ],
+    "brightness": 1.45
   },
   {
     "name": "ROCK_3_SMOOTH",
@@ -1707,6 +1733,11 @@
     "parent": "MARBLE_1",
     "specularStrength": 0.9,
     "specularGloss": 280.0
+  },
+  {
+    "name": "MARBLE_1_LIGHT",
+    "parent": "MARBLE_1",
+    "brightness": 1.15
   },
   {
     "name": "MARBLE_2_GLOSS",
@@ -2214,6 +2245,11 @@
     "brightness": 1.122
   },
   {
+    "name": "STONE_NORMALED_VERY_LIGHT",
+    "parent": "STONE_NORMALED",
+    "brightness": 1.2
+  },
+  {
     "name": "STONE_LOWGLOSS",
     "parent": "STONE",
     "specularStrength": 0.3,
@@ -2490,6 +2526,11 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_CONCRETE_FLAT",
+    "normalMap": null,
+    "parent": "HD_CONCRETE"
+  },
+  {
     "name": "HD_HAY_N"
   },
   {
@@ -2616,6 +2657,11 @@
     "normalMap": "GROUND_WEB_2_N",
     "specularStrength": 0.35,
     "specularGloss": 90.0
+  },
+  {
+    "name": "GROUND_WEB_2_LIGHT",
+    "parent": "GROUND_WEB_2",
+    "brightness": 1.5
   },
   {
     "name": "GROUND_WEB_3_N"

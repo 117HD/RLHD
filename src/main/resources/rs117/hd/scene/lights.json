@@ -20597,7 +20597,6 @@
       "FENK_TORCH",
       "VC_CANDLE",
       "ROYAL_CAVEWALL_TORCH_FLAMES",
-      "KR_UNDERGROUND_JAIL_TOURCH",
       "FAVOUR_TORCH",
       "FALADOR_TORCH",
       "FAVOUR_TORCH",
@@ -20985,6 +20984,7 @@
   },
   {
     "description": "FIRE",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
     "height": 40,
     "alignment": "CENTER",
     "radius": 450,
@@ -24811,8 +24811,8 @@
     "description": "TRUE_BLOOD_ALTAR",
     "height": 300,
     "alignment": "CENTER",
-    "radius": 4000,
-    "strength": 4,
+    "radius": 1200,
+    "strength": 3,
     "color": [
       255,
       0,
@@ -24820,7 +24820,7 @@
     ],
     "type": "PULSE",
     "duration": 2000,
-    "range": 10,
+    "range": 20,
     "objectIds": [
       "BLOOD_ALTAR"
     ]
@@ -24830,7 +24830,7 @@
     "height": 20,
     "alignment": "CENTER",
     "radius": 400,
-    "strength": 6,
+    "strength": 8,
     "color": [
       255,
       0,
@@ -24862,7 +24862,7 @@
     "range": 5
   },
   {
-    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE",
+    "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_WIDE",
     "worldX": 3232,
     "worldY": 4847,
     "plane": 0,
@@ -24878,7 +24878,25 @@
     "type": "FLICKER",
     "duration": 1280,
     "range": 5
-  },
+  },  {
+  "description": "TRUE_BLOOD_ALTAR_CRYSTAL_PURPLE_SHORT",
+  "worldX": 3232,
+  "worldY": 4847,
+  "plane": 0,
+  "height": 600,
+  "alignment": "CENTER",
+  "radius": 700,
+  "strength": 14,
+  "color": [
+    255,
+    0,
+    255
+  ],
+  "type": "FLICKER",
+  "duration": 1280,
+  "range": 5
+},
+
   {
     "description": "TRUE_BLOOD_ALTAR_CRYSTAL_3",
     "worldX": 3232,
@@ -25267,11 +25285,28 @@
     ]
   },
   {
+    "description": "LIZARDMAN_LAMP",
+    "offset": [ 30, 120, 0 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "LIZARDMAN_LAMP"
+    ]
+  },
+  {
     "description": "LIZARDMAN_TEMPLE_SKYLIGHT",
-    "height": 600,
+    "height": 850,
     "alignment": "CENTER",
-    "radius": 1000,
-    "strength": 12.5,
+    "radius": 1200,
+    "strength": 15,
     "color": [
       200,
       230,
@@ -25285,10 +25320,28 @@
     ]
   },
   {
-    "description": "LIZARDMAN_TEMPLE_MYSTICAL_BARRIER_GREEN",
-    "height": 200,
+    "description": "Lizardman Temple Torch",
+    "height": 275,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 350,
+    "strength": 16,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KR_UNDERGROUND_JAIL_TOURCH"
+    ]
+  },
+  {
+    "description": "LIZARDMAN_TEMPLE_MYSTICAL_BARRIER_GREEN",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 550,
     "strength": 12.5,
     "color": [
       191,
@@ -25297,9 +25350,28 @@
     ],
     "type": "PULSE",
     "duration": 1400,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "MOLCH_TEMPLE_BARRIER_GREEN"
+    ]
+  },
+  {
+    "description": "Lizardman Spawn",
+    "height": 75,
+    "alignment": "CENTER",
+    "radius": 375,
+    "strength": 6,
+    "spawnDelay": 100,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 800,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "ZEAH_LIZARDSHAMAN_SPAWN"
     ]
   },
   {
@@ -26541,9 +26613,9 @@
   },
   {
     "description": "COSMIC_AIR_ALTAR_PILLAR_AND_ORBS",
-    "height": 250,
+    "height": 240,
     "alignment": "CENTER",
-    "radius": 300,
+    "radius": 350,
     "strength": 10,
     "color": [
       255,
@@ -26551,8 +26623,8 @@
       255
     ],
     "type": "PULSE",
-    "duration": 500,
-    "range": 20,
+    "duration": 700,
+    "range": 7,
     "objectIds": [
       "RUNETEMPLE_STANDINGSTONE_GLOW_AIR"
     ]
@@ -29507,7 +29579,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29624,7 +29696,7 @@
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29781,11 +29853,13 @@
     "height": 125,
     "alignment": "CENTER",
     "radius": 200,
-    "strength": 5.5,
+    "strength": 8.5,
+    "fadeOutDuration": 200,
+    "fadeInDuration": 150,
     "color": [
       255,
-      240.28485,
-      0
+      255,
+      100
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29914,15 +29988,15 @@
     "height": 45,
     "alignment": "CENTER",
     "radius": 475,
-    "strength": 3.5,
+    "strength": 3,
     "color": [
       70,
-      242,
-      31
+      250,
+      110
     ],
     "type": "FLICKER",
     "duration": 0,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "NEXUS_TENDRILS",
       "NEXUS_TENDRILS_CORNER",
@@ -29937,8 +30011,8 @@
     "strength": 7.5,
     "color": [
       70,
-      242,
-      31
+      230,
+      110
     ],
     "objectIds": [ "NEXUS_LUNG_WHEEZING" ],
     "fadeInDuration": 200,
@@ -29949,11 +30023,11 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 4,
+    "strength": 8,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -29967,7 +30041,7 @@
     "height": 250,
     "alignment": "CENTER",
     "radius": 350,
-    "strength": 6,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -29985,12 +30059,12 @@
     "description": "GOTR_WEAK_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.25,
+    "radius": 350,
+    "strength": 2,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -30004,12 +30078,12 @@
     "description": "GOTR_MED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 1.5,
+    "radius": 300,
+    "strength": 5,
     "color": [
       255,
       255,
-      0
+      140
     ],
     "type": "FLICKER",
     "duration": 0,
@@ -30023,8 +30097,8 @@
     "description": "GOTR_STRONG_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 2.25,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -30042,8 +30116,8 @@
     "description": "GOTR_OVERCHARGED_BARRIER",
     "height": 200,
     "alignment": "CENTER",
-    "radius": 250,
-    "strength": 3,
+    "radius": 300,
+    "strength": 6,
     "color": [
       255,
       255,
@@ -30062,7 +30136,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2,
+    "strength": 4,
     "color": [
       255,
       255,
@@ -30080,7 +30154,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       0,
@@ -30098,7 +30172,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 4,
     "color": [
       0,
       255,
@@ -30116,7 +30190,7 @@
     "height": 60,
     "alignment": "CENTER",
     "radius": 100,
-    "strength": 2.75,
+    "strength": 7,
     "color": [
       255,
       0,
@@ -35383,8 +35457,8 @@
   {
     "description": "FIRE_OF_ETERNAL_LIGHT",
     "height": 300,
-    "radius": 850,
-    "strength": 5,
+    "radius": 650,
+    "strength": 20,
     "color": "#ffffff",
     "type": "FLICKER",
     "range": 10,
@@ -35517,6 +35591,23 @@
     "range": 20,
     "objectIds": [
       "SLP_POOR_STOVE"
+    ]
+  },
+  {
+    "description": "STOVE",
+    "offset": [ -49, 88, -40 ],
+    "radius": 450,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SLP_STOVE"
     ]
   },
   {
@@ -35925,10 +36016,10 @@
   },
   {
     "description": "RUNECRAFTING_YELLOW_PORTALS",
-    "height": 30,
+    "height": 50,
     "alignment": "CENTER",
-    "radius": 500,
-    "strength": 7.5,
+    "radius": 400,
+    "strength": 17.5,
     "color": [
       255,
       216,
@@ -35936,11 +36027,12 @@
     ],
     "type": "PULSE",
     "duration": 1550,
-    "range": 50,
+    "range": 20,
     "objectIds": [
       "COSMICTEMPLE_EXIT_PORTAL",
       "LAWTEMPLE_EXIT_PORTAL",
-      "NATURETEMPLE_EXIT_PORTAL"
+      "NATURETEMPLE_EXIT_PORTAL",
+      "DEATHTEMPLE_EXIT_PORTAL"
     ]
   },
   {
@@ -36836,8 +36928,8 @@
       175,
       255
     ],
-    "strength": 5,
-    "radius": 1000,
+    "strength": 3.5,
+    "radius": 750,
     "fadeInDuration": 150,
     "fadeOutDuration": 250,
     "offset": [ 0, 150, 20 ]
@@ -37079,7 +37171,7 @@
     "graphicsObjectIds": [ "VFX_DJINN_ICE_FLOOR_ATTACK_01" ],
     "visibleFromOtherPlanes": true,
     "color": "#B1C9DB",
-    "strength": 15,
+    "strength": 10,
     "radius": 170,
     "fixedDespawnTime": true,
     "despawnDelay": 1950,
@@ -41670,6 +41762,103 @@
     "range": 20,
     "objectIds": [
       "NIGHTMARE_PLATFORM_LVL2_23"
+    ]
+  },
+  {
+    "description": "GIANT_MOLE_LIGHT_SHAFT",
+    "objectIds": [ "MOLE_LIGHT_STREAMING" ],
+    "radius": 700,
+    "strength": 25,
+    "color": "#ffffff",
+    "offset": [ 0, 300, 0 ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Wall Torches",
+    "height": 235,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TOBQUEST_CRYPT_TORCH"
+    ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Candles - Large bunch",
+    "offset": [ -5, 82, 0 ],
+    "radius": 300,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 30,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CANDLES_1"
+    ]
+  },
+  {
+    "description": "Night at the Theatre crypt - Candles angled small bunch",
+    "offset": [ -5, 67, 33 ],
+    "radius": 300,
+    "strength": 10,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "TOBQUEST_CRYPT_CANDLES_2"
+    ]
+  },
+  {
+    "description": "Ghosts Ahoy Range",
+    "height": 100,
+    "offset": [ 53, -53, 48 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "AHOY_RANGE"
+
+    ]
+  },
+  {
+    "description": "Sisterhood Sanctuary Ghost",
+    "height": 88,
+    "alignment": "CENTER",
+    "radius": 300,
+    "strength": 17,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 25,
+    "npcIds": [
+      "SANCTUARY_GHOST"
     ]
   }
 ]

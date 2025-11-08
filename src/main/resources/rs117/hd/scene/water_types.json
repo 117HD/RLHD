@@ -95,6 +95,17 @@
     "duration": 2.0
   },
   {
+    "name": "BLOOD_FLAT",
+    "normalStrength": 0.05,
+    "baseOpacity": 0.85,
+    "fresnelAmount": 0.0,
+    "surfaceColor": "#260000",
+    "hasFoam": false,
+    "depthColor": "#321a16",
+    "duration": 2.0,
+    "flat": true
+  },
+  {
     "name": "ICE",
     "specularStrength": 0.3,
     "specularGloss": 200.0,
@@ -141,15 +152,15 @@
   },
   {
     "name": "ABYSS_BILE",
-    "specularStrength": 0.2,
-    "specularGloss": 100.0,
+    "specularStrength": 0.15,
+    "specularGloss": 60,
     "normalStrength": 0.08,
-    "baseOpacity": 0.85,
+    "baseOpacity": 0.8,
     "fresnelAmount": 0.3,
     "surfaceColor": [
       47.89,
-      26.68,
-      0.0
+      30.68,
+      7.5
     ],
     "foamColor": [
       47.89,
@@ -161,7 +172,7 @@
       11.15,
       0.0
     ],
-    "duration": 2.2
+    "duration": 3.5
   },
   {
     "name": "PLAIN_WATER",
