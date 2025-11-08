@@ -5,7 +5,8 @@
     "unlit": true
   },
   {
-    "name": "TRANSPARENT"
+    "name": "TRANSPARENT",
+    "hasTransparency": true
   },
   {
     "name": "LAVA_FLOW_MAP"
@@ -127,7 +128,8 @@
     "scrollSpeed": [
       -0.0,
       -0.9
-    ]
+    ],
+    "hasTransparency": true
   },
   {
     "name": "HAY",
@@ -670,12 +672,321 @@
     "textureScale": [ -1, -1 ]
   },
   {
+    "name": "LEAFY_ACACIA01",
+    "vanillaTextureIndex": 123,
+    "hasTransparency": true
+  },
+  {
+    "name": "LEAFY_STONEPINE01",
+    "vanillaTextureIndex": 124
+  },
+  {
     "name": "BRICK_CAM_TORUM",
     "vanillaTextureIndex": 125
   },
   {
     "name": "BRICK_CAM_TORUM_2",
     "vanillaTextureIndex": 126
+  },
+  {
+    "name": "LEAFYTREE_FROSTY",
+    "vanillaTextureIndex": 127
+  },
+  {
+    "name": "LEAFYTREE_TILED_FROSTY",
+    "vanillaTextureIndex": 128
+  },
+  {
+    "name": "WATER_OPEN",
+    "vanillaTextureIndex": 129
+  },
+  {
+    "name": "WATER_SHELF",
+    "vanillaTextureIndex": 130
+  },
+  {
+    "name": "WATER_DROPOFF",
+    "vanillaTextureIndex": 131
+  },
+  {
+    "name": "WATER_DEEP",
+    "vanillaTextureIndex": 132
+  },
+  {
+    "name": "WATER_TRENCH",
+    "vanillaTextureIndex": 133
+  },
+  {
+    "name": "WATER_STORMY",
+    "vanillaTextureIndex": 134
+  },
+  {
+    "name": "WATER_STORMY_OPEN",
+    "vanillaTextureIndex": 135
+  },
+  {
+    "name": "WATER_STORMY_SHELF",
+    "vanillaTextureIndex": 136
+  },
+  {
+    "name": "WATER_STORMY_DROPOFF",
+    "vanillaTextureIndex": 137
+  },
+  {
+    "name": "WATER_STORMY_DEEP",
+    "vanillaTextureIndex": 138
+  },
+  {
+    "name": "WATER_SUNBAKED",
+    "vanillaTextureIndex": 139
+  },
+  {
+    "name": "WATER_SUNBAKED_OPEN",
+    "vanillaTextureIndex": 140
+  },
+  {
+    "name": "WATER_SUNBAKED_SHELF",
+    "vanillaTextureIndex": 141
+  },
+  {
+    "name": "WATER_SUNBAKED_DROPOFF",
+    "vanillaTextureIndex": 142
+  },
+  {
+    "name": "WATER_SUNBAKED_DEEP",
+    "vanillaTextureIndex": 143
+  },
+  {
+    "name": "WATER_PROFANE",
+    "vanillaTextureIndex": 144
+  },
+  {
+    "name": "WATER_PROFANE_OPEN",
+    "vanillaTextureIndex": 145
+  },
+  {
+    "name": "WATER_PROFANE_SHELF",
+    "vanillaTextureIndex": 146
+  },
+  {
+    "name": "WATER_PROFANE_DROPOFF",
+    "vanillaTextureIndex": 147
+  },
+  {
+    "name": "WATER_PROFANE_DEEP",
+    "vanillaTextureIndex": 148
+  },
+  {
+    "name": "WATER_CURSED",
+    "vanillaTextureIndex": 149
+  },
+  {
+    "name": "WATER_CURSED_OPEN",
+    "vanillaTextureIndex": 150
+  },
+  {
+    "name": "WATER_CURSED_SHELF",
+    "vanillaTextureIndex": 151
+  },
+  {
+    "name": "WATER_CURSED_DROPOFF",
+    "vanillaTextureIndex": 152
+  },
+  {
+    "name": "WATER_CURSED_DEEP",
+    "vanillaTextureIndex": 153
+  },
+  {
+    "name": "WATER_SCALDING",
+    "vanillaTextureIndex": 154
+  },
+  {
+    "name": "WATER_SCALDING_OPEN",
+    "vanillaTextureIndex": 155
+  },
+  {
+    "name": "WATER_SCALDING_SHELF",
+    "vanillaTextureIndex": 156
+  },
+  {
+    "name": "WATER_SCALDING_DROPOFF",
+    "vanillaTextureIndex": 157
+  },
+  {
+    "name": "WATER_SCALDING_DEEP",
+    "vanillaTextureIndex": 158
+  },
+  {
+    "name": "WATER_ICY",
+    "vanillaTextureIndex": 159
+  },
+  {
+    "name": "WATER_ICY_OPEN",
+    "vanillaTextureIndex": 160
+  },
+  {
+    "name": "WATER_ICY_SHELF",
+    "vanillaTextureIndex": 161
+  },
+  {
+    "name": "WATER_ICY_DROPOFF",
+    "vanillaTextureIndex": 162
+  },
+  {
+    "name": "WATER_ICY_DEEP",
+    "vanillaTextureIndex": 163
+  },
+  {
+    "name": "WATER_ENDLESS",
+    "vanillaTextureIndex": 164
+  },
+  {
+    "name": "WATER_ENDLESS_OPEN",
+    "vanillaTextureIndex": 165
+  },
+  {
+    "name": "WATER_ENDLESS_SHELF",
+    "vanillaTextureIndex": 166
+  },
+  {
+    "name": "WATER_ENDLESS_DROPOFF",
+    "vanillaTextureIndex": 167
+  },
+  {
+    "name": "WATER_ENDLESS_DEEP",
+    "vanillaTextureIndex": 168
+  },
+  {
+    "name": "WATER_CRYSTAL",
+    "vanillaTextureIndex": 169
+  },
+  {
+    "name": "WATER_CRYSTAL_OPEN",
+    "vanillaTextureIndex": 170
+  },
+  {
+    "name": "WATER_CRYSTAL_SHELF",
+    "vanillaTextureIndex": 171
+  },
+  {
+    "name": "WATER_CRYSTAL_DROPOFF",
+    "vanillaTextureIndex": 172
+  },
+  {
+    "name": "WATER_CRYSTAL_DEEP",
+    "vanillaTextureIndex": 173
+  },
+  {
+    "name": "WATER_FETID",
+    "vanillaTextureIndex": 174
+  },
+  {
+    "name": "WATER_FETID_OPEN",
+    "vanillaTextureIndex": 175
+  },
+  {
+    "name": "WATER_FETID_SHELF",
+    "vanillaTextureIndex": 176
+  },
+  {
+    "name": "WATER_FETID_DROPOFF",
+    "vanillaTextureIndex": 177
+  },
+  {
+    "name": "WATER_FETID_DEEP",
+    "vanillaTextureIndex": 178
+  },
+  {
+    "name": "WATER_TANGLED",
+    "vanillaTextureIndex": 179
+  },
+  {
+    "name": "WATER_TANGLED_OPEN",
+    "vanillaTextureIndex": 180
+  },
+  {
+    "name": "WATER_TANGLED_SHELF",
+    "vanillaTextureIndex": 181
+  },
+  {
+    "name": "WATER_TANGLED_DROPOFF",
+    "vanillaTextureIndex": 182
+  },
+  {
+    "name": "WATER_TANGLED_DEEP",
+    "vanillaTextureIndex": 183
+  },
+  {
+    "name": "WATER_JAGGED",
+    "vanillaTextureIndex": 184
+  },
+  {
+    "name": "WATER_JAGGED_OPEN",
+    "vanillaTextureIndex": 185
+  },
+  {
+    "name": "WATER_JAGGED_SHELF",
+    "vanillaTextureIndex": 186
+  },
+  {
+    "name": "WATER_JAGGED_DROPOFF",
+    "vanillaTextureIndex": 187
+  },
+  {
+    "name": "WATER_JAGGED_DEEP",
+    "vanillaTextureIndex": 188
+  },
+  {
+    "name": "LEAFY_JATOBA",
+    "vanillaTextureIndex": 189
+  },
+  {
+    "name": "LEAFY_JATOBA_TILED",
+    "vanillaTextureIndex": 190
+  },
+  {
+    "name": "LEAFY_JATOBA_DISEASED",
+    "vanillaTextureIndex": 191
+  },
+  {
+    "name": "LEAFY_JATOBA_DISEASED_TILED",
+    "vanillaTextureIndex": 192
+  },
+  {
+    "name": "LEAFY_CAMPHOR",
+    "vanillaTextureIndex": 193
+  },
+  {
+    "name": "LEAFY_CAMPHOR_TILED",
+    "vanillaTextureIndex": 194
+  },
+  {
+    "name": "LEAFY_CAMPHOR_DISEASED",
+    "vanillaTextureIndex": 195
+  },
+  {
+    "name": "LEAFY_CAMPHOR_DISEASED_TILED",
+    "vanillaTextureIndex": 196
+  },
+  {
+    "name": "LEAFY_IRONWOOD",
+    "vanillaTextureIndex": 197
+  },
+  {
+    "name": "LEAFY_IRONWOOD_TILED",
+    "vanillaTextureIndex": 198
+  },
+  {
+    "name": "LEAFY_IRONWOOD_DISEASED",
+    "vanillaTextureIndex": 199
+  },
+  {
+    "name": "LEAFY_IRONWOOD_DISEASED_TILED",
+    "vanillaTextureIndex": 200
+  },
+  {
+    "name": "TEXTURE_THATCHED02",
+    "vanillaTextureIndex": 201
   },
   {
     "name": "WHITE",
@@ -824,6 +1135,11 @@
     "specularGloss": 20.0
   },
   {
+    "name": "SNOW_4_DARK",
+    "parent": "SNOW_4",
+    "brightness": 0.9
+  },
+  {
     "name": "GRASS_1"
   },
   {
@@ -850,8 +1166,13 @@
   {
     "name": "DIRT_1",
     "normalMap": "DIRT_1_N",
-    "specularStrength": 0.25,
+    "specularStrength": 0.13,
     "specularGloss": 18.0
+  },
+  {
+    "name": "DIRT_1_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.1
   },
   {
     "name": "DIRT_1_VERT",
@@ -864,7 +1185,7 @@
   {
     "name": "DIRT_2",
     "normalMap": "DIRT_2_N",
-    "specularStrength": 0.25,
+    "specularStrength": 0.13,
     "specularGloss": 18.0
   },
   {
@@ -1022,6 +1343,11 @@
     "specularGloss": 30.0
   },
   {
+    "name": "GRUNGE_3_SMOOTH",
+    "parent": "GRUNGE_3",
+    "normalMap": null
+  },
+  {
     "name": "GRUNGE_3_SHINY",
     "parent": "GRUNGE_3",
     "brightness": 1.177,
@@ -1060,6 +1386,11 @@
       12.0,
       -12.0
     ]
+  },
+  {
+    "name": "WATER_FOUNTAIN_FLAT_LIGHT",
+    "parent": "WATER_FOUNTAIN_FLAT",
+    "brightness": 1.1
   },
   {
     "name": "WATER_FLAT_FORCE",
@@ -1127,6 +1458,11 @@
     "specularGloss": 60.0
   },
   {
+    "name": "ROCK_2_LIGHT",
+    "parent": "ROCK_2",
+    "brightness": 1.2
+  },
+  {
     "name": "ROCK_3_D"
   },
   {
@@ -1157,6 +1493,17 @@
     "brightness": 1.194
   },
   {
+    "name": "ROCK_3_VERY_LIGHT_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "textureScale": [
+      1,
+      1,
+      0.3
+    ],
+    "brightness": 1.45
+  },
+  {
     "name": "ROCK_3_SMOOTH",
     "parent": "ROCK_3",
     "displacementMap": null,
@@ -1168,6 +1515,11 @@
       1.0,
       0.15
     ]
+  },
+  {
+    "name": "ROCK_3_SMOOTH_LIGHT",
+    "parent": "ROCK_3_SMOOTH",
+    "brightness": 1.194
   },
   {
     "name": "ROCK_3_ORE",
@@ -1237,6 +1589,11 @@
     "name": "ROPE"
   },
   {
+    "name": "ROPE_LIGHT",
+    "parent": "ROPE",
+    "brightness": 1.5
+  },
+  {
     "name": "CARPET_N"
   },
   {
@@ -1257,6 +1614,11 @@
   },
   {
     "name": "BURLAP"
+  },
+  {
+    "name": "BURLAP_LIGHT",
+    "parent": "BURLAP",
+    "brightness": 1.1
   },
   {
     "name": "FALADOR_PATH_BRICK_N"
@@ -1373,6 +1735,11 @@
     "specularGloss": 280.0
   },
   {
+    "name": "MARBLE_1_LIGHT",
+    "parent": "MARBLE_1",
+    "brightness": 1.15
+  },
+  {
     "name": "MARBLE_2_GLOSS",
     "parent": "MARBLE_2",
     "specularStrength": 0.8,
@@ -1466,6 +1833,28 @@
     "displacementMap": "LASSAR_UNDERCITY_TILE_D",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
     "displacementScale": 0.025
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH",
+    "parent": "MARBLE_2",
+    "normalMap": "LASSAR_UNDERCITY_TILE_N",
+    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
+    "displacementScale": 0.025,
+    "textureScale": [
+      1,
+      1.1,
+      1
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH_BLEND",
+    "parent": "DARKMEYER_BRICK_PATH",
+    "textureScale": [
+      0.76,
+      0.76,
+      1
+    ]
   },
   {
     "name": "HD_LAVA_1",
@@ -1837,6 +2226,11 @@
     "name": "STONE_NORMALED_LIGHT",
     "parent": "STONE_NORMALED",
     "brightness": 1.122
+  },
+  {
+    "name": "STONE_NORMALED_VERY_LIGHT",
+    "parent": "STONE_NORMALED",
+    "brightness": 1.2
   },
   {
     "name": "STONE_LOWGLOSS",
@@ -2231,6 +2625,11 @@
     "normalMap": "GROUND_WEB_2_N",
     "specularStrength": 0.35,
     "specularGloss": 90.0
+  },
+  {
+    "name": "GROUND_WEB_2_LIGHT",
+    "parent": "GROUND_WEB_2",
+    "brightness": 1.5
   },
   {
     "name": "GROUND_WEB_3_N"
