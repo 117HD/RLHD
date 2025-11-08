@@ -23,7 +23,7 @@
       },
       "areas": {
         "type": "array",
-        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the override should be limited to.",
+        "description": "An array of bounding boxes and/or area enums specifying which areas the override should be limited to.",
         "items": {
           "$ref": "aabb.schema.json"
         }
@@ -153,6 +153,10 @@
         "type": "boolean",
         "description": "Whether the bottom-most vertices of the model should snap to the tile height. Defaults to false."
       },
+      "undoVanillaShading": {
+        "type": "boolean",
+        "description": "Whether the model should undo the baked phong shading in the vertex colours. Defaults to true."
+      },
       "shadowOpacityThreshold": {
         "type": "number",
         "description": "Specify an opacity threshold for shadow casting that better suits the model. Between 0 and 1."
@@ -169,7 +173,7 @@
       },
       "hideInAreas": {
         "type": "array",
-        "description": "An array of bounding boxes, region IDs and/or area enums specifying where the model should be hidden.",
+        "description": "An array of bounding boxes and/or area enums specifying where the model should be hidden.",
         "items": {
           "$ref": "aabb.schema.json"
         }
@@ -193,6 +197,10 @@
       "invertDisplacementStrength": {
         "type": "boolean",
         "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
+      },
+      "depthBias": {
+        "type": "integer",
+        "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
       },
       "materialOverrides": {
         "type": "object",
