@@ -6874,7 +6874,8 @@
   },
   {
     "description": "Hide triangle wall tops where they are not needed",
-    "hideInAreas": [ "TAVERLEY_DUNGEON" ],
+    "areas": [ "TAVERLEY_DUNGEON" ],
+    "hide": true,
     "objectIds": [
       "CAVEWALL_TOP5"
     ]
@@ -14043,8 +14044,7 @@
       "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE01",
       "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE02",
       "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP02_FADE03",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04_FADE01",
-      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP01"
+      "GIANTS_FOUNDRY_WALL_LVL1_WALLTOP04_FADE01"
     ],
     "uvType": "BOX",
     "uvScale": 0.6,
