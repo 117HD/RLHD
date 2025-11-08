@@ -62904,5 +62904,111 @@
     "projectileIds": [
       "GODWARS_BLACK_DEMON_FIREBALL_PROJ"
     ]
+  },
+  {
+    "description": "Catacombs of Kourend - Wall",
+    "baseMaterial": "ROCK_3_VERY_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "ZEAH_CATA_WALL_01",
+      "ZEAH_CATA_WALL_02",
+      "ZEAH_CATA_WALL_03",
+      "ZEAH_CATA_WALL_04",
+      "ZEAH_CATA_OVERPASS_01",
+      "ZEAH_CATA_OVERPASS_02",
+      "ZEAH_CATA_STAIRS_01",
+      "ZEAH_CATA_CRACK",
+      "ZEAH_CATA_ROCK_MINE"
+    ]
+  },
+  {
+    "description": "Catacombs of Kourend - Floor",
+    "baseMaterial": "ROCK_3_VERY_LIGHT_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "ZEAH_CATA_FLOOR_01",
+      "ZEAH_CATA_FLOOR_02",
+      "ZEAH_CATA_FLOOR_03",
+      "ZEAH_CATA_FLOOR_04",
+      "ZEAH_CATA_FLOOR_05",
+      "ZEAH_CATA_FLOOR_06",
+      "ZEAH_CATA_FLOOR_07",
+      "ZEAH_CATA_FLOOR_08",
+      "ZEAH_CATA_FLOOR_09",
+      "ZEAH_CATA_FLOOR_10",
+      "ZEAH_CATA_FLOOR_11",
+      "ZEAH_CATA_FLOOR_12",
+      "ZEAH_CATA_FLOOR_13",
+      "ZEAH_CATA_OVERPASS_SIDE_01",
+      "ZEAH_CATA_OVERPASS_SIDE_02"
+    ]
+  },
+  {
+    "description": "Catacombs of Kourend - Water Pool - Edges",
+    "areas": [ "KOUREND_CATACOMBS_DUNGEON_WATER" ],
+    "baseMaterial": "STONE_NORMALED_VERY_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "ZEAH_CATA_FLOOR_10",
+      "ZEAH_CATA_FLOOR_03",
+      "ZEAH_CATA_FLOOR_05",
+      "ZEAH_CATA_FLOOR_09",
+      "ZEAH_CATA_FLOOR_08",
+      "ZEAH_CATA_FLOOR_04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 30",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Catacombs of Kourend - Water Pool - Middle",
+    "areas": [ "KOUREND_CATACOMBS_DUNGEON_WATER" ],
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 2,
+    "objectIds": [
+      "ZEAH_CATA_FLOOR_02",
+      "ZEAH_CATA_STEPSTONE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 30",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Catacombs of Kourend - Exit Vines",
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
+    "invertDisplacementStrength": true,
+    "windDisplacementModifier": -1,
+    "uvType": "BOX",
+    "objectIds": [
+      "CATA_EXIT",
+      "ZEAH_CATA_EXIT_02",
+      "ZEAH_CATA_EXIT_01",
+      "ZEAH_CATA_EXIT_03",
+      "ZEAH_CATA_EXIT_04"
+    ]
+  },
+  {
+    "description": "Catacombs of Kourend - Skotizo Altar - Dynamic - Animated",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
+    "uvType": "BOX",
+    "objectIds": [
+      "CATA_ALTAR"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   }
 ]

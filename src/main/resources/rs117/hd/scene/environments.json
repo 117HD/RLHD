@@ -1145,7 +1145,9 @@
     "ambientStrength": 3.5,
     "directionalStrength": 1,
     "fogColor": "#0e0022",
-    "fogDepth": 40
+    "fogDepth": 35,
+    "windStrength": 15,
+    "windSpeed": 10
   },
   {
     "area": "KEBOS_LOWLANDS",

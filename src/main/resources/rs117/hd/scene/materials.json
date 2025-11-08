@@ -1478,6 +1478,17 @@
     "brightness": 1.194
   },
   {
+    "name": "ROCK_3_VERY_LIGHT_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "textureScale": [
+      1,
+      1,
+      0.3
+    ],
+    "brightness": 1.45
+  },
+  {
     "name": "ROCK_3_SMOOTH",
     "parent": "ROCK_3",
     "displacementMap": null,
@@ -2200,6 +2211,11 @@
     "name": "STONE_NORMALED_LIGHT",
     "parent": "STONE_NORMALED",
     "brightness": 1.122
+  },
+  {
+    "name": "STONE_NORMALED_VERY_LIGHT",
+    "parent": "STONE_NORMALED",
+    "brightness": 1.2
   },
   {
     "name": "STONE_LOWGLOSS",
