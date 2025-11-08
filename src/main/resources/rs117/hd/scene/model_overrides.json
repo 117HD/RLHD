@@ -10107,7 +10107,8 @@
       "GRANDTREE_LADDERBOTTOM",
       "GRANDTREE_LADDERMIDDLE_BOTTOM",
       "GRANDTREE_LADDERMIDDLE_TOP",
-      "GRANDTREE_LADDERTOP"
+      "GRANDTREE_LADDERTOP",
+      "REHNISON_LADDER_UP"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -10759,6 +10760,7 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "BIGTABLE2",
+      "BIGTABLE3",
       "KR_CAM_BIGTABLE",
       "FAI_VARROCK_COUNTER_TABLE",
       "FAI_VARROCK_WOODEN_TABLE",
@@ -65517,6 +65519,19 @@
       "BLUEFLOWER",
       "REDFLOWER",
       "DAISYS"
+    ]
+  },
+  {
+    "description": "West Ardougne Gate - Metallic - Textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 192,
+    "objectIds": [
+      "ARDOUGNEDOOR_R",
+      "ARDOUGNEDOOR_R_OPEN",
+      "ARDOUGNEDOOR_L",
+      "ARDOUGNEDOOR_L_OPEN"
     ]
   }
 ]
