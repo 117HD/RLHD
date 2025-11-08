@@ -20651,7 +20651,7 @@
   },
   {
     "description": "Varrock Lantern",
-    "excludeAreas": [ "VARROCK_ZAFFS", "VARROCK_HORVIKS_ANVIL", "VARROCK_DUMMY_TRAINING_ROOM", "VARROCK_HOUSE_3" ],
+    "excludeAreas": [ "VARROCK_HOUSES" ],
     "offset": [ -10, 155, 0 ],
     "radius": 220,
     "strength": 8.5,
@@ -20669,46 +20669,10 @@
   },
   {
     "description": "Varrock Indoors Lantern",
-    "areas": [ "VARROCK_DUMMY_TRAINING_ROOM", "VARROCK_HOUSE_3" ],
+    "areas": [ "VARROCK_HOUSES" ],
     "offset": [ 30, 155, 0 ],
-    "radius": 350,
+    "radius": 300,
     "strength": 5.5,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "objectIds": [
-      "FAI_VARROCK_OILLAMP"
-    ]
-  },
-  {
-    "description": "Horvik Lantern",
-    "areas": [ "VARROCK_HORVIKS_ANVIL" ],
-    "offset": [ 30, 155, 0 ],
-    "radius": 420,
-    "strength": 8.5,
-    "color": [
-      252,
-      148,
-      3
-    ],
-    "type": "FLICKER",
-    "duration": 0,
-    "range": 20,
-    "objectIds": [
-      "FAI_VARROCK_OILLAMP"
-    ]
-  },
-  {
-    "description": "Zaff Lantern",
-    "areas": [ "VARROCK_ZAFFS" ],
-    "offset": [ -10, 155, 0 ],
-    "radius": 400,
-    "strength": 8.5,
     "color": [
       252,
       148,
