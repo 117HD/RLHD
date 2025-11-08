@@ -10311,24 +10311,6 @@
     ]
   },
   {
-    "description": "Falador - Metallic - Wooden - Barrel with maces in it",
-    "baseMaterial": "METALLIC_1_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 404,
-    "colorOverrides": [
-      {
-        "description": "Wood",
-        "colors": "s >= 1",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "uvType": "BOX"
-      }
-    ],
-    "objectIds": [
-      "FAI_FALADOR_MACE_FILLED_BARREL"
-    ]
-  },
-  {
     "description": "Falador - Metallic - Wooden - Metal wall rack with maces",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
