@@ -947,7 +947,6 @@
       "RAIDS_CRYTAL5",
       "RAIDS_CRYTAL6",
       "RAIDS_TEKTON_ANVIL",
-      "LIZARDMAN_LAMP",
       "RAIDS_BLOCKAGE_PURPLE",
       "RAIDS_BLOCKAGE_PURPLE_SMALL",
       "RAIDS_BLOCKAGE_ORANGE",
@@ -1183,6 +1182,7 @@
     "description": "Spirit trees - Small",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "windDisplacementModifier": -3,
     "objectIds": [
       "SPIRIT_TREE_SEEDLING",
       "SPIRIT_TREE_1",
@@ -12750,6 +12750,7 @@
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
       "MDAUGHTER_ROCKSLIDE",
+      "SWAMP_MOSS_COVERED_ROCK_1",
       "SWAMP_MOSS_COVERED_ROCK_2",
       "HUNTING_TRAIL_SPAWN_FOSSIL1",
       "HUNTING_TRAIL_SPAWN_FOSSIL3",
@@ -14090,6 +14091,7 @@
   {
     "description": "Mortton - Objects - Stone - Funeral Pyre",
     "baseMaterial": "STONE_NORMALED",
+    "textureMaterial": "HD_CONCRETE_FLAT",
     "objectIds": [
       "TEMPLE_PYRE"
     ],
@@ -19001,7 +19003,7 @@
     "description": "Tree - Non interactable - Jungle",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "windDisplacementModifier": -2,
+    "windDisplacementModifier": -3,
     "objectIds": [
       "JUNGLETREE1",
       "JUNGLETREE2",
@@ -19019,7 +19021,7 @@
       {
         "colors": "h > 10",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "windDisplacementModifier": -2,
+        "windDisplacementModifier": -3,
         "baseMaterial": "LEAF_VEINS",
         "uvType": "MODEL_XZ",
         "uvScale": 0.25
@@ -19041,7 +19043,7 @@
     "description": "Jungle Tree Small",
     "baseMaterial": "LEAF_VEINS",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-    "windDisplacementModifier": -2,
+    "windDisplacementModifier": -3,
     "objectIds": [
       "KHARAZI_JUNGLE_TREE_LOGS",
       "MM_BUSH_KHARAZI_JUNGLE_TREE1",
@@ -19059,7 +19061,7 @@
       {
         "colors": [ "h == 5", "h == 4" ],
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "windDisplacementModifier": -2,
+        "windDisplacementModifier": -3,
         "baseMaterial": "BARK",
         "uvScale": 0.75,
         "terrainVertexSnap": true,
@@ -19256,7 +19258,7 @@
     "materialOverrides": {
       "TROPICAL_LEAF": {
         "textureMaterial": "TROPICAL_LEAF",
-        "windDisplacementMode": "OBJECT",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "windDisplacementModifier": -2
       }
     }
@@ -23834,7 +23836,9 @@
       "AHOY_PLANT_4",
       "SMALL_PLANT1",
       "SMALL_PLANT2",
-      "SMALL_PLANT3"
+      "SMALL_PLANT3",
+      "ARCQUEST_HUNTING_PLANT_NOOP",
+      "ARCQUEST_HUNTING_PLANT_OP"
     ]
   },
   {
@@ -23960,7 +23964,7 @@
   {
     "description": "Morytania - Tall Grass",
     "baseMaterial": "PLANT_GRUNGE_1",
-    "windDisplacementMode": "VERTEX",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
       "SWAMP_PLANT1",
       "SWAMP_PLANT2",
@@ -26970,7 +26974,6 @@
       "THATCHED_TIMBERROOF",
       "THATCHED_TIMBERROOF_FILL",
       "OLDROOF_THATCHED",
-      "ROOF_THATCHED",
       "DEATH_STONEHUTROOF",
       "DEATH_STONEHUTROOFB",
       "VIKING_ABODE_POOR_ROOF",
@@ -27921,7 +27924,14 @@
       "MY2ARM_BONES3",
       "MY2ARM_BONES4",
       "NECROPOLIS_BONES1",
-      "NECROPOLIS_BONES3"
+      "NECROPOLIS_BONES3",
+      "CHICKENQUEST_WAR_BONES1",
+      "CHICKENQUEST_WAR_BONES2",
+      "CHICKENQUEST_WAR_BONES3",
+      "CHICKENQUEST_WAR_BONES4",
+      "CHICKENQUEST_BONES_SMALL_01",
+      "CHICKENQUEST_BONES_SMALL_02",
+      "CHICKENQUEST_BONES_SMALL_03"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -36344,6 +36354,50 @@
     "uvType": "BOX",
     "uvScale": 0.8,
     "uvOrientation": 100
+  },
+  {
+    "description": "Molch Ruins Pyramid Facade",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "MOLCH_TEMPLE_FLATSKEW_CORN",
+      "MOLCH_TEMPLE_FLATSKEW",
+      "MOLCH_TEMPLE_TABLE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75
+  },
+  {
+    "description": "Molch Ruins Temple Entrance",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "MOLCH_TEMPLE_LIZARD_DWELLING",
+      "MOLCH_TEMPLE_LIZARD_DWELLING2",
+      "MOLCH_TEMPLE_LIZARD_DWELLING3",
+      "MOLCH_TEMPLE_LIZARD_DWELLING4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "s == 7 && l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Molch Ruins Temple Exit",
+    "baseMaterial": "STONE_NORMALED",
+    "objectIds": [
+      "MOLCH_TEMPLE_EXIT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Olmic Halfwall",
@@ -48720,19 +48774,6 @@
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 89
-      },
-      {
-        "description": "Items",
-        "colors": "h == 12",
-        "baseMaterial": "GRUNGE_3_SHINY",
-        "uvType": "BOX"
-      },
-      {
-        "description": "Items",
-        "colors": "h > 13",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
       }
     ]
   },
@@ -51358,13 +51399,16 @@
     ]
   },
   {
-    "description": "Kebos Lowlands - Wooden - Log -  Molch Palisade",
+    "description": "Kebos Lowlands - Wooden - Log - Molch Palisade",
     "baseMaterial": "BARK",
     "uvType": "BOX",
     "uvScale": 0.8,
     "objectIds": [
       "MOLCH_PALISADE_1",
-      "MOLCH_PALISADE_2"
+      "MOLCH_PALISADE_2",
+      "MOLCH_SWAMP_STUMP1",
+      "MOLCH_SWAMP_STUMP2",
+      "MOLCH_SWAMP_STUMP3"
     ],
     "colorOverrides": [
       {
@@ -51380,6 +51424,81 @@
         "uvScale": 0.5,
         "uvOrientation": 212
       }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Stone - Molch Low Wall",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "objectIds": [
+      "MOLCH_LOW_WALL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s > 3",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Molch Swampy Lamp",
+    "baseMaterial": "LEAF_VEINS",
+    "upwardsNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "LIZARDMAN_LAMP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Hide fake lighting",
+        "colors": "a < 255 && l > 50 && l < 60",
+        "baseMaterial": "TRANSPARENT"
+      },
+      {
+        "description": "Brighten bulb",
+        "colors": "a < 255",
+        "baseMaterial": "GRAY_300",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Lizardman Lair Entrance",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "LIZARDMAN_LAIR"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Lizardman Temple - Chest & Vase",
+    "baseMaterial": "STONE",
+    "uvType": "BOX",
+    "uvScale": 0.9,
+    "objectIds": [
+      "MOLCH_TEMPLE_CHEST_THEIVING",
+      "MOLCH_TEMPLE_CHEST_THEIVING_OPEN",
+      "MOLCH_TEMPLE_CHEST_TABLET",
+      "MOLCH_TEMPLE_CHEST_HAMMERS",
+      "MOLCH_TEMPLE_VASE1",
+      "MOLCH_TEMPLE_VASE2"
+    ]
+  },
+  {
+    "description": "Kebos Lowlands - Lizardman Temple - Cat Statue",
+    "baseMaterial": "MARBLE_2",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "MOLCH_TEMPLE_CAT"
     ]
   },
   {
@@ -57004,7 +57123,7 @@
     "materialOverrides": {
       "TROPICAL_LEAF": {
         "textureMaterial": "TROPICAL_LEAF",
-        "windDisplacementMode": "OBJECT",
+        "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
         "windDisplacementModifier": -3
       }
     }
@@ -60713,10 +60832,13 @@
   {
     "description": "Fossil Island - Tar Swamp - Vines",
     "baseMaterial": "GRUNGE_3_LIGHT",
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "uvType": "BOX",
     "objectIds": [
       "FOSSIL_FLORA_SWAMP_VINE_01",
-      "FOSSIL_FLORA_SWAMP_VINE_TOP_01"
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_01",
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_02",
+      "FOSSIL_FLORA_SWAMP_VINE_TOP_03"
     ]
   },
   {

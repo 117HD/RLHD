@@ -3345,6 +3345,13 @@
     ]
   },
   {
+    "name": "MORYTANIA_SLAYER_TOWER_BASEMENT",
+    "regions": [
+      13723
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "CANIFIS",
     "regions": [
       13878
@@ -4961,6 +4968,13 @@
       [ 1280, 3675, 1283, 3680 ],
       [ 1284, 3677, 1284, 3678 ],
       [ 1290, 3686, 1294, 3694 ]
+    ]
+  },
+  {
+    "name": "Molch Water Channel Fix",
+    "aabbs": [
+      [ 1301, 3688, 1302, 3689 ],
+      [ 1283, 3688, 1284, 3689 ]
     ]
   },
   {

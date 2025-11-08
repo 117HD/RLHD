@@ -993,6 +993,11 @@
     "parent": "NONE"
   },
   {
+    "name": "GRAY_300",
+    "parent": "NONE",
+    "brightness": 3
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5
@@ -2502,6 +2507,11 @@
       "CONCRETE"
     ],
     "replacementCondition": "modelTextures"
+  },
+  {
+    "name": "HD_CONCRETE_FLAT",
+    "normalMap": null,
+    "parent": "HD_CONCRETE"
   },
   {
     "name": "HD_HAY_N"

@@ -20597,7 +20597,6 @@
       "FENK_TORCH",
       "VC_CANDLE",
       "ROYAL_CAVEWALL_TORCH_FLAMES",
-      "KR_UNDERGROUND_JAIL_TOURCH",
       "FAVOUR_TORCH",
       "FALADOR_TORCH",
       "FAVOUR_TORCH",
@@ -25286,11 +25285,28 @@
     ]
   },
   {
+    "description": "LIZARDMAN_LAMP",
+    "offset": [ 30, 120, 0 ],
+    "radius": 350,
+    "strength": 15,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "LIZARDMAN_LAMP"
+    ]
+  },
+  {
     "description": "LIZARDMAN_TEMPLE_SKYLIGHT",
-    "height": 600,
+    "height": 850,
     "alignment": "CENTER",
-    "radius": 1000,
-    "strength": 12.5,
+    "radius": 1200,
+    "strength": 15,
     "color": [
       200,
       230,
@@ -25304,10 +25320,28 @@
     ]
   },
   {
-    "description": "LIZARDMAN_TEMPLE_MYSTICAL_BARRIER_GREEN",
-    "height": 200,
+    "description": "Lizardman Temple Torch",
+    "height": 275,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 350,
+    "strength": 16,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "KR_UNDERGROUND_JAIL_TOURCH"
+    ]
+  },
+  {
+    "description": "LIZARDMAN_TEMPLE_MYSTICAL_BARRIER_GREEN",
+    "height": 150,
+    "alignment": "CENTER",
+    "radius": 550,
     "strength": 12.5,
     "color": [
       191,
@@ -25316,9 +25350,28 @@
     ],
     "type": "PULSE",
     "duration": 1400,
-    "range": 20,
+    "range": 10,
     "objectIds": [
       "MOLCH_TEMPLE_BARRIER_GREEN"
+    ]
+  },
+  {
+    "description": "Lizardman Spawn",
+    "height": 75,
+    "alignment": "CENTER",
+    "radius": 375,
+    "strength": 6,
+    "spawnDelay": 100,
+    "fadeInDuration": 400,
+    "fadeOutDuration": 800,
+    "color": [
+      255,
+      0,
+      255
+    ],
+    "type": "STATIC",
+    "npcIds": [
+      "ZEAH_LIZARDSHAMAN_SPAWN"
     ]
   },
   {
