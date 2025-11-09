@@ -13919,7 +13919,6 @@
     "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_RANGE",
-      "FAI_VARROCK_RANGE_WITH_PIPE",
       "KR_SIN_RANGE",
       "CON_CONTRACT_FALADOR_SOUTH_RANGE_FIXED",
       "CON_CONTRACT_ARDY_WEST_HOTSPOT1",
@@ -13933,6 +13932,15 @@
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Varrock - Range",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.2,
+    "objectIds": [
+      "FAI_VARROCK_RANGE_WITH_PIPE"
     ]
   },
   {
