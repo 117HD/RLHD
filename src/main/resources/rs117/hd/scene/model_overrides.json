@@ -6995,6 +6995,35 @@
     "uvOrientation": 100
   },
   {
+    "description": "Underground Pass - Grunge - Bone - Temple Door attached to Rounded Cave Wall - Textured",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "objectIds": [
+      "UPASS_TEMPLEDOOR_RIGHT",
+      "UPASS_TEMPLEDOOR_LEFT"
+    ]
+  },
+  {
+    "description": "Underground Pass - Grunge - Bone - Temple Door top - Textured",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UPASS_TEMPLEDOOR_TOP"
+    ]
+  },
+  {
     "description": "Castle Wars - Cave in Walls 1",
     "baseMaterial": "GRUNGE_1_LIGHT",
     "upwardsNormals": true,
@@ -11153,7 +11182,9 @@
       "TRAPCHEST5",
       "INACOPENCHEST",
       "GRANDTREE_CHESTCLOSED",
-      "SOTE_TRINKET_CHEST"
+      "SOTE_TRINKET_CHEST",
+      "UPASSSHUTCHEST1",
+      "CAVEWITCHCHEST"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -14065,7 +14096,9 @@
       "ELID_POTSANDPANS1",
       "ELID_POTSANDPANS2",
       "AREA_SANGUINE_GHETTO_POTS1",
-      "AREA_SANGUINE_GHETTO_POTS2"
+      "AREA_SANGUINE_GHETTO_POTS2",
+      "SOTE_POTSANDPANS1",
+      "SOTE_POTSANDPANS2"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -28115,6 +28148,7 @@
     "baseMaterial": "BONE",
     "objectIds": [
       "CORPSE",
+      "CORPSE_BURNT",
       "CORPSE4",
       "CHICKENQUEST_SKELETON_1",
       "CHICKENQUEST_SKELETON_2",
@@ -28129,6 +28163,7 @@
       "GA_SKELETON",
       "GRIM_GIANT_SKELETON_2",
       "CORPSE2_NOBLOCK",
+      "CORPSE2_BURNT",
       "TAPO_SKELETON01",
       "TAPO_SKELETON02",
       "TOBQUEST_SKELETON_OP"
@@ -56436,6 +56471,19 @@
     "uvType": "BOX"
   },
   {
+    "description": "Mushroom - Red mushroom with White spots and Small red and white mushroom clusters",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "REGICIDE_RED_MUSHROOMS",
+      "SOTE_HUNTING_MUSHROOMS2_NOOP",
+      "SOTE_HUNTING_MUSHROOMS2_OP",
+      "SOTE_HUNTING_MUSHROOMS3_OP",
+      "REGICIDE_RED_MUSHROOM_FADE",
+      "REGICIDE_RED_MUSHROOM_CORNER"
+    ],
+    "uvType": "BOX"
+  },
+  {
     "description": "Gnome Stronghold - Cloth - Wooden - Standards",
     "baseMaterial": "CARPET",
     "uvType": "MODEL_XY",
@@ -65661,6 +65709,128 @@
       "SOTE_LIGHT_RED_4",
       "SOTE_LIGHT_BLACK_3",
       "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Underground Pass - Grunge - Bone - Skull on stick attached to a block - Needs proper UV",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UPASS_SKULLS_SPIKES"
+    ]
+  },
+  {
+    "description": "Underground Pass - Grunge - Bone - Skull on stick attached to a block - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [ "IBAN_TEMPLE_SKULL" ]
+  },
+  {
+    "description": "Underground Pass - Grunge Dark Beast Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "objectIds": [
+      "DARKMONSTER_STATUE_UPASS_RIGHT",
+      "DARKMONSTER_STATUE_UPASS_LEFT"
+    ]
+  },
+  {
+    "description": "Underground Pass - Brown Stone Wedge Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "objectIds": [ "SKEWSTEPS1_UPASS" ]
+  },
+  {
+    "description": "Underground Pass - Iban Altar",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [ "CAVE_TEMPLE_ALTAR" ]
+  },
+  {
+    "description": "Underground Pass - Iban Throne",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "description": "Seat",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "IBAN_TEMPLE_THRONE", "IBAN_TEMPLE_THRONE_TOP"
+    ]
+  },
+  {
+    "description": "Underground Pass - Iban Claws",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "objectIds": [
+      "IBAN_TEMPLE_CLAWS_R",
+      "IBAN_TEMPLE_CLAWS_L"
+    ]
+  },
+  {
+    "description": "Underground Pass - Stone - Platforms",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "PLATFORM_DISTANCEBOTTOM",
+      "PLATFORM_DISTANCETOP",
+      "BRIDGEPLATFORMTOP",
+      "PLATFORMBASE3",
+      "BRIDGE1_SUPPORT",
+      "UPASS_BRIDGE_SUPPORT",
+      "UPASS_BRIDGECORNER1",
+      "UPASS_BRIDGECORNER2R",
+      "UPASS_BRIDGECORNER2L",
+      "BRIDGE_BEND_RIGHT",
+      "BRIDGE1",
+      "BRIDGE2",
+      "BRIDGE3",
+      "BRIDGE_THREEWAY",
+      "BRIDGECOLLAPSED1",
+      "BRIDGECOLLAPSED2"
     ]
   }
 ]
