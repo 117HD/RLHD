@@ -39147,7 +39147,7 @@
   {
     "description": "Wooden barrel with metal bands - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
-    "objectIds": [ "BARREL", "BARREL_WATERFALL_QUEST", "BARRELWITHTAP" ],
+    "objectIds": [ "BARREL", "BARREL_WATERFALL_QUEST", "BARRELWITHTAP", "UPASSDWARFBREWBARREL" ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
@@ -65830,7 +65830,29 @@
       "BRIDGE3",
       "BRIDGE_THREEWAY",
       "BRIDGECOLLAPSED1",
-      "BRIDGECOLLAPSED2"
+      "BRIDGECOLLAPSED2",
+      "PLATFORMBASE_GROUND",
+      "PLATFORMBASE_GROUND_UPPER"
+    ]
+  },
+  {
+    "description": "Dwarf Multi Cannon",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.4,
+    "objectIds": [
+      "SOTE_CANNON"
+    ]
+  },
+  {
+    "description": "Underground Pass - Stone - Dwarf Statues",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.4,
+    "objectIds": [
+      "STATUE_DWARFMINER_UPASS"
     ]
   }
 ]
