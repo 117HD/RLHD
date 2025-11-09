@@ -32567,7 +32567,8 @@
     "uvScale": 1.2,
     "objectIds": [
       "YEWTREE_UPDATE",
-      "MAHOGANYTREE_UPDATE"
+      "MAHOGANYTREE_UPDATE",
+      "PRIF_MAHOGANYTREE"
     ],
     "colorOverrides": [
       {
@@ -65452,6 +65453,95 @@
         "baseMaterial": "NONE",
         "depthBias": 110
       }
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Bark - Crystal - Tree - Crystal Trees",
+    "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Trunk",
+        "colors": "h < 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "terrainVertexSnap": true,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Crystals",
+        "colors": "h >= 32",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Grass",
+        "colors": "h == 12 && s == 7",
+        "baseMaterial": "GRAY_65",
+        "flatNormals": true,
+        "windDisplacementMode": "OBJECT",
+        "castShadows": false,
+        "terrainVertexSnap": true
+      }
+    ],
+    "objectIds": [
+      "PRIF_TREE_NORMAL_1",
+      "PRIF_TREE_NORMAL_2"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Bark - Crystal - Tree - Giant Crystal Trees",
+    "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Trunk",
+        "colors": "h < 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "terrainVertexSnap": true,
+        "uvScale": 0.6
+      },
+      {
+        "description": "Crystals",
+        "colors": "h >= 32",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      }
+    ],
+    "objectIds": [
+      "CRYSTAL_SUPPORT_SMALL",
+      "CRYSTAL_SUPPORT_LARGE_0_1",
+      "CRYSTAL_SUPPORT_LARGE_0_2",
+      "CRYSTAL_SUPPORT_LARGE_0_3",
+      "CRYSTAL_SUPPORT_LARGE_0_4",
+      "CRYSTAL_SUPPORT_LARGE_1_1",
+      "CRYSTAL_SUPPORT_LARGE_2_1"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Mossy Rocks Slayer Entrance",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "colors": "h == 12",
+        "baseMaterial": "GRASS_1",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "PRIF_SLAYER_DUNGEON_ENTRANCE"
     ]
   }
 ]
