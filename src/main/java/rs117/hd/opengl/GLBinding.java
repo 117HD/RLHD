@@ -36,7 +36,7 @@ public enum GLBinding {
 	UNIFORM_WORLD_VIEW(GLBindingType.BUFFER),
 
 	// Storage Buffer bindings
-	STORAGE_MODEL_DATA(GLBindingType.TEXTURE_BUFFER);
+	STORAGE_MODEL_DATA(GLBindingType.STORAGE_BUFFER);
 
 	private static final int MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS);
 	private static final int MAX_IMAGE_UNITS = glGetInteger(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
@@ -48,19 +48,9 @@ public enum GLBinding {
 	private int textureUnit = -1;
 	private int imageUnit;
 	private int bufferBindingIndex = -1;
+	private boolean initialized = false;
 
 	static {
-		for (GLBinding binding : values()) {
-			if ((binding.bindingType == GLBindingType.NONE && binding == NONE) || binding.bindingType == GLBindingType.TEXTURE || binding.bindingType == GLBindingType.TEXTURE_BUFFER)
-				binding.textureUnit = GL_TEXTURE0 + textureUnitCounter++;
-
-			if (binding.bindingType == GLBindingType.IMAGE)
-				binding.imageUnit = imageUnitCounter++;
-
-			if (binding.bindingType == GLBindingType.BUFFER || binding.bindingType == GLBindingType.TEXTURE_BUFFER)
-				binding.bufferBindingIndex = bufferBindingCounter++;
-		}
-
 		if (MAX_TEXTURE_UNITS < textureUnitCounter)
 			log.warn("The GPU only supports {} texture units", MAX_TEXTURE_UNITS);
 
@@ -68,23 +58,49 @@ public enum GLBinding {
 			log.warn("The GPU only supports {} image units", MAX_IMAGE_UNITS);
 	}
 
+	private void init() {
+		if ((bindingType == GLBindingType.NONE && this == NONE) || bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.STORAGE_BUFFER)
+			textureUnit = GL_TEXTURE0 + textureUnitCounter++;
+
+		if (bindingType == GLBindingType.IMAGE)
+			imageUnit = imageUnitCounter++;
+
+		if (bindingType == GLBindingType.BUFFER || bindingType == GLBindingType.STORAGE_BUFFER)
+			bufferBindingIndex = bufferBindingCounter++;
+
+		initialized = true;
+	}
+
+	public static void reset() {
+		for (GLBinding binding : values()) {
+			binding.textureUnit = 0;
+			binding.imageUnit = 0;
+			binding.bufferBindingIndex = 0;
+			binding.initialized = false;
+		}
+	}
+
 	public int getTextureUnit() {
-		assert bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.TEXTURE_BUFFER : this + " is not a  texture binding.";
+		assert bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.STORAGE_BUFFER : this + " is not a  texture binding.";
+		if (!initialized) init();
 		return textureUnit;
 	}
 
 	public int getImageUnit() {
 		assert bindingType == GLBindingType.IMAGE : this + " is not a image binding.";
+		if (!initialized) init();
 		return imageUnit;
 	}
 
 	public int getBufferBindingIndex() {
-		assert bindingType == GLBindingType.BUFFER || bindingType == GLBindingType.TEXTURE_BUFFER : this + " is not a buffer binding.";
+		assert bindingType == GLBindingType.BUFFER || bindingType == GLBindingType.STORAGE_BUFFER : this + " is not a buffer binding.";
+		if (!initialized) init();
 		return bufferBindingIndex;
 	}
 
 	public void setActive() {
-		assert bindingType == GLBindingType.NONE || bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.TEXTURE_BUFFER : this + " is not a texture or texture buffer binding.";
+		assert bindingType == GLBindingType.NONE || bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.STORAGE_BUFFER : this + " is not a texture or texture buffer binding.";
+		if (!initialized) init();
 		glActiveTexture(textureUnit);
 	}
 

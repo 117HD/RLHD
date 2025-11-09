@@ -81,6 +81,7 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.AsyncUICopy;
+import rs117.hd.opengl.GLBinding;
 import rs117.hd.opengl.buffer.uniforms.UBODisplacement;
 import rs117.hd.opengl.buffer.uniforms.UBOGlobal;
 import rs117.hd.opengl.buffer.uniforms.UBOLights;
@@ -646,6 +647,8 @@ public class HdPlugin extends Plugin {
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
 				renderer.waitUntilIdle();
+
+				GLBinding.reset();
 
 				waterTypeManager.shutDown();
 				materialManager.shutDown();

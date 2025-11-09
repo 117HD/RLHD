@@ -4,6 +4,6 @@ public enum GLBindingType {
 	TEXTURE,
 	IMAGE,
 	BUFFER,
-	TEXTURE_BUFFER,
+	STORAGE_BUFFER,
 	NONE;
 }
