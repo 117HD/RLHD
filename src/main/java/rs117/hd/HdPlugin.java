@@ -125,14 +125,13 @@ import rs117.hd.utils.ShaderRecompile;
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.opengl.GLBinding.IMAGE_TILE_LIGHTING_MAP;
-import static rs117.hd.opengl.GLBinding.TEXTURE_SHADOW_MAP;
-import static rs117.hd.opengl.GLBinding.TEXTURE_TILE_LIGHTING_MAP;
-import static rs117.hd.opengl.GLBinding.TEXTURE_UI;
-import static rs117.hd.opengl.GLBinding.UNIFORM_GLOBAL;
-import static rs117.hd.opengl.GLBinding.UNIFORM_LIGHTS;
-import static rs117.hd.opengl.GLBinding.UNIFORM_LIGHTS_CULLING;
-import static rs117.hd.opengl.GLBinding.UNIFORM_UI;
+import static rs117.hd.opengl.GLBinding.BINDING_IMG_TILE_LIGHTING_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_SHADOW_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_UI;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_GLOBAL;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_LIGHTS;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_LIGHTS_CULLING;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_UI;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -987,10 +986,10 @@ public class HdPlugin extends Plugin {
 	}
 
 	private void initializeUbos() {
-		uboGlobal.initialize(UNIFORM_GLOBAL);
-		uboLights.initialize(UNIFORM_LIGHTS);
-		uboLightsCulling.initialize(UNIFORM_LIGHTS_CULLING);
-		uboUI.initialize(UNIFORM_UI);
+		uboGlobal.initialize(BINDING_UBO_GLOBAL);
+		uboLights.initialize(BINDING_UBO_LIGHTS);
+		uboLightsCulling.initialize(BINDING_UBO_LIGHTS_CULLING);
+		uboUI.initialize(BINDING_UBO_UI);
 	}
 
 	private void destroyUbos() {
@@ -1004,7 +1003,7 @@ public class HdPlugin extends Plugin {
 		pboUi = glGenBuffers();
 
 		texUi = glGenTextures();
-		TEXTURE_UI.setActive();
+		BINDING_TEX_UI.setActive();
 		glBindTexture(GL_TEXTURE_2D, texUi);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -1039,7 +1038,7 @@ public class HdPlugin extends Plugin {
 
 		fboTiledLighting = glGenFramebuffers();
 		texTiledLighting = glGenTextures();
-		TEXTURE_TILE_LIGHTING_MAP.setActive();
+		BINDING_IMG_TILE_LIGHTING_MAP.setActive();
 		glBindTexture(GL_TEXTURE_2D_ARRAY, texTiledLighting);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -1064,7 +1063,7 @@ public class HdPlugin extends Plugin {
 
 		if (tiledLightingImageStoreProgram.isValid())
 			ARBShaderImageLoadStore.glBindImageTexture(
-				IMAGE_TILE_LIGHTING_MAP.getImageUnit(), texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
+				BINDING_IMG_TILE_LIGHTING_MAP.getImageUnit(), texTiledLighting, 0, true, 0, GL_WRITE_ONLY, GL_RGBA16UI);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 
@@ -1231,7 +1230,7 @@ public class HdPlugin extends Plugin {
 
 		// Create texture
 		texShadowMap = glGenTextures();
-		TEXTURE_SHADOW_MAP.setActive();
+		BINDING_TEX_SHADOW_MAP.setActive();
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 
 		shadowMapResolution = config.shadowResolution().getValue();
@@ -1272,7 +1271,7 @@ public class HdPlugin extends Plugin {
 	private void initializeDummyShadowMap() {
 		// Create dummy texture
 		texShadowMap = glGenTextures();
-		TEXTURE_SHADOW_MAP.setActive();
+		BINDING_TEX_SHADOW_MAP.setActive();
 		glBindTexture(GL_TEXTURE_2D, texShadowMap);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, 1, 1, 0, GL_DEPTH_COMPONENT, GL_FLOAT, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -1311,7 +1310,7 @@ public class HdPlugin extends Plugin {
 			glBufferData(GL_PIXEL_UNPACK_BUFFER, uiResolution[0] * uiResolution[1] * 4L, GL_STREAM_DRAW);
 			glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 
-			TEXTURE_UI.setActive();
+			BINDING_TEX_UI.setActive();
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, uiResolution[0], uiResolution[1], 0, GL_BGRA, GL_UNSIGNED_BYTE, 0);
 		}
@@ -1354,7 +1353,7 @@ public class HdPlugin extends Plugin {
 
 			frameTimer.begin(Timer.UPLOAD_UI);
 			glUnmapBuffer(GL_PIXEL_UNPACK_BUFFER);
-			TEXTURE_UI.setActive();
+			BINDING_TEX_UI.setActive();
 			glBindTexture(GL_TEXTURE_2D, texUi);
 			glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
 			frameTimer.end(Timer.UPLOAD_UI);
@@ -1391,7 +1390,7 @@ public class HdPlugin extends Plugin {
 		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
 		// GL_NEAREST makes sampling for bicubic/xBR simpler, so it should be used whenever linear/pixel isn't
 		final int function = config.uiScalingMode().glSamplingFunction;
-		TEXTURE_UI.setActive();
+		BINDING_TEX_UI.setActive();
 		glBindTexture(GL_TEXTURE_2D, texUi);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, function);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, function);

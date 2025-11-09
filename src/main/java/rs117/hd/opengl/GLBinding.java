@@ -12,34 +12,33 @@ import static org.lwjgl.opengl.GL20C.GL_MAX_TEXTURE_IMAGE_UNITS;
 @RequiredArgsConstructor
 @Slf4j
 public enum GLBinding {
-	NONE(GLBindingType.NONE),
+	BINDING_NONE(GLBindingType.NONE),
 
 	// Texture bindings
-	TEXTURE_UI(GLBindingType.TEXTURE),
-	TEXTURE_GAME(GLBindingType.TEXTURE),
-	TEXTURE_SHADOW_MAP(GLBindingType.TEXTURE),
-	TEXTURE_TILE_HEIGHT_MAP(GLBindingType.TEXTURE),
-	TEXTURE_TILE_LIGHTING_MAP(GLBindingType.TEXTURE),
+	BINDING_TEX_UI(GLBindingType.TEXTURE),
+	BINDING_TEX_GAME(GLBindingType.TEXTURE),
+	BINDING_TEX_SHADOW_MAP(GLBindingType.TEXTURE),
+	BINDING_TEX_TILE_HEIGHT_MAP(GLBindingType.TEXTURE),
 
 	// Image bindings
-	IMAGE_TILE_LIGHTING_MAP(GLBindingType.IMAGE),
+	BINDING_IMG_TILE_LIGHTING_MAP(GLBindingType.IMAGE),
 
 	// Uniform Buffer bindings
-	UNIFORM_GLOBAL(GLBindingType.BUFFER),
-	UNIFORM_MATERIALS(GLBindingType.BUFFER),
-	UNIFORM_WATER_TYPES(GLBindingType.BUFFER),
-	UNIFORM_LIGHTS(GLBindingType.BUFFER),
-	UNIFORM_LIGHTS_CULLING(GLBindingType.BUFFER),
-	UNIFORM_UI(GLBindingType.BUFFER),
-	UNIFORM_DISPLACEMENT(GLBindingType.BUFFER),
-	UNIFORM_COMPUTE(GLBindingType.BUFFER),
-	UNIFORM_WORLD_VIEW(GLBindingType.BUFFER),
+	BINDING_UBO_GLOBAL(GLBindingType.BUFFER),
+	BINDING_UBO_MATERIALS(GLBindingType.BUFFER),
+	BINDING_UBO_WATER_TYPES(GLBindingType.BUFFER),
+	BINDING_UBO_LIGHTS(GLBindingType.BUFFER),
+	BINDING_UBO_LIGHTS_CULLING(GLBindingType.BUFFER),
+	BINDING_UBO_UI(GLBindingType.BUFFER),
+	BINDING_UBO_DISPLACEMENT(GLBindingType.BUFFER),
+	BINDING_UBO_COMPUTE(GLBindingType.BUFFER),
+	BINDING_UBO_WORLD_VIEW(GLBindingType.BUFFER),
 
 	// Storage Buffer bindings
-	STORAGE_MODEL_DATA(GLBindingType.STORAGE_BUFFER);
+	BINDING_SSAO_MODEL_DATA(GLBindingType.STORAGE_BUFFER);
 
-	private static final int MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS);
-	private static final int MAX_IMAGE_UNITS = glGetInteger(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+	private static final int MAX_TEXTURE_UNITS;
+	private static final int MAX_IMAGE_UNITS;
 	private static int textureUnitCounter = 0;
 	private static int imageUnitCounter = 0;
 	private static int bufferBindingCounter = 0;
@@ -51,21 +50,23 @@ public enum GLBinding {
 	private boolean initialized = false;
 
 	static {
+		MAX_TEXTURE_UNITS = glGetInteger(GL_MAX_TEXTURE_IMAGE_UNITS);
 		if (MAX_TEXTURE_UNITS < textureUnitCounter)
 			log.warn("The GPU only supports {} texture units", MAX_TEXTURE_UNITS);
 
+		MAX_IMAGE_UNITS = glGetInteger(GL_MAX_VERTEX_TEXTURE_IMAGE_UNITS);
 		if (MAX_IMAGE_UNITS < imageUnitCounter)
 			log.warn("The GPU only supports {} image units", MAX_IMAGE_UNITS);
 	}
 
 	private void init() {
-		if ((bindingType == GLBindingType.NONE && this == NONE) || bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.STORAGE_BUFFER)
+		if (bindingType.isTextureUnit)
 			textureUnit = GL_TEXTURE0 + textureUnitCounter++;
 
-		if (bindingType == GLBindingType.IMAGE)
+		if (bindingType.isImageUnit)
 			imageUnit = imageUnitCounter++;
 
-		if (bindingType == GLBindingType.BUFFER || bindingType == GLBindingType.STORAGE_BUFFER)
+		if (bindingType.isBufferBinding)
 			bufferBindingIndex = bufferBindingCounter++;
 
 		initialized = true;
@@ -81,27 +82,27 @@ public enum GLBinding {
 	}
 
 	public int getTextureUnit() {
-		assert bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.STORAGE_BUFFER : this + " is not a  texture binding.";
+		assert bindingType.isTextureUnit : this + " is not a  texture binding.";
 		if (!initialized) init();
 		return textureUnit;
 	}
 
+	public void setActive() {
+		assert bindingType.isTextureUnit : this + " is not a texture or texture buffer binding.";
+		if (!initialized) init();
+		glActiveTexture(textureUnit);
+	}
+
 	public int getImageUnit() {
-		assert bindingType == GLBindingType.IMAGE : this + " is not a image binding.";
+		assert bindingType.isImageUnit : this + " is not a image binding.";
 		if (!initialized) init();
 		return imageUnit;
 	}
 
 	public int getBufferBindingIndex() {
-		assert bindingType == GLBindingType.BUFFER || bindingType == GLBindingType.STORAGE_BUFFER : this + " is not a buffer binding.";
+		assert bindingType.isBufferBinding : this + " is not a buffer binding.";
 		if (!initialized) init();
 		return bufferBindingIndex;
-	}
-
-	public void setActive() {
-		assert bindingType == GLBindingType.NONE || bindingType == GLBindingType.TEXTURE || bindingType == GLBindingType.STORAGE_BUFFER : this + " is not a texture or texture buffer binding.";
-		if (!initialized) init();
-		glActiveTexture(textureUnit);
 	}
 
 	@Override

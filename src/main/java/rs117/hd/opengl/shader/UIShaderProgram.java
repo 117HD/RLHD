@@ -1,7 +1,7 @@
 package rs117.hd.opengl.shader;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.opengl.GLBinding.TEXTURE_UI;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_UI;
 
 public class UIShaderProgram extends ShaderProgram {
 	private final UniformTexture uniUiTexture = addUniformTexture("uiTexture");
@@ -14,6 +14,6 @@ public class UIShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniUiTexture.set(TEXTURE_UI);
+		uniUiTexture.set(BINDING_TEX_UI);
 	}
 }

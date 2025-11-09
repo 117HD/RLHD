@@ -4,7 +4,7 @@ import java.io.IOException;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.opengl.GLBinding.TEXTURE_GAME;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_GAME;
 
 public class ShadowShaderProgram extends ShaderProgram {
 	private ShadowMode mode;
@@ -18,7 +18,7 @@ public class ShadowShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniTextureArray.set(TEXTURE_GAME);
+		uniTextureArray.set(BINDING_TEX_GAME);
 	}
 
 	@Override

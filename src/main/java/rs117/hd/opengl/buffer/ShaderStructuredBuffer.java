@@ -42,7 +42,7 @@ public class ShaderStructuredBuffer extends StructuredBuffer<GLBuffer> {
 			glBindTexture(GL_TEXTURE_BUFFER, textureBufferId);
 			glTexBuffer(GL_TEXTURE_BUFFER, GL_R32I, glBuffer.id);
 
-			GLBinding.NONE.setActive();
+			GLBinding.BINDING_NONE.setActive();
 			glBindTexture(GL_TEXTURE_BUFFER, 0);
 		} else {
 			glBindBufferBase(GL_SHADER_STORAGE_BUFFER, binding.getBufferBindingIndex(), glBuffer.id);

@@ -75,9 +75,9 @@ import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
-import static rs117.hd.opengl.GLBinding.TEXTURE_TILE_HEIGHT_MAP;
-import static rs117.hd.opengl.GLBinding.UNIFORM_COMPUTE;
-import static rs117.hd.opengl.GLBinding.UNIFORM_DISPLACEMENT;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_TILE_HEIGHT_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_COMPUTE;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_DISPLACEMENT;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -461,8 +461,8 @@ public class LegacyRenderer implements Renderer {
 		hModelPassthroughBuffer = new SharedGLBuffer("Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		uboCompute = new UBOCompute();
-		uboCompute.initialize(UNIFORM_COMPUTE);
-		plugin.uboDisplacement.initialize(UNIFORM_DISPLACEMENT);
+		uboCompute.initialize(BINDING_UBO_COMPUTE);
+		plugin.uboDisplacement.initialize(BINDING_UBO_DISPLACEMENT);
 
 		modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -525,7 +525,7 @@ public class LegacyRenderer implements Renderer {
 		tileBuffer.flip();
 
 		texTileHeightMap = glGenTextures();
-		TEXTURE_TILE_HEIGHT_MAP.setActive();
+		BINDING_TEX_TILE_HEIGHT_MAP.setActive();
 		glBindTexture(GL_TEXTURE_3D, texTileHeightMap);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

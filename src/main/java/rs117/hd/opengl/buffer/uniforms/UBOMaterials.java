@@ -7,7 +7,7 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.opengl.GLBinding.UNIFORM_MATERIALS;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_MATERIALS;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -38,7 +38,7 @@ public class UBOMaterials extends UniformStructuredBuffer<GLBuffer> {
 		assert materialCount - 1 <= Material.MAX_MATERIAL_INDEX :
 			"Too many materials (" + materialCount + ") to fit into packed material data.";
 		uboStructs = addStructs(new MaterialStruct[materialCount], MaterialStruct::new);
-		initialize(UNIFORM_MATERIALS);
+		initialize(BINDING_UBO_MATERIALS);
 	}
 
 	public void update(Material[] materials, Texture[] vanillaTextures) {

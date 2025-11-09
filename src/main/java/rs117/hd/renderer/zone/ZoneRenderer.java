@@ -89,9 +89,9 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
-import static rs117.hd.opengl.GLBinding.STORAGE_MODEL_DATA;
-import static rs117.hd.opengl.GLBinding.UNIFORM_DISPLACEMENT;
-import static rs117.hd.opengl.GLBinding.UNIFORM_WORLD_VIEW;
+import static rs117.hd.opengl.GLBinding.BINDING_SSAO_MODEL_DATA;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_DISPLACEMENT;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_WORLD_VIEW;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -235,9 +235,9 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
-		uboWorldViews.initialize(UNIFORM_WORLD_VIEW);
-		plugin.uboDisplacement.initialize(UNIFORM_DISPLACEMENT);
-		modelData.initialize(STORAGE_MODEL_DATA);
+		uboWorldViews.initialize(BINDING_UBO_WORLD_VIEW);
+		plugin.uboDisplacement.initialize(BINDING_UBO_DISPLACEMENT);
+		modelData.initialize(BINDING_SSAO_MODEL_DATA);
 	}
 
 	@Override

@@ -3,7 +3,7 @@ package rs117.hd.opengl.shader;
 import java.io.IOException;
 import org.lwjgl.opengl.*;
 
-import static rs117.hd.opengl.GLBinding.TEXTURE_TILE_HEIGHT_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_TILE_HEIGHT_MAP;
 
 public class ModelSortingComputeProgram extends ShaderProgram {
 	public final int threadCount, facesPerThread;
@@ -18,7 +18,7 @@ public class ModelSortingComputeProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniTileHeightMap.set(TEXTURE_TILE_HEIGHT_MAP);
+		uniTileHeightMap.set(BINDING_TEX_TILE_HEIGHT_MAP);
 	}
 
 	@Override

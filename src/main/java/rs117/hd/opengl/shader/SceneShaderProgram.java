@@ -1,10 +1,10 @@
 package rs117.hd.opengl.shader;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.opengl.GLBinding.STORAGE_MODEL_DATA;
-import static rs117.hd.opengl.GLBinding.TEXTURE_GAME;
-import static rs117.hd.opengl.GLBinding.TEXTURE_SHADOW_MAP;
-import static rs117.hd.opengl.GLBinding.TEXTURE_TILE_LIGHTING_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_IMG_TILE_LIGHTING_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_SSAO_MODEL_DATA;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_GAME;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_SHADOW_MAP;
 
 public class SceneShaderProgram extends ShaderProgram {
 	private final UniformTexture uniTextureArray = addUniformTexture("textureArray");
@@ -22,9 +22,9 @@ public class SceneShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniTextureArray.set(TEXTURE_GAME);
-		uniShadowMap.set(TEXTURE_SHADOW_MAP);
-		uniTiledLightingTextureArray.set(TEXTURE_TILE_LIGHTING_MAP);
-		uniModelDataBuffer.set(STORAGE_MODEL_DATA);
+		uniTextureArray.set(BINDING_TEX_GAME);
+		uniShadowMap.set(BINDING_TEX_SHADOW_MAP);
+		uniTiledLightingTextureArray.set(BINDING_IMG_TILE_LIGHTING_MAP);
+		uniModelDataBuffer.set(BINDING_SSAO_MODEL_DATA);
 	}
 }

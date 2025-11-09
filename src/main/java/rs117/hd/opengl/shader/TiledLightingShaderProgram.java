@@ -1,8 +1,7 @@
 package rs117.hd.opengl.shader;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.opengl.GLBinding.IMAGE_TILE_LIGHTING_MAP;
-import static rs117.hd.opengl.GLBinding.TEXTURE_TILE_LIGHTING_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_IMG_TILE_LIGHTING_MAP;
 
 public class TiledLightingShaderProgram extends ShaderProgram {
 	private final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
@@ -18,7 +17,7 @@ public class TiledLightingShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniTiledLightingTextureArray.set(TEXTURE_TILE_LIGHTING_MAP);
-		uniTiledLightingTextureStore.set(IMAGE_TILE_LIGHTING_MAP);
+		uniTiledLightingTextureArray.set(BINDING_IMG_TILE_LIGHTING_MAP);
+		uniTiledLightingTextureStore.set(BINDING_IMG_TILE_LIGHTING_MAP);
 	}
 }
