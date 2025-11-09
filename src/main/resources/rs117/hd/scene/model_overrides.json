@@ -3719,7 +3719,8 @@
       "FAI_VARROCK_INTERIOR_WINDOW_TALL",
       "FAI_VARROCK_INTERIOR_WINDOW_TALL_TERM",
       "FAI_VARROCK_INTERIOR_WINDOW",
-      "FAI_VARROCK_INTERIOR_WINDOW_TYPE1"
+      "FAI_VARROCK_INTERIOR_WINDOW_TYPE1",
+      "FAI_VARROCK_CASTLE_INTERIOR_PUB_WINDOW"
     ]
   },
   {
@@ -3858,6 +3859,8 @@
       "FAI_VARROCK_CASTLE_INTERIOR_TERM_RIGHT",
       "FAI_VARROCK_CASTLE_INTERIOR_TERM_LEFT",
       "FAI_VARROCK_CASTLE_INTERIOR_WINDOW_LARGE",
+      "FAI_VARROCK_CASTLE_INTERIOR_PUB_WINDOW_JOIN_RIGHT",
+      "FAI_VARROCK_CASTLE_INTERIOR_PUB_WINDOW_JOIN_LEFT",
       "FAI_VARROCK_CRUMBLY_WALL2",
       "FAI_VARROCK_CRUMBLY_WALL2_MIRROR",
       "FAI_VARROCK_CRUMBLY_WALL3",
@@ -41792,6 +41795,45 @@
     ]
   },
   {
+    "description": "Varrock - Jolly Boar Inn - Stool with orange cushions",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Orange Cushion",
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_BLUE_INN_BARSTOOL_TALL_ORANGE"
+    ]
+  },
+  {
+    "description": "Varrock - Jolly Boar Inn - Doublebed with orange or baby blue blanket - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_FALADOR_BUNKBED",
+      "FAI_VARROCK_SINGLE_BED_ORANGE",
+      "FAI_VARROCK_SINGLE_BED_ORANGE",
+      "FAI_VARROCK_DOUBLE_BED_ORANGE",
+      "FAI_VARROCK_SINGLE_BED_ORANGE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Stool with Red or white cushions and gold trim",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -41913,7 +41955,8 @@
       "AKD_SHAYZIEN_DRINKS_BAR_LEFT",
       "AKD_SHAYZIEN_BAR_RIGHT",
       "AKD_SHAYZIEN_BAR_MIDDLE",
-      "AKD_SHAYZIEN_BAR_LEFT"
+      "AKD_SHAYZIEN_BAR_LEFT",
+      "FAI_VARROCK_BLUE_INN_BAR_MIDDLE_BRIGHT"
     ]
   },
   {
