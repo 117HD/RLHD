@@ -1392,9 +1392,6 @@
       "DEADTREE2_DARK",
       "DEADTREE2_SWAMP",
       "DEADTREE6",
-      "REGICIDE_TREE_DEAD2_D2",
-      "REGICIDE_TREE_SWAMP1",
-      "REGICIDE_TREE_SWAMP2",
       "DEADTREE4SWAMP",
       "COPPICETREE_SWAMP",
       "REGICIDE_TREE_DEAD2SWAMP",
@@ -1424,7 +1421,10 @@
     "objectIds": [
       "DARKM_DEAD_TREE_01",
       "DARKM_DEAD_TREE_02",
-      "DARKM_DEAD_TREE_03"
+      "DARKM_DEAD_TREE_03",
+      "REGICIDE_TREE_DEAD2_D2",
+      "REGICIDE_TREE_SWAMP1",
+      "REGICIDE_TREE_SWAMP2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
