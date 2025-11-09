@@ -86,7 +86,6 @@ import static org.lwjgl.opengl.GL33C.*;
 import static org.lwjgl.opengl.GL40.GL_DRAW_INDIRECT_BUFFER;
 import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
-import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
@@ -273,7 +272,7 @@ public class ZoneRenderer implements Renderer {
 	public void addShaderIncludes(ShaderIncludes includes) {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
-			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", MAX_WORLDVIEWS))
+			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
 			.addInclude("MODEL_DATA_GETTER", () -> modelData.generateGetter("ModelData", "MODEL_DATA_GETTER"))
 			.addUniformBuffer(uboWorldViews);
 	}
@@ -442,7 +441,7 @@ public class ZoneRenderer implements Renderer {
 				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
 
 				if (sceneCamera.isDirty()) {
-					int shadowDrawDistance = config.shadowDistance().getValue() * LOCAL_TILE_SIZE;
+					int shadowDrawDistance = 90 * LOCAL_TILE_SIZE;
 					directionalCamera.setPitch(environmentManager.currentSunAngles[0]);
 					directionalCamera.setYaw(PI - environmentManager.currentSunAngles[1]);
 
@@ -688,10 +687,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		plugin.uboGlobal.upload();
-		uboWorldViews.update();
-		for (var ctx : subs)
-			if (ctx != null)
-				ctx.updateWorldViewIndex(uboWorldViews);
+		updateWorldViews();
 
 		// Reset buffers for the next frame
 		eboAlphaStaging.clear();
@@ -701,6 +697,13 @@ public class ZoneRenderer implements Renderer {
 		renderState.reset();
 
 		checkGLErrors();
+	}
+
+	private void updateWorldViews() {
+		uboWorldViews.update();
+		for (var ctx : subs)
+			if (ctx != null)
+				ctx.updateWorldViewIndex(uboWorldViews);
 	}
 
 	private void updateAreaHiding() {
@@ -778,9 +781,6 @@ public class ZoneRenderer implements Renderer {
 			glBindBuffer(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmds);
 			glBufferData(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmdsStaging.getBuffer(), GL_STREAM_DRAW);
 		}
-
-		if (GL_CAPS.OpenGL43) // TODO: Specify why & gate it behind some other check, since it really supports OpenGL 4.2. Possibly even allow extensions.
-			GL43C.glMemoryBarrier(GL43C.GL_SHADER_STORAGE_BARRIER_BIT);
 
 		frameTimer.begin(Timer.CLICKBOX_CHECK);
 		modelData.upload();
@@ -1431,7 +1431,8 @@ public class ZoneRenderer implements Renderer {
 
 	private void loadSceneInternal(WorldView worldView, Scene scene) {
 		if (scene.getWorldViewId() > -1) {
-			loadSubScene(worldView, scene);
+			// TODO: Fix async sub scene loading when hopping worlds
+//			loadSubScene(worldView, scene);
 			return;
 		}
 
@@ -1771,8 +1772,12 @@ public class ZoneRenderer implements Renderer {
 		int worldViewId = worldView.getId();
 		if (worldViewId > -1) {
 			log.debug("WorldView despawn: {}", worldViewId);
-			subs[worldViewId].free();
-			subs[worldViewId] = null;
+			if (subs[worldViewId] == null) {
+				log.debug("Attempted to despawn unloaded worldview: {}", worldView);
+			} else {
+				subs[worldViewId].free();
+				subs[worldViewId] = null;
+			}
 		}
 	}
 
@@ -1864,6 +1869,10 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void swapSub(Scene scene) {
+		// TODO: Fix async sub scene loading when hopping worlds
+		updateWorldViews();
+		loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
+
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;

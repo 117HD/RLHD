@@ -42,6 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.api.events.*;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
@@ -80,6 +81,9 @@ public class LightManager {
 	private Client client;
 
 	@Inject
+	private ClientThread clientThread;
+
+	@Inject
 	private EventBus eventBus;
 
 	@Inject
@@ -111,19 +115,19 @@ public class LightManager {
 	private int currentPlane;
 
 	public void loadConfig(Gson gson, ResourcePath path) {
+		LightDefinition[] lights;
 		try {
-			LightDefinition[] lights;
-			try {
-				lights = path.loadJson(gson, LightDefinition[].class);
-				if (lights == null) {
-					log.warn("Skipping empty lights.json");
-					return;
-				}
-			} catch (IOException ex) {
-				log.error("Failed to load lights", ex);
+			lights = path.loadJson(gson, LightDefinition[].class);
+			if (lights == null) {
+				log.warn("Skipping empty lights.json");
 				return;
 			}
+		} catch (IOException ex) {
+			log.error("Failed to load lights", ex);
+			return;
+		}
 
+		clientThread.invoke(() -> {
 			WORLD_LIGHTS.clear();
 			NPC_LIGHTS.clear();
 			OBJECT_LIGHTS.clear();
@@ -149,9 +153,7 @@ public class LightManager {
 			// Reload lights once on plugin startup, and whenever lights.json should be hot-swapped.
 			// If we don't reload on startup, NPCs won't have lights added until RuneLite fires events
 			reloadLights = true;
-		} catch (Exception ex) {
-			log.error("Failed to parse light configuration", ex);
-		}
+		});
 	}
 
 	public void startUp() {

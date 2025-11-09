@@ -276,8 +276,12 @@ public class HdPlugin extends Plugin {
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
+	public static boolean INTEL_GPU;
+	public static boolean NVIDIA_GPU;
 	public static boolean APPLE;
 	public static boolean APPLE_ARM;
+
+	public static boolean SUPPORTS_INDIRECT_DRAW;
 
 	public Canvas canvas;
 	public AWTContext awtContext;
@@ -451,21 +455,31 @@ public class HdPlugin extends Plugin {
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
-				APPLE = OSType.getOSType() == OSType.MacOS;
-				APPLE_ARM = APPLE && System.getProperty("os.arch").equals("aarch64");
+				OSType osType = OSType.getOSType();
+				String arch = System.getProperty("os.arch", "Unknown");
+				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
+				log.info("Operating system: {}", osType);
+				log.info("Architecture: {}", arch);
+				log.info("Client is {}-bit", wordSize);
+				APPLE = osType == OSType.MacOS;
+				APPLE_ARM = APPLE && arch.equals("aarch64");
 
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				String arch = System.getProperty("sun.arch.data.model", "Unknown");
-				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				log.info("Using device: {} ({})", glRenderer, glVendor);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
-				log.info("Client is {}-bit", arch);
-				log.info("Low memory mode: {}", useLowMemoryMode);
+				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
+				INTEL_GPU = glRenderer.contains("Intel");
+				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
+
+				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU || config.forceIndirectDraw();
 
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
 					injector.getInstance(ZoneRenderer.class);
+				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
+
+				log.info("Low memory mode: {}", useLowMemoryMode);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -1560,6 +1574,7 @@ public class HdPlugin extends Plugin {
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
+							case KEY_FORCE_INDIRECT_DRAW:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;

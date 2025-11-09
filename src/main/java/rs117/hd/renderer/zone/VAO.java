@@ -11,6 +11,7 @@ import rs117.hd.utils.CommandBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 
 class VAO {
 	// Zone vertex format
@@ -125,7 +126,7 @@ class VAO {
 			int end = lengths[i];
 			int count = end - start;
 
-			if (GL_CAPS.OpenGL43) {
+			if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 				cmd.DrawArraysIndirect(
 					GL_TRIANGLES,
 					start / (VERT_SIZE / 4),

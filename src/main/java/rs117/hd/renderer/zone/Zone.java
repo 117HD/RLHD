@@ -23,6 +23,7 @@ import rs117.hd.utils.CommandBuffer;
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
+import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
@@ -54,6 +55,7 @@ class Zone {
 	int bufLenA;
 
 	int sizeO, sizeA;
+	@Nullable
 	VBO vboO, vboA, vboM;
 
 	boolean initialized; // whether the zone vao and vbos are ready
@@ -220,7 +222,7 @@ class Zone {
 	}
 
 	void setMetadata(int worldViewIdx, ZoneSceneContext ctx, int mx, int mz) {
-		if (!metadataDirty)
+		if (vboM == null || !metadataDirty)
 			return;
 		metadataDirty = false;
 
@@ -708,7 +710,7 @@ class Zone {
 				long byteOffset = 4L * (ZoneRenderer.eboAlphaStaging.position() - vertexCount);
 				cmd.BindVertexArray(lastVao);
 				// The EBO & IDO is bound by in ZoneRenderer
-				if (GL_CAPS.OpenGL43) {
+				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawElementsIndirect(GL_TRIANGLES, vertexCount, (int) (byteOffset / 4L), ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.DrawElements(GL_TRIANGLES, vertexCount, byteOffset);
@@ -719,13 +721,13 @@ class Zone {
 			convertForDraw(lastDrawMode == STATIC_UNSORTED ? VERT_SIZE : VAO.VERT_SIZE);
 			cmd.BindVertexArray(lastVao);
 			if (glDrawOffset.length == 1) {
-				if (GL_CAPS.OpenGL43) {
+				if (GL_CAPS.OpenGL40 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.DrawArraysIndirect(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0], ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.DrawArrays(GL_TRIANGLES, glDrawOffset[0], glDrawLength[0]);
 				}
 			} else {
-				if (GL_CAPS.OpenGL43) {
+				if (GL_CAPS.OpenGL43 && SUPPORTS_INDIRECT_DRAW) {
 					cmd.MultiDrawArraysIndirect(GL_TRIANGLES, glDrawOffset, glDrawLength, ZoneRenderer.indirectDrawCmdsStaging);
 				} else {
 					cmd.MultiDrawArrays(GL_TRIANGLES, glDrawOffset, glDrawLength);

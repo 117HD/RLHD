@@ -142,6 +142,16 @@
     ]
   },
   {
+    "name": "DIRTY_MARBLE_GLOSS",
+    "materials": [
+      "MARBLE_1_SEMIGLOSS",
+      "DIRT_1",
+      "MARBLE_2_SEMIGLOSS",
+      "MARBLE_1_SEMIGLOSS",
+      "MARBLE_2_SEMIGLOSS"
+    ]
+  },
+  {
     "name": "TILE_SMALL",
     "materials": [
       "TILE_SMALL_1"
@@ -177,6 +187,12 @@
     "name": "GRUNGE_2",
     "materials": [
       "GRUNGE_2"
+    ]
+  },
+  {
+    "name": "GRUNGE_3",
+    "materials": [
+      "GRUNGE_3"
     ]
   },
   {
@@ -303,6 +319,18 @@
     "name": "CAM_TORUM_TILES",
     "materials": [
       "CAM_TORUM_TILES"
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH",
+    "materials": [
+      "DARKMEYER_BRICK_PATH"
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH_BLEND",
+    "materials": [
+      "DARKMEYER_BRICK_PATH_BLEND"
     ]
   },
   {

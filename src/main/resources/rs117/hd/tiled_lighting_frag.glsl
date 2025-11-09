@@ -4,7 +4,8 @@
 #include TILED_IMAGE_STORE
 
 #if TILED_IMAGE_STORE
-    #extension GL_EXT_shader_image_load_store : require
+    #extension GL_EXT_shader_image_load_store : enable
+    #extension GL_ARB_shader_image_load_store : enable
     layout(rgba16ui) coherent uniform uimage2DArray tiledLightingImage;
 #else
     uniform usampler2DArray tiledLightingArray;
