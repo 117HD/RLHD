@@ -11152,7 +11152,8 @@
       "TRAPCHEST1",
       "TRAPCHEST5",
       "INACOPENCHEST",
-      "GRANDTREE_CHESTCLOSED"
+      "GRANDTREE_CHESTCLOSED",
+      "SOTE_TRINKET_CHEST"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -65589,6 +65590,77 @@
     "objectIds": [
       "DS2_PALADIN_DEAD_1",
       "DS2_PALADIN_DEAD_2"
+    ]
+  },
+  {
+    "description": "Prifddinas - Tall Tree",
+    "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "PRIF_OUTSIDE_TREE_NORMAL_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "terrainVertexSnap": true,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Underground pass - Stone - Metallic - paper - Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 84
+      },
+      {
+        "colors": "h >= 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [ "REGICIDE_VOYAGE_TEMPLE_ALTAR" ]
+  },
+  {
+    "description": "Lleyla - Plant - Song of the Elves - Elder Candantine - Herb",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [ "SOTE_HERB_3" ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Light beam shadow removal",
+    "receiveShadows": false,
+    "castShadows": false,
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4",
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4",
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4",
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4",
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
     ]
   }
 ]
