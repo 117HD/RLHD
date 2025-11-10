@@ -3320,7 +3320,9 @@
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_SMALL_WALL",
       "FAI_VARROCK_CASTLE_BATTLEMENT_CAPPED",
@@ -3333,7 +3335,9 @@
   },
   {
     "description": "GRAND_EXCHANGE_CLAN_PORTAL",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "CLAN_HUB_PORTAL"
     ],
@@ -3426,7 +3430,9 @@
   },
   {
     "description": "Brick walls with wooden boards",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3458,7 +3464,9 @@
   },
   {
     "description": "Brick walls with wooden plank windows",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3478,7 +3486,9 @@
   },
   {
     "description": "Brick walls with wooden planks leaned on them",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3523,10 +3533,10 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with glass windows",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Wooden boards",
@@ -3557,10 +3567,10 @@
   },
   {
     "description": "Varrock church - Kourend Castle - Glass -  golden window",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Wooden boards",
@@ -3588,10 +3598,10 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_POOR_WALL",
       "FAI_VARROCK_POOR_WALL_TOP",
@@ -3747,10 +3757,10 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_BUTRESS",
       "FAI_VARROCK_BUTRESS_DARK"
@@ -11119,7 +11129,24 @@
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Varrock - Metallic - Stone - Water Pump - Needs proper UV",
@@ -47939,6 +47966,10 @@
         "uvScale": 0.6,
         "uvOrientation": 256,
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET_LIGHT"
       }
     ]
   },
