@@ -23821,7 +23821,8 @@
     "description": "Digsite - Objects - Wooden - Tables - Fine",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "QIP_DIGSITE_TABLE"
+      "QIP_DIGSITE_TABLE",
+      "SWAN_TABLE"
     ],
     "uvType": "MODEL_XZ",
     "flatNormals": true,
@@ -26960,7 +26961,7 @@
     "uvScale":0.8,
     "colorOverrides": [
       {
-        "description": "Net",
+        "description": "Fish",
         "colors": " h == 0",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
@@ -26992,6 +26993,31 @@
     ]
   },
   {
+    "description": "Piscatoris - Metallic - Wooden - Barrels with fish",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale":0.8,
+    "colorOverrides": [
+      {
+        "description": "Fish",
+        "colors": " h == 0",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale":0.8
+      },
+      {
+        "description": "Metal",
+        "colors": " h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale":0.8
+      }
+    ],
+    "objectIds": [
+      "SWAN_BARREL_FISH"
+    ]
+  },
+  {
     "description": "Piscatoris - Metallic - Wooden - Barrel Rack",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
@@ -27009,6 +27035,108 @@
     ],
     "objectIds": [
       "SWAN_BARREL_RACK"
+    ]
+  },
+  {
+    "description": "Piscatoris - Metallic - Stove",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 179,
+    "objectIds": [
+      "SWAN_STOVE"
+    ]
+  },
+  {
+    "description": "Piscatoris - Metallic - Sink",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 179,
+    "objectIds": [
+      "SWAN_SINK1",
+      "SWAN_SINK2"
+    ]
+  },
+  {
+    "description": "Piscatoris - Metallic - Press Machine",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 179,
+    "objectIds": [
+      "SWAN_CONVEYER_COGS",
+      "SWAN_MACHINE_CRUSHER",
+      "SWAN_PRESS",
+      "SWAN_FIREBOX",
+      "SWAN_MACHINE_FIREBOX_LIT"
+    ]
+  },
+  {
+    "description": "Piscatoris - Metallic - Furnace",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -179,
+    "objectIds": [
+      "SWAN_FURNACE"
+    ]
+  },
+  {
+    "description": "Piscatoris - Metallic - Rope - Fishing Weights",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -179,
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 0 && s == 0",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -512
+      }
+    ],
+    "objectIds": [
+      "SWAN_FISHING_WEIGHTS"
+    ]
+  },
+  {
+    "description": "Piscatoris - Rimmington - Wooden chair with red cushion",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Red Cushion",
+        "colors": "h == 0 && s == 4",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      "RIMMINGTON_POSH_CHAIR"
+    ]
+  },
+  {
+    "description": "Piscatoris - Wooden - Paper - Desk with Papers on it",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "description": "Papers",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.65
+      }
+    ],
+    "objectIds": [
+      "SWAN_DESK"
     ]
   },
   {
@@ -35838,7 +35966,8 @@
     "description": "Wooden Cupboard Empty",
     "baseMaterial": "WOOD_GRAIN_3",
     "objectIds": [
-      "DWARF_KELDAGRIM_SMALL_CUPBOARD"
+      "DWARF_KELDAGRIM_SMALL_CUPBOARD",
+      "SWAN_CUPBOARD"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -39177,7 +39306,8 @@
     "objectIds": [
       "FAI_FALADOR_BUNKBED",
       "FAI_VARROCK_SINGLE_BED_ORANGE",
-      "FAI_VARROCK_SINGLE_BED_ORANGE"
+      "FAI_VARROCK_SINGLE_BED_ORANGE",
+      "NORMAL_BED_NOBLOCKRANGE"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
