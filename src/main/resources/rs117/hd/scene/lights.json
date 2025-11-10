@@ -42027,5 +42027,39 @@
     "npcIds": [
       "SANCTUARY_GHOST"
     ]
+  },
+  {
+    "description": "Piscatoris - Press Light",
+    "offset": [ 25, 120, 0 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_MACHINE_FIREBOX_LIT"
+    ]
+  },
+  {
+    "description": "Piscatoris - Furnace",
+    "offset": [ 0, 60, 20 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_FURNACE"
+    ]
   }
 ]
