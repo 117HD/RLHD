@@ -3273,7 +3273,7 @@
   },
   {
     "description": "GRAND_EXCHANGE_FLOOR",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "EXCHANGE_STAIRS_VAR01_MIRROR",
       "EXCHANGE_STAIRS_VAR01",
@@ -3315,7 +3315,8 @@
       "EXCHANGE_FLOOR_VAR04_1X1"
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 1.25
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
