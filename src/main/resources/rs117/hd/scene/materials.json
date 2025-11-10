@@ -2410,6 +2410,16 @@
     "specularGloss": 65.0
   },
   {
+    "name": "METALLIC_1_LIGHTER",
+    "parent": "METALLIC_1",
+    "brightness": 1.4
+  },
+  {
+    "name": "METALLIC_1_LIGHTER_SMOOTH",
+    "parent": "METALLIC_1_LIGHTER",
+    "normalMap": null
+  },
+  {
     "name": "METALLIC_1_VERY_LIGHT",
     "parent": "METALLIC_1",
     "brightness": 1.516

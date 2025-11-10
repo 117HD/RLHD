@@ -64037,7 +64037,7 @@
       {
         "description": "Metal",
         "colors": "h == 5",
-        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+        "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH"
       }
     ]
   },
@@ -64078,7 +64078,7 @@
       {
         "description": "Metal",
         "colors": "h == 0 || h > 10 || h == 7 && s == 7",
-        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+        "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH"
       }
     ]
   },
