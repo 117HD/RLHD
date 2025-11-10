@@ -35651,6 +35651,23 @@
     ]
   },
   {
+    "description": "STOVE - Right lit",
+    "offset": [ 20, 88, 65 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_STOVE"
+    ]
+  },
+  {
     "description": "SLEPE_WALL_CANDLE",
     "height": 220,
     "alignment": "CENTER",
