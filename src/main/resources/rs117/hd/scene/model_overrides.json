@@ -12745,7 +12745,11 @@
       "ROCKS_SEAROCK_BARE02",
       "QUEST_START_ICON_DIGSITE",
       "ROCKS_SEAROCK_BARE03",
-      "CASTLEWARS_STEPING_STONE"
+      "CASTLEWARS_STEPING_STONE",
+      "DOV_HUNTING_BOULDER1",
+      "DOV_HUNTING_BOULDER1_OP",
+      "DOV_HUNTING_BOULDER2",
+      "DOV_HUNTING_BOULDER2_OP"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
@@ -23979,7 +23983,10 @@
       "SMALL_PLANT2",
       "SMALL_PLANT3",
       "ARCQUEST_HUNTING_PLANT_NOOP",
-      "ARCQUEST_HUNTING_PLANT_OP"
+      "ARCQUEST_HUNTING_PLANT_OP",
+      "DOV_HUNTING_PLANT1",
+      "DOV_HUNTING_PLANT1_OP",
+      "DOV_HUNTING_PLANT_INITIAL"
     ]
   },
   {
@@ -27085,7 +27092,9 @@
       "DOV_HUNTING_PLANT2_NOOP",
       "BUSH_DESERT_DEAD01",
       "BUSH_DESERT_DEAD02",
-      "FAI_LEAFLESS_BUSH_SMALL_01"
+      "FAI_LEAFLESS_BUSH_SMALL_01",
+      "DOV_HUNTING_PLANT2",
+      "DOV_HUNTING_PLANT2_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -38161,6 +38170,7 @@
     "description": "Camdozaal Rock Piles - Large",
     "baseMaterial": "ROCK_3",
     "objectIds": [
+      "ARCHEUUS_ROCKS_LARGE_01",
       "ARCHEUUS_ROCKS_LARGE_02",
       "ARCHEUUS_ROCKS_LARGE_03",
       "ARCHEUUS_ROCKS_LARGE_04"
@@ -39055,7 +39065,6 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       "FAI_FALADOR_BUNKBED",
-      "FAI_VARROCK_SINGLE_BED_ORANGE",
       "FAI_VARROCK_SINGLE_BED_ORANGE"
     ],
     "uvType": "BOX",
@@ -41813,14 +41822,10 @@
     ]
   },
   {
-    "description": "Varrock - Jolly Boar Inn - Doublebed with orange or baby blue blanket - Light Frame",
+    "description": "Varrock - Jolly Boar Inn - Doublebed with orange blanket - Light Frame",
     "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_FALADOR_BUNKBED",
-      "FAI_VARROCK_SINGLE_BED_ORANGE",
-      "FAI_VARROCK_SINGLE_BED_ORANGE",
-      "FAI_VARROCK_DOUBLE_BED_ORANGE",
-      "FAI_VARROCK_SINGLE_BED_ORANGE"
+      "FAI_VARROCK_DOUBLE_BED_ORANGE"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
@@ -65495,6 +65500,37 @@
         "baseMaterial": "NONE",
         "depthBias": 110
       }
+    ]
+  },
+  {
+    "description": "Varrock - Stone - Surok Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SUROK_STATUEBASE",
+      "SUROK_STATUEBASE2"
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Defender of Varrock - Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DOV_BASE_ENTRY",
+      "DOV_BASE_ENTRY_OP",
+      "DOV_BASE_ENTRY_OPEN_OP"
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Defender of Varrock - Trapdoor",
+    "baseMaterial": "GROUND_WEB_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HS_WEB_WALL_01",
+      "HS_WEB_WALL_02"
     ]
   }
 ]
