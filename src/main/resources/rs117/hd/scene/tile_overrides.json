@@ -3820,8 +3820,61 @@
     "overlayIds": [
       163
     ],
-    "groundMaterial": "DIRT",
+    "groundMaterial": "DIRTY_MARBLE",
     "blended": false
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_PATH",
+    "area": "MOUNT_QUIDAMORTEM_PATH",
+    "overlayIds": [
+      76
+    ],
+    "groundMaterial": "GRAVEL",
+    "shiftLightness": 5,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_UNDERLAY",
+    "area": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX",
+    "underlayIds": [
+      60,
+      68,
+      26,
+      8
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "maxLightness": 60,
+    "minLightness": 40,
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
+      "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_OVERLAY",
+    "area": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX",
+    "overlayIds": [
+      77
+    ],
+    "groundMaterial": "DIRT",
+    "maxLightness": 55,
+    "replacements": {
+      "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX_NO_TEXTURES",
+    "area": "MOUNT_QUIDAMORTEM_BRIGHTNESS_FIX",
+    "overlayIds": [
+      77
+    ],
+    "groundMaterial": "NONE",
+    "maxLightness": 50,
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "LIZARDMAN_TEMPLE_WATER",
