@@ -12,7 +12,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.config.FishingSpotStyle;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -69,9 +68,6 @@ public class FishingSpotReplacer {
 	}
 
 	public ModelOverride getModelOverride() {
-		if (config.fishingSpotStyle() != FishingSpotStyle.HD)
-			return null;
-
 		ModelOverride override = new ModelOverride();
 		override.hide = true;
 		override.npcIds = NPC_IDS;
@@ -79,8 +75,6 @@ public class FishingSpotReplacer {
 	}
 
 	public void update() {
-		if (config.fishingSpotStyle() == FishingSpotStyle.VANILLA)
-			return;
 
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
@@ -161,7 +155,7 @@ public class FishingSpotReplacer {
 		RuneLiteObject fishingSpot = client.createRuneLiteObject();
 		fishingSpot.setAnimationController(animController);
 		fishingSpot.setOrientation(RAND.nextInt(4) * 512);
-		fishingSpot.setDrawFrontTilesFirst(false);
+		fishingSpot.setDrawFrontTilesFirst(true);
 		fishingSpot.setActive(true);
 		fishingSpot.setModel(modelData.light());
 		npcIndexToModel.put(npc.getIndex(), fishingSpot);
