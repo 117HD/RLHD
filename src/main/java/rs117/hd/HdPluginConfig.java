@@ -414,107 +414,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	String KEY_SHADOW_MODE = "shadowMode";
-	@ConfigItem(
-		keyName = KEY_SHADOW_MODE,
-		name = "Shadows",
-		description =
-			"Render fully dynamic shadows.<br>" +
-			"'Off' completely disables shadows.<br>" +
-			"'Fast' enables fast shadows without any texture detail.<br>" +
-			"'Detailed' enables slower shadows with support for texture detail.",
-		position = 5,
-		section = lightingSettings
-	)
-	default ShadowMode shadowMode()
-	{
-		return ShadowMode.DETAILED;
-	}
-
-	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
-	@ConfigItem(
-		keyName = KEY_SHADOW_TRANSPARENCY,
-		name = "Shadow Transparency",
-		description = "Enables partial support for shadows that take transparency into account.",
-		position = 6,
-		section = lightingSettings
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
-	@ConfigItem(
-		keyName = KEY_PIXELATED_SHADOWS,
-		name = "Pixelated Shadows",
-		description = "Give shadows a slightly pixelated look.",
-		position = 7,
-		section = lightingSettings
-	)
-	default boolean pixelatedShadows() {
-		return false;
-	}
-
-	String KEY_SHADOW_RESOLUTION = "shadowResolution";
-	@ConfigItem(
-		keyName = KEY_SHADOW_RESOLUTION,
-		name = "Shadow Quality",
-		description =
-			"The resolution of the shadow map.<br>" +
-			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		position = 8,
-		section = lightingSettings
-	)
-	default ShadowResolution shadowResolution()
-	{
-		return ShadowResolution.RES_4096;
-	}
-
-	@ConfigItem(
-		keyName = "shadowDistance",
-		name = "Shadow Distance",
-		description =
-			"The maximum draw distance for shadows.<br>" +
-			"Shorter distances result in higher quality shadows.",
-		position = 9,
-		section = lightingSettings
-	)
-	default ShadowDistance shadowDistance()
-	{
-		return ShadowDistance.DISTANCE_50;
-	}
-
-	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
-	@ConfigItem(
-		keyName = KEY_EXPAND_SHADOW_DRAW,
-		name = "Expand Shadow Draw",
-		description =
-			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
-			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
-		position = 10,
-		section = lightingSettings
-	)
-	default boolean expandShadowDraw()
-	{
-		return false;
-	}
-
-	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
-	@ConfigItem(
-		keyName = KEY_VANILLA_SHADOW_MODE,
-		name = "Vanilla Shadows",
-		description =
-			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
-			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
-			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
-		position = 11,
-		section = lightingSettings
-	)
-	default VanillaShadowMode vanillaShadowMode() {
-		return VanillaShadowMode.SHOW_IN_PVM;
-	}
-
 	String KEY_NORMAL_MAPPING = "normalMapping";
 	@ConfigItem(
 		keyName = KEY_NORMAL_MAPPING,
@@ -539,13 +438,99 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	/*====== Shadow settings ======*/
+
+	@ConfigSection(
+		name = "Shadows",
+		description = "Shadow settings",
+		position = 2,
+		closedByDefault = true
+	)
+	String shadowSettings = "shadowSettings";
+
+	String KEY_SHADOW_MODE = "shadowMode";
+	@ConfigItem(
+		keyName = KEY_SHADOW_MODE,
+		name = "Shadows",
+		description =
+			"Render fully dynamic shadows.<br>" +
+			"'Off' completely disables shadows.<br>" +
+			"'Fast' enables fast shadows without any texture detail.<br>" +
+			"'Detailed' enables slower shadows with support for texture detail.",
+		section = shadowSettings
+	)
+	default ShadowMode shadowMode()
+	{
+		return ShadowMode.DETAILED;
+	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = KEY_SHADOW_TRANSPARENCY,
+		name = "Shadow Transparency",
+		description = "Enables partial support for shadows that take transparency into account.",
+		section = shadowSettings
+	)
+	default boolean enableShadowTransparency()
+	{
+		return true;
+	}
+
+	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
+	@ConfigItem(
+		keyName = KEY_PIXELATED_SHADOWS,
+		name = "Pixelated Shadows",
+		description = "Give shadows a slightly pixelated look.",
+		section = shadowSettings
+	)
+	default boolean pixelatedShadows() {
+		return false;
+	}
+
+	String KEY_SHADOW_CASTER_CULLING = "shadowCasterCulling";
+	@ConfigItem(
+		keyName = KEY_SHADOW_CASTER_CULLING,
+		name = "Shadow Caster Culling",
+		description = "Prevent shadow pop-in by including the minimal amount of screen geometry.<br>" +
+					  "(MacOs users might see a performance improvement disabling this)",
+		section = shadowSettings
+	)
+	default boolean shadowCasterCulling() { return true; }
+
+	String KEY_SHADOW_RESOLUTION = "shadowResolution";
+	@ConfigItem(
+		keyName = KEY_SHADOW_RESOLUTION,
+		name = "Shadow Quality",
+		description =
+			"The resolution of the shadow map.<br>" +
+			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
+		section = shadowSettings
+	)
+	default ShadowResolution shadowResolution()
+	{
+		return ShadowResolution.RES_4096;
+	}
+
+	String KEY_VANILLA_SHADOW_MODE = "vanillaShadowMode";
+	@ConfigItem(
+		keyName = KEY_VANILLA_SHADOW_MODE,
+		name = "Vanilla Shadows",
+		description =
+			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
+			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
+			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
+		section = shadowSettings
+	)
+	default VanillaShadowMode vanillaShadowMode() {
+		return VanillaShadowMode.SHOW_IN_PVM;
+	}
 
 	/*====== Environment settings ======*/
 
 	@ConfigSection(
 		name = "Environment",
 		description = "Environment settings",
-		position = 2,
+		position = 3,
 		closedByDefault = true
 	)
 	String environmentSettings = "environmentSettings";
@@ -739,7 +724,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Model caching",
 		description = "Improve performance by reusing model data",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String modelCachingSettings = "modelCachingSettings";
@@ -798,7 +783,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";
@@ -946,7 +931,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Legacy",
 		description = "Legacy options. If you dislike a change, you might find an option to change it back here.",
-		position = 5,
+		position = 6,
 		closedByDefault = true
 	)
 	String legacySettings = "legacySettings";
@@ -1019,13 +1004,40 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_EXPAND_SHADOW_DRAW = "expandShadowDraw";
+	@ConfigItem(
+		keyName = KEY_EXPAND_SHADOW_DRAW,
+		name = "Legacy Expand Shadow Draw",
+		description =
+			"Reduces shadows popping in and out at the edge of the screen by rendering<br>" +
+			"shadows for a larger portion of the scene, at the cost of higher GPU usage.",
+		section = legacySettings
+	)
+	default boolean expandShadowDraw()
+	{
+		return false;
+	}
+
+	@ConfigItem(
+		keyName = "shadowDistance",
+		name = "Legacy Shadow Distance",
+		description =
+			"The maximum draw distance for shadows.<br>" +
+			"Shorter distances result in higher quality shadows.",
+		position = 9,
+		section = legacySettings
+	)
+	default ShadowDistance shadowDistance()
+	{
+		return ShadowDistance.DISTANCE_50;
+	}
 
 	/*====== Experimental settings ======*/
 
 	@ConfigSection(
 		name = "Experimental",
 		description = "Experimental features - if you're experiencing issues you should consider disabling these.",
-		position = 6,
+		position = 7,
 		closedByDefault = true
 	)
 	String experimentalSettings = "experimentalSettings";

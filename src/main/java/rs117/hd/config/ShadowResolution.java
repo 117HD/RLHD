@@ -31,14 +31,16 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum ShadowResolution
 {
-	RES_1024("Low (1K)", 1024),
-	RES_2048("Medium (2K)", 2048),
-	RES_4096("High (4K)", 4096),
-	RES_8192("Ultra (8K)", 8192),
-	RES_16384("Extreme (16K)", 16384);
+	RES_1024("Low (1K)", 1024, 0.0009f, 0.003f),
+	RES_2048("Medium (2K)", 2048, 0.0005f, 0.0009f),
+	RES_4096("High (4K)", 4096, 0.00005f, 0.000725f),
+	RES_8192("Ultra (8K)", 8192, 0.000099f, 0.0007f),
+	RES_16384("Extreme (16K)", 16384, 0.000009f, 0.00025f);
 
 	private final String name;
 	private final int value;
+	private final float constantBias;
+	private final float slopeBias;
 
 	@Override
 	public String toString()

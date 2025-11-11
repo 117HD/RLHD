@@ -362,6 +362,7 @@ public class HdPlugin extends Plugin {
 	public boolean configShadowsEnabled;
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
+	public boolean configShadowCasterCulling;
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
@@ -799,6 +800,8 @@ public class HdPlugin extends Plugin {
 			.define("SHADOW_MODE", configShadowMode)
 			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
 			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
+			.define("SHADOW_CONSTANT_BIAS", config.shadowResolution().getConstantBias())
+			.define("SHADOW_SLOPE_BIAS", config.shadowResolution().getSlopeBias())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1265,7 +1268,7 @@ public class HdPlugin extends Plugin {
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
-			GL_DEPTH_COMPONENT24,
+			GL_DEPTH_COMPONENT32F,
 			shadowMapResolution,
 			shadowMapResolution,
 			0,
@@ -1498,6 +1501,7 @@ public class HdPlugin extends Plugin {
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configExpandShadowDraw = config.expandShadowDraw();
+		configShadowCasterCulling = config.shadowCasterCulling();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
@@ -1653,6 +1657,7 @@ public class HdPlugin extends Plugin {
 								// fall-through
 							case KEY_SHADOW_RESOLUTION:
 								recreateShadowMapFbo = true;
+								recompilePrograms = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
 							case KEY_LEGACY_TOB_ENVIRONMENT:

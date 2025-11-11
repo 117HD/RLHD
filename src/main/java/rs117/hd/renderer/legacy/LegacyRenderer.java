@@ -691,7 +691,7 @@ public class LegacyRenderer implements Renderer {
 					Mat4.mul(projectionMatrix, Mat4.scale(ORTHOGRAPHIC_ZOOM, ORTHOGRAPHIC_ZOOM, -1));
 					Mat4.mul(projectionMatrix, Mat4.orthographic(viewportWidth, viewportHeight, 40000));
 				} else {
-					Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
+					Mat4.mul(projectionMatrix, Mat4.perspectiveInfiniteReverseZ(viewportWidth, viewportHeight, NEAR_PLANE));
 				}
 
 
@@ -726,10 +726,10 @@ public class LegacyRenderer implements Renderer {
 					}
 				}
 
-				plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
-				plugin.uboGlobal.viewMatrix.set(plugin.viewMatrix);
-				plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
-				plugin.uboGlobal.invProjectionMatrix.set(plugin.invViewProjMatrix);
+				plugin.uboGlobal.sceneCamera.position.set(plugin.cameraPosition);
+				plugin.uboGlobal.sceneCamera.viewMatrix.set(plugin.viewMatrix);
+				plugin.uboGlobal.sceneCamera.viewProj.set(plugin.viewProjMatrix);
+				plugin.uboGlobal.sceneCamera.invViewProj.set(plugin.invViewProjMatrix);
 				plugin.uboGlobal.pointLightsCount.set(sceneContext.numVisibleLights);
 				plugin.uboGlobal.upload();
 			}
@@ -1166,7 +1166,7 @@ public class LegacyRenderer implements Renderer {
 				Mat4.mul(lightProjectionMatrix, lightViewMatrix);
 				Mat4.mul(lightProjectionMatrix, Mat4.translate(-(width / 2f + west), 0, -(height / 2f + south)));
 
-				plugin.uboGlobal.lightProjectionMatrix.set(lightProjectionMatrix);
+				plugin.uboGlobal.directionalCamera.viewProj.set(lightProjectionMatrix);
 				plugin.uboGlobal.upload();
 
 				glEnable(GL_CULL_FACE);

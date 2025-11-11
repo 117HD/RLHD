@@ -87,7 +87,7 @@ void main() {
             gOpacity = opacity;
         #endif
     #else
-        gl_Position = lightProjectionMatrix * getWorldViewProjection(vWorldViewId) * vec4(pos, shouldCastShadow);
+        gl_Position = directionalCamera.viewProj * getWorldViewProjection(vWorldViewId) * vec4(pos, shouldCastShadow);
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
         #endif

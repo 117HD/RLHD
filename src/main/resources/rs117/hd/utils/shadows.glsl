@@ -27,42 +27,81 @@
 
 #include <utils/constants.glsl>
 
+#include SHADOW_CONSTANT_BIAS
+#include SHADOW_SLOPE_BIAS
+
 #if SHADOW_MODE != SHADOW_MODE_OFF
 float fetchShadowTexel(ivec2 uv, float fragDepth) {
     #if SHADOW_TRANSPARENCY
         int alphaDepth = int(texelFetch(shadowMap, uv, 0).r * SHADOW_COMBINED_MAX);
         float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
-        float alpha = 1 - float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-        return depth < fragDepth ? alpha : 0.f;
+        float alpha = float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
+#if ZONE_RENDERER
+        return depth > fragDepth ? alpha : 0.f;
+#else
+        return depth < fragDepth ? (1.0 - alpha) : 0.f;
+#endif
     #else
+#if ZONE_RENDERER
+        return texelFetch(shadowMap, uv, 0).r > fragDepth ? 1.f : 0.f;
+#else
         return texelFetch(shadowMap, uv, 0).r < fragDepth ? 1.f : 0.f;
+#endif
     #endif
 }
 
 float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
-    vec4 shadowPos = lightProjectionMatrix * vec4(fragPos, 1);
+    vec4 shadowPos = directionalCamera.viewProj * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
-    // Fade out shadows near shadow texture edges
+    float fadeOut = 0.0;
 #if ZONE_RENDERER
-    float fadeOut = abs(shadowPos.x) > 1 || abs(shadowPos.y) > 1 ? 1 : 0;
+    vec4 camShadowPos = directionalCamera.viewProj * vec4(sceneCamera.position, 1);
+    camShadowPos.xyz /= camShadowPos.w;
+
+    float camShadowFade = length(shadowPos - camShadowPos);
+    // Fade out shadows in the distance
+    fadeOut = clamp((camShadowFade - 0.95) / 0.05, 0.0, 1.0);
 #else
-    float fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
+    // Fade out shadows near shadow texture edges
+    fadeOut = smoothstep(.75, 1., dot(shadowPos.xy, shadowPos.xy));
 #endif
     if (fadeOut >= 1)
         return 0.f;
 
     // NDC to texture space
-    shadowPos.xyz += 1;
+    ivec2 shadowRes = textureSize(shadowMap, 0);
+    #if ZONE_RENDERER
+    shadowPos.xy += 1; // Zone Renderer uses 0 -> +1
+    shadowPos.xy /= 2;
+    #else
+    shadowPos.xyz += 1; // Legacy uses -1 -> +1
     shadowPos.xyz /= 2;
+    #endif
     shadowPos.xy += distortion;
     shadowPos.xy = clamp(shadowPos.xy, 0, 1);
-    shadowPos.xy *= textureSize(shadowMap, 0);
+    shadowPos.xy *= shadowRes;
     shadowPos.xy += .5; // Shift to texel center
 
-    float shadowMinBias = 0.0009f;
+    #if ZONE_RENDERER
+    vec2 texelSize = 1.0 / vec2(shadowRes);
+
+    vec3 shadowTexDDX = dFdx(shadowPos.xyz);
+    vec3 shadowTexDDY = dFdy(shadowPos.xyz);
+
+    shadowTexDDX.xy *= texelSize.x;
+    shadowTexDDY.xy *= texelSize.y;
+
+    float receiverBias = abs(dot(shadowTexDDX, vec3(1.0))) + abs(dot(shadowTexDDY, vec3(1.0)));
+    float slopeBias = (1.0 - lightDotNormals) * SHADOW_SLOPE_BIAS;
+
+    float shadowBias = SHADOW_CONSTANT_BIAS + slopeBias + receiverBias;
+    float fragDepth = shadowPos.z + shadowBias;
+    #else
+    float shadowMinBias = -0.0009f;
     float shadowBias = shadowMinBias * max(1, (1.0 - lightDotNormals));
-    float fragDepth = shadowPos.z - shadowBias;
+    float fragDepth = shadowPos.z + shadowBias;
+    #endif
 
     const int kernelSize = 3;
     ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);

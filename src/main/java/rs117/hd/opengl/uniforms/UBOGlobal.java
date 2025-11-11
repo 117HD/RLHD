@@ -1,5 +1,6 @@
 package rs117.hd.opengl.uniforms;
 
+import rs117.hd.utils.Camera;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -55,11 +56,8 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public Property pointLightsCount = addProperty(PropertyType.Int, "pointLightsCount");
 
-	public Property cameraPos = addProperty(PropertyType.FVec3, "cameraPos");
-	public Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
-	public Property projectionMatrix = addProperty(PropertyType.Mat4, "projectionMatrix");
-	public Property invProjectionMatrix = addProperty(PropertyType.Mat4, "invProjectionMatrix");
-	public Property lightProjectionMatrix = addProperty(PropertyType.Mat4, "lightProjectionMatrix");
+	public Camera.CameraStruct sceneCamera = addStruct(new Camera.CameraStruct());
+	public Camera.CameraStruct directionalCamera = addStruct(new Camera.CameraStruct());
 
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");

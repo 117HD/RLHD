@@ -71,8 +71,11 @@ void main() {
         // Unfortunately, the exact handling of floats is implementation dependant, so this may not work
         // the same across all GPUs.
         float depth = gl_FragCoord.z;
+        #if !ZONE_RENDERER
+        opacity = 1.0 - opacity;
+        #endif
         gl_FragDepth = (
-            int((1 - opacity) * SHADOW_ALPHA_MAX) << SHADOW_DEPTH_BITS |
+            int(opacity * SHADOW_ALPHA_MAX) << SHADOW_DEPTH_BITS |
             int(depth * SHADOW_DEPTH_MAX)
         ) / float(SHADOW_COMBINED_MAX);
     #endif

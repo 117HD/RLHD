@@ -3,11 +3,13 @@ package rs117.hd.utils;
 import java.util.Arrays;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.opengl.uniforms.UniformBuffer.PropertyType;
 
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class Camera {
+public final class Camera {
 	private static final int PROJECTION_MATRIX_DIRTY = 1;
 	private static final int VIEW_MATRIX_DIRTY = 1 << 1;
 	private static final int VIEW_PROJ_MATRIX_DIRTY = 1 << 2;
@@ -21,6 +23,7 @@ public class Camera {
 	private static final int VIEW_CHANGED = VIEW_MATRIX_DIRTY | VIEW_PROJ_CHANGED;
 
 	private float[] viewMatrix;
+	private float[] invViewMatrix;
 	private float[] projectionMatrix;
 	private float[] viewProjMatrix;
 	private float[] invViewProjMatrix;
@@ -45,6 +48,7 @@ public class Camera {
 	@Getter
 	private float farPlane = 0.0f;
 	private boolean isOrthographic = false;
+	private boolean reverseZ = false;
 
 	public boolean isDirty() {
 		return dirtyFlags != 0;
@@ -63,6 +67,16 @@ public class Camera {
 		}
 		return this;
 	}
+
+	public Camera setReverseZ(boolean newReverseZ) {
+		if (reverseZ != newReverseZ) {
+			reverseZ = newReverseZ;
+			dirtyFlags |= PROJ_CHANGED;
+		}
+		return this;
+	}
+
+	public boolean getIsReverseZ() {return reverseZ; }
 
 	public Camera setViewportWidth(int newViewportWidth) {
 		if (viewportWidth != newViewportWidth) {
@@ -235,10 +249,15 @@ public class Camera {
 		return this;
 	}
 
-	public float[] getForwardDirection() {
+	public float[] getForwardDirection(float[] out) {
 		calculateViewMatrix();
-		return new float[] { -viewMatrix[2], -viewMatrix[6], -viewMatrix[10] };
+		out[0] = -viewMatrix[2];
+		out[1] = -viewMatrix[6];
+		out[2] = -viewMatrix[10];
+		return out;
 	}
+
+	public float[] getForwardDirection() { return getForwardDirection(new float[3]); }
 
 	private void calculateViewMatrix() {
 		if ((dirtyFlags & VIEW_MATRIX_DIRTY) != 0) {
@@ -254,6 +273,12 @@ public class Camera {
 						-position[2]
 					)
 				);
+			}
+
+			try {
+				invViewMatrix = Mat4.inverse(viewMatrix);
+			} catch (Exception ex) {
+				log.warn("Encountered an exception whilst solving inverse of camera view: ", ex);
 			}
 			dirtyFlags &= ~VIEW_MATRIX_DIRTY;
 		}
@@ -279,17 +304,43 @@ public class Camera {
 		return transformPoint(new float[3], point);
 	}
 
+	public float[] inverseTransformPoint(float[] out, float[] point) {
+		calculateViewMatrix();
+		Mat4.transformVecAffine(out, invViewMatrix, point);
+		return out;
+	}
+
+	public float[] inverseTransformPoint(float[] point) {
+		return inverseTransformPoint(new float[3], point);
+	}
+
 	private void calculateProjectionMatrix() {
 		if ((dirtyFlags & PROJECTION_MATRIX_DIRTY) != 0) {
 			final float zoomedViewportWidth = (viewportWidth / zoom);
 			final float zoomedViewportHeight = (viewportHeight / zoom);
 			if (isOrthographic) {
-				projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
-			} else {
-				if (farPlane > 0.0f) {
-					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+				if (reverseZ) {
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.orthographicReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					}
 				} else {
-					projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					projectionMatrix = Mat4.orthographic(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+				}
+			} else {
+				if (reverseZ) {
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.perspectiveReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.perspectiveInfiniteReverseZ(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
+				} else {
+					if (farPlane > 0.0f) {
+						projectionMatrix = Mat4.perspective(zoomedViewportWidth, zoomedViewportHeight, nearPlane, farPlane);
+					} else {
+						projectionMatrix = Mat4.perspectiveInfinite(zoomedViewportWidth, zoomedViewportHeight, nearPlane);
+					}
 				}
 			}
 			dirtyFlags &= ~PROJECTION_MATRIX_DIRTY;
@@ -393,5 +444,27 @@ public class Camera {
 	public boolean intersectsAABB(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		calculateFrustumPlanes();
 		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes);
+	}
+
+	public static class CameraStruct extends UniformBuffer.StructProperty {
+		public UniformBuffer.Property viewProj = addProperty(PropertyType.Mat4, "viewProj");
+		public UniformBuffer.Property invViewProj = addProperty(PropertyType.Mat4, "invViewProj");
+		public UniformBuffer.Property viewMatrix = addProperty(PropertyType.Mat4, "viewMatrix");
+		public UniformBuffer.Property nearPlane = addProperty(PropertyType.Float, "nearPlane");
+		public UniformBuffer.Property farPlane = addProperty(PropertyType.Float, "farPlane");
+		public UniformBuffer.Property position = addProperty(PropertyType.FVec3, "position");
+
+		public void set(Camera camera) {
+			camera.calculateViewMatrix();
+			camera.calculateViewProjMatrix();
+			camera.calculateInvViewProjMatrix();
+
+			viewProj.set(camera.viewProjMatrix);
+			invViewProj.set(camera.invViewProjMatrix);
+			viewMatrix.set(camera.viewMatrix);
+			nearPlane.set(camera.nearPlane);
+			farPlane.set(camera.farPlane);
+			position.set(camera.position);
+		}
 	}
 }
