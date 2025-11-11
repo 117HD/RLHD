@@ -56,7 +56,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
     shadowPos.xyz += 1;
     shadowPos.xyz /= 2;
     shadowPos.xy += distortion;
-    shadowPos.xy = clamp(shadowPos.xy, 0, 1);
+    shadowPos.xy = clamp(shadowPos.xy, 0.0, 1.0);
     shadowPos.xy *= textureSize(shadowMap, 0);
     shadowPos.xy += .5; // Shift to texel center
 

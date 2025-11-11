@@ -138,9 +138,9 @@ vec3 hslToSrgb(vec3 hsl) {
     float H_prime = fract(hsl[0]) * 6;
     float m = hsl[2] - C / 2;
 
-    float r = clamp(abs(H_prime - 3) - 1, 0, 1);
-    float g = clamp(2 - abs(H_prime - 2), 0, 1);
-    float b = clamp(2 - abs(H_prime - 4), 0, 1);
+    float r = clamp(abs(H_prime - 3.0) - 1.0, 0.0, 1.0);
+    float g = clamp(2 - abs(H_prime - 2.0), 0.0, 1.0);
+    float b = clamp(2 - abs(H_prime - 4.0), 0.0, 1.0);
     return vec3(r, g, b) * C + m;
 }
 

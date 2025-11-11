@@ -37,6 +37,7 @@ shared int min10; // minimum distance to a face of priority 10
 shared int renderPris[THREAD_COUNT * FACES_PER_THREAD]; // priority for face draw order
 
 #include <uniforms/compute.glsl>
+#include <uniforms/displacement.glsl>
 
 #include <comp_common.glsl>
 
