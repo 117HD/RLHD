@@ -1359,7 +1359,11 @@
   },
   {
     "name": "MARBLE_4",
-    "normalMap": "MARBLE_4_N"
+    "normalMap": "MARBLE_4_N",
+    "materialsToReplace": [
+      "MARBLE_DARK"
+    ],
+    "replacementCondition": "modelTextures"
   },
   {
     "name": "MARBLE_1_GLOSS",
@@ -1706,15 +1710,6 @@
     "specularGloss": 40.0,
     "materialsToReplace": [
       "ROOF_SHINGLES_1"
-    ],
-    "replacementCondition": "modelTextures"
-  },
-  {
-    "name": "HD_MARBLE_DARK",
-    "specularStrength": 1.1,
-    "specularGloss": 380.0,
-    "materialsToReplace": [
-      "MARBLE_DARK"
     ],
     "replacementCondition": "modelTextures"
   },
