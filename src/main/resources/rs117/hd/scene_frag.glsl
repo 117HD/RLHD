@@ -35,7 +35,6 @@
 #include MATERIAL_CONSTANTS
 
 uniform sampler2DArray textureArray;
-uniform sampler2D shadowMap;
 uniform usampler2DArray tiledLightingArray;
 
 // general HD settings

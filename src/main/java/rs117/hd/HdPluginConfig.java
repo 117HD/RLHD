@@ -457,45 +457,13 @@ public interface HdPluginConfig extends Config
 			"'Off' completely disables shadows.<br>" +
 			"'Fast' enables fast shadows without any texture detail.<br>" +
 			"'Detailed' enables slower shadows with support for texture detail.",
+		position = 0,
 		section = shadowSettings
 	)
 	default ShadowMode shadowMode()
 	{
 		return ShadowMode.DETAILED;
 	}
-
-	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
-	@ConfigItem(
-		keyName = KEY_SHADOW_TRANSPARENCY,
-		name = "Shadow Transparency",
-		description = "Enables partial support for shadows that take transparency into account.",
-		section = shadowSettings
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
-	@ConfigItem(
-		keyName = KEY_PIXELATED_SHADOWS,
-		name = "Pixelated Shadows",
-		description = "Give shadows a slightly pixelated look.",
-		section = shadowSettings
-	)
-	default boolean pixelatedShadows() {
-		return false;
-	}
-
-	String KEY_SHADOW_CASTER_CULLING = "shadowCasterCulling";
-	@ConfigItem(
-		keyName = KEY_SHADOW_CASTER_CULLING,
-		name = "Shadow Caster Culling",
-		description = "Prevent shadow pop-in by including the minimal amount of screen geometry.<br>" +
-					  "(MacOs users might see a performance improvement disabling this)",
-		section = shadowSettings
-	)
-	default boolean shadowCasterCulling() { return true; }
 
 	String KEY_SHADOW_RESOLUTION = "shadowResolution";
 	@ConfigItem(
@@ -504,7 +472,7 @@ public interface HdPluginConfig extends Config
 		description =
 			"The resolution of the shadow map.<br>" +
 			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		section = shadowSettings
+		section = shadowSettings,position = 1
 	)
 	default ShadowResolution shadowResolution()
 	{
@@ -519,11 +487,48 @@ public interface HdPluginConfig extends Config
 			"Choose whether shadows built into models by Jagex should be hidden. This does not affect clickboxes.<br>" +
 			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
 			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
-		section = shadowSettings
+		section = shadowSettings,
+		position = 2
 	)
 	default VanillaShadowMode vanillaShadowMode() {
 		return VanillaShadowMode.SHOW_IN_PVM;
 	}
+
+	String KEY_SHADOW_TRANSPARENCY = "enableShadowTransparency";
+	@ConfigItem(
+		keyName = KEY_SHADOW_TRANSPARENCY,
+		name = "Shadow Transparency",
+		description = "Enables partial support for shadows that take transparency into account.",
+		section = shadowSettings,
+		position = 3
+	)
+	default boolean enableShadowTransparency()
+	{
+		return true;
+	}
+
+	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
+	@ConfigItem(
+		keyName = KEY_PIXELATED_SHADOWS,
+		name = "Pixelated Shadows",
+		description = "Give shadows a slightly pixelated look.",
+		section = shadowSettings,
+		position = 4
+	)
+	default boolean pixelatedShadows() {
+		return false;
+	}
+
+	String KEY_SHADOW_CASTER_CULLING = "shadowCasterCulling";
+	@ConfigItem(
+		keyName = KEY_SHADOW_CASTER_CULLING,
+		name = "Shadow Caster Culling",
+		description = "Prevent shadow pop-in by including the minimal amount of screen geometry.<br>" +
+					  "(MacOs users might see a performance improvement disabling this)",
+		section = shadowSettings,
+		position = 5
+	)
+	default boolean shadowCasterCulling() { return true; }
 
 	/*====== Environment settings ======*/
 
