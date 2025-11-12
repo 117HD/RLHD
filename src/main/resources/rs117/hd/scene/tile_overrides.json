@@ -1545,7 +1545,10 @@
     ],
     "groundMaterial": "MARBLE_2_GLOSS",
     "minLightness": 30,
-    "maxLightness": 30
+    "maxLightness": 30,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EDGEVILLE_BANK_WINDOW_FIX_BLEND",
@@ -1609,7 +1612,10 @@
     "groundMaterial": "TILES_2x2_1",
     "blended": false,
     "minLightness": 26,
-    "maxLightness": 26
+    "maxLightness": 26,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EDGEVILLE_MANS_HOUSE_FLOOR",
@@ -1678,7 +1684,10 @@
     "groundMaterial": "VARROCK_PATHS",
     "blendedAsOpposite": true,
     "minLightness": 32,
-    "maxLightness": 32
+    "maxLightness": 32,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "ABYSSAL_FLOOR_OVERLAY",
@@ -2328,6 +2337,7 @@
     "groundMaterial": "VARROCK_PATHS",
     "shiftLightness": 6,
     "replacements": {
+      "NONE": "!textures",
       "EAST_ARDOUGNE_PATH_BLENDING_FIX_TOGGLE_WINTER": "season == SeasonalTheme.WINTER",
       "EAST_ARDOUGNE_PATH_BLENDING_FIX": "blending"
     }
@@ -2382,7 +2392,10 @@
     "groundMaterial": "CONCRETE",
     "blended": false,
     "minLightness": 40,
-    "maxLightness": 40
+    "maxLightness": 40,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING",
@@ -2413,7 +2426,8 @@
     "groundMaterial": "VARROCK_PATHS",
     "shiftLightness": 6,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -2442,7 +2456,10 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "minLightness": 33,
-    "maxLightness": 33
+    "maxLightness": 33,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_BRIDGE_TEXTURE",
@@ -2452,7 +2469,10 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "minLightness": 33,
-    "maxLightness": 33
+    "maxLightness": 33,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_HANDELMORT_TEXTURE",
@@ -2462,7 +2482,10 @@
     ],
     "groundMaterial": "BRICK_PATHS",
     "minLightness": 33,
-    "maxLightness": 33
+    "maxLightness": 33,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EAST_ARDOUGNE_HANDELMORT_BALCONY_TEXTURE",
@@ -6122,7 +6145,10 @@
       20
     ],
     "groundMaterial": "MARBLE_4_GLOSS",
-    "uvScale": 1.15
+    "uvScale": 1.15,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "OVERLAY_28",
