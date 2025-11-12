@@ -1691,11 +1691,6 @@ public class HdPlugin extends Plugin {
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
 								break;
-							case KEY_FISHING_SPOT_STYLE:
-								reloadModelOverrides = true;
-								fishingSpotReplacer.despawnRuneLiteObjects();
-								clientThread.invokeLater(fishingSpotReplacer::update);
-								break;
 						}
 					}
 
