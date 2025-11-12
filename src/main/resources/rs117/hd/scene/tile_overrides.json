@@ -270,7 +270,10 @@
       10
     ],
     "groundMaterial": "WORN_TILES",
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_CASTLE_TILE_OVERLAY",
@@ -287,11 +290,47 @@
       10
     ],
     "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 10
+    "shiftLightness": 10,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "LUM_BRIDGE_NO_BLENDING_FIX",
+    "area": "LUM_BRIDGE_NO_BLENDING_FIX",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 0,
+    "maxSaturation": 1,
+    "shiftLightness": 7,
+    "replacements": {
+      "LUMBRIDGE_PATHS": "blending",
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUM_BRIDGE_10",
     "area": "LUM_BRIDGE",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "minHue": 7,
+    "maxHue": 7,
+    "minSaturation": 0,
+    "maxSaturation": 1,
+    "shiftLightness": 7,
+    "replacements": {
+      "NONE": "!textures"
+    }
+  },
+  {
+    "name": "LUM_BRIDGE_BRIGHTNESS_FIX",
+    "area": "LUM_BRIDGE_BRIGHTNESS_FIX",
     "overlayIds": [
       10
     ],
@@ -300,7 +339,19 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 11,
+    "minLightness": 31,
+    "replacements": {
+      "LUM_BRIDGE_BRIGHTNESS_FIX_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "LUM_BRIDGE_BRIGHTNESS_FIX_NO_TEXTURES",
+    "area": "LUM_BRIDGE_BRIGHTNESS_FIX",
+    "overlayIds": [
+      10
+    ],
+    "minLightness": 21
   },
   {
     "name": "LUM_BRIDGE_22",
@@ -313,7 +364,8 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": -5
+    "shiftLightness": -5,
+    "blendedAsOpposite": true
   },
   {
     "name": "LUMBRIDGE_TOWERS_EXTERIOR",
@@ -338,7 +390,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 6
+    "shiftLightness": 6,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "BLEND_IMPROVEMENT_2",
@@ -351,7 +406,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 9
+    "shiftLightness": 9,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "SWAMP_PATH_FIX_1",
@@ -386,7 +444,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_VARROCK_BAND_BLEND_FIX",
@@ -402,6 +463,7 @@
     "minLightness": 18,
     "maxLightness": 18,
     "replacements": {
+      "NONE": "!textures",
       "LUMBRIDGE_VARROCK_BAND_BLEND_FIX_NOBLENDING": "!blending"
     }
   },
@@ -414,7 +476,10 @@
     "groundMaterial": "GRAVEL",
     "setHue": 7,
     "setSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_RIVER_DIRT_FIX",
@@ -436,7 +501,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_VARROCK_PATH_FIX_2",
@@ -449,7 +517,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "PINBALL_FLOOR",
@@ -545,7 +616,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LUMBRIDGE_CASTLE_ENTRYWAY_1",
