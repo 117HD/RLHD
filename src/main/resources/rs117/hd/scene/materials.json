@@ -2286,6 +2286,15 @@
     ]
   },
   {
+    "name": "SMOOTH_STONE",
+    "normalMap": "STONE_N"
+  },
+  {
+    "name": "SMOOTH_STONE_DARK",
+    "parent": "SMOOTH_STONE",
+    "brightness": 0.95
+  },
+  {
     "name": "WALL_STONE_N"
   },
   {
