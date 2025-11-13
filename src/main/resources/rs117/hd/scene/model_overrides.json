@@ -2702,12 +2702,13 @@
   },
   {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
-    "baseMaterial": "GRAY_75",
+    "baseMaterial": "GRAY_65",
     "flatNormals": true,
     "upwardsNormals": true,
     "inheritTileColorType": "UNDERLAY",
     "castShadows": false,
     "windDisplacementMode": "OBJECT",
+    "windDisplacementModifier": -2,
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
@@ -3184,6 +3185,16 @@
       "AVIUM_GRASS_TALL3_DRY",
       "AVIUM_GRASS_TALL4_DRY",
       "POH_GRASS"
+    ]
+  },
+  {
+    "description": "Hide Grass on Wizard Cromperty's Path",
+    "areas": [ "WIZARD_CROMPERTY_PATH_2" ],
+    "hide": true,
+    "objectIds": [
+      "LONG_GRASS_1",
+      "GRASS_LIGHT_1",
+      "GRASS_LIGHT_2"
     ]
   },
   {
@@ -44137,6 +44148,16 @@
         "uvOrientation": 128
       }
     ]
+  },
+  {
+    "description": "Fortis Bridge - Hide Road Model to Replace with Tiles",
+    "areas": [ "FORTIS_BRIDGE" ],
+    "hide": true,
+    "objectIds": [
+      "FLOOR_CIVITAS_MIDDLE01",
+      "FLOOR_CIVITAS_MIDDLE02"
+    ],
+    "uvType": "BOX"
   },
   {
     "description": "Mortytania Slayer Tower Spiked Chain shortcuts",
