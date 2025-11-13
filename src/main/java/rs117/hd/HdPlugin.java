@@ -803,6 +803,7 @@ public class HdPlugin extends Plugin {
 			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
 			.define("SHADOW_CONSTANT_BIAS", config.shadowResolution().getConstantBias())
 			.define("SHADOW_SLOPE_BIAS", config.shadowResolution().getSlopeBias())
+			.define("GROUND_SHADOWS", config.enableGroundShadows())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1652,6 +1653,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_PIXELATED_SHADOWS:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_GROUND_SHADOWS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:

@@ -519,6 +519,16 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
+	String KEY_GROUND_SHADOWS = "groundShadows";
+	@ConfigItem(
+		keyName = KEY_GROUND_SHADOWS,
+		name = "Ground Shadows",
+		description = "Enabled drawing of ground tile shadows, which can let mountains cast shadows.",
+		section = shadowSettings,
+		position = 5
+	)
+	default boolean enableGroundShadows() { return true; }
+
 	String KEY_SHADOW_CASTER_CULLING = "shadowCasterCulling";
 	@ConfigItem(
 		keyName = KEY_SHADOW_CASTER_CULLING,
@@ -526,7 +536,7 @@ public interface HdPluginConfig extends Config
 		description = "Prevent shadow pop-in by including the minimal amount of screen geometry.<br>" +
 					  "(MacOs users might see a performance improvement disabling this)",
 		section = shadowSettings,
-		position = 5
+		position = 6
 	)
 	default boolean shadowCasterCulling() { return true; }
 

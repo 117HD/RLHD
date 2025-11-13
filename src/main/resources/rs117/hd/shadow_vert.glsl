@@ -30,6 +30,7 @@
 
 layout (location = 0) in vec3 vPosition;
 layout (location = 1) in vec3 vUv;
+layout (location = 2) in vec3 vNormal;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
@@ -63,19 +64,29 @@ void main() {
     if (opacityThreshold == 0)
         opacityThreshold = SHADOW_DEFAULT_OPACITY_THRESHOLD;
 
+    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
+    vec3 pos = sceneOffset + vPosition;
+
     bool isTransparent = opacity <= opacityThreshold;
     bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
     bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
     bool isShadowDisabled =
-        isGroundPlaneTile ||
         isWaterSurfaceOrUnderwaterTile ||
         isTransparent;
 
-    int shouldCastShadow = isShadowDisabled ? 0 : 1;
+    #if ZONE_RENDERER && GROUND_SHADOWS
+    if (isGroundPlaneTile) {
+        vec3 groundNormal = normalize(vNormal);
+        float upFactor = clamp(dot(groundNormal, vec3(0.0, -1.0, 0.0)), 0.0, 1.0);
+        float bias = mix(64, 128, 1.0 - upFactor);
+       pos -= groundNormal * bias;
+    }
+    #else
+    isShadowDisabled = isShadowDisabled || isGroundPlaneTile;
+    #endif
 
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    vec3 pos = sceneOffset + vPosition;
+    int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         gPosition = pos;
