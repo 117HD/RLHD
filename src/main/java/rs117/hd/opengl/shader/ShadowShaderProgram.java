@@ -5,10 +5,12 @@ import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_SHADOW_MAP;
 
 public class ShadowShaderProgram extends ShaderProgram {
 	private ShadowMode mode;
-	private final UniformTexture uniShadowMap = addUniformTexture("textureArray");
+	private final UniformTexture uniTextureArray = addUniformTexture("textureArray");
+	private final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 
 	public ShadowShaderProgram() {
 		super(t -> t
@@ -18,7 +20,8 @@ public class ShadowShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniShadowMap.set(TEXTURE_UNIT_GAME);
+		uniTextureArray.set(TEXTURE_UNIT_GAME);
+		uniShadowMap.set(TEXTURE_UNIT_SHADOW_MAP);
 	}
 
 	@Override

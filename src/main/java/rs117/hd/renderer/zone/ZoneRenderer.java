@@ -845,12 +845,13 @@ public class ZoneRenderer implements Renderer {
 			renderState.apply();
 
 			glClearDepth(directionalCamera.getIsReverseZ() ? 0 : 1);
-			glClear(GL_DEPTH_BUFFER_BIT);
+			glClearColor(0, 0, 0, 0);
+			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
 			renderState.enable.set(GL_POLYGON_OFFSET_FILL);
 			renderState.enable.set(GL_DEPTH_TEST);
-			renderState.disable.set(GL_CULL_FACE);
-			renderState.depthFunc.set(directionalCamera.getIsReverseZ() ? GL_GREATER : GL_LESS);
+			renderState.enable.set(GL_CULL_FACE);
+			renderState.depthFunc.set(directionalCamera.getIsReverseZ() ? GL_GEQUAL : GL_LEQUAL);
 			renderState.polygonOffset.set(directionalCamera.getIsReverseZ() ? -1.3f : 1.3f, directionalCamera.getIsReverseZ() ? -2.3f : 2.3f);
 
 			CommandBuffer.SKIP_DEPTH_MASKING = true;

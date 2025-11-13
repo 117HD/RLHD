@@ -44,12 +44,16 @@ flat in int gMaterialData[3];
 flat in int gCastShadow[3];
 flat in int gWorldViewId[3];
 
-out vec3 fUvw;
+out vec4 fUvw;
 flat out int fMaterialData;
 
 #if SHADOW_TRANSPARENCY
     flat in float gOpacity[3];
     out float fOpacity;
+    #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+        flat in vec3 gColor[3];
+        out vec3 fColor;
+    #endif
 #endif
 
 void main() {
@@ -68,7 +72,7 @@ void main() {
     fMaterialData = materialData;
 
     for (int i = 0; i < 3; i++) {
-        fUvw = vec3(uvw[i].xy, material.colorMap);
+        fUvw = vec4(uvw[i].xy, material.colorMap, material.shadowAlphaMap);
         // Scroll UVs
         fUvw.xy += material.scrollDuration * elapsedTime;
         // Scale from the center
@@ -76,6 +80,9 @@ void main() {
 
         #if SHADOW_TRANSPARENCY
             fOpacity = gOpacity[i];
+            #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+                fColor = gColor[i];
+            #endif
         #endif
 
         gl_Position = directionalCamera.viewProj * getWorldViewProjection(worldViewIndex) * vec4(gPosition[i], 1);

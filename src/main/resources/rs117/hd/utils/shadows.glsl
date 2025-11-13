@@ -26,39 +26,49 @@
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
-
-#include SHADOW_CONSTANT_BIAS
-#include SHADOW_SLOPE_BIAS
+#include <utils/misc.glsl>
 
 #if SHADOW_MODE != SHADOW_MODE_OFF
 
-#if SHADOW_TRANSPARENCY || !ZONE_RENDERER
-uniform sampler2D shadowMap;
-#else
 #extension GL_EXT_shadow_samplers : enable
 uniform sampler2DShadow shadowMap;
+
+#if SHADOW_TRANSPARENCY
+    uniform isampler2D shadowTransparencyMap;
 #endif
 
-float fetchShadowTexel(ivec2 uv, float fragDepth) {
-    #if SHADOW_TRANSPARENCY
-        int alphaDepth = int(texelFetch(shadowMap, uv, 0).r * SHADOW_COMBINED_MAX);
-        float depth = float(alphaDepth & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
-        float alpha = float(alphaDepth >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-#if ZONE_RENDERER
-        return depth > fragDepth ? alpha : 0.f;
-#else
-        return depth < fragDepth ? (1.0 - alpha) : 0.f;
+vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth) {
+#if SHADOW_SHADING == SHADOW_DITHERED_SHADING
+    int index = int(hash(vec4(floor(worldPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
+    pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
 #endif
-    #else
+
+    vec2 shadowUV = vec2(pixelCoord) / vec2(textureSize(shadowMap, 0));
+    float shadow = shadow2DEXT(shadowMap, vec3(shadowUV, fragDepth));
+    vec3 tint = vec3(0.0);
+
+#if SHADOW_TRANSPARENCY
+    // Not in shadow, so lets check the transparency map
+    ivec2 encoded = texelFetch(shadowTransparencyMap, pixelCoord, 0).rg;
+    float depth = float(encoded.r & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
 #if ZONE_RENDERER
-        return shadow2DEXT(shadowMap, vec3(vec2(uv.xy) / vec2(textureSize(shadowMap, 0)), fragDepth));
+    if(depth > fragDepth)
 #else
-        return texelFetch(shadowMap, uv, 0).r < fragDepth ? 1.0f : 0.0f;
+    if(depth < fragDepth)
 #endif
+    {
+        shadow += float(encoded.r >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
+    #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+        tint += srgbToLinear(packedHslToSrgb(encoded.g));
     #endif
+    }
+
+#endif
+
+    return vec4(shadow, tint);
 }
 
-float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, out vec3 tint) {
     vec4 shadowPos = directionalCamera.viewProj * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
@@ -113,7 +123,7 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
 
     const int kernelSize = 3;
     ivec2 kernelOffset = ivec2(shadowPos.xy - kernelSize / 2);
-    #if PIXELATED_SHADOWS
+    #if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
         const float kernelAreaReciprocal = 1. / (kernelSize * kernelSize);
     #else
         const float kernelAreaReciprocal = .25; // This is effectively a 2x2 kernel
@@ -122,35 +132,34 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
         vec3 lerpY = vec3(1 - lerp.y, 1, lerp.y);
     #endif
 
-    float shadow = 0;
     // Sample 4 corners first
-    float c00 = fetchShadowTexel(kernelOffset + ivec2(0, 0), fragDepth);
-    float c02 = fetchShadowTexel(kernelOffset + ivec2(0, kernelSize - 1), fragDepth);
-    float c20 = fetchShadowTexel(kernelOffset + ivec2(kernelSize - 1, 0), fragDepth);
-    float c22 = fetchShadowTexel(kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth);
+    vec4 c00 = fetchShadowTexel(fragPos, 0, kernelOffset + ivec2(0, 0), fragDepth);
+    vec4 c02 = fetchShadowTexel(fragPos, 1, kernelOffset + ivec2(0, kernelSize - 1), fragDepth);
+    vec4 c20 = fetchShadowTexel(fragPos, 2, kernelOffset + ivec2(kernelSize - 1, 0), fragDepth);
+    vec4 c22 = fetchShadowTexel(fragPos, 3, kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth);
 
     // Early exit if all corners are the same (fully shadowed or fully lit)
-    float cornerAvg = (c00 + c02 + c20 + c22) * 0.25;
-    bool allShadowed = (c00 == 0.0 && c02 == 0.0 && c20 == 0.0 && c22 == 0.0);
-    bool allLit      = (c00 == 1.0 && c02 == 1.0 && c20 == 1.0 && c22 == 1.0);
+    bool allShadowed = (c00.r == 0.0 && c02.r == 0.0 && c20.r == 0.0 && c22.r == 0.0);
+    bool allLit      = (c00.r == 1.0 && c02.r == 1.0 && c20.r == 1.0 && c22.r == 1.0);
 
+    vec4 combined = vec4(0.0);
     if (allShadowed || allLit) {
-        shadow = cornerAvg;
+        combined = (c00 + c02 + c20 + c22) * 0.25;;
     } else {
         // Finish sampling the reset of the kernal
-        float s01 = fetchShadowTexel(kernelOffset + ivec2(0, 1), fragDepth);
-        float s10 = fetchShadowTexel(kernelOffset + ivec2(1, 0), fragDepth);
-        float s11 = fetchShadowTexel(kernelOffset + ivec2(1, 1), fragDepth);
-        float s12 = fetchShadowTexel(kernelOffset + ivec2(1, 2), fragDepth);
-        float s21 = fetchShadowTexel(kernelOffset + ivec2(2, 1), fragDepth);
+        vec4 s01 = fetchShadowTexel(fragPos, 4, kernelOffset + ivec2(0, 1), fragDepth);
+        vec4 s10 = fetchShadowTexel(fragPos, 5, kernelOffset + ivec2(1, 0), fragDepth);
+        vec4 s11 = fetchShadowTexel(fragPos, 6, kernelOffset + ivec2(1, 1), fragDepth);
+        vec4 s12 = fetchShadowTexel(fragPos, 7, kernelOffset + ivec2(1, 2), fragDepth);
+        vec4 s21 = fetchShadowTexel(fragPos, 8, kernelOffset + ivec2(2, 1), fragDepth);
 
-        #if PIXELATED_SHADOWS
-            shadow =
+        #if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
+            combined =
                 c00 + s01 + c02 +
                 s10 + s11 + s12 +
                 c20 + s21 + c22;
         #else
-            shadow =
+            combined =
                 c00 * lerpX[0] * lerpY[0] +
                 s01 * lerpX[0] * lerpY[1] +
                 c02 * lerpX[0] * lerpY[2] +
@@ -161,11 +170,12 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals) {
                 s21 * lerpX[2] * lerpY[1] +
                 c22 * lerpX[2] * lerpY[2];
         #endif
-        shadow *= kernelAreaReciprocal;
+        combined *= kernelAreaReciprocal;
     }
-
-    return shadow * (1.0 - fadeOut);
+    combined *= (1.0 - fadeOut);
+    tint = combined.gba;
+    return combined.r;
 }
 #else
-#define sampleShadowMap(fragPos, distortion, lightDotNormals) 0
+#define sampleShadowMap(fragPos, distortion, lightDotNormals, tint) 0
 #endif

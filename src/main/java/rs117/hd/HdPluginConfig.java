@@ -47,6 +47,8 @@ import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowDistance;
 import rs117.hd.config.ShadowMode;
 import rs117.hd.config.ShadowResolution;
+import rs117.hd.config.ShadowShading;
+import rs117.hd.config.ShadowTransparency;
 import rs117.hd.config.TextureResolution;
 import rs117.hd.config.UIScalingMode;
 import rs117.hd.config.VanillaShadowMode;
@@ -465,6 +467,23 @@ public interface HdPluginConfig extends Config
 		return ShadowMode.DETAILED;
 	}
 
+	String KEY_SHADOW_SHADING = "shadowShading";
+	@ConfigItem(
+		keyName = KEY_SHADOW_SHADING,
+		name = "Shadow Shading",
+		description =
+			"Shading technique used when sampling shadow map.<br>" +
+			"'Smooth' Smooths out the shadow pixels (PCF 3x3).<br>" +
+			"'Dithered' Further smoothens pixelation with dithering.<br>"+
+			"'Pixelated' Retains slightly pixelated shadows.",
+		section = shadowSettings,
+		position = 1
+	)
+	default ShadowShading shadowShading()
+	{
+		return ShadowShading.Dithered;
+	}
+
 	String KEY_SHADOW_RESOLUTION = "shadowResolution";
 	@ConfigItem(
 		keyName = KEY_SHADOW_RESOLUTION,
@@ -472,7 +491,8 @@ public interface HdPluginConfig extends Config
 		description =
 			"The resolution of the shadow map.<br>" +
 			"Higher resolutions result in higher quality shadows, at the cost of higher GPU usage.",
-		section = shadowSettings,position = 1
+		section = shadowSettings,
+		position = 2
 	)
 	default ShadowResolution shadowResolution()
 	{
@@ -488,7 +508,7 @@ public interface HdPluginConfig extends Config
 			"'Show in PvM' will retain shadows for falling crystals during the Olm fight and other useful cases.<br>" +
 			"'Prefer in PvM' will do the above and also disable 117 HD's dynamic shadows in such cases.",
 		section = shadowSettings,
-		position = 2
+		position = 3
 	)
 	default VanillaShadowMode vanillaShadowMode() {
 		return VanillaShadowMode.SHOW_IN_PVM;
@@ -500,23 +520,11 @@ public interface HdPluginConfig extends Config
 		name = "Shadow Transparency",
 		description = "Enables partial support for shadows that take transparency into account.",
 		section = shadowSettings,
-		position = 3
-	)
-	default boolean enableShadowTransparency()
-	{
-		return true;
-	}
-
-	String KEY_PIXELATED_SHADOWS = "pixelatedShadows";
-	@ConfigItem(
-		keyName = KEY_PIXELATED_SHADOWS,
-		name = "Pixelated Shadows",
-		description = "Give shadows a slightly pixelated look.",
-		section = shadowSettings,
 		position = 4
 	)
-	default boolean pixelatedShadows() {
-		return false;
+	default ShadowTransparency enableShadowTransparency()
+	{
+		return ShadowTransparency.EnabledWithTinting;
 	}
 
 	String KEY_GROUND_SHADOWS = "groundShadows";

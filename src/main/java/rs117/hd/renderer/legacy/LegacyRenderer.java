@@ -1136,7 +1136,8 @@ public class LegacyRenderer implements Renderer {
 				glViewport(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
 				glBindFramebuffer(GL_FRAMEBUFFER, plugin.fboShadowMap);
 				glClearDepth(1);
-				glClear(GL_DEPTH_BUFFER_BIT);
+				glClearColor(0, 0, 0, 0);
+				glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
 
 				shadowProgram.use();

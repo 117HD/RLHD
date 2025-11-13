@@ -26,6 +26,7 @@
 #version 330
 
 #define DISPLAY_BASE_COLOR 0
+#define DISPLAY_SHADOW_TINT 0
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
@@ -303,13 +304,13 @@ void main() {
             lightDotNormals = .7;
         #endif
 
+        vec3 shadowTint = vec3(0);
         float shadow = 0;
         if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals);
+            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals, shadowTint);
         shadow = max(shadow, selfShadowing);
+        shadowTint *= lightStrength * 2.0;
         float inverseShadow = 1 - shadow;
-
-
 
         // specular
         vec3 vSpecularGloss = vec3(material1.specularGloss, material2.specularGloss, material3.specularGloss);
@@ -368,8 +369,15 @@ void main() {
         // apply shadows
         dirLightColor *= inverseShadow;
 
-        vec3 lightColor = dirLightColor;
+        vec3 lightColor = mix(dirLightColor, shadowTint, shadow);
         vec3 lightOut = max(lightDotNormals, 0.0) * lightColor;
+
+        #if DISPLAY_SHADOW_TINT
+        outputColor.rgb += shadowTint;
+        outputColor.rgb = linearToSrgb(outputColor.rgb);
+        FragColor = outputColor;
+        return;
+        #endif
 
         // directional light specular
         vec3 lightReflectDir = reflect(-lightDir, normals);

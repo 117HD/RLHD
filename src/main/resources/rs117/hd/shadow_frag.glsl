@@ -28,36 +28,60 @@
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/color_utils.glsl>
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     uniform sampler2DArray textureArray;
-    in vec3 fUvw;
+    in vec4 fUvw;
     flat in int fMaterialData;
 #endif
 
 #if SHADOW_TRANSPARENCY
+    uniform sampler2D shadowMap;
     in float fOpacity;
+
+    #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+    in vec3 fColor;
+    out ivec2 output;
+    #else
+    out int output;
+    #endif
+
+    #extension GL_ARB_conservative_depth : enable
+    layout (depth_less) out float gl_FragDepth;
 #endif
 
 void main() {
     float opacity = 0;
     #if SHADOW_TRANSPARENCY
         opacity = fOpacity;
+        #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+            vec3 shadowTint = fColor * fOpacity;
+        #endif
     #endif
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         if (fUvw.z != -1) {
-            vec3 uvw = fUvw;
+            vec4 uvw = fUvw;
 
             // Vanilla tree textures rely on UVs being clamped horizontally,
             // which HD doesn't do, so we instead opt to hide these fragments
             if ((fMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
                 uvw.x = clamp(uvw.x, 0, .984375);
 
-            opacity = texture(textureArray, uvw).a;
             #if SHADOW_TRANSPARENCY
+                #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+                    vec4 albedo = texture(textureArray, uvw.xyz);
+                    shadowTint = albedo.rgb;
+                    opacity = albedo.a;
+                #else
+                    opacity = texture(textureArray, uvw.xyz).a;
+                #endif
+                if(uvw.w > 0)
+                    opacity *= texture(textureArray, uvw.xyw).a;
                 opacity *= fOpacity;
             #else
+                opacity = texture(textureArray, uvw.xyz).a;
                 if (opacity < SHADOW_DEFAULT_OPACITY_THRESHOLD)
                     discard;
             #endif
@@ -65,18 +89,25 @@ void main() {
     #endif
 
     #if SHADOW_TRANSPARENCY
-        // We pack the transparency and depth of each fragment into the upper and lower bits
-        // of the output depth respectively, such that less-transparent fragments overwrite
-        // more-transparent fragments first, and equally transparent fragments second, based on depth.
-        // Unfortunately, the exact handling of floats is implementation dependant, so this may not work
-        // the same across all GPUs.
+    if(opacity != 1.0) {
         float depth = gl_FragCoord.z;
-        #if !ZONE_RENDERER
-        opacity = 1.0 - opacity;
+        #if ZONE_RENDERER
+        depth -= 0.0015;
+        #else
+        depth += 0.002;
         #endif
-        gl_FragDepth = (
+        int alphaDepth =
             int(opacity * SHADOW_ALPHA_MAX) << SHADOW_DEPTH_BITS |
-            int(depth * SHADOW_DEPTH_MAX)
-        ) / float(SHADOW_COMBINED_MAX);
+            int(depth * SHADOW_DEPTH_MAX);
+
+        #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+            output = ivec2(alphaDepth, srgbToPackedHsl(shadowTint));
+        #else
+            output = alphaDepth;
+        #endif
+        gl_FragDepth = texelFetch(shadowMap, ivec2(gl_FragCoord.xy), 0).r;
+    } else {
+        gl_FragDepth = gl_FragCoord.z;
+    }
     #endif
 }
