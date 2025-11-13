@@ -39813,6 +39813,60 @@
     "graphicsObjectIds": [ "VFX_HUMAN_SCORCHING_BOW_SPECIAL_ATTACK_01" ]
   },
   {
+    "description": "Abyssal Dagger Special Attack Right 1",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Right 2",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 750,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Left",
+    "offset": [ -30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
     "offset": [ 0, 350, 0 ],
     "radius": 500,
