@@ -5139,7 +5139,7 @@
       "SEASONAL_DIRT": [
         "h == 6 && s <= 4",
         "h == 8 && s <= 4 && l <= 71",
-        "h <= 7 && s <= 5 && l <= 58",
+        "h <= 7 && s <= 5 && l <= 60",
         "h <= 7 && s <= 7 && l <= 34",
         "h == 8 && s == 5",
         "h == 9 && s == 2",
@@ -7724,6 +7724,18 @@
     }
   },
   {
+    "name": "Farming Guild Grass",
+    "area": "Farming Guild Interior",
+    "underlayIds": [
+      49,
+      50,
+      63,
+      68,
+      96
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
     "name": "ZEAH_DIRT_UNDERLAY",
     "area": "KOUREND",
     "underlayIds": [
@@ -8844,8 +8856,11 @@
       65,
       68,
       69,
+      77,
       94,
-      96
+      96,
+      125,
+      141
     ],
     "replacements": {
       "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
@@ -8862,7 +8877,7 @@
       ],
       "SEASONAL_DIRT": [
         "h == 8 && s <= 4 && l <= 71",
-        "h <= 7 && s <= 5 && l <= 57",
+        "h <= 7 && s <= 5 && l <= 60",
         "h <= 7 && s <= 7 && l <= 34",
         "h == 8 && s == 5",
         "h == 9 && s == 3 && l <= 48"
