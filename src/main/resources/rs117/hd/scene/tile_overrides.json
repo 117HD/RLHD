@@ -5128,16 +5128,18 @@
       "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
       "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
       "SEASONAL_GRASS": [
+        "h == 6 && s >= 5",
+        "h == 8 && s >= 6 && l >= 2",
         "h == 9 && s == 3 && l >= 49",
         "h == 9 && s >= 4 && l >= 31",
         "h >= 9 && s >= 5",
         "h >= 10 && s >= 2",
-        "h == 8 && s >= 6 && l >= 2"
+        "h >= 11"
       ],
       "SEASONAL_DIRT": [
-        "h == 6",
+        "h == 6 && s <= 4",
         "h == 8 && s <= 4 && l <= 71",
-        "h <= 7 && s <= 5 && l <= 57",
+        "h <= 7 && s <= 5 && l <= 58",
         "h <= 7 && s <= 7 && l <= 34",
         "h == 8 && s == 5",
         "h == 9 && s == 2",
@@ -5812,7 +5814,7 @@
   {
     "name": "Varlamore - Auburn Valley - Complex Tiles",
     "area": "AUBURNVALE",
-    "underlayIds": [ 63, 66, 67, 70 ],
+    "underlayIds": [ 63, 66, 67, 68, 70 ],
     "replacements": {
       "SEASONAL_GRASS": [
         "h >= 10 && s == 1",
