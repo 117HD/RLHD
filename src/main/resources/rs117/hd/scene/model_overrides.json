@@ -65514,7 +65514,7 @@
       {
         "description": "Rock",
         "colors": "h == 10 && s == 1",
-        "baseMaterial": "ROCK_5",
+        "baseMaterial": "ROCK_5_LIGHT",
         "uvType": "BOX",
         "uvOrientation": -256,
         "uvScale": 0.8

@@ -1623,6 +1623,11 @@
     ]
   },
   {
+    "name": "ROCK_5_LIGHT",
+    "parent": "ROCK_5",
+    "brightness": 1.25
+  },
+  {
     "name": "ROCK_5_ORE",
     "parent": "ROCK_5",
     "specularStrength": 1.0
