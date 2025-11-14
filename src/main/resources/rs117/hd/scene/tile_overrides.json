@@ -4191,6 +4191,17 @@
     "blended": false
   },
   {
+    "name": "Mount Karuulm Mountainside",
+    "area": "MOUNT_KARUULM",
+    "overlayIds": [ 114, 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR"
+  },
+  {
     "name": "ZEAH_DIRT_OVERLAY",
     "area": "KOUREND",
     "overlayIds": [
