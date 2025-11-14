@@ -3854,6 +3854,14 @@
     "blended": false
   },
   {
+    "name": "Farming Guild Grass",
+    "area": "Kebos Interior",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "OVERLAY_KOUREND_PATH",
     "area": "KOUREND",
     "overlayIds": [
