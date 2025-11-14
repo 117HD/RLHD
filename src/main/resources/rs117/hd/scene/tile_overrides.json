@@ -5087,6 +5087,48 @@
     "blended": false
   },
   {
+    "name": "Savannah Church - Stone tile pathway",
+    "area": "OVERWORLD",
+    "overlayIds": [ 199 ],
+    "groundMaterial": "STONE",
+    "blended": false
+  },
+  {
+    "name": "Varlamore Dirt",
+    "area": "VARLAMORE",
+    "underlayIds": [ 119 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "Varlamore - Complex",
+    "area": "VARLAMORE",
+    "underlayIds": [ 26, 50, 52, 63, 68, 94, 123, 129, 147, 178 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "SEASONAL_GRASS": [
+        "h == 9 && s == 3 && l >= 49",
+        "h >= 9 && s >= 4 && l >= 31",
+        "h >= 10 && s >= 2",
+        "h == 8 && s >= 6 && l >= 2"
+      ],
+      "SEASONAL_DIRT": [
+        "h == 8 && s <= 4 && l <= 71",
+        "h <= 7 && s <= 5 && l <= 57",
+        "h <= 7 && s <= 7 && l <= 34",
+        "h == 8 && s == 5",
+        "h == 9 && s == 3 && l <= 48",
+        "h == 9 && s == 4 && l <= 30",
+        "h == 9 && s == 5 && l <= 30"
+      ],
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
     "name": "Proudspire Snow Blending",
     "area": "Proudspire",
     "underlayIds": [ 58 ],
@@ -5727,7 +5769,10 @@
     "name": "Varlamore - Custodas Mountains - Grunge",
     "area": "VARLAMORE",
     "underlayIds": [ 92, 173 ],
-    "groundMaterial": "GRUNGE"
+    "groundMaterial": "GRUNGE",
+    "replacements": {
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Varlamore - Custodas Mountains - Dirt",
@@ -8576,7 +8621,8 @@
       103,
       114,
       115,
-      126
+      126,
+      203
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
@@ -8792,7 +8838,8 @@
         "h == 8 && s <= 4 && l <= 71",
         "h <= 7 && s <= 5 && l <= 57",
         "h <= 7 && s <= 7 && l <= 34",
-        "h == 8 && s == 5"
+        "h == 8 && s == 5",
+        "h == 9 && s == 3 && l <= 48"
       ],
       "DEFAULT_DIRT": true
     }
