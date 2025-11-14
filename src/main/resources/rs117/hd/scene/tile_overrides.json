@@ -5135,6 +5135,7 @@
         "h == 8 && s >= 6 && l >= 2"
       ],
       "SEASONAL_DIRT": [
+        "h == 6",
         "h == 8 && s <= 4 && l <= 71",
         "h <= 7 && s <= 5 && l <= 57",
         "h <= 7 && s <= 7 && l <= 34",
@@ -5781,7 +5782,7 @@
     "underlayIds": [ 151 ],
     "groundMaterial": "SNOW_1",
     "replacements": {
-      "DEFAULT_DIRT": "s > 0"
+      "SEASONAL_DIRT": "s > 0"
     }
   },
   {
@@ -5797,7 +5798,10 @@
     "name": "Varlamore - Custodas Mountains - Dirt",
     "area": "VARLAMORE",
     "underlayIds": [ 176 ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Varlamore - Auburn Valley - Dirt path",
@@ -6175,7 +6179,8 @@
       36,
       80,
       85,
-      131
+      131,
+      216
     ],
     "groundMaterial": "VARIED_DIRT"
   },
