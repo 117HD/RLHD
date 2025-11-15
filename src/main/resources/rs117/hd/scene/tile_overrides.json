@@ -3463,7 +3463,8 @@
     "underlayIds": [
       57,
       148,
-      149
+      149,
+      150
     ],
     "groundMaterial": "VARIED_DIRT"
   },
@@ -3473,14 +3474,26 @@
     "underlayIds": [
       72
     ],
-    "groundMaterial": "VARIED_DIRT"
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "SEASONAL_DIRT": [
+        "h > 0 && s > 0"
+      ]
+    }
   },
   {
     "name": "Wilderness - Dirt - Seasonal",
     "area": "WILDERNESS",
     "underlayIds": [
       147,
-      148
+      148,
+      162,
+      163,
+      164,
+      165,
+      167,
+      168,
+      169
     ],
     "groundMaterial": "VARIED_DIRT",
     "replacements": {
