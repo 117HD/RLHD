@@ -41,6 +41,21 @@ uniform sampler2D shadowMap;
     uniform isampler2D shadowGroundMask;
 #endif
 
+vec3 reconstructShadowWorldPos(ivec2 pixelCoord, float shadowDepth)
+{
+    vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
+    vec2 uv = (vec2(pixelCoord) + 0.5) / shadowMapSize;
+
+#if ZONE_RENDERER
+    vec4 shadowNDC = vec4(uv * 2.0 - 1.0, shadowDepth, 1.0);
+#else
+    vec4 shadowNDC = vec4(uv * 2.0 - 1.0, shadowDepth * 2.0 - 1.0, 1.0);
+#endif
+    vec4 world = directionalCamera.invViewProj * shadowNDC;
+    return world.xyz / world.w;
+}
+
+
 vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth, bool isGroundPlane) {
 #if SHADOW_SHADING == SHADOW_DITHERED_SHADING
     int index = int(hash(vec4(floor(worldPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
@@ -58,19 +73,23 @@ vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth, b
     vec3 tint = vec3(0.0);
 
 #if ZONE_RENDERER && GROUND_SHADOWS
-    if(isGroundPlane && shadow > 0.0 && abs(shadowDepth - fragDepth) < 0.0125) {
-        int shadowGroundTileXY = texelFetch(shadowGroundMask, pixelCoord, 0).r;
-        if(shadowGroundTileXY != 0) {
-            int tileExX = int(worldPos.x / 128.0) % 255;
-            int tileExY = int(worldPos.z / 128.0) % 255;
+    if(isGroundPlane && shadow > 0.0) {
+        vec3 shadowWorldPos = reconstructShadowWorldPos(pixelCoord, shadowDepth);
+        float dist = distance(shadowWorldPos, worldPos);
+        if(dist < 256.0) {
+            int shadowGroundTileXY = texelFetch(shadowGroundMask, pixelCoord, 0).r;
+            if(shadowGroundTileXY != 0) {
+                int tileExX = int(worldPos.x / 128.0) % 255;
+                int tileExY = int(worldPos.z / 128.0) % 255;
 
-            int shadowGroundTileExX = shadowGroundTileXY & 0xFF;
-            int shadowGroundTileExY = (shadowGroundTileXY >> 8) & 0xFF;
+                int shadowGroundTileExX = shadowGroundTileXY & 0xFF;
+                int shadowGroundTileExY = (shadowGroundTileXY >> 8) & 0xFF;
 
-            for(int x = -1; x < 2 && shadow > 0; x++) {
-                for(int y = -1; y < 2 && shadow > 0; y++) {
-                    if(((tileExX + x) % 255) == shadowGroundTileExX && ((tileExY + y) % 255) == shadowGroundTileExY) {
-                        shadow = 0; // Ignore Shadow, since its coming from a nearby tile
+                for(int x = -2; x < 3 && shadow > 0; x++) {
+                    for(int y = -2; y < 3 && shadow > 0; y++) {
+                        if(((tileExX + x) % 255) == shadowGroundTileExX && ((tileExY + y) % 255) == shadowGroundTileExY) {
+                            shadow = 0; // Ignore Shadow, since its coming from a nearby tile
+                        }
                     }
                 }
             }
