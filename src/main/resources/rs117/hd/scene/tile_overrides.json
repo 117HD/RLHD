@@ -3458,7 +3458,25 @@
     "waterType": "BLOOD"
   },
   {
-    "name": "Wilderness - Dirt",
+    "name": "Wilderness - Dirt without snow",
+    "area": "Wilderness areas with Lava in them",
+    "underlayIds": [
+      57,
+      148,
+      149
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Wilderness - Dirt by lava",
+    "area": "WILDERNESS",
+    "underlayIds": [
+      72
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Wilderness - Dirt - Seasonal",
     "area": "WILDERNESS",
     "underlayIds": [
       147,
