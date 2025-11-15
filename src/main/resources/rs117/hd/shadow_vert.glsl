@@ -86,9 +86,7 @@ void main() {
     bool isGroundPlaneTile = (vTerrainData & 0xF) == 1; // plane == 0 && isTerrain
     bool isWaterSurfaceOrUnderwaterTile = waterTypeIndex > 0;
 
-    bool isShadowDisabled =
-        isWaterSurfaceOrUnderwaterTile ||
-        isTransparent;
+    bool isShadowDisabled = isTransparent;
 
     #if ZONE_RENDERER && GROUND_SHADOWS
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
@@ -97,7 +95,7 @@ void main() {
         fGroundPlane = isGroundPlaneTile ? 1.0 : 0.0;
     #endif
     #else
-    isShadowDisabled = isShadowDisabled || isGroundPlaneTile;
+    isShadowDisabled = isShadowDisabled || isWaterSurfaceOrUnderwaterTile || isGroundPlaneTile;
     #endif
 
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
