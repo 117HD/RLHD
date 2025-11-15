@@ -84,6 +84,7 @@ void main() {
     Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // Water data
+    bool isGroundPlane = (vTerrainData[0] & 0xF) == 1;
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
     int waterDepth1 = vTerrainData[0] >> 11 & 0xFFF;
     int waterDepth2 = vTerrainData[1] >> 11 & 0xFFF;
@@ -307,7 +308,7 @@ void main() {
         vec3 shadowTint = vec3(0);
         float shadow = 0;
         if ((vMaterialData[0] >> MATERIAL_FLAG_DISABLE_SHADOW_RECEIVING & 1) == 0)
-            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals, shadowTint);
+            shadow = sampleShadowMap(fragPos, vec2(0), lightDotNormals, isGroundPlane, shadowTint);
         shadow = max(shadow, selfShadowing);
         shadowTint *= lightStrength * 2.0;
         float inverseShadow = 1 - shadow;

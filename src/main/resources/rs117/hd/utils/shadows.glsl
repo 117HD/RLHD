@@ -31,44 +31,77 @@
 #if SHADOW_MODE != SHADOW_MODE_OFF
 
 #extension GL_EXT_shadow_samplers : enable
-uniform sampler2DShadow shadowMap;
+uniform sampler2D shadowMap;
 
 #if SHADOW_TRANSPARENCY
     uniform isampler2D shadowTransparencyMap;
 #endif
 
-vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth) {
+#if ZONE_RENDERER && GROUND_SHADOWS
+    uniform isampler2D shadowGroundMask;
+#endif
+
+vec4 fetchShadowTexel(vec3 worldPos, int i, ivec2 pixelCoord, float fragDepth, bool isGroundPlane) {
 #if SHADOW_SHADING == SHADOW_DITHERED_SHADING
     int index = int(hash(vec4(floor(worldPos.xyz), i)) * float(POISSON_DISK_LENGTH)) % POISSON_DISK_LENGTH;
     pixelCoord += ivec2(getPoissonDisk(index) * 1.25);
 #endif
 
-    vec2 shadowUV = vec2(pixelCoord) / vec2(textureSize(shadowMap, 0));
-    float shadow = shadow2DEXT(shadowMap, vec3(shadowUV, fragDepth));
+    vec2 shadowMapSize = vec2(textureSize(shadowMap, 0));
+    vec2 shadowUV = vec2(pixelCoord) / shadowMapSize;
+    float shadowDepth = texelFetch(shadowMap, pixelCoord, 0).r;
+#if ZONE_RENDERER
+    float shadow = shadowDepth > fragDepth ? 1.0 : 0.0;
+#else
+    float shadow = shadowDepth < fragDepth ? 1.0 : 0.0;
+#endif
     vec3 tint = vec3(0.0);
 
-#if SHADOW_TRANSPARENCY
-    // Not in shadow, so lets check the transparency map
-    ivec2 encoded = texelFetch(shadowTransparencyMap, pixelCoord, 0).rg;
-    float depth = float(encoded.r & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
-#if ZONE_RENDERER
-    if(depth > fragDepth)
-#else
-    if(depth < fragDepth)
-#endif
-    {
-        shadow += float(encoded.r >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
-    #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-        tint += srgbToLinear(packedHslToSrgb(encoded.g));
-    #endif
-    }
+#if ZONE_RENDERER && GROUND_SHADOWS
+    if(isGroundPlane && shadow > 0.0 && abs(shadowDepth - fragDepth) < 0.0125) {
+        int shadowGroundTileXY = texelFetch(shadowGroundMask, pixelCoord, 0).r;
+        if(shadowGroundTileXY != 0) {
+            int tileExX = int(worldPos.x / 128.0) % 255;
+            int tileExY = int(worldPos.z / 128.0) % 255;
 
+            int shadowGroundTileExX = shadowGroundTileXY & 0xFF;
+            int shadowGroundTileExY = (shadowGroundTileXY >> 8) & 0xFF;
+
+            for(int x = -1; x < 2 && shadow > 0; x++) {
+                for(int y = -1; y < 2 && shadow > 0; y++) {
+                    if(((tileExX + x) % 255) == shadowGroundTileExX && ((tileExY + y) % 255) == shadowGroundTileExY) {
+                        shadow = 0; // Ignore Shadow, since its coming from a nearby tile
+                    }
+                }
+            }
+        }
+    }
+#endif
+
+#if SHADOW_TRANSPARENCY
+    if(shadow == 0) {
+        // Not in shadow, so lets check the transparency map
+        ivec2 encoded = texelFetch(shadowTransparencyMap, pixelCoord, 0).rg;
+        float depth = float(encoded.r & SHADOW_DEPTH_MAX) / SHADOW_DEPTH_MAX;
+    #if ZONE_RENDERER
+        if(depth > fragDepth)
+    #else
+        if(depth < fragDepth)
+    #endif
+        {
+            float alpha = float(encoded.r >> SHADOW_DEPTH_BITS) / SHADOW_ALPHA_MAX;
+        #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+            tint += srgbToLinear(packedHslToSrgb(encoded.g)) * alpha;
+        #endif
+            shadow = alpha;
+        }
+    }
 #endif
 
     return vec4(shadow, tint);
 }
 
-float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, out vec3 tint) {
+float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, bool isGroundPlane, out vec3 tint) {
     vec4 shadowPos = directionalCamera.viewProj * vec4(fragPos, 1);
     shadowPos.xyz /= shadowPos.w;
 
@@ -133,10 +166,10 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, out 
     #endif
 
     // Sample 4 corners first
-    vec4 c00 = fetchShadowTexel(fragPos, 0, kernelOffset + ivec2(0, 0), fragDepth);
-    vec4 c02 = fetchShadowTexel(fragPos, 1, kernelOffset + ivec2(0, kernelSize - 1), fragDepth);
-    vec4 c20 = fetchShadowTexel(fragPos, 2, kernelOffset + ivec2(kernelSize - 1, 0), fragDepth);
-    vec4 c22 = fetchShadowTexel(fragPos, 3, kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth);
+    vec4 c00 = fetchShadowTexel(fragPos, 0, kernelOffset + ivec2(0, 0), fragDepth, isGroundPlane);
+    vec4 c02 = fetchShadowTexel(fragPos, 1, kernelOffset + ivec2(0, kernelSize - 1), fragDepth, isGroundPlane);
+    vec4 c20 = fetchShadowTexel(fragPos, 2, kernelOffset + ivec2(kernelSize - 1, 0), fragDepth, isGroundPlane);
+    vec4 c22 = fetchShadowTexel(fragPos, 3, kernelOffset + ivec2(kernelSize - 1, kernelSize - 1), fragDepth, isGroundPlane);
 
     // Early exit if all corners are the same (fully shadowed or fully lit)
     bool allShadowed = (c00.r == 0.0 && c02.r == 0.0 && c20.r == 0.0 && c22.r == 0.0);
@@ -147,11 +180,11 @@ float sampleShadowMap(vec3 fragPos, vec2 distortion, float lightDotNormals, out 
         combined = (c00 + c02 + c20 + c22) * 0.25;;
     } else {
         // Finish sampling the reset of the kernal
-        vec4 s01 = fetchShadowTexel(fragPos, 4, kernelOffset + ivec2(0, 1), fragDepth);
-        vec4 s10 = fetchShadowTexel(fragPos, 5, kernelOffset + ivec2(1, 0), fragDepth);
-        vec4 s11 = fetchShadowTexel(fragPos, 6, kernelOffset + ivec2(1, 1), fragDepth);
-        vec4 s12 = fetchShadowTexel(fragPos, 7, kernelOffset + ivec2(1, 2), fragDepth);
-        vec4 s21 = fetchShadowTexel(fragPos, 8, kernelOffset + ivec2(2, 1), fragDepth);
+        vec4 s01 = fetchShadowTexel(fragPos, 4, kernelOffset + ivec2(0, 1), fragDepth, isGroundPlane);
+        vec4 s10 = fetchShadowTexel(fragPos, 5, kernelOffset + ivec2(1, 0), fragDepth, isGroundPlane);
+        vec4 s11 = fetchShadowTexel(fragPos, 6, kernelOffset + ivec2(1, 1), fragDepth, isGroundPlane);
+        vec4 s12 = fetchShadowTexel(fragPos, 7, kernelOffset + ivec2(1, 2), fragDepth, isGroundPlane);
+        vec4 s21 = fetchShadowTexel(fragPos, 8, kernelOffset + ivec2(2, 1), fragDepth, isGroundPlane);
 
         #if SHADOW_SHADING == SHADOW_PIXELATED_SHADING
             combined =

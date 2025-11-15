@@ -207,6 +207,7 @@ public class ZoneRenderer implements Renderer {
 
 	private boolean sceneFboValid;
 	private boolean deferScenePass;
+	private boolean drawRoofShadows;
 
 	private final WorldViewContext root = new WorldViewContext(null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
@@ -424,6 +425,8 @@ public class ZoneRenderer implements Renderer {
 
 				if (plugin.orthographicProjection)
 					zoom *= ORTHOGRAPHIC_ZOOM;
+
+				drawRoofShadows = plugin.configRoofShadows && environmentManager.isOverworld();
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
 				sceneCamera.setOrthographic(plugin.orthographicProjection);
@@ -989,8 +992,8 @@ public class ZoneRenderer implements Renderer {
 				directionalCmd,
 				minLevel,
 				level,
-				plugin.configRoofShadows ? 3 : maxLevel,
-				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds
+				drawRoofShadows ? 3 : maxLevel,
+				drawRoofShadows ? Collections.emptySet() : hideRoofIds
 			);
 		}
 
@@ -1043,10 +1046,10 @@ public class ZoneRenderer implements Renderer {
 				zz - offset,
 				minLevel,
 				this.level,
-				plugin.configRoofShadows ? 3 : maxLevel,
+				drawRoofShadows ? 3 : maxLevel,
 				level,
 				directionalCamera,
-				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds
+				drawRoofShadows ? Collections.emptySet() : hideRoofIds
 			);
 		}
 

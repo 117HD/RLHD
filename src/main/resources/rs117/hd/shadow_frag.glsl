@@ -42,13 +42,19 @@
 
     #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
     in vec3 fColor;
-    out ivec2 output;
+    layout (location = 0) out ivec2 depthAlphaColorOutput;
     #else
-    out int output;
+    layout (location = 0) out int depthAlphaOutput;
     #endif
 
     #extension GL_ARB_conservative_depth : enable
     layout (depth_less) out float gl_FragDepth;
+#endif
+
+#if ZONE_RENDERER && GROUND_SHADOWS
+    in vec3 fFragPos;
+    in float fGroundPlane;
+    layout (location = 1) out int groundMaskOutput;
 #endif
 
 void main() {
@@ -88,6 +94,17 @@ void main() {
         }
     #endif
 
+
+#if ZONE_RENDERER && GROUND_SHADOWS
+    if(fGroundPlane > 0.0) {
+        int tileExX = int(fFragPos.x / 128.0) % 255;
+        int tileExY = int(fFragPos.z / 128.0) % 255;
+        groundMaskOutput = tileExX | tileExY << 8;
+    } else {
+        groundMaskOutput = 0;
+    }
+#endif
+
     #if SHADOW_TRANSPARENCY
     if(opacity != 1.0) {
         float depth = gl_FragCoord.z;
@@ -101,9 +118,9 @@ void main() {
             int(depth * SHADOW_DEPTH_MAX);
 
         #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-            output = ivec2(alphaDepth, srgbToPackedHsl(shadowTint));
+            depthAlphaColorOutput = ivec2(alphaDepth, srgbToPackedHsl(shadowTint));
         #else
-            output = alphaDepth;
+            depthAlphaOutput = alphaDepth;
         #endif
         gl_FragDepth = texelFetch(shadowMap, ivec2(gl_FragCoord.xy), 0).r;
     } else {

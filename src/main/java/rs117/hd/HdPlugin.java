@@ -38,6 +38,7 @@ import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -156,6 +157,7 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TRANSPARENCY_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_GROUND_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
@@ -344,6 +346,7 @@ public class HdPlugin extends Plugin {
 	public int fboShadowMap;
 	public int texShadowMap;
 	public int texShadowTransparencyMap;
+	public int texShadowGroundMap;
 
 	public int[] tiledLightingResolution;
 	public int tiledLightingLayerCount;
@@ -1299,8 +1302,6 @@ public class HdPlugin extends Plugin {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, renderer instanceof ZoneRenderer ? GL_LESS : GL_GREATER);
 
 		float[] color = { 1, 1, 1, 1 };
 		glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, color);
@@ -1308,6 +1309,7 @@ public class HdPlugin extends Plugin {
 		// Bind texture
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texShadowMap, 0);
 
+		IntBuffer attachments = BufferUtils.createIntBuffer(2);
 		if(configShadowTransparency != ShadowTransparency.Disabled) {
 			texShadowTransparencyMap = glGenTextures();
 			glActiveTexture(TEXTURE_UNIT_TRANSPARENCY_MAP);
@@ -1331,10 +1333,37 @@ public class HdPlugin extends Plugin {
 
 			// Bind texture
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texShadowTransparencyMap, 0);
-			glDrawBuffer(GL_COLOR_ATTACHMENT0);
-		} else {
-			glDrawBuffer(GL_NONE);
+			attachments.put(GL_COLOR_ATTACHMENT0);
 		}
+
+		if(config.enableGroundShadows()) {
+			texShadowGroundMap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_GROUND_MAP);
+			glBindTexture(GL_TEXTURE_2D, texShadowGroundMap);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_R16I,
+				shadowMapResolution,
+				shadowMapResolution,
+				0,
+				GL_RED_INTEGER,
+				GL_UNSIGNED_SHORT,
+				0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+			// Bind texture
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texShadowGroundMap, 0);
+			attachments.put(GL_COLOR_ATTACHMENT1);
+		}
+
+		attachments.flip();
+		glDrawBuffers(attachments);
 		glReadBuffer(GL_NONE);
 
 		checkGLFrameBuffer();

@@ -56,6 +56,12 @@ flat out int fMaterialData;
     #endif
 #endif
 
+#if ZONE_RENDERER && GROUND_SHADOWS
+    flat in float gGroundPlane[3];
+    out vec3 fFragPos;
+    out float fGroundPlane;
+#endif
+
 void main() {
     if (gCastShadow[0] + gCastShadow[1] + gCastShadow[2] == 0)
         return;
@@ -78,14 +84,21 @@ void main() {
         // Scale from the center
         fUvw.xy = .5 + (fUvw.xy - .5) * material.textureScale.xy;
 
-        #if SHADOW_TRANSPARENCY
-            fOpacity = gOpacity[i];
-            #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
-                fColor = gColor[i];
-            #endif
+    #if SHADOW_TRANSPARENCY
+        fOpacity = gOpacity[i];
+        #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
+            fColor = gColor[i];
         #endif
+    #endif
 
-        gl_Position = directionalCamera.viewProj * getWorldViewProjection(worldViewIndex) * vec4(gPosition[i], 1);
+    vec4 pos = getWorldViewProjection(worldViewIndex) * vec4(gPosition[i], 1);
+
+    #if ZONE_RENDERER && GROUND_SHADOWS
+        fFragPos = pos.xyz;
+        fGroundPlane = gGroundPlane[i];
+    #endif
+
+        gl_Position = directionalCamera.viewProj * pos;
         EmitVertex();
     }
     EndPrimitive();

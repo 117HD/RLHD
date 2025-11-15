@@ -53,6 +53,9 @@ layout (location = 7) in ivec2 vSceneBase;
             flat out vec3 gColor;
         #endif
     #endif
+    #if ZONE_RENDERER && GROUND_SHADOWS
+        flat out float gGroundPlane;
+    #endif
 #else
     #if SHADOW_TRANSPARENCY
         // Pass to fragment shader
@@ -60,6 +63,11 @@ layout (location = 7) in ivec2 vSceneBase;
         #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
             out vec3 fColor;
         #endif
+    #endif
+
+    #if ZONE_RENDERER && GROUND_SHADOWS
+        out vec3 fFragPos;
+        out float fGroundPlane;
     #endif
 #endif
 
@@ -83,12 +91,11 @@ void main() {
         isTransparent;
 
     #if ZONE_RENDERER && GROUND_SHADOWS
-    if (isGroundPlaneTile) {
-        vec3 groundNormal = normalize(vNormal);
-        float upFactor = clamp(dot(groundNormal, vec3(0.0, -1.0, 0.0)), 0.0, 1.0);
-        float bias = mix(0, 32, upFactor);
-        pos -= groundNormal * bias;
-    }
+    #if SHADOW_MODE == SHADOW_MODE_DETAILED
+        gGroundPlane = isGroundPlaneTile ? 1.0 : 0.0;
+    #else
+        fGroundPlane = isGroundPlaneTile ? 1.0 : 0.0;
+    #endif
     #else
     isShadowDisabled = isShadowDisabled || isGroundPlaneTile;
     #endif
@@ -108,7 +115,11 @@ void main() {
             #endif
         #endif
     #else
-        gl_Position = directionalCamera.viewProj * getWorldViewProjection(vWorldViewId) * vec4(pos, shouldCastShadow);
+        pos = (getWorldViewProjection(vWorldViewId) * vec4(pos, 1.0)).xyz;
+        #if ZONE_RENDERER && GROUND_SHADOWS
+            fFragPos = pos.xyz;
+        #endif
+        gl_Position = directionalCamera.viewProj * vec4(pos, shouldCastShadow);
         #if SHADOW_TRANSPARENCY
             fOpacity = opacity;
             #if SHADOW_TRANSPARENCY == SHADOW_TRANSPARENCY_ENABLED_WITH_TINT
