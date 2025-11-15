@@ -3458,6 +3458,18 @@
     "waterType": "BLOOD"
   },
   {
+    "name": "Wilderness - Dirt",
+    "area": "WILDERNESS",
+    "underlayIds": [
+      147,
+      148
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "ARANDAR_PATHS",
     "area": "ARANDAR",
     "overlayIds": [
