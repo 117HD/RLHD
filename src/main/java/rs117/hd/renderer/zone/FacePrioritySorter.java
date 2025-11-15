@@ -436,7 +436,7 @@ class FacePrioritySorter {
 		if (color3 == -1)
 			color2 = color3 = color1;
 
-		if (plugin.configUndoVanillaShading) {
+		if (plugin.configUndoVanillaShading && xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
 			int color1H = color1 >> 10 & 0x3F;
 			int color1S = color1 >> 7 & 0x7;
 			int color1L = color1 & 0x7F;
