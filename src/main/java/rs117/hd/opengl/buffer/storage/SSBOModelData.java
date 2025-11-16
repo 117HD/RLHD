@@ -41,7 +41,7 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		return slice;
 	}
 
-	public int addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
+	public int addDynamicModelData(Renderable renderable, Model model, ModelOverride override, int x, int y, int z, boolean isDetailModel) {
 		ModelData dynamicModelData = null;
 		if(!frameModelDataSlices.isEmpty()) {
 			Slice currentSlice = frameModelDataSlices.get(frameModelDataSlices.size() - 1);
@@ -57,7 +57,7 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		}
 
 		frameDynamicModelCount++;
-		dynamicModelData.set(renderable, model, override, x, y, z, true); // All Dynamic Models are detail models
+		dynamicModelData.set(renderable, model, override, x, y, z, isDetailModel); // All Dynamic Models are detail models
 		return dynamicModelData.modelOffset;
 	}
 

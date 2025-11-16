@@ -79,7 +79,7 @@ class VAO {
 			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
 
 			// WorldView index (not ID)
-			glEnableVertexAttribArray(6);
+			glEnableVertexAttribArray(7);
 			glVertexAttribDivisor(7, 1);
 			glVertexAttribIPointer(7, 1, GL_INT, METADATA_SIZE, 0);
 		}

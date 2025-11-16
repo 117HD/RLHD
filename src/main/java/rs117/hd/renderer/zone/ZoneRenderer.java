@@ -1108,10 +1108,12 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		// Check Detail Draw Distance
-		float modelDist = distance(sceneCamera.getPosition(), new float[] {x, y, z});
-		float detailDrawDistanceTiles = config.detailDrawDistance() * LOCAL_TILE_SIZE;
-		if(modelDist > detailDrawDistanceTiles) {
-			return;
+		if(ctx == root) {
+			float modelDist = distance(sceneCamera.getPosition(), new float[] { x, y, z });
+			float detailDrawDistanceTiles = config.detailDrawDistance() * LOCAL_TILE_SIZE;
+			if (modelDist > detailDrawDistanceTiles) {
+				return;
+			}
 		}
 
 		int[] worldPos = ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
@@ -1133,7 +1135,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int modelDataOffset = modelData.addDynamicModelData(r, m, modelOverride, x, y, z);
+		int modelDataOffset = modelData.addDynamicModelData(r, m, modelOverride, x, y, z, ctx == root);
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1185,7 +1187,7 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int modelDataOffset = modelData.addDynamicModelData(renderable, m, modelOverride, x, y, z);
+		int modelDataOffset = modelData.addDynamicModelData(renderable, m, modelOverride, x, y, z, false);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
