@@ -587,7 +587,8 @@ class Zone {
 		int maxLevel,
 		int level,
 		Camera camera,
-		Set<Integer> hiddenRoofIds
+		Set<Integer> hiddenRoofIds,
+		boolean useStaticUnsorted
 	) {
 		if (alphaModels.isEmpty())
 			return;
@@ -617,6 +618,13 @@ class Zone {
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
 				lastDrawMode = TEMP;
+				pushRange(m.startpos, m.endpos);
+				continue;
+			}
+
+			if (useStaticUnsorted)
+			{
+				lastDrawMode = STATIC_UNSORTED;
 				pushRange(m.startpos, m.endpos);
 				continue;
 			}

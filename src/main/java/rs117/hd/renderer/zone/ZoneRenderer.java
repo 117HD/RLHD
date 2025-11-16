@@ -958,6 +958,8 @@ public class ZoneRenderer implements Renderer {
 		checkGLErrors();
 	}
 
+	private static final int ALPHA_ZSORT_CLOSE = 2048;
+
 	@Override
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		WorldViewContext ctx = context(scene);
@@ -977,6 +979,10 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int dx = (int)plugin.cameraPosition[0] - ((zx - offset) << 10);
+		int dz = (int)plugin.cameraPosition[2] - ((zz - offset) << 10);
+		boolean close = dx * dx + dz * dz < ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
 			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
@@ -992,7 +998,8 @@ public class ZoneRenderer implements Renderer {
 				maxLevel,
 				level,
 				sceneCamera,
-				hideRoofIds
+				hideRoofIds,
+				close
 			);
 		}
 
@@ -1007,7 +1014,8 @@ public class ZoneRenderer implements Renderer {
 				plugin.configRoofShadows ? 3 : maxLevel,
 				level,
 				directionalCamera,
-				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds
+				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds,
+				close
 			);
 		}
 
