@@ -416,4 +416,9 @@ public final class Camera {
 		calculateFrustumPlanes();
 		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes);
 	}
+
+	public boolean intersectsSphere(float x, float y, float z, float radius) {
+		calculateFrustumPlanes();
+		return HDUtils.isSphereIntersectingFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
+	}
 }

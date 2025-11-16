@@ -1140,8 +1140,15 @@ public class ZoneRenderer implements Renderer {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
-		if(!zone.inSceneFrustum && (zone.inShadowFrustum && !modelOverride.castShadows)) {
-			return;
+		if(ctx == root) {
+			// Additional Culling checks to help reduce dynamic object perf impact when off screen
+			if (!zone.inSceneFrustum && (zone.inShadowFrustum && !modelOverride.castShadows)) {
+				return;
+			}
+
+			if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius())) {
+				return;
+			}
 		}
 
 		int modelDataOffset = modelData.addDynamicModelData(r, m, modelOverride, x, y, z, ctx == root);
