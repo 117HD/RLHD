@@ -156,21 +156,21 @@ public class GpuIntBuffer
 	}
 
 	public static void putFloatVertex(
-		IntBuffer buffer,
+		int[] data, int offset,
 		float x, float y, float z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
 		int nx, int ny, int nz, int terrainData, int modelOffset
 	) {
-		buffer.put(Float.floatToRawIntBits(x));
-		buffer.put(Float.floatToRawIntBits(y));
-		buffer.put(Float.floatToRawIntBits(z));
-		buffer.put(float16(v) << 16 | float16(u));
-		buffer.put((nx & 0xFFFF) << 16 | float16(w));
-		buffer.put((nz & 0xFFFF) << 16 | ny & 0xFFFF);
-		buffer.put(alphaBiasHsl);
-		buffer.put(materialData);
-		buffer.put(terrainData);
-		buffer.put(modelOffset + 1);
+		data[offset++] = (Float.floatToRawIntBits(x));
+		data[offset++] = (Float.floatToRawIntBits(y));
+		data[offset++] = (Float.floatToRawIntBits(z));
+		data[offset++] = v != 0 || u != 0 ? (float16(v) << 16 | float16(u)) : 0;
+		data[offset++] = ((nx & 0xFFFF) << 16 | float16(w));
+		data[offset++] = ((nz & 0xFFFF) << 16 | ny & 0xFFFF);
+		data[offset++] = (alphaBiasHsl);
+		data[offset++] = (materialData);
+		data[offset++] = (terrainData);
+		data[offset] = (modelOffset + 1);
 	}
 
 	public int position()

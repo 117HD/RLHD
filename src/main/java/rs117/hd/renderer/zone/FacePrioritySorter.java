@@ -45,6 +45,8 @@ class FacePrioritySorter {
 	static final char[] distanceFaceCount;
 	static final char[][] distanceToFaces;
 
+	private static final int[] STAGING_VERTEX_DATA = new int[30];
+
 	private static final float[] modelCanvasX;
 	private static final float[] modelCanvasY;
 
@@ -609,25 +611,25 @@ class FacePrioritySorter {
 			bias == null ? 0 : bias[face] & 0xFF;
 		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 		boolean hasAlpha = material.hasTransparency || transparency != 0;
-		var vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 		GpuIntBuffer.putFloatVertex(
-			vb,
+			STAGING_VERTEX_DATA, 0,
 			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 			modelNormals[0], modelNormals[1], modelNormals[2], 0, modelOffset
 		);
 		GpuIntBuffer.putFloatVertex(
-			vb,
+			STAGING_VERTEX_DATA, 10,
 			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 			modelNormals[3], modelNormals[4], modelNormals[5], 0, modelOffset
 		);
 		GpuIntBuffer.putFloatVertex(
-			vb,
+			STAGING_VERTEX_DATA, 20,
 			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 			modelNormals[6], modelNormals[7], modelNormals[8], 0, modelOffset
 		);
+		(hasAlpha ? alphaBuffer : opaqueBuffer).put(STAGING_VERTEX_DATA);
 		return 3;
 	}
 }
