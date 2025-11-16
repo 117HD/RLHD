@@ -21,6 +21,7 @@ public final class RenderState {
 	public final GLBindEBO ebo = addState(GLBindEBO::new);
 	public final GLBindIDO ido = addState(GLBindIDO::new);
 	public final GLBindUBO ubo = addState(GLBindUBO::new);
+	public final GLPolygonOffset polygonOffset = addState(GLPolygonOffset::new);
 	public final GLDepthMask depthMask = addState(GLDepthMask::new);
 	public final GLDepthFunc depthFunc = addState(GLDepthFunc::new);
 	public final GLColorMask colorMask = addState(GLColorMask::new);
@@ -102,6 +103,14 @@ public final class RenderState {
 	public static final class GLBindUBO extends GLState.SingleState<RenderState, Integer> {
 		@Override
 		protected void applyValue(Integer ubo) { glBindBuffer(GL_UNIFORM_BUFFER, ubo); }
+	}
+
+	public static final class GLPolygonOffset extends GLState.PrimitiveArrayState<RenderState, Float> {
+		private GLPolygonOffset() {
+			super(() -> new Float[2]);
+		}
+		@Override
+		protected void applyValues(Float[] values) { glPolygonOffset(values[0], values[1]); }
 	}
 
 	public static final class GLDepthMask extends GLState.SingleState<RenderState, Boolean> {

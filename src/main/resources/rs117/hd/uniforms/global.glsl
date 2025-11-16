@@ -2,6 +2,15 @@
 
 #include <utils/constants.glsl>
 
+struct Camera {
+    mat4 viewProj;
+    mat4 invViewProj;
+    mat4 viewMatrix;
+    float nearPlane;
+    float farPlane;
+    vec3 position;
+};
+
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;
@@ -44,11 +53,8 @@ layout(std140) uniform UBOGlobal {
 
     int pointLightsCount;
 
-    vec3 cameraPos;
-    mat4 viewMatrix;
-    mat4 projectionMatrix;
-    mat4 invProjectionMatrix;
-    mat4 lightProjectionMatrix;
+    Camera sceneCamera;
+    Camera directionalCamera;
 
     float lightningBrightness;
     float elapsedTime;
