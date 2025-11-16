@@ -18,7 +18,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.opengl.uniforms.UBOMaterials;
+import rs117.hd.opengl.buffer.uniforms.UBOMaterials;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;

@@ -1,10 +1,11 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer.uniforms;
 
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
-public class UBOGlobal extends UniformBuffer<GLBuffer> {
+public class UBOGlobal extends UniformStructuredBuffer<GLBuffer> {
 	public UBOGlobal() {
 		super(GL_DYNAMIC_DRAW);
 	}
@@ -16,6 +17,7 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
+	public Property detailDrawDistance = addProperty(PropertyType.Float, "detailDrawDistance");
 
 	public Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
 	public Property gammaCorrection = addProperty(PropertyType.Float, "gammaCorrection");
