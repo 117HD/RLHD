@@ -619,6 +619,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
+		plugin.uboGlobal.detailDrawDistance.set((float) config.detailDrawDistance());
 		plugin.uboGlobal.expandedMapLoadingChunks.set(root.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
@@ -1078,6 +1079,13 @@ public class ZoneRenderer implements Renderer {
 		WorldViewContext ctx = context(scene);
 		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
+
+		// Check Detail Draw Distance
+		float modelDist = distance(sceneCamera.getPosition(), new float[] {x, y, z});
+		float detailDrawDistanceTiles = config.detailDrawDistance() * LOCAL_TILE_SIZE;
+		if(modelDist > detailDrawDistanceTiles) {
+			return;
+		}
 
 		int[] worldPos = ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
 		// Hide everything outside the current area if area hiding is enabled

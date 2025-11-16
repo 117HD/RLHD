@@ -45,6 +45,7 @@ flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
 flat in vec3 T;
 flat in vec3 B;
+flat in float detailFade;
 
 in FragmentData {
     vec3 position;
@@ -75,6 +76,11 @@ vec2 worldUvs(float scale) {
 #include <utils/lights.glsl>
 
 void main() {
+    // TODO: Early Dither Fade based on detailFade
+    if(detailFade > 0 && orderedDither(gl_FragCoord.xy, detailFade, 2.0) < 1.0) {
+        discard;
+    }
+
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);

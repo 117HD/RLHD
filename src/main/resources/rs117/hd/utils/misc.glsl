@@ -48,6 +48,55 @@ vec2 animationFrame(vec2 animationDuration) {
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
 }
 
+#if ZONE_RENDERER
+bool getDetailCullingFade(vec3 position, int modelFlags, out float detailFade) {
+    if((modelFlags & 1) == 0) {
+        detailFade = 0.0;
+        return true;
+    }
+    float modelDist = distance(position, cameraPos);
+    float detailDrawDistanceTiles = detailDrawDistance * TILE_SIZE;
+    if(modelDist > detailDrawDistanceTiles) {
+        detailFade = 1.0;
+        return false; // Cull model
+    }
+    float fadeRange = 4.0 * TILE_SIZE;
+    float fadeStart = max(0.0, detailDrawDistanceTiles - fadeRange);
+    detailFade = clamp((modelDist - fadeStart) / fadeRange, 0.0, 1.0);
+    return true;
+}
+
+bool getDetailCullingFade(vec3 position, int modelFlags) {
+    float fade;
+    return getDetailCullingFade(position, modelFlags, fade);
+}
+#endif
+
+const int DITHER_MAP_LEN = 4;
+const float DITHER_MAP_SCALE = 16.0;
+
+const float DITHER_MAP[DITHER_MAP_LEN * DITHER_MAP_LEN] = float[](
+     0.0 / DITHER_MAP_SCALE,  8.0 / DITHER_MAP_SCALE,  2.0 / DITHER_MAP_SCALE, 10.0 / DITHER_MAP_SCALE,
+    12.0 / DITHER_MAP_SCALE,  4.0 / DITHER_MAP_SCALE, 14.0 / DITHER_MAP_SCALE,  6.0 / DITHER_MAP_SCALE,
+     3.0 / DITHER_MAP_SCALE, 11.0 / DITHER_MAP_SCALE,  1.0 / DITHER_MAP_SCALE,  9.0 / DITHER_MAP_SCALE,
+    15.0 / DITHER_MAP_SCALE,  7.0 / DITHER_MAP_SCALE, 13.0 / DITHER_MAP_SCALE,  5.0 / DITHER_MAP_SCALE
+);
+
+// ------------------------------------------------------------
+// Based on https://www.shadertoy.com/view/4t2cRt
+// Returns a dither value (0.0 or 1.0) based on coords + opacity
+// ------------------------------------------------------------
+float orderedDither(vec2 pixelCoord, float opacity, float scaleFactor)
+{
+    // index into 4×4 matrix
+    int i = int(pixelCoord.x / scaleFactor) % DITHER_MAP_LEN;
+    int j = int(pixelCoord.y / scaleFactor) % DITHER_MAP_LEN;
+
+    int index = i + j * DITHER_MAP_LEN;
+
+    return (DITHER_MAP[index] < clamp(opacity, 0.0, 1.0)) ? 0.0 : 1.0;
+}
+
 vec3 windowsHdrCorrection(vec3 c) {
     // SDR monitors *usually* apply a gamma 2.2 curve, instead of the piece-wise sRGB curve, leading to the following
     // technically incorrect operation for *most* SDR monitors, producing our *expected* final result (first line).

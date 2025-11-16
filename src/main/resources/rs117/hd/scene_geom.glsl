@@ -45,12 +45,14 @@ in int gMaterialData[3];
 in int gTerrainData[3];
 in int gWorldViewId[3];
 in int gModelOffset[3];
+in vec3 gSceneOffset[3];
 
 flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
 flat out vec3 T;
 flat out vec3 B;
+flat out float detailFade;
 
 out FragmentData {
     vec3 position;
@@ -60,7 +62,19 @@ out FragmentData {
 } OUT;
 
 void main() {
-    ModelData modelData = getModelData(gModelOffset[0]);
+#if ZONE_RENDERER
+    int modelOffset = gModelOffset[0];
+    ModelData modelData = getModelData(modelOffset);
+    if(modelOffset > 0) {
+        if(!getDetailCullingFade(modelData.position + gSceneOffset[0], modelData.flags, detailFade)) {
+            return; // Cull!
+        }
+    } else {
+        detailFade = 0.0;
+    }
+#endif
+
+    // Check if we should cull this face
     vec3 vUv[3];
 
     // MacOS doesn't allow assigning these arrays directly.

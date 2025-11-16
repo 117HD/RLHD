@@ -17,6 +17,7 @@ public class UBOGlobal extends UniformStructuredBuffer<GLBuffer> {
 
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
+	public Property detailDrawDistance = addProperty(PropertyType.Float, "detailDrawDistance");
 
 	public Property colorBlindnessIntensity = addProperty(PropertyType.Float, "colorBlindnessIntensity");
 	public Property gammaCorrection = addProperty(PropertyType.Float, "gammaCorrection");

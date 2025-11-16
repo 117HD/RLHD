@@ -20,12 +20,10 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		public final Property height = addProperty(PropertyType.Int, "height");
 		public final Property flags = addProperty(PropertyType.Int, "flags");
 
-		public void set(Renderable renderable, Model model, ModelOverride override, int x, int y, int z) {
+		public void set(Renderable renderable, Model model, ModelOverride override, int x, int y, int z, boolean isDetailModel) {
 			position.set(x, y, z);
 			height.set(model.getModelHeight());
-			flags.set(((override.windDisplacementModifier + 3) & 0x7) << 12
-					  | (override.windDisplacementMode.ordinal() & 0x7) << 9
-					  | (override.invertDisplacementStrength ? 1 : 0) << 8);
+			flags.set(isDetailModel ? 1 : 0);
 		}
 	}
 
@@ -59,7 +57,7 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		}
 
 		frameDynamicModelCount++;
-		dynamicModelData.set(renderable, model, override, x, y, z);
+		dynamicModelData.set(renderable, model, override, x, y, z, true); // All Dynamic Models are detail models
 		return dynamicModelData.modelOffset;
 	}
 

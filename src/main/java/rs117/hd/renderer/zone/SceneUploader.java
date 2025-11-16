@@ -437,6 +437,7 @@ class SceneUploader {
 				-1,
 				-1,
 				wallObject.getId(),
+				false,
 				vertexBuffer,
 				alphaBuffer
 			);
@@ -459,6 +460,7 @@ class SceneUploader {
 				-1,
 				-1,
 				wallObject.getId(),
+				false,
 				vertexBuffer,
 				alphaBuffer
 			);
@@ -486,6 +488,7 @@ class SceneUploader {
 				-1,
 				-1,
 				decorativeObject.getId(),
+				true,
 				vertexBuffer,
 				alphaBuffer
 			);
@@ -508,6 +511,7 @@ class SceneUploader {
 				-1,
 				-1,
 				decorativeObject.getId(),
+				true,
 				vertexBuffer,
 				alphaBuffer
 			);
@@ -530,6 +534,7 @@ class SceneUploader {
 				-1, -1,
 				-1,
 				groundObject.getId(),
+				false,
 				vertexBuffer,
 				alphaBuffer
 			);
@@ -560,6 +565,7 @@ class SceneUploader {
 				min.getY(), max.getX(),
 				max.getY(),
 				gameObject.getId(),
+				false,
 				vertexBuffer,
 				alphaBuffer
 			);
@@ -605,6 +611,7 @@ class SceneUploader {
 		int ux,
 		int uz,
 		int id,
+		boolean isDetailMode,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
@@ -626,6 +633,7 @@ class SceneUploader {
 			uploadStaticModel(
 				ctx, tile, model, modelOverride, uuid,
 				preOrientation, orient,
+				isDetailMode,
 				x - basex, y, z - basez,
 				opaqueBuffer,
 				alphaBuffer
@@ -1187,12 +1195,13 @@ class SceneUploader {
 		ModelOverride modelOverride,
 		int uuid,
 		int preOrientation, int orientation,
+		boolean isDetailModel,
 		int x, int y, int z,
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
 		final var modelData = modelDataSlice.add();
-		modelData.set(null, model, modelOverride, x, y, z);
+		modelData.set(null, model, modelOverride, x, y, z, isDetailModel);
 
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();

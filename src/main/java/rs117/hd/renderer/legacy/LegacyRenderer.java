@@ -1057,6 +1057,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.fogColor.set(fogColor);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
+			plugin.uboGlobal.detailDrawDistance.set((float) config.detailDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 

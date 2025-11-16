@@ -27,6 +27,7 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <buffers/model_data.glsl>
 
 // Vertex Data
 layout (location = 0) in vec3 vPosition;
@@ -42,6 +43,7 @@ layout (location = 8) in ivec2 vSceneBase;
 layout (location = 9) in ivec2 vZoneModelOffset;
 
 #include <utils/constants.glsl>
+#include <utils/misc.glsl>
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     // Pass to geometry shader
@@ -77,10 +79,19 @@ void main() {
         isWaterSurfaceOrUnderwaterTile ||
         isTransparent;
 
-    int shouldCastShadow = isShadowDisabled ? 0 : 1;
-
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
     vec3 pos = sceneOffset + vPosition;
+
+#if ZONE_RENDERER
+    if(!isShadowDisabled && vModelOffset > 0) {
+        ModelData modelData = getModelData(vModelOffset);
+        if(!getDetailCullingFade(modelData.position + sceneOffset, modelData.flags)) {
+            isShadowDisabled = true;
+        }
+    }
+#endif
+
+    int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         gPosition = pos;
