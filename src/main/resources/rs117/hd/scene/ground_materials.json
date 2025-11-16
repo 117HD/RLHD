@@ -611,5 +611,11 @@
   {
     "name": "FORTIS_ROADS_MIRRORED",
     "materials": [ "FORTIS_ROADS_MIRRORED" ]
+  },
+  {
+    "name": "STONE",
+    "materials": [
+      "STONE_NORMALED"
+    ]
   }
 ]
