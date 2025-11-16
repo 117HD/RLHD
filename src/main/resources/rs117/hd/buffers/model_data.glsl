@@ -4,6 +4,7 @@ struct ModelData {
     ivec3 position;
     int height;
     int flags;
+    int padding;
 };
 
 #if ZONE_RENDERER

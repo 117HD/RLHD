@@ -10,7 +10,7 @@ public class SceneShaderProgram extends ShaderProgram {
 	private final UniformTexture uniTextureArray = addUniformTexture("textureArray");
 	private final UniformTexture uniShadowMap = addUniformTexture("shadowMap");
 	private final UniformTexture uniTiledLightingTextureArray = addUniformTexture("tiledLightingArray");
-	private final UniformTexture uniModelDataBuffer = addUniformTexture("modelDataBuffer");
+	private final UniformTexture uniModelDataSampler = addUniformTexture("ModelDataSampler");
 
 	public SceneShaderProgram() {
 		super(t -> t
@@ -25,6 +25,6 @@ public class SceneShaderProgram extends ShaderProgram {
 		uniTextureArray.set(BINDING_TEX_GAME);
 		uniShadowMap.set(BINDING_TEX_SHADOW_MAP);
 		uniTiledLightingTextureArray.set(BINDING_IMG_TILE_LIGHTING_MAP);
-		uniModelDataBuffer.set(BINDING_SSAO_MODEL_DATA);
+		uniModelDataSampler.set(BINDING_SSAO_MODEL_DATA);
 	}
 }
