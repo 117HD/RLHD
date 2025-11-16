@@ -77,6 +77,7 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
+import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
@@ -168,6 +169,7 @@ public class ZoneRenderer implements Renderer {
 
 	private final Camera sceneCamera = new Camera();
 	private final Camera directionalCamera = new Camera().setOrthographic(true);
+	private final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
 	private int minLevel, level, maxLevel;
 	private Set<Integer> hideRoofIds;
@@ -451,6 +453,8 @@ public class ZoneRenderer implements Renderer {
 					int maxDistance = Math.min(shadowDrawDistance, (int) sceneCamera.getFarPlane());
 					final float[][] sceneFrustumCorners = sceneCamera.getFrustumCorners();
 					clipFrustumToDistance(sceneFrustumCorners, maxDistance);
+
+					directionalShadowCasterVolume.build(sceneFrustumCorners);
 
 					sceneCamera.setFarPlane(0.0f); // Reset so Scene can use Infinite Plane instead
 
@@ -897,6 +901,7 @@ public class ZoneRenderer implements Renderer {
 		if (root.sceneContext == null)
 			return false;
 
+		if(plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
 		int minX = zx * CHUNK_SIZE - root.sceneContext.sceneOffset;
 		int minZ = zz * CHUNK_SIZE - root.sceneContext.sceneOffset;
 		if (root.sceneContext.currentArea != null) {
@@ -904,8 +909,10 @@ public class ZoneRenderer implements Renderer {
 			assert base != null;
 			boolean inArea = root.sceneContext.currentArea.intersects(
 				true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
-			if (!inArea)
+			if (!inArea) {
+				if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
 				return false;
+			}
 		}
 
 		minX *= LOCAL_TILE_SIZE;
@@ -919,12 +926,24 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-		if (zone.inSceneFrustum)
+		if (zone.inSceneFrustum) {
+			if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
 			return zone.inShadowFrustum = true;
+		}
 
-		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw)
-			return zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
+			zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
+			if(zone.inShadowFrustum) {
+				int centerX = minX + (maxX - minX) / 2;
+				int centerY = minY + (maxY - minY) / 2;
+				int centerZ = minZ + (maxZ - minZ) / 2;
+				zone.inShadowFrustum = directionalShadowCasterVolume.intersectsPoint(centerX, centerY, centerZ);
+			}
+			if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
+			return zone.inShadowFrustum;
+		}
 
+		if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
 		if (plugin.orthographicProjection)
 			return zone.inSceneFrustum = true;
 
