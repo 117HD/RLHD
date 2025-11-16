@@ -31388,14 +31388,21 @@
   },
   {
     "description": "Falling rocks at Grotesque Guardians",
+    "baseMaterial": "GRAY_05",
     "hideVanillaShadows": true,
     "retainVanillaShadowsInPvm": true,
     "hideHdShadowsInPvm": true,
     "graphicsObjectIds": [
+      "GARGBOSS_DEBRIS_SHADOW_60",
+      "GARGBOSS_DEBRIS_SHADOW_60_SMALL",
+      "GARGBOSS_DEBRIS_SHADOW_90",
+      "GARGBOSS_DEBRIS_SHADOW_120",
+      "GARGBOSS_DEBRIS_SHADOW_150",
       "GARGBOSS_DEBRIS_SHADOW_180",
       "GARGBOSS_DEBRIS_SHADOW_210",
       "GARGBOSS_DEBRIS_SHADOW_240",
-      "GARGBOSS_DEBRIS_SHADOW_270"
+      "GARGBOSS_DEBRIS_SHADOW_270",
+      "GARGBOSS_DEBRIS_SHADOW_300"
     ],
     "projectileIds": [ "GG_FALLING_PROJECTILE" ]
   },
@@ -44228,7 +44235,7 @@
   },
   {
     "description": "Grotesque Guardians Tiled Floor",
-    "baseMaterial": "STONE_NORMALED",
+    "baseMaterial": "STONE_NORMALED_LIGHT",
     "objectIds": [
       "SLAYER_TOWER_ROOF_TOP_FLOOR_1A",
       "SLAYER_TOWER_ROOF_TOP_FLOOR_1B",
@@ -44248,7 +44255,8 @@
       "SLAYER_TOWER_ROOF_TOP_FLOOR_4D"
     ],
     "uvType": "MODEL_XZ",
-    "uvOrientation": 156
+    "uvOrientation": 156,
+    "uvScale": 1.2
   },
   {
     "description": "Grotesque Guardians Low Wall",
