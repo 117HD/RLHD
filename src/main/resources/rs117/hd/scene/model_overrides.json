@@ -2701,6 +2701,25 @@
     ]
   },
   {
+    "description": "Sailing objects that shouldn't cast any shadows",
+    "castShadows": false,
+    "objectIds": [
+      "SAILING_FETID_POOL",
+      "SAILING_FETID_POOL_2X2",
+      "SAILING_FETID_POOL_3X3A",
+      "SAILING_FETID_POOL_3X3B",
+      "SAILING_FETID_POOL_3X3C",
+      "SAILING_RAPIDS_STRONG",
+      "OCEAN_OUTCROP_SEAWEED01",
+      "OCEAN_OUTCROP_SEAWEED02",
+      "OCEAN_OUTCROP_SEAWEED03",
+      "SAILING_HAZARD_FETID_WATERS_AMBIENT_1X1",
+      "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_FAST",
+      "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_SLOW",
+      "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3C_FAST"
+    ]
+  },
+  {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,

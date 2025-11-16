@@ -1135,13 +1135,17 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int modelDataOffset = modelData.addDynamicModelData(r, m, modelOverride, x, y, z, ctx == root);
-		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
-
 		int offset = ctx.sceneContext.sceneOffset >> 3;
 		int zx = (x >> 10) + offset;
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
+
+		if(!zone.inSceneFrustum && (zone.inShadowFrustum && !modelOverride.castShadows)) {
+			return;
+		}
+
+		int modelDataOffset = modelData.addDynamicModelData(r, m, modelOverride, x, y, z, ctx == root);
+		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		boolean hasAlpha = m.getFaceTransparencies() != null;
