@@ -33,6 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
@@ -86,6 +87,8 @@ class SceneUploader {
 
 	private int basex, basez, rid, level;
 
+	private SSBOModelData.Slice modelDataSlice;
+
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
 	private final int[] modelNormals = new int[9];
@@ -101,6 +104,7 @@ class SceneUploader {
 	void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 
+		zone.modelCount = 0;
 		for (int z = 3; z >= 0; --z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -132,6 +136,8 @@ class SceneUploader {
 		zone.rids = new int[4][roofIds.size()];
 		zone.roofStart = new int[4][roofIds.size()];
 		zone.roofEnd = new int[4][roofIds.size()];
+
+		modelDataSlice = zone.modelDataSlice;
 
 		for (int z = 0; z <= 3; ++z) {
 			if (z == 0) {
@@ -399,6 +405,7 @@ class SceneUploader {
 		Tile bridge = t.getBridge();
 		if (bridge != null)
 			uploadZoneTile(ctx, zone, bridge, onlyWaterSurface, vertexBuffer, alphaBuffer);
+
 	}
 
 	private void uploadZoneTileRenderables(
@@ -569,6 +576,7 @@ class SceneUploader {
 		if (m == null)
 			return;
 
+		z.modelCount++;
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
@@ -863,37 +871,37 @@ class SceneUploader {
 		vb.putVertex(
 			lx2, neHeight, lz2, neColor,
 			uvx, uvy, 0, neMaterialData,
-			neNormals[0], neNormals[2], neNormals[1], neTerrainData
+			neNormals[0], neNormals[2], neNormals[1], neTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3, nwColor,
 			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData
+			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1, seColor,
 			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData
+			seNormals[0], seNormals[2], seNormals[1], seTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx0, swHeight, lz0, swColor,
 			uvx - uvcos + uvsin, uvy - uvsin - uvcos, 0, swMaterialData,
-			swNormals[0], swNormals[2], swNormals[1], swTerrainData
+			swNormals[0], swNormals[2], swNormals[1], swTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx1, seHeight, lz1, seColor,
 			uvx + uvsin, uvy - uvcos, 0, seMaterialData,
-			seNormals[0], seNormals[2], seNormals[1], seTerrainData
+			seNormals[0], seNormals[2], seNormals[1], seTerrainData, -1
 		);
 
 		vb.putVertex(
 			lx3, nwHeight, lz3, nwColor,
 			uvx - uvcos, uvy - uvsin, 0, nwMaterialData,
-			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData
+			nwNormals[0], nwNormals[2], nwNormals[1], nwTerrainData, -1
 		);
 	}
 
@@ -1154,19 +1162,19 @@ class SceneUploader {
 			vb.putVertex(
 				lx0, ly0, lz0, colorA,
 				uvAx, uvAy, 0, materialDataA,
-				normalsA[0], normalsA[2], normalsA[1], terrainDataA
+				normalsA[0], normalsA[2], normalsA[1], terrainDataA, -1
 			);
 
 			vb.putVertex(
 				lx1, ly1, lz1, colorB,
 				uvBx, uvBy, 0, materialDataB,
-				normalsB[0], normalsB[2], normalsB[1], terrainDataB
+				normalsB[0], normalsB[2], normalsB[1], terrainDataB, -1
 			);
 
 			vb.putVertex(
 				lx2, ly2, lz2, colorC,
 				uvCx, uvCy, 0, materialDataC,
-				normalsC[0], normalsC[2], normalsC[1], terrainDataC
+				normalsC[0], normalsC[2], normalsC[1], terrainDataC, -1
 			);
 		}
 	}
@@ -1183,6 +1191,9 @@ class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
+		final var modelData = modelDataSlice.add();
+		modelData.set(null, model, modelOverride, x, y, z);
+
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 
@@ -1460,19 +1471,19 @@ class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				modelNormals[0], modelNormals[1], modelNormals[2], 0, modelData.modelOffset
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				modelNormals[3], modelNormals[4], modelNormals[5], 0, modelData.modelOffset
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				modelNormals[6], modelNormals[7], modelNormals[8], 0, modelData.modelOffset
 			);
 
 			len += 3;
@@ -1490,6 +1501,7 @@ class SceneUploader {
 		int x,
 		int y,
 		int z,
+		int modelOffset,
 		IntBuffer opaqueBuffer,
 		IntBuffer alphaBuffer
 	) {
@@ -1692,19 +1704,19 @@ class SceneUploader {
 				vb,
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				modelNormals[0], modelNormals[1], modelNormals[2], 0, modelOffset
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				modelNormals[3], modelNormals[4], modelNormals[5], 0, modelOffset
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				modelNormals[6], modelNormals[7], modelNormals[8], 0, modelOffset
 			);
 			len += 3;
 		}

@@ -2,7 +2,7 @@ package rs117.hd.renderer.zone;
 
 import javax.annotation.Nullable;
 import net.runelite.api.*;
-import rs117.hd.opengl.uniforms.UBOWorldViews;
+import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 
 public class WorldViewContext {
 	final int worldViewId;

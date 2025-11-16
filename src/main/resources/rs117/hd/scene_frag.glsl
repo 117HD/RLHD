@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include VERSION_HEADER
 
 #define DISPLAY_BASE_COLOR 0
 
@@ -118,7 +118,7 @@ void main() {
         // Instead we manually clamp vanilla textures with transparency here. Including the transparency check
         // allows texture wrapping to work correctly for the mirror shield.
         if ((vMaterialData[0] >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1 && getMaterialHasTransparency(material1))
-            blendedUv.x = clamp(blendedUv.x, 0, .984375);
+            blendedUv.x = clamp(blendedUv.x, 0.0, .984375);
 
         vec2 uv1 = blendedUv;
         vec2 uv2 = blendedUv;
@@ -245,12 +245,12 @@ void main() {
             float underlayBlendMultiplier = 1.0 / (underlayBlend[0] + underlayBlend[1] + underlayBlend[2]);
             // adjust back to 1.0 total
             underlayBlend *= underlayBlendMultiplier;
-            underlayBlend = clamp(underlayBlend, 0, 1);
+            underlayBlend = clamp(underlayBlend, 0.0, 1.0);
 
             float overlayBlendMultiplier = 1.0 / (overlayBlend[0] + overlayBlend[1] + overlayBlend[2]);
             // adjust back to 1.0 total
             overlayBlend *= overlayBlendMultiplier;
-            overlayBlend = clamp(overlayBlend, 0, 1);
+            overlayBlend = clamp(overlayBlend, 0.0, 1.0);
         }
 
 
@@ -277,9 +277,9 @@ void main() {
 
             float result = dot(IN.texBlend, isPrimary);
             if (invert)
-                result = 1 - result;
+                result = 1.0 - result;
 
-            result = clamp(result * 2 - 1, 0, 1);
+            result = clamp(result * 2.0 - 1.0, 0.0, 1.0);
             overlayMix = result;
         }
 

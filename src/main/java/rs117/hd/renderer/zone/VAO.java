@@ -21,7 +21,8 @@ class VAO {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	static final int VERT_SIZE = 36;
+	// modelOffset int TODO: Make short
+	static final int VERT_SIZE = 40;
 
 	// Metadata format
 	// worldViewIndex int int
@@ -69,14 +70,18 @@ class VAO {
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
 
+		// modelOffset
+		glEnableVertexAttribArray(6);
+		glVertexAttribIPointer(6, 1, GL_INT, VERT_SIZE, 36);
+		
 		if (vboMetadata != null) {
 			this.vboMetadata = vboMetadata.bufId;
 			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
 
 			// WorldView index (not ID)
 			glEnableVertexAttribArray(6);
-			glVertexAttribDivisor(6, 1);
-			glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
+			glVertexAttribDivisor(7, 1);
+			glVertexAttribIPointer(7, 1, GL_INT, METADATA_SIZE, 0);
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);

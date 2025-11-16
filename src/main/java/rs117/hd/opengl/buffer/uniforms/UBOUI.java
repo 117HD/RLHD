@@ -1,10 +1,11 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer.uniforms;
 
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
-public class UBOUI extends UniformBuffer<GLBuffer> {
+public class UBOUI extends UniformStructuredBuffer<GLBuffer> {
 	public UBOUI() {
 		super(GL_DYNAMIC_DRAW);
 	}
