@@ -137,6 +137,7 @@ class SceneUploader {
 		zone.rids = new int[4][roofIds.size()];
 		zone.roofStart = new int[4][roofIds.size()];
 		zone.roofEnd = new int[4][roofIds.size()];
+		zone.isWaterZone = true;
 
 		modelDataSlice = zone.modelDataSlice;
 
@@ -161,6 +162,8 @@ class SceneUploader {
 		if (zone.hasWater && vb != null) {
 			uploadZoneWater(ctx, zone, mzx, mzz, vb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
+		} else {
+			zone.isWaterZone = false;
 		}
 	}
 
@@ -284,6 +287,9 @@ class SceneUploader {
 				// but we'll render them in the correct order without needing face sorting,
 				// so we might as well use the opaque buffer for simplicity
 				z.sizeO += 2;
+			} else {
+				// Has Opaque Tile
+				z.isWaterZone = false;
 			}
 		}
 
@@ -381,11 +387,11 @@ class SceneUploader {
 			return;
 
 		boolean drawTile = renderCallbackManager.drawTile(ctx.scene, t);
-
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && drawTile) {
 			uploadTilePaint(
 				ctx,
+				zone,
 				worldPos,
 				t,
 				paint,
@@ -679,6 +685,7 @@ class SceneUploader {
 	@SuppressWarnings({ "UnnecessaryLocalVariable" })
 	private void uploadTilePaint(
 		ZoneSceneContext ctx,
+		Zone zone,
 		int[] worldPos,
 		Tile tile,
 		SceneTilePaint paint,
@@ -700,6 +707,9 @@ class SceneUploader {
 		WaterType waterType = proceduralGenerator.seasonalWaterType(override, paint.getTexture());
 		if (onlyWaterSurface && waterType == WaterType.NONE)
 			return;
+
+		if(waterType == WaterType.NONE)
+			zone.isWaterZone = false;
 
 		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];

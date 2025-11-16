@@ -72,6 +72,7 @@ class Zone {
 	int[][] rids;
 	int[][] roofStart;
 	int[][] roofEnd;
+	boolean isWaterZone;
 	short modelCount;
 	SSBOModelData.Slice modelDataSlice;
 

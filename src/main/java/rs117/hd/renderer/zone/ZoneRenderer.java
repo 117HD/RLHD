@@ -1000,7 +1000,7 @@ public class ZoneRenderer implements Renderer {
 		int offset = ctx.sceneContext.sceneOffset >> 3;
 		int dx = (int)plugin.cameraPosition[0] - ((zx - offset) << 10);
 		int dz = (int)plugin.cameraPosition[2] - ((zz - offset) << 10);
-		boolean close = dx * dx + dz * dz < ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+		boolean useStaticUnSorted = z.isWaterZone && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
 
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
@@ -1018,7 +1018,7 @@ public class ZoneRenderer implements Renderer {
 				level,
 				sceneCamera,
 				hideRoofIds,
-				close
+				useStaticUnSorted
 			);
 		}
 
@@ -1034,7 +1034,7 @@ public class ZoneRenderer implements Renderer {
 				level,
 				directionalCamera,
 				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds,
-				close
+				useStaticUnSorted
 			);
 		}
 
