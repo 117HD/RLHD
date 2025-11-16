@@ -408,6 +408,10 @@ public class HdPlugin extends Plugin {
 	@Getter
 	public int drawnTileCount;
 	@Getter
+	public int drawnZoneCount;
+	@Getter
+	public int drawCallCount;
+	@Getter
 	public int drawnStaticRenderableCount;
 	@Getter
 	public int drawnDynamicRenderableCount;

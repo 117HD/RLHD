@@ -366,6 +366,8 @@ public class ZoneRenderer implements Renderer {
 //				renderBufferOffset = sceneContext.staticVertexCount;
 
 				plugin.drawnTileCount = 0;
+				plugin.drawnZoneCount = 0;
+				plugin.drawCallCount = 0;
 				plugin.drawnStaticRenderableCount = 0;
 				plugin.drawnDynamicRenderableCount = 0;
 
@@ -824,6 +826,7 @@ public class ZoneRenderer implements Renderer {
 			renderState.disable.set(GL_DEPTH_TEST);
 
 			frameTimer.end(Timer.RENDER_SHADOWS);
+			plugin.drawCallCount += directionalCmd.getDrawCallCount();
 		}
 	}
 
@@ -876,6 +879,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
+
+		plugin.drawCallCount += sceneCmd.getDrawCallCount();
 	}
 
 	@Override
@@ -927,6 +932,7 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized || z.sizeO == 0)
 			return;
 
+		plugin.drawnZoneCount++;
 		if (ctx != root || z.inSceneFrustum)
 			z.renderOpaque(sceneCmd, minLevel, level, maxLevel, hideRoofIds);
 
@@ -1085,6 +1091,9 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
+		if(!modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius()))
+			return;
+
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
@@ -1108,6 +1117,7 @@ public class ZoneRenderer implements Renderer {
 			VAO o = vaoO.get(size, ctx.vboM);
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
+		plugin.drawnDynamicRenderableCount++;
 	}
 
 	@Override
@@ -1145,7 +1155,7 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
-			if (ctx != root || zone.inSceneFrustum) {
+			if ((ctx != root || zone.inSceneFrustum) && sceneCamera.intersectsSphere(x, y, z, m.getRadius())) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
@@ -1179,6 +1189,7 @@ public class ZoneRenderer implements Renderer {
 						y - renderable.getModelHeight() /* to render players over locs */,
 						z & 1023
 					);
+					plugin.drawnDynamicRenderableCount++;
 				}
 			}
 

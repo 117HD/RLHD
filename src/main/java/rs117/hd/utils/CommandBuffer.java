@@ -2,6 +2,7 @@ package rs117.hd.utils;
 
 import java.nio.IntBuffer;
 import java.util.Arrays;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.opengl.shader.ShaderProgram;
@@ -38,6 +39,8 @@ public class CommandBuffer {
 
 	private final Object[] objects = new Object[10];
 	private int objectCount = 0;
+	@Getter
+	private int drawCallCount = 0;
 
 	private final RenderState renderState;
 
@@ -99,18 +102,21 @@ public class CommandBuffer {
 		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_TYPE & 0xFF | mode << 8 | (long) offsets.length << 32;
 		for (int i = 0; i < offsets.length; i++)
 			cmd[writeHead++] = (long) offsets[i] << 32 | counts[i] & INT_MASK;
+		drawCallCount += offsets.length;
 	}
 
 	public void DrawElements(int mode, int vertexCount, long offset) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DRAW_ELEMENTS_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8 | (long) vertexCount << 32;
 		cmd[writeHead++] = offset;
+		drawCallCount++;
 	}
 
 	public void DrawArrays(int mode, int offset, int vertexCount) {
 		ensureCapacity(2);
 		cmd[writeHead++] = GL_DRAW_ARRAYS_TYPE & 0xFF | (mode & DRAW_MODE_MASK) << 8;
 		cmd[writeHead++] = (long) offset << 32 | vertexCount & INT_MASK;
+		drawCallCount++;
 	}
 
 	public void DrawArraysIndirect(int mode, int vertexOffset, int vertexCount, GpuIntBuffer indirectBuffer) {
@@ -126,6 +132,7 @@ public class CommandBuffer {
 
 		cmd[writeHead++] = GL_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
+		drawCallCount++;
 	}
 
 	public void DrawElementsIndirect(int mode, int indexCount, int indexOffset, GpuIntBuffer indirectBuffer) {
@@ -142,6 +149,7 @@ public class CommandBuffer {
 
 		cmd[writeHead++] = GL_DRAW_ELEMENTS_INDIRECT_TYPE & 0xFF | (long) mode << 8;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
+		drawCallCount++;
 	}
 
 	public void MultiDrawArraysIndirect(int mode, int[] vertexOffsets, int[] vertexCounts, GpuIntBuffer indirectBuffer) {
@@ -166,8 +174,8 @@ public class CommandBuffer {
 
 		cmd[writeHead++] = GL_MULTI_DRAW_ARRAYS_INDIRECT_TYPE & 0xFF | (long) mode << 8 | (long) drawCount << 32;
 		cmd[writeHead++] = (long) indirectOffset * Integer.BYTES;
+		drawCallCount++;
 	}
-
 
 	public void Enable(int capability) {
 		Toggle(capability, true);
@@ -315,6 +323,9 @@ public class CommandBuffer {
 
 	public void reset() {
 		writeHead = 0;
+		drawCallCount = 0;
+		Arrays.fill(objects, 0, objectCount, null);
+		objectCount = 0;
 		renderState.reset();
 	}
 }

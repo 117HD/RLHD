@@ -14,6 +14,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.NpcDisplacementCache;
 
@@ -125,15 +126,27 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 					.build());
 			}
 
-			children.add(LineComponent.builder()
-				.left("Tiles:")
-				.right(String.valueOf(plugin.getDrawnTileCount()))
-				.build());
+			if(plugin.renderer instanceof LegacyRenderer) {
+				children.add(LineComponent.builder()
+					.left("Tiles:")
+					.right(String.valueOf(plugin.getDrawnTileCount()))
+					.build());
 
-			children.add(LineComponent.builder()
-				.left("Static Renderables:")
-				.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
-				.build());
+				children.add(LineComponent.builder()
+					.left("Static Renderables:")
+					.right(String.valueOf(plugin.getDrawnStaticRenderableCount()))
+					.build());
+			} else {
+				children.add(LineComponent.builder()
+					.left("Zones:")
+					.right(String.valueOf(plugin.getDrawnZoneCount()))
+					.build());
+
+				children.add(LineComponent.builder()
+					.left("DrawCalls:")
+					.right(String.valueOf(plugin.getDrawCallCount()))
+					.build());
+			}
 
 			children.add(LineComponent.builder()
 				.left("Dynamic Renderables:")
