@@ -65218,6 +65218,31 @@
     ]
   },
   {
+    "description": "Depth Bias Fix - Grotesque Guardians Lightning / Flames",
+    "graphicsObjectIds": [
+      "GG_DUSK_LIGHTNING_DAWN_DEATH",
+      "GG_DUSK_LIGHTNING_ENRAGED",
+      "GG_DUSK_LIGHTNING_ENRAGED_START",
+      "GG_DAWN_LIGHTNING_1",
+      "GG_DAWN_LIGHTNING_2",
+      "GG_DAWN_LIGHTNING_3",
+      "GG_DAWN_LIGHTNING_4",
+      "GG_DAWN_LIGHTNING_5",
+      "GG_DAWN_LIGHTNING_6",
+      "GG_DAWN_LIGHTNING_7",
+      "GG_DAWN_LIGHTNING_8",
+      "GG_DUSK_LIGHTNING_1",
+      "GG_DUSK_LIGHTNING_2",
+      "GG_DUSK_LIGHTNING_3",
+      "GG_DUSK_LIGHTNING_4",
+      "GG_DUSK_LIGHTNING_5",
+      "GG_DUSK_LIGHTNING_6",
+      "GG_DUSK_LIGHTNING_7",
+      "GG_DUSK_LIGHTNING_8"
+    ],
+    "depthBias": 255
+  },
+  {
     "description": "Depth Bias Fix - Zulrah Exit Scroll",
     "objectIds": [
       "SNAKEBOSS_EXIT"
