@@ -65218,6 +65218,29 @@
     ]
   },
   {
+    "description": "Depth Bias Fix - Tempoross  Pools",
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_0",
+      "TEMPOROSS_REWARDPOOL_8",
+      "TEMPOROSS_REWARDPOOL_7",
+      "TEMPOROSS_REWARDPOOL_6",
+      "TEMPOROSS_REWARDPOOL_5",
+      "TEMPOROSS_REWARDPOOL_4",
+      "TEMPOROSS_REWARDPOOL_3",
+      "TEMPOROSS_REWARDPOOL_2",
+      "TEMPOROSS_REWARDPOOL_1"
+    ],
+    "npcIds": [
+      "TEMPOROSS_P2_FISHINGSPOT",
+      "TEMPOROSS_P2_FISHINGSPOT_INACTIVE",
+      "TEMPOROSS_BOSS_UNENGAGED",
+      "TEMPOROSS_BOSS_ENRAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL",
+      "TEMPOROSS_BOSS_READY"
+    ],
+    "depthBias": 255
+  },
+  {
     "description": "Depth Bias Fix - Grotesque Guardians Lightning / Flames",
     "graphicsObjectIds": [
       "GG_DUSK_LIGHTNING_DAWN_DEATH",
