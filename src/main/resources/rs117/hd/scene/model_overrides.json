@@ -65238,6 +65238,9 @@
       "TEMPOROSS_BOSS_WHIRLPOOL",
       "TEMPOROSS_BOSS_READY"
     ],
+    "graphicsObjectIds": [
+      "TEMPOROSS_FISHING_SPOTANIM"
+    ],
     "depthBias": 255
   },
   {
