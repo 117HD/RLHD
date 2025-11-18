@@ -26591,7 +26591,13 @@
       "LADDER_OUTSIDE_TO_UNDERGROUND"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Objects - Wood - Ladder - Edgeville Dungeon Ladder",
@@ -65292,6 +65298,113 @@
         "baseMaterial": "PLANT_GRUNGE_1",
         "uvType": "GEOMETRY",
         "terrainVertexSnap": true
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Tempoross  Pools",
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_0",
+      "TEMPOROSS_REWARDPOOL_8",
+      "TEMPOROSS_REWARDPOOL_7",
+      "TEMPOROSS_REWARDPOOL_6",
+      "TEMPOROSS_REWARDPOOL_5",
+      "TEMPOROSS_REWARDPOOL_4",
+      "TEMPOROSS_REWARDPOOL_3",
+      "TEMPOROSS_REWARDPOOL_2",
+      "TEMPOROSS_REWARDPOOL_1"
+    ],
+    "npcIds": [
+      "TEMPOROSS_P2_FISHINGSPOT",
+      "TEMPOROSS_P2_FISHINGSPOT_INACTIVE",
+      "TEMPOROSS_BOSS_UNENGAGED",
+      "TEMPOROSS_BOSS_ENRAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL",
+      "TEMPOROSS_BOSS_READY"
+    ],
+    "graphicsObjectIds": [
+      "TEMPOROSS_FISHING_SPOTANIM"
+    ],
+    "depthBias": 255
+  },
+  {
+    "description": "Depth Bias Fix - Grotesque Guardians Lightning / Flames",
+    "graphicsObjectIds": [
+      "GG_DUSK_LIGHTNING_DAWN_DEATH",
+      "GG_DUSK_LIGHTNING_ENRAGED",
+      "GG_DUSK_LIGHTNING_ENRAGED_START",
+      "GG_DAWN_LIGHTNING_1",
+      "GG_DAWN_LIGHTNING_2",
+      "GG_DAWN_LIGHTNING_3",
+      "GG_DAWN_LIGHTNING_4",
+      "GG_DAWN_LIGHTNING_5",
+      "GG_DAWN_LIGHTNING_6",
+      "GG_DAWN_LIGHTNING_7",
+      "GG_DAWN_LIGHTNING_8",
+      "GG_DUSK_LIGHTNING_1",
+      "GG_DUSK_LIGHTNING_2",
+      "GG_DUSK_LIGHTNING_3",
+      "GG_DUSK_LIGHTNING_4",
+      "GG_DUSK_LIGHTNING_5",
+      "GG_DUSK_LIGHTNING_6",
+      "GG_DUSK_LIGHTNING_7",
+      "GG_DUSK_LIGHTNING_8"
+    ],
+    "depthBias": 255
+  },
+  {
+    "description": "Depth Bias Fix - Zulrah Exit Scroll",
+    "objectIds": [
+      "SNAKEBOSS_EXIT"
+    ],
+    "depthBias": 200,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "NONE",
+        "depthBias": 255
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - PoH Pools & Ponds",
+    "objectIds": [
+      "POH_POOL_REJUVENATION",
+      "POH_POOL_REGENERATION",
+      "LEAGUE_4_POH_POOL_REJUVENATION",
+      "XMAS20_POH_POOL_REJUVENATION",
+      "POH_POOL_RESTORATION",
+      "POH_POOL_REVITALISATION",
+      "POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_RESTORATION",
+      "XMAS20_POH_POOL_REVITALISATION",
+      "XMAS20_POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_REGENERATION",
+      "POH_CRUDE_GARDEN_CENTREPIECE3",
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ],
+    "depthBias": 210
+  },
+  {
+    "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
+    "objectIds": [
+      "POH_TROPHY_AMULETOFGLORY_4",
+      "POH_AMULET_DIG_DIGSITE",
+      "POH_AMULET_DIG_FOSSIL",
+      "POH_AMULET_DIG_LITHKREN",
+      "POH_AMULET_XERIC",
+      "POH_AMULET_XERIC_HONOUR",
+      "POH_AMULET_XERIC_HEART",
+      "POH_AMULET_XERIC_INFERNO",
+      "POH_AMULET_XERIC_GLADE",
+      "POH_AMULET_XERIC_LOOKOUT"
+    ],
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 49 || h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "depthBias": 110
       }
     ]
   }
