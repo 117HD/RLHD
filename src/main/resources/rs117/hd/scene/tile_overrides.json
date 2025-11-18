@@ -3458,6 +3458,49 @@
     "waterType": "BLOOD"
   },
   {
+    "name": "Wilderness - Dirt without snow",
+    "area": "Wilderness areas with lava in them",
+    "underlayIds": [
+      57,
+      148,
+      149,
+      150
+    ],
+    "groundMaterial": "VARIED_DIRT"
+  },
+  {
+    "name": "Wilderness - Dirt by lava",
+    "area": "WILDERNESS",
+    "underlayIds": [
+      72
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "SEASONAL_DIRT": [
+        "h > 0 && s > 0"
+      ]
+    }
+  },
+  {
+    "name": "Wilderness - Dirt - Seasonal",
+    "area": "WILDERNESS",
+    "underlayIds": [
+      147,
+      148,
+      162,
+      163,
+      164,
+      165,
+      167,
+      168,
+      169
+    ],
+    "groundMaterial": "VARIED_DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
     "name": "ARANDAR_PATHS",
     "area": "ARANDAR",
     "overlayIds": [
@@ -3854,6 +3897,13 @@
     "blended": false
   },
   {
+    "area": "Kebos Interior",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "VARROCK_PATHS"
+  },
+  {
     "name": "OVERLAY_KOUREND_PATH",
     "area": "KOUREND",
     "overlayIds": [
@@ -4181,6 +4231,17 @@
     ],
     "groundMaterial": "DIRT",
     "blended": false
+  },
+  {
+    "name": "Mount Karuulm Mountainside",
+    "area": "MOUNT_KARUULM",
+    "overlayIds": [ 114, 115 ],
+    "underlayIds": [
+      27,
+      29,
+      129
+    ],
+    "groundMaterial": "ROCKY_CAVE_FLOOR"
   },
   {
     "name": "ZEAH_DIRT_OVERLAY",
@@ -5087,6 +5148,70 @@
     "blended": false
   },
   {
+    "name": "Savannah Church - Stone tile pathway",
+    "area": "OVERWORLD",
+    "overlayIds": [ 199 ],
+    "groundMaterial": "STONE",
+    "blended": false
+  },
+  {
+    "name": "Varlamore Dirt",
+    "area": "VARLAMORE",
+    "underlayIds": [ 119 ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
+  },
+  {
+    "name": "Varlamore - Complex",
+    "area": "VARLAMORE",
+    "underlayIds": [
+      26,
+      33,
+      48,
+      50,
+      52,
+      63,
+      66,
+      68,
+      94,
+      123,
+      129,
+      147,
+      167,
+      177,
+      178,
+      230
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "SEASONAL_GRASS": [
+        "h == 6 && s >= 5",
+        "h == 8 && s >= 6 && l >= 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h == 9 && s >= 4 && l >= 31",
+        "h >= 9 && s >= 5",
+        "h >= 10 && s >= 2",
+        "h >= 11"
+      ],
+      "SEASONAL_DIRT": [
+        "h == 6 && s <= 4",
+        "h == 8 && s <= 4 && l <= 71",
+        "h <= 7 && s <= 5 && l <= 60",
+        "h <= 7 && s <= 7 && l <= 34",
+        "h == 8 && s == 5",
+        "h == 9 && s == 2",
+        "h == 9 && s == 3 && l <= 48",
+        "h == 9 && s == 4 && l <= 30",
+        "h == 9 && s == 5 && l <= 30"
+      ],
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
     "name": "Proudspire Snow Blending",
     "area": "Proudspire",
     "underlayIds": [ 58 ],
@@ -5720,20 +5845,26 @@
     "underlayIds": [ 151 ],
     "groundMaterial": "SNOW_1",
     "replacements": {
-      "DEFAULT_DIRT": "s > 0"
+      "SEASONAL_DIRT": "s > 0"
     }
   },
   {
     "name": "Varlamore - Custodas Mountains - Grunge",
     "area": "VARLAMORE",
     "underlayIds": [ 92, 173 ],
-    "groundMaterial": "GRUNGE"
+    "groundMaterial": "GRUNGE",
+    "replacements": {
+      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Varlamore - Custodas Mountains - Dirt",
     "area": "VARLAMORE",
     "underlayIds": [ 176 ],
-    "groundMaterial": "DIRT"
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "Varlamore - Auburn Valley - Dirt path",
@@ -5744,7 +5875,7 @@
   {
     "name": "Varlamore - Auburn Valley - Complex Tiles",
     "area": "AUBURNVALE",
-    "underlayIds": [ 63, 66, 67, 70 ],
+    "underlayIds": [ 63, 66, 67, 68, 70 ],
     "replacements": {
       "SEASONAL_GRASS": [
         "h >= 10 && s == 1",
@@ -6111,7 +6242,8 @@
       36,
       80,
       85,
-      131
+      131,
+      216
     ],
     "groundMaterial": "VARIED_DIRT"
   },
@@ -7653,6 +7785,18 @@
     }
   },
   {
+    "name": "Farming Guild Grass",
+    "area": "Farming Guild Interior",
+    "underlayIds": [
+      49,
+      50,
+      63,
+      68,
+      96
+    ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
     "name": "ZEAH_DIRT_UNDERLAY",
     "area": "KOUREND",
     "underlayIds": [
@@ -8576,7 +8720,8 @@
       103,
       114,
       115,
-      126
+      126,
+      203
     ],
     "groundMaterial": "OVERWORLD_GRASS_1",
     "replacements": {
@@ -8772,8 +8917,11 @@
       65,
       68,
       69,
+      77,
       94,
-      96
+      96,
+      125,
+      141
     ],
     "replacements": {
       "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
@@ -8790,9 +8938,10 @@
       ],
       "SEASONAL_DIRT": [
         "h == 8 && s <= 4 && l <= 71",
-        "h <= 7 && s <= 5 && l <= 57",
+        "h <= 7 && s <= 5 && l <= 60",
         "h <= 7 && s <= 7 && l <= 34",
-        "h == 8 && s == 5"
+        "h == 8 && s == 5",
+        "h == 9 && s == 3 && l <= 48"
       ],
       "DEFAULT_DIRT": true
     }
