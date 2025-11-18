@@ -1898,8 +1898,7 @@ public class ZoneRenderer implements Renderer {
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
 				log.debug("WorldView loading: {}", sub.getId());
-				// TODO: Fix async sub scene loading when hopping worlds
-				//loadSubScene(sub, sub.getScene());
+				// Relies on swapSub being able to load the scene if it hasn't already been loaded
 				swapSub(sub.getScene());
 			}
 		}
@@ -1910,6 +1909,7 @@ public class ZoneRenderer implements Renderer {
 	private void swapSub(Scene scene) {
 		// TODO: Fix async sub scene loading when hopping worlds
 		updateWorldViews();
+		// TODO: Currently the first swapScene relies on swapSub loading the sub scene
 		loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
 
 		WorldViewContext ctx = context(scene);
