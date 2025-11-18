@@ -75,7 +75,6 @@ public class FishingSpotReplacer {
 	}
 
 	public void update() {
-
 		var sceneContext = plugin.getSceneContext();
 		if (sceneContext == null)
 			return;
