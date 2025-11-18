@@ -38,6 +38,7 @@ import java.awt.image.DataBufferInt;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ import rs117.hd.config.SeasonalHemisphere;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.ShadingMode;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.config.ShadowTransparency;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.shader.ShaderException;
@@ -123,6 +125,9 @@ import rs117.hd.utils.ShaderRecompile;
 
 import static net.runelite.api.Constants.*;
 import static org.lwjgl.opengl.GL33C.*;
+import static org.lwjgl.opengl.GL43.GL_DEBUG_SOURCE_API;
+import static org.lwjgl.opengl.GL43.GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR;
+import static org.lwjgl.opengl.GL43.glDebugMessageControl;
 import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
@@ -147,9 +152,12 @@ public class HdPlugin extends Plugin {
 
 	public static int MAX_TEXTURE_UNITS;
 	public static int TEXTURE_UNIT_COUNT = 0;
+	public static final int TEXTURE_UNIT_UNUSED = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_UI = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_GAME = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_TRANSPARENCY_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_GROUND_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
@@ -336,7 +344,9 @@ public class HdPlugin extends Plugin {
 
 	public int shadowMapResolution;
 	public int fboShadowMap;
-	private int texShadowMap;
+	public int texShadowMap;
+	public int texShadowTransparencyMap;
+	public int texShadowGroundMap;
 
 	public int[] tiledLightingResolution;
 	public int tiledLightingLayerCount;
@@ -362,6 +372,7 @@ public class HdPlugin extends Plugin {
 	public boolean configShadowsEnabled;
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
+	public boolean configShadowCasterCulling;
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
@@ -371,6 +382,7 @@ public class HdPlugin extends Plugin {
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public DynamicLights configDynamicLights;
+	public ShadowTransparency configShadowTransparency;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
 	public SeasonalHemisphere configSeasonalHemisphere;
@@ -534,6 +546,14 @@ public class HdPlugin extends Plugin {
 							GL43C.GL_DEBUG_TYPE_PUSH_GROUP,
 							GL43C.GL_DEBUG_SEVERITY_NOTIFICATION,
 							(int[]) null,
+							false
+						);
+						// Hide Shadow Sampler Undefined Behaviour messages (TODO: We should introduce Samplers to avoid this)
+						glDebugMessageControl(
+							GL_DEBUG_SOURCE_API,
+							GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR,
+							GL_DONT_CARE,
+							new int[]{0x20096},
 							false
 						);
 						GL43C.glDebugMessageControl(
@@ -797,8 +817,11 @@ public class HdPlugin extends Plugin {
 			.define("NORMAL_MAPPING", config.normalMapping())
 			.define("PARALLAX_OCCLUSION_MAPPING", config.parallaxOcclusionMapping())
 			.define("SHADOW_MODE", configShadowMode)
-			.define("SHADOW_TRANSPARENCY", config.enableShadowTransparency())
-			.define("PIXELATED_SHADOWS", config.pixelatedShadows())
+			.define("SHADOW_TRANSPARENCY", configShadowTransparency)
+			.define("SHADOW_SHADING", config.shadowShading())
+			.define("SHADOW_CONSTANT_BIAS", config.shadowResolution().getConstantBias())
+			.define("SHADOW_SLOPE_BIAS", config.shadowResolution().getSlopeBias())
+			.define("GROUND_SHADOWS", config.enableGroundShadows())
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
@@ -1211,6 +1234,8 @@ public class HdPlugin extends Plugin {
 			checkGLErrors();
 		}
 
+		checkGLFrameBuffer();
+
 		// Reset
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
 		glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -1265,7 +1290,7 @@ public class HdPlugin extends Plugin {
 		glTexImage2D(
 			GL_TEXTURE_2D,
 			0,
-			GL_DEPTH_COMPONENT24,
+			GL_DEPTH_COMPONENT16,
 			shadowMapResolution,
 			shadowMapResolution,
 			0,
@@ -1283,11 +1308,69 @@ public class HdPlugin extends Plugin {
 
 		// Bind texture
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texShadowMap, 0);
-		glDrawBuffer(GL_NONE);
+
+		IntBuffer attachments = BufferUtils.createIntBuffer(2);
+		if(configShadowTransparency != ShadowTransparency.Disabled) {
+			texShadowTransparencyMap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_TRANSPARENCY_MAP);
+			glBindTexture(GL_TEXTURE_2D, texShadowTransparencyMap);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				configShadowTransparency == ShadowTransparency.EnabledWithTinting ? GL_RG16I : GL_R16I,
+				shadowMapResolution,
+				shadowMapResolution,
+				0,
+				configShadowTransparency == ShadowTransparency.EnabledWithTinting ? GL_RG_INTEGER : GL_RED_INTEGER,
+				GL_SHORT,
+				0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+			// Bind texture
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texShadowTransparencyMap, 0);
+			attachments.put(GL_COLOR_ATTACHMENT0);
+		}
+
+		if(config.enableGroundShadows()) {
+			texShadowGroundMap = glGenTextures();
+			glActiveTexture(TEXTURE_UNIT_GROUND_MAP);
+			glBindTexture(GL_TEXTURE_2D, texShadowGroundMap);
+
+			glTexImage2D(
+				GL_TEXTURE_2D,
+				0,
+				GL_R16I,
+				shadowMapResolution,
+				shadowMapResolution,
+				0,
+				GL_RED_INTEGER,
+				GL_UNSIGNED_SHORT,
+				0
+			);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+
+			// Bind texture
+			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, texShadowGroundMap, 0);
+			attachments.put(GL_COLOR_ATTACHMENT1);
+		}
+
+		attachments.flip();
+		glDrawBuffers(attachments);
 		glReadBuffer(GL_NONE);
+
+		checkGLFrameBuffer();
 
 		// Reset FBO
 		glBindFramebuffer(GL_FRAMEBUFFER, awtContext.getFramebuffer(false));
+		checkGLErrors();
 	}
 
 	private void initializeDummyShadowMap() {
@@ -1306,6 +1389,10 @@ public class HdPlugin extends Plugin {
 		if (texShadowMap != 0)
 			glDeleteTextures(texShadowMap);
 		texShadowMap = 0;
+
+		if(texShadowTransparencyMap != 0)
+			glDeleteTextures(texShadowTransparencyMap);
+		texShadowTransparencyMap = 0;
 
 		if (fboShadowMap != 0)
 			glDeleteFramebuffers(fboShadowMap);
@@ -1434,8 +1521,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1483,6 +1570,7 @@ public class HdPlugin extends Plugin {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
 		configRoofShadows = config.roofShadows();
+		configShadowTransparency = config.enableShadowTransparency();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
@@ -1498,6 +1586,7 @@ public class HdPlugin extends Plugin {
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
 		configExpandShadowDraw = config.expandShadowDraw();
+		configShadowCasterCulling = config.shadowCasterCulling();
 		configUseFasterModelHashing = config.fasterModelHashing();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
@@ -1639,8 +1728,9 @@ public class HdPlugin extends Plugin {
 							case KEY_WIND_DISPLACEMENT:
 							case KEY_CHARACTER_DISPLACEMENT:
 							case KEY_WIREFRAME:
-							case KEY_PIXELATED_SHADOWS:
+							case KEY_SHADOW_SHADING:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_GROUND_SHADOWS:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -1649,10 +1739,9 @@ public class HdPlugin extends Plugin {
 								break;
 							case KEY_SHADOW_MODE:
 							case KEY_SHADOW_TRANSPARENCY:
-								recompilePrograms = true;
-								// fall-through
 							case KEY_SHADOW_RESOLUTION:
 								recreateShadowMapFbo = true;
+								recompilePrograms = true;
 								break;
 							case KEY_ATMOSPHERIC_LIGHTING:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
@@ -1841,6 +1930,36 @@ public class HdPlugin extends Plugin {
 		// @formatter:off
 		while (glGetError() != GL_NO_ERROR);
 		// @formatter:on
+	}
+
+	public static void checkGLFrameBuffer() {
+		switch (glCheckFramebufferStatus(GL_FRAMEBUFFER)) {
+			case GL_FRAMEBUFFER_COMPLETE:
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+				log.warn("Frame buffer is incomplete");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+				log.warn("Frame buffer is missing an attachment");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+				log.warn("Frame buffer is incomplete in the draw buffer");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+				log.warn("Frame buffer is incomplete in the read buffer");
+			case GL_FRAMEBUFFER_UNSUPPORTED:
+				log.warn("Frame buffer is unsupported");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE:
+				log.warn("Frame buffer is incomplete in the multisample buffer");
+				break;
+			case GL_FRAMEBUFFER_UNDEFINED:
+				log.warn("Frame buffer is undefined");
+				break;
+			case GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS:
+				log.warn("Frame buffer is incomplete in the layer targets");
+				break;
+		}
 	}
 
 	public static void checkGLErrors() {

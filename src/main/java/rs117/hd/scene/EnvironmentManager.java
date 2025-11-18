@@ -486,6 +486,10 @@ public class EnvironmentManager {
 		}
 	}
 
+	public boolean isOverworld() {
+		return currentEnvironment.isOverworld;
+	}
+
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
 	}
