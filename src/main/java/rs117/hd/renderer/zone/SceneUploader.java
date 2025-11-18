@@ -99,8 +99,10 @@ class SceneUploader {
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
 	void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
+		// Initialize the zone as containing only water, until a non-water tile is found
+		zone.onlyWater = true;
 
+		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int z = 3; z >= 0; --z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -277,6 +279,8 @@ class SceneUploader {
 				// but we'll render them in the correct order without needing face sorting,
 				// so we might as well use the opaque buffer for simplicity
 				z.sizeO += 2;
+			} else {
+				z.onlyWater = false;
 			}
 		}
 
@@ -310,6 +314,8 @@ class SceneUploader {
 			if (isFallbackWater || isOverlayWater || isUnderlayWater) {
 				z.hasWater = true;
 				z.sizeO += len;
+			} else {
+				z.onlyWater = false;
 			}
 		}
 
@@ -1183,7 +1189,7 @@ class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
-		final int[][] tileHeights = ctx.scene.getTileHeights()[tile.getPlane()];
+		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 
@@ -1234,13 +1240,14 @@ class SceneUploader {
 			vz += z;
 
 			if (modelOverride.terrainVertexSnap && heightFrac <= modelOverride.terrainVertexSnapThreshold) {
-				int tileEeX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE);
-				int tileEeY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE);
+				int plane = tile.getRenderLevel();
+				int tileExX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE - 1);
+				int tileExY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE - 1);
 
-				float h00 = tileHeights[tileEeX][tileEeY];
-				float h10 = tileHeights[tileEeX + 1][tileEeY];
-				float h01 = tileHeights[tileEeX][tileEeY + 1];
-				float h11 = tileHeights[tileEeX + 1][tileEeY + 1];
+				float h00 = tileHeights[plane][tileExX][tileExY];
+				float h10 = tileHeights[plane][tileExX + 1][tileExY];
+				float h01 = tileHeights[plane][tileExX][tileExY + 1];
+				float h11 = tileHeights[plane][tileExX + 1][tileExY + 1];
 
 				float hx0 = mix(h00, h10, (vx % 128.0f) / 128.0f);
 				float hx1 = mix(h01, h11, (vx % 128.0f) / 128.0f);
