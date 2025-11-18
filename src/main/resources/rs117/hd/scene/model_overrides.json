@@ -41240,6 +41240,23 @@
     "uvType": "BOX"
   },
   {
+    "description": "Fortis Roads - Lighten Broken Trims",
+    "objectIds": [
+      "FLOOR_CIVITAS_FADE01",
+      "FLOOR_CIVITAS_FADE02",
+      "FLOOR_CIVITAS_MIDDLE01",
+      "FLOOR_CIVITAS_MIDDLE02",
+      "FLOOR_CIVITAS_HALF01"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "h == 1",
+        "baseMaterial": "GRAY_115"
+      }
+    ]
+  },
+  {
     "description": "Mortytania Slayer Tower Spiked Chain shortcuts",
     "baseMaterial": "METALLIC_1_LIGHT_GLOSS",
     "uvOrientation": 343,
