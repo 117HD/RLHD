@@ -1840,7 +1840,8 @@ public class ZoneRenderer implements Renderer {
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
 				log.debug("WorldView loading: {}", sub.getId());
-				loadSubScene(sub, sub.getScene());
+				// TODO: Fix async sub scene loading when hopping worlds
+				//loadSubScene(sub, sub.getScene());
 				swapSub(sub.getScene());
 			}
 		}
