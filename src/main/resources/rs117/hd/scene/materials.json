@@ -663,13 +663,13 @@
   {
     "name": "FORTIS_ROADS",
     "vanillaTextureIndex": 121,
-    "textureScale": [ -1, -1 ]
+    "textureScale": [ -1, -1 ],
+    "brightness": 0.92
   },
   {
     "name": "FORTIS_ROADS_MIRRORED",
     "parent": "FORTIS_ROADS",
-    "vanillaTextureIndex": 122,
-    "textureScale": [ -1, -1 ]
+    "vanillaTextureIndex": 122
   },
   {
     "name": "LEAFY_ACACIA01",
@@ -1007,6 +1007,11 @@
     "name": "GRAY_125",
     "parent": "NONE",
     "brightness": 1.25
+  },
+  {
+    "name": "GRAY_115",
+    "parent": "NONE",
+    "brightness": 1.15
   },
   {
     "name": "GRAY_110",
@@ -1747,7 +1752,11 @@
   },
   {
     "name": "MARBLE_4",
-    "normalMap": "MARBLE_4_N"
+    "normalMap": "MARBLE_4_N",
+    "materialsToReplace": [
+      "MARBLE_DARK"
+    ],
+    "replacementCondition": "modelTextures"
   },
   {
     "name": "MARBLE_1_GLOSS",
@@ -2138,15 +2147,6 @@
     "specularGloss": 40.0,
     "materialsToReplace": [
       "ROOF_SHINGLES_1"
-    ],
-    "replacementCondition": "modelTextures"
-  },
-  {
-    "name": "HD_MARBLE_DARK",
-    "specularStrength": 1.1,
-    "specularGloss": 380.0,
-    "materialsToReplace": [
-      "MARBLE_DARK"
     ],
     "replacementCondition": "modelTextures"
   },

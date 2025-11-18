@@ -29239,7 +29239,9 @@
     "type": "STATIC",
     "duration": 0,
     "range": 0,
-    "fadeInDuration": 500,
+    "fadeInDuration": 300,
+    "fadeOutDuration": 100,
+    "fadeOverlap": true,
     "projectileIds": [
       "FIREBREATH_TRAVEL"
     ]
@@ -30371,7 +30373,7 @@
   {
     "description": "Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 220,
+    "radius": 250,
     "strength": 20,
     "color": [
       0,
@@ -30380,16 +30382,15 @@
     ],
     "type": "FLICKER",
     "duration": 1,
-    "range": 80,
+    "range": 60,
     "projectileIds": [ "WYRM_RANGE_PROJ" ],
-    "spawnDelay": 400,
     "fadeInDuration": 300,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 300
   },
   {
     "description": "Shadow Wyrm Magic Attack",
     "offset": [ 0, 0, 0 ],
-    "radius": 220,
+    "radius": 250,
     "strength": 50,
     "color": [
       0,
@@ -30400,9 +30401,8 @@
     "duration": 10,
     "range": 70,
     "projectileIds": [ "SUPERIOR_WYRM_RANGE_PROJ" ],
-    "spawnDelay": 400,
     "fadeInDuration": 300,
-    "fadeOutDuration": 100
+    "fadeOutDuration": 300
   },
   {
     "description": "KARUULM_INDOOR_LAVA_1",
@@ -40213,6 +40213,134 @@
     "fadeInDuration": 300,
     "fadeOutDuration": 200,
     "graphicsObjectIds": [ "SPECIAL_ATLATL_SPOTANIM" ]
+  },
+  {
+    "description": "Scorching Bow Special Attack - Arrow",
+    "offset": [ 0, -25, 0 ],
+    "radius": 175,
+    "strength": 12,
+    "fadeOutDuration": 575,
+    "fadeInDuration": 200,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "projectileIds": [ "VFX_SCORCHING_BOW_PROJECTILE" ]
+  },
+  {
+    "description": "Emberlight Special Attack Player",
+    "offset": [ 0, 75, 0 ],
+    "radius": 230,
+    "strength": 11.5,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 900,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 375,
+    "graphicsObjectIds": [ "VFX_EMBERLIGHT_SPEC_02" ]
+  },
+  {
+    "description": "Emberlight Special Attack Impact",
+    "offset": [ 0, 75, 90 ],
+    "radius": 260,
+    "spawnDelay": 1150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 650,
+    "strength": 11.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 150,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "VFX_EMBERLIGHT_SPEC_02" ]
+  },
+  {
+    "description": "Scorching Bow Special Attack - Shot Firing",
+    "offset": [ 0, 80, 50 ],
+    "radius": 165,
+    "strength": 12,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1000,
+    "spawnDelay": 150,
+    "fadeOutDuration": 175,
+    "fadeInDuration": 250,
+
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "graphicsObjectIds": [ "VFX_HUMAN_SCORCHING_BOW_SPECIAL_ATTACK_01" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Right 1",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 150,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Right 2",
+    "offset": [ 30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 750,
+    "fixedDespawnTime": true,
+    "despawnDelay": 300,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
+  },
+  {
+    "description": "Abyssal Dagger Special Attack Left",
+    "offset": [ -30, 150, 60 ],
+    "radius": 175,
+    "spawnDelay": 350,
+    "fixedDespawnTime": true,
+    "despawnDelay": 500,
+    "strength": 10,
+    "color": [
+      0,
+      255,
+      0
+    ],
+    "type": "STATIC",
+    "fadeInDuration": 175,
+    "fadeOutDuration": 275,
+    "graphicsObjectIds": [ "ABYSSAL_DAGGER_SPECIAL_SPOTANIM" ]
   },
   {
     "description": "Varlamore - Ruins of Tapoyauik - Brazier",
