@@ -94,7 +94,8 @@ public interface HdPluginConfig extends Config
 		keyName = "detailDistance",
 		name = "Detail Distance",
 		description =
-			"The number of tiles to draw detail models in either direction from the camera, up to a maximum of 184.<br>",
+			"The number of tiles to draw animated models in either direction from the camera, up to a maximum of 184.<br>" +
+			"Reducing this can help with performance, particularly in crowded sailing areas.",
 		position = 2,
 		section = generalSettings
 	)

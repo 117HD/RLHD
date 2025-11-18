@@ -70,7 +70,6 @@ class Zone {
 	int[][] rids;
 	int[][] roofStart;
 	int[][] roofEnd;
-	boolean isWaterZone;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 

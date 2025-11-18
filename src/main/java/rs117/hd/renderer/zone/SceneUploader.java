@@ -132,7 +132,6 @@ class SceneUploader {
 		zone.rids = new int[4][roofIds.size()];
 		zone.roofStart = new int[4][roofIds.size()];
 		zone.roofEnd = new int[4][roofIds.size()];
-		zone.isWaterZone = true;
 
 		for (int z = 0; z <= 3; ++z) {
 			if (z == 0) {
@@ -155,8 +154,6 @@ class SceneUploader {
 		if (zone.hasWater && vb != null) {
 			uploadZoneWater(ctx, zone, mzx, mzz, vb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
-		} else {
-			zone.isWaterZone = false;
 		}
 	}
 
@@ -280,9 +277,6 @@ class SceneUploader {
 				// but we'll render them in the correct order without needing face sorting,
 				// so we might as well use the opaque buffer for simplicity
 				z.sizeO += 2;
-			} else {
-				// Has Opaque Tile
-				z.isWaterZone = false;
 			}
 		}
 

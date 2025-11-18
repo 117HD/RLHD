@@ -989,7 +989,7 @@ public class ZoneRenderer implements Renderer {
 		int offset = ctx.sceneContext.sceneOffset >> 3;
 		int dx = (int) plugin.cameraPosition[0] - ((zx - offset) << 10);
 		int dz = (int) plugin.cameraPosition[2] - ((zz - offset) << 10);
-		boolean useStaticUnSorted = z.isWaterZone && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+		boolean useStaticUnSorted = dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
 
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
@@ -1096,7 +1096,7 @@ public class ZoneRenderer implements Renderer {
 		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
-		// Check Detail Draw Distance
+		// Cull based on detail draw distance
 		if (ctx == root) {
 			float modelDist = distance(sceneCamera.getPosition(), new float[] { x, y, z });
 			float detailDrawDistanceTiles = config.detailDrawDistance() * LOCAL_TILE_SIZE;
@@ -1131,7 +1131,7 @@ public class ZoneRenderer implements Renderer {
 
 		if (ctx == root) {
 			// Additional Culling checks to help reduce dynamic object perf impact when off screen
-			if (!zone.inSceneFrustum && (zone.inShadowFrustum && !modelOverride.castShadows)) {
+			if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows) {
 				return;
 			}
 
