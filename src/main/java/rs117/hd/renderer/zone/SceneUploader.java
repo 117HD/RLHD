@@ -99,8 +99,10 @@ class SceneUploader {
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
 	void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
+		// Initialize the zone as containing only water, until a non-water tile is found
+		zone.onlyWater = true;
 
+		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int z = 3; z >= 0; --z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -277,6 +279,8 @@ class SceneUploader {
 				// but we'll render them in the correct order without needing face sorting,
 				// so we might as well use the opaque buffer for simplicity
 				z.sizeO += 2;
+			} else {
+				z.onlyWater = false;
 			}
 		}
 
@@ -310,6 +314,8 @@ class SceneUploader {
 			if (isFallbackWater || isOverlayWater || isUnderlayWater) {
 				z.hasWater = true;
 				z.sizeO += len;
+			} else {
+				z.onlyWater = false;
 			}
 		}
 

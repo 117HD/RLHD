@@ -989,7 +989,8 @@ public class ZoneRenderer implements Renderer {
 		int offset = ctx.sceneContext.sceneOffset >> 3;
 		int dx = (int) plugin.cameraPosition[0] - ((zx - offset) << 10);
 		int dz = (int) plugin.cameraPosition[2] - ((zz - offset) << 10);
-		boolean useStaticUnSorted = dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+		// If the zone is at sea, allow incorrect alpha ordering in the distance, for areas like north of Prifddinas
+		boolean useStaticUnsorted = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
 
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
@@ -1007,7 +1008,7 @@ public class ZoneRenderer implements Renderer {
 				level,
 				sceneCamera,
 				hideRoofIds,
-				useStaticUnSorted
+				useStaticUnsorted
 			);
 		}
 
@@ -1023,7 +1024,7 @@ public class ZoneRenderer implements Renderer {
 				level,
 				directionalCamera,
 				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds,
-				useStaticUnSorted
+				useStaticUnsorted
 			);
 		}
 

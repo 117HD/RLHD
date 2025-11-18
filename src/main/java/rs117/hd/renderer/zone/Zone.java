@@ -62,6 +62,7 @@ class Zone {
 	boolean metadataDirty; // whether the zone needs metadata updating
 	boolean invalidate; // whether the zone needs rebuilding
 	boolean hasWater; // whether the zone has any water tiles
+	boolean onlyWater; // whether the zone only contains water tiles
 	boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 
