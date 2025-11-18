@@ -3459,7 +3459,7 @@
   },
   {
     "name": "Wilderness - Dirt without snow",
-    "area": "Wilderness areas with Lava in them",
+    "area": "Wilderness areas with lava in them",
     "underlayIds": [
       57,
       148,
