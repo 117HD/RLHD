@@ -1609,7 +1609,10 @@
     "blended": false,
     "blendedAsOpposite": true,
     "minLightness": 22,
-    "maxLightness": 22
+    "maxLightness": 22,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EDGEVILLE_BANK_WINDOW_FIX_2",
@@ -1663,7 +1666,10 @@
     "blended": false,
     "blendedAsOpposite": true,
     "minLightness": 30,
-    "maxLightness": 30
+    "maxLightness": 30,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "EDGEVILLE_BANK_SURROUNDING_PATH",
