@@ -32779,21 +32779,46 @@
     "uvType": "BOX"
   },
   {
-    "description": "Abyss - Wall",
+    "description": "Abyss - Walls and tops with filler that should be black",
     "baseMaterial": "ABYSSAL",
     "areas": [ "ABYSSAL_AREAS" ],
     "objectIds": [
       "BARROWS_MOUNTAIN_CAVEWALL_TOP",
+      "RCU_ABYSSALWALL_TOP5",
+      "RCU_ABYSSALWALL_TOP_OUTER",
+      "RCU_ABYSSALWALL_TOP5_OUTER",
+      "RCU_ABYSSALWALL_TOP5_OUTER2",
+      "NEXUS_ABYSS_WALL_TOP_CORNER_2",
+      "NEXUS_ABYSS_WALL_TOP_CORNER",
+      "NEXUS_ABYSS_WALL_TOP_EDGE_2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 1.1,
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l == 2",
+        "baseMaterial": "GRAY_60",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "l < 19",
+        "baseMaterial": "ABYSSAL_2",
+        "uvType": "WORLD_XZ",
+        "uvScale": 1.1
+      }
+    ]
+  },
+  {
+    "description": "Abyss - Wall",
+    "baseMaterial": "ABYSSAL",
+    "areas": [ "ABYSSAL_AREAS" ],
+    "objectIds": [
       "RCU_OUTER_ENTRANCE_ACTIVE_INNER",
       "RCU_OUTER_ENTRANCE",
       "RCU_ABYSSAL_WALL",
       "RCU_ABYSSAL_WALL_HIGH",
       "RCU_ABYSSAL_WALL_TEST",
       "RCU_ABYSSAL_WALL_BULGE",
-      "RCU_ABYSSALWALL_TOP5",
-      "RCU_ABYSSALWALL_TOP_OUTER",
-      "RCU_ABYSSALWALL_TOP5_OUTER",
-      "RCU_ABYSSALWALL_TOP5_OUTER2",
       "NEXUS_ABYSS_WALL_01",
       "NEXUS_ABYSS_WALL_02",
       "NEXUS_ABYSS_WALL_03",
@@ -32801,15 +32826,13 @@
       "NEXUS_ABYSS_WALL_05",
       "NEXUS_ABYSS_WALL_06",
       "NEXUS_ABYSS_WALL_TOP_EDGE",
-      "NEXUS_ABYSS_WALL_TOP_CORNER",
-      "NEXUS_ABYSS_WALL_TOP_EDGE_2",
-      "NEXUS_ABYSS_WALL_TOP_CORNER_2",
       "NEXUS_ABYSS_WALL_CORNER_01",
       "ABYSSALSIRE_EXIT_LEVER",
+      "ABYSSALSIRE_EXIT_LEVER_INACTIVE",
       "RCU_ABYSS_TO_OVERSEER"
     ],
     "uvType": "BOX",
-    "uvScale": 0.9
+    "uvScale": 1
   },
   {
     "description": "Abyss - Wall",
@@ -32818,7 +32841,7 @@
       "RCU_ABYSSALWALL_TOP"
     ],
     "uvType": "WORLD_XZ",
-    "uvScale": 1.1
+    "uvScale": 1
   },
   {
     "description": "Abyss - Puddle",
