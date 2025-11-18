@@ -2701,6 +2701,90 @@
     ]
   },
   {
+    "description": "Sailing objects that shouldn't cast any shadows",
+    "castShadows": false,
+    "objectIds": [
+      "OCEAN_OUTCROP_SEAWEED01",
+      "OCEAN_OUTCROP_SEAWEED02",
+      "OCEAN_OUTCROP_SEAWEED03",
+      "SAILING_RAPIDS",
+      "SAILING_RAPIDS_STRONG",
+      "SAILING_RAPIDS_POWERFUL",
+      "SAILING_RAPIDS_DEADLY",
+      "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_FAST",
+      "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_SLOW",
+      "SAILING_HAZARD_FETID_WATERS_AMBIENT_1X1",
+      "SAILING_FETID_POOL",
+      "SAILING_FETID_POOL_2X2",
+      "SAILING_FETID_POOL_3X3A",
+      "SAILING_FETID_POOL_3X3B",
+      "SAILING_FETID_POOL_3X3C",
+      "SAILING_HAZARD_PROFANE_SPLASH",
+      "SAILING_HAZARD_PROFANE_CURSE",
+      "SAILING_HAZARD_PROFANE_ORB",
+      "SAILING_HAZARDOUS_WATER_PROFANE",
+      "HAZARDOUS_WATER_PROFANE_2X2_01",
+      "HAZARDOUS_WATER_PROFANE_2X2_02",
+      "HAZARDOUS_WATER_PROFANE_2X2_03",
+      "HAZARDOUS_WATER_PROFANE_1X1_01",
+      "HAZARDOUS_WATER_PROFANE_1X1_02",
+      "HAZARDOUS_WATER_PROFANE_1X1_03",
+      "HAZARDOUS_WATER_PROFANE_1X1_04",
+      "HAZARDOUS_WATER_PROFANE_1X1_05",
+      "HAZARDOUS_WATER_PROFANE_1X1_06",
+      "SAILING_HAZARDOUS_WATER_BOILING_3X3_01",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_02",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_04",
+      "SAILING_HAZARDOUS_WATER_BOILING_2X2_01",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_03",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_01",
+      "SAILING_HAZARDOUS_SUNBAKED_1X1_01",
+      "SAILING_HAZARDOUS_SUNBAKED_1X1_02",
+      "SAILING_HAZARDOUS_SUNBAKED_1X1_03",
+      "SAILING_HAZARDOUS_SUNBAKED_2X2_02",
+      "SAILING_HAZARDOUS_SUNBAKED_3X3_01",
+      "SAILING_HAZARDOUS_SUNBAKED_2X2_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_2X2_02",
+      "SAILING_HAZARDOUS_WATER_CURSED_3X3_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_3X3_02",
+      "SAILING_HAZARDOUS_WATER_CURSED_2X2_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_1X1_02",
+      "SAILING_HAZARDOUS_WATER_CURSED_6X3_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_1X1_01",
+      "SAILING_HAZARDOUS_WATER_BOILING_3X3_01",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_02",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_04",
+      "SAILING_HAZARDOUS_WATER_BOILING_2X2_01",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_03",
+      "SAILING_HAZARDOUS_WATER_BOILING_1X1_01",
+      "SAILING_HAZARDOUS_SUNBAKED_1X1_01",
+      "SAILING_HAZARDOUS_SUNBAKED_1X1_02",
+      "SAILING_HAZARDOUS_SUNBAKED_1X1_03",
+      "SAILING_HAZARDOUS_SUNBAKED_2X2_02",
+      "SAILING_HAZARDOUS_SUNBAKED_3X3_01",
+      "SAILING_HAZARDOUS_SUNBAKED_2X2_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_2X2_02",
+      "SAILING_HAZARDOUS_WATER_CURSED_3X3_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_3X3_02",
+      "SAILING_HAZARDOUS_WATER_CURSED_2X2_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_1X1_02",
+      "SAILING_HAZARDOUS_WATER_CURSED_6X3_01",
+      "SAILING_HAZARDOUS_WATER_CURSED_1X1_01",
+      "SAILING_HAZARDOUS_WATER_ICY_2X2_01",
+      "SAILING_HAZARDOUS_WATER_ICY_1X1_04",
+      "SAILING_HAZARDOUS_WATER_ICY_1X1_03",
+      "SAILING_HAZARDOUS_WATER_ICY_1X1_01",
+      "SAILING_HAZARDOUS_WATER_ENDLESS_1X1_02",
+      "SAILING_HAZARDOUS_WATER_ICY_1X1_02",
+      "SAILING_HAZARDOUS_WATER_ICY_2X1_01",
+      "SAILING_HAZARDOUS_WATER_ICY_2X1_02",
+      "SAILING_HAZARDOUS_WATER_ICY_2X1_03",
+      "SAILING_HAZARDOUS_WATER_ICY_2X2_02",
+      "SAILING_HAZARDOUS_WATER_ICY_2X2_03",
+      "SAILING_HAZARDOUS_WATER_ICY_3X3_01"
+    ]
+  },
+  {
     "description": "Short grass that is constructed out of triangles at perpendicular angles from each other. Shouldn't cast shadows, and should use up as the normal direction to prevent lighting artifacts.",
     "baseMaterial": "GRAY_75",
     "flatNormals": true,
@@ -26507,7 +26591,13 @@
       "LADDER_OUTSIDE_TO_UNDERGROUND"
     ],
     "uvType": "BOX",
-    "uvScale": 0.8
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
   },
   {
     "description": "Objects - Wood - Ladder - Edgeville Dungeon Ladder",
@@ -65208,6 +65298,113 @@
         "baseMaterial": "PLANT_GRUNGE_1",
         "uvType": "GEOMETRY",
         "terrainVertexSnap": true
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Tempoross  Pools",
+    "objectIds": [
+      "TEMPOROSS_REWARDPOOL_0",
+      "TEMPOROSS_REWARDPOOL_8",
+      "TEMPOROSS_REWARDPOOL_7",
+      "TEMPOROSS_REWARDPOOL_6",
+      "TEMPOROSS_REWARDPOOL_5",
+      "TEMPOROSS_REWARDPOOL_4",
+      "TEMPOROSS_REWARDPOOL_3",
+      "TEMPOROSS_REWARDPOOL_2",
+      "TEMPOROSS_REWARDPOOL_1"
+    ],
+    "npcIds": [
+      "TEMPOROSS_P2_FISHINGSPOT",
+      "TEMPOROSS_P2_FISHINGSPOT_INACTIVE",
+      "TEMPOROSS_BOSS_UNENGAGED",
+      "TEMPOROSS_BOSS_ENRAGED",
+      "TEMPOROSS_BOSS_WHIRLPOOL",
+      "TEMPOROSS_BOSS_READY"
+    ],
+    "graphicsObjectIds": [
+      "TEMPOROSS_FISHING_SPOTANIM"
+    ],
+    "depthBias": 255
+  },
+  {
+    "description": "Depth Bias Fix - Grotesque Guardians Lightning / Flames",
+    "graphicsObjectIds": [
+      "GG_DUSK_LIGHTNING_DAWN_DEATH",
+      "GG_DUSK_LIGHTNING_ENRAGED",
+      "GG_DUSK_LIGHTNING_ENRAGED_START",
+      "GG_DAWN_LIGHTNING_1",
+      "GG_DAWN_LIGHTNING_2",
+      "GG_DAWN_LIGHTNING_3",
+      "GG_DAWN_LIGHTNING_4",
+      "GG_DAWN_LIGHTNING_5",
+      "GG_DAWN_LIGHTNING_6",
+      "GG_DAWN_LIGHTNING_7",
+      "GG_DAWN_LIGHTNING_8",
+      "GG_DUSK_LIGHTNING_1",
+      "GG_DUSK_LIGHTNING_2",
+      "GG_DUSK_LIGHTNING_3",
+      "GG_DUSK_LIGHTNING_4",
+      "GG_DUSK_LIGHTNING_5",
+      "GG_DUSK_LIGHTNING_6",
+      "GG_DUSK_LIGHTNING_7",
+      "GG_DUSK_LIGHTNING_8"
+    ],
+    "depthBias": 255
+  },
+  {
+    "description": "Depth Bias Fix - Zulrah Exit Scroll",
+    "objectIds": [
+      "SNAKEBOSS_EXIT"
+    ],
+    "depthBias": 200,
+    "colorOverrides": [
+      {
+        "colors": "h == 21",
+        "baseMaterial": "NONE",
+        "depthBias": 255
+      }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - PoH Pools & Ponds",
+    "objectIds": [
+      "POH_POOL_REJUVENATION",
+      "POH_POOL_REGENERATION",
+      "LEAGUE_4_POH_POOL_REJUVENATION",
+      "XMAS20_POH_POOL_REJUVENATION",
+      "POH_POOL_RESTORATION",
+      "POH_POOL_REVITALISATION",
+      "POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_RESTORATION",
+      "XMAS20_POH_POOL_REVITALISATION",
+      "XMAS20_POH_POOL_RECOVERY",
+      "XMAS20_POH_POOL_REGENERATION",
+      "POH_CRUDE_GARDEN_CENTREPIECE3",
+      "POH_CRUDE_GARDEN_CENTREPIECE4"
+    ],
+    "depthBias": 210
+  },
+  {
+    "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
+    "objectIds": [
+      "POH_TROPHY_AMULETOFGLORY_4",
+      "POH_AMULET_DIG_DIGSITE",
+      "POH_AMULET_DIG_FOSSIL",
+      "POH_AMULET_DIG_LITHKREN",
+      "POH_AMULET_XERIC",
+      "POH_AMULET_XERIC_HONOUR",
+      "POH_AMULET_XERIC_HEART",
+      "POH_AMULET_XERIC_INFERNO",
+      "POH_AMULET_XERIC_GLADE",
+      "POH_AMULET_XERIC_LOOKOUT"
+    ],
+    "depthBias": 100,
+    "colorOverrides": [
+      {
+        "colors": "h == 49 || h == 0 && s == 7",
+        "baseMaterial": "NONE",
+        "depthBias": 110
       }
     ]
   }
