@@ -678,7 +678,8 @@
   },
   {
     "name": "LEAFY_STONEPINE01",
-    "vanillaTextureIndex": 124
+    "vanillaTextureIndex": 124,
+    "hasTransparency": true
   },
   {
     "name": "BRICK_CAM_TORUM",
@@ -1056,6 +1057,11 @@
     "name": "GRAY_25",
     "parent": "NONE",
     "brightness": 0.25
+  },
+  {
+    "name": "GRAY_05",
+    "parent": "NONE",
+    "brightness": 0.05
   },
   {
     "name": "BLACK",
