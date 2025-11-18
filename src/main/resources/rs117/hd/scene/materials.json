@@ -1009,6 +1009,11 @@
     "brightness": 1.25
   },
   {
+    "name": "GRAY_115",
+    "parent": "NONE",
+    "brightness": 1.15
+  },
+  {
     "name": "GRAY_110",
     "parent": "NONE",
     "brightness": 1.1
