@@ -1183,7 +1183,7 @@ class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
-		final int[][] tiles = ctx.scene.getTileHeights()[tile.getPlane()];
+		final int[][] tileHeights = ctx.scene.getTileHeights()[tile.getPlane()];
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 
@@ -1233,14 +1233,14 @@ class SceneUploader {
 			vy += y;
 			vz += z;
 
-			if(modelOverride.terrainVertexSnap && heightFrac <= modelOverride.terrainVertexSnapThreshold) {
+			if (modelOverride.terrainVertexSnap && heightFrac <= modelOverride.terrainVertexSnapThreshold) {
 				int tileEeX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE);
 				int tileEeY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE);
 
-				float h00 = tiles[tileEeX][tileEeY];
-				float h10 = tiles[tileEeX + 1][tileEeY];
-				float h01 = tiles[tileEeX][tileEeY + 1];
-				float h11 = tiles[tileEeX + 1][tileEeY + 1];
+				float h00 = tileHeights[tileEeX][tileEeY];
+				float h10 = tileHeights[tileEeX + 1][tileEeY];
+				float h01 = tileHeights[tileEeX][tileEeY + 1];
+				float h11 = tileHeights[tileEeX + 1][tileEeY + 1];
 
 				float hx0 = mix(h00, h10, (vx % 128.0f) / 128.0f);
 				float hx1 = mix(h01, h11, (vx % 128.0f) / 128.0f);
