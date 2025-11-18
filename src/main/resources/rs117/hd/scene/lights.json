@@ -38012,11 +38012,12 @@
   {
     "description": "Grotesque Guardians Flames",
     "graphicsObjectIds": [
-      "GG_DUSK_LIGHTNING_ENRAGED"
+      "GG_DUSK_LIGHTNING_ENRAGED",
+      "GG_DUSK_LIGHTNING_DAWN_DEATH"
     ],
-    "offset": [ 0, 10, 0 ],
-    "radius": 175,
-    "strength": 20,
+    "offset": [ 0, 20, 0 ],
+    "radius": 185,
+    "strength": 22,
     "color": [
       50,
       0,
@@ -38044,25 +38045,6 @@
       255
     ],
     "type": "STATIC"
-  },
-  {
-    "description": "Grotesque Guardians Dusk Heal Orb",
-    "objectIds": [
-      "GARGBOSS_HEALSPHERE_SMALL",
-      "GARGBOSS_HEALSPHERE_MED",
-      "GARGBOSS_HEALSPHERE_LARGE"
-    ],
-    "offset": [ 0, 10, 0 ],
-    "radius": 200,
-    "strength": 20,
-    "color": [
-      50,
-      0,
-      255
-    ],
-    "type": "STATIC",
-    "fadeInDuration": 100,
-    "fadeOutDuration": 150
   },
   {
     "description": "Paterdomus Temple Basement Monument lights",
