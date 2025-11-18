@@ -8692,8 +8692,7 @@
     "groundMaterial": "ABYSSAL_FLOOR",
     "minHue": 1,
     "maxHue": 1,
-    "uvScale": 2,
-    "uvOrientation": 50
+    "uvScale": 2.5
   },
   {
     "name": "LAW_ALTAR_FLOOR",
