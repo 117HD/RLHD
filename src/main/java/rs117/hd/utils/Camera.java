@@ -235,10 +235,15 @@ public class Camera {
 		return this;
 	}
 
-	public float[] getForwardDirection() {
+	public float[] getForwardDirection(float[] out) {
 		calculateViewMatrix();
-		return new float[] { -viewMatrix[2], -viewMatrix[6], -viewMatrix[10] };
+		out[0] = -viewMatrix[2];
+		out[1] = -viewMatrix[6];
+		out[2] = -viewMatrix[10];
+		return out;
 	}
+
+	public float[] getForwardDirection() { return getForwardDirection(new float[3]); }
 
 	private void calculateViewMatrix() {
 		if ((dirtyFlags & VIEW_MATRIX_DIRTY) != 0) {
@@ -393,5 +398,10 @@ public class Camera {
 	public boolean intersectsAABB(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		calculateFrustumPlanes();
 		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes);
+	}
+
+	public boolean intersectsSphere(float x, float y, float z, float radius) {
+		calculateFrustumPlanes();
+		return HDUtils.isSphereIntersectingFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
 	}
 }
