@@ -177,6 +177,10 @@ public class MathUtils {
 		return multiply(new float[max(a.length, b.length)], a, b);
 	}
 
+	public static float divide(float a, float b) {
+		return b == 0 ? 0 : a / b;
+	}
+
 	public static float[] divide(float[] out, float[] a, float... b) {
 		for (int i = 0; i < out.length; i++) {
 			float divisor = b[i % b.length];

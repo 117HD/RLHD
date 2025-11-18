@@ -1246,7 +1246,7 @@ class SceneUploader {
 				float hx1 = mix(h01, h11, (vx % 128.0f) / 128.0f);
 				float h = mix(hx0, hx1, (vz % 128.0f) / 128.0f);
 
-				float blend = heightFrac / modelOverride.terrainVertexSnapThreshold;
+				float blend = divide(heightFrac, modelOverride.terrainVertexSnapThreshold);
 				vy = (int) mix(h, vy, blend);
 			}
 
