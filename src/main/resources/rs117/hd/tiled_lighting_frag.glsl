@@ -1,4 +1,4 @@
-#version 330
+#include VERSION_HEADER
 
 #include TILED_LIGHTING_LAYER
 #include TILED_IMAGE_STORE

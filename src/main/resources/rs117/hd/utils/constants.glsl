@@ -6,6 +6,7 @@
 #define TAU (2*PI)
 
 #define SHORT_MAX 32767 // 2^15 - 1
+#define TILE_SIZE 128
 
 #include LEGACY_RENDERER
 #include ZONE_RENDERER

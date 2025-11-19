@@ -3,7 +3,6 @@ package rs117.hd.renderer.zone;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -12,6 +11,7 @@ import rs117.hd.utils.CommandBuffer;
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.GL_CAPS;
 import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
+import static rs117.hd.HdPlugin.checkGLErrors;
 
 class VAO {
 	// Zone vertex format
@@ -21,7 +21,8 @@ class VAO {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	static final int VERT_SIZE = 36;
+	// modelOffset int TODO: Make short
+	static final int VERT_SIZE = 40;
 
 	// Metadata format
 	// worldViewIndex int int
@@ -35,7 +36,7 @@ class VAO {
 		vbo = new VBO(size);
 	}
 
-	void initialize(int ebo, @Nullable VBO vboMetadata) {
+	void initialize(int ebo) {
 		vao = glGenVertexArrays();
 		glBindVertexArray(vao);
 
@@ -69,26 +70,14 @@ class VAO {
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
 
-		bindMetadata(vboMetadata);
+		// modelOffset
+		glEnableVertexAttribArray(6);
+		glVertexAttribIPointer(6, 1, GL_INT, VERT_SIZE, 36);
+
+		checkGLErrors();
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
-	}
-
-	void bindMetadata(@Nullable VBO vboMetadata) {
-		glBindVertexArray(vao);
-		if (vboMetadata == null) {
-			this.vboMetadata = 0;
-			glDisableVertexAttribArray(6);
-		} else {
-			this.vboMetadata = vboMetadata.bufId;
-			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
-
-			// WorldView index (not ID)
-			glEnableVertexAttribArray(6);
-			glVertexAttribDivisor(6, 1);
-			glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
-		}
 	}
 
 	void destroy() {
@@ -160,7 +149,7 @@ class VAO {
 		private final List<VAO> vaos = new ArrayList<>();
 		private final int eboAlpha;
 
-		VAO get(int size, @Nullable VBO vboMetadata) {
+		VAO get(int size) {
 			assert size <= VAO_SIZE;
 
 			while (curIdx < vaos.size()) {
@@ -171,20 +160,14 @@ class VAO {
 
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
 				if (size <= rem) {
-					if (vao.vboMetadata == (vboMetadata == null ? 0 : vboMetadata.bufId))
-						return vao;
-
-					if (!wasMapped) {
-						vao.bindMetadata(vboMetadata);
-						return vao;
-					}
+					return vao;
 				}
 
 				curIdx++;
 			}
 
 			VAO vao = new VAO(VAO_SIZE);
-			vao.initialize(eboAlpha, vboMetadata);
+			vao.initialize(eboAlpha);
 			vao.vbo.map();
 			vaos.add(vao);
 			log.debug("Allocated VAO {} request {}", vao.vao, size);

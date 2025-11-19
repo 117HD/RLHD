@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include VERSION_HEADER
 
 #include <uniforms/global.glsl>
 
@@ -52,7 +52,7 @@ void main() {
             // Vanilla tree textures rely on UVs being clamped horizontally,
             // which HD doesn't do, so we instead opt to hide these fragments
             if ((fMaterialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1)
-                uvw.x = clamp(uvw.x, 0, .984375);
+                uvw.x = clamp(uvw.x, 0.0, .984375);
 
             opacity = texture(textureArray, uvw).a;
             #if SHADOW_TRANSPARENCY

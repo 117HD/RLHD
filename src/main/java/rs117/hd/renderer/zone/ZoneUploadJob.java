@@ -4,6 +4,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -15,6 +16,7 @@ public final class ZoneUploadJob extends Job {
 	private static final ThreadLocal<ZoneUploader> THREAD_LOCAL_SCENE_UPLOADER =
 		ThreadLocal.withInitial(() -> getInjector().getInstance(ZoneUploader.class));
 
+
 	private static class ZoneUploader extends SceneUploader {
 		ZoneUploadJob job;
 
@@ -25,6 +27,7 @@ public final class ZoneUploadJob extends Job {
 		}
 	}
 
+	SSBOModelData modelData;
 	WorldViewContext viewContext;
 	ZoneSceneContext sceneContext;
 	Zone zone;
@@ -73,7 +76,7 @@ public final class ZoneUploadJob extends Job {
 				a.map();
 			}
 
-			zone.initialize(o, a, eboAlpha);
+			zone.initialize(modelData, o, a, eboAlpha);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -109,7 +112,7 @@ public final class ZoneUploadJob extends Job {
 		POOL.add(this);
 	}
 
-	public static ZoneUploadJob build(WorldViewContext viewContext, ZoneSceneContext sceneContext, Zone zone, int x, int z) {
+	public static ZoneUploadJob build(SSBOModelData modelData, WorldViewContext viewContext, ZoneSceneContext sceneContext, Zone zone, int x, int z) {
 		assert viewContext != null : "WorldViewContext cant be null";
 		assert sceneContext != null : "ZoneSceneContext cant be null";
 		assert zone != null : "Zone cant be null";
@@ -118,6 +121,7 @@ public final class ZoneUploadJob extends Job {
 		ZoneUploadJob newTask = POOL.poll();
 		if (newTask == null)
 			newTask = new ZoneUploadJob();
+		newTask.modelData = modelData;
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;
