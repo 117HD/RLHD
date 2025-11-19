@@ -1890,15 +1890,15 @@ public class ZoneRenderer implements Renderer {
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
+				Scene subScene = sub.getScene();
 				log.debug(
-					"Loading worldview: id={}, sizeX={}, sizeZ={}, getScene().getWorldViewId()={}",
+					"Loading worldview: id={}, sizeX={}, sizeZ={}",
 					sub.getId(),
 					sub.getSizeX(),
-					sub.getSizeY(),
-					sub.getScene().getWorldViewId()
+					sub.getSizeY()
 				);
-				loadSubScene(sub, sub.getScene());
-				swapSubScene(scene);
+				loadSubScene(sub, subScene);
+				swapSubScene(subScene);
 			}
 		}
 
