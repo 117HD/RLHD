@@ -25,9 +25,15 @@ public class WorldViewContext {
 	void updateWorldViewIndex(UBOWorldViews uboWorldViews) {
 		if (vboM == null)
 			return;
+
+		int worldViewIndex = uboWorldViews.getIndex(worldViewId);
 		vboM.map();
-		vboM.vb.put(uboWorldViews.getIndex(worldViewId) + 1);
+		vboM.vb.put(worldViewIndex + 1);
 		vboM.unmap();
+
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				zones[x][z].setMetadata(worldViewIndex, sceneContext, x, z);
 	}
 
 	void free() {
