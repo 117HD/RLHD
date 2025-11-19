@@ -589,6 +589,12 @@
     ]
   },
   {
+    "name": "FORTIS_ROADS",
+    "materials": [
+      "FORTIS_ROADS"
+    ]
+  },
+  {
     "name": "ABYSSAL_BILE",
     "materials": [
       "ABYSSAL_2_FLOW",
@@ -611,5 +617,11 @@
   {
     "name": "FORTIS_ROADS_MIRRORED",
     "materials": [ "FORTIS_ROADS_MIRRORED" ]
+  },
+  {
+    "name": "STONE",
+    "materials": [
+      "STONE_NORMALED"
+    ]
   }
 ]

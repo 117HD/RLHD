@@ -54,8 +54,12 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 				break;
 			}
 
+			// TODO: Stable index mapping
+//			indexMapping[id] = index;
+//			var struct = uboStructs[index++];
+			index = id % MAX_SIMULTANEOUS_WORLD_VIEWS;
 			indexMapping[id] = index;
-			var struct = uboStructs[index++];
+			var struct = uboStructs[index];
 
 			var proj = worldView.getMainWorldProjection();
 			struct.projection.set(proj instanceof FloatProjection ? ((FloatProjection) proj).getProjection() : Mat4.identity());

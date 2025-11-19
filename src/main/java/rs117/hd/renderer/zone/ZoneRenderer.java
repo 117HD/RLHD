@@ -97,6 +97,8 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class ZoneRenderer implements Renderer {
+	private static final int ALPHA_ZSORT_CLOSE = 2048;
+
 	public static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
 	public static final int MAX_WORLDVIEWS = 4096;
 
@@ -924,7 +926,7 @@ public class ZoneRenderer implements Renderer {
 		if (root.sceneContext == null)
 			return false;
 
-		if(plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
+		if (plugin.enableDetailedTimers) frameTimer.begin(Timer.VISIBILITY_CHECK);
 		int minX = zx * CHUNK_SIZE - root.sceneContext.sceneOffset;
 		int minZ = zz * CHUNK_SIZE - root.sceneContext.sceneOffset;
 		if (root.sceneContext.currentArea != null) {
@@ -933,7 +935,7 @@ public class ZoneRenderer implements Renderer {
 			boolean inArea = root.sceneContext.currentArea.intersects(
 				true, base[0] + minX, base[1] + minZ, base[0] + minX + 7, base[1] + minZ + 7);
 			if (!inArea) {
-				if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
+				if (plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
 				return false;
 			}
 		}
@@ -950,23 +952,26 @@ public class ZoneRenderer implements Renderer {
 
 		zone.inSceneFrustum = sceneCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
 		if (zone.inSceneFrustum) {
-			if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
+			if (plugin.enableDetailedTimers)
+				frameTimer.end(Timer.VISIBILITY_CHECK);
 			return zone.inShadowFrustum = true;
 		}
 
-		if (plugin.configShadowsEnabled && plugin.configShadowCasterCulling) {
+		if (plugin.configShadowsEnabled && plugin.configExpandShadowDraw) {
 			zone.inShadowFrustum = directionalCamera.intersectsAABB(minX, minY, minZ, maxX, maxY, maxZ);
-			if(zone.inShadowFrustum) {
+			if (zone.inShadowFrustum) {
 				int centerX = minX + (maxX - minX) / 2;
 				int centerY = minY + (maxY - minY) / 2;
 				int centerZ = minZ + (maxZ - minZ) / 2;
 				zone.inShadowFrustum = directionalShadowCasterVolume.intersectsPoint(centerX, centerY, centerZ);
 			}
-			if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
+			if (plugin.enableDetailedTimers)
+				frameTimer.end(Timer.VISIBILITY_CHECK);
 			return zone.inShadowFrustum;
 		}
 
-		if(plugin.enableDetailedTimers) frameTimer.end(Timer.VISIBILITY_CHECK);
+		if (plugin.enableDetailedTimers)
+			frameTimer.end(Timer.VISIBILITY_CHECK);
 		if (plugin.orthographicProjection)
 			return zone.inSceneFrustum = true;
 
@@ -1019,6 +1024,11 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int dx = (int) plugin.cameraPosition[0] - ((zx - offset) << 10);
+		int dz = (int) plugin.cameraPosition[2] - ((zz - offset) << 10);
+		// If the zone is at sea, allow incorrect alpha ordering in the distance, for areas like north of Prifddinas
+		boolean useStaticUnsorted = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
 			z.multizoneLocs(ctx.sceneContext, zx - offset, zz - offset, sceneCamera, ctx.zones);
@@ -1034,7 +1044,8 @@ public class ZoneRenderer implements Renderer {
 				maxLevel,
 				level,
 				sceneCamera,
-				hideRoofIds
+				hideRoofIds,
+				useStaticUnsorted
 			);
 		}
 
@@ -1049,7 +1060,8 @@ public class ZoneRenderer implements Renderer {
 				drawRoofShadows ? 3 : maxLevel,
 				level,
 				directionalCamera,
-				drawRoofShadows ? Collections.emptySet() : hideRoofIds
+				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds,
+				useStaticUnsorted
 			);
 		}
 
@@ -1122,6 +1134,15 @@ public class ZoneRenderer implements Renderer {
 		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
+		// Cull based on detail draw distance
+		if (ctx == root) {
+			float modelDist = distance(sceneCamera.getPosition(), new float[] { x, y, z });
+			float detailDrawDistanceTiles = config.detailDrawDistance() * LOCAL_TILE_SIZE;
+			if (modelDist > detailDrawDistanceTiles) {
+				return;
+			}
+		}
+
 		int[] worldPos = ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane());
 		// Hide everything outside the current area if area hiding is enabled
 		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
@@ -1146,8 +1167,24 @@ public class ZoneRenderer implements Renderer {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
-		if(ctx == root && !zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows)
-			return;
+		if (ctx == root) {
+			// Additional Culling checks to help reduce dynamic object perf impact when off screen
+			if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows) {
+				return;
+			}
+
+			if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius())) {
+				return;
+			}
+
+			if (!zone.inSceneFrustum &&
+				zone.inShadowFrustum &&
+				modelOverride.castShadows &&
+				!directionalShadowCasterVolume.intersectsPoint(x, y, z)
+			) {
+				return;
+			}
+		}
 
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
@@ -1902,7 +1939,7 @@ public class ZoneRenderer implements Renderer {
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
 				log.debug("WorldView loading: {}", sub.getId());
-				loadSubScene(sub, sub.getScene());
+				// Relies on swapSub being able to load the scene if it hasn't already been loaded
 				swapSub(sub.getScene());
 			}
 		}
@@ -1913,6 +1950,7 @@ public class ZoneRenderer implements Renderer {
 	private void swapSub(Scene scene) {
 		// TODO: Fix async sub scene loading when hopping worlds
 		updateWorldViews();
+		// TODO: Currently the first swapScene relies on swapSub loading the sub scene
 		loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
 
 		WorldViewContext ctx = context(scene);

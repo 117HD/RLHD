@@ -446,6 +446,11 @@ public final class Camera {
 		return HDUtils.isAABBIntersectingFrustum(minX, minY, minZ, maxX, maxY, maxZ, frustumPlanes);
 	}
 
+	public boolean intersectsSphere(int x, int y, int z, int radius) {
+		calculateFrustumPlanes();
+		return HDUtils.isSphereIntersectingFrustum(x, y, z, radius, frustumPlanes, frustumPlanes.length);
+	}
+
 	public static class CameraStruct extends UniformBuffer.StructProperty {
 		public UniformBuffer.Property viewProj = addProperty(PropertyType.Mat4, "viewProj");
 		public UniformBuffer.Property invViewProj = addProperty(PropertyType.Mat4, "invViewProj");

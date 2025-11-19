@@ -37,7 +37,7 @@ public class ShadowCasterVolume {
 
 	public ShadowCasterVolume(Camera shadowCamera) {
 		this.shadowCamera = shadowCamera;
-		for(int t = 0; t < VOLUME_TRIANGLE_COUNT; t++)
+		for (int t = 0; t < VOLUME_TRIANGLE_COUNT; t++)
 			volumeTriangles[t] = new VolumeTriangle();
 	}
 
@@ -50,7 +50,7 @@ public class ShadowCasterVolume {
 		lightDir[1] = -lightDir[1];
 		lightDir[2] = -lightDir[2];
 
-		for(int t = 0; t < VOLUME_TRIANGLE_COUNT; t++) {
+		for (int t = 0; t < VOLUME_TRIANGLE_COUNT; t++) {
 			final float[] v0 = volumeCorners[VOLUME_TRIANGLE_INDICES[t * 3]];
 			final float[] v1 = volumeCorners[VOLUME_TRIANGLE_INDICES[t * 3 + 1]];
 			final float[] v2 = volumeCorners[VOLUME_TRIANGLE_INDICES[t * 3 + 2]];
@@ -61,7 +61,7 @@ public class ShadowCasterVolume {
 
 	public boolean intersectsPoint(int x, int y, int z) {
 		for (int t = 0; t < VOLUME_TRIANGLE_COUNT; t++) {
-			if(volumeTriangles[t].side(lightDir, x, y, z))
+			if (volumeTriangles[t].side(lightDir, x, y, z))
 				return true;
 		}
 
@@ -70,15 +70,15 @@ public class ShadowCasterVolume {
 
 	public boolean intersectsAABB(int minX, int minY, int minZ, int maxX, int maxY, int maxZ) {
 		for (int t = 0; t < VOLUME_TRIANGLE_COUNT; t++) {
-			if(volumeTriangles[t].side(lightDir, minX, minY, minZ)) return true;
-			if(volumeTriangles[t].side(lightDir, maxX, minY, minZ)) return true;
-			if(volumeTriangles[t].side(lightDir, maxX, minY, maxZ)) return true;
-			if(volumeTriangles[t].side(lightDir, minX, minY, maxZ)) return true;
+			if (volumeTriangles[t].side(lightDir, minX, minY, minZ)) return true;
+			if (volumeTriangles[t].side(lightDir, maxX, minY, minZ)) return true;
+			if (volumeTriangles[t].side(lightDir, maxX, minY, maxZ)) return true;
+			if (volumeTriangles[t].side(lightDir, minX, minY, maxZ)) return true;
 
-			if(volumeTriangles[t].side(lightDir, minX, maxY, minZ)) return true;
-			if(volumeTriangles[t].side(lightDir, maxX, maxY, minZ)) return true;
-			if(volumeTriangles[t].side(lightDir, maxX, maxY, maxZ)) return true;
-			if(volumeTriangles[t].side(lightDir, minX, maxY, maxZ)) return true;
+			if (volumeTriangles[t].side(lightDir, minX, maxY, minZ)) return true;
+			if (volumeTriangles[t].side(lightDir, maxX, maxY, minZ)) return true;
+			if (volumeTriangles[t].side(lightDir, maxX, maxY, maxZ)) return true;
+			if (volumeTriangles[t].side(lightDir, minX, maxY, maxZ)) return true;
 		}
 
 		return false;

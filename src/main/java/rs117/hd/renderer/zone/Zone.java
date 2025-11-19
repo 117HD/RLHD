@@ -62,6 +62,7 @@ class Zone {
 	boolean metadataDirty; // whether the zone needs metadata updating
 	boolean invalidate; // whether the zone needs rebuilding
 	boolean hasWater; // whether the zone has any water tiles
+	boolean onlyWater; // whether the zone only contains water tiles
 	boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 
@@ -569,7 +570,8 @@ class Zone {
 		int maxLevel,
 		int level,
 		Camera camera,
-		Set<Integer> hiddenRoofIds
+		Set<Integer> hiddenRoofIds,
+		boolean useStaticUnsorted
 	) {
 		if (alphaModels.isEmpty())
 			return;
@@ -599,6 +601,12 @@ class Zone {
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
 				lastDrawMode = TEMP;
+				pushRange(m.startpos, m.endpos);
+				continue;
+			}
+
+			if (useStaticUnsorted) {
+				lastDrawMode = STATIC_UNSORTED;
 				pushRange(m.startpos, m.endpos);
 				continue;
 			}
