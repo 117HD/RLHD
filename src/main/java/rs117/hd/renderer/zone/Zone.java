@@ -213,7 +213,7 @@ class Zone {
 		int baseZ = (mz - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
 
 		vboM.map();
-		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
+		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : -1);
 		vboM.vb.put(baseX);
 		vboM.vb.put(baseZ);
 		vboM.unmap();
