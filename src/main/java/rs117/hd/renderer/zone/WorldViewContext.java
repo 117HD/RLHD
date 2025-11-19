@@ -5,7 +5,7 @@ import net.runelite.api.*;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 
-import static org.lwjgl.opengl.GL15C.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL33C.*;
 
 public class WorldViewContext {
 	final int worldViewId;
