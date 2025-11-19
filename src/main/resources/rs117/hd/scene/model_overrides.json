@@ -32793,7 +32793,6 @@
       "NEXUS_ABYSS_WALL_TOP_EDGE_2"
     ],
     "uvType": "BOX",
-    "uvScale": 1.1,
     "colorOverrides": [
       {
         "colors": "s == 0 && l == 2",
@@ -32803,8 +32802,7 @@
       {
         "colors": "l < 19",
         "baseMaterial": "ABYSSAL_2",
-        "uvType": "WORLD_XZ",
-        "uvScale": 1.1
+        "uvType": "WORLD_XZ"
       }
     ]
   },
@@ -32831,8 +32829,7 @@
       "ABYSSALSIRE_EXIT_LEVER_INACTIVE",
       "RCU_ABYSS_TO_OVERSEER"
     ],
-    "uvType": "BOX",
-    "uvScale": 1
+    "uvType": "BOX"
   },
   {
     "description": "Abyss - Wall",
@@ -32840,8 +32837,7 @@
     "objectIds": [
       "RCU_ABYSSALWALL_TOP"
     ],
-    "uvType": "WORLD_XZ",
-    "uvScale": 1
+    "uvType": "WORLD_XZ"
   },
   {
     "description": "Abyss - Puddle",
