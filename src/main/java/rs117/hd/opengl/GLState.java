@@ -43,6 +43,11 @@ public abstract class GLState<T> {
 		}
 
 		protected abstract void applyValue(K value);
+
+		@Override
+		public String toString() {
+			return String.format("%s: %s", getClass().getSimpleName(), appliedValue);
+		}
 	}
 
 	public abstract static class PrimitiveArrayState<T, K> extends GLState<T> {
@@ -68,6 +73,11 @@ public abstract class GLState<T> {
 		}
 
 		protected abstract void applyValues(K[] values);
+
+		@Override
+		public String toString() {
+			return String.format("%s: %s", getClass().getSimpleName(), Arrays.toString(appliedValue));
+		}
 	}
 
 	public abstract static class GLFlagSetState<T> extends GLState<T> {

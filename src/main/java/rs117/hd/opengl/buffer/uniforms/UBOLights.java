@@ -1,10 +1,11 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer.uniforms;
 
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
-public class UBOLights extends UniformBuffer<GLBuffer> {
+public class UBOLights extends UniformStructuredBuffer<GLBuffer> {
 
 	public static final int MAX_LIGHTS = 1000; // Struct is 64 Bytes, UBO Max size is 64 KB
 	private final LightStruct[] lights;
@@ -33,7 +34,7 @@ public class UBOLights extends UniformBuffer<GLBuffer> {
 		}
 	}
 
-	public static class LightStruct extends UniformBuffer.StructProperty {
+	public static class LightStruct extends UniformStructuredBuffer.StructProperty {
 		public Property position = addProperty(PropertyType.FVec4, "position");
 		public Property color = addProperty(PropertyType.FVec4, "color");
 	}

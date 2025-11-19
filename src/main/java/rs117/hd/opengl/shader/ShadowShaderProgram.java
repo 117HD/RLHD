@@ -4,11 +4,13 @@ import java.io.IOException;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.opengl.GLBinding.BINDING_SSAO_MODEL_DATA;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_GAME;
 
 public class ShadowShaderProgram extends ShaderProgram {
 	private ShadowMode mode;
-	private final UniformTexture uniShadowMap = addUniformTexture("textureArray");
+	private final UniformTexture uniTextureArray = addUniformTexture("textureArray");
+	private final UniformTexture uniModelDataSampler = addUniformTexture("ModelDataSampler");
 
 	public ShadowShaderProgram() {
 		super(t -> t
@@ -18,7 +20,8 @@ public class ShadowShaderProgram extends ShaderProgram {
 
 	@Override
 	protected void initialize() {
-		uniShadowMap.set(TEXTURE_UNIT_GAME);
+		uniTextureArray.set(BINDING_TEX_GAME);
+		uniModelDataSampler.set(BINDING_SSAO_MODEL_DATA);
 	}
 
 	@Override
