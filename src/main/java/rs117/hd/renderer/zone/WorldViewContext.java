@@ -10,6 +10,7 @@ import static org.lwjgl.opengl.GL15C.GL_STATIC_DRAW;
 public class WorldViewContext {
 	final int worldViewId;
 	final int sizeX, sizeZ;
+	@Nullable
 	WorldViewStruct uboWorldViewStruct;
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
@@ -22,7 +23,7 @@ public class WorldViewContext {
 		this.sizeX = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeX() >> 3;
 		this.sizeZ = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeY() >> 3;
 		if (worldView != null)
-			uboWorldViewStruct = uboWorldViews.obtain(worldView);
+			uboWorldViewStruct = uboWorldViews.acquire(worldView);
 		zones = new Zone[sizeX][sizeZ];
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)

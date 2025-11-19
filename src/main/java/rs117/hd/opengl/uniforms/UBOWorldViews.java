@@ -68,7 +68,7 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		}
 	}
 
-	public synchronized WorldViewStruct obtain(WorldView worldView) {
+	public synchronized WorldViewStruct acquire(WorldView worldView) {
 		if (freeIndices.isEmpty()) {
 			log.warn("Too many world views at once: {}", MAX_SIMULTANEOUS_WORLD_VIEWS);
 			return null;
