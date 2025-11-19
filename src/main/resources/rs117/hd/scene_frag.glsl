@@ -40,7 +40,7 @@ uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
 
-flat in ivec3 vWorldViewId;
+flat in int vWorldViewId;
 flat in ivec3 vAlphaBiasHsl;
 flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
@@ -182,7 +182,7 @@ void main() {
         vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
 
         // Apply entity tint to HSL
-        ivec4 tint = getWorldViewTint(vWorldViewId[0]);
+        ivec4 tint = getWorldViewTint(vWorldViewId);
         if (tint.w > 0) {
             hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
             hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
