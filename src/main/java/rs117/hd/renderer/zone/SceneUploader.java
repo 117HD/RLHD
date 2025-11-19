@@ -1596,11 +1596,6 @@ class SceneUploader {
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
 
-		ModelOverride cachedFaceOverride = null;
-		UvType cachedUvType = null;
-		boolean cachedIsTextured = false;
-		int cachedMaterialData = 0;
-
 		int len = 0;
 		for (int face = 0; face < triangleCount; ++face) {
 			int transparency = transparencies != null ? transparencies[face] & 0xFF : 0;
@@ -1691,16 +1686,7 @@ class SceneUploader {
 					uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 			}
 
-			final int materialData;
-			if (cachedFaceOverride == faceOverride && cachedUvType == uvType && cachedIsTextured == (textureId != -1)) {
-				materialData = cachedMaterialData;
-			} else {
-				cachedFaceOverride = faceOverride;
-				cachedUvType = uvType;
-				cachedIsTextured = textureId != -1;
-				materialData = material.packMaterialData(faceOverride, uvType, false, false);
-				cachedMaterialData = materialData;
-			}
+			int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
 
 			if (uvType == UvType.VANILLA) {
 				modelUvs[0] = modelLocalX[texA] - vx1;
