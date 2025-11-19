@@ -181,14 +181,12 @@ void main() {
         vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
         vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
 
-        bool hasTint = false;
         // Apply entity tint to HSL
         ivec4 tint = getWorldViewTint(vWorldViewId[0]);
-        if(tint.x != -1 && tint.y != -1 && tint.z != -1) {
-            hsl1.xyz += ((tint.xyz - hsl1.xyz) * tint.w) / 128;
-            hsl2.xyz += ((tint.xyz - hsl2.xyz) * tint.w) / 128;
-            hsl3.xyz += ((tint.xyz - hsl3.xyz) * tint.w) / 128;
-            hasTint = true;
+        if (tint.w > 0) {
+            hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
+            hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
+            hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;
         }
 
         // get vertex colors
@@ -202,7 +200,7 @@ void main() {
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
 
         #if DISPLAY_BASE_COLOR
-        {
+        if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
             outputColor = baseColor1 * IN.texBlend.x + baseColor2 * IN.texBlend.y + baseColor3 * IN.texBlend.z;
             outputColor.rgb = linearToSrgb(outputColor.rgb);
             FragColor = outputColor;
@@ -419,7 +417,6 @@ void main() {
             getMaterialIsUnlit(material3)
         ));
 
-
         #if VANILLA_COLOR_BANDING
             outputColor.rgb = linearToSrgb(outputColor.rgb);
             outputColor.rgb = srgbToHsv(outputColor.rgb);
@@ -428,7 +425,7 @@ void main() {
             outputColor.rgb = srgbToLinear(outputColor.rgb);
         #endif
 
-        if(hasTint) {
+        if (tint.w > 0) {
             outputColor.rgb *= 1.0 + skyLightOut;
         } else {
             outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
