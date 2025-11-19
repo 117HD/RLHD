@@ -204,16 +204,16 @@ class Zone {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void setMetadata(int worldViewIdx, ZoneSceneContext ctx, int mx, int mz) {
+	void setMetadata(WorldViewContext viewContext, int mx, int mz) {
 		if (vboM == null || !metadataDirty)
 			return;
 		metadataDirty = false;
 
-		int baseX = (mx - (ctx.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (ctx.sceneOffset >> 3)) << 10;
+		int baseX = (mx - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
 
 		vboM.map();
-		vboM.vb.put(worldViewIdx + 1);
+		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
 		vboM.vb.put(baseX);
 		vboM.vb.put(baseZ);
 		vboM.unmap();
