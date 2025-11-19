@@ -1127,13 +1127,14 @@ public class ZoneRenderer implements Renderer {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
+		int radius = max(max(m.getModelHeight(), m.getRadius()), m.getDiameter());
 		if (ctx == root) {
 			// Additional Culling checks to help reduce dynamic object perf impact when off screen
 			if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows) {
 				return;
 			}
 
-			if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius())) {
+			if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, radius)) {
 				return;
 			}
 
@@ -1145,7 +1146,7 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 		} else {
-			if (!sceneCamera.intersectsSphere(position[0], position[1], position[2], m.getRadius()) &&
+			if (!sceneCamera.intersectsSphere(position[0], position[1], position[2], radius) &&
 				!directionalShadowCasterVolume.intersectsPoint((int)position[0], (int)position[1], (int)position[2])) {
 				return;
 			}
