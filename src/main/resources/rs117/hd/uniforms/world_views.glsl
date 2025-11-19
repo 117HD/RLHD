@@ -24,7 +24,7 @@
 
     ivec4 getWorldViewTint(int worldViewIndex) {
         if (worldViewIndex <= 0)
-            return ivec4(0);
+            return ivec4(-1);
         return getWorldView(worldViewIndex - 1).tint;
     }
 #else

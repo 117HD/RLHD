@@ -40,6 +40,7 @@ uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
 
+flat in ivec3 vWorldViewId;
 flat in ivec3 vAlphaBiasHsl;
 flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
@@ -180,14 +181,15 @@ void main() {
         vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
         vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
 
-/*
-        { TODO: FIX ME :)
-            // Apply entity tint to HSL
-            ivec4 tint = getWorldViewTint(worldViewIndex);
-            hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
-            hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
-            hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;
-        }*/
+        bool hasTint = false;
+        // Apply entity tint to HSL
+        ivec4 tint = getWorldViewTint(vWorldViewId[0]);
+        if(tint.x != -1 && tint.y != -1 && tint.z != -1) {
+            hsl1.xyz += ((tint.xyz - hsl1.xyz) * tint.w) / 128;
+            hsl2.xyz += ((tint.xyz - hsl2.xyz) * tint.w) / 128;
+            hsl3.xyz += ((tint.xyz - hsl3.xyz) * tint.w) / 128;
+            hasTint = true;
+        }
 
         // get vertex colors
         vec4 baseColor1 = vec4(convertHsl(hsl1), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
@@ -417,6 +419,7 @@ void main() {
             getMaterialIsUnlit(material3)
         ));
 
+
         #if VANILLA_COLOR_BANDING
             outputColor.rgb = linearToSrgb(outputColor.rgb);
             outputColor.rgb = srgbToHsv(outputColor.rgb);
@@ -425,7 +428,11 @@ void main() {
             outputColor.rgb = srgbToLinear(outputColor.rgb);
         #endif
 
-        outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+        if(hasTint) {
+            outputColor.rgb *= 1.0 + skyLightOut;
+        } else {
+            outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+        }
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
