@@ -1,11 +1,10 @@
 package rs117.hd.opengl.uniforms;
 
-import java.util.Arrays;
-import javax.annotation.Nullable;
-import javax.inject.Inject;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -17,58 +16,24 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 	// Source: https://discord.com/channels/886733267284398130/1419633364817674351/1429129853592146041
 	public static final int MAX_SIMULTANEOUS_WORLD_VIEWS = 128;
 
-	public static class WorldViewStruct extends StructProperty {
+	@RequiredArgsConstructor
+	public class WorldViewStruct extends StructProperty {
+		public final int worldViewIdx;
+
 		public final Property projection = addProperty(PropertyType.Mat4, "projection");
 		public final Property tint = addProperty(PropertyType.IVec4, "tint");
-	}
 
-	@Inject
-	private Client client;
+		public WorldView worldView;
 
-	private final WorldViewStruct[] uboStructs = addStructs(new WorldViewStruct[MAX_SIMULTANEOUS_WORLD_VIEWS], WorldViewStruct::new);
-	private final int[] indexMapping;
-
-	public UBOWorldViews() {
-		super(GL_DYNAMIC_DRAW);
-		indexMapping = new int[ZoneRenderer.MAX_WORLDVIEWS];
-	}
-
-	public void update() {
-		Arrays.fill(indexMapping, -1);
-
-		int index = 0;
-
-		// Update index mapping, and projections & tints for all current worldviews
-		for (WorldEntity entity : client.getTopLevelWorldView().worldEntities()) {
-			WorldView worldView = entity.getWorldView();
-			int id = worldView.getId();
-			if (id == -1)
-				continue;
-			if (id < 0 || id >= indexMapping.length) {
-				log.warn("Unexpected worldview ID: {}", id);
-				continue;
-			}
-
-			if (index == uboStructs.length) {
-				log.warn("Too many world views at once: {}", MAX_SIMULTANEOUS_WORLD_VIEWS);
-				break;
-			}
-
-			// TODO: Stable index mapping
-//			indexMapping[id] = index;
-//			var struct = uboStructs[index++];
-			index = id % MAX_SIMULTANEOUS_WORLD_VIEWS;
-			indexMapping[id] = index;
-			var struct = uboStructs[index];
-
+		public void update() {
 			var proj = worldView.getMainWorldProjection();
-			struct.projection.set(proj instanceof FloatProjection ? ((FloatProjection) proj).getProjection() : Mat4.identity());
+			projection.set(proj instanceof FloatProjection ? ((FloatProjection) proj).getProjection() : Mat4.identity());
 
 			var scene = worldView.getScene();
 			if (scene == null) {
-				struct.tint.set(0, 0, 0, 0);
+				tint.set(0, 0, 0, 0);
 			} else {
-				struct.tint.set(
+				tint.set(
 					scene.getOverrideHue(),
 					scene.getOverrideSaturation(),
 					scene.getOverrideLuminance(),
@@ -77,24 +42,42 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 			}
 		}
 
-		upload();
+		public synchronized void free() {
+			activeIndices.remove((Integer) worldViewIdx);
+			freeIndices.add(worldViewIdx);
+			worldView = null;
+		}
 	}
 
-	public int getIndex(@Nullable Scene scene) {
-		if (scene == null)
-			return -1;
-		return getIndex(scene.getWorldViewId());
+	private final WorldViewStruct[] uboStructs = new WorldViewStruct[MAX_SIMULTANEOUS_WORLD_VIEWS];
+	private final ArrayList<Integer> activeIndices = new ArrayList<>();
+	private final ArrayDeque<Integer> freeIndices = new ArrayDeque<>();
+
+	public UBOWorldViews() {
+		super(GL_DYNAMIC_DRAW);
+		for (int i = 0; i < MAX_SIMULTANEOUS_WORLD_VIEWS; i++) {
+			uboStructs[i] = addStruct(new WorldViewStruct(i));
+			freeIndices.add(i);
+		}
 	}
 
-	public int getIndex(@Nullable WorldView worldView) {
-		if (worldView == null)
-			return -1;
-		return getIndex(worldView.getId());
+	@Override
+	protected synchronized void preUpload() {
+		for (Integer activeIndex : activeIndices) {
+			uboStructs[activeIndex].update();
+		}
 	}
 
-	public int getIndex(int worldViewId) {
-		if (worldViewId < 0 || worldViewId >= indexMapping.length)
-			return -1;
-		return indexMapping[worldViewId];
+	public synchronized WorldViewStruct acquire(WorldView worldView) {
+		if (freeIndices.isEmpty()) {
+			log.warn("Too many world views at once: {}", MAX_SIMULTANEOUS_WORLD_VIEWS);
+			return null;
+		}
+
+		WorldViewStruct struct = uboStructs[freeIndices.poll()];
+		struct.worldView = worldView;
+		struct.update();
+		activeIndices.add(struct.worldViewIdx);
+		return struct;
 	}
 }
