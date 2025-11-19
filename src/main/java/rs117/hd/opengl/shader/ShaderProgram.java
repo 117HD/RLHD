@@ -7,7 +7,8 @@ import java.util.function.Consumer;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.opengl.uniforms.UniformBuffer;
+import rs117.hd.opengl.GLBinding;
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
@@ -15,7 +16,7 @@ import static org.lwjgl.opengl.GL33C.*;
 public class ShaderProgram {
 	@RequiredArgsConstructor
 	private static class UniformBufferBlockPair {
-		public final UniformBuffer<?> buffer;
+		public final UniformStructuredBuffer<?> buffer;
 		public final int uboProgramIndex;
 	}
 
@@ -82,9 +83,9 @@ public class ShaderProgram {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends UniformBuffer<?>> T getUniformBufferBlock(int UniformBlockIndex) {
+	public <T extends UniformStructuredBuffer<?>> T getUniformBufferBlock(int UniformBlockIndex) {
 		for (UniformBufferBlockPair pair : uniformBlockMappings)
-			if (pair.buffer.getBindingIndex() == UniformBlockIndex)
+			if (pair.buffer.getBinding().getBufferBindingIndex() == UniformBlockIndex)
 				return (T) pair.buffer;
 		return null;
 	}
@@ -94,7 +95,7 @@ public class ShaderProgram {
 		glUseProgram(program);
 
 		for (UniformBufferBlockPair pair : uniformBlockMappings)
-			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBindingIndex());
+			glUniformBlockBinding(program, pair.uboProgramIndex, pair.buffer.getBinding().getBufferBindingIndex());
 	}
 
 	public void destroy() {
@@ -141,10 +142,9 @@ public class ShaderProgram {
 	}
 
 	public static class UniformTexture extends UniformProperty {
-		public void set(int textureUnit) {
-			assert textureUnit >= GL_TEXTURE0 : "Did you accidentally pass in an image unit?";
+		public void set(GLBinding binding) {
 			assert program.isActive();
-			glUniform1i(uniformIndex, textureUnit - GL_TEXTURE0);
+			glUniform1i(uniformIndex, binding.getTextureUnit() - GL_TEXTURE0);
 		}
 	}
 
@@ -153,10 +153,9 @@ public class ShaderProgram {
 	}
 
 	public static class UniformImage extends UniformProperty {
-		public void set(int imageUnit) {
-			assert imageUnit < GL_TEXTURE0 : "Did you accidentally pass in a texture unit?";
+		public void set(GLBinding binding) {
 			assert program.isActive();
-			glUniform1i(uniformIndex, imageUnit);
+			glUniform1i(uniformIndex, binding.getImageUnit());
 		}
 	}
 

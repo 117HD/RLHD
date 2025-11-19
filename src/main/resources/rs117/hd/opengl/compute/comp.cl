@@ -41,6 +41,7 @@ void sortModel(
   __global struct UVData *uvout,
   __global float4 *normalout,
   __constant struct UBOCompute *uni,
+  __constant struct UBODisplacement *uniDis,
   read_only image3d_t tileHeightMap
 ) {
   size_t groupId = get_group_id(0);
@@ -63,15 +64,15 @@ void sortModel(
   #if WIND_DISPLACEMENT
   {
       float2 modelPos = (float2)(minfo.x, minfo.z);
-      float modelNoise = noise((modelPos + (float2)(uni->windOffset, uni->windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
+      float modelNoise = noise((modelPos + (float2)(uniDis->windOffset, uniDis->windOffset)) * WIND_DISPLACEMENT_NOISE_RESOLUTION);
       float angle = modelNoise * (PI / 2.0f);
       float c = cos(angle);
       float s = sin(angle);
       float y = (float)(minfo.y >> 16);
       float height = (float)(minfo.y & 0xffff);
 
-      windSample.direction = normalize((float3)(uni->windDirectionX * c + uni->windDirectionZ * s, 0.0f, -uni->windDirectionX * s + uni->windDirectionZ * c));
-      windSample.heightBasedStrength = clamp((fabs(y) + height) / uni->windCeiling, 0.0f, 1.0f) * uni->windStrength;
+      windSample.direction = normalize((float3)(uniDis->windDirectionX * c + uniDis->windDirectionZ * s, 0.0f, -uniDis->windDirectionX * s + uniDis->windDirectionZ * c));
+      windSample.heightBasedStrength = clamp((fabs(y) + height) / uniDis->windCeiling, 0.0f, 1.0f) * uniDis->windStrength;
       windSample.displacement = windSample.direction * windSample.heightBasedStrength * modelNoise;
   }
   #endif
@@ -109,6 +110,6 @@ void sortModel(
   barrier(CLK_LOCAL_MEM_FENCE);
 
   for (int i = 0; i < FACES_PER_THREAD; i++) {
-    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap, windSample);
+    sort_and_insert(shared, uv, normal, vout, uvout, normalout, uni, uniDis, localId + i, minfo, prioAdj[i], dis[i], v1[i], v2[i], v3[i], tileHeightMap, windSample);
   }
 }

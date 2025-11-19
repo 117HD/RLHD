@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class Camera {
+public final class Camera {
 	private static final int PROJECTION_MATRIX_DIRTY = 1;
 	private static final int VIEW_MATRIX_DIRTY = 1 << 1;
 	private static final int VIEW_PROJ_MATRIX_DIRTY = 1 << 2;
@@ -21,6 +21,7 @@ public class Camera {
 	private static final int VIEW_CHANGED = VIEW_MATRIX_DIRTY | VIEW_PROJ_CHANGED;
 
 	private float[] viewMatrix;
+	private float[] invViewMatrix;
 	private float[] projectionMatrix;
 	private float[] viewProjMatrix;
 	private float[] invViewProjMatrix;
@@ -260,6 +261,12 @@ public class Camera {
 					)
 				);
 			}
+
+			try {
+				invViewMatrix = Mat4.inverse(viewMatrix);
+			} catch (Exception ex) {
+				log.warn("Encountered an exception whilst solving inverse of camera view: ", ex);
+			}
 			dirtyFlags &= ~VIEW_MATRIX_DIRTY;
 		}
 	}
@@ -282,6 +289,16 @@ public class Camera {
 
 	public float[] transformPoint(float[] point) {
 		return transformPoint(new float[3], point);
+	}
+
+	public float[] inverseTransformPoint(float[] out, float[] point) {
+		calculateViewMatrix();
+		Mat4.transformVecAffine(out, invViewMatrix, point);
+		return out;
+	}
+
+	public float[] inverseTransformPoint(float[] point) {
+		return inverseTransformPoint(new float[3], point);
 	}
 
 	private void calculateProjectionMatrix() {

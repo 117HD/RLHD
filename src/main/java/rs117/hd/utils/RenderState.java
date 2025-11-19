@@ -38,6 +38,14 @@ public final class RenderState {
 			state.reset();
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder str = new StringBuilder();
+		for (GLState<RenderState> state : states)
+			str.append(state.toString()).append("\n");
+		return str.toString();
+	}
+
 	private <T extends GLState<RenderState>> T addState(Supplier<T> supplier) {
 		T state = supplier.get();
 		state.owner = this;

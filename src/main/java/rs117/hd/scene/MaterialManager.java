@@ -46,7 +46,7 @@ import net.runelite.client.callback.ClientThread;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.opengl.uniforms.UBOMaterials;
+import rs117.hd.opengl.buffer.uniforms.UBOMaterials;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.FileWatcher;
@@ -55,7 +55,7 @@ import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_GAME;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -377,7 +377,7 @@ public class MaterialManager {
 
 		int textureSize = config.textureResolution().getSize();
 		textureResolution = ivec(textureSize, textureSize);
-		glActiveTexture(TEXTURE_UNIT_GAME);
+		BINDING_TEX_GAME.setActive();
 		if (texMaterialTextureArray == 0 || previousLayerCount != textureLayers.size()) {
 			if (texMaterialTextureArray != 0)
 				glDeleteTextures(texMaterialTextureArray);
@@ -476,7 +476,7 @@ public class MaterialManager {
 
 			try {
 				if (!uploadedAnything) {
-					glActiveTexture(TEXTURE_UNIT_GAME);
+					BINDING_TEX_GAME.setActive();
 					glBindTexture(GL_TEXTURE_2D_ARRAY, texMaterialTextureArray);
 					uploadedAnything = true;
 				}

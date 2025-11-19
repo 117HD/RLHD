@@ -49,12 +49,13 @@ import rs117.hd.HdPluginConfig;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.ShadowMode;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
+import rs117.hd.opengl.buffer.uniforms.UBOLights;
+import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
-import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
@@ -89,6 +90,9 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
 import static rs117.hd.HdPlugin.checkGLErrors;
+import static rs117.hd.opengl.GLBinding.BINDING_SSAO_MODEL_DATA;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_DISPLACEMENT;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_WORLD_VIEW;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -98,9 +102,6 @@ public class ZoneRenderer implements Renderer {
 
 	public static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
 	public static final int MAX_WORLDVIEWS = 4096;
-
-	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
-	public static final int UNIFORM_BLOCK_WORLD_VIEWS = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
 	private Client client;
@@ -134,6 +135,9 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private ProceduralGenerator proceduralGenerator;
+
+	@Inject
+	private SSBOModelData modelData;
 
 	@Inject
 	private SceneUploader sceneUploader;
@@ -235,7 +239,9 @@ public class ZoneRenderer implements Renderer {
 	public void initialize() {
 		initializeBuffers();
 
-		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
+		uboWorldViews.initialize(BINDING_UBO_WORLD_VIEW);
+		plugin.uboDisplacement.initialize(BINDING_UBO_DISPLACEMENT);
+		modelData.initialize(BINDING_SSAO_MODEL_DATA);
 	}
 
 	@Override
@@ -250,6 +256,8 @@ public class ZoneRenderer implements Renderer {
 
 		destroyBuffers();
 		uboWorldViews.destroy();
+		plugin.uboDisplacement.destroy();
+		modelData.destroy();
 
 		Zone.freeZones(nextZones);
 		nextZones = null;
@@ -269,6 +277,7 @@ public class ZoneRenderer implements Renderer {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
+			.addInclude("MODEL_DATA_GETTER", () -> modelData.generateGetter("ModelData", "MODEL_DATA_GETTER"))
 			.addUniformBuffer(uboWorldViews);
 	}
 
@@ -370,6 +379,8 @@ public class ZoneRenderer implements Renderer {
 //				renderBufferOffset = sceneContext.staticVertexCount;
 
 				plugin.drawnTileCount = 0;
+				plugin.drawnZoneCount = 0;
+				plugin.drawCallCount = 0;
 				plugin.drawnStaticRenderableCount = 0;
 				plugin.drawnDynamicRenderableCount = 0;
 
@@ -616,6 +627,7 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.fogColor.set(ColorUtils.linearToSrgb(environmentManager.currentFogColor));
 
 		plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
+		plugin.uboGlobal.detailDrawDistance.set((float) config.detailDrawDistance());
 		plugin.uboGlobal.expandedMapLoadingChunks.set(root.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
@@ -684,7 +696,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		plugin.uboGlobal.upload();
-		updateWorldViews();
+		uboWorldViews.update();
 
 		// Reset buffers for the next frame
 		eboAlphaStaging.clear();
@@ -694,13 +706,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.reset();
 
 		checkGLErrors();
-	}
-
-	private void updateWorldViews() {
-		uboWorldViews.update();
-		for (var ctx : subs)
-			if (ctx != null)
-				ctx.updateWorldViewIndex(uboWorldViews);
 	}
 
 	private void updateAreaHiding() {
@@ -779,6 +784,10 @@ public class ZoneRenderer implements Renderer {
 			glBufferData(GL_DRAW_INDIRECT_BUFFER, indirectDrawCmdsStaging.getBuffer(), GL_STREAM_DRAW);
 		}
 
+		modelData.upload();
+
+		checkGLErrors();
+
 		directionalShadowPass();
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
@@ -800,8 +809,6 @@ public class ZoneRenderer implements Renderer {
 //		frameTimer.begin(Timer.COMPUTE);
 //		plugin.uboCompute.upload();
 //		frameTimer.end(Timer.COMPUTE);
-
-		checkGLErrors();
 	}
 
 	private void directionalShadowPass() {
@@ -830,6 +837,9 @@ public class ZoneRenderer implements Renderer {
 			renderState.disable.set(GL_DEPTH_TEST);
 
 			frameTimer.end(Timer.RENDER_SHADOWS);
+			plugin.drawCallCount += directionalCmd.getDrawCallCount();
+
+			checkGLErrors();
 		}
 	}
 
@@ -882,6 +892,10 @@ public class ZoneRenderer implements Renderer {
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
+
+		plugin.drawCallCount += sceneCmd.getDrawCallCount();
+
+		checkGLErrors();
 	}
 
 	@Override
@@ -951,6 +965,7 @@ public class ZoneRenderer implements Renderer {
 		if (!z.initialized || z.sizeO == 0)
 			return;
 
+		plugin.drawnZoneCount++;
 		if (ctx != root || z.inSceneFrustum)
 			z.renderOpaque(sceneCmd, minLevel, level, maxLevel, hideRoofIds);
 
@@ -1148,25 +1163,28 @@ public class ZoneRenderer implements Renderer {
 				return;
 			}
 		}
-
+		
+		int worldViewIndex = uboWorldViews.getIndex(ctx.worldViewId) + 1;
+		int modelDataOffset = modelData.addDynamicModelData(r, m, modelOverride, x, y, z, ctx == root, worldViewIndex);
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		boolean hasAlpha = m.getFaceTransparencies() != null;
 		if (hasAlpha) {
-			VAO o = vaoO.get(size, ctx.vboM);
-			VAO a = vaoA.get(size, ctx.vboM);
+			VAO o = vaoO.get(size);
+			VAO a = vaoA.get(size);
 			int start = a.vbo.vb.position();
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, modelDataOffset, o.vbo.vb, a.vbo.vb);
 			int end = a.vbo.vb.position();
 			if (end > start) {
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
 				zone.addTempAlphaModel(a.vao, start, end, tileObject.getPlane(), x & 1023, y, z & 1023);
 			}
 		} else {
-			VAO o = vaoO.get(size, ctx.vboM);
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
+			VAO o = vaoO.get(size);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, modelDataOffset, o.vbo.vb, o.vbo.vb);
 		}
+		plugin.drawnDynamicRenderableCount++;
 	}
 
 	@Override
@@ -1195,6 +1213,8 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
+		int worldViewIndex = uboWorldViews.getIndex(ctx.worldViewId) + 1;
+		int modelDataOffset = modelData.addDynamicModelData(renderable, m, modelOverride, x, y, z, false, worldViewIndex);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
@@ -1208,8 +1228,8 @@ public class ZoneRenderer implements Renderer {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal
 				// transparent faces are already not depth tested
-				VAO o = renderable instanceof Player ? vaoPO.get(size, ctx.vboM) : vaoO.get(size, ctx.vboM);
-				VAO a = vaoA.get(size, ctx.vboM);
+				VAO o = renderable instanceof Player ? vaoPO.get(size) : vaoO.get(size);
+				VAO a = vaoA.get(size);
 
 				int start = a.vbo.vb.position();
 				m.calculateBoundsCylinder();
@@ -1221,6 +1241,7 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orientation,
 						x, y, z,
+						modelDataOffset,
 						o.vbo.vb,
 						a.vbo.vb
 					);
@@ -1244,29 +1265,30 @@ public class ZoneRenderer implements Renderer {
 			if (zone.inShadowFrustum) {
 				// Since priority sorting of models includes back-face culling,
 				// we need to upload the entire model again for shadows
-				VAO o = vaoPOShadow.get(size, ctx.vboM);
+				VAO o = vaoPOShadow.get(size);
 				sceneUploader.uploadTempModel(
 					m,
 					modelOverride,
 					preOrientation,
 					orientation,
-					x, y, z,
+					x, y, z, modelDataOffset,
 					o.vbo.vb,
 					o.vbo.vb
 				);
 			}
 		} else {
-			VAO o = vaoO.get(size, ctx.vboM);
+			VAO o = vaoO.get(size);
 			sceneUploader.uploadTempModel(
 				m,
 				modelOverride,
 				preOrientation,
 				orientation,
-				x, y, z,
+				x, y, z, modelDataOffset,
 				o.vbo.vb,
 				o.vbo.vb
 			);
 		}
+		plugin.drawnDynamicRenderableCount++;
 	}
 
 	@Override
@@ -1323,7 +1345,7 @@ public class ZoneRenderer implements Renderer {
 					a.map();
 				}
 
-				zone.initialize(o, a, eboAlpha);
+				zone.initialize(modelData, o, a, eboAlpha);
 				zone.setMetadata(uboWorldViews.getIndex(wv), ctx.sceneContext, x, z);
 
 				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
@@ -1411,6 +1433,8 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
+
+		modelData.freeDynamicModelData();
 
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
@@ -1656,7 +1680,7 @@ public class ZoneRenderer implements Renderer {
 						a.map();
 					}
 
-					zone.initialize(o, a, eboAlpha);
+					zone.initialize(modelData, o, a, eboAlpha);
 					zone.setMetadata(uboWorldViews.getIndex(worldView), nextSceneContext, x, z);
 				}
 			}
@@ -1768,9 +1792,6 @@ public class ZoneRenderer implements Renderer {
 		CountDownLatch latch = new CountDownLatch(1);
 		clientThread.invoke(() ->
 		{
-			ctx.vboM = new VBO(VAO.METADATA_SIZE);
-			ctx.vboM.initialize(GL_STATIC_DRAW);
-
 			for (int x = 0; x < ctx.sizeX; ++x) {
 				for (int z = 0; z < ctx.sizeZ; ++z) {
 					Zone zone = ctx.zones[x][z];
@@ -1790,7 +1811,7 @@ public class ZoneRenderer implements Renderer {
 						a.map();
 					}
 
-					zone.initialize(o, a, eboAlpha);
+					zone.initialize(modelData, o, a, eboAlpha);
 					zone.setMetadata(uboWorldViews.getIndex(worldView), ctx.sceneContext, x, z);
 				}
 			}
@@ -1904,12 +1925,13 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
+		modelData.defrag();
+
 		checkGLErrors();
 	}
 
 	private void swapSub(Scene scene) {
 		// TODO: Fix async sub scene loading when hopping worlds
-		updateWorldViews();
 		// TODO: Currently the first swapScene relies on swapSub loading the sub scene
 		loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
 

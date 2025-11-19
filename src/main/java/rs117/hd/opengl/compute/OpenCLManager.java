@@ -46,9 +46,9 @@ import org.lwjgl.opencl.CLImageFormat;
 import org.lwjgl.system.Configuration;
 import org.lwjgl.system.MemoryStack;
 import rs117.hd.HdPlugin;
+import rs117.hd.opengl.buffer.uniforms.UBODisplacement;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
@@ -324,7 +324,7 @@ public class OpenCLManager {
 				.define("WIND_DISPLACEMENT", plugin.configWindDisplacement)
 				.define("WIND_DISPLACEMENT_NOISE_RESOLUTION", HdPlugin.WIND_DISPLACEMENT_NOISE_RESOLUTION)
 				.define("CHARACTER_DISPLACEMENT", plugin.configCharacterDisplacement)
-				.define("MAX_CHARACTER_POSITION_COUNT", UBOCompute.MAX_CHARACTER_POSITION_COUNT)
+				.define("MAX_CHARACTER_POSITION_COUNT", UBODisplacement.MAX_CHARACTER_POSITION_COUNT)
 				.addIncludePath(OpenCLManager.class);
 			passthroughProgram = compileProgram(stack, "comp_unordered.cl", includes);
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
@@ -404,14 +404,16 @@ public class OpenCLManager {
 
 	public void compute(
 		SharedGLBuffer uboCompute,
+		SharedGLBuffer uboDisplacement,
 		int numPassthroughModels, int[] numSortingBinModels,
 		SharedGLBuffer modelPassthroughBuffer, SharedGLBuffer[] modelSortingBuffers,
 		SharedGLBuffer stagingBufferVertices, SharedGLBuffer stagingBufferUvs, SharedGLBuffer stagingBufferNormals,
 		SharedGLBuffer renderBufferVertices, SharedGLBuffer renderBufferUvs, SharedGLBuffer renderBufferNormals
 	) {
 		try (var stack = MemoryStack.stackPush()) {
-			PointerBuffer glBuffers = stack.mallocPointer(8 + modelSortingBuffers.length)
+			PointerBuffer glBuffers = stack.mallocPointer(9 + modelSortingBuffers.length)
 				.put(uboCompute.clId)
+				.put(uboDisplacement.clId)
 				.put(modelPassthroughBuffer.clId)
 				.put(stagingBufferVertices.clId)
 				.put(stagingBufferUvs.clId)
@@ -462,7 +464,8 @@ public class OpenCLManager {
 				clSetKernelArg1p(kernel, 6, renderBufferUvs.clId);
 				clSetKernelArg1p(kernel, 7, renderBufferNormals.clId);
 				clSetKernelArg1p(kernel, 8, uboCompute.clId);
-				clSetKernelArg1p(kernel, 9, tileHeightMap);
+				clSetKernelArg1p(kernel, 9, uboDisplacement.clId);
+				clSetKernelArg1p(kernel, 10, tileHeightMap);
 
 				clEnqueueNDRangeKernel(commandQueue, kernel, 1, null,
 					stack.pointers((long) numModels * threadCount),
