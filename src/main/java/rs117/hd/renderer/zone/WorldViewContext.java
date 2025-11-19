@@ -3,43 +3,51 @@ package rs117.hd.renderer.zone;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
+import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+
+import static org.lwjgl.opengl.GL15C.GL_STATIC_DRAW;
 
 public class WorldViewContext {
 	final int worldViewId;
 	final int sizeX, sizeZ;
+	WorldViewStruct uboWorldViewStruct;
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
 	VBO vboM;
 
-	WorldViewContext(@Nullable WorldView worldView, @Nullable ZoneSceneContext sceneContext) {
+	WorldViewContext(@Nullable WorldView worldView, @Nullable ZoneSceneContext sceneContext, UBOWorldViews uboWorldViews) {
 		this.worldViewId = worldView == null ? -1 : worldView.getId();
 		this.sceneContext = sceneContext;
 		this.sizeX = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeX() >> 3;
 		this.sizeZ = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeY() >> 3;
+		if(worldView != null) {
+			this.uboWorldViewStruct = uboWorldViews.obtain(worldView);
+		}
 		zones = new Zone[sizeX][sizeZ];
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
 				zones[x][z] = new Zone();
 	}
 
-	void updateWorldViewIndex(UBOWorldViews uboWorldViews) {
-		if (vboM == null)
+	void initMetadata() {
+		if (vboM != null || uboWorldViewStruct == null)
 			return;
 
-		int worldViewIndex = uboWorldViews.getIndex(worldViewId);
+		vboM = new VBO(VAO.METADATA_SIZE);
+		vboM.initialize(GL_STATIC_DRAW);
 		vboM.map();
-		vboM.vb.put(worldViewIndex + 1);
+		vboM.vb.put(uboWorldViewStruct.worldViewIdx + 1);
 		vboM.unmap();
-
-		for (int x = 0; x < sizeX; x++)
-			for (int z = 0; z < sizeZ; z++)
-				zones[x][z].setMetadata(worldViewIndex, sceneContext, x, z);
 	}
 
 	void free() {
 		if (sceneContext != null)
 			sceneContext.destroy();
 		sceneContext = null;
+
+		if(uboWorldViewStruct != null)
+			uboWorldViewStruct.free();
+		uboWorldViewStruct = null;
 
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)

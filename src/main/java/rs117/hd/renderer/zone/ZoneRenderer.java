@@ -207,7 +207,7 @@ public class ZoneRenderer implements Renderer {
 	private boolean sceneFboValid;
 	private boolean deferScenePass;
 
-	private final WorldViewContext root = new WorldViewContext(null, null);
+	private final WorldViewContext root = new WorldViewContext(null, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
 	private ZoneSceneContext nextSceneContext;
 	private Zone[][] nextZones;
@@ -684,7 +684,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		plugin.uboGlobal.upload();
-		updateWorldViews();
+		uboWorldViews.upload();
 
 		// Reset buffers for the next frame
 		eboAlphaStaging.clear();
@@ -694,13 +694,6 @@ public class ZoneRenderer implements Renderer {
 		renderState.reset();
 
 		checkGLErrors();
-	}
-
-	private void updateWorldViews() {
-		uboWorldViews.update();
-		for (var ctx : subs)
-			if (ctx != null)
-				ctx.updateWorldViewIndex(uboWorldViews);
 	}
 
 	private void updateAreaHiding() {
@@ -1324,7 +1317,7 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				zone.initialize(o, a, eboAlpha);
-				zone.setMetadata(uboWorldViews.getIndex(wv), ctx.sceneContext, x, z);
+				zone.setMetadata(ctx,x, z);
 
 				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
 
@@ -1472,8 +1465,7 @@ public class ZoneRenderer implements Renderer {
 
 	private void loadSceneInternal(WorldView worldView, Scene scene) {
 		if (scene.getWorldViewId() > -1) {
-			// TODO: Fix async sub scene loading when hopping worlds
-//			loadSubScene(worldView, scene);
+			loadSubScene(worldView, scene);
 			return;
 		}
 
@@ -1657,7 +1649,6 @@ public class ZoneRenderer implements Renderer {
 					}
 
 					zone.initialize(o, a, eboAlpha);
-					zone.setMetadata(uboWorldViews.getIndex(worldView), nextSceneContext, x, z);
 				}
 			}
 
@@ -1757,7 +1748,7 @@ public class ZoneRenderer implements Renderer {
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
 		proceduralGenerator.generateSceneData(sceneContext);
 
-		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext);
+		final WorldViewContext ctx = new WorldViewContext(worldView, sceneContext, uboWorldViews);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)
@@ -1768,8 +1759,7 @@ public class ZoneRenderer implements Renderer {
 		CountDownLatch latch = new CountDownLatch(1);
 		clientThread.invoke(() ->
 		{
-			ctx.vboM = new VBO(VAO.METADATA_SIZE);
-			ctx.vboM.initialize(GL_STATIC_DRAW);
+			ctx.initMetadata();
 
 			for (int x = 0; x < ctx.sizeX; ++x) {
 				for (int z = 0; z < ctx.sizeZ; ++z) {
@@ -1791,7 +1781,7 @@ public class ZoneRenderer implements Renderer {
 					}
 
 					zone.initialize(o, a, eboAlpha);
-					zone.setMetadata(uboWorldViews.getIndex(worldView), ctx.sceneContext, x, z);
+					zone.setMetadata(ctx, x, z);
 				}
 			}
 
@@ -1890,7 +1880,7 @@ public class ZoneRenderer implements Renderer {
 					zone.initialized = true;
 				}
 
-				zone.setMetadata(uboWorldViews.getIndex(scene), ctx.sceneContext, x, z);
+				zone.setMetadata(ctx, x, z);
 			}
 		}
 
@@ -1899,8 +1889,8 @@ public class ZoneRenderer implements Renderer {
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
 				log.debug("WorldView loading: {}", sub.getId());
-				// Relies on swapSub being able to load the scene if it hasn't already been loaded
-				swapSub(sub.getScene());
+				loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
+				swapSub(scene);
 			}
 		}
 
@@ -1908,11 +1898,6 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void swapSub(Scene scene) {
-		// TODO: Fix async sub scene loading when hopping worlds
-		updateWorldViews();
-		// TODO: Currently the first swapScene relies on swapSub loading the sub scene
-		loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
-
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1927,7 +1912,7 @@ public class ZoneRenderer implements Renderer {
 					zone.initialized = true;
 				}
 
-				zone.setMetadata(uboWorldViews.getIndex(scene), ctx.sceneContext, x, z);
+				zone.setMetadata(ctx, x, z);
 			}
 		}
 		log.debug("WorldView ready: {}", scene.getWorldViewId());
