@@ -12,6 +12,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -38,7 +39,8 @@ public class Zone {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	public static final int VERT_SIZE = 32;
+	// modelOffset int TODO: Make short
+	public static final int VERT_SIZE = 36;
 
 	// Metadata format
 	// worldViewIndex int int
@@ -74,10 +76,12 @@ public class Zone {
 	int[][] rids;
 	int[][] roofStart;
 	int[][] roofEnd;
+	short modelCount;
+	SSBOModelData.Slice modelDataSlice;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	public void initialize(VBO o, VBO a, int eboShared) {
+	void initialize(SSBOModelData modelData, VBO o, VBO a, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
@@ -96,6 +100,10 @@ public class Zone {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
+		}
+
+		if (modelCount > 0) {
+			modelDataSlice = modelData.obtainSlice(modelCount);
 		}
 	}
 
@@ -134,6 +142,12 @@ public class Zone {
 			glDeleteVertexArrays(glVaoA);
 			glVaoA = 0;
 		}
+
+		if (modelDataSlice != null) {
+			modelDataSlice.free();
+			modelDataSlice = null;
+		}
+		modelCount = 0;
 
 		if (uploadJob != null) {
 			uploadJob.release();
@@ -210,17 +224,21 @@ public class Zone {
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
 
+		// modelOffset
+		glEnableVertexAttribArray(6);
+		glVertexAttribIPointer(6, 1, GL_INT, VERT_SIZE, 32);
+
 		glBindBuffer(GL_ARRAY_BUFFER, metadata);
 
 		// WorldView index (not ID)
-		glEnableVertexAttribArray(6);
-		glVertexAttribDivisor(6, 1);
-		glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
-
-		// Scene offset
 		glEnableVertexAttribArray(7);
 		glVertexAttribDivisor(7, 1);
-		glVertexAttribIPointer(7, 2, GL_INT, METADATA_SIZE, 4);
+		glVertexAttribIPointer(7, 1, GL_INT, METADATA_SIZE, 0);
+
+		// Scene offset
+		glEnableVertexAttribArray(8);
+		glVertexAttribDivisor(8, 1);
+		glVertexAttribIPointer(8, 2, GL_INT, METADATA_SIZE, 4);
 
 		checkGLErrors();
 

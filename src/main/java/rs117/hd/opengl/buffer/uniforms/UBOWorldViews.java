@@ -1,10 +1,11 @@
-package rs117.hd.opengl.uniforms;
+package rs117.hd.opengl.buffer.uniforms;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.opengl.buffer.UniformStructuredBuffer;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
@@ -12,7 +13,7 @@ import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-public class UBOWorldViews extends UniformBuffer<GLBuffer> {
+public class UBOWorldViews extends UniformStructuredBuffer<GLBuffer> {
 	// The max concurrent visible worldviews is 25
 	// Source: https://discord.com/channels/886733267284398130/1419633364817674351/1429129853592146041
 	public static final int MAX_SIMULTANEOUS_WORLD_VIEWS = 128;

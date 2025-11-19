@@ -27,6 +27,8 @@ import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.model.ModelHasher;
 import rs117.hd.model.ModelOffsets;
+import rs117.hd.opengl.buffer.uniforms.UBOCompute;
+import rs117.hd.opengl.buffer.uniforms.UBOLights;
 import rs117.hd.opengl.compute.ComputeMode;
 import rs117.hd.opengl.compute.OpenCLManager;
 import rs117.hd.opengl.shader.ModelPassthroughComputeProgram;
@@ -35,8 +37,6 @@ import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.shader.ShadowShaderProgram;
-import rs117.hd.opengl.uniforms.UBOCompute;
-import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
@@ -65,9 +65,11 @@ import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
-import static rs117.hd.HdPlugin.TEXTURE_UNIT_TILE_HEIGHT_MAP;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.HdPluginConfig.*;
+import static rs117.hd.opengl.GLBinding.BINDING_TEX_TILE_HEIGHT_MAP;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_COMPUTE;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_DISPLACEMENT;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -76,9 +78,6 @@ public class LegacyRenderer implements Renderer {
 	public static final int VERTEX_SIZE = 4; // 4 ints per vertex
 	public static final int UV_SIZE = 4; // 4 floats per vertex
 	public static final int NORMAL_SIZE = 4; // 4 floats per vertex
-
-	private static int UNIFORM_BLOCK_COUNT = HdPlugin.UNIFORM_BLOCK_COUNT;
-	public static final int UNIFORM_BLOCK_COMPUTE = UNIFORM_BLOCK_COUNT++;
 
 	@Inject
 	private Client client;
@@ -431,7 +430,8 @@ public class LegacyRenderer implements Renderer {
 		hModelPassthroughBuffer = new SharedGLBuffer("Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
 
 		uboCompute = new UBOCompute();
-		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
+		uboCompute.initialize(BINDING_UBO_COMPUTE);
+		plugin.uboDisplacement.initialize(BINDING_UBO_DISPLACEMENT);
 
 		modelPassthroughBuffer = new GpuIntBuffer();
 
@@ -449,6 +449,8 @@ public class LegacyRenderer implements Renderer {
 	private void destroyBuffers() {
 		uboCompute.destroy();
 		uboCompute = null;
+
+		plugin.uboDisplacement.destroy();
 
 		hStagingBufferVertices.destroy();
 		hStagingBufferUvs.destroy();
@@ -492,7 +494,7 @@ public class LegacyRenderer implements Renderer {
 		tileBuffer.flip();
 
 		texTileHeightMap = glGenTextures();
-		glActiveTexture(TEXTURE_UNIT_TILE_HEIGHT_MAP);
+		BINDING_TEX_TILE_HEIGHT_MAP.setActive();
 		glBindTexture(GL_TEXTURE_3D, texTileHeightMap);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
@@ -586,6 +588,8 @@ public class LegacyRenderer implements Renderer {
 				renderBufferOffset = sceneContext.staticVertexCount;
 
 				plugin.drawnTileCount = 0;
+				plugin.drawnZoneCount = 0;
+				plugin.drawCallCount = 0;
 				plugin.drawnStaticRenderableCount = 0;
 				plugin.drawnDynamicRenderableCount = 0;
 
@@ -637,17 +641,17 @@ public class LegacyRenderer implements Renderer {
 				uboCompute.cameraY.set(plugin.cameraPosition[1]);
 				uboCompute.cameraZ.set(plugin.cameraPosition[2]);
 
-				uboCompute.windDirectionX.set(cos(environmentManager.currentWindAngle));
-				uboCompute.windDirectionZ.set(sin(environmentManager.currentWindAngle));
-				uboCompute.windStrength.set(environmentManager.currentWindStrength);
-				uboCompute.windCeiling.set(environmentManager.currentWindCeiling);
-				uboCompute.windOffset.set(plugin.windOffset);
+				plugin.uboDisplacement.windDirectionX.set(cos(environmentManager.currentWindAngle));
+				plugin.uboDisplacement.windDirectionZ.set(sin(environmentManager.currentWindAngle));
+				plugin.uboDisplacement.windStrength.set(environmentManager.currentWindStrength);
+				plugin.uboDisplacement.windCeiling.set(environmentManager.currentWindCeiling);
+				plugin.uboDisplacement.windOffset.set(plugin.windOffset);
 
 				if (plugin.configCharacterDisplacement) {
 					// The local player needs to be added first for distance culling
 					Model playerModel = localPlayer.getModel();
 					if (playerModel != null)
-						uboCompute.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+						plugin.uboDisplacement.addCharacterPosition(lp.getX(), lp.getY(), (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
 
 				// Calculate the viewport dimensions before scaling in order to include the extra padding
@@ -825,6 +829,7 @@ public class LegacyRenderer implements Renderer {
 		frameTimer.begin(Timer.COMPUTE);
 
 		uboCompute.upload();
+		plugin.uboDisplacement.upload();
 
 		if (computeMode == ComputeMode.OPENCL) {
 			// The docs for clEnqueueAcquireGLObjects say all pending GL operations must be completed before calling
@@ -833,7 +838,7 @@ public class LegacyRenderer implements Renderer {
 			// glFinish();
 
 			clManager.compute(
-				uboCompute.glBuffer,
+				uboCompute.glBuffer, plugin.uboDisplacement.glBuffer,
 				numPassthroughModels, numModelsToSort,
 				hModelPassthroughBuffer, hModelSortingBuffers,
 				hStagingBufferVertices, hStagingBufferUvs, hStagingBufferNormals,
@@ -1023,6 +1028,7 @@ public class LegacyRenderer implements Renderer {
 			plugin.uboGlobal.fogColor.set(fogColor);
 
 			plugin.uboGlobal.drawDistance.set((float) plugin.getDrawDistance());
+			plugin.uboGlobal.detailDrawDistance.set((float) config.detailDrawDistance());
 			plugin.uboGlobal.expandedMapLoadingChunks.set(sceneContext.expandedMapLoadingChunks);
 			plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
@@ -1096,6 +1102,8 @@ public class LegacyRenderer implements Renderer {
 				long timeSinceChange = System.currentTimeMillis() - plugin.colorFilterChangedAt;
 				plugin.uboGlobal.colorFilterFade.set(clamp(timeSinceChange / COLOR_FILTER_FADE_DURATION, 0, 1));
 			}
+
+			plugin.uboDisplacement.upload();
 
 			if (plugin.configShadowsEnabled && plugin.fboShadowMap != 0
 				&& environmentManager.currentDirectionalStrength > 0) {
@@ -1768,10 +1776,10 @@ public class LegacyRenderer implements Renderer {
 								entry.idleRadius = displacementRadius;
 							}
 						}
-						uboCompute.addCharacterPosition(x, z, displacementRadius);
+						plugin.uboDisplacement.addCharacterPosition(x, z, displacementRadius);
 					}
 				} else if (renderable instanceof Player && renderable != client.getLocalPlayer()) {
-					uboCompute.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
+					plugin.uboDisplacement.addCharacterPosition(x, z, (int) (Perspective.LOCAL_TILE_SIZE * 1.33f));
 				}
 				if (plugin.enableDetailedTimers)
 					frameTimer.end(Timer.CHARACTER_DISPLACEMENT);

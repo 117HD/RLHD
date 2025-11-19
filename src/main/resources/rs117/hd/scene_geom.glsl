@@ -23,7 +23,7 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-#version 330
+#include VERSION_HEADER
 
 #include <uniforms/global.glsl>
 
@@ -43,6 +43,8 @@ in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
 in int gWorldViewId[3];
+in vec3 gSceneOffset[3];
+in float gDetailFade[3];
 
 flat out int vWorldViewId;
 flat out ivec3 vAlphaBiasHsl;
@@ -50,6 +52,7 @@ flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
 flat out vec3 T;
 flat out vec3 B;
+flat out float fDetailFade;
 
 out FragmentData {
     vec3 position;
@@ -59,7 +62,8 @@ out FragmentData {
 } OUT;
 
 void main() {
-    vWorldViewId = gWorldViewId[0];
+    if ((gDetailFade[0] + gDetailFade[1] + gDetailFade[2]) == 1.0)
+        return;
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
@@ -107,6 +111,9 @@ void main() {
             }
         }
     #endif
+
+    fDetailFade = gDetailFade[0];
+    vWorldViewId = gWorldViewId[0];
 
     for (int i = 0; i < 3; i++) {
         vec4 pos = vec4(gPosition[i], 1);

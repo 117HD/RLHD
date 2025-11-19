@@ -19,7 +19,8 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
-import rs117.hd.opengl.uniforms.UBOWorldViews;
+import rs117.hd.opengl.buffer.storage.SSBOModelData;
+import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
@@ -78,7 +79,8 @@ public class SceneManager {
 	@Inject
 	private FrameTimer frameTimer;
 
-	private UBOWorldViews uboWorldViews;
+	protected SSBOModelData ssboModelData;
+	protected UBOWorldViews uboWorldViews;
 
 	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
 	@Getter
@@ -119,7 +121,8 @@ public class SceneManager {
 		return root;
 	}
 
-	public void initialize(UBOWorldViews uboWorldViews) {
+	public void initialize(SSBOModelData ssboModelData, UBOWorldViews uboWorldViews) {
+		this.ssboModelData = ssboModelData;
 		this.uboWorldViews = uboWorldViews;
 	}
 
@@ -502,7 +505,7 @@ public class SceneManager {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 						if (root.sceneContext == null || dist < ZONE_DEFER_DIST_START) {
 							ZoneUploadJob
-								.build(ctx, nextSceneContext, zone, x, z)
+								.build(ssboModelData, ctx, nextSceneContext, zone, x, z)
 								.setExecuteAsync(plugin.configZoneStreaming)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
@@ -518,7 +521,7 @@ public class SceneManager {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
 				sorted.zone.uploadJob = ZoneUploadJob
-					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
+					.build(ssboModelData, ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 					.setExecuteAsync(plugin.configZoneStreaming);
 				sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				sorted.free();
@@ -684,7 +687,7 @@ public class SceneManager {
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				ZoneUploadJob.build(ctx, sceneContext, ctx.zones[x][z], x, z)
+				ZoneUploadJob.build(ssboModelData, ctx, sceneContext, ctx.zones[x][z], x, z)
 					.setExecuteAsync(plugin.configZoneStreaming)
 					.queue(ctx.sceneLoadGroup);
 
@@ -699,7 +702,6 @@ public class SceneManager {
 		Stopwatch sw = Stopwatch.createStarted();
 		ctx.sceneLoadGroup.complete();
 		ctx.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS);
-		ctx.initMetadata();
 		ctx.isLoading = false;
 		ctx.sceneSwapTime = sw.elapsed(TimeUnit.NANOSECONDS);
 		log.debug("swapSubScene time {} WorldView ready: {}", ctx.sceneSwapTime, scene.getWorldViewId());

@@ -31,7 +31,7 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.opengl.uniforms.UBOWaterTypes;
+import rs117.hd.opengl.buffer.uniforms.UBOWaterTypes;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;

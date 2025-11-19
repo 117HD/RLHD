@@ -5,23 +5,19 @@ import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.opengl.uniforms.UBOWorldViews;
-import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
+import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 import rs117.hd.utils.jobs.JobGroup;
 
-import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
-
 @Slf4j
 public class WorldViewContext {
 	final int worldViewId;
 	final int sizeX, sizeZ;
 	@Nullable
-	WorldViewStruct uboWorldViewStruct;
+	UBOWorldViews.WorldViewStruct uboWorldViewStruct;
 	SceneManager sceneManager;
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
-	VBO vboM;
 	boolean isLoading = true;
 
 	int minLevel, level, maxLevel;
@@ -52,17 +48,6 @@ public class WorldViewContext {
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
 				zones[x][z] = new Zone();
-	}
-
-	void initMetadata() {
-		if (vboM != null || uboWorldViewStruct == null)
-			return;
-
-		vboM = new VBO(VAO.METADATA_SIZE);
-		vboM.initialize(GL_STATIC_DRAW);
-		vboM.map();
-		vboM.vb.put(uboWorldViewStruct.worldViewIdx + 1);
-		vboM.unmap();
 	}
 
 	void handleZoneSwap(float deltaTime, int zx, int zz) {
@@ -147,10 +132,6 @@ public class WorldViewContext {
 		while ((cullZone = pendingCull.poll()) != null)
 			cullZone.free();
 
-		if (vboM != null)
-			vboM.destroy();
-		vboM = null;
-
 		isLoading = true;
 	}
 
@@ -181,7 +162,7 @@ public class WorldViewContext {
 		Zone newZone = new Zone();
 		newZone.dirty = zones[zx][zz].dirty;
 
-		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, zx, zz);
+		curZone.uploadJob = ZoneUploadJob.build(sceneManager.ssboModelData, this, sceneContext, newZone, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
 			curZone.uploadJob.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
