@@ -1090,9 +1090,13 @@ public class ZoneRenderer implements Renderer {
 		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
-		// Cull based on detail draw distance
-		if (ctx == root) {
-			float modelDist = distance(sceneCamera.getPosition(), new float[] { x, y, z });
+		final float[] position = new float[] { x, y, z, 1.0f };
+		if(ctx == root || ctx.uboWorldViewStruct != null) {
+			if (ctx != root)
+				Mat4.transformVecAffine(position, ctx.uboWorldViewStruct.projectionMatrix, position);
+
+			// Cull based on detail draw distance
+			float modelDist = distance(sceneCamera.getPosition(), position, 3) - (int)(m.getModelHeight() * LOCAL_TILE_SIZE * 1.25f);
 			float detailDrawDistanceTiles = config.detailDrawDistance() * LOCAL_TILE_SIZE;
 			if (modelDist > detailDrawDistanceTiles) {
 				return;
@@ -1138,6 +1142,11 @@ public class ZoneRenderer implements Renderer {
 				modelOverride.castShadows &&
 				!directionalShadowCasterVolume.intersectsPoint(x, y, z)
 			) {
+				return;
+			}
+		} else {
+			if (!sceneCamera.intersectsSphere(position[0], position[1], position[2], m.getRadius()) &&
+				!directionalShadowCasterVolume.intersectsPoint((int)position[0], (int)position[1], (int)position[2])) {
 				return;
 			}
 		}
@@ -1188,15 +1197,25 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
+		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int zx = (x >> 10) + offset;
+		int zz = (z >> 10) + offset;
+		Zone zone = ctx.zones[zx][zz];
+
+		if(ctx != root && ctx.uboWorldViewStruct != null) {
+			final float[] position = new float[] { x, y, z, 1.0f };
+			Mat4.transformVecAffine(position, ctx.uboWorldViewStruct.projectionMatrix, position);
+
+			if (!sceneCamera.intersectsSphere(position[0], position[1], position[2], m.getRadius()) &&
+				!directionalShadowCasterVolume.intersectsPoint((int)position[0], (int)position[1], (int)position[2])) {
+				return;
+			}
+		}
+
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		if (renderable instanceof Player || m.getFaceTransparencies() != null) {
-			int offset = ctx.sceneContext.sceneOffset >> 3;
-			int zx = (gameObject.getX() >> 10) + offset;
-			int zz = (gameObject.getY() >> 10) + offset;
-			Zone zone = ctx.zones[zx][zz];
-
 			if (ctx != root || zone.inSceneFrustum) {
 				// opaque player faces have their own vao and are drawn in a separate pass from normal opaque faces
 				// because they are not depth tested. transparent player faces don't need their own vao because normal

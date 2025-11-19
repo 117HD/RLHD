@@ -9,6 +9,7 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class UBOWorldViews extends UniformBuffer<GLBuffer> {
@@ -23,11 +24,14 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		public final Property projection = addProperty(PropertyType.Mat4, "projection");
 		public final Property tint = addProperty(PropertyType.IVec4, "tint");
 
+		public float[] projectionMatrix = new float[16];
 		public WorldView worldView;
 
 		public void update() {
 			var proj = worldView.getMainWorldProjection();
-			projection.set(proj instanceof FloatProjection ? ((FloatProjection) proj).getProjection() : Mat4.identity());
+			float[] newProjectionMatrix = proj instanceof FloatProjection ? ((FloatProjection) proj).getProjection() : Mat4.identity();
+			copyTo(projectionMatrix, newProjectionMatrix);
+			projection.set(newProjectionMatrix);
 
 			var scene = worldView.getScene();
 			if (scene == null) {
