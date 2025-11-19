@@ -63946,7 +63946,6 @@
     "description": "Sailing - Shipyard - Boat being built",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.7,
     "objectIds": [
       "SAILING_SHIPYARD_BOAT01"
     ],
