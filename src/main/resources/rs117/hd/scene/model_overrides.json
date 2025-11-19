@@ -1528,7 +1528,8 @@
       "YEW_TREE_DEAD_FULLYGROWN",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP"
+      "YEWTREE_NOOP",
+      "YEWTREE_UPDATE2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -9662,7 +9663,10 @@
       "SORCERESS_RUG_END",
       "SORCERESS_RUG_END_M",
       "SORCERESS_RUG_CORNER_M",
-      "SORCERESS_RUG_CORNER"
+      "SORCERESS_RUG_CORNER",
+      "ALDARIN_RUG01_MIDDLE01",
+      "ALDARIN_RUG01_SIDE01",
+      "ALDARIN_RUG01_CORNER01"
     ],
     "uvType": "WORLD_XZ",
     "flatNormals": true
@@ -28558,7 +28562,8 @@
       "TUT2_OAK_NOOP",
       "TREE_OAK_DEFAULT01",
       "GIM_OAKTREE",
-      "AVIUM_OAK_1"
+      "AVIUM_OAK_1",
+      "OAKTREE_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -28931,10 +28936,10 @@
   },
   {
     "description": "Auburnvale - Sawmill - Planks and Stripped Logs",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.7,
-    "uvOrientation": 512,
+    "uvOrientationX": 512,
     "objectIds": [
       "BUNDLE01_AUBURN01_PLANKS01_STACK01",
       "BUNDLE01_AUBURN01_LOGS01_STACK01",
@@ -31937,7 +31942,7 @@
       "ZEAH_TRAVEL_LANDSEND_SHIPPLANK_OFF_2", "SAILING_FORTIS_SHIPPLANK_OFF", "SAILING_FORTIS_SHIPPLANK_ON", "SAILING_FORTIS_SHIPPLANK_NOOP",
       "SAILING_ALDARIN_SHIPPLANK_OFF", "SAILING_ALDARIN_SHIPPLANK_ON", "PEST_SHIP_ISLAND_ON", "PEST_SHIP_ISLAND_OFF", "SAILING_SUNSETCOAST_SHIPPLANK_ON",
       "SAILING_SUNSETCOAST_SHIPPLANK_OFF", "SAILING_PRIF_SHIPPLANK_OFF", "SAILING_PRIF_SHIPPLANK_ON", "SAILING_PANDEMONIUM_SHIPPLANK_OFF_A",
-      "SAILING_PANDEMONIUM_SHIPPLANK_ON_A", "SAILING_PANDEMONIUM_SHIPPLANK_ON_B", "SAILING_PANDEMONIUM_SHIPPLANK_OFF_B"
+      "SAILING_PANDEMONIUM_SHIPPLANK_ON_A", "SAILING_PANDEMONIUM_SHIPPLANK_ON_B", "SAILING_PANDEMONIUM_SHIPPLANK_OFF_B", "GANGPLANK"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -43957,11 +43962,12 @@
       "WALLKIT_WOODEN01_DEFAULT01",
       "WALLKIT_WOODEN01_WINDOW01",
       "WALLKIT_WOODEN02_DEFAULT01",
-      "WALLKIT_WOODEN02_WINDOW01"
+      "WALLKIT_WOODEN02_WINDOW01",
+      "WALLKIT_WOODEN01_DEFAULT01_UPPER"
     ]
   },
   {
-    "description": " Varlamore - Fortis wooden plank Door",
+    "description": "Varlamore - Fortis wooden plank Door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -43986,14 +43992,16 @@
       "FORTIS_DOOR_DOUBLE_R_OPEN",
       "FORTIS_DOOR_DOUBLE_R_OPEN_NOOP",
       "VARLAMORE_THIEVING_HOUSE_DOOR_LOCKED",
-      "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN"
+      "VARLAMORE_THIEVING_HOUSE_DOOR_OPEN",
+      "WALLKIT_WOODEN01_DEFAULT01_DOOR"
     ],
     "colorOverrides": [
       {
         "description": "Metal",
         "colors": "s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "uvScale": 0.2
       }
     ]
   },
@@ -63338,7 +63346,8 @@
       "PORT_TASK_BOARD_RUINS_OF_UNKAH",
       "PORT_TASK_BOARD_PORT_KHAZARD",
       "PORT_TASK_BOARD_CATHERBY",
-      "PORT_TASK_BOARD_PANDEMONIUM"
+      "PORT_TASK_BOARD_PANDEMONIUM",
+      "SAILING_SHIPYARD_SCHEMATICS"
     ],
     "colorOverrides": [
       {
@@ -63347,6 +63356,11 @@
         "baseMaterial": "BONE",
         "uvType": "BOX",
         "uvScale": 0.3
+      },
+      {
+        "description": "Metal Wheel",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT"
       },
       {
         "description": "Wood",
@@ -63496,18 +63510,28 @@
   },
   {
     "description": "Sailing - Player Ship Dock",
-    "baseMaterial": "WOOD_GRAIN_2",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
-      "SAILING_GANGPLANK_PROXY"
+      "SAILING_GANGPLANK_PROXY",
+      "SAILING_GANGPLANK_PROXY_WIDE",
+      "SAILING_GANGPLANK_PROXY_WIDE_INACTIVE"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientationY": 512,
     "uvScale": 0.8,
     "colorOverrides": [
       {
         "description": "Wind Sock",
         "colors": "h == 5 && s == 0 || h == 1",
         "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Wind Pole",
+        "colors": "s == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.24,
+        "uvOrientation": 512
       }
     ]
   },
@@ -63815,6 +63839,239 @@
         "description": "Hole",
         "colors": "h == 10",
         "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Portal",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_SHIPYARD_PORTAL_EXIT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Sawdust",
+        "colors": "h == 6",
+        "baseMaterial": "DIRT_1",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Portal",
+        "colors": "h == 43",
+        "baseMaterial": "NONE",
+        "shadowOpacityThreshold": 1,
+        "receiveShadows": false
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Harbour Walls - Straight",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "uvOrientationX": -150,
+    "objectIds": [
+      "SAILING_SHIPYARD_HARBOUR_WALLS_STRAIGHT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Algae",
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMI_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Wood Bolts",
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 140
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Harbour Walls - Corner",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "SAILING_SHIPYARD_HARBOUR_WALLS_CORNER_INSIDE01",
+      "SAILING_SHIPYARD_HARBOUR_WALLS_CORNER_OUTSIDE01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Algae",
+        "colors": "h > 8",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_SEMI_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      },
+      {
+        "description": "Wood Bolts",
+        "colors": "s == 4",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 140
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Boat being built",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "SAILING_SHIPYARD_BOAT01"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Misc",
+        "colors": "h == 5 && s == 6 || h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Sawblade",
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_1_SEMI_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Bookcase",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "SHIPYARD_BOOKCASE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Misc",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "description": "Misc",
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Mast being built",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 570,
+    "objectIds": [
+      "SAILING_SHIPYARD_BOAT02"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Mast",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.7,
+        "uvOrientationY": 60,
+        "uvOrientationX": 512
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 37",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Workbench",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SHIPYARD_WORKBENCH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Model boat sail",
+        "colors": "h == 4 && s == 1",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Hammer and model Boat",
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -100
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Shipyard - Crate of hammers and saws",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CRATE_SAWS",
+      "CRATE_HAMMERS"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Mast",
+        "colors": "h == 5 && s == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1",
+        "uvType": "BOX",
+        "uvScale": 0.2
       }
     ]
   },
