@@ -1305,7 +1305,7 @@ public class ZoneRenderer implements Renderer {
 	private void rebuild(WorldView wv) {
 		assert client.isClientThread();
 		WorldViewContext ctx = context(wv);
-		if (ctx == null)
+		if (ctx == null || ctx.isLoading)
 			return;
 
 		for (int x = 0; x < ctx.sizeX; ++x) {
@@ -1336,7 +1336,7 @@ public class ZoneRenderer implements Renderer {
 				}
 
 				zone.initialize(o, a, eboAlpha);
-				zone.setMetadata(ctx,x, z);
+				zone.setMetadata(ctx, x, z);
 
 				sceneUploader.uploadZone(ctx.sceneContext, zone, x, z);
 
@@ -1752,7 +1752,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void loadSubScene(WorldView worldView, Scene scene) {
-		int worldViewId = scene.getWorldViewId();
+		int worldViewId = worldView.getId();
 		assert worldViewId != -1;
 
 		log.debug("Loading world view {}", worldViewId);
@@ -1839,7 +1839,7 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		if (scene.getWorldViewId() > -1) {
-			swapSub(scene);
+			swapSubScene(scene);
 			return;
 		}
 
@@ -1903,20 +1903,28 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
+		root.isLoading = false;
+
 		if (isFirst) {
 			// Load all pre-existing sub scenes on the first scene load
 			for (WorldEntity subEntity : client.getTopLevelWorldView().worldEntities()) {
 				WorldView sub = subEntity.getWorldView();
-				log.debug("WorldView loading: {}", sub.getId());
-				loadSubScene(client.getWorldView(scene.getWorldViewId()), scene);
-				swapSub(scene);
+				Scene subScene = sub.getScene();
+				log.debug(
+					"Loading worldview: id={}, sizeX={}, sizeZ={}",
+					sub.getId(),
+					sub.getSizeX(),
+					sub.getSizeY()
+				);
+				loadSubScene(sub, subScene);
+				swapSubScene(subScene);
 			}
 		}
 
 		checkGLErrors();
 	}
 
-	private void swapSub(Scene scene) {
+	private void swapSubScene(Scene scene) {
 		WorldViewContext ctx = context(scene);
 		if (ctx == null)
 			return;
@@ -1934,6 +1942,7 @@ public class ZoneRenderer implements Renderer {
 				zone.setMetadata(ctx, x, z);
 			}
 		}
+		ctx.isLoading = false;
 		log.debug("WorldView ready: {}", scene.getWorldViewId());
 	}
 }

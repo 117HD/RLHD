@@ -5,24 +5,25 @@ import net.runelite.api.*;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 
-import static org.lwjgl.opengl.GL15C.GL_STATIC_DRAW;
+import static org.lwjgl.opengl.GL33C.*;
 
 public class WorldViewContext {
 	final int worldViewId;
 	final int sizeX, sizeZ;
+	@Nullable
 	WorldViewStruct uboWorldViewStruct;
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
 	VBO vboM;
+	boolean isLoading = true;
 
 	WorldViewContext(@Nullable WorldView worldView, @Nullable ZoneSceneContext sceneContext, UBOWorldViews uboWorldViews) {
 		this.worldViewId = worldView == null ? -1 : worldView.getId();
 		this.sceneContext = sceneContext;
 		this.sizeX = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeX() >> 3;
 		this.sizeZ = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeY() >> 3;
-		if(worldView != null) {
-			this.uboWorldViewStruct = uboWorldViews.obtain(worldView);
-		}
+		if (worldView != null)
+			uboWorldViewStruct = uboWorldViews.acquire(worldView);
 		zones = new Zone[sizeX][sizeZ];
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
@@ -45,7 +46,7 @@ public class WorldViewContext {
 			sceneContext.destroy();
 		sceneContext = null;
 
-		if(uboWorldViewStruct != null)
+		if (uboWorldViewStruct != null)
 			uboWorldViewStruct.free();
 		uboWorldViewStruct = null;
 
@@ -56,6 +57,8 @@ public class WorldViewContext {
 		if (vboM != null)
 			vboM.destroy();
 		vboM = null;
+
+		isLoading = true;
 	}
 
 	void invalidate() {

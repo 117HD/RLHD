@@ -55,11 +55,11 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 
 	private final WorldViewStruct[] uboStructs = new WorldViewStruct[MAX_SIMULTANEOUS_WORLD_VIEWS];
 	private final ArrayList<Integer> activeIndices = new ArrayList<>();
-	private final ArrayDeque<Integer> freeIndices= new ArrayDeque<>();
+	private final ArrayDeque<Integer> freeIndices = new ArrayDeque<>();
 
 	public UBOWorldViews() {
 		super(GL_DYNAMIC_DRAW);
-		for(int i = 0; i < MAX_SIMULTANEOUS_WORLD_VIEWS; i++) {
+		for (int i = 0; i < MAX_SIMULTANEOUS_WORLD_VIEWS; i++) {
 			uboStructs[i] = addStruct(new WorldViewStruct(i));
 			freeIndices.add(i);
 		}
@@ -72,8 +72,8 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		}
 	}
 
-	public synchronized WorldViewStruct obtain(WorldView worldView) {
-		if(freeIndices.isEmpty()) {
+	public synchronized WorldViewStruct acquire(WorldView worldView) {
+		if (freeIndices.isEmpty()) {
 			log.warn("Too many world views at once: {}", MAX_SIMULTANEOUS_WORLD_VIEWS);
 			return null;
 		}
