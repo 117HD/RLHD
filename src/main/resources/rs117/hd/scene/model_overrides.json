@@ -63696,7 +63696,8 @@
     "uvOrientationX": 512,
     "uvScale": 0.5,
     "objectIds": [
-      "SAILING_BOAT_STEERING_KANDARIN_2X5_OAK_IDLE"
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_OAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_OAK_IN_USE"
     ],
     "colorOverrides": [
       {
@@ -63709,6 +63710,31 @@
       {
         "description": "Metal",
         "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Helm - Bronze",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_WOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_WOOD_IN_USE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
