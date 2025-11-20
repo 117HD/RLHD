@@ -63635,10 +63635,11 @@
   },
   {
     "description": "Sailing - Skiff - Hull",
-    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientationY": 512,
+    "uvScale": 0.6,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
     "objectIds": [
       "SAILING_BOAT_SKIFF_TRIM_WOODEN",
       "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD",
