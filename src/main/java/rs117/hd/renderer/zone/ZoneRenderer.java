@@ -858,14 +858,14 @@ public class ZoneRenderer implements Renderer {
 			// Since the game was never designed to be viewed from below, a lot of
 			// things are missing triangles underneath. In most cases, it's fine
 			// visually to render the top face from below.
-			glDisable(GL_CULL_FACE);
+			renderState.disable.set(GL_CULL_FACE);
 
-			glEnable(GL_DEPTH_TEST);
+			renderState.enable.set(GL_DEPTH_TEST);
 			// With LEQUAL, the insides of paper thin walls are visible from the outside
-			glDepthFunc(GL_GEQUAL);
+			renderState.depthFunc.set(GL_GEQUAL);
 
-			glEnable(GL_BLEND);
-			glBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+			renderState.enable.set(GL_BLEND);
+			renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 			sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
 
@@ -882,8 +882,8 @@ public class ZoneRenderer implements Renderer {
 			frameTimer.end(Timer.REFLECTION_MIPMAPS);
 
 			// Reset everything back to the main pass' state
-			glDisable(GL_DEPTH_TEST);
-			glEnable(GL_CULL_FACE);
+			renderState.disable.set(GL_DEPTH_TEST);
+			renderState.enable.set(GL_CULL_FACE);
 
 			frameTimer.end(Timer.RENDER_REFLECTIONS);
 
@@ -925,6 +925,7 @@ public class ZoneRenderer implements Renderer {
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		// Render the scene
+		sceneProgram.use();
 		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
 		sceneProgram.uniWaterReflectionEnabled.set(renderWaterReflections);
 		sceneCmd.execute();

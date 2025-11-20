@@ -150,16 +150,23 @@ void main() {
         }
     #endif
 
-    if (renderPass == RENDER_PASS_WATER_REFLECTION && isWater) {
-        // Hide flat water surface tiles in the reflection
-        bool isFlat = -N.y > .7;
-        if (isWaterSurface && isFlat)
-            return;
-
-        // Hide underwater tiles from the reflection
+    if (renderPass == RENDER_PASS_WATER_REFLECTION) {
         float minY = min(min(gPosition[0].y, gPosition[1].y), gPosition[2].y);
-        if (isUnderwaterTile && waterHeight - minY <= WATER_REFLECTION_HEIGHT_THRESHOLD)
-            return;
+
+        if (isWater) {
+            // Hide flat water surface tiles in the reflection
+            bool isFlat = -N.y > .7;
+            if (isWaterSurface && isFlat)
+                return;
+
+            // Hide underwater tiles from the reflection
+            if (isUnderwaterTile && waterHeight - minY <= WATER_REFLECTION_HEIGHT_THRESHOLD)
+                return;
+        } else {
+            // Hide stuff which is under the water from the reflection
+            if (waterHeight - minY <= 0)
+                return;
+        }
     }
 
     for (int i = 0; i < 3; i++) {
