@@ -63218,8 +63218,9 @@
   },
   {
     "description": "Ocean Rocks - Plain",
-    "baseMaterial": "ROCK_3_LIGHT",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH_LIGHT",
     "uvType": "BOX",
+    "uvScale": 1.2,
     "objectIds": [
       "OCEAN_OUTCROP_ROCK01",
       "OCEAN_OUTCROP_ROCK02",
@@ -63229,7 +63230,13 @@
       "OCEAN_OUTCROP_ROCK06",
       "OCEAN_OUTCROP_ROCK07",
       "OCEAN_OUTCROP_ROCK08",
-      "OCEAN_OUTCROP_ROCK09"
+      "OCEAN_OUTCROP_ROCK09",
+      "OCEAN_OUTCROP_JAGGED05",
+      "OCEAN_OUTCROP_JAGGED07",
+      "OCEAN_OUTCROP_JAGGED04",
+      "OCEAN_OUTCROP_JAGGED02",
+      "OCEAN_OUTCROP_JAGGED03",
+      "OCEAN_OUTCROP_JAGGED06"
     ]
   },
   {
@@ -63672,7 +63679,7 @@
       {
         "description": "Sail",
         "colors": "h == 11 || h == 12",
-        "baseMaterial": "CARPET_LIGHT",
+        "baseMaterial": "CARPET_VERY_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.3,
         "uvOrientation": 400,

@@ -1543,9 +1543,35 @@
     ]
   },
   {
+    "name": "ROCK_3_SEMI_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "displacementScale": 0.0,
+    "specularStrength": 0.3,
+    "specularGloss": 40.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.5
+    ]
+  },
+  {
     "name": "ROCK_3_SMOOTH_LIGHT",
     "parent": "ROCK_3_SMOOTH",
     "brightness": 1.194
+  },
+  {
+    "name": "ROCK_3_SEMI_SMOOTH_LIGHT",
+    "parent": "ROCK_3_LIGHT",
+    "displacementMap": null,
+    "displacementScale": 0.0,
+    "specularStrength": 0.3,
+    "specularGloss": 40.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.6
+    ]
   },
   {
     "name": "ROCK_3_ORE",
@@ -1632,6 +1658,11 @@
     "name": "CARPET_LIGHT",
     "parent": "CARPET",
     "brightness": 1.177
+  },
+  {
+    "name": "CARPET_VERY_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.4
   },
   {
     "name": "CARPET_DARK",
