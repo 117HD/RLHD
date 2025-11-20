@@ -63881,7 +63881,7 @@
     "colorOverrides": [
       {
         "colors": "a > 200",
-        "baseMaterial": "GRAY_75",
+        "baseMaterial": "GRAY_65",
         "receiveShadows": false
       }
     ]
@@ -63897,7 +63897,7 @@
     "colorOverrides": [
       {
         "colors": "a > 200",
-        "baseMaterial": "NONE",
+        "baseMaterial": "GRAY_90",
         "receiveShadows": false
       }
     ]
