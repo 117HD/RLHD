@@ -485,7 +485,6 @@ public class ZoneRenderer implements Renderer {
 				if (root.sceneContext.scene == scene) {
 					try {
 						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(root.sceneContext);
 						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
 
 						frameTimer.begin(Timer.UPDATE_LIGHTS);
@@ -1487,8 +1486,8 @@ public class ZoneRenderer implements Renderer {
 		nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 
 		environmentManager.loadSceneEnvironments(nextSceneContext);
-		proceduralGenerator.generateSceneData(nextSceneContext);
 		plugin.minimapRenderer.prepareScene(nextSceneContext);
+		proceduralGenerator.generateSceneData(nextSceneContext);
 
 		if (nextSceneContext.enableAreaHiding) {
 			nextSceneContext.possibleAreas = Arrays

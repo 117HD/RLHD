@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.events.PluginMessage;
 import rs117.hd.HdPlugin;
@@ -18,13 +19,14 @@ import rs117.hd.utils.ColorUtils;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 public class MinimapRenderer {
+
+	public static String CONFIG_GROUP_HD_MINIMAP = "hdminimap";
 
 	@Inject
 	ProceduralGenerator proceduralGenerator;
@@ -54,14 +56,42 @@ public class MinimapRenderer {
 	private MaterialManager materialManager;
 
 	@Inject
+	private ConfigManager configManager;
+
+	@Inject
 	private EventBus eventBus;
 
 	public boolean updateMinimapLighting;
 
-	public int[][][][] minimapTilePaintColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
-	public int[][][][][] minimapTileModelColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+	public int[][][][] minimapTilePaintColorsLighting;
+	public int[][][][][] minimapTileModelColorsLighting;
+
+	public void setUp() {
+		minimapTilePaintColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
+		minimapTileModelColorsLighting = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+	}
+
+	public void clear(SceneContext sceneContext) {
+		minimapTilePaintColorsLighting = null;
+		minimapTileModelColorsLighting = null;
+		sceneContext.minimapTileModelColors = null;
+		sceneContext.minimapTilePaintColors = null;
+	}
+
+	public boolean HD117MapEnabled()
+	{
+		return "true".equals(configManager.getConfiguration("runelite", "hdminimapplugin"))
+			   && "HD117".equals(configManager.getConfiguration("hdminimap", "minimapStyle"));
+	}
 
 	public void prepareScene(SceneContext sceneContext) {
+		if (!HD117MapEnabled()) return;
+
+		if (sceneContext.minimapTilePaintColors == null) {
+			sceneContext.minimapTilePaintColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
+			sceneContext.minimapTileModelColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+		}
+
 		final Scene scene = sceneContext.scene;
 
 		for (int z = 0; z < MAX_Z; ++z) {
@@ -353,6 +383,13 @@ public class MinimapRenderer {
 
 
 	public void applyLighting(SceneContext sceneContext) {
+		if (!HD117MapEnabled()) return;
+
+		if (sceneContext.minimapTilePaintColors == null) {
+			sceneContext.minimapTilePaintColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][8];
+			sceneContext.minimapTileModelColors = new int[MAX_Z][EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE][6][6];
+		}
+
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
