@@ -63634,26 +63634,6 @@
     ]
   },
   {
-    "description": "Sailing - Raft - Cargo",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "uvType": "BOX",
-    "uvScale": 0.4,
-    "uvOrientation": 512,
-    "objectIds": [
-      "SAILING_BOAT_CARGO_HOLD_REGULAR_RAFT"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Rope",
-        "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 100
-      }
-    ]
-  },
-  {
     "description": "Sailing - Skiff - Hull",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
@@ -63707,25 +63687,6 @@
     "uvScale": 0.3,
     "objectIds": [
       "SAILING_KEEL_KANDARIN_2X5_BRONZE"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Rope",
-        "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 200
-      },
-      {
-        "description": "Sail",
-        "colors": "h == 11 || h == 12",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 400,
-        "receiveShadows": false
-      }
     ]
   },
   {
@@ -63775,6 +63736,25 @@
         "colors": "h == 6",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility- Cargo",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_RAFT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
       }
     ]
   },
