@@ -8612,6 +8612,10 @@
     ]
   },
   {
+    "name": "PANDEMONIUM_ISLAND",
+    "regions": [ 12078 ]
+  },
+  {
     "name": "PANDEMONIUM_QUEST_INSTANCE",
     "regions": [ 5958 ]
   },
