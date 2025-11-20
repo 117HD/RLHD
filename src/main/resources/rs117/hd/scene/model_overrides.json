@@ -63868,6 +63868,41 @@
     ]
   },
   {
+    "description": "Sailing - Facility - Build Spot - Flat",
+    "undoVanillaShading": false,
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_0",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_1",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_2",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_3",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_4"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a > 200",
+        "baseMaterial": "GRAY_75",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Build Spot - Vertical",
+    "undoVanillaShading": false,
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_5",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_6"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a > 200",
+        "baseMaterial": "NONE",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
     "description": "The Pandemonium - Docks",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
