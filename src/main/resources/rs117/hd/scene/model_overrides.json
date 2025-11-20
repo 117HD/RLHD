@@ -63661,17 +63661,13 @@
     "uvOrientationY": 512,
     "objectIds": [
       "SAILING_BOAT_SKIFF_TRIM_WOODEN",
-      "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD"
-    ],
-    "colorOverrides": [
-      {
-        "description": "Rope",
-        "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 100
-      }
+      "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_ROSEWOOD"
     ]
   },
   {
