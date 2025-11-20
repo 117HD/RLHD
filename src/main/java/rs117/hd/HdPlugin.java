@@ -1602,7 +1602,7 @@ public class HdPlugin extends Plugin {
 					boolean reloadModelOverrides = false;
 					boolean reloadTileOverrides = false;
 					boolean reloadScene = false;
-
+					
 					for (var key : pendingConfigChanges) {
 
 						switch (key) {
