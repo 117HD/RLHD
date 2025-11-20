@@ -23,7 +23,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
-import net.runelite.client.util.OSType;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
@@ -38,6 +37,7 @@ import rs117.hd.opengl.shader.ModelSortingComputeProgram;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
+import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
@@ -170,27 +170,23 @@ public class LegacyRenderer implements Renderer {
 	@Inject
 	public ModelPassthroughComputeProgram modelPassthroughComputeProgram;
 
-	private final ComputeMode computeMode = OSType.getOSType() == OSType.MacOS ? ComputeMode.OPENCL : ComputeMode.OPENGL;
+	@Inject
+	public ShadowShaderProgram shadowProgram;
+
+	private final ComputeMode computeMode = HdPlugin.APPLE ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
 
 	public int vaoScene;
 	public int texTileHeightMap;
-	public final SharedGLBuffer hStagingBufferVertices = new SharedGLBuffer(
-		"Staging Vertices", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-	public final SharedGLBuffer hStagingBufferUvs = new SharedGLBuffer(
-		"Staging UVs", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-	public final SharedGLBuffer hStagingBufferNormals = new SharedGLBuffer(
-		"Staging Normals", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
-	public final SharedGLBuffer hRenderBufferVertices = new SharedGLBuffer(
-		"Render Vertices", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
-	public final SharedGLBuffer hRenderBufferUvs = new SharedGLBuffer(
-		"Render UVs", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
-	public final SharedGLBuffer hRenderBufferNormals = new SharedGLBuffer(
-		"Render Normals", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
+	public SharedGLBuffer hStagingBufferVertices;
+	public SharedGLBuffer hStagingBufferUvs;
+	public SharedGLBuffer hStagingBufferNormals;
+	public SharedGLBuffer hRenderBufferVertices;
+	public SharedGLBuffer hRenderBufferUvs;
+	public SharedGLBuffer hRenderBufferNormals;
 	public int numPassthroughModels;
 	public GpuIntBuffer modelPassthroughBuffer;
-	public final SharedGLBuffer hModelPassthroughBuffer = new SharedGLBuffer(
-		"Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+	public SharedGLBuffer hModelPassthroughBuffer;
 	// ordered by face count from small to large
 	public int numSortingBins;
 	public int[] modelSortingBinFaceCounts; // facesPerThread * threadCount
@@ -215,7 +211,7 @@ public class LegacyRenderer implements Renderer {
 	private LegacySceneContext nextSceneContext;
 	private int gameTicksUntilSceneReload;
 
-	private final UBOCompute uboCompute = new UBOCompute();
+	private UBOCompute uboCompute;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -240,8 +236,6 @@ public class LegacyRenderer implements Renderer {
 		// Create scene VAO
 		vaoScene = glGenVertexArrays();
 
-		initializeBuffers();
-
 		int maxComputeThreadCount;
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.startUp(this, plugin.awtContext);
@@ -250,6 +244,8 @@ public class LegacyRenderer implements Renderer {
 			maxComputeThreadCount = glGetInteger(GL43C.GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS);
 		}
 		initializeModelSortingBins(maxComputeThreadCount);
+
+		initializeBuffers();
 	}
 
 	@Override
@@ -274,6 +270,8 @@ public class LegacyRenderer implements Renderer {
 		if (nextSceneContext != null)
 			nextSceneContext.destroy();
 		nextSceneContext = null;
+
+		clManager.shutDown();
 	}
 
 	@Override
@@ -314,6 +312,9 @@ public class LegacyRenderer implements Renderer {
 	public void initializeShaders(ShaderIncludes includes) throws ShaderException, IOException {
 		sceneProgram.compile(includes);
 
+		shadowProgram.setMode(plugin.configShadowMode);
+		shadowProgram.compile(includes);
+
 		if (computeMode == ComputeMode.OPENCL) {
 			clManager.initializePrograms();
 		} else {
@@ -333,6 +334,7 @@ public class LegacyRenderer implements Renderer {
 	@Override
 	public void destroyShaders() {
 		sceneProgram.destroy();
+		shadowProgram.destroy();
 
 		if (computeMode == ComputeMode.OPENGL) {
 			modelPassthroughComputeProgram.destroy();
@@ -452,6 +454,15 @@ public class LegacyRenderer implements Renderer {
 	}
 
 	private void initializeBuffers() {
+		hStagingBufferVertices = new SharedGLBuffer("Staging Vertices", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		hStagingBufferUvs = new SharedGLBuffer("Staging UVs", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		hStagingBufferNormals = new SharedGLBuffer("Staging Normals", GL_ARRAY_BUFFER, GL_DYNAMIC_DRAW, CL_MEM_READ_ONLY);
+		hRenderBufferVertices = new SharedGLBuffer("Render Vertices", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
+		hRenderBufferUvs = new SharedGLBuffer("Render UVs", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
+		hRenderBufferNormals = new SharedGLBuffer("Render Normals", GL_ARRAY_BUFFER, GL_STREAM_COPY, CL_MEM_WRITE_ONLY);
+		hModelPassthroughBuffer = new SharedGLBuffer("Model Passthrough", GL_ARRAY_BUFFER, GL_STREAM_DRAW, CL_MEM_READ_ONLY);
+
+		uboCompute = new UBOCompute();
 		uboCompute.initialize(UNIFORM_BLOCK_COMPUTE);
 
 		modelPassthroughBuffer = new GpuIntBuffer();
@@ -469,6 +480,7 @@ public class LegacyRenderer implements Renderer {
 
 	private void destroyBuffers() {
 		uboCompute.destroy();
+		uboCompute = null;
 
 		hStagingBufferVertices.destroy();
 		hStagingBufferUvs.destroy();
@@ -479,6 +491,14 @@ public class LegacyRenderer implements Renderer {
 		hRenderBufferNormals.destroy();
 
 		hModelPassthroughBuffer.destroy();
+
+		hStagingBufferVertices = null;
+		hStagingBufferUvs = null;
+		hStagingBufferNormals = null;
+		hRenderBufferVertices = null;
+		hRenderBufferUvs = null;
+		hRenderBufferNormals = null;
+		hModelPassthroughBuffer = null;
 
 		clManager.shutDown();
 	}
@@ -633,20 +653,6 @@ public class LegacyRenderer implements Renderer {
 					plugin.cameraFocalPoint[0] = (int) client.getCameraFocalPointX();
 					plugin.cameraFocalPoint[1] = (int) client.getCameraFocalPointZ();
 					Arrays.fill(plugin.cameraShift, 0);
-
-					try {
-						frameTimer.begin(Timer.UPDATE_ENVIRONMENT);
-						environmentManager.update(sceneContext);
-						frameTimer.end(Timer.UPDATE_ENVIRONMENT);
-
-						frameTimer.begin(Timer.UPDATE_LIGHTS);
-						lightManager.update(sceneContext, plugin.cameraShift, plugin.cameraFrustum);
-						frameTimer.end(Timer.UPDATE_LIGHTS);
-					} catch (Exception ex) {
-						log.error("Error while updating environment or lights:", ex);
-						plugin.stopPlugin();
-						return;
-					}
 				} else {
 					plugin.cameraShift[0] = plugin.cameraFocalPoint[0] - (int) client.getCameraFocalPointX();
 					plugin.cameraShift[1] = plugin.cameraFocalPoint[1] - (int) client.getCameraFocalPointZ();
@@ -1115,7 +1121,7 @@ public class LegacyRenderer implements Renderer {
 				glClear(GL_DEPTH_BUFFER_BIT);
 				glDepthFunc(GL_LEQUAL);
 
-				plugin.shadowProgram.use();
+				shadowProgram.use();
 
 				final int camX = plugin.cameraFocalPoint[0];
 				final int camY = plugin.cameraFocalPoint[1];

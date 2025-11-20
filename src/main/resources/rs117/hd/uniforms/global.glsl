@@ -2,16 +2,6 @@
 
 #include <utils/constants.glsl>
 
-#if ZONE_RENDERER
-    layout(std140) uniform UBOCommandBuffer {
-        int worldViewIndex;
-        ivec3 sceneBase;
-    };
-#else
-    #define worldViewIndex -1
-    #define sceneBase vec3(0)
-#endif
-
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;

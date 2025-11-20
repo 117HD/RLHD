@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.config.SeasonalTheme;
 import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.scene.GamevalManager;
@@ -67,12 +68,15 @@ public class ModelOverride
 	public boolean castShadows = true;
 	public boolean receiveShadows = true;
 	public boolean terrainVertexSnap = false;
+	public boolean undoVanillaShading = true;
+	public float terrainVertexSnapThreshold = 0.125f;
 	public float shadowOpacityThreshold = 0;
 	public TzHaarRecolorType tzHaarRecolorType = TzHaarRecolorType.NONE;
 	public InheritTileColorType inheritTileColorType = InheritTileColorType.NONE;
 	public WindDisplacement windDisplacementMode = WindDisplacement.DISABLED;
 	public int windDisplacementModifier = 0;
 	public boolean invertDisplacementStrength = false;
+	public int depthBias = -1;
 
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] hideInAreas = {};
@@ -85,13 +89,16 @@ public class ModelOverride
 	public transient boolean isDummy;
 	public transient Map<AABB, ModelOverride> areaOverrides;
 	public transient AhslPredicate ahslCondition;
+	public transient boolean hasTransparency;
+	public transient boolean mightHaveTransparency;
+	public transient boolean modifiesVanillaTexture;
 
 	@FunctionalInterface
 	public interface AhslPredicate {
 		boolean test(int ahsl);
 	}
 
-	public void normalize(VanillaShadowMode vanillaShadowMode) {
+	public void normalize(HdPlugin plugin) {
 		// Ensure there are no nulls in case of invalid configuration during development
 		if (baseMaterial == null) {
 			if (Props.DEVELOPMENT)
@@ -130,24 +137,45 @@ public class ModelOverride
 			windDisplacementModifier = clamp(windDisplacementModifier, -3, 3);
 		}
 
+		modifiesVanillaTexture = textureMaterial.modifiesVanillaTexture;
+
+		boolean disableTextures = !plugin.configModelTextures && !forceMaterialChanges;
+		if (disableTextures) {
+			if (baseMaterial.modifiesVanillaTexture)
+				baseMaterial = Material.NONE;
+			if (textureMaterial.modifiesVanillaTexture)
+				textureMaterial = Material.NONE;
+		}
+
 		if (areas == null)
 			areas = new AABB[0];
 		if (hideInAreas == null)
 			hideInAreas = new AABB[0];
 
+		hasTransparency = mightHaveTransparency =
+			baseMaterial.hasTransparency ||
+			textureMaterial.hasTransparency ||
+			tzHaarRecolorType != TzHaarRecolorType.NONE;
+
 		if (materialOverrides != null) {
 			var normalized = new HashMap<Material, ModelOverride>();
 			for (var entry : materialOverrides.entrySet()) {
 				var override = entry.getValue();
-				override.normalize(vanillaShadowMode);
+				override.normalize(plugin);
+				if (disableTextures && override.modifiesVanillaTexture)
+					continue;
+				mightHaveTransparency |= override.mightHaveTransparency;
 				normalized.put(entry.getKey(), override);
 			}
+			if (normalized.isEmpty())
+				normalized = null;
 			materialOverrides = normalized;
 		}
 
 		if (colorOverrides != null) {
 			for (var override : colorOverrides) {
-				override.normalize(vanillaShadowMode);
+				override.normalize(plugin);
+				mightHaveTransparency |= override.mightHaveTransparency;
 				override.ahslCondition = parseAhslConditions(override.colors);
 			}
 		}
@@ -160,9 +188,9 @@ public class ModelOverride
 			uvOrientationZ = uvOrientation;
 
 		if (retainVanillaShadowsInPvm) {
-			if (vanillaShadowMode.retainInPvm)
+			if (plugin.configVanillaShadowMode.retainInPvm)
 				hideVanillaShadows = false;
-			if (vanillaShadowMode == VanillaShadowMode.PREFER_IN_PVM && hideHdShadowsInPvm)
+			if (plugin.configVanillaShadowMode == VanillaShadowMode.PREFER_IN_PVM && hideHdShadowsInPvm)
 				castShadows = false;
 		}
 
@@ -199,19 +227,25 @@ public class ModelOverride
 			castShadows,
 			receiveShadows,
 			terrainVertexSnap,
+			undoVanillaShading,
+			terrainVertexSnapThreshold,
 			shadowOpacityThreshold,
 			tzHaarRecolorType,
 			inheritTileColorType,
 			windDisplacementMode,
 			windDisplacementModifier,
 			invertDisplacementStrength,
+			depthBias,
 			hideInAreas,
 			materialOverrides,
 			colorOverrides,
 			colors,
 			isDummy,
 			areaOverrides,
-			ahslCondition
+			ahslCondition,
+			hasTransparency,
+			mightHaveTransparency,
+			modifiesVanillaTexture
 		);
 	}
 

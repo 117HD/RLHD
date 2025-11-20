@@ -40,7 +40,6 @@ import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
@@ -59,6 +58,7 @@ import static rs117.hd.scene.tile_overrides.TileOverride.NONE;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.UNDERWATER_HSL;
+import static rs117.hd.utils.HDUtils.packTerrainData;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -181,7 +181,7 @@ public class LegacySceneUploader {
 		proceduralGenerator.clearSceneData(sceneContext);
 	}
 
-	public void prepareBeforeSwap(SceneContext sceneContext) {
+	public void prepareBeforeSwap(LegacySceneContext sceneContext) {
 		assert client.isClientThread();
 		if (sceneContext.isPrepared)
 			return;
@@ -194,16 +194,12 @@ public class LegacySceneUploader {
 		// Gaps need to be filled right before scene swap, since map regions aren't updated earlier
 		if (sceneContext.fillGaps) {
 			sceneContext.staticGapFillerTilesOffset = sceneContext.staticVertexCount;
-			if (sceneContext instanceof LegacySceneContext) {
-				fillGaps((LegacySceneContext) sceneContext);
-			} else {
-				log.warn("TODO: Implementing gap filling");
-			}
+			fillGaps(sceneContext);
 			sceneContext.staticGapFillerTilesVertexCount = sceneContext.staticVertexCount - sceneContext.staticGapFillerTilesOffset;
 		}
 	}
 
-	public void updatePlayerArea(SceneContext sceneContext) {
+	public void updatePlayerArea(LegacySceneContext sceneContext) {
 		if (!sceneContext.enableAreaHiding) {
 			sceneContext.currentArea = null;
 			return;
@@ -228,7 +224,7 @@ public class LegacySceneUploader {
 		}
 	}
 
-	private void removeTilesOutsideCurrentArea(SceneContext sceneContext) {
+	private void removeTilesOutsideCurrentArea(LegacySceneContext sceneContext) {
 		assert sceneContext.sceneBase != null;
 		updatePlayerArea(sceneContext);
 		if (sceneContext.currentArea == null)
@@ -260,7 +256,7 @@ public class LegacySceneUploader {
 		if (area != null && !area.fillGaps)
 			return;
 
-		log.warn("TODO: Check if scene.getMapRegions() is the same as client.getMapRegions()");
+//		log.warn("TODO: Check if scene.getMapRegions() is the same as client.getMapRegions()");
 
 		int sceneMin = -sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
 		int sceneMax = SCENE_SIZE + sceneContext.expandedMapLoadingChunks * CHUNK_SIZE;
@@ -786,10 +782,10 @@ public class LegacySceneUploader {
 			bufferLength += 6;
 
 
-			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay);
-			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay);
-			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay);
-			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay);
+			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, swVertexIsOverlay, true);
+			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, seVertexIsOverlay, true);
+			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, nwVertexIsOverlay, true);
+			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, neVertexIsOverlay, true);
 
 			float uvcos = -uvScale, uvsin = 0;
 			if (uvOrientation % 2048 != 0) {
@@ -927,10 +923,10 @@ public class LegacySceneUploader {
 
 			bufferLength += 6;
 
-			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
-			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+			int packedMaterialDataSW = swMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+			int packedMaterialDataSE = seMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+			int packedMaterialDataNW = nwMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+			int packedMaterialDataNE = neMaterial.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
 
 			sceneContext.stagingBufferUvs.ensureCapacity(24);
 			sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialDataNE);
@@ -1143,9 +1139,9 @@ public class LegacySceneUploader {
 			bufferLength += 3;
 
 			int[] packedMaterialData = {
-				materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay),
-				materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay),
-				materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay)
+				materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexAIsOverlay, true),
+				materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexBIsOverlay, true),
+				materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, vertexCIsOverlay, true)
 			};
 
 			float uvcos = -uvScale, uvsin = 0;
@@ -1310,9 +1306,9 @@ public class LegacySceneUploader {
 
 				bufferLength += 3;
 
-				int packedMaterialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
-				int packedMaterialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
-				int packedMaterialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+				int packedMaterialDataA = materialA.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+				int packedMaterialDataB = materialB.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
+				int packedMaterialDataC = materialC.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
 
 				sceneContext.stagingBufferUvs.ensureCapacity(12);
 				sceneContext.stagingBufferUvs.put(1 - localVertices[0][0] / 128f, 1 - localVertices[0][1] / 128f, 0, packedMaterialDataA);
@@ -1361,7 +1357,7 @@ public class LegacySceneUploader {
 		sceneContext.stagingBufferVertices.put(toX, seHeight, fromY, color);
 		sceneContext.stagingBufferVertices.put(fromX, nwHeight, toY, color);
 
-		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false);
+		int packedMaterialData = material.packMaterialData(ModelOverride.NONE, UvType.GEOMETRY, false, true);
 
 		sceneContext.stagingBufferUvs.ensureCapacity(24);
 		sceneContext.stagingBufferUvs.put(0, 0, 0, packedMaterialData);
@@ -1371,13 +1367,5 @@ public class LegacySceneUploader {
 		sceneContext.stagingBufferUvs.put(1, 1, 0, packedMaterialData);
 		sceneContext.stagingBufferUvs.put(0, 1, 0, packedMaterialData);
 		sceneContext.stagingBufferUvs.put(1, 0, 0, packedMaterialData);
-	}
-
-	public static int packTerrainData(boolean isTerrain, int waterDepth, WaterType waterType, int plane) {
-		// Up to 16-bit water depth | 5-bit water type | 2-bit plane | terrain flag
-		assert waterType.index < 1 << 5 : "Too many water types";
-		int terrainData = (waterDepth & 0xFFFF) << 8 | waterType.index << 3 | plane << 1 | (isTerrain ? 1 : 0);
-		assert (terrainData & ~0xFFFFFF) == 0 : "Only the lower 24 bits are usable, since we pass this into shaders as a float";
-		return terrainData;
 	}
 }

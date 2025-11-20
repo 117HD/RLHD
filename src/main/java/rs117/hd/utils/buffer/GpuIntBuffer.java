@@ -25,6 +25,7 @@
 package rs117.hd.utils.buffer;
 
 import java.nio.IntBuffer;
+import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
@@ -32,6 +33,7 @@ import static rs117.hd.utils.MathUtils.*;
 
 public class GpuIntBuffer
 {
+	@Getter
 	private IntBuffer buffer;
 	private final boolean ownsBuffer;
 
@@ -66,6 +68,17 @@ public class GpuIntBuffer
 	@SuppressWarnings("deprecation")
 	protected void finalize() {
 		destroy();
+	}
+
+	@Override
+	public String toString() {
+		return String.format(
+			"%s@%x(pos=%d, size=%d)",
+			getClass().getSimpleName(),
+			hashCode(),
+			buffer.position(),
+			buffer.capacity()
+		);
 	}
 
 	public void put(int x, int y, int z) {
@@ -191,10 +204,5 @@ public class GpuIntBuffer
 		}
 
 		return this;
-	}
-
-	public IntBuffer getBuffer()
-	{
-		return buffer;
 	}
 }

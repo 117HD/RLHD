@@ -38,6 +38,7 @@ import rs117.hd.utils.PopupUtils;
 import static rs117.hd.HdPlugin.MAX_FACE_COUNT;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
+import static rs117.hd.utils.HDUtils.packTerrainData;
 import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
@@ -188,17 +189,10 @@ public class LegacyModelPusher {
 
 		Material baseMaterial = modelOverride.baseMaterial;
 		Material textureMaterial = modelOverride.textureMaterial;
-		boolean disableTextures = !plugin.configModelTextures && !modelOverride.forceMaterialChanges;
-		if (disableTextures) {
-			if (baseMaterial.modifiesVanillaTexture)
-				baseMaterial = Material.NONE;
-			if (textureMaterial.modifiesVanillaTexture)
-				textureMaterial = Material.NONE;
-		}
 
 		boolean skipUVs =
 			!isVanillaTextured &&
-			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false) == 0 &&
+			baseMaterial.packMaterialData(modelOverride, UvType.GEOMETRY, false, false) == 0 &&
 			modelOverride.colorOverrides == null;
 
 		// ensure capacity upfront
@@ -321,36 +315,33 @@ public class LegacyModelPusher {
 			int[] faceColors = model.getFaceColors1();
 			byte[] faceTransparencies = model.getFaceTransparencies();
 			for (int face = 0; face < faceCount; face++) {
+				short textureId = isVanillaTextured ? faceTextures[face] : -1;
 				UvType uvType = UvType.GEOMETRY;
 				Material material = baseMaterial;
+				ModelOverride faceOverride = modelOverride;
 
-				short textureId = isVanillaTextured ? faceTextures[face] : -1;
 				if (textureId != -1) {
 					uvType = UvType.VANILLA;
-					material = textureMaterial;
-					if (material == Material.NONE)
+					if (textureMaterial != Material.NONE) {
+						material = textureMaterial;
+					} else {
 						material = materialManager.fromVanillaTexture(textureId);
-				}
-
-				ModelOverride faceOverride = modelOverride;
-				if (!disableTextures) {
-					if (modelOverride.materialOverrides != null) {
-						var override = modelOverride.materialOverrides.get(material);
-						if (override != null) {
-							faceOverride = override;
-							material = faceOverride.textureMaterial;
+						if (modelOverride.materialOverrides != null) {
+							var override = modelOverride.materialOverrides.get(material);
+							if (override != null) {
+								faceOverride = override;
+								material = faceOverride.textureMaterial;
+							}
 						}
 					}
-
+				} else if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
 					// Color overrides are heavy. Only apply them if the UVs will be cached or don't need caching
-					if (modelOverride.colorOverrides != null && (cacheUvData || !needsCaching)) {
-						int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
-						for (var override : modelOverride.colorOverrides) {
-							if (override.ahslCondition.test(ahsl)) {
-								faceOverride = override;
-								material = faceOverride.baseMaterial;
-								break;
-							}
+					int ahsl = (faceTransparencies == null ? 0xFF : 0xFF - (faceTransparencies[face] & 0xFF)) << 16 | faceColors[face];
+					for (var override : modelOverride.colorOverrides) {
+						if (override.ahslCondition.test(ahsl)) {
+							faceOverride = override;
+							material = faceOverride.baseMaterial;
+							break;
 						}
 					}
 				}
@@ -361,7 +352,7 @@ public class LegacyModelPusher {
 						uvType = isVanillaUVMapped && textureFaces[face] != -1 ? UvType.VANILLA : UvType.GEOMETRY;
 				}
 
-				int materialData = material.packMaterialData(faceOverride, uvType, false);
+				int materialData = material.packMaterialData(faceOverride, uvType, false, textureId != -1);
 
 				final float[] uvData = sceneContext.modelFaceUvs;
 				if (materialData == 0) {
@@ -394,7 +385,7 @@ public class LegacyModelPusher {
 	}
 
 	private void getNormalDataForFace(SceneContext sceneContext, Model model, @Nonnull ModelOverride modelOverride, int face) {
-		assert LegacySceneUploader.packTerrainData(false, 0, WaterType.NONE, 0) == 0;
+		assert packTerrainData(false, 0, WaterType.NONE, 0) == 0;
 		if (modelOverride.flatNormals || !plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1) {
 			Arrays.fill(sceneContext.modelFaceNormals, 0);
 			return;
@@ -617,7 +608,6 @@ public class LegacyModelPusher {
 						modelOverride,
 						model,
 						face,
-						packedAlphaPriorityFlags,
 						color1,
 						color2,
 						color3
@@ -625,7 +615,7 @@ public class LegacyModelPusher {
 					color1 = tzHaarRecolored[0];
 					color2 = tzHaarRecolored[1];
 					color3 = tzHaarRecolored[2];
-					packedAlphaPriorityFlags = tzHaarRecolored[3];
+					packedAlphaPriorityFlags |= tzHaarRecolored[3] << 24;
 				}
 			}
 		}

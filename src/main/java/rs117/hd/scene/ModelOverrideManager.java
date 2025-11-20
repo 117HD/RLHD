@@ -8,6 +8,7 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -50,7 +51,7 @@ public class ModelOverrideManager {
 				modelOverrides.clear();
 				for (ModelOverride override : parsedOverrides) {
 					try {
-						override.normalize(plugin.configVanillaShadowMode);
+						override.normalize(plugin);
 					} catch (IllegalStateException ex) {
 						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 						continue;
@@ -193,5 +194,10 @@ public class ModelOverrideManager {
 					return entry.getValue();
 
 		return override;
+	}
+
+	@Nonnull
+	public ModelOverride getOverride(TileObject tileObject, int[] worldPos) {
+		return getOverride(ModelHash.packUuid(ModelHash.TYPE_OBJECT, tileObject.getId()), worldPos);
 	}
 }

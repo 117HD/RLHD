@@ -5,11 +5,13 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.lwjgl.BufferUtils;
+import rs117.hd.utils.RenderState;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
@@ -302,6 +304,9 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		size += property.type.size + padding;
 		properties.add(property);
 
+		if (size > 65536)
+			log.warn("Uniform buffer {} is too large! ({} bytes)", glBuffer.name, size);
+
 		return property;
 	}
 
@@ -341,6 +346,10 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 	protected void preUpload() {}
 
 	public final void upload() {
+		upload(null);
+	}
+
+	public final void upload(@Nullable RenderState state) {
 		if (data == null)
 			return;
 
@@ -352,9 +361,13 @@ public abstract class UniformBuffer<GLBUFFER extends GLBuffer> {
 		data.position(dirtyLowTide);
 		data.limit(dirtyHighTide);
 
-		glBindBuffer(GL_UNIFORM_BUFFER, glBuffer.id);
+		if (state != null) {
+			state.ubo.set(glBuffer.id);
+			state.ubo.apply();
+		} else {
+			glBindBuffer(GL_UNIFORM_BUFFER, glBuffer.id);
+		}
 		glBufferSubData(GL_UNIFORM_BUFFER, dirtyLowTide, data);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		data.clear();
 

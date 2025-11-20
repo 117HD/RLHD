@@ -31,7 +31,6 @@ import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.HdPlugin;
-import rs117.hd.config.SeasonalTheme;
 import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -78,6 +77,9 @@ public class ProceduralGenerator {
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
+
+	@Inject
+	private WaterTypeManager waterTypeManager;
 
 	public void generateSceneData(SceneContext sceneContext)
 	{
@@ -817,14 +819,13 @@ public class ProceduralGenerator {
 		// As a fallback, always consider vanilla textured water tiles as water
 		// We purposefully ignore material replacements here such as ice from the winter theme
 		if (waterType == WaterType.NONE) {
-			if (130 <= textureId && textureId <= 189) {
+			if (130 <= textureId && textureId <= 189 || textureId == 208) {
 				// New sailing water textures
-				waterType = WaterType.WATER;
+				waterType = waterTypeManager.get(String.format("VANILLA_%d", textureId));
 			} else {
 				switch (textureId) {
 					case 1:
 					case 24:
-					case 208:
 						waterType = WaterType.WATER; // This used to be WATER_FLAT, but for sailing we want translucent water
 						break;
 					case 25:
@@ -834,8 +835,9 @@ public class ProceduralGenerator {
 			}
 		}
 
-		if (waterType == WaterType.WATER && plugin.configSeasonalTheme == SeasonalTheme.WINTER)
-			return WaterType.ICE;
+		// Disable the winter theme ice
+//		if (waterType == WaterType.WATER && plugin.configSeasonalTheme == SeasonalTheme.WINTER)
+//			return WaterType.ICE;
 
 		return waterType;
 	}
@@ -991,7 +993,6 @@ public class ProceduralGenerator {
 		ModelOverride modelOverride,
 		Model model,
 		int face,
-		int packedAlphaPriority,
 		int color1,
 		int color2,
 		int color3
@@ -1004,12 +1005,14 @@ public class ProceduralGenerator {
 		int hue = 7;
 		hsl1[0] = hsl2[0] = hsl3[0] = hue;
 
+		int transparency = 0;
+
 		// recolor tzhaar to look like the 2008+ HD version
 		if (ModelHash.getUuidSubType(uuid) == ModelHash.TYPE_GROUND_OBJECT) {
 			// remove the black parts of floor objects to allow the ground to show,
 			// so we can apply textures, ground blending, etc. to it
 			if (hsl1[1] <= 1)
-				packedAlphaPriority = 0xFF << 24;
+				transparency = 0xFF;
 		}
 
 		if (modelOverride.tzHaarRecolorType == TzHaarRecolorType.GRADIENT) {
@@ -1051,7 +1054,7 @@ public class ProceduralGenerator {
 		tzHaarRecolored[0] = ColorUtils.packRawHsl(hsl1);
 		tzHaarRecolored[1] = ColorUtils.packRawHsl(hsl2);
 		tzHaarRecolored[2] = ColorUtils.packRawHsl(hsl3);
-		tzHaarRecolored[3] = packedAlphaPriority;
+		tzHaarRecolored[3] = transparency;
 
 		return tzHaarRecolored;
 	}

@@ -170,17 +170,17 @@ public class Material {
 		return replacementCondition.test(vars);
 	}
 
-	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay) {
+	public int packMaterialData(@Nonnull ModelOverride modelOverride, UvType uvType, boolean isOverlay, boolean isTextured) {
 		// This needs to return zero by default, since we often fall back to writing all zeroes to UVs
 		assert isValid : String.format("Material %s used after invalidation", this);
 		int materialIndex = uboIndex;
 		assert materialIndex <= MAX_MATERIAL_INDEX;
-		// The sign bit can't be used without shader changes to correctly unpack the material index
-		return (materialIndex & MAX_MATERIAL_INDEX) << 20
-			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 14
-			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 11
-			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 8
-			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 7
+		return (materialIndex & MAX_MATERIAL_INDEX) << 21
+			   | ((int) (modelOverride.shadowOpacityThreshold * 0x3F) & 0x3F) << 15
+			   | ((modelOverride.windDisplacementModifier + 3) & 0x7) << 12
+			   | (modelOverride.windDisplacementMode.ordinal() & 0x7) << 9
+			   | (modelOverride.invertDisplacementStrength ? 1 : 0) << 8
+			   | (modelOverride.undoVanillaShading && !isTextured ? 1 : 0) << 7
 			   | (modelOverride.terrainVertexSnap ? 1 : 0) << 6
 			   | (!modelOverride.receiveShadows ? 1 : 0) << 5
 			   | (modelOverride.upwardsNormals ? 1 : 0) << 4

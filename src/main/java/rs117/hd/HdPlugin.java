@@ -86,7 +86,6 @@ import rs117.hd.config.VanillaShadowMode;
 import rs117.hd.opengl.AsyncUICopy;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
-import rs117.hd.opengl.shader.ShadowShaderProgram;
 import rs117.hd.opengl.shader.TiledLightingShaderProgram;
 import rs117.hd.opengl.shader.UIShaderProgram;
 import rs117.hd.opengl.uniforms.UBOCompute;
@@ -99,6 +98,8 @@ import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
+import rs117.hd.renderer.legacy.LegacyRenderer;
+import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -267,9 +268,6 @@ public class HdPlugin extends Plugin {
 	private FrameTimer frameTimer;
 
 	@Inject
-	public ShadowShaderProgram shadowProgram;
-
-	@Inject
 	private UIShaderProgram uiProgram;
 
 	@Getter
@@ -298,6 +296,12 @@ public class HdPlugin extends Plugin {
 	public static boolean SKIP_GL_ERROR_CHECKS;
 	public static GLCapabilities GL_CAPS;
 	public static boolean AMD_GPU;
+	public static boolean INTEL_GPU;
+	public static boolean NVIDIA_GPU;
+	public static boolean APPLE;
+	public static boolean APPLE_ARM;
+
+	public static boolean SUPPORTS_INDIRECT_DRAW;
 
 	public Canvas canvas;
 	public AWTContext awtContext;
@@ -371,6 +375,7 @@ public class HdPlugin extends Plugin {
 	public boolean configModelBatching;
 	public boolean configModelCaching;
 	public boolean configShadowsEnabled;
+	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
 	public boolean configUndoVanillaShading;
@@ -488,16 +493,31 @@ public class HdPlugin extends Plugin {
 				useLowMemoryMode = config.lowMemoryMode();
 				BUFFER_GROWTH_MULTIPLIER = useLowMemoryMode ? 1.333f : 2;
 
+				OSType osType = OSType.getOSType();
+				String arch = System.getProperty("os.arch", "Unknown");
+				String wordSize = System.getProperty("sun.arch.data.model", "Unknown");
+				log.info("Operating system: {}", osType);
+				log.info("Architecture: {}", arch);
+				log.info("Client is {}-bit", wordSize);
+				APPLE = osType == OSType.MacOS;
+				APPLE_ARM = APPLE && arch.equals("aarch64");
+
 				String glRenderer = Objects.requireNonNullElse(glGetString(GL_RENDERER), "Unknown");
 				String glVendor = Objects.requireNonNullElse(glGetString(GL_VENDOR), "Unknown");
-				String arch = System.getProperty("sun.arch.data.model", "Unknown");
-				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
 				log.info("Using device: {} ({})", glRenderer, glVendor);
 				log.info("Using driver: {}", glGetString(GL_VERSION));
-				log.info("Client is {}-bit", arch);
-				log.info("Low memory mode: {}", useLowMemoryMode);
+				AMD_GPU = glRenderer.contains("AMD") || glRenderer.contains("Radeon") || glVendor.contains("ATI");
+				INTEL_GPU = glRenderer.contains("Intel");
+				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
-				renderer = injector.getInstance(config.renderer().rendererClass);
+				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU && !APPLE || config.forceIndirectDraw();
+
+				renderer = config.legacyRenderer() ?
+					injector.getInstance(LegacyRenderer.class) :
+					injector.getInstance(ZoneRenderer.class);
+				log.info("Using renderer: {}", renderer.getClass().getSimpleName());
+
+				log.info("Low memory mode: {}", useLowMemoryMode);
 
 				if (!Props.has("rlhd.skipGpuChecks")) {
 					List<String> fallbackDevices = List.of(
@@ -771,8 +791,7 @@ public class HdPlugin extends Plugin {
 	public String generateGetter(String type, int arrayLength) {
 		StringBuilder include = new StringBuilder();
 
-		boolean isAppleM1 = OSType.getOSType() == OSType.MacOS && System.getProperty("os.arch").equals("aarch64");
-		if (config.macosIntelWorkaround() && !isAppleM1) {
+		if (config.macosIntelWorkaround() && !APPLE_ARM) {
 			// Workaround wrapper for drivers that do not support dynamic indexing,
 			// particularly Intel drivers on macOS
 			include
@@ -826,7 +845,8 @@ public class HdPlugin extends Plugin {
 			.define("MAX_CHARACTER_POSITION_COUNT", max(1, UBOCompute.MAX_CHARACTER_POSITION_COUNT))
 			.define("WIREFRAME", config.wireframe())
 			.define("WINDOWS_HDR_CORRECTION", config.windowsHdrCorrection())
-			.define("RENDERER", config.renderer())
+			.define("LEGACY_RENDERER", renderer instanceof LegacyRenderer)
+			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
 			.define("LINEAR_ALPHA_BLENDING", configLinearAlphaBlending)
@@ -865,8 +885,6 @@ public class HdPlugin extends Plugin {
 		glBindVertexArray(vaoTri);
 
 		renderer.initializeShaders(includes);
-		shadowProgram.setMode(configShadowMode);
-		shadowProgram.compile(includes);
 		uiProgram.compile(includes);
 
 		if (configDynamicLights != DynamicLights.NONE && configTiledLighting) {
@@ -928,7 +946,6 @@ public class HdPlugin extends Plugin {
 
 	private void destroyShaders() {
 		renderer.destroyShaders();
-		shadowProgram.destroy();
 		uiProgram.destroy();
 
 		tiledLightingImageStoreProgram.destroy();
@@ -1217,7 +1234,7 @@ public class HdPlugin extends Plugin {
 		// Create depth render buffer
 		rboSceneDepth = glGenRenderbuffers();
 		glBindRenderbuffer(GL_RENDERBUFFER, rboSceneDepth);
-		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH24_STENCIL8, sceneResolution[0], sceneResolution[1]);
+		glRenderbufferStorageMultisample(GL_RENDERBUFFER, msaaSamples, GL_DEPTH_COMPONENT32F, sceneResolution[0], sceneResolution[1]);
 		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rboSceneDepth);
 		checkGLErrors();
 
@@ -1628,6 +1645,7 @@ public class HdPlugin extends Plugin {
 	private void updateCachedConfigs() {
 		configShadowMode = config.shadowMode();
 		configShadowsEnabled = configShadowMode != ShadowMode.OFF;
+		configRoofShadows = config.roofShadows();
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
@@ -1747,7 +1765,8 @@ public class HdPlugin extends Plugin {
 						switch (key) {
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
-							case KEY_RENDERER:
+							case KEY_LEGACY_RENDERER:
+							case KEY_FORCE_INDIRECT_DRAW:
 								restartPlugin();
 								// since we'll be restarting the plugin anyway, skip pending changes
 								return;
@@ -1865,11 +1884,6 @@ public class HdPlugin extends Plugin {
 							case KEY_UNLOCK_FPS:
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
-								break;
-							case KEY_FISHING_SPOT_STYLE:
-								reloadModelOverrides = true;
-								fishingSpotReplacer.despawnRuneLiteObjects();
-								clientThread.invokeLater(fishingSpotReplacer::update);
 								break;
 						}
 					}

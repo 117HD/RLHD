@@ -148,6 +148,8 @@ vec4 sampleLegacyWater(int waterTypeIndex, vec3 viewDir) {
 
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
+    if (waterType.fresnelAmount == 0.85)
+        baseColor *= .75f; // Sailing hack
     float shoreLineMask = 1 - dot(IN.texBlend, vAlphaBiasHsl / 127.f);
     float maxFoamAmount = 0.8;
     float foamAmount = min(shoreLineMask, maxFoamAmount);

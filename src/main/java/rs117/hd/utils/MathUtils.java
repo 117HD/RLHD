@@ -177,6 +177,10 @@ public class MathUtils {
 		return multiply(new float[max(a.length, b.length)], a, b);
 	}
 
+	public static float divide(float a, float b) {
+		return b == 0 ? 0 : a / b;
+	}
+
 	public static float[] divide(float[] out, float[] a, float... b) {
 		for (int i = 0; i < out.length; i++) {
 			float divisor = b[i % b.length];
@@ -196,6 +200,16 @@ public class MathUtils {
 		return v - floor(v / mod) * mod;
 	}
 
+	/**
+	 * Modulo which returns the answer with the same sign as the modulus.
+	 */
+	public static int mod(int v, int mod) {
+		return v - (v / mod) * mod;
+	}
+
+	/**
+	 * Modulo which returns the answer with the same sign as the modulus.
+	 */
 	public static int mod(long v, int mod) {
 		return (int) (v - (v / mod) * mod);
 	}
@@ -709,6 +723,8 @@ public class MathUtils {
 	}
 
 	public static int float16(float value) {
+		if (value == 0)
+			return 0;
 		// float32: (-1)^sign * 2^(exponent - 127) * (1.mantissa)
 		// float16: (-1)^sign * 2^(exponent -  15) * (1.mantissa)
 		int f = Float.floatToRawIntBits(value);

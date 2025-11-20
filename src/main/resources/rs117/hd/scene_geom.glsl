@@ -37,6 +37,7 @@ layout(triangle_strip, max_vertices = 3) out;
 #define USE_VANILLA_UV_PROJECTION
 #include <utils/uvs.glsl>
 #include <utils/color_utils.glsl>
+#include <utils/misc.glsl>
 
 in vec3 gPosition[3];
 in vec3 gUv[3];
@@ -44,7 +45,9 @@ in vec3 gNormal[3];
 in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
 in int gTerrainData[3];
+in int gWorldViewId[3];
 
+flat out int vWorldViewId;
 flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
@@ -82,10 +85,11 @@ void main() {
     if (alpha < .004)
         return;
 
-    vec3 vUv[3];
+    vWorldViewId = gWorldViewId[0];
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
+    vec3 vUv[3];
     for (int i = 0; i < 3; i++) {
         vAlphaBiasHsl[i] = gAlphaBiasHsl[i];
         vUv[i] = gUv[i];
@@ -93,7 +97,9 @@ void main() {
         vTerrainData[i] = gTerrainData[i];
     }
 
-    computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    int materialData = vMaterialData[0];
+
+    computeUvs(materialData, gWorldViewId[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(
@@ -127,6 +133,22 @@ void main() {
     bool isWater = waterTypeIndex > 0;
     bool isUnderwaterTile = waterDepth != 0;
     bool isWaterSurface = isWater && !isUnderwaterTile;
+
+    #if UNDO_VANILLA_SHADING && ZONE_RENDERER
+        if ((materialData >> MATERIAL_FLAG_UNDO_VANILLA_SHADING & 1) == 1) {
+            for (int i = 0; i < 3; i++) {
+                vec3 normal = gNormal[i];
+                float magnitude = length(normal);
+                if (magnitude == 0) {
+                    normal = N;
+                } else {
+                    normal /= magnitude;
+                }
+                // TODO: Rotate normal for player shading reversal
+                undoVanillaShading(vAlphaBiasHsl[i], normal);
+            }
+        }
+    #endif
 
     if (renderPass == RENDER_PASS_WATER_REFLECTION && isWater) {
         // Hide flat water surface tiles in the reflection

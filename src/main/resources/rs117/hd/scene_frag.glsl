@@ -25,6 +25,8 @@
  */
 #version 330
 
+#define DISPLAY_BASE_COLOR 0
+
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
@@ -45,6 +47,7 @@ uniform bool shorelineCaustics;
 uniform bool waterTransparency;
 uniform vec3 legacyWaterColor;
 
+flat in int vWorldViewId;
 flat in ivec3 vAlphaBiasHsl;
 flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
@@ -85,9 +88,9 @@ void main() {
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 
-    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
-    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
-    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT);
+    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // Get initial texture map ids
     int colorMap1 = material1.colorMap;
@@ -99,14 +102,14 @@ void main() {
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    int waterDepth1 = vTerrainData[0] >> 8 & 0xFFFF;
-    int waterDepth2 = vTerrainData[1] >> 8 & 0xFFFF;
-    int waterDepth3 = vTerrainData[2] >> 8 & 0xFFFF;
+    int waterDepth1 = vTerrainData[0] >> 11 & 0xFFF;
+    int waterDepth2 = vTerrainData[1] >> 11 & 0xFFF;
+    int waterDepth3 = vTerrainData[2] >> 11 & 0xFFF;
     float waterDepth =
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +
         waterDepth3 * IN.texBlend.z;
-    int waterTypeIndex = vTerrainData[0] >> 3 & 0x1F;
+    int waterTypeIndex = vTerrainData[0] >> 3 & 0xFF;
 
     bool isWater = waterTypeIndex > 0;
     bool isUnderwaterTile = waterDepth != 0;
@@ -200,9 +203,9 @@ void main() {
         vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
         vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
 
-        {
-            // Apply entity tint to HSL
-            ivec4 tint = getWorldViewTint(worldViewIndex);
+        // Apply entity tint to HSL
+        ivec4 tint = getWorldViewTint(vWorldViewId);
+        if (tint.w > 0) {
             hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
             hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
             hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;
@@ -217,6 +220,15 @@ void main() {
         baseColor1.rgb = srgbToLinear(hslToSrgb(baseColor1.xyz));
         baseColor2.rgb = srgbToLinear(hslToSrgb(baseColor2.xyz));
         baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
+
+        #if DISPLAY_BASE_COLOR
+        if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
+            outputColor = baseColor1 * IN.texBlend.x + baseColor2 * IN.texBlend.y + baseColor3 * IN.texBlend.z;
+            outputColor.rgb = linearToSrgb(outputColor.rgb);
+            FragColor = outputColor;
+            return;
+        }
+        #endif
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
@@ -435,14 +447,23 @@ void main() {
         ));
 
         #if LEGACY_WATER
-            outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+            if (tint.w > 0) {
+                outputColor.rgb *= 1.0 + skyLightOut;
+            } else {
+                outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+            }
+
             if (isUnderwaterTile)
                 sampleLegacyUnderwater(outputColor.rgb, waterType.depthColor, waterDepth, lightDotNormals);
         #else
             if (isUnderwaterTile) {
                 sampleUnderwater(outputColor.rgb, waterTypeIndex, waterDepth);
             } else {
-                outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+                if (tint.w > 0) {
+                    outputColor.rgb *= 1.0 + skyLightOut;
+                } else {
+                    outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+                }
             }
         #endif
 
