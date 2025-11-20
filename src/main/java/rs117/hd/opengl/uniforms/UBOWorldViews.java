@@ -1,7 +1,6 @@
 package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -43,14 +42,12 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		}
 
 		public synchronized void free() {
-			activeIndices.remove((Integer) worldViewIdx);
 			freeIndices.add(worldViewIdx);
 			worldView = null;
 		}
 	}
 
 	private final WorldViewStruct[] uboStructs = new WorldViewStruct[MAX_SIMULTANEOUS_WORLD_VIEWS];
-	private final ArrayList<Integer> activeIndices = new ArrayList<>();
 	private final ArrayDeque<Integer> freeIndices = new ArrayDeque<>();
 
 	public UBOWorldViews() {
@@ -58,13 +55,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		for (int i = 0; i < MAX_SIMULTANEOUS_WORLD_VIEWS; i++) {
 			uboStructs[i] = addStruct(new WorldViewStruct(i));
 			freeIndices.add(i);
-		}
-	}
-
-	@Override
-	protected synchronized void preUpload() {
-		for (Integer activeIndex : activeIndices) {
-			uboStructs[activeIndex].update();
 		}
 	}
 
@@ -77,7 +67,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		WorldViewStruct struct = uboStructs[freeIndices.poll()];
 		struct.worldView = worldView;
 		struct.update();
-		activeIndices.add(struct.worldViewIdx);
 		return struct;
 	}
 }
