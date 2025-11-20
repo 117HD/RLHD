@@ -63644,11 +63644,17 @@
     "description": "Sailing - Skiff - Hull",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.75,
     "uvOrientationX": 512,
     "uvOrientationZ": 512,
     "objectIds": [
       "SAILING_BOAT_SKIFF_TRIM_WOODEN",
+      "SAILING_BOAT_SKIFF_TRIM_OAK",
+      "SAILING_BOAT_SKIFF_TRIM_TEAK",
+      "SAILING_BOAT_SKIFF_TRIM_MAHOGANY",
+      "SAILING_BOAT_SKIFF_TRIM_CAMPHOR",
+      "SAILING_BOAT_SKIFF_TRIM_IRONWOOD",
+      "SAILING_BOAT_SKIFF_TRIM_ROSEWOOD",
       "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD",
       "SAILING_BOAT_HULL_KANDARIN_2X5_OAK",
       "SAILING_BOAT_HULL_KANDARIN_2X5_TEAK",
@@ -63694,7 +63700,14 @@
     "uvType": "BOX",
     "uvScale": 0.3,
     "objectIds": [
-      "SAILING_KEEL_KANDARIN_2X5_BRONZE"
+      "SAILING_KEEL_KANDARIN_2X5_BRONZE",
+      "SAILING_KEEL_KANDARIN_2X5_IRON",
+      "SAILING_KEEL_KANDARIN_2X5_STEEL",
+      "SAILING_KEEL_KANDARIN_2X5_MITHRIL",
+      "SAILING_KEEL_KANDARIN_2X5_ADAMANT",
+      "SAILING_KEEL_KANDARIN_2X5_RUNE",
+      "SAILING_KEEL_KANDARIN_2X5_DRAGON"
+
     ]
   },
   {
@@ -63748,11 +63761,10 @@
     ]
   },
   {
-    "description": "Sailing - Skiff - Salvaging Hook",
-    "baseMaterial": "METALLIC_1_LIGHT",
+    "description": "Sailing - Skiff - Salvaging Hook - Bronze",
+    "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientationX": 512,
-    "uvScale": 0.25,
+    "uvScale": 0.5,
     "objectIds": [
       "SALVAGING_HOOK_BRONZE"
     ],
@@ -63765,27 +63777,74 @@
         "uvScale": 0.5
       },
       {
-        "description": "Wood",
-        "baseMaterial": "WOOD_GRAIN_3",
-        "colors": "h == 6",
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.1
       }
     ]
   },
   {
-    "description": "Sailing - Facility- Cargo",
+    "description": "Sailing - Skiff - Salvaging Hook",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SALVAGING_HOOK_IRON"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cargo - Bronze",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 512,
     "objectIds": [
-      "SAILING_BOAT_CARGO_HOLD_REGULAR_RAFT"
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_2X5"
     ],
     "colorOverrides": [
       {
         "description": "Metal",
         "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cargo",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_BOAT_CARGO_HOLD_OAK_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_OAK_2X5"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.1
