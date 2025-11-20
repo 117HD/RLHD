@@ -1496,6 +1496,7 @@ public class ZoneRenderer implements Renderer {
 
 		environmentManager.loadSceneEnvironments(nextSceneContext);
 		proceduralGenerator.generateSceneData(nextSceneContext);
+		plugin.minimapRenderer.prepareScene(nextSceneContext);
 
 		if (nextSceneContext.enableAreaHiding) {
 			nextSceneContext.possibleAreas = Arrays

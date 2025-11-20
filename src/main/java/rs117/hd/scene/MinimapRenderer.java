@@ -63,15 +63,14 @@ public class MinimapRenderer {
 
 	public void prepareScene(SceneContext sceneContext) {
 		final Scene scene = sceneContext.scene;
-		boolean classicLighting = false;
 
 		for (int z = 0; z < MAX_Z; ++z) {
 			for (int x = 0; x < EXTENDED_SCENE_SIZE; ++x) {
 				for (int y = 0; y < EXTENDED_SCENE_SIZE; ++y) {
 					Tile tile = scene.getExtendedTiles()[z][x][y];
 					if (tile == null) continue;
-					processTilePaint(scene, sceneContext, tile, z, x, y, classicLighting);
-					processTileModel(scene, sceneContext, tile, z, x, y, classicLighting);
+					processTilePaint(scene, sceneContext, tile, z, x, y);
+					processTileModel(scene, sceneContext, tile, z, x, y);
 				}
 			}
 		}
@@ -91,7 +90,7 @@ public class MinimapRenderer {
 	private final boolean minimapGroundBlending = false;
 	private final boolean minimapGroundTextures = false;
 
-	private void processTilePaint(Scene scene, SceneContext sceneContext, Tile tile, int z, int x, int y, boolean classicLighting) {
+	private void processTilePaint(Scene scene, SceneContext sceneContext, Tile tile, int z, int x, int y) {
 		SceneTilePaint paint = tile.getSceneTilePaint();
 		if (paint == null) {
 			return;
@@ -110,7 +109,7 @@ public class MinimapRenderer {
 		int baseX = scene.getBaseX();
 		int baseY = scene.getBaseY();
 
-		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(scene, tile);
+		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(sceneContext, tile);
 		int swVertexKey = vertexKeys[0];
 		int seVertexKey = vertexKeys[1];
 		int nwVertexKey = vertexKeys[2];
@@ -203,7 +202,7 @@ public class MinimapRenderer {
 		System.arraycopy(texturePackedColors, 0, sceneContext.minimapTilePaintColors[z][x][y], colors.length, texturePackedColors.length);
 	}
 
-	private void processTileModel(Scene scene, SceneContext sceneContext, Tile tile, int z, int x, int y, boolean classicLighting) {
+	private void processTileModel(Scene scene, SceneContext sceneContext, Tile tile, int z, int x, int y) {
 		SceneTileModel model = tile.getSceneTileModel();
 		if (model == null) {
 			return;
@@ -221,8 +220,8 @@ public class MinimapRenderer {
 		int baseX = scene.getBaseX();
 		int baseY = scene.getBaseY();
 
-		final int tileExX = tileX + SCENE_OFFSET;
-		final int tileExY = tileY + SCENE_OFFSET;
+		final int tileExX = tileX + sceneContext.sceneOffset;
+		final int tileExY = tileY + sceneContext.sceneOffset;
 
 		int[] worldPos = sceneContext.sceneToWorld(tileX, tileY, tileZ);
 		int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY];

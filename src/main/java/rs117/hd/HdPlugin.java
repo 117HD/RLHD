@@ -104,6 +104,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.MinimapRenderer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
@@ -249,6 +250,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private AsyncUICopy asyncUICopy;
+
+	@Inject
+	public MinimapRenderer minimapRenderer;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
@@ -684,6 +688,7 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
+				minimapRenderer.sendApiMessage(null,null);
 
 				if (renderer != null) {
 					eventBus.unregister(renderer);

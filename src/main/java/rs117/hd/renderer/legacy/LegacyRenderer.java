@@ -1385,6 +1385,7 @@ public class LegacyRenderer implements Renderer {
 			nextSceneContext.forceDisableAreaHiding = sceneContext != null && sceneContext.forceDisableAreaHiding;
 
 			environmentManager.loadSceneEnvironments(nextSceneContext);
+			plugin.minimapRenderer.prepareScene(nextSceneContext);
 			sceneUploader.upload(nextSceneContext);
 		} catch (OutOfMemoryError oom) {
 			log.error(
