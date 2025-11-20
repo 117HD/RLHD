@@ -335,9 +335,8 @@ public class ZoneRenderer implements Renderer {
 		this.hideRoofIds = hideRoofIds;
 
 		WorldViewContext ctx = context(scene);
-		if(ctx != null && ctx.uboWorldViewStruct != null) {
+		if (ctx != null && ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.update();
-		}
 
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
 			preSceneDrawTopLevel(scene, cameraX, cameraY, cameraZ, cameraPitch, cameraYaw);

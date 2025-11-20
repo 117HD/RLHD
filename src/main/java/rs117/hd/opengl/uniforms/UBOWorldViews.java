@@ -20,40 +20,39 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 
 	@RequiredArgsConstructor
 	public class WorldViewStruct extends StructProperty {
-
 		public final int worldViewIdx;
 
 		public final Property projection = addProperty(PropertyType.Mat4, "projection");
 		public final Property tint = addProperty(PropertyType.IVec4, "tint");
 
 		public WorldView worldView;
-		public final float[] projectionMatrix = new float[16];
-		public final int[] tintValues = new int[4];
+
+		private final float[] currentProjection = new float[16];
+		private final int[] currentTint = new int[4];
+		private final int[] newTint = new int[4];
 
 		public void update() {
-			final Projection worldViewProjection = worldView.getMainWorldProjection();
-
 			float[] newProjection = IDENTITY_MATRIX;
-			if(worldViewProjection instanceof FloatProjection) {
-				newProjection = ((FloatProjection)worldViewProjection).getProjection();
-			}
+			final Projection worldViewProjection = worldView.getMainWorldProjection();
+			if (worldViewProjection instanceof FloatProjection)
+				newProjection = ((FloatProjection) worldViewProjection).getProjection();
 
-			if(!Arrays.equals(projectionMatrix, newProjection)) {
+			if (!Arrays.equals(currentProjection, newProjection)) {
 				projection.set(newProjection);
-				copyTo(projectionMatrix, newProjection);
+				copyTo(currentProjection, newProjection);
 			}
 
+			newTint[3] = 0;
 			Scene scene = worldView.getScene();
-			int hue = scene != null ? scene.getOverrideHue() : 0;
-			int saturation = scene != null ? scene.getOverrideSaturation() : 0;
-			int luminance = scene != null ? scene.getOverrideLuminance() : 0;
-			int amount = scene != null ? scene.getOverrideAmount() : 0;
-			if(tintValues[0] != hue || tintValues[1] != saturation || tintValues[2] != luminance || tintValues[3] != amount) {
-				tintValues[0] = hue;
-				tintValues[1] = saturation;
-				tintValues[2] = luminance;
-				tintValues[3] = amount;
-				tint.set(tintValues);
+			if (scene != null) {
+				newTint[0] = scene.getOverrideHue();
+				newTint[1] = scene.getOverrideSaturation();
+				newTint[2] = scene.getOverrideLuminance();
+				newTint[3] = scene.getOverrideAmount();
+			}
+			if (!Arrays.equals(currentTint, newTint)) {
+				tint.set(newTint);
+				copyTo(currentTint, newTint);
 			}
 		}
 
