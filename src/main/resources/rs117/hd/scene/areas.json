@@ -8612,6 +8612,10 @@
     ]
   },
   {
+    "name": "PANDEMONIUM_QUEST_INSTANCE",
+    "regions": [ 5958 ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -8642,6 +8646,7 @@
   {
     "name": "MAINLAND_EXTENSIONS",
     "areas": [
+      "PANDEMONIUM_QUEST_INSTANCE",
       "BRAINDEATH_ISLAND",
       "CLAN_HALL",
       "CLAN_WARS_ARENAS_OVERWORLD",

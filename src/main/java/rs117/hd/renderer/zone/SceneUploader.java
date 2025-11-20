@@ -25,7 +25,6 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -62,6 +61,7 @@ import static rs117.hd.utils.MathUtils.*;
 class SceneUploader {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
+	private static final int[] EMPTY_NORMALS = new int[9];
 
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
@@ -1205,6 +1205,11 @@ class SceneUploader {
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
 
+		final int[] xVertexNormals = model.getVertexNormalsX();
+		final int[] yVertexNormals = model.getVertexNormalsY();
+		final int[] zVertexNormals = model.getVertexNormalsZ();
+		final boolean modelHasNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
+
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
 		final int[] texIndices1 = model.getTexIndices1();
@@ -1460,23 +1465,24 @@ class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
-				Arrays.fill(modelNormals, 0);
-			} else {
-				final int[] xVertexNormals = model.getVertexNormalsX();
-				final int[] yVertexNormals = model.getVertexNormalsY();
-				final int[] zVertexNormals = model.getVertexNormalsZ();
-				if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
-					modelNormals[0] = xVertexNormals[triangleA];
-					modelNormals[1] = yVertexNormals[triangleA];
-					modelNormals[2] = zVertexNormals[triangleA];
-					modelNormals[3] = xVertexNormals[triangleB];
-					modelNormals[4] = yVertexNormals[triangleB];
-					modelNormals[5] = zVertexNormals[triangleB];
-					modelNormals[6] = xVertexNormals[triangleC];
-					modelNormals[7] = yVertexNormals[triangleC];
-					modelNormals[8] = zVertexNormals[triangleC];
+			final int[] faceNormals;
+			if (modelHasNormals) {
+				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
+					faceNormals = EMPTY_NORMALS;
+				} else {
+					faceNormals = modelNormals;
+					faceNormals[0] = xVertexNormals[triangleA];
+					faceNormals[1] = yVertexNormals[triangleA];
+					faceNormals[2] = zVertexNormals[triangleA];
+					faceNormals[3] = xVertexNormals[triangleB];
+					faceNormals[4] = yVertexNormals[triangleB];
+					faceNormals[5] = zVertexNormals[triangleB];
+					faceNormals[6] = xVertexNormals[triangleC];
+					faceNormals[7] = yVertexNormals[triangleC];
+					faceNormals[8] = zVertexNormals[triangleC];
 				}
+			} else {
+				faceNormals = EMPTY_NORMALS;
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -1487,19 +1493,19 @@ class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				faceNormals[0], faceNormals[1], faceNormals[2], 0
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				faceNormals[3], faceNormals[4], faceNormals[5], 0
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				faceNormals[6], faceNormals[7], faceNormals[8], 0
 			);
 
 			len += 3;
@@ -1534,6 +1540,11 @@ class SceneUploader {
 		final int[] color1s = model.getFaceColors1();
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
+
+		final int[] xVertexNormals = model.getVertexNormalsX();
+		final int[] yVertexNormals = model.getVertexNormalsY();
+		final int[] zVertexNormals = model.getVertexNormalsZ();
+		final boolean modelHasNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
 
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
@@ -1691,23 +1702,24 @@ class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
-				Arrays.fill(modelNormals, 0);
-			} else {
-				final int[] xVertexNormals = model.getVertexNormalsX();
-				final int[] yVertexNormals = model.getVertexNormalsY();
-				final int[] zVertexNormals = model.getVertexNormalsZ();
-				if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
-					modelNormals[0] = xVertexNormals[triangleA];
-					modelNormals[1] = yVertexNormals[triangleA];
-					modelNormals[2] = zVertexNormals[triangleA];
-					modelNormals[3] = xVertexNormals[triangleB];
-					modelNormals[4] = yVertexNormals[triangleB];
-					modelNormals[5] = zVertexNormals[triangleB];
-					modelNormals[6] = xVertexNormals[triangleC];
-					modelNormals[7] = yVertexNormals[triangleC];
-					modelNormals[8] = zVertexNormals[triangleC];
+			final int[] faceNormals;
+			if (modelHasNormals) {
+				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
+					faceNormals = EMPTY_NORMALS;
+				} else {
+					faceNormals = modelNormals;
+					faceNormals[0] = xVertexNormals[triangleA];
+					faceNormals[1] = yVertexNormals[triangleA];
+					faceNormals[2] = zVertexNormals[triangleA];
+					faceNormals[3] = xVertexNormals[triangleB];
+					faceNormals[4] = yVertexNormals[triangleB];
+					faceNormals[5] = zVertexNormals[triangleB];
+					faceNormals[6] = xVertexNormals[triangleC];
+					faceNormals[7] = yVertexNormals[triangleC];
+					faceNormals[8] = zVertexNormals[triangleC];
 				}
+			} else {
+				faceNormals = EMPTY_NORMALS;
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -1719,19 +1731,19 @@ class SceneUploader {
 				vb,
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				faceNormals[0], faceNormals[1], faceNormals[2], 0
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				faceNormals[3], faceNormals[4], faceNormals[5], 0
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				faceNormals[6], faceNormals[7], faceNormals[8], 0
 			);
 			len += 3;
 		}
