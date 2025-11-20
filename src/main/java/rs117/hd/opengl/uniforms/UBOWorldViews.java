@@ -1,6 +1,7 @@
 package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -8,36 +9,51 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 	// The max concurrent visible worldviews is 25
 	// Source: https://discord.com/channels/886733267284398130/1419633364817674351/1429129853592146041
 	public static final int MAX_SIMULTANEOUS_WORLD_VIEWS = 128;
+	private static final float[] IDENTITY_MATRIX = Mat4.identity();
 
 	@RequiredArgsConstructor
 	public class WorldViewStruct extends StructProperty {
+
 		public final int worldViewIdx;
 
 		public final Property projection = addProperty(PropertyType.Mat4, "projection");
 		public final Property tint = addProperty(PropertyType.IVec4, "tint");
 
 		public WorldView worldView;
+		public final float[] projectionMatrix = new float[16];
+		public final int[] tintValues = new int[4];
 
 		public void update() {
-			var proj = worldView.getMainWorldProjection();
-			projection.set(proj instanceof FloatProjection ? ((FloatProjection) proj).getProjection() : Mat4.identity());
+			final Projection worldViewProjection = worldView.getMainWorldProjection();
 
-			var scene = worldView.getScene();
-			if (scene == null) {
-				tint.set(0, 0, 0, 0);
-			} else {
-				tint.set(
-					scene.getOverrideHue(),
-					scene.getOverrideSaturation(),
-					scene.getOverrideLuminance(),
-					scene.getOverrideAmount()
-				);
+			float[] newProjection = IDENTITY_MATRIX;
+			if(worldViewProjection instanceof FloatProjection) {
+				newProjection = ((FloatProjection)worldViewProjection).getProjection();
+			}
+
+			if(!Arrays.equals(projectionMatrix, newProjection)) {
+				projection.set(newProjection);
+				copyTo(projectionMatrix, newProjection);
+			}
+
+			Scene scene = worldView.getScene();
+			int hue = scene != null ? scene.getOverrideHue() : 0;
+			int saturation = scene != null ? scene.getOverrideSaturation() : 0;
+			int luminance = scene != null ? scene.getOverrideLuminance() : 0;
+			int amount = scene != null ? scene.getOverrideAmount() : 0;
+			if(tintValues[0] != hue || tintValues[1] != saturation || tintValues[2] != luminance || tintValues[3] != amount) {
+				tintValues[0] = hue;
+				tintValues[1] = saturation;
+				tintValues[2] = luminance;
+				tintValues[3] = amount;
+				tint.set(tintValues);
 			}
 		}
 
