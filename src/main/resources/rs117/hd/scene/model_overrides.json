@@ -63545,6 +63545,211 @@
     ]
   },
   {
+    "description": "Sailing - Raft - Hull",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SAILING_BOAT_HULL_KANDARIN_1X3_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_ROSEWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 100
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Raft - Helm",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_WOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_WOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_OAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_OAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_TEAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_TEAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_MAHOGANY_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_MAHOGANY_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_CAMPHOR_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_CAMPHOR_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_IRONWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_IRONWOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_ROSEWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_ROSEWOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_CRYSTALLISED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 100
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Raft - Sail",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_WOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_OAK",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_TEAK",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_MAHOGANY",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_CAMPHOR",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_IRONWOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_ROSEWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 11 || h == 12",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 400,
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Raft - Cargo",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_RAFT"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 100
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Hull",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SAILING_BOAT_SKIFF_TRIM_WOODEN",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 100
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Sail",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 500,
+    "uvScale": 0.5,
+    "objectIds": [
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_WOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 11 || h == 12",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 400,
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Keel",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_KEEL_KANDARIN_2X5_BRONZE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 11 || h == 12",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 400,
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cooking Range",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_FACILITY_RANGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
     "description": "The Pandemonium - Docks",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
