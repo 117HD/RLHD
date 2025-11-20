@@ -63790,7 +63790,10 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "SALVAGING_HOOK_BRONZE"
+      "SALVAGING_HOOK_RAFT_BRONZE",
+      "SALVAGING_HOOK_BRONZE",
+      "SALVAGING_HOOK_LARGE_BRONZE",
+      "SALVAGING_HOOK_LARGE_BRONZEB"
     ],
     "colorOverrides": [
       {
@@ -63802,7 +63805,7 @@
       },
       {
         "description": "Metal",
-        "colors": "h == 5",
+        "colors": "s == 7",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.1
@@ -63810,17 +63813,39 @@
     ]
   },
   {
-    "description": "Sailing - Skiff - Salvaging Hook - All Others",
+    "description": "Sailing - Salvaging Hook - All Others",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
+      "SALVAGING_HOOK_RAFT_IRON",
+      "SALVAGING_HOOK_RAFT_STEEL",
+      "SALVAGING_HOOK_RAFT_MITHRIL",
+      "SALVAGING_HOOK_RAFT_ADAMANT",
+      "SALVAGING_HOOK_RAFT_RUNE",
+      "SALVAGING_HOOK_RAFT_DRAGON",
       "SALVAGING_HOOK_IRON",
       "SALVAGING_HOOK_STEEL",
       "SALVAGING_HOOK_MITHRIL",
       "SALVAGING_HOOK_ADAMANT",
       "SALVAGING_HOOK_RUNE",
-      "SALVAGING_HOOK_DRAGON"
+      "SALVAGING_HOOK_DRAGON",
+      "SALVAGING_HOOK_LARGE_IRON",
+      "SALVAGING_HOOK_LARGE_STEEL",
+      "SALVAGING_HOOK_LARGE_IRON",
+      "SALVAGING_HOOK_LARGE_STEEL",
+      "SALVAGING_HOOK_LARGE_MITHRIL",
+      "SALVAGING_HOOK_LARGE_ADAMANT",
+      "SALVAGING_HOOK_LARGE_RUNE",
+      "SALVAGING_HOOK_LARGE_DRAGON",
+      "SALVAGING_HOOK_LARGE_IRONB",
+      "SALVAGING_HOOK_LARGE_STEELB",
+      "SALVAGING_HOOK_LARGE_IRONB",
+      "SALVAGING_HOOK_LARGE_STEELB",
+      "SALVAGING_HOOK_LARGE_MITHRILB",
+      "SALVAGING_HOOK_LARGE_ADAMANTB",
+      "SALVAGING_HOOK_LARGE_RUNEB",
+      "SALVAGING_HOOK_LARGE_DRAGONB"
     ],
     "colorOverrides": [
       {
@@ -63829,6 +63854,11 @@
         "baseMaterial": "ROPE",
         "uvType": "BOX",
         "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "TRANSPARENT",
+        "colors": "h == 19"
       },
       {
         "description": "Metal",
