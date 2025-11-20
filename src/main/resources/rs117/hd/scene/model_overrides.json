@@ -63994,7 +63994,7 @@
   {
     "description": "Sailing - Wind Buff",
     "baseMaterial": "GRAY_90",
-    "upwardsNormals": false,
+    "upwardsNormals": true,
     "graphicsObjectIds": [
       "VFX_WIND_SAIL_RAFT01_FULL01",
       "VFX_WIND_SAIL_RAFT01_DOWN01",
