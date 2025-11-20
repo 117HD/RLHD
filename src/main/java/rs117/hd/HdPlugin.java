@@ -137,6 +137,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @PluginDependency(EntityHiderPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin {
+
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
 
@@ -286,6 +287,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	public HDVariables vars;
+
+	@Inject
+	public ConfigManager configManager;
 
 	public Renderer renderer;
 
@@ -592,6 +596,7 @@ public class HdPlugin extends Plugin {
 				textureManager.startUp();
 				materialManager.startUp();
 				waterTypeManager.startUp();
+				minimapRenderer.setUp();
 
 				renderer.initialize();
 				eventBus.register(renderer);
@@ -1564,8 +1569,8 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event) {
-		// Exit if the plugin is off, the config is unrelated to the plugin, or if switching to a profile with the plugin turned off
-		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
+		if (!isActive || (!event.getGroup().equals(CONFIG_GROUP) && !event.getGroup().equals(MinimapRenderer.CONFIG_GROUP_HD_MINIMAP))
+			|| !pluginManager.isPluginEnabled(this))
 			return;
 
 		synchronized (this) {
@@ -1597,9 +1602,20 @@ public class HdPlugin extends Plugin {
 					boolean reloadModelOverrides = false;
 					boolean reloadTileOverrides = false;
 					boolean reloadScene = false;
-
+					
 					for (var key : pendingConfigChanges) {
+
 						switch (key) {
+							case "minimapStyle" :
+								String style = configManager.getConfiguration("hdminimap", "minimapStyle");
+								if ("HD117".equals(style)) {
+									minimapRenderer.setUp();
+									minimapRenderer.prepareScene(getSceneContext());
+									minimapRenderer.updateMinimapLighting = true;
+								} else {
+									minimapRenderer.clear(getSceneContext());
+								}
+							break;
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
