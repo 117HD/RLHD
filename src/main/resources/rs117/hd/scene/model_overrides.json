@@ -2783,7 +2783,13 @@
       "SAILING_HAZARDOUS_WATER_ICY_2X2_02",
       "SAILING_HAZARDOUS_WATER_ICY_2X2_03",
       "SAILING_HAZARDOUS_WATER_ICY_3X3_01"
-    ],
+    ]
+  },
+  {
+    "description": "Sailing Wind Event that shouldn't cast any shadows and should have upwards normals",
+    "castShadows": false,
+    "upwardsNormals": true,
+    "baseMaterial": "GRAY_90",
     "npcIds": [
       "SAILING_CHANCE_ENCOUNTERS_WIND_LOW",
       "SAILING_CHANCE_ENCOUNTERS_WIND_MED",
