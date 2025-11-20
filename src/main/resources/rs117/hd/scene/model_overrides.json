@@ -2781,7 +2781,9 @@
       "SAILING_HAZARDOUS_WATER_ICY_2X1_03",
       "SAILING_HAZARDOUS_WATER_ICY_2X2_02",
       "SAILING_HAZARDOUS_WATER_ICY_2X2_03",
-      "SAILING_HAZARDOUS_WATER_ICY_3X3_01"
+      "SAILING_HAZARDOUS_WATER_ICY_3X3_01",
+      "SAILING_CHARTING_HINT_MARKER_SPYGLASS",
+      "SAILING_CHARTING_HINT_MARKER_DUCK"
     ]
   },
   {
@@ -12633,9 +12635,6 @@
       "TROLL_ROMANCE_ROCKNOBLOCK",
       "TROLLRESCUE_ICY_ROCK_BIG",
       "AHOY_SHIPWRECK_ROCKS",
-      "ROCK_POOL",
-      "ROCK_POOL_SMALL",
-      "ROCK_POOL_BITS",
       "MDAUGHTER_CLIFF_BOULDER",
       "MDAUGHTER_CLIFF_BOULDER_WITHROPE",
       "MDAUGHTER_CLIFF_ROCK",
@@ -12655,13 +12654,10 @@
       "MOLE_ROCKS_SMALL_01",
       "MOLE_ROCKS_SMALL_02",
       "MOLE_ROCKS_SMALL_03",
-      "SANDY_ROCK_POOL",
       "ROCKSLIDE_MIDGREY1",
       "ROCKSLIDE_MIDGREY2",
       "ROCKSLIDE_MIDGREY3",
       "ROCKSLIDE_MIDGREY4",
-      "SANDY_ROCK_POOL_SMALL",
-      "SANDY_ROCK_POOL_BITS",
       "BURGH_ROCK1",
       "BURGH_ROCK2",
       "BURGH_ROCK3",
@@ -26527,7 +26523,8 @@
     "terrainVertexSnap": true,
     "objectIds": [
       "BOULDER1",
-      "BOULDER2"
+      "BOULDER2",
+      "BOULDER3"
     ],
     "uvType": "BOX",
     "retainVanillaUvs": false,
@@ -63246,6 +63243,51 @@
         "description": "Skeleton",
         "colors": "h == 10",
         "baseMaterial": "BONE"
+      }
+    ]
+  },
+  {
+    "description": "Floating Stuff - Hide Ripples",
+    "objectIds": [
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_TILT",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED",
+      "SEASLUG_CRATE_IN_WATER2",
+      "SEASLUG_CRATE_IN_WATER",
+      "SLUG2_ROWBOAT",
+      "SLUG2_ROWBOAT",
+      "SEASLUG_MESSGAE_BOTTLE",
+      "SAILING_CHARTING_DRINK_CRATE",
+      "SLUG2_ROTTEN_BARREL_HALF_BURRIED_UPRIGHT"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255 || h == 37 && l == 71",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Rocks in Water - Hide Ripples",
+    "baseMaterial": "STONE_NORMALED",
+    "castShadows": false,
+    "objectIds": [
+      "SANDY_ROCK_POOL_SMALL",
+      "SANDY_ROCK_POOL",
+      "SANDY_ROCK_POOL_BITS",
+      "ROCK_POOL",
+      "ROCK_POOL_SMALL",
+      "ROCK_POOL_BITS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "a < 255",
+        "baseMaterial": "TRANSPARENT"
       }
     ]
   },
