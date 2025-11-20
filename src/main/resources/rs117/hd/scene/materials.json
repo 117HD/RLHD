@@ -1662,7 +1662,7 @@
   {
     "name": "CARPET_VERY_LIGHT",
     "parent": "CARPET",
-    "brightness": 1.4
+    "brightness": 1.22
   },
   {
     "name": "CARPET_DARK",
