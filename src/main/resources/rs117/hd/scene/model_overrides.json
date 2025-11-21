@@ -63118,6 +63118,13 @@
     ]
   },
   {
+    "description": "Storm Tempor - Disable cloud shadows",
+    "castShadows": false,
+    "npcIds": [
+      "SAILING_SEA_STORMY_CLOUD"
+    ]
+  },
+  {
     "description": "Ship - Wood",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
