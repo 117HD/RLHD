@@ -1300,7 +1300,13 @@
     "specularGloss": 10.0
   },
   {
-    "name": "GRUNGE_1"
+    "name": "GRUNGE_1_N"
+  },
+  {
+    "name": "GRUNGE_1",
+    "normalMap": "GRUNGE_1_N",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
   },
   {
     "name": "GRUNGE_1_LIGHT",
@@ -1336,7 +1342,13 @@
     "specularGloss": 300.0
   },
   {
-    "name": "GRUNGE_2"
+    "name": "GRUNGE_2_N"
+  },
+  {
+    "name": "GRUNGE_2",
+    "normalMap": "GRUNGE_2_N",
+    "specularStrength": 0.25,
+    "specularGloss": 20.0
   },
   {
     "name": "GRUNGE_2_SHINY",
