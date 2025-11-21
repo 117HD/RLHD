@@ -35651,6 +35651,23 @@
     ]
   },
   {
+    "description": "STOVE - Right lit",
+    "offset": [ 20, 88, 65 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_STOVE"
+    ]
+  },
+  {
     "description": "SLEPE_WALL_CANDLE",
     "height": 220,
     "alignment": "CENTER",
@@ -42009,6 +42026,40 @@
     "range": 25,
     "npcIds": [
       "SANCTUARY_GHOST"
+    ]
+  },
+  {
+    "description": "Piscatoris - Press Light",
+    "offset": [ 25, 120, 0 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_MACHINE_FIREBOX_LIT"
+    ]
+  },
+  {
+    "description": "Piscatoris - Furnace",
+    "offset": [ 0, 60, 20 ],
+    "radius": 200,
+    "strength": 5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SWAN_FURNACE"
     ]
   }
 ]
