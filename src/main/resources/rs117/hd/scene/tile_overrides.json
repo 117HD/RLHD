@@ -3681,6 +3681,21 @@
     "uvScale": 1.25
   },
   {
+    "name": "PRIFDDINAS_INTERIORS",
+    "area": "PRIFDDINAS_INTERIORS",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftLightness": 10
+  },
+  {
+    "name": "PRIFDDINAS_INTERIORS",
+    "area": "PRIFDDINAS_INTERIORS_RAISED",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
+  },
+  {
     "name": "TIRANNWN_PATHS",
     "area": "TIRANNWN",
     "overlayIds": [
