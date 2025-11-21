@@ -1044,6 +1044,11 @@
     "brightness": 0.65
   },
   {
+    "name": "GRAY_60",
+    "parent": "NONE",
+    "brightness": 0.60
+  },
+  {
     "name": "GRAY_50",
     "parent": "NONE",
     "brightness": 0.5
