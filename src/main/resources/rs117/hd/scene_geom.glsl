@@ -27,6 +27,9 @@
 
 #include <uniforms/global.glsl>
 
+uniform int renderPass;
+uniform int waterHeight;
+
 layout(triangles) in;
 layout(triangle_strip, max_vertices = 3) out;
 
@@ -55,10 +58,33 @@ out FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
+    vec3 flatNormal;
     vec3 texBlend;
 } OUT;
 
+void displaceUnderwaterPosition(inout vec3 position, int waterDepth) {
+    if (waterDepth <= 1 || position.y < waterHeight)
+        return;
+
+    // Only displace underwater surfaces viewed from above
+    vec3 I = normalize(position - cameraPos);
+    if (I.y < .15)
+        return;
+
+    // This is quite arbitrary, but a correct solution is non-trivial
+    // See https://en.wikipedia.org/wiki/Fermat%27s_principle#/media/File:Fermat_Snellius.svg
+    // which boils down to a quartic equation when solving for x given A, B and b
+    vec3 refracted = 1.3 * I + vec3(0, .3, 0);
+    position += (I - refracted / refracted.y) * waterDepth;
+}
+
 void main() {
+    float alpha = 1 - float(gAlphaBiasHsl[0] >> 24 & 0xFF) / 0xFF;
+    // Hide vertices with barely any opacity, since Jagex often includes hitboxes as part of the model.
+    // This prevents them from showing up in planar reflections due to depth testing.
+    if (alpha < .004)
+        return;
+
     vWorldViewId = gWorldViewId[0];
 
     // MacOS doesn't allow assigning these arrays directly.
@@ -92,6 +118,22 @@ void main() {
     B = TB[1];
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
+    // Water data
+    bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
+    int waterDepth = vTerrainData[0] >> 8 & 0x7FF;
+    int waterTypeIndex = 0;
+    if (isTerrain) {
+        #ifdef DEVELOPMENT_WATER_TYPE
+            waterTypeIndex = DEVELOPMENT_WATER_TYPE;
+        #else
+            waterTypeIndex = vTerrainData[0] >> 3 & 0x1F;
+        #endif
+    }
+
+    bool isWater = waterTypeIndex > 0;
+    bool isUnderwaterTile = waterDepth != 0;
+    bool isWaterSurface = isWater && !isUnderwaterTile;
+
     #if UNDO_VANILLA_SHADING && ZONE_RENDERER
         if ((materialData >> MATERIAL_FLAG_UNDO_VANILLA_SHADING & 1) == 1) {
             for (int i = 0; i < 3; i++) {
@@ -108,6 +150,25 @@ void main() {
         }
     #endif
 
+    if (renderPass == RENDER_PASS_WATER_REFLECTION) {
+        float minY = min(min(gPosition[0].y, gPosition[1].y), gPosition[2].y);
+
+        if (isWater) {
+            // Hide flat water surface tiles in the reflection
+            bool isFlat = -N.y > .7;
+            if (isWaterSurface && isFlat)
+                return;
+
+            // Hide underwater tiles from the reflection
+            if (isUnderwaterTile && waterHeight - minY <= WATER_REFLECTION_HEIGHT_THRESHOLD)
+                return;
+        } else {
+            // Hide stuff which is under the water from the reflection
+            if (waterHeight - minY <= 0)
+                return;
+        }
+    }
+
     for (int i = 0; i < 3; i++) {
         vec4 pos = vec4(gPosition[i], 1);
         // Flat normals must be applied separately per vertex
@@ -115,6 +176,7 @@ void main() {
 
         OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
+        OUT.flatNormal = N;
         #if FLAT_SHADING
             OUT.normal = N;
         #else
@@ -122,6 +184,16 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
+
+        // Apply some arbitrary displacement to mimic refraction
+        // TODO: Solve the quartic equation numerically
+        int waterDepth = vTerrainData[i] >> 8 & 0x7FF;
+//        displaceUnderwaterPosition(position, waterDepth);
+
+        if (renderPass == RENDER_PASS_WATER_REFLECTION && isWaterSurface) {
+            // Hide some Z-fighting issues with waterfalls
+            pos.xyz += 16 * N * vec3(1, 0, 1);
+        }
 
         pos = projectionMatrix * pos;
         #if ZONE_RENDERER

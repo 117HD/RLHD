@@ -8,7 +8,9 @@
  */
 #pragma once
 
-#include <utils/constants.glsl>
+#ifndef EPS
+#define EPS 1.0e-10
+#endif
 
 /**
  * Row-major transformation matrices for conversion between RGB and XYZ color spaces.
@@ -83,31 +85,43 @@ vec3 colorTemperatureToLinearRgb(float kelvin) {
 // Source: https://web.archive.org/web/20220808015852/https://registry.khronos.org/DataFormat/specs/1.3/dataformat.1.3.pdf
 // Page number 130 (146 in the PDF)
 vec3 srgbToLinear(vec3 srgb) {
-  return mix(
-    srgb / 12.92,
-    pow((srgb + vec3(0.055)) / vec3(1.055), vec3(2.4)),
-    step(vec3(0.04045), srgb));
+    return mix(
+        srgb / 12.92,
+        pow((srgb + vec3(0.055)) / vec3(1.055), vec3(2.4)),
+        step(vec3(0.04045), srgb)
+    );
 }
 
 vec3 linearToSrgb(vec3 rgb) {
-  return mix(
-    rgb * 12.92,
-    1.055 * pow(rgb, vec3(1 / 2.4)) - 0.055,
-    step(vec3(0.0031308), rgb));
+    return mix(
+        rgb * 12.92,
+        1.055 * pow(rgb, vec3(1 / 2.4)) - 0.055,
+        step(vec3(0.0031308), rgb)
+    );
+}
+
+vec4 srgbToLinear(vec4 srgb) {
+    return vec4(srgbToLinear(srgb.rgb), srgb.a);
+}
+
+vec4 linearToSrgb(vec4 rgb) {
+    return vec4(linearToSrgb(rgb.rgb), rgb.a);
 }
 
 float srgbToLinear(float srgb) {
-  return mix(
-    srgb / 12.92,
-    pow((srgb + float(0.055)) / float(1.055), float(2.4)),
-    step(float(0.04045), srgb));
+    return mix(
+        srgb / 12.92,
+        pow((srgb + float(0.055)) / float(1.055), float(2.4)),
+        step(float(0.04045), srgb)
+    );
 }
 
 float linearToSrgb(float rgb) {
-  return mix(
-    rgb * 12.92,
-    1.055 * pow(rgb, 1 / 2.4) - 0.055,
-    step(0.0031308, rgb));
+    return mix(
+        rgb * 12.92,
+        1.055 * pow(rgb, 1 / 2.4) - 0.055,
+        step(0.0031308, rgb)
+    );
 }
 
 // https://web.archive.org/web/20230619214343/https://en.wikipedia.org/wiki/HSL_and_HSV#Color_conversion_formulae
@@ -205,4 +219,8 @@ int srgbToPackedHsl(vec3 srgb) {
 
 vec3 packedHslToSrgb(int hsl) {
     return hslToSrgb(convertHsl(unpackRawHsl(hsl)));
+}
+
+vec3 unpackSrgb(int srgb) {
+    return srgbToLinear(vec3(srgb >> 16, srgb >> 8 & 0xFF, srgb & 0xFF) / 0xFF);
 }

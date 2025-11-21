@@ -29,10 +29,12 @@ package rs117.hd;
 import com.google.gson.Gson;
 import com.google.inject.Provides;
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GraphicsConfiguration;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
@@ -66,6 +68,7 @@ import net.runelite.client.plugins.PluginInstantiationException;
 import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.plugins.entityhider.EntityHiderPlugin;
 import net.runelite.client.ui.ClientUI;
+import net.runelite.client.ui.components.colorpicker.ColorPickerManager;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.OSType;
 import net.runelite.rlawt.AWTContext;
@@ -152,6 +155,8 @@ public class HdPlugin extends Plugin {
 	public static final int TEXTURE_UNIT_SHADOW_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILE_HEIGHT_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 	public static final int TEXTURE_UNIT_TILED_LIGHTING_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_REFLECTION_MAP = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
+	public static final int TEXTURE_UNIT_WATER_NORMAL_MAPS = GL_TEXTURE0 + TEXTURE_UNIT_COUNT++;
 
 	public static int MAX_IMAGE_UNITS;
 	public static int IMAGE_UNIT_COUNT = 0;
@@ -281,6 +286,9 @@ public class HdPlugin extends Plugin {
 	private TiledLightingOverlay tiledLightingOverlay;
 
 	@Inject
+	private ColorPickerManager colorPickerManager;
+
+	@Inject
 	public HDVariables vars;
 
 	public Renderer renderer;
@@ -343,6 +351,13 @@ public class HdPlugin extends Plugin {
 	public int fboTiledLighting;
 	public int texTiledLighting;
 
+	public int[] waterReflectionResolution;
+	public int fboWaterReflection;
+	public int texWaterReflection;
+	private int texWaterReflectionDepthMap;
+
+	private int texWaterNormalMaps;
+
 	public final UBOGlobal uboGlobal = new UBOGlobal();
 	public final UBOLights uboLights = new UBOLights(false);
 	public final UBOLights uboLightsCulling = new UBOLights(true);
@@ -368,6 +383,10 @@ public class HdPlugin extends Plugin {
 	public boolean configAsyncUICopy;
 	public boolean configWindDisplacement;
 	public boolean configCharacterDisplacement;
+	public boolean configLinearAlphaBlending;
+	public boolean configPlanarReflections;
+	public boolean configWaterTransparency;
+	public boolean configLegacyWater;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
 	public DynamicLights configDynamicLights;
@@ -402,6 +421,7 @@ public class HdPlugin extends Plugin {
 	public final float[] cameraOrientation = new float[2];
 	public final float[][] cameraFrustum = new float[6][4];
 	public float[] viewMatrix = new float[16];
+	public float[] projMatrix = new float[16];
 	public float[] viewProjMatrix = new float[16];
 	public float[] invViewProjMatrix = new float[16];
 
@@ -599,6 +619,7 @@ public class HdPlugin extends Plugin {
 				initializeShaderHotswapping();
 				initializeUiTexture();
 				initializeShadowMapFbo();
+				initWaterNormalMaps();
 
 				checkGLErrors();
 
@@ -631,6 +652,17 @@ public class HdPlugin extends Plugin {
 					client.setGameState(GameState.LOADING);
 
 				checkGLErrors();
+
+				var colorPicker = colorPickerManager.create(
+					client,
+					Color.WHITE,
+					"Shader Color Picker",
+					false
+				);
+				colorPicker.setLocationRelativeTo(canvas);
+				colorPicker.setOnColorChange(c -> clientThread.invoke(() ->
+					uboGlobal.COLOR_PICKER.set(ColorUtils.rgba(c))));
+//				colorPicker.setVisible(true);
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
@@ -684,6 +716,8 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
+				destroyWaterReflectionsFbo();
+				destroyWaterNormalMaps();
 
 				if (renderer != null) {
 					eventBus.unregister(renderer);
@@ -802,6 +836,7 @@ public class HdPlugin extends Plugin {
 			.define("VANILLA_COLOR_BANDING", config.vanillaColorBanding())
 			.define("UNDO_VANILLA_SHADING", configUndoVanillaShading)
 			.define("LEGACY_GREY_COLORS", configLegacyGreyColors)
+			.define("LEGACY_WATER", configLegacyWater)
 			.define("DISABLE_DIRECTIONAL_SHADING", config.shadingMode() != ShadingMode.DEFAULT)
 			.define("FLAT_SHADING", config.flatShading())
 			.define("WIND_DISPLACEMENT", configWindDisplacement)
@@ -814,6 +849,9 @@ public class HdPlugin extends Plugin {
 			.define("ZONE_RENDERER", renderer instanceof ZoneRenderer)
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", 0)
 			.define("WORLD_VIEW_GETTER", "")
+			.define("LINEAR_ALPHA_BLENDING", configLinearAlphaBlending)
+			.define("WATER_FOAM", config.enableWaterFoam())
+			.define("PLANAR_REFLECTIONS", configPlanarReflections)
 			.addInclude(
 				"MATERIAL_CONSTANTS", () -> {
 					StringBuilder include = new StringBuilder();
@@ -1148,7 +1186,7 @@ public class HdPlugin extends Plugin {
 		// Since there's seemingly no reliable way to check if the default framebuffer will do sRGB conversions with GL_FRAMEBUFFER_SRGB
 		// enabled, we always replace the default framebuffer with an sRGB one. We could technically support rendering to the default
 		// framebuffer when sRGB conversions aren't needed, but the goal is to transition to linear blending in the future anyway.
-		boolean sRGB = false; // This is currently unused
+		boolean sRGB = configLinearAlphaBlending;
 
 		// Some implementations (*cough* Apple) complain when blitting from an FBO without an alpha channel to a (default) FBO with alpha.
 		// To work around this, we select a format which includes an alpha channel, even though we don't need it.
@@ -1161,7 +1199,7 @@ public class HdPlugin extends Plugin {
 			alpha ? RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA : RENDERBUFFER_FORMATS_SRGB :
 			alpha ? RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA : RENDERBUFFER_FORMATS_LINEAR;
 
-		float resolutionScale = config.sceneResolutionScale() / 100f;
+		float resolutionScale = config.sceneResolution() / 100f;
 		sceneResolution = round(max(vec(1), multiply(slice(vec(sceneViewport), 2), resolutionScale)));
 		uboGlobal.sceneResolution.set(sceneResolution);
 
@@ -1313,10 +1351,135 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void initializeShaderHotswapping() {
-		SHADER_PATH.watch("\\.(glsl|cl)$", path -> {
-			log.info("Recompiling shaders: {}", path);
-			recompilePrograms();
-		});
+		SHADER_PATH.watch(
+			"\\.(glsl|cl)$", path -> {
+				log.info("Recompiling shaders: {}", path);
+				recompilePrograms();
+			}
+		);
+	}
+
+	public void updateWaterReflectionsFbo() {
+		if (!configPlanarReflections || sceneViewport == null)
+			return;
+
+		// Clamp this to our target range since RuneLite allows manually typing numbers outside the range
+		float resolutionScale = config.waterReflectionResolution() / 100f;
+		int[] resolution = {
+			Math.max(1, Math.round(sceneViewport[2] * resolutionScale)),
+			Math.max(1, Math.round(sceneViewport[3] * resolutionScale))
+		};
+		if (Arrays.equals(waterReflectionResolution, resolution))
+			return;
+
+		destroyWaterReflectionsFbo();
+		waterReflectionResolution = resolution;
+
+		// Create and bind the FBO
+		fboWaterReflection = glGenFramebuffers();
+		glBindFramebuffer(GL_FRAMEBUFFER, fboWaterReflection);
+
+		// Both of these are required color-renderable texture formats
+		int format = configLinearAlphaBlending ? GL_SRGB8 : GL_RGB8;
+
+		// Create texture
+		texWaterReflection = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texWaterReflection);
+		glTexImage2D(GL_TEXTURE_2D, 0, format, resolution[0], resolution[1], 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		checkGLErrors();
+
+		// Bind texture
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texWaterReflection, 0);
+		glReadBuffer(GL_NONE);
+
+		// Create texture
+		texWaterReflectionDepthMap = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D, texWaterReflectionDepthMap);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, resolution[0], resolution[1], 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_SHORT, 0);
+		checkGLErrors();
+
+		// Bind texture
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texWaterReflectionDepthMap, 0);
+		checkGLErrors();
+	}
+
+	private void destroyWaterReflectionsFbo() {
+		waterReflectionResolution = null;
+
+		if (texWaterReflection != 0)
+			glDeleteTextures(texWaterReflection);
+		texWaterReflection = 0;
+
+		if (texWaterReflectionDepthMap != 0)
+			glDeleteTextures(texWaterReflectionDepthMap);
+		texWaterReflectionDepthMap = 0;
+
+		if (fboWaterReflection != 0)
+			glDeleteFramebuffers(fboWaterReflection);
+		fboWaterReflection = 0;
+	}
+
+	private void initWaterNormalMaps() {
+		if (configLegacyWater || texWaterNormalMaps != 0)
+			return;
+
+		glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
+
+		texWaterNormalMaps = glGenTextures();
+		glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
+
+		int numCascades = 2;
+		int format = GL_RGB8;
+		int textureSize = 512;
+		int mipLevels = 1 + floor(log2(textureSize));
+
+		if (GL_CAPS.glTexStorage3D != 0) {
+			ARBTextureStorage.glTexStorage3D(GL_TEXTURE_2D_ARRAY, mipLevels, format, textureSize, textureSize, numCascades);
+		} else {
+			// Allocate each mip level separately
+			for (int i = 0; i < mipLevels; i++) {
+				int size = textureSize >> i;
+				glTexImage3D(GL_TEXTURE_2D_ARRAY, i, format, size, size, numCascades, 0, GL_RGB, GL_UNSIGNED_BYTE, 0);
+			}
+		}
+
+		var image = new BufferedImage(textureSize, textureSize, BufferedImage.TYPE_INT_ARGB);
+		for (int i = 0; i < numCascades; i++) {
+			var rawImage = textureManager.loadTexture(String.format("water_normal_map_%d", i + 1));
+
+			var t = new AffineTransform();
+			// Flip non-vanilla textures horizontally to match vanilla UV orientation
+			t.translate(textureSize, 0);
+			t.scale(-1, 1);
+			t.scale((double) textureSize / rawImage.getWidth(), (double) textureSize / rawImage.getHeight());
+			var scaleOp = new AffineTransformOp(t, AffineTransformOp.TYPE_BILINEAR);
+			scaleOp.filter(rawImage, image);
+			rawImage = image;
+
+			int[] pixels = ((DataBufferInt) rawImage.getRaster().getDataBuffer()).getData();
+			glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0,
+				i, textureSize, textureSize, 1,
+				GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, pixels
+			);
+		}
+
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, config.anisotropicFilteringLevel());
+
+		glGenerateMipmap(GL_TEXTURE_2D_ARRAY);
+	}
+
+	private void destroyWaterNormalMaps() {
+		if (texWaterNormalMaps != 0)
+			glDeleteTextures(texWaterNormalMaps);
+		texWaterNormalMaps = 0;
 	}
 
 	public void prepareInterfaceTexture() {
@@ -1492,6 +1655,8 @@ public class HdPlugin extends Plugin {
 		configVanillaShadowMode = config.vanillaShadowMode();
 		configHideFakeShadows = configVanillaShadowMode != VanillaShadowMode.SHOW;
 		configLegacyGreyColors = config.legacyGreyColors();
+		configLegacyWater = config.legacyWater();
+		configLinearAlphaBlending = !configLegacyWater;
 		configModelBatching = config.modelBatching();
 		configModelCaching = config.modelCaching();
 		configDynamicLights = config.dynamicLights();
@@ -1506,6 +1671,8 @@ public class HdPlugin extends Plugin {
 		configCharacterDisplacement = config.characterDisplacement();
 		configSeasonalTheme = config.seasonalTheme();
 		configSeasonalHemisphere = config.seasonalHemisphere();
+		configPlanarReflections = config.enablePlanarReflections();
+		configWaterTransparency = config.waterTransparency();
 
 		var newColorFilter = config.colorFilter();
 		if (newColorFilter != configColorFilter) {
@@ -1587,6 +1754,7 @@ public class HdPlugin extends Plugin {
 					boolean recompilePrograms = false;
 					boolean recreateSceneFbo = false;
 					boolean recreateShadowMapFbo = false;
+					boolean recreateWaterReflectionsFbo = false;
 					boolean reloadTexturesAndMaterials = false;
 					boolean reloadEnvironments = false;
 					boolean reloadModelOverrides = false;
@@ -1614,6 +1782,29 @@ public class HdPlugin extends Plugin {
 								if (configColorFilter == ColorFilter.CEL_SHADING || configColorFilterPrevious == ColorFilter.CEL_SHADING)
 									reloadScene = true;
 								break;
+							case KEY_LEGACY_WATER:
+								recreateSceneFbo = true;
+								recreateWaterReflectionsFbo = true;
+								recompilePrograms = true;
+								if (configLegacyWater) {
+									destroyWaterNormalMaps();
+								} else {
+									initWaterNormalMaps();
+								}
+								break;
+							case KEY_ANISOTROPIC_FILTERING_LEVEL:
+								int level = config.anisotropicFilteringLevel();
+								if (texWaterNormalMaps != 0) {
+									glActiveTexture(TEXTURE_UNIT_WATER_NORMAL_MAPS);
+									glBindTexture(GL_TEXTURE_2D_ARRAY, texWaterNormalMaps);
+									setAnisotropicFilteringLevel(GL_TEXTURE_2D_ARRAY, level);
+								}
+								// TODO
+//								if (textureManager.textureArray != 0) {
+//									glActiveTexture(TEXTURE_UNIT_GAME);
+//									setAnisotropicFilteringAndMipMapping(GL_TEXTURE_2D_ARRAY, level);
+//								}
+								break;
 							case KEY_ASYNC_UI_COPY:
 								asyncUICopy.complete();
 								break;
@@ -1627,6 +1818,9 @@ public class HdPlugin extends Plugin {
 								if (client.getGameState() == GameState.LOGGED_IN)
 									client.setGameState(GameState.LOADING);
 								break;
+							case KEY_PLANAR_REFLECTIONS:
+								recreateWaterReflectionsFbo = true;
+								// fall-through
 							case KEY_COLOR_BLINDNESS:
 							case KEY_MACOS_INTEL_WORKAROUND:
 							case KEY_DYNAMIC_LIGHTS:
@@ -1641,6 +1835,7 @@ public class HdPlugin extends Plugin {
 							case KEY_WIREFRAME:
 							case KEY_PIXELATED_SHADOWS:
 							case KEY_WINDOWS_HDR_CORRECTION:
+							case KEY_WATER_FOAM:
 								recompilePrograms = true;
 								break;
 							case KEY_ANTI_ALIASING_MODE:
@@ -1663,7 +1858,6 @@ public class HdPlugin extends Plugin {
 								reloadEnvironments = true;
 								reloadModelOverrides = true;
 								// fall-through
-							case KEY_ANISOTROPIC_FILTERING_LEVEL:
 							case KEY_GROUND_TEXTURES:
 							case KEY_MODEL_TEXTURES:
 							case KEY_TEXTURE_RESOLUTION:
@@ -1726,6 +1920,11 @@ public class HdPlugin extends Plugin {
 					if (recreateShadowMapFbo) {
 						destroyShadowMapFbo();
 						initializeShadowMapFbo();
+					}
+
+					if (recreateWaterReflectionsFbo) {
+						destroyWaterReflectionsFbo();
+						updateWaterReflectionsFbo();
 					}
 
 					if (reloadEnvironments)
@@ -1829,6 +2028,32 @@ public class HdPlugin extends Plugin {
 			return;
 
 		fishingSpotReplacer.update();
+	}
+
+	public static void setAnisotropicFilteringAndMipMapping(int target, float level) {
+		setAnisotropicFilteringLevel(target, level);
+		if (level == 0) {
+			// level = 0 means no mipmaps and no anisotropic filtering
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		} else {
+			// level = 1 means with mipmaps but without anisotropic filtering GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT defaults to 1.0 which is off
+			// level > 1 enables anisotropic filtering. It's up to the vendor what the values mean
+			// Even if anisotropic filtering isn't supported, mipmaps will be enabled with any level >= 1
+			// Trilinear filtering is used for HD textures as linear filtering produces noisy textures
+			// that are very noticeable on terrain
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+	}
+
+	public static void setAnisotropicFilteringLevel(int target, float level) {
+		if (!GL_CAPS.GL_EXT_texture_filter_anisotropic)
+			return;
+
+		float max = glGetFloat(EXTTextureFilterAnisotropic.GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT);
+		level = clamp(level, 1, max);
+		glTexParameterf(target, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, level);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")
@@ -1968,7 +2193,8 @@ public class HdPlugin extends Plugin {
 		} else {
 			errorMessage =
 				"The plugin ran out of memory. "
-				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ") + "closing other programs.<br>"
+				+ "Try " + (useLowMemoryMode ? "" : "reducing your model cache size from " + config.modelCacheSizeMiB() + " or ")
+				+ "closing other programs.<br>"
 				+ "<br>"
 				+ "If the issue persists, please join our "
 				+ "<a href=\"" + HdPlugin.DISCORD_URL + "\">Discord</a> server, and click the \"Open logs folder\" button<br>"
