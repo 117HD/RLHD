@@ -1365,6 +1365,22 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "THE_STORM_TEMPOR",
+    "lightningEffects": true,
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3,
+    "directionalColor": "#707070",
+    "directionalStrength": 1,
+    "fogColor": "#45474b",
+    "fogDepth": 25,
+    "windStrength": 65,
+    "windCeiling": 750,
+    "windSpeed": 20,
+    "groundFogStart": 0,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.3
+  },
+  {
     "area": "TEMPLE_OF_THE_EYE",
     "isUnderwater": true,
     "directionalColor": "#e6f4ff",
