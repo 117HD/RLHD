@@ -34571,7 +34571,6 @@
   {
     "description": "DIGSITE_LAMP",
     "height": 170,
-    "alignment": "FRONT",
     "radius": 290,
     "strength": 8.5,
     "color": [
@@ -42009,6 +42008,23 @@
     "range": 25,
     "npcIds": [
       "SANCTUARY_GHOST"
+    ]
+  },
+  {
+    "description": "Sailing Shipyard Portal",
+    "offset": [ 0, 100, -50 ],
+    "radius": 500,
+    "strength": 20,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 10,
+    "objectIds": [
+      "SAILING_SHIPYARD_PORTAL_EXIT"
     ]
   }
 ]
