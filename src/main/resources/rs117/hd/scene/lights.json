@@ -41990,7 +41990,6 @@
     "range": 5,
     "objectIds": [
       "AHOY_RANGE"
-
     ]
   },
   {
@@ -42009,6 +42008,414 @@
     "range": 25,
     "npcIds": [
       "SANCTUARY_GHOST"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - White light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - White light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - White light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Magenta light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Magenta light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Magenta light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Red light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Red light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Red light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 10,
+    "color": [
+      252,
+      0,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Yellow light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Yellow light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      200,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Yellow light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 7,
+    "color": [
+      252,
+      230,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Black light beam",
+    "offset": [ 0, 144, 0 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 15,
+    "color": [
+      126,
+      0,
+      126
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Black light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 15,
+    "color": [
+      126,
+      0,
+      126
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Black light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 15,
+    "color": [
+      126,
+      0,
+      126
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Blue light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLUE_3",
+      "SOTE_LIGHT_BLUE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Blue light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLUE_3",
+      "SOTE_LIGHT_BLUE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Blue light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      0,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_BLUE_3",
+      "SOTE_LIGHT_BLUE_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Cyan light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_CYAN_3",
+      "SOTE_LIGHT_CYAN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Cyan light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_CYAN_3",
+      "SOTE_LIGHT_CYAN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Cyan light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 256,
+    "strength": 14,
+    "color": [
+      0,
+      252,
+      252
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_CYAN_3",
+      "SOTE_LIGHT_CYAN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Green light beam",
+    "height": 144,
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      0,
+      252,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_GREEN_3",
+      "SOTE_LIGHT_GREEN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Green light beam - front",
+    "offset": [ 0, 144, 144 ],
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      0,
+      252,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_GREEN_3",
+      "SOTE_LIGHT_GREEN_4"
+    ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Green light beam - back",
+    "offset": [ 0, 144, -144 ],
+    "alignment": "CENTER",
+    "radius": 275,
+    "strength": 7,
+    "color": [
+      0,
+      252,
+      0
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "SOTE_LIGHT_GREEN_3",
+      "SOTE_LIGHT_GREEN_4"
     ]
   }
 ]
