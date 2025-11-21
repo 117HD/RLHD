@@ -14,6 +14,7 @@ import net.runelite.client.ui.overlay.OverlayPosition;
 import net.runelite.client.ui.overlay.components.LineComponent;
 import net.runelite.client.ui.overlay.components.TitleComponent;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.ZoneStreamingManager;
 import rs117.hd.utils.FrameTimingsRecorder;
 import rs117.hd.utils.NpcDisplacementCache;
 
@@ -35,6 +36,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 
 	@Inject
 	private NpcDisplacementCache npcDisplacementCache;
+
+	@Inject
+	private ZoneStreamingManager zoneStreamingManager;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
 	private final long[] timings = new long[Timer.TIMERS.length];
@@ -143,6 +147,11 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			children.add(LineComponent.builder()
 				.left("NPC Displacement Cache Size:")
 				.right(String.valueOf(npcDisplacementCache.size()))
+				.build());
+
+			children.add(LineComponent.builder()
+				.left("Streaming Zones:")
+				.right(String.valueOf(zoneStreamingManager.getZoneStreamingCount()))
 				.build());
 
 			if (frameTimingsRecorder.isCapturingSnapshot())

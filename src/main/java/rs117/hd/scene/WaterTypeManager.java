@@ -25,6 +25,7 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -62,6 +63,8 @@ public class WaterTypeManager {
 
 	public static WaterType[] WATER_TYPES = {};
 
+	private HashMap<String, Integer> nameToWaterTypeIdx = new HashMap<>();
+
 	public UBOWaterTypes uboWaterTypes;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
@@ -79,8 +82,11 @@ public class WaterTypeManager {
 				System.arraycopy(rawWaterTypes, 0, waterTypes, 1, rawWaterTypes.length);
 
 				Material fallbackNormalMap = materialManager.getMaterial("WATER_NORMAL_MAP_1");
-				for (int i = 0; i < waterTypes.length; i++)
+				nameToWaterTypeIdx.clear();
+				for (int i = 0; i < waterTypes.length; i++) {
 					waterTypes[i].normalize(i, fallbackNormalMap);
+					nameToWaterTypeIdx.put(waterTypes[i].name, i);
+				}
 
 				var oldWaterTypes = WATER_TYPES;
 				WATER_TYPES = waterTypes;
@@ -141,9 +147,7 @@ public class WaterTypeManager {
 	}
 
 	public WaterType get(String name) {
-		for (var type : WATER_TYPES)
-			if (name.equals(type.name))
-				return type;
-		return WaterType.NONE;
+		int index = nameToWaterTypeIdx.getOrDefault(name, -1);
+		return index != -1 ? WATER_TYPES[index] : WaterType.NONE;
 	}
 }

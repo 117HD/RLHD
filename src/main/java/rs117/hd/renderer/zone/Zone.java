@@ -56,11 +56,16 @@ class Zone {
 	@Nullable
 	VBO vboO, vboA, vboM;
 
+
 	boolean initialized; // whether the zone vao and vbos are ready
+	boolean uploaded; // whether the zone has been uploaded or its deferred
+	boolean isDeferred; // whether the zone has been deferred
+	boolean isRebuild;
 	boolean cull; // whether the zone is queued for deletion
 	boolean dirty; // whether the zone has temporary modifications
-	boolean metadataDirty; // whether the zone needs metadata updating
+	boolean needsTerrainGen; // whether the zone needs the proc terrain gen
 	boolean invalidate; // whether the zone needs rebuilding
+	boolean metadataDirty; // whether the zone needs its metadata updating
 	boolean hasWater; // whether the zone has any water tiles
 	boolean onlyWater; // whether the zone only contains water tiles
 	boolean inSceneFrustum; // whether the zone is visible to the scene camera
@@ -95,6 +100,10 @@ class Zone {
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
 		}
+	}
+
+	boolean needsRebuild() {
+		return !isDeferred && (invalidate || (!initialized && !uploaded));
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -204,19 +213,23 @@ class Zone {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void setMetadata(WorldViewContext viewContext, int mx, int mz) {
+	void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
 		if (vboM == null || !metadataDirty)
 			return;
 		metadataDirty = false;
 
-		int baseX = (mx - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
+		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
 		vboM.map();
 		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
 		vboM.vb.put(baseX);
 		vboM.vb.put(baseZ);
 		vboM.unmap();
+	}
+
+	void setMetadata(WorldViewContext viewContext, int mx, int mz) {
+		setMetadata(viewContext, viewContext.sceneContext, mx, mz);
 	}
 
 	void updateRoofs(Map<Integer, Integer> updates) {

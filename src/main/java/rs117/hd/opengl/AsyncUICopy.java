@@ -2,8 +2,6 @@ package rs117.hd.opengl;
 
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
@@ -14,6 +12,7 @@ import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPlugin.THREAD_POOL;
 
 @Slf4j
 public class AsyncUICopy implements Runnable {
@@ -26,7 +25,6 @@ public class AsyncUICopy implements Runnable {
 	@Inject
 	private FrameTimer timer;
 
-	private final ExecutorService executor = Executors.newSingleThreadExecutor();
 	private final Semaphore completionSemaphore = new Semaphore(0);
 
 	private IntBuffer mappedBuffer;
@@ -69,7 +67,7 @@ public class AsyncUICopy implements Runnable {
 		this.width = provider.getWidth();
 		this.height = provider.getHeight();
 
-		executor.execute(this);
+		THREAD_POOL.execute(this);
 	}
 
 	public boolean complete() {

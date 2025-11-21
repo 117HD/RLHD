@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.Future;
 import java.util.function.Predicate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -113,6 +114,9 @@ public class LightManager {
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
 	private int currentPlane;
+
+	// TODO: Move this to be private & add a wait function in here
+	public Future<?> asyncLoadTask;
 
 	public void loadConfig(Gson gson, ResourcePath path) {
 		LightDefinition[] lights;
@@ -598,8 +602,6 @@ public class LightManager {
 
 	public void loadSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext)
 	{
-		assert client.isClientThread();
-
 		if (oldSceneContext == null) {
 			sceneContext.lights.clear();
 			sceneContext.trackedTileObjects.clear();
@@ -660,6 +662,23 @@ public class LightManager {
 
 		// Set the plane to an unreachable plane, forcing the first `toggleTemporaryVisibility` call to not fade
 		currentPlane = -1;
+	}
+
+	public void setupImposterTracking(@Nonnull SceneContext sceneContext) {
+		for(TileObjectImpostorTracker tracker : sceneContext.trackedTileObjects.values()) {
+			ObjectComposition def = client.getObjectDefinition(tracker.tileObject.getId());
+			tracker.impostorIds = def.getImpostorIds();
+			if (tracker.impostorIds != null) {
+				tracker.impostorVarbit = def.getVarbitId();
+				tracker.impostorVarp = def.getVarPlayerId();
+				if (tracker.impostorVarbit != -1)
+					sceneContext.trackedVarbits.put(tracker.impostorVarbit, tracker);
+				if (tracker.impostorVarp != -1)
+					sceneContext.trackedVarps.put(tracker.impostorVarp, tracker);
+			}
+
+			trackImpostorChanges(sceneContext, tracker);
+		}
 	}
 
 	private void removeLightIf(Predicate<Light> predicate) {
@@ -771,7 +790,7 @@ public class LightManager {
 		sceneContext.trackedTileObjects.put(tileObject, tracker);
 
 		// prevent objects at plane -1 and below from having lights
-		if (tileObject.getPlane() < 0)
+		if (tileObject.getPlane() < 0 || !client.isClientThread())
 			return;
 
 		ObjectComposition def = client.getObjectDefinition(tileObject.getId());

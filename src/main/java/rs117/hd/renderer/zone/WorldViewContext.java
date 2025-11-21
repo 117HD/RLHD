@@ -1,12 +1,18 @@
 package rs117.hd.renderer.zone;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nullable;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.opengl.uniforms.UBOWorldViews;
 import rs117.hd.opengl.uniforms.UBOWorldViews.WorldViewStruct;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
 
+@Slf4j
 public class WorldViewContext {
 	final int worldViewId;
 	final int sizeX, sizeZ;
@@ -15,13 +21,14 @@ public class WorldViewContext {
 	ZoneSceneContext sceneContext;
 	Zone[][] zones;
 	VBO vboM;
+	List<ZoneStreamingManager.WorkHandle> streamingZones = new ArrayList<>();
 	boolean isLoading = true;
 
 	WorldViewContext(@Nullable WorldView worldView, @Nullable ZoneSceneContext sceneContext, UBOWorldViews uboWorldViews) {
 		this.worldViewId = worldView == null ? -1 : worldView.getId();
 		this.sceneContext = sceneContext;
-		this.sizeX = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeX() >> 3;
-		this.sizeZ = worldView == null ? ZoneRenderer.NUM_ZONES : worldView.getSizeY() >> 3;
+		this.sizeX = worldView == null ? NUM_ZONES : worldView.getSizeX() >> 3;
+		this.sizeZ = worldView == null ? NUM_ZONES : worldView.getSizeY() >> 3;
 		if (worldView != null)
 			uboWorldViewStruct = uboWorldViews.acquire(worldView);
 		zones = new Zone[sizeX][sizeZ];
@@ -39,6 +46,30 @@ public class WorldViewContext {
 		vboM.map();
 		vboM.vb.put(uboWorldViewStruct.worldViewIdx + 1);
 		vboM.unmap();
+	}
+
+	void cancelStreaming() {
+		for(ZoneStreamingManager.WorkHandle handle : streamingZones)
+			handle.cancel();
+		streamingZones.clear();
+	}
+
+	void clearCompleteStreaming() {
+		for(ZoneStreamingManager.WorkHandle handle : streamingZones) {
+			if(handle.isComplete()) {
+				handle.release();
+				streamingZones.remove(handle);
+			}
+		}
+	}
+
+	@SneakyThrows
+	void completeStreaming() {
+		for(ZoneStreamingManager.WorkHandle handle : streamingZones) {
+			handle.complete();
+			handle.release();
+		}
+		streamingZones.clear();
 	}
 
 	void free() {

@@ -21,6 +21,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
+import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -223,9 +224,10 @@ public class TileOverrideManager {
 		if (override.isConstant())
 			return override;
 
-		sceneContext.tileOverrideVars.setTile(tile);
-		var replacement = override.resolveReplacements(sceneContext.tileOverrideVars);
-		sceneContext.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
+		final TileOverrideVariables tileOverrideVars = sceneContext.tileOverrideVars.get();
+		tileOverrideVars.setTile(tile);
+		var replacement = override.resolveReplacements(tileOverrideVars);
+		tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
 		return replacement;
 	}
 

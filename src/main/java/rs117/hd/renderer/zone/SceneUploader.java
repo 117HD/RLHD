@@ -70,6 +70,9 @@ class SceneUploader {
 	private HdPlugin plugin;
 
 	@Inject
+	private Client client;
+
+	@Inject
 	public GamevalManager gamevalManager;
 
 	@Inject
@@ -84,7 +87,20 @@ class SceneUploader {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
+	@Inject
+	private ZoneStreamingManager zoneStreamingManager;
+
 	private int basex, basez, rid, level;
+	private Runnable streamingCallback;
+
+	private final Set<Integer> roofIds = new HashSet<>();
+	private Scene currentScene;
+	private Tile[][][] tiles;
+	private byte[][][] settings;
+	private int[][][] roofs;
+	private short[][][] overlayIds;
+	private short[][][] underlayIds;
+	private int[][][] tileHeights;
 
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
@@ -98,11 +114,36 @@ class SceneUploader {
 	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
+	void setStreamingUploaderCallback(Runnable streamingCallback) { this.streamingCallback = streamingCallback; }
+
+	void setScene(Scene scene) {
+		if(scene == currentScene) {
+			return;
+		}
+
+		currentScene = scene;
+		tiles = scene.getExtendedTiles();
+		settings = scene.getExtendedTileSettings();
+		roofs = scene.getRoofs();
+		overlayIds = scene.getOverlayIds();
+		underlayIds = scene.getUnderlayIds();
+		tileHeights = scene.getTileHeights();
+	}
+
+	void clear() {
+		tiles = null;
+		settings = null;
+		roofs = null;
+		overlayIds = null;
+		underlayIds = null;
+		tileHeights = null;
+		currentScene = null;
+	}
+
 	void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		// Initialize the zone as containing only water, until a non-water tile is found
 		zone.onlyWater = true;
 
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int z = 3; z >= 0; --z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -115,12 +156,10 @@ class SceneUploader {
 	}
 
 	void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		int[][][] roofs = ctx.scene.getRoofs();
-		Set<Integer> roofIds = new HashSet<>();
-
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.vb) : null;
 		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.vb) : null;
 
+		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -157,6 +196,8 @@ class SceneUploader {
 			uploadZoneWater(ctx, zone, mzx, mzz, vb);
 			zone.levelOffsets[Zone.LEVEL_WATER_SURFACE] = vb.position();
 		}
+
+		zone.uploaded = true;
 	}
 
 	private void uploadZoneLevel(
@@ -203,10 +244,6 @@ class SceneUploader {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab
 	) {
-		byte[][][] settings = ctx.scene.getExtendedTileSettings();
-		int[][][] roofs = ctx.scene.getRoofs();
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
-
 		this.level = level;
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
@@ -249,7 +286,6 @@ class SceneUploader {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int level = 0; level < MAX_Z; level++) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -264,6 +300,9 @@ class SceneUploader {
 	}
 
 	private void estimateZoneTileSize(ZoneSceneContext ctx, Zone z, Tile t) {
+		if(streamingCallback != null)
+			streamingCallback.run();
+
 		var tilePoint = t.getSceneLocation();
 		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
 
@@ -292,8 +331,8 @@ class SceneUploader {
 			int tileExX = tilePoint.getX() + ctx.sceneOffset;
 			int tileExY = tilePoint.getY() + ctx.sceneOffset;
 			int tileZ = t.getRenderLevel();
-			int overlayId = OVERLAY_FLAG | ctx.scene.getOverlayIds()[tileZ][tileExX][tileExY];
-			int underlayId = ctx.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+			int overlayId = OVERLAY_FLAG | overlayIds[tileZ][tileExX][tileExY];
+			int underlayId = underlayIds[tileZ][tileExX][tileExY];
 			var overlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, overlayId);
 			var underlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, underlayId);
 
@@ -370,6 +409,9 @@ class SceneUploader {
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
+		if(streamingCallback != null)
+			streamingCallback.run();
+
 		var tilePoint = t.getSceneLocation();
 		int tileExX = tilePoint.getX() + ctx.sceneOffset;
 		int tileExY = tilePoint.getY() + ctx.sceneOffset;
@@ -570,7 +612,9 @@ class SceneUploader {
 		if (r instanceof Model) {
 			m = (Model) r;
 		} else if (r instanceof DynamicObject) {
-			m = ((DynamicObject) r).getModelZbuf();
+			try {
+				m = ((DynamicObject) r).getModelZbuf();
+			} catch (Throwable ignored) {}
 		}
 		if (m == null)
 			return;
@@ -615,7 +659,9 @@ class SceneUploader {
 		if (r instanceof Model) {
 			model = (Model) r;
 		} else if (r instanceof DynamicObject) {
-			model = ((DynamicObject) r).getModelZbuf();
+			try {
+				model = ((DynamicObject) r).getModelZbuf();
+			} catch (Throwable ignored) {}
 		}
 		if (model == null)
 			return;
@@ -690,7 +736,6 @@ class SceneUploader {
 		if (onlyWaterSurface && waterType == WaterType.NONE)
 			return;
 
-		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
@@ -799,25 +844,25 @@ class SceneUploader {
 				neMaterial = groundMaterial.getRandomMaterial(worldPos[0] + 1, worldPos[1] + 1, worldPos[2]);
 			}
 
-			if (ctx.vertexIsOverlay.containsKey(neVertexKey) && ctx.vertexIsUnderlay.containsKey(neVertexKey))
+			if (ctx.vertexIsOverlay.contains(neVertexKey) && ctx.vertexIsUnderlay.contains(neVertexKey))
 				neVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(nwVertexKey) && ctx.vertexIsUnderlay.containsKey(nwVertexKey))
+			if (ctx.vertexIsOverlay.contains(nwVertexKey) && ctx.vertexIsUnderlay.contains(nwVertexKey))
 				nwVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(seVertexKey) && ctx.vertexIsUnderlay.containsKey(seVertexKey))
+			if (ctx.vertexIsOverlay.contains(seVertexKey) && ctx.vertexIsUnderlay.contains(seVertexKey))
 				seVertexIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(swVertexKey) && ctx.vertexIsUnderlay.containsKey(swVertexKey))
+			if (ctx.vertexIsOverlay.contains(swVertexKey) && ctx.vertexIsUnderlay.contains(swVertexKey))
 				swVertexIsOverlay = true;
 		} else if (onlyWaterSurface) {
 			// set colors for the shoreline to create a foam effect in the water shader
 			swColor = seColor = nwColor = neColor = 127;
 
-			if (ctx.vertexIsWater.containsKey(swVertexKey) && ctx.vertexIsLand.containsKey(swVertexKey))
+			if (ctx.vertexIsWater.contains(swVertexKey) && ctx.vertexIsLand.contains(swVertexKey))
 				swColor = 0;
-			if (ctx.vertexIsWater.containsKey(seVertexKey) && ctx.vertexIsLand.containsKey(seVertexKey))
+			if (ctx.vertexIsWater.contains(seVertexKey) && ctx.vertexIsLand.contains(seVertexKey))
 				seColor = 0;
-			if (ctx.vertexIsWater.containsKey(nwVertexKey) && ctx.vertexIsLand.containsKey(nwVertexKey))
+			if (ctx.vertexIsWater.contains(nwVertexKey) && ctx.vertexIsLand.contains(nwVertexKey))
 				nwColor = 0;
-			if (ctx.vertexIsWater.containsKey(neVertexKey) && ctx.vertexIsLand.containsKey(neVertexKey))
+			if (ctx.vertexIsWater.contains(neVertexKey) && ctx.vertexIsLand.contains(neVertexKey))
 				neColor = 0;
 
 			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
@@ -923,8 +968,8 @@ class SceneUploader {
 				}
 			}
 		}
-		int overlayId = OVERLAY_FLAG | ctx.scene.getOverlayIds()[tileZ][tileExX][tileExY];
-		int underlayId = ctx.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+		int overlayId = OVERLAY_FLAG | overlayIds[tileZ][tileExX][tileExY];
+		int underlayId = underlayIds[tileZ][tileExX][tileExY];
 		var overlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, overlayId);
 		var underlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, underlayId);
 		WaterType overlayWaterType = proceduralGenerator.seasonalWaterType(overlayOverride, 0);
@@ -1075,11 +1120,11 @@ class SceneUploader {
 			} else if (onlyWaterSurface) {
 				// set colors for the shoreline to create a foam effect in the water shader
 				colorA = colorB = colorC = 127;
-				if (ctx.vertexIsWater.containsKey(vertexKeyA) && ctx.vertexIsLand.containsKey(vertexKeyA))
+				if (ctx.vertexIsWater.contains(vertexKeyA) && ctx.vertexIsLand.contains(vertexKeyA))
 					colorA = 0;
-				if (ctx.vertexIsWater.containsKey(vertexKeyB) && ctx.vertexIsLand.containsKey(vertexKeyB))
+				if (ctx.vertexIsWater.contains(vertexKeyB) && ctx.vertexIsLand.contains(vertexKeyB))
 					colorB = 0;
-				if (ctx.vertexIsWater.containsKey(vertexKeyC) && ctx.vertexIsLand.containsKey(vertexKeyC))
+				if (ctx.vertexIsWater.contains(vertexKeyC) && ctx.vertexIsLand.contains(vertexKeyC))
 					colorC = 0;
 				if (colorA == 0 && colorB == 0 && colorC == 0)
 					colorA = colorB = colorC = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
@@ -1118,11 +1163,11 @@ class SceneUploader {
 				terrainDataC = HDUtils.packTerrainData(true, max(1, depthC), waterType, tileZ);
 			}
 
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyA) && ctx.vertexIsUnderlay.containsKey(vertexKeyA))
+			if (ctx.vertexIsOverlay.contains(vertexKeyA) && ctx.vertexIsUnderlay.contains(vertexKeyA))
 				vertexAIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyB) && ctx.vertexIsUnderlay.containsKey(vertexKeyB))
+			if (ctx.vertexIsOverlay.contains(vertexKeyB) && ctx.vertexIsUnderlay.contains(vertexKeyB))
 				vertexBIsOverlay = true;
-			if (ctx.vertexIsOverlay.containsKey(vertexKeyC) && ctx.vertexIsUnderlay.containsKey(vertexKeyC))
+			if (ctx.vertexIsOverlay.contains(vertexKeyC) && ctx.vertexIsUnderlay.contains(vertexKeyC))
 				vertexCIsOverlay = true;
 
 			ly0 -= override.heightOffset;
