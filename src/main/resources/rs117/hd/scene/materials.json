@@ -2366,6 +2366,11 @@
     "brightness": 1.293
   },
   {
+    "name": "METALLIC_1_LIGHT_SMOOTH",
+    "parent": "METALLIC_1_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "METALLIC_1_LIGHT_SEMIGLOSS",
     "parent": "METALLIC_1_LIGHT",
     "specularStrength": 0.7,

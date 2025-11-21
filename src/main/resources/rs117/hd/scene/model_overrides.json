@@ -63726,10 +63726,10 @@
     ]
   },
   {
-    "description": "Sailing - Skiff - Helm - All Others",
+    "description": "Sailing - Skiff - Helm & Keg - All Others",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.51,
     "objectIds": [
       "SAILING_BOAT_STEERING_KANDARIN_2X5_OAK_IDLE",
       "SAILING_BOAT_STEERING_KANDARIN_2X5_OAK_IN_USE",
@@ -63742,7 +63742,15 @@
       "SAILING_BOAT_STEERING_KANDARIN_2X5_IRONWOOD_IN_USE",
       "SAILING_BOAT_STEERING_KANDARIN_2X5_IRONWOOD_IDLE",
       "SAILING_BOAT_STEERING_KANDARIN_2X5_ROSEWOOD_IN_USE",
-      "SAILING_BOAT_STEERING_KANDARIN_2X5_ROSEWOOD_IDLE"
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_ROSEWOOD_IDLE",
+      "SAILING_KEG_EMPTY",
+      "SAILING_KEG_GROG",
+      "SAILING_KEG_CIDER",
+      "SAILING_KEG_WHIRLPOOL_SURPRISE",
+      "SAILING_KEG_KRAKEN_INK_STOUT",
+      "SAILING_KEG_PERILDANCE_BITTER",
+      "SAILING_KEG_TRAWLERS_TRUST",
+      "SAILING_KEG_HORIZONS_LURE"
     ],
     "colorOverrides": [
       {
@@ -63754,8 +63762,8 @@
       },
       {
         "description": "Metal",
-        "colors": "h == 0 || h > 10",
-        "baseMaterial": "METALLIC_1_LIGHT"
+        "colors": "h == 0 || h > 10 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       }
     ]
   },
@@ -63848,6 +63856,11 @@
       "SALVAGING_HOOK_LARGE_DRAGON_B"
     ],
     "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
       {
         "description": "Rope",
         "colors": "h == 8",
