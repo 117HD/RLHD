@@ -63690,8 +63690,13 @@
         "uvOrientation": 200
       },
       {
+        "description": "Metal",
+        "colors": "h == 0 || h == 1 || h > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
         "description": "Sail",
-        "colors": "h == 11 || h == 12 || h == 0 && s == 7",
+        "colors": "h == 11 || h == 12 || h == 0 && s == 7 || h == 6 && s == 1 || h == 8 && s == 1",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
         "receiveShadows": false,
         "undoVanillaShading": false
