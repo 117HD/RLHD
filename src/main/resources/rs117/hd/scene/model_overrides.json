@@ -63218,8 +63218,9 @@
   },
   {
     "description": "Ocean Rocks - Plain",
-    "baseMaterial": "ROCK_3_LIGHT",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH_LIGHT",
     "uvType": "BOX",
+    "uvScale": 1.2,
     "objectIds": [
       "OCEAN_OUTCROP_ROCK01",
       "OCEAN_OUTCROP_ROCK02",
@@ -63229,7 +63230,13 @@
       "OCEAN_OUTCROP_ROCK06",
       "OCEAN_OUTCROP_ROCK07",
       "OCEAN_OUTCROP_ROCK08",
-      "OCEAN_OUTCROP_ROCK09"
+      "OCEAN_OUTCROP_ROCK09",
+      "OCEAN_OUTCROP_JAGGED05",
+      "OCEAN_OUTCROP_JAGGED07",
+      "OCEAN_OUTCROP_JAGGED04",
+      "OCEAN_OUTCROP_JAGGED02",
+      "OCEAN_OUTCROP_JAGGED03",
+      "OCEAN_OUTCROP_JAGGED06"
     ]
   },
   {
@@ -63542,6 +63549,578 @@
         "uvType": "BOX",
         "uvScale": 0.6
       }
+    ]
+  },
+  {
+    "description": "Sailing - Raft - Hull",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SAILING_BOAT_HULL_KANDARIN_1X3_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_ROSEWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 100
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Raft - Helm",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_WOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_WOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_OAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_OAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_TEAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_TEAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_MAHOGANY_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_MAHOGANY_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_CAMPHOR_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_CAMPHOR_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_IRONWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_IRONWOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_ROSEWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_ROSEWOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_1X3_CRYSTALLISED"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 100
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Raft - Sail",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_WOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_OAK",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_TEAK",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_MAHOGANY",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_CAMPHOR",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_IRONWOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_1X3_ROSEWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      },
+      {
+        "description": "Sail",
+        "colors": "h == 11 || h == 12",
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 400,
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Hull",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "SAILING_BOAT_SKIFF_TRIM_WOODEN",
+      "SAILING_BOAT_SKIFF_TRIM_OAK",
+      "SAILING_BOAT_SKIFF_TRIM_TEAK",
+      "SAILING_BOAT_SKIFF_TRIM_MAHOGANY",
+      "SAILING_BOAT_SKIFF_TRIM_CAMPHOR",
+      "SAILING_BOAT_SKIFF_TRIM_IRONWOOD",
+      "SAILING_BOAT_SKIFF_TRIM_ROSEWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_ROSEWOOD"
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Sail",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 500,
+    "uvScale": 0.5,
+    "objectIds": [
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_WOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_OAK",
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_TEAK",
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_MAHOGANY",
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_CAMPHOR",
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_IRONWOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_ROSEWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h == 1 || h > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Sail Low Tier",
+        "colors": "h == 11 || h == 12 || h == 0 && s == 7",
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Sail Med Tier",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Keel & Metallic Trims",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_KEEL_KANDARIN_2X5_BRONZE",
+      "SAILING_KEEL_KANDARIN_2X5_IRON",
+      "SAILING_KEEL_KANDARIN_2X5_STEEL",
+      "SAILING_KEEL_KANDARIN_2X5_MITHRIL",
+      "SAILING_KEEL_KANDARIN_2X5_ADAMANT",
+      "SAILING_KEEL_KANDARIN_2X5_RUNE",
+      "SAILING_KEEL_KANDARIN_2X5_DRAGON",
+      "SAILING_BOAT_SKIFF_TRIM_BARRACUDA",
+      "SAILING_BOAT_SKIFF_TRIM_SHARK",
+      "SAILING_BOAT_SKIFF_TRIM_INKY",
+      "SAILING_BOAT_SKIFF_TRIM_ANGLERS",
+      "SAILING_BOAT_SKIFF_TRIM_SALVORS",
+      "SAILING_BOAT_SKIFF_TRIM_ARMADYLEAN",
+      "SAILING_BOAT_SKIFF_TRIM_ZAMORAKIAN",
+      "SAILING_BOAT_SKIFF_TRIM_GUTHIXIAN",
+      "SAILING_BOAT_SKIFF_TRIM_SARADOMINIST",
+      "SAILING_BOAT_SKIFF_TRIM_MERCHANTS",
+      "SAILING_BOAT_SKIFF_TRIM_SANDY"
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Helm & Keg - All Others",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.51,
+    "objectIds": [
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_OAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_OAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_TEAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_TEAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_MAHOGANY_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_MAHOGANY_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_CAMPHOR_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_CAMPHOR_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_IRONWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_IRONWOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_ROSEWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_ROSEWOOD_IDLE",
+      "SAILING_KEG_EMPTY",
+      "SAILING_KEG_GROG",
+      "SAILING_KEG_CIDER",
+      "SAILING_KEG_WHIRLPOOL_SURPRISE",
+      "SAILING_KEG_KRAKEN_INK_STOUT",
+      "SAILING_KEG_PERILDANCE_BITTER",
+      "SAILING_KEG_TRAWLERS_TRUST",
+      "SAILING_KEG_HORIZONS_LURE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h > 10 || h == 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff - Helm - Bronze",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationX": 512,
+    "uvScale": 0.5,
+    "objectIds": [
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_WOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_WOOD_IN_USE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Salvaging Hook - Bronze",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SALVAGING_HOOK_RAFT_BRONZE",
+      "SALVAGING_HOOK_BRONZE",
+      "SALVAGING_HOOK_LARGE_BRONZE",
+      "SALVAGING_HOOK_LARGE_BRONZE_B"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "colors": "s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Salvaging Hook - All Others",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "SALVAGING_HOOK_RAFT_IRON",
+      "SALVAGING_HOOK_RAFT_STEEL",
+      "SALVAGING_HOOK_RAFT_MITHRIL",
+      "SALVAGING_HOOK_RAFT_ADAMANT",
+      "SALVAGING_HOOK_RAFT_RUNE",
+      "SALVAGING_HOOK_RAFT_DRAGON",
+      "SALVAGING_HOOK_IRON",
+      "SALVAGING_HOOK_STEEL",
+      "SALVAGING_HOOK_MITHRIL",
+      "SALVAGING_HOOK_ADAMANT",
+      "SALVAGING_HOOK_RUNE",
+      "SALVAGING_HOOK_DRAGON",
+      "SALVAGING_HOOK_LARGE_IRON",
+      "SALVAGING_HOOK_LARGE_STEEL",
+      "SALVAGING_HOOK_LARGE_IRON",
+      "SALVAGING_HOOK_LARGE_STEEL",
+      "SALVAGING_HOOK_LARGE_MITHRIL",
+      "SALVAGING_HOOK_LARGE_ADAMANT",
+      "SALVAGING_HOOK_LARGE_RUNE",
+      "SALVAGING_HOOK_LARGE_DRAGON",
+      "SALVAGING_HOOK_LARGE_IRON_B",
+      "SALVAGING_HOOK_LARGE_STEEL_B",
+      "SALVAGING_HOOK_LARGE_IRON_B",
+      "SALVAGING_HOOK_LARGE_STEEL_B",
+      "SALVAGING_HOOK_LARGE_MITHRIL_B",
+      "SALVAGING_HOOK_LARGE_ADAMANT_B",
+      "SALVAGING_HOOK_LARGE_RUNE_B",
+      "SALVAGING_HOOK_LARGE_DRAGON_B"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 1",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "TRANSPARENT",
+        "colors": "h == 19"
+      },
+      {
+        "description": "Metal",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "colors": "h == 0 || h > 10",
+        "uvType": "BOX",
+        "uvOrientationX": 512,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cargo Hold & Cannon - Bronze",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_2X5",
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_LARGE",
+      "SAILING_BRONZE_CANNON"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cargo Hold & Cannon - All Others",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_IRON_CANNON",
+      "SAILING_STEEL_CANNON",
+      "SAILING_MITHRIL_CANNON",
+      "SAILING_ADAMANT_CANNON",
+      "SAILING_RUNE_CANNON",
+      "SAILING_DRAGON_CANNON",
+      "SAILING_GOLD_CANNON",
+      "SAILING_BOAT_CARGO_HOLD_OAK_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_TEAK_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_MAHOGANY_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_CAMPHOR_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_OAK_2X5",
+      "SAILING_BOAT_CARGO_HOLD_TEAK_2X5",
+      "SAILING_BOAT_CARGO_HOLD_MAHOGANY_2X5",
+      "SAILING_BOAT_CARGO_HOLD_CAMPHOR_2X5",
+      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_2X5",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5",
+      "SAILING_BOAT_CARGO_HOLD_OAK_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_TEAK_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_MAHOGANY_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_CAMPHOR_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h > 10 || h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.1
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cooking Range",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_FACILITY_RANGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Inoculation Station",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_FACILITY_2X5_INOCULATION_STATION",
+      "SAILING_FACILITY_2X5_INOCULATION_STATION_NOOP",
+      "SAILING_FACILITY_3X8_INOCULATION_STATION"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Anchor",
+    "baseMaterial": "METALLIC_1_LIGHT_LOW_GLOSS",
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "receiveShadows": false,
+    "objectIds": [
+      "SAILING_ANCHOR_RAISED_2X5",
+      "SAILING_ANCHOR_LOWERED_2X5",
+      "SAILING_ANCHOR_RAISED_3X8",
+      "SAILING_ANCHOR_LOWERED_3X8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Barracuda Flag",
+    "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "SAILING_BOAT_1X3_FLAG_JUBBLY_JIVE",
+      "SAILING_BOAT_1X3_FLAG_TEMPOR_TANTRUM",
+      "SAILING_BOAT_1X3_FLAG_GWENITH_GLIDE",
+      "SAILING_BOAT_SKIFF_FLAG_TEMPOR_TANTRUM",
+      "SAILING_BOAT_SKIFF_FLAG_JUBBLY_JIVE",
+      "SAILING_BOAT_SKIFF_FLAG_GWENITH_GLIDE",
+      "SAILING_BOAT_SLOOP_FLAG_TEMPOR_TANTRUM",
+      "SAILING_BOAT_SLOOP_FLAG_JUBBLY_JIVE",
+      "SAILING_BOAT_SLOOP_FLAG_GWENITH_GLIDE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": 500,
+        "uvScale": 0.2
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Build Spot - Flat",
+    "undoVanillaShading": false,
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_RAFT_0",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_0",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_1",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_2",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_3",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_4",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_0",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_1",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_2",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_3",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_4",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_5",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_6",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_7",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a > 200",
+        "baseMaterial": "GRAY_65",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Build Spot - Vertical",
+    "undoVanillaShading": false,
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_5",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_6",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_9",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_10"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a > 200",
+        "baseMaterial": "GRAY_90",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Wind Buff",
+    "baseMaterial": "GRAY_90",
+    "upwardsNormals": true,
+    "graphicsObjectIds": [
+      "VFX_WIND_SAIL_RAFT01_FULL01",
+      "VFX_WIND_SAIL_RAFT01_DOWN01",
+      "VFX_WIND_SAIL_RAFT01_HALF01",
+      "VFX_WIND_SAIL_RAFT01_SPEEDBOOST01",
+      "VFX_WIND_SAIL_SMALL01_FULL01",
+      "VFX_WIND_SAIL_SMALL01_DOWN01",
+      "VFX_WIND_SAIL_SMALL01_HALF01",
+      "VFX_WIND_SAIL_SMALL01_SPEEDBOOST01",
+      "VFX_WIND_SAIL_LARGE01_FULL01",
+      "VFX_WIND_SAIL_LARGE01_DOWN01",
+      "VFX_WIND_SAIL_LARGE01_HALF01",
+      "VFX_WIND_SAIL_LARGE01_SPEEDBOOST01"
     ]
   },
   {
