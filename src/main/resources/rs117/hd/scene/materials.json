@@ -1665,8 +1665,18 @@
     "brightness": 1.22
   },
   {
+    "name": "CARPET_SUPER_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.35
+  },
+  {
     "name": "CARPET_VERY_LIGHT_SMOOTH",
     "parent": "CARPET_VERY_LIGHT",
+    "normalMap": null
+  },
+  {
+    "name": "CARPET_SUPER_LIGHT_SMOOTH",
+    "parent": "CARPET_SUPER_LIGHT",
     "normalMap": null
   },
   {
@@ -2403,6 +2413,12 @@
     "name": "METALLIC_1_VERY_LIGHT",
     "parent": "METALLIC_1",
     "brightness": 1.516
+  },
+  {
+    "name": "METALLIC_1_LIGHT_LOW_GLOSS",
+    "parent": "METALLIC_1_LIGHT",
+    "specularStrength": 0.05,
+    "specularGloss": 20.0
   },
   {
     "name": "METALLIC_2_N"
