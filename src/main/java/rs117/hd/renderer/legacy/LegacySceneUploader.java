@@ -112,7 +112,7 @@ public class LegacySceneUploader {
 		if (sceneContext.enableAreaHiding) {
 			sceneContext.possibleAreas = Arrays
 				.stream(areaManager.areasWithAreaHiding)
-				.filter(area -> area.intersects(sceneContext.sceneBounds))
+				.filter(area -> sceneContext.sceneBounds.intersects(area.aabbs))
 				.toArray(Area[]::new);
 
 			if (log.isDebugEnabled() && sceneContext.possibleAreas.length > 0) {
