@@ -190,6 +190,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 						copy.regions = area.regions;
 						copy.regionBoxes = area.regionBoxes;
 						copy.rawAabbs = area.rawAabbs;
+						copy.polygon = area.polygon;
 						copy.normalize();
 						copy.unhideAreas = area.unhideAreas;
 						copy.aabbs = Arrays
@@ -198,8 +199,17 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 							.toArray(AABB[]::new);
 						return copy;
 					})
-					.filter(area -> Arrays.stream(area.aabbs)
-						.anyMatch(aabb -> aabb != dummyAabb))
+					.filter(area -> {
+						// Include areas with AABBs that intersect the scene bounds
+						if (Arrays.stream(area.aabbs).anyMatch(aabb -> aabb != dummyAabb)) {
+							return true;
+						}
+						// Include areas with polygons that intersect the scene bounds
+						if (area.polygon != null) {
+							return area.polygon.intersects(ctx.sceneBounds);
+						}
+						return false;
+					})
 					.toArray(Area[]::new);
 			}
 		}

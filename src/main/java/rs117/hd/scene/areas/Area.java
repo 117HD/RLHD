@@ -4,6 +4,7 @@ import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.Collections;
+import net.runelite.api.coords.*;
 import rs117.hd.scene.AreaManager;
 
 public class Area {
@@ -22,6 +23,10 @@ public class Area {
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	@SerializedName("aabbs")
 	public AABB[] rawAabbs;
+
+	@SerializedName("polyAreas")
+	@JsonAdapter(Polygon.Adapter.class)
+	public Polygon polygon;
 	@JsonAdapter(AABB.ArrayAdapter.class)
 	public AABB[] unhideAreas = {};
 
@@ -41,6 +46,21 @@ public class Area {
 		if (normalized)
 			return;
 		normalized = true;
+
+		if (polygon != null) {
+			boolean hasAabbFields = (rawAabbs != null && rawAabbs.length > 0) ||
+				(regions != null && regions.length > 0) ||
+				(regionBoxes != null && regionBoxes.length > 0) ||
+				(areas != null && areas.length > 0);
+			
+			if (hasAabbFields) {
+				throw new IllegalStateException(
+					"Area '" + name + "' cannot have both polygon and AABB fields (aabbs, regions, regionBoxes, or areas) set");
+			}
+
+			System.out.println(polygon);
+
+		}
 
 		ArrayList<AABB> aabbs = new ArrayList<>();
 		if (rawAabbs != null)
@@ -70,6 +90,16 @@ public class Area {
 	}
 
 	public boolean containsPoint(boolean includeUnhiding, int... worldPoint) {
+		if (polygon != null) {
+			boolean result = polygon.contains(worldPoint);
+			if (includeUnhiding) {
+				for (var aabb : unhideAreas)
+					if (aabb.contains(worldPoint))
+						return true;
+			}
+			return result;
+		}
+
 		for (var aabb : aabbs)
 			if (aabb.contains(worldPoint))
 				return true;
@@ -85,6 +115,16 @@ public class Area {
 	}
 
 	public boolean intersects(boolean includeUnhiding, int minX, int minY, int maxX, int maxY) {
+		if (polygon != null) {
+			boolean result = polygon.intersects(minX, minY, maxX, maxY);
+			if (includeUnhiding) {
+				for (var aabb : unhideAreas)
+					if (aabb.intersects(minX, minY, maxX, maxY))
+						return true;
+			}
+			return result;
+		}
+
 		for (AABB aabb : aabbs)
 			if (aabb.intersects(minX, minY, maxX, maxY))
 				return true;
@@ -102,6 +142,10 @@ public class Area {
 	}
 
 	public boolean intersects(AABB... otherAabbs) {
+		if (polygon != null) {
+			return polygon.intersects(otherAabbs);
+		}
+
 		for (AABB aabb : aabbs)
 			if (aabb.intersects(otherAabbs))
 				return true;
