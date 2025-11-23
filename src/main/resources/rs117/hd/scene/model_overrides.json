@@ -63519,6 +63519,37 @@
     ]
   },
   {
+    "description": "Sailing - Player Ship Dock",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH_LIGHT",
+    "objectIds": [
+      "SAILING_MOORING_EMBARK",
+      "SAILING_MOORING_DISEMBARK"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Wind Sock",
+        "colors": "h == 5 && s == 0 || h == 1",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Wind Pole",
+        "colors": "s == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.24,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Seagull",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Port Sarim - Pier - Crane with Crate",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
