@@ -245,29 +245,6 @@ public class SceneManager {
 
 	public boolean isLoadingScene() { return nextSceneContext != null; }
 
-	private static int canReuse(Zone[][] zones, int zx, int zz) {
-		// For tile blending, sharelight, and shadows to work correctly, the zones surrounding
-		// the zone must be valid.
-		for (int x = zx - 1; x <= zx + 1; ++x) {
-			if (x < 0 || x >= NUM_ZONES)
-				return REUSE_STATE_PARTIAL;
-			for (int z = zz - 1; z <= zz + 1; ++z) {
-				if (z < 0 || z >= NUM_ZONES)
-					return REUSE_STATE_PARTIAL;
-				Zone zone = zones[x][z];
-				if (!zone.initialized)
-					return REUSE_STATE_NONE;
-				if (zone.sizeO == 0 && zone.sizeA == 0)
-					return REUSE_STATE_NONE;
-				if (zone.hasWater)
-					return REUSE_STATE_PARTIAL;
-				if (zone.dirty)
-					return REUSE_STATE_PARTIAL;
-			}
-		}
-		return REUSE_STATE_FULLY;
-	}
-
 	public void invalidateZone(Scene scene, int zx, int zz) {
 		WorldViewContext ctx = context(scene);
 		if(ctx == null) return;
@@ -386,9 +363,13 @@ public class SceneManager {
 						if(ox < 0 || ox >= NUM_ZONES || oz < 0 || oz >= NUM_ZONES)
 							continue;
 
-						int reuseState = canReuse(ctx.zones, ox, oz);
-						if (reuseState == REUSE_STATE_NONE)
+						Zone old = ctx.zones[ox][oz];
+						if (!old.initialized || old.sizeO == 0 || old.sizeA == 0 || nextPlayerPos == null)
 							continue;
+
+						boolean partial = old.hasWater || old.dirty;
+						if (ox <= 0 || ox >= NUM_ZONES - 1) partial = true;
+						if (oz <= 0 || oz >= NUM_ZONES - 1) partial = true;
 
 						if (scene.isInstance()) {
 							// Convert from modified chunk coordinates to Jagex chunk coordinates
@@ -412,17 +393,7 @@ public class SceneManager {
 							}
 						}
 
-						Zone old = ctx.zones[ox][oz];
-						assert old.initialized;
-						assert old.sizeO > 0 || old.sizeA > 0;
-						assert old.cull;
-
-						if (reuseState == REUSE_STATE_PARTIAL) {
-							if(nextPlayerPos == null)
-								continue;
-							old.invalidate = true;
-						}
-
+						old.invalidate = partial;
 						old.cull = false;
 						old.metadataDirty = true;
 
