@@ -65736,13 +65736,14 @@
     ]
   },
   {
-    "description": "Great Conch - Gryphon Lair Entrance",
+    "description": "Great Conch - Gryphon Lair & Coral Cave Entrance",
     "baseMaterial": "DIRT_2_LIGHT",
     "objectIds": [
       "CONCH_GRYPHON_LAIR_ENTRANCE",
       "TT_LAIR_ENTRANCE_CLEAR",
       "TT_LAIR_ENTRANCE_BLOCKED",
-      "CONCH_GRYPHON_TASK_LAIR_ENTRANCE"
+      "CONCH_GRYPHON_TASK_LAIR_ENTRANCE",
+      "CONCH_UNDERWATER_CAVE_ENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5,
@@ -65752,6 +65753,22 @@
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "The Little Pearl - Tortugan Egg Nest",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TORTUGAN_EGGS",
+      "TORTUGAN_EGGS02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRAY_90"
       }
     ]
   },
