@@ -1,5 +1,6 @@
 package rs117.hd.renderer.zone;
 
+import java.util.concurrent.Future;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
@@ -80,6 +81,7 @@ public class ZoneStreamingManager {
 	private final LinkedBlockingDeque<WorkItem> workQueue = new LinkedBlockingDeque<>();
 	private final LinkedBlockingDeque<ClientCallbackItem> highPriorityClientCallbacks = new LinkedBlockingDeque<>();
 	private final LinkedBlockingDeque<ClientCallbackItem> clientCallbacks = new LinkedBlockingDeque<>();
+	private final LinkedBlockingDeque<Future<?>> dependencies = new LinkedBlockingDeque<>();
 
 	private final int workerCount = PROCESSOR_COUNT - 1;
 	private Thread[] workers;
@@ -100,6 +102,10 @@ public class ZoneStreamingManager {
 			newWorker.setName("117HD - Streaming Worker  " + i);
 			newWorker.start();
 		}
+	}
+
+	public void addDependency(Future<?> dependency) {
+		dependencies.add(dependency);
 	}
 
 	@SneakyThrows
@@ -189,8 +195,16 @@ public class ZoneStreamingManager {
 			}
 
 			try {
+				// Wait on any dependency, using peek to ensure all workers block
+				while(dependencies.peek() != null) {
+					Future<?> dep = dependencies.peek();
+					if(dep != null) {
+						dep.get();
+						dependencies.remove(dep);
+					}
+				}
+
 				if (work.zone.needsTerrainGen) {
-					proceduralGenerator.asyncProcGenTask.get(); // TODO: replace this with something like proceduralGenerator.waitForAsyncProcGen();
 					proceduralGenerator.generateTerrainDataForZone(work.sceneContext, work.x, work.z);
 					work.zone.needsTerrainGen = false;
 				}

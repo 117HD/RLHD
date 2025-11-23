@@ -40,10 +40,6 @@ import static rs117.hd.utils.MathUtils.*;
 public class SceneManager {
 	private static final int ZONE_DEFER_DIST_START = 50 * LOCAL_TILE_SIZE;
 
-	private static final int REUSE_STATE_NONE = -1;
-	private static final int REUSE_STATE_PARTIAL = 0;
-	private static final int REUSE_STATE_FULLY = 1;
-
 	public static final int MAX_WORLDVIEWS = 4096;
 
 	public static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
@@ -298,8 +294,8 @@ public class SceneManager {
 			nextPlayerPos = null;
 		}
 
-		proceduralGenerator.asyncProcGenTask = THREAD_POOL.submit(() -> proceduralGenerator.generateSceneData(nextSceneContext));
-		lightManager.asyncLoadTask = THREAD_POOL.submit(() ->  lightManager.loadSceneLights(nextSceneContext, root.sceneContext));
+		zoneStreamingManager.addDependency(THREAD_POOL.submit(() -> proceduralGenerator.generateSceneData(nextSceneContext)));
+		zoneStreamingManager.addDependency(THREAD_POOL.submit(() -> lightManager.loadSceneLights(nextSceneContext, root.sceneContext)));
 
 		if (nextSceneContext.enableAreaHiding) {
 			assert nextSceneContext.sceneBase != null;
@@ -349,7 +345,7 @@ public class SceneManager {
 				ctx.zones[x][z].cull = true;
 
 
-		if (ctx.sceneContext != null && ctx.sceneContext.currentArea == nextSceneContext.currentArea) {
+		if (ctx.sceneContext != null && ctx.sceneContext.expandedMapLoadingChunks == nextSceneContext.expandedMapLoadingChunks && ctx.sceneContext.currentArea == nextSceneContext.currentArea) {
 			// Find zones which overlap, and reuse them
 			if (prev.isInstance() == scene.isInstance() && prev.getRoofRemovalMode() == scene.getRoofRemovalMode()) {
 				int[][][] prevTemplates = prev.getInstanceTemplateChunks();
@@ -364,12 +360,8 @@ public class SceneManager {
 							continue;
 
 						Zone old = ctx.zones[ox][oz];
-						if (!old.initialized || old.sizeO == 0 || old.sizeA == 0 || nextPlayerPos == null)
+						if (!old.initialized || (old.sizeO == 0 && old.sizeA == 0))
 							continue;
-
-						boolean partial = old.hasWater || old.dirty;
-						if (ox <= 0 || ox >= NUM_ZONES - 1) partial = true;
-						if (oz <= 0 || oz >= NUM_ZONES - 1) partial = true;
 
 						if (scene.isInstance()) {
 							// Convert from modified chunk coordinates to Jagex chunk coordinates
@@ -393,9 +385,11 @@ public class SceneManager {
 							}
 						}
 
-						old.invalidate = partial;
-						old.cull = false;
+						old.invalidate = old.hasWater || old.dirty;
+						old.invalidate |= (ox - 2) < 0 || (ox + 2) >= root.sizeX;
+						old.invalidate |= (oz - 2) < 0 || (oz + 2) >= root.sizeZ;
 						old.metadataDirty = true;
+						old.cull = false;
 
 						nextZones[x][z] = old;
 					}
@@ -413,9 +407,7 @@ public class SceneManager {
 				Zone zone = nextZones[x][z];
 				if(zone == null)
 					zone = nextZones[x][z] = new Zone();
-
-				// TODO: Partial zone reuse still need terrain gen performed, this is why the issues occur along borders
-				zone.needsTerrainGen = true;
+				zone.needsTerrainGen = true; // Regardless of reuse, terrainGen needs to be performed
 
 				if (!zone.initialized) {
 					boolean isZoneRequired = root.sceneContext == null || nextSceneContext.sceneBase == null || nextPlayerPos == null;
@@ -485,7 +477,6 @@ public class SceneManager {
 
 		Stopwatch sw = Stopwatch.createStarted();
 
-		lightManager.asyncLoadTask.get();
 		lightManager.setupImposterTracking(nextSceneContext);
 		fishingSpotReplacer.despawnRuneLiteObjects();
 
@@ -578,16 +569,6 @@ public class SceneManager {
 			prevCtx.free();
 		}
 		assert prevCtx == null;
-
-		if(proceduralGenerator.asyncProcGenTask != null) {
-			try {
-				proceduralGenerator.asyncProcGenTask.get();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			} catch (ExecutionException e) {
-				throw new RuntimeException(e);
-			}
-		}
 
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
 		proceduralGenerator.generateSceneData(sceneContext);
