@@ -63871,10 +63871,11 @@
   },
   {
     "description": "Sailing - Shipyard - Portal",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
-    "uvScale": 0.5,
-    "uvOrientation": 512,
+    "uvScale": 0.55,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
     "objectIds": [
       "SAILING_SHIPYARD_PORTAL_EXIT"
     ],
