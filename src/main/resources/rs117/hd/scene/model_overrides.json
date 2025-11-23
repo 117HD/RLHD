@@ -63267,12 +63267,23 @@
       "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_CAMPHOR",
       "SAILING_CHANCE_ENCOUNTER_LOST_GOODS_IRONWOOD"
     ],
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "colorOverrides": [
       {
         "description": "Fake Ripples",
         "colors": "a < 255 || h == 37 && l == 71",
+        "baseMaterial": "TRANSPARENT"
+      }
+    ]
+  },
+  {
+    "description": "Floating Jellyfish - Hide Ripples",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_LARGE_JELLYFISH"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Fake Ripples",
+        "colors": "h == 37",
         "baseMaterial": "TRANSPARENT"
       }
     ]
