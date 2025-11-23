@@ -8638,6 +8638,27 @@
     "hideOtherAreas": true
   },
   {
+    "name": "GRYPHON_QUEST_INSTANCE_AND_BOSS",
+    "aabbs": [
+      [ 3162, 8859, 3195, 8891 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GRYPHON_NORMAL_DUNGEON",
+    "aabbs": [
+      [ 3077, 8837, 3135, 8890 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
+    "name": "GRYPHON_SLAYER_DUNGEON",
+    "aabbs": [
+      [ 3203, 8835, 3255, 8890 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
