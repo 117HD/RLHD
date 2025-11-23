@@ -65427,6 +65427,35 @@
     ]
   },
   {
+    "description": "Great Conch - Tortugan - Market Stall",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "objectIds": [
+      "TORTUGAN_STALL_WEAPONS",
+      "TORTUGAN_STALL_HERBALIST",
+      "TORTUGAN_STALL_EMPTY",
+      "TORTUGAN_STALL_CRAFTING",
+      "TORTUGAN_STALL_HUNTING",
+      "TORTUGAN_STALL_SEED",
+      "TORTUGAN_STALL_FRUIT",
+      "TORTUGAN_STALL_VEG",
+      "TORTUGAN_STALL_SILVER",
+      "TORTUGAN_STALL_ORE",
+      "TORTUGAN_STALL_FISH",
+      "TT_REPAIR_STALL_COCO_BROKEN_NOOP",
+      "TT_REPAIR_STALL_COCO_BROKEN",
+      "TT_REPAIR_STALL_COCO_BROKEN",
+      "TT_REPAIR_STALL_KRILL_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 13",
+        "baseMaterial": "GRAY_85",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Great Conch - Tortugan - House Walls",
     "baseMaterial": "WOOD_GRAIN_3_LIGHT",
     "uvType": "BOX",
