@@ -63780,7 +63780,10 @@
     "objectIds": [
       "PALM_UPDATE01",
       "PALM_UPDATE02",
-      "PALM_UPDATE03"
+      "PALM_UPDATE03",
+      "TT_PALM_1",
+      "TT_PALM_2",
+      "TT_PALM_3"
     ],
     "colorOverrides": [
       {
