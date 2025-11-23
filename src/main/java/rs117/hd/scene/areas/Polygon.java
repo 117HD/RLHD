@@ -161,25 +161,128 @@ public class Polygon {
 
 	public boolean intersects(int minX, int minY, int maxX, int maxY) {
 		// Check if any corner of the rectangle is contained in the polygon
-		return contains(minX, minY) || contains(maxX, minY) ||
-			contains(minX, maxY) || contains(maxX, maxY);
-	}
-
-	public boolean intersects(AABB... otherAabbs) {
-		// Check if any corner of any AABB is contained in the polygon
-		for (AABB aabb : otherAabbs) {
-			// Check all 8 corners of the AABB
-			if (contains(aabb.minX, aabb.minY, aabb.minZ) ||
-				contains(aabb.maxX, aabb.minY, aabb.minZ) ||
-				contains(aabb.minX, aabb.maxY, aabb.minZ) ||
-				contains(aabb.maxX, aabb.maxY, aabb.minZ) ||
-				contains(aabb.minX, aabb.minY, aabb.maxZ) ||
-				contains(aabb.maxX, aabb.minY, aabb.maxZ) ||
-				contains(aabb.minX, aabb.maxY, aabb.maxZ) ||
-				contains(aabb.maxX, aabb.maxY, aabb.maxZ)) {
+		if (contains(minX, minY) || contains(maxX, minY) ||
+			contains(minX, maxY) || contains(maxX, maxY)) {
+			return true;
+		}
+		
+		// Check if any polygon vertex is inside the rectangle
+		int[][] points = getPoints();
+		for (int[] point : points) {
+			if (point[0] >= minX && point[0] <= maxX &&
+				point[1] >= minY && point[1] <= maxY) {
 				return true;
 			}
 		}
+		
+		// Check if any polygon edge intersects the rectangle
+		// For 2D rectangles, check if any edge crosses the rectangle boundaries
+		int nPoints = points.length;
+		for (int i = 0; i < nPoints; i++) {
+			int x1 = points[i][0];
+			int y1 = points[i][1];
+			int x2 = points[(i + 1) % nPoints][0];
+			int y2 = points[(i + 1) % nPoints][1];
+			
+			// Check if edge intersects rectangle using line-rectangle intersection
+			if (lineIntersectsRect(x1, y1, x2, y2, minX, minY, maxX, maxY)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public boolean intersects(AABB... otherAabbs) {
+		for (AABB aabb : otherAabbs) {
+			// For 2D AABBs (no Z constraint), use 2D intersection
+			if (!aabb.hasZ() || (aabb.minZ == aabb.maxZ)) {
+				if (intersects(aabb.minX, aabb.minY, aabb.maxX, aabb.maxY)) {
+					return true;
+				}
+			} else {
+				// For 3D AABBs, check each Z plane
+				for (int z = aabb.minZ; z <= aabb.maxZ; z++) {
+					if (contains(aabb.minX, aabb.minY, z) ||
+						contains(aabb.maxX, aabb.minY, z) ||
+						contains(aabb.minX, aabb.maxY, z) ||
+						contains(aabb.maxX, aabb.maxY, z)) {
+						return true;
+					}
+				}
+				// Also check 2D intersection at any Z level
+				if (intersects(aabb.minX, aabb.minY, aabb.maxX, aabb.maxY)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	// Check if a line segment intersects a rectangle
+	private boolean lineIntersectsRect(int x1, int y1, int x2, int y2, int minX, int minY, int maxX, int maxY) {
+		// If both endpoints are on the same side of a rectangle edge, no intersection
+		// Check if line segment is completely outside rectangle
+		if ((x1 < minX && x2 < minX) || (x1 > maxX && x2 > maxX) ||
+			(y1 < minY && y2 < minY) || (y1 > maxY && y2 > maxY)) {
+			return false;
+		}
+		
+		// If one endpoint is inside, there's intersection
+		if ((x1 >= minX && x1 <= maxX && y1 >= minY && y1 <= maxY) ||
+			(x2 >= minX && x2 <= maxX && y2 >= minY && y2 <= maxY)) {
+			return true;
+		}
+		
+		// Check if line segment intersects any rectangle edge
+		// Use parametric line equation: P = P1 + t(P2 - P1), t in [0,1]
+		int dx = x2 - x1;
+		int dy = y2 - y1;
+		
+		// Check intersection with left edge (x = minX)
+		if (dx != 0) {
+			double t = (minX - x1) / (double) dx;
+			if (t >= 0 && t <= 1) {
+				double y = y1 + t * dy;
+				if (y >= minY && y <= maxY) {
+					return true;
+				}
+			}
+		}
+		
+		// Check intersection with right edge (x = maxX)
+		if (dx != 0) {
+			double t = (maxX - x1) / (double) dx;
+			if (t >= 0 && t <= 1) {
+				double y = y1 + t * dy;
+				if (y >= minY && y <= maxY) {
+					return true;
+				}
+			}
+		}
+		
+		// Check intersection with bottom edge (y = minY)
+		if (dy != 0) {
+			double t = (minY - y1) / (double) dy;
+			if (t >= 0 && t <= 1) {
+				double x = x1 + t * dx;
+				if (x >= minX && x <= maxX) {
+					return true;
+				}
+			}
+		}
+		
+		// Check intersection with top edge (y = maxY)
+		if (dy != 0) {
+			double t = (maxY - y1) / (double) dy;
+			if (t >= 0 && t <= 1) {
+				double x = x1 + t * dx;
+				if (x >= minX && x <= maxX) {
+					return true;
+				}
+			}
+		}
+		
 		return false;
 	}
 
