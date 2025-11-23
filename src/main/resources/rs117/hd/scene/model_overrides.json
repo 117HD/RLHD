@@ -65773,6 +65773,14 @@
     ]
   },
   {
+    "description": "Great Conch - Fix Waterfalls",
+    "areas": [ "THE_GREAT_CONCH" ],
+    "textureMaterial": "WATER_FLAT_FLOW",
+    "objectIds": [
+      "WATERFALL_OVERLAY"
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Tempoross Pools",
     "objectIds": [
       "TEMPOROSS_REWARDPOOL_0",

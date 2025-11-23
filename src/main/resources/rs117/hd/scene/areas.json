@@ -8616,10 +8616,26 @@
     "regions": [ 5958 ]
   },
   {
+    "name": "THE_GREAT_CONCH",
+    "aabbs": [
+      [ 3072, 2368, 3263, 2559 ],
+      [ 3136, 2304, 3327, 2367 ],
+      [ 3264, 2368, 3327, 2431 ],
+      [ 3264, 2432, 3327, 2495 ]
+    ]
+  },
+  {
     "name": "THE_LITTLE_PEARL",
     "aabbs": [
       [ 3337, 2181, 3373, 2221 ]
     ]
+  },
+  {
+    "name": "CORAL_NURSERY",
+    "aabbs": [
+      [ 3264, 8832, 3327, 8895 ]
+    ],
+    "hideOtherAreas": true
   },
   {
     "name": "SNOWY_REGIONS",

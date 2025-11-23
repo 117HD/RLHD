@@ -1465,6 +1465,20 @@
     ]
   },
   {
+    "name": "WATER_FLAT_FLOW",
+    "parent": "WATER_FLAT",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.2,
+    "flowMapDuration": [
+      7.0,
+      -11.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -1.3
+    ]
+  },
+  {
     "name": "GRUNGE_3_DULL",
     "parent": "GRUNGE_3",
     "normalMap": null,
