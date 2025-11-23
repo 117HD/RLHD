@@ -8945,7 +8945,7 @@
     "uvScale": 1.1
   },
   {
-    "name": "PANDAMONIUM_COMPLEX_TILES",
+    "name": "PANDAMONIUM_ROCKY_TILES",
     "area": "PANDEMONIUM_ISLAND",
     "groundMaterial": "OVERWORLD_ROCKY",
     "underlayIds": [
@@ -8962,11 +8962,34 @@
     ],
     "replacements": {
       "DEFAULT_GRASS": "h >= 10",
-      "DEFAULT_SAND": "h == 8 && s >= 3",
+      "DEFAULT_SAND": "h == 8 ",
       "DEFAULT_DIRT": [
         "h == 8 && s == 2",
         "h == 9"
       ]
+    }
+  },
+  {
+    "name": "DOGNOSE_COMPLEX_TILES",
+    "area": "DOGNOSE_ISLAND_BEACH",
+    "groundMaterial": "SAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ]
+  },
+  {
+    "name": "DOGNOSE_COMPLEX_TILES",
+    "area": "DOGNOSE_ISLAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 10",
+      "DEFAULT_DIRT": "h <= 9 "
     }
   },
   {
