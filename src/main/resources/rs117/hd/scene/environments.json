@@ -1032,6 +1032,14 @@
     "windStrength": 40
   },
   {
+    "area": "BACKWATER_AND_BREAKBONE_STRAIT",
+    "ambientColor": "#c0dbad",
+    "directionalColor": "#adb08b",
+    "fogColor": "#BDD8E8",
+    "directionalStrength": 4,
+    "fogDepth": 15
+  },
+  {
     "area": "TIRANNWN_MAINLAND",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
