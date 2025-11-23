@@ -64029,6 +64029,41 @@
     ]
   },
   {
+    "description": "Sailing - Salvaging Station",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "SAILING_SALVAGING_STATION_2X5A",
+      "SAILING_SALVAGING_STATION_2X5B",
+      "SAILING_SALVAGING_STATION_3X8"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.55,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 6 || h == 8",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Seaweed",
+        "colors": "h == 15",
+        "baseMaterial": "GRUNGE_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Sailing - Facility - Anchor",
     "baseMaterial": "METALLIC_1_LIGHT_LOW_GLOSS",
     "flatNormals": true,
@@ -64152,6 +64187,13 @@
       "VFX_WIND_SAIL_LARGE01_DOWN01",
       "VFX_WIND_SAIL_LARGE01_HALF01",
       "VFX_WIND_SAIL_LARGE01_SPEEDBOOST01"
+    ]
+  },
+  {
+    "description": "Sailing - Dog Castaway",
+    "baseMaterial": "GRAY_90",
+    "npcIds": [
+      "SAILING_CHANCE_ENCOUNTERS_RESCUE_DOG1_ADRIFT"
     ]
   },
   {
