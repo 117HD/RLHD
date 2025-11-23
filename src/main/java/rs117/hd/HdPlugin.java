@@ -45,6 +45,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.swing.SwingUtilities;
@@ -195,6 +197,9 @@ public class HdPlugin extends Plugin {
 		GL_RGBA8,
 		GL_RGBA // should be guaranteed
 	};
+
+	public static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
+	public static final ExecutorService THREAD_POOL = Executors.newCachedThreadPool();
 
 	@Getter
 	private Gson gson;
@@ -1434,8 +1439,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;

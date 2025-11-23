@@ -5,8 +5,9 @@ import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Stream;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
@@ -57,24 +58,24 @@ public class SceneContext {
 	public int uniqueModels;
 
 	// Terrain data
-	public Map<Integer, Integer> vertexTerrainColor;
-	public Map<Integer, Material> vertexTerrainTexture;
-	public Map<Integer, int[]> vertexTerrainNormals;
+	public ConcurrentMap<Integer, Integer> vertexTerrainColor;
+	public ConcurrentMap<Integer, Material> vertexTerrainTexture;
+	public ConcurrentMap<Integer, int[]> vertexTerrainNormals;
 	// Used for overriding potentially low quality vertex colors
-	public HashMap<Integer, Boolean> highPriorityColor;
+	public ConcurrentHashMap.KeySetView<Integer, Boolean> highPriorityColor;
 
 	// Water-related data
 	public boolean[][][] tileIsWater;
-	public Map<Integer, Boolean> vertexIsWater;
-	public Map<Integer, Boolean> vertexIsLand;
-	public Map<Integer, Boolean> vertexIsOverlay;
-	public Map<Integer, Boolean> vertexIsUnderlay;
+	public ConcurrentHashMap.KeySetView<Integer, Boolean> vertexIsWater;
+	public ConcurrentHashMap.KeySetView<Integer, Boolean> vertexIsLand;
+	public ConcurrentHashMap.KeySetView<Integer, Boolean> vertexIsOverlay;
+	public ConcurrentHashMap.KeySetView<Integer, Boolean> vertexIsUnderlay;
 	public boolean[][][] skipTile;
-	public Map<Integer, Integer> vertexUnderwaterDepth;
+	public ConcurrentMap<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
 
 	// Thread safe tile override variables
-	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();
+	public final ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial( TileOverrideVariables::new);
 
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
@@ -127,14 +128,25 @@ public class SceneContext {
 		return sceneToWorld(localX >> LOCAL_COORD_BITS, localY >> LOCAL_COORD_BITS, plane);
 	}
 
+	public void sceneToWorld(int sceneX, int sceneY, int plane, int[] result) {
+		if (sceneBase == null) {
+			HDUtils.sceneToWorld(scene, sceneX, sceneY, plane, result);
+			return;
+		}
+
+		result[0] = sceneBase[0] + sceneX;
+		result[1] = sceneBase[1] + sceneY;
+		result[2] = sceneBase[2] + plane;
+	}
+
 	public int[] sceneToWorld(int sceneX, int sceneY, int plane) {
-		if (sceneBase == null)
-			return HDUtils.sceneToWorld(scene, sceneX, sceneY, plane);
-		return ivec(
-			sceneBase[0] + sceneX,
-			sceneBase[1] + sceneY,
-			sceneBase[2] + plane
-		);
+		int[] result = new int[3];
+		sceneToWorld(sceneX, sceneY, plane, result);
+		return result;
+	}
+
+	public void extendedSceneToWorld(int sceneExX, int sceneExY, int plane, int[] result) {
+		sceneToWorld(sceneExX - sceneOffset, sceneExY - sceneOffset, plane, result);
 	}
 
 	public int[] extendedSceneToWorld(int sceneExX, int sceneExY, int plane) {

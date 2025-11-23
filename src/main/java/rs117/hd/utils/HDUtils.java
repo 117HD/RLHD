@@ -42,16 +42,33 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @Singleton
-public class HDUtils {
+public final class HDUtils {
 	public static final int HIDDEN_HSL = 12345678;
 	public static final int UNDERWATER_HSL = 6676;
 
-	public static int vertexHash(int[] vPos) {
-		// simple custom hashing function for vertex position data
-		StringBuilder s = new StringBuilder();
+	public static int fastVertexHash(int[] vPos) {
+		int hash = 0;
+		for (int part : vPos) {
+			hash = 31 * hash + part;
+			hash = 31 * hash + ','; // preserve the comma separator effect
+		}
+		return hash;
+	}
+
+	public static int vertexHash(StringBuilder s, int[] vPos) {
 		for (int part : vPos)
 			s.append(part).append(",");
-		return s.toString().hashCode();
+
+		// Compute hash code of string representation of vertex position data.
+		// Pulled from `StringUTF16.hashCode`
+		int hash = 0;
+		int length = s.length();
+		for (int i = 0; i < length; i++) {
+			hash = 31 * hash + s.charAt(i);
+		}
+		s.setLength(0);
+
+		return hash;
 	}
 
 	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
@@ -162,6 +179,10 @@ public class HDUtils {
 		return orientation % 2048;
 	}
 
+	public static int extendedCoordToIndex(int tileX, int tileY, int plane) {
+		return (plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE) + (tileX * EXTENDED_SCENE_SIZE) + tileY;
+	}
+
 	/**
 	 * Returns the south-west coordinate of the scene in world coordinates, after resolving instance template
 	 * chunks to their original world coordinates. If the scene is instanced, the base coordinates are computed from
@@ -219,7 +240,7 @@ public class HDUtils {
 	/**
 	 * The returned plane may be different
 	 */
-	public static int[] sceneToWorld(Scene scene, int sceneX, int sceneY, int plane) {
+	public static void sceneToWorld(Scene scene, int sceneX, int sceneY, int plane, int[] result) {
 		if (scene.isInstance()) {
 			if (sceneX >= 0 && sceneY >= 0 && sceneX < SCENE_SIZE && sceneY < SCENE_SIZE) {
 				int chunkX = sceneX / CHUNK_SIZE;
@@ -233,34 +254,46 @@ public class HDUtils {
 					int worldX = templateChunkX + (sceneX & 7);
 					int worldY = templateChunkY + (sceneY & 7);
 
-					int[] pos = { worldX, worldY, templateChunkPlane };
+					result[0] = worldX;
+					result[1] = worldY;
+					result[2] = templateChunkPlane;
 
-					chunkX = pos[0] & -8;
-					chunkY = pos[1] & -8;
-					int x = pos[0] & 7;
-					int y = pos[1] & 7;
+					chunkX = result[0] & -8;
+					chunkY = result[1] & -8;
+					int x = result[0] & 7;
+					int y = result[1] & 7;
 					switch (rotation) {
 						case 1:
-							pos[0] = chunkX + y;
-							pos[1] = chunkY + (7 - x);
+							result[0] = chunkX + y;
+							result[1] = chunkY + (7 - x);
 							break;
 						case 2:
-							pos[0] = chunkX + (7 - x);
-							pos[1] = chunkY + (7 - y);
+							result[0] = chunkX + (7 - x);
+							result[1] = chunkY + (7 - y);
 							break;
 						case 3:
-							pos[0] = chunkX + (7 - y);
-							pos[1] = chunkY + x;
+							result[0] = chunkX + (7 - y);
+							result[1] = chunkY + x;
 							break;
 					}
-
-					return pos;
+					return;
 				}
 			}
-			return ivec(-1, -1, 0);
+			result[0] = -1;
+			result[1] = -1;
+			result[2] = 0;
+			return;
 		}
 
-		return ivec(scene.getBaseX() + sceneX, scene.getBaseY() + sceneY, plane);
+		result[0] = scene.getBaseX() + sceneX;
+		result[1] = scene.getBaseY() + sceneY;
+		result[2] = plane;
+	}
+
+	public static int[] sceneToWorld(Scene scene, int sceneX, int sceneY, int plane) {
+		int[] result = new int[3];
+		sceneToWorld(scene, sceneX, sceneY, plane, result);
+		return result;
 	}
 
 	public static int worldToRegionID(int[] worldPoint) {

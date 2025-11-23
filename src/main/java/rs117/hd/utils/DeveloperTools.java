@@ -162,6 +162,9 @@ public class DeveloperTools implements KeyListener {
 					keyManager.unregisterKeyListener(this);
 				}
 				break;
+			case "reload":
+				plugin.renderer.reloadScene();
+				break;
 		}
 	}
 
