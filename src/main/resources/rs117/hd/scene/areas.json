@@ -8616,6 +8616,12 @@
     "regions": [ 5958 ]
   },
   {
+    "name": "THE_LITTLE_PEARL",
+    "aabbs": [
+      [ 3337, 2181, 3373, 2221 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",

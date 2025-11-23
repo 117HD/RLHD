@@ -65736,6 +65736,26 @@
     ]
   },
   {
+    "description": "Great Conch - Gryphon Lair Entrance",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "objectIds": [
+      "CONCH_GRYPHON_LAIR_ENTRANCE",
+      "TT_LAIR_ENTRANCE_CLEAR",
+      "TT_LAIR_ENTRANCE_BLOCKED",
+      "CONCH_GRYPHON_TASK_LAIR_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 3 || h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Tempoross Pools",
     "objectIds": [
       "TEMPOROSS_REWARDPOOL_0",

@@ -8945,6 +8945,33 @@
     "uvScale": 1.1
   },
   {
+    "name": "THE_LITTLE_PEARL_SAND",
+    "area": "THE_LITTLE_PEARL",
+    "underlayIds": [
+      61,
+      62,
+      68
+    ],
+    "groundMaterial": "SAND",
+    "uvScale": 1.1,
+    "replacements": {
+      "THE_LITTLE_PEARL_SAND_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "THE_LITTLE_PEARL_SAND_NO_TEXTURES",
+    "area": "THE_LITTLE_PEARL",
+    "underlayIds": [
+      61,
+      62,
+      68
+    ],
+    "groundMaterial": "NONE",
+    "shiftLightness": -8,
+    "maxLightness": 49,
+    "minLightness": 28
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
