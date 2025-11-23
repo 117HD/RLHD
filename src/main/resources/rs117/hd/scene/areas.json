@@ -8616,6 +8616,12 @@
     "regions": [ 5958 ]
   },
   {
+    "name": "THE_ONYX_CREST",
+    "aabbs": [
+      [ 2945, 2246, 3004, 2298 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",

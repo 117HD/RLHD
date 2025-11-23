@@ -5197,6 +5197,15 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "THE_ONYX_CREST_CLIFF_FIX",
+    "area": "THE_ONYX_CREST",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "uvScale": 1.1
+  },
+  {
     "name": "VARROCK_PATHS",
     "area": "OVERWORLD",
     "overlayIds": [
