@@ -1381,6 +1381,11 @@
     "normalMap": null
   },
   {
+    "name": "GRUNGE_3_SMOOTH_LIGHT",
+    "parent": "GRUNGE_3_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "GRUNGE_3_SHINY",
     "parent": "GRUNGE_3",
     "brightness": 1.177,
