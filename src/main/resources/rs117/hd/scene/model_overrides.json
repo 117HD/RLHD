@@ -1748,6 +1748,78 @@
     ]
   },
   {
+    "description": "Jatoba Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "JATOBA_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND"
+      }
+    ]
+  },
+  {
+    "description": "Jatoba Tree Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "JATOBA_TREE_STUMP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Campohr Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "CAMPHOR_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 50
+  },
+  {
+    "description": "Campohr Tree Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "CAMPHOR_TREE_UPDATE_STUMP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 50,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
     "description": "Objects - Trees - Tirannwn Tree - Stump",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
