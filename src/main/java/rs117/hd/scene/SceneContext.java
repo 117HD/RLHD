@@ -170,7 +170,7 @@ public class SceneContext {
 	}
 
 	public boolean intersects(Area area) {
-		return intersects(area.aabbs);
+		return area.intersects(sceneBounds);
 	}
 
 	public boolean intersects(AABB... aabbs) {

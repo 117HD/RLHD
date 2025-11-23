@@ -1496,7 +1496,7 @@ public class ZoneRenderer implements Renderer {
 		if (nextSceneContext.enableAreaHiding) {
 			nextSceneContext.possibleAreas = Arrays
 				.stream(areaManager.areasWithAreaHiding)
-				.filter(area -> nextSceneContext.sceneBounds.intersects(area.aabbs))
+				.filter(area -> area.intersects(nextSceneContext.sceneBounds))
 				.toArray(Area[]::new);
 
 			if (log.isDebugEnabled() && nextSceneContext.possibleAreas.length > 0) {
