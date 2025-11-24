@@ -16,14 +16,26 @@ public class Polygon {
 	private final ImmutablePolygon immutablePolygon;
 	// Cache bounds to avoid Rectangle allocation
 	private final int boundsMinX, boundsMinY, boundsMaxX, boundsMaxY;
+	private final int level; // Z coordinate/height/plane, or -1 if not specified
 
 	public Polygon(int[][] nPoints) {
 		int[] xPoints = new int[nPoints.length];
 		int[] yPoints = new int[nPoints.length];
+		int level = -1;
 
+		// Extract and validate Z coordinate
 		for (int i = 0; i < nPoints.length; i++) {
 			xPoints[i] = nPoints[i][0];
 			yPoints[i] = nPoints[i][1];
+			if (nPoints[i].length >= 3) {
+				int z = nPoints[i][2];
+				if (level == -1) {
+					level = z;
+				} else if (level != z) {
+					throw new IllegalArgumentException(
+						"All polygon points must have the same Z coordinate. Found " + level + " and " + z);
+				}
+			}
 		}
 
 		this.immutablePolygon = new ImmutablePolygon(xPoints, yPoints, nPoints.length);
@@ -33,17 +45,26 @@ public class Polygon {
 		this.boundsMinY = bounds.y;
 		this.boundsMaxX = bounds.x + bounds.width;
 		this.boundsMaxY = bounds.y + bounds.height;
+		this.level = level;
 	}
 
 	public Polygon(List<WorldPoint> points) {
 		int size = points.size();
 		int[] xPoints = new int[size];
 		int[] yPoints = new int[size];
+		int level = -1;
 
 		for (int i = 0; i < size; i++) {
 			WorldPoint p = points.get(i);
 			xPoints[i] = p.getX();
 			yPoints[i] = p.getY();
+			int z = p.getPlane();
+			if (level == -1) {
+				level = z;
+			} else if (level != z) {
+				throw new IllegalArgumentException(
+					"All polygon points must have the same Z coordinate. Found " + level + " and " + z);
+			}
 		}
 
 		this.immutablePolygon = new ImmutablePolygon(xPoints, yPoints, size);
@@ -53,19 +74,31 @@ public class Polygon {
 		this.boundsMinY = bounds.y;
 		this.boundsMaxX = bounds.x + bounds.width;
 		this.boundsMaxY = bounds.y + bounds.height;
+		this.level = level;
 	}
 
 	public boolean contains(int x, int y) {
 		return immutablePolygon.containsFast(x, y);
 	}
 
+	public boolean contains(int x, int y, int z) {
+		// If polygon has a level specified, check it matches
+		if (level != -1 && level != z) {
+			return false;
+		}
+		return contains(x, y);
+	}
+
 	public boolean contains(WorldPoint position) {
-		return contains(position.getX(), position.getY());
+		return contains(position.getX(), position.getY(), position.getPlane());
 	}
 
 	public boolean contains(int... pos) {
 		if (pos.length < 2) {
 			return false;
+		}
+		if (pos.length >= 3) {
+			return contains(pos[0], pos[1], pos[2]);
 		}
 		return contains(pos[0], pos[1]);
 	}
@@ -221,12 +254,26 @@ public class Polygon {
 	public int[][] getPoints() {
 		java.awt.Polygon poly = immutablePolygon;
 		int nPoints = poly.npoints;
-		int[][] points = new int[nPoints][2];
-		for (int i = 0; i < nPoints; i++) {
-			points[i][0] = poly.xpoints[i];
-			points[i][1] = poly.ypoints[i];
+		int[][] points;
+		if (level != -1) {
+			points = new int[nPoints][3];
+			for (int i = 0; i < nPoints; i++) {
+				points[i][0] = poly.xpoints[i];
+				points[i][1] = poly.ypoints[i];
+				points[i][2] = level;
+			}
+		} else {
+			points = new int[nPoints][2];
+			for (int i = 0; i < nPoints; i++) {
+				points[i][0] = poly.xpoints[i];
+				points[i][1] = poly.ypoints[i];
+			}
 		}
 		return points;
+	}
+
+	public int getLevel() {
+		return level;
 	}
 
 	@Slf4j
@@ -248,15 +295,14 @@ public class Polygon {
 				}
 
 				in.beginArray();
-				int[] point = new int[2];
+				int[] point = new int[3]; // Allow up to 3 coordinates
 				int i = 0;
 				while (in.hasNext()) {
 					switch (in.peek()) {
 						case NUMBER:
-							if (i >= 2) {
-								// Ignore 3rd coordinate (Z/height) if present
-								in.nextInt();
-								break;
+							if (i >= 3) {
+								throw new IOException(
+									"Too many coordinates in polygon point (> 3) at " + GsonUtils.location(in));
 							}
 							point[i++] = in.nextInt();
 							break;
@@ -277,7 +323,9 @@ public class Polygon {
 						"Polygon point must have at least 2 coordinates (x, y) at " + GsonUtils.location(in));
 				}
 
-				points.add(point);
+				// Store point with actual number of coordinates
+				int[] finalPoint = i == 2 ? new int[] { point[0], point[1] } : new int[] { point[0], point[1], point[2] };
+				points.add(finalPoint);
 			}
 			in.endArray();
 
@@ -298,11 +346,15 @@ public class Polygon {
 			}
 
 			int[][] points = polygon.getPoints();
+			int level = polygon.level;
 			out.beginArray();
 			for (int[] point : points) {
 				out.beginArray();
 				out.value(point[0]); // x
 				out.value(point[1]); // y
+				if (level != -1) {
+					out.value(level); // z/height if specified
+				}
 				out.endArray();
 			}
 			out.endArray();

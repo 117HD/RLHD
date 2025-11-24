@@ -53,6 +53,10 @@
           "$ref": "aabb.schema.json"
         }
       },
+      "polyAreas": {
+        "$ref": "polygon.schema.json",
+        "description": "A polygon defining the area boundary. Cannot be used together with aabbs, regions, regionBoxes, or areas fields. The polygon is defined as an array of points, where each point is [x, y] or [x, y, z] (z is ignored)."
+      },
       "unhideAreas": {
         "type": "array",
         "description": "An array of bounding boxes and/or area names which should be included in the area, but not used to determine whether the player is within the area for area hiding. Intended for use with unfinished map portions. Any overlap with main areas is ignored.",

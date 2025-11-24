@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "polygon.schema.json",
+  "title": "Polygon",
+  "description": "A polygon defined by an array of 2D points (x, y). A third coordinate (z/height) may be present but will be ignored.",
+  "type": "array",
+  "items": {
+    "type": "array",
+    "description": "A point in the polygon. Must have at least 2 coordinates (x, y). A third coordinate (z) may be present but will be ignored.",
+    "minItems": 2,
+    "maxItems": 3,
+    "items": {
+      "type": "integer",
+      "description": "Coordinate value. First item is x, second is y, third (if present) is z/height (ignored)."
+    }
+  },
+  "examples": [
+    [
+      [3200, 3458],
+      [3199, 3501],
+      [3225, 3502],
+      [3227, 3492],
+      [3230, 3484]
+    ],
+    [
+      [1000, 2000, 0],
+      [1100, 2000, 0],
+      [1100, 2100, 0],
+      [1000, 2100, 0]
+    ]
+  ]
+}
+
