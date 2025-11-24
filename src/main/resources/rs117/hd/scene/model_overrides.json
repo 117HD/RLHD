@@ -63673,7 +63673,7 @@
     ]
   },
   {
-    "description": "Sailing - Skiff - Hull",
+    "description": "Sailing - Skiff and Sloop - Hull",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -63687,29 +63687,88 @@
       "SAILING_BOAT_SKIFF_TRIM_CAMPHOR",
       "SAILING_BOAT_SKIFF_TRIM_IRONWOOD",
       "SAILING_BOAT_SKIFF_TRIM_ROSEWOOD",
+      "SAILING_BOAT_SLOOP_TRIM_WOODEN",
+      "SAILING_BOAT_SLOOP_TRIM_OAK",
+      "SAILING_BOAT_SLOOP_TRIM_TEAK",
+      "SAILING_BOAT_SLOOP_TRIM_MAHOGANY",
+      "SAILING_BOAT_SLOOP_TRIM_CAMPHOR",
+      "SAILING_BOAT_SLOOP_TRIM_IRONWOOD",
+      "SAILING_BOAT_SLOOP_TRIM_ROSEWOOD",
       "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD",
       "SAILING_BOAT_HULL_KANDARIN_2X5_OAK",
       "SAILING_BOAT_HULL_KANDARIN_2X5_TEAK",
       "SAILING_BOAT_HULL_KANDARIN_2X5_MAHOGANY",
       "SAILING_BOAT_HULL_KANDARIN_2X5_CAMPHOR",
       "SAILING_BOAT_HULL_KANDARIN_2X5_IRONWOOD",
-      "SAILING_BOAT_HULL_KANDARIN_2X5_ROSEWOOD"
+      "SAILING_BOAT_HULL_KANDARIN_2X5_ROSEWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_ROSEWOOD"
     ]
   },
   {
-    "description": "Sailing - Skiff - Sail",
+    "description": "Sailing - Skiff and Sloop - Sail - Bronze",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientationY": 500,
     "uvScale": 0.5,
     "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_2X5_WOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_WOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.4,
+        "uvOrientation": 200
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Sail Low Tier",
+        "colors": "h == 11 || h == 12 || h == 0 && s == 7",
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Sail Med Tier",
+        "colors": "h == 6 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff and Sloop - Sail",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 500,
+    "uvScale": 0.5,
+    "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_2X5_OAK",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_TEAK",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_MAHOGANY",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_CAMPHOR",
       "SAILING_BOAT_SAIL_KANDARIN_2X5_IRONWOOD",
-      "SAILING_BOAT_SAIL_KANDARIN_2X5_ROSEWOOD"
+      "SAILING_BOAT_SAIL_KANDARIN_2X5_ROSEWOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_OAK",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_TEAK",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_MAHOGANY",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_CAMPHOR",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_IRONWOOD",
+      "SAILING_BOAT_SAIL_KANDARIN_3X8_ROSEWOOD"
     ],
     "colorOverrides": [
       {
@@ -63742,7 +63801,7 @@
     ]
   },
   {
-    "description": "Sailing - Skiff - Keel & Metallic Trims",
+    "description": "Sailing - Skiff and Sloop - Keel & Metallic Trims",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvOrientation": 512,
     "uvType": "BOX",
@@ -63755,6 +63814,13 @@
       "SAILING_KEEL_KANDARIN_2X5_ADAMANT",
       "SAILING_KEEL_KANDARIN_2X5_RUNE",
       "SAILING_KEEL_KANDARIN_2X5_DRAGON",
+      "SAILING_KEEL_KANDARIN_3X8_BRONZE",
+      "SAILING_KEEL_KANDARIN_3X8_IRON",
+      "SAILING_KEEL_KANDARIN_3X8_STEEL",
+      "SAILING_KEEL_KANDARIN_3X8_MITHRIL",
+      "SAILING_KEEL_KANDARIN_3X8_ADAMANT",
+      "SAILING_KEEL_KANDARIN_3X8_RUNE",
+      "SAILING_KEEL_KANDARIN_3X8_DRAGON",
       "SAILING_BOAT_SKIFF_TRIM_BARRACUDA",
       "SAILING_BOAT_SKIFF_TRIM_SHARK",
       "SAILING_BOAT_SKIFF_TRIM_INKY",
@@ -63765,11 +63831,22 @@
       "SAILING_BOAT_SKIFF_TRIM_GUTHIXIAN",
       "SAILING_BOAT_SKIFF_TRIM_SARADOMINIST",
       "SAILING_BOAT_SKIFF_TRIM_MERCHANTS",
-      "SAILING_BOAT_SKIFF_TRIM_SANDY"
+      "SAILING_BOAT_SKIFF_TRIM_SANDY",
+      "SAILING_BOAT_SLOOP_TRIM_BARRACUDA",
+      "SAILING_BOAT_SLOOP_TRIM_SHARK",
+      "SAILING_BOAT_SLOOP_TRIM_INKY",
+      "SAILING_BOAT_SLOOP_TRIM_ANGLERS",
+      "SAILING_BOAT_SLOOP_TRIM_SALVORS",
+      "SAILING_BOAT_SLOOP_TRIM_ARMADYLEAN",
+      "SAILING_BOAT_SLOOP_TRIM_ZAMORAKIAN",
+      "SAILING_BOAT_SLOOP_TRIM_GUTHIXIAN",
+      "SAILING_BOAT_SLOOP_TRIM_SARADOMINIST",
+      "SAILING_BOAT_SLOOP_TRIM_MERCHANTS",
+      "SAILING_BOAT_SLOOP_TRIM_SANDY"
     ]
   },
   {
-    "description": "Sailing - Skiff - Helm & Keg - All Others",
+    "description": "Sailing - Skiff and Sloop - Helm & Keg - All Others",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.51,
@@ -63786,6 +63863,18 @@
       "SAILING_BOAT_STEERING_KANDARIN_2X5_IRONWOOD_IDLE",
       "SAILING_BOAT_STEERING_KANDARIN_2X5_ROSEWOOD_IN_USE",
       "SAILING_BOAT_STEERING_KANDARIN_2X5_ROSEWOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_OAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_OAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_TEAK_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_TEAK_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_MAHOGANY_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_MAHOGANY_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_CAMPHOR_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_CAMPHOR_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_IRONWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_IRONWOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_ROSEWOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_ROSEWOOD_IDLE",
       "SAILING_KEG_EMPTY",
       "SAILING_KEG_GROG",
       "SAILING_KEG_CIDER",
@@ -63811,14 +63900,15 @@
     ]
   },
   {
-    "description": "Sailing - Skiff - Helm - Bronze",
+    "description": "Sailing - Skiff and Sloop - Helm - Bronze",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientationX": 512,
-    "uvScale": 0.5,
+    "uvScale": 0.51,
     "objectIds": [
       "SAILING_BOAT_STEERING_KANDARIN_2X5_WOOD_IDLE",
-      "SAILING_BOAT_STEERING_KANDARIN_2X5_WOOD_IN_USE"
+      "SAILING_BOAT_STEERING_KANDARIN_2X5_WOOD_IN_USE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_WOOD_IDLE",
+      "SAILING_BOAT_STEERING_KANDARIN_3X8_WOOD_IN_USE"
     ],
     "colorOverrides": [
       {
