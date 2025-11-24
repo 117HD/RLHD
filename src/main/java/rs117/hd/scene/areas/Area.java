@@ -57,9 +57,6 @@ public class Area {
 				throw new IllegalStateException(
 					"Area '" + name + "' cannot have both polygon and AABB fields (aabbs, regions, regionBoxes, or areas) set");
 			}
-
-			System.out.println(polygon);
-
 		}
 
 		ArrayList<AABB> aabbs = new ArrayList<>();
