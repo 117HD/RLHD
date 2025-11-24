@@ -55,11 +55,6 @@ public class PolygonAreaWorldMapOverlay extends Overlay {
 			return null;
 		}
 
-		WorldPoint playerPos = client.getLocalPlayer() != null ? client.getLocalPlayer().getWorldLocation() : null;
-		if (playerPos == null) {
-			return null;
-		}
-		
 		for (Area area : AreaManager.AREAS) {
 			if (area.polygon != null) {
 				if (client.getWorldMap() != null && client.getWorldMap().getWorldMapRenderer().isLoaded()) {
