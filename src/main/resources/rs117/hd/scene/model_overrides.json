@@ -63673,7 +63673,7 @@
     ]
   },
   {
-    "description": "Sailing - Skiff and Sloop - Hull",
+    "description": "Sailing - Skiff and Sloop - Hull & Wood Trim",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -63700,7 +63700,17 @@
       "SAILING_BOAT_HULL_KANDARIN_2X5_MAHOGANY",
       "SAILING_BOAT_HULL_KANDARIN_2X5_CAMPHOR",
       "SAILING_BOAT_HULL_KANDARIN_2X5_IRONWOOD",
-      "SAILING_BOAT_HULL_KANDARIN_2X5_ROSEWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_ROSEWOOD"
+    ]
+  },
+  {
+    "description": "Sailing - Sloop - Hull",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
       "SAILING_BOAT_HULL_KANDARIN_3X8_WOOD",
       "SAILING_BOAT_HULL_KANDARIN_3X8_OAK",
       "SAILING_BOAT_HULL_KANDARIN_3X8_TEAK",
