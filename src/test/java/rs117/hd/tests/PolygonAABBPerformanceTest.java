@@ -271,7 +271,7 @@ public class PolygonAABBPerformanceTest {
 	@Test
 	public void testContainmentPerformance() {
 		List<WorldPoint> pointsList = Arrays.asList(POLYGON_POINTS);
-		Polygon polygonAABB = new Polygon(pointsList, 0); // level 0
+		Polygon polygonAABB = new Polygon(pointsList); // level 0
 
 		int testX = 2308;
 		int testY = 3025;

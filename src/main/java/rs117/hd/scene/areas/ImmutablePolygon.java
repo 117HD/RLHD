@@ -8,7 +8,8 @@ public class ImmutablePolygon extends Polygon {
 	private final int[] xPointsArray;
 	private final int[] yPointsArray;
 	private final int nPoints;
-	private Rectangle immutableBoundingBox;
+	// Cache Rectangle to avoid repeated allocation, but compute bounds directly
+	private volatile Rectangle immutableBoundingBox;
 
 	public ImmutablePolygon(int[] xPoints, int[] yPoints, int nPoints) {
 		super(xPoints, yPoints, nPoints);
@@ -77,9 +78,12 @@ public class ImmutablePolygon extends Polygon {
 	@Override
 	@SuppressWarnings("deprecation")
 	public Rectangle getBoundingBox() {
-		if (immutableBoundingBox == null) {
-			immutableBoundingBox = super.getBoundingBox();
+		Rectangle box = immutableBoundingBox;
+		if (box == null) {
+			// Create Rectangle directly from cached bounds instead of calling super
+			box = new Rectangle(minX, minY, maxX - minX, maxY - minY);
+			immutableBoundingBox = box;
 		}
-		return immutableBoundingBox;
+		return box;
 	}
 }

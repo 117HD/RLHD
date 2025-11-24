@@ -14,11 +14,10 @@ import rs117.hd.utils.GsonUtils;
 public class Polygon {
 
 	private final ImmutablePolygon immutablePolygon;
-	private final int[] levels;
-	private final boolean hasLevels;
-	private final int singleLevel; // Single level uses equality check instead of array scan
+	// Cache bounds to avoid Rectangle allocation
+	private final int boundsMinX, boundsMinY, boundsMaxX, boundsMaxY;
 
-	public Polygon(int[][] nPoints, int... levels) {
+	public Polygon(int[][] nPoints) {
 		int[] xPoints = new int[nPoints.length];
 		int[] yPoints = new int[nPoints.length];
 
@@ -28,59 +27,18 @@ public class Polygon {
 		}
 
 		this.immutablePolygon = new ImmutablePolygon(xPoints, yPoints, nPoints.length);
-		
-		if (levels.length == 0) {
-			this.levels = new int[0];
-			this.hasLevels = false;
-			this.singleLevel = 0;
-		} else if (levels.length == 1) {
-			this.levels = null;
-			this.hasLevels = true;
-			this.singleLevel = levels[0];
-		} else {
-			this.levels = levels.clone();
-			this.hasLevels = true;
-			this.singleLevel = 0;
-		}
+		// Cache bounds directly to avoid Rectangle allocation
+		java.awt.Rectangle bounds = this.immutablePolygon.getBounds();
+		this.boundsMinX = bounds.x;
+		this.boundsMinY = bounds.y;
+		this.boundsMaxX = bounds.x + bounds.width;
+		this.boundsMaxY = bounds.y + bounds.height;
 	}
 
-	public Polygon(List<WorldPoint> points, int... levels) {
+	public Polygon(List<WorldPoint> points) {
 		int size = points.size();
 		int[] xPoints = new int[size];
 		int[] yPoints = new int[size];
-
-		if (levels.length > 0) {
-			if (levels.length == 1) {
-				this.levels = null;
-				this.hasLevels = true;
-				this.singleLevel = levels[0];
-			} else {
-				this.levels = levels.clone();
-				this.hasLevels = true;
-				this.singleLevel = 0;
-			}
-		} else {
-			// Extract levels from WorldPoints - no autoboxing
-			int[] tempLevels = new int[size];
-			for (int i = 0; i < size; i++) {
-				tempLevels[i] = points.get(i).getPlane();
-			}
-			int[] distinct = distinctSorted(tempLevels);
-			
-			if (distinct.length == 1) {
-				this.levels = null;
-				this.hasLevels = true;
-				this.singleLevel = distinct[0];
-			} else if (distinct.length > 1) {
-				this.levels = distinct;
-				this.hasLevels = true;
-				this.singleLevel = 0;
-			} else {
-				this.levels = new int[0];
-				this.hasLevels = false;
-				this.singleLevel = 0;
-			}
-		}
 
 		for (int i = 0; i < size; i++) {
 			WorldPoint p = points.get(i);
@@ -89,202 +47,176 @@ public class Polygon {
 		}
 
 		this.immutablePolygon = new ImmutablePolygon(xPoints, yPoints, size);
-	}
-
-	// Primitive-only deduplication - faster than HashSet
-	private static int[] distinctSorted(int[] input) {
-		if (input.length <= 1) {
-			return input.length == 0 ? new int[0] : new int[] { input[0] };
-		}
-
-		int[] sorted = input.clone();
-		java.util.Arrays.sort(sorted);
-
-		int count = 1;
-		for (int i = 1; i < sorted.length; i++) {
-			if (sorted[i] != sorted[i - 1]) {
-				count++;
-			}
-		}
-
-		if (count == sorted.length) {
-			return sorted;
-		}
-
-		int[] out = new int[count];
-		out[0] = sorted[0];
-		for (int i = 1, j = 1; i < sorted.length; i++) {
-			if (sorted[i] != sorted[i - 1]) {
-				out[j++] = sorted[i];
-			}
-		}
-		return out;
+		// Cache bounds directly to avoid Rectangle allocation
+		java.awt.Rectangle bounds = this.immutablePolygon.getBounds();
+		this.boundsMinX = bounds.x;
+		this.boundsMinY = bounds.y;
+		this.boundsMaxX = bounds.x + bounds.width;
+		this.boundsMaxY = bounds.y + bounds.height;
 	}
 
 	public boolean contains(int x, int y) {
 		return immutablePolygon.containsFast(x, y);
 	}
 
-	public boolean contains(int x, int y, int z) {
-		if (!hasLevels) {
-			return contains(x, y);
-		}
-
-		if (levels == null) {
-			if (z != singleLevel) {
-				return false;
-			}
-			return contains(x, y);
-		}
-
-		for (int level : levels) {
-			if (level == z) {
-				return contains(x, y);
-			}
-		}
-		return false;
-	}
-
 	public boolean contains(WorldPoint position) {
-		return contains(position.getX(), position.getY(), position.getPlane());
+		return contains(position.getX(), position.getY());
 	}
 
 	public boolean contains(int... pos) {
 		if (pos.length < 2) {
 			return false;
 		}
-		if (pos.length < 3) {
-			return contains(pos[0], pos[1]);
-		}
-		return contains(pos[0], pos[1], pos[2]);
+		return contains(pos[0], pos[1]);
 	}
 
 	public boolean intersects(int minX, int minY, int maxX, int maxY) {
-		// Check if any corner of the rectangle is contained in the polygon
+		// Use cached bounds instead of creating Rectangle
+		if (maxX < boundsMinX || minX > boundsMaxX ||
+			maxY < boundsMinY || minY > boundsMaxY) {
+			return false;
+		}
+
+		// Check corners first (fast early exit)
 		if (contains(minX, minY) || contains(maxX, minY) ||
 			contains(minX, maxY) || contains(maxX, maxY)) {
 			return true;
 		}
-		
+
+		// Check center point
+		int centerX = (minX + maxX) / 2;
+		int centerY = (minY + maxY) / 2;
+		if (contains(centerX, centerY)) {
+			return true;
+		}
+
+		// Access arrays directly from ImmutablePolygon to avoid allocation
+		java.awt.Polygon poly = immutablePolygon;
+		int nPoints = poly.npoints;
+		int[] xPoints = poly.xpoints;
+		int[] yPoints = poly.ypoints;
+
 		// Check if any polygon vertex is inside the rectangle
-		int[][] points = getPoints();
-		for (int[] point : points) {
-			if (point[0] >= minX && point[0] <= maxX &&
-				point[1] >= minY && point[1] <= maxY) {
+		for (int i = 0; i < nPoints; i++) {
+			int px = xPoints[i];
+			int py = yPoints[i];
+			if (px >= minX && px <= maxX && py >= minY && py <= maxY) {
 				return true;
 			}
 		}
-		
-		// Check if any polygon edge intersects the rectangle
-		// For 2D rectangles, check if any edge crosses the rectangle boundaries
-		int nPoints = points.length;
+
+		// Check edge intersections
 		for (int i = 0; i < nPoints; i++) {
-			int x1 = points[i][0];
-			int y1 = points[i][1];
-			int x2 = points[(i + 1) % nPoints][0];
-			int y2 = points[(i + 1) % nPoints][1];
-			
-			// Check if edge intersects rectangle using line-rectangle intersection
+			int x1 = xPoints[i];
+			int y1 = yPoints[i];
+			int x2 = xPoints[(i + 1) % nPoints];
+			int y2 = yPoints[(i + 1) % nPoints];
+
+			// Check if polygon edge intersects rectangle edges
 			if (lineIntersectsRect(x1, y1, x2, y2, minX, minY, maxX, maxY)) {
 				return true;
 			}
 		}
-		
-		return false;
-	}
 
-	public boolean intersects(AABB... otherAabbs) {
-		for (AABB aabb : otherAabbs) {
-			// For 2D AABBs (no Z constraint), use 2D intersection
-			if (!aabb.hasZ() || (aabb.minZ == aabb.maxZ)) {
-				if (intersects(aabb.minX, aabb.minY, aabb.maxX, aabb.maxY)) {
-					return true;
-				}
-			} else {
-				// For 3D AABBs, check each Z plane
-				for (int z = aabb.minZ; z <= aabb.maxZ; z++) {
-					if (contains(aabb.minX, aabb.minY, z) ||
-						contains(aabb.maxX, aabb.minY, z) ||
-						contains(aabb.minX, aabb.maxY, z) ||
-						contains(aabb.maxX, aabb.maxY, z)) {
+		// Sample points if rectangle is small enough (avoid checking every point for large rectangles)
+		int width = maxX - minX + 1;
+		int height = maxY - minY + 1;
+		if (width * height <= 100) {
+			// Small rectangle - check all points
+			for (int x = minX; x <= maxX; x++) {
+				for (int y = minY; y <= maxY; y++) {
+					if (contains(x, y)) {
 						return true;
 					}
 				}
-				// Also check 2D intersection at any Z level
-				if (intersects(aabb.minX, aabb.minY, aabb.maxX, aabb.maxY)) {
-					return true;
+			}
+		} else {
+			int stepX = Math.max(1, width / 10);
+			int stepY = Math.max(1, height / 10);
+			for (int x = minX; x <= maxX; x += stepX) {
+				for (int y = minY; y <= maxY; y += stepY) {
+					if (contains(x, y)) {
+						return true;
+					}
 				}
 			}
 		}
+
 		return false;
 	}
 
-	// Check if a line segment intersects a rectangle
+
 	private boolean lineIntersectsRect(int x1, int y1, int x2, int y2, int minX, int minY, int maxX, int maxY) {
-		// If both endpoints are on the same side of a rectangle edge, no intersection
-		// Check if line segment is completely outside rectangle
+		// Quick rejection - if both endpoints are outside on same side, no intersection
 		if ((x1 < minX && x2 < minX) || (x1 > maxX && x2 > maxX) ||
 			(y1 < minY && y2 < minY) || (y1 > maxY && y2 > maxY)) {
 			return false;
 		}
-		
+
 		// If one endpoint is inside, there's intersection
 		if ((x1 >= minX && x1 <= maxX && y1 >= minY && y1 <= maxY) ||
 			(x2 >= minX && x2 <= maxX && y2 >= minY && y2 <= maxY)) {
 			return true;
 		}
-		
-		// Check if line segment intersects any rectangle edge
-		// Use parametric line equation: P = P1 + t(P2 - P1), t in [0,1]
+
+		// Check if line segment intersects rectangle edges using parametric line equation
 		int dx = x2 - x1;
 		int dy = y2 - y1;
-		
-		// Check intersection with left edge (x = minX)
+
+		// Avoid division by zero checks - compute once and reuse
 		if (dx != 0) {
-			double t = (minX - x1) / (double) dx;
-			if (t >= 0 && t <= 1) {
-				double y = y1 + t * dy;
+			// Check intersection with left edge (x = minX)
+			double tLeft = (minX - x1) / (double) dx;
+			if (tLeft >= 0 && tLeft <= 1) {
+				double y = y1 + tLeft * dy;
+				if (y >= minY && y <= maxY) {
+					return true;
+				}
+			}
+
+			// Check intersection with right edge (x = maxX)
+			double tRight = (maxX - x1) / (double) dx;
+			if (tRight >= 0 && tRight <= 1) {
+				double y = y1 + tRight * dy;
 				if (y >= minY && y <= maxY) {
 					return true;
 				}
 			}
 		}
-		
-		// Check intersection with right edge (x = maxX)
-		if (dx != 0) {
-			double t = (maxX - x1) / (double) dx;
-			if (t >= 0 && t <= 1) {
-				double y = y1 + t * dy;
-				if (y >= minY && y <= maxY) {
+
+		if (dy != 0) {
+			// Check intersection with bottom edge (y = minY)
+			double tBottom = (minY - y1) / (double) dy;
+			if (tBottom >= 0 && tBottom <= 1) {
+				double x = x1 + tBottom * dx;
+				if (x >= minX && x <= maxX) {
 					return true;
 				}
 			}
-		}
-		
-		// Check intersection with bottom edge (y = minY)
-		if (dy != 0) {
-			double t = (minY - y1) / (double) dy;
-			if (t >= 0 && t <= 1) {
-				double x = x1 + t * dx;
+
+			// Check intersection with top edge (y = maxY)
+			double tTop = (maxY - y1) / (double) dy;
+			if (tTop >= 0 && tTop <= 1) {
+				double x = x1 + tTop * dx;
 				if (x >= minX && x <= maxX) {
 					return true;
 				}
 			}
 		}
-		
-		// Check intersection with top edge (y = maxY)
-		if (dy != 0) {
-			double t = (maxY - y1) / (double) dy;
-			if (t >= 0 && t <= 1) {
-				double x = x1 + t * dx;
-				if (x >= minX && x <= maxX) {
-					return true;
-				}
-			}
-		}
-		
+
 		return false;
 	}
+
+	public boolean intersects(AABB... otherAabbs) {
+		for (AABB aabb : otherAabbs) {
+			// Always use 2D intersection (X and Y only, ignore Z)
+			if (intersects(aabb.minX, aabb.minY, aabb.maxX, aabb.maxY)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 	public int[][] getPoints() {
 		java.awt.Polygon poly = immutablePolygon;
@@ -308,8 +240,6 @@ public class Polygon {
 
 			in.beginArray();
 			ArrayList<int[]> points = new ArrayList<>();
-			int[] tempLevels = new int[16];
-			int levelCount = 0;
 
 			while (in.hasNext() && in.peek() != JsonToken.END_ARRAY) {
 				if (in.peek() == JsonToken.NULL) {
@@ -318,14 +248,15 @@ public class Polygon {
 				}
 
 				in.beginArray();
-				int[] point = new int[3];
+				int[] point = new int[2];
 				int i = 0;
 				while (in.hasNext()) {
 					switch (in.peek()) {
 						case NUMBER:
-							if (i >= point.length) {
-								throw new IOException(
-									"Too many numbers in polygon point (> " + point.length + ") at " + GsonUtils.location(in));
+							if (i >= 2) {
+								// Ignore 3rd coordinate (Z/height) if present
+								in.nextInt();
+								break;
 							}
 							point[i++] = in.nextInt();
 							break;
@@ -346,18 +277,7 @@ public class Polygon {
 						"Polygon point must have at least 2 coordinates (x, y) at " + GsonUtils.location(in));
 				}
 
-				// Extract level if present (3rd element) - no autoboxing
-				if (i >= 3) {
-					if (levelCount >= tempLevels.length) {
-						int[] newLevels = new int[tempLevels.length * 2];
-						System.arraycopy(tempLevels, 0, newLevels, 0, tempLevels.length);
-						tempLevels = newLevels;
-					}
-					tempLevels[levelCount++] = point[2];
-				}
-
-				// Store only x, y for the point
-				points.add(new int[] { point[0], point[1] });
+				points.add(point);
 			}
 			in.endArray();
 
@@ -366,18 +286,8 @@ public class Polygon {
 			}
 
 			int[][] pointsArray = points.toArray(new int[0][]);
-			
-			// Extract distinct levels if any were provided
-			int[] levels;
-			if (levelCount == 0) {
-				levels = new int[0];
-			} else {
-				int[] actualLevels = new int[levelCount];
-				System.arraycopy(tempLevels, 0, actualLevels, 0, levelCount);
-				levels = distinctSorted(actualLevels);
-			}
 
-			return new Polygon(pointsArray, levels);
+			return new Polygon(pointsArray);
 		}
 
 		@Override
@@ -387,39 +297,15 @@ public class Polygon {
 				return;
 			}
 
-			// For serialization, we'd need access to the original points
-			// Since we don't store them, we can't serialize back
-			throw new UnsupportedOperationException("Polygon serialization not supported");
-		}
-
-		// Primitive-only deduplication - faster than HashSet
-		private static int[] distinctSorted(int[] input) {
-			if (input.length <= 1) {
-				return input.length == 0 ? new int[0] : new int[] { input[0] };
+			int[][] points = polygon.getPoints();
+			out.beginArray();
+			for (int[] point : points) {
+				out.beginArray();
+				out.value(point[0]); // x
+				out.value(point[1]); // y
+				out.endArray();
 			}
-
-			int[] sorted = input.clone();
-			java.util.Arrays.sort(sorted);
-
-			int count = 1;
-			for (int i = 1; i < sorted.length; i++) {
-				if (sorted[i] != sorted[i - 1]) {
-					count++;
-				}
-			}
-
-			if (count == sorted.length) {
-				return sorted;
-			}
-
-			int[] out = new int[count];
-			out[0] = sorted[0];
-			for (int i = 1, j = 1; i < sorted.length; i++) {
-				if (sorted[i] != sorted[i - 1]) {
-					out[j++] = sorted[i];
-				}
-			}
-			return out;
+			out.endArray();
 		}
 	}
 }

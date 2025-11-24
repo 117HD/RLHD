@@ -116,13 +116,7 @@ public class Area {
 
 	public boolean intersects(boolean includeUnhiding, int minX, int minY, int maxX, int maxY) {
 		if (polygon != null) {
-			boolean result = polygon.intersects(minX, minY, maxX, maxY);
-			if (includeUnhiding) {
-				for (var aabb : unhideAreas)
-					if (aabb.intersects(minX, minY, maxX, maxY))
-						return true;
-			}
-			return result;
+			return polygon.intersects(minX, minY, maxX, maxY);
 		}
 
 		for (AABB aabb : aabbs)
