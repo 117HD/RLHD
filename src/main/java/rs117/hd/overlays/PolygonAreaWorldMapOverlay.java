@@ -61,23 +61,16 @@ public class PolygonAreaWorldMapOverlay extends Overlay {
 		}
 
 		// Find which polygon area the player is in
-		Area currentArea = null;
-		for (Area area : AreaManager.AREAS) {
-			if (area.polygon != null && area.polygon.contains(playerPos)) {
-				currentArea = area;
-				break;
-			}
-		}
 
-		// Draw only current area on world map
-		if (currentArea != null && currentArea.polygon != null) {
-			if (client.getWorldMap() != null && client.getWorldMap().getWorldMapRenderer().isLoaded()) {
-				List<WorldPoint> worldPoints = convertIntArrayToWorldPoints(currentArea.polygon.getPoints());
-				// Close the polygon
-				if (!worldPoints.isEmpty()) {
-					worldPoints.add(worldPoints.get(0));
+		for (Area area : AreaManager.AREAS) {
+			if (area.polygon != null) {
+				if (client.getWorldMap() != null && client.getWorldMap().getWorldMapRenderer().isLoaded()) {
+					List<WorldPoint> worldPoints = convertIntArrayToWorldPoints(area.polygon.getPoints());
+					if (!worldPoints.isEmpty()) {
+						worldPoints.add(worldPoints.get(0));
+					}
+					createWorldMapLines(graphics, client, worldPoints, LINE_COLOR, area.name);
 				}
-				createWorldMapLines(graphics, client, worldPoints, LINE_COLOR, currentArea.name);
 			}
 		}
 
