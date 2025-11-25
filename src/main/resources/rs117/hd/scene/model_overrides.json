@@ -63815,7 +63815,7 @@
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvOrientation": 512,
     "uvType": "BOX",
-    "uvScale": 0.3,
+    "uvScale": 0.25,
     "objectIds": [
       "SAILING_KEEL_KANDARIN_2X5_BRONZE",
       "SAILING_KEEL_KANDARIN_2X5_IRON",
@@ -63931,7 +63931,7 @@
       {
         "description": "Metal",
         "colors": "h == 5",
-        "baseMaterial": "METALLIC_1_LIGHT"
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       }
     ]
   },
@@ -63957,9 +63957,7 @@
       {
         "description": "Metal",
         "colors": "s == 7",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.1
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       }
     ]
   },
@@ -64018,11 +64016,8 @@
       },
       {
         "description": "Metal",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "colors": "h == 0 || h > 10",
-        "uvType": "BOX",
-        "uvOrientationX": 512,
-        "uvScale": 0.25
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+        "colors": "h == 0 || h > 10"
       }
     ]
   },
@@ -64042,9 +64037,7 @@
       {
         "description": "Metal",
         "colors": "h == 5",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.1
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       }
     ]
   },
@@ -64085,9 +64078,7 @@
       {
         "description": "Metal",
         "colors": "h == 0 || h > 10 || h == 7 && s == 7",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.1
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       }
     ]
   },
@@ -64165,10 +64156,8 @@
   },
   {
     "description": "Sailing - Facility - Anchor",
-    "baseMaterial": "METALLIC_1_LIGHT_LOW_GLOSS",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
     "flatNormals": true,
-    "uvType": "BOX",
-    "uvScale": 0.1,
     "receiveShadows": false,
     "objectIds": [
       "SAILING_ANCHOR_RAISED_2X5",
@@ -64183,6 +64172,38 @@
         "uvType": "BOX",
         "uvScale": 0.3,
         "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Wind Catcher",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "SAILING_WIND_CATCHER_ACTIVATED",
+      "SAILING_WIND_CATCHER_DEACTIVATED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 41",
+        "baseMaterial": "WATER_FOUNTAIN_FLAT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 0 && l > 70",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "MODEL_YZ",
+        "uvScale": 0.4
+      },
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.25
       }
     ]
   },
