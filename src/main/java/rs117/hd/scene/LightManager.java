@@ -55,6 +55,7 @@ import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
+import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
@@ -602,10 +603,13 @@ public class LightManager {
 
 		if (oldSceneContext == null) {
 			sceneContext.lights.clear();
-			sceneContext.trackedTileObjects.clear();
-			sceneContext.trackedVarps.clear();
-			sceneContext.trackedVarbits.clear();
 			sceneContext.knownProjectiles.clear();
+			if (sceneContext instanceof LegacySceneContext) {
+				var ctx = (LegacySceneContext) sceneContext;
+				ctx.trackedTileObjects.clear();
+				ctx.trackedVarps.clear();
+				ctx.trackedVarbits.clear();
+			}
 		} else {
 			// Copy over NPC and projectile lights from the old scene
 			ArrayList<Light> lightsToKeep = new ArrayList<>();
@@ -761,9 +765,12 @@ public class LightManager {
 	}
 
 	private void handleObjectSpawn(
-		@Nonnull SceneContext sceneContext,
+		@Nonnull SceneContext ctx,
 		@Nonnull TileObject tileObject
 	) {
+		if (!(ctx instanceof LegacySceneContext))
+			return;
+		var sceneContext = (LegacySceneContext) ctx;
 		if (sceneContext.trackedTileObjects.containsKey(tileObject))
 			return;
 
@@ -789,9 +796,10 @@ public class LightManager {
 	}
 
 	private void handleObjectDespawn(TileObject tileObject) {
-		var sceneContext = plugin.getSceneContext();
-		if (sceneContext == null)
+		var ctx = plugin.getSceneContext();
+		if (!(ctx instanceof LegacySceneContext))
 			return;
+		var sceneContext = (LegacySceneContext) ctx;
 
 		var tracker = sceneContext.trackedTileObjects.remove(tileObject);
 		if (tracker == null)
@@ -1147,9 +1155,10 @@ public class LightManager {
 
 	@Subscribe
 	public void onVarbitChanged(VarbitChanged event) {
-		var sceneContext = plugin.getSceneContext();
-		if (sceneContext == null)
+		var ctx = plugin.getSceneContext();
+		if (!(ctx instanceof LegacySceneContext))
 			return;
+		var sceneContext = (LegacySceneContext) ctx;
 
 		if (plugin.enableDetailedTimers)
 			frameTimer.begin(Timer.IMPOSTOR_TRACKING);
