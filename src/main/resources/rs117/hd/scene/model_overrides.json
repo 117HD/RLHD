@@ -63250,6 +63250,157 @@
     ]
   },
   {
+    "description": "Jubbly Jive - Pillar 3 and 4 with white wood",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK3_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK4_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK3_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK4_TOAD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Toad",
+        "colors": "h == 14 && s == 5",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0 && l < 30",
+        "baseMaterial": "STONE_NORMALED_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 1.2
+      },
+      {
+        "description": "Tree Bark",
+        "colors": "h == 0 && l > 30",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": -50
+      },
+      {
+        "description": "Flag",
+        "colors": "h == 40 || h == 6 && s == 5",
+        "baseMaterial": "CARPET_LIGHT"
+      },
+      {
+        "description": "Nest",
+        "colors": "h > 4 && h < 21",
+        "baseMaterial": "HD_HAY_BRIGHT",
+        "uvType": "BOX"
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_1"
+      }
+    ]
+  },
+  {
+    "description": "Jubbly Jive - Pillar 6",
+    "objectIds": [
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK6_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK6_TOAD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Toad",
+        "colors": "h == 14 && s == 5",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Flag",
+        "colors": "h == 52",
+        "baseMaterial": "CARPET_LIGHT"
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 1.2
+      },
+      {
+        "description": "Algae",
+        "colors": "h == 21",
+        "baseMaterial": "GRUNGE_1"
+      },
+      {
+        "description": "Tree Bark",
+        "colors": "h == 3",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "description": "Bone",
+        "colors": "h == 12",
+        "baseMaterial": "BONE_DARK"
+      },
+      {
+        "description": "Nest",
+        "colors": "h > 4 && h < 21",
+        "baseMaterial": "HD_HAY_BRIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Jubbly Jive - Pillar 0, 1, 2, 5 and 7",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK5_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK0_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK2_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK7_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK1_NO_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK5_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK0_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK2_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK7_TOAD",
+      "SAILING_BT_JUBBLY_JIVE_PILLAR_ROCK1_TOAD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Toad",
+        "colors": "h == 14 && s == 5",
+        "baseMaterial": "NONE"
+      },
+      {
+        "description": "Flag",
+        "colors": "h == 29 || h == 18 && s == 4 || h == 0 && s == 5 || h == 49 || h == 9 && s == 6",
+        "baseMaterial": "CARPET_LIGHT"
+      },
+      {
+        "description": "Stone",
+        "colors": "h == 0",
+        "baseMaterial": "STONE_NORMALED_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 1.2,
+        "uvOrientation": 100
+      },
+      {
+        "description": "Algae and Leaves",
+        "colors": "h == 21 || h == 14",
+        "baseMaterial": "GRUNGE_1"
+      },
+      {
+        "description": "Tree Bark",
+        "colors": "h == 14",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "description": "Nest",
+        "colors": "h > 4 && h < 21",
+        "baseMaterial": "HD_HAY_BRIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Sailing - Salvaging Station",
     "baseMaterial": "METALLIC_1_VERY_LIGHT",
     "uvType": "BOX",
