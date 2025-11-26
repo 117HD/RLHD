@@ -1365,8 +1365,15 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "THE_STORM_TEMPOR_EDGE",
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3.5,
+    "directionalColor": "#707070",
+    "fogColor": "#99AECC",
+    "fogDepth": 10
+  },
+  {
     "area": "THE_STORM_TEMPOR",
-    "lightningEffects": true,
     "ambientColor": "#a5acbd",
     "ambientStrength": 3,
     "directionalColor": "#707070",
@@ -1378,7 +1385,7 @@
     "windSpeed": 20,
     "groundFogStart": 0,
     "groundFogEnd": -300,
-    "groundFogOpacity": 0.15
+    "groundFogOpacity": 0.25
   },
   {
     "area": "TEMPLE_OF_THE_EYE",
