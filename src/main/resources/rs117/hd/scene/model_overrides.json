@@ -63121,7 +63121,8 @@
     "description": "Storm Tempor - Disable cloud shadows",
     "castShadows": false,
     "npcIds": [
-      "SAILING_SEA_STORMY_CLOUD"
+      "SAILING_SEA_STORMY_CLOUD",
+      "SAILING_SEA_STORMY_LIGHTNING_STRIKE"
     ]
   },
   {
