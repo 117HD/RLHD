@@ -64208,6 +64208,24 @@
     ]
   },
   {
+    "description": "Sailing - Facility - Teleport Focus",
+    "baseMaterial": "GRAY_75",
+    "objectIds": [
+      "SAILING_TELEPORTATION_FOCUS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 32 && s == 0",
+        "baseMaterial": "GRAY_90",
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 32",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
     "description": "Sailing - Barracuda Flag",
     "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
     "objectIds": [
