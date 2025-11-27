@@ -65776,8 +65776,8 @@
     ]
   },
   {
-    "description": "Great Conch - Fix Waterfalls",
-    "areas": [ "THE_GREAT_CONCH" ],
+    "description": "Fix Waterfalls that are holes in the world without an opaque texture",
+    "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE" ],
     "textureMaterial": "WATER_FLAT_FLOW",
     "objectIds": [
       "WATERFALL_OVERLAY"
