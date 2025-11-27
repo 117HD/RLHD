@@ -2707,10 +2707,6 @@
       "OCEAN_OUTCROP_SEAWEED01",
       "OCEAN_OUTCROP_SEAWEED02",
       "OCEAN_OUTCROP_SEAWEED03",
-      "SAILING_RAPIDS",
-      "SAILING_RAPIDS_STRONG",
-      "SAILING_RAPIDS_POWERFUL",
-      "SAILING_RAPIDS_DEADLY",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_FAST",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_SLOW",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_1X1",
@@ -64315,11 +64311,16 @@
     ]
   },
   {
-    "description": "Sailing - Dog Castaway",
+    "description": "Sailing - Slightly darken water ripple and rapids",
     "baseMaterial": "GRAY_90",
-    "npcIds": [
-      "SAILING_CHANCE_ENCOUNTERS_RESCUE_DOG1_ADRIFT"
-    ]
+    "objectIds": [
+      "SAILING_CHARTING_HINT_MARKER_DUCK",
+      "SAILING_RAPIDS",
+      "SAILING_RAPIDS_STRONG",
+      "SAILING_RAPIDS_POWERFUL",
+      "SAILING_RAPIDS_DEADLY"
+    ],
+    "castShadows": false
   },
   {
     "description": "The Pandemonium - Docks",
