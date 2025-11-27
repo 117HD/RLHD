@@ -578,6 +578,7 @@ public class HdPlugin extends Plugin {
 				}
 
 				updateCachedConfigs();
+				developerTools.pluginLogWindowFilterReminder();
 				developerTools.activate();
 
 				setupSyncMode();

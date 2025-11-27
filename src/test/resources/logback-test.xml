@@ -27,6 +27,10 @@
     <appender-ref ref="117HD_FILE"/>
   </logger>
 
+  <logger name="rs117.hd.PluginFileLog" level="debug" additivity="false">
+    <appender-ref ref="117HD_FILE"/>
+  </logger>
+
   <root level="info">
     <appender-ref ref="CONSOLE"/>
   </root>
