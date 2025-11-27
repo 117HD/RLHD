@@ -4467,7 +4467,7 @@
   },
   {
     "description": "Seers Village - Walls",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -4521,7 +4521,7 @@
   },
   {
     "description": "Seers Village - Walls - Windows",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.8,
