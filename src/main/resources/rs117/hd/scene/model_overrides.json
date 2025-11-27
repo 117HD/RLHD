@@ -3934,7 +3934,7 @@
   },
   {
     "description": "Falador - Stone - Brick Walls",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -4034,7 +4034,7 @@
   },
   {
     "description": "Falador - Stone - Glass - Wooden walls With Windows",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -4059,7 +4059,7 @@
   },
   {
     "description": "Falador - Stone - Glass - Brick Walls - With Windows",
-    "baseMaterial": "MARBLE_3_SEMIGLOSS",
+    "baseMaterial": "SMOOTH_STONE",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
