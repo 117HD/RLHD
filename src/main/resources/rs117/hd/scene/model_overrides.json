@@ -63601,10 +63601,7 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 100
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
       }
     ]
   },
@@ -63632,10 +63629,7 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.3,
-        "uvOrientation": 100
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
       }
     ]
   },
@@ -63655,10 +63649,12 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 200
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h == 1 || h > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       },
       {
         "description": "Sail",
@@ -63734,10 +63730,7 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 200
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       },
       {
         "description": "Metal",
@@ -63761,7 +63754,7 @@
     ]
   },
   {
-    "description": "Sailing - Skiff and Sloop - Sail",
+    "description": "Sailing - Skiff and Sloop - Sail - All others",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvOrientationY": 500,
@@ -63784,10 +63777,7 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 200
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       },
       {
         "description": "Metal",
@@ -63898,9 +63888,7 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.4
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
       },
       {
         "description": "Metal",
@@ -63924,9 +63912,7 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "ROPE",
-        "uvType": "BOX",
-        "uvScale": 0.4
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
       },
       {
         "description": "Metal",

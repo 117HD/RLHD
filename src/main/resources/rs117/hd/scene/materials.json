@@ -1670,6 +1670,11 @@
     "brightness": 1.35
   },
   {
+    "name": "CARPET_LIGHT_SMOOTH",
+    "parent": "CARPET_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "CARPET_VERY_LIGHT_SMOOTH",
     "parent": "CARPET_VERY_LIGHT",
     "normalMap": null
