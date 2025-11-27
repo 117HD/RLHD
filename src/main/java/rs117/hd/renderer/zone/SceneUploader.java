@@ -566,11 +566,15 @@ class SceneUploader {
 	}
 
 	private void estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
+		boolean mightHaveTransparency = modelOverride.mightHaveTransparency;
 		Model m = null;
 		if (r instanceof Model) {
 			m = (Model) r;
 		} else if (r instanceof DynamicObject) {
-			m = ((DynamicObject) r).getModelZbuf();
+			var dynamic = (DynamicObject) r;
+			m = dynamic.getModelZbuf();
+			if (dynamic.getRecordedObjectComposition() != null)
+				mightHaveTransparency = true;
 		}
 		if (m == null)
 			return;
@@ -578,7 +582,7 @@ class SceneUploader {
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
-		if (transparencies == null && faceTextures == null && !modelOverride.mightHaveTransparency) {
+		if (transparencies == null && faceTextures == null && !mightHaveTransparency) {
 			z.sizeO += faceCount;
 		} else {
 			z.sizeO += faceCount;
@@ -606,20 +610,24 @@ class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
+		Model model = null;
+		if (r instanceof Model) {
+			model = (Model) r;
+		} else if (r instanceof DynamicObject) {
+			var dynamic = (DynamicObject) r;
+			model = dynamic.getModelZbuf();
+			var composition = dynamic.getRecordedObjectComposition();
+			if (composition != null)
+				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
+		}
+		if (model == null)
+			return;
+
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
 
 		int alphaStart = zone.vboA != null ? zone.vboA.vb.position() : 0;
-		Model model = null;
-		if (r instanceof Model) {
-			model = (Model) r;
-		} else if (r instanceof DynamicObject) {
-			model = ((DynamicObject) r).getModelZbuf();
-		}
-		if (model == null)
-			return;
-
 		try {
 			uploadStaticModel(
 				ctx, tile, model, modelOverride, uuid,

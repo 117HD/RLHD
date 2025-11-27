@@ -1,7 +1,5 @@
 package rs117.hd.scene;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,7 +13,6 @@ import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
@@ -79,9 +76,6 @@ public class SceneContext {
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
-	public final HashMap<TileObject, TileObjectImpostorTracker> trackedTileObjects = new HashMap<>();
-	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
-	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
 
 	// Model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
