@@ -123,10 +123,10 @@ public class DeveloperTools implements KeyListener {
 		hideUiEnabled = false;
 	}
 
-	public void pluginLogWindowFilterReminder() {
+	public static void pluginLogWindowFilterReminder() {
 		LoggerFactory.getLogger("rs117.hd.PluginFileLog")
-			.warn("If this is your first time this session using the HdPluginTest run-configuration, this window will filter "
-				  + "WARN-level logging until you reset the filter.");
+			.warn("If this is your first time this session using the HdPluginTest run-configuration, "
+				  + "this window will filter on WARN-level logging until you reset the filter.");
 	}
 
 	@Subscribe
