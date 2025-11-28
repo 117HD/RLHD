@@ -3742,11 +3742,61 @@
     "uvScale": 0.75
   },
   {
-    "description": "Lumbridge - Castle Walls",
+    "description": "Lumbridge - Building Walls with roofs",
     "areas": [ "LUMBRIDGE" ],
     "flatNormals": true,
-    "textureMaterial": "HD_BRICKWALL",
     "objectIds": [
+      "ROOF_REDSLATE",
+      "ROOFWALLFILLER",
+      "ROOF_DOUBLELENGTH",
+      "ROOFEDGE_DOUBLELENGTH_R",
+      "ROOFEDGE_DOUBLELENGTH_RR",
+      "ROOFEDGE_DOUBLELENGTH_L",
+      "ROOFEDGE_DOUBLELENGTH_LL",
+      "ROOFEDGE_AL",
+      "ROOFEDGE_ALL",
+      "ROOFEDGE_TIP",
+      "ROOF_THATCHED"
+    ],
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICKWALL"
+      }
+    }
+  },
+  {
+    "description": "Lumbridge - Building Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "flatNormals": true,
+    "objectIds": [
+      "BRICKWALL",
+      "ROOFWALLFILLER_CHURCH",
+      "BRICKWALL_CHURCH_FRAME",
+      "BRICKWALL_RIVEREDGE",
+      "BRICKWALLSKEW"
+    ]
+  },
+  {
+    "description": "Lumbridge - Castle Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "flatNormals": true,
+    "baseMaterial": "METALLIC_1_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "PORTCULLIS_2R",
+      "PORTCULLIS_2L"
+    ]
+  },
+  {
+    "description": "Lumbridge - Castle Walls",
+    "areas": [ "LUMBRIDGE" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "flatNormals": true,
+    "objectIds": [
+      "CROSS_CASTLEEDGE",
       "CASTLEWALL",
       "BIGSTONE_CASTLEWALL",
       "CASTLEBATTLEMENTS",
