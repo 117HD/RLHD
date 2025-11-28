@@ -26404,8 +26404,8 @@
     "description": "Objects - Concrete - Bank Booth",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientation": 512,
     "uvScale": 0.65,
+    "uvOrientationZ": 512,
     "materialOverrides": {
       "WOODEN_SCREEN": {
         "textureMaterial": "WOODEN_SCREEN"
@@ -26418,8 +26418,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "MODEL_YZ"
+        "baseMaterial": "GRAY_50"
       }
     ]
   },
@@ -26437,7 +26436,7 @@
       "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientationZ": 512,
     "uvScale": 0.65
   },
   {
