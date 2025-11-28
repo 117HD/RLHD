@@ -3830,6 +3830,7 @@
   },
   {
     "description": "CASTLE_WALLS",
+    "flatNormals": true,
     "objectIds": [
       "CROSS_CASTLEEDGE",
       "CASTLEWALL",
