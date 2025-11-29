@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.model.ModelPusher;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
@@ -27,9 +26,6 @@ public class ModelOverrideManager {
 		.getFile("rlhd.model-overrides-path", () -> path(ModelOverrideManager.class, "model_overrides.json"));
 
 	@Inject
-	private Client client;
-
-	@Inject
 	private ClientThread clientThread;
 
 	@Inject
@@ -37,9 +33,6 @@ public class ModelOverrideManager {
 
 	@Inject
 	private GamevalManager gamevalManager;
-
-	@Inject
-	private ModelPusher modelPusher;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
@@ -58,7 +51,7 @@ public class ModelOverrideManager {
 				modelOverrides.clear();
 				for (ModelOverride override : parsedOverrides) {
 					try {
-						override.normalize(plugin.configVanillaShadowMode);
+						override.normalize(plugin);
 					} catch (IllegalStateException ex) {
 						log.error("Invalid model override '{}': {}", override.description, ex.getMessage());
 						continue;
@@ -81,8 +74,8 @@ public class ModelOverrideManager {
 				if (first)
 					return;
 
-				modelPusher.clearModelCache();
-				plugin.reuploadScene();
+				plugin.renderer.clearCaches();
+				plugin.renderer.reloadScene();
 			} catch (Exception ex) {
 				log.error("Failed to load model overrides:", ex);
 			}
@@ -201,5 +194,10 @@ public class ModelOverrideManager {
 					return entry.getValue();
 
 		return override;
+	}
+
+	@Nonnull
+	public ModelOverride getOverride(TileObject tileObject, int[] worldPos) {
+		return getOverride(ModelHash.packUuid(ModelHash.TYPE_OBJECT, tileObject.getId()), worldPos);
 	}
 }

@@ -25,12 +25,17 @@
 package rs117.hd.utils.buffer;
 
 import java.nio.IntBuffer;
+import lombok.Getter;
 import org.lwjgl.system.MemoryUtil;
 import rs117.hd.HdPlugin;
 
+import static rs117.hd.utils.MathUtils.*;
+
 public class GpuIntBuffer
 {
+	@Getter
 	private IntBuffer buffer;
+	private final boolean ownsBuffer;
 
 	public GpuIntBuffer()
 	{
@@ -45,10 +50,16 @@ public class GpuIntBuffer
 			System.gc();
 			buffer = MemoryUtil.memAllocInt(initialCapacity);
 		}
+		ownsBuffer = true;
+	}
+
+	public GpuIntBuffer(IntBuffer buffer) {
+		this.buffer = buffer;
+		ownsBuffer = false;
 	}
 
 	public void destroy() {
-		if (buffer != null)
+		if (buffer != null && ownsBuffer)
 			MemoryUtil.memFree(buffer);
 		buffer = null;
 	}
@@ -57,6 +68,17 @@ public class GpuIntBuffer
 	@SuppressWarnings("deprecation")
 	protected void finalize() {
 		destroy();
+	}
+
+	@Override
+	public String toString() {
+		return String.format(
+			"%s@%x(pos=%d, size=%d)",
+			getClass().getSimpleName(),
+			hashCode(),
+			buffer.position(),
+			buffer.capacity()
+		);
 	}
 
 	public void put(int x, int y, int z) {
@@ -77,6 +99,74 @@ public class GpuIntBuffer
 
 	public void put(IntBuffer buffer) {
 		this.buffer.put(buffer);
+	}
+
+	public void putVertex(
+		int x, int y, int z, int alphaBiasHsl,
+		int u, int v, int w, int materialData,
+		int nx, int ny, int nz, int terrainData
+	) {
+		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
+		buffer.put((u & 0xFFFF) << 16 | z & 0xFFFF);
+		buffer.put((w & 0xFFFF) << 16 | v & 0xFFFF);
+		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
+		buffer.put(nz & 0xFFFF);
+		buffer.put(alphaBiasHsl);
+		buffer.put(materialData);
+		buffer.put(terrainData);
+	}
+
+	public static int normShort(float f) {
+		return round(clamp(f, -1, 1) * Short.MAX_VALUE);
+	}
+
+	public void putVertex(
+		int x, int y, int z, int alphaBiasHsl,
+		float u, float v, float w, int materialData,
+		float nx, float ny, float nz, int terrainData
+	) {
+		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
+		buffer.put(float16(u) << 16 | z & 0xFFFF);
+		buffer.put(float16(w) << 16 | float16(v));
+		// This only works with normalized normals
+		buffer.put((normShort(ny) & 0xFFFF) << 16 | (normShort(nx) & 0xFFFF));
+		buffer.put((normShort(nz) & 0xFFFF));
+		buffer.put(alphaBiasHsl);
+		buffer.put(materialData);
+		buffer.put(terrainData);
+	}
+
+	public void putVertex(
+		int x, int y, int z, int alphaBiasHsl,
+		float u, float v, float w, int materialData,
+		int nx, int ny, int nz, int terrainData
+	) {
+		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
+		buffer.put(float16(u) << 16 | z & 0xFFFF);
+		buffer.put(float16(w) << 16 | float16(v));
+		// Unnormalized normals, assumed to be within short max
+		buffer.put((ny & 0xFFFF) << 16 | nx & 0xFFFF);
+		buffer.put(nz & 0xFFFF);
+		buffer.put(alphaBiasHsl);
+		buffer.put(materialData);
+		buffer.put(terrainData);
+	}
+
+	public static void putFloatVertex(
+		IntBuffer buffer,
+		float x, float y, float z, int alphaBiasHsl,
+		float u, float v, float w, int materialData,
+		int nx, int ny, int nz, int terrainData
+	) {
+		buffer.put(Float.floatToRawIntBits(x));
+		buffer.put(Float.floatToRawIntBits(y));
+		buffer.put(Float.floatToRawIntBits(z));
+		buffer.put(float16(v) << 16 | float16(u));
+		buffer.put((nx & 0xFFFF) << 16 | float16(w));
+		buffer.put((nz & 0xFFFF) << 16 | ny & 0xFFFF);
+		buffer.put(alphaBiasHsl);
+		buffer.put(materialData);
+		buffer.put(terrainData);
 	}
 
 	public int position()
@@ -114,10 +204,5 @@ public class GpuIntBuffer
 		}
 
 		return this;
-	}
-
-	public IntBuffer getBuffer()
-	{
-		return buffer;
 	}
 }

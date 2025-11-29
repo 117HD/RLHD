@@ -25,7 +25,10 @@
  */
 #version 330
 
+#define DISPLAY_BASE_COLOR 0
+
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 #include <uniforms/materials.glsl>
 #include <uniforms/water_types.glsl>
 
@@ -33,11 +36,12 @@
 
 uniform sampler2DArray textureArray;
 uniform sampler2D shadowMap;
-uniform isampler2DArray tiledLightingArray;
+uniform usampler2DArray tiledLightingArray;
 
 // general HD settings
 
-flat in ivec3 vHsl;
+flat in int vWorldViewId;
+flat in ivec3 vAlphaBiasHsl;
 flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
 flat in vec3 T;
@@ -76,20 +80,20 @@ void main() {
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
 
-    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT);
-    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT);
-    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT);
+    Material material1 = getMaterial(vMaterialData[0] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material2 = getMaterial(vMaterialData[1] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
+    Material material3 = getMaterial(vMaterialData[2] >> MATERIAL_INDEX_SHIFT & MATERIAL_INDEX_MASK);
 
     // Water data
     bool isTerrain = (vTerrainData[0] & 1) != 0; // 1 = 0b1
-    int waterDepth1 = vTerrainData[0] >> 8 & 0xFFFF;
-    int waterDepth2 = vTerrainData[1] >> 8 & 0xFFFF;
-    int waterDepth3 = vTerrainData[2] >> 8 & 0xFFFF;
+    int waterDepth1 = vTerrainData[0] >> 11 & 0xFFF;
+    int waterDepth2 = vTerrainData[1] >> 11 & 0xFFF;
+    int waterDepth3 = vTerrainData[2] >> 11 & 0xFFF;
     float waterDepth =
         waterDepth1 * IN.texBlend.x +
         waterDepth2 * IN.texBlend.y +
         waterDepth3 * IN.texBlend.z;
-    int waterTypeIndex = isTerrain ? vTerrainData[0] >> 3 & 0x1F : 0;
+    int waterTypeIndex = isTerrain ? vTerrainData[0] >> 3 & 0xFF : 0;
     WaterType waterType = getWaterType(waterTypeIndex);
 
     // set initial texture map ids
@@ -173,10 +177,36 @@ void main() {
             fragPos += TBN * fragDelta;
         #endif
 
+        vec3 hsl1 = unpackRawHsl(vAlphaBiasHsl[0]);
+        vec3 hsl2 = unpackRawHsl(vAlphaBiasHsl[1]);
+        vec3 hsl3 = unpackRawHsl(vAlphaBiasHsl[2]);
+
+        // Apply entity tint to HSL
+        ivec4 tint = getWorldViewTint(vWorldViewId);
+        if (tint.w > 0) {
+            hsl1 += ((tint.xyz - hsl1) * tint.w) / 128;
+            hsl2 += ((tint.xyz - hsl2) * tint.w) / 128;
+            hsl3 += ((tint.xyz - hsl3) * tint.w) / 128;
+        }
+
         // get vertex colors
-        vec4 baseColor1 = vec4(srgbToLinear(packedHslToSrgb(vHsl[0])), 1 - float(vHsl[0] >> 24 & 0xff) / 255.);
-        vec4 baseColor2 = vec4(srgbToLinear(packedHslToSrgb(vHsl[1])), 1 - float(vHsl[1] >> 24 & 0xff) / 255.);
-        vec4 baseColor3 = vec4(srgbToLinear(packedHslToSrgb(vHsl[2])), 1 - float(vHsl[2] >> 24 & 0xff) / 255.);
+        vec4 baseColor1 = vec4(convertHsl(hsl1), 1 - float(vAlphaBiasHsl[0] >> 24 & 0xff) / 255.);
+        vec4 baseColor2 = vec4(convertHsl(hsl2), 1 - float(vAlphaBiasHsl[1] >> 24 & 0xff) / 255.);
+        vec4 baseColor3 = vec4(convertHsl(hsl3), 1 - float(vAlphaBiasHsl[2] >> 24 & 0xff) / 255.);
+
+        // Convert to linear RGB
+        baseColor1.rgb = srgbToLinear(hslToSrgb(baseColor1.xyz));
+        baseColor2.rgb = srgbToLinear(hslToSrgb(baseColor2.xyz));
+        baseColor3.rgb = srgbToLinear(hslToSrgb(baseColor3.xyz));
+
+        #if DISPLAY_BASE_COLOR
+        if (DISPLAY_BASE_COLOR == 1) { // Redundant, used for syntax highlighting in IntelliJ
+            outputColor = baseColor1 * IN.texBlend.x + baseColor2 * IN.texBlend.y + baseColor3 * IN.texBlend.z;
+            outputColor.rgb = linearToSrgb(outputColor.rgb);
+            FragColor = outputColor;
+            return;
+        }
+        #endif
 
         // get diffuse textures
         vec4 texColor1 = colorMap1 == -1 ? vec4(1) : texture(textureArray, vec3(uv1, colorMap1), mipBias);
@@ -395,7 +425,11 @@ void main() {
             outputColor.rgb = srgbToLinear(outputColor.rgb);
         #endif
 
-        outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+        if (tint.w > 0) {
+            outputColor.rgb *= 1.0 + skyLightOut;
+        } else {
+            outputColor.rgb *= mix(compositeLight, vec3(1), unlit);
+        }
         outputColor.rgb = linearToSrgb(outputColor.rgb);
 
         if (isUnderwater) {
@@ -461,6 +495,10 @@ void main() {
     }
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+
+    #if WINDOWS_HDR_CORRECTION
+        outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
+    #endif
 
     FragColor = outputColor;
 }

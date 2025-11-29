@@ -1,7 +1,5 @@
 package rs117.hd.scene;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -15,34 +13,27 @@ import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.scene.lights.Light;
-import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.HDUtils;
-import rs117.hd.utils.buffer.GpuFloatBuffer;
-import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Constants.SCENE_SIZE;
 import static net.runelite.api.Perspective.*;
-import static rs117.hd.HdPlugin.UV_SIZE;
-import static rs117.hd.HdPlugin.VERTEX_SIZE;
 import static rs117.hd.utils.MathUtils.*;
 
 public class SceneContext {
-	public static final int SCENE_OFFSET = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
-
-	public final int id = RAND.nextInt() & SceneUploader.SCENE_ID_MASK;
 	public final Client client;
 	public final Scene scene;
 	public final int expandedMapLoadingChunks;
+	public int sizeX, sizeZ;
 
 	@Nullable
 	public final int[] sceneBase;
 	public final AABB sceneBounds;
+	public int sceneOffset;
 
 	public boolean enableAreaHiding;
-	public boolean forceDisableAreaHiding;
 	public boolean fillGaps;
 	public boolean isPrepared;
 
@@ -53,10 +44,6 @@ public class SceneContext {
 	public byte[][] filledTiles = new byte[EXTENDED_SCENE_SIZE][EXTENDED_SCENE_SIZE];
 
 	public int staticVertexCount = 0;
-	public GpuIntBuffer staticUnorderedModelBuffer;
-	public GpuIntBuffer stagingBufferVertices;
-	public GpuFloatBuffer stagingBufferUvs;
-	public GpuFloatBuffer stagingBufferNormals;
 
 	public int staticGapFillerTilesOffset;
 	public int staticGapFillerTilesVertexCount;
@@ -69,7 +56,7 @@ public class SceneContext {
 	// Terrain data
 	public Map<Integer, Integer> vertexTerrainColor;
 	public Map<Integer, Material> vertexTerrainTexture;
-	public Map<Integer, float[]> vertexTerrainNormals;
+	public Map<Integer, int[]> vertexTerrainNormals;
 	// Used for overriding potentially low quality vertex colors
 	public HashMap<Integer, Boolean> highPriorityColor;
 
@@ -89,75 +76,26 @@ public class SceneContext {
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();
 	public final HashSet<Projectile> knownProjectiles = new HashSet<>();
-	public final HashMap<TileObject, TileObjectImpostorTracker> trackedTileObjects = new HashMap<>();
-	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
-	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
 
 	// Model pusher arrays, to avoid simultaneous usage from different threads
 	public final int[] modelFaceVertices = new int[12];
+	public final float[] modelFaceUvs = new float[12];
 	public final float[] modelFaceNormals = new float[12];
 	public final int[] modelPusherResults = new int[2];
 
-	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks, boolean reuseBuffers, @Nullable SceneContext previous) {
+	public SceneContext(Client client, Scene scene, int expandedMapLoadingChunks) {
 		this.client = client;
 		this.scene = scene;
 		this.expandedMapLoadingChunks = expandedMapLoadingChunks;
+//		this.sizeX = SCENE_SIZE + expandedMapLoadingChunks * CHUNK_SIZE;
+//		this.sizeZ = SCENE_SIZE + expandedMapLoadingChunks * CHUNK_SIZE;
+		sizeX = sizeZ = EXTENDED_SCENE_SIZE;
+		sceneOffset = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
-
-		if (previous == null) {
-			staticUnorderedModelBuffer = new GpuIntBuffer();
-			stagingBufferVertices = new GpuIntBuffer();
-			stagingBufferUvs = new GpuFloatBuffer();
-			stagingBufferNormals = new GpuFloatBuffer();
-		} else {
-			// If area hiding was determined to be incorrect previously, keep it disabled
-			forceDisableAreaHiding = previous.forceDisableAreaHiding;
-
-			if (reuseBuffers) {
-				// Avoid reallocating buffers whenever possible
-				staticUnorderedModelBuffer = previous.staticUnorderedModelBuffer.clear();
-				stagingBufferVertices = previous.stagingBufferVertices.clear();
-				stagingBufferUvs = previous.stagingBufferUvs.clear();
-				stagingBufferNormals = previous.stagingBufferNormals.clear();
-				previous.staticUnorderedModelBuffer = null;
-				previous.stagingBufferVertices = null;
-				previous.stagingBufferUvs = null;
-				previous.stagingBufferNormals = null;
-			} else {
-				staticUnorderedModelBuffer = new GpuIntBuffer(previous.staticUnorderedModelBuffer.capacity());
-				stagingBufferVertices = new GpuIntBuffer(previous.stagingBufferVertices.capacity());
-				stagingBufferUvs = new GpuFloatBuffer(previous.stagingBufferUvs.capacity());
-				stagingBufferNormals = new GpuFloatBuffer(previous.stagingBufferNormals.capacity());
-			}
-		}
 	}
 
-	public synchronized void destroy() {
-		if (staticUnorderedModelBuffer != null)
-			staticUnorderedModelBuffer.destroy();
-		staticUnorderedModelBuffer = null;
-
-		if (stagingBufferVertices != null)
-			stagingBufferVertices.destroy();
-		stagingBufferVertices = null;
-
-		if (stagingBufferUvs != null)
-			stagingBufferUvs.destroy();
-		stagingBufferUvs = null;
-
-		if (stagingBufferNormals != null)
-			stagingBufferNormals.destroy();
-		stagingBufferNormals = null;
-	}
-
-	public int getVertexOffset() {
-		return stagingBufferVertices.position() / VERTEX_SIZE;
-	}
-
-	public int getUvOffset() {
-		return stagingBufferUvs.position() / UV_SIZE;
-	}
+	public synchronized void destroy() {}
 
 	/**
 	 * Transform local coordinates into world coordinates.
@@ -194,7 +132,7 @@ public class SceneContext {
 	}
 
 	public int[] extendedSceneToWorld(int sceneExX, int sceneExY, int plane) {
-		return sceneToWorld(sceneExX - SCENE_OFFSET, sceneExY - SCENE_OFFSET, plane);
+		return sceneToWorld(sceneExX - sceneOffset, sceneExY - sceneOffset, plane);
 	}
 
 	public Stream<int[]> worldToLocals(WorldPoint worldPoint) {
@@ -235,19 +173,6 @@ public class SceneContext {
 
 	public AABB getNonInstancedSceneBounds() {
 		return HDUtils.getNonInstancedSceneBounds(scene, expandedMapLoadingChunks);
-	}
-
-	public int getObjectConfig(Tile tile, long hash) {
-		if (tile.getWallObject() != null && tile.getWallObject().getHash() == hash)
-			return tile.getWallObject().getConfig();
-		if (tile.getDecorativeObject() != null && tile.getDecorativeObject().getHash() == hash)
-			return tile.getDecorativeObject().getConfig();
-		if (tile.getGroundObject() != null && tile.getGroundObject().getHash() == hash)
-			return tile.getGroundObject().getConfig();
-		for (GameObject gameObject : tile.getGameObjects())
-			if (gameObject != null && gameObject.getHash() == hash)
-				return gameObject.getConfig();
-		return -1;
 	}
 
 	/**
@@ -315,8 +240,8 @@ public class SceneContext {
 	 */
 	private AABB findSceneBounds(@Nullable int[] sceneBase) {
 		if (sceneBase != null) {
-			int x = sceneBase[0] - SCENE_OFFSET;
-			int y = sceneBase[1] - SCENE_OFFSET;
+			int x = sceneBase[0] - sceneOffset;
+			int y = sceneBase[1] - sceneOffset;
 			return new AABB(x, y, x + EXTENDED_SCENE_SIZE - 1, y + EXTENDED_SCENE_SIZE - 1);
 		}
 
