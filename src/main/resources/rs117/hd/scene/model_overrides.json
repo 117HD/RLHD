@@ -65459,5 +65459,24 @@
         "depthBias": 110
       }
     ]
+  },
+  {
+    "description": "Depth Bias Fix - Catherby drawers poking through a wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "areas": [ "CATHERBY_DEPTH_BIAS_FIX" ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX",
+        "depthBias": 1
+      }
+    ],
+    "objectIds": [
+      "TIMBERWALL"
+    ]
   }
 ]

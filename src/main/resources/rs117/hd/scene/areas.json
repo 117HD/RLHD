@@ -8634,6 +8634,12 @@
     "regions": [ 5958 ]
   },
   {
+    "name": "CATHERBY_DEPTH_BIAS_FIX",
+    "aabbs": [
+      [ 2809, 3448, 2809, 3449, 1 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
