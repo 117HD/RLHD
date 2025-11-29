@@ -44,6 +44,7 @@ in int gMaterialData[3];
 in int gTerrainData[3];
 in int gWorldViewId[3];
 
+flat out int vWorldViewId;
 flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
@@ -58,10 +59,11 @@ out FragmentData {
 } OUT;
 
 void main() {
-    vec3 vUv[3];
+    vWorldViewId = gWorldViewId[0];
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
+    vec3 vUv[3];
     for (int i = 0; i < 3; i++) {
         vAlphaBiasHsl[i] = gAlphaBiasHsl[i];
         vUv[i] = gUv[i];

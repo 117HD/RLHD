@@ -142,6 +142,16 @@
     ]
   },
   {
+    "name": "DIRTY_MARBLE_GLOSS",
+    "materials": [
+      "MARBLE_1_SEMIGLOSS",
+      "DIRT_1",
+      "MARBLE_2_SEMIGLOSS",
+      "MARBLE_1_SEMIGLOSS",
+      "MARBLE_2_SEMIGLOSS"
+    ]
+  },
+  {
     "name": "TILE_SMALL",
     "materials": [
       "TILE_SMALL_1"
@@ -579,6 +589,12 @@
     ]
   },
   {
+    "name": "FORTIS_ROADS",
+    "materials": [
+      "FORTIS_ROADS"
+    ]
+  },
+  {
     "name": "ABYSSAL_BILE",
     "materials": [
       "ABYSSAL_2_FLOW",
@@ -601,5 +617,11 @@
   {
     "name": "FORTIS_ROADS_MIRRORED",
     "materials": [ "FORTIS_ROADS_MIRRORED" ]
+  },
+  {
+    "name": "STONE",
+    "materials": [
+      "STONE_NORMALED"
+    ]
   }
 ]

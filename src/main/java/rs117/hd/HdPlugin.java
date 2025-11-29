@@ -490,7 +490,7 @@ public class HdPlugin extends Plugin {
 				INTEL_GPU = glRenderer.contains("Intel");
 				NVIDIA_GPU = glRenderer.toLowerCase().contains("nvidia");
 
-				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU || config.forceIndirectDraw();
+				SUPPORTS_INDIRECT_DRAW = NVIDIA_GPU && !APPLE || config.forceIndirectDraw();
 
 				renderer = config.legacyRenderer() ?
 					injector.getInstance(LegacyRenderer.class) :
@@ -1690,11 +1690,6 @@ public class HdPlugin extends Plugin {
 							case KEY_UNLOCK_FPS:
 							case KEY_VSYNC_MODE:
 								setupSyncMode();
-								break;
-							case KEY_FISHING_SPOT_STYLE:
-								reloadModelOverrides = true;
-								fishingSpotReplacer.despawnRuneLiteObjects();
-								clientThread.invokeLater(fishingSpotReplacer::update);
 								break;
 						}
 					}

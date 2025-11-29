@@ -62,6 +62,7 @@ class Zone {
 	boolean metadataDirty; // whether the zone needs metadata updating
 	boolean invalidate; // whether the zone needs rebuilding
 	boolean hasWater; // whether the zone has any water tiles
+	boolean onlyWater; // whether the zone only contains water tiles
 	boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 
@@ -203,16 +204,16 @@ class Zone {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void setMetadata(int worldViewIdx, ZoneSceneContext ctx, int mx, int mz) {
+	void setMetadata(WorldViewContext viewContext, int mx, int mz) {
 		if (vboM == null || !metadataDirty)
 			return;
 		metadataDirty = false;
 
-		int baseX = (mx - (ctx.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (ctx.sceneOffset >> 3)) << 10;
+		int baseX = (mx - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
 
 		vboM.map();
-		vboM.vb.put(worldViewIdx + 1);
+		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
 		vboM.vb.put(baseX);
 		vboM.vb.put(baseZ);
 		vboM.unmap();
@@ -569,7 +570,8 @@ class Zone {
 		int maxLevel,
 		int level,
 		Camera camera,
-		Set<Integer> hiddenRoofIds
+		Set<Integer> hiddenRoofIds,
+		boolean useStaticUnsorted
 	) {
 		if (alphaModels.isEmpty())
 			return;
@@ -599,6 +601,12 @@ class Zone {
 			if (m.isTemp()) {
 				// these are already sorted and so just requires a glMultiDrawArrays() from the active vao
 				lastDrawMode = TEMP;
+				pushRange(m.startpos, m.endpos);
+				continue;
+			}
+
+			if (useStaticUnsorted) {
+				lastDrawMode = STATIC_UNSORTED;
 				pushRange(m.startpos, m.endpos);
 				continue;
 			}

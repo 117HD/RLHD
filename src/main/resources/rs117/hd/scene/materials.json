@@ -663,13 +663,13 @@
   {
     "name": "FORTIS_ROADS",
     "vanillaTextureIndex": 121,
-    "textureScale": [ -1, -1 ]
+    "textureScale": [ -1, -1 ],
+    "brightness": 0.92
   },
   {
     "name": "FORTIS_ROADS_MIRRORED",
     "parent": "FORTIS_ROADS",
-    "vanillaTextureIndex": 122,
-    "textureScale": [ -1, -1 ]
+    "vanillaTextureIndex": 122
   },
   {
     "name": "LEAFY_ACACIA01",
@@ -678,7 +678,8 @@
   },
   {
     "name": "LEAFY_STONEPINE01",
-    "vanillaTextureIndex": 124
+    "vanillaTextureIndex": 124,
+    "hasTransparency": true
   },
   {
     "name": "BRICK_CAM_TORUM",
@@ -993,6 +994,11 @@
     "parent": "NONE"
   },
   {
+    "name": "GRAY_300",
+    "parent": "NONE",
+    "brightness": 3
+  },
+  {
     "name": "GRAY_150",
     "parent": "NONE",
     "brightness": 1.5
@@ -1001,6 +1007,11 @@
     "name": "GRAY_125",
     "parent": "NONE",
     "brightness": 1.25
+  },
+  {
+    "name": "GRAY_115",
+    "parent": "NONE",
+    "brightness": 1.15
   },
   {
     "name": "GRAY_110",
@@ -1051,6 +1062,11 @@
     "name": "GRAY_25",
     "parent": "NONE",
     "brightness": 0.25
+  },
+  {
+    "name": "GRAY_05",
+    "parent": "NONE",
+    "brightness": 0.05
   },
   {
     "name": "BLACK",
@@ -1292,6 +1308,16 @@
     "brightness": 1.122
   },
   {
+    "name": "GRUNGE_1_DARK",
+    "parent": "GRUNGE_1",
+    "brightness": 0.9
+  },
+  {
+    "name": "GRUNGE_1_VERY_DARK",
+    "parent": "GRUNGE_1",
+    "brightness": 0.82
+  },
+  {
     "name": "GRUNGE_1_VERY_LIGHT",
     "parent": "GRUNGE_1",
     "brightness": 1.261
@@ -1441,6 +1467,11 @@
     "name": "ROCK_1_LIGHT",
     "parent": "ROCK_1",
     "brightness": 1.159
+  },
+  {
+    "name": "ROCK_1_LIGHT_SMOOTH",
+    "parent": "ROCK_1_LIGHT",
+    "normalMap": null
   },
   {
     "name": "ROCK_2_N"
@@ -1721,7 +1752,11 @@
   },
   {
     "name": "MARBLE_4",
-    "normalMap": "MARBLE_4_N"
+    "normalMap": "MARBLE_4_N",
+    "materialsToReplace": [
+      "MARBLE_DARK"
+    ],
+    "replacementCondition": "modelTextures"
   },
   {
     "name": "MARBLE_1_GLOSS",
@@ -1949,6 +1984,11 @@
     "brightness": 0.881
   },
   {
+    "name": "LEAF_VEINS_DARKER",
+    "parent": "LEAF_VEINS",
+    "brightness": 0.581
+  },
+  {
     "name": "LEAVES_1_N"
   },
   {
@@ -1988,6 +2028,18 @@
       1.0,
       0.2
     ]
+  },
+  {
+    "name": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "parent": "WOOD_GRAIN_2",
+    "brightness": 1.043,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.2
+    ],
+    "specularStrength": 0.3,
+    "specularGloss": 40.0
   },
   {
     "name": "WOOD_GRAIN_2_LIGHT",
@@ -2095,15 +2147,6 @@
     "specularGloss": 40.0,
     "materialsToReplace": [
       "ROOF_SHINGLES_1"
-    ],
-    "replacementCondition": "modelTextures"
-  },
-  {
-    "name": "HD_MARBLE_DARK",
-    "specularStrength": 1.1,
-    "specularGloss": 380.0,
-    "materialsToReplace": [
-      "MARBLE_DARK"
     ],
     "replacementCondition": "modelTextures"
   },
@@ -2246,6 +2289,15 @@
       -0.0,
       1.4285715
     ]
+  },
+  {
+    "name": "SMOOTH_STONE",
+    "normalMap": "STONE_N"
+  },
+  {
+    "name": "SMOOTH_STONE_DARK",
+    "parent": "SMOOTH_STONE",
+    "brightness": 0.95
   },
   {
     "name": "WALL_STONE_N"
@@ -2504,6 +2556,11 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_CONCRETE_FLAT",
+    "normalMap": null,
+    "parent": "HD_CONCRETE"
+  },
+  {
     "name": "HD_HAY_N"
   },
   {
@@ -2537,6 +2594,21 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_SAND_BRICK_N"
+  },
+  {
+    "name": "HD_SAND_BRICK",
+    "normalMap": "HD_SAND_BRICK_N",
+    "brightness": 0.881,
+    "displacementScale": 0.05,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "SAND_BRICK"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
     "name": "OOZE",
     "parent": "GRAY_65",
     "specularStrength": 1.5,
@@ -2546,6 +2618,12 @@
     "name": "BONE",
     "parent": "GRUNGE_2",
     "brightness": 1.122,
+    "specularStrength": 0.25,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "BONE_DARK",
+    "parent": "GRUNGE_2",
     "specularStrength": 0.25,
     "specularGloss": 20.0
   },

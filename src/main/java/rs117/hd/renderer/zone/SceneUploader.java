@@ -25,7 +25,6 @@
 package rs117.hd.renderer.zone;
 
 import java.nio.IntBuffer;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
@@ -62,6 +61,7 @@ import static rs117.hd.utils.MathUtils.*;
 class SceneUploader {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
+	private static final int[] EMPTY_NORMALS = new int[9];
 
 	@Inject
 	private RenderCallbackManager renderCallbackManager;
@@ -99,8 +99,10 @@ class SceneUploader {
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
 	void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
+		// Initialize the zone as containing only water, until a non-water tile is found
+		zone.onlyWater = true;
 
+		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int z = 3; z >= 0; --z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -277,6 +279,8 @@ class SceneUploader {
 				// but we'll render them in the correct order without needing face sorting,
 				// so we might as well use the opaque buffer for simplicity
 				z.sizeO += 2;
+			} else {
+				z.onlyWater = false;
 			}
 		}
 
@@ -310,6 +314,8 @@ class SceneUploader {
 			if (isFallbackWater || isOverlayWater || isUnderlayWater) {
 				z.hasWater = true;
 				z.sizeO += len;
+			} else {
+				z.onlyWater = false;
 			}
 		}
 
@@ -560,11 +566,15 @@ class SceneUploader {
 	}
 
 	private void estimateRenderableSize(Zone z, Renderable r, ModelOverride modelOverride) {
+		boolean mightHaveTransparency = modelOverride.mightHaveTransparency;
 		Model m = null;
 		if (r instanceof Model) {
 			m = (Model) r;
 		} else if (r instanceof DynamicObject) {
-			m = ((DynamicObject) r).getModelZbuf();
+			var dynamic = (DynamicObject) r;
+			m = dynamic.getModelZbuf();
+			if (dynamic.getRecordedObjectComposition() != null)
+				mightHaveTransparency = true;
 		}
 		if (m == null)
 			return;
@@ -572,7 +582,7 @@ class SceneUploader {
 		int faceCount = m.getFaceCount();
 		byte[] transparencies = m.getFaceTransparencies();
 		short[] faceTextures = m.getFaceTextures();
-		if (transparencies == null && faceTextures == null && !modelOverride.mightHaveTransparency) {
+		if (transparencies == null && faceTextures == null && !mightHaveTransparency) {
 			z.sizeO += faceCount;
 		} else {
 			z.sizeO += faceCount;
@@ -600,20 +610,24 @@ class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
+		Model model = null;
+		if (r instanceof Model) {
+			model = (Model) r;
+		} else if (r instanceof DynamicObject) {
+			var dynamic = (DynamicObject) r;
+			model = dynamic.getModelZbuf();
+			var composition = dynamic.getRecordedObjectComposition();
+			if (composition != null)
+				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
+		}
+		if (model == null)
+			return;
+
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
 
 		int alphaStart = zone.vboA != null ? zone.vboA.vb.position() : 0;
-		Model model = null;
-		if (r instanceof Model) {
-			model = (Model) r;
-		} else if (r instanceof DynamicObject) {
-			model = ((DynamicObject) r).getModelZbuf();
-		}
-		if (model == null)
-			return;
-
 		try {
 			uploadStaticModel(
 				ctx, tile, model, modelOverride, uuid,
@@ -1183,6 +1197,7 @@ class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
+		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
 
@@ -1198,6 +1213,11 @@ class SceneUploader {
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
 
+		final int[] xVertexNormals = model.getVertexNormalsX();
+		final int[] yVertexNormals = model.getVertexNormalsY();
+		final int[] zVertexNormals = model.getVertexNormalsZ();
+		final boolean modelHasNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
+
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
 		final int[] texIndices1 = model.getTexIndices1();
@@ -1206,6 +1226,7 @@ class SceneUploader {
 
 		final byte[] bias = model.getFaceBias();
 		final byte[] transparencies = model.getFaceTransparencies();
+		final float modelHeight = model.getModelHeight();
 
 		int orientSin = 0;
 		int orientCos = 0;
@@ -1219,6 +1240,7 @@ class SceneUploader {
 			int vx = (int) vertexX[v];
 			int vy = (int) vertexY[v];
 			int vz = (int) vertexZ[v];
+			float heightFrac = modelOverride.terrainVertexSnap ? abs(vy / modelHeight) : 0.0f;
 
 			if (orientation != 0) {
 				int x0 = vx;
@@ -1229,6 +1251,24 @@ class SceneUploader {
 			vx += x;
 			vy += y;
 			vz += z;
+
+			if (modelOverride.terrainVertexSnap && heightFrac <= modelOverride.terrainVertexSnapThreshold) {
+				int plane = tile.getRenderLevel();
+				int tileExX = clamp(ctx.sceneOffset + ((vx + basex) / 128), 0, EXTENDED_SCENE_SIZE - 1);
+				int tileExY = clamp(ctx.sceneOffset + ((vz + basez) / 128), 0, EXTENDED_SCENE_SIZE - 1);
+
+				float h00 = tileHeights[plane][tileExX][tileExY];
+				float h10 = tileHeights[plane][tileExX + 1][tileExY];
+				float h01 = tileHeights[plane][tileExX][tileExY + 1];
+				float h11 = tileHeights[plane][tileExX + 1][tileExY + 1];
+
+				float hx0 = mix(h00, h10, (vx % 128.0f) / 128.0f);
+				float hx1 = mix(h01, h11, (vx % 128.0f) / 128.0f);
+				float h = mix(hx0, hx1, (vz % 128.0f) / 128.0f);
+
+				float blend = divide(heightFrac, modelOverride.terrainVertexSnapThreshold);
+				vy = (int) mix(h, vy, blend);
+			}
 
 			modelLocalXI[v] = vx;
 			modelLocalYI[v] = vy;
@@ -1433,23 +1473,24 @@ class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
-				Arrays.fill(modelNormals, 0);
-			} else {
-				final int[] xVertexNormals = model.getVertexNormalsX();
-				final int[] yVertexNormals = model.getVertexNormalsY();
-				final int[] zVertexNormals = model.getVertexNormalsZ();
-				if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
-					modelNormals[0] = xVertexNormals[triangleA];
-					modelNormals[1] = yVertexNormals[triangleA];
-					modelNormals[2] = zVertexNormals[triangleA];
-					modelNormals[3] = xVertexNormals[triangleB];
-					modelNormals[4] = yVertexNormals[triangleB];
-					modelNormals[5] = zVertexNormals[triangleB];
-					modelNormals[6] = xVertexNormals[triangleC];
-					modelNormals[7] = yVertexNormals[triangleC];
-					modelNormals[8] = zVertexNormals[triangleC];
+			final int[] faceNormals;
+			if (modelHasNormals) {
+				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
+					faceNormals = EMPTY_NORMALS;
+				} else {
+					faceNormals = modelNormals;
+					faceNormals[0] = xVertexNormals[triangleA];
+					faceNormals[1] = yVertexNormals[triangleA];
+					faceNormals[2] = zVertexNormals[triangleA];
+					faceNormals[3] = xVertexNormals[triangleB];
+					faceNormals[4] = yVertexNormals[triangleB];
+					faceNormals[5] = zVertexNormals[triangleB];
+					faceNormals[6] = xVertexNormals[triangleC];
+					faceNormals[7] = yVertexNormals[triangleC];
+					faceNormals[8] = zVertexNormals[triangleC];
 				}
+			} else {
+				faceNormals = EMPTY_NORMALS;
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -1460,19 +1501,19 @@ class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				faceNormals[0], faceNormals[1], faceNormals[2], 0
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				faceNormals[3], faceNormals[4], faceNormals[5], 0
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				faceNormals[6], faceNormals[7], faceNormals[8], 0
 			);
 
 			len += 3;
@@ -1507,6 +1548,11 @@ class SceneUploader {
 		final int[] color1s = model.getFaceColors1();
 		final int[] color2s = model.getFaceColors2();
 		final int[] color3s = model.getFaceColors3();
+
+		final int[] xVertexNormals = model.getVertexNormalsX();
+		final int[] yVertexNormals = model.getVertexNormalsY();
+		final int[] zVertexNormals = model.getVertexNormalsZ();
+		final boolean modelHasNormals = xVertexNormals != null && yVertexNormals != null && zVertexNormals != null;
 
 		final short[] faceTextures = model.getFaceTextures();
 		final byte[] textureFaces = model.getTextureFaces();
@@ -1664,23 +1710,24 @@ class SceneUploader {
 				faceOverride.fillUvsForFace(modelUvs, model, preOrientation, uvType, face, workingSpace);
 			}
 
-			if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && model.getFaceColors3()[face] == -1)) {
-				Arrays.fill(modelNormals, 0);
-			} else {
-				final int[] xVertexNormals = model.getVertexNormalsX();
-				final int[] yVertexNormals = model.getVertexNormalsY();
-				final int[] zVertexNormals = model.getVertexNormalsZ();
-				if (xVertexNormals != null && yVertexNormals != null && zVertexNormals != null) {
-					modelNormals[0] = xVertexNormals[triangleA];
-					modelNormals[1] = yVertexNormals[triangleA];
-					modelNormals[2] = zVertexNormals[triangleA];
-					modelNormals[3] = xVertexNormals[triangleB];
-					modelNormals[4] = yVertexNormals[triangleB];
-					modelNormals[5] = zVertexNormals[triangleB];
-					modelNormals[6] = xVertexNormals[triangleC];
-					modelNormals[7] = yVertexNormals[triangleC];
-					modelNormals[8] = zVertexNormals[triangleC];
+			final int[] faceNormals;
+			if (modelHasNormals) {
+				if (faceOverride.flatNormals || (!plugin.configPreserveVanillaNormals && color3s[face] == -1)) {
+					faceNormals = EMPTY_NORMALS;
+				} else {
+					faceNormals = modelNormals;
+					faceNormals[0] = xVertexNormals[triangleA];
+					faceNormals[1] = yVertexNormals[triangleA];
+					faceNormals[2] = zVertexNormals[triangleA];
+					faceNormals[3] = xVertexNormals[triangleB];
+					faceNormals[4] = yVertexNormals[triangleB];
+					faceNormals[5] = zVertexNormals[triangleB];
+					faceNormals[6] = xVertexNormals[triangleC];
+					faceNormals[7] = yVertexNormals[triangleC];
+					faceNormals[8] = zVertexNormals[triangleC];
 				}
+			} else {
+				faceNormals = EMPTY_NORMALS;
 			}
 
 			int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
@@ -1692,19 +1739,19 @@ class SceneUploader {
 				vb,
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				modelNormals[0], modelNormals[1], modelNormals[2], 0
+				faceNormals[0], faceNormals[1], faceNormals[2], 0
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				modelNormals[3], modelNormals[4], modelNormals[5], 0
+				faceNormals[3], faceNormals[4], faceNormals[5], 0
 			);
 			GpuIntBuffer.putFloatVertex(
 				vb,
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				modelNormals[6], modelNormals[7], modelNormals[8], 0
+				faceNormals[6], faceNormals[7], faceNormals[8], 0
 			);
 			len += 3;
 		}
