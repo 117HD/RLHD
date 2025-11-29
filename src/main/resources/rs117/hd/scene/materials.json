@@ -1103,6 +1103,12 @@
     "specularGloss": 55.0
   },
   {
+    "name": "BASE_SEMIGLOSS",
+    "parent": "GRAY_85",
+    "specularStrength": 0.35,
+    "specularGloss": 80.0
+  },
+  {
     "name": "SNOW_1_N"
   },
   {
@@ -1305,7 +1311,13 @@
     "specularGloss": 10.0
   },
   {
-    "name": "GRUNGE_1"
+    "name": "GRUNGE_1_N"
+  },
+  {
+    "name": "GRUNGE_1",
+    "normalMap": "GRUNGE_1_N",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
   },
   {
     "name": "GRUNGE_1_LIGHT",
@@ -1341,7 +1353,13 @@
     "specularGloss": 300.0
   },
   {
-    "name": "GRUNGE_2"
+    "name": "GRUNGE_2_N"
+  },
+  {
+    "name": "GRUNGE_2",
+    "normalMap": "GRUNGE_2_N",
+    "specularStrength": 0.25,
+    "specularGloss": 20.0
   },
   {
     "name": "GRUNGE_2_SHINY",
@@ -1582,9 +1600,14 @@
     "normalMap": "ROCK_4_N",
     "displacementMap": "ROCK_4_D",
     "brightness": 1.083,
-    "displacementScale": 0.15,
+    "displacementScale": 0.12,
     "specularStrength": 0.4,
-    "specularGloss": 20.0
+    "specularGloss": 20.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.9
+    ]
   },
   {
     "name": "ROCK_4_DARK",
@@ -1607,9 +1630,19 @@
     "normalMap": "ROCK_5_N",
     "displacementMap": "ROCK_5_D",
     "brightness": 1.083,
-    "displacementScale": 0.15,
+    "displacementScale": 0.12,
     "specularStrength": 0.4,
-    "specularGloss": 20.0
+    "specularGloss": 20.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.9
+    ]
+  },
+  {
+    "name": "ROCK_5_LIGHT",
+    "parent": "ROCK_5",
+    "brightness": 1.25
   },
   {
     "name": "ROCK_5_ORE",
@@ -2254,6 +2287,11 @@
     "name": "STONE"
   },
   {
+    "name": "STONE_DARK",
+    "parent": "STONE",
+    "brightness": 0.88
+  },
+  {
     "name": "STONE_NORMALED",
     "parent": "STONE",
     "normalMap": "STONE_N",
@@ -2294,6 +2332,22 @@
       -0.0,
       1.4285715
     ]
+  },
+  {
+    "name": "SMOOTH_STONE",
+    "normalMap": "STONE_N"
+  },
+  {
+    "name": "SMOOTH_STONE_DARK",
+    "parent": "SMOOTH_STONE",
+    "brightness": 0.95
+  },
+  {
+    "name": "GEM_STONE",
+    "normalMap": "METALLIC_2_N",
+    "brightness": 1.1,
+    "specularStrength": 1,
+    "specularGloss": 30.0
   },
   {
     "name": "WALL_STONE_N"
