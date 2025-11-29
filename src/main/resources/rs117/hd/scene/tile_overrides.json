@@ -8760,7 +8760,7 @@
     "groundMaterial": "ABYSSAL_FLOOR",
     "minHue": 1,
     "maxHue": 1,
-    "uvScale": 1.85
+    "uvScale": 2.5
   },
   {
     "name": "LAW_ALTAR_FLOOR",
