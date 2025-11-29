@@ -3697,7 +3697,7 @@
     "shiftLightness": 10
   },
   {
-    "name": "PRIFDDINAS_INTERIORS",
+    "name": "PRIFDDINAS_INTERIORS_RAISED",
     "area": "PRIFDDINAS_INTERIORS_RAISED",
     "overlayIds": [ 42, 106 ],
     "groundMaterial": "HD_WOOD_PLANKS_2",
