@@ -66287,6 +66287,7 @@
     "description": "Shilo Mine - Entrance Ladder",
     "baseMaterial": "GRAVEL",
     "uvType": "BOX",
+    "depthBias": 201,
     "objectIds": [
       "ATJUN_MINE_LADDER_HOLE"
     ],
@@ -66297,7 +66298,8 @@
         "uvOrientationZ": 512,
         "uvOrientationX": 512,
         "uvScale": 0.6,
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "depthBias": 180
       },
       {
         "colors": "h == 0 && l == 2",

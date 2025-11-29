@@ -2546,6 +2546,13 @@
     }
   },
   {
+    "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "area": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "groundMaterial": "PURE_BLACK",
+    "blended": false,
+    "overlayIds": [ 10 ]
+  },
+  {
     "name": "EAST_ARDOUGNE_PATHS_1",
     "area": "EAST_ARDOUGNE",
     "overlayIds": [
@@ -7457,6 +7464,15 @@
       72
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
+    "area": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
+    "groundMaterial": "PURE_BLACK",
+    "blended": false,
+    "underlayIds": [
+      55
+    ]
   },
   {
     "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",

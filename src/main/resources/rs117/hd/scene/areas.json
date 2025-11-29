@@ -8712,6 +8712,18 @@
     ]
   },
   {
+    "name": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
+    "aabbs": [
+      [ 2825, 2998 ]
+    ]
+  },
+  {
+    "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "aabbs": [
+      [ 2632, 3294 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
