@@ -1,11 +1,13 @@
 package rs117.hd.opengl.shader;
 
+import java.io.IOException;
 import rs117.hd.config.ShadowMode;
 
 import static org.lwjgl.opengl.GL33C.*;
 import static rs117.hd.HdPlugin.TEXTURE_UNIT_GAME;
 
 public class ShadowShaderProgram extends ShaderProgram {
+	private ShadowMode mode;
 	private final UniformTexture uniShadowMap = addUniformTexture("textureArray");
 
 	public ShadowShaderProgram() {
@@ -19,11 +21,31 @@ public class ShadowShaderProgram extends ShaderProgram {
 		uniShadowMap.set(TEXTURE_UNIT_GAME);
 	}
 
+	@Override
+	public void compile(ShaderIncludes includes) throws ShaderException, IOException {
+		super.compile(includes.copy().define("SHADOW_MODE", mode));
+	}
+
 	public void setMode(ShadowMode mode) {
+		this.mode = mode;
 		if (mode == ShadowMode.DETAILED) {
 			shaderTemplate.add(GL_GEOMETRY_SHADER, "shadow_geom.glsl");
 		} else {
 			shaderTemplate.remove(GL_GEOMETRY_SHADER);
+		}
+	}
+
+	public static class Fast extends ShadowShaderProgram {
+		public Fast() {
+			super();
+			setMode(ShadowMode.FAST);
+		}
+	}
+
+	public static class Detailed extends ShadowShaderProgram {
+		public Detailed() {
+			super();
+			setMode(ShadowMode.DETAILED);
 		}
 	}
 }

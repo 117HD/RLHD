@@ -36,6 +36,7 @@ public enum Timer {
 	SWAP_BUFFERS,
 	;
 
+	public static final Timer[] TIMERS = values();
 	public final String name;
 	public final boolean isGpuTimer;
 	public final boolean gpuDebugGroup;
