@@ -8970,7 +8970,7 @@
     }
   },
   {
-    "name": "DOGNOSE_COMPLEX_TILES",
+    "name": "DOGNOSE_BEACH_SAND",
     "area": "DOGNOSE_ISLAND_BEACH",
     "groundMaterial": "SAND",
     "underlayIds": [
