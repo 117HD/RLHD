@@ -69,7 +69,18 @@ class VAO {
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
 
-		if (vboMetadata != null) {
+		bindMetadata(vboMetadata);
+
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
+	}
+
+	void bindMetadata(@Nullable VBO vboMetadata) {
+		glBindVertexArray(vao);
+		if (vboMetadata == null) {
+			this.vboMetadata = 0;
+			glDisableVertexAttribArray(6);
+		} else {
 			this.vboMetadata = vboMetadata.bufId;
 			glBindBuffer(GL_ARRAY_BUFFER, vboMetadata.bufId);
 
@@ -78,9 +89,6 @@ class VAO {
 			glVertexAttribDivisor(6, 1);
 			glVertexAttribIPointer(6, 1, GL_INT, METADATA_SIZE, 0);
 		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
 	}
 
 	void destroy() {
@@ -157,13 +165,19 @@ class VAO {
 
 			while (curIdx < vaos.size()) {
 				VAO vao = vaos.get(curIdx);
-				if (!vao.vbo.mapped) {
+				boolean wasMapped = vao.vbo.mapped;
+				if (!wasMapped)
 					vao.vbo.map();
-				}
 
 				int rem = vao.vbo.vb.remaining() * Integer.BYTES;
-				if (size <= rem && vao.vboMetadata == (vboMetadata == null ? 0 : vboMetadata.bufId)) {
-					return vao;
+				if (size <= rem) {
+					if (vao.vboMetadata == (vboMetadata == null ? 0 : vboMetadata.bufId))
+						return vao;
+
+					if (!wasMapped) {
+						vao.bindMetadata(vboMetadata);
+						return vao;
+					}
 				}
 
 				curIdx++;
