@@ -2249,6 +2249,11 @@
     "name": "STONE"
   },
   {
+    "name": "STONE_DARK",
+    "parent": "STONE",
+    "brightness": 0.88
+  },
+  {
     "name": "STONE_NORMALED",
     "parent": "STONE",
     "normalMap": "STONE_N",
@@ -2298,6 +2303,13 @@
     "name": "SMOOTH_STONE_DARK",
     "parent": "SMOOTH_STONE",
     "brightness": 0.95
+  },
+  {
+    "name": "GEM_STONE",
+    "normalMap": "METALLIC_2_N",
+    "brightness": 1.1,
+    "specularStrength": 1,
+    "specularGloss": 30.0
   },
   {
     "name": "WALL_STONE_N"

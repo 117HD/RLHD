@@ -20810,7 +20810,24 @@
     "objectIds": [
       "MISC_LANTERN",
       "VC_LANTERN_DECOR",
-      "QUEST_LUNAR_HANGING_LANTERN",
+      "QUEST_LUNAR_HANGING_LANTERN"
+    ]
+  },
+  {
+    "description": "Shilo Mine Lantern",
+    "offset": [ -8, 115, 30 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 16,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       "ATJUN_MINE_WALL_LAMP"
     ]
   },

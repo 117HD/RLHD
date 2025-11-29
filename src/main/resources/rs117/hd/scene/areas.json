@@ -5462,6 +5462,12 @@
     "hideOtherAreas": true
   },
   {
+    "name": "SHILO_VILLAGE_MINE_SURFACE",
+    "aabbs": [
+      [ 2815, 2990, 2833, 3007 ]
+    ]
+  },
+  {
     "name": "SHILO_VILLAGE_MINE",
     "regions": [ 11410 ],
     "hideOtherAreas": true
