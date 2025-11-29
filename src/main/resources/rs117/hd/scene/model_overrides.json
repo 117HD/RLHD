@@ -54181,18 +54181,30 @@
     "description": "Aldarin - Mixology - Plant -  Mixology basement Digweed",
     "baseMaterial": "LEAF_VEINS",
     "uvType": "BOX",
-    "uvScale": 0.6,
-    "uvOrientation": 89,
+    "uvScale": 0.4,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
-      "MM_HERB_DEAD"
+      "MM_HERB_DEAD",
+      "MM_HERB_READY"
+    ]
+  },
+  {
+    "description": "Aldarin - Mixology - Signet Chest",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ALCHEMIST_SIGNET_CHEST",
+      "ALCHEMIST_SIGNET_CHEST_OPEN"
     ]
   },
   {
     "description": "Aldarin - Mixology - Plant -  Mixology basement ferns - Tall",
     "baseMaterial": "LEAF_VEINS",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.4,
     "uvOrientation": 172,
+    "windDisplacementMode": "OBJECT_NO_GROUND_DISPLACEMENT",
     "objectIds": [
       "PLANT_FERN01_TALL01",
       "PLANT_FERN01_TALL02",
@@ -54264,8 +54276,8 @@
   },
   {
     "description": "Varlamore - Mastering Mixology - Wooden - Glass - Plant - Stone - Mixology Shelves",
-    "baseMaterial": "GRUNGE_2",
-    "uvScale": 0.5,
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.4,
     "uvType": "BOX",
     "objectIds": [
       "MM_LAB_SHELF03_EQUIPMENT01",
@@ -54279,13 +54291,13 @@
         "colors": "h == 5 && s >= 4 && s <= 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.6
+        "uvOrientationX": 512,
+        "uvScale": 0.5
       },
       {
         "description": "Glass",
         "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "BOX"
+        "baseMaterial": "BLANK_GLOSS"
       },
       {
         "description": "Plants",
@@ -54299,15 +54311,15 @@
         "colors": "h == 7 && s == 1",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.4
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Pottery",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
-    "uvScale": 0.6,
+    "uvScale": 0.4,
     "uvOrientation": 168,
     "objectIds": [
       "MM_LAB_BARREL_CLAY_WINE01"
@@ -54341,7 +54353,7 @@
         "colors": "h == 5 && s >= 3",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
-        "uvScale": 0.6,
+        "uvScale": 0.2,
         "uvOrientation": 89
       },
       {
@@ -54353,7 +54365,7 @@
   },
   {
     "description": "Varlamore - Mastering Mixology -  Hunters Guild - Clay pottery with grain",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.4,
     "uvOrientation": 192,
@@ -54386,6 +54398,7 @@
     "description": "Varlamore - Mastering Mixology - Wooden - Metallic - Bank Chest",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
+    "uvScale": 0.4,
     "uvOrientation": 512,
     "objectIds": [
       "CHEST_ALCHEMIST01_OPEN01"
@@ -54395,8 +54408,12 @@
         "colors": "h == 0 && s == 0",
         "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
         "uvType": "BOX",
-        "uvScale": 0.6,
+        "uvScale": 0.4,
         "uvOrientation": 89
+      },
+      {
+        "colors": "h > 10",
+        "baseMaterial": "GRUNGE_2"
       }
     ]
   },
@@ -54447,8 +54464,6 @@
   {
     "description": "Varlamore - Mastering Mixology - Mixing Vessel",
     "baseMaterial": "SLIME_GRUNGE",
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_VESSEL_EMPTY",
       "MM_LAB_VESSEL_READY_MAL",
@@ -54465,10 +54480,14 @@
     "colorOverrides": [
       {
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
+      },
+      {
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
         "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 89
+        "uvScale": 0.3
       },
       {
         "colors": "h == 5 || h == 6",
@@ -54478,17 +54497,14 @@
         "uvOrientation": 343
       },
       {
-        "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "BOX"
+        "colors": "a < 255 && s == 0",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Retort",
     "baseMaterial": "SLIME_GRUNGE",
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_MACHINE_RETORT_EMPTY",
       "MM_LAB_MACHINE_RETORT_MAL",
@@ -54505,13 +54521,17 @@
     "colorOverrides": [
       {
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 89
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone base",
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone body",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
@@ -54519,17 +54539,14 @@
         "uvOrientation": 192
       },
       {
-        "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "BOX"
+        "colors": "a < 255 && s == 0",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Agitator",
     "baseMaterial": "SLIME_GRUNGE",
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_MACHINE_AGITATOR_AAA",
       "MM_LAB_MACHINE_AGITATOR_AA1",
@@ -54546,13 +54563,17 @@
     "colorOverrides": [
       {
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 89
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone base",
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone body",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
@@ -54560,17 +54581,14 @@
         "uvOrientation": 768
       },
       {
-        "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "BOX"
+        "colors": "a < 255 && s == 0",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Alembic",
     "baseMaterial": "SLIME_GRUNGE",
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_MACHINE_ALEMBIC_EMPTY",
       "MM_LAB_MACHINE_ALEMBIC_MAL",
@@ -54587,13 +54605,18 @@
     "colorOverrides": [
       {
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 89
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone base",
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvOrientationY": 512,
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone body",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
@@ -54609,17 +54632,14 @@
         "uvOrientation": 89
       },
       {
-        "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "BOX"
+        "colors": "a < 255 && s == 0",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Mixer",
     "baseMaterial": "SLIME_GRUNGE",
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_MIXER01_EMPTY",
       "MM_LAB_MIXER02_EMPTY",
@@ -54641,13 +54661,17 @@
       {
         "description": "Metal",
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 89
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone base",
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone body",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
@@ -54657,54 +54681,46 @@
       {
         "description": "Paper",
         "colors": "h == 7 || h == 8",
-        "baseMaterial": "GRUNGE_3",
-        "uvType": "BOX",
-        "uvScale": 0.4,
-        "uvOrientation": 89
+        "baseMaterial": "GRUNGE_3"
       },
       {
         "description": "Glass",
-        "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "BOX"
+        "colors": "a < 255 && s == 0",
+        "baseMaterial": "BLANK_GLOSS"
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Hopper",
     "baseMaterial": "SLIME_GRUNGE",
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_HOPPER"
     ],
     "colorOverrides": [
       {
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 179
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone base",
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone body",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "STONE_NORMALED_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": 512
-      },
-      {
-        "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "BOX"
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Conveyor Belt",
     "baseMaterial": "GRAY_75",
-    "uvType": "BOX",
     "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_CONVEYOR"
@@ -54712,39 +54728,45 @@
     "colorOverrides": [
       {
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 179
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone base",
+        "description": "Stone body",
         "colors": "h == 5 && s < 3 || h == 6",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.6,
         "uvOrientation": 512
+      },
+      {
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
       }
     ]
   },
   {
     "description": "Varlamore - Mastering Mixology - Herb Grinder",
     "baseMaterial": "SLIME_GRUNGE",
-    "uvType": "BOX",
-    "uvScale": 0.4,
     "objectIds": [
       "MM_LAB_MILL"
     ],
     "colorOverrides": [
       {
         "colors": "a == 255 && h == 0 && s == 0",
-        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
-        "uvType": "BOX",
-        "uvScale": 0.6,
-        "uvOrientation": 179
+        "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS"
       },
       {
-        "description": "Stone base",
+        "description": "Wood base",
+        "colors": "h == 5 && s == 4 || s == 5",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Stone body",
         "colors": "h == 5 || h == 6",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",

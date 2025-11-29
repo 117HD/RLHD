@@ -5947,8 +5947,21 @@
       351
     ],
     "groundMaterial": "STONE_CAVE_FLOOR",
+    "blendedAsOpposite": true,
+    "shiftLightness": 9,
+    "replacements": {
+      "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING",
+    "area": "MASTERING_MIXOLOGY",
+    "overlayIds": [
+      351
+    ],
+    "groundMaterial": "ROCK_PILES",
     "blended": false,
-    "shiftLightness": 6
+    "shiftLightness": 14
   },
   {
     "name": "MASTERING_MIXOLOGY_UNDERLAY",
