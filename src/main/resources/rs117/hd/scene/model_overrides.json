@@ -3722,7 +3722,8 @@
       "FAI_VARROCK_INTERIOR_WINDOW_TALL",
       "FAI_VARROCK_INTERIOR_WINDOW_TALL_TERM",
       "FAI_VARROCK_INTERIOR_WINDOW",
-      "FAI_VARROCK_INTERIOR_WINDOW_TYPE1"
+      "FAI_VARROCK_INTERIOR_WINDOW_TYPE1",
+      "FAI_VARROCK_CASTLE_INTERIOR_PUB_WINDOW"
     ]
   },
   {
@@ -3861,6 +3862,8 @@
       "FAI_VARROCK_CASTLE_INTERIOR_TERM_RIGHT",
       "FAI_VARROCK_CASTLE_INTERIOR_TERM_LEFT",
       "FAI_VARROCK_CASTLE_INTERIOR_WINDOW_LARGE",
+      "FAI_VARROCK_CASTLE_INTERIOR_PUB_WINDOW_JOIN_RIGHT",
+      "FAI_VARROCK_CASTLE_INTERIOR_PUB_WINDOW_JOIN_LEFT",
       "FAI_VARROCK_CRUMBLY_WALL2",
       "FAI_VARROCK_CRUMBLY_WALL2_MIRROR",
       "FAI_VARROCK_CRUMBLY_WALL3",
@@ -12869,7 +12872,11 @@
       "ATJUN_ROCKS_SMALL_SOFT_02",
       "ATJUN_ROCKS_FLOOR_SOFT_03",
       "ATJUN_ROCKS_FLOOR_SOFT_02",
-      "ATJUN_ROCKS_FLOOR_SOFT_01"
+      "ATJUN_ROCKS_FLOOR_SOFT_01",
+      "DOV_HUNTING_BOULDER1",
+      "DOV_HUNTING_BOULDER1_OP",
+      "DOV_HUNTING_BOULDER2",
+      "DOV_HUNTING_BOULDER2_OP"
     ],
     "uvType": "BOX",
     "uvScale": 0.32
@@ -24112,7 +24119,10 @@
       "SMALL_PLANT2",
       "SMALL_PLANT3",
       "ARCQUEST_HUNTING_PLANT_NOOP",
-      "ARCQUEST_HUNTING_PLANT_OP"
+      "ARCQUEST_HUNTING_PLANT_OP",
+      "DOV_HUNTING_PLANT1",
+      "DOV_HUNTING_PLANT1_OP",
+      "DOV_HUNTING_PLANT_INITIAL"
     ]
   },
   {
@@ -27229,7 +27239,9 @@
       "DOV_HUNTING_PLANT2_NOOP",
       "BUSH_DESERT_DEAD01",
       "BUSH_DESERT_DEAD02",
-      "FAI_LEAFLESS_BUSH_SMALL_01"
+      "FAI_LEAFLESS_BUSH_SMALL_01",
+      "DOV_HUNTING_PLANT2",
+      "DOV_HUNTING_PLANT2_OP"
     ],
     "uvType": "BOX",
     "uvOrientation": 600
@@ -38308,6 +38320,7 @@
     "description": "Camdozaal Rock Piles - Large",
     "baseMaterial": "ROCK_3",
     "objectIds": [
+      "ARCHEUUS_ROCKS_LARGE_01",
       "ARCHEUUS_ROCKS_LARGE_02",
       "ARCHEUUS_ROCKS_LARGE_03",
       "ARCHEUUS_ROCKS_LARGE_04"
@@ -39202,7 +39215,6 @@
     "baseMaterial": "CARPET",
     "objectIds": [
       "FAI_FALADOR_BUNKBED",
-      "FAI_VARROCK_SINGLE_BED_ORANGE",
       "FAI_VARROCK_SINGLE_BED_ORANGE"
     ],
     "uvType": "BOX",
@@ -42160,6 +42172,41 @@
     ]
   },
   {
+    "description": "Varrock - Jolly Boar Inn - Stool with orange cushions",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Orange Cushion",
+        "colors": "h == 4 || h == 5",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.75,
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "FAI_VARROCK_BLUE_INN_BARSTOOL_TALL_ORANGE"
+    ]
+  },
+  {
+    "description": "Varrock - Jolly Boar Inn - Doublebed with orange blanket - Light Frame",
+    "baseMaterial": "CARPET",
+    "objectIds": [
+      "FAI_VARROCK_DOUBLE_BED_ORANGE"
+    ],
+    "uvType": "BOX",
+    "uvOrientation": 64,
+    "colorOverrides": [
+      {
+        "description": "Wood frame",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
     "description": "Stool with Red or white cushions and gold trim",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -42281,7 +42328,8 @@
       "AKD_SHAYZIEN_DRINKS_BAR_LEFT",
       "AKD_SHAYZIEN_BAR_RIGHT",
       "AKD_SHAYZIEN_BAR_MIDDLE",
-      "AKD_SHAYZIEN_BAR_LEFT"
+      "AKD_SHAYZIEN_BAR_LEFT",
+      "FAI_VARROCK_BLUE_INN_BAR_MIDDLE_BRIGHT"
     ]
   },
   {
@@ -66465,6 +66513,37 @@
     ],
     "objectIds": [
       "PRIF_SLAYER_DUNGEON_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Varrock - Stone - Surok Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SUROK_STATUEBASE",
+      "SUROK_STATUEBASE2"
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Defender of Varrock - Trapdoor",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "DOV_BASE_ENTRY",
+      "DOV_BASE_ENTRY_OP",
+      "DOV_BASE_ENTRY_OPEN_OP"
+    ]
+  },
+  {
+    "description": "Varrock - Wooden - Defender of Varrock - Trapdoor",
+    "baseMaterial": "GROUND_WEB_1",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "HS_WEB_WALL_01",
+      "HS_WEB_WALL_02"
     ]
   }
 ]
