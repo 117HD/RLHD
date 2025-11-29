@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.ModelHash;
@@ -37,6 +38,9 @@ public class ModelOverrideManager {
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
+	@Inject
+	private SceneManager sceneManager;
+
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 
 	private FileWatcher.UnregisterCallback fileWatcher;
@@ -44,6 +48,9 @@ public class ModelOverrideManager {
 	public void startUp() {
 		fileWatcher = MODEL_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> {
 			try {
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+
 				ModelOverride[] parsedOverrides = path.loadJson(plugin.getGson(), ModelOverride[].class);
 				if (parsedOverrides == null)
 					throw new IOException("Empty or invalid: " + path);
@@ -78,6 +85,9 @@ public class ModelOverrideManager {
 				plugin.renderer.reloadScene();
 			} catch (Exception ex) {
 				log.error("Failed to load model overrides:", ex);
+			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.debug("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		}));
 	}

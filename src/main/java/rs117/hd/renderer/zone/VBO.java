@@ -5,7 +5,7 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
 
-class VBO {
+public class VBO {
 	final int size;
 	int glUsage;
 	int bufId;
@@ -15,11 +15,11 @@ class VBO {
 
 	private ByteBuffer mappedBuffer;
 
-	VBO(int size) {
+	public VBO(int size) {
 		this.size = size;
 	}
 
-	void initialize(int glUsage) {
+	public void initialize(int glUsage) {
 		this.glUsage = glUsage;
 		bufId = glGenBuffers();
 		glBindBuffer(GL_ARRAY_BUFFER, bufId);
@@ -38,11 +38,12 @@ class VBO {
 		bufId = 0;
 	}
 
-	void map() {
+	public void map() {
 		assert !mapped;
 		glBindBuffer(GL_ARRAY_BUFFER, bufId);
+		ByteBuffer buf;
 		if (glUsage != GL_STATIC_DRAW) {
-			mappedBuffer = glMapBufferRange(
+			buf = glMapBufferRange(
 				GL_ARRAY_BUFFER,
 				0,
 				size,
@@ -51,11 +52,15 @@ class VBO {
 				mappedBuffer
 			);
 		} else {
-			mappedBuffer = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY, mappedBuffer);
+			buf = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY, mappedBuffer);
 		}
-		if (mappedBuffer == null)
+		if (buf == null)
 			throw new RuntimeException("unable to map GL buffer " + bufId + " size " + size);
-		this.vb = mappedBuffer.asIntBuffer();
+		if(buf != mappedBuffer) {
+			mappedBuffer = buf;
+			vb = mappedBuffer.asIntBuffer();
+		}
+		vb.position(0);
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		mapped = true;
 	}
@@ -63,7 +68,6 @@ class VBO {
 	void unmap() {
 		assert mapped;
 		len = vb.position();
-		vb = null;
 
 		glBindBuffer(GL_ARRAY_BUFFER, bufId);
 		if (glUsage != GL_STATIC_DRAW)

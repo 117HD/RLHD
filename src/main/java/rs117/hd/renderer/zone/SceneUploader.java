@@ -28,6 +28,8 @@ import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
+import lombok.Setter;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
@@ -48,6 +50,8 @@ import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
+import rs117.hd.utils.jobs.JobSystem;
+import rs117.hd.utils.jobs.JobWork;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -58,7 +62,7 @@ import static rs117.hd.utils.HDUtils.UNDERWATER_HSL;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
-class SceneUploader {
+public class SceneUploader {
 	private static final int MAX_VERTEX_COUNT = 6500;
 	private static final int[] UP_NORMAL = { 0, -1, 0 };
 	private static final int[] EMPTY_NORMALS = new int[9];
@@ -68,6 +72,9 @@ class SceneUploader {
 
 	@Inject
 	private HdPlugin plugin;
+
+	@Inject
+	private Client client;
 
 	@Inject
 	public GamevalManager gamevalManager;
@@ -84,8 +91,25 @@ class SceneUploader {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
+	@Inject
+	private JobSystem jobSystem;
+
 	private int basex, basez, rid, level;
 
+	private final Set<Integer> roofIds = new HashSet<>();
+	private Scene currentScene;
+	@Setter
+	private JobWork currentWork;
+	private Tile[][][] tiles;
+	private byte[][][] settings;
+	private int[][][] roofs;
+	private short[][][] overlayIds;
+	private short[][][] underlayIds;
+	private int[][][] tileHeights;
+
+	private final int[] worldPos = new int[3];
+	private final int[][] vertices = new int[][] {new int[3], new int[3], new int[3], new int[3]};
+	private final int[] vertexKeys = new int[4];
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
 	private final int[] modelNormals = new int[9];
@@ -98,15 +122,42 @@ class SceneUploader {
 	private final int[] modelLocalYI = new int[MAX_VERTEX_COUNT];
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
-	void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
+	public void setScene(Scene scene) {
+		if(scene == currentScene) {
+			return;
+		}
+
+		currentScene = scene;
+		tiles = scene.getExtendedTiles();
+		settings = scene.getExtendedTileSettings();
+		roofs = scene.getRoofs();
+		overlayIds = scene.getOverlayIds();
+		underlayIds = scene.getUnderlayIds();
+		tileHeights = scene.getTileHeights();
+	}
+
+	public void clear() {
+		tiles = null;
+		settings = null;
+		roofs = null;
+		overlayIds = null;
+		underlayIds = null;
+		tileHeights = null;
+		currentScene = null;
+		currentWork = null;
+	}
+
+	@SneakyThrows
+	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		// Initialize the zone as containing only water, until a non-water tile is found
 		zone.onlyWater = true;
 
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int z = 3; z >= 0; --z) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
+					if(currentWork != null)
+						currentWork.workerHandleCancel();
 					if (t != null)
 						estimateZoneTileSize(ctx, zone, t);
 				}
@@ -114,13 +165,11 @@ class SceneUploader {
 		}
 	}
 
-	void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
-		int[][][] roofs = ctx.scene.getRoofs();
-		Set<Integer> roofIds = new HashSet<>();
-
+	public void uploadZone(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		var vb = zone.vboO != null ? new GpuIntBuffer(zone.vboO.vb) : null;
 		var ab = zone.vboA != null ? new GpuIntBuffer(zone.vboA.vb) : null;
 
+		roofIds.clear();
 		for (int level = 0; level <= 3; ++level) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
@@ -192,6 +241,7 @@ class SceneUploader {
 		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab);
 	}
 
+	@SneakyThrows
 	private void uploadZoneLevelRoof(
 		ZoneSceneContext ctx,
 		Zone zone,
@@ -203,10 +253,6 @@ class SceneUploader {
 		GpuIntBuffer vb,
 		GpuIntBuffer ab
 	) {
-		byte[][][] settings = ctx.scene.getExtendedTileSettings();
-		int[][][] roofs = ctx.scene.getRoofs();
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
-
 		this.level = level;
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
@@ -236,6 +282,8 @@ class SceneUploader {
 
 				if (rid == roofId) {
 					Tile t = tiles[level][msx][msz];
+					if(currentWork != null)
+						currentWork.workerHandleCancel();
 					if (t != null) {
 						this.rid = rid;
 						uploadZoneTile(ctx, zone, t, false, vb, ab);
@@ -245,17 +293,19 @@ class SceneUploader {
 		}
 	}
 
+	@SneakyThrows
 	private void uploadZoneWater(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb) {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
-		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int level = 0; level < MAX_Z; level++) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					int msx = (mzx << 3) + xoff;
 					int msz = (mzz << 3) + zoff;
 					Tile t = tiles[level][msx][msz];
+					if(currentWork != null)
+						currentWork.workerHandleCancel();
 					if (t != null)
 						uploadZoneTile(ctx, zone, t, true, vb, null);
 				}
@@ -265,7 +315,7 @@ class SceneUploader {
 
 	private void estimateZoneTileSize(ZoneSceneContext ctx, Zone z, Tile t) {
 		var tilePoint = t.getSceneLocation();
-		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
+		ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane(), worldPos);
 
 		SceneTilePaint paint = t.getSceneTilePaint();
 		if (paint != null && paint.getNeColor() != HIDDEN_HSL) {
@@ -292,8 +342,8 @@ class SceneUploader {
 			int tileExX = tilePoint.getX() + ctx.sceneOffset;
 			int tileExY = tilePoint.getY() + ctx.sceneOffset;
 			int tileZ = t.getRenderLevel();
-			int overlayId = OVERLAY_FLAG | ctx.scene.getOverlayIds()[tileZ][tileExX][tileExY];
-			int underlayId = ctx.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+			int overlayId = OVERLAY_FLAG | overlayIds[tileZ][tileExX][tileExY];
+			int underlayId = underlayIds[tileZ][tileExX][tileExY];
 			var overlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, overlayId);
 			var underlayOverride = tileOverrideManager.getOverride(ctx, t, worldPos, underlayId);
 
@@ -349,6 +399,10 @@ class SceneUploader {
 			if (gameObject == null || !gameObject.getSceneMinLocation().equals(t.getSceneLocation()))
 				continue;
 
+			// Detect if GameObject is a temp by checking its hash
+			if(ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
+				continue;
+
 			ModelOverride modelOverride = modelOverrideManager.getOverride(gameObject, worldPos);
 			if (modelOverride.hide)
 				continue;
@@ -374,7 +428,7 @@ class SceneUploader {
 		int tileExX = tilePoint.getX() + ctx.sceneOffset;
 		int tileExY = tilePoint.getY() + ctx.sceneOffset;
 		int tileZ = t.getRenderLevel();
-		int[] worldPos = ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane());
+		ctx.sceneToWorld(tilePoint.getX(), tilePoint.getY(), t.getPlane(), worldPos);
 
 		if (ctx.currentArea != null && !ctx.currentArea.containsPoint(worldPos))
 			return;
@@ -385,7 +439,6 @@ class SceneUploader {
 		if (paint != null && drawTile) {
 			uploadTilePaint(
 				ctx,
-				worldPos,
 				t,
 				paint,
 				onlyWaterSurface,
@@ -397,10 +450,10 @@ class SceneUploader {
 
 		SceneTileModel model = t.getSceneTileModel();
 		if (model != null && drawTile)
-			uploadTileModel(ctx, worldPos, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer);
+			uploadTileModel(ctx, t, model, onlyWaterSurface, tileExX, tileExY, tileZ, basex, basez, vertexBuffer);
 
 		if (!onlyWaterSurface)
-			uploadZoneTileRenderables(ctx, zone, t, worldPos, vertexBuffer, alphaBuffer);
+			uploadZoneTileRenderables(ctx, zone, t, vertexBuffer, alphaBuffer);
 
 		Tile bridge = t.getBridge();
 		if (bridge != null)
@@ -411,7 +464,6 @@ class SceneUploader {
 		ZoneSceneContext ctx,
 		Zone zone,
 		Tile t,
-		int[] worldPos,
 		GpuIntBuffer vertexBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
@@ -425,7 +477,6 @@ class SceneUploader {
 				t,
 				renderable1,
 				uuid,
-				worldPos,
 				HDUtils.convertWallObjectOrientation(wallObject.getOrientationA()),
 				0,
 				wallObject.getX(),
@@ -447,7 +498,6 @@ class SceneUploader {
 				t,
 				renderable2,
 				uuid,
-				worldPos,
 				HDUtils.convertWallObjectOrientation(wallObject.getOrientationB()),
 				0,
 				wallObject.getX(),
@@ -474,7 +524,6 @@ class SceneUploader {
 				t,
 				renderable,
 				uuid,
-				worldPos,
 				preOrientation,
 				0,
 				decorativeObject.getX() + decorativeObject.getXOffset(),
@@ -496,7 +545,6 @@ class SceneUploader {
 				t,
 				renderable2,
 				uuid,
-				worldPos,
 				preOrientation,
 				0,
 				decorativeObject.getX(),
@@ -521,7 +569,6 @@ class SceneUploader {
 				t,
 				renderable,
 				ModelHash.packUuid(ModelHash.TYPE_GROUND_OBJECT, groundObject.getId()),
-				worldPos,
 				HDUtils.getModelPreOrientation(groundObject.getConfig()),
 				0,
 				groundObject.getX(), groundObject.getZ(), groundObject.getY(),
@@ -539,6 +586,10 @@ class SceneUploader {
 			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
 
+			// Detect if GameObject is a temp by checking its hash
+			if(ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
+				continue;
+
 			Point min = gameObject.getSceneMinLocation();
 			if (!min.equals(t.getSceneLocation()))
 				continue;
@@ -551,7 +602,6 @@ class SceneUploader {
 				t,
 				renderable,
 				ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, gameObject.getId()),
-				worldPos,
 				HDUtils.getModelPreOrientation(gameObject.getConfig()),
 				gameObject.getModelOrientation(),
 				gameObject.getX(), gameObject.getZ(), gameObject.getY(),
@@ -596,7 +646,6 @@ class SceneUploader {
 		Tile tile,
 		Renderable r,
 		int uuid,
-		int[] worldPos,
 		int preOrientation,
 		int orient,
 		int x,
@@ -637,18 +686,15 @@ class SceneUploader {
 				alphaBuffer
 			);
 		} catch (Throwable ex) {
-			throw new RuntimeException(
-				String.format(
-					"Error uploading static %s %s (ID %d), override=\"%s\", opaque=%s, alpha=%s",
+			log.warn(
+					"Error uploading static {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
 					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
 					gamevalManager.getObjectName(id),
 					id,
 					modelOverride.description,
 					opaqueBuffer,
-					alphaBuffer
-				),
-				ex
-			);
+					alphaBuffer,
+					ex);
 		}
 
 		int alphaEnd = zone.vboA != null ? zone.vboA.vb.position() : 0;
@@ -676,7 +722,6 @@ class SceneUploader {
 	@SuppressWarnings({ "UnnecessaryLocalVariable" })
 	private void uploadTilePaint(
 		ZoneSceneContext ctx,
-		int[] worldPos,
 		Tile tile,
 		SceneTilePaint paint,
 		boolean onlyWaterSurface,
@@ -698,7 +743,6 @@ class SceneUploader {
 		if (onlyWaterSurface && waterType == WaterType.NONE)
 			return;
 
-		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		int swHeight = tileHeights[tileZ][tileExX][tileExY];
 		int seHeight = tileHeights[tileZ][tileExX + 1][tileExY];
 		int neHeight = tileHeights[tileZ][tileExX + 1][tileExY + 1];
@@ -721,7 +765,7 @@ class SceneUploader {
 		final int lx3 = lx;
 		final int lz3 = lz + LOCAL_TILE_SIZE;
 
-		int[] vertexKeys = ProceduralGenerator.tileVertexKeys(ctx, tile);
+		ProceduralGenerator.tileVertexKeys(ctx, tile, vertices, vertexKeys);
 		int swVertexKey = vertexKeys[0];
 		int seVertexKey = vertexKeys[1];
 		int nwVertexKey = vertexKeys[2];
@@ -913,7 +957,6 @@ class SceneUploader {
 
 	private void uploadTileModel(
 		ZoneSceneContext ctx,
-		int[] worldPos,
 		Tile tile,
 		SceneTileModel model,
 		boolean onlyWaterSurface,
@@ -931,8 +974,8 @@ class SceneUploader {
 				}
 			}
 		}
-		int overlayId = OVERLAY_FLAG | ctx.scene.getOverlayIds()[tileZ][tileExX][tileExY];
-		int underlayId = ctx.scene.getUnderlayIds()[tileZ][tileExX][tileExY];
+		int overlayId = OVERLAY_FLAG | overlayIds[tileZ][tileExX][tileExY];
+		int underlayId = underlayIds[tileZ][tileExX][tileExY];
 		var overlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, overlayId);
 		var underlayOverride = tileOverrideManager.getOverride(ctx, tile, worldPos, underlayId);
 		WaterType overlayWaterType = proceduralGenerator.seasonalWaterType(overlayOverride, 0);
@@ -992,9 +1035,9 @@ class SceneUploader {
 			int ly2 = vertexY[vertex2];
 			int lz2 = vertexZ[vertex2] - basez;
 
-			int[][] localVertices = ProceduralGenerator.faceLocalVertices(tile, face);
+			ProceduralGenerator.faceVertexKeys(tile, face, vertices, vertexKeys);
+			ProceduralGenerator.faceLocalVertices(tile, face, vertices);
 
-			int[] vertexKeys = ProceduralGenerator.faceVertexKeys(tile, face);
 			int vertexKeyA = vertexKeys[0];
 			int vertexKeyB = vertexKeys[1];
 			int vertexKeyC = vertexKeys[2];
@@ -1065,18 +1108,18 @@ class SceneUploader {
 					}
 				} else if (plugin.configGroundTextures && groundMaterial != null) {
 					materialA = groundMaterial.getRandomMaterial(
-						worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+						worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[0][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialB = groundMaterial.getRandomMaterial(
-						worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+						worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[1][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialC = groundMaterial.getRandomMaterial(
-						worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+						worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[2][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 				}
@@ -1098,18 +1141,18 @@ class SceneUploader {
 				if (plugin.configGroundTextures) {
 					GroundMaterial groundMaterial = GroundMaterial.UNDERWATER_GENERIC;
 					materialA = groundMaterial.getRandomMaterial(
-						worldPos[0] + (localVertices[0][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[0][1] >> LOCAL_COORD_BITS),
+						worldPos[0] + (vertices[0][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[0][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialB = groundMaterial.getRandomMaterial(
-						worldPos[0] + (localVertices[1][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[1][1] >> LOCAL_COORD_BITS),
+						worldPos[0] + (vertices[1][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[1][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 					materialC = groundMaterial.getRandomMaterial(
-						worldPos[0] + (localVertices[2][0] >> LOCAL_COORD_BITS),
-						worldPos[1] + (localVertices[2][1] >> LOCAL_COORD_BITS),
+						worldPos[0] + (vertices[2][0] >> LOCAL_COORD_BITS),
+						worldPos[1] + (vertices[2][1] >> LOCAL_COORD_BITS),
 						worldPos[2]
 					);
 				}
@@ -1389,7 +1432,6 @@ class SceneUploader {
 									int tileZ = tile.getRenderLevel();
 									int tileExX = tileX + ctx.sceneOffset;
 									int tileExY = tileY + ctx.sceneOffset;
-									int[] worldPos = ctx.sceneToWorld(tileX, tileY, tileZ);
 									int tileId = modelOverride.inheritTileColorType == InheritTileColorType.OVERLAY ?
 										OVERLAY_FLAG | scene.getOverlayIds()[tileZ][tileExX][tileExY] :
 										scene.getUnderlayIds()[tileZ][tileExX][tileExY];

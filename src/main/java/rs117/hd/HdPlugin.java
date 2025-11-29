@@ -36,6 +36,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.time.ZoneOffset;
@@ -96,6 +98,7 @@ import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
@@ -196,6 +199,8 @@ public class HdPlugin extends Plugin {
 		GL_RGBA // should be guaranteed
 	};
 
+	public static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
+
 	@Getter
 	private Gson gson;
 
@@ -264,6 +269,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private UIShaderProgram uiProgram;
+
+	@Inject
+	private SceneManager sceneManager;
 
 	@Getter
 	@Inject
@@ -363,6 +371,7 @@ public class HdPlugin extends Plugin {
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
+	public boolean configZoneStreaming;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
 	public boolean configAsyncUICopy;
@@ -370,6 +379,7 @@ public class HdPlugin extends Plugin {
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public float configDetailDrawDistance;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -411,6 +421,8 @@ public class HdPlugin extends Plugin {
 	public int drawnStaticRenderableCount;
 	@Getter
 	public int drawnDynamicRenderableCount;
+	@Getter
+	public long garbageCollectionCount;
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -420,6 +432,8 @@ public class HdPlugin extends Plugin {
 	public double lastFrameClientTime;
 	public float windOffset;
 	public long colorFilterChangedAt;
+
+	private long[] lastGCTimes;
 
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
@@ -657,25 +671,10 @@ public class HdPlugin extends Plugin {
 			client.setExpandedMapLoading(0);
 
 			asyncUICopy.complete();
-			developerTools.deactivate();
-			tileOverrideManager.shutDown();
-			groundMaterialManager.shutDown();
-			modelOverrideManager.shutDown();
-			lightManager.shutDown();
-			environmentManager.shutDown();
-			fishingSpotReplacer.shutDown();
-			areaManager.shutDown();
-			gamevalManager.shutDown();
-			gammaCalibrationOverlay.destroy();
-			npcDisplacementCache.destroy();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
 				renderer.waitUntilIdle();
-
-				waterTypeManager.shutDown();
-				materialManager.shutDown();
-				textureManager.shutDown();
 
 				destroyUiTexture();
 				destroyShaders();
@@ -691,6 +690,21 @@ public class HdPlugin extends Plugin {
 				}
 				renderer = null;
 			}
+
+			developerTools.deactivate();
+			tileOverrideManager.shutDown();
+			groundMaterialManager.shutDown();
+			modelOverrideManager.shutDown();
+			lightManager.shutDown();
+			environmentManager.shutDown();
+			fishingSpotReplacer.shutDown();
+			areaManager.shutDown();
+			gamevalManager.shutDown();
+			gammaCalibrationOverlay.destroy();
+			npcDisplacementCache.destroy();
+			waterTypeManager.shutDown();
+			materialManager.shutDown();
+			textureManager.shutDown();
 
 			if (awtContext != null)
 				awtContext.destroy();
@@ -729,6 +743,32 @@ public class HdPlugin extends Plugin {
 			canvas.validate();
 			startUp();
 		});
+	}
+
+	public void trackGarbageCollection() {
+		if (!frameTimer.isActive())
+			return;
+
+		List<GarbageCollectorMXBean> garbageCollectors = ManagementFactory.getGarbageCollectorMXBeans();
+		if(lastGCTimes == null || lastGCTimes.length != garbageCollectors.size()) {
+			lastGCTimes = new long[garbageCollectors.size()];
+		}
+
+		garbageCollectionCount = 0;
+		long elapsedDuration = 0;
+		for(int i = 0; i < garbageCollectors.size(); i++) {
+			var gc = garbageCollectors.get(i);
+			long time = gc.getCollectionTime();
+			if(time > 0 && time != lastGCTimes[i]) {
+				long duration = time - lastGCTimes[i];
+				lastGCTimes[i] = time;
+
+				elapsedDuration += duration;
+			}
+			garbageCollectionCount += gc.getCollectionCount();
+		}
+
+		frameTimer.add(Timer.GARBAGE_COLLECTION, elapsedDuration * 1000000);
 	}
 
 	@Nullable
@@ -1407,6 +1447,12 @@ public class HdPlugin extends Plugin {
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
 
+		if(configAsyncUICopy) {
+			frameTimer.begin(Timer.UPLOAD_UI);
+			asyncUICopy.complete();
+			frameTimer.end(Timer.UPLOAD_UI);
+		}
+
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
 		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
@@ -1434,8 +1480,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-	 * Convert the front framebuffer to an Image
-	 */
+     * Convert the front framebuffer to an Image
+     */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1497,8 +1543,10 @@ public class HdPlugin extends Plugin {
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
+		configDetailDrawDistance = config.detailDrawDistance();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
+		configZoneStreaming = config.zoneStreaming();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configAsyncUICopy = config.asyncUICopy();
@@ -1576,6 +1624,9 @@ public class HdPlugin extends Plugin {
 				return;
 
 			try {
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+
 				// Synchronize with scene loading
 				synchronized (this) {
 					updateCachedConfigs();
@@ -1735,6 +1786,8 @@ public class HdPlugin extends Plugin {
 				log.error("Error while changing settings:", ex);
 				stopPlugin();
 			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.debug("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 				pendingConfigChanges.clear();
 				frameTimer.reset();
 			}

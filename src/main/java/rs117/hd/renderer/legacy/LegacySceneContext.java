@@ -1,8 +1,12 @@
 package rs117.hd.renderer.legacy;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
+import java.util.HashMap;
 import javax.annotation.Nullable;
 import net.runelite.api.*;
 import rs117.hd.scene.SceneContext;
+import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.utils.buffer.GpuFloatBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
@@ -10,6 +14,10 @@ import static rs117.hd.utils.MathUtils.*;
 
 public class LegacySceneContext extends SceneContext {
 	public final int id = RAND.nextInt() & LegacySceneUploader.SCENE_ID_MASK;
+
+	public final HashMap<TileObject, TileObjectImpostorTracker> trackedTileObjects = new HashMap<>();
+	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarps = ArrayListMultimap.create();
+	public final ListMultimap<Integer, TileObjectImpostorTracker> trackedVarbits = ArrayListMultimap.create();
 
 	public boolean forceDisableAreaHiding;
 

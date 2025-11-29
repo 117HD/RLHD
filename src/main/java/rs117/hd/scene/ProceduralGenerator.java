@@ -46,7 +46,7 @@ import static net.runelite.api.Perspective.*;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.HIDDEN_HSL;
 import static rs117.hd.utils.HDUtils.calculateSurfaceNormals;
-import static rs117.hd.utils.HDUtils.vertexHash;
+import static rs117.hd.utils.HDUtils.fastVertexHash;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -868,7 +868,7 @@ public class ProceduralGenerator {
 		return getTileOverlayTris(tileShapeIndex)[face];
 	}
 
-	private static int[][] tileVertices(SceneContext ctx, Tile tile) {
+	private static void tileVertices(SceneContext ctx, Tile tile, int[][] vertices) {
 		int tileX = tile.getSceneLocation().getX();
 		int tileY = tile.getSceneLocation().getY();
 		int tileExX = tileX + ctx.sceneOffset;
@@ -876,31 +876,34 @@ public class ProceduralGenerator {
 		int tileZ = tile.getRenderLevel();
 		int[][][] tileHeights = ctx.scene.getTileHeights();
 
-		int[] swVertex = new int[] {
-			tileX * LOCAL_TILE_SIZE,
-			tileY * LOCAL_TILE_SIZE,
-			tileHeights[tileZ][tileExX][tileExY]
-		};
-		int[] seVertex = new int[] {
-			(tileX + 1) * LOCAL_TILE_SIZE,
-			tileY * LOCAL_TILE_SIZE,
-			tileHeights[tileZ][tileExX + 1][tileExY]
-		};
-		int[] nwVertex = new int[] {
-			tileX * LOCAL_TILE_SIZE,
-			(tileY + 1) * LOCAL_TILE_SIZE,
-			tileHeights[tileZ][tileExX][tileExY + 1]
-		};
-		int[] neVertex = new int[] {
-			(tileX + 1) * LOCAL_TILE_SIZE,
-			(tileY + 1) * LOCAL_TILE_SIZE,
-			tileHeights[tileZ][tileExX + 1][tileExY + 1]
-		};
+		// swVertex
+		vertices[0][0] = tileX * LOCAL_TILE_SIZE;
+		vertices[0][1] = tileY * LOCAL_TILE_SIZE;
+		vertices[0][2] = tileHeights[tileZ][tileExX][tileExY];
 
-		return new int[][] { swVertex, seVertex, nwVertex, neVertex };
+		// seVertex
+		vertices[1][0] = (tileX + 1) * LOCAL_TILE_SIZE;
+		vertices[1][1] = tileY * LOCAL_TILE_SIZE;
+		vertices[1][2] = tileHeights[tileZ][tileExX + 1][tileExY];
+
+		// nwVertex
+		vertices[2][0] = tileX * LOCAL_TILE_SIZE;
+		vertices[2][1] = (tileY + 1) * LOCAL_TILE_SIZE;
+		vertices[2][2] = tileHeights[tileZ][tileExX][tileExY + 1];
+
+		//neVertex
+		vertices[3][0] = (tileX + 1) * LOCAL_TILE_SIZE;
+		vertices[3][1] = (tileY + 1) * LOCAL_TILE_SIZE;
+		vertices[3][2] = tileHeights[tileZ][tileExX + 1][tileExY + 1];
 	}
 
-	private static int[][] faceVertices(Tile tile, int face)
+	private static int[][] tileVertices(SceneContext ctx, Tile tile) {
+		int[][] vertices = new int[][] {new int[3], new int[3], new int[3], new int[3]};
+		tileVertices(ctx, tile, vertices);
+		return vertices;
+	}
+
+	private static void faceVertices(Tile tile, int face, int[][] vertices)
 	{
 		SceneTileModel sceneTileModel = tile.getSceneTileModel();
 
@@ -917,42 +920,51 @@ public class ProceduralGenerator {
 		int vertexFacesC = faceC[face];
 
 		// scene X
-		int sceneVertexXA = vertexX[vertexFacesA];
-		int sceneVertexXB = vertexX[vertexFacesB];
-		int sceneVertexXC = vertexX[vertexFacesC];
+		vertices[0][0] = vertexX[vertexFacesA];
+		vertices[1][0] = vertexX[vertexFacesB];
+		vertices[2][0] = vertexX[vertexFacesC];
 		// scene Y
-		int sceneVertexZA = vertexZ[vertexFacesA];
-		int sceneVertexZB = vertexZ[vertexFacesB];
-		int sceneVertexZC = vertexZ[vertexFacesC];
+		vertices[0][1] = vertexZ[vertexFacesA];
+		vertices[1][1] = vertexZ[vertexFacesB];
+		vertices[2][1] = vertexZ[vertexFacesC];
 		// scene Z - heights
-		int sceneVertexYA = vertexY[vertexFacesA];
-		int sceneVertexYB = vertexY[vertexFacesB];
-		int sceneVertexYC = vertexY[vertexFacesC];
+		vertices[0][2] = vertexY[vertexFacesA];
+		vertices[1][2] = vertexY[vertexFacesB];
+		vertices[2][2] = vertexY[vertexFacesC];
+	}
 
-		int[] vertexA = new int[] { sceneVertexXA, sceneVertexZA, sceneVertexYA };
-		int[] vertexB = new int[] { sceneVertexXB, sceneVertexZB, sceneVertexYB };
-		int[] vertexC = new int[] { sceneVertexXC, sceneVertexZC, sceneVertexYC };
-
-		return new int[][] { vertexA, vertexB, vertexC };
+	private static int[][] faceVertices(Tile tile, int face)
+	{
+		int[][] vertices = new int[][] {new int[3], new int[3], new int[3]};
+		faceVertices(tile, face, vertices);
+		return vertices;
 	}
 
 	/**
 	 * Returns vertex positions in local coordinates, between 0 and 128.
 	 */
-	public static int[][] faceLocalVertices(Tile tile, int face) {
-		if (tile.getSceneTileModel() == null)
-			return new int[0][0];
+	public static void faceLocalVertices(Tile tile, int face, int[][] vertices) {
+		if (tile.getSceneTileModel() == null) {
+			for (int[] vertex : vertices)
+				Arrays.fill(vertex, 0);
+			return;
+		}
 
 		int x = tile.getSceneLocation().getX();
 		int y = tile.getSceneLocation().getY();
 		int baseX = x * LOCAL_TILE_SIZE;
 		int baseY = y * LOCAL_TILE_SIZE;
 
-		int[][] vertices = faceVertices(tile, face);
+		faceVertices(tile, face, vertices);
 		for (int[] vertex : vertices) {
 			vertex[0] -= baseX;
 			vertex[1] -= baseY;
 		}
+	}
+
+	public static int[][] faceLocalVertices(Tile tile, int face) {
+		int[][] vertices = new int[][] {new int[3], new int[3], new int[3]};
+		faceLocalVertices(tile, face, vertices);
 		return vertices;
 	}
 
@@ -963,25 +975,38 @@ public class ProceduralGenerator {
 	 * @param tile to get the vertex keys of
 	 * @return Vertex keys in following order: SW, SE, NW, NE
 	 */
+	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[][] tileVertices, int[] vertexHashes)
+	{
+		tileVertices(ctx, tile, tileVertices);
+		for (int vertex = 0; vertex < tileVertices.length; ++vertex)
+			vertexHashes[vertex] = fastVertexHash(tileVertices[vertex]);
+	}
+
+	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[] vertexHashes)
+	{
+		int[][] vertices = new int[][] {new int[3], new int[3], new int[3], new int[3]};
+		tileVertexKeys(ctx, tile, vertices, vertexHashes);
+	}
+
 	public static int[] tileVertexKeys(SceneContext ctx, Tile tile)
 	{
-		int[][] tileVertices = tileVertices(ctx, tile);
-		int[] vertexHashes = new int[tileVertices.length];
-
-		for (int vertex = 0; vertex < tileVertices.length; ++vertex)
-			vertexHashes[vertex] = vertexHash(tileVertices[vertex]);
-
+		int[] vertexHashes = new int[4];
+		tileVertexKeys(ctx, tile, vertexHashes);
 		return vertexHashes;
+	}
+
+	public static void faceVertexKeys(Tile tile, int face, int[][] vertices, int[] vertexHashes)
+	{
+		faceVertices(tile, face, vertices);
+		for (int vertex = 0; vertex < vertices.length; ++vertex)
+			vertexHashes[vertex] = fastVertexHash(vertices[vertex]);
 	}
 
 	public static int[] faceVertexKeys(Tile tile, int face)
 	{
-		int[][] faceVertices = faceVertices(tile, face);
-		int[] vertexHashes = new int[faceVertices.length];
-
-		for (int vertex = 0; vertex < faceVertices.length; ++vertex)
-			vertexHashes[vertex] = vertexHash(faceVertices[vertex]);
-
+		int[][] vertices = new int[][] {new int[3], new int[3], new int[3]};
+		int[] vertexHashes = new int[4];
+		faceVertexKeys(tile, face, vertices, vertexHashes);
 		return vertexHashes;
 	}
 

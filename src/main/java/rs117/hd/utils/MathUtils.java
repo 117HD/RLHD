@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
  * When automatically determining the length of the output vector, it will equal the maximum length of the input vectors.
  * Some regular Java math function aliases are included to minimize the need for manual type casting.
  */
-public class MathUtils {
+public final class MathUtils {
 	public static final Random RAND = new Random();
 
 	public static final long KiB = 1024;
@@ -46,7 +46,7 @@ public class MathUtils {
 	}
 
 	public static float[] vec(int... vec) {
-		float[] floats = new float[vec.length];
+		final float[] floats = new float[vec.length];
 		for (int i = 0; i < vec.length; i++)
 			floats[i] = vec[i];
 		return floats;
@@ -57,7 +57,7 @@ public class MathUtils {
 	}
 
 	public static int[] ivec(float... vec) {
-		int[] ivec = new int[vec.length];
+		final int[] ivec = new int[vec.length];
 		for (int i = 0; i < vec.length; i++)
 			ivec[i] = (int) vec[i];
 		return ivec;
