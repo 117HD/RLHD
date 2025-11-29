@@ -3716,7 +3716,8 @@
     "area": "PRIFDDINAS_TEMPLE_FLOOR_FIX",
     "overlayIds": [ 118 ],
     "underlayIds": [ 143 ],
-    "groundMaterial": "MARBLE_1_SEMIGLOSS"
+    "groundMaterial": "CARPET",
+    "blendedAsOpposite": true
   },
   {
     "name": "PRIFDDINAS_GRASS",
