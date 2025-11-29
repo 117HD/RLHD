@@ -59,6 +59,8 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginMessage;
+import rs117.hd.api.RLHDAPI;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -73,6 +75,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
+import rs117.hd.api.RLHDEvent;
+import rs117.hd.api.RLHDSubscribe;
+import rs117.hd.api.RLHDUnsubscribe;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
@@ -254,6 +259,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	public MinimapRenderer minimapRenderer;
+
+	@Inject
+	private RLHDAPI rlhdAPI;
 
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
@@ -641,6 +649,9 @@ public class HdPlugin extends Plugin {
 
 				checkGLErrors();
 
+				// Notify all subscribers that 117 HD has started
+				rlhdAPI.notifyStartup();
+
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
@@ -693,7 +704,8 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
-				minimapRenderer.sendApiMessage(null,null);
+
+				rlhdAPI.notifyShutdown();
 
 				if (renderer != null) {
 					eventBus.unregister(renderer);
@@ -1569,8 +1581,8 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe
 	public void onConfigChanged(ConfigChanged event) {
-		if (!isActive || (!event.getGroup().equals(CONFIG_GROUP) && !event.getGroup().equals(MinimapRenderer.CONFIG_GROUP_HD_MINIMAP))
-			|| !pluginManager.isPluginEnabled(this))
+		// Exit if the plugin is off, the config is unrelated to the plugin, or if switching to a profile with the plugin turned off
+		if (!isActive || !event.getGroup().equals(CONFIG_GROUP) || !pluginManager.isPluginEnabled(this))
 			return;
 
 		synchronized (this) {
@@ -1602,20 +1614,9 @@ public class HdPlugin extends Plugin {
 					boolean reloadModelOverrides = false;
 					boolean reloadTileOverrides = false;
 					boolean reloadScene = false;
-					
-					for (var key : pendingConfigChanges) {
 
+					for (var key : pendingConfigChanges) {
 						switch (key) {
-							case "minimapStyle" :
-								String style = configManager.getConfiguration("hdminimap", "minimapStyle");
-								if ("HD117".equals(style)) {
-									minimapRenderer.setUp();
-									minimapRenderer.prepareScene(getSceneContext());
-									minimapRenderer.updateMinimapLighting = true;
-								} else {
-									minimapRenderer.clear(getSceneContext());
-								}
-							break;
 							case KEY_LOW_MEMORY_MODE:
 							case KEY_REMOVE_VERTEX_SNAPPING:
 							case KEY_LEGACY_RENDERER:
@@ -1822,6 +1823,20 @@ public class HdPlugin extends Plugin {
 		return config.expandedMapLoadingChunks();
 	}
 
+	@Subscribe
+	public void onRLHDSubscribe(RLHDSubscribe event) {
+		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+			minimapRenderer.onRLHDSubscribe(event);
+		}
+	}
+
+	@Subscribe
+	public void onRLHDUnsubscribe(RLHDUnsubscribe event) {
+		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+			minimapRenderer.onRLHDUnsubscribe(event);
+		}
+	}
+
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
@@ -1850,6 +1865,11 @@ public class HdPlugin extends Plugin {
 			return;
 
 		fishingSpotReplacer.update();
+	}
+
+	@Subscribe
+	public void onPluginMessage(PluginMessage message) {
+		rlhdAPI.handlePluginMessage(message);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")

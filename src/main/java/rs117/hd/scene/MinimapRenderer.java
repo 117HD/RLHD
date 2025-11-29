@@ -9,9 +9,14 @@ import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.PluginMessage;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.api.RLHDAPI;
+import rs117.hd.api.RLHDEvent;
+import rs117.hd.api.RLHDSubscribe;
+import rs117.hd.api.RLHDUnsubscribe;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;
@@ -25,8 +30,6 @@ import static rs117.hd.utils.MathUtils.*;
 
 @Singleton
 public class MinimapRenderer {
-
-	public static String CONFIG_GROUP_HD_MINIMAP = "hdminimap";
 
 	@Inject
 	ProceduralGenerator proceduralGenerator;
@@ -60,6 +63,9 @@ public class MinimapRenderer {
 
 	@Inject
 	private EventBus eventBus;
+
+	@Inject
+	private RLHDAPI rlhdAPI;
 
 	public boolean updateMinimapLighting;
 
@@ -483,10 +489,38 @@ public class MinimapRenderer {
 	}
 
 	public void sendApiMessage(int[][][][] minimapTilePaintColorsLighting, int[][][][][] minimapTileModelColorsLighting) {
+		if (!rlhdAPI.isSubscribed(RLHDEvent.EVENT_MINIMAP)) {
+			return;
+		}
+
 		Map<String, Object> payload = new HashMap<>();
 		payload.put("paintColors", minimapTilePaintColorsLighting);
 		payload.put("modelColors", minimapTileModelColorsLighting);
-		eventBus.post(new PluginMessage("117hd", "minimap",payload));
+		eventBus.post(new PluginMessage("117hd", RLHDEvent.EVENT_MINIMAP.getEventName(), payload));
+	}
+
+	@Subscribe
+	public void onRLHDSubscribe(RLHDSubscribe event) {
+		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+			clientThread.invoke(() -> {
+				setUp();
+				SceneContext sceneContext = plugin.getSceneContext();
+				if (sceneContext != null) {
+					prepareScene(sceneContext);
+				}
+				updateMinimapLighting = true;
+			});
+		}
+	}
+
+	@Subscribe
+	public void onRLHDUnsubscribe(RLHDUnsubscribe event) {
+		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+			SceneContext sceneContext = plugin.getSceneContext();
+			if (sceneContext != null) {
+				clear(sceneContext);
+			}
+		}
 	}
 
 	private int environmentalLighting(int packedHsl) {
@@ -499,6 +533,5 @@ public class MinimapRenderer {
 		}
 		return ColorUtils.srgbToPackedHsl(ColorUtils.linearToSrgb(rgb));
 	}
-
 
 }
