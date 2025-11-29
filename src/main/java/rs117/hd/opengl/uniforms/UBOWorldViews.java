@@ -1,7 +1,7 @@
 package rs117.hd.opengl.uniforms;
 
 import java.util.ArrayDeque;
-import java.util.ArrayList;
+import java.util.Arrays;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -9,12 +9,14 @@ import rs117.hd.utils.Mat4;
 import rs117.hd.utils.buffer.GLBuffer;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 	// The max concurrent visible worldviews is 25
 	// Source: https://discord.com/channels/886733267284398130/1419633364817674351/1429129853592146041
 	public static final int MAX_SIMULTANEOUS_WORLD_VIEWS = 128;
+	private static final float[] IDENTITY_MATRIX = Mat4.identity();
 
 	@RequiredArgsConstructor
 	public class WorldViewStruct extends StructProperty {
@@ -25,32 +27,42 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 
 		public WorldView worldView;
 
-		public void update() {
-			var proj = worldView.getMainWorldProjection();
-			projection.set(proj instanceof FloatProjection ? ((FloatProjection) proj).getProjection() : Mat4.identity());
+		private final float[] currentProjection = new float[16];
+		private final int[] currentTint = new int[4];
+		private final int[] newTint = new int[4];
 
-			var scene = worldView.getScene();
-			if (scene == null) {
-				tint.set(0, 0, 0, 0);
-			} else {
-				tint.set(
-					scene.getOverrideHue(),
-					scene.getOverrideSaturation(),
-					scene.getOverrideLuminance(),
-					scene.getOverrideAmount()
-				);
+		public void update() {
+			float[] newProjection = IDENTITY_MATRIX;
+			final Projection worldViewProjection = worldView.getMainWorldProjection();
+			if (worldViewProjection instanceof FloatProjection)
+				newProjection = ((FloatProjection) worldViewProjection).getProjection();
+
+			if (!Arrays.equals(currentProjection, newProjection)) {
+				projection.set(newProjection);
+				copyTo(currentProjection, newProjection);
+			}
+
+			newTint[3] = 0;
+			Scene scene = worldView.getScene();
+			if (scene != null) {
+				newTint[0] = scene.getOverrideHue();
+				newTint[1] = scene.getOverrideSaturation();
+				newTint[2] = scene.getOverrideLuminance();
+				newTint[3] = scene.getOverrideAmount();
+			}
+			if (!Arrays.equals(currentTint, newTint)) {
+				tint.set(newTint);
+				copyTo(currentTint, newTint);
 			}
 		}
 
 		public synchronized void free() {
-			activeIndices.remove((Integer) worldViewIdx);
 			freeIndices.add(worldViewIdx);
 			worldView = null;
 		}
 	}
 
 	private final WorldViewStruct[] uboStructs = new WorldViewStruct[MAX_SIMULTANEOUS_WORLD_VIEWS];
-	private final ArrayList<Integer> activeIndices = new ArrayList<>();
 	private final ArrayDeque<Integer> freeIndices = new ArrayDeque<>();
 
 	public UBOWorldViews() {
@@ -58,13 +70,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		for (int i = 0; i < MAX_SIMULTANEOUS_WORLD_VIEWS; i++) {
 			uboStructs[i] = addStruct(new WorldViewStruct(i));
 			freeIndices.add(i);
-		}
-	}
-
-	@Override
-	protected synchronized void preUpload() {
-		for (Integer activeIndex : activeIndices) {
-			uboStructs[activeIndex].update();
 		}
 	}
 
@@ -77,7 +82,6 @@ public class UBOWorldViews extends UniformBuffer<GLBuffer> {
 		WorldViewStruct struct = uboStructs[freeIndices.poll()];
 		struct.worldView = worldView;
 		struct.update();
-		activeIndices.add(struct.worldViewIdx);
 		return struct;
 	}
 }
