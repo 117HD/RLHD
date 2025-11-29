@@ -704,6 +704,14 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
+    "name": "VARROCK_HOUSE_3",
+    "area": "VARROCK_HOUSE_3",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "TILE_SMALL"
+  },
+  {
     "name": "VARROCK_BLUE_MOON_INN",
     "area": "VARROCK_BLUE_MOON_INN",
     "overlayIds": [
@@ -3681,12 +3689,41 @@
     "uvScale": 1.25
   },
   {
+    "name": "PRIFDDINAS_INTERIORS",
+    "area": "PRIFDDINAS_INTERIORS",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "blended": false,
+    "shiftLightness": 10
+  },
+  {
+    "name": "PRIFDDINAS_INTERIORS_RAISED",
+    "area": "PRIFDDINAS_INTERIORS_RAISED",
+    "overlayIds": [ 42, 106 ],
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "uvScale": 1.25
+  },
+  {
     "name": "TIRANNWN_PATHS",
     "area": "TIRANNWN",
     "overlayIds": [
       106
     ],
     "groundMaterial": "GRASSY_DIRT"
+  },
+  {
+    "name": "PRIFDDINAS_TEMPLE_FLOOR",
+    "area": "PRIFDDINAS_TEMPLE_FLOOR_FIX",
+    "overlayIds": [ 118 ],
+    "underlayIds": [ 143 ],
+    "groundMaterial": "CARPET",
+    "blendedAsOpposite": true
+  },
+  {
+    "name": "PRIFDDINAS_GRASS",
+    "area": "PRIFDDINAS",
+    "underlayIds": [ 48, 67, 143 ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
   },
   {
     "name": "Grand Library Floor",
@@ -5939,8 +5976,21 @@
       351
     ],
     "groundMaterial": "STONE_CAVE_FLOOR",
+    "blendedAsOpposite": true,
+    "shiftLightness": 9,
+    "replacements": {
+      "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING",
+    "area": "MASTERING_MIXOLOGY",
+    "overlayIds": [
+      351
+    ],
+    "groundMaterial": "ROCK_PILES",
     "blended": false,
-    "shiftLightness": 6
+    "shiftLightness": 14
   },
   {
     "name": "MASTERING_MIXOLOGY_UNDERLAY",
@@ -7377,6 +7427,24 @@
       72
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
+    "area": "SHILO_VILLAGE_MINE_SURFACE",
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "underlayIds": [
+      21,
+      50,
+      55
+    ],
+    "replacements": {
+      "DEFAULT_DIRT": [
+        "h <= 8 && s >= 4 && l <= 71",
+        "h == 9 && s == 2 && l <= 44",
+        "h == 8 && s == 3 && l <= 40"
+      ],
+      "DEFAULT_ROCKY_GROUND": "s <= 2 && l <= 40"
+    }
   },
   {
     "name": "COMPLEX_TILES_KARAMJA",

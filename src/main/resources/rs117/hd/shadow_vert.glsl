@@ -72,6 +72,15 @@ void main() {
         isWaterSurfaceOrUnderwaterTile ||
         isTransparent;
 
+#if ZONE_RENDERER
+    if(!isShadowDisabled && vWorldViewId > 0) {
+        ivec4 tint = getWorldViewTint(vWorldViewId);
+        if(tint.x != -1 && tint.y != -1 && tint.z != -1) {
+            isShadowDisabled = true;
+        }
+    }
+#endif
+
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
     vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
