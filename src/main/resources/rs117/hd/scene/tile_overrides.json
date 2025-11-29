@@ -704,6 +704,14 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
+    "name": "VARROCK_HOUSE_3",
+    "area": "VARROCK_HOUSE_3",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "TILE_SMALL"
+  },
+  {
     "name": "VARROCK_BLUE_MOON_INN",
     "area": "VARROCK_BLUE_MOON_INN",
     "overlayIds": [
@@ -5954,8 +5962,21 @@
       351
     ],
     "groundMaterial": "STONE_CAVE_FLOOR",
+    "blendedAsOpposite": true,
+    "shiftLightness": 9,
+    "replacements": {
+      "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "MASTERING_MIXOLOGY_OVERLAY_NO_BLENDING",
+    "area": "MASTERING_MIXOLOGY",
+    "overlayIds": [
+      351
+    ],
+    "groundMaterial": "ROCK_PILES",
     "blended": false,
-    "shiftLightness": 6
+    "shiftLightness": 14
   },
   {
     "name": "MASTERING_MIXOLOGY_UNDERLAY",
@@ -7392,6 +7413,24 @@
       72
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
+    "area": "SHILO_VILLAGE_MINE_SURFACE",
+    "groundMaterial": "ROCKY_CAVE_FLOOR",
+    "underlayIds": [
+      21,
+      50,
+      55
+    ],
+    "replacements": {
+      "DEFAULT_DIRT": [
+        "h <= 8 && s >= 4 && l <= 71",
+        "h == 9 && s == 2 && l <= 44",
+        "h == 8 && s == 3 && l <= 40"
+      ],
+      "DEFAULT_ROCKY_GROUND": "s <= 2 && l <= 40"
+    }
   },
   {
     "name": "COMPLEX_TILES_KARAMJA",
