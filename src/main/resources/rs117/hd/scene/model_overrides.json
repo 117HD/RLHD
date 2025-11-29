@@ -1392,9 +1392,6 @@
       "DEADTREE2_DARK",
       "DEADTREE2_SWAMP",
       "DEADTREE6",
-      "REGICIDE_TREE_DEAD2_D2",
-      "REGICIDE_TREE_SWAMP1",
-      "REGICIDE_TREE_SWAMP2",
       "DEADTREE4SWAMP",
       "COPPICETREE_SWAMP",
       "REGICIDE_TREE_DEAD2SWAMP",
@@ -1424,7 +1421,10 @@
     "objectIds": [
       "DARKM_DEAD_TREE_01",
       "DARKM_DEAD_TREE_02",
-      "DARKM_DEAD_TREE_03"
+      "DARKM_DEAD_TREE_03",
+      "REGICIDE_TREE_DEAD2_D2",
+      "REGICIDE_TREE_SWAMP1",
+      "REGICIDE_TREE_SWAMP2"
     ],
     "uvType": "BOX",
     "uvScale": 0.8
@@ -2268,18 +2268,11 @@
     "windDisplacementMode": "OBJECT",
     "objectIds": [
       "SOTE_FLOWERS",
-      "DAISYS",
       "ONION",
       "AVIUM_ONION01",
       "AVIUM_ONION02",
       "RAREFLOWER_BLUE",
-      "RAREFLOWERS_BLUE",
-      "BLUEFLOWER",
-      "REDFLOWER",
-      "TULIPS",
       "FLAX",
-      "RAREFLOWER_1",
-      "RAREFLOWERS_1",
       "FLOWERBED1",
       "FLOWERBED_RED",
       "FLOWERBED_YELLOW",
@@ -2291,7 +2284,6 @@
       "BULLRUSHES4",
       "BULLRUSHES5",
       "THISTLE",
-      "POTATO",
       "NETTLES",
       "NETTLES1",
       "NETTLES2",
@@ -2376,7 +2368,6 @@
     "windDisplacementMode": "VERTEX",
     "objectIds": [
       "SUNFLOWER",
-      "SUNFLOWERS",
       "FAIRY2_BULLRUSH_FALLOFF",
       "FAIRY2_BULLRUSH_SMALL",
       "FAIRY2_BULLRUSH_TILE",
@@ -2796,7 +2787,8 @@
     "objectIds": [
       "GRASS_LIGHT_1",
       "GRASS_LIGHT_2",
-      "GRASS_LIGHT_3"
+      "GRASS_LIGHT_3",
+      "GRASS_2"
     ]
   },
   {
@@ -7056,11 +7048,41 @@
       "SOTE_WELL_CAVE_BLOCKED_INSPECT",
       "SOTE_WELL_CAVE_BLOCKED_MINE",
       "SOTE_WELL_CAVE_OPEN",
-      "SOTE_WELL_CAVE_EXIT"
+      "SOTE_WELL_CAVE_EXIT",
+      "CAVEWALLTUNNEL_TO_TEMPLE_OPEN"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 100
+  },
+  {
+    "description": "Underground Pass - Grunge - Bone - Temple Door attached to Rounded Cave Wall - Textured",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "objectIds": [
+      "UPASS_TEMPLEDOOR_RIGHT",
+      "UPASS_TEMPLEDOOR_LEFT"
+    ]
+  },
+  {
+    "description": "Underground Pass - Grunge - Bone - Temple Door top - Textured",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UPASS_TEMPLEDOOR_TOP"
+    ]
   },
   {
     "description": "Castle Wars - Cave in Walls 1",
@@ -10181,7 +10203,9 @@
       "GRANDTREE_LADDERBOTTOM",
       "GRANDTREE_LADDERMIDDLE_BOTTOM",
       "GRANDTREE_LADDERMIDDLE_TOP",
-      "GRANDTREE_LADDERTOP"
+      "GRANDTREE_LADDERTOP",
+      "REHNISON_LADDER_UP",
+      "MOURNER_HIDEOUT_LADDER1_BATTLE"
     ],
     "uvType": "BOX",
     "uvOrientation": 512,
@@ -10833,6 +10857,7 @@
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "objectIds": [
       "BIGTABLE2",
+      "BIGTABLE3",
       "KR_CAM_BIGTABLE",
       "FAI_VARROCK_COUNTER_TABLE",
       "FAI_VARROCK_WOODEN_TABLE",
@@ -11003,6 +11028,14 @@
       "ROOF_VERYSPECIAL_THATCHED",
       "QIP_DIGSITE_TIMBERWALL"
     ]
+  },
+  {
+    "description": "Wattle Style House (Ardougne, Digsite, Hosidius) - Wooden overhang",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "objectIds": [ "TIMBER_OVERHANG" ]
   },
   {
     "description": "Candelabra",
@@ -11210,10 +11243,14 @@
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "objectIds": [
       "CHESTCLOSED",
+      "CHESTCLOSED_NOOP",
       "TRAPCHEST1",
       "TRAPCHEST5",
       "INACOPENCHEST",
-      "GRANDTREE_CHESTCLOSED"
+      "GRANDTREE_CHESTCLOSED",
+      "SOTE_TRINKET_CHEST",
+      "UPASSSHUTCHEST1",
+      "CAVEWITCHCHEST"
     ],
     "uvType": "BOX",
     "uvScale": 0.33,
@@ -14150,7 +14187,9 @@
       "ELID_POTSANDPANS1",
       "ELID_POTSANDPANS2",
       "AREA_SANGUINE_GHETTO_POTS1",
-      "AREA_SANGUINE_GHETTO_POTS2"
+      "AREA_SANGUINE_GHETTO_POTS2",
+      "SOTE_POTSANDPANS1",
+      "SOTE_POTSANDPANS2"
     ],
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -16692,13 +16731,14 @@
   {
     "description": "Objects - Stone - Large Gravestone - Large",
     "baseMaterial": "STONE_SEMIGLOSS",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "flatNormals": true,
+    "terrainVertexSnap": true,
     "objectIds": [
       "LARGEGRAVE",
       "GLARIALS_TOMBSTONE_WATERFALL_QUEST"
-    ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false,
-    "flatNormals": true
+    ]
   },
   {
     "description": "Ardougne - Walls - Stone - Zoo Fence",
@@ -16795,7 +16835,8 @@
   },
   {
     "description": "Objects - Ardougne Castle - Standard",
-    "baseMaterial": "GRUNGE_3",
+    "baseMaterial": "GRUNGE_3_DARK",
+    "upwardsNormals": true,
     "objectIds": [
       "STANDARD1_KANDARIN",
       "STANDARD2_KANDARIN"
@@ -21041,7 +21082,8 @@
       "SACK_FULL",
       "SACK_GRAIN01_FULL01",
       "SOTE_LLETYA_SACK_FULL",
-      "VC_SACK_FULL_DWARF"
+      "VC_SACK_FULL_DWARF",
+      "MOURNING_SACK_FULL_BURNT"
     ],
     "uvType": "BOX",
     "uvScale": 0.75,
@@ -26537,13 +26579,14 @@
   {
     "description": "Objects - Concrete - Gravestone",
     "textureMaterial": "HD_CONCRETE",
+    "uvType": "BOX",
+    "retainVanillaUvs": false,
+    "uvScale": 0.65,
+    "terrainVertexSnap": true,
     "objectIds": [
       "GRAVESTONE1",
       "GRAVESTONE2"
-    ],
-    "uvType": "BOX",
-    "retainVanillaUvs": false,
-    "uvScale": 0.65
+    ]
   },
   {
     "description": "Objects - Concrete - Salve Tunnel Entrance",
@@ -26715,11 +26758,21 @@
   {
     "description": "Objects - Wood - Trap Door",
     "baseMaterial": "WOOD_GRAIN_3",
-    "objectIds": [
-      "TRAPDOOR"
-    ],
     "uvType": "BOX",
-    "uvOrientation": 512
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 192
+      }
+    ],
+    "objectIds": [
+      "TRAPDOOR",
+      "MOURNING_HIDEOUT_TRAP_DOOR_BATTLE"
+    ]
   },
   {
     "description": "Objects - Wood - Danger Sign",
@@ -28190,6 +28243,7 @@
     "baseMaterial": "BONE",
     "objectIds": [
       "CORPSE",
+      "CORPSE_BURNT",
       "CORPSE4",
       "CHICKENQUEST_SKELETON_1",
       "CHICKENQUEST_SKELETON_2",
@@ -28204,6 +28258,7 @@
       "GA_SKELETON",
       "GRIM_GIANT_SKELETON_2",
       "CORPSE2_NOBLOCK",
+      "CORPSE2_BURNT",
       "TAPO_SKELETON01",
       "TAPO_SKELETON02",
       "TOBQUEST_SKELETON_OP"
@@ -39187,7 +39242,7 @@
   {
     "description": "Wooden barrel with metal bands - textured",
     "baseMaterial": "METALLIC_1_LIGHT",
-    "objectIds": [ "BARREL", "BARREL_WATERFALL_QUEST", "BARRELWITHTAP" ],
+    "objectIds": [ "BARREL", "BARREL_WATERFALL_QUEST", "BARRELWITHTAP", "UPASSDWARFBREWBARREL" ],
     "uvType": "BOX",
     "uvScale": 0.6
   },
@@ -53964,6 +54019,15 @@
     "uvOrientation": 179
   },
   {
+    "description": "Generic - Potato Plant",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 179,
+    "windDisplacementMode": "OBJECT",
+    "objectIds": [ "POTATO" ]
+  },
+  {
     "description": "Hosidius - White brick walls",
     "baseMaterial": "STONE_NORMALED",
     "objectIds": [
@@ -56742,6 +56806,19 @@
       "MUSHROOM2_LARGE",
       "MUSHROOMS2",
       "MUSHROOM2"
+    ],
+    "uvType": "BOX"
+  },
+  {
+    "description": "Mushroom - Red mushroom with White spots and Small red and white mushroom clusters",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "REGICIDE_RED_MUSHROOMS",
+      "SOTE_HUNTING_MUSHROOMS2_NOOP",
+      "SOTE_HUNTING_MUSHROOMS2_OP",
+      "SOTE_HUNTING_MUSHROOMS3_OP",
+      "REGICIDE_RED_MUSHROOM_FADE",
+      "REGICIDE_RED_MUSHROOM_CORNER"
     ],
     "uvType": "BOX"
   },
@@ -65972,6 +66049,331 @@
     "npcIds": [
       "GEMSTONE_CRAB",
       "GEMSTONE_CRAB_REMAINS"
+    ]
+  },
+  {
+    "description": "Ardougne - Red, Yellow, and blue flowers and tulips",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "RAREFLOWER_1",
+      "RAREFLOWERS_1",
+      "RAREFLOWERS_BLUE",
+      "TULIPS"
+    ]
+  },
+  {
+    "description": "Ardougne - Sunflowers",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "VERTEX",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 21",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "SUNFLOWERS"
+    ]
+  },
+  {
+    "description": "Ardougne - small  Red and blue flowers and Daisies",
+    "baseMaterial": "GRAY_90",
+    "windDisplacementMode": "OBJECT",
+    "colorOverrides": [
+      {
+        "description": "Leaves",
+        "colors": "h == 14",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [
+      "BLUEFLOWER",
+      "REDFLOWER",
+      "DAISYS"
+    ]
+  },
+  {
+    "description": "West Ardougne Gate - Metallic - Textured",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 192,
+    "objectIds": [
+      "ARDOUGNEDOOR_R",
+      "ARDOUGNEDOOR_R_OPEN",
+      "ARDOUGNEDOOR_L",
+      "ARDOUGNEDOOR_L_OPEN"
+    ]
+  },
+  {
+    "description": "Ardougne - Song of the Elves - Skin - Cloth - Metallic - Dead Paladin",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 192,
+    "colorOverrides": [
+      {
+        "description": "Cloth",
+        "colors": "h == 53",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Skin",
+        "colors": "h == 5 || h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Hair",
+        "colors": "h == 6 && s == 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Shield",
+        "colors": "h == 6 && s == 7 || h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": -128
+      }
+    ],
+    "objectIds": [
+      "DS2_PALADIN_DEAD_1",
+      "DS2_PALADIN_DEAD_2"
+    ]
+  },
+  {
+    "description": "Prifddinas - Tall Tree",
+    "baseMaterial": "LEAVES_1",
+    "windDisplacementMode": "VERTEX",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "PRIF_OUTSIDE_TREE_NORMAL_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "terrainVertexSnap": true,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Underground pass - Stone - Metallic - paper - Altar",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h == 7 && s == 2",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 84
+      },
+      {
+        "colors": "h >= 8",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ],
+    "objectIds": [ "REGICIDE_VOYAGE_TEMPLE_ALTAR" ]
+  },
+  {
+    "description": "Lleyla - Plant - Song of the Elves - Elder Candantine - Herb",
+    "baseMaterial": "LEAF_VEINS",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [ "SOTE_HERB_3" ]
+  },
+  {
+    "description": "Song of the Elves - Grand Library - Light beam shadow removal",
+    "receiveShadows": false,
+    "castShadows": false,
+    "objectIds": [
+      "SOTE_LIGHT_WHITE_3",
+      "SOTE_LIGHT_WHITE_4",
+      "SOTE_LIGHT_YELLOW_3",
+      "SOTE_LIGHT_YELLOW_4",
+      "SOTE_LIGHT_MAGENTA_3",
+      "SOTE_LIGHT_MAGENTA_4",
+      "SOTE_LIGHT_RED_3",
+      "SOTE_LIGHT_RED_4",
+      "SOTE_LIGHT_BLACK_3",
+      "SOTE_LIGHT_BLACK_4"
+    ]
+  },
+  {
+    "description": "Underground Pass - Grunge - Bone - Skull on stick attached to a block - Needs proper UV",
+    "baseMaterial": "GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "UPASS_SKULLS_SPIKES"
+    ]
+  },
+  {
+    "description": "Underground Pass - Grunge - Bone - Skull on stick attached to a block - Needs proper UV",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [ "IBAN_TEMPLE_SKULL" ]
+  },
+  {
+    "description": "Underground Pass - Grunge Dark Beast Statue",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientation": 100,
+    "objectIds": [
+      "DARKMONSTER_STATUE_UPASS_RIGHT",
+      "DARKMONSTER_STATUE_UPASS_LEFT"
+    ]
+  },
+  {
+    "description": "Underground Pass - Brown Stone Wedge Stairs",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "objectIds": [ "SKEWSTEPS1_UPASS" ]
+  },
+  {
+    "description": "Underground Pass - Iban Altar",
+    "baseMaterial": "ROCK_3_SMOOTH",
+    "uvType": "BOX",
+    "uvOrientation": 256,
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "description": "Bone",
+        "colors": "h == 5 && s == 0",
+        "baseMaterial": "BONE",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [ "CAVE_TEMPLE_ALTAR" ]
+  },
+  {
+    "description": "Underground Pass - Iban Throne",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "colorOverrides": [
+      {
+        "description": "Seat",
+        "colors": "h == 0 && s == 7",
+        "baseMaterial": "CARPET",
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "IBAN_TEMPLE_THRONE", "IBAN_TEMPLE_THRONE_TOP"
+    ]
+  },
+  {
+    "description": "Underground Pass - Iban Claws",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "uvScale": 1.2,
+    "objectIds": [
+      "IBAN_TEMPLE_CLAWS_R",
+      "IBAN_TEMPLE_CLAWS_L"
+    ]
+  },
+  {
+    "description": "Underground Pass - Stone - Platforms",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 512,
+    "objectIds": [
+      "PLATFORM_DISTANCEBOTTOM",
+      "PLATFORM_DISTANCETOP",
+      "BRIDGEPLATFORMTOP",
+      "PLATFORMBASE3",
+      "BRIDGE1_SUPPORT",
+      "UPASS_BRIDGE_SUPPORT",
+      "UPASS_BRIDGECORNER1",
+      "UPASS_BRIDGECORNER2R",
+      "UPASS_BRIDGECORNER2L",
+      "BRIDGE_BEND_RIGHT",
+      "BRIDGE1",
+      "BRIDGE2",
+      "BRIDGE3",
+      "BRIDGE_THREEWAY",
+      "BRIDGECOLLAPSED1",
+      "BRIDGECOLLAPSED2",
+      "PLATFORMBASE_GROUND",
+      "PLATFORMBASE_GROUND_UPPER"
+    ]
+  },
+  {
+    "description": "Dwarf Multi Cannon",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.4,
+    "objectIds": [
+      "SOTE_CANNON"
+    ]
+  },
+  {
+    "description": "Underground Pass - Stone - Dwarf Statues",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.4,
+    "objectIds": [
+      "STATUE_DWARFMINER_UPASS"
     ]
   }
 ]
