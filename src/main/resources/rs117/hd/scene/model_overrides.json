@@ -3441,7 +3441,7 @@
   },
   {
     "description": "GRAND_EXCHANGE_FLOOR",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE",
     "objectIds": [
       "EXCHANGE_STAIRS_VAR01_MIRROR",
       "EXCHANGE_STAIRS_VAR01",
@@ -3483,11 +3483,14 @@
       "EXCHANGE_FLOOR_VAR04_1X1"
     ],
     "flatNormals": true,
-    "uvType": "MODEL_XZ"
+    "uvType": "BOX",
+    "uvScale": 1
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_SMALL_WALL",
       "FAI_VARROCK_CASTLE_BATTLEMENT_CAPPED",
@@ -3500,7 +3503,9 @@
   },
   {
     "description": "GRAND_EXCHANGE_CLAN_PORTAL",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "objectIds": [
       "CLAN_HUB_PORTAL"
     ],
@@ -3593,7 +3598,9 @@
   },
   {
     "description": "Brick walls with wooden boards",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3625,7 +3632,9 @@
   },
   {
     "description": "Brick walls with wooden plank windows",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3645,7 +3654,9 @@
   },
   {
     "description": "Brick walls with wooden planks leaned on them",
-    "baseMaterial": "GRUNGE_1",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
     "flatNormals": true,
     "colorOverrides": [
       {
@@ -3690,10 +3701,10 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with glass windows",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Wooden boards",
@@ -3724,10 +3735,10 @@
   },
   {
     "description": "Varrock church - Kourend Castle - Glass -  golden window",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "colorOverrides": [
       {
         "description": "Wooden boards",
@@ -3755,10 +3766,10 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_POOR_WALL",
       "FAI_VARROCK_POOR_WALL_TOP",
@@ -3914,10 +3925,10 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "SMOOTH_STONE_DARK",
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 0.8,
+    "uvScale": 0.6,
     "objectIds": [
       "FAI_VARROCK_BUTRESS",
       "FAI_VARROCK_BUTRESS_DARK"
@@ -12087,7 +12098,24 @@
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
-    "flatNormals": true
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "description": "Interior Wallpaper",
+        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 8",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Interior trim",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "colors": "h == 7",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Varrock - Metallic - Stone - Water Pump - Needs proper UV",
@@ -18039,7 +18067,6 @@
       "HALLOWED_TREASURE_MAGIC_INACTIVE",
       "HALLOWED_TREASURE_MAGIC_READY",
       "HALLOWED_TREASURE_MAGIC_FINAL",
-      "DEATH_OFFICE_EXITPORTAL",
       "POH_PORTAL_TEAK_ARCEUUS_LIBRARY",
       "POH_PORTAL_MAG_ARCEUUS_LIBRARY",
       "POH_PORTAL_MARBLE_ARCEUUS_LIBRARY",
@@ -39293,23 +39320,83 @@
     "description": "Deaths office - Walls - Stone",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "DEATH_OFFICE_WALL_FIRE",
       "DEATH_OFFICE_WALL_ALCOVE",
-      "DEATH_OFFICE_WALL_ALCOVE_SKULL",
       "DEATH_OFFICE_WALL_ALCOVE_02",
       "DEATH_OFFICE_WALL_GRATE",
       "DEATH_OFFICE_WALL_VAR_01",
       "DEATH_OFFICE_WALL_VAR_02",
+      "DEATH_OFFICE_WALL_INSIDE_CORNER_BASIC",
+      "DEATH_OFFICE_WALL_OUTSIDE_CORNER_BASIC"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Walls - Stone with Skulls/Shelves/Scrolls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DEATH_OFFICE_WALL_ALCOVE_SKULL",
       "DEATH_OFFICE_WALL_VAR_03",
       "DEATH_OFFICE_WALL_VAR_04",
-      "DEATH_OFFICE_WALL_INSIDE_CORNER_BASIC",
-      "DEATH_OFFICE_WALL_OUTSIDE_CORNER_BASIC",
-      "DEATH_OFFICE_WALL_FIRE_LEFT_1",
-      "DEATH_OFFICE_WALL_FIRE_LEFT_2",
       "DEATH_OFFICE_WALL_FIRE_RIGHT_1",
-      "DEATH_OFFICE_WALL_FIRE_RIGHT_2"
+      "DEATH_OFFICE_WALL_FIRE_RIGHT_2",
+      "DEATH_OFFICE_WALL_FIRE_LEFT_2",
+      "DEATH_OFFICE_WALL_FIRE_LEFT_1"
     ],
-    "uvType": "BOX"
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && l < 33",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Walls - Stone with Skulls/Shelves/Scrolls",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DEATH_OFFICE_WALL_FIRE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && l < 35",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvOrientation": 512,
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Walls - Exit Portal",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "objectIds": [
+      "DEATH_OFFICE_EXITPORTAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE"
+      }
+    ]
   },
   {
     "description": "Deaths office - Walls - Outer Layer",
@@ -39320,29 +39407,185 @@
       "DEATH_OFFICE_CAVEWALL_TOP_CORNER",
       "DEATH_OFFICE_CAVEWALL_TOP_CORNER_INSIDE"
     ],
-    "uvType": "BOX"
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Objects - Chairs",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "objectIds": [
+      "DEATH_OFFICE_CHAIR",
+      "DEATH_OFFICE_CHAIR_SKULLS"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "colorOverrides": [
+      {
+        "colors": "h == 45",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h > 9 || h == 0",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Npcs - Death",
+    "npcIds": [ "DEATH_OFFICE_DEATH" ],
+    "colorOverrides": [
+      {
+        "colors": "h == 42",
+        "baseMaterial": "CARPET_LIGHT"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 45",
+        "baseMaterial": "NONE"
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
   },
   {
     "description": "Deaths office - Objects - Generic",
     "baseMaterial": "GRUNGE_3",
     "objectIds": [
-      "DEATH_COFFER_ACCESS",
-      "DEATH_OFFICE_DESK_01",
-      "DEATH_OFFICE_MUNCHER",
-      "DEATH_OFFICE_CHAIR",
-      "DEATH_OFFICE_CHAIR_SKULLS",
-      "DEATH_OFFICE_SCYTHE",
-      "DEATH_OFFICE_CHEST_CLOSED",
-      "DEATH_OFFICE_CHEST_OPEN_GOLD",
-      "DEATH_OFFICE_CHEST_OPEN_RUNES_01",
       "DEATH_OFFICE_TOB_WEAPONS",
       "DEATH_OFFICE_BOOKS_02",
       "DEATH_OFFICE_BOOKS_03",
-      "DEATH_OFFICE_TORCH",
       "DEATH_OFFICE_BONES"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
+  },
+  {
+    "description": "Deaths office - Objects - Muncher",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DEATH_OFFICE_MUNCHER"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 8 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Objects - Torch",
+    "baseMaterial": "GRAY_65",
+    "objectIds": [
+      "DEATH_OFFICE_TORCH"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Deaths office - Objects - Deaths Table",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DEATH_OFFICE_DESK_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 || h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Objects - Death's Scythe",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "DEATH_OFFICE_SCYTHE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "upwardsNormals": true
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3"
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Objects - Chests",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DEATH_OFFICE_CHEST_CLOSED",
+      "DEATH_OFFICE_CHEST_OPEN_GOLD",
+      "DEATH_OFFICE_CHEST_OPEN_RUNES_01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
+    "description": "Deaths office - Objects - Sacrifice Chest",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "objectIds": [
+      "DEATH_COFFER_ACCESS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientationY": -256,
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512,
+        "uvScale": 0.6
+      }
+    ]
   },
   {
     "description": "Deaths office - Objects - Rug",
@@ -51260,6 +51503,10 @@
         "uvScale": 0.6,
         "uvOrientation": 256,
         "uvType": "BOX"
+      },
+      {
+        "colors": "h == 7 && s == 7",
+        "baseMaterial": "CARPET_LIGHT"
       }
     ]
   },

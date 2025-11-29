@@ -704,6 +704,14 @@
     "groundMaterial": "VARROCK_PATHS"
   },
   {
+    "name": "VARROCK_HOUSE_3",
+    "area": "VARROCK_HOUSE_3",
+    "overlayIds": [
+      26
+    ],
+    "groundMaterial": "TILE_SMALL"
+  },
+  {
     "name": "VARROCK_BLUE_MOON_INN",
     "area": "VARROCK_BLUE_MOON_INN",
     "overlayIds": [
