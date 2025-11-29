@@ -3481,7 +3481,10 @@
       "EXCHANGE_FLOOR_VAR02_1X1",
       "EXCHANGE_FLOOR_VAR03_1X1",
       "EXCHANGE_FLOOR_VAR04_1X1"
-    ]
+    ],
+    "flatNormals": true,
+    "uvType": "BOX",
+    "uvScale": 1
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
@@ -3495,7 +3498,8 @@
       "FAI_VARROCK_CASTLE_BATTLEMENT_HILLSKEW_SHARELIGHT",
       "FAI_VARROCK_CASTLE_WALL_NO_BACK",
       "FAI_VARROCK_CASTLE_WALL_NO_BACK_HILLSKEW"
-    ]
+    ],
+    "flatNormals": true
   },
   {
     "description": "GRAND_EXCHANGE_CLAN_PORTAL",
