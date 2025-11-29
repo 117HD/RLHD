@@ -6918,7 +6918,7 @@
     "colorOverrides": [
       {
         "description": "Wooden Supports",
-        "colors": " h == 6",
+        "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.6
@@ -9372,7 +9372,7 @@
     "colorOverrides": [
       {
         "description": "Wood - Must match the Docks",
-        "colors": " h == 6",
+        "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 1.1
@@ -9396,7 +9396,7 @@
     "colorOverrides": [
       {
         "description": "Wood - Must match the Docks",
-        "colors": " h == 6",
+        "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 1.1,
@@ -12607,7 +12607,7 @@
     "colorOverrides": [
       {
         "description": "Both required to prevent vanilla texture from disappearing",
-        "colors": "h == 0 && s == 0 && l < 72 ",
+        "colors": "h == 0 && s == 0 && l < 72",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.2
@@ -27076,14 +27076,14 @@
     "colorOverrides": [
       {
         "description": "Wooden Post",
-        "colors": " h == 8",
+        "colors": "h == 8",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale":0.8
       },
       {
         "description": "Net",
-        "colors": " h == 5",
+        "colors": "h == 5",
         "baseMaterial": "ROPE",
         "uvType": "BOX",
         "uvScale":0.8
@@ -27119,7 +27119,7 @@
     "colorOverrides": [
       {
         "description": "Fish",
-        "colors": " h == 0",
+        "colors": "h == 0",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale":0.8
@@ -27137,7 +27137,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": " h == 5",
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale":0.8
@@ -27157,14 +27157,14 @@
     "colorOverrides": [
       {
         "description": "Fish",
-        "colors": " h == 0",
+        "colors": "h == 0",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale":0.8
       },
       {
         "description": "Metal",
-        "colors": " h == 5",
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale":0.8
@@ -27183,7 +27183,7 @@
     "colorOverrides": [
       {
         "description": "Metal",
-        "colors": " h == 5",
+        "colors": "h == 5",
         "baseMaterial": "METALLIC_1_LIGHT",
         "uvType": "BOX",
         "uvScale":0.8,
@@ -44008,7 +44008,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 10 ", "h == 3", "h == 18" ],
+        "colors": [ "h == 10", "h == 3", "h == 18" ],
         "baseMaterial": "LIGHT_BARK",
         "uvType": "BOX",
         "uvScale": 0.66
@@ -44073,7 +44073,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": [ "h == 62 ", "h == 63" ],
+        "colors": [ "h == 62", "h == 63" ],
         "baseMaterial": "NONE"
       }
     ]
@@ -44631,7 +44631,7 @@
     ]
   },
   {
-    "description": " Varlamore - Fortis wooden plank Door",
+    "description": "Varlamore - Fortis wooden plank Door",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -47262,7 +47262,7 @@
       {
         "description": "Metal",
         "baseMaterial": "METALLIC_1_SEMIGLOSS",
-        "colors": "s == 0 ",
+        "colors": "s == 0",
         "uvType": "BOX",
         "uvOrientation": 42,
         "uvScale": 0.5
@@ -50243,7 +50243,7 @@
     "colorOverrides": [
       {
         "description": "Blood",
-        "colors": " h == 0 && s == 7",
+        "colors": "h == 0 && s == 7",
         "baseMaterial": "GRUNGE_3_SHINY",
         "uvType": "MODEL_XZ"
       }
@@ -51880,7 +51880,7 @@
     "uvScale": 0.6
   },
   {
-    "description": "Zeah - Hosiduis - Kourend - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "description": "Zeah - Hosiduis - Kourend - Porcelain - Metallic - Wooden - Fancy Sink",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -53474,7 +53474,7 @@
     ]
   },
   {
-    "description": "Varrock - Castle Garden - Stone - Dirt - Flow beds with mason bricks ",
+    "description": "Varrock - Castle Garden - Stone - Dirt - Flow beds with mason bricks",
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -53888,7 +53888,7 @@
       },
       {
         "description": "Glass",
-        "colors": "a < 255 ",
+        "colors": "a < 255",
         "baseMaterial": "BLANK_GLOSS",
         "uvType": "MODEL_XY"
       }
@@ -56360,7 +56360,7 @@
     ]
   },
   {
-    "description": "Aldarin - Shayzian - Porcelain - Metallic - Wooden - Fancy Sink ",
+    "description": "Aldarin - Shayzian - Porcelain - Metallic - Wooden - Fancy Sink",
     "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
     "uvType": "BOX",
     "uvScale": 0.4,
@@ -57007,7 +57007,7 @@
     "colorOverrides": [
       {
         "description": "Stone",
-        "colors": " h == 7 && s <= 1",
+        "colors": "h == 7 && s <= 1",
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX",
         "uvScale": 0.66,
@@ -57026,7 +57026,7 @@
     "colorOverrides": [
       {
         "description": "Log",
-        "colors": " h == 7 && s == 1",
+        "colors": "h == 7 && s == 1",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.66
@@ -63078,7 +63078,7 @@
       },
       {
         "description": "Cloth",
-        "colors": " h == 5",
+        "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvOrientationX": 512
