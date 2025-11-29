@@ -20810,7 +20810,24 @@
     "objectIds": [
       "MISC_LANTERN",
       "VC_LANTERN_DECOR",
-      "QUEST_LUNAR_HANGING_LANTERN",
+      "QUEST_LUNAR_HANGING_LANTERN"
+    ]
+  },
+  {
+    "description": "Shilo Mine Lantern",
+    "offset": [ -8, 115, 30 ],
+    "alignment": "CENTER",
+    "radius": 500,
+    "strength": 16,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
       "ATJUN_MINE_WALL_LAMP"
     ]
   },
@@ -39185,7 +39202,7 @@
     "description": "Mastering Mixology - Godray lights - Hovering in mid air to add depth to scene",
     "height": -70,
     "alignment": "CENTER",
-    "radius": 600,
+    "radius": 750,
     "strength": 15,
     "color": [
       255,
@@ -39197,6 +39214,35 @@
     "range": 0,
     "objectIds": [
       "MM_LAB_LIGHT_GODRAY02_LARGE01_BRIGHT01"
+    ]
+  },
+  {
+    "description": "Mastering Mixology - Retort Fire",
+    "height": 90,
+    "alignment": "CENTER",
+    "radius": 120,
+    "strength": 7.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeOutDuration": 150,
+    "fadeInDuration": 150,
+    "objectIds": [
+      "MM_LAB_MACHINE_RETORT_MAL",
+      "MM_LAB_MACHINE_RETORT_MMM",
+      "MM_LAB_MACHINE_RETORT_MMA",
+      "MM_LAB_MACHINE_RETORT_MML",
+      "MM_LAB_MACHINE_RETORT_AAA",
+      "MM_LAB_MACHINE_RETORT_AAM",
+      "MM_LAB_MACHINE_RETORT_AAL",
+      "MM_LAB_MACHINE_RETORT_LLL",
+      "MM_LAB_MACHINE_RETORT_LLA",
+      "MM_LAB_MACHINE_RETORT_LLM"
     ]
   },
   {

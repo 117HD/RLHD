@@ -325,6 +325,13 @@
     ]
   },
   {
+    "name": "VARROCK_HOUSE_3",
+    "aabbs": [
+      [ 3268, 3376, 3273, 3384, 1 ],
+      [ 3265, 3376, 3267, 3379, 1 ]
+    ]
+  },
+  {
     "name": "VARROCK_BLUE_MOON_INN",
     "aabbs": [
       [ 3228, 3397, 0, 3233, 3402, 0 ],
@@ -5320,6 +5327,12 @@
     ]
   },
   {
+    "name": "MASTERING_MIXOLOGY_WIND",
+    "aabbs": [
+      [ 1386, 9319, 1401, 9333 ]
+    ]
+  },
+  {
     "name": "FOSSIL_ISLAND_WYVERN_TASK_CAVE",
     "regions": [
       14496
@@ -5447,6 +5460,12 @@
     "name": "Rantz's cave (Big Chompy Bird Hunting)",
     "regions": [ 10642 ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "SHILO_VILLAGE_MINE_SURFACE",
+    "aabbs": [
+      [ 2815, 2990, 2833, 3007 ]
+    ]
   },
   {
     "name": "SHILO_VILLAGE_MINE",
@@ -8612,6 +8631,10 @@
     ]
   },
   {
+    "name": "PANDEMONIUM_QUEST_INSTANCE",
+    "regions": [ 5958 ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
@@ -8642,6 +8665,7 @@
   {
     "name": "MAINLAND_EXTENSIONS",
     "areas": [
+      "PANDEMONIUM_QUEST_INSTANCE",
       "BRAINDEATH_ISLAND",
       "CLAN_HALL",
       "CLAN_WARS_ARENAS_OVERWORLD",
