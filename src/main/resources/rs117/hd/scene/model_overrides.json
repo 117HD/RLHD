@@ -66164,7 +66164,7 @@
     ]
   },
   {
-    "description": "Depth Bias Fix - PoH Pools & Ponds",
+    "description": "Depth Bias Fix - POH Restoration Pools",
     "objectIds": [
       "POH_POOL_REJUVENATION",
       "POH_POOL_REGENERATION",
@@ -66176,11 +66176,28 @@
       "XMAS20_POH_POOL_RESTORATION",
       "XMAS20_POH_POOL_REVITALISATION",
       "XMAS20_POH_POOL_RECOVERY",
-      "XMAS20_POH_POOL_REGENERATION",
-      "POH_CRUDE_GARDEN_CENTREPIECE3",
-      "POH_CRUDE_GARDEN_CENTREPIECE4"
+      "XMAS20_POH_POOL_REGENERATION"
     ],
     "depthBias": 210
+  },
+  {
+    "description": "Depth Bias Fix - Garden Ornaments",
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3",
+      "POH_CRUDE_GARDEN_CENTREPIECE4",
+      "POH_CRUDE_GARDEN_CENTREPIECE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      }
+    ]
   },
   {
     "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
