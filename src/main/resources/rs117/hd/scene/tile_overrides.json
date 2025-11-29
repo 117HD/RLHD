@@ -3712,6 +3712,20 @@
     "groundMaterial": "GRASSY_DIRT"
   },
   {
+    "name": "PRIFDDINAS_TEMPLE_FLOOR",
+    "area": "PRIFDDINAS_TEMPLE_FLOOR_FIX",
+    "overlayIds": [ 118 ],
+    "underlayIds": [ 143 ],
+    "groundMaterial": "CARPET",
+    "blendedAsOpposite": true
+  },
+  {
+    "name": "PRIFDDINAS_GRASS",
+    "area": "PRIFDDINAS",
+    "underlayIds": [ 48, 67, 143 ],
+    "groundMaterial": "OVERWORLD_GRASS_1"
+  },
+  {
     "name": "Grand Library Floor",
     "area": "SOTE_GRAND_LIBRARY",
     "groundMaterial": "CARPET",
