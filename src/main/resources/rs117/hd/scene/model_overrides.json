@@ -63626,6 +63626,11 @@
         "description": "Rope",
         "colors": "h == 8",
         "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h == 1 || h > 15",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       }
     ]
   },
@@ -63653,8 +63658,18 @@
         "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       },
       {
-        "description": "Sail",
+        "description": "Sail Low Tier",
         "colors": "h == 11 || h == 12",
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 400,
+        "receiveShadows": false,
+        "undoVanillaShading": false
+      },
+      {
+        "description": "Sail Med Tier",
+        "colors": "h == 6 && s == 1",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
         "uvType": "BOX",
         "uvScale": 0.3,
@@ -63753,7 +63768,7 @@
     "description": "Sailing - Skiff and Sloop - Sail - All others",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientationY": 500,
+    "uvOrientationY": 525,
     "uvScale": 0.5,
     "objectIds": [
       "SAILING_BOAT_SAIL_KANDARIN_2X5_OAK",
@@ -63908,7 +63923,7 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH"
       },
       {
         "description": "Metal",
