@@ -3484,7 +3484,7 @@
     ],
     "flatNormals": true,
     "uvType": "BOX",
-    "uvScale": 1.25
+    "uvScale": 1
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
