@@ -26,24 +26,68 @@
 
 #include <uniforms/global.glsl>
 
+#include <utils/constants.glsl>
+#include <utils/color_utils.glsl>
+
 // translates a value from a custom range into 0-1
-float translateRange(float rangeStart, float rangeEnd, float value)
-{
+float translateRange(float rangeStart, float rangeEnd, float value) {
     return (value - rangeStart) / (rangeEnd - rangeStart);
 }
 
 // returns a value between 0-1 representing a frame of animation
 // based on the length of the animation
-float animationFrame(float animationDuration)
-{
+float animationFrame(float animationDuration) {
     if (animationDuration == 0)
         return 0.0;
     return mod(elapsedTime, animationDuration) / animationDuration;
 }
 
-vec2 animationFrame(vec2 animationDuration)
-{
+vec2 animationFrame(vec2 animationDuration) {
     if (animationDuration == vec2(0))
         return vec2(0);
     return mod(vec2(elapsedTime), vec2(animationDuration)) / animationDuration;
+}
+
+vec3 windowsHdrCorrection(vec3 c) {
+    // SDR monitors *usually* apply a gamma 2.2 curve, instead of the piece-wise sRGB curve, leading to the following
+    // technically incorrect operation for *most* SDR monitors, producing our *expected* final result (first line).
+    // In Windows' SDR-in-HDR implementation however, the piece-wise sRGB EOTF is used, leading to technically correct
+    // linear colors before transformation to HDR, but this is *not* the *expected* output. To counteract this, we can
+    // transform our output from linear to sRGB, then from gamma 2.2 to linear, effectively replacing Windows' HDR sRGB
+    // conversion with our expected gamma 2.2 conversion for SDR content, to within rounding error of the output format.
+    // sRGB ----------------------------------> SDR screen gammaToLinear --> expected (although technically incorrect)
+    // sRGB ----------------------------------> Windows' HDR srgbToLinear -> linear (technically correct, not expected)
+    // sRGB -> linearToSrgb -> gammaToLinear -> Windows' HDR srgbToLinear -> expected (same as the SDR case)
+    // https://github.com/clshortfuse/renodx (MIT license)
+    return pow(linearToSrgb(c), vec3(2.2));
+}
+
+void undoVanillaShading(inout int hsl, vec3 unrotatedNormal) {
+    const vec3 LIGHT_DIR_MODEL = vec3(0.57735026, 0.57735026, 0.57735026);
+    // subtracts the X lowest lightness levels from the formula.
+    // helps keep darker colors appropriately dark
+    const int IGNORE_LOW_LIGHTNESS = 3;
+    // multiplier applied to vertex' lightness value.
+    // results in greater lightening of lighter colors
+    const float LIGHTNESS_MULTIPLIER = 3.f;
+    // the minimum amount by which each color will be lightened
+    const int BASE_LIGHTEN = 10;
+
+    int saturation = hsl >> 7 & 0x7;
+    int lightness = hsl & 0x7F;
+    float vanillaLightDotNormals = dot(LIGHT_DIR_MODEL, unrotatedNormal);
+    if (vanillaLightDotNormals > 0) {
+        vanillaLightDotNormals /= length(unrotatedNormal);
+        float lighten = max(0, lightness - IGNORE_LOW_LIGHTNESS);
+        lightness += int((lighten * LIGHTNESS_MULTIPLIER + BASE_LIGHTEN - lightness) * vanillaLightDotNormals);
+    }
+    int maxLightness;
+    #if LEGACY_GREY_COLORS
+        maxLightness = 55;
+    #else
+        maxLightness = int(127 - 72 * pow(saturation / 7., .05));
+    #endif
+    lightness = min(lightness, maxLightness);
+    hsl &= ~0x7F;
+    hsl |= lightness;
 }

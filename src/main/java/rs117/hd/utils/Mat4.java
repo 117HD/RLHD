@@ -99,6 +99,31 @@ public class Mat4
 		};
 	}
 
+	/**
+	 * Create a perspective projection matrix matching vanilla OSRS projection, with a finite far plane.
+	 *
+	 * @param w viewport width
+	 * @param h viewport height
+	 * @param n near plane
+	 * @param f far plane
+	 * @return 4x4 column-major matrix
+	 */
+	public static float[] perspective(float w, float h, float n, float f) {
+		// Same projection as vanilla, except with slightly more depth precision, and a usable far plane for clipping calculations
+		w = 2 / w;
+		h = 2 / h;
+		float a = (1 + n / f) / (n / f - 1);
+		float b = a * n - n;
+		float c = -1; // perspective divide by -z
+		return new float[]
+			{
+				w, 0, 0, 0,
+				0, h, 0, 0,
+				0, 0, a, c,
+				0, 0, b, 0
+			};
+	}
+
 	public static float[] orthographic(float w, float h, float n)
 	{
 		return new float[] {
@@ -207,6 +232,121 @@ public class Mat4
 		out[3] = d;
 	}
 
+	public static float[][] extractFrustumCorners(float[] invViewProj, float[][] corners) {
+		int index = 0;
+
+		for (int z = 0; z <= 1; z++) {
+			for (int y = 0; y <= 1; y++) {
+				for (int x = 0; x <= 1; x++) {
+					// Convert from 0/1 to -1/+1 for NDC
+					float ndcX = x * 2.0f - 1.0f;
+					float ndcY = y * 2.0f - 1.0f;
+					float ndcZ = z * 2.0f - 1.0f;
+
+					float[] ndc = new float[] { ndcX, ndcY, ndcZ, 1.0f };
+					float[] world = new float[4];
+
+					projectVec(world, invViewProj, ndc);
+
+					// Store world-space XYZ
+					corners[index][0] = world[0];
+					corners[index][1] = world[1];
+					corners[index][2] = world[2];
+					index++;
+				}
+			}
+		}
+
+		return corners;
+	}
+
+	public static void extractPlanes(float[] mat, float[][] planes) {
+		// Each plane is defined as: ax + by + cz + d = 0
+		// Extract rows from the matrix (column-major order)
+		float m00 = mat[0], m01 = mat[4], m02 = mat[8], m03 = mat[12];
+		float m10 = mat[1], m11 = mat[5], m12 = mat[9], m13 = mat[13];
+		float m20 = mat[2], m21 = mat[6], m22 = mat[10], m23 = mat[14];
+		float m30 = mat[3], m31 = mat[7], m32 = mat[11], m33 = mat[15];
+
+		// Left = row3 + row0
+		float[] left = planes[0];
+		left[0] = m30 + m00;
+		left[1] = m31 + m01;
+		left[2] = m32 + m02;
+		left[3] = m33 + m03;
+		normalizePlane(left, left);
+
+		// Right = row3 - row0
+		float[] right = planes[1];
+		right[0] = m30 - m00;
+		right[1] = m31 - m01;
+		right[2] = m32 - m02;
+		right[3] = m33 - m03;
+		normalizePlane(right, right);
+
+		// Bottom = row3 + row1
+		float[] bottom = planes[2];
+		bottom[0] = m30 + m10;
+		bottom[1] = m31 + m11;
+		bottom[2] = m32 + m12;
+		bottom[3] = m33 + m13;
+		normalizePlane(bottom, bottom);
+
+		// Top = row3 - row1
+		float[] top = planes[3];
+		top[0] = m30 - m10;
+		top[1] = m31 - m11;
+		top[2] = m32 - m12;
+		top[3] = m33 - m13;
+		normalizePlane(top, top);
+
+		// Near = row3 + row2
+		float[] near = planes[4];
+		near[0] = m30 + m20;
+		near[1] = m31 + m21;
+		near[2] = m32 + m22;
+		near[3] = m33 + m23;
+		normalizePlane(near, near);
+
+		// Far = row3 - row2
+		float[] far = planes[5];
+		far[0] = m30 - m20;
+		far[1] = m31 - m21;
+		far[2] = m32 - m22;
+		far[3] = m33 - m23;
+		normalizePlane(far, far);
+	}
+
+	/**
+	 * Multiplies a 4x4 matrix with a 3x1 vector, storing the result in the output vector, which may be the same as the input vector.
+	 * Transforms a 3D position by a 4x4 affine matrix (w = 1.0), ignoring the resulting W component.
+	 *
+	 * @param out  where the result should be stored
+	 * @param mat4 4x4 column-major matrix
+	 * @param vec3 3x1 vector
+	 */
+	@SuppressWarnings("PointlessArithmeticExpression")
+	public static void transformVecAffine(float[] out, float[] mat4, float[] vec3) {
+		float a =
+			mat4[0 * 4 + 0] * vec3[0] +
+			mat4[1 * 4 + 0] * vec3[1] +
+			mat4[2 * 4 + 0] * vec3[2] +
+			mat4[3 * 4 + 0] * 1.0f;
+		float b =
+			mat4[0 * 4 + 1] * vec3[0] +
+			mat4[1 * 4 + 1] * vec3[1] +
+			mat4[2 * 4 + 1] * vec3[2] +
+			mat4[3 * 4 + 1] * 1.0f;
+		float c =
+			mat4[0 * 4 + 2] * vec3[0] +
+			mat4[1 * 4 + 2] * vec3[1] +
+			mat4[2 * 4 + 2] * vec3[2] +
+			mat4[3 * 4 + 2] * 1.0f;
+		out[0] = a;
+		out[1] = b;
+		out[2] = c;
+	}
+
 	/**
 	 * Transforms the vector by the matrix, and does a perspective divide.
 	 *
@@ -216,8 +356,13 @@ public class Mat4
 	 */
 	public static void projectVec(float[] out, float[] mat4, float[] vec4) {
 		mulVec(out, mat4, vec4);
-		// Perspective divide
-		divide(out, out, out[3]);
+		if (out[3] != 0) {
+			// The 4th component should retain information about whether the
+			// point lies behind the camera
+			float reciprocal = 1 / Math.abs(out[3]);
+			for (int i = 0; i < 4; i++)
+				out[i] *= reciprocal;
+		}
 	}
 
 	public static void transpose(float[] m) {
@@ -237,6 +382,26 @@ public class Mat4
 		augmented[16] = augmented[21] = augmented[26] = augmented[31] = 1;
 		Matrix.solve(augmented, 4, 8);
 		return slice(augmented, 16);
+	}
+
+	public static void clipFrustumToDistance(float[][] frustumCorners, float maxDistance) {
+		if (frustumCorners.length != 8) {
+			return;
+		}
+
+		// Clip Far Plane Corners
+		for (int i = 4; i < frustumCorners.length; i++) {
+			float[] nearCorner = frustumCorners[i - 4];
+			float[] farCorner = frustumCorners[i];
+			float[] nearToFarVec = subtract(nearCorner, farCorner);
+			float len = length(nearToFarVec);
+
+			if (len > 1e-5f && len > maxDistance) {
+				normalize(nearToFarVec, nearToFarVec);
+				float[] clipped = multiply(nearToFarVec, maxDistance);
+				frustumCorners[i] = add(clipped, nearCorner);
+			}
+		}
 	}
 
 	public static void extractRow(float[] out, float[] mat4, int rowIndex) {
