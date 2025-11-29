@@ -48,8 +48,11 @@ public class ShaderProgram {
 		program = newProgram;
 		assert isValid();
 
-		for (var prop : uniformProperties)
+		for (var prop : uniformProperties) {
 			prop.uniformIndex = glGetUniformLocation(program, prop.uniformName);
+			if (prop.uniformIndex == -1 && !prop.ignoreMissing)
+				log.warn("{} has missing or unused {}: {}", getClass().getSimpleName(), prop.getClass().getSimpleName(), prop.uniformName);
+		}
 
 		for (var ubo : includes.uniformBuffers) {
 			int bindingIndex = glGetUniformBlockIndex(program, ubo.getUniformBlockName());
@@ -112,6 +115,7 @@ public class ShaderProgram {
 		ShaderProgram program;
 		String uniformName;
 		int uniformIndex;
+		boolean ignoreMissing;
 
 		void destroy() {
 			uniformIndex = -1;
