@@ -54,12 +54,10 @@ import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
 import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
 import rs117.hd.scene.lights.LightType;
-import rs117.hd.scene.lights.TileObjectImpostorTracker;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.Props;
@@ -602,9 +600,6 @@ public class LightManager {
 
 		if (oldSceneContext == null) {
 			sceneContext.lights.clear();
-			sceneContext.trackedTileObjects.clear();
-			sceneContext.trackedVarps.clear();
-			sceneContext.trackedVarbits.clear();
 			sceneContext.knownProjectiles.clear();
 		} else {
 			// Copy over NPC and projectile lights from the old scene
@@ -760,32 +755,46 @@ public class LightManager {
 			handleObjectSpawn(sceneContext, object);
 	}
 
+	private int getImpostorId(TileObject tileObject) {
+		ObjectComposition def = client.getObjectDefinition(tileObject.getId());
+		var impostorIds = def.getImpostorIds();
+		if (impostorIds != null) {
+			try {
+				int impostorVarbit = def.getVarbitId();
+				int impostorVarp = def.getVarPlayerId();
+				int impostorIndex = -1;
+				if (impostorVarbit != -1) {
+					impostorIndex = client.getVarbitValue(impostorVarbit);
+				} else if (impostorVarp != -1) {
+					impostorIndex = client.getVarpValue(impostorVarp);
+				}
+				if (impostorIndex >= 0)
+					return impostorIds[min(impostorIndex, impostorIds.length - 1)];
+			} catch (Exception ex) {
+				log.debug("Error getting impostor:", ex);
+			}
+		}
+		return tileObject.getId();
+	}
+
 	private void handleObjectSpawn(
 		@Nonnull SceneContext sceneContext,
 		@Nonnull TileObject tileObject
 	) {
-		if (sceneContext.trackedTileObjects.containsKey(tileObject))
-			return;
-
-		var tracker = new TileObjectImpostorTracker(tileObject);
-		sceneContext.trackedTileObjects.put(tileObject, tracker);
-
 		// prevent objects at plane -1 and below from having lights
 		if (tileObject.getPlane() < 0)
 			return;
 
-		ObjectComposition def = client.getObjectDefinition(tileObject.getId());
-		tracker.impostorIds = def.getImpostorIds();
-		if (tracker.impostorIds != null) {
-			tracker.impostorVarbit = def.getVarbitId();
-			tracker.impostorVarp = def.getVarPlayerId();
-			if (tracker.impostorVarbit != -1)
-				sceneContext.trackedVarbits.put(tracker.impostorVarbit, tracker);
-			if (tracker.impostorVarp != -1)
-				sceneContext.trackedVarps.put(tracker.impostorVarp, tracker);
-		}
+		int impostorId = getImpostorId(tileObject);
+		boolean isDuplicate = sceneContext.lights.stream()
+			.anyMatch(light ->
+				light.tileObject == tileObject &&
+				light.impostorId == impostorId);
+		if (isDuplicate)
+			return;
 
-		trackImpostorChanges(sceneContext, tracker);
+		sceneContext.lights.removeIf(light -> light.tileObject == tileObject);
+		spawnLights(sceneContext, tileObject, impostorId);
 	}
 
 	private void handleObjectDespawn(TileObject tileObject) {
@@ -793,49 +802,17 @@ public class LightManager {
 		if (sceneContext == null)
 			return;
 
-		var tracker = sceneContext.trackedTileObjects.remove(tileObject);
-		if (tracker == null)
-			return;
-
-		if (tracker.spawnedAnyLights) {
-			long hash = tracker.lightHash(tracker.impostorId);
-			removeLightIf(sceneContext, l -> l.hash == hash);
-		}
-
-		if (tracker.impostorVarbit != -1)
-			sceneContext.trackedVarbits.remove(tracker.impostorVarbit, tracker);
-		if (tracker.impostorVarp != -1)
-			sceneContext.trackedVarps.remove(tracker.impostorVarp, tracker);
+		int impostorId = getImpostorId(tileObject);
+		removeLightIf(sceneContext, l -> l.tileObject == tileObject && l.impostorId == impostorId);
 	}
 
-	private void trackImpostorChanges(@Nonnull SceneContext sceneContext, TileObjectImpostorTracker tracker) {
-		int impostorId = -1;
-		if (tracker.impostorIds != null) {
-			try {
-				int impostorIndex = -1;
-				if (tracker.impostorVarbit != -1) {
-					impostorIndex = client.getVarbitValue(tracker.impostorVarbit);
-				} else if (tracker.impostorVarp != -1) {
-					impostorIndex = client.getVarpValue(tracker.impostorVarp);
-				}
-				if (impostorIndex >= 0)
-					impostorId = tracker.impostorIds[min(impostorIndex, tracker.impostorIds.length - 1)];
-			} catch (Exception ex) {
-				log.debug("Error getting impostor:", ex);
-			}
-		}
-
-		// Don't do anything if the impostor is the same, unless the object just spawned
-		if (impostorId == tracker.impostorId && !tracker.justSpawned)
-			return;
-
+	private void spawnLights(@Nonnull SceneContext sceneContext, TileObject tileObject, int impostorId) {
 		int sizeX = 1;
 		int sizeY = 1;
 		Renderable[] renderables = new Renderable[2];
 		int[] orientations = { 0, 0 };
 		int[] offset = { 0, 0 };
 
-		var tileObject = tracker.tileObject;
 		if (tileObject instanceof GroundObject) {
 			var object = (GroundObject) tileObject;
 			renderables[0] = object.getRenderable();
@@ -885,14 +862,6 @@ public class LightManager {
 			return;
 		}
 
-		// Despawn old lights, if we spawned any for the previous impostor
-		if (tracker.spawnedAnyLights) {
-			long oldHash = tracker.lightHash(tracker.impostorId);
-			removeLightIf(sceneContext, l -> l.hash == oldHash);
-			tracker.spawnedAnyLights = false;
-		}
-
-		long newHash = tracker.lightHash(impostorId);
 		List<LightDefinition> lights = OBJECT_LIGHTS.get(impostorId == -1 ? tileObject.getId() : impostorId);
 		HashSet<LightDefinition> onlySpawnOnce = new HashSet<>();
 
@@ -956,8 +925,8 @@ public class LightManager {
 				float tileHeight = mix(heightSouth, heightNorth, lerpZ);
 
 				Light light = new Light(def);
-				light.hash = newHash;
 				light.tileObject = tileObject;
+				light.impostorId = impostorId;
 				light.plane = plane;
 				light.orientation = orientations[i];
 				light.origin[0] = lightX;
@@ -966,12 +935,8 @@ public class LightManager {
 				light.sizeX = sizeX;
 				light.sizeY = sizeY;
 				sceneContext.lights.add(light);
-				tracker.spawnedAnyLights = true;
 			}
 		}
-
-		tracker.impostorId = impostorId;
-		tracker.justSpawned = false;
 	}
 
 	private void addWorldLight(SceneContext sceneContext, Light light) {
@@ -1145,24 +1110,26 @@ public class LightManager {
 		handleObjectDespawn(despawn.getGroundObject());
 	}
 
-	@Subscribe
-	public void onVarbitChanged(VarbitChanged event) {
-		var sceneContext = plugin.getSceneContext();
-		if (sceneContext == null)
-			return;
-
-		if (plugin.enableDetailedTimers)
-			frameTimer.begin(Timer.IMPOSTOR_TRACKING);
-		// Check if the event is specifically a varbit change first,
-		// since all varbit changes are necessarily also varp changes
-		if (event.getVarbitId() != -1) {
-			for (var tracker : sceneContext.trackedVarbits.get(event.getVarbitId()))
-				trackImpostorChanges(sceneContext, tracker);
-		} else if (event.getVarpId() != -1) {
-			for (var tracker : sceneContext.trackedVarps.get(event.getVarpId()))
-				trackImpostorChanges(sceneContext, tracker);
-		}
-		if (plugin.enableDetailedTimers)
-			frameTimer.end(Timer.IMPOSTOR_TRACKING);
-	}
+	// TODO: Check whether this is still necessary. If so, we could track varbits/varps within each light
+//	@Subscribe
+//	public void onVarbitChanged(VarbitChanged event) {
+//		var ctx = plugin.getSceneContext();
+//		if (!(ctx instanceof LegacySceneContext))
+//			return;
+//		var sceneContext = (LegacySceneContext) ctx;
+//
+//		if (plugin.enableDetailedTimers)
+//			frameTimer.begin(Timer.IMPOSTOR_TRACKING);
+//		// Check if the event is specifically a varbit change first,
+//		// since all varbit changes are necessarily also varp changes
+//		if (event.getVarbitId() != -1) {
+//			for (var tracker : sceneContext.trackedVarbits.get(event.getVarbitId()))
+//				trackImpostorChanges(sceneContext, tracker);
+//		} else if (event.getVarpId() != -1) {
+//			for (var tracker : sceneContext.trackedVarps.get(event.getVarpId()))
+//				trackImpostorChanges(sceneContext, tracker);
+//		}
+//		if (plugin.enableDetailedTimers)
+//			frameTimer.end(Timer.IMPOSTOR_TRACKING);
+//	}
 }
