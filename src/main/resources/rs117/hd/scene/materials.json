@@ -1098,6 +1098,12 @@
     "specularGloss": 55.0
   },
   {
+    "name": "BASE_SEMIGLOSS",
+    "parent": "GRAY_85",
+    "specularStrength": 0.35,
+    "specularGloss": 80.0
+  },
+  {
     "name": "SNOW_1_N"
   },
   {
@@ -1589,9 +1595,14 @@
     "normalMap": "ROCK_4_N",
     "displacementMap": "ROCK_4_D",
     "brightness": 1.083,
-    "displacementScale": 0.15,
+    "displacementScale": 0.12,
     "specularStrength": 0.4,
-    "specularGloss": 20.0
+    "specularGloss": 20.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.9
+    ]
   },
   {
     "name": "ROCK_4_DARK",
@@ -1614,9 +1625,19 @@
     "normalMap": "ROCK_5_N",
     "displacementMap": "ROCK_5_D",
     "brightness": 1.083,
-    "displacementScale": 0.15,
+    "displacementScale": 0.12,
     "specularStrength": 0.4,
-    "specularGloss": 20.0
+    "specularGloss": 20.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.9
+    ]
+  },
+  {
+    "name": "ROCK_5_LIGHT",
+    "parent": "ROCK_5",
+    "brightness": 1.25
   },
   {
     "name": "ROCK_5_ORE",
