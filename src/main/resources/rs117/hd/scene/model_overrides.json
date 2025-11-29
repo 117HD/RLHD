@@ -11756,7 +11756,8 @@
   },
   {
     "description": "POH entrance portals",
-    "baseMaterial": "STONE",
+    "baseMaterial": "NONE",
+    "castShadows": false,
     "objectIds": [
       "POH_TAVERLY_PORTAL",
       "POH_RIMMINGTON_PORTAL",
@@ -11768,7 +11769,14 @@
       "SOUL_WARS_ENCLAVE_PORTAL",
       "POH_KOUREND_PORTAL"
     ],
-    "shadowOpacityThreshold": 0.12
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Clocktower metal pipes",
