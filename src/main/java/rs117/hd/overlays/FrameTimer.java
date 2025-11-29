@@ -2,6 +2,7 @@ package rs117.hd.overlays;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -15,6 +16,8 @@ import static org.lwjgl.opengl.GL33C.*;
 @Slf4j
 @Singleton
 public class FrameTimer {
+	protected static final ConcurrentLinkedDeque<TimerHandle> FRAME_TIMER_HANDLE_POOL = new ConcurrentLinkedDeque<>();
+
 	@Inject
 	private ClientThread clientThread;
 
@@ -157,6 +160,19 @@ public class FrameTimer {
 		}
 	}
 
+	public TimerHandle pushTimer(Timer timer) {
+		TimerHandle handle = FRAME_TIMER_HANDLE_POOL.poll();
+		if(handle == null)
+			handle = new TimerHandle();
+		handle.timer = timer;
+		return handle;
+	}
+
+	public void addTimestamp(Timer timer, long time) {
+		if (isActive)
+			timings[timer.ordinal()] += System.nanoTime() - time;
+	}
+
 	public void add(Timer timer, long time) {
 		if (isActive)
 			timings[timer.ordinal()] += time;
@@ -202,5 +218,20 @@ public class FrameTimer {
 			listener.onFrameCompletion(frameTimings);
 
 		reset();
+	}
+
+	public class TimerHandle implements AutoCloseable {
+		private Timer timer;
+
+		protected void push(Timer timer) {
+			this.timer = timer;
+			begin(timer);
+		}
+
+		@Override
+		public void close() {
+			end(timer);
+			FRAME_TIMER_HANDLE_POOL.add(this);
+		}
 	}
 }

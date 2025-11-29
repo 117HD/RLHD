@@ -167,7 +167,15 @@ public class Camera {
 	}
 
 	public float[] getPosition() {
-		return Arrays.copyOf(position, 3);
+		return copy(position);
+	}
+
+	public float distanceTo(float[] point) {
+		return distance(position, point);
+	}
+
+	public float distanceTo(float x, float y, float z) {
+		return distance(position, vec(x, y, z));
 	}
 
 	public Camera translate(float[] translation) {

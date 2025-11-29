@@ -1045,6 +1045,17 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_ZONE_STREAMING = "experimentalZoneStreaming";
+	@ConfigItem(
+		keyName = KEY_ZONE_STREAMING,
+		name = "Zone streaming",
+		description = "Streams distant zones in parallel into memory instead of blocking and causing a noticeable stall.",
+		section = experimentalSettings
+	)
+	default boolean zoneStreaming() {
+		return true;
+	}
+
 	String KEY_PRESERVE_VANILLA_NORMALS = "experimentalPreserveVanillaNormals";
 	@ConfigItem(
 		keyName = KEY_PRESERVE_VANILLA_NORMALS,

@@ -25,12 +25,14 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.util.HashMap;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
 import rs117.hd.opengl.uniforms.UBOWaterTypes;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.FileWatcher;
@@ -60,7 +62,12 @@ public class WaterTypeManager {
 	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
+	@Inject
+	private SceneManager sceneManager;
+
 	public static WaterType[] WATER_TYPES = {};
+
+	private HashMap<String, Integer> nameToWaterTypeIdx = new HashMap<>();
 
 	public UBOWaterTypes uboWaterTypes;
 
@@ -69,6 +76,9 @@ public class WaterTypeManager {
 	public void startUp() {
 		fileWatcher = WATER_TYPES_PATH.watch((path, first) -> clientThread.invoke(() -> {
 			try {
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+
 				var rawWaterTypes = path.loadJson(plugin.getGson(), WaterType[].class);
 				if (rawWaterTypes == null)
 					throw new IOException("Empty or invalid: " + path);
@@ -79,8 +89,11 @@ public class WaterTypeManager {
 				System.arraycopy(rawWaterTypes, 0, waterTypes, 1, rawWaterTypes.length);
 
 				Material fallbackNormalMap = materialManager.getMaterial("WATER_NORMAL_MAP_1");
-				for (int i = 0; i < waterTypes.length; i++)
+				nameToWaterTypeIdx.clear();
+				for (int i = 0; i < waterTypes.length; i++) {
 					waterTypes[i].normalize(i, fallbackNormalMap);
+					nameToWaterTypeIdx.put(waterTypes[i].name, i);
+				}
 
 				var oldWaterTypes = WATER_TYPES;
 				WATER_TYPES = waterTypes;
@@ -119,6 +132,9 @@ public class WaterTypeManager {
 				}
 			} catch (IOException ex) {
 				log.error("Failed to load water types:", ex);
+			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.debug("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		}));
 	}
@@ -141,9 +157,7 @@ public class WaterTypeManager {
 	}
 
 	public WaterType get(String name) {
-		for (var type : WATER_TYPES)
-			if (name.equals(type.name))
-				return type;
-		return WaterType.NONE;
+		int index = nameToWaterTypeIdx.getOrDefault(name, -1);
+		return index != -1 ? WATER_TYPES[index] : WaterType.NONE;
 	}
 }

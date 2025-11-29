@@ -9,6 +9,10 @@ public class ZoneSceneContext extends SceneContext {
 //	public final Zone[][] zones;
 //	public final int numZonesX, numZonesY;
 
+	public int totalReused;
+	public int totalDeferred;
+	public int totalMapZones;
+
 	public ZoneSceneContext(
 		Client client,
 		WorldView worldView,
