@@ -8688,6 +8688,14 @@
     "regions": [ 5958 ]
   },
   {
+    "name": "SHIPYARD_CONCRETE",
+    "aabbs": [
+      [ 2082, 2706, 2097, 2708 ],
+      [ 2082, 2709, 2086, 2728 ],
+      [ 2082, 2729, 2097, 2731 ]
+    ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",

@@ -6317,6 +6317,14 @@
     "groundMaterial": "PACKED_EARTH"
   },
   {
+    "area": "SHIPYARD_CONCRETE",
+    "overlayIds": [ 186 ],
+    "groundMaterial": "GRAY_50",
+    "setSaturation": 1,
+    "setLightness": 8,
+    "blended": false
+  },
+  {
     "name": "OVERLAY_GRAVEL",
     "area": "ALL",
     "overlayIds": [
