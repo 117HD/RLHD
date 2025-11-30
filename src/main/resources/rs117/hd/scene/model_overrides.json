@@ -3805,6 +3805,40 @@
     ]
   },
   {
+    "description": "Edgeville - Roof with Walls",
+    "areas": [ "EDGEVILLE" ],
+    "flatNormals": true,
+    "materialOverrides": {
+      "HD_BRICK": {
+        "textureMaterial": "HD_BRICKWALL"
+      }
+    },
+    "objectIds": [
+      "ROOFWALLFILLER",
+      "ROOF_WOODEN"
+    ]
+  },
+  {
+    "description": "Edgeville - Walls",
+    "areas": [ "EDGEVILLE" ],
+    "flatNormals": true,
+    "textureMaterial": "HD_BRICKWALL",
+    "objectIds": [
+      "CASTLEBATTLEMENTS",
+      "BRICKWALL"
+    ]
+  },
+  {
+    "description": "Edgeville Monastary - Walls",
+    "areas": [ "EDGEVILLE_MONASTERY" ],
+    "textureMaterial": "HD_BRICKWALL",
+    "baseMaterial": "WATTLE_1",
+    "objectIds": [
+      "PAINTEDBRICKWALL_1",
+      "PAINTEDBRICKWALL_2"
+    ]
+  },
+  {
     "description": "CASTLE_WALLS",
     "flatNormals": true,
     "objectIds": [
