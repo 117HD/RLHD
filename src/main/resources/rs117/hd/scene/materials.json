@@ -2418,6 +2418,11 @@
     "specularGloss": 65.0
   },
   {
+    "name": "METALLIC_1_SEMI_LIGHT",
+    "parent": "METALLIC_1",
+    "brightness": 1.33
+  },
+  {
     "name": "METALLIC_1_VERY_LIGHT",
     "parent": "METALLIC_1",
     "brightness": 1.516
