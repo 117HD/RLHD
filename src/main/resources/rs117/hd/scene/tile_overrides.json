@@ -9064,7 +9064,7 @@
     ],
     "replacements": {
       "DEFAULT_GRASS": "h >= 10",
-      "DEFAULT_SAND": "h == 8 ",
+      "DEFAULT_SAND": "h == 8",
       "DEFAULT_DIRT": [
         "h == 8 && s == 2",
         "h == 9"
@@ -9091,7 +9091,7 @@
     ],
     "replacements": {
       "DEFAULT_GRASS": "h >= 10",
-      "DEFAULT_DIRT": "h <= 9 "
+      "DEFAULT_DIRT": "h <= 9"
     }
   },
   {
