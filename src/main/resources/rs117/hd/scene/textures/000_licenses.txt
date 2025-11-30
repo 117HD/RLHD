@@ -56,7 +56,7 @@ ROCK_5, ROCK_5_N, ROCK_5_D textures from AmbientCG. All textures on this site ar
 HD_CONCRETE, HD_CONCRETE_N  and HD_CONCRETE_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Rock030
 
-HD_BRICK, HD_BRICK_N, HD_BRICk_D textures from AmbientCG. All textures on this site are licensed as CC0.
+HD_BRICKWALL, HD_BRICKWALL_N, HD_BRICkWALL_D textures from AmbientCG. All textures on this site are licensed as CC0.
 -- https://ambientcg.com/view?id=Bricks061
 
 HD_BRICK_BROWN, HD_BRICK_BROWN_N, HD_BRICK_BROWN_D textures from AmbientCG. All textures on this site are licensed as CC0.
@@ -110,3 +110,6 @@ GROUND_WEB_# and variants made by SirFancyBacon for the purpose of this project 
 
 LEAVES_1 and LEAVES_1_N are a modification of textures from CC0-Textures. All textures on this site are licensed as CC0.
 https://cc0-textures.com/t/cc0t-scattered-leaves-001
+
+HD_BRICK, HD_BRICK_N, HD_BRICk_D textures from cc0-textures.com. All textures on this site are licensed as CC0.
+-- https://cc0-textures.com/t/th-rustic-stone-wall
