@@ -1383,7 +1383,7 @@ public class HdPlugin extends Plugin {
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 	}
 
-	private void drawUi(int overlayColor) {
+	public void drawUi(int overlayColor) {
 		if (uiResolution == null || developerToolManager.isHideUiEnabled() && hasLoggedIn)
 			return;
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
