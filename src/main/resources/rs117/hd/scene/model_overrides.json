@@ -67037,6 +67037,33 @@
     ]
   },
   {
+    "description": "Depth Bias Fix - Fire of Nourishment",
+    "baseMaterial": "NONE",
+    "castShadows": false,
+    "receiveShadows": false,
+    "objectIds": [
+      "MY2ARM_HERBPATCH_FIRE",
+      "MY2ARM_HERBPATCH_FIRE_SPECIAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "BONE"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "colors": "h > 4 && a > 222",
+        "baseMaterial": "TRANSPARENT",
+        "castShadows": false
+      }
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Tempoross Pools",
     "objectIds": [
       "TEMPOROSS_REWARDPOOL_0",
