@@ -65556,7 +65556,7 @@
       {
         "description": "Canvas Roof",
         "baseMaterial": "CARPET_LIGHT_SMOOTH",
-        "colors": "h > 6  && h < 11"
+        "colors": "h > 6 && h < 11"
       },
       {
         "description": "Window",
