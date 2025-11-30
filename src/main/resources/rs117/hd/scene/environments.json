@@ -1373,6 +1373,29 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "THE_STORM_TEMPOR_EDGE",
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3.5,
+    "directionalColor": "#707070",
+    "fogColor": "#99AECC",
+    "fogDepth": 10
+  },
+  {
+    "area": "THE_STORM_TEMPOR",
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3,
+    "directionalColor": "#707070",
+    "directionalStrength": 1,
+    "fogColor": "#4B505B",
+    "fogDepth": 20,
+    "windStrength": 65,
+    "windCeiling": 750,
+    "windSpeed": 20,
+    "groundFogStart": 0,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.25
+  },
+  {
     "area": "TEMPLE_OF_THE_EYE",
     "isUnderwater": true,
     "directionalColor": "#e6f4ff",
