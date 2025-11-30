@@ -30,7 +30,6 @@ import java.nio.IntBuffer;
 import java.nio.LongBuffer;
 import java.nio.ShortBuffer;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.util.OSType;
@@ -50,6 +49,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
 import rs117.hd.opengl.uniforms.UBOCompute;
+import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
 
 import static org.lwjgl.opencl.APPLEGLSharing.CL_CGL_DEVICE_FOR_CURRENT_VIRTUAL_SCREEN_APPLE;
@@ -63,7 +63,6 @@ import static org.lwjgl.system.MemoryUtil.memASCII;
 import static org.lwjgl.system.MemoryUtil.memUTF8;
 import static rs117.hd.utils.MathUtils.*;
 
-@Singleton
 @Slf4j
 public class OpenCLManager {
 	private static final String KERNEL_NAME_PASSTHROUGH = "passthroughModel";
@@ -80,6 +79,8 @@ public class OpenCLManager {
 
 	@Inject
 	private HdPlugin plugin;
+
+	private LegacyRenderer legacyRenderer;
 
 	public static long context;
 
@@ -101,12 +102,13 @@ public class OpenCLManager {
 		Configuration.OPENCL_EXPLICIT_INIT.set(true);
 	}
 
-	public void startUp(AWTContext awtContext) {
+	public void startUp(LegacyRenderer legacyRenderer, AWTContext awtContext) {
+		this.legacyRenderer = legacyRenderer;
 		CL.create();
 		initialized = true;
-		initContext(awtContext);
+		initializeContext(awtContext);
 		log.debug("Device CL_DEVICE_MAX_WORK_GROUP_SIZE: {}", getMaxWorkGroupSize());
-		initQueue();
+		initializeQueue();
 	}
 
 	public void shutDown() {
@@ -135,7 +137,7 @@ public class OpenCLManager {
 		}
 	}
 
-	private void initContext(AWTContext awtContext) {
+	private void initializeContext(AWTContext awtContext) {
 		try (var stack = MemoryStack.stackPush()) {
 			IntBuffer pi = stack.mallocInt(1);
 			checkCLError(clGetPlatformIDs(null, pi));
@@ -234,7 +236,7 @@ public class OpenCLManager {
 								long context = clCreateContext(ctxProps, device, callback, NULL, errcode_ret);
 								checkCLError(errcode_ret);
 
-								if (OSType.getOSType() == OSType.MacOS) {
+								if (HdPlugin.APPLE) {
 									var buf = stack.mallocPointer(1);
 									checkCLError(clGetGLContextInfoAPPLE(
 										context,
@@ -274,7 +276,7 @@ public class OpenCLManager {
 		return (int) (maxWorkGroupSize[0] * 0.6f); // Workaround for https://github.com/117HD/RLHD/issues/598
 	}
 
-	private void initQueue() {
+	private void initializeQueue() {
 		long[] l = new long[1];
 		clGetDeviceInfo(device, CL_DEVICE_QUEUE_PROPERTIES, l, null);
 
@@ -314,7 +316,7 @@ public class OpenCLManager {
 		return kernel;
 	}
 
-	public void initPrograms() throws ShaderException, IOException {
+	public void initializePrograms() throws ShaderException, IOException {
 		try (var stack = MemoryStack.stackPush()) {
 			var includes = new ShaderIncludes()
 				.define("UNDO_VANILLA_SHADING", plugin.configUndoVanillaShading)
@@ -327,11 +329,11 @@ public class OpenCLManager {
 			passthroughProgram = compileProgram(stack, "comp_unordered.cl", includes);
 			passthroughKernel = getKernel(stack, passthroughProgram, KERNEL_NAME_PASSTHROUGH);
 
-			sortingPrograms = new long[plugin.numSortingBins];
-			sortingKernels = new long[plugin.numSortingBins];
-			for (int i = 0; i < plugin.numSortingBins; i++) {
-				int faceCount = plugin.modelSortingBinFaceCounts[i];
-				int threadCount = plugin.modelSortingBinThreadCounts[i];
+			sortingPrograms = new long[legacyRenderer.numSortingBins];
+			sortingKernels = new long[legacyRenderer.numSortingBins];
+			for (int i = 0; i < legacyRenderer.numSortingBins; i++) {
+				int faceCount = legacyRenderer.modelSortingBinFaceCounts[i];
+				int threadCount = legacyRenderer.modelSortingBinThreadCounts[i];
 				int facesPerThread = ceil((float) faceCount / threadCount);
 				includes = includes
 					.define("THREAD_COUNT", threadCount)
@@ -449,8 +451,8 @@ public class OpenCLManager {
 				if (numModels == 0)
 					continue;
 
-				int faceCount = plugin.modelSortingBinFaceCounts[i];
-				int threadCount = plugin.modelSortingBinThreadCounts[i];
+				int faceCount = legacyRenderer.modelSortingBinFaceCounts[i];
+				int threadCount = legacyRenderer.modelSortingBinThreadCounts[i];
 				long kernel = sortingKernels[i];
 
 				clSetKernelArg(kernel, 0, (long) (SHARED_SIZE + faceCount) * Integer.BYTES);
