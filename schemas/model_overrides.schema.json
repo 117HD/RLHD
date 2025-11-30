@@ -318,6 +318,10 @@
             "invertDisplacementStrength": {
               "type": "boolean",
               "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
+            },
+            "depthBias": {
+              "type": "integer",
+              "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
             }
           }
         }
@@ -441,6 +445,10 @@
             "invertDisplacementStrength": {
               "type": "boolean",
               "description": "Will invert the strength blend applied to the model, where vertices near the top will be effected less."
+            },
+            "depthBias": {
+              "type": "integer",
+              "description": "Specify our own depth bias, replacing the bias set by Jagex. Between 0-255."
             }
           }
         }

@@ -67407,11 +67407,6 @@
         "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvScale": 0.6
-      },
-      {
-        "colors": "h > 4 && a > 222",
-        "baseMaterial": "TRANSPARENT",
-        "castShadows": false
       }
     ]
   },
