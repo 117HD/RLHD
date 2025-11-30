@@ -270,6 +270,7 @@
       10
     ],
     "groundMaterial": "WORN_TILES",
+    "blended": false,
     "shiftLightness": 12,
     "replacements": {
       "NONE": "!textures"
@@ -285,12 +286,24 @@
   },
   {
     "name": "LUMBRIDGE_CASTLE_FLOORS",
-    "area": "LUMBRIDGE_CASTLE_COBBLE",
+    "area": "LUMBRIDGE_CASTLE_FLOORS",
     "overlayIds": [
       10
     ],
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
+    "replacements": {
+      "NONE": "!textures",
+      "LUMBRIDGE_CASTLE_FLOORS_NO_BLENDING": "!blending"
+    }
+  },
+  {
+    "name": "LUMBRIDGE_CASTLE_FLOORS_NO_BLENDING",
+    "area": "LUMBRIDGE_CASTLE_FLOORS",
+    "overlayIds": [
+      10
+    ],
+    "shiftLightness": 13,
     "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 10,
     "replacements": {
       "NONE": "!textures"
     }
@@ -368,15 +381,32 @@
     "blendedAsOpposite": true
   },
   {
+    "name": "LUMBRIDGE_TOWERS_EXTERIOR_BLEND_FIX",
+    "area": "LUMBRIDGE_TOWERS_EXTERIOR_FIX",
+    "overlayIds": [
+      10
+    ],
+    "groundMaterial": "VARROCK_PATHS",
+    "shiftLightness": 9,
+    "blendedAsOpposite": false,
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "LUMBRIDGE_TOWERS_EXTERIOR": "!blending",
+      "NONE": "!textures"
+    }
+  },
+  {
     "name": "LUMBRIDGE_TOWERS_EXTERIOR",
     "area": "LUMBRIDGE_CASTLE",
     "overlayIds": [
       10
     ],
+    "blended": false,
     "groundMaterial": "VARROCK_PATHS",
-    "shiftLightness": 10,
+    "shiftLightness": 14,
     "replacements": {
-      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
+      "NONE": "!textures"
     }
   },
   {
@@ -2514,6 +2544,13 @@
       "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
       "EAST_ARDOUGNE_CASTLE_PATH_FIX_BLENDING": "blending"
     }
+  },
+  {
+    "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "area": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
+    "groundMaterial": "PURE_BLACK",
+    "blended": false,
+    "overlayIds": [ 10 ]
   },
   {
     "name": "EAST_ARDOUGNE_PATHS_1",
@@ -6624,7 +6661,7 @@
     "underlayIds": [
       56
     ],
-    "groundMaterial": "VARROCK_PATHS",
+    "groundMaterial": "TILES_2X2_2_SEMIGLOSS",
     "uvScale": 1.25
   },
   {
@@ -7443,6 +7480,15 @@
       72
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
+  },
+  {
+    "name": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
+    "area": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
+    "groundMaterial": "PURE_BLACK",
+    "blended": false,
+    "underlayIds": [
+      55
+    ]
   },
   {
     "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",

@@ -8085,7 +8085,8 @@
       "LEDGER_TABLE_ICON_PEST_SERIM_PIER",
       "LEDGER_TABLE_ICON_PIER",
       "CONCH_FARMING_ENTRANCE",
-      "CONCH_FARMING_EXIT"
+      "CONCH_FARMING_EXIT",
+      "SHIPWRIGHT_ICON_SERIM_PIER"
     ],
     "uvType": "BOX"
   },
@@ -11869,7 +11870,8 @@
   },
   {
     "description": "POH entrance portals",
-    "baseMaterial": "STONE",
+    "baseMaterial": "NONE",
+    "castShadows": false,
     "objectIds": [
       "POH_TAVERLY_PORTAL",
       "POH_RIMMINGTON_PORTAL",
@@ -11881,7 +11883,14 @@
       "SOUL_WARS_ENCLAVE_PORTAL",
       "POH_KOUREND_PORTAL"
     ],
-    "shadowOpacityThreshold": 0.12
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
   },
   {
     "description": "Clocktower metal pipes",
@@ -26672,8 +26681,8 @@
     "description": "Objects - Concrete - Bank Booth",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
-    "uvOrientation": 512,
     "uvScale": 0.65,
+    "uvOrientationZ": 512,
     "materialOverrides": {
       "WOODEN_SCREEN": {
         "textureMaterial": "WOODEN_SCREEN"
@@ -26686,8 +26695,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "BLANK_GLOSS",
-        "uvType": "MODEL_YZ"
+        "baseMaterial": "GRAY_50"
       }
     ]
   },
@@ -26705,7 +26713,7 @@
       "BANKBOOTHCLOSED"
     ],
     "uvType": "BOX",
-    "uvOrientation": 512,
+    "uvOrientationZ": 512,
     "uvScale": 0.65
   },
   {
@@ -26946,6 +26954,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "flatNormals": true,
     "colorOverrides": [
       {
         "colors": "s == 0 && l < 30",
@@ -40845,7 +40854,7 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_50"
       },
       {
         "colors": "s == 3",
@@ -40876,18 +40885,19 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientation": 512,
     "objectIds": [ "FAI_VARROCK_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_50"
       },
       {
-        "colors": "s > 3",
+        "colors": "s == 6",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.5,
-        "uvOrientation": 512
+        "uvOrientationY": 512
       }
     ]
   },
@@ -40913,11 +40923,12 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientationY": 512,
     "objectIds": [ "FAI_FALADOR_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_75"
       },
       {
         "colors": "s == 4",
@@ -40938,13 +40949,14 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_50"
       },
       {
         "colors": "s >= 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.66,
+        "uvOrientation": 512
       }
     ]
   },
@@ -40960,6 +40972,7 @@
         "colors": "s >= 3",
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
+        "uvOrientation": 512,
         "uvScale": 0.66
       }
     ]
@@ -40989,11 +41002,12 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.5,
+    "uvOrientationY": 512,
     "objectIds": [ "CANAFIS_BANKBOOTH" ],
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "NONE"
+        "baseMaterial": "GRAY_50"
       },
       {
         "colors": "s == 3",
@@ -41032,10 +41046,11 @@
     "uvOrientation": 512,
     "colorOverrides": [
       {
-        "colors": "s == 2",
+        "colors": "s == 3",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.66,
+        "uvOrientationX": 512
       }
     ]
   },
@@ -67374,6 +67389,28 @@
     ]
   },
   {
+    "description": "Depth Bias Fix - Fire of Nourishment",
+    "baseMaterial": "NONE",
+    "castShadows": false,
+    "receiveShadows": false,
+    "objectIds": [
+      "MY2ARM_HERBPATCH_FIRE",
+      "MY2ARM_HERBPATCH_FIRE_SPECIAL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 1",
+        "baseMaterial": "BONE"
+      },
+      {
+        "colors": "h == 0",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Depth Bias Fix - Tempoross Pools",
     "objectIds": [
       "TEMPOROSS_REWARDPOOL_0",
@@ -67439,7 +67476,7 @@
     ]
   },
   {
-    "description": "Depth Bias Fix - PoH Pools & Ponds",
+    "description": "Depth Bias Fix - POH Restoration Pools",
     "objectIds": [
       "POH_POOL_REJUVENATION",
       "POH_POOL_REGENERATION",
@@ -67451,11 +67488,28 @@
       "XMAS20_POH_POOL_RESTORATION",
       "XMAS20_POH_POOL_REVITALISATION",
       "XMAS20_POH_POOL_RECOVERY",
-      "XMAS20_POH_POOL_REGENERATION",
-      "POH_CRUDE_GARDEN_CENTREPIECE3",
-      "POH_CRUDE_GARDEN_CENTREPIECE4"
+      "XMAS20_POH_POOL_REGENERATION"
     ],
     "depthBias": 210
+  },
+  {
+    "description": "Depth Bias Fix - Garden Ornaments",
+    "depthBias": 210,
+    "objectIds": [
+      "POH_CRUDE_GARDEN_CENTREPIECE3",
+      "POH_CRUDE_GARDEN_CENTREPIECE4",
+      "POH_CRUDE_GARDEN_CENTREPIECE2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 13",
+        "baseMaterial": "GRAY_45",
+        "windDisplacementMode": "OBJECT",
+        "upwardsNormals": true,
+        "castShadows": false,
+        "windDisplacementModifier": 1
+      }
+    ]
   },
   {
     "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
@@ -67478,6 +67532,25 @@
         "baseMaterial": "NONE",
         "depthBias": 110
       }
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Catherby drawers poking through a wall",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "areas": [ "CATHERBY_DEPTH_BIAS_FIX" ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "flatNormals": true,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 && s == 0",
+        "baseMaterial": "WATTLE_1",
+        "uvType": "BOX",
+        "depthBias": 1
+      }
+    ],
+    "objectIds": [
+      "TIMBERWALL"
     ]
   },
   {
@@ -67551,6 +67624,7 @@
     "description": "Shilo Mine - Entrance Ladder",
     "baseMaterial": "GRAVEL",
     "uvType": "BOX",
+    "depthBias": 201,
     "objectIds": [
       "ATJUN_MINE_LADDER_HOLE"
     ],
@@ -67561,7 +67635,8 @@
         "uvOrientationZ": 512,
         "uvOrientationX": 512,
         "uvScale": 0.6,
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "depthBias": 180
       },
       {
         "colors": "h == 0 && l == 2",
