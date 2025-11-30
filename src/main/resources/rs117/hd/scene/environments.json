@@ -1021,6 +1021,14 @@
     "fogDepth": 50
   },
   {
+    "area": "BACKWATER_AND_BREAKBONE_STRAIT",
+    "ambientColor": "#c0dbad",
+    "directionalColor": "#adb08b",
+    "fogColor": "#BDD8E8",
+    "directionalStrength": 4,
+    "fogDepth": 15
+  },
+  {
     "area": "POISON_WASTE",
     "ambientColor": "#c0dbad",
     "directionalColor": "#adb08b",
@@ -1365,6 +1373,29 @@
     "groundFogOpacity": 0.3
   },
   {
+    "area": "THE_STORM_TEMPOR_EDGE",
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3.5,
+    "directionalColor": "#707070",
+    "fogColor": "#99AECC",
+    "fogDepth": 10
+  },
+  {
+    "area": "THE_STORM_TEMPOR",
+    "ambientColor": "#a5acbd",
+    "ambientStrength": 3,
+    "directionalColor": "#707070",
+    "directionalStrength": 1,
+    "fogColor": "#4B505B",
+    "fogDepth": 20,
+    "windStrength": 65,
+    "windCeiling": 750,
+    "windSpeed": 20,
+    "groundFogStart": 0,
+    "groundFogEnd": -300,
+    "groundFogOpacity": 0.25
+  },
+  {
     "area": "TEMPLE_OF_THE_EYE",
     "isUnderwater": true,
     "directionalColor": "#e6f4ff",
@@ -1463,6 +1494,20 @@
       80,
       190
     ],
+    "fogColor": "#133156",
+    "fogDepth": 60,
+    "groundFogStart": -450,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 4
+  },
+  {
+    "area": "CORAL_NURSERY",
+    "isUnderwater": true,
+    "ambientColor": "#255590",
+    "ambientStrength": 1.5,
+    "directionalColor": "#71a3d0",
+    "directionalStrength": 3,
     "fogColor": "#133156",
     "fogDepth": 60,
     "groundFogStart": -450,

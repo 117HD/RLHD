@@ -19360,6 +19360,38 @@
     "animationIds": [ "TEMPOROSS_LIGHTNING_CLOUD_ATTACK" ]
   },
   {
+    "description": "STORM_TEMPOR_LIGHTNING_SPAWN",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 2,
+    "color": "#B2E8FF",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 100,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 700,
+    "npcIds": [ "SAILING_SEA_STORMY_CLOUD" ],
+    "animationIds": [ "SAILING_LIGHTNING_CLOUD_ATTACK" ]
+  },
+  {
+    "description": "STORM_TEMPOR_LIGHTNING_STRIKE",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 1300,
+    "strength": 4,
+    "color": "#B2E8FF",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 100,
+    "spawnDelay": 700,
+    "fadeOutDuration": 700,
+    "npcIds": [ "SAILING_SEA_STORMY_CLOUD" ],
+    "animationIds": [ "SAILING_LIGHTNING_CLOUD_ATTACK" ]
+  },
+  {
     "description": "ELECTRIFIED_HARPOONFISH_CANNON",
     "height": 50,
     "alignment": "CENTER",
@@ -20700,7 +20732,8 @@
     "objectIds": [
       "FAI_FALADOR_HOUSE_TORCH",
       "AIDE_TORCH",
-      "GRAB_EVIL_TWIN_TORCH"
+      "GRAB_EVIL_TWIN_TORCH",
+      "CONCH_TORTUGAN01_TORCH01"
     ]
   },
   {
@@ -34588,7 +34621,6 @@
   {
     "description": "DIGSITE_LAMP",
     "height": 170,
-    "alignment": "FRONT",
     "radius": 290,
     "strength": 8.5,
     "color": [
@@ -42513,6 +42545,23 @@
     "range": 20,
     "objectIds": [
       "SWAN_FURNACE"
+    ]
+  },
+  {
+    "description": "Sailing Shipyard Portal",
+    "offset": [ 0, 100, -50 ],
+    "radius": 500,
+    "strength": 20,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 10,
+    "objectIds": [
+      "SAILING_SHIPYARD_PORTAL_EXIT"
     ]
   }
 ]
