@@ -19360,6 +19360,38 @@
     "animationIds": [ "TEMPOROSS_LIGHTNING_CLOUD_ATTACK" ]
   },
   {
+    "description": "STORM_TEMPOR_LIGHTNING_SPAWN",
+    "height": 100,
+    "alignment": "CENTER",
+    "radius": 750,
+    "strength": 2,
+    "color": "#B2E8FF",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "spawnDelay": 100,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 700,
+    "npcIds": [ "SAILING_SEA_STORMY_CLOUD" ],
+    "animationIds": [ "SAILING_LIGHTNING_CLOUD_ATTACK" ]
+  },
+  {
+    "description": "STORM_TEMPOR_LIGHTNING_STRIKE",
+    "height": 250,
+    "alignment": "CENTER",
+    "radius": 1300,
+    "strength": 4,
+    "color": "#B2E8FF",
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "fadeInDuration": 100,
+    "spawnDelay": 700,
+    "fadeOutDuration": 700,
+    "npcIds": [ "SAILING_SEA_STORMY_CLOUD" ],
+    "animationIds": [ "SAILING_LIGHTNING_CLOUD_ATTACK" ]
+  },
+  {
     "description": "ELECTRIFIED_HARPOONFISH_CANNON",
     "height": 50,
     "alignment": "CENTER",

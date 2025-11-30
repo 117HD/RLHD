@@ -1597,9 +1597,35 @@
     ]
   },
   {
+    "name": "ROCK_3_SEMI_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "displacementScale": 0.0,
+    "specularStrength": 0.3,
+    "specularGloss": 40.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.5
+    ]
+  },
+  {
     "name": "ROCK_3_SMOOTH_LIGHT",
     "parent": "ROCK_3_SMOOTH",
     "brightness": 1.194
+  },
+  {
+    "name": "ROCK_3_SEMI_SMOOTH_LIGHT",
+    "parent": "ROCK_3_LIGHT",
+    "displacementMap": null,
+    "displacementScale": 0.0,
+    "specularStrength": 0.3,
+    "specularGloss": 40.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.6
+    ]
   },
   {
     "name": "ROCK_3_ORE",
@@ -1701,6 +1727,31 @@
     "name": "CARPET_LIGHT",
     "parent": "CARPET",
     "brightness": 1.177
+  },
+  {
+    "name": "CARPET_VERY_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.22
+  },
+  {
+    "name": "CARPET_SUPER_LIGHT",
+    "parent": "CARPET",
+    "brightness": 1.35
+  },
+  {
+    "name": "CARPET_LIGHT_SMOOTH",
+    "parent": "CARPET_LIGHT",
+    "normalMap": null
+  },
+  {
+    "name": "CARPET_VERY_LIGHT_SMOOTH",
+    "parent": "CARPET_VERY_LIGHT",
+    "normalMap": null
+  },
+  {
+    "name": "CARPET_SUPER_LIGHT_SMOOTH",
+    "parent": "CARPET_SUPER_LIGHT",
+    "normalMap": null
   },
   {
     "name": "CARPET_DARK",
@@ -2425,6 +2476,11 @@
     "brightness": 1.293
   },
   {
+    "name": "METALLIC_1_LIGHT_SMOOTH",
+    "parent": "METALLIC_1_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "METALLIC_1_LIGHT_SEMIGLOSS",
     "parent": "METALLIC_1_LIGHT",
     "specularStrength": 0.7,
@@ -2454,9 +2510,30 @@
     "brightness": 1.33
   },
   {
+    "name": "METALLIC_1_LIGHTER",
+    "parent": "METALLIC_1",
+    "brightness": 1.4
+  },
+  {
+    "name": "METALLIC_1_LIGHTER_SMOOTH",
+    "parent": "METALLIC_1_LIGHTER",
+    "normalMap": null
+  },
+  {
     "name": "METALLIC_1_VERY_LIGHT",
     "parent": "METALLIC_1",
     "brightness": 1.516
+  },
+  {
+    "name": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "parent": "METALLIC_1_VERY_LIGHT",
+    "normalMap": null
+  },
+  {
+    "name": "METALLIC_1_LIGHT_LOW_GLOSS",
+    "parent": "METALLIC_1_LIGHT",
+    "specularStrength": 0.05,
+    "specularGloss": 20.0
   },
   {
     "name": "METALLIC_2_N"

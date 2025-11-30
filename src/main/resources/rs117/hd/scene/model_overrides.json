@@ -2771,10 +2771,6 @@
       "OCEAN_OUTCROP_SEAWEED01",
       "OCEAN_OUTCROP_SEAWEED02",
       "OCEAN_OUTCROP_SEAWEED03",
-      "SAILING_RAPIDS",
-      "SAILING_RAPIDS_STRONG",
-      "SAILING_RAPIDS_POWERFUL",
-      "SAILING_RAPIDS_DEADLY",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_FAST",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_3X3_SLOW",
       "SAILING_HAZARD_FETID_WATERS_AMBIENT_1X1",
@@ -32307,8 +32303,7 @@
     "description": "Object - Metal - Anchor",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
-      "ANCHOR",
-      "DOCK_CLEAT01"
+      "ANCHOR"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -32319,6 +32314,15 @@
         "uvType": "BOX",
         "uvScale": 0.25
       }
+    ]
+  },
+  {
+    "description": "Object - Metal - Dock Cleat",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "DOCK_CLEAT01"
     ]
   },
   {
@@ -64053,6 +64057,14 @@
     ]
   },
   {
+    "description": "Storm Tempor - Disable cloud shadows",
+    "castShadows": false,
+    "npcIds": [
+      "SAILING_SEA_STORMY_CLOUD",
+      "SAILING_SEA_STORMY_LIGHTNING_STRIKE"
+    ]
+  },
+  {
     "description": "Ship - Wood",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -64090,9 +64102,7 @@
   },
   {
     "description": "Ship - Wood with Sails or Metal",
-    "baseMaterial": "METALLIC_1_VERY_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.1,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_SHIPHULL_FIGUREHEAD01",
       "BOATKIT_SHIPHULL_PORTHOLE01",
@@ -64117,17 +64127,13 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       }
     ]
   },
   {
     "description": "Ship - Wood with Sails or Metal - Rotated",
-    "baseMaterial": "METALLIC_1_VERY_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.1,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_MAST_MIDDLEMAST_HOISTED",
       "BOATKIT_MAST_REARMAST_HOISTED",
@@ -64145,16 +64151,15 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       }
     ]
   },
   {
     "description": "Ocean Rocks - Plain",
-    "baseMaterial": "ROCK_3_LIGHT",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH_LIGHT",
     "uvType": "BOX",
+    "uvScale": 1.2,
     "objectIds": [
       "OCEAN_OUTCROP_ROCK01",
       "OCEAN_OUTCROP_ROCK02",
@@ -64164,7 +64169,13 @@
       "OCEAN_OUTCROP_ROCK06",
       "OCEAN_OUTCROP_ROCK07",
       "OCEAN_OUTCROP_ROCK08",
-      "OCEAN_OUTCROP_ROCK09"
+      "OCEAN_OUTCROP_ROCK09",
+      "OCEAN_OUTCROP_JAGGED05",
+      "OCEAN_OUTCROP_JAGGED07",
+      "OCEAN_OUTCROP_JAGGED04",
+      "OCEAN_OUTCROP_JAGGED02",
+      "OCEAN_OUTCROP_JAGGED03",
+      "OCEAN_OUTCROP_JAGGED06"
     ]
   },
   {
@@ -64337,9 +64348,7 @@
   },
   {
     "description": "Sailing - Salvaging Station",
-    "baseMaterial": "METALLIC_1_VERY_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.1,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "SAILING_PORT_SALVAGING_STATION_PORT_SARIM",
       "SAILING_PORT_SALVAGING_STATION"
@@ -64356,9 +64365,7 @@
       {
         "description": "Cloth",
         "colors": "h == 6",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       },
       {
         "description": "Seaweed",
@@ -64390,17 +64397,13 @@
       {
         "description": "Paper",
         "colors": "h == 6 && s == 1",
-        "baseMaterial": "GRUNGE_3_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.1
+        "baseMaterial": "GRAY_90"
       }
     ]
   },
   {
     "description": "Sailing - Port Task Board",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "baseMaterial": "GRUNGE_3_SMOOTH",
     "objectIds": [
       "PORT_TASK_BOARD_PORT_SARIM",
       "PORT_TASK_BOARD_LUNAR_ISLE",
@@ -64431,9 +64434,7 @@
       {
         "description": "Shark Jaw",
         "colors": "h == 8 || h == 4",
-        "baseMaterial": "BONE",
-        "uvType": "BOX",
-        "uvScale": 0.3
+        "baseMaterial": "BONE"
       },
       {
         "description": "Metal Wheel",
@@ -64452,9 +64453,7 @@
   },
   {
     "description": "Sailing - Ledger Table",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "baseMaterial": "GRUNGE_3_SMOOTH",
     "objectIds": [
       "DOCK_LOADING_BAY_LEDGER_TABLE_WITHDRAW",
       "DOCK_LOADING_BAY_LEDGER_TABLE_DEPOSIT",
@@ -64513,9 +64512,7 @@
   },
   {
     "description": "Sailing - Decorative Loading Crates",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "baseMaterial": "GRUNGE_3_SMOOTH",
     "objectIds": [
       "DOCK_LOADING_BAY_CRATE_BARS_MITHRIL",
       "DOCK_LOADING_BAY_CRATE_SEEDS",
@@ -64542,9 +64539,7 @@
       {
         "description": "Cannonball",
         "colors": "h == 37",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.1
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       },
       {
         "description": "Mithril",
@@ -64563,7 +64558,7 @@
   {
     "description": "Sailing - Decorative Barrel with Liquid",
     "baseMaterial": "WATER_FOUNTAIN_FLAT_LIGHT",
-    "uvType": "BOX",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.6,
     "objectIds": [
       "DOCK_LOADING_BAY_BARREL_LIQUID",
@@ -64614,6 +64609,37 @@
     ]
   },
   {
+    "description": "Sailing - Player Ship Dock",
+    "baseMaterial": "ROCK_3_SEMI_SMOOTH_LIGHT",
+    "objectIds": [
+      "SAILING_MOORING_EMBARK",
+      "SAILING_MOORING_DISEMBARK"
+    ],
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "description": "Wind Sock",
+        "colors": "h == 5 && s == 0 || h == 1",
+        "baseMaterial": "GRAY_90"
+      },
+      {
+        "description": "Wind Pole",
+        "colors": "s == 6",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.24,
+        "uvOrientation": 512
+      },
+      {
+        "description": "Seagull",
+        "colors": "h == 10",
+        "baseMaterial": "NONE"
+      }
+    ]
+  },
+  {
     "description": "Port Sarim - Pier - Crane with Crate",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
@@ -64645,6 +64671,333 @@
         "uvScale": 0.6
       }
     ]
+  },
+  {
+    "description": "Sailing - Raft - Hull",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "SAILING_BOAT_HULL_KANDARIN_1X3_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_1X3_ROSEWOOD"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skiff and Sloop - Hull & Wood Trim",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.75,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "SAILING_BOAT_SKIFF_TRIM_WOODEN",
+      "SAILING_BOAT_SKIFF_TRIM_OAK",
+      "SAILING_BOAT_SKIFF_TRIM_TEAK",
+      "SAILING_BOAT_SKIFF_TRIM_MAHOGANY",
+      "SAILING_BOAT_SKIFF_TRIM_CAMPHOR",
+      "SAILING_BOAT_SKIFF_TRIM_IRONWOOD",
+      "SAILING_BOAT_SKIFF_TRIM_ROSEWOOD",
+      "SAILING_BOAT_SLOOP_TRIM_WOODEN",
+      "SAILING_BOAT_SLOOP_TRIM_OAK",
+      "SAILING_BOAT_SLOOP_TRIM_TEAK",
+      "SAILING_BOAT_SLOOP_TRIM_MAHOGANY",
+      "SAILING_BOAT_SLOOP_TRIM_CAMPHOR",
+      "SAILING_BOAT_SLOOP_TRIM_IRONWOOD",
+      "SAILING_BOAT_SLOOP_TRIM_ROSEWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_2X5_ROSEWOOD"
+    ]
+  },
+  {
+    "description": "Sailing - Sloop - Hull",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 1,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "SAILING_BOAT_HULL_KANDARIN_3X8_WOOD",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_OAK",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_TEAK",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_MAHOGANY",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_CAMPHOR",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_IRONWOOD",
+      "SAILING_BOAT_HULL_KANDARIN_3X8_ROSEWOOD"
+    ]
+  },
+  {
+    "description": "Sailing - Skiff and Sloop - Keel & Metallic Trims",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvOrientation": 512,
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "SAILING_KEEL_KANDARIN_2X5_BRONZE",
+      "SAILING_KEEL_KANDARIN_2X5_IRON",
+      "SAILING_KEEL_KANDARIN_2X5_STEEL",
+      "SAILING_KEEL_KANDARIN_2X5_MITHRIL",
+      "SAILING_KEEL_KANDARIN_2X5_ADAMANT",
+      "SAILING_KEEL_KANDARIN_2X5_RUNE",
+      "SAILING_KEEL_KANDARIN_2X5_DRAGON",
+      "SAILING_KEEL_KANDARIN_3X8_BRONZE",
+      "SAILING_KEEL_KANDARIN_3X8_IRON",
+      "SAILING_KEEL_KANDARIN_3X8_STEEL",
+      "SAILING_KEEL_KANDARIN_3X8_MITHRIL",
+      "SAILING_KEEL_KANDARIN_3X8_ADAMANT",
+      "SAILING_KEEL_KANDARIN_3X8_RUNE",
+      "SAILING_KEEL_KANDARIN_3X8_DRAGON",
+      "SAILING_BOAT_SKIFF_TRIM_BARRACUDA",
+      "SAILING_BOAT_SKIFF_TRIM_SHARK",
+      "SAILING_BOAT_SKIFF_TRIM_INKY",
+      "SAILING_BOAT_SKIFF_TRIM_ANGLERS",
+      "SAILING_BOAT_SKIFF_TRIM_SALVORS",
+      "SAILING_BOAT_SKIFF_TRIM_ARMADYLEAN",
+      "SAILING_BOAT_SKIFF_TRIM_ZAMORAKIAN",
+      "SAILING_BOAT_SKIFF_TRIM_GUTHIXIAN",
+      "SAILING_BOAT_SKIFF_TRIM_SARADOMINIST",
+      "SAILING_BOAT_SKIFF_TRIM_MERCHANTS",
+      "SAILING_BOAT_SKIFF_TRIM_SANDY",
+      "SAILING_BOAT_SLOOP_TRIM_BARRACUDA",
+      "SAILING_BOAT_SLOOP_TRIM_SHARK",
+      "SAILING_BOAT_SLOOP_TRIM_INKY",
+      "SAILING_BOAT_SLOOP_TRIM_ANGLERS",
+      "SAILING_BOAT_SLOOP_TRIM_SALVORS",
+      "SAILING_BOAT_SLOOP_TRIM_ARMADYLEAN",
+      "SAILING_BOAT_SLOOP_TRIM_ZAMORAKIAN",
+      "SAILING_BOAT_SLOOP_TRIM_GUTHIXIAN",
+      "SAILING_BOAT_SLOOP_TRIM_SARADOMINIST",
+      "SAILING_BOAT_SLOOP_TRIM_MERCHANTS",
+      "SAILING_BOAT_SLOOP_TRIM_SANDY"
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cargo Hold & Cannon - Bronze",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_2X5",
+      "SAILING_BOAT_CARGO_HOLD_REGULAR_LARGE",
+      "SAILING_BRONZE_CANNON"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cargo Hold & Cannon - All Others",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "uvOrientation": 512,
+    "objectIds": [
+      "SAILING_IRON_CANNON",
+      "SAILING_STEEL_CANNON",
+      "SAILING_MITHRIL_CANNON",
+      "SAILING_ADAMANT_CANNON",
+      "SAILING_RUNE_CANNON",
+      "SAILING_DRAGON_CANNON",
+      "SAILING_GOLD_CANNON",
+      "SAILING_BOAT_CARGO_HOLD_OAK_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_TEAK_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_MAHOGANY_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_CAMPHOR_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_RAFT",
+      "SAILING_BOAT_CARGO_HOLD_OAK_2X5",
+      "SAILING_BOAT_CARGO_HOLD_TEAK_2X5",
+      "SAILING_BOAT_CARGO_HOLD_MAHOGANY_2X5",
+      "SAILING_BOAT_CARGO_HOLD_CAMPHOR_2X5",
+      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_2X5",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_2X5",
+      "SAILING_BOAT_CARGO_HOLD_OAK_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_TEAK_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_MAHOGANY_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_CAMPHOR_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_IRONWOOD_LARGE",
+      "SAILING_BOAT_CARGO_HOLD_ROSEWOOD_LARGE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Metal",
+        "colors": "h == 0 || h > 10 || h == 7 && s == 7",
+        "baseMaterial": "METALLIC_1_LIGHTER_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Cooking Range",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_FACILITY_RANGE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Inoculation Station",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "SAILING_FACILITY_2X5_INOCULATION_STATION",
+      "SAILING_FACILITY_2X5_INOCULATION_STATION_NOOP",
+      "SAILING_FACILITY_3X8_INOCULATION_STATION"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Salvaging Station",
+    "baseMaterial": "METALLIC_1_VERY_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.1,
+    "objectIds": [
+      "SAILING_SALVAGING_STATION_2X5A",
+      "SAILING_SALVAGING_STATION_2X5B",
+      "SAILING_SALVAGING_STATION_3X8"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.55,
+        "uvOrientationY": 512
+      },
+      {
+        "description": "Cloth",
+        "colors": "h == 6 || h == 8",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Seaweed",
+        "colors": "h == 15",
+        "baseMaterial": "GRUNGE_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Build Spot - Flat",
+    "undoVanillaShading": false,
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_RAFT_0",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_0",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_1",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_2",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_3",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_4",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_0",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_1",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_2",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_3",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_4",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_5",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_6",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_7",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_8"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a > 200",
+        "baseMaterial": "GRAY_65",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Facility - Build Spot - Vertical",
+    "undoVanillaShading": false,
+    "baseMaterial": "UNLIT",
+    "objectIds": [
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_5",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_2X5_6",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_9",
+      "SAILING_BOAT_FACILITY_PLACEHOLDER_3X8_10"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a > 200",
+        "baseMaterial": "GRAY_90",
+        "receiveShadows": false
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Wind Buff",
+    "baseMaterial": "GRAY_90",
+    "upwardsNormals": true,
+    "graphicsObjectIds": [
+      "VFX_WIND_SAIL_RAFT01_FULL01",
+      "VFX_WIND_SAIL_RAFT01_DOWN01",
+      "VFX_WIND_SAIL_RAFT01_HALF01",
+      "VFX_WIND_SAIL_RAFT01_SPEEDBOOST01",
+      "VFX_WIND_SAIL_SMALL01_FULL01",
+      "VFX_WIND_SAIL_SMALL01_DOWN01",
+      "VFX_WIND_SAIL_SMALL01_HALF01",
+      "VFX_WIND_SAIL_SMALL01_SPEEDBOOST01",
+      "VFX_WIND_SAIL_LARGE01_FULL01",
+      "VFX_WIND_SAIL_LARGE01_DOWN01",
+      "VFX_WIND_SAIL_LARGE01_HALF01",
+      "VFX_WIND_SAIL_LARGE01_SPEEDBOOST01"
+    ]
+  },
+  {
+    "description": "Sailing - Slightly darken water ripple and rapids",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "SAILING_CHARTING_HINT_MARKER_DUCK",
+      "SAILING_RAPIDS",
+      "SAILING_RAPIDS_STRONG",
+      "SAILING_RAPIDS_POWERFUL",
+      "SAILING_RAPIDS_DEADLY"
+    ],
+    "castShadows": false
   },
   {
     "description": "The Pandemonium - Docks",
@@ -64793,10 +65146,8 @@
     "colorOverrides": [
       {
         "description": "Canvas Roof",
-        "baseMaterial": "CARPET_LIGHT",
-        "colors": "h > 6  && h < 11",
-        "uvType": "BOX",
-        "uvScale": 0.6
+        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "colors": "h > 6 && h < 11"
       },
       {
         "description": "Window",
@@ -64804,7 +65155,7 @@
         "baseMaterial": "GRAY_90"
       },
       {
-        "description": "Window",
+        "description": "Mast",
         "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",
