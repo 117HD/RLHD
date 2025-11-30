@@ -1628,7 +1628,10 @@
     "overlayIds": [
       10
     ],
-    "groundMaterial": "VARROCK_PATHS"
+    "groundMaterial": "VARROCK_PATHS",
+    "replacements": {
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER"
+    }
   },
   {
     "name": "EDGEVILLE_BANK_PERIMETER_FIX",
@@ -1652,6 +1655,7 @@
     ],
     "groundMaterial": "VARROCK_PATHS",
     "replacements": {
+      "WINTER_JAGGED_STONE_TILE_LIGHT": "season == SeasonalTheme.WINTER",
       "EDGEVILLE_BANK_WINDOW_FIX_UNBLEND": "!blending"
     },
     "blended": false,
