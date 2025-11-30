@@ -11869,7 +11869,7 @@
     ]
   },
   {
-    "description": "POH Stone Entrance Portals",
+    "description": "POH Stone Entrance Portals - Fix Flickering Shadow",
     "baseMaterial": "NONE",
     "castShadows": false,
     "objectIds": [
@@ -11893,7 +11893,7 @@
     ]
   },
   {
-    "description": "POH Exit Portal",
+    "description": "POH Exit Portal - Fix Flickering Shadow",
     "uvType": "BOX",
     "uvScale": 0.5,
     "baseMaterial": "LIGHT_BARK",
