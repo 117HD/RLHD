@@ -9009,6 +9009,10 @@
     "hideOtherAreas": true
   },
   {
+    "name": "THE_ONYX_CREST",
+    "regions": [ 11811 ]
+  },
+  {
     "name": "SNOWY_REGIONS",
     "areas": [
       "ASGARNIA_ICE_DUNGEON_SNOWY",
