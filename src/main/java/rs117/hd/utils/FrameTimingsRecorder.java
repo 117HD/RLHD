@@ -160,7 +160,7 @@ public class FrameTimingsRecorder implements FrameTimer.Listener {
 		for (var frame : snapshot.frames) {
 			frame.cpu = new LinkedHashMap<>();
 			frame.gpu = new LinkedHashMap<>();
-			for (Timer t : Timer.values())
+			for (Timer t : Timer.TIMERS)
 				(t.isGpuTimer ? frame.gpu : frame.cpu).put(t.name, frame.rawTimings[t.ordinal()]);
 		}
 

@@ -37,7 +37,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 	private NpcDisplacementCache npcDisplacementCache;
 
 	private final ArrayDeque<FrameTimings> frames = new ArrayDeque<>();
-	private final long[] timings = new long[Timer.values().length];
+	private final long[] timings = new long[Timer.TIMERS.length];
 	private final StringBuilder sb = new StringBuilder();
 
 	@Inject
@@ -85,13 +85,13 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		} else {
 			long cpuTime = timings[Timer.DRAW_FRAME.ordinal()];
 			addTiming("CPU", cpuTime, true);
-			for (var t : Timer.values())
+			for (var t : Timer.TIMERS)
 				if (!t.isGpuTimer && t != Timer.DRAW_FRAME)
 					addTiming(t, timings);
 
 			long gpuTime = timings[Timer.RENDER_FRAME.ordinal()];
 			addTiming("GPU", gpuTime, true);
-			for (var t : Timer.values())
+			for (var t : Timer.TIMERS)
 				if (t.isGpuTimer && t != Timer.RENDER_FRAME)
 					addTiming(t, timings);
 

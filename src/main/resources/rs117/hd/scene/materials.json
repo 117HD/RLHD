@@ -5,7 +5,8 @@
     "unlit": true
   },
   {
-    "name": "TRANSPARENT"
+    "name": "TRANSPARENT",
+    "hasTransparency": true
   },
   {
     "name": "LAVA_FLOW_MAP"
@@ -127,7 +128,8 @@
     "scrollSpeed": [
       -0.0,
       -0.9
-    ]
+    ],
+    "hasTransparency": true
   },
   {
     "name": "HAY",
@@ -661,13 +663,23 @@
   {
     "name": "FORTIS_ROADS",
     "vanillaTextureIndex": 121,
-    "textureScale": [ -1, -1 ]
+    "textureScale": [ -1, -1 ],
+    "brightness": 0.92
   },
   {
     "name": "FORTIS_ROADS_MIRRORED",
     "parent": "FORTIS_ROADS",
-    "vanillaTextureIndex": 122,
-    "textureScale": [ -1, -1 ]
+    "vanillaTextureIndex": 122
+  },
+  {
+    "name": "LEAFY_ACACIA01",
+    "vanillaTextureIndex": 123,
+    "hasTransparency": true
+  },
+  {
+    "name": "LEAFY_STONEPINE01",
+    "vanillaTextureIndex": 124,
+    "hasTransparency": true
   },
   {
     "name": "BRICK_CAM_TORUM",
@@ -678,8 +690,313 @@
     "vanillaTextureIndex": 126
   },
   {
+    "name": "LEAFYTREE_FROSTY",
+    "vanillaTextureIndex": 127
+  },
+  {
+    "name": "LEAFYTREE_TILED_FROSTY",
+    "vanillaTextureIndex": 128
+  },
+  {
+    "name": "WATER_OPEN",
+    "vanillaTextureIndex": 129
+  },
+  {
+    "name": "WATER_SHELF",
+    "vanillaTextureIndex": 130
+  },
+  {
+    "name": "WATER_DROPOFF",
+    "vanillaTextureIndex": 131
+  },
+  {
+    "name": "WATER_DEEP",
+    "vanillaTextureIndex": 132
+  },
+  {
+    "name": "WATER_TRENCH",
+    "vanillaTextureIndex": 133
+  },
+  {
+    "name": "WATER_STORMY",
+    "vanillaTextureIndex": 134
+  },
+  {
+    "name": "WATER_STORMY_OPEN",
+    "vanillaTextureIndex": 135
+  },
+  {
+    "name": "WATER_STORMY_SHELF",
+    "vanillaTextureIndex": 136
+  },
+  {
+    "name": "WATER_STORMY_DROPOFF",
+    "vanillaTextureIndex": 137
+  },
+  {
+    "name": "WATER_STORMY_DEEP",
+    "vanillaTextureIndex": 138
+  },
+  {
+    "name": "WATER_SUNBAKED",
+    "vanillaTextureIndex": 139
+  },
+  {
+    "name": "WATER_SUNBAKED_OPEN",
+    "vanillaTextureIndex": 140
+  },
+  {
+    "name": "WATER_SUNBAKED_SHELF",
+    "vanillaTextureIndex": 141
+  },
+  {
+    "name": "WATER_SUNBAKED_DROPOFF",
+    "vanillaTextureIndex": 142
+  },
+  {
+    "name": "WATER_SUNBAKED_DEEP",
+    "vanillaTextureIndex": 143
+  },
+  {
+    "name": "WATER_PROFANE",
+    "vanillaTextureIndex": 144
+  },
+  {
+    "name": "WATER_PROFANE_OPEN",
+    "vanillaTextureIndex": 145
+  },
+  {
+    "name": "WATER_PROFANE_SHELF",
+    "vanillaTextureIndex": 146
+  },
+  {
+    "name": "WATER_PROFANE_DROPOFF",
+    "vanillaTextureIndex": 147
+  },
+  {
+    "name": "WATER_PROFANE_DEEP",
+    "vanillaTextureIndex": 148
+  },
+  {
+    "name": "WATER_CURSED",
+    "vanillaTextureIndex": 149
+  },
+  {
+    "name": "WATER_CURSED_OPEN",
+    "vanillaTextureIndex": 150
+  },
+  {
+    "name": "WATER_CURSED_SHELF",
+    "vanillaTextureIndex": 151
+  },
+  {
+    "name": "WATER_CURSED_DROPOFF",
+    "vanillaTextureIndex": 152
+  },
+  {
+    "name": "WATER_CURSED_DEEP",
+    "vanillaTextureIndex": 153
+  },
+  {
+    "name": "WATER_SCALDING",
+    "vanillaTextureIndex": 154
+  },
+  {
+    "name": "WATER_SCALDING_OPEN",
+    "vanillaTextureIndex": 155
+  },
+  {
+    "name": "WATER_SCALDING_SHELF",
+    "vanillaTextureIndex": 156
+  },
+  {
+    "name": "WATER_SCALDING_DROPOFF",
+    "vanillaTextureIndex": 157
+  },
+  {
+    "name": "WATER_SCALDING_DEEP",
+    "vanillaTextureIndex": 158
+  },
+  {
+    "name": "WATER_ICY",
+    "vanillaTextureIndex": 159
+  },
+  {
+    "name": "WATER_ICY_OPEN",
+    "vanillaTextureIndex": 160
+  },
+  {
+    "name": "WATER_ICY_SHELF",
+    "vanillaTextureIndex": 161
+  },
+  {
+    "name": "WATER_ICY_DROPOFF",
+    "vanillaTextureIndex": 162
+  },
+  {
+    "name": "WATER_ICY_DEEP",
+    "vanillaTextureIndex": 163
+  },
+  {
+    "name": "WATER_ENDLESS",
+    "vanillaTextureIndex": 164
+  },
+  {
+    "name": "WATER_ENDLESS_OPEN",
+    "vanillaTextureIndex": 165
+  },
+  {
+    "name": "WATER_ENDLESS_SHELF",
+    "vanillaTextureIndex": 166
+  },
+  {
+    "name": "WATER_ENDLESS_DROPOFF",
+    "vanillaTextureIndex": 167
+  },
+  {
+    "name": "WATER_ENDLESS_DEEP",
+    "vanillaTextureIndex": 168
+  },
+  {
+    "name": "WATER_CRYSTAL",
+    "vanillaTextureIndex": 169
+  },
+  {
+    "name": "WATER_CRYSTAL_OPEN",
+    "vanillaTextureIndex": 170
+  },
+  {
+    "name": "WATER_CRYSTAL_SHELF",
+    "vanillaTextureIndex": 171
+  },
+  {
+    "name": "WATER_CRYSTAL_DROPOFF",
+    "vanillaTextureIndex": 172
+  },
+  {
+    "name": "WATER_CRYSTAL_DEEP",
+    "vanillaTextureIndex": 173
+  },
+  {
+    "name": "WATER_FETID",
+    "vanillaTextureIndex": 174
+  },
+  {
+    "name": "WATER_FETID_OPEN",
+    "vanillaTextureIndex": 175
+  },
+  {
+    "name": "WATER_FETID_SHELF",
+    "vanillaTextureIndex": 176
+  },
+  {
+    "name": "WATER_FETID_DROPOFF",
+    "vanillaTextureIndex": 177
+  },
+  {
+    "name": "WATER_FETID_DEEP",
+    "vanillaTextureIndex": 178
+  },
+  {
+    "name": "WATER_TANGLED",
+    "vanillaTextureIndex": 179
+  },
+  {
+    "name": "WATER_TANGLED_OPEN",
+    "vanillaTextureIndex": 180
+  },
+  {
+    "name": "WATER_TANGLED_SHELF",
+    "vanillaTextureIndex": 181
+  },
+  {
+    "name": "WATER_TANGLED_DROPOFF",
+    "vanillaTextureIndex": 182
+  },
+  {
+    "name": "WATER_TANGLED_DEEP",
+    "vanillaTextureIndex": 183
+  },
+  {
+    "name": "WATER_JAGGED",
+    "vanillaTextureIndex": 184
+  },
+  {
+    "name": "WATER_JAGGED_OPEN",
+    "vanillaTextureIndex": 185
+  },
+  {
+    "name": "WATER_JAGGED_SHELF",
+    "vanillaTextureIndex": 186
+  },
+  {
+    "name": "WATER_JAGGED_DROPOFF",
+    "vanillaTextureIndex": 187
+  },
+  {
+    "name": "WATER_JAGGED_DEEP",
+    "vanillaTextureIndex": 188
+  },
+  {
+    "name": "LEAFY_JATOBA",
+    "vanillaTextureIndex": 189
+  },
+  {
+    "name": "LEAFY_JATOBA_TILED",
+    "vanillaTextureIndex": 190
+  },
+  {
+    "name": "LEAFY_JATOBA_DISEASED",
+    "vanillaTextureIndex": 191
+  },
+  {
+    "name": "LEAFY_JATOBA_DISEASED_TILED",
+    "vanillaTextureIndex": 192
+  },
+  {
+    "name": "LEAFY_CAMPHOR",
+    "vanillaTextureIndex": 193
+  },
+  {
+    "name": "LEAFY_CAMPHOR_TILED",
+    "vanillaTextureIndex": 194
+  },
+  {
+    "name": "LEAFY_CAMPHOR_DISEASED",
+    "vanillaTextureIndex": 195
+  },
+  {
+    "name": "LEAFY_CAMPHOR_DISEASED_TILED",
+    "vanillaTextureIndex": 196
+  },
+  {
+    "name": "LEAFY_IRONWOOD",
+    "vanillaTextureIndex": 197
+  },
+  {
+    "name": "LEAFY_IRONWOOD_TILED",
+    "vanillaTextureIndex": 198
+  },
+  {
+    "name": "LEAFY_IRONWOOD_DISEASED",
+    "vanillaTextureIndex": 199
+  },
+  {
+    "name": "LEAFY_IRONWOOD_DISEASED_TILED",
+    "vanillaTextureIndex": 200
+  },
+  {
+    "name": "TEXTURE_THATCHED02",
+    "vanillaTextureIndex": 201
+  },
+  {
     "name": "WHITE",
     "parent": "NONE"
+  },
+  {
+    "name": "GRAY_300",
+    "parent": "NONE",
+    "brightness": 3
   },
   {
     "name": "GRAY_150",
@@ -690,6 +1007,11 @@
     "name": "GRAY_125",
     "parent": "NONE",
     "brightness": 1.25
+  },
+  {
+    "name": "GRAY_115",
+    "parent": "NONE",
+    "brightness": 1.15
   },
   {
     "name": "GRAY_110",
@@ -722,6 +1044,11 @@
     "brightness": 0.65
   },
   {
+    "name": "GRAY_60",
+    "parent": "NONE",
+    "brightness": 0.6
+  },
+  {
     "name": "GRAY_50",
     "parent": "NONE",
     "brightness": 0.5
@@ -740,6 +1067,11 @@
     "name": "GRAY_25",
     "parent": "NONE",
     "brightness": 0.25
+  },
+  {
+    "name": "GRAY_05",
+    "parent": "NONE",
+    "brightness": 0.05
   },
   {
     "name": "BLACK",
@@ -769,6 +1101,12 @@
     "parent": "WHITE",
     "specularStrength": 1.75,
     "specularGloss": 55.0
+  },
+  {
+    "name": "BASE_SEMIGLOSS",
+    "parent": "GRAY_85",
+    "specularStrength": 0.35,
+    "specularGloss": 80.0
   },
   {
     "name": "SNOW_1_N"
@@ -819,6 +1157,11 @@
     "specularGloss": 20.0
   },
   {
+    "name": "SNOW_4_DARK",
+    "parent": "SNOW_4",
+    "brightness": 0.9
+  },
+  {
     "name": "GRASS_1"
   },
   {
@@ -845,8 +1188,13 @@
   {
     "name": "DIRT_1",
     "normalMap": "DIRT_1_N",
-    "specularStrength": 0.25,
+    "specularStrength": 0.13,
     "specularGloss": 18.0
+  },
+  {
+    "name": "DIRT_1_LIGHT",
+    "parent": "DIRT_1",
+    "brightness": 1.1
   },
   {
     "name": "DIRT_1_VERT",
@@ -859,7 +1207,7 @@
   {
     "name": "DIRT_2",
     "normalMap": "DIRT_2_N",
-    "specularStrength": 0.25,
+    "specularStrength": 0.13,
     "specularGloss": 18.0
   },
   {
@@ -963,12 +1311,28 @@
     "specularGloss": 10.0
   },
   {
-    "name": "GRUNGE_1"
+    "name": "GRUNGE_1_N"
+  },
+  {
+    "name": "GRUNGE_1",
+    "normalMap": "GRUNGE_1_N",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
   },
   {
     "name": "GRUNGE_1_LIGHT",
     "parent": "GRUNGE_1",
     "brightness": 1.122
+  },
+  {
+    "name": "GRUNGE_1_DARK",
+    "parent": "GRUNGE_1",
+    "brightness": 0.9
+  },
+  {
+    "name": "GRUNGE_1_VERY_DARK",
+    "parent": "GRUNGE_1",
+    "brightness": 0.82
   },
   {
     "name": "GRUNGE_1_VERY_LIGHT",
@@ -989,7 +1353,13 @@
     "specularGloss": 300.0
   },
   {
-    "name": "GRUNGE_2"
+    "name": "GRUNGE_2_N"
+  },
+  {
+    "name": "GRUNGE_2",
+    "normalMap": "GRUNGE_2_N",
+    "specularStrength": 0.25,
+    "specularGloss": 20.0
   },
   {
     "name": "GRUNGE_2_SHINY",
@@ -1015,6 +1385,11 @@
     "normalMap": "GRUNGE_3_N",
     "specularStrength": 0.25,
     "specularGloss": 30.0
+  },
+  {
+    "name": "GRUNGE_3_SMOOTH",
+    "parent": "GRUNGE_3",
+    "normalMap": null
   },
   {
     "name": "GRUNGE_3_SHINY",
@@ -1055,6 +1430,11 @@
       12.0,
       -12.0
     ]
+  },
+  {
+    "name": "WATER_FOUNTAIN_FLAT_LIGHT",
+    "parent": "WATER_FOUNTAIN_FLAT",
+    "brightness": 1.1
   },
   {
     "name": "WATER_FLAT_FORCE",
@@ -1112,6 +1492,11 @@
     "brightness": 1.159
   },
   {
+    "name": "ROCK_1_LIGHT_SMOOTH",
+    "parent": "ROCK_1_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "ROCK_2_N"
   },
   {
@@ -1120,6 +1505,11 @@
     "brightness": 1.083,
     "specularStrength": 0.35,
     "specularGloss": 60.0
+  },
+  {
+    "name": "ROCK_2_LIGHT",
+    "parent": "ROCK_2",
+    "brightness": 1.2
   },
   {
     "name": "ROCK_3_D"
@@ -1152,6 +1542,17 @@
     "brightness": 1.194
   },
   {
+    "name": "ROCK_3_VERY_LIGHT_SMOOTH",
+    "parent": "ROCK_3",
+    "displacementMap": null,
+    "textureScale": [
+      1,
+      1,
+      0.3
+    ],
+    "brightness": 1.45
+  },
+  {
     "name": "ROCK_3_SMOOTH",
     "parent": "ROCK_3",
     "displacementMap": null,
@@ -1163,6 +1564,11 @@
       1.0,
       0.15
     ]
+  },
+  {
+    "name": "ROCK_3_SMOOTH_LIGHT",
+    "parent": "ROCK_3_SMOOTH",
+    "brightness": 1.194
   },
   {
     "name": "ROCK_3_ORE",
@@ -1194,9 +1600,14 @@
     "normalMap": "ROCK_4_N",
     "displacementMap": "ROCK_4_D",
     "brightness": 1.083,
-    "displacementScale": 0.15,
+    "displacementScale": 0.12,
     "specularStrength": 0.4,
-    "specularGloss": 20.0
+    "specularGloss": 20.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.9
+    ]
   },
   {
     "name": "ROCK_4_DARK",
@@ -1219,9 +1630,19 @@
     "normalMap": "ROCK_5_N",
     "displacementMap": "ROCK_5_D",
     "brightness": 1.083,
-    "displacementScale": 0.15,
+    "displacementScale": 0.12,
     "specularStrength": 0.4,
-    "specularGloss": 20.0
+    "specularGloss": 20.0,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.9
+    ]
+  },
+  {
+    "name": "ROCK_5_LIGHT",
+    "parent": "ROCK_5",
+    "brightness": 1.25
   },
   {
     "name": "ROCK_5_ORE",
@@ -1230,6 +1651,11 @@
   },
   {
     "name": "ROPE"
+  },
+  {
+    "name": "ROPE_LIGHT",
+    "parent": "ROPE",
+    "brightness": 1.5
   },
   {
     "name": "CARPET_N"
@@ -1252,6 +1678,11 @@
   },
   {
     "name": "BURLAP"
+  },
+  {
+    "name": "BURLAP_LIGHT",
+    "parent": "BURLAP",
+    "brightness": 1.1
   },
   {
     "name": "FALADOR_PATH_BRICK_N"
@@ -1359,13 +1790,22 @@
   },
   {
     "name": "MARBLE_4",
-    "normalMap": "MARBLE_4_N"
+    "normalMap": "MARBLE_4_N",
+    "materialsToReplace": [
+      "MARBLE_DARK"
+    ],
+    "replacementCondition": "modelTextures"
   },
   {
     "name": "MARBLE_1_GLOSS",
     "parent": "MARBLE_1",
     "specularStrength": 0.9,
     "specularGloss": 280.0
+  },
+  {
+    "name": "MARBLE_1_LIGHT",
+    "parent": "MARBLE_1",
+    "brightness": 1.15
   },
   {
     "name": "MARBLE_2_GLOSS",
@@ -1461,6 +1901,28 @@
     "displacementMap": "LASSAR_UNDERCITY_TILE_D",
     "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
     "displacementScale": 0.025
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH",
+    "parent": "MARBLE_2",
+    "normalMap": "LASSAR_UNDERCITY_TILE_N",
+    "displacementMap": "LASSAR_UNDERCITY_TILE_D",
+    "ambientOcclusionMap": "CAM_TORUM_TILE_AO",
+    "displacementScale": 0.025,
+    "textureScale": [
+      1,
+      1.1,
+      1
+    ]
+  },
+  {
+    "name": "DARKMEYER_BRICK_PATH_BLEND",
+    "parent": "DARKMEYER_BRICK_PATH",
+    "textureScale": [
+      0.76,
+      0.76,
+      1
+    ]
   },
   {
     "name": "HD_LAVA_1",
@@ -1560,6 +2022,11 @@
     "brightness": 0.881
   },
   {
+    "name": "LEAF_VEINS_DARKER",
+    "parent": "LEAF_VEINS",
+    "brightness": 0.581
+  },
+  {
     "name": "LEAVES_1_N"
   },
   {
@@ -1599,6 +2066,18 @@
       1.0,
       0.2
     ]
+  },
+  {
+    "name": "WOOD_GRAIN_2_SMOOTH_SHINY",
+    "parent": "WOOD_GRAIN_2",
+    "brightness": 1.043,
+    "textureScale": [
+      1.0,
+      1.0,
+      0.2
+    ],
+    "specularStrength": 0.3,
+    "specularGloss": 40.0
   },
   {
     "name": "WOOD_GRAIN_2_LIGHT",
@@ -1710,15 +2189,6 @@
     "replacementCondition": "modelTextures"
   },
   {
-    "name": "HD_MARBLE_DARK",
-    "specularStrength": 1.1,
-    "specularGloss": 380.0,
-    "materialsToReplace": [
-      "MARBLE_DARK"
-    ],
-    "replacementCondition": "modelTextures"
-  },
-  {
     "name": "HD_BRICK_BROWN_N"
   },
   {
@@ -1817,6 +2287,11 @@
     "name": "STONE"
   },
   {
+    "name": "STONE_DARK",
+    "parent": "STONE",
+    "brightness": 0.88
+  },
+  {
     "name": "STONE_NORMALED",
     "parent": "STONE",
     "normalMap": "STONE_N",
@@ -1832,6 +2307,11 @@
     "name": "STONE_NORMALED_LIGHT",
     "parent": "STONE_NORMALED",
     "brightness": 1.122
+  },
+  {
+    "name": "STONE_NORMALED_VERY_LIGHT",
+    "parent": "STONE_NORMALED",
+    "brightness": 1.2
   },
   {
     "name": "STONE_LOWGLOSS",
@@ -1852,6 +2332,22 @@
       -0.0,
       1.4285715
     ]
+  },
+  {
+    "name": "SMOOTH_STONE",
+    "normalMap": "STONE_N"
+  },
+  {
+    "name": "SMOOTH_STONE_DARK",
+    "parent": "SMOOTH_STONE",
+    "brightness": 0.95
+  },
+  {
+    "name": "GEM_STONE",
+    "normalMap": "METALLIC_2_N",
+    "brightness": 1.1,
+    "specularStrength": 1,
+    "specularGloss": 30.0
   },
   {
     "name": "WALL_STONE_N"
@@ -2110,6 +2606,11 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_CONCRETE_FLAT",
+    "normalMap": null,
+    "parent": "HD_CONCRETE"
+  },
+  {
     "name": "HD_HAY_N"
   },
   {
@@ -2143,6 +2644,21 @@
     "replacementCondition": "modelTextures"
   },
   {
+    "name": "HD_SAND_BRICK_N"
+  },
+  {
+    "name": "HD_SAND_BRICK",
+    "normalMap": "HD_SAND_BRICK_N",
+    "brightness": 0.881,
+    "displacementScale": 0.05,
+    "specularStrength": 0.3,
+    "specularGloss": 20.0,
+    "materialsToReplace": [
+      "SAND_BRICK"
+    ],
+    "replacementCondition": "modelTextures"
+  },
+  {
     "name": "OOZE",
     "parent": "GRAY_65",
     "specularStrength": 1.5,
@@ -2152,6 +2668,12 @@
     "name": "BONE",
     "parent": "GRUNGE_2",
     "brightness": 1.122,
+    "specularStrength": 0.25,
+    "specularGloss": 20.0
+  },
+  {
+    "name": "BONE_DARK",
+    "parent": "GRUNGE_2",
     "specularStrength": 0.25,
     "specularGloss": 20.0
   },
@@ -2221,6 +2743,11 @@
     "normalMap": "GROUND_WEB_2_N",
     "specularStrength": 0.35,
     "specularGloss": 90.0
+  },
+  {
+    "name": "GROUND_WEB_2_LIGHT",
+    "parent": "GROUND_WEB_2",
+    "brightness": 1.5
   },
   {
     "name": "GROUND_WEB_3_N"

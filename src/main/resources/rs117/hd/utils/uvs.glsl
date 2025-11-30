@@ -24,8 +24,11 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 #include <uniforms/global.glsl>
+#include <uniforms/world_views.glsl>
 
-void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
+#include <utils/constants.glsl>
+
+void computeUvs(const int materialData, const int worldViewIndex, const vec3 pos[3], inout vec3 uvw[3]) {
     if ((materialData >> MATERIAL_FLAG_WORLD_UVS & 1) == 1) {
         // Treat the input uvw as a normal vector for a plane that goes through origo,
         // and find the distance from the point to the plane
@@ -41,6 +44,12 @@ void computeUvs(const int materialData, const vec3 pos[3], inout vec3 uvw[3]) {
         for (int i = 0; i < 3; i++)
             uvw[i].xy = (TBN * pos[i]).xy / 128. * scale;
     } else if ((materialData >> MATERIAL_FLAG_VANILLA_UVS & 1) == 1) {
+        #if ZONE_RENDERER
+            // Vanilla UVs are relative to vertex positions
+            for (int i = 0; i < 3; i++)
+                uvw[i] = pos[i] + mat3(getWorldViewProjection(worldViewIndex)) * uvw[i];
+        #endif
+
         vec3 v1 = uvw[0];
         vec3 v2 = uvw[1] - v1;
         vec3 v3 = uvw[2] - v1;
