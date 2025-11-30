@@ -9010,9 +9010,7 @@
   },
   {
     "name": "THE_ONYX_CREST",
-    "aabbs": [
-      [ 2945, 2246, 3004, 2298 ]
-    ]
+    "regions": [ 11811 ]
   },
   {
     "name": "SNOWY_REGIONS",
