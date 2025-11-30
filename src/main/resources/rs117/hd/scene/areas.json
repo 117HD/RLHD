@@ -8937,6 +8937,25 @@
     ]
   },
   {
+    "name": "PANDEMONIUM_ISLAND",
+    "regions": [ 12078 ]
+  },
+  {
+    "name": "DOGNOSE_ISLAND_BEACH",
+    "aabbs": [
+      [ 3048, 2631, 3059, 2642 ],
+      [ 3052, 2643, 3064, 2646 ],
+      [ 3060, 2637, 3064, 2642 ],
+      [ 3056, 2646, 3062, 2653 ],
+      [ 3046, 2631, 3048, 2639 ],
+      [ 3051, 2644, 3051, 2643 ]
+    ]
+  },
+  {
+    "name": "DOGNOSE_ISLAND",
+    "regions": [ 12073 ]
+  },
+  {
     "name": "PANDEMONIUM_QUEST_INSTANCE",
     "regions": [ 5958 ]
   },

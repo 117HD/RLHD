@@ -9047,6 +9047,54 @@
     "minLightness": 28
   },
   {
+    "name": "PANDAMONIUM_ROCKY_TILES",
+    "area": "PANDEMONIUM_ISLAND",
+    "groundMaterial": "OVERWORLD_ROCKY",
+    "underlayIds": [
+      110
+    ]
+  },
+  {
+    "name": "PANDAMONIUM_COMPLEX_TILES",
+    "area": "PANDEMONIUM_ISLAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 10",
+      "DEFAULT_SAND": "h == 8",
+      "DEFAULT_DIRT": [
+        "h == 8 && s == 2",
+        "h == 9"
+      ]
+    }
+  },
+  {
+    "name": "DOGNOSE_BEACH_SAND",
+    "area": "DOGNOSE_ISLAND_BEACH",
+    "groundMaterial": "SAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ]
+  },
+  {
+    "name": "DOGNOSE_COMPLEX_TILES",
+    "area": "DOGNOSE_ISLAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 10",
+      "DEFAULT_DIRT": "h <= 9"
+    }
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
@@ -9252,7 +9300,8 @@
       10,
       58,
       60,
-      92
+      92,
+      132
     ],
     "groundMaterial": "GRUNGE"
   },
