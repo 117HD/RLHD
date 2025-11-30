@@ -423,11 +423,10 @@ public class OpenCLManager {
 				glBuffers.put(buffer.clId);
 			glBuffers.flip();
 
-			PointerBuffer acquireEvent = stack.mallocPointer(1);
+			PointerBuffer acquireEvent = stack.callocPointer(1);
 			CL10GL.clEnqueueAcquireGLObjects(commandQueue, glBuffers, null, acquireEvent);
 
-			PointerBuffer computeEvents = stack.mallocPointer(1 + modelSortingBuffers.length);
-			int numComputeEvents = 0;
+			PointerBuffer computeEvents = stack.callocPointer(1 + modelSortingBuffers.length);
 			if (numPassthroughModels > 0) {
 				clSetKernelArg1p(passthroughKernel, 0, modelPassthroughBuffer.clId);
 				clSetKernelArg1p(passthroughKernel, 1, stagingBufferVertices.clId);
@@ -443,7 +442,6 @@ public class OpenCLManager {
 					acquireEvent, computeEvents
 				);
 				computeEvents.position(computeEvents.position() + 1);
-				numComputeEvents++;
 			}
 
 			for (int i = 0; i < numSortingBinModels.length; i++) {
@@ -472,15 +470,10 @@ public class OpenCLManager {
 					acquireEvent, computeEvents
 				);
 				computeEvents.position(computeEvents.position() + 1);
-				numComputeEvents++;
 			}
 
-			if (computeEvents.position() == 0) {
-				CL10GL.clEnqueueReleaseGLObjects(commandQueue, glBuffers, null, null);
-			} else {
-				computeEvents.flip();
-				CL10GL.clEnqueueReleaseGLObjects(commandQueue, glBuffers, computeEvents, null);
-			}
+			computeEvents.flip();
+			CL10GL.clEnqueueReleaseGLObjects(commandQueue, glBuffers, computeEvents, null);
 
 			// Release OpenCL events to prevent memory leak
 			// Events are reference-counted host memory objects that must be explicitly freed
@@ -488,11 +481,10 @@ public class OpenCLManager {
 			if (acquireEventPtr != 0)
 				clReleaseEvent(acquireEventPtr);
 
-			// Only release the compute events that were actually created
-			for (int i = 0; i < numComputeEvents; i++) {
-				long eventPtr = computeEvents.get(i);
-				if (eventPtr != 0)
-					clReleaseEvent(eventPtr);
+			for (int i = 0; i < computeEvents.limit(); ++i) {
+				long ptr = computeEvents.get(i);
+				if (ptr != 0L)
+					clReleaseEvent(ptr);
 			}
 		}
 	}
