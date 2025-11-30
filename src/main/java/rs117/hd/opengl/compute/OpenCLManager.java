@@ -477,14 +477,14 @@ public class OpenCLManager {
 
 			// Release OpenCL events to prevent memory leak
 			// Events are reference-counted host memory objects that must be explicitly freed
-			long acquireEventPtr = acquireEvent.get(0);
-			if (acquireEventPtr != 0)
-				clReleaseEvent(acquireEventPtr);
+			long pointer = acquireEvent.get(0);
+			if (pointer != 0L)
+				clReleaseEvent(pointer);
 
 			for (int i = 0; i < computeEvents.limit(); ++i) {
-				long ptr = computeEvents.get(i);
-				if (ptr != 0L)
-					clReleaseEvent(ptr);
+				pointer = computeEvents.get(i);
+				if (pointer != 0L)
+					clReleaseEvent(pointer);
 			}
 		}
 	}
