@@ -1080,7 +1080,7 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void drawDynamic(
-		Projection worldProjection,
+		Projection projection,
 		Scene scene,
 		TileObject tileObject,
 		Renderable r,
@@ -1154,7 +1154,13 @@ public class ZoneRenderer implements Renderer {
 			VAO o = vaoO.get(size, ctx.vboM);
 			VAO a = vaoA.get(size, ctx.vboM);
 			int start = a.vbo.vb.position();
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+
+			if (zone.inSceneFrustum) {
+				facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			} else {
+				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+			}
+
 			int end = a.vbo.vb.position();
 			if (end > start) {
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
@@ -1209,7 +1215,6 @@ public class ZoneRenderer implements Renderer {
 				VAO a = vaoA.get(size, ctx.vboM);
 
 				int start = a.vbo.vb.position();
-				m.calculateBoundsCylinder();
 				try {
 					facePrioritySorter.uploadSortedModel(
 						worldProjection,

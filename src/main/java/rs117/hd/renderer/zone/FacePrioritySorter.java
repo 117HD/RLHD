@@ -47,8 +47,8 @@ class FacePrioritySorter {
 	static final char[] distanceFaceCount;
 	static final char[][] distanceToFaces;
 
-	private static final float[] modelCanvasX;
-	private static final float[] modelCanvasY;
+	private static final float[] modelProjectedX;
+	private static final float[] modelProjectedY;
 
 	private static final float[] modelLocalX;
 	private static final float[] modelLocalY;
@@ -87,8 +87,8 @@ class FacePrioritySorter {
 		distanceFaceCount = new char[MAX_DIAMETER];
 		distanceToFaces = new char[MAX_DIAMETER][ZSORT_GROUP_SIZE];
 
-		modelCanvasX = new float[MAX_VERTEX_COUNT];
-		modelCanvasY = new float[MAX_VERTEX_COUNT];
+		modelProjectedX = new float[MAX_VERTEX_COUNT];
+		modelProjectedY = new float[MAX_VERTEX_COUNT];
 
 		modelLocalX = new float[MAX_VERTEX_COUNT];
 		modelLocalY = new float[MAX_VERTEX_COUNT];
@@ -107,9 +107,6 @@ class FacePrioritySorter {
 		for (int i = 0; i < 8; i++)
 			MAX_BRIGHTNESS_LOOKUP_TABLE[i] = (int) (127 - 72 * Math.pow(i / 7f, .05));
 	}
-
-	@Inject
-	private Client client;
 
 	@Inject
 	private HdPlugin plugin;
@@ -141,10 +138,6 @@ class FacePrioritySorter {
 
 		final int[] faceColors3 = model.getFaceColors3();
 		final byte[] faceRenderPriorities = model.getFaceRenderPriorities();
-
-		final int centerX = client.getCenterX();
-		final int centerY = client.getCenterY();
-		final int zoom = client.get3dZoom();
 
 		orientation = mod(orientation, 2048);
 		orientSin = SINE[orientation];
@@ -180,11 +173,12 @@ class FacePrioritySorter {
 				return 0;
 			}
 
-			modelCanvasX[v] = centerX + p[0] * zoom / p[2];
-			modelCanvasY[v] = centerY + p[1] * zoom / p[2];
+			modelProjectedX[v] = p[0];
+			modelProjectedY[v] = p[1];
 			distances[v] = (int) p[2] - zero;
 		}
 
+		model.calculateBoundsCylinder();
 		final int diameter = model.getDiameter();
 		final int radius = model.getRadius();
 		if (diameter >= 6000) {
@@ -202,12 +196,12 @@ class FacePrioritySorter {
 			final int v3 = indices3[i];
 
 			final float
-				aX = modelCanvasX[v1],
-				aY = modelCanvasY[v1],
-				bX = modelCanvasX[v2],
-				bY = modelCanvasY[v2],
-				cX = modelCanvasX[v3],
-				cY = modelCanvasY[v3];
+				aX = modelProjectedX[v1],
+				aY = modelProjectedY[v1],
+				bX = modelProjectedX[v2],
+				bY = modelProjectedY[v2],
+				cX = modelProjectedX[v3],
+				cY = modelProjectedY[v3];
 			// Back-face culling
 			if ((aX - bX) * (cY - bY) - (cX - bX) * (aY - bY) <= 0)
 				continue;
@@ -276,12 +270,7 @@ class FacePrioritySorter {
 				dynFaceDistances = eq11;
 			}
 
-			int currFaceDistance;
-			if (drawnFaces < numDynFaces) {
-				currFaceDistance = dynFaceDistances[drawnFaces];
-			} else {
-				currFaceDistance = -1000;
-			}
+			int currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
 
 			for (int pri = 0; pri < 10; ++pri) {
 				while (pri == 0 && currFaceDistance > avg12) {
@@ -295,11 +284,7 @@ class FacePrioritySorter {
 						dynFaceDistances = eq11;
 					}
 
-					if (drawnFaces < numDynFaces) {
-						currFaceDistance = dynFaceDistances[drawnFaces];
-					} else {
-						currFaceDistance = -1000;
-					}
+					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
 				}
 
 				while (pri == 3 && currFaceDistance > avg34) {
@@ -313,11 +298,7 @@ class FacePrioritySorter {
 						dynFaceDistances = eq11;
 					}
 
-					if (drawnFaces < numDynFaces) {
-						currFaceDistance = dynFaceDistances[drawnFaces];
-					} else {
-						currFaceDistance = -1000;
-					}
+					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
 				}
 
 				while (pri == 5 && currFaceDistance > avg68) {
@@ -331,11 +312,7 @@ class FacePrioritySorter {
 						dynFaceDistances = eq11;
 					}
 
-					if (drawnFaces < numDynFaces) {
-						currFaceDistance = dynFaceDistances[drawnFaces];
-					} else {
-						currFaceDistance = -1000;
-					}
+					currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
 				}
 
 				final int priNum = numOfPriority[pri];
@@ -358,11 +335,7 @@ class FacePrioritySorter {
 					dynFaceDistances = eq11;
 				}
 
-				if (drawnFaces < numDynFaces) {
-					currFaceDistance = dynFaceDistances[drawnFaces];
-				} else {
-					currFaceDistance = -1000;
-				}
+				currFaceDistance = drawnFaces < numDynFaces ? dynFaceDistances[drawnFaces] : -1000;
 			}
 		}
 
