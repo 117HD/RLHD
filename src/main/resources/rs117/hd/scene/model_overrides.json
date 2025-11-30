@@ -3817,6 +3817,7 @@
     "areas": [ "EDGEVILLE_MONASTERY" ],
     "textureMaterial": "HD_BRICKWALL",
     "baseMaterial": "WATTLE_1",
+    "flatNormals": true,
     "objectIds": [
       "PAINTEDBRICKWALL_1",
       "PAINTEDBRICKWALL_2"
@@ -25845,6 +25846,7 @@
   {
     "description": "Hadleys House - Wattle",
     "baseMaterial": "WATTLE_1",
+    "flatNormals": true,
     "objectIds": [
       "PAINTEDBRICKWALL_1",
       "PAINTEDBRICKWALL_2"
