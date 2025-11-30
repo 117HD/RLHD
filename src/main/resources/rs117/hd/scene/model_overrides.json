@@ -26958,6 +26958,7 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "flatNormals": true,
     "colorOverrides": [
       {
         "colors": "s == 0 && l < 30",
