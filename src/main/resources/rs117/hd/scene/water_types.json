@@ -351,12 +351,12 @@
   },
   {
     "name": "VANILLA_148",
-    "surfaceColor": "#545888",
+    "surfaceColor": "#473D72",
     "fresnelAmount": 0.85
   },
   {
     "name": "VANILLA_149",
-    "surfaceColor": "#454779",
+    "surfaceColor": "#3F3863",
     "fresnelAmount": 0.85
   },
   {
@@ -486,12 +486,12 @@
   },
   {
     "name": "VANILLA_175",
-    "surfaceColor": "#627E82",
+    "surfaceColor": "#5D7F72",
     "fresnelAmount": 0.85
   },
   {
     "name": "VANILLA_176",
-    "surfaceColor": "#577478",
+    "surfaceColor": "#517C6C",
     "fresnelAmount": 0.85
   },
   {
