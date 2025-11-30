@@ -3764,7 +3764,15 @@
     ]
   },
   {
-    "description": "CASTLE_WALLS",
+    "description": "Burthorpe - Warriors Guild - Walls",
+    "flatNormals": true,
+    "objectIds": [
+      "WARGUILD_WINDOW",
+      "WARGUILD_WALL"
+    ]
+  },
+  {
+    "description": "Generic - Stone Brick Walls with Bricks Texture - Textured",
     "flatNormals": true,
     "objectIds": [
       "CROSS_CASTLEEDGE",
@@ -3772,7 +3780,8 @@
       "BIGSTONE_CASTLEWALL",
       "CASTLEBATTLEMENTS",
       "CASTLECRUMBLY_L",
-      "CASTLECRUMBLY_R"
+      "CASTLECRUMBLY_R",
+      "BRICKWALL_BARS"
     ]
   },
   {
