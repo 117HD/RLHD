@@ -8965,9 +8965,7 @@
   },
   {
     "name": "CORAL_NURSERY",
-    "aabbs": [
-      [ 3264, 8832, 3327, 8895 ]
-    ],
+    "regions": [ 13194 ],
     "hideOtherAreas": true
   },
   {
