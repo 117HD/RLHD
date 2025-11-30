@@ -31755,8 +31755,7 @@
     "description": "Object - Metal - Anchor",
     "baseMaterial": "WOOD_GRAIN_2_LIGHT",
     "objectIds": [
-      "ANCHOR",
-      "DOCK_CLEAT01"
+      "ANCHOR"
     ],
     "uvType": "BOX",
     "uvScale": 0.25,
@@ -31767,6 +31766,15 @@
         "uvType": "BOX",
         "uvScale": 0.25
       }
+    ]
+  },
+  {
+    "description": "Object - Metal - Dock Cleat",
+    "baseMaterial": "METALLIC_1_LIGHT_SEMIGLOSS",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "DOCK_CLEAT01"
     ]
   },
   {
@@ -63151,9 +63159,7 @@
   },
   {
     "description": "Ship - Wood with Sails or Metal",
-    "baseMaterial": "METALLIC_1_VERY_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.1,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_SHIPHULL_FIGUREHEAD01",
       "BOATKIT_SHIPHULL_PORTHOLE01",
@@ -63178,17 +63184,13 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       }
     ]
   },
   {
     "description": "Ship - Wood with Sails or Metal - Rotated",
-    "baseMaterial": "METALLIC_1_VERY_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.1,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "BOATKIT_MAST_MIDDLEMAST_HOISTED",
       "BOATKIT_MAST_REARMAST_HOISTED",
@@ -63206,9 +63208,7 @@
       {
         "description": "Sail",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       }
     ]
   },
@@ -63254,9 +63254,7 @@
   },
   {
     "description": "Sailing - Salvaging Station",
-    "baseMaterial": "METALLIC_1_VERY_LIGHT",
-    "uvType": "BOX",
-    "uvScale": 0.1,
+    "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "SAILING_PORT_SALVAGING_STATION_PORT_SARIM",
       "SAILING_PORT_SALVAGING_STATION"
@@ -63273,9 +63271,7 @@
       {
         "description": "Cloth",
         "colors": "h == 6",
-        "baseMaterial": "CARPET_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.5
+        "baseMaterial": "CARPET_LIGHT_SMOOTH"
       },
       {
         "description": "Seaweed",
@@ -63307,17 +63303,13 @@
       {
         "description": "Paper",
         "colors": "h == 6 && s == 1",
-        "baseMaterial": "GRUNGE_3_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.1
+        "baseMaterial": "GRAY_90"
       }
     ]
   },
   {
     "description": "Sailing - Port Task Board",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "baseMaterial": "GRUNGE_3_SMOOTH",
     "objectIds": [
       "PORT_TASK_BOARD_PORT_SARIM",
       "PORT_TASK_BOARD_LUNAR_ISLE",
@@ -63347,9 +63339,7 @@
       {
         "description": "Shark Jaw",
         "colors": "h == 8 || h == 4",
-        "baseMaterial": "BONE",
-        "uvType": "BOX",
-        "uvScale": 0.3
+        "baseMaterial": "BONE"
       },
       {
         "description": "Wood",
@@ -63363,9 +63353,7 @@
   },
   {
     "description": "Sailing - Ledger Table",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "baseMaterial": "GRUNGE_3_SMOOTH",
     "objectIds": [
       "DOCK_LOADING_BAY_LEDGER_TABLE_WITHDRAW",
       "DOCK_LOADING_BAY_LEDGER_TABLE_DEPOSIT",
@@ -63424,9 +63412,7 @@
   },
   {
     "description": "Sailing - Decorative Loading Crates",
-    "baseMaterial": "GRUNGE_3",
-    "uvType": "BOX",
-    "uvScale": 0.6,
+    "baseMaterial": "GRUNGE_3_SMOOTH",
     "objectIds": [
       "DOCK_LOADING_BAY_CRATE_BARS_MITHRIL",
       "DOCK_LOADING_BAY_CRATE_SEEDS",
@@ -63453,9 +63439,7 @@
       {
         "description": "Cannonball",
         "colors": "h == 37",
-        "baseMaterial": "METALLIC_1_LIGHT",
-        "uvType": "BOX",
-        "uvScale": 0.1
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
       },
       {
         "description": "Mithril",
@@ -63474,7 +63458,7 @@
   {
     "description": "Sailing - Decorative Barrel with Liquid",
     "baseMaterial": "WATER_FOUNTAIN_FLAT_LIGHT",
-    "uvType": "BOX",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.6,
     "objectIds": [
       "DOCK_LOADING_BAY_BARREL_LIQUID",
@@ -64484,10 +64468,8 @@
     "colorOverrides": [
       {
         "description": "Canvas Roof",
-        "baseMaterial": "CARPET_LIGHT",
-        "colors": "h > 6  && h < 11",
-        "uvType": "BOX",
-        "uvScale": 0.6
+        "baseMaterial": "CARPET_LIGHT_SMOOTH",
+        "colors": "h > 6  && h < 11"
       },
       {
         "description": "Window",
@@ -64495,7 +64477,7 @@
         "baseMaterial": "GRAY_90"
       },
       {
-        "description": "Window",
+        "description": "Mast",
         "colors": "h == 5",
         "baseMaterial": "WOOD_GRAIN_3_LIGHT",
         "uvType": "BOX",

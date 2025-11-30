@@ -2430,6 +2430,11 @@
     "brightness": 1.516
   },
   {
+    "name": "METALLIC_1_VERY_LIGHT_SMOOTH",
+    "parent": "METALLIC_1_VERY_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "METALLIC_1_LIGHT_LOW_GLOSS",
     "parent": "METALLIC_1_LIGHT",
     "specularStrength": 0.05,
