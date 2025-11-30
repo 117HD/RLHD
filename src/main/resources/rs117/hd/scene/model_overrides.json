@@ -2296,9 +2296,7 @@
       {
         "colors": [ "h == 42", "h == 35" ],
         "baseMaterial": "TRANSPARENT",
-        "uvType": "BOX",
-        "uvScale": 0.33,
-        "uvOrientation": 512
+        "isWaterEffect": true
       }
     ]
   },
@@ -2853,8 +2851,7 @@
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_IORWERTH",
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_MEILYR",
       "SAILING_BT_GWENITH_GLIDE_TELEPORT_MARKER_TRAHAEARN",
-      "SAILING_CHARTING_HINT_MARKER_SPYGLASS",
-      "SAILING_CHARTING_HINT_MARKER_DUCK"
+      "SAILING_CHARTING_HINT_MARKER_SPYGLASS"
     ]
   },
   {
@@ -8393,7 +8390,8 @@
       },
       {
         "baseMaterial": "TRANSPARENT",
-        "colors": [ "a < 255" ]
+        "colors": [ "a < 255" ],
+        "isWaterEffect": true
       }
     ]
   },
@@ -25054,7 +25052,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "TRANSPARENT",
+        "isWaterEffect": true
       }
     ]
   },
@@ -37134,13 +37133,14 @@
       "DAGANNOTH_PUDDLE"
     ],
     "uvType": "BOX"
-  },  {
+  },
+  {
   "description": "Waterbirth Water Leak",
   "baseMaterial": "SLIME_GRUNGE",
   "objectIds": [
     "DAGANNOTH_CAVEWALL_ANIMATED_WATER"
   ]
-},
+  },
   {
     "description": "Stone-  Ruined Steps",
     "baseMaterial": "STONE_NORMALED",
@@ -37937,7 +37937,8 @@
     "colorOverrides": [
       {
         "colors": [ "h == 37" ],
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "TRANSPARENT",
+        "isWaterEffect": true
       }
     ]
   },
@@ -58983,7 +58984,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "TRANSPARENT",
+        "isWaterEffect": true
       }
     ]
   },
@@ -61290,7 +61292,8 @@
       {
         "colors": "a < 255",
         "baseMaterial": "TRANSPARENT",
-        "uvType": "BOX"
+        "uvType": "BOX",
+        "isWaterEffect": true
       }
     ]
   },
@@ -64356,7 +64359,8 @@
       {
         "description": "Fake Ripples",
         "colors": "a < 255 || h == 37 && l == 71",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "TRANSPARENT",
+        "isWaterEffect": true
       }
     ]
   },
@@ -64369,7 +64373,8 @@
       {
         "description": "Fake Ripples",
         "colors": "h == 37",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "TRANSPARENT",
+        "isWaterEffect": true
       }
     ]
   },
@@ -64391,7 +64396,8 @@
       {
         "description": "Fake Ripples",
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "TRANSPARENT",
+        "isWaterEffect": true
       }
     ]
   },
@@ -66222,7 +66228,8 @@
     "colorOverrides": [
       {
         "colors": "a < 255",
-        "baseMaterial": "TRANSPARENT"
+        "baseMaterial": "TRANSPARENT",
+        "isWaterEffect": true
       }
     ]
   },
