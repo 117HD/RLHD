@@ -5271,6 +5271,15 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "THE_ONYX_CREST_CLIFF_FIX",
+    "area": "THE_ONYX_CREST",
+    "overlayIds": [
+      11
+    ],
+    "groundMaterial": "PACKED_EARTH",
+    "uvScale": 1.1
+  },
+  {
     "name": "VARROCK_PATHS",
     "area": "OVERWORLD",
     "overlayIds": [
@@ -6352,6 +6361,13 @@
     "area": "Brimhaven Dungeon",
     "underlayIds": [ 63, 64, 65, 66 ],
     "groundMaterial": "PACKED_EARTH"
+  },
+  {
+    "area": "SHIPYARD_CONCRETE",
+    "overlayIds": [ 186 ],
+    "setSaturation": 1,
+    "setLightness": 8,
+    "blended": false
   },
   {
     "name": "OVERLAY_GRAVEL",
@@ -9059,6 +9075,81 @@
     "uvScale": 1.1
   },
   {
+    "name": "THE_LITTLE_PEARL_SAND",
+    "area": "THE_LITTLE_PEARL",
+    "underlayIds": [
+      61,
+      62,
+      68
+    ],
+    "groundMaterial": "SAND",
+    "uvScale": 1.1,
+    "replacements": {
+      "THE_LITTLE_PEARL_SAND_NO_TEXTURES": "!textures"
+    }
+  },
+  {
+    "name": "THE_LITTLE_PEARL_SAND_NO_TEXTURES",
+    "area": "THE_LITTLE_PEARL",
+    "underlayIds": [
+      61,
+      62,
+      68
+    ],
+    "groundMaterial": "NONE",
+    "shiftLightness": -8,
+    "maxLightness": 49,
+    "minLightness": 28
+  },
+  {
+    "name": "PANDAMONIUM_ROCKY_TILES",
+    "area": "PANDEMONIUM_ISLAND",
+    "groundMaterial": "OVERWORLD_ROCKY",
+    "underlayIds": [
+      110
+    ]
+  },
+  {
+    "name": "PANDAMONIUM_COMPLEX_TILES",
+    "area": "PANDEMONIUM_ISLAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 10",
+      "DEFAULT_SAND": "h == 8",
+      "DEFAULT_DIRT": [
+        "h == 8 && s == 2",
+        "h == 9"
+      ]
+    }
+  },
+  {
+    "name": "DOGNOSE_BEACH_SAND",
+    "area": "DOGNOSE_ISLAND_BEACH",
+    "groundMaterial": "SAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ]
+  },
+  {
+    "name": "DOGNOSE_COMPLEX_TILES",
+    "area": "DOGNOSE_ISLAND",
+    "underlayIds": [
+      48,
+      68,
+      100
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 10",
+      "DEFAULT_DIRT": "h <= 9"
+    }
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
@@ -9264,7 +9355,8 @@
       10,
       58,
       60,
-      92
+      92,
+      132
     ],
     "groundMaterial": "GRUNGE"
   },

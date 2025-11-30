@@ -20700,7 +20700,8 @@
     "objectIds": [
       "FAI_FALADOR_HOUSE_TORCH",
       "AIDE_TORCH",
-      "GRAB_EVIL_TWIN_TORCH"
+      "GRAB_EVIL_TWIN_TORCH",
+      "CONCH_TORTUGAN01_TORCH01"
     ]
   },
   {
@@ -34588,7 +34589,6 @@
   {
     "description": "DIGSITE_LAMP",
     "height": 170,
-    "alignment": "FRONT",
     "radius": 290,
     "strength": 8.5,
     "color": [
@@ -42513,6 +42513,23 @@
     "range": 20,
     "objectIds": [
       "SWAN_FURNACE"
+    ]
+  },
+  {
+    "description": "Sailing Shipyard Portal",
+    "offset": [ 0, 100, -50 ],
+    "radius": 500,
+    "strength": 20,
+    "color": [
+      0,
+      0,
+      255
+    ],
+    "type": "PULSE",
+    "duration": 4100,
+    "range": 10,
+    "objectIds": [
+      "SAILING_SHIPYARD_PORTAL_EXIT"
     ]
   }
 ]

@@ -1021,6 +1021,14 @@
     "fogDepth": 50
   },
   {
+    "area": "BACKWATER_AND_BREAKBONE_STRAIT",
+    "ambientColor": "#c0dbad",
+    "directionalColor": "#adb08b",
+    "fogColor": "#BDD8E8",
+    "directionalStrength": 4,
+    "fogDepth": 15
+  },
+  {
     "area": "POISON_WASTE",
     "ambientColor": "#c0dbad",
     "directionalColor": "#adb08b",
@@ -1463,6 +1471,20 @@
       80,
       190
     ],
+    "fogColor": "#133156",
+    "fogDepth": 60,
+    "groundFogStart": -450,
+    "groundFogEnd": -700,
+    "groundFogOpacity": 0.65,
+    "waterCausticsStrength": 4
+  },
+  {
+    "area": "CORAL_NURSERY",
+    "isUnderwater": true,
+    "ambientColor": "#255590",
+    "ambientStrength": 1.5,
+    "directionalColor": "#71a3d0",
+    "directionalStrength": 3,
     "fogColor": "#133156",
     "fogDepth": 60,
     "groundFogStart": -450,
