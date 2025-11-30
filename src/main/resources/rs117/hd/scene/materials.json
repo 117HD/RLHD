@@ -939,51 +939,63 @@
   },
   {
     "name": "LEAFY_JATOBA",
-    "vanillaTextureIndex": 189
+    "vanillaTextureIndex": 189,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_JATOBA_TILED",
-    "vanillaTextureIndex": 190
+    "vanillaTextureIndex": 190,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_JATOBA_DISEASED",
-    "vanillaTextureIndex": 191
+    "vanillaTextureIndex": 191,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_JATOBA_DISEASED_TILED",
-    "vanillaTextureIndex": 192
+    "vanillaTextureIndex": 192,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR",
-    "vanillaTextureIndex": 193
+    "vanillaTextureIndex": 193,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR_TILED",
-    "vanillaTextureIndex": 194
+    "vanillaTextureIndex": 194,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR_DISEASED",
-    "vanillaTextureIndex": 195
+    "vanillaTextureIndex": 195,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_CAMPHOR_DISEASED_TILED",
-    "vanillaTextureIndex": 196
+    "vanillaTextureIndex": 196,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD",
-    "vanillaTextureIndex": 197
+    "vanillaTextureIndex": 197,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD_TILED",
-    "vanillaTextureIndex": 198
+    "vanillaTextureIndex": 198,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD_DISEASED",
-    "vanillaTextureIndex": 199
+    "vanillaTextureIndex": 199,
+    "hasTransparency": true
   },
   {
     "name": "LEAFY_IRONWOOD_DISEASED_TILED",
-    "vanillaTextureIndex": 200
+    "vanillaTextureIndex": 200,
+    "hasTransparency": true
   },
   {
     "name": "TEXTURE_THATCHED02",
@@ -1392,6 +1404,11 @@
     "normalMap": null
   },
   {
+    "name": "GRUNGE_3_SMOOTH_LIGHT",
+    "parent": "GRUNGE_3_LIGHT",
+    "normalMap": null
+  },
+  {
     "name": "GRUNGE_3_SHINY",
     "parent": "GRUNGE_3",
     "brightness": 1.177,
@@ -1459,6 +1476,20 @@
   {
     "name": "SWAMP_WATER_FLAT_FLOW",
     "parent": "SWAMP_WATER_FLAT",
+    "flowMap": "UNDERWATER_FLOW_MAP",
+    "flowMapStrength": 0.2,
+    "flowMapDuration": [
+      7.0,
+      -11.0
+    ],
+    "scrollSpeed": [
+      -0.0,
+      -1.3
+    ]
+  },
+  {
+    "name": "WATER_FLAT_FLOW",
+    "parent": "WATER_FLAT",
     "flowMap": "UNDERWATER_FLOW_MAP",
     "flowMapStrength": 0.2,
     "flowMapDuration": [

@@ -1749,6 +1749,78 @@
     ]
   },
   {
+    "description": "Jatoba Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "JATOBA_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND"
+      }
+    ]
+  },
+  {
+    "description": "Jatoba Tree Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "objectIds": [
+      "JATOBA_TREE_STUMP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 3",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Campohr Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "CAMPHOR_TREE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 50
+  },
+  {
+    "description": "Campohr Tree Stump",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "CAMPHOR_TREE_UPDATE_STUMP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.85,
+    "uvOrientation": 50,
+    "colorOverrides": [
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "GRUNGE_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
     "description": "Objects - Trees - Tirannwn Tree - Stump",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
@@ -8002,7 +8074,9 @@
       "VIKING_PIER_LEDGER_TABLE_ICON",
       "PORT_TASK_BOARD_ICON_PEST_SERIM_PIER",
       "LEDGER_TABLE_ICON_PEST_SERIM_PIER",
-      "LEDGER_TABLE_ICON_PIER"
+      "LEDGER_TABLE_ICON_PIER",
+      "CONCH_FARMING_ENTRANCE",
+      "CONCH_FARMING_EXIT"
     ],
     "uvType": "BOX"
   },
@@ -13237,7 +13311,14 @@
       "AVIUM_ROCKSLIDE04",
       "DOTI_AGILITY_CHALLENGE_A",
       "DOTI_AGILITY_CHALLENGE_B",
-      "DOTI_AGILITY_CHALLENGE_C"
+      "DOTI_AGILITY_CHALLENGE_C",
+      "TT_HUNTING_ROCKS_02_NOOP",
+      "TT_HUNTING_ROCKS_01_NOOP",
+      "TT_HUNTING_ROCKS_02_OP",
+      "TT_HUNTING_ROCKS_01_OP",
+      "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_BOTTOM",
+      "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_TOP",
+      "GREAT_CONCH_CLIFF_SHORTCUT_MIDDLE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -32434,7 +32515,9 @@
       "SAILING_PANDEMONIUM_SHIPPLANK_ON_A",
       "SAILING_PANDEMONIUM_SHIPPLANK_ON_B",
       "SAILING_PANDEMONIUM_SHIPPLANK_OFF_B",
-      "GANGPLANK"
+      "GANGPLANK",
+      "SAILING_GENERIC_SHIPPLANK_ON",
+      "SAILING_GENERIC_SHIPPLANK_OFF"
     ],
     "uvType": "BOX",
     "uvScale": 1.1,
@@ -50395,7 +50478,7 @@
     "description": "Varrock - Vault - Golden Bars - Stacked",
     "baseMaterial": "METALLIC_1_GLOSS",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.3,
     "uvOrientation": 89,
     "objectIds": [ "FAI_VARROCK_BANK_GOLD_BARS" ]
   },
@@ -64771,7 +64854,10 @@
     "objectIds": [
       "PALM_UPDATE01",
       "PALM_UPDATE02",
-      "PALM_UPDATE03"
+      "PALM_UPDATE03",
+      "TT_PALM_1",
+      "TT_PALM_2",
+      "TT_PALM_3"
     ],
     "colorOverrides": [
       {
@@ -66572,7 +66658,359 @@
     ]
   },
   {
-    "description": "Depth Bias Fix - Tempoross  Pools",
+    "description": "Great Conch - Tortugan - Market Stall",
+    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "objectIds": [
+      "TORTUGAN_STALL_WEAPONS",
+      "TORTUGAN_STALL_HERBALIST",
+      "TORTUGAN_STALL_EMPTY",
+      "TORTUGAN_STALL_CRAFTING",
+      "TORTUGAN_STALL_HUNTING",
+      "TORTUGAN_STALL_SEED",
+      "TORTUGAN_STALL_FRUIT",
+      "TORTUGAN_STALL_VEG",
+      "TORTUGAN_STALL_SILVER",
+      "TORTUGAN_STALL_ORE",
+      "TORTUGAN_STALL_FISH",
+      "TT_REPAIR_STALL_COCO_BROKEN_NOOP",
+      "TT_REPAIR_STALL_COCO_BROKEN",
+      "TT_REPAIR_STALL_COCO_BROKEN",
+      "TT_REPAIR_STALL_KRILL_BROKEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 13",
+        "baseMaterial": "GRAY_85",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan - House Walls",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CONCH_WALKIT_UNPAINTED_LVL0",
+      "CONCH_WALKIT_UNPAINTED_LVL0_DOORWAY01",
+      "TT_REPAIR_WALL_BROKEN",
+      "CONCH_WALKIT_UNPAINTED_LVL0_WINDOW",
+      "CONCH_WALKIT_PAINTED_LVL0_WINDOW",
+      "CONCH_WALKIT_PAINTED_LVL0",
+      "CONCH_WALKIT_WOODEN_LVL0",
+      "CONCH_WALKIT_WOODEN_LVL0_WINDOW",
+      "CONCH_WALKIT_WOODEN_LVL1",
+      "CONCH_WALKIT_WOODEN_LVL1_WINDOW",
+      "TT_REPAIR_WALL_FIXED",
+      "CONCH_WALKIT_WOODEN_LVL0_DOORWAY01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 0 || h > 5",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan House - Wooden Pillars",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CONCH_ROOFKIT_SUPPORT",
+      "CONCH_WALKIT_WOODEN_FRAME01_MIRROR",
+      "CONCH_WALKIT_WOODEN_FRAME01",
+      "CONCH_WALKIT_WOODEN_FRAME02",
+      "CONCH_WALKIT_WOODEN_FRAME03"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan House Shells - Remove Shadows",
+    "castShadows": false,
+    "baseMaterial": "GRUNGE_3_LIGHT",
+    "objectIds": [
+      "CONCH_WALLKIT_DECOR_SHELLS01",
+      "CONCH_WALLKIT_DECOR_SHELLS02",
+      "CONCH_WALLKIT_DECOR_SHELLS03",
+      "CONCH_WALLKIT_DECOR_SHELLS04"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan House - Roof",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "objectIds": [
+      "CONCH_ROOFKIT_SLOPE_STRAIGHT_MIDDLE01",
+      "CONCH_ROOFKIT_SLOPE_STRAIGHT_EDGE_MIRROR01",
+      "CONCH_ROOFKIT_SLOPE_STRAIGHT_EDGE01",
+      "CONCH_ROOFKIT_TOP_EDGE_CORNER01_MIRROR",
+      "CONCH_ROOFKIT_TOP_EDGE_MIDDLE01",
+      "CONCH_ROOFKIT_TOP_MIDDLE01",
+      "CONCH_ROOFKIT_TOP_EDGE_CORNER01",
+      "CONCH_ROOFKIT_TOP_EDGE_MIDDLE02"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan House - Roof - Corner",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientation": 256,
+    "objectIds": [
+      "CONCH_ROOFKIT_SLOPE_CORNER_OUTSIDE01"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Wooden Stairs",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationY": 512,
+    "uvOrientationX": 720,
+    "objectIds": [
+      "CONCH_TORTUGAN_STAIRCASE_BOTTOM"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Wooden Table",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CONCH_TABLE_TORTUGAN01_1X2",
+      "CONCH_TABLE_TORTUGAN01_1X1"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Wooden Table - With Saw",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "CONCH_TABLE_TORTUGAN01_SAW01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 60",
+        "baseMaterial": "METALLIC_1_LIGHT"
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Sand Bed",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "CONCH_BED_TORTUGAN01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.2
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Sand Bucket",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CONCH_BUCKET_TORTUGAN01_SAND01",
+      "CONCH_BUCKET_TORTUGAN02_SAND01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 12 || h == 4",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "GRAVEL_LIGHT",
+        "uvType": "BOX",
+        "uvOrientation": 100,
+        "uvScale": 0.25
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Bean Chair",
+    "baseMaterial": "CARPET_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "CONCH_BEANCHAIR_TORTUGAN01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Shelves",
+    "baseMaterial": "GRUNGE_3_SMOOTH_LIGHT",
+    "objectIds": [
+      "CONCH_SHELF_TORTUGAN02_BOTTLES01",
+      "CONCH_CABINET_TORTUGAN02_FISHNET01",
+      "CONCH_CABINET_TORTUGAN01_EMPTY01",
+      "CONCH_SHELF_TORTUGAN02_BOTTLES02",
+      "CONCH_SHELF_TORTUGAN01_FOOD01",
+      "CONCH_SHELF_TORTUGAN02_FOOD01",
+      "CONCH_CABINET_TORTUGAN02_TROPHY01",
+      "CONCH_CABINET_TORTUGAN01_BOOK02",
+      "CONCH_SHELF_TORTUGAN01_HAT01",
+      "CONCH_CABINET_TORTUGAN02_EMPTY01",
+      "CONCH_CABINET_TORTUGAN02_BACKPACK01",
+      "CONCH_SHELF_TORTUGAN01_CANDLES01",
+      "CONCH_CABINET_TORTUGAN01_TROPHY01",
+      "CONCH_CABINET_TORTUGAN02_TOOLS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Telescope",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "objectIds": [
+      "TORTUGAN_TELESCOPE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvScale": 0.1,
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h > 4" ,
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvScale": 0.2,
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Crate",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "CONCH_CRATE_TORTUGAN01_JELLYFISH01",
+      "TT_REPAIR_CRATES_BROKEN",
+      "CONCH_TORTUGAN_BANKBOOTH01",
+      "CONCH_CRATE_TORTUGAN01_EMPTY01",
+      "TT_REPAIR_CRATES_COCO_FIXED",
+      "TT_REPAIR_CRATES_COCO_BROKEN_NOOP",
+      "TT_REPAIR_CRATES_COCO_BROKEN",
+      "TT_REPAIR_CRATES_FIXED",
+      "TT_REPAIR_CRATES_BROKEN",
+      "TT_REPAIR_CRATES_BROKEN_NOOP"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h > 9 && a == 255",
+        "baseMaterial": "GRUNGE_1",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Planter",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "CONCH_PLANTER_TORTUGAN_01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 4 || h == 6",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Gryphon Lair & Coral Cave Entrance",
+    "baseMaterial": "DIRT_2_LIGHT",
+    "objectIds": [
+      "CONCH_GRYPHON_LAIR_ENTRANCE",
+      "TT_LAIR_ENTRANCE_CLEAR",
+      "TT_LAIR_ENTRANCE_BLOCKED",
+      "CONCH_GRYPHON_TASK_LAIR_ENTRANCE",
+      "CONCH_UNDERWATER_CAVE_ENTRANCE"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 3 || h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "The Little Pearl - Tortugan Egg Nest",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "TORTUGAN_EGGS",
+      "TORTUGAN_EGGS02"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Fix Waterfalls that are holes in the world without an opaque texture",
+    "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE" ],
+    "textureMaterial": "WATER_FLAT_FLOW",
+    "objectIds": [
+      "WATERFALL_OVERLAY"
+    ]
+  },
+  {
+    "description": "Depth Bias Fix - Tempoross Pools",
     "objectIds": [
       "TEMPOROSS_REWARDPOOL_0",
       "TEMPOROSS_REWARDPOOL_8",
