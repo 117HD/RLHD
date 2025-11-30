@@ -486,12 +486,12 @@
   },
   {
     "name": "VANILLA_175",
-    "surfaceColor": "#627E82",
+    "surfaceColor": "#5D7F72",
     "fresnelAmount": 0.85
   },
   {
     "name": "VANILLA_176",
-    "surfaceColor": "#577478",
+    "surfaceColor": "#517C6C",
     "fresnelAmount": 0.85
   },
   {
