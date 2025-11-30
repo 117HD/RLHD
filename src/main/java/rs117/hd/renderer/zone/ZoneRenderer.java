@@ -1491,7 +1491,6 @@ public class ZoneRenderer implements Renderer {
 		nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 
 		environmentManager.loadSceneEnvironments(nextSceneContext);
-		plugin.minimapRenderer.prepareScene(nextSceneContext);
 		proceduralGenerator.generateSceneData(nextSceneContext);
 
 		if (nextSceneContext.enableAreaHiding) {
@@ -1674,6 +1673,7 @@ public class ZoneRenderer implements Renderer {
 					asyncSceneUploader.uploadZone(nextSceneContext, zone, x, z);
 			}
 		}
+		plugin.minimapRenderer.prepareScene(nextSceneContext);
 		log.debug("Scene upload time {}", sw);
 
 		// Roof ids aren't consistent between scenes, so build a mapping of old -> new roof ids
