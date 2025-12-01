@@ -2,7 +2,6 @@ package rs117.hd.renderer.zone;
 
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.opengl.uniforms.UBOWorldViews;

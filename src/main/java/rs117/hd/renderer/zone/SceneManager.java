@@ -470,7 +470,10 @@ public class SceneManager {
 						curZone.updateRoofsTask.cancel();
 					curZone.updateRoofsTask = null;
 
+					// Last minute chance for a streamed in zone to be reused
 					ctx.handleZoneSwap(-1.0f, x, z);
+					// Mark all zones to be culled, unless they get reused later
+					ctx.zones[x][z].cull = true;
 				}
 			}
 
