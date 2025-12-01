@@ -424,7 +424,6 @@ public class SceneManager {
 
 			generateSceneDataTask.setExecuteAsync(plugin.configZoneStreaming).queue();
 			loadSceneLightsTask.setExecuteAsync(plugin.configZoneStreaming).queue();
-			calculateRoofChangesTask.setExecuteAsync(plugin.configZoneStreaming).queue();
 
 			if (nextSceneContext.enableAreaHiding) {
 				assert nextSceneContext.sceneBase != null;
@@ -465,9 +464,14 @@ public class SceneManager {
 			for (int x = 0; x < NUM_ZONES; ++x) {
 				for (int z = 0; z < NUM_ZONES; ++z) {
 					ctx.zones[x][z].cull = true;
+					ctx.zones[x][z].updateRoofsTask.cancel();
+					ctx.zones[x][z].updateRoofsTask = null;
 					ctx.handleZoneSwap(-1.0f, x, z);
 				}
 			}
+
+			// Queue after ensuring previous scene has been cancelled
+			calculateRoofChangesTask.setExecuteAsync(plugin.configZoneStreaming).queue();
 
 			final int dx = scene.getBaseX() - prev.getBaseX() >> 3;
 			final int dy = scene.getBaseY() - prev.getBaseY() >> 3;
@@ -504,7 +508,7 @@ public class SceneManager {
 								.build( "updateRoof",
 								(task) -> old.updateRoofs(nextRoofChanges))
 								.setExecuteAsync(plugin.configZoneStreaming)
-								.queue(true, calculateRoofChangesTask);
+								.queue(calculateRoofChangesTask);
 
 						nextZones[x][z] = old;
 						nextSceneContext.totalReused++;
