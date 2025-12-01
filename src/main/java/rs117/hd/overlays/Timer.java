@@ -33,42 +33,83 @@ public enum Timer {
 	RENDER_SHADOWS(true),
 	RENDER_SCENE(true),
 	RENDER_UI(true, "Render UI"),
-	SWAP_BUFFERS,
+	SWAP_BUFFERS(FrameTimerSubCategory.STREAMING),
 	;
 
 	public static final Timer[] TIMERS = values();
 	public final String name;
 	public final boolean isGpuTimer;
 	public final boolean gpuDebugGroup;
+	public final FrameTimerSubCategory subCategory;
 
 	Timer() {
 		name = enumToName(name());
 		isGpuTimer = false;
 		gpuDebugGroup = false;
+		subCategory = FrameTimerSubCategory.TIMINGS;
 	}
 
 	Timer(boolean isGpuTimer) {
 		name = enumToName(name());
 		this.isGpuTimer = isGpuTimer;
 		gpuDebugGroup = isGpuTimer;
+		subCategory = FrameTimerSubCategory.TIMINGS;
 	}
 
 	Timer(boolean isGpuTimer, @Nonnull String name) {
 		this.name = name;
 		this.isGpuTimer = isGpuTimer;
 		gpuDebugGroup = isGpuTimer;
+		subCategory = FrameTimerSubCategory.TIMINGS;
 	}
 
 	Timer(boolean isGpuTimer, boolean gpuDebugGroup) {
 		name = enumToName(name());
 		this.isGpuTimer = isGpuTimer;
 		this.gpuDebugGroup = gpuDebugGroup;
+		subCategory = FrameTimerSubCategory.TIMINGS;
 	}
 
 	Timer(@Nonnull String name) {
 		this.name = name;
 		isGpuTimer = false;
 		gpuDebugGroup = false;
+		subCategory = FrameTimerSubCategory.TIMINGS;
+	}
+
+	Timer(FrameTimerSubCategory subCategory) {
+		name = enumToName(name());
+		isGpuTimer = false;
+		gpuDebugGroup = false;
+		this.subCategory = subCategory;
+	}
+
+	Timer(boolean isGpuTimer, FrameTimerSubCategory subCategory) {
+		name = enumToName(name());
+		this.isGpuTimer = isGpuTimer;
+		gpuDebugGroup = isGpuTimer;
+		this.subCategory = subCategory;
+	}
+
+	Timer(boolean isGpuTimer, @Nonnull String name, FrameTimerSubCategory subCategory) {
+		this.name = name;
+		this.isGpuTimer = isGpuTimer;
+		gpuDebugGroup = isGpuTimer;
+		this.subCategory = subCategory;
+	}
+
+	Timer(boolean isGpuTimer, boolean gpuDebugGroup, FrameTimerSubCategory subCategory) {
+		name = enumToName(name());
+		this.isGpuTimer = isGpuTimer;
+		this.gpuDebugGroup = gpuDebugGroup;
+		this.subCategory = subCategory;
+	}
+
+	Timer(@Nonnull String name, FrameTimerSubCategory subCategory) {
+		this.name = name;
+		isGpuTimer = false;
+		gpuDebugGroup = false;
+		this.subCategory = subCategory;
 	}
 
 	private static String enumToName(String name) {
