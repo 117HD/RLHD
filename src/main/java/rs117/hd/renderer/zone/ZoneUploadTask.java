@@ -2,10 +2,6 @@ package rs117.hd.renderer.zone;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 import lombok.extern.slf4j.Slf4j;
-import rs117.hd.overlays.FrameTimer;
-import rs117.hd.overlays.Timer;
-import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.utils.jobs.JobSystem;
 import rs117.hd.utils.jobs.JobWork;
 
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -38,12 +34,13 @@ public final class ZoneUploadTask extends JobWork {
 			queueClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
 			workerHandleCancel();
 
-			if (zone.vboO != null || zone.vboA != null) {
-				sceneUploader.uploadZone(sceneContext, zone, x, z);
-				workerHandleCancel();
+			sceneUploader.uploadZone(sceneContext, zone, x, z);
+			workerHandleCancel();
 
-				queueClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
-			}
+			queueClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
+		} else {
+			// The zone should not be left uninitialized, as this will prevent drawing anything within it
+			zone.initialized = true;
 		}
 	}
 
