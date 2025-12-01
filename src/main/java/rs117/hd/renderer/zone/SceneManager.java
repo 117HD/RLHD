@@ -463,10 +463,13 @@ public class SceneManager {
 
 			for (int x = 0; x < NUM_ZONES; ++x) {
 				for (int z = 0; z < NUM_ZONES; ++z) {
-					ctx.zones[x][z].cull = true;
-					if(ctx.zones[x][z].updateRoofsTask != null)
-						ctx.zones[x][z].updateRoofsTask.cancel();
-					ctx.zones[x][z].updateRoofsTask = null;
+					Zone curZone = ctx.zones[x][z];
+					curZone.cull = true;
+
+					if(curZone.updateRoofsTask != null)
+						curZone.updateRoofsTask.cancel();
+					curZone.updateRoofsTask = null;
+
 					ctx.handleZoneSwap(-1.0f, x, z);
 				}
 			}
