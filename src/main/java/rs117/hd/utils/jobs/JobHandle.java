@@ -9,7 +9,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import javax.annotation.Nullable;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import static rs117.hd.utils.HDUtils.printStacktrace;
@@ -131,7 +130,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		setJobState(STATE_QUEUED);
 	}
 
-	synchronized void setCompleted() {
+	synchronized void setCompleted() throws InterruptedException {
 		if (isCompleted()) return;
 
 		final boolean wasCancelled = isCancelled();
@@ -178,7 +177,6 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		setState(value); // AQS state for completion: 0 = not done, 1 = done
 	}
 
-	@SneakyThrows
 	synchronized void release() {
 		if (isReleased()) return;
 
@@ -198,8 +196,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		POOL.add(this);
 	}
 
-	@SneakyThrows
-	void cancel(boolean block) {
+	void cancel(boolean block) throws InterruptedException {
 		if (item == null || isCancelled() || isCompleted())
 			return;
 
@@ -229,8 +226,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	boolean isCancelled() { return jobState.getAcquire() == STATE_CANCELLED; }
 	boolean isCompleted() { return jobState.getAcquire() == STATE_COMPLETED; }
 
-	@SneakyThrows
-	void await() {
+	void await() throws InterruptedException {
 		refCounter.incrementAndGet();
 
 		final boolean isClientThread = JobSystem.INSTANCE.client != null && JobSystem.INSTANCE.client.isClientThread();

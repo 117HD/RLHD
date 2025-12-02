@@ -71,27 +71,35 @@ public final class JobWorker {
 			}
 
 			try {
-				workerHandleCancel();
-
-				if(handle.item != null && handle.setRunning(this)) {
-					inflight.lazySet(true);
-					handle.item.onRun();
-					handle.item.ranToCompletion.set(true);
-				}
-			}
-			catch (InterruptedException e) {
-				log.debug("Interrupt Received whilst processing: {}", handle.hashCode());
-			}
-			catch (Throwable ex) {
-				log.warn("Encountered an error whilst processing: {}", handle.hashCode(), ex);
-				handle.cancel(false);
-			} finally {
-				handle.setCompleted();
-				handle.worker = null;
-				handle = null;
+				processHandle();
+			} catch (InterruptedException ignored) {
+				thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
 			}
 		}
 		log.debug("Shutdown - {}", JobSystem.INSTANCE.active);
+	}
+
+	void processHandle() throws InterruptedException {
+		try {
+			workerHandleCancel();
+
+			if(handle.item != null && handle.setRunning(this)) {
+				inflight.lazySet(true);
+				handle.item.onRun();
+				handle.item.ranToCompletion.set(true);
+			}
+		}
+		catch (InterruptedException e) {
+			log.debug("Interrupt Received whilst processing: {}", handle.hashCode());
+		}
+		catch (Throwable ex) {
+			log.warn("Encountered an error whilst processing: {}", handle.hashCode(), ex);
+			handle.cancel(false);
+		} finally {
+			handle.setCompleted();
+			handle.worker = null;
+			handle = null;
+		}
 	}
 
 	void workerHandleCancel() throws InterruptedException {

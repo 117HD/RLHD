@@ -3,7 +3,6 @@ package rs117.hd.utils.jobs;
 import java.util.concurrent.LinkedBlockingDeque;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -20,7 +19,6 @@ public final class JobGroup<T extends JobWork> {
 
 	public int getPendingCount() { return pending.size(); }
 
-	@SneakyThrows
 	public void complete() {
 		T work;
 		while ((work = pending.poll()) != null) {

@@ -1,7 +1,9 @@
 package rs117.hd.renderer.zone;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import rs117.hd.utils.jobs.JobWork;
 
 import static org.lwjgl.opengl.GL15.GL_STATIC_DRAW;
@@ -11,7 +13,7 @@ import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 public final class ZoneUploadTask extends JobWork {
 	private static final ConcurrentLinkedDeque<ZoneUploadTask> POOL = new ConcurrentLinkedDeque<>();
 
-	private static final ThreadLocal<SceneUploader> SCENE_UPLOADER_THREAD_LOCAL = ThreadLocal.withInitial(() -> getInjector().getInstance(SceneUploader.class));
+	private static final ThreadLocal<AsyncSceneUploader> SCENE_UPLOADER_THREAD_LOCAL = ThreadLocal.withInitial(() -> getInjector().getInstance(AsyncSceneUploader.class));
 
 	WorldViewContext viewContext;
 	ZoneSceneContext sceneContext;
@@ -21,11 +23,11 @@ public final class ZoneUploadTask extends JobWork {
 
 	@Override
 	protected void onRun() throws InterruptedException {
-		final SceneUploader sceneUploader = SCENE_UPLOADER_THREAD_LOCAL.get();
+		final AsyncSceneUploader sceneUploader = SCENE_UPLOADER_THREAD_LOCAL.get();
 		workerHandleCancel();
 
+		sceneUploader.currentWork = this;
 		sceneUploader.setScene(sceneContext.scene);
-		sceneUploader.setCurrentWork(this);
 		sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
 		if(zone.sizeO > 0 || zone.sizeA > 0) {
@@ -119,5 +121,15 @@ public final class ZoneUploadTask extends JobWork {
 	@Override
 	public String toString() {
 		return super.toString() + " worldViewId: [" + (viewContext != null ? viewContext.worldViewId : "null") + "] X: [" + x + "] Z: [" + z + "]";
+	}
+
+	static class AsyncSceneUploader extends SceneUploader {
+		ZoneUploadTask currentWork;
+
+		@SneakyThrows
+		@Override
+		protected void onBeforeProcessTile(Tile t, boolean isEstimate) {
+			currentWork.workerHandleCancel();
+		}
 	}
 }

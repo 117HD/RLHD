@@ -2,7 +2,9 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public abstract class JobWork {
 	protected final AtomicBoolean done = new AtomicBoolean();
 	protected final AtomicBoolean wasCancelled = new AtomicBoolean();
@@ -16,8 +18,14 @@ public abstract class JobWork {
 
 	public final void waitForCompletion() {
 		if(handle != null) {
-			handle.await();
-			handle.release();
+			try {
+				handle.await();
+			} catch (InterruptedException e) {
+				log.warn("Job {} was interrupted while waiting for completion", this);
+				throw new RuntimeException(e);
+			} finally {
+				handle.release();
+			}
 		}
 
 		if(group != null) {
@@ -40,8 +48,14 @@ public abstract class JobWork {
 
 	public final void cancel() {
 		if(handle != null) {
-			handle.cancel(true);
-			handle.release();
+			try {
+				handle.cancel(true);
+			} catch (InterruptedException e) {
+				log.warn("Job {} was interrupted while waiting for it to be cancelled", this);
+				throw new RuntimeException(e);
+			} finally {
+				handle.release();
+			}
 		}
 	}
 

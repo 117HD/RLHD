@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 import javax.inject.Inject;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
@@ -1090,7 +1089,6 @@ public class ZoneRenderer implements Renderer {
 		}
 	}
 
-	@SneakyThrows
 	@Override
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		jobSystem.processPendingClientCallbacks();
@@ -1145,11 +1143,10 @@ public class ZoneRenderer implements Renderer {
 					);
 				};
 
-				if(!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
-					shadowUploadTask = JobGenericTask.build("uploadTempModel", uploadFunc).queue(true);
-				} else {
-					uploadFunc.run(null);
-				}
+				shadowUploadTask = JobGenericTask
+					.build("uploadTempModel", uploadFunc)
+					.setExecuteAsync(!sceneManager.isRoot(ctx) || zone.inSceneFrustum)
+					.queue(true);
 			}
 
 			if (!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {

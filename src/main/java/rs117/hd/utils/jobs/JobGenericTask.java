@@ -1,7 +1,6 @@
 package rs117.hd.utils.jobs;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
-import lombok.SneakyThrows;
 
 public final class JobGenericTask extends JobWork {
 	private static final ConcurrentLinkedDeque<JobGenericTask> POOL = new ConcurrentLinkedDeque<>();
@@ -10,7 +9,6 @@ public final class JobGenericTask extends JobWork {
 		void run(JobGenericTask Task) throws InterruptedException;
 	}
 
-	@SneakyThrows
 	public static JobGenericTask build(String context, TaskRunnable runnable) {
 		JobGenericTask newTask = POOL.poll();
 		if (newTask == null)

@@ -28,8 +28,6 @@ import java.nio.IntBuffer;
 import java.util.HashSet;
 import java.util.Set;
 import javax.inject.Inject;
-import lombok.Setter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.RenderCallbackManager;
@@ -51,7 +49,6 @@ import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.jobs.JobSystem;
-import rs117.hd.utils.jobs.JobWork;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -98,8 +95,6 @@ public class SceneUploader {
 
 	private final Set<Integer> roofIds = new HashSet<>();
 	private Scene currentScene;
-	@Setter
-	private JobWork currentWork;
 	private Tile[][][] tiles;
 	private byte[][][] settings;
 	private int[][][] roofs;
@@ -144,10 +139,10 @@ public class SceneUploader {
 		underlayIds = null;
 		tileHeights = null;
 		currentScene = null;
-		currentWork = null;
 	}
 
-	@SneakyThrows
+	protected void onBeforeProcessTile(Tile t, boolean isEstimate) { }
+
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		// Initialize the zone as containing only water, until a non-water tile is found
 		zone.onlyWater = true;
@@ -156,10 +151,10 @@ public class SceneUploader {
 			for (int xoff = 0; xoff < 8; ++xoff) {
 				for (int zoff = 0; zoff < 8; ++zoff) {
 					Tile t = tiles[z][(mzx << 3) + xoff][(mzz << 3) + zoff];
-					if(currentWork != null)
-						currentWork.workerHandleCancel();
-					if (t != null)
+					if (t != null) {
+						onBeforeProcessTile(t, true);
 						estimateZoneTileSize(ctx, zone, t);
+					}
 				}
 			}
 		}
@@ -241,7 +236,6 @@ public class SceneUploader {
 		uploadZoneLevelRoof(ctx, zone, mzx, mzz, level, 0, visbelow, vb, ab);
 	}
 
-	@SneakyThrows
 	private void uploadZoneLevelRoof(
 		ZoneSceneContext ctx,
 		Zone zone,
@@ -282,10 +276,9 @@ public class SceneUploader {
 
 				if (rid == roofId) {
 					Tile t = tiles[level][msx][msz];
-					if(currentWork != null)
-						currentWork.workerHandleCancel();
 					if (t != null) {
 						this.rid = rid;
+						onBeforeProcessTile(t, false);
 						uploadZoneTile(ctx, zone, t, false, vb, ab);
 					}
 				}
@@ -293,7 +286,6 @@ public class SceneUploader {
 		}
 	}
 
-	@SneakyThrows
 	private void uploadZoneWater(ZoneSceneContext ctx, Zone zone, int mzx, int mzz, GpuIntBuffer vb) {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
@@ -304,10 +296,10 @@ public class SceneUploader {
 					int msx = (mzx << 3) + xoff;
 					int msz = (mzz << 3) + zoff;
 					Tile t = tiles[level][msx][msz];
-					if(currentWork != null)
-						currentWork.workerHandleCancel();
-					if (t != null)
+					if (t != null) {
+						onBeforeProcessTile(t, false);
 						uploadZoneTile(ctx, zone, t, true, vb, null);
+					}
 				}
 			}
 		}

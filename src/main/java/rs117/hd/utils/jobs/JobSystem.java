@@ -7,7 +7,6 @@ import java.util.concurrent.LinkedBlockingDeque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
@@ -81,7 +80,6 @@ public final class JobSystem {
 		return workQueue.size();
 	}
 
-	@SneakyThrows
 	public void shutdown() {
 		active = false;
 		workQueue.clear();
@@ -89,8 +87,14 @@ public final class JobSystem {
 		for(JobWorker worker : workers) {
 			worker.localWorkQueue.clear();
 			worker.thread.interrupt();
-			if(worker.handle != null)
-				worker.handle.cancel(true);
+			if(worker.handle != null) {
+				try {
+					worker.handle.cancel(true);
+				} catch (InterruptedException e) {
+					log.warn("Interrupted while shutting down worker", e);
+					throw new RuntimeException(e);
+				}
+			}
 		}
 
 		int workerShutdownCount = 0;
@@ -100,7 +104,11 @@ public final class JobSystem {
 				continue;
 			}
 
-			worker.thread.join(1000);
+			try {
+				worker.thread.join(1000);
+			} catch (InterruptedException e) {
+				log.warn("Interrupted while waiting for worker shutdown", e);
+			}
 
 			if (worker.thread.isAlive()) {
 				log.warn("Worker {} didn't shutdown within a timely manner", worker.thread.getName());
