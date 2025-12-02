@@ -443,7 +443,9 @@ public class ZoneRenderer implements Renderer {
 						lightManager.update(ctx.sceneContext, plugin.cameraShift, plugin.cameraFrustum);
 						frameTimer.end(Timer.UPDATE_LIGHTS);
 
+						frameTimer.begin(Timer.UPDATE_SCENE);
 						sceneManager.update();
+						frameTimer.end(Timer.UPDATE_SCENE);
 					} catch (Exception ex) {
 						log.error("Error while updating environment or lights:", ex);
 						plugin.stopPlugin();
