@@ -60,6 +60,7 @@ public class Zone {
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
+	public boolean needsRoofUpdate; // whether the zone needs to have its roofs updated during scene swap
 	public boolean rebuild; // whether the zone is queued for rebuild
 	public boolean dirty; // whether the zone has temporary modifications
 	public boolean metadataDirty; // whether the zone needs its metadata updating
@@ -69,7 +70,6 @@ public class Zone {
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 
 	ZoneUploadTask zoneUploadTask;
-	JobGenericTask updateRoofsTask;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
@@ -136,11 +136,6 @@ public class Zone {
 		if (glVaoA != 0) {
 			glDeleteVertexArrays(glVaoA);
 			glVaoA = 0;
-		}
-
-		if(updateRoofsTask != null) {
-			updateRoofsTask.release();
-			updateRoofsTask = null;
 		}
 
 		if(zoneUploadTask != null) {
