@@ -9540,6 +9540,14 @@
     "regions": [ 6187 ]
   },
   {
+    "name": "VATRACHOS_ISLAND",
+    "regions": [ 7470 ]
+  },
+  {
+    "name": "MINOTAURS_REST",
+    "regions": [ 7728 ]
+  },
+  {
     "name": "LAGUNA_AURORAE",
     "aabbs": [
       [1136, 2717, 1254, 2813],
@@ -9660,6 +9668,8 @@
       "THE_CROWN_JEWEL",
       "SHIMMERING_ATOLL",
       "LAGUNA_AURORAE",
+      "VATRACHOS_ISLAND",
+      "MINOTAURS_REST",
       "ISLE_OF_SERPENTS",
       "SUNBLEAK_ISLAND",
       "RAINBOW_END",
