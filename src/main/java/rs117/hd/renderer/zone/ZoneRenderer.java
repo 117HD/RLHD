@@ -1147,7 +1147,6 @@ public class ZoneRenderer implements Renderer {
 
 				if(!sceneManager.isRoot(ctx) || zone.inSceneFrustum) {
 					shadowUploadTask = JobGenericTask.build("uploadTempModel", uploadFunc).queue(true);
-					jobSystem.wakeWorkers();
 				} else {
 					uploadFunc.run(null);
 				}

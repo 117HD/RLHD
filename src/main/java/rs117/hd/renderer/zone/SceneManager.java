@@ -194,9 +194,6 @@ public class SceneManager {
 			}
 		}
 
-		if(queuedWork)
-			jobSystem.wakeWorkers();
-
 		if(plugin.isInHouse && queuedWork)
 			root.streamingGroup.complete();
 	}
@@ -396,8 +393,8 @@ public class SceneManager {
 			root.isLoading = true;
 			root.loadTime = root.uploadTime = root.sceneSwapTime = 0;
 
-			root.sceneLoadGroup.cancel();
-			root.streamingGroup.cancel();
+			root.sceneLoadGroup.complete();
+			root.streamingGroup.complete();
 
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();
@@ -551,12 +548,10 @@ public class SceneManager {
 				sorted.zone.zoneUploadTask = ZoneUploadTask
 					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 					.setExecuteAsync(plugin.configZoneStreaming);
-				sorted.zone.zoneUploadTask.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 2.5f;
+				sorted.zone.zoneUploadTask.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				sorted.free();
 			}
 			sortedZones.clear();
-
-			jobSystem.wakeWorkers();
 
 			root.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 			log.debug("loadScene time: {}", sw);
@@ -691,8 +686,10 @@ public class SceneManager {
 
 		for(int x = 0; x <  ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				ctx.zones[x][z].zoneUploadTask = ZoneUploadTask.build(ctx, sceneContext, ctx.zones[x][z], x, z).queue(ctx.sceneLoadGroup);
-		jobSystem.wakeWorkers();
+				ZoneUploadTask.build(ctx, sceneContext, ctx.zones[x][z], x, z)
+					.setExecuteAsync(plugin.configZoneStreaming)
+					.queue(ctx.sceneLoadGroup);
+
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
 	}
 

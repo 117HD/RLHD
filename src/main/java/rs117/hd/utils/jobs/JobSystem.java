@@ -4,7 +4,6 @@ import com.google.inject.Injector;
 import java.util.HashMap;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.locks.LockSupport;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -80,22 +79,6 @@ public final class JobSystem {
 
 	public int getWorkQueueSize() {
 		return workQueue.size();
-	}
-
-	public void wakeWorkers() {
-		int queueSize = workQueue.size();
-		if(queueSize == 0)
-			return;
-
-		for(int i = 0; i < workerCount; i++) {
-			if(!workers[i].inflight.get()) {
-				LockSupport.unpark(workers[i].thread);
-				queueSize--;
-				if(queueSize == 0) {
-					return; // Woken enough workers to handle the current queue size
-				}
-			}
-		}
 	}
 
 	@SneakyThrows
