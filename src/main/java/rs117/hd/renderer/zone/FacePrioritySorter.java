@@ -173,8 +173,8 @@ class FacePrioritySorter {
 				return 0;
 			}
 
-			modelProjectedX[v] = p[0];
-			modelProjectedY[v] = p[1];
+			modelProjectedX[v] = p[0] / p[2];
+			modelProjectedY[v] = p[1] / p[2];
 			distances[v] = (int) p[2] - zero;
 		}
 
