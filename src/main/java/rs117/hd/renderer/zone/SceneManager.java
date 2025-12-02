@@ -463,10 +463,6 @@ public class SceneManager {
 					Zone curZone = ctx.zones[x][z];
 					curZone.cull = true;
 
-					if(curZone.updateRoofsTask != null)
-						curZone.updateRoofsTask.cancel();
-					curZone.updateRoofsTask = null;
-
 					// Last minute chance for a streamed in zone to be reused
 					ctx.handleZoneSwap(-1.0f, x, z);
 					// Mark all zones to be culled, unless they get reused later
@@ -496,23 +492,13 @@ public class SceneManager {
 							continue;
 
 						old.cull = false;
+						old.needsRoofUpdate = true;
 
 						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz)) {
 							float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 							sortedZones.add(SortedZone.getZone(old, x, z, dist));
 							nextSceneContext.totalDeferred++;
 						}
-
-						if(old.updateRoofsTask != null) {
-							old.updateRoofsTask.cancel();
-							old.updateRoofsTask.release();
-						}
-
-						old.updateRoofsTask = JobGenericTask
-								.build( "updateRoof",
-								(task) -> old.updateRoofs(nextRoofChanges))
-								.setExecuteAsync(plugin.configZoneStreaming)
-								.queue(calculateRoofChangesTask);
 
 						nextZones[x][z] = old;
 						nextSceneContext.totalReused++;
@@ -593,6 +579,22 @@ public class SceneManager {
 		if (!isFirst)
 			root.sceneContext.destroy(); // Destroy the old context before replacing it
 
+		// Wait for roof change calculation to complete
+		calculateRoofChangesTask.waitForCompletion();
+
+		WorldViewContext ctx = root;
+		if(!nextRoofChanges.isEmpty()) {
+			for (int x = 0; x < ctx.sizeX; ++x) {
+				for (int z = 0; z < ctx.sizeZ; ++z) {
+					Zone zone = nextZones[x][z];
+					if (zone.needsRoofUpdate) {
+						zone.needsRoofUpdate = false;
+						zone.updateRoofs(nextRoofChanges);
+					}
+				}
+			}
+		}
+
 		// Handle object spawns that must be processed on the client thread
 		loadSceneLightsTask.waitForCompletion();
 
@@ -623,7 +625,6 @@ public class SceneManager {
 			totalAlpha, ((long) totalAlpha * Zone.VERT_SIZE * 3) / KiB
 		);
 
-		WorldViewContext ctx = root;
 		for (int x = 0; x < ctx.sizeX; ++x) {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
 				Zone preZone = ctx.zones[x][z];
@@ -634,9 +635,6 @@ public class SceneManager {
 					root.pendingCull.add(preZone);
 
 				nextZone.setMetadata(ctx, nextSceneContext, x, z);
-				if(nextZone.updateRoofsTask != null)
-					nextZone.updateRoofsTask.waitForCompletion();
-				nextZone.updateRoofsTask = null;
 			}
 		}
 
