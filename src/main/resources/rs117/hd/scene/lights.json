@@ -42563,5 +42563,374 @@
     "objectIds": [
       "SAILING_SHIPYARD_PORTAL_EXIT"
     ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 450,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "projectileIds": [
+      "PROJANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 1",
+    "offset": [ 200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 2",
+    "offset": [ -200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 3",
+    "offset": [ 220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 4",
+    "offset": [ -220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Blue - Animation 5",
+    "offset": [ 0, 100, -280 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      0,
+      200,
+      255
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC01"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 500,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "strength": 3.5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "projectileIds": [
+      "PROJANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 1",
+    "offset": [ 200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 2",
+    "offset": [ -200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 3",
+    "offset": [ 220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 4",
+    "offset": [ -220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Yellow - Animation 5",
+    "offset": [ 0, 100, -280 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      255,
+      255,
+      122
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC02"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Projectile",
+    "offset": [ 0, 30, 0 ],
+    "radius": 500,
+    "fadeInDuration": 200,
+    "fadeOutDuration": 200,
+    "strength": 4,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "projectileIds": [
+      "PROJANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 1",
+    "offset": [ 200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 2",
+    "offset": [ -200, 100, 200 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 3",
+    "offset": [ 220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 4",
+    "offset": [ -220, 100, -130 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
+    "description": "Sailing - Kraken Lighting Attack - Pink - Animation 5",
+    "offset": [ 0, 100, -280 ],
+    "radius": 350,
+    "spawnDelay": 450,
+    "fixedDespawnTime": true,
+    "despawnDelay": 1200,
+    "fadeInDuration": 150,
+    "fadeOutDuration": 300,
+    "strength": 5,
+    "color": [
+      217,
+      119,
+      160
+    ],
+    "type": "FLICKER",
+    "range": 50,
+    "graphicsObjectIds": [
+      "SPOTANIM_KRAKEN_MAGIC03"
+    ]
   }
 ]
