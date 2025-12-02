@@ -216,7 +216,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			return;
 		}
 
-		if (prevState == STATE_RUNNING && worker != null)
+		if (prevState == STATE_RUNNING && worker != null && worker.thread != Thread.currentThread())
 			worker.thread.interrupt();
 
 		if (block)
