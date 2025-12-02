@@ -2924,28 +2924,36 @@
   {
     "name": "KHARID_DESERT_REGION",
     "aabbs": [
-      [ 3268, 2672, 3414, 3321 ],
-      [ 3271, 3322, 3392, 3327 ],
-      [ 3356, 3328, 3392, 3329 ],
-      [ 3316, 3328, 3350, 3329 ],
-      [ 3319, 3330, 3322, 3330 ],
-      [ 3271, 3328, 3315, 3328 ],
-      [ 3271, 3329, 3306, 3329 ],
-      [ 3300, 3330, 3304, 3330 ],
-      [ 3267, 3233, 3267, 3321 ],
-      [ 3266, 3240, 3266, 3297 ],
-      [ 3265, 3247, 3265, 3254 ],
-      [ 3415, 3172, 3424, 3191 ],
-      [ 3415, 2748, 3480, 3171 ],
-      [ 3481, 2907, 3544, 3132 ],
-      [ 3175, 2671, 3267, 3135 ],
-      [ 3129, 2623, 3174, 3066 ],
-      [ 3266, 3136, 3267, 3203 ],
-      [ 3267, 3204, 3267, 3223 ],
-      [ 3254, 3148, 3265, 3183 ],
-      [ 3259, 3184, 3265, 3200 ],
-      [ 3265, 3201, 3265, 3202 ],
-      [ 3264, 3201 ]
+      [3268, 2673, 3392, 3322],
+      [3271, 3322, 3392, 3327],
+      [3356, 3328, 3392, 3329],
+      [3316, 3328, 3350, 3329],
+      [3319, 3330, 3322, 3330],
+      [3271, 3328, 3315, 3328],
+      [3271, 3329, 3306, 3329],
+      [3300, 3330, 3304, 3330],
+      [3267, 3233, 3267, 3321],
+      [3266, 3240, 3266, 3297],
+      [3265, 3247, 3265, 3254],
+      [3415, 3172, 3424, 3191],
+      [3415, 2716, 3480, 3171],
+      [3481, 2907, 3544, 3132],
+      [3201, 2662, 3267, 3135],
+      [3146, 2623, 3200, 3066],
+      [3266, 3136, 3267, 3203],
+      [3267, 3204, 3267, 3223],
+      [3254, 3148, 3265, 3183],
+      [3259, 3184, 3265, 3200],
+      [3265, 3201, 3265, 3202],
+      [3136, 2707, 3145, 3009],
+      [3393, 3168, 3414, 3263],
+      [3415, 3192, 3421, 3257],
+      [3421, 3200, 3424, 3208],
+      [3393, 3264, 3395, 3318],
+      [3396, 3264, 3399, 3284],
+      [3400, 3264, 3403, 3278],
+      [3404, 3264, 3407, 3267],
+      [3393, 2682, 3414, 3167]
     ]
   },
   {
@@ -5960,11 +5968,11 @@
       "KARAMJA_INSTANCES"
     ],
     "aabbs": [
-      [ 2686, 3124, 2809, 3257 ],
-      [ 2810, 3124, 2917, 3209 ],
-      [ 2918, 3132, 2964, 3184 ],
-      [ 2746, 2873, 2973, 3123 ],
-      [ 2974, 2873, 3009, 3081 ]
+      [2689, 3124, 2809, 3257],
+      [2810, 3124, 2917, 3209],
+      [2918, 3132, 2964, 3184],
+      [2746, 2873, 2973, 3123],
+      [2974, 2873, 3009, 3081]
     ]
   },
   {
@@ -9426,6 +9434,96 @@
     "regions": [ 11811 ]
   },
   {
+    "name": "LAST_LIGHT",
+    "regions": [ 11300 ]
+  },
+  {
+    "name": "CHARRED_ISLAND",
+    "regions": [ 10533 ]
+  },
+  {
+    "name": "ISLE_OF_BONES",
+    "regions": [ 10023 ]
+  },
+  {
+    "name": "ANGLERS_RETREAT",
+    "regions": [ 9770 ]
+  },
+  {
+    "name": "SHIPYARD",
+    "regions": [ 8234 ]
+  },
+  {
+    "name": "NAMELESS_ISLAND_BY_SHIPYARD",
+    "regions": [ 7977 ]
+  },
+  {
+    "name": "WINTUMBER_ISLAND",
+    "regions": [ 8232 ]
+  },
+  {
+    "name": "DEEPFIN_POINT",
+    "aabbs": [
+      [1920, 2749, 1983, 2815]
+    ]
+  },
+  {
+    "name": "THE_CROWN_JEWEL",
+    "regions": [ 6953 ]
+  },
+  {
+    "name": "SHIMMERING_ATOLL",
+    "regions": [ 6187 ]
+  },
+  {
+    "name": "LAGUNA_AURORAE",
+    "aabbs": [
+      [1136, 2717, 1254, 2813],
+      [1180, 2814, 1207, 2830]
+    ]
+  },
+  {
+    "name": "ISLE_OF_SERPENTS",
+    "aabbs": [
+      [1795, 2369, 1909, 2431],
+      [1831, 2432, 1900, 2483]
+    ]
+  },
+  {
+    "name": "SUNBLEAK_ISLAND",
+    "aabbs": [
+      [2221, 2368, 2239, 2381],
+      [2178, 2306, 2238, 2367]
+    ]
+  },
+  {
+    "name": "RAINBOW_END",
+    "regions": [ 9251 ]
+  },
+  {
+    "name": "ROCK_ISLAND_PRISON",
+    "aabbs": [
+      [2880, 2819, 2911, 2852]
+    ]
+  },
+  {
+    "name": "CURSED_ACHIPELAGO",
+    "aabbs": [
+      [3525, 2371, 3750, 2505],
+      [3593, 2507, 3888, 2678]
+    ]
+  },
+  {
+    "name": "TROUBLED_TORTUGANS_START_ISLAND",
+    "aabbs": [
+      [2948, 2599, 2972, 2623]
+    ]
+  },
+  {
+    "name": "NAMELESS_ISLAND_NORTH_OF_CURSED_ARCHIPELAGO",
+    "regions": [ 14379 ]
+  },
+  {
     "name": "CATHERBY_DEPTH_BIAS_FIX",
     "aabbs": [
       [ 2809, 3448, 2809, 3449, 1 ]
@@ -9463,6 +9561,45 @@
       "PLAYER_OWNED_HOUSE_SNOWY",
       "TROLLHEIM",
       "RALOS_RISE"
+    ]
+  },
+  {
+    "name": "WARM_REGIONS",
+    "areas": [
+      "MOS_LE_HARMLESS_ALL",
+      "HARMONY",
+      "KHARID_DESERT_REGION",
+      "KARAMJA",
+      "APE_ATOLL",
+      "CRASH_ISLAND",
+      "FELDIP_HILLS_SOUTHERN_REGION",
+      "VOID_KNIGHTS_OUTPOST",
+      "PEST_CONTROL",
+      "TEMPOROSS_COVE",
+      "PANDEMONIUM_ISLAND",
+      "PANDEMONIUM_QUEST_INSTANCE",
+      "DOGNOSE_ISLAND",
+      "THE_GREAT_CONCH",
+      "THE_LITTLE_PEARL",
+      "THE_ONYX_CREST",
+      "LAST_LIGHT",
+      "CHARRED_ISLAND",
+      "ISLE_OF_BONES",
+      "ANGLERS_RETREAT",
+      "SHIPYARD",
+      "NAMELESS_ISLAND_BY_SHIPYARD",
+      "WINTUMBER_ISLAND",
+      "DEEPFIN_POINT",
+      "THE_CROWN_JEWEL",
+      "SHIMMERING_ATOLL",
+      "LAGUNA_AURORAE",
+      "ISLE_OF_SERPENTS",
+      "SUNBLEAK_ISLAND",
+      "RAINBOW_END",
+      "ROCK_ISLAND_PRISON",
+      "CURSED_ACHIPELAGO",
+      "TROUBLED_TORTUGANS_START_ISLAND",
+      "NAMELESS_ISLAND_NORTH_OF_CURSED_ARCHIPELAGO"
     ]
   },
   {
