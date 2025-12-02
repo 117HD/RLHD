@@ -3,9 +3,7 @@ package rs117.hd.utils.jobs;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.locks.LockSupport;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -62,7 +60,7 @@ public final class JobWorker {
 
 					if(handle == null) {
 						inflight.lazySet(false);
-						LockSupport.parkNanos(100); // Yield to other threads to avoid busy spinning
+						Thread.onSpinWait();
 					}
 				}
 
