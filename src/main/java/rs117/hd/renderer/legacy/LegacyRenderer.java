@@ -66,6 +66,7 @@ import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.buffer.GLBuffer;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 import rs117.hd.utils.buffer.SharedGLBuffer;
+import rs117.hd.utils.jobs.JobSystem;
 
 import static org.lwjgl.opencl.CL10.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -172,6 +173,9 @@ public class LegacyRenderer implements Renderer {
 	@Inject
 	public ShadowShaderProgram shadowProgram;
 
+	@Inject
+	private JobSystem jobSystem;
+
 	private final ComputeMode computeMode = HdPlugin.APPLE ? ComputeMode.OPENCL : ComputeMode.OPENGL;
 	private final List<ModelSortingComputeProgram> modelSortingComputePrograms = new ArrayList<>();
 
@@ -228,6 +232,8 @@ public class LegacyRenderer implements Renderer {
 	public void initialize() {
 		modelPusher.startUp();
 
+		jobSystem.initialize();
+
 		renderBufferOffset = 0;
 		numPassthroughModels = 0;
 		numModelsToSort = null;
@@ -254,6 +260,8 @@ public class LegacyRenderer implements Renderer {
 		if (vaoScene != 0)
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
+		
+		jobSystem.shutdown();
 
 		destroyBuffers();
 		destroyTileHeightMap();
