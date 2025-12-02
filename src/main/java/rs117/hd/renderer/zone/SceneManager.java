@@ -578,15 +578,7 @@ public class SceneManager {
 
 		Stopwatch sw = Stopwatch.createStarted();
 
-		// Handle object spawns that must be processed on the client thread
-		loadSceneLightsTask.waitForCompletion();
-
-		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
-			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
-		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
-
 		fishingSpotReplacer.despawnRuneLiteObjects();
-
 		npcDisplacementCache.clear();
 
 		if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
@@ -600,6 +592,13 @@ public class SceneManager {
 		boolean isFirst = root.sceneContext == null;
 		if (!isFirst)
 			root.sceneContext.destroy(); // Destroy the old context before replacing it
+
+		// Handle object spawns that must be processed on the client thread
+		loadSceneLightsTask.waitForCompletion();
+
+		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
+			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
+		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
 
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
@@ -627,12 +626,17 @@ public class SceneManager {
 		WorldViewContext ctx = root;
 		for (int x = 0; x < ctx.sizeX; ++x) {
 			for (int z = 0; z < ctx.sizeZ; ++z) {
-				Zone zone = ctx.zones[x][z];
+				Zone preZone = ctx.zones[x][z];
+				Zone nextZone = nextZones[x][z];
 
-				if (zone.cull)
-					root.pendingCull.add(zone);
+				assert !preZone.cull || preZone != nextZone : "Zone which is marked for culling was reused!";
+				if (preZone.cull)
+					root.pendingCull.add(preZone);
 
-				nextZones[x][z].setMetadata(ctx, nextSceneContext, x, z);
+				nextZone.setMetadata(ctx, nextSceneContext, x, z);
+				if(nextZone.updateRoofsTask != null)
+					nextZone.updateRoofsTask.waitForCompletion();
+				nextZone.updateRoofsTask = null;
 			}
 		}
 
