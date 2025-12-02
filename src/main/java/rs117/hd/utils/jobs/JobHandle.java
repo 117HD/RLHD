@@ -2,7 +2,6 @@ package rs117.hd.utils.jobs;
 
 import java.util.ArrayDeque;
 import java.util.HashSet;
-import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
@@ -188,7 +187,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 		assert item != null : "Double Release, item is already null";
 		assert isCompleted() : "Release before setCompleted() has been called?!";
-		assert !POOL.contains(this) : "POOL already contains this Handle?!";
+		assert !VALIDATE || !POOL.contains(this) : "POOL already contains this Handle?!";
 
 		if (VALIDATE) log.debug("Releasing [{}] state: [{}]", this, STATE_NAMES[jobState.getAcquire()]);
 		setJobState(STATE_NONE);
