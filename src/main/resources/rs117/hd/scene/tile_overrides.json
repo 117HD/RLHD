@@ -8803,19 +8803,6 @@
     "groundMaterial": "VARIED_DIRT"
   },
   {
-    "name": "PEST_CONTROL",
-    "area": "PEST_CONTROL",
-    "underlayIds": [
-      59,
-      121,
-      142
-    ],
-    "groundMaterial": "DIRT",
-    "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
-  },
-  {
     "name": "ABYSSAL_FLOOR_UNDERLAY",
     "area": "ABYSSAL_AREAS",
     "underlayIds": [
@@ -9157,11 +9144,17 @@
     "name": "WARM_REGION_COMPLEX_TILES",
     "area": "WARM_REGIONS",
     "underlayIds": [
+      7,
+      8,
       13,
       26,
+      49,
       50,
+      51,
       52,
+      53,
       55,
+      59,
       61,
       62,
       63,
@@ -9169,11 +9162,24 @@
       65,
       68,
       69,
+      72,
       77,
       94,
       96,
+      99,
+      109,
+      110,
+      103,
+      121,
       125,
-      141
+      130,
+      131,
+      132,
+      141,
+      142,
+      150,
+      202,
+      203
     ],
     "replacements": {
       "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
