@@ -2,10 +2,10 @@ package rs117.hd.overlays;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.concurrent.ConcurrentLinkedDeque;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.callback.ClientThread;
 import org.lwjgl.opengl.*;
@@ -16,8 +16,6 @@ import static org.lwjgl.opengl.GL33C.*;
 @Slf4j
 @Singleton
 public class FrameTimer {
-	protected static final ConcurrentLinkedDeque<TimerHandle> FRAME_TIMER_HANDLE_POOL = new ConcurrentLinkedDeque<>();
-
 	@Inject
 	private ClientThread clientThread;
 
@@ -28,11 +26,28 @@ public class FrameTimer {
 	private static final int NUM_GPU_TIMERS = (int) Arrays.stream(Timer.TIMERS).filter(t -> t.isGpuTimer).count();
 	private static final int NUM_GPU_DEBUG_GROUPS = (int) Arrays.stream(Timer.TIMERS).filter(t -> t.gpuDebugGroup).count();
 
+	private final AutoTimer[] autoTimers = new AutoTimer[NUM_TIMERS];
 	private final boolean[] activeTimers = new boolean[NUM_TIMERS];
 	private final long[] timings = new long[NUM_TIMERS];
 	private final int[] gpuQueries = new int[NUM_TIMERS * 2];
 	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
+
+	@RequiredArgsConstructor
+	public class AutoTimer implements AutoCloseable {
+		private final Timer timer;
+
+		@Override
+		public void close() {
+			end(timer);
+		}
+	}
+
+	@SuppressWarnings("resource")
+	public FrameTimer() {
+		for (int i = 0; i < NUM_TIMERS; i++)
+			autoTimers[i] = new AutoTimer(Timer.TIMERS[i]);
+	}
 
 	@Getter
 	private boolean isActive = false;
@@ -113,28 +128,31 @@ public class FrameTimer {
 		cumulativeError = 0;
 	}
 
-	public void begin(Timer timer) {
+	public AutoTimer begin(Timer timer) {
+		int index = timer.ordinal();
 		if (log.isDebugEnabled() && timer.gpuDebugGroup && HdPlugin.GL_CAPS.OpenGL43) {
 			if (glDebugGroupStack.contains(timer)) {
 				log.warn("The debug group {} is already on the stack", timer.name());
 			} else {
 				glDebugGroupStack.push(timer);
-				GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, timer.ordinal(), timer.name);
+				GL43C.glPushDebugGroup(GL43C.GL_DEBUG_SOURCE_APPLICATION, index, timer.name);
 			}
 		}
 
 		if (!isActive)
-			return;
+			return null;
 
 		if (timer.isGpuTimer) {
-			if (activeTimers[timer.ordinal()])
+			if (activeTimers[index])
 				throw new UnsupportedOperationException("Cumulative GPU timing isn't supported");
-			glQueryCounter(gpuQueries[timer.ordinal() * 2], GL_TIMESTAMP);
-		} else if (!activeTimers[timer.ordinal()]) {
+			glQueryCounter(gpuQueries[index * 2], GL_TIMESTAMP);
+		} else if (!activeTimers[index]) {
 			cumulativeError += errorCompensation + 1 >> 1;
-			timings[timer.ordinal()] -= System.nanoTime() - cumulativeError;
+			timings[index] -= System.nanoTime() - cumulativeError;
 		}
-		activeTimers[timer.ordinal()] = true;
+		activeTimers[index] = true;
+
+		return autoTimers[index];
 	}
 
 	public void end(Timer timer) {
@@ -160,22 +178,9 @@ public class FrameTimer {
 		}
 	}
 
-	public TimerHandle pushTimer(Timer timer) {
-		TimerHandle handle = FRAME_TIMER_HANDLE_POOL.poll();
-		if(handle == null)
-			handle = new TimerHandle();
-		handle.timer = timer;
-		return handle;
-	}
-
-	public void addTimestamp(Timer timer, long time) {
+	public void add(Timer timer, long nanos) {
 		if (isActive)
-			timings[timer.ordinal()] += System.nanoTime() - time;
-	}
-
-	public void add(Timer timer, long time) {
-		if (isActive)
-			timings[timer.ordinal()] += time;
+			timings[timer.ordinal()] += nanos;
 	}
 
 	public void endFrameAndReset() {
@@ -218,20 +223,5 @@ public class FrameTimer {
 			listener.onFrameCompletion(frameTimings);
 
 		reset();
-	}
-
-	public class TimerHandle implements AutoCloseable {
-		private Timer timer;
-
-		protected void push(Timer timer) {
-			this.timer = timer;
-			begin(timer);
-		}
-
-		@Override
-		public void close() {
-			end(timer);
-			FRAME_TIMER_HANDLE_POOL.add(this);
-		}
 	}
 }

@@ -7,7 +7,6 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
-import rs117.hd.utils.jobs.JobSystem;
 import rs117.hd.utils.jobs.JobWork;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -22,9 +21,6 @@ public final class AsyncUICopy extends JobWork {
 
 	@Inject
 	private FrameTimer timer;
-
-	@Inject
-	private JobSystem jobSystem;
 
 	private ByteBuffer mappedBuffer;
 	private int[] pixels;
@@ -52,13 +48,12 @@ public final class AsyncUICopy extends JobWork {
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		timer.end(Timer.MAP_UI_BUFFER);
 
-
 		if (buffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 			return;
 		}
 
-		if(buffer != mappedBuffer)
+		if (buffer != mappedBuffer)
 			mappedBuffer = buffer;
 
 		setExecuteAsync(client.getGameState() == GameState.LOGGED_IN);
@@ -87,7 +82,7 @@ public final class AsyncUICopy extends JobWork {
 		glActiveTexture(HdPlugin.TEXTURE_UNIT_UI);
 		glBindTexture(GL_TEXTURE_2D, interfaceTexture);
 		glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, width, height, GL_BGRA, GL_UNSIGNED_INT_8_8_8_8_REV, 0);
-		timer.addTimestamp(Timer.COPY_UI, timestamp);
+		timer.add(Timer.COPY_UI, System.nanoTime() - timestamp);
 
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 

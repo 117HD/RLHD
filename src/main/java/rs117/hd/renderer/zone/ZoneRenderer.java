@@ -1043,7 +1043,7 @@ public class ZoneRenderer implements Renderer {
 
 		if (sceneManager.isRoot(ctx)) {
 
-			try (var ignored = frameTimer.pushTimer(Timer.VISIBILITY_CHECK)) {
+			try (var ignored = frameTimer.begin(Timer.VISIBILITY_CHECK)) {
 				// Additional Culling checks to help reduce dynamic object perf impact when off screen
 				if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows) {
 					return;
