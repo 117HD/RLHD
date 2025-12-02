@@ -9154,6 +9154,44 @@
     }
   },
   {
+    "name": "WARM_REGION_COMPLEX_TILES",
+    "area": "WARM_REGIONS",
+    "underlayIds": [
+      13,
+      26,
+      50,
+      52,
+      55,
+      61,
+      62,
+      63,
+      64,
+      65,
+      68,
+      69,
+      77,
+      94,
+      96,
+      125,
+      141
+    ],
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "DEFAULT_GRASS": [
+        "h >= 11 && s == 1",
+        "h == 9 && s == 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h >= 9 && s >= 4",
+        "h == 9 && l <= 38",
+        "h >= 10 && s >= 2",
+        "h == 8 && s == 5 && l >= 15",
+        "h == 8 && s >= 6 && l >= 2"
+      ],
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
     "name": "OVERWORLD_GRASS_UNDERLAY",
     "area": "OVERWORLD",
     "underlayIds": [
