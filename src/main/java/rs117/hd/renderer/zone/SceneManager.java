@@ -594,6 +594,8 @@ public class SceneManager {
 				}
 			}
 		}
+		long roofsTime = sw.elapsed(TimeUnit.MILLISECONDS);
+		log.debug("swapScene - Roofs: {} ms", roofsTime);
 
 		// Handle object spawns that must be processed on the client thread
 		loadSceneLightsTask.waitForCompletion();
@@ -601,6 +603,9 @@ public class SceneManager {
 		for (var tileObject : nextSceneContext.lightSpawnsToHandleOnClientThread)
 			lightManager.handleObjectSpawn(nextSceneContext, tileObject);
 		nextSceneContext.lightSpawnsToHandleOnClientThread.clear();
+
+		long lightsTime = sw.elapsed(TimeUnit.MILLISECONDS);
+		log.debug("swapScene - Lights: {} ms", lightsTime - roofsTime);
 
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
