@@ -65523,6 +65523,20 @@
     ]
   },
   {
+    "description": "Sailing - Kraken Lighting Attack - Remove Shadows",
+    "castShadows": false,
+    "projectileIds": [
+      "PROJANIM_KRAKEN_MAGIC01",
+      "PROJANIM_KRAKEN_MAGIC02",
+      "PROJANIM_KRAKEN_MAGIC03"
+    ],
+    "graphicsObjectIds": [
+      "PROJANIM_KRAKEN_MAGIC01",
+      "PROJANIM_KRAKEN_MAGIC02",
+      "PROJANIM_KRAKEN_MAGIC03"
+    ]
+  },
+  {
     "description": "Karamja - Musa Point - Wooden - Plank Walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
