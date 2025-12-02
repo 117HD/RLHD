@@ -66,6 +66,7 @@ public class WorldViewContext {
 			if(deltaTime > 0.0f && uploadTask.delay >= 0.0f) {
 				uploadTask.delay -= deltaTime;
 				if(uploadTask.delay <= 0.0f) {
+					log.trace("queueing zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
 					uploadTask.delay = -1.0f;
 					uploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
 				}
@@ -76,6 +77,8 @@ public class WorldViewContext {
 		if(uploadTask.isDone()) {
 			curZone.zoneUploadTask = null;
 			if(uploadTask.ranToCompletion() && !uploadTask.wasCancelled()) {
+				log.trace("swapping zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
+
 				Zone PrevZone = curZone;
 				// Swap the zone out with the one we just uploaded
 				zones[zx][zz] = curZone = uploadTask.zone;
@@ -94,8 +97,10 @@ public class WorldViewContext {
 			return false;
 
 		Zone cullZone;
-		while((cullZone = pendingCull.poll()) != null)
+		while((cullZone = pendingCull.poll()) != null) {
+			log.trace("Culling zone({})", cullZone.hashCode());
 			cullZone.free();
+		}
 
 		boolean queuedWork = false;
 		for(int x = 0; x < sizeX; x++) {
@@ -151,6 +156,7 @@ public class WorldViewContext {
 		Zone curZone = zones[zx][zz];
 		float prevUploadDelay = -1.0f;
 		if(curZone.zoneUploadTask != null) {
+			log.trace("Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})", curZone.hashCode(), worldViewId, zx, zz, curZone.zoneUploadTask.zone.hashCode());
 			prevUploadDelay = curZone.zoneUploadTask.delay;
 			curZone.zoneUploadTask.cancel();
 			curZone.zoneUploadTask.release();
