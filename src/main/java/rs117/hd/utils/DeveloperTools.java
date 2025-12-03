@@ -14,6 +14,8 @@ import net.runelite.client.input.KeyManager;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimerOverlay;
 import rs117.hd.overlays.LightGizmoOverlay;
+import rs117.hd.overlays.PolygonAreaInGameOverlay;
+import rs117.hd.overlays.PolygonAreaWorldMapOverlay;
 import rs117.hd.overlays.ShadowMapOverlay;
 import rs117.hd.overlays.TileInfoOverlay;
 import rs117.hd.overlays.TiledLightingOverlay;
@@ -33,6 +35,7 @@ public class DeveloperTools implements KeyListener {
 	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_POLYGON_AREA_OVERLAY = new Keybind(KeyEvent.VK_F8, CTRL_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
 	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
@@ -67,6 +70,12 @@ public class DeveloperTools implements KeyListener {
 	@Inject
 	private TiledLightingOverlay tiledLightingOverlay;
 
+	@Inject
+	private PolygonAreaInGameOverlay polygonAreaInGameOverlay;
+
+	@Inject
+	private PolygonAreaWorldMapOverlay polygonAreaWorldMapOverlay;
+
 	private boolean keyBindingsEnabled;
 	private boolean tileInfoOverlayEnabled;
 	@Getter
@@ -76,6 +85,8 @@ public class DeveloperTools implements KeyListener {
 	@Getter
 	private boolean hideUiEnabled;
 	private boolean tiledLightingOverlayEnabled;
+	private boolean polygonAreaInGameOverlayEnabled;
+	private boolean polygonAreaWorldMapOverlayEnabled;
 
 	public void activate() {
 		// Listen for commands
@@ -95,6 +106,8 @@ public class DeveloperTools implements KeyListener {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled);
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled);
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled);
+			polygonAreaInGameOverlay.setActive(polygonAreaInGameOverlayEnabled);
+			polygonAreaWorldMapOverlay.setActive(polygonAreaWorldMapOverlayEnabled);
 		});
 
 		// Check for any out of bounds areas
@@ -119,6 +132,8 @@ public class DeveloperTools implements KeyListener {
 		shadowMapOverlay.setActive(false);
 		lightGizmoOverlay.setActive(false);
 		tiledLightingOverlay.setActive(false);
+		polygonAreaInGameOverlay.setActive(false);
+		polygonAreaWorldMapOverlay.setActive(false);
 		hideUiEnabled = false;
 	}
 
@@ -153,6 +168,11 @@ public class DeveloperTools implements KeyListener {
 			case "tiledlighting":
 				tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
 				break;
+			case "polygonarea":
+			case "polyarea":
+				polygonAreaInGameOverlay.setActive(polygonAreaInGameOverlayEnabled = !polygonAreaInGameOverlayEnabled);
+				polygonAreaWorldMapOverlay.setActive(polygonAreaWorldMapOverlayEnabled = !polygonAreaWorldMapOverlayEnabled);
+				break;
 			case "keybinds":
 			case "keybindings":
 				keyBindingsEnabled = !keyBindingsEnabled;
@@ -179,6 +199,9 @@ public class DeveloperTools implements KeyListener {
 			lightGizmoOverlay.setActive(lightGizmoOverlayEnabled = !lightGizmoOverlayEnabled);
 		} else if (KEY_TOGGLE_TILED_LIGHTING_OVERLAY.matches(e)) {
 			tiledLightingOverlay.setActive(tiledLightingOverlayEnabled = !tiledLightingOverlayEnabled);
+		} else if (KEY_TOGGLE_POLYGON_AREA_OVERLAY.matches(e)) {
+			polygonAreaInGameOverlay.setActive(polygonAreaInGameOverlayEnabled = !polygonAreaInGameOverlayEnabled);
+			polygonAreaWorldMapOverlay.setActive(polygonAreaWorldMapOverlayEnabled = !polygonAreaWorldMapOverlayEnabled);
 		} else if (KEY_TOGGLE_FREEZE_FRAME.matches(e)) {
 			plugin.toggleFreezeFrame();
 		} else if (KEY_TOGGLE_ORTHOGRAPHIC.matches(e)) {

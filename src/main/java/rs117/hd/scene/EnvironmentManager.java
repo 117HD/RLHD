@@ -401,7 +401,7 @@ public class EnvironmentManager {
 
 		sceneContext.environments.clear();
 		for (var environment : environments) {
-			if (sceneContext.sceneBounds.intersects(environment.area.aabbs)) {
+			if (sceneContext.sceneBounds.intersects(environment.area)) {
 				log.debug("Added environment: {}", environment);
 				sceneContext.environments.add(environment);
 			}

@@ -176,6 +176,17 @@ public class AABB {
 		);
 	}
 
+	public boolean intersects(Area area) {
+		if (area.polygon != null) {
+			return area.polygon.intersects(this);
+		} else {
+			for (var aabb : area.aabbs)
+				if (intersects(aabb))
+					return true;
+		}
+		return false;
+	}
+
 	public boolean intersects(AABB... aabbs) {
 		for (var aabb : aabbs)
 			if (intersects(aabb))
