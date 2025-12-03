@@ -8,7 +8,6 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
-import rs117.hd.utils.jobs.JobGenericTask;
 import rs117.hd.utils.jobs.JobSystem;
 import rs117.hd.utils.jobs.JobWork;
 
@@ -65,6 +64,7 @@ public final class AsyncUICopy extends JobWork {
 			mappedIntBuffer = mappedBuffer.asIntBuffer();
 		}
 
+		setExecuteAsync(client.getGameState() == GameState.LOGGED_IN);
 		queue();
 		inFlight = true;
 	}
