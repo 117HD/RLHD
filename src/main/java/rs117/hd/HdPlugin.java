@@ -27,6 +27,7 @@
 package rs117.hd;
 
 import com.google.gson.Gson;
+import com.google.inject.Binder;
 import com.google.inject.Provides;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -108,6 +109,7 @@ import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
@@ -200,6 +202,22 @@ public class HdPlugin extends Plugin {
 	};
 
 	public static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
+
+	// Manually instantiate singletons and lazily inject them to avoid circular dependencies
+	private static final List<Class<?>> LAZY_SINGLETONS = List.of(
+		AreaManager.class,
+		EnvironmentManager.class,
+		GamevalManager.class,
+		GroundMaterialManager.class,
+		LightManager.class,
+		MaterialManager.class,
+		ModelOverrideManager.class,
+		ProceduralGenerator.class,
+		TextureManager.class,
+		TileOverrideManager.class,
+		WaterTypeManager.class,
+		SceneManager.class
+	);
 
 	@Getter
 	private Gson gson;
@@ -455,6 +473,10 @@ public class HdPlugin extends Plugin {
 
 	@Override
 	protected void startUp() {
+		// Lazily inject members into our singletons
+		for (var clazz : LAZY_SINGLETONS)
+			injector.injectMembers(injector.getInstance(clazz));
+
 		gson = GsonUtils.wrap(injector.getInstance(Gson.class));
 
 		clientThread.invoke(() -> {
