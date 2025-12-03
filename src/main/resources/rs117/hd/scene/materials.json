@@ -2204,9 +2204,13 @@
     "brightness": 1.228
   },
   {
-    "name": "WOOD_GRAIN_3_SEMILIGHT_DULL",
+    "name": "WOOD_GRAIN_3_SEMILIGHT",
     "parent": "WOOD_GRAIN_3",
-    "brightness": 1.083,
+    "brightness": 1.083
+  },
+  {
+    "name": "WOOD_GRAIN_3_SEMILIGHT_DULL",
+    "parent": "WOOD_GRAIN_3_SEMILIGHT",
     "specularStrength": 0.0,
     "specularGloss": 0.0
   },

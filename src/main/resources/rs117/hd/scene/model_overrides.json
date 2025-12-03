@@ -64688,6 +64688,18 @@
     ]
   },
   {
+    "description": "Sailing - Barracuda Trial Master's Boat - Hull",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "uvOrientationX": 512,
+    "uvOrientationZ": 512,
+    "objectIds": [
+      "SAILING_BT_TRIAL_MASTER_BOAT_HULL",
+      "SAILING_BT_TRIAL_MASTER_BOAT_HULL_JUBBLY_JIVE"
+    ]
+  },
+  {
     "description": "Sailing - Raft - Hull",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
@@ -64712,7 +64724,7 @@
   },
   {
     "description": "Sailing - Skiff and Sloop - Hull & Wood Trim",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientationX": 512,
@@ -64743,7 +64755,7 @@
   },
   {
     "description": "Sailing - Sloop - Hull",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
     "uvType": "BOX",
     "uvScale": 1,
     "uvOrientationX": 512,
@@ -64805,7 +64817,7 @@
   },
   {
     "description": "Sailing - Facility - Cargo Hold & Cannon - Bronze",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 512,
@@ -64825,7 +64837,7 @@
   },
   {
     "description": "Sailing - Facility - Cargo Hold & Cannon - All Others",
-    "baseMaterial": "WOOD_GRAIN_3",
+    "baseMaterial": "WOOD_GRAIN_3_SEMILIGHT",
     "uvType": "BOX",
     "uvScale": 0.45,
     "uvOrientation": 512,
