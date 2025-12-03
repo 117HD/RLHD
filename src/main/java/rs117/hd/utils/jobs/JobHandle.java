@@ -16,9 +16,9 @@ import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 
 @Slf4j
 final class JobHandle extends AbstractQueuedSynchronizer {
-	public static final int STATE_NONE      = 0;
-	public static final int STATE_QUEUED    = 1;
-	public static final int STATE_RUNNING   = 2;
+	public static final int STATE_NONE = 0;
+	public static final int STATE_QUEUED = 1;
+	public static final int STATE_RUNNING = 2;
 	public static final int STATE_CANCELLED = 3;
 	public static final int STATE_COMPLETED = 4;
 
@@ -35,7 +35,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	private final AtomicInteger depCount = new AtomicInteger();
 
 	@Getter
-	JobWork item;
+	Job item;
 	@Getter
 	JobWorker worker;
 	@Getter
@@ -44,7 +44,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	static JobHandle obtain() {
 		JobHandle handle = POOL.poll();
 		if (handle == null || handle.refCounter.get() > 0) {
-			if(handle != null) {
+			if (handle != null) {
 				POOL.add(handle); // Re-add to the end of the pool
 			}
 			handle = new JobHandle();
@@ -75,7 +75,12 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 		if (isCompleted() || isReleased()) {
 			if (VALIDATE)
-				log.debug("Handle [{}] Skipping dependant [{}] due to being in state: [{}]", this, handle, STATE_NAMES[jobState.getAcquire()]);
+				log.debug(
+					"Handle [{}] Skipping dependant [{}] due to being in state: [{}]",
+					this,
+					handle,
+					STATE_NAMES[jobState.getAcquire()]
+				);
 			return false;
 		}
 
@@ -83,7 +88,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			throw new IllegalStateException("Circular dependency detected: " + this + " depends on " + handle);
 
 		if (VALIDATE)
-		    log.debug("Handle [{}] added dependant [{}]", this, handle);
+			log.debug("Handle [{}] added dependant [{}]", this, handle);
 
 		dependants.add(handle);
 		handle.depCount.getAndIncrement();
@@ -117,7 +122,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	}
 
 	synchronized boolean setRunning(JobWorker worker) {
-		if(isInQueue()) {
+		if (isInQueue()) {
 			setJobState(STATE_RUNNING);
 			this.worker = worker;
 			return true;
@@ -136,7 +141,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		final boolean wasCancelled = isCancelled();
 		setJobState(STATE_COMPLETED);
 
-		if(item != null)
+		if (item != null)
 			item.done.set(true);
 
 		// Signal completion via AQS
@@ -146,7 +151,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			log.debug("Handle [{}] Completed", this);
 
 		JobHandle dep;
-		while((dep = dependants.pollFirst()) != null) {
+		while ((dep = dependants.pollFirst()) != null) {
 			if (wasCancelled) {
 				dep.cancel(false);
 				continue;
@@ -203,7 +208,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		int prevState = jobState.getAcquire();
 		setJobState(STATE_CANCELLED);
 
-		if(item != null)
+		if (item != null)
 			item.wasCancelled.set(true);
 
 		if (VALIDATE) log.debug("Cancelling [{}] state: [{}]", this, STATE_NAMES[prevState]);
@@ -220,7 +225,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			await();
 	}
 
-	boolean isReleased() { return isIdle() && refCounter.get() == 0;}
+	boolean isReleased() { return isIdle() && refCounter.get() == 0; }
 	boolean isIdle() { return jobState.getAcquire() == STATE_NONE; }
 	boolean isInQueue() { return jobState.getAcquire() == STATE_QUEUED; }
 	boolean isCancelled() { return jobState.getAcquire() == STATE_CANCELLED; }

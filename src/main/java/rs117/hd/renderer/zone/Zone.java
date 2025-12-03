@@ -67,7 +67,7 @@ public class Zone {
 	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
 
-	ZoneUploadTask zoneUploadTask;
+	ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
@@ -135,9 +135,9 @@ public class Zone {
 			glVaoA = 0;
 		}
 
-		if (zoneUploadTask != null) {
-			zoneUploadTask.release();
-			zoneUploadTask = null;
+		if (uploadJob != null) {
+			uploadJob.release();
+			uploadJob = null;
 		}
 
 		sizeO = 0;

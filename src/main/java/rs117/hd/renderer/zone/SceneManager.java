@@ -166,7 +166,7 @@ public class SceneManager {
 				root.streamingGroup.complete();
 			} finally {
 				loadingLock.unlock();
-				log.debug("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
+				log.trace("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
 			}
 		}
 
@@ -319,7 +319,7 @@ public class SceneManager {
 
 	@Getter
 	private final JobGenericTask loadSceneLightsTask = JobGenericTask.build(
-		"lightManager::loadSceneLights",
+		"LightManager::loadSceneLights",
 		(task) -> lightManager.loadSceneLights(nextSceneContext, root.sceneContext)
 	);
 
@@ -501,7 +501,7 @@ public class SceneManager {
 					if (!zone.initialized) {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 						if (root.sceneContext == null || dist < ZONE_DEFER_DIST_START) {
-							ZoneUploadTask
+							ZoneUploadJob
 								.build(ctx, nextSceneContext, zone, x, z)
 								.setExecuteAsync(plugin.configZoneStreaming)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
@@ -517,10 +517,10 @@ public class SceneManager {
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
-				sorted.zone.zoneUploadTask = ZoneUploadTask
+				sorted.zone.uploadJob = ZoneUploadJob
 					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 					.setExecuteAsync(plugin.configZoneStreaming);
-				sorted.zone.zoneUploadTask.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
+				sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				sorted.free();
 			}
 			sortedZones.clear();
@@ -529,7 +529,7 @@ public class SceneManager {
 			log.debug("loadScene time: {}", sw);
 		} finally {
 			loadingLock.unlock();
-			log.debug("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
+			log.trace("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
 		}
 	}
 
@@ -684,7 +684,7 @@ public class SceneManager {
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				ZoneUploadTask.build(ctx, sceneContext, ctx.zones[x][z], x, z)
+				ZoneUploadJob.build(ctx, sceneContext, ctx.zones[x][z], x, z)
 					.setExecuteAsync(plugin.configZoneStreaming)
 					.queue(ctx.sceneLoadGroup);
 

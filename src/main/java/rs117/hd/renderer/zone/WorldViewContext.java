@@ -28,8 +28,8 @@ public class WorldViewContext {
 	public long sceneSwapTime;
 
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
-	final JobGroup<ZoneUploadTask> sceneLoadGroup = new JobGroup<>(true, false);
-	final JobGroup<ZoneUploadTask> streamingGroup = new JobGroup<>(false, false);
+	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, false);
+	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
 
 	WorldViewContext(
 		SceneManager sceneManager,
@@ -63,7 +63,7 @@ public class WorldViewContext {
 
 	void handleZoneSwap(float deltaTime, int zx, int zz) {
 		Zone curZone = zones[zx][zz];
-		ZoneUploadTask uploadTask = curZone.zoneUploadTask;
+		ZoneUploadJob uploadTask = curZone.uploadJob;
 		if (uploadTask == null)
 			return;
 
@@ -80,7 +80,7 @@ public class WorldViewContext {
 		}
 
 		if (uploadTask.isDone()) {
-			curZone.zoneUploadTask = null;
+			curZone.uploadJob = null;
 			if (uploadTask.ranToCompletion() && !uploadTask.wasCancelled()) {
 				log.trace("swapping zone({}): [{}-{},{}]", uploadTask.zone.hashCode(), worldViewId, zx, zz);
 
@@ -160,26 +160,26 @@ public class WorldViewContext {
 	void invalidateZone(int zx, int zz) {
 		Zone curZone = zones[zx][zz];
 		float prevUploadDelay = -1.0f;
-		if (curZone.zoneUploadTask != null) {
+		if (curZone.uploadJob != null) {
 			log.trace(
 				"Invalidate Zone({}) - Cancelled upload task: [{}-{},{}] task zone({})",
 				curZone.hashCode(),
 				worldViewId,
 				zx,
 				zz,
-				curZone.zoneUploadTask.zone.hashCode()
+				curZone.uploadJob.zone.hashCode()
 			);
-			prevUploadDelay = curZone.zoneUploadTask.delay;
-			curZone.zoneUploadTask.cancel();
-			curZone.zoneUploadTask.release();
+			prevUploadDelay = curZone.uploadJob.delay;
+			curZone.uploadJob.cancel();
+			curZone.uploadJob.release();
 		}
 
 		Zone newZone = new Zone();
 		newZone.dirty = zones[zx][zz].dirty;
 
-		curZone.zoneUploadTask = ZoneUploadTask.build(this, sceneContext, newZone, zx, zz);
-		curZone.zoneUploadTask.delay = prevUploadDelay;
-		if (curZone.zoneUploadTask.delay < 0.0f)
-			curZone.zoneUploadTask.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
+		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, zx, zz);
+		curZone.uploadJob.delay = prevUploadDelay;
+		if (curZone.uploadJob.delay < 0.0f)
+			curZone.uploadJob.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }

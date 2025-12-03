@@ -1049,7 +1049,9 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_ZONE_STREAMING,
 		name = "Zone streaming",
-		description = "Streams distant zones in parallel into memory instead of blocking and causing a noticeable stall.",
+		description =
+			"Loads multiple zones in parallel while continuing to render the game.<br>" +
+			"As a result, you will see new zones appearing as they finish loading in.",
 		section = experimentalSettings
 	)
 	default boolean zoneStreaming() {

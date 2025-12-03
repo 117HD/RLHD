@@ -2,7 +2,7 @@ package rs117.hd.utils.jobs;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public final class JobGenericTask extends JobWork {
+public final class JobGenericTask extends Job {
 	private static final ConcurrentLinkedDeque<JobGenericTask> POOL = new ConcurrentLinkedDeque<>();
 
 	@FunctionalInterface

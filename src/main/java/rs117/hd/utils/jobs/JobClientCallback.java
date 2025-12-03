@@ -7,7 +7,7 @@ public final class JobClientCallback {
 
 	public static JobClientCallback current() {
 		JobClientCallback callback = POOL.get();
-		if(callback == null)
+		if (callback == null)
 			callback = new JobClientCallback();
 		callback.sema.drainPermits();
 		return callback;

@@ -37,8 +37,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
 import java.io.IOException;
-import java.lang.management.GarbageCollectorMXBean;
-import java.lang.management.ManagementFactory;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.time.ZoneOffset;
@@ -451,8 +449,6 @@ public class HdPlugin extends Plugin {
 	public float windOffset;
 	public long colorFilterChangedAt;
 
-	private long[] lastGCTimes;
-
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(HdPluginConfig.class);
@@ -778,32 +774,6 @@ public class HdPlugin extends Plugin {
 			canvas.validate();
 			startUp();
 		});
-	}
-
-	public void trackGarbageCollection() {
-		if (!frameTimer.isActive())
-			return;
-
-		List<GarbageCollectorMXBean> garbageCollectors = ManagementFactory.getGarbageCollectorMXBeans();
-		if(lastGCTimes == null || lastGCTimes.length != garbageCollectors.size()) {
-			lastGCTimes = new long[garbageCollectors.size()];
-		}
-
-		garbageCollectionCount = 0;
-		long elapsedDuration = 0;
-		for(int i = 0; i < garbageCollectors.size(); i++) {
-			var gc = garbageCollectors.get(i);
-			long time = gc.getCollectionTime();
-			if(time > 0 && time != lastGCTimes[i]) {
-				long duration = time - lastGCTimes[i];
-				lastGCTimes[i] = time;
-
-				elapsedDuration += duration;
-			}
-			garbageCollectionCount += gc.getCollectionCount();
-		}
-
-		frameTimer.add(Timer.GARBAGE_COLLECTION, elapsedDuration * 1000000);
 	}
 
 	@Nullable
@@ -1482,7 +1452,7 @@ public class HdPlugin extends Plugin {
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
 
-		if(configAsyncUICopy) {
+		if (configAsyncUICopy) {
 			frameTimer.begin(Timer.UPLOAD_UI);
 			asyncUICopy.complete();
 			frameTimer.end(Timer.UPLOAD_UI);
@@ -1515,8 +1485,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	/**
-     * Convert the front framebuffer to an Image
-     */
+	 * Convert the front framebuffer to an Image
+	 */
 	public Image screenshot() {
 		if (uiResolution == null)
 			return null;
@@ -1822,7 +1792,7 @@ public class HdPlugin extends Plugin {
 				stopPlugin();
 			} finally {
 				sceneManager.getLoadingLock().unlock();
-				log.debug("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 				pendingConfigChanges.clear();
 				frameTimer.reset();
 			}

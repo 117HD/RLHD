@@ -111,9 +111,8 @@ public class SceneUploader {
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
 	public void setScene(Scene scene) {
-		if (scene == currentScene) {
+		if (scene == currentScene)
 			return;
-		}
 
 		currentScene = scene;
 		tiles = scene.getExtendedTiles();
@@ -134,7 +133,7 @@ public class SceneUploader {
 		currentScene = null;
 	}
 
-	protected void onBeforeProcessTile(Tile t, boolean isEstimate) { }
+	protected void onBeforeProcessTile(Tile t, boolean isEstimate) {}
 
 	public void estimateZoneSize(ZoneSceneContext ctx, Zone zone, int mzx, int mzz) {
 		// Initialize the zone as containing only water, until a non-water tile is found
@@ -384,8 +383,7 @@ public class SceneUploader {
 			if (gameObject == null || !gameObject.getSceneMinLocation().equals(t.getSceneLocation()))
 				continue;
 
-			// Detect if GameObject is a temp object
-			if (ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
+			if (ModelHash.isTemporaryObject(gameObject.getHash()))
 				continue;
 
 			ModelOverride modelOverride = modelOverrideManager.getOverride(gameObject, worldPos);
@@ -571,8 +569,7 @@ public class SceneUploader {
 			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
 
-			// Detect if GameObject is a temp object
-			if (ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
+			if (ModelHash.isTemporaryObject(gameObject.getHash()))
 				continue;
 
 			Point min = gameObject.getSceneMinLocation();

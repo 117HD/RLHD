@@ -55,22 +55,6 @@ public final class HDUtils {
 		return hash;
 	}
 
-	public static int vertexHash(StringBuilder s, int[] vPos) {
-		for (int part : vPos)
-			s.append(part).append(",");
-
-		// Compute hash code of string representation of vertex position data.
-		// Pulled from `StringUTF16.hashCode`
-		int hash = 0;
-		int length = s.length();
-		for (int i = 0; i < length; i++) {
-			hash = 31 * hash + s.charAt(i);
-		}
-		s.setLength(0);
-
-		return hash;
-	}
-
 	public static int[] calculateSurfaceNormals(int[] a, int[] b, int[] c) {
 		subtract(b, a, b);
 		subtract(c, a, c);

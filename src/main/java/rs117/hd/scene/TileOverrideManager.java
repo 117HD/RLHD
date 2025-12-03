@@ -36,7 +36,7 @@ public class TileOverrideManager {
 	private static final ResourcePath TILE_OVERRIDES_PATH = Props
 		.getFile("rlhd.tile-overrides-path", () -> path(TileOverrideManager.class, "tile_overrides.json"));
 
-	private static ThreadLocal<int[]> OVERLAY_UNDERLAY_IDS = ThreadLocal.withInitial(() -> new int[2]);
+	private static final ThreadLocal<int[]> OVERLAY_UNDERLAY_IDS = ThreadLocal.withInitial(() -> new int[2]);
 
 	@Inject
 	private Client client;
@@ -128,7 +128,7 @@ public class TileOverrideManager {
 			log.error("Failed to load tile overrides:", ex);
 		} finally {
 			sceneManager.getLoadingLock().unlock();
-			log.debug("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
+			log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 		}
 
 		// Update the reference, since the underlying dirt materials may have changed

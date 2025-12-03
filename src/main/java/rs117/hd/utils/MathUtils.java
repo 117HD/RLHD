@@ -46,7 +46,7 @@ public final class MathUtils {
 	}
 
 	public static float[] vec(int... vec) {
-		final float[] floats = new float[vec.length];
+		float[] floats = new float[vec.length];
 		for (int i = 0; i < vec.length; i++)
 			floats[i] = vec[i];
 		return floats;
@@ -57,7 +57,7 @@ public final class MathUtils {
 	}
 
 	public static int[] ivec(float... vec) {
-		final int[] ivec = new int[vec.length];
+		int[] ivec = new int[vec.length];
 		for (int i = 0; i < vec.length; i++)
 			ivec[i] = (int) vec[i];
 		return ivec;

@@ -1,7 +1,10 @@
 package rs117.hd.overlays;
 
+import java.lang.management.GarbageCollectorMXBean;
+import java.lang.management.ManagementFactory;
 import java.util.ArrayDeque;
 import java.util.Arrays;
+import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -32,6 +35,7 @@ public class FrameTimer {
 	private final int[] gpuQueries = new int[NUM_TIMERS * 2];
 	private final ArrayDeque<Timer> glDebugGroupStack = new ArrayDeque<>(NUM_GPU_DEBUG_GROUPS);
 	private final ArrayDeque<Listener> listeners = new ArrayDeque<>();
+	private long[] lastGCTimes;
 
 	@RequiredArgsConstructor
 	public class AutoTimer implements AutoCloseable {
@@ -197,6 +201,8 @@ public class FrameTimer {
 		long frameEndNanos = System.nanoTime();
 		long frameEndTimestamp = System.currentTimeMillis();
 
+		trackGarbageCollection();
+
 		int[] available = { 0 };
 		for (var timer : Timer.TIMERS) {
 			int i = timer.ordinal();
@@ -223,5 +229,26 @@ public class FrameTimer {
 			listener.onFrameCompletion(frameTimings);
 
 		reset();
+	}
+
+	private void trackGarbageCollection() {
+		List<GarbageCollectorMXBean> garbageCollectors = ManagementFactory.getGarbageCollectorMXBeans();
+		if (lastGCTimes == null || lastGCTimes.length != garbageCollectors.size())
+			lastGCTimes = new long[garbageCollectors.size()];
+
+		plugin.garbageCollectionCount = 0;
+		long elapsedDuration = 0;
+		for (int i = 0; i < garbageCollectors.size(); i++) {
+			var gc = garbageCollectors.get(i);
+			long time = gc.getCollectionTime();
+			if (time > 0 && time != lastGCTimes[i]) {
+				long duration = time - lastGCTimes[i];
+				lastGCTimes[i] = time;
+				elapsedDuration += duration;
+			}
+			plugin.garbageCollectionCount += gc.getCollectionCount();
+		}
+
+		add(Timer.GARBAGE_COLLECTION, elapsedDuration * 1_000_000L);
 	}
 }

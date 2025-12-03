@@ -7,12 +7,12 @@ import net.runelite.api.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
-import rs117.hd.utils.jobs.JobWork;
+import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
 
 @Slf4j
-public final class AsyncUICopy extends JobWork {
+public final class AsyncUICopy extends Job {
 	@Inject
 	private Client client;
 

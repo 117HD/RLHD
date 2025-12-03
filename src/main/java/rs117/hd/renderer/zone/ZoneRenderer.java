@@ -165,7 +165,7 @@ public class ZoneRenderer implements Renderer {
 	public static int alphaFaceCount;
 
 	private boolean sceneFboValid;
-	private boolean drawScene;
+	private boolean shouldRenderScene;
 
 	@Override
 	public boolean supportsGpu(GLCapabilities glCaps) {
@@ -679,9 +679,10 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 
+		// Space out GL calls on Apple, to minimize stalls from the command queue filling up
 		if (APPLE)
 			directionalShadowPass();
-		drawScene = true;
+		shouldRenderScene = true;
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
 		// but the compute shaders should still be executed in case the camera angle has changed.
@@ -699,32 +700,30 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	private void directionalShadowPass() {
-		if (plugin.configShadowsEnabled &&
-			plugin.fboShadowMap != 0 &&
-			environmentManager.currentDirectionalStrength > 0
-		) {
-			frameTimer.begin(Timer.RENDER_SHADOWS);
+		if (!plugin.configShadowsEnabled || plugin.fboShadowMap == 0 || environmentManager.currentDirectionalStrength <= 0)
+			return;
 
-			// Render to the shadow depth map
-			renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
-			renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
-			renderState.apply();
+		frameTimer.begin(Timer.RENDER_SHADOWS);
 
-			glClearDepth(1);
-			glClear(GL_DEPTH_BUFFER_BIT);
+		// Render to the shadow depth map
+		renderState.framebuffer.set(GL_FRAMEBUFFER, plugin.fboShadowMap);
+		renderState.viewport.set(0, 0, plugin.shadowMapResolution, plugin.shadowMapResolution);
+		renderState.apply();
 
-			renderState.enable.set(GL_DEPTH_TEST);
-			renderState.disable.set(GL_CULL_FACE);
-			renderState.depthFunc.set(GL_LEQUAL);
+		glClearDepth(1);
+		glClear(GL_DEPTH_BUFFER_BIT);
 
-			CommandBuffer.SKIP_DEPTH_MASKING = true;
-			directionalCmd.execute();
-			CommandBuffer.SKIP_DEPTH_MASKING = false;
+		renderState.enable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_CULL_FACE);
+		renderState.depthFunc.set(GL_LEQUAL);
 
-			renderState.disable.set(GL_DEPTH_TEST);
+		CommandBuffer.SKIP_DEPTH_MASKING = true;
+		directionalCmd.execute();
+		CommandBuffer.SKIP_DEPTH_MASKING = false;
 
-			frameTimer.end(Timer.RENDER_SHADOWS);
-		}
+		renderState.disable.set(GL_DEPTH_TEST);
+
+		frameTimer.end(Timer.RENDER_SHADOWS);
 	}
 
 	private void scenePass() {
@@ -1230,7 +1229,7 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		if (drawScene) {
+		if (shouldRenderScene) {
 			if (!APPLE)
 				directionalShadowPass();
 			scenePass();
@@ -1290,14 +1289,12 @@ public class ZoneRenderer implements Renderer {
 
 		glBindFramebuffer(GL_FRAMEBUFFER, plugin.awtContext.getFramebuffer(false));
 
-		plugin.trackGarbageCollection();
-
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
 		checkGLErrors();
 
-		drawScene = false;
+		shouldRenderScene = false;
 	}
 
 	@Subscribe

@@ -87,7 +87,7 @@ public class ModelOverrideManager {
 				log.error("Failed to load model overrides:", ex);
 			} finally {
 				sceneManager.getLoadingLock().unlock();
-				log.debug("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		}));
 	}

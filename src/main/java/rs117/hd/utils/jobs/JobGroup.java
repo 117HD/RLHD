@@ -7,7 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RequiredArgsConstructor
-public final class JobGroup<T extends JobWork> {
+public final class JobGroup<T extends Job> {
 	@Getter
 	protected final LinkedBlockingDeque<T> pending = new LinkedBlockingDeque<>();
 
@@ -23,7 +23,7 @@ public final class JobGroup<T extends JobWork> {
 		T work;
 		while ((work = pending.poll()) != null) {
 			work.waitForCompletion();
-			if(autoRelease) work.release();
+			if (autoRelease) work.release();
 		}
 	}
 
@@ -31,7 +31,7 @@ public final class JobGroup<T extends JobWork> {
 		T work;
 		while ((work = pending.poll()) != null) {
 			work.cancel();
-			if(autoRelease) work.release();
+			if (autoRelease) work.release();
 		}
 		pending.clear();
 	}

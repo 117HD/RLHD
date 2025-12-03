@@ -26,36 +26,46 @@ public class JobSystemTests {
 	@Test
 	public void testQueueAndCompletion() {
 		JobGenericTask task = JobGenericTask
-			.build("testQueueAndCompletion",
-			(t) -> busyWork(t, 5000))
+			.build(
+				"testQueueAndCompletion",
+				(t) -> busyWork(t, 5000)
+			)
 			.queue(false);
 
 		task.waitForCompletion();
 		Assert.assertTrue(task.ranToCompletion());
 	}
 
-
 	@Test
 	public void testQueueWithMultipleDependencies() {
 		List<String> order = new CopyOnWriteArrayList<>();
 
 		JobGenericTask tA = JobGenericTask
-			.build("A", t -> {
-				busyWork(t, 200);
-				order.add("A");
-			}).queue();
+			.build(
+				"A", t -> {
+					busyWork(t, 200);
+					order.add("A");
+				}
+			)
+			.queue();
 
 		JobGenericTask tB = JobGenericTask
-			.build("B", t -> {
-				busyWork(t, 300);
-				order.add("B");
-			}).queue(tA);
+			.build(
+				"B", t -> {
+					busyWork(t, 300);
+					order.add("B");
+				}
+			)
+			.queue(tA);
 
 		JobGenericTask tC = JobGenericTask
-			.build("C", t -> {
-				busyWork(t, 300);
-				order.add("C");
-			}).queue(tA, tB);
+			.build(
+				"C", t -> {
+					busyWork(t, 300);
+					order.add("C");
+				}
+			)
+			.queue(tA, tB);
 
 		// Wait for dependent
 		tC.waitForCompletion();
@@ -75,10 +85,9 @@ public class JobSystemTests {
 
 	@Test
 	public void testCancelTask() throws Exception {
-		JobGenericTask longTask =
-			JobGenericTask.build("long",
-			(t) -> busyWork(t, 10000)
-		).queue();
+		JobGenericTask longTask = JobGenericTask
+			.build("long", (t) -> busyWork(t, 10000))
+			.queue();
 
 		Thread.sleep(50); // let it start
 		longTask.cancel();
@@ -94,24 +103,23 @@ public class JobSystemTests {
 
 		// Queue all tasks with no dependencies
 		for (int i = 0; i < taskCount; i++) {
-
-			int idx = i;
 			tasks.add(JobGenericTask
-				.build("Task" + idx,
-				t -> {
-					busyWork(t, 100); // short work for speed
-				}).queue());
+				.build(
+					"Task" + i,
+					t -> {
+						busyWork(t, 100); // short work for speed
+					}
+				)
+				.queue());
 		}
 
 		// Wait for all tasks to complete
-		for (JobGenericTask task : tasks) {
+		for (JobGenericTask task : tasks)
 			task.waitForCompletion();
-		}
 
 		// Verify all tasks ran
-		for (int i = 0; i < taskCount; i++) {
+		for (int i = 0; i < taskCount; i++)
 			Assert.assertTrue("Task" + i + " should have executed", tasks.get(i).ranToCompletion());
-		}
 	}
 
 	@Test
@@ -123,10 +131,14 @@ public class JobSystemTests {
 
 		for (int i = 0; i < count; i++) {
 			int idx = i;
-			JobGenericTask task = JobGenericTask.build("T" + idx, t -> {
-					log.debug("[TASK {}] Start", idx);
-					busyWork(t, 10);
-				}).queue(prev);
+			JobGenericTask task = JobGenericTask
+				.build(
+					"T" + idx, t -> {
+						log.debug("[TASK {}] Start", idx);
+						busyWork(t, 10);
+					}
+				)
+				.queue(prev);
 
 			tasks.add(task);
 			prev = task;
@@ -142,23 +154,35 @@ public class JobSystemTests {
 	public void testDependencyChain() {
 		List<String> order = new CopyOnWriteArrayList<>();
 
-		JobGenericTask tA = JobGenericTask.build("A", t -> {
-				log.debug("[TASK A] Start");
-				busyWork(t, 1000);
-				order.add("A");
-			}).queue();
+		JobGenericTask tA = JobGenericTask
+			.build(
+				"A", t -> {
+					log.debug("[TASK A] Start");
+					busyWork(t, 1000);
+					order.add("A");
+				}
+			)
+			.queue();
 
-		JobGenericTask tB = JobGenericTask.build("B", t -> {
-				log.debug("[TASK B] Start");
-				busyWork(t, 200);
-				order.add("B");
-			}).queue(tA);
+		JobGenericTask tB = JobGenericTask
+			.build(
+				"B", t -> {
+					log.debug("[TASK B] Start");
+					busyWork(t, 200);
+					order.add("B");
+				}
+			)
+			.queue(tA);
 
-		JobGenericTask tC = JobGenericTask.build("C", t -> {
-				log.debug("[TASK C] Start");
-				busyWork(t, 2000);
-				order.add("C");
-			}).queue(tB);
+		JobGenericTask tC = JobGenericTask
+			.build(
+				"C", t -> {
+					log.debug("[TASK C] Start");
+					busyWork(t, 2000);
+					order.add("C");
+				}
+			)
+			.queue(tB);
 
 		tC.waitForCompletion();
 
@@ -170,29 +194,37 @@ public class JobSystemTests {
 	public void testBranchingDependencies() {
 		List<String> order = new CopyOnWriteArrayList<>();
 
-		JobGenericTask tA = JobGenericTask.build("A", t -> {
+		JobGenericTask tA = JobGenericTask.build(
+			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 100);
 				order.add("A");
-			}).queue();
+			}
+		).queue();
 
-		JobGenericTask tB = JobGenericTask.build("B", t -> {
+		JobGenericTask tB = JobGenericTask.build(
+			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 200);
 				order.add("B");
-			}).queue(tA);
+			}
+		).queue(tA);
 
-		JobGenericTask tC = JobGenericTask.build("C", t -> {
+		JobGenericTask tC = JobGenericTask.build(
+			"C", t -> {
 				log.debug("[TASK C] Start");
 				busyWork(t, 150);
 				order.add("C");
-			}).queue(tA);
+			}
+		).queue(tA);
 
-		JobGenericTask tD = JobGenericTask.build("D", t -> {
+		JobGenericTask tD = JobGenericTask.build(
+			"D", t -> {
 				log.debug("[TASK D] Start");
 				busyWork(t, 100);
 				order.add("D");
-			}).queue(tB, tC);
+			}
+		).queue(tB, tC);
 
 		tD.waitForCompletion();
 
@@ -206,35 +238,45 @@ public class JobSystemTests {
 	public void testDiamondDependencyGraph() throws Exception {
 		List<String> order = new CopyOnWriteArrayList<>();
 
-		JobGenericTask tA = JobGenericTask.build("A", t -> {
+		JobGenericTask tA = JobGenericTask.build(
+			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 120);
 				order.add("A");
-			}).queue();
+			}
+		).queue();
 
-		JobGenericTask tB = JobGenericTask.build("B", t -> {
+		JobGenericTask tB = JobGenericTask.build(
+			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 140);
 				order.add("B");
-			}).queue();
+			}
+		).queue();
 
-		JobGenericTask tC = JobGenericTask.build("C", t -> {
+		JobGenericTask tC = JobGenericTask.build(
+			"C", t -> {
 				log.debug("[TASK C] Start");
 				busyWork(t, 200);
 				order.add("C");
-			}).queue(tA, tB);
+			}
+		).queue(tA, tB);
 
-		JobGenericTask tD = JobGenericTask.build("D", t -> {
+		JobGenericTask tD = JobGenericTask.build(
+			"D", t -> {
 				log.debug("[TASK D] Start");
 				busyWork(t, 180);
 				order.add("D");
-			}).queue(tA, tB);
+			}
+		).queue(tA, tB);
 
-		JobGenericTask tE = JobGenericTask.build("E", t -> {
+		JobGenericTask tE = JobGenericTask.build(
+			"E", t -> {
 				log.debug("[TASK E] Start");
 				busyWork(t, 80);
 				order.add("E");
-			}).queue(tC, tD);
+			}
+		).queue(tC, tD);
 
 		tE.waitForCompletion();
 
@@ -249,15 +291,19 @@ public class JobSystemTests {
 
 	@Test
 	public void testCancelUpstreamDependencyPreventsDownstreamExecution() throws Exception {
-		JobGenericTask hA = JobGenericTask.build("A", t -> {
+		JobGenericTask hA = JobGenericTask.build(
+			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 5000);
-			}).queue();
+			}
+		).queue();
 
-		JobGenericTask hB = JobGenericTask.build("B", t -> {
+		JobGenericTask hB = JobGenericTask.build(
+			"B", t -> {
 				log.debug("[TASK B] Start (This shouldn't happen)");
 				busyWork(t, 100);
-			}).queue(hA);
+			}
+		).queue(hA);
 
 		Thread.sleep(50);
 		hA.cancel();
@@ -331,39 +377,49 @@ public class JobSystemTests {
 		List<String> order = new CopyOnWriteArrayList<>();
 
 		// ----- A -----
-		JobGenericTask tA = JobGenericTask.build("A", t -> {
+		JobGenericTask tA = JobGenericTask.build(
+			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 100);
 				order.add("A");
-			}).queue();
+			}
+		).queue();
 
 		// ----- B -----
-		JobGenericTask tB = JobGenericTask.build("B", t -> {
+		JobGenericTask tB = JobGenericTask.build(
+			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 120);
 				order.add("B");
-			}).queue();
+			}
+		).queue();
 
 		// ----- C depends on A & B -----
-		JobGenericTask hC = JobGenericTask.build("C", t -> {
+		JobGenericTask hC = JobGenericTask.build(
+			"C", t -> {
 				log.debug("[TASK C] Start");
 				busyWork(t, 150);
 				order.add("C");
-			}).queue(tA, tB);
+			}
+		).queue(tA, tB);
 
 		// ----- D depends on C -----
-		JobGenericTask tD = JobGenericTask.build("D", t -> {
+		JobGenericTask tD = JobGenericTask.build(
+			"D", t -> {
 				log.debug("[TASK D] Start");
 				busyWork(t, 80);
 				order.add("D");
-			}).queue(hC);
+			}
+		).queue(hC);
 
 		// ----- E depends on C -----
-		JobGenericTask tE = JobGenericTask.build("E", t -> {
+		JobGenericTask tE = JobGenericTask.build(
+			"E", t -> {
 				log.debug("[TASK E] Start");
 				busyWork(t, 90);
 				order.add("E");
-			}).queue(hC);
+			}
+		).queue(hC);
 
 		// Wait for the final downstream tasks
 		tD.waitForCompletion();
@@ -397,39 +453,49 @@ public class JobSystemTests {
 		List<String> order = new CopyOnWriteArrayList<>();
 
 		// ----- A: Will be cancelled -----
-		JobGenericTask tA = JobGenericTask.build("A", t -> {
+		JobGenericTask tA = JobGenericTask.build(
+			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 3000);  // long-running, gives us time to cancel
 				order.add("A");
-			}).queue();
+			}
+		).queue();
 
 		// ----- B: Allowed to run -----
-		JobGenericTask tB = JobGenericTask.build("B", t -> {
+		JobGenericTask tB = JobGenericTask.build(
+			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 100);
 				order.add("B");
-			}).queue();
+			}
+		).queue();
 
 		// ----- C depends on A & B -----
-		JobGenericTask tC = JobGenericTask.build("C", t -> {
+		JobGenericTask tC = JobGenericTask.build(
+			"C", t -> {
 				log.debug("[TASK C] Should NOT execute");
 				busyWork(t, 50);
 				order.add("C");
-			}).queue(tA, tB);
+			}
+		).queue(tA, tB);
 
 		// ----- D depends on C -----
-		JobGenericTask tD = JobGenericTask.build("D", t -> {
+		JobGenericTask tD = JobGenericTask.build(
+			"D", t -> {
 				log.debug("[TASK D] Should NOT execute");
 				busyWork(t, 50);
 				order.add("D");
-			}).queue(tC);
+			}
+		).queue(tC);
 
 		// ----- E depends on C -----
-		JobGenericTask tE = JobGenericTask.build("E", t -> {
+		JobGenericTask tE = JobGenericTask.build(
+			"E", t -> {
 				log.debug("[TASK E] Should NOT execute");
 				busyWork(t, 50);
 				order.add("E");
-			}).queue(tC);
+			}
+		).queue(tC);
 
 		// Let A start
 		Thread.sleep(50);

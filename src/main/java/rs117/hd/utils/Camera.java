@@ -171,11 +171,11 @@ public class Camera {
 	}
 
 	public float distanceTo(float[] point) {
-		return distance(position, point);
+		return distanceTo(point[0], point[1], point[2]);
 	}
 
 	public float distanceTo(float x, float y, float z) {
-		return sqrt(position[0] * x + position[1] * y + position[2] * z);
+		return sqrt(squaredDistanceTo(x, y, z));
 	}
 
 	public float squaredDistanceTo(float x, float y, float z) {

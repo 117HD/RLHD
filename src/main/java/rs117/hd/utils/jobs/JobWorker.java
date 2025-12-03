@@ -30,17 +30,17 @@ public final class JobWorker {
 			// Check local work queue
 			handle = localWorkQueue.poll();
 
-			while(handle == null) {
-				if(stealTargetIdx >= 0) {
+			while (handle == null) {
+				if (stealTargetIdx >= 0) {
 					final JobWorker victim = JobSystem.INSTANCE.workers[stealTargetIdx];
 					int stealCount = victim.localWorkQueue.size() / 2;
 
 					JobHandle stolenHandle;
 					while (stealCount-- > 0 && (stolenHandle = victim.localWorkQueue.poll()) != null) {
-						if(handle == null) {
+						if (handle == null) {
 							handle = stolenHandle;
 						} else {
-							if(handle.highPriority)
+							if (handle.highPriority)
 								localWorkQueue.addFirst(stolenHandle);
 							else
 								localWorkQueue.addLast(stolenHandle);
@@ -52,19 +52,19 @@ public final class JobWorker {
 					// Reset steal worker idx since its queue is empty
 					stealTargetIdx = random.nextInt(0, JobSystem.INSTANCE.workers.length);
 
-					if(stealTargetIdx == workerIdx) // Don't steal from yourself
+					if (stealTargetIdx == workerIdx) // Don't steal from yourself
 						stealTargetIdx = (stealTargetIdx + 1) % JobSystem.INSTANCE.workers.length;
 
 					// Still no work, wait longer on the main work Queue
 					handle = JobSystem.INSTANCE.workQueue.poll();
 
-					if(handle == null) {
+					if (handle == null) {
 						inflight.lazySet(false);
 						Thread.onSpinWait();
 					}
 				}
 
-				if(!JobSystem.INSTANCE.active) {
+				if (!JobSystem.INSTANCE.active) {
 					log.debug("Shutdown");
 					return;
 				}
@@ -83,16 +83,14 @@ public final class JobWorker {
 		try {
 			workerHandleCancel();
 
-			if(handle.item != null && handle.setRunning(this)) {
+			if (handle.item != null && handle.setRunning(this)) {
 				inflight.lazySet(true);
 				handle.item.onRun();
 				handle.item.ranToCompletion.set(true);
 			}
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			log.debug("Interrupt Received whilst processing: {}", handle.hashCode());
-		}
-		catch (Throwable ex) {
+		} catch (Throwable ex) {
 			log.warn("Encountered an error whilst processing: {}", handle.hashCode(), ex);
 			handle.cancel(false);
 		} finally {
@@ -104,15 +102,15 @@ public final class JobWorker {
 
 	void workerHandleCancel() throws InterruptedException {
 		if (handle.isCancelled()) {
-			if(VALIDATE) log.debug("Handle {} has been cancelled, interrupting to exit execution", handle);
-			if(handle.item != null)
+			if (VALIDATE) log.debug("Handle {} has been cancelled, interrupting to exit execution", handle);
+			if (handle.item != null)
 				handle.item.onCancel();
 			throw new InterruptedException();
 		}
 	}
 
 	void printState() {
-		if(handle == null) {
+		if (handle == null) {
 			log.debug("Worker [{}] Idle", thread.getName());
 			return;
 		}

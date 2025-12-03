@@ -172,7 +172,7 @@ public class MaterialManager {
 				swapMaterials(materials);
 			} finally {
 				sceneManager.getLoadingLock().unlock();
-				log.debug("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		});
 	}

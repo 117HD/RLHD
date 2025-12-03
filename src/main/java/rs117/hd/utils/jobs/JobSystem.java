@@ -56,7 +56,7 @@ public final class JobSystem {
 		workers = new JobWorker[workerCount];
 		active = true;
 
-		for(int i = 0; i < workerCount; i++) {
+		for (int i = 0; i < workerCount; i++) {
 			JobWorker newWorker = workers[i] = new JobWorker(i);
 			newWorker.thread = new Thread(newWorker::run);
 			newWorker.thread.setPriority(Thread.NORM_PRIORITY + 1);
@@ -64,14 +64,14 @@ public final class JobSystem {
 			threadToWorker.put(newWorker.thread, newWorker);
 		}
 
-		for(int i = 0; i < workerCount; i++)
+		for (int i = 0; i < workerCount; i++)
 			workers[i].thread.start();
 	}
 
 	public int getInflightWorkerCount() {
 		int inflightCount = 0;
-		for(int i = 0; i < workerCount; i++) {
-			if(workers[i].inflight.get())
+		for (int i = 0; i < workerCount; i++) {
+			if (workers[i].inflight.get())
 				inflightCount++;
 		}
 		return inflightCount;
@@ -85,10 +85,10 @@ public final class JobSystem {
 		active = false;
 		workQueue.clear();
 
-		for(JobWorker worker : workers) {
+		for (JobWorker worker : workers) {
 			worker.localWorkQueue.clear();
 			worker.thread.interrupt();
-			if(worker.handle != null) {
+			if (worker.handle != null) {
 				try {
 					worker.handle.cancel(true);
 				} catch (InterruptedException e) {
@@ -99,8 +99,8 @@ public final class JobSystem {
 		}
 
 		int workerShutdownCount = 0;
-		for(JobWorker worker : workers) {
-			if(!worker.thread.isAlive()) {
+		for (JobWorker worker : workers) {
+			if (!worker.thread.isAlive()) {
 				workerShutdownCount++;
 				continue;
 			}
@@ -119,7 +119,7 @@ public final class JobSystem {
 			}
 		}
 
-		if(workerShutdownCount == workerCount)
+		if (workerShutdownCount == workerCount)
 			log.debug("All workers shutdown successfully");
 
 		threadToWorker.clear();
@@ -131,8 +131,8 @@ public final class JobSystem {
 	}
 
 	public boolean hasIdleWorkers() {
-		for(JobWorker worker : workers) {
-			if(!worker.inflight.get())
+		for (JobWorker worker : workers) {
+			if (!worker.inflight.get())
 				return true;
 		}
 		return false;
@@ -140,12 +140,12 @@ public final class JobSystem {
 
 	public void printWorkersState() {
 		log.debug("WorkQueue Size: {}", workQueue.size());
-		for(JobWorker worker : workers)
+		for (JobWorker worker : workers)
 			worker.printState();
 	}
 
-	protected void queue(JobWork item, boolean highPriority, JobWork... dependencies) {
-		if(!item.executeAsync) {
+	protected void queue(Job item, boolean highPriority, Job... dependencies) {
+		if (!item.executeAsync) {
 			try {
 				item.queued.set(true);
 				item.onRun();
@@ -163,9 +163,9 @@ public final class JobSystem {
 		newHandle.item = item;
 
 		boolean shouldQueue = true;
-		for(JobWork dep : dependencies) {
-			if(dep == null || dep.handle == null) continue;
-			if(dep.handle.addDependant(newHandle)) {
+		for (Job dep : dependencies) {
+			if (dep == null || dep.handle == null) continue;
+			if (dep.handle.addDependant(newHandle)) {
 				shouldQueue = false;
 			}
 		}
@@ -175,9 +175,9 @@ public final class JobSystem {
 		item.wasCancelled.set(false);
 		item.ranToCompletion.set(false);
 
-		if(shouldQueue) {
+		if (shouldQueue) {
 			newHandle.setInQueue();
-			if(VALIDATE) log.debug("Handle [{}] Added to queue (Dep Count: {{}})", newHandle, dependencies);
+			if (VALIDATE) log.debug("Handle [{}] Added to queue (Dep Count: {{}})", newHandle, dependencies);
 			if (highPriority) {
 				workQueue.addFirst(newHandle);
 			} else {
@@ -187,7 +187,7 @@ public final class JobSystem {
 	}
 
 	protected void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
-		if(client.isClientThread()) {
+		if (client.isClientThread()) {
 			callback.run();
 			processPendingClientCallbacks(false);
 			return;
@@ -197,12 +197,12 @@ public final class JobSystem {
 		clientCallback.callback = callback;
 		clientCallback.immediate = immediate;
 
-		if(immediate)
+		if (immediate)
 			clientCallbacks.addFirst(clientCallback);
 		else
 			clientCallbacks.addLast(clientCallback);
 
-		if(!clientInvokeScheduled) {
+		if (!clientInvokeScheduled) {
 			clientInvokeScheduled = true;
 			clientThread.invoke(() -> {
 				clientInvokeScheduled = false;
@@ -212,7 +212,7 @@ public final class JobSystem {
 
 		try {
 			clientCallback.sema.acquire();
-		}catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			clientCallbacks.remove(clientCallback);
 			throw new InterruptedException();
 		}
@@ -228,8 +228,8 @@ public final class JobSystem {
 			return;
 
 		JobClientCallback pair;
-		while(size-- > 0 && (pair = clientCallbacks.poll()) != null) {
-			if(!pair.immediate && immediateOnly) {
+		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
+			if (!pair.immediate && immediateOnly) {
 				clientCallbacks.addLast(pair); // Add it back onto the end
 				continue;
 			}
