@@ -1,7 +1,6 @@
 package rs117.hd.opengl;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -28,7 +27,6 @@ public final class AsyncUICopy extends JobWork {
 	private JobSystem jobSystem;
 
 	private ByteBuffer mappedBuffer;
-	private IntBuffer mappedIntBuffer;
 	private int[] pixels;
 	private int interfacePbo;
 	private int interfaceTexture;
@@ -54,15 +52,14 @@ public final class AsyncUICopy extends JobWork {
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		timer.end(Timer.MAP_UI_BUFFER);
 
+
 		if (buffer == null) {
 			log.error("Unable to map interface PBO. Skipping UI...");
 			return;
 		}
 
-		if(buffer != mappedBuffer) {
+		if(buffer != mappedBuffer)
 			mappedBuffer = buffer;
-			mappedIntBuffer = mappedBuffer.asIntBuffer();
-		}
 
 		setExecuteAsync(client.getGameState() == GameState.LOGGED_IN);
 		queue();
@@ -101,7 +98,7 @@ public final class AsyncUICopy extends JobWork {
 
 	@Override
 	protected void onRun() {
-		mappedIntBuffer.put(pixels, 0, width * height);
+		mappedBuffer.asIntBuffer().put(0, pixels, 0, width * height);
 	}
 
 	@Override
