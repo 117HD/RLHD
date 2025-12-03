@@ -1678,6 +1678,7 @@ public class ZoneRenderer implements Renderer {
 					asyncSceneUploader.uploadZone(nextSceneContext, zone, x, z);
 			}
 		}
+		plugin.minimapRenderer.prepareScene(nextSceneContext);
 		log.debug("Scene upload time {}", sw);
 
 		// Roof ids aren't consistent between scenes, so build a mapping of old -> new roof ids

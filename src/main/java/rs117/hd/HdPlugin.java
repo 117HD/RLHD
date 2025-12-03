@@ -59,6 +59,8 @@ import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.events.ConfigChanged;
+import net.runelite.client.events.PluginMessage;
+import rs117.hd.api.RLHDAPI;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDependency;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -73,6 +75,9 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.Callback;
 import org.lwjgl.system.Configuration;
+import rs117.hd.api.RLHDEvent;
+import rs117.hd.api.RLHDSubscribe;
+import rs117.hd.api.RLHDUnsubscribe;
 import rs117.hd.config.ColorFilter;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.config.SeasonalHemisphere;
@@ -104,6 +109,7 @@ import rs117.hd.scene.GamevalManager;
 import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
+import rs117.hd.scene.MinimapRenderer;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
@@ -136,6 +142,7 @@ import static rs117.hd.utils.ResourcePath.path;
 @PluginDependency(EntityHiderPlugin.class)
 @Slf4j
 public class HdPlugin extends Plugin {
+
 	public static final ResourcePath PLUGIN_DIR = Props
 		.getFolder("rlhd.plugin-dir", () -> path(RuneLite.RUNELITE_DIR, "117hd"));
 
@@ -251,6 +258,12 @@ public class HdPlugin extends Plugin {
 	private AsyncUICopy asyncUICopy;
 
 	@Inject
+	public MinimapRenderer minimapRenderer;
+
+	@Inject
+	private RLHDAPI rlhdAPI;
+
+	@Inject
 	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
@@ -282,6 +295,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	public HDVariables vars;
+
+	@Inject
+	public ConfigManager configManager;
 
 	public Renderer renderer;
 
@@ -588,6 +604,7 @@ public class HdPlugin extends Plugin {
 				textureManager.startUp();
 				materialManager.startUp();
 				waterTypeManager.startUp();
+				minimapRenderer.setUp();
 
 				renderer.initialize();
 				eventBus.register(renderer);
@@ -631,6 +648,9 @@ public class HdPlugin extends Plugin {
 					client.setGameState(GameState.LOADING);
 
 				checkGLErrors();
+
+				// Notify all subscribers that 117 HD has started
+				rlhdAPI.notifyStartup();
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 			} catch (Throwable err) {
@@ -684,6 +704,8 @@ public class HdPlugin extends Plugin {
 				destroySceneFbo();
 				destroyShadowMapFbo();
 				destroyTiledLightingFbo();
+
+				rlhdAPI.notifyShutdown();
 
 				if (renderer != null) {
 					eventBus.unregister(renderer);
@@ -1801,6 +1823,20 @@ public class HdPlugin extends Plugin {
 		return config.expandedMapLoadingChunks();
 	}
 
+	@Subscribe
+	public void onRLHDSubscribe(RLHDSubscribe event) {
+		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+			minimapRenderer.onRLHDSubscribe(event);
+		}
+	}
+
+	@Subscribe
+	public void onRLHDUnsubscribe(RLHDUnsubscribe event) {
+		if (event.getEvent() == RLHDEvent.EVENT_MINIMAP) {
+			minimapRenderer.onRLHDUnsubscribe(event);
+		}
+	}
+
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
@@ -1829,6 +1865,11 @@ public class HdPlugin extends Plugin {
 			return;
 
 		fishingSpotReplacer.update();
+	}
+
+	@Subscribe
+	public void onPluginMessage(PluginMessage message) {
+		rlhdAPI.handlePluginMessage(message);
 	}
 
 	@SuppressWarnings("StatementWithEmptyBody")
