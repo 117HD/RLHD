@@ -33,13 +33,13 @@ public final class ZoneUploadTask extends JobWork {
 		if(zone.sizeO > 0 || zone.sizeA > 0) {
 			workerHandleCancel();
 
-			queueClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
+			invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
 			workerHandleCancel();
 
 			sceneUploader.uploadZone(sceneContext, zone, x, z);
 			workerHandleCancel();
 
-			queueClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
+			invokeClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
 		} else {
 			// The zone should not be left uninitialized, as this will prevent drawing anything within it
 			zone.initialized = true;

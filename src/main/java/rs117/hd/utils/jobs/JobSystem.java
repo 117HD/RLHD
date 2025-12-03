@@ -186,7 +186,7 @@ public final class JobSystem {
 		}
 	}
 
-	protected void queueClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
+	protected void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
 		if(client.isClientThread()) {
 			callback.run();
 			processPendingClientCallbacks(false);
