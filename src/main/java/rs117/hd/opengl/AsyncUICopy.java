@@ -93,7 +93,7 @@ public final class AsyncUICopy extends JobWork {
 
 	@Override
 	protected void onRun() {
-		mappedBuffer.asIntBuffer().put(0, pixels, 0, width * height);
+		mappedBuffer.asIntBuffer().put(pixels, 0, width * height);
 	}
 
 	@Override
