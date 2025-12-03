@@ -41,10 +41,11 @@ public final class JobSystem {
 	@Getter
 	protected boolean active;
 
-	protected final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
-	private final BlockingDeque<JobClientCallback> clientCallbacks = new LinkedBlockingDeque<>();
-
 	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
+
+	protected final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
+	private final BlockingDeque<JobClientCallback> clientCallbacks = new LinkedBlockingDeque<>(workerCount);
+
 	private final HashMap<Thread, JobWorker> threadToWorker = new HashMap<>();
 	protected JobWorker[] workers;
 
@@ -192,14 +193,14 @@ public final class JobSystem {
 			return;
 		}
 
-		final JobClientCallback newItem = JobClientCallback.obtain();
-		newItem.callback = callback;
-		newItem.immediate = immediate;
+		final JobClientCallback clientCallback = JobClientCallback.current();
+		clientCallback.callback = callback;
+		clientCallback.immediate = immediate;
 
 		if(immediate)
-			clientCallbacks.addFirst(newItem);
+			clientCallbacks.addFirst(clientCallback);
 		else
-			clientCallbacks.addLast(newItem);
+			clientCallbacks.addLast(clientCallback);
 
 		if(!clientInvokeScheduled) {
 			clientInvokeScheduled = true;
@@ -210,12 +211,10 @@ public final class JobSystem {
 		}
 
 		try {
-			newItem.sema.acquire();
+			clientCallback.sema.acquire();
 		}catch (InterruptedException e) {
-			clientCallbacks.remove(newItem);
+			clientCallbacks.remove(clientCallback);
 			throw new InterruptedException();
-		} finally {
-			newItem.release();
 		}
 	}
 
