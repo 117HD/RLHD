@@ -69,6 +69,10 @@ public class SceneContext {
 	public boolean[][][] skipTile;
 	public Map<Integer, Integer> vertexUnderwaterDepth;
 	public int[][][] underwaterDepthLevels;
+	public int sceneEdge0, sceneEdge1;
+	public int[] waterHeightCounters;
+	public int waterHeight;
+	public boolean hasWater;
 
 	// Thread safe tile override variables
 	public final TileOverrideVariables tileOverrideVars = new TileOverrideVariables();
@@ -93,6 +97,10 @@ public class SceneContext {
 		sceneOffset = (EXTENDED_SCENE_SIZE - SCENE_SIZE) / 2;
 		sceneBase = findSceneBase();
 		sceneBounds = findSceneBounds(sceneBase);
+
+		final int pad = expandedMapLoadingChunks * CHUNK_SIZE;
+		sceneEdge0 = max(1, sceneOffset - pad);
+		sceneEdge1 = min(EXTENDED_SCENE_SIZE - 2, sceneOffset + SCENE_SIZE + pad - 1);
 	}
 
 	public synchronized void destroy() {}

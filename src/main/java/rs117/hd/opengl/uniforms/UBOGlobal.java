@@ -9,11 +9,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 		super(GL_DYNAMIC_DRAW);
 	}
 
-	@Override
-	public void initialize() {
-		super.initialize();
-	}
-
 	public Property expandedMapLoadingChunks = addProperty(PropertyType.Int, "expandedMapLoadingChunks");
 	public Property drawDistance = addProperty(PropertyType.Float, "drawDistance");
 
@@ -42,14 +37,9 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 	public Property groundFogEnd = addProperty(PropertyType.Float, "groundFogEnd");
 	public Property groundFogOpacity = addProperty(PropertyType.Float, "groundFogOpacity");
 
-	public Property waterColorLight = addProperty(PropertyType.FVec3, "waterColorLight");
-	public Property waterColorMid = addProperty(PropertyType.FVec3, "waterColorMid");
-	public Property waterColorDark = addProperty(PropertyType.FVec3, "waterColorDark");
-
 	public Property underwaterEnvironment = addProperty(PropertyType.Int, "underwaterEnvironment");
 	public Property underwaterCaustics = addProperty(PropertyType.Int, "underwaterCaustics");
 	public Property underwaterCausticsColor = addProperty(PropertyType.FVec3, "underwaterCausticsColor");
-	public Property underwaterCausticsStrength = addProperty(PropertyType.Float, "underwaterCausticsStrength");
 
 	public Property lightDir = addProperty(PropertyType.FVec3, "lightDir");
 
@@ -63,4 +53,6 @@ public class UBOGlobal extends UniformBuffer<GLBuffer> {
 
 	public Property lightningBrightness = addProperty(PropertyType.Float, "lightningBrightness");
 	public Property elapsedTime = addProperty(PropertyType.Float, "elapsedTime");
+
+	public Property COLOR_PICKER = addProperty(PropertyType.FVec4, "COLOR_PICKER");
 }

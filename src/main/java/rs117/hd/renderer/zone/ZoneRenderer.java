@@ -88,6 +88,7 @@ import static rs117.hd.HdPlugin.APPLE;
 import static rs117.hd.HdPlugin.COLOR_FILTER_FADE_DURATION;
 import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.HdPlugin.ORTHOGRAPHIC_ZOOM;
+import static rs117.hd.HdPlugin.TEXTURE_UNIT_WATER_REFLECTION_MAP;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
@@ -358,6 +359,8 @@ public class ZoneRenderer implements Renderer {
 		if (root.sceneContext == null || plugin.sceneViewport == null)
 			return;
 
+		plugin.updateWaterReflectionsFbo();
+
 		frameTimer.begin(Timer.DRAW_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
 
@@ -435,6 +438,7 @@ public class ZoneRenderer implements Renderer {
 
 				// Calculate view matrix, view proj & inv matrix
 				sceneCamera.getViewMatrix(plugin.viewMatrix);
+				sceneCamera.getProjectionMatrix(plugin.projMatrix);
 				sceneCamera.getViewProjMatrix(plugin.viewProjMatrix);
 				sceneCamera.getInvViewProjMatrix(plugin.invViewProjMatrix);
 				sceneCamera.getFrustumPlanes(plugin.cameraFrustum);
@@ -623,29 +627,6 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.expandedMapLoadingChunks.set(root.sceneContext.expandedMapLoadingChunks);
 		plugin.uboGlobal.colorBlindnessIntensity.set(config.colorBlindnessIntensity() / 100.f);
 
-		float[] waterColorHsv = ColorUtils.srgbToHsv(environmentManager.currentWaterColor);
-		float lightBrightnessMultiplier = 0.8f;
-		float midBrightnessMultiplier = 0.45f;
-		float darkBrightnessMultiplier = 0.05f;
-		float[] waterColorLight = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * lightBrightnessMultiplier
-		}));
-		float[] waterColorMid = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * midBrightnessMultiplier
-		}));
-		float[] waterColorDark = ColorUtils.linearToSrgb(ColorUtils.hsvToSrgb(new float[] {
-			waterColorHsv[0],
-			waterColorHsv[1],
-			waterColorHsv[2] * darkBrightnessMultiplier
-		}));
-		plugin.uboGlobal.waterColorLight.set(waterColorLight);
-		plugin.uboGlobal.waterColorMid.set(waterColorMid);
-		plugin.uboGlobal.waterColorDark.set(waterColorDark);
-
 		plugin.uboGlobal.gammaCorrection.set(plugin.getGammaCorrection());
 		float ambientStrength = environmentManager.currentAmbientStrength;
 		float directionalStrength = environmentManager.currentDirectionalStrength;
@@ -676,8 +657,10 @@ public class ZoneRenderer implements Renderer {
 		plugin.uboGlobal.contrast.set(config.contrast() / 100f);
 		plugin.uboGlobal.underwaterEnvironment.set(environmentManager.isUnderwater() ? 1 : 0);
 		plugin.uboGlobal.underwaterCaustics.set(config.underwaterCaustics() ? 1 : 0);
-		plugin.uboGlobal.underwaterCausticsColor.set(environmentManager.currentUnderwaterCausticsColor);
-		plugin.uboGlobal.underwaterCausticsStrength.set(environmentManager.currentUnderwaterCausticsStrength);
+		plugin.uboGlobal.underwaterCausticsColor.set(multiply(
+			environmentManager.currentUnderwaterCausticsColor,
+			environmentManager.currentUnderwaterCausticsStrength
+		));
 		plugin.uboGlobal.elapsedTime.set((float) (plugin.elapsedTime % MAX_FLOAT_WITH_128TH_PRECISION));
 
 		if (plugin.configColorFilter != ColorFilter.NONE) {
@@ -832,6 +815,86 @@ public class ZoneRenderer implements Renderer {
 
 	private void scenePass() {
 		sceneProgram.use();
+		sceneProgram.uniLegacyWaterColor.set(environmentManager.currentWaterColor);
+		sceneProgram.uniShorelineCaustics.set(config.shorelineCaustics());
+		sceneProgram.uniWaterTransparency.set(plugin.configWaterTransparency);
+
+		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
+		if (plugin.configLinearAlphaBlending) {
+			glEnable(GL_FRAMEBUFFER_SRGB);
+			// This is kind of stupid, but our shader expects fogColor in sRGB, so we transform it back here
+			fogColor = ColorUtils.srgbToLinear(fogColor);
+		}
+		glClearColor(fogColor[0], fogColor[1], fogColor[2], 1f);
+
+		boolean renderWaterReflections = plugin.configPlanarReflections && root.sceneContext.hasWater;
+		if (renderWaterReflections) {
+			sceneProgram.uniWaterHeight.set(root.sceneContext.waterHeight);
+
+			// Calculate water reflection projection matrix
+			float[] reflectionProjectionMatrix = Mat4.scale(1, -1, 1);
+			Mat4.mul(reflectionProjectionMatrix, plugin.projMatrix);
+			Mat4.mul(reflectionProjectionMatrix, Mat4.rotateX(-plugin.cameraOrientation[1]));
+			Mat4.mul(reflectionProjectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
+			Mat4.mul(
+				reflectionProjectionMatrix, Mat4.translate(
+					-plugin.cameraPosition[0],
+					-(plugin.cameraPosition[1] + (root.sceneContext.waterHeight - plugin.cameraPosition[1]) * 2),
+					-plugin.cameraPosition[2]
+				)
+			);
+			plugin.uboGlobal.projectionMatrix.set(reflectionProjectionMatrix);
+			plugin.uboGlobal.cameraPos.set(
+				plugin.cameraPosition[0],
+				(plugin.cameraPosition[1] + (root.sceneContext.waterHeight - plugin.cameraPosition[1]) * 2),
+				plugin.cameraPosition[2]
+			);
+			plugin.uboGlobal.upload();
+
+			frameTimer.begin(Timer.RENDER_REFLECTIONS);
+
+			glViewport(0, 0, plugin.waterReflectionResolution[0], plugin.waterReflectionResolution[1]);
+
+			glBindFramebuffer(GL_DRAW_FRAMEBUFFER, plugin.fboWaterReflection);
+			glClearDepth(0);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+			// Since the game was never designed to be viewed from below, a lot of
+			// things are missing triangles underneath. In most cases, it's fine
+			// visually to render the top face from below.
+			renderState.disable.set(GL_CULL_FACE);
+
+			renderState.enable.set(GL_DEPTH_TEST);
+			// With LEQUAL, the insides of paper thin walls are visible from the outside
+			renderState.depthFunc.set(GL_GEQUAL);
+
+			renderState.enable.set(GL_BLEND);
+			renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
+
+			sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_REFLECTION);
+
+			CommandBuffer.SKIP_DEPTH_MASKING = true;
+			sceneCmd.execute();
+			directionalCmd.execute();
+			CommandBuffer.SKIP_DEPTH_MASKING = false;
+
+			// Bind the water reflection texture to index 4
+			glActiveTexture(TEXTURE_UNIT_WATER_REFLECTION_MAP);
+			glBindTexture(GL_TEXTURE_2D, plugin.texWaterReflection);
+			frameTimer.begin(Timer.REFLECTION_MIPMAPS);
+			glGenerateMipmap(GL_TEXTURE_2D);
+			frameTimer.end(Timer.REFLECTION_MIPMAPS);
+
+			// Reset everything back to the main pass' state
+			renderState.disable.set(GL_DEPTH_TEST);
+			renderState.enable.set(GL_CULL_FACE);
+
+			frameTimer.end(Timer.RENDER_REFLECTIONS);
+
+			plugin.uboGlobal.projectionMatrix.set(plugin.viewProjMatrix);
+			plugin.uboGlobal.cameraPos.set(plugin.cameraPosition);
+			plugin.uboGlobal.upload();
+		}
 
 		frameTimer.begin(Timer.DRAW_SCENE);
 		renderState.framebuffer.set(GL_DRAW_FRAMEBUFFER, plugin.fboScene);
@@ -846,7 +909,6 @@ public class ZoneRenderer implements Renderer {
 		// Clear scene
 		frameTimer.begin(Timer.CLEAR_SCENE);
 
-		float[] fogColor = ColorUtils.linearToSrgb(environmentManager.currentFogColor);
 		float[] gammaCorrectedFogColor = pow(fogColor, plugin.getGammaCorrection());
 		glClearColor(
 			gammaCorrectedFogColor[0],
@@ -867,6 +929,9 @@ public class ZoneRenderer implements Renderer {
 		renderState.blendFunc.set(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ZERO, GL_ONE);
 
 		// Render the scene
+		sceneProgram.use();
+		sceneProgram.uniRenderPass.set(SceneShaderProgram.RENDER_PASS_MAIN);
+		sceneProgram.uniWaterReflectionEnabled.set(renderWaterReflections);
 		sceneCmd.execute();
 
 		// TODO: Filler tiles
@@ -876,6 +941,8 @@ public class ZoneRenderer implements Renderer {
 		renderState.disable.set(GL_BLEND);
 		renderState.disable.set(GL_CULL_FACE);
 		renderState.disable.set(GL_DEPTH_TEST);
+		renderState.disable.set(GL_MULTISAMPLE);
+		renderState.disable.set(GL_FRAMEBUFFER_SRGB);
 		renderState.apply();
 
 		frameTimer.end(Timer.DRAW_SCENE);
@@ -1838,7 +1905,7 @@ public class ZoneRenderer implements Renderer {
 		if (nextSceneContext == null) {
 //			loadSceneInternal(scene);
 //			if (nextSceneContext == null)
-				return; // Return early if scene loading failed
+			return; // Return early if scene loading failed
 		}
 
 		lightManager.loadSceneLights(nextSceneContext, root.sceneContext);
@@ -1878,6 +1945,23 @@ public class ZoneRenderer implements Renderer {
 
 		ctx.zones = nextZones;
 		nextZones = null;
+
+		HashMap<Integer, Integer> waterLevelPrevalence = new HashMap<>();
+		for (int x = 0; x < EXTENDED_SCENE_SIZE >> 3; ++x) {
+			for (int z = 0; z < EXTENDED_SCENE_SIZE >> 3; ++z) {
+				Zone zone = ctx.zones[x][z];
+				if (zone.hasWater)
+					waterLevelPrevalence.compute(zone.mostPrevalentWaterLevel, (level, count) -> (count == null ? 0 : count) + 1);
+			}
+		}
+		Map.Entry<Integer, Integer> mostPrevalent = null;
+		for (var entry : waterLevelPrevalence.entrySet())
+			if (mostPrevalent == null || mostPrevalent.getValue() < entry.getValue())
+				mostPrevalent = entry;
+		if (mostPrevalent != null) {
+			ctx.sceneContext.hasWater = true;
+			ctx.sceneContext.waterHeight = -mostPrevalent.getKey();
+		}
 
 		// setup vaos
 		for (int x = 0; x < ctx.zones.length; ++x) {

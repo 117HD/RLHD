@@ -146,7 +146,7 @@ public interface HdPluginConfig extends Config
 	)
 	@Units(Units.PERCENT)
 	@Range(min = 1, max = 200)
-	default int sceneResolutionScale() {
+	default int sceneResolution() {
 		return 100;
 	}
 
@@ -713,18 +713,6 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
-	@ConfigItem(
-		keyName = "underwaterCaustics",
-		name = "Underwater Caustics",
-		description = "Apply underwater lighting effects to imitate sunlight passing through waves on the surface.",
-		position = 11,
-		section = environmentSettings
-	)
-	default boolean underwaterCaustics()
-	{
-		return true;
-	}
-
 	String KEY_WIND_DISPLACEMENT = "windDisplacement";
 	@ConfigItem(
 		keyName = KEY_WIND_DISPLACEMENT,
@@ -749,12 +737,110 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	/*====== Water settings ======*/
+
+	@ConfigSection(
+		name = "Water",
+		description = "Various options which control the appearance of water.",
+		position = 3
+	)
+	String waterSettings = "waterSettings";
+
+	@ConfigItem(
+		keyName = "waterTransparency",
+		name = "Water Transparency",
+		description = "Choose whether water should be transparent. Some water will be opaque regardless of this setting.",
+		position = 1,
+		section = waterSettings
+	)
+	default boolean waterTransparency() {
+		return true;
+	}
+
+	String KEY_PLANAR_REFLECTIONS = "planarReflections";
+	@ConfigItem(
+		keyName = KEY_PLANAR_REFLECTIONS,
+		name = "Water Reflections",
+		description = "Render a reflection for the main water surface in the scene.<br><b>GPU intensive</b>.",
+		position = 2,
+		section = waterSettings
+	)
+	default boolean enablePlanarReflections() {
+		return true;
+	}
+
+	String KEY_WATER_REFLECTION_RESOLUTION = "waterReflectionResolution";
+	@ConfigItem(
+		keyName = KEY_WATER_REFLECTION_RESOLUTION,
+		name = "Reflection Resolution",
+		description =
+			"Render water reflections at a different resolution.<br>" +
+			"50% is better for performance, but produces more shimmering artifacts.<br>" +
+			"Resolutions above 100% may improve visual quality, at the expense of performance.",
+		position = 3,
+		section = waterSettings
+	)
+	@Units(Units.PERCENT)
+	@Range(min = 1, max = 200)
+	default int waterReflectionResolution() {
+		return 100;
+	}
+
+	@ConfigItem(
+		keyName = "shorelineCaustics",
+		name = "Shoreline Caustics",
+		description = "Imitate sunlight passing through waves on the water surface near shorelines.",
+		position = 4,
+		section = waterSettings
+	)
+	default boolean shorelineCaustics() {
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "underwaterCaustics",
+		name = "Underwater Caustics",
+		description =
+			"Imitate sunlight passing through waves on the surface in underwater environments.<br>" +
+			"This applies for example when diving and in Guardians of the Rift.",
+		position = 5,
+		section = waterSettings
+	)
+	default boolean underwaterCaustics() {
+		return true;
+	}
+
+	String KEY_WATER_FOAM = "waterFoam";
+	@ConfigItem(
+		keyName = KEY_WATER_FOAM,
+		name = "Foam",
+		description = "Add foam around the edges of water bodies.",
+		position = 6,
+		section = waterSettings
+	)
+	default boolean enableWaterFoam() {
+		return true;
+	}
+
+	String KEY_LEGACY_WATER = "legacyWater";
+	@ConfigItem(
+		keyName = KEY_LEGACY_WATER,
+		name = "Legacy Water",
+		description = "Use the water style which was included in the initial release of the plugin.",
+		position = 7,
+		section = waterSettings
+	)
+	default boolean legacyWater() {
+		return false;
+	}
+
+
 	/*====== Model caching settings ======*/
 
 	@ConfigSection(
 		name = "Model caching",
 		description = "Improve performance by reusing model data",
-		position = 3,
+		position = 4,
 		closedByDefault = true
 	)
 	String modelCachingSettings = "modelCachingSettings";
@@ -813,7 +899,7 @@ public interface HdPluginConfig extends Config
 	@ConfigSection(
 		name = "Miscellaneous",
 		description = "Miscellaneous settings",
-		position = 4,
+		position = 5,
 		closedByDefault = true
 	)
 	String miscellaneousSettings = "miscellaneousSettings";

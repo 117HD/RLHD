@@ -1059,6 +1059,31 @@
     ]
   },
   {
+    "description": "Hide objects causing issues with water reflections, such as grapple shortcuts",
+    "objectIds": [ "XBOWS_INV_FLOOR" ],
+    "hide": true
+  },
+  {
+    "description": "Hide black boxes in God Wars Dungeon messing up the water reflection",
+    "objectIds": [ "CAVEWALL_TOP_SUPERBLACK" ],
+    "hideInAreas": [
+      [ 2899, 5301, 2911, 5311 ]
+    ]
+  },
+  {
+    "description": "Godwars waterfall replace cyan water",
+    "objectIds": [
+      "GODWARS_WATERFALL_TOP_OFFSET"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 33",
+        "baseMaterial": "TRANSPARENT",
+        "uvType": "MODEL_XY"
+      }
+    ]
+  },
+  {
     "description": "Kourend - Hosidius - Apple Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -25959,6 +25984,9 @@
       "WATERFALL_OVERLAY_1_BRIGHTER",
       "MYARM_WATER_MOVING_1",
       "FAIRY2_WATERFALL_BOTTOM"
+    ],
+    "hideInAreas": [
+      "SHIP_SAILING"
     ]
   },
   {

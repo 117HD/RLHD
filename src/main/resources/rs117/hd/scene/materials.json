@@ -21,6 +21,12 @@
     "name": "CAUSTICS_MAP"
   },
   {
+    "name": "LEGACY_WATER_NORMAL_MAP_1"
+  },
+  {
+    "name": "LEGACY_WATER_NORMAL_MAP_2"
+  },
+  {
     "name": "WATER_NORMAL_MAP_1"
   },
   {
@@ -557,28 +563,28 @@
   },
   {
     "name": "FOG_VERY_SLOW",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 99
+    "vanillaTextureIndex": 99,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_SLOW",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 100
+    "vanillaTextureIndex": 100,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_MEDIUM",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 101
+    "vanillaTextureIndex": 101,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_FAST",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 102
+    "vanillaTextureIndex": 102,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_VERY_FAST",
-    "parent": "FOG_STATIC",
-    "vanillaTextureIndex": 103
+    "vanillaTextureIndex": 103,
+    "parent": "FOG_STATIC"
   },
   {
     "name": "FOG_LIGHT_STATIC",
@@ -587,28 +593,28 @@
   },
   {
     "name": "FOG_LIGHT_VERY_SLOW",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 105
+    "vanillaTextureIndex": 105,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_SLOW",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 106
+    "vanillaTextureIndex": 106,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_MEDIUM",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 107
+    "vanillaTextureIndex": 107,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_FAST",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 108
+    "vanillaTextureIndex": 108,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_LIGHT_VERY_FAST",
-    "parent": "FOG_LIGHT_STATIC",
-    "vanillaTextureIndex": 109
+    "vanillaTextureIndex": 109,
+    "parent": "FOG_LIGHT_STATIC"
   },
   {
     "name": "FOG_HEAVY_STATIC",
@@ -617,28 +623,28 @@
   },
   {
     "name": "FOG_HEAVY_VERY_SLOW",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 111
+    "vanillaTextureIndex": 111,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_SLOW",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 112
+    "vanillaTextureIndex": 112,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_MEDIUM",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 113
+    "vanillaTextureIndex": 113,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_FAST",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 114
+    "vanillaTextureIndex": 114,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "FOG_HEAVY_VERY_FAST",
-    "parent": "FOG_HEAVY_STATIC",
-    "vanillaTextureIndex": 115
+    "vanillaTextureIndex": 115,
+    "parent": "FOG_HEAVY_STATIC"
   },
   {
     "name": "SKULLS",

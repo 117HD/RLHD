@@ -237,6 +237,23 @@
     "duration": 1.6
   },
   {
+    "name": "CYAN_WATER"
+  },
+  {
+    "name": "GREEN_CAVE_WATER",
+    "flat": true,
+    "specularStrength": 0.1,
+    "specularGloss": 100.0,
+    "normalStrength": 0.05,
+    "baseOpacity": 0.8,
+    "fresnelAmount": 0.3,
+    "surfaceColor": "#172114",
+    "foamColor": "#737865",
+    "depthColor": "#29521a",
+    "duration": 1.2,
+    "fishingSpotRecolor": 23454
+  },
+  {
     "name": "CAVE_WATER",
     "specularStrength": 0.2,
     "specularGloss": 100.0,

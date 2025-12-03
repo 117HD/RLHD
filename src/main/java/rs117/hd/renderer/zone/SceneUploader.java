@@ -249,6 +249,9 @@ class SceneUploader {
 		this.basex = (mzx - (ctx.sceneOffset >> 3)) << 10;
 		this.basez = (mzz - (ctx.sceneOffset >> 3)) << 10;
 
+		// Initialize array for counting the most prevalent water level
+		ctx.waterHeightCounters = new int[10000]; // Probably large enough
+
 		Tile[][][] tiles = ctx.scene.getExtendedTiles();
 		for (int level = 0; level < MAX_Z; level++) {
 			for (int xoff = 0; xoff < 8; ++xoff) {
@@ -261,6 +264,19 @@ class SceneUploader {
 				}
 			}
 		}
+
+		// Find the most prevalent water height
+		int mostPrevalentIndex = 0;
+		int mostPrevalentCount = 0;
+		for (int i = 0; i < ctx.waterHeightCounters.length; i++) {
+			int count = ctx.waterHeightCounters[i];
+			if (count > mostPrevalentCount) {
+				mostPrevalentIndex = i;
+				mostPrevalentCount = count;
+			}
+		}
+		zone.mostPrevalentWaterLevel = -mostPrevalentIndex;
+		ctx.waterHeightCounters = null;
 	}
 
 	private void estimateZoneTileSize(ZoneSceneContext ctx, Zone z, Tile t) {
@@ -830,6 +846,13 @@ class SceneUploader {
 
 			if (seColor == 0 && nwColor == 0 && (neColor == 0 || swColor == 0))
 				swColor = seColor = nwColor = neColor = 1 << 16; // Bias depth a bit if it's flush with underwater geometry
+
+			// Increment the corresponding water height value in array which tracks frequency
+			int i = Math.abs(swHeight);
+			// Grow if we need to (probably won't)
+			if (i >= ctx.waterHeightCounters.length && i < 1e6)
+				ctx.waterHeightCounters = slice(ctx.waterHeightCounters, 0, ctx.waterHeightCounters.length * 2);
+			ctx.waterHeightCounters[i]++;
 		} else {
 			// Underwater geometry
 			swColor = seColor = neColor = nwColor = UNDERWATER_HSL;
@@ -846,6 +869,17 @@ class SceneUploader {
 			int seDepth = ctx.vertexUnderwaterDepth.getOrDefault(seVertexKey, 0);
 			int nwDepth = ctx.vertexUnderwaterDepth.getOrDefault(nwVertexKey, 0);
 			int neDepth = ctx.vertexUnderwaterDepth.getOrDefault(neVertexKey, 0);
+
+			// Clamp underwater terrain to the edge of the scene
+			if (tileExX == ctx.sceneEdge0)
+				swDepth = nwDepth = 0;
+			if (tileExY == ctx.sceneEdge0)
+				swDepth = seDepth = 0;
+			if (tileExX == ctx.sceneEdge1)
+				seDepth = neDepth = 0;
+			if (tileExY == ctx.sceneEdge1)
+				nwDepth = neDepth = 0;
+
 			swHeight += swDepth;
 			seHeight += seDepth;
 			nwHeight += nwDepth;
@@ -959,6 +993,10 @@ class SceneUploader {
 		var sceneLoc = tile.getSceneLocation();
 		int tileX = sceneLoc.getX();
 		int tileY = sceneLoc.getY();
+
+		boolean isEdge =
+			Math.min(tileExX, tileExY) == ctx.sceneEdge0 ||
+			Math.max(tileExX, tileExY) == ctx.sceneEdge1;
 
 		for (int face = 0; face < faceCount; ++face) {
 			int colorA = triangleColorA[face];
@@ -1114,16 +1152,32 @@ class SceneUploader {
 					);
 				}
 
-				int depthA = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0);
-				int depthB = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0);
-				int depthC = ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0);
-				ly0 += depthA;
-				ly1 += depthB;
-				ly2 += depthC;
+				int[] depths = {
+					ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyA, 0),
+					ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyB, 0),
+					ctx.vertexUnderwaterDepth.getOrDefault(vertexKeyC, 0)
+				};
+				;
+				// Clamp underwater terrain to the edge of the scene
+				if (isEdge) {
+					for (int i = 0; i < 3; i++) {
+						if (tileExX == ctx.sceneEdge0 && localVertices[i][0] == 0)
+							depths[i] = 0;
+						if (tileExY == ctx.sceneEdge0 && localVertices[i][1] == 0)
+							depths[i] = 0;
+						if (tileExX == ctx.sceneEdge1 && localVertices[i][0] == LOCAL_TILE_SIZE)
+							depths[i] = 0;
+						if (tileExY == ctx.sceneEdge1 && localVertices[i][1] == LOCAL_TILE_SIZE)
+							depths[i] = 0;
+					}
+				}
+				ly0 += depths[0];
+				ly1 += depths[1];
+				ly2 += depths[2];
 
-				terrainDataA = HDUtils.packTerrainData(true, max(1, depthA), waterType, tileZ);
-				terrainDataB = HDUtils.packTerrainData(true, max(1, depthB), waterType, tileZ);
-				terrainDataC = HDUtils.packTerrainData(true, max(1, depthC), waterType, tileZ);
+				terrainDataA = HDUtils.packTerrainData(true, max(1, depths[0]), waterType, tileZ);
+				terrainDataB = HDUtils.packTerrainData(true, max(1, depths[1]), waterType, tileZ);
+				terrainDataC = HDUtils.packTerrainData(true, max(1, depths[2]), waterType, tileZ);
 			}
 
 			if (ctx.vertexIsOverlay.containsKey(vertexKeyA) && ctx.vertexIsUnderlay.containsKey(vertexKeyA))
