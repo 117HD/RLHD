@@ -110,7 +110,7 @@ import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
 import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.utils.ColorUtils;
-import rs117.hd.utils.DeveloperTools;
+import rs117.hd.utils.tooling.DeveloperToolManager;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.GsonUtils;
 import rs117.hd.utils.HDUtils;
@@ -257,7 +257,7 @@ public class HdPlugin extends Plugin {
 	private NpcDisplacementCache npcDisplacementCache;
 
 	@Inject
-	private DeveloperTools developerTools;
+	private DeveloperToolManager developerToolManager;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -578,7 +578,7 @@ public class HdPlugin extends Plugin {
 				}
 
 				updateCachedConfigs();
-				developerTools.activate();
+				developerToolManager.activate();
 
 				setupSyncMode();
 				initializeVaos();
@@ -657,7 +657,7 @@ public class HdPlugin extends Plugin {
 			client.setExpandedMapLoading(0);
 
 			asyncUICopy.complete();
-			developerTools.deactivate();
+			developerToolManager.deactivate();
 			tileOverrideManager.shutDown();
 			groundMaterialManager.shutDown();
 			modelOverrideManager.shutDown();
@@ -1384,9 +1384,8 @@ public class HdPlugin extends Plugin {
 	}
 
 	public void drawUi(int overlayColor) {
-		if (uiResolution == null || developerTools.isHideUiEnabled() && hasLoggedIn)
+		if (uiResolution == null || developerToolManager.isHideUiEnabled() && hasLoggedIn)
 			return;
-
 		// Fix vanilla bug causing the overlay to remain on the login screen in areas like Fossil Island underwater
 		if (client.getGameState().getState() < GameState.LOADING.getState())
 			overlayColor = 0;
@@ -1803,7 +1802,7 @@ public class HdPlugin extends Plugin {
 
 	@Subscribe(priority = -1) // Run after the low detail plugin
 	public void onBeforeRender(BeforeRender beforeRender) {
-		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
+		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || frameTimer.isActive();
 
 		// Upload the UI which we began copying during the previous frame
 		if (configAsyncUICopy)
