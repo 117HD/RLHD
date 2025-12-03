@@ -179,7 +179,7 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoO;
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
-	private VAO.VAOList vaoPOShadow;
+	private VAO.VAOList vaoShadow;
 
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -296,15 +296,15 @@ public class ZoneRenderer implements Renderer {
 		vaoO = new VAO.VAOList(eboAlpha);
 		vaoA = new VAO.VAOList(eboAlpha);
 		vaoPO = new VAO.VAOList(eboAlpha);
-		vaoPOShadow = new VAO.VAOList(eboAlpha);
+		vaoShadow = new VAO.VAOList(eboAlpha);
 	}
 
 	private void destroyBuffers() {
 		vaoO.free();
 		vaoA.free();
 		vaoPO.free();
-		vaoPOShadow.free();
-		vaoO = vaoA = vaoPO = vaoPOShadow = null;
+		vaoShadow.free();
+		vaoO = vaoA = vaoPO = vaoShadow = null;
 
 		if (eboAlpha != 0)
 			glDeleteBuffers(eboAlpha);
@@ -344,7 +344,7 @@ public class ZoneRenderer implements Renderer {
 			Scene topLevel = client.getScene();
 			vaoO.addRange(topLevel);
 			vaoPO.addRange(topLevel);
-			vaoPOShadow.addRange(topLevel);
+			vaoShadow.addRange(topLevel);
 		}
 	}
 
@@ -1038,7 +1038,7 @@ public class ZoneRenderer implements Renderer {
 			case DrawCallbacks.PASS_OPAQUE:
 				vaoO.addRange(scene);
 				vaoPO.addRange(scene);
-				vaoPOShadow.addRange(scene);
+				vaoShadow.addRange(scene);
 
 				if (scene.getWorldViewId() == -1) {
 					directionalCmd.SetShader(fastShadowProgram);
@@ -1051,10 +1051,10 @@ public class ZoneRenderer implements Renderer {
 
 					vaoPO.unmap();
 
-					// Draw player shadows
-					vaoPOShadow.unmap();
-					vaoPOShadow.drawAll(directionalCmd);
-					vaoPOShadow.resetAll();
+					// Draw shadow-only models
+					vaoShadow.unmap();
+					vaoShadow.drawAll(directionalCmd);
+					vaoShadow.resetAll();
 
 					// Draw players opaque, without depth writes
 					sceneCmd.DepthMask(false);
@@ -1149,25 +1149,47 @@ public class ZoneRenderer implements Renderer {
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
+		VAO o = vaoO.get(size, ctx.vboM);
+
 		boolean hasAlpha = m.getFaceTransparencies() != null;
 		if (hasAlpha) {
-			VAO o = vaoO.get(size, ctx.vboM);
 			VAO a = vaoA.get(size, ctx.vboM);
 			int start = a.vbo.vb.position();
 
 			if (zone.inSceneFrustum) {
-				facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				try {
+					facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
+				} catch (Exception ex) {
+					log.debug("error drawing entity", ex);
+				}
+
+				if (plugin.configShadowsEnabled) {
+					// Since priority sorting of models includes back-face culling,
+					// we need to upload the entire model again for shadows
+					VAO vao = vaoShadow.get(size, ctx.vboM);
+					sceneUploader.uploadTempModel(
+						m,
+						modelOverride,
+						preOrientation,
+						orient,
+						x, y, z,
+						vao.vbo.vb,
+						vao.vbo.vb
+					);
+				}
 			} else {
 				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, a.vbo.vb);
 			}
 
 			int end = a.vbo.vb.position();
 			if (end > start) {
+				// level is checked prior to this callback being run, in order to cull clickboxes, but
+				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
+				int plane = Math.min(maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
-				zone.addTempAlphaModel(a.vao, start, end, tileObject.getPlane(), x & 1023, y, z & 1023);
+				zone.addTempAlphaModel(a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			VAO o = vaoO.get(size, ctx.vboM);
 			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, o.vbo.vb, o.vbo.vb);
 		}
 	}
@@ -1246,7 +1268,7 @@ public class ZoneRenderer implements Renderer {
 			if (zone.inShadowFrustum) {
 				// Since priority sorting of models includes back-face culling,
 				// we need to upload the entire model again for shadows
-				VAO o = vaoPOShadow.get(size, ctx.vboM);
+				VAO o = vaoShadow.get(size, ctx.vboM);
 				sceneUploader.uploadTempModel(
 					m,
 					modelOverride,

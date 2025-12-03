@@ -585,8 +585,8 @@ class Zone {
 		int pitchSin = SINE[camera.getFixedPitch()];
 		int pitchCos = COSINE[camera.getFixedPitch()];
 		for (AlphaModel m : alphaModels) {
-			if ((m.flags & AlphaModel.SKIP) != 0) continue;
-			if (m.level != level) continue;
+			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
+				continue;
 
 			if (level < minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
 				continue;
@@ -621,8 +621,8 @@ class Zone {
 
 			Arrays.fill(distanceFaceCount, 0, diameter, (char) 0);
 
-			char bufferIdx = 0;
-			for (int packed : packedFaces) {
+			for (int i = 0; i < packedFaces.length; ++i) {
+				int packed = packedFaces[i];
 				int x = packed >> 21;
 				int y = (packed << 11) >> 22;
 				int z = (packed << 21) >> 21;
@@ -632,10 +632,10 @@ class Zone {
 				fz += radius;
 
 				assert fz >= 0 && fz < diameter : fz;
-				distanceToFaces[fz][distanceFaceCount[fz]++] = bufferIdx++;
+				distanceToFaces[fz][distanceFaceCount[fz]++] = (char) i;
 			}
 
-			ZoneRenderer.eboAlphaStaging.ensureCapacity(bufferIdx * 3);
+			ZoneRenderer.eboAlphaStaging.ensureCapacity(packedFaces.length * 3);
 
 			byte[] faceRenderPriorities = m.renderPriorities;
 			final int start = m.startpos / (VERT_SIZE >> 2); // ints to verts
