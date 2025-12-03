@@ -30,7 +30,6 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
-import rs117.hd.HdPlugin;
 import rs117.hd.renderer.legacy.LegacySceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -71,9 +70,6 @@ public class ProceduralGenerator {
 			/* 10 */ { true, true, true, false, false, false },
 			/* 11 */ { true, true, false, false, false, false },
 		};
-
-	@Inject
-	private HdPlugin plugin;
 
 	@Inject
 	private TileOverrideManager tileOverrideManager;
@@ -826,7 +822,7 @@ public class ProceduralGenerator {
 		if (waterType == WaterType.NONE) {
 			if (130 <= textureId && textureId <= 189 || textureId == 208) {
 				// New sailing water textures
-				waterType = waterTypeManager.get(String.format("VANILLA_%d", textureId));
+				waterType = waterTypeManager.getFallback(textureId);
 			} else {
 				switch (textureId) {
 					case 1:
@@ -898,7 +894,7 @@ public class ProceduralGenerator {
 	}
 
 	private static int[][] tileVertices(SceneContext ctx, Tile tile) {
-		int[][] vertices = new int[][] {new int[3], new int[3], new int[3], new int[3]};
+		int[][] vertices = new int[4][3];
 		tileVertices(ctx, tile, vertices);
 		return vertices;
 	}
@@ -935,7 +931,7 @@ public class ProceduralGenerator {
 
 	private static int[][] faceVertices(Tile tile, int face)
 	{
-		int[][] vertices = new int[][] {new int[3], new int[3], new int[3]};
+		int[][] vertices = new int[3][3];
 		faceVertices(tile, face, vertices);
 		return vertices;
 	}
@@ -963,17 +959,17 @@ public class ProceduralGenerator {
 	}
 
 	public static int[][] faceLocalVertices(Tile tile, int face) {
-		int[][] vertices = new int[][] {new int[3], new int[3], new int[3]};
+		int[][] vertices = new int[3][3];
 		faceLocalVertices(tile, face, vertices);
 		return vertices;
 	}
 
 	/**
 	 * Gets the vertex keys of a Tile Paint tile for use in retrieving data from hashmaps.
+	 * Writes the vertex keys in following order: SW, SE, NW, NE
 	 *
 	 * @param ctx that the tile is from
 	 * @param tile to get the vertex keys of
-	 * @return Vertex keys in following order: SW, SE, NW, NE
 	 */
 	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[][] tileVertices, int[] vertexHashes)
 	{
@@ -984,7 +980,7 @@ public class ProceduralGenerator {
 
 	public static void tileVertexKeys(SceneContext ctx, Tile tile, int[] vertexHashes)
 	{
-		int[][] vertices = new int[][] {new int[3], new int[3], new int[3], new int[3]};
+		int[][] vertices = new int[4][3];
 		tileVertexKeys(ctx, tile, vertices, vertexHashes);
 	}
 
@@ -1004,7 +1000,7 @@ public class ProceduralGenerator {
 
 	public static int[] faceVertexKeys(Tile tile, int face)
 	{
-		int[][] vertices = new int[][] {new int[3], new int[3], new int[3]};
+		int[][] vertices = new int[3][3];
 		int[] vertexHashes = new int[4];
 		faceVertexKeys(tile, face, vertices, vertexHashes);
 		return vertexHashes;

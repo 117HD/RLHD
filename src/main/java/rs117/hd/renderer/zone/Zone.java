@@ -18,7 +18,6 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
-import rs117.hd.utils.jobs.JobGenericTask;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -63,7 +62,6 @@ public class Zone {
 	public boolean needsRoofUpdate; // whether the zone needs to have its roofs updated during scene swap
 	public boolean rebuild; // whether the zone is queued for rebuild
 	public boolean dirty; // whether the zone has temporary modifications
-	public boolean metadataDirty; // whether the zone needs its metadata updating
 	public boolean hasWater; // whether the zone has any water tiles
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
@@ -86,7 +84,6 @@ public class Zone {
 		if (o != null || a != null) {
 			vboM = new VBO(METADATA_SIZE);
 			vboM.initialize(GL_STATIC_DRAW);
-			metadataDirty = true;
 		}
 
 		if (o != null) {
@@ -138,7 +135,7 @@ public class Zone {
 			glVaoA = 0;
 		}
 
-		if(zoneUploadTask != null) {
+		if (zoneUploadTask != null) {
 			zoneUploadTask.release();
 			zoneUploadTask = null;
 		}
@@ -232,7 +229,7 @@ public class Zone {
 	}
 
 	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
-		if (vboM == null || !metadataDirty)
+		if (vboM == null)
 			return;
 
 		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
@@ -243,10 +240,6 @@ public class Zone {
 		vboM.vb.put(baseX);
 		vboM.vb.put(baseZ);
 		vboM.unmap();
-	}
-
-	void setMetadata(WorldViewContext viewContext, int mx, int mz) {
-		setMetadata(viewContext, viewContext.sceneContext, mx, mz);
 	}
 
 	void updateRoofs(Map<Integer, Integer> updates) {
@@ -261,14 +254,14 @@ public class Zone {
 		}
 	}
 
-	private static final int[][] glDrawOffsetPreAlloc = new int[15][];
-	private static final int[][] glDrawLengthPreAlloc = new int[15][];
-
 	private static final int NUM_DRAW_RANGES = 512;
 	private static final int[] drawOff = new int[NUM_DRAW_RANGES];
 	private static final int[] drawEnd = new int[NUM_DRAW_RANGES];
 	private static int drawIdx = 0;
 	private static int[] glDrawOffset, glDrawLength;
+
+	private static final int[][] glDrawOffsetPreAlloc = new int[15][];
+	private static final int[][] glDrawLengthPreAlloc = new int[15][];
 
 	static {
 		for (int i = 0; i < glDrawOffsetPreAlloc.length; ++i) {
@@ -288,7 +281,7 @@ public class Zone {
 			drawEnd[i] -= drawOff[i]; // convert from end pos to length
 		}
 
-		if(drawIdx < glDrawOffsetPreAlloc.length) {
+		if (drawIdx < glDrawOffsetPreAlloc.length) {
 			glDrawOffset = copyTo(glDrawOffsetPreAlloc[drawIdx], drawOff, 0, drawIdx);
 			glDrawLength = copyTo(glDrawLengthPreAlloc[drawIdx], drawEnd, 0, drawIdx);
 		} else {
@@ -393,17 +386,6 @@ public class Zone {
 
 		boolean isTemp() {
 			return packedFaces == null;
-		}
-
-		int distanceSq(int zx, int zz, int cx, int cy, int cz) {
-			int mx = x + ((zx - zofx) << 10);
-			int mz = z + ((zz - zofz) << 10);
-
-			int dx = mx - cx;
-			int dy = y - cy;
-			int dz = mz - cz;
-
-			return dx * dx + dy * dy + dz * dz;
 		}
 	}
 
@@ -605,7 +587,6 @@ public class Zone {
 
 	private Camera alphaSort_Camera;
 	private int alphaSort_zx, alphaSort_zz;
-
 	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt((AlphaModel m) -> {
 		final int cx = (int) alphaSort_Camera.getPositionX();
 		final int cy = (int) alphaSort_Camera.getPositionY();
@@ -619,7 +600,6 @@ public class Zone {
 		alphaSort_Camera = camera;
 		alphaSort_zx = zx;
 		alphaSort_zz = zz;
-
 		alphaModels.sort(alphaSortComparator);
 	}
 

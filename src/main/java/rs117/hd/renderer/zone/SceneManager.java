@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -32,27 +31,19 @@ import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.jobs.JobGenericTask;
-import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.SCENE_SIZE;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.utils.MathUtils.*;
 
-@Singleton
 @Slf4j
+@Singleton
 public class SceneManager {
-	private static final int ZONE_DEFER_DIST_START = 3;
-
 	public static final int MAX_WORLDVIEWS = 4096;
-
 	public static final int NUM_ZONES = EXTENDED_SCENE_SIZE >> 3;
 
-	@Inject
-	private HdPlugin plugin;
-
-	@Inject
-	private HdPluginConfig config;
+	private static final int ZONE_DEFER_DIST_START = 3;
 
 	@Inject
 	private Client client;
@@ -61,25 +52,28 @@ public class SceneManager {
 	private ClientThread clientThread;
 
 	@Inject
-	private ProceduralGenerator proceduralGenerator;
+	private HdPlugin plugin;
 
 	@Inject
-	private EnvironmentManager environmentManager;
-
-	@Inject
-	private NpcDisplacementCache npcDisplacementCache;
+	private HdPluginConfig config;
 
 	@Inject
 	private AreaManager areaManager;
 
 	@Inject
+	private EnvironmentManager environmentManager;
+
+	@Inject
 	private LightManager lightManager;
 
 	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
+	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
-	private JobSystem jobSystem;
+	private NpcDisplacementCache npcDisplacementCache;
+
+	@Inject
+	private FishingSpotReplacer fishingSpotReplacer;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -87,6 +81,7 @@ public class SceneManager {
 	private UBOWorldViews uboWorldViews;
 
 	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
+	@Getter
 	private final WorldViewContext root = new WorldViewContext(this, null, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
 	private final List<SortedZone> sortedZones = new ArrayList<>();
@@ -98,7 +93,7 @@ public class SceneManager {
 	public final ReentrantLock loadingLock = new ReentrantLock();
 
 	public boolean isTopLevelValid() {
-		return root != null && root.sceneContext != null;
+		return root.sceneContext != null;
 	}
 
 	@Nullable
@@ -106,20 +101,17 @@ public class SceneManager {
 		return root.sceneContext;
 	}
 
-	@Nonnull
-	public WorldViewContext getRoot() { return root; }
-
 	public boolean isRoot(WorldViewContext context) { return root == context; }
 
-	public WorldViewContext context(Scene scene) {
-		return context(scene.getWorldViewId());
+	public WorldViewContext getContext(Scene scene) {
+		return getContext(scene.getWorldViewId());
 	}
 
-	public WorldViewContext context(WorldView wv) {
-		return context(wv.getId());
+	public WorldViewContext getContext(WorldView wv) {
+		return getContext(wv.getId());
 	}
 
-	public WorldViewContext context(int worldViewId) {
+	public WorldViewContext getContext(int worldViewId) {
 		if (worldViewId != -1)
 			return subs[worldViewId];
 		if (root.sceneContext == null)
@@ -131,7 +123,7 @@ public class SceneManager {
 		this.uboWorldViews = uboWorldViews;
 	}
 
-	public void shutdown() {
+	public void destroy() {
 		root.free();
 
 		for (int i = 0; i < subs.length; i++) {
@@ -154,14 +146,14 @@ public class SceneManager {
 		updateAreaHiding();
 		frameTimer.end(Timer.UPDATE_AREA_HIDING);
 
-		if(reloadRequested && loadingLock.getHoldCount() == 0) {
+		if (reloadRequested && loadingLock.getHoldCount() == 0) {
 			reloadRequested = false;
 
 			completeAllStreaming();
 			try {
 				loadingLock.lock();
 
-				if(!generateSceneDataTask.isDone())
+				if (!generateSceneDataTask.isDone())
 					generateSceneDataTask.waitForCompletion();
 				generateSceneDataTask.queue();
 
@@ -172,7 +164,6 @@ public class SceneManager {
 
 				root.sceneLoadGroup.complete();
 				root.streamingGroup.complete();
-
 			} finally {
 				loadingLock.unlock();
 				log.debug("loadingLock unlocked - holdCount: {}", loadingLock.getHoldCount());
@@ -183,9 +174,9 @@ public class SceneManager {
 		boolean queuedWork = root.update(plugin.deltaTime);
 
 		WorldView wv = client.getTopLevelWorldView();
-		if(wv != null) {
+		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
-				WorldViewContext ctx = context(we.getWorldView());
+				WorldViewContext ctx = getContext(we.getWorldView());
 				if (ctx != null) {
 					anyScenesLoading = anyScenesLoading || ctx.isLoading;
 					queuedWork = ctx.update(plugin.deltaTime) || queuedWork;
@@ -193,13 +184,13 @@ public class SceneManager {
 			}
 		}
 
-		if(plugin.isInHouse && queuedWork)
+		if (plugin.isInHouse && queuedWork)
 			root.streamingGroup.complete();
 	}
 
 	private void updateAreaHiding() {
 		Player localPlayer = client.getLocalPlayer();
-		if(!isTopLevelValid() || localPlayer == null || root.isLoading)
+		if (!isTopLevelValid() || localPlayer == null || root.isLoading)
 			return;
 
 		var lp = localPlayer.getLocalLocation();
@@ -259,17 +250,17 @@ public class SceneManager {
 				subs[worldViewId].free();
 				subs[worldViewId] = null;
 			}
-		} else if(worldViewId == root.worldViewId) {
+		} else if (worldViewId == root.worldViewId) {
 			root.free();
 		}
 	}
 
 	public void reloadScene() {
-		if(!plugin.isActive() || reloadRequested)
+		if (!plugin.isActive() || reloadRequested)
 			return;
 
 		reloadRequested = true;
-		log.debug("Reload scene requested");
+		log.debug("Scene reload requested");
 	}
 
 	public boolean isLoadingScene() { return nextSceneContext != null; }
@@ -279,9 +270,9 @@ public class SceneManager {
 		root.streamingGroup.complete();
 
 		WorldView wv = client.getTopLevelWorldView();
-		if(wv != null) {
+		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
-				WorldViewContext ctx = context(we.getWorldView());
+				WorldViewContext ctx = getContext(we.getWorldView());
 				if (ctx != null) {
 					ctx.sceneLoadGroup.complete();
 					ctx.streamingGroup.complete();
@@ -291,12 +282,12 @@ public class SceneManager {
 	}
 
 	public void invalidateZone(Scene scene, int zx, int zz) {
-		WorldViewContext ctx = context(scene);
+		WorldViewContext ctx = getContext(scene);
 		if (ctx == null)
 			return;
 
 		Zone zone = ctx.zones[zx][zz];
-		if(zone.rebuild)
+		if (zone.rebuild)
 			return;
 
 		zone.rebuild = true;
@@ -323,17 +314,13 @@ public class SceneManager {
 	@Getter
 	private final JobGenericTask generateSceneDataTask = JobGenericTask.build(
 		"ProceduralGenerator::generateSceneData",
-		(task) -> {
-			proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext);
-		}
+		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext)
 	);
 
 	@Getter
 	private final JobGenericTask loadSceneLightsTask = JobGenericTask.build(
 		"lightManager::loadSceneLights",
-		(task) -> {
-			lightManager.loadSceneLights(nextSceneContext, root.sceneContext);
-		}
+		(task) -> lightManager.loadSceneLights(nextSceneContext, root.sceneContext)
 	);
 
 	private final JobGenericTask calculateRoofChangesTask = JobGenericTask.build(
@@ -581,7 +568,7 @@ public class SceneManager {
 		calculateRoofChangesTask.waitForCompletion();
 
 		WorldViewContext ctx = root;
-		if(!nextRoofChanges.isEmpty()) {
+		if (!nextRoofChanges.isEmpty()) {
 			for (int x = 0; x < ctx.sizeX; ++x) {
 				for (int z = 0; z < ctx.sizeZ; ++z) {
 					Zone zone = nextZones[x][z];
@@ -608,13 +595,13 @@ public class SceneManager {
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
-		if(plugin.isInHouse)
+		if (plugin.isInHouse)
 			root.streamingGroup.complete();
 
 		int totalOpaque = 0;
 		int totalAlpha = 0;
-		for(int x = 0; x < NUM_ZONES; ++x) {
-			for(int z = 0; z < NUM_ZONES; ++z) {
+		for (int x = 0; x < NUM_ZONES; ++x) {
+			for (int z = 0; z < NUM_ZONES; ++z) {
 				totalOpaque += nextZones[x][z].bufLen;
 				totalAlpha += nextZones[x][z].bufLenA;
 			}
@@ -623,9 +610,15 @@ public class SceneManager {
 		root.uploadTime = sw.elapsed(TimeUnit.NANOSECONDS) - sceneUploadTimeStart;
 		log.debug(
 			"upload time {} reused {} deferred {} map {} sceneLoad {} len opaque {} size opaque {} KiB len alpha {} size alpha {} KiB",
-			TimeUnit.MILLISECONDS.convert(root.uploadTime, TimeUnit.NANOSECONDS), nextSceneContext.totalReused, nextSceneContext.totalDeferred, nextSceneContext.totalMapZones, blockingCount,
-			totalOpaque, ((long) totalOpaque * Zone.VERT_SIZE * 3) / KiB,
-			totalAlpha, ((long) totalAlpha * Zone.VERT_SIZE * 3) / KiB
+			TimeUnit.MILLISECONDS.convert(root.uploadTime, TimeUnit.NANOSECONDS),
+			nextSceneContext.totalReused,
+			nextSceneContext.totalDeferred,
+			nextSceneContext.totalMapZones,
+			blockingCount,
+			totalOpaque,
+			(totalOpaque * Zone.VERT_SIZE * 3L) / KiB,
+			totalAlpha,
+			(totalAlpha * Zone.VERT_SIZE * 3L) / KiB
 		);
 
 		for (int x = 0; x < ctx.sizeX; ++x) {
@@ -689,7 +682,7 @@ public class SceneManager {
 		final WorldViewContext ctx = new WorldViewContext(this, worldView, sceneContext, uboWorldViews);
 		subs[worldViewId] = ctx;
 
-		for(int x = 0; x <  ctx.sizeX; ++x)
+		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
 				ZoneUploadTask.build(ctx, sceneContext, ctx.zones[x][z], x, z)
 					.setExecuteAsync(plugin.configZoneStreaming)
@@ -699,7 +692,7 @@ public class SceneManager {
 	}
 
 	private void swapSubScene(Scene scene) {
-		WorldViewContext ctx = context(scene);
+		WorldViewContext ctx = getContext(scene);
 		if (ctx == null)
 			return;
 
@@ -721,7 +714,7 @@ public class SceneManager {
 
 		public static SortedZone getZone(Zone zone, int x, int z, float dist) {
 			SortedZone sorted = POOL.poll();
-			if(sorted == null)
+			if (sorted == null)
 				sorted = new SortedZone();
 			sorted.zone = zone;
 			sorted.x = x;

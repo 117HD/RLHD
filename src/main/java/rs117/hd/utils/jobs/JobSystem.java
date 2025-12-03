@@ -81,7 +81,7 @@ public final class JobSystem {
 		return workQueue.size();
 	}
 
-	public void shutdown() {
+	public void destroy() {
 		active = false;
 		workQueue.clear();
 

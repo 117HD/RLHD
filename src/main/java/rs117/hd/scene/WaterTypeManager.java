@@ -25,7 +25,7 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.Arrays;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.extern.slf4j.Slf4j;
@@ -39,6 +39,7 @@ import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Slf4j
@@ -67,10 +68,9 @@ public class WaterTypeManager {
 
 	public static WaterType[] WATER_TYPES = {};
 
-	private HashMap<String, Integer> nameToWaterTypeIdx = new HashMap<>();
-
 	public UBOWaterTypes uboWaterTypes;
 
+	private WaterType[] fallbackWaterTypes = {};
 	private FileWatcher.UnregisterCallback fileWatcher;
 
 	public void startUp() {
@@ -89,10 +89,23 @@ public class WaterTypeManager {
 				System.arraycopy(rawWaterTypes, 0, waterTypes, 1, rawWaterTypes.length);
 
 				Material fallbackNormalMap = materialManager.getMaterial("WATER_NORMAL_MAP_1");
-				nameToWaterTypeIdx.clear();
+				int maxFallback = -1;
 				for (int i = 0; i < waterTypes.length; i++) {
 					waterTypes[i].normalize(i, fallbackNormalMap);
-					nameToWaterTypeIdx.put(waterTypes[i].name, i);
+					if (waterTypes[i].vanillaTextureIndex > -1)
+						maxFallback = max(maxFallback, waterTypes[i].vanillaTextureIndex);
+				}
+				if (maxFallback > -1) {
+					maxFallback = min(maxFallback, Short.MAX_VALUE);
+					fallbackWaterTypes = new WaterType[maxFallback];
+					Arrays.fill(fallbackWaterTypes, WaterType.NONE);
+					for (var waterType : waterTypes) {
+						int i = waterType.vanillaTextureIndex;
+						if (0 <= i && i < fallbackWaterTypes.length)
+							fallbackWaterTypes[i] = waterType;
+					}
+				} else {
+					fallbackWaterTypes = new WaterType[0];
 				}
 
 				var oldWaterTypes = WATER_TYPES;
@@ -156,8 +169,16 @@ public class WaterTypeManager {
 		startUp();
 	}
 
-	public WaterType get(String name) {
-		int index = nameToWaterTypeIdx.getOrDefault(name, -1);
-		return index != -1 ? WATER_TYPES[index] : WaterType.NONE;
+	private WaterType get(String name) {
+		for (var type : WATER_TYPES)
+			if (name.equals(type.name))
+				return type;
+		return WaterType.NONE;
+	}
+
+	public WaterType getFallback(int vanillaTextureId) {
+		if (vanillaTextureId < 0 || vanillaTextureId >= fallbackWaterTypes.length)
+			return WaterType.NONE;
+		return fallbackWaterTypes[vanillaTextureId];
 	}
 }

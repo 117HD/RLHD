@@ -175,7 +175,11 @@ public class Camera {
 	}
 
 	public float distanceTo(float x, float y, float z) {
-		return distance(position, vec(x, y, z));
+		return sqrt(position[0] * x + position[1] * y + position[2] * z);
+	}
+
+	public float squaredDistanceTo(float x, float y, float z) {
+		return position[0] * x + position[1] * y + position[2] * z;
 	}
 
 	public Camera translate(float[] translation) {

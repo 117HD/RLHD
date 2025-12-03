@@ -179,10 +179,6 @@ public final class HDUtils {
 		return orientation % 2048;
 	}
 
-	public static int extendedCoordToIndex(int tileX, int tileY, int plane) {
-		return (plane * EXTENDED_SCENE_SIZE * EXTENDED_SCENE_SIZE) + (tileX * EXTENDED_SCENE_SIZE) + tileY;
-	}
-
 	/**
 	 * Returns the south-west coordinate of the scene in world coordinates, after resolving instance template
 	 * chunks to their original world coordinates. If the scene is instanced, the base coordinates are computed from
@@ -439,10 +435,10 @@ public final class HDUtils {
 		for (int i = 1; i < stackTrace.length; i++)
 			sb.append(stackTrace[i].toString()).append("\n");
 
-		if(sb.length() == 0)
+		if (sb.length() == 0)
 			return;
 
-		if(isWarn) {
+		if (isWarn) {
 			log.warn(sb.toString());
 		} else {
 			log.debug(sb.toString());

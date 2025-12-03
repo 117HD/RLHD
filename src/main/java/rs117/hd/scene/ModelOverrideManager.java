@@ -36,10 +36,10 @@ public class ModelOverrideManager {
 	private GamevalManager gamevalManager;
 
 	@Inject
-	private FishingSpotReplacer fishingSpotReplacer;
+	private SceneManager sceneManager;
 
 	@Inject
-	private SceneManager sceneManager;
+	private FishingSpotReplacer fishingSpotReplacer;
 
 	private final HashMap<Integer, ModelOverride> modelOverrides = new HashMap<>();
 

@@ -33,7 +33,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
-import net.runelite.client.callback.ClientThread;
 import net.runelite.client.callback.RenderCallbackManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.ui.DrawManager;
@@ -65,7 +64,6 @@ import rs117.hd.utils.CommandBuffer;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Mat4;
 import rs117.hd.utils.ModelHash;
-import rs117.hd.utils.NpcDisplacementCache;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GpuIntBuffer;
@@ -95,9 +93,6 @@ public class ZoneRenderer implements Renderer {
 	private Client client;
 
 	@Inject
-	private ClientThread clientThread;
-
-	@Inject
 	private DrawManager drawManager;
 
 	@Inject
@@ -117,17 +112,15 @@ public class ZoneRenderer implements Renderer {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private SceneManager sceneManager;
+
 	@Inject
 	private SceneUploader sceneUploader;
 
 	@Inject
 	private FacePrioritySorter facePrioritySorter;
-
-	@Inject
-	private NpcDisplacementCache npcDisplacementCache;
-
-	@Inject
-	private SceneManager sceneManager;
 
 	@Inject
 	private FrameTimer frameTimer;
@@ -145,12 +138,13 @@ public class ZoneRenderer implements Renderer {
 	private JobSystem jobSystem;
 
 	@Inject
-	public UBOWorldViews uboWorldViews;
+	private UBOWorldViews uboWorldViews;
 
 	private final Camera sceneCamera = new Camera();
 	private final Camera directionalCamera = new Camera().setOrthographic(true);
 	private final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
+	private final int[] worldPos = new int[3];
 	private int minLevel, level, maxLevel;
 	private Set<Integer> hideRoofIds;
 
@@ -162,8 +156,6 @@ public class ZoneRenderer implements Renderer {
 	private VAO.VAOList vaoA;
 	private VAO.VAOList vaoPO;
 	private VAO.VAOList vaoPOShadow;
-
-	private final int[] worldPos = new int[3];
 
 	public static int indirectDrawCmds;
 	public static GpuIntBuffer indirectDrawCmdsStaging;
@@ -190,18 +182,20 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void initialize() {
+		initializeBuffers();
+
 		jobSystem.initialize();
 		uboWorldViews.initialize(UNIFORM_BLOCK_WORLD_VIEWS);
-		initializeBuffers();
 		sceneManager.initialize(uboWorldViews);
 	}
 
 	@Override
 	public void destroy() {
-		sceneManager.shutdown();
 		destroyBuffers();
+
+		jobSystem.destroy();
+		sceneManager.destroy();
 		uboWorldViews.destroy();
-		jobSystem.shutdown();
 	}
 
 	@Override
@@ -279,7 +273,7 @@ public class ZoneRenderer implements Renderer {
 		this.maxLevel = maxLevel;
 		this.hideRoofIds = hideRoofIds;
 
-		WorldViewContext ctx = sceneManager.context(scene);
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx != null && ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.update();
 
@@ -305,7 +299,7 @@ public class ZoneRenderer implements Renderer {
 		if (!sceneManager.isTopLevelValid() || plugin.sceneViewport == null)
 			return;
 
-		WorldViewContext ctx = sceneManager.context(scene);
+		WorldViewContext ctx = sceneManager.getContext(scene);
 
 		frameTimer.begin(Timer.DRAW_FRAME);
 		frameTimer.begin(Timer.DRAW_SCENE);
@@ -685,9 +679,8 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_SCENE);
 		frameTimer.begin(Timer.RENDER_FRAME);
 
-		if (APPLE) {
+		if (APPLE)
 			directionalShadowPass();
-		}
 		drawScene = true;
 
 		// The client only updates animations once per client tick, so we can skip updating geometry buffers,
@@ -847,7 +840,7 @@ public class ZoneRenderer implements Renderer {
 	public void drawZoneOpaque(Projection entityProjection, Scene scene, int zx, int zz) {
 		jobSystem.processPendingClientCallbacks();
 
-		WorldViewContext ctx = sceneManager.context(scene);
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null)
 			return;
 
@@ -876,7 +869,7 @@ public class ZoneRenderer implements Renderer {
 	public void drawZoneAlpha(Projection entityProjection, Scene scene, int level, int zx, int zz) {
 		jobSystem.processPendingClientCallbacks();
 
-		WorldViewContext ctx = sceneManager.context(scene);
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null)
 			return;
 
@@ -941,7 +934,7 @@ public class ZoneRenderer implements Renderer {
 	public void drawPass(Projection projection, Scene scene, int pass) {
 		jobSystem.processPendingClientCallbacks();
 
-		WorldViewContext ctx = sceneManager.context(scene);
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null)
 			return;
 
@@ -1004,7 +997,7 @@ public class ZoneRenderer implements Renderer {
 	) {
 		jobSystem.processPendingClientCallbacks();
 
-		WorldViewContext ctx = sceneManager.context(scene);
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || !renderCallbackManager.drawObject(scene, tileObject))
 			return;
 
@@ -1015,11 +1008,10 @@ public class ZoneRenderer implements Renderer {
 
 		if (sceneManager.isRoot(ctx)) {
 			// Cull based on detail draw distance
-			float modelDist = sceneCamera.distanceTo(x, y, z);
-			float detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
-			if (modelDist > detailDrawDistanceTiles) {
+			float squaredDistance = sceneCamera.squaredDistanceTo(x, y, z);
+			int detailDrawDistanceTiles = plugin.configDetailDrawDistance * LOCAL_TILE_SIZE;
+			if (squaredDistance > detailDrawDistanceTiles * detailDrawDistanceTiles)
 				return;
-			}
 
 			// Hide everything outside the current area if area hiding is enabled
 			if (ctx.sceneContext.currentArea != null) {
@@ -1033,35 +1025,29 @@ public class ZoneRenderer implements Renderer {
 				if (!inArea)
 					return;
 			}
-			if(!zone.initialized)
+
+			if (!zone.initialized)
 				return;
 		}
 
 		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), worldPos);
 		int uuid = ModelHash.generateUuid(client, tileObject.getHash(), r);
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
-		//if (modelOverride.hide)
-		//	return;
+		if (modelOverride.hide)
+			return;
 
 		if (sceneManager.isRoot(ctx)) {
-
 			try (var ignored = frameTimer.begin(Timer.VISIBILITY_CHECK)) {
 				// Additional Culling checks to help reduce dynamic object perf impact when off screen
-				if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows) {
+				if (!zone.inSceneFrustum && zone.inShadowFrustum && !modelOverride.castShadows)
 					return;
-				}
 
-				if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius())) {
+				if (zone.inSceneFrustum && !modelOverride.castShadows && !sceneCamera.intersectsSphere(x, y, z, m.getRadius()))
 					return;
-				}
 
-				if (!zone.inSceneFrustum &&
-					zone.inShadowFrustum &&
-					modelOverride.castShadows &&
-					!directionalShadowCasterVolume.intersectsPoint(x, y, z)
-				) {
+				if (!zone.inSceneFrustum && zone.inShadowFrustum && modelOverride.castShadows &&
+					!directionalShadowCasterVolume.intersectsPoint(x, y, z))
 					return;
-				}
 			}
 		}
 
@@ -1095,7 +1081,7 @@ public class ZoneRenderer implements Renderer {
 	public void drawTemp(Projection worldProjection, Scene scene, GameObject gameObject, Model m, int orientation, int x, int y, int z) {
 		jobSystem.processPendingClientCallbacks();
 
-		WorldViewContext ctx = sceneManager.context(scene);
+		WorldViewContext ctx = sceneManager.getContext(scene);
 		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
@@ -1131,22 +1117,21 @@ public class ZoneRenderer implements Renderer {
 			JobGenericTask shadowUploadTask = null;
 			if (zone.inShadowFrustum) {
 				final VAO o = vaoPOShadow.get(size, ctx.vboM);
-				final JobGenericTask.TaskRunnable uploadFunc = (t) -> {
-					// Since priority sorting of models includes back-face culling,
-					// we need to upload the entire model again for shadows
-					sceneUploader.uploadTempModel(
-						m,
-						modelOverride,
-						preOrientation,
-						orientation,
-						x, y, z,
-						o.vbo.vb,
-						o.vbo.vb
-					);
-				};
 
 				shadowUploadTask = JobGenericTask
-					.build("uploadTempModel", uploadFunc)
+					.build("uploadTempModel", t -> {
+						// Since priority sorting of models includes back-face culling,
+						// we need to upload the entire model again for shadows
+						sceneUploader.uploadTempModel(
+							m,
+							modelOverride,
+							preOrientation,
+							orientation,
+							x, y, z,
+							o.vbo.vb,
+							o.vbo.vb
+						);
+					})
 					.setExecuteAsync(!sceneManager.isRoot(ctx) || zone.inSceneFrustum)
 					.queue(true);
 			}
@@ -1187,7 +1172,7 @@ public class ZoneRenderer implements Renderer {
 				}
 			}
 
-			if(shadowUploadTask != null) {
+			if (shadowUploadTask != null) {
 				shadowUploadTask.waitForCompletion();
 				shadowUploadTask.release();
 			}
@@ -1223,13 +1208,10 @@ public class ZoneRenderer implements Renderer {
 			return;
 		}
 
-		if(drawScene) {
-			if (APPLE) {
-				scenePass();
-			} else {
+		if (drawScene) {
+			if (!APPLE)
 				directionalShadowPass();
-				scenePass();
-			}
+			scenePass();
 		}
 
 		if (sceneFboValid && plugin.sceneResolution != null && plugin.sceneViewport != null) {
@@ -1291,7 +1273,6 @@ public class ZoneRenderer implements Renderer {
 		frameTimer.end(Timer.DRAW_FRAME);
 		frameTimer.end(Timer.RENDER_FRAME);
 		frameTimer.endFrameAndReset();
-//		frameModelInfoMap.clear();
 		checkGLErrors();
 
 		drawScene = false;
@@ -1315,7 +1296,7 @@ public class ZoneRenderer implements Renderer {
 	}
 
 	/// ---------------------
-	///  SCENE MANAGER API 
+	///   SCENE MANAGER API
 	/// ---------------------
 
 	@Override
@@ -1325,10 +1306,8 @@ public class ZoneRenderer implements Renderer {
 
 	@Override
 	public void reloadScene() {
-		if (client.getGameState().getState() < GameState.LOGGED_IN.getState() || !sceneManager.isTopLevelValid())
-			return;
-
-		sceneManager.reloadScene();
+		if (sceneManager.isTopLevelValid() && client.getGameState().getState() >= GameState.LOGGED_IN.getState())
+			sceneManager.reloadScene();
 	}
 
 	@Override

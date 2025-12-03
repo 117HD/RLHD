@@ -56,7 +56,7 @@ public class VBO {
 		}
 		if (buf == null)
 			throw new RuntimeException("unable to map GL buffer " + bufId + " size " + size);
-		if(buf != mappedBuffer) {
+		if (buf != mappedBuffer) {
 			mappedBuffer = buf;
 			vb = mappedBuffer.asIntBuffer();
 		}

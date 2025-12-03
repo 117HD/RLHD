@@ -70,7 +70,7 @@ public class SceneContext {
 	public int[][][] underwaterDepthLevels;
 
 	// Thread safe tile override variables
-	public final ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial( TileOverrideVariables::new);
+	public final ThreadLocal<TileOverrideVariables> tileOverrideVars = ThreadLocal.withInitial(TileOverrideVariables::new);
 
 	public int numVisibleLights = 0;
 	public final ArrayList<Light> lights = new ArrayList<>();

@@ -22,7 +22,6 @@ import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
-import rs117.hd.scene.tile_overrides.TileOverrideVariables;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
@@ -221,7 +220,6 @@ public class TileOverrideManager {
 		return getOverride(sceneContext, tile, worldPos);
 	}
 
-
 	@Nonnull
 	public TileOverride getOverride(SceneContext sceneContext, @Nonnull Tile tile, @Nonnull int[] worldPos, int... ids) {
 		if (ids.length == 0) {
@@ -239,10 +237,10 @@ public class TileOverrideManager {
 		if (override.isConstant())
 			return override;
 
-		final TileOverrideVariables tileOverrideVars = sceneContext.tileOverrideVars.get();
-		tileOverrideVars.setTile(tile);
-		var replacement = override.resolveReplacements(tileOverrideVars);
-		tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
+		var vars = sceneContext.tileOverrideVars.get();
+		vars.setTile(tile);
+		var replacement = override.resolveReplacements(vars);
+		vars.setTile(null); // Avoid accidentally keeping the old scene in memory
 		return replacement;
 	}
 
@@ -253,7 +251,9 @@ public class TileOverrideManager {
 		outer:
 		for (int id : ids) {
 			final var entries = idMatchOverrides.get(id);
-			for (int i = 0; i < entries.size(); i++) { // Enhanced for allocates an iterator
+			// Enhanced for allocates an iterator...
+			// noinspection ForLoopReplaceableByForEach
+			for (int i = 0; i < entries.size(); i++) {
 				final var entry = entries.get(i);
 				final var area = entry.getKey();
 				if (area.containsPoint(worldPos)) {
@@ -277,5 +277,4 @@ public class TileOverrideManager {
 
 		return match;
 	}
-
 }

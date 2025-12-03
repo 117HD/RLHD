@@ -181,20 +181,20 @@ public class HdPlugin extends Plugin {
 
 	public static final float COLOR_FILTER_FADE_DURATION = 500;
 
-	private static final int[] RENDERBUFFER_FORMATS_SRGB = {
+	public static final int[] RENDERBUFFER_FORMATS_SRGB = {
 		GL_SRGB8,
 		GL_SRGB8_ALPHA8 // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
+	public static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
 		GL_SRGB8_ALPHA8 // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR = {
+	public static final int[] RENDERBUFFER_FORMATS_LINEAR = {
 		GL_RGB8,
 		GL_RGBA8,
 		GL_RGB, // should be guaranteed
 		GL_RGBA // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
+	public static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
 		GL_RGBA8,
 		GL_RGBA // should be guaranteed
 	};
@@ -379,7 +379,7 @@ public class HdPlugin extends Plugin {
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
-	public float configDetailDrawDistance;
+	public int configDetailDrawDistance;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -438,6 +438,19 @@ public class HdPlugin extends Plugin {
 	@Provides
 	HdPluginConfig provideConfig(ConfigManager configManager) {
 		return configManager.getConfig(HdPluginConfig.class);
+	}
+
+	@Override
+	public void configure(Binder binder) {
+		// Bind manually constructed instances of singletons to avoid recursive loading issues
+		for (var clazz : LAZY_SINGLETONS) {
+			try {
+				// noinspection unchecked
+				binder.bind((Class<Object>) clazz).toInstance(clazz.getDeclaredConstructor().newInstance());
+			} catch (Exception ex) {
+				throw new RuntimeException("Failed to instantiate singleton " + clazz, ex);
+			}
+		}
 	}
 
 	@Override

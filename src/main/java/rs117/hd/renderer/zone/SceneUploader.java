@@ -48,7 +48,6 @@ import rs117.hd.scene.water_types.WaterType;
 import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.buffer.GpuIntBuffer;
-import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.*;
@@ -71,9 +70,6 @@ public class SceneUploader {
 	private HdPlugin plugin;
 
 	@Inject
-	private Client client;
-
-	@Inject
 	public GamevalManager gamevalManager;
 
 	@Inject
@@ -88,9 +84,6 @@ public class SceneUploader {
 	@Inject
 	public ProceduralGenerator proceduralGenerator;
 
-	@Inject
-	private JobSystem jobSystem;
-
 	private int basex, basez, rid, level;
 
 	private final Set<Integer> roofIds = new HashSet<>();
@@ -103,7 +96,7 @@ public class SceneUploader {
 	private int[][][] tileHeights;
 
 	private final int[] worldPos = new int[3];
-	private final int[][] vertices = new int[][] {new int[3], new int[3], new int[3], new int[3]};
+	private final int[][] vertices = new int[4][3];
 	private final int[] vertexKeys = new int[4];
 	private final float[] workingSpace = new float[9];
 	private final float[] modelUvs = new float[12];
@@ -118,7 +111,7 @@ public class SceneUploader {
 	private final int[] modelLocalZI = new int[MAX_VERTEX_COUNT];
 
 	public void setScene(Scene scene) {
-		if(scene == currentScene) {
+		if (scene == currentScene) {
 			return;
 		}
 
@@ -391,8 +384,8 @@ public class SceneUploader {
 			if (gameObject == null || !gameObject.getSceneMinLocation().equals(t.getSceneLocation()))
 				continue;
 
-			// Detect if GameObject is a temp by checking its hash
-			if(ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
+			// Detect if GameObject is a temp object
+			if (ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
 				continue;
 
 			ModelOverride modelOverride = modelOverrideManager.getOverride(gameObject, worldPos);
@@ -578,8 +571,8 @@ public class SceneUploader {
 			if (gameObject == null || !renderCallbackManager.drawObject(ctx.scene, gameObject))
 				continue;
 
-			// Detect if GameObject is a temp by checking its hash
-			if(ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
+			// Detect if GameObject is a temp object
+			if (ModelHash.getIdOrIndex(gameObject.getHash()) == 0xFFFFFFFF)
 				continue;
 
 			Point min = gameObject.getSceneMinLocation();
@@ -679,14 +672,15 @@ public class SceneUploader {
 			);
 		} catch (Throwable ex) {
 			log.warn(
-					"Error uploading static {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
-					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
-					gamevalManager.getObjectName(id),
-					id,
-					modelOverride.description,
-					opaqueBuffer,
-					alphaBuffer,
-					ex);
+				"Error uploading static {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+				ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+				gamevalManager.getObjectName(id),
+				id,
+				modelOverride.description,
+				opaqueBuffer,
+				alphaBuffer,
+				ex
+			);
 		}
 
 		int alphaEnd = zone.vboA != null ? zone.vboA.vb.position() : 0;

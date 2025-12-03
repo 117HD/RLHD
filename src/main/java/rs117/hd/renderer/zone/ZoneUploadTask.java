@@ -11,9 +11,9 @@ import static rs117.hd.renderer.zone.ZoneRenderer.eboAlpha;
 
 @Slf4j
 public final class ZoneUploadTask extends JobWork {
+	private static final ThreadLocal<AsyncSceneUploader> SCENE_UPLOADER_THREAD_LOCAL =
+		ThreadLocal.withInitial(() -> getInjector().getInstance(AsyncSceneUploader.class));
 	private static final ConcurrentLinkedDeque<ZoneUploadTask> POOL = new ConcurrentLinkedDeque<>();
-
-	private static final ThreadLocal<AsyncSceneUploader> SCENE_UPLOADER_THREAD_LOCAL = ThreadLocal.withInitial(() -> getInjector().getInstance(AsyncSceneUploader.class));
 
 	WorldViewContext viewContext;
 	ZoneSceneContext sceneContext;
@@ -30,7 +30,7 @@ public final class ZoneUploadTask extends JobWork {
 		sceneUploader.setScene(sceneContext.scene);
 		sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
-		if(zone.sizeO > 0 || zone.sizeA > 0) {
+		if (zone.sizeO > 0 || zone.sizeA > 0) {
 			workerHandleCancel();
 
 			invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
@@ -85,7 +85,7 @@ public final class ZoneUploadTask extends JobWork {
 
 	@Override
 	protected void onCancel() {
-		if(viewContext.zones[x][z] != zone)
+		if (viewContext.zones[x][z] != zone)
 			viewContext.pendingCull.add(zone);
 	}
 
@@ -120,7 +120,12 @@ public final class ZoneUploadTask extends JobWork {
 
 	@Override
 	public String toString() {
-		return super.toString() + " worldViewId: [" + (viewContext != null ? viewContext.worldViewId : "null") + "] X: [" + x + "] Z: [" + z + "]";
+		return String.format(
+			"%s: worldViewId=%s, x=%d, z=%d",
+			super.toString(),
+			viewContext != null ? viewContext.worldViewId : "null",
+			x, z
+		);
 	}
 
 	static class AsyncSceneUploader extends SceneUploader {

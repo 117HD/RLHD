@@ -20,7 +20,7 @@ public class JobSystemTests {
 
 	@AfterClass
 	public static void afterAll() {
-		JobSystem.INSTANCE.shutdown();
+		JobSystem.INSTANCE.destroy();
 	}
 
 	@Test

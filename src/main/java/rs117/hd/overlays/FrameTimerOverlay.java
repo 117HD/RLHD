@@ -179,9 +179,9 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 			long subSceneUploadTime = 0;
 			long subSceneSwapTime = 0;
 
-			for(int worldViewId = 0; worldViewId < MAX_WORLDVIEWS; worldViewId++) {
-				WorldViewContext subscene = sceneManager.context(worldViewId);
-				if(subscene != null) {
+			for (int worldViewId = 0; worldViewId < MAX_WORLDVIEWS; worldViewId++) {
+				WorldViewContext subscene = sceneManager.getContext(worldViewId);
+				if (subscene != null) {
 					subSceneCount++;
 					subSceneLoadTime += subscene.loadTime;
 					subSceneUploadTime += subscene.uploadTime;
@@ -189,7 +189,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 				}
 			}
 
-			if(subSceneCount > 0) {
+			if (subSceneCount > 0) {
 				addTiming("Avg SubScene Load", subSceneLoadTime / subSceneCount, false);
 				addTiming("Avg SubScene Upload", subSceneUploadTime / subSceneCount, false);
 				addTiming("Avg SubScene Swap", subSceneSwapTime / subSceneCount, false);
@@ -279,7 +279,7 @@ public class FrameTimerOverlay extends OverlayPanel implements FrameTimer.Listen
 		} else {
 			component.setRight(result);
 		}
-		
+
 		panelComponent.getChildren().add(component);
 	}
 }

@@ -18,10 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.events.*;
 import net.runelite.api.hooks.*;
-import net.runelite.client.callback.ClientThread;
-import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
-import net.runelite.client.plugins.PluginManager;
 import net.runelite.client.ui.DrawManager;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
@@ -46,15 +43,9 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
-import rs117.hd.scene.GamevalManager;
-import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
-import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
 import rs117.hd.scene.ProceduralGenerator;
-import rs117.hd.scene.TextureManager;
-import rs117.hd.scene.TileOverrideManager;
-import rs117.hd.scene.WaterTypeManager;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.model_overrides.ModelOverride;
@@ -93,16 +84,7 @@ public class LegacyRenderer implements Renderer {
 	private Client client;
 
 	@Inject
-	private ClientThread clientThread;
-
-	@Inject
-	private EventBus eventBus;
-
-	@Inject
 	private DrawManager drawManager;
-
-	@Inject
-	private PluginManager pluginManager;
 
 	@Inject
 	private HdPlugin plugin;
@@ -114,9 +96,6 @@ public class LegacyRenderer implements Renderer {
 	private OpenCLManager clManager;
 
 	@Inject
-	private GamevalManager gamevalManager;
-
-	@Inject
 	private AreaManager areaManager;
 
 	@Inject
@@ -126,25 +105,7 @@ public class LegacyRenderer implements Renderer {
 	private EnvironmentManager environmentManager;
 
 	@Inject
-	private TextureManager textureManager;
-
-	@Inject
-	private MaterialManager materialManager;
-
-	@Inject
-	private WaterTypeManager waterTypeManager;
-
-	@Inject
-	private GroundMaterialManager groundMaterialManager;
-
-	@Inject
-	private TileOverrideManager tileOverrideManager;
-
-	@Inject
 	private ModelOverrideManager modelOverrideManager;
-
-	@Inject
-	private ProceduralGenerator proceduralGenerator;
 
 	@Inject
 	private LegacySceneUploader sceneUploader;
@@ -260,8 +221,8 @@ public class LegacyRenderer implements Renderer {
 		if (vaoScene != 0)
 			glDeleteVertexArrays(vaoScene);
 		vaoScene = 0;
-		
-		jobSystem.shutdown();
+
+		jobSystem.destroy();
 
 		destroyBuffers();
 		destroyTileHeightMap();

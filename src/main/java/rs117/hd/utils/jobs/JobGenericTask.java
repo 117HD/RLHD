@@ -5,6 +5,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 public final class JobGenericTask extends JobWork {
 	private static final ConcurrentLinkedDeque<JobGenericTask> POOL = new ConcurrentLinkedDeque<>();
 
+	@FunctionalInterface
 	public interface TaskRunnable {
 		void run(JobGenericTask Task) throws InterruptedException;
 	}
