@@ -42935,5 +42935,138 @@
     "graphicsObjectIds": [
       "SPOTANIM_KRAKEN_MAGIC03"
     ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 1",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ -70, 350, 70 ],
+    "alignment": "CENTER",
+    "radius": 350,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 2",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 100, 550, -30 ],
+    "alignment": "CENTER",
+    "radius": 250,
+    "strength": 12.5,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 3",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ -220, 180, 100 ],
+    "alignment": "CENTER",
+    "radius": 150,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 4",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 65, 250, 190 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 5",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 145, 230, -140 ],
+    "alignment": "CENTER",
+    "radius": 200,
+    "strength": 17,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 6",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ 85, 95, -200 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
+  },
+  {
+    "description": "Mercanry Ship Wreak Fire 7",
+    "excludeAreas": [ "FIRE_ALTAR_CULL_FIRE_LIGHTS" ],
+    "offset": [ -60, 295, -80 ],
+    "alignment": "CENTER",
+    "radius": 100,
+    "strength": 25,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 20,
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ]
   }
 ]

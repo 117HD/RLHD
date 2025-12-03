@@ -68208,5 +68208,19 @@
       "HS_WEB_WALL_01",
       "HS_WEB_WALL_02"
     ]
+  },
+  {
+    "description": "Sailing - Mercenary Shipwreak - Brighten Flames",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 223",
+        "baseMaterial": "GRAY_75",
+        "upwardsNormals": true
+      }
+    ]
   }
 ]
