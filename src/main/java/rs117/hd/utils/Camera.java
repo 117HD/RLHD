@@ -179,7 +179,10 @@ public class Camera {
 	}
 
 	public float squaredDistanceTo(float x, float y, float z) {
-		return position[0] * x + position[1] * y + position[2] * z;
+		float dx = position[0] - x;
+		float dy = position[1] - y;
+		float dz = position[2] - z;
+		return dx * dx + dy * dy + dz * dz;
 	}
 
 	public Camera translate(float[] translation) {
