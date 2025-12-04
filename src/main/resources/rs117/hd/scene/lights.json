@@ -43119,5 +43119,21 @@
     "objectIds": [
       "DEEPFIN_CAVE_EXIT"
     ]
+  },
+  {
+    "description": "Sailing - Island Hut Lantern",
+    "offset": [ 3.75, 155, 0 ],
+    "radius": 350,
+    "strength": 9,
+    "color": [
+      252,
+      148,
+      3
+    ],
+    "type": "FLICKER",
+    "range": 15,
+    "objectIds": [
+      "HIDEOUT_LANTERN01_DEFAULT01"
+    ]
   }
 ]

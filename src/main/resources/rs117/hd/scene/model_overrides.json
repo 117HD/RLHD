@@ -13353,7 +13353,13 @@
       "TT_HUNTING_ROCKS_01_OP",
       "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_BOTTOM",
       "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_TOP",
-      "GREAT_CONCH_CLIFF_SHORTCUT_MIDDLE"
+      "GREAT_CONCH_CLIFF_SHORTCUT_MIDDLE",
+      "LAGUNA_DUGUPSOIL01_MUD01",
+      "LAGUNA_DUGUPSOIL02_MUD01",
+      "LAGUNA_DUGUPSOIL03_MUD01",
+      "LAGUNA_DUGUPSOIL01_SAND01",
+      "LAGUNA_DUGUPSOIL02_SAND01",
+      "LAGUNA_DUGUPSOIL03_SAND01"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -14718,7 +14724,10 @@
     "objectIds": [
       "DORGESH_MUSHROOM1",
       "DORGESH_MUSHROOM2",
-      "DORGESH_MUSHROOM3"
+      "DORGESH_MUSHROOM3",
+      "EASTER25_MUSHROOM01_CRYPT01",
+      "EASTER25_MUSHROOM01_CRYPT02",
+      "EASTER25_MUSHROOM01_CRYPT03"
     ],
     "uvType": "GEOMETRY"
   },
@@ -27669,6 +27678,7 @@
   {
     "description": "Objects - Bush - Dead",
     "baseMaterial": "BARK",
+    "uvScale": 0.4,
     "windDisplacementMode": "VERTEX",
     "objectIds": [
       "LEAFLESSBUSH",
@@ -27680,6 +27690,7 @@
       "BUSH_DESERT_DEAD01",
       "BUSH_DESERT_DEAD02",
       "FAI_LEAFLESS_BUSH_SMALL_01",
+      "FAI_LEAFLESS_BUSH_SMALL_02",
       "DOV_HUNTING_PLANT2",
       "DOV_HUNTING_PLANT2_OP"
     ],
@@ -52839,8 +52850,9 @@
   },
   {
     "description": "Varrock - Kebos Farm - Fortis - Thatch - Roofs",
-    "baseMaterial": "HD_HAY",
+    "baseMaterial": "HD_HAY_BRIGHT",
     "uvType": "BOX",
+    "uvOrientation": 512,
     "uvScale": 0.7,
     "objectIds": [
       "FAI_VARROCK_ROOF_THATCHED_WINDOW_RIGHT",
@@ -52859,9 +52871,9 @@
       {
         "description": "Ropes",
         "baseMaterial": "ROPE",
-        "colors": "s == 3",
+        "colors": "s > 2",
         "uvType": "BOX",
-        "uvScale": 0.66
+        "uvScale": 0.55
       }
     ]
   },
@@ -67833,6 +67845,119 @@
     ]
   },
   {
+    "description": "Laguna Aurorae - Mangrove Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "uvScale": 0.65,
+    "uvType": "BOX",
+    "objectIds": [
+      "TREE_MANGROVE02_DEFAULT01",
+      "TREE_MANGROVE01_DEFAULT02",
+      "TREE_MANGROVE02_DEFAULT02",
+      "TREE_MANGROVE01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      }
+    ]
+  },
+  {
+    "description": "Laguna Aurorae - Mangrove Roots",
+    "baseMaterial": "LIGHT_BARK",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "ROOT_MANGROVE01_DEFAULT01",
+      "ROOT_MANGROVE02_DEFAULT01",
+      "ROOT_MANGROVE02_DEFAULT02",
+      "ROOT_MANGROVE01_DEFAULT02_2X2",
+      "ROOT_MANGROVE01_DEFAULT01_2X2",
+      "ROOT_MANGROVE01_DEFAULT02",
+      "ROOT_MANGROVE01_DEFAULT03"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      }
+    ]
+  },
+  {
+    "description": "Laguna Aurorae - Rocks",
+    "baseMaterial": "ROCK_3_LIGHT",
+    "objectIds": [
+      "LAGUNA_ROCKSLIDE_MUDDY01",
+      "LAGUNA_ROCKSLIDE_MUDDY02",
+      "LAGUNA_ROCKSLIDE_MUDDY03",
+      "LAGUNA_ROCKSLIDE_MUDDY04"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.6
+  },
+  {
+    "description": "Laguna Aurorae - Cave Entrance",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "LAGUNA_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Island Hut - Walls",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "WALLKIT_HIDEOUT01_DAMAGED01",
+      "WALLKIT_HIDEOUT01_DAMAGED02",
+      "WALLKIT_HIDEOUT01_DEFAULT01",
+      "WALLKIT_HIDEOUT01_WINDOW01",
+      "WALLKIT_HIDEOUT01_DOOR01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8
+  },
+  {
+    "description": "Sailing - Island Hut - Lantern - Brighten Flame",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "HIDEOUT_LANTERN01_DEFAULT01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 155",
+        "baseMaterial": "GRAY_150"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Skull Spike",
+    "baseMaterial": "GRUNGE_3",
+    "objectIds": [
+      "HIDEOUT_SKULL_DEFAULT01"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      }
+    ]
+  },
+  {
     "description": "Sailing - Schematic Lockbox",
     "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
     "objectIds": [
@@ -67896,7 +68021,8 @@
       "AMENITY_POTTERYWHEEL_UNBUILT",
       "AMENITY_POTTERYOVEN_UNBUILT",
       "AMENITY_BANKCHEST_UNBUILT",
-      "AMENITY_COOKING_POT_UNBUILT"
+      "AMENITY_COOKING_POT_UNBUILT",
+      "AMENITY_LOOM_UNBUILT"
     ],
     "colorOverrides": [
       {
