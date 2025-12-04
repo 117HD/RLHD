@@ -3571,7 +3571,7 @@
   },
   {
     "description": "GRAND_EXCHANGE_WALLS",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
@@ -3681,7 +3681,7 @@
   },
   {
     "description": "Brick walls with wooden boards",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -3715,7 +3715,7 @@
   },
   {
     "description": "Brick walls with wooden plank windows",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -3737,7 +3737,7 @@
   },
   {
     "description": "Brick walls with wooden planks leaned on them",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "uvType": "BOX",
     "uvScale": 0.6,
     "flatNormals": true,
@@ -3784,7 +3784,7 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with glass windows",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -3819,7 +3819,7 @@
   },
   {
     "description": "Varrock church - Kourend Castle - Glass -  golden window",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -3850,7 +3850,7 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -4011,7 +4011,7 @@
   },
   {
     "description": "Varrock - Kourend - Walls - Brick walls with taupe interior",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.6,
@@ -4572,7 +4572,7 @@
   },
   {
     "description": "Seers Village - Walls",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -4626,7 +4626,7 @@
   },
   {
     "description": "Seers Village - Walls - Windows",
-    "baseMaterial": "SMOOTH_STONE_DARK",
+    "baseMaterial": "SMOOTH_STONE_SEMI_DARK",
     "flatNormals": true,
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -67856,6 +67856,14 @@
     "uvScale": 0.25,
     "objectIds": [
       "SAILING_CHARTING_GENERIC_SEAGULL_NEST"
+    ]
+  },
+  {
+    "description": "Sailing - Charting - Crab Statue",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_CRAB_STATUE"
     ]
   },
   {

@@ -2438,9 +2438,14 @@
     "normalMap": "STONE_N"
   },
   {
-    "name": "SMOOTH_STONE_DARK",
+    "name": "SMOOTH_STONE_SEMI_DARK",
     "parent": "SMOOTH_STONE",
     "brightness": 0.95
+  },
+  {
+    "name": "SMOOTH_STONE_DARK",
+    "parent": "SMOOTH_STONE",
+    "brightness": 0.85
   },
   {
     "name": "GEM_STONE",
