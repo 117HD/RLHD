@@ -4360,10 +4360,7 @@
     "name": "Aldarin Dirt hills Overlay",
     "area": "ALDARIN",
     "overlayIds": [ 377 ],
-    "groundMaterial": "VERTICAL_DIRT",
-    "replacements": {
-      "WINTER_DIRT": "season == SeasonalTheme.WINTER"
-    }
+    "groundMaterial": "VERTICAL_DIRT"
   },
   {
     "name": "FORTIS_EARTHEN_FLOOR",
@@ -5485,9 +5482,11 @@
     "underlayIds": [
       26,
       33,
+      40,
       48,
       50,
       52,
+      54,
       63,
       66,
       68,
@@ -5502,9 +5501,9 @@
     ],
     "groundMaterial": "DIRT",
     "replacements": {
-      "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
-      "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
-      "SEASONAL_GRASS": [
+      "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "DEFAULT_GRASS": [
         "h == 6 && s >= 5",
         "h == 8 && s >= 6 && l >= 2",
         "h == 9 && s == 3 && l >= 49",
@@ -5512,17 +5511,6 @@
         "h >= 9 && s >= 5",
         "h >= 10 && s >= 2",
         "h >= 11"
-      ],
-      "SEASONAL_DIRT": [
-        "h == 6 && s <= 4",
-        "h == 8 && s <= 4 && l <= 71",
-        "h <= 7 && s <= 5 && l <= 60",
-        "h <= 7 && s <= 7 && l <= 34",
-        "h == 8 && s == 5",
-        "h == 9 && s == 2",
-        "h == 9 && s == 3 && l <= 48",
-        "h == 9 && s == 4 && l <= 30",
-        "h == 9 && s == 5 && l <= 30"
       ],
       "DEFAULT_DIRT": true
     }
@@ -6288,6 +6276,26 @@
     "area": "VARLAMORE",
     "overlayIds": [ 222 ],
     "groundMaterial": "ROCK_PILES"
+  },
+  {
+    "name": "Vatrachos - Island - Complex",
+    "area": "VATRACHOS_ISLAND",
+    "underlayIds": [ 26, 52, 68 ],
+    "replacements": {
+      "DEFAULT_SAND": "h <= 8",
+      "DEFAULT_GRASS": "h >= 9",
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
+    "name": "Shimmering Atoll - Complex",
+    "area": "SHIMMERING_ATOLL",
+    "underlayIds": [ 50, 68, 223 ],
+    "replacements": {
+      "DEFAULT_SAND": "h == 8 && s <= 3",
+      "DEFAULT_GRASS": "h >= 9",
+      "DEFAULT_DIRT": true
+    }
   },
   {
     "name": "OVERWORLD_GRASS_OVERLAY",
@@ -9141,13 +9149,23 @@
     }
   },
   {
+    "name": "WARM_REGION_ROCK_OVERLAYS",
+    "area": "WARM_REGIONS",
+    "overlayIds": [
+      376
+    ]
+  },
+  {
     "name": "WARM_REGION_COMPLEX_TILES",
     "area": "WARM_REGIONS",
     "underlayIds": [
       7,
       8,
       13,
+      25,
       26,
+      33,
+      38,
       49,
       50,
       51,
@@ -9164,9 +9182,11 @@
       69,
       72,
       77,
+      93,
       94,
       96,
       99,
+      100,
       109,
       110,
       103,
@@ -9179,7 +9199,8 @@
       142,
       150,
       202,
-      203
+      203,
+      223
     ],
     "replacements": {
       "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
