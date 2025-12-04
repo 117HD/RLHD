@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import static rs117.hd.utils.HDUtils.printStacktrace;
+import static rs117.hd.utils.HDUtils.getThreadStackTrace;
 import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 
 @Slf4j
@@ -111,11 +111,6 @@ public final class Worker {
 	}
 
 	void printState() {
-		if (handle == null) {
-			log.debug("Worker [{}] Idle", thread.getName());
-			return;
-		}
-
-		printStacktrace(false, thread.getStackTrace());
+		log.debug("Worker {} is {}", thread.getName(), handle == null ? "idle" : "running:\n" + getThreadStackTrace(thread));
 	}
 }

@@ -414,19 +414,17 @@ public final class HDUtils {
 
 	private static final ThreadLocal<StringBuilder> threadLocalStringBuilder = ThreadLocal.withInitial(StringBuilder::new);
 
-	public static void printStacktrace(boolean isWarn, StackTraceElement[] stackTrace) {
+	public static String getThreadStackTrace(Thread thread) {
+		var stackTrace = thread.getStackTrace();
+		if (stackTrace.length == 0)
+			return "<STACK TRACE UNAVAILABLE>";
+
 		StringBuilder sb = threadLocalStringBuilder.get();
 		for (int i = 1; i < stackTrace.length; i++)
-			sb.append(stackTrace[i].toString()).append("\n");
+			sb.append('\t').append(stackTrace[i]).append('\n');
 
-		if (sb.length() == 0)
-			return;
-
-		if (isWarn) {
-			log.warn(sb.toString());
-		} else {
-			log.debug(sb.toString());
-		}
+		String s = sb.toString();
 		sb.setLength(0);
+		return s;
 	}
 }

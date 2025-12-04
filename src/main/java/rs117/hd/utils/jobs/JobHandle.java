@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
-import static rs117.hd.utils.HDUtils.printStacktrace;
+import static rs117.hd.utils.HDUtils.getThreadStackTrace;
 import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 
 @Slf4j
@@ -292,23 +292,20 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		if (!JOB_SYSTEM.active) return;
 
 		log.warn(
-			"Deadlock detected on thread: {} whilst waiting {} seconds on handle {} {}, shutting down...",
+			"Deadlock detected on thread: {} whilst waiting {} seconds on handle {} {}, worker {}, shutting down...",
 			Thread.currentThread().getName(),
-			DEADLOCK_TIMEOUT_SECONDS, hashCode(), item
+			DEADLOCK_TIMEOUT_SECONDS,
+			hashCode(),
+			item,
+			worker
 		);
-
-		log.warn("{} Stacktrace:", Thread.currentThread().getName());
-		printStacktrace(true, Thread.currentThread().getStackTrace());
-
-		if (worker != null) {
-			log.warn("Worker Stacktrace:");
-			printStacktrace(true, worker.thread.getStackTrace());
-		}
+		log.warn("Thread {} stacktrace:\n{}", Thread.currentThread().getName(), getThreadStackTrace(Thread.currentThread()));
+		if (worker != null)
+			log.warn("Worker {} stacktrace:\n{}", worker.thread.getName(), getThreadStackTrace(worker.thread));
 
 		JOB_SYSTEM.plugin.stopPlugin();
-		if (JOB_SYSTEM.isWorker()) {
+		if (JOB_SYSTEM.isWorker())
 			throw new InterruptedException();
-		}
 	}
 
 	@Override
