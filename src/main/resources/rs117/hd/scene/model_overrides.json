@@ -1821,6 +1821,17 @@
     ]
   },
   {
+    "description": "Ironwood Tree",
+    "baseMaterial": "LIGHT_BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "IRONWOOD_TREE",
+      "IRONWOOD_TREE_UPDATE_STUMP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.9
+  },
+  {
     "description": "Objects - Trees - Tirannwn Tree - Stump",
     "baseMaterial": "LIGHT_BARK",
     "uvType": "BOX",
@@ -10193,7 +10204,14 @@
       "SANCTUARY_CAVE_ROCKS_2X2_2",
       "SANCTUARY_CAVE_ROCKS_2X2_3",
       "SANCTUARY_CAVE_STALAGMITE_1",
-      "SANCTUARY_CAVE_STALAGMITE_2"
+      "SANCTUARY_CAVE_STALAGMITE_2",
+      "SUNBLEAK_CAVE_STALAGMITE_1",
+      "SUNBLEAK_CAVE_STALAGMITE_2",
+      "SUNBLEAK_CAVE_ROCKS_1",
+      "SUNBLEAK_CAVE_ROCKS_2",
+      "SUNBLEAK_CAVE_ROCKS_2X2_1",
+      "SUNBLEAK_CAVE_ROCKS_2X2_2",
+      "SUNBLEAK_CAVE_ROCKS_2X2_3"
     ],
     "uvType": "BOX",
     "uvOrientation": 256
@@ -11935,7 +11953,8 @@
     "description": "Fire Remains",
     "baseMaterial": "ROCK_1",
     "objectIds": [
-      "FIRE_REMAINS"
+      "FIRE_REMAINS",
+      "FIRE_REMAINS_OLD"
     ]
   },
   {
@@ -21154,7 +21173,8 @@
       "DIGSITESACKS",
       "DIGSAMPLESACKS",
       "MURDERSACKS",
-      "SACKS_NOOP"
+      "SACKS_NOOP",
+      "SACKS_DARK_INACTIVE"
     ],
     "uvType": "BOX",
     "uvOrientation": 256,
@@ -63994,7 +64014,8 @@
       "SLUG2_ROWBOAT_BROKEN_ONLAND",
       "SLUG2_ROWBOAT_BROKEN_ONLAND2",
       "SLUG2_ROWBOAT_BROKEN_ONLAND3",
-      "SLUG2_ROWBOAT_BROKEN_ONLAND4"
+      "SLUG2_ROWBOAT_BROKEN_ONLAND4",
+      "SLUG2_ROWBOAT_BROKEN_ONLAND2_INACTIVE"
     ]
   },
   {
@@ -67548,10 +67569,10 @@
     ]
   },
   {
-    "description": "Minotaurs' Rest - Cave Walls",
+    "description": "Minotaurs' Rest & Sunbleak - Cave Walls",
     "baseMaterial": "GRAVEL",
     "uvType": "BOX",
-    "uvScale": 1.5,
+    "uvScale": 1.25,
     "uvOrientation": 25,
     "objectIds": [
       "MINOTAURS_REST_CAVE_WALL_LOWER",
@@ -67560,13 +67581,108 @@
       "MINOTAURS_REST_CAVE_WALL_UPPER_ACTIVE",
       "MINOTAURS_REST_CAVE_EXIT",
       "MINOTAURS_REST_CAVE_ENTRANCE",
-      "CAVEKIT_ROCK01_DEFAULT05_WALLTOP"
+      "CAVEKIT_ROCK01_DEFAULT05_WALLTOP",
+      "SANCTUARY_CAVE_WALL_TOP",
+      "SUNBLEAK_CAVE_WALL_OUTER",
+      "SUNBLEAK_CAVE_WALL_UPPER",
+      "SUNBLEAK_DUNGEON_EXIT",
+      "SUNBLEAK_CAVE_WALL_UPPER_ACTIVE"
     ],
     "colorOverrides": [
       {
-        "colors": "l == 2",
+        "colors": "s == 0 && l == 2",
         "baseMaterial": "PURE_BLACK"
       }
+    ]
+  },
+  {
+    "description": "Sunbleak - Cave Entrance",
+    "baseMaterial": "DIRT_1_LIGHT",
+    "uvType": "BOX",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "SUNBLEAK_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 0 && l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Sunbleak - Spade",
+    "baseMaterial": "DIRT_1_DARK",
+    "uvType": "BOX",
+    "uvScale": 0.45,
+    "colorOverrides": [
+      {
+        "description": "Wood Handle",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.6
+      },
+      {
+        "description": "Metal head",
+        "colors": "s == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ],
+    "objectIds": [
+      "SUNBLEAK_SPADE_BROWN"
+    ]
+  },
+  {
+    "description": "Sunbleak - Rock with Pickaxe",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Wood Handle",
+        "colors": "h == 7",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": -200
+      },
+      {
+        "description": "Metal head",
+        "colors": "h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ],
+    "objectIds": [
+      "SUNBLEAK_MINING_STONE_PICK_NOOP"
+    ]
+  },
+  {
+    "description": "Sunbleak - Ruined Wall",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "SNP_RUIN_WINDOW2_MIRROR_LIGHTBROWN01",
+      "SNP_RUINS_LARGE_WALL1_MIRROR_LIGHTBROWN01",
+      "SNP_RUIN_WINDOW2_LIGHTBROWN01",
+      "SNP_RUINS_RUBBLE1_LIGHTBROWN01",
+      "SNP_RUINS_RUBBLE2_LIGHTBROWN01",
+      "SNP_RUINS_LARGE_WALL1_LIGHTBROWN01",
+      "SNP_RUIN_WINDOW1_LIGHTBROWN01",
+      "SNP_RUIN_SMALL_WALL1_LIGHTBROWN01",
+      "SNP_RUIN_SMALL_WALL2_LIGHTBROWN01",
+      "SNP_RUINS_LARGE_WALL2_LIGHTBROWN01",
+      "SNP_RUINS_LARGE_WALL2_MIRROR_LIGHTBROWN01",
+      "SNP_RUIN_SMALL_WALL2_MIRROR_LIGHTBROWN01",
+      "SNP_RUIN_WINDOW1_MIRROR_LIGHTBROWN01"
+    ]
+  },
+  {
+    "description": "Sunbleak - Hide Stone Chips",
+    "areas": [ "SUNBLEAK_ISLAND" ],
+    "hide": true,
+    "objectIds": [
+      "AVIUM_DUGUPSOIL02"
     ]
   },
   {
@@ -68041,7 +68157,8 @@
     "uvType": "BOX",
     "uvScale": 0.25,
     "objectIds": [
-      "SAILING_CHARTING_GENERIC_SEAGULL_NEST"
+      "SAILING_CHARTING_GENERIC_SEAGULL_NEST",
+      "SUNBLEAK_SEAGULL_NEST"
     ]
   },
   {

@@ -1209,6 +1209,11 @@
     "brightness": 1.1
   },
   {
+    "name": "DIRT_1_DARK",
+    "parent": "DIRT_1",
+    "brightness": 0.8
+  },
+  {
     "name": "DIRT_1_VERT",
     "parent": "DIRT_1",
     "normalMap": null
