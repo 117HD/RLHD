@@ -4298,10 +4298,7 @@
     "groundMaterial": "TERRACOTTA_FLOOR",
     "minLightness": 23,
     "shiftLightness": 2,
-    "blended": false,
-    "replacements": {
-      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
-    }
+    "blended": false
   },
   {
     "name": "Aldarin Terracotta Floor - Red",
@@ -4331,10 +4328,7 @@
     "uvOrientation": 512,
     "uvScale": 1.2,
     "minLightness": 14,
-    "maxLightness": 16,
-    "replacements": {
-      "WINTER_GRUNGE": "season == SeasonalTheme.WINTER"
-    }
+    "maxLightness": 16
   },
   {
     "name": "Aldarin Wooden Floor - 81 ",
@@ -4361,6 +4355,38 @@
     "area": "ALDARIN",
     "overlayIds": [ 377 ],
     "groundMaterial": "VERTICAL_DIRT"
+  },
+  {
+    "name": "Aldarin - WARM_REGION - Complex",
+    "area": "ALDARIN",
+    "underlayIds": [
+      26,
+      33,
+      48,
+      50,
+      52,
+      63,
+      68,
+      92,
+      94,
+      112
+
+    ],
+    "groundMaterial": "DIRT",
+    "replacements": {
+      "DEFAULT_GRUNGE": "s == 0 || h <= 10 && s < 2",
+      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "DEFAULT_GRASS": [
+        "h == 6 && s >= 5",
+        "h == 8 && s >= 6 && l >= 2",
+        "h == 9 && s == 3 && l >= 49",
+        "h == 9 && s >= 4 && l >= 31",
+        "h >= 9 && s >= 5",
+        "h >= 10 && s >= 2",
+        "h >= 11"
+      ],
+      "DEFAULT_DIRT": true
+    }
   },
   {
     "name": "FORTIS_EARTHEN_FLOOR",
