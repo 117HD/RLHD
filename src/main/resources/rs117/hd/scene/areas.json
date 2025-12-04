@@ -9431,6 +9431,13 @@
     "hideOtherAreas": true
   },
   {
+    "name": "DEEPFIN_POINT_MINE_CAVE",
+    "regionBoxes": [
+      [ 7823, 8335 ]
+    ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "CATHERBY_DEPTH_BIAS_FIX",
     "aabbs": [
       [ 2809, 3448, 2809, 3449, 1 ]

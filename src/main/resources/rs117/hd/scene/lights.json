@@ -43069,5 +43069,55 @@
     "objectIds": [
       "SAILING_MERCENARY_SHIPWRECK"
     ]
+  },
+  {
+    "description": "Deepfin Point - Furnace - Inside",
+    "offset": [ 0, 100, -55 ],
+    "radius": 75,
+    "strength": 50,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DEEPFIN_FURNACE"
+    ]
+  },
+  {
+    "description": "Deepfin Point - Furnace - Outside",
+    "offset": [ 0, 100, -125 ],
+    "radius": 200,
+    "strength": 7.5,
+    "color": [
+      252,
+      90,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 10,
+    "objectIds": [
+      "DEEPFIN_FURNACE"
+    ]
+  },
+  {
+    "description": "Deepfin Cave Exit",
+    "offset": [ -50, 100, 0 ],
+    "alignment": "CENTER",
+    "radius": 600,
+    "strength": 6,
+    "color": [
+      255,
+      255,
+      255
+    ],
+    "type": "STATIC",
+    "objectIds": [
+      "DEEPFIN_CAVE_EXIT"
+    ]
   }
 ]

@@ -9905,7 +9905,8 @@
       "GIANTS_DEN_ENTRANCE_LADDER_HOLE",
       "WILD_VENANATIS_ENTRANCE01",
       "WILD_VENENATIS_SINGLES_ENTRANCE01",
-      "CAVE_ROCK02_ENTRANCE01_COLOSSAL_WYRM"
+      "CAVE_ROCK02_ENTRANCE01_COLOSSAL_WYRM",
+      "DEEPFIN_CAVE_ENTRANCE"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -14293,8 +14294,6 @@
     "uvType": "BOX",
     "uvScale": 0.6,
     "objectIds": [
-      "FAI_VARROCK_RANGE",
-      "FAI_VARROCK_RANGE_WITH_PIPE",
       "KR_SIN_RANGE",
       "CON_CONTRACT_FALADOR_SOUTH_RANGE_FIXED",
       "CON_CONTRACT_ARDY_WEST_HOTSPOT1",
@@ -14308,6 +14307,16 @@
         "baseMaterial": "STONE_NORMALED",
         "uvType": "BOX"
       }
+    ]
+  },
+  {
+    "description": "Objects - Metallic - Range - No stone plaform",
+    "baseMaterial": "METALLIC_1_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.3,
+    "objectIds": [
+      "FAI_VARROCK_RANGE",
+      "FAI_VARROCK_RANGE_WITH_PIPE"
     ]
   },
   {
@@ -26598,6 +26607,40 @@
     "uvOrientation": 256
   },
   {
+    "description": "Ore - Lead - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "LEADROCK1",
+      "LEADROCK1_EMPTY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "colorOverrides": [
+      {
+        "colors": "h > 7",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Ore - Lead - Rock",
+    "baseMaterial": "ROCK_3",
+    "objectIds": [
+      "NICKELROCK1",
+      "NICKELROCK1_EMPTY"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.33,
+    "colorOverrides": [
+      {
+        "colors": "h > 7",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
     "description": "Objects - Concrete - Runecrafting Altars",
     "textureMaterial": "HD_CONCRETE",
     "objectIds": [
@@ -28038,7 +28081,7 @@
     ]
   },
   {
-    "description": "Tutorial Island - Shelves",
+    "description": "Tutorial Island - Shelves - Boxes",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "objectIds": [
@@ -28046,12 +28089,27 @@
       "FAI_VARROCK_SHELVES2",
       "FAI_VARROCK_SHELVES3",
       "FAI_VARROCK_SINGLE_SHELF_FLOWERS",
-      "FAI_VARROCK_SHELF_TANKARDS",
+      "FAI_VARROCK_SHELF_TANKARDS"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 || h == 7 && s == 1 || h == 8 && s == 1",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.75
+      }
+    ]
+  },
+  {
+    "description": "Tutorial Island - Shelves - Books",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "objectIds": [
       "FAI_VARROCK_SHELF_BOOKS_INACTIVE"
     ],
     "colorOverrides": [
       {
-        "colors": "h == 6",
+        "colors": "h == 6 || h == 10 || h == 7 && s == 5",
         "baseMaterial": "GRUNGE_3",
         "uvType": "BOX",
         "uvScale": 0.75
@@ -35445,7 +35503,8 @@
       "SKEWSTEPS_STONE_IMCANDO01",
       "SKEWSTEPS_STONE_IMCANDO01_DARK01",
       "ROR_TEMPLE_TALL_BLUE_ARCH01_DARK02",
-      "ROR_TEMPLE_TALL_BLUE_DARK01"
+      "ROR_TEMPLE_TALL_BLUE_DARK01",
+      "DEEPFIN_CAVE_SHORTCUT"
     ],
     "uvType": "BOX",
     "uvScale": 0.86
@@ -35492,7 +35551,8 @@
       "HG_CAVE_EXIT",
       "CAVEKIT_ROCK01_ENTRANCE02",
       "STALKER_DEN_EXTERNAL_SHORTCUT_INSIDE",
-      "SOC_CAVE_EXIT"
+      "SOC_CAVE_EXIT",
+      "DEEPFIN_CAVE_EXIT"
     ],
     "uvType": "BOX",
     "uvScale": 0.86,
@@ -53561,7 +53621,8 @@
     "description": "Varrock - Cloth - Wooden - White Bunk Bed with pillows",
     "baseMaterial": "CARPET",
     "objectIds": [
-      "FAI_VARROCK_GUARD_BUNKBED"
+      "FAI_VARROCK_GUARD_BUNKBED",
+      "DEEPFIN_BUNKBED"
     ],
     "uvType": "BOX",
     "uvOrientation": 64,
@@ -64127,7 +64188,12 @@
       "PANDEMONIUM_FISHING_STORE_ICON",
       "PANDEMONIUM_WATER_SOURCE_ICON",
       "QUEST_START_ICON_PRYINGTIMES",
-      "PANDEMONIUM_SHIPWRIGHT_ICON"
+      "PANDEMONIUM_SHIPWRIGHT_ICON",
+      "PANDEMONIUM_PIER_SHIPWRIGHT_ICON",
+      "PANDEMONIUM_PIER_ANVIL_ICON",
+      "PANDEMONIUM_PIER_RANGE_ICON",
+      "PANDEMONIUM_PIER_MINING_SHOP_ICON",
+      "PANDEMONIUM_PIER_BANK_ICON"
     ]
   },
   {
@@ -64557,7 +64623,8 @@
         "baseMaterial": "WOOD_GRAIN_3",
         "uvType": "BOX",
         "uvScale": 0.65,
-        "uvOrientation": 512
+        "uvOrientationZ": 512,
+        "uvOrientationX": 512
       },
       {
         "description": "Seeds",
@@ -64620,7 +64687,7 @@
       "SAILING_GANGPLANK_PROXY_WIDE_INACTIVE"
     ],
     "uvType": "BOX",
-    "uvOrientationY": 512,
+    "uvOrientation": 512,
     "uvScale": 0.8,
     "colorOverrides": [
       {
@@ -67563,12 +67630,201 @@
     "uvType": "BOX",
     "colorOverrides": [
       {
-        "colors": [ "h == 0" ],
+        "colors": "h == 0",
         "baseMaterial": "GRUNGE_1"
       },
       {
-        "colors": [ "h == 5 && s == 1" ],
+        "colors": "h == 5 && s == 1",
         "baseMaterial": "METALLIC_1_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Deepfin Point - Furnace",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "DEEPFIN_FURNACE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0 || h == 42",
+        "baseMaterial": "METALLIC_1_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "CARPET_SEMI_DARK",
+        "upwardsNormals": true,
+        "receiveShadows": false
+      },
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRAVEL",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.75
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "LIGHT_BARK",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Deepfin Point - Rope Fence",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "BARRACUDA_FENCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      }
+    ]
+  },
+  {
+    "description": "Deepfin Point - Rail Track",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "DEEPFIN_TRACKSTRAIGHT_GDECOR",
+      "DEEPFIN_TRACK_POINTS_C",
+      "DEEPFIN_TRACKBUFFER"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Deepfin Point - Rail Track - Corner",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "DEEPFIN_TRACK_CURVE_D",
+      "DEEPFIN_TRACK_CURVE_B",
+      "DEEPFIN_TRACK_CURVE_C",
+      "DEEPFIN_TRACK_CURVE_A"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 700
+      }
+    ]
+  },
+  {
+    "description": "Deepfin Point - Rail Switch Track - Darken",
+    "areas": [ "DEEPFIN_POINT_MINE_CAVE" ],
+    "baseMaterial": "METALLIC_1_SMOOTH",
+    "objectIds": [
+      "TRACK_POINTS_A",
+      "DEEPFIN_TRACK_POINTS_B"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ]
+  },
+  {
+    "description": "Deepfin Point - Minecart",
+    "baseMaterial": "GRAVEL",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "DEEPFIN_MINECART_EMPTY",
+      "DEEPFIN_MINECART_FULL"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Deepfin Point - Mining Machine",
+    "baseMaterial": "GRAVEL",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "DEEPFIN_MINING_MACHINE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 10",
+        "baseMaterial": "GRUNGE_3",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      },
+      {
+        "colors": "h == 5 && s == 2",
+        "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.55,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 0 || h == 5",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Schematic Lockbox",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "LOST_SCHEMATIC_BOX_DEEPFIN_CLOSED",
+      "LOST_SCHEMATIC_BOX_DEEPFIN_OPEN",
+      "LOST_SCHEMATIC_BOX_CHINCHOMPA_CLOSED",
+      "LOST_SCHEMATIC_BOX_CHINCHOMPA_OPEN",
+      "LOST_SCHEMATIC_BOX_ANGLERS_CLOSED",
+      "LOST_SCHEMATIC_BOX_ANGLERS_OPEN",
+      "LOST_SCHEMATIC_BOX_BUCCANEERS_CLOSED",
+      "LOST_SCHEMATIC_BOX_BUCCANEERS_OPEN",
+      "LOST_SCHEMATIC_BOX_LLEDRITH_CLOSED",
+      "LOST_SCHEMATIC_BOX_LLEDRITH_OPEN",
+      "LOST_SCHEMATIC_BOX_CROWNJEWEL_CLOSED",
+      "LOST_SCHEMATIC_BOX_CROWNJEWEL_OPEN",
+      "LOST_SCHEMATIC_BOX_SHIMMERING_CLOSED",
+      "LOST_SCHEMATIC_BOX_SHIMMERING_OPEN",
+      "LOST_SCHEMATIC_BOX_BRITTLE_CLOSED",
+      "LOST_SCHEMATIC_BOX_BRITTLE_OPEN",
+      "LOST_SCHEMATIC_BOX_SUNBLEAK_CLOSED",
+      "LOST_SCHEMATIC_BOX_SUNBLEAK_OPEN",
+      "LOST_SCHEMATIC_BOX_GRIMSTONE_CLOSED",
+      "LOST_SCHEMATIC_BOX_GRIMSTONE_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2 || h == 3" ,
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
       }
     ]
   },
@@ -67581,7 +67837,8 @@
       "AMENITY_WATER_PUMP_UNBUILT",
       "AMENITY_ROWBOAT_UNBUILT",
       "AMENITY_POTTERYWHEEL_UNBUILT",
-      "AMENITY_POTTERYOVEN_UNBUILT"
+      "AMENITY_POTTERYOVEN_UNBUILT",
+      "AMENITY_BANKCHEST_UNBUILT"
     ],
     "colorOverrides": [
       {
