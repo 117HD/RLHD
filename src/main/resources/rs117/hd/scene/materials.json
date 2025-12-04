@@ -1754,6 +1754,11 @@
     "normalMap": null
   },
   {
+    "name": "CARPET_SEMI_DARK",
+    "parent": "CARPET",
+    "brightness": 0.85
+  },
+  {
     "name": "CARPET_DARK",
     "parent": "CARPET",
     "brightness": 0.701
