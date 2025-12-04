@@ -65549,6 +65549,37 @@
     ]
   },
   {
+    "description": "Sailing - Mercenary Shipwreak - Brighten Flames",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "SAILING_MERCENARY_SHIPWRECK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "a == 223",
+        "baseMaterial": "GRAY_75",
+        "upwardsNormals": true
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Cabin Boy Jenkins - Fix Brightness",
+    "baseMaterial": "UNLIT",
+    "npcIds": [
+      "SAILING_CREW_GHOST_JENKINS_DOCK",
+      "SAILING_CREW_GHOST_JENKINS_UNRECRUITED",
+      "SAILING_CREW_GHOST_JENKINS_RECRUITED",
+      "SAILING_CREW_GHOST_JENKINS_WORLD",
+      "SAILING_CREW_GHOST_JENKINS_DOCK",
+      "SAILING_CREW_GHOST_JENKINS_SHIP",
+      "SAILING_CREW_GHOST_JENKINS_SHIP_OP",
+      "SAILING_CREW_GHOST_JENKINS_SHIP_NO_OP",
+      "SAILING_CREW_GHOST_JENKINS_CARGO",
+      "SAILING_CREW_GHOST_JENKINS_CARGO_2",
+      "SAILING_CREW_GHOST_JENKINS_CARGO_3"
+    ]
+  },
+  {
     "description": "Karamja - Musa Point - Wooden - Plank Walls",
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
@@ -68222,20 +68253,6 @@
     "objectIds": [
       "HS_WEB_WALL_01",
       "HS_WEB_WALL_02"
-    ]
-  },
-  {
-    "description": "Sailing - Mercenary Shipwreak - Brighten Flames",
-    "baseMaterial": "GRAY_90",
-    "objectIds": [
-      "SAILING_MERCENARY_SHIPWRECK"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "a == 223",
-        "baseMaterial": "GRAY_75",
-        "upwardsNormals": true
-      }
     ]
   }
 ]
