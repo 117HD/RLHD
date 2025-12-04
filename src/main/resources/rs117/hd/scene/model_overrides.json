@@ -67794,6 +67794,45 @@
     ]
   },
   {
+    "description": "The Crown Jewel - Dungeon Entrance",
+    "baseMaterial": "GRAVEL",
+    "uvScale": 0.6,
+    "uvType": "BOX",
+    "objectIds": [
+      "CROWN_JEWEL_CAVE_ENTRANCE_CLOSED",
+      "CROWN_JEWEL_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "PURE_BLACK"
+      },
+      {
+        "colors": "h > 9",
+        "baseMaterial": "GRASS_1",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "The Crown Jewel - Crab Rock",
+    "baseMaterial": "SMOOTH_STONE",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "objectIds": [
+      "CRAB_ROCK"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 10",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.35
+      }
+    ]
+  },
+  {
     "description": "Sailing - Schematic Lockbox",
     "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
     "objectIds": [
@@ -67829,6 +67868,24 @@
     ]
   },
   {
+    "description": "Sailing - Tarnished Chest",
+    "baseMaterial": "METALLIC_1_LIGHT_SMOOTH",
+    "objectIds": [
+      "TARNISHED_PIRATE_THIEVING_CHEST_CROWN_JEWEL",
+      "TARNISHED_PIRATE_THIEVING_CHEST_SHIMMERING_ATOLL",
+      "TARNISHED_PIRATE_THIEVING_CHEST_OPEN"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 7 && s == 3" ,
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.65,
+        "uvOrientation": 512
+      }
+    ]
+  },
+  {
     "description": "Sailing - Island Build Sites",
     "baseMaterial": "BARK",
     "uvType": "BOX",
@@ -67838,12 +67895,13 @@
       "AMENITY_ROWBOAT_UNBUILT",
       "AMENITY_POTTERYWHEEL_UNBUILT",
       "AMENITY_POTTERYOVEN_UNBUILT",
-      "AMENITY_BANKCHEST_UNBUILT"
+      "AMENITY_BANKCHEST_UNBUILT",
+      "AMENITY_COOKING_POT_UNBUILT"
     ],
     "colorOverrides": [
       {
         "colors": [ "h == 7" ],
-        "baseMaterial": "ROPE",
+        "baseMaterial": "ROPE_LIGHT",
         "uvType": "BOX",
         "uvScale": 0.41
       }
@@ -67864,6 +67922,21 @@
     "uvType": "BOX",
     "objectIds": [
       "SAILING_CHARTING_GENERIC_CRAB_STATUE"
+    ]
+  },
+  {
+    "description": "Sailing - Hunter - Sandy Crab Trap",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "CRAB_TRAP_UNBUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h > 8",
+        "baseMaterial": "GRAY_90"
+      }
     ]
   },
   {
