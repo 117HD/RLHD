@@ -3,7 +3,6 @@ package rs117.hd.utils.jobs;
 import com.google.inject.Injector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.client.RuneLite;
 
 @Slf4j
 public abstract class Job {
@@ -89,7 +88,7 @@ public abstract class Job {
 		if (handle == null)
 			return;
 
-		final JobWorker worker = handle.worker;
+		final Worker worker = handle.worker;
 		if (handle.worker == null)
 			return;
 

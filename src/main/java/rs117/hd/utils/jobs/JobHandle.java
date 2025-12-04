@@ -10,7 +10,6 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.runelite.client.RuneLite;
 
 import static rs117.hd.utils.HDUtils.printStacktrace;
 import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
@@ -40,7 +39,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	@Getter
 	Job item;
 	@Getter
-	JobWorker worker;
+	Worker worker;
 	@Getter
 	boolean highPriority;
 
@@ -124,7 +123,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		return false;
 	}
 
-	synchronized boolean setRunning(JobWorker worker) {
+	synchronized boolean setRunning(Worker worker) {
 		if (isInQueue()) {
 			setJobState(STATE_RUNNING);
 			this.worker = worker;

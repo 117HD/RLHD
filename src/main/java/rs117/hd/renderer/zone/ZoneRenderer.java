@@ -67,7 +67,7 @@ import rs117.hd.utils.ModelHash;
 import rs117.hd.utils.RenderState;
 import rs117.hd.utils.ShadowCasterVolume;
 import rs117.hd.utils.buffer.GpuIntBuffer;
-import rs117.hd.utils.jobs.JobGenericTask;
+import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 import static net.runelite.api.Constants.*;
@@ -1135,11 +1135,11 @@ public class ZoneRenderer implements Renderer {
 			int zz = (gameObject.getY() >> 10) + offset;
 			Zone zone = ctx.zones[zx][zz];
 
-			JobGenericTask shadowUploadTask = null;
+			GenericJob shadowUploadTask = null;
 			if (zone.inShadowFrustum) {
 				final VAO o = vaoShadow.get(size, ctx.vboM);
 
-				shadowUploadTask = JobGenericTask
+				shadowUploadTask = GenericJob
 					.build("uploadTempModel", t -> {
 						// Since priority sorting of models includes back-face culling,
 						// we need to upload the entire model again for shadows

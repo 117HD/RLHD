@@ -2,18 +2,18 @@ package rs117.hd.utils.jobs;
 
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-public final class JobGenericTask extends Job {
-	private static final ConcurrentLinkedDeque<JobGenericTask> POOL = new ConcurrentLinkedDeque<>();
+public final class GenericJob extends Job {
+	private static final ConcurrentLinkedDeque<GenericJob> POOL = new ConcurrentLinkedDeque<>();
 
 	@FunctionalInterface
 	public interface TaskRunnable {
-		void run(JobGenericTask Task) throws InterruptedException;
+		void run(GenericJob Task) throws InterruptedException;
 	}
 
-	public static JobGenericTask build(String context, TaskRunnable runnable) {
-		JobGenericTask newTask = POOL.poll();
+	public static GenericJob build(String context, TaskRunnable runnable) {
+		GenericJob newTask = POOL.poll();
 		if (newTask == null)
-			newTask = new JobGenericTask();
+			newTask = new GenericJob();
 		newTask.context = context;
 		newTask.runnable = runnable;
 		newTask.isReleased = false;

@@ -7,7 +7,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import rs117.hd.utils.jobs.JobGenericTask;
+import rs117.hd.utils.jobs.GenericJob;
 import rs117.hd.utils.jobs.JobSystem;
 
 @Slf4j
@@ -27,7 +27,7 @@ public class JobSystemTests {
 
 	@Test
 	public void testQueueAndCompletion() {
-		JobGenericTask task = JobGenericTask
+		GenericJob task = GenericJob
 			.build(
 				"testQueueAndCompletion",
 				(t) -> busyWork(t, 5000)
@@ -42,7 +42,7 @@ public class JobSystemTests {
 	public void testQueueWithMultipleDependencies() {
 		List<String> order = new CopyOnWriteArrayList<>();
 
-		JobGenericTask tA = JobGenericTask
+		GenericJob tA = GenericJob
 			.build(
 				"A", t -> {
 					busyWork(t, 200);
@@ -51,7 +51,7 @@ public class JobSystemTests {
 			)
 			.queue();
 
-		JobGenericTask tB = JobGenericTask
+		GenericJob tB = GenericJob
 			.build(
 				"B", t -> {
 					busyWork(t, 300);
@@ -60,7 +60,7 @@ public class JobSystemTests {
 			)
 			.queue(tA);
 
-		JobGenericTask tC = JobGenericTask
+		GenericJob tC = GenericJob
 			.build(
 				"C", t -> {
 					busyWork(t, 300);
@@ -87,7 +87,7 @@ public class JobSystemTests {
 
 	@Test
 	public void testCancelTask() throws Exception {
-		JobGenericTask longTask = JobGenericTask
+		GenericJob longTask = GenericJob
 			.build("long", (t) -> busyWork(t, 10000))
 			.queue();
 
@@ -101,11 +101,11 @@ public class JobSystemTests {
 	public void testTasksWideParallel() {
 		int taskCount = 1000;
 
-		List<JobGenericTask> tasks = new CopyOnWriteArrayList<>();
+		List<GenericJob> tasks = new CopyOnWriteArrayList<>();
 
 		// Queue all tasks with no dependencies
 		for (int i = 0; i < taskCount; i++) {
-			tasks.add(JobGenericTask
+			tasks.add(GenericJob
 				.build(
 					"Task" + i,
 					t -> {
@@ -116,7 +116,7 @@ public class JobSystemTests {
 		}
 
 		// Wait for all tasks to complete
-		for (JobGenericTask task : tasks)
+		for (GenericJob task : tasks)
 			task.waitForCompletion();
 
 		// Verify all tasks ran
@@ -127,13 +127,13 @@ public class JobSystemTests {
 	@Test
 	public void testManyDependenciesStress() {
 		int count = 500;
-		List<JobGenericTask> tasks = new CopyOnWriteArrayList<>();
+		List<GenericJob> tasks = new CopyOnWriteArrayList<>();
 
-		JobGenericTask prev = null;
+		GenericJob prev = null;
 
 		for (int i = 0; i < count; i++) {
 			int idx = i;
-			JobGenericTask task = JobGenericTask
+			GenericJob task = GenericJob
 				.build(
 					"T" + idx, t -> {
 						log.debug("[TASK {}] Start", idx);
@@ -156,7 +156,7 @@ public class JobSystemTests {
 	public void testDependencyChain() {
 		List<String> order = new CopyOnWriteArrayList<>();
 
-		JobGenericTask tA = JobGenericTask
+		GenericJob tA = GenericJob
 			.build(
 				"A", t -> {
 					log.debug("[TASK A] Start");
@@ -166,7 +166,7 @@ public class JobSystemTests {
 			)
 			.queue();
 
-		JobGenericTask tB = JobGenericTask
+		GenericJob tB = GenericJob
 			.build(
 				"B", t -> {
 					log.debug("[TASK B] Start");
@@ -176,7 +176,7 @@ public class JobSystemTests {
 			)
 			.queue(tA);
 
-		JobGenericTask tC = JobGenericTask
+		GenericJob tC = GenericJob
 			.build(
 				"C", t -> {
 					log.debug("[TASK C] Start");
@@ -196,7 +196,7 @@ public class JobSystemTests {
 	public void testBranchingDependencies() {
 		List<String> order = new CopyOnWriteArrayList<>();
 
-		JobGenericTask tA = JobGenericTask.build(
+		GenericJob tA = GenericJob.build(
 			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 100);
@@ -204,7 +204,7 @@ public class JobSystemTests {
 			}
 		).queue();
 
-		JobGenericTask tB = JobGenericTask.build(
+		GenericJob tB = GenericJob.build(
 			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 200);
@@ -212,7 +212,7 @@ public class JobSystemTests {
 			}
 		).queue(tA);
 
-		JobGenericTask tC = JobGenericTask.build(
+		GenericJob tC = GenericJob.build(
 			"C", t -> {
 				log.debug("[TASK C] Start");
 				busyWork(t, 150);
@@ -220,7 +220,7 @@ public class JobSystemTests {
 			}
 		).queue(tA);
 
-		JobGenericTask tD = JobGenericTask.build(
+		GenericJob tD = GenericJob.build(
 			"D", t -> {
 				log.debug("[TASK D] Start");
 				busyWork(t, 100);
@@ -240,7 +240,7 @@ public class JobSystemTests {
 	public void testDiamondDependencyGraph() throws Exception {
 		List<String> order = new CopyOnWriteArrayList<>();
 
-		JobGenericTask tA = JobGenericTask.build(
+		GenericJob tA = GenericJob.build(
 			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 120);
@@ -248,7 +248,7 @@ public class JobSystemTests {
 			}
 		).queue();
 
-		JobGenericTask tB = JobGenericTask.build(
+		GenericJob tB = GenericJob.build(
 			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 140);
@@ -256,7 +256,7 @@ public class JobSystemTests {
 			}
 		).queue();
 
-		JobGenericTask tC = JobGenericTask.build(
+		GenericJob tC = GenericJob.build(
 			"C", t -> {
 				log.debug("[TASK C] Start");
 				busyWork(t, 200);
@@ -264,7 +264,7 @@ public class JobSystemTests {
 			}
 		).queue(tA, tB);
 
-		JobGenericTask tD = JobGenericTask.build(
+		GenericJob tD = GenericJob.build(
 			"D", t -> {
 				log.debug("[TASK D] Start");
 				busyWork(t, 180);
@@ -272,7 +272,7 @@ public class JobSystemTests {
 			}
 		).queue(tA, tB);
 
-		JobGenericTask tE = JobGenericTask.build(
+		GenericJob tE = GenericJob.build(
 			"E", t -> {
 				log.debug("[TASK E] Start");
 				busyWork(t, 80);
@@ -293,14 +293,14 @@ public class JobSystemTests {
 
 	@Test
 	public void testCancelUpstreamDependencyPreventsDownstreamExecution() throws Exception {
-		JobGenericTask hA = JobGenericTask.build(
+		GenericJob hA = GenericJob.build(
 			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 5000);
 			}
 		).queue();
 
-		JobGenericTask hB = JobGenericTask.build(
+		GenericJob hB = GenericJob.build(
 			"B", t -> {
 				log.debug("[TASK B] Start (This shouldn't happen)");
 				busyWork(t, 100);
@@ -320,10 +320,10 @@ public class JobSystemTests {
 	@Test
 	public void testCircularDependencyDetection() {
 		// Create 4 fresh handles
-		JobGenericTask A = JobGenericTask.build("A", t -> busyWork(t, 1000));
-		JobGenericTask B = JobGenericTask.build("B", t -> busyWork(t, 1000));
-		JobGenericTask C = JobGenericTask.build("C", t -> busyWork(t, 1000));
-		JobGenericTask D = JobGenericTask.build("D", t -> busyWork(t, 1000));
+		GenericJob A = GenericJob.build("A", t -> busyWork(t, 1000));
+		GenericJob B = GenericJob.build("B", t -> busyWork(t, 1000));
+		GenericJob C = GenericJob.build("C", t -> busyWork(t, 1000));
+		GenericJob D = GenericJob.build("D", t -> busyWork(t, 1000));
 
 		// ----------------------------
 		// Case 1: Valid chain A -> B -> C -> D
@@ -379,7 +379,7 @@ public class JobSystemTests {
 		List<String> order = new CopyOnWriteArrayList<>();
 
 		// ----- A -----
-		JobGenericTask tA = JobGenericTask.build(
+		GenericJob tA = GenericJob.build(
 			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 100);
@@ -388,7 +388,7 @@ public class JobSystemTests {
 		).queue();
 
 		// ----- B -----
-		JobGenericTask tB = JobGenericTask.build(
+		GenericJob tB = GenericJob.build(
 			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 120);
@@ -397,7 +397,7 @@ public class JobSystemTests {
 		).queue();
 
 		// ----- C depends on A & B -----
-		JobGenericTask hC = JobGenericTask.build(
+		GenericJob hC = GenericJob.build(
 			"C", t -> {
 				log.debug("[TASK C] Start");
 				busyWork(t, 150);
@@ -406,7 +406,7 @@ public class JobSystemTests {
 		).queue(tA, tB);
 
 		// ----- D depends on C -----
-		JobGenericTask tD = JobGenericTask.build(
+		GenericJob tD = GenericJob.build(
 			"D", t -> {
 				log.debug("[TASK D] Start");
 				busyWork(t, 80);
@@ -415,7 +415,7 @@ public class JobSystemTests {
 		).queue(hC);
 
 		// ----- E depends on C -----
-		JobGenericTask tE = JobGenericTask.build(
+		GenericJob tE = GenericJob.build(
 			"E", t -> {
 				log.debug("[TASK E] Start");
 				busyWork(t, 90);
@@ -455,7 +455,7 @@ public class JobSystemTests {
 		List<String> order = new CopyOnWriteArrayList<>();
 
 		// ----- A: Will be cancelled -----
-		JobGenericTask tA = JobGenericTask.build(
+		GenericJob tA = GenericJob.build(
 			"A", t -> {
 				log.debug("[TASK A] Start");
 				busyWork(t, 3000);  // long-running, gives us time to cancel
@@ -464,7 +464,7 @@ public class JobSystemTests {
 		).queue();
 
 		// ----- B: Allowed to run -----
-		JobGenericTask tB = JobGenericTask.build(
+		GenericJob tB = GenericJob.build(
 			"B", t -> {
 				log.debug("[TASK B] Start");
 				busyWork(t, 100);
@@ -473,7 +473,7 @@ public class JobSystemTests {
 		).queue();
 
 		// ----- C depends on A & B -----
-		JobGenericTask tC = JobGenericTask.build(
+		GenericJob tC = GenericJob.build(
 			"C", t -> {
 				log.debug("[TASK C] Should NOT execute");
 				busyWork(t, 50);
@@ -482,7 +482,7 @@ public class JobSystemTests {
 		).queue(tA, tB);
 
 		// ----- D depends on C -----
-		JobGenericTask tD = JobGenericTask.build(
+		GenericJob tD = GenericJob.build(
 			"D", t -> {
 				log.debug("[TASK D] Should NOT execute");
 				busyWork(t, 50);
@@ -491,7 +491,7 @@ public class JobSystemTests {
 		).queue(tC);
 
 		// ----- E depends on C -----
-		JobGenericTask tE = JobGenericTask.build(
+		GenericJob tE = GenericJob.build(
 			"E", t -> {
 				log.debug("[TASK E] Should NOT execute");
 				busyWork(t, 50);
@@ -525,7 +525,7 @@ public class JobSystemTests {
 		Assert.assertEquals(1, order.size());
 	}
 
-	private static void busyWork(JobGenericTask task, long millis) throws InterruptedException {
+	private static void busyWork(GenericJob task, long millis) throws InterruptedException {
 		final long start = System.nanoTime();
 		final long durationNanos = millis * 1_000_000L;
 		long nextLogTime = System.nanoTime() + 1000 * 1_000_000L; // 1 Second

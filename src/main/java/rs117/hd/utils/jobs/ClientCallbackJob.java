@@ -1,0 +1,19 @@
+package rs117.hd.utils.jobs;
+
+import java.util.concurrent.Semaphore;
+
+public final class ClientCallbackJob {
+	private static final ThreadLocal<ClientCallbackJob> POOL = new ThreadLocal<>();
+
+	public static ClientCallbackJob current() {
+		ClientCallbackJob callback = POOL.get();
+		if (callback == null)
+			callback = new ClientCallbackJob();
+		callback.sema.drainPermits();
+		return callback;
+	}
+
+	final Semaphore sema = new Semaphore(0);
+	public Runnable callback;
+	public boolean immediate;
+}

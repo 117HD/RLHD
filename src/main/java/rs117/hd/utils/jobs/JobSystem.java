@@ -16,13 +16,13 @@ import rs117.hd.overlays.FrameTimer;
 import static rs117.hd.HdPlugin.PROCESSOR_COUNT;
 import static rs117.hd.utils.MathUtils.*;
 
-@Singleton
 @Slf4j
+@Singleton
 public final class JobSystem {
 	public static final boolean VALIDATE = false;
 
 	@Inject
-	public HdPlugin plugin;
+	public Injector injector;
 
 	@Inject
 	public Client client;
@@ -31,34 +31,34 @@ public final class JobSystem {
 	public ClientThread clientThread;
 
 	@Inject
-	public FrameTimer frametimer;
+	public HdPlugin plugin;
 
 	@Inject
-	public Injector injector;
+	public FrameTimer frametimer;
 
 	@Getter
-	protected boolean active;
+	boolean active;
 
 	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
 
-	protected final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
-	private final BlockingDeque<JobClientCallback> clientCallbacks = new LinkedBlockingDeque<>(workerCount);
+	final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
+	private final BlockingDeque<ClientCallbackJob> clientCallbacks = new LinkedBlockingDeque<>(workerCount);
 
-	private final HashMap<Thread, JobWorker> threadToWorker = new HashMap<>();
-	protected JobWorker[] workers;
+	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
+	Worker[] workers;
 
 	private boolean clientInvokeScheduled;
 
 	public void initialize() {
-		workers = new JobWorker[workerCount];
+		workers = new Worker[workerCount];
 		active = true;
 
 		for (int i = 0; i < workerCount; i++) {
-			JobWorker newWorker = workers[i] = new JobWorker(this, i);
-			newWorker.thread = new Thread(newWorker::run);
-			newWorker.thread.setPriority(Thread.NORM_PRIORITY + 1);
-			newWorker.thread.setName("117HD - Worker " + i);
-			threadToWorker.put(newWorker.thread, newWorker);
+			Worker worker = workers[i] = new Worker(this, i);
+			worker.thread = new Thread(worker::run);
+			worker.thread.setPriority(Thread.NORM_PRIORITY + 1);
+			worker.thread.setName("117HD - Worker " + i);
+			threadToWorker.put(worker.thread, worker);
 		}
 
 		Job.JOB_SYSTEM = this;
@@ -85,7 +85,7 @@ public final class JobSystem {
 		active = false;
 		workQueue.clear();
 
-		for (JobWorker worker : workers) {
+		for (Worker worker : workers) {
 			worker.localWorkQueue.clear();
 			worker.thread.interrupt();
 			if (worker.handle != null) {
@@ -99,7 +99,7 @@ public final class JobSystem {
 		}
 
 		int workerShutdownCount = 0;
-		for (JobWorker worker : workers) {
+		for (Worker worker : workers) {
 			if (!worker.thread.isAlive()) {
 				workerShutdownCount++;
 				continue;
@@ -131,7 +131,7 @@ public final class JobSystem {
 	}
 
 	public boolean hasIdleWorkers() {
-		for (JobWorker worker : workers) {
+		for (Worker worker : workers) {
 			if (!worker.inflight.get())
 				return true;
 		}
@@ -140,11 +140,11 @@ public final class JobSystem {
 
 	public void printWorkersState() {
 		log.debug("WorkQueue Size: {}", workQueue.size());
-		for (JobWorker worker : workers)
+		for (Worker worker : workers)
 			worker.printState();
 	}
 
-	protected void queue(Job item, boolean highPriority, Job... dependencies) {
+	void queue(Job item, boolean highPriority, Job... dependencies) {
 		if (!item.executeAsync) {
 			try {
 				item.queued.set(true);
@@ -186,14 +186,14 @@ public final class JobSystem {
 		}
 	}
 
-	protected void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
+	void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
 		if (client.isClientThread()) {
 			callback.run();
 			processPendingClientCallbacks(false);
 			return;
 		}
 
-		final JobClientCallback clientCallback = JobClientCallback.current();
+		final ClientCallbackJob clientCallback = ClientCallbackJob.current();
 		clientCallback.callback = callback;
 		clientCallback.immediate = immediate;
 
@@ -227,7 +227,7 @@ public final class JobSystem {
 		if (size == 0)
 			return;
 
-		JobClientCallback pair;
+		ClientCallbackJob pair;
 		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
 			if (!pair.immediate && immediateOnly) {
 				clientCallbacks.addLast(pair); // Add it back onto the end

@@ -12,7 +12,7 @@ import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 
 @Slf4j
 @RequiredArgsConstructor
-public final class JobWorker {
+public final class Worker {
 	String name, pausedName;
 	Thread thread;
 	JobHandle handle;
@@ -33,7 +33,7 @@ public final class JobWorker {
 
 			while (handle == null) {
 				if (stealTargetIdx >= 0) {
-					final JobWorker victim = jobSystem.workers[stealTargetIdx];
+					final Worker victim = jobSystem.workers[stealTargetIdx];
 					int stealCount = victim.localWorkQueue.size() / 2;
 
 					JobHandle stolenHandle;

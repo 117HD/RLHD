@@ -30,7 +30,7 @@ import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 import rs117.hd.utils.NpcDisplacementCache;
-import rs117.hd.utils.jobs.JobGenericTask;
+import rs117.hd.utils.jobs.GenericJob;
 
 import static net.runelite.api.Constants.*;
 import static net.runelite.api.Perspective.SCENE_SIZE;
@@ -312,18 +312,18 @@ public class SceneManager {
 	}
 
 	@Getter
-	private final JobGenericTask generateSceneDataTask = JobGenericTask.build(
+	private final GenericJob generateSceneDataTask = GenericJob.build(
 		"ProceduralGenerator::generateSceneData",
 		(task) -> proceduralGenerator.generateSceneData(nextSceneContext != null ? nextSceneContext : root.sceneContext)
 	);
 
 	@Getter
-	private final JobGenericTask loadSceneLightsTask = JobGenericTask.build(
+	private final GenericJob loadSceneLightsTask = GenericJob.build(
 		"LightManager::loadSceneLights",
 		(task) -> lightManager.loadSceneLights(nextSceneContext, root.sceneContext)
 	);
 
-	private final JobGenericTask calculateRoofChangesTask = JobGenericTask.build(
+	private final GenericJob calculateRoofChangesTask = GenericJob.build(
 		"calculateRoofChanges",
 		(task) -> {
 			Scene prev = client.getTopLevelWorldView().getScene();
