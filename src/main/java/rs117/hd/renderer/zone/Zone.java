@@ -26,10 +26,11 @@ import static rs117.hd.HdPlugin.SUPPORTS_INDIRECT_DRAW;
 import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceFaceCount;
 import static rs117.hd.renderer.zone.FacePrioritySorter.distanceToFaces;
+import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
 @RequiredArgsConstructor
-class Zone {
+public class Zone {
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
@@ -37,34 +38,36 @@ class Zone {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	static final int VERT_SIZE = 32;
+	public static final int VERT_SIZE = 32;
 
 	// Metadata format
 	// worldViewIndex int int
 	// sceneOffset int vec2(x, y)
-	static final int METADATA_SIZE = 12;
+	public static final int METADATA_SIZE = 12;
 
-	static final int LEVEL_WATER_SURFACE = 4;
+	public static final int LEVEL_WATER_SURFACE = 4;
 
-	int glVao;
+	public int glVao;
 	int bufLen;
 
-	int glVaoA;
-	int bufLenA;
+	public int glVaoA;
+	public int bufLenA;
 
-	int sizeO, sizeA;
+	public int sizeO, sizeA;
 	@Nullable
-	VBO vboO, vboA, vboM;
+	public VBO vboO, vboA, vboM;
 
-	boolean initialized; // whether the zone vao and vbos are ready
-	boolean cull; // whether the zone is queued for deletion
-	boolean dirty; // whether the zone has temporary modifications
-	boolean metadataDirty; // whether the zone needs metadata updating
-	boolean invalidate; // whether the zone needs rebuilding
-	boolean hasWater; // whether the zone has any water tiles
-	boolean onlyWater; // whether the zone only contains water tiles
-	boolean inSceneFrustum; // whether the zone is visible to the scene camera
-	boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
+	public boolean initialized; // whether the zone vao and vbos are ready
+	public boolean cull; // whether the zone is queued for deletion
+	public boolean needsRoofUpdate; // whether the zone needs to have its roofs updated during scene swap
+	public boolean rebuild; // whether the zone is queued for rebuild
+	public boolean dirty; // whether the zone has temporary modifications
+	public boolean hasWater; // whether the zone has any water tiles
+	public boolean onlyWater; // whether the zone only contains water tiles
+	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
+	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
+
+	ZoneUploadJob uploadJob;
 
 	int[] levelOffsets = new int[5]; // buffer pos in ints for the end of the level
 
@@ -74,14 +77,13 @@ class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void initialize(VBO o, VBO a, int eboShared) {
+	public void initialize(VBO o, VBO a, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
 		if (o != null || a != null) {
 			vboM = new VBO(METADATA_SIZE);
 			vboM.initialize(GL_STATIC_DRAW);
-			metadataDirty = true;
 		}
 
 		if (o != null) {
@@ -107,7 +109,7 @@ class Zone {
 					zone.free();
 	}
 
-	void free() {
+	public void free() {
 		if (vboO != null) {
 			vboO.destroy();
 			vboO = null;
@@ -133,12 +135,34 @@ class Zone {
 			glVaoA = 0;
 		}
 
+		if (uploadJob != null) {
+			uploadJob.release();
+			uploadJob = null;
+		}
+
+		sizeO = 0;
+		sizeA = 0;
+		bufLen = 0;
+		bufLenA = 0;
+
+		initialized = false;
+		cull = false;
+		hasWater = false;
+		onlyWater = false;
+		inSceneFrustum = false;
+		inShadowFrustum = false;
+
+		Arrays.fill(levelOffsets, 0);
+		rids = null;
+		roofStart = null;
+		roofEnd = null;
+
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
 		alphaModels.clear();
 	}
 
-	void unmap() {
+	public void unmap() {
 		if (vboO != null) {
 			vboO.unmap();
 		}
@@ -204,13 +228,12 @@ class Zone {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void setMetadata(WorldViewContext viewContext, int mx, int mz) {
-		if (vboM == null || !metadataDirty)
+	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
+		if (vboM == null)
 			return;
-		metadataDirty = false;
 
-		int baseX = (mx - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (viewContext.sceneContext.sceneOffset >> 3)) << 10;
+		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
+		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
 
 		vboM.map();
 		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
@@ -237,6 +260,16 @@ class Zone {
 	private static int drawIdx = 0;
 	private static int[] glDrawOffset, glDrawLength;
 
+	private static final int[][] glDrawOffsetPreAlloc = new int[15][];
+	private static final int[][] glDrawLengthPreAlloc = new int[15][];
+
+	static {
+		for (int i = 0; i < glDrawOffsetPreAlloc.length; ++i) {
+			glDrawOffsetPreAlloc[i] = new int[i + 1];
+			glDrawLengthPreAlloc[i] = new int[i + 1];
+		}
+	}
+
 	private void convertForDraw(int vertSize) {
 		for (int i = 0; i < drawIdx; ++i) {
 			assert drawEnd[i] >= drawOff[i];
@@ -248,8 +281,13 @@ class Zone {
 			drawEnd[i] -= drawOff[i]; // convert from end pos to length
 		}
 
-		glDrawOffset = Arrays.copyOfRange(drawOff, 0, drawIdx);
-		glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
+		if (drawIdx < glDrawOffsetPreAlloc.length) {
+			glDrawOffset = copyTo(glDrawOffsetPreAlloc[drawIdx], drawOff, 0, drawIdx);
+			glDrawLength = copyTo(glDrawLengthPreAlloc[drawIdx], drawEnd, 0, drawIdx);
+		} else {
+			glDrawOffset = Arrays.copyOfRange(drawOff, 0, drawIdx);
+			glDrawLength = Arrays.copyOfRange(drawEnd, 0, drawIdx);
+		}
 	}
 
 	void renderOpaque(CommandBuffer cmd, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
@@ -547,18 +585,22 @@ class Zone {
 	private static final int[] numOfPriority = FacePrioritySorter.numOfPriority;
 	private static final int[][] orderedFaces = FacePrioritySorter.orderedFaces;
 
+	private Camera alphaSort_Camera;
+	private int alphaSort_zx, alphaSort_zz;
+	private final Comparator<AlphaModel> alphaSortComparator = Comparator.comparingInt((AlphaModel m) -> {
+		final int cx = (int) alphaSort_Camera.getPositionX();
+		final int cy = (int) alphaSort_Camera.getPositionY();
+		final int cz = (int) alphaSort_Camera.getPositionZ();
+		final int mx = m.x + ((alphaSort_zx - m.zofx) << 10);
+		final int mz = m.z + ((alphaSort_zz - m.zofz) << 10);
+		return (mx - cx) * (mx - cx) + (m.y - cy) * (m.y - cy) + (mz - cz) * (mz - cz);
+	}).reversed();
+
 	void alphaSort(int zx, int zz, Camera camera) {
-		int cx = (int) camera.getPositionX();
-		int cy = (int) camera.getPositionY();
-		int cz = (int) camera.getPositionZ();
-		alphaModels.sort(Comparator
-			.comparingInt((AlphaModel m) -> {
-				final int mx = m.x + ((zx - m.zofx) << 10);
-				final int mz = m.z + ((zz - m.zofz) << 10);
-				return (mx - cx) * (mx - cx) + (m.y - cy) * (m.y - cy) + (mz - cz) * (mz - cz);
-			})
-			.reversed()
-		);
+		alphaSort_Camera = camera;
+		alphaSort_zx = zx;
+		alphaSort_zz = zz;
+		alphaModels.sort(alphaSortComparator);
 	}
 
 	void renderAlpha(

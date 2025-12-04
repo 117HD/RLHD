@@ -53,7 +53,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.overlays.FrameTimer;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
@@ -99,15 +98,13 @@ public class LightManager {
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
 
-	@Inject
-	private FrameTimer frameTimer;
-
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> OBJECT_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> PROJECTILE_LIGHTS = ArrayListMultimap.create();
 	private final ListMultimap<Integer, LightDefinition> GRAPHICS_OBJECT_LIGHTS = ArrayListMultimap.create();
 
+	private final Renderable[] imposterRenderables = new Renderable[2];
 	private boolean reloadLights;
 	private EntityHiderConfig entityHiderConfig;
 	private int currentPlane;
@@ -596,8 +593,6 @@ public class LightManager {
 
 	public void loadSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext)
 	{
-		assert client.isClientThread();
-
 		if (oldSceneContext == null) {
 			sceneContext.lights.clear();
 			sceneContext.knownProjectiles.clear();
@@ -777,7 +772,7 @@ public class LightManager {
 		return tileObject.getId();
 	}
 
-	private void handleObjectSpawn(
+	public void handleObjectSpawn(
 		@Nonnull SceneContext sceneContext,
 		@Nonnull TileObject tileObject
 	) {
@@ -785,16 +780,21 @@ public class LightManager {
 		if (tileObject.getPlane() < 0)
 			return;
 
-		int impostorId = getImpostorId(tileObject);
-		boolean isDuplicate = sceneContext.lights.stream()
-			.anyMatch(light ->
-				light.tileObject == tileObject &&
-				light.impostorId == impostorId);
-		if (isDuplicate)
-			return;
+		// GameObjects with DynamicObject renderables may be impostors, so handle those in swapScene
+		int tileObjectId = tileObject.getId();
+		if (tileObject instanceof GameObject &&
+			((GameObject) tileObject).getRenderable() instanceof DynamicObject
+		) {
+			if (client.isClientThread()) {
+				tileObjectId = getImpostorId(tileObject);
+			} else {
+				sceneContext.lightSpawnsToHandleOnClientThread.add(tileObject);
+				return;
+			}
+		}
 
 		sceneContext.lights.removeIf(light -> light.tileObject == tileObject);
-		spawnLights(sceneContext, tileObject, impostorId);
+		spawnLights(sceneContext, tileObject, tileObjectId);
 	}
 
 	private void handleObjectDespawn(TileObject tileObject) {
@@ -803,24 +803,23 @@ public class LightManager {
 			return;
 
 		int impostorId = getImpostorId(tileObject);
-		removeLightIf(sceneContext, l -> l.tileObject == tileObject && l.impostorId == impostorId);
+		removeLightIf(sceneContext, l -> l.tileObject == tileObject && l.tileObjectId == impostorId);
 	}
 
 	private void spawnLights(@Nonnull SceneContext sceneContext, TileObject tileObject, int impostorId) {
 		int sizeX = 1;
 		int sizeY = 1;
-		Renderable[] renderables = new Renderable[2];
 		int[] orientations = { 0, 0 };
 		int[] offset = { 0, 0 };
 
 		if (tileObject instanceof GroundObject) {
 			var object = (GroundObject) tileObject;
-			renderables[0] = object.getRenderable();
+			imposterRenderables[0] = object.getRenderable();
 			orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 		} else if (tileObject instanceof DecorativeObject) {
 			var object = (DecorativeObject) tileObject;
-			renderables[0] = object.getRenderable();
-			renderables[1] = object.getRenderable2();
+			imposterRenderables[0] = object.getRenderable();
+			imposterRenderables[1] = object.getRenderable2();
 			int ori = orientations[0] = orientations[1] = HDUtils.getModelOrientation(object.getConfig());
 			switch (ObjectType.fromConfig(object.getConfig())) {
 				case WallDecorDiagonalNoOffset:
@@ -835,15 +834,15 @@ public class LightManager {
 			offset[1] += object.getYOffset();
 		} else if (tileObject instanceof WallObject) {
 			var object = (WallObject) tileObject;
-			renderables[0] = object.getRenderable1();
-			renderables[1] = object.getRenderable2();
+			imposterRenderables[0] = object.getRenderable1();
+			imposterRenderables[1] = object.getRenderable2();
 			orientations[0] = HDUtils.convertWallObjectOrientation(object.getOrientationA());
 			orientations[1] = HDUtils.convertWallObjectOrientation(object.getOrientationB());
 		} else if (tileObject instanceof GameObject) {
 			var object = (GameObject) tileObject;
 			sizeX = object.sizeX();
 			sizeY = object.sizeY();
-			renderables[0] = object.getRenderable();
+			imposterRenderables[0] = object.getRenderable();
 			int ori = orientations[0] = HDUtils.getModelOrientation(object.getConfig());
 			int offsetDist = 64;
 			switch (ObjectType.fromConfig(object.getConfig())) {
@@ -872,7 +871,7 @@ public class LightManager {
 
 		// Spawn animation-specific lights for each DynamicObject renderable, and non-animation-based lights
 		for (int i = 0; i < 2; i++) {
-			var renderable = renderables[i];
+			var renderable = imposterRenderables[i];
 			if (renderable == null)
 				continue;
 
@@ -926,7 +925,7 @@ public class LightManager {
 
 				Light light = new Light(def);
 				light.tileObject = tileObject;
-				light.impostorId = impostorId;
+				light.tileObjectId = impostorId;
 				light.plane = plane;
 				light.orientation = orientations[i];
 				light.origin[0] = lightX;

@@ -1045,6 +1045,19 @@ public interface HdPluginConfig extends Config
 		return true;
 	}
 
+	String KEY_ZONE_STREAMING = "experimentalZoneStreaming";
+	@ConfigItem(
+		keyName = KEY_ZONE_STREAMING,
+		name = "Zone streaming",
+		description =
+			"Load zones in parallel in the background, switching to new scenes almost instantly.<br>" +
+			"You will see zones appear when they are loaded, instead of having to wait for them all at once.",
+		section = experimentalSettings
+	)
+	default boolean zoneStreaming() {
+		return true;
+	}
+
 	String KEY_PRESERVE_VANILLA_NORMALS = "experimentalPreserveVanillaNormals";
 	@ConfigItem(
 		keyName = KEY_PRESERVE_VANILLA_NORMALS,

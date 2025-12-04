@@ -490,7 +490,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 
 		Color polyColor = Color.LIGHT_GRAY;
 		if (mode == MODE_TILE_INFO) {
-			ctx.tileOverrideVars.setTile(tile);
+			ctx.tileOverrideVars.get().setTile(tile);
 			if (tile.getBridge() != null)
 				lines.add("Bridge");
 
@@ -515,7 +515,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var overlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, OVERLAY_FLAG | overlayId);
 			var replacementPath = new StringBuilder(overlay.toString());
 			while (true) {
-				var replacement = overlay.resolveNextReplacement(ctx.tileOverrideVars);
+				var replacement = overlay.resolveNextReplacement(ctx.tileOverrideVars.get());
 				if (replacement == overlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -532,7 +532,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 			var underlay = tileOverrideManager.getOverrideBeforeReplacements(worldPos, underlayId);
 			replacementPath = new StringBuilder(underlay.toString());
 			while (true) {
-				var replacement = underlay.resolveNextReplacement(ctx.tileOverrideVars);
+				var replacement = underlay.resolveNextReplacement(ctx.tileOverrideVars.get());
 				if (replacement == underlay)
 					break;
 				replacementPath.append("\n\t⤷ ").append(replacement);
@@ -598,7 +598,7 @@ public class TileInfoOverlay extends Overlay implements MouseListener, MouseWhee
 				lines.add(String.format("HSL: %s", hslString(tile)));
 			}
 
-			ctx.tileOverrideVars.setTile(null); // Avoid accidentally keeping the old scene in memory
+			ctx.tileOverrideVars.get().setTile(null); // Avoid accidentally keeping the old scene in memory
 		}
 
 		var decorObject = tile.getDecorativeObject();

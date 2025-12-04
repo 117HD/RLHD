@@ -47,6 +47,7 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.uniforms.UBOMaterials;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.utils.ExpressionParser;
 import rs117.hd.utils.FileWatcher;
@@ -94,6 +95,9 @@ public class MaterialManager {
 
 	@Inject
 	private ModelOverrideManager modelOverrideManager;
+
+	@Inject
+	private SceneManager sceneManager;
 
 	public UBOMaterials uboMaterials;
 
@@ -150,15 +154,25 @@ public class MaterialManager {
 	}
 
 	public void reload(boolean throwOnFailure) {
+		Material[] materials;
+		try {
+			materials = loadMaterials(MATERIALS_PATH);
+			log.debug("Loaded {} materials", materials.length);
+		} catch (IOException ex) {
+			log.error("Failed to load materials:", ex);
+			if (throwOnFailure)
+				throw new IllegalStateException(ex);
+			return;
+		}
+
 		clientThread.invoke(() -> {
 			try {
-				Material[] materials = loadMaterials(MATERIALS_PATH);
-				log.debug("Loaded {} materials", materials.length);
-				clientThread.invoke(() -> swapMaterials(materials));
-			} catch (IOException ex) {
-				log.error("Failed to load materials:", ex);
-				if (throwOnFailure)
-					throw new IllegalStateException(ex);
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+				swapMaterials(materials);
+			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 			}
 		});
 	}

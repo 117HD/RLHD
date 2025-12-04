@@ -27,6 +27,7 @@
 package rs117.hd;
 
 import com.google.gson.Gson;
+import com.google.inject.Binder;
 import com.google.inject.Provides;
 import java.awt.Canvas;
 import java.awt.Dimension;
@@ -96,6 +97,7 @@ import rs117.hd.overlays.TiledLightingOverlay;
 import rs117.hd.overlays.Timer;
 import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
@@ -105,6 +107,7 @@ import rs117.hd.scene.GroundMaterialManager;
 import rs117.hd.scene.LightManager;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.ModelOverrideManager;
+import rs117.hd.scene.ProceduralGenerator;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.TextureManager;
 import rs117.hd.scene.TileOverrideManager;
@@ -178,23 +181,41 @@ public class HdPlugin extends Plugin {
 
 	public static final float COLOR_FILTER_FADE_DURATION = 500;
 
-	private static final int[] RENDERBUFFER_FORMATS_SRGB = {
+	public static final int[] RENDERBUFFER_FORMATS_SRGB = {
 		GL_SRGB8,
 		GL_SRGB8_ALPHA8 // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
+	public static final int[] RENDERBUFFER_FORMATS_SRGB_WITH_ALPHA = {
 		GL_SRGB8_ALPHA8 // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR = {
+	public static final int[] RENDERBUFFER_FORMATS_LINEAR = {
 		GL_RGB8,
 		GL_RGBA8,
 		GL_RGB, // should be guaranteed
 		GL_RGBA // should be guaranteed
 	};
-	private static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
+	public static final int[] RENDERBUFFER_FORMATS_LINEAR_WITH_ALPHA = {
 		GL_RGBA8,
 		GL_RGBA // should be guaranteed
 	};
+
+	public static final int PROCESSOR_COUNT = Runtime.getRuntime().availableProcessors();
+
+	// Manually instantiate singletons and lazily inject them to avoid circular dependencies
+	private static final List<Class<?>> LAZY_SINGLETONS = List.of(
+		AreaManager.class,
+		EnvironmentManager.class,
+		GamevalManager.class,
+		GroundMaterialManager.class,
+		LightManager.class,
+		MaterialManager.class,
+		ModelOverrideManager.class,
+		ProceduralGenerator.class,
+		TextureManager.class,
+		TileOverrideManager.class,
+		WaterTypeManager.class,
+		SceneManager.class
+	);
 
 	@Getter
 	private Gson gson;
@@ -264,6 +285,9 @@ public class HdPlugin extends Plugin {
 
 	@Inject
 	private UIShaderProgram uiProgram;
+
+	@Inject
+	private SceneManager sceneManager;
 
 	@Getter
 	@Inject
@@ -363,6 +387,7 @@ public class HdPlugin extends Plugin {
 	public boolean configRoofShadows;
 	public boolean configExpandShadowDraw;
 	public boolean configUseFasterModelHashing;
+	public boolean configZoneStreaming;
 	public boolean configUndoVanillaShading;
 	public boolean configPreserveVanillaNormals;
 	public boolean configAsyncUICopy;
@@ -370,6 +395,7 @@ public class HdPlugin extends Plugin {
 	public boolean configCharacterDisplacement;
 	public boolean configTiledLighting;
 	public boolean configTiledLightingImageLoadStore;
+	public int configDetailDrawDistance;
 	public DynamicLights configDynamicLights;
 	public ShadowMode configShadowMode;
 	public SeasonalTheme configSeasonalTheme;
@@ -411,6 +437,8 @@ public class HdPlugin extends Plugin {
 	public int drawnStaticRenderableCount;
 	@Getter
 	public int drawnDynamicRenderableCount;
+	@Getter
+	public long garbageCollectionCount;
 
 	public double elapsedTime;
 	public double elapsedClientTime;
@@ -427,7 +455,24 @@ public class HdPlugin extends Plugin {
 	}
 
 	@Override
+	public void configure(Binder binder) {
+		// Bind manually constructed instances of singletons to avoid recursive loading issues
+		for (var clazz : LAZY_SINGLETONS) {
+			try {
+				// noinspection unchecked
+				binder.bind((Class<Object>) clazz).toInstance(clazz.getDeclaredConstructor().newInstance());
+			} catch (Exception ex) {
+				throw new RuntimeException("Failed to instantiate singleton " + clazz, ex);
+			}
+		}
+	}
+
+	@Override
 	protected void startUp() {
+		// Lazily inject members into our singletons
+		for (var clazz : LAZY_SINGLETONS)
+			injector.injectMembers(injector.getInstance(clazz));
+
 		gson = GsonUtils.wrap(injector.getInstance(Gson.class));
 
 		clientThread.invoke(() -> {
@@ -657,25 +702,10 @@ public class HdPlugin extends Plugin {
 			client.setExpandedMapLoading(0);
 
 			asyncUICopy.complete();
-			developerTools.deactivate();
-			tileOverrideManager.shutDown();
-			groundMaterialManager.shutDown();
-			modelOverrideManager.shutDown();
-			lightManager.shutDown();
-			environmentManager.shutDown();
-			fishingSpotReplacer.shutDown();
-			areaManager.shutDown();
-			gamevalManager.shutDown();
-			gammaCalibrationOverlay.destroy();
-			npcDisplacementCache.destroy();
 
 			if (lwjglInitialized) {
 				lwjglInitialized = false;
 				renderer.waitUntilIdle();
-
-				waterTypeManager.shutDown();
-				materialManager.shutDown();
-				textureManager.shutDown();
 
 				destroyUiTexture();
 				destroyShaders();
@@ -691,6 +721,21 @@ public class HdPlugin extends Plugin {
 				}
 				renderer = null;
 			}
+
+			developerTools.deactivate();
+			tileOverrideManager.shutDown();
+			groundMaterialManager.shutDown();
+			modelOverrideManager.shutDown();
+			lightManager.shutDown();
+			environmentManager.shutDown();
+			fishingSpotReplacer.shutDown();
+			areaManager.shutDown();
+			gamevalManager.shutDown();
+			gammaCalibrationOverlay.destroy();
+			npcDisplacementCache.destroy();
+			waterTypeManager.shutDown();
+			materialManager.shutDown();
+			textureManager.shutDown();
 
 			if (awtContext != null)
 				awtContext.destroy();
@@ -1407,6 +1452,12 @@ public class HdPlugin extends Plugin {
 		uboUI.alphaOverlay.set(ColorUtils.srgba(overlayColor));
 		uboUI.upload();
 
+		if (configAsyncUICopy) {
+			frameTimer.begin(Timer.UPLOAD_UI);
+			asyncUICopy.complete();
+			frameTimer.end(Timer.UPLOAD_UI);
+		}
+
 		// Set the sampling function used when stretching the UI.
 		// This is probably better done with sampler objects instead of texture parameters, but this is easier and likely more portable.
 		// See https://www.khronos.org/opengl/wiki/Sampler_Object for details.
@@ -1497,8 +1548,10 @@ public class HdPlugin extends Plugin {
 		configDynamicLights = config.dynamicLights();
 		configTiledLighting = config.tiledLighting();
 		configTiledLightingImageLoadStore = config.tiledLightingImageLoadStore();
+		configDetailDrawDistance = config.detailDrawDistance();
 		configExpandShadowDraw = config.expandShadowDraw();
 		configUseFasterModelHashing = config.fasterModelHashing();
+		configZoneStreaming = config.zoneStreaming();
 		configUndoVanillaShading = config.shadingMode() != ShadingMode.VANILLA;
 		configPreserveVanillaNormals = config.preserveVanillaNormals();
 		configAsyncUICopy = config.asyncUICopy();
@@ -1576,6 +1629,9 @@ public class HdPlugin extends Plugin {
 				return;
 
 			try {
+				sceneManager.getLoadingLock().lock();
+				sceneManager.completeAllStreaming();
+
 				// Synchronize with scene loading
 				synchronized (this) {
 					updateCachedConfigs();
@@ -1735,6 +1791,8 @@ public class HdPlugin extends Plugin {
 				log.error("Error while changing settings:", ex);
 				stopPlugin();
 			} finally {
+				sceneManager.getLoadingLock().unlock();
+				log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 				pendingConfigChanges.clear();
 				frameTimer.reset();
 			}
