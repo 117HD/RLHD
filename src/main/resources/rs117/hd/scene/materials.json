@@ -2065,6 +2065,15 @@
     "brightness": 1.277
   },
   {
+    "name": "LIGHT_BARK_SMOOTH",
+    "parent": "LIGHT_BARK",
+    "textureScale": [
+      1,
+      1,
+      0.7
+    ]
+  },
+  {
     "name": "VERY_LIGHT_BARK",
     "parent": "BARK",
     "brightness": 1.553

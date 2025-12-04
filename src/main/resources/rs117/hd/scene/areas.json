@@ -9426,6 +9426,11 @@
     "regions": [ 11811 ]
   },
   {
+    "name": "MINOTAURS_REST_CAVE",
+    "regions": [ 7828 ],
+    "hideOtherAreas": true
+  },
+  {
     "name": "CATHERBY_DEPTH_BIAS_FIX",
     "aabbs": [
       [ 2809, 3448, 2809, 3449, 1 ]
