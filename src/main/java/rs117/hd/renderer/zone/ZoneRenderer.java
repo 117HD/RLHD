@@ -1305,18 +1305,7 @@ public class ZoneRenderer implements Renderer {
 			// but keep it when doing >loading to loading
 			sceneFboValid = false;
 		}
-//		if (state == GameState.STARTING) {
-//			if (textureArrayId != -1) {
-//				textureManager.freeTextureArray(textureArrayId);
-//			}
-//			textureArrayId = -1;
-//			lastAnisotropicFilteringLevel = -1;
-//		}
 	}
-
-	/// ---------------------
-	///   SCENE MANAGER API
-	/// ---------------------
 
 	@Override
 	public void invalidateZone(Scene scene, int zx, int zz) {

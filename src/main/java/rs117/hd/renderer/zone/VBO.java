@@ -36,6 +36,8 @@ public class VBO {
 		}
 		glDeleteBuffers(bufId);
 		bufId = 0;
+		mappedBuffer = null;
+		vb = null;
 	}
 
 	public void map() {

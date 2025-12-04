@@ -9,13 +9,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public final class JobGroup<T extends Job> {
 	@Getter
-	protected final LinkedBlockingDeque<T> pending = new LinkedBlockingDeque<>();
+	final LinkedBlockingDeque<T> pending = new LinkedBlockingDeque<>();
 
 	@Getter
-	protected final boolean highPriority;
+	final boolean highPriority;
 
 	@Getter
-	protected final boolean autoRelease;
+	final boolean autoRelease;
 
 	public int getPendingCount() { return pending.size(); }
 

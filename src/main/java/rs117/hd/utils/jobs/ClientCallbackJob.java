@@ -9,11 +9,11 @@ public final class ClientCallbackJob {
 		ClientCallbackJob callback = POOL.get();
 		if (callback == null)
 			callback = new ClientCallbackJob();
-		callback.sema.drainPermits();
+		callback.semaphore.drainPermits();
 		return callback;
 	}
 
-	final Semaphore sema = new Semaphore(0);
+	final Semaphore semaphore = new Semaphore(0);
 	public Runnable callback;
 	public boolean immediate;
 }

@@ -44,7 +44,13 @@ public final class AsyncUICopy extends Job {
 
 		timer.begin(Timer.MAP_UI_BUFFER);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, interfacePbo);
-		ByteBuffer buffer = glMapBufferRange(GL_PIXEL_UNPACK_BUFFER, 0, (long) width * height * Integer.BYTES, GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT, mappedBuffer);
+		ByteBuffer buffer = glMapBufferRange(
+			GL_PIXEL_UNPACK_BUFFER,
+			0,
+			(long) width * height * Integer.BYTES,
+			GL_MAP_WRITE_BIT | GL_MAP_INVALIDATE_BUFFER_BIT,
+			mappedBuffer
+		);
 		glBindBuffer(GL_PIXEL_UNPACK_BUFFER, 0);
 		timer.end(Timer.MAP_UI_BUFFER);
 

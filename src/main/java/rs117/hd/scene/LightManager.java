@@ -53,7 +53,6 @@ import rs117.hd.HdPlugin;
 import rs117.hd.config.DynamicLights;
 import rs117.hd.data.ObjectType;
 import rs117.hd.opengl.uniforms.UBOLights;
-import rs117.hd.overlays.FrameTimer;
 import rs117.hd.scene.lights.Alignment;
 import rs117.hd.scene.lights.Light;
 import rs117.hd.scene.lights.LightDefinition;
@@ -98,9 +97,6 @@ public class LightManager {
 
 	@Inject
 	private EntityHiderPlugin entityHiderPlugin;
-
-	@Inject
-	private FrameTimer frameTimer;
 
 	private final ArrayList<Light> WORLD_LIGHTS = new ArrayList<>();
 	private final ListMultimap<Integer, LightDefinition> NPC_LIGHTS = ArrayListMultimap.create();
@@ -595,7 +591,7 @@ public class LightManager {
 		return plugin.configProjectileLights && !(pluginManager.isPluginEnabled(entityHiderPlugin) && entityHiderConfig.hideProjectiles());
 	}
 
-	public synchronized void loadSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext)
+	public void loadSceneLights(SceneContext sceneContext, @Nullable SceneContext oldSceneContext)
 	{
 		if (oldSceneContext == null) {
 			sceneContext.lights.clear();

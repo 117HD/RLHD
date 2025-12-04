@@ -211,7 +211,7 @@ public final class JobSystem {
 		}
 
 		try {
-			clientCallback.sema.acquire();
+			clientCallback.semaphore.acquire();
 		} catch (InterruptedException e) {
 			clientCallbacks.remove(clientCallback);
 			throw new InterruptedException();
@@ -239,7 +239,7 @@ public final class JobSystem {
 			} catch (Throwable ex) {
 				log.warn("Encountered exception whilst processing client callback", ex);
 			} finally {
-				pair.sema.release();
+				pair.semaphore.release();
 			}
 		}
 	}
