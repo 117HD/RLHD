@@ -1050,8 +1050,8 @@ public interface HdPluginConfig extends Config
 		keyName = KEY_ZONE_STREAMING,
 		name = "Zone streaming",
 		description =
-			"Loads multiple zones in parallel while continuing to render the game.<br>" +
-			"As a result, you will see new zones appearing as they finish loading in.",
+			"Load zones in parallel in the background, switching to new scenes almost instantly.<br>" +
+			"You will see zones appear when they are loaded, instead of having to wait for them all at once.",
 		section = experimentalSettings
 	)
 	default boolean zoneStreaming() {
