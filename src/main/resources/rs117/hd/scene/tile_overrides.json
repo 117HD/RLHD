@@ -9312,6 +9312,18 @@
     }
   },
   {
+    "name": "RAINBOW_END_COMPLEX_TILES",
+    "area": "RAINBOW_END",
+    "underlayIds": [
+      52,
+      129
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": "h >= 9",
+      "DEFAULT_DIRT": "h <= 8"
+    }
+  },
+  {
     "name": "WARM_REGION_ROCK_OVERLAYS",
     "area": "WARM_REGIONS",
     "overlayIds": [
