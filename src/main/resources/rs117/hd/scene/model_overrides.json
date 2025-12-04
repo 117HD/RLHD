@@ -55465,6 +55465,21 @@
     ]
   },
   {
+    "description": "Varlamore - Sunbed",
+    "baseMaterial": "METALLIC_1_SMOOTH",
+    "objectIds": [
+      "AVIUM_BED_OASIS01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
     "description": "Varlamore - Wooden - Plank Floors",
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
@@ -65239,7 +65254,7 @@
   },
   {
     "description": "The Pandemonium - Palm Tree",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "GRUNGE_3",
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
@@ -65254,7 +65269,7 @@
       {
         "description": "Bark",
         "colors": "h == 6",
-        "baseMaterial": "LIGHT_BARK",
+        "baseMaterial": "LIGHT_BARK_SMOOTH",
         "uvType": "BOX",
         "uvScale": 0.5,
         "uvOrientation": 512
@@ -67434,6 +67449,93 @@
       {
         "colors": "h > 8",
         "baseMaterial": "GRAY_90"
+      }
+    ]
+  },
+  {
+    "description": "Minotaurs' Rest - Cave Walls",
+    "baseMaterial": "GRAVEL",
+    "uvType": "BOX",
+    "uvScale": 1.5,
+    "uvOrientation": 25,
+    "objectIds": [
+      "MINOTAURS_REST_CAVE_WALL_LOWER",
+      "MINOTAURS_REST_CAVE_WALL_UPPER",
+      "MINOTAURS_REST_CAVE_WALL_TOP",
+      "MINOTAURS_REST_CAVE_WALL_UPPER_ACTIVE",
+      "MINOTAURS_REST_CAVE_EXIT",
+      "MINOTAURS_REST_CAVE_ENTRANCE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 2",
+        "baseMaterial": "PURE_BLACK"
+      }
+    ]
+  },
+  {
+    "description": "Minotaurs' Rest - Cooking Table",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "MINOTAURS_REST_COOKING_TABLE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h < 2",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h > 2 && h < 5 || h == 2",
+        "baseMaterial": "GRUNGE_3"
+      },
+      {
+        "colors": "h == 5",
+        "baseMaterial": "SMOOTH_STONE",
+        "uvType": "BOX"
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_2",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.7
+      }
+    ]
+  },
+  {
+    "description": "Minotaurs Rest' - Sleeping Bag",
+    "objectIds": [
+      "MINOTAURS_REST_BED"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 4",
+        "baseMaterial": "BURLAP",
+        "uvType": "BOX",
+        "uvScale": 0.8
+      },
+      {
+        "colors": "h == 6",
+        "baseMaterial": "CARPET_LIGHT",
+        "uvType": "BOX"
+      }
+    ]
+  },
+  {
+    "description": "Minotaurs Rest' - Row Boat",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "objectIds": [
+      "ROWBOAT_2"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT"
       }
     ]
   },
