@@ -43105,7 +43105,7 @@
     ]
   },
   {
-    "description": "Deepfin Cave Exit",
+    "description": "Deepfin Cave and Laguna Cave Exit",
     "offset": [ -50, 100, 0 ],
     "alignment": "CENTER",
     "radius": 600,
@@ -43117,7 +43117,8 @@
     ],
     "type": "STATIC",
     "objectIds": [
-      "DEEPFIN_CAVE_EXIT"
+      "DEEPFIN_CAVE_EXIT",
+      "LAGUNA_CAVE_EXIT"
     ]
   },
   {
