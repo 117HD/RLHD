@@ -67540,6 +67540,53 @@
     ]
   },
   {
+    "description": "Vatrachos Island - Barrel - with fish",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "objectIds": [
+      "AIDE_BARREL_FISH"
+    ],
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "colors": [ "h == 0" ],
+        "baseMaterial": "GRUNGE_1"
+      },
+      {
+        "colors": [ "h == 5 && s == 1" ],
+        "baseMaterial": "METALLIC_1_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Island Build Sites",
+    "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "AMENITY_WATER_PUMP_UNBUILT",
+      "AMENITY_ROWBOAT_UNBUILT",
+      "AMENITY_POTTERYWHEEL_UNBUILT",
+      "AMENITY_POTTERYOVEN_UNBUILT"
+    ],
+    "colorOverrides": [
+      {
+        "colors": [ "h == 7" ],
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.41
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Charting - Nest",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_SEAGULL_NEST"
+    ]
+  },
+  {
     "description": "Fix Waterfalls that are holes in the world without an opaque texture",
     "areas": [ "THE_GREAT_CONCH", "LUNAR_ISLE" ],
     "textureMaterial": "WATER_FLAT_FLOW",
