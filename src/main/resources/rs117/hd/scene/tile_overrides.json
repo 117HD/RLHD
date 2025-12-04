@@ -7038,8 +7038,10 @@
   {
     "area": "AL_KHARID_GRASS_FIXES",
     "underlayIds": [
+      48,
       49,
       50,
+      51,
       52,
       62,
       61,
@@ -7047,7 +7049,8 @@
     ],
     "groundMaterial": "GRASS_1",
     "replacements": {
-      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+      "SEASONAL_GRASS": "h >= 9",
+      "DEFAULT_SAND": true
     }
   },
   {
