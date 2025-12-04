@@ -4754,6 +4754,11 @@
     "blended": false
   },
   {
+    "name": "VOID_OUTPOST_BEACH",
+    "groundMaterial": "SAND",
+    "maxLightness": 52
+  },
+  {
     "name": "Void Knight Outpost - Complex Tiles",
     "area": "VOID_KNIGHTS_OUTPOST",
     "underlayIds": [
@@ -4769,7 +4774,7 @@
         "h >= 10"
       ],
       "DEFAULT_DIRT": "h <= 8",
-      "DEFAULT_SAND": true
+      "VOID_OUTPOST_BEACH": true
     }
   },
   {
