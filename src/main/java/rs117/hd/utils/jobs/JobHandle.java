@@ -10,12 +10,15 @@ import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import javax.annotation.Nullable;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.RuneLite;
 
 import static rs117.hd.utils.HDUtils.printStacktrace;
 import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 
 @Slf4j
 final class JobHandle extends AbstractQueuedSynchronizer {
+	static JobSystem JOB_SYSTEM;
+
 	public static final int STATE_NONE = 0;
 	public static final int STATE_QUEUED = 1;
 	public static final int STATE_RUNNING = 2;
@@ -213,7 +216,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 
 		if (VALIDATE) log.debug("Cancelling [{}] state: [{}]", this, STATE_NAMES[prevState]);
 
-		if (prevState == STATE_NONE || (prevState == STATE_QUEUED && JobSystem.INSTANCE.workQueue.remove(this))) {
+		if (prevState == STATE_NONE || (prevState == STATE_QUEUED && JOB_SYSTEM.workQueue.remove(this))) {
 			setCompleted();
 			return;
 		}
@@ -234,14 +237,14 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	void await() throws InterruptedException {
 		refCounter.incrementAndGet();
 
-		final boolean isClientThread = JobSystem.INSTANCE.client != null && JobSystem.INSTANCE.client.isClientThread();
+		final boolean isClientThread = JOB_SYSTEM.client != null && JOB_SYSTEM.client.isClientThread();
 		try {
 			if (!isDone()) {
 				if (isClientThread) {
 					long start = System.currentTimeMillis();
 					int seconds = 0;
 					while (!tryAcquireSharedNanos(0, TimeUnit.MILLISECONDS.toNanos(1))) {
-						JobSystem.INSTANCE.processPendingClientCallbacks(false);
+						JOB_SYSTEM.processPendingClientCallbacks(false);
 						long elapsed = System.currentTimeMillis() - start;
 						int newSeconds = (int) (elapsed / 1000);
 						if (newSeconds > seconds) {
@@ -252,7 +255,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 									STATE_NAMES[jobState.getAcquire()],
 									newSeconds
 								);
-								JobSystem.INSTANCE.printWorkersState();
+								JOB_SYSTEM.printWorkersState();
 							}
 							seconds = newSeconds;
 						}
@@ -287,7 +290,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 	}
 
 	private void handleDeadlock() throws InterruptedException {
-		if (!JobSystem.INSTANCE.active) return;
+		if (!JOB_SYSTEM.active) return;
 
 		log.warn(
 			"Deadlock detected on thread: {} whilst waiting {} seconds on handle {} {}, shutting down...",
@@ -303,8 +306,8 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			printStacktrace(true, worker.thread.getStackTrace());
 		}
 
-		JobSystem.INSTANCE.plugin.stopPlugin();
-		if (JobSystem.INSTANCE.isWorker()) {
+		JOB_SYSTEM.plugin.stopPlugin();
+		if (JOB_SYSTEM.isWorker()) {
 			throw new InterruptedException();
 		}
 	}

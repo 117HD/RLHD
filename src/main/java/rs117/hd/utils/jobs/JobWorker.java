@@ -18,6 +18,7 @@ public final class JobWorker {
 	JobHandle handle;
 	int stealTargetIdx = -1;
 
+	final JobSystem jobSystem;
 	final int workerIdx;
 	final BlockingDeque<JobHandle> localWorkQueue = new LinkedBlockingDeque<>();
 	final AtomicBoolean inflight = new AtomicBoolean();
@@ -26,13 +27,13 @@ public final class JobWorker {
 		name = thread.getName();
 		pausedName = name + " [Paused]";
 		ThreadLocalRandom random = ThreadLocalRandom.current();
-		while (JobSystem.INSTANCE.active) {
+		while (jobSystem.active) {
 			// Check local work queue
 			handle = localWorkQueue.poll();
 
 			while (handle == null) {
 				if (stealTargetIdx >= 0) {
-					final JobWorker victim = JobSystem.INSTANCE.workers[stealTargetIdx];
+					final JobWorker victim = jobSystem.workers[stealTargetIdx];
 					int stealCount = victim.localWorkQueue.size() / 2;
 
 					JobHandle stolenHandle;
@@ -50,13 +51,13 @@ public final class JobWorker {
 
 				if (handle == null) {
 					// Reset steal worker idx since its queue is empty
-					stealTargetIdx = random.nextInt(0, JobSystem.INSTANCE.workers.length);
+					stealTargetIdx = random.nextInt(0, jobSystem.workers.length);
 
 					if (stealTargetIdx == workerIdx) // Don't steal from yourself
-						stealTargetIdx = (stealTargetIdx + 1) % JobSystem.INSTANCE.workers.length;
+						stealTargetIdx = (stealTargetIdx + 1) % jobSystem.workers.length;
 
 					// Still no work, wait longer on the main work Queue
-					handle = JobSystem.INSTANCE.workQueue.poll();
+					handle = jobSystem.workQueue.poll();
 
 					if (handle == null) {
 						inflight.lazySet(false);
@@ -64,7 +65,7 @@ public final class JobWorker {
 					}
 				}
 
-				if (!JobSystem.INSTANCE.active) {
+				if (!jobSystem.active) {
 					log.debug("Shutdown");
 					return;
 				}
@@ -76,7 +77,7 @@ public final class JobWorker {
 				thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
 			}
 		}
-		log.debug("Shutdown - {}", JobSystem.INSTANCE.active);
+		log.debug("Shutdown - {}", jobSystem.active);
 	}
 
 	void processHandle() throws InterruptedException {

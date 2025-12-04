@@ -3,9 +3,12 @@ package rs117.hd.utils.jobs;
 import com.google.inject.Injector;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.RuneLite;
 
 @Slf4j
 public abstract class Job {
+	static JobSystem JOB_SYSTEM;
+
 	protected final AtomicBoolean done = new AtomicBoolean();
 	protected final AtomicBoolean wasCancelled = new AtomicBoolean();
 	protected final AtomicBoolean ranToCompletion = new AtomicBoolean();
@@ -76,10 +79,10 @@ public abstract class Job {
 		return (group != null && group.highPriority) || (handle != null && handle.highPriority);
 	}
 
-	protected static Injector getInjector() { return JobSystem.INSTANCE.injector; }
+	protected static Injector getInjector() { return JOB_SYSTEM.injector; }
 
 	protected void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
-		JobSystem.INSTANCE.invokeClientCallback(immediate || !executeAsync, callback);
+		JOB_SYSTEM.invokeClientCallback(immediate || !executeAsync, callback);
 	}
 
 	public final void workerHandleCancel() throws InterruptedException {
@@ -100,7 +103,7 @@ public abstract class Job {
 
 	public final <T extends Job> T queue(JobGroup<T> group, Job... dependencies) {
 		assert group != null;
-		JobSystem.INSTANCE.queue(this, group.highPriority, dependencies);
+		JOB_SYSTEM.queue(this, group.highPriority, dependencies);
 		if (executeAsync) {
 			this.group = (JobGroup<Job>) group;
 			this.group.pending.add(this);
@@ -109,12 +112,12 @@ public abstract class Job {
 	}
 
 	public final <T extends Job> T queue(boolean highPriority, Job... dependencies) {
-		JobSystem.INSTANCE.queue(this, highPriority, dependencies);
+		JOB_SYSTEM.queue(this, highPriority, dependencies);
 		return (T) this;
 	}
 
 	public final <T extends Job> T queue(Job... dependencies) {
-		JobSystem.INSTANCE.queue(this, true, dependencies);
+		JOB_SYSTEM.queue(this, true, dependencies);
 		return (T) this;
 	}
 

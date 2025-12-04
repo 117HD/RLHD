@@ -12,15 +12,17 @@ import rs117.hd.utils.jobs.JobSystem;
 
 @Slf4j
 public class JobSystemTests {
+	private static JobSystem JOB_SYSTEM;
+
 	@BeforeClass
 	public static void beforeAll() {
-		JobSystem.INSTANCE = new JobSystem();
-		JobSystem.INSTANCE.initialize();
+		JOB_SYSTEM = new JobSystem();
+		JOB_SYSTEM.initialize();
 	}
 
 	@AfterClass
 	public static void afterAll() {
-		JobSystem.INSTANCE.destroy();
+		JOB_SYSTEM.destroy();
 	}
 
 	@Test

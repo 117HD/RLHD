@@ -21,8 +21,6 @@ import static rs117.hd.utils.MathUtils.*;
 public final class JobSystem {
 	public static final boolean VALIDATE = false;
 
-	public static JobSystem INSTANCE;
-
 	@Inject
 	public HdPlugin plugin;
 
@@ -52,17 +50,19 @@ public final class JobSystem {
 	private boolean clientInvokeScheduled;
 
 	public void initialize() {
-		INSTANCE = this;
 		workers = new JobWorker[workerCount];
 		active = true;
 
 		for (int i = 0; i < workerCount; i++) {
-			JobWorker newWorker = workers[i] = new JobWorker(i);
+			JobWorker newWorker = workers[i] = new JobWorker(this, i);
 			newWorker.thread = new Thread(newWorker::run);
 			newWorker.thread.setPriority(Thread.NORM_PRIORITY + 1);
 			newWorker.thread.setName("117HD - Worker " + i);
 			threadToWorker.put(newWorker.thread, newWorker);
 		}
+
+		Job.JOB_SYSTEM = this;
+		JobHandle.JOB_SYSTEM = this;
 
 		for (int i = 0; i < workerCount; i++)
 			workers[i].thread.start();
