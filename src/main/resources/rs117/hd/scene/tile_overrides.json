@@ -4754,6 +4754,48 @@
     "blended": false
   },
   {
+    "name": "Void Knight Outpost - Complex Tiles",
+    "area": "VOID_KNIGHTS_OUTPOST",
+    "underlayIds": [
+      48,
+      53,
+      63,
+      64,
+      68
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": [
+        "h == 9 && s >= 5",
+        "h >= 10"
+      ],
+      "DEFAULT_DIRT": "h <= 8",
+      "DEFAULT_SAND": true
+    }
+  },
+  {
+    "name": "Pest Control - Complex Tiles",
+    "area": "PEST_CONTROL",
+    "underlayIds": [
+      49,
+      52,
+      53,
+      59,
+      63,
+      68,
+      121,
+      142,
+      150
+    ],
+    "replacements": {
+      "DEFAULT_GRASS": [
+        "h >= 9 && s >= 4 && h <= 12",
+        "h >= 10 && h <= 12 && s >= 3"
+      ],
+      "DEFAULT_SAND": "h == 8 && s == 3 && l > 30",
+      "DEFAULT_DIRT": true
+    }
+  },
+  {
     "name": "BA_WAITING_ROOM_NUMBERS",
     "area": "BARBARIAN_ASSAULT_WAITING_ROOMS",
     "overlayIds": [
