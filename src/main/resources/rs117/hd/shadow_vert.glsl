@@ -73,14 +73,18 @@ void main() {
         fade = getZoneReveal(zoneIdx);
     }
 
-    if(modelIdx > 0) {
-        ModelData modelData = getModelData(modelIdx);
-        if(isDetailModel(modelData)) {
-            float modelFade = 0.0;
-            getDetailCullingFade(modelData, sceneOffset, modelFade);
-            //fade = max(fade, modelFade); TODO: Need to fix Dynamic Models hmmm
-        }
-    }
+   if(modelIdx > 0) {
+       ModelData modelData = getModelData(modelIdx);
+       if(!isStaticModel(modelData)) {
+           sceneOffset = vec3(0.0);
+       }
+
+       if(isDetailModel(modelData)) {
+           float modelFade = 0.0;
+           getDetailCullingFade(modelData, sceneOffset, modelFade);
+           fade = max(fade, modelFade);
+       }
+   }
 #endif
 
     int waterTypeIndex = vTerrainData >> 3 & 0xFF;

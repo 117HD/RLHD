@@ -1074,7 +1074,6 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		int zoneIdx = zone.zoneData.getZoneIdx();
 		int modelDataOffset = ssboModelData.addDynamicModelData(r, m, modelOverride, x, y, z, sceneManager.isRoot(ctx));
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
@@ -1088,7 +1087,7 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-				facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, zoneIdx, modelDataOffset, o.vbo.vb, a.vbo.vb);
+				facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, zone.zoneData.zoneIdx, modelDataOffset, o.vbo.vb, a.vbo.vb);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
@@ -1103,14 +1102,14 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orient,
 						x, y, z,
-						zoneIdx,
+						zone.zoneData.zoneIdx,
 						modelDataOffset,
 						vao.vbo.vb,
 						vao.vbo.vb
 					);
 				}
 			} else {
-				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, zoneIdx, modelDataOffset, o.vbo.vb, a.vbo.vb);
+				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, zone.zoneData.zoneIdx, modelDataOffset, o.vbo.vb, a.vbo.vb);
 			}
 
 			int end = a.vbo.vb.position();
@@ -1122,7 +1121,7 @@ public class ZoneRenderer implements Renderer {
 				zone.addTempAlphaModel(a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, zoneIdx, modelDataOffset, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, zone.zoneData.zoneIdx, modelDataOffset, o.vbo.vb, o.vbo.vb);
 		}
 		plugin.drawnDynamicRenderableCount++;
 	}
@@ -1159,10 +1158,7 @@ public class ZoneRenderer implements Renderer {
 		int zx = (gameObject.getX() >> 10) + offset;
 		int zz = (gameObject.getY() >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
-		if(zone.zoneData == null)
-			return;
 
-		int zoneIdx = zone.zoneData.getZoneIdx();
 		int modelDataOffset = ssboModelData.addDynamicModelData(renderable, m, modelOverride, x, y, z, false);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
@@ -1182,7 +1178,7 @@ public class ZoneRenderer implements Renderer {
 							preOrientation,
 							orientation,
 							x, y, z,
-							zoneIdx,
+							zone.zoneData.zoneIdx,
 							modelDataOffset,
 							o.vbo.vb,
 							o.vbo.vb
@@ -1208,7 +1204,7 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orientation,
 						x, y, z,
-						zoneIdx,
+						zone.zoneData.zoneIdx,
 						modelDataOffset,
 						o.vbo.vb,
 						a.vbo.vb
@@ -1242,7 +1238,7 @@ public class ZoneRenderer implements Renderer {
 				preOrientation,
 				orientation,
 				x, y, z,
-				zoneIdx, modelDataOffset,
+				zone.zoneData.zoneIdx, modelDataOffset,
 				o.vbo.vb,
 				o.vbo.vb
 			);
