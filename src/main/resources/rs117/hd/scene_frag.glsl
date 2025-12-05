@@ -77,10 +77,6 @@ vec2 worldUvs(float scale) {
 #include <utils/lights.glsl>
 
 void main() {
-    if (fDetailFade > 0 && orderedDither(gl_FragCoord.xy, fDetailFade, 2.0) < 1.0) {
-        discard;
-    }
-
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
@@ -480,9 +476,9 @@ void main() {
     #endif
 
     // apply fog
+    float distance = distance(IN.position, cameraPos);
     if (!isUnderwater) {
         // ground fog
-        float distance = distance(IN.position, cameraPos);
         float closeFadeDistance = 1500;
         float groundFog = 1.0 - clamp((IN.position.y - groundFogStart) / (groundFogEnd - groundFogStart), 0.0, 1.0);
         groundFog = mix(0.0, groundFogOpacity, groundFog);
@@ -500,6 +496,10 @@ void main() {
     }
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
+
+    if(fDetailFade > 0.0) {
+        outputColor.rgb = mix(outputColor.rgb, fogColor, fDetailFade);
+    }
 
     #if WINDOWS_HDR_CORRECTION
         outputColor.rgb = windowsHdrCorrection(outputColor.rgb);

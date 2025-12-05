@@ -43,14 +43,15 @@
 in float fDetailFade;
 
 void main() {
-    if (fDetailFade > 0 && orderedDither(gl_FragCoord.xy, fDetailFade, 2.0) < 1.0) {
-        discard;
-    }
 
     float opacity = 0;
     #if SHADOW_TRANSPARENCY
         opacity = fOpacity;
     #endif
+
+    if (fDetailFade > 0) {
+        opacity *= 1.0 - fDetailFade;
+    }
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED
         if (fUvw.z != -1) {
