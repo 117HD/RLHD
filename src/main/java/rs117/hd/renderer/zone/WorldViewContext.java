@@ -1,5 +1,6 @@
 package rs117.hd.renderer.zone;
 
+import java.util.Set;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,9 @@ public class WorldViewContext {
 	Zone[][] zones;
 	VBO vboM;
 	boolean isLoading = true;
+
+	int minLevel, level, maxLevel;
+	Set<Integer> hideRoofIds;
 
 	public long loadTime;
 	public long uploadTime;
