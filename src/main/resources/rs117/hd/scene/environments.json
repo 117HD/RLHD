@@ -1053,6 +1053,7 @@
     "area": "PRIFDDINAS",
     "ambientColor": "#97baff",
     "directionalStrength": 4,
+    "waterColor": "#99d8c8",
     "fogColor": "#99d8c8",
     "fogDepth": 15
   },
