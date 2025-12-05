@@ -771,7 +771,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2.5,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "RELLEKKA_SNOWY_REGION",
@@ -780,7 +780,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 2,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "RELLEKKA_HUNTER_ICEBERG",
@@ -789,7 +789,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "ICEBERG",
@@ -832,7 +832,7 @@
     "directionalColor": "#abc2d3",
     "directionalStrength": 2,
     "fogColor": "#969ca2",
-    "fogDepth": 40,
+    "fogDepth": 35,
     "groundFogEnd": -400,
     "groundFogOpacity": 0.3,
     "windSpeed": 17.5,
@@ -1189,7 +1189,7 @@
     "directionalColor": "#f4e5c9",
     "directionalStrength": 1.5,
     "fogColor": "#aebde0",
-    "fogDepth": 70
+    "fogDepth": 50
   },
   {
     "area": "WINTERTODT_ARENA",
@@ -2142,7 +2142,7 @@
       102
     ],
     "fogColor": "#fddcb4",
-    "fogDepth": 18,
+    "fogDepth": 15,
     "windAngle": 40,
     "windSpeed": 12,
     "windStrength": 55
@@ -2154,7 +2154,7 @@
     "directionalStrength": 1.5,
     "sunAngles": [ 52, 235 ],
     "fogColor": "#b8c5db",
-    "fogDepth": 35,
+    "fogDepth": 25,
     "windAngle": 40,
     "windSpeed": 10,
     "windStrength": 30
