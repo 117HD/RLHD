@@ -15,7 +15,6 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		public final Property position = addProperty(PropertyType.IVec3, "position");
 		public final Property height = addProperty(PropertyType.Int, "height");
 		public final Property flags = addProperty(PropertyType.Int, "flags");
-		public final Property worldViewId = addProperty(PropertyType.Int, "worldViewId");
 
 		public void set(
 			Renderable renderable,
@@ -25,32 +24,13 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 			int y,
 			int z,
 			boolean isStaticModel,
-			boolean isDetailModel,
-			int worldViewId
+			boolean isDetailModel
 		) {
 			this.position.set(x, y, z);
 			this.height.set(model.getModelHeight());
 			this.flags.set(
 				(isStaticModel ? 1 : 0) |
 				(isDetailModel ? 1 : 0) << 1);
-			this.worldViewId.set(worldViewId);
-		}
-
-		public void set(
-			Renderable renderable,
-			Model model,
-			ModelOverride override,
-			int x,
-			int y,
-			int z,
-			boolean isDetailModel,
-			int worldViewId
-		) {
-			set(renderable, model, override, x, y, z, false, isDetailModel, worldViewId);
-		}
-
-		public void set(Renderable renderable, Model model, ModelOverride override, int x, int y, int z, boolean isDetailModel) {
-			set(renderable, model, override, x, y, z, true, isDetailModel, -1);
 		}
 	}
 
@@ -75,8 +55,7 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		int x,
 		int y,
 		int z,
-		boolean isDetailModel,
-		int worldViewId
+		boolean isDetailModel
 	) {
 		ModelData dynamicModelData = null;
 		if (!frameModelDataSlices.isEmpty()) {
@@ -93,7 +72,7 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		}
 
 		frameDynamicModelCount++;
-		dynamicModelData.set(renderable, model, override, x, y, z, isDetailModel, worldViewId);
+		dynamicModelData.set(renderable, model, override, x, y, z, false, isDetailModel);
 		return dynamicModelData.modelOffset;
 	}
 

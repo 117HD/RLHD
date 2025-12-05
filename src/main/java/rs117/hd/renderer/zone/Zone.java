@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.opengl.buffer.storage.SSBOModelData;
+import rs117.hd.opengl.buffer.uniforms.UBOZoneData;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
@@ -39,13 +40,8 @@ public class Zone {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	// modelOffset int TODO: Make short
+	// packedZoneModelIdx int
 	public static final int VERT_SIZE = 36;
-
-	// Metadata format
-	// worldViewIndex int int
-	// sceneOffset int vec2(x, y)
-	public static final int METADATA_SIZE = 12;
 
 	public static final int LEVEL_WATER_SURFACE = 4;
 
@@ -57,7 +53,7 @@ public class Zone {
 
 	public int sizeO, sizeA;
 	@Nullable
-	public VBO vboO, vboA, vboM;
+	public VBO vboO, vboA;
 
 	public boolean initialized; // whether the zone vao and vbos are ready
 	public boolean cull; // whether the zone is queued for deletion
@@ -78,33 +74,31 @@ public class Zone {
 	int[][] roofEnd;
 	short modelCount;
 	SSBOModelData.Slice modelDataSlice;
+	UBOZoneData.ZoneStruct zoneData;
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void initialize(SSBOModelData modelData, VBO o, VBO a, int eboShared) {
+	void initialize(UBOZoneData uboZoneData, SSBOModelData ssboModelData, VBO o, VBO a, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
-
-		if (o != null || a != null) {
-			vboM = new VBO(METADATA_SIZE);
-			vboM.initialize(GL_STATIC_DRAW);
-		}
 
 		if (o != null) {
 			vboO = o;
 			glVao = glGenVertexArrays();
-			setupVao(glVao, o.bufId, vboM.bufId, eboShared);
+			setupVao(glVao, o.bufId, eboShared);
 		}
 
 		if (a != null) {
 			vboA = a;
 			glVaoA = glGenVertexArrays();
-			setupVao(glVaoA, a.bufId, vboM.bufId, eboShared);
+			setupVao(glVaoA, a.bufId, eboShared);
 		}
 
 		if (modelCount > 0) {
-			modelDataSlice = modelData.obtainSlice(modelCount);
+			modelDataSlice = ssboModelData.obtainSlice(modelCount);
 		}
+
+		zoneData = uboZoneData.acquire();
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -128,11 +122,6 @@ public class Zone {
 			vboA = null;
 		}
 
-		if (vboM != null) {
-			vboM.destroy();
-			vboM = null;
-		}
-
 		if (glVao != 0) {
 			glDeleteVertexArrays(glVao);
 			glVao = 0;
@@ -141,6 +130,11 @@ public class Zone {
 		if (glVaoA != 0) {
 			glDeleteVertexArrays(glVaoA);
 			glVaoA = 0;
+		}
+
+		if(zoneData != null) {
+			zoneData.free();
+			zoneData = null;
 		}
 
 		if (modelDataSlice != null) {
@@ -193,7 +187,7 @@ public class Zone {
 		}
 	}
 
-	private void setupVao(int vao, int buffer, int metadata, int ebo) {
+	private void setupVao(int vao, int buffer, int ebo) {
 		glBindVertexArray(vao);
 		glBindBuffer(GL_ARRAY_BUFFER, buffer);
 
@@ -224,21 +218,9 @@ public class Zone {
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 28);
 
-		// modelOffset
+		// packedZoneModelIdx
 		glEnableVertexAttribArray(6);
 		glVertexAttribIPointer(6, 1, GL_INT, VERT_SIZE, 32);
-
-		glBindBuffer(GL_ARRAY_BUFFER, metadata);
-
-		// WorldView index (not ID)
-		glEnableVertexAttribArray(7);
-		glVertexAttribDivisor(7, 1);
-		glVertexAttribIPointer(7, 1, GL_INT, METADATA_SIZE, 0);
-
-		// Scene offset
-		glEnableVertexAttribArray(8);
-		glVertexAttribDivisor(8, 1);
-		glVertexAttribIPointer(8, 2, GL_INT, METADATA_SIZE, 4);
 
 		checkGLErrors();
 
@@ -247,17 +229,13 @@ public class Zone {
 	}
 
 	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
-		if (vboM == null)
+		if (zoneData == null)
 			return;
 
-		int baseX = (mx - (sceneContext.sceneOffset >> 3)) << 10;
-		int baseZ = (mz - (sceneContext.sceneOffset >> 3)) << 10;
-
-		vboM.map();
-		vboM.vb.put(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
-		vboM.vb.put(baseX);
-		vboM.vb.put(baseZ);
-		vboM.unmap();
+		zoneData.worldViewIdx.set(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
+		zoneData.offsetX.set((mx - (sceneContext.sceneOffset >> 3)) << 10);
+		zoneData.offsetZ.set((mz - (sceneContext.sceneOffset >> 3)) << 10);
+		zoneData.reveal.set(0.0f); // TODO: We should fade the zone in after its been loaded
 	}
 
 	void updateRoofs(Map<Integer, Integer> updates) {

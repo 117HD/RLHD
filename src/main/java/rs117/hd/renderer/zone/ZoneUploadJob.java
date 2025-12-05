@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import rs117.hd.opengl.buffer.storage.SSBOModelData;
+import rs117.hd.opengl.buffer.uniforms.UBOZoneData;
 import rs117.hd.utils.jobs.Job;
 
 import static org.lwjgl.opengl.GL33C.*;
@@ -27,7 +28,8 @@ public final class ZoneUploadJob extends Job {
 		}
 	}
 
-	SSBOModelData modelData;
+	UBOZoneData uboZoneData;
+	SSBOModelData ssboModelData;
 	WorldViewContext viewContext;
 	ZoneSceneContext sceneContext;
 	Zone zone;
@@ -76,7 +78,7 @@ public final class ZoneUploadJob extends Job {
 				a.map();
 			}
 
-			zone.initialize(modelData, o, a, eboAlpha);
+			zone.initialize(uboZoneData, ssboModelData, o, a, eboAlpha);
 			zone.setMetadata(viewContext, sceneContext, x, z);
 		} catch (Throwable ex) {
 			log.warn(
@@ -112,7 +114,7 @@ public final class ZoneUploadJob extends Job {
 		POOL.add(this);
 	}
 
-	public static ZoneUploadJob build(SSBOModelData modelData, WorldViewContext viewContext, ZoneSceneContext sceneContext, Zone zone, int x, int z) {
+	public static ZoneUploadJob build(UBOZoneData uboZoneData, SSBOModelData ssboModelData, WorldViewContext viewContext, ZoneSceneContext sceneContext, Zone zone, int x, int z) {
 		assert viewContext != null : "WorldViewContext cant be null";
 		assert sceneContext != null : "ZoneSceneContext cant be null";
 		assert zone != null : "Zone cant be null";
@@ -121,7 +123,8 @@ public final class ZoneUploadJob extends Job {
 		ZoneUploadJob newTask = POOL.poll();
 		if (newTask == null)
 			newTask = new ZoneUploadJob();
-		newTask.modelData = modelData;
+		newTask.uboZoneData = uboZoneData;
+		newTask.ssboModelData = ssboModelData;
 		newTask.viewContext = viewContext;
 		newTask.sceneContext = sceneContext;
 		newTask.zone = zone;

@@ -27,6 +27,7 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <uniforms/zone_data.glsl>
 #include <buffers/model_data.glsl>
 
 layout (location = 0) in vec3 vPosition;
@@ -35,9 +36,7 @@ layout (location = 2) in vec3 vNormal;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
-layout (location = 6) in int vModelOffset;
-layout (location = 7) in int vWorldViewId;
-layout (location = 8) in ivec2 vSceneBase;
+layout (location = 6) in int vPackedZoneAndModelIdx;
 
 #include <utils/misc.glsl>
 
@@ -52,19 +51,28 @@ out int gWorldViewId;
 out float gDetailFade;
 
 void main() {
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
-    int worldViewId = vWorldViewId;
+    int worldViewId = 0;
+    vec3 sceneOffset = vec3(0.0);
+    float fade = 0.0f;
 
-    gDetailFade = 0.0;
 #if ZONE_RENDERER
-    if(vModelOffset > 0) {
-        ModelData modelData = getModelData(vModelOffset);
+    int zoneIdx = vPackedZoneAndModelIdx & 0xFFF;
+    int modelIdx = vPackedZoneAndModelIdx >> 12;
+
+    if(zoneIdx > 0) {
+        worldViewId = getZoneWorldViewIdx(zoneIdx);
+        sceneOffset = getZoneSceneOffset(zoneIdx);
+        fade = getZoneReveal(zoneIdx);
+    }
+
+    if(modelIdx > 0) {
+        ModelData modelData = getModelData(modelIdx);
         if(!isStaticModel(modelData)) {
             worldViewId = modelData.worldViewId;
         }
 
         if(isDetailModel(modelData)) {
-            getDetailCullingFade(modelData, sceneOffset, gDetailFade);
+            getDetailCullingFade(modelData, sceneOffset, fade);
         }
     }
 #endif
@@ -77,4 +85,5 @@ void main() {
     gMaterialData = vMaterialData;
     gTerrainData = vTerrainData;
     gWorldViewId = worldViewId;
+    gDetailFade = fade;
 }

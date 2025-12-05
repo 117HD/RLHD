@@ -24,13 +24,8 @@ class VAO {
 	// modelOffset int TODO: Make short
 	static final int VERT_SIZE = 40;
 
-	// Metadata format
-	// worldViewIndex int int
-	static final int METADATA_SIZE = 4;
-
 	final VBO vbo;
 	int vao;
-	int vboMetadata;
 
 	VAO(int size) {
 		vbo = new VBO(size);
@@ -70,7 +65,7 @@ class VAO {
 		glEnableVertexAttribArray(5);
 		glVertexAttribIPointer(5, 1, GL_INT, VERT_SIZE, 32);
 
-		// modelOffset
+		// packedZoneModelIdx
 		glEnableVertexAttribArray(6);
 		glVertexAttribIPointer(6, 1, GL_INT, VERT_SIZE, 36);
 

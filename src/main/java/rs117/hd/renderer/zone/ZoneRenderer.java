@@ -44,6 +44,7 @@ import rs117.hd.config.ShadowMode;
 import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.opengl.buffer.uniforms.UBOLights;
 import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
+import rs117.hd.opengl.buffer.uniforms.UBOZoneData;
 import rs117.hd.opengl.shader.SceneShaderProgram;
 import rs117.hd.opengl.shader.ShaderException;
 import rs117.hd.opengl.shader.ShaderIncludes;
@@ -82,6 +83,7 @@ import static rs117.hd.HdPlugin.checkGLErrors;
 import static rs117.hd.opengl.GLBinding.BINDING_SSAO_MODEL_DATA;
 import static rs117.hd.opengl.GLBinding.BINDING_UBO_DISPLACEMENT;
 import static rs117.hd.opengl.GLBinding.BINDING_UBO_WORLD_VIEW;
+import static rs117.hd.opengl.GLBinding.BINDING_UBO_ZONES;
 import static rs117.hd.utils.Mat4.clipFrustumToDistance;
 import static rs117.hd.utils.MathUtils.*;
 
@@ -143,6 +145,9 @@ public class ZoneRenderer implements Renderer {
 	@Inject
 	private UBOWorldViews uboWorldViews;
 
+	@Inject
+	private UBOZoneData uboZoneData;
+
 	private final Camera sceneCamera = new Camera();
 	private final Camera directionalCamera = new Camera().setOrthographic(true);
 	private final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
@@ -186,11 +191,12 @@ public class ZoneRenderer implements Renderer {
 		initializeBuffers();
 		
 		uboWorldViews.initialize(BINDING_UBO_WORLD_VIEW);
+		uboZoneData.initialize(BINDING_UBO_ZONES);
 		plugin.uboDisplacement.initialize(BINDING_UBO_DISPLACEMENT);
 		ssboModelData.initialize(BINDING_SSAO_MODEL_DATA);
 
 		jobSystem.initialize();
-		sceneManager.initialize(ssboModelData, uboWorldViews);
+		sceneManager.initialize(ssboModelData, uboWorldViews, uboZoneData);
 	}
 
 	@Override
@@ -200,6 +206,7 @@ public class ZoneRenderer implements Renderer {
 		jobSystem.destroy();
 		sceneManager.destroy();
 		uboWorldViews.destroy();
+		uboZoneData.destroy();
 		plugin.uboDisplacement.destroy();
 		ssboModelData.destroy();
 	}
@@ -213,9 +220,12 @@ public class ZoneRenderer implements Renderer {
 	public void addShaderIncludes(ShaderIncludes includes) {
 		includes
 			.define("MAX_SIMULTANEOUS_WORLD_VIEWS", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS)
+			.define("MAX_ZONE_DATA_COUNT", UBOZoneData.MAX_ZONES)
 			.addInclude("WORLD_VIEW_GETTER", () -> plugin.generateGetter("WorldView", UBOWorldViews.MAX_SIMULTANEOUS_WORLD_VIEWS))
+			.addInclude("ZONE_DATA_GETTER", () -> plugin.generateGetter("ZoneData", UBOZoneData.MAX_ZONES))
 			.addInclude("MODEL_DATA_GETTER", () -> ssboModelData.generateGetter("ModelData", "MODEL_DATA_GETTER"))
-			.addUniformBuffer(uboWorldViews);
+			.addUniformBuffer(uboWorldViews)
+			.addUniformBuffer(uboZoneData);
 	}
 
 	@Override
@@ -673,8 +683,9 @@ public class ZoneRenderer implements Renderer {
 
 		vaoA.unmap();
 
-		// Upload world views before rendering
+		// Upload world views & zone data before rendering
 		uboWorldViews.upload();
+		uboZoneData.upload();
 
 		// Scene draw state to apply before all recorded commands
 		if (eboAlphaStaging.position() > 0) {
@@ -1063,8 +1074,8 @@ public class ZoneRenderer implements Renderer {
 			}
 		}
 
-		int worldViewIndex = ctx.uboWorldViewStruct != null ? ctx.uboWorldViewStruct.worldViewIdx + 1 : -1;
-		int modelDataOffset = ssboModelData.addDynamicModelData(r, m, modelOverride, x, y, z, sceneManager.isRoot(ctx), worldViewIndex);
+		int zoneIdx = zone.zoneData.getZoneIdx();
+		int modelDataOffset = ssboModelData.addDynamicModelData(r, m, modelOverride, x, y, z, sceneManager.isRoot(ctx));
 		int preOrientation = HDUtils.getModelPreOrientation(HDUtils.getObjectConfig(tileObject));
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
@@ -1077,7 +1088,7 @@ public class ZoneRenderer implements Renderer {
 
 			if (zone.inSceneFrustum) {
 				try {
-				facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, modelDataOffset, o.vbo.vb, a.vbo.vb);
+				facePrioritySorter.uploadSortedModel(projection, m, modelOverride, preOrientation, orient, x, y, z, zoneIdx, modelDataOffset, o.vbo.vb, a.vbo.vb);
 				} catch (Exception ex) {
 					log.debug("error drawing entity", ex);
 				}
@@ -1092,13 +1103,14 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orient,
 						x, y, z,
+						zoneIdx,
 						modelDataOffset,
 						vao.vbo.vb,
 						vao.vbo.vb
 					);
 				}
 			} else {
-				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, modelDataOffset, o.vbo.vb, a.vbo.vb);
+				sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, zoneIdx, modelDataOffset, o.vbo.vb, a.vbo.vb);
 			}
 
 			int end = a.vbo.vb.position();
@@ -1110,7 +1122,7 @@ public class ZoneRenderer implements Renderer {
 				zone.addTempAlphaModel(a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}
 		} else {
-			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, modelDataOffset, o.vbo.vb, o.vbo.vb);
+			sceneUploader.uploadTempModel(m, modelOverride, preOrientation, orient, x, y, z, zoneIdx, modelDataOffset, o.vbo.vb, o.vbo.vb);
 		}
 		plugin.drawnDynamicRenderableCount++;
 	}
@@ -1143,17 +1155,19 @@ public class ZoneRenderer implements Renderer {
 		if (modelOverride.hide)
 			return;
 
-		int worldViewIndex = ctx.uboWorldViewStruct != null ? ctx.uboWorldViewStruct.worldViewIdx + 1 : -1;
-		int modelDataOffset = ssboModelData.addDynamicModelData(renderable, m, modelOverride, x, y, z, false, worldViewIndex);
+		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int zx = (gameObject.getX() >> 10) + offset;
+		int zz = (gameObject.getY() >> 10) + offset;
+		Zone zone = ctx.zones[zx][zz];
+		if(zone.zoneData == null)
+			return;
+
+		int zoneIdx = zone.zoneData.getZoneIdx();
+		int modelDataOffset = ssboModelData.addDynamicModelData(renderable, m, modelOverride, x, y, z, false);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());
 
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		if (renderable instanceof Player || m.getFaceTransparencies() != null) {
-			int offset = ctx.sceneContext.sceneOffset >> 3;
-			int zx = (gameObject.getX() >> 10) + offset;
-			int zz = (gameObject.getY() >> 10) + offset;
-			Zone zone = ctx.zones[zx][zz];
-
 			GenericJob shadowUploadTask = null;
 			if (zone.inShadowFrustum) {
 				final VAO o = vaoShadow.get(size);
@@ -1168,6 +1182,7 @@ public class ZoneRenderer implements Renderer {
 							preOrientation,
 							orientation,
 							x, y, z,
+							zoneIdx,
 							modelDataOffset,
 							o.vbo.vb,
 							o.vbo.vb
@@ -1193,6 +1208,7 @@ public class ZoneRenderer implements Renderer {
 						preOrientation,
 						orientation,
 						x, y, z,
+						zoneIdx,
 						modelDataOffset,
 						o.vbo.vb,
 						a.vbo.vb
@@ -1225,7 +1241,8 @@ public class ZoneRenderer implements Renderer {
 				modelOverride,
 				preOrientation,
 				orientation,
-				x, y, z, modelDataOffset,
+				x, y, z,
+				zoneIdx, modelDataOffset,
 				o.vbo.vb,
 				o.vbo.vb
 			);

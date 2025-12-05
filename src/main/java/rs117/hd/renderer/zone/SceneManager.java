@@ -21,6 +21,7 @@ import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
+import rs117.hd.opengl.buffer.uniforms.UBOZoneData;
 import rs117.hd.overlays.FrameTimer;
 import rs117.hd.overlays.Timer;
 import rs117.hd.scene.AreaManager;
@@ -81,10 +82,11 @@ public class SceneManager {
 
 	protected SSBOModelData ssboModelData;
 	protected UBOWorldViews uboWorldViews;
+	protected UBOZoneData uboZoneData;
 
 	private final Map<Integer, Integer> nextRoofChanges = new HashMap<>();
 	@Getter
-	private final WorldViewContext root = new WorldViewContext(this, null, null, null);
+	private final WorldViewContext root = new WorldViewContext(this, null, null);
 	private final WorldViewContext[] subs = new WorldViewContext[MAX_WORLDVIEWS];
 	private final List<SortedZone> sortedZones = new ArrayList<>();
 	private ZoneSceneContext nextSceneContext;
@@ -121,9 +123,10 @@ public class SceneManager {
 		return root;
 	}
 
-	public void initialize(SSBOModelData ssboModelData, UBOWorldViews uboWorldViews) {
+	public void initialize(SSBOModelData ssboModelData, UBOWorldViews uboWorldViews, UBOZoneData uboZoneData) {
 		this.ssboModelData = ssboModelData;
 		this.uboWorldViews = uboWorldViews;
+		this.uboZoneData = uboZoneData;
 	}
 
 	public void destroy() {
@@ -141,6 +144,7 @@ public class SceneManager {
 			nextSceneContext.destroy();
 		nextSceneContext = null;
 
+		uboZoneData = null;
 		uboWorldViews = null;
 	}
 
@@ -505,7 +509,7 @@ public class SceneManager {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 						if (root.sceneContext == null || dist < ZONE_DEFER_DIST_START) {
 							ZoneUploadJob
-								.build(ssboModelData, ctx, nextSceneContext, zone, x, z)
+								.build(uboZoneData, ssboModelData, ctx, nextSceneContext, zone, x, z)
 								.setExecuteAsync(plugin.configZoneStreaming)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
@@ -521,7 +525,7 @@ public class SceneManager {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
 				sorted.zone.uploadJob = ZoneUploadJob
-					.build(ssboModelData, ctx, nextSceneContext, newZone, sorted.x, sorted.z)
+					.build(uboZoneData, ssboModelData, ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 					.setExecuteAsync(plugin.configZoneStreaming);
 				sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				sorted.free();
@@ -682,12 +686,12 @@ public class SceneManager {
 		var sceneContext = new ZoneSceneContext(client, worldView, scene, plugin.getExpandedMapLoadingChunks(), null);
 		proceduralGenerator.generateSceneData(sceneContext);
 
-		final WorldViewContext ctx = new WorldViewContext(this, worldView, sceneContext, uboWorldViews);
+		final WorldViewContext ctx = new WorldViewContext(this, worldView, sceneContext);
 		subs[worldViewId] = ctx;
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				ZoneUploadJob.build(ssboModelData, ctx, sceneContext, ctx.zones[x][z], x, z)
+				ZoneUploadJob.build(uboZoneData, ssboModelData, ctx, sceneContext, ctx.zones[x][z], x, z)
 					.setExecuteAsync(plugin.configZoneStreaming)
 					.queue(ctx.sceneLoadGroup);
 
