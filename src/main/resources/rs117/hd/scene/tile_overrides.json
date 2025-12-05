@@ -9047,6 +9047,14 @@
     "shiftSaturation": -1
   },
   {
+    "name": "Gryphon Dungeon Tiles",
+    "area": "GRYPHON_DUNGEONS",
+    "groundMaterial": "PLAIN_DIRT",
+    "underlayIds": [
+      14
+    ]
+  },
+  {
     "name": "Fortis roads",
     "area": "ALL",
     "overlayIds": [ 328 ],
