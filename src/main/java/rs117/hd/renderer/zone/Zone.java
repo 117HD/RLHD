@@ -73,7 +73,7 @@ public class Zone {
 	int[][] roofStart;
 	int[][] roofEnd;
 	short modelCount;
-	float reveal = 1.0f;
+	float revealTime = 0.25f;
 	SSBOModelData.Slice modelDataSlice;
 	UBOZoneData.ZoneStruct zoneData;
 
@@ -236,7 +236,7 @@ public class Zone {
 		zoneData.worldViewIdx.set(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
 		zoneData.offsetX.set((mx - (sceneContext.sceneOffset >> 3)) << 10);
 		zoneData.offsetZ.set((mz - (sceneContext.sceneOffset >> 3)) << 10);
-		zoneData.reveal.set(0.0f); // TODO: We should fade the zone in after its been loaded
+		zoneData.reveal.set(revealTime > 0.0f ? 1.0f : 0.0f);
 	}
 
 	void updateRoofs(Map<Integer, Integer> updates) {
