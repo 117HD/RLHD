@@ -45,6 +45,10 @@ public final class ZoneUploadJob extends Job {
 		sceneUploader.setScene(sceneContext.scene);
 		sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
+		zone.zoneData = uboZoneData.acquire();
+		zone.zoneData.reveal.set(zone.revealTime > 0.0f ? 1.0f : 0.0f);
+		zone.setWorldViewAndOffset(viewContext, sceneContext, x, z);
+
 		if (zone.sizeO > 0 || zone.sizeA > 0) {
 			workerHandleCancel();
 
@@ -78,8 +82,11 @@ public final class ZoneUploadJob extends Job {
 				a.map();
 			}
 
-			zone.initialize(uboZoneData, ssboModelData, o, a, eboAlpha);
-			zone.setMetadata(viewContext, sceneContext, x, z);
+			zone.initialize(o, a, eboAlpha);
+
+			if (zone.modelCount > 0) {
+				zone.modelDataSlice = ssboModelData.obtainSlice(zone.modelCount);
+			}
 		} catch (Throwable ex) {
 			log.warn(
 				"Caught exception whilst processing zone [{}, {}] worldId [{}] group priority [{}] cancelling...\n",

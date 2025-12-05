@@ -639,7 +639,7 @@ public class SceneManager {
 				if (preZone.cull)
 					root.pendingCull.add(preZone);
 
-				nextZone.setMetadata(ctx, nextSceneContext, x, z);
+				nextZone.setWorldViewAndOffset(ctx, nextSceneContext, x, z);
 			}
 		}
 

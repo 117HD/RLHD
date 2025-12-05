@@ -286,7 +286,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 		return null;
 	}
 
-	protected final <T extends StructProperty> T addStruct(T newStructProp) {
+	protected synchronized final <T extends StructProperty> T addStruct(T newStructProp) {
 		int structStart = size;
 		for (Property property : newStructProp.properties)
 			appendToBuffer(property);
@@ -305,7 +305,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 		return newStructProp;
 	}
 
-	protected final <T extends StructProperty> T[] addStructs(T[] newStructPropArray, Supplier<T> createFunction) {
+	protected synchronized final <T extends StructProperty> T[] addStructs(T[] newStructPropArray, Supplier<T> createFunction) {
 		for (int i = 0; i < newStructPropArray.length; i++) {
 			newStructPropArray[i] = createFunction.get();
 			addStruct(newStructPropArray[i]);
@@ -314,11 +314,11 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 		return newStructPropArray;
 	}
 
-	protected Property addProperty(PropertyType type, String name) {
+	protected synchronized Property addProperty(PropertyType type, String name) {
 		return appendToBuffer(new Property(type, name));
 	}
 
-	protected Property[] addPropertyArray(PropertyType type, String name, int size) {
+	protected synchronized Property[] addPropertyArray(PropertyType type, String name, int size) {
 		Property[] result = new Property[size];
 		for (int i = 0; i < size; i++)
 			result[i] = addProperty(type, name);
@@ -327,7 +327,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 
 	protected void onAppendToBuffer(Property property) {}
 
-	private Property appendToBuffer(Property property) {
+	private synchronized Property appendToBuffer(Property property) {
 		property.owner = this;
 
 		int padding = alignment ? (property.type.alignment - (size % property.type.alignment)) % property.type.alignment : 0;
@@ -347,9 +347,9 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 		dirtyHighTide = max(dirtyHighTide, position + size);
 	}
 
-	protected boolean preUpload() { return true; }
+	protected synchronized boolean preUpload() { return true; }
 
-	protected void initialize() {
+	protected synchronized void initialize() {
 		if (data != null)
 			destroy();
 
@@ -362,11 +362,11 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			prop.offset = prop.position / 4;
 	}
 
-	public final void upload() {
+	public synchronized final void upload() {
 		upload(null);
 	}
 
-	public final void upload(@Nullable RenderState state) {
+	public synchronized final void upload(@Nullable RenderState state) {
 		if (data == null)
 			return;
 
@@ -396,7 +396,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 		dirtyHighTide = 0;
 	}
 
-	public void destroy() {
+	public synchronized void destroy() {
 		if (data == null)
 			return;
 

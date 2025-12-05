@@ -79,7 +79,7 @@ public class Zone {
 
 	final List<AlphaModel> alphaModels = new ArrayList<>(0);
 
-	void initialize(UBOZoneData uboZoneData, SSBOModelData ssboModelData, VBO o, VBO a, int eboShared) {
+	void initialize(VBO o, VBO a, int eboShared) {
 		assert glVao == 0;
 		assert glVaoA == 0;
 
@@ -94,12 +94,6 @@ public class Zone {
 			glVaoA = glGenVertexArrays();
 			setupVao(glVaoA, a.bufId, eboShared);
 		}
-
-		if (modelCount > 0) {
-			modelDataSlice = ssboModelData.obtainSlice(modelCount);
-		}
-
-		zoneData = uboZoneData.acquire();
 	}
 
 	public static void freeZones(@Nullable Zone[][] zones) {
@@ -229,14 +223,13 @@ public class Zone {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	public void setMetadata(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
+	public void setWorldViewAndOffset(WorldViewContext viewContext, SceneContext sceneContext, int mx, int mz) {
 		if (zoneData == null)
 			return;
 
 		zoneData.worldViewIdx.set(viewContext.uboWorldViewStruct != null ? viewContext.uboWorldViewStruct.worldViewIdx + 1 : 0);
 		zoneData.offsetX.set((mx - (sceneContext.sceneOffset >> 3)) << 10);
 		zoneData.offsetZ.set((mz - (sceneContext.sceneOffset >> 3)) << 10);
-		zoneData.reveal.set(revealTime > 0.0f ? 1.0f : 0.0f);
 	}
 
 	void updateRoofs(Map<Integer, Integer> updates) {
