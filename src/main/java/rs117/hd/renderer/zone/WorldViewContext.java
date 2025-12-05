@@ -34,8 +34,7 @@ public class WorldViewContext {
 	WorldViewContext(
 		SceneManager sceneManager,
 		@Nullable WorldView worldView,
-		@Nullable ZoneSceneContext sceneContext,
-		UBOWorldViews uboWorldViews
+		@Nullable ZoneSceneContext sceneContext
 	) {
 		this.sceneManager = sceneManager;
 		this.worldViewId = worldView == null ? -1 : worldView.getId();
@@ -43,7 +42,7 @@ public class WorldViewContext {
 		this.sizeX = worldView == null ? NUM_ZONES : worldView.getSizeX() >> 3;
 		this.sizeZ = worldView == null ? NUM_ZONES : worldView.getSizeY() >> 3;
 		if (worldView != null)
-			uboWorldViewStruct = uboWorldViews.acquire(worldView);
+			uboWorldViewStruct = sceneManager.uboWorldViews.acquire(worldView);
 		zones = new Zone[sizeX][sizeZ];
 		for (int x = 0; x < sizeX; ++x)
 			for (int z = 0; z < sizeZ; ++z)
@@ -162,7 +161,7 @@ public class WorldViewContext {
 		Zone newZone = new Zone();
 		newZone.dirty = zones[zx][zz].dirty;
 
-		curZone.uploadJob = ZoneUploadJob.build(sceneManager.ssboModelData, this, sceneContext, newZone, zx, zz);
+		curZone.uploadJob = ZoneUploadJob.build(sceneManager.uboZoneData, sceneManager.ssboModelData, this, sceneContext, newZone, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
 			curZone.uploadJob.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());

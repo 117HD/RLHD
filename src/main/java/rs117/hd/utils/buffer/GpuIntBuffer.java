@@ -104,7 +104,7 @@ public class GpuIntBuffer
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		int u, int v, int w, int materialData,
-		int nx, int ny, int nz, int terrainData, int modelOffset
+		int nx, int ny, int nz, int terrainData, int zoneIdx, int modelIdx
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put((u & 0xFFFF) << 16 | z & 0xFFFF);
@@ -114,7 +114,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(modelOffset + 1);
+		buffer.put(((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12));
 	}
 
 	public static int normShort(float f) {
@@ -124,7 +124,7 @@ public class GpuIntBuffer
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		float nx, float ny, float nz, int terrainData, int modelOffset
+		float nx, float ny, float nz, int terrainData, int zoneIdx, int modelIdx
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(float16(u) << 16 | z & 0xFFFF);
@@ -135,13 +135,13 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(modelOffset + 1);
+		buffer.put(((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12));
 	}
 
 	public void putVertex(
 		int x, int y, int z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		int nx, int ny, int nz, int terrainData, int modelOffset
+		int nx, int ny, int nz, int terrainData, int zoneIdx, int modelIdx
 	) {
 		buffer.put((y & 0xFFFF) << 16 | x & 0xFFFF);
 		buffer.put(float16(u) << 16 | z & 0xFFFF);
@@ -152,14 +152,14 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(modelOffset + 1);
+		buffer.put(((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12));
 	}
 
 	public static void putFloatVertex(
 		int[] data, int offset,
 		float x, float y, float z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
-		int nx, int ny, int nz, int terrainData, int modelOffset
+		int nx, int ny, int nz, int terrainData, int zoneIdx, int modelIdx
 	) {
 		data[offset++] = (Float.floatToRawIntBits(x));
 		data[offset++] = (Float.floatToRawIntBits(y));
@@ -170,7 +170,7 @@ public class GpuIntBuffer
 		data[offset++] = (alphaBiasHsl);
 		data[offset++] = (materialData);
 		data[offset++] = (terrainData);
-		data[offset] = (modelOffset + 1);
+		data[offset] = ((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12);
 	}
 
 	public int position()
