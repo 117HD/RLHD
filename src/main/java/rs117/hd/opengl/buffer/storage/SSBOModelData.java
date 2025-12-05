@@ -15,6 +15,7 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		public final Property position = addProperty(PropertyType.IVec3, "position");
 		public final Property height = addProperty(PropertyType.Int, "height");
 		public final Property flags = addProperty(PropertyType.Int, "flags");
+		public final Property padding = addProperty(PropertyType.Int, "padding");
 
 		public void set(
 			Renderable renderable,

@@ -100,10 +100,19 @@ public class WorldViewContext {
 			for (int z = 0; z < sizeZ; z++) {
 				handleZoneSwap(deltaTime, x, z);
 
-				if (zones[x][z].rebuild) {
-					zones[x][z].rebuild = false;
+				Zone curZone = zones[x][z];
+				if (curZone.rebuild) {
+					curZone.rebuild = false;
 					invalidateZone(x, z);
 					queuedWork = true;
+				}
+
+				if(curZone.zoneData != null && curZone.reveal > 0.0f) {
+					curZone.reveal -= deltaTime;
+					if(curZone.reveal < 0.0f)
+						curZone.reveal = 0.0f;
+
+					curZone.zoneData.reveal.set(curZone.reveal);
 				}
 			}
 		}
@@ -160,6 +169,7 @@ public class WorldViewContext {
 
 		Zone newZone = new Zone();
 		newZone.dirty = zones[zx][zz].dirty;
+		newZone.reveal = zones[zx][zz].reveal;
 
 		curZone.uploadJob = ZoneUploadJob.build(sceneManager.uboZoneData, sceneManager.ssboModelData, this, sceneContext, newZone, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
