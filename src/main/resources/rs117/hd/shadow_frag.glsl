@@ -28,6 +28,7 @@
 #include <uniforms/global.glsl>
 
 #include <utils/constants.glsl>
+#include <utils/misc.glsl>
 
 #if SHADOW_MODE == SHADOW_MODE_DETAILED
     uniform sampler2DArray textureArray;
@@ -39,7 +40,13 @@
     in float fOpacity;
 #endif
 
+in float fDetailFade;
+
 void main() {
+    if (fDetailFade > 0 && orderedDither(gl_FragCoord.xy, fDetailFade, 2.0) < 1.0) {
+        discard;
+    }
+
     float opacity = 0;
     #if SHADOW_TRANSPARENCY
         opacity = fOpacity;
