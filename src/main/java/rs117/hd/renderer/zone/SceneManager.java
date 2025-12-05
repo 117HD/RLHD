@@ -508,6 +508,7 @@ public class SceneManager {
 					if (!zone.initialized) {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 						if (root.sceneContext == null || dist < ZONE_DEFER_DIST_START) {
+							zone.reveal = 0.0f;
 							ZoneUploadJob
 								.build(uboZoneData, ssboModelData, ctx, nextSceneContext, zone, x, z)
 								.setExecuteAsync(plugin.configZoneStreaming)
@@ -524,6 +525,7 @@ public class SceneManager {
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
+				newZone.reveal = sorted.zone.reveal;
 				sorted.zone.uploadJob = ZoneUploadJob
 					.build(uboZoneData, ssboModelData, ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 					.setExecuteAsync(plugin.configZoneStreaming);

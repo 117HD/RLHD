@@ -27,6 +27,7 @@
 
 #include <uniforms/global.glsl>
 #include <uniforms/world_views.glsl>
+#include <uniforms/zone_data.glsl>
 #include <buffers/model_data.glsl>
 
 // Vertex Data
@@ -35,12 +36,7 @@ layout (location = 1) in vec3 vUv;
 layout (location = 3) in int vAlphaBiasHsl;
 layout (location = 4) in int vMaterialData;
 layout (location = 5) in int vTerrainData;
-layout (location = 6) in int vModelOffset;
-
-// Draw Metadata
-layout (location = 7) in int vWorldViewId;
-layout (location = 8) in ivec2 vSceneBase;
-layout (location = 9) in ivec2 vZoneModelOffset;
+layout (location = 6) in int vPackedZoneAndModelIdx;
 
 #include <utils/constants.glsl>
 #include <utils/misc.glsl>
@@ -63,6 +59,30 @@ layout (location = 9) in ivec2 vZoneModelOffset;
 #endif
 
 void main() {
+    int worldViewId = 0;
+    vec3 sceneOffset = vec3(0.0);
+    float fade = 0.0f;
+
+#if ZONE_RENDERER
+    int zoneIdx = vPackedZoneAndModelIdx & 0xFFF;
+    int modelIdx = vPackedZoneAndModelIdx >> 12;
+
+    if(zoneIdx > 0) {
+        worldViewId = getZoneWorldViewIdx(zoneIdx);
+        sceneOffset = getZoneSceneOffset(zoneIdx);
+        fade = getZoneReveal(zoneIdx);
+    }
+
+    if(modelIdx > 0) {
+        ModelData modelData = getModelData(modelIdx);
+        if(isDetailModel(modelData)) {
+            float modelFade = 0.0;
+            getDetailCullingFade(modelData, sceneOffset, modelFade);
+            //fade = max(fade, modelFade); TODO: Need to fix Dynamic Models hmmm
+        }
+    }
+#endif
+
     int waterTypeIndex = vTerrainData >> 3 & 0xFF;
     float opacity = 1 - (vAlphaBiasHsl >> 24 & 0xFF) / float(0xFF);
 
@@ -77,34 +97,19 @@ void main() {
     bool isShadowDisabled =
         isGroundPlaneTile ||
         isWaterSurfaceOrUnderwaterTile ||
-        isTransparent;
+        isTransparent ||
+        fade == 1.0f;
 
 #if ZONE_RENDERER
-    if(!isShadowDisabled && vWorldViewId > 0) {
-        ivec4 tint = getWorldViewTint(vWorldViewId);
+    if(!isShadowDisabled && worldViewId > 0) {
+        ivec4 tint = getWorldViewTint(worldViewId);
         if(tint.x != -1 && tint.y != -1 && tint.z != -1) {
             isShadowDisabled = true;
         }
     }
 #endif
 
-    vec3 sceneOffset = vec3(vSceneBase.x, 0, vSceneBase.y);
     vec3 pos = sceneOffset + vPosition;
-
-    int worldViewId = vWorldViewId;
-#if ZONE_RENDERER
-    if (!isShadowDisabled && vModelOffset > 0) {
-        ModelData modelData = getModelData(vModelOffset);
-        if (!isStaticModel(modelData)) {
-            worldViewId = modelData.worldViewId;
-        }
-
-        if (isDetailModel(modelData)) {
-            isShadowDisabled = !getDetailCullingFade(modelData, sceneOffset);
-        }
-    }
-#endif
-
     int shouldCastShadow = isShadowDisabled ? 0 : 1;
 
     #if SHADOW_MODE == SHADOW_MODE_DETAILED

@@ -67,12 +67,10 @@ void main() {
 
     if(modelIdx > 0) {
         ModelData modelData = getModelData(modelIdx);
-        if(!isStaticModel(modelData)) {
-            worldViewId = modelData.worldViewId;
-        }
-
         if(isDetailModel(modelData)) {
-            getDetailCullingFade(modelData, sceneOffset, fade);
+            float modelFade = 0.0;
+            getDetailCullingFade(modelData, sceneOffset, modelFade);
+            //fade = max(fade, modelFade); TODO: Need to fix Dynamic Models hmmm
         }
     }
 #endif

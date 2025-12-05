@@ -73,6 +73,7 @@ public class Zone {
 	int[][] roofStart;
 	int[][] roofEnd;
 	short modelCount;
+	float reveal = 1.0f;
 	SSBOModelData.Slice modelDataSlice;
 	UBOZoneData.ZoneStruct zoneData;
 
