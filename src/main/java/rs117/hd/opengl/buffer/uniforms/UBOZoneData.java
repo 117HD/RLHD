@@ -1,7 +1,6 @@
 package rs117.hd.opengl.buffer.uniforms;
 
 import java.util.ArrayDeque;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.buffer.UniformStructuredBuffer;
@@ -16,8 +15,7 @@ public class UBOZoneData extends UniformStructuredBuffer<GLBuffer> {
 
 	@RequiredArgsConstructor
 	public class ZoneStruct extends StructProperty {
-		@Getter
-		private final int zoneIdx;
+		public final int zoneIdx;
 
 		public final Property worldViewIdx = addProperty(PropertyType.Int, "worldViewIdx");
 		public final Property offsetX = addProperty(PropertyType.Int, "offsetX");
