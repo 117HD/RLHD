@@ -1374,6 +1374,12 @@
     "specularGloss": 20.0
   },
   {
+    "name": "GRUNGE_2_MATTE",
+    "parent": "GRUNGE_2",
+    "specularStrength": 0.15,
+    "specularGloss": 10.0
+  },
+  {
     "name": "GRUNGE_2_SHINY",
     "parent": "GRUNGE_2",
     "specularStrength": 0.7,
@@ -2091,12 +2097,31 @@
     "brightness": 1.277
   },
   {
-    "name": "LEAF_VEINS"
+    "name": "LEAF_VEINS_n"
+  },
+  {
+    "name": "LEAF_VEINS",
+    "normalMap": "LEAF_VEINS_N",
+    "specularStrength": 0.15,
+    "specularGloss": 20.0
   },
   {
     "name": "LEAF_VEINS_LIGHT",
     "parent": "LEAF_VEINS",
     "brightness": 1.083
+  },
+  {
+    "name": "LEAF_VEINS_PALM",
+    "parent": "LEAF_VEINS",
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
+  },
+  {
+    "name": "LEAF_VEINS_PALM_LIGHT",
+    "parent": "LEAF_VEINS",
+    "brightness": 1.18,
+    "specularStrength": 0.25,
+    "specularGloss": 30.0
   },
   {
     "name": "LEAF_VEINS_DARK",
