@@ -24268,11 +24268,12 @@
       "ARCQUEST_HUNTING_PLANT_OP",
       "DOV_HUNTING_PLANT1",
       "DOV_HUNTING_PLANT1_OP",
-      "DOV_HUNTING_PLANT_INITIAL"
+      "DOV_HUNTING_PLANT_INITIAL",
+      "PLANT_TROPICAL_01"
     ]
   },
   {
-    "description": "Karamja - Jungle plant - Leafy style",
+    "description": "Tropical - Karamja - Great Conch - Jungle plant - Leafy style",
     "windDisplacementMode": "VERTEX",
     "baseMaterial": "LEAF_VEINS",
     "uvScale": 0.25,
@@ -24283,18 +24284,14 @@
       "JUNGLEPLANT1_KARAMJA",
       "JUNGLEPLANT2",
       "JUNGLEPLANT3",
-      "KHARAZI_JUNGLE_PLANT1",
-      "KHARAZI_JUNGLE_PLANT2",
-      "MM_PLANT_KHARAZI_JUNGLE_PLANT1",
-      "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
-      "MM_JUNGLEPLANT_FAT",
-      "MM_JUNGLE_PLANT_MISC2",
-      "HUNTING_JUNGLE_PLANT1",
-      "HUNTING_JUNGLE_PLANT2"
+      "HUNTING_JUNGLE_PLANT2",
+      "MM_JUNGLEPLANT3",
+      "MM_JUNGLEPLANT1",
+      "PLANT_TROPICAL_02"
     ]
   },
   {
-    "description": "Karamja - Jungle plant - fern style",
+    "description": "Tropical - Karamja - Great Conch - Jungle plant - fern style",
     "baseMaterial": "LEAF_VEINS_DARK",
     "windDisplacementMode": "VERTEX",
     "uvScale": 0.25,
@@ -24303,8 +24300,13 @@
       "JUNGLE2",
       "GREENER_JUNGLE2",
       "MM_JUNGLE_PLANT_FERN",
-      "MM_JUNGLEPLANT3",
-      "MM_JUNGLEPLANT1"
+      "KHARAZI_JUNGLE_PLANT1",
+      "KHARAZI_JUNGLE_PLANT2",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT1",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
+      "MM_JUNGLEPLANT_FAT",
+      "MM_JUNGLE_PLANT_MISC2",
+      "HUNTING_JUNGLE_PLANT1"
     ]
   },
   {
@@ -68196,6 +68198,25 @@
     "objectIds": [
       "HS_WEB_WALL_01",
       "HS_WEB_WALL_02"
+    ]
+  },
+  {
+    "description": "The Great Conch - Object - Crab Apple Tree",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 87
+      }
+    ],
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_CRAB_APPLE"
     ]
   }
 ]
