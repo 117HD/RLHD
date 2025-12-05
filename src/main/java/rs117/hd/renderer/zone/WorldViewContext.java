@@ -9,8 +9,11 @@ import rs117.hd.opengl.buffer.uniforms.UBOWorldViews;
 import rs117.hd.utils.jobs.JobGroup;
 
 import static rs117.hd.renderer.zone.SceneManager.NUM_ZONES;
+import static rs117.hd.renderer.zone.Zone.REVEAL_TIME;
+
 @Slf4j
 public class WorldViewContext {
+
 	final int worldViewId;
 	final int sizeX, sizeZ;
 	@Nullable
@@ -111,7 +114,7 @@ public class WorldViewContext {
 					curZone.revealTime -= deltaTime;
 					if(curZone.revealTime < 0.0f)
 						curZone.revealTime = 0.0f;
-					curZone.zoneData.reveal.set(curZone.revealTime);
+					curZone.zoneData.reveal.set(curZone.revealTime / REVEAL_TIME);
 				}
 			}
 		}

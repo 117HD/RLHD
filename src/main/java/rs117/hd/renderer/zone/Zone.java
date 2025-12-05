@@ -33,6 +33,8 @@ import static rs117.hd.utils.MathUtils.*;
 @Slf4j
 @RequiredArgsConstructor
 public class Zone {
+	public static final float REVEAL_TIME = 0.25f;
+
 	// Zone vertex format
 	// pos short vec3(x, y, z)
 	// uvw short vec3(u, v, w)
@@ -73,7 +75,7 @@ public class Zone {
 	int[][] roofStart;
 	int[][] roofEnd;
 	short modelCount;
-	float revealTime = 0.25f;
+	float revealTime = REVEAL_TIME;
 	SSBOModelData.Slice modelDataSlice;
 	UBOZoneData.ZoneStruct zoneData;
 
