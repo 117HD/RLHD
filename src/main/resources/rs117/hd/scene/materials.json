@@ -1415,6 +1415,12 @@
     "normalMap": null
   },
   {
+    "name": "GRUNGE_3_GLOSS",
+    "parent": "GRUNGE_3",
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
+  },
+  {
     "name": "GRUNGE_3_SHINY",
     "parent": "GRUNGE_3",
     "brightness": 1.177,
@@ -2097,7 +2103,7 @@
     "brightness": 1.277
   },
   {
-    "name": "LEAF_VEINS_n"
+    "name": "LEAF_VEINS_N"
   },
   {
     "name": "LEAF_VEINS",
@@ -2113,15 +2119,15 @@
   {
     "name": "LEAF_VEINS_PALM",
     "parent": "LEAF_VEINS",
-    "specularStrength": 0.25,
-    "specularGloss": 30.0
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
   },
   {
     "name": "LEAF_VEINS_PALM_LIGHT",
     "parent": "LEAF_VEINS",
     "brightness": 1.18,
-    "specularStrength": 0.25,
-    "specularGloss": 30.0
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
   },
   {
     "name": "LEAF_VEINS_DARK",
