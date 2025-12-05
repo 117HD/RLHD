@@ -211,3 +211,11 @@ vec3 saturate(vec3 value) {
 vec4 saturate(vec4 value) {
     return clamp(value, vec4(0.0), vec4(1.0));
 }
+
+float easeInExpo(float x) {
+    return x == 0 ? 0 : pow(2, 10 * x - 10);
+}
+
+float easeInCirc(float x) {
+    return 1 - sqrt(1 - pow(x, 2));
+}
