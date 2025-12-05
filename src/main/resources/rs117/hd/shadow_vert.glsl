@@ -48,6 +48,7 @@ layout (location = 6) in int vPackedZoneAndModelIdx;
     flat out int gMaterialData;
     flat out int gCastShadow;
     flat out int gWorldViewId;
+    flat out float gDetailFade;
     #if SHADOW_TRANSPARENCY
         flat out float gOpacity;
     #endif
@@ -56,6 +57,7 @@ layout (location = 6) in int vPackedZoneAndModelIdx;
         // Pass to fragment shader
         out float fOpacity;
     #endif
+    out float fDetailFade;
 #endif
 
 void main() {
@@ -85,6 +87,12 @@ void main() {
            fade = max(fade, modelFade);
        }
    }
+
+    #if SHADOW_MODE == SHADOW_MODE_DETAILED
+        gDetailFade = fade;
+    #else
+        fDetailFade = fade;
+   #endif
 #endif
 
     int waterTypeIndex = vTerrainData >> 3 & 0xFF;
