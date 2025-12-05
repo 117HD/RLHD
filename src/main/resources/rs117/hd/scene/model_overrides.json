@@ -5655,13 +5655,15 @@
     ]
   },
   {
-    "description": "Shayzien - Metal - Metal bars gate",
+    "description": "Varrock - Shayzien - Metal - Metal bars gate",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 117,
     "objectIds": [
-      "SHAYZIEN_BANK_BARS_DOOR"
+      "SHAYZIEN_BANK_BARS_DOOR",
+      "FAI_VARROCK_BANK_BARS_END",
+      "FAI_VARROCK_BANK_BARS_END_MIRROR"
     ]
   },
   {
@@ -8297,11 +8299,14 @@
     "description": "RowBoat",
     "objectIds": [
       "QUEST_LUNAR_ROWBOAT",
-      "SERIM_ROWBOAT"
+      "SERIM_ROWBOAT",
+      "CONCH_ROWBOAT_NORTH",
+      "CONCH_ROWBOAT_EAST"
     ],
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "colors": [ "h == 0" ],
@@ -36593,7 +36598,11 @@
       "GROUNDCOVER_PLANT1_WITHERED",
       "GROUNDCOVER_PLANT2_WITHERED",
       "GROUNDCOVER_PLANT3_WITHERED",
-      "GROUNDCOVER_PLANT4_WITHERED"
+      "GROUNDCOVER_PLANT4_WITHERED",
+      "GROUNDCOVER_PLANT5_WITHERED",
+      "TT_HUNTING_PLANT_04_OP",
+      "TT_HUNTING_PLANT_05_OP",
+      "TT_HUNTING_PLANT_06_OP"
     ]
   },
   {
@@ -67344,7 +67353,6 @@
     "baseMaterial": "NONE",
     "objectIds": [
       "TT_REPAIR_CRATES_BROKEN",
-      "CONCH_TORTUGAN_BANKBOOTH01",
       "CONCH_CRATE_TORTUGAN01_EMPTY01",
       "TT_REPAIR_CRATES_COCO_FIXED",
       "TT_REPAIR_CRATES_COCO_BROKEN_NOOP",
@@ -67368,6 +67376,72 @@
         "uvScale": 0.6,
         "uvOrientation": 179
       }
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Seaweed - Tortugan Bankbooth",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h >= 10",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "CONCH_TORTUGAN_BANKBOOTH01"
+
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Seaweed - Tortugan Bank Chest Closed",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 || h == 11",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "TORTUGAN_CHEST01_BANK01_OPEN01",
+      "TORTUGAN_CHEST01_BANK01_CLOSED01"
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Seaweed - Tortugan Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRAVEL_SHINY_LIGHT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 1.2,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 10 || h == 11",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "TORTUGAN_CHEST01_BANK01_OPEN01"
     ]
   },
   {
@@ -67420,10 +67494,16 @@
     "objectIds": [
       "CONCH_GRYPHON_LAIR_ENTRANCE",
       "TT_LAIR_ENTRANCE_CLEAR",
-      "TT_LAIR_ENTRANCE_BLOCKED",
       "CONCH_GRYPHON_TASK_LAIR_ENTRANCE",
-      "CONCH_UNDERWATER_CAVE_ENTRANCE"
+      "CONCH_UNDERWATER_CAVE_ENTRANCE",
+      "CONCH_CLIFF_PATH_ENTRANCE"
     ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Great Conch - Gryphon Lair Blocked",
+    "baseMaterial": "DIRT_2_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "colorOverrides": [
@@ -67433,6 +67513,9 @@
         "uvType": "BOX",
         "uvScale": 0.5
       }
+    ],
+    "objectIds": [
+      "TT_LAIR_ENTRANCE_BLOCKED"
     ]
   },
   {
@@ -68355,7 +68438,8 @@
       }
     ],
     "objectIds": [
-      "PLANT_TROPICAL_BROMELIA01"
+      "PLANT_TROPICAL_BROMELIA01",
+      "TT_HUNTING_PLANT_03_OP"
     ]
   },
   {
@@ -68482,16 +68566,16 @@
         "uvScale": 0.5
       }
     ],
-    "objectIds": [ "TT_HUNTING_MONUMENT_NOOP" ]
+    "objectIds": [
+      "TT_HUNTING_MONUMENT_NOOP",
+      "TT_HUNTING_MONUMENT_OP"
+    ]
   },
   {
     "description": "Great Conch - Sandpit",
     "baseMaterial": "GRAVEL_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.4,
-    "objectIds": [
-      "SANDPIT_2"
-    ],
     "colorOverrides": [
       {
         "colors": "s == 2",
@@ -68500,6 +68584,47 @@
         "uvScale": 0.5,
         "uvOrientation": 512
       }
+    ],
+    "objectIds": [
+      "SANDPIT_2"
+    ]
+  },
+  {
+    "description": "Great Conch - Farming Rack",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -89
+      }
+    ],
+    "objectIds": [
+      "CONCH_RACK_TORTUGAN01_SCENERY04_1X1",
+      "CONCH_RACK_TORTUGAN01_SCENERY05_1X1"
+    ]
+  },
+  {
+    "description": "Great Conch - Dirt - Gryphon Tracks",
+    "baseMaterial": "DIRT_2",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 89,
+    "uvScale": 1.1,
+    "objectIds": [
+      "TT_HUNTING_TRAIL",
+      "TT_HUNTING_TRAIL_CORNER",
+      "TT_HUNTING_TRAIL_CORNER_MIRROR"
     ]
   }
 ]
