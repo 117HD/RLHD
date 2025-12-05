@@ -13352,7 +13352,11 @@
       "TT_HUNTING_ROCKS_01_OP",
       "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_BOTTOM",
       "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_TOP",
-      "GREAT_CONCH_CLIFF_SHORTCUT_MIDDLE"
+      "GREAT_CONCH_CLIFF_SHORTCUT_MIDDLE",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_2_BOTTOM",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_2_TOP",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_1_BOTTOM",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_1_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -65244,9 +65248,9 @@
   },
   {
     "description": "The Pandemonium - Palm Tree",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS_PALM_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.3,
     "objectIds": [
       "PALM_UPDATE01",
       "PALM_UPDATE02",
@@ -68217,6 +68221,145 @@
     ],
     "objectIds": [
       "SAILING_CHARTING_GENERIC_CRAB_APPLE"
+    ]
+  },
+  {
+    "description": "The Great Conch - Plant - Rock - Rocks with plants",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 87,
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "CRAB_ROCK"
+    ]
+  },
+  {
+    "description": "The Great Conch - Plant - Rock - Rocks with plants",
+    "baseMaterial": "SAND_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 478,
+    "objectIds": [
+      "CRAB_TRAP_UNBUILT"
+    ]
+  },
+  {
+    "description": "The Great Conch - Grunge - Shells",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 313,
+    "objectIds": [
+      "SHELL1BIG",
+      "SHELL2BIG"
+    ]
+  },
+  {
+    "description": "The Great Conch - Grunge - Shells",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -128,
+    "objectIds": [
+      "SHELL1BIG"
+    ]
+  },
+  {
+    "description": "The Great Conch - Shell - Inactive Hermit Crab",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 313,
+    "npcIds": [
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_NORTH",
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_EAST",
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_SOUTH",
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_WEST"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Bromelia",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stem and leaves",
+        "colors": "h == 14",
+        "windDisplacementMode": "VERTEX",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "PLANT_TROPICAL_BROMELIA01"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Bell",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stem and leaves",
+        "colors": "h == 20 || h == 24",
+        "windDisplacementMode": "VERTEX",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "PLANT_TROPICAL_BELL01"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Large leaf tropical plant",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "LEAF_VEINS_PALM",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "objectIds": [
+      "PLANT_TROPICAL_LEAFY03",
+      "PLANT_TROPICAL_LEAFY04"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Tropcial Palm",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "LEAF_VEINS_PALM",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "uvOrientation": 492,
+    "objectIds": [
+      "PLANT_TROPICAL_FAN02_SMALL",
+      "PLANT_TROPICAL_FAN02_MEDIUM"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Tropcial Palm - Purple and red",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "LEAF_VEINS_PALM",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "uvOrientation": -313,
+    "objectIds": [
+      "PLANT_TROPICAL_FAN01_SMALL"
     ]
   }
 ]
