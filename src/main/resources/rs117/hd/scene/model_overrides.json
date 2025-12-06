@@ -69957,13 +69957,6 @@
         "uvScale": 0.8,
         "uvType": "BOX",
         "uvOrientation": 256
-      },
-      {
-        "colors": "h >= 23",
-        "baseMaterial": "LEAF_VEINS",
-        "uvScale": 0.8,
-        "uvType": "BOX",
-        "uvOrientation": 256
       }
     ],
     "objectIds": [
