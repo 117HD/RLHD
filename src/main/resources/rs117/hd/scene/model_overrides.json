@@ -1540,7 +1540,7 @@
   },
   {
     "description": "Warm Region - Objects - Tree - Yew",
-    "areas": ["WARM_REGIONS" ],
+    "areas": [ "WARM_REGIONS" ],
     "baseMaterial": "BARK",
     "terrainVertexSnap": true,
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
