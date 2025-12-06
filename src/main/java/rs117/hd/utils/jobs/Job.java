@@ -2,6 +2,7 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -10,9 +11,12 @@ public abstract class Job {
 
 	protected final AtomicBoolean done = new AtomicBoolean();
 	protected final AtomicBoolean wasCancelled = new AtomicBoolean();
+	protected final AtomicBoolean encounteredError = new AtomicBoolean();
 	protected final AtomicBoolean ranToCompletion = new AtomicBoolean();
 	protected final AtomicBoolean queued = new AtomicBoolean();
 	protected JobGroup<Job> group;
+
+	@Getter
 	protected boolean isReleased;
 
 	boolean executeAsync = true;
@@ -38,6 +42,10 @@ public abstract class Job {
 
 	public final boolean isQueued() {
 		return queued.get();
+	}
+
+	public final boolean encounteredError() {
+		return encounteredError.get();
 	}
 
 	public final boolean wasCancelled() {
