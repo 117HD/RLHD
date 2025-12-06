@@ -94,7 +94,7 @@ public class WorldViewContext {
 
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
-			} else if (uploadTask.wasCancelled() ) {
+			} else if (uploadTask.wasCancelled() && !curZone.cull) {
 				if(!uploadTask.encounteredError() || !curZone.encounteredErrorDuringUpload) {
 					// Cache if the previous upload task encountered an error, if it encounters another one the zone will be dropped to avoid constantly rebuilding
 					curZone.rebuild = true;
