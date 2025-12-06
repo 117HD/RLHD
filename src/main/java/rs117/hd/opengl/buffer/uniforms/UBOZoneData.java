@@ -1,6 +1,7 @@
 package rs117.hd.opengl.buffer.uniforms;
 
 import java.util.ArrayDeque;
+import java.util.concurrent.ArrayBlockingQueue;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.opengl.buffer.UniformStructuredBuffer;
@@ -28,7 +29,7 @@ public class UBOZoneData extends UniformStructuredBuffer<GLBuffer> {
 	}
 
 	private final ZoneStruct[] uboStructs = new ZoneStruct[MAX_ZONES];
-	private final ArrayDeque<Integer> freeIndices = new ArrayDeque<>();
+	private final ArrayBlockingQueue<Integer> freeIndices = new ArrayBlockingQueue<>(MAX_ZONES);
 
 	public UBOZoneData() {
 		super(GL_DYNAMIC_DRAW);

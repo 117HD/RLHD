@@ -1029,6 +1029,9 @@ public class ZoneRenderer implements Renderer {
 		int zz = (z >> 10) + offset;
 		Zone zone = ctx.zones[zx][zz];
 
+		if (!zone.initialized)
+			return;
+
 		if (sceneManager.isRoot(ctx)) {
 			// Cull based on detail draw distance
 			float squaredDistance = sceneCamera.squaredDistanceTo(x, y, z);
@@ -1048,9 +1051,6 @@ public class ZoneRenderer implements Renderer {
 				if (!inArea)
 					return;
 			}
-
-			if (!zone.initialized)
-				return;
 		}
 
 		ctx.sceneContext.localToWorld(tileObject.getLocalLocation(), tileObject.getPlane(), worldPos);
@@ -1134,6 +1134,14 @@ public class ZoneRenderer implements Renderer {
 		if (ctx == null || !renderCallbackManager.drawObject(scene, gameObject))
 			return;
 
+		int offset = ctx.sceneContext.sceneOffset >> 3;
+		int zx = (gameObject.getX() >> 10) + offset;
+		int zz = (gameObject.getY() >> 10) + offset;
+		Zone zone = ctx.zones[zx][zz];
+
+		if(!zone.initialized)
+			return;
+
 		ctx.sceneContext.localToWorld(gameObject.getLocalLocation(), gameObject.getPlane(), worldPos);
 		// Hide everything outside the current area if area hiding is enabled
 		if (ctx.sceneContext.currentArea != null && scene.getWorldViewId() == -1) {
@@ -1153,11 +1161,6 @@ public class ZoneRenderer implements Renderer {
 		ModelOverride modelOverride = modelOverrideManager.getOverride(uuid, worldPos);
 		if (modelOverride.hide)
 			return;
-
-		int offset = ctx.sceneContext.sceneOffset >> 3;
-		int zx = (gameObject.getX() >> 10) + offset;
-		int zz = (gameObject.getY() >> 10) + offset;
-		Zone zone = ctx.zones[zx][zz];
 
 		int modelDataOffset = ssboModelData.addDynamicModelData(renderable, m, modelOverride, x, y, z, false);
 		int preOrientation = HDUtils.getModelPreOrientation(gameObject.getConfig());

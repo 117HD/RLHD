@@ -498,7 +498,7 @@ void main() {
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
 
     if(fDetailFade > 0.0) {
-        outputColor.rgb = mix(outputColor.rgb, fogColor, fDetailFade);
+        outputColor.a *= 1.0 - fDetailFade;
     }
 
     #if WINDOWS_HDR_CORRECTION
