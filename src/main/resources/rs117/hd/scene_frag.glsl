@@ -46,13 +46,13 @@ flat in ivec3 vMaterialData;
 flat in ivec3 vTerrainData;
 flat in vec3 T;
 flat in vec3 B;
-flat in float fDetailFade;
 
 in FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
+    vec2 fFade;
 } IN;
 
 out vec4 FragColor;
@@ -77,6 +77,10 @@ vec2 worldUvs(float scale) {
 #include <utils/lights.glsl>
 
 void main() {
+    if (IN.fFade.y > 0 && orderedDither(gl_FragCoord.xy, IN.fFade.y, 2.0) < 1.0) {
+        discard;
+    }
+
     vec3 downDir = vec3(0, -1, 0);
     // View & light directions are from the fragment to the camera/light
     vec3 viewDir = normalize(cameraPos - IN.position);
@@ -497,8 +501,8 @@ void main() {
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
 
-    if(fDetailFade > 0.0) {
-        outputColor.a *= 1.0 - fDetailFade;
+    if(IN.fFade.x > 0.0) {
+        outputColor.a *= 1.0 - IN.fFade.x;
     }
 
     #if WINDOWS_HDR_CORRECTION

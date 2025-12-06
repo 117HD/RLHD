@@ -44,7 +44,7 @@ in int gMaterialData[3];
 in int gTerrainData[3];
 in int gWorldViewId[3];
 in vec3 gSceneOffset[3];
-in float gDetailFade[3];
+in vec2 gFade[3];
 
 flat out int vWorldViewId;
 flat out ivec3 vAlphaBiasHsl;
@@ -52,17 +52,17 @@ flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
 flat out vec3 T;
 flat out vec3 B;
-flat out float fDetailFade;
 
 out FragmentData {
     vec3 position;
     vec2 uv;
     vec3 normal;
     vec3 texBlend;
+    vec2 fFade;
 } OUT;
 
 void main() {
-    if ((gDetailFade[0] + gDetailFade[1] + gDetailFade[2]) == 1.0)
+    if ((gFade[0].y + gFade[1].y + gFade[2].y) == 1.0)
         return;
 
     // MacOS doesn't allow assigning these arrays directly.
@@ -112,7 +112,6 @@ void main() {
         }
     #endif
 
-    fDetailFade = gDetailFade[0];
     vWorldViewId = gWorldViewId[0];
 
     for (int i = 0; i < 3; i++) {
@@ -129,6 +128,7 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
+        OUT.fFade = gFade[i];
 
         pos = projectionMatrix * pos;
         #if ZONE_RENDERER

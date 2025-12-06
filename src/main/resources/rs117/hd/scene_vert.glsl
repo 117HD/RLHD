@@ -48,12 +48,12 @@ out int gAlphaBiasHsl;
 out int gMaterialData;
 out int gTerrainData;
 out int gWorldViewId;
-out float gDetailFade;
+out vec2 gFade;
 
 void main() {
     int worldViewId = 0;
     vec3 sceneOffset = vec3(0.0);
-    float fade = 0.0f;
+    vec2 fade = vec2(0.0);
 
 #if ZONE_RENDERER
     int zoneIdx = vPackedZoneAndModelIdx & 0xFFF;
@@ -62,7 +62,7 @@ void main() {
     if(zoneIdx > 0) {
         worldViewId = getZoneWorldViewIdx(zoneIdx);
         sceneOffset = getZoneSceneOffset(zoneIdx);
-        fade = getZoneReveal(zoneIdx);
+        fade.x = getZoneReveal(zoneIdx);
     }
 
     if(modelIdx > 0) {
@@ -72,9 +72,7 @@ void main() {
         }
 
         if(isDetailModel(modelData)) {
-            float modelFade = 0.0;
-            getDetailCullingFade(modelData, sceneOffset, modelFade);
-            fade = max(fade, modelFade);
+            getDetailCullingFade(modelData, sceneOffset, fade.y);
         }
     }
 #endif
@@ -87,5 +85,5 @@ void main() {
     gMaterialData = vMaterialData;
     gTerrainData = vTerrainData;
     gWorldViewId = worldViewId;
-    gDetailFade = fade;
+    gFade = fade;
 }
