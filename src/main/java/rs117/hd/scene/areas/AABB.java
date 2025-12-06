@@ -31,6 +31,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.coords.*;
@@ -47,15 +48,6 @@ public class AABB {
 	public final int maxX;
 	public final int maxY;
 	public final int maxZ;
-
-	public AABB(int regionId) {
-		minX = (regionId >>> 8) << 6;
-		minY = (regionId & 0xFF) << 6;
-		maxX = minX + REGION_SIZE - 1;
-		maxY = minY + REGION_SIZE - 1;
-		minZ = Integer.MIN_VALUE;
-		maxZ = Integer.MAX_VALUE;
-	}
 
 	public AABB(int x, int y) {
 		minX = maxX = x;
@@ -104,6 +96,14 @@ public class AABB {
 		this(from[0], from[1], from[2], to[0], to[1], to[2]);
 	}
 
+	public static AABB fromRegionId(int regionId) {
+		int minX = (regionId >>> 8) << 6;
+		int minY = (regionId & 0xFF) << 6;
+		int maxX = minX + REGION_SIZE - 1;
+		int maxY = minY + REGION_SIZE - 1;
+		return new AABB(minX, minY, maxX, maxY);
+	}
+
 	public AABB onPlane(int plane) {
 		return new AABB(minX, minY, plane, maxX, maxY, plane);
 	}
@@ -135,6 +135,7 @@ public class AABB {
 	}
 
 	public boolean contains(int... worldPos) {
+		assert worldPos.length >= 2 : "Expected X, Y & possibly a plane, got: " + Arrays.toString(worldPos);
 		return
 			minX <= worldPos[0] && worldPos[0] <= maxX &&
 			minY <= worldPos[1] && worldPos[1] <= maxY &&
@@ -223,7 +224,7 @@ public class AABB {
 	}
 
 	@Slf4j
-	public static class Adapter extends TypeAdapter<AABB[]> {
+	public static class ArrayAdapter extends TypeAdapter<AABB[]> {
 		@Override
 		public AABB[] read(JsonReader in) throws IOException {
 			in.beginArray();
@@ -235,9 +236,8 @@ public class AABB {
 					continue;
 				}
 
-				// Parse numbers as region IDs
 				if (in.peek() == JsonToken.NUMBER) {
-					list.add(new AABB(in.nextInt()));
+					log.warn("AABBs are specified by two or more numbers. Did you forget to add an array at {}?", GsonUtils.location(in));
 					continue;
 				}
 
@@ -276,7 +276,7 @@ public class AABB {
 
 				switch (i) {
 					case 1:
-						list.add(new AABB(ints[0]));
+						log.warn("AABBs are specified by two or more numbers, only one was provided at {}", GsonUtils.location(in));
 						break;
 					case 2:
 						list.add(new AABB(ints[0], ints[1]));

@@ -39,7 +39,6 @@ import rs117.hd.scene.lights.LightType;
 import rs117.hd.utils.ColorUtils;
 import rs117.hd.utils.Mat4;
 
-import static rs117.hd.HdPlugin.NEAR_PLANE;
 import static rs117.hd.utils.MathUtils.*;
 
 @Slf4j
@@ -196,16 +195,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 		Mat4.mul(projectionMatrix, Mat4.scale(viewportWidth, viewportHeight, 1));
 		Mat4.mul(projectionMatrix, Mat4.translate(.5f, .5f, .5f));
 		Mat4.mul(projectionMatrix, Mat4.scale(.5f, -.5f, .5f));
-		// NDC clip space
-		Mat4.mul(projectionMatrix, Mat4.scale(client.getScale(), client.getScale(), 1));
-		Mat4.mul(projectionMatrix, Mat4.perspective(viewportWidth, viewportHeight, NEAR_PLANE));
-		Mat4.mul(projectionMatrix, Mat4.rotateX(plugin.cameraOrientation[1]));
-		Mat4.mul(projectionMatrix, Mat4.rotateY(plugin.cameraOrientation[0]));
-		Mat4.mul(projectionMatrix, Mat4.translate(
-			-plugin.cameraPosition[0],
-			-plugin.cameraPosition[1],
-			-plugin.cameraPosition[2]
-		));
+		Mat4.mul(projectionMatrix, plugin.viewProjMatrix);
 
 		float[] inverseProjection = null;
 		try {
@@ -280,7 +270,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 					} else {
 						// Shift the position with mouse movement
 						for (int j = 0; j < 2; j++)
-							point[j] += (float) mouseDelta[j];
+							point[j] += mouseDelta[j];
 					}
 
 					if (numFrozenAxes == 0) { // restrict to same depth plane
@@ -460,7 +450,7 @@ public class LightGizmoOverlay extends Overlay implements MouseListener, KeyList
 				if (showDuplicationInfo) {
 					int newlines = (counter++ % 5) + 1;
 					info += "\n".repeat(newlines);
-					info += counter + ": " + l.hash;
+					info += counter + ": " + l.tileObjectId;
 					info += "\n".repeat(5 - newlines);
 				}
 				if (!hideInfo) {

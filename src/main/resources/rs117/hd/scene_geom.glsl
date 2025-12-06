@@ -34,14 +34,18 @@ layout(triangle_strip, max_vertices = 3) out;
 #define USE_VANILLA_UV_PROJECTION
 #include <utils/uvs.glsl>
 #include <utils/color_utils.glsl>
+#include <utils/misc.glsl>
 
 in vec3 gPosition[3];
-in int gHsl[3];
 in vec3 gUv[3];
+in vec3 gNormal[3];
+in int gAlphaBiasHsl[3];
 in int gMaterialData[3];
-in vec4 gNormal[3];
+in int gTerrainData[3];
+in int gWorldViewId[3];
 
-flat out ivec3 vHsl;
+flat out int vWorldViewId;
+flat out ivec3 vAlphaBiasHsl;
 flat out ivec3 vMaterialData;
 flat out ivec3 vTerrainData;
 flat out vec3 T;
@@ -55,18 +59,21 @@ out FragmentData {
 } OUT;
 
 void main() {
-    vec3 vUv[3];
+    vWorldViewId = gWorldViewId[0];
 
     // MacOS doesn't allow assigning these arrays directly.
     // One of the many wonders of Apple software...
+    vec3 vUv[3];
     for (int i = 0; i < 3; i++) {
-        vHsl[i] = gHsl[i];
+        vAlphaBiasHsl[i] = gAlphaBiasHsl[i];
         vUv[i] = gUv[i];
         vMaterialData[i] = gMaterialData[i];
-        vTerrainData[i] = int(gNormal[i].w);
+        vTerrainData[i] = gTerrainData[i];
     }
 
-    computeUvs(vMaterialData[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
+    int materialData = vMaterialData[0];
+
+    computeUvs(materialData, gWorldViewId[0], vec3[](gPosition[0], gPosition[1], gPosition[2]), vUv);
 
     // Calculate tangent-space vectors
     mat2 triToUv = mat2(
@@ -85,10 +92,28 @@ void main() {
     B = TB[1];
     vec3 N = normalize(cross(triToWorld[0], triToWorld[1]));
 
+    #if UNDO_VANILLA_SHADING && ZONE_RENDERER
+        if ((materialData >> MATERIAL_FLAG_UNDO_VANILLA_SHADING & 1) == 1) {
+            for (int i = 0; i < 3; i++) {
+                vec3 normal = gNormal[i];
+                float magnitude = length(normal);
+                if (magnitude == 0) {
+                    normal = N;
+                } else {
+                    normal /= magnitude;
+                }
+                // TODO: Rotate normal for player shading reversal
+                undoVanillaShading(vAlphaBiasHsl[i], normal);
+            }
+        }
+    #endif
+
     for (int i = 0; i < 3; i++) {
+        vec4 pos = vec4(gPosition[i], 1);
         // Flat normals must be applied separately per vertex
-        vec3 normal = gNormal[i].xyz;
-        OUT.position = gPosition[i];
+        vec3 normal = gNormal[i];
+
+        OUT.position = pos.xyz;
         OUT.uv = vUv[i].xy;
         #if FLAT_SHADING
             OUT.normal = N;
@@ -97,7 +122,13 @@ void main() {
         #endif
         OUT.texBlend = vec3(0);
         OUT.texBlend[i] = 1;
-        gl_Position = projectionMatrix * vec4(OUT.position, 1);
+
+        pos = projectionMatrix * pos;
+        #if ZONE_RENDERER
+            int depthBias = (gAlphaBiasHsl[i] >> 16) & 0xff;
+            pos.z += depthBias / 128.0;
+        #endif
+        gl_Position = pos;
         EmitVertex();
     }
 

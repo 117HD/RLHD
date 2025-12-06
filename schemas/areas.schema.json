@@ -48,7 +48,14 @@
       },
       "aabbs": {
         "type": "array",
-        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the override should be limited to.",
+        "description": "An array of bounding boxes and/or area names specifying which areas the override should be limited to.",
+        "items": {
+          "$ref": "aabb.schema.json"
+        }
+      },
+      "unhideAreas": {
+        "type": "array",
+        "description": "An array of bounding boxes and/or area names which should be included in the area, but not used to determine whether the player is within the area for area hiding. Intended for use with unfinished map portions. Any overlap with main areas is ignored.",
         "items": {
           "$ref": "aabb.schema.json"
         }

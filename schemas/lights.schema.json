@@ -69,7 +69,7 @@
         "minItems": 3,
         "maxItems": 3,
         "items": {
-          "type": "integer"
+          "type": "number"
         }
       },
       "height": {
@@ -133,7 +133,7 @@
       },
       "visibleFromOtherPlanes": {
         "type": "boolean",
-        "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to true."
+        "description": "Whether the light should be hidden when it appears on a different plane than the current. Defaults to false."
       },
       "ignoreActorHiding": {
         "type": "boolean",
@@ -141,7 +141,7 @@
       },
       "areas": {
         "type": "array",
-        "description": "An array of bounding boxes, region IDs and/or area enums specifying which areas the light should be limited to.",
+        "description": "An array of bounding boxes and/or area enums specifying which areas the light should be limited to.",
         "items": {
           "$ref": "aabb.schema.json"
         }

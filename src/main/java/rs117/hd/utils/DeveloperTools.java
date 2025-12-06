@@ -1,6 +1,5 @@
 package rs117.hd.utils;
 
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import javax.inject.Inject;
 import lombok.Getter;
@@ -22,17 +21,22 @@ import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.areas.AABB;
 import rs117.hd.scene.areas.Area;
 
+import static java.awt.event.InputEvent.CTRL_DOWN_MASK;
+import static java.awt.event.InputEvent.SHIFT_DOWN_MASK;
+
 @Slf4j
 public class DeveloperTools implements KeyListener {
 	// This could be part of the config if we had developer mode config sections
-	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, InputEvent.CTRL_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, InputEvent.SHIFT_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK);
-	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, InputEvent.CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_TILE_INFO = new Keybind(KeyEvent.VK_F3, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_FRAME_TIMINGS = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK);
+	private static final Keybind KEY_RECORD_TIMINGS_SNAPSHOT = new Keybind(KeyEvent.VK_F4, CTRL_DOWN_MASK | SHIFT_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_SHADOW_MAP_OVERLAY = new Keybind(KeyEvent.VK_F5, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_LIGHT_GIZMO_OVERLAY = new Keybind(KeyEvent.VK_F6, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_TILED_LIGHTING_OVERLAY = new Keybind(KeyEvent.VK_F7, CTRL_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_FREEZE_FRAME = new Keybind(KeyEvent.VK_ESCAPE, SHIFT_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_ORTHOGRAPHIC = new Keybind(KeyEvent.VK_TAB, SHIFT_DOWN_MASK);
+	private static final Keybind KEY_TOGGLE_HIDE_UI = new Keybind(KeyEvent.VK_H, CTRL_DOWN_MASK);
+	private static final Keybind KEY_RELOAD_SCENE = new Keybind(KeyEvent.VK_R, CTRL_DOWN_MASK);
 
 	@Inject
 	private ClientThread clientThread;
@@ -51,6 +55,9 @@ public class DeveloperTools implements KeyListener {
 
 	@Inject
 	private FrameTimerOverlay frameTimerOverlay;
+
+	@Inject
+	private FrameTimingsRecorder frameTimingsRecorder;
 
 	@Inject
 	private ShadowMapOverlay shadowMapOverlay;
@@ -134,6 +141,9 @@ public class DeveloperTools implements KeyListener {
 			case "timings":
 				frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
 				break;
+			case "snapshot":
+				frameTimingsRecorder.recordSnapshot();
+				break;
 			case "shadowmap":
 				shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
 				break;
@@ -153,6 +163,9 @@ public class DeveloperTools implements KeyListener {
 					keyManager.unregisterKeyListener(this);
 				}
 				break;
+			case "reload":
+				plugin.renderer.reloadScene();
+				break;
 		}
 	}
 
@@ -162,6 +175,8 @@ public class DeveloperTools implements KeyListener {
 			tileInfoOverlay.setActive(tileInfoOverlayEnabled = !tileInfoOverlayEnabled);
 		} else if (KEY_TOGGLE_FRAME_TIMINGS.matches(e)) {
 			frameTimerOverlay.setActive(frameTimingsOverlayEnabled = !frameTimingsOverlayEnabled);
+		} else if (KEY_RECORD_TIMINGS_SNAPSHOT.matches(e)) {
+			frameTimingsRecorder.recordSnapshot();
 		} else if (KEY_TOGGLE_SHADOW_MAP_OVERLAY.matches(e)) {
 			shadowMapOverlay.setActive(shadowMapOverlayEnabled = !shadowMapOverlayEnabled);
 		} else if (KEY_TOGGLE_LIGHT_GIZMO_OVERLAY.matches(e)) {
@@ -174,6 +189,8 @@ public class DeveloperTools implements KeyListener {
 			plugin.orthographicProjection = !plugin.orthographicProjection;
 		} else if (KEY_TOGGLE_HIDE_UI.matches(e)) {
 			hideUiEnabled = !hideUiEnabled;
+		} else if (KEY_RELOAD_SCENE.matches(e)) {
+			plugin.renderer.reloadScene();
 		} else {
 			return;
 		}

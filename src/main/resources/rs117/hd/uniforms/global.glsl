@@ -1,5 +1,7 @@
 #pragma once
 
+#include <utils/constants.glsl>
+
 layout(std140) uniform UBOGlobal {
     int expandedMapLoadingChunks;
     float drawDistance;
@@ -43,6 +45,7 @@ layout(std140) uniform UBOGlobal {
     int pointLightsCount;
 
     vec3 cameraPos;
+    mat4 viewMatrix;
     mat4 projectionMatrix;
     mat4 invProjectionMatrix;
     mat4 lightProjectionMatrix;

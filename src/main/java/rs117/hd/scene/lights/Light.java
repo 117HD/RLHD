@@ -56,9 +56,9 @@ public class Light
 	public Projectile projectile;
 	public TileObject tileObject;
 	public GraphicsObject graphicsObject;
+	public int tileObjectId;
 	public int spotanimId = -1;
 	public int[] projectileRefCounter;
-	public long hash;
 
 	public int sizeX = 1;
 	public int sizeY = 1;

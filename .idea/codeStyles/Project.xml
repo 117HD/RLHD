@@ -2,7 +2,7 @@
   <code_scheme name="Project" version="173">
     <option name="AUTODETECT_INDENTS" value="false" />
     <option name="LINE_SEPARATOR" value="&#10;" />
-    <option name="RIGHT_MARGIN" value="140" />
+    <option name="RIGHT_MARGIN" value="120" />
     <option name="FORMATTER_TAGS_ENABLED" value="true" />
     <option name="DO_NOT_FORMAT">
       <list>
@@ -26,7 +26,8 @@
           <package name="org.lwjgl.opengl.GL33C" withSubpackages="true" static="true" />
           <package name="org.lwjgl.opencl.CL10" withSubpackages="true" static="true" />
           <package name="net.runelite.api" withSubpackages="true" static="false" />
-          <package name="rs117.hd.HdPluginConfig" withSubpackages="true" static="true" />
+          <package name="rs117.hd.HdPluginConfig" withSubpackages="false" static="true" />
+          <package name="rs117.hd.utils.HDVariables" withSubpackages="false" static="true" />
           <package name="rs117.hd.utils.MathUtils" withSubpackages="false" static="true" />
         </value>
       </option>

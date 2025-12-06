@@ -39,7 +39,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     vec2 flowMapUv = worldUvs(15) + animationFrame(50 * waterType.duration);
     float flowMapStrength = 0.025;
 
-    vec2 uvFlow = texture(textureArray, vec3(flowMapUv, waterType.flowMap)).xy;
+    vec2 uvFlow = texture(textureArray, vec3(flowMapUv, MAT_WATER_FLOW_MAP.colorMap)).xy;
     uv1 += uvFlow * flowMapStrength;
     uv2 += uvFlow * flowMapStrength;
     uv3 += uvFlow * flowMapStrength;
@@ -47,7 +47,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     // get diffuse textures
     vec3 n1 = linearToSrgb(texture(textureArray, vec3(uv1, waterType.normalMap)).xyz);
     vec3 n2 = linearToSrgb(texture(textureArray, vec3(uv2, waterType.normalMap)).xyz);
-    float foamMask = texture(textureArray, vec3(uv3, waterType.foamMap)).r;
+    float foamMask = texture(textureArray, vec3(uv3, MAT_WATER_FOAM.colorMap)).r;
 
     // normals
     n1 = -vec3((n1.x * 2 - 1) * waterType.normalStrength, n1.z, (n1.y * 2 - 1) * waterType.normalStrength);
@@ -59,7 +59,7 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
     float viewDotNormals = dot(viewDir, normals);
 
     vec2 distortion = uvFlow * .00075;
-    float shadow = sampleShadowMap(IN.position, waterTypeIndex, distortion, lightDotNormals);
+    float shadow = sampleShadowMap(IN.position, distortion, lightDotNormals);
     float inverseShadow = 1 - shadow;
 
     vec3 vSpecularStrength = vec3(waterType.specularStrength);
@@ -129,7 +129,9 @@ vec4 sampleWater(int waterTypeIndex, vec3 viewDir) {
 
     vec3 baseColor = waterType.surfaceColor * compositeLight;
     baseColor = mix(baseColor, surfaceColor, waterType.fresnelAmount);
-    float shoreLineMask = 1 - dot(IN.texBlend, vHsl / 127.f);
+    if (waterType.fresnelAmount == 0.85)
+        baseColor *= .75f; // Sailing hack
+    float shoreLineMask = 1 - dot(IN.texBlend, (vAlphaBiasHsl & 127) / 127.f);
     float maxFoamAmount = 0.8;
     float foamAmount = min(shoreLineMask, maxFoamAmount);
     float foamDistance = 0.7;

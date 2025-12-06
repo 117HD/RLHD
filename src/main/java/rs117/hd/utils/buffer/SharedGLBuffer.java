@@ -17,7 +17,7 @@ public class SharedGLBuffer extends GLBuffer {
 	}
 
 	private void releaseCLBuffer() {
-		if (clId != 0)
+		if (clId != 0 && OpenCLManager.context != 0)
 			clReleaseMemObject(clId);
 		clId = 0;
 	}

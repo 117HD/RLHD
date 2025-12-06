@@ -11,26 +11,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.api.coords.*;
 import net.runelite.client.callback.ClientThread;
 import rs117.hd.HdPlugin;
-import rs117.hd.config.SeasonalTheme;
-import rs117.hd.model.ModelPusher;
+import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.scene.areas.Area;
+import rs117.hd.scene.ground_materials.GroundMaterial;
 import rs117.hd.scene.tile_overrides.TileOverride;
 import rs117.hd.utils.FileWatcher;
-import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
-import rs117.hd.utils.VariableSupplier;
 
-import static rs117.hd.scene.SceneContext.SCENE_OFFSET;
 import static rs117.hd.scene.tile_overrides.TileOverride.OVERLAY_FLAG;
 import static rs117.hd.utils.HDUtils.localToWorld;
 import static rs117.hd.utils.ResourcePath.path;
@@ -40,6 +35,8 @@ import static rs117.hd.utils.ResourcePath.path;
 public class TileOverrideManager {
 	private static final ResourcePath TILE_OVERRIDES_PATH = Props
 		.getFile("rlhd.tile-overrides-path", () -> path(TileOverrideManager.class, "tile_overrides.json"));
+
+	private static final ThreadLocal<int[]> OVERLAY_UNDERLAY_IDS = ThreadLocal.withInitial(() -> new int[2]);
 
 	@Inject
 	private Client client;
@@ -51,20 +48,15 @@ public class TileOverrideManager {
 	private HdPlugin plugin;
 
 	@Inject
-	private ModelPusher modelPusher;
+	private SceneManager sceneManager;
 
 	private FileWatcher.UnregisterCallback fileWatcher;
-	private ResourcePath tileOverridesPath;
 	private boolean trackReplacements;
 	private List<Map.Entry<Area, TileOverride>> anyMatchOverrides;
 	private ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatchOverrides;
-	private final HslVariables hslVars = new HslVariables();
 
 	public void startUp() {
-		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> {
-			tileOverridesPath = path;
-			reload(!first);
-		});
+		fileWatcher = TILE_OVERRIDES_PATH.watch((path, first) -> clientThread.invoke(() -> reload(!first)));
 	}
 
 	public void shutDown() {
@@ -76,13 +68,15 @@ public class TileOverrideManager {
 	}
 
 	public void reload(boolean reloadScene) {
-		if (tileOverridesPath == null)
-			return;
+		assert client.isClientThread();
 
 		try {
-			TileOverride[] allOverrides = tileOverridesPath.loadJson(plugin.getGson(), TileOverride[].class);
+			sceneManager.getLoadingLock().lock();
+			sceneManager.completeAllStreaming();
+
+			TileOverride[] allOverrides = TILE_OVERRIDES_PATH.loadJson(plugin.getGson(), TileOverride[].class);
 			if (allOverrides == null)
-				throw new IOException("Empty or invalid: " + tileOverridesPath);
+				throw new IOException("Empty or invalid: " + TILE_OVERRIDES_PATH);
 
 			HashSet<String> names = new HashSet<>();
 			for (var override : allOverrides) {
@@ -99,19 +93,15 @@ public class TileOverrideManager {
 			List<Map.Entry<Area, TileOverride>> anyMatch = new ArrayList<>();
 			ListMultimap<Integer, Map.Entry<Area, TileOverride>> idMatch = ArrayListMultimap.create();
 
-			// Substitute constants in replacement expressions and simplify
-			Map<String, Object> constants = new HashMap<>();
-			for (var season : SeasonalTheme.values())
-				constants.put(season.name(), season.ordinal());
-			constants.put("season", plugin.configSeasonalTheme.ordinal());
-			constants.put("blending", plugin.configGroundBlending);
-			constants.put("textures", plugin.configGroundTextures);
+			var tileOverrideVars = plugin.vars.aliases(Map.of(
+				"textures", "groundTextures"
+			));
 
 			for (int i = 0; i < allOverrides.length; i++) {
 				var override = allOverrides[i];
 				try {
 					override.index = i;
-					override.normalize(allOverrides, constants);
+					override.normalize(allOverrides, tileOverrideVars);
 				} catch (Exception ex) {
 					log.warn("Skipping invalid tile override '{}':", override.name, ex);
 					continue;
@@ -136,14 +126,17 @@ public class TileOverrideManager {
 			log.debug("Loaded {} tile overrides", allOverrides.length);
 		} catch (IOException ex) {
 			log.error("Failed to load tile overrides:", ex);
+		} finally {
+			sceneManager.getLoadingLock().unlock();
+			log.trace("loadingLock unlocked - holdCount: {}", sceneManager.getLoadingLock().getHoldCount());
 		}
 
+		// Update the reference, since the underlying dirt materials may have changed
+		TileOverride.NONE.groundMaterial = GroundMaterial.DIRT;
+
 		if (reloadScene) {
-			clientThread.invoke(() -> {
-				modelPusher.clearModelCache();
-				if (client.getGameState() == GameState.LOGGED_IN)
-					client.setGameState(GameState.LOADING);
-			});
+			plugin.renderer.clearCaches();
+			plugin.renderer.reloadScene();
 		}
 	}
 
@@ -176,6 +169,7 @@ public class TileOverrideManager {
 		String topLevelOverrideName,
 		TileOverride overrideToCheck
 	) {
+		assert overrideToCheck.name != null : "There's no point in checking overrides without names, since they can't be referenced";
 		loop.addLast(overrideToCheck.name);
 
 		for (String replacementName : overrideToCheck.rawReplacements.keySet()) {
@@ -212,44 +206,56 @@ public class TileOverrideManager {
 	}
 
 	public void setTrackReplacements(boolean shouldTrackReplacements) {
-		trackReplacements = shouldTrackReplacements;
-		if (plugin.isActive())
-			reload(true);
+		clientThread.invoke(() -> {
+			trackReplacements = shouldTrackReplacements;
+			if (plugin.isActive())
+				reload(true);
+		});
 	}
 
-	@NonNull
-	public TileOverride getOverride(Scene scene, Tile tile) {
-		return getOverride(scene, tile, null);
+	@Nonnull
+	public TileOverride getOverride(SceneContext sceneContext, Tile tile) {
+		LocalPoint lp = tile.getLocalLocation();
+		var worldPos = localToWorld(sceneContext.scene, lp.getX(), lp.getY(), tile.getRenderLevel());
+		return getOverride(sceneContext, tile, worldPos);
 	}
 
-	@NonNull
-	public TileOverride getOverride(Scene scene, Tile tile, @Nullable int[] worldPos, int... ids) {
-		if (worldPos == null) {
-			LocalPoint lp = tile.getLocalLocation();
-			worldPos = localToWorld(scene, lp.getX(), lp.getY(), tile.getRenderLevel());
-		}
+	@Nonnull
+	public TileOverride getOverride(SceneContext sceneContext, @Nonnull Tile tile, @Nonnull int[] worldPos, int... ids) {
 		if (ids.length == 0) {
 			var pos = tile.getSceneLocation();
-			int x = pos.getX() + SCENE_OFFSET;
-			int y = pos.getY() + SCENE_OFFSET;
+			int x = pos.getX() + sceneContext.sceneOffset;
+			int y = pos.getY() + sceneContext.sceneOffset;
 			int z = tile.getRenderLevel();
-			int overlayId = OVERLAY_FLAG | scene.getOverlayIds()[z][x][y];
-			int underlayId = scene.getUnderlayIds()[z][x][y];
-			ids = new int[] { overlayId, underlayId };
+			int overlayId = OVERLAY_FLAG | sceneContext.scene.getOverlayIds()[z][x][y];
+			int underlayId = sceneContext.scene.getUnderlayIds()[z][x][y];
+			ids = OVERLAY_UNDERLAY_IDS.get();
+			ids[0] = overlayId;
+			ids[1] = underlayId;
 		}
 		var override = getOverrideBeforeReplacements(worldPos, ids);
-		return resolveReplacements(override, tile);
+		if (override.isConstant())
+			return override;
+
+		var vars = sceneContext.tileOverrideVars.get();
+		vars.setTile(tile);
+		var replacement = override.resolveReplacements(vars);
+		vars.setTile(null); // Avoid accidentally keeping the old scene in memory
+		return replacement;
 	}
 
-	@NonNull
+	@Nonnull
 	public TileOverride getOverrideBeforeReplacements(@Nonnull int[] worldPos, int... ids) {
 		var match = TileOverride.NONE;
 
 		outer:
 		for (int id : ids) {
-			var entries = idMatchOverrides.get(id);
-			for (var entry : entries) {
-				var area = entry.getKey();
+			final var entries = idMatchOverrides.get(id);
+			// Enhanced for allocates an iterator...
+			// noinspection ForLoopReplaceableByForEach
+			for (int i = 0; i < entries.size(); i++) {
+				final var entry = entries.get(i);
+				final var area = entry.getKey();
 				if (area.containsPoint(worldPos)) {
 					match = entry.getValue();
 					match.queriedAsOverlay = (id & OVERLAY_FLAG) != 0;
@@ -259,74 +265,16 @@ public class TileOverrideManager {
 		}
 
 		for (var entry : anyMatchOverrides) {
-			var override = entry.getValue();
-			if (override.index > match.index)
+			var anyMatch = entry.getValue();
+			if (anyMatch.index > match.index)
 				break;
 			var area = entry.getKey();
 			if (area.containsPoint(worldPos)) {
-				match = override;
+				match = anyMatch;
 				break;
 			}
 		}
 
 		return match;
-	}
-
-	public TileOverride resolveReplacements(TileOverride override, Tile tile) {
-		var replacement = resolveNextReplacement(override, tile);
-		if (replacement != override)
-			replacement = resolveReplacements(replacement, tile);
-		return replacement;
-	}
-
-	public TileOverride resolveNextReplacement(TileOverride override, Tile tile) {
-		if (override.replacements != null) {
-			hslVars.setTile(tile);
-			for (var exprReplacement : override.replacements) {
-				var replacement = override;
-				if (exprReplacement.predicate.test(hslVars))
-					replacement = exprReplacement.replacement;
-				if (replacement == null)
-					return TileOverride.NONE;
-				if (replacement != override) {
-					replacement.queriedAsOverlay = override.queriedAsOverlay;
-					return replacement;
-				}
-			}
-			// Avoid accidentally keeping the old scene in memory
-			hslVars.setTile(null);
-		}
-
-		return override;
-	}
-
-	private static class HslVariables implements VariableSupplier {
-		private final String[] HSL_VARS = { "h", "s", "l" };
-		private final int[] hsl = new int[3];
-
-		private Tile tile;
-		private boolean requiresHslUpdate;
-
-		public void setTile(Tile tile) {
-			if (tile == this.tile)
-				return;
-			this.tile = tile;
-			requiresHslUpdate = true;
-		}
-
-		@Override
-		public Object get(String variableName) {
-			for (int i = 0; i < HSL_VARS.length; i++) {
-				if (HSL_VARS[i].equals(variableName)) {
-					if (requiresHslUpdate) {
-						HDUtils.getSouthWesternMostTileColor(hsl, tile);
-						requiresHslUpdate = false;
-					}
-					return hsl[i];
-				}
-			}
-
-			throw new IllegalArgumentException("Undefined variable '" + variableName + "'");
-		}
 	}
 }
