@@ -9463,7 +9463,9 @@
   },
   {
     "name": "RED_ROCK",
-    "regions": [ 11046, 11047 ]
+    "regionBoxes": [
+      [ 11046, 11047 ]
+    ]
   },
   {
     "name": "ISLE_OF_BONES",
