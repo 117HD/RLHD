@@ -86,7 +86,6 @@ public class SceneUploader {
 	public ProceduralGenerator proceduralGenerator;
 
 	private int basex, basez, rid, level;
-	private final int[] stagingVertexData = new int[30];
 
 	private SSBOModelData.Slice modelDataSlice;
 
@@ -1797,26 +1796,26 @@ public class SceneUploader {
 			final int depthBias = faceOverride.depthBias != -1 ? faceOverride.depthBias :
 				bias == null ? 0 : bias[face] & 0xFF;
 			final int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
+			boolean hasAlpha = material.hasTransparency || transparency != 0;
+			IntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 			GpuIntBuffer.putFloatVertex(
-				stagingVertexData, 0,
+				vb,
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
 				faceNormals[0], faceNormals[1], faceNormals[2], 0, zoneIdx, modelOffset
 			);
 			GpuIntBuffer.putFloatVertex(
-				stagingVertexData, 10,
+				vb,
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
 				faceNormals[3], faceNormals[4], faceNormals[5], 0, zoneIdx, modelOffset
 			);
 			GpuIntBuffer.putFloatVertex(
-				stagingVertexData, 20,
+				vb,
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
 				faceNormals[6], faceNormals[7], faceNormals[8], 0, zoneIdx, modelOffset
 			);
-			boolean hasAlpha = material.hasTransparency || transparency != 0;
-			(hasAlpha ? alphaBuffer : opaqueBuffer).put(stagingVertexData);
 			len += 3;
 		}
 

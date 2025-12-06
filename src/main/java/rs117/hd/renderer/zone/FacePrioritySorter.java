@@ -581,10 +581,10 @@ class FacePrioritySorter {
 
 				// Rotate normals
 				for (int i = 0; i < 9; i += 3) {
-					int x = modelNormals[i];
-					int z = modelNormals[i + 2];
-					modelNormals[i] = z * orientSin + x * orientCos >> 16;
-					modelNormals[i + 2] = z * orientCos - x * orientSin >> 16;
+					int x = faceNormals[i];
+					int z = faceNormals[i + 2];
+					faceNormals[i] = z * orientSin + x * orientCos >> 16;
+					faceNormals[i + 2] = z * orientCos - x * orientSin >> 16;
 				}
 			}
 		} else {
@@ -595,25 +595,25 @@ class FacePrioritySorter {
 			bias == null ? 0 : bias[face] & 0xFF;
 		int packedAlphaBiasHsl = transparency << 24 | depthBias << 16;
 		boolean hasAlpha = material.hasTransparency || transparency != 0;
+		IntBuffer vb = hasAlpha ? alphaBuffer : opaqueBuffer;
 		GpuIntBuffer.putFloatVertex(
-			STAGING_VERTEX_DATA, 0,
+			vb,
 			vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 			modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-			modelNormals[0], modelNormals[1], modelNormals[2], 0, zoneIdx, modelOffset
+			faceNormals[0], faceNormals[1], faceNormals[2], 0, zoneIdx, modelOffset
 		);
 		GpuIntBuffer.putFloatVertex(
-			STAGING_VERTEX_DATA, 10,
+			vb,
 			vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 			modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-			modelNormals[3], modelNormals[4], modelNormals[5], 0, zoneIdx, modelOffset
+			faceNormals[3], faceNormals[4], faceNormals[5], 0, zoneIdx, modelOffset
 		);
 		GpuIntBuffer.putFloatVertex(
-			STAGING_VERTEX_DATA, 20,
+			vb,
 			vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 			modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-			modelNormals[6], modelNormals[7], modelNormals[8], 0, zoneIdx, modelOffset
+			faceNormals[6], faceNormals[7], faceNormals[8], 0, zoneIdx, modelOffset
 		);
-		(hasAlpha ? alphaBuffer : opaqueBuffer).put(STAGING_VERTEX_DATA);
 		return 3;
 	}
 }

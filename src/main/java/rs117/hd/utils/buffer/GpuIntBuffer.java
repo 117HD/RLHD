@@ -156,21 +156,21 @@ public class GpuIntBuffer
 	}
 
 	public static void putFloatVertex(
-		int[] data, int offset,
+		IntBuffer buffer,
 		float x, float y, float z, int alphaBiasHsl,
 		float u, float v, float w, int materialData,
 		int nx, int ny, int nz, int terrainData, int zoneIdx, int modelIdx
 	) {
-		data[offset++] = (Float.floatToRawIntBits(x));
-		data[offset++] = (Float.floatToRawIntBits(y));
-		data[offset++] = (Float.floatToRawIntBits(z));
-		data[offset++] = v != 0 || u != 0 ? (float16(v) << 16 | float16(u)) : 0;
-		data[offset++] = ((nx & 0xFFFF) << 16 | float16(w));
-		data[offset++] = ((nz & 0xFFFF) << 16 | ny & 0xFFFF);
-		data[offset++] = (alphaBiasHsl);
-		data[offset++] = (materialData);
-		data[offset++] = (terrainData);
-		data[offset] = ((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12);
+		buffer.put( (Float.floatToRawIntBits(x)));
+		buffer.put( (Float.floatToRawIntBits(y)));
+		buffer.put( (Float.floatToRawIntBits(z)));
+		buffer.put( v != 0 || u != 0 ? (float16(v) << 16 | float16(u)) : 0);
+		buffer.put( ((nx & 0xFFFF) << 16 | float16(w)));
+		buffer.put( ((nz & 0xFFFF) << 16 | ny & 0xFFFF));
+		buffer.put( (alphaBiasHsl));
+		buffer.put( (materialData));
+		buffer.put( (terrainData));
+		buffer.put( ((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12));
 	}
 
 	public int position()
