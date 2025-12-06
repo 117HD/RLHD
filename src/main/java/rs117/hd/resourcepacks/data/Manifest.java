@@ -15,12 +15,14 @@ public class Manifest {
 	private String author = "";
 	private String description = "";
 	private String link = "";
+	private PackType packType;
 
 	public Manifest(String name, String description, String author) {
 		this.displayName = name;
 		this.internalName = name.toLowerCase().replace(" ", "_");
 		this.author = author;
 		this.description = description;
+		this.packType = PackType.RESOURCE;
 	}
 
 	private String version = "";
@@ -36,39 +38,19 @@ public class Manifest {
 		return displayName;
 	}
 
-	public String getInternalName() {
-		return internalName;
-	}
-
-	public ArrayList<String> getTags() {
-		return tags;
-	}
-
-	public String getCommit() {
-		return commit;
-	}
-
-	public String getSupport() {
-		return support;
-	}
-
-	public String getAuthor() {
-		return author;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public String getLink() {
-		return link;
-	}
-
-	public String getVersion() {
-		return version;
-	}
-
 	public Boolean isDevelopmentPack() {
 		return dev;
+	}
+
+	public PackType getPackType() {
+		return packType != null ? packType : PackType.RESOURCE;
+	}
+
+	public boolean isResourcePack() {
+		return getPackType() == PackType.RESOURCE;
+	}
+
+	public boolean isAddonPack() {
+		return getPackType() == PackType.ADDON;
 	}
 }

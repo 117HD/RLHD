@@ -38,21 +38,29 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
+import net.runelite.client.ui.PluginPanel;
+import net.runelite.client.ui.components.IconTextField;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
 import net.runelite.client.util.SwingUtil;
@@ -66,6 +74,7 @@ import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.resourcepacks.data.Manifest;
+import rs117.hd.resourcepacks.data.PackType;
 import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 
 import static rs117.hd.resourcepacks.ResourcePackManager.RAW_GITHUB_URL;
@@ -111,11 +120,31 @@ public class ResourcePackPanel extends JPanel {
 
 	private final JPanel list;
 	private final JButton bottomButton;
+	private final JComboBox<PackTypeFilter> packTypeFilter;
+	private final JPanel filterPanel;
+	private final IconTextField searchBar;
 
 	private final MessagePanel installHint = new MessagePanel(
 		"Looking for more? ",
 		"You can install additional resource packs<br>by clicking the button below."
 	);
+
+	private enum PackTypeFilter {
+		ALL("All"),
+		RESOURCE("Resource"),
+		ADDON("Addon");
+
+		private final String displayName;
+
+		PackTypeFilter(String displayName) {
+			this.displayName = displayName;
+		}
+
+		@Override
+		public String toString() {
+			return displayName;
+		}
+	}
 
 	ResourcePackPanel() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -150,6 +179,39 @@ public class ResourcePackPanel extends JPanel {
 		scrollPane.setViewportView(scrollContainer);
 		add(scrollPane);
 
+		// Pack type filter dropdown
+		packTypeFilter = new JComboBox<>(PackTypeFilter.values());
+		packTypeFilter.setSelectedItem(PackTypeFilter.ALL);
+		packTypeFilter.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+		packTypeFilter.setForeground(Color.WHITE);
+		packTypeFilter.addActionListener(e -> refreshPanel());
+
+		// Search bar
+		searchBar = new IconTextField();
+		searchBar.setIcon(IconTextField.Icon.SEARCH);
+		searchBar.setPreferredSize(new Dimension(0, 30));
+		searchBar.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+		searchBar.setHoverBackgroundColor(ColorScheme.DARK_GRAY_HOVER_COLOR);
+		searchBar.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				onSearchBarChanged();
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				onSearchBarChanged();
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				onSearchBarChanged();
+			}
+		});
+
+		// Add common tags to search suggestions
+		// Tags will be dynamically added from manifests when packs are loaded
+
 		JPanel bottomPanel = new JPanel();
 		bottomPanel.setLayout(new BorderLayout());
 		bottomPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
@@ -159,6 +221,33 @@ public class ResourcePackPanel extends JPanel {
 			PanelState.DOWNLOAD : PanelState.SELECTION));
 		bottomPanel.add(bottomButton);
 		add(bottomPanel);
+
+		// Add filter panel at the top
+		filterPanel = new JPanel();
+		filterPanel.setLayout(new BorderLayout());
+		filterPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+		filterPanel.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		
+		JPanel filterControls = new JPanel();
+		filterControls.setLayout(new BorderLayout());
+		filterControls.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		
+		// Make search bar bigger - take most of the space
+		searchBar.setPreferredSize(new Dimension(0, 30));
+		filterControls.add(searchBar, BorderLayout.CENTER);
+		
+		// Make dropdown smaller and put it on the right with small gap
+		packTypeFilter.setPreferredSize(new Dimension(70, 30));
+		packTypeFilter.setMaximumSize(new Dimension(70, 30));
+		JPanel dropdownContainer = new JPanel(new BorderLayout());
+		dropdownContainer.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 0));
+		dropdownContainer.setBackground(ColorScheme.DARK_GRAY_COLOR);
+		dropdownContainer.add(packTypeFilter, BorderLayout.CENTER);
+		filterControls.add(dropdownContainer, BorderLayout.EAST);
+		
+		filterPanel.add(filterControls, BorderLayout.CENTER);
+		filterPanel.setVisible(false);
+		add(filterPanel, 0); // Add at the top
 
 		setState(PanelState.SELECTION);
 	}
@@ -177,6 +266,7 @@ public class ResourcePackPanel extends JPanel {
 			switch (currentState) {
 				case SELECTION: {
 					bottomButton.setText("Download resource packs");
+					filterPanel.setVisible(false);
 
 					var packs = resourcePackManager.getInstalledPacks();
 					for (int i = 0; i < packs.size(); i++) {
@@ -189,6 +279,7 @@ public class ResourcePackPanel extends JPanel {
 				}
 				case DOWNLOAD: {
 					bottomButton.setText("Show installed resource packs");
+					filterPanel.setVisible(true);
 
 					resourcePackManager.checkForUpdates();
 
@@ -196,9 +287,58 @@ public class ResourcePackPanel extends JPanel {
 					if (message != null) {
 						list.add(message);
 					} else {
-						var packs = resourcePackManager.getDownloadablePacks().values();
-						for (var pack : packs)
+						PackTypeFilter selectedFilter = (PackTypeFilter) packTypeFilter.getSelectedItem();
+						String searchQuery = searchBar.getText().toLowerCase().trim();
+						var allPacks = resourcePackManager.getDownloadablePacks().values();
+						
+						// Update search suggestions with tags from all packs
+						updateSearchSuggestions(allPacks);
+						
+						for (var pack : allPacks) {
+							// Filter by pack type
+							boolean matchesType = selectedFilter == PackTypeFilter.ALL ||
+								(selectedFilter == PackTypeFilter.RESOURCE && pack.isResourcePack()) ||
+								(selectedFilter == PackTypeFilter.ADDON && pack.isAddonPack());
+							
+							if (!matchesType) {
+								continue;
+							}
+							
+							// Filter by search query (display name and tags)
+							if (!searchQuery.isEmpty()) {
+								boolean matchesSearch = false;
+								
+								// Check display name
+								String displayName = pack.getDisplayName().toLowerCase();
+								if (displayName.contains(searchQuery)) {
+									matchesSearch = true;
+								}
+								
+								// Check tags
+								if (!matchesSearch && pack.getTags() != null) {
+									for (String tag : pack.getTags()) {
+										if (tag.toLowerCase().contains(searchQuery)) {
+											matchesSearch = true;
+											break;
+										}
+									}
+								}
+								
+								// Check description
+								if (!matchesSearch) {
+									String description = pack.getDescription().toLowerCase();
+									if (description.contains(searchQuery)) {
+										matchesSearch = true;
+									}
+								}
+								
+								if (!matchesSearch) {
+									continue;
+								}
+							}
+							
 							list.add(createDownloadablePackComponent(pack));
+						}
 					}
 					break;
 				}
@@ -450,5 +590,29 @@ public class ResourcePackPanel extends JPanel {
 		panel.add(icon);
 
 		return panel;
+	}
+
+	private void onSearchBarChanged() {
+		if (currentState == PanelState.DOWNLOAD) {
+			refreshPanel();
+		}
+	}
+
+	private void updateSearchSuggestions(java.util.Collection<Manifest> packs) {
+		var suggestionModel = searchBar.getSuggestionListModel();
+		suggestionModel.clear();
+		
+		// Collect all unique tags from all packs
+		Set<String> allTags = new HashSet<>();
+		for (var pack : packs) {
+			if (pack.getTags() != null) {
+				allTags.addAll(pack.getTags());
+			}
+		}
+		
+		// Add tags to suggestions
+		allTags.stream()
+			.sorted()
+			.forEach(suggestionModel::addElement);
 	}
 }
