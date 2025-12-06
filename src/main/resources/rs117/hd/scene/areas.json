@@ -9497,6 +9497,14 @@
     "hideOtherAreas": true
   },
   {
+    "name": "GRYPHON_DUNGEONS",
+    "areas": [
+      "GRYPHON_QUEST_INSTANCE_AND_BOSS",
+      "GRYPHON_NORMAL_DUNGEON",
+      "GRYPHON_SLAYER_DUNGEON"
+    ]
+  },
+  {
     "name": "THE_ONYX_CREST",
     "regions": [ 11811 ]
   },

@@ -5815,13 +5815,15 @@
     ]
   },
   {
-    "description": "Shayzien - Metal - Metal bars gate",
+    "description": "Varrock - Shayzien - Metal - Metal bars gate",
     "baseMaterial": "METALLIC_1_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "uvOrientation": 117,
     "objectIds": [
-      "SHAYZIEN_BANK_BARS_DOOR"
+      "SHAYZIEN_BANK_BARS_DOOR",
+      "FAI_VARROCK_BANK_BARS_END",
+      "FAI_VARROCK_BANK_BARS_END_MIRROR"
     ]
   },
   {
@@ -8457,11 +8459,15 @@
     "description": "RowBoat",
     "objectIds": [
       "QUEST_LUNAR_ROWBOAT",
-      "SERIM_ROWBOAT"
+      "SERIM_ROWBOAT",
+      "CONCH_ROWBOAT_NORTH",
+      "CONCH_ROWBOAT_EAST",
+      "CONCH_ROWBOAT_SOUTH"
     ],
     "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "uvOrientationY": 512,
     "colorOverrides": [
       {
         "colors": [ "h == 0" ],
@@ -13512,7 +13518,11 @@
       "TT_HUNTING_ROCKS_01_OP",
       "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_BOTTOM",
       "GREAT_CONCH_CLIFF_SHORTCUT_TOWN_TOP",
-      "GREAT_CONCH_CLIFF_SHORTCUT_MIDDLE"
+      "GREAT_CONCH_CLIFF_SHORTCUT_MIDDLE",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_2_BOTTOM",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_2_TOP",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_1_BOTTOM",
+      "GREAT_CONCH_CLIFF_SHORTCUT_EAST_1_TOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.5
@@ -24428,11 +24438,12 @@
       "ARCQUEST_HUNTING_PLANT_OP",
       "DOV_HUNTING_PLANT1",
       "DOV_HUNTING_PLANT1_OP",
-      "DOV_HUNTING_PLANT_INITIAL"
+      "DOV_HUNTING_PLANT_INITIAL",
+      "PLANT_TROPICAL_01"
     ]
   },
   {
-    "description": "Karamja - Jungle plant - Leafy style",
+    "description": "Tropical - Karamja - Great Conch - Jungle plant - Leafy style",
     "windDisplacementMode": "VERTEX",
     "baseMaterial": "LEAF_VEINS",
     "uvScale": 0.25,
@@ -24443,18 +24454,14 @@
       "JUNGLEPLANT1_KARAMJA",
       "JUNGLEPLANT2",
       "JUNGLEPLANT3",
-      "KHARAZI_JUNGLE_PLANT1",
-      "KHARAZI_JUNGLE_PLANT2",
-      "MM_PLANT_KHARAZI_JUNGLE_PLANT1",
-      "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
-      "MM_JUNGLEPLANT_FAT",
-      "MM_JUNGLE_PLANT_MISC2",
-      "HUNTING_JUNGLE_PLANT1",
-      "HUNTING_JUNGLE_PLANT2"
+      "HUNTING_JUNGLE_PLANT2",
+      "MM_JUNGLEPLANT3",
+      "MM_JUNGLEPLANT1",
+      "PLANT_TROPICAL_02"
     ]
   },
   {
-    "description": "Karamja - Jungle plant - fern style",
+    "description": "Tropical - Karamja - Great Conch - Jungle plant - fern style",
     "baseMaterial": "LEAF_VEINS_DARK",
     "windDisplacementMode": "VERTEX",
     "uvScale": 0.25,
@@ -24463,8 +24470,13 @@
       "JUNGLE2",
       "GREENER_JUNGLE2",
       "MM_JUNGLE_PLANT_FERN",
-      "MM_JUNGLEPLANT3",
-      "MM_JUNGLEPLANT1"
+      "KHARAZI_JUNGLE_PLANT1",
+      "KHARAZI_JUNGLE_PLANT2",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT1",
+      "MM_PLANT_KHARAZI_JUNGLE_PLANT2",
+      "MM_JUNGLEPLANT_FAT",
+      "MM_JUNGLE_PLANT_MISC2",
+      "HUNTING_JUNGLE_PLANT1"
     ]
   },
   {
@@ -34425,7 +34437,6 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "windDisplacementMode": "OBJECT",
     "objectIds": [
-      "GROUNDCOVER_PLANT5_WITHERED",
       "PLANT_FERN_ECLIPSE01",
       "PLANT_FERN_ECLIPSE02",
       "PLANT_FERN_ECLIPSE03",
@@ -36784,7 +36795,14 @@
       "GROUNDCOVER_PLANT1_WITHERED",
       "GROUNDCOVER_PLANT2_WITHERED",
       "GROUNDCOVER_PLANT3_WITHERED",
-      "GROUNDCOVER_PLANT4_WITHERED"
+      "GROUNDCOVER_PLANT4_WITHERED",
+      "GROUNDCOVER_PLANT5_WITHERED",
+      "TT_HUNTING_PLANT_04_OP",
+      "TT_HUNTING_PLANT_04_NOOP",
+      "TT_HUNTING_PLANT_05_OP",
+      "TT_HUNTING_PLANT_05_NOOP",
+      "TT_HUNTING_PLANT_06_OP",
+      "TT_HUNTING_PLANT_06_NOOP"
     ]
   },
   {
@@ -39595,7 +39613,8 @@
       "SLAYER_CORPSE3",
       "ROGUESDEN_CORPSE3",
       "CORPSE3_NOBLOCK",
-      "TAPO_SKELETON03"
+      "TAPO_SKELETON03",
+      "CONCH_GRYPHON_BELLE"
     ],
     "colorOverrides": [
       {
@@ -45394,7 +45413,10 @@
       "BLOODSPLATTER3",
       "DEATH_TROLLBLOODSPLAT1",
       "DEATH_TROLLBLOODSPLAT2",
-      "DEATH_TROLLBLOODSPLAT3"
+      "DEATH_TROLLBLOODSPLAT3",
+      "CONCH_GRYPHON_BLOODSPLATTER01",
+      "CONCH_GRYPHON_BLOODSPLATTER02",
+      "CONCH_GRYPHON_BLOODSPLATTER03"
     ],
     "uvType": "MODEL_XZ"
   },
@@ -64825,7 +64847,8 @@
     "baseMaterial": "ROCK_3_SEMI_SMOOTH_LIGHT",
     "objectIds": [
       "SAILING_MOORING_EMBARK",
-      "SAILING_MOORING_DISEMBARK"
+      "SAILING_MOORING_DISEMBARK",
+      "TT_PEARL_MOORING_POINT_FIGHT"
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -65439,9 +65462,9 @@
   },
   {
     "description": "The Pandemonium - Palm Tree",
-    "baseMaterial": "GRUNGE_2",
+    "baseMaterial": "LEAF_VEINS_PALM_LIGHT",
     "uvType": "BOX",
-    "uvScale": 0.5,
+    "uvScale": 0.3,
     "objectIds": [
       "PALM_UPDATE01",
       "PALM_UPDATE02",
@@ -67270,7 +67293,32 @@
   },
   {
     "description": "Great Conch - Tortugan - Market Stall",
-    "baseMaterial": "GRUNGE_3_SMOOTH",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "colorOverrides": [
+      {
+        "colors": "h >= 11",
+        "baseMaterial": "GRUNGE_3_GLOSS",
+        "uvScale": 0.6,
+        "uvType": "BOX",
+        "uvOrientation": 313
+      },
+      {
+        "colors": "h == 6 && s == 2",
+        "baseMaterial": "STONE_NORMALED",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 6 && s >= 3",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvScale": 0.6,
+        "uvType": "BOX",
+        "uvOrientation": 512
+      }
+    ],
     "objectIds": [
       "TORTUGAN_STALL_WEAPONS",
       "TORTUGAN_STALL_HERBALIST",
@@ -67286,15 +67334,8 @@
       "TT_REPAIR_STALL_COCO_BROKEN_NOOP",
       "TT_REPAIR_STALL_COCO_BROKEN",
       "TT_REPAIR_STALL_COCO_BROKEN",
-      "TT_REPAIR_STALL_KRILL_BROKEN"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h == 12 || h == 13",
-        "baseMaterial": "GRAY_85",
-        "uvType": "BOX",
-        "uvScale": 0.5
-      }
+      "TT_REPAIR_STALL_KRILL_BROKEN",
+      "TT_REPAIR_STALL_KRILL_BROKEN_NOOP"
     ]
   },
   {
@@ -67315,7 +67356,8 @@
       "CONCH_WALKIT_WOODEN_LVL1",
       "CONCH_WALKIT_WOODEN_LVL1_WINDOW",
       "TT_REPAIR_WALL_FIXED",
-      "CONCH_WALKIT_WOODEN_LVL0_DOORWAY01"
+      "CONCH_WALKIT_WOODEN_LVL0_DOORWAY01",
+      "TT_REPAIR_WALL_BROKEN_NOOP"
     ],
     "colorOverrides": [
       {
@@ -67349,7 +67391,9 @@
   {
     "description": "Great Conch - Tortugan House Shells - Remove Shadows",
     "castShadows": false,
-    "baseMaterial": "GRUNGE_3_LIGHT",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "MODEL_YZ",
+    "uvScale": 0.25,
     "objectIds": [
       "CONCH_WALLKIT_DECOR_SHELLS01",
       "CONCH_WALLKIT_DECOR_SHELLS02",
@@ -67454,10 +67498,10 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 12 || h == 4",
-        "baseMaterial": "GRUNGE_3",
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_2",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.25
       },
       {
         "colors": "h == 6",
@@ -67533,9 +67577,7 @@
     "description": "Great Conch - Tortugan Crate",
     "baseMaterial": "NONE",
     "objectIds": [
-      "CONCH_CRATE_TORTUGAN01_JELLYFISH01",
       "TT_REPAIR_CRATES_BROKEN",
-      "CONCH_TORTUGAN_BANKBOOTH01",
       "CONCH_CRATE_TORTUGAN01_EMPTY01",
       "TT_REPAIR_CRATES_COCO_FIXED",
       "TT_REPAIR_CRATES_COCO_BROKEN_NOOP",
@@ -67553,10 +67595,104 @@
         "uvOrientationY": 512
       },
       {
-        "colors": "h > 9 && a == 255",
-        "baseMaterial": "GRUNGE_1",
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_2",
         "uvType": "BOX",
-        "uvScale": 0.5
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Seaweed - Tortugan Bankbooth",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientationY": 512,
+    "colorOverrides": [
+      {
+        "colors": "h >= 10",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "CONCH_TORTUGAN_BANKBOOTH01"
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Seaweed - Tortugan Bank Chest Closed",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 10 || h == 11",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "TORTUGAN_CHEST01_BANK01_CLOSED01"
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Seaweed - Tortugan Bank Chest",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "colorOverrides": [
+      {
+        "colors": "h == 8",
+        "baseMaterial": "GRAVEL_SHINY_LIGHT",
+        "uvType": "MODEL_XZ",
+        "uvScale": 1.2,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 10 || h == 11",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      }
+    ],
+    "objectIds": [
+      "TORTUGAN_CHEST01_BANK01_OPEN01"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Crate with Water",
+    "baseMaterial": "NONE",
+    "objectIds": [
+      "CONCH_CRATE_TORTUGAN01_JELLYFISH01",
+      "CONCH_CRATE_TORTUGAN01_WATER01"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "h == 2",
+        "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientationY": 512
+      },
+      {
+        "colors": "h == 12",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.6,
+        "uvOrientation": 179
+      },
+      {
+        "colors": "h == 47",
+        "baseMaterial": "GRUNGE_3_SHINY",
+        "uvType": "BOX"
       }
     ]
   },
@@ -67581,10 +67717,16 @@
     "objectIds": [
       "CONCH_GRYPHON_LAIR_ENTRANCE",
       "TT_LAIR_ENTRANCE_CLEAR",
-      "TT_LAIR_ENTRANCE_BLOCKED",
       "CONCH_GRYPHON_TASK_LAIR_ENTRANCE",
-      "CONCH_UNDERWATER_CAVE_ENTRANCE"
+      "CONCH_UNDERWATER_CAVE_ENTRANCE",
+      "CONCH_CLIFF_PATH_ENTRANCE"
     ],
+    "uvType": "BOX",
+    "uvScale": 0.5
+  },
+  {
+    "description": "Great Conch - Gryphon Lair Blocked",
+    "baseMaterial": "DIRT_2_LIGHT",
     "uvType": "BOX",
     "uvScale": 0.5,
     "colorOverrides": [
@@ -67594,6 +67736,9 @@
         "uvType": "BOX",
         "uvScale": 0.5
       }
+    ],
+    "objectIds": [
+      "TT_LAIR_ENTRANCE_BLOCKED"
     ]
   },
   {
@@ -68413,6 +68558,438 @@
     "objectIds": [
       "HS_WEB_WALL_01",
       "HS_WEB_WALL_02"
+    ]
+  },
+  {
+    "description": "The Great Conch - Object - Crab Apple Tree",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 6 && s == 7",
+        "baseMaterial": "BARK",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 87
+      }
+    ],
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_CRAB_APPLE"
+    ]
+  },
+  {
+    "description": "The Great Conch - Plant - Rock - Rocks with plants",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "description": "Bark",
+        "colors": "h == 11",
+        "baseMaterial": "LEAF_VEINS",
+        "uvType": "BOX",
+        "uvScale": 0.8,
+        "uvOrientation": 87,
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "CRAB_ROCK"
+    ]
+  },
+  {
+    "description": "The Great Conch - Plant - Rock - Rocks with plants",
+    "baseMaterial": "SAND_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 478,
+    "objectIds": [
+      "CRAB_TRAP_UNBUILT"
+    ]
+  },
+  {
+    "description": "The Great Conch - Grunge - Shells",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 313,
+    "objectIds": [
+      "SHELL2",
+      "SHELL2BIG"
+    ]
+  },
+  {
+    "description": "The Great Conch - Grunge - Shells",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": -128,
+    "objectIds": [
+      "SHELL1BIG",
+      "SHELL1"
+    ]
+  },
+  {
+    "description": "The Great Conch - Shell - Inactive Hermit Crab",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientation": 313,
+    "npcIds": [
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_NORTH",
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_EAST",
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_SOUTH",
+      "GREAT_CONCH_HERMIT_CRAB_INACTIVE_WEST"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Bromelia",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stem and leaves",
+        "colors": "h == 14",
+        "windDisplacementMode": "VERTEX",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "PLANT_TROPICAL_BROMELIA01",
+      "TT_HUNTING_PLANT_03_OP"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Bell",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "GRUNGE_3",
+    "uvScale": 0.5,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Stem and leaves",
+        "colors": "h == 20 || h == 24",
+        "windDisplacementMode": "VERTEX",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.25,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "PLANT_TROPICAL_BELL01"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Large leaf tropical plant",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "LEAF_VEINS_PALM",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "objectIds": [
+      "PLANT_TROPICAL_LEAFY03",
+      "PLANT_TROPICAL_LEAFY04",
+      "PLANT_TROPICAL_LEAFY07",
+      "PLANT_TROPICAL_LEAFY08",
+      "PLANT_TROPICAL_LEAFY09"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Tropcial Palm",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "LEAF_VEINS_PALM",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "uvOrientation": 492,
+    "objectIds": [
+      "PLANT_TROPICAL_FAN02_SMALL",
+      "PLANT_TROPICAL_FAN04_SMALL01",
+      "PLANT_TROPICAL_FAN04_SMALL02",
+      "PLANT_TROPICAL_FAN04_MEDIUM02",
+      "PLANT_TROPICAL_FAN02_MEDIUM",
+      "PLANT_TROPICAL_FAN04_MEDIUM01"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Tropcial Palm - Purple and red",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "LEAF_VEINS_PALM",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "uvOrientation": -313,
+    "objectIds": [
+      "PLANT_TROPICAL_FAN01_SMALL"
+    ]
+  },
+  {
+    "description": "Tropical - Great Conch - Tropcial Palm - Orange",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "LEAF_VEINS_PALM",
+    "uvScale": 0.25,
+    "uvType": "BOX",
+    "uvOrientation": -313,
+    "objectIds": [
+      "PLANT_TROPICAL_FAN03_SMALL01",
+      "PLANT_TROPICAL_FAN03_MEDIUM01",
+      "PLANT_TROPICAL_FAN03_LARGE"
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Rope - Rope Fence",
+    "windDisplacementMode": "VERTEX",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvScale": 0.8,
+    "uvType": "BOX",
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvScale": 0.25,
+        "uvType": "BOX"
+      }
+    ],
+    "objectIds": [
+      "CONCH_FENCE"
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Deposit Box",
+    "baseMaterial": "WOOD_GRAIN_3",
+    "uvType": "BOX",
+    "uvOrientationY": 512,
+    "objectIds": [
+      "CONCH_GROVE_BANK_DEPOSIT_BOX"
+    ]
+  },
+  {
+    "description": "Great Conch - Wooden - Shell - Wheelbarrow",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 313,
+    "colorOverrides": [
+      {
+        "description": "Wood",
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvOrientation": 512,
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [ "CONCH_WHEELBARROW_TORTUGAN01_DEFAULT01" ]
+  },
+  {
+    "description": "Great Conch - Stone - Monument",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientation": 313,
+    "colorOverrides": [
+      {
+        "description": "Ground",
+        "colors": "h == 7 && s == 3",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvOrientation": 89,
+        "uvScale": 0.5
+      },
+      {
+        "description": "Ground",
+        "colors": "h == 4 && s == 3",
+        "baseMaterial": "STONE_NORMALED",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "TT_HUNTING_MONUMENT_NOOP",
+      "TT_HUNTING_MONUMENT_OP"
+    ]
+  },
+  {
+    "description": "Great Conch - Sandpit",
+    "baseMaterial": "GRAVEL_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "s == 2",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      }
+    ],
+    "objectIds": [
+      "SANDPIT_2"
+    ]
+  },
+  {
+    "description": "Great Conch - Farming Rack",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 6 && s == 5",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5,
+        "uvOrientation": 512
+      },
+      {
+        "colors": "h == 6 && s == 1",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3,
+        "uvOrientation": -89
+      }
+    ],
+    "objectIds": [
+      "CONCH_RACK_TORTUGAN01_SCENERY04_1X1",
+      "CONCH_RACK_TORTUGAN01_SCENERY05_1X1"
+    ]
+  },
+  {
+    "description": "Great Conch - Dirt - Gryphon Tracks",
+    "baseMaterial": "DIRT_2",
+    "uvType": "MODEL_XZ",
+    "uvOrientation": 89,
+    "uvScale": 1.1,
+    "objectIds": [
+      "TT_HUNTING_TRAIL",
+      "TT_HUNTING_TRAIL_CORNER",
+      "TT_HUNTING_TRAIL_CORNER_MIRROR"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Shell",
+    "baseMaterial": "GRUNGE_2_MATTE",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "objectIds": [
+      "CONCH_TORTUGAN_SHELL_CRACKED01",
+      "CONCH_TORTUGAN_SHELL_CRACKED04",
+      "CONCH_TORTUGAN_SHELL_CRACKED05_2X2"
+    ]
+  },
+  {
+    "description": "Great Conch - Gryphon Nest",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.70,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 6 || h == 7",
+        "baseMaterial": "GRUNGE_2_MATTE",
+        "uvType": "BOX",
+        "uvScale": 0.70,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "CONCH_GRYPHON_NEST01",
+      "CONCH_GRYPHON_NEST01A"
+    ]
+  },
+  {
+    "description": "Great Conch - Quest Gryphon Nest",
+    "baseMaterial": "GRUNGE_3",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "colorOverrides": [
+      {
+        "colors": "h == 5",
+        "baseMaterial": "DIRT_2",
+        "uvType": "BOX",
+        "uvScale": 0.70,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 6 || h == 7 || h >= 10",
+        "baseMaterial": "GRUNGE_2_MATTE",
+        "uvType": "BOX",
+        "uvScale": 0.70,
+        "uvOrientation": 89
+      },
+      {
+        "colors": "h == 8 && s == 1",
+        "baseMaterial": "BONE",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "CONCH_GRYPHON_NEST02"
+    ]
+  },
+  {
+    "description": "Great Conch - Dirt - Gryphon Walls",
+    "baseMaterial": "DIRT_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "a < 255",
+        "baseMaterial": "NONE",
+        "uvType": "BOX",
+        "uvScale": 0.70,
+        "uvOrientation": 89
+      }
+    ],
+    "objectIds": [
+      "BCS_TOMB_WALL01_DARKTOP",
+      "TT_LAIR_EXIT_FIGHT",
+      "CONCH_GRYPHON_LAIR_EXIT"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Shell Tent",
+    "baseMaterial": "BURLAP",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "colorOverrides": [
+      {
+        "colors": "h == 6",
+        "baseMaterial": "WOOD_GRAIN_3",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "CONCH_TENT_TORTUGAN01_DEFAULT01"
+    ]
+  },
+  {
+    "description": "Great Conch - Tortugan Shrine",
+    "baseMaterial": "STONE_NORMALED",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "colorOverrides": [
+      {
+        "colors": "h >= 10 || h <= 12",
+        "baseMaterial": "PLANT_GRUNGE_2",
+        "uvType": "BOX",
+        "uvScale": 0.5
+      }
+    ],
+    "objectIds": [
+      "GREAT_CONCH_SHRINE"
     ]
   }
 ]
