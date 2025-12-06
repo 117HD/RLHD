@@ -32,7 +32,7 @@ public class WorldViewContext {
 	public long sceneSwapTime;
 
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
-	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
+	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, false);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
 
 	WorldViewContext(
