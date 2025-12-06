@@ -1209,6 +1209,11 @@
     "brightness": 1.1
   },
   {
+    "name": "DIRT_1_DARK",
+    "parent": "DIRT_1",
+    "brightness": 0.8
+  },
+  {
     "name": "DIRT_1_VERT",
     "parent": "DIRT_1",
     "normalMap": null
@@ -1766,6 +1771,11 @@
     "normalMap": null
   },
   {
+    "name": "CARPET_SEMI_DARK",
+    "parent": "CARPET",
+    "brightness": 0.85
+  },
+  {
     "name": "CARPET_DARK",
     "parent": "CARPET",
     "brightness": 0.701
@@ -2077,6 +2087,15 @@
     "brightness": 1.277
   },
   {
+    "name": "LIGHT_BARK_SMOOTH",
+    "parent": "LIGHT_BARK",
+    "textureScale": [
+      1,
+      1,
+      0.7
+    ]
+  },
+  {
     "name": "VERY_LIGHT_BARK",
     "parent": "BARK",
     "brightness": 1.553
@@ -2235,9 +2254,13 @@
     "brightness": 1.228
   },
   {
-    "name": "WOOD_GRAIN_3_SEMILIGHT_DULL",
+    "name": "WOOD_GRAIN_3_SEMILIGHT",
     "parent": "WOOD_GRAIN_3",
-    "brightness": 1.083,
+    "brightness": 1.083
+  },
+  {
+    "name": "WOOD_GRAIN_3_SEMILIGHT_DULL",
+    "parent": "WOOD_GRAIN_3_SEMILIGHT",
     "specularStrength": 0.0,
     "specularGloss": 0.0
   },
@@ -2451,9 +2474,14 @@
     "normalMap": "STONE_N"
   },
   {
-    "name": "SMOOTH_STONE_DARK",
+    "name": "SMOOTH_STONE_SEMI_DARK",
     "parent": "SMOOTH_STONE",
     "brightness": 0.95
+  },
+  {
+    "name": "SMOOTH_STONE_DARK",
+    "parent": "SMOOTH_STONE",
+    "brightness": 0.85
   },
   {
     "name": "GEM_STONE",
