@@ -44,6 +44,7 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.eventbus.Subscribe;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.resourcepacks.ResourcePackManager;
@@ -61,7 +62,7 @@ import static rs117.hd.utils.ResourcePath.path;
 public class TextureManager {
 	private static final String[] SUPPORTED_IMAGE_EXTENSIONS = { "png", "jpg" };
 	private static final ResourcePath TEXTURE_PATH = Props
-		.getFolder("rlhd.texture-path", () -> path(TextureManager.class, "textures"));
+		.getFolder("rlhd.texture-path", () -> path(HdPlugin.class,"resource-pack", "environments" , "environments.json"));
 
 	@Inject
 	private Client client;

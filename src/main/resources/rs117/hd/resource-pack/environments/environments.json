@@ -363,34 +363,6 @@
   },
   {
     "description": "Needs to be above the non-legacy version",
-    "key": "TOB_ROOM_VAULT_LEGACY",
-    "area": "TOB_ROOM_VAULT",
-    "ambientColor": "#7575ea",
-    "ambientStrength": 3,
-    "directionalColor": "#dda6a6",
-    "directionalStrength": 1,
-    "sunAngles": [
-      80,
-      190
-    ],
-    "fogColor": "#0e081a",
-    "fogDepth": 40
-  },
-  {
-    "area": "TOB_ROOM_VAULT",
-    "ambientColor": "#7575ea",
-    "ambientStrength": 3,
-    "directionalColor": "#dda6a6",
-    "directionalStrength": 1,
-    "sunAngles": [
-      80,
-      190
-    ],
-    "fogColor": "#040407",
-    "fogDepth": 20
-  },
-  {
-    "description": "Needs to be above the non-legacy version",
     "key": "THEATRE_OF_BLOOD_LEGACY",
     "area": "THEATRE_OF_BLOOD",
     "ambientColor": "#8282b0",

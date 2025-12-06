@@ -3,6 +3,8 @@ package rs117.hd.resourcepacks.impl;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.utils.ResourcePath;
@@ -43,4 +45,11 @@ public class DefaultResourcePack extends AbstractResourcePack {
     public boolean hasPackImage() {
         return getPackImage() != null;
     }
+
+	@Override
+	public List<ResourcePath> listJsonFiles(String directory) {
+		// DefaultResourcePack uses ClassResourcePath which doesn't support listing files
+		// Return empty list as default pack environments are loaded from the main environments.json
+		return new ArrayList<>();
+	}
 }

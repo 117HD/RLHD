@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import lombok.extern.slf4j.Slf4j;
@@ -106,5 +108,27 @@ public class ZipResourcePack extends AbstractResourcePack {
 	@Override
 	public boolean hasPackImage() {
 		return hasResource("icon.png");
+	}
+
+	@Override
+	public List<ResourcePath> listJsonFiles(String directory) {
+		List<ResourcePath> jsonFiles = new ArrayList<>();
+		String dirPath = normalizeZipPath(directory);
+		if (!dirPath.endsWith("/")) {
+			dirPath += "/";
+		}
+
+		var entries = zipFile.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = entries.nextElement();
+			String name = entry.getName();
+			if (name.startsWith(dirPath) && name.endsWith(".json") && !entry.isDirectory()) {
+				// Extract the filename relative to the directory
+				String filename = name.substring(dirPath.length());
+				jsonFiles.add(new ZipResourcePath(this, directory, filename));
+			}
+		}
+
+		return jsonFiles;
 	}
 }

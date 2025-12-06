@@ -25,20 +25,27 @@
 package rs117.hd.scene;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.config.DefaultSkyColor;
+import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.scene.environments.Environment;
 import rs117.hd.utils.FileWatcher;
 import rs117.hd.utils.Props;
@@ -50,8 +57,9 @@ import static rs117.hd.utils.ResourcePath.path;
 @Slf4j
 @Singleton
 public class EnvironmentManager {
+
 	private static final ResourcePath ENVIRONMENTS_PATH = Props
-		.getFile("rlhd.environments-path", () -> path(EnvironmentManager.class, "environments.json"));
+		.getFile("rlhd.environments-path", () -> path(HdPlugin.class,"resource-pack", "environments" , "environments.json"));
 
 	@Inject
 	private Client client;
@@ -64,6 +72,12 @@ public class EnvironmentManager {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private ResourcePackManager resourcePackManager;
+
+	@Inject
+	private EventBus eventBus;
 
 	private static final float TRANSITION_DURATION = 3; // seconds
 	// distance in tiles to skip transition (e.g. entering cave, teleporting)
@@ -161,44 +175,45 @@ public class EnvironmentManager {
 	private Environment currentEnvironment = Environment.NONE;
 
 	public void startUp() {
-		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> {
-			try {
-				environments = path.loadJson(plugin.getGson(), Environment[].class);
-				if (environments == null)
-					throw new IOException("Empty or invalid: " + path);
-				log.debug("Loaded {} environments", environments.length);
+		eventBus.register(this);
+		fileWatcher = ENVIRONMENTS_PATH.watch((path, first) -> load(first));
+	}
 
-				if (!config.legacyTobEnvironment()) {
-					var legacyEnvs = List.of("TOB_ROOM_VAULT_LEGACY", "THEATRE_OF_BLOOD_LEGACY");
-					environments = Arrays.stream(environments)
-						.filter(env -> env.key == null || !legacyEnvs.contains(env.key))
-						.toArray(Environment[]::new);
-				}
+	public void load(boolean first) {
+		try {
+			// Try loading from default pack first, fallback to ENVIRONMENTS_PATH
+			Environment[] defaultEnvironments = ENVIRONMENTS_PATH.loadJson(plugin.getGson(), Environment[].class);
 
-				HashMap<String, Environment> map = new HashMap<>();
-				for (var env : environments)
-					if (env.key != null)
-						map.put(env.key, env);
+			List<Environment> allEnvironments = new ArrayList<>(Arrays.asList(ENVIRONMENTS_PATH.loadJson(plugin.getGson(), Environment[].class)));
+			mergeEnvironmentsFromResourcePacks(allEnvironments);
 
-				Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
-				Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
-				Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
+			environments = allEnvironments.toArray(new Environment[0]);
+			log.debug("Loaded {} environments ({} from default, {} from resource packs)",
+				environments.length, defaultEnvironments.length, environments.length - defaultEnvironments.length);
 
-				for (var env : environments)
-					env.normalize();
+			HashMap<String, Environment> map = new HashMap<>();
+			for (var env : environments)
+				if (env.key != null)
+					map.put(env.key, env);
 
-				clientThread.invoke(() -> {
-					// Force instant transition during development
-					if (!first)
-						reset();
+			Environment.OVERWORLD = map.getOrDefault("OVERWORLD", Environment.DEFAULT);
+			Environment.AUTUMN = map.getOrDefault("AUTUMN", Environment.DEFAULT);
+			Environment.WINTER = map.getOrDefault("WINTER", Environment.DEFAULT);
 
-					if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
-						loadSceneEnvironments(plugin.getSceneContext());
-				});
-			} catch (IOException ex) {
-				log.error("Failed to load environments:", ex);
-			}
-		});
+			for (var env : environments)
+				env.normalize();
+
+			clientThread.invoke(() -> {
+				// Force instant transition during development
+				if (!first)
+					reset();
+
+				if (client.getGameState().getState() >= GameState.LOGGED_IN.getState() && plugin.getSceneContext() != null)
+					loadSceneEnvironments(plugin.getSceneContext());
+			});
+		} catch (IOException ex) {
+			log.error("Failed to load environments:", ex);
+		}
 	}
 
 	public void shutDown() {
@@ -207,6 +222,7 @@ public class EnvironmentManager {
 		fileWatcher = null;
 		environments = null;
 		reset();
+		eventBus.unregister(this);
 	}
 
 	public void reset() {
@@ -489,4 +505,85 @@ public class EnvironmentManager {
 	public boolean isUnderwater() {
 		return currentEnvironment.isUnderwater;
 	}
+
+	public void mergeEnvironmentsFromResourcePacks(List<Environment> existingEnvironments) {
+		for (var pack : resourcePackManager.getInstalledPacks()) {
+			try {
+				var jsonFiles = pack.listJsonFiles("environments");
+				for (var jsonPath : jsonFiles) {
+					List<Environment> loaded = loadEnvironmentsFromFile(jsonPath);
+					for (Environment env : loaded) {
+						mergeEnvironment(existingEnvironments, env, jsonPath, pack.getPackName());
+					}
+				}
+			} catch (Exception ex) {
+				log.warn("Failed to list environment files in pack {}: {}", pack.getPackName(), ex.getMessage());
+			}
+		}
+	}
+
+	private List<Environment> loadEnvironmentsFromFile(ResourcePath jsonPath) {
+		List<Environment> environments = new ArrayList<>();
+
+		try {
+			// Try loading as array first
+			Environment[] envArray = jsonPath.loadJson(plugin.getGson(), Environment[].class);
+			if (envArray != null) {
+				environments.addAll(Arrays.asList(envArray));
+				return environments;
+			}
+		} catch (Exception ex) {
+
+		}
+
+		try {
+			Environment env = jsonPath.loadJson(plugin.getGson(), Environment.class);
+			if (env != null) {
+				environments.add(env);
+			}
+		} catch (Exception ex) {
+			log.warn("Failed to load environment from {}: {}", jsonPath, ex.getMessage());
+		}
+
+		return environments;
+	}
+
+	/**
+	 * Merges an environment into the list. If an environment with the same area name exists,
+	 * it will be replaced. Otherwise, it will be added as a new environment.
+	 * @param environments List to merge into
+	 * @param newEnv Environment to merge
+	 * @param sourcePath Path where the environment was loaded from (for logging)
+	 * @param packName Name of the resource pack (for logging)
+	 */
+	private void mergeEnvironment(List<Environment> environments, Environment newEnv, ResourcePath sourcePath, String packName) {
+		if (newEnv.area == null || newEnv.area.name == null) {
+			log.warn("Environment from {} in pack {} has no area name, skipping", sourcePath, packName);
+			return;
+		}
+
+		// Find existing environment with the same area name
+		for (int i = 0; i < environments.size(); i++) {
+			Environment existing = environments.get(i);
+			if (existing.area != null && existing.area.name != null && 
+				existing.area.name.equals(newEnv.area.name)) {
+				environments.set(i, newEnv);
+				log.debug("Replaced environment for area '{}' from {} in pack {}", 
+					newEnv.area.name, sourcePath, packName);
+				return;
+			}
+		}
+
+		// No matching area found, add as new environment
+		environments.add(newEnv);
+		log.debug("Added new environment for area '{}' from {} in pack {}", 
+			newEnv.area.name, sourcePath, packName);
+	}
+
+	@Subscribe
+	public void onResourcePackUpdate(ResourcePackUpdate event) {
+		load(false);
+	}
+
+
 }

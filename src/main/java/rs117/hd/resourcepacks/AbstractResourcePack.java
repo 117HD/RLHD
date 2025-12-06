@@ -5,6 +5,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,6 +41,13 @@ public abstract class AbstractResourcePack implements IResourcePack {
 		var path = this.path.resolve(parts);
 		return path.exists();
 	}
+
+	/**
+	 * Lists all JSON files in the specified directory.
+	 * @param directory The directory path (e.g., "environments")
+	 * @return List of ResourcePath objects pointing to JSON files
+	 */
+	public abstract List<ResourcePath> listJsonFiles(String directory);
 
 	public Manifest getManifest() {
 		try {
