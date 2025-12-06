@@ -1380,6 +1380,10 @@ public class SceneUploader {
 				// weird-looking tint. The brightness clamp afterward is required to reduce the over-exposure introduced.
 				color1 = color2 = color3 = 90;
 			} else {
+				// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+				if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
+					continue;
+
 				if (modelOverride.inheritTileColorType != InheritTileColorType.NONE) {
 					final Scene scene = ctx.scene;
 					SceneTileModel tileModel = tile.getSceneTileModel();
@@ -1671,6 +1675,10 @@ public class SceneUploader {
 			} else if (color3 == -2) {
 				continue;
 			}
+
+			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+			if (plugin.configHideFakeShadows && HDUtils.isBakedGroundShading(model, face) && modelOverride.hideVanillaShadows)
+				continue;
 
 			// HSL override is not applied to textured faces
 			if (overrideAmount > 0 && (!isVanillaTextured || faceTextures[face] == -1)) {

@@ -611,7 +611,7 @@ public class Zone {
 		WorldViewContext ctx,
 		Camera camera,
 		boolean roofShadows,
-		boolean useStaticUnsorted
+		boolean skipSorting
 	) {
 		if (alphaModels.isEmpty())
 			return;
@@ -653,7 +653,7 @@ public class Zone {
 				continue;
 			}
 
-			if (useStaticUnsorted) {
+			if (skipSorting) {
 				lastDrawMode = STATIC_UNSORTED;
 				pushRange(m.startpos, m.endpos);
 				continue;

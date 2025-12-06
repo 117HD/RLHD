@@ -916,7 +916,7 @@ public class ZoneRenderer implements Renderer {
 		int dx = (int) plugin.cameraPosition[0] - ((zx - offset) << 10);
 		int dz = (int) plugin.cameraPosition[2] - ((zz - offset) << 10);
 		// If the zone is at sea, allow incorrect alpha ordering in the distance, for areas like north of Prifddinas
-		boolean useStaticUnsorted = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
+		boolean skipSorting = z.onlyWater && dx * dx + dz * dz > ALPHA_ZSORT_CLOSE * ALPHA_ZSORT_CLOSE;
 
 		if (level == 0) {
 			z.alphaSort(zx - offset, zz - offset, sceneCamera);
@@ -924,30 +924,12 @@ public class ZoneRenderer implements Renderer {
 		}
 
 		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum) {
-			z.renderAlpha(
-				sceneCmd,
-				zx - offset,
-				zz - offset,
-				level,
-				ctx,
-				sceneCamera,
-				false,
-				useStaticUnsorted
-			);
+			z.renderAlpha(sceneCmd, zx - offset, zz - offset, level, ctx, sceneCamera, false, skipSorting);
 		}
 
 		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
 			directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
-			z.renderAlpha(
-				sceneCmd,
-				zx - offset,
-				zz - offset,
-				level,
-				ctx,
-				sceneCamera,
-				plugin.configRoofShadows,
-				useStaticUnsorted
-			);
+			z.renderAlpha(directionalCmd, zx - offset, zz - offset, level, ctx, directionalCamera, plugin.configRoofShadows, skipSorting);
 		}
 
 		checkGLErrors();
@@ -1080,7 +1062,7 @@ public class ZoneRenderer implements Renderer {
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		VAO o = vaoO.get(size);
 
-		boolean hasAlpha = m.getFaceTransparencies() != null;
+		boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 		if (hasAlpha) {
 			VAO a = vaoA.get(size);
 			int start = a.vbo.vb.position();
