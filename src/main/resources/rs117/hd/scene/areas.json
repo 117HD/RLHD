@@ -9462,6 +9462,10 @@
     "regions": [ 10533 ]
   },
   {
+    "name": "RED_ROCK",
+    "regions": [ 11046, 11047 ]
+  },
+  {
     "name": "ISLE_OF_BONES",
     "regions": [ 10023 ]
   },
@@ -9598,6 +9602,7 @@
       "ANGLERS_RETREAT",
       "APE_ATOLL",
       "CHARRED_ISLAND",
+      "RED_ROCK",
       "CRASH_ISLAND",
       "CURSED_ACHIPELAGO",
       "DEEPFIN_POINT",
