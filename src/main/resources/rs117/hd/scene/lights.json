@@ -21604,7 +21604,7 @@
     ]
   },
   {
-    "description": "Prifddinas - Scavengers Overlook - Furnace - Needs proper UV",
+    "description": "Prifddinas - Scavengers Overlook - The Great Conch - Furnace",
     "height": 150,
     "offset": [ -55, -88, -2 ],
     "radius": 480,
@@ -42563,6 +42563,25 @@
     "range": 10,
     "objectIds": [
       "SAILING_SHIPYARD_PORTAL_EXIT"
+    ]
+  },
+  {
+    "description": "Varrock - Greack Conch - Metal cooking  Range",
+    "height": 100,
+    "offset": [ 20, -10, 64 ],
+    "radius": 200,
+    "strength": 6,
+    "color": [
+      252,
+      108,
+      3
+    ],
+    "type": "FLICKER",
+    "duration": 0,
+    "range": 5,
+    "objectIds": [
+      "FAI_VARROCK_RANGE",
+      "KR_SIN_RANGE"
     ]
   },
   {

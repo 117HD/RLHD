@@ -26,7 +26,6 @@ package rs117.hd.renderer.zone;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Set;
 import javax.inject.Inject;
 import lombok.extern.slf4j.Slf4j;
@@ -145,8 +144,6 @@ public class ZoneRenderer implements Renderer {
 	private final ShadowCasterVolume directionalShadowCasterVolume = new ShadowCasterVolume(directionalCamera);
 
 	private final int[] worldPos = new int[3];
-	private int minLevel, level, maxLevel;
-	private Set<Integer> hideRoofIds;
 
 	private final RenderState renderState = new RenderState();
 	private final CommandBuffer sceneCmd = new CommandBuffer(renderState);
@@ -268,13 +265,16 @@ public class ZoneRenderer implements Renderer {
 		float cameraX, float cameraY, float cameraZ, float cameraPitch, float cameraYaw,
 		int minLevel, int level, int maxLevel, Set<Integer> hideRoofIds
 	) {
-		this.minLevel = minLevel;
-		this.level = level;
-		this.maxLevel = maxLevel;
-		this.hideRoofIds = hideRoofIds;
-
 		WorldViewContext ctx = sceneManager.getContext(scene);
-		if (ctx != null && ctx.uboWorldViewStruct != null)
+		if (ctx == null)
+			return;
+
+		ctx.minLevel = minLevel;
+		ctx.level = level;
+		ctx.maxLevel = maxLevel;
+		ctx.hideRoofIds = hideRoofIds;
+
+		if (ctx.uboWorldViewStruct != null)
 			ctx.uboWorldViewStruct.update();
 
 		if (scene.getWorldViewId() == WorldView.TOPLEVEL) {
@@ -848,17 +848,11 @@ public class ZoneRenderer implements Renderer {
 			return;
 
 		if (!sceneManager.isRoot(ctx) || z.inSceneFrustum)
-			z.renderOpaque(sceneCmd, minLevel, level, maxLevel, hideRoofIds);
+			z.renderOpaque(sceneCmd, ctx, false);
 
 		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
 			directionalCmd.SetShader(fastShadowProgram);
-			z.renderOpaque(
-				directionalCmd,
-				minLevel,
-				level,
-				plugin.configRoofShadows ? 3 : maxLevel,
-				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds
-			);
+			z.renderOpaque(directionalCmd, ctx, plugin.configRoofShadows);
 		}
 
 		checkGLErrors();
@@ -900,12 +894,10 @@ public class ZoneRenderer implements Renderer {
 				sceneCmd,
 				zx - offset,
 				zz - offset,
-				minLevel,
-				this.level,
-				maxLevel,
 				level,
+				ctx,
 				sceneCamera,
-				hideRoofIds,
+				false,
 				useStaticUnsorted
 			);
 		}
@@ -913,15 +905,13 @@ public class ZoneRenderer implements Renderer {
 		if (!sceneManager.isRoot(ctx) || z.inShadowFrustum) {
 			directionalCmd.SetShader(plugin.configShadowMode == ShadowMode.DETAILED ? detailedShadowProgram : fastShadowProgram);
 			z.renderAlpha(
-				directionalCmd,
+				sceneCmd,
 				zx - offset,
 				zz - offset,
-				minLevel,
-				this.level,
-				plugin.configRoofShadows ? 3 : maxLevel,
 				level,
-				directionalCamera,
-				plugin.configRoofShadows ? Collections.emptySet() : hideRoofIds,
+				ctx,
+				sceneCamera,
+				plugin.configRoofShadows,
 				useStaticUnsorted
 			);
 		}
@@ -1089,7 +1079,7 @@ public class ZoneRenderer implements Renderer {
 			if (end > start) {
 				// level is checked prior to this callback being run, in order to cull clickboxes, but
 				// tileObject.getPlane()>maxLevel if visbelow is set - lower the object to the max level
-				int plane = Math.min(maxLevel, tileObject.getPlane());
+				int plane = Math.min(ctx.maxLevel, tileObject.getPlane());
 				// renderable modelheight is typically not set here because DynamicObject doesn't compute it on the returned model
 				zone.addTempAlphaModel(a.vao, start, end, plane, x & 1023, y, z & 1023);
 			}

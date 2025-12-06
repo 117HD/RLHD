@@ -1379,6 +1379,12 @@
     "specularGloss": 20.0
   },
   {
+    "name": "GRUNGE_2_MATTE",
+    "parent": "GRUNGE_2",
+    "specularStrength": 0.15,
+    "specularGloss": 10.0
+  },
+  {
     "name": "GRUNGE_2_SHINY",
     "parent": "GRUNGE_2",
     "specularStrength": 0.7,
@@ -1412,6 +1418,12 @@
     "name": "GRUNGE_3_SMOOTH_LIGHT",
     "parent": "GRUNGE_3_LIGHT",
     "normalMap": null
+  },
+  {
+    "name": "GRUNGE_3_GLOSS",
+    "parent": "GRUNGE_3",
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
   },
   {
     "name": "GRUNGE_3_SHINY",
@@ -2110,12 +2122,31 @@
     "brightness": 1.277
   },
   {
-    "name": "LEAF_VEINS"
+    "name": "LEAF_VEINS_N"
+  },
+  {
+    "name": "LEAF_VEINS",
+    "normalMap": "LEAF_VEINS_N",
+    "specularStrength": 0.15,
+    "specularGloss": 20.0
   },
   {
     "name": "LEAF_VEINS_LIGHT",
     "parent": "LEAF_VEINS",
     "brightness": 1.083
+  },
+  {
+    "name": "LEAF_VEINS_PALM",
+    "parent": "LEAF_VEINS",
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
+  },
+  {
+    "name": "LEAF_VEINS_PALM_LIGHT",
+    "parent": "LEAF_VEINS",
+    "brightness": 1.18,
+    "specularStrength": 0.4,
+    "specularGloss": 60.0
   },
   {
     "name": "LEAF_VEINS_DARK",
@@ -2904,6 +2935,22 @@
     "parent": "GRAY_75",
     "specularStrength": 0.5,
     "specularGloss": 100
+  },
+  {
+    "name": "SEASONLESS_LEAVES_SIDE",
+    "parent": "LEAVES_SIDE"
+  },
+  {
+    "name": "SEASONLESS_LEAVES_TOP",
+    "parent": "LEAVES_TOP"
+  },
+  {
+    "name": "SEASONLESS_WILLOW_LEAVES",
+    "parent": "WILLOW_LEAVES"
+  },
+  {
+    "name": "SEASONLESS_MAPLE_LEAVES",
+    "parent": "MAPLE_LEAVES"
   },
   {
     "name": "LEAVES_YELLOW_SIDE",

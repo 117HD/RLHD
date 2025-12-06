@@ -97,7 +97,7 @@ public class WaterTypeManager {
 				}
 				if (maxFallback > -1) {
 					maxFallback = min(maxFallback, Short.MAX_VALUE);
-					fallbackWaterTypes = new WaterType[maxFallback];
+					fallbackWaterTypes = new WaterType[maxFallback + 1];
 					Arrays.fill(fallbackWaterTypes, WaterType.NONE);
 					for (var waterType : waterTypes) {
 						int i = waterType.vanillaTextureIndex;

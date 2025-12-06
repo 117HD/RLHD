@@ -3,11 +3,11 @@ package rs117.hd.renderer.zone;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -290,10 +290,18 @@ public class Zone {
 		}
 	}
 
-	void renderOpaque(CommandBuffer cmd, int minLevel, int currentLevel, int maxLevel, Set<Integer> hiddenRoofIds) {
+	void renderOpaque(CommandBuffer cmd, WorldViewContext ctx, boolean roofShadows) {
 		drawIdx = 0;
 
-		for (int level = minLevel; level <= maxLevel; ++level) {
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+		if (roofShadows) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
+
+		for (int level = ctx.minLevel; level <= maxLevel; ++level) {
 			int[] rids = this.rids[level];
 			int[] roofStart = this.roofStart[level];
 			int[] roofEnd = this.roofEnd[level];
@@ -607,16 +615,22 @@ public class Zone {
 		CommandBuffer cmd,
 		int zx,
 		int zz,
-		int minLevel,
-		int currentLevel,
-		int maxLevel,
 		int level,
+		WorldViewContext ctx,
 		Camera camera,
-		Set<Integer> hiddenRoofIds,
+		boolean roofShadows,
 		boolean useStaticUnsorted
 	) {
 		if (alphaModels.isEmpty())
 			return;
+
+		int currentLevel = ctx.level;
+		int maxLevel = ctx.maxLevel;
+		var hiddenRoofIds = ctx.hideRoofIds;
+		if (roofShadows) {
+			maxLevel = 3;
+			hiddenRoofIds = Collections.emptySet();
+		}
 
 		cmd.DepthMask(false);
 
@@ -630,7 +644,7 @@ public class Zone {
 			if ((m.flags & AlphaModel.SKIP) != 0 || m.level != level)
 				continue;
 
-			if (level < minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
+			if (level < ctx.minLevel || level > maxLevel || level > currentLevel && hiddenRoofIds.contains((int) m.rid))
 				continue;
 
 			if (lastVao != m.vao || lastzx != (zx - m.zofx) || lastzz != (zz - m.zofz))
