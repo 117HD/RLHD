@@ -94,6 +94,7 @@ public final class Worker {
 		} catch (Throwable ex) {
 			log.warn("Encountered an error whilst processing: {}", handle.hashCode(), ex);
 			handle.item.encounteredError.set(true);
+			handle.item.onCancel();
 			handle.cancel(false);
 		} finally {
 			handle.setCompleted();

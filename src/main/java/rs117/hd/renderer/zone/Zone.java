@@ -165,6 +165,12 @@ public class Zone {
 		alphaModels.clear();
 	}
 
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		free(); // Just in case
+	}
+
 	public void unmap() {
 		if (vboO != null) {
 			vboO.unmap();
