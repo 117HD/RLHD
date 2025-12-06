@@ -664,9 +664,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_MODEL_TEXTURES,
 		name = "Model Textures",
-		description =
-			"Adds new textures to most models. If disabled, the standard game textures will be used instead.<br>" +
-			"Note, this requires model caching in order to apply to animated models.",
+		description = "Adds new textures to most models. If disabled, the standard game textures will be used instead.",
 		position = 7,
 		section = environmentSettings
 	)
@@ -747,64 +745,6 @@ public interface HdPluginConfig extends Config
 	)
 	default boolean characterDisplacement() {
 		return true;
-	}
-
-	/*====== Model caching settings ======*/
-
-	@ConfigSection(
-		name = "Model caching",
-		description = "Improve performance by reusing model data",
-		position = 3,
-		closedByDefault = true
-	)
-	String modelCachingSettings = "modelCachingSettings";
-
-	String KEY_MODEL_BATCHING = "useModelBatching";
-	@ConfigItem(
-		keyName = KEY_MODEL_BATCHING,
-		name = "Model Batching",
-		description =
-			"Model batching improves performance by reusing identical models within the same frame.<br>" +
-			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
-		position = 1,
-		section = modelCachingSettings
-	)
-	default boolean modelBatching() {return true;}
-
-	String KEY_MODEL_CACHING = "useModelCaching";
-	@ConfigItem(
-		keyName = KEY_MODEL_CACHING,
-		name = "Model Caching",
-		description =
-			"Model caching improves performance by saving and reusing model data from previous frames.<br>" +
-			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
-		position = 2,
-		section = modelCachingSettings
-	)
-	default boolean modelCaching() {return true;}
-
-	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiBv2";
-	@Range(
-		min = 64,
-		max = 16384
-	)
-	@ConfigItem(
-		keyName = KEY_MODEL_CACHE_SIZE,
-		name = "Cache Size (MiB)",
-		description =
-			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
-			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
-			"Minimum=64 MiB, maximum=16384 MiB",
-		position = 3,
-		section = modelCachingSettings
-	)
-	default int modelCacheSizeMiB() {
-		return modelCacheSizeMiBv1() / 4;
-	}
-	@ConfigItem(keyName = "modelCacheSizeMiB", hidden = true, name = "", description = "")
-	default int modelCacheSizeMiBv1()
-	{
-		return 2048;
 	}
 
 
@@ -995,6 +935,53 @@ public interface HdPluginConfig extends Config
 	)
 	default int legacyBrightness() {
 		return 20;
+	}
+
+	String KEY_MODEL_BATCHING = "useModelBatching";
+	@ConfigItem(
+		keyName = KEY_MODEL_BATCHING,
+		name = "Legacy model batching",
+		description =
+			"With the legacy renderer, model batching improves performance by reusing identical models within the same frame.<br>" +
+			"May cause instability and graphical bugs, particularly if Jagex makes engine changes.",
+		position = -97,
+		section = legacySettings
+	)
+	default boolean modelBatching() { return true; }
+
+	String KEY_MODEL_CACHING = "useModelCaching";
+	@ConfigItem(
+		keyName = KEY_MODEL_CACHING,
+		name = "Legacy model caching",
+		description =
+			"With the legacy renderer, model caching improves performance by saving and reusing model data from previous frames.<br>" +
+			"May cause instability or graphical bugs, particularly if Jagex makes engine changes.",
+		position = -96,
+		section = legacySettings
+	)
+	default boolean modelCaching() { return true; }
+
+	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiBv2";
+	@Range(
+		min = 64,
+		max = 16384
+	)
+	@ConfigItem(
+		keyName = KEY_MODEL_CACHE_SIZE,
+		name = "Legacy cache size (MiB)",
+		description =
+			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
+			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
+			"Minimum=64 MiB, maximum=16384 MiB",
+		position = -95,
+		section = legacySettings
+	)
+	default int modelCacheSizeMiB() {
+		return modelCacheSizeMiBv1() / 4;
+	}
+	@ConfigItem(keyName = "modelCacheSizeMiB", hidden = true, name = "", description = "")
+	default int modelCacheSizeMiBv1() {
+		return 2048;
 	}
 
 	String KEY_LEGACY_GREY_COLORS = "reduceOverExposure";
