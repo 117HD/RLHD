@@ -12,12 +12,14 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.SceneContext;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.HDUtils;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -401,6 +403,7 @@ public class Zone {
 	static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
 
 	void addAlphaModel(
+		HdPlugin plugin,
 		MaterialManager materialManager,
 		int vao,
 		Model model,
@@ -495,6 +498,10 @@ public class Zone {
 		char bufferIdx = 0;
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
+				continue;
+
+			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
 				continue;
 
 			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;
