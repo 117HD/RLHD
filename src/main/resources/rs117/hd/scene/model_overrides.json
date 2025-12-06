@@ -68377,12 +68377,6 @@
     "baseMaterial": "LIGHT_BARK",
     "uvScale": 0.65,
     "uvType": "BOX",
-    "objectIds": [
-      "TREE_MANGROVE02_DEFAULT01",
-      "TREE_MANGROVE01_DEFAULT02",
-      "TREE_MANGROVE02_DEFAULT02",
-      "TREE_MANGROVE01_DEFAULT01"
-    ],
     "colorOverrides": [
       {
         "colors": "h > 10",
@@ -68390,6 +68384,22 @@
         "uvType": "BOX",
         "uvScale": 0.35
       }
+    ],
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    },
+    "objectIds": [
+      "TREE_MANGROVE02_DEFAULT01",
+      "TREE_MANGROVE01_DEFAULT02",
+      "TREE_MANGROVE02_DEFAULT02",
+      "TREE_MANGROVE01_DEFAULT01"
     ]
   },
   {
