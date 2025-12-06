@@ -1085,6 +1085,58 @@
     ]
   },
   {
+    "description": "TREES - Warm Region",
+    "baseMaterial": "BARK",
+    "areas": [ "WARM_REGIONS" ],
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "TREE2",
+      "TREE3",
+      "TREE4",
+      "LEPRECHAUNTREE",
+      "NEWBIETREE2",
+      "WOM_TREE",
+      "MAPLETREE",
+      "PEST_TREE2",
+      "ZEP_TREE3",
+      "MACRO_FORESTERTREE2",
+      "TUT2_TREE2",
+      "TUT2_TREE2_NOOP",
+      "GIM_TREE",
+      "DRILL_TREE3",
+      "POH_SMALL_TREE2_5",
+      "POH_BIG_TREE5_4",
+      "POH_BIG_TREE2_4",
+      "POH_SMALL_TREE4_5",
+      "TREE",
+      "LIGHTTREE",
+      "NEWBIETREE",
+      "PEST_TREE",
+      "ZEP_TREE",
+      "DRILL_TREE",
+      "MACRO_FORESTER_TREE",
+      "TUT2_TREE",
+      "TUT2_TREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      },
+      "MAPLE_LEAVES": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_MAPLE_LEAVES"
+      }
+    }
+  },
+  {
     "description": "TREES",
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
@@ -1487,6 +1539,65 @@
     ]
   },
   {
+    "description": "Warm Region - Objects - Tree - Yew",
+    "areas": [ "WARM_REGIONS" ],
+    "baseMaterial": "BARK",
+    "terrainVertexSnap": true,
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "POH_BIG_TREE6_4",
+      "POH_SMALL_TREE6_5",
+      "YEW_TREE_SEEDLING",
+      "YEW_TREE_1",
+      "YEW_TREE_2",
+      "YEW_TREE_3",
+      "YEW_TREE_4",
+      "YEW_TREE_5",
+      "YEW_TREE_6",
+      "YEW_TREE_7",
+      "YEW_TREE_8",
+      "YEW_TREE_9",
+      "YEW_TREE_FULLYGROWN_1",
+      "YEW_TREE_FULLYGROWN_2",
+      "YEW_TREE_DISEASED_1",
+      "YEW_TREE_DISEASED_2",
+      "YEW_TREE_DISEASED_3",
+      "YEW_TREE_DISEASED_4",
+      "YEW_TREE_DISEASED_5",
+      "YEW_TREE_DISEASED_6",
+      "YEW_TREE_DISEASED_7",
+      "YEW_TREE_DISEASED_8",
+      "YEW_TREE_DISEASED_9",
+      "YEW_TREE_DISEASED_FULLYGROWN",
+      "YEW_TREE_DEAD_1",
+      "YEW_TREE_DEAD_2",
+      "YEW_TREE_DEAD_3",
+      "YEW_TREE_DEAD_4",
+      "YEW_TREE_DEAD_5",
+      "YEW_TREE_DEAD_6",
+      "YEW_TREE_DEAD_7",
+      "YEW_TREE_DEAD_8",
+      "YEW_TREE_DEAD_9",
+      "YEW_TREE_DEAD_FULLYGROWN",
+      "YEWTREE",
+      "TREE_YEW_DEFAULT01",
+      "YEWTREE_NOOP",
+      "YEWTREE_UPDATE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    }
+  },
+  {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "terrainVertexSnap": true,
@@ -1579,6 +1690,7 @@
   },
   {
     "description": "Objects - Tree - Willow",
+    "areas": [ "WARM_REGIONS" ],
     "baseMaterial": "BARK",
     "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
     "objectIds": [
@@ -1594,15 +1706,28 @@
     "retainVanillaUvs": true,
     "terrainVertexSnap": true,
     "materialOverrides": {
-      "LEAVES_SIDE": {
+      "WILLOW_LEAVES": {
         "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_RED_SIDE"
-      },
-      "LEAVES_TOP": {
-        "windDisplacementMode": "VERTEX",
-        "textureMaterial": "LEAVES_RED_TOP"
+        "textureMaterial": "SEASONLESS_WILLOW_LEAVES"
       }
     }
+  },
+  {
+    "description": "Objects - Tree - Willow",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "WILLOWTREE",
+      "WILLOW_TREE2",
+      "WILLOW_TREE3",
+      "WILLOW_TREE4"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationZ": 128,
+    "uvOrientationY": 512,
+    "retainVanillaUvs": true,
+    "terrainVertexSnap": true
   },
   {
     "description": "Objects - Tree - Mahogany - Stump",
@@ -1614,6 +1739,41 @@
       "MAHOGANY_STUMP",
       "MAHOGANY_TREE_STUMP"
     ]
+  },
+  {
+    "description": " Warm Region - Objects - Tree - Mahogany",
+    "areas": [ "WARM_REGIONS" ],
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "baseMaterial": "BARK_STONEPINE",
+    "uvType": "BOX",
+    "uvScale": 0.25,
+    "uvOrientation": 42,
+    "retainVanillaUvs": true,
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "MAHOGANYTREE",
+      "MAHOGANY_TREE_1",
+      "MAHOGANY_TREE_2",
+      "MAHOGANY_TREE_3",
+      "MAHOGANY_TREE_4",
+      "MAHOGANY_TREE_5",
+      "MAHOGANY_TREE_6",
+      "MAHOGANY_TREE_7",
+      "MAHOGANY_TREE_8",
+      "MAHOGANY_TREE_9",
+      "MAHOGANY_TREE_FULLYGROWN_CLAIMXP",
+      "MAHOGANY_TREE_FULLYGROWN"
+    ],
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    }
   },
   {
     "description": "Objects - Tree - Mahogany",
@@ -29116,7 +29276,6 @@
       "TUT2_OAK_NOOP",
       "TREE_OAK_DEFAULT01",
       "GIM_OAKTREE",
-      "AVIUM_OAK_1",
       "OAKTREE_NOOP"
     ],
     "uvType": "BOX",
@@ -29129,6 +29288,44 @@
       "LEAVES_TOP": {
         "windDisplacementMode": "VERTEX",
         "textureMaterial": "LEAVES_RED_TOP"
+      }
+    }
+  },
+  {
+    "description": "Warm Region Oak Tree",
+    "areas": [ "WARM_REGIONS" ],
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "terrainVertexSnap": true,
+    "objectIds": [
+      "POH_BIG_TREE3_4",
+      "POH_SMALL_TREE3_5",
+      "OAK_TREE_SEEDLING",
+      "OAK_TREE_1",
+      "OAK_TREE_2",
+      "OAK_TREE_3",
+      "OAK_TREE_FULLYGROWN_1",
+      "OAK_TREE_FULLYGROWN_2",
+      "NEWBIEOAKTREE",
+      "OAKTREE",
+      "DRILL_OAKTREE",
+      "TUT2_OAK",
+      "TUT2_OAK_NOOP",
+      "TREE_OAK_DEFAULT01",
+      "GIM_OAKTREE",
+      "OAKTREE_NOOP",
+      "AVIUM_OAK_1"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
       }
     }
   },
@@ -67008,7 +67205,17 @@
         "baseMaterial": "PLANT_GRUNGE_1",
         "uvType": "GEOMETRY"
       }
-    ]
+    ],
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    }
   },
   {
     "description": "Tlati Rainforest - Tree - Large Bottoms",
@@ -67049,7 +67256,17 @@
         "uvType": "GEOMETRY",
         "terrainVertexSnap": true
       }
-    ]
+    ],
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    }
   },
   {
     "description": "Great Conch - Tortugan - Market Stall",
