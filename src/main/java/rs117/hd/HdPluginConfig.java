@@ -821,7 +821,7 @@ public interface HdPluginConfig extends Config
 	String KEY_MACOS_INTEL_WORKAROUND = "macosIntelWorkaround";
 	@ConfigItem(
 		keyName = KEY_MACOS_INTEL_WORKAROUND,
-		name = "Fix white color issue on Macs",
+		name = "Fix broken colors on Intel Macs",
 		description = "Workaround for visual artifacts found on some Intel GPU drivers on macOS.",
 		warning =
 			"This setting can cause RuneLite to crash, and it can be difficult to undo.\n" +
