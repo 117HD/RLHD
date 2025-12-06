@@ -419,25 +419,6 @@ public class LegacyModelPusher {
 		sceneContext.modelFaceNormals[11] = terrainData;
 	}
 
-	private boolean isBakedGroundShading(Model model, int face) {
-		final byte[] faceTransparencies = model.getFaceTransparencies();
-		if (faceTransparencies == null || (faceTransparencies[face] & 0xFF) <= 100)
-			return false;
-
-		final short[] faceTextures = model.getFaceTextures();
-		if (faceTextures != null && faceTextures[face] != -1)
-			return false;
-
-		final float[] yVertices = model.getVerticesY();
-		float heightA = yVertices[model.getFaceIndices1()[face]];
-		if (heightA < -8)
-			return false;
-
-		float heightB = yVertices[model.getFaceIndices2()[face]];
-		float heightC = yVertices[model.getFaceIndices3()[face]];
-		return heightA == heightB && heightA == heightC;
-	}
-
 	@SuppressWarnings({ "ReassignedVariable" })
 	private int[] getFaceVertices(
 		SceneContext sceneContext,
@@ -451,7 +432,7 @@ public class LegacyModelPusher {
 			return ZEROED_INTS; // Hide the face
 
 		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-		if (plugin.configHideFakeShadows && isBakedGroundShading(model, face)) {
+		if (plugin.configHideFakeShadows && HDUtils.isBakedGroundShading(model, face)) {
 			if (modelOverride.hideVanillaShadows)
 				return ZEROED_INTS; // Hide the face
 

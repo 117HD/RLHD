@@ -34,6 +34,7 @@ import rs117.hd.scene.MaterialManager;
 import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.scene.model_overrides.UvType;
+import rs117.hd.utils.HDUtils;
 import rs117.hd.utils.buffer.GpuIntBuffer;
 
 import static net.runelite.api.Perspective.*;
@@ -409,6 +410,10 @@ class FacePrioritySorter {
 
 		if (color3 == -1)
 			color2 = color3 = color1;
+
+		// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+		if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
+			return 0;
 
 		if (plugin.configUndoVanillaShading && hasVertexNormals) {
 			int color1H = color1 >> 10 & 0x3F;
