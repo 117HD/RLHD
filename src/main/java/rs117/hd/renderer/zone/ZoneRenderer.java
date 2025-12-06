@@ -1027,7 +1027,7 @@ public class ZoneRenderer implements Renderer {
 		int size = m.getFaceCount() * 3 * VAO.VERT_SIZE;
 		VAO o = vaoO.get(size, ctx.vboM);
 
-		boolean hasAlpha = m.getFaceTransparencies() != null;
+		boolean hasAlpha = m.getFaceTransparencies() != null || modelOverride.mightHaveTransparency;
 		if (hasAlpha) {
 			VAO a = vaoA.get(size, ctx.vboM);
 			int start = a.vbo.vb.position();
