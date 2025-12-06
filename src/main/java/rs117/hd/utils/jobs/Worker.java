@@ -93,6 +93,7 @@ public final class Worker {
 			log.debug("Interrupt Received whilst processing: {}", handle.hashCode());
 		} catch (Throwable ex) {
 			log.warn("Encountered an error whilst processing: {}", handle.hashCode(), ex);
+			handle.item.encounteredError.set(true);
 			handle.cancel(false);
 		} finally {
 			handle.setCompleted();

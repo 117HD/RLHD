@@ -66,6 +66,7 @@ public class Zone {
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
+	public boolean encounteredErrorDuringUpload;
 
 	ZoneUploadJob uploadJob;
 

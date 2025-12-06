@@ -173,6 +173,7 @@ public final class JobSystem {
 		item.queued.set(true);
 		item.done.set(false);
 		item.wasCancelled.set(false);
+		item.encounteredError.set(false);
 		item.ranToCompletion.set(false);
 
 		if (shouldQueue) {
