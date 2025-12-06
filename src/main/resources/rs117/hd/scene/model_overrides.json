@@ -24441,7 +24441,12 @@
       "FERN2",
       "AREA_SANGUINE_OUTER_WALL_PLANT",
       "FAIRY2_PLANT_2",
-      "FAIRY2_PLANT_4"
+      "FAIRY2_PLANT_4",
+      "TLATI_PLANT_FERN01",
+      "PLANT_FERN_TLATI01",
+      "PLANT_FERN_TLATI02",
+      "PLANT_FERN_TLATI04",
+      "TLATI_PLANT_CLUSTER01_DEFAULT02"
     ]
   },
   {
@@ -69926,6 +69931,73 @@
     "uvOrientationY": 512,
     "objectIds": [
       "STRANGLER_CAMPSITE_BOAT01"
+    ]
+  },
+  {
+    "description": "Charting - Rock - Collasped Gem Crab Burrow",
+    "baseMaterial": "ROCK_5",
+    "uvType": "BOX",
+    "uvOrientation": 313,
+    "uvScale": 0.8,
+    "objectIds": [
+      "SAILING_CHARTING_GENERIC_CRAB_HOLE"
+    ]
+  },
+  {
+    "description": "Tlati - Mossy Rocks",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h < 23 && s >= 3",
+        "baseMaterial": "GRASS_1",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h >= 23",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      }
+    ],
+    "objectIds": [
+      "TLATI_ROCK01_1X1A",
+      "TLATI_ROCK02_1X1A"
+    ]
+  },
+  {
+    "description": "Tlati - Mossy Rocks with plants",
+    "baseMaterial": "ROCK_1",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 256,
+    "colorOverrides": [
+      {
+        "description": "Moss",
+        "colors": "h == 23 && s >= 3",
+        "baseMaterial": "GRASS_1",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256
+      },
+      {
+        "colors": "h == 16 || h == 19",
+        "baseMaterial": "LEAF_VEINS",
+        "uvScale": 0.8,
+        "uvType": "BOX",
+        "uvOrientation": 256,
+        "windDisplacementMode": "VERTEX"
+      }
+    ],
+    "objectIds": [
+      "TLATI_ROCK01_2X2A",
+      "TLATI_ROCK02_2X2A"
     ]
   }
 ]
