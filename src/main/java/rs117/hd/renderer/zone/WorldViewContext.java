@@ -95,12 +95,20 @@ public class WorldViewContext {
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
-				if(!uploadTask.encounteredError() || !curZone.encounteredErrorDuringUpload) {
-					// Cache if the previous upload task encountered an error, if it encounters another one the zone will be dropped to avoid constantly rebuilding
+				boolean shouldRetry = uploadTask.encounteredError() && curZone.isFirstLoadingAttempt;
+				if (shouldRetry) {
+					// Cache if the previous upload task encountered an error,
+					// if it encounters another one the zone will be dropped to avoid constantly rebuilding
 					curZone.rebuild = true;
-					curZone.encounteredErrorDuringUpload = uploadTask.encounteredError();
-				} else {
-					log.debug("Zone({}) [{}-{},{}] was cancelled due to an error, dropping to avoid constantly rebuilding", curZone.hashCode(), worldViewId, zx, zz);
+					curZone.isFirstLoadingAttempt = false;
+				} else if (uploadTask.encounteredError()) {
+					log.debug(
+						"Zone({}) [{}-{},{}] was cancelled due to an error, dropping to avoid constantly rebuilding",
+						curZone.hashCode(),
+						worldViewId,
+						zx,
+						zz
+					);
 				}
 			}
 			uploadTask.release();
