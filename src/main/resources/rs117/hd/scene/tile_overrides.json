@@ -7657,15 +7657,6 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
-    "name": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
-    "area": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
-    "groundMaterial": "PURE_BLACK",
-    "blended": false,
-    "underlayIds": [
-      55
-    ]
-  },
-  {
     "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
     "area": "SHILO_VILLAGE_MINE_SURFACE",
     "groundMaterial": "ROCKY_CAVE_FLOOR",

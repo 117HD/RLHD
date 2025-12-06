@@ -9558,18 +9558,6 @@
     "regions": [ 14379 ]
   },
   {
-    "name": "CATHERBY_DEPTH_BIAS_FIX",
-    "aabbs": [
-      [ 2809, 3448, 2809, 3449, 1 ]
-    ]
-  },
-  {
-    "name": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
-    "aabbs": [
-      [ 2825, 2998 ]
-    ]
-  },
-  {
     "name": "ARDOUGNE_SEWER_ENTRANCE_DEPTH_BIAS_FIX",
     "aabbs": [
       [ 2632, 3294 ]
