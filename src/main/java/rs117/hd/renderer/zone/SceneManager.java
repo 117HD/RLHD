@@ -148,10 +148,10 @@ public class SceneManager {
 
 		if (reloadRequested && loadingLock.getHoldCount() == 0) {
 			reloadRequested = false;
-
-			completeAllStreaming();
 			try {
 				loadingLock.lock();
+
+				completeAllStreaming();
 
 				if (!generateSceneDataTask.isDone())
 					generateSceneDataTask.waitForCompletion();
@@ -250,8 +250,6 @@ public class SceneManager {
 				subs[worldViewId].free();
 				subs[worldViewId] = null;
 			}
-		} else if (worldViewId == root.worldViewId) {
-			root.free();
 		}
 	}
 
