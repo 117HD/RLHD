@@ -2065,6 +2065,11 @@
     "specularGloss": 30.0
   },
   {
+    "name": "SEMI_LIGHT_BARK",
+    "parent": "BARK",
+    "brightness": 1.177
+  },
+  {
     "name": "LIGHT_BARK",
     "parent": "BARK",
     "brightness": 1.277
