@@ -17352,18 +17352,20 @@
     "uvType": "BOX"
   },
   {
-    "description": "Ground Decoration - Sticks - Small",
+    "description": "Ground Decoration - Bark - Sticks - Small",
     "baseMaterial": "BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "uvOrientation": 313,
     "objectIds": [
       "FULL_TWIG",
       "BROKEN_TWIG",
       "BROKEN_TWIG_DARK",
       "FULL_TWIG_LIGHT",
       "BROKEN_TWIG_LIGHT",
-      "GROUNDCOVER_STRANGLER01_TWIGS04"
-    ],
-    "uvType": "BOX",
-    "uvScale": 0.4
+      "GROUNDCOVER_STRANGLER01_TWIGS04",
+      "TWIG_SAVANNAH_FULL01"
+    ]
   },
   {
     "description": "Walls - Double Rope Rails",
@@ -28937,7 +28939,8 @@
       "CORPSE2_BURNT",
       "TAPO_SKELETON01",
       "TAPO_SKELETON02",
-      "TOBQUEST_SKELETON_OP"
+      "TOBQUEST_SKELETON_OP",
+      "LASSAR_CHURCH01_SKELETON01_CORPSE03"
     ],
     "uvType": "BOX",
     "uvOrientation": 768,
@@ -37257,7 +37260,8 @@
       "HOLLOWLOG",
       "HOLLOWLOGSMALLER",
       "HOLLOWLOG_VERYSMALL",
-      "HOLLOWLOG_WILDERNESS"
+      "HOLLOWLOG_WILDERNESS",
+      "CONTACT_HOLLOWLOGSMALLER"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -69900,7 +69904,18 @@
     "uvType": "BOX",
     "uvScale": 0.5,
     "objectIds": [
-      "STARFISH"
+      "STARFISH",
+      "STARFISHBIG"
+    ]
+  },
+  {
+    "description": "Broken biten up rowboat",
+    "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "uvOrientationY": 512,
+    "objectIds": [
+      "STRANGLER_CAMPSITE_BOAT01"
     ]
   }
 ]
