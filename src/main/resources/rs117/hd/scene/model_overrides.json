@@ -34437,7 +34437,6 @@
     "baseMaterial": "PLANT_GRUNGE_1",
     "windDisplacementMode": "OBJECT",
     "objectIds": [
-      "GROUNDCOVER_PLANT5_WITHERED",
       "PLANT_FERN_ECLIPSE01",
       "PLANT_FERN_ECLIPSE02",
       "PLANT_FERN_ECLIPSE03",
@@ -67639,7 +67638,6 @@
       }
     ],
     "objectIds": [
-      "TORTUGAN_CHEST01_BANK01_OPEN01",
       "TORTUGAN_CHEST01_BANK01_CLOSED01"
     ]
   },
