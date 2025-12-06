@@ -15493,7 +15493,8 @@
       "GREATRUNESTONE_DECKING_CORNER_D",
       "GREATRUNESTONE_DECKING",
       "GREATRUNESTONE_DECKING_2",
-      "GREATRUNESTONE_DECKING_5"
+      "GREATRUNESTONE_DECKING_5",
+      "FOSSIL_DECKING_CORNER"
     ],
     "uvType": "MODEL_XZ",
     "uvOrientation": 512
@@ -64696,6 +64697,58 @@
     ]
   },
   {
+    "description": "Gwenith Glide Small Crystals",
+    "baseMaterial": "GRAY_85",
+    "objectIds": [
+      "ROCK_CRYSTAL01_FLECKED01",
+      "ROCK_CRYSTAL01_FLECKED02",
+      "ROCK_CRYSTAL01_FLECKED03",
+      "ROCK_CRYSTAL01_FLECKED04",
+      "ROCK_CRYSTAL01_FLECKED05"
+    ]
+  },
+  {
+    "description": "Gwenith Glide Large Crystals and Debris",
+    "baseMaterial": "GRAY_90",
+    "objectIds": [
+      "BOATS_CRYSTAL01_WRECK02",
+      "BOATS_CRYSTAL01_LARGE01",
+      "BOATS_CRYSTAL01_OUTCROP01",
+      "BOATS_CRYSTAL01_OUTCROP02",
+      "BOATS_CRYSTAL01_OUTCROP04",
+      "BOATS_CRYSTAL01_OUTCROP03",
+      "BOATS_CRYSTAL01_OUTCROP05",
+      "SAILING_BT_GWENITH_GLIDE_CRYSTAL",
+      "SAILING_BT_GWENITH_GLIDE_CRYSTAL_2",
+      "BOATS_CRYSTAL01_WRECK01",
+      "BOATS_CRYSTAL01_CRATE01",
+      "BOATS_CRYSTAL01_SUPPORT01",
+      "BOATS_CRYSTAL01_WRECK03",
+      "BOATS_CRYSTAL01_HULL01",
+      "BOATS_CRYSTAL01_HULL01_BROKEN01",
+      "BOATS_CRYSTAL01_HULL01_BROKEN02_M",
+      "BOATS_CRYSTAL01_SUPPORT01_M",
+      "BOATS_CRYSTAL01_HULL02_MIRROR",
+      "BOATS_CRYSTAL01_HULL02",
+      "BOATS_CRYSTAL01_HULL01_BROKEN01_M",
+      "BOATS_CRYSTAL01_MAST01_BROKEN01",
+      "BOATS_CRYSTAL01_BARREL01",
+      "BOATS_CRYSTAL01_MAST01_BROKEN02",
+      "BOATS_CRYSTAL01_SUPPORT02",
+      "BOATS_CRYSTAL01_HULL01_BROKEN02",
+      "BOATS_CRYSTAL01_SUPPORT02_M",
+      "BOATS_CRYSTAL01_WRECK04"
+    ]
+  },
+  {
+    "description": "Gwenith Glide Wind Mote",
+    "baseMaterial": "GRAY_110",
+    "objectIds": [
+      "SAILING_BT_GWENITH_GLIDE_MOTE"
+    ]
+  },
+
+  {
     "description": "Sailing - Salvaging Station",
     "baseMaterial": "METALLIC_1_VERY_LIGHT_SMOOTH",
     "objectIds": [
@@ -69234,9 +69287,7 @@
       {
         "description": "Crystals",
         "colors": "h >= 32",
-        "baseMaterial": "GRUNGE_3_SHINY",
-        "uvType": "BOX",
-        "uvScale": 0.6
+        "baseMaterial": "GRAY_90"
       },
       {
         "description": "Grass",
@@ -69251,7 +69302,33 @@
     "objectIds": [
       "PRIF_TREE_NORMAL_1",
       "PRIF_TREE_NORMAL_2",
-      "PRIF_TREE_NORMAL_2_NOCHOP"
+      "PRIF_TREE_NORMAL_2_NOCHOP",
+      "PRIF_WALL_TALL_01",
+      "PRIF_WALL_MEDIUM_02",
+      "PRIF_WALL_MEDIUM_01",
+      "PRIF_WALL_MEDIUM_02_MIRROR",
+      "PRIF_WALL_DIAGONAL_01",
+      "PRIF_WALL_DIAGONAL_02",
+      "PRIF_WALL_DIAGONAL_03",
+      "PRIF_WALL_DIAGONAL_04",
+      "PRIF_WALL_DIAGONAL_05",
+      "PRIF_WALL_DIAGONAL_06",
+      "PRIF_WALL_DIAGONAL_07",
+      "PRIF_WALL_DIAGONAL_01_MIRROR",
+      "PRIF_WALL_DIAGONAL_03_MIRROR",
+      "PRIF_WALL_DIAGONAL_02_MIRROR",
+      "PRIF_WALL_DIAGONAL_06_MIRROR",
+      "PRIF_WALL_DIAGONAL_05_MIRROR",
+      "PRIF_WALL_DIAGONAL_04_MIRROR",
+      "PRIF_WALL_DIAGONAL_07_MIRROR",
+      "PRIF_WALL_DIAGONAL_MEDIUM_MID",
+      "PRIF_WALL_DIAGONAL_MEDIUM_INSIDE",
+      "PRIF_WALL_DIAGONAL_MEDIUM_OUT",
+      "PRIF_WALL_GATE_SIDE_RIGHT",
+      "PRIF_WALL_GATE_SIDE_LEFT",
+      "PRIF_WALL_GATE_LEFT",
+      "PRIF_WALL_GATE_RIGHT",
+      "PRIF_AMLODD_WOODEN_RAILING"
     ]
   },
   {
@@ -69272,9 +69349,7 @@
       {
         "description": "Crystals",
         "colors": "h >= 32",
-        "baseMaterial": "GRUNGE_3_SHINY",
-        "uvType": "BOX",
-        "uvScale": 0.4
+        "baseMaterial": "GRAY_90"
       }
     ],
     "objectIds": [
@@ -69304,6 +69379,46 @@
     ],
     "objectIds": [
       "PRIF_SLAYER_DUNGEON_ENTRANCE"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Bark - Fence",
+    "baseMaterial": "SEMI_LIGHT_BARK",
+    "uvType": "BOX",
+    "uvScale": 0.6,
+    "objectIds": [
+      "PRIF_HOUSE_FENCE"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Wood - Dock Support",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.4,
+    "uvOrientationY": 256,
+    "objectIds": [
+      "PRIF_HOUSE_WALL_STONE"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Wood - Dock Planks",
+    "baseMaterial": "WOOD_GRAIN_3_LIGHT",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "uvOrientation": 512,
+    "objectIds": [
+      "PRIF_AMLODD_WOODEN_DECKING",
+      "PRIF_AMLODD_WOODEN_DECKING_PORT_TASK_BOARD_ICON"
+    ]
+  },
+  {
+    "description": "Tirannwn - Prifddinas - Stairs",
+    "baseMaterial": "SMOOTH_STONE_DARK",
+    "uvType": "BOX",
+    "objectIds": [
+      "PRIF_SKEWSTEPS_STONE_EDGE",
+      "PRIF_SKEWSTEPS_STONE",
+      "PRIF_SKEWSTEPS_STONE_EDGE_M"
     ]
   },
   {

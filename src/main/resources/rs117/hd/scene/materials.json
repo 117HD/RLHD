@@ -1041,6 +1041,11 @@
     "brightness": 0.85
   },
   {
+    "name": "GRAY_80",
+    "parent": "NONE",
+    "brightness": 0.8
+  },
+  {
     "name": "GRAY_75",
     "parent": "NONE",
     "brightness": 0.75
@@ -2080,6 +2085,11 @@
     "normalMap": "BARK_N",
     "specularStrength": 0.3,
     "specularGloss": 30.0
+  },
+  {
+    "name": "SEMI_LIGHT_BARK",
+    "parent": "BARK",
+    "brightness": 1.177
   },
   {
     "name": "LIGHT_BARK",
