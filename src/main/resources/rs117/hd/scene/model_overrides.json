@@ -66202,15 +66202,18 @@
     "baseMaterial": "WOOD_GRAIN_3",
     "uvType": "BOX",
     "uvScale": 0.8,
+    "flatNormals": true,
     "objectIds": [
       "PEST_FARM_BARN_ROOF",
       "PEST_FARM_BARN_ROOF1",
       "PEST_FARM_BARN_ROOF2",
       "PEST_FARM_BARN_ROOF_EDGE",
       "FARM_BARN_ROOF_MID_EDGE",
+      "FARM_BARN_ROOF_MID_EDGE2",
       "PEST_FARM_BARN_ROOF_EDGE_MIRROR",
       "PEST_FARM_BARN_ROOF_EDGE_2",
-      "PEST_FARM_BARN_ROOF_EDGE_2_MIRROR"
+      "PEST_FARM_BARN_ROOF_EDGE_2_MIRROR",
+      "FARM_BARN_ROOF_MID2"
     ]
   },
   {
