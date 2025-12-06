@@ -9314,6 +9314,7 @@
   {
     "name": "WARM_REGION_ROCK_OVERLAYS",
     "area": "WARM_REGIONS",
+    "groundMaterial": "GRUNGE",
     "overlayIds": [
       376
     ]
