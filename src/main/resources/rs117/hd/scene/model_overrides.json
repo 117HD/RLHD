@@ -6995,7 +6995,8 @@
       "LOVAKENGJ_RUBBLE_03",
       "SULPHUR_DUGUPSOIL_3",
       "SULPHUR_DUGUPSOIL_4",
-      "SULPHUR_DUGUPSOIL_5"
+      "SULPHUR_DUGUPSOIL_5",
+      "STONEDISC_DARKBROWN"
     ],
     "uvType": "WORLD_XZ",
     "uvScale": 0.25
@@ -18706,7 +18707,9 @@
   },
   {
     "description": "Kharidian Fern Cactus",
-    "baseMaterial": "PLANT_GRUNGE_2",
+    "baseMaterial": "PLANT_GRUNGE_1",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "windDisplacementMode": "VERTEX",
     "objectIds": [
       "CACTUS4"
@@ -18734,8 +18737,10 @@
   },
   {
     "description": "Kharidian Sophmena Cactus",
-    "baseMaterial": "PLANT_GRUNGE_1",
+    "baseMaterial": "PLANT_GRUNGE_2",
     "windDisplacementMode": "VERTEX",
+    "uvType": "BOX",
+    "uvScale": 0.8,
     "objectIds": [
       "PLANT_CACTUS_01",
       "PLANT_CACTUS_02",
@@ -19755,7 +19760,7 @@
       {
         "description": "Leaves",
         "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
-        "baseMaterial": "LEAF_VEINS",
+        "baseMaterial": "LEAF_VEINS_PALM",
         "colors": "h > 10"
       }
     ],
@@ -69516,14 +69521,16 @@
     ]
   },
   {
-    "description": "The Great Conch - Grunge - Shells",
+    "description": "The Great Conch - Tropical Islands - Grunge - Shells",
     "baseMaterial": "GRUNGE_2_MATTE",
-    "uvType": "BOX",
+    "uvType": "MODEL_XZ",
     "uvScale": 0.5,
     "uvOrientation": -128,
     "objectIds": [
       "SHELL1BIG",
-      "SHELL1"
+      "SHELL1",
+      "VIKING_SHELL1",
+      "HORROR_SHELL1"
     ]
   },
   {
@@ -69885,6 +69892,15 @@
     ],
     "objectIds": [
       "GREAT_CONCH_SHRINE"
+    ]
+  },
+  {
+    "description": "Tropical Islands - Starfish",
+    "baseMaterial": "GRUNGE_2",
+    "uvType": "BOX",
+    "uvScale": 0.5,
+    "objectIds": [
+      "STARFISH"
     ]
   }
 ]
