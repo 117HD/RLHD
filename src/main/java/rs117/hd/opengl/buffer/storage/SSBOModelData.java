@@ -17,7 +17,7 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 		public final Property flags = addProperty(PropertyType.Int, "flags");
 		public final Property padding = addProperty(PropertyType.Int, "padding");
 
-		public void set(
+		public int set(
 			Renderable renderable,
 			Model model,
 			ModelOverride override,
@@ -32,11 +32,12 @@ public class SSBOModelData extends ShaderStructuredBuffer {
 			this.flags.set(
 				(isStaticModel ? 1 : 0) |
 				(isDetailModel ? 1 : 0) << 1);
+			return modelOffset;
 		}
 	}
 
 	private final List<ModelData> modelDataProperties = new ArrayList<>();
-	private final SliceAllocator<Slice> allocator = new SliceAllocator<>(Slice::new, 1, 100, false);
+	private final SliceAllocator<Slice> allocator = new SliceAllocator<>(Slice::new, 1, 100, true);
 
 	// Dynamic Model Data
 	private final List<Slice> frameModelDataSlices = new ArrayList<>();

@@ -64,7 +64,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			return true;
 		}
 
-		public final void set(int... values) {
+		public final synchronized void set(int... values) {
 			if (isUninitialized())
 				return;
 
@@ -87,7 +87,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(int x) {
+		public final synchronized void set(int x) {
 			if (isUninitialized())
 				return;
 
@@ -100,7 +100,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(int x, int y) {
+		public final synchronized void set(int x, int y) {
 			if (isUninitialized())
 				return;
 
@@ -113,7 +113,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(int x, int y, int z) {
+		public final synchronized void set(int x, int y, int z) {
 			if (isUninitialized())
 				return;
 
@@ -126,7 +126,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(int x, int y, int z, int w) {
+		public final synchronized void set(int x, int y, int z, int w) {
 			if (isUninitialized())
 				return;
 
@@ -139,7 +139,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(float... values) {
+		public final synchronized void set(float... values) {
 			if (isUninitialized())
 				return;
 
@@ -173,7 +173,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(float x) {
+		public final synchronized void set(float x) {
 			if (isUninitialized())
 				return;
 
@@ -199,7 +199,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(float x, float y, float z) {
+		public final synchronized void set(float x, float y, float z) {
 			if (isUninitialized())
 				return;
 
@@ -212,7 +212,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 			owner.markWaterLine(position, type.size);
 		}
 
-		public final void set(float x, float y, float z, float w) {
+		public final synchronized void set(float x, float y, float z, float w) {
 			if (isUninitialized())
 				return;
 
@@ -342,7 +342,7 @@ public class StructuredBuffer<GLBUFFER extends GLBuffer> {
 		return property;
 	}
 
-	private void markWaterLine(int position, int size) {
+	private synchronized void markWaterLine(int position, int size) {
 		dirtyLowTide = min(dirtyLowTide, position);
 		dirtyHighTide = max(dirtyHighTide, position + size);
 	}

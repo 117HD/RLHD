@@ -42,7 +42,7 @@ public class Zone {
 	// alphaBiasHsl int
 	// materialData int
 	// terrainData int
-	// packedZoneModelIdx int
+	// packedZoneModelIdx int(12 bits zone idx, 20 bits model idx)
 	public static final int VERT_SIZE = 36;
 
 	public static final int LEVEL_WATER_SURFACE = 4;

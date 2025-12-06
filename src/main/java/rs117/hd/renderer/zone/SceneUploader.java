@@ -1242,9 +1242,7 @@ public class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
-		final var modelData = modelDataSlice.add();
-		modelData.set(null, model, modelOverride, x, y, z, true, isDetailModel);
-
+		final int modelIdx = modelDataSlice.add().set(null, model, modelOverride, x, y, z, true, isDetailModel);
 		final int[][][] tileHeights = ctx.scene.getTileHeights();
 		final int triangleCount = model.getFaceCount();
 		final int vertexCount = model.getVerticesCount();
@@ -1548,19 +1546,19 @@ public class SceneUploader {
 			vb.putVertex(
 				vx1, vy1, vz1, packedAlphaBiasHsl | color1,
 				modelUvs[0], modelUvs[1], modelUvs[2], materialData,
-				faceNormals[0], faceNormals[1], faceNormals[2], 0, zone.zoneData.zoneIdx, modelData.modelOffset
+				faceNormals[0], faceNormals[1], faceNormals[2], 0, zone.zoneData.zoneIdx, modelIdx
 			);
 
 			vb.putVertex(
 				vx2, vy2, vz2, packedAlphaBiasHsl | color2,
 				modelUvs[4], modelUvs[5], modelUvs[6], materialData,
-				faceNormals[3], faceNormals[4], faceNormals[5], 0, zone.zoneData.zoneIdx, modelData.modelOffset
+				faceNormals[3], faceNormals[4], faceNormals[5], 0, zone.zoneData.zoneIdx, modelIdx
 			);
 
 			vb.putVertex(
 				vx3, vy3, vz3, packedAlphaBiasHsl | color3,
 				modelUvs[8], modelUvs[9], modelUvs[10], materialData,
-				faceNormals[6], faceNormals[7], faceNormals[8], 0, zone.zoneData.zoneIdx, modelData.modelOffset
+				faceNormals[6], faceNormals[7], faceNormals[8], 0, zone.zoneData.zoneIdx, modelIdx
 			);
 
 			len += 3;

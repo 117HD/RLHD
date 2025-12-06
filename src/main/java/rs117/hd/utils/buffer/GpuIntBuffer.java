@@ -135,7 +135,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12));
+		buffer.put(((zoneIdx + 1) & 0xFFF) | (((modelIdx + 1) & 0xFFFFF) << 12));
 	}
 
 	public void putVertex(
@@ -152,7 +152,7 @@ public class GpuIntBuffer
 		buffer.put(alphaBiasHsl);
 		buffer.put(materialData);
 		buffer.put(terrainData);
-		buffer.put(((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12));
+		buffer.put(((zoneIdx + 1) & 0xFFF) | (((modelIdx + 1) & 0xFFFFF) << 12));
 	}
 
 	public static void putFloatVertex(
@@ -170,7 +170,7 @@ public class GpuIntBuffer
 		buffer.put( (alphaBiasHsl));
 		buffer.put( (materialData));
 		buffer.put( (terrainData));
-		buffer.put( ((zoneIdx + 1) & 0xFFF) | ((modelIdx + 1) << 12));
+		buffer.put(((zoneIdx + 1) & 0xFFF) | (((modelIdx + 1) & 0xFFFFF) << 12));
 	}
 
 	public int position()
