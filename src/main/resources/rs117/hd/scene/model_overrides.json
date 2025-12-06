@@ -1598,6 +1598,27 @@
     }
   },
   {
+    "description": "Warm Region - Objects - Tree - Yew - No Terrain Vertex Snapping",
+    "areas": [ "WARM_REGIONS" ],
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
+      "YEWTREE_UPDATE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    }
+  },
+  {
     "description": "Objects - Tree - Yew",
     "baseMaterial": "BARK",
     "terrainVertexSnap": true,
@@ -1640,6 +1661,26 @@
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
       "YEWTREE_NOOP",
+      "YEWTREE_UPDATE2"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_TOP"
+      }
+    }
+  },
+  {
+    "description": "Objects - Tree - Yew - No Terrain Vertex Snapping",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
       "YEWTREE_UPDATE2"
     ],
     "uvType": "BOX",
