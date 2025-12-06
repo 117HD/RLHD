@@ -28,6 +28,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferInt;
+import java.io.InputStream;
 import java.nio.IntBuffer;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -44,6 +45,7 @@ import net.runelite.client.eventbus.Subscribe;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPluginConfig;
+import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.utils.Props;
@@ -188,6 +190,9 @@ public class TextureManager {
 	public BufferedImage loadTexture(String filename) {
 		for (String ext : SUPPORTED_IMAGE_EXTENSIONS) {
 			ResourcePath path = resourcePackManager.locateFile("materials", filename + "." + ext);
+			if (path == null)
+				continue;
+			
 			try {
 				return path.loadImage();
 			} catch (Exception ex) {

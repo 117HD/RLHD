@@ -30,6 +30,16 @@ public abstract class AbstractResourcePack implements IResourcePack {
 
 	protected abstract InputStream getInputStreamByName(String name) throws IOException;
 
+	/**
+	 * Check if a resource exists in this pack.
+	 * @param parts The path parts to the resource
+	 * @return true if the resource exists, false otherwise
+	 */
+	public boolean hasResource(String... parts) {
+		var path = this.path.resolve(parts);
+		return path.exists();
+	}
+
 	public Manifest getManifest() {
 		try {
 			if (manifest == null) {

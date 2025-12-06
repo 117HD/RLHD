@@ -111,7 +111,7 @@ public class ResourcePath {
 		this.path = null;
 	}
 
-	private ResourcePath(@Nullable ResourcePath root, String... parts) {
+	protected ResourcePath(@Nullable ResourcePath root, String... parts) {
 		this.root = root;
 		this.path = normalize(parts);
 	}
