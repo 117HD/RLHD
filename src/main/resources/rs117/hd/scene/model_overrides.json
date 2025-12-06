@@ -33447,7 +33447,7 @@
   {
     "description": "Isle of Souls Dungeon - Walls - Rock Walls",
     "baseMaterial": "STONE_NORMALED",
-    "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER", "SANCTUARY_CAVE_WALL_TOP" ],
+    "objectIds": [ "SANCTUARY_CAVE_WALL_OUTER", "SANCTUARY_CAVE_WALL_UPPER" ],
     "uvType": "BOX",
     "uvScale": 0.75,
     "uvOrientation": 768
@@ -68308,23 +68308,6 @@
     ]
   },
   {
-    "description": "The Crown Jewel - Crab Rock",
-    "baseMaterial": "SMOOTH_STONE",
-    "uvScale": 0.5,
-    "uvType": "BOX",
-    "objectIds": [
-      "CRAB_ROCK"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h > 10",
-        "baseMaterial": "LEAF_VEINS",
-        "uvType": "BOX",
-        "uvScale": 0.35
-      }
-    ]
-  },
-  {
     "description": "Laguna Aurorae - Mangrove Tree",
     "baseMaterial": "LIGHT_BARK",
     "uvScale": 0.65,
@@ -68549,21 +68532,6 @@
     "uvType": "BOX",
     "objectIds": [
       "SAILING_CHARTING_GENERIC_CRAB_STATUE"
-    ]
-  },
-  {
-    "description": "Sailing - Hunter - Sandy Crab Trap",
-    "baseMaterial": "GRAVEL",
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "objectIds": [
-      "CRAB_TRAP_UNBUILT"
-    ],
-    "colorOverrides": [
-      {
-        "colors": "h > 8",
-        "baseMaterial": "GRAY_90"
-      }
     ]
   },
   {
