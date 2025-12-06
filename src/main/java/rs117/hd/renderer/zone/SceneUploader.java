@@ -1434,7 +1434,7 @@ public class SceneUploader {
 					}
 				}
 
-				if (plugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
+				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
 					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
 						uuid,
 						modelOverride,

@@ -873,17 +873,6 @@ public interface HdPluginConfig extends Config
 		return false;
 	}
 
-	String KEY_HD_TZHAAR_RESKIN = "tzhaarHD";
-	@ConfigItem(
-		keyName = KEY_HD_TZHAAR_RESKIN,
-		name = "HD TzHaar Reskin",
-		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
-		section = miscellaneousSettings
-	)
-	default boolean hdTzHaarReskin() {
-		return true;
-	}
-
 
 	/*====== Legacy settings ======*/
 
@@ -1007,6 +996,17 @@ public interface HdPluginConfig extends Config
 		section = legacySettings
 	)
 	default boolean legacyTobEnvironment() {
+		return false;
+	}
+
+	String KEY_LEGACY_TZHAAR_RESKIN = "tzhaarHD";
+	@ConfigItem(
+		keyName = KEY_LEGACY_TZHAAR_RESKIN,
+		name = "Legacy TzHaar city reskin",
+		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
+		section = legacySettings
+	)
+	default boolean legacyTzHaarReskin() {
 		return false;
 	}
 

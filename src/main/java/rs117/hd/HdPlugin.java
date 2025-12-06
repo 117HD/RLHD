@@ -376,7 +376,7 @@ public class HdPlugin extends Plugin {
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
 	public boolean configModelTextures;
-	public boolean configTzhaarHD;
+	public boolean configLegacyTzHaarReskin;
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configHideFakeShadows;
@@ -1537,7 +1537,7 @@ public class HdPlugin extends Plugin {
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
-		configTzhaarHD = config.hdTzHaarReskin();
+		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
@@ -1728,7 +1728,7 @@ public class HdPlugin extends Plugin {
 								// fall-through
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
-							case KEY_HD_TZHAAR_RESKIN:
+							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
 							case KEY_VANILLA_SHADOW_MODE:
