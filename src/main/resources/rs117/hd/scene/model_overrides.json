@@ -64850,8 +64850,6 @@
       "SAILING_MOORING_EMBARK",
       "SAILING_MOORING_DISEMBARK",
       "TT_PEARL_MOORING_POINT_FIGHT"
-
-
     ],
     "uvType": "BOX",
     "uvOrientationY": 512,
@@ -67501,7 +67499,7 @@
     ],
     "colorOverrides": [
       {
-        "colors": "h == 12 ",
+        "colors": "h == 12",
         "baseMaterial": "PLANT_GRUNGE_2",
         "uvType": "BOX",
         "uvScale": 0.25
@@ -67623,7 +67621,6 @@
     ],
     "objectIds": [
       "CONCH_TORTUGAN_BANKBOOTH01"
-
     ]
   },
   {
@@ -67695,7 +67692,7 @@
         "uvOrientation": 179
       },
       {
-        "colors": "h == 47 ",
+        "colors": "h == 47",
         "baseMaterial": "GRUNGE_3_SHINY",
         "uvType": "BOX"
       }
