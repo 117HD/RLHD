@@ -692,13 +692,27 @@ public class SceneUploader {
 				assert ux < 25 : ux; // largest object?
 				assert uz < 25 : uz;
 			}
-			zone.addAlphaModel(
-				materialManager,
-				zone.glVaoA, model, modelOverride, alphaStart, alphaEnd,
-				x - basex, y, z - basez,
-				lx, lz, ux, uz,
-				rid, level, id
-			);
+			try {
+				zone.addAlphaModel(
+					plugin,
+					materialManager,
+					zone.glVaoA, model, modelOverride, alphaStart, alphaEnd,
+					x - basex, y, z - basez,
+					lx, lz, ux, uz,
+					rid, level, id
+				);
+			} catch (Throwable ex) {
+				log.warn(
+					"Error adding alpha model for static {} {} (ID {}), override=\"{}\", opaque={}, alpha={}",
+					ModelHash.getTypeName(ModelHash.getUuidType(uuid)),
+					gamevalManager.getObjectName(id),
+					id,
+					modelOverride.description,
+					opaqueBuffer,
+					alphaBuffer,
+					ex
+				);
+			}
 		}
 	}
 
@@ -1650,7 +1664,7 @@ public class SceneUploader {
 			}
 
 			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
-			if (plugin.configHideFakeShadows && HDUtils.isBakedGroundShading(model, face) && modelOverride.hideVanillaShadows)
+			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, face))
 				continue;
 
 			// HSL override is not applied to textured faces
