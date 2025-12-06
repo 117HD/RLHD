@@ -35,17 +35,22 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
 import net.runelite.client.callback.ClientThread;
+import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.eventbus.Subscribe;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
 import static org.lwjgl.opengl.GL33C.*;
+import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.ResourcePath.path;
 
@@ -72,6 +77,9 @@ public class TextureManager {
 	private HdPluginConfig config;
 
 	@Inject
+	private EventBus eventBus;
+
+	@Inject
 	private MaterialManager materialManager;
 
 	// Temporary variables for texture loading and generating material uniforms
@@ -84,7 +92,7 @@ public class TextureManager {
 	public void startUp() {
 		assert vanillaTexturesAvailable();
 		vanillaImage = new BufferedImage(128, 128, BufferedImage.TYPE_INT_ARGB);
-
+		eventBus.register(this);
 		TEXTURE_PATH.watch((path, first) -> {
 			if (first) return;
 			log.debug("Texture changed: {}", path);
@@ -102,10 +110,12 @@ public class TextureManager {
 		});
 	}
 
+
 	public void shutDown() {
 		pixelBuffer = null;
 		scaledImage = null;
 		vanillaImage = null;
+		eventBus.unregister(this);
 	}
 
 	public boolean vanillaTexturesAvailable() {
@@ -241,4 +251,15 @@ public class TextureManager {
 			glTexParameterf(GL_TEXTURE_2D_ARRAY, EXTTextureFilterAnisotropic.GL_TEXTURE_MAX_ANISOTROPY_EXT, clamp(level, 1, maxSamples));
 		}
 	}
+
+	@Subscribe
+	public void onResourcePackUpdate(ResourcePackUpdate event) {
+		for (var layer : materialManager.textureLayers) {
+			layer.needsUpload = true;
+		}
+
+		if (debounce == null || debounce.cancel(false) || debounce.isDone())
+			debounce = executor.schedule(() -> clientThread.invoke(materialManager::uploadTextures), 100, TimeUnit.MILLISECONDS);
+	}
+
 }

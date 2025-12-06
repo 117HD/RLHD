@@ -49,6 +49,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
@@ -63,7 +64,9 @@ import okhttp3.Response;
 import rs117.hd.gui.HdSidebar;
 import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.resourcepacks.data.Manifest;
+import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 
 import static rs117.hd.resourcepacks.ResourcePackManager.RAW_GITHUB_URL;
 
@@ -98,6 +101,9 @@ public class ResourcePackPanel extends JPanel {
 
 	@Inject
 	private ResourcePackManager resourcePackManager;
+
+	@Inject
+	private EventBus eventBus;
 
 	private enum PanelState {SELECTION, DOWNLOAD}
 
@@ -204,15 +210,35 @@ public class ResourcePackPanel extends JPanel {
 	}
 
 	public void movePack(int fromIndex, int toIndex) {
-		Collections.swap(resourcePackManager.getInstalledPacks(), fromIndex, toIndex);
+		var packs = resourcePackManager.getInstalledPacks();
+		var pack = packs.get(fromIndex);
+		
+		// Prevent moving the default pack (it must always be at the bottom)
+		if (pack instanceof DefaultResourcePack) {
+			return;
+		}
+		
+		// The default pack is always at the last index, so prevent moving past it
+		int lastIndex = packs.size() - 1;
+		if (toIndex >= lastIndex) {
+			toIndex = lastIndex - 1;
+		}
+		
+		Collections.swap(packs, fromIndex, toIndex);
+		
 		refreshPanel();
+		// Notify that resource packs have been updated
+		eventBus.post(new ResourcePackUpdate());
 	}
 
 	public JPanel createInstalledPackComponent(AbstractResourcePack pack, int index) {
 		JPanel panel = new JPanel();
 
+		boolean isDefaultPack = pack instanceof DefaultResourcePack;
 		boolean isTop = index == 0;
-		boolean isBottom = index == (resourcePackManager.getInstalledPacks().size() - 1);
+		int lastIndex = resourcePackManager.getInstalledPacks().size() - 1;
+		// Disable down arrow if it's the last pack before the default pack (default is always at lastIndex)
+		boolean isLastBeforeDefault = index == lastIndex - 1;
 
 		panel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		panel.setOpaque(true);
@@ -227,7 +253,7 @@ public class ResourcePackPanel extends JPanel {
 		SwingUtil.removeButtonDecorations(moveDown);
 		moveDown.setBounds(190, 5, 22, 22);
 		panel.add(moveDown);
-		moveDown.setEnabled(!isBottom);
+		moveDown.setEnabled(!isLastBeforeDefault && !isDefaultPack);
 		moveDown.addActionListener(ev -> movePack(index, index + 1));
 
 		JButton moveUp = new JButton();
@@ -236,7 +262,7 @@ public class ResourcePackPanel extends JPanel {
 		SwingUtil.removeButtonDecorations(moveUp);
 		panel.add(moveUp);
 		moveUp.setBounds(165, 5, 22, 22);
-		moveUp.setEnabled(!isTop);
+		moveUp.setEnabled(!isTop && !isDefaultPack);
 		moveUp.addActionListener(ev -> movePack(index, index - 1));
 
 		if (pack.isDevelopmentPack()) {

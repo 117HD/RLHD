@@ -21,6 +21,7 @@ import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
+import net.runelite.client.eventbus.EventBus;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -62,6 +63,9 @@ public class ResourcePackManager {
 	@Inject
 	private HdPlugin plugin;
 
+	@Inject
+	private EventBus eventBus;
+
 	@Getter
 	private ArrayList<AbstractResourcePack> installedPacks = new ArrayList<>();
 
@@ -87,6 +91,7 @@ public class ResourcePackManager {
 			}
 		}
 
+		// Add default pack at the end (it must always be at the bottom)
 		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
 	}
 
@@ -180,6 +185,7 @@ public class ResourcePackManager {
 	public void removeResourcePack(String internalName) {
 		installedPacks.removeIf(p -> p.getManifest().getInternalName().equals(internalName));
 		plugin.getSidebar().refresh();
+		eventBus.post(new ResourcePackUpdate());
 	}
 
 	public void downloadResourcePack(Manifest manifest) {
@@ -232,10 +238,14 @@ public class ResourcePackManager {
 						String internalName = pack.getManifest().getInternalName();
 
 						var localPack = getInstalledPack(internalName);
-						if (localPack == null)
-							installedPacks.add(pack);
+						if (localPack == null) {
+							// Add before the default pack (which is always at the last index)
+							int lastIndex = installedPacks.size() - 1;
+							installedPacks.add(lastIndex, pack);
+						}
 
 						plugin.getSidebar().refresh();
+						eventBus.post(new ResourcePackUpdate());
 					});
 				}
 			}
