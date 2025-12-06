@@ -2909,6 +2909,22 @@
     "specularGloss": 100
   },
   {
+    "name": "SEASONLESS_LEAVES_SIDE",
+    "parent": "LEAVES_SIDE"
+  },
+  {
+    "name": "SEASONLESS_LEAVES_TOP",
+    "parent": "LEAVES_TOP"
+  },
+  {
+    "name": "SEASONLESS_WILLOW_LEAVES",
+    "parent": "WILLOW_LEAVES"
+  },
+  {
+    "name": "SEASONLESS_MAPLE_LEAVES",
+    "parent": "MAPLE_LEAVES"
+  },
+  {
     "name": "LEAVES_YELLOW_SIDE",
     "parent": "LEAVES_SIDE"
   },
