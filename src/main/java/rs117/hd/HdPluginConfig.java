@@ -72,6 +72,7 @@ public interface HdPluginConfig extends Config
 	@Range(
 		max = MAX_DISTANCE
 	)
+	@Units(" tiles")
 	@ConfigItem(
 		keyName = "drawDistance",
 		name = "Draw Distance",
@@ -88,6 +89,7 @@ public interface HdPluginConfig extends Config
 	@Range(
 		max = MAX_DISTANCE
 	)
+	@Units(" tiles")
 	@ConfigItem(
 		keyName = "detailDistance",
 		name = "Detail Distance",
@@ -105,6 +107,7 @@ public interface HdPluginConfig extends Config
 	@Range(
 		max = 5
 	)
+	@Units(" chunks")
 	@ConfigItem(
 		keyName = KEY_EXPANDED_MAP_LOADING_CHUNKS,
 		name = "Extended map loading",
@@ -192,6 +195,7 @@ public interface HdPluginConfig extends Config
 		min = 0,
 		max = 16
 	)
+	@Units("x")
 	@ConfigItem(
 		keyName = KEY_ANISOTROPIC_FILTERING_LEVEL,
 		name = "Anisotropic Filtering",
@@ -506,6 +510,7 @@ public interface HdPluginConfig extends Config
 		position = 9,
 		section = lightingSettings
 	)
+	@Units(" tiles")
 	default ShadowDistance shadowDistance()
 	{
 		return ShadowDistance.DISTANCE_50;
@@ -618,6 +623,7 @@ public interface HdPluginConfig extends Config
 	@Range(
 		max = MAX_FOG_DEPTH
 	)
+	@Units(" tiles")
 	@ConfigItem(
 		keyName = "fogDepth",
 		name = "Static Fog Depth",
@@ -966,9 +972,10 @@ public interface HdPluginConfig extends Config
 		min = 64,
 		max = 16384
 	)
+	@Units(" MiB")
 	@ConfigItem(
 		keyName = KEY_MODEL_CACHE_SIZE,
-		name = "Legacy cache size (MiB)",
+		name = "Legacy cache size",
 		description =
 			"Size of the model cache in mebibytes (slightly more than megabytes).<br>" +
 			"Generally, 512 MiB is plenty, with diminishing returns the higher you go.<br>" +
