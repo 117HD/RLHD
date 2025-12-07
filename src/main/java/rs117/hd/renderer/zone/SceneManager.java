@@ -538,12 +538,15 @@ public class SceneManager {
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
-				sorted.zone.uploadJob = ZoneUploadJob
-					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z);
-				if (staggerLoad) {
+				if(staggerLoad) {
+					sorted.zone.uploadJob = ZoneUploadJob
+						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z);
 					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				} else {
-					sorted.zone.uploadJob.queue(ctx.streamingGroup, generateSceneDataTask);
+					nextZones[sorted.x][sorted.z] = newZone;
+					ZoneUploadJob
+						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
+						.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 				}
 				sorted.free();
 			}
@@ -611,8 +614,6 @@ public class SceneManager {
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
-		if (!isZoneStreamingEnabled() || nextSceneContext.isInHouse)
-			root.streamingGroup.complete();
 
 		int totalOpaque = 0;
 		int totalAlpha = 0;

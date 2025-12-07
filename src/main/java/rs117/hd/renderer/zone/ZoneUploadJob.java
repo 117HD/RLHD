@@ -34,32 +34,26 @@ public final class ZoneUploadJob extends Job {
 
 	@Override
 	protected void onRun() throws InterruptedException {
-		try {
-			final ZoneUploader sceneUploader = THREAD_LOCAL_SCENE_UPLOADER.get();
+		final ZoneUploader sceneUploader = THREAD_LOCAL_SCENE_UPLOADER.get();
+		workerHandleCancel();
+
+		sceneUploader.job = this;
+		sceneUploader.setScene(sceneContext.scene);
+		sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
+
+		if (zone.sizeO > 0 || zone.sizeA > 0) {
 			workerHandleCancel();
 
-			sceneUploader.job = this;
-			sceneUploader.setScene(sceneContext.scene);
-			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
+			invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
+			workerHandleCancel();
 
-			if (zone.sizeO > 0 || zone.sizeA > 0) {
-				workerHandleCancel();
+			sceneUploader.uploadZone(sceneContext, zone, x, z);
+			workerHandleCancel();
 
-				invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
-				workerHandleCancel();
-
-				sceneUploader.uploadZone(sceneContext, zone, x, z);
-				workerHandleCancel();
-
-				invokeClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
-			} else {
-				// The zone should not be left uninitialized, as this will prevent drawing anything within it
-				zone.initialized = true;
-			}
-		} finally {
-			// Avoid holding a reference to the context after the job is done
-			viewContext = null;
-			sceneContext = null;
+			invokeClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
+		} else {
+			// The zone should not be left uninitialized, as this will prevent drawing anything within it
+			zone.initialized = true;
 		}
 	}
 
@@ -147,5 +141,11 @@ public final class ZoneUploadJob extends Job {
 			viewContext != null ? viewContext.worldViewId : "null",
 			x, z
 		);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		log.debug("ZoneUploadJob finalized, it should of been pooled? - {}", this);
 	}
 }
