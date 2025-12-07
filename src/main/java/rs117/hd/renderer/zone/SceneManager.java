@@ -504,6 +504,8 @@ public class SceneManager {
 							float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
 							sortedZones.add(SortedZone.getZone(old, x, z, dist));
 							nextSceneContext.totalDeferred++;
+						} else {
+							old.cull = false;
 						}
 
 						nextZones[x][z] = old;
