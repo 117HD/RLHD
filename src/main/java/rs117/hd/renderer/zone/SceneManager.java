@@ -506,14 +506,15 @@ public class SceneManager {
 							nextSceneContext.totalDeferred++;
 						} else {
 							old.cull = false;
+							nextSceneContext.totalReused++;
 						}
 
 						nextZones[x][z] = old;
-						nextSceneContext.totalReused++;
 					}
 				}
 			}
 
+			boolean staggerLoad = isZoneStreamingEnabled() && !nextSceneContext.isInHouse && root.sceneContext != null && nextSceneContext.totalReused > 0;
 			for (int x = 0; x < NUM_ZONES; ++x) {
 				for (int z = 0; z < NUM_ZONES; ++z) {
 					Zone zone = nextZones[x][z];
@@ -522,7 +523,7 @@ public class SceneManager {
 
 					if (!zone.initialized) {
 						float dist = distance(vec(x, z), vec(NUM_ZONES / 2, NUM_ZONES / 2));
-						if (root.sceneContext == null || dist < ZONE_DEFER_DIST_START) {
+						if (!staggerLoad || dist < ZONE_DEFER_DIST_START) {
 							ZoneUploadJob
 								.build(ctx, nextSceneContext, zone, x, z)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
@@ -535,7 +536,6 @@ public class SceneManager {
 				}
 			}
 
-			boolean staggerLoad = isZoneStreamingEnabled() && !nextSceneContext.isInHouse;
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
