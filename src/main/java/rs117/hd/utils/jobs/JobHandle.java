@@ -172,7 +172,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			}
 		}
 
-		if(worker.localWorkQueue.size() > 2)
+		if(worker != null && worker.localWorkQueue.size() > 2)
 			JOB_SYSTEM.signalWorkAvailable();
 	}
 
