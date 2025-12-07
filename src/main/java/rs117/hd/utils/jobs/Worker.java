@@ -2,12 +2,12 @@ package rs117.hd.utils.jobs;
 
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import static rs117.hd.utils.HDUtils.getThreadStackTrace;
+import static rs117.hd.utils.MathUtils.*;
 import static rs117.hd.utils.jobs.JobSystem.VALIDATE;
 
 @Slf4j
@@ -23,10 +23,25 @@ public final class Worker {
 	final BlockingDeque<JobHandle> localWorkQueue = new LinkedBlockingDeque<>();
 	final AtomicBoolean inflight = new AtomicBoolean();
 
+	boolean findNextStealTarget() {
+		// Find the best target to steal work from
+		int nextVictimIdx = (workerIdx + 1) % jobSystem.workers.length;
+		int nextVictimWorkCount = jobSystem.workers[nextVictimIdx].localWorkQueue.size();
+		for(int i = 0; i < jobSystem.workers.length; i++) {
+			if(i == workerIdx || nextVictimIdx == i) continue;
+			int workCount = jobSystem.workers[i].localWorkQueue.size();
+			if(workCount > nextVictimWorkCount) {
+				nextVictimIdx = i;
+				nextVictimWorkCount = workCount;
+			}
+		}
+		stealTargetIdx = nextVictimIdx;
+		return nextVictimWorkCount > 0;
+	}
+
 	void run() {
 		name = thread.getName();
 		pausedName = name + " [Paused]";
-		ThreadLocalRandom random = ThreadLocalRandom.current();
 		while (jobSystem.active) {
 			// Check local work queue
 			handle = localWorkQueue.poll();
@@ -34,7 +49,7 @@ public final class Worker {
 			while (handle == null) {
 				if (stealTargetIdx >= 0) {
 					final Worker victim = jobSystem.workers[stealTargetIdx];
-					int stealCount = victim.localWorkQueue.size() / 2;
+					int stealCount = max(1, victim.localWorkQueue.size() / jobSystem.workers.length);
 
 					JobHandle stolenHandle;
 					while (stealCount-- > 0 && (stolenHandle = victim.localWorkQueue.poll()) != null) {
@@ -50,31 +65,26 @@ public final class Worker {
 				}
 
 				if (handle == null) {
-					// Still no work, wait longer on the main work Queue
+					// Check if any work is in the main queue before attempting to steal again
 					handle = jobSystem.workQueue.poll();
 				}
 
-				if(handle == null) {
-					// Find the best target to steal work from
-					int nextVictimIdx = (workerIdx + 1) % jobSystem.workers.length;
-					int nextVictimWorkCount = jobSystem.workers[nextVictimIdx].localWorkQueue.size();
-					for(int i = 0; i < jobSystem.workers.length; i++) {
-						if(i == workerIdx) continue;
-						int workCount = jobSystem.workers[i].localWorkQueue.size();
-						if(workCount > nextVictimWorkCount) {
-							nextVictimIdx = i;
-							nextVictimWorkCount = workCount;
-						}
+				if(handle == null && !findNextStealTarget()) {
+					// Wait for a signal that there is work to be had
+					try {
+						jobSystem.workerSemaphore.acquire();
+					} catch (InterruptedException ignored) {
+						// Interrupts are used to signal that the worker should shutdown, we'll pick this up and shutdown
 					}
-					stealTargetIdx = nextVictimIdx;
 
-					if(nextVictimWorkCount == 0) {
-						// Wait for a signal that there is work to be had
-						try {
-							jobSystem.workerSemaphore.acquire();
-						} catch (InterruptedException ignored) {
-							// Interrupts are used to signal that the worker should shutdown, we'll pick this up and shutdown
-						}
+					if (handle == null) {
+						// We've been signaled that there is work to be had, try the main queue again
+						handle = jobSystem.workQueue.poll();
+					}
+
+					if(handle == null) {
+						// No work in the main queue, this must mean it was pushed to a local queue and as such should find it
+						findNextStealTarget();
 					}
 				}
 
