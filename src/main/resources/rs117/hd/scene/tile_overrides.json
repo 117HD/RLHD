@@ -115,9 +115,9 @@
   },
   {
     "name": "WINTER_SAND",
-    "groundMaterial": "SNOW_2",
-    "maxHue": 0,
-    "maxSaturation": 0,
+    "groundMaterial": "SAND",
+    "maxHue": 6,
+    "maxSaturation": 1,
     "shiftLightness": 40,
     "maxLightness": 70
   },
@@ -9690,7 +9690,7 @@
     ],
     "replacements": {
       "SEASONAL_GRUNGE": "s == 0 || h <= 10 && s < 2",
-      "DEFAULT_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
+      "SEASONAL_SAND": "h == 8 && s == 4 && l >= 71 || h == 8 && s == 3 && l >= 48",
       "SEASONAL_GRASS": [
         "h >= 11 && s == 1",
         "h == 9 && s == 2",
