@@ -90,13 +90,14 @@ public final class Worker {
 				handle.item.ranToCompletion.set(true);
 			}
 		} catch (InterruptedException e) {
-			log.debug("Interrupt Received whilst processing: {}", handle.hashCode());
 		} catch (Throwable ex) {
 			log.warn("Encountered an error whilst processing: {}", handle.hashCode(), ex);
 			handle.item.encounteredError.set(true);
-			handle.item.onCancel();
 			handle.cancel(false);
 		} finally {
+			log.debug("Interrupt Received whilst processing: {}", handle.hashCode());
+			if(handle.item.wasCancelled.get())
+				handle.item.onCancel();
 			handle.setCompleted();
 			handle.worker = null;
 			handle = null;
@@ -106,8 +107,6 @@ public final class Worker {
 	void workerHandleCancel() throws InterruptedException {
 		if (handle.isCancelled()) {
 			if (VALIDATE) log.debug("Handle {} has been cancelled, interrupting to exit execution", handle);
-			if (handle.item != null)
-				handle.item.onCancel();
 			throw new InterruptedException();
 		}
 	}
