@@ -68868,7 +68868,7 @@
     ],
     "colorOverrides": [
       {
-        "description": "Bias ladder slightly less so it doesnt overlap the rocky trim",
+        "description": "Bias ladder slightly less so it doesn't overlap the rocky trim",
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvOrientationZ": 512,
