@@ -126,10 +126,6 @@ public class ResourcePackManager {
 	}
 
 	private void migrateLegacyConfigsInternal() {
-		if (config.legacyTzHaarReskin()) {
-			downloadLegacyPackIfNeeded("tzhaar_reskin", "TzHaar Reskin",KEY_LEGACY_TZHAAR_RESKIN);
-		}
-
 		if (config.legacyTobEnvironment()) {
 			downloadLegacyPackIfNeeded("legacy_theatre_of_blood", "Theatre of Blood",KEY_LEGACY_TOB_ENVIRONMENT);
 		}
