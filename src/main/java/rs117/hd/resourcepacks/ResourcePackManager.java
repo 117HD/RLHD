@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.client.RuneLite;
+import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,6 +32,7 @@ import rs117.hd.utils.FileDownloader;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
+import static rs117.hd.HdPluginConfig.*;
 import static rs117.hd.utils.ResourcePath.path;
 
 @Singleton
@@ -60,6 +62,9 @@ public class ResourcePackManager {
 
 	@Inject
 	private HdPluginConfig config;
+
+	@Inject
+	private ConfigManager configManager;
 
 	@Getter
 	private ArrayList<AbstractResourcePack> installedPacks = new ArrayList<>();
@@ -92,6 +97,29 @@ public class ResourcePackManager {
 					installedPacks.add(lastIndex, pack);
 				}
 			}
+		}
+	}
+
+	private void migrateLegacyConfigsInternal() {
+		if (config.legacyTzHaarReskin()) {
+			downloadLegacyPackIfNeeded("tzhaar_reskin", "TzHaar Reskin",KEY_LEGACY_TZHAAR_RESKIN);
+		}
+
+		if (config.legacyTobEnvironment()) {
+			downloadLegacyPackIfNeeded("legacy_theatre_of_blood", "Theatre of Blood",KEY_LEGACY_TOB_ENVIRONMENT);
+		}
+	}
+
+	private void downloadLegacyPackIfNeeded(String internalName, String displayName, String keyName) {
+		Manifest manifest = downloadablePacks.get(internalName);
+		if (manifest != null) {
+			if (getInstalledPack(internalName) == null) {
+				log.info("Auto-downloading legacy pack '{}' due to legacy config being enabled", internalName);
+				downloadResourcePack(manifest);
+				configManager.setConfiguration("hd",keyName,false);
+			}
+		} else {
+			log.warn("Could not find legacy pack '{}' ({}) in downloadable packs", internalName, displayName);
 		}
 	}
 
@@ -167,6 +195,8 @@ public class ResourcePackManager {
 						}
 
 						setStatus(null, null);
+
+						migrateLegacyConfigsInternal();
 					});
 				}
 			});
