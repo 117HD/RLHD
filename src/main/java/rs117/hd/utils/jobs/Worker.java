@@ -58,10 +58,14 @@ public final class Worker {
 
 					// Still no work, wait longer on the main work Queue
 					handle = jobSystem.workQueue.poll();
+				}
 
-					if (handle == null) {
-						inflight.lazySet(false);
-						Thread.onSpinWait();
+				if(handle == null) {
+					// Wait for a signal that there is work to be had
+					try {
+						jobSystem.workerSemaphore.acquire();
+					} catch (InterruptedException ignored) {
+						// Interrupts are used to signal that the worker should shutdown, we'll pick this up and shutdown
 					}
 				}
 

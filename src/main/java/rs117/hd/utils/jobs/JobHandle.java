@@ -171,6 +171,9 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 				}
 			}
 		}
+
+		if(worker.localWorkQueue.size() > 2)
+			JOB_SYSTEM.signalWorkAvailable();
 	}
 
 	private void setJobState(int newState) {

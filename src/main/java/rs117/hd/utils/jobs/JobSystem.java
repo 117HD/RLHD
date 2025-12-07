@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -47,6 +48,7 @@ public final class JobSystem {
 
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
 	Worker[] workers;
+	Semaphore workerSemaphore = new Semaphore(workerCount);
 
 	private boolean clientInvokeScheduled;
 
@@ -76,6 +78,11 @@ public final class JobSystem {
 				inflightCount++;
 		}
 		return inflightCount;
+	}
+
+	void signalWorkAvailable() {
+		workerSemaphore.drainPermits();
+		workerSemaphore.release(workerCount);
 	}
 
 	public int getWorkQueueSize() {
@@ -186,6 +193,8 @@ public final class JobSystem {
 				workQueue.addLast(newHandle);
 			}
 		}
+
+		signalWorkAvailable();
 	}
 
 	void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
