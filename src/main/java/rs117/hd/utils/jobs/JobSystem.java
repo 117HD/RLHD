@@ -2,6 +2,7 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.HashMap;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import javax.inject.Inject;
@@ -42,7 +43,7 @@ public final class JobSystem {
 	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
 
 	final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
-	private final BlockingDeque<ClientCallbackJob> clientCallbacks = new LinkedBlockingDeque<>(workerCount);
+	private final ArrayBlockingQueue<ClientCallbackJob> clientCallbacks = new ArrayBlockingQueue<>(workerCount);
 
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
 	Worker[] workers;
