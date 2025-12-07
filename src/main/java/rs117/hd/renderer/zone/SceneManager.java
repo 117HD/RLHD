@@ -498,7 +498,6 @@ public class SceneManager {
 						if (!old.initialized || (old.sizeO == 0 && old.sizeA == 0))
 							continue;
 
-						old.cull = false;
 						old.needsRoofUpdate = true;
 
 						if (old.hasWater || old.dirty || isEdgeTile(ctx.zones, ox, oz)) {
@@ -539,6 +538,7 @@ public class SceneManager {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
 				if(staggerLoad) {
+					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z);
 					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
