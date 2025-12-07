@@ -14,6 +14,7 @@ import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
+import rs117.hd.HdPlugin;
 import rs117.hd.opengl.buffer.storage.SSBOModelData;
 import rs117.hd.opengl.buffer.uniforms.UBOZoneData;
 import rs117.hd.scene.MaterialManager;
@@ -205,11 +206,6 @@ public class Zone {
 		if (vboA != null) {
 			VBO_PENDING_DELETION.add(vboA);
 			vboA = null;
-		}
-
-		if (vboM != null) {
-			VBO_PENDING_DELETION.add(vboM);
-			vboM = null;
 		}
 
 		if (glVao != 0) {

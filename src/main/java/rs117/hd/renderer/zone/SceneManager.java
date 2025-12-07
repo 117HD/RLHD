@@ -539,7 +539,7 @@ public class SceneManager {
 						if (!staggerLoad || dist < ZONE_DEFER_DIST_START) {
 							zone.revealTime = -1.0f;
 							ZoneUploadJob
-								.build(ctx, nextSceneContext, zone, x, z)
+								.build(uboZoneData, ssboModelData, ctx, nextSceneContext, zone, x, z)
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
 						} else {
@@ -558,12 +558,12 @@ public class SceneManager {
 					newZone.revealTime = sorted.zone.revealTime;
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z);
+						.build(uboZoneData, ssboModelData, ctx, nextSceneContext, newZone, sorted.x, sorted.z);
 					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				} else {
 					nextZones[sorted.x][sorted.z] = newZone;
 					ZoneUploadJob
-						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
+						.build(uboZoneData, ssboModelData, ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 						.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 				}
 				sorted.free();
@@ -719,8 +719,7 @@ public class SceneManager {
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				ZoneUploadJob
-				ZoneUploadJob.build(ctx, sceneContext, ctx.zones[x][z], x, z)
+				ZoneUploadJob.build(uboZoneData, ssboModelData, ctx, sceneContext, ctx.zones[x][z], x, z)
 					.queue(ctx.sceneLoadGroup);
 
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
