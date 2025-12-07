@@ -526,23 +526,15 @@ public class EnvironmentManager {
 		List<Environment> environments = new ArrayList<>();
 
 		try {
-			// Try loading as array first
 			Environment[] envArray = jsonPath.loadJson(plugin.getGson(), Environment[].class);
 			if (envArray != null) {
 				environments.addAll(Arrays.asList(envArray));
-				return environments;
+				log.debug("Loaded {} environments from {}", envArray.length, jsonPath);
+			} else {
+				log.warn("Environment array from {} is null", jsonPath);
 			}
 		} catch (Exception ex) {
-
-		}
-
-		try {
-			Environment env = jsonPath.loadJson(plugin.getGson(), Environment.class);
-			if (env != null) {
-				environments.add(env);
-			}
-		} catch (Exception ex) {
-			log.warn("Failed to load environment from {}: {}", jsonPath, ex.getMessage());
+			log.warn("Failed to load environment array from {}: {}", jsonPath, ex.getMessage(), ex);
 		}
 
 		return environments;
@@ -562,22 +554,17 @@ public class EnvironmentManager {
 			return;
 		}
 
-		// Find existing environment with the same area name
 		for (int i = 0; i < environments.size(); i++) {
 			Environment existing = environments.get(i);
 			if (existing.area != null && existing.area.name != null && 
 				existing.area.name.equals(newEnv.area.name)) {
 				environments.set(i, newEnv);
-				log.debug("Replaced environment for area '{}' from {} in pack {}", 
-					newEnv.area.name, sourcePath, packName);
 				return;
 			}
 		}
 
-		// No matching area found, add as new environment
 		environments.add(newEnv);
-		log.debug("Added new environment for area '{}' from {} in pack {}", 
-			newEnv.area.name, sourcePath, packName);
+
 	}
 
 	@Subscribe

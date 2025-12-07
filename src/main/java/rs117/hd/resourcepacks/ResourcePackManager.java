@@ -2,10 +2,15 @@ package rs117.hd.resourcepacks;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import javax.swing.SwingUtilities;
@@ -40,6 +45,7 @@ import static rs117.hd.utils.ResourcePath.path;
 public class ResourcePackManager {
 
 	public static ResourcePath RESOURCE_PACK_DIR = Props.getFolder("117hd-resource-packs", () -> path(new File(RuneLite.RUNELITE_DIR,"117hd-resource-packs").getPath()));
+	public static ResourcePath RESOURCE_PACK_PROPS = Props.getFile("117hd-resource-pack-commits", () -> path(new File(RuneLite.RUNELITE_DIR,"117hd-resource-packs").getPath(), "commits.properties"));
 
 	public static final HttpUrl GITHUB = HttpUrl.get("https://github.com/117HD/resource-packs");
 	public static final HttpUrl RESOURCE_PACKS_MANIFEST_URL = HttpUrl.get(
@@ -84,20 +90,37 @@ public class ResourcePackManager {
 			return;
 		}
 		SwingUtilities.invokeLater(() -> plugin.sidebar = plugin.getInjector().getInstance(HdSidebar.class));
-		checkForUpdates();
+		
+		Properties commitHashes = loadCommitHashes();
 
 		if (RESOURCE_PACK_DIR.exists()) {
-			for (File path : RESOURCE_PACK_DIR.toFile().listFiles(RESOURCE_PACK_FILTER)) {
-				AbstractResourcePack pack = createResourcePack(path);
-				pack.setNeedsUpdating(false);
+			if (RESOURCE_PACK_DIR.exists()) {
+				File[] files = RESOURCE_PACK_DIR.toFile().listFiles(RESOURCE_PACK_FILTER);
+				if (files != null) {
+					for (File file : files) {
+						boolean isZip = file.isFile() && file.getName().endsWith(".zip");
+						boolean hasPackProperties = file.isDirectory() && new File(file, "pack.properties").exists();
 
-				if (pack.isValid()) {
-					// Add before the default pack (which is always at the last index)
-					int lastIndex = installedPacks.size() - 1;
-					installedPacks.add(lastIndex, pack);
+						if (!isZip && !hasPackProperties) {
+							continue;
+						}
+
+						if (isOrphanedZipPack(file, commitHashes)) {
+							deleteOrphanedZipPack(file);
+							continue;
+						}
+
+						AbstractResourcePack pack = createResourcePack(file);
+
+						if (pack.isValid()) {
+							installedPacks.add(pack);
+						}
+					}
 				}
 			}
 		}
+		
+		checkForUpdates();
 	}
 
 	private void migrateLegacyConfigsInternal() {
@@ -186,13 +209,9 @@ public class ResourcePackManager {
 
 						for (var manifest : manifests) {
 							downloadablePacks.put(manifest.getInternalName(), manifest);
-
-							var installed = getInstalledPack(manifest.getInternalName());
-							if (installed == null || installed.getManifest().getCommit().equals(manifest.getCommit()))
-								continue;
-
-							installed.setNeedsUpdating(true);
 						}
+
+						checkAndUpdateOutdatedPacks();
 
 						setStatus(null, null);
 
@@ -253,15 +272,13 @@ public class ResourcePackManager {
 		// Delete the zip file from disk
 		if (fileToDelete != null && fileToDelete.exists() && fileToDelete.isFile()) {
 			try {
-				if (fileToDelete.delete()) {
-					log.info("Deleted resource pack file: {}", fileToDelete.getAbsolutePath());
-				} else {
-					log.warn("Failed to delete resource pack file: {}", fileToDelete.getAbsolutePath());
-				}
+				fileToDelete.delete();
 			} catch (Exception e) {
 				log.error("Error deleting resource pack file for '{}':", internalName, e);
 			}
 		}
+		
+		removeCommitHash(internalName);
 		
 		plugin.getSidebar().refresh();
 		eventBus.post(new ResourcePackUpdate());
@@ -326,7 +343,19 @@ public class ResourcePackManager {
 							// Add before the default pack (which is always at the last index)
 							int lastIndex = installedPacks.size() - 1;
 							installedPacks.add(lastIndex, pack);
+						} else {
+							// Replace existing pack if updating
+							int index = installedPacks.indexOf(localPack);
+							if (index >= 0) {
+								// Close old pack if it's a zip
+								if (localPack instanceof ZipResourcePack) {
+									((ZipResourcePack) localPack).close();
+								}
+								installedPacks.set(index, pack);
+							}
 						}
+
+						saveCommitHash(internalName, manifest.getCommit());
 
 						plugin.getSidebar().refresh();
 						eventBus.post(new ResourcePackUpdate());
@@ -359,6 +388,133 @@ public class ResourcePackManager {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Checks if a file is an orphaned zip pack (not tracked in commit hashes).
+	 */
+	private boolean isOrphanedZipPack(File file, Properties commitHashes) {
+		if (!file.isFile() || !file.getName().toLowerCase().endsWith(".zip")) {
+			return false;
+		}
+		
+		String internalName = file.getName().substring(0, file.getName().length() - 4);
+		return !commitHashes.containsKey(internalName);
+	}
+
+	/**
+	 * Deletes an orphaned zip pack file.
+	 */
+	private void deleteOrphanedZipPack(File file) {
+		String internalName = file.getName().substring(0, file.getName().length() - 4);
+		log.info("Deleting orphaned zip pack '{}' (not found in commit hashes)", internalName);
+		
+		if (file.delete()) {
+			log.debug("Deleted orphaned zip pack: {}", file.getAbsolutePath());
+		} else {
+			log.warn("Failed to delete orphaned zip pack: {}", file.getAbsolutePath());
+		}
+	}
+
+	/**
+	 * Checks for outdated packs by comparing stored commit hashes with manifest,
+	 * and automatically re-downloads any outdated packs.
+	 */
+	private void checkAndUpdateOutdatedPacks() {
+		Properties commitHashes = loadCommitHashes();
+		ArrayList<Manifest> packsToUpdate = new ArrayList<>();
+
+		for (var pack : installedPacks) {
+			if (pack instanceof DefaultResourcePack) {
+				continue;
+			}
+
+			String internalName = pack.getManifest().getInternalName();
+			Manifest manifest = downloadablePacks.get(internalName);
+
+			if (manifest == null) {
+				continue;
+			}
+
+			String storedCommit = commitHashes.getProperty(internalName);
+			String manifestCommit = manifest.getCommit();
+
+			if (storedCommit == null || !storedCommit.equals(manifestCommit)) {
+				packsToUpdate.add(manifest);
+			}
+		}
+
+		if (!packsToUpdate.isEmpty()) {
+			List<String> namesList = packsToUpdate.stream()
+				.map(Manifest::getInternalName)
+				.collect(Collectors.toList());
+
+			String names = String.join(", ", namesList);
+			log.info("{} | Packs outdated: {}", namesList.size(), names);
+		}
+
+		for (var manifest : packsToUpdate) {
+			removeResourcePack(manifest.getInternalName());
+			downloadResourcePack(manifest);
+		}
+	}
+	/**
+	 * Loads commit hashes from the properties file.
+	 * @return Properties object containing internalName -> commitHash mappings
+	 */
+	private Properties loadCommitHashes() {
+		Properties props = new Properties();
+		File propsFile = RESOURCE_PACK_PROPS.toFile();
+		
+		if (propsFile.exists() && propsFile.isFile()) {
+			try (FileInputStream fis = new FileInputStream(propsFile)) {
+				props.load(fis);
+			} catch (IOException e) {
+				log.warn("Failed to load commit hashes from {}: {}", propsFile, e.getMessage());
+			}
+		}
+		
+		return props;
+	}
+
+	/**
+	 * Saves a commit hash for a pack to the properties file.
+	 * @param internalName The internal name of the pack
+	 * @param commitHash The commit hash to save
+	 */
+	private void saveCommitHash(String internalName, String commitHash) {
+		Properties props = loadCommitHashes();
+		props.setProperty(internalName, commitHash);
+		
+		File propsFile = RESOURCE_PACK_PROPS.toFile();
+		try {
+			// Ensure parent directory exists
+			propsFile.getParentFile().mkdirs();
+			
+			try (FileOutputStream fos = new FileOutputStream(propsFile)) {
+				props.store(fos, "Resource pack commit hashes - internalName:commitHash");
+			}
+		} catch (IOException e) {
+			log.warn("Failed to save commit hash for pack '{}': {}", internalName, e.getMessage());
+		}
+	}
+
+	/**
+	 * Removes a commit hash from the properties file.
+	 * @param internalName The internal name of the pack to remove
+	 */
+	private void removeCommitHash(String internalName) {
+		Properties props = loadCommitHashes();
+		if (props.remove(internalName) != null) {
+			File propsFile = RESOURCE_PACK_PROPS.toFile();
+			try {
+				try (FileOutputStream fos = new FileOutputStream(propsFile)) {
+					props.store(fos, "Resource pack commit hashes - internalName:commitHash");
+				}
+			} catch (IOException e) {
+				log.warn("Failed to remove commit hash for pack '{}': {}", internalName, e.getMessage());
+			}
+		}
 	}
 
 	/**

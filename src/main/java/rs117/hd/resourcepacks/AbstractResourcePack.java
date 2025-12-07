@@ -18,9 +18,6 @@ import rs117.hd.utils.ResourcePath;
 public abstract class AbstractResourcePack implements IResourcePack {
 	private Manifest manifest;
 	public final ResourcePath path;
-	@Getter
-	@Setter
-	private boolean needsUpdating = false;
 
 	@Getter
 	@Setter
@@ -56,7 +53,7 @@ public abstract class AbstractResourcePack implements IResourcePack {
 			}
 			return manifest;
 		} catch (IOException e) {
-			log.warn("COULD NOT LOAD");
+			log.warn("Failed to load pack.properties for resource pack {}: {}", this, e.getMessage());
 			return null;
 		}
 	}

@@ -282,7 +282,6 @@ public class ResourcePackPanel extends JPanel {
 
 					var packs = resourcePackManager.getInstalledPacks();
 					for (int i = 0; i < packs.size(); i++) {
-						log.info("Adding installed pack: {}", packs.get(i).getPackName());
 						list.add(createInstalledPackComponent(packs.get(i), i));
 					}
 
@@ -699,17 +698,6 @@ public class ResourcePackPanel extends JPanel {
 		
 		panel.add(progressBar);
 		panel.setComponentZOrder(progressBar, 0);
-		panel.revalidate();
-		panel.repaint();
-	}
-
-	private void restoreButtonFromProgressBar(String internalName, JPanel panel, JButton button, int y) {
-		JProgressBar progressBar = downloadProgressBars.remove(internalName);
-		if (progressBar != null) {
-			panel.remove(progressBar);
-		}
-		
-		panel.add(button);
 		panel.revalidate();
 		panel.repaint();
 	}
