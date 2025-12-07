@@ -143,16 +143,14 @@ public class WorldViewContext {
 	}
 
 	void completeInvalidation() {
-		if(isLoading)
+		if (isLoading)
 			return;
 
 		invalidationGroup.complete();
 
-		for (int x = 0; x < sizeX; x++) {
-			for (int z = 0; z < sizeZ; z++) {
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
 				handleZoneSwap(-1.0f, x, z);
-			}
-		}
 	}
 
 	void free() {

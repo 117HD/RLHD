@@ -60,7 +60,7 @@ public final class Worker {
 					handle = jobSystem.workQueue.poll();
 				}
 
-				if(handle == null) {
+				if (handle == null) {
 					// Wait for a signal that there is work to be had
 					try {
 						jobSystem.workerSemaphore.acquire();
