@@ -414,8 +414,6 @@ public class HdPlugin extends Plugin {
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
 	public boolean redrawPreviousFrame;
-	public boolean isInChambersOfXeric;
-	public boolean isInHouse;
 	public boolean justChangedArea;
 	public Scene skipScene;
 
@@ -668,8 +666,6 @@ public class HdPlugin extends Plugin {
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
-				isInHouse = false;
-				isInChambersOfXeric = false;
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -1867,10 +1863,10 @@ public class HdPlugin extends Plugin {
 		if (configAsyncUICopy)
 			asyncUICopy.complete();
 
-		if (client.getScene() == null)
-			return;
 		// The game runs significantly slower with lower planes in Chambers of Xeric
-		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
+		var ctx = getSceneContext();
+		if (ctx != null)
+			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 	}
 
 	@Subscribe

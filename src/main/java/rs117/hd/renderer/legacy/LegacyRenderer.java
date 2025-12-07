@@ -1312,8 +1312,8 @@ public class LegacyRenderer implements Renderer {
 
 		int expandedChunks = plugin.getExpandedMapLoadingChunks();
 		if (HDUtils.sceneIntersects(scene, expandedChunks, areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			// Reload once the POH is done loading
-			if (!plugin.isInHouse)
+			// Reload once the POH is done loading, upon first entering the POH
+			if (sceneContext == null || !sceneContext.isInHouse)
 				reloadSceneIn(2);
 		} else if (plugin.skipScene != scene && HDUtils.sceneIntersects(
 			scene,
@@ -1417,11 +1417,11 @@ public class LegacyRenderer implements Renderer {
 		sceneContext.stagingBufferNormals.clear();
 
 		if (sceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			plugin.isInHouse = true;
-			plugin.isInChambersOfXeric = false;
+			sceneContext.isInHouse = true;
+			sceneContext.isInChambersOfXeric = false;
 		} else {
-			plugin.isInHouse = false;
-			plugin.isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
+			sceneContext.isInHouse = false;
+			sceneContext.isInChambersOfXeric = sceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
 		}
 	}
 
