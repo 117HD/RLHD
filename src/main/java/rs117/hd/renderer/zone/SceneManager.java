@@ -520,7 +520,7 @@ public class SceneManager {
 				isZoneStreamingEnabled() &&
 				!nextSceneContext.isInHouse &&
 				root.sceneContext != null &&
-				nextSceneContext.totalReused > 0;
+				nextSceneContext.totalReused + nextSceneContext.totalDeferred > 0;
 			for (int x = 0; x < NUM_ZONES; ++x) {
 				for (int z = 0; z < NUM_ZONES; ++z) {
 					Zone zone = nextZones[x][z];
