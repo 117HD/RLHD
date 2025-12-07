@@ -126,8 +126,6 @@ public class WorldViewContext {
 			cullZone.free();
 		}
 
-		invalidationGroup.complete();
-
 		boolean queuedWork = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
