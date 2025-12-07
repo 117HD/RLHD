@@ -7696,7 +7696,8 @@
     "name": "CRANDOR_GROUND_1",
     "area": "CRANDOR",
     "overlayIds": [
-      11
+      11,
+      92
     ],
     "groundMaterial": "GRAVEL"
   },
@@ -7711,6 +7712,7 @@
       52,
       53,
       56,
+      57,
       62,
       68,
       72,
