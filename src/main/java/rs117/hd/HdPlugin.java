@@ -101,6 +101,7 @@ import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
 import rs117.hd.resourcepacks.ResourcePackManager;
+import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.scene.AreaManager;
 import rs117.hd.scene.EnvironmentManager;
 import rs117.hd.scene.FishingSpotReplacer;
@@ -223,7 +224,7 @@ public class HdPlugin extends Plugin {
 	private Gson gson;
 
 	@Getter
-	private HdSidebar sidebar;
+	public HdSidebar sidebar;
 
 	@Inject
 	private Client client;
@@ -689,9 +690,6 @@ public class HdPlugin extends Plugin {
 
 				clientThread.invokeLater(this::displayUpdateMessage);
 
-				SwingUtilities.invokeLater(() -> {
-					sidebar = injector.getInstance(HdSidebar.class);
-				});
 			} catch (Throwable err) {
 				log.error("Error while starting 117 HD", err);
 				stopPlugin();
@@ -704,10 +702,6 @@ public class HdPlugin extends Plugin {
 	protected void shutDown() {
 		isActive = false;
 		FileWatcher.destroy();
-
-		if (sidebar != null)
-			sidebar.destroy();
-		sidebar = null;
 
 		clientThread.invoke(() -> {
 			var scene = client.getScene();
@@ -1732,6 +1726,17 @@ public class HdPlugin extends Plugin {
 							case KEY_ATMOSPHERIC_LIGHTING:
 							case KEY_LEGACY_TOB_ENVIRONMENT:
 								reloadEnvironments = true;
+								break;
+							case KEY_ENABLE_RESOURCE_PACKS:
+								resourcePackManager.shutDown();
+								resourcePackManager.startUp();
+								eventBus.post(new ResourcePackUpdate());
+								break;
+							case KEY_COMPACT_VIEW:
+								// Refresh the panel to update view
+								if (sidebar != null) {
+									sidebar.refresh();
+								}
 								break;
 							case KEY_SEASONAL_THEME:
 							case KEY_SEASONAL_HEMISPHERE:

@@ -20,6 +20,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import rs117.hd.HdPlugin;
+import rs117.hd.HdPluginConfig;
+import rs117.hd.gui.HdSidebar;
 import rs117.hd.gui.components.MessagePanel;
 import rs117.hd.resourcepacks.data.Manifest;
 import rs117.hd.resourcepacks.impl.DefaultResourcePack;
@@ -56,6 +58,9 @@ public class ResourcePackManager {
 	@Inject
 	private EventBus eventBus;
 
+	@Inject
+	private HdPluginConfig config;
+
 	@Getter
 	private ArrayList<AbstractResourcePack> installedPacks = new ArrayList<>();
 
@@ -68,6 +73,12 @@ public class ResourcePackManager {
 	private long lastCheckForUpdates;
 
 	public void startUp() {
+		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
+
+		if (!config.enableResourcePacks()) {
+			return;
+		}
+		SwingUtilities.invokeLater(() -> plugin.sidebar = plugin.getInjector().getInstance(HdSidebar.class));
 		checkForUpdates();
 
 		if (RESOURCE_PACK_DIR.exists()) {
@@ -75,17 +86,20 @@ public class ResourcePackManager {
 				AbstractResourcePack pack = createResourcePack(path);
 				pack.setNeedsUpdating(false);
 
-				if (pack.isValid())
-					installedPacks.add(pack);
+				if (pack.isValid()) {
+					// Add before the default pack (which is always at the last index)
+					int lastIndex = installedPacks.size() - 1;
+					installedPacks.add(lastIndex, pack);
+				}
 			}
 		}
-
-		// Add default pack at the end (it must always be at the bottom)
-		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
 	}
 
 	public void shutDown() {
 		installedPacks.clear();
+		if (plugin.sidebar != null)
+			plugin.sidebar.destroy();
+		plugin.sidebar = null;
 	}
 
 	public void checkForUpdates() {

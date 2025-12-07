@@ -69,6 +69,7 @@ import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import rs117.hd.HdPluginConfig;
 import rs117.hd.gui.HdSidebar;
 import rs117.hd.resourcepacks.AbstractResourcePack;
 import rs117.hd.resourcepacks.ResourcePackManager;
@@ -113,6 +114,9 @@ public class ResourcePackPanel extends JPanel {
 
 	@Inject
 	private EventBus eventBus;
+
+	@Inject
+	private HdPluginConfig config;
 
 	private enum PanelState {SELECTION, DOWNLOAD}
 
@@ -379,13 +383,17 @@ public class ResourcePackPanel extends JPanel {
 		int lastIndex = resourcePackManager.getInstalledPacks().size() - 1;
 		// Disable down arrow if it's the last pack before the default pack (default is always at lastIndex)
 		boolean isLastBeforeDefault = index == lastIndex - 1;
+		boolean compactView = config.compactView();
 
 		panel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		panel.setOpaque(true);
 		panel.setLayout(null);
-		panel.setBounds(0, 0, 221, 124);
-		panel.setMinimumSize(new Dimension(221, 124));
-		panel.setPreferredSize(new Dimension(221, 124));
+		
+		// Adjust panel size for compact view
+		int panelHeight = compactView ? 45 : 124;
+		panel.setBounds(0, 0, 221, panelHeight);
+		panel.setMinimumSize(new Dimension(221, panelHeight));
+		panel.setPreferredSize(new Dimension(221, panelHeight));
 
 		JButton moveDown = new JButton();
 		moveDown.setText("");
@@ -405,7 +413,8 @@ public class ResourcePackPanel extends JPanel {
 		moveUp.setEnabled(!isTop && !isDefaultPack);
 		moveUp.addActionListener(ev -> movePack(index, index - 1));
 
-		if (pack.isDevelopmentPack()) {
+		boolean hasFolderButton = pack.isDevelopmentPack();
+		if (hasFolderButton) {
 			JButton openFolder = new JButton();
 			openFolder.setIcon(FOLDER);
 			SwingUtil.removeButtonDecorations(openFolder);
@@ -416,23 +425,28 @@ public class ResourcePackPanel extends JPanel {
 		}
 
 		Manifest manifest = pack.getManifest();
+		
+		// Author is always shown, but positioned differently in compact view
 		JLabel author = new JLabel(manifest.getAuthor());
 		author.setFont(FontManager.getRunescapeSmallFont());
 		author.setToolTipText(manifest.getAuthor());
-		author.setBounds(5, 105, 65, author.getPreferredSize().height);
+		int authorY = compactView ? 28 : 105;
+		author.setBounds(5, authorY, 65, author.getPreferredSize().height);
 		author.setForeground(Color.WHITE);
 		panel.add(author);
-
-		String descriptionText = manifest.getDescription();
-		if (!descriptionText.startsWith("<html>")) {
-			descriptionText = "<html>" + HtmlEscapers.htmlEscaper().escape(descriptionText) + "</html>";
+		
+		if (!compactView) {
+			String descriptionText = manifest.getDescription();
+			if (!descriptionText.startsWith("<html>")) {
+				descriptionText = "<html>" + HtmlEscapers.htmlEscaper().escape(descriptionText) + "</html>";
+			}
+			JLabel description = new JLabel(descriptionText);
+			description.setVerticalAlignment(JLabel.TOP);
+			description.setToolTipText(descriptionText);
+			description.setBounds(5, 30, 210, 70);
+			description.setForeground(Color.WHITE);
+			panel.add(description);
 		}
-		JLabel description = new JLabel(descriptionText);
-		description.setVerticalAlignment(JLabel.TOP);
-		description.setToolTipText(descriptionText);
-		description.setBounds(5, 30, 210, 70);
-		description.setForeground(Color.WHITE);
-		panel.add(description);
 
 
 		if (pack.isDevelopmentPack()) {
@@ -444,10 +458,13 @@ public class ResourcePackPanel extends JPanel {
 		}
 
 		int packNameShift = pack.isDevelopmentPack() ? 19 : 0;
+		// Calculate width: stop before folder button (140) if present, otherwise before up arrow (165)
+		int packNameEndX = hasFolderButton ? 140 : 165;
+		int packNameWidth = packNameEndX - (5 + packNameShift);
 		JLabel packName = new JLabel(manifest.getDisplayName());
 		packName.setFont(FontManager.getRunescapeBoldFont());
 		packName.setToolTipText(manifest.getInternalName());
-		packName.setBounds(5 + packNameShift, 5, 105, 25);
+		packName.setBounds(5 + packNameShift, 5, packNameWidth, 25);
 		packName.setForeground(Color.WHITE);
 		panel.add(packName);
 
@@ -467,7 +484,7 @@ public class ResourcePackPanel extends JPanel {
 			blackBox.setVisible(false);
 		}
 		icon.setBounds(new Rectangle(new Point(0, 0), icon.getPreferredSize()));
-		blackBox.setBounds(0, 0, 221, 124);
+		blackBox.setBounds(0, 0, 221, panelHeight);
 
 		panel.add(blackBox);
 		panel.add(icon);
@@ -479,35 +496,60 @@ public class ResourcePackPanel extends JPanel {
 		log.info("Listing downloadable pack '{}' with URL: {}", manifest.getInternalName(), manifest.getLink());
 		JPanel panel = new JPanel();
 
+		boolean compactView = config.compactView();
+		int panelHeight = compactView ? 60 : 124;
+
 		panel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		panel.setOpaque(true);
 		panel.setLayout(null);
-		panel.setBounds(0, 0, 221, 124);
-		panel.setMinimumSize(new Dimension(221, 124));
-		panel.setPreferredSize(new Dimension(221, 124));
+		panel.setBounds(0, 0, 221, panelHeight);
+		panel.setMinimumSize(new Dimension(221, panelHeight));
+		panel.setPreferredSize(new Dimension(221, panelHeight));
 
+		// Author is always shown, but positioned differently in compact view
 		JLabel author = new JLabel(manifest.getAuthor());
 		author.setFont(FontManager.getRunescapeSmallFont());
 		author.setToolTipText(manifest.getAuthor());
-		author.setBounds(5, 105, 65, author.getPreferredSize().height);
+		int authorY = compactView ? 28 : 105;
+		author.setBounds(5, authorY, 65, author.getPreferredSize().height);
 		author.setForeground(Color.WHITE);
 		panel.add(author);
-
-		String descriptionText = manifest.getDescription();
-		if (!descriptionText.startsWith("<html>")) {
-			descriptionText = "<html>" + HtmlEscapers.htmlEscaper().escape(descriptionText) + "</html>";
+		
+		if (!compactView) {
+			String descriptionText = manifest.getDescription();
+			if (!descriptionText.startsWith("<html>")) {
+				descriptionText = "<html>" + HtmlEscapers.htmlEscaper().escape(descriptionText) + "</html>";
+			}
+			JLabel description = new JLabel(descriptionText);
+			description.setVerticalAlignment(JLabel.TOP);
+			description.setToolTipText(descriptionText);
+			description.setBounds(5, 30, 210, 70);
+			description.setForeground(Color.WHITE);
+			panel.add(description);
 		}
-		JLabel description = new JLabel(descriptionText);
-		description.setVerticalAlignment(JLabel.TOP);
-		description.setToolTipText(descriptionText);
-		description.setBounds(5, 30, 210, 70);
-		description.setForeground(Color.WHITE);
-		panel.add(description);
 
-		JLabel packName = new JLabel(manifest.getDisplayName());
+		String displayName = manifest.getDisplayName();
+		displayName = displayName.replace('_', ' ');
+		String[] words = displayName.split("\\s+");
+		StringBuilder formatted = new StringBuilder();
+		for (String word : words) {
+			if (formatted.length() > 0) {
+				formatted.append(' ');
+			}
+			if (!word.isEmpty()) {
+				formatted.append(Character.toUpperCase(word.charAt(0)));
+				if (word.length() > 1) {
+					formatted.append(word.substring(1).toLowerCase());
+				}
+			}
+		}
+
+		displayName = formatted.toString();
+		
+		JLabel packName = new JLabel(displayName);
 		packName.setFont(FontManager.getRunescapeBoldFont());
 		packName.setToolTipText(manifest.getInternalName());
-		packName.setBounds(5, 5, 105, 25);
+		packName.setBounds(5, 5, 200, 25);
 		packName.setForeground(Color.WHITE);
 		panel.add(packName);
 
@@ -533,7 +575,9 @@ public class ResourcePackPanel extends JPanel {
 				resourcePackManager.removeResourcePack(manifest.getInternalName());
 			});
 		}
-		actionButton.setBounds(115, 97, 105, 25);
+		// Adjust button position for compact view
+		int buttonY = compactView ? 28 : 97;
+		actionButton.setBounds(115, buttonY, 105, 25);
 
 		JLabel icon = new JLabel();
 		icon.setHorizontalAlignment(JLabel.CENTER);
@@ -543,8 +587,8 @@ public class ResourcePackPanel extends JPanel {
 
 		icon.setVisible(false);
 		blackBox.setVisible(false);
-		icon.setBounds(0, 0, 221, 124);
-		blackBox.setBounds(0, 0, 221, 124);
+		icon.setBounds(0, 0, 221, panelHeight);
+		blackBox.setBounds(0, 0, 221, panelHeight);
 
 		if (manifest.hasIcon()) {
 			okHttpClient

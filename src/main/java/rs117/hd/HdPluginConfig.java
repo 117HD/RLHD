@@ -968,6 +968,41 @@ public interface HdPluginConfig extends Config
 	default boolean modelCaching() { return true; }
 
 	String KEY_MODEL_CACHE_SIZE = "modelCacheSizeMiBv2";
+
+	/*====== Resource Packs settings ======*/
+
+	@ConfigSection(
+		name = "Resource Packs",
+		description = "Manage and configure resource packs for textures, environments, and other visual enhancements.",
+		position = 7
+	)
+	String resourcePackSettings = "resourcePackSettings";
+
+	String KEY_ENABLE_RESOURCE_PACKS = "enableResourcePacks";
+	@ConfigItem(
+		keyName = KEY_ENABLE_RESOURCE_PACKS,
+		name = "Enable resource packs",
+		description = 
+			"Enable custom resource packs. When disabled, only the default internal pack will be loaded.<br>" +
+			"The resource pack sidebar will also be hidden when disabled.",
+		position = 1,
+		section = resourcePackSettings
+	)
+	default boolean enableResourcePacks() {
+		return true;
+	}
+
+	String KEY_COMPACT_VIEW = "compactView";
+	@ConfigItem(
+		keyName = KEY_COMPACT_VIEW,
+		name = "Compact pack view",
+		description = "Display resource packs in a more compact format, hiding author and description information.",
+		position = 2,
+		section = resourcePackSettings
+	)
+	default boolean compactView() {
+		return false;
+	}
 	@Range(
 		min = 64,
 		max = 16384
