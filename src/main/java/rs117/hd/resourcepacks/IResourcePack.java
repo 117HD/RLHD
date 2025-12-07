@@ -18,5 +18,9 @@ public interface IResourcePack
 
     boolean hasPackImage();
 
+    BufferedImage getPackImage(boolean compactView);
+
+    boolean hasPackImage(boolean compactView);
+
     String getPackName();
 }

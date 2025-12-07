@@ -43,7 +43,7 @@ public class DefaultResourcePack extends AbstractResourcePack {
 
     @Override
     public boolean hasPackImage() {
-        return getPackImage() != null;
+        return this.path.resolve("icon.png").exists();
     }
 
 	@Override

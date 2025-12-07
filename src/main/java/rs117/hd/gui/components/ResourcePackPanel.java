@@ -30,6 +30,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
@@ -89,8 +91,6 @@ public class ResourcePackPanel extends JPanel {
 	private static final ImageIcon DEV_ICON;
 	private static final ImageIcon ARROW_UP;
 	private static final ImageIcon ARROW_DOWN;
-	private static final ImageIcon ARROW_UP_HOVER;
-	private static final ImageIcon ARROW_DOWN_HOVER;
 	private static final ImageIcon FOLDER;
 
 	static {
@@ -102,9 +102,6 @@ public class ResourcePackPanel extends JPanel {
 
 		ARROW_UP = new ImageIcon(ARROW_UP_ICON);
 		ARROW_DOWN = new ImageIcon(ARROW_DOWN_ICON);
-
-		ARROW_UP_HOVER = new ImageIcon(ImageUtil.alphaOffset(ARROW_UP_ICON, -100));
-		ARROW_DOWN_HOVER = new ImageIcon(ImageUtil.alphaOffset(ARROW_DOWN_ICON, -100));
 
 		FOLDER = new ImageIcon(ImageUtil.loadImageResource(HdSidebar.class, "folder_icon.png"));
 	}
@@ -482,8 +479,8 @@ public class ResourcePackPanel extends JPanel {
 		JLabel blackBox = new JLabel();
 		blackBox.setIcon(FADE);
 
-		if (pack.hasPackImage()) {
-			icon.setIcon(new ImageIcon(pack.getPackImage()));
+		if (pack.hasPackImage(compactView)) {
+			icon.setIcon(new ImageIcon(pack.getPackImage(compactView)));
 			icon.setVisible(true);
 			blackBox.setVisible(true);
 		} else {
@@ -635,19 +632,25 @@ public class ResourcePackPanel extends JPanel {
 		blackBox.setBounds(0, 0, 221, panelHeight);
 
 		if (manifest.hasIcon()) {
+			String iconFileName = compactView ? "compact-icon.png" : "icon.png";
+
 			okHttpClient
 				.newCall(new Request.Builder()
 					.url(RAW_GITHUB_URL
 						.newBuilder()
 						.addPathSegment(manifest.getLink().replace("https://github.com/", ""))
 						.addPathSegment(manifest.getCommit())
-						.addPathSegment("icon.png")
+						.addPathSegment(iconFileName)
 						.build())
 					.build())
 				.enqueue(new Callback() {
 					@Override
 					public void onFailure(Call call, IOException ex) {
-						log.warn("Unable to download icon for pack \"{}\"", manifest.getInternalName(), ex);
+						if (compactView) {
+							downloadRegularIcon(manifest, icon, blackBox, panel);
+						} else {
+							log.warn("Unable to download icon for pack \"{}\"", manifest.getInternalName(), ex);
+						}
 					}
 
 					@Override
@@ -659,15 +662,32 @@ public class ResourcePackPanel extends JPanel {
 						}
 
 						if (img != null) {
+							if (compactView) {
+								// Scale image to match panel height
+								int originalWidth = img.getWidth();
+								int originalHeight = img.getHeight();
+								int targetWidth = (originalWidth * panelHeight) / originalHeight;
+								Image scaled = img.getScaledInstance(targetWidth, panelHeight, Image.SCALE_SMOOTH);
+								img = new BufferedImage(targetWidth, panelHeight, BufferedImage.TYPE_INT_ARGB);
+								Graphics2D g2d = img.createGraphics();
+								g2d.drawImage(scaled, 0, 0, null);
+								g2d.dispose();
+							}
+
+							BufferedImage finalImg = img;
 							SwingUtilities.invokeLater(() -> {
-								icon.setIcon(new ImageIcon(img));
+								icon.setIcon(new ImageIcon(finalImg));
 								icon.setVisible(true);
 								blackBox.setVisible(true);
 								panel.revalidate();
 								panel.repaint();
 							});
 						} else {
-							log.warn("Received null icon for icon for pack \"{}\"", manifest.getInternalName());
+							if (compactView) {
+								downloadRegularIcon(manifest, icon, blackBox, panel);
+							} else {
+								log.warn("Received null icon for pack \"{}\"", manifest.getInternalName());
+							}
 						}
 					}
 				});
@@ -724,5 +744,44 @@ public class ResourcePackPanel extends JPanel {
 		allTags.stream()
 			.sorted()
 			.forEach(suggestionModel::addElement);
+	}
+
+	private void downloadRegularIcon(Manifest manifest, JLabel icon, JLabel blackBox, JPanel panel) {
+		okHttpClient
+			.newCall(new Request.Builder()
+				.url(RAW_GITHUB_URL
+					.newBuilder()
+					.addPathSegment(manifest.getLink().replace("https://github.com/", ""))
+					.addPathSegment(manifest.getCommit())
+					.addPathSegment("icon.png")
+					.build())
+				.build())
+			.enqueue(new Callback() {
+				@Override
+				public void onFailure(Call call, IOException ex) {
+					log.warn("Unable to download regular icon for pack \"{}\"", manifest.getInternalName(), ex);
+				}
+
+				@Override
+				public void onResponse(Call call, Response res) throws IOException {
+					byte[] bytes = res.body().bytes();
+					BufferedImage img;
+					synchronized (ImageIO.class) {
+						img = ImageIO.read(new ByteArrayInputStream(bytes));
+					}
+
+					if (img != null) {
+						SwingUtilities.invokeLater(() -> {
+							icon.setIcon(new ImageIcon(img));
+							icon.setVisible(true);
+							blackBox.setVisible(true);
+							panel.revalidate();
+							panel.repaint();
+						});
+					} else {
+						log.warn("Received null regular icon for pack \"{}\"", manifest.getInternalName());
+					}
+				}
+			});
 	}
 }

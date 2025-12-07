@@ -31,7 +31,7 @@ public class FileResourcePack extends AbstractResourcePack {
 		return this.path.resolve(parts);
 	}
 
-	@Override
+    @Override
     public BufferedImage getPackImage() {
 		ResourcePath path = this.path.resolve("icon.png");
         try {
@@ -44,7 +44,7 @@ public class FileResourcePack extends AbstractResourcePack {
 
     @Override
     public boolean hasPackImage() {
-        return getPackImage() != null;
+        return this.path.resolve("icon.png").exists();
     }
 
 	@Override

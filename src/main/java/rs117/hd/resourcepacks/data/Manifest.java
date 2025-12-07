@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 public class Manifest {
 	private boolean hasIcon = false;
+	private boolean hasCompactIcon = false;
 	private String displayName = "";
 	private String internalName = "";
 	private ArrayList<String> tags = new ArrayList<>();
@@ -32,6 +33,7 @@ public class Manifest {
 	public boolean hasIcon() {
 		return hasIcon;
 	}
+
 
 	public String getDisplayName() {
 		if (displayName == null || displayName.isEmpty())

@@ -1,6 +1,7 @@
 package rs117.hd.resourcepacks;
 
 import com.google.common.base.Charsets;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -85,5 +86,25 @@ public abstract class AbstractResourcePack implements IResourcePack {
 
 	public boolean isValid() {
 		return getManifest() != null;
+	}
+
+	@Override
+	public BufferedImage getPackImage(boolean compactView) {
+		if (compactView && hasResource("compact-icon.png")) {
+			try {
+				return getResource("compact-icon.png").loadImage();
+			} catch (IOException e) {
+				log.warn("Pack: {} has compact-icon.png but failed to load, falling back to icon.png", getPackName());
+			}
+		}
+		return getPackImage();
+	}
+
+	@Override
+	public boolean hasPackImage(boolean compactView) {
+		if (compactView) {
+			return hasResource("compact-icon.png") || hasPackImage();
+		}
+		return hasPackImage();
 	}
 }

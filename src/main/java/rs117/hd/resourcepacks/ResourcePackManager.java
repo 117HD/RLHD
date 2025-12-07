@@ -84,9 +84,9 @@ public class ResourcePackManager {
 	private long lastCheckForUpdates;
 
 	public void startUp() {
-		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
 
 		if (!config.enableResourcePacks()) {
+			installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
 			return;
 		}
 		SwingUtilities.invokeLater(() -> plugin.sidebar = plugin.getInjector().getInstance(HdSidebar.class));
@@ -119,7 +119,8 @@ public class ResourcePackManager {
 				}
 			}
 		}
-		
+		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
+
 		checkForUpdates();
 	}
 
