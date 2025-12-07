@@ -1581,8 +1581,7 @@
       "YEW_TREE_DEAD_FULLYGROWN",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP",
-      "YEWTREE_UPDATE2"
+      "YEWTREE_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
@@ -1660,8 +1659,7 @@
       "YEW_TREE_DEAD_FULLYGROWN",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP",
-      "YEWTREE_UPDATE2"
+      "YEWTREE_NOOP"
     ],
     "uvType": "BOX",
     "uvScale": 0.8,
