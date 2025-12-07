@@ -152,6 +152,7 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 		if (VALIDATE)
 			log.debug("Handle [{}] Completed", this);
 
+		int queuedWork = 0;
 		JobHandle dep;
 		while ((dep = dependants.pollFirst()) != null) {
 			if (wasCancelled) {
@@ -169,10 +170,12 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 				} else {
 					worker.localWorkQueue.addLast(dep);
 				}
+
+				queuedWork++;
 			}
 		}
 
-		if(worker != null && worker.localWorkQueue.size() > 2)
+		if(queuedWork > 2)
 			JOB_SYSTEM.signalWorkAvailable();
 	}
 
