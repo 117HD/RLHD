@@ -80,9 +80,11 @@ public final class JobSystem {
 		return inflightCount;
 	}
 
-	void signalWorkAvailable() {
-		workerSemaphore.drainPermits();
-		workerSemaphore.release(workerCount);
+	void signalWorkAvailable(int workCount) {
+		int availPermits = workerSemaphore.availablePermits();
+		if(availPermits >= workCount)
+			return;
+		workerSemaphore.release(min(workCount, workCount - availPermits));
 	}
 
 	public int getWorkQueueSize() {
@@ -194,7 +196,7 @@ public final class JobSystem {
 			}
 		}
 
-		signalWorkAvailable();
+		signalWorkAvailable(1);
 	}
 
 	void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {

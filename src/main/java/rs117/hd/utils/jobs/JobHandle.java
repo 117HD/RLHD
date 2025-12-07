@@ -175,8 +175,8 @@ final class JobHandle extends AbstractQueuedSynchronizer {
 			}
 		}
 
-		if (queuedWork > 2)
-			JOB_SYSTEM.signalWorkAvailable();
+		if (queuedWork > 1)
+			JOB_SYSTEM.signalWorkAvailable(queuedWork - 1);
 	}
 
 	private void setJobState(int newState) {
