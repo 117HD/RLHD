@@ -425,8 +425,8 @@ public class SceneManager {
 			loadSceneLightsTask.cancel();
 			calculateRoofChangesTask.cancel();
 
-			generateSceneDataTask.setExecuteAsync(isZoneStreamingEnabled()).queue();
-			loadSceneLightsTask.setExecuteAsync(isZoneStreamingEnabled()).queue();
+			generateSceneDataTask.queue();
+			loadSceneLightsTask.queue();
 
 			if (nextSceneContext.enableAreaHiding) {
 				assert nextSceneContext.sceneBase != null;
@@ -477,7 +477,7 @@ public class SceneManager {
 			}
 
 			// Queue after ensuring previous scene has been cancelled
-			calculateRoofChangesTask.setExecuteAsync(isZoneStreamingEnabled()).queue();
+			calculateRoofChangesTask.queue();
 
 			final int dx = scene.getBaseX() - prev.getBaseX() >> 3;
 			final int dy = scene.getBaseY() - prev.getBaseY() >> 3;
@@ -524,7 +524,6 @@ public class SceneManager {
 						if (root.sceneContext == null || dist < ZONE_DEFER_DIST_START) {
 							ZoneUploadJob
 								.build(ctx, nextSceneContext, zone, x, z)
-								.setExecuteAsync(isZoneStreamingEnabled())
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
 						} else {
@@ -540,8 +539,7 @@ public class SceneManager {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
 				sorted.zone.uploadJob = ZoneUploadJob
-					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
-					.setExecuteAsync(isZoneStreamingEnabled());
+					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z);
 				if (staggerLoad) {
 					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				} else {
@@ -613,7 +611,7 @@ public class SceneManager {
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
-		if (nextSceneContext.isInHouse)
+		if (!isZoneStreamingEnabled() || nextSceneContext.isInHouse)
 			root.streamingGroup.complete();
 
 		int totalOpaque = 0;
@@ -702,8 +700,8 @@ public class SceneManager {
 
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
-				ZoneUploadJob.build(ctx, sceneContext, ctx.zones[x][z], x, z)
-					.setExecuteAsync(isZoneStreamingEnabled())
+				ZoneUploadJob
+					.build(ctx, sceneContext, ctx.zones[x][z], x, z)
 					.queue(ctx.sceneLoadGroup);
 
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
