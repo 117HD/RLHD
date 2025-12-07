@@ -146,6 +146,8 @@ public class SceneManager {
 		updateAreaHiding();
 		frameTimer.end(Timer.UPDATE_AREA_HIDING);
 
+		Zone.ProcessPendingDeletion();
+
 		if (reloadRequested && loadingLock.getHoldCount() == 0) {
 			reloadRequested = false;
 			try {
