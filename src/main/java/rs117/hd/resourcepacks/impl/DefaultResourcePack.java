@@ -13,6 +13,8 @@ import rs117.hd.utils.ResourcePath;
 public class DefaultResourcePack extends AbstractResourcePack {
     public DefaultResourcePack(ResourcePath resourcePackFileIn) {
         super(resourcePackFileIn);
+        setHasTextures(true);
+        setHasEnvironments(true);
     }
 
     @Override

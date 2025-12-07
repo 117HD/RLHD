@@ -44,6 +44,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -116,10 +119,20 @@ public class ResourcePackPanel extends JPanel {
 	@Inject
 	private HdPluginConfig config;
 
+	@Inject
+	private ScheduledExecutorService executor;
+
 	// Map to track download progress bars for each pack
 	private final Map<String, JProgressBar> downloadProgressBars = new HashMap<>();
 	private final Map<String, JButton> downloadButtons = new HashMap<>();
 	private final Map<String, JPanel> packPanels = new HashMap<>();
+
+	// Debounce for pack move events and UI refresh
+	private ScheduledFuture<?> moveDebounce;
+	private AbstractResourcePack pendingMovePack;
+	private int originalFromIndex; // Original starting position
+	private int currentToIndex; // Current destination (updated with each move)
+	private boolean justClicked = false; // Track if a move was just clicked
 
 	private enum PanelState {SELECTION, DOWNLOAD}
 
@@ -363,7 +376,28 @@ public class ResourcePackPanel extends JPanel {
 		Collections.swap(packs, fromIndex, toIndex);
 		
 		refreshPanel();
-		eventBus.post(new ResourcePackUpdate(PackEventType.MOVED, pack));
+		
+		justClicked = true;
+		
+		if (moveDebounce == null || moveDebounce.isDone() || pendingMovePack != pack) {
+			originalFromIndex = fromIndex;
+			pendingMovePack = pack;
+		}
+		
+		currentToIndex = toIndex;
+		
+		if (moveDebounce != null && !moveDebounce.isDone()) {
+			moveDebounce.cancel(false);
+		}
+
+		moveDebounce = executor.schedule(() -> {
+			if (justClicked) {
+				eventBus.post(new ResourcePackUpdate(PackEventType.MOVED, pendingMovePack, originalFromIndex, currentToIndex));
+				justClicked = false;
+				moveDebounce = null;
+				pendingMovePack = null;
+			}
+		}, 800, TimeUnit.MILLISECONDS);
 	}
 
 	public JPanel createInstalledPackComponent(AbstractResourcePack pack, int index) {

@@ -13,13 +13,18 @@ public class ResourcePackUpdate {
 	@Nullable
 	private final Manifest manifest;
 	private String internalName = "";
+	// For MOVED events, track the old and new indices
+	@Getter
+	private int fromIndex = -1;
+	@Getter
+	private int toIndex = -1;
 
 	public ResourcePackUpdate(PackEventType type) {
 		this(type, null, null);
 	}
 
 	public ResourcePackUpdate(PackEventType type, AbstractResourcePack pack) {
-		this(type, pack,  pack.getManifest());
+		this(type, pack, pack != null ? pack.getManifest() : null);
 	}
 
 	public ResourcePackUpdate(PackEventType type, AbstractResourcePack pack, Manifest manifest) {
@@ -27,6 +32,12 @@ public class ResourcePackUpdate {
 		this.pack = pack;
 		this.manifest = manifest;
 		this.internalName = manifest == null ? "" : manifest.getInternalName();
+	}
+
+	public ResourcePackUpdate(PackEventType type, AbstractResourcePack pack, int fromIndex, int toIndex) {
+		this(type, pack, pack != null ? pack.getManifest() : null);
+		this.fromIndex = fromIndex;
+		this.toIndex = toIndex;
 	}
 
 	/**

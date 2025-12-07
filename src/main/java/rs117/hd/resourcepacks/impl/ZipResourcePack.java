@@ -23,9 +23,37 @@ public class ZipResourcePack extends AbstractResourcePack {
 		try {
 			this.zipFile = new ZipFile(resourcePackFileIn);
 			this.rootPrefix = detectRootPrefix();
+			setHasTextures(checkHasTextures());
+			setHasEnvironments(!listJsonFiles("environments").isEmpty());
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to open zip file: " + resourcePackFileIn, e);
 		}
+	}
+
+	private boolean checkHasTextures() {
+		if (zipFile == null) {
+			return false;
+		}
+
+		String materialsPath = normalizeZipPath("materials");
+		if (!materialsPath.endsWith("/")) {
+			materialsPath += "/";
+		}
+
+		// Check if there are any image files in the materials directory
+		var entries = zipFile.entries();
+		while (entries.hasMoreElements()) {
+			ZipEntry entry = entries.nextElement();
+			String name = entry.getName();
+			if (name.startsWith(materialsPath) && !entry.isDirectory()) {
+				String lower = name.toLowerCase();
+				if (lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg")) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

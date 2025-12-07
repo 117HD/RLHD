@@ -14,7 +14,28 @@ import rs117.hd.utils.ResourcePath;
 public class FileResourcePack extends AbstractResourcePack {
     public FileResourcePack(File resourcePackFileIn) {
         super(ResourcePath.path(resourcePackFileIn.getPath()));
+        setHasTextures(checkHasTextures());
+        setHasEnvironments(!listJsonFiles("environments").isEmpty());
     }
+
+	private boolean checkHasTextures() {
+		ResourcePath materialsPath = this.path.resolve("materials");
+		if (!materialsPath.exists()) {
+			return false;
+		}
+
+		File materialsDir = materialsPath.toFile();
+		if (!materialsDir.isDirectory()) {
+			return false;
+		}
+
+		// Check if there are any image files in the materials directory
+		File[] files = materialsDir.listFiles((file, name) -> {
+			String lower = name.toLowerCase();
+			return lower.endsWith(".png") || lower.endsWith(".jpg") || lower.endsWith(".jpeg");
+		});
+		return files != null && files.length > 0;
+	}
 
     @Override
     protected InputStream getInputStreamByName(String name) throws IOException {

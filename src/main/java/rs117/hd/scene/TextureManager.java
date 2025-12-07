@@ -47,6 +47,7 @@ import org.lwjgl.opengl.*;
 import rs117.hd.HdPlugin;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.resourcepacks.AbstractResourcePack;
+import rs117.hd.resourcepacks.PackEventType;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.utils.Props;
@@ -72,6 +73,13 @@ public class TextureManager {
 
 	@Inject
 	private ResourcePackManager resourcePackManager;
+
+	/**
+	 * Checks if a pack has textures by checking if it has any image files in the materials directory.
+	 */
+	private boolean packHasTextures(@Nullable AbstractResourcePack pack) {
+		return pack != null && pack.hasTextures();
+	}
 
 	@Inject
 	private ScheduledExecutorService executor;

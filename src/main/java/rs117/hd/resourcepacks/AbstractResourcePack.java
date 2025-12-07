@@ -24,6 +24,9 @@ public abstract class AbstractResourcePack implements IResourcePack {
 	@Setter
 	private boolean developmentPack = false;
 
+	private boolean cachedHasTextures = false;
+	private boolean cachedHasEnvironments = false;
+
 	public AbstractResourcePack(ResourcePath resourcePackFileIn) {
 		this.path = resourcePackFileIn;
 	}
@@ -46,6 +49,38 @@ public abstract class AbstractResourcePack implements IResourcePack {
 	 * @return List of ResourcePath objects pointing to JSON files
 	 */
 	public abstract List<ResourcePath> listJsonFiles(String directory);
+
+	/**
+	 * Checks if this pack has any textures (image files in the materials directory).
+	 * This value is cached during pack initialization.
+	 * @return true if the pack contains textures, false otherwise
+	 */
+	public boolean hasTextures() {
+		return cachedHasTextures;
+	}
+
+	/**
+	 * Sets whether this pack has textures. Called during pack initialization.
+	 */
+	protected void setHasTextures(boolean hasTextures) {
+		this.cachedHasTextures = hasTextures;
+	}
+
+	/**
+	 * Checks if this pack has any environments (JSON files in the environments directory).
+	 * This value is cached during pack initialization.
+	 * @return true if the pack contains environments, false otherwise
+	 */
+	public boolean hasEnvironments() {
+		return cachedHasEnvironments;
+	}
+
+	/**
+	 * Sets whether this pack has environments. Called during pack initialization.
+	 */
+	protected void setHasEnvironments(boolean hasEnvironments) {
+		this.cachedHasEnvironments = hasEnvironments;
+	}
 
 	public Manifest getManifest() {
 		try {
