@@ -183,6 +183,17 @@ public class SceneManager {
 				}
 			}
 		}
+
+		// Ensure any queued zone invalidations are now completed
+		root.completeInvalidation();
+
+		if (wv != null) {
+			for (WorldEntity we : wv.worldEntities()) {
+				WorldViewContext ctx = getContext(we.getWorldView());
+				if (ctx != null)
+					ctx.completeInvalidation();
+			}
+		}
 	}
 
 	private void updateAreaHiding() {

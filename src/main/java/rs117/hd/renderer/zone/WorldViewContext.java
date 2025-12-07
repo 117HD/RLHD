@@ -139,16 +139,17 @@ public class WorldViewContext {
 			}
 		}
 
-		if(invalidationGroup.getPendingCount() > 0) {
-			invalidationGroup.complete();
-			for (int x = 0; x < sizeX; x++) {
-				for (int z = 0; z < sizeZ; z++) {
-					handleZoneSwap(deltaTime, x, z);
-				}
+		return queuedWork;
+	}
+
+	void completeInvalidation() {
+		invalidationGroup.complete();
+
+		for (int x = 0; x < sizeX; x++) {
+			for (int z = 0; z < sizeZ; z++) {
+				handleZoneSwap(-1.0f, x, z);
 			}
 		}
-
-		return queuedWork;
 	}
 
 	void free() {
