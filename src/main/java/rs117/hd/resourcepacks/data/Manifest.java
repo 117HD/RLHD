@@ -1,7 +1,9 @@
 package rs117.hd.resourcepacks.data;
 
+import com.google.common.html.HtmlEscapers;
 import java.util.ArrayList;
 import lombok.Data;
+import org.apache.commons.text.WordUtils;
 
 @Data
 public class Manifest {
@@ -13,8 +15,8 @@ public class Manifest {
 	private String commit = "";
 
 	private String support = "";
-	private String author = "";
-	private String description = "";
+	private String author;
+	private String description;
 	private String link = "";
 	private PackType packType;
 
@@ -30,10 +32,11 @@ public class Manifest {
 	private Boolean dev = false;
 	private Long fileSize = null;
 
+	private transient String renderDescription = null;
+
 	public boolean hasIcon() {
 		return hasIcon;
 	}
-
 
 	public String getDisplayName() {
 		if (displayName == null || displayName.isEmpty())
@@ -55,5 +58,25 @@ public class Manifest {
 
 	public boolean isAddonPack() {
 		return getPackType() == PackType.ADDON;
+	}
+
+	public String getTooltipText() {
+		if (renderDescription != null) {
+			return renderDescription;
+		}
+
+		if (description == null || description.isEmpty()) {
+			return null;
+		}
+
+		String plain = HtmlEscapers.htmlEscaper().escape(description).trim();
+		if (plain.isEmpty()) {
+			return null;
+		}
+
+		String wrapped = WordUtils.wrap(plain, 40, "<br>", true);
+
+		renderDescription = "<html>" + wrapped + "</html>";
+		return renderDescription;
 	}
 }

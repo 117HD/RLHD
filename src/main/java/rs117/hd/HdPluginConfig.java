@@ -1001,7 +1001,7 @@ public interface HdPluginConfig extends Config
 		section = resourcePackSettings
 	)
 	default boolean compactView() {
-		return false;
+		return true;
 	}
 	@Range(
 		min = 64,

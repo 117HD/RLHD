@@ -24,7 +24,6 @@
  */
 package rs117.hd.gui.components;
 
-import com.google.common.html.HtmlEscapers;
 import com.google.inject.Inject;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -36,6 +35,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -46,7 +46,6 @@ import java.util.Map;
 import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -64,7 +63,6 @@ import net.runelite.client.eventbus.EventBus;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.DynamicGridLayout;
 import net.runelite.client.ui.FontManager;
-import net.runelite.client.ui.PluginPanel;
 import net.runelite.client.ui.components.IconTextField;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.LinkBrowser;
@@ -81,7 +79,6 @@ import rs117.hd.resourcepacks.PackEventType;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.resourcepacks.data.Manifest;
-import rs117.hd.resourcepacks.data.PackType;
 import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 
 import static rs117.hd.resourcepacks.ResourcePackManager.RAW_GITHUB_URL;
@@ -316,14 +313,12 @@ public class ResourcePackPanel extends JPanel {
 							// Filter by search query (display name and tags)
 							if (!searchQuery.isEmpty()) {
 								boolean matchesSearch = false;
-								
-								// Check display name
+
 								String displayName = pack.getDisplayName().toLowerCase();
 								if (displayName.contains(searchQuery)) {
 									matchesSearch = true;
 								}
-								
-								// Check tags
+
 								if (!matchesSearch && pack.getTags() != null) {
 									for (String tag : pack.getTags()) {
 										if (tag.toLowerCase().contains(searchQuery)) {
@@ -332,15 +327,7 @@ public class ResourcePackPanel extends JPanel {
 										}
 									}
 								}
-								
-								// Check description
-								if (!matchesSearch) {
-									String description = pack.getDescription().toLowerCase();
-									if (description.contains(searchQuery)) {
-										matchesSearch = true;
-									}
-								}
-								
+
 								if (!matchesSearch) {
 									continue;
 								}
@@ -380,21 +367,26 @@ public class ResourcePackPanel extends JPanel {
 	}
 
 	public JPanel createInstalledPackComponent(AbstractResourcePack pack, int index) {
-		JPanel panel = new JPanel();
+		boolean compactView = config.compactView();
+
+		int panelHeight = compactView ? 45 : 124;
+
+		JPanel panel = new JPanel() {
+			@Override
+			public Point getToolTipLocation(MouseEvent event) {
+				return new Point(5, panelHeight + 5);
+			}
+		};
 
 		boolean isDefaultPack = pack instanceof DefaultResourcePack;
 		boolean isTop = index == 0;
 		int lastIndex = resourcePackManager.getInstalledPacks().size() - 1;
-		// Disable down arrow if it's the last pack before the default pack (default is always at lastIndex)
 		boolean isLastBeforeDefault = index == lastIndex - 1;
-		boolean compactView = config.compactView();
 
 		panel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		panel.setOpaque(true);
 		panel.setLayout(null);
-		
-		// Adjust panel size for compact view
-		int panelHeight = compactView ? 45 : 124;
+
 		panel.setBounds(0, 0, 221, panelHeight);
 		panel.setMinimumSize(new Dimension(221, panelHeight));
 		panel.setPreferredSize(new Dimension(221, panelHeight));
@@ -404,6 +396,7 @@ public class ResourcePackPanel extends JPanel {
 		moveDown.setIcon(ARROW_DOWN);
 		SwingUtil.removeButtonDecorations(moveDown);
 		moveDown.setBounds(190, 5, 22, 22);
+		moveDown.setToolTipText(null); // Don't override panel tooltip
 		panel.add(moveDown);
 		moveDown.setEnabled(!isLastBeforeDefault && !isDefaultPack);
 		moveDown.addActionListener(ev -> movePack(index, index + 1));
@@ -412,6 +405,7 @@ public class ResourcePackPanel extends JPanel {
 		moveUp.setText("");
 		moveUp.setIcon(ARROW_UP);
 		SwingUtil.removeButtonDecorations(moveUp);
+		moveUp.setToolTipText(null); // Don't override panel tooltip
 		panel.add(moveUp);
 		moveUp.setBounds(165, 5, 22, 22);
 		moveUp.setEnabled(!isTop && !isDefaultPack);
@@ -433,20 +427,25 @@ public class ResourcePackPanel extends JPanel {
 		// Author is always shown, but positioned differently in compact view
 		JLabel author = new JLabel(manifest.getAuthor());
 		author.setFont(FontManager.getRunescapeSmallFont());
-		author.setToolTipText(manifest.getAuthor());
+		author.setToolTipText(null); // Don't override panel tooltip
 		int authorY = compactView ? 28 : 105;
 		author.setBounds(5, authorY, 65, author.getPreferredSize().height);
 		author.setForeground(Color.WHITE);
 		panel.add(author);
+
+		String tooltipText = manifest.getTooltipText();
+		if (tooltipText != null) {
+			panel.setToolTipText(tooltipText);
+		}
 		
 		if (!compactView) {
-			String descriptionText = manifest.getDescription();
-			if (!descriptionText.startsWith("<html>")) {
-				descriptionText = "<html>" + HtmlEscapers.htmlEscaper().escape(descriptionText) + "</html>";
+			String labelText = manifest.getTooltipText();
+			if (!labelText.startsWith("<html>")) {
+				labelText = "<html>" + labelText + "</html>";
 			}
-			JLabel description = new JLabel(descriptionText);
+			JLabel description = new JLabel(labelText);
 			description.setVerticalAlignment(JLabel.TOP);
-			description.setToolTipText(descriptionText);
+			description.setToolTipText(null); // Don't override panel tooltip
 			description.setBounds(5, 30, 210, 70);
 			description.setForeground(Color.WHITE);
 			panel.add(description);
@@ -467,7 +466,7 @@ public class ResourcePackPanel extends JPanel {
 		int packNameWidth = packNameEndX - (5 + packNameShift);
 		JLabel packName = new JLabel(manifest.getDisplayName());
 		packName.setFont(FontManager.getRunescapeBoldFont());
-		packName.setToolTipText(manifest.getInternalName());
+		packName.setToolTipText(null); // Don't override panel tooltip
 		packName.setBounds(5 + packNameShift, 5, packNameWidth, 25);
 		packName.setForeground(Color.WHITE);
 		panel.add(packName);
@@ -497,10 +496,16 @@ public class ResourcePackPanel extends JPanel {
 	}
 
 	public JPanel createDownloadablePackComponent(Manifest manifest) {
-		JPanel panel = new JPanel();
-
 		boolean compactView = config.compactView();
 		int panelHeight = compactView ? 60 : 124;
+		final int finalPanelHeight = panelHeight;
+		
+		JPanel panel = new JPanel() {
+			@Override
+			public Point getToolTipLocation(MouseEvent event) {
+				return new Point(5, finalPanelHeight + 5);
+			}
+		};
 
 		panel.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		panel.setOpaque(true);
@@ -509,61 +514,42 @@ public class ResourcePackPanel extends JPanel {
 		panel.setMinimumSize(new Dimension(221, panelHeight));
 		panel.setPreferredSize(new Dimension(221, panelHeight));
 
-		// Author is always shown, but positioned differently in compact view
 		JLabel author = new JLabel(manifest.getAuthor());
 		author.setFont(FontManager.getRunescapeSmallFont());
-		author.setToolTipText(manifest.getAuthor());
+		author.setToolTipText(null);
 		int authorY = compactView ? 28 : 105;
 		author.setBounds(5, authorY, 65, author.getPreferredSize().height);
 		author.setForeground(Color.WHITE);
 		panel.add(author);
-		
+
+		String tooltipText = manifest.getTooltipText();
+		if (tooltipText != null) {
+			panel.setToolTipText(tooltipText);
+		}
 		if (!compactView) {
-			String descriptionText = manifest.getDescription();
-			if (!descriptionText.startsWith("<html>")) {
-				descriptionText = "<html>" + HtmlEscapers.htmlEscaper().escape(descriptionText) + "</html>";
-			}
-			JLabel description = new JLabel(descriptionText);
+			JLabel description = new JLabel("<html>" + manifest.getTooltipText() + "</html>");
 			description.setVerticalAlignment(JLabel.TOP);
-			description.setToolTipText(descriptionText);
+			description.setToolTipText(null); // Don't override panel tooltip
 			description.setBounds(5, 30, 210, 70);
 			description.setForeground(Color.WHITE);
 			panel.add(description);
 		}
 
-		String displayName = manifest.getDisplayName();
-		displayName = displayName.replace('_', ' ');
-		String[] words = displayName.split("\\s+");
-		StringBuilder formatted = new StringBuilder();
-		for (String word : words) {
-			if (formatted.length() > 0) {
-				formatted.append(' ');
-			}
-			if (!word.isEmpty()) {
-				formatted.append(Character.toUpperCase(word.charAt(0)));
-				if (word.length() > 1) {
-					formatted.append(word.substring(1).toLowerCase());
-				}
-			}
-		}
-
-		displayName = formatted.toString();
-		
-		JLabel packName = new JLabel(displayName);
+		JLabel packName = new JLabel(manifest.getDisplayName());
 		packName.setFont(FontManager.getRunescapeBoldFont());
-		packName.setToolTipText(manifest.getInternalName());
+		packName.setToolTipText(null);
 		packName.setBounds(5, 5, 200, 25);
 		packName.setForeground(Color.WHITE);
 		panel.add(packName);
 
 		String internalName = manifest.getInternalName();
 		packPanels.put(internalName, panel);
-		
-		// Adjust button position for compact view
+
 		int buttonY = compactView ? 28 : 97;
 		
 		JButton actionButton = new JButton();
 		actionButton.setFocusPainted(false);
+		actionButton.setToolTipText(null);
 		boolean notInstalled = resourcePackManager.getInstalledPack(internalName) == null;
 		if (notInstalled) {
 			actionButton.setText("Install");
