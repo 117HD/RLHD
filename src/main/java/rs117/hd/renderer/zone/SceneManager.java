@@ -172,22 +172,17 @@ public class SceneManager {
 			}
 		}
 
-		boolean anyScenesLoading = root.isLoading;
-		boolean queuedWork = root.update(plugin.deltaTime);
+		root.update(plugin.deltaTime);
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
 				WorldViewContext ctx = getContext(we.getWorldView());
 				if (ctx != null) {
-					anyScenesLoading = anyScenesLoading || ctx.isLoading;
-					queuedWork = ctx.update(plugin.deltaTime) || queuedWork;
+					ctx.update(plugin.deltaTime);
 				}
 			}
 		}
-
-		if (plugin.isInHouse && queuedWork)
-			root.streamingGroup.complete();
 	}
 
 	private void updateAreaHiding() {
@@ -603,10 +598,8 @@ public class SceneManager {
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
-		if (plugin.isInHouse) {
+		if (!plugin.configZoneStreaming)
 			root.streamingGroup.complete();
-			root.invalidationGroup.complete();
-		}
 
 		int totalOpaque = 0;
 		int totalAlpha = 0;
