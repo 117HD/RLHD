@@ -505,6 +505,7 @@ public class SceneManager {
 							sortedZones.add(SortedZone.getZone(old, x, z, dist));
 							nextSceneContext.totalDeferred++;
 						} else {
+							// The zone can be reused without modifications
 							old.cull = false;
 							nextSceneContext.totalReused++;
 						}
@@ -514,7 +515,11 @@ public class SceneManager {
 				}
 			}
 
-			boolean staggerLoad = isZoneStreamingEnabled() && !nextSceneContext.isInHouse && root.sceneContext != null && nextSceneContext.totalReused > 0;
+			boolean staggerLoad =
+				isZoneStreamingEnabled() &&
+				!nextSceneContext.isInHouse &&
+				root.sceneContext != null &&
+				nextSceneContext.totalReused > 0;
 			for (int x = 0; x < NUM_ZONES; ++x) {
 				for (int z = 0; z < NUM_ZONES; ++z) {
 					Zone zone = nextZones[x][z];
@@ -539,7 +544,8 @@ public class SceneManager {
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
-				if(staggerLoad) {
+				if (staggerLoad) {
+					// Reuse the old zone while uploading a correct one
 					sorted.zone.cull = false;
 					sorted.zone.uploadJob = ZoneUploadJob
 						.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z);

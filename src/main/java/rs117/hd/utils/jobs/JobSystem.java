@@ -82,7 +82,7 @@ public final class JobSystem {
 
 	void signalWorkAvailable(int workCount) {
 		int availPermits = workerSemaphore.availablePermits();
-		if(availPermits >= workCount)
+		if (availPermits >= workCount)
 			return;
 		workerSemaphore.release(min(workCount, workCount - availPermits));
 	}

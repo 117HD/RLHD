@@ -27,11 +27,11 @@ public final class Worker {
 		// Find the best target to steal work from
 		int nextVictimIdx = -1;
 		int nextVictimWorkCount = -1;
-		for(int i = 0; i < jobSystem.workers.length; i++) {
-			if(i == workerIdx || !jobSystem.workers[i].inflight.get())
+		for (int i = 0; i < jobSystem.workers.length; i++) {
+			if (i == workerIdx || !jobSystem.workers[i].inflight.get())
 				continue; // Don't query ourselves or a worker that is idle
 			int workCount = jobSystem.workers[i].localWorkQueue.size();
-			if(workCount > nextVictimWorkCount) {
+			if (workCount > nextVictimWorkCount) {
 				nextVictimIdx = i;
 				nextVictimWorkCount = workCount;
 			}
@@ -70,7 +70,7 @@ public final class Worker {
 					handle = jobSystem.workQueue.poll();
 				}
 
-				if(handle == null && !findNextStealTarget()) {
+				if (handle == null && !findNextStealTarget()) {
 					// Wait for a signal that there is work to be had
 					try {
 						jobSystem.workerSemaphore.acquire();
@@ -84,7 +84,7 @@ public final class Worker {
 						handle = jobSystem.workQueue.poll();
 					}
 
-					if(handle == null) {
+					if (handle == null) {
 						// No work in the main queue, this must mean it was pushed to a local queue and as such should find it
 						findNextStealTarget();
 					}
