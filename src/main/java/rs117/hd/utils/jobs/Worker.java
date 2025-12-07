@@ -50,22 +50,31 @@ public final class Worker {
 				}
 
 				if (handle == null) {
-					// Reset steal worker idx since its queue is empty
-					stealTargetIdx = random.nextInt(0, jobSystem.workers.length);
-
-					if (stealTargetIdx == workerIdx) // Don't steal from yourself
-						stealTargetIdx = (stealTargetIdx + 1) % jobSystem.workers.length;
-
 					// Still no work, wait longer on the main work Queue
 					handle = jobSystem.workQueue.poll();
 				}
 
-				if (handle == null) {
-					// Wait for a signal that there is work to be had
-					try {
-						jobSystem.workerSemaphore.acquire();
-					} catch (InterruptedException ignored) {
-						// Interrupts are used to signal that the worker should shutdown, we'll pick this up and shutdown
+				if(handle == null) {
+					// Find the best target to steal work from
+					int nextVictimIdx = (workerIdx + 1) % jobSystem.workers.length;
+					int nextVictimWorkCount = jobSystem.workers[nextVictimIdx].localWorkQueue.size();
+					for(int i = 0; i < jobSystem.workers.length; i++) {
+						if(i == workerIdx) continue;
+						int workCount = jobSystem.workers[i].localWorkQueue.size();
+						if(workCount > nextVictimWorkCount) {
+							nextVictimIdx = i;
+							nextVictimWorkCount = workCount;
+						}
+					}
+					stealTargetIdx = nextVictimIdx;
+
+					if(nextVictimWorkCount == 0) {
+						// Wait for a signal that there is work to be had
+						try {
+							jobSystem.workerSemaphore.acquire();
+						} catch (InterruptedException ignored) {
+							// Interrupts are used to signal that the worker should shutdown, we'll pick this up and shutdown
+						}
 					}
 				}
 
