@@ -122,6 +122,7 @@ public class ResourcePackManager {
 		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
 
 		checkForUpdates();
+		plugin.configLegacyTzHaarReskin = isEnabled("tzhaar_reskin");
 	}
 
 	private void migrateLegacyConfigsInternal() {
@@ -282,7 +283,7 @@ public class ResourcePackManager {
 		removeCommitHash(internalName);
 		
 		plugin.getSidebar().refresh();
-		eventBus.post(new ResourcePackUpdate());
+		eventBus.post(new ResourcePackUpdate(PackEventType.REMOVED, packToRemove));
 	}
 
 	public void downloadResourcePack(Manifest manifest) {
@@ -359,7 +360,7 @@ public class ResourcePackManager {
 						saveCommitHash(internalName, manifest.getCommit());
 
 						plugin.getSidebar().refresh();
-						eventBus.post(new ResourcePackUpdate());
+						eventBus.post(new ResourcePackUpdate(PackEventType.ADDED, pack, manifest));
 						
 						if (onSuccess != null) {
 							onSuccess.run();
@@ -375,6 +376,10 @@ public class ResourcePackManager {
 			if (pack.getManifest().getInternalName().equals(internalName))
 				return pack;
 		return null;
+	}
+
+	public boolean isEnabled(String internalName) {
+		return getInstalledPack(internalName) != null;
 	}
 
 	public ResourcePath locateFile(String... parts) {

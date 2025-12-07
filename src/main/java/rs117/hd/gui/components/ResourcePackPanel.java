@@ -77,6 +77,7 @@ import okhttp3.Response;
 import rs117.hd.HdPluginConfig;
 import rs117.hd.gui.HdSidebar;
 import rs117.hd.resourcepacks.AbstractResourcePack;
+import rs117.hd.resourcepacks.PackEventType;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.resourcepacks.data.Manifest;
@@ -375,8 +376,7 @@ public class ResourcePackPanel extends JPanel {
 		Collections.swap(packs, fromIndex, toIndex);
 		
 		refreshPanel();
-		// Notify that resource packs have been updated
-		eventBus.post(new ResourcePackUpdate());
+		eventBus.post(new ResourcePackUpdate(PackEventType.MOVED, pack));
 	}
 
 	public JPanel createInstalledPackComponent(AbstractResourcePack pack, int index) {

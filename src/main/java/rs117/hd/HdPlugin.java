@@ -100,6 +100,7 @@ import rs117.hd.renderer.Renderer;
 import rs117.hd.renderer.legacy.LegacyRenderer;
 import rs117.hd.renderer.zone.SceneManager;
 import rs117.hd.renderer.zone.ZoneRenderer;
+import rs117.hd.resourcepacks.PackEventType;
 import rs117.hd.resourcepacks.ResourcePackManager;
 import rs117.hd.resourcepacks.ResourcePackUpdate;
 import rs117.hd.scene.AreaManager;
@@ -1539,6 +1540,17 @@ public class HdPlugin extends Plugin {
 		}
 	}
 
+	@Subscribe
+	public void onResourcePackUpdate(ResourcePackUpdate event) {
+		if (Objects.equals(event.getInternalName(), "tzhaar_reskin") && event.stateIs(PackEventType.ADDED, PackEventType.REMOVED)) {
+			configLegacyTzHaarReskin = resourcePackManager.isEnabled("tzhaar_reskin");
+			clientThread.invoke(() -> {
+				renderer.clearCaches();
+				renderer.reloadScene();
+			});
+		}
+	}
+
 	public boolean isLoadingScene() {
 		return renderer.isLoadingScene();
 	}
@@ -1550,7 +1562,6 @@ public class HdPlugin extends Plugin {
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
-		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
@@ -1730,7 +1741,7 @@ public class HdPlugin extends Plugin {
 							case KEY_ENABLE_RESOURCE_PACKS:
 								resourcePackManager.shutDown();
 								resourcePackManager.startUp();
-								eventBus.post(new ResourcePackUpdate());
+								eventBus.post(new ResourcePackUpdate(PackEventType.ADDED));
 								break;
 							case KEY_COMPACT_VIEW:
 								// Refresh the panel to update view
