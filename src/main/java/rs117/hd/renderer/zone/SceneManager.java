@@ -89,7 +89,7 @@ public class SceneManager {
 	private Zone[][] nextZones;
 	private boolean reloadRequested;
 
-	public final boolean isZoneStreamingEnabled() {
+	public boolean isZoneStreamingEnabled() {
 		return plugin.configZoneStreaming;
 	}
 
@@ -182,9 +182,8 @@ public class SceneManager {
 		if (wv != null) {
 			for (WorldEntity we : wv.worldEntities()) {
 				WorldViewContext ctx = getContext(we.getWorldView());
-				if (ctx != null) {
+				if (ctx != null)
 					ctx.update(plugin.deltaTime);
-				}
 			}
 		}
 
@@ -413,13 +412,21 @@ public class SceneManager {
 
 			nextSceneContext.enableAreaHiding = nextSceneContext.sceneBase != null && config.hideUnrelatedAreas();
 
+			if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
+				nextSceneContext.isInHouse = true;
+				nextSceneContext.isInChambersOfXeric = false;
+			} else {
+				nextSceneContext.isInHouse = false;
+				nextSceneContext.isInChambersOfXeric = nextSceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
+			}
+
 			environmentManager.loadSceneEnvironments(nextSceneContext);
 
 			loadSceneLightsTask.cancel();
 			calculateRoofChangesTask.cancel();
 
-			generateSceneDataTask.setExecuteAsync(plugin.configZoneStreaming).queue();
-			loadSceneLightsTask.setExecuteAsync(plugin.configZoneStreaming).queue();
+			generateSceneDataTask.setExecuteAsync(isZoneStreamingEnabled()).queue();
+			loadSceneLightsTask.setExecuteAsync(isZoneStreamingEnabled()).queue();
 
 			if (nextSceneContext.enableAreaHiding) {
 				assert nextSceneContext.sceneBase != null;
@@ -470,7 +477,7 @@ public class SceneManager {
 			}
 
 			// Queue after ensuring previous scene has been cancelled
-			calculateRoofChangesTask.setExecuteAsync(plugin.configZoneStreaming).queue();
+			calculateRoofChangesTask.setExecuteAsync(isZoneStreamingEnabled()).queue();
 
 			final int dx = scene.getBaseX() - prev.getBaseX() >> 3;
 			final int dy = scene.getBaseY() - prev.getBaseY() >> 3;
@@ -517,7 +524,7 @@ public class SceneManager {
 						if (root.sceneContext == null || dist < ZONE_DEFER_DIST_START) {
 							ZoneUploadJob
 								.build(ctx, nextSceneContext, zone, x, z)
-								.setExecuteAsync(plugin.configZoneStreaming)
+								.setExecuteAsync(isZoneStreamingEnabled())
 								.queue(ctx.sceneLoadGroup, generateSceneDataTask);
 							nextSceneContext.totalMapZones++;
 						} else {
@@ -528,13 +535,14 @@ public class SceneManager {
 				}
 			}
 
+			boolean staggerLoad = isZoneStreamingEnabled() && !nextSceneContext.isInHouse;
 			for (SortedZone sorted : sortedZones) {
 				Zone newZone = new Zone();
 				newZone.dirty = sorted.zone.dirty;
 				sorted.zone.uploadJob = ZoneUploadJob
 					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
-					.setExecuteAsync(plugin.configZoneStreaming);
-				if(plugin.configZoneStreaming) {
+					.setExecuteAsync(isZoneStreamingEnabled());
+				if (staggerLoad) {
 					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
 				} else {
 					sorted.zone.uploadJob.queue(ctx.streamingGroup, generateSceneDataTask);
@@ -569,14 +577,6 @@ public class SceneManager {
 
 		fishingSpotReplacer.despawnRuneLiteObjects();
 		npcDisplacementCache.clear();
-
-		if (nextSceneContext.intersects(areaManager.getArea("PLAYER_OWNED_HOUSE"))) {
-			plugin.isInHouse = true;
-			plugin.isInChambersOfXeric = false;
-		} else {
-			plugin.isInHouse = false;
-			plugin.isInChambersOfXeric = nextSceneContext.intersects(areaManager.getArea("CHAMBERS_OF_XERIC"));
-		}
 
 		boolean isFirst = root.sceneContext == null;
 		if (!isFirst)
@@ -613,7 +613,7 @@ public class SceneManager {
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
-		if (!plugin.configZoneStreaming)
+		if (nextSceneContext.isInHouse)
 			root.streamingGroup.complete();
 
 		int totalOpaque = 0;
@@ -703,7 +703,7 @@ public class SceneManager {
 		for (int x = 0; x < ctx.sizeX; ++x)
 			for (int z = 0; z < ctx.sizeZ; ++z)
 				ZoneUploadJob.build(ctx, sceneContext, ctx.zones[x][z], x, z)
-					.setExecuteAsync(plugin.configZoneStreaming)
+					.setExecuteAsync(isZoneStreamingEnabled())
 					.queue(ctx.sceneLoadGroup);
 
 		ctx.loadTime = sw.elapsed(TimeUnit.NANOSECONDS);
