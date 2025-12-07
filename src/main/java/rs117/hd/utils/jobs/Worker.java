@@ -25,10 +25,11 @@ public final class Worker {
 
 	boolean findNextStealTarget() {
 		// Find the best target to steal work from
-		int nextVictimIdx = (workerIdx + 1) % jobSystem.workers.length;
-		int nextVictimWorkCount = jobSystem.workers[nextVictimIdx].localWorkQueue.size();
+		int nextVictimIdx = -1;
+		int nextVictimWorkCount = -1;
 		for(int i = 0; i < jobSystem.workers.length; i++) {
-			if(i == workerIdx || nextVictimIdx == i) continue;
+			if(i == workerIdx || !jobSystem.workers[i].inflight.get())
+				continue; // Don't query ourselves or a worker that is idle
 			int workCount = jobSystem.workers[i].localWorkQueue.size();
 			if(workCount > nextVictimWorkCount) {
 				nextVictimIdx = i;
