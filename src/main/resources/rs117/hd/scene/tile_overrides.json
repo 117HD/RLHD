@@ -7483,6 +7483,7 @@
     "minSaturation": 3,
     "maxSaturation": 3,
     "underlayIds": [
+      48,
       61,
       62,
       64,
@@ -7654,15 +7655,6 @@
       72
     ],
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
-  },
-  {
-    "name": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
-    "area": "SHILO_MINE_ENTRANCE_DEPTH_BIAS_FIX",
-    "groundMaterial": "PURE_BLACK",
-    "blended": false,
-    "underlayIds": [
-      55
-    ]
   },
   {
     "name": "SHILO_VILLAGE_MINE_SURFACE_FIX",
@@ -9339,6 +9331,7 @@
       26,
       33,
       38,
+      48,
       49,
       50,
       51,

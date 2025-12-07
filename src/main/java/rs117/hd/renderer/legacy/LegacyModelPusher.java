@@ -583,7 +583,7 @@ public class LegacyModelPusher {
 					}
 				}
 
-				if (plugin.configTzhaarHD && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
+				if (plugin.configLegacyTzHaarReskin && modelOverride.tzHaarRecolorType != TzHaarRecolorType.NONE) {
 					int[] tzHaarRecolored = ProceduralGenerator.recolorTzHaar(
 						uuid,
 						modelOverride,

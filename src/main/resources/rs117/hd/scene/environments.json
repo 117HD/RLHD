@@ -2154,7 +2154,7 @@
     "directionalStrength": 1.5,
     "sunAngles": [ 52, 235 ],
     "fogColor": "#b8c5db",
-    "fogDepth": 25,
+    "fogDepth": 18,
     "windAngle": 40,
     "windSpeed": 10,
     "windStrength": 30

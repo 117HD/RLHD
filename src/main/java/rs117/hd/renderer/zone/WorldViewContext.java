@@ -31,8 +31,9 @@ public class WorldViewContext {
 	public long sceneSwapTime;
 
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
-	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, false);
+	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, true);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
+	final JobGroup<ZoneUploadJob> invalidationGroup = new JobGroup<>(true, false);
 
 	WorldViewContext(
 		SceneManager sceneManager,
@@ -82,7 +83,21 @@ public class WorldViewContext {
 				if (PrevZone != curZone)
 					pendingCull.add(PrevZone);
 			} else if (uploadTask.wasCancelled() && !curZone.cull) {
-				curZone.rebuild = true;
+				boolean shouldRetry = uploadTask.encounteredError() && curZone.isFirstLoadingAttempt;
+				if (shouldRetry) {
+					// Cache if the previous upload task encountered an error,
+					// if it encounters another one the zone will be dropped to avoid constantly rebuilding
+					curZone.rebuild = true;
+					curZone.isFirstLoadingAttempt = false;
+				} else if (uploadTask.encounteredError()) {
+					log.debug(
+						"Zone({}) [{}-{},{}] was cancelled due to an error, dropping to avoid constantly rebuilding",
+						curZone.hashCode(),
+						worldViewId,
+						zx,
+						zz
+					);
+				}
 			}
 			uploadTask.release();
 		}
@@ -120,6 +135,17 @@ public class WorldViewContext {
 		}
 
 		return queuedWork;
+	}
+
+	void completeInvalidation() {
+		if (isLoading)
+			return;
+
+		invalidationGroup.complete();
+
+		for (int x = 0; x < sizeX; x++)
+			for (int z = 0; z < sizeZ; z++)
+				handleZoneSwap(-1.0f, x, z);
 	}
 
 	void free() {
@@ -176,6 +202,6 @@ public class WorldViewContext {
 		curZone.uploadJob = ZoneUploadJob.build(sceneManager.uboZoneData, sceneManager.ssboModelData, this, sceneContext, newZone, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
-			curZone.uploadJob.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
+			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }

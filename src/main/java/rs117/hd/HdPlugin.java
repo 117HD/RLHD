@@ -359,7 +359,7 @@ public class HdPlugin extends Plugin {
 	public boolean configGroundTextures;
 	public boolean configGroundBlending;
 	public boolean configModelTextures;
-	public boolean configTzhaarHD;
+	public boolean configLegacyTzHaarReskin;
 	public boolean configProjectileLights;
 	public boolean configNpcLights;
 	public boolean configHideFakeShadows;
@@ -397,8 +397,6 @@ public class HdPlugin extends Plugin {
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
 	public boolean redrawPreviousFrame;
-	public boolean isInChambersOfXeric;
-	public boolean isInHouse;
 	public boolean justChangedArea;
 	public Scene skipScene;
 
@@ -647,8 +645,6 @@ public class HdPlugin extends Plugin {
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
-				isInHouse = false;
-				isInChambersOfXeric = false;
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -759,7 +755,7 @@ public class HdPlugin extends Plugin {
 
 	@Nullable
 	public SceneContext getSceneContext() {
-		return renderer.getSceneContext();
+		return renderer == null ? null : renderer.getSceneContext();
 	}
 
 	public void toggleFreezeFrame() {
@@ -1529,7 +1525,7 @@ public class HdPlugin extends Plugin {
 		configGroundTextures = config.groundTextures();
 		configGroundBlending = config.groundBlending();
 		configModelTextures = config.modelTextures();
-		configTzhaarHD = config.hdTzHaarReskin();
+		configLegacyTzHaarReskin = config.legacyTzHaarReskin();
 		configProjectileLights = config.projectileLights();
 		configNpcLights = config.npcLights();
 		configVanillaShadowMode = config.vanillaShadowMode();
@@ -1720,7 +1716,7 @@ public class HdPlugin extends Plugin {
 								// fall-through
 							case KEY_GROUND_BLENDING:
 							case KEY_FILL_GAPS_IN_TERRAIN:
-							case KEY_HD_TZHAAR_RESKIN:
+							case KEY_LEGACY_TZHAAR_RESKIN:
 								reloadScene = true;
 								break;
 							case KEY_VANILLA_SHADOW_MODE:
@@ -1859,10 +1855,10 @@ public class HdPlugin extends Plugin {
 		if (configAsyncUICopy)
 			asyncUICopy.complete();
 
-		if (client.getScene() == null)
-			return;
 		// The game runs significantly slower with lower planes in Chambers of Xeric
-		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
+		var ctx = getSceneContext();
+		if (ctx != null)
+			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 	}
 
 	@Subscribe

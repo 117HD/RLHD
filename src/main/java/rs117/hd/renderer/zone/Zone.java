@@ -8,6 +8,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.LinkedBlockingDeque;
 import javax.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +22,7 @@ import rs117.hd.scene.materials.Material;
 import rs117.hd.scene.model_overrides.ModelOverride;
 import rs117.hd.utils.Camera;
 import rs117.hd.utils.CommandBuffer;
+import rs117.hd.utils.HDUtils;
 
 import static net.runelite.api.Perspective.*;
 import static org.lwjgl.opengl.GL33C.*;
@@ -47,6 +50,9 @@ public class Zone {
 
 	public static final int LEVEL_WATER_SURFACE = 4;
 
+	public static final BlockingDeque<VBO> VBO_PENDING_DELETION = new LinkedBlockingDeque<>();
+	public static final BlockingDeque<Integer> VAO_PENDING_DELETION = new LinkedBlockingDeque<>();
+
 	public int glVao;
 	int bufLen;
 
@@ -66,6 +72,7 @@ public class Zone {
 	public boolean onlyWater; // whether the zone only contains water tiles
 	public boolean inSceneFrustum; // whether the zone is visible to the scene camera
 	public boolean inShadowFrustum; // whether the zone casts shadows into the visible scene
+	public boolean isFirstLoadingAttempt = true;
 
 	ZoneUploadJob uploadJob;
 
@@ -165,6 +172,55 @@ public class Zone {
 		// don't add permanent alphamodels to the cache as permanent alphamodels are always allocated
 		// to avoid having to synchronize the cache
 		alphaModels.clear();
+	}
+
+	public static void processPendingDeletions() {
+		int leakCount = 0;
+		VBO vbo;
+		while ((vbo = VBO_PENDING_DELETION.poll()) != null) {
+			vbo.destroy();
+			leakCount++;
+		}
+
+		Integer vao;
+		while ((vao = VAO_PENDING_DELETION.poll()) != null) {
+			glDeleteVertexArrays(vao);
+			leakCount++;
+		}
+
+		if (leakCount > 0)
+			log.warn("Destroyed {} leaked VBOs", leakCount);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		// Just in case the zone instance is no longer valid,
+		// copy everything which needs to be cleaned up here
+		if (vboO != null) {
+			VBO_PENDING_DELETION.add(vboO);
+			vboO = null;
+		}
+
+		if (vboA != null) {
+			VBO_PENDING_DELETION.add(vboA);
+			vboA = null;
+		}
+
+		if (vboM != null) {
+			VBO_PENDING_DELETION.add(vboM);
+			vboM = null;
+		}
+
+		if (glVao != 0) {
+			VAO_PENDING_DELETION.add(glVao);
+			glVao = 0;
+		}
+
+		if (glVaoA != 0) {
+			VAO_PENDING_DELETION.add(glVaoA);
+			glVaoA = 0;
+		}
 	}
 
 	public void unmap() {
@@ -392,6 +448,7 @@ public class Zone {
 	static final Queue<AlphaModel> modelCache = new ArrayDeque<>();
 
 	void addAlphaModel(
+		HdPlugin plugin,
 		MaterialManager materialManager,
 		int vao,
 		Model model,
@@ -486,6 +543,10 @@ public class Zone {
 		char bufferIdx = 0;
 		for (int f = 0; f < faceCount; ++f) {
 			if (color3[f] == -2)
+				continue;
+
+			// Hide fake shadows or lighting that is often baked into models by making the fake shadow transparent
+			if (plugin.configHideFakeShadows && modelOverride.hideVanillaShadows && HDUtils.isBakedGroundShading(model, f))
 				continue;
 
 			int transparency = transparencies != null ? transparencies[f] & 0xFF : 0;

@@ -28,10 +28,11 @@ public final class ZoneUploadJob extends Job {
 		}
 	}
 
-	UBOZoneData uboZoneData;
-	SSBOModelData ssboModelData;
-	WorldViewContext viewContext;
-	ZoneSceneContext sceneContext;
+	private UBOZoneData uboZoneData;
+	private SSBOModelData ssboModelData;
+	private WorldViewContext viewContext;
+	private ZoneSceneContext sceneContext;
+
 	Zone zone;
 	int x, z;
 	float delay;
@@ -39,29 +40,33 @@ public final class ZoneUploadJob extends Job {
 	@Override
 	protected void onRun() throws InterruptedException {
 		final ZoneUploader sceneUploader = THREAD_LOCAL_SCENE_UPLOADER.get();
-		workerHandleCancel();
+		try {
+			workerHandleCancel();
 
-		sceneUploader.job = this;
-		sceneUploader.setScene(sceneContext.scene);
-		sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
+			sceneUploader.job = this;
+			sceneUploader.setScene(sceneContext.scene);
+			sceneUploader.estimateZoneSize(sceneContext, zone, x, z);
 
 		zone.zoneData = uboZoneData.acquire();
 		zone.zoneData.reveal.set(zone.revealTime > 0.0f ? 1.0f : 0.0f);
 		zone.setWorldViewAndOffset(viewContext, sceneContext, x, z);
 
-		if (zone.sizeO > 0 || zone.sizeA > 0) {
-			workerHandleCancel();
+			if (zone.sizeO > 0 || zone.sizeA > 0) {
+				workerHandleCancel();
 
-			invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
-			workerHandleCancel();
+				invokeClientCallback(isHighPriority(), this::mapZoneVertexBuffers);
+				workerHandleCancel();
 
-			sceneUploader.uploadZone(sceneContext, zone, x, z);
-			workerHandleCancel();
+				sceneUploader.uploadZone(sceneContext, zone, x, z);
+				workerHandleCancel();
 
-			invokeClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
-		} else {
-			// The zone should not be left uninitialized, as this will prevent drawing anything within it
-			zone.initialized = true;
+				invokeClientCallback(isHighPriority(), this::unmapZoneVertexBuffers);
+			} else {
+				// The zone should not be left uninitialized, as this will prevent drawing anything within it
+				zone.initialized = true;
+			}
+		} finally {
+			sceneUploader.clear();
 		}
 	}
 
@@ -109,6 +114,10 @@ public final class ZoneUploadJob extends Job {
 	protected void onCancel() {
 		if (viewContext.zones[x][z] != zone)
 			viewContext.pendingCull.add(zone);
+
+		// Avoid holding a reference to the context after the job is done
+		viewContext = null;
+		sceneContext = null;
 	}
 
 	@Override
@@ -150,5 +159,11 @@ public final class ZoneUploadJob extends Job {
 			viewContext != null ? viewContext.worldViewId : "null",
 			x, z
 		);
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
+	protected void finalize() {
+		log.debug("ZoneUploadJob finalized, it should have been pooled? - {}", this);
 	}
 }
