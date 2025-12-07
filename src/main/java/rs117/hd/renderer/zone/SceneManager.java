@@ -187,16 +187,17 @@ public class SceneManager {
 			}
 		}
 
+		// TODO: Wait for zone invalidations without blocking other async loading
 		// Ensure any queued zone invalidations are now completed
-		root.completeInvalidation();
-
-		if (wv != null) {
-			for (WorldEntity we : wv.worldEntities()) {
-				WorldViewContext ctx = getContext(we.getWorldView());
-				if (ctx != null)
-					ctx.completeInvalidation();
-			}
-		}
+//		root.completeInvalidation();
+//
+//		if (wv != null) {
+//			for (WorldEntity we : wv.worldEntities()) {
+//				WorldViewContext ctx = getContext(we.getWorldView());
+//				if (ctx != null)
+//					ctx.completeInvalidation();
+//			}
+//		}
 	}
 
 	private void updateAreaHiding() {
