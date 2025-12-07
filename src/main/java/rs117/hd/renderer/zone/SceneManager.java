@@ -89,6 +89,10 @@ public class SceneManager {
 	private Zone[][] nextZones;
 	private boolean reloadRequested;
 
+	public final boolean isZoneStreamingEnabled() {
+		return plugin.configZoneStreaming;
+	}
+
 	@Getter
 	public final ReentrantLock loadingLock = new ReentrantLock();
 

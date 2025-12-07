@@ -143,6 +143,9 @@ public class WorldViewContext {
 	}
 
 	void completeInvalidation() {
+		if(isLoading)
+			return;
+
 		invalidationGroup.complete();
 
 		for (int x = 0; x < sizeX; x++) {
@@ -207,6 +210,7 @@ public class WorldViewContext {
 		newZone.dirty = zones[zx][zz].dirty;
 
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, zx, zz);
+		curZone.uploadJob.setExecuteAsync(sceneManager.isZoneStreamingEnabled());
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
 			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
