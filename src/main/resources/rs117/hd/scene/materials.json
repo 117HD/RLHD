@@ -1188,6 +1188,11 @@
     "name": "GRASS_3"
   },
   {
+    "name": "GRASS_1_DARK",
+    "parent": "GRASS_1",
+    "brightness": 0.86
+  },
+  {
     "name": "GRASS_SCROLLING",
     "parent": "GRASS_1",
     "scrollSpeed": [
