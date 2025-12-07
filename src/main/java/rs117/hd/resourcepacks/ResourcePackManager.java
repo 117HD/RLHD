@@ -216,12 +216,62 @@ public class ResourcePackManager {
 	}
 
 	public void removeResourcePack(String internalName) {
-		installedPacks.removeIf(p -> p.getManifest().getInternalName().equals(internalName));
+		// Find the pack before removing it
+		AbstractResourcePack packToRemove = null;
+		for (var pack : installedPacks) {
+			if (pack.getManifest().getInternalName().equals(internalName)) {
+				packToRemove = pack;
+				break;
+			}
+		}
+		
+		if (packToRemove == null) {
+			log.warn("Attempted to remove pack '{}' but it was not found", internalName);
+			return;
+		}
+		
+		// Don't delete the default pack
+		if (packToRemove instanceof DefaultResourcePack) {
+			log.warn("Attempted to remove default pack, ignoring");
+			return;
+		}
+		
+		// Store file path before removing from list
+		File fileToDelete = null;
+		if (packToRemove.path.isFileSystemResource()) {
+			fileToDelete = packToRemove.path.toFile();
+		}
+		
+		// Remove from the list first
+		installedPacks.remove(packToRemove);
+		
+		// Close the zip file if it's a ZipResourcePack to release the file lock
+		if (packToRemove instanceof ZipResourcePack) {
+			((ZipResourcePack) packToRemove).close();
+		}
+		
+		// Delete the zip file from disk
+		if (fileToDelete != null && fileToDelete.exists() && fileToDelete.isFile()) {
+			try {
+				if (fileToDelete.delete()) {
+					log.info("Deleted resource pack file: {}", fileToDelete.getAbsolutePath());
+				} else {
+					log.warn("Failed to delete resource pack file: {}", fileToDelete.getAbsolutePath());
+				}
+			} catch (Exception e) {
+				log.error("Error deleting resource pack file for '{}':", internalName, e);
+			}
+		}
+		
 		plugin.getSidebar().refresh();
 		eventBus.post(new ResourcePackUpdate());
 	}
 
 	public void downloadResourcePack(Manifest manifest) {
+		downloadResourcePack(manifest, null, null, null);
+	}
+
+	public void downloadResourcePack(Manifest manifest, java.util.function.Consumer<Integer> onProgress, Runnable onSuccess, Runnable onFailure) {
 		if (!RESOURCE_PACK_DIR.exists()) {
 			RESOURCE_PACK_DIR.toFile().mkdir();
 		}
@@ -233,11 +283,14 @@ public class ResourcePackManager {
 			.build()
 			.url();
 
+		// Use file size from manifest if available
+		Long expectedFileSize = manifest.getFileSize();
 
 		FileDownloader downloader = new FileDownloader();
 		downloader.downloadFile(
 			url.toString(),
 			RESOURCE_PACK_DIR.resolve(manifest.getInternalName() + ".zip").toFile(),
+			expectedFileSize,
 			new FileDownloader.DownloadListener() {
 				@Override
 				public void onStarted() {
@@ -247,12 +300,16 @@ public class ResourcePackManager {
 				@Override
 				public void onFailure(Call call, IOException e) {
 					log.info("Error while downloading resource pack '{}' from {}:", manifest.getInternalName(), url, e);
+					if (onFailure != null) {
+						onFailure.run();
+					}
 				}
 
 				@Override
 				public void onProgress(int progress) {
-					System.out.println("Progress: " + progress);
-
+					if (onProgress != null) {
+						onProgress.accept(progress);
+					}
 				}
 
 				@Override
@@ -273,6 +330,10 @@ public class ResourcePackManager {
 
 						plugin.getSidebar().refresh();
 						eventBus.post(new ResourcePackUpdate());
+						
+						if (onSuccess != null) {
+							onSuccess.run();
+						}
 					});
 				}
 			}

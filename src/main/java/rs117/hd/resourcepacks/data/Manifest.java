@@ -27,6 +27,7 @@ public class Manifest {
 
 	private String version = "";
 	private Boolean dev = false;
+	private Long fileSize = null;
 
 	public boolean hasIcon() {
 		return hasIcon;

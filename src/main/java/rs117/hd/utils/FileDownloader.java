@@ -30,6 +30,10 @@ public class FileDownloader {
 	}
 
 	public void downloadFile(String url, File destination, final DownloadListener listener) {
+		downloadFile(url, destination, null, listener);
+	}
+
+	public void downloadFile(String url, File destination, Long expectedFileSize, final DownloadListener listener) {
 		listener.onStarted(); // Trigger onStarted callback
 
 		Request request = new Request.Builder()
@@ -55,7 +59,7 @@ public class FileDownloader {
 					return;
 				}
 
-				long contentLength = body.contentLength();
+				long contentLength = expectedFileSize != null ? expectedFileSize : body.contentLength();
 				long bytesRead = 0;
 				byte[] buffer = new byte[1024 * 4]; // 4KB buffer
 
@@ -67,8 +71,12 @@ public class FileDownloader {
 						}
 						fos.write(buffer, 0, read);
 						bytesRead += read;
-						int progress = (int) ((bytesRead * 100) / contentLength);
-						listener.onProgress(progress);
+						if (contentLength > 0) {
+							int progress = (int) ((bytesRead * 100) / contentLength);
+							listener.onProgress(progress);
+						} else {
+							listener.onProgress(-1);
+						}
 					}
 					fos.flush();
 					listener.onFinished();

@@ -15,7 +15,7 @@ import rs117.hd.utils.ZipResourcePath;
 
 @Slf4j
 public class ZipResourcePack extends AbstractResourcePack {
-	private final ZipFile zipFile;
+	private ZipFile zipFile;
 	private final String rootPrefix;
 
 	public ZipResourcePack(File resourcePackFileIn) {
@@ -25,6 +25,21 @@ public class ZipResourcePack extends AbstractResourcePack {
 			this.rootPrefix = detectRootPrefix();
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to open zip file: " + resourcePackFileIn, e);
+		}
+	}
+
+	/**
+	 * Closes the zip file to release the file lock.
+	 * This should be called before deleting the pack file.
+	 */
+	public void close() {
+		if (zipFile != null) {
+			try {
+				zipFile.close();
+				zipFile = null;
+			} catch (IOException e) {
+				log.warn("Error closing zip file: {}", path, e);
+			}
 		}
 	}
 

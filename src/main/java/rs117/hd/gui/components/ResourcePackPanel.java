@@ -38,7 +38,9 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -49,6 +51,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
@@ -117,6 +120,11 @@ public class ResourcePackPanel extends JPanel {
 
 	@Inject
 	private HdPluginConfig config;
+
+	// Map to track download progress bars for each pack
+	private final Map<String, JProgressBar> downloadProgressBars = new HashMap<>();
+	private final Map<String, JButton> downloadButtons = new HashMap<>();
+	private final Map<String, JPanel> packPanels = new HashMap<>();
 
 	private enum PanelState {SELECTION, DOWNLOAD}
 
@@ -493,7 +501,6 @@ public class ResourcePackPanel extends JPanel {
 	}
 
 	public JPanel createDownloadablePackComponent(Manifest manifest) {
-		log.info("Listing downloadable pack '{}' with URL: {}", manifest.getInternalName(), manifest.getLink());
 		JPanel panel = new JPanel();
 
 		boolean compactView = config.compactView();
@@ -553,17 +560,57 @@ public class ResourcePackPanel extends JPanel {
 		packName.setForeground(Color.WHITE);
 		panel.add(packName);
 
+		String internalName = manifest.getInternalName();
+		packPanels.put(internalName, panel);
+		
+		// Adjust button position for compact view
+		int buttonY = compactView ? 28 : 97;
+		
 		JButton actionButton = new JButton();
 		actionButton.setFocusPainted(false);
-		boolean notInstalled = resourcePackManager.getInstalledPack(manifest.getInternalName()) == null;
+		boolean notInstalled = resourcePackManager.getInstalledPack(internalName) == null;
 		if (notInstalled) {
 			actionButton.setText("Install");
 			actionButton.setBackground(new Color(0x28BE28));
+			downloadButtons.put(internalName, actionButton);
 			actionButton.addActionListener(l ->
 			{
-				actionButton.setText("Installing...");
-				actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
-				resourcePackManager.downloadResourcePack(manifest);
+				replaceButtonWithProgressBar(internalName, panel, actionButton, buttonY);
+				resourcePackManager.downloadResourcePack(manifest, (progress) -> {
+					SwingUtilities.invokeLater(() -> {
+						JProgressBar progressBar = downloadProgressBars.get(internalName);
+						if (progressBar != null) {
+							// Skip if progress is -1 (unknown file size)
+							if (progress < 0) {
+								progressBar.setString("Downloading...");
+								panel.repaint();
+								return;
+							}
+							// Clamp progress to valid range (0-100)
+							int clampedProgress = Math.max(0, Math.min(100, progress));
+							progressBar.setValue(clampedProgress);
+							progressBar.setString(clampedProgress + "%");
+							panel.repaint(); // Force repaint to show progress
+						}
+					});
+				}, () -> {
+					SwingUtilities.invokeLater(() -> {
+						JProgressBar progressBar = downloadProgressBars.get(internalName);
+						if (progressBar != null) {
+							progressBar.setValue(100);
+							progressBar.setString("100%");
+							panel.repaint();
+						}
+					});
+				}, () -> {
+					SwingUtilities.invokeLater(() -> {
+						JProgressBar progressBar = downloadProgressBars.get(internalName);
+						if (progressBar != null) {
+							progressBar.setString("Failed");
+							panel.repaint();
+						}
+					});
+				});
 			});
 		} else {
 			actionButton.setText("Remove");
@@ -572,11 +619,9 @@ public class ResourcePackPanel extends JPanel {
 			{
 				actionButton.setText("Removing");
 				actionButton.setBackground(ColorScheme.MEDIUM_GRAY_COLOR);
-				resourcePackManager.removeResourcePack(manifest.getInternalName());
+				resourcePackManager.removeResourcePack(internalName);
 			});
 		}
-		// Adjust button position for compact view
-		int buttonY = compactView ? 28 : 97;
 		actionButton.setBounds(115, buttonY, 105, 25);
 
 		JLabel icon = new JLabel();
@@ -634,6 +679,39 @@ public class ResourcePackPanel extends JPanel {
 		panel.add(icon);
 
 		return panel;
+	}
+
+	private void replaceButtonWithProgressBar(String internalName, JPanel panel, JButton button, int y) {
+		panel.remove(button);
+		
+		JProgressBar progressBar = new JProgressBar(0, 100);
+		progressBar.setStringPainted(true);
+		progressBar.setString("0%");
+		progressBar.setValue(0);
+		progressBar.setBounds(115, y, 105, 25);
+		progressBar.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+		progressBar.setForeground(new Color(0x28BE28));
+		progressBar.setOpaque(true);
+		progressBar.setVisible(true);
+		progressBar.setBorderPainted(true);
+		
+		downloadProgressBars.put(internalName, progressBar);
+		
+		panel.add(progressBar);
+		panel.setComponentZOrder(progressBar, 0);
+		panel.revalidate();
+		panel.repaint();
+	}
+
+	private void restoreButtonFromProgressBar(String internalName, JPanel panel, JButton button, int y) {
+		JProgressBar progressBar = downloadProgressBars.remove(internalName);
+		if (progressBar != null) {
+			panel.remove(progressBar);
+		}
+		
+		panel.add(button);
+		panel.revalidate();
+		panel.repaint();
 	}
 
 	private void onSearchBarChanged() {
