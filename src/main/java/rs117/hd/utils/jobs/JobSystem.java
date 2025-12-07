@@ -2,8 +2,10 @@ package rs117.hd.utils.jobs;
 
 import com.google.inject.Injector;
 import java.util.HashMap;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.Semaphore;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import lombok.Getter;
@@ -42,10 +44,11 @@ public final class JobSystem {
 	private final int workerCount = max(2, PROCESSOR_COUNT - 1);
 
 	final BlockingDeque<JobHandle> workQueue = new LinkedBlockingDeque<>();
-	private final BlockingDeque<ClientCallbackJob> clientCallbacks = new LinkedBlockingDeque<>(workerCount);
+	private final ArrayBlockingQueue<ClientCallbackJob> clientCallbacks = new ArrayBlockingQueue<>(workerCount);
 
 	private final HashMap<Thread, Worker> threadToWorker = new HashMap<>();
 	Worker[] workers;
+	Semaphore workerSemaphore = new Semaphore(workerCount);
 
 	private boolean clientInvokeScheduled;
 
@@ -75,6 +78,13 @@ public final class JobSystem {
 				inflightCount++;
 		}
 		return inflightCount;
+	}
+
+	void signalWorkAvailable(int workCount) {
+		int availPermits = workerSemaphore.availablePermits();
+		if (availPermits >= workCount)
+			return;
+		workerSemaphore.release(min(workCount, workCount - availPermits));
 	}
 
 	public int getWorkQueueSize() {
@@ -185,6 +195,8 @@ public final class JobSystem {
 				workQueue.addLast(newHandle);
 			}
 		}
+
+		signalWorkAvailable(1);
 	}
 
 	void invokeClientCallback(boolean immediate, Runnable callback) throws InterruptedException {
@@ -198,10 +210,7 @@ public final class JobSystem {
 		clientCallback.callback = callback;
 		clientCallback.immediate = immediate;
 
-		if (immediate)
-			clientCallbacks.addFirst(clientCallback);
-		else
-			clientCallbacks.addLast(clientCallback);
+		clientCallbacks.add(clientCallback);
 
 		if (!clientInvokeScheduled) {
 			clientInvokeScheduled = true;
@@ -231,7 +240,7 @@ public final class JobSystem {
 		ClientCallbackJob pair;
 		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
 			if (!pair.immediate && immediateOnly) {
-				clientCallbacks.addLast(pair); // Add it back onto the end
+				clientCallbacks.add(pair); // Add it back onto the end
 				continue;
 			}
 
