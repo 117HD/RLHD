@@ -524,7 +524,11 @@ public class SceneManager {
 				sorted.zone.uploadJob = ZoneUploadJob
 					.build(ctx, nextSceneContext, newZone, sorted.x, sorted.z)
 					.setExecuteAsync(plugin.configZoneStreaming);
-				sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
+				if(plugin.configZoneStreaming) {
+					sorted.zone.uploadJob.delay = 0.5f + clamp(sorted.dist / 15.0f, 0.0f, 1.0f) * 1.5f;
+				} else {
+					sorted.zone.uploadJob.queue(ctx.streamingGroup, generateSceneDataTask);
+				}
 				sorted.free();
 			}
 			sortedZones.clear();
