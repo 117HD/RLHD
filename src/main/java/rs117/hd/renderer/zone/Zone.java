@@ -51,8 +51,8 @@ public class Zone {
 
 	public static final int LEVEL_WATER_SURFACE = 4;
 
-	public static final BlockingDeque<VBO> VBO_PENDING_DELETION = new LinkedBlockingDeque<>() {};
-	public static final BlockingDeque<Integer> VAO_PENDING_DELETION = new LinkedBlockingDeque<>() {};
+	public static final BlockingDeque<VBO> VBO_PENDING_DELETION = new LinkedBlockingDeque<>();
+	public static final BlockingDeque<Integer> VAO_PENDING_DELETION = new LinkedBlockingDeque<>();
 
 	public int glVao;
 	int bufLen;
@@ -170,7 +170,7 @@ public class Zone {
 		alphaModels.clear();
 	}
 
-	public static void ProcessPendingDeletion() {
+	public static void processPendingDeletions() {
 		int leakCount = 0;
 		VBO vbo;
 		while ((vbo = VBO_PENDING_DELETION.poll()) != null) {
@@ -184,35 +184,36 @@ public class Zone {
 			leakCount++;
 		}
 
-		if (leakCount > 0) {
+		if (leakCount > 0)
 			log.warn("Destroyed {} leaked VBOs", leakCount);
-		}
 	}
 
 	@Override
 	@SuppressWarnings("deprecation")
 	protected void finalize() {
-		if(vboO != null) {
+		// Just in case the zone instance is no longer valid,
+		// copy everything which needs to be cleaned up here
+		if (vboO != null) {
 			VBO_PENDING_DELETION.add(vboO);
 			vboO = null;
 		}
 
-		if(vboA != null) {
+		if (vboA != null) {
 			VBO_PENDING_DELETION.add(vboA);
 			vboA = null;
 		}
 
-		if(vboM != null) {
+		if (vboM != null) {
 			VBO_PENDING_DELETION.add(vboM);
 			vboM = null;
 		}
 
-		if(glVao != 0) {
+		if (glVao != 0) {
 			VAO_PENDING_DELETION.add(glVao);
 			glVao = 0;
 		}
 
-		if(glVaoA != 0) {
+		if (glVaoA != 0) {
 			VAO_PENDING_DELETION.add(glVaoA);
 			glVaoA = 0;
 		}
