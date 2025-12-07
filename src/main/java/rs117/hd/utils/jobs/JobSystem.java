@@ -199,10 +199,7 @@ public final class JobSystem {
 		clientCallback.callback = callback;
 		clientCallback.immediate = immediate;
 
-		if (immediate)
-			clientCallbacks.addFirst(clientCallback);
-		else
-			clientCallbacks.addLast(clientCallback);
+		clientCallbacks.add(clientCallback);
 
 		if (!clientInvokeScheduled) {
 			clientInvokeScheduled = true;
@@ -232,7 +229,7 @@ public final class JobSystem {
 		ClientCallbackJob pair;
 		while (size-- > 0 && (pair = clientCallbacks.poll()) != null) {
 			if (!pair.immediate && immediateOnly) {
-				clientCallbacks.addLast(pair); // Add it back onto the end
+				clientCallbacks.add(pair); // Add it back onto the end
 				continue;
 			}
 
