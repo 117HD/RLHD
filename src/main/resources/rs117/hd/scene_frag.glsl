@@ -501,9 +501,15 @@ void main() {
 
     outputColor.rgb = pow(outputColor.rgb, vec3(gammaCorrection));
 
+#if FADE_TYPE == 0
     if(IN.fFade.x > 0.0) {
         outputColor.a *= 1.0 - IN.fFade.x;
     }
+#elif FADE_TYPE == 1
+    if (IN.fFade.x > 0 && orderedDither(gl_FragCoord.xy, IN.fFade.x, 2.0) < 1.0) {
+        discard;
+    }
+#endif
 
     #if WINDOWS_HDR_CORRECTION
         outputColor.rgb = windowsHdrCorrection(outputColor.rgb);
