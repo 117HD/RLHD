@@ -76,6 +76,7 @@ public final class Worker {
 						jobSystem.workerSemaphore.acquire();
 					} catch (InterruptedException ignored) {
 						// Interrupts are used to signal that the worker should shutdown, we'll pick this up and shutdown
+						thread.isInterrupted(); // Consume the interrupt to prevent it from cancelling the next job
 					}
 
 					if (handle == null) {
