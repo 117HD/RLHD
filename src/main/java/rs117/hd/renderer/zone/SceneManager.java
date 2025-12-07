@@ -268,6 +268,7 @@ public class SceneManager {
 	public void completeAllStreaming() {
 		root.sceneLoadGroup.complete();
 		root.streamingGroup.complete();
+		root.invalidationGroup.complete();
 
 		WorldView wv = client.getTopLevelWorldView();
 		if (wv != null) {
@@ -276,6 +277,7 @@ public class SceneManager {
 				if (ctx != null) {
 					ctx.sceneLoadGroup.complete();
 					ctx.streamingGroup.complete();
+					ctx.invalidationGroup.complete();
 				}
 			}
 		}
@@ -381,6 +383,7 @@ public class SceneManager {
 
 			root.sceneLoadGroup.complete();
 			root.streamingGroup.complete();
+			root.invalidationGroup.complete();
 
 			if (nextSceneContext != null)
 				nextSceneContext.destroy();
@@ -596,8 +599,10 @@ public class SceneManager {
 		long sceneUploadTimeStart = sw.elapsed(TimeUnit.NANOSECONDS);
 		int blockingCount = root.sceneLoadGroup.getPendingCount();
 		root.sceneLoadGroup.complete();
-		if (plugin.isInHouse)
+		if (plugin.isInHouse) {
 			root.streamingGroup.complete();
+			root.invalidationGroup.complete();
+		}
 
 		int totalOpaque = 0;
 		int totalAlpha = 0;

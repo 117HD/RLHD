@@ -33,6 +33,7 @@ public class WorldViewContext {
 
 	final LinkedBlockingDeque<Zone> pendingCull = new LinkedBlockingDeque<>();
 	final JobGroup<ZoneUploadJob> sceneLoadGroup = new JobGroup<>(true, false);
+	final JobGroup<ZoneUploadJob> invalidationGroup = new JobGroup<>(true, false);
 	final JobGroup<ZoneUploadJob> streamingGroup = new JobGroup<>(false, false);
 
 	WorldViewContext(
@@ -125,6 +126,8 @@ public class WorldViewContext {
 			cullZone.free();
 		}
 
+		invalidationGroup.complete();
+
 		boolean queuedWork = false;
 		for (int x = 0; x < sizeX; x++) {
 			for (int z = 0; z < sizeZ; z++) {
@@ -134,6 +137,15 @@ public class WorldViewContext {
 					zones[x][z].rebuild = false;
 					invalidateZone(x, z);
 					queuedWork = true;
+				}
+			}
+		}
+
+		if(invalidationGroup.getPendingCount() > 0) {
+			invalidationGroup.complete();
+			for (int x = 0; x < sizeX; x++) {
+				for (int z = 0; z < sizeZ; z++) {
+					handleZoneSwap(deltaTime, x, z);
 				}
 			}
 		}
@@ -198,6 +210,6 @@ public class WorldViewContext {
 		curZone.uploadJob = ZoneUploadJob.build(this, sceneContext, newZone, zx, zz);
 		curZone.uploadJob.delay = prevUploadDelay;
 		if (curZone.uploadJob.delay < 0.0f)
-			curZone.uploadJob.queue(streamingGroup, sceneManager.getGenerateSceneDataTask());
+			curZone.uploadJob.queue(invalidationGroup, sceneManager.getGenerateSceneDataTask());
 	}
 }
