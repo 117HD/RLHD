@@ -1008,6 +1008,7 @@ public interface HdPluginConfig extends Config
 	@ConfigItem(
 		keyName = KEY_LEGACY_TOB_ENVIRONMENT,
 		name = "Legacy Theatre of Blood",
+		hidden = true,
 		description =
 			"Previously, Theatre of Blood used to look a whole lot more blue, which<br>" +
 			"some people grew really used to. This option brings back that same old look.",
@@ -1020,6 +1021,7 @@ public interface HdPluginConfig extends Config
 	String KEY_LEGACY_TZHAAR_RESKIN = "tzhaarHD";
 	@ConfigItem(
 		keyName = KEY_LEGACY_TZHAAR_RESKIN,
+		hidden = true,
 		name = "Legacy TzHaar city reskin",
 		description = "Recolors the TzHaar city of Mor Ul Rek to give it an appearance similar to that of its 2008 HD variant.",
 		section = legacySettings
