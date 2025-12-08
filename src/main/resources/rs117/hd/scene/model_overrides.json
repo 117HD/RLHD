@@ -115,24 +115,6 @@
       "KOLDEMON",
       "GROWNCAT_HELL",
       "LAZYCAT_HELL",
-      "II_IMPLING_TYPE_1",
-      "II_IMPLING_TYPE_2",
-      "II_IMPLING_TYPE_3",
-      "II_IMPLING_TYPE_4",
-      "II_IMPLING_TYPE_6",
-      "II_IMPLING_TYPE_7",
-      "II_IMPLING_TYPE_8",
-      "II_IMPLING_TYPE_9",
-      "II_IMPLING_TYPE_10",
-      "II_IMPLING_TYPE_1_MAZE",
-      "II_IMPLING_TYPE_2_MAZE",
-      "II_IMPLING_TYPE_3_MAZE",
-      "II_IMPLING_TYPE_4_MAZE",
-      "II_IMPLING_TYPE_6_MAZE",
-      "II_IMPLING_TYPE_7_MAZE",
-      "II_IMPLING_TYPE_8_MAZE",
-      "II_IMPLING_TYPE_9_MAZE",
-      "II_IMPLING_TYPE_10_MAZE",
       "BARBASSAULT_PEN_RANGER_TUTOR",
       "BARROWS_GIANTRAT",
       "BARROWS_GIANTRAT2",
@@ -1056,6 +1038,39 @@
       "BR_UNICORN",
       "AKD_LIZARD_EGGS_CORNER_NOOP",
       "AKD_LIZARD_EGGS_CORNER_OP"
+    ]
+  },
+  {
+    "description": "Impling Triangle Shadow Fix",
+    "hideVanillaShadows": true,
+    "npcIds": [
+      "II_IMPLING_TYPE_1",
+      "II_IMPLING_TYPE_2",
+      "II_IMPLING_TYPE_3",
+      "II_IMPLING_TYPE_4",
+      "II_IMPLING_TYPE_5",
+      "II_IMPLING_TYPE_6",
+      "II_IMPLING_TYPE_7",
+      "II_IMPLING_TYPE_8",
+      "II_IMPLING_TYPE_9",
+      "II_IMPLING_TYPE_10",
+      "II_IMPLING_TYPE_1_MAZE",
+      "II_IMPLING_TYPE_2_MAZE",
+      "II_IMPLING_TYPE_3_MAZE",
+      "II_IMPLING_TYPE_4_MAZE",
+      "II_IMPLING_TYPE_5_MAZE",
+      "II_IMPLING_TYPE_6_MAZE",
+      "II_IMPLING_TYPE_7_MAZE",
+      "II_IMPLING_TYPE_8_MAZE",
+      "II_IMPLING_TYPE_9_MAZE",
+      "II_IMPLING_TYPE_10_MAZE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 6 || l == 4",
+        "baseMaterial": "NONE",
+        "castShadows": false
+      }
     ]
   },
   {
