@@ -102,6 +102,7 @@ public class SceneUploader {
 	// GameObject cache to prevent changes between estimate & upload
 	private final List<GameObject> gameObjectCache = new ArrayList<>();
 	private final Map<Tile, Long> tileToGameObjectsRange = new HashMap<>();
+	private final Map<Renderable, Model> renderableModelCache = new HashMap<>();
 
 	private final int[] worldPos = new int[3];
 	private final int[][] vertices = new int[4][3];
@@ -142,6 +143,7 @@ public class SceneUploader {
 
 		gameObjectCache.clear();
 		tileToGameObjectsRange.clear();
+		renderableModelCache.clear();
 	}
 
 	protected void onBeforeProcessTile(Tile t, boolean isEstimate) {}
@@ -637,6 +639,7 @@ public class SceneUploader {
 			z.sizeO += faceCount;
 			z.sizeA += faceCount;
 		}
+		renderableModelCache.put(r, m);
 		return true;
 	}
 
@@ -659,16 +662,7 @@ public class SceneUploader {
 		GpuIntBuffer opaqueBuffer,
 		GpuIntBuffer alphaBuffer
 	) {
-		Model model = null;
-		if (r instanceof Model) {
-			model = (Model) r;
-		} else if (r instanceof DynamicObject) {
-			var dynamic = (DynamicObject) r;
-			model = dynamic.getModelZbuf();
-			var composition = dynamic.getRecordedObjectComposition();
-			if (composition != null)
-				uuid = ModelHash.packUuid(ModelHash.TYPE_GAME_OBJECT, composition.getId());
-		}
+		Model model = renderableModelCache.get(r);
 		if (model == null)
 			return;
 
