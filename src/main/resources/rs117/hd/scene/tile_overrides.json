@@ -6622,16 +6622,6 @@
     "shiftLightness": -4
   },
   {
-    "name": "OVERLAY_SAND",
-    "area": "ALL",
-    "overlayIds": [
-      25,
-      26,
-      76
-    ],
-    "groundMaterial": "SAND"
-  },
-  {
     "name": "OVERLAY_BRICK_BROWN",
     "area": "ALL",
     "overlayIds": [
@@ -7090,6 +7080,22 @@
     "groundMaterial": "EARTHEN_CAVE_FLOOR"
   },
   {
+    "name": "SOUTH_CATHERBY_SEASON_FIX",
+    "area": "SOUTH_CATHERBY_SEASON_FIX",
+    "overlayIds": [ 25 ],
+    "replacements": {
+      "SEASONAL_SAND": true
+    }
+  },
+  {
+    "name": "CATHERBY_BEACH_SAND_OVERLAY",
+    "area": "CATHERBY",
+    "overlayIds": [ 25 ],
+    "replacements": {
+      "SEASONAL_SAND": true
+    }
+  },
+  {
     "name": "CATHERBY_BEACH_SAND",
     "area": "CATHERBY",
     "underlayIds": [
@@ -7098,7 +7104,7 @@
     "replacements": {
       "SEASONAL_GRASS": "h >= 9 || h == 8 && s > 5",
       "SEASONAL_DIRT": "h < 8 && s > 4 && l < 45",
-      "DEFAULT_SAND": true
+      "SEASONAL_SAND": true
     }
   },
   {
@@ -9580,6 +9586,16 @@
       "WINTER_DIRT": "season == SeasonalTheme.WINTER"
     },
     "maxLightness": 75
+  },
+  {
+    "name": "OVERLAY_SAND",
+    "area": "ALL",
+    "overlayIds": [
+      25,
+      26,
+      76
+    ],
+    "groundMaterial": "SAND"
   },
   {
     "name": "OVERLAY_DIRT",
