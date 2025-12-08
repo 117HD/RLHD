@@ -91,6 +91,13 @@
     }
   },
   {
+    "name": "SEASONAL_SNOW",
+    "replacements": {
+      "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
+      "DEFAULT_SNOW": true
+    }
+  },
+  {
     "name": "WINTER_GRASS",
     "groundMaterial": "SNOW_1",
     "maxHue": 0,
@@ -121,6 +128,14 @@
     "maxSaturation": 0,
     "shiftLightness": 40,
     "maxLightness": 70
+  },
+  {
+    "name": "WINTER_ICY_SNOW",
+    "groundMaterial": "SNOW_1",
+    "setHue": 45,
+    "maxSaturation": 0,
+    "shiftLightness": 30,
+    "maxLightness": 68
   },
   {
     "name": "SNOW_2",
@@ -5172,8 +5187,24 @@
       98
     ],
     "replacements": {
-      "DEFAULT_SNOW": "h >= 17 || s == 0",
-      "DEFAULT_DIRT": "h == 7 || s == 1"
+      "SEASONAL_SNOW": "h >= 17 || s == 0",
+      "SEASONAL_DIRT": true
+    }
+  },
+  {
+    "name": "PIRATES_COVE_COMPLEX",
+    "area": "PIRATES_COVE",
+    "underlayIds": [
+      58,
+      59,
+      97,
+      98,
+      112
+    ],
+    "replacements": {
+      "SEASONAL_GRUNGE": "s == 0 && l <= 39",
+      "SEASONAL_SNOW": "h >= 17 || s == 0",
+      "SEASONAL_DIRT": true
     }
   },
   {
@@ -7959,6 +7990,47 @@
     "description": "For when ground blending is ENABLED",
     "groundMaterial": "SNOW_1",
     "shiftLightness": 13
+  },
+  {
+    "name": "FREM_COLONIES_SEASONAL_SNOW",
+    "minHue": 3,
+    "maxHue": 7,
+    "maxLightness": 63,
+    "replacements": {
+      "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
+      "DEFAULT_SNOW": true
+    }
+  },
+  {
+    "name": "Miscellania and Etcetera Complex Tiles",
+    "area": "FREMENNIK_COLONIES",
+    "underlayIds": [
+      48,
+      49,
+      50,
+      55,
+      56,
+      57,
+      58,
+      60,
+      64,
+      93,
+      96,
+      97
+    ],
+    "replacements": {
+      "FREM_COLONIES_SEASONAL_SNOW": "s == 0",
+      "SEASONAL_GRASS": [
+        "h >= 9 && s >= 2",
+        "h >= 11 && s >= 1"
+      ],
+      "SEASONAL_DIRT": [
+        "h <= 8 && s <= 4",
+        "h == 9 && s == 1",
+        "h == 10 && s == 1"
+      ],
+      "DEFAULT_DIRT": true
+    }
   },
   {
     "name": "SHADOW_DUNGEON_FLOOR",
