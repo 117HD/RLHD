@@ -94,7 +94,7 @@
     "name": "SEASONAL_SNOW",
     "replacements": {
       "WINTER_ICY_SNOW": "season == SeasonalTheme.WINTER",
-      "DEFAULT_SNOW": true
+      "WINTER_DIRT": true
     }
   },
   {
@@ -7041,7 +7041,7 @@
     "replacements": {
       "SEASONAL_GRASS": "s >= 5",
       "SEASONAL_VERTICAL_DIRT": "s >= 1",
-      "WINTER_DIRT": true
+      "SEASONAL_SNOW": true
     }
   },
   {
