@@ -393,6 +393,7 @@ public class ResourcePackPanel extends JPanel {
 		moveDebounce = executor.schedule(() -> {
 			if (justClicked) {
 				eventBus.post(new ResourcePackUpdate(PackEventType.MOVED, pendingMovePack, originalFromIndex, currentToIndex));
+				resourcePackManager.savePackOrder();
 				justClicked = false;
 				moveDebounce = null;
 				pendingMovePack = null;
@@ -626,7 +627,7 @@ public class ResourcePackPanel extends JPanel {
 							panel.repaint();
 						}
 					});
-				});
+				},false);
 			});
 		} else {
 			actionButton.setText("Remove");

@@ -56,11 +56,8 @@ public class ResourcePackManager {
 	public static ResourcePath RESOURCE_PACK_DIR = Props.getFolder("117hd-resource-packs", () -> path(new File(RuneLite.RUNELITE_DIR,"117hd-resource-packs").getPath()));
 	public static ResourcePath RESOURCE_PACK_PROPS = Props.getFile("117hd-resource-pack-commits", () -> path(new File(RuneLite.RUNELITE_DIR,"117hd-resource-packs").getPath(), "commits.properties"));
 
-	public static final HttpUrl GITHUB = HttpUrl.get("https://github.com/117HD/resource-packs");
-	public static final HttpUrl RESOURCE_PACKS_MANIFEST_URL = HttpUrl.get(
-		"https://raw.githubusercontent.com/117HD/resource-packs/manifest/manifest.json");
+	public static final HttpUrl RESOURCE_PACKS_MANIFEST_URL = HttpUrl.get("https://raw.githubusercontent.com/117HD/resource-pack-hub/manifest/manifest.json");
 	public static final HttpUrl RAW_GITHUB_URL = HttpUrl.get("https://raw.githubusercontent.com/");
-	public static final HttpUrl API_GITHUB = HttpUrl.get("https://api.github.com/repos/117HD/resource-packs");
 
 	private static final int MAX_UPDATE_CHECK_INTERVAL = 600000; // 10 minutes
 	private static final FileFilter RESOURCE_PACK_FILTER = file ->
@@ -109,6 +106,8 @@ public class ResourcePackManager {
 		SwingUtilities.invokeLater(() -> plugin.sidebar = plugin.getInjector().getInstance(HdSidebar.class));
 		
 		Properties commitHashes = loadCommitHashes();
+		ArrayList<AbstractResourcePack> loadedPacks = new ArrayList<>();
+		HashMap<String, AbstractResourcePack> packMap = new HashMap<>();
 
 		if (RESOURCE_PACK_DIR.exists()) {
 			if (RESOURCE_PACK_DIR.exists()) {
@@ -130,13 +129,32 @@ public class ResourcePackManager {
 						AbstractResourcePack pack = createResourcePack(file);
 
 						if (pack.isValid()) {
-							installedPacks.add(pack);
+							loadedPacks.add(pack);
+							packMap.put(pack.getManifest().getInternalName(), pack);
 						}
 					}
 				}
 			}
 		}
+
+		// Restore pack order from commits.properties
+		String packOrder = commitHashes.getProperty("packOrder");
+		if (packOrder != null && !packOrder.isEmpty()) {
+			String[] orderedNames = packOrder.split(",");
+			for (String internalName : orderedNames) {
+				internalName = internalName.trim();
+				AbstractResourcePack pack = packMap.remove(internalName);
+				if (pack != null) {
+					installedPacks.add(pack);
+				}
+			}
+		}
+
+		installedPacks.addAll(packMap.values());
+
 		installedPacks.add(new DefaultResourcePack(path(HdPlugin.class, "resource-pack")));
+
+		savePackOrder();
 
 		checkForUpdates();
 		plugin.configLegacyTzHaarReskin = isEnabled("tzhaar_reskin");
@@ -153,7 +171,7 @@ public class ResourcePackManager {
 		if (manifest != null) {
 			if (getInstalledPack(internalName) == null) {
 				log.info("Auto-downloading legacy pack '{}' due to legacy config being enabled", internalName);
-				downloadResourcePack(manifest);
+				downloadResourcePack(manifest,false);
 				configManager.setConfiguration("hd",keyName,false);
 			}
 		} else {
@@ -294,18 +312,21 @@ public class ResourcePackManager {
 		}
 		
 		removeCommitHash(internalName);
+
+		savePackOrder();
 		
 		plugin.getSidebar().refresh();
 		eventBus.post(new ResourcePackUpdate(PackEventType.REMOVED, packToRemove));
 	}
 
-	public void downloadResourcePack(Manifest manifest) {
-		downloadResourcePack(manifest, null, null, null);
+	public void downloadResourcePack(Manifest manifest, boolean updating) {
+		downloadResourcePack(manifest, null, null, null, updating);
 	}
 
-	public void downloadResourcePack(Manifest manifest, java.util.function.Consumer<Integer> onProgress, Runnable onSuccess, Runnable onFailure) {
-		// Check if pack has settings and show pre-install popup
-		if (manifest.isHasSettings()) {
+	public void downloadResourcePack(Manifest manifest, java.util.function.Consumer<Integer> onProgress, Runnable onSuccess, Runnable onFailure, boolean updating) {
+		boolean packExists = getInstalledPack(manifest.getInternalName()) != null;
+
+		if (manifest.isHasSettings() && !updating && !packExists) {
 			PopupUtils.displayPopupMessage(
 				client,
 				"Pack Settings Override",
@@ -314,7 +335,7 @@ public class ResourcePackManager {
 				new String[] { "Cancel", "Continue" },
 				i -> {
 					if (i == 1) {
-						downloadResourcePackInternal(manifest, onProgress, onSuccess, onFailure);
+						downloadResourcePackInternal(manifest, onProgress, onSuccess, onFailure, false);
 						return true;
 					}
 					return true;
@@ -323,10 +344,10 @@ public class ResourcePackManager {
 			return;
 		}
 		
-		downloadResourcePackInternal(manifest, onProgress, onSuccess, onFailure);
+		downloadResourcePackInternal(manifest, onProgress, onSuccess, onFailure, updating);
 	}
 
-	private void downloadResourcePackInternal(Manifest manifest, java.util.function.Consumer<Integer> onProgress, Runnable onSuccess, Runnable onFailure) {
+	private void downloadResourcePackInternal(Manifest manifest, java.util.function.Consumer<Integer> onProgress, Runnable onSuccess, Runnable onFailure, boolean updating) {
 		if (!RESOURCE_PACK_DIR.exists()) {
 			RESOURCE_PACK_DIR.toFile().mkdir();
 		}
@@ -398,7 +419,10 @@ public class ResourcePackManager {
 						plugin.getSidebar().refresh();
 						eventBus.post(new ResourcePackUpdate(PackEventType.ADDED, pack, manifest));
 
-						if (manifest.isHasSettings()) {
+
+						savePackOrder();
+
+						if (manifest.isHasSettings() && localPack == null && !updating) {
 							applyPackSettings(pack);
 						}
 						
@@ -501,7 +525,7 @@ public class ResourcePackManager {
 
 		for (var manifest : packsToUpdate) {
 			removeResourcePack(manifest.getInternalName());
-			downloadResourcePack(manifest);
+			downloadResourcePack(manifest,true);
 		}
 	}
 	/**
@@ -524,6 +548,48 @@ public class ResourcePackManager {
 	}
 
 	/**
+	 * Saves all properties to the file in the correct order:
+	 * 1. packOrder
+	 * 2. Commit hashes
+	 */
+	private void savePropertiesFile(Properties props) {
+		File propsFile = RESOURCE_PACK_PROPS.toFile();
+		try {
+			propsFile.getParentFile().mkdirs();
+			
+			try (FileOutputStream fos = new FileOutputStream(propsFile)) {
+				fos.write("# Resource pack commit hashes and order - packOrder:comma-separated-list, internalName:commitHash\n".getBytes());
+
+				String packOrder = props.getProperty("packOrder");
+				if (packOrder != null) {
+					fos.write(("packOrder=" + packOrder + "\n").getBytes());
+				}
+
+				List<String> commitHashKeys = new ArrayList<>();
+				
+				for (String key : props.stringPropertyNames()) {
+					if (key.equals("packOrder")) {
+						continue;
+					} else {
+						commitHashKeys.add(key);
+					}
+				}
+
+				commitHashKeys.sort(String::compareTo);
+
+				if (!commitHashKeys.isEmpty()) {
+					fos.write("\n# Commit hashes\n".getBytes());
+					for (String key : commitHashKeys) {
+						fos.write((key + "=" + props.getProperty(key) + "\n").getBytes());
+					}
+				}
+			}
+		} catch (IOException e) {
+			log.warn("Failed to save properties file: {}", e.getMessage());
+		}
+	}
+
+	/**
 	 * Saves a commit hash for a pack to the properties file.
 	 * @param internalName The internal name of the pack
 	 * @param commitHash The commit hash to save
@@ -531,18 +597,7 @@ public class ResourcePackManager {
 	private void saveCommitHash(String internalName, String commitHash) {
 		Properties props = loadCommitHashes();
 		props.setProperty(internalName, commitHash);
-		
-		File propsFile = RESOURCE_PACK_PROPS.toFile();
-		try {
-			// Ensure parent directory exists
-			propsFile.getParentFile().mkdirs();
-			
-			try (FileOutputStream fos = new FileOutputStream(propsFile)) {
-				props.store(fos, "Resource pack commit hashes - internalName:commitHash");
-			}
-		} catch (IOException e) {
-			log.warn("Failed to save commit hash for pack '{}': {}", internalName, e.getMessage());
-		}
+		savePropertiesFile(props);
 	}
 
 	/**
@@ -552,16 +607,34 @@ public class ResourcePackManager {
 	private void removeCommitHash(String internalName) {
 		Properties props = loadCommitHashes();
 		if (props.remove(internalName) != null) {
-			File propsFile = RESOURCE_PACK_PROPS.toFile();
-			try {
-				try (FileOutputStream fos = new FileOutputStream(propsFile)) {
-					props.store(fos, "Resource pack commit hashes - internalName:commitHash");
-				}
-			} catch (IOException e) {
-				log.warn("Failed to remove commit hash for pack '{}': {}", internalName, e.getMessage());
-			}
+			savePropertiesFile(props);
 		}
 	}
+
+	/**
+	 * Saves the current pack order to the properties file.
+	 * Public method to allow external components to trigger saving.
+	 */
+	public void savePackOrder() {
+		Properties props = loadCommitHashes();
+		List<String> packNames = new ArrayList<>();
+		
+		for (var pack : installedPacks) {
+			if (pack instanceof DefaultResourcePack) {
+				continue;
+			}
+			packNames.add(pack.getManifest().getInternalName());
+		}
+		
+		if (!packNames.isEmpty()) {
+			props.setProperty("packOrder", String.join(",", packNames));
+		} else {
+			props.remove("packOrder");
+		}
+		
+		savePropertiesFile(props);
+	}
+
 
 	/**
 	 * Creates an appropriate ResourcePack instance based on the file type.
@@ -603,7 +676,7 @@ public class ResourcePackManager {
 			for (String key : settings.stringPropertyNames()) {
 				String value = settings.getProperty(key).trim();
 				configManager.setConfiguration(CONFIG_GROUP, key, value);
-				log.info("Applied setting: {} = {}", value, value);
+				log.info("Applied setting: {} = {}", key, value);
 			}
 
 			boolean loggedIn = client.getGameState() == GameState.LOGGED_IN;
