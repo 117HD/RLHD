@@ -1,5 +1,8 @@
 package rs117.hd.resourcepacks;
 
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Rectangle;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
@@ -16,9 +19,14 @@ import javax.inject.Singleton;
 import javax.swing.SwingUtilities;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.*;
 import net.runelite.client.RuneLite;
+import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.EventBus;
+import net.runelite.client.ui.ClientUI;
+import net.runelite.client.ui.ContainableFrame;
+import net.runelite.client.util.ColorUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.HttpUrl;
@@ -34,6 +42,7 @@ import rs117.hd.resourcepacks.impl.DefaultResourcePack;
 import rs117.hd.resourcepacks.impl.FileResourcePack;
 import rs117.hd.resourcepacks.impl.ZipResourcePack;
 import rs117.hd.utils.FileDownloader;
+import rs117.hd.utils.PopupUtils;
 import rs117.hd.utils.Props;
 import rs117.hd.utils.ResourcePath;
 
@@ -71,6 +80,14 @@ public class ResourcePackManager {
 
 	@Inject
 	private ConfigManager configManager;
+
+	@Inject
+	private Client client;
+
+	@Inject
+	private ClientUI clientUI;
+
+	@Inject ClientThread clientThread;
 
 	@Getter
 	private ArrayList<AbstractResourcePack> installedPacks = new ArrayList<>();
@@ -287,6 +304,29 @@ public class ResourcePackManager {
 	}
 
 	public void downloadResourcePack(Manifest manifest, java.util.function.Consumer<Integer> onProgress, Runnable onSuccess, Runnable onFailure) {
+		// Check if pack has settings and show pre-install popup
+		if (manifest.isHasSettings()) {
+			PopupUtils.displayPopupMessage(
+				client,
+				"Pack Settings Override",
+				"This pack will override some of your settings.<br><br>" +
+				"Do you want to continue with the installation?",
+				new String[] { "Cancel", "Continue" },
+				i -> {
+					if (i == 1) {
+						downloadResourcePackInternal(manifest, onProgress, onSuccess, onFailure);
+						return true;
+					}
+					return true;
+				}
+			);
+			return;
+		}
+		
+		downloadResourcePackInternal(manifest, onProgress, onSuccess, onFailure);
+	}
+
+	private void downloadResourcePackInternal(Manifest manifest, java.util.function.Consumer<Integer> onProgress, Runnable onSuccess, Runnable onFailure) {
 		if (!RESOURCE_PACK_DIR.exists()) {
 			RESOURCE_PACK_DIR.toFile().mkdir();
 		}
@@ -357,6 +397,10 @@ public class ResourcePackManager {
 
 						plugin.getSidebar().refresh();
 						eventBus.post(new ResourcePackUpdate(PackEventType.ADDED, pack, manifest));
+
+						if (manifest.isHasSettings()) {
+							applyPackSettings(pack);
+						}
 						
 						if (onSuccess != null) {
 							onSuccess.run();
@@ -536,4 +580,63 @@ public class ResourcePackManager {
 		}
 		return pack;
 	}
+
+	private void applyPackSettings(AbstractResourcePack pack) {
+		try {
+			if (!pack.hasResource("settings.properties")) {
+				log.warn("Pack {} has hasSettings=true but no settings.properties file", pack.getPackName());
+				return;
+			}
+
+			var settingsPath = pack.getResource("settings.properties");
+			if (settingsPath == null || !settingsPath.exists()) {
+				log.warn("Pack {} settings.properties file not found", pack.getPackName());
+				return;
+			}
+
+			Properties settings = new Properties();
+			try (var inputStream = settingsPath.toInputStream()) {
+				settings.load(inputStream);
+			}
+
+			// Map settings from properties file to config keys
+			for (String key : settings.stringPropertyNames()) {
+				String value = settings.getProperty(key).trim();
+				configManager.setConfiguration(CONFIG_GROUP, key, value);
+				log.info("Applied setting: {} = {}", value, value);
+			}
+
+			boolean loggedIn = client.getGameState() == GameState.LOGGED_IN;
+			boolean interacting = loggedIn && client.getLocalPlayer() != null && client.getLocalPlayer().isInteracting();
+
+			if (!loggedIn || !interacting) {
+				PopupUtils.displayPopupMessage(
+					client,
+					"Settings Applied",
+					"The pack settings have been applied.<br><br>" +
+					"This requires a restart to take effect.",
+					new String[] { "Cancel", "Restart" },
+					i -> {
+						if (i == 1) {
+							System.exit(0);
+						}
+						return true;
+					}
+				);
+			} else {
+				clientThread.invoke(() -> client.addChatMessage(
+					ChatMessageType.GAMEMESSAGE,
+					"117 HD",
+					ColorUtil.wrapWithColorTag(
+						"[117 HD] We could not apply the settings visually because you were in combat. Please restart the client to see the changes.",
+						Color.GREEN
+					),
+					"117 HD"
+				));
+			}
+		} catch (Exception ex) {
+			log.error("Error applying pack settings:", ex);
+		}
+	}
+
 }

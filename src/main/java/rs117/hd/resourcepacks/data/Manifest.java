@@ -9,6 +9,7 @@ import org.apache.commons.text.WordUtils;
 public class Manifest {
 	private boolean hasIcon = false;
 	private boolean hasCompactIcon = false;
+	private boolean hasSettings = false;
 	private String displayName = "";
 	private String internalName = "";
 	private ArrayList<String> tags = new ArrayList<>();
