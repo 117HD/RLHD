@@ -201,17 +201,25 @@
   {
     "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
     "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "groundMaterial": "VERTICAL_DIRT",
     "overlayIds": [
       14
-    ],
+    ]
+  },
+  {
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "replacements": {
+      "WINTER_DIRT": "season == SeasonalTheme.WINTER",
+      "VERTICAL_DIRT_FIX": true
+    },
     "underlayIds": [
       48,
       63,
       64,
       65,
       66
-    ],
-    "groundMaterial": "VERTICAL_DIRT"
+    ]
   },
   {
     "name": "TUTORIAL_ISLAND_KITCHEN_TILE_1",
@@ -2900,6 +2908,22 @@
     ],
     "waterType": "SWAMP_WATER_FLAT",
     "blended": false
+  },
+  {
+    "name": "GU'TANOTH - WARM_REGION - Complex",
+    "area": "GU'TANOTH",
+    "overlayIds": [
+      14
+    ],
+    "underlayIds": [
+      48,
+      50,
+      63,
+      64,
+      65,
+      66
+    ],
+    "groundMaterial": "VERTICAL_DIRT"
   },
   {
     "name": "FELDIP_HILLS_HUNTER_OVERLAY",
