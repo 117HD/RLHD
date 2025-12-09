@@ -1372,7 +1372,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 20
+    "shiftLightness": 20,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_EAST_BANK_PATH_FIX_1",
@@ -1386,7 +1389,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 16
+    "shiftLightness": 16,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_1",
@@ -1395,7 +1401,10 @@
       2
     ],
     "groundMaterial": "GRAVEL",
-    "shiftLightness": 3
+    "shiftLightness": 3,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_TRIANGLE_DIRT_PATH_FIX_2",
@@ -1406,7 +1415,10 @@
     "groundMaterial": "GRAVEL",
     "shiftHue": -4,
     "shiftSaturation": -1,
-    "shiftLightness": 5
+    "shiftLightness": 5,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_TRIANGLE_PATH_PATH_FIX_1",
@@ -1417,7 +1429,10 @@
     "groundMaterial": "GRAVEL",
     "shiftHue": -4,
     "shiftSaturation": -1,
-    "shiftLightness": 2
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_SOUTH_PATH_FIX_1",
@@ -1430,7 +1445,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 19
+    "shiftLightness": 19,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_SOUTH_PATH_FIX_2",
@@ -1441,7 +1459,10 @@
     "groundMaterial": "GRAVEL",
     "shiftHue": -4,
     "shiftSaturation": -1,
-    "shiftLightness": 2
+    "shiftLightness": 2,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_PATHS",
@@ -1454,7 +1475,10 @@
     "maxHue": 7,
     "minSaturation": 1,
     "maxSaturation": 1,
-    "shiftLightness": 15
+    "shiftLightness": 15,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "FALADOR_HAIRDRESSER_TILE_1",
