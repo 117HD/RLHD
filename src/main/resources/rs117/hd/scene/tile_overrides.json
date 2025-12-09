@@ -141,7 +141,6 @@
   {
     "name": "WINTER_EDGEVILLE_PATH",
     "groundMaterial": "WINTER_JAGGED_STONE_TILE_LIGHT",
-    "blendedAsOpposite": true,
     "maxHue": 0,
     "maxSaturation": 0,
     "shiftLightness": 8
@@ -6899,7 +6898,6 @@
   {
     "name": "EDGEVILLE_PATH_OVERLAY_48",
     "area": "EDGEVILLE_PATH_OVERLAY",
-    "groundMaterial": "VARROCK_PATHS",
     "replacements": {
       "EDGEVILLE_PATH_OVERLAY_48_CUSTOM_PATH": "blending",
       "WINTER_GRASS": "season == SeasonalTheme.WINTER",
