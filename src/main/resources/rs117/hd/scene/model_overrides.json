@@ -65221,7 +65221,8 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
+        "undoVanillaShading": false
       },
       {
         "description": "Metal",
@@ -65235,7 +65236,6 @@
         "uvType": "BOX",
         "uvScale": 0.3,
         "uvOrientation": 400,
-        "receiveShadows": false,
         "undoVanillaShading": false
       },
       {
@@ -65245,7 +65245,6 @@
         "uvType": "BOX",
         "uvScale": 0.3,
         "uvOrientation": 400,
-        "receiveShadows": false,
         "undoVanillaShading": false
       }
     ]
@@ -65312,7 +65311,8 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "undoVanillaShading": false
       },
       {
         "description": "Metal",
@@ -65323,14 +65323,12 @@
         "description": "Sail Low Tier",
         "colors": "h == 11 || h == 12 || h == 0 && s == 7",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "receiveShadows": false,
         "undoVanillaShading": false
       },
       {
         "description": "Sail Med Tier",
         "colors": "h == 6 && s == 1 || h == 8 && s == 1",
         "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
-        "receiveShadows": false,
         "undoVanillaShading": false
       }
     ]
@@ -65359,7 +65357,8 @@
       {
         "description": "Rope",
         "colors": "h == 8",
-        "baseMaterial": "CARPET_LIGHT_SMOOTH"
+        "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+        "undoVanillaShading": false
       },
       {
         "description": "Metal",
@@ -65370,14 +65369,12 @@
         "description": "Sail Low Tier",
         "colors": "h == 11 || h == 12 || h == 0 && s == 7",
         "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
-        "receiveShadows": false,
         "undoVanillaShading": false
       },
       {
         "description": "Sail Med Tier",
         "colors": "h == 6 && s == 1 || h == 8 && s == 1",
         "baseMaterial": "CARPET_SUPER_LIGHT_SMOOTH",
-        "receiveShadows": false,
         "undoVanillaShading": false
       }
     ]
