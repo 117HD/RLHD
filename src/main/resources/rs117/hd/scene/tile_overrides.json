@@ -3718,7 +3718,10 @@
     ],
     "groundMaterial": "SAND_BRICK",
     "shiftSaturation": -2,
-    "shiftLightness": 12
+    "shiftLightness": 12,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "LLETYA_WOOD_FLOORS",
@@ -3735,7 +3738,10 @@
     "overlayIds": [ 42, 106 ],
     "groundMaterial": "HD_WOOD_PLANKS_2",
     "blended": false,
-    "shiftLightness": 10
+    "shiftLightness": 10,
+    "replacements": {
+      "NONE": "!textures"
+    }
   },
   {
     "name": "PRIFDDINAS_INTERIORS_RAISED",
