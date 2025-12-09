@@ -199,7 +199,7 @@
     "groundMaterial": "VERTICAL_DIRT"
   },
   {
-    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH_OVERLAY",
     "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
     "groundMaterial": "VERTICAL_DIRT",
     "overlayIds": [
@@ -207,7 +207,7 @@
     ]
   },
   {
-    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
+    "name": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH_UNDERLAY",
     "area": "VERTICAL_DIRT_FIX_JIGGIG_GU'TANOTH",
     "replacements": {
       "WINTER_DIRT": "season == SeasonalTheme.WINTER",
