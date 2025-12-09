@@ -4002,22 +4002,28 @@
   {
     "name": "KOUREND_GREAT_STATUE_BLEND_FIX_1",
     "area": "GREAT_KOUREND_STATUE",
+    "groundMaterial": "GRASS_1",
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    },
     "overlayIds": [
       108
-    ],
-    "groundMaterial": "GRASS_1"
+    ]
   },
   {
     "name": "KOUREND_GREAT_STATUE_BLEND_FIX_2",
     "area": "GREAT_KOUREND_STATUE",
+    "groundMaterial": "GRASS_1",
+    "blended": false,
+    "replacements": {
+      "WINTER_GRASS": "season == SeasonalTheme.WINTER"
+    },
     "overlayIds": [
       11
     ],
     "underlayIds": [
       112
-    ],
-    "groundMaterial": "GRASS_1",
-    "blended": false
+    ]
   },
   {
     "name": "HOSIDIUS_WELL_BLEND_FIX",
