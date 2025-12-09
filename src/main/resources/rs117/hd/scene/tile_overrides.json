@@ -1958,7 +1958,7 @@
   },
   {
     "name": "TROLLHEIM_WALLS",
-    "area": "TROLLHEIM",
+    "area": "TROLL_COUNTRY",
     "overlayIds": [
       83
     ],
@@ -7079,7 +7079,7 @@
   },
   {
     "name": "TROLLHEIM_DIRT",
-    "area": "TROLLHEIM",
+    "area": "TROLL_COUNTRY",
     "underlayIds": [
       63,
       67

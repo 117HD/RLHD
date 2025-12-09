@@ -4233,6 +4233,23 @@
     ]
   },
   {
+    "name": "TROLL_ICE_PATH",
+    "regions": [
+      11322,
+      11325,
+      11578,
+      11579
+    ]
+  },
+  {
+    "name": "TROLLWEISS_MOUNTAIN",
+    "regions": [
+      11066,
+      11067,
+      11068
+    ]
+  },
+  {
     "name": "TROLLHEIM",
     "regions": [
       11577,
@@ -4253,6 +4270,14 @@
       11676
     ],
     "hideOtherAreas": true
+  },
+  {
+    "name": "TROLL_COUNTRY",
+    "areas": [
+      "TROLLHEIM",
+      "TROLL_ICE_PATH",
+      "TROLLWEISS_MOUNTAIN"
+    ]
   },
   {
     "name": "Saba's cave",
@@ -10241,7 +10266,9 @@
       "WHITE_WOLF_MOUNTAIN_ENVIRONMENT",
       "ZEAH_SNOWY_NORTHERN_REGION",
       "PLAYER_OWNED_HOUSE_SNOWY",
-      "TROLLHEIM",
+      "TROLL_ICE_PATH",
+      "TROLLWEISS_MOUNTAIN",
+      "WEISS_REGION",
       "RALOS_RISE"
     ]
   },
