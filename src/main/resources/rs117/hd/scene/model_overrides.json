@@ -65816,18 +65816,15 @@
     ]
   },
   {
-    "description": "Sailing - Barracuda Flag",
+    "description": "Sailing - Barracuda Flag Tempor and Jubbly",
     "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
     "objectIds": [
       "SAILING_BOAT_1X3_FLAG_JUBBLY_JIVE",
       "SAILING_BOAT_1X3_FLAG_TEMPOR_TANTRUM",
-      "SAILING_BOAT_1X3_FLAG_GWENITH_GLIDE",
       "SAILING_BOAT_SKIFF_FLAG_TEMPOR_TANTRUM",
       "SAILING_BOAT_SKIFF_FLAG_JUBBLY_JIVE",
-      "SAILING_BOAT_SKIFF_FLAG_GWENITH_GLIDE",
       "SAILING_BOAT_SLOOP_FLAG_TEMPOR_TANTRUM",
-      "SAILING_BOAT_SLOOP_FLAG_JUBBLY_JIVE",
-      "SAILING_BOAT_SLOOP_FLAG_GWENITH_GLIDE"
+      "SAILING_BOAT_SLOOP_FLAG_JUBBLY_JIVE"
     ],
     "colorOverrides": [
       {
@@ -65844,6 +65841,36 @@
         "uvType": "BOX",
         "uvOrientationY": 500,
         "uvScale": 0.2
+      },
+      {
+        "description": "Metal",
+        "colors": "h == 0",
+        "baseMaterial": "METALLIC_1_LIGHT_SMOOTH"
+      }
+    ]
+  },
+  {
+    "description": "Sailing - Barracuda Flag Gwenith",
+    "baseMaterial": "CARPET_VERY_LIGHT_SMOOTH",
+    "objectIds": [
+      "SAILING_BOAT_1X3_FLAG_GWENITH_GLIDE",
+      "SAILING_BOAT_SKIFF_FLAG_GWENITH_GLIDE",
+      "SAILING_BOAT_SLOOP_FLAG_GWENITH_GLIDE"
+    ],
+    "colorOverrides": [
+      {
+        "description": "Rope",
+        "colors": "h == 8",
+        "baseMaterial": "ROPE",
+        "uvType": "BOX",
+        "uvScale": 0.3
+      },
+      {
+        "description": "Wood",
+        "colors": "h == 5",
+        "baseMaterial": "LIGHT_BARK_SMOOTH",
+        "uvType": "BOX",
+        "uvScale": 0.4
       },
       {
         "description": "Metal",
