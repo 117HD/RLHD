@@ -115,24 +115,6 @@
       "KOLDEMON",
       "GROWNCAT_HELL",
       "LAZYCAT_HELL",
-      "II_IMPLING_TYPE_1",
-      "II_IMPLING_TYPE_2",
-      "II_IMPLING_TYPE_3",
-      "II_IMPLING_TYPE_4",
-      "II_IMPLING_TYPE_6",
-      "II_IMPLING_TYPE_7",
-      "II_IMPLING_TYPE_8",
-      "II_IMPLING_TYPE_9",
-      "II_IMPLING_TYPE_10",
-      "II_IMPLING_TYPE_1_MAZE",
-      "II_IMPLING_TYPE_2_MAZE",
-      "II_IMPLING_TYPE_3_MAZE",
-      "II_IMPLING_TYPE_4_MAZE",
-      "II_IMPLING_TYPE_6_MAZE",
-      "II_IMPLING_TYPE_7_MAZE",
-      "II_IMPLING_TYPE_8_MAZE",
-      "II_IMPLING_TYPE_9_MAZE",
-      "II_IMPLING_TYPE_10_MAZE",
       "BARBASSAULT_PEN_RANGER_TUTOR",
       "BARROWS_GIANTRAT",
       "BARROWS_GIANTRAT2",
@@ -1059,6 +1041,39 @@
     ]
   },
   {
+    "description": "Impling Triangle Shadow Fix",
+    "hideVanillaShadows": true,
+    "npcIds": [
+      "II_IMPLING_TYPE_1",
+      "II_IMPLING_TYPE_2",
+      "II_IMPLING_TYPE_3",
+      "II_IMPLING_TYPE_4",
+      "II_IMPLING_TYPE_5",
+      "II_IMPLING_TYPE_6",
+      "II_IMPLING_TYPE_7",
+      "II_IMPLING_TYPE_8",
+      "II_IMPLING_TYPE_9",
+      "II_IMPLING_TYPE_10",
+      "II_IMPLING_TYPE_1_MAZE",
+      "II_IMPLING_TYPE_2_MAZE",
+      "II_IMPLING_TYPE_3_MAZE",
+      "II_IMPLING_TYPE_4_MAZE",
+      "II_IMPLING_TYPE_5_MAZE",
+      "II_IMPLING_TYPE_6_MAZE",
+      "II_IMPLING_TYPE_7_MAZE",
+      "II_IMPLING_TYPE_8_MAZE",
+      "II_IMPLING_TYPE_9_MAZE",
+      "II_IMPLING_TYPE_10_MAZE"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "l == 6 || l == 4",
+        "baseMaterial": "NONE",
+        "castShadows": false
+      }
+    ]
+  },
+  {
     "description": "Kourend - Hosidius - Apple Tree",
     "baseMaterial": "BARK",
     "objectIds": [
@@ -1581,7 +1596,27 @@
       "YEW_TREE_DEAD_FULLYGROWN",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP",
+      "YEWTREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "SEASONLESS_LEAVES_TOP"
+      }
+    }
+  },
+  {
+    "description": "Warm Region - Objects - Tree - Yew - No Terrain Vertex Snapping",
+    "areas": [ "WARM_REGIONS" ],
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
       "YEWTREE_UPDATE2"
     ],
     "uvType": "BOX",
@@ -1639,7 +1674,26 @@
       "YEW_TREE_DEAD_FULLYGROWN",
       "YEWTREE",
       "TREE_YEW_DEFAULT01",
-      "YEWTREE_NOOP",
+      "YEWTREE_NOOP"
+    ],
+    "uvType": "BOX",
+    "uvScale": 0.8,
+    "materialOverrides": {
+      "LEAVES_SIDE": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_SIDE"
+      },
+      "LEAVES_TOP": {
+        "windDisplacementMode": "VERTEX",
+        "textureMaterial": "LEAVES_TOP"
+      }
+    }
+  },
+  {
+    "description": "Objects - Tree - Yew - No Terrain Vertex Snapping",
+    "baseMaterial": "BARK",
+    "windDisplacementMode": "VERTEX_WITH_HEMISPHERE_BLEND",
+    "objectIds": [
       "YEWTREE_UPDATE2"
     ],
     "uvType": "BOX",
@@ -2830,10 +2884,6 @@
       "PMOON_SHORT_GRASS_1",
       "PMOON_SHORT_GRASS_2",
       "PMOON_SHORT_GRASS_3",
-      "PLANT_MOSS01_SUN01",
-      "PLANT_MOSS01_SUN02",
-      "PLANT_MOSS01_SUN03",
-      "PLANT_MOSS01_SUN04",
       "REGICIDE_GRASS1_RIVER",
       "REGICIDE_GRASS2_RIVER",
       "REGICIDE_GRASS2L_RIVER",
@@ -28114,6 +28164,8 @@
     "baseMaterial": "STONE_NORMALED",
     "uvType": "BOX",
     "uvScale": 0.4,
+    "terrainVertexSnap": true,
+    "terrainVertexSnapThreshold": 0.15,
     "objectIds": [
       "WELL"
     ],
@@ -35440,7 +35492,31 @@
       "FLOORKIT_SUN01_CORNER01"
     ],
     "uvType": "MODEL_XZ",
-    "uvScale": 0.75
+    "uvScale": 0.75,
+    "depthBias": 150
+  },
+  {
+    "description": "Short grass which shouldn't cast shadows",
+    "baseMaterial": "GRAY_65",
+    "uvType": "BOX",
+    "uvScale": 0.7,
+    "flatNormals": true,
+    "windDisplacementMode": "OBJECT",
+    "castShadows": false,
+    "objectIds": [
+      "PLANT_MOSS01_SUN01",
+      "PLANT_MOSS01_SUN02",
+      "PLANT_MOSS01_SUN03",
+      "PLANT_MOSS01_SUN04"
+    ],
+    "colorOverrides": [
+      {
+        "colors": "s == 4",
+        "baseMaterial": "GRASS_1_DARK",
+        "uvType": "BOX",
+        "uvScale": 0.7
+      }
+    ]
   },
   {
     "description": "Perilous Moons Ancient Shrine Chest",
@@ -68599,8 +68675,7 @@
     ]
   },
   {
-    "description": "Depth Bias Fix - Fire of Nourishment",
-    "baseMaterial": "NONE",
+    "description": "Weiss - Fire of Nourishment",
     "castShadows": false,
     "receiveShadows": false,
     "objectIds": [
@@ -68617,6 +68692,12 @@
         "baseMaterial": "SMOOTH_STONE",
         "uvType": "BOX",
         "uvScale": 0.6
+      },
+      {
+        "colors": "h == 7",
+        "baseMaterial": "DIRT_1",
+        "uvType": "MODEL_XZ",
+        "uvScale": 0.45
       }
     ]
   },
@@ -68672,20 +68753,6 @@
     "depthBias": 255
   },
   {
-    "description": "Depth Bias Fix - Zulrah Exit Scroll",
-    "objectIds": [
-      "SNAKEBOSS_EXIT"
-    ],
-    "depthBias": 200,
-    "colorOverrides": [
-      {
-        "colors": "h == 21",
-        "baseMaterial": "NONE",
-        "depthBias": 255
-      }
-    ]
-  },
-  {
     "description": "Depth Bias Fix - POH Restoration Pools",
     "objectIds": [
       "POH_POOL_REJUVENATION",
@@ -68725,9 +68792,6 @@
     "description": "Depth Bias Fix - Mounted Glory/Digsite/Xeric",
     "objectIds": [
       "POH_TROPHY_AMULETOFGLORY_4",
-      "POH_AMULET_DIG_DIGSITE",
-      "POH_AMULET_DIG_FOSSIL",
-      "POH_AMULET_DIG_LITHKREN",
       "POH_AMULET_XERIC",
       "POH_AMULET_XERIC_HONOUR",
       "POH_AMULET_XERIC_HEART",
@@ -68742,25 +68806,6 @@
         "baseMaterial": "NONE",
         "depthBias": 110
       }
-    ]
-  },
-  {
-    "description": "Depth Bias Fix - Catherby drawers poking through a wall",
-    "baseMaterial": "WOOD_GRAIN_3",
-    "areas": [ "CATHERBY_DEPTH_BIAS_FIX" ],
-    "uvType": "BOX",
-    "uvScale": 0.5,
-    "flatNormals": true,
-    "colorOverrides": [
-      {
-        "colors": "h == 10 && s == 0",
-        "baseMaterial": "WATTLE_1",
-        "uvType": "BOX",
-        "depthBias": 1
-      }
-    ],
-    "objectIds": [
-      "TIMBERWALL"
     ]
   },
   {
@@ -68840,6 +68885,7 @@
     ],
     "colorOverrides": [
       {
+        "description": "Bias ladder slightly less so it doesn't overlap the rocky trim",
         "colors": "h == 6",
         "baseMaterial": "WOOD_GRAIN_2_SMOOTH",
         "uvOrientationZ": 512,

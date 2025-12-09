@@ -414,8 +414,6 @@ public class HdPlugin extends Plugin {
 	private boolean lwjglInitialized;
 	public boolean hasLoggedIn;
 	public boolean redrawPreviousFrame;
-	public boolean isInChambersOfXeric;
-	public boolean isInHouse;
 	public boolean justChangedArea;
 	public Scene skipScene;
 
@@ -444,8 +442,8 @@ public class HdPlugin extends Plugin {
 	public double elapsedClientTime;
 	public float deltaTime;
 	public float deltaClientTime;
-	public long lastFrameTimeMillis;
-	public double lastFrameClientTime;
+	private long lastFrameTimeMillis;
+	private double lastFrameClientTime;
 	public float windOffset;
 	public long colorFilterChangedAt;
 
@@ -668,8 +666,6 @@ public class HdPlugin extends Plugin {
 				hasLoggedIn = client.getGameState().getState() > GameState.LOGGING_IN.getState();
 				redrawPreviousFrame = false;
 				skipScene = null;
-				isInHouse = false;
-				isInChambersOfXeric = false;
 
 				// Force the client to reload the scene since we're changing GPU flags, and to restore any removed tiles
 				if (client.getGameState() == GameState.LOGGED_IN)
@@ -778,7 +774,7 @@ public class HdPlugin extends Plugin {
 
 	@Nullable
 	public SceneContext getSceneContext() {
-		return renderer.getSceneContext();
+		return renderer == null ? null : renderer.getSceneContext();
 	}
 
 	public void toggleFreezeFrame() {
@@ -1863,14 +1859,31 @@ public class HdPlugin extends Plugin {
 	public void onBeforeRender(BeforeRender beforeRender) {
 		SKIP_GL_ERROR_CHECKS = !log.isDebugEnabled() || developerTools.isFrameTimingsOverlayEnabled();
 
-		// Upload the UI which we began copying during the previous frame
-		if (configAsyncUICopy)
-			asyncUICopy.complete();
+		if (lastFrameTimeMillis > 0) {
+			deltaTime = (float) ((System.currentTimeMillis() - lastFrameTimeMillis) / 1000.);
 
-		if (client.getScene() == null)
-			return;
+			// Restart the to avoid potential buffer corruption if the computer has likely resumed from suspension
+			if (deltaTime > 300) {
+				log.debug("Restarting the after probable OS suspend ({} second delta)", deltaTime);
+				restartPlugin();
+			}
+
+			// If system time changes between frames, clamp the delta to a more sensible value
+			if (abs(deltaTime) > 10)
+				deltaTime = 1 / 60.f;
+			// The client delta doesn't need clamping
+			deltaClientTime = (float) (elapsedClientTime - lastFrameClientTime);
+
+			elapsedTime += deltaTime;
+			windOffset += deltaTime * environmentManager.currentWindSpeed;
+		}
+		lastFrameTimeMillis = System.currentTimeMillis();
+		lastFrameClientTime = elapsedClientTime;
+
 		// The game runs significantly slower with lower planes in Chambers of Xeric
-		client.getScene().setMinLevel(isInChambersOfXeric ? client.getPlane() : client.getScene().getMinLevel());
+		var ctx = getSceneContext();
+		if (ctx != null)
+			ctx.scene.setMinLevel(ctx.isInChambersOfXeric ? client.getPlane() : ctx.scene.getMinLevel());
 	}
 
 	@Subscribe
