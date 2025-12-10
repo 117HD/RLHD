@@ -1499,6 +1499,15 @@
     "blended": false
   },
   {
+    "name": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
+    "area": "KOUREND_LEGLESS_FAUN_BLENDING_FIX",
+    "groundMaterial": "TILES_2X2_2_GLOSS",
+    "blended": false,
+    "overlayIds": [
+      134
+    ]
+  },
+  {
     "name": "TAG - FIXES - END"
   },
   {
@@ -7859,6 +7868,14 @@
     }
   },
   {
+    "name": "Etcetera Castle Upstairs",
+    "area": "ETCETERIA_CASTLE_FLOOR",
+    "groundMaterial": "HD_WOOD_PLANKS_2",
+    "underlayIds": [
+      67
+    ]
+  },
+  {
     "name": "Miscellania and Etcetera Complex Tiles",
     "area": "FREMENNIK_COLONIES",
     "underlayIds": [
@@ -7881,12 +7898,7 @@
         "h >= 9 && s >= 2",
         "h >= 11 && s >= 1"
       ],
-      "SEASONAL_DIRT": [
-        "h <= 8 && s <= 5",
-        "h == 9 && s == 1",
-        "h == 10 && s == 1"
-      ],
-      "DEFAULT_DIRT": true
+      "SEASONAL_DIRT": true
     }
   },
   {
