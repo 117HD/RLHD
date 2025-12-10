@@ -98,7 +98,7 @@
     "windStrength": 40
   },
   {
-    "area": "WILDERNESS",
+    "area": "WILDERNESS_MID",
     "ambientColor": "#d7d2d2",
     "ambientStrength": 0.75,
     "directionalColor": "#c5b8b6",
@@ -774,7 +774,7 @@
     "fogDepth": 50
   },
   {
-    "area": "RELLEKKA_SNOWY_REGION",
+    "area": "RELLEKKA_HUNTER_REGION",
     "ambientColor": "#6fb0ff",
     "ambientStrength": 1,
     "directionalColor": "#f4e5c9",
